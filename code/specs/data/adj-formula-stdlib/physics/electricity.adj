@@ -1,0 +1,75 @@
+% ============================================================================
+% electricity.adj — foundational circuit laws in the ADJ standard library.
+% ============================================================================
+% The electricity entry of the *physics* track, a sibling of `energy-work.adj`:
+% two of the laws a first circuits course opens with — OHM'S LAW (the voltage
+% across a resistor is its current times its resistance) and ELECTRIC POWER (the
+% power delivered is the voltage times the current) — each an importable,
+% byte-provenanced, PARAMETERIZED `formula`. As with every compute library, a
+% consumer states NO arithmetic: it `import`s this file, binds the electrical
+% quantities from its own byte-provenance decomposition, and asks the engine to
+% APPLY the cited law on the CPU. Zero math is performed by the model; the engine
+% computes each value EXACTLY, carrying the law's citation.
+%
+%     import "electricity.adj"
+%     observe current(2)       % "…a 2 A current…"    (span cited by the model)
+%     observe resistance(3)    % "…through 3 Ω…"      (span cited by the model)
+%     ? voltage(current, resistance)   % engine → 6, carrying Ohm's law V = I·R
+%
+% Both laws are EXACT over their parameters — each is a product of two measured
+% quantities. There is no *separately grounded* physical constant here (no ε₀, no
+% elementary charge), so every value the engine returns is exact; a law that needs
+% a measured constant belongs in a different, constant-carrying library. Note the
+% two laws COMPOSE: the `voltage` a consumer computes from Ohm's law can be fed
+% straight back in as the `voltage` parameter of `power` — the same term names the
+% result of one law and an input of the other, exactly as a circuit problem reads.
+%
+%   voltage(current, resistance) = current · resistance    %  V = I·R   (Ohm's law)
+%   power(voltage, current)      = voltage · current        %  P = V·I   (power)
+%
+% The definitions are quoted from Georgia State University's HyperPhysics (a
+% university .edu physics reference — the same primary source `energy-work.adj`
+% cites for kinetic energy), so each `formula` carries the provenance envelope
+% every shipped grounded clause carries; the linter rejects an unsourced one.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable electrical quantity the laws range
+% over, and each result is the derived quantity. `voltage` appears BOTH as a
+% derived result (of Ohm's law) and as an input (to the power law), so it is a
+% single dictionary term used in both roles. The `surface` lists are the everyday
+% names a decomposer maps onto the canonical term; the trailing comment records
+% the intended SI unit.
+% ----------------------------------------------------------------------------
+dictionary electricity_vocab {
+    define current    : finding  surface "current", "I"                              % electric current, e.g. A
+    define resistance : finding  surface "resistance", "R"                           % resistance, e.g. Ω
+    define voltage    : finding  surface "voltage", "potential difference", "emf", "V"  % voltage, e.g. V
+    define power      : finding  surface "power", "electric power", "P"              % power, e.g. W
+}
+
+% ----------------------------------------------------------------------------
+% The laws. Each is a named, importable, reusable `let` over its formal parameters,
+% bound at apply time, and each carries a definitional quote from HyperPhysics (a
+% quote is required on a shipped formula). Both are products, so the engine returns
+% each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook electricity_laws {
+    use electricity_vocab
+
+    % Ohm's law — the voltage across a conductor is the current through it times
+    % its resistance. HyperPhysics states the proportionality of current to the
+    % applied voltage that Ohm's law expresses as V = I·R.
+    formula voltage(current, resistance) = current * resistance
+        source "For many conductors of electricity, the electric current which will flow through them is directly proportional to the voltage applied to them."
+        locator "https://hyperphysics.gsu.edu/hbase/electric/ohmlaw.html"
+        trust authoritative
+
+    % Electric power — the rate at which a circuit converts electrical energy,
+    % equal to the voltage times the current (P = V·I). HyperPhysics gives the
+    % electric-power relationship this way.
+    formula power(voltage, current) = voltage * current
+        source "The electric power in watts associated with a complete electric circuit or a circuit component represents the rate at which energy is converted from the electrical energy of the moving charges to some other form"
+        locator "https://hyperphysics.gsu.edu/hbase/electric/elepow.html"
+        trust authoritative
+}
