@@ -413,18 +413,22 @@ fn clone_subckt_element(
             mapped.flicker_noise_exponent = element.flicker_noise_exponent;
             Element::Diode(mapped)
         }
-        Element::Jfet(element) => Element::Jfet(Jfet::with_model_and_capacitance(
-            format!("{instance_name}.{}", element.name),
-            map_subckt_node(&element.drain, instance_name, node_map),
-            map_subckt_node(&element.gate, instance_name, node_map),
-            map_subckt_node(&element.source, instance_name, node_map),
-            element.polarity,
-            element.beta,
-            element.threshold_voltage,
-            element.channel_length_modulation,
-            element.gate_source_capacitance,
-            element.gate_drain_capacitance,
-        )),
+        Element::Jfet(element) => {
+            let mut mapped = Jfet::with_model_and_capacitance(
+                format!("{instance_name}.{}", element.name),
+                map_subckt_node(&element.drain, instance_name, node_map),
+                map_subckt_node(&element.gate, instance_name, node_map),
+                map_subckt_node(&element.source, instance_name, node_map),
+                element.polarity,
+                element.beta,
+                element.threshold_voltage,
+                element.channel_length_modulation,
+                element.gate_source_capacitance,
+                element.gate_drain_capacitance,
+            );
+            mapped.flicker_noise_coefficient = element.flicker_noise_coefficient;
+            Element::Jfet(mapped)
+        }
         Element::Bjt(element) => {
             let mut expanded = Bjt::with_model_temperature_depletion_early_rolloff_junction_leakage_and_reverse_beta_parameters(
                 format!("{instance_name}.{}", element.name),
@@ -2810,6 +2814,7 @@ pub struct Jfet {
     pub channel_length_modulation: f64,
     pub gate_source_capacitance: f64,
     pub gate_drain_capacitance: f64,
+    pub flicker_noise_coefficient: f64,
 }
 
 impl Jfet {
@@ -2878,6 +2883,7 @@ impl Jfet {
             channel_length_modulation,
             gate_source_capacitance,
             gate_drain_capacitance,
+            flicker_noise_coefficient: 0.0,
         }
     }
 }
@@ -3801,8 +3807,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Diode, 15, 21, 5, 3),
     (ModelCardKind::Npn, 41, 58, 13, 4),
     (ModelCardKind::Pnp, 41, 58, 13, 4),
-    (ModelCardKind::Njf, 5, 11, 5, 3),
-    (ModelCardKind::Pjf, 5, 11, 5, 3),
+    (ModelCardKind::Njf, 6, 12, 5, 3),
+    (ModelCardKind::Pjf, 6, 12, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
     (ModelCardKind::Pmos, 18, 25, 6, 3),
 ];
@@ -3901,6 +3907,7 @@ const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("CGS0", "CGS"),
     ("CGD", "CGD"),
     ("CGD0", "CGD"),
+    ("KF", "KF"),
 ];
 const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("LEVEL", "LEVEL"),
@@ -4607,7 +4614,7 @@ pub fn jfet_from_model_card(
         ModelCardKind::Pjf => JfetPolarity::Pjf,
         _ => return Err(model_card_kind_error(&name, "JFET", model.kind)),
     };
-    Ok(Jfet::with_model_and_capacitance(
+    let mut jfet = Jfet::with_model_and_capacitance(
         name,
         drain,
         gate,
@@ -4626,7 +4633,9 @@ pub fn jfet_from_model_card(
         model_card_value(model, "LAMBDA", 0.0),
         model_card_value(model, "CGS", 0.0),
         model_card_value(model, "CGD", 0.0),
-    ))
+    );
+    jfet.flicker_noise_coefficient = model_card_value(model, "KF", 0.0);
+    Ok(jfet)
 }
 
 pub fn mosfet_from_model_card(
@@ -22446,6 +22455,16 @@ fn collect_noise_sources(
                         frequency_exponent: 0.0,
                     });
                 }
+                if jfet.flicker_noise_coefficient > 0.0 {
+                    sources.push(NoiseSource {
+                        element_name: jfet.name.clone(),
+                        noise_type: NoiseType::Flicker,
+                        positive: drain,
+                        negative: source,
+                        source_psd: jfet.flicker_noise_coefficient * result.drain_current.abs(),
+                        frequency_exponent: 1.0,
+                    });
+                }
             }
             Element::Mosfet(mosfet) => {
                 validate_mosfet(mosfet)?;
@@ -24832,6 +24851,12 @@ fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
             reason: "gate-drain capacitance must be finite and non-negative".to_string(),
+        });
+    }
+    if !jfet.flicker_noise_coefficient.is_finite() || jfet.flicker_noise_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "flicker-noise coefficient must be finite and non-negative".to_string(),
         });
     }
     Ok(())

@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language diode flicker-noise current exponent.
+1. Cross-language JFET flicker-noise coefficient.
    - Status: current PR completion candidate.
-   - Add Berkeley diode `AF` model-card support in Rust, Python, and TypeScript,
-     defaulting to one and applying it to the existing diode-current flicker
-     source as `KF * abs(Id)^AF / frequency`.
-   - Preserve `AF` through hierarchy, temperature, sensitivity, and Monte Carlo
-     cloning while validating finite non-negative values in every engine.
-   - Extend the supported-parameter coverage gate from 142 to 143 canonical
-     rows and lock current-exponent behavior in all engines.
+   - Add Berkeley JFET `KF` model-card support in Rust, Python, and TypeScript,
+     defaulting to zero and emitting a distinct drain-current flicker source as
+     `KF * abs(Id) / frequency`.
+   - Preserve `KF` through hierarchy and cloning while validating finite
+     non-negative values in every engine.
+   - Extend the supported-parameter coverage gate from 143 to 145 canonical
+     rows and lock inverse-frequency noise scaling in all engines.
 
 ## Completed Slices
 
@@ -3236,6 +3236,14 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning paths preserve `KF`, finite non-negative validation
      is shared across analyses, and the supported-parameter release gate now
      covers 142 canonical rows.
+
+248. Cross-language diode flicker-noise current exponent.
+   - Status: completed in PR 8902.
+   - Rust, Python, and TypeScript diode model cards now accept `AF`, default it
+     to one, and apply `KF * abs(Id)^AF / frequency` to diode flicker noise.
+   - Hierarchy and cloning paths preserve `AF`, finite non-negative validation
+     is shared across analyses, and the supported-parameter release gate now
+     covers 143 canonical rows.
 
 ## Backlog
 

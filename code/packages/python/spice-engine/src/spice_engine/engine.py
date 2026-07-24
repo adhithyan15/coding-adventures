@@ -604,7 +604,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.Af,
         )
     if isinstance(element, JFET):
-        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd)
+        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf)
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
@@ -9055,6 +9055,8 @@ def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
         raise ValueError(f"JFET '{el.name}' CGS must be finite and non-negative")
     if not math.isfinite(el.Cgd) or el.Cgd < 0.0:
         raise ValueError(f"JFET '{el.name}' CGD must be finite and non-negative")
+    if not math.isfinite(el.Kf) or el.Kf < 0.0:
+        raise ValueError(f"JFET '{el.name}' flicker-noise coefficient must be finite and non-negative")
     if el.polarity == "PJF":
         ids, gm, gds = _eval_njf(-vgs, -vds, -el.vto, el.beta, el.lambda_)
         return -ids, gm, gds
@@ -15319,13 +15321,17 @@ def _collect_noise_sources(
             Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
             Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
             Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
-            _, gm, _ = _eval_jfet(el, Vg - Vs, Vd - Vs)
+            drain_current, gm, _ = _eval_jfet(el, Vg - Vs, Vd - Vs)
             gm = max(0.0, float(gm))
             if gm > 0.0:
                 psd = kT4 * _MOSFET_CHANNEL_NOISE_GAMMA * gm
                 n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
                 n_s = None if _is_ground(el.source) else node_to_idx[el.source]
                 sources.append((el.name, "thermal", n_d, n_s, psd, 0.0))
+            if el.Kf > 0.0:
+                n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
+                n_s = None if _is_ground(el.source) else node_to_idx[el.source]
+                sources.append((el.name, "flicker", n_d, n_s, el.Kf * abs(drain_current), 1.0))
 
         # Capacitors, Inductors, VoltageSources, CurrentSources: noiseless in
         # this first-order model.

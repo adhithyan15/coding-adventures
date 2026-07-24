@@ -1,7 +1,7 @@
 use spice_engine::{
     device_model_noise_audit_fixtures, format_corner_noise_table, format_noise_table, noise_ac,
     noise_ac_corners, noise_ac_corners_parallel, noise_ac_default, Bjt, Capacitor, Circuit,
-    CornerOverride, CornerSpec, CurrentSource, Diode, Element, Mosfet, MosfetLevel1Params,
+    CornerOverride, CornerSpec, CurrentSource, Diode, Element, Jfet, Mosfet, MosfetLevel1Params,
     MosfetType, NoiseType, Resistor, SpiceError, VoltageSource,
 };
 
@@ -270,6 +270,63 @@ fn diode_flicker_noise_uses_kf_with_inverse_frequency_scaling() {
 
     assert!(flicker_psd(0) > 0.0);
     assert_close(flicker_psd(0) / flicker_psd(1), 100.0, 1.0e-10);
+}
+
+#[test]
+fn jfet_flicker_noise_uses_kf_with_inverse_frequency_scaling() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    let mut jfet = Jfet::with_model(
+        "J1",
+        "out",
+        "gate",
+        "0",
+        spice_engine::JfetPolarity::Njf,
+        1.0e-3,
+        -2.0,
+        0.0,
+    );
+    jfet.flicker_noise_coefficient = 1.0e-12;
+    circuit.add(Element::Jfet(jfet));
+
+    let result = noise_ac(&circuit, "out", "Vgate", &[10.0, 1_000.0], 300.0).unwrap();
+    let flicker_psd = |point_index: usize| {
+        result.points[point_index]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "J1" && entry.noise_type == NoiseType::Flicker)
+            .unwrap()
+            .source_psd
+    };
+
+    assert!(flicker_psd(0) > 0.0);
+    assert_close(flicker_psd(0) / flicker_psd(1), 100.0, 1.0e-10);
+}
+
+#[test]
+fn jfet_rejects_invalid_flicker_noise_coefficient() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.flicker_noise_coefficient = -1.0;
+    circuit.add(Element::Jfet(jfet));
+
+    let error = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(matches!(
+        error,
+        SpiceError::InvalidElement { reason, .. }
+            if reason == "flicker-noise coefficient must be finite and non-negative"
+    ));
 }
 
 #[test]

@@ -95,7 +95,7 @@ fn model_card_type_aliases_are_normalized() {
 #[test]
 fn model_card_supported_parameter_coverage_exports_are_stable() {
     let coverage = model_card_supported_parameter_coverage();
-    assert_eq!(coverage.len(), 143);
+    assert_eq!(coverage.len(), 145);
     assert_eq!(coverage[0].kind, ModelCardKind::Diode);
     assert_eq!(coverage[0].canonical_parameter, "IS");
     assert_eq!(coverage[0].accepted_names, vec!["IS", "JS"]);
@@ -114,7 +114,7 @@ fn model_card_supported_parameter_coverage_exports_are_stable() {
     assert!(table.contains("NMOS\tVT0\tVT0|VTO|VTH\t3"));
     assert_eq!(lines.last().unwrap(), &"PMOS\tMJ\tMJ\t1");
     let records = model_card_supported_parameter_coverage_records();
-    assert_eq!(records.len(), 143);
+    assert_eq!(records.len(), 145);
     assert_eq!(records[0]["kind"], "D");
     assert_eq!(records[0]["canonical_parameter"], "IS");
     assert_eq!(records[0]["accepted_names"], "IS|JS");
@@ -195,15 +195,15 @@ fn model_card_supported_parameter_coverage_gate_passes_current_catalog() {
     assert!(report.passed);
     assert_eq!(report.kind_count, 7);
     assert_eq!(report.expected_kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 143);
-    assert_eq!(report.expected_canonical_parameter_count, 143);
-    assert_eq!(report.accepted_name_count, 209);
+    assert_eq!(report.canonical_parameter_count, 145);
+    assert_eq!(report.expected_canonical_parameter_count, 145);
+    assert_eq!(report.accepted_name_count, 211);
     assert_eq!(report.aliased_parameter_count, 53);
     assert_eq!(report.max_alias_count, 4);
     assert!(report.issues.is_empty());
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t143\t143\t209\t53\t4\t0"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t145\t145\t211\t53\t4\t0"
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_issue_table(&report),
@@ -230,8 +230,8 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
 
     assert!(!report.passed);
     assert_eq!(report.kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 142);
-    assert_eq!(report.accepted_name_count, 206);
+    assert_eq!(report.canonical_parameter_count, 144);
+    assert_eq!(report.accepted_name_count, 208);
     assert_eq!(report.aliased_parameter_count, 52);
     assert_eq!(report.max_alias_count, 4);
     assert_eq!(report.issues.len(), 4);
@@ -248,7 +248,7 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t142\t143\t206\t52\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t144\t145\t208\t52\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
     );
     let records = model_card_supported_parameter_coverage_gate_issue_records(&report);
     assert_eq!(records[0]["kind"], "NMOS");
@@ -509,17 +509,24 @@ fn model_card_aliases_build_device_instances() {
     let jfet_card = normalize_model_card(
         "Jn",
         "njfet",
-        &[("BET", 9.0e-4), ("VT0", -1.8), ("LAM", 0.02)],
+        &[
+            ("BET", 9.0e-4),
+            ("VT0", -1.8),
+            ("LAM", 0.02),
+            ("KF", 1.0e-12),
+        ],
     )
     .unwrap();
     let jfet_model = jfet_from_model_card("J1", "d", "g", "s", &jfet_card).unwrap();
     assert_close(*jfet_card.parameters.get("BETA").unwrap(), 9.0e-4);
     assert_close(*jfet_card.parameters.get("VTO").unwrap(), -1.8);
     assert_close(*jfet_card.parameters.get("LAMBDA").unwrap(), 0.02);
+    assert_close(*jfet_card.parameters.get("KF").unwrap(), 1.0e-12);
     assert_eq!(jfet_model.polarity, JfetPolarity::Njf);
     assert_close(jfet_model.beta, 9.0e-4);
     assert_close(jfet_model.threshold_voltage, -1.8);
     assert_close(jfet_model.channel_length_modulation, 0.02);
+    assert_close(jfet_model.flicker_noise_coefficient, 1.0e-12);
 
     let mos_card = normalize_model_card(
         "Mn",
@@ -1435,6 +1442,37 @@ fn subcircuit_expansion_preserves_complete_diode_model() {
     assert_close(expanded.series_resistance, 10.0);
     assert_close(expanded.flicker_noise_coefficient, 1.0e-12);
     assert_close(expanded.flicker_noise_exponent, 1.3);
+}
+
+#[test]
+fn subcircuit_expansion_preserves_jfet_flicker_noise_coefficient() {
+    let mut jfet = Jfet::new("Jcell", "d", "g", "s");
+    jfet.flicker_noise_coefficient = 1.0e-12;
+    let mut circuit = Circuit::new();
+    circuit
+        .define_subcircuit(SubcircuitDefinition::new(
+            "jfet-cell",
+            vec!["d".to_string(), "g".to_string(), "s".to_string()],
+            vec![SubcircuitElement::from(Element::Jfet(jfet))],
+        ))
+        .unwrap();
+    circuit
+        .instantiate(XInstance::new(
+            "X1",
+            vec!["d1".to_string(), "g1".to_string(), "0".to_string()],
+            "jfet-cell",
+        ))
+        .unwrap();
+
+    let expanded = circuit
+        .elements()
+        .iter()
+        .find_map(|element| match element {
+            Element::Jfet(jfet) => Some(jfet),
+            _ => None,
+        })
+        .unwrap();
+    assert_close(expanded.flicker_noise_coefficient, 1.0e-12);
 }
 
 #[test]
