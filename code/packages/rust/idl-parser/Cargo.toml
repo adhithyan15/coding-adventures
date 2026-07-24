@@ -1,0 +1,12 @@
+[package]
+name = "coding-adventures-idl-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Parser for IDL (Interactive Data Language), the science/astronomy array frontend (MA12 MA-12c)"
+license = "MIT"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-idl-lexer = { path = "../idl-lexer" }

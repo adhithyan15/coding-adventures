@@ -281,6 +281,7 @@ members = [
     "q-repl",
     "q-to-semantic-ir",
     "idl-lexer",
+    "idl-parser",
     "logic-gates",
     "logic-core",
     "lookup-core",
