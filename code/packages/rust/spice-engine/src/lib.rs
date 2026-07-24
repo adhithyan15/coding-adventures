@@ -427,6 +427,7 @@ fn clone_subckt_element(
                 element.gate_drain_capacitance,
             );
             mapped.flicker_noise_coefficient = element.flicker_noise_coefficient;
+            mapped.flicker_noise_exponent = element.flicker_noise_exponent;
             Element::Jfet(mapped)
         }
         Element::Bjt(element) => {
@@ -2815,6 +2816,7 @@ pub struct Jfet {
     pub gate_source_capacitance: f64,
     pub gate_drain_capacitance: f64,
     pub flicker_noise_coefficient: f64,
+    pub flicker_noise_exponent: f64,
 }
 
 impl Jfet {
@@ -2884,6 +2886,7 @@ impl Jfet {
             gate_source_capacitance,
             gate_drain_capacitance,
             flicker_noise_coefficient: 0.0,
+            flicker_noise_exponent: 1.0,
         }
     }
 }
@@ -3807,8 +3810,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Diode, 15, 21, 5, 3),
     (ModelCardKind::Npn, 41, 58, 13, 4),
     (ModelCardKind::Pnp, 41, 58, 13, 4),
-    (ModelCardKind::Njf, 6, 12, 5, 3),
-    (ModelCardKind::Pjf, 6, 12, 5, 3),
+    (ModelCardKind::Njf, 7, 13, 5, 3),
+    (ModelCardKind::Pjf, 7, 13, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
     (ModelCardKind::Pmos, 18, 25, 6, 3),
 ];
@@ -3908,6 +3911,7 @@ const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("CGD", "CGD"),
     ("CGD0", "CGD"),
     ("KF", "KF"),
+    ("AF", "AF"),
 ];
 const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("LEVEL", "LEVEL"),
@@ -4635,6 +4639,7 @@ pub fn jfet_from_model_card(
         model_card_value(model, "CGD", 0.0),
     );
     jfet.flicker_noise_coefficient = model_card_value(model, "KF", 0.0);
+    jfet.flicker_noise_exponent = model_card_value(model, "AF", 1.0);
     Ok(jfet)
 }
 
@@ -22461,7 +22466,8 @@ fn collect_noise_sources(
                         noise_type: NoiseType::Flicker,
                         positive: drain,
                         negative: source,
-                        source_psd: jfet.flicker_noise_coefficient * result.drain_current.abs(),
+                        source_psd: jfet.flicker_noise_coefficient
+                            * result.drain_current.abs().powf(jfet.flicker_noise_exponent),
                         frequency_exponent: 1.0,
                     });
                 }
@@ -24857,6 +24863,12 @@ fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
             reason: "flicker-noise coefficient must be finite and non-negative".to_string(),
+        });
+    }
+    if !jfet.flicker_noise_exponent.is_finite() || jfet.flicker_noise_exponent < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "flicker-noise exponent must be finite and non-negative".to_string(),
         });
     }
     Ok(())

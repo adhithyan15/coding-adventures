@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language JFET flicker-noise coefficient.
+1. Cross-language JFET flicker-noise current exponent.
    - Status: current PR completion candidate.
-   - Add Berkeley JFET `KF` model-card support in Rust, Python, and TypeScript,
-     defaulting to zero and emitting a distinct drain-current flicker source as
-     `KF * abs(Id) / frequency`.
-   - Preserve `KF` through hierarchy and cloning while validating finite
+   - Add Berkeley JFET `AF` model-card support in Rust, Python, and TypeScript,
+     defaulting to one and applying it to the existing drain-current flicker
+     source as `KF * abs(Id)^AF / frequency`.
+   - Preserve `AF` through hierarchy and cloning while validating finite
      non-negative values in every engine.
-   - Extend the supported-parameter coverage gate from 143 to 145 canonical
-     rows and lock inverse-frequency noise scaling in all engines.
+   - Extend the supported-parameter coverage gate from 145 to 147 canonical
+     rows and lock current-exponent behavior in all engines.
 
 ## Completed Slices
 
@@ -3244,6 +3244,14 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning paths preserve `AF`, finite non-negative validation
      is shared across analyses, and the supported-parameter release gate now
      covers 143 canonical rows.
+
+249. Cross-language JFET flicker-noise coefficient.
+   - Status: completed in PR 8910.
+   - Rust, Python, and TypeScript JFET model cards now accept `KF`, default it
+     to zero, and emit a distinct drain-current flicker-noise contribution.
+   - Hierarchy and cloning paths preserve `KF`, finite non-negative validation
+     is shared across analyses, and the supported-parameter release gate now
+     covers 145 canonical rows.
 
 ## Backlog
 

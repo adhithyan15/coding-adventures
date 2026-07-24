@@ -604,7 +604,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.Af,
         )
     if isinstance(element, JFET):
-        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf)
+        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af)
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
@@ -9057,6 +9057,8 @@ def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
         raise ValueError(f"JFET '{el.name}' CGD must be finite and non-negative")
     if not math.isfinite(el.Kf) or el.Kf < 0.0:
         raise ValueError(f"JFET '{el.name}' flicker-noise coefficient must be finite and non-negative")
+    if not math.isfinite(el.Af) or el.Af < 0.0:
+        raise ValueError(f"JFET '{el.name}' flicker-noise exponent must be finite and non-negative")
     if el.polarity == "PJF":
         ids, gm, gds = _eval_njf(-vgs, -vds, -el.vto, el.beta, el.lambda_)
         return -ids, gm, gds
@@ -15331,7 +15333,9 @@ def _collect_noise_sources(
             if el.Kf > 0.0:
                 n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
                 n_s = None if _is_ground(el.source) else node_to_idx[el.source]
-                sources.append((el.name, "flicker", n_d, n_s, el.Kf * abs(drain_current), 1.0))
+                sources.append(
+                    (el.name, "flicker", n_d, n_s, el.Kf * abs(drain_current) ** el.Af, 1.0)
+                )
 
         # Capacitors, Inductors, VoltageSources, CurrentSources: noiseless in
         # this first-order model.

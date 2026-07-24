@@ -330,6 +330,63 @@ fn jfet_rejects_invalid_flicker_noise_coefficient() {
 }
 
 #[test]
+fn jfet_rejects_invalid_flicker_noise_exponent() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.flicker_noise_exponent = -1.0;
+    circuit.add(Element::Jfet(jfet));
+
+    let error = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(matches!(
+        error,
+        SpiceError::InvalidElement { reason, .. }
+            if reason == "flicker-noise exponent must be finite and non-negative"
+    ));
+}
+
+#[test]
+fn jfet_flicker_noise_uses_af_current_exponent() {
+    let source_psd = |exponent: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vdd", "vdd", "0", 5.0,
+        )));
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vgate", "gate", "0", 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "vdd", "out", 1_000.0,
+        )));
+        let mut jfet = Jfet::with_model(
+            "J1",
+            "out",
+            "gate",
+            "0",
+            spice_engine::JfetPolarity::Njf,
+            1.0e-3,
+            -2.0,
+            0.0,
+        );
+        jfet.flicker_noise_coefficient = 1.0e-12;
+        jfet.flicker_noise_exponent = exponent;
+        circuit.add(Element::Jfet(jfet));
+        noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0)
+            .unwrap()
+            .points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "J1" && entry.noise_type == NoiseType::Flicker)
+            .unwrap()
+            .source_psd
+    };
+
+    assert!(source_psd(2.0) < source_psd(1.0));
+}
+
+#[test]
 fn diode_flicker_noise_uses_af_current_exponent() {
     let source_psd = |exponent: f64| {
         let mut circuit = Circuit::new();
