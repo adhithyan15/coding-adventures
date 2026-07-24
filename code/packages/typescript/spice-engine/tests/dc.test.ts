@@ -120,7 +120,7 @@ describe("dcOp", () => {
 
   it("exports stable model-card supported parameter coverage", () => {
     const coverage = modelCardSupportedParameterCoverage();
-    expect(coverage).toHaveLength(151);
+    expect(coverage).toHaveLength(153);
     expect(coverage[0]).toStrictEqual({
       kind: "D",
       canonicalParameter: "IS",
@@ -140,7 +140,7 @@ describe("dcOp", () => {
     expect(table).toContain("NMOS\tVT0\tVT0|VTO|VTH\t3");
     expect(table.split("\n").at(-1)).toBe("PMOS\tMJ\tMJ\t1");
     const records = modelCardSupportedParameterCoverageRecords();
-    expect(records).toHaveLength(151);
+    expect(records).toHaveLength(153);
     expect(records[0]).toStrictEqual({
       kind: "D",
       canonical_parameter: "IS",
@@ -205,15 +205,15 @@ describe("dcOp", () => {
       passed: true,
       kindCount: 7,
       expectedKindCount: 7,
-      canonicalParameterCount: 151,
-      expectedCanonicalParameterCount: 151,
-      acceptedNameCount: 219,
+      canonicalParameterCount: 153,
+      expectedCanonicalParameterCount: 153,
+      acceptedNameCount: 221,
       aliasedParameterCount: 55,
       maxAliasCount: 4,
       issues: [],
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t151\t151\t219\t55\t4\t0",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t153\t153\t221\t55\t4\t0",
     );
     expect(formatModelCardSupportedParameterCoverageGateIssueTable(report)).toBe(
       "kind\tfield\tmessage",
@@ -236,8 +236,8 @@ describe("dcOp", () => {
 
     expect(report.passed).toBe(false);
     expect(report.kindCount).toBe(7);
-    expect(report.canonicalParameterCount).toBe(150);
-    expect(report.acceptedNameCount).toBe(216);
+    expect(report.canonicalParameterCount).toBe(152);
+    expect(report.acceptedNameCount).toBe(218);
     expect(report.aliasedParameterCount).toBe(54);
     expect(report.maxAliasCount).toBe(4);
     expect(report.issues).toHaveLength(4);
@@ -252,7 +252,7 @@ describe("dcOp", () => {
       message: "expected NMOS max alias count 3, found 2",
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t150\t151\t216\t54\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t152\t153\t218\t54\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
     );
     const records = modelCardSupportedParameterCoverageGateIssueRecords(report);
     expect(records[0]).toStrictEqual({
@@ -383,9 +383,9 @@ describe("dcOp", () => {
     expectClose(bjtModel.baseCollectorGradingCoefficient, 0.45);
     expectClose(bjtModel.forwardBiasDepletionCoefficient, 0.4);
 
-    const jfetCard = normalizeModelCard("Jn", "njfet", { BET: 9.0e-4, VT0: -1.8, LAM: 0.02, KF: 1.0e-12, AF: 1.3, VJ: 0.8, FC: 0.35 });
+    const jfetCard = normalizeModelCard("Jn", "njfet", { BET: 9.0e-4, VT0: -1.8, LAM: 0.02, KF: 1.0e-12, AF: 1.3, VJ: 0.8, FC: 0.35, IS: 2.0e-13 });
     const jfetModel = jfetFromModelCard("J1", "d", "g", "s", jfetCard);
-    expect(jfetCard.parameters).toStrictEqual({ BETA: 9.0e-4, VTO: -1.8, LAMBDA: 0.02, KF: 1.0e-12, AF: 1.3, PB: 0.8, FC: 0.35 });
+    expect(jfetCard.parameters).toStrictEqual({ BETA: 9.0e-4, VTO: -1.8, LAMBDA: 0.02, KF: 1.0e-12, AF: 1.3, PB: 0.8, FC: 0.35, IS: 2.0e-13 });
     expect(jfetModel.polarity).toBe("NJF");
     expectClose(jfetModel.beta, 9.0e-4);
     expectClose(jfetModel.thresholdVoltage, -1.8);
@@ -394,6 +394,7 @@ describe("dcOp", () => {
     expectClose(jfetModel.flickerNoiseExponent, 1.3);
     expectClose(jfetModel.junctionPotential, 0.8);
     expectClose(jfetModel.forwardBiasDepletionCoefficient, 0.35);
+    expectClose(jfetModel.gateSaturationCurrent, 2.0e-13);
 
     const mosCard = normalizeModelCard("Mn", "nmos", {
       LEVEL: 1.0,
@@ -1055,6 +1056,7 @@ describe("dcOp", () => {
           flickerNoiseExponent: 1.3,
           junctionPotential: 0.8,
           forwardBiasDepletionCoefficient: 0.35,
+          gateSaturationCurrent: 2.0e-13,
         },
       ]),
     );
@@ -1069,6 +1071,31 @@ describe("dcOp", () => {
     expectClose(expanded.flickerNoiseExponent, 1.3);
     expectClose(expanded.junctionPotential, 0.8);
     expectClose(expanded.forwardBiasDepletionCoefficient, 0.35);
+    expectClose(expanded.gateSaturationCurrent, 2.0e-13);
+  });
+
+  it("loads a forward-biased JFET gate from gate saturation current", () => {
+    function gateVoltage(
+      polarity: "NJF" | "PJF",
+      biasVoltage: number,
+      gateSaturationCurrent: number,
+    ): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vbias", "bias", "0", biasVoltage));
+      circuit.add(resistor("Rgate", "bias", "gate", 1.0e6));
+      circuit.add({
+        ...jfet("J1", "0", "gate", "0", polarity),
+        gateSaturationCurrent,
+      });
+      return dcOp(circuit).nodeVoltages.get("gate")!;
+    }
+
+    expect(gateVoltage("NJF", 0.3, 1.0e-9)).toBeLessThan(
+      gateVoltage("NJF", 0.3, 1.0e-14),
+    );
+    expect(gateVoltage("PJF", -0.3, 1.0e-9)).toBeGreaterThan(
+      gateVoltage("PJF", -0.3, 1.0e-14),
+    );
   });
 
   it("preserves the complete BJT model through subcircuit expansion", () => {

@@ -430,6 +430,7 @@ fn clone_subckt_element(
             mapped.flicker_noise_exponent = element.flicker_noise_exponent;
             mapped.junction_potential = element.junction_potential;
             mapped.forward_bias_depletion_coefficient = element.forward_bias_depletion_coefficient;
+            mapped.gate_saturation_current = element.gate_saturation_current;
             Element::Jfet(mapped)
         }
         Element::Bjt(element) => {
@@ -2821,6 +2822,7 @@ pub struct Jfet {
     pub flicker_noise_exponent: f64,
     pub junction_potential: f64,
     pub forward_bias_depletion_coefficient: f64,
+    pub gate_saturation_current: f64,
 }
 
 impl Jfet {
@@ -2893,6 +2895,7 @@ impl Jfet {
             flicker_noise_exponent: 1.0,
             junction_potential: 1.0,
             forward_bias_depletion_coefficient: 0.5,
+            gate_saturation_current: 1.0e-14,
         }
     }
 }
@@ -3816,8 +3819,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Diode, 15, 21, 5, 3),
     (ModelCardKind::Npn, 41, 58, 13, 4),
     (ModelCardKind::Pnp, 41, 58, 13, 4),
-    (ModelCardKind::Njf, 9, 16, 6, 3),
-    (ModelCardKind::Pjf, 9, 16, 6, 3),
+    (ModelCardKind::Njf, 10, 17, 6, 3),
+    (ModelCardKind::Pjf, 10, 17, 6, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
     (ModelCardKind::Pmos, 18, 25, 6, 3),
 ];
@@ -3921,6 +3924,7 @@ const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("PB", "PB"),
     ("VJ", "PB"),
     ("FC", "FC"),
+    ("IS", "IS"),
 ];
 const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("LEVEL", "LEVEL"),
@@ -4651,6 +4655,7 @@ pub fn jfet_from_model_card(
     jfet.flicker_noise_exponent = model_card_value(model, "AF", 1.0);
     jfet.junction_potential = model_card_value(model, "PB", 1.0);
     jfet.forward_bias_depletion_coefficient = model_card_value(model, "FC", 0.5);
+    jfet.gate_saturation_current = model_card_value(model, "IS", 1.0e-14);
     Ok(jfet)
 }
 
@@ -22471,6 +22476,26 @@ fn collect_noise_sources(
                         frequency_exponent: 0.0,
                     });
                 }
+                let (gate_source_current, _) =
+                    jfet_gate_junction_current_conductance(jfet, gate_voltage - source_voltage);
+                let (gate_drain_current, _) =
+                    jfet_gate_junction_current_conductance(jfet, gate_voltage - drain_voltage);
+                sources.push(NoiseSource {
+                    element_name: format!("{}:IGS", jfet.name),
+                    noise_type: NoiseType::Shot,
+                    positive: gate,
+                    negative: source,
+                    source_psd: 2.0 * ELECTRON_CHARGE * gate_source_current.abs(),
+                    frequency_exponent: 0.0,
+                });
+                sources.push(NoiseSource {
+                    element_name: format!("{}:IGD", jfet.name),
+                    noise_type: NoiseType::Shot,
+                    positive: gate,
+                    negative: drain,
+                    source_psd: 2.0 * ELECTRON_CHARGE * gate_drain_current.abs(),
+                    frequency_exponent: 0.0,
+                });
                 if jfet.flicker_noise_coefficient > 0.0 {
                     sources.push(NoiseSource {
                         element_name: jfet.name.clone(),
@@ -23607,8 +23632,59 @@ fn stamp_jfet(
     stamp_conductance(matrix, drain, source, result.gds);
     stamp_transconductance(matrix, drain, source, gate, source, result.gm);
     stamp_equivalent_current_source(rhs, drain, source, equivalent_current);
+    stamp_jfet_gate_junction(
+        jfet,
+        gate,
+        source,
+        gate_voltage - source_voltage,
+        matrix,
+        rhs,
+    );
+    stamp_jfet_gate_junction(jfet, gate, drain, gate_voltage - drain_voltage, matrix, rhs);
     stamp_jfet_charge(jfet, capacitor_states, node_indices, matrix, rhs)?;
     Ok(())
+}
+
+const JFET_THERMAL_VOLTAGE: f64 = 0.02585;
+
+fn jfet_gate_junction_current_conductance(jfet: &Jfet, gate_voltage: f64) -> (f64, f64) {
+    let junction_voltage = match jfet.polarity {
+        JfetPolarity::Njf => gate_voltage,
+        JfetPolarity::Pjf => -gate_voltage,
+    };
+    let exp_value = (junction_voltage / JFET_THERMAL_VOLTAGE)
+        .clamp(-40.0, 40.0)
+        .exp();
+    (
+        jfet.gate_saturation_current * (exp_value - 1.0),
+        jfet.gate_saturation_current / JFET_THERMAL_VOLTAGE * exp_value,
+    )
+}
+
+fn stamp_jfet_gate_junction(
+    jfet: &Jfet,
+    gate: Option<usize>,
+    terminal: Option<usize>,
+    gate_voltage: f64,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+) {
+    let (current, conductance) = jfet_gate_junction_current_conductance(jfet, gate_voltage);
+    let junction_voltage = match jfet.polarity {
+        JfetPolarity::Njf => gate_voltage,
+        JfetPolarity::Pjf => -gate_voltage,
+    };
+    let equivalent_current = current - conductance * junction_voltage;
+    match jfet.polarity {
+        JfetPolarity::Njf => {
+            stamp_conductance(matrix, gate, terminal, conductance);
+            stamp_equivalent_current_source(rhs, gate, terminal, equivalent_current);
+        }
+        JfetPolarity::Pjf => {
+            stamp_conductance(matrix, terminal, gate, conductance);
+            stamp_equivalent_current_source(rhs, terminal, gate, equivalent_current);
+        }
+    }
 }
 
 fn stamp_jfet_charge(
@@ -23937,7 +24013,13 @@ fn stamp_jfet_small_signal(
         gate_voltage - source_voltage,
         drain_voltage - source_voltage,
     );
+    let (_, gate_source_conductance) =
+        jfet_gate_junction_current_conductance(jfet, gate_voltage - source_voltage);
+    let (_, gate_drain_conductance) =
+        jfet_gate_junction_current_conductance(jfet, gate_voltage - drain_voltage);
     stamp_conductance(matrix, drain, source, result.gds);
+    stamp_conductance(matrix, gate, source, gate_source_conductance);
+    stamp_conductance(matrix, gate, drain, gate_drain_conductance);
     stamp_transconductance(matrix, drain, source, gate, source, result.gm);
     Ok(())
 }
@@ -24017,17 +24099,21 @@ fn stamp_ac_jfet_small_signal(
         gate_voltage - drain_voltage,
     );
     stamp_complex_conductance(matrix, drain, source, Complex::new(result.gds, 0.0));
+    let (_, gate_source_conductance) =
+        jfet_gate_junction_current_conductance(jfet, gate_voltage - source_voltage);
+    let (_, gate_drain_conductance) =
+        jfet_gate_junction_current_conductance(jfet, gate_voltage - drain_voltage);
     stamp_complex_conductance(
         matrix,
         gate,
         source,
-        Complex::new(0.0, omega * gate_source_capacitance),
+        Complex::new(gate_source_conductance, omega * gate_source_capacitance),
     );
     stamp_complex_conductance(
         matrix,
         gate,
         drain,
-        Complex::new(0.0, omega * gate_drain_capacitance),
+        Complex::new(gate_drain_conductance, omega * gate_drain_capacitance),
     );
     stamp_complex_transconductance(
         matrix,
@@ -24927,6 +25013,12 @@ fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
             reason: "forward-bias depletion coefficient must be finite and in [0, 1)".to_string(),
+        });
+    }
+    if !jfet.gate_saturation_current.is_finite() || jfet.gate_saturation_current < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "gate saturation current must be finite and non-negative".to_string(),
         });
     }
     Ok(())
