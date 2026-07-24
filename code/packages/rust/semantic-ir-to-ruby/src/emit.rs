@@ -79,6 +79,10 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     // lowering of a bare `self` — renders as the native `self` keyword.  (Its
     // sibling `@ivar` read/write rides on `Scope::Instance`, not a builtin.)
     "__self__",
+    // OOP classes slice 4 (inheritance): `__super__("m", "Class", args…)` — a
+    // `super` call — dispatches the superclass's `sir_um_m` on `self`.  (The
+    // subclass relation itself rides on `Stmt::ClassDef { superclass }`.)
+    "__super__",
 ];
 
 /// Emit a complete self-contained Ruby source file for `m`.
@@ -458,9 +462,17 @@ impl Scan {
                     "a namespaced class name (`class Foo::Bar`)".to_string(),
                     span.clone(),
                 ))
-            } else if superclass.is_some() {
-                Some(ScanHit::Unsupported(
-                    "class inheritance (a superclass)".to_string(),
+            } else if superclass
+                .as_deref()
+                .is_some_and(|s| !is_valid_constant_path(s))
+            {
+                // OOP slice 4: a superclass (`class Dog < Animal`) is emitted as
+                // the `Class.new(<superclass>)` argument — a bare constant
+                // REFERENCE — so validate it as a constant path (a `::` path IS
+                // allowed here: it references, not defines).  A crafted name is
+                // rejected so it cannot inject source.
+                Some(ScanHit::ConstantName(
+                    superclass.clone().unwrap_or_default(),
                     span.clone(),
                 ))
             } else if !body.is_empty() {
@@ -586,6 +598,23 @@ impl Scan {
                                 ),
                                 span.clone(),
                             ));
+                        }
+                    }
+                    _ => return Some(ScanHit::Builtin(name.clone(), span.clone())),
+                }
+            }
+            // `__super__("m", "Class", args…)` (OOP slice 4) dispatches the
+            // superclass's method.  args[0] is the method NAME (rendered as a
+            // `sir_um_`-prefixed quoted symbol — safe), args[1] is the DEFINING
+            // class emitted VERBATIM as a bare constant (`<Class>.superclass…`),
+            // so validate it as a constant path here (injection guard); the
+            // forwarded args (args[2..]) are scanned below.  A malformed shape is
+            // reported as an unlowerable builtin.
+            if name == "__super__" {
+                match (args.first(), args.get(1)) {
+                    (Some(Expr::StrLit { .. }), Some(Expr::StrLit { value, span })) => {
+                        if !is_valid_constant_path(value) {
+                            return Some(ScanHit::ConstantName(value.clone(), span.clone()));
                         }
                     }
                     _ => return Some(ScanHit::Builtin(name.clone(), span.clone())),
@@ -928,8 +957,16 @@ fn emit_stmt(s: &Stmt) -> String {
         // safe symbol literal and `Class.new` takes no base / body.  (This
         // dynamic construction also composes with the next slice's
         // `define_method` for the frontend's hoisted, separately-registered
-        // methods.)
-        Stmt::ClassDef { name, .. } => format!("Object.const_set(:{name}, Class.new)"),
+        // methods.)  OOP slice 4: a superclass (`class Dog < Animal`) becomes
+        // `Class.new(Animal)` — the superclass is a bare constant REFERENCE (the
+        // scan validated it as a constant path), so the subclass inherits its
+        // ancestry natively (`Dog.new.is_a?(Animal)`, and `super` resolves up it).
+        Stmt::ClassDef {
+            name, superclass, ..
+        } => match superclass {
+            Some(sup) => format!("Object.const_set(:{name}, Class.new({sup}))"),
+            None => format!("Object.const_set(:{name}, Class.new)"),
+        },
         // Other not-yet-supported statements (e.g. index-set, module/singleton
         // defs) are rejected by the capability check / scan before emit.
         other => unreachable!("Ruby backend reached unsupported statement: {other:?}"),
@@ -1227,6 +1264,23 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // OOP classes slice 3: a bare `self` → the native `self` keyword.  Inside
         // a `define_method`-installed method (slice 2) `self` is the receiver.
         "__self__" => "self".to_string(),
+        // OOP classes slice 4: a `super` call.  `args[0]` = method name, `args[1]`
+        // = the DEFINING class (a bare validated constant), `args[2..]` (in `a`) =
+        // the forwarded arguments.  A method body lives in a hoisted top-level
+        // function (not a real method context), so native `super` cannot be used;
+        // dispatch EXPLICITLY up the ancestry: fetch the superclass's method as an
+        // `UnboundMethod`, bind it to `self` (the receiver, inherited via slice
+        // 2's `define_method`), and call it.  The method name is `sir_um_`-prefixed
+        // (a quoted symbol), so `instance_method` can only fetch a user method —
+        // never a reflection built-in (anti-RCE, as with `__method__` dispatch).
+        "__super__" => {
+            let class = str_arg(args, 1);
+            let sym = emit_symbol(&format!("sir_um_{}", str_arg(args, 0)));
+            format!(
+                "({class}).superclass.instance_method({sym}).bind(self).call({})",
+                a[2..].join(", ")
+            )
+        }
         // Unreachable: first_scan_issue rejected anything else.
         other => unreachable!("v0 Ruby backend reached unsupported builtin: {other}"),
     }

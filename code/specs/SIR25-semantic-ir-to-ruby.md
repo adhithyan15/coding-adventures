@@ -116,10 +116,21 @@ receiver, so `@v` in a method reads/writes that instance's own variable and
 persists across dispatches — no runtime support. Each `@`-name is validated as
 `@<identifier>` in the co-total scan (no injection).
 
+The fourth OOP slice (0.14.0) adds **inheritance** and `super`. `class Dog <
+Animal` (`ClassDef { superclass: Some("Animal") }`) becomes
+`Object.const_set(:Dog, Class.new(Animal))` — the subclass inherits Animal's
+ancestry natively (the superclass is a validated bare constant reference). `super`
+(bare or explicit, the frontend forwards arguments in both) →
+`__super__("m", "Dog", args…)` → `(Dog).superclass.instance_method(:sir_um_m)
+.bind(self).call(args…)`: an EXPLICIT ancestry walk, because a method body lives
+in a hoisted top-level function (not a real method context) where native `super`
+is unavailable. It resolves a multi-level chain correctly, and the `sir_um_`
+prefix keeps `instance_method` restricted to user methods (anti-RCE).
+
 **Still rejects** `TailCalls`, `Intrinsics`, `NDArrays`, and every not-yet-landed
-feature — including the rest of OOP: **inheritance** (a superclass / `__super__`),
-class methods (`__class_method__` / `__def_class_method__`), class variables
-(`@@x`), and modules; plus a malformed `__def_method__`, a
+feature — including the rest of OOP: class methods (`__class_method__` /
+`__def_class_method__`), class variables (`@@x`), and modules; plus a malformed
+`__def_method__`, a
 non-empty class body, a namespaced (`Foo::Bar`) class/constant *definition*
 (`const_set` names one namespace), and a **singleton class** (`class << self` —
 `Stmt::SingletonClassDef`, which also observes `Feature::Classes`, so accepting
@@ -165,6 +176,8 @@ or temporaries:
 | `BuiltinCall("__method__", [recv, m, args…])` | `(<recv>).public_send(:sir_um_<m>, <args>)` — closed prefixed dispatch (anti-RCE) |
 | `VarRef { Instance }` / `Assign { Instance }` | `@v` — native instance variable (name incl. `@`, verbatim, validated `@<identifier>`) |
 | `BuiltinCall("__self__", [])` | `self` — native |
+| `ClassDef { superclass: Some(S) }` | `Object.const_set(:<name>, Class.new(<S>))` — native inheritance (`S` a validated constant ref) |
+| `BuiltinCall("__super__", [m, class, args…])` | `(<class>).superclass.instance_method(:sir_um_<m>).bind(self).call(<args>)` — explicit prefixed ancestry walk |
 | `If` | `(if sir_truthy(<cond>) then <then> else <else> end)` |
 | `LogicalAnd { lhs, rhs }` | `(<lhs> && <rhs>)` — native short-circuit, yields the deciding operand |
 | `LogicalOr { lhs, rhs }` | `(<lhs> \|\| <rhs>)` — native short-circuit, yields the deciding operand |
@@ -265,8 +278,9 @@ growing `ACCEPTED_FEATURES`, the runtime, and the conformance corpus in lockstep
    slices: `Constants` + an empty `class`/`Foo.new` (reflective `const_set`,
    landed 0.11), instance **methods** (`define_method`/`public_send` under a
    reserved `sir_um_` prefix, landed 0.12), instance **variables** (`@v`, native,
-   landed 0.13), then **inheritance** (`superclass`/`super`), **class variables**
-   (`@@x`), class methods, and **modules**/mixins.
+   landed 0.13), **inheritance** + `super` (`Class.new(Super)` + an explicit
+   ancestry walk, landed 0.14), then **class variables** (`@@x`), class methods,
+   and **modules**/mixins.
 6. **Collections** — the `__method__` catalog for built-in `String`/`Array`/
    `Hash`/numeric methods (Ruby methods are largely native), sharing the same
    `__method__` dispatch surface as OOP.

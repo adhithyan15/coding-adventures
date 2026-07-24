@@ -83,12 +83,17 @@ reach `instance_eval`/`send` (anti-RCE); a dispatch to an un-registered
 (slice 3): `@v = x` / `@v` (`Scope::Instance`) render as native `@v` and `__self__`
 as native `self`; `define_method` binds `self` to the receiver, so `@v` in a
 method addresses that instance (each `@`-name validated as `@<identifier>`, no
-injection).
+injection). **Inheritance** (slice 4): `class Dog < Animal` →
+`Object.const_set(:Dog, Class.new(Animal))` (native ancestry), and `super` →
+`(Dog).superclass.instance_method(:sir_um_m).bind(self).call(…)` — an explicit
+ancestry walk (the body is a hoisted function, so native `super` is unavailable),
+still `sir_um_`-prefixed so `instance_method` can only fetch a user method
+(anti-RCE); the superclass and defining-class names are constant-path validated.
 Rejects `TailCalls`, `Intrinsics`, and every not-yet-wired feature (array
 indexing / slicing via `IndexGet` — `NDArrays`; array-pattern destructuring;
-built-in collection methods; and the rest of OOP — **inheritance** / superclass,
-class variables (`@@x`), class methods, modules — plus a non-empty class body
-or a namespaced class/constant definition) until its slice lands — each a clean,
+built-in collection methods; and the rest of OOP — class variables (`@@x`),
+class methods, modules — plus a non-empty class body or a namespaced
+class/constant definition) until its slice lands — each a clean,
 source-positioned `UnsupportedFeature`.
 
 ## Verification
