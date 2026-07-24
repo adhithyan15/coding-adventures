@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.14.0 — classes slice 4: inheritance + super
+
+Class **inheritance** and `super`. No new `Feature` (a superclass rides on
+`Stmt::ClassDef`; `super` is a builtin).
+
+- `class Dog < Animal` → `ClassDef { superclass: Some("Animal") }` →
+  `Object.const_set(:Dog, Class.new(Animal))`. The subclass inherits Animal's
+  ancestry natively — `Dog.new.is_a?(Animal)` holds, and method resolution walks
+  up it. The superclass is a bare constant **reference** (a `::` path is allowed
+  here — it references, not defines), validated as a constant path.
+- `super` (bare or with args — the frontend forwards the method's arguments
+  explicitly in both cases) → `__super__("m", "Dog", args…)` →
+  `(Dog).superclass.instance_method(:sir_um_m).bind(self).call(args…)`.
+
+**Why an explicit ancestry walk (not native `super`).** A method body lives in a
+hoisted top-level function (slice 2), not a real method context, so native bare
+`super` is unavailable there. Instead the superclass's method is fetched as an
+`UnboundMethod` from `<DefiningClass>.superclass`, bound to `self` (the receiver,
+inherited via slice 2's `define_method` binding), and called. This resolves up a
+multi-level chain correctly (`A → B → C`, each `super` climbing one level).
+
+**Anti-RCE preserved.** The super'd method name is emitted as a `sir_um_`-prefixed
+quoted symbol, so `instance_method` can only fetch a user-defined method — never
+a reflection/eval built-in — exactly as `__method__` dispatch (slice 2). The
+defining-class name is emitted verbatim as a bare constant and validated as a
+constant path (co-total injection guard), as is the superclass in `Class.new`.
+
+**Still rejects** class variables (`@@x`, `Feature::ClassVars`), class methods
+(`__class_method__` / `__def_class_method__`), and modules — each a later slice.
+
 ## 0.13.1 — `is_ruby_keyword` missing `__ENCODING__` (task #116 audit)
 
 Follow-up to task #110/#112 (`semantic-ir-to-javascript`/`-typescript`'s

@@ -1553,14 +1553,6 @@ fn raise_of_a_constant_exception_class_now_compiles() {
 // ---- hand-built: totality (deferred shapes rejected, never panicked) ------
 
 #[test]
-fn a_class_with_a_superclass_is_rejected_cleanly() {
-    // Inheritance is a later slice; a `class Foo < Bar` is rejected, not emitted.
-    let m = class_module(vec![classdef("Foo", Some("Bar"), vec![])]);
-    let err = compile(&m).expect_err("a superclass must be rejected");
-    assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
-}
-
-#[test]
 fn a_non_empty_class_body_is_rejected_cleanly() {
     // Class-level code / constants are a later slice; a non-empty body rejects.
     let m = class_module(vec![classdef("Foo", None, vec![puts(strlit("hi"))])]);
@@ -1841,8 +1833,8 @@ fn an_injectable_def_method_class_name_is_rejected() {
 fn still_rejected_super_self_classmethod_builtins() {
     // The remaining OOP builtins are later slices — a hand-built module carrying
     // any is rejected cleanly (never `unreachable!`).  (`__self__` landed in
-    // slice 3, so it is no longer in this list.)
-    for bad in ["__super__", "__class_method__", "__def_class_method__"] {
+    // slice 3 and `__super__` in slice 4, so they are no longer in this list.)
+    for bad in ["__class_method__", "__def_class_method__"] {
         let call = Expr::BuiltinCall {
             name: bad.into(),
             args: vec![strlit("Foo"), strlit("m")],
@@ -1981,4 +1973,114 @@ fn a_non_at_ivar_name_is_rejected() {
     assert!(compile(&ivar_module(vec![ivar_assign("v", ilit(1))])).is_err(), "no @");
     assert!(compile(&ivar_module(vec![ivar_assign("@", ilit(1))])).is_err(), "bare @");
     assert!(compile(&ivar_module(vec![ivar_assign("@1x", ilit(1))])).is_err(), "@ + digit");
+}
+
+// ── OOP classes slice 4 — inheritance + super ───────────────────────────────
+//
+// `class Dog < Animal` lowers to `ClassDef { superclass: Some("Animal") }`,
+// emitted as `Object.const_set(:Dog, Class.new(Animal))` — the subclass inherits
+// Animal's ancestry natively. `super` (bare or with args, both forwarded
+// explicitly by the frontend) lowers to `__super__("m", "Dog", args…)`, emitted
+// as `(Dog).superclass.instance_method(:sir_um_m).bind(self).call(args…)` — an
+// explicit ancestry walk (the method body lives in a hoisted top-level function,
+// not a real method context, so native `super` cannot be used). The `sir_um_`
+// prefix keeps it anti-RCE: `instance_method` can only fetch a user method.
+
+fn super_call(method: &str, class: &str, args: Vec<Expr>) -> Expr {
+    let mut a = vec![strlit(method), strlit(class)];
+    a.extend(args);
+    Expr::BuiltinCall { name: "__super__".into(), args: a, effects: EffectSet::PURE, span: s2() }
+}
+
+// ---- positive, through the real frontend + interpreter --------------------
+
+#[test]
+fn e2e_bare_super_calls_the_superclass_method() {
+    // `class B; def name; "B"; end; end; class D < B; def name; super; end; end`
+    // — D#name with a bare `super` returns B#name's result.
+    let rb = ruby_to_ruby(
+        "class B\n  def name\n    \"B\"\n  end\nend\n\
+         class D < B\n  def name\n    super\n  end\nend\nputs D.new.name\n",
+    );
+    assert!(rb.contains("Class.new(B)"), "subclass inherits B:\n{rb}");
+    assert!(
+        rb.contains(".superclass.instance_method(:sir_um_name)"),
+        "explicit prefixed super dispatch:\n{rb}"
+    );
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "B"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_super_with_args_and_a_result() {
+    // `super(x)` forwards an argument and the subclass uses the returned value.
+    let rb = ruby_to_ruby(
+        "class B\n  def add(x)\n    x + 1\n  end\nend\n\
+         class D < B\n  def add(x)\n    super(x) + 10\n  end\nend\nputs D.new.add(5)\n",
+    );
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "16"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_super_walks_a_multi_level_chain() {
+    // A→B→C: each `super` climbs one level, proving `instance_method` resolves up
+    // the ancestry and each level's defining-class in `__super__` is correct.
+    let rb = ruby_to_ruby(
+        "class A\n  def v\n    1\n  end\nend\n\
+         class B < A\n  def v\n    super + 10\n  end\nend\n\
+         class C < B\n  def v\n    super + 100\n  end\nend\nputs C.new.v\n",
+    );
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "111"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+// ---- hand-built: emit shape + injection -----------------------------------
+
+#[test]
+fn subclass_emits_class_new_with_the_superclass() {
+    let m = class_module(vec![
+        classdef("Animal", None, vec![]),
+        classdef("Dog", Some("Animal"), vec![]),
+    ]);
+    let rb = compile(&m).expect("subclass module compiles").source;
+    assert!(rb.contains("Object.const_set(:Dog, Class.new(Animal))"), "subclass emit:\n{rb}");
+}
+
+#[test]
+fn an_injectable_superclass_name_is_rejected() {
+    // `class Foo < <super>` emits `Class.new(<super>)`, a bare constant — a
+    // crafted superclass name must be rejected (injection guard).
+    let m = class_module(vec![classdef("Foo", Some("Bar\n  system('boom')"), vec![])]);
+    let err = compile(&m).expect_err("an injectable superclass name must be rejected");
+    assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
+}
+
+#[test]
+fn an_injectable_super_class_name_is_rejected() {
+    // `__super__`'s class argument is emitted verbatim as `(<class>).superclass…`,
+    // so a crafted name must be rejected.
+    let m = method_module(vec![puts(super_call("greet", "Dog\n  system('x')", vec![]))]);
+    assert!(compile(&m).is_err(), "an injectable __super__ class must be rejected");
+}
+
+#[test]
+fn a_malformed_super_missing_the_class_is_rejected() {
+    // `__super__` needs a method-name StrLit AND a defining-class StrLit (rendered
+    // as `str_arg(args, 1)`); a missing/non-string class is rejected, so the
+    // emitter never indexes past the end.
+    let bad = Expr::BuiltinCall {
+        name: "__super__".into(),
+        args: vec![strlit("greet")], // no class arg
+        effects: EffectSet::PURE,
+        span: s2(),
+    };
+    let m = method_module(vec![puts(bad)]);
+    assert!(compile(&m).is_err(), "a malformed __super__ must be rejected");
 }
