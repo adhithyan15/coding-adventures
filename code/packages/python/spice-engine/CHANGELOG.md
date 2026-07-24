@@ -1,5 +1,8 @@
 # Changelog
 
+- Add JFET model-card `RS` source-resistance support with an intrinsic source
+  node across DC, transient, AC, transfer-function, and noise analysis, plus
+  hierarchy preservation, validation, and a distinct thermal-noise source.
 - Add JFET model-card `RD` drain-resistance support with an intrinsic drain
   node across DC, transient, AC, transfer-function, and noise analysis, plus
   hierarchy preservation, validation, and a distinct thermal-noise source.

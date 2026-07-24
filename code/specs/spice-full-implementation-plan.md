@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language JFET drain resistance.
+1. Cross-language JFET source resistance.
    - Status: current PR completion candidate.
-   - Add Berkeley JFET `RD` model-card support in Rust, Python, and TypeScript.
-   - Default `RD` to zero ohms and, when positive, route channel, gate-drain,
+   - Add Berkeley JFET `RS` model-card support in Rust, Python, and TypeScript.
+   - Default `RS` to zero ohms and, when positive, route channel, gate-source,
      charge, AC, transient, transfer-function, and noise behavior through an
-     intrinsic drain node behind the external drain resistor.
-   - Preserve `RD` through hierarchy and cloning, validate finite non-negative
-     values, emit a distinct `RD` thermal-noise source, and extend the
-     supported-parameter coverage gate from 153 to 155 canonical rows.
+     intrinsic source node behind the external source resistor.
+   - Preserve `RS` through hierarchy and cloning, validate finite non-negative
+     values, emit a distinct `RS` thermal-noise source, and extend the
+     supported-parameter coverage gate from 155 to 157 canonical rows.
 
 ## Completed Slices
 
@@ -3288,6 +3288,17 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning paths preserve `IS`, finite non-negative validation
      is shared across analyses, distinct `IGS` / `IGD` shot-noise sources are
      emitted, and the supported-parameter release gate now covers 153
+     canonical rows.
+
+254. Cross-language JFET drain resistance.
+   - Status: completed in PR 8934.
+   - Rust, Python, and TypeScript JFET model cards now accept `RD`, default it
+     to zero ohms, and route channel, gate-drain, charge, AC, transient,
+     transfer-function, and noise behavior through an intrinsic drain node
+     behind the external drain resistor when positive.
+   - Hierarchy and cloning paths preserve `RD`, finite non-negative validation
+     is shared across analyses, a distinct `RD` thermal-noise source is
+     emitted, and the supported-parameter release gate now covers 155
      canonical rows.
 
 ## Backlog

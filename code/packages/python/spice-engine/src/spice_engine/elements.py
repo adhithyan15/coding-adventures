@@ -518,6 +518,7 @@ class JFET:
     Fc: float = 0.5
     Is: float = 1.0e-14
     Rd: float = 0.0
+    Rs: float = 0.0
 
 
 @dataclass(frozen=True, slots=True)
