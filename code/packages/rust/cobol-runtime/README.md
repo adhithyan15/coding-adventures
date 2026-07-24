@@ -62,7 +62,12 @@ images. A numeric *literal* vs alphanumeric (a different pairing) or a group ite
 such a mixed comparison is a clean later rung, matching the compiler; two figurative
 constants compared against each other (`IF ZERO = SPACE`) each fill to a single
 character — `ZERO` → `"0"`, `SPACE` → `" "` — so `ZERO = ZERO` is true and
-`ZERO > SPACE`, and the compiler now compiles the same construct);
+`ZERO > SPACE`, and the compiler now compiles the same construct. `EVALUATE`'s
+subject-vs-`WHEN` comparison (`subject_in_when`) routes through this **same**
+`compare_operands` rule, so a mixed numeric↔alphanumeric subject/`WHEN` — including
+signed / scaled numeric sides, figuratives, and the same numeric-literal-vs-alphanumeric
+deferral — is compared identically to `IF subject <relop> value`, and the compiler now
+reuses its relation dispatch to match byte-for-byte);
 **reference modification** `IDENT(start:len)` /
 `IDENT(start:)` (a 1-based substring of an alphanumeric item, in `DISPLAY` and
 alphanumeric-comparison operands — with **constant** integer indices *or*

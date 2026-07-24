@@ -8,6 +8,43 @@ tag.
 
 ## [Unreleased]
 
+### Changed — v0.35.0: EVALUATE reuses the IF relation dispatch (mixed numeric↔alphanumeric subject/WHEN)
+
+An `EVALUATE` whose subject and a `WHEN` value are in **different** categories —
+a numeric subject vs an alphanumeric `WHEN` (`EVALUATE NUM WHEN "042"`), or an
+alphanumeric subject vs a numeric `WHEN` — now compiles instead of being rejected.
+Previously `EVALUATE` split into two same-category paths (`emit_when_match` reading
+each `WHEN` via `read_arith_term`, or `emit_when_match_str` via `str_value`), each of
+which rejected the other category — a reject-vs-answer gate divergence, since the
+oracle already routes every subject-vs-`WHEN` comparison through `compare_operands`
+(which handles mixed pairs exactly as an `IF` relation does).
+
+The fix factors the category-dispatching core of `emit_relation` into a reusable
+`emit_operand_relation(left, right, op)` helper, then rewrites `EVALUATE`'s `WHEN`
+matching to call it: a single value `[v]` emits `emit_operand_relation(subject, v,
+"cmp_eq")`, a `THRU` range `[lo, hi]` emits `and(cmp_ge, cmp_le)`, and the value-list
+`OR`-folds as before. Each subject-vs-`WHEN` comparison is now identical to
+`IF subject <relop> value`, so `EVALUATE` inherits `IF`'s full category dispatch —
+numeric (scaled `cmp_*`), alphanumeric (`str_cmp`), and mixed numeric↔alphanumeric
+with **unsigned / signed (overpunch) / scaled** digit images, figuratives, and the
+`ZERO`-numeric routing (`WHEN ZERO` stays a numeric comparison) — and its **deferral
+set**: a numeric-literal `WHEN` against an alphanumeric subject (and a group operand)
+is a clean reject on both engines, exactly as the oracle defers it. Byte-identical to
+`coding-adventures-cobol-runtime` 0.39.0 by construction.
+
+- Factored `emit_operand_relation` out of `emit_relation` (behaviour of `IF`
+  relations unchanged — all existing relation tests still pass).
+- Deleted the now-dead `emit_when_match_str`, `str_value`, and `emit_scaled_cmp`;
+  `emit_when_match` is rewritten to take the subject grammar node and dispatch through
+  the shared helper. `emit_evaluate` no longer pre-classifies the subject.
+- New e2e tests: `evaluate_numeric_subject_alphanumeric_when`,
+  `evaluate_signed_numeric_subject_alphanumeric_when`,
+  `evaluate_scaled_numeric_subject_alphanumeric_when`,
+  `evaluate_scaled_numeric_subject_numeric_when_stays_numeric`,
+  `evaluate_mixed_thru_range`, `evaluate_numeric_subject_when_zero_stays_numeric`,
+  and `evaluate_alpha_subject_numeric_literal_when_is_a_later_rung` (both engines
+  reject the deferred numeric-literal pairing identically).
+
 ### Added — v0.34.0: figurative-vs-figurative comparison
 
 A relational condition comparing **two figurative constants** (`IF ZERO = ZERO`,

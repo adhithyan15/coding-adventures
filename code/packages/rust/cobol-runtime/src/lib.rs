@@ -1185,6 +1185,44 @@ mod tests {
     }
 
     #[test]
+    fn evaluate_numeric_subject_vs_alphanumeric_when() {
+        // A numeric subject vs an alphanumeric WHEN value routes through
+        // `compare_operands` exactly like `IF N = "042"`: N PIC 9(3)=42 → digit
+        // image "042" matches WHEN "042"; WHEN "42" space-pads to "42 " ('0' < '4')
+        // → no match. This pins the oracle's mixed EVALUATE that the compiler now
+        // matches byte-for-byte.
+        let run = |v: &str| {
+            let body = [
+                "EVALUATE N".to_string(),
+                format!("WHEN {v} DISPLAY \"HIT\""),
+                "WHEN OTHER DISPLAY \"MISS\"".to_string(),
+                "END-EVALUATE.".to_string(),
+                "STOP RUN.".to_string(),
+            ];
+            let refs: Vec<&str> = body.iter().map(|s| s.as_str()).collect();
+            run_if("42", &refs)
+        };
+        assert_eq!(run("\"042\""), "HIT\n");
+        assert_eq!(run("\"42\""), "MISS\n");
+    }
+
+    #[test]
+    fn evaluate_alpha_subject_vs_numeric_literal_when_is_a_later_rung() {
+        // An alphanumeric subject vs a numeric-LITERAL WHEN value is a *different*
+        // pairing (numeric literal vs alphanumeric) — `compare_operands` rejects it,
+        // exactly as the compiler's `num_digit_str_operand` does. Both engines
+        // defer this identically.
+        let body = &[
+            "EVALUATE GRADE",
+            "WHEN 42 DISPLAY \"HIT\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ];
+        assert!(run_alpha_evaluate("A", body).is_err());
+    }
+
+    #[test]
     fn if_then_branch_runs_multiple_statements() {
         // THEN branch has two statements; both run when the condition holds.
         assert_eq!(

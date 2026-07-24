@@ -776,16 +776,26 @@ magnitude, `emit_signed_num_alpha_image` for the signed overpunch), then feeds
 relation emits. Because both engines build the identical image and run the identical
 byte comparison, a mixed relation evaluates byte-for-byte the same on both.
 `EVALUATE`'s subject-vs-`WHEN` comparison reuses `compare_operands`, so the oracle
-applies the same rule there for free.
+applies the same rule there for free. The **compiler** now matches this: each
+`EVALUATE` subject-vs-`WHEN`-value comparison is routed through the *same* relation
+dispatch an `IF subject <relop> value` uses (`emit_operand_relation`, factored out of
+`emit_relation`) — a single value is `cmp_eq`, a `THRU` range is
+`and(cmp_ge, cmp_le)`, and the value-list `OR`-folds. So a mixed numeric↔alphanumeric
+subject/`WHEN` (numeric subject vs alphanumeric `WHEN`, or the reverse; single value
+or `THRU`) compiles and is byte-identical to the oracle, inheriting the full category
+dispatch — unsigned, **signed** (overpunch image), and **scaled** numeric sides,
+figuratives, and the `ZERO`-numeric routing (`EVALUATE N WHEN ZERO` stays a numeric
+comparison) — and the same deferral set as `IF`.
 
 Deferred as clean later rungs (rejected on both engines, so they agree on the
 deferral): an **edited** numeric operand in a mixed comparison, a **group** item on
 either side, and a **numeric-literal-vs-alphanumeric** pairing (a different pairing,
 kept out of scope — the numeric side must be an item on this rung; the compiler
 rejects it in `num_digit_str_operand`, and the oracle's `compare_operands` rejects a
-numeric-literal operand in a mixed comparison so the two agree). The compiler's
-`EVALUATE` mixed lowering (numeric subject vs alphanumeric `WHEN`, or the reverse)
-likewise remains a later rung; its subject/`WHEN` paths are same-category only.
+numeric-literal operand in a mixed comparison so the two agree). Because `EVALUATE`
+now reuses the relation dispatch, this deferral set applies identically to an
+`EVALUATE` `WHEN` value: e.g. a numeric-literal `WHEN` against an alphanumeric
+subject is a clean reject on both engines.
 
 **Figurative-vs-figurative comparison.** Comparing two figurative constants
 (`IF ZERO = ZERO`, `IF ZERO = SPACE`, `IF SPACE < ZERO`) resolves each figurative to
