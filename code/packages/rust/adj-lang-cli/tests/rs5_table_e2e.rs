@@ -336,6 +336,48 @@ fn shipped_si_prefixes_table_resolves_signed_exponents_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b6) Shipped table — reference/time-conversions.adj resolves via import (time
+//      unit → seconds, EXACT defined factors), and `year` — which has no single
+//      exact factor and therefore no row — abstains honestly.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_time_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_time");
+    let src = stdlib().join("reference/time-conversions.adj");
+    std::fs::copy(&src, dir.join("time-conversions.adj"))
+        .expect("copy shipped time-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"time-conversions.adj\"\n\
+         ? time_to_seconds(minute, $S)\n\
+         ? time_to_seconds(hour, $S)\n\
+         ? time_to_seconds(day, $S)\n\
+         ? time_to_seconds(year, $S)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 "Time" exact factors resolve, character-for-character
+    // from the table (boldface = exact; scientific notation to plain integer).
+    assert!(out.contains("\"S\":\"60\""), "minute = 60 s: {out}");
+    assert!(out.contains("\"S\":\"3600\""), "hour = 3600 s: {out}");
+    assert!(out.contains("\"S\":\"86400\""), "day = 86400 s: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `year` is NOT a single exact factor (SP 811 lists only non-exact,
+    // inequivalent variants) — no row, so the engine abstains rather than
+    // committing to one of several lengths.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "year abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
