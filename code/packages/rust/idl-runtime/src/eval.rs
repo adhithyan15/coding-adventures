@@ -1195,7 +1195,22 @@ impl Interpreter {
                     builtins::MAX_ARRAY_LENGTH
                 ));
             }
-            i += stride;
+            // `stride_f as i64` (above) saturates any sufficiently large
+            // finite stride (e.g. `1e20`) to `i64::MAX`/`i64::MIN` -- the
+            // `stride == 0` check above only rejects a NaN or literal-zero
+            // stride, not a merely huge one, so `i += stride` here can
+            // overflow `i64` on the very first iteration once `start_i` is
+            // nonzero (a debug-build panic, or silent release-build wrap
+            // into a garbage index passed to `arr.data()[i]`/`arr.get(...)`
+            // downstream -- either way an unauthenticated, two-line-of-
+            // input crash, the same severity as the sibling NaN-index bug
+            // this same review round fixed). `checked_add` closes this the
+            // same way `arr_zeros`'s `checked_mul` already guards its own
+            // overflow-prone multiplication elsewhere in this file.
+            i = i.checked_add(stride).ok_or_else(|| {
+                "idl-runtime: subscript stride overflow (start + stride is out of range)"
+                    .to_string()
+            })?;
         }
         Ok(positions)
     }

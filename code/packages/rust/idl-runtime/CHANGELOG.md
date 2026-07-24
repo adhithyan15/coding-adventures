@@ -143,10 +143,30 @@
   correctly rejects it. New regression test
   `nan_subscript_is_a_clean_error_not_a_panic` (`lib.rs`) covers the 1-D,
   2-D, and range-subscript-endpoint paths, and reproduces the exact panic
-  with the fix reverted before confirming the fix resolves it. The
-  `range_subscript_positions` stride path was independently audited and
-  found already safe — its separate `stride == 0` check incidentally
-  catches a `NaN` stride via the same truncating `as i64` cast.
+  with the fix reverted before confirming the fix resolves it. (The
+  `range_subscript_positions` stride path's own `stride == 0` check
+  incidentally catches a `NaN` stride via the same truncating `as i64`
+  cast — but see the SEPARATE stride-overflow finding immediately below,
+  caught by a second review round, which the first round's audit of this
+  same function missed.)
+- **`range_subscript_positions`**: a second, distinct overflow in the same
+  function family, found by a second security-review round on this same
+  diff. `stride_f as i64` saturates any sufficiently large FINITE stride
+  (e.g. a literal `99999999999999999999`) to `i64::MAX`/`i64::MIN` — the
+  `stride == 0` check above only rejects a zero or `NaN` stride (`NaN as
+  i64 == 0`), not a merely huge one. The loop's own `i += stride` then
+  overflowed `i64` on its first iteration whenever `start_i` was nonzero
+  (`start_i + i64::MAX` cannot be represented), panicking in a debug build
+  ("attempt to add with overflow") or silently wrapping to a garbage index
+  in release — either way an unauthenticated, two-line-of-input crash via
+  ordinary syntax like `a[1:2:99999999999999999999]`, the same severity as
+  the `resolve_index` bug above. Fixed by replacing the raw `i += stride`
+  with `i.checked_add(stride)`, returning a clean error instead of
+  overflowing — the same discipline `arr_zeros`'s own `checked_mul`
+  already uses elsewhere in this file. New regression test
+  `huge_stride_is_a_clean_error_not_an_overflow_panic` (`lib.rs`)
+  reproduces the exact original panic with the fix reverted before
+  confirming the fix resolves it.
 
 ### Notes
 

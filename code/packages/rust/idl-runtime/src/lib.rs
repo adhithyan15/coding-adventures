@@ -370,6 +370,18 @@ PRINT, DOIT(5)\n";
     }
 
     #[test]
+    fn huge_stride_is_a_clean_error_not_an_overflow_panic() {
+        // Regression test: `stride_f as i64` saturates a sufficiently large
+        // finite stride (e.g. 1e20) to `i64::MAX`, which passes the range
+        // loop's only guard (`stride == 0`, added to reject NaN/zero) but
+        // then overflows on the very first `i += stride` once `start_i` is
+        // nonzero -- a debug-build panic ("attempt to add with overflow"),
+        // reproduced directly before this fix. `checked_add` in the fixed
+        // loop rejects this cleanly instead.
+        assert!(eval("a = [10, 20, 30]\nPRINT, a[1:2:99999999999999999999]\n").is_err());
+    }
+
+    #[test]
     fn wildcard_subscript_is_the_whole_array() {
         assert_eq!(vector("a = [1,2,3]\nPRINT, a[*]\n"), vec![1.0, 2.0, 3.0]);
     }
