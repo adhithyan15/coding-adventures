@@ -1,5 +1,44 @@
 # Changelog — gc-core
 
+## 0.16.0 — 2026-07-24 — the full moving cycle `collect_compacting` (AOT00-T3 PR-3c-2)
+
+Completes the moving/compacting collector: `collect_compacting(root_slots, regions)` runs
+one **complete relocating collection** and leaves the heap self-consistent and owning
+everything. It builds on the pieces landed in 0.13–0.15 (mobility classification, the arena
++ forwarding map, pointer fixup, arena provenance) and adds step 4 of the cycle — reclaim
+from-space and integrate to-space.
+
+- **`collect_compacting`** (new `pub` entry): classify + evacuate + fix up (via
+  `evacuate_and_fixup`), then:
+  - **Mark survivors-in-place off the pin bit.** After classification the invariant
+    `reachable ∧ ¬moved ≡ pinned` holds, so the `pinned` bit is a ready-made keep-in-place
+    predicate: `marked = pinned` marks every survivor, leaving *both* the unreachable and
+    the moved-from-space originals unmarked.
+  - **Sweep** frees the unmarked blocks — reclaiming the dead *and* the now-orphaned
+    from-space originals of moved objects (every live reference to them was rewritten in the
+    fixup step, so none dangles) — and keeps + ages the pinned survivors. From-space
+    originals are malloc'd, so they free normally; no arena slice is touched.
+  - **Integrate the arena:** the moved objects' copies are re-threaded (their `next` fields
+    are stale bytes from the `copy_nonoverlapping`) into one chain, aged/tenured like an
+    in-place survivor, and prepended to the all-list; the arena is moved into `self.arenas`
+    so its storage outlives the collection and is freed exactly once (never per-object).
+  - **Rebuild the remembered set** over the post-integration all-list — remapping any moved
+    old→young parent to its new address and re-deriving the promotion barrier, exactly as a
+    full `collect_mixed` does.
+  - Reports `freed` as the genuinely-dead count (`swept − moved`), so `freed + survived ==
+    before` holds as for a non-moving collect. With nothing movable it degenerates to
+    `collect_mixed` (the spec's strict generalization).
+- **PR-3b reviewer follow-up:** `fixup_ref_fields` now carries a `debug_assert` that every
+  precise reference field holds a **base** (or tagged-base) pointer, never an interior
+  pointer — an interior pointer would silently escape `forwarded`'s base-only rewrite and
+  dangle. Compiled out of release builds; exercised under tests + Miri.
+- **Tests (+4):** the headline executing differential (a precise `a → b` chain moves, an
+  unreachable `c` is reclaimed, the root is rewritten, a sentinel is byte-preserved across
+  the move, and a *second* compaction re-moves the arena-backed copies); strict-
+  generalization parity with `collect_mixed`; a UAF reuse-and-recollect stress; and the
+  empty-roots degenerate case. **All moving-collector tests pass under Miri** (no
+  double-free of a from-space block, no dealloc of an arena slice, no stale-`next` walk).
+
 ## 0.15.0 — 2026-07-24 — moving-collector arena provenance plumbing (AOT00-T3 PR-3c-1)
 
 The UAF-safety plumbing for reclamation: an evacuated object lives inside an [`Arena`] (a
