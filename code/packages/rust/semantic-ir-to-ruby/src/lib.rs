@@ -183,9 +183,22 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // **non-empty class body** (class-level code / constants) — and validates
     // the class name (of both `ClassDef` and `__new__`) as a Ruby constant path
     // so a hand-built module cannot inject source through a crafted name.
-    // Instance variables / class variables / constants / modules remain
-    // unaccepted features (their own later slices).
+    // Class variables / modules remain unaccepted features (their own slices).
     Feature::Classes,
+    // ── OOP classes, slice 3: instance variables (`@ivars`) ──────────────
+    // `Feature::InstanceVars` is observed by a `Scope::Instance` name (`@v`).
+    // Two nodes carry it, both handled natively:
+    //   `@v = x` → `Stmt::Assign { scope: Instance, .. }` → native `@v = x`
+    //   `@v`     → `Expr::VarRef  { scope: Instance, .. }` → native `@v`
+    // The frontend puts the leading `@` in the node's `name`, emitted VERBATIM;
+    // the pre-emit scan validates it as `@<identifier>` (co-total with the
+    // emitter) so no name can inject.  Instance-method bodies are installed with
+    // `define_method` (slice 2), which binds `self` to the receiver, so `@v`
+    // inside a method reads/writes the instance's own variable — no runtime
+    // support.  The `__self__` builtin (a bare `self`) rides in here too,
+    // rendering the native `self`.  `@@class` variables are the separate
+    // `Feature::ClassVars` (a later slice), still rejected.
+    Feature::InstanceVars,
 ];
 
 impl Backend for RubyBackend {
@@ -277,6 +290,18 @@ impl Backend for RubyBackend {
                     message: format!(
                         "the Ruby backend does not yet support {reason} \
                          (deferred to a later slice)"
+                    ),
+                    span,
+                });
+            }
+            // A `Scope::Instance` name emitted verbatim (a `@v` read / write) that
+            // is not a valid `@identifier` — a metacharacter could inject source.
+            Some(emit::ScanHit::InstanceVarName(name, span)) => {
+                return Err(BackendError {
+                    kind: BackendErrorKind::UnsupportedFeature,
+                    message: format!(
+                        "the Ruby backend cannot emit the instance variable `{name}` \
+                         (not a valid `@identifier`)"
                     ),
                     span,
                 });
