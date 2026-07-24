@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.62.0] — 2026-07-23
+
+### Added — RS-5d: `mode interpolated` table lookup (ADJ-TABLES §3.3)
+
+The `? lookup <table> <key> = <n> mode interpolated give <val>` tactic is now built — the
+piecewise-linear sibling of `mode range`. Lowering changes:
+
+- The mode dispatch accepts `interpolated` alongside `range` (both are built tactics); an
+  unrecognized mode is still `LowerError::LookupUnknownMode`. The reserved-mode error
+  `LookupModeUnsupported` is **retired** (it existed only to reject `interpolated`).
+- `interpolated` additionally validates that the **value** column is numeric in every row —
+  the new `LowerError::LookupNonNumericValueColumn` — because it computes on the value cells
+  (`v0 + (v1−v0)·(q−k0)/(k1−k0)`); you cannot linearly blend a category label. (`range` returns
+  the value cell verbatim and imposes no such check.)
+
+The lowered form is unchanged (`LoweredRangeLookup` carries the mode through); the interpolation
+arithmetic itself lives in the CLI's exact-rational tactic (see `adj-lang-cli` 0.23.0).
+
 ## [0.61.0] — 2026-07-23
 
 ### Added — NUM-6c: the `to_currency(x, code [, places])` money rendering (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3)

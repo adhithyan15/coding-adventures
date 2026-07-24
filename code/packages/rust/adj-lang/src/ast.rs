@@ -410,17 +410,25 @@ pub enum Statement {
     /// as the single-hop special case of the differential.
     Query { conclusion: Term },
     /// `? lookup <table> <key_col> = <n> mode <mode> give <value_col>` — a
-    /// RANGE / BRACKET lookup over a [`Statement::Table`] read as a step function
-    /// (ADJ-TABLES RS-5c). Unlike [`Query`] (exact SLD unification on the key), a
-    /// range lookup selects the breakpoint row whose `key_col` is the greatest key
-    /// `<= key_value`, and returns that row's `value_col` **with the row's
-    /// citation** — the tactic for tax brackets, dose bands, and reference-range
-    /// classification. A query below the smallest key abstains ("below the table's
-    /// domain"). `mode` selects the tactic: `range` here; `interpolated` is
-    /// reserved for RS-5d ([`crate::LowerError::LookupModeUnsupported`]).
+    /// RANGE / INTERPOLATED lookup over a [`Statement::Table`] (ADJ-TABLES RS-5c/RS-5d).
+    /// Unlike [`Query`] (exact SLD unification on the key), the `mode` selects a
+    /// numeric tactic over the table's breakpoints:
+    /// - `range` reads the table as a **step function**: it selects the breakpoint
+    ///   row whose `key_col` is the greatest key `<= key_value` and returns that
+    ///   row's `value_col` verbatim — tax brackets, dose bands, reference-range
+    ///   classification. A query below the smallest key abstains ("below the table's
+    ///   domain").
+    /// - `interpolated` reads it as a **piecewise-linear function**: it finds the two
+    ///   bracketing rows `k0 <= key_value <= k1` and returns the exact linear blend
+    ///   `v0 + (v1−v0)·(key_value−k0)/(k1−k0)` — nomograms, growth charts, calibration
+    ///   curves. Both bracketing rows' citations ride along. A query outside `[min,
+    ///   max]` abstains (below- or above-domain); it never extrapolates. The value
+    ///   column must be numeric ([`crate::LowerError::LookupNonNumericValueColumn`]).
+    ///
+    /// An unrecognized mode is [`crate::LowerError::LookupUnknownMode`].
     RangeLookup {
-        /// The `table` to read as a step function (must be a declared table:
-        /// [`crate::LowerError::LookupUnknownTable`]).
+        /// The `table` to read as a step / piecewise-linear function (must be a
+        /// declared table: [`crate::LowerError::LookupUnknownTable`]).
         table: String,
         /// The numeric key column the query value is compared against (must be one
         /// of the table's columns and hold only numbers:
@@ -430,7 +438,7 @@ pub enum Statement {
         /// The concrete query value to classify. Carried as a [`NumLit`] (sign
         /// already folded in) so no digit is lost before the exact comparison.
         key_value: NumLit,
-        /// The lookup tactic named at the call site (`range`; `interpolated` = RS-5d).
+        /// The lookup tactic named at the call site (`range` or `interpolated`).
         mode: String,
         /// The column whose cell is returned for the selected breakpoint row (must
         /// be one of the table's columns: [`crate::LowerError::LookupUnknownColumn`]).

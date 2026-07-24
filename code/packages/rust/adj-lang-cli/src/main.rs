@@ -438,6 +438,16 @@ fn abstention_json(reason: &AbstentionReason) -> String {
             payload(key),
             payload(min_key)
         ),
+        AbstentionReason::AboveTableDomain {
+            table,
+            key,
+            max_key,
+        } => format!(
+            "{{\"reason\":\"above_table_domain\",\"table\":\"{}\",\"key\":\"{}\",\"max_key\":\"{}\",\"explanation\":\"the query falls above the highest breakpoint this source defines; interpolation would extrapolate past what the source measured\"}}",
+            payload(table),
+            payload(key),
+            payload(max_key)
+        ),
         AbstentionReason::NonNumericKey { table, column, key } => format!(
             "{{\"reason\":\"non_numeric_key\",\"table\":\"{}\",\"column\":\"{}\",\"key\":\"{}\",\"explanation\":\"a range lookup needs a numeric key; this one could not be read as a number\"}}",
             payload(table),
@@ -465,6 +475,16 @@ enum AbstentionReason {
         table: String,
         key: String,
         min_key: String,
+    },
+    /// The key is above the table's highest breakpoint (ADJ-TABLES RS-5d). An
+    /// `interpolated` lookup needs a breakpoint on *both* sides of the query; above
+    /// the last one there is nothing to interpolate toward, so — rather than
+    /// extrapolate past what the source measured — it abstains. (A `range` lookup
+    /// treats the top breakpoint as an open band and never hits this.)
+    AboveTableDomain {
+        table: String,
+        key: String,
+        max_key: String,
     },
     /// A range lookup was handed a key that is not a number.
     NonNumericKey {
@@ -959,16 +979,20 @@ fn main() -> ExitCode {
         format!(",\"governing\":[{}]", governing.join(","))
     };
 
-    // ADJ-TABLES RS-5c: range / bracket lookups over `table`s read as step
-    // functions. Each resolves to its bracketed value + the matched breakpoint
-    // row's citation (or abstains below the table's domain). 0 answer-time model
-    // calls — exact comparison over the CAS-grounded rows. Omitted when the
-    // program declares no `? lookup … mode range …`, so existing output is
-    // byte-for-byte unchanged.
+    // ADJ-TABLES RS-5c/RS-5d: table lookups. `mode range` reads the table as a step
+    // function (bracketed value + the matched breakpoint row's citation, or abstains
+    // below the domain); `mode interpolated` reads it as a piecewise-linear function
+    // (exact linear blend of the two bracketing rows, both citations, or abstains
+    // outside the domain). Both are 0 answer-time model calls — exact rational
+    // arithmetic over the CAS-grounded rows. Omitted when the program declares no
+    // `? lookup …`, so existing output is byte-for-byte unchanged.
     let lookups: Vec<String> = lowered
         .range_lookups
         .iter()
-        .map(|rl| range_lookup_json(rl, &lowered.kb))
+        .map(|rl| match rl.mode.as_str() {
+            "interpolated" => interpolated_lookup_json(rl, &lowered.kb),
+            _ => range_lookup_json(rl, &lowered.kb),
+        })
         .collect();
     let lookup_section = if lookups.is_empty() {
         String::new()
@@ -1243,6 +1267,223 @@ fn range_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
                 query_echo(&query_str),
                 esc(&rl.mode),
                 abstention_json(&reason)
+            )
+        }
+    }
+}
+
+/// Resolve an INTERPOLATED lookup (ADJ-TABLES RS-5d) against the grounded table and
+/// render it as JSON. Where a `range` lookup reads the table as a *step* function,
+/// `interpolated` reads it as a *piecewise-linear* one: it finds the two breakpoint
+/// rows that bracket the query — the greatest key `k0 <= q` and the smallest key
+/// `k1 >= q` — and returns the exact linear blend
+///
+/// ```text
+///     v = v0 + (v1 - v0) * (q - k0) / (k1 - k0)
+/// ```
+///
+/// with BOTH bracketing rows' citations riding along, so the interpolated answer is
+/// traceable to the two measured points it sits between (nomograms, growth charts,
+/// calibration curves). Every step is exact `BigRational` arithmetic — no `f64` hop —
+/// so a terminating blend renders all its digits and a repeating one renders as the
+/// reduced fraction, never a rounded float.
+///
+/// Three honest edges:
+/// - **exact hit** (`q` equals a breakpoint key, so `k0 == k1`): the blend is
+///   degenerate (`0/0`), so it is short-circuited to that row's value with its single
+///   citation — no fabricated division.
+/// - **below / above the domain**: interpolation needs a breakpoint on *both* sides;
+///   outside `[min, max]` it abstains (`below_table_domain` / `above_table_domain`)
+///   rather than extrapolate past what the source measured.
+/// - **truncated search**: if enumeration hit a resolution limit we may not have seen
+///   the true bracketing rows, so any interpolation could be wrong; we abstain with
+///   `search_limit_exceeded` instead of blending against a possibly-incomplete scan.
+///
+/// 0 answer-time model calls — pure exact arithmetic over the CAS-grounded rows.
+fn interpolated_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
+    use logic_engine::compute::ExactRational;
+
+    let cols: Vec<LogicVar> = (0..rl.arity).map(|i| var(&format!("c{i}"))).collect();
+    let goal = compound(
+        rl.table.clone(),
+        cols.iter().map(|v| Term::Var(v.clone())).collect(),
+    );
+    let dag = enumerate_all(&goal, kb);
+
+    let query_str = format!(
+        "lookup {} {} = {} mode {} give {}",
+        rl.table, rl.key_col, rl.key_value, rl.mode, rl.value_col
+    );
+
+    // Render an exact rational for a JSON string binding: prefer a terminating
+    // decimal (all digits), else the reduced fraction (still exact, never a float).
+    let render = |x: &ExactRational| -> String {
+        x.to_exact_decimal_string()
+            .unwrap_or_else(|| format!("{}/{}", x.numerator(), x.denominator()))
+    };
+    let cites_of = |proof: &Proof| -> Vec<String> {
+        proof
+            .via_facts
+            .iter()
+            .filter_map(|fid| kb.fact(*fid))
+            .map(|f| format!("{{{}}}", prov(&f.provenance)))
+            .collect()
+    };
+    let abstain = |reason: AbstentionReason| -> String {
+        format!(
+            "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true,\"abstention\":{}}}",
+            query_echo(&query_str),
+            esc(&rl.mode),
+            abstention_json(&reason)
+        )
+    };
+
+    let q = match numeric_exact_magnitude(&rl.key_value) {
+        Some(x) => x,
+        None => {
+            return abstain(AbstentionReason::NonNumericKey {
+                table: rl.table.clone(),
+                column: rl.key_col.clone(),
+                key: format!("{}", rl.key_value),
+            })
+        }
+    };
+
+    // A truncated scan may have missed the true bracketing rows, which would make
+    // any interpolation wrong — abstain rather than blend against a partial table.
+    if dag.truncated {
+        return abstain(AbstentionReason::SearchLimitExceeded {
+            goal: query_str.clone(),
+        });
+    }
+
+    // Scan every row once, keeping the tightest bracket on each side of `q`:
+    // `lower` = the row with the greatest key `<= q`; `upper` = the row with the
+    // smallest key `>= q`. Comparison and storage are exact.
+    let mut lower: Option<(&Proof, ExactRational, ExactRational)> = None;
+    let mut upper: Option<(&Proof, ExactRational, ExactRational)> = None;
+    for proof in &dag.proofs {
+        let key_term = proof.bindings.walk_var(&cols[rl.key_index]);
+        let Some(k) = numeric_exact_magnitude(&key_term) else {
+            continue; // non-numeric key is impossible post-lowering; skip defensively.
+        };
+        let value_term = proof.bindings.walk_var(&cols[rl.value_index]);
+        let Some(v) = numeric_exact_magnitude(&value_term) else {
+            continue; // non-numeric value is impossible post-lowering (checked); skip.
+        };
+        if k.as_ratio() <= q.as_ratio() {
+            let take = match &lower {
+                None => true,
+                Some((_, lk, _)) => k.as_ratio() > lk.as_ratio(),
+            };
+            if take {
+                lower = Some((proof, k.clone(), v.clone()));
+            }
+        }
+        if k.as_ratio() >= q.as_ratio() {
+            let take = match &upper {
+                None => true,
+                Some((_, uk, _)) => k.as_ratio() < uk.as_ratio(),
+            };
+            if take {
+                upper = Some((proof, k, v));
+            }
+        }
+    }
+
+    // The min/max keys, for an out-of-domain abstention's audit payload.
+    let extremal = |pick_max: bool| -> String {
+        dag.proofs
+            .iter()
+            .filter_map(|pr| numeric_exact_magnitude(&pr.bindings.walk_var(&cols[rl.key_index])))
+            .fold(None, |acc: Option<ExactRational>, k| match acc {
+                None => Some(k),
+                Some(a) => {
+                    let keep = if pick_max {
+                        k.as_ratio() > a.as_ratio()
+                    } else {
+                        k.as_ratio() < a.as_ratio()
+                    };
+                    Some(if keep { k } else { a })
+                }
+            })
+            .map(|k| render(&k))
+            .unwrap_or_else(|| "(empty table)".to_string())
+    };
+
+    match (lower, upper) {
+        // Below the lowest breakpoint — nothing to interpolate down toward.
+        (None, _) => abstain(AbstentionReason::BelowTableDomain {
+            table: rl.table.clone(),
+            key: format!("{}", rl.key_value),
+            min_key: extremal(false),
+        }),
+        // Above the highest breakpoint — nothing to interpolate up toward.
+        (_, None) => abstain(AbstentionReason::AboveTableDomain {
+            table: rl.table.clone(),
+            key: format!("{}", rl.key_value),
+            max_key: extremal(true),
+        }),
+        (Some((lp, k0, v0)), Some((up, k1, v1))) => {
+            // Exact hit on a breakpoint (`k0 == k1 == q`): the blend is `0/0`, so
+            // return that row's value verbatim with its single citation.
+            if k0.as_ratio() == k1.as_ratio() {
+                let cites = cites_of(lp);
+                return format!(
+                    "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[{{\"bindings\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"brackets\":{{\"exact\":{{\"{}\":\"{}\",\"{}\":\"{}\"}}}},\"citations\":[{}],\"steps\":{}}}],\"abstained\":false}}",
+                    query_echo(&query_str),
+                    esc(&rl.mode),
+                    esc(&rl.value_col),
+                    esc(&render(&v0)),
+                    esc(&rl.key_col),
+                    esc(&render(&q)),
+                    esc(&rl.key_col),
+                    esc(&render(&k0)),
+                    esc(&rl.value_col),
+                    esc(&render(&v0)),
+                    cites.join(","),
+                    trace_steps_json(lp, kb)
+                );
+            }
+            // Linear blend, all exact: v = v0 + (v1 - v0) * (q - k0) / (k1 - k0).
+            // The denominator is non-zero (k1 > k0 here), so every step is defined.
+            let blended = (|| {
+                let dv = v1.sub(&v0)?;
+                let dq = q.sub(&k0)?;
+                let dk = k1.sub(&k0)?;
+                let frac = dq.div(&dk)?;
+                let scaled = dv.mul(&frac)?;
+                v0.add(&scaled)
+            })();
+            let v = match blended {
+                Some(v) => v,
+                None => {
+                    // Exact arithmetic only fails on a zero denominator, already
+                    // excluded above; abstain rather than emit a wrong number.
+                    return abstain(AbstentionReason::SearchLimitExceeded {
+                        goal: query_str.clone(),
+                    });
+                }
+            };
+            let mut cites = cites_of(lp);
+            cites.extend(cites_of(up));
+            format!(
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[{{\"bindings\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"brackets\":{{\"lower\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"upper\":{{\"{}\":\"{}\",\"{}\":\"{}\"}}}},\"citations\":[{}]}}],\"abstained\":false}}",
+                query_echo(&query_str),
+                esc(&rl.mode),
+                esc(&rl.value_col),
+                esc(&render(&v)),
+                esc(&rl.key_col),
+                esc(&render(&q)),
+                esc(&rl.key_col),
+                esc(&render(&k0)),
+                esc(&rl.value_col),
+                esc(&render(&v0)),
+                esc(&rl.key_col),
+                esc(&render(&k1)),
+                esc(&rl.value_col),
+                esc(&render(&v1)),
+                cites.join(",")
             )
         }
     }

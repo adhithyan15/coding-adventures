@@ -14,9 +14,10 @@
 //!       breakpoint falls in the top band; a value below the smallest key has no
 //!       key `<=` it and honestly ABSTAINS ("below the table's domain"), never a
 //!       fabricated classification.
-//!   (d) GUARDS: a `mode interpolated` is rejected (reserved for RS-5d), an
-//!       unknown value column is a clean compile error, and a non-numeric key
-//!       column is rejected (a range key must be a number).
+//!   (d) GUARDS: `mode interpolated give <non-numeric col>` is rejected (RS-5d
+//!       interpolation needs a numeric value column — you cannot interpolate a
+//!       category label), an unknown value column is a clean compile error, and a
+//!       non-numeric key column is rejected (a range key must be a number).
 
 use std::path::Path;
 use std::process::Command;
@@ -68,18 +69,37 @@ table bmi_categories {
 #[test]
 fn range_lookup_bracket_hit_binds_band_value_with_citation_and_matched_key() {
     let dir = scratch("hit");
-    let src = format!("{BMI_TABLE}\n? lookup bmi_categories min_bmi = 27.3 mode range give category\n");
+    let src =
+        format!("{BMI_TABLE}\n? lookup bmi_categories min_bmi = 27.3 mode range give category\n");
     write(&dir, "case.adj", &src);
     let (ok, out, err) = run_full(&dir.join("case.adj"));
     assert!(ok, "CLI should succeed; stderr={err}");
-    assert!(out.contains("\"lookups\""), "expected a lookups section: {out}");
+    assert!(
+        out.contains("\"lookups\""),
+        "expected a lookups section: {out}"
+    );
     // 27.3 falls in [25, 30) → overweight, selected breakpoint min_bmi = 25.
-    assert!(out.contains("\"category\":\"overweight\""), "wrong band: {out}");
-    assert!(out.contains("\"min_bmi\":\"25\""), "audit should name the matched breakpoint: {out}");
+    assert!(
+        out.contains("\"category\":\"overweight\""),
+        "wrong band: {out}"
+    );
+    assert!(
+        out.contains("\"min_bmi\":\"25\""),
+        "audit should name the matched breakpoint: {out}"
+    );
     // The selected row's citation travels with the answer.
-    assert!(out.contains("example.test/bmi-bands"), "answer must carry the row citation: {out}");
-    assert!(out.contains("\"trust\":\"consensus\""), "citation must carry the trust tier: {out}");
-    assert!(out.contains("\"abstained\":false"), "a hit is not an abstention: {out}");
+    assert!(
+        out.contains("example.test/bmi-bands"),
+        "answer must carry the row citation: {out}"
+    );
+    assert!(
+        out.contains("\"trust\":\"consensus\""),
+        "citation must carry the trust tier: {out}"
+    );
+    assert!(
+        out.contains("\"abstained\":false"),
+        "a hit is not an abstention: {out}"
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -89,13 +109,20 @@ fn range_lookup_bracket_hit_binds_band_value_with_citation_and_matched_key() {
 #[test]
 fn range_lookup_on_an_exact_breakpoint_selects_that_breakpoint() {
     let dir = scratch("boundary");
-    let src = format!("{BMI_TABLE}\n? lookup bmi_categories min_bmi = 18.5 mode range give category\n");
+    let src =
+        format!("{BMI_TABLE}\n? lookup bmi_categories min_bmi = 18.5 mode range give category\n");
     write(&dir, "case.adj", &src);
     let (ok, out, _err) = run_full(&dir.join("case.adj"));
     assert!(ok);
     // greatest key <= 18.5 is 18.5 itself → normal (exact comparison, no f64 fuzz).
-    assert!(out.contains("\"category\":\"normal\""), "exact boundary must land on the breakpoint: {out}");
-    assert!(out.contains("\"min_bmi\":\"18.5\""), "matched key should be the breakpoint itself: {out}");
+    assert!(
+        out.contains("\"category\":\"normal\""),
+        "exact boundary must land on the breakpoint: {out}"
+    );
+    assert!(
+        out.contains("\"min_bmi\":\"18.5\""),
+        "matched key should be the breakpoint itself: {out}"
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -106,19 +133,30 @@ fn range_lookup_on_an_exact_breakpoint_selects_that_breakpoint() {
 fn range_lookup_top_band_is_open_and_below_domain_abstains() {
     let dir = scratch("edges");
     // A value above the last breakpoint falls in the top (open) band.
-    let top = format!("{BMI_TABLE}\n? lookup bmi_categories min_bmi = 42 mode range give category\n");
+    let top =
+        format!("{BMI_TABLE}\n? lookup bmi_categories min_bmi = 42 mode range give category\n");
     write(&dir, "top.adj", &top);
     let (ok, out, _e) = run_full(&dir.join("top.adj"));
     assert!(ok);
-    assert!(out.contains("\"category\":\"obese\""), "top-open band should be selected: {out}");
+    assert!(
+        out.contains("\"category\":\"obese\""),
+        "top-open band should be selected: {out}"
+    );
 
     // A value below the smallest key has no key <= it → honest abstention.
-    let below = format!("{BMI_TABLE}\n? lookup bmi_categories min_bmi = -1 mode range give category\n");
+    let below =
+        format!("{BMI_TABLE}\n? lookup bmi_categories min_bmi = -1 mode range give category\n");
     write(&dir, "below.adj", &below);
     let (ok2, out2, _e2) = run_full(&dir.join("below.adj"));
     assert!(ok2);
-    assert!(out2.contains("\"abstained\":true"), "below the domain must abstain, not fabricate: {out2}");
-    assert!(!out2.contains("\"category\":\""), "an abstention has no bound band: {out2}");
+    assert!(
+        out2.contains("\"abstained\":true"),
+        "below the domain must abstain, not fabricate: {out2}"
+    );
+    assert!(
+        !out2.contains("\"category\":\""),
+        "an abstention has no bound band: {out2}"
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -126,25 +164,40 @@ fn range_lookup_top_band_is_open_and_below_domain_abstains() {
 // ---------------------------------------------------------------------------
 
 #[test]
-fn range_lookup_reserved_interpolated_mode_is_rejected() {
+fn interpolated_mode_over_a_non_numeric_value_column_is_rejected() {
+    // `interpolated` (RS-5d) is now a built tactic, but it computes on the VALUE
+    // column, so a non-numeric `give` column (here `category`) is a clean compile
+    // error — you cannot linearly blend "overweight" and "obese".
     let dir = scratch("mode");
-    let src = format!("{BMI_TABLE}\n? lookup bmi_categories min_bmi = 27 mode interpolated give category\n");
+    let src = format!(
+        "{BMI_TABLE}\n? lookup bmi_categories min_bmi = 27 mode interpolated give category\n"
+    );
     write(&dir, "case.adj", &src);
     let (ok, out, err) = run_full(&dir.join("case.adj"));
-    assert!(!ok, "interpolated is RS-5d — must be rejected, not silently run as range");
+    assert!(
+        !ok,
+        "interpolating a non-numeric value column must be rejected"
+    );
     let diag = format!("{out}{err}");
-    assert!(diag.contains("LookupModeUnsupported") || diag.to_lowercase().contains("interpolated"), "diag: {diag}");
+    assert!(
+        diag.contains("LookupNonNumericValueColumn") || diag.to_lowercase().contains("category"),
+        "diag names the non-numeric value column: {diag}"
+    );
 }
 
 #[test]
 fn range_lookup_unknown_value_column_is_a_clean_compile_error() {
     let dir = scratch("col");
-    let src = format!("{BMI_TABLE}\n? lookup bmi_categories min_bmi = 27 mode range give bmi_class\n");
+    let src =
+        format!("{BMI_TABLE}\n? lookup bmi_categories min_bmi = 27 mode range give bmi_class\n");
     write(&dir, "case.adj", &src);
     let (ok, out, err) = run_full(&dir.join("case.adj"));
     assert!(!ok, "an unknown value column must be a compile error");
     let diag = format!("{out}{err}");
-    assert!(diag.contains("LookupUnknownColumn") || diag.contains("bmi_class"), "diag: {diag}");
+    assert!(
+        diag.contains("LookupUnknownColumn") || diag.contains("bmi_class"),
+        "diag: {diag}"
+    );
 }
 
 #[test]
@@ -152,10 +205,14 @@ fn range_lookup_non_numeric_key_column_is_rejected() {
     let dir = scratch("nonnum");
     // Here the *category* (an atom column) is (mis)used as the key — a range key
     // must be numeric, so this is a clean compile error, not a silent skip.
-    let src = format!("{BMI_TABLE}\n? lookup bmi_categories category = 27 mode range give min_bmi\n");
+    let src =
+        format!("{BMI_TABLE}\n? lookup bmi_categories category = 27 mode range give min_bmi\n");
     write(&dir, "case.adj", &src);
     let (ok, out, err) = run_full(&dir.join("case.adj"));
     assert!(!ok, "a non-numeric key column must be rejected");
     let diag = format!("{out}{err}");
-    assert!(diag.contains("LookupNonNumericKeyColumn") || diag.contains("category"), "diag: {diag}");
+    assert!(
+        diag.contains("LookupNonNumericKeyColumn") || diag.contains("category"),
+        "diag: {diag}"
+    );
 }

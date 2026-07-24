@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.23.0] — 2026-07-23 — RS-5d: interpolated table lookup tactic
+
+Closes the table-lookup trio (exact / range / **interpolated**). A `? lookup … mode interpolated
+give <val>` reads the `table` as a piecewise-linear function: it finds the two breakpoint rows
+that bracket the query key and returns the exact linear blend
+
+```
+v = v0 + (v1 - v0) * (q - k0) / (k1 - k0)
+```
+
+computed entirely on `ExactRational` (`add`/`sub`/`mul`/`div`) — a terminating blend renders every
+digit, a repeating one renders as the reduced fraction (`10/3`), never a rounded `f64`. **Both**
+bracketing rows' citations ride along, so the answer is traceable to the two measured points it
+sits between (nomograms, calibration curves, growth charts). Honest edges:
+
+- **exact hit** (`q` equals a breakpoint): the `0/0` blend is short-circuited to that row's value
+  with its single citation;
+- **out of domain**: below the lowest / above the highest breakpoint abstains with the typed
+  `below_table_domain` / new `above_table_domain` reason — interpolation never extrapolates;
+- **truncated search**: abstains `search_limit_exceeded` rather than blend against a partial scan.
+
+Adds the `AboveTableDomain` abstention reason and an end-to-end suite (`rs5d_interpolated_lookup_e2e`):
+linear blend with both citations, exact-fraction rendering, exact-breakpoint hit, below/above-domain
+abstention, and correct-segment selection. The RS-5c suite's reserved-mode test becomes a
+non-numeric-value-column guard (interpolating `category` is a compile error).
+
 ## [0.22.0] — 2026-07-23 — NUM-6c: render `to_currency` in the audit trail
 
 The derivation-tree renderer gains a `DerivationNode::ToCurrency` arm (NUM-6c): a

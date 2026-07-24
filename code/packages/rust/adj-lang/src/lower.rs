@@ -283,16 +283,21 @@ pub enum LowerError {
         column: String,
         row: usize,
     },
-    /// A lookup named `mode <name>` for a mode that is spec'd but not yet built
-    /// (ADJ-TABLES RS-5d) — today only `interpolated`. Rejected explicitly (rather
-    /// than silently treated as `range`) so the reserved surface is honest about
-    /// what the engine can do. Carries the requested mode.
-    LookupModeUnsupported {
-        mode: String,
+    /// An `interpolated` lookup's VALUE column holds a non-numeric cell (ADJ-TABLES
+    /// RS-5d). `mode interpolated` computes `v0 + (v1−v0)·(q−k0)/(k1−k0)` between the
+    /// two bracketing rows, so the `give` column must be a number in every row — you
+    /// cannot interpolate a category label. (A `range` lookup returns the cell
+    /// verbatim, so it imposes no such requirement; this check is interpolation-only.)
+    /// Carries the table, the value column, and the offending row index (0-based).
+    LookupNonNumericValueColumn {
+        table: String,
+        column: String,
+        row: usize,
     },
     /// A lookup named a `mode` that is not a recognized tactic at all (ADJ-TABLES
-    /// RS-5c). The valid modes are `range` (built) and `interpolated` (reserved,
-    /// RS-5d). Carries the unrecognized mode.
+    /// RS-5c/RS-5d). The valid modes are `range` (bracket / step function) and
+    /// `interpolated` (linear between breakpoints); both are built. Carries the
+    /// unrecognized mode.
     LookupUnknownMode {
         mode: String,
     },
@@ -638,14 +643,12 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                         .ok_or_else(|| LowerError::LookupUnknownTable {
                             table: table.clone(),
                         })?;
-                // Mode: `range` is built; `interpolated` is the reserved RS-5d
-                // tactic (rejected honestly, not silently treated as range); any
-                // other word is not a tactic at all.
+                // Mode: `range` reads the table as a step function (bracket
+                // lookup); `interpolated` reads it as a piecewise-linear function
+                // between breakpoints (RS-5d). Both are built; any other word is not
+                // a tactic at all.
                 match mode.as_str() {
-                    "range" => {}
-                    "interpolated" => {
-                        return Err(LowerError::LookupModeUnsupported { mode: mode.clone() })
-                    }
+                    "range" | "interpolated" => {}
                     _ => return Err(LowerError::LookupUnknownMode { mode: mode.clone() }),
                 }
                 let key_index = columns.iter().position(|c| c == key_col).ok_or_else(|| {
@@ -673,6 +676,23 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                             column: key_col.clone(),
                             row: i,
                         });
+                    }
+                }
+                // `interpolated` additionally computes on the VALUE column, so it
+                // too must be numeric in every row (RS-5d). `range` returns the value
+                // cell verbatim (it may be a category label), so it skips this check.
+                if mode == "interpolated" {
+                    for (i, row) in rows.iter().enumerate() {
+                        if !matches!(
+                            row.cells.get(value_index),
+                            Some(crate::ast::TableCell::Number(_))
+                        ) {
+                            return Err(LowerError::LookupNonNumericValueColumn {
+                                table: table.clone(),
+                                column: value_col.clone(),
+                                row: i,
+                            });
+                        }
                     }
                 }
                 range_lookups.push(LoweredRangeLookup {
