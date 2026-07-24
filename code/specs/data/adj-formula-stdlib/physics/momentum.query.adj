@@ -1,0 +1,33 @@
+% ============================================================================
+% momentum.query.adj — worked examples over the physics momentum library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a momentum
+% question: it states NO arithmetic and NO definition — it only `import`s the
+% grounded library, `observe`s the physical quantities it decomposed from the
+% prompt (each a byte-provenanced span, elided here), and asks the engine to APPLY
+% the cited definition. The native adj-lang engine binds the parameters, computes
+% each value EXACTLY on the CPU, and returns it with the definition's
+% source/locator/trust.
+%
+% The three questions INVERT: a 2 kg mass at 5 m/s carries a momentum of 10
+% kg·m/s; that 10 kg·m/s momentum is exactly what the velocity formula divides by
+% the 2 kg mass to recover the 5 m/s, and exactly what the mass formula divides by
+% the 5 m/s to recover the 2 kg.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli momentum.query.adj
+% ============================================================================
+
+import "momentum.adj"
+
+% A 2 kg mass moving at 5 m/s: momentum = 2 * 5.
+observe mass(2)
+observe velocity(5)
+? momentum(mass, velocity)     % expect 10   (definition: p = m·v)
+
+% That 10 kg·m/s momentum for the same 2 kg mass: velocity = 10 / 2.
+observe momentum(10)
+? velocity(momentum, mass)      % expect 5    (same definition, solved for v = p/m)
+
+% That 10 kg·m/s momentum at the same 5 m/s: mass = 10 / 5.
+? mass(momentum, velocity)      % expect 2    (same definition, solved for m = p/v)
