@@ -1,0 +1,21 @@
+% ============================================================================
+% energy-conversions.query.adj — a worked lookup over the energy-conversions table.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a "how many joules
+% in a kilowatt-hour?" question: it states no conversion fact — it only `import`s
+% the grounded table and asks binding queries. The native adj-lang engine resolves
+% each `?` against the table's rows (lowered to `energy_to_joules` relations) and
+% returns the binding + the table's source/locator/trust. A unit not in the table
+% abstains honestly — the engine never invents a factor (notably the Btu and the
+% electronvolt, which have no single EXACT factor and so have no row).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli energy-conversions.query.adj
+% ============================================================================
+
+import "energy-conversions.adj"
+
+? energy_to_joules(calorie_th, $J)     % expect 4.184
+? energy_to_joules(kilowatt_hour, $J)  % expect 3600000
+? energy_to_joules(erg, $J)            % expect 0.0000001
+? energy_to_joules(btu, $J)            % expect abstain — not a single exact factor, not a row
