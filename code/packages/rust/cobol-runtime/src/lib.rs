@@ -2455,14 +2455,6 @@ mod tests {
         .unwrap_err();
         assert!(matches!(chars, RuntimeError::Unsupported(_)), "got {chars:?}");
 
-        // … REPLACING LEADING replaces only a leading run …
-        let lead = run_cobol(&wrap(
-            &["01  S  PIC X(5) VALUE \"AABBB\"."],
-            &["INSPECT S REPLACING LEADING \"A\" BY \"X\".", "STOP RUN."],
-        ))
-        .unwrap_err();
-        assert!(matches!(lead, RuntimeError::Unsupported(_)), "got {lead:?}");
-
         // … a multi-character search needs a multi-char scan …
         let multi = run_cobol(&wrap(
             &["01  S  PIC X(5) VALUE \"AB::B\"."],
@@ -2507,6 +2499,92 @@ mod tests {
         ))
         .unwrap_err();
         assert!(matches!(combined_lead, RuntimeError::Unsupported(_)), "got {combined_lead:?}");
+
+        // … and a combined statement whose REPLACING half is REPLACING LEADING
+        // still rejects — the LEADING replace inside the combined form stays
+        // deferred even though a LONE REPLACING LEADING is now supported.
+        let combined_repl_lead = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"B\" REPLACING LEADING \"A\" BY \"X\".",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap_err();
+        assert!(
+            matches!(combined_repl_lead, RuntimeError::Unsupported(_)),
+            "got {combined_repl_lead:?}"
+        );
+    }
+
+    /// A LONE `INSPECT … REPLACING LEADING search BY replace` replaces only the run
+    /// of consecutive `search` characters at the START of the source, stopping at
+    /// the first character that is not `search`. Positions after that first gap are
+    /// left unchanged even if they equal `search` — the key contrast with
+    /// `REPLACING ALL`.
+    #[test]
+    fn inspect_replacing_leading_replaces_only_the_leading_run() {
+        // "000123": the three leading "0"s become "*"; the digits after are kept.
+        let lead = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"000123\"."],
+            &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(lead, "***123\n");
+
+        // "00X00": stops at "X"; the trailing "00" is NOT replaced (the contrast
+        // with REPLACING ALL, which would give "**X**").
+        let stop = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"00X00\"."],
+            &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(stop, "**X00\n");
+
+        // The same source under REPLACING ALL replaces BOTH runs — proving the two
+        // forms diverge exactly where the leading run ends.
+        let all = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"00X00\"."],
+            &["INSPECT S REPLACING ALL \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(all, "**X**\n");
+
+        // No leading run at all (first char is not the search) — unchanged.
+        let none = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"120003\"."],
+            &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(none, "120003\n");
+
+        // Every character is the search — the whole field is replaced.
+        let all_match = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"0000\"."],
+            &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(all_match, "****\n");
+
+        // A blank source has no leading run — unchanged.
+        let blank = run_cobol(&wrap(
+            &["01  S  PIC X(3)."],
+            &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(blank, "   \n");
+
+        // The search and replacement can be PIC X(1) items, not just literals.
+        let via_items = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(6) VALUE \"000123\".",
+                "01  X  PIC X(1) VALUE \"0\".",
+                "01  Y  PIC X(1) VALUE \"*\".",
+            ],
+            &["INSPECT S REPLACING LEADING X BY Y.", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(via_items, "***123\n");
     }
 
     /// The COMBINED `INSPECT … TALLYING … REPLACING` runs tally-then-replace: the

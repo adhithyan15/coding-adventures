@@ -3105,6 +3105,88 @@ fn inspect_replacing_end_inspect_terminator_parses() {
     assert_eq!(out, "BoNoNo\n");
 }
 
+// INSPECT … REPLACING LEADING x BY y — replace only the run of CONSECUTIVE `x`
+// characters at the START of the source, stopping at the first non-`x`; positions
+// after that first gap are left unchanged even if they equal `x`. The compiled
+// unroll threads a runtime `active` flag (an extra `and` per position) and must
+// match the oracle's stateful `in_run` map byte-for-byte.
+
+#[test]
+fn inspect_replacing_leading_replaces_the_leading_run() {
+    // "000123" with LEADING 0→* → "***123": the three leading zeros are replaced,
+    // the digits after are kept.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"000123\"."],
+        &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "***123\n");
+}
+
+#[test]
+fn inspect_replacing_leading_stops_at_first_gap() {
+    // "00X00" with LEADING 0→* → "**X00": the run stops at "X", so the trailing
+    // "00" is NOT replaced. Contrast REPLACING ALL below, which replaces both runs.
+    let lead = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"00X00\"."],
+        &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(lead, "**X00\n");
+
+    // Same source, REPLACING ALL → "**X**": every "0" is replaced. The two forms
+    // diverge exactly where the leading run ends.
+    let all = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"00X00\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(all, "**X**\n");
+}
+
+#[test]
+fn inspect_replacing_leading_no_run_leaves_source_unchanged() {
+    // "120003" — the first character is not "0", so there is no leading run and the
+    // source is untouched (even though interior "0"s exist).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"120003\"."],
+        &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "120003\n");
+}
+
+#[test]
+fn inspect_replacing_leading_every_character() {
+    // "0000" is all leading "0"s → the whole field becomes "****".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"0000\"."],
+        &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "****\n");
+}
+
+#[test]
+fn inspect_replacing_leading_blank_source_unchanged() {
+    // A blank PIC X(3) has no leading "0" run — the three spaces are unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3)."],
+        &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "   \n");
+}
+
+#[test]
+fn inspect_replacing_leading_search_and_replacement_are_pic_x1_items() {
+    // The search and replacement can be PIC X(1) items, not just literals:
+    // LEADING 0→* on "000123" → "***123".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(6) VALUE \"000123\".",
+            "01  X  PIC X(1) VALUE \"0\".",
+            "01  Y  PIC X(1) VALUE \"*\".",
+        ],
+        &["INSPECT S REPLACING LEADING X BY Y.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "***123\n");
+}
+
 // INSPECT … TALLYING … REPLACING — one INSPECT carrying BOTH phrases. Per ISO the
 // statement runs "as though an INSPECT TALLYING were specified, followed by an
 // INSPECT REPLACING": count FIRST (into the counter, over the ORIGINAL bytes),

@@ -1771,9 +1771,12 @@ impl<'a> Compiler<'a> {
                 // The combined form is FOR ALL only: `allow_leading = false` makes a
                 // combined `TALLYING … FOR LEADING … REPLACING` a clean later rung.
                 self.emit_inspect_tallying(verb, &s_reg, false)?;
-                self.emit_inspect_replacing(verb, &s_reg, source_width)
+                // The combined REPLACING half is ALL only: `allow_leading = false`
+                // makes a combined `TALLYING … REPLACING LEADING` a clean later rung.
+                self.emit_inspect_replacing(verb, &s_reg, source_width, false)
             }
-            (false, true) => self.emit_inspect_replacing(verb, &s_reg, source_width),
+            // A lone REPLACING: both `ALL` and `LEADING` are supported here.
+            (false, true) => self.emit_inspect_replacing(verb, &s_reg, source_width, true),
             // A lone TALLYING (or neither, which `inspect_tally_all` rejects). Both
             // `FOR ALL` and `FOR LEADING` are supported here.
             _ => self.emit_inspect_tallying(verb, &s_reg, true),
@@ -1873,19 +1876,32 @@ impl<'a> Compiler<'a> {
         self.store_scaled(&counter_name, &sum, 0, int_digits + 1, false)
     }
 
-    /// `INSPECT source REPLACING ALL x BY y` — rebuild the alphanumeric `source`
-    /// with EVERY occurrence of the single character `x` replaced by the single
-    /// character `y`, in place. Because both are single characters the width `W`
-    /// is unchanged, so the result is a per-position map that we UNROLL over the
-    /// compile-time-known `W`: at each position `j`, the output character is
-    /// `S[j] == x ? y : S[j]`.
+    /// `INSPECT source REPLACING ALL x BY y` (or `REPLACING LEADING x BY y`) —
+    /// rebuild the alphanumeric `source` with the single character `x` replaced by
+    /// the single character `y`, in place. Because both are single characters the
+    /// width `W` is unchanged, so the result is a per-position map that we UNROLL
+    /// over the compile-time-known `W`. For `ALL`, at each position `j` the output
+    /// character is `S[j] == x ? y : S[j]`.
+    ///
+    /// `REPLACING LEADING` replaces only the run of consecutive `x` characters at
+    /// the START of the source, stopping at the first non-`x`. We thread a runtime
+    /// `active` flag (i64, init 1 = still inside the leading run) through the
+    /// unroll: position `j` is replaced iff `active AND (S[j] == x)` — i.e. every
+    /// position `0..=j` equalled `x`. Once a mismatch clears `active`, it stays 0
+    /// for all later positions, so a later `x` is left unchanged. That is the ONLY
+    /// difference from `ALL`; when `leading` is false the extra `and` folds away
+    /// and the emitted unroll is byte-identical to the original `ALL` lowering.
     ///
     /// ```text
     ///   result = ""
-    ///   for j in 0..W:                       # W is known at compile time
-    ///       if S[j] == x   result = result ++ y_str
+    ///   active = 1                            # LEADING only
+    ///   for j in 0..W:                        # W is known at compile time
+    ///       eq = (S[j] == x)
+    ///       use_repl = LEADING ? (active AND eq) : eq
+    ///       if use_repl    result = result ++ y_str
     ///       else           result = result ++ S[j, j+1)
-    ///   source := result                     # exactly W chars, width unchanged
+    ///       active = active AND eq            # LEADING only; sticks at 0
+    ///   source := result                      # exactly W chars, width unchanged
     /// ```
     ///
     /// The search `x` is reduced to a byte code with the shared
@@ -1896,14 +1912,24 @@ impl<'a> Compiler<'a> {
     /// figurative/wider/numeric `x` or `y` is a clean later-rung `Unsupported`.
     /// The rebuilt string is copied into the source register — the same W-wide
     /// alphanumeric image the oracle's `move_into` produces, byte-for-byte.
+    ///
+    /// `allow_leading` is `false` on the combined tally-then-replace path (a
+    /// combined `REPLACING LEADING` is a later rung); a lone REPLACING passes
+    /// `true`.
     fn emit_inspect_replacing(
         &mut self,
         verb: &GrammarASTNode,
         s_reg: &str,
         width: usize,
+        allow_leading: bool,
     ) -> Result<(), CompileError> {
-        // The single `ALL x BY y` phrase (rejecting the later rungs).
-        let (search_node, replace_node) = inspect_replacing_all(verb)?;
+        // The single `ALL`/`LEADING x BY y` phrase (rejecting the later rungs).
+        let (search_node, replace_node, leading) = inspect_replacing_all(verb)?;
+        if leading && !allow_leading {
+            return Err(CompileError::Unsupported(
+                "INSPECT TALLYING … REPLACING LEADING is a later rung".into(),
+            ));
+        }
         // x → a byte code (for the per-position compare); y → a 1-char string
         // (for the concatenation). Both share the single-character validation.
         let x_reg = self.single_delim_code(search_node, "INSPECT REPLACING")?;
@@ -1912,6 +1938,12 @@ impl<'a> Compiler<'a> {
         // result = "" — the accumulator we build W characters into.
         let result = self.fresh("_irres");
         self.emit("str_const", Some(&result), vec![Operand::Str(String::new())], "str");
+
+        // active = 1 — still inside the leading run (LEADING only; unused for ALL).
+        let active = self.fresh("_iractive");
+        if leading {
+            self.emit("const", Some(&active), vec![Operand::Int(1)], "i64");
+        }
 
         for j in 0..width {
             // c = S[j]  (the source byte at this position).
@@ -1926,10 +1958,25 @@ impl<'a> Compiler<'a> {
             // eq = (c == x).
             let eq = self.fresh("_ireq");
             self.emit("cmp_eq", Some(&eq), vec![Operand::Var(c), Operand::Var(x_reg.clone())], "i64");
+            // For LEADING, replace iff STILL in the run AND this char matches:
+            // `use_repl = active AND eq`. For ALL, the branch condition is just `eq`.
+            let branch = if leading {
+                let use_repl = self.fresh("_iruse");
+                self.emit(
+                    "and",
+                    Some(&use_repl),
+                    vec![Operand::Var(active.clone()), Operand::Var(eq.clone())],
+                    "i64",
+                );
+                use_repl
+            } else {
+                eq.clone()
+            };
             let use_orig = self.fresh("ir_orig");
             let done = self.fresh("ir_done");
-            // On a match, append the replacement `y`; otherwise the original char.
-            self.emit("jmp_if_false", None, vec![Operand::Var(eq), Operand::Var(use_orig.clone())], "void");
+            // On a match (within the run, for LEADING), append the replacement `y`;
+            // otherwise the original char.
+            self.emit("jmp_if_false", None, vec![Operand::Var(branch), Operand::Var(use_orig.clone())], "void");
             self.emit(
                 "str_concat",
                 Some(&result),
@@ -1954,6 +2001,17 @@ impl<'a> Compiler<'a> {
                 "str",
             );
             self.emit("label", None, vec![Operand::Var(done)], "void");
+            // active := active AND eq — once a non-match clears it, it sticks at 0
+            // for every later position, so LEADING never replaces past the first
+            // gap. (LEADING only; ALL never reads `active`.)
+            if leading {
+                self.emit(
+                    "and",
+                    Some(&active),
+                    vec![Operand::Var(active.clone()), Operand::Var(eq)],
+                    "i64",
+                );
+            }
         }
 
         // source := result. `result` is exactly W chars (each of the W pieces is a
@@ -4293,19 +4351,21 @@ fn inspect_tally_all(
     Ok((counter, delim, leading))
 }
 
-/// Extract the single supported `REPLACING ALL search BY replace` phrase from an
-/// `inspect_stmt`, returning `(search_node, replace_node)` and rejecting every
-/// later-rung form the grammar also accepts:
-///   * more than one replace item (`{ replace_item }`) — one `ALL x BY y` this rung;
-///   * a `CHARACTERS` or `LEADING`/`FIRST` replacement (only `ALL` this rung);
+/// Extract the supported `REPLACING ALL search BY replace` / `REPLACING LEADING
+/// search BY replace` phrase from an `inspect_stmt`, returning `(search_node,
+/// replace_node, leading)` where `leading` is `true` for `REPLACING LEADING`
+/// (replace only the leading run) and `false` for `REPLACING ALL` (replace every
+/// occurrence). Rejects every later-rung form the grammar also accepts:
+///   * more than one replace item (`{ replace_item }`) — one `x BY y` this rung;
+///   * a `CHARACTERS` or `FIRST` replacement (only `ALL`/`LEADING` this rung);
 ///   * a `BEFORE`/`AFTER` region restricting the replacement.
 ///
-/// (The combined `TALLYING … REPLACING` and a non-alphanumeric source are
+/// (A combined `TALLYING … REPLACING LEADING`, and a non-alphanumeric source, are
 /// rejected by the caller; a multi-character/wider/figurative search or
 /// replacement is rejected by `single_delim_code`/`single_delim_str`.)
 fn inspect_replacing_all(
     verb: &GrammarASTNode,
-) -> Result<(&GrammarASTNode, &GrammarASTNode), CompileError> {
+) -> Result<(&GrammarASTNode, &GrammarASTNode, bool), CompileError> {
     let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
         CompileError::Unsupported("INSPECT without a REPLACING clause is a later rung".into())
     })?;
@@ -4324,23 +4384,27 @@ fn inspect_replacing_all(
             "INSPECT REPLACING CHARACTERS is a later rung".into(),
         ));
     }
-    if toks.iter().any(|(k, v)| k == "KEYWORD" && (v == "LEADING" || v == "FIRST")) {
+    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "FIRST") {
         return Err(CompileError::Unsupported(
-            "INSPECT REPLACING LEADING/FIRST is a later rung".into(),
+            "INSPECT REPLACING FIRST is a later rung".into(),
         ));
     }
+    // `REPLACING LEADING` is now supported (replace only the leading run);
+    // `REPLACING ALL` is the default. The keyword selects the stop-at-first-
+    // mismatch behaviour threaded into the unroll.
+    let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
     if child_node(ri, "inspect_region").is_some() {
         return Err(CompileError::Unsupported(
             "INSPECT REPLACING … BEFORE/AFTER is a later rung".into(),
         ));
     }
-    // `ALL search BY replace` — the two `operand` children are the search (first)
-    // and the replacement (second), in order.
+    // `ALL`/`LEADING search BY replace` — the two `operand` children are the
+    // search (first) and the replacement (second), in order.
     let ops = child_nodes(ri, "operand");
     match ops.as_slice() {
-        [s, r] => Ok((*s, *r)),
+        [s, r] => Ok((*s, *r, leading)),
         _ => Err(CompileError::Malformed(
-            "INSPECT REPLACING ALL without a search and a BY replacement".into(),
+            "INSPECT REPLACING ALL/LEADING without a search and a BY replacement".into(),
         )),
     }
 }
@@ -5836,14 +5900,37 @@ mod tests {
     }
 
     #[test]
-    fn inspect_replacing_leading_is_a_later_rung() {
-        // REPLACING LEADING replaces only a leading run — a later rung.
-        let err = compile_source(
+    fn inspect_replacing_leading_now_compiles() {
+        // A lone REPLACING LEADING replaces only the run of consecutive matches at
+        // the start of the source — now supported. It threads an `active` flag
+        // (an extra `and` per position) through the same per-position unroll and
+        // must compile to a valid module.
+        let module = compile_source(
             &wrap(
                 &["01  S  PIC X(5) VALUE \"AABBB\"."],
-                &["INSPECT S REPLACING LEADING \"A\" BY \"X\".", "STOP RUN."],
+                &["INSPECT S REPLACING LEADING \"A\" BY \"X\".", "DISPLAY S.", "STOP RUN."],
             ),
             "insp_repl_lead",
+        )
+        .expect("lone REPLACING LEADING should compile");
+        assert!(module.validate().is_empty(), "validate: {:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"and".to_string()), "leading run uses an `and` active flag: {os:?}");
+    }
+
+    #[test]
+    fn inspect_combined_tally_replacing_leading_is_a_later_rung() {
+        // A combined `TALLYING … REPLACING LEADING` keeps the REPLACING half at ALL
+        // only — the LEADING replace inside the combined form stays deferred.
+        let err = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
+                &[
+                    "INSPECT S TALLYING C FOR ALL \"B\" REPLACING LEADING \"A\" BY \"X\".",
+                    "STOP RUN.",
+                ],
+            ),
+            "insp_comb_repl_lead",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");

@@ -488,10 +488,11 @@ non-integer/signed/non-numeric counter, are likewise clean later rungs. (`FIRST`
 and `INITIAL`, needed only by `REPLACING FIRST` / `BEFORE INITIAL`, are left
 unreserved so common data names keep working.)
 
-### `INSPECT … REPLACING` (first rung)
+### `INSPECT … REPLACING` (first rung + `LEADING`)
 
-The **substitution** form's first rung implements a LONE
-`INSPECT source REPLACING ALL x BY y`:
+The **substitution** form implements a LONE
+`INSPECT source REPLACING ALL x BY y` (and, as a follow-up rung,
+`INSPECT source REPLACING LEADING x BY y`):
 
 - `source` is an alphanumeric (`PIC X`) item, modified **in place**. Because
   both `x` and `y` are single characters, the result has the **same width** as
@@ -499,24 +500,40 @@ The **substitution** form's first rung implements a LONE
 - `x` (the search) and `y` (the replacement) are each a **single character** — a
   1-character string literal (`"A"`) or a `PIC X(1)` item — reusing the same
   single-character helpers as `TALLYING`/`UNSTRING`.
-- Semantics: `source := source with each x → y`, left to right. Every position
-  `j` where `source[j] == x` becomes `y`; all others are unchanged.
+- `ALL` semantics: `source := source with each x → y`, left to right. Every
+  position `j` where `source[j] == x` becomes `y`; all others are unchanged.
+- `LEADING` semantics: replace only the run of **consecutive** `x` characters at
+  the **START** of the source, stopping at the first character that is not `x`.
+  A position `j` is replaced iff **every** character at `0..=j` equals `x`;
+  positions after that first gap are left unchanged **even if they equal `x`**.
 
-Worked (search `"A"`, replacement `"X"`): `"ABABA"` → `"XBXBX"`; a search that
-never occurs (`"Z"` in `"HELLO"`) leaves the source unchanged; `"AAAA"` with
-`A → X` → `"XXXX"`.
+Worked, `ALL` (search `"A"`, replacement `"X"`): `"ABABA"` → `"XBXBX"`; a search
+that never occurs (`"Z"` in `"HELLO"`) leaves the source unchanged; `"AAAA"` with
+`A → X` → `"XXXX"`. Worked, `LEADING` (search `"0"`, replacement `"*"`):
+`"000123"` → `"***123"`; `"00X00"` → `"**X00"` (stops at `X`; contrast `ALL`,
+which gives `"**X**"`); `"120003"` → `"120003"` (no leading run); `"0000"` →
+`"****"`; a blank source is unchanged.
 
-The oracle rebuilds the string (`source.chars().map(|c| if c == x { y } else
-{ c }`)) and stores it back through the **same alphanumeric char-store path** a
-`MOVE` uses; the compiler **unrolls** the per-position map over the
-compile-time-known width `W` (`str_index`/`cmp_eq` per byte, splicing either the
-replacement or the original character with `str_slice`/`str_concat`), then copies
-the `W`-wide result into the source register. The two agree byte-for-byte.
+The oracle rebuilds the string and stores it back through the **same alphanumeric
+char-store path** a `MOVE` uses. For `ALL` it is a stateless map
+(`source.chars().map(|c| if c == x { y } else { c })`); for `LEADING` it is a
+**stateful** map that keeps an `in_run` flag, replacing while `in_run && c == x`
+and flipping `in_run` off (permanently) at the first non-`x`. The compiler
+**unrolls** the per-position map over the compile-time-known width `W`
+(`str_index`/`cmp_eq` per byte, splicing either the replacement or the original
+character with `str_slice`/`str_concat`), then copies the `W`-wide result into the
+source register. For `LEADING` it threads a runtime `active` flag (i64, init 1)
+through the unroll: position `j` is replaced iff `active AND (s[j] == x)`, and
+`active := active AND (s[j] == x)` sticks at 0 after the first non-match — the
+extra `and` is the ONLY difference from `ALL`, and it folds away for `ALL`. The
+two engines agree byte-for-byte.
 
 Deferred as clean later rungs (accepted by the grammar, rejected at read/compile
-time): `REPLACING CHARACTERS BY`, `REPLACING LEADING`/`FIRST`, `BEFORE`/`AFTER`
-regions, **several** replace items, a multi-character / figurative / wider /
-numeric search or replacement, and a numeric/group source.
+time): `REPLACING CHARACTERS BY`, `REPLACING FIRST` (`FIRST` does not parse as a
+replace keyword — it is deferred at parse time), `BEFORE`/`AFTER` regions,
+**several** replace items, a `REPLACING LEADING` inside the combined
+`TALLYING … REPLACING` form, a multi-character / figurative / wider / numeric
+search or replacement, and a numeric/group source.
 
 ### Combined `INSPECT … TALLYING … REPLACING` (one statement)
 
@@ -541,10 +558,13 @@ reference agree byte-for-byte. No grammar change was needed — the grammar alre
 accepted `inspect_tallying [ inspect_replacing ]`; only the two prior "combined is
 a later rung" rejects were removed. Each phrase is still restricted to its
 single-character `FOR ALL`/`ALL … BY` form: a combined statement whose `TALLYING`
-or `REPLACING` half is itself a deferred sub-form (`LEADING`/`CHARACTERS`, several
+half is `FOR LEADING` or whose `REPLACING` half is `REPLACING LEADING` — or whose
+either half is otherwise a deferred sub-form (`CHARACTERS`, several
 counters/FOR/replace items, `BEFORE`/`AFTER`, multi-char/figurative/wider/numeric
-operands, a numeric/group source, or a non-integer counter) remains a clean later
-rung.
+operands, a numeric/group source, or a non-integer counter) — remains a clean
+later rung. (A lone `FOR LEADING` tally and a lone `REPLACING LEADING` are each
+supported on their own; only their appearance **inside the combined form** is
+deferred.)
 
 ### `INSPECT … CONVERTING` (first rung)
 
