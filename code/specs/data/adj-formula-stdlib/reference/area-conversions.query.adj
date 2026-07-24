@@ -1,0 +1,21 @@
+% ============================================================================
+% area-conversions.query.adj — a worked lookup over the area-conversions table.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a "how many
+% square metres in an acre?" question: it states no conversion fact — it only
+% `import`s the grounded table and asks binding queries. The native adj-lang
+% engine resolves each `?` against the table's rows (lowered to
+% `area_to_square_metres` relations) and returns the binding + the table's
+% source/locator/trust. A unit not in the table abstains honestly — the engine
+% never invents a factor.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli area-conversions.query.adj
+% ============================================================================
+
+import "area-conversions.adj"
+
+? area_to_square_metres(square_rod, $SqMetres)   % expect 25.29285264
+? area_to_square_metres(acre, $SqMetres)         % expect 4046.8564224
+? area_to_square_metres(square_mile, $SqMetres)  % expect 2589988.110336
+? area_to_square_metres(hectare, $SqMetres)      % expect abstain — not in the table

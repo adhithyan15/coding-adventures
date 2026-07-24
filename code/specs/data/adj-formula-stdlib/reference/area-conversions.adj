@@ -1,0 +1,49 @@
+% ============================================================================
+% area-conversions — exact area-unit → square-metre factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A sibling of `length-conversions`: a native tabular relation ingested VERBATIM
+% from the SAME published NIST conversion table. Each row states an EXACT factor
+% converting one customary AREA unit to square metres:
+%
+%     ? area_to_square_metres(acre, $SqMetres)        % 4046.8564224
+%     ? area_to_square_metres(square_mile, $SqMetres) % 2589988.110336
+%
+% Why a `table` and not three hand-written `relate` clauses: this is exactly the
+% shape reference data comes in — a published table, not prose. The citable
+% artifact IS the NIST conversion-factors table at the `locator` below, whose
+% "International foot metric equivalent" column is headed **(exact)**. Every
+% factor here appears CHARACTER-FOR-CHARACTER in that column of the table (the
+% page prints them with digit-group spaces, which a number literal cannot carry,
+% so the spaces are removed but no digit is changed):
+%
+%     square rod  →  "25.292 852 64 m2"        →  25.29285264
+%     acre        →  "4046.856 422 4 m2"       →  4046.8564224
+%     square mile →  "2 589 988.110 336 m2"    →  2589988.110336
+%
+% These are the areas of the customary units defined by the 1959 international
+% yard-and-pound agreement (an acre is 4046.8564224 m² because it is exactly one
+% chain × one furlong, and 20.1168 m × 201.168 m = 4046.8564224 m²; a square mile
+% is 1609.344² m²). The whole table is defended by ONE provenance envelope rather
+% than repeating `source`/`locator`/`trust` on every row. Each `row` lowers to a
+% ground relation `area_to_square_metres(unit, square_metres)`, so the exact
+% lookup above is the ordinary SLD binding query — the engine returns the factor
+% WITH this table's citation as its proof, on the CPU, with zero model calls. A
+% looked-up factor is a number, so it can feed a `let`/`formula` downstream (e.g.
+% multiply a measurement by it) through the existing slot path.
+%
+% `trust authoritative` — a primary, re-fetchable standards reference. (See
+% ADJ-TABLES.md; and feedback_nothing_human_authored — nothing here is asserted
+% "from memory": every factor is a verbatim cell of the cited table.)
+% ============================================================================
+
+table area_to_square_metres {
+    columns unit, square_metres
+
+    row (square_rod, 25.29285264)
+    row (acre, 4046.8564224)
+    row (square_mile, 2589988.110336)
+
+    source "Defined with respect to meter"
+    locator "https://www.nist.gov/pml/us-surveyfoot/revised-unit-conversion-factors"
+    trust authoritative
+}

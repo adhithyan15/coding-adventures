@@ -206,6 +206,49 @@ fn shipped_mass_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b3) Shipped table — reference/area-conversions.adj resolves via import (a
+//      second dimension: AREA), and a unit absent from the table abstains.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_area_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_area");
+    let src = stdlib().join("reference/area-conversions.adj");
+    std::fs::copy(&src, dir.join("area-conversions.adj"))
+        .expect("copy shipped area-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"area-conversions.adj\"\n\
+         ? area_to_square_metres(acre, $SqMetres)\n\
+         ? area_to_square_metres(square_mile, $SqMetres)\n\
+         ? area_to_square_metres(hectare, $SqMetres)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST exact-column factors resolve, character-for-character from the
+    // table (digit-group spaces removed, no digit changed).
+    assert!(
+        out.contains("\"SqMetres\":\"4046.8564224\""),
+        "shipped acre factor: {out}"
+    );
+    assert!(
+        out.contains("\"SqMetres\":\"2589988.110336\""),
+        "shipped square-mile factor: {out}"
+    );
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("revised-unit-conversion-factors"),
+        "carries the NIST locator: {out}"
+    );
+    // `hectare` is not a row — the engine abstains rather than inventing a factor.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "an absent unit abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
