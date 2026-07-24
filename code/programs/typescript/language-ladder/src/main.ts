@@ -41,6 +41,12 @@ import { pickNext as pickReviewCell, makeRng, cellKey, type GridCell } from "./q
 import { confusions } from "./mistakes.ts";
 import { loadReview, saveReview } from "./reviewstore.ts";
 import {
+  scriptsById,
+  firstIntroductionByScript,
+  scriptIntroFor,
+  type ScriptIntro,
+} from "./scriptintro.ts";
+import {
   sweepableConcepts,
   activeChain,
   LANGUAGE_CHAIN,
@@ -109,6 +115,17 @@ const CONCEPT_LESSONS = LESSONS.filter((l) => !CONSOLIDATION_TYPES.has(l.type));
 // by any active language, in the order the book first introduces them. Constant
 // for the page's lifetime (the curriculum does not change while it is open).
 const CONCEPT_SPINE = sweepableConcepts(CONCEPT_LESSONS, activeChain(ACTIVE_COUNT));
+
+// Script introductions (phase 7). Index the script data by id, then precompute
+// which concept is the FIRST (in book order) to teach each non-Latin script we
+// have data for — the single place its "new script" note should appear. Both
+// are constant for the page's lifetime and grounded in the real scripts JSON.
+const SCRIPTS_BY_ID = scriptsById(SCRIPTS);
+const SCRIPT_INTRO_AT = firstIntroductionByScript(
+  CONCEPT_SPINE,
+  CONCEPT_LESSONS,
+  new Set(SCRIPTS_BY_ID.keys()),
+);
 
 // --- the Learn-mode review quiz (HL03 phase 6, slice 6b-2) ------------------
 //
@@ -576,7 +593,11 @@ function firstGloss(teaching: SessionStep[]): string {
 }
 
 /** One stop of the sweep: a language, its word(s) for the concept, its threads back. */
-function renderTeachingStep(step: SessionStep, ordinal: number): HTMLElement {
+function renderTeachingStep(
+  step: SessionStep,
+  ordinal: number,
+  intro: ScriptIntro | null,
+): HTMLElement {
   const card = el("div", "step");
 
   const head = el("div", "step__head");
@@ -592,6 +613,23 @@ function renderTeachingStep(step: SessionStep, ordinal: number): HTMLElement {
     head.appendChild(badge);
   }
   card.appendChild(head);
+
+  // A new writing system, the first time the walk reaches it — what it is and
+  // how to recognise it, straight from the script data (never invented).
+  if (intro) {
+    const note = el("div", "step__script");
+    const label = el("span", "step__script-label");
+    label.textContent = `New script — ${intro.name}`;
+    const sys = el("span", "step__script-system");
+    sys.textContent = intro.system;
+    note.append(label, sys);
+    if (intro.signature) {
+      const sig = el("p", "step__script-sig");
+      sig.textContent = intro.signature;
+      note.appendChild(sig);
+    }
+    card.appendChild(note);
+  }
 
   for (const lesson of step.lessons) {
     const row = el("div", "step__word");
@@ -699,7 +737,10 @@ function renderLearn(): HTMLElement {
     wrap.appendChild(none);
   } else {
     const sweep = el("div", "sweep");
-    plan.teaching.forEach((step, i) => sweep.appendChild(renderTeachingStep(step, i)));
+    plan.teaching.forEach((step, i) => {
+      const intro = scriptIntroFor(concept, step.language, SCRIPT_INTRO_AT, SCRIPTS_BY_ID);
+      sweep.appendChild(renderTeachingStep(step, i, intro));
+    });
     wrap.appendChild(sweep);
   }
 
