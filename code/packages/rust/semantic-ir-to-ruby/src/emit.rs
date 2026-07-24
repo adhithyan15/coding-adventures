@@ -75,6 +75,10 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     // using them is rejected until their slice.
     "__def_method__",
     "__method__",
+    // OOP classes slice 3 (instance variables): `__self__` — the frontend's
+    // lowering of a bare `self` — renders as the native `self` keyword.  (Its
+    // sibling `@ivar` read/write rides on `Scope::Instance`, not a builtin.)
+    "__self__",
 ];
 
 /// Emit a complete self-contained Ruby source file for `m`.
@@ -148,6 +152,11 @@ pub enum ScanHit {
     /// Carries a human-readable reason.  Deferred to a later slice; rejected
     /// cleanly rather than mis-emitted.
     Unsupported(String, semantic_ir::Span),
+    /// A `Scope::Instance` name (`@v`) that is not a valid Ruby instance-variable
+    /// name — it is emitted VERBATIM (a bare `@v` read / write), so a
+    /// metacharacter would inject source.  Same injection guard as `ConstantName`,
+    /// at the instance-variable positions.
+    InstanceVarName(String, semantic_ir::Span),
 }
 
 /// Scan the module — in a SINGLE traversal shared with the unsupported-builtin
@@ -361,6 +370,15 @@ impl Scan {
                 } else {
                     self.expr(value)
                 }
+            } else if matches!(scope, Scope::Instance) {
+                // A `Scope::Instance` target (`@v = …`) emits the name VERBATIM,
+                // so validate it as `@<identifier>` at this position (the same
+                // injection guard as an ivar reference); then scan the value.
+                if !is_valid_ivar_name(name) {
+                    Some(ScanHit::InstanceVarName(name.clone(), span.clone()))
+                } else {
+                    self.expr(value)
+                }
             } else {
                 self.expr(value)
             }
@@ -487,6 +505,18 @@ fn is_valid_constant_path(name: &str) -> bool {
         })
 }
 
+/// Whether `name` is a syntactically valid Ruby instance-variable name — a `@`
+/// followed by an identifier (`@v`, `@_x1`).  The frontend puts the `@` in the
+/// node's `name`, and the emitter renders `@v` VERBATIM (a bare local/ivar write
+/// or read), so this gates out any name carrying a metacharacter that could
+/// inject source.  (A `@@class` variable is `Scope::ClassVar`, a later slice.)
+fn is_valid_ivar_name(name: &str) -> bool {
+    let mut chars = name.chars();
+    chars.next() == Some('@')
+        && matches!(chars.next(), Some(c) if c.is_ascii_alphabetic() || c == '_')
+        && chars.all(|c| c.is_ascii_alphanumeric() || c == '_')
+}
+
 impl Scan {
     fn expr(&self, e: &Expr) -> Option<ScanHit> {
         match e {
@@ -609,6 +639,14 @@ impl Scan {
             scope: Scope::Const,
             span,
         } if !is_valid_constant_path(name) => Some(ScanHit::ConstantName(name.clone(), span.clone())),
+        // A `Scope::Instance` reference (`@v`, `Feature::InstanceVars`) is emitted
+        // VERBATIM by `emit_var_ref`, so validate it as `@<identifier>` here — at
+        // that emitter position — to bar injection.
+        Expr::VarRef {
+            name,
+            scope: Scope::Instance,
+            span,
+        } if !is_valid_ivar_name(name) => Some(ScanHit::InstanceVarName(name.clone(), span.clone())),
         _ => None,
     }
     }
@@ -715,6 +753,13 @@ fn emit_stmt(s: &Stmt) -> String {
         } => {
             if matches!(scope, Scope::Const) {
                 format!("Object.const_set(:{}, {})", name, emit_expr(value))
+            } else if matches!(scope, Scope::Instance) {
+                // A `Scope::Instance` target (`@v = …`, `Feature::InstanceVars`,
+                // OOP slice 3): the name already INCLUDES the `@`, emitted VERBATIM
+                // (the scan validated it as `@<identifier>`, so no injection).
+                // Inside a `define_method`-installed method `self` is the receiver,
+                // so this writes the instance's own variable.
+                format!("{} = {}", name, emit_expr(value))
             } else {
                 format!("{} = {}", sanitize_ident(name), emit_expr(value))
             }
@@ -1075,8 +1120,16 @@ fn emit_var_ref(name: &str, scope: Scope) -> String {
         // `first_scan_issue` has already validated the name as a constant path at
         // this position, so it carries no injectable metacharacter.
         Scope::Const => name.to_string(),
-        // Remaining scopes (`Instance`, `ClassVar`) belong to later OOP slices'
-        // features, not yet accepted → their modules are rejected before emit.
+        // A `Scope::Instance` reference (`Feature::InstanceVars`, OOP slice 3) is
+        // a Ruby instance variable — the name already INCLUDES the `@` (`@v`),
+        // emitted VERBATIM (NOT through `sanitize_ident`, which would mangle the
+        // `@`).  `first_scan_issue` validated it as `@<identifier>` at this
+        // position, so it carries no injectable metacharacter.  Inside a
+        // `define_method`-installed method (slice 2) `self` IS the receiver, so
+        // `@v` reads the instance's own variable — no runtime plumbing.
+        Scope::Instance => name.to_string(),
+        // `Scope::ClassVar` (`@@x`) is a later OOP slice's feature, not yet
+        // accepted → such a module is rejected before emit.
         other => unreachable!("Ruby backend reached unsupported var scope: {other:?}"),
     }
 }
@@ -1171,6 +1224,9 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
             parts.extend_from_slice(&a[2..]);
             format!("({}).public_send({})", a[0], parts.join(", "))
         }
+        // OOP classes slice 3: a bare `self` → the native `self` keyword.  Inside
+        // a `define_method`-installed method (slice 2) `self` is the receiver.
+        "__self__" => "self".to_string(),
         // Unreachable: first_scan_issue rejected anything else.
         other => unreachable!("v0 Ruby backend reached unsupported builtin: {other}"),
     }

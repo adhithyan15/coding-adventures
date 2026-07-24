@@ -79,11 +79,15 @@ top-level function plus `__def_method__` / `__method__` builtins, rendered as
 The reserved `sir_um_` method-name prefix makes dispatch **closed** — no
 reflection/eval built-in is named `sir_um_*`, so a crafted method name can never
 reach `instance_eval`/`send` (anti-RCE); a dispatch to an un-registered
-(built-in) method is rejected cleanly (Collections batch).
+(built-in) method is rejected cleanly (Collections batch). Instance **variables**
+(slice 3): `@v = x` / `@v` (`Scope::Instance`) render as native `@v` and `__self__`
+as native `self`; `define_method` binds `self` to the receiver, so `@v` in a
+method addresses that instance (each `@`-name validated as `@<identifier>`, no
+injection).
 Rejects `TailCalls`, `Intrinsics`, and every not-yet-wired feature (array
 indexing / slicing via `IndexGet` — `NDArrays`; array-pattern destructuring;
 built-in collection methods; and the rest of OOP — **inheritance** / superclass,
-instance & class variables, class methods, modules — plus a non-empty class body
+class variables (`@@x`), class methods, modules — plus a non-empty class body
 or a namespaced class/constant definition) until its slice lands — each a clean,
 source-positioned `UnsupportedFeature`.
 

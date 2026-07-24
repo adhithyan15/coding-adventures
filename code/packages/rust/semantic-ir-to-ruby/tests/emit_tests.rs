@@ -1825,8 +1825,9 @@ fn an_injectable_def_method_class_name_is_rejected() {
 #[test]
 fn still_rejected_super_self_classmethod_builtins() {
     // The remaining OOP builtins are later slices — a hand-built module carrying
-    // any is rejected cleanly (never `unreachable!`).
-    for bad in ["__super__", "__self__", "__class_method__", "__def_class_method__"] {
+    // any is rejected cleanly (never `unreachable!`).  (`__self__` landed in
+    // slice 3, so it is no longer in this list.)
+    for bad in ["__super__", "__class_method__", "__def_class_method__"] {
         let call = Expr::BuiltinCall {
             name: bad.into(),
             args: vec![strlit("Foo"), strlit("m")],
@@ -1836,4 +1837,133 @@ fn still_rejected_super_self_classmethod_builtins() {
         let m = method_module(vec![puts(call)]);
         assert!(compile(&m).is_err(), "`{bad}` must still be rejected");
     }
+}
+
+// ── OOP classes slice 3 — instance variables (@ivars) + self ────────────────
+//
+// `@v = x` / `@v` lower to a `Scope::Instance` `Assign` / `VarRef` whose `name`
+// already includes the `@`. They render as native `@v = x` / `@v` (the name
+// emitted verbatim, validated as `@<identifier>` by the scan — no injection).
+// Instance-method bodies are installed with `define_method` (slice 2), which
+// binds `self` to the receiver, so `@v` inside a method reads/writes the
+// instance's own variable with no runtime plumbing. A bare `self` (`__self__`)
+// renders the native `self`.
+
+/// A `main` module carrying `stmts`, declaring InstanceVars (+ Strings) — for
+/// hand-built ivar shapes (the frontend only produces `@v` inside a method body).
+fn ivar_module(stmts: Vec<Stmt>) -> Module {
+    Module {
+        name: "ivprog".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::InstanceVars,
+            Feature::MutableBindings,
+            Feature::Strings,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts, value: Expr::NilLit { span: s2() }, span: s2() },
+            effects: EffectSet::PURE.with(Effect::MayPrint),
+            metadata: Metadata::new().with_source_language("test"),
+            span: s2(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new().with_sir_version(CURRENT_SIR_VERSION),
+        span: s2(),
+    }
+}
+fn ivar_ref(name: &str) -> Expr {
+    Expr::VarRef { name: name.into(), scope: Scope::Instance, span: s2() }
+}
+fn ivar_assign(name: &str, value: Expr) -> Stmt {
+    Stmt::Assign { name: name.into(), scope: Scope::Instance, value, span: s2() }
+}
+
+// ---- positive, through the real frontend + interpreter --------------------
+
+#[test]
+fn e2e_instance_variable_set_and_get() {
+    // `class Box; def set(v); @v=v; end; def get; @v; end; end` — a set writes
+    // the instance's `@v`, a later get reads it back through `self`.
+    let rb = ruby_to_ruby(
+        "class Box\n  def set(v)\n    @v = v\n  end\n  def get\n    @v\n  end\nend\n\
+         b = Box.new\nb.set(7)\nputs b.get\n",
+    );
+    assert!(rb.contains("@v = "), "native ivar write:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "7"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_instance_variable_mutation_across_calls() {
+    // A counter mutating `@n` across method calls — proves the ivar persists on
+    // the instance between dispatches, and `@n = @n + 1` reads then writes it.
+    let rb = ruby_to_ruby(
+        "class Counter\n  def start\n    @n = 0\n  end\n  def inc\n    @n = @n + 1\n  end\n  \
+         def value\n    @n\n  end\nend\n\
+         c = Counter.new\nc.start\nc.inc\nc.inc\nputs c.value\n",
+    );
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "2"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+// ---- hand-built: emit shape + self ----------------------------------------
+
+#[test]
+fn ivar_read_and_write_emit_verbatim() {
+    // `@v = 1` then a read of `@v` render as native `@v` — the leading `@` is
+    // preserved (NOT routed through `sanitize_ident`, which would mangle it).
+    let m = ivar_module(vec![ivar_assign("@v", ilit(1)), puts(ivar_ref("@v"))]);
+    let rb = compile(&m).expect("ivar module compiles").source;
+    assert!(rb.contains("@v = 1"), "ivar write verbatim:\n{rb}");
+    assert!(rb.contains("sir_puts(@v)"), "ivar read verbatim:\n{rb}");
+}
+
+#[test]
+fn self_builtin_emits_native_self() {
+    // `__self__` (a bare `self`) renders the native `self` keyword.
+    let self_call = Expr::BuiltinCall {
+        name: "__self__".into(),
+        args: vec![],
+        effects: EffectSet::PURE,
+        span: s2(),
+    };
+    let m = ivar_module(vec![puts(self_call)]);
+    let rb = compile(&m).expect("self module compiles").source;
+    assert!(rb.contains("sir_puts(self)"), "native self:\n{rb}");
+}
+
+// ---- hand-built: injection (a crafted ivar name cannot inject) ------------
+
+#[test]
+fn an_injectable_ivar_write_name_is_rejected() {
+    // A `Scope::Instance` assignment target is emitted verbatim, so a crafted
+    // name must be rejected before it can inject source.
+    let m = ivar_module(vec![ivar_assign("@v = 1; system('boom')", ilit(1))]);
+    let err = compile(&m).expect_err("an injectable ivar write must be rejected");
+    assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
+}
+
+#[test]
+fn an_injectable_ivar_read_name_is_rejected() {
+    // Likewise an ivar REFERENCE name.
+    let m = ivar_module(vec![puts(ivar_ref("@v; system('boom')"))]);
+    assert!(compile(&m).is_err(), "an injectable ivar read must be rejected");
+}
+
+#[test]
+fn a_non_at_ivar_name_is_rejected() {
+    // A `Scope::Instance` name that does not start with `@` (or is just `@`) is
+    // malformed — rejected, never emitted as a bare identifier.
+    assert!(compile(&ivar_module(vec![ivar_assign("v", ilit(1))])).is_err(), "no @");
+    assert!(compile(&ivar_module(vec![ivar_assign("@", ilit(1))])).is_err(), "bare @");
+    assert!(compile(&ivar_module(vec![ivar_assign("@1x", ilit(1))])).is_err(), "@ + digit");
 }

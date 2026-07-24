@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.13.0 — classes slice 3: instance variables (@ivars) + self
+
+Accepts `Feature::InstanceVars` — an instance variable read and write, plus the
+`__self__` builtin. The third OOP slice, and a small one: the slice-2 method
+machinery already does the heavy lifting.
+
+- `@v = x` → `Stmt::Assign { scope: Instance }` → native `@v = x`.
+- `@v` → `Expr::VarRef { scope: Instance }` → native `@v`.
+- `__self__` (a bare `self`) → the native `self` keyword.
+
+The frontend puts the leading `@` in the node's `name`, and the emitter renders
+it **verbatim** (not through `sanitize_ident`, which would mangle the `@`). No
+runtime support is needed: an instance-method body is installed with
+`define_method` (slice 2), which binds `self` to the receiver, so `@v` inside a
+method reads/writes **that instance's** own variable, and it persists across
+dispatches (a counter mutating `@n` across calls works).
+
+**Injection safety.** Both verbatim-emitted instance-variable positions — a
+`Scope::Instance` `Assign` target and `VarRef` — are validated as
+`@<identifier>` (a new `is_valid_ivar_name`) in the SAME pre-emit traversal as
+the builtin/constant scan (co-total with the emitter), so a crafted name (`@v;
+system(...)`, a non-`@` name, `@` + digit) cannot inject source and is rejected
+cleanly.
+
+**Still rejects** class variables (`@@x` — `Feature::ClassVars`), inheritance (a
+superclass / `__super__`), class methods (`__class_method__` /
+`__def_class_method__`), and modules — each a later slice.
+
 ## 0.12.0 — classes slice 2: instance methods
 
 Instance-method **definition** and **dispatch** — the second OOP slice. No new
