@@ -433,6 +433,9 @@ fn clone_subckt_element(
             mapped.gate_saturation_current = element.gate_saturation_current;
             mapped.drain_resistance = element.drain_resistance;
             mapped.source_resistance = element.source_resistance;
+            mapped.threshold_voltage_temperature_coefficient =
+                element.threshold_voltage_temperature_coefficient;
+            mapped.nominal_temperature_kelvin = element.nominal_temperature_kelvin;
             Element::Jfet(mapped)
         }
         Element::Bjt(element) => {
@@ -2767,6 +2770,38 @@ pub fn mosfet_at_temperature(
     Ok(adjusted)
 }
 
+pub fn jfet_at_temperature(
+    jfet: &Jfet,
+    temperature_kelvin: f64,
+    nominal_temperature_kelvin: f64,
+) -> Result<Jfet, SpiceError> {
+    if !temperature_kelvin.is_finite() || temperature_kelvin <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "temperature must be finite and positive".to_string(),
+        });
+    }
+    let nominal_temperature = jfet
+        .nominal_temperature_kelvin
+        .unwrap_or(nominal_temperature_kelvin);
+    if !nominal_temperature.is_finite() || nominal_temperature <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "nominal temperature must be finite and positive".to_string(),
+        });
+    }
+    if !jfet.threshold_voltage_temperature_coefficient.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "threshold-voltage temperature coefficient must be finite".to_string(),
+        });
+    }
+    let mut adjusted = jfet.clone();
+    adjusted.threshold_voltage -=
+        jfet.threshold_voltage_temperature_coefficient * (temperature_kelvin - nominal_temperature);
+    Ok(adjusted)
+}
+
 pub fn circuit_at_temperature(
     circuit: &Circuit,
     temperature_kelvin: f64,
@@ -2790,6 +2825,11 @@ pub fn circuit_at_temperature(
                 temperature_kelvin,
                 nominal_temperature_kelvin,
                 bjt.energy_gap_electron_volts,
+            )?),
+            Element::Jfet(jfet) => Element::Jfet(jfet_at_temperature(
+                jfet,
+                temperature_kelvin,
+                nominal_temperature_kelvin,
             )?),
             Element::Mosfet(mosfet) => Element::Mosfet(mosfet_at_temperature(
                 mosfet,
@@ -2827,6 +2867,8 @@ pub struct Jfet {
     pub gate_saturation_current: f64,
     pub drain_resistance: f64,
     pub source_resistance: f64,
+    pub threshold_voltage_temperature_coefficient: f64,
+    pub nominal_temperature_kelvin: Option<f64>,
 }
 
 impl Jfet {
@@ -2902,6 +2944,8 @@ impl Jfet {
             gate_saturation_current: 1.0e-14,
             drain_resistance: 0.0,
             source_resistance: 0.0,
+            threshold_voltage_temperature_coefficient: 0.0,
+            nominal_temperature_kelvin: None,
         }
     }
 }
@@ -3825,8 +3869,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Diode, 15, 21, 5, 3),
     (ModelCardKind::Npn, 41, 58, 13, 4),
     (ModelCardKind::Pnp, 41, 58, 13, 4),
-    (ModelCardKind::Njf, 12, 19, 6, 3),
-    (ModelCardKind::Pjf, 12, 19, 6, 3),
+    (ModelCardKind::Njf, 14, 22, 7, 3),
+    (ModelCardKind::Pjf, 14, 22, 7, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
     (ModelCardKind::Pmos, 18, 25, 6, 3),
 ];
@@ -3933,6 +3977,9 @@ const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
     ("RD", "RD"),
     ("RS", "RS"),
+    ("TNOM", "TNOM"),
+    ("T_NOM", "TNOM"),
+    ("TCV", "TCV"),
 ];
 const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("LEVEL", "LEVEL"),
@@ -4666,6 +4713,11 @@ pub fn jfet_from_model_card(
     jfet.gate_saturation_current = model_card_value(model, "IS", 1.0e-14);
     jfet.drain_resistance = model_card_value(model, "RD", 0.0);
     jfet.source_resistance = model_card_value(model, "RS", 0.0);
+    jfet.threshold_voltage_temperature_coefficient = model_card_value(model, "TCV", 0.0);
+    jfet.nominal_temperature_kelvin = model
+        .parameters
+        .get("TNOM")
+        .map(|temperature| temperature + 273.15);
     Ok(jfet)
 }
 
@@ -5005,7 +5057,7 @@ fn device_model_temperature_behavior(name: &str) -> Result<String, SpiceError> {
             Ok("BJT saturation current and thermal voltage scale with temperature".to_string())
         }
         "jfet-source-bias" => Ok(
-            "JFET temperature scaling is intentionally invariant until a policy lands".to_string(),
+            "JFET temperature scaling defaults to invariant; TCV/TNOM enable threshold-voltage scaling".to_string(),
         ),
         "mos-level1-common-source" => {
             Ok("Level-1 MOS threshold and transconductance scale with temperature".to_string())
@@ -25139,6 +25191,21 @@ fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
             reason: "source resistance must be finite and non-negative".to_string(),
+        });
+    }
+    if !jfet.threshold_voltage_temperature_coefficient.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "threshold-voltage temperature coefficient must be finite".to_string(),
+        });
+    }
+    if jfet
+        .nominal_temperature_kelvin
+        .is_some_and(|temperature| !temperature.is_finite() || temperature <= 0.0)
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "nominal temperature must be finite and positive".to_string(),
         });
     }
     Ok(())

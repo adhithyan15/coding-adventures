@@ -1,5 +1,8 @@
 # Changelog
 
+- Add JFET model-card `TNOM` / `T_NOM` and `TCV` support, converting nominal
+  Celsius values to Kelvin and applying Berkeley threshold-voltage temperature
+  scaling while preserving invariant behavior when `TCV` is omitted.
 - Add JFET model-card `RS` source-resistance support with an intrinsic source
   node across DC, transient, AC, transfer-function, and noise analysis, plus
   hierarchy preservation, validation, and a distinct thermal-noise source.
