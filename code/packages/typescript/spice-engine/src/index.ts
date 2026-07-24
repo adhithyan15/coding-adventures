@@ -1701,6 +1701,7 @@ export interface Jfet {
   readonly forwardBiasDepletionCoefficient: number;
   readonly gateSaturationCurrent: number;
   readonly drainResistance: number;
+  readonly sourceResistance: number;
 }
 
 export type BjtPolarity = "NPN" | "PNP";
@@ -2030,8 +2031,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   D: [15, 21, 5, 3],
   NPN: [41, 58, 13, 4],
   PNP: [41, 58, 13, 4],
-  NJF: [11, 18, 6, 3],
-  PJF: [11, 18, 6, 3],
+  NJF: [12, 19, 6, 3],
+  PJF: [12, 19, 6, 3],
   NMOS: [18, 25, 6, 3],
   PMOS: [18, 25, 6, 3],
 };
@@ -3617,7 +3618,7 @@ function cloneSubcktElement(
     case "diode":
       return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime, element.junctionPotential, element.gradingCoefficient, element.forwardBiasDepletionCoefficient, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.seriesResistance, element.flickerNoiseCoefficient, element.flickerNoiseExponent);
     case "jfet":
-      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.junctionPotential, element.forwardBiasDepletionCoefficient, element.gateSaturationCurrent, element.drainResistance);
+      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.junctionPotential, element.forwardBiasDepletionCoefficient, element.gateSaturationCurrent, element.drainResistance, element.sourceResistance);
     case "bjt":
       return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta, element.reverseBetaRolloffCurrent, element.nominalTemperatureKelvin, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.forwardExcessPhaseDegrees, element.forwardTransitTimeBiasCoefficient, element.forwardTransitTimeCurrent, element.forwardTransitTimeVoltage, element.emitterResistance, element.collectorResistance, element.baseResistance, element.minimumBaseResistance, element.baseResistanceHalfCurrent, element.baseCollectorCapacitanceFraction);
     case "mosfet":
@@ -7768,6 +7769,7 @@ export function jfet(
   forwardBiasDepletionCoefficient = 0.5,
   gateSaturationCurrent = 1.0e-14,
   drainResistance = 0.0,
+  sourceResistance = 0.0,
 ): Jfet {
   return {
     kind: "jfet",
@@ -7787,6 +7789,7 @@ export function jfet(
     forwardBiasDepletionCoefficient,
     gateSaturationCurrent,
     drainResistance,
+    sourceResistance,
   };
 }
 
@@ -8050,6 +8053,7 @@ const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   FC: "FC",
   IS: "IS",
   RD: "RD",
+  RS: "RS",
 };
 
 const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -8599,6 +8603,7 @@ export function jfetFromModelCard(
     p.FC ?? 0.5,
     p.IS ?? 1.0e-14,
     p.RD ?? 0.0,
+    p.RS ?? 0.0,
   );
 }
 
@@ -18365,6 +18370,9 @@ function collectNodeIndices(circuit: Circuit): Map<string, number> {
         if (element.drainResistance > 0.0) {
           insertNode(names, jfetIntrinsicDrainNode(element));
         }
+        if (element.sourceResistance > 0.0) {
+          insertNode(names, jfetIntrinsicSourceNode(element));
+        }
         break;
       case "bjt":
         insertNode(names, element.collector);
@@ -18660,9 +18668,10 @@ function collectNoiseSources(
     } else if (element.kind === "jfet") {
       validateJfet(element);
       const intrinsicDrain = jfetIntrinsicDrainNode(element);
+      const intrinsicSource = jfetIntrinsicSourceNode(element);
       const drain = nodeIndex(nodeIndices, intrinsicDrain);
       const gate = nodeIndex(nodeIndices, element.gate);
-      const source = nodeIndex(nodeIndices, element.source);
+      const source = nodeIndex(nodeIndices, intrinsicSource);
       const drainVoltage = vectorVoltage(operatingPoint, drain);
       const gateVoltage = vectorVoltage(operatingPoint, gate);
       const sourceVoltage = vectorVoltage(operatingPoint, source);
@@ -18726,6 +18735,17 @@ function collectNoiseSources(
           negative: drain,
           sourcePsd:
             4.0 * BOLTZMANN * temperatureKelvin / element.drainResistance,
+          frequencyExponent: 0.0,
+        });
+      }
+      if (element.sourceResistance > 0.0) {
+        sources.push({
+          elementName: `${element.name}:RS`,
+          noiseType: "thermal",
+          positive: nodeIndex(nodeIndices, element.source),
+          negative: source,
+          sourcePsd:
+            4.0 * BOLTZMANN * temperatureKelvin / element.sourceResistance,
           frequencyExponent: 0.0,
         });
       }
@@ -19612,6 +19632,12 @@ function validateJfet(element: Jfet): void {
       "drain resistance must be finite and non-negative",
     );
   }
+  if (!Number.isFinite(element.sourceResistance) || element.sourceResistance < 0.0) {
+    throw invalidElement(
+      element.name,
+      "source resistance must be finite and non-negative",
+    );
+  }
 }
 
 const JFET_THERMAL_VOLTAGE = 0.02585;
@@ -19663,9 +19689,10 @@ function stampJfet(
 ): void {
   validateJfet(element);
   const intrinsicDrain = jfetIntrinsicDrainNode(element);
+  const intrinsicSource = jfetIntrinsicSourceNode(element);
   const drain = nodeIndex(nodeIndices, intrinsicDrain);
   const gate = nodeIndex(nodeIndices, element.gate);
-  const source = nodeIndex(nodeIndices, element.source);
+  const source = nodeIndex(nodeIndices, intrinsicSource);
   const drainVoltage = vectorVoltage(operatingPoint, drain);
   const gateVoltage = vectorVoltage(operatingPoint, gate);
   const sourceVoltage = vectorVoltage(operatingPoint, source);
@@ -19701,6 +19728,14 @@ function stampJfet(
       nodeIndex(nodeIndices, element.drain),
       drain,
       1.0 / element.drainResistance,
+    );
+  }
+  if (element.sourceResistance > 0.0) {
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.source),
+      source,
+      1.0 / element.sourceResistance,
     );
   }
 }
@@ -20353,7 +20388,7 @@ function jfetChargeStateSpecs(element: Jfet): JfetChargeStateSpec[] {
     specs.push({
       name: jfetGateSourceChargeStateName(element),
       positive: element.gate,
-      negative: element.source,
+      negative: jfetIntrinsicSourceNode(element),
       capacitance: element.gateSourceCapacitance,
     });
   }
@@ -20372,6 +20407,12 @@ function jfetIntrinsicDrainNode(element: Jfet): string {
   return element.drainResistance === 0.0
     ? element.drain
     : `__spice_${element.name}_drain`;
+}
+
+function jfetIntrinsicSourceNode(element: Jfet): string {
+  return element.sourceResistance === 0.0
+    ? element.source
+    : `__spice_${element.name}_source`;
 }
 
 function jfetChargeStateVoltage(
@@ -22099,9 +22140,10 @@ function stampJfetSmallSignal(
 ): void {
   validateJfet(element);
   const intrinsicDrain = jfetIntrinsicDrainNode(element);
+  const intrinsicSource = jfetIntrinsicSourceNode(element);
   const drain = nodeIndex(nodeIndices, intrinsicDrain);
   const gate = nodeIndex(nodeIndices, element.gate);
-  const source = nodeIndex(nodeIndices, element.source);
+  const source = nodeIndex(nodeIndices, intrinsicSource);
   const drainVoltage = vectorVoltage(operatingPoint, drain);
   const gateVoltage = vectorVoltage(operatingPoint, gate);
   const sourceVoltage = vectorVoltage(operatingPoint, source);
@@ -22124,6 +22166,14 @@ function stampJfetSmallSignal(
       nodeIndex(nodeIndices, element.drain),
       drain,
       1.0 / element.drainResistance,
+    );
+  }
+  if (element.sourceResistance > 0.0) {
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.source),
+      source,
+      1.0 / element.sourceResistance,
     );
   }
 }
@@ -22850,9 +22900,10 @@ function stampAcJfetSmallSignal(
 ): void {
   validateJfet(element);
   const intrinsicDrain = jfetIntrinsicDrainNode(element);
+  const intrinsicSource = jfetIntrinsicSourceNode(element);
   const drain = nodeIndex(nodeIndices, intrinsicDrain);
   const gate = nodeIndex(nodeIndices, element.gate);
-  const source = nodeIndex(nodeIndices, element.source);
+  const source = nodeIndex(nodeIndices, intrinsicSource);
   const drainVoltage = vectorVoltage(operatingPoint, drain);
   const gateVoltage = vectorVoltage(operatingPoint, gate);
   const sourceVoltage = vectorVoltage(operatingPoint, source);
@@ -22902,6 +22953,14 @@ function stampAcJfetSmallSignal(
       nodeIndex(nodeIndices, element.drain),
       drain,
       complex(1.0 / element.drainResistance, 0.0),
+    );
+  }
+  if (element.sourceResistance > 0.0) {
+    stampComplexConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.source),
+      source,
+      complex(1.0 / element.sourceResistance, 0.0),
     );
   }
 }

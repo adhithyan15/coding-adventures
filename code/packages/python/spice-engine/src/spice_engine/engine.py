@@ -604,7 +604,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.Af,
         )
     if isinstance(element, JFET):
-        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb, element.Fc, element.Is, element.Rd)
+        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb, element.Fc, element.Is, element.Rd, element.Rs)
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
@@ -7265,6 +7265,8 @@ def _element_nodes(el: Element) -> list[str]:
         nodes = [el.drain, el.gate, el.source]
         if el.Rd > 0.0:
             nodes.append(_jfet_intrinsic_drain_node(el))
+        if el.Rs > 0.0:
+            nodes.append(_jfet_intrinsic_source_node(el))
         return nodes
     if isinstance(el, Mosfet):
         return [el.drain, el.gate, el.source, el.body]
@@ -8912,7 +8914,14 @@ def _jfet_gate_drain_charge_state_name(el: JFET) -> str:
 def _jfet_charge_state_specs(el: JFET) -> list[tuple[str, str, str, float]]:
     specs: list[tuple[str, str, str, float]] = []
     if el.Cgs > 0.0:
-        specs.append((_jfet_gate_source_charge_state_name(el), el.gate, el.source, el.Cgs))
+        specs.append(
+            (
+                _jfet_gate_source_charge_state_name(el),
+                el.gate,
+                _jfet_intrinsic_source_node(el),
+                el.Cgs,
+            )
+        )
     if el.Cgd > 0.0:
         specs.append(
             (
@@ -8930,6 +8939,14 @@ def _jfet_intrinsic_drain_node(el: JFET) -> str:
         el.drain
         if not math.isfinite(el.Rd) or el.Rd <= 0.0
         else f"__spice_{el.name}_drain"
+    )
+
+
+def _jfet_intrinsic_source_node(el: JFET) -> str:
+    return (
+        el.source
+        if not math.isfinite(el.Rs) or el.Rs <= 0.0
+        else f"__spice_{el.name}_source"
     )
 
 
@@ -9106,6 +9123,8 @@ def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
         )
     if not math.isfinite(el.Rd) or el.Rd < 0.0:
         raise ValueError(f"JFET '{el.name}' drain resistance must be finite and non-negative")
+    if not math.isfinite(el.Rs) or el.Rs < 0.0:
+        raise ValueError(f"JFET '{el.name}' source resistance must be finite and non-negative")
     if el.polarity == "PJF":
         ids, gm, gds = _eval_njf(-vgs, -vds, -el.vto, el.beta, el.lambda_)
         return -ids, gm, gds
@@ -9178,35 +9197,38 @@ def _stamp_jfet(
     el: JFET,
 ) -> None:
     intrinsic_drain = _jfet_intrinsic_drain_node(el)
+    intrinsic_source = _jfet_intrinsic_source_node(el)
     Vd = 0.0 if _is_ground(intrinsic_drain) else x[node_to_idx[intrinsic_drain]]
     Vg = 0.0 if _is_ground(el.gate) else x[node_to_idx[el.gate]]
-    Vs = 0.0 if _is_ground(el.source) else x[node_to_idx[el.source]]
+    Vs = 0.0 if _is_ground(intrinsic_source) else x[node_to_idx[intrinsic_source]]
     vgs = Vg - Vs
     vds = Vd - Vs
     ids, gm, gds = _eval_jfet(el, vgs, vds)
 
-    _stamp_g(G, node_to_idx, intrinsic_drain, el.source, gds)
+    _stamp_g(G, node_to_idx, intrinsic_drain, intrinsic_source, gds)
     if not _is_ground(intrinsic_drain):
         d = node_to_idx[intrinsic_drain]
         if not _is_ground(el.gate):
             G[d][node_to_idx[el.gate]] += gm
-        if not _is_ground(el.source):
-            G[d][node_to_idx[el.source]] -= gm
-    if not _is_ground(el.source):
-        s = node_to_idx[el.source]
+        if not _is_ground(intrinsic_source):
+            G[d][node_to_idx[intrinsic_source]] -= gm
+    if not _is_ground(intrinsic_source):
+        s = node_to_idx[intrinsic_source]
         if not _is_ground(el.gate):
             G[s][node_to_idx[el.gate]] -= gm
-        if not _is_ground(el.source):
-            G[s][node_to_idx[el.source]] += gm
+        if not _is_ground(intrinsic_source):
+            G[s][node_to_idx[intrinsic_source]] += gm
     Ieq = ids - gm * vgs - gds * vds
     if not _is_ground(intrinsic_drain):
         b[node_to_idx[intrinsic_drain]] -= Ieq
-    if not _is_ground(el.source):
-        b[node_to_idx[el.source]] += Ieq
-    _stamp_jfet_gate_junction(G, b, node_to_idx, el, el.source, Vg - Vs)
+    if not _is_ground(intrinsic_source):
+        b[node_to_idx[intrinsic_source]] += Ieq
+    _stamp_jfet_gate_junction(G, b, node_to_idx, el, intrinsic_source, Vg - Vs)
     _stamp_jfet_gate_junction(G, b, node_to_idx, el, intrinsic_drain, Vg - Vd)
     if el.Rd > 0.0:
         _stamp_g(G, node_to_idx, el.drain, intrinsic_drain, 1.0 / el.Rd)
+    if el.Rs > 0.0:
+        _stamp_g(G, node_to_idx, el.source, intrinsic_source, 1.0 / el.Rs)
 
 
 def _bjt_early_factor(el: BJT, junction_voltage: float, output_voltage: float) -> float:
@@ -12821,18 +12843,19 @@ def _stamp_ac(
 
     elif isinstance(el, JFET):
         intrinsic_drain = _jfet_intrinsic_drain_node(el)
+        intrinsic_source = _jfet_intrinsic_source_node(el)
         Vd = 0.0 if _is_ground(intrinsic_drain) else dc_x[node_to_idx[intrinsic_drain]]
         Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
-        Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+        Vs = 0.0 if _is_ground(intrinsic_source) else dc_x[node_to_idx[intrinsic_source]]
         _, gm_j, gds_j = _eval_jfet(el, Vg - Vs, Vd - Vs)
         _, ggs = _jfet_gate_junction_current_conductance(el, Vg - Vs)
         _, ggd = _jfet_gate_junction_current_conductance(el, Vg - Vd)
-        _stamp_g_c(G, node_to_idx, intrinsic_drain, el.source, gds_j + 0j)
-        _stamp_g_c(G, node_to_idx, el.gate, el.source, ggs + 0j)
+        _stamp_g_c(G, node_to_idx, intrinsic_drain, intrinsic_source, gds_j + 0j)
+        _stamp_g_c(G, node_to_idx, el.gate, intrinsic_source, ggs + 0j)
         _stamp_g_c(G, node_to_idx, el.gate, intrinsic_drain, ggd + 0j)
         if el.Cgs > 0.0:
             cgs = _jfet_charge_dynamic_capacitance(el, el.Cgs, Vg - Vs)
-            _stamp_g_c(G, node_to_idx, el.gate, el.source, 1j * omega * cgs)
+            _stamp_g_c(G, node_to_idx, el.gate, intrinsic_source, 1j * omega * cgs)
         if el.Cgd > 0.0:
             cgd = _jfet_charge_dynamic_capacitance(el, el.Cgd, Vg - Vd)
             _stamp_g_c(G, node_to_idx, el.gate, intrinsic_drain, 1j * omega * cgd)
@@ -12840,16 +12863,18 @@ def _stamp_ac(
             d = node_to_idx[intrinsic_drain]
             if not _is_ground(el.gate):
                 G[d][node_to_idx[el.gate]] += gm_j + 0j
-            if not _is_ground(el.source):
-                G[d][node_to_idx[el.source]] -= gm_j + 0j
-        if not _is_ground(el.source):
-            s = node_to_idx[el.source]
+            if not _is_ground(intrinsic_source):
+                G[d][node_to_idx[intrinsic_source]] -= gm_j + 0j
+        if not _is_ground(intrinsic_source):
+            s = node_to_idx[intrinsic_source]
             if not _is_ground(el.gate):
                 G[s][node_to_idx[el.gate]] -= gm_j + 0j
-            if not _is_ground(el.source):
-                G[s][node_to_idx[el.source]] += gm_j + 0j
+            if not _is_ground(intrinsic_source):
+                G[s][node_to_idx[intrinsic_source]] += gm_j + 0j
         if el.Rd > 0.0:
             _stamp_g_c(G, node_to_idx, el.drain, intrinsic_drain, 1.0 / el.Rd)
+        if el.Rs > 0.0:
+            _stamp_g_c(G, node_to_idx, el.source, intrinsic_source, 1.0 / el.Rs)
 
     elif isinstance(el, Mosfet):
         # Small-signal model: gds (output conductance) + gm (transconductance).
@@ -13543,33 +13568,40 @@ def _build_ss_matrix(
 
         elif isinstance(el, JFET):
             intrinsic_drain = _jfet_intrinsic_drain_node(el)
+            intrinsic_source = _jfet_intrinsic_source_node(el)
             Vd = (
                 0.0
                 if _is_ground(intrinsic_drain)
                 else dc_x[node_to_idx[intrinsic_drain]]
             )
             Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
-            Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+            Vs = (
+                0.0
+                if _is_ground(intrinsic_source)
+                else dc_x[node_to_idx[intrinsic_source]]
+            )
             _, gm_j, gds_j = _eval_jfet(el, Vg - Vs, Vd - Vs)
             _, ggs = _jfet_gate_junction_current_conductance(el, Vg - Vs)
             _, ggd = _jfet_gate_junction_current_conductance(el, Vg - Vd)
-            _stamp_g(G, node_to_idx, intrinsic_drain, el.source, gds_j)
-            _stamp_g(G, node_to_idx, el.gate, el.source, ggs)
+            _stamp_g(G, node_to_idx, intrinsic_drain, intrinsic_source, gds_j)
+            _stamp_g(G, node_to_idx, el.gate, intrinsic_source, ggs)
             _stamp_g(G, node_to_idx, el.gate, intrinsic_drain, ggd)
             if not _is_ground(intrinsic_drain):
                 d = node_to_idx[intrinsic_drain]
                 if not _is_ground(el.gate):
                     G[d][node_to_idx[el.gate]] += gm_j
-                if not _is_ground(el.source):
-                    G[d][node_to_idx[el.source]] -= gm_j
-            if not _is_ground(el.source):
-                s = node_to_idx[el.source]
+                if not _is_ground(intrinsic_source):
+                    G[d][node_to_idx[intrinsic_source]] -= gm_j
+            if not _is_ground(intrinsic_source):
+                s = node_to_idx[intrinsic_source]
                 if not _is_ground(el.gate):
                     G[s][node_to_idx[el.gate]] -= gm_j
-                if not _is_ground(el.source):
-                    G[s][node_to_idx[el.source]] += gm_j
+                if not _is_ground(intrinsic_source):
+                    G[s][node_to_idx[intrinsic_source]] += gm_j
             if el.Rd > 0.0:
                 _stamp_g(G, node_to_idx, el.drain, intrinsic_drain, 1.0 / el.Rd)
+            if el.Rs > 0.0:
+                _stamp_g(G, node_to_idx, el.source, intrinsic_source, 1.0 / el.Rs)
 
         elif isinstance(el, Mosfet):
             # Small-signal model: gds (drain–source) + gm VCCS (gate–source
@@ -15432,13 +15464,18 @@ def _collect_noise_sources(
 
         elif isinstance(el, JFET):
             intrinsic_drain = _jfet_intrinsic_drain_node(el)
+            intrinsic_source = _jfet_intrinsic_source_node(el)
             Vd = (
                 0.0
                 if _is_ground(intrinsic_drain)
                 else dc_x[node_to_idx[intrinsic_drain]]
             )
             Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
-            Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+            Vs = (
+                0.0
+                if _is_ground(intrinsic_source)
+                else dc_x[node_to_idx[intrinsic_source]]
+            )
             drain_current, gm, _ = _eval_jfet(el, Vg - Vs, Vd - Vs)
             gm = max(0.0, float(gm))
             if gm > 0.0:
@@ -15448,10 +15485,18 @@ def _collect_noise_sources(
                     if _is_ground(intrinsic_drain)
                     else node_to_idx[intrinsic_drain]
                 )
-                n_s = None if _is_ground(el.source) else node_to_idx[el.source]
+                n_s = (
+                    None
+                    if _is_ground(intrinsic_source)
+                    else node_to_idx[intrinsic_source]
+                )
                 sources.append((el.name, "thermal", n_d, n_s, psd, 0.0))
             n_g = None if _is_ground(el.gate) else node_to_idx[el.gate]
-            n_s = None if _is_ground(el.source) else node_to_idx[el.source]
+            n_s = (
+                None
+                if _is_ground(intrinsic_source)
+                else node_to_idx[intrinsic_source]
+            )
             n_d = (
                 None
                 if _is_ground(intrinsic_drain)
@@ -15475,7 +15520,11 @@ def _collect_noise_sources(
                     if _is_ground(intrinsic_drain)
                     else node_to_idx[intrinsic_drain]
                 )
-                n_s = None if _is_ground(el.source) else node_to_idx[el.source]
+                n_s = (
+                    None
+                    if _is_ground(intrinsic_source)
+                    else node_to_idx[intrinsic_source]
+                )
                 sources.append(
                     (el.name, "flicker", n_d, n_s, el.Kf * abs(drain_current) ** el.Af, 1.0)
                 )
@@ -15487,6 +15536,17 @@ def _collect_noise_sources(
                         node_to_idx.get(el.drain),
                         node_to_idx.get(intrinsic_drain),
                         kT4 / el.Rd,
+                        0.0,
+                    )
+                )
+            if el.Rs > 0.0:
+                sources.append(
+                    (
+                        f"{el.name}:RS",
+                        "thermal",
+                        node_to_idx.get(el.source),
+                        node_to_idx.get(intrinsic_source),
+                        kT4 / el.Rs,
                         0.0,
                     )
                 )
