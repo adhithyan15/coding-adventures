@@ -991,6 +991,7 @@ fn main() -> ExitCode {
         .iter()
         .map(|rl| match rl.mode.as_str() {
             "interpolated" => interpolated_lookup_json(rl, &lowered.kb),
+            "nearest" => nearest_lookup_json(rl, &lowered.kb),
             _ => range_lookup_json(rl, &lowered.kb),
         })
         .collect();
@@ -1269,6 +1270,131 @@ fn range_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
                 abstention_json(&reason)
             )
         }
+    }
+}
+
+/// Resolve a NEAREST lookup (ADJ-TABLES RS-5f) against the grounded table and render
+/// it as JSON. Where a `range` lookup returns the greatest key `<= q` (a step / floor)
+/// and `interpolated` blends between the two bracketing rows, `nearest` snaps the query
+/// to the single row whose key is CLOSEST to `q` — nearest-neighbour lookup. It returns
+/// that row's value cell VERBATIM (like `range`, and unlike `interpolated`, so the value
+/// column may hold a category label, not just a number), together with the matched key
+/// and that one row's citation.
+///
+/// This is the tactic for tables where neither flooring nor linear blending is right:
+/// snapping a measurement to the closest tabulated standard, nearest-rank selection, or
+/// a discrete lookup grid where the between-points region has no defined value. The key
+/// column must be numeric (enforced at lowering, shared with `range`/`interpolated`); the
+/// value column is returned as-is.
+///
+/// Distance is exact: `|k - q|` is computed as a `BigRational` (`sub` then `abs`), never
+/// via `f64`, and candidates are compared on that exact distance. **Ties break to the
+/// SMALLER key**, deterministically — if `q` sits exactly halfway between two keys, the
+/// lower key wins, so the answer is reproducible and never depends on row order.
+///
+/// Two honest edges:
+/// - **empty table**: with no rows there is no nearest key, so it abstains
+///   (`no_grounded_support`) rather than inventing one.
+/// - **truncated search**: if enumeration hit a resolution limit we may not have seen the
+///   truly nearest row, so snapping to the closest row we *did* see could be wrong; it
+///   abstains with `search_limit_exceeded` instead of a possibly-non-nearest key.
+///
+/// 0 answer-time model calls — pure exact comparison over the CAS-grounded rows.
+fn nearest_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
+    use logic_engine::compute::ExactRational;
+
+    // Enumerate every row (same all-fresh-vars unification as the other tactics).
+    let cols: Vec<LogicVar> = (0..rl.arity).map(|i| var(&format!("c{i}"))).collect();
+    let goal = compound(
+        rl.table.clone(),
+        cols.iter().map(|v| Term::Var(v.clone())).collect(),
+    );
+    let dag = enumerate_all(&goal, kb);
+
+    let query_str = format!(
+        "lookup {} {} = {} mode {} give {}",
+        rl.table, rl.key_col, rl.key_value, rl.mode, rl.value_col
+    );
+
+    let abstain = |reason: AbstentionReason| -> String {
+        format!(
+            "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true,\"abstention\":{}}}",
+            query_echo(&query_str),
+            esc(&rl.mode),
+            abstention_json(&reason)
+        )
+    };
+
+    // The query value, as an exact rational.
+    let q = match numeric_exact_magnitude(&rl.key_value) {
+        Some(x) => x,
+        None => {
+            // The lowerer guarantees a numeric literal; abstain rather than panic.
+            return abstain(AbstentionReason::NonNumericKey {
+                table: rl.table.clone(),
+                column: rl.key_col.clone(),
+                key: format!("{}", rl.key_value),
+            });
+        }
+    };
+
+    // A truncated scan may have hidden the truly nearest row, so no row we saw can be
+    // claimed nearest — abstain rather than snap to a possibly-non-nearest key.
+    if dag.truncated {
+        return abstain(AbstentionReason::SearchLimitExceeded {
+            goal: query_str.clone(),
+        });
+    }
+
+    // Among ALL rows, keep the one minimizing the exact distance `|k - q|`. Ties break
+    // to the SMALLER key so the choice is deterministic and order-independent.
+    let mut best: Option<(&Proof, Term, Term, ExactRational)> = None;
+    for proof in &dag.proofs {
+        let key_term = proof.bindings.walk_var(&cols[rl.key_index]);
+        let Some(k) = numeric_exact_magnitude(&key_term) else {
+            continue; // a non-numeric key cell is impossible post-lowering; skip defensively.
+        };
+        let value_term = proof.bindings.walk_var(&cols[rl.value_index]);
+        let take = match &best {
+            None => true,
+            Some((_, _, _, best_k)) => {
+                // `d_*` are exact `BigRational` distances; comparison is exact.
+                let d_new = k.as_ratio().sub(q.as_ratio()).abs();
+                let d_best = best_k.as_ratio().sub(q.as_ratio()).abs();
+                d_new < d_best || (d_new == d_best && k.as_ratio() < best_k.as_ratio())
+            }
+        };
+        if take {
+            best = Some((proof, key_term, value_term, k));
+        }
+    }
+
+    match best {
+        Some((proof, key_term, value_term, _)) => {
+            let cites: Vec<String> = proof
+                .via_facts
+                .iter()
+                .filter_map(|fid| kb.fact(*fid))
+                .map(|f| format!("{{{}}}", prov(&f.provenance)))
+                .collect();
+            // The answer names the value column (the binding) AND the matched key, so
+            // the audit shows WHICH row the query snapped to.
+            format!(
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[{{\"bindings\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"citations\":[{}],\"steps\":{}}}],\"abstained\":false}}",
+                query_echo(&query_str),
+                esc(&rl.mode),
+                esc(&rl.value_col),
+                esc(&format!("{value_term}")),
+                esc(&rl.key_col),
+                esc(&format!("{key_term}")),
+                cites.join(","),
+                trace_steps_json(proof, kb)
+            )
+        }
+        // No rows at all — there is no nearest key to snap to.
+        None => abstain(AbstentionReason::NoGroundedSupport {
+            goal: query_str.clone(),
+        }),
     }
 }
 

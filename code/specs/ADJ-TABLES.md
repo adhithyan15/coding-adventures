@@ -141,7 +141,8 @@ table, the key column bound to a concrete value, the mode, and the value column 
   differently. The key column must be numeric (checked at lower time: `LookupNonNumericKeyColumn`);
   an unknown table or column is `LookupUnknownTable` / `LookupUnknownColumn`; an unrecognized mode
   is `LookupUnknownMode`. `mode interpolated` is now built (RS-5d, §3.3) and additionally requires
-  a numeric **value** column (`LookupNonNumericValueColumn`).
+  a numeric **value** column (`LookupNonNumericValueColumn`); `mode nearest` is built (RS-5f, §3.4)
+  and, like `range`, needs only a numeric **key** column.
 - A hit returns the value column **with the selected breakpoint row's citation** (the same
   `via_facts → provenance` flow as exact lookup) and records the matched key in the audit, so the
   answer names *which* bracket it fell in. A query **below the smallest key** has no key `≤` it
@@ -173,6 +174,32 @@ answer is traceable to the two measured points it sits between. Three honest edg
 
 Interpolation is only defined for numeric key **and** value columns; a non-numeric value column is
 a compile error (`LookupNonNumericValueColumn`) — you cannot linearly blend a category label.
+
+### 3.4 Nearest / nearest-neighbour lookup (RS-5f, built)
+
+For discrete grids where neither flooring (`range`) nor linear blending (`interpolated`) is
+right — snapping a measurement to the closest tabulated standard, nearest-rank selection, or a
+lookup grid whose between-points region has no defined value — `mode nearest` returns the single
+row whose key is **closest** to the query:
+
+```
+? lookup trial_lenses power = 0.6 mode nearest give stocked      % 0.5 (the nearest stocked lens)
+```
+
+- Distance is exact: `|k − q|` is a `BigRational` (`sub` then `abs`), and candidate rows are
+  compared on that exact distance — never an `f64` hop.
+- **Ties break to the smaller key**, deterministically: if `q` sits exactly halfway between two
+  keys, the lower key wins, so the answer is reproducible and independent of row order.
+- Like `range` (and unlike `interpolated`), `nearest` returns the value cell **verbatim**, so the
+  value column may hold a category label; only the **key** column must be numeric.
+- Unlike `interpolated`, `nearest` does **not** abstain out of domain — a query beyond the last key
+  snaps to the nearest endpoint (the nearest key always exists for a non-empty table). It abstains
+  only when there is genuinely no nearest key: an **empty table** (`no_grounded_support`) or a
+  **truncated search** (`search_limit_exceeded`, since an unseen row might have been closer).
+
+`nearest` completes the lookup family: `range` (step / floor), `interpolated` (piecewise-linear
+between breakpoints), `nearest` (snap to closest). All three share the same numeric-key check, the
+same exact-`BigRational` arithmetic, and the same per-row citation path.
 
 ---
 
@@ -235,6 +262,7 @@ per conversion, one table cites the NIST page once and every conversion is audit
 | RS-5c | **range/bracket** lookup tactic (reuses the exact `BigRational` order) + e2e (inline BMI bands) | shipped |
 | RS-5e | **per-row provenance** — a row's `{ … }` block overrides the envelope; the answer cites the SELECTED row's span | **this PR** |
 | RS-5d | **interpolated** lookup tactic (exact linear blend on `BigRational`, both citations, out-of-domain abstention) + e2e (calibration curve) | shipped |
+| RS-5f | **nearest** / nearest-neighbour lookup tactic (exact `|k−q|` distance, tie → smaller key, verbatim value cell, snaps out-of-domain, abstains only on empty/truncated) + e2e (lens grid, shoe sizes) | shipped |
 
 **Explicitly deferred:** multi-key composite lookup beyond positional binding; typed/dimensioned
 columns (columns are untyped atoms/numbers today). These are additive and do not change the

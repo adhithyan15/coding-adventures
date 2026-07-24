@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.24.0] — 2026-07-24 — RS-5f: nearest / nearest-neighbour table lookup tactic
+
+Adds the fourth member of the `table` lookup family. A `? lookup … mode nearest give <val>`
+snaps the query key to the single row whose key is CLOSEST to it — where `range` floors and
+`interpolated` blends, `nearest` snaps:
+
+```
+? lookup trial_lenses power = 0.6 mode nearest give stocked      % 0.5 (the nearest stocked lens)
+```
+
+- **Exact distance.** `|k − q|` is computed as a `BigRational` (`sub` then `abs`) and candidates
+  are compared on that exact distance — never an `f64` hop.
+- **Deterministic ties.** An exact halfway query breaks to the SMALLER key, so the answer is
+  reproducible and independent of row order.
+- **Verbatim value.** Like `range` (unlike `interpolated`), the value cell is returned as-is, so
+  a category-label value column is allowed; only the key column must be numeric.
+- **Snaps out of domain.** A query beyond the last key snaps to the nearest endpoint — it never
+  abstains for a non-empty table. It abstains only when there is genuinely no nearest key: an
+  empty table (`no_grounded_support`) or a truncated search (`search_limit_exceeded`).
+
+New `nearest_lookup_json` in `main.rs`, dispatched from the lookup map on `mode == "nearest"`.
+Every answer carries the snapped row's citation (the same `via_facts → provenance` flow as the
+other tactics). 0 answer-time model calls — pure exact comparison over the CAS-grounded rows.
+New e2e suite `rs5f_nearest_lookup_e2e.rs` (snap, exact-tie → smaller key, non-numeric value cell,
+out-of-domain snap). Requires adj-lang 0.63.0.
+
 ## [0.23.0] — 2026-07-23 — RS-5d: interpolated table lookup tactic
 
 Closes the table-lookup trio (exact / range / **interpolated**). A `? lookup … mode interpolated
