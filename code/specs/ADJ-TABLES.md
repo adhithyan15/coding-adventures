@@ -139,20 +139,40 @@ table, the key column bound to a concrete value, the mode, and the value column 
   binding query.
 - The table declaration is **unchanged** — a `range` table is an ordinary table read
   differently. The key column must be numeric (checked at lower time: `LookupNonNumericKeyColumn`);
-  an unknown table or column is `LookupUnknownTable` / `LookupUnknownColumn`; `mode interpolated`
-  is reserved for RS-5d (`LookupModeUnsupported`).
+  an unknown table or column is `LookupUnknownTable` / `LookupUnknownColumn`; an unrecognized mode
+  is `LookupUnknownMode`. `mode interpolated` is now built (RS-5d, §3.3) and additionally requires
+  a numeric **value** column (`LookupNonNumericValueColumn`).
 - A hit returns the value column **with the selected breakpoint row's citation** (the same
   `via_facts → provenance` flow as exact lookup) and records the matched key in the audit, so the
   answer names *which* bracket it fell in. A query **below the smallest key** has no key `≤` it
   and honestly **abstains** — "below the table's domain", not a fabricated classification.
 
-### 3.3 Interpolated lookup (spec'd here, built in a follow-up)
+### 3.3 Interpolated lookup (RS-5d, built)
 
-For sampled continuous functions (nomograms, calibration curves), the lookup **linearly
-interpolates** between the two rows that bracket the query key, computing on the exact
-`BigRational` arithmetic already in the compute evaluator. No interpolation code exists in the
-engine today; this tactic is genuinely new. Interpolation is only defined for numeric key and
-value columns; a non-numeric column is a compile/lookup error.
+For sampled continuous functions (nomograms, calibration curves, growth charts), `mode
+interpolated` reads the table as a **piecewise-linear** function. It finds the two rows that
+bracket the query key — the greatest key `k0 ≤ q` and the smallest key `k1 ≥ q` — and returns the
+exact linear blend
+
+```
+v = v0 + (v1 − v0) · (q − k0) / (k1 − k0)
+```
+
+computed entirely on the exact `BigRational` arithmetic already in the compute evaluator (`add`/
+`sub`/`mul`/`div`), so a terminating blend renders every digit and a repeating one renders as the
+reduced fraction — never a rounded `f64`. **Both** bracketing rows' citations ride along, so the
+answer is traceable to the two measured points it sits between. Three honest edges:
+
+- **Exact hit** (`q` equals a breakpoint, `k0 = k1`): the `0/0` blend is short-circuited to that
+  row's value with its single citation — no fabricated division.
+- **Out of domain**: interpolation needs a breakpoint on *both* sides of `q`. Below the lowest key
+  it abstains `below_table_domain`; above the highest, `above_table_domain` — it never extrapolates
+  past what the source measured.
+- **Truncated search**: if enumeration hit a resolution limit the true bracket may be unseen, so it
+  abstains `search_limit_exceeded` rather than blend against a partial scan.
+
+Interpolation is only defined for numeric key **and** value columns; a non-numeric value column is
+a compile error (`LookupNonNumericValueColumn`) — you cannot linearly blend a category label.
 
 ---
 
@@ -214,7 +234,7 @@ per conversion, one table cites the NIST page once and every conversion is audit
 | RS-5b | grammar + AST + adapter + lower; rows→relations; **exact lookup** e2e; shipped NIST table | **this PR** |
 | RS-5c | **range/bracket** lookup tactic (reuses the exact `BigRational` order) + e2e (inline BMI bands) | shipped |
 | RS-5e | **per-row provenance** — a row's `{ … }` block overrides the envelope; the answer cites the SELECTED row's span | **this PR** |
-| RS-5d | **interpolated** lookup tactic (new, on `BigRational`) + e2e (nomogram) | follow-up |
+| RS-5d | **interpolated** lookup tactic (exact linear blend on `BigRational`, both citations, out-of-domain abstention) + e2e (calibration curve) | shipped |
 
 **Explicitly deferred:** multi-key composite lookup beyond positional binding; typed/dimensioned
 columns (columns are untyped atoms/numbers today). These are additive and do not change the
