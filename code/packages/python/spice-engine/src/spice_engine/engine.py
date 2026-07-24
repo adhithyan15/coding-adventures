@@ -600,6 +600,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.Xti,
             element.Eg,
             element.Rs,
+            element.Kf,
         )
     if isinstance(element, JFET):
         return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd)
@@ -8673,6 +8674,10 @@ def _stamp_diode(
 
 
 def _diode_effective_vt(el: Diode) -> float:
+    if not math.isfinite(el.Kf) or el.Kf < 0.0:
+        raise ValueError(
+            f"{el.name}: diode flicker-noise coefficient must be finite and non-negative"
+        )
     if not math.isfinite(el.Rs) or el.Rs < 0.0:
         raise ValueError(f"{el.name}: diode series resistance must be finite and non-negative")
     if not math.isfinite(el.N) or el.N <= 0.0:
@@ -14407,6 +14412,7 @@ def sens_dc(
                     el.Xti,
                     el.Eg,
                     el.Rs,
+                    el.Kf,
                 ),
             )
 
@@ -14708,6 +14714,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             el.Xti,
             el.Eg,
             el.Rs,
+            el.Kf,
         )
 
     if isinstance(el, BJT):
@@ -15186,6 +15193,10 @@ def _collect_noise_sources(
             )
             n_k = None if _is_ground(el.cathode) else node_to_idx[el.cathode]
             sources.append((el.name, "shot", n_a, n_k, psd, 0.0))
+            if el.Kf > 0.0:
+                sources.append(
+                    (el.name, "flicker", n_a, n_k, el.Kf * abs(I_D), 1.0)
+                )
             if el.Rs > 0.0:
                 sources.append(
                     (
