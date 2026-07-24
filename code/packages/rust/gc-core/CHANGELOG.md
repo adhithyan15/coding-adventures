@@ -1,5 +1,31 @@
 # Changelog — gc-core
 
+## 0.15.0 — 2026-07-24 — moving-collector arena provenance plumbing (AOT00-T3 PR-3c-1)
+
+The UAF-safety plumbing for reclamation: an evacuated object lives inside an [`Arena`] (a
+big single allocation), so it must never be handed to `dealloc` individually. This lands
+that safety contract on its own, ahead of the full `collect_compacting` (PR-3c-2) that
+populates it.
+
+- `FlatHeader` gains a 1-byte `arena_backed` provenance flag, stolen from tail padding —
+  the header stays exactly 32 bytes (`size_of == 32` assertion intact; `_pad` 9 → 8).
+  `false` for a normal `alloc`'d block; `plan_compaction` sets it `true` on each arena copy.
+- `FlatHeap` gains an `arenas: Vec<Arena>` it owns; a compacting collection will move its
+  to-space arena here so the moved objects outlive the collection.
+- **Every `dealloc` site is now provenance-aware:** `sweep` unlinks a dead arena-backed
+  block from the all-list but does **not** free it (its arena will); `Drop` frees the
+  malloc'd blocks and skips arena-backed ones, then `self.arenas` drops (after `Drop::drop`,
+  per Rust field-drop order), releasing the arena storage exactly once — no double-free, no
+  dealloc of an arena slice.
+
+Purely additive; no existing behaviour change (the PR-3a byte-identity test updated to
+expect the one intentional provenance-byte difference between an original and its copy).
+2 new tests integrate an arena copy into the heap and exercise **both** `dealloc` sites
+(sweep-skip and Drop-skip). **All 14 moving-collector tests pass under Miri** (no
+double-free, no dealloc of an arena slice, correct Drop ordering). `arenas` carries
+`#[allow(dead_code)]` until `collect_compacting` (PR-3c-2) populates and consults it.
+gc-core-only. gc-core 0.14.0 → 0.15.0.
+
 ## 0.14.0 — 2026-07-24 — moving-collector pointer fixup (AOT00-T3 PR-3b)
 
 Third step of the moving/compacting collector: the **pointer fixup** (moving-cycle steps

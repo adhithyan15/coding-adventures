@@ -121,8 +121,16 @@ struct FlatHeader {
     /// the forwarding slot during stop-the-world, per spec §3.1, so no further
     /// header growth). Kept 1 byte so the header stays exactly 32 bytes.
     pinned: bool,
+    /// **Provenance** flag for the moving/compacting collector (AOT00-T3 PR-3c). `false`
+    /// (the `alloc_zeroed` default) for a normal per-object [`alloc`](FlatHeap::alloc)'d
+    /// block; `true` for a block that lives inside an [`Arena`] (a moved object's copy).
+    /// It is **load-bearing for safety**: an arena-backed block is a *slice* of one big
+    /// arena allocation, so it must NEVER be handed to `dealloc` individually — the whole
+    /// arena is freed together (on heap drop, or when a future compaction re-moves its
+    /// live objects). Every `dealloc` site (`sweep`, `Drop`) skips arena-backed blocks.
+    arena_backed: bool,
     /// Explicit tail padding to reach exactly 32 bytes.
-    _pad: [u8; 9],
+    _pad: [u8; 8],
 }
 
 /// Generation tag for a freshly-allocated object: the **young** generation, where
@@ -181,6 +189,16 @@ pub struct FlatHeap {
     /// objects young longer to reduce premature tenuring. Never `0` (clamped by the
     /// setter) so an object always tenures after a bounded number of survivals.
     tenure_age: u8,
+    /// **To-space arenas** retained by the heap (AOT00-T3 PR-3c). A compacting
+    /// collection evacuates movable survivors into a fresh [`Arena`] and moves it here;
+    /// the arena's objects are [`FlatHeader::arena_backed`] and live until the whole
+    /// arena is dropped (on heap teardown, or — a future optimisation — when a later
+    /// compaction re-moves its survivors). Dropped *after* the malloc'd all-list is
+    /// freed in [`Drop`], so an arena-backed block is never individually deallocated.
+    // Populated + consulted by `collect_compacting` (PR-3c-2); its Drop-time ownership is
+    // the safety contract that lets the all-list skip arena-backed blocks.
+    #[allow(dead_code)]
+    arenas: Vec<Arena>,
 }
 
 /// Default [`FlatHeap::tenure_age`]: **1** — a survivor tenures on its first
@@ -291,6 +309,7 @@ impl FlatHeap {
             remembered: HashSet::new(),
             field_maps: Vec::new(),
             tenure_age: DEFAULT_TENURE_AGE,
+            arenas: Vec::new(),
         }
     }
 
@@ -1217,6 +1236,9 @@ impl FlatHeap {
             // Copy header + payload verbatim. Source (a malloc'd from-space block) and
             // destination (the fresh arena) never overlap.
             ptr::copy_nonoverlapping(h as *const u8, dst, obj);
+            // The copy lives in the arena — mark its provenance so no `dealloc` site ever
+            // frees it individually (its storage belongs to the whole arena).
+            (*(dst as *mut FlatHeader)).arena_backed = true;
             let new_payload = dst as usize + HEADER_SIZE;
             forward.insert(payload, new_payload);
         }
@@ -1409,9 +1431,17 @@ impl FlatHeap {
                     live += (*h).size;
                     cursor = &mut (*h).next;
                 } else {
+                    // Unlink the dead block from the all-list either way.
                     *cursor = (*h).next;
-                    let layout = Layout::from_size_align_unchecked(HEADER_SIZE + (*h).size, ALIGN);
-                    dealloc(h as *mut u8, layout);
+                    // Provenance: an **arena-backed** block is a slice of a big arena
+                    // allocation — it must NOT be `dealloc`'d individually (that is UB);
+                    // its storage is reclaimed when the whole arena drops. Only a normal
+                    // per-object `alloc`'d block is freed here.
+                    if !(*h).arena_backed {
+                        let layout =
+                            Layout::from_size_align_unchecked(HEADER_SIZE + (*h).size, ALIGN);
+                        dealloc(h as *mut u8, layout);
+                    }
                     freed += 1;
                 }
             }
@@ -1511,19 +1541,27 @@ impl FlatHeap {
 
 impl Drop for FlatHeap {
     /// Free every block still on the list — no leak when the heap itself is
-    /// dropped (e.g. a test's `FlatHeap` going out of scope).
+    /// dropped (e.g. a test's `FlatHeap` going out of scope). **Arena-backed** blocks
+    /// are skipped here: they are slices of the arenas in `self.arenas`, which are freed
+    /// as those `Arena`s drop *after* this `Drop::drop` returns (Rust drops the fields
+    /// after the explicit impl). So each block's storage is released exactly once — a
+    /// malloc'd block here, an arena block via its `Arena`.
     fn drop(&mut self) {
         let mut h = self.all;
-        // SAFETY: list walk freeing blocks we own with their exact layouts.
+        // SAFETY: list walk freeing malloc'd blocks we own with their exact layouts;
+        // arena-backed blocks are not `dealloc`'d (their arena frees them).
         unsafe {
             while !h.is_null() {
                 let next = (*h).next;
-                let layout = Layout::from_size_align_unchecked(HEADER_SIZE + (*h).size, ALIGN);
-                dealloc(h as *mut u8, layout);
+                if !(*h).arena_backed {
+                    let layout = Layout::from_size_align_unchecked(HEADER_SIZE + (*h).size, ALIGN);
+                    dealloc(h as *mut u8, layout);
+                }
                 h = next;
             }
         }
         self.all = ptr::null_mut();
+        // `self.arenas` drops next (after this method), freeing the arena-backed blocks.
     }
 }
 
@@ -2883,11 +2921,20 @@ mod tests {
             "new address lies inside the arena",
         );
 
-        // Header + payload bytes are identical between original and arena copy.
-        let obj = HEADER_SIZE + 16;
-        let old = unsafe { std::slice::from_raw_parts((a - HEADER_SIZE) as *const u8, obj) };
-        let new = unsafe { std::slice::from_raw_parts((na - HEADER_SIZE) as *const u8, obj) };
-        assert_eq!(old, new, "arena copy is byte-for-byte identical");
+        // The 16-byte PAYLOAD is copied byte-for-byte; the header's size/kind match; and
+        // the copy's `arena_backed` provenance byte is the one intentional difference
+        // (set to `true` on the copy, `false` on the malloc'd original).
+        let old_pl = unsafe { std::slice::from_raw_parts(a as *const u8, 16) };
+        let new_pl = unsafe { std::slice::from_raw_parts(na as *const u8, 16) };
+        assert_eq!(old_pl, new_pl, "payload copied byte-for-byte");
+        let oh = (a - HEADER_SIZE) as *const FlatHeader;
+        let nh = (na - HEADER_SIZE) as *const FlatHeader;
+        unsafe {
+            assert_eq!((*oh).size, (*nh).size);
+            assert_eq!((*oh).kind, (*nh).kind);
+            assert!(!(*oh).arena_backed, "malloc'd original is not arena-backed");
+            assert!((*nh).arena_backed, "arena copy is arena-backed");
+        }
         drop(arena);
     }
 
@@ -3002,5 +3049,56 @@ mod tests {
         let a_field = unsafe { *(na as *const usize) };
         assert_eq!(a_field, nb | tag, "tagged pointer fixed up, tag preserved");
         drop(arena);
+    }
+
+    // ── Moving collector — arena provenance safety (AOT00-T3 PR-3c-1) ──
+    //
+    // An arena-backed block is a SLICE of one big arena allocation, so it must never be
+    // handed to `dealloc` individually. These integrate an arena copy into the heap and
+    // exercise both `dealloc` sites (sweep, Drop). Run under Miri to catch a double-free
+    // or a dealloc of an arena slice.
+
+    /// Copy an object into a fresh arena (marked `arena_backed`), splice it onto the
+    /// heap's all-list, and retain the arena — the shared setup for the two tests below.
+    /// Returns the arena-copy header. (Standing in for the real integration PR-3c-2 does.)
+    unsafe fn integrate_one_arena_copy(heap: &mut FlatHeap) -> *mut FlatHeader {
+        let k = heap.register_kind(&[0]);
+        let a = heap.alloc(16, k) as usize;
+        let root = a;
+        let slots = [&root as *const usize as usize];
+        let (arena, forward) = heap.plan_compaction(&slots, &[]);
+        let na = *forward.get(&a).expect("A moved");
+        let new_h = (na - HEADER_SIZE) as *mut FlatHeader;
+        assert!((*new_h).arena_backed, "arena copy is marked arena-backed");
+        // Splice the arena copy onto the all-list (the from-space original stays too).
+        (*new_h).next = heap.all;
+        heap.all = new_h;
+        heap.arenas.push(arena);
+        new_h
+    }
+
+    /// **Drop** never `dealloc`s an arena-backed block: a live arena copy present on the
+    /// all-list at teardown is freed only when its `Arena` drops (after `Drop::drop`), so
+    /// its storage is released exactly once — no double-free, no dealloc of an arena slice.
+    #[test]
+    fn arena_backed_block_not_freed_by_drop() {
+        let mut heap = FlatHeap::new();
+        unsafe { integrate_one_arena_copy(&mut heap) };
+        // all-list = [arena_copy, malloc'd original]. Dropping frees the malloc block and
+        // skips the arena copy (freed as `arenas` drops). Miri catches any double-free.
+        drop(heap);
+    }
+
+    /// **Sweep** never `dealloc`s an arena-backed block: a collection that finds the arena
+    /// copy unreachable unlinks it from the all-list but does not free it (its arena will).
+    #[test]
+    fn arena_backed_block_not_freed_by_sweep() {
+        let mut heap = FlatHeap::new();
+        unsafe { integrate_one_arena_copy(&mut heap) };
+        // Collect rooting nothing: both blocks are unreachable. The malloc original is
+        // dealloc'd; the arena copy is only unlinked (arena-backed → not freed here).
+        let _ = heap.collect(&[]);
+        // Teardown then frees the retained arena. No double-free / no arena-slice dealloc.
+        drop(heap);
     }
 }
