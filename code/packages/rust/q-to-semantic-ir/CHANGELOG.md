@@ -1,5 +1,45 @@
 # Changelog
 
+## [0.1.2] - 2026-07-23
+
+### Added
+
+- **`tests/oracle.rs`**: one new corpus case,
+  `whitespace_sensitive_strand_vs_subtraction_no_space_at_all` (`2-1` →
+  `1`) — the third spelling of MA11 §3 bullet 2's negative-literal-vs-
+  subtraction disambiguation, alongside the pre-existing `2 -1` (strand)
+  and `2 - 1` (spaced subtraction) cases. `q-lexer`'s own
+  `no_space_at_all_is_also_subtraction`/`no_space_at_all_stays_subtraction`
+  tests and `q-runtime`'s own `scalar("2-1\n") == 1.0` assertion already
+  confirmed the *lexer*/*runtime* resolve this correctly in isolation, but
+  neither exercised the resolved CST shape through this crate's own
+  lowering → `semantic-ir-to-javascript` → real `node` — this case closes
+  that gap, confirmed to pass end-to-end (`known_bug: None`).
+
+### Fixed (documentation only — no code/behavior change)
+
+- `README.md`'s own "Testing" section had described `tests/oracle.rs` as a
+  "33-case" corpus (and cited "5 of the 33 cases" as a known-bug gap) since
+  the very first commit (`0.1.0`, #8826) — but the corpus was already
+  50 cases at that point (confirmed via `git show` against that commit),
+  and the 5-case display gap it described was already fixed in `0.1.1`
+  (every entry has run `known_bug: None` since then). Both counts were
+  stale from day one, not a regression introduced later. Also corrected
+  `tests/test_lower.rs`'s documented count (56 → the actual 57). Past
+  `CHANGELOG.md` entries below are left as originally written (an
+  append-only historical record of what was believed true at the time,
+  not a live spec) — this entry is the correction, not a rewrite of
+  `[0.1.0]`/`[0.1.1]`. `README.md` now states the accurate, current counts
+  (51-case oracle corpus after the addition above, 57 `test_lower.rs`
+  cases) and drops the stale known-bug framing, since task #109 already
+  closed that gap.
+
+### Testing
+
+- `cargo test -p q-to-semantic-ir`: all 81 tests pass (12 `e2e_node`, 1
+  `oracle` covering the 51-case `CORPUS`, 57 `test_lower`, 10
+  `test_validator`, 1 doctest).
+
 ## [0.1.1] - 2026-07-23
 
 ### Fixed (in the shared `semantic-ir-to-javascript` crate — task #109)
