@@ -251,13 +251,16 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // program uses to drive and measure a collection (→ `__twig_gc_*` aliases in
     // gc-core-capi). `gc_collect` is a forced *conservative* full collect;
     // `gc_collect_precise` is the precise-roots walk (returns objects freed);
-    // `gc_live_bytes` reports the live payload. Together they let the GC-stress
-    // differential show precise roots reclaiming a look-alike-pinned object that the
-    // conservative scan retains.
-    BuiltinSig { name: "gc_collect",         n_args: 0, returns: false },
-    BuiltinSig { name: "gc_collect_precise", n_args: 0, returns: true  },
-    BuiltinSig { name: "gc_live_bytes",      n_args: 0, returns: true  },
-    BuiltinSig { name: "gc_stackmap_count",  n_args: 0, returns: true  },
+    // `gc_collect_compacting` is the precise-roots *moving* collect (relocates the movable
+    // survivors, rewriting the caller's root slots — spec AOT00-T3 §5; degrades to
+    // `gc_collect_precise` when nothing is movable); `gc_live_bytes` reports the live
+    // payload. Together they let the GC-stress differential show precise roots reclaiming a
+    // look-alike-pinned object that the conservative scan retains.
+    BuiltinSig { name: "gc_collect",            n_args: 0, returns: false },
+    BuiltinSig { name: "gc_collect_precise",    n_args: 0, returns: true  },
+    BuiltinSig { name: "gc_collect_compacting", n_args: 0, returns: true  },
+    BuiltinSig { name: "gc_live_bytes",         n_args: 0, returns: true  },
+    BuiltinSig { name: "gc_stackmap_count",     n_args: 0, returns: true  },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
@@ -2324,6 +2327,26 @@ mod tests {
         let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
         assert!(symbols.contains(&"__dyn_cons"), "missing cons call: {symbols:?}");
         assert!(symbols.contains(&"__dyn_car"), "missing car call: {symbols:?}");
+    }
+
+    /// `call_builtin "gc_collect_compacting" -> freed` lowers to a `BL` to the linker
+    /// symbol `__twig_gc_collect_compacting` (the moving-collector C-ABI entry, spec
+    /// AOT00-T3 §5), via the generic `__twig_<name>` builtin dispatch — the same path
+    /// `gc_collect_precise` uses. Proves a native frontend can trigger a compaction.
+    #[test]
+    fn gc_collect_compacting_emits_external_twig_call() {
+        let cir = vec![
+            call_builtin(Some("freed"), "gc_collect_compacting", &[]),
+            ret_u64("freed"),
+        ];
+        let (bytes, ext) = compile_with_relocs(&ctx("gc_compact", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("gc_collect_compacting must lower: {e}"));
+        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+        let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(
+            symbols.contains(&"__twig_gc_collect_compacting"),
+            "missing compacting-collect call: {symbols:?}",
+        );
     }
 
     #[test]

@@ -1,5 +1,13 @@
 # Changelog — `aarch64-backend`
 
+## 0.31.0 - 2026-07-24 — `gc_collect_compacting` builtin (frontend GC.compact, AOT00-T3 §5)
+
+- New `V1_BUILTINS` entry `gc_collect_compacting` (0 args, returns the freed count) — the
+  moving/compacting collect. The generic `__twig_<name>` `call_builtin` dispatch auto-emits a
+  `BL __twig_gc_collect_compacting`, so no per-name lowering is needed; it sits beside
+  `gc_collect` / `gc_collect_precise`. A native program can now trigger a compaction. New
+  emission unit test asserts the external reloc symbol.
+
 ## 0.30.0 - 2026-07-21 — V1_BUILTINS: GC collection + observability (AOT00-T1 increment C)
 
 Four `call_builtin` entries the native GC-stress differential drives, resolving to the

@@ -399,12 +399,16 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // AOT00-T1 increment C / x86_64 PR-x3 — GC collection + observability entry points
     // a native program uses to drive and measure a collection (→ `__twig_gc_*` aliases
     // in gc-core-capi). `gc_collect` = forced conservative full collect; `gc_collect_precise`
-    // = precise-roots stack walk (returns objects freed); `gc_live_bytes` = live payload
-    // bytes; `gc_stackmap_count` = registered-function count. Mirrors the aarch64 backend.
-    BuiltinSig { name: "gc_collect",         n_args: 0, returns: false },
-    BuiltinSig { name: "gc_collect_precise", n_args: 0, returns: true  },
-    BuiltinSig { name: "gc_live_bytes",      n_args: 0, returns: true  },
-    BuiltinSig { name: "gc_stackmap_count",  n_args: 0, returns: true  },
+    // = precise-roots stack walk (returns objects freed); `gc_collect_compacting` =
+    // precise-roots *moving* collect (relocates movable survivors, rewriting the caller's
+    // root slots — spec AOT00-T3 §5; degrades to `gc_collect_precise` when nothing is
+    // movable); `gc_live_bytes` = live payload bytes; `gc_stackmap_count` = registered-
+    // function count. Mirrors the aarch64 backend.
+    BuiltinSig { name: "gc_collect",            n_args: 0, returns: false },
+    BuiltinSig { name: "gc_collect_precise",    n_args: 0, returns: true  },
+    BuiltinSig { name: "gc_collect_compacting", n_args: 0, returns: true  },
+    BuiltinSig { name: "gc_live_bytes",         n_args: 0, returns: true  },
+    BuiltinSig { name: "gc_stackmap_count",     n_args: 0, returns: true  },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
@@ -2191,6 +2195,27 @@ mod tests {
         let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
         assert!(symbols.contains(&"__dyn_cons"), "missing cons call: {symbols:?}");
         assert!(symbols.contains(&"__dyn_car"), "missing car call: {symbols:?}");
+    }
+
+    /// `call_builtin "gc_collect_compacting" -> freed` lowers to a `call` to the linker
+    /// symbol `__twig_gc_collect_compacting` (the moving-collector C-ABI entry, spec
+    /// AOT00-T3 §5), via the generic `__twig_<name>` builtin dispatch — the same path
+    /// `gc_collect_precise` uses. Proves a native frontend can trigger a compaction.
+    #[test]
+    fn gc_collect_compacting_emits_external_twig_call() {
+        let ir = vec![
+            call_builtin(Some("freed"), "gc_collect_compacting", &[]),
+            instr("ret_u64", None, vec![Op::Var("freed".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("gc_compact", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("gc_collect_compacting must lower");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(
+            symbols.contains(&"__twig_gc_collect_compacting"),
+            "missing compacting-collect call: {symbols:?}",
+        );
     }
 
     #[test]

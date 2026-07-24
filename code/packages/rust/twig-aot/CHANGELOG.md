@@ -1,5 +1,17 @@
 # Changelog — `twig-aot`
 
+## 0.45.0 - 2026-07-24 — end-to-end frontend-triggered compaction (AOT00-T3 §5)
+
+- New macOS smoke test `end_to_end_gc_compacting_matches_precise`: a compiled native program
+  invokes the `gc_collect_compacting` builtin (→ `__twig_gc_collect_compacting`), keeps its
+  live cons-cell reference, reclaims an `i64` look-alike, and yields the **identical**
+  `live_bytes` to `gc_collect_precise` — proving a native frontend can trigger a compaction
+  that runs safely on a real thread stack. Every frontend heap object is currently allocated
+  **kind 0** (`__dyn_cons` → `__twig_gc_alloc` → `__gc_alloc`), traced conservatively and
+  therefore **pinned**, so nothing is movable yet and the compacting collect degrades to
+  exactly the precise one. A true address-relocation differential is gated on frontend
+  kind-registration (`__gc_alloc_kind` + ref-field maps) — a separate follow-up.
+
 ## 0.44.0 - 2026-07-23 — MsX64 (Windows) precise-roots registration (AOT00-T1 x86_64 PR-x6)
 
 Brings Windows from safe-conservative GC to **real precise-roots registration**, completing

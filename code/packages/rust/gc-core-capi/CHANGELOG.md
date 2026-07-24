@@ -2,6 +2,13 @@
 
 All notable changes to this crate are documented here.
 
+## 0.16.0 - 2026-07-24 — twig-compat alias `__twig_gc_collect_compacting` (frontend GC.compact)
+
+- **`__twig_gc_collect_compacting()`** (new `twig_compat` alias → [`__gc_collect_compacting`]) —
+  the `__twig_gc_*` linker symbol a native code generator emits for the `gc_collect_compacting`
+  builtin, so a compiled program can trigger a moving/compacting collection. Mirrors
+  `__twig_gc_collect_precise`. No new `unsafe` beyond the delegated call.
+
 ## 0.15.0 - 2026-07-24 — moving/compacting collector C ABI `__gc_collect_compacting` (AOT00-T3 §5)
 
 - **`__gc_collect_compacting()`** (new export in `stack_scan.rs`) — the argument-less
