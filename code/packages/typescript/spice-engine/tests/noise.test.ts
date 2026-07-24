@@ -69,6 +69,16 @@ describe("noiseAc", () => {
     );
   });
 
+  it("rejects an invalid JFET forward-bias depletion coefficient", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+    circuit.add({ ...jfet("J1", "out", "gate", "0"), forwardBiasDepletionCoefficient: 1.0 });
+
+    expect(() => noiseAc(circuit, "out", "Vgate", [1_000.0])).toThrow(
+      /forward-bias depletion coefficient must be finite and in \[0, 1\)/,
+    );
+  });
+
   it("uses JFET AF as the current exponent", () => {
     function sourcePsd(exponent: number): number {
       const circuit = new Circuit();

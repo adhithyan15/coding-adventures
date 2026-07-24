@@ -604,7 +604,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.Af,
         )
     if isinstance(element, JFET):
-        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb)
+        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb, element.Fc)
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
@@ -8923,17 +8923,16 @@ def _jfet_charge_dynamic_capacitance(
     el: JFET, zero_bias_capacitance: float, junction_voltage: float
 ) -> float:
     grading_coefficient = 0.5
-    forward_bias_depletion_coefficient = 0.5
     oriented_voltage = -junction_voltage if el.polarity == "PJF" else junction_voltage
     normalized_voltage = oriented_voltage / el.Pb
-    if normalized_voltage < forward_bias_depletion_coefficient:
+    if normalized_voltage < el.Fc:
         return zero_bias_capacitance / ((1.0 - normalized_voltage) ** grading_coefficient)
-    transition_scale = (1.0 - forward_bias_depletion_coefficient) ** (
+    transition_scale = (1.0 - el.Fc) ** (
         1.0 + grading_coefficient
     )
     continuation = (
         1.0
-        - forward_bias_depletion_coefficient * (1.0 + grading_coefficient)
+        - el.Fc * (1.0 + grading_coefficient)
         + grading_coefficient * normalized_voltage
     )
     return zero_bias_capacitance * continuation / transition_scale
@@ -9081,6 +9080,8 @@ def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
         raise ValueError(f"JFET '{el.name}' flicker-noise exponent must be finite and non-negative")
     if not math.isfinite(el.Pb) or el.Pb <= 0.0:
         raise ValueError(f"JFET '{el.name}' PB must be finite and positive")
+    if not math.isfinite(el.Fc) or el.Fc < 0.0 or el.Fc >= 1.0:
+        raise ValueError(f"JFET '{el.name}' FC must be finite and in [0, 1)")
     if el.polarity == "PJF":
         ids, gm, gds = _eval_njf(-vgs, -vds, -el.vto, el.beta, el.lambda_)
         return -ids, gm, gds

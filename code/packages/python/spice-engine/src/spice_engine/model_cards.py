@@ -309,8 +309,8 @@ _MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES = {
     "D": (15, 21, 5, 3),
     "NPN": (41, 58, 13, 4),
     "PNP": (41, 58, 13, 4),
-    "NJF": (8, 15, 6, 3),
-    "PJF": (8, 15, 6, 3),
+    "NJF": (9, 16, 6, 3),
+    "PJF": (9, 16, 6, 3),
     "NMOS": (18, 25, 6, 3),
     "PMOS": (18, 25, 6, 3),
 }
@@ -434,6 +434,7 @@ _JFET_PARAMETER_ALIASES: dict[str, str] = {
     "AF": "AF",
     "PB": "PB",
     "VJ": "PB",
+    "FC": "FC",
 }
 
 _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
@@ -1009,6 +1010,7 @@ def jfet_from_model_card(
         Kf=p.get("KF", 0.0),
         Af=p.get("AF", 1.0),
         Pb=p.get("PB", 1.0),
+        Fc=p.get("FC", 0.5),
     )
 
 

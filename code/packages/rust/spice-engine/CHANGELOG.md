@@ -1,5 +1,8 @@
 # Changelog
 
+- Add JFET model-card `FC` forward-bias depletion coefficient support,
+  defaulting to `0.5` and shaping `CGS`/`CGD` depletion capacitance in AC and
+  transient analysis with hierarchy preservation and range validation.
 - Add JFET model-card `PB` gate-junction-potential support with `VJ` as an
   alias, bias-dependent `CGS`/`CGD` depletion capacitance in AC and transient
   analysis, hierarchy preservation, and finite-positive validation.

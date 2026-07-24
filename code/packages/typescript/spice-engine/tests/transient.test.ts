@@ -312,6 +312,33 @@ describe("transient", () => {
     expect(finalGateVoltage(0.5)).toBeLessThan(finalGateVoltage(2.0));
   });
 
+  it("uses JFET forward-bias depletion coefficient to shape transient gate charge", () => {
+    function finalGateVoltage(coefficient: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithWaveform(
+        "Vstep",
+        "in",
+        "0",
+        0.0,
+        new PwlWaveform([
+          [0.0, 0.0],
+          [2.0e-7, 0.6],
+          [2.0e-6, 0.6],
+        ]),
+      ));
+      circuit.add(resistor("Rin", "in", "gate", 1_000.0));
+      circuit.add(resistor("Rdrain", "drain", "0", 1_000.0));
+      circuit.add({
+        ...jfet("J1", "drain", "gate", "0", "NJF", 1.0e-12, -2.0, 0.0, 1.0e-9),
+        forwardBiasDepletionCoefficient: coefficient,
+      });
+      const points = transient(circuit, 2.0e-7, 2.0e-6, "euler");
+      return points.at(-1)!.voltage("gate")!;
+    }
+
+    expect(finalGateVoltage(0.2)).toBeGreaterThan(finalGateVoltage(0.8));
+  });
+
   it("uses MOSFET overlap capacitance during transient gate steps", () => {
     function run(gateSourceOverlapCapacitance: number): TransientPoint[] {
       const circuit = new Circuit();
