@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.12.0 — classes slice 2: instance methods
+
+Instance-method **definition** and **dispatch** — the second OOP slice. No new
+`Feature` (the frontend lowers a method-bearing class to builtins, not a
+feature-gated node); this wires two builtins:
+
+- `__def_method__("Class", "method", MakeClosure(fn))` — the frontend's
+  registration of a hoisted method — renders as
+  `Class.define_method(:sir_um_method, &closure)`. `define_method` binds `self`
+  to the receiver at call time, and the closure calls the hoisted top-level
+  function, so the method body runs with the instance as `self` (its `@ivars`
+  become reachable once slice 3 accepts them).
+- `__method__(recv, "method", args…)` — instance dispatch — renders as
+  `(recv).public_send(:sir_um_method, args…)`.
+
+**Anti-RCE — the `sir_um_` prefix closes reflection dispatch.** `__method__`
+dispatches by a method name taken from the IR, so a naive
+`recv.public_send(:name)` would be a remote-code-execution sink: a hand-built
+module could pass `"instance_eval"` / `"send"` and reach Ruby's metaprogramming.
+Both registration and dispatch instead go through a **reserved `sir_um_`
+method-name prefix** — no Ruby built-in is named `sir_um_*`, so `public_send`
+with a crafted name can reach *only* a method installed by `__def_method__`,
+never `instance_eval`/`send`/`eval`/any reflection sink. This is the codebase's
+"explicit dispatch, never reflection" invariant, achieved natively (SIR24 §OOP).
+The prefixed name is emitted as a quoted symbol via `emit_symbol` (no injection),
+and the class name in `__def_method__` is validated as a constant path like the
+slice-1 constant positions.
+
+**Totality / clean rejection.** A `__method__` call to a name the module never
+registers via `__def_method__` is a **built-in method call** (`.upcase`, …) — the
+separate Collections batch — and is rejected cleanly (a source-positioned
+`UnsupportedFeature`) rather than compiling to a runtime `NoMethodError` (the
+prefixed `sir_um_upcase` is unbound). The scan collects the module-wide set of
+registered method names in a first pass, then the single co-total traversal
+validates each dispatch against it. A malformed `__def_method__` (missing its
+closure) and the remaining OOP builtins (`__super__`, `__self__`,
+`__class_method__`, `__def_class_method__`) stay rejected (later slices). Class
+**methods**, **inheritance**, `@ivars`, `@@class vars`, and modules remain
+unsupported.
+
 ## 0.11.0 — classes (slice 1) + constants
 
 Accepts `Feature::Classes` and `Feature::Constants` — the first slice of the OOP
