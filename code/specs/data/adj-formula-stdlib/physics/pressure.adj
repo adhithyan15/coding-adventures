@@ -1,0 +1,74 @@
+% ============================================================================
+% pressure.adj — the definition of pressure in the ADJ standard library.
+% ============================================================================
+% The pressure entry of the *physics* track, a sibling of `electricity.adj` and
+% `mechanics-laws.adj`: the foundational mechanical definition a first course
+% opens with — PRESSURE IS FORCE PER UNIT AREA — as an importable, byte-provenanced,
+% PARAMETERIZED `formula`, together with its exact rearrangement (the force a given
+% pressure exerts over an area). As with every compute library, a consumer states
+% NO arithmetic: it `import`s this file, binds the mechanical quantities from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited definition on
+% the CPU. Zero math is performed by the model; the engine computes each value
+% EXACTLY, carrying the definition's citation.
+%
+%     import "pressure.adj"
+%     observe force(50)        % "…a 50 N force…"   (span cited by the model)
+%     observe area(2)          % "…over 2 m²…"      (span cited by the model)
+%     ? pressure(force, area)  % engine → 25, carrying the def P = F/A
+%
+% Both formulas are EXACT over their parameters — one a quotient, one a product of
+% two measured quantities. There is no *separately grounded* physical constant here,
+% so every value the engine returns is exact. The two COMPOSE and invert cleanly:
+% the `pressure` a consumer computes from a force over an area is exactly the
+% `pressure` the `force` formula multiplies back by an area to recover the force.
+%
+%   pressure(force, area) = force / area     %  P = F/A   (definition of pressure)
+%   force(pressure, area) = pressure · area  %  F = P·A   (the same definition, solved for F)
+%
+% Both formulas are defended by the SAME definitional sentence — "Pressure is defined
+% as force per unit area." — because that one definition sanctions the relation read
+% either way (P from F and A, or F from P and A). The quote is transcribed verbatim
+% from Georgia State University's HyperPhysics (a university .edu physics reference —
+% the same primary source `electricity.adj` cites), so each `formula` carries the
+% provenance envelope every shipped grounded clause carries; the linter rejects an
+% unsourced one. (See feedback_nothing_human_authored — the definitional sentence is
+% a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable mechanical quantity the definition
+% ranges over, and each result is the derived quantity. `pressure` and `force`
+% each appear BOTH as a derived result and as an input (of the other formula), so
+% each is a single dictionary term used in both roles. The `surface` lists are the
+% everyday names a decomposer maps onto the canonical term; the trailing comment
+% records the intended SI unit.
+% ----------------------------------------------------------------------------
+dictionary pressure_vocab {
+    define force    : finding  surface "force", "F"                     % force, e.g. N (newtons)
+    define area     : finding  surface "area", "A"                      % area, e.g. m²
+    define pressure : finding  surface "pressure", "P"                  % pressure, e.g. Pa (pascals)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, both ways. Each is a named, importable, reusable `let` over its
+% formal parameters, bound at apply time, and each carries the definitional quote
+% from HyperPhysics (a quote is required on a shipped formula). One is a quotient
+% and one a product, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook pressure_laws {
+    use pressure_vocab
+
+    % Pressure — the force per unit area. HyperPhysics defines pressure as the
+    % force distributed over the area it acts on, i.e. P = F/A.
+    formula pressure(force, area) = force / area
+        source "Pressure is defined as force per unit area."
+        locator "https://hyperphysics.gsu.edu/hbase/press.html"
+        trust authoritative
+
+    % Force — the same definition solved for the force a pressure exerts over an
+    % area (F = P·A). Defended by the SAME definitional sentence, read the other way.
+    formula force(pressure, area) = pressure * area
+        source "Pressure is defined as force per unit area."
+        locator "https://hyperphysics.gsu.edu/hbase/press.html"
+        trust authoritative
+}
