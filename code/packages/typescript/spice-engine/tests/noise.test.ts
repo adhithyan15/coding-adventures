@@ -59,6 +59,16 @@ describe("noiseAc", () => {
     );
   });
 
+  it("rejects an invalid JFET junction potential", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+    circuit.add({ ...jfet("J1", "out", "gate", "0"), junctionPotential: 0.0 });
+
+    expect(() => noiseAc(circuit, "out", "Vgate", [1_000.0])).toThrow(
+      /junction potential must be finite and positive/,
+    );
+  });
+
   it("uses JFET AF as the current exponent", () => {
     function sourcePsd(exponent: number): number {
       const circuit = new Circuit();

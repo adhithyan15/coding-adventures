@@ -1697,6 +1697,7 @@ export interface Jfet {
   readonly gateDrainCapacitance: number;
   readonly flickerNoiseCoefficient: number;
   readonly flickerNoiseExponent: number;
+  readonly junctionPotential: number;
 }
 
 export type BjtPolarity = "NPN" | "PNP";
@@ -2026,8 +2027,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   D: [15, 21, 5, 3],
   NPN: [41, 58, 13, 4],
   PNP: [41, 58, 13, 4],
-  NJF: [7, 13, 5, 3],
-  PJF: [7, 13, 5, 3],
+  NJF: [8, 15, 6, 3],
+  PJF: [8, 15, 6, 3],
   NMOS: [18, 25, 6, 3],
   PMOS: [18, 25, 6, 3],
 };
@@ -3613,7 +3614,7 @@ function cloneSubcktElement(
     case "diode":
       return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime, element.junctionPotential, element.gradingCoefficient, element.forwardBiasDepletionCoefficient, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.seriesResistance, element.flickerNoiseCoefficient, element.flickerNoiseExponent);
     case "jfet":
-      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance, element.flickerNoiseCoefficient, element.flickerNoiseExponent);
+      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.junctionPotential);
     case "bjt":
       return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta, element.reverseBetaRolloffCurrent, element.nominalTemperatureKelvin, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.forwardExcessPhaseDegrees, element.forwardTransitTimeBiasCoefficient, element.forwardTransitTimeCurrent, element.forwardTransitTimeVoltage, element.emitterResistance, element.collectorResistance, element.baseResistance, element.minimumBaseResistance, element.baseResistanceHalfCurrent, element.baseCollectorCapacitanceFraction);
     case "mosfet":
@@ -7760,6 +7761,7 @@ export function jfet(
   gateDrainCapacitance = 0.0,
   flickerNoiseCoefficient = 0.0,
   flickerNoiseExponent = 1.0,
+  junctionPotential = 1.0,
 ): Jfet {
   return {
     kind: "jfet",
@@ -7775,6 +7777,7 @@ export function jfet(
     gateDrainCapacitance,
     flickerNoiseCoefficient,
     flickerNoiseExponent,
+    junctionPotential,
   };
 }
 
@@ -8033,6 +8036,8 @@ const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   CGD0: "CGD",
   KF: "KF",
   AF: "AF",
+  PB: "PB",
+  VJ: "PB",
 };
 
 const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -8578,6 +8583,7 @@ export function jfetFromModelCard(
     p.CGD ?? 0.0,
     p.KF ?? 0.0,
     p.AF ?? 1.0,
+    p.PB ?? 1.0,
   );
 }
 
@@ -19528,6 +19534,9 @@ function validateJfet(element: Jfet): void {
       "flicker-noise exponent must be finite and non-negative",
     );
   }
+  if (!Number.isFinite(element.junctionPotential) || element.junctionPotential <= 0.0) {
+    throw invalidElement(element.name, "junction potential must be finite and positive");
+  }
 }
 
 function stampJfet(
@@ -19569,17 +19578,22 @@ function stampJfetCharge(
     if (state === undefined || spec.capacitance <= 0.0) {
       continue;
     }
+    const capacitance = jfetChargeDynamicCapacitance(
+      element,
+      spec.capacitance,
+      state.previousVoltage,
+    );
     const conductance =
       state.method === "trap"
-        ? (2.0 * spec.capacitance) / state.timeStep
+        ? (2.0 * capacitance) / state.timeStep
         : state.method === "gear2"
-          ? (3.0 * spec.capacitance) / (2.0 * state.timeStep)
-          : spec.capacitance / state.timeStep;
+          ? (3.0 * capacitance) / (2.0 * state.timeStep)
+          : capacitance / state.timeStep;
     const historyCurrent =
       state.method === "trap"
         ? conductance * state.previousVoltage + state.previousCurrent
         : state.method === "gear2"
-          ? (spec.capacitance *
+          ? (capacitance *
               (4.0 * state.previousVoltage - state.previousPreviousVoltage)) /
             (2.0 * state.timeStep)
           : conductance * state.previousVoltage;
@@ -20220,6 +20234,27 @@ function jfetChargeStateVoltage(
   nodeVoltages: ReadonlyMap<string, number>,
 ): number {
   return voltageAt(nodeVoltages, spec.positive) - voltageAt(nodeVoltages, spec.negative);
+}
+
+function jfetChargeDynamicCapacitance(
+  element: Jfet,
+  zeroBiasCapacitance: number,
+  junctionVoltage: number,
+): number {
+  const gradingCoefficient = 0.5;
+  const forwardBiasDepletionCoefficient = 0.5;
+  const orientedVoltage = element.polarity === "PJF" ? -junctionVoltage : junctionVoltage;
+  const normalizedVoltage = orientedVoltage / element.junctionPotential;
+  if (normalizedVoltage < forwardBiasDepletionCoefficient) {
+    return zeroBiasCapacitance / ((1.0 - normalizedVoltage) ** gradingCoefficient);
+  }
+  const transitionScale =
+    (1.0 - forwardBiasDepletionCoefficient) ** (1.0 + gradingCoefficient);
+  const continuation =
+    1.0 -
+    forwardBiasDepletionCoefficient * (1.0 + gradingCoefficient) +
+    gradingCoefficient * normalizedVoltage;
+  return (zeroBiasCapacitance * continuation) / transitionScale;
 }
 
 interface MosfetChargeStateSpec {
@@ -20948,7 +20983,11 @@ function updateCapacitorStates(
                 previousVoltages.get(bjtBaseCollectorChargeStateName(bjtElement!)) ?? 0.0,
               )
             : jfetSpec !== undefined
-              ? jfetSpec.capacitance
+              ? jfetChargeDynamicCapacitance(
+                  jfetElement!,
+                  jfetSpec.capacitance,
+                  state.previousVoltage,
+                )
               : mosfetChargeDynamicCapacitance(
                   mosfetElement!,
                   mosfetSpec!,
@@ -22662,18 +22701,28 @@ function stampAcJfetSmallSignal(
     gateVoltage - sourceVoltage,
     drainVoltage - sourceVoltage,
   );
+  const gateSourceCapacitance = jfetChargeDynamicCapacitance(
+    element,
+    element.gateSourceCapacitance,
+    gateVoltage - sourceVoltage,
+  );
+  const gateDrainCapacitance = jfetChargeDynamicCapacitance(
+    element,
+    element.gateDrainCapacitance,
+    gateVoltage - drainVoltage,
+  );
   stampComplexConductance(matrix, drain, source, complex(result.gds, 0.0));
   stampComplexConductance(
     matrix,
     gate,
     source,
-    complex(0.0, omega * element.gateSourceCapacitance),
+    complex(0.0, omega * gateSourceCapacitance),
   );
   stampComplexConductance(
     matrix,
     gate,
     drain,
-    complex(0.0, omega * element.gateDrainCapacitance),
+    complex(0.0, omega * gateDrainCapacitance),
   );
   stampComplexTransconductance(
     matrix,

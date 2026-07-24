@@ -428,6 +428,7 @@ fn clone_subckt_element(
             );
             mapped.flicker_noise_coefficient = element.flicker_noise_coefficient;
             mapped.flicker_noise_exponent = element.flicker_noise_exponent;
+            mapped.junction_potential = element.junction_potential;
             Element::Jfet(mapped)
         }
         Element::Bjt(element) => {
@@ -2817,6 +2818,7 @@ pub struct Jfet {
     pub gate_drain_capacitance: f64,
     pub flicker_noise_coefficient: f64,
     pub flicker_noise_exponent: f64,
+    pub junction_potential: f64,
 }
 
 impl Jfet {
@@ -2887,6 +2889,7 @@ impl Jfet {
             gate_drain_capacitance,
             flicker_noise_coefficient: 0.0,
             flicker_noise_exponent: 1.0,
+            junction_potential: 1.0,
         }
     }
 }
@@ -3810,8 +3813,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Diode, 15, 21, 5, 3),
     (ModelCardKind::Npn, 41, 58, 13, 4),
     (ModelCardKind::Pnp, 41, 58, 13, 4),
-    (ModelCardKind::Njf, 7, 13, 5, 3),
-    (ModelCardKind::Pjf, 7, 13, 5, 3),
+    (ModelCardKind::Njf, 8, 15, 6, 3),
+    (ModelCardKind::Pjf, 8, 15, 6, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
     (ModelCardKind::Pmos, 18, 25, 6, 3),
 ];
@@ -3912,6 +3915,8 @@ const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("CGD0", "CGD"),
     ("KF", "KF"),
     ("AF", "AF"),
+    ("PB", "PB"),
+    ("VJ", "PB"),
 ];
 const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("LEVEL", "LEVEL"),
@@ -4640,6 +4645,7 @@ pub fn jfet_from_model_card(
     );
     jfet.flicker_noise_coefficient = model_card_value(model, "KF", 0.0);
     jfet.flicker_noise_exponent = model_card_value(model, "AF", 1.0);
+    jfet.junction_potential = model_card_value(model, "PB", 1.0);
     Ok(jfet)
 }
 
@@ -23614,7 +23620,8 @@ fn stamp_jfet_charge(
         else {
             continue;
         };
-        let capacitance = spec.capacitance;
+        let capacitance =
+            jfet_charge_dynamic_capacitance(jfet, spec.capacitance, state.previous_voltage);
         if capacitance <= 0.0 {
             continue;
         }
@@ -23994,18 +24001,28 @@ fn stamp_ac_jfet_small_signal(
         gate_voltage - source_voltage,
         drain_voltage - source_voltage,
     );
+    let gate_source_capacitance = jfet_charge_dynamic_capacitance(
+        jfet,
+        jfet.gate_source_capacitance,
+        gate_voltage - source_voltage,
+    );
+    let gate_drain_capacitance = jfet_charge_dynamic_capacitance(
+        jfet,
+        jfet.gate_drain_capacitance,
+        gate_voltage - drain_voltage,
+    );
     stamp_complex_conductance(matrix, drain, source, Complex::new(result.gds, 0.0));
     stamp_complex_conductance(
         matrix,
         gate,
         source,
-        Complex::new(0.0, omega * jfet.gate_source_capacitance),
+        Complex::new(0.0, omega * gate_source_capacitance),
     );
     stamp_complex_conductance(
         matrix,
         gate,
         drain,
-        Complex::new(0.0, omega * jfet.gate_drain_capacitance),
+        Complex::new(0.0, omega * gate_drain_capacitance),
     );
     stamp_complex_transconductance(
         matrix,
@@ -24336,6 +24353,29 @@ fn jfet_charge_state_voltage(
     node_voltages: &BTreeMap<String, f64>,
 ) -> f64 {
     voltage_at(node_voltages, spec.positive) - voltage_at(node_voltages, spec.negative)
+}
+
+fn jfet_charge_dynamic_capacitance(
+    jfet: &Jfet,
+    zero_bias_capacitance: f64,
+    junction_voltage: f64,
+) -> f64 {
+    const GRADING_COEFFICIENT: f64 = 0.5;
+    const FORWARD_BIAS_DEPLETION_COEFFICIENT: f64 = 0.5;
+
+    let oriented_voltage = match jfet.polarity {
+        JfetPolarity::Njf => junction_voltage,
+        JfetPolarity::Pjf => -junction_voltage,
+    };
+    let normalized_voltage = oriented_voltage / jfet.junction_potential;
+    if normalized_voltage < FORWARD_BIAS_DEPLETION_COEFFICIENT {
+        return zero_bias_capacitance / (1.0 - normalized_voltage).powf(GRADING_COEFFICIENT);
+    }
+    let transition_scale =
+        (1.0 - FORWARD_BIAS_DEPLETION_COEFFICIENT).powf(1.0 + GRADING_COEFFICIENT);
+    let continuation = 1.0 - FORWARD_BIAS_DEPLETION_COEFFICIENT * (1.0 + GRADING_COEFFICIENT)
+        + GRADING_COEFFICIENT * normalized_voltage;
+    zero_bias_capacitance * continuation / transition_scale
 }
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
@@ -24869,6 +24909,12 @@ fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
             reason: "flicker-noise exponent must be finite and non-negative".to_string(),
+        });
+    }
+    if !jfet.junction_potential.is_finite() || jfet.junction_potential <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "junction potential must be finite and positive".to_string(),
         });
     }
     Ok(())
@@ -25455,7 +25501,11 @@ fn update_capacitor_states(
                 .map(|spec| {
                     (
                         jfet_charge_state_voltage(&spec, node_voltages),
-                        spec.capacitance,
+                        jfet_charge_dynamic_capacitance(
+                            jfet,
+                            spec.capacitance,
+                            state.previous_voltage,
+                        ),
                     )
                 }),
             Element::Mosfet(mosfet) => mosfet_charge_state_specs(mosfet)

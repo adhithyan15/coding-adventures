@@ -1425,6 +1425,42 @@ fn ac_jfet_gate_source_capacitance_shunts_high_frequency_gate_drive() {
 }
 
 #[test]
+fn ac_jfet_junction_potential_shapes_reverse_biased_gate_capacitance() {
+    fn gate_amplitude(junction_potential: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", -0.5, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "gate", 1_000.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rdrain", "drain", "0", 1_000.0,
+        )));
+        let mut jfet = Jfet::with_model_and_capacitance(
+            "J1",
+            "drain",
+            "gate",
+            "0",
+            JfetPolarity::Njf,
+            1.0e-12,
+            -2.0,
+            0.0,
+            1.0e-9,
+            0.0,
+        );
+        jfet.junction_potential = junction_potential;
+        circuit.add(Element::Jfet(jfet));
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("gate")
+            .unwrap()
+            .abs()
+    }
+
+    assert!(gate_amplitude(0.5) > gate_amplitude(2.0));
+}
+
+#[test]
 fn ac_current_source_supports_explicit_magnitude_and_phase() {
     let mut circuit = Circuit::new();
     circuit.add(Element::CurrentSource(CurrentSource::with_ac(

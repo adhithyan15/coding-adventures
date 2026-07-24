@@ -519,6 +519,22 @@ describe("acSweep", () => {
     expect(withCapacitance).toBeLessThan(withoutCapacitance / 100.0);
   });
 
+  it("uses JFET junction potential to shape reverse-biased gate capacitance", () => {
+    function gateAmplitude(junctionPotential: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", -0.5, 1.0));
+      circuit.add(resistor("Rin", "in", "gate", 1_000.0));
+      circuit.add(resistor("Rdrain", "drain", "0", 1_000.0));
+      circuit.add({
+        ...jfet("J1", "drain", "gate", "0", "NJF", 1.0e-12, -2.0, 0.0, 1.0e-9),
+        junctionPotential,
+      });
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("gate")!);
+    }
+
+    expect(gateAmplitude(0.5)).toBeGreaterThan(gateAmplitude(2.0));
+  });
+
   it("uses MOSFET overlap capacitance in AC analysis", () => {
     function gateAmplitude(CGSO: number): number {
       const circuit = new Circuit();
