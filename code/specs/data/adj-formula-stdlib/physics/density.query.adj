@@ -1,0 +1,29 @@
+% ============================================================================
+% density.query.adj — worked examples over the physics density library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a density
+% question: it states NO arithmetic and NO definition — it only `import`s the
+% grounded library, `observe`s the physical quantities it decomposed from the
+% prompt (each a byte-provenanced span, elided here), and asks the engine to APPLY
+% the cited definition. The native adj-lang engine binds the parameters, computes
+% each value EXACTLY on the CPU, and returns it with the definition's
+% source/locator/trust.
+%
+% The two questions INVERT: 60 g in 3 cm³ gives a density of 20 g/cm³, which is
+% exactly the density the mass formula multiplies back by the 3 cm³ volume to
+% recover the 60 g mass.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli density.query.adj
+% ============================================================================
+
+import "density.adj"
+
+% A 60 g mass in a 3 cm³ volume: density = 60 / 3.
+observe mass(60)
+observe volume(3)
+? density(mass, volume)     % expect 20   (definition: ρ = m/V)
+
+% That 20 g/cm³ density in the same 3 cm³ volume: mass = 20 * 3.
+observe density(20)
+? mass(density, volume)      % expect 60   (same definition, solved for m = ρ·V)
