@@ -124,6 +124,30 @@
   rank-1-not-scalar array-literal rule, and case folding for both
   variables and routine names.
 
+### Fixed (security — caught by review before this release ever shipped)
+
+- **`resolve_index`**: the subscript bounds check was written as an "out of
+  range" disjunction, `idx_f < 0.0 || idx_f >= axis_len as f64`. IEEE-754
+  comparisons against `NaN` are always `false`, so a `NaN` subscript
+  (`a[SQRT(-1)]`, `a[0.0/0.0]`) made both disjuncts `false`, skipped the
+  bounds check entirely, and fell through to `NaN as usize` (Rust's
+  saturating float-to-int cast, which returns `0`) as though it were a
+  validated in-bounds index — even against a zero-length axis. Indexing an
+  empty array at the resulting "index 0" then panicked
+  (`index out of bounds: the len is 0 but the index is 0`), uncaught
+  anywhere between `resolve_index` and the `idl` binary's process boundary:
+  an unauthenticated, two-line-of-input crash, reachable via ordinary IDL
+  syntax with no injection/escape needed. Fixed by writing the check as the
+  negated IN-RANGE condition, `!(idx_f >= 0.0 && idx_f < axis_len as f64)`,
+  which is `true` for `NaN` (both `&&` operands are `false`) and so
+  correctly rejects it. New regression test
+  `nan_subscript_is_a_clean_error_not_a_panic` (`lib.rs`) covers the 1-D,
+  2-D, and range-subscript-endpoint paths, and reproduces the exact panic
+  with the fix reverted before confirming the fix resolves it. The
+  `range_subscript_positions` stride path was independently audited and
+  found already safe — its separate `stride == 0` check incidentally
+  catches a `NaN` stride via the same truncating `as i64` cast.
+
 ### Notes
 
 - No `array-runtime` substrate changes were needed (MA12 §2's own "zero new

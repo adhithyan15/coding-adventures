@@ -408,6 +408,33 @@ PRINT, DOIT(5)\n";
         assert!(eval("a = [1,2,3]\nPRINT, a[10]\n").is_err());
     }
 
+    #[test]
+    fn nan_subscript_is_a_clean_error_not_a_panic() {
+        // Regression test: `resolve_index`'s original bounds check was
+        // written as `idx_f < 0.0 || idx_f >= axis_len as f64` ("out of
+        // range" as a disjunction). IEEE-754 comparisons against NaN are
+        // always `false`, so a NaN subscript (`SQRT(-1)`, `0.0/0.0`) made
+        // BOTH disjuncts false, skipped the bounds check entirely, and fell
+        // through to `NaN as usize` (Rust's saturating float-to-int cast,
+        // which returns 0) as though it were a validated in-bounds index --
+        // reported as index 0 even against a zero-length array. Indexing an
+        // empty array's underlying `Vec` at 0 then panicked, uncaught
+        // anywhere between here and the `idl` binary's process boundary: an
+        // unauthenticated two-line-of-input crash. Fixed by writing the
+        // check as the negated IN-RANGE condition instead
+        // (`!(idx_f >= 0.0 && idx_f < axis_len as f64)`), which is `true`
+        // for NaN since both `&&` operands are `false`.
+        assert!(eval("a = []\nPRINT, a[SQRT(-1)]\n").is_err());
+        assert!(eval("a = []\nPRINT, a[0.0/0.0]\n").is_err());
+        // The 2-D indexing path (`arr.get(r, c).expect(...)`) shares the
+        // same `resolve_index` call for each axis -- confirm it too.
+        assert!(eval("a = FLTARR(0, 3)\nPRINT, a[SQRT(-1), 1]\n").is_err());
+        // A NaN range-subscript ENDPOINT (not the stride, which already had
+        // its own independent `stride == 0` guard) goes through the same
+        // function via `range_subscript_positions`.
+        assert!(eval("a = []\nPRINT, a[0:SQRT(-1)]\n").is_err());
+    }
+
     // ── Array construction / reductions ──────────────────────────────────
 
     #[test]

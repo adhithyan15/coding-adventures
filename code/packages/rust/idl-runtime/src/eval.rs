@@ -1321,7 +1321,19 @@ fn resolve_index(raw: f64, axis_len: usize) -> Result<usize, String> {
     } else {
         raw
     };
-    if idx_f < 0.0 || idx_f >= axis_len as f64 {
+    // Written as the IN-RANGE condition, negated, rather than an "out of
+    // range" disjunction of `<`/`>=` comparisons: IEEE-754 comparisons
+    // against NaN are always `false` (`NaN < 0.0` and `NaN >= len` both
+    // evaluate `false`), so the disjunction form let a NaN subscript
+    // (`a[SQRT(-1)]`, `a[0.0/0.0]`) skip this check entirely and fall
+    // through to `NaN as usize` (Rust's saturating float-to-int cast,
+    // which returns 0), reported as a validated in-bounds index even
+    // against a zero-length axis -- an unauthenticated, two-line-of-input
+    // panic (`arr.data()[0]` / `arr.get(...).expect(...)` downstream) that
+    // is not caught anywhere between here and the REPL's process boundary.
+    // `!(idx_f >= 0.0 && idx_f < axis_len as f64)` is `true` for NaN
+    // (since both `&&` operands are `false`), so this form rejects it.
+    if !(idx_f >= 0.0 && idx_f < axis_len as f64) {
         return Err(format!(
             "idl-runtime: subscript {raw} is out of range for a dimension of size {axis_len}"
         ));
