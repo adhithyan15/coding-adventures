@@ -1345,6 +1345,13 @@ fn is_ruby_keyword(s: &str) -> bool {
             | "yield"
             | "__FILE__"
             | "__LINE__"
+            // `__ENCODING__` is the third of Ruby's three magic-constant
+            // keywords (alongside `__FILE__`/`__LINE__` above) — a real
+            // lexical keyword, not a plain identifier: `__ENCODING__ = 5`
+            // is a `SyntaxError` (verified against MRI/Ruby 3.4), exactly
+            // like the other two. It was missing from this list even
+            // though its two siblings were already here.
+            | "__ENCODING__"
             | "__method__"
             | "lambda"
             | "proc"

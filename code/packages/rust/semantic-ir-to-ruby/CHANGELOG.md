@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.13.1 — `is_ruby_keyword` missing `__ENCODING__` (task #116 audit)
+
+Follow-up to task #110/#112 (`semantic-ir-to-javascript`/`-typescript`'s
+`eval`/`arguments` gap): a broader audit of every `semantic-ir-to-*`
+backend's reserved-word check for the same class of bug.
+
+`is_ruby_keyword` (`emit.rs`) already listed two of Ruby's three
+magic-constant keywords, `__FILE__` and `__LINE__`, but not the third,
+`__ENCODING__`. All three are genuine lexical keywords, not plain
+identifiers — `__ENCODING__ = 5` is a `SyntaxError` under MRI (verified
+against Ruby 3.4.9), exactly like `__FILE__ = 5` or `__LINE__ = 5`. A
+SIR identifier named `__ENCODING__` was previously emitted verbatim by
+`sanitize_ident` instead of being suffixed.
+
+Fixed by adding `__ENCODING__` to the existing magic-constant group in
+`is_ruby_keyword`'s `matches!` list (same style as the existing
+`__FILE__`/`__LINE__` entries; no restructuring). New test
+`sanitize_ident_flags_encoding_magic_constant`
+(`tests/emit_tests.rs`) pins it as reserved and confirms ordinary
+look-alike identifiers (`encoding`, `__encoding__`) are untouched.
+
 ## 0.13.0 — classes slice 3: instance variables (@ivars) + self
 
 Accepts `Feature::InstanceVars` — an instance variable read and write, plus the
