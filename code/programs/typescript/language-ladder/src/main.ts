@@ -41,6 +41,7 @@ import { pickNext as pickReviewCell, makeRng, cellKey, type GridCell } from "./q
 import { confusions } from "./mistakes.ts";
 import { loadReview, saveReview } from "./reviewstore.ts";
 import { loadCursor, saveCursor } from "./cursorstore.ts";
+import { clearProgress, removableStorage } from "./reset.ts";
 import {
   scriptsById,
   firstIntroductionByScript,
@@ -63,6 +64,7 @@ import taxonomyJson from "../../../../learning/human-languages/concepts/taxonomy
 import type { Taxonomy } from "@coding-adventures/human-language-data/src/types.ts";
 import {
   browserStorage,
+  emptyProgress,
   fromSaved,
   loadProgress,
   saveProgress,
@@ -162,6 +164,10 @@ let reviewChosen: string | null = null; // cellKey of the picked option; null = 
 // from storage, clamped to the current spine (the curriculum may have grown or
 // shrunk since the save). A missing/corrupt value starts at 0.
 conceptCursor = loadCursor(REVIEW_STORAGE, CONCEPT_SPINE.length);
+
+// "Reset progress" is a two-click confirm: the first click ARMS it (so a stray
+// tap can't wipe everything), the second executes. This flag is that arming.
+let resetArmed = false;
 
 // Constant for the page's lifetime: lesson indices grouped by language, and the
 // round-robin pool over those groups. Computing them once is why consecutive
@@ -757,6 +763,65 @@ function renderLearn(): HTMLElement {
   // The review pass: a cumulative, SRS-weighted quiz over everything covered so
   // far (this concept and all before it). `plan.reviewGrid` is exactly that grid.
   wrap.appendChild(renderReview(plan.reviewGrid));
+
+  // A quiet way to start over — clears every persisted key, two-click confirmed.
+  wrap.appendChild(renderReset());
+  return wrap;
+}
+
+/** Clear all persisted progress and reset the in-memory session to the start. */
+function executeReset(): void {
+  clearProgress(removableStorage());
+  // Review + teaching cursor.
+  reviewProgress = { states: new Map(), log: [] };
+  reviewSession = 0;
+  reviewCell = null;
+  reviewOptions = [];
+  reviewChosen = null;
+  conceptCursor = 0;
+  // The Lessons-mode schedule is one of the cleared keys, so its in-memory state
+  // must be zeroed too — otherwise Lessons still shows the old stats and the next
+  // grade would `persistLessons()` the stale schedule straight back into the key
+  // we just wiped, defeating the reset until a reload.
+  savedProgress = emptyProgress();
+  lessonSchedule = fromSaved(LESSON_IDS, savedProgress);
+  lessonSession = savedProgress.session;
+  lessonIndex = null;
+  lessonRevealed = false;
+  lessonCursor = -1;
+  resetArmed = false;
+  render();
+}
+
+/**
+ * The "Reset progress" footer — a two-click confirm so a stray tap can't wipe
+ * everything. First click arms it (swaps in a warning + Yes/Cancel); the second
+ * (Yes) executes; Cancel disarms.
+ */
+function renderReset(): HTMLElement {
+  const wrap = el("div", "learn__reset");
+  if (!resetArmed) {
+    const btn = el("button", "reset-link") as HTMLButtonElement;
+    btn.textContent = "Reset progress";
+    btn.onclick = () => {
+      resetArmed = true;
+      render();
+    };
+    wrap.appendChild(btn);
+    return wrap;
+  }
+  const warn = el("span", "reset-warn");
+  warn.textContent = "Clear all progress — review, mistakes, and your place in the walk?";
+  const yes = el("button", "reset-yes") as HTMLButtonElement;
+  yes.textContent = "Yes, reset";
+  yes.onclick = () => executeReset();
+  const cancel = el("button", "reset-cancel") as HTMLButtonElement;
+  cancel.textContent = "Cancel";
+  cancel.onclick = () => {
+    resetArmed = false;
+    render();
+  };
+  wrap.append(warn, yes, cancel);
   return wrap;
 }
 
