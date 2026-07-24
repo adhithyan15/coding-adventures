@@ -79,6 +79,31 @@ describe("noiseAc", () => {
     );
   });
 
+  it("rejects an invalid JFET gate saturation current", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+    circuit.add({ ...jfet("J1", "out", "gate", "0"), gateSaturationCurrent: -1.0 });
+
+    expect(() => noiseAc(circuit, "out", "Vgate", [1_000.0])).toThrow(
+      /gate saturation current must be finite and non-negative/,
+    );
+  });
+
+  it("emits distinct JFET gate-junction shot-noise sources", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdd", "out", "0", 1.0));
+    circuit.add(voltageSource("Vgate", "gate", "0", 0.3));
+    circuit.add({ ...jfet("J1", "out", "gate", "0"), gateSaturationCurrent: 1.0e-12 });
+
+    const entries = noiseAc(circuit, "gate", "Vgate", [1_000.0], 300.0).points[0]!.entries;
+    for (const name of ["J1:IGS", "J1:IGD"]) {
+      const entry = entries.find(
+        (candidate) => candidate.elementName === name && candidate.noiseType === "shot",
+      );
+      expect(entry?.sourcePsd).toBeGreaterThan(0.0);
+    }
+  });
+
   it("uses JFET AF as the current exponent", () => {
     function sourcePsd(exponent: number): number {
       const circuit = new Circuit();

@@ -407,7 +407,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 151
+    assert len(coverage) == 153
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -422,7 +422,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 151
+    assert len(records) == 153
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -496,9 +496,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 151
-    assert report.expected_canonical_parameter_count == 151
-    assert report.accepted_name_count == 219
+    assert report.canonical_parameter_count == 153
+    assert report.expected_canonical_parameter_count == 153
+    assert report.accepted_name_count == 221
     assert report.aliased_parameter_count == 55
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -506,7 +506,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t151\t151\t219\t55\t4\t0"
+        "true\t7\t7\t153\t153\t221\t55\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -534,8 +534,8 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 150
-    assert report.accepted_name_count == 216
+    assert report.canonical_parameter_count == 152
+    assert report.accepted_name_count == 218
     assert report.aliased_parameter_count == 54
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
@@ -550,7 +550,7 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t150\t151\t216\t54\t4\t4\n"
+        "false\t7\t7\t152\t153\t218\t54\t4\t4\n"
         "kind\tfield\tmessage\n"
         "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
         "supported parameters, found 17\n"
@@ -674,6 +674,7 @@ def test_model_card_aliases_build_device_instances() -> None:
             "AF": 1.3,
             "VJ": 0.8,
             "FC": 0.35,
+            "IS": 2.0e-13,
         },
     )
     jfet_model = jfet_from_model_card("J1", "d", "g", "s", jfet_card)
@@ -685,6 +686,7 @@ def test_model_card_aliases_build_device_instances() -> None:
         "AF": 1.3,
         "PB": 0.8,
         "FC": 0.35,
+        "IS": 2.0e-13,
     }
     assert jfet_model.polarity == "NJF"
     assert jfet_model.beta == pytest.approx(9.0e-4)
@@ -694,6 +696,7 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert jfet_model.Af == pytest.approx(1.3)
     assert jfet_model.Pb == pytest.approx(0.8)
     assert jfet_model.Fc == pytest.approx(0.35)
+    assert jfet_model.Is == pytest.approx(2.0e-13)
 
     mos_card = normalize_model_card(
         "Mn",
@@ -765,6 +768,41 @@ def test_dc_rejects_invalid_jfet_forward_bias_depletion_coefficient() -> None:
 
     with pytest.raises(ValueError, match=r"FC must be finite and in \[0, 1\)"):
         dc_op(circuit)
+
+
+def test_dc_rejects_invalid_jfet_gate_saturation_current() -> None:
+    circuit = Circuit()
+    circuit.add(JFET("J1", "drain", "gate", "0", Is=-1.0))
+
+    with pytest.raises(
+        ValueError,
+        match="gate saturation current must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+def test_jfet_gate_saturation_current_loads_a_forward_biased_gate() -> None:
+    def gate_voltage(
+        polarity: str, bias_voltage: float, gate_saturation_current: float
+    ) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbias", "bias", "0", bias_voltage))
+        circuit.add(Resistor("Rgate", "bias", "gate", 1.0e6))
+        circuit.add(
+            JFET(
+                "J1",
+                "0",
+                "gate",
+                "0",
+                polarity=polarity,
+                vto=-2.0 if polarity == "NJF" else 2.0,
+                Is=gate_saturation_current,
+            )
+        )
+        return dc_op(circuit).node_voltages["gate"]
+
+    assert gate_voltage("NJF", 0.3, 1.0e-9) < gate_voltage("NJF", 0.3, 1.0e-14)
+    assert gate_voltage("PJF", -0.3, 1.0e-9) > gate_voltage("PJF", -0.3, 1.0e-14)
 
 
 def test_bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() -> None:
@@ -2525,7 +2563,7 @@ def test_subcircuit_expansion_preserves_complete_jfet_model():
     cell = SubcircuitDefinition(
         "jfet-cell",
         ("d", "g", "s"),
-        (JFET("Jcell", "d", "g", "s", Kf=1.0e-12, Af=1.3, Pb=0.8, Fc=0.35),),
+        (JFET("Jcell", "d", "g", "s", Kf=1.0e-12, Af=1.3, Pb=0.8, Fc=0.35, Is=2.0e-13),),
     )
     circuit = Circuit()
     circuit.define_subcircuit(cell)
@@ -2536,6 +2574,7 @@ def test_subcircuit_expansion_preserves_complete_jfet_model():
     assert expanded.Af == pytest.approx(1.3)
     assert expanded.Pb == pytest.approx(0.8)
     assert expanded.Fc == pytest.approx(0.35)
+    assert expanded.Is == pytest.approx(2.0e-13)
 
 
 def test_subcircuit_expansion_preserves_complete_bjt_model():
@@ -7550,6 +7589,24 @@ def test_noise_jfet_kf_adds_inverse_frequency_flicker_noise() -> None:
 
     assert flicker_psds[0] > 0.0
     assert flicker_psds[0] / flicker_psds[1] == pytest.approx(100.0)
+
+
+def test_noise_jfet_gate_junctions_emit_distinct_shot_sources() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vdd", "out", "0", 1.0))
+    circuit.add(VoltageSource("Vgate", "gate", "0", 0.3))
+    circuit.add(JFET("J1", "out", "gate", "0", Is=1.0e-12))
+
+    entries = noise_ac(
+        circuit, "gate", "Vgate", freqs=[1_000.0], temperature=300.0
+    ).points[0].entries
+    for name in ("J1:IGS", "J1:IGD"):
+        entry = next(
+            entry
+            for entry in entries
+            if entry.element_name == name and entry.noise_type == "shot"
+        )
+        assert entry.source_psd > 0.0
 
 
 def test_noise_jfet_af_is_the_current_exponent() -> None:

@@ -384,6 +384,48 @@ fn jfet_rejects_invalid_forward_bias_depletion_coefficient() {
 }
 
 #[test]
+fn jfet_rejects_invalid_gate_saturation_current() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.gate_saturation_current = -1.0;
+    circuit.add(Element::Jfet(jfet));
+
+    let error = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(matches!(
+        error,
+        SpiceError::InvalidElement { reason, .. }
+            if reason == "gate saturation current must be finite and non-negative"
+    ));
+}
+
+#[test]
+fn jfet_gate_junctions_emit_distinct_shot_noise_sources() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "out", "0", 1.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.3,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.gate_saturation_current = 1.0e-12;
+    circuit.add(Element::Jfet(jfet));
+
+    let result = noise_ac(&circuit, "gate", "Vgate", &[1_000.0], 300.0).unwrap();
+    let entries = &result.points[0].entries;
+    for name in ["J1:IGS", "J1:IGD"] {
+        let entry = entries
+            .iter()
+            .find(|entry| entry.element_name == name && entry.noise_type == NoiseType::Shot)
+            .unwrap();
+        assert!(entry.source_psd > 0.0);
+    }
+}
+
+#[test]
 fn jfet_flicker_noise_uses_af_current_exponent() {
     let source_psd = |exponent: f64| {
         let mut circuit = Circuit::new();

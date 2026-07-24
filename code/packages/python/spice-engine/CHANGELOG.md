@@ -1,5 +1,8 @@
 # Changelog
 
+- Add JFET model-card `IS` gate-junction saturation-current support,
+  defaulting to `1e-14`, stamping `IGS`/`IGD` leakage in DC, transient, AC,
+  and transfer-function analyses, and emitting distinct shot-noise sources.
 - Add JFET model-card `FC` forward-bias depletion coefficient support,
   defaulting to `0.5` and shaping `CGS`/`CGD` depletion capacitance in AC and
   transient analysis with hierarchy preservation and range validation.

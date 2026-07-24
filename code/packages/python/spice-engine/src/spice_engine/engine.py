@@ -9082,12 +9082,53 @@ def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
         raise ValueError(f"JFET '{el.name}' PB must be finite and positive")
     if not math.isfinite(el.Fc) or el.Fc < 0.0 or el.Fc >= 1.0:
         raise ValueError(f"JFET '{el.name}' FC must be finite and in [0, 1)")
+    if not math.isfinite(el.Is) or el.Is < 0.0:
+        raise ValueError(
+            f"JFET '{el.name}' gate saturation current must be finite and non-negative"
+        )
     if el.polarity == "PJF":
         ids, gm, gds = _eval_njf(-vgs, -vds, -el.vto, el.beta, el.lambda_)
         return -ids, gm, gds
     if el.polarity != "NJF":
         raise ValueError(f"JFET '{el.name}' polarity must be 'NJF' or 'PJF'")
     return _eval_njf(vgs, vds, el.vto, el.beta, el.lambda_)
+
+
+_JFET_THERMAL_VOLTAGE = 0.02585
+
+
+def _jfet_gate_junction_current_conductance(
+    el: JFET, gate_voltage: float
+) -> tuple[float, float]:
+    junction_voltage = gate_voltage if el.polarity == "NJF" else -gate_voltage
+    exp_value = math.exp(
+        max(-40.0, min(40.0, junction_voltage / _JFET_THERMAL_VOLTAGE))
+    )
+    return (
+        el.Is * (exp_value - 1.0),
+        el.Is / _JFET_THERMAL_VOLTAGE * exp_value,
+    )
+
+
+def _stamp_jfet_gate_junction(
+    G: list[list[float]],
+    b: list[float],
+    node_to_idx: dict[str, int],
+    el: JFET,
+    terminal: str,
+    gate_voltage: float,
+) -> None:
+    current, conductance = _jfet_gate_junction_current_conductance(el, gate_voltage)
+    junction_voltage = gate_voltage if el.polarity == "NJF" else -gate_voltage
+    equivalent_current = current - conductance * junction_voltage
+    positive, negative = (
+        (el.gate, terminal) if el.polarity == "NJF" else (terminal, el.gate)
+    )
+    _stamp_g(G, node_to_idx, positive, negative, conductance)
+    if not _is_ground(positive):
+        b[node_to_idx[positive]] -= equivalent_current
+    if not _is_ground(negative):
+        b[node_to_idx[negative]] += equivalent_current
 
 
 def _eval_njf(
@@ -9141,6 +9182,8 @@ def _stamp_jfet(
         b[node_to_idx[el.drain]] -= Ieq
     if not _is_ground(el.source):
         b[node_to_idx[el.source]] += Ieq
+    _stamp_jfet_gate_junction(G, b, node_to_idx, el, el.source, Vg - Vs)
+    _stamp_jfet_gate_junction(G, b, node_to_idx, el, el.drain, Vg - Vd)
 
 
 def _bjt_early_factor(el: BJT, junction_voltage: float, output_voltage: float) -> float:
@@ -12758,7 +12801,11 @@ def _stamp_ac(
         Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
         Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
         _, gm_j, gds_j = _eval_jfet(el, Vg - Vs, Vd - Vs)
+        _, ggs = _jfet_gate_junction_current_conductance(el, Vg - Vs)
+        _, ggd = _jfet_gate_junction_current_conductance(el, Vg - Vd)
         _stamp_g_c(G, node_to_idx, el.drain, el.source, gds_j + 0j)
+        _stamp_g_c(G, node_to_idx, el.gate, el.source, ggs + 0j)
+        _stamp_g_c(G, node_to_idx, el.gate, el.drain, ggd + 0j)
         if el.Cgs > 0.0:
             cgs = _jfet_charge_dynamic_capacitance(el, el.Cgs, Vg - Vs)
             _stamp_g_c(G, node_to_idx, el.gate, el.source, 1j * omega * cgs)
@@ -13473,7 +13520,11 @@ def _build_ss_matrix(
             Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
             Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
             _, gm_j, gds_j = _eval_jfet(el, Vg - Vs, Vd - Vs)
+            _, ggs = _jfet_gate_junction_current_conductance(el, Vg - Vs)
+            _, ggd = _jfet_gate_junction_current_conductance(el, Vg - Vd)
             _stamp_g(G, node_to_idx, el.drain, el.source, gds_j)
+            _stamp_g(G, node_to_idx, el.gate, el.source, ggs)
+            _stamp_g(G, node_to_idx, el.gate, el.drain, ggd)
             if not _is_ground(el.drain):
                 d = node_to_idx[el.drain]
                 if not _is_ground(el.gate):
@@ -15357,6 +15408,21 @@ def _collect_noise_sources(
                 n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
                 n_s = None if _is_ground(el.source) else node_to_idx[el.source]
                 sources.append((el.name, "thermal", n_d, n_s, psd, 0.0))
+            n_g = None if _is_ground(el.gate) else node_to_idx[el.gate]
+            n_s = None if _is_ground(el.source) else node_to_idx[el.source]
+            n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
+            gate_source_current, _ = _jfet_gate_junction_current_conductance(
+                el, Vg - Vs
+            )
+            gate_drain_current, _ = _jfet_gate_junction_current_conductance(
+                el, Vg - Vd
+            )
+            sources.append(
+                (f"{el.name}:IGS", "shot", n_g, n_s, q2 * abs(gate_source_current), 0.0)
+            )
+            sources.append(
+                (f"{el.name}:IGD", "shot", n_g, n_d, q2 * abs(gate_drain_current), 0.0)
+            )
             if el.Kf > 0.0:
                 n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
                 n_s = None if _is_ground(el.source) else node_to_idx[el.source]
