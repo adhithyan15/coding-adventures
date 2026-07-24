@@ -419,6 +419,47 @@ fn shipped_energy_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b8) Shipped table — reference/pressure-conversions.adj resolves via import
+//      (pressure/stress unit → pascals, EXACT SP 811 B.9 boldface factors), and a
+//      non-exact unit (`torr`) — a rounded measured factor with no row — abstains.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_pressure_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_pressure");
+    let src = stdlib().join("reference/pressure-conversions.adj");
+    std::fs::copy(&src, dir.join("pressure-conversions.adj"))
+        .expect("copy shipped pressure-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"pressure-conversions.adj\"\n\
+         ? pressure_to_pascals(atmosphere_standard, $Pa)\n\
+         ? pressure_to_pascals(bar, $Pa)\n\
+         ? pressure_to_pascals(kilogram_force_per_square_meter, $Pa)\n\
+         ? pressure_to_pascals(torr, $Pa)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 "Pressure or stress" exact factors resolve, character-for-
+    // character from the table (boldface = exact; scientific notation to plain decimal).
+    assert!(out.contains("\"Pa\":\"101325\""), "standard atmosphere = 101325 Pa: {out}");
+    assert!(out.contains("\"Pa\":\"100000\""), "bar = 100000 Pa: {out}");
+    assert!(out.contains("\"Pa\":\"9.80665\""), "kgf/m² = 9.80665 Pa: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `torr` is NOT a single exact factor (SP 811 lists it as a rounded measured
+    // value, not boldface) — no row, so the engine abstains rather than commit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a non-exact unit abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
