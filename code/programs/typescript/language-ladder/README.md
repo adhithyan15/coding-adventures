@@ -21,8 +21,9 @@ own script, its etymology hook, and the **connections back** to earlier
 languages that share a root, so the cross-language memory the interleaving is
 meant to build is made visible rather than left implicit. Prev / Next walk the
 spine, and a **jump picker** (a `<select>` of the whole book-ordered spine) leaps
-straight to any concept; consolidation lessons (`practice`/`review`) are left to
-the review quiz, not the teaching sweep.
+straight to any concept; a slim **progress bar** shows how far along the 186-
+concept walk you are. Consolidation lessons (`practice`/`review`) are left to the
+review quiz, not the teaching sweep.
 
 The session **introduces writing systems as-needed** (`scriptintro.ts`): the
 first time the walk reaches a non-Latin script — Arabic, then Devanagari, then

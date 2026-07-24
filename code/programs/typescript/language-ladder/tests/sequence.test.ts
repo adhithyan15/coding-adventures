@@ -8,6 +8,7 @@ import {
   activeChain,
   teachingSweep,
   sweepableConcepts,
+  spineProgress,
   type ChainLanguage,
 } from "../src/sequence";
 
@@ -152,5 +153,25 @@ describe("sweepableConcepts", () => {
     const hello = concepts.indexOf("GREETING-HELLO");
     expect(hello).toBeGreaterThanOrEqual(0);
     expect(hello).toBeLessThan(concepts.length - 1);
+  });
+});
+
+describe("spineProgress", () => {
+  it("counts the current concept as reached: cursor 0 of 10 is 0.1, last is 1", () => {
+    // CONTROL: a naive cursor/length would give 0 at the start (0/10). Counting
+    // the current concept (cursor+1)/length gives 0.1 — this asserts that.
+    expect(spineProgress(0, 10)).toBeCloseTo(0.1, 5);
+    expect(spineProgress(4, 10)).toBeCloseTo(0.5, 5);
+    expect(spineProgress(9, 10)).toBe(1);
+  });
+
+  it("an empty spine is 0, never NaN or Infinity", () => {
+    expect(spineProgress(3, 0)).toBe(0);
+    expect(spineProgress(0, 0)).toBe(0);
+  });
+
+  it("clamps an out-of-range cursor to the ends", () => {
+    expect(spineProgress(-5, 10)).toBeCloseTo(0.1, 5); // clamped up to 0 → 1/10
+    expect(spineProgress(999, 10)).toBe(1); // clamped down to 9 → 10/10
   });
 });

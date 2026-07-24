@@ -52,6 +52,7 @@ import {
   sweepableConcepts,
   activeChain,
   LANGUAGE_CHAIN,
+  spineProgress,
 } from "./sequence.ts";
 import type { SessionStep } from "./session.ts";
 import {
@@ -751,6 +752,15 @@ function renderLearn(): HTMLElement {
     `Concept ${conceptCursor + 1} of ${CONCEPT_SPINE.length}` +
     ` · taught in ${plan.teaching.length} language${plan.teaching.length === 1 ? "" : "s"}`;
   wrap.appendChild(progress);
+
+  // A slim bar for how far along the spine you are — a sense of the whole
+  // journey that the bare "N of M" count doesn't convey at a glance.
+  const track = el("div", "progress");
+  const fill = el("div", "progress__fill");
+  const pct = spineProgress(conceptCursor, CONCEPT_SPINE.length) * 100;
+  fill.style.width = `${pct}%`;
+  track.appendChild(fill);
+  wrap.appendChild(track);
 
   const heading = el("h2", "learn__concept");
   heading.textContent = conceptTitle(concept);
