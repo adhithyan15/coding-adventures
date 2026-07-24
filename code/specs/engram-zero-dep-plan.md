@@ -198,7 +198,13 @@ test-fixture work for Phase F.
 ### Phase F — sqlite-file writer (**removes rusqlite**) — L (PRs A6–A8)
 - F1: record/header/b-tree **write** — smallest-serial-type rule, leaf-insert,
   page splits → interior pages, overflow-write for large `col` JSON. L
-- F2: sqlite_schema writer + `build(tables)` API. M
+- F2: sqlite_schema writer + `build(tables)` API. M — **DONE.**
+  `write_multi_table_db(page_size, tables)` (with `write_single_table_db` as the
+  one-table case) emits a full multi-table database — page-1 `sqlite_schema` leaf
+  + per-table data b-trees — accepted by real SQLite (`PRAGMA integrity_check`).
+  Page-1 `sqlite_schema` records that overflow now spill onto overflow pages
+  (sqlite-file 0.17.0). Remaining later rung: a schema so large its inline heads
+  need page 1 to become an interior b-tree.
 - F3: cut anki-pkg **writer** over (`write_v11_collection_bytes_from_engram_state`),
   **delete `rusqlite`** from Cargo.toml; port engram-capi's test-only sqlite
   fixture builder to the new writer, drop its dev-dep. **rusqlite gone from repo.**
