@@ -680,31 +680,48 @@ function renderTeachingStep(
 }
 
 /** Prev / Next along the concept spine — walking the curriculum forward. */
+/**
+ * Move the teaching cursor to `index` (clamped), the one place all navigation
+ * funnels through — Prev, Next, and the jump picker. Resets the review draw
+ * (the covered set changed), persists so the app resumes here, and re-renders.
+ * A no-op if the target is where we already are.
+ */
+function jumpToConcept(index: number): void {
+  const target = Math.max(0, Math.min(index, CONCEPT_SPINE.length - 1));
+  if (target === conceptCursor) return;
+  conceptCursor = target;
+  reviewCell = null;
+  saveCursor(REVIEW_STORAGE, conceptCursor);
+  render();
+}
+
 function renderLearnNav(): HTMLElement {
   const nav = el("div", "learn__nav");
+
   const prev = el("button", "opt") as HTMLButtonElement;
-  prev.textContent = "← Previous concept";
+  prev.textContent = "← Previous";
   prev.disabled = conceptCursor === 0;
-  prev.onclick = () => {
-    if (conceptCursor > 0) {
-      conceptCursor -= 1;
-      reviewCell = null; // covered set changed — draw the next review from it
-      saveCursor(REVIEW_STORAGE, conceptCursor); // resume here next visit
-      render();
-    }
-  };
+  prev.onclick = () => jumpToConcept(conceptCursor - 1);
+
+  // Jump anywhere in the spine — 186 concepts is a long walk to Next through.
+  // A native <select> gives free keyboard type-ahead over the book-ordered list.
+  const jump = el("select", "learn__jump") as HTMLSelectElement;
+  jump.title = "Jump to concept";
+  CONCEPT_SPINE.forEach((concept, i) => {
+    const opt = el("option", "") as HTMLOptionElement;
+    opt.value = String(i);
+    opt.textContent = `${i + 1}. ${conceptTitle(concept)}`;
+    if (i === conceptCursor) opt.selected = true;
+    jump.appendChild(opt);
+  });
+  jump.onchange = () => jumpToConcept(Number(jump.value));
+
   const next = el("button", "opt") as HTMLButtonElement;
-  next.textContent = "Next concept →";
+  next.textContent = "Next →";
   next.disabled = conceptCursor >= CONCEPT_SPINE.length - 1;
-  next.onclick = () => {
-    if (conceptCursor < CONCEPT_SPINE.length - 1) {
-      conceptCursor += 1;
-      reviewCell = null; // covered set changed — draw the next review from it
-      saveCursor(REVIEW_STORAGE, conceptCursor); // resume here next visit
-      render();
-    }
-  };
-  nav.append(prev, next);
+  next.onclick = () => jumpToConcept(conceptCursor + 1);
+
+  nav.append(prev, jump, next);
   return nav;
 }
 
