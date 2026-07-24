@@ -196,6 +196,35 @@ rush large work):
 Each step verifies in the browser (screenshot + read the render) and ships only
 with tests that fail on the pre-change behaviour.
 
+### Status — shipped
+
+All of the above shipped as the app **`language-ladder`** (renamed from
+`script-writing-visualizer`, v0.16.0), each step its own reviewed PR:
+
+- **2–5** — the pure engine: sequencing (`sequence.ts`), the session orchestrator
+  (`session.ts` + `sessionplan.ts`), the SRS-weighted cumulative quiz (`quiz.ts`),
+  and the mistakes store (`mistakes.ts`), all deterministic and unit-tested with
+  controls that bite.
+- **6** — the unified shell: **Learn** mode folds the teaching sweep (with the
+  grounded cross-language connections) and the review quiz into one flow; the app
+  was renamed; the standalone exploratory artifacts were a no-op to retire (they
+  were only ever ephemeral, never committed).
+- **7** — **script introduction** is wired in (`scriptintro.ts`): a "new script"
+  note the first time the walk reaches a non-Latin script, from the scripts'
+  `signature` data. **Grammar introduction was parked**, not built: the curriculum
+  carries a single grammar concept tag (`GRAMMAR-THE`) with no explanation field —
+  too thin to ground an honest note the way scripts have `signature` data.
+- **Polish beyond the plan**: localStorage persistence for the review
+  (`reviewstore.ts`), the teaching cursor (`cursorstore.ts`), and a "reset
+  progress" clearer (`reset.ts`); resume-where-you-left-off; a jump-to-concept
+  picker; and a spine progress bar. One candidate was **abandoned as un-grounded**:
+  romanization under the quiz options — the `romanization` field is populated for
+  only ~54 of ~700 lessons (and not the Indic vocabulary, whose romanization lives
+  in the gloss text), so showing it would be inconsistent rather than helpful.
+
+The two honest non-builds (grammar intro, romanization) can return if the
+curriculum grows the metadata they need.
+
 ## Verification
 
 - Pure modules (sequencing, orchestrator, mistakes) are deterministic and unit-
