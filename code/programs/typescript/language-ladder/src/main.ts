@@ -40,6 +40,7 @@ import {
 import { pickNext as pickReviewCell, makeRng, cellKey, type GridCell } from "./quiz.ts";
 import { confusions } from "./mistakes.ts";
 import { loadReview, saveReview } from "./reviewstore.ts";
+import { loadCursor, saveCursor } from "./cursorstore.ts";
 import {
   scriptsById,
   firstIntroductionByScript,
@@ -156,6 +157,11 @@ let reviewSession = restoredReview.session; // advances once per answered questi
 let reviewCell: GridCell | null = null; // the question currently on screen
 let reviewOptions: GridCell[] = []; // its answer options (one is `reviewCell`)
 let reviewChosen: string | null = null; // cellKey of the picked option; null = unanswered
+
+// Resume the teaching walk where it was left off: restore the concept cursor
+// from storage, clamped to the current spine (the curriculum may have grown or
+// shrunk since the save). A missing/corrupt value starts at 0.
+conceptCursor = loadCursor(REVIEW_STORAGE, CONCEPT_SPINE.length);
 
 // Constant for the page's lifetime: lesson indices grouped by language, and the
 // round-robin pool over those groups. Computing them once is why consecutive
@@ -677,6 +683,7 @@ function renderLearnNav(): HTMLElement {
     if (conceptCursor > 0) {
       conceptCursor -= 1;
       reviewCell = null; // covered set changed — draw the next review from it
+      saveCursor(REVIEW_STORAGE, conceptCursor); // resume here next visit
       render();
     }
   };
@@ -687,6 +694,7 @@ function renderLearnNav(): HTMLElement {
     if (conceptCursor < CONCEPT_SPINE.length - 1) {
       conceptCursor += 1;
       reviewCell = null; // covered set changed — draw the next review from it
+      saveCursor(REVIEW_STORAGE, conceptCursor); // resume here next visit
       render();
     }
   };

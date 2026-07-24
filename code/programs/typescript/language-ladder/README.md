@@ -43,6 +43,11 @@ confusing"* panel rolls the mistakes up from `confusions(log)`. The review
 `progress.ts` uses for the lesson schedule, with the same defensive parse (a
 corrupt or wrong-version blob restores as empty, never throws).
 
+The **teaching cursor persists too** (`cursorstore.ts`): the concept you walked
+to is saved on each Prev/Next and restored at startup, so the app resumes where
+you left off rather than back at the first concept. The restored index is
+clamped to the current spine, and a bad blob falls back to the start.
+
 ## Concepts mode
 
 The curriculum tags lessons with a shared `concept_tag`, and canonical tags are
