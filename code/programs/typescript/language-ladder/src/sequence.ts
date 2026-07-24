@@ -159,3 +159,15 @@ export function sweepableConcepts(
     return a < b ? -1 : a > b ? 1 : 0;
   });
 }
+
+/**
+ * How far along a spine of `length` concepts a 0-based `cursor` has reached, as a
+ * fraction in [0, 1]. Counts the current concept as reached, so cursor 0 of 10 is
+ * 0.1 (one of ten), and the last concept is 1. An empty spine is 0; the cursor is
+ * clamped so an out-of-range value can't push past the ends.
+ */
+export function spineProgress(cursor: number, length: number): number {
+  if (length <= 0) return 0;
+  const reached = Math.max(0, Math.min(cursor, length - 1)) + 1;
+  return reached / length;
+}
