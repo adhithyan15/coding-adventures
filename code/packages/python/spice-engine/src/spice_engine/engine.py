@@ -402,6 +402,29 @@ def mosfet_at_temperature(
     )
 
 
+def jfet_at_temperature(
+    jfet: JFET,
+    temperature_kelvin: float,
+    *,
+    nominal_temperature_kelvin: float = 300.15,
+) -> JFET:
+    """Return a JFET with its threshold voltage adjusted for temperature."""
+
+    if not math.isfinite(temperature_kelvin) or temperature_kelvin <= 0.0:
+        raise ValueError("temperature_kelvin must be finite and positive")
+    nominal_temperature = (
+        jfet.Tnom if jfet.Tnom is not None else nominal_temperature_kelvin
+    )
+    if not math.isfinite(nominal_temperature) or nominal_temperature <= 0.0:
+        raise ValueError("nominal_temperature_kelvin must be finite and positive")
+    if not math.isfinite(jfet.Tcv):
+        raise ValueError(f"{jfet.name}: JFET TCV must be finite")
+    return replace(
+        jfet,
+        vto=jfet.vto - jfet.Tcv * (temperature_kelvin - nominal_temperature),
+    )
+
+
 def circuit_at_temperature(
     circuit: Circuit,
     temperature_kelvin: float,
@@ -425,6 +448,12 @@ def circuit_at_temperature(
                 temperature_kelvin,
                 nominal_temperature_kelvin=nominal_temperature_kelvin,
                 energy_gap_ev=element.Eg,
+            )
+        if isinstance(element, JFET):
+            return jfet_at_temperature(
+                element,
+                temperature_kelvin,
+                nominal_temperature_kelvin=nominal_temperature_kelvin,
             )
         if isinstance(element, Mosfet):
             return mosfet_at_temperature(
@@ -604,7 +633,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.Af,
         )
     if isinstance(element, JFET):
-        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb, element.Fc, element.Is, element.Rd, element.Rs)
+        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb, element.Fc, element.Is, element.Rd, element.Rs, element.Tcv, element.Tnom)
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
@@ -9125,6 +9154,10 @@ def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
         raise ValueError(f"JFET '{el.name}' drain resistance must be finite and non-negative")
     if not math.isfinite(el.Rs) or el.Rs < 0.0:
         raise ValueError(f"JFET '{el.name}' source resistance must be finite and non-negative")
+    if not math.isfinite(el.Tcv):
+        raise ValueError(f"JFET '{el.name}' TCV must be finite")
+    if el.Tnom is not None and (not math.isfinite(el.Tnom) or el.Tnom <= 0.0):
+        raise ValueError(f"JFET '{el.name}' TNOM must be finite and positive")
     if el.polarity == "PJF":
         ids, gm, gds = _eval_njf(-vgs, -vds, -el.vto, el.beta, el.lambda_)
         return -ids, gm, gds

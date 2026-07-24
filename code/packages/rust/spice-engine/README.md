@@ -114,9 +114,10 @@ let result = transient_adaptive(
 )?;
 ```
 
-`diode_at_temperature`, `bjt_at_temperature`, `mosfet_at_temperature`, and
-`circuit_at_temperature` provide operating-temperature footholds for diode,
-BJT, and Level-1 MOSFET models before running an analysis.
+`diode_at_temperature`, `bjt_at_temperature`, `jfet_at_temperature`,
+`mosfet_at_temperature`, and `circuit_at_temperature` provide
+operating-temperature footholds for diode, BJT, JFET, and Level-1 MOSFET
+models before running an analysis.
 
 `normalize_model_card`, `diode_from_model_card`, `bjt_from_model_card`,
 `jfet_from_model_card`, and `mosfet_from_model_card` provide the shared
@@ -157,6 +158,10 @@ omitted.
 `TNOM`/`T_NOM` sets the BJT model's nominal temperature in degrees Celsius.
 It overrides the circuit-level nominal temperature for BJT temperature scaling;
 omitting it preserves the inherited default.
+JFET cards accept `TCV` (default `0 V/K`) to shift threshold voltage as
+`VTO(T) = VTO - TCV * (T - TNOM)`. `TNOM`/`T_NOM` sets the JFET model's
+nominal temperature in degrees Celsius and overrides the circuit default;
+omitting `TCV` preserves temperature-invariant JFET behavior.
 `KF` (default `0`, disabled) adds a distinct BJT base-current flicker-noise
 source to `.NOISE`. `AF` (default `1`) controls the base-current exponent, so
 source PSD is `KF * abs(Ib)^AF / frequency`.

@@ -309,6 +309,7 @@ from spice_engine import (
     fourier,
     fourier_corners,
     fourier_transient_deck,
+    jfet_at_temperature,
     jfet_from_model_card,
     mc_dc,
     mc_dc_corners,
@@ -407,7 +408,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 157
+    assert len(coverage) == 161
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -422,7 +423,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 157
+    assert len(records) == 161
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -496,17 +497,17 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 157
-    assert report.expected_canonical_parameter_count == 157
-    assert report.accepted_name_count == 225
-    assert report.aliased_parameter_count == 55
+    assert report.canonical_parameter_count == 161
+    assert report.expected_canonical_parameter_count == 161
+    assert report.accepted_name_count == 231
+    assert report.aliased_parameter_count == 57
     assert report.max_alias_count == 4
     assert report.issues == ()
     assert format_model_card_supported_parameter_coverage_gate_report(report) == (
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t157\t157\t225\t55\t4\t0"
+        "true\t7\t7\t161\t161\t231\t57\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -534,9 +535,9 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 156
-    assert report.accepted_name_count == 222
-    assert report.aliased_parameter_count == 54
+    assert report.canonical_parameter_count == 160
+    assert report.accepted_name_count == 228
+    assert report.aliased_parameter_count == 56
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
     assert report.issues[0].kind == "NMOS"
@@ -550,7 +551,7 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t156\t157\t222\t54\t4\t4\n"
+        "false\t7\t7\t160\t161\t228\t56\t4\t4\n"
         "kind\tfield\tmessage\n"
         "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
         "supported parameters, found 17\n"
@@ -677,6 +678,8 @@ def test_model_card_aliases_build_device_instances() -> None:
             "IS": 2.0e-13,
             "RD": 125.0,
             "RS": 75.0,
+            "T_NOM": 50.0,
+            "TCV": 0.01,
         },
     )
     jfet_model = jfet_from_model_card("J1", "d", "g", "s", jfet_card)
@@ -691,6 +694,8 @@ def test_model_card_aliases_build_device_instances() -> None:
         "IS": 2.0e-13,
         "RD": 125.0,
         "RS": 75.0,
+        "TNOM": 50.0,
+        "TCV": 0.01,
     }
     assert jfet_model.polarity == "NJF"
     assert jfet_model.beta == pytest.approx(9.0e-4)
@@ -703,6 +708,8 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert jfet_model.Is == pytest.approx(2.0e-13)
     assert jfet_model.Rd == pytest.approx(125.0)
     assert jfet_model.Rs == pytest.approx(75.0)
+    assert jfet_model.Tnom == pytest.approx(323.15)
+    assert jfet_model.Tcv == pytest.approx(0.01)
 
     mos_card = normalize_model_card(
         "Mn",
@@ -940,7 +947,7 @@ def test_device_model_temperature_audit_fixtures_run_reference_sweeps() -> None:
             assert expected.expected_min <= value <= expected.expected_max
 
     jfet_fixture = next(fixture for fixture in fixtures if fixture.kind == "NJF")
-    assert jfet_fixture.temperature_behavior.startswith("JFET temperature scaling is intentionally")
+    assert jfet_fixture.temperature_behavior.startswith("JFET temperature scaling defaults")
 
 
 def test_device_model_capacitance_audit_fixtures_run_reference_ac_points() -> None:
@@ -2612,7 +2619,7 @@ def test_subcircuit_expansion_preserves_complete_jfet_model():
     cell = SubcircuitDefinition(
         "jfet-cell",
         ("d", "g", "s"),
-        (JFET("Jcell", "d", "g", "s", Kf=1.0e-12, Af=1.3, Pb=0.8, Fc=0.35, Is=2.0e-13, Rd=125.0, Rs=75.0),),
+        (JFET("Jcell", "d", "g", "s", Kf=1.0e-12, Af=1.3, Pb=0.8, Fc=0.35, Is=2.0e-13, Rd=125.0, Rs=75.0, Tcv=0.01, Tnom=323.15),),
     )
     circuit = Circuit()
     circuit.define_subcircuit(cell)
@@ -2626,6 +2633,8 @@ def test_subcircuit_expansion_preserves_complete_jfet_model():
     assert expanded.Is == pytest.approx(2.0e-13)
     assert expanded.Rd == pytest.approx(125.0)
     assert expanded.Rs == pytest.approx(75.0)
+    assert expanded.Tcv == pytest.approx(0.01)
+    assert expanded.Tnom == pytest.approx(323.15)
 
 
 def test_subcircuit_expansion_preserves_complete_bjt_model():
@@ -2903,6 +2912,31 @@ def test_bjt_temperature_scaling_uses_model_temperature_exponent():
     low = bjt_at_temperature(BJT("Qlow", "c", "b", "e", Xti=0.0), 350.0)
     high = bjt_at_temperature(BJT("Qhigh", "c", "b", "e", Xti=4.0), 350.0)
     assert high.Is > low.Is
+
+
+def test_jfet_temperature_scaling_uses_tcv_and_model_nominal_temperature():
+    transistor = JFET("J1", "d", "g", "s", vto=-2.0, Tcv=0.01, Tnom=310.0)
+    at_model_nominal = jfet_at_temperature(transistor, 310.0)
+    hot = jfet_at_temperature(transistor, 320.0)
+    cold = jfet_at_temperature(transistor, 300.0)
+    invariant = jfet_at_temperature(JFET("Jflat", "d", "g", "s"), 350.0)
+
+    assert at_model_nominal.vto == pytest.approx(-2.0)
+    assert hot.vto == pytest.approx(-2.1)
+    assert cold.vto == pytest.approx(-1.9)
+    assert invariant.vto == pytest.approx(-2.0)
+
+
+def test_dc_rejects_invalid_jfet_temperature_parameters():
+    circuit = Circuit()
+    circuit.add(JFET("Jbad", "d", "g", "0", Tcv=float("nan")))
+    with pytest.raises(ValueError, match="TCV must be finite"):
+        dc_op(circuit)
+
+    circuit = Circuit()
+    circuit.add(JFET("Jbad", "d", "g", "0", Tnom=0.0))
+    with pytest.raises(ValueError, match="TNOM must be finite and positive"):
+        dc_op(circuit)
 
 
 def test_bjt_temperature_scaling_uses_beta_temperature_exponent():

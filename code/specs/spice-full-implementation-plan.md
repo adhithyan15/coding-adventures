@@ -33,15 +33,17 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language JFET source resistance.
+1. Cross-language JFET threshold-voltage temperature scaling.
    - Status: current PR completion candidate.
-   - Add Berkeley JFET `RS` model-card support in Rust, Python, and TypeScript.
-   - Default `RS` to zero ohms and, when positive, route channel, gate-source,
-     charge, AC, transient, transfer-function, and noise behavior through an
-     intrinsic source node behind the external source resistor.
-   - Preserve `RS` through hierarchy and cloning, validate finite non-negative
-     values, emit a distinct `RS` thermal-noise source, and extend the
-     supported-parameter coverage gate from 155 to 157 canonical rows.
+   - Add Berkeley JFET `TNOM` / `T_NOM` and `TCV` model-card support in Rust,
+     Python, and TypeScript.
+   - Convert model-card nominal temperature from Celsius to Kelvin and apply
+     `VTO(T) = VTO - TCV * (T - TNOM)`, with model `TNOM` overriding the
+     circuit nominal temperature.
+   - Preserve both parameters through hierarchy and cloning, validate finite
+     coefficients and finite-positive nominal temperatures, keep the default
+     temperature-invariant when `TCV` is zero, and extend the
+     supported-parameter coverage gate from 157 to 161 canonical rows.
 
 ## Completed Slices
 
@@ -3299,6 +3301,17 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning paths preserve `RD`, finite non-negative validation
      is shared across analyses, a distinct `RD` thermal-noise source is
      emitted, and the supported-parameter release gate now covers 155
+     canonical rows.
+
+255. Cross-language JFET source resistance.
+   - Status: completed in PR 8938.
+   - Rust, Python, and TypeScript JFET model cards now accept `RS`, default it
+     to zero ohms, and route channel, gate-source, charge, AC, transient,
+     transfer-function, and noise behavior through an intrinsic source node
+     behind the external source resistor when positive.
+   - Hierarchy and cloning paths preserve `RS`, finite non-negative validation
+     is shared across analyses, a distinct `RS` thermal-noise source is
+     emitted, and the supported-parameter release gate now covers 157
      canonical rows.
 
 ## Backlog

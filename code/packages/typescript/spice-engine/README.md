@@ -65,9 +65,10 @@ each Newton update per unknown. Diagnostics report the active limit, how many
 steps were clipped, and the minimum damping factor; pass
 `newtonStepLimit: null` to disable the limiter.
 
-`diodeAtTemperature`, `bjtAtTemperature`, `mosfetAtTemperature`, and
-`circuitAtTemperature` provide operating-temperature footholds for diode, BJT,
-and Level-1 MOSFET models before running an analysis.
+`diodeAtTemperature`, `bjtAtTemperature`, `jfetAtTemperature`,
+`mosfetAtTemperature`, and `circuitAtTemperature` provide
+operating-temperature footholds for diode, BJT, JFET, and Level-1 MOSFET
+models before running an analysis.
 `dcTemperatureSweep` and `dcTemperatureSweepCorners` run `.temp`-style DC
 operating-point snapshots across explicit analysis temperatures, with stable
 nominal and named-corner table helpers for cross-language comparison.
@@ -227,6 +228,10 @@ omitted.
 `TNOM`/`T_NOM` sets the BJT model's nominal temperature in degrees Celsius.
 It overrides the circuit-level nominal temperature for BJT temperature scaling;
 omitting it preserves the inherited default.
+JFET cards accept `TCV` (default `0 V/K`) to shift threshold voltage as
+`VTO(T) = VTO - TCV * (T - TNOM)`. `TNOM`/`T_NOM` sets the JFET model's
+nominal temperature in degrees Celsius and overrides the circuit default;
+omitting `TCV` preserves temperature-invariant JFET behavior.
 `KF` (default `0`, disabled) adds a distinct BJT base-current flicker-noise
 source to `.NOISE`. `AF` (default `1`) controls the base-current exponent, so
 source PSD is `KF * abs(Ib)^AF / frequency`.
