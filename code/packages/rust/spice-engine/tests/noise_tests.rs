@@ -273,6 +273,33 @@ fn diode_flicker_noise_uses_kf_with_inverse_frequency_scaling() {
 }
 
 #[test]
+fn diode_flicker_noise_uses_af_current_exponent() {
+    let source_psd = |exponent: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vbias", "bias", "0", 1.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rbias", "bias", "out", 1_000.0,
+        )));
+        let mut diode = Diode::new("D1", "out", "0");
+        diode.flicker_noise_coefficient = 1.0e-12;
+        diode.flicker_noise_exponent = exponent;
+        circuit.add(Element::Diode(diode));
+        noise_ac(&circuit, "out", "Vbias", &[1_000.0], 300.0)
+            .unwrap()
+            .points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "D1" && entry.noise_type == NoiseType::Flicker)
+            .unwrap()
+            .source_psd
+    };
+
+    assert!(source_psd(2.0) < source_psd(1.0));
+}
+
+#[test]
 fn bjt_flicker_noise_uses_af_base_current_exponent() {
     let source_psd = |exponent: f64| {
         let mut circuit = Circuit::new();
