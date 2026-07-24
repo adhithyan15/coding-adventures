@@ -297,6 +297,45 @@ fn shipped_volume_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b5) Shipped table — reference/si-prefixes.adj resolves via import (prefix →
+//      power-of-ten exponent, incl. NEGATIVE exponents), and an absent prefix
+//      abstains. This is the original concrete trigger for the `table` construct.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_si_prefixes_table_resolves_signed_exponents_and_abstains() {
+    let dir = scratch("shipped_siprefix");
+    let src = stdlib().join("reference/si-prefixes.adj");
+    std::fs::copy(&src, dir.join("si-prefixes.adj")).expect("copy shipped si-prefixes.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"si-prefixes.adj\"\n\
+         ? si_prefix_to_exponent(kilo, $E)\n\
+         ? si_prefix_to_exponent(milli, $E)\n\
+         ? si_prefix_to_exponent(pico, $E)\n\
+         ? si_prefix_to_exponent(zetta, $E)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST prefix → integer-exponent rows resolve, including the negatives.
+    assert!(out.contains("\"E\":\"3\""), "kilo = 3: {out}");
+    assert!(out.contains("\"E\":\"-3\""), "milli = -3 (negative exponent): {out}");
+    assert!(out.contains("\"E\":\"-12\""), "pico = -12: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("metric-si-prefixes"),
+        "carries the NIST SI-prefixes locator: {out}"
+    );
+    // `zetta` is a real SI prefix but not in this row set — the engine abstains
+    // rather than inventing an exponent.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "an absent prefix abstains, never a fabricated exponent: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
