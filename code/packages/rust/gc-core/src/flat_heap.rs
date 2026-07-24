@@ -1291,6 +1291,26 @@ impl FlatHeap {
             if size >= 8 && off <= size - 8 {
                 let slot = base.add(off) as *mut usize;
                 let w = ptr::read_unaligned(slot);
+                // PR-3b reviewer follow-up: a *precise* reference field holds a reference —
+                // a **base** pointer (payload start, low-3 NaN-box tag permitted) or null —
+                // never an *interior* pointer. `forwarded` only rewrites base keys, so an
+                // interior pointer in a ref field would silently escape relocation and dangle
+                // once its target's from-space block is freed. This catches a frontend that
+                // registered a ref-field offset holding an interior/derived pointer (a
+                // genuine non-pointer datum belongs in a non-ref field, scanned
+                // conservatively, not at a registered ref offset). Compiled out of release
+                // builds; exercised under tests + Miri. `find_header` is a live read
+                // (from-space is still intact during fixup, before any sweep).
+                #[cfg(debug_assertions)]
+                {
+                    let cand = w & !0x7usize;
+                    let bh = self.find_header(cand);
+                    debug_assert!(
+                        bh.is_null() || bh as usize + HEADER_SIZE == cand,
+                        "precise ref field at offset {off} holds an interior pointer \
+                         (0x{cand:x}); precise ref fields must hold base/tagged-base pointers",
+                    );
+                }
                 if let Some(nw) = self.forwarded(w, forward) {
                     ptr::write_unaligned(slot, nw);
                 }
@@ -1320,7 +1340,6 @@ impl FlatHeap {
     /// # Safety
     /// Each `root_slots` address and each `regions` span must be readable (same contract
     /// as [`Self::collect_mixed`]).
-    #[allow(dead_code)] // full `collect_compacting` (reclaim + integrate) consumes this in PR-3c
     unsafe fn evacuate_and_fixup(
         &mut self,
         root_slots: &[usize],
@@ -1344,6 +1363,148 @@ impl FlatHeap {
         }
 
         (arena, forward)
+    }
+
+    /// **AOT00-T3 PR-3c-2 — the full moving cycle (`collect_compacting`).** Runs one
+    /// complete relocating collection: classify + evacuate + fix up (steps 1–3, via
+    /// [`Self::evacuate_and_fixup`]), then **reclaim** from-space and **integrate** the
+    /// to-space arena into the heap (step 4). After it returns the heap is self-consistent
+    /// and owns everything: the moved objects live in an arena on `self.arenas`, the
+    /// pinned survivors stay in place on `self.all`, and the from-space originals and all
+    /// unreachable objects are freed. This is the shipping entry the compacting collector
+    /// exposes; the C ABI (spec §5) wraps it in a later rung.
+    ///
+    /// # Step 4 in detail — the UAF surface, and why each step is safe
+    ///
+    /// After [`Self::evacuate_and_fixup`], the crucial invariant established by
+    /// [`Self::classify_mobility`] is:
+    ///
+    /// > **A reachable object survives *in place* iff its [`FlatHeader::pinned`] bit is
+    /// > set; every reachable-but-not-moved object is pinned.**
+    ///
+    /// Proof: a reachable object is either (a) reached conservatively (a `regions` root, or
+    /// through a `kind == 0` object) — the pinning wave sets its pin bit; or (b) reached
+    /// only precisely. A precise `kind == 0` object is *seeded* into the pinning wave (its
+    /// conservative out-edges make it unmovable) → pinned. A precise `kind != 0` object is
+    /// pinned iff a conservative edge also reached it; if not, it is exactly a **movable**
+    /// object and was moved. So `reachable ∧ ¬moved ≡ pinned`, and `movable ⇒ ¬pinned`.
+    ///
+    /// Therefore the pin bit is a ready-made *keep-in-place* predicate:
+    /// 1. **Mark survivors-in-place**: set `marked = pinned` on every from-space block.
+    ///    Unpinned = (unreachable) ∪ (moved originals, since `movable ⇒ ¬pinned`).
+    /// 2. **Sweep** (`sweep(false)`) frees every unmarked (unpinned) block — reclaiming the
+    ///    dead *and* the now-orphaned from-space originals of moved objects (their bytes
+    ///    live in the arena; every pointer that named them was rewritten in step 3, so no
+    ///    live reference dangles) — and keeps + ages the pinned survivors, re-threading
+    ///    `self.all` over just them. From-space originals are malloc'd (`arena_backed ==
+    ///    false`), so `sweep` frees them normally; no arena slice is touched here.
+    /// 3. **Integrate the arena**: the moved objects' arena copies are not yet on any list
+    ///    (their `next` fields are stale bytes from the `copy_nonoverlapping`). Re-thread
+    ///    them into one fresh chain and prepend it to `self.all`, and age/tenure each just
+    ///    as `sweep` ages an in-place survivor (so a moved young object still progresses
+    ///    toward tenuring instead of being immortally young). Then hand the arena to
+    ///    `self.arenas` so its storage outlives the collection — and is freed exactly once,
+    ///    when the arena drops, never by an individual `dealloc` (its blocks are
+    ///    [`FlatHeader::arena_backed`]).
+    /// 4. **Rebuild the remembered set** over the *post-integration* `self.all`: this both
+    ///    remaps any moved old→young parent to its new address and re-derives every
+    ///    old→young edge (the promotion barrier), exactly as a full [`Self::collect_mixed`]
+    ///    does — a moved parent is found at its new arena address, its rewritten ref fields
+    ///    resolve to the survivors' current addresses.
+    ///
+    /// With **no movable survivors** (`forward` empty) this degenerates to marking the
+    /// pinned/reachable set and sweeping — i.e. exactly [`Self::collect_mixed`], the
+    /// spec's "strict generalization" (§4). (Because a *pinned* `kind != 0` object is
+    /// scanned conservatively during classification, the kept set can be a conservative
+    /// superset of `collect_mixed`'s — never smaller: a live object is never freed.)
+    ///
+    /// # Safety
+    /// Each `root_slots` address and each `regions` span must be readable (same contract as
+    /// [`Self::collect_mixed`]).
+    pub unsafe fn collect_compacting(
+        &mut self,
+        root_slots: &[usize],
+        regions: &[(*const u8, usize)],
+    ) -> GcCycleStats {
+        let before = self.object_count();
+        let prev_live = self.live_bytes;
+
+        // Steps 1–3: classify, evacuate movable survivors into a fresh arena, and rewrite
+        // every pointer that named a moved object (roots + moved copies' ref fields).
+        let (arena, forward) = self.evacuate_and_fixup(root_slots, regions);
+
+        // The moved objects' new headers (arena copies) and their total live bytes.
+        // Captured before the sweep so the from-space walk below is undisturbed.
+        let mut moved_new: Vec<*mut FlatHeader> = Vec::with_capacity(forward.len());
+        let mut moved_bytes = 0usize;
+        for &new_payload in forward.values() {
+            let nh = (new_payload - HEADER_SIZE) as *mut FlatHeader;
+            moved_bytes += (*nh).size;
+            moved_new.push(nh);
+        }
+
+        // Step 4.1: mark survivors-in-place. `pinned` is the keep predicate (see doc);
+        // unpinned blocks — the unreachable *and* the moved-from-space originals — will be
+        // freed by the sweep.
+        {
+            let mut h = self.all;
+            while !h.is_null() {
+                (*h).marked = (*h).pinned;
+                h = (*h).next;
+            }
+        }
+
+        // Step 4.2: sweep from-space. Frees unpinned blocks (dead + moved originals), keeps
+        // and ages the pinned survivors, re-threads `self.all` over them, clears marks.
+        let (swept, survived_in_place, live_in_place, _promoted) = self.sweep(false);
+        // A moved object's from-space original is swept too, but it did not *die* — its
+        // contents live on in the arena. Report only the genuinely-dead (unreachable) count,
+        // so `freed + survived == before` holds exactly as for a non-moving collect. Every
+        // moved object contributes exactly one swept original, so this subtraction is exact.
+        let freed = swept.saturating_sub(moved_new.len());
+
+        // Step 4.3: integrate the arena copies. Re-thread them (their `next` bytes are
+        // stale) into one chain, age/tenure each like an in-place survivor, and prepend to
+        // the (pinned-survivor) all-list.
+        for &nh in &moved_new {
+            if (*nh).generation == GEN_YOUNG {
+                (*nh).age = (*nh).age.saturating_add(1);
+                if (*nh).age >= self.tenure_age {
+                    (*nh).generation = GEN_OLD;
+                }
+            }
+            (*nh).marked = false; // a fresh survivor carries no mark into the next cycle
+        }
+        for i in 0..moved_new.len() {
+            let nh = moved_new[i];
+            (*nh).next = if i + 1 < moved_new.len() { moved_new[i + 1] } else { self.all };
+        }
+        if let Some(&head) = moved_new.first() {
+            self.all = head;
+        }
+
+        // Retain the arena so the moved objects' storage outlives the collection. Freed
+        // exactly once, when the arena drops (its blocks are `arena_backed`, so `sweep` /
+        // `Drop` never `dealloc` them individually).
+        self.arenas.push(arena);
+
+        self.live_bytes = live_in_place + moved_bytes;
+        self.adapt_threshold(prev_live);
+        // Rebuild over the integrated all-list: remaps moved old→young parents to their new
+        // addresses and re-derives the promotion barrier, as a full collect does.
+        self.rebuild_remembered();
+
+        let survived = survived_in_place + moved_new.len();
+        let stats = GcCycleStats {
+            freed,
+            survived,
+            pause_ns: 0,
+            heap_size_before: before,
+            heap_size_after: survived,
+        };
+        self.profile.record_cycle(&stats);
+        self.collection_count += 1;
+        stats
     }
 
     /// Return the header of the live block whose payload contains `addr`, or null.
@@ -3099,6 +3260,159 @@ mod tests {
         // dealloc'd; the arena copy is only unlinked (arena-backed → not freed here).
         let _ = heap.collect(&[]);
         // Teardown then frees the retained arena. No double-free / no arena-slice dealloc.
+        drop(heap);
+    }
+
+    // ── Moving collector — the full moving cycle `collect_compacting` (AOT00-T3 PR-3c-2) ──
+    //
+    // These run a COMPLETE relocating collection and then keep using the heap: deref the
+    // rewritten roots, read moved payloads, and collect again. Run under Miri to catch the
+    // UAF surface — a double-free of a from-space block, a dealloc of an arena slice as if
+    // malloc'd, or a walk over a stale/corrupt `next` link after integration.
+
+    /// **The headline executing differential.** A precise chain `a → b` (both movable) is
+    /// evacuated; an unreachable `c` is reclaimed. Afterwards the heap holds exactly the two
+    /// moved copies, the root is rewritten to `a`'s new arena address, dereferencing it
+    /// reaches `b`'s new address, and a sentinel written into `b` before the collection is
+    /// byte-preserved at the new location. Then a SECOND `collect_compacting` (rooting the
+    /// already-moved `a`) re-moves the arena copies — exercising relocation of an
+    /// arena-backed object and the re-threaded all-list — and the sentinel still survives.
+    #[test]
+    fn collect_compacting_moves_chain_reclaims_garbage_and_preserves_values() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]); // one ref field at offset 0
+        let a = heap.alloc(16, k) as usize;
+        let b = heap.alloc(16, k) as usize;
+        let _c = heap.alloc(16, k) as usize; // unreachable garbage
+        unsafe {
+            *(a as *mut usize) = b; // a.field0 -> b
+            *(b as *mut usize) = 0; // b.field0 -> null (leaf)
+            *((b + 8) as *mut usize) = 0xDEAD_BEEF_usize; // sentinel in b's non-ref word
+        }
+
+        let root = a;
+        let slots = [&root as *const usize as usize];
+        let stats = unsafe { heap.collect_compacting(&slots, &[]) };
+
+        assert_eq!(stats.freed, 1, "the unreachable c was reclaimed");
+        assert_eq!(stats.survived, 2, "a and b survived (moved)");
+        assert_eq!(heap.object_count(), 2, "heap holds exactly the two moved copies");
+        assert_eq!(heap.live_bytes(), 32, "live bytes = 2 × 16");
+        assert_eq!(heap.remembered_len(), 0, "all survivors young → empty remembered set");
+
+        let na = root; // root slot was rewritten in place to a's new address
+        assert_ne!(na, a, "a moved to a new address");
+        let nb = unsafe { *(na as *const usize) };
+        assert_ne!(nb, b, "b moved; a's ref field points at b's new address");
+        assert_eq!(
+            unsafe { *((nb + 8) as *const usize) },
+            0xDEAD_BEEF,
+            "b's sentinel byte-preserved across the move",
+        );
+
+        // Second cycle: re-move the arena-backed copies (root still holds na).
+        let stats2 = unsafe { heap.collect_compacting(&slots, &[]) };
+        assert_eq!(stats2.survived, 2, "both survive the second compaction");
+        assert_eq!(heap.object_count(), 2);
+        let na2 = root;
+        assert_ne!(na2, na, "a re-moved into a fresh arena");
+        let nb2 = unsafe { *(na2 as *const usize) };
+        assert_eq!(
+            unsafe { *((nb2 + 8) as *const usize) },
+            0xDEAD_BEEF,
+            "sentinel survives a second relocation",
+        );
+        drop(heap); // frees both retained arenas + any malloc survivors, each exactly once
+    }
+
+    /// **Strict generalization (spec §4):** with nothing movable, `collect_compacting`
+    /// behaves as `collect_mixed` — same survivors, same frees, and pinned objects keep
+    /// their address (no move). Built on `kind == 0` objects reached conservatively, where
+    /// the two collectors' reachability coincides exactly.
+    #[test]
+    fn collect_compacting_all_pinned_matches_collect_mixed() {
+        // Twin heaps, identical shape: a conservatively-rooted survivor `p` + garbage `g`.
+        let build = || {
+            let mut heap = FlatHeap::new();
+            let p = heap.alloc(16, 0) as usize; // kind 0 → conservative → pins
+            let _g = heap.alloc(16, 0) as usize; // unreachable
+            (heap, p)
+        };
+        let (mut hm, pm) = build();
+        let (mut hc, pc) = build();
+
+        let region_m = [(&pm as *const usize as *const u8, 8usize)];
+        let region_c = [(&pc as *const usize as *const u8, 8usize)];
+        let sm = unsafe { hm.collect_mixed(&[], &region_m) };
+        let sc = unsafe { hc.collect_compacting(&[], &region_c) };
+
+        assert_eq!(sc.freed, sm.freed, "same objects freed as collect_mixed");
+        assert_eq!(sc.survived, sm.survived, "same survivor count");
+        assert_eq!(hc.object_count(), hm.object_count(), "same live count");
+        assert_eq!(hc.live_bytes(), hm.live_bytes(), "same live bytes");
+        assert_eq!(sc.survived, 1, "just the pinned survivor");
+        // A pinned (kind 0) object is never relocated: its address is unchanged.
+        assert_eq!(hc.find_header(pc), (pc - HEADER_SIZE) as *mut FlatHeader);
+    }
+
+    /// **UAF stress.** A wider movable graph with garbage, a partial root set, then heavy
+    /// reuse of the survivors (deref + write) and a second collection. Under Miri this
+    /// exercises: reclaiming from-space originals without freeing a still-referenced block,
+    /// never `dealloc`ing an arena slice, and walking the re-threaded all-list.
+    #[test]
+    fn collect_compacting_reuse_and_recollect_no_uaf() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        // Five movable objects; root only #0 and #2, each pointing at the next.
+        let objs: Vec<usize> = (0..5).map(|_| heap.alloc(16, k) as usize).collect();
+        unsafe {
+            *(objs[0] as *mut usize) = objs[1]; // 0 -> 1
+            *(objs[2] as *mut usize) = objs[3]; // 2 -> 3
+            *(objs[1] as *mut usize) = 0;
+            *(objs[3] as *mut usize) = 0;
+            // #4 is unreachable garbage.
+        }
+        let r0 = objs[0];
+        let r2 = objs[2];
+        let slots = [&r0 as *const usize as usize, &r2 as *const usize as usize];
+
+        let stats = unsafe { heap.collect_compacting(&slots, &[]) };
+        assert_eq!(stats.freed, 1, "only the unreachable #4 is freed");
+        assert_eq!(heap.object_count(), 4, "0,1,2,3 survive (moved)");
+
+        // Reuse: deref both rewritten roots to reach their children, and write through them.
+        unsafe {
+            let c0 = *(r0 as *const usize);
+            let c2 = *(r2 as *const usize);
+            *((c0 + 8) as *mut usize) = 111;
+            *((c2 + 8) as *mut usize) = 222;
+        }
+        // Second collection keeps everything; then verify the writes survived.
+        let stats2 = unsafe { heap.collect_compacting(&slots, &[]) };
+        assert_eq!(stats2.freed, 0, "nothing new to free");
+        assert_eq!(heap.object_count(), 4);
+        unsafe {
+            let c0 = *(r0 as *const usize);
+            let c2 = *(r2 as *const usize);
+            assert_eq!(*((c0 + 8) as *const usize), 111);
+            assert_eq!(*((c2 + 8) as *const usize), 222);
+        }
+        drop(heap);
+    }
+
+    /// Degenerate: no roots and no regions → everything is unreachable and reclaimed, the
+    /// heap empties, and the (empty) arena is retained harmlessly. Mirrors
+    /// `collect_mixed_empty_frees_all` for the compacting entry.
+    #[test]
+    fn collect_compacting_empty_roots_frees_all() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        heap.alloc(16, k);
+        heap.alloc(16, k);
+        let stats = unsafe { heap.collect_compacting(&[], &[]) };
+        assert_eq!(stats.freed, 2, "both unreachable objects freed");
+        assert_eq!(heap.object_count(), 0, "heap emptied");
+        assert_eq!(heap.live_bytes(), 0);
         drop(heap);
     }
 }
