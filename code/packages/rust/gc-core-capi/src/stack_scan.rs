@@ -467,6 +467,75 @@ pub unsafe extern "C" fn __gc_collect_precise() -> i64 {
     freed
 }
 
+/// A full **moving/compacting** collection rooted precisely at this thread's stack —
+/// the argument-less entry that turns the precise-root machinery into a *relocating*
+/// GC (spec `AOT00-T3-moving-collector.md` §5). It is to
+/// [`gc_core::FlatHeap::collect_compacting`] exactly what [`__gc_collect_precise`] is to
+/// `collect_mixed`: the *same* frame-pointer walk produces **precise slots** (for
+/// stack-mapped frames) and **conservative regions** (unmapped frames + the spilled
+/// callee-saved registers), and the very same `(slots, regions)` are handed to
+/// `collect_compacting`, which evacuates the movable survivors into an arena and — this is
+/// what makes moving safe — rewrites the pointers that named them, **including writing each
+/// forwarded address back into its precise root slot** (a real stack location produced by
+/// the walk). After it returns, the mutator's stack slots point at the relocated objects.
+///
+/// **Why precise roots are the safety precondition (and why this is always safe to call):**
+/// only an object reachable *purely precisely* — named by a stack-map slot and by no
+/// conservative region — is ever moved; anything a conservative region (an unmapped frame,
+/// or a spilled register) can reach is **pinned** and stays put, because a conservative
+/// holder's pointer cannot be found-and-rewritten. With **no** stack maps registered every
+/// frame becomes a conservative region tiling all of `[sp, base)`, so nothing is movable and
+/// this degrades to exactly [`__gc_collect_precise`] / `__gc_collect` — no relocation, no
+/// risk, even if the captured frame pointer is garbage. As backends register maps a *valid*
+/// frame pointer becomes load-bearing (see [`current_fp`]), identical to `__gc_collect_precise`.
+/// A failed stack-base detection collects nothing this cycle (bias-to-leak), never freeing
+/// or moving a live object.
+///
+/// Returns the number of objects reclaimed (genuinely-dead only; a relocated object is a
+/// survivor, not a free — see `collect_compacting`).
+///
+/// # Safety
+///
+/// Same contract as [`__gc_collect_precise`]: sound to call from any thread that owns its
+/// stack (the single-threaded native runtime always does); it must not run while another
+/// thread mutates the same heap. The captured frame pointer must be valid once any stack map
+/// is registered (guaranteed by ABI on the aarch64 primary target / frame-pointer builds).
+#[no_mangle]
+#[inline(never)]
+pub unsafe extern "C" fn __gc_collect_compacting() -> i64 {
+    // Spill callee-saved registers into a stack buffer (in this frame), then SP.
+    let mut regs = [0usize; SPILL_SLOTS];
+    let sp = spill_and_sp(regs.as_mut_ptr());
+    // Capture this frame's frame pointer — the walk's unwind anchor (see current_fp).
+    let fp = current_fp();
+    let base = stack_base();
+
+    // Only collect when the stack range is trustworthy (identical gate to
+    // __gc_collect_precise): a failed base detection or absurd span means we cannot
+    // enumerate all roots, so we leak this cycle rather than move/free a live object.
+    let freed = if base != 0 && sp < base && base - sp <= MAX_STACK_SCAN {
+        let mut slots: Vec<usize> = Vec::new();
+        let mut regions: Vec<(*const u8, usize)> = Vec::new();
+        // Walk the frame-pointer chain into precise slots + conservative regions.
+        crate::precise_walk::build_precise_roots(fp, sp, base, &mut slots, &mut regions);
+        // Always scan the spilled callee-saved registers as a conservative region: a
+        // reference live only in such a register is named by no stack map yet, so it must
+        // pin (never move) — exactly as __gc_collect_precise scans it.
+        regions.push((
+            regs.as_ptr() as *const u8,
+            SPILL_SLOTS * core::mem::size_of::<usize>(),
+        ));
+        with_heap(|h| h.collect_compacting(&slots, &regions).freed as i64)
+    } else {
+        0
+    };
+
+    // Keep `regs` materialised across the collect: its address is what makes the
+    // spilled registers part of the scanned roots.
+    core::hint::black_box(&regs);
+    freed
+}
+
 /// Upper bound on how many bytes of stack a single conservative scan will walk
 /// (256 MiB). A corrupt or absurd `base` (far above `sp`) would otherwise make
 /// `collect_region` read hundreds of GB and appear to hang — an
@@ -597,6 +666,42 @@ mod tests {
             unsafe { *(kept as *const i64) },
             0x9a11,
             "the stack-rooted object must survive the precise collect"
+        );
+        assert!(__gc_live_bytes() >= 16);
+        assert_eq!(__gc_collection_count(), 1);
+        core::hint::black_box(kept);
+    }
+
+    /// End-to-end smoke test for the argument-less **moving** entry
+    /// `__gc_collect_compacting`: the same asm-capture → frame-pointer-walk path, now
+    /// driving `collect_compacting`. With no stack maps registered every frame is
+    /// conservative, so nothing is movable and this degrades to exactly
+    /// `__gc_collect_precise` — the live stack local (conservatively pinned) survives with
+    /// its value intact, and the dead object is reclaimed. Proves the C-ABI moving path runs
+    /// on a real thread stack without crashing and never corrupts a live object.
+    #[test]
+    fn compacting_collect_keeps_live_local_frees_dead() {
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+        run_compacting_collect_case();
+        __gc_reset();
+    }
+
+    #[inline(never)]
+    fn run_compacting_collect_case() {
+        let kept = __gc_alloc(16);
+        assert!(kept != 0);
+        let _ = __gc_alloc(16); // dead: no stack slot retains it
+        assert_eq!(__gc_live_bytes(), 32);
+        unsafe { *(kept as *mut i64) = 0x5eed };
+
+        let freed = unsafe { __gc_collect_compacting() };
+
+        assert!(freed >= 1, "the unreferenced object must be reclaimed");
+        assert_eq!(
+            unsafe { *(kept as *const i64) },
+            0x5eed,
+            "the conservatively-pinned live local survives the compacting collect intact"
         );
         assert!(__gc_live_bytes() >= 16);
         assert_eq!(__gc_collection_count(), 1);

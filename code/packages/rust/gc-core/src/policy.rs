@@ -106,13 +106,14 @@ impl GcAlgorithm {
 
     /// `true` if this algorithm is available in the current gc-core build.
     ///
-    /// `MarkAndSweep` (the conservative/precise full collector) and
-    /// `Generational` (`FlatHeap::collect_minor` + the remembered-set write
-    /// barrier) are implemented; `Compacting` / `Incremental` are still planned.
+    /// `MarkAndSweep` (the conservative/precise full collector), `Generational`
+    /// (`FlatHeap::collect_minor` + the remembered-set write barrier), and
+    /// `Compacting` (`FlatHeap::collect_compacting` — the moving/evacuating
+    /// collector) are implemented; `Incremental` is still planned.
     pub fn is_available(self) -> bool {
         matches!(
             self,
-            GcAlgorithm::MarkAndSweep | GcAlgorithm::Generational
+            GcAlgorithm::MarkAndSweep | GcAlgorithm::Generational | GcAlgorithm::Compacting
         )
     }
 }

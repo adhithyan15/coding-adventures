@@ -1,5 +1,14 @@
 # Changelog — gc-core
 
+## 0.17.0 — 2026-07-24 — `Compacting` algorithm marked available (AOT00-T3 §5)
+
+- `GcAlgorithm::Compacting::is_available()` now returns `true`: the moving/evacuating
+  collector (`FlatHeap::collect_compacting`, shipped in 0.16.0) is implemented, so the
+  adaptive policy's existing high-fragmentation `SuggestSwitch(Compacting, …)` recommendation
+  becomes actionable rather than advisory. `Incremental` remains the one planned-but-absent
+  rung. Precision ladder: mark-and-sweep ✓ → interior-precise ✓ → generational ✓ →
+  precise-roots ✓ → **compacting ✓**.
+
 ## 0.16.0 — 2026-07-24 — the full moving cycle `collect_compacting` (AOT00-T3 PR-3c-2)
 
 Completes the moving/compacting collector: `collect_compacting(root_slots, regions)` runs

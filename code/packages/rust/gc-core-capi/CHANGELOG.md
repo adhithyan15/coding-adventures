@@ -2,6 +2,26 @@
 
 All notable changes to this crate are documented here.
 
+## 0.15.0 - 2026-07-24 — moving/compacting collector C ABI `__gc_collect_compacting` (AOT00-T3 §5)
+
+- **`__gc_collect_compacting()`** (new export in `stack_scan.rs`) — the argument-less
+  **relocating** collection rooted precisely at this thread's stack: the relocating analogue
+  of `__gc_collect_precise`. It runs the *same* frame-pointer walk (`build_precise_roots` →
+  precise slots for stack-mapped frames + conservative regions for the rest, plus the spilled
+  callee-saved registers), then drives `gc_core::FlatHeap::collect_compacting` instead of
+  `collect_mixed`. Movable survivors (reachable purely precisely, no conservative in-edge) are
+  evacuated into an arena and every pointer that named them is rewritten — including writing
+  the forwarded address back into its precise root slot, so the mutator's stack points at the
+  relocated objects on return. With no stack maps registered nothing is movable and it
+  degrades to exactly `__gc_collect_precise`, so it is always safe to call. Declared in
+  `include/gc_core.h`.
+- **Tests (+2):** an end-to-end smoke test on a real thread stack (`__gc_collect_compacting`
+  keeps a live local, frees a dead object, never crashes) and a synthetic-stack **relocation
+  differential** (`walk_output_drives_compacting_collection_and_relocates`): a precisely-named
+  registered-kind object with no conservative in-edge is *moved* — its address in the root
+  slot is rewritten to the new arena location — while an unnamed sibling in the same mapped
+  frame is reclaimed; `live_bytes` preserved.
+
 ## 0.14.0 - 2026-07-23 — generational tenuring-age C ABI
 
 Exposes gc-core 0.11.0's tunable generational **tenuring age** across the C ABI so native
