@@ -49,6 +49,35 @@ describe("noiseAc", () => {
     );
   });
 
+  it("rejects an invalid JFET flicker-noise exponent", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+    circuit.add({ ...jfet("J1", "out", "gate", "0"), flickerNoiseExponent: -1.0 });
+
+    expect(() => noiseAc(circuit, "out", "Vgate", [1_000.0])).toThrow(
+      /flicker-noise exponent must be finite and non-negative/,
+    );
+  });
+
+  it("uses JFET AF as the current exponent", () => {
+    function sourcePsd(exponent: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vdd", "vdd", "0", 5.0));
+      circuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+      circuit.add(resistor("Rload", "vdd", "out", 1_000.0));
+      circuit.add({
+        ...jfet("J1", "out", "gate", "0"),
+        flickerNoiseCoefficient: 1.0e-12,
+        flickerNoiseExponent: exponent,
+      });
+      return noiseAc(circuit, "out", "Vgate", [1_000.0], 300.0).points[0]!.entries
+        .find((entry) => entry.elementName === "J1" && entry.noiseType === "flicker")!
+        .sourcePsd;
+    }
+
+    expect(sourcePsd(2.0)).toBeLessThan(sourcePsd(1.0));
+  });
+
   it("adds thermal noise for diode series resistance", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vbias", "bias", "0", 1.0));
