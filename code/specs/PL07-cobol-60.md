@@ -457,20 +457,30 @@ form `INSPECT source TALLYING counter FOR ALL delim`:
   source of the "why is my count too high?" bug.)
 - `delim` is a **single-character** delimiter — a 1-character string literal
   (`"A"`) or a `PIC X(1)` item. `ALL` means every (non-overlapping, left-to-right)
-  occurrence is counted.
-- The count is the number of positions `j` where `source[j] == delim` (single-byte
-  ASCII compare — the same char/byte assumption `STRING`/`UNSTRING` use).
+  occurrence is counted; **`LEADING`** counts only the run of **consecutive**
+  delimiters at the START of the source, stopping at the first non-`delim`
+  character.
+- For `ALL` the count is the number of positions `j` where `source[j] == delim`;
+  for `LEADING` it is the length of the leading prefix of positions all equal to
+  `delim` (single-byte ASCII compare — the same char/byte assumption
+  `STRING`/`UNSTRING` use).
 
-Worked (delimiter `"A"`, `counter` `PIC 9(3)`): `"BANANA"` → three A's → counter
-`0 → 3`; a counter starting at `5` over `"MISSISSIPPI"` counting `"S"` → `5 + 4 =
-9` (proving ADD, not replace); `"HELLO"` counting `"Z"` → `0` (unchanged).
+Worked (delimiter `"A"`, `counter` `PIC 9(3)`): `"BANANA"` FOR ALL → three A's →
+counter `0 → 3`; a counter starting at `5` over `"MISSISSIPPI"` counting `"S"` →
+`5 + 4 = 9` (proving ADD, not replace); `"HELLO"` counting `"Z"` → `0` (unchanged).
+FOR LEADING (delimiter `"0"`): `"000123"` → `3` (three leading zeros, stop at
+`'1'`); `"120003"` → `0` (first char is `'1'`, so the run is empty — whereas FOR
+ALL on the same source is `3`); `"0000"` → `4`.
 
 The count folds into the counter through the **same numeric-store path the
 arithmetic verbs use** (COBOL's silent high-order truncation on overflow), so the
 oracle (`store_result(counter, counter + count)`) and the compiler
 (a `str_len` + `str_index`/`cmp_eq` **count loop**, then `store_scaled`) agree
-byte-for-byte. The grammar deliberately accepts the fuller `INSPECT` surface —
-`LEADING`/`CHARACTERS` tallies, `BEFORE`/`AFTER` regions, several `TALLYING`
+byte-for-byte. FOR ALL and FOR LEADING share that identical loop — the ONLY
+difference is the not-equal branch: FOR ALL skips just the increment and keeps
+scanning, FOR LEADING breaks out of the loop (oracle: `filter…count` vs
+`take_while…count`). The grammar deliberately accepts the fuller `INSPECT`
+surface — a `CHARACTERS` tally, `BEFORE`/`AFTER` regions, several `TALLYING`
 counters or `FOR` phrases — so the reader/compiler reject each as a clean
 "later rung" error rather than a parse failure. A multi-character / figurative /
 numeric / wider-than-one delimiter, and a numeric/group source or a

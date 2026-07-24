@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.40.0 — INSPECT TALLYING FOR LEADING (leading-run count)
+
+- A lone `INSPECT source TALLYING counter FOR LEADING delim` now executes instead of
+  being rejected as a later rung. `FOR LEADING` counts only the run of **consecutive**
+  `delim` characters at the START of the source, stopping at the first character that
+  is not `delim`, then ADDs that count to the counter (INSPECT adds; it does not clear
+  the counter first — identical to `FOR ALL`).
+- `inspect_tally` gains a `leading: bool`: the count is
+  `storage.chars().take_while(|&c| c == delim).count()` when leading, else the
+  existing `filter(|&c| c == delim).count()` — the ONLY difference between the two
+  forms. Everything else (unsigned-integer `PIC 9(n)` counter check, single delimiter
+  char, ADD-not-clear store) is unchanged. `Stmt::Inspect` carries a `leading` field;
+  the lowering captures the `LEADING` keyword instead of rejecting it.
+- The COMBINED tally-then-replace exec still passes `leading = false` — a combined
+  `TALLYING … FOR LEADING … REPLACING` remains a clean `Unsupported`, as do `LEADING`
+  inside a `REPLACING` clause, `BEFORE`/`AFTER` regions, `CHARACTERS`, `FIRST`, a
+  multi-character/figurative delimiter, and a numeric/group source. The `FOR ALL`
+  path is byte-identical to the previous release.
+- New oracle test `inspect_tallying_for_leading_counts_only_a_leading_run`:
+  `"000123"` → 3, `"120003"` → 0 (FOR ALL would be 3), `"0000"` → 4, and adding a
+  leading run onto a nonzero counter via a `PIC X(1)` delimiter item. The prior
+  "FOR LEADING is a later rung" reject was removed from the tallying deferral test;
+  the combined-LEADING and REPLACING-LEADING rejects are retained.
+
 ## 0.39.0 — EVALUATE mixed numeric↔alphanumeric subject/WHEN (parity milestone)
 
 - No behaviour change on this engine: `subject_in_when` already routes every

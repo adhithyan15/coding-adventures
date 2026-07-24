@@ -2373,6 +2373,48 @@ mod tests {
     }
 
     #[test]
+    fn inspect_tallying_for_leading_counts_only_a_leading_run() {
+        // FOR LEADING counts the run of consecutive delimiters at the START, then
+        // stops at the first non-match. "000123" → three leading "0"s → 3.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"000123\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"0\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "003\n");
+
+        // A non-delimiter first character stops the run immediately: "120003" has
+        // three "0"s but NONE are leading → 0 (whereas FOR ALL would give 3).
+        let gap = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"120003\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"0\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(gap, "000\n");
+
+        // An all-delimiter source counts every character: "0000" → 4.
+        let all = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"0000\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"0\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(all, "004\n");
+
+        // FOR LEADING adds to the counter (does not clear): C starts at 5, two
+        // leading "0"s in "00X", and the delimiter is a PIC X(1) item → 5 + 2 = 7.
+        let adds = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(3) VALUE \"00X\".",
+                "01  D  PIC X(1) VALUE \"0\".",
+                "01  C  PIC 9(3) VALUE 5.",
+            ],
+            &["INSPECT S TALLYING C FOR LEADING D.", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(adds, "007\n");
+    }
+
+    #[test]
     fn inspect_replacing_maps_every_occurrence_in_place() {
         // "ABABA" with A→X → "XBXBX" (same width, per-position map).
         let out = run_cobol(&wrap(
@@ -2497,14 +2539,6 @@ mod tests {
         ))
         .unwrap_err();
         assert!(matches!(multi, RuntimeError::Unsupported(_)), "got {multi:?}");
-
-        // … FOR LEADING counts only a leading run …
-        let lead = run_cobol(&wrap(
-            &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
-            &["INSPECT S TALLYING C FOR LEADING \"A\".", "STOP RUN."],
-        ))
-        .unwrap_err();
-        assert!(matches!(lead, RuntimeError::Unsupported(_)), "got {lead:?}");
 
         // … and a non-integer (fractional) counter needs numeric editing.
         let frac = run_cobol(&wrap(

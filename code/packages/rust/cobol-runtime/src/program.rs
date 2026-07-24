@@ -148,15 +148,19 @@ pub enum Stmt {
     /// space-filled). `WITH POINTER`, `ON OVERFLOW`, a multi-character or `ALL`/
     /// `OR` delimiter, and a numeric/group source or receiver are later rungs.
     Unstring { source: String, delim: Operand, targets: Vec<String> },
-    /// `INSPECT source TALLYING counter FOR ALL delim` — count the (non-
-    /// overlapping, left-to-right) occurrences of the SINGLE-character `delim`
-    /// (a 1-char literal or a `PIC X(1)` item) in the alphanumeric `source`, and
-    /// **ADD** that count to the unsigned-integer `counter` (`PIC 9(n)`). INSPECT
-    /// adds to the counter; it does NOT clear it first. `LEADING`/`CHARACTERS`
-    /// tallies, `BEFORE`/`AFTER` phrases, several counters or `FOR` phrases, any
-    /// `REPLACING`, and a multi-character/figurative/wider delimiter or a
-    /// numeric/group source or a non-integer/non-numeric counter are later rungs.
-    Inspect { source: String, counter: String, delim: Operand },
+    /// `INSPECT source TALLYING counter FOR ALL delim` (or `FOR LEADING delim`)
+    /// — count occurrences of the SINGLE-character `delim` (a 1-char literal or a
+    /// `PIC X(1)` item) in the alphanumeric `source` and **ADD** that count to the
+    /// unsigned-integer `counter` (`PIC 9(n)`). `FOR ALL` counts EVERY (non-
+    /// overlapping, left-to-right) occurrence; `FOR LEADING` counts only the run of
+    /// CONSECUTIVE occurrences at the START of the source, stopping at the first
+    /// character that is not `delim` (`leading == true` selects this). INSPECT adds
+    /// to the counter; it does NOT clear it first. `CHARACTERS` tallies,
+    /// `BEFORE`/`AFTER` phrases, several counters or `FOR` phrases, any `REPLACING`
+    /// (including a combined `TALLYING … FOR LEADING … REPLACING`), and a multi-
+    /// character/figurative/wider delimiter or a numeric/group source or a
+    /// non-integer/non-numeric counter are later rungs.
+    Inspect { source: String, counter: String, delim: Operand, leading: bool },
     /// `INSPECT source REPLACING ALL search BY replace` — replace EVERY
     /// occurrence of the SINGLE character `search` in the alphanumeric `source`
     /// with the SINGLE character `replace`, in place. Because both are single
@@ -872,7 +876,15 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                 // extracted here (each rejecting its own later-rung forms) and the
                 // ordering is enforced at exec time.
                 (true, true) => {
-                    let (counter, delim) = read_inspect_tally_all(verb)?;
+                    let (counter, delim, leading) = read_inspect_tally_all(verb)?;
+                    // The combined tally-then-replace form stays FOR ALL only: a
+                    // combined `TALLYING … FOR LEADING … REPLACING` is a later rung.
+                    if leading {
+                        return Err(RuntimeError::Unsupported(
+                            "INSPECT TALLYING … FOR LEADING combined with REPLACING is a later rung"
+                                .into(),
+                        ));
+                    }
                     let (search, replace) = read_inspect_replacing_all(verb)?;
                     Ok(Stmt::InspectTallyReplace { source, counter, delim, search, replace })
                 }
@@ -881,10 +893,11 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     Ok(Stmt::InspectReplacing { source, search, replace })
                 }
                 // A lone TALLYING (or neither phrase, which `read_inspect_tally_all`
-                // rejects as a missing TALLYING clause).
+                // rejects as a missing TALLYING clause). Both `FOR ALL` and `FOR
+                // LEADING` are supported here; `leading` selects the count semantics.
                 _ => {
-                    let (counter, delim) = read_inspect_tally_all(verb)?;
-                    Ok(Stmt::Inspect { source, counter, delim })
+                    let (counter, delim, leading) = read_inspect_tally_all(verb)?;
+                    Ok(Stmt::Inspect { source, counter, delim, leading })
                 }
             }
         }
@@ -892,13 +905,16 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
     }
 }
 
-/// Extract the single supported `TALLYING counter FOR ALL delim` phrase from an
-/// `inspect_stmt`, returning `(counter_name, delim_operand)` and rejecting every
-/// later-rung form the grammar also accepts: several counters, several `FOR`
-/// phrases, a `LEADING`/`CHARACTERS` tally, and a `BEFORE`/`AFTER … INITIAL`
-/// region. (`REPLACING` and a non-alphanumeric source/counter are handled by the
-/// caller and exec.)
-fn read_inspect_tally_all(verb: &GrammarASTNode) -> Result<(String, Operand), RuntimeError> {
+/// Extract the supported `TALLYING counter FOR ALL delim` / `FOR LEADING delim`
+/// phrase from an `inspect_stmt`, returning `(counter_name, delim_operand,
+/// leading)` where `leading` is `true` for `FOR LEADING` and `false` for `FOR
+/// ALL`. Rejects every later-rung form the grammar also accepts: several
+/// counters, several `FOR` phrases, a `CHARACTERS` tally, and a `BEFORE`/`AFTER
+/// … INITIAL` region. (`REPLACING`, a combined `FOR LEADING … REPLACING`, and a
+/// non-alphanumeric source/counter are handled by the caller and exec.)
+fn read_inspect_tally_all(
+    verb: &GrammarASTNode,
+) -> Result<(String, Operand, bool), RuntimeError> {
     let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
         RuntimeError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
     })?;
@@ -928,20 +944,18 @@ fn read_inspect_tally_all(verb: &GrammarASTNode) -> Result<(String, Operand), Ru
             "INSPECT TALLYING … FOR CHARACTERS is a later rung".into(),
         ));
     }
-    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
-        return Err(RuntimeError::Unsupported(
-            "INSPECT TALLYING … FOR LEADING is a later rung".into(),
-        ));
-    }
+    // `FOR LEADING` is now supported (leading-run count); `FOR ALL` is the default.
+    // The keyword picks the count semantics threaded through to `inspect_tally`.
+    let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
     if child_node(ti, "inspect_region").is_some() {
         return Err(RuntimeError::Unsupported(
             "INSPECT TALLYING … BEFORE/AFTER is a later rung".into(),
         ));
     }
     let delim_node = child_node(ti, "operand").ok_or_else(|| {
-        RuntimeError::Unsupported("INSPECT TALLYING FOR ALL without a delimiter".into())
+        RuntimeError::Unsupported("INSPECT TALLYING FOR ALL/LEADING without a delimiter".into())
     })?;
-    Ok((counter, read_operand(delim_node)?))
+    Ok((counter, read_operand(delim_node)?, leading))
 }
 
 /// Extract the single supported `REPLACING ALL search BY replace` phrase from an

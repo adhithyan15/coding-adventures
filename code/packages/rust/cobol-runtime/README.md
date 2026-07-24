@@ -87,10 +87,12 @@ r1 [r2 …]` (the inverse — split the alphanumeric source on a single-characte
 delimiter into successive receivers; each receiver including the last takes the
 field up to the next delimiter, extra fields are dropped, empty fields become
 spaces, and once the source is exhausted the remaining receivers keep their prior
-value); and `INSPECT source TALLYING counter FOR ALL delim` (count the
-occurrences of a single-character delimiter — a 1-char literal or a `PIC X(1)`
-item — in the alphanumeric source and **ADD** them to the unsigned-integer
-counter; INSPECT adds, it does not clear the counter first); and `INSPECT source
+value); and `INSPECT source TALLYING counter FOR ALL delim` / `FOR LEADING delim`
+(count the occurrences of a single-character delimiter — a 1-char literal or a
+`PIC X(1)` item — in the alphanumeric source and **ADD** them to the
+unsigned-integer counter; `FOR ALL` counts EVERY occurrence, `FOR LEADING` counts
+only the run of consecutive delimiters at the START, stopping at the first
+non-match; INSPECT adds, it does not clear the counter first); and `INSPECT source
 REPLACING ALL x BY y` (replace every occurrence of a single character `x` — a
 1-char literal or a `PIC X(1)` item — with a single character `y` in the
 alphanumeric source, **in place**, a per-position map that leaves the width
@@ -107,10 +109,11 @@ modelled (the explicit
 `SIGN` clause with `SEPARATE`/`LEADING`, editing pictures, `COMP`,
 `PERFORM … WITH TEST AFTER`/inline, `GO TO … DEPENDING`, `STRING` with a real
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `UNSTRING` with a multi-character
-delimiter / `WITH POINTER` / `ON OVERFLOW`, `INSPECT` with a `LEADING`/
-`CHARACTERS` tally, `BEFORE`/`AFTER` phrases, `REPLACING CHARACTERS`/`LEADING`/
-`FIRST`, several replace items, or a combined statement whose `TALLYING` or
-`REPLACING` half is itself a deferred sub-form, `CONVERTING` with unequal-length
+delimiter / `WITH POINTER` / `ON OVERFLOW`, `INSPECT` with a `CHARACTERS`
+tally, `BEFORE`/`AFTER` phrases, `REPLACING CHARACTERS`/`LEADING`/
+`FIRST`, several replace items, or a combined statement whose `TALLYING` half is
+`FOR LEADING` or whose `TALLYING`/`REPLACING` half is otherwise a deferred
+sub-form, `CONVERTING` with unequal-length
 `FROM`/`TO`, a data-name/figurative/reference-modified `from`/`to`, or a
 `BEFORE`/`AFTER` region, tables,
 files,
