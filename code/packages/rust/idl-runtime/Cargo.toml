@@ -1,0 +1,12 @@
+[package]
+name = "coding-adventures-idl-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Tree-walking evaluator for IDL (Interactive Data Language) over array-runtime (MA12 MA-12d)"
+license = "MIT"
+
+[dependencies]
+coding-adventures-idl-parser = { path = "../idl-parser" }
+array-runtime = { package = "coding-adventures-array-runtime", path = "../array-runtime" }
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
