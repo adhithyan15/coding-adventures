@@ -402,6 +402,53 @@ fn jfet_rejects_invalid_gate_saturation_current() {
 }
 
 #[test]
+fn jfet_rejects_invalid_drain_resistance() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.drain_resistance = -1.0;
+    circuit.add(Element::Jfet(jfet));
+
+    let error = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(matches!(
+        error,
+        SpiceError::InvalidElement { reason, .. }
+            if reason == "drain resistance must be finite and non-negative"
+    ));
+}
+
+#[test]
+fn jfet_drain_resistance_emits_thermal_noise() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.drain_resistance = 250.0;
+    circuit.add(Element::Jfet(jfet));
+
+    let result = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap();
+    let entry = result.points[0]
+        .entries
+        .iter()
+        .find(|entry| entry.element_name == "J1:RD" && entry.noise_type == NoiseType::Thermal)
+        .unwrap();
+    assert_close(
+        entry.source_psd,
+        4.0 * 1.380_649e-23 * 300.0 / 250.0,
+        1.0e-30,
+    );
+}
+
+#[test]
 fn jfet_gate_junctions_emit_distinct_shot_noise_sources() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(
