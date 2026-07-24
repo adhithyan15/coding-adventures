@@ -167,14 +167,41 @@
   `huge_stride_is_a_clean_error_not_an_overflow_panic` (`lib.rs`)
   reproduces the exact original panic with the fix reverted before
   confirming the fix resolves it.
+- **`#`/`##` (matrix product)**: a third, distinct finding, caught by a third
+  security-review round on this same diff. `eval_multiplicative` called
+  `array_runtime::ops::matmul` directly for both operators. `ops::matmul`
+  only guards against `usize` **overflow** on the output element count
+  (`m.checked_mul(n)`) — it does not guard against a large-but-representable
+  output **magnitude** before allocating (`vec![0.0; out_len]`). Two operands
+  each individually within this crate's own `MAX_ARRAY_LENGTH` cap
+  (1,000,000 elements — e.g. `FLTARR(1, 1000000)` and `FLTARR(1000000, 1)`)
+  multiply out to a 1,000,000 x 1,000,000 (1e12-element, ~8 TB) result: an
+  unauthenticated, three-line-of-input attempt at an 8 TB allocation,
+  reachable via ordinary IDL syntax with no injection/escape needed —
+  unlike `matlab-runtime`/`scilab-runtime`, which already route matmul
+  through `array_runtime::execute(Kernel::MatMul, ...)`, whose planner
+  rejects an over-large total buffer footprint (`MAX_TOTAL_BUFFER_BYTES`,
+  4 GiB) during graph planning, *before* any output-sized buffer is
+  allocated. Fixed by routing both `#` and `##` through
+  `execute(Kernel::MatMul, ...)` instead of the raw `ops::matmul`, mirroring
+  `matlab-runtime`'s own established call pattern exactly. New regression
+  test `matmul_output_beyond_the_buffer_cap_is_a_clean_error_not_an_8tb_allocation`
+  (`lib.rs`) constructs the same 1,000,000 x 1,000,000-result shape from the
+  review's own PoC and confirms it now returns a clean `Err` — verified safe
+  to run as-is (not via a revert-and-confirm cycle) because `execute`'s
+  planner rejects the shape before `row_to_col`/`CpuExecutor` ever allocate
+  an output-sized buffer, so even the pre-fix code path was only reachable
+  by direct source reading, not by actually attempting the allocation in
+  this environment.
 
 ### Notes
 
 - No `array-runtime` substrate changes were needed (MA12 §2's own "zero new
   substrate" finding, confirmed directly against `ops.rs`'s current public
   API) — every arithmetic/comparison operator is either
-  `ops::elementwise`/`ops::matmul`/`ops::transpose`/`ops::sum`/`ops::min`/
-  `ops::max` wearing IDL's own spelling, or hand-rolled logic local to this
-  crate (`^`, `AND`/`OR`/`XOR`/`NOT`, negation) for operators
-  `array-runtime` has no `BinOp` variant for.
+  `ops::elementwise`/`ops::transpose`/`ops::sum`/`ops::min`/`ops::max`
+  wearing IDL's own spelling, `execute(Kernel::MatMul, ...)` for `#`/`##`
+  (see the matmul finding above), or hand-rolled logic local to this crate
+  (`^`, `AND`/`OR`/`XOR`/`NOT`, negation) for operators `array-runtime` has
+  no `BinOp` variant for.
 - `idl-lexer` and `idl-parser` were **not** modified.

@@ -134,6 +134,28 @@ mod tests {
         assert_eq!(out.trim(), "6");
     }
 
+    #[test]
+    fn matmul_output_beyond_the_buffer_cap_is_a_clean_error_not_an_8tb_allocation() {
+        // Regression test: `#`/`##` originally called `array_runtime::ops::matmul`
+        // directly, which only guards against `usize` overflow on the output
+        // element count (`m.checked_mul(n)`), not against a large-but-
+        // representable output MAGNITUDE -- unlike `matlab-runtime`/
+        // `scilab-runtime`, which route matmul through
+        // `array_runtime::execute(Kernel::MatMul, ...)`, whose planner rejects
+        // an over-large total buffer footprint (`MAX_TOTAL_BUFFER_BYTES`, 4
+        // GiB) BEFORE allocating. Two operands each within idl-runtime's own
+        // `MAX_ARRAY_LENGTH` cap (1,000,000 elements) can still multiply out
+        // to a 1,000,000 x 1,000,000 (1e12-element, ~8 TB) result -- an
+        // unauthenticated, three-line-of-input attempt at an 8 TB allocation,
+        // reachable via ordinary IDL syntax with no injection/escape needed.
+        // Fixed by routing `#`/`##` through `execute(Kernel::MatMul, ...)`
+        // like the sibling runtimes already do, which rejects this shape
+        // during planning -- before `row_to_col`/`CpuExecutor` ever allocate
+        // an output-sized buffer -- so this test is safe to run as-is.
+        let src = "a = FLTARR(1, 1000000)\nb = FLTARR(1000000, 1)\nc = a ## b\nPRINT, 1\n";
+        assert!(eval(src).is_err());
+    }
+
     // ── Strings ────────────────────────────────────────────────────────────
 
     #[test]

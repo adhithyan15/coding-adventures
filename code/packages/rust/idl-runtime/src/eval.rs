@@ -66,7 +66,7 @@
 
 use crate::builtins::{self};
 use crate::value::IdlValue;
-use array_runtime::{ops, ops::BinOp, Array};
+use array_runtime::{execute, ops, ops::BinOp, Array, Kernel};
 use coding_adventures_idl_parser::try_parse_idl;
 use lexer::token::Token;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -915,7 +915,7 @@ impl Interpreter {
                 // the first array times columns of the second) --
                 // confirmed against multiple secondary IDL references this
                 // session.
-                "HASH_HASH" => ops::matmul(&acc, &rhs)?,
+                "HASH_HASH" => execute(Kernel::MatMul, &acc, &rhs)?,
                 // `#` is IDL's OWN reversed/column-oriented product
                 // (documented as "the opposite of normal matrix
                 // multiplication," multiplying columns of the first by
@@ -929,7 +929,7 @@ impl Interpreter {
                 // descriptions of `#`'s documented shape/compatibility
                 // rule, not independently re-verified against a primary
                 // IDL source's own worked numeric example in this session.
-                "HASH" => ops::matmul(&rhs, &acc)?,
+                "HASH" => execute(Kernel::MatMul, &rhs, &acc)?,
                 other => {
                     return Err(format!(
                         "idl-runtime: unknown multiplicative operator '{other}'"
