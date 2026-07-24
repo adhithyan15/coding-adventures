@@ -322,7 +322,20 @@ body {
 }
 .step__script-sig { margin: 5px 0 0; font-size: 0.85rem; line-height: 1.5; color: var(--ink); }
 
-.learn__nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; }
+.learn__nav { display: flex; align-items: center; gap: 10px; margin-top: 20px; }
+/* The jump picker grows to fill the space between Prev and Next. */
+.learn__jump {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.learn__jump:hover { border-color: var(--accent); }
 .learn__nav .opt {
   border: 1px solid var(--line);
   background: var(--card);
