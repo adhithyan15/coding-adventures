@@ -2165,8 +2165,19 @@ fn is_python_keyword(s: &str) -> bool {
             | "while"
             | "with"
             | "yield"
+            // Soft keywords (`keyword.softkwlist`): not syntactic keywords —
+            // freely usable as ordinary identifiers everywhere outside a
+            // narrow grammar position (`match`/`case` in a `match`
+            // statement since 3.10; `_` as a wildcard capture pattern since
+            // 3.10; `type` in a `type X = ...` alias statement since
+            // 3.12's PEP 695). This backend already treated `match`/`case`
+            // as unsafe defensively; `_` and `type` are the other two
+            // entries of the same official soft-keyword set and were
+            // missing.
             | "match"
             | "case"
+            | "_"
+            | "type"
     )
 }
 
@@ -2219,6 +2230,27 @@ mod tests {
         let r = sanitize_ident("null?");
         assert!(r.starts_with('_'));
         assert!(r.contains("null"));
+    }
+
+    #[test]
+    fn is_python_keyword_flags_remaining_soft_keywords() {
+        // `_` and `type` are the other two entries of Python's
+        // `keyword.softkwlist` (`_`, `case`, `match`, `type`) — this
+        // backend already treated `match`/`case` as unsafe; `_` and
+        // `type` were missing.
+        assert!(is_python_keyword("_"));
+        assert!(is_python_keyword("type"));
+        assert!(sanitize_ident("_").starts_with('_'));
+        assert_eq!(sanitize_ident("_"), "__");
+        assert_eq!(sanitize_ident("type"), "type_");
+
+        // Ordinary identifiers — including close look-alikes — are
+        // unaffected by the addition.
+        assert!(!is_python_keyword("_x"));
+        assert!(!is_python_keyword("typing"));
+        assert!(!is_python_keyword("types"));
+        assert_eq!(sanitize_ident("_x"), "_x");
+        assert_eq!(sanitize_ident("typing"), "typing");
     }
 
     #[test]
