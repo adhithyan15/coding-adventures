@@ -121,7 +121,7 @@ describe("dcOp", () => {
 
   it("exports stable model-card supported parameter coverage", () => {
     const coverage = modelCardSupportedParameterCoverage();
-    expect(coverage).toHaveLength(161);
+    expect(coverage).toHaveLength(163);
     expect(coverage[0]).toStrictEqual({
       kind: "D",
       canonicalParameter: "IS",
@@ -141,7 +141,7 @@ describe("dcOp", () => {
     expect(table).toContain("NMOS\tVT0\tVT0|VTO|VTH\t3");
     expect(table.split("\n").at(-1)).toBe("PMOS\tMJ\tMJ\t1");
     const records = modelCardSupportedParameterCoverageRecords();
-    expect(records).toHaveLength(161);
+    expect(records).toHaveLength(163);
     expect(records[0]).toStrictEqual({
       kind: "D",
       canonical_parameter: "IS",
@@ -206,15 +206,15 @@ describe("dcOp", () => {
       passed: true,
       kindCount: 7,
       expectedKindCount: 7,
-      canonicalParameterCount: 161,
-      expectedCanonicalParameterCount: 161,
-      acceptedNameCount: 231,
+      canonicalParameterCount: 163,
+      expectedCanonicalParameterCount: 163,
+      acceptedNameCount: 233,
       aliasedParameterCount: 57,
       maxAliasCount: 4,
       issues: [],
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t161\t161\t231\t57\t4\t0",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t163\t163\t233\t57\t4\t0",
     );
     expect(formatModelCardSupportedParameterCoverageGateIssueTable(report)).toBe(
       "kind\tfield\tmessage",
@@ -237,8 +237,8 @@ describe("dcOp", () => {
 
     expect(report.passed).toBe(false);
     expect(report.kindCount).toBe(7);
-    expect(report.canonicalParameterCount).toBe(160);
-    expect(report.acceptedNameCount).toBe(228);
+    expect(report.canonicalParameterCount).toBe(162);
+    expect(report.acceptedNameCount).toBe(230);
     expect(report.aliasedParameterCount).toBe(56);
     expect(report.maxAliasCount).toBe(4);
     expect(report.issues).toHaveLength(4);
@@ -253,7 +253,7 @@ describe("dcOp", () => {
       message: "expected NMOS max alias count 3, found 2",
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t160\t161\t228\t56\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t162\t163\t230\t56\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
     );
     const records = modelCardSupportedParameterCoverageGateIssueRecords(report);
     expect(records[0]).toStrictEqual({
@@ -384,9 +384,9 @@ describe("dcOp", () => {
     expectClose(bjtModel.baseCollectorGradingCoefficient, 0.45);
     expectClose(bjtModel.forwardBiasDepletionCoefficient, 0.4);
 
-    const jfetCard = normalizeModelCard("Jn", "njfet", { BET: 9.0e-4, VT0: -1.8, LAM: 0.02, KF: 1.0e-12, AF: 1.3, VJ: 0.8, FC: 0.35, IS: 2.0e-13, RD: 125.0, RS: 75.0, T_NOM: 50.0, TCV: 0.01 });
+    const jfetCard = normalizeModelCard("Jn", "njfet", { BET: 9.0e-4, VT0: -1.8, LAM: 0.02, KF: 1.0e-12, AF: 1.3, VJ: 0.8, FC: 0.35, IS: 2.0e-13, RD: 125.0, RS: 75.0, T_NOM: 50.0, TCV: 0.01, BEX: 1.5 });
     const jfetModel = jfetFromModelCard("J1", "d", "g", "s", jfetCard);
-    expect(jfetCard.parameters).toStrictEqual({ BETA: 9.0e-4, VTO: -1.8, LAMBDA: 0.02, KF: 1.0e-12, AF: 1.3, PB: 0.8, FC: 0.35, IS: 2.0e-13, RD: 125.0, RS: 75.0, TNOM: 50.0, TCV: 0.01 });
+    expect(jfetCard.parameters).toStrictEqual({ BETA: 9.0e-4, VTO: -1.8, LAMBDA: 0.02, KF: 1.0e-12, AF: 1.3, PB: 0.8, FC: 0.35, IS: 2.0e-13, RD: 125.0, RS: 75.0, TNOM: 50.0, TCV: 0.01, BEX: 1.5 });
     expect(jfetModel.polarity).toBe("NJF");
     expectClose(jfetModel.beta, 9.0e-4);
     expectClose(jfetModel.thresholdVoltage, -1.8);
@@ -400,6 +400,7 @@ describe("dcOp", () => {
     expectClose(jfetModel.sourceResistance, 75.0);
     expectClose(jfetModel.nominalTemperatureKelvin, 323.15);
     expectClose(jfetModel.thresholdVoltageTemperatureCoefficient, 0.01);
+    expectClose(jfetModel.mobilityTemperatureExponent, 1.5);
 
     const mosCard = normalizeModelCard("Mn", "nmos", {
       LEVEL: 1.0,
@@ -1066,6 +1067,7 @@ describe("dcOp", () => {
           sourceResistance: 75.0,
           thresholdVoltageTemperatureCoefficient: 0.01,
           nominalTemperatureKelvin: 323.15,
+          mobilityTemperatureExponent: 1.5,
         },
       ]),
     );
@@ -1085,6 +1087,7 @@ describe("dcOp", () => {
     expectClose(expanded.sourceResistance, 75.0);
     expectClose(expanded.thresholdVoltageTemperatureCoefficient, 0.01);
     expectClose(expanded.nominalTemperatureKelvin, 323.15);
+    expectClose(expanded.mobilityTemperatureExponent, 1.5);
   });
 
   it("drops the intrinsic JFET drain voltage across RD", () => {
@@ -1540,12 +1543,14 @@ describe("dcOp", () => {
     expect(high.saturationCurrent).toBeGreaterThan(low.saturationCurrent);
   });
 
-  it("uses JFET TCV and model nominal temperature", () => {
+  it("uses JFET TCV, BEX, and model nominal temperature", () => {
     const transistor = {
       ...jfet("J1", "d", "g", "s"),
       thresholdVoltage: -2.0,
+      beta: 1.0e-4,
       thresholdVoltageTemperatureCoefficient: 0.01,
       nominalTemperatureKelvin: 310.0,
+      mobilityTemperatureExponent: 1.0,
     };
     const atModelNominal = jfetAtTemperature(transistor, 310.0);
     const hot = jfetAtTemperature(transistor, 320.0);
@@ -1553,9 +1558,13 @@ describe("dcOp", () => {
     const invariant = jfetAtTemperature(jfet("Jflat", "d", "g", "s"), 350.0);
 
     expectClose(atModelNominal.thresholdVoltage, -2.0);
+    expectClose(atModelNominal.beta, 1.0e-4);
     expectClose(hot.thresholdVoltage, -2.1);
+    expectClose(hot.beta, 1.0e-4 * 320.0 / 310.0);
     expectClose(cold.thresholdVoltage, -1.9);
+    expectClose(cold.beta, 1.0e-4 * 300.0 / 310.0);
     expectClose(invariant.thresholdVoltage, -2.0);
+    expectClose(invariant.beta, 1.0e-4);
   });
 
   it("rejects invalid JFET temperature parameters", () => {
@@ -1575,6 +1584,15 @@ describe("dcOp", () => {
     });
     expect(() => dcOp(invalidNominal)).toThrowError(
       "nominal temperature must be finite and positive",
+    );
+
+    const invalidExponent = new Circuit();
+    invalidExponent.add({
+      ...jfet("Jbad", "d", "g", "0"),
+      mobilityTemperatureExponent: Number.NaN,
+    });
+    expect(() => dcOp(invalidExponent)).toThrowError(
+      "mobility temperature exponent must be finite",
     );
   });
 

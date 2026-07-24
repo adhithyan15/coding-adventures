@@ -1704,6 +1704,7 @@ export interface Jfet {
   readonly sourceResistance: number;
   readonly thresholdVoltageTemperatureCoefficient: number;
   readonly nominalTemperatureKelvin?: number;
+  readonly mobilityTemperatureExponent: number;
 }
 
 export type BjtPolarity = "NPN" | "PNP";
@@ -2033,8 +2034,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   D: [15, 21, 5, 3],
   NPN: [41, 58, 13, 4],
   PNP: [41, 58, 13, 4],
-  NJF: [14, 22, 7, 3],
-  PJF: [14, 22, 7, 3],
+  NJF: [15, 23, 7, 3],
+  PJF: [15, 23, 7, 3],
   NMOS: [18, 25, 6, 3],
   PMOS: [18, 25, 6, 3],
 };
@@ -3620,7 +3621,7 @@ function cloneSubcktElement(
     case "diode":
       return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime, element.junctionPotential, element.gradingCoefficient, element.forwardBiasDepletionCoefficient, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.seriesResistance, element.flickerNoiseCoefficient, element.flickerNoiseExponent);
     case "jfet":
-      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.junctionPotential, element.forwardBiasDepletionCoefficient, element.gateSaturationCurrent, element.drainResistance, element.sourceResistance, element.thresholdVoltageTemperatureCoefficient, element.nominalTemperatureKelvin);
+      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.junctionPotential, element.forwardBiasDepletionCoefficient, element.gateSaturationCurrent, element.drainResistance, element.sourceResistance, element.thresholdVoltageTemperatureCoefficient, element.nominalTemperatureKelvin, element.mobilityTemperatureExponent);
     case "bjt":
       return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta, element.reverseBetaRolloffCurrent, element.nominalTemperatureKelvin, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.forwardExcessPhaseDegrees, element.forwardTransitTimeBiasCoefficient, element.forwardTransitTimeCurrent, element.forwardTransitTimeVoltage, element.emitterResistance, element.collectorResistance, element.baseResistance, element.minimumBaseResistance, element.baseResistanceHalfCurrent, element.baseCollectorCapacitanceFraction);
     case "mosfet":
@@ -7735,8 +7736,13 @@ export function jfetAtTemperature(
       "threshold-voltage temperature coefficient must be finite",
     );
   }
+  if (!Number.isFinite(element.mobilityTemperatureExponent)) {
+    throw invalidElement(element.name, "mobility temperature exponent must be finite");
+  }
+  const temperatureRatio = temperatureKelvin / nominalTemperature;
   return {
     ...element,
+    beta: element.beta * temperatureRatio ** element.mobilityTemperatureExponent,
     thresholdVoltage:
       element.thresholdVoltage -
       element.thresholdVoltageTemperatureCoefficient *
@@ -7804,6 +7810,7 @@ export function jfet(
   sourceResistance = 0.0,
   thresholdVoltageTemperatureCoefficient = 0.0,
   nominalTemperatureKelvin: number | undefined = undefined,
+  mobilityTemperatureExponent = 0.0,
 ): Jfet {
   return {
     kind: "jfet",
@@ -7826,6 +7833,7 @@ export function jfet(
     sourceResistance,
     thresholdVoltageTemperatureCoefficient,
     nominalTemperatureKelvin,
+    mobilityTemperatureExponent,
   };
 }
 
@@ -8093,6 +8101,7 @@ const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   TNOM: "TNOM",
   T_NOM: "TNOM",
   TCV: "TCV",
+  BEX: "BEX",
 };
 
 const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -8645,6 +8654,7 @@ export function jfetFromModelCard(
     p.RS ?? 0.0,
     p.TCV ?? 0.0,
     p.TNOM !== undefined ? p.TNOM + 273.15 : undefined,
+    p.BEX ?? 0.0,
   );
 }
 
@@ -8866,7 +8876,7 @@ function deviceModelTemperatureBehavior(name: string): string {
   const behaviors: Record<string, string> = {
     "diode-forward-bias": "diode saturation current and thermal voltage scale with temperature",
     "bjt-emitter-follower": "BJT saturation current and thermal voltage scale with temperature",
-    "jfet-source-bias": "JFET temperature scaling defaults to invariant; TCV/TNOM enable threshold-voltage scaling",
+    "jfet-source-bias": "JFET temperature scaling defaults to invariant; TCV/TNOM enable threshold-voltage scaling and BEX enables beta scaling",
     "mos-level1-common-source": "Level-1 MOS threshold and transconductance scale with temperature",
   };
   const behavior = behaviors[name];
@@ -19689,6 +19699,9 @@ function validateJfet(element: Jfet): void {
       (!Number.isFinite(element.nominalTemperatureKelvin) ||
        element.nominalTemperatureKelvin <= 0.0)) {
     throw invalidElement(element.name, "nominal temperature must be finite and positive");
+  }
+  if (!Number.isFinite(element.mobilityTemperatureExponent)) {
+    throw invalidElement(element.name, "mobility temperature exponent must be finite");
   }
 }
 

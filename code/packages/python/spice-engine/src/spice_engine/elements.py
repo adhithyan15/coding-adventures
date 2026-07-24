@@ -521,6 +521,7 @@ class JFET:
     Rs: float = 0.0
     Tcv: float = 0.0
     Tnom: float | None = None
+    Bex: float = 0.0
 
 
 @dataclass(frozen=True, slots=True)

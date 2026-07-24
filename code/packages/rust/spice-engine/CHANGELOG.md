@@ -1,5 +1,7 @@
 # Changelog
 
+- Add JFET model-card `BEX` support, applying
+  `BETA(T) = BETA * (T / TNOM)^BEX` with a temperature-invariant zero default.
 - Add JFET model-card `TNOM` / `T_NOM` and `TCV` support, converting nominal
   Celsius values to Kelvin and applying Berkeley threshold-voltage temperature
   scaling while preserving invariant behavior when `TCV` is omitted.
