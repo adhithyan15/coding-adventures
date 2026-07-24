@@ -9,6 +9,7 @@ import {
   deviceModelNoiseAuditFixtures,
   formatCornerNoiseTable,
   formatNoiseTable,
+  jfet,
   mosfet,
   noiseAc,
   noiseAcCorners,
@@ -20,6 +21,34 @@ const BOLTZMANN = 1.380_649e-23;
 const MOSFET_CHANNEL_NOISE_GAMMA = 2.0 / 3.0;
 
 describe("noiseAc", () => {
+  it("adds inverse-frequency JFET flicker noise from KF", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdd", "vdd", "0", 5.0));
+    circuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+    circuit.add(resistor("Rload", "vdd", "out", 1_000.0));
+    circuit.add({ ...jfet("J1", "out", "gate", "0"), flickerNoiseCoefficient: 1.0e-12 });
+
+    const result = noiseAc(circuit, "out", "Vgate", [10.0, 1_000.0], 300.0);
+    const flickerPsds = result.points.map((point) =>
+      point.entries.find(
+        (entry) => entry.elementName === "J1" && entry.noiseType === "flicker",
+      )!.sourcePsd
+    );
+
+    expect(flickerPsds[0]).toBeGreaterThan(0.0);
+    expect(flickerPsds[0]! / flickerPsds[1]!).toBeCloseTo(100.0, 10);
+  });
+
+  it("rejects an invalid JFET flicker-noise coefficient", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+    circuit.add({ ...jfet("J1", "out", "gate", "0"), flickerNoiseCoefficient: -1.0 });
+
+    expect(() => noiseAc(circuit, "out", "Vgate", [1_000.0])).toThrow(
+      /flicker-noise coefficient must be finite and non-negative/,
+    );
+  });
+
   it("adds thermal noise for diode series resistance", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vbias", "bias", "0", 1.0));

@@ -1,5 +1,7 @@
 # Changelog
 
+- Add JFET model-card `KF` flicker-noise support with a distinct drain-current
+  `flicker` contribution and Berkeley-default inverse-frequency scaling.
 - Add diode model-card `AF` flicker-noise current-exponent support, defaulting
   to `1` and applying `KF * abs(Id)^AF / frequency` across noise analysis.
 - Add diode model-card `KF` flicker-noise support with a distinct diode-current

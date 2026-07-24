@@ -1695,6 +1695,7 @@ export interface Jfet {
   readonly channelLengthModulation: number;
   readonly gateSourceCapacitance: number;
   readonly gateDrainCapacitance: number;
+  readonly flickerNoiseCoefficient: number;
 }
 
 export type BjtPolarity = "NPN" | "PNP";
@@ -2024,8 +2025,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   D: [15, 21, 5, 3],
   NPN: [41, 58, 13, 4],
   PNP: [41, 58, 13, 4],
-  NJF: [5, 11, 5, 3],
-  PJF: [5, 11, 5, 3],
+  NJF: [6, 12, 5, 3],
+  PJF: [6, 12, 5, 3],
   NMOS: [18, 25, 6, 3],
   PMOS: [18, 25, 6, 3],
 };
@@ -3611,7 +3612,7 @@ function cloneSubcktElement(
     case "diode":
       return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime, element.junctionPotential, element.gradingCoefficient, element.forwardBiasDepletionCoefficient, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.seriesResistance, element.flickerNoiseCoefficient, element.flickerNoiseExponent);
     case "jfet":
-      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
+      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance, element.flickerNoiseCoefficient);
     case "bjt":
       return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta, element.reverseBetaRolloffCurrent, element.nominalTemperatureKelvin, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.forwardExcessPhaseDegrees, element.forwardTransitTimeBiasCoefficient, element.forwardTransitTimeCurrent, element.forwardTransitTimeVoltage, element.emitterResistance, element.collectorResistance, element.baseResistance, element.minimumBaseResistance, element.baseResistanceHalfCurrent, element.baseCollectorCapacitanceFraction);
     case "mosfet":
@@ -7756,6 +7757,7 @@ export function jfet(
   channelLengthModulation = 0.0,
   gateSourceCapacitance = 0.0,
   gateDrainCapacitance = 0.0,
+  flickerNoiseCoefficient = 0.0,
 ): Jfet {
   return {
     kind: "jfet",
@@ -7769,6 +7771,7 @@ export function jfet(
     channelLengthModulation,
     gateSourceCapacitance,
     gateDrainCapacitance,
+    flickerNoiseCoefficient,
   };
 }
 
@@ -8025,6 +8028,7 @@ const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   CGS0: "CGS",
   CGD: "CGD",
   CGD0: "CGD",
+  KF: "KF",
 };
 
 const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -8568,6 +8572,7 @@ export function jfetFromModelCard(
     p.LAMBDA ?? 0.0,
     p.CGS ?? 0.0,
     p.CGD ?? 0.0,
+    p.KF ?? 0.0,
   );
 }
 
@@ -18647,6 +18652,16 @@ function collectNoiseSources(
           frequencyExponent: 0.0,
         });
       }
+      if (element.flickerNoiseCoefficient > 0.0) {
+        sources.push({
+          elementName: element.name,
+          noiseType: "flicker",
+          positive: drain,
+          negative: source,
+          sourcePsd: element.flickerNoiseCoefficient * Math.abs(result.drainCurrent),
+          frequencyExponent: 1.0,
+        });
+      }
     } else if (element.kind === "mosfet") {
       validateMosfet(element);
       const drain = nodeIndex(nodeIndices, element.drain);
@@ -19493,6 +19508,12 @@ function validateJfet(element: Jfet): void {
   }
   if (!Number.isFinite(element.gateDrainCapacitance) || element.gateDrainCapacitance < 0.0) {
     throw invalidElement(element.name, "gate-drain capacitance must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.flickerNoiseCoefficient) || element.flickerNoiseCoefficient < 0.0) {
+    throw invalidElement(
+      element.name,
+      "flicker-noise coefficient must be finite and non-negative",
+    );
   }
 }
 
