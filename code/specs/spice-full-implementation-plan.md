@@ -33,17 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language JFET threshold-voltage temperature scaling.
+1. Cross-language JFET beta temperature scaling.
    - Status: current PR completion candidate.
-   - Add Berkeley JFET `TNOM` / `T_NOM` and `TCV` model-card support in Rust,
-     Python, and TypeScript.
-   - Convert model-card nominal temperature from Celsius to Kelvin and apply
-     `VTO(T) = VTO - TCV * (T - TNOM)`, with model `TNOM` overriding the
+   - Add Berkeley JFET `BEX` model-card support in Rust, Python, and TypeScript.
+   - Apply `BETA(T) = BETA * (T / TNOM)^BEX`, with model `TNOM` overriding the
      circuit nominal temperature.
-   - Preserve both parameters through hierarchy and cloning, validate finite
-     coefficients and finite-positive nominal temperatures, keep the default
-     temperature-invariant when `TCV` is zero, and extend the
-     supported-parameter coverage gate from 157 to 161 canonical rows.
+   - Preserve the exponent through hierarchy and cloning, validate finite
+     coefficients, keep the default temperature-invariant when `BEX` is zero,
+     and extend the supported-parameter coverage gate from 161 to 163
+     canonical rows.
 
 ## Completed Slices
 
@@ -3313,6 +3311,16 @@ the Rust, Python, and TypeScript surfaces together.
      is shared across analyses, a distinct `RS` thermal-noise source is
      emitted, and the supported-parameter release gate now covers 157
      canonical rows.
+
+256. Cross-language JFET threshold-voltage temperature scaling.
+   - Status: completed in PR 8943.
+   - Rust, Python, and TypeScript JFET model cards now accept `TNOM` / `T_NOM`
+     and `TCV`, convert nominal Celsius values to Kelvin, and apply
+     `VTO(T) = VTO - TCV * (T - TNOM)`.
+   - Hierarchy and cloning paths preserve both parameters, finite coefficients
+     and finite-positive nominal temperatures are validated, the zero default
+     remains temperature-invariant, and the supported-parameter release gate
+     now covers 161 canonical rows.
 
 ## Backlog
 

@@ -436,6 +436,7 @@ fn clone_subckt_element(
             mapped.threshold_voltage_temperature_coefficient =
                 element.threshold_voltage_temperature_coefficient;
             mapped.nominal_temperature_kelvin = element.nominal_temperature_kelvin;
+            mapped.mobility_temperature_exponent = element.mobility_temperature_exponent;
             Element::Jfet(mapped)
         }
         Element::Bjt(element) => {
@@ -2796,9 +2797,17 @@ pub fn jfet_at_temperature(
             reason: "threshold-voltage temperature coefficient must be finite".to_string(),
         });
     }
+    if !jfet.mobility_temperature_exponent.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "mobility temperature exponent must be finite".to_string(),
+        });
+    }
+    let temperature_ratio = temperature_kelvin / nominal_temperature;
     let mut adjusted = jfet.clone();
     adjusted.threshold_voltage -=
         jfet.threshold_voltage_temperature_coefficient * (temperature_kelvin - nominal_temperature);
+    adjusted.beta *= temperature_ratio.powf(jfet.mobility_temperature_exponent);
     Ok(adjusted)
 }
 
@@ -2869,6 +2878,7 @@ pub struct Jfet {
     pub source_resistance: f64,
     pub threshold_voltage_temperature_coefficient: f64,
     pub nominal_temperature_kelvin: Option<f64>,
+    pub mobility_temperature_exponent: f64,
 }
 
 impl Jfet {
@@ -2946,6 +2956,7 @@ impl Jfet {
             source_resistance: 0.0,
             threshold_voltage_temperature_coefficient: 0.0,
             nominal_temperature_kelvin: None,
+            mobility_temperature_exponent: 0.0,
         }
     }
 }
@@ -3869,8 +3880,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Diode, 15, 21, 5, 3),
     (ModelCardKind::Npn, 41, 58, 13, 4),
     (ModelCardKind::Pnp, 41, 58, 13, 4),
-    (ModelCardKind::Njf, 14, 22, 7, 3),
-    (ModelCardKind::Pjf, 14, 22, 7, 3),
+    (ModelCardKind::Njf, 15, 23, 7, 3),
+    (ModelCardKind::Pjf, 15, 23, 7, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
     (ModelCardKind::Pmos, 18, 25, 6, 3),
 ];
@@ -3980,6 +3991,7 @@ const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("TNOM", "TNOM"),
     ("T_NOM", "TNOM"),
     ("TCV", "TCV"),
+    ("BEX", "BEX"),
 ];
 const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("LEVEL", "LEVEL"),
@@ -4718,6 +4730,7 @@ pub fn jfet_from_model_card(
         .parameters
         .get("TNOM")
         .map(|temperature| temperature + 273.15);
+    jfet.mobility_temperature_exponent = model_card_value(model, "BEX", 0.0);
     Ok(jfet)
 }
 
@@ -5057,7 +5070,7 @@ fn device_model_temperature_behavior(name: &str) -> Result<String, SpiceError> {
             Ok("BJT saturation current and thermal voltage scale with temperature".to_string())
         }
         "jfet-source-bias" => Ok(
-            "JFET temperature scaling defaults to invariant; TCV/TNOM enable threshold-voltage scaling".to_string(),
+            "JFET temperature scaling defaults to invariant; TCV/TNOM enable threshold-voltage scaling and BEX enables beta scaling".to_string(),
         ),
         "mos-level1-common-source" => {
             Ok("Level-1 MOS threshold and transconductance scale with temperature".to_string())
@@ -25206,6 +25219,12 @@ fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
             reason: "nominal temperature must be finite and positive".to_string(),
+        });
+    }
+    if !jfet.mobility_temperature_exponent.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "mobility temperature exponent must be finite".to_string(),
         });
     }
     Ok(())

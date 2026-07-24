@@ -77,6 +77,9 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 `mosfet_at_temperature()`, and `circuit_at_temperature()` provide
 operating-temperature footholds for diode, BJT, JFET, and Level-1 MOSFET
 models before running an analysis.
+JFET model cards use `TCV` for threshold-voltage scaling and `BEX` for
+`BETA(T) = BETA * (T / TNOM)^BEX`; both default to temperature-invariant
+behavior and honor model-card `TNOM` / `T_NOM`.
 `dc_temperature_sweep()` and `dc_temperature_sweep_corners()` run
 `.temp`-style DC operating-point snapshots across explicit analysis
 temperatures, with stable nominal and named-corner table helpers for

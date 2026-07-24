@@ -118,6 +118,9 @@ let result = transient_adaptive(
 `mosfet_at_temperature`, and `circuit_at_temperature` provide
 operating-temperature footholds for diode, BJT, JFET, and Level-1 MOSFET
 models before running an analysis.
+JFET model cards use `TCV` for threshold-voltage scaling and `BEX` for
+`BETA(T) = BETA * (T / TNOM)^BEX`; both default to temperature-invariant
+behavior and honor model-card `TNOM` / `T_NOM`.
 
 `normalize_model_card`, `diode_from_model_card`, `bjt_from_model_card`,
 `jfet_from_model_card`, and `mosfet_from_model_card` provide the shared
