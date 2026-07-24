@@ -1,0 +1,572 @@
+# IDL (Interactive Data Language) Parser Grammar
+# ============================================================================
+#
+# Parses the token stream from `idl-lexer` (code/grammars/idl/idl.tokens,
+# MA-12b, already merged) into a CST a future `idl-runtime` (MA-12d) will
+# walk. See code/specs/MA12-idl-language.md (MA-12c, this file).
+#
+# MA12 §5 makes the one decision this file is structured around: unlike
+# every array-family grammar already in this repo (apl/j/q/scilab/matlab),
+# IDL's *surface* is an Algol/Fortran-family imperative grammar --
+# statements, PRO/FUNCTION definitions, IF/FOR/WHILE/REPEAT blocks, an infix
+# operator-precedence cascade with WORD operators (EQ/AND/...) -- closer in
+# shape to this repo's algol.grammar/dartmouth_basic.grammar than to any
+# array-family grammar. This file is therefore written to IDL's own shape,
+# not forked from an array sibling (contrast scilab.grammar, forked from
+# matlab.grammar at the text level).
+#
+# ============================================================================
+# THE TWO GENUINELY NEW DISAMBIGUATIONS (MA12 §3) -- BOTH RESOLVED BY
+# PRODUCTION CONTEXT, NOT BY LOOKAHEAD TRICKS
+# ----------------------------------------------------------------------------
+#
+# idl-lexer (MA-12b) deliberately left two glyphs lexically unconditional --
+# SLASH is always plain division, EQUALS is always one plain "=" -- because
+# neither ambiguity can be resolved from raw characters or a flat token list
+# (idl.tokens' own header comment explains why at length). MA12 §3 frames
+# both as "parser-level, grammar-position concerns", to be resolved by which
+# PRODUCTION is currently being parsed, not by any lexer-level or
+# lookahead-predicate hack. Here is exactly how this grammar resolves each:
+#
+# 1. `/BOOLEAN` keyword shorthand vs. division (MA12 §3 item 3).
+#
+#    `arg` (below) is the ONLY production in this whole grammar that ever
+#    references a bare, argument-leading SLASH:
+#
+#        arg = keyword_arg | bool_keyword_arg | expr ;
+#        bool_keyword_arg = SLASH NAME ;
+#
+#    This works with NO lookahead predicate at all, for a simple structural
+#    reason: nowhere in `expr`'s own precedence cascade (see SECTION on
+#    expressions below) does SLASH ever appear as anything other than a
+#    BINARY operator consumed by `multiplicative`'s own `{ ( STAR | SLASH |
+#    ... ) power }` repetition -- i.e. only AFTER a left operand has already
+#    been parsed. IDL has no unary "/" (there is no such thing as a
+#    division-prefix operator), so `expr` can structurally never SUCCEED
+#    starting exactly at a SLASH token. That means, at an `arg` position:
+#
+#      - `PLOT, x, /YLOG`    -- at the second arg's position, the current
+#        token IS a SLASH. `expr` cannot match here (nothing in the
+#        cascade can start on SLASH), so the ONLY alternative that can ever
+#        succeed is `bool_keyword_arg = SLASH NAME`, unambiguously the
+#        boolean-keyword shorthand -- exactly IDL's own `/YLOG` == `YLOG=1`
+#        rule (MA12 §3 item 3).
+#      - `x = a/YLOG`        -- this is `assignment_stmt`'s RHS `expr`, NOT
+#        an `arg` position at all. `expr` parses `a` as a `primary`, then
+#        `multiplicative` sees the SLASH sitting AFTER an already-parsed
+#        left operand and consumes it as ordinary division, exactly the
+#        same production path `x = a + b` or `x = a * b` takes. `arg`'s own
+#        `bool_keyword_arg` alternative is never even reached here, because
+#        we are not inside an argument list at all.
+#      - `PLOT, x, a/YLOG`   -- a positional arg that is ITSELF a division
+#        expression: at this arg's position the current token is NAME `a`,
+#        not SLASH, so `arg`'s third alternative (`expr`) matches -- and,
+#        exactly as above, `multiplicative` consumes the SLASH as division
+#        once `a` is already parsed as the left operand. `bool_keyword_arg`
+#        is never attempted here either (its own first token, SLASH, is not
+#        the current token), so there is no false-positive risk of this
+#        being misread as a boolean keyword.
+#
+#    So the disambiguation is a genuine, structural fact about this
+#    grammar's shape (a leading SLASH can only ever mean the boolean
+#    shorthand, because `expr` cannot start with one), not a lookahead
+#    predicate bolted on top -- precisely the "know which production you are
+#    inside" resolution MA12 §3 calls for, and precisely why `arg` (an
+#    explicit, dedicated argument-list alternative production, distinct from
+#    a bare `expr`) is the one new production that makes the whole
+#    disambiguation possible at all.
+#
+# 2. `=` as assignment vs. keyword-bind (MA12 §3 item 2).
+#
+#    Exactly the same "which production" resolution, requiring no special
+#    machinery either:
+#
+#        assignment_stmt = NAME [ index_suffix ] EQUALS expr ;   -- statement
+#        keyword_arg     = NAME EQUALS expr ;                    -- inside arg_list
+#
+#    Both productions have the identical `NAME EQUALS expr` shape (modulo
+#    `assignment_stmt`'s optional subscript target) -- the token sequence
+#    around the `=` is genuinely indistinguishable in isolation, exactly as
+#    MA12 §3 says. What tells them apart is which rule the parser is
+#    CURRENTLY inside when it reaches that shape: `assignment_stmt` is only
+#    ever attempted from `statement` (never from inside an `arg_list`), and
+#    `keyword_arg` is only ever attempted from `arg` (only ever inside an
+#    `arg_list`, i.e. immediately after a `PROC_NAME,` or inside a call's
+#    `( ... )`). A caller can never reach `keyword_arg` while parsing a
+#    top-level statement, and can never reach `assignment_stmt` while
+#    parsing an argument -- the grammar's own call graph is the
+#    disambiguation, with no shared "read `=` and decide later" production
+#    and no predicate of any kind.
+#
+# Both resolutions match MA12 §3's own framing ("a parse-context signal...
+# resolved the same 'know which production you are inside' way") to the
+# letter: the argument-list production (`arg_list`/`arg`) is written once,
+# explicitly, as its own distinct home for `KEYWORD=value` and `/KEYWORD`,
+# never folded into how a bare `expr` is parsed anywhere else in this file.
+#
+# ============================================================================
+# WHY THE PROCEDURE-CALL STATEMENT NEEDS NO SPECIAL LOOKAHEAD EITHER
+# ----------------------------------------------------------------------------
+# `statement`'s three NAME-led alternatives -- `procedure_call_stmt`,
+# `assignment_stmt`, `expr_stmt` -- are tried in that order (see `statement`
+# below). This is safe, ordinary PEG ordered choice (`parser::grammar_parser`
+# backtracks via its packrat memo on a failed alternative, restoring
+# position, per that module's own `Alternation` handling), not a hand-rolled
+# disambiguation: `procedure_call_stmt = NAME COMMA arg_list` fails cleanly
+# and backtracks whenever the token after NAME isn't COMMA, `assignment_stmt
+# = NAME [ index_suffix ] EQUALS expr` fails and backtracks whenever no
+# EQUALS follows the (optionally subscripted) NAME, and `expr_stmt = expr`
+# is the catch-all that always succeeds on a bare NAME, a function call
+# `NAME ( ... )`, an indexing expression `NAME [ ... ]`, or any arithmetic
+# expression. COMMA is not used as a statement-level separator anywhere else
+# in this cut's in-scope surface (unlike Scilab, whose `stmt_sep` accepts a
+# bare COMMA as a statement terminator) -- idl.tokens' own SECTION 7 comment
+# confirms IDL's statement separator is `&` (STMT_SEP), not COMMA -- so
+# `NAME COMMA` at the START of a statement is UNAMBIGUOUSLY the
+# procedure-call-statement shape; no other production can ever produce that
+# exact two-token prefix at a statement boundary.
+#
+# A DISCLOSED, SPEC-CONSISTENT SCOPE NOTE: a procedure called with ZERO
+# arguments (real IDL: e.g. a bare `STOP` or `PRINT` with nothing after it)
+# is syntactically IDENTICAL, at the CST level, to a bare-variable-reference
+# expression statement (real IDL: auto-display a variable's value) -- both
+# are just a lone NAME token. MA12 §3 item 1 itself frames the
+# procedure-call-statement production as "a bare identifier ... FOLLOWED BY
+# a comma-separated argument list" (emphasis reflects the quoted text
+# itself), i.e. the comma+arglist IS the defining shape; a zero-arg call has
+# no comma and so has no distinguishing syntax at all versus a bare name
+# read. This mirrors MA12 §1's own finding for pre-5.0 IDL's `fish(5)`
+# ambiguity: some "is this a call or a value" questions in IDL are only
+# answerable by a symbol table, not by grammar alone. This grammar does not
+# invent a zero-arg `procedure_call_stmt` alternative to paper over that --
+# a bare NAME statement parses via `expr_stmt` either way, and a future
+# `idl-runtime` (MA-12d) is where "is this NAME a known zero-arg procedure or
+# a variable to auto-display" gets resolved, by symbol-table lookup, exactly
+# as real IDL's own compiler does it -- not a gap this parser's CST needs to
+# paper over.
+#
+# ============================================================================
+# BLOCK TERMINATORS, BODY FORMS, AND REPEAT'S ENDREP-BEFORE-UNTIL ORDER
+# ----------------------------------------------------------------------------
+# Every conditional/loop header has TWO body forms (MA12 §3): a
+# single-`statement` form with NO closing keyword at all (`IF x THEN y = 1`),
+# and a `BEGIN ... ENDxxx`/`END` block form. The matched terminator
+# (`ENDIF`/`ENDELSE`/`ENDFOR`/`ENDWHILE`/`ENDREP`) is preferred; a bare `END`
+# is always also accepted as the generic fallback (MA12 §3: "the optional
+# compiler-side 'does ENDFOR match a FOR?' check is a nicety the parser can
+# carry, not a semantic requirement") -- this grammar does not attempt that
+# compiler-side cross-check (it would require passing the opener's identity
+# down into a parameterized production family this shared EBNF has no way to
+# express), so `IF x THEN BEGIN y = 1 ENDFOR` would parse -- a deliberately
+# NOT-caught mismatch, left to a later semantic pass exactly as MA12 §3
+# itself says is acceptable.
+#
+# `DO` sits in the IDENTICAL relative position for both FOR and WHILE (MA12
+# §4: "FOR v = init, limit[, step] DO ..." / "WHILE expr DO ..." -- `DO`
+# immediately follows the range/condition, immediately before the body, in
+# both), so `for_stmt`/`while_stmt` share the same "condition/range DO body"
+# shape with no divergence to encode -- confirmed by direct comparison of
+# both bullets, not assumed.
+#
+# `REPEAT`'s own terminator order was double-checked against real IDL
+# documentation (not guessed): the closing `ENDREP` comes BEFORE `UNTIL`, not
+# after -- `REPEAT BEGIN ... ENDREP UNTIL expr` (single-statement form:
+# `REPEAT statement UNTIL expr`, no ENDREP at all, the same "no closer for
+# the single-statement form" shape every other construct here has). This
+# reads naturally once `ENDREP` is understood as `BEGIN`'s OWN closer (the
+# same role `ENDIF`/`ENDFOR`/`ENDWHILE` each play for their own `BEGIN`),
+# with `UNTIL expr` as REPEAT's trailing loop-condition clause coming after
+# the body is fully closed -- not a terminator for the whole `REPEAT`
+# construct in its own right.
+#
+# ============================================================================
+# NO `$` (CONTINUATION) HANDLING IN THIS GRAMMAR -- A DELIBERATE, DISCLOSED
+# SCOPE BOUNDARY, NOT AN OVERSIGHT
+# ----------------------------------------------------------------------------
+# idl-lexer emits CONTINUATION (`$`) as an ordinary, un-suppressed token and
+# explicitly does NOT swallow the NEWLINE that follows it (idl-lexer's own
+# doc comment: "what 'continuation' means operationally is entirely
+# idl-repl's concern, not this lexer's"). MA12 §5 assigns exactly that
+# responsibility to `idl-repl`'s own "continuation scanner", which tracks
+# paren/bracket balance and `$` at the RAW TEXT level to decide when a
+# chunk of source is complete BEFORE it is ever handed to `tokenize_idl` --
+# a text-joining step that happens strictly before lexing, not something a
+# grammar operating on an already-tokenized stream could express or should
+# try to. Consistently, `CONTINUATION` is not referenced ANYWHERE in this
+# file: a bare `$` reaching `idl-parser` is a syntax error by construction,
+# exactly mirroring `idl-lexer`'s own explicit disclaiming of `$`'s meaning.
+# This is MA-12d's (`idl-repl`) job, not this crate's -- consistent with this
+# task's own scope boundary (MA-12c only).
+#
+# ============================================================================
+# OPERATOR PRECEDENCE -- VERIFIED AGAINST THE OFFICIAL NV5/L3HARRIS
+# "OPERATOR PRECEDENCE" REFERENCE PAGE, NOT GUESSED
+# ----------------------------------------------------------------------------
+# IDL's own documented precedence table (highest to lowest; the untranslated
+# tiers -- pointer-deref/`++`/`--`/`MOD`/`<`-min/`>`-max/`&&`/`||`/`?:` -- are
+# all out of scope per MA12 §4 and have no token in idl.tokens to reference):
+#
+#   1. ( ) grouping; [ ] array-literal/concatenation       -- `group`/`array_literal`
+#   2. [ ] subscripting; ( ) call                          -- `postfix` suffixes
+#   3. ^ (exponentiation)                                  -- `power`
+#   4. * / # ## (multiplicative, incl. matrix product)     -- `multiplicative`
+#   5. binary + -; UNARY + - NOT                           -- `additive`/`unary`
+#   6. EQ NE LE LT GE GT (comparison -- ALL SIX, one tier) -- `comparison`
+#   7. AND OR XOR (logical/bitwise -- all three, one tier) -- `logical`
+#
+# TWO GENUINELY NON-OBVIOUS FACTS THIS CASCADE ENCODES, CONFIRMED AGAINST THE
+# OFFICIAL REFERENCE RATHER THAN ASSUMED FROM SCILAB/MATLAB'S OWN SHAPE:
+#
+#   a. Unary `+`/`-`/`NOT` sit at the SAME documented tier (tier 5) as
+#      BINARY `+`/`-`, not at a tighter tier above `multiplicative` the way
+#      Scilab's/MATLAB's own `unary` production sits (between
+#      `multiplicative` and `power`). This is why `unary` here recurses
+#      ABOVE `multiplicative` (i.e. a unary prefix wraps the entire
+#      `multiplicative` term that follows it): `-a*b` is `-(a*b)`, and
+#      `-a^b` is `-(a^b)` -- a real, documented IDL divergence from the
+#      "unary binds tighter than `*`" convention most C-family/MATLAB-family
+#      languages use.
+#   b. `^` (exponentiation) is LEFT-associative in IDL, not right-associative
+#      the way Scilab's/MATLAB's/Python's own `^`/`**` is. The official
+#      precedence page states the general rule "operators with equal
+#      precedence are evaluated from left to right" and gives a worked
+#      example (`6 / 2 * 3` = 9, left-to-right) for tier 4; since `^` sits
+#      ALONE at its own tier with no competing binary operator, that same
+#      general rule is what governs a `^` CHAIN against itself, and
+#      secondary sources confirm this directly: `2^3^2` evaluates to
+#      `(2^3)^2 = 64` in real IDL, not `2^(3^2) = 512`. `power` below is
+#      therefore written with LEFT-recursive `{ }` repetition (like every
+#      other tier in this cascade), NOT the right-recursive `[ CARET power
+#      ]` shape Scilab's own `power` production uses.
+#
+# `NOT` is placed in `unary` (tier 5, per the table above), not in
+# `logical`'s own tier 7 alongside `AND`/`OR`/`XOR` -- despite idl.tokens'
+# own SECTION 6 comment grouping all four together under one descriptive
+# "logical/bitwise" heading, that comment is about the LEXER's keyword list,
+# not this grammar's precedence tiers; NV5's own precedence table is
+# unambiguous that `NOT` (a UNARY operator) sits at tier 5 while
+# `AND`/`OR`/`XOR` (BINARY operators) sit at tier 7 -- two different tiers,
+# confirmed directly against the official reference rather than assumed
+# from the lexer's own grouping.
+#
+# Assignment (`=`) is NOT part of this expression cascade at all -- unlike
+# Scilab's/MATLAB's own `assignment = logical_or [ EQ assignment ]`
+# (chainable, expression-level `x = y = z`), real IDL has no
+# assignment-as-expression and no assignment chaining; `=` is purely a
+# STATEMENT-level construct here (`assignment_stmt`), confirmed by the
+# absence of any documented IDL "compound/chained assignment expression"
+# construct and consistent with MA12 §4's own "Assignment & statements:
+# `x = expr`" bullet treating it as a statement, not an expression form.
+# ============================================================================
+
+# ============================================================================
+# Program and statements
+# ============================================================================
+
+# The entry rule (first in the file) -- a program is top-level PRO/FUNCTION
+# definitions interleaved with ordinary executable statements, covering both
+# a library-file cut (all PRO/FUNCTION defs) and a batch/REPL-style cut (a
+# plain sequence of statements with no routine definitions at all), per MA12
+# §5's own "the crate layout mirrors ... the REPL & binary" framing and this
+# task's own brief ("A program is a sequence of statements (procedure/
+# function definitions at top level, or a sequence of executable statements
+# for the REPL case)"). Real IDL disallows NESTING a PRO/FUNCTION definition
+# inside a block body (a `.pro` file defines exactly one routine, or is a
+# main-level batch of statements with none) -- so, unlike scilab.grammar's
+# own `statement` (which includes `func_def` as an ordinary nestable
+# statement alternative), `pro_def`/`func_def` are reachable ONLY from
+# `top_level_item`, never from `statement` (used inside `block_body`).
+program = { top_level_item } ;
+
+top_level_item = pro_def
+               | func_def
+               | statement_line ;
+
+# A statement-bearing line: one or more statements joined by the `&`
+# statement separator (idl.tokens SECTION 4 / MA12 §3's "lexer trivia"
+# bullet), then an optional terminating NEWLINE (optional so the final line
+# of a file need not end with one) -- or a bare blank line (just a NEWLINE,
+# nothing else). Mirrors scilab.grammar's own `statement_line` shape,
+# adapted to IDL's own separator/terminator pair (`&`/NEWLINE) instead of
+# Scilab's (COMMA/NEWLINE/SEMICOLON).
+statement_line = statement { STMT_SEP statement } [ NEWLINE ]
+               | NEWLINE ;
+
+# A run of statement lines; stops at whatever keyword closes the enclosing
+# construct (`ENDIF`/`ENDELSE`/`ENDFOR`/`ENDWHILE`/`ENDREP`/`END`/`UNTIL`),
+# none of which can begin a `statement`. Also consumes the header's own
+# trailing NEWLINE as a leading blank `statement_line` -- so `pro_def`/
+# `func_def`/every block-form header below needs no dedicated
+# header-terminator production of its own; the ordinary newline right after
+# a header line is just the first (blank) `statement_line` in the body.
+block_body = { statement_line } ;
+
+statement = if_stmt
+          | for_stmt
+          | while_stmt
+          | repeat_stmt
+          | begin_block
+          | break_stmt
+          | continue_stmt
+          | return_stmt
+          | procedure_call_stmt
+          | assignment_stmt
+          | expr_stmt ;
+
+# ============================================================================
+# Control flow
+# ============================================================================
+
+# `IF expr THEN <then-branch> [ ELSE <else-branch> ]`. `THEN`/`ELSE` are
+# MANDATORY linker keywords (MA12 §3/§4 -- simpler than Scilab's
+# optional-elidable `then`, no elision rule needed at all). Each branch is
+# either the single-statement form or a `BEGIN ... ENDxxx|END` block.
+if_stmt = "IF" expr "THEN" then_branch [ "ELSE" else_branch ] ;
+
+then_branch = "BEGIN" block_body ( "ENDIF" | "END" )
+            | statement ;
+
+else_branch = "BEGIN" block_body ( "ENDELSE" | "END" )
+            | statement ;
+
+# `FOR v = init, limit[, step] DO <body>` (MA12 §4's own exact spelling,
+# COMMA-separated -- not Scilab/MATLAB's colon-range `for i = 1:10`; IDL has
+# no colon-range FOR form in scope here).
+for_stmt = "FOR" NAME EQUALS expr COMMA expr [ COMMA expr ] "DO" for_body ;
+
+for_body = "BEGIN" block_body ( "ENDFOR" | "END" )
+         | statement ;
+
+# `WHILE expr DO <body>` -- `DO` in the identical relative position to
+# `for_stmt`'s own (see this file's header comment).
+while_stmt = "WHILE" expr "DO" while_body ;
+
+while_body = "BEGIN" block_body ( "ENDWHILE" | "END" )
+           | statement ;
+
+# `REPEAT <body> UNTIL expr` -- single-statement form has no closer at all;
+# the block form's `ENDREP`/`END` closes `BEGIN`'s own block BEFORE `UNTIL
+# expr` (this file's header comment explains why ENDREP precedes UNTIL,
+# confirmed against real IDL documentation rather than guessed).
+repeat_stmt = "REPEAT" repeat_body "UNTIL" expr ;
+
+repeat_body = "BEGIN" block_body ( "ENDREP" | "END" )
+            | statement ;
+
+# A generic `BEGIN ... END` block used as an ordinary statement (MA12 §4's
+# own "a generic BEGIN…ENDxxx block" bullet) -- plain grouping, not attached
+# to any header keyword. Always closes with a bare `END` here (there is no
+# more-specific matched terminator for a block with no header to match
+# against).
+begin_block = "BEGIN" block_body "END" ;
+
+break_stmt = "BREAK" ;
+continue_stmt = "CONTINUE" ;
+
+# `RETURN` alone (procedure context, early exit) or `RETURN, expr` (function
+# context, the returned value) -- MA12 §3/§4's "with or without an
+# expression, function vs. procedure context". Both forms are accepted
+# everywhere by this CST-only grammar; which context is semantically valid
+# is a future `idl-runtime` (MA-12d) concern, not this parser's. The comma
+# before the returned expression mirrors the same command-style
+# "NAME, arg" shape `procedure_call_stmt` itself uses -- RETURN just cannot
+# fall through to that generic production because it is a reserved KEYWORD,
+# never a NAME.
+return_stmt = "RETURN" [ COMMA expr ] ;
+
+# ============================================================================
+# The procedure-call statement and assignment -- the two NAME-led,
+# comma/equals-disambiguated statement forms (see this file's header
+# comment for the full disambiguation design). Order matters here only in
+# the sense that each alternative must be tried before the more permissive
+# ones that could otherwise also match a bare NAME -- ordinary PEG ordered
+# choice with packrat backtracking, not a hand-rolled lookahead.
+# ============================================================================
+
+# `PROC_NAME, arg, arg, KEYWORD=value, /BOOLEAN_KEYWORD ...` -- MA12 §3's
+# headline new production. Requires the COMMA (see this file's header
+# comment on the disclosed zero-arg-call scope note); `arg_list` (below) is
+# the SAME production a function call's parenthesised argument list uses
+# (`call_suffix`), so keyword arguments and the `/BOOLEAN` shorthand work
+# identically in both procedure and function calls, exactly as MA12 §3
+# item 2 requires.
+procedure_call_stmt = NAME COMMA arg_list ;
+
+# `x = expr` or `a[i] = expr` / `a[i,j] = expr` (subscripted assignment,
+# MA12 §4). `index_suffix` is the SAME production `postfix` uses for
+# ordinary indexing (see the expression cascade below) -- reused, not
+# duplicated. Only ONE subscript group is permitted on an assignment target
+# (real IDL assignment targets are `var` or `var[subscripts]`, never a
+# chained `f(x)[i] = ...` or `a[i][j] = ...`), unlike `postfix`'s own
+# `{ index_suffix | call_suffix }` repetition used for general expressions.
+assignment_stmt = NAME [ index_suffix ] EQUALS expr ;
+
+# The catch-all: a bare NAME (variable read / zero-arg procedure-call
+# shape, see this file's header comment), a function call `NAME(...)`, an
+# indexing expression `NAME[...]`, or any arithmetic/comparison/logical
+# expression used for its side effect or auto-display value.
+expr_stmt = expr ;
+
+# ============================================================================
+# Procedure and function definitions (MA12 §3/§4/§6)
+#
+#   PRO name, p1, p2, KW=kw ... & ... & END
+#   FUNCTION name, p1, p2, KW=kw ... & ... & RETURN, value & END
+#
+# Both terminated by the generic `END` (there is no `ENDPRO`/`ENDFUNCTION`
+# in idl.tokens' keyword list -- confirmed directly, unlike Scilab's own
+# dedicated `endfunction`). Parameter lists mix plain positional parameter
+# names with keyword-parameter declarations of the shape
+# `KEYWORD=local_var_name` (MA12 §4's own literal "KW=kw" spelling) -- in
+# real IDL this binds the call-site keyword name KEYWORD to a LOCAL
+# VARIABLE NAME inside the body, which may differ from KEYWORD itself; the
+# right-hand side of a parameter declaration's `=` is therefore always a
+# bare NAME (the local binding), never an arbitrary expression -- a real
+# default value is instead assigned inside the body via IDL's own
+# `N_ELEMENTS(kw) EQ 0` idiom (MA12 §3), not declared in the header.
+# ============================================================================
+
+pro_def = "PRO" NAME [ COMMA params ] block_body "END" ;
+func_def = "FUNCTION" NAME [ COMMA params ] block_body "END" ;
+
+params = param { COMMA param } ;
+param = NAME EQUALS NAME
+      | NAME ;
+
+# ============================================================================
+# Expression precedence cascade (loosest -> tightest). See this file's
+# header comment for the full precedence-table verification and the two
+# non-obvious divergences from Scilab/MATLAB's own cascade shape (unary
+# binding looser than multiplicative, and left- rather than
+# right-associative `^`).
+# ============================================================================
+
+expr = logical ;
+
+logical = comparison { ( "AND" | "OR" | "XOR" ) comparison } ;
+
+comparison = additive { ( "EQ" | "NE" | "LE" | "LT" | "GE" | "GT" ) additive } ;
+
+# Binary `+`/`-`. The left operand is `unary` (not `multiplicative`
+# directly), so a leading unary prefix correctly wraps the entire
+# multiplicative term that follows it (`-a*b` = `-(a*b)`, per this file's
+# header comment).
+additive = unary { ( PLUS | MINUS ) unary } ;
+
+# Unary `+`/`-`/`NOT`, self-recursive so a chain (`- - -5`, `NOT NOT x`)
+# parses; the base case dives into `multiplicative`. This production sits
+# ABOVE `multiplicative` in the call graph (looser), matching IDL's
+# documented tier-5 unary placement -- NOT the tighter-than-multiplicative
+# position Scilab's/MATLAB's own `unary` production occupies.
+unary = ( PLUS | MINUS | "NOT" ) unary
+      | multiplicative ;
+
+# `*` `/` and BOTH matrix-product operators `#`/`##` share one precedence
+# tier (MA12 §4's own "matrix multiply # and ##" bullet grouped alongside
+# "+ - * /"; confirmed against the official precedence table's own tier 4,
+# which lists `*`, `#`/`##`, `/`, and `MOD` together -- MOD is out of scope,
+# no token exists for it). Left-associative repetition, like every other
+# tier here except the two documented left-associative/loosest-unary
+# divergences already called out above (which are ALSO left-associative,
+# just structured differently for the wrapping reason explained there).
+multiplicative = power { ( STAR | SLASH | HASH_HASH | HASH ) power } ;
+
+# Exponentiation -- LEFT-associative (see this file's header comment for
+# the verification against the official reference and the worked
+# `2^3^2 = 64` confirmation), so plain `{ }` repetition, NOT the
+# right-recursive `[ CARET power ]` shape a right-associative power
+# operator would need (contrast Scilab's own `power`).
+power = postfix { CARET postfix } ;
+
+# Postfix (tightest, tier 1/2 combined): subscripting and function-call
+# argument lists. `index_suffix`/`call_suffix` may repeat and interleave
+# (`f(x)[i]`, `a[i](x)`, ...) -- real IDL rarely nests these, but nothing in
+# MA12 §4 forbids it structurally, and the repetition costs nothing extra
+# to express here (mirrors scilab.grammar's own generously-repeating
+# `postfix`).
+postfix = primary { index_suffix | call_suffix } ;
+
+index_suffix = LBRACKET subscript_list RBRACKET ;
+call_suffix = LPAREN [ arg_list ] RPAREN ;
+
+# ============================================================================
+# Subscripts -- the full surface MA12 §4 lists: plain (`a[i]`), 2-D
+# (`a[i,j]`), ranged (`a[s0:s1]`), strided (`a[s0:s1:n]`), `*`-wildcard
+# (`a[*]`, `a[s0:*]`, `a[s0:*:n]`), and negative-from-end (`a[-1]`, handled
+# for free by `expr`'s own `unary` MINUS -- no dedicated production needed).
+# ============================================================================
+
+subscript_list = subscript { COMMA subscript } ;
+
+# Order: `STAR` first, since a bare `a[*]` cannot be matched by
+# `range_subscript` (which requires a leading `expr`, and `expr` cannot
+# start with STAR any more than it can start with SLASH) or by `expr`
+# itself -- `STAR` is the only alternative that can ever succeed on a bare
+# leading STAR token, so the ordering is not load-bearing for correctness,
+# only for avoiding two guaranteed-to-fail attempts first.
+subscript = STAR
+          | range_subscript
+          | expr ;
+
+# `s0:s1` / `s0:s1:n` / `s0:*` / `s0:*:n` -- the stride slot (third,
+# optional) is always a concrete `expr`; MA12 §2/§4 document `*` only as
+# the RANGE-END position, never the stride, so no `STAR` alternative is
+# offered there.
+range_subscript = expr COLON range_end [ COLON expr ] ;
+range_end = STAR
+          | expr ;
+
+# ============================================================================
+# Argument lists -- the headline new production (MA12 §3). Shared,
+# unmodified, between `procedure_call_stmt`'s command-style comma list and
+# `call_suffix`'s parenthesised function-call list, so keyword arguments and
+# the `/BOOLEAN` shorthand behave identically in both (MA12 §3 item 2).
+# See this file's header comment for the full disambiguation design.
+# ============================================================================
+
+arg_list = arg { COMMA arg } ;
+
+# Order matters here for efficiency (packrat memoization makes it harmless
+# for correctness either way, since each alternative fails cleanly and
+# backtracks): try the two argument-list-specific shapes before falling
+# through to a bare `expr`, so an ordinary positional argument that happens
+# to start with a NAME (the overwhelmingly common case) only pays for one
+# extra failed `NAME EQUALS` attempt before matching as `expr`.
+arg = keyword_arg
+    | bool_keyword_arg
+    | expr ;
+
+# `KEYWORD=value` -- a keyword binding, MA12 §3 item 2. Structurally
+# identical in shape to `assignment_stmt`, but reachable only from `arg`,
+# inside an argument list -- see this file's header comment.
+keyword_arg = NAME EQUALS expr ;
+
+# `/KEYWORD` -- the boolean shorthand, MA12 §3 item 3, `== KEYWORD=1` at the
+# semantic level (a future `idl-runtime` concern). See this file's header
+# comment for why this alternative can never be confused with SLASH-as
+# -division: `expr` structurally cannot start on a SLASH token, so this is
+# the only alternative that can ever succeed here.
+bool_keyword_arg = SLASH NAME ;
+
+# ============================================================================
+# Primary expressions
+# ============================================================================
+
+primary = NUMBER
+        | STRING
+        | array_literal
+        | group
+        | NAME ;
+
+group = LPAREN expr RPAREN ;
+
+# `[1, 2, 3]` -- array literal / concatenation (MA12 §4), tier 1 in the
+# precedence table (same tier as grouping parens) -- a PRIMARY alternative,
+# structurally distinct from `index_suffix`'s OWN `LBRACKET` (a postfix
+# SUFFIX on an already-parsed primary): a leading `[` at a primary position
+# (nothing parsed yet) is unambiguously a literal; a `[` immediately after
+# an existing `postfix` value is unambiguously a subscript. No lookahead
+# needed -- the same "which production position" resolution used
+# throughout this file.
+array_literal = LBRACKET [ array_elements ] RBRACKET ;
+array_elements = expr { COMMA expr } ;
