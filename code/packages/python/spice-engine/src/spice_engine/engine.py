@@ -421,11 +421,18 @@ def jfet_at_temperature(
         raise ValueError(f"{jfet.name}: JFET TCV must be finite")
     if not math.isfinite(jfet.Bex):
         raise ValueError(f"{jfet.name}: JFET BEX must be finite")
+    if jfet.Betatce is not None and not math.isfinite(jfet.Betatce):
+        raise ValueError(f"{jfet.name}: JFET BETATCE must be finite")
     temperature_ratio = temperature_kelvin / nominal_temperature
+    beta_scale = (
+        1.01 ** (jfet.Betatce * (temperature_kelvin - nominal_temperature))
+        if jfet.Betatce is not None
+        else temperature_ratio**jfet.Bex
+    )
     return replace(
         jfet,
         vto=jfet.vto - jfet.Tcv * (temperature_kelvin - nominal_temperature),
-        beta=jfet.beta * temperature_ratio**jfet.Bex,
+        beta=jfet.beta * beta_scale,
     )
 
 
@@ -637,7 +644,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.Af,
         )
     if isinstance(element, JFET):
-        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb, element.Fc, element.Is, element.Rd, element.Rs, element.Tcv, element.Tnom, element.Bex)
+        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb, element.Fc, element.Is, element.Rd, element.Rs, element.Tcv, element.Tnom, element.Bex, element.Betatce)
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
@@ -9164,6 +9171,8 @@ def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
         raise ValueError(f"JFET '{el.name}' TNOM must be finite and positive")
     if not math.isfinite(el.Bex):
         raise ValueError(f"JFET '{el.name}' BEX must be finite")
+    if el.Betatce is not None and not math.isfinite(el.Betatce):
+        raise ValueError(f"JFET '{el.name}' BETATCE must be finite")
     if el.polarity == "PJF":
         ids, gm, gds = _eval_njf(-vgs, -vds, -el.vto, el.beta, el.lambda_)
         return -ids, gm, gds

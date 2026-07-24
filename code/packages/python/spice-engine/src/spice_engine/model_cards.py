@@ -309,8 +309,8 @@ _MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES = {
     "D": (15, 21, 5, 3),
     "NPN": (41, 58, 13, 4),
     "PNP": (41, 58, 13, 4),
-    "NJF": (15, 23, 7, 3),
-    "PJF": (15, 23, 7, 3),
+    "NJF": (16, 24, 7, 3),
+    "PJF": (16, 24, 7, 3),
     "NMOS": (18, 25, 6, 3),
     "PMOS": (18, 25, 6, 3),
 }
@@ -442,6 +442,7 @@ _JFET_PARAMETER_ALIASES: dict[str, str] = {
     "T_NOM": "TNOM",
     "TCV": "TCV",
     "BEX": "BEX",
+    "BETATCE": "BETATCE",
 }
 
 _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
@@ -1024,6 +1025,7 @@ def jfet_from_model_card(
         Tcv=p.get("TCV", 0.0),
         Tnom=p["TNOM"] + 273.15 if "TNOM" in p else None,
         Bex=p.get("BEX", 0.0),
+        Betatce=p.get("BETATCE"),
     )
 
 
@@ -1259,7 +1261,7 @@ def device_model_temperature_audit_fixtures() -> tuple[DeviceModelTemperatureBeh
         "bjt-emitter-follower": "BJT saturation current and thermal voltage scale with temperature",
         "jfet-source-bias": (
             "JFET temperature scaling defaults to invariant; TCV/TNOM enable "
-            "threshold-voltage scaling and BEX enables beta scaling"
+            "threshold-voltage scaling; BETATCE overrides BEX for beta scaling"
         ),
         "mos-level1-common-source": "Level-1 MOS threshold and transconductance scale with temperature",
     }

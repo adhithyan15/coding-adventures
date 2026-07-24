@@ -70,8 +70,9 @@ steps were clipped, and the minimum damping factor; pass
 operating-temperature footholds for diode, BJT, JFET, and Level-1 MOSFET
 models before running an analysis.
 JFET model cards use `TCV` for threshold-voltage scaling and `BEX` for
-`BETA(T) = BETA * (T / TNOM)^BEX`; both default to temperature-invariant
-behavior and honor model-card `TNOM` / `T_NOM`.
+`BETA(T) = BETA * (T / TNOM)^BEX`. When explicitly present, `BETATCE`
+overrides `BEX` with `BETA(T) = BETA * 1.01^(BETATCE * (T - TNOM))`.
+All temperature coefficients honor model-card `TNOM` / `T_NOM`.
 `dcTemperatureSweep` and `dcTemperatureSweepCorners` run `.temp`-style DC
 operating-point snapshots across explicit analysis temperatures, with stable
 nominal and named-corner table helpers for cross-language comparison.
