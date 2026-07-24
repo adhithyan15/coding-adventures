@@ -1,5 +1,8 @@
 # Changelog
 
+- Add JFET model-card `PB` gate-junction-potential support with `VJ` as an
+  alias, bias-dependent `CGS`/`CGD` depletion capacitance in AC and transient
+  analysis, hierarchy preservation, and finite-positive validation.
 - Add JFET model-card `AF` flicker-noise current-exponent support, defaulting
   to `1` and applying `KF * abs(Id)^AF / frequency` across noise analysis.
 - Add JFET model-card `KF` flicker-noise support with a distinct drain-current

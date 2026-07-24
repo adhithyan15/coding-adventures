@@ -348,6 +348,24 @@ fn jfet_rejects_invalid_flicker_noise_exponent() {
 }
 
 #[test]
+fn jfet_rejects_invalid_junction_potential() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.junction_potential = 0.0;
+    circuit.add(Element::Jfet(jfet));
+
+    let error = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(matches!(
+        error,
+        SpiceError::InvalidElement { reason, .. }
+            if reason == "junction potential must be finite and positive"
+    ));
+}
+
+#[test]
 fn jfet_flicker_noise_uses_af_current_exponent() {
     let source_psd = |exponent: f64| {
         let mut circuit = Circuit::new();

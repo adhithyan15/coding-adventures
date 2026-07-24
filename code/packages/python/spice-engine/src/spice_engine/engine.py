@@ -604,7 +604,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.Af,
         )
     if isinstance(element, JFET):
-        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af)
+        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb)
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
@@ -8919,6 +8919,26 @@ def _jfet_charge_state_voltage(n_plus: str, n_minus: str, node_voltages: dict[st
     return _node_voltage(n_plus, node_voltages) - _node_voltage(n_minus, node_voltages)
 
 
+def _jfet_charge_dynamic_capacitance(
+    el: JFET, zero_bias_capacitance: float, junction_voltage: float
+) -> float:
+    grading_coefficient = 0.5
+    forward_bias_depletion_coefficient = 0.5
+    oriented_voltage = -junction_voltage if el.polarity == "PJF" else junction_voltage
+    normalized_voltage = oriented_voltage / el.Pb
+    if normalized_voltage < forward_bias_depletion_coefficient:
+        return zero_bias_capacitance / ((1.0 - normalized_voltage) ** grading_coefficient)
+    transition_scale = (1.0 - forward_bias_depletion_coefficient) ** (
+        1.0 + grading_coefficient
+    )
+    continuation = (
+        1.0
+        - forward_bias_depletion_coefficient * (1.0 + grading_coefficient)
+        + grading_coefficient * normalized_voltage
+    )
+    return zero_bias_capacitance * continuation / transition_scale
+
+
 def _mosfet_gate_source_charge_state_name(el: Mosfet) -> str:
     return f"_M_{el.name}_gs_charge"
 
@@ -9059,6 +9079,8 @@ def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
         raise ValueError(f"JFET '{el.name}' flicker-noise coefficient must be finite and non-negative")
     if not math.isfinite(el.Af) or el.Af < 0.0:
         raise ValueError(f"JFET '{el.name}' flicker-noise exponent must be finite and non-negative")
+    if not math.isfinite(el.Pb) or el.Pb <= 0.0:
+        raise ValueError(f"JFET '{el.name}' PB must be finite and positive")
     if el.polarity == "PJF":
         ids, gm, gds = _eval_njf(-vgs, -vds, -el.vto, el.beta, el.lambda_)
         return -ids, gm, gds
@@ -10203,6 +10225,7 @@ def _build_transient_companions(
         elif isinstance(el, JFET):
             for state_name, n_plus, n_minus, capacitance in _jfet_charge_state_specs(el):
                 v_prev = cap_voltages.get(state_name, 0.0)
+                capacitance = _jfet_charge_dynamic_capacitance(el, capacitance, v_prev)
                 if method == "trap":
                     g_eq = 2.0 * capacitance / h
                     I_eq = g_eq * v_prev + cap_currents.get(state_name, 0.0)
@@ -10465,6 +10488,7 @@ def _update_reactive_state(
                 v_new = _jfet_charge_state_voltage(n_plus, n_minus, op.node_voltages)
                 v_prev = cap_voltages.get(state_name, v_new)
                 v_older = cap_voltages_older.get(state_name, v_prev)
+                capacitance = _jfet_charge_dynamic_capacitance(el, capacitance, v_prev)
 
                 if method == "trap":
                     g_eq = 2.0 * capacitance / h
@@ -12735,9 +12759,11 @@ def _stamp_ac(
         _, gm_j, gds_j = _eval_jfet(el, Vg - Vs, Vd - Vs)
         _stamp_g_c(G, node_to_idx, el.drain, el.source, gds_j + 0j)
         if el.Cgs > 0.0:
-            _stamp_g_c(G, node_to_idx, el.gate, el.source, 1j * omega * el.Cgs)
+            cgs = _jfet_charge_dynamic_capacitance(el, el.Cgs, Vg - Vs)
+            _stamp_g_c(G, node_to_idx, el.gate, el.source, 1j * omega * cgs)
         if el.Cgd > 0.0:
-            _stamp_g_c(G, node_to_idx, el.gate, el.drain, 1j * omega * el.Cgd)
+            cgd = _jfet_charge_dynamic_capacitance(el, el.Cgd, Vg - Vd)
+            _stamp_g_c(G, node_to_idx, el.gate, el.drain, 1j * omega * cgd)
         if not _is_ground(el.drain):
             d = node_to_idx[el.drain]
             if not _is_ground(el.gate):

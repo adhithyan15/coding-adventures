@@ -33,15 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language JFET flicker-noise current exponent.
+1. Cross-language JFET gate-junction potential.
    - Status: current PR completion candidate.
-   - Add Berkeley JFET `AF` model-card support in Rust, Python, and TypeScript,
-     defaulting to one and applying it to the existing drain-current flicker
-     source as `KF * abs(Id)^AF / frequency`.
-   - Preserve `AF` through hierarchy and cloning while validating finite
-     non-negative values in every engine.
-   - Extend the supported-parameter coverage gate from 145 to 147 canonical
-     rows and lock current-exponent behavior in all engines.
+   - Add Berkeley JFET `PB` model-card support, with `VJ` as an accepted alias,
+     in Rust, Python, and TypeScript.
+   - Default `PB` to one volt and use it to shape the existing zero-bias
+     `CGS`/`CGD` junction capacitances in AC and transient analysis with the
+     Berkeley grading and forward-bias continuation defaults.
+   - Preserve `PB` through hierarchy and cloning, validate finite positive
+     values, and extend the supported-parameter coverage gate from 147 to 149
+     canonical rows.
 
 ## Completed Slices
 
@@ -3252,6 +3253,14 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning paths preserve `KF`, finite non-negative validation
      is shared across analyses, and the supported-parameter release gate now
      covers 145 canonical rows.
+
+250. Cross-language JFET flicker-noise current exponent.
+   - Status: completed in PR 8914.
+   - Rust, Python, and TypeScript JFET model cards now accept `AF`, default it
+     to one, and apply `KF * abs(Id)^AF / frequency` to JFET flicker noise.
+   - Hierarchy and cloning paths preserve `AF`, finite non-negative validation
+     is shared across analyses, and the supported-parameter release gate now
+     covers 147 canonical rows.
 
 ## Backlog
 
