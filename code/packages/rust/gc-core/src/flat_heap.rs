@@ -1223,6 +1223,107 @@ impl FlatHeap {
         (arena, forward)
     }
 
+    /// If `word` is a pointer at a **moved** object's *base* (old payload address) —
+    /// either raw, or carrying a low-3 NaN-box tag — return the forwarded pointer (new
+    /// base, tag reattached); otherwise `None`.
+    ///
+    /// Only **base** pointers are handled, deliberately: a moved object is referenced
+    /// *only* by base pointers. Precise reference fields hold base pointers, and any
+    /// object reachable *conservatively* (a `regions` root, or a `kind == 0` object)
+    /// was scanned every-word during classification, which **pins** its targets — so a
+    /// moved object has no interior-pointer and no conservative in-edge. An interior or
+    /// integer look-alike therefore never legitimately names a moved object, and is
+    /// never rewritten (avoiding corrupting a non-pointer word).
+    fn forwarded(&self, word: usize, forward: &HashMap<usize, usize>) -> Option<usize> {
+        if let Some(&nw) = forward.get(&word) {
+            return Some(nw); // untagged base pointer
+        }
+        let tag = word & 0x7;
+        if tag != 0 {
+            let base = word & !0x7usize;
+            if let Some(&nw) = forward.get(&base) {
+                return Some(nw | tag); // tagged base pointer — reattach the tag
+            }
+        }
+        None
+    }
+
+    /// Rewrite `h`'s **registered-kind reference fields** that point at a moved object
+    /// to the forwarded (new) address. `h` must be a registered kind (`kind != 0`) with
+    /// a field map — the only objects that hold pointers to moved objects are the moved
+    /// objects themselves (their arena copies), and those are registered kinds. Words
+    /// that don't name a moved object are left untouched; tag bits are preserved by
+    /// [`Self::forwarded`].
+    ///
+    /// # Safety
+    /// `h` is a live block owned by this heap (or its arena copy).
+    unsafe fn fixup_ref_fields(&self, h: *mut FlatHeader, forward: &HashMap<usize, usize>) {
+        let kind = (*h).kind;
+        let offsets = match self.field_maps.get((kind.wrapping_sub(1)) as usize) {
+            Some(o) if kind != 0 => o,
+            _ => return, // kind==0 / unregistered holds no pointers to moved objects
+        };
+        let base = h.add(1) as *const u8;
+        let size = (*h).size;
+        for &off in offsets.iter() {
+            if size >= 8 && off <= size - 8 {
+                let slot = base.add(off) as *mut usize;
+                let w = ptr::read_unaligned(slot);
+                if let Some(nw) = self.forwarded(w, forward) {
+                    ptr::write_unaligned(slot, nw);
+                }
+            }
+        }
+    }
+
+    /// **AOT00-T3 PR-3b — evacuate + pointer fixup (the moving cycle's steps 1–3).**
+    /// Marks/classifies, copies every movable object into a fresh to-space [`Arena`]
+    /// (via [`Self::plan_compaction`]), then rewrites every pointer that named a moved
+    /// object to its new arena address:
+    /// - **roots** — each precise `root_slot` whose word names a moved object is updated
+    ///   in place (tag preserved);
+    /// - **interior** — each moved object's *arena copy* has its registered-kind
+    ///   reference fields rewritten (pinned and `kind == 0` objects provably hold no
+    ///   pointer to a moved object — see [`Self::forwarded`] — so they are skipped).
+    ///
+    /// Returns `(arena, forward)`. **The caller MUST keep the arena alive for as long as
+    /// any rewritten pointer is dereferenced** — the moved objects now live *in the
+    /// arena*, and the from-space originals are intentionally left untouched (not freed)
+    /// and orphaned. Reclaiming the from-space blocks and re-threading the heap's
+    /// all-list over the arena (so the heap itself uses the compacted copies) is the
+    /// integration step PR-3c; this PR lands and reviews the fixup math in isolation. The
+    /// remembered set is likewise left pointing at the still-valid from-space addresses;
+    /// remapping it belongs with the reclamation step.
+    ///
+    /// # Safety
+    /// Each `root_slots` address and each `regions` span must be readable (same contract
+    /// as [`Self::collect_mixed`]).
+    #[allow(dead_code)] // full `collect_compacting` (reclaim + integrate) consumes this in PR-3c
+    unsafe fn evacuate_and_fixup(
+        &mut self,
+        root_slots: &[usize],
+        regions: &[(*const u8, usize)],
+    ) -> (Arena, HashMap<usize, usize>) {
+        let (arena, forward) = self.plan_compaction(root_slots, regions);
+
+        // (a) Roots: write the forwarded address back into each precise slot.
+        for &slot in root_slots {
+            let w = ptr::read_unaligned(slot as *const usize);
+            if let Some(nw) = self.forwarded(w, &forward) {
+                ptr::write_unaligned(slot as *mut usize, nw);
+            }
+        }
+
+        // (b) Interior: fix up each MOVED object's arena copy. (Only moved objects hold
+        //     pointers to moved objects; pinned / kind==0 objects were conservatively
+        //     scanned in classification, which pinned their targets.)
+        for &new_payload in forward.values() {
+            self.fixup_ref_fields((new_payload - HEADER_SIZE) as *mut FlatHeader, &forward);
+        }
+
+        (arena, forward)
+    }
+
     /// Return the header of the live block whose payload contains `addr`, or null.
     /// Linear scan of the all-blocks list (matching `twig_gc.c`'s V1; a sorted
     /// interval index is a later optimisation).
@@ -2828,6 +2929,78 @@ mod tests {
         assert_eq!(keys, movable, "exactly the movable objects are forwarded");
         let news: HashSet<usize> = forward.values().copied().collect();
         assert_eq!(news.len(), forward.len(), "each object gets a distinct arena address");
+        drop(arena);
+    }
+
+    // ── Moving/compacting collector — evacuate + pointer fixup (AOT00-T3 PR-3b) ──
+
+    /// The headline move differential: a precise-rooted registered object and its
+    /// registered child both MOVE; the root slot is rewritten to the parent's new
+    /// address, and the parent's (arena-copy) reference field is rewritten to the
+    /// child's new address — so deref-through the rewritten root reaches the child at
+    /// its NEW arena location. (Arena kept alive across the assertions.)
+    #[test]
+    fn evacuate_moves_precise_chain_and_rewrites_root_and_interior() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]); // one ref field at offset 0
+        let a = heap.alloc(16, k) as usize;
+        let b = heap.alloc(16, k) as usize;
+        unsafe { *(a as *mut usize) = b }; // a.field0 -> b
+
+        let root = a; // a precise root slot holding A's address
+        let slots = [&root as *const usize as usize];
+        let (arena, forward) = unsafe { heap.evacuate_and_fixup(&slots, &[]) };
+
+        let na = *forward.get(&a).expect("A moved");
+        let nb = *forward.get(&b).expect("B moved (reached precisely via A)");
+        assert_eq!(root, na, "root slot rewritten to A's new address");
+        let a_field = unsafe { *(na as *const usize) };
+        assert_eq!(a_field, nb, "moved A's ref field now points at moved B's new address");
+        assert!(na >= arena.base as usize && na < arena.base as usize + arena.cap);
+        assert!(nb >= arena.base as usize && nb < arena.base as usize + arena.cap);
+        drop(arena);
+    }
+
+    /// A conservatively-rooted object PINS — even when *also* precisely rooted: it is
+    /// not moved and its root slot is left unchanged (a conservative pointer to it can't
+    /// be rewritten, so it must stay put).
+    #[test]
+    fn evacuate_conservative_in_edge_object_pins_and_root_unchanged() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let a = heap.alloc(16, k) as usize;
+
+        let precise = a;
+        let cons = a;
+        let slots = [&precise as *const usize as usize];
+        let region = [(&cons as *const usize as *const u8, 8usize)];
+        let (arena, forward) = unsafe { heap.evacuate_and_fixup(&slots, &region) };
+
+        assert!(!forward.contains_key(&a), "a conservative in-edge pins the object");
+        assert_eq!(precise, a, "a pinned object's precise root slot is left unchanged");
+        assert_eq!(arena.cap, 0, "nothing moved");
+        drop(arena);
+    }
+
+    /// A **tagged** interior pointer (low-3 NaN-box tag) is fixed up to the child's new
+    /// address with the tag reattached.
+    #[test]
+    fn evacuate_fixes_tagged_interior_pointer_preserving_tag() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let a = heap.alloc(16, k) as usize;
+        let b = heap.alloc(16, k) as usize;
+        let tag = 0x3usize;
+        unsafe { *(a as *mut usize) = b | tag }; // a.field0 -> b, tagged
+
+        let root = a;
+        let slots = [&root as *const usize as usize];
+        let (arena, forward) = unsafe { heap.evacuate_and_fixup(&slots, &[]) };
+
+        let nb = *forward.get(&b).expect("tagged child still reached + moved");
+        let na = *forward.get(&a).expect("A moved");
+        let a_field = unsafe { *(na as *const usize) };
+        assert_eq!(a_field, nb | tag, "tagged pointer fixed up, tag preserved");
         drop(arena);
     }
 }

@@ -1,5 +1,41 @@
 # Changelog — gc-core
 
+## 0.14.0 — 2026-07-24 — moving-collector pointer fixup (AOT00-T3 PR-3b)
+
+Third step of the moving/compacting collector: the **pointer fixup** (moving-cycle steps
+1–3). `evacuate_and_fixup(root_slots, regions)` runs `plan_compaction` (mark + copy into the
+to-space arena, PR-3a) and then rewrites every pointer that named a moved object to its new
+arena address:
+
+- **roots** — each precise `root_slot` whose word names a moved object is updated in place;
+- **interior** — each moved object's *arena copy* has its registered-kind reference fields
+  rewritten (`fixup_ref_fields`).
+
+Key simplification, proven from the mobility model and the reason this is UAF-safe: a moved
+object is referenced **only by base pointers** — precise reference fields hold base pointers,
+and the classification's conservative wave scans every pinned / `kind == 0` object *every
+word*, which **pins all their targets**. So a moved object has no conservative in-edge and no
+interior-pointer referrer. The `forwarded(word)` helper therefore rewrites only a word that is
+*exactly* a moved object's old base (raw or low-3-tag-carrying, tag reattached) and **never** a
+`kind == 0` / conservative word — so a non-pointer look-alike is never corrupted, and pinned
+and `kind == 0` objects are skipped entirely during interior fixup.
+
+Scope boundary (kept deliberately narrow to isolate the UAF surface): this **returns the
+arena** and the caller must keep it alive while any rewritten pointer is dereferenced; the
+from-space originals are left in place (not freed) and the heap's all-list is not re-threaded,
+so the heap does not yet *use* the compacted copies. Reclaiming from-space + integrating the
+arena into the heap (a provenance-aware sweep) is PR-3c. The remembered set is likewise left
+pointing at the still-valid from-space addresses.
+
+Purely additive; no existing symbol/behaviour change (75 prior tests unchanged). 3 new
+differential tests: a precise chain moves and both its root slot and interior ref field are
+rewritten so deref-through reaches the child at its new arena address; a conservative in-edge
+pins an object (unmoved, root slot unchanged) even when also precisely rooted; a tagged
+interior pointer is fixed up with its tag preserved. **All moving-collector tests pass under
+Miri** (no UB in the arena copy / unaligned read-write / fixup). `evacuate_and_fixup` carries
+`#[allow(dead_code)]` until the full `collect_compacting` (PR-3c) consumes it. gc-core-only.
+gc-core 0.13.0 → 0.14.0.
+
 ## 0.13.0 — 2026-07-23 — moving-collector to-space arena + copy scaffold (AOT00-T3 PR-3a)
 
 Second step of the moving/compacting collector: the **to-space arena** and the **copy +
