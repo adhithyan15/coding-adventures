@@ -1594,6 +1594,22 @@ fn a_malformed_def_method_missing_its_closure_is_rejected_cleanly() {
     let m = class_module(vec![classdef("Foo", None, vec![]), def_method]);
     let err = compile(&m).expect_err("a __def_method__ with no closure must be rejected");
     assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
+
+    // Likewise a NON-closure third argument (which would emit `&(5)` and fail at
+    // Ruby runtime) is rejected at compile time, not mis-emitted.
+    let non_closure = Stmt::ExprStmt {
+        expr: Expr::BuiltinCall {
+            name: "__def_method__".into(),
+            args: vec![strlit("Foo"), strlit("greet"), ilit(5)],
+            effects: EffectSet::PURE,
+            span: s2(),
+        },
+        span: s2(),
+    };
+    assert!(
+        compile(&class_module(vec![classdef("Foo", None, vec![]), non_closure])).is_err(),
+        "a __def_method__ whose third arg is not a closure must be rejected"
+    );
 }
 
 // ---- hand-built: injection (a crafted constant name cannot inject) --------

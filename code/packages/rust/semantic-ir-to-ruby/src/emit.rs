@@ -524,11 +524,15 @@ impl Scan {
                     Some(Expr::StrLit { .. }) => {}
                     _ => return Some(ScanHit::Builtin(name.clone(), span.clone())),
                 }
-                // Require the method-name `StrLit` (args[1]) AND the closure
-                // (args[2], which the emitter renders as `a[2]`).  A malformed
-                // shape is reported as an unlowerable builtin, so the emitter
-                // never indexes past the end.
-                if !matches!(args.get(1), Some(Expr::StrLit { .. })) || args.get(2).is_none() {
+                // Require the method-name `StrLit` (args[1]) AND a `MakeClosure`
+                // (args[2], rendered as `a[2]` and installed with `&(<closure>)`).
+                // A malformed shape — missing the closure, or a non-closure that
+                // would emit `&(<expr>)` and fail at Ruby runtime — is reported as
+                // an unlowerable builtin here, so the emitter never indexes past
+                // the end nor emits a value that cannot become a method body.
+                if !matches!(args.get(1), Some(Expr::StrLit { .. }))
+                    || !matches!(args.get(2), Some(Expr::MakeClosure { .. }))
+                {
                     return Some(ScanHit::Builtin(name.clone(), span.clone()));
                 }
             }
