@@ -93,10 +93,25 @@ a `Const` reference, a `Const` assignment target) is validated as a constant pat
 in the SAME pre-emit traversal as the builtin scan (co-total with the emitter),
 so no name can inject.
 
+The second OOP slice (0.12.0) adds instance-method **definition** and
+**dispatch**: a method-bearing class lowers to a hoisted top-level function plus
+`__def_method__("Class", "m", MakeClosure(fn))` and `__method__(recv, "m",
+args…)`, rendered as `Class.define_method(:sir_um_m, &closure)` and
+`(recv).public_send(:sir_um_m, args…)`. A **reserved `sir_um_` method-name
+prefix** makes dispatch CLOSED: no reflection/eval built-in is named `sir_um_*`,
+so `public_send` with an IR-supplied method name can reach only a method
+installed by `__def_method__` — never `instance_eval`/`send`/`eval` (the
+"explicit dispatch, never reflection" anti-RCE invariant, achieved natively).
+`define_method` binds `self` to the receiver, so the hoisted body sees the
+instance (its `@ivars` become reachable when slice 3 accepts them). A `__method__`
+to a name the module never registers is a **built-in method call** (the
+Collections batch) — rejected cleanly (the scan collects the module's registered
+method names, then validates each dispatch), never a runtime `NoMethodError`.
+
 **Still rejects** `TailCalls`, `Intrinsics`, `NDArrays`, and every not-yet-landed
-feature — including the rest of OOP: class **methods** (the `__def_method__` /
-`__method__` dispatch builtins), **inheritance** (a superclass / `__super__`),
-instance variables (`@x`), class variables (`@@x`), and modules; plus a
+feature — including the rest of OOP: **inheritance** (a superclass / `__super__`),
+class methods (`__class_method__` / `__def_class_method__`), instance variables
+(`@x`), class variables (`@@x`), and modules; plus a malformed `__def_method__`, a
 non-empty class body, a namespaced (`Foo::Bar`) class/constant *definition*
 (`const_set` names one namespace), and a **singleton class** (`class << self` —
 `Stmt::SingletonClassDef`, which also observes `Feature::Classes`, so accepting
@@ -138,6 +153,8 @@ or temporaries:
 | `ClassDef { name, superclass: None, body: [] }` | `Object.const_set(:<name>, Class.new)` — reflective (a native `class` block is illegal in the `main` method) |
 | `Assign { Const }` | `Object.const_set(:<name>, <value>)` — reflective constant definition |
 | `BuiltinCall("__new__", [name, args…])` | `<name>.new(<args>)` — native construction |
+| `BuiltinCall("__def_method__", [class, m, closure])` | `<class>.define_method(:sir_um_<m>, &closure)` — reserved-prefix registration |
+| `BuiltinCall("__method__", [recv, m, args…])` | `(<recv>).public_send(:sir_um_<m>, <args>)` — closed prefixed dispatch (anti-RCE) |
 | `If` | `(if sir_truthy(<cond>) then <then> else <else> end)` |
 | `LogicalAnd { lhs, rhs }` | `(<lhs> && <rhs>)` — native short-circuit, yields the deciding operand |
 | `LogicalOr { lhs, rhs }` | `(<lhs> \|\| <rhs>)` — native short-circuit, yields the deciding operand |
@@ -236,9 +253,9 @@ growing `ACCEPTED_FEATURES`, the runtime, and the conformance corpus in lockstep
    faithfulness payoff.
 5. **Exceptions / OOP** — `begin/rescue` (native, landed 0.10); then OOP in
    slices: `Constants` + an empty `class`/`Foo.new` (reflective `const_set`,
-   landed 0.11), then class **methods** (`define_method` for the frontend's
-   hoisted, separately-registered methods), **instance/class variables**,
-   **inheritance** (`superclass`/`super`), and **modules**/mixins.
+   landed 0.11), instance **methods** (`define_method`/`public_send` under a
+   reserved `sir_um_` prefix, landed 0.12), then **instance/class variables**,
+   **inheritance** (`superclass`/`super`), class methods, and **modules**/mixins.
 6. **Collections** — the `__method__` catalog for built-in `String`/`Array`/
    `Hash`/numeric methods (Ruby methods are largely native), sharing the same
    `__method__` dispatch surface as OOP.

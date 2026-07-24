@@ -7,6 +7,7 @@
 //!
 //! See [SIR25](../../../specs/SIR25-semantic-ir-to-ruby.md) for the design.
 
+use std::collections::HashSet;
 use std::fmt::Write;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
@@ -62,10 +63,18 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     // — the frontend's lowering of `Foo.new(args…)`.  Its first argument is the
     // class name (a `StrLit`), emitted verbatim as the `.new` receiver after
     // constant-path validation in the scan (so no source can inject); the rest
-    // are constructor arguments.  The OTHER OOP builtins (`__def_method__`,
-    // `__method__`, `__super__`, `__self__`, `__class_method__`, …) are
-    // deliberately absent — a module using them is rejected until their slice.
+    // are constructor arguments.
     "__new__",
+    // OOP classes slice 2 (instance methods): `__def_method__("Class", "m",
+    // MakeClosure(fn))` registers a hoisted method on the class, and
+    // `__method__(recv, "m", args…)` dispatches to it.  Both render through a
+    // reserved `sir_um_` method-name PREFIX (`define_method`/`public_send`), so
+    // dispatch is CLOSED — no reflection/eval built-in (none named `sir_um_*`)
+    // is reachable (anti-RCE).  The other OOP builtins (`__super__`, `__self__`,
+    // `__class_method__`, `__def_class_method__`, …) are still absent — a module
+    // using them is rejected until their slice.
+    "__def_method__",
+    "__method__",
 ];
 
 /// Emit a complete self-contained Ruby source file for `m`.
@@ -142,9 +151,19 @@ pub enum ScanHit {
 }
 
 /// Scan the module — in a SINGLE traversal shared with the unsupported-builtin
-/// check — for the first thing `compile` must reject: an unlowerable builtin or
-/// an injectable `rescue` type.  Returns it (with a span) or `None`.
+/// check — for the first thing `compile` must reject: an unlowerable builtin, an
+/// injectable `rescue`/constant name, an out-of-slice class shape, or (OOP slice
+/// 2) an instance-method dispatch (`__method__`) to a method the module never
+/// defines.  Returns it (with a span) or `None`.
+///
+/// The traversal is a [`Scan`] carrying the set of method names the module
+/// registers via `__def_method__` — the CLOSED set `__method__` may dispatch to.
+/// A first collection pass gathers that set (a dispatch can textually precede
+/// its registration), then the single scan validates against it.
 pub fn first_scan_issue(m: &Module) -> Option<ScanHit> {
+    let scan = Scan {
+        registered_methods: collect_registered_methods(m),
+    };
     for f in &m.functions {
         // A SIR19 parameter default is an expression evaluated at call time, so
         // a builtin nested in it (`def g(x = foo())`) must be pre-checked too —
@@ -152,32 +171,174 @@ pub fn first_scan_issue(m: &Module) -> Option<ScanHit> {
         // `unreachable!`.  Scan each default before the body.
         for p in &f.params {
             if let Some(default) = &p.default {
-                if let Some(hit) = scan_expr(default) {
+                if let Some(hit) = scan.expr(default) {
                     return Some(hit);
                 }
             }
         }
-        if let Some(hit) = scan_block(&f.body) {
+        if let Some(hit) = scan.block(&f.body) {
             return Some(hit);
         }
     }
     None
 }
 
-fn scan_block(b: &Block) -> Option<ScanHit> {
-    for s in &b.stmts {
-        if let Some(hit) = scan_stmt(s) {
-            return Some(hit);
+/// Walk the whole module and collect the method names registered via
+/// `__def_method__("Class", "method", closure)` — the closed set that
+/// `__method__` dispatch may target (OOP slice 2).  A `__method__` call to any
+/// OTHER name is a built-in-method call (the separate Collections batch),
+/// rejected until then.  (The `sir_um_` dispatch prefix is the SECURITY
+/// guarantee against reflection-RCE; this allowlist is for clean COMPILE-TIME
+/// rejection of not-yet-supported built-in dispatch.)
+fn collect_registered_methods(m: &Module) -> HashSet<String> {
+    fn from_expr(e: &Expr, out: &mut HashSet<String>) {
+        match e {
+            Expr::BuiltinCall { name, args, .. } => {
+                if name == "__def_method__" {
+                    if let Some(Expr::StrLit { value, .. }) = args.get(1) {
+                        out.insert(value.clone());
+                    }
+                }
+                for a in args {
+                    from_expr(a, out);
+                }
+            }
+            Expr::If {
+                cond,
+                then_branch,
+                else_branch,
+                ..
+            } => {
+                from_expr(cond, out);
+                from_block(then_branch, out);
+                from_block(else_branch, out);
+            }
+            Expr::Block(b) => from_block(b, out),
+            Expr::DirectCall { args, .. } => args.iter().for_each(|a| from_expr(a, out)),
+            Expr::IndirectCall { target, args, .. } => {
+                from_expr(target, out);
+                args.iter().for_each(|a| from_expr(a, out));
+            }
+            Expr::MakeClosure { captures, .. } => {
+                captures.iter().for_each(|c| from_expr(&c.value, out))
+            }
+            Expr::Convert { value, .. } => from_expr(value, out),
+            Expr::SeqLit { items, .. } => items.iter().for_each(|i| from_expr(i, out)),
+            Expr::SeqIndex { seq, index, .. } => {
+                from_expr(seq, out);
+                from_expr(index, out);
+            }
+            Expr::SeqLen { seq, .. } => from_expr(seq, out),
+            Expr::MapLit { entries, .. } => entries.iter().for_each(|e| {
+                from_expr(&e.key, out);
+                from_expr(&e.value, out);
+            }),
+            Expr::MapGet { map, key, .. } => {
+                from_expr(map, out);
+                from_expr(key, out);
+            }
+            Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+                from_expr(lhs, out);
+                from_expr(rhs, out);
+            }
+            Expr::KeywordArg { value, .. } => from_expr(value, out),
+            _ => {}
         }
     }
-    scan_expr(&b.value)
+    fn from_stmt(s: &Stmt, out: &mut HashSet<String>) {
+        match s {
+            Stmt::LetBinding { value, .. }
+            | Stmt::LetStarBinding { value, .. }
+            | Stmt::ExprStmt { expr: value, .. }
+            | Stmt::Assign { value, .. } => from_expr(value, out),
+            Stmt::SeqSet {
+                seq, index, value, ..
+            } => {
+                from_expr(seq, out);
+                from_expr(index, out);
+                from_expr(value, out);
+            }
+            Stmt::MapSet {
+                map, key, value, ..
+            } => {
+                from_expr(map, out);
+                from_expr(key, out);
+                from_expr(value, out);
+            }
+            Stmt::While { cond, body, .. } => {
+                from_expr(cond, out);
+                from_block(body, out);
+            }
+            Stmt::ForEach { iter, body, .. } => {
+                from_expr(iter, out);
+                from_block(body, out);
+            }
+            Stmt::ForRange {
+                start,
+                stop,
+                step,
+                body,
+                ..
+            } => {
+                from_expr(start, out);
+                from_expr(stop, out);
+                from_expr(step, out);
+                from_block(body, out);
+            }
+            Stmt::TryCatch {
+                body,
+                rescues,
+                ensure_body,
+                ..
+            } => {
+                body.iter().for_each(|s| from_stmt(s, out));
+                rescues
+                    .iter()
+                    .for_each(|rc| rc.body.iter().for_each(|s| from_stmt(s, out)));
+                if let Some(e) = ensure_body {
+                    e.iter().for_each(|s| from_stmt(s, out));
+                }
+            }
+            _ => {}
+        }
+    }
+    fn from_block(b: &Block, out: &mut HashSet<String>) {
+        b.stmts.iter().for_each(|s| from_stmt(s, out));
+        from_expr(&b.value, out);
+    }
+    let mut out = HashSet::new();
+    for f in &m.functions {
+        for p in &f.params {
+            if let Some(d) = &p.default {
+                from_expr(d, &mut out);
+            }
+        }
+        from_block(&f.body, &mut out);
+    }
+    out
 }
 
-fn scan_stmt(s: &Stmt) -> Option<ScanHit> {
-    match s {
+/// The pre-emit scan, carrying the module's registered-method allowlist so the
+/// single co-total traversal can validate `__method__` dispatch.
+struct Scan {
+    registered_methods: HashSet<String>,
+}
+
+impl Scan {
+    fn block(&self, b: &Block) -> Option<ScanHit> {
+        for s in &b.stmts {
+            if let Some(hit) = self.stmt(s) {
+                return Some(hit);
+            }
+        }
+        self.expr(&b.value)
+    }
+
+    fn stmt(&self, s: &Stmt) -> Option<ScanHit> {
+        match s {
         Stmt::LetBinding { value, .. }
         | Stmt::LetStarBinding { value, .. }
-        | Stmt::ExprStmt { expr: value, .. } => scan_expr(value),
+        | Stmt::ExprStmt { expr: value, .. } => self.expr(value),
         // An `Stmt::Assign` to a `Scope::Const` target (`PI = 3`) emits the name
         // VERBATIM as a Ruby constant, so validate it as a constant path (the
         // same injection guard as a const reference); then scan the value. A
@@ -198,10 +359,10 @@ fn scan_stmt(s: &Stmt) -> Option<ScanHit> {
                         span.clone(),
                     ))
                 } else {
-                    scan_expr(value)
+                    self.expr(value)
                 }
             } else {
-                scan_expr(value)
+                self.expr(value)
             }
         }
         // A sequence write / iteration has sub-expressions that may themselves
@@ -209,29 +370,29 @@ fn scan_stmt(s: &Stmt) -> Option<ScanHit> {
         // graceful pre-check catches it rather than the emitter.
         Stmt::SeqSet {
             seq, index, value, ..
-        } => scan_expr(seq)
-            .or_else(|| scan_expr(index))
-            .or_else(|| scan_expr(value)),
+        } => self.expr(seq)
+            .or_else(|| self.expr(index))
+            .or_else(|| self.expr(value)),
         Stmt::MapSet {
             map, key, value, ..
-        } => scan_expr(map)
-            .or_else(|| scan_expr(key))
-            .or_else(|| scan_expr(value)),
+        } => self.expr(map)
+            .or_else(|| self.expr(key))
+            .or_else(|| self.expr(value)),
         // Compound-statement bodies must be scanned too, or an unsupported
         // builtin hidden in a loop body survives the pre-check and reaches the
         // emitter's `unreachable!`. (`While` was a pre-existing scan hole.)
-        Stmt::While { cond, body, .. } => scan_expr(cond).or_else(|| scan_block(body)),
-        Stmt::ForEach { iter, body, .. } => scan_expr(iter).or_else(|| scan_block(body)),
+        Stmt::While { cond, body, .. } => self.expr(cond).or_else(|| self.block(body)),
+        Stmt::ForEach { iter, body, .. } => self.expr(iter).or_else(|| self.block(body)),
         Stmt::ForRange {
             start,
             stop,
             step,
             body,
             ..
-        } => scan_expr(start)
-            .or_else(|| scan_expr(stop))
-            .or_else(|| scan_expr(step))
-            .or_else(|| scan_block(body)),
+        } => self.expr(start)
+            .or_else(|| self.expr(stop))
+            .or_else(|| self.expr(step))
+            .or_else(|| self.block(body)),
         // A `begin … rescue … ensure … end`.  Check each rescue clause's
         // exception-type NAMES here (this arm is reached by the SAME complete
         // traversal as the builtin scan, so EVERY `TryCatch` the emitter reaches
@@ -247,12 +408,12 @@ fn scan_stmt(s: &Stmt) -> Option<ScanHit> {
             .flat_map(|rc| rc.exception_types.iter())
             .find(|t| !is_valid_constant_path(t))
             .map(|t| ScanHit::RescueType(t.clone(), span.clone()))
-            .or_else(|| body.iter().find_map(scan_stmt))
-            .or_else(|| rescues.iter().find_map(|rc| rc.body.iter().find_map(scan_stmt)))
+            .or_else(|| body.iter().find_map(|s| self.stmt(s)))
+            .or_else(|| rescues.iter().find_map(|rc| rc.body.iter().find_map(|s| self.stmt(s))))
             .or_else(|| {
                 ensure_body
                     .as_ref()
-                    .and_then(|e| e.iter().find_map(scan_stmt))
+                    .and_then(|e| e.iter().find_map(|s| self.stmt(s)))
             }),
         // A `Stmt::ClassDef` (`Feature::Classes`).  Slice 1 supports ONLY an
         // empty-bodied base class → native `class Name\nend`.  At exactly the
@@ -308,6 +469,7 @@ fn scan_stmt(s: &Stmt) -> Option<ScanHit> {
         )),
         _ => None,
     }
+    }
 }
 
 /// Whether `name` is a syntactically valid Ruby constant path (`Foo`,
@@ -325,8 +487,9 @@ fn is_valid_constant_path(name: &str) -> bool {
         })
 }
 
-fn scan_expr(e: &Expr) -> Option<ScanHit> {
-    match e {
+impl Scan {
+    fn expr(&self, e: &Expr) -> Option<ScanHit> {
+        match e {
         Expr::BuiltinCall {
             name, args, span, ..
         } => {
@@ -348,44 +511,95 @@ fn scan_expr(e: &Expr) -> Option<ScanHit> {
                     _ => return Some(ScanHit::Builtin(name.clone(), span.clone())),
                 }
             }
-            args.iter().find_map(scan_expr)
+            // OOP slice 2 — instance-method definition/dispatch.
+            // `__def_method__("Class", "method", closure)` emits the CLASS name
+            // verbatim (a `const_set` receiver), so validate it as a constant
+            // path; the method name and closure are rendered safely (a quoted
+            // symbol / a scanned closure).
+            if name == "__def_method__" {
+                match args.first() {
+                    Some(Expr::StrLit { value, span }) if !is_valid_constant_path(value) => {
+                        return Some(ScanHit::ConstantName(value.clone(), span.clone()));
+                    }
+                    Some(Expr::StrLit { .. }) => {}
+                    _ => return Some(ScanHit::Builtin(name.clone(), span.clone())),
+                }
+                // Require the method-name `StrLit` (args[1]) AND a `MakeClosure`
+                // (args[2], rendered as `a[2]` and installed with `&(<closure>)`).
+                // A malformed shape — missing the closure, or a non-closure that
+                // would emit `&(<expr>)` and fail at Ruby runtime — is reported as
+                // an unlowerable builtin here, so the emitter never indexes past
+                // the end nor emits a value that cannot become a method body.
+                if !matches!(args.get(1), Some(Expr::StrLit { .. }))
+                    || !matches!(args.get(2), Some(Expr::MakeClosure { .. }))
+                {
+                    return Some(ScanHit::Builtin(name.clone(), span.clone()));
+                }
+            }
+            // `__method__(recv, "method", args…)` dispatches to a method by name.
+            // The name is rendered as a `sir_um_`-PREFIXED quoted symbol via
+            // `public_send`, so no source can inject AND no reflection/eval
+            // built-in (none of which is named `sir_um_*`) is reachable — the
+            // anti-RCE guarantee.  Additionally reject, cleanly, a dispatch to a
+            // method the module never registers via `__def_method__`: that is a
+            // BUILT-IN method call (`.upcase`, …), deferred to the Collections
+            // batch, so it must not compile-then-`NoMethodError` at runtime.
+            if name == "__method__" {
+                match args.get(1) {
+                    Some(Expr::StrLit { value, span }) => {
+                        if !self.registered_methods.contains(value) {
+                            return Some(ScanHit::Unsupported(
+                                format!(
+                                    "a call to the built-in method `{value}` (only \
+                                     user-defined methods dispatch this slice; \
+                                     built-in methods are the Collections batch)"
+                                ),
+                                span.clone(),
+                            ));
+                        }
+                    }
+                    _ => return Some(ScanHit::Builtin(name.clone(), span.clone())),
+                }
+            }
+            args.iter().find_map(|a| self.expr(a))
         }
         Expr::If {
             cond,
             then_branch,
             else_branch,
             ..
-        } => scan_expr(cond)
-            .or_else(|| scan_block(then_branch))
-            .or_else(|| scan_block(else_branch)),
-        Expr::Block(b) => scan_block(b),
-        Expr::DirectCall { args, .. } => args.iter().find_map(scan_expr),
+        } => self
+            .expr(cond)
+            .or_else(|| self.block(then_branch))
+            .or_else(|| self.block(else_branch)),
+        Expr::Block(b) => self.block(b),
+        Expr::DirectCall { args, .. } => args.iter().find_map(|a| self.expr(a)),
         // An `IndirectCall` renders its `target` too (`sir_apply(<target>, …)`),
         // so a deferred builtin hidden in the callee position — not just the
         // args — must be pre-checked, or it would reach the emitter's
         // `unreachable!`.  (Found by security review while wiring the param
         // default scan, which routes through here.)
         Expr::IndirectCall { target, args, .. } => {
-            scan_expr(target).or_else(|| args.iter().find_map(scan_expr))
+            self.expr(target).or_else(|| args.iter().find_map(|a| self.expr(a)))
         }
-        Expr::MakeClosure { captures, .. } => captures.iter().find_map(|c| scan_expr(&c.value)),
-        Expr::Convert { value, .. } => scan_expr(value),
+        Expr::MakeClosure { captures, .. } => captures.iter().find_map(|c| self.expr(&c.value)),
+        Expr::Convert { value, .. } => self.expr(value),
         // A sequence literal's items are themselves expressions — scan each so
         // an unsupported builtin nested in `[foo(), bar()]` is caught by the
         // graceful pre-check rather than reaching the emitter.
-        Expr::SeqLit { items, .. } => items.iter().find_map(scan_expr),
-        Expr::SeqIndex { seq, index, .. } => scan_expr(seq).or_else(|| scan_expr(index)),
-        Expr::SeqLen { seq, .. } => scan_expr(seq),
+        Expr::SeqLit { items, .. } => items.iter().find_map(|i| self.expr(i)),
+        Expr::SeqIndex { seq, index, .. } => self.expr(seq).or_else(|| self.expr(index)),
+        Expr::SeqLen { seq, .. } => self.expr(seq),
         Expr::MapLit { entries, .. } => entries
             .iter()
-            .find_map(|e| scan_expr(&e.key).or_else(|| scan_expr(&e.value))),
-        Expr::MapGet { map, key, .. } => scan_expr(map).or_else(|| scan_expr(key)),
+            .find_map(|e| self.expr(&e.key).or_else(|| self.expr(&e.value))),
+        Expr::MapGet { map, key, .. } => self.expr(map).or_else(|| self.expr(key)),
         Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
-            scan_expr(lhs).or_else(|| scan_expr(rhs))
+            self.expr(lhs).or_else(|| self.expr(rhs))
         }
         // A keyword argument carries its value as a sub-expression — scan it so
         // an unsupported builtin in `f(x: foo())` is reported cleanly.
-        Expr::KeywordArg { value, .. } => scan_expr(value),
+        Expr::KeywordArg { value, .. } => self.expr(value),
         // A `Scope::Const` reference (`Feature::Constants`) is emitted VERBATIM
         // as a Ruby constant (`PI`, `Foo::Bar`) by `emit_var_ref`, so validate it
         // as a constant path here — at that emitter position — to bar injection.
@@ -396,6 +610,7 @@ fn scan_expr(e: &Expr) -> Option<ScanHit> {
             span,
         } if !is_valid_constant_path(name) => Some(ScanHit::ConstantName(name.clone(), span.clone())),
         _ => None,
+    }
     }
 }
 
@@ -930,6 +1145,32 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
             };
             format!("{class}.new({})", a[1..].join(", "))
         }
+        // OOP classes slice 2 — register a hoisted instance method on the class.
+        // `args[0]` = class name (`StrLit`, a bare validated constant receiver),
+        // `args[1]` = method name (`StrLit`), `args[2]` = a `MakeClosure` (already
+        // emitted in `a[2]` as `->(*__sir_args){ Class__m(*__sir_args) }`).  The
+        // method name is rendered under a RESERVED `sir_um_` prefix as a quoted
+        // symbol via `emit_symbol` (so it cannot inject and never collides with a
+        // built-in), then installed with `define_method`.  `define_method` binds
+        // `self` to the receiver at call time, so the hoisted body sees the
+        // instance (its `@ivars`, once slice 3 lands).
+        "__def_method__" => {
+            let class = str_arg(args, 0);
+            let sym = emit_symbol(&format!("sir_um_{}", str_arg(args, 1)));
+            format!("{class}.define_method({sym}, &({}))", a[2])
+        }
+        // Dispatch an instance method: `(recv).public_send(:sir_um_<m>, args…)`.
+        // The `sir_um_` prefix makes this a CLOSED dispatch — `public_send` can
+        // only reach methods installed by `__def_method__` (no built-in is named
+        // `sir_um_*`), so a crafted method name cannot reach `instance_eval` /
+        // `send` / any reflection sink.  `args[0]` = receiver (`a[0]`), `args[1]`
+        // = method name, `args[2..]` (in `a`) = call arguments.
+        "__method__" => {
+            let sym = emit_symbol(&format!("sir_um_{}", str_arg(args, 1)));
+            let mut parts = vec![sym];
+            parts.extend_from_slice(&a[2..]);
+            format!("({}).public_send({})", a[0], parts.join(", "))
+        }
         // Unreachable: first_scan_issue rejected anything else.
         other => unreachable!("v0 Ruby backend reached unsupported builtin: {other}"),
     }
@@ -947,6 +1188,17 @@ fn join_op(a: &[String], op: &str, empty: &str) -> String {
 /// The i-th argument, or `nil` if the frontend under-supplied (defensive).
 fn arg(a: &[String], i: usize) -> String {
     a.get(i).cloned().unwrap_or_else(|| "nil".to_string())
+}
+
+/// The i-th argument's raw `StrLit` value — for an OOP builtin whose class /
+/// method name is a compile-time string the emitter renders specially (a bare
+/// constant receiver, or a `sir_um_`-prefixed symbol).  The pre-emit scan
+/// guarantees this position is a `StrLit`, so a non-string is unreachable.
+fn str_arg(args: &[Expr], i: usize) -> String {
+    match args.get(i) {
+        Some(Expr::StrLit { value, .. }) => value.clone(),
+        _ => unreachable!("OOP builtin requires a string argument at position {i}"),
+    }
 }
 
 // ---------------------------------------------------------------------------

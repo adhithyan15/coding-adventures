@@ -1578,35 +1578,38 @@ fn a_namespaced_class_name_is_rejected_cleanly() {
 }
 
 #[test]
-fn a_method_bearing_class_is_rejected_cleanly() {
-    // A class with a method surfaces the `__def_method__` registration builtin,
-    // which is NOT supported this slice → rejected cleanly (never `unreachable!`).
+fn a_malformed_def_method_missing_its_closure_is_rejected_cleanly() {
+    // Totality: `__def_method__` is now supported (slice 2), but the emitter
+    // renders its closure argument (`args[2]`); a malformed registration missing
+    // it must be rejected in the scan, so the emitter never indexes past the end.
     let def_method = Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
             name: "__def_method__".into(),
-            args: vec![strlit("Foo"), strlit("greet")],
+            args: vec![strlit("Foo"), strlit("greet")], // no closure
             effects: EffectSet::PURE,
             span: s2(),
         },
         span: s2(),
     };
     let m = class_module(vec![classdef("Foo", None, vec![]), def_method]);
-    let err = compile(&m).expect_err("a __def_method__ builtin must be rejected");
+    let err = compile(&m).expect_err("a __def_method__ with no closure must be rejected");
     assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
-}
 
-#[test]
-fn an_instance_method_call_is_rejected_cleanly() {
-    // `x.foo` lowers to the `__method__` dispatch builtin (a later slice) — a
-    // hand-built module carrying it is rejected, not emitted.
-    let call = Expr::BuiltinCall {
-        name: "__method__".into(),
-        args: vec![new_expr("Foo", vec![]), strlit("foo")],
-        effects: EffectSet::PURE,
+    // Likewise a NON-closure third argument (which would emit `&(5)` and fail at
+    // Ruby runtime) is rejected at compile time, not mis-emitted.
+    let non_closure = Stmt::ExprStmt {
+        expr: Expr::BuiltinCall {
+            name: "__def_method__".into(),
+            args: vec![strlit("Foo"), strlit("greet"), ilit(5)],
+            effects: EffectSet::PURE,
+            span: s2(),
+        },
         span: s2(),
     };
-    let m = class_module(vec![classdef("Foo", None, vec![]), puts(call)]);
-    assert!(compile(&m).is_err(), "a __method__ call must be rejected");
+    assert!(
+        compile(&class_module(vec![classdef("Foo", None, vec![]), non_closure])).is_err(),
+        "a __def_method__ whose third arg is not a closure must be rejected"
+    );
 }
 
 // ---- hand-built: injection (a crafted constant name cannot inject) --------
@@ -1642,4 +1645,195 @@ fn an_injectable_constant_assignment_target_is_rejected() {
     // crafted target must be rejected.
     let m = class_module(vec![const_assign("PI\n=1; system('x')", ilit(1))]);
     assert!(compile(&m).is_err(), "an injectable const assignment must be rejected");
+}
+
+// ── OOP classes slice 2 — instance methods (define_method / public_send) ────
+//
+// A method-bearing class lowers to a HOISTED top-level function `Class__method`,
+// a `__def_method__("Class", "method", MakeClosure(fn))` registration, and a
+// `__method__(recv, "method", args…)` dispatch. This slice renders the
+// registration as `Class.define_method(:sir_um_method, &closure)` and the
+// dispatch as `(recv).public_send(:sir_um_method, args…)`.
+//
+// The reserved `sir_um_` method-name PREFIX is the anti-RCE guarantee: no
+// reflection/eval built-in is named `sir_um_*`, so `public_send` with a crafted
+// name can NEVER reach `instance_eval` / `send` / etc. — it can only reach a
+// method installed by `__def_method__`.  A `__method__` to an UNregistered name
+// (a built-in method call like `.upcase`) is rejected cleanly (Collections batch).
+
+fn method_module(stmts: Vec<Stmt>) -> Module {
+    method_module_fns(stmts, vec![])
+}
+/// A `main` module carrying `stmts`, plus `extra` hoisted method functions (a
+/// `MakeClosure` in a `__def_method__` references one by name, and the validator
+/// requires the target to exist).
+fn method_module_fns(stmts: Vec<Stmt>, extra: Vec<Function>) -> Module {
+    let mut functions = vec![Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: s2() }, span: s2() },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new().with_source_language("test"),
+        span: s2(),
+    }];
+    functions.extend(extra);
+    Module {
+        name: "methprog".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Classes,
+            Feature::Constants,
+            Feature::Strings,
+            Feature::Closures,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions,
+        globals: vec![],
+        metadata: Metadata::new().with_sir_version(CURRENT_SIR_VERSION),
+        span: s2(),
+    }
+}
+/// A minimal hoisted method function (no params, `nil` body) — enough for the
+/// validator to resolve a `MakeClosure` that names it.
+fn hoisted(name: &str) -> Function {
+    Function {
+        name: name.into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts: vec![], value: Expr::NilLit { span: s2() }, span: s2() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: s2(),
+    }
+}
+fn make_closure(fn_name: &str) -> Expr {
+    Expr::MakeClosure { fn_name: fn_name.into(), captures: vec![], span: s2() }
+}
+fn def_method(class: &str, method: &str, fn_name: &str) -> Stmt {
+    Stmt::ExprStmt {
+        expr: Expr::BuiltinCall {
+            name: "__def_method__".into(),
+            args: vec![strlit(class), strlit(method), make_closure(fn_name)],
+            effects: EffectSet::PURE,
+            span: s2(),
+        },
+        span: s2(),
+    }
+}
+fn method_call(recv: Expr, method: &str, args: Vec<Expr>) -> Expr {
+    let mut a = vec![recv, strlit(method)];
+    a.extend(args);
+    Expr::BuiltinCall { name: "__method__".into(), args: a, effects: EffectSet::PURE, span: s2() }
+}
+
+// ---- positive, through the real frontend + interpreter --------------------
+
+#[test]
+fn e2e_instance_method_call() {
+    // `class Greeter; def greet; puts "hi"; end; end; Greeter.new.greet` → "hi".
+    let rb = ruby_to_ruby("class Greeter\n  def greet\n    puts \"hi\"\n  end\nend\ng = Greeter.new\ng.greet\n");
+    assert!(rb.contains("define_method(:sir_um_greet"), "prefixed registration:\n{rb}");
+    assert!(rb.contains("public_send(:sir_um_greet"), "prefixed dispatch:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "hi"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_instance_method_with_args_and_return() {
+    // A method with parameters and a return value: `add(a, b) = a + b`.
+    let rb = ruby_to_ruby("class Adder\n  def add(a, b)\n    a + b\n  end\nend\nputs Adder.new.add(2, 3)\n");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "5"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+// ---- hand-built: anti-RCE (the sir_um_ prefix closes reflection dispatch) --
+
+#[test]
+fn dispatch_is_prefixed_so_reflection_is_unreachable() {
+    // Even when the method name coincides with a dangerous reflection built-in
+    // (`instance_eval`), the `sir_um_` prefix means the emitted `public_send`
+    // targets `:sir_um_instance_eval` — a name no built-in has — so Ruby's real
+    // `instance_eval` is UNREACHABLE.  (The method is registered so it passes the
+    // allowlist; the prefix is what neutralises the RCE.)
+    let recv = new_expr("Foo", vec![]);
+    let m = method_module_fns(
+        vec![
+            classdef("Foo", None, vec![]),
+            def_method("Foo", "instance_eval", "Foo__x"),
+            puts(method_call(recv, "instance_eval", vec![strlit("system('boom')")])),
+        ],
+        vec![hoisted("Foo__x")],
+    );
+    let rb = compile(&m).expect("registered dispatch compiles").source;
+    assert!(rb.contains(":sir_um_instance_eval"), "prefixed symbol:\n{rb}");
+    assert!(!rb.contains(".instance_eval("), "must NOT emit a bare instance_eval call:\n{rb}");
+    assert!(
+        !rb.contains("public_send(:instance_eval"),
+        "must NOT dispatch to the unprefixed reflection name:\n{rb}"
+    );
+}
+
+// ---- hand-built: totality / clean rejection -------------------------------
+
+#[test]
+fn dispatch_to_an_unregistered_method_is_rejected_cleanly() {
+    // `__method__(recv, "upcase")` with no `__def_method__` registering `upcase`
+    // is a BUILT-IN method call (Collections batch) — rejected cleanly, so it
+    // does NOT compile-then-`NoMethodError` at runtime (`sir_um_upcase` is unbound).
+    let recv = new_expr("Foo", vec![]);
+    let m = method_module(vec![
+        classdef("Foo", None, vec![]),
+        puts(method_call(recv, "upcase", vec![])),
+    ]);
+    let err = compile(&m).expect_err("a built-in method dispatch must be rejected");
+    assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
+}
+
+#[test]
+fn a_registered_method_dispatches_across_the_whole_module() {
+    // The allowlist is module-wide: a method registered anywhere lets its
+    // dispatch compile (the receiver need not be statically the defining class).
+    let m = method_module_fns(
+        vec![
+            classdef("Foo", None, vec![]),
+            def_method("Foo", "greet", "Foo__greet"),
+            puts(method_call(new_expr("Foo", vec![]), "greet", vec![])),
+        ],
+        vec![hoisted("Foo__greet")],
+    );
+    assert!(compile(&m).is_ok(), "a registered-method dispatch must compile");
+}
+
+#[test]
+fn an_injectable_def_method_class_name_is_rejected() {
+    // `__def_method__`'s class name is emitted as the bare `const_set`/receiver
+    // constant, so a crafted class name must be rejected (injection guard).
+    let m = method_module_fns(
+        vec![def_method("Foo\n  system('x')", "greet", "Foo__greet")],
+        vec![hoisted("Foo__greet")],
+    );
+    assert!(compile(&m).is_err(), "an injectable def_method class name must be rejected");
+}
+
+#[test]
+fn still_rejected_super_self_classmethod_builtins() {
+    // The remaining OOP builtins are later slices — a hand-built module carrying
+    // any is rejected cleanly (never `unreachable!`).
+    for bad in ["__super__", "__self__", "__class_method__", "__def_class_method__"] {
+        let call = Expr::BuiltinCall {
+            name: bad.into(),
+            args: vec![strlit("Foo"), strlit("m")],
+            effects: EffectSet::PURE,
+            span: s2(),
+        };
+        let m = method_module(vec![puts(call)]);
+        assert!(compile(&m).is_err(), "`{bad}` must still be rejected");
+    }
 }
