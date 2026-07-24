@@ -1,0 +1,15 @@
+[package]
+name = "coding-adventures-idl-repl"
+version = "0.1.0"
+edition = "2021"
+description = "Interactive REPL and `idl` binary for IDL (Interactive Data Language) (MA12 MA-12d)"
+license = "MIT"
+
+[dependencies]
+coding-adventures-idl-runtime = { path = "../idl-runtime" }
+coding-adventures-idl-lexer = { path = "../idl-lexer" }
+lexer = { path = "../lexer" }
+
+[[bin]]
+name = "idl"
+path = "src/main.rs"
