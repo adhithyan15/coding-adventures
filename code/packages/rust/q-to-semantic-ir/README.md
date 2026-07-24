@@ -110,13 +110,22 @@ rationale.
 cargo test -p q-to-semantic-ir -- --nocapture
 ```
 
-- `tests/test_lower.rs` — 56 unit tests over exact `Expr`/`Function` shapes
+- `tests/test_lower.rs` — 57 unit tests over exact `Expr`/`Function` shapes
   for every grammar production.
 - `tests/test_validator.rs` — 10 capability-acceptance tests against the
   shared SIR validator and `semantic-ir-to-javascript`.
 - `tests/e2e_node.rs` — 12 tests actually running compiled programs through
   `node`, weighted toward the function-literal machinery.
-- `tests/oracle.rs` (HML01 §7) — 33-case oracle/golden corpus cross-checking
+- `tests/oracle.rs` (HML01 §7) — 51-case oracle/golden corpus cross-checking
   `q-runtime` (ground truth) against this crate → `semantic-ir-to-javascript`
-  → real `node`. See `CHANGELOG.md` for the one documented, pre-existing,
-  not-fixed-here shared-crate display gap (5 of the 33 cases).
+  → real `node`: every one of the 17 primitive verbs (monadic and dyadic),
+  all three whitespace-sensitive strand-vs-subtraction spellings (`2 -1`,
+  `2 - 1`, and fully-glued `2-1`), reduce/scan/each, dual list-literal
+  syntax, chained/global assignment, and the full function-literal surface
+  (named, inline, implicit/explicit params, multi-statement bodies, and the
+  higher-order `MakeClosure`/`IndirectCall` case). All 51 cases pass
+  end-to-end today — task #109 fixed the one shared-crate display gap this
+  corpus originally found (`SIR_DISPLAY_Q_ASCII_MINUS` in
+  `semantic-ir-to-javascript`; see `CHANGELOG.md`'s `[0.1.1]` entry). The
+  `known_bug` field stays on `Case` for a future genuine bug to reuse, unused
+  by any entry today.

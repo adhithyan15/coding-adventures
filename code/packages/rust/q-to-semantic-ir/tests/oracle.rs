@@ -123,6 +123,28 @@ const CORPUS: &[Case] = &[
         expected: "1",
         known_bug: None,
     },
+    // Third spelling of the same disambiguation: NO space at all on either
+    // side (`2-1`, fully glued). MA11 §3 bullet 2's rule only folds a `-`
+    // into a signed-numeric-literal token when it is "at a position where a
+    // new list-stranding element may start" -- i.e. preceded by whitespace
+    // after a completed noun. With no preceding space, `2-1` never reaches
+    // that check at all (confirmed directly: `q-lexer`'s own
+    // `no_space_at_all_is_also_subtraction`/`no_space_at_all_stays_
+    // subtraction` tests and `q-runtime`'s own `scalar("2-1\n") == 1.0`
+    // assertion, both tokenizing/evaluating this as ordinary subtraction,
+    // never a two-element strand) -- so this lowers to the exact same
+    // `ElementwiseOp` shape as `2 - 1` above, just reached via a different
+    // tokenization path. Genuinely new coverage here: those two upstream
+    // tests only confirm the *lexer*/*runtime* get this right in isolation;
+    // this case confirms the SAME resolved CST shape also lowers correctly
+    // through `q-to-semantic-ir` -> `semantic-ir-to-javascript` -> `node`,
+    // not just through `q-runtime`'s own evaluator.
+    Case {
+        name: "whitespace_sensitive_strand_vs_subtraction_no_space_at_all",
+        source: "2-1\n",
+        expected: "1",
+        known_bug: None,
+    },
 
     // --- All 6 comparisons (always 0/1, never negative -- no display gap) ---
     Case { name: "comparison_eq_true", source: "3=3\n", expected: "1", known_bug: None },
