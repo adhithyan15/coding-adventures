@@ -48,6 +48,16 @@
  * the managed heap instead of leaking via calloc. */
 extern int64_t __twig_gc_alloc(int64_t n);
 
+/* Precise-GC kind registration (gc-core-capi). A cons cell is TWO reference
+ * fields — car at byte 0, cdr at byte 8 — so it is allocated under a registered
+ * HeapKind whose field map is {0, 8}. This makes the cell MOVABLE by the
+ * compacting collector (a kind-0 conservative allocation would be pinned) and
+ * lets the collector trace + relocate its children precisely. `__gc_register_kind`
+ * returns a 1-based kind id; `__gc_alloc_kind(n, kind)` allocates `n` zeroed,
+ * 16-aligned bytes tagged with that kind. Both are exported by gc-core-capi. */
+extern int64_t __gc_register_kind(const int64_t *field_offsets, int64_t count);
+extern int64_t __gc_alloc_kind(int64_t n, uint16_t kind);
+
 /* ── Tag constants ──────────────────────────────────────────────────────
  *
  * These mirror lispy-runtime/src/value.rs.  The golden test reads them back
@@ -108,7 +118,19 @@ uint64_t __dyn_nil(void) {
  * rather than crashing inside the runtime.
  */
 uint64_t __dyn_cons(uint64_t car, uint64_t cdr) {
-    int64_t ptr = __twig_gc_alloc(2 * (int64_t)sizeof(uint64_t));
+    /* Register the cons-cell kind once (its two fields are references at bytes
+     * 0 and 8), then allocate the cell under that kind so the compacting collector
+     * may RELOCATE it (a kind-0 conservative cell would pin). The runtime is
+     * single-threaded, so the lazy `static` init needs no synchronisation, and
+     * registering immediately before the first allocation of that kind keeps the
+     * ordering trivially correct. Size (16 bytes = 2 words) is unchanged; a
+     * kind-tagged block has the same 16-aligned payload as `__twig_gc_alloc`. */
+    static int64_t cons_kind = 0; /* 0 = not yet registered */
+    if (cons_kind == 0) {
+        int64_t offsets[2] = {0, 8};
+        cons_kind = __gc_register_kind(offsets, 2); /* 1-based id */
+    }
+    int64_t ptr = __gc_alloc_kind(2 * (int64_t)sizeof(uint64_t), (uint16_t)cons_kind);
     if (ptr == 0) {
         return LISPY_NIL;
     }

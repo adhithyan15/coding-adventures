@@ -1,5 +1,29 @@
 # Changelog — `twig-aot`
 
+## 0.46.0 - 2026-07-24 — movable cons cells: the real compaction relocation payoff (AOT00-T3)
+
+The moving/compacting collector now actually **relocates** a live heap object in a compiled
+native program — the end-to-end payoff of the whole moving-collector arc.
+
+- **`dynval_runtime.c` `__dyn_cons` now allocates a *movable* cell.** A cons cell is two
+  reference fields (car at byte 0, cdr at byte 8), so it is registered as a GC **kind**
+  (`__gc_register_kind({0, 8})`, lazily on first cons) and allocated via `__gc_alloc_kind`
+  instead of the kind-0 `__twig_gc_alloc`. A kind-0 cell is traced conservatively and thus
+  **pinned**; a registered-kind cell is **movable**, so the compacting collector may evacuate
+  it and precisely trace/relocate its children. Size (16 bytes) and the car/cdr layout are
+  unchanged — the golden parity test (`dynval` semantics vs the Rust reference) stays green.
+  The lazy `static` kind id is safe in the single-threaded runtime.
+- **New macOS end-to-end differential `end_to_end_gc_compacting_relocates_and_preserves`:** a
+  compiled program conses `box_int(42)`, triggers `gc_collect_compacting`, then reads
+  `car` of the cell and returns 42. Because the cell is movable, the compacting collect
+  **relocates** it and rewrites the `any` root slot in place; returning 42 proves the move
+  happened *and* the reference was fixed up (a missed fixup would deref the freed from-space
+  block → wrong value/fault). The same program under `gc_collect_precise` (non-moving) also
+  returns 42. Validated by real execution on aarch64 macOS (Miri can't run the C runtime /
+  asm path; the UAF-critical `collect_compacting` core is already Miri-clean).
+- The prior `end_to_end_gc_compacting_matches_precise` still holds — the cell is now moved,
+  but `live_bytes` is conserved across a move, so its columns stay equal (comment updated).
+
 ## 0.45.0 - 2026-07-24 — end-to-end frontend-triggered compaction (AOT00-T3 §5)
 
 - New macOS smoke test `end_to_end_gc_compacting_matches_precise`: a compiled native program

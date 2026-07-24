@@ -625,11 +625,113 @@ fn end_to_end_gc_compacting_matches_precise() {
         compacting > 0,
         "compacting collect must KEEP the live cons cell (live_bytes={compacting})",
     );
-    // …and, with nothing movable yet, matches the precise collect exactly.
+    // …and matches the precise collect's live_bytes exactly. The cons cell is now MOVABLE
+    // (a registered kind), so the compacting collect *relocates* it — but `live_bytes` counts
+    // surviving payload bytes, which a move conserves, so the two columns stay equal. (That
+    // the relocation actually happens and its pointers are fixed up is proven by
+    // `end_to_end_gc_compacting_relocates_and_preserves` below.)
     assert_eq!(
         compacting, precise,
-        "frontend-triggered compaction must match precise (nothing movable yet): \
+        "compaction must conserve live_bytes vs precise: \
          compacting={compacting}, precise={precise}",
+    );
+}
+
+/// AOT00-T3 — **the real relocation payoff**: a native program triggers a compaction that
+/// *moves* a live heap object, and the program keeps working through the moved reference.
+///
+/// A cons cell is now allocated under a registered kind (`__dyn_cons` → `__gc_alloc_kind`
+/// with the ref-field map `{0, 8}`), so it is **movable**: precise-reachable via its `any`
+/// slot (a stack-map root), a registered kind, and — its fields being immediate boxed ints —
+/// with no conservative in-edge to pin it. So:
+///
+/// ```text
+///   main() -> i64:
+///       v    = dyn_box_int(42)            ; immediate 42
+///       cell = dyn_cons(v, dyn_box_int(7)); a MOVABLE heap cell, held in an `any` slot
+///       _    = gc_collect_compacting()    ; EVACUATES cell → new arena address;
+///                                         ;   the `any` root slot is rewritten in place
+///       car  = dyn_car(cell)              ; reads the NEW location (slot was fixed up)
+///       ret dyn_unbox_int(car)            ; 42
+/// ```
+///
+/// Returning **42** proves the cell relocated *and* every reference to it was fixed up: had
+/// the compacting collect moved the cell without rewriting the `any` root slot, `dyn_car`
+/// would dereference the freed from-space block — reading garbage or faulting, not 42. The
+/// same program under `gc_collect_precise` (non-moving) also returns 42 (the cell stays put),
+/// so the two agree on the *value* while differing on *where the cell lives*.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_compacting_relocates_and_preserves() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    fn build(collect: &str) -> IIRModule {
+        let body = vec![
+            IIRInstr::new("const", Some("k42".into()), vec![Operand::Int(42)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("v".into()),
+                vec![Operand::Var("dyn_box_int".into()), Operand::Var("k42".into())],
+                "any",
+            ),
+            IIRInstr::new("const", Some("k7".into()), vec![Operand::Int(7)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("w".into()),
+                vec![Operand::Var("dyn_box_int".into()), Operand::Var("k7".into())],
+                "any",
+            ),
+            // A MOVABLE cons cell, held live in an `any` slot the stack map names.
+            IIRInstr::new(
+                "call_builtin",
+                Some("cell".into()),
+                vec![Operand::Var("dyn_cons".into()), Operand::Var("v".into()), Operand::Var("w".into())],
+                "any",
+            ),
+            // Trigger the collection: under compaction the cell relocates + its root is fixed.
+            IIRInstr::new("call_builtin", Some("freed".into()), vec![Operand::Var(collect.into())], "i64"),
+            // Deref through the (possibly rewritten) reference and unbox → 42.
+            IIRInstr::new(
+                "call_builtin",
+                Some("car".into()),
+                vec![Operand::Var("dyn_car".into()), Operand::Var("cell".into())],
+                "any",
+            ),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var("dyn_unbox_int".into()), Operand::Var("car".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ];
+        let mut m = IIRModule::new("gc_relocate", "twig");
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: &str| -> i32 {
+        let m = build(collect);
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&m, &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    let compacting = run("gc_relocate_comp", "gc_collect_compacting");
+    let precise = run("gc_relocate_prec", "gc_collect_precise");
+
+    assert_eq!(
+        compacting, 42,
+        "car of the RELOCATED cell must be 42 — a wrong value/crash means the move left a \
+         dangling reference (got {compacting})",
+    );
+    assert_eq!(
+        precise, 42,
+        "the same program under a non-moving precise collect must also return 42 (got {precise})",
     );
 }
 
