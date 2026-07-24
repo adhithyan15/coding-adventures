@@ -150,6 +150,21 @@ int64_t __gc_register_stackmap(uint64_t func_start, uint64_t func_len,
  * __gc_collect. (For precision the image must be built with frame pointers.) */
 int64_t __gc_collect_precise(void);
 
+/* Full **moving/compacting** collection rooted PRECISELY at this thread's stack — the
+ * relocating analogue of __gc_collect_precise (spec AOT00-T3-moving-collector.md §5). The
+ * SAME frame-pointer walk yields precise reference slots (for stack-mapped frames) and
+ * conservative regions (unmapped frames + spilled callee-saved registers); those roots then
+ * drive a compacting cycle that EVACUATES the movable survivors into a fresh arena and
+ * rewrites every pointer that named them — including writing each forwarded address back
+ * into its precise root slot, so the mutator's stack points at the relocated objects when
+ * this returns. Only objects reachable purely precisely (named by a stack map, no
+ * conservative in-edge) move; anything a conservative region can reach is pinned and stays
+ * put. With no stack maps registered nothing is movable and this degrades to exactly
+ * __gc_collect_precise, so it is always safe to call. Returns objects reclaimed (genuinely
+ * dead only — a relocated object is a survivor, not a free). For precision + safety the image
+ * must be built with frame pointers. Same threading contract as __gc_collect_precise. */
+int64_t __gc_collect_compacting(void);
+
 /* One compiled function's stack-map descriptor in a module table (see
  * __gc_register_stackmap_module). Mirrors the __gc_register_stackmap arguments;
  * frame_sizes / callee_masks may be NULL. Emitted into the image's read-only data,

@@ -497,9 +497,15 @@ fn gc_algorithm_generational_is_available() {
 }
 
 #[test]
-fn gc_algorithm_compacting_and_incremental_not_yet_available() {
-    // Still planned rungs of the precision ladder.
-    assert!(!GcAlgorithm::Compacting.is_available());
+fn gc_algorithm_compacting_is_available() {
+    // Compacting became available with FlatHeap::collect_compacting — the full
+    // moving/evacuating cycle (the moving-collector rung of the ladder).
+    assert!(GcAlgorithm::Compacting.is_available());
+}
+
+#[test]
+fn gc_algorithm_incremental_not_yet_available() {
+    // Still a planned rung of the precision ladder.
     assert!(!GcAlgorithm::Incremental.is_available());
 }
 
