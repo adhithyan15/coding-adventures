@@ -1678,6 +1678,7 @@ export interface Diode {
   readonly energyGapElectronVolts: number;
   readonly seriesResistance: number;
   readonly flickerNoiseCoefficient: number;
+  readonly flickerNoiseExponent: number;
 }
 
 export type JfetPolarity = "NJF" | "PJF";
@@ -2020,7 +2021,7 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS: readonly ModelCardKind[] = 
 const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
-  D: [14, 20, 5, 3],
+  D: [15, 21, 5, 3],
   NPN: [41, 58, 13, 4],
   PNP: [41, 58, 13, 4],
   NJF: [5, 11, 5, 3],
@@ -3608,7 +3609,7 @@ function cloneSubcktElement(
     case "custom-model":
       return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap) };
     case "diode":
-      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime, element.junctionPotential, element.gradingCoefficient, element.forwardBiasDepletionCoefficient, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.seriesResistance, element.flickerNoiseCoefficient);
+      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime, element.junctionPotential, element.gradingCoefficient, element.forwardBiasDepletionCoefficient, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.seriesResistance, element.flickerNoiseCoefficient, element.flickerNoiseExponent);
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
@@ -7572,6 +7573,7 @@ export function diode(
   energyGapElectronVolts = 1.11,
   seriesResistance = 0.0,
   flickerNoiseCoefficient = 0.0,
+  flickerNoiseExponent = 1.0,
 ): Diode {
   return {
     kind: "diode",
@@ -7592,6 +7594,7 @@ export function diode(
     energyGapElectronVolts,
     seriesResistance,
     flickerNoiseCoefficient,
+    flickerNoiseExponent,
   };
 }
 
@@ -7946,6 +7949,7 @@ const DIODE_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   EG: "EG",
   RS: "RS",
   KF: "KF",
+  AF: "AF",
 };
 
 const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -8478,6 +8482,7 @@ export function diodeFromModelCard(
     p.EG ?? 1.11,
     p.RS ?? 0.0,
     p.KF ?? 0.0,
+    p.AF ?? 1.0,
   );
 }
 
@@ -18500,7 +18505,9 @@ function collectNoiseSources(
           noiseType: "flicker",
           positive: anode,
           negative: cathode,
-          sourcePsd: element.flickerNoiseCoefficient * Math.abs(current),
+          sourcePsd:
+            element.flickerNoiseCoefficient *
+            Math.abs(current) ** element.flickerNoiseExponent,
           frequencyExponent: 1.0,
         });
       }
@@ -19798,6 +19805,15 @@ function validateReactiveElements(circuit: Circuit): void {
 }
 
 function validateDiode(element: Diode): void {
+  if (
+    !Number.isFinite(element.flickerNoiseExponent) ||
+    element.flickerNoiseExponent < 0.0
+  ) {
+    throw invalidElement(
+      element.name,
+      "flicker-noise exponent must be finite and non-negative",
+    );
+  }
   if (
     !Number.isFinite(element.flickerNoiseCoefficient) ||
     element.flickerNoiseCoefficient < 0.0

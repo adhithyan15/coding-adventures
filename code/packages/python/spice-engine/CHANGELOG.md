@@ -1,5 +1,7 @@
 # Changelog
 
+- Add diode model-card `AF` flicker-noise current-exponent support, defaulting
+  to `1` and applying `KF * abs(Id)^AF / frequency` across noise analysis.
 - Add diode model-card `KF` flicker-noise support with a distinct diode-current
   `flicker` contribution and Berkeley-default inverse-frequency scaling.
 - Add legacy SPICE2 BJT model-card `C2` and `C4` leakage-ratio support,

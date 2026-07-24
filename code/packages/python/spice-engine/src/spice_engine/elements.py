@@ -495,6 +495,7 @@ class Diode:
     Eg: float = 1.11  # energy gap in electron volts
     Rs: float = 0.0  # ohmic series resistance
     Kf: float = 0.0  # flicker-noise coefficient
+    Af: float = 1.0  # flicker-noise current exponent
 
 
 @dataclass(frozen=True, slots=True)
