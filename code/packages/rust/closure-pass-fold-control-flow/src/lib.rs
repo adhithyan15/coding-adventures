@@ -396,11 +396,49 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> Statemen
         // A `do … while(test)` runs its body at least once, so — unlike
         // `while` — it can NEVER be eliminated as a dead loop even when
         // `test` is statically falsy (the single body run is observable).
-        // We therefore only recurse structurally: fold the body and the test.
+        // We therefore recurse structurally (fold the body and the test) and
+        // then apply the same loop-body comma-fusion as `for`/`while`:
+        //
+        //   do { a(); b(); } while(c);   →   do a(), b(); while(c);
+        //
+        // A `BlockStatement` body whose statements are *all* plain expression
+        // statements collapses to one (possibly comma-sequenced) expression
+        // statement, dropping the braces — the comma operator runs them
+        // left-to-right with identical side effects and the loop discards the
+        // value. `stmts_as_sequence_expr` returns `None` (keeping the block) for
+        // any body carrying a declaration (`var`/`let`/`const`), a
+        // `break`/`continue`/`return`, or a nested statement — none of which can
+        // join a comma-sequence. Unlike `while`, a `do`-loop is not rewritten to
+        // a `for`, so the fusion is applied here rather than inherited from
+        // `fold_for_statement`. It runs *after* the body's own inner folds, so an
+        // `if (x) a();` that folded to `x && a()` participates:
+        // `do { if (x) a(); b(); } while(c);` → `do x && a(), b(); while(c);`.
         TaggedStatement::DoWhileStatement(s) => {
+            let body = fold_statement(&s.body, st);
+            let body = match &body {
+                Statement::Tagged(TaggedStatement::BlockStatement(_)) => {
+                    match stmts_as_sequence_expr(&body) {
+                        Some(expr) => {
+                            let body_cv = statement_cv(&body);
+                            st.record_fold(
+                                &s.cv,
+                                "loop-body-fuse",
+                                "do { s1; s2; … } while(…)",
+                                "do s1, s2, … while(…)",
+                            );
+                            Statement::expression_statement(ExpressionStatement {
+                                cv: body_cv,
+                                expression: expr,
+                            })
+                        }
+                        None => body,
+                    }
+                }
+                _ => body,
+            };
             Statement::Tagged(TaggedStatement::DoWhileStatement(DoWhileStatement {
                 cv: s.cv.clone(),
-                body: Box::new(fold_statement(&s.body, st)),
+                body: Box::new(body),
                 test: fold_expression(&s.test, st),
             }))
         }
@@ -2662,6 +2700,75 @@ mod tests {
                 other => panic!("expected a fused expression-statement body; got {other:?}"),
             },
             other => panic!("expected ForStatement; got {other:?}"),
+        }
+    }
+
+    /// `do { a(); b(); } while(c);` → `do a(), b(); while(c);` — a do-while
+    /// block body of plain expression statements fuses to a comma-sequenced
+    /// single statement, exactly like `for`/`while`.
+    #[test]
+    fn do_while_body_multi_expr_fuses_to_sequence() {
+        let body = block(
+            Some("blk.1"),
+            vec![
+                expr_stmt(call_expr("a"), None),
+                expr_stmt(call_expr("b"), None),
+            ],
+        );
+        let dw = Statement::Tagged(TaggedStatement::DoWhileStatement(DoWhileStatement {
+            cv: Some("dw.1".to_string()),
+            body: Box::new(body),
+            test: ident("c"),
+        }));
+        let (out, contribs, changed, _) =
+            run_pass(program().with_body(vec![ProgramItem::Statement(dw)]));
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "loop-body-fuse"));
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::DoWhileStatement(d)) => match d.body.as_ref() {
+                Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+                    match &es.expression {
+                        Expression::SequenceExpression(s) => assert_eq!(s.expressions.len(), 2),
+                        other => panic!("expected a 2-element sequence; got {other:?}"),
+                    }
+                }
+                other => panic!("expected a fused expression-statement body; got {other:?}"),
+            },
+            other => panic!("expected DoWhileStatement; got {other:?}"),
+        }
+    }
+
+    /// `do { var x = 1; a(); } while(c);` — a do-while body carrying a `var`
+    /// declaration is NOT fused (a declaration can't join a comma-sequence);
+    /// the block is kept intact.
+    #[test]
+    fn do_while_body_with_var_decl_not_fused() {
+        use coding_adventures_javascript_ast::{
+            BindingTarget, VariableDeclaration, VariableDeclarator,
+        };
+        let var_x = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Var,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(Identifier { cv: None, name: "x".to_string() }),
+                init: Some(num(1.0, None)),
+            }],
+        }));
+        let body = block(Some("blk.1"), vec![var_x, expr_stmt(call_expr("a"), None)]);
+        let dw = Statement::Tagged(TaggedStatement::DoWhileStatement(DoWhileStatement {
+            cv: None,
+            body: Box::new(body),
+            test: ident("c"),
+        }));
+        let (out, _, _, _) = run_pass(program().with_body(vec![ProgramItem::Statement(dw)]));
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::DoWhileStatement(d)) => assert!(
+                matches!(d.body.as_ref(), Statement::Tagged(TaggedStatement::BlockStatement(_))),
+                "var-carrying do-while body must stay a block; got {:?}",
+                d.body
+            ),
+            other => panic!("expected DoWhileStatement; got {other:?}"),
         }
     }
 

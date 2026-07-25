@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.36.0] - 2026-07-24
+
+### Added - do-while loop-body comma-fusion
+
+A `do … while` loop body that is a block of all-plain-expression statements now
+fuses to a single (possibly comma-sequenced) expression statement, dropping the
+braces — matching the reference Closure Compiler at SIMPLE and completing the
+loop-body fusion already done for `for`/`while` (0.32.0):
+
+```text
+  do { a(); b(); } while(c);      ->  do a(), b(); while(c);
+  do { a(); b(); d(); } while(c); ->  do a(), b(), d(); while(c);
+  do { a(); } while(c);           ->  do a(); while(c);         (block unwrapped)
+```
+
+The comma operator runs the operands left-to-right with identical side effects
+and the loop discards the value, so the rewrite is behaviour-preserving. It runs
+after the body's own inner folds, so an `if (x) a();` that folded to `x && a()`
+participates: `do { if (x) a(); b(); } while(c);` -> `do x && a(), b(); while(c);`.
+
+Reuses the existing `stmts_as_sequence_expr` gate, which keeps the block intact
+for any body carrying a declaration (`var`/`let`/`const`), a
+`break`/`continue`/`return`, or a nested statement — none can join a
+comma-sequence. Unlike `while`, a `do`-loop is not rewritten to a `for`, so the
+fusion is applied directly in the `DoWhileStatement` fold arm.
+
+Not handled here (separate reference transforms, tracked as follow-ups): trailing
+`continue` removal in a do-body (`do{a();continue}while(c)` -> `do a();while(c)`),
+trailing `return` -> `break` in a loop, and empty-body `do{}while(c)` ->
+`for(;c;);`.
+
 ## [0.35.0] - 2026-07-22
 
 ### Added - split a comma-sequence expression statement into separate statements

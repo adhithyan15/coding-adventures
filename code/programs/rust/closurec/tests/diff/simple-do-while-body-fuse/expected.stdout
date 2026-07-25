@@ -1,0 +1,1 @@
+do a(),b();while(c);do x&&g(),h();while(d);do{var v=1;k(v)}while(e);
