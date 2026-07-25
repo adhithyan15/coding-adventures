@@ -1,6 +1,112 @@
 # Changelog
 
-## [Unreleased]
+## [0.1.1] - 2026-07-24
+
+### Added
+
+- **`tests/oracle.rs` — HML01 §7 oracle/golden testing, cross-checking
+  `wolfram-runtime` (ground truth) against `wolfram_to_semantic_ir::
+  compile_source` → `semantic_ir::Module` → `semantic_ir_to_javascript::
+  compile` → a real `node` process.** Wolfram was one of the very first
+  math-language frontends built in this rollout, predating the
+  oracle-testing convention itself — every OTHER `-to-semantic-ir` crate
+  except Macsyma already has one; this closes that gap. Modeled directly
+  on `maple-to-semantic-ir/tests/oracle.rs` (the nearest SIR23/CAS
+  sibling — both lower straight to the symbolic/pattern vocabulary with
+  no host-language binding at lowering time). 32-case corpus: literal
+  arithmetic precedence, right-associative `^` (opposite of IDL's
+  left-assoc), unary minus binding looser than `^` (`-2^2 = -4`);
+  exact-integer vs. genuine-rational division; the `x+0`/`x*1`/`x^1`/
+  `x^0` free-symbol identity-law simplifications (pulled straight from
+  `wolfram-runtime`'s own `symbolic_evaluation` unit test); every
+  comparison plus a 3-term `&&` chain (the n-ary fold), `||`, and `!`;
+  the `Sin`/`Cos`/`Sqrt` exact-value elementary-function folds; `=`
+  (`Assign`) binding and reading back across statements, including the
+  self-referential-assign loop guard (`x = x`); `:=` (`Define`) and a
+  call; `{...}` list-literal elementwise evaluation; and `/.`/`:>`/`//.`
+  replacement (a literal rule, a pattern-capture rule, a `RuleDelayed`
+  rule, and a `//.` fixed-point chase through a rule chain).
+- Adds a dev-dependency on `coding-adventures-wolfram-runtime` (this
+  frontend's own sibling native-runtime crate) for `tests/oracle.rs`'s
+  ground truth only — the non-dev `[dependencies]` section still does
+  not depend on it; lowering itself only ever needs the parse-tree shape.
+- **Supersedes `[0.1.0]`'s own "Known limitation" note below** ("no
+  module this crate produces currently executes end-to-end through any
+  backend"): `sir-runtime-symbolic`/`semantic-ir-to-javascript`'s SIR23
+  codegen has since landed in full (all four addendum items), so 27 of
+  this corpus's 32 cases now execute end-to-end through `node` and match
+  `wolfram-runtime`'s own ground truth exactly. Left the `[0.1.0]` entry
+  itself unedited (an accurate record of what was true at that release);
+  see the "Found, NOT fixed here" section immediately below for what
+  still doesn't round-trip.
+
+### Found, NOT fixed here (shared `semantic-ir-to-javascript` crate and
+this frontend's own lowering — follow-up work, not this PR's scope)
+
+Every finding below was **confirmed by actually running each case
+through `node`** (this file's own dedicated probe run against
+`coding-adventures-wolfram-runtime`, plus direct inspection of
+`semantic-ir-to-javascript`'s `runtime.rs`/`emit.rs`), not assumed from
+reading the shared crate's source alone.
+
+- **All four SIR23 addendum items are shipped as of this PR** — a much
+  more complete surface than `maple-to-semantic-ir/tests/oracle.rs` saw
+  when it was written (that file's own module doc says item 2, held-form
+  execution, was "not yet landed"). 27 of this corpus's 32 cases need no
+  `known_bug` marker at all: arithmetic/comparison/logic/elementary-
+  function folding, `Assign` binding+read-back (including the
+  self-referential loop guard), and substitution-only `/.`/`//.` cases
+  whose rule RHS is already atomic post-substitution.
+- **Wolfram needs NO `True`/`False` case-bridging, unlike Maple.**
+  `maple-to-semantic-ir`'s own oracle file documents a genuine case
+  mismatch (Maple prints lowercase `true`/`false` natively, but the
+  shared handler always folds to the capitalized `True`/`False` symbol).
+  Wolfram's own native printer renders that symbol completely
+  generically, so it already matches the compiled side's hardcoded
+  spelling byte-for-byte — every comparison/logic case in this corpus is
+  `known_bug: None`, a larger unconditional-match set than Maple's
+  equivalent cases.
+- **GENUINELY NEW — `SetDelayed`/`Define` never registers a callable
+  function on the compiled side, for ANY arity.** Not a display gap: a
+  real argument-shape mismatch. `wolfram-runtime`'s own lowering reduces
+  `f[x_] := body`'s LHS into the 3-arg `Define(f, List(x), body)` record
+  `symbolic-vm::define_handler` (and its JS port) require, stripping each
+  parameter's pattern wrapper down to a bare symbol name.
+  `wolfram-to-semantic-ir`'s own lowering deliberately does NOT do this
+  (per its "everything is data" full-fidelity design — a pinned
+  `tests/test_lower.rs::setdelayed_lowers_to_define_apply` test asserts
+  the 2-arg `Define(f[x_], body)` shape, preserving e.g. a parameter's
+  type constraint the native lowering would silently drop). The shared
+  JS `defineHandler` requires exactly 3 args, so this frontend's 2-arg
+  `Define` call is always left completely unevaluated — no callable ever
+  gets registered, regardless of parameter count. Fixing this would mean
+  changing this frontend's own documented, deliberately-full-fidelity
+  lowering (and its pinned test) — out of scope for an oracle-test-only
+  PR; recorded as a `known_bug` in `function_definition_and_call`.
+- **GENUINELY NEW — `SymReplaceAll` (`/.`/`//.`) performs substitution
+  ONLY on the compiled side; it never re-folds the substituted result
+  through `evalTerm`.** `emit.rs`'s `SymReplaceAll` codegen arm calls only
+  `Symbolic.replaceAll`/`replaceRepeated`, and the print-wrapping
+  `is_sym23_root_shape` gate (which decides whether a statement gets an
+  `evalTerm` wrap) recognizes only `SymApply`/`SymSymbol`/`SymRational` —
+  never `SymReplaceAll`. So a rule whose substituted RHS is itself a
+  compound arithmetic expression (`h[3] /. h[n_] :> n + 1` substitutes
+  `n -> 3` into `n + 1`, producing the STILL-UNFOLDED `Add(3, 1)`) never
+  gets reduced to `4` on the compiled side, while native
+  `wolfram-runtime` always re-evaluates the whole statement via `vm.eval`
+  after its own substitution pre-pass. Invisible whenever the substituted
+  RHS is already atomic (a literal or bare captured symbol/value), which
+  is why `tests/sir23_symbolic.rs`'s own hand-built SIR23 tests never hit
+  it either. Recorded as a `known_bug` in
+  `rule_delayed_rhs_needs_arithmetic_refold`.
+- **Shared with every SIR23 frontend, not re-derived: no
+  `SIR_DISPLAY_WOLFRAM` bracket/infix convention.** The generic
+  `Symbolic.toDisplayString` renders every compound term as
+  `head(args, ...)` — no infix `+`/`*`/`^`, no `{...}` list brackets, no
+  `f[...]` square-bracket application (Wolfram's own convention).
+  Recorded as `known_bug` in `negation_of_a_free_symbol`,
+  `sin_of_a_free_symbol_stays_symbolic`, and
+  `list_literal_evaluates_elementwise`.
 
 ### Fixed
 
