@@ -1,0 +1,36 @@
+% ============================================================================
+% charles-law.query.adj — worked examples over the chemistry Charles's-law library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a Charles's-law question:
+% it states NO arithmetic and NO relation — it only `import`s the grounded library,
+% `observe`s the measured quantities it decomposed from the prompt (each a
+% byte-provenanced span, elided here; the temperatures are ABSOLUTE/kelvin), and asks the
+% engine to APPLY the cited relation. The native adj-lang engine binds the parameters,
+% computes each value EXACTLY on the CPU, and returns it with the relation's
+% source/locator/trust.
+%
+% The four questions all turn on the SAME conserved ratio V₁/T₁ = V₂/T₂ (cross-product
+% V₁T₂ = V₂T₁ = 12), around the worked case V₁ = 2 L, T₁ = 4 K, V₂ = 3 L, T₂ = 6 K: given
+% any three, the engine recovers the fourth exactly.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli charles-law.query.adj
+% ============================================================================
+
+import "charles-law.adj"
+
+% 2 L at 4 K, heated to 6 K: final volume = 2 * 6 / 4.
+observe initial_volume(2)
+observe initial_temperature(4)
+observe final_temperature(6)
+? final_volume(initial_volume, initial_temperature, final_temperature)   % expect 3   (V₂ = V₁T₂/T₁)
+
+% The same gas expanded instead to 3 L: final temperature = 3 * 4 / 2.
+observe final_volume(3)
+? final_temperature(final_volume, initial_volume, initial_temperature)   % expect 6   (T₂ = V₂T₁/V₁)
+
+% Recover the starting volume from the 3 L / 6 K final state and the 4 K start.
+? initial_volume(final_volume, final_temperature, initial_temperature)   % expect 2   (V₁ = V₂T₁/T₂)
+
+% Recover the starting temperature from the 3 L / 6 K final state and the 2 L start.
+? initial_temperature(initial_volume, final_temperature, final_volume)   % expect 4   (T₁ = V₁T₂/V₂)
