@@ -352,6 +352,9 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowe
         // builtins need no feature of their own (core control flow / intrinsics).
         Feature::Loops,
         Feature::MutableBindings,
+        // Milestone 4: `&&`/`||`/`!` lower to the short-circuiting `and`/`or`/
+        // `not` builtins.
+        Feature::ShortCircuit,
     ]);
 
     let module = Module {
@@ -990,12 +993,72 @@ impl Lowerer {
     /// so the explicit compare is required).
     fn lower_cond(&mut self, node: &GrammarASTNode) -> Result<Expr, CLowerError> {
         let n = peel(node);
-        if matches!(n.rule_name.as_str(), "equality" | "relational") && child_nodes(n).len() >= 2 {
-            self.lower_compare_bool(n)
-        } else {
-            let (e, _t) = self.lower_expr(node)?;
-            Ok(builtin("!=", vec![e, int_lit(0)]))
+        match n.rule_name.as_str() {
+            // Short-circuiting `&&` / `||`: fold the operands *as conditions*
+            // with the matching SIR builtin (left-associative, like C).
+            "logical_and" if child_nodes(n).len() >= 2 => self.lower_logical(n, "and"),
+            "logical_or" if child_nodes(n).len() >= 2 => self.lower_logical(n, "or"),
+            // A comparison already yields a SIR bool.
+            "equality" | "relational" if child_nodes(n).len() >= 2 => self.lower_compare_bool(n),
+            // Unary `!c` → `not(cond(c))`.  Charged against the depth budget:
+            // `!!!…c` recurses here per `!`, and nests the emitted tree the same.
+            "unary" if unary_op(n).as_deref() == Some("!") => {
+                let operand = child_nodes(n)
+                    .into_iter()
+                    .next()
+                    .ok_or_else(|| CLowerError {
+                        message: "`!` without an operand".into(),
+                        line: n.start_line.unwrap_or(0),
+                        column: n.start_column.unwrap_or(0),
+                    })?;
+                self.expr_depth += 1;
+                if self.budget_used() > MAX_EXPR_DEPTH {
+                    self.expr_depth -= 1;
+                    return err(
+                        format!("expression nests deeper than the limit of {MAX_EXPR_DEPTH}"),
+                        n,
+                    );
+                }
+                let inner = self.lower_cond(operand);
+                self.expr_depth -= 1;
+                Ok(builtin("not", vec![inner?]))
+            }
+            // Any other integer expression `e` is true iff `e != 0` (C treats 0
+            // as false; SIR treats it as truthy).
+            _ => {
+                let (e, _t) = self.lower_expr(node)?;
+                Ok(builtin("!=", vec![e, int_lit(0)]))
+            }
         }
+    }
+
+    /// Fold a `logical_and`/`logical_or` node into left-associative short-circuit
+    /// builtins, lowering each operand *as a condition*.  Its width is charged
+    /// against the depth budget (the fold nests as deep as the chain is wide).
+    fn lower_logical(&mut self, n: &GrammarASTNode, op: &str) -> Result<Expr, CLowerError> {
+        let width = self.charge_chain(n)?;
+        self.expr_depth += width;
+        let result = self.lower_logical_inner(n, op);
+        self.expr_depth -= width;
+        result
+    }
+
+    fn lower_logical_inner(&mut self, n: &GrammarASTNode, op: &str) -> Result<Expr, CLowerError> {
+        let mut acc: Option<Expr> = None;
+        for c in &n.children {
+            if let ASTNodeOrToken::Node(operand) = c {
+                let cond = self.lower_cond(operand)?;
+                acc = Some(match acc {
+                    None => cond,
+                    Some(a) => builtin(op, vec![a, cond]),
+                });
+            }
+        }
+        acc.ok_or_else(|| CLowerError {
+            message: "empty logical expression".into(),
+            line: n.start_line.unwrap_or(0),
+            column: n.start_column.unwrap_or(0),
+        })
     }
 
     /// Lower an `equality`/`relational` node to a SIR bool.  Left-associative:
@@ -1186,18 +1249,23 @@ impl Lowerer {
             "additive" | "multiplicative" | "shift" | "bit_and" | "bit_or" | "bit_xor" => {
                 self.lower_binary(n)
             }
-            // A comparison used as a *value* has type `int` in C (0 or 1), so it
-            // lowers to `If(cmp, 1, 0)` — restoring the integer from the bool.
+            // A comparison or logical operator used as a *value* has type `int`
+            // in C (0 or 1), so it lowers to `If(bool, 1, 0)` — restoring the
+            // integer from the SIR bool.
             "equality" | "relational" if child_nodes(n).len() >= 2 => {
                 let b = self.lower_compare_bool(n)?;
+                Ok((if_int(b), i32_spec()))
+            }
+            "logical_and" | "logical_or" if child_nodes(n).len() >= 2 => {
+                let b = self.lower_cond(n)?;
                 Ok((if_int(b), i32_spec()))
             }
             "cast" => self.lower_cast(n),
             "unary" => self.lower_unary(n),
             "postfix" => self.lower_postfix(n),
             "primary" => self.lower_primary(n),
-            // Logical `&& ||`, unary `!`, and assignment-as-subexpression remain
-            // deferred (assignment is handled in statement position).
+            // Assignment-as-subexpression remains deferred (assignment is handled
+            // in statement position).
             other => err(format!("expression `{other}` not yet supported"), n),
         }
     }
@@ -1293,6 +1361,14 @@ impl Lowerer {
         // unary = (PLUS|MINUS|TILDE|BANG) unary
         let op = child_tokens(n).first().map(|t| t.value.clone()).unwrap();
         let operand = child_nodes(n).into_iter().next().unwrap();
+
+        // `!c` used as a *value* has type `int` (0/1), so lower its operand as a
+        // condition and wrap the resulting bool: `If(not(cond(c)), 1, 0)`.
+        if op == "!" {
+            let cond = builtin("not", vec![self.lower_cond(operand)?]);
+            return Ok((if_int(cond), i32_spec()));
+        }
+
         let (e, t) = self.lower_expr(operand)?;
         let tp = promote(t); // unary applies integer promotion
         let e = convert_to(e, t, tp);
@@ -1301,8 +1377,8 @@ impl Lowerer {
             // Unary minus as `0 - x` (both backends render binary `-`); the
             // subtract happens at the promoted type and its result is wrapped.
             "-" => Ok((convert(builtin("-", vec![int_lit(0), e]), tp), tp)),
-            // `~` (bitnot) and `!` (logical not / truthiness) are deferred.
-            other => err(format!("unary `{other}` not supported in milestone 1"), n),
+            // `~` (bitnot) is deferred to the bitwise milestone.
+            other => err(format!("unary `{other}` not yet supported"), n),
         }
     }
 
@@ -1429,6 +1505,11 @@ impl Lowerer {
 
 fn peel_block_item(item: &GrammarASTNode) -> &GrammarASTNode {
     child_nodes(item).into_iter().next().unwrap_or(item)
+}
+
+/// The leading operator token of a `unary` node (`!`, `~`, `-`, `+`), if any.
+fn unary_op(n: &GrammarASTNode) -> Option<String> {
+    child_tokens(n).first().map(|t| t.value.clone())
 }
 
 // ── sequence / control-flow shape analysis (milestone 3) ────────────────────

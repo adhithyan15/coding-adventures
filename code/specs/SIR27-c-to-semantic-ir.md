@@ -272,6 +272,35 @@ guard bounds.
    a positioned error.  Lifting the cap means making those consumers iterative —
    a cross-cutting change well beyond this frontend.
 
+## Logical operators (milestone 4)
+
+`&&`, `||`, and unary `!` — the short-circuiting logical operators — reuse the
+same C-vs-SIR truthiness bridge as milestone 2.  In C each operand is tested for
+truthiness (`!= 0`) and the result is an `int` `0`/`1`; SIR has short-circuiting
+`and`/`or` builtins (and `not`) whose operands are evaluated under SIR
+truthiness.  So the two directions mirror the comparison handling:
+
+- **As a condition** (`if (a && b)`), each operand is lowered *as a condition*
+  (`lower_cond`, which already yields the right SIR bool for a comparison or an
+  `!= 0`), and the operator becomes the matching short-circuiting builtin:
+  `a && b → and(cond(a), cond(b))`, `a || b → or(cond(a), cond(b))`,
+  `!a → not(cond(a))`.  Left-associative, so `a && b && c` is `and(and(a,b),c)` —
+  exactly C's evaluation order, and the SIR builtins short-circuit just as C
+  does (the backends render `and`/`or` as `&&`/`||` in Ruby and as a
+  short-circuiting `if` chain in C).
+- **As a value** (`int r = a && b;`), the bool is wrapped back to C's `int`
+  `0`/`1` with `If(bool, 1, 0)` — the same `if_int` used for a bare comparison.
+
+A logical operator chain folds into a tree as deep as it is wide, so — like an
+arithmetic chain — its width is charged against the shared depth budget.
+
+`Feature::ShortCircuit` is added to the module manifest (both backends already
+accept it and render `and`/`or`; the C backend gains a `_sir_not` for `!`).
+
+Bitwise (`& | ^ ~`, `<< >>`) and division/modulo (`/ %`) remain deferred:
+bitwise needs new builtins in both backends, and `/`/`%` need the truncate-vs-
+floor split (C truncates toward zero; SIR/Ruby floor), which is its own slice.
+
 ## Pipeline
 
 ```text

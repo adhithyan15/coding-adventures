@@ -362,6 +362,55 @@ fn corpus() -> Vec<Case> {
                    if (go > 0) { return s; } return 0; }\n\
                    int main(void) { printf(\"%u\\n\", total(1)); return 0; }",
         },
+        // ── milestone 4: logical operators (&& || !) ─────────────────────────
+        Case {
+            label: "&& range check in-range in_range(5) → 1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int in_range(int x) { if (x >= 0 && x < 10) { return 1; } return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", in_range(5)); return 0; }",
+        },
+        Case {
+            label: "&& range check out-of-range in_range(15) → 0",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int in_range(int x) { if (x >= 0 && x < 10) { return 1; } return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", in_range(15)); return 0; }",
+        },
+        Case {
+            label: "|| out-of-band far(-3) → 1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int far(int x) { if (x < 0 || x > 100) { return 1; } return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", far(-3)); return 0; }",
+        },
+        Case {
+            label: "&& as a value both(3,0) → 0",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int both(int a, int b) { return a && b; }\n\
+                   int main(void) { printf(\"%d\\n\", both(3, 0)); return 0; }",
+        },
+        Case {
+            label: "! as a value negate(0) → 1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int negate(int x) { return !x; }\n\
+                   int main(void) { printf(\"%d\\n\", negate(0)); return 0; }",
+        },
+        Case {
+            label: "! in a condition not_big(3) → 100",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int not_big(int x) { if (!(x > 5)) { return 100; } return 200; }\n\
+                   int main(void) { printf(\"%d\\n\", not_big(3)); return 0; }",
+        },
+        Case {
+            label: "chained && excludes 50 band(50) → 0",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int band(int x) { if (x > 0 && x < 100 && x != 50) { return 1; } return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", band(50)); return 0; }",
+        },
+        Case {
+            label: "mixed || / && / ! precedence classify(4) → 1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int classify(int x, int y) { if ((x > 0 || y > 0) && !(x == y)) { return 1; } return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", classify(4, 4)); return 0; }",
+        },
     ]
 }
 

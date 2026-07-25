@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+### Milestone 4 — logical operators (`&&`, `||`, `!`)
+
+- The short-circuiting logical operators lower to SIR's `and`/`or`/`not`
+  builtins, reusing the milestone-2 truthiness bridge.  As a **condition** each
+  operand is lowered *as a condition* (`a && b → and(cond(a), cond(b))`,
+  left-associative — C's evaluation order, and the builtins short-circuit like
+  C); as a **value** the resulting bool is wrapped back to C's int `0`/`1` with
+  `If(bool, 1, 0)`.  So `if (x >= 0 && x < n)`, `return a && b`, and `!(x > 5)`
+  all translate now.
+- Manifest declares `Feature::ShortCircuit`.  Both backends already accept it and
+  render `and`/`or`; the C backend gains a `_sir_not` runtime helper for `!`
+  (Ruby already had `not`).
+- A logical operator chain folds into a tree as deep as it is wide, so its width
+  is charged against the shared depth budget, and `!!!…` recursion is bounded
+  too — a 200-long `&&` chain is a clean positioned error, not a crash.
+- Corpus grows with 8 logical programs (`&&` range checks in/out of range, `||`
+  out-of-band, `&&`/`!` as values, `!` in a condition, a chained `&&`, and mixed
+  `|| / && / !` precedence) — all byte-identical across reference `clang -fwrapv`,
+  emitted Ruby, and emitted C (and clang+gcc+MSVC).
+- Still deferred: bitwise (`& | ^ ~`, `<< >>`) — needs new backend builtins — and
+  division/modulo (`/ %`) — needs the truncate-vs-floor split.
+
 ### Milestone 3 — early `return` (return lifting)
 
 - A returning `if` is now **lifted** into a value-producing `Expr::If`, with the

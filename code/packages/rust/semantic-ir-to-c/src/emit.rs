@@ -1487,6 +1487,8 @@ fn fixed_helper(name: &str) -> Option<(&'static str, usize)> {
         ">=" => ("_sir_ge", 2),
         "==" => ("_sir_eq", 2),
         "!=" => ("_sir_ne", 2),
+        // Milestone 4 logical negation (`&&`/`||` short-circuit via emit_assign).
+        "not" => ("_sir_not", 1),
         "cons" => ("_sir_cons", 2),
         "car" => ("_sir_car", 1),
         "cdr" => ("_sir_cdr", 1),
