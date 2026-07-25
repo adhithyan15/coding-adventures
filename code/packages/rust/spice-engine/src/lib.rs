@@ -431,6 +431,8 @@ fn clone_subckt_element(
             mapped.junction_potential = element.junction_potential;
             mapped.forward_bias_depletion_coefficient = element.forward_bias_depletion_coefficient;
             mapped.gate_saturation_current = element.gate_saturation_current;
+            mapped.gate_saturation_current_temperature_exponent =
+                element.gate_saturation_current_temperature_exponent;
             mapped.drain_resistance = element.drain_resistance;
             mapped.source_resistance = element.source_resistance;
             mapped.threshold_voltage_temperature_coefficient =
@@ -2794,6 +2796,15 @@ pub fn jfet_at_temperature(
             reason: "nominal temperature must be finite and positive".to_string(),
         });
     }
+    if !jfet
+        .gate_saturation_current_temperature_exponent
+        .is_finite()
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "gate saturation-current temperature exponent must be finite".to_string(),
+        });
+    }
     if !jfet.threshold_voltage_temperature_coefficient.is_finite() {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
@@ -2826,6 +2837,11 @@ pub fn jfet_at_temperature(
         });
     }
     let temperature_ratio = temperature_kelvin / nominal_temperature;
+    let saturation_exponent =
+        1.11 * ELECTRON_CHARGE / BOLTZMANN * (1.0 / nominal_temperature - 1.0 / temperature_kelvin);
+    let saturation_scale = temperature_ratio
+        .powf(jfet.gate_saturation_current_temperature_exponent)
+        * saturation_exponent.clamp(-100.0, 100.0).exp();
     let beta_scale = jfet.mobility_temperature_coefficient.map_or_else(
         || temperature_ratio.powf(jfet.mobility_temperature_exponent),
         |coefficient| 1.01_f64.powf(coefficient * (temperature_kelvin - nominal_temperature)),
@@ -2844,6 +2860,7 @@ pub fn jfet_at_temperature(
             },
         );
     adjusted.beta *= beta_scale;
+    adjusted.gate_saturation_current *= saturation_scale;
     Ok(adjusted)
 }
 
@@ -2910,6 +2927,7 @@ pub struct Jfet {
     pub junction_potential: f64,
     pub forward_bias_depletion_coefficient: f64,
     pub gate_saturation_current: f64,
+    pub gate_saturation_current_temperature_exponent: f64,
     pub drain_resistance: f64,
     pub source_resistance: f64,
     pub threshold_voltage_temperature_coefficient: f64,
@@ -2990,6 +3008,7 @@ impl Jfet {
             junction_potential: 1.0,
             forward_bias_depletion_coefficient: 0.5,
             gate_saturation_current: 1.0e-14,
+            gate_saturation_current_temperature_exponent: 3.0,
             drain_resistance: 0.0,
             source_resistance: 0.0,
             threshold_voltage_temperature_coefficient: 0.0,
@@ -3920,8 +3939,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Diode, 15, 21, 5, 3),
     (ModelCardKind::Npn, 41, 58, 13, 4),
     (ModelCardKind::Pnp, 41, 58, 13, 4),
-    (ModelCardKind::Njf, 17, 25, 7, 3),
-    (ModelCardKind::Pjf, 17, 25, 7, 3),
+    (ModelCardKind::Njf, 18, 26, 7, 3),
+    (ModelCardKind::Pjf, 18, 26, 7, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
     (ModelCardKind::Pmos, 18, 25, 6, 3),
 ];
@@ -4026,6 +4045,7 @@ const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("VJ", "PB"),
     ("FC", "FC"),
     ("IS", "IS"),
+    ("XTI", "XTI"),
     ("RD", "RD"),
     ("RS", "RS"),
     ("TNOM", "TNOM"),
@@ -4765,6 +4785,7 @@ pub fn jfet_from_model_card(
     jfet.junction_potential = model_card_value(model, "PB", 1.0);
     jfet.forward_bias_depletion_coefficient = model_card_value(model, "FC", 0.5);
     jfet.gate_saturation_current = model_card_value(model, "IS", 1.0e-14);
+    jfet.gate_saturation_current_temperature_exponent = model_card_value(model, "XTI", 3.0);
     jfet.drain_resistance = model_card_value(model, "RD", 0.0);
     jfet.source_resistance = model_card_value(model, "RS", 0.0);
     jfet.threshold_voltage_temperature_coefficient = model_card_value(model, "TCV", 0.0);
@@ -25237,6 +25258,15 @@ fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
             reason: "gate saturation current must be finite and non-negative".to_string(),
+        });
+    }
+    if !jfet
+        .gate_saturation_current_temperature_exponent
+        .is_finite()
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "gate saturation-current temperature exponent must be finite".to_string(),
         });
     }
     if !jfet.drain_resistance.is_finite() || jfet.drain_resistance < 0.0 {

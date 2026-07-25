@@ -121,7 +121,8 @@ models before running an analysis.
 JFET model cards use `TCV` for threshold-voltage scaling and `BEX` for
 `BETA(T) = BETA * (T / TNOM)^BEX`. When explicitly present, `VTOTC` overrides
 `TCV` with `VTO(T) = VTO + VTOTC * (T - TNOM)`, while `BETATCE` overrides
-`BEX` with `BETA(T) = BETA * 1.01^(BETATCE * (T - TNOM))`.
+`BEX` with `BETA(T) = BETA * 1.01^(BETATCE * (T - TNOM))`. JFET `XTI`
+scales gate saturation current with the standard silicon bandgap law.
 All temperature coefficients honor model-card `TNOM` / `T_NOM`.
 
 `normalize_model_card`, `diode_from_model_card`, `bjt_from_model_card`,
@@ -168,7 +169,8 @@ JFET cards accept `TCV` (default `0 V/K`) to shift threshold voltage as
 precedence and applies `VTO(T) = VTO + VTOTC * (T - TNOM)`. `TNOM`/`T_NOM`
 sets the JFET model's nominal temperature in degrees Celsius and overrides the
 circuit default; omitting both coefficients preserves temperature-invariant
-JFET behavior.
+JFET threshold voltage and beta. `XTI` defaults to 3 and scales gate-junction
+saturation current from the model nominal temperature.
 `KF` (default `0`, disabled) adds a distinct BJT base-current flicker-noise
 source to `.NOISE`. `AF` (default `1`) controls the base-current exponent, so
 source PSD is `KF * abs(Ib)^AF / frequency`.
