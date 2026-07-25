@@ -1,6 +1,63 @@
 # Changelog
 
-## [Unreleased]
+## [0.1.1] - 2026-07-25
+
+### Added
+
+- **`tests/oracle.rs` — HML01 §7 oracle/golden testing, cross-checking
+  `macsyma-runtime` (ground truth) against `macsyma_to_semantic_ir::
+  compile_source` → `semantic_ir::Module` → `semantic_ir_to_javascript::
+  compile` → a real `node` process.** Macsyma (and its thin-alias sibling
+  Maxima) was one of the very first math-language frontends built in this
+  rollout, predating the oracle-testing convention itself — every OTHER
+  `-to-semantic-ir` crate now has one; this closes that gap. Modeled
+  directly on `wolfram-to-semantic-ir/tests/oracle.rs` (the freshest,
+  nearest SIR23/CAS sibling — both lower straight to the symbolic
+  vocabulary with no host-language binding at lowering time). 34-case
+  corpus: literal arithmetic precedence, right-associative `^`, unary
+  minus binding looser than `^` (`-2^2 = -4`); exact-integer vs.
+  genuine-rational division; the `x+0`/`x*1`/`x^1`/`x^0` free-symbol
+  identity-law simplifications; every comparison in Macsyma's own spelling
+  (`=`/`#`/`<`/`>`/`<=`/`>=` — `=` is equality, `:` is assignment) plus a
+  3-term `and` chain (the n-ary fold), `or`, and `not` (keyword spellings,
+  not `&&`/`||`/`!`); the `sin`/`cos`/`sqrt` exact-value elementary-
+  function folds; `:` (`Assign`) binding and reading back across
+  statements, including the self-referential-assign loop guard (`x : x`);
+  `:=` (`Define`) and a call; `if`/`then`/`else` (both branches, plus the
+  no-`else` `False`-fallback case); `[...]` list-literal elementwise
+  evaluation; and two control-flow-as-data cases (`while`/`return`).
+- **Genuinely new finding vs. `wolfram-to-semantic-ir`'s own oracle file:
+  `f(x) := body` round-trips correctly end-to-end, unlike Wolfram's own
+  documented gap.** Macsyma's `lower_assign` (`COLONEQ` branch) already
+  splits the LHS into the exact 3-argument `Define(name, List(params),
+  body)` record the shared JS `defineHandler`/`applyUserFunction` require
+  — confirmed by `function_definition_and_call`'s `known_bug: None`.
+- **Genuinely new finding: two control-flow-as-data cases
+  (`while_head_is_unevaluated_symbolic_data_matching_verbatim`,
+  `return_head_is_unevaluated_symbolic_data_matching_verbatim`) match
+  verbatim between the native pretty-printer and the compiled side's
+  generic `toDisplayString`, despite being non-atomic.** `While`/
+  `ForEach`/`ForRange`/`Block`/`Return` have no registered handler on
+  either side, so both rebuild an unevaluated `Apply` term via the
+  identical "unknown head" fallback; neither `MacsymaDialect::
+  function_name` nor the JS `toDisplayString` special-cases these
+  synthetic head names, so their generic function-call rendering
+  coincides — as long as no argument is itself a `List` (which the native
+  walker DOES special-case, reopening the display gap one level down).
+- **Maxima-coverage finding, documented in `tests/oracle.rs`'s own module
+  doc rather than a separate corpus**: `maxima-to-semantic-ir` is a pure
+  re-export of this crate's `compile`/`compile_source` (no shim), and
+  `maxima-runtime::MaximaSession` is a thin façade over this crate's own
+  sibling `macsyma-runtime::MacsymaSession`, formatting the exact same
+  `output_text` (same `cas_pretty_printer::MacsymaDialect`) behind a
+  `(%oN) ` REPL-echo prefix. A separate Maxima oracle corpus would
+  therefore re-run the identical evaluator against the identical lowering
+  and assert the identical strings — pure duplication, not additional
+  coverage.
+- Adds a dev-dependency on `coding-adventures-macsyma-runtime` (this
+  frontend's own sibling native-runtime crate) for `tests/oracle.rs`'s
+  ground truth only — the non-dev `[dependencies]` section still does not
+  depend on it; lowering itself only ever needs the parse-tree shape.
 
 ### Fixed
 
