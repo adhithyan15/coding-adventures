@@ -95,7 +95,7 @@ fn model_card_type_aliases_are_normalized() {
 #[test]
 fn model_card_supported_parameter_coverage_exports_are_stable() {
     let coverage = model_card_supported_parameter_coverage();
-    assert_eq!(coverage.len(), 171);
+    assert_eq!(coverage.len(), 173);
     assert_eq!(coverage[0].kind, ModelCardKind::Diode);
     assert_eq!(coverage[0].canonical_parameter, "IS");
     assert_eq!(coverage[0].accepted_names, vec!["IS", "JS"]);
@@ -114,7 +114,7 @@ fn model_card_supported_parameter_coverage_exports_are_stable() {
     assert!(table.contains("NMOS\tVT0\tVT0|VTO|VTH\t3"));
     assert_eq!(lines.last().unwrap(), &"PMOS\tMJ\tMJ\t1");
     let records = model_card_supported_parameter_coverage_records();
-    assert_eq!(records.len(), 171);
+    assert_eq!(records.len(), 173);
     assert_eq!(records[0]["kind"], "D");
     assert_eq!(records[0]["canonical_parameter"], "IS");
     assert_eq!(records[0]["accepted_names"], "IS|JS");
@@ -195,15 +195,15 @@ fn model_card_supported_parameter_coverage_gate_passes_current_catalog() {
     assert!(report.passed);
     assert_eq!(report.kind_count, 7);
     assert_eq!(report.expected_kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 171);
-    assert_eq!(report.expected_canonical_parameter_count, 171);
-    assert_eq!(report.accepted_name_count, 241);
+    assert_eq!(report.canonical_parameter_count, 173);
+    assert_eq!(report.expected_canonical_parameter_count, 173);
+    assert_eq!(report.accepted_name_count, 243);
     assert_eq!(report.aliased_parameter_count, 57);
     assert_eq!(report.max_alias_count, 4);
     assert!(report.issues.is_empty());
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t171\t171\t241\t57\t4\t0"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t173\t173\t243\t57\t4\t0"
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_issue_table(&report),
@@ -230,8 +230,8 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
 
     assert!(!report.passed);
     assert_eq!(report.kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 170);
-    assert_eq!(report.accepted_name_count, 238);
+    assert_eq!(report.canonical_parameter_count, 172);
+    assert_eq!(report.accepted_name_count, 240);
     assert_eq!(report.aliased_parameter_count, 56);
     assert_eq!(report.max_alias_count, 4);
     assert_eq!(report.issues.len(), 4);
@@ -248,7 +248,7 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t170\t171\t238\t56\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t172\t173\t240\t56\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
     );
     let records = model_card_supported_parameter_coverage_gate_issue_records(&report);
     assert_eq!(records[0]["kind"], "NMOS");
@@ -520,6 +520,7 @@ fn model_card_aliases_build_device_instances() {
             ("IS", 2.0e-13),
             ("XTI", 2.5),
             ("EG", 1.05),
+            ("B", 1.1),
             ("RD", 125.0),
             ("RS", 75.0),
             ("T_NOM", 50.0),
@@ -541,6 +542,7 @@ fn model_card_aliases_build_device_instances() {
     assert_close(*jfet_card.parameters.get("IS").unwrap(), 2.0e-13);
     assert_close(*jfet_card.parameters.get("XTI").unwrap(), 2.5);
     assert_close(*jfet_card.parameters.get("EG").unwrap(), 1.05);
+    assert_close(*jfet_card.parameters.get("B").unwrap(), 1.1);
     assert_close(*jfet_card.parameters.get("RD").unwrap(), 125.0);
     assert_close(*jfet_card.parameters.get("RS").unwrap(), 75.0);
     assert_close(*jfet_card.parameters.get("TNOM").unwrap(), 50.0);
@@ -559,6 +561,7 @@ fn model_card_aliases_build_device_instances() {
     assert_close(jfet_model.gate_saturation_current, 2.0e-13);
     assert_close(jfet_model.gate_saturation_current_temperature_exponent, 2.5);
     assert_close(jfet_model.bandgap_voltage, 1.05);
+    assert_close(jfet_model.doping_tail_parameter, 1.1);
     assert_close(jfet_model.nominal_temperature_kelvin.unwrap(), 323.15);
     assert_close(jfet_model.threshold_voltage_temperature_coefficient, 0.01);
     assert_close(
@@ -1498,6 +1501,7 @@ fn subcircuit_expansion_preserves_complete_jfet_model() {
     jfet.gate_saturation_current = 2.0e-13;
     jfet.gate_saturation_current_temperature_exponent = 2.5;
     jfet.bandgap_voltage = 1.05;
+    jfet.doping_tail_parameter = 1.1;
     jfet.drain_resistance = 125.0;
     jfet.source_resistance = 75.0;
     jfet.threshold_voltage_temperature_coefficient = 0.01;
@@ -1536,6 +1540,7 @@ fn subcircuit_expansion_preserves_complete_jfet_model() {
     assert_close(expanded.gate_saturation_current, 2.0e-13);
     assert_close(expanded.gate_saturation_current_temperature_exponent, 2.5);
     assert_close(expanded.bandgap_voltage, 1.05);
+    assert_close(expanded.doping_tail_parameter, 1.1);
     assert_close(expanded.drain_resistance, 125.0);
     assert_close(expanded.source_resistance, 75.0);
     assert_close(expanded.threshold_voltage_temperature_coefficient, 0.01);
@@ -1585,6 +1590,36 @@ fn dc_jfet_source_resistance_raises_intrinsic_source_voltage() {
 
     let result = dc_op(&circuit).unwrap();
     assert!(result.node_voltages["__spice_J1_source"] > 0.0);
+}
+
+#[test]
+fn dc_jfet_doping_tail_parameter_shapes_linear_and_saturation_current() {
+    let drain_current = |drain_voltage: f64, doping_tail_parameter: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vdrain",
+            "drain",
+            "0",
+            drain_voltage,
+        )));
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vgate", "gate", "0", 0.0,
+        )));
+        let mut jfet = Jfet::new("J1", "drain", "gate", "0");
+        jfet.beta = 1.0e-3;
+        jfet.threshold_voltage = -2.0;
+        jfet.junction_potential = 1.0;
+        jfet.doping_tail_parameter = doping_tail_parameter;
+        circuit.add(Element::Jfet(jfet));
+        dc_op(&circuit)
+            .unwrap()
+            .branch_current("Vdrain")
+            .unwrap()
+            .abs()
+    };
+
+    assert!(drain_current(1.0, 1.1) > drain_current(1.0, 1.0));
+    assert!(drain_current(3.0, 1.1) > drain_current(3.0, 1.0));
 }
 
 #[test]
@@ -2296,6 +2331,15 @@ fn jfet_temperature_scaling_uses_vtotc_betatce_and_model_nominal_temperature() {
 
 #[test]
 fn dc_rejects_invalid_jfet_temperature_parameters() {
+    let mut transistor = Jfet::new("Jbad", "d", "g", "0");
+    transistor.doping_tail_parameter = f64::NAN;
+    let mut circuit = Circuit::new();
+    circuit.add(Element::Jfet(transistor));
+    let error = dc_op(&circuit).unwrap_err();
+    assert!(error
+        .to_string()
+        .contains("doping-tail parameter must be finite"));
+
     let mut transistor = Jfet::new("Jbad", "d", "g", "0");
     transistor.gate_saturation_current_temperature_exponent = f64::NAN;
     let mut circuit = Circuit::new();
