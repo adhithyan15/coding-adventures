@@ -1062,6 +1062,78 @@ fn noise_ac_includes_mosfet_channel_thermal_noise() {
 }
 
 #[test]
+fn noise_ac_adds_inverse_frequency_mosfet_flicker_noise() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 3.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            vt0: 1.0,
+            kp: 1.0e-3,
+            flicker_noise_coefficient: 2.0e-18,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let result = noise_ac(&circuit, "out", "Vgate", &[100.0, 1_000.0], 300.0).unwrap();
+    let flicker_psds = result
+        .points
+        .iter()
+        .map(|point| {
+            point
+                .entries
+                .iter()
+                .find(|entry| entry.element_name == "M1" && entry.noise_type == NoiseType::Flicker)
+                .expect("missing MOSFET flicker-noise entry")
+                .source_psd
+        })
+        .collect::<Vec<_>>();
+
+    assert!(flicker_psds[0] > 0.0);
+    assert_close(flicker_psds[0], 10.0 * flicker_psds[1], 1.0e-30);
+    assert!(result.points[0]
+        .entries
+        .iter()
+        .any(|entry| { entry.element_name == "M1" && entry.noise_type == NoiseType::Thermal }));
+}
+
+#[test]
+fn noise_ac_rejects_invalid_mosfet_flicker_noise_coefficient() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 3.0,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "0",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            flicker_noise_coefficient: -1.0,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let error = noise_ac(&circuit, "0", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(error.to_string().contains("MOSFET KF must be non-negative"));
+}
+
+#[test]
 fn device_model_noise_audit_fixtures_run_reference_noise_points() {
     let fixtures = device_model_noise_audit_fixtures().unwrap();
     assert_eq!(

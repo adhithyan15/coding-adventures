@@ -517,6 +517,41 @@ describe("noiseAc", () => {
     expect(entry?.outputPsd).toBeCloseTo(expectedSourcePsd * 1_000.0 ** 2, 30);
   });
 
+  it("adds inverse-frequency MOSFET flicker noise from KF", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdd", "vdd", "0", 5.0));
+    circuit.add(voltageSource("Vgate", "gate", "0", 3.0));
+    circuit.add(resistor("Rload", "vdd", "out", 1_000.0));
+    circuit.add(mosfet("M1", "out", "gate", "0", "0", "NMOS", {
+      VT0: 1.0,
+      KP: 1.0e-3,
+      KF: 2.0e-18,
+    }));
+
+    const result = noiseAc(circuit, "out", "Vgate", [100.0, 1_000.0], 300.0);
+    const flickerPsds = result.points.map((point) =>
+      point.entries.find(
+        (entry) => entry.elementName === "M1" && entry.noiseType === "flicker",
+      )!.sourcePsd
+    );
+
+    expect(flickerPsds[0]).toBeGreaterThan(0.0);
+    expect(flickerPsds[0]! / flickerPsds[1]!).toBeCloseTo(10.0, 12);
+    expect(result.points[0]!.entries).toContainEqual(
+      expect.objectContaining({ elementName: "M1", noiseType: "thermal" }),
+    );
+  });
+
+  it("rejects an invalid MOSFET flicker-noise coefficient", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vgate", "gate", "0", 3.0));
+    circuit.add(mosfet("M1", "0", "gate", "0", "0", "NMOS", { KF: -1.0 }));
+
+    expect(() => noiseAc(circuit, "0", "Vgate", [1_000.0])).toThrow(
+      /MOSFET KF must be non-negative/,
+    );
+  });
+
   it("runs device model noise audit fixtures as reference noise points", () => {
     const fixtures = deviceModelNoiseAuditFixtures();
     expect(fixtures.map((fixture) => fixture.name)).toStrictEqual([

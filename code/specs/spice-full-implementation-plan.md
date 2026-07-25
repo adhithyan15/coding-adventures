@@ -33,16 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language JFET channel-noise equation selection.
+1. Cross-language Level-1 MOS flicker-noise coefficient.
    - Status: current PR completion candidate.
-   - Add Berkeley JFET `NLEV` and `GDSNOI` model-card support in Rust, Python,
-     and TypeScript.
-   - Preserve the legacy `2/3 * gm` channel thermal-noise path for `NLEV < 3`
-     while implementing the Berkeley linear-region equation for `NLEV >= 3`,
-     scaled by `GDSNOI`.
-   - Preserve both parameters through hierarchy and cloning, validate their
-     domains, and extend the supported-parameter coverage gate from 173 to 177
-     canonical rows.
+   - Add Berkeley Level-1 MOS `KF` model-card support in Rust, Python, and
+     TypeScript, defaulting to zero.
+   - Add `KF * abs(Id) / frequency` flicker noise alongside the existing
+     channel thermal-noise source.
+   - Preserve the coefficient through hierarchy and cloning, validate its
+     finite non-negative domain, and extend the supported-parameter coverage
+     gate from 177 to 179 canonical rows.
 
 ## Completed Slices
 
@@ -3374,8 +3373,18 @@ the Rust, Python, and TypeScript surfaces together.
      Parker-Skellern doping-tail shaping to linear and saturation channel
      current while preserving Shichman-Hodges behavior at the default of 1.
    - Hierarchy and cloning preserve the parameter, finite and denominator
-     validation is shared across analyses, and the supported-parameter release
-     gate now covers 173 canonical rows.
+   validation is shared across analyses, and the supported-parameter release
+   gate now covers 173 canonical rows.
+
+263. Cross-language JFET channel-noise equation selection.
+   - Status: completed in PR 8984.
+   - Rust, Python, and TypeScript JFET model cards now accept `NLEV` and
+     `GDSNOI`, preserving the legacy `2/3 * gm` channel thermal-noise path
+     below level 3 and selecting the Berkeley linear-region equation at level
+     3 and above.
+   - Hierarchy and cloning preserve both parameters, shared validation enforces
+     their domains, and the supported-parameter release gate now covers 177
+     canonical rows.
 
 ## Backlog
 

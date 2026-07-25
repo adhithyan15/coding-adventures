@@ -311,8 +311,8 @@ _MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES = {
     "PNP": (41, 58, 13, 4),
     "NJF": (22, 30, 7, 3),
     "PJF": (22, 30, 7, 3),
-    "NMOS": (18, 25, 6, 3),
-    "PMOS": (18, 25, 6, 3),
+    "NMOS": (19, 26, 6, 3),
+    "PMOS": (19, 26, 6, 3),
 }
 
 
@@ -477,6 +477,7 @@ _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
     "CJD": "CBD",
     "PB": "PB",
     "MJ": "MJ",
+    "KF": "KF",
 }
 
 
@@ -1074,6 +1075,7 @@ def mosfet_from_model_card(
         CBD=p.get("CBD", defaults.CBD),
         PB=p.get("PB", defaults.PB),
         MJ=p.get("MJ", defaults.MJ),
+        KF=p.get("KF", defaults.KF),
     )
     mos_type = MosfetType.NMOS if model.kind == "NMOS" else MosfetType.PMOS
     return Mosfet(name, drain, gate, source, body, MOSFET(mos_type, Level1Model(params)))
