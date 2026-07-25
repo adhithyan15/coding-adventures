@@ -59,6 +59,49 @@ describe("noiseAc", () => {
     );
   });
 
+  it("selects and scales JFET channel noise with NLEV and GDSNOI", () => {
+    function sourcePsd(noiseEquationLevel: number, channelNoiseCoefficient: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vdrain", "out", "0", 1.0));
+      circuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+      circuit.add({
+        ...jfet("J1", "out", "gate", "0"),
+        beta: 1.0e-3,
+        thresholdVoltage: -2.0,
+        noiseEquationLevel,
+        channelNoiseCoefficient,
+      });
+      return noiseAc(circuit, "out", "Vgate", [1_000.0], 300.0).points[0]!.entries
+        .find((entry) =>
+          entry.elementName === "J1" && entry.noiseType === "thermal"
+        )!.sourcePsd;
+    }
+
+    const expectedConductance = (2.0 / 3.0) * 1.0e-3 * 2.0 * 1.75 / 1.5;
+    const expectedPsd = 4.0 * BOLTZMANN * 300.0 * expectedConductance;
+    expect(sourcePsd(3.0, 1.0) / expectedPsd).toBeCloseTo(1.0, 12);
+    expect(sourcePsd(2.0, 4.0) / sourcePsd(1.0, 1.0)).toBeCloseTo(1.0, 12);
+    expect(sourcePsd(3.0, 2.0) / sourcePsd(3.0, 1.0)).toBeCloseTo(2.0, 12);
+  });
+
+  it("rejects invalid JFET channel-noise parameters", () => {
+    for (const [overrides, message] of [
+      [
+        { noiseEquationLevel: 2.5 },
+        /noise equation level must be a finite integer/,
+      ],
+      [
+        { channelNoiseCoefficient: -1.0 },
+        /channel noise coefficient must be finite and non-negative/,
+      ],
+    ] as const) {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+      circuit.add({ ...jfet("J1", "out", "gate", "0"), ...overrides });
+      expect(() => noiseAc(circuit, "out", "Vgate", [1_000.0])).toThrow(message);
+    }
+  });
+
   it("rejects an invalid JFET junction potential", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vgate", "gate", "0", 0.0));

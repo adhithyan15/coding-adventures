@@ -1703,6 +1703,8 @@ export interface Jfet {
   readonly gateSaturationCurrentTemperatureExponent: number;
   readonly bandgapVoltage: number;
   readonly dopingTailParameter: number;
+  readonly noiseEquationLevel: number;
+  readonly channelNoiseCoefficient: number;
   readonly drainResistance: number;
   readonly sourceResistance: number;
   readonly thresholdVoltageTemperatureCoefficient: number;
@@ -2039,8 +2041,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   D: [15, 21, 5, 3],
   NPN: [41, 58, 13, 4],
   PNP: [41, 58, 13, 4],
-  NJF: [20, 28, 7, 3],
-  PJF: [20, 28, 7, 3],
+  NJF: [22, 30, 7, 3],
+  PJF: [22, 30, 7, 3],
   NMOS: [18, 25, 6, 3],
   PMOS: [18, 25, 6, 3],
 };
@@ -3626,7 +3628,7 @@ function cloneSubcktElement(
     case "diode":
       return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime, element.junctionPotential, element.gradingCoefficient, element.forwardBiasDepletionCoefficient, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.seriesResistance, element.flickerNoiseCoefficient, element.flickerNoiseExponent);
     case "jfet":
-      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.junctionPotential, element.forwardBiasDepletionCoefficient, element.gateSaturationCurrent, element.gateSaturationCurrentTemperatureExponent, element.bandgapVoltage, element.dopingTailParameter, element.drainResistance, element.sourceResistance, element.thresholdVoltageTemperatureCoefficient, element.alternativeThresholdVoltageTemperatureCoefficient, element.nominalTemperatureKelvin, element.mobilityTemperatureExponent, element.mobilityTemperatureCoefficient);
+      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.junctionPotential, element.forwardBiasDepletionCoefficient, element.gateSaturationCurrent, element.gateSaturationCurrentTemperatureExponent, element.bandgapVoltage, element.dopingTailParameter, element.noiseEquationLevel, element.channelNoiseCoefficient, element.drainResistance, element.sourceResistance, element.thresholdVoltageTemperatureCoefficient, element.alternativeThresholdVoltageTemperatureCoefficient, element.nominalTemperatureKelvin, element.mobilityTemperatureExponent, element.mobilityTemperatureCoefficient);
     case "bjt":
       return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta, element.reverseBetaRolloffCurrent, element.nominalTemperatureKelvin, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.forwardExcessPhaseDegrees, element.forwardTransitTimeBiasCoefficient, element.forwardTransitTimeCurrent, element.forwardTransitTimeVoltage, element.emitterResistance, element.collectorResistance, element.baseResistance, element.minimumBaseResistance, element.baseResistanceHalfCurrent, element.baseCollectorCapacitanceFraction);
     case "mosfet":
@@ -7766,6 +7768,25 @@ export function jfetAtTemperature(
     throw invalidElement(element.name, "doping-tail parameter must be finite");
   }
   if (
+    !Number.isFinite(element.noiseEquationLevel) ||
+    element.noiseEquationLevel < 1.0 ||
+    !Number.isInteger(element.noiseEquationLevel)
+  ) {
+    throw invalidElement(
+      element.name,
+      "noise equation level must be a finite integer greater than or equal to 1",
+    );
+  }
+  if (
+    !Number.isFinite(element.channelNoiseCoefficient) ||
+    element.channelNoiseCoefficient < 0.0
+  ) {
+    throw invalidElement(
+      element.name,
+      "channel noise coefficient must be finite and non-negative",
+    );
+  }
+  if (
     element.mobilityTemperatureCoefficient !== undefined &&
     !Number.isFinite(element.mobilityTemperatureCoefficient)
   ) {
@@ -7859,6 +7880,8 @@ export function jfet(
   gateSaturationCurrentTemperatureExponent = 3.0,
   bandgapVoltage = 1.11,
   dopingTailParameter = 1.0,
+  noiseEquationLevel = 1.0,
+  channelNoiseCoefficient = 1.0,
   drainResistance = 0.0,
   sourceResistance = 0.0,
   thresholdVoltageTemperatureCoefficient = 0.0,
@@ -7887,6 +7910,8 @@ export function jfet(
     gateSaturationCurrentTemperatureExponent,
     bandgapVoltage,
     dopingTailParameter,
+    noiseEquationLevel,
+    channelNoiseCoefficient,
     drainResistance,
     sourceResistance,
     thresholdVoltageTemperatureCoefficient,
@@ -8159,6 +8184,8 @@ const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   XTI: "XTI",
   EG: "EG",
   B: "B",
+  NLEV: "NLEV",
+  GDSNOI: "GDSNOI",
   RD: "RD",
   RS: "RS",
   TNOM: "TNOM",
@@ -8718,6 +8745,8 @@ export function jfetFromModelCard(
     p.XTI ?? 3.0,
     p.EG ?? 1.11,
     p.B ?? 1.0,
+    p.NLEV ?? 1.0,
+    p.GDSNOI ?? 1.0,
     p.RD ?? 0.0,
     p.RS ?? 0.0,
     p.TCV ?? 0.0,
@@ -18626,6 +18655,35 @@ function findInputSource(circuit: Circuit, inputSource: string): InputSource {
   throw invalidElement(inputSource, "input source was not found");
 }
 
+function jfetChannelNoiseConductance(
+  element: Jfet,
+  vgs: number,
+  vds: number,
+  gm: number,
+): number {
+  if (element.noiseEquationLevel < 3.0) {
+    return MOSFET_CHANNEL_NOISE_GAMMA * Math.abs(gm);
+  }
+  const normalizedVgs = element.polarity === "NJF" ? vgs : -vgs;
+  const normalizedVds = element.polarity === "NJF" ? vds : -vds;
+  const thresholdVoltage =
+    element.polarity === "NJF" ? element.thresholdVoltage : -element.thresholdVoltage;
+  const overdrive = normalizedVgs - thresholdVoltage;
+  if (overdrive <= 0.0 || normalizedVds < 0.0) {
+    return 0.0;
+  }
+  const alpha =
+    overdrive >= normalizedVds ? 1.0 - normalizedVds / overdrive : 0.0;
+  return (
+    MOSFET_CHANNEL_NOISE_GAMMA *
+    element.beta *
+    overdrive *
+    (1.0 + alpha + alpha * alpha) /
+    (1.0 + alpha) *
+    element.channelNoiseCoefficient
+  );
+}
+
 function collectNoiseSources(
   circuit: Circuit,
   nodeIndices: ReadonlyMap<string, number>,
@@ -18802,13 +18860,19 @@ function collectNoiseSources(
         drainVoltage - sourceVoltage,
       );
       const gm = Math.max(0.0, result.gm);
-      if (gm > 0.0) {
+      const noiseConductance = jfetChannelNoiseConductance(
+        element,
+        gateVoltage - sourceVoltage,
+        drainVoltage - sourceVoltage,
+        gm,
+      );
+      if (noiseConductance > 0.0) {
         sources.push({
           elementName: element.name,
           noiseType: "thermal",
           positive: drain,
           negative: source,
-          sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin * MOSFET_CHANNEL_NOISE_GAMMA * gm,
+          sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin * noiseConductance,
           frequencyExponent: 0.0,
         });
       }
@@ -19758,6 +19822,25 @@ function validateJfet(element: Jfet): void {
   }
   if (!Number.isFinite(element.dopingTailParameter)) {
     throw invalidElement(element.name, "doping-tail parameter must be finite");
+  }
+  if (
+    !Number.isFinite(element.noiseEquationLevel) ||
+    element.noiseEquationLevel < 1.0 ||
+    !Number.isInteger(element.noiseEquationLevel)
+  ) {
+    throw invalidElement(
+      element.name,
+      "noise equation level must be a finite integer greater than or equal to 1",
+    );
+  }
+  if (
+    !Number.isFinite(element.channelNoiseCoefficient) ||
+    element.channelNoiseCoefficient < 0.0
+  ) {
+    throw invalidElement(
+      element.name,
+      "channel noise coefficient must be finite and non-negative",
+    );
   }
   const effectiveThreshold =
     element.polarity === "NJF" ? element.thresholdVoltage : -element.thresholdVoltage;

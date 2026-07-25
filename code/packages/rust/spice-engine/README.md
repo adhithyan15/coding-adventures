@@ -125,6 +125,9 @@ JFET model cards use `TCV` for threshold-voltage scaling and `BEX` for
 and `EG` scale gate saturation current with the standard bandgap law. JFET
 `B` applies Parker-Skellern doping-tail shaping to channel current and defaults
 to `1`, which preserves the Shichman-Hodges equations.
+JFET `NLEV` values below `3` preserve the legacy `2/3 * gm` channel thermal
+noise model. `NLEV >= 3` selects the Berkeley linear-region equation, with
+`GDSNOI` (default `1`) scaling its channel-noise conductance.
 All temperature coefficients honor model-card `TNOM` / `T_NOM`.
 
 `normalize_model_card`, `diode_from_model_card`, `bjt_from_model_card`,
