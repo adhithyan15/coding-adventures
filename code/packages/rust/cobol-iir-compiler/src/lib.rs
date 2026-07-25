@@ -1712,11 +1712,11 @@ impl<'a> Compiler<'a> {
     /// uses (`store_scaled`, which mirrors the oracle's `store_result`/
     /// `move_into_numeric`), so a compiled program matches `cobol-runtime`'s
     /// `exec_inspect` byte-for-byte. Every later-rung form — a `CHARACTERS` tally,
-    /// `BEFORE`/`AFTER` phrases, several counters or `FOR` phrases, a combined
-    /// `TALLYING … REPLACING LEADING`, and a multi-character/figurative/wider
-    /// delimiter or a numeric source or a non-integer/non-numeric counter — is a
-    /// clean `Unsupported`, accepted by the grammar and rejected here. (A combined
-    /// `TALLYING … FOR LEADING … REPLACING ALL` is now supported.)
+    /// `BEFORE`/`AFTER` phrases, several counters or `FOR` phrases, and a
+    /// multi-character/figurative/wider delimiter or a numeric source or a
+    /// non-integer/non-numeric counter — is a clean `Unsupported`, accepted by the
+    /// grammar and rejected here. (Both combined halves may independently be
+    /// `LEADING`: `TALLYING … FOR LEADING … REPLACING LEADING` is now supported.)
     fn emit_inspect(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
         // This rung supports a LONE `TALLYING … FOR ALL`, a LONE `REPLACING ALL …
         // BY …`, or the COMBINED `TALLYING … REPLACING` in one INSPECT. The
@@ -1774,9 +1774,13 @@ impl<'a> Compiler<'a> {
                 // (`emit_inspect_tallying` already emits the `leading ? end : nobump`
                 // branch that stops at the first non-match).
                 self.emit_inspect_tallying(verb, &s_reg, true)?;
-                // The combined REPLACING half is ALL only: `allow_leading = false`
-                // makes a combined `TALLYING … REPLACING LEADING` a clean later rung.
-                self.emit_inspect_replacing(verb, &s_reg, source_width, false)
+                // The combined REPLACING half now also supports BOTH `ALL` and
+                // `LEADING`: `allow_leading = true` lets a combined
+                // `TALLYING … REPLACING LEADING` rewrite only the leading run
+                // (`emit_inspect_replacing` already threads the `active`-guarded run
+                // unroll that stops at the first non-match). The two halves' leading
+                // flags are independent, so BOTH may be LEADING at once.
+                self.emit_inspect_replacing(verb, &s_reg, source_width, true)
             }
             // A lone REPLACING: both `ALL` and `LEADING` are supported here.
             (false, true) => self.emit_inspect_replacing(verb, &s_reg, source_width, true),
@@ -1918,9 +1922,10 @@ impl<'a> Compiler<'a> {
     /// The rebuilt string is copied into the source register — the same W-wide
     /// alphanumeric image the oracle's `move_into` produces, byte-for-byte.
     ///
-    /// `allow_leading` is `false` on the combined tally-then-replace path (a
-    /// combined `REPLACING LEADING` is a later rung); a lone REPLACING passes
-    /// `true`.
+    /// `allow_leading` is `true` on both the lone REPLACING path and the combined
+    /// tally-then-replace path — a combined `TALLYING … REPLACING LEADING` now
+    /// lowers exactly like a lone `REPLACING LEADING`, independent of the TALLYING
+    /// half's own leading flag.
     fn emit_inspect_replacing(
         &mut self,
         verb: &GrammarASTNode,
@@ -4365,9 +4370,10 @@ fn inspect_tally_all(
 ///   * a `CHARACTERS` or `FIRST` replacement (only `ALL`/`LEADING` this rung);
 ///   * a `BEFORE`/`AFTER` region restricting the replacement.
 ///
-/// (A combined `TALLYING … REPLACING LEADING`, and a non-alphanumeric source, are
-/// rejected by the caller; a multi-character/wider/figurative search or
-/// replacement is rejected by `single_delim_code`/`single_delim_str`.)
+/// Both `ALL` and `LEADING` are accepted here, whether the phrase is lone or
+/// combined with `TALLYING`. (A non-alphanumeric source is rejected by the
+/// caller; a multi-character/wider/figurative search or replacement is rejected
+/// by `single_delim_code`/`single_delim_str`.)
 fn inspect_replacing_all(
     verb: &GrammarASTNode,
 ) -> Result<(&GrammarASTNode, &GrammarASTNode, bool), CompileError> {
@@ -5924,21 +5930,25 @@ mod tests {
     }
 
     #[test]
-    fn inspect_combined_tally_replacing_leading_is_a_later_rung() {
-        // A combined `TALLYING … REPLACING LEADING` keeps the REPLACING half at ALL
-        // only — the LEADING replace inside the combined form stays deferred.
-        let err = compile_source(
+    fn inspect_combined_tally_replacing_leading_now_compiles() {
+        // A combined `TALLYING … REPLACING LEADING` is now supported — the LEADING
+        // replace half threads the same `active` run flag inside the combined form.
+        // The module must compile, validate, and carry the leading-run `and`.
+        let module = compile_source(
             &wrap(
                 &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
                 &[
                     "INSPECT S TALLYING C FOR ALL \"B\" REPLACING LEADING \"A\" BY \"X\".",
+                    "DISPLAY S.",
                     "STOP RUN.",
                 ],
             ),
             "insp_comb_repl_lead",
         )
-        .unwrap_err();
-        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+        .expect("combined TALLYING … REPLACING LEADING should compile");
+        assert!(module.validate().is_empty(), "validate: {:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"and".to_string()), "leading run uses an `and` active flag: {os:?}");
     }
 
     #[test]

@@ -8,6 +8,38 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.39.0: combined INSPECT TALLYING with REPLACING LEADING
+
+The COMBINED `INSPECT source TALLYING counter FOR ALL|LEADING delim REPLACING LEADING
+x BY y` now compiles instead of being rejected as a later rung. This is the exact
+MIRROR of v0.38.0: where that rung let the TALLYING half be `FOR LEADING`, this rung
+lets the REPLACING half be `LEADING` (rewrite only the **consecutive run** of `x` at
+the START of the source, stopping at the first non-match). The two halves' leading
+flags are now fully independent — either, both, or neither may be LEADING.
+
+- The change is a single flag: `emit_inspect`'s `(has_tally, has_repl) == (true,
+  true)` arm now calls `emit_inspect_replacing(verb, &s_reg, source_width, /*
+  allow_leading */ true)` for the replace half (matching the tally half, which
+  already passed `true`). `emit_inspect_replacing` already threaded the `active`-
+  guarded run unroll from the lone `REPLACING LEADING` rung — the per-position
+  `use_repl = and(active, eq)` with `active` sticking at 0 after the first mismatch —
+  so no codegen change was needed. Tally still emits FIRST (over the original `s_reg`
+  bytes), then the leading replace rebuild, matching the oracle's tally-then-replace
+  order; a shared `delim == x` is counted before it is substituted.
+- This composes the two existing lone-form lowerings, so the JIT output is
+  byte-identical to `coding-adventures-cobol-runtime` 0.43.0. Every other combined
+  gate is unchanged: a second `FOR`/replace item, `CHARACTERS`/`BEFORE`/`AFTER`, a
+  multi-character/figurative/wider operand, a numeric source, and a non-integer/
+  signed counter remain clean `Unsupported`.
+- The combined-deferred-half unit test flips from a reject to a "now compiles"
+  assertion (`inspect_combined_tally_replacing_leading_now_compiles`). New e2e parity
+  tests in `jit_e2e.rs`: `inspect_combined_replacing_leading_all_tally` (`"00X00"`,
+  `FOR ALL` tally + leading replace, shared `delim == search` → `004` / `"**X00"`),
+  `inspect_combined_both_halves_leading` (`"00X00"` both halves leading → `002` /
+  `"**X00"`), `inspect_combined_replacing_leading_no_run` (`"X00X"` → `002` /
+  unchanged), and `inspect_combined_characters_is_still_a_later_rung` (a still-
+  deferred combined `CHARACTERS` sub-form remains rejected on both engines).
+
 ### Added — v0.38.0: combined INSPECT TALLYING FOR LEADING with REPLACING ALL
 
 The COMBINED `INSPECT source TALLYING counter FOR LEADING delim REPLACING ALL x BY y`

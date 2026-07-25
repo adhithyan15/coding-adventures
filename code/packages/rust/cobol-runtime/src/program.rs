@@ -156,10 +156,10 @@ pub enum Stmt {
     /// CONSECUTIVE occurrences at the START of the source, stopping at the first
     /// character that is not `delim` (`leading == true` selects this). INSPECT adds
     /// to the counter; it does NOT clear it first. `CHARACTERS` tallies,
-    /// `BEFORE`/`AFTER` phrases, several counters or `FOR` phrases, any `REPLACING`
-    /// (including a combined `TALLYING … FOR LEADING … REPLACING`), and a multi-
+    /// `BEFORE`/`AFTER` phrases, several counters or `FOR` phrases, and a multi-
     /// character/figurative/wider delimiter or a numeric/group source or a
-    /// non-integer/non-numeric counter are later rungs.
+    /// non-integer/non-numeric counter are later rungs. (A `REPLACING` phrase in
+    /// the SAME statement is the combined form below, not this lone `Inspect`.)
     Inspect { source: String, counter: String, delim: Operand, leading: bool },
     /// `INSPECT source REPLACING ALL search BY replace` (or `REPLACING LEADING
     /// search BY replace`) — substitute the SINGLE character `search` in the
@@ -172,35 +172,43 @@ pub enum Stmt {
     /// — positions after that first gap are left unchanged even if they equal
     /// `search`. Each of `search` and `replace` is a 1-char literal or a `PIC
     /// X(1)` item. `REPLACING CHARACTERS`/`FIRST`, `BEFORE`/`AFTER` regions,
-    /// several replace items, a `LEADING` replacement inside the combined
-    /// `TALLYING … REPLACING` form, and a multi-character/figurative/wider search
-    /// or replacement or a numeric/group source are later rungs.
+    /// several replace items, and a multi-character/figurative/wider search or
+    /// replacement or a numeric/group source are later rungs. (A `LEADING`
+    /// replacement inside the combined `TALLYING … REPLACING` form is now
+    /// supported — see the combined statement below.)
     InspectReplacing { source: String, search: Operand, replace: Operand, leading: bool },
-    /// `INSPECT source TALLYING counter FOR {ALL|LEADING} delim REPLACING ALL
-    /// search BY replace` — one INSPECT carrying BOTH phrases. Per ISO this
-    /// executes "as though an INSPECT TALLYING were specified, followed by an
+    /// `INSPECT source TALLYING counter FOR {ALL|LEADING} delim REPLACING
+    /// {ALL|LEADING} search BY replace` — one INSPECT carrying BOTH phrases. Per
+    /// ISO this executes "as though an INSPECT TALLYING were specified, followed by an
     /// INSPECT REPLACING": FIRST count occurrences of `delim` in the ORIGINAL
     /// source and **ADD** them to `counter`, THEN replace every `search` with
     /// `replace` in the source. The tally-first ordering matters when
     /// `delim == search`: the count must see the pre-replacement bytes. The
     /// TALLYING half may be `FOR ALL` (count every occurrence) or `FOR LEADING`
     /// (count only the consecutive run of `delim` at the start of the source),
-    /// selected by `tally_leading`; the REPLACING half stays `ALL`-only. Each of
+    /// selected by `tally_leading`. The REPLACING half is likewise selected by
+    /// `replace_leading`: `ALL` (substitute every `search`) or `LEADING`
+    /// (substitute only the consecutive run of `search` at the start of the
+    /// source, stopping at the first byte that is not `search`). The two flags
+    /// are independent — either, both, or neither half may be LEADING. Each of
     /// `delim`/`search`/`replace` is a single character; the remaining single-form
-    /// restrictions as the lone phrases apply (a combined REPLACING LEADING,
-    /// CHARACTERS/FIRST, BEFORE/AFTER, multiple counters/FOR/replace items,
-    /// multi-char/figurative/wider operands, and a numeric/group source or
-    /// non-integer counter are later rungs).
+    /// restrictions as the lone phrases apply (CHARACTERS/FIRST, BEFORE/AFTER,
+    /// multiple counters/FOR/replace items, multi-char/figurative/wider operands,
+    /// and a numeric/group source or non-integer counter are later rungs).
     InspectTallyReplace {
         source: String,
         counter: String,
         delim: Operand,
         /// `true` for `FOR LEADING` (count only the leading run of `delim`),
         /// `false` for `FOR ALL` (count every occurrence). Applies to the
-        /// TALLYING half only — the REPLACING half is always `ALL`.
+        /// TALLYING half only.
         tally_leading: bool,
         search: Operand,
         replace: Operand,
+        /// `true` for `REPLACING LEADING` (substitute only the leading run of
+        /// `search`), `false` for `REPLACING ALL` (substitute every `search`).
+        /// Applies to the REPLACING half only.
+        replace_leading: bool,
     },
     /// `INSPECT source CONVERTING from TO to` — translate each character of the
     /// alphanumeric `source` through a per-character **translation table** built
@@ -895,13 +903,11 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     // (LEADING counts only the consecutive run of `delim` at the
                     // start of the source). It rides along into the statement.
                     let (search, replace, repl_leading) = read_inspect_replacing_all(verb)?;
-                    // A combined `TALLYING … REPLACING LEADING` is still a later rung:
-                    // the combined form's REPLACING half stays FOR ALL only.
-                    if repl_leading {
-                        return Err(RuntimeError::Unsupported(
-                            "INSPECT TALLYING … REPLACING LEADING is a later rung".into(),
-                        ));
-                    }
+                    // The combined form's REPLACING half now supports BOTH `ALL`
+                    // and `LEADING`: `repl_leading` selects the substitution
+                    // semantics (LEADING rewrites only the consecutive run of
+                    // `search` at the start of the source). It rides along into
+                    // the statement, independent of the TALLYING half's `leading`.
                     Ok(Stmt::InspectTallyReplace {
                         source,
                         counter,
@@ -909,6 +915,7 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                         tally_leading: leading,
                         search,
                         replace,
+                        replace_leading: repl_leading,
                     })
                 }
                 (false, true) => {
@@ -933,8 +940,9 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
 /// leading)` where `leading` is `true` for `FOR LEADING` and `false` for `FOR
 /// ALL`. Rejects every later-rung form the grammar also accepts: several
 /// counters, several `FOR` phrases, a `CHARACTERS` tally, and a `BEFORE`/`AFTER
-/// … INITIAL` region. (`REPLACING`, a combined `FOR LEADING … REPLACING`, and a
-/// non-alphanumeric source/counter are handled by the caller and exec.)
+/// … INITIAL` region. (`REPLACING` (lone or combined, `ALL` or `LEADING` on
+/// either half) and a non-alphanumeric source/counter are handled by the caller
+/// and exec.)
 fn read_inspect_tally_all(
     verb: &GrammarASTNode,
 ) -> Result<(String, Operand, bool), RuntimeError> {
@@ -987,10 +995,10 @@ fn read_inspect_tally_all(
 /// (replace only the leading run) and `false` for `REPLACING ALL` (replace every
 /// occurrence). Rejects every later-rung form the grammar also accepts: several
 /// replace items, a `CHARACTERS` or `FIRST` replacement, and a `BEFORE`/`AFTER …
-/// INITIAL` region. (A combined `TALLYING … REPLACING LEADING`, and a non-
-/// alphanumeric source, are rejected by the caller; a multi-character/wider/
-/// figurative search or replacement is rejected by `single_delim_char` at exec
-/// time.)
+/// INITIAL` region. Both `ALL` and `LEADING` are accepted here, whether the
+/// phrase is lone or combined with `TALLYING`. (A non-alphanumeric source is
+/// rejected by the caller; a multi-character/wider/figurative search or
+/// replacement is rejected by `single_delim_char` at exec time.)
 fn read_inspect_replacing_all(
     verb: &GrammarASTNode,
 ) -> Result<(Operand, Operand, bool), RuntimeError> {
