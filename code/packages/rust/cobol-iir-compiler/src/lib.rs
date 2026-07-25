@@ -1772,8 +1772,10 @@ impl<'a> Compiler<'a> {
                 // `FOR LEADING`: `allow_leading = true` lets a combined
                 // `TALLYING … FOR LEADING … REPLACING` count only the leading run
                 // (`emit_inspect_tallying` already emits the `leading ? end : nobump`
-                // branch that stops at the first non-match).
-                self.emit_inspect_tallying(verb, &s_reg, true)?;
+                // branch that stops at the first non-match). A `{BEFORE|AFTER}`
+                // region on the combined TALLYING half is a later rung, so
+                // `allow_region = false`.
+                self.emit_inspect_tallying(verb, &s_reg, true, false)?;
                 // The combined REPLACING half now also supports BOTH `ALL` and
                 // `LEADING`: `allow_leading = true` lets a combined
                 // `TALLYING … REPLACING LEADING` rewrite only the leading run
@@ -1785,8 +1787,9 @@ impl<'a> Compiler<'a> {
             // A lone REPLACING: both `ALL` and `LEADING` are supported here.
             (false, true) => self.emit_inspect_replacing(verb, &s_reg, source_width, true),
             // A lone TALLYING (or neither, which `inspect_tally_all` rejects). Both
-            // `FOR ALL` and `FOR LEADING` are supported here.
-            _ => self.emit_inspect_tallying(verb, &s_reg, true),
+            // `FOR ALL` and `FOR LEADING` are supported here, and `FOR ALL` may carry
+            // a `{BEFORE|AFTER}` region (`allow_region = true`).
+            _ => self.emit_inspect_tallying(verb, &s_reg, true, true),
         }
     }
 
@@ -1808,18 +1811,35 @@ impl<'a> Compiler<'a> {
     /// combined `TALLYING … FOR LEADING … REPLACING` is supported); the guard is
     /// retained so any future caller that must forbid `FOR LEADING` can pass
     /// `false` and get the clean later-rung diagnostic.
+    ///
+    /// `allow_region` gates whether a `{BEFORE|AFTER} x` region is accepted. The
+    /// lone TALLYING passes `true` (a `FOR ALL … BEFORE/AFTER` region is supported);
+    /// the combined path passes `false` (a region on the combined form is a later
+    /// rung, matching the oracle's read-time rejection). When a region IS present,
+    /// we first scan the source for the FIRST occurrence of the single region
+    /// delimiter, derive the window `[start, end)` with the ISO not-found asymmetry
+    /// (BEFORE→whole source, AFTER→empty), and bound the count loop to that window.
+    /// With NO region, nothing extra is emitted — the lowering is byte-identical to
+    /// the pre-region code.
     fn emit_inspect_tallying(
         &mut self,
         verb: &GrammarASTNode,
         s_reg: &str,
         allow_leading: bool,
+        allow_region: bool,
     ) -> Result<(), CompileError> {
-        // Extract the single `FOR ALL`/`FOR LEADING delim` phrase (rejecting the
-        // later rungs).
-        let (counter_name, delim_node, leading) = inspect_tally_all(verb)?;
+        // Extract the single `FOR ALL`/`FOR LEADING delim [{BEFORE|AFTER} x]` phrase
+        // (rejecting the later rungs).
+        let (counter_name, delim_node, leading, region) = inspect_tally_all(verb)?;
         if leading && !allow_leading {
             return Err(CompileError::Unsupported(
                 "INSPECT TALLYING … FOR LEADING combined with REPLACING is a later rung".into(),
+            ));
+        }
+        if region.is_some() && !allow_region {
+            return Err(CompileError::Unsupported(
+                "INSPECT combined TALLYING … REPLACING with a BEFORE/AFTER region is a later rung"
+                    .into(),
             ));
         }
 
@@ -1849,6 +1869,12 @@ impl<'a> Compiler<'a> {
         let j = self.fresh("_inspj");
         self.emit("const", Some(&j), vec![Operand::Int(0)], "i64");
 
+        // The optional `{BEFORE|AFTER} x` window `[start, end)`. When present we scan
+        // the source ONCE for the first occurrence of the single region delimiter and
+        // derive the bounds; when absent nothing here is emitted (byte-identical to
+        // the pre-region lowering) and the count runs over the whole source.
+        let region_window = self.emit_inspect_region_window(region, s_reg, &len)?;
+
         let top = self.fresh("insp_top");
         let end = self.fresh("insp_end");
         self.emit("label", None, vec![Operand::Var(top.clone())], "void");
@@ -1866,6 +1892,19 @@ impl<'a> Compiler<'a> {
         let nobump = self.fresh("insp_nobump");
         let mismatch_target = if leading { end.clone() } else { nobump.clone() };
         self.emit("jmp_if_false", None, vec![Operand::Var(eq), Operand::Var(mismatch_target)], "void");
+        // Region guard (only when a `{BEFORE|AFTER}` window is present): a matching
+        // character OUTSIDE `[start, end)` is skipped (jump to `nobump`, keep
+        // scanning) — `j < start` or `j >= end` means "not in the region". `FOR
+        // LEADING` never reaches here with a region (rejected at read time), so this
+        // only ever pairs with `FOR ALL`.
+        if let Some((start, end_bound)) = &region_window {
+            let lt = self.fresh("_insplt");
+            self.emit("cmp_lt", Some(&lt), vec![Operand::Var(j.clone()), Operand::Var(start.clone())], "i64");
+            self.emit("jmp_if_true", None, vec![Operand::Var(lt), Operand::Var(nobump.clone())], "void");
+            let ge2 = self.fresh("_inspge2");
+            self.emit("cmp_ge", Some(&ge2), vec![Operand::Var(j.clone()), Operand::Var(end_bound.clone())], "i64");
+            self.emit("jmp_if_true", None, vec![Operand::Var(ge2), Operand::Var(nobump.clone())], "void");
+        }
         let one = self.fresh("_insp1");
         self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
         self.emit("add", Some(&cnt), vec![Operand::Var(cnt.clone()), Operand::Var(one)], "i64");
@@ -1883,6 +1922,107 @@ impl<'a> Compiler<'a> {
         let sum = self.fresh("_inspsum");
         self.emit("add", Some(&sum), vec![Operand::Var(counter_reg), Operand::Var(cnt)], "i64");
         self.store_scaled(&counter_name, &sum, 0, int_digits + 1, false)
+    }
+
+    /// Emit the runtime window `[start, end)` for an optional `{BEFORE|AFTER} x`
+    /// INSPECT region, returning `Some((start_reg, end_reg))` (both i64 registers)
+    /// when a region is present, or `None` when it is absent (so the caller emits
+    /// nothing extra and counts the whole source).
+    ///
+    /// A region is bounded by the FIRST (leftmost) occurrence of the single region
+    /// delimiter `x`. We scan the source once, recording a `found` flag and the
+    /// first index `fidx`, then derive the bounds with the ISO not-found asymmetry:
+    ///
+    /// ```text
+    ///   fidx = 0; found = 0; rj = 0
+    /// rtop: if rj >= len jmp rdone          # ran off the end → not found
+    ///       if S[rj] != x   jmp rcont
+    ///       fidx = rj; found = 1; jmp rdone # first match → record and stop
+    /// rcont: rj = rj + 1; jmp rtop
+    /// rdone:
+    ///   BEFORE:  start = 0;   end = found ? fidx     : len   # absent → WHOLE source
+    ///   AFTER:   end   = len; start = found ? fidx+1  : len   # absent → EMPTY window
+    /// ```
+    ///
+    /// The BEFORE→whole / AFTER→empty split is the whole subtlety of the rung, and it
+    /// mirrors the oracle's `inspect_tally` window exactly, so both engines agree
+    /// byte-for-byte. A multi-character region delimiter is rejected by
+    /// `single_delim_code`, exactly like the tally delimiter.
+    fn emit_inspect_region_window(
+        &mut self,
+        region: Option<(RegionKind, &GrammarASTNode)>,
+        s_reg: &str,
+        len: &str,
+    ) -> Result<Option<(String, String)>, CompileError> {
+        let (kind, rdelim_node) = match region {
+            None => return Ok(None),
+            Some(r) => r,
+        };
+        // The region delimiter reduced to a single byte code register.
+        let rd = self.single_delim_code(rdelim_node, "INSPECT")?;
+
+        // found = 0; fidx = 0; rj = 0.
+        let found = self.fresh("_insprf");
+        self.emit("const", Some(&found), vec![Operand::Int(0)], "i64");
+        let fidx = self.fresh("_insprfi");
+        self.emit("const", Some(&fidx), vec![Operand::Int(0)], "i64");
+        let rj = self.fresh("_insprj");
+        self.emit("const", Some(&rj), vec![Operand::Int(0)], "i64");
+
+        let rtop = self.fresh("insp_rtop");
+        let rcont = self.fresh("insp_rcont");
+        let rdone = self.fresh("insp_rdone");
+        self.emit("label", None, vec![Operand::Var(rtop.clone())], "void");
+        // if rj >= len jmp rdone (ran off the end without a match → found stays 0).
+        let rge = self.fresh("_insprge");
+        self.emit("cmp_ge", Some(&rge), vec![Operand::Var(rj.clone()), Operand::Var(len.to_string())], "i64");
+        self.emit("jmp_if_true", None, vec![Operand::Var(rge), Operand::Var(rdone.clone())], "void");
+        // if S[rj] != x jmp rcont.
+        let rc = self.fresh("_insprc");
+        self.emit("str_index", Some(&rc), vec![Operand::Var(s_reg.to_string()), Operand::Var(rj.clone())], "i64");
+        let req = self.fresh("_inspreq");
+        self.emit("cmp_eq", Some(&req), vec![Operand::Var(rc), Operand::Var(rd.clone())], "i64");
+        self.emit("jmp_if_false", None, vec![Operand::Var(req), Operand::Var(rcont.clone())], "void");
+        // Match: record the FIRST index and stop scanning.
+        self.emit("mov", Some(&fidx), vec![Operand::Var(rj.clone())], "i64");
+        self.emit("const", Some(&found), vec![Operand::Int(1)], "i64");
+        self.emit("jmp", None, vec![Operand::Var(rdone.clone())], "void");
+        // rcont: rj = rj + 1; jmp rtop.
+        self.emit("label", None, vec![Operand::Var(rcont)], "void");
+        let rone = self.fresh("_inspr1");
+        self.emit("const", Some(&rone), vec![Operand::Int(1)], "i64");
+        self.emit("add", Some(&rj), vec![Operand::Var(rj.clone()), Operand::Var(rone)], "i64");
+        self.emit("jmp", None, vec![Operand::Var(rtop)], "void");
+        self.emit("label", None, vec![Operand::Var(rdone)], "void");
+
+        // Derive [start, end) from (kind, found, fidx). The `skip` label guards the
+        // "found" adjustment: when `found == 0` the default (whole for BEFORE, empty
+        // for AFTER) stands.
+        let start = self.fresh("_insprs");
+        let end = self.fresh("_inspre");
+        match kind {
+            RegionKind::Before => {
+                // start = 0; end = found ? fidx : len (absent → whole source).
+                self.emit("const", Some(&start), vec![Operand::Int(0)], "i64");
+                self.emit("mov", Some(&end), vec![Operand::Var(len.to_string())], "i64");
+                let skip = self.fresh("insp_bskip");
+                self.emit("jmp_if_false", None, vec![Operand::Var(found.clone()), Operand::Var(skip.clone())], "void");
+                self.emit("mov", Some(&end), vec![Operand::Var(fidx.clone())], "i64");
+                self.emit("label", None, vec![Operand::Var(skip)], "void");
+            }
+            RegionKind::After => {
+                // end = len; start = found ? fidx+1 : len (absent → empty window).
+                self.emit("mov", Some(&end), vec![Operand::Var(len.to_string())], "i64");
+                self.emit("mov", Some(&start), vec![Operand::Var(len.to_string())], "i64");
+                let skip = self.fresh("insp_askip");
+                self.emit("jmp_if_false", None, vec![Operand::Var(found.clone()), Operand::Var(skip.clone())], "void");
+                let rone2 = self.fresh("_inspr1b");
+                self.emit("const", Some(&rone2), vec![Operand::Int(1)], "i64");
+                self.emit("add", Some(&start), vec![Operand::Var(fidx.clone()), Operand::Var(rone2)], "i64");
+                self.emit("label", None, vec![Operand::Var(skip)], "void");
+            }
+        }
+        Ok(Some((start, end)))
     }
 
     /// `INSPECT source REPLACING ALL x BY y` (or `REPLACING LEADING x BY y`) —
@@ -4303,21 +4443,39 @@ fn read_refmod_index(op: &GrammarASTNode) -> Result<RefIndex, CompileError> {
     }
 }
 
-/// Extract the supported `TALLYING counter FOR ALL delim` / `FOR LEADING delim`
-/// phrase from an `inspect_stmt`, returning `(counter_name, delim_operand_node,
-/// leading)` where `leading` is `true` for `FOR LEADING` (count only the leading
-/// run) and `false` for `FOR ALL` (count every occurrence). Rejects every later-
-/// rung form the grammar also accepts:
+/// Which side of a delimiter an `INSPECT … BEFORE`/`AFTER` region selects — the
+/// compiler-side mirror of the oracle's `RegionKind`.
+#[derive(Clone, Copy)]
+enum RegionKind {
+    Before,
+    After,
+}
+
+/// The parsed pieces of a `TALLYING counter FOR ALL|LEADING delim [{BEFORE|AFTER}
+/// x]` phrase: `(counter_name, delim_node, leading, region)`, where `region` is the
+/// optional `{BEFORE|AFTER} x` window as `(kind, region_delim_node)`. The node
+/// references borrow from the `inspect_stmt` CST the reader was handed.
+type TallyPhrase<'a> = (String, &'a GrammarASTNode, bool, Option<(RegionKind, &'a GrammarASTNode)>);
+
+/// Extract the supported `TALLYING counter FOR ALL delim [{BEFORE|AFTER} x]` /
+/// `FOR LEADING delim` phrase from an `inspect_stmt`, returning `(counter_name,
+/// delim_operand_node, leading, region)` where `leading` is `true` for `FOR
+/// LEADING` (count only the leading run) and `false` for `FOR ALL` (count every
+/// occurrence), and `region` carries an optional `{BEFORE|AFTER} x` window as
+/// `(kind, region_delim_node)`. Rejects every later-rung form the grammar also
+/// accepts:
 ///   * more than one `TALLYING` counter (`{ tally_for }`) — one counter this rung;
 ///   * more than one `FOR` phrase on that counter (`{ tally_item }`);
 ///   * a `CHARACTERS` tally (only `ALL`/`LEADING` this rung);
-///   * a `BEFORE`/`AFTER` region restricting the scan.
+///   * a `FOR LEADING` phrase carrying a region (`FOR LEADING … BEFORE/AFTER` is a
+///     later rung; only `FOR ALL` gets a region this rung).
 ///
 /// (`REPLACING` and a non-alphanumeric source are rejected by the caller; the
-/// combined `FOR LEADING … REPLACING ALL` is now accepted.)
-fn inspect_tally_all(
-    verb: &GrammarASTNode,
-) -> Result<(String, &GrammarASTNode, bool), CompileError> {
+/// combined `FOR LEADING … REPLACING ALL` is accepted, but a combined form with a
+/// region is rejected by the caller. A multi-character region delimiter is
+/// rejected by `single_delim_code` at emit time, exactly like the tally
+/// delimiter, so both engines diagnose it identically.)
+fn inspect_tally_all(verb: &GrammarASTNode) -> Result<TallyPhrase<'_>, CompileError> {
     let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
         CompileError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
     })?;
@@ -4350,15 +4508,38 @@ fn inspect_tally_all(
     // `FOR LEADING` is now supported (count only the leading run); `FOR ALL` is the
     // default. The keyword selects the scan's stop-on-mismatch behaviour.
     let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
-    if child_node(ti, "inspect_region").is_some() {
-        return Err(CompileError::Unsupported(
-            "INSPECT TALLYING … BEFORE/AFTER is a later rung".into(),
-        ));
-    }
+    // A `{BEFORE|AFTER} x` region now PARSES into `Option<(RegionKind, node)>` (it
+    // used to be rejected wholesale here). Only `FOR ALL` gets a region this rung,
+    // so a `FOR LEADING` phrase carrying a region is still a clean later-rung error.
+    let region = match child_node(ti, "inspect_region") {
+        None => None,
+        Some(region_node) => {
+            if leading {
+                return Err(CompileError::Unsupported(
+                    "INSPECT TALLYING … FOR LEADING with a BEFORE/AFTER region is a later rung"
+                        .into(),
+                ));
+            }
+            let rtoks = child_tokens(region_node);
+            let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+                RegionKind::Before
+            } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+                RegionKind::After
+            } else {
+                return Err(CompileError::Unsupported(
+                    "INSPECT region without a BEFORE or AFTER keyword".into(),
+                ));
+            };
+            let rdelim = child_node(region_node, "operand").ok_or_else(|| {
+                CompileError::Malformed("INSPECT BEFORE/AFTER region without a delimiter".into())
+            })?;
+            Some((kind, rdelim))
+        }
+    };
     let delim = child_node(ti, "operand").ok_or_else(|| {
         CompileError::Malformed("INSPECT TALLYING FOR ALL/LEADING without a delimiter".into())
     })?;
-    Ok((counter, delim, leading))
+    Ok((counter, delim, leading, region))
 }
 
 /// Extract the supported `REPLACING ALL search BY replace` / `REPLACING LEADING

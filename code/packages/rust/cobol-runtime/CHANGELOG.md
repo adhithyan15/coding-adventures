@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.44.0 — INSPECT TALLYING FOR ALL with a BEFORE/AFTER region
+
+- `INSPECT source TALLYING counter FOR ALL delim {BEFORE|AFTER} x` now executes
+  instead of being rejected as a later rung. The `{BEFORE|AFTER} x` region narrows
+  the count to a sub-slice of the source, bounded by the FIRST (leftmost) occurrence
+  of the SINGLE-character region delimiter `x`:
+  - `BEFORE x` counts `delim` only in `source[0 .. first_index_of(x)]`; if `x` is
+    ABSENT the region is the ENTIRE source.
+  - `AFTER x` counts `delim` only in `source[first_index_of(x)+1 .. end]`; if `x` is
+    ABSENT the region is EMPTY (count 0).
+  This not-found asymmetry (BEFORE→whole, AFTER→empty) is the ISO rule and the crux
+  of the rung. INSPECT still ADDs to the counter (it does not clear it), so a region
+  changes only WHICH positions are counted, not the accumulate-into-counter store.
+- `Stmt::Inspect` gains a `region: Option<Region>` field, where the new `Region {
+  kind: RegionKind, delim: Operand }` and `RegionKind { Before, After }` types
+  capture the phrase. `read_inspect_tally_all` now PARSES the `inspect_region` CST
+  child (via the new `read_inspect_region`) into that `Option` instead of rejecting
+  it. `inspect_tally` computes the window `[start, end)` over the source's current
+  storage and counts only within it; with no region the window is the whole source,
+  so behaviour is byte-identical to 0.43.0.
+- Scoped SMALL: this rung is `TALLYING FOR ALL` only, single-character region
+  delimiter only. Still rejected identically on both engines: `FOR LEADING` with a
+  region, a region on the combined `TALLYING … REPLACING` form, and (via
+  `single_delim_char`, exactly like the tally delimiter) a MULTI-character region
+  delimiter. `REPLACING`/`CONVERTING` regions, `CHARACTERS`, several counters/FOR
+  phrases, a numeric/group source, and a non-integer/signed counter remain later
+  rungs unchanged.
+- Tests: oracle unit coverage plus the shared e2e parity suite exercise BEFORE/AFTER
+  present, both not-found branches, the region delimiter at position 0 / last
+  position / equal to the tally delimiter, the empty region, a PIC X(1) region
+  delimiter, and the nonzero-counter ADD — each byte-identical to the compiler — and
+  assert that `FOR LEADING` + region and a multi-char region delimiter still reject.
+
 ## 0.43.0 — combined INSPECT TALLYING with REPLACING LEADING
 
 - The COMBINED `INSPECT source TALLYING counter FOR ALL|LEADING delim REPLACING

@@ -2954,6 +2954,156 @@ fn inspect_delimiter_at_both_ends() {
     assert_eq!(out, "02\n");
 }
 
+// INSPECT … TALLYING … FOR ALL … {BEFORE|AFTER} x — count only within the sub-
+// slice of the source bounded by the FIRST occurrence of the single region
+// delimiter `x`. BEFORE counts left of `x`; AFTER counts right of it. The ISO
+// not-found asymmetry is the crux: BEFORE with `x` absent counts the WHOLE source,
+// AFTER with `x` absent counts NOTHING. Each case pins the compiled window scan to
+// the oracle byte-for-byte.
+
+#[test]
+fn inspect_before_counts_only_left_of_the_delimiter() {
+    // "AB0CD0" — BEFORE "C" restricts to "AB0" (indices 0..3), which holds ONE '0'.
+    // (The trailing '0' after 'C' is outside the region.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "001\n");
+}
+
+#[test]
+fn inspect_after_counts_only_right_of_the_delimiter() {
+    // Same source — AFTER "C" restricts to "D0" (indices 4..6), which holds ONE '0'.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" AFTER \"C\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "001\n");
+}
+
+#[test]
+fn inspect_before_absent_delimiter_counts_the_whole_source() {
+    // BEFORE "Z" with no 'Z' present → the region is the ENTIRE source, so BOTH '0's
+    // are counted (2). This is the BEFORE not-found rule.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"Z\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_after_absent_delimiter_counts_nothing() {
+    // AFTER "Z" with no 'Z' present → the region is EMPTY, so NOTHING is counted (0).
+    // This is the AFTER not-found rule — the asymmetric partner of the case above.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" AFTER \"Z\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000\n");
+}
+
+#[test]
+fn inspect_after_delimiter_at_position_zero() {
+    // The region delimiter is the FIRST character: AFTER "X" in "X00" → region "00"
+    // (indices 1..3) → two '0's. Pins the `start = fidx + 1` edge.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"X00\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" AFTER \"X\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_before_delimiter_at_last_position() {
+    // The region delimiter is the LAST character: BEFORE "X" in "00X" → region "00"
+    // (indices 0..2) → two '0's. Pins the `end = fidx` prefix edge.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"00X\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"X\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_region_delimiter_equals_tally_delimiter() {
+    // The tally delimiter and the region delimiter are the SAME char: AFTER "A" in
+    // "ABABA" → the FIRST 'A' (index 0) bounds the region to "BABA" (indices 1..5),
+    // where two more 'A's remain → 2. (The bounding 'A' itself is excluded.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"A\" AFTER \"A\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_before_delimiter_at_position_zero_is_an_empty_region() {
+    // BEFORE "A" in "A00" → the first 'A' is at index 0, so the region is [0, 0) —
+    // EMPTY — and nothing is counted (0). Pins the empty-prefix edge.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"A00\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"A\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000\n");
+}
+
+#[test]
+fn inspect_region_adds_to_a_nonzero_counter() {
+    // INSPECT ADDs to the counter; a region does not change that. C starts at 5;
+    // BEFORE "C" counts one '0' → C = 5 + 1 = 6.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 5."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "006\n");
+}
+
+#[test]
+fn inspect_region_delimiter_is_a_pic_x1_item() {
+    // The region delimiter may itself be a PIC X(1) item, read at run time: BEFORE
+    // the item DL (";") in "0;0;0" restricts to "0" (index 0..1) → one '0'.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"0;0;0\".",
+            "01  DL PIC X(1) VALUE \";\".",
+            "01  C  PIC 9(3) VALUE 0.",
+        ],
+        &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE DL.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "001\n");
+}
+
+#[test]
+fn inspect_for_leading_with_a_region_is_a_later_rung() {
+    // `FOR LEADING` combined with a `{BEFORE|AFTER}` region is still deferred — it
+    // must be rejected IDENTICALLY on both engines (a leading-run count restricted to
+    // a sub-region is a later rung).
+    let src = wrap(
+        &["01  S  PIC X(6) VALUE \"000CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"0\" BEFORE \"C\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject FOR LEADING + region");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject FOR LEADING + region");
+}
+
+#[test]
+fn inspect_multi_char_region_delimiter_is_a_later_rung() {
+    // A MULTI-character region delimiter is deferred — rejected on both engines, just
+    // like a multi-character tally delimiter (the oracle rejects at exec, the
+    // compiler at emit, both via the single-delimiter check).
+    let src = wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"CD\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-char region delimiter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-char region delimiter"
+    );
+}
+
 // INSPECT … TALLYING … FOR LEADING — count only the run of CONSECUTIVE delimiters
 // at the START of the source, stopping at the first non-match (contrast FOR ALL,
 // which counts every occurrence). Each case pins the compiled leading-run scan to

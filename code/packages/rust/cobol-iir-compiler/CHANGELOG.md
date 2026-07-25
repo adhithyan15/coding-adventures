@@ -8,6 +8,43 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.40.0: INSPECT TALLYING FOR ALL with a BEFORE/AFTER region
+
+`INSPECT source TALLYING counter FOR ALL delim {BEFORE|AFTER} x` now compiles
+instead of being rejected as a later rung. A `{BEFORE|AFTER} x` region narrows the
+count to a sub-slice of the source, bounded by the FIRST (leftmost) occurrence of
+the SINGLE-character region delimiter `x`, with the ISO not-found asymmetry:
+`BEFORE x` counts left of the first `x` (whole source if `x` is absent); `AFTER x`
+counts right of it (EMPTY if `x` is absent).
+
+- `inspect_tally_all` now PARSES the `inspect_region` CST child into `Option<
+  (RegionKind, delim_node)>` (a new compiler-side `RegionKind { Before, After }`)
+  instead of rejecting it, and rejects `FOR LEADING` carrying a region. A new
+  `emit_inspect_region_window` helper emits a single scan for the first occurrence of
+  the region delimiter (a `found` flag + first index `fidx`), then derives the window
+  `[start, end)` per the BEFORE→whole / AFTER→empty rule. `emit_inspect_tallying`
+  gains an `allow_region` gate (lone TALLYING passes `true`, the combined path
+  `false`) and, when a region is present, bounds its existing per-position `FOR ALL`
+  count loop with `j < start || j >= end → skip` (jump to `nobump`, keep scanning).
+- With NO region the lowering emits nothing extra — it is byte-identical to v0.39.0,
+  and matches `coding-adventures-cobol-runtime` 0.44.0's `inspect_tally` window
+  byte-for-byte on every accepted input.
+- Scoped SMALL — `TALLYING FOR ALL` only, single-character region delimiter only.
+  Still rejected identically on both engines: `FOR LEADING` + region, a region on the
+  combined `TALLYING … REPLACING` form (`allow_region == false`), and — via
+  `single_delim_code`, exactly like the tally delimiter — a MULTI-character region
+  delimiter. `REPLACING`/`CONVERTING` regions, `CHARACTERS`, several counters/FOR
+  phrases, a numeric source, and a non-integer/signed counter remain clean
+  `Unsupported`.
+- New e2e parity tests in `jit_e2e.rs`: `inspect_before_counts_only_left_of_the_
+  delimiter`, `inspect_after_counts_only_right_of_the_delimiter`, both not-found
+  branches, `inspect_after_delimiter_at_position_zero`, `inspect_before_delimiter_at_
+  last_position`, `inspect_region_delimiter_equals_tally_delimiter`, `inspect_before_
+  delimiter_at_position_zero_is_an_empty_region`, `inspect_region_adds_to_a_nonzero_
+  counter`, `inspect_region_delimiter_is_a_pic_x1_item`, and the two reject tests
+  `inspect_for_leading_with_a_region_is_a_later_rung` and `inspect_multi_char_region_
+  delimiter_is_a_later_rung`.
+
 ### Added — v0.39.0: combined INSPECT TALLYING with REPLACING LEADING
 
 The COMBINED `INSPECT source TALLYING counter FOR ALL|LEADING delim REPLACING LEADING
