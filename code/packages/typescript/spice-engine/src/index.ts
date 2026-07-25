@@ -1702,6 +1702,7 @@ export interface Jfet {
   readonly gateSaturationCurrent: number;
   readonly gateSaturationCurrentTemperatureExponent: number;
   readonly bandgapVoltage: number;
+  readonly dopingTailParameter: number;
   readonly drainResistance: number;
   readonly sourceResistance: number;
   readonly thresholdVoltageTemperatureCoefficient: number;
@@ -2038,8 +2039,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   D: [15, 21, 5, 3],
   NPN: [41, 58, 13, 4],
   PNP: [41, 58, 13, 4],
-  NJF: [19, 27, 7, 3],
-  PJF: [19, 27, 7, 3],
+  NJF: [20, 28, 7, 3],
+  PJF: [20, 28, 7, 3],
   NMOS: [18, 25, 6, 3],
   PMOS: [18, 25, 6, 3],
 };
@@ -3625,7 +3626,7 @@ function cloneSubcktElement(
     case "diode":
       return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime, element.junctionPotential, element.gradingCoefficient, element.forwardBiasDepletionCoefficient, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.seriesResistance, element.flickerNoiseCoefficient, element.flickerNoiseExponent);
     case "jfet":
-      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.junctionPotential, element.forwardBiasDepletionCoefficient, element.gateSaturationCurrent, element.gateSaturationCurrentTemperatureExponent, element.bandgapVoltage, element.drainResistance, element.sourceResistance, element.thresholdVoltageTemperatureCoefficient, element.alternativeThresholdVoltageTemperatureCoefficient, element.nominalTemperatureKelvin, element.mobilityTemperatureExponent, element.mobilityTemperatureCoefficient);
+      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.junctionPotential, element.forwardBiasDepletionCoefficient, element.gateSaturationCurrent, element.gateSaturationCurrentTemperatureExponent, element.bandgapVoltage, element.dopingTailParameter, element.drainResistance, element.sourceResistance, element.thresholdVoltageTemperatureCoefficient, element.alternativeThresholdVoltageTemperatureCoefficient, element.nominalTemperatureKelvin, element.mobilityTemperatureExponent, element.mobilityTemperatureCoefficient);
     case "bjt":
       return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta, element.reverseBetaRolloffCurrent, element.nominalTemperatureKelvin, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.forwardExcessPhaseDegrees, element.forwardTransitTimeBiasCoefficient, element.forwardTransitTimeCurrent, element.forwardTransitTimeVoltage, element.emitterResistance, element.collectorResistance, element.baseResistance, element.minimumBaseResistance, element.baseResistanceHalfCurrent, element.baseCollectorCapacitanceFraction);
     case "mosfet":
@@ -7761,6 +7762,9 @@ export function jfetAtTemperature(
   if (!Number.isFinite(element.bandgapVoltage) || element.bandgapVoltage <= 0.0) {
     throw invalidElement(element.name, "bandgap voltage must be finite and positive");
   }
+  if (!Number.isFinite(element.dopingTailParameter)) {
+    throw invalidElement(element.name, "doping-tail parameter must be finite");
+  }
   if (
     element.mobilityTemperatureCoefficient !== undefined &&
     !Number.isFinite(element.mobilityTemperatureCoefficient)
@@ -7854,6 +7858,7 @@ export function jfet(
   gateSaturationCurrent = 1.0e-14,
   gateSaturationCurrentTemperatureExponent = 3.0,
   bandgapVoltage = 1.11,
+  dopingTailParameter = 1.0,
   drainResistance = 0.0,
   sourceResistance = 0.0,
   thresholdVoltageTemperatureCoefficient = 0.0,
@@ -7881,6 +7886,7 @@ export function jfet(
     gateSaturationCurrent,
     gateSaturationCurrentTemperatureExponent,
     bandgapVoltage,
+    dopingTailParameter,
     drainResistance,
     sourceResistance,
     thresholdVoltageTemperatureCoefficient,
@@ -8152,6 +8158,7 @@ const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   IS: "IS",
   XTI: "XTI",
   EG: "EG",
+  B: "B",
   RD: "RD",
   RS: "RS",
   TNOM: "TNOM",
@@ -8710,6 +8717,7 @@ export function jfetFromModelCard(
     p.IS ?? 1.0e-14,
     p.XTI ?? 3.0,
     p.EG ?? 1.11,
+    p.B ?? 1.0,
     p.RD ?? 0.0,
     p.RS ?? 0.0,
     p.TCV ?? 0.0,
@@ -19748,6 +19756,20 @@ function validateJfet(element: Jfet): void {
   if (!Number.isFinite(element.bandgapVoltage) || element.bandgapVoltage <= 0.0) {
     throw invalidElement(element.name, "bandgap voltage must be finite and positive");
   }
+  if (!Number.isFinite(element.dopingTailParameter)) {
+    throw invalidElement(element.name, "doping-tail parameter must be finite");
+  }
+  const effectiveThreshold =
+    element.polarity === "NJF" ? element.thresholdVoltage : -element.thresholdVoltage;
+  if (
+    element.dopingTailParameter !== 1.0 &&
+    element.junctionPotential === effectiveThreshold
+  ) {
+    throw invalidElement(
+      element.name,
+      "junction potential minus effective threshold voltage must be non-zero when doping-tail parameter differs from 1",
+    );
+  }
   if (!Number.isFinite(element.drainResistance) || element.drainResistance < 0.0) {
     throw invalidElement(
       element.name,
@@ -19942,6 +19964,8 @@ function evaluateJfet(element: Jfet, vgs: number, vds: number): JfetDcResult {
       -element.thresholdVoltage,
       element.beta,
       element.channelLengthModulation,
+      element.junctionPotential,
+      element.dopingTailParameter,
     );
     return {
       drainCurrent: -result.drainCurrent,
@@ -19955,6 +19979,8 @@ function evaluateJfet(element: Jfet, vgs: number, vds: number): JfetDcResult {
     element.thresholdVoltage,
     element.beta,
     element.channelLengthModulation,
+    element.junctionPotential,
+    element.dopingTailParameter,
   );
 }
 
@@ -19964,27 +19990,42 @@ function evaluateNjf(
   thresholdVoltage: number,
   beta: number,
   channelLengthModulation: number,
+  junctionPotential: number,
+  dopingTailParameter: number,
 ): JfetDcResult {
   const overdrive = vgs - thresholdVoltage;
   if (overdrive <= 0.0 || vds < 0.0) {
     return { drainCurrent: 0.0, gm: 0.0, gds: 0.0 };
   }
+  const tailFactor =
+    dopingTailParameter === 1.0
+      ? 0.0
+      : (1.0 - dopingTailParameter) / (junctionPotential - thresholdVoltage);
+  const modulation = 1.0 + channelLengthModulation * vds;
   if (vds < overdrive) {
-    const channel = 2.0 * overdrive * vds - vds * vds;
-    const modulation = 1.0 + channelLengthModulation * vds;
+    const slope =
+      2.0 * dopingTailParameter + 3.0 * tailFactor * (overdrive - vds);
+    const channel =
+      vds *
+      (vds * (tailFactor * vds - dopingTailParameter) + overdrive * slope);
     return {
       drainCurrent: beta * channel * modulation,
-      gm: 2.0 * beta * vds * modulation,
+      gm: beta * modulation * vds * (slope + 3.0 * tailFactor * overdrive),
       gds:
-        beta * (2.0 * overdrive - 2.0 * vds) * modulation +
+        beta * modulation * (overdrive - vds) * slope +
         beta * channel * channelLengthModulation,
     };
   }
+  const channel =
+    overdrive * overdrive * (dopingTailParameter + overdrive * tailFactor);
   return {
-    drainCurrent:
-      beta * overdrive * overdrive * (1.0 + channelLengthModulation * vds),
-    gm: 2.0 * beta * overdrive * (1.0 + channelLengthModulation * vds),
-    gds: beta * overdrive * overdrive * channelLengthModulation,
+    drainCurrent: beta * channel * modulation,
+    gm:
+      beta *
+      modulation *
+      overdrive *
+      (2.0 * dopingTailParameter + 3.0 * overdrive * tailFactor),
+    gds: beta * channel * channelLengthModulation,
   };
 }
 

@@ -408,7 +408,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 171
+    assert len(coverage) == 173
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -423,7 +423,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 171
+    assert len(records) == 173
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -497,9 +497,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 171
-    assert report.expected_canonical_parameter_count == 171
-    assert report.accepted_name_count == 241
+    assert report.canonical_parameter_count == 173
+    assert report.expected_canonical_parameter_count == 173
+    assert report.accepted_name_count == 243
     assert report.aliased_parameter_count == 57
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -507,7 +507,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t171\t171\t241\t57\t4\t0"
+        "true\t7\t7\t173\t173\t243\t57\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -535,8 +535,8 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 170
-    assert report.accepted_name_count == 238
+    assert report.canonical_parameter_count == 172
+    assert report.accepted_name_count == 240
     assert report.aliased_parameter_count == 56
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
@@ -551,7 +551,7 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t170\t171\t238\t56\t4\t4\n"
+        "false\t7\t7\t172\t173\t240\t56\t4\t4\n"
         "kind\tfield\tmessage\n"
         "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
         "supported parameters, found 17\n"
@@ -678,6 +678,7 @@ def test_model_card_aliases_build_device_instances() -> None:
             "IS": 2.0e-13,
             "XTI": 2.5,
             "EG": 1.05,
+            "B": 1.1,
             "RD": 125.0,
             "RS": 75.0,
             "T_NOM": 50.0,
@@ -699,6 +700,7 @@ def test_model_card_aliases_build_device_instances() -> None:
         "IS": 2.0e-13,
         "XTI": 2.5,
         "EG": 1.05,
+        "B": 1.1,
         "RD": 125.0,
         "RS": 75.0,
         "TNOM": 50.0,
@@ -718,6 +720,7 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert jfet_model.Is == pytest.approx(2.0e-13)
     assert jfet_model.Xti == pytest.approx(2.5)
     assert jfet_model.Eg == pytest.approx(1.05)
+    assert pytest.approx(1.1) == jfet_model.B
     assert jfet_model.Rd == pytest.approx(125.0)
     assert jfet_model.Rs == pytest.approx(75.0)
     assert jfet_model.Tnom == pytest.approx(323.15)
@@ -829,6 +832,37 @@ def test_dc_rejects_invalid_jfet_source_resistance() -> None:
         match="source resistance must be finite and non-negative",
     ):
         dc_op(circuit)
+
+
+def test_dc_rejects_invalid_jfet_doping_tail_parameter() -> None:
+    circuit = Circuit()
+    circuit.add(JFET("J1", "drain", "gate", "0", B=math.nan))
+
+    with pytest.raises(ValueError, match="doping-tail parameter must be finite"):
+        dc_op(circuit)
+
+
+def test_dc_jfet_doping_tail_parameter_shapes_linear_and_saturation_current() -> None:
+    def drain_current(drain_voltage: float, doping_tail_parameter: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vdrain", "drain", "0", drain_voltage))
+        circuit.add(VoltageSource("Vgate", "gate", "0", 0.0))
+        circuit.add(
+            JFET(
+                "J1",
+                "drain",
+                "gate",
+                "0",
+                beta=1.0e-3,
+                vto=-2.0,
+                Pb=1.0,
+                B=doping_tail_parameter,
+            )
+        )
+        return abs(dc_op(circuit).branch_currents["I(Vdrain)"])
+
+    assert drain_current(1.0, 1.1) > drain_current(1.0, 1.0)
+    assert drain_current(3.0, 1.1) > drain_current(3.0, 1.0)
 
 
 def test_dc_jfet_drain_resistance_drops_intrinsic_drain_voltage() -> None:
@@ -2634,7 +2668,7 @@ def test_subcircuit_expansion_preserves_complete_jfet_model():
     cell = SubcircuitDefinition(
         "jfet-cell",
         ("d", "g", "s"),
-        (JFET("Jcell", "d", "g", "s", Kf=1.0e-12, Af=1.3, Pb=0.8, Fc=0.35, Is=2.0e-13, Xti=2.5, Eg=1.05, Rd=125.0, Rs=75.0, Tcv=0.01, Vtotc=-0.0025, Tnom=323.15, Bex=1.5, Betatce=-0.5),),
+        (JFET("Jcell", "d", "g", "s", Kf=1.0e-12, Af=1.3, Pb=0.8, Fc=0.35, Is=2.0e-13, Xti=2.5, Eg=1.05, B=1.1, Rd=125.0, Rs=75.0, Tcv=0.01, Vtotc=-0.0025, Tnom=323.15, Bex=1.5, Betatce=-0.5),),
     )
     circuit = Circuit()
     circuit.define_subcircuit(cell)
@@ -2648,6 +2682,7 @@ def test_subcircuit_expansion_preserves_complete_jfet_model():
     assert expanded.Is == pytest.approx(2.0e-13)
     assert expanded.Xti == pytest.approx(2.5)
     assert expanded.Eg == pytest.approx(1.05)
+    assert pytest.approx(1.1) == expanded.B
     assert expanded.Rd == pytest.approx(125.0)
     assert expanded.Rs == pytest.approx(75.0)
     assert expanded.Tcv == pytest.approx(0.01)

@@ -122,7 +122,9 @@ JFET model cards use `TCV` for threshold-voltage scaling and `BEX` for
 `BETA(T) = BETA * (T / TNOM)^BEX`. When explicitly present, `VTOTC` overrides
 `TCV` with `VTO(T) = VTO + VTOTC * (T - TNOM)`, while `BETATCE` overrides
 `BEX` with `BETA(T) = BETA * 1.01^(BETATCE * (T - TNOM))`. JFET `XTI`
-and `EG` scale gate saturation current with the standard bandgap law.
+and `EG` scale gate saturation current with the standard bandgap law. JFET
+`B` applies Parker-Skellern doping-tail shaping to channel current and defaults
+to `1`, which preserves the Shichman-Hodges equations.
 All temperature coefficients honor model-card `TNOM` / `T_NOM`.
 
 `normalize_model_card`, `diode_from_model_card`, `bjt_from_model_card`,

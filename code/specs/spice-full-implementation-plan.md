@@ -33,16 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language JFET gate-junction bandgap voltage.
+1. Cross-language JFET doping-tail shaping.
    - Status: current PR completion candidate.
-   - Add Berkeley JFET `EG` model-card support in Rust, Python, and TypeScript.
-   - Scale gate saturation current from `TNOM` with
-     `IS(T) = IS * (T / TNOM)^XTI * exp((EG * q / k) * (1 / TNOM - 1 / T))`,
-     using the configured bandgap voltage and the Level-1 silicon
-     `EG = 1.11 eV` default.
-   - Preserve the voltage through hierarchy and cloning, validate finite
-     positive values, and extend the supported-parameter coverage gate from
-     169 to 171 canonical rows.
+   - Add Berkeley JFET `B` model-card support in Rust, Python, and TypeScript.
+   - Apply Parker-Skellern doping-tail shaping to the linear and saturation
+     channel-current equations while preserving the existing
+     Shichman-Hodges behavior at the Berkeley default `B = 1`.
+   - Preserve the parameter through hierarchy and cloning, validate finite
+     values and its `PB - VTO` denominator, and extend the
+     supported-parameter coverage gate from 171 to 173 canonical rows.
 
 ## Completed Slices
 
@@ -3358,6 +3357,15 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning paths preserve the exponent, finite validation is
      shared across analyses, and the supported-parameter release gate now
      covers 169 canonical rows.
+
+261. Cross-language JFET gate-junction bandgap voltage.
+   - Status: completed in PR 8972.
+   - Rust, Python, and TypeScript JFET model cards now accept `EG` and use the
+     configured bandgap voltage when scaling gate saturation current from
+     `TNOM`, preserving the Level-1 silicon default of 1.11 eV.
+   - Hierarchy and cloning paths preserve the voltage, finite-positive
+     validation is shared across analyses, and the supported-parameter release
+     gate now covers 171 canonical rows.
 
 ## Backlog
 

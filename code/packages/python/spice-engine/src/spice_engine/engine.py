@@ -423,6 +423,8 @@ def jfet_at_temperature(
         )
     if not math.isfinite(jfet.Eg) or jfet.Eg <= 0.0:
         raise ValueError(f"{jfet.name}: JFET bandgap voltage must be finite and positive")
+    if not math.isfinite(jfet.B):
+        raise ValueError(f"{jfet.name}: JFET doping-tail parameter must be finite")
     if not math.isfinite(jfet.Tcv):
         raise ValueError(f"{jfet.name}: JFET TCV must be finite")
     if jfet.Vtotc is not None and not math.isfinite(jfet.Vtotc):
@@ -666,7 +668,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.Af,
         )
     if isinstance(element, JFET):
-        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb, element.Fc, element.Is, element.Xti, element.Eg, element.Rd, element.Rs, element.Tcv, element.Vtotc, element.Tnom, element.Bex, element.Betatce)
+        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb, element.Fc, element.Is, element.Xti, element.Eg, element.B, element.Rd, element.Rs, element.Tcv, element.Vtotc, element.Tnom, element.Bex, element.Betatce)
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
@@ -9191,6 +9193,13 @@ def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
         raise ValueError(
             f"JFET '{el.name}' bandgap voltage must be finite and positive"
         )
+    if not math.isfinite(el.B):
+        raise ValueError(f"JFET '{el.name}' doping-tail parameter must be finite")
+    effective_threshold = el.vto if el.polarity == "NJF" else -el.vto
+    if el.B != 1.0 and el.Pb == effective_threshold:
+        raise ValueError(
+            f"JFET '{el.name}' PB - effective VTO must be non-zero when B differs from 1"
+        )
     if not math.isfinite(el.Rd) or el.Rd < 0.0:
         raise ValueError(f"JFET '{el.name}' drain resistance must be finite and non-negative")
     if not math.isfinite(el.Rs) or el.Rs < 0.0:
@@ -9206,11 +9215,13 @@ def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
     if el.Betatce is not None and not math.isfinite(el.Betatce):
         raise ValueError(f"JFET '{el.name}' BETATCE must be finite")
     if el.polarity == "PJF":
-        ids, gm, gds = _eval_njf(-vgs, -vds, -el.vto, el.beta, el.lambda_)
+        ids, gm, gds = _eval_njf(
+            -vgs, -vds, -el.vto, el.beta, el.lambda_, el.Pb, el.B
+        )
         return -ids, gm, gds
     if el.polarity != "NJF":
         raise ValueError(f"JFET '{el.name}' polarity must be 'NJF' or 'PJF'")
-    return _eval_njf(vgs, vds, el.vto, el.beta, el.lambda_)
+    return _eval_njf(vgs, vds, el.vto, el.beta, el.lambda_, el.Pb, el.B)
 
 
 _JFET_THERMAL_VOLTAGE = 0.02585
@@ -9251,21 +9262,43 @@ def _stamp_jfet_gate_junction(
 
 
 def _eval_njf(
-    vgs: float, vds: float, vto: float, beta: float, lambda_: float
+    vgs: float,
+    vds: float,
+    vto: float,
+    beta: float,
+    lambda_: float,
+    junction_potential: float,
+    doping_tail: float,
 ) -> tuple[float, float, float]:
     overdrive = vgs - vto
     if overdrive <= 0.0 or vds < 0.0:
         return (0.0, 0.0, 0.0)
+    tail_factor = (
+        0.0
+        if doping_tail == 1.0
+        else (1.0 - doping_tail) / (junction_potential - vto)
+    )
+    modulation = 1.0 + lambda_ * vds
     if vds < overdrive:
-        channel = 2.0 * overdrive * vds - vds * vds
-        modulation = 1.0 + lambda_ * vds
+        slope = 2.0 * doping_tail + 3.0 * tail_factor * (overdrive - vds)
+        channel = vds * (
+            vds * (tail_factor * vds - doping_tail) + overdrive * slope
+        )
         ids = beta * channel * modulation
-        gm = 2.0 * beta * vds * modulation
-        gds = beta * (2.0 * overdrive - 2.0 * vds) * modulation + beta * channel * lambda_
+        gm = beta * modulation * vds * (slope + 3.0 * tail_factor * overdrive)
+        gds = (
+            beta * modulation * (overdrive - vds) * slope
+            + beta * channel * lambda_
+        )
         return (ids, gm, gds)
-    ids = beta * overdrive * overdrive * (1.0 + lambda_ * vds)
-    gm = 2.0 * beta * overdrive * (1.0 + lambda_ * vds)
-    gds = beta * overdrive * overdrive * lambda_
+    channel = overdrive * overdrive * (
+        doping_tail + overdrive * tail_factor
+    )
+    ids = beta * channel * modulation
+    gm = beta * modulation * overdrive * (
+        2.0 * doping_tail + 3.0 * overdrive * tail_factor
+    )
+    gds = beta * channel * lambda_
     return (ids, gm, gds)
 
 

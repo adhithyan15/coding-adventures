@@ -434,6 +434,7 @@ fn clone_subckt_element(
             mapped.gate_saturation_current_temperature_exponent =
                 element.gate_saturation_current_temperature_exponent;
             mapped.bandgap_voltage = element.bandgap_voltage;
+            mapped.doping_tail_parameter = element.doping_tail_parameter;
             mapped.drain_resistance = element.drain_resistance;
             mapped.source_resistance = element.source_resistance;
             mapped.threshold_voltage_temperature_coefficient =
@@ -2812,6 +2813,12 @@ pub fn jfet_at_temperature(
             reason: "bandgap voltage must be finite and positive".to_string(),
         });
     }
+    if !jfet.doping_tail_parameter.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "doping-tail parameter must be finite".to_string(),
+        });
+    }
     if !jfet.threshold_voltage_temperature_coefficient.is_finite() {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
@@ -2936,6 +2943,7 @@ pub struct Jfet {
     pub gate_saturation_current: f64,
     pub gate_saturation_current_temperature_exponent: f64,
     pub bandgap_voltage: f64,
+    pub doping_tail_parameter: f64,
     pub drain_resistance: f64,
     pub source_resistance: f64,
     pub threshold_voltage_temperature_coefficient: f64,
@@ -3018,6 +3026,7 @@ impl Jfet {
             gate_saturation_current: 1.0e-14,
             gate_saturation_current_temperature_exponent: 3.0,
             bandgap_voltage: 1.11,
+            doping_tail_parameter: 1.0,
             drain_resistance: 0.0,
             source_resistance: 0.0,
             threshold_voltage_temperature_coefficient: 0.0,
@@ -3948,8 +3957,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Diode, 15, 21, 5, 3),
     (ModelCardKind::Npn, 41, 58, 13, 4),
     (ModelCardKind::Pnp, 41, 58, 13, 4),
-    (ModelCardKind::Njf, 19, 27, 7, 3),
-    (ModelCardKind::Pjf, 19, 27, 7, 3),
+    (ModelCardKind::Njf, 20, 28, 7, 3),
+    (ModelCardKind::Pjf, 20, 28, 7, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
     (ModelCardKind::Pmos, 18, 25, 6, 3),
 ];
@@ -4056,6 +4065,7 @@ const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
     ("XTI", "XTI"),
     ("EG", "EG"),
+    ("B", "B"),
     ("RD", "RD"),
     ("RS", "RS"),
     ("TNOM", "TNOM"),
@@ -4797,6 +4807,7 @@ pub fn jfet_from_model_card(
     jfet.gate_saturation_current = model_card_value(model, "IS", 1.0e-14);
     jfet.gate_saturation_current_temperature_exponent = model_card_value(model, "XTI", 3.0);
     jfet.bandgap_voltage = model_card_value(model, "EG", 1.11);
+    jfet.doping_tail_parameter = model_card_value(model, "B", 1.0);
     jfet.drain_resistance = model_card_value(model, "RD", 0.0);
     jfet.source_resistance = model_card_value(model, "RS", 0.0);
     jfet.threshold_voltage_temperature_coefficient = model_card_value(model, "TCV", 0.0);
@@ -23939,6 +23950,8 @@ fn evaluate_jfet(jfet: &Jfet, vgs: f64, vds: f64) -> JfetDcResult {
                 -jfet.threshold_voltage,
                 jfet.beta,
                 jfet.channel_length_modulation,
+                jfet.junction_potential,
+                jfet.doping_tail_parameter,
             );
             JfetDcResult {
                 drain_current: -result.drain_current,
@@ -23952,6 +23965,8 @@ fn evaluate_jfet(jfet: &Jfet, vgs: f64, vds: f64) -> JfetDcResult {
             jfet.threshold_voltage,
             jfet.beta,
             jfet.channel_length_modulation,
+            jfet.junction_potential,
+            jfet.doping_tail_parameter,
         ),
     }
 }
@@ -23962,6 +23977,8 @@ fn evaluate_njf(
     threshold_voltage: f64,
     beta: f64,
     channel_length_modulation: f64,
+    junction_potential: f64,
+    doping_tail_parameter: f64,
 ) -> JfetDcResult {
     let overdrive = vgs - threshold_voltage;
     if overdrive <= 0.0 || vds < 0.0 {
@@ -23971,20 +23988,30 @@ fn evaluate_njf(
             gds: 0.0,
         };
     }
+    let tail_factor = if doping_tail_parameter == 1.0 {
+        0.0
+    } else {
+        (1.0 - doping_tail_parameter) / (junction_potential - threshold_voltage)
+    };
+    let modulation = 1.0 + channel_length_modulation * vds;
     if vds < overdrive {
-        let channel = 2.0 * overdrive * vds - vds * vds;
-        let modulation = 1.0 + channel_length_modulation * vds;
+        let slope = 2.0 * doping_tail_parameter + 3.0 * tail_factor * (overdrive - vds);
+        let channel = vds * (vds * (tail_factor * vds - doping_tail_parameter) + overdrive * slope);
         return JfetDcResult {
             drain_current: beta * channel * modulation,
-            gm: 2.0 * beta * vds * modulation,
-            gds: beta * (2.0 * overdrive - 2.0 * vds) * modulation
+            gm: beta * modulation * vds * (slope + 3.0 * tail_factor * overdrive),
+            gds: beta * modulation * (overdrive - vds) * slope
                 + beta * channel * channel_length_modulation,
         };
     }
+    let channel = overdrive * overdrive * (doping_tail_parameter + overdrive * tail_factor);
     JfetDcResult {
-        drain_current: beta * overdrive * overdrive * (1.0 + channel_length_modulation * vds),
-        gm: 2.0 * beta * overdrive * (1.0 + channel_length_modulation * vds),
-        gds: beta * overdrive * overdrive * channel_length_modulation,
+        drain_current: beta * channel * modulation,
+        gm: beta
+            * modulation
+            * overdrive
+            * (2.0 * doping_tail_parameter + 3.0 * overdrive * tail_factor),
+        gds: beta * channel * channel_length_modulation,
     }
 }
 
@@ -25284,6 +25311,22 @@ fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
             reason: "bandgap voltage must be finite and positive".to_string(),
+        });
+    }
+    if !jfet.doping_tail_parameter.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "doping-tail parameter must be finite".to_string(),
+        });
+    }
+    let effective_threshold = match jfet.polarity {
+        JfetPolarity::Njf => jfet.threshold_voltage,
+        JfetPolarity::Pjf => -jfet.threshold_voltage,
+    };
+    if jfet.doping_tail_parameter != 1.0 && jfet.junction_potential == effective_threshold {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "junction potential minus effective threshold voltage must be non-zero when doping-tail parameter differs from 1".to_string(),
         });
     }
     if !jfet.drain_resistance.is_finite() || jfet.drain_resistance < 0.0 {
