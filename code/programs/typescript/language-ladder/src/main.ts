@@ -378,7 +378,12 @@ function renderDetail(v: LetterView): HTMLElement {
   head.append(big, meta);
   d.appendChild(head);
   d.appendChild(section("Break it apart — the pieces", listOf(v.components, "pieces")));
-  d.appendChild(section(`Write it — stroke order (${v.strokeOrderNote})`, orderedListOf(v.strokeOrder)));
+  // Only offer stroke order when we actually have it. The Dravidian syllabaries
+  // are recognition-only (their ductus is a separate, paused effort), so showing
+  // an empty "Write it" section would imply data we don't have.
+  if (v.strokeOrder.length > 0) {
+    d.appendChild(section(`Write it — stroke order (${v.strokeOrderNote})`, orderedListOf(v.strokeOrder)));
+  }
   if (v.notes) {
     const note = el("p", "detail__notes");
     note.textContent = v.notes;

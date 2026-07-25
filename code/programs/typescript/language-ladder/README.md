@@ -123,8 +123,20 @@ language-ladder                                     ← this app renders it (HL0
 
 The app imports those JSON files **directly**, so it can never drift from the
 curriculum. Adding a script to the curriculum surfaces it here with a one-line
-edit in `src/data.ts`. Ships today with **Cyrillic, Hebrew, Chinese, Arabic, and
-Devanagari**.
+edit in `src/data.ts`. Ships today with **Cyrillic, Hebrew, Chinese, Arabic,
+Devanagari, Gujarati, Tamil**, and the three **Dravidian syllabaries** below.
+
+### Dravidian syllabaries (Telugu / Kannada / Malayalam)
+
+These three are **abugidas** — a base consonant carries an inherent *a*, and a
+vowel sign turns it into a syllable (క = *ka*, కి = *ki*, కు = *ku*; ఖ = *kha*).
+So each "letter" is a syllable, and `data/scripts/{telugu,kannada,malayalam}.json`
+are **generated from Unicode** by `data/scripts/generate_syllabary.py`: every
+glyph is composed from code points and its romanization taken from the official
+Unicode character name (ISO-15919), never hand-typed. They are **recognition
+only** — `strokeOrder` is empty, since the handwriting ductus is a separate,
+source-gated effort; the Browse detail hides the stroke-order section when it's
+absent rather than showing an empty one.
 
 ## Design
 
