@@ -3303,7 +3303,9 @@ fn update_accumulator(acc: &mut AggAccumulator, fn_tag: &AggFn, v: SqlValue) -> 
                 acc.count += 1;
             }
         }
-        AggFn::Sum => {
+        AggFn::Sum | AggFn::Total => {
+            // TOTAL accumulates exactly like SUM (skip NULLs, add the rest); the
+            // only difference is at finalize time (always REAL, `0.0` default).
             if !matches!(v, SqlValue::Null) {
                 acc.acc = Some(match &acc.acc {
                     None => v,
@@ -3441,6 +3443,17 @@ fn finalize_accumulator(acc: &AggAccumulator, fn_tag: &AggFn) -> SqlValue {
         AggFn::CountStar => SqlValue::Int(acc.count),
         AggFn::Count => SqlValue::Int(acc.count),
         AggFn::Sum => acc.acc.clone().unwrap_or(SqlValue::Null),
+        // TOTAL always returns a REAL and yields 0.0 (never NULL) for an empty or
+        // all-NULL group — SQLite's NULL-free companion to SUM. The running sum is
+        // kept in `acc.acc` exactly as SUM does (i64 while all inputs are
+        // integers, saturating at i64::MAX) and converted to f64 here; SQLite
+        // accumulates in a double throughout, so the two agree for every sum
+        // within i64 range and diverge only past i64::MAX (~9.22e18) — an
+        // astronomical edge we accept.
+        AggFn::Total => SqlValue::Float(match &acc.acc {
+            Some(v) => to_f64(v),
+            None => 0.0,
+        }),
         AggFn::Min => acc.acc.clone().unwrap_or(SqlValue::Null),
         AggFn::Max => acc.acc.clone().unwrap_or(SqlValue::Null),
         // The accumulated Text, or NULL when no non-NULL value was seen (an

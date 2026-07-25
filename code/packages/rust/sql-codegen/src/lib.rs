@@ -186,6 +186,9 @@ pub enum AggFn {
     CountDistinct,
     /// `SUM(col)` — sum of all non-NULL values
     Sum,
+    /// `TOTAL(col)` — like SUM but always REAL and `0.0` (never NULL) for an
+    /// empty/all-NULL group.
+    Total,
     /// `AVG(col)` — arithmetic mean of non-NULL values
     Avg,
     /// `MIN(col)` — minimum value
@@ -2442,6 +2445,7 @@ fn render_aggregate_name(func: &AggFunc, arg: Option<&SqlExpr>, distinct: bool) 
     let func_name = match func {
         AggFunc::Count => "COUNT",
         AggFunc::Sum => "SUM",
+        AggFunc::Total => "TOTAL",
         AggFunc::Avg => "AVG",
         AggFunc::Min => "MIN",
         AggFunc::Max => "MAX",
@@ -2620,6 +2624,7 @@ fn plan_agg_to_agg_fn(func: &AggFunc, is_star: bool) -> AggFn {
             }
         }
         AggFunc::Sum => AggFn::Sum,
+        AggFunc::Total => AggFn::Total,
         AggFunc::Avg => AggFn::Avg,
         AggFunc::Min => AggFn::Min,
         AggFunc::Max => AggFn::Max,

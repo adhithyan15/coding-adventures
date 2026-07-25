@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.13] - Unreleased
+
+### Added
+
+- **`TOTAL(x)` aggregate** — new `AggFn::Total`, wired through the `AggFunc→AggFn`
+  mapping and the aggregate name renderer (`TOTAL`). Accumulates like `SUM`; the
+  VM finalizes it as an always-REAL, `0.0`-default value.
+
 ## [0.6.12] - Unreleased
 
 ### Changed
