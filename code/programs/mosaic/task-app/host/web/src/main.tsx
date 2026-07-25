@@ -95,15 +95,18 @@ function makeController(engine: any, init: ControllerInit = {}) {
     getProps() {
       // Ask the ENGINE for render-ready cells. The host no longer formats dates,
       // picks the ✓/○ glyph, or decides what "overdue" means — those all come back
-      // already resolved and formatted, identically for every future host. All this
-      // code does is lay the cells out as a text row (presentation, not logic).
+      // already resolved and formatted, identically for every future host. Each row
+      // is handed to the layout as a *list of cells* in the order the interface
+      // documents — [ done-glyph, name, due, schedule, overdue ] — and the Mosaic
+      // layout places each cell in its own styled element (toggle, name, chips).
+      // Empty cells become empty strings, which the layout hides.
       const { byTask, ids } = rows();
-      const taskRows = ids.map((id) => {
+      const taskRows: string[][] = ids.map((id) => {
         const c = byTask.get(id)!;
-        const due = c.display[DEADLINE] ? ` · due ${c.display[DEADLINE]}` : "";
-        const sched = c.display[START] ? ` · ${c.display[START]} → ${c.display[FINISH]}` : "";
-        const late = c.value[OVERDUE]?.value === true ? " · ⚠ overdue" : "";
-        return `${c.display[DONE]} ${c.display[NAME]}${due}${sched}${late}`;
+        const due = c.display[DEADLINE] ? `due ${c.display[DEADLINE]}` : "";
+        const sched = c.display[START] ? `${c.display[START]} → ${c.display[FINISH]}` : "";
+        const late = c.value[OVERDUE]?.value === true ? "⚠ overdue" : "";
+        return [c.display[DONE], c.display[NAME], due, sched, late];
       });
       const doneCount = ids.filter((id) => byTask.get(id)!.value[DONE]?.value === true).length;
       const finish = engine.gantt(today).data.projectFinish;

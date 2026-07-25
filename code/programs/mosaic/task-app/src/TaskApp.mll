@@ -24,9 +24,23 @@ layout TaskApp {
     Text [ summary ] ( content : slot: summary )
 
     Column [ task-list ] {
+      // Each row is a list of cells. The toggle and Delete buttons sit directly in
+      // the For body so their `number` payload carries the outer row index `i`; the
+      // name and the meta chips read individual cells by `( row[n] )`. Each chip is
+      // wrapped in an `If` on its own cell so an empty cell renders nothing at all.
       For ( each: slot: task-rows , as: row , index: i ) {
         Row [ task-row ] {
-          HostButton [ row-btn ] ( label : row , onClick : emit: onToggleTask )
+          HostButton [ toggle ] ( label : ( row[0] ) , onClick : emit: onToggleTask )
+          Text [ task-name ] ( content : ( row[1] ) )
+          If ( when: ( row[2] ) ) {
+            Text [ chip-due ] ( content : ( row[2] ) )
+          }
+          If ( when: ( row[3] ) ) {
+            Text [ chip-sched ] ( content : ( row[3] ) )
+          }
+          If ( when: ( row[4] ) ) {
+            Text [ chip-over ] ( content : ( row[4] ) )
+          }
           HostButton [ del-btn ] ( label : "Delete" , onClick : emit: onDeleteTask )
         }
       }
