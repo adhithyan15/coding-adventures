@@ -1867,26 +1867,20 @@ const CASES: &[Case] = &[
     // rows; `COLLATE NOCASE` collapses them to two, keeping each fold's FIRST
     // (scan-order) original text — 'a','b'. The output column is named after its
     // source text `b COLLATE NOCASE` (SQLite includes the COLLATE in the name).
-    //
-    // No ORDER BY on purpose: the surviving representative of a fold is only
-    // well-defined once DISTINCT runs, and mini's VM currently applies ORDER BY
-    // BEFORE DISTINCT (post-op order sort→distinct), which would pick the
-    // sort-first row instead — an orthogonal ordering bug tracked separately as
-    // `distinct_collate_order_by_representative`. Compared unordered as a multiset.
+    // Now with an `ORDER BY b`: DISTINCT runs BEFORE the sort (fixed VM post-op
+    // order), so the scan-first 'a'/'b' survive and are then ordered — exactly
+    // SQLite. (Previously the VM sorted first and kept the byte-sort-first 'A'.)
     Case {
         id: "distinct_explicit_collate",
         setup: &[
             "CREATE TABLE t (id INTEGER, c TEXT COLLATE NOCASE, b TEXT)",
             "INSERT INTO t VALUES (1,'a','a'),(2,'A','A'),(3,'b','b'),(4,'B','B')",
         ],
-        query: "SELECT DISTINCT b COLLATE NOCASE FROM t",
+        query: "SELECT DISTINCT b COLLATE NOCASE FROM t ORDER BY b",
     },
-    // Tracks the orthogonal bug the case above sidesteps: with `ORDER BY b` the
-    // VM sorts (post_sort) BEFORE deduping (post_distinct), so the NOCASE fold of
-    // 'a'/'A' keeps the byte-sort-first 'A' rather than SQLite's scan-first 'a'.
-    // The COLLATE *folding* is correct (two rows out); only WHICH original text
-    // survives diverges. Fix is to apply DISTINCT before ORDER BY (SQL semantics),
-    // a VM post-op reordering left to its own increment.
+    // The specific representative-selection regression, now fixed: a NOCASE fold
+    // of 'a'/'A' under `ORDER BY b` keeps SQLite's scan-first 'a', because the VM
+    // applies DISTINCT before ORDER BY. Guards the post-op ordering directly.
     Case {
         id: "distinct_collate_order_by_representative",
         setup: &[
@@ -2322,13 +2316,6 @@ const LEDGER: &[(&str, &str)] = &[
     (
         "order_by_ordinal_over_aggregate",
         "positional ORDER BY over an aggregate output column not yet re-bound to the materialized column",
-    ),
-    // Explicit COLLATE now parses AND folds (DISTINCT / GROUP BY); the only
-    // remaining divergence is which original row a fold keeps when ORDER BY is
-    // present, because the VM runs sort before distinct. Folding is correct.
-    (
-        "distinct_collate_order_by_representative",
-        "`SELECT DISTINCT x COLLATE NOCASE ... ORDER BY x` keeps the sort-first original text, not SQLite's scan-first, because the VM applies ORDER BY (post_sort) before DISTINCT (post_distinct); DISTINCT should precede ORDER BY",
     ),
 ];
 

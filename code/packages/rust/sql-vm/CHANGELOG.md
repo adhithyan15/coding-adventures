@@ -3,6 +3,23 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.36] - Unreleased
+
+### Fixed
+
+- **DISTINCT is now applied before ORDER BY (SQL logical order).** The
+  post-processing phase ran `sort → strip-hidden-sort-columns → distinct → limit`,
+  so a `DISTINCT` group kept whichever row sorted first instead of SQLite's
+  scan-first row — observable when a collation folds rows with different original
+  text (`SELECT DISTINCT x COLLATE NOCASE … ORDER BY x` kept the byte-sort-first
+  `'A'` rather than `'a'`). It now runs `distinct → sort → truncate → limit`.
+- `apply_distinct` gained a `visible_cols` parameter and dedups on ONLY the first
+  `visible_cols` (SELECT-list) columns, so the trailing hidden `__sort_N__`
+  columns — which must survive until the sort reads them — don't pollute the
+  dedup key, and the collation vector still lines up. `visible_cols =
+  post_truncate.unwrap_or(output_columns.len())`, i.e. the visible-column prefix
+  whether or not hidden sort columns were appended. LIMIT still runs last.
+
 ## [0.4.35] - Unreleased
 
 ### Added
