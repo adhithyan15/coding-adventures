@@ -675,15 +675,54 @@ impl FlatHeap {
     /// `parent - HEADER_SIZE`; a non-heap `parent` would read foreign memory. A
     /// `parent < HEADER_SIZE` (null / tiny) is ignored.
     pub unsafe fn write_barrier(&mut self, parent: usize, child: usize) {
-        let _ = child; // reserved for a future precise (child-young) filter
-        if parent < HEADER_SIZE {
-            return;
+        // (a) Generational remembered-set barrier (unchanged): record an old parent so a
+        //     later minor GC scans it for the young objects it may now reference.
+        if parent >= HEADER_SIZE {
+            // SAFETY: caller guarantees `parent` is a live GC payload, so its header is the
+            // 32 bytes immediately before it (the flat-heap layout invariant).
+            let parent_gen =
+                unsafe { (*((parent - HEADER_SIZE) as *const FlatHeader)).generation };
+            if parent_gen == GEN_OLD {
+                self.remembered.insert(parent);
+            }
         }
-        // SAFETY: caller guarantees `parent` is a live GC payload, so its header
-        // is the 32 bytes immediately before it (the flat-heap layout invariant).
-        let parent_gen = unsafe { (*((parent - HEADER_SIZE) as *const FlatHeader)).generation };
-        if parent_gen == GEN_OLD {
-            self.remembered.insert(parent);
+
+        // (b) Incremental **Dijkstra insertion barrier** (AOT00-T4 §5): while an incremental
+        //     mark is in progress, shade the stored `child` GREY. This preserves the strong
+        //     tri-colour invariant "no black → white": without it, storing a white child into
+        //     an already-scanned (black) parent and dropping the child's other in-edge would
+        //     strand the child white, and the sweep would free it while it is still live (a
+        //     use-after-free). Shading the child (marking + enqueuing) guarantees it is
+        //     rescanned, hence retained. `child` may be a raw or NaN-box-tagged heap pointer
+        //     (low 3 bits), so both the raw and tag-stripped forms are shaded — the same
+        //     candidate discipline as `mark_word`/`push_candidates`. Outside a mark this whole
+        //     block is a single predictable-branch no-op (generational path unchanged).
+        if self.mark_in_progress {
+            // Compute the header pointers first (a `Copy` `*mut`), *then* shade — so the
+            // `&self` `find_header` borrow ends before the `&mut self` `shade_grey`.
+            let h0 = self.find_header(child);
+            self.shade_grey(h0);
+            let stripped = child & !0x7usize;
+            if stripped != child && stripped != 0 {
+                let h1 = self.find_header(stripped);
+                self.shade_grey(h1);
+            }
+        }
+    }
+
+    /// Shade a candidate block **grey** for the incremental mark: if `h` is a non-null,
+    /// still-**white** (`!marked`) block, mark it and push it onto the grey worklist so a
+    /// later [`Self::incremental_step`] scans it. A null `h`, or an already-marked
+    /// (grey/black) block, is a no-op — shading is idempotent. Erring toward grey (shading a
+    /// child that later proves dead) only retains it one extra cycle (floating garbage), never
+    /// a use-after-free.
+    ///
+    /// # Safety
+    /// `h` is null or a live block owned by this heap (as returned by [`Self::find_header`]).
+    unsafe fn shade_grey(&mut self, h: *mut FlatHeader) {
+        if !h.is_null() && !(*h).marked {
+            (*h).marked = true;
+            self.mark_worklist.push(h);
         }
     }
 
@@ -1015,6 +1054,15 @@ impl FlatHeap {
         debug_assert!(self.mark_in_progress, "incremental_step outside a mark phase");
         // Take the worklist out so `scan_payload(&self, …)` can borrow `self` immutably while
         // we push newly-greyed children into the (now local) list.
+        //
+        // SOUND ONLY UNDER THE SINGLE-THREADED, NON-REENTRANT DRIVER: while the list is taken
+        // out, `self.mark_worklist` is empty, and the reassignment below overwrites it. A
+        // `write_barrier` shade (PR-2) that pushed to `self.mark_worklist` *during* this window
+        // would be clobbered — the child lost, then swept (a UAF). That never happens because
+        // the mutator (hence the barrier) runs strictly *between* steps, never inside one:
+        // gc-core is single-threaded and `incremental_step` calls nothing that re-enters the
+        // mutator. This `take`/reassign is the one construct that would have to change first if
+        // this collector ever went reentrant or multi-threaded.
         let mut work = core::mem::take(&mut self.mark_worklist);
         let mut scanned = 0usize;
         while scanned < budget {
@@ -3713,5 +3761,84 @@ mod tests {
         let next = unsafe { heap.collect_mixed(&[&root2 as *const usize as usize], &[]) };
         assert_eq!(next.freed, 1, "newborn reclaimed on the following cycle");
         assert_eq!(heap.object_count(), 1);
+    }
+
+    // ── Incremental collector — the Dijkstra insertion write barrier (AOT00-T4 PR-2) ──
+
+    /// Build the shared "black parent gains a white child" scenario and return `(heap, P, C)`
+    /// with the mutation applied. Objects: `P` (rooted, scanned to BLACK), `Q` (rooted, still
+    /// GREY), `C` (a leaf, reachable at start ONLY via `Q.field0`, so still WHITE after `P`'s
+    /// scan). The mutation stores `C` into black `P` and drops the `Q → C` edge — exactly the
+    /// state where, without a barrier, `C` is stranded white and swept. The caller decides
+    /// whether to fire `write_barrier(P, C)`.
+    unsafe fn incremental_barrier_setup() -> (FlatHeap, usize, usize) {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]); // one ref field at offset 0
+        let p = heap.alloc(16, k) as usize; // leaf parent (field0 = 0)
+        let q = heap.alloc(16, k) as usize;
+        let c = heap.alloc(16, k) as usize; // leaf
+        *(q as *mut usize) = c; // Q.field0 -> C  (C reachable only via Q for now)
+
+        // Root Q *then* P so the worklist (a LIFO stack) pops P first.
+        let root_q = q;
+        let root_p = p;
+        let slots = [&root_q as *const usize as usize, &root_p as *const usize as usize];
+        heap.incremental_start(&slots, &[]);
+        // One step scans P (a leaf) → P BLACK; Q stays grey, C stays white.
+        let done = heap.incremental_step(1);
+        assert!(!done, "Q still unscanned after one step");
+
+        // Mutate: install C into the black parent P, and drop the Q -> C edge.
+        *(p as *mut usize) = c;
+        *(q as *mut usize) = 0;
+        (heap, p, c)
+    }
+
+    /// **The barrier is load-bearing.** With the Dijkstra insertion barrier, storing the white
+    /// `C` into the black `P` shades `C` grey, so it survives the cycle — nothing is freed.
+    #[test]
+    fn incremental_write_barrier_keeps_mutator_installed_child() {
+        let (mut heap, p, c) = unsafe { incremental_barrier_setup() };
+        // Fire the barrier for the store `P.field0 = C` — shades C grey.
+        unsafe { heap.write_barrier(p, c) };
+        while !unsafe { heap.incremental_step(8) } {}
+        let stats = unsafe { heap.incremental_finish() };
+        assert_eq!(stats.freed, 0, "the barrier-shaded child C survives");
+        assert_eq!(heap.object_count(), 3, "P, Q, C all live");
+        // C is reachable through P and its value is intact.
+        assert_eq!(unsafe { *(p as *const usize) }, c, "P.field0 still points at the live C");
+    }
+
+    /// **The load-bearing twin.** The *identical* sequence with the barrier call OMITTED: `C`
+    /// is never shaded, stays white behind the already-scanned black `P`, and the sweep frees
+    /// it — the use-after-free the barrier exists to prevent. Proves the barrier is necessary,
+    /// not decorative.
+    #[test]
+    fn incremental_without_barrier_strands_and_frees_the_child() {
+        let (mut heap, _p, _c) = unsafe { incremental_barrier_setup() };
+        // NO write_barrier call — the store went straight to memory.
+        while !unsafe { heap.incremental_step(8) } {}
+        let stats = unsafe { heap.incremental_finish() };
+        assert_eq!(stats.freed, 1, "without the barrier, the stranded white C is swept");
+        assert_eq!(heap.object_count(), 2, "only P and Q survive — C was lost");
+    }
+
+    /// The incremental half of the barrier is inert when no mark is in progress: a store
+    /// outside an incremental cycle only does the generational bookkeeping (the worklist stays
+    /// empty, nothing is shaded), so the existing generational barrier behaviour is unchanged.
+    #[test]
+    fn incremental_write_barrier_is_noop_outside_a_mark() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let p = heap.alloc(16, k) as usize;
+        let c = heap.alloc(16, k) as usize;
+        assert!(!heap.incremental_in_progress());
+        unsafe { heap.write_barrier(p, c) }; // no mark → no shading
+        assert_eq!(heap.incremental_grey_count(), 0, "nothing shaded outside a mark");
+        // A subsequent full collect rooting only P reclaims the unreferenced C, exactly as
+        // before this rung (the barrier didn't spuriously retain anything).
+        let root = p;
+        let stats = unsafe { heap.collect_mixed(&[&root as *const usize as usize], &[]) };
+        assert_eq!(stats.freed, 1, "C reclaimed — the barrier had no incremental effect");
     }
 }
