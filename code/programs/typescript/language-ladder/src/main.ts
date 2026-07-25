@@ -31,6 +31,12 @@ import {
   type ItemState,
 } from "./scheduler.ts";
 import { buildPool, type PoolEntry } from "./interleave.ts";
+import {
+  isSyllabary,
+  consonantGroups,
+  unlockedConsonantCount,
+  unlockedLetterIndices,
+} from "./syllabary.ts";
 import { loadLessons, indicesByLanguage, nextDue } from "./lessons.ts";
 import {
   planSession,
@@ -228,6 +234,29 @@ function resolve(idx: number): PoolEntry {
   return { scriptIndex: currentScript, letterIndex: idx };
 }
 
+// The slow-unlock gate for the Dravidian syllabaries. Drilling 350 syllables at
+// once is the opposite of learning to read; instead the drill opens ONE
+// consonant's vowel row (ka kā ki … kō) and unlocks the next consonant only once
+// the current row is mastered — the "ka, ki, ku … kha, khi, khu" build-up. Only
+// active in "script" scope on a syllabary; null (no gating) everywhere else, so
+// the alphabets and Mixed mode are untouched. In script scope the schedule index
+// IS the letter index, so `schedule` lines up 1:1 with `letters`.
+interface SyllabaryGate {
+  indices: number[]; // the letter indices currently drillable
+  set: Set<number>; // same, for O(1) distractor filtering
+  unlocked: number; // how many consonants are open
+  total: number; // how many consonants in all
+}
+function syllabaryGate(): SyllabaryGate | null {
+  if (scope !== "script") return null;
+  const letters = SCRIPTS[currentScript]!.letters;
+  if (!isSyllabary(letters)) return null;
+  const groups = consonantGroups(letters);
+  const unlocked = unlockedConsonantCount(groups, schedule);
+  const indices = unlockedLetterIndices(groups, unlocked);
+  return { indices, set: new Set(indices), unlocked, total: groups.length };
+}
+
 // --- shared chrome ----------------------------------------------------------
 
 const SUBTITLES: Record<Mode, string> = {
@@ -412,15 +441,36 @@ function startPractice(): void {
 function nextQuestion(): void {
   // The scheduler decides WHICH item (spaced repetition, interleaved in mixed
   // scope); randomness is only for the distractors + answer position.
-  const idx = pickNext(schedule, sessionTick);
-  scheduleIndex = idx < 0 ? 0 : idx;
+  const gate = syllabaryGate();
+  let idx: number;
+  if (gate) {
+    // Only ask about UNLOCKED syllables: run the scheduler over just that slice.
+    // pickNext returns the picked item's real `letterIndex` (initStates seeds it
+    // to the schedule position and reviewIn preserves it), and every item in the
+    // slice is an unlocked letter — so the return value is already a real index
+    // into the full letters/views, no re-mapping needed.
+    const picked = pickNext(
+      gate.indices.map((i) => schedule[i]!),
+      sessionTick,
+    );
+    idx = picked < 0 ? gate.indices[0]! : picked;
+  } else {
+    idx = pickNext(schedule, sessionTick);
+    if (idx < 0) idx = 0;
+  }
+  scheduleIndex = idx;
   const { scriptIndex, letterIndex } = resolve(scheduleIndex);
   questionScript = scriptIndex;
   const views = buildScriptView(SCRIPTS[scriptIndex]!);
   const placeAt = randInt(Math.min(OPTION_COUNT, views.length));
   // Distractors come from the target's OWN script, so a Cyrillic prompt never
-  // offers a Hebrew decoy.
-  question = buildDrillQuestion(views, letterIndex, OPTION_COUNT, chooseConfusableShuffled, placeAt);
+  // offers a Hebrew decoy — and on a gated syllabary, only from UNLOCKED
+  // syllables, so a not-yet-introduced consonant never appears as a decoy.
+  const chooser = gate
+    ? (ranked: number[], count: number) =>
+        chooseConfusableShuffled(ranked.filter((i) => gate.set.has(i)), count)
+    : chooseConfusableShuffled;
+  question = buildDrillQuestion(views, letterIndex, OPTION_COUNT, chooser, placeAt);
   chosen = null;
 }
 
@@ -433,14 +483,25 @@ function renderPractice(): HTMLElement {
 
   wrap.appendChild(renderScopeToggle());
 
-  // Score line + a spaced-repetition mastery read-out (across the whole pool in
-  // mixed scope).
+  // Score line + a spaced-repetition mastery read-out. On a gated syllabary the
+  // read-out is over the UNLOCKED syllables, not all 350 — otherwise "mastered
+  // 10 / 350" would read as no progress when you've in fact finished the first
+  // row.
+  const gate = syllabaryGate();
   const acc = accuracy(score);
-  const mastered = masteredCount(schedule);
+  const scoreState = gate ? gate.indices.map((i) => schedule[i]!) : schedule;
+  const mastered = masteredCount(scoreState);
   const scoreLine = el("div", "score");
   const scoreText = acc === null ? "Score: 0 / 0" : `Score: ${score.correct} / ${score.total}  ·  ${acc}%`;
-  scoreLine.textContent = `${scoreText}   ·   mastered ${mastered} / ${schedule.length}`;
+  scoreLine.textContent = `${scoreText}   ·   mastered ${mastered} / ${scoreState.length}`;
   wrap.appendChild(scoreLine);
+
+  // The slow-unlock cue: which consonant you're on, and how to open the next.
+  if (gate) {
+    const cue = el("div", "syllabary-cue");
+    cue.textContent = `Learning consonant ${gate.unlocked} of ${gate.total} — master this vowel row to unlock the next.`;
+    wrap.appendChild(cue);
+  }
 
   // Prompt
   const prompt = el("div", "prompt");
