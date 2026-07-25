@@ -435,6 +435,8 @@ fn clone_subckt_element(
                 element.gate_saturation_current_temperature_exponent;
             mapped.bandgap_voltage = element.bandgap_voltage;
             mapped.doping_tail_parameter = element.doping_tail_parameter;
+            mapped.noise_equation_level = element.noise_equation_level;
+            mapped.channel_noise_coefficient = element.channel_noise_coefficient;
             mapped.drain_resistance = element.drain_resistance;
             mapped.source_resistance = element.source_resistance;
             mapped.threshold_voltage_temperature_coefficient =
@@ -2819,6 +2821,22 @@ pub fn jfet_at_temperature(
             reason: "doping-tail parameter must be finite".to_string(),
         });
     }
+    if !jfet.noise_equation_level.is_finite()
+        || jfet.noise_equation_level < 1.0
+        || jfet.noise_equation_level.fract() != 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "noise equation level must be a finite integer greater than or equal to 1"
+                .to_string(),
+        });
+    }
+    if !jfet.channel_noise_coefficient.is_finite() || jfet.channel_noise_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "channel noise coefficient must be finite and non-negative".to_string(),
+        });
+    }
     if !jfet.threshold_voltage_temperature_coefficient.is_finite() {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
@@ -2944,6 +2962,8 @@ pub struct Jfet {
     pub gate_saturation_current_temperature_exponent: f64,
     pub bandgap_voltage: f64,
     pub doping_tail_parameter: f64,
+    pub noise_equation_level: f64,
+    pub channel_noise_coefficient: f64,
     pub drain_resistance: f64,
     pub source_resistance: f64,
     pub threshold_voltage_temperature_coefficient: f64,
@@ -3027,6 +3047,8 @@ impl Jfet {
             gate_saturation_current_temperature_exponent: 3.0,
             bandgap_voltage: 1.11,
             doping_tail_parameter: 1.0,
+            noise_equation_level: 1.0,
+            channel_noise_coefficient: 1.0,
             drain_resistance: 0.0,
             source_resistance: 0.0,
             threshold_voltage_temperature_coefficient: 0.0,
@@ -3957,8 +3979,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Diode, 15, 21, 5, 3),
     (ModelCardKind::Npn, 41, 58, 13, 4),
     (ModelCardKind::Pnp, 41, 58, 13, 4),
-    (ModelCardKind::Njf, 20, 28, 7, 3),
-    (ModelCardKind::Pjf, 20, 28, 7, 3),
+    (ModelCardKind::Njf, 22, 30, 7, 3),
+    (ModelCardKind::Pjf, 22, 30, 7, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
     (ModelCardKind::Pmos, 18, 25, 6, 3),
 ];
@@ -4066,6 +4088,8 @@ const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("XTI", "XTI"),
     ("EG", "EG"),
     ("B", "B"),
+    ("NLEV", "NLEV"),
+    ("GDSNOI", "GDSNOI"),
     ("RD", "RD"),
     ("RS", "RS"),
     ("TNOM", "TNOM"),
@@ -4808,6 +4832,8 @@ pub fn jfet_from_model_card(
     jfet.gate_saturation_current_temperature_exponent = model_card_value(model, "XTI", 3.0);
     jfet.bandgap_voltage = model_card_value(model, "EG", 1.11);
     jfet.doping_tail_parameter = model_card_value(model, "B", 1.0);
+    jfet.noise_equation_level = model_card_value(model, "NLEV", 1.0);
+    jfet.channel_noise_coefficient = model_card_value(model, "GDSNOI", 1.0);
     jfet.drain_resistance = model_card_value(model, "RD", 0.0);
     jfet.source_resistance = model_card_value(model, "RS", 0.0);
     jfet.threshold_voltage_temperature_coefficient = model_card_value(model, "TCV", 0.0);
@@ -22420,6 +22446,28 @@ fn input_source_type_error(input_source: &str, kind: &str) -> SpiceError {
     }
 }
 
+fn jfet_channel_noise_conductance(jfet: &Jfet, vgs: f64, vds: f64, gm: f64) -> f64 {
+    if jfet.noise_equation_level < 3.0 {
+        return MOSFET_CHANNEL_NOISE_GAMMA * gm.abs();
+    }
+    let (vgs, vds, threshold_voltage) = match jfet.polarity {
+        JfetPolarity::Njf => (vgs, vds, jfet.threshold_voltage),
+        JfetPolarity::Pjf => (-vgs, -vds, -jfet.threshold_voltage),
+    };
+    let overdrive = vgs - threshold_voltage;
+    if overdrive <= 0.0 || vds < 0.0 {
+        return 0.0;
+    }
+    let alpha = if overdrive >= vds {
+        1.0 - vds / overdrive
+    } else {
+        0.0
+    };
+    MOSFET_CHANNEL_NOISE_GAMMA * jfet.beta * overdrive * (1.0 + alpha + alpha * alpha)
+        / (1.0 + alpha)
+        * jfet.channel_noise_coefficient
+}
+
 fn collect_noise_sources(
     circuit: &Circuit,
     node_indices: &HashMap<String, usize>,
@@ -22633,17 +22681,19 @@ fn collect_noise_sources(
                     drain_voltage - source_voltage,
                 );
                 let gm = result.gm.max(0.0);
-                if gm > 0.0 {
+                let noise_conductance = jfet_channel_noise_conductance(
+                    jfet,
+                    gate_voltage - source_voltage,
+                    drain_voltage - source_voltage,
+                    gm,
+                );
+                if noise_conductance > 0.0 {
                     sources.push(NoiseSource {
                         element_name: jfet.name.clone(),
                         noise_type: NoiseType::Thermal,
                         positive: drain,
                         negative: source,
-                        source_psd: 4.0
-                            * BOLTZMANN
-                            * temperature_kelvin
-                            * MOSFET_CHANNEL_NOISE_GAMMA
-                            * gm,
+                        source_psd: 4.0 * BOLTZMANN * temperature_kelvin * noise_conductance,
                         frequency_exponent: 0.0,
                     });
                 }
@@ -25317,6 +25367,22 @@ fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
             reason: "doping-tail parameter must be finite".to_string(),
+        });
+    }
+    if !jfet.noise_equation_level.is_finite()
+        || jfet.noise_equation_level < 1.0
+        || jfet.noise_equation_level.fract() != 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "noise equation level must be a finite integer greater than or equal to 1"
+                .to_string(),
+        });
+    }
+    if !jfet.channel_noise_coefficient.is_finite() || jfet.channel_noise_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "channel noise coefficient must be finite and non-negative".to_string(),
         });
     }
     let effective_threshold = match jfet.polarity {

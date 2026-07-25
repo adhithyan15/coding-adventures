@@ -33,15 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language JFET doping-tail shaping.
+1. Cross-language JFET channel-noise equation selection.
    - Status: current PR completion candidate.
-   - Add Berkeley JFET `B` model-card support in Rust, Python, and TypeScript.
-   - Apply Parker-Skellern doping-tail shaping to the linear and saturation
-     channel-current equations while preserving the existing
-     Shichman-Hodges behavior at the Berkeley default `B = 1`.
-   - Preserve the parameter through hierarchy and cloning, validate finite
-     values and its `PB - VTO` denominator, and extend the
-     supported-parameter coverage gate from 171 to 173 canonical rows.
+   - Add Berkeley JFET `NLEV` and `GDSNOI` model-card support in Rust, Python,
+     and TypeScript.
+   - Preserve the legacy `2/3 * gm` channel thermal-noise path for `NLEV < 3`
+     while implementing the Berkeley linear-region equation for `NLEV >= 3`,
+     scaled by `GDSNOI`.
+   - Preserve both parameters through hierarchy and cloning, validate their
+     domains, and extend the supported-parameter coverage gate from 173 to 177
+     canonical rows.
 
 ## Completed Slices
 
@@ -3366,6 +3367,15 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning paths preserve the voltage, finite-positive
      validation is shared across analyses, and the supported-parameter release
      gate now covers 171 canonical rows.
+
+262. Cross-language JFET doping-tail shaping.
+   - Status: completed in PR 8978.
+   - Rust, Python, and TypeScript JFET model cards now accept `B` and apply
+     Parker-Skellern doping-tail shaping to linear and saturation channel
+     current while preserving Shichman-Hodges behavior at the default of 1.
+   - Hierarchy and cloning preserve the parameter, finite and denominator
+     validation is shared across analyses, and the supported-parameter release
+     gate now covers 173 canonical rows.
 
 ## Backlog
 

@@ -1,5 +1,8 @@
 # Changelog
 
+- Add JFET model-card `NLEV` and `GDSNOI` support, preserving the legacy
+  channel thermal-noise path below level 3 and adding the Berkeley
+  linear-region equation at level 3 and above.
 - Add JFET model-card `B` support with Parker-Skellern doping-tail shaping in
   linear and saturation operation, preserving Shichman-Hodges behavior at the
   Berkeley default of 1.

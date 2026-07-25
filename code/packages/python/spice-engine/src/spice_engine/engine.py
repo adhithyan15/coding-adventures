@@ -668,7 +668,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.Af,
         )
     if isinstance(element, JFET):
-        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb, element.Fc, element.Is, element.Xti, element.Eg, element.B, element.Rd, element.Rs, element.Tcv, element.Vtotc, element.Tnom, element.Bex, element.Betatce)
+        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb, element.Fc, element.Is, element.Xti, element.Eg, element.B, element.Nlev, element.Gdsnoi, element.Rd, element.Rs, element.Tcv, element.Vtotc, element.Tnom, element.Bex, element.Betatce)
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
@@ -9195,6 +9195,19 @@ def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
         )
     if not math.isfinite(el.B):
         raise ValueError(f"JFET '{el.name}' doping-tail parameter must be finite")
+    if (
+        not math.isfinite(el.Nlev)
+        or el.Nlev < 1.0
+        or el.Nlev != math.floor(el.Nlev)
+    ):
+        raise ValueError(
+            f"JFET '{el.name}' noise equation level must be a finite integer "
+            "greater than or equal to 1"
+        )
+    if not math.isfinite(el.Gdsnoi) or el.Gdsnoi < 0.0:
+        raise ValueError(
+            f"JFET '{el.name}' channel noise coefficient must be finite and non-negative"
+        )
     effective_threshold = el.vto if el.polarity == "NJF" else -el.vto
     if el.B != 1.0 and el.Pb == effective_threshold:
         raise ValueError(
@@ -9237,6 +9250,29 @@ def _jfet_gate_junction_current_conductance(
     return (
         el.Is * (exp_value - 1.0),
         el.Is / _JFET_THERMAL_VOLTAGE * exp_value,
+    )
+
+
+def _jfet_channel_noise_conductance(
+    el: JFET, vgs: float, vds: float, gm: float
+) -> float:
+    if el.Nlev < 3.0:
+        return _MOSFET_CHANNEL_NOISE_GAMMA * abs(gm)
+    if el.polarity == "PJF":
+        vgs, vds, threshold = -vgs, -vds, -el.vto
+    else:
+        threshold = el.vto
+    overdrive = vgs - threshold
+    if overdrive <= 0.0 or vds < 0.0:
+        return 0.0
+    alpha = 1.0 - vds / overdrive if overdrive >= vds else 0.0
+    return (
+        _MOSFET_CHANNEL_NOISE_GAMMA
+        * el.beta
+        * overdrive
+        * (1.0 + alpha + alpha * alpha)
+        / (1.0 + alpha)
+        * el.Gdsnoi
     )
 
 
@@ -15591,8 +15627,11 @@ def _collect_noise_sources(
             )
             drain_current, gm, _ = _eval_jfet(el, Vg - Vs, Vd - Vs)
             gm = max(0.0, float(gm))
-            if gm > 0.0:
-                psd = kT4 * _MOSFET_CHANNEL_NOISE_GAMMA * gm
+            noise_conductance = _jfet_channel_noise_conductance(
+                el, Vg - Vs, Vd - Vs, gm
+            )
+            if noise_conductance > 0.0:
+                psd = kT4 * noise_conductance
                 n_d = (
                     None
                     if _is_ground(intrinsic_drain)
