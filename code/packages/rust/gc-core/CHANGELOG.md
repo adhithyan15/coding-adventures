@@ -1,5 +1,30 @@
 # Changelog — gc-core
 
+## 0.19.0 — 2026-07-25 — incremental Dijkstra insertion write barrier — PR-2 (AOT00-T4)
+
+Closes the incremental collector's soundness surface: the mutator may now safely store
+references *between* mark steps.
+
+- **`FlatHeap::write_barrier(parent, child)` extended** with a **Dijkstra insertion barrier**:
+  while an incremental mark is in progress (`mark_in_progress`), the stored `child` is
+  **shaded grey** (marked + pushed to the grey worklist) if it was white. This preserves the
+  strong tri-colour invariant *"no black → white"* — without it, storing a white child into
+  an already-scanned (black) parent and dropping the child's other in-edge would strand the
+  child white and the sweep would free it while still live (a use-after-free). Handles a raw
+  or NaN-box-tagged child pointer (both raw and tag-stripped forms shaded). **One barrier, two
+  jobs:** the generational old→young remembered-set half is unchanged and still runs first;
+  the incremental half is gated behind `mark_in_progress`, so outside a mark it is a single
+  predictable-branch no-op (no new call site — the native/JIT emitters already emit exactly
+  one `write_barrier` per ref store). New private `shade_grey` helper.
+- **Tests (+3), all Miri-clean:** the load-bearing differential — a white child stored into a
+  black parent (its other in-edge dropped) **survives** with the barrier (`freed == 0`); the
+  **load-bearing twin** with the barrier call omitted **frees** it (`freed == 1`), proving the
+  barrier is necessary, not decorative; plus a no-op-outside-a-mark check that the generational
+  path is unchanged. 90 gc-core tests pass; clippy clean.
+- This is PR-2 of 4 (spec §9). PR-3 = the C ABI (`__gc_collect_incremental_{start,step,finish}`
+  + the `__gc_write_barrier` extension) and flipping `Incremental::is_available()`; PR-4 = the
+  native builtin trio + end-to-end.
+
 ## 0.18.0 — 2026-07-24 — incremental (bounded-pause) marking — PR-1 (AOT00-T4)
 
 The first rung of the incremental collector (spec `AOT00-T4-incremental-collector.md`): the
