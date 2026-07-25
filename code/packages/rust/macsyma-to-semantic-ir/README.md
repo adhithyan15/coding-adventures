@@ -119,13 +119,34 @@ is an instance method specifically so this can never regress.
   regression test.
 - `tests/test_validator.rs` — every lowered module passes
   `semantic_ir::validate` (manifest declares exactly the SIR23 features
-  used) and is correctly *rejected* by `semantic-ir-to-javascript`'s
-  capability check.
-
-There is **no** e2e `node`-execution test in this crate, unlike
-`matlab-to-semantic-ir`'s purely-literal case: under the "everything is
-symbolic data" design this crate inherits from `macsyma-compiler`, even
-bare literal arithmetic (`1 + 2`) emits at least one SIR23 node, and no
-backend implements SIR23 codegen yet (`sir-runtime-symbolic`, the JS/TS
-runtime library it would depend on, is separate, not-yet-shipped follow-on
-work — HML01 Stream B rollout item 6).
+  used) and is correctly **accepted** by `semantic-ir-to-javascript`'s
+  capability check (`sir-runtime-symbolic`'s SIR23 codegen has since
+  landed — see the crate `CHANGELOG.md`'s `[Unreleased]`/`[0.1.1]` "Fixed"
+  entry; this file's assertions used to say the opposite, which was itself
+  a stale-test bug).
+- `tests/e2e_node.rs` — actually compiles and runs representative Macsyma
+  programs (arithmetic, a function definition+call, assignment,
+  control-flow constructs, a multi-statement program) through `node`,
+  proving the SIR23 codegen path is genuinely executable, not just
+  statically accepted. Asserts only that `node` exits cleanly — no
+  `disp`-equivalent stdout to diff against, under this crate's own
+  "everything is symbolic data" design.
+- `tests/oracle.rs` — HML01 §7 oracle/golden testing (a 34-case corpus):
+  the SAME Macsyma source run through **two independent
+  implementations** — `macsyma-runtime` (ground truth) and this crate's
+  own `compile_source` → `semantic_ir_to_javascript::compile` → `node` —
+  and diffed. Modeled directly on `wolfram-to-semantic-ir/tests/oracle.rs`.
+  Covers arithmetic/identity-law folding, every comparison and logic
+  operator (Macsyma's own spelling: `=`/`#`/`and`/`or`/`not`), elementary
+  functions, `:` (`Assign`) and `:=` (`Define`) — including a
+  genuinely-working function-definition-and-call round-trip, unlike
+  Wolfram's own frontend, since Macsyma's `:=` lowering already produces
+  the exact 3-argument `Define` shape the shared JS handler requires —
+  `if`/`then`/`else`, list-literal evaluation (`known_bug`'d for the
+  missing bracket display convention), and two control-flow-as-data cases
+  that surprisingly match verbatim on both sides despite being
+  non-atomic. Also documents (in the file's own module doc) why a
+  separate Maxima oracle corpus is unnecessary duplication:
+  `maxima-to-semantic-ir` is a pure re-export of this crate with no shim,
+  and `maxima-runtime` is a thin façade over this crate's own sibling
+  `macsyma-runtime`, formatting the identical `output_text`.
