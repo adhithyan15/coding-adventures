@@ -4,6 +4,24 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed - warm visual system on the app shell (UI design, step 1)
+
+- **`TaskApp.light.msl` restyled to the "warm & approachable" identity** from
+  [`code/specs/task-app-ui-design.md`](../../../specs/task-app-ui-design.md): warm paper
+  ground (`#f0ebe3`), crisp warm-white surfaces, warm-charcoal ink, and a single honey
+  accent (`#e0942a`) spent only on the primary Add action and active affordances.
+  Semantic red stays a separate axis, used only for the destructive Delete. Adds
+  `state focused` (honey ring on inputs) and `state hover` (honey-tinted rows, deeper
+  honey on the Add button) — the first hover/focus affordances the app has had.
+  Verified end-to-end: the sources compile (`cargo test -p task-app`), and the palette
+  and the hover/focus selectors flow through `mosaic-compile --backend react` into the
+  generated component's inline styles and CSS lattice.
+- This is the first increment of the design spec's Phase-5 work (design tokens + app
+  shell). Richer rows (checkbox, chips, progressive-disclosure detail), the timeline and
+  board views, and a matching **dark theme** — which needs host-level theme switching —
+  are the follow-on increments; the prototype at
+  `design/ui-prototype.html` remains the visual target.
+
 ### Changed
 
 - **The web host is now a committed npm package** (`host/web/`) instead of files
