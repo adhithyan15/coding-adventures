@@ -1,6 +1,6 @@
 {
   "name": "language-ladder",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "private": true,
   "description": "The unified curriculum learning app (HL03): walk the language chain concept by concept, seeing the threads back to what you already know, then review it all with a randomised SRS quiz. (Was the HL02 script-writing-visualizer, whose Browse/Practice/Lessons/Concepts modes it now subsumes.)",
   "type": "module",
