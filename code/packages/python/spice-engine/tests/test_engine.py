@@ -408,22 +408,22 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 179
+    assert len(coverage) == 181
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
     assert coverage[0].alias_count == 2
     assert coverage[-1].kind == "PMOS"
-    assert coverage[-1].canonical_parameter == "KF"
-    assert coverage[-1].accepted_names == ("KF",)
+    assert coverage[-1].canonical_parameter == "AF"
+    assert coverage[-1].accepted_names == ("AF",)
 
     table = format_model_card_supported_parameter_coverage_table()
     assert table.splitlines()[0] == "kind\tcanonical_parameter\taccepted_names\talias_count"
     assert table.splitlines()[1] == "D\tIS\tIS|JS\t2"
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
-    assert table.splitlines()[-1] == "PMOS\tKF\tKF\t1"
+    assert table.splitlines()[-1] == "PMOS\tAF\tAF\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 179
+    assert len(records) == 181
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -446,8 +446,8 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     assert summary[0].max_alias_count == 3
     assert summary[0].aliased_parameters == ("IS", "VT", "CJO", "VJ", "M")
     assert summary[5].kind == "NMOS"
-    assert summary[5].canonical_parameter_count == 19
-    assert summary[5].accepted_name_count == 26
+    assert summary[5].canonical_parameter_count == 20
+    assert summary[5].accepted_name_count == 27
     assert summary[5].aliased_parameter_count == 6
     assert summary[5].max_alias_count == 3
     assert summary[5].aliased_parameters == (
@@ -469,7 +469,7 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     assert table.splitlines()[1] == "D\t15\t21\t5\t3\tIS|VT|CJO|VJ|M"
     assert (
         table.splitlines()[-1]
-        == "PMOS\t19\t26\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD"
+        == "PMOS\t20\t27\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD"
     )
     records = model_card_supported_parameter_coverage_summary_records()
     assert len(records) == 7
@@ -497,9 +497,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 179
-    assert report.expected_canonical_parameter_count == 179
-    assert report.accepted_name_count == 249
+    assert report.canonical_parameter_count == 181
+    assert report.expected_canonical_parameter_count == 181
+    assert report.accepted_name_count == 251
     assert report.aliased_parameter_count == 57
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -507,7 +507,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t179\t179\t249\t57\t4\t0"
+        "true\t7\t7\t181\t181\t251\t57\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -535,15 +535,15 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 178
-    assert report.accepted_name_count == 246
+    assert report.canonical_parameter_count == 180
+    assert report.accepted_name_count == 248
     assert report.aliased_parameter_count == 56
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
     assert report.issues[0].kind == "NMOS"
     assert report.issues[0].field == "canonical_parameter_count"
     assert report.issues[0].message == (
-        "expected NMOS to expose 19 canonical supported parameters, found 18"
+        "expected NMOS to expose 20 canonical supported parameters, found 19"
     )
     assert report.issues[-1].field == "max_alias_count"
     assert report.issues[-1].message == "expected NMOS max alias count 3, found 2"
@@ -551,12 +551,12 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t178\t179\t246\t56\t4\t4\n"
+        "false\t7\t7\t180\t181\t248\t56\t4\t4\n"
         "kind\tfield\tmessage\n"
-        "NMOS\tcanonical_parameter_count\texpected NMOS to expose 19 canonical "
-        "supported parameters, found 18\n"
-        "NMOS\taccepted_name_count\texpected NMOS to expose 26 accepted model-card "
-        "names, found 23\n"
+        "NMOS\tcanonical_parameter_count\texpected NMOS to expose 20 canonical "
+        "supported parameters, found 19\n"
+        "NMOS\taccepted_name_count\texpected NMOS to expose 27 accepted model-card "
+        "names, found 24\n"
         "NMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing "
         "parameters, found 5\n"
         "NMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
@@ -565,12 +565,12 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
     assert records[0] == {
         "kind": "NMOS",
         "field": "canonical_parameter_count",
-        "message": "expected NMOS to expose 19 canonical supported parameters, found 18",
+        "message": "expected NMOS to expose 20 canonical supported parameters, found 19",
     }
     assert format_model_card_supported_parameter_coverage_gate_issue_csv(report).startswith(
         "kind,field,message\n"
-        'NMOS,canonical_parameter_count,"expected NMOS to expose 19 canonical '
-        'supported parameters, found 18"\n'
+        'NMOS,canonical_parameter_count,"expected NMOS to expose 20 canonical '
+        'supported parameters, found 19"\n'
     )
     assert (
         json.loads(format_model_card_supported_parameter_coverage_gate_issue_json(report))
@@ -747,6 +747,7 @@ def test_model_card_aliases_build_device_instances() -> None:
             "PB": 0.9,
             "MJ": 0.45,
             "KF": 2.0e-24,
+            "AF": 1.4,
         },
     )
     mos_model = mosfet_from_model_card("M1", "d", "g", "s", "b", mos_card)
@@ -759,6 +760,7 @@ def test_model_card_aliases_build_device_instances() -> None:
         "PB": 0.9,
         "MJ": 0.45,
         "KF": 2.0e-24,
+        "AF": 1.4,
     }
     assert isinstance(mos_model.model, MOSFET)
     assert mos_model.model.type == MosfetType.NMOS
@@ -770,6 +772,7 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(0.9) == mos_model.model.model.params.PB
     assert pytest.approx(0.45) == mos_model.model.model.params.MJ
     assert pytest.approx(2.0e-24) == mos_model.model.model.params.KF
+    assert pytest.approx(1.4) == mos_model.model.model.params.AF
 
 
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
@@ -8141,7 +8144,7 @@ def test_noise_mosfet_flicker_noise_scales_inversely_with_frequency() -> None:
         "0",
         MOSFET(
             MosfetType.NMOS,
-            Level1Model(Level1Params(VT0=1.0, KP=1.0e-3, KF=2.0e-18)),
+            Level1Model(Level1Params(VT0=1.0, KP=1.0e-3, KF=2.0e-18, AF=2.0)),
         ),
     ))
 
@@ -8181,6 +8184,23 @@ def test_noise_rejects_invalid_mosfet_flicker_noise_coefficient() -> None:
     ))
 
     with pytest.raises(ValueError, match="KF must be finite and non-negative"):
+        noise_ac(c, "out", "Vgate", freqs=[1000.0])
+
+
+def test_noise_rejects_invalid_mosfet_flicker_noise_exponent() -> None:
+    c = Circuit()
+    c.add(VoltageSource("Vgate", "gate", "0", 3.0))
+    c.add(Resistor("Rload", "out", "0", 1000.0))
+    c.add(Mosfet(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MOSFET(MosfetType.NMOS, Level1Model(Level1Params(AF=-1.0))),
+    ))
+
+    with pytest.raises(ValueError, match="AF must be finite and non-negative"):
         noise_ac(c, "out", "Vgate", freqs=[1000.0])
 
 

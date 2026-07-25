@@ -211,3 +211,4 @@ def test_default_params_match_spec():
     assert p.W == 1e-6
     assert p.L == 130e-9
     assert p.KF == 0.0
+    assert p.AF == 1.0

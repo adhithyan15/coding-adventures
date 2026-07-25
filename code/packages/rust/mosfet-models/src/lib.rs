@@ -40,6 +40,7 @@ use device_physics::thermal_voltage;
 /// | N_SUB     | Subthreshold slope factor          | 1.4      |
 /// | T_NOM     | Nominal temperature (K)            | 300.15   |
 /// | KF        | Flicker-noise coefficient           | 0        |
+/// | AF        | Flicker-noise current exponent      | 1        |
 #[derive(Debug, Clone, PartialEq)]
 pub struct Level1Params {
     /// Threshold voltage at zero source-body bias [V].
@@ -74,6 +75,8 @@ pub struct Level1Params {
     pub cbd: f64,
     /// Flicker-noise coefficient.
     pub kf: f64,
+    /// Flicker-noise drain-current exponent.
+    pub af: f64,
     /// Enable subthreshold current below V_t.
     pub subthreshold_enable: bool,
 }
@@ -97,6 +100,7 @@ impl Default for Level1Params {
             cbs: 0.0,
             cbd: 0.0,
             kf: 0.0,
+            af: 1.0,
             subthreshold_enable: true,
         }
     }

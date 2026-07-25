@@ -36,6 +36,7 @@ class Level1Params:
     PB: float = 0.8  # bulk junction potential (V)
     MJ: float = 0.5  # bulk junction grading coefficient
     KF: float = 0.0  # flicker-noise coefficient
+    AF: float = 1.0  # flicker-noise drain-current exponent
     subthreshold_enable: bool = True
 
 

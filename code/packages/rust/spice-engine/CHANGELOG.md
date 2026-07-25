@@ -1,5 +1,7 @@
 # Changelog
 
+- Add Level-1 MOS model-card `AF` support and apply the configurable
+  drain-current exponent to MOS flicker-noise power spectral density.
 - Add Level-1 MOS model-card `KF` support and emit drain-current-scaled
   inverse-frequency flicker noise alongside channel thermal noise.
 - Add JFET model-card `NLEV` and `GDSNOI` support, preserving the legacy

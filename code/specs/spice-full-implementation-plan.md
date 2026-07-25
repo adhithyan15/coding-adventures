@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS flicker-noise coefficient.
+1. Cross-language Level-1 MOS flicker-noise exponent.
    - Status: current PR completion candidate.
-   - Add Berkeley Level-1 MOS `KF` model-card support in Rust, Python, and
-     TypeScript, defaulting to zero.
-   - Add `KF * abs(Id) / frequency` flicker noise alongside the existing
-     channel thermal-noise source.
-   - Preserve the coefficient through hierarchy and cloning, validate its
-     finite non-negative domain, and extend the supported-parameter coverage
-     gate from 177 to 179 canonical rows.
+   - Add Berkeley Level-1 MOS `AF` model-card support in Rust, Python, and
+     TypeScript, defaulting to one.
+   - Apply `KF * abs(Id)^AF / frequency` to the existing MOS flicker-noise
+     source.
+   - Preserve the exponent through hierarchy and cloning, validate its finite
+     non-negative domain, and extend the supported-parameter coverage gate from
+     179 to 181 canonical rows.
 
 ## Completed Slices
 
@@ -3383,8 +3383,17 @@ the Rust, Python, and TypeScript surfaces together.
      below level 3 and selecting the Berkeley linear-region equation at level
      3 and above.
    - Hierarchy and cloning preserve both parameters, shared validation enforces
-     their domains, and the supported-parameter release gate now covers 177
-     canonical rows.
+   their domains, and the supported-parameter release gate now covers 177
+   canonical rows.
+
+264. Cross-language Level-1 MOS flicker-noise coefficient.
+   - Status: completed in PR 8985.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `KF`,
+     defaulting to zero, and emit a distinct drain-current-scaled
+     inverse-frequency flicker-noise source alongside channel thermal noise.
+   - Hierarchy and cloning preserve the coefficient, shared validation enforces
+     its finite non-negative domain, and the supported-parameter release gate
+     now covers 179 canonical rows.
 
 ## Backlog
 

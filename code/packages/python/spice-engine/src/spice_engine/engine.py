@@ -15605,12 +15605,17 @@ def _collect_noise_sources(
             Vb = 0.0 if _is_ground(el.body) else dc_x[node_to_idx[el.body]]
             r = el.model.dc(Vg - Vs, Vd - Vs, Vb - Vs)  # type: ignore[attr-defined]
             flicker_noise_coefficient = el.model.model.params.KF  # type: ignore[attr-defined]
+            flicker_noise_exponent = el.model.model.params.AF  # type: ignore[attr-defined]
             if (
                 not math.isfinite(flicker_noise_coefficient)
                 or flicker_noise_coefficient < 0.0
             ):
                 raise ValueError(
                     f"{el.name}: MOSFET KF must be finite and non-negative"
+                )
+            if not math.isfinite(flicker_noise_exponent) or flicker_noise_exponent < 0.0:
+                raise ValueError(
+                    f"{el.name}: MOSFET AF must be finite and non-negative"
                 )
             gm = max(0.0, float(r.gm))
             n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
@@ -15625,7 +15630,8 @@ def _collect_noise_sources(
                         "flicker",
                         n_d,
                         n_s,
-                        flicker_noise_coefficient * abs(float(r.Id)),
+                        flicker_noise_coefficient
+                        * abs(float(r.Id)) ** flicker_noise_exponent,
                         1.0,
                     )
                 )

@@ -87,8 +87,8 @@ to `1`, which preserves the Shichman-Hodges equations.
 JFET `NLEV` values below `3` preserve the legacy `2/3 * gm` channel thermal
 noise model. `NLEV >= 3` selects the Berkeley linear-region equation, with
 `GDSNOI` (default `1`) scaling its channel-noise conductance.
-Level-1 MOS model cards accept `KF` (default `0`) and add
-`KF * abs(Id) / frequency` flicker noise alongside channel thermal noise.
+Level-1 MOS model cards accept `KF` (default `0`) and `AF` (default `1`) and add
+`KF * abs(Id)^AF / frequency` flicker noise alongside channel thermal noise.
 All temperature coefficients honor model-card `TNOM` / `T_NOM`.
 `dc_temperature_sweep()` and `dc_temperature_sweep_corners()` run
 `.temp`-style DC operating-point snapshots across explicit analysis

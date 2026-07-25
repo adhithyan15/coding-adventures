@@ -1785,6 +1785,7 @@ export interface MosfetLevel1Params {
   readonly PB: number;
   readonly MJ: number;
   readonly KF: number;
+  readonly AF: number;
 }
 
 export interface Mosfet {
@@ -2044,8 +2045,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   PNP: [41, 58, 13, 4],
   NJF: [22, 30, 7, 3],
   PJF: [22, 30, 7, 3],
-  NMOS: [19, 26, 6, 3],
-  PMOS: [19, 26, 6, 3],
+  NMOS: [20, 27, 6, 3],
+  PMOS: [20, 27, 6, 3],
 };
 
 export interface Vccs {
@@ -8038,6 +8039,7 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     PB: 0.8,
     MJ: 0.5,
     KF: 0.0,
+    AF: 1.0,
   };
 }
 
@@ -8225,6 +8227,7 @@ const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   PB: "PB",
   MJ: "MJ",
   KF: "KF",
+  AF: "AF",
 };
 
 function modelTypeKey(text: string): string {
@@ -8791,6 +8794,7 @@ export function mosfetFromModelCard(
     ...(p.PB !== undefined ? { PB: p.PB } : {}),
     ...(p.MJ !== undefined ? { MJ: p.MJ } : {}),
     ...(p.KF !== undefined ? { KF: p.KF } : {}),
+    ...(p.AF !== undefined ? { AF: p.AF } : {}),
   };
   return mosfet(name, drain, gate, source, body, model.kind, params);
 }
@@ -18971,7 +18975,9 @@ function collectNoiseSources(
           noiseType: "flicker",
           positive: drain,
           negative: source,
-          sourcePsd: element.params.KF * Math.abs(result.drainCurrent),
+          sourcePsd:
+            element.params.KF *
+            Math.abs(result.drainCurrent) ** element.params.AF,
           frequencyExponent: 1.0,
         });
       }
@@ -21008,6 +21014,9 @@ function validateMosfet(element: Mosfet): void {
   }
   if (params.KF < 0.0) {
     throw invalidElement(element.name, "MOSFET KF must be non-negative");
+  }
+  if (params.AF < 0.0) {
+    throw invalidElement(element.name, "MOSFET AF must be non-negative");
   }
   if (
     params.CGSO < 0.0 ||

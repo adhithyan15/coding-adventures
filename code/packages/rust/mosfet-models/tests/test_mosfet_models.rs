@@ -17,6 +17,7 @@ fn test_default_params() {
     assert_eq!(p.w, 1e-6);
     assert!((p.l - 130e-9).abs() < 1e-15);
     assert_eq!(p.kf, 0.0);
+    assert_eq!(p.af, 1.0);
     assert!(p.subthreshold_enable);
 }
 

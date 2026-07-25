@@ -3,6 +3,8 @@
 ## [0.1.0] — Unreleased
 
 ### Added
+- `Level1Params.AF` provides the Level-1 MOS flicker-noise current exponent,
+  defaulting to one.
 - `Level1Params.KF` provides the Level-1 MOS flicker-noise coefficient, with a
   noise-disabled default of zero.
 - `Level1Params` now includes MOS Level-1 capacitance footholds (`CGSO`,

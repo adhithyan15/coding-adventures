@@ -526,6 +526,7 @@ describe("noiseAc", () => {
       VT0: 1.0,
       KP: 1.0e-3,
       KF: 2.0e-18,
+      AF: 2.0,
     }));
 
     const result = noiseAc(circuit, "out", "Vgate", [100.0, 1_000.0], 300.0);
@@ -549,6 +550,16 @@ describe("noiseAc", () => {
 
     expect(() => noiseAc(circuit, "0", "Vgate", [1_000.0])).toThrow(
       /MOSFET KF must be non-negative/,
+    );
+  });
+
+  it("rejects an invalid MOSFET flicker-noise exponent", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vgate", "gate", "0", 3.0));
+    circuit.add(mosfet("M1", "0", "gate", "0", "0", "NMOS", { AF: -1.0 }));
+
+    expect(() => noiseAc(circuit, "0", "Vgate", [1_000.0])).toThrow(
+      /MOSFET AF must be non-negative/,
     );
   });
 
