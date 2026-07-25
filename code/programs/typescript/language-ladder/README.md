@@ -138,6 +138,18 @@ only** — `strokeOrder` is empty, since the handwriting ductus is a separate,
 source-gated effort; the Browse detail hides the stroke-order section when it's
 absent rather than showing an empty one.
 
+**Practice introduces them slowly** (`src/syllabary.ts`). Rather than drill all
+350 syllables at once, the recall drill opens with a *single consonant's vowel
+row* — ka kā ki kī ku kū ke kē ko kō — and unlocks the next consonant only once
+the current row is mastered (a Leitner box ≥ 3). So recognition is built one
+consonant at a time, the "ka, ki, ku … kha, khi, khu" way. On these scripts the
+drill's target and its distractors are both confined to the unlocked syllables
+(a consonant you haven't met never appears, even as a wrong option), the mastery
+read-out is scoped to the open rows, and a cue shows *"Learning consonant N of M
+— master this vowel row to unlock the next."* The gate is a pure, unit-tested
+helper (with a control that keeps the 2nd consonant locked until row 1 is done);
+the alphabets and Mixed mode are unaffected.
+
 ## Design
 
 - **`src/core.ts`** — the pure, unit-tested heart: `buildScriptView`,
