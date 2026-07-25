@@ -124,12 +124,30 @@ nesting for this particular grammar.
   CI failure, not a stack-size issue).
 - `tests/test_validator.rs` — every lowered module passes
   `semantic_ir::validate` (manifest declares exactly the SIR23 features
-  used) and is correctly *rejected* by `semantic-ir-to-javascript`'s
-  capability check.
-
-There is **no** e2e `node`-execution test in this crate, unlike
-`matlab-to-semantic-ir`'s purely-literal case: under the "everything is
-data" design, even bare literal arithmetic (`1 + 2`) emits at least one
-SIR23 node, and no backend implements SIR23 codegen yet
-(`sir-runtime-symbolic`, the JS/TS runtime library it would depend on, is
-separate, not-yet-shipped follow-on work — HML01 Stream B rollout item 6).
+  used) and is correctly *accepted* by `semantic-ir-to-javascript`'s
+  capability check (this crate's SIR23 codegen has since landed in full —
+  the check used to assert *rejection*, back when it didn't; see
+  `CHANGELOG.md`'s `[Unreleased]`/`0.1.1` "Fixed" entry).
+- `tests/e2e_node.rs` — compiles representative Wolfram programs
+  (arithmetic, a pattern+call, `/.`, `//.`, a multi-statement program)
+  and runs the emitted JavaScript through an actual `node` process,
+  proving the SIR23 codegen path is genuinely executable end-to-end, not
+  just statically accepted. These check only that `node` exits cleanly,
+  not a specific printed value — under the "everything is data" design, a
+  bare top-level statement is never wrapped in `print`/`console.log` by
+  this frontend's own lowering (see that file's own module doc comment),
+  so there is nothing to assert stdout against there.
+- `tests/oracle.rs` — HML01 §7 oracle/golden testing: the SAME Wolfram
+  source run through *two* independent implementations —
+  `wolfram-runtime` (ground truth, native `symbolic-ir`/`symbolic-vm`
+  evaluation) and this crate's own `compile_source` → `semantic-ir-to-
+  javascript` → an actual `node` process — diffed for an exact match. A
+  32-case corpus (arithmetic, free-symbol identity laws, comparisons,
+  logic, elementary functions, `Assign`/self-referential-assign,
+  `Define`+call, lists, and `/.`/`:>`/`//.` replacement), most of which
+  match exactly now that all four SIR23 addendum items have shipped; a
+  documented `known_bug` subset covers a genuine `Define` argument-shape
+  mismatch between this frontend's own lowering and the shared JS
+  handler, `SymReplaceAll`'s missing post-substitution re-fold, and the
+  shared backend's generic (non-Wolfram-specific) display convention —
+  see that file's own module doc comment for the full findings.
