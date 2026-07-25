@@ -33,15 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language JFET gate saturation-current temperature exponent.
+1. Cross-language JFET gate-junction bandgap voltage.
    - Status: current PR completion candidate.
-   - Add Berkeley JFET `XTI` model-card support in Rust, Python, and TypeScript.
+   - Add Berkeley JFET `EG` model-card support in Rust, Python, and TypeScript.
    - Scale gate saturation current from `TNOM` with
      `IS(T) = IS * (T / TNOM)^XTI * exp((EG * q / k) * (1 / TNOM - 1 / T))`,
-     using the Level-1 silicon `EG = 1.11 eV` default.
-   - Preserve the exponent through hierarchy and cloning, validate finite
-     values, and extend the supported-parameter coverage gate from 167 to 169
-     canonical rows.
+     using the configured bandgap voltage and the Level-1 silicon
+     `EG = 1.11 eV` default.
+   - Preserve the voltage through hierarchy and cloning, validate finite
+     positive values, and extend the supported-parameter coverage gate from
+     169 to 171 canonical rows.
 
 ## Completed Slices
 
@@ -3348,6 +3349,15 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning paths preserve parameter presence, finite validation
      is shared across analyses, the `TCV` fallback remains intact, and the
      supported-parameter release gate now covers 167 canonical rows.
+
+260. Cross-language JFET gate saturation-current temperature exponent.
+   - Status: completed in PR 8963.
+   - Rust, Python, and TypeScript JFET model cards now accept `XTI` and scale
+     gate saturation current from `TNOM` with the standard bandgap law and a
+     default exponent of 3.
+   - Hierarchy and cloning paths preserve the exponent, finite validation is
+     shared across analyses, and the supported-parameter release gate now
+     covers 169 canonical rows.
 
 ## Backlog
 

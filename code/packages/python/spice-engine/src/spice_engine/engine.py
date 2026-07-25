@@ -421,6 +421,8 @@ def jfet_at_temperature(
         raise ValueError(
             f"{jfet.name}: JFET gate saturation-current temperature exponent must be finite"
         )
+    if not math.isfinite(jfet.Eg) or jfet.Eg <= 0.0:
+        raise ValueError(f"{jfet.name}: JFET bandgap voltage must be finite and positive")
     if not math.isfinite(jfet.Tcv):
         raise ValueError(f"{jfet.name}: JFET TCV must be finite")
     if jfet.Vtotc is not None and not math.isfinite(jfet.Vtotc):
@@ -431,7 +433,7 @@ def jfet_at_temperature(
         raise ValueError(f"{jfet.name}: JFET BETATCE must be finite")
     temperature_ratio = temperature_kelvin / nominal_temperature
     saturation_exponent = (
-        1.11
+        jfet.Eg
         * _ELECTRON_CHARGE
         / _BOLTZMANN
         * (1.0 / nominal_temperature - 1.0 / temperature_kelvin)
@@ -664,7 +666,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.Af,
         )
     if isinstance(element, JFET):
-        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb, element.Fc, element.Is, element.Xti, element.Rd, element.Rs, element.Tcv, element.Vtotc, element.Tnom, element.Bex, element.Betatce)
+        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb, element.Fc, element.Is, element.Xti, element.Eg, element.Rd, element.Rs, element.Tcv, element.Vtotc, element.Tnom, element.Bex, element.Betatce)
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
@@ -9184,6 +9186,10 @@ def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
     if not math.isfinite(el.Xti):
         raise ValueError(
             f"JFET '{el.name}' gate saturation-current temperature exponent must be finite"
+        )
+    if not math.isfinite(el.Eg) or el.Eg <= 0.0:
+        raise ValueError(
+            f"JFET '{el.name}' bandgap voltage must be finite and positive"
         )
     if not math.isfinite(el.Rd) or el.Rd < 0.0:
         raise ValueError(f"JFET '{el.name}' drain resistance must be finite and non-negative")

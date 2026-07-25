@@ -1,5 +1,8 @@
 # Changelog
 
+- Add JFET model-card `EG` support, replacing the fixed 1.11 eV silicon
+  bandgap in gate saturation-current temperature scaling while preserving that
+  value as the default.
 - Add JFET model-card `XTI` support, scaling gate saturation current from
   `TNOM` with the standard silicon bandgap temperature law and a default
   exponent of 3.
