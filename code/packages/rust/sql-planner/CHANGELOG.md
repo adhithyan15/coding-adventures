@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.32] - Unreleased
+
+### Changed
+
+- **`SELECT` items are all `select_item` nodes now, including a bare `*`.**
+  `plan_select_list` dropped its special-case shortcut (which returned a single
+  `*` column whenever any `*` token appeared) and simply maps `plan_select_item`
+  over the items. `plan_select_item` detects a bare-`*` item (no child expr node
+  + a `*` token) and emits the `*` placeholder (new `star_output_column` helper);
+  `expand_star_columns` then expands each placeholder in place. This is what lets
+  `SELECT a, *` / `SELECT *, a` expand correctly (`a, *` → `a` then the whole
+  row), matching SQLite, now that the grammar produces the mixed shape.
+
 ## [0.2.31] - Unreleased
 
 ### Added

@@ -1640,10 +1640,9 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT * FROM t ORDER BY 1 DESC",
     },
-    // Still ledgered: `*` mixed with another select item (`SELECT a, *`) does
-    // not PARSE — the grammar's select_list has no bare-`*` alternative in a
-    // comma-separated list. The planner's star expansion handles this shape once
-    // the parser produces it (a grammar follow-up).
+    // `*` mixed with another select item: `*` is now a `select_item` alternative,
+    // so it parses in a comma list and expands IN PLACE. `SELECT a, *` yields
+    // `a, a, b` (the leading `a`, then the whole row) — matching SQLite.
     Case {
         id: "select_star_in_place",
         setup: &[
@@ -1651,6 +1650,16 @@ const CASES: &[Case] = &[
             "INSERT INTO t VALUES (1,'x'),(2,'y')",
         ],
         query: "SELECT a, * FROM t ORDER BY a",
+    },
+    // `*` as the FIRST item, then another column: expands in place to the whole
+    // row followed by the trailing item — `SELECT *, a` → `a, b, a`.
+    Case {
+        id: "select_star_then_column",
+        setup: &[
+            "CREATE TABLE t (a INTEGER, b TEXT)",
+            "INSERT INTO t VALUES (1,'x'),(2,'y')",
+        ],
+        query: "SELECT *, a FROM t ORDER BY a",
     },
     // `SELECT DISTINCT *` now expands AND folds: `*` becomes the bare column
     // references, each contributing its own declared collation, so a NOCASE
@@ -2313,10 +2322,6 @@ const LEDGER: &[(&str, &str)] = &[
     (
         "order_by_ordinal_over_aggregate",
         "positional ORDER BY over an aggregate output column not yet re-bound to the materialized column",
-    ),
-    (
-        "select_star_in_place",
-        "`*` mixed with other select items (`SELECT a, *`) does not parse (grammar: select_list lacks a bare `*` alternative in a comma list)",
     ),
     // Explicit COLLATE now parses AND folds (DISTINCT / GROUP BY); the only
     // remaining divergence is which original row a fold keeps when ORDER BY is
