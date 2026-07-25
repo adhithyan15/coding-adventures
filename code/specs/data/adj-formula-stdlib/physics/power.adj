@@ -1,0 +1,94 @@
+% ============================================================================
+% power.adj — mechanical power (P = W/t) in the ADJ standard library.
+% ============================================================================
+% The power entry of the *physics* track, a sibling of `energy-work.adj`,
+% `wave-speed.adj` and `hookes-law.adj`: the foundational mechanics definition a first
+% course states as POWER IS THE RATE OF DOING WORK — i.e. the AVERAGE-power relation
+% P = W/t (work done divided by the time taken) — as an importable, byte-provenanced,
+% PARAMETERIZED `formula`, together with its two exact rearrangements (the work a
+% power delivers in a time, and the time a power takes to do a work). This is
+% MECHANICAL power (work per unit time); it is distinct from the electrical power
+% P = V·I in `electricity.adj`, and from `arithmetic/powers.adj` (exponentiation). As
+% with every compute library, a consumer states NO arithmetic: it `import`s this file,
+% binds the physical quantities from its own byte-provenance decomposition, and asks
+% the engine to APPLY the cited definition on the CPU. Zero math is performed by the
+% model; the engine computes each value EXACTLY, carrying the definition's citation.
+%
+%     import "power.adj"
+%     observe work(6)                % "…6 J of work…"  (span cited by the model)
+%     observe time(2)                % "…in 2 s…"       (span cited by the model)
+%     ? power(work, time)            % engine → 3, carrying P = W/t
+%
+% NOTE: this computes the AVERAGE power over the interval, P = W/t — the plain
+% work-over-time rate. (Instantaneous power is the same rate in the limit of a
+% vanishing interval; the exact numeric relation the engine applies over measured W
+% and t is P = W/t.)
+%
+% All three formulas are EXACT over their parameters — one a quotient, one a product,
+% one a quotient of measured quantities. There is no *separately grounded* physical
+% constant here, so every value the engine returns is exact. The three COMPOSE and
+% invert cleanly: the `power` a consumer computes from a work done in a time is exactly
+% the `power` the `work` formula multiplies by that time to recover the work, and
+% exactly the `power` the `time` formula divides that work by to recover the time.
+%
+%   power(work, time) = work / time     %  P = W/t   (definition of power)
+%   work(power, time) = power * time      %  W = P·t   (same definition, solved for W)
+%   time(work, power) = work / power      %  t = W/P   (same definition, solved for t)
+%
+% All three formulas are defended by the SAME definitional sentence — "Power is
+% defined as the rate of doing work, or the limit of the average power for time
+% intervals approaching zero." — because that definition (power IS the rate of doing
+% work, i.e. work per unit time) sanctions the relation read every way (P from W and
+% t, W from P and t, or t from W and P). The quote is transcribed verbatim from
+% Physics LibreTexts (OpenStax University Physics — a primary educational reference,
+% the same publisher `wave-speed.adj`, `hookes-law.adj`, `molarity.adj` and
+% `dilution.adj` cite), so each `formula` carries the provenance envelope every shipped
+% grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the sentence is a verbatim span of the cited page,
+% not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable physical quantity the definition ranges
+% over, and each result is the derived quantity. `power`, `work` and `time` each appear
+% BOTH as a derived result and as an input (of the other formulas), so each is a single
+% dictionary term used in both roles. The `surface` lists are the everyday names a
+% decomposer maps onto the canonical term; the trailing comment records the intended
+% SI unit.
+% ----------------------------------------------------------------------------
+dictionary power_vocab {
+    define work  : finding  surface "work", "energy", "W"       % work/energy, e.g. J
+    define time  : finding  surface "time", "duration", "t"     % time, e.g. s
+    define power : finding  surface "power", "P"                % power, e.g. W (watt)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable `let` over its
+% formal parameters, bound at apply time, and each carries the definitional quote from
+% LibreTexts (a quote is required on a shipped formula). One is a quotient, one a
+% product, one a quotient, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook power_laws {
+    use power_vocab
+
+    % Power — the work done divided by the time taken. LibreTexts defines power as the
+    % rate of doing work, i.e. P = W/t.
+    formula power(work, time) = work / time
+        source "Power is defined as the rate of doing work, or the limit of the average power for time intervals approaching zero."
+        locator "https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_(OpenStax)/Book:_University_Physics_I_-_Mechanics_Sound_Oscillations_and_Waves_(OpenStax)/07:_Work_and_Kinetic_Energy/7.05:_Power"
+        trust authoritative
+
+    % Work — the same definition solved for the work a power delivers in a time
+    % (W = P·t). Defended by the SAME definitional sentence, read the other way.
+    formula work(power, time) = power * time
+        source "Power is defined as the rate of doing work, or the limit of the average power for time intervals approaching zero."
+        locator "https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_(OpenStax)/Book:_University_Physics_I_-_Mechanics_Sound_Oscillations_and_Waves_(OpenStax)/07:_Work_and_Kinetic_Energy/7.05:_Power"
+        trust authoritative
+
+    % Time — the same definition solved for the time a power takes to do a work
+    % (t = W/P). Again the SAME definitional sentence, read the third way.
+    formula time(work, power) = work / power
+        source "Power is defined as the rate of doing work, or the limit of the average power for time intervals approaching zero."
+        locator "https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_(OpenStax)/Book:_University_Physics_I_-_Mechanics_Sound_Oscillations_and_Waves_(OpenStax)/07:_Work_and_Kinetic_Energy/7.05:_Power"
+        trust authoritative
+}
