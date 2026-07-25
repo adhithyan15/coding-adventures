@@ -100,11 +100,12 @@ unchanged; `ALL` replaces EVERY occurrence, `LEADING` replaces only the run of
 consecutive `x` at the START, stopping at the first character that is not `x` —
 positions after that first gap are left unchanged even if they equal `x`); and the
 **combined** `INSPECT source TALLYING counter FOR {ALL|LEADING} delim
-REPLACING ALL x BY y` (one `INSPECT`, both phrases — per ISO it runs as
+REPLACING {ALL|LEADING} x BY y` (one `INSPECT`, both phrases — per ISO it runs as
 tally-then-replace: count `delim` in the ORIGINAL source into `counter` FIRST,
 then replace `x` with `y`, so a shared `delim == x` is counted before it is
-substituted; the `TALLYING` half may be `FOR ALL` or `FOR LEADING`, while the
-`REPLACING` half stays `ALL`-only); and `INSPECT source CONVERTING from TO to` (translate each character
+substituted; the `TALLYING` half may be `FOR ALL` or `FOR LEADING` and the
+`REPLACING` half may independently be `ALL` or `LEADING`, so either, both, or
+neither half may be leading); and `INSPECT source CONVERTING from TO to` (translate each character
 of the alphanumeric source through a per-character table built from the two
 equal-length string literals `from`/`to` — a character equal to `from[k]` becomes
 `to[k]`, the **first (leftmost) occurrence winning** if `from` repeats a
@@ -115,9 +116,9 @@ modelled (the explicit
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `UNSTRING` with a multi-character
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `INSPECT` with a `CHARACTERS`
 tally, `BEFORE`/`AFTER` phrases, `REPLACING CHARACTERS`/`FIRST`, several
-replace items, or a combined statement whose `REPLACING` half is `REPLACING
-LEADING` or whose `TALLYING`/`REPLACING` half is otherwise a deferred sub-form
-(a combined `TALLYING … FOR LEADING` is now supported), `CONVERTING` with
+replace items, or a combined statement whose `TALLYING`/`REPLACING` half is a
+deferred sub-form (a combined `TALLYING … FOR LEADING` and a combined `REPLACING
+LEADING`, in any combination, are now supported), `CONVERTING` with
 unequal-length
 `FROM`/`TO`, a data-name/figurative/reference-modified `from`/`to`, or a
 `BEFORE`/`AFTER` region, tables,

@@ -3265,11 +3265,11 @@ fn inspect_combined_chars_at_both_ends() {
 }
 
 // INSPECT … TALLYING … FOR LEADING … REPLACING ALL — the combined form's TALLYING
-// half may count only the LEADING run of the delimiter while the REPLACING half
-// stays ALL. Tally still runs FIRST over the original bytes, so a shared
-// delimiter/search is counted before it is substituted. The compiler reuses the
-// lone-TALLYING leading lowering and the oracle its leading count path, so the JIT
-// output stays byte-identical.
+// half may count only the LEADING run of the delimiter (the REPLACING half here is
+// ALL; the mirror REPLACING-LEADING half is exercised in the next section). Tally
+// still runs FIRST over the original bytes, so a shared delimiter/search is counted
+// before it is substituted. The compiler reuses the lone-TALLYING leading lowering
+// and the oracle its leading count path, so the JIT output stays byte-identical.
 
 #[test]
 fn inspect_combined_for_leading_counts_only_the_leading_run() {
@@ -3322,20 +3322,81 @@ fn inspect_combined_for_leading_all_characters_match() {
     assert_eq!(out, "004\n****\n");
 }
 
+// INSPECT … TALLYING … REPLACING LEADING — the combined form's REPLACING half may
+// now be LEADING too: after the tally counts (over the ORIGINAL bytes), the rebuild
+// rewrites only the consecutive run of `search` at the START, stopping at the first
+// non-match. The two halves' leading flags are INDEPENDENT — either, both, or
+// neither may be LEADING. The compiler reuses the lone-REPLACING-LEADING `active`
+// run unroll and the oracle its leading-run map, so the JIT output stays
+// byte-identical.
+
 #[test]
-fn inspect_combined_replacing_leading_is_a_later_rung() {
-    // The combined form's REPLACING half stays ALL only: a combined
-    // `TALLYING … REPLACING LEADING` is still a later rung, rejected identically on
-    // both engines (a lone REPLACING LEADING, by contrast, is supported).
+fn inspect_combined_replacing_leading_all_tally() {
+    // "00X00": TALLYING FOR ALL "0" counts EVERY "0" (4 — two leading, two trailing)
+    // into C FIRST, THEN REPLACING LEADING "0" rewrites only the leading run (2,
+    // stops at 'X') → "**X00". delim == search: the count is 4 (all zeros) even
+    // though only the two leading zeros are ultimately replaced — proof the tally
+    // saw the original bytes before the leading replace overwrote any of them.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"00X00\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" REPLACING LEADING \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "004\n**X00\n");
+}
+
+#[test]
+fn inspect_combined_both_halves_leading() {
+    // Both halves LEADING: TALLYING FOR LEADING "0" counts only the leading run (2)
+    // into C, THEN REPLACING LEADING "0" rewrites that same leading run → "**X00".
+    // The two leading flags are threaded independently through the combined form.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"00X00\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"0\" REPLACING LEADING \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n**X00\n");
+}
+
+#[test]
+fn inspect_combined_replacing_leading_no_run() {
+    // No leading run: the first character is not `search`, so REPLACING LEADING
+    // changes nothing even though later "0"s exist. TALLYING FOR ALL still counts
+    // every "0" (2) → source unchanged "X00X". Pins the "no run" boundary.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"X00X\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" REPLACING LEADING \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\nX00X\n");
+}
+
+#[test]
+fn inspect_combined_characters_is_still_a_later_rung() {
+    // A still-deferred combined sub-form: `REPLACING CHARACTERS BY` rewrites every
+    // position unconditionally — rejected identically on both engines even now that
+    // combined REPLACING LEADING is supported.
     let err = compile_source(
         &wrap(
             &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
             &[
-                "INSPECT S TALLYING C FOR ALL \"B\" REPLACING LEADING \"A\" BY \"X\".",
+                "INSPECT S TALLYING C FOR ALL \"B\" REPLACING CHARACTERS BY \"X\".",
                 "STOP RUN.",
             ],
         ),
-        "insp_combined_repl_leading",
+        "insp_combined_repl_chars",
     )
     .unwrap_err();
     assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");

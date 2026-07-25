@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.43.0 — combined INSPECT TALLYING with REPLACING LEADING
+
+- The COMBINED `INSPECT source TALLYING counter FOR ALL|LEADING delim REPLACING
+  LEADING x BY y` now executes instead of being rejected as a later rung. This is the
+  exact MIRROR of the prior rung: where 0.42.0 let the TALLYING half be `FOR LEADING`,
+  this release lets the REPLACING half be `LEADING` — substitute only the
+  **consecutive run** of `x` at the START of the source, stopping at the first byte
+  that is not `x`. The two halves' leading flags are now fully independent: either,
+  both, or neither may be LEADING, so the fully-general `TALLYING FOR LEADING …
+  REPLACING LEADING` works too. ISO tally-then-replace ordering is unchanged: the
+  tally counts `delim` in the ORIGINAL bytes into `counter` FIRST (adding, not
+  clearing), then the REPLACING rebuild overwrites the source — so a shared
+  `delim == x` is COUNTED before it is substituted.
+- `Stmt::InspectTallyReplace` gains a `replace_leading: bool` field alongside the
+  existing `tally_leading`. The combined reader no longer rejects a `REPLACING
+  LEADING` half; it captures the `leading` flag from `read_inspect_replacing_all`
+  into `replace_leading`. `exec_inspect_tally_replace` forwards `replace_leading` to
+  the SAME `inspect_replace` leading-run map the lone `REPLACING LEADING` uses (an
+  `in_run` flag that flips off at the first non-match and never replaces again), so
+  there is no second substitution routine and the result matches the lone-form
+  semantics exactly.
+- Every other combined gate is intact and unchanged: `CHARACTERS`/`FIRST`,
+  `BEFORE`/`AFTER`, several counters/FOR/replace items, a multi-character/figurative/
+  wider operand, a numeric/group source, and a non-integer or signed counter are all
+  still clean `Unsupported`. The `REPLACING ALL` combined path is byte-identical to
+  the previous release.
+- Tests: the combined-later-rung oracle test flips the `REPLACING LEADING` sub-case
+  from a reject to a run (`"AABBB"` `TALLYING C FOR ALL "B" REPLACING LEADING "A"` →
+  `C = 003`, source `XXBBB`); a new `inspect_tally_replace_leading_*` test covers the
+  `FOR ALL` tally + leading replace (`"00X00"` → `C = 004`, `**X00`), both-halves-
+  leading (`C = 002`, `**X00`), and the no-leading-run boundary.
+
 ## 0.42.0 — combined INSPECT TALLYING FOR LEADING with REPLACING ALL
 
 - The COMBINED `INSPECT source TALLYING counter FOR LEADING delim REPLACING ALL x BY

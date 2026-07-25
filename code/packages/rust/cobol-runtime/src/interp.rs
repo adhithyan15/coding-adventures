@@ -365,7 +365,15 @@ impl Machine {
             Stmt::InspectReplacing { source, search, replace, leading } => {
                 self.exec_inspect_replacing(source, search, replace, *leading)?
             }
-            Stmt::InspectTallyReplace { source, counter, delim, tally_leading, search, replace } => {
+            Stmt::InspectTallyReplace {
+                source,
+                counter,
+                delim,
+                tally_leading,
+                search,
+                replace,
+                replace_leading,
+            } => {
                 return self.exec_inspect_tally_replace(
                     source,
                     counter,
@@ -373,6 +381,7 @@ impl Machine {
                     *tally_leading,
                     search,
                     replace,
+                    *replace_leading,
                 )
             }
             Stmt::InspectConverting { source, from, to } => {
@@ -738,19 +747,26 @@ impl Machine {
         self.inspect_replace(sidx, search, replace, leading)
     }
 
-    /// `INSPECT source TALLYING counter FOR {ALL|LEADING} delim REPLACING ALL
-    /// search BY replace` — one INSPECT carrying BOTH phrases. Per ISO this runs
-    /// "as though an INSPECT TALLYING were specified, followed by an INSPECT
-    /// REPLACING", so the order is fixed: FIRST [`Self::inspect_tally`] counts
-    /// `delim` in the ORIGINAL (pre-replacement) storage and adds to `counter`,
-    /// THEN [`Self::inspect_replace`] maps `search`→`replace` in the source.
-    /// Running tally before replace is what makes `delim == search` correct — the
-    /// count sees the bytes as they were, and only afterwards are they
-    /// overwritten. The TALLYING half honours `tally_leading` (`FOR LEADING`
-    /// counts only the leading run of `delim`, `FOR ALL` counts every occurrence),
-    /// while the REPLACING half stays `ALL`-only. The `cobol-iir-compiler`
-    /// composes the same two lowerings in the same order, so the compiled program
-    /// matches this reference byte-for-byte.
+    /// `INSPECT source TALLYING counter FOR {ALL|LEADING} delim REPLACING
+    /// {ALL|LEADING} search BY replace` — one INSPECT carrying BOTH phrases. Per
+    /// ISO this runs "as though an INSPECT TALLYING were specified, followed by an
+    /// INSPECT REPLACING", so the order is fixed: FIRST [`Self::inspect_tally`]
+    /// counts `delim` in the ORIGINAL (pre-replacement) storage and adds to
+    /// `counter`, THEN [`Self::inspect_replace`] maps `search`→`replace` in the
+    /// source. Running tally before replace is what makes `delim == search`
+    /// correct — the count sees the bytes as they were, and only afterwards are
+    /// they overwritten. The TALLYING half honours `tally_leading` (`FOR LEADING`
+    /// counts only the leading run of `delim`, `FOR ALL` counts every occurrence);
+    /// the REPLACING half independently honours `replace_leading` (`LEADING`
+    /// rewrites only the leading run of `search`, `ALL` rewrites every
+    /// occurrence). The `cobol-iir-compiler` composes the same two lowerings in
+    /// the same order with the same two flags, so the compiled program matches
+    /// this reference byte-for-byte.
+    // Eight parameters: the source/counter/delim/search/replace operands plus the
+    // two INDEPENDENT leading flags (tally half, replace half). Grouping them into a
+    // struct would only re-spell the same fields the caller already destructured
+    // from `Stmt::InspectTallyReplace`, so the flat signature is clearer here.
+    #[allow(clippy::too_many_arguments)]
     fn exec_inspect_tally_replace(
         &mut self,
         source: &str,
@@ -759,15 +775,17 @@ impl Machine {
         tally_leading: bool,
         search: &Operand,
         replace: &Operand,
+        replace_leading: bool,
     ) -> Result<Flow, RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
         // Tally FIRST, on the current (original) storage — it does not mutate the
         // source, so the subsequent replace still sees the original bytes too. The
         // TALLYING half may be FOR ALL or FOR LEADING (`tally_leading`).
         self.inspect_tally(sidx, counter, delim, tally_leading)?;
-        // THEN replace, overwriting the source in place. The combined form is
-        // REPLACING ALL only (`leading = false`).
-        self.inspect_replace(sidx, search, replace, false)?;
+        // THEN replace, overwriting the source in place. The REPLACING half may be
+        // ALL or LEADING (`replace_leading`) — the same leading-run map used by a
+        // lone `INSPECT REPLACING LEADING`.
+        self.inspect_replace(sidx, search, replace, replace_leading)?;
         Ok(Flow::Normal)
     }
 
@@ -779,9 +797,10 @@ impl Machine {
     /// CONSECUTIVE `search` characters at the START of the source is replaced,
     /// stopping at the first character that is not `search` — positions after that
     /// first gap are left unchanged even if they equal `search`. The combined
-    /// tally-then-replace path always passes `leading = false` (a combined
-    /// `REPLACING LEADING` is a later rung). A numeric/group source is rejected by
-    /// the caller via [`Self::inspect_alnum_source`].
+    /// tally-then-replace path passes whichever `leading` the statement's REPLACING
+    /// half selected — this map is shared verbatim by the lone `REPLACING LEADING`
+    /// and the combined `TALLYING … REPLACING LEADING`. A numeric/group source is
+    /// rejected by the caller via [`Self::inspect_alnum_source`].
     fn inspect_replace(
         &mut self,
         sidx: usize,

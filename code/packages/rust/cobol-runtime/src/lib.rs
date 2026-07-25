@@ -2503,21 +2503,21 @@ mod tests {
         .unwrap();
         assert_eq!(combined_lead, "002\nAAXXX\n");
 
-        // … and a combined statement whose REPLACING half is REPLACING LEADING
-        // still rejects — the LEADING replace inside the combined form stays
-        // deferred even though a LONE REPLACING LEADING is now supported.
+        // … and a combined statement whose REPLACING half is REPLACING LEADING is
+        // now SUPPORTED too: it counts ALL "B" (3 in "AABBB") into C FIRST, THEN
+        // replaces only the LEADING run of "A" → "XXBBB". (The dedicated ordering
+        // and both-halves-leading cases live in `inspect_tally_replace_leading_*`.)
         let combined_repl_lead = run_cobol(&wrap(
             &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
             &[
                 "INSPECT S TALLYING C FOR ALL \"B\" REPLACING LEADING \"A\" BY \"X\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
                 "STOP RUN.",
             ],
         ))
-        .unwrap_err();
-        assert!(
-            matches!(combined_repl_lead, RuntimeError::Unsupported(_)),
-            "got {combined_repl_lead:?}"
-        );
+        .unwrap();
+        assert_eq!(combined_repl_lead, "003\nXXBBB\n");
     }
 
     /// A LONE `INSPECT … REPLACING LEADING search BY replace` replaces only the run
@@ -2660,6 +2660,61 @@ mod tests {
         ))
         .unwrap();
         assert_eq!(all, "004\n****\n");
+    }
+
+    /// The COMBINED form's REPLACING half may be `LEADING`: after the tally counts
+    /// (on the ORIGINAL bytes), the rebuild rewrites only the consecutive run of
+    /// `search` at the START of the source, stopping at the first non-match. The
+    /// TALLYING half's own leading flag is independent — this test drives both
+    /// `FOR ALL` and `FOR LEADING` tally halves against a `REPLACING LEADING` half.
+    #[test]
+    fn inspect_tally_replace_leading_replaces_only_the_leading_run() {
+        // "00X00" — TALLYING FOR ALL "0" counts every "0" (4 — two leading, two
+        // trailing) into C FIRST, THEN REPLACING LEADING "0" rewrites only the
+        // leading run (2, stops at 'X') → "**X00". delim == search proves the tally
+        // saw the original bytes: the count is 4 (all zeros) even though only the
+        // two leading zeros are ultimately replaced.
+        let all_tally = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"00X00\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" REPLACING LEADING \"0\" BY \"*\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(all_tally, "004\n**X00\n");
+
+        // Both halves LEADING: TALLYING FOR LEADING "0" counts only the leading run
+        // (2) into C, THEN REPLACING LEADING "0" rewrites only that same leading run
+        // → "**X00". The two leading flags are threaded independently.
+        let both_leading = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"00X00\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR LEADING \"0\" REPLACING LEADING \"0\" BY \"*\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(both_leading, "002\n**X00\n");
+
+        // No leading run: the first character is not `search`, so REPLACING LEADING
+        // changes nothing, even though later "0"s exist. The FOR ALL tally still
+        // counts every "0" (2) → source unchanged "X00X".
+        let no_run = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"X00X\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" REPLACING LEADING \"0\" BY \"*\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(no_run, "002\nX00X\n");
     }
 
     #[test]

@@ -531,22 +531,27 @@ two engines agree byte-for-byte.
 Deferred as clean later rungs (accepted by the grammar, rejected at read/compile
 time): `REPLACING CHARACTERS BY`, `REPLACING FIRST` (`FIRST` does not parse as a
 replace keyword — it is deferred at parse time), `BEFORE`/`AFTER` regions,
-**several** replace items, a `REPLACING LEADING` inside the combined
-`TALLYING … REPLACING` form, a multi-character / figurative / wider / numeric
-search or replacement, and a numeric/group source.
+**several** replace items, a multi-character / figurative / wider / numeric
+search or replacement, and a numeric/group source. (A `REPLACING LEADING` inside
+the combined `TALLYING … REPLACING` form is now supported — see the combined
+section below.)
 
 ### Combined `INSPECT … TALLYING … REPLACING` (one statement)
 
 A single `INSPECT` may carry **both** phrases:
-`INSPECT source TALLYING counter FOR {ALL|LEADING} delim REPLACING ALL x BY y`. Per
-ISO the statement executes "**as though an `INSPECT TALLYING` were specified,
+`INSPECT source TALLYING counter FOR {ALL|LEADING} delim REPLACING {ALL|LEADING} x
+BY y`. Per ISO the statement executes "**as though an `INSPECT TALLYING` were specified,
 followed by an `INSPECT REPLACING`**" — so the order is fixed:
 
 1. **Tally first** — count occurrences of `delim` in the **ORIGINAL** `source` and
    **ADD** them to `counter` (the tally does not modify the source). The tally half
    may be `FOR ALL` (count every occurrence) or `FOR LEADING` (count only the
    consecutive run of `delim` at the start, stopping at the first non-match).
-2. **Then replace** — substitute every `x` with `y` in the source (`REPLACING ALL`).
+2. **Then replace** — substitute `x` with `y` in the source. The replace half may be
+   `REPLACING ALL` (substitute every `x`) or `REPLACING LEADING` (substitute only the
+   consecutive run of `x` at the start, stopping at the first non-`x`). The two
+   halves' leading flags are **independent** — either, both, or neither may be
+   `LEADING`.
 
 This tally-before-replace order is observable when `delim == x`: the count must
 see every occurrence in the pre-replacement bytes. Worked (`delim == x == "S"`):
@@ -555,20 +560,25 @@ the count run after the replace it would have seen zero `S` — so the `4` prove
 the ordering. Worked `FOR LEADING` (`delim == x == "0"`): `"000X0"` TALLYING
 `FOR LEADING "0"` → `counter += 3` (the leading run stops at `X`, so the trailing
 `0` is **not** counted — `FOR ALL` would give 4), then `REPLACING ALL "0" BY "*"` →
-`"***X*"` (the replace still rewrites every `0`).
+`"***X*"` (the replace still rewrites every `0`). Worked `REPLACING LEADING`
+(`delim == x == "0"`): `"00X00"` TALLYING `FOR ALL "0"` → `counter += 4` (all four
+zeros), then `REPLACING LEADING "0" BY "*"` → `"**X00"` (only the leading run of two
+is rewritten; the count still saw all four). Worked **both halves leading**:
+`"00X00"` TALLYING `FOR LEADING "0"` → `counter += 2`, then `REPLACING LEADING` →
+`"**X00"`.
 
 Both the oracle and the compiler compose their two existing single-phrase
 lowerings in this exact order on the same source, so the compiled program and the
 reference agree byte-for-byte. No grammar change was needed — the grammar already
-accepted `inspect_tallying [ inspect_replacing ]`. The `TALLYING` half now accepts
-`FOR LEADING` (reusing the lone-TALLYING leading-run count/break), while the
-`REPLACING` half stays single-character `ALL … BY` only: a combined statement whose
-`REPLACING` half is `REPLACING LEADING` — or whose either half is otherwise a
-deferred sub-form (`CHARACTERS`, several counters/FOR/replace items, `BEFORE`/
-`AFTER`, multi-char/figurative/wider/numeric operands, a numeric/group source, or a
-non-integer counter) — remains a clean later rung. (A lone `FOR LEADING` tally, a
-combined `FOR LEADING` tally, and a lone `REPLACING LEADING` are each supported; a
-`REPLACING LEADING` **inside the combined form** is still deferred.)
+accepted `inspect_tallying [ inspect_replacing ]`. The `TALLYING` half accepts
+`FOR ALL`/`FOR LEADING` (reusing the lone-TALLYING leading-run count/break) and the
+`REPLACING` half independently accepts `ALL`/`LEADING` (reusing the lone-REPLACING
+`active` run flag): a combined statement whose either half is a deferred sub-form
+(`CHARACTERS`, several counters/FOR/replace items, `BEFORE`/`AFTER`, multi-char/
+figurative/wider/numeric operands, a numeric/group source, or a non-integer
+counter) remains a clean later rung. (A lone `FOR LEADING` tally, a lone
+`REPLACING LEADING`, and every combination of leading/`ALL` on the two combined
+halves are each supported.)
 
 ### `INSPECT … CONVERTING` (first rung)
 
