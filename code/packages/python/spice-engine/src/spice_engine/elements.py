@@ -520,6 +520,7 @@ class JFET:
     Rd: float = 0.0
     Rs: float = 0.0
     Tcv: float = 0.0
+    Vtotc: float | None = None
     Tnom: float | None = None
     Bex: float = 0.0
     Betatce: float | None = None

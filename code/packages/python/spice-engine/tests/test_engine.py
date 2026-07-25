@@ -408,7 +408,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 165
+    assert len(coverage) == 167
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -423,7 +423,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 165
+    assert len(records) == 167
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -497,9 +497,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 165
-    assert report.expected_canonical_parameter_count == 165
-    assert report.accepted_name_count == 235
+    assert report.canonical_parameter_count == 167
+    assert report.expected_canonical_parameter_count == 167
+    assert report.accepted_name_count == 237
     assert report.aliased_parameter_count == 57
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -507,7 +507,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t165\t165\t235\t57\t4\t0"
+        "true\t7\t7\t167\t167\t237\t57\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -535,8 +535,8 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 164
-    assert report.accepted_name_count == 232
+    assert report.canonical_parameter_count == 166
+    assert report.accepted_name_count == 234
     assert report.aliased_parameter_count == 56
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
@@ -551,7 +551,7 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t164\t165\t232\t56\t4\t4\n"
+        "false\t7\t7\t166\t167\t234\t56\t4\t4\n"
         "kind\tfield\tmessage\n"
         "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
         "supported parameters, found 17\n"
@@ -680,6 +680,7 @@ def test_model_card_aliases_build_device_instances() -> None:
             "RS": 75.0,
             "T_NOM": 50.0,
             "TCV": 0.01,
+            "VTOTC": -0.0025,
             "BEX": 1.5,
             "BETATCE": -0.5,
         },
@@ -698,6 +699,7 @@ def test_model_card_aliases_build_device_instances() -> None:
         "RS": 75.0,
         "TNOM": 50.0,
         "TCV": 0.01,
+        "VTOTC": -0.0025,
         "BEX": 1.5,
         "BETATCE": -0.5,
     }
@@ -714,6 +716,7 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert jfet_model.Rs == pytest.approx(75.0)
     assert jfet_model.Tnom == pytest.approx(323.15)
     assert jfet_model.Tcv == pytest.approx(0.01)
+    assert jfet_model.Vtotc == pytest.approx(-0.0025)
     assert jfet_model.Bex == pytest.approx(1.5)
     assert jfet_model.Betatce == pytest.approx(-0.5)
 
@@ -2625,7 +2628,7 @@ def test_subcircuit_expansion_preserves_complete_jfet_model():
     cell = SubcircuitDefinition(
         "jfet-cell",
         ("d", "g", "s"),
-        (JFET("Jcell", "d", "g", "s", Kf=1.0e-12, Af=1.3, Pb=0.8, Fc=0.35, Is=2.0e-13, Rd=125.0, Rs=75.0, Tcv=0.01, Tnom=323.15, Bex=1.5, Betatce=-0.5),),
+        (JFET("Jcell", "d", "g", "s", Kf=1.0e-12, Af=1.3, Pb=0.8, Fc=0.35, Is=2.0e-13, Rd=125.0, Rs=75.0, Tcv=0.01, Vtotc=-0.0025, Tnom=323.15, Bex=1.5, Betatce=-0.5),),
     )
     circuit = Circuit()
     circuit.define_subcircuit(cell)
@@ -2640,6 +2643,7 @@ def test_subcircuit_expansion_preserves_complete_jfet_model():
     assert expanded.Rd == pytest.approx(125.0)
     assert expanded.Rs == pytest.approx(75.0)
     assert expanded.Tcv == pytest.approx(0.01)
+    assert expanded.Vtotc == pytest.approx(-0.0025)
     assert expanded.Bex == pytest.approx(1.5)
     assert expanded.Betatce == pytest.approx(-0.5)
     assert expanded.Tnom == pytest.approx(323.15)
@@ -2922,7 +2926,7 @@ def test_bjt_temperature_scaling_uses_model_temperature_exponent():
     assert high.Is > low.Is
 
 
-def test_jfet_temperature_scaling_uses_tcv_betatce_and_model_nominal_temperature():
+def test_jfet_temperature_scaling_uses_vtotc_betatce_and_model_nominal_temperature():
     transistor = JFET(
         "J1",
         "d",
@@ -2931,6 +2935,7 @@ def test_jfet_temperature_scaling_uses_tcv_betatce_and_model_nominal_temperature
         beta=1.0e-4,
         vto=-2.0,
         Tcv=0.01,
+        Vtotc=-0.0025,
         Tnom=310.0,
         Bex=-5.0,
         Betatce=1.0,
@@ -2946,19 +2951,29 @@ def test_jfet_temperature_scaling_uses_tcv_betatce_and_model_nominal_temperature
 
     assert at_model_nominal.vto == pytest.approx(-2.0)
     assert at_model_nominal.beta == pytest.approx(1.0e-4)
-    assert hot.vto == pytest.approx(-2.1)
+    assert hot.vto == pytest.approx(-2.025)
     assert hot.beta == pytest.approx(1.0e-4 * 1.01**10.0)
-    assert cold.vto == pytest.approx(-1.9)
+    assert cold.vto == pytest.approx(-1.975)
     assert cold.beta == pytest.approx(1.0e-4 * 1.01**-10.0)
     assert invariant.vto == pytest.approx(-2.0)
     assert invariant.beta == pytest.approx(1.0e-4)
     assert bex_fallback.beta == pytest.approx(1.0e-4 * 320.0 / 310.0)
+    tcv_fallback = jfet_at_temperature(
+        JFET("Jtcv", "d", "g", "s", vto=-2.0, Tcv=0.01, Tnom=310.0),
+        320.0,
+    )
+    assert tcv_fallback.vto == pytest.approx(-2.1)
 
 
 def test_dc_rejects_invalid_jfet_temperature_parameters():
     circuit = Circuit()
     circuit.add(JFET("Jbad", "d", "g", "0", Tcv=float("nan")))
     with pytest.raises(ValueError, match="TCV must be finite"):
+        dc_op(circuit)
+
+    circuit = Circuit()
+    circuit.add(JFET("Jbad", "d", "g", "0", Vtotc=float("nan")))
+    with pytest.raises(ValueError, match="VTOTC must be finite"):
         dc_op(circuit)
 
     circuit = Circuit()

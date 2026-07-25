@@ -1,5 +1,8 @@
 # Changelog
 
+- Add JFET model-card `VTOTC` support, applying the alternative
+  `VTO(T) = VTO + VTOTC * (T - TNOM)` rule with precedence over `TCV` when
+  explicitly present.
 - Add JFET model-card `BETATCE` support, applying the alternative
   `BETA(T) = BETA * 1.01^(BETATCE * (T - TNOM))` rule with precedence over
   `BEX` when explicitly present.
