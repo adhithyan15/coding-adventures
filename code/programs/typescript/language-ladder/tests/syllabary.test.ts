@@ -78,10 +78,10 @@ describe("against the real generated Telugu syllabary", () => {
     expect(isSyllabary(telugu.letters)).toBe(true);
     const groups = consonantGroups(telugu.letters);
     expect(groups.length).toBe(35); // 35 consonants
-    expect(groups[0]!.length).toBe(10); // ka's row = 10 core vowels
-    // Fresh learner: only the first consonant's 10 syllables are drillable.
+    expect(groups[0]!.length).toBe(13); // ka's row = 10 core vowels + ai, au, vocalic-r
+    // Fresh learner: only the first consonant's 13 syllables are drillable.
     const fresh = telugu.letters.map(() => ({ box: 0 }));
     expect(unlockedConsonantCount(groups, fresh)).toBe(1);
-    expect(unlockedLetterIndices(groups, 1)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    expect(unlockedLetterIndices(groups, 1)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   });
 });
