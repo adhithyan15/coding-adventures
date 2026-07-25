@@ -199,6 +199,25 @@ pub struct FlatHeap {
     // the safety contract that lets the all-list skip arena-backed blocks.
     #[allow(dead_code)]
     arenas: Vec<Arena>,
+    /// **Incremental-mark grey set** (AOT00-T4): objects marked but not yet scanned,
+    /// carried *between* [`Self::incremental_step`] slices. In the tri-colour model
+    /// white = `!marked`, black = `marked` and off this list, **grey = `marked` and on
+    /// this list**. A stop-the-world collector keeps its mark worklist as a function-local
+    /// `Vec` (drained before returning); an interruptible collector must persist it here so
+    /// a slice can stop mid-drain and the next slice resume. Empty ⇔ no unscanned greys.
+    mark_worklist: Vec<*mut FlatHeader>,
+    /// True from [`Self::incremental_start`] until [`Self::incremental_finish`] — i.e. while
+    /// an incremental mark phase is live. Gates alloc-black (`alloc` sets `marked` to this),
+    /// the (future) incremental write barrier's shading, and a debug guard against starting a
+    /// second incremental cycle or a full `collect*` mid-phase.
+    mark_in_progress: bool,
+    /// The **root snapshot** for the current incremental cycle: an incremental mark is rooted
+    /// **once**, at `incremental_start`, so later steps never re-read a mutated stack (the
+    /// soundness pivot — anything made reachable *after* start is caught by the write barrier,
+    /// PR-2, not by re-scanning). Precise slot addresses (`mark_roots`) and conservative spans
+    /// (`mark_regions`), exactly the pair [`Self::collect_mixed`] consumes. Cleared at finish.
+    mark_roots: Vec<usize>,
+    mark_regions: Vec<(*const u8, usize)>,
 }
 
 /// Default [`FlatHeap::tenure_age`]: **1** — a survivor tenures on its first
@@ -207,6 +226,17 @@ pub struct FlatHeap {
 /// (existing consumers and tests are unchanged); aging is opt-in via
 /// [`FlatHeap::set_tenure_age`] and can become the default in a later tuning pass.
 pub const DEFAULT_TENURE_AGE: u8 = 1;
+
+/// Debug-assert message for the four stop-the-world `collect*` entries: none may run
+/// *between* an [`FlatHeap::incremental_start`] and its [`FlatHeap::incremental_finish`].
+/// A full/minor collect mid-incremental-cycle would `sweep` blocks still referenced by the
+/// persistent [`FlatHeap::mark_worklist`], leaving dangling worklist pointers a later
+/// [`FlatHeap::incremental_step`] would pop (a use-after-free). One incremental cycle must
+/// run to `finish` before any other collector — a caller-contract invariant, fenced here in
+/// debug builds (AOT00-T4 §1 scope guard).
+const INCREMENTAL_MIXING_MSG: &str =
+    "stop-the-world collect during an incremental mark phase — drive incremental_step/finish \
+     to completion before calling collect*";
 
 /// Initial collection threshold, and the floor `adapt_threshold` never drops
 /// below: **1 MiB**. Small enough that a real workload collects promptly, large
@@ -310,6 +340,10 @@ impl FlatHeap {
             field_maps: Vec::new(),
             tenure_age: DEFAULT_TENURE_AGE,
             arenas: Vec::new(),
+            mark_worklist: Vec::new(),
+            mark_in_progress: false,
+            mark_roots: Vec::new(),
+            mark_regions: Vec::new(),
         }
     }
 
@@ -365,7 +399,11 @@ impl FlatHeap {
         unsafe {
             (*block).next = self.all;
             (*block).size = n;
-            (*block).marked = false;
+            // **Alloc-black during an incremental mark** (AOT00-T4 §5): an object born
+            // *while* a mark is in progress is marked (black), so the running cycle — whose
+            // reachable snapshot was fixed at `incremental_start` — never sweeps it. It is
+            // reclaimed next cycle if it dies. Outside a mark this is the usual `false`.
+            (*block).marked = self.mark_in_progress;
             (*block).kind = kind;
             (*block).generation = GEN_YOUNG; // new objects are born young
         }
@@ -518,6 +556,7 @@ impl FlatHeap {
     /// reference are followed).  A false positive retains a dead object for one
     /// extra cycle; it never frees a live one.
     pub fn collect(&mut self, roots: &[usize]) -> GcCycleStats {
+        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         let before = self.object_count();
         let prev_live = self.live_bytes;
 
@@ -583,6 +622,7 @@ impl FlatHeap {
     /// may be null iff `len == 0`). No alignment of `base`/`len` is required —
     /// scanning starts at `base` and a sub-8-byte tail is ignored.
     pub unsafe fn collect_region(&mut self, base: *const u8, len: usize) -> GcCycleStats {
+        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         let before = self.object_count();
         let prev_live = self.live_bytes;
 
@@ -663,6 +703,7 @@ impl FlatHeap {
     /// object be wrongly freed. The GC upholds its half; the mutator/codegen must
     /// uphold the barrier.
     pub fn collect_minor(&mut self, roots: &[usize]) -> GcCycleStats {
+        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         let before = self.object_count();
         let mut work: Vec<*mut FlatHeader> = Vec::new();
         // Roots — mark only the young objects they reach (old are live).
@@ -682,6 +723,7 @@ impl FlatHeap {
     /// `[base, base + len)` must be readable (or `base` null with `len == 0`),
     /// exactly as for [`Self::collect_region`].
     pub unsafe fn collect_minor_region(&mut self, base: *const u8, len: usize) -> GcCycleStats {
+        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         let before = self.object_count();
         let mut work: Vec<*mut FlatHeader> = Vec::new();
         // SAFETY: caller guarantees `[base, base+len)` is readable.
@@ -783,6 +825,7 @@ impl FlatHeap {
     /// is not a valid, readable slot is undefined behaviour — the same contract
     /// [`Self::collect_region`] places on its `[base, base + len)` span.
     pub unsafe fn collect_precise(&mut self, root_slots: &[usize]) -> GcCycleStats {
+        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         let before = self.object_count();
         let prev_live = self.live_bytes;
 
@@ -861,6 +904,7 @@ impl FlatHeap {
         root_slots: &[usize],
         regions: &[(*const u8, usize)],
     ) -> GcCycleStats {
+        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         let before = self.object_count();
         let prev_live = self.live_bytes;
 
@@ -901,6 +945,143 @@ impl FlatHeap {
         self.profile.record_cycle(&stats);
         self.collection_count += 1;
         stats
+    }
+
+    // ── Incremental (bounded-pause) collector — tri-colour marking (AOT00-T4) ──
+    //
+    // The stop-the-world `collect_mixed` above marks the *entire* live set then sweeps in one
+    // indivisible call. The three methods below decompose the **mark** into bounded slices so
+    // the mutator sees short pauses instead of one long one, while a persistent grey worklist
+    // ([`FlatHeap::mark_worklist`]) holds the tri-colour invariant across the gaps. This is
+    // PR-1: the interruptible mark itself, driven by a cooperative single-shot driver that
+    // does not mutate the heap *during* a mark (so no write barrier is needed yet — that is
+    // PR-2). Colours: white = `!marked`, grey = `marked` ∧ on the worklist, black = `marked`
+    // ∧ off the worklist. Invariant to preserve at `finish`: every reachable object is black,
+    // so every white object is unreachable and safe to sweep.
+
+    /// **Begin** an incremental collection (AOT00-T4 §4): colour every object white, snapshot
+    /// the roots for the whole phase, and shade the root-reachable objects grey.
+    ///
+    /// Rooting **once**, here, is the soundness pivot: later [`Self::incremental_step`] slices
+    /// never re-read a possibly-mutated stack. (Anything the mutator makes reachable *after*
+    /// this point is the write barrier's job — PR-2; a PR-1 driver simply does not mutate the
+    /// heap mid-mark.) After this call the worklist holds the grey frontier (the roots).
+    ///
+    /// # Safety
+    /// Each `root_slots` address and each `regions` span must be readable (same contract as
+    /// [`Self::collect_mixed`]). Must not be called while a mark is already in progress.
+    pub unsafe fn incremental_start(
+        &mut self,
+        root_slots: &[usize],
+        regions: &[(*const u8, usize)],
+    ) {
+        debug_assert!(!self.mark_in_progress, "incremental cycle already in progress");
+        // Everything white: clear the mark bit on every live block.
+        // SAFETY: list walk over blocks we own / null terminator.
+        let mut h = self.all;
+        while !h.is_null() {
+            (*h).marked = false;
+            h = (*h).next;
+        }
+        // Snapshot the roots for the entire phase; entering the phase makes `alloc` born-black.
+        self.mark_roots = root_slots.to_vec();
+        self.mark_regions = regions.to_vec();
+        self.mark_in_progress = true;
+
+        // Grey the roots: mark each root-reachable block and push it onto the worklist
+        // (`mark_word`/`mark_region` set `marked` and enqueue only previously-white blocks).
+        let mut work: Vec<*mut FlatHeader> = Vec::new();
+        for &slot in root_slots {
+            let word = ptr::read_unaligned(slot as *const usize);
+            self.mark_word(word, &mut work, false);
+        }
+        for &(base, len) in regions {
+            self.mark_region(base, len, &mut work, false);
+        }
+        self.mark_worklist = work;
+    }
+
+    /// **Advance** marking by up to `budget` objects (AOT00-T4 §4) — the sole bounded-pause
+    /// primitive. Pops grey objects, scans each (greying its still-white children), turning it
+    /// black. Returns `true` once the worklist empties (marking complete → call
+    /// [`Self::incremental_finish`]), `false` if more work remains. `budget` bounds the work
+    /// per slice: at most `budget` objects are scanned, so the pause scales with `budget`.
+    ///
+    /// # Safety
+    /// Must be called only between [`Self::incremental_start`] and
+    /// [`Self::incremental_finish`]. Every worklist pointer is a live block owned by this heap
+    /// (nothing frees a block mid-cycle in PR-1's non-mutating driver).
+    pub unsafe fn incremental_step(&mut self, budget: usize) -> bool {
+        debug_assert!(self.mark_in_progress, "incremental_step outside a mark phase");
+        // Take the worklist out so `scan_payload(&self, …)` can borrow `self` immutably while
+        // we push newly-greyed children into the (now local) list.
+        let mut work = core::mem::take(&mut self.mark_worklist);
+        let mut scanned = 0usize;
+        while scanned < budget {
+            let h = match work.pop() {
+                Some(h) => h, // grey → (scan) → black
+                None => break,
+            };
+            // Grey every still-white child: `scan_payload` follows the object's ref fields
+            // (precise for a registered kind, conservative otherwise) via `mark_word`, which
+            // marks + enqueues only white targets — exactly the tri-colour shade step.
+            self.scan_payload(h, &mut work, false);
+            scanned += 1;
+        }
+        let done = work.is_empty();
+        self.mark_worklist = work;
+        done
+    }
+
+    /// **Finish** the incremental cycle (AOT00-T4 §4): sweep every white (unreachable) object,
+    /// rebuild the remembered set, adapt the threshold, and end the phase. Marking must be
+    /// complete (the worklist empty) — the caller drives [`Self::incremental_step`] to `true`
+    /// first. Returns the cycle's [`GcCycleStats`]. The sweep is monolithic in this rung
+    /// (bounding *sweep* pauses is a strictly-additive follow-up).
+    ///
+    /// # Safety
+    /// Must be called only after [`Self::incremental_start`] with marking complete.
+    pub unsafe fn incremental_finish(&mut self) -> GcCycleStats {
+        debug_assert!(self.mark_in_progress, "incremental_finish outside a mark phase");
+        debug_assert!(self.mark_worklist.is_empty(), "marking not complete — step to done first");
+        let before = self.object_count();
+        let prev_live = self.live_bytes;
+
+        // Free every white object; keep + age every marked (black) survivor. Identical sweep
+        // to a full `collect_mixed` — the incremental mark just computed the same mark bits in
+        // slices.
+        let (freed, survived, live, _promoted) = self.sweep(false);
+        self.live_bytes = live;
+        self.adapt_threshold(prev_live);
+        self.rebuild_remembered();
+
+        // End the phase; drop the root snapshot and (already-empty) worklist.
+        self.mark_in_progress = false;
+        self.mark_roots.clear();
+        self.mark_regions.clear();
+        self.mark_worklist.clear();
+
+        let stats = GcCycleStats {
+            freed,
+            survived,
+            pause_ns: 0,
+            heap_size_before: before,
+            heap_size_after: survived,
+        };
+        self.profile.record_cycle(&stats);
+        self.collection_count += 1;
+        stats
+    }
+
+    /// Whether an incremental mark phase is currently in progress (test/introspection).
+    pub fn incremental_in_progress(&self) -> bool {
+        self.mark_in_progress
+    }
+
+    /// Size of the grey frontier — objects marked but not yet scanned (test/introspection).
+    /// `0` while no mark is in progress or once marking is complete.
+    pub fn incremental_grey_count(&self) -> usize {
+        self.mark_worklist.len()
     }
 
     /// Scan `[base, base + len)` as an array of aligned candidate root words,
@@ -1426,6 +1607,7 @@ impl FlatHeap {
         root_slots: &[usize],
         regions: &[(*const u8, usize)],
     ) -> GcCycleStats {
+        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         let before = self.object_count();
         let prev_live = self.live_bytes;
 
@@ -3414,5 +3596,122 @@ mod tests {
         assert_eq!(heap.object_count(), 0, "heap emptied");
         assert_eq!(heap.live_bytes(), 0);
         drop(heap);
+    }
+
+    // ── Incremental (bounded-pause) collector — tri-colour marking (AOT00-T4 PR-1) ──
+    //
+    // `incremental_start → step* → finish` decomposes a full mark-sweep's MARK into bounded
+    // slices. These prove the decomposition is faithful (same reclamation as one atomic
+    // collect), that a step is bounded, and that an object born during a mark survives it.
+    // Roots-only graphs (no mutation mid-mark) — the write barrier is PR-2.
+
+    /// **Stepping ≡ stop-the-world.** A precise `a → b` chain plus unreachable garbage `c`,
+    /// marked incrementally one object per step, frees EXACTLY what a single atomic
+    /// `collect_mixed` with the same root frees — same freed count, survivors, and live bytes.
+    /// Incremental is a decomposition of the mark, not a different reachability.
+    #[test]
+    fn incremental_step_by_step_equals_stop_the_world() {
+        // Twin heaps, identical shape: register a 1-ref-field kind, build a → b, leak c.
+        let build = || {
+            let mut heap = FlatHeap::new();
+            let k = heap.register_kind(&[0]);
+            let a = heap.alloc(16, k) as usize;
+            let b = heap.alloc(16, k) as usize;
+            unsafe { *(a as *mut usize) = b }; // a.field0 -> b
+            let _c = heap.alloc(16, k); // unreachable garbage
+            (heap, a)
+        };
+        let (mut hi, ai) = build();
+        let (mut hs, as_) = build();
+
+        // Stop-the-world reference.
+        let root_s = as_;
+        let s_stats = unsafe { hs.collect_mixed(&[&root_s as *const usize as usize], &[]) };
+
+        // Incremental: root a, then mark ONE object per step until done, then finish.
+        let root_i = ai;
+        let slots = [&root_i as *const usize as usize];
+        unsafe { hi.incremental_start(&slots, &[]) };
+        assert!(hi.incremental_in_progress());
+        let mut steps = 0;
+        while !unsafe { hi.incremental_step(1) } {
+            steps += 1;
+            assert!(steps < 100, "must converge");
+        }
+        let i_stats = unsafe { hi.incremental_finish() };
+
+        assert!(!hi.incremental_in_progress(), "phase ended at finish");
+        assert_eq!(i_stats.freed, s_stats.freed, "same objects freed as stop-the-world");
+        assert_eq!(i_stats.survived, s_stats.survived, "same survivor count");
+        assert_eq!(hi.object_count(), hs.object_count(), "same live count");
+        assert_eq!(hi.live_bytes(), hs.live_bytes(), "same live bytes");
+        assert_eq!(i_stats.freed, 1, "just the garbage c");
+        assert_eq!(hi.object_count(), 2, "a and b survive");
+    }
+
+    /// **A step is bounded.** A root object with three registered children: after `start` the
+    /// grey frontier is just the root; `step(1)` scans exactly that one object (greying its
+    /// three children, so the frontier grows to 3) and reports *not done*; a `step(3)` then
+    /// drains the leaves to completion. The per-step scan is bounded by the budget.
+    #[test]
+    fn incremental_step_scans_at_most_budget() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0, 8, 16]); // three ref fields
+        let c1 = heap.alloc(16, k) as usize;
+        let c2 = heap.alloc(16, k) as usize;
+        let c3 = heap.alloc(16, k) as usize;
+        let r = heap.alloc(24, k) as usize; // holds all three children
+        unsafe {
+            *(r as *mut usize) = c1;
+            *((r + 8) as *mut usize) = c2;
+            *((r + 16) as *mut usize) = c3;
+        }
+
+        let root = r;
+        let slots = [&root as *const usize as usize];
+        unsafe { heap.incremental_start(&slots, &[]) };
+        assert_eq!(heap.incremental_grey_count(), 1, "only the root is grey at start");
+
+        // One step scans exactly the root → greys its 3 children, not yet done.
+        let done1 = unsafe { heap.incremental_step(1) };
+        assert!(!done1, "one step over a 4-object graph is not complete");
+        assert_eq!(heap.incremental_grey_count(), 3, "root scanned; its 3 children now grey");
+
+        // Drain the three leaves; now complete.
+        let done2 = unsafe { heap.incremental_step(3) };
+        assert!(done2, "the three leaves are scanned to completion");
+        assert_eq!(heap.incremental_grey_count(), 0);
+
+        let stats = unsafe { heap.incremental_finish() };
+        assert_eq!(stats.freed, 0, "everything reachable — nothing freed");
+        assert_eq!(heap.object_count(), 4);
+    }
+
+    /// **An object born during a mark survives the cycle** (alloc-black). Allocated *between*
+    /// two steps, unrooted, it must not be swept by the cycle that was already running — its
+    /// reachable snapshot was fixed at `start`, so it is coloured black on birth.
+    #[test]
+    fn incremental_new_object_during_mark_is_retained() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let a = heap.alloc(16, k) as usize; // the rooted survivor
+
+        let root = a;
+        let slots = [&root as *const usize as usize];
+        unsafe { heap.incremental_start(&slots, &[]) };
+        // Allocate mid-mark — born black. Deliberately rooted NOWHERE.
+        let _newborn = heap.alloc(16, k);
+        assert_eq!(heap.object_count(), 2);
+        while !unsafe { heap.incremental_step(8) } {}
+        let stats = unsafe { heap.incremental_finish() };
+
+        assert_eq!(stats.freed, 0, "the mid-mark newborn is retained (born black), not swept");
+        assert_eq!(heap.object_count(), 2, "rooted `a` + the newborn both survive");
+        // The next cycle (newborn now white + unrooted) reclaims it — proving it was only
+        // spared because it was born during the mark, not because it is reachable.
+        let root2 = a;
+        let next = unsafe { heap.collect_mixed(&[&root2 as *const usize as usize], &[]) };
+        assert_eq!(next.freed, 1, "newborn reclaimed on the following cycle");
+        assert_eq!(heap.object_count(), 1);
     }
 }
