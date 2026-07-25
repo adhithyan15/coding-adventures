@@ -35,6 +35,7 @@ class Level1Params:
     CBD: float = 0.0  # drain-bulk zero-bias junction capacitance (F)
     PB: float = 0.8  # bulk junction potential (V)
     MJ: float = 0.5  # bulk junction grading coefficient
+    KF: float = 0.0  # flicker-noise coefficient
     subthreshold_enable: bool = True
 
 

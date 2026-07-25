@@ -1,5 +1,7 @@
 # Changelog
 
+- Add Level-1 MOS model-card `KF` support and emit drain-current-scaled
+  inverse-frequency flicker noise alongside channel thermal noise.
 - Add JFET model-card `NLEV` and `GDSNOI` support, preserving the legacy
   channel thermal-noise path below level 3 and adding the Berkeley
   linear-region equation at level 3 and above.

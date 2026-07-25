@@ -15598,18 +15598,37 @@ def _collect_noise_sources(
                 sources.append((el.name, "flicker", n_b, n_e, el.Kf * abs(base_current) ** el.Af, 1.0))
 
         elif isinstance(el, Mosfet):
-            # Long-channel MOSFET channel thermal noise: S_i = 4kTγgm.
+            # Long-channel channel thermal noise plus model-card 1/f noise.
             Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
             Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
             Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
             Vb = 0.0 if _is_ground(el.body) else dc_x[node_to_idx[el.body]]
             r = el.model.dc(Vg - Vs, Vd - Vs, Vb - Vs)  # type: ignore[attr-defined]
+            flicker_noise_coefficient = el.model.model.params.KF  # type: ignore[attr-defined]
+            if (
+                not math.isfinite(flicker_noise_coefficient)
+                or flicker_noise_coefficient < 0.0
+            ):
+                raise ValueError(
+                    f"{el.name}: MOSFET KF must be finite and non-negative"
+                )
             gm = max(0.0, float(r.gm))
+            n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
+            n_s = None if _is_ground(el.source) else node_to_idx[el.source]
             if gm > 0.0:
                 psd = kT4 * _MOSFET_CHANNEL_NOISE_GAMMA * gm
-                n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
-                n_s = None if _is_ground(el.source) else node_to_idx[el.source]
                 sources.append((el.name, "thermal", n_d, n_s, psd, 0.0))
+            if flicker_noise_coefficient > 0.0:
+                sources.append(
+                    (
+                        el.name,
+                        "flicker",
+                        n_d,
+                        n_s,
+                        flicker_noise_coefficient * abs(float(r.Id)),
+                        1.0,
+                    )
+                )
 
         elif isinstance(el, JFET):
             intrinsic_drain = _jfet_intrinsic_drain_node(el)
