@@ -417,6 +417,9 @@ int _sir_value_eq(SirValue a, SirValue b) { return _sir_value_eq_d(a, b, 0); }
 SirValue _sir_eq(SirValue a, SirValue b) { return _sir_bool(_sir_value_eq(a, b)); }
 SirValue _sir_ne(SirValue a, SirValue b) { return _sir_bool(!_sir_value_eq(a, b)); }
 
+/* Logical negation: `!v` under SIR truthiness (only nil/false are falsy). */
+SirValue _sir_not(SirValue v) { return _sir_bool(!_sir_truthy(v)); }
+
 /* Ruby `===` (case subsumption).  For the v0 value set — no classes, ranges, or
  * regexps yet — `pattern === value` reduces to structural equality, so `case`
  * / `when` over literals behaves correctly.  Later batches extend this for
@@ -928,6 +931,7 @@ SirValue _sir_builtin_dispatch(SirValue *caps, SirValue *args, int argc) {
     if (strcmp(name, ">=") == 0)       return _sir_ge(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "==") == 0)       return _sir_eq(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "!=") == 0)       return _sir_ne(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, "not") == 0)      return _sir_not(_sir_arg(args, argc, 0));
     if (strcmp(name, "cons") == 0)     return _sir_cons(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "car") == 0)      return _sir_car(_sir_arg(args, argc, 0));
     if (strcmp(name, "cdr") == 0)      return _sir_cdr(_sir_arg(args, argc, 0));

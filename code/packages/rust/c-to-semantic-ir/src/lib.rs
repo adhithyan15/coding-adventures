@@ -16,6 +16,8 @@
 //!   `for`, re-assignment), bridging the C-vs-SIR truthiness mismatch.
 //! - **Milestone 3** — early `return`, lifted into value-producing `If`s, which
 //!   is what makes guard clauses and idiomatic recursion translatable.
+//! - **Milestone 4** — the short-circuiting logical operators `&&`, `||`, `!`,
+//!   reusing the truthiness bridge (`and`/`or`/`not` builtins).
 
 mod lower;
 
@@ -122,6 +124,73 @@ mod tests {
         let m = lower("int main(void) { int a = 5; int b = 3; int c = a > b; return 0; }");
         let text = semantic_ir::print_module(&m);
         assert!(text.contains("(if (builtin-call >"), "no if-int:\n{text}");
+    }
+
+    // ── milestone 4: logical operators ──────────────────────────────────────
+
+    #[test]
+    fn logical_and_condition_short_circuits_via_and_builtin() {
+        // `if (a && b)` → `and(cond(a), cond(b))`, each operand a SIR bool.
+        let m = lower("int f(int x) { if (x >= 0 && x < 10) { return 1; } return 0; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(
+            text.contains("(builtin-call and"),
+            "no short-circuit and:\n{text}"
+        );
+        // Its operands are the comparison builtins directly (bools), not `!= 0`.
+        assert!(text.contains("(builtin-call >="), "no >= operand:\n{text}");
+        assert!(text.contains("(builtin-call <"), "no < operand:\n{text}");
+    }
+
+    #[test]
+    fn logical_or_uses_or_builtin() {
+        let m = lower("int f(int x) { if (x < 0 || x > 9) { return 1; } return 0; }");
+        assert!(semantic_ir::print_module(&m).contains("(builtin-call or"));
+    }
+
+    #[test]
+    fn logical_not_condition_uses_not_builtin() {
+        let m = lower("int f(int x) { if (!(x > 5)) { return 1; } return 0; }");
+        assert!(semantic_ir::print_module(&m).contains("(builtin-call not"));
+    }
+
+    #[test]
+    fn bare_variable_operand_is_bridged_via_ne_zero() {
+        // `a && b` with plain int operands: each is `!= 0` (SIR treats 0 truthy).
+        let m = lower("int f(int a, int b) { if (a && b) { return 1; } return 0; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(text.contains("(builtin-call and"), "no and:\n{text}");
+        assert!(
+            text.contains("(builtin-call != (effects pure) (var-ref a param) (int 0))"),
+            "operand a not bridged via != 0:\n{text}"
+        );
+    }
+
+    #[test]
+    fn logical_as_value_is_if_one_else_zero() {
+        // `int r = a && b;` — a logical operator used as a value is int 0/1.
+        let m = lower("int f(int a, int b) { int r = a && b; return r; }");
+        assert!(semantic_ir::print_module(&m).contains("(if (builtin-call and"));
+    }
+
+    #[test]
+    fn long_logical_chain_is_a_clean_error_not_a_crash() {
+        // A `&&` chain folds into a tree as deep as it is wide, so its width is
+        // charged against the shared depth budget.
+        let mut cond = String::from("x > 0");
+        for i in 0..200 {
+            cond.push_str(&format!(" && x != {i}"));
+        }
+        let err = compile_source(
+            &format!("int f(int x) {{ if ({cond}) {{ return 1; }} return 0; }}"),
+            "t",
+        )
+        .unwrap_err();
+        assert!(
+            err.message.contains("limit"),
+            "wrong error: {}",
+            err.message
+        );
     }
 
     // ── milestone 3: early return ───────────────────────────────────────────
