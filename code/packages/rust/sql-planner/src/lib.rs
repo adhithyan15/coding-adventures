@@ -254,6 +254,10 @@ pub enum CastType {
 pub enum AggFunc {
     Count,
     Sum,
+    /// `TOTAL(x)` — like `SUM(x)` but ALWAYS returns a REAL and yields `0.0`
+    /// (never NULL) for an empty group or an all-NULL column. This is SQLite's
+    /// non-standard, NULL-free companion to SUM.
+    Total,
     Avg,
     Min,
     Max,
@@ -2052,6 +2056,7 @@ fn try_plan_as_aggregate(func_call: &GrammarASTNode) -> Option<AggregateItem> {
     let agg_func = match name.to_uppercase().as_str() {
         "COUNT" => AggFunc::Count,
         "SUM" => AggFunc::Sum,
+        "TOTAL" => AggFunc::Total,
         "AVG" => AggFunc::Avg,
         "MIN" => AggFunc::Min,
         "MAX" => AggFunc::Max,
@@ -3589,6 +3594,7 @@ fn plan_function_call(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
     let agg_func = match name.to_uppercase().as_str() {
         "COUNT" => Some(AggFunc::Count),
         "SUM" => Some(AggFunc::Sum),
+        "TOTAL" => Some(AggFunc::Total),
         "AVG" => Some(AggFunc::Avg),
         "MIN" => Some(AggFunc::Min),
         "MAX" => Some(AggFunc::Max),

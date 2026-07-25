@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.67 — `TOTAL()` aggregate
+
+`SELECT total(v) FROM t` is now supported — SQLite's NULL-free companion to
+`SUM`: it always returns a REAL and yields `0.0` (not NULL) for an empty or
+all-NULL group, and returns REAL even when every input is an integer. Previously
+`total(...)` errored with "unknown built-in function". Verified against bundled
+real SQLite (empty→0.0, all-int→REAL, mixed int/real→REAL, per-group). Spans
+sql-planner 0.2.33, sql-codegen 0.6.13, sql-vm 0.4.37.
+
 ## 0.5.66 — DISTINCT applies before ORDER BY (representative selection)
 
 `SELECT DISTINCT x COLLATE NOCASE FROM t ORDER BY x` now keeps SQLite's

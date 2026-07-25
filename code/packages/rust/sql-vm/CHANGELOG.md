@@ -3,6 +3,14 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.37] - Unreleased
+
+### Added
+
+- **`TOTAL(x)` aggregate.** Accumulates identically to `SUM` (shared
+  `update_accumulator` arm), but finalizes as `SqlValue::Float(to_f64(sum))` with
+  a `0.0` default — always REAL and never NULL, matching SQLite's `total()`.
+
 ## [0.4.36] - Unreleased
 
 ### Fixed

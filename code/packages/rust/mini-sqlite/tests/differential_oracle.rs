@@ -2280,6 +2280,35 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT k, sum(v) FROM g GROUP BY k ORDER BY 2",
     },
+    // `TOTAL(x)` is SQLite's NULL-free companion to SUM: always REAL, and 0.0
+    // (not NULL) for an empty or all-NULL group. Here the mixed int/real values
+    // sum to a REAL, and the all-NULL / empty groups return 0.0.
+    Case {
+        id: "total_aggregate",
+        setup: &[
+            "CREATE TABLE t (g TEXT, v)",
+            "INSERT INTO t VALUES ('a',1),('a',2),('b',NULL),('c',2.5)",
+        ],
+        query: "SELECT g, total(v), sum(v) FROM t GROUP BY g ORDER BY g",
+    },
+    // TOTAL over an empty table is 0.0 (a single grouped-less aggregate row),
+    // where SUM would be NULL — the defining difference (Real(0.0) vs Null in the
+    // value comparison).
+    Case {
+        id: "total_empty_is_zero",
+        setup: &["CREATE TABLE e (v INTEGER)"],
+        query: "SELECT total(v), sum(v) FROM e",
+    },
+    // TOTAL of all integers still returns a REAL (unlike SUM, which stays
+    // INTEGER) — `Real(6.0)` vs `Int(6)` in the value comparison proves the type.
+    Case {
+        id: "total_ints_returns_real",
+        setup: &[
+            "CREATE TABLE t (v INTEGER)",
+            "INSERT INTO t VALUES (1),(2),(3)",
+        ],
+        query: "SELECT total(v), sum(v) FROM t",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

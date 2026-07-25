@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.33] - Unreleased
+
+### Added
+
+- **`TOTAL(x)` aggregate.** Recognized as an aggregate function name (both
+  aggregate-detection sites), lowering to the new `AggFunc::Total`. `TOTAL` is
+  SQLite's NULL-free companion to `SUM`: it accumulates identically but always
+  returns a REAL and yields `0.0` (never NULL) for an empty or all-NULL group.
+
 ## [0.2.32] - Unreleased
 
 ### Changed
