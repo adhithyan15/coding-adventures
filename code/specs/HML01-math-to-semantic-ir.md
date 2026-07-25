@@ -270,13 +270,14 @@ without any change to the IR or the frontends.
 
 ## §5 Rollout — two parallel streams, one shared serialization point
 
-**Stream A (array/matrix, backs MATLAB/Octave/APL/J/Scilab and future
-IDL):**
+**Stream A (array/matrix, backs MATLAB/Octave/APL/J/Scilab/Q/IDL):**
 `SIR22` spec → `semantic-ir` core additions → `matlab-to-semantic-ir` →
 `octave-to-semantic-ir` → `sir-runtime-array` → JS/TS backend codegen →
 `apl-to-semantic-ir` (SIR22 addendum for APL primitives) →
-`j-to-semantic-ir` → `scilab-to-semantic-ir` → golden/oracle tests
-(MATLAB's, Octave's, APL's, J's, and Scilab's own now shipped. MATLAB — see
+`j-to-semantic-ir` → `scilab-to-semantic-ir` → `q-to-semantic-ir` →
+`idl-to-semantic-ir` → golden/oracle tests
+(MATLAB's, Octave's, APL's, J's, Scilab's, Q's, and IDL's own now shipped.
+MATLAB — see
 `matlab-to-semantic-ir/tests/oracle.rs`, the first
 true oracle diff anywhere in this track: the same computation run through
 `matlab-runtime` and through this frontend's compiled-JS-via-`node` path,
@@ -346,20 +347,46 @@ supports user-defined functions, giving a function-parameter
 self-multiplication repro shape MATLAB's own oracle file could never
 have exercised even if it had tried — see that crate's `CHANGELOG.md`
 for the full write-up and the dedicated follow-up task filed against
-`semantic-ir-to-javascript`'s `matmul`. All items through JS/TS backend
-codegen are shipped.
+`semantic-ir-to-javascript`'s `matmul`. Q — see
+`q-to-semantic-ir/tests/oracle.rs`, its own 50-case corpus (no
+`setup`/`final_expr` split needed — like J's and APL's own oracle files,
+Q's silent-assignment/auto-print convention lets every case be one whole
+`source` string). Building it reconfirmed the exact same shared-crate
+display gap `j-to-semantic-ir`'s own oracle file first found —
+`semantic-ir-to-javascript` printing APL's high-minus `¯` glyph for any
+negative `NDArray` result regardless of source language, with no
+per-language flag gating it to Q's own plain-ASCII-minus convention —
+except this time it was fixed as a direct follow-up (task #109 added a
+third, mutually exclusive `SIR_DISPLAY_Q_ASCII_MINUS` display flag
+alongside the existing APL/J ones), so all 50 cases now agree end-to-end
+with `known_bug: None` throughout. IDL — see
+`idl-to-semantic-ir/tests/oracle.rs`, its own 32-case corpus (the
+`setup`/`final_expr`/`expected`/`known_bug` `Case` shape borrowed
+directly from Scilab's own oracle file, adapted to `idl-runtime`'s
+Implied-Print convention). All 32 cases agree end-to-end with
+`known_bug: None` throughout — the cleanest pass of any Stream A oracle
+file so far — modulo one explicitly-disclosed testing-scope limitation,
+not a bug: this frontend has no in-scope way to construct a genuine
+rank-2 array literal, so every `#`/`##` (matmul) case necessarily uses
+commuting rank-1 operands, meaning the file can confirm the VALUE agrees
+but cannot independently prove `matmul`'s operand-order fix through
+end-to-end values alone (that proof lives in `tests/test_lower.rs`'s own
+`hash_is_matmul_with_operands_swapped` structural assertion instead). All
+items through JS/TS backend codegen are shipped.
 
 **Stream B (symbolic/CAS, backs Wolfram/Macsyma/Maxima/Derive/Reduce/
 Maple):** `SIR23` spec → `semantic-ir` core additions →
 `wolfram-to-semantic-ir` → `macsyma-to-semantic-ir` → `maxima-to-semantic-ir`
 → `derive-to-semantic-ir` → `reduce-to-semantic-ir` → `maple-to-semantic-ir`
-→ `sir-runtime-symbolic` → JS/TS backend codegen → golden/oracle tests (in
-progress — real `node`-execution proof shipped for `wolfram-to-semantic-ir`,
+→ `sir-runtime-symbolic` → JS/TS backend codegen → golden/oracle tests (all
+five SIR23 frontends now have both proofs: a real `node`-execution proof
+(`tests/e2e_node.rs`, shipped first for `wolfram-to-semantic-ir`,
 `macsyma-to-semantic-ir`, `derive-to-semantic-ir`, `reduce-to-semantic-ir`,
-and `maple-to-semantic-ir` via each crate's `tests/e2e_node.rs`. A true
-oracle diff against each language's native runtime is now shipped for
-`derive-to-semantic-ir`, `reduce-to-semantic-ir`, and `maple-to-semantic-ir`
-— see `derive-to-semantic-ir/tests/oracle.rs` (a 38-case corpus
+and `maple-to-semantic-ir` — Wolfram's and Macsyma's predate the
+oracle-testing convention itself, per each of their own `tests/oracle.rs`
+module docs), and a true oracle diff against each language's own native
+runtime (`tests/oracle.rs`). Derive's, Reduce's, and Maple's oracle diffs
+shipped first — see `derive-to-semantic-ir/tests/oracle.rs` (a 38-case corpus
 cross-checking `derive-runtime`), `reduce-to-semantic-ir/tests/oracle.rs`
 (its own 38-case corpus cross-checking `reduce-runtime`), and
 `maple-to-semantic-ir/tests/oracle.rs` (its own 43-case corpus
@@ -407,13 +434,67 @@ to real Maple's own lowercase `true`/`false` surface (MA09 §3), so even a
 comparison/logic case that folds identically on both sides still
 disagrees on letter case. All four gaps are recorded via `known_bug`, not
 patched in any frontend's own oracle PR, and remain a follow-up item for
-`semantic-ir-to-javascript`/`symbolic-vm` themselves; a true oracle diff
-for `wolfram-to-semantic-ir`/`macsyma-to-semantic-ir` remains the open
-item for the rest of this stream, blocked on the same shared-crate gaps).
+`semantic-ir-to-javascript`/`symbolic-vm` themselves.
+
+Wolfram's and Macsyma's own oracle diffs shipped afterward, closing what
+was this stream's last open item — see
+`wolfram-to-semantic-ir/tests/oracle.rs` (its own 32-case corpus
+cross-checking `wolfram-runtime`, 27 of 32 cases `known_bug: None`) and
+`macsyma-to-semantic-ir/tests/oracle.rs` (its own 34-case corpus
+cross-checking `macsyma-runtime`, 31 of 34 cases `known_bug: None`), both
+against the compiled-JS-via-`node` path. Both reconfirm finding one (the
+SIR23 JS backend's arithmetic/comparison/logic/held-form folding, by then
+shipped in full — `runtime.rs`'s own "all four addendum items now
+shipped" comment) and finding five (the still-open, shared,
+no-per-language-display-convention gap that needs `known_bug` for any
+non-atomic result) rather than re-deriving either. Two gaps are genuinely
+new, and both are left open rather than patched in either oracle PR:
+Wolfram's own `SetDelayed`/`:=` lowering emits a 2-argument
+`Define(f[x_], body)` call (full-fidelity, no lowering-time LHS
+destructuring — deliberate, per `lower.rs`'s own "Everything is data"
+design), but the shared JS `defineHandler` requires exactly 3 args, so a
+Wolfram-defined function is never actually registered on the compiled
+side — unlike every other SIR23 frontend's `:=`/`COLONEQ` lowering.
+Macsyma's own `:=` lowering already emits the matching 3-argument
+`Define(f, List(x), body)` shape (confirmed directly against
+`macsyma-to-semantic-ir/tests/test_lower.rs`), so Macsyma needs no
+equivalent `known_bug` here — the exact opposite finding. Separately,
+Wolfram's `SymReplaceAll` (`/.`/`//.`) performs substitution only on the
+compiled side and never re-folds the substituted result through
+`evalTerm`, so a rule whose right-hand side needs further arithmetic
+reduction after substitution stays unevaluated compiled-side while
+`wolfram-runtime` folds it correctly natively — invisible whenever the
+substituted result is already atomic (true of most of
+`tests/sir23_symbolic.rs`'s own hand-built cases), and only surfaced
+while building this corpus. Macsyma's own grammar (v0.1.0) has no
+pattern-matching/rewrite-rule surface syntax at all (no `_`/blank, no
+`->`/`:>` rule arrow), so there is no `SymReplaceAll` analogue for its
+corpus to hit in the first place.
+
+`maxima-to-semantic-ir` deliberately has no oracle corpus of its own, and
+this is a documented finding, not a coverage gap —
+`macsyma-to-semantic-ir/tests/oracle.rs`'s own "Maxima coverage" section
+spells it out: `maxima-to-semantic-ir::src/lib.rs` is a pure re-export of
+`macsyma-to-semantic-ir::{compile, compile_source}` (no Maxima-specific
+CST is ever built), and `maxima-runtime::MaximaSession` is a thin façade
+over `macsyma-runtime::MacsymaSession` whose `feed` forwards straight to
+`eval_source` and echoes the exact same `output_text` (rendered by the
+same `cas_pretty_printer::MacsymaDialect`) behind only a `(%oN) `
+REPL-echo prefix the SIR/JS pipeline never sees either way — unlike
+Octave, which needs a genuine `octavify` source-rewrite shim over
+`matlab-runtime` for real surface departures. A separate Maxima corpus
+would therefore re-run the identical evaluator against the identical
+lowering and assert the identical strings — pure duplication, not
+additional coverage — so `macsyma-to-semantic-ir/tests/oracle.rs`'s
+corpus stands in for both languages; a future Maxima-specific surface
+departure would be the trigger to split it, not anything currently
+observed.
+
 **All five frontends this stream's own language list names are now
-shipped** — `maple-to-semantic-ir` was the last open
-follow-on item and is done as of this crate landing. All items through
-JS/TS backend codegen are shipped.
+shipped, and so is a true oracle diff for all five** — Wolfram's and
+Macsyma's own `tests/oracle.rs` were the last open item and are done as
+of those two crates landing. All items through JS/TS backend codegen are
+shipped.
 
 The streams touch disjoint crates except `semantic-ir` core and the two JS
 backends — a short serialization point, not a merge of the whole effort.
@@ -435,8 +516,13 @@ simultaneously, rotating rather than exhausting one before starting another:
 1. **Existing-language feature completeness** — Wolfram's `cas-*` function
    surface, Macsyma's remaining gaps (general multivariate factoring,
    Frobenius ODEs, hypergeometric summation, TS/Rust `Apart` port).
-2. **New math-language additions** — HML00 Wave 4+ (APL, J, K/Q, Scilab,
-   IDL, Reduce, Derive, Maple, Axiom, Julia), none of which exist yet.
+2. **New math-language additions** — HML00 Wave 4+ has now shipped APL, J,
+   K/Q (as `q-to-semantic-ir`), Scilab, IDL, Reduce, Derive, and Maple —
+   every language this bullet originally tracked except Axiom and Julia,
+   neither of which has a crate or spec anywhere in this repo yet
+   (confirmed: no `axiom-*`/`julia-*` crate under `code/packages/rust/`
+   and no `axiom`/`julia` spec under `code/specs/`). Axiom and Julia
+   remain the two genuinely not-yet-started items on this front.
 3. **This track (Semantic IR compilation).**
 
 A reasonable cadence: land one PR-sized unit here, then pick up one item from
