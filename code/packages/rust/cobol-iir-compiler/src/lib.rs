@@ -1781,11 +1781,15 @@ impl<'a> Compiler<'a> {
                 // `TALLYING … REPLACING LEADING` rewrite only the leading run
                 // (`emit_inspect_replacing` already threads the `active`-guarded run
                 // unroll that stops at the first non-match). The two halves' leading
-                // flags are independent, so BOTH may be LEADING at once.
-                self.emit_inspect_replacing(verb, &s_reg, source_width, true)
+                // flags are independent, so BOTH may be LEADING at once. A
+                // `{BEFORE|AFTER}` region on the combined REPLACING half is a later
+                // rung, so `allow_region = false`.
+                self.emit_inspect_replacing(verb, &s_reg, source_width, true, false)
             }
-            // A lone REPLACING: both `ALL` and `LEADING` are supported here.
-            (false, true) => self.emit_inspect_replacing(verb, &s_reg, source_width, true),
+            // A lone REPLACING: both `ALL` and `LEADING` are supported here, and
+            // `REPLACING ALL` may carry a `{BEFORE|AFTER}` region (`allow_region =
+            // true`).
+            (false, true) => self.emit_inspect_replacing(verb, &s_reg, source_width, true, true),
             // A lone TALLYING (or neither, which `inspect_tally_all` rejects). Both
             // `FOR ALL` and `FOR LEADING` are supported here, and `FOR ALL` may carry
             // a `{BEFORE|AFTER}` region (`allow_region = true`).
@@ -2066,24 +2070,54 @@ impl<'a> Compiler<'a> {
     /// tally-then-replace path — a combined `TALLYING … REPLACING LEADING` now
     /// lowers exactly like a lone `REPLACING LEADING`, independent of the TALLYING
     /// half's own leading flag.
+    ///
+    /// `allow_region` gates whether a `{BEFORE|AFTER} x` region is accepted (only the
+    /// lone `REPLACING ALL` path passes `true`; the combined path passes `false`,
+    /// matching the oracle's read-time rejection). When a region is present we reuse
+    /// [`Self::emit_inspect_region_window`] — the SAME window the TALLYING side emits
+    /// — to derive `[start, end)` over the ORIGINAL source, then at each unrolled
+    /// position `j` replace iff `start <= j < end AND S[j] == x`; a position outside
+    /// the window keeps its original character. With NO region the extra guard folds
+    /// away and the emitted unroll is byte-identical to the pre-region `ALL` lowering.
     fn emit_inspect_replacing(
         &mut self,
         verb: &GrammarASTNode,
         s_reg: &str,
         width: usize,
         allow_leading: bool,
+        allow_region: bool,
     ) -> Result<(), CompileError> {
-        // The single `ALL`/`LEADING x BY y` phrase (rejecting the later rungs).
-        let (search_node, replace_node, leading) = inspect_replacing_all(verb)?;
+        // The single `ALL`/`LEADING x BY y [{BEFORE|AFTER} z]` phrase (rejecting the
+        // later rungs).
+        let (search_node, replace_node, leading, region) = inspect_replacing_all(verb)?;
         if leading && !allow_leading {
             return Err(CompileError::Unsupported(
                 "INSPECT TALLYING … REPLACING LEADING is a later rung".into(),
+            ));
+        }
+        if region.is_some() && !allow_region {
+            return Err(CompileError::Unsupported(
+                "INSPECT combined TALLYING … REPLACING with a BEFORE/AFTER region is a later rung"
+                    .into(),
             ));
         }
         // x → a byte code (for the per-position compare); y → a 1-char string
         // (for the concatenation). Both share the single-character validation.
         let x_reg = self.single_delim_code(search_node, "INSPECT REPLACING")?;
         let y_reg = self.single_delim_str(replace_node, "INSPECT REPLACING")?;
+
+        // The optional `{BEFORE|AFTER} z` window `[start, end)`, derived over the
+        // ORIGINAL source (before the unroll overwrites `s_reg`). We reuse the tally
+        // side's `emit_inspect_region_window`, which needs the runtime length; with no
+        // region nothing here is emitted and the guard below folds away.
+        let region_window = match region {
+            None => None,
+            Some(_) => {
+                let len = self.fresh("_irlen");
+                self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.to_string())], "i64");
+                self.emit_inspect_region_window(region, s_reg, &len)?
+            }
+        };
 
         // result = "" — the accumulator we build W characters into.
         let result = self.fresh("_irres");
@@ -2109,13 +2143,47 @@ impl<'a> Compiler<'a> {
             let eq = self.fresh("_ireq");
             self.emit("cmp_eq", Some(&eq), vec![Operand::Var(c), Operand::Var(x_reg.clone())], "i64");
             // For LEADING, replace iff STILL in the run AND this char matches:
-            // `use_repl = active AND eq`. For ALL, the branch condition is just `eq`.
+            // `use_repl = active AND eq`. For ALL with a `{BEFORE|AFTER}` region,
+            // replace iff this char matches AND its position lies inside the window:
+            // `use_repl = (start <= j < end) AND eq`. For plain ALL the branch
+            // condition is just `eq`. (LEADING never carries a region, so the two
+            // extra-guard cases are mutually exclusive.)
             let branch = if leading {
                 let use_repl = self.fresh("_iruse");
                 self.emit(
                     "and",
                     Some(&use_repl),
                     vec![Operand::Var(active.clone()), Operand::Var(eq.clone())],
+                    "i64",
+                );
+                use_repl
+            } else if let Some((start, end_bound)) = &region_window {
+                // in_region = (j >= start) AND (j < end); j is the compile-time
+                // constant for this unrolled position, materialised into a register so
+                // it can be compared against the runtime window bounds.
+                let jreg = self.fresh("_irjr");
+                self.emit("const", Some(&jreg), vec![Operand::Int(j as i64)], "i64");
+                let ge = self.fresh("_irge");
+                self.emit(
+                    "cmp_ge",
+                    Some(&ge),
+                    vec![Operand::Var(jreg.clone()), Operand::Var(start.clone())],
+                    "i64",
+                );
+                let lt = self.fresh("_irlt");
+                self.emit(
+                    "cmp_lt",
+                    Some(&lt),
+                    vec![Operand::Var(jreg), Operand::Var(end_bound.clone())],
+                    "i64",
+                );
+                let in_region = self.fresh("_irin");
+                self.emit("and", Some(&in_region), vec![Operand::Var(ge), Operand::Var(lt)], "i64");
+                let use_repl = self.fresh("_iruse");
+                self.emit(
+                    "and",
+                    Some(&use_repl),
+                    vec![Operand::Var(in_region), Operand::Var(eq.clone())],
                     "i64",
                 );
                 use_repl
@@ -4542,22 +4610,32 @@ fn inspect_tally_all(verb: &GrammarASTNode) -> Result<TallyPhrase<'_>, CompileEr
     Ok((counter, delim, leading, region))
 }
 
-/// Extract the supported `REPLACING ALL search BY replace` / `REPLACING LEADING
-/// search BY replace` phrase from an `inspect_stmt`, returning `(search_node,
-/// replace_node, leading)` where `leading` is `true` for `REPLACING LEADING`
-/// (replace only the leading run) and `false` for `REPLACING ALL` (replace every
-/// occurrence). Rejects every later-rung form the grammar also accepts:
+/// The parsed pieces of a `REPLACING ALL|LEADING search BY replace [{BEFORE|AFTER}
+/// x]` phrase: `(search_node, replace_node, leading, region)`, where `region` is the
+/// optional `{BEFORE|AFTER} x` window as `(kind, region_delim_node)` — the exact
+/// analogue of [`TallyPhrase`]'s region on the count side.
+type ReplacePhrase<'a> =
+    (&'a GrammarASTNode, &'a GrammarASTNode, bool, Option<(RegionKind, &'a GrammarASTNode)>);
+
+/// Extract the supported `REPLACING ALL search BY replace [{BEFORE|AFTER} x]` /
+/// `REPLACING LEADING search BY replace` phrase from an `inspect_stmt`, returning
+/// `(search_node, replace_node, leading, region)` where `leading` is `true` for
+/// `REPLACING LEADING` (replace only the leading run) and `false` for `REPLACING
+/// ALL` (replace every occurrence), and `region` carries an optional `{BEFORE|AFTER}
+/// x` window as `(kind, region_delim_node)`. Rejects every later-rung form the
+/// grammar also accepts:
 ///   * more than one replace item (`{ replace_item }`) — one `x BY y` this rung;
 ///   * a `CHARACTERS` or `FIRST` replacement (only `ALL`/`LEADING` this rung);
-///   * a `BEFORE`/`AFTER` region restricting the replacement.
+///   * a `REPLACING LEADING` phrase carrying a region (`REPLACING LEADING …
+///     BEFORE/AFTER` is a later rung; only `REPLACING ALL` gets a region this rung,
+///     mirroring the `FOR LEADING … BEFORE/AFTER` rejection on the count side).
 ///
 /// Both `ALL` and `LEADING` are accepted here, whether the phrase is lone or
-/// combined with `TALLYING`. (A non-alphanumeric source is rejected by the
-/// caller; a multi-character/wider/figurative search or replacement is rejected
-/// by `single_delim_code`/`single_delim_str`.)
-fn inspect_replacing_all(
-    verb: &GrammarASTNode,
-) -> Result<(&GrammarASTNode, &GrammarASTNode, bool), CompileError> {
+/// combined with `TALLYING`; the combined caller separately rejects any region. (A
+/// non-alphanumeric source is rejected by the caller; a multi-character/wider/
+/// figurative search, replacement, or region delimiter is rejected by
+/// `single_delim_code`/`single_delim_str`.)
+fn inspect_replacing_all(verb: &GrammarASTNode) -> Result<ReplacePhrase<'_>, CompileError> {
     let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
         CompileError::Unsupported("INSPECT without a REPLACING clause is a later rung".into())
     })?;
@@ -4585,16 +4663,43 @@ fn inspect_replacing_all(
     // `REPLACING ALL` is the default. The keyword selects the stop-at-first-
     // mismatch behaviour threaded into the unroll.
     let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
-    if child_node(ri, "inspect_region").is_some() {
-        return Err(CompileError::Unsupported(
-            "INSPECT REPLACING … BEFORE/AFTER is a later rung".into(),
-        ));
-    }
+    // A `{BEFORE|AFTER} x` region now PARSES into `Option<(RegionKind, node)>` (it
+    // used to be rejected wholesale here), using the SAME keyword/operand extraction
+    // as `inspect_tally_all` on the count side. Only `REPLACING ALL` gets a region
+    // this rung, so a `REPLACING LEADING` phrase carrying a region is still a clean
+    // later-rung error.
+    let region = match child_node(ri, "inspect_region") {
+        None => None,
+        Some(region_node) => {
+            if leading {
+                return Err(CompileError::Unsupported(
+                    "INSPECT REPLACING LEADING with a BEFORE/AFTER region is a later rung".into(),
+                ));
+            }
+            let rtoks = child_tokens(region_node);
+            let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+                RegionKind::Before
+            } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+                RegionKind::After
+            } else {
+                return Err(CompileError::Unsupported(
+                    "INSPECT region without a BEFORE or AFTER keyword".into(),
+                ));
+            };
+            let rdelim = child_node(region_node, "operand").ok_or_else(|| {
+                CompileError::Malformed("INSPECT BEFORE/AFTER region without a delimiter".into())
+            })?;
+            Some((kind, rdelim))
+        }
+    };
     // `ALL`/`LEADING search BY replace` — the two `operand` children are the
-    // search (first) and the replacement (second), in order.
+    // search (first) and the replacement (second), in order. (A `{BEFORE|AFTER}`
+    // region contributes its own operand nested under `inspect_region`, not a direct
+    // child of `replace_item`, so these two direct `operand` children are exactly the
+    // search and replacement.)
     let ops = child_nodes(ri, "operand");
     match ops.as_slice() {
-        [s, r] => Ok((*s, *r, leading)),
+        [s, r] => Ok((*s, *r, leading, region)),
         _ => Err(CompileError::Malformed(
             "INSPECT REPLACING ALL/LEADING without a search and a BY replacement".into(),
         )),

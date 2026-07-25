@@ -8,6 +8,47 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.41.0: INSPECT REPLACING ALL with a BEFORE/AFTER region
+
+`INSPECT source REPLACING ALL x BY y {BEFORE|AFTER} z` now compiles instead of being
+rejected as a later rung — the exact analogue of the TALLYING-region rung applied to
+the substitution instead of the count. A `{BEFORE|AFTER} z` region narrows the ALL
+replacement to a sub-slice of the source, bounded by the FIRST (leftmost) occurrence
+of the SINGLE-character region delimiter `z`, with the ISO not-found asymmetry:
+`BEFORE z` replaces left of the first `z` (WHOLE source if `z` is absent); `AFTER z`
+replaces right of it (EMPTY — no replacement — if `z` is absent). Positions OUTSIDE
+the region keep their original character.
+
+- `inspect_replacing_all` now PARSES the `inspect_region` CST child into
+  `Option<(RegionKind, delim_node)>` (reusing the count side's keyword/operand
+  extraction) instead of rejecting it, and rejects `REPLACING LEADING` carrying a
+  region. `emit_inspect_replacing` REUSES `emit_inspect_region_window` — the SAME
+  helper the TALLYING side emits — to derive `[start, end)` over the ORIGINAL source,
+  then guards its per-position `ALL` unroll so a match at position `j` is rewritten
+  only when `start <= j < end` (materialising the compile-time `j` into a register to
+  compare against the runtime window bounds). It gains an `allow_region` gate: the
+  lone `REPLACING ALL` path passes `true`, the combined path `false`.
+- With NO region the extra guard folds away — the lowering is byte-identical to
+  v0.40.0, and matches `coding-adventures-cobol-runtime` 0.45.0's `inspect_replace`
+  window byte-for-byte on every accepted input (both now share the oracle's
+  `region_window` semantics).
+- Scoped SMALL — `REPLACING ALL` only, single-character region delimiter only. Still
+  rejected identically on both engines: `REPLACING LEADING` + region, a region on the
+  combined `TALLYING … REPLACING` form (`allow_region == false`), and — via
+  `single_delim_code`, exactly like the search delimiter — a MULTI-character region
+  delimiter.
+- New e2e parity tests in `jit_e2e.rs`:
+  `inspect_replacing_before_replaces_only_left_of_the_delimiter`,
+  `inspect_replacing_after_replaces_only_right_of_the_delimiter`, both not-found
+  branches, `inspect_replacing_after_region_delimiter_at_position_zero`,
+  `inspect_replacing_region_delimiter_equals_search`,
+  `inspect_replacing_region_delimiter_equals_replacement`,
+  `inspect_replacing_before_delimiter_at_position_zero_is_an_empty_region`,
+  `inspect_replacing_region_delimiter_is_a_pic_x1_item`, and the reject tests
+  `inspect_replacing_leading_with_a_region_is_a_later_rung`,
+  `inspect_replacing_multi_char_region_delimiter_is_a_later_rung`, and
+  `inspect_replacing_combined_with_a_region_is_a_later_rung`.
+
 ### Added — v0.40.0: INSPECT TALLYING FOR ALL with a BEFORE/AFTER region
 
 `INSPECT source TALLYING counter FOR ALL delim {BEFORE|AFTER} x` now compiles
