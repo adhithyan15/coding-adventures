@@ -501,6 +501,46 @@ fn shipped_speed_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b10) Shipped table — reference/force-conversions.adj resolves via import (force
+//       unit → newtons, EXACT SP 811 B.9 boldface factors), and a non-exact unit
+//       (`pound_force`) — a rounded factor with no row — abstains.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_force_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_force");
+    let src = stdlib().join("reference/force-conversions.adj");
+    std::fs::copy(&src, dir.join("force-conversions.adj"))
+        .expect("copy shipped force-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"force-conversions.adj\"\n\
+         ? force_to_newtons(kilogram_force, $n)\n\
+         ? force_to_newtons(kilopond, $n)\n\
+         ? force_to_newtons(dyne, $n)\n\
+         ? force_to_newtons(pound_force, $n)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 "Force" exact factors resolve, character-for-character from
+    // the table (boldface = exact; scientific notation to plain decimal).
+    assert!(out.contains("\"n\":\"9.80665\""), "kilogram-force = 9.80665 N: {out}");
+    assert!(out.contains("\"n\":\"0.00001\""), "dyne = 0.00001 N: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `pound_force` is NOT a single exact factor (SP 811 prints it rounded, not
+    // boldface) — no row, so the engine abstains rather than commit to a rounded value.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a non-exact unit abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
