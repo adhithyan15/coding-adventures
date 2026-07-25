@@ -1,5 +1,36 @@
 # Changelog — gc-core
 
+## 0.18.0 — 2026-07-24 — incremental (bounded-pause) marking — PR-1 (AOT00-T4)
+
+The first rung of the incremental collector (spec `AOT00-T4-incremental-collector.md`): the
+stop-the-world mark is decomposed into **bounded slices** so the mutator sees short pauses
+instead of one long one.
+
+- **`FlatHeap::incremental_start(root_slots, regions)` / `incremental_step(budget) -> bool` /
+  `incremental_finish() -> GcCycleStats`** — the interruptible tri-colour mark cycle.
+  `start` colours everything white, snapshots the roots **once**, and greys the roots; `step`
+  scans up to `budget` grey objects, greying their still-white children (turning each scanned
+  object black), returning `true` when the grey frontier empties; `finish` sweeps every white
+  (unreachable) object, rebuilds the remembered set, and ends the phase. Tri-colour state:
+  white = `!marked`, grey = `marked` ∧ on the new persistent `mark_worklist`, black = `marked`
+  ∧ off it. **Header unchanged (still 32 bytes)** — grey is worklist membership, not a new bit.
+- **Alloc-black during a mark:** `alloc` sets `marked = mark_in_progress`, so an object born
+  mid-mark (outside the fixed reachable snapshot) is never swept by the running cycle.
+- **Introspection:** `incremental_in_progress()`, `incremental_grey_count()`.
+- **Mixing guard:** every stop-the-world `collect*` entry (`collect`, `collect_region`,
+  `collect_minor`, `collect_minor_region`, `collect_precise`, `collect_mixed`,
+  `collect_compacting`) now `debug_assert!(!mark_in_progress)` — a full/minor collect run
+  *between* incremental steps would sweep blocks still on the grey worklist (dangling
+  pointers a later step would pop), so the caller must drive one incremental cycle to
+  `finish` before any other collector. Fenced in debug builds (a review follow-up).
+- This is PR-1 of 4 (spec §9): a cooperative single-shot driver that does **not** mutate the
+  heap during a mark, so no write barrier is needed yet (the Dijkstra insertion barrier is
+  PR-2; the C ABI + `Incremental::is_available()` flip is PR-3; the native end-to-end is PR-4).
+- **Tests (+3), all Miri-clean:** stepping one object per step frees **exactly** what a single
+  atomic `collect_mixed` frees (decomposition, not different reachability); a step scans at
+  most `budget` objects (grey-frontier assertions); an object allocated mid-mark is retained
+  this cycle (born black) and reclaimed the next. 87 gc-core tests pass; clippy clean.
+
 ## 0.17.0 — 2026-07-24 — `Compacting` algorithm marked available (AOT00-T3 §5)
 
 - `GcAlgorithm::Compacting::is_available()` now returns `true`: the moving/evacuating
