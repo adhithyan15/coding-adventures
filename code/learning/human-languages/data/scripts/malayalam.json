@@ -128,6 +128,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "കൈ",
+      "sound": "kai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ക  ka — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "കൌ",
+      "sound": "kau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ക  ka — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "കൃ",
+      "sound": "kr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ക  ka — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ഖ",
       "sound": "kha",
       "role": "syllable",
@@ -242,6 +278,42 @@
       "components": [
         "ഖ  kha — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഖൈ",
+      "sound": "khai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഖ  kha — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഖൌ",
+      "sound": "khau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഖ  kha — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഖൃ",
+      "sound": "khr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഖ  kha — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -366,6 +438,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "ഗൈ",
+      "sound": "gai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഗ  ga — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഗൌ",
+      "sound": "gau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഗ  ga — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഗൃ",
+      "sound": "gr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഗ  ga — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ഘ",
       "sound": "gha",
       "role": "syllable",
@@ -480,6 +588,42 @@
       "components": [
         "ഘ  gha — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഘൈ",
+      "sound": "ghai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഘ  gha — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഘൌ",
+      "sound": "ghau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഘ  gha — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഘൃ",
+      "sound": "ghr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഘ  gha — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -604,6 +748,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "ങൈ",
+      "sound": "ṅai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ങ  ṅa — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ങൌ",
+      "sound": "ṅau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ങ  ṅa — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ങൃ",
+      "sound": "ṅr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ങ  ṅa — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ച",
       "sound": "ca",
       "role": "syllable",
@@ -718,6 +898,42 @@
       "components": [
         "ച  ca — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ചൈ",
+      "sound": "cai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ച  ca — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ചൌ",
+      "sound": "cau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ച  ca — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ചൃ",
+      "sound": "cr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ച  ca — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -842,6 +1058,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "ഛൈ",
+      "sound": "chai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഛ  cha — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഛൌ",
+      "sound": "chau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഛ  cha — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഛൃ",
+      "sound": "chr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഛ  cha — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ജ",
       "sound": "ja",
       "role": "syllable",
@@ -956,6 +1208,42 @@
       "components": [
         "ജ  ja — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ജൈ",
+      "sound": "jai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ജ  ja — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ജൌ",
+      "sound": "jau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ജ  ja — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ജൃ",
+      "sound": "jr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ജ  ja — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -1080,6 +1368,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "ഝൈ",
+      "sound": "jhai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഝ  jha — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഝൌ",
+      "sound": "jhau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഝ  jha — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഝൃ",
+      "sound": "jhr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഝ  jha — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ഞ",
       "sound": "ña",
       "role": "syllable",
@@ -1194,6 +1518,42 @@
       "components": [
         "ഞ  ña — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഞൈ",
+      "sound": "ñai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഞ  ña — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഞൌ",
+      "sound": "ñau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഞ  ña — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഞൃ",
+      "sound": "ñr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഞ  ña — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -1318,6 +1678,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "ടൈ",
+      "sound": "ṭai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ട  ṭa — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ടൌ",
+      "sound": "ṭau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ട  ṭa — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ടൃ",
+      "sound": "ṭr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ട  ṭa — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ഠ",
       "sound": "ṭha",
       "role": "syllable",
@@ -1432,6 +1828,42 @@
       "components": [
         "ഠ  ṭha — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഠൈ",
+      "sound": "ṭhai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഠ  ṭha — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഠൌ",
+      "sound": "ṭhau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഠ  ṭha — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഠൃ",
+      "sound": "ṭhr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഠ  ṭha — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -1556,6 +1988,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "ഡൈ",
+      "sound": "ḍai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഡ  ḍa — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഡൌ",
+      "sound": "ḍau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഡ  ḍa — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഡൃ",
+      "sound": "ḍr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഡ  ḍa — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ഢ",
       "sound": "ḍha",
       "role": "syllable",
@@ -1670,6 +2138,42 @@
       "components": [
         "ഢ  ḍha — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഢൈ",
+      "sound": "ḍhai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഢ  ḍha — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഢൌ",
+      "sound": "ḍhau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഢ  ḍha — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഢൃ",
+      "sound": "ḍhr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഢ  ḍha — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -1794,6 +2298,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "ണൈ",
+      "sound": "ṇai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ണ  ṇa — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ണൌ",
+      "sound": "ṇau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ണ  ṇa — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ണൃ",
+      "sound": "ṇr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ണ  ṇa — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ത",
       "sound": "ta",
       "role": "syllable",
@@ -1908,6 +2448,42 @@
       "components": [
         "ത  ta — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "തൈ",
+      "sound": "tai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ത  ta — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "തൌ",
+      "sound": "tau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ത  ta — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "തൃ",
+      "sound": "tr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ത  ta — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -2032,6 +2608,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "ഥൈ",
+      "sound": "thai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഥ  tha — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഥൌ",
+      "sound": "thau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഥ  tha — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഥൃ",
+      "sound": "thr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഥ  tha — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ദ",
       "sound": "da",
       "role": "syllable",
@@ -2146,6 +2758,42 @@
       "components": [
         "ദ  da — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ദൈ",
+      "sound": "dai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ദ  da — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ദൌ",
+      "sound": "dau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ദ  da — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ദൃ",
+      "sound": "dr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ദ  da — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -2270,6 +2918,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "ധൈ",
+      "sound": "dhai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ധ  dha — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ധൌ",
+      "sound": "dhau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ധ  dha — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ധൃ",
+      "sound": "dhr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ധ  dha — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ന",
       "sound": "na",
       "role": "syllable",
@@ -2384,6 +3068,42 @@
       "components": [
         "ന  na — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "നൈ",
+      "sound": "nai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ന  na — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "നൌ",
+      "sound": "nau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ന  na — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "നൃ",
+      "sound": "nr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ന  na — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -2508,6 +3228,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "പൈ",
+      "sound": "pai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "പ  pa — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "പൌ",
+      "sound": "pau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "പ  pa — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "പൃ",
+      "sound": "pr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "പ  pa — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ഫ",
       "sound": "pha",
       "role": "syllable",
@@ -2622,6 +3378,42 @@
       "components": [
         "ഫ  pha — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഫൈ",
+      "sound": "phai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഫ  pha — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഫൌ",
+      "sound": "phau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഫ  pha — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഫൃ",
+      "sound": "phr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഫ  pha — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -2746,6 +3538,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "ബൈ",
+      "sound": "bai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ബ  ba — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ബൌ",
+      "sound": "bau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ബ  ba — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ബൃ",
+      "sound": "br̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ബ  ba — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ഭ",
       "sound": "bha",
       "role": "syllable",
@@ -2860,6 +3688,42 @@
       "components": [
         "ഭ  bha — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഭൈ",
+      "sound": "bhai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഭ  bha — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഭൌ",
+      "sound": "bhau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഭ  bha — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഭൃ",
+      "sound": "bhr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഭ  bha — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -2984,6 +3848,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "മൈ",
+      "sound": "mai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "മ  ma — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "മൌ",
+      "sound": "mau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "മ  ma — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "മൃ",
+      "sound": "mr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "മ  ma — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "യ",
       "sound": "ya",
       "role": "syllable",
@@ -3098,6 +3998,42 @@
       "components": [
         "യ  ya — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "യൈ",
+      "sound": "yai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "യ  ya — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "യൌ",
+      "sound": "yau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "യ  ya — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "യൃ",
+      "sound": "yr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "യ  ya — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -3222,6 +4158,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "രൈ",
+      "sound": "rai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ര  ra — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "രൌ",
+      "sound": "rau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ര  ra — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "രൃ",
+      "sound": "rr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ര  ra — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ല",
       "sound": "la",
       "role": "syllable",
@@ -3336,6 +4308,42 @@
       "components": [
         "ല  la — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ലൈ",
+      "sound": "lai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ല  la — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ലൌ",
+      "sound": "lau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ല  la — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ലൃ",
+      "sound": "lr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ല  la — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -3460,6 +4468,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "വൈ",
+      "sound": "vai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "വ  va — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "വൌ",
+      "sound": "vau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "വ  va — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "വൃ",
+      "sound": "vr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "വ  va — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ശ",
       "sound": "śa",
       "role": "syllable",
@@ -3574,6 +4618,42 @@
       "components": [
         "ശ  śa — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ശൈ",
+      "sound": "śai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ശ  śa — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ശൌ",
+      "sound": "śau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ശ  śa — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ശൃ",
+      "sound": "śr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ശ  śa — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -3698,6 +4778,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "ഷൈ",
+      "sound": "ṣai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഷ  ṣa — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഷൌ",
+      "sound": "ṣau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഷ  ṣa — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഷൃ",
+      "sound": "ṣr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഷ  ṣa — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "സ",
       "sound": "sa",
       "role": "syllable",
@@ -3812,6 +4928,42 @@
       "components": [
         "സ  sa — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "സൈ",
+      "sound": "sai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "സ  sa — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "സൌ",
+      "sound": "sau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "സ  sa — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "സൃ",
+      "sound": "sr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "സ  sa — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -3936,6 +5088,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "ഹൈ",
+      "sound": "hai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഹ  ha — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഹൌ",
+      "sound": "hau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഹ  ha — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഹൃ",
+      "sound": "hr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഹ  ha — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ള",
       "sound": "ḷa",
       "role": "syllable",
@@ -4050,6 +5238,42 @@
       "components": [
         "ള  ḷa — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ളൈ",
+      "sound": "ḷai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ള  ḷa — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ളൌ",
+      "sound": "ḷau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ള  ḷa — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ളൃ",
+      "sound": "ḷr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ള  ḷa — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -4174,6 +5398,42 @@
       "strokeOrderNote": ""
     },
     {
+      "glyph": "റൈ",
+      "sound": "ṟai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "റ  ṟa — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "റൌ",
+      "sound": "ṟau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "റ  ṟa — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "റൃ",
+      "sound": "ṟr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "റ  ṟa — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
       "glyph": "ഩ",
       "sound": "ṉa",
       "role": "syllable",
@@ -4288,6 +5548,42 @@
       "components": [
         "ഩ  ṉa — base consonant",
         "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഩൈ",
+      "sound": "ṉai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഩ  ṉa — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഩൌ",
+      "sound": "ṉau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഩ  ṉa — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഩൃ",
+      "sound": "ṉr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഩ  ṉa — base consonant",
+        "ൃ  “r̥” vowel sign"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""

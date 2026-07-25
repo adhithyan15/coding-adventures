@@ -138,9 +138,16 @@ only** — `strokeOrder` is empty, since the handwriting ductus is a separate,
 source-gated effort; the Browse detail hides the stroke-order section when it's
 absent rather than showing an empty one.
 
+Each consonant carries its full vowel row: the ten short/long vowels plus the
+two diphthongs *ai / au* and the **vocalic R** of Sanskrit-derived words (కృ =
+*kr̥*, as in *kr̥ṣṇa* "Krishna") — thirteen syllables per consonant, so **Telugu
+455 / Kannada 455 / Malayalam 468**. The vocalic-R romanization is ISO-15919
+`r̥` (a plain *r* with a ring below), deliberately not IAST's dot-below `ṛ`
+(which in ISO-15919 is the unrelated retroflex ṛ).
+
 **Practice introduces them slowly** (`src/syllabary.ts`). Rather than drill all
-350 syllables at once, the recall drill opens with a *single consonant's vowel
-row* — ka kā ki kī ku kū ke kē ko kō — and unlocks the next consonant only once
+~450 syllables at once, the recall drill opens with a *single consonant's vowel
+row* — ka kā ki kī ku kū ke kē ko kō kai kau kr̥ — and unlocks the next consonant only once
 the current row is mastered (a Leitner box ≥ 3). So recognition is built one
 consonant at a time, the "ka, ki, ku … kha, khi, khu" way. On these scripts the
 drill's target and its distractors are both confined to the unlocked syllables

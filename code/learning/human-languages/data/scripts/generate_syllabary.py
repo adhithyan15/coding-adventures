@@ -47,11 +47,21 @@ CONSONANTS = [
 # The Dravidian core vowel set (short + long e/o — the distinction is phonemic in
 # these languages). The empty key is the inherent /a/ (the bare consonant).
 # Keyed on the Unicode vowel-sign token ("<SCRIPT> VOWEL SIGN <V>"); the roman is
-# the vowel added AFTER the consonant root. `ai/au/ṛ` etc. are left for later.
+# the vowel added AFTER the consonant root.
+#
+# The first ten are the core row; then the two diphthongs (ai, au) and the vocalic
+# R that Sanskrit-derived words carry (కృ = kr̥, as in కృష్ణ *kr̥ṣṇa* "Krishna").
+# NOTE on the vocalic R romanization: ISO-15919 — which this whole file follows —
+# writes it "r̥", a plain r with a COMBINING RING BELOW (U+0325), NOT the dot-below
+# "ṛ" of IAST (that dot-below form is ISO-15919's *retroflex* ṛ, a different sound,
+# so using it here would be wrong). No precomposed "r-with-ring-below" exists in
+# Unicode, so it is the two code points r + ◌̥ by construction. The rarer vocalic
+# RR / L / LL signs exist too but are archaic; they are left for a later slice.
 VOWELS = [
     ("", "a"),      # inherent — no sign
     ("AA", "ā"), ("I", "i"), ("II", "ī"), ("U", "u"), ("UU", "ū"),
     ("E", "e"), ("EE", "ē"), ("O", "o"), ("OO", "ō"),
+    ("AI", "ai"), ("AU", "au"), ("VOCALIC R", "r̥"),
 ]
 
 # The three scripts: (script id, display name, Unicode block base, the Noto face
