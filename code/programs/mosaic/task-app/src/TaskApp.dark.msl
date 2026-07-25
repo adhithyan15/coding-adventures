@@ -65,21 +65,49 @@ style TaskApp {
     gap : 8 ;
   }
   part task-row {
-    gap : 8 ;
+    gap : 10 ;
     align : center-vertical ;
   }
-  part row-btn {
+  // The completion toggle — a round button whose label is the engine's done glyph.
+  part toggle {
     background : "#252019" ;
-    color : "#f1ebe1" ;
-    font-size : 14 ;
-    padding : 12 ;
-    border-width : 1 ;
-    border-color : "#352e25" ;
-    border-radius : 11 ;
+    color : "#6fb489" ;
+    font-size : 15 ;
+    padding : 6 ;
+    border-width : 2 ;
+    border-color : "#4a4136" ;
+    border-radius : 20 ;
     state hover {
       border-color : "#eaa63f" ;
-      background : "#3a2c17" ;
     }
+  }
+  part task-name {
+    color : "#f1ebe1" ;
+    font-size : 14 ;
+  }
+  // Meta chips. Due is honey (time), schedule is a quiet surface, overdue is the
+  // one place semantic red appears in a row.
+  part chip-due {
+    background : "#3a2c17" ;
+    color : "#eaa63f" ;
+    font-size : 12 ;
+    padding : 5 ;
+    border-radius : 20 ;
+  }
+  part chip-sched {
+    background : "#2d271f" ;
+    color : "#b3a99c" ;
+    font-size : 12 ;
+    padding : 5 ;
+    border-radius : 20 ;
+  }
+  part chip-over {
+    background : "#3a221c" ;
+    color : "#e26a52" ;
+    font-size : 12 ;
+    font-weight : bold ;
+    padding : 5 ;
+    border-radius : 20 ;
   }
   part del-btn {
     background : "#3a221c" ;

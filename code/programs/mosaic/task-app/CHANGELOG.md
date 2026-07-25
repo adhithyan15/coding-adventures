@@ -4,6 +4,35 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed - structured task rows (UI design, step 2)
+
+- **Each task row is now a structured set of styled elements** — a round completion
+  toggle, the task name, and meta chips (due / schedule / overdue) — instead of one
+  baked string in a single button. This is the richer-row step of
+  [`code/specs/task-app-ui-design.md`](../../../specs/task-app-ui-design.md), and it
+  needed **no compiler change**: the `task-rows` slot became `list<list<text>>` (each
+  row a list of cells), and the layout places each cell with a `For` over the rows plus
+  `( row[n] )` cell access. Each chip is wrapped in an `If` on its own cell, so an empty
+  cell (no due date, not overdue) renders nothing at all.
+  - `TaskApp.mil` — `task-rows : list<text>` → `list<list<text>>`; the cell order
+    `[ done-glyph, name, due, schedule, overdue ]` is now the documented contract
+    between the host and the layout's `row[n]` indices.
+  - `TaskApp.mll` — the single row button is replaced by a toggle (whose `number`
+    payload still carries the outer row index `i`), a name, three conditional chips,
+    and Delete.
+  - `TaskApp.light.msl` / `.dark.msl` — new `toggle`, `task-name`, `chip-due`,
+    `chip-sched`, `chip-over` parts (both themes); the old `row-btn` part is gone.
+  - `host/web/src/main.tsx` — `getProps` returns each row as a `string[]` of the
+    engine's already-formatted cells rather than concatenating them into one string.
+    The engine still owns every value (glyph, date formatting, "overdue"); the host
+    just stops flattening them.
+  - Verified without the browser: `cargo test -p task-app` compiles all sources (both
+    themes); regenerating via `mosaic-compile` produces the structured rows with the
+    toggle/Delete dispatching the correct row index and the chips conditionally
+    rendered; and the generated `taskRows: Array<Array<string>>` matches the host's
+    `string[][]`. (Pre-existing, not from this change: the emitter maps mosstyle
+    `align` to an invalid CSS `align` property — already present on other parts.)
+
 ### Changed - warm visual system on the app shell (UI design, step 1)
 
 - **`TaskApp.light.msl` restyled to the "warm & approachable" identity** from
