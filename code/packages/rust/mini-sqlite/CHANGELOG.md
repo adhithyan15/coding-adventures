@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.65 — `*` composes in a SELECT comma list (`SELECT a, *`)
+
+`SELECT a, *`, `SELECT *, a` (and any mix) now parse and expand the `*` in place,
+matching SQLite — `SELECT a, *` yields `a, a, b` (the leading column, then the
+whole row). Previously `*` parsed only as the entire select list, so a mixed list
+was a parse error. The grammar now treats a bare `*` as a `select_item`
+alternative rather than a whole-list alternative; the planner already expanded a
+`*` placeholder in place (from the round-2 star-expansion work), so this only
+needed the parser to produce the mixed shape. Retires the `select_star_in_place`
+ledger entry. Verified against bundled real SQLite. Spans sql-parser 0.1.23 and
+sql-planner 0.2.32.
+
 ## 0.5.64 — explicit `COLLATE` on DISTINCT select-items and GROUP BY keys
 
 `SELECT DISTINCT b COLLATE NOCASE FROM t` and `SELECT b, COUNT(*) FROM t GROUP BY

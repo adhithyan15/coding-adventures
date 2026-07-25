@@ -1816,43 +1816,48 @@ fn plan_limit(limit_clause: &GrammarASTNode) -> Result<(Option<i64>, Option<i64>
 
 /// Plan the `select_list` into a list of `OutputColumn`s.
 ///
-/// Grammar: `select_list = STAR | select_item { "," select_item }`
-/// Grammar: `select_item = expr [ AS NAME ]`
+/// Grammar: `select_list = select_item { "," select_item }`
+/// Grammar: `select_item = STAR | ( expr [ COLLATE name ] [ [ "AS" ] NAME ] )`
 fn plan_select_list(select_list: &GrammarASTNode) -> Result<Vec<OutputColumn>, PlanError> {
-    // Check for SELECT * (STAR token).
-    if has_token(select_list, "*") {
-        return Ok(vec![OutputColumn {
-            expr: SqlExpr::Column {
-                table: None,
-                name: "*".to_string(),
-            },
-            alias: None,
-        }]);
-    }
-
-    // Plan each select_item.
+    // Every item — including a bare `*` — is a `select_item` now, so `*` can be
+    // one item among others (`SELECT a, *`). `plan_select_item` emits a `*`
+    // placeholder for the wildcard, which `expand_star_columns` expands in place.
     find_nodes(select_list, "select_item")
         .iter()
         .map(|item| plan_select_item(item))
         .collect()
 }
 
+/// The `*` placeholder output column. `expand_star_columns` replaces it with the
+/// base table's columns (in place, so it composes with other select items).
+fn star_output_column() -> OutputColumn {
+    OutputColumn {
+        expr: SqlExpr::Column {
+            table: None,
+            name: "*".to_string(),
+        },
+        alias: None,
+    }
+}
+
 /// Plan a single `select_item` node.
 ///
-/// Grammar: `select_item = expr [ "AS" NAME ]`
+/// Grammar: `select_item = STAR | ( expr [ COLLATE name ] [ [ "AS" ] NAME ] )`
 fn plan_select_item(item: &GrammarASTNode) -> Result<OutputColumn, PlanError> {
-    // The first child node is the expression.
-    let expr_node = item
-        .children
-        .iter()
-        .find_map(|c| {
-            if let ASTNodeOrToken::Node(n) = c {
-                Some(n)
-            } else {
-                None
-            }
-        })
-        .ok_or_else(|| PlanError::UnsupportedStatement("empty select_item".to_string()))?;
+    // The first child node is the expression. A bare `*` item (the STAR
+    // alternative) has NO child expr node — just a `*` token — so it is the
+    // wildcard placeholder.
+    let expr_node = match item.children.iter().find_map(|c| {
+        if let ASTNodeOrToken::Node(n) = c {
+            Some(n)
+        } else {
+            None
+        }
+    }) {
+        Some(n) => n,
+        None if has_token(item, "*") => return Ok(star_output_column()),
+        None => return Err(PlanError::UnsupportedStatement("empty select_item".to_string())),
+    };
 
     let expr = plan_expression(expr_node)?;
 

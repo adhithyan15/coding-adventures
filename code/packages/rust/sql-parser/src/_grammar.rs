@@ -58,21 +58,32 @@ pub fn parser_grammar() -> ParserGrammar {
         },
         GrammarRule {
             name: r#"select_list"#.to_string(),
-            body: GrammarElement::Alternation { choices: vec![
-                GrammarElement::TokenReference { name: r#"STAR"#.to_string() },
-                GrammarElement::Sequence { elements: vec![
-                    GrammarElement::RuleReference { name: r#"select_item"#.to_string() },
-                    GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
-                            GrammarElement::Literal { value: r#","#.to_string() },
-                            GrammarElement::RuleReference { name: r#"select_item"#.to_string() },
-                        ] }) },
-                ] },
+            // `select_list = select_item { "," select_item }`. A bare `*` is now a
+            // `select_item` alternative (see below), NOT a top-level whole-list
+            // alternative, so `*` can appear as ONE item in a comma list
+            // (`SELECT a, *`, `SELECT *, a`) — SQLite expands each `*` in place.
+            // Previously `*` was only accepted as the entire list, so a mixed list
+            // failed to parse.
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::RuleReference { name: r#"select_item"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Literal { value: r#","#.to_string() },
+                        GrammarElement::RuleReference { name: r#"select_item"#.to_string() },
+                    ] }) },
             ] },
             line_number: 22,
         },
         GrammarRule {
             name: r#"select_item"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
+            // `select_item = STAR | ( expr [ COLLATE name ] [ [ "AS" ] NAME ] )`.
+            // A bare `*` is the wildcard item — the planner emits a `*` placeholder
+            // that `expand_star_columns` turns into the table's columns in place,
+            // so `*` composes with other items in a comma list. STAR is tried
+            // first (ordered choice); `SELECT a` / `count(*)` fall through to the
+            // expr form because their first token is not a bare `*`.
+            body: GrammarElement::Alternation { choices: vec![
+              GrammarElement::TokenReference { name: r#"STAR"#.to_string() },
+              GrammarElement::Sequence { elements: vec![
                 GrammarElement::RuleReference { name: r#"expr"#.to_string() },
                 // Optional `COLLATE name` suffix on a select-list expression, e.g.
                 // `SELECT DISTINCT b COLLATE NOCASE`. Same shape as ORDER BY's
@@ -97,6 +108,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::Optional { element: Box::new(GrammarElement::Literal { value: r#"AS"#.to_string() }) },
                         GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                     ] }) },
+              ] },
             ] },
             line_number: 23,
         },
