@@ -1,0 +1,94 @@
+// TaskApp — styling (mosstyle), dark theme. Parts match the [ part-name ] labels
+// in TaskApp.mll, and mirror TaskApp.light.msl part-for-part.
+//
+// The dark half of the "warm & approachable" identity (code/specs/task-app-ui-design.md):
+// a warm near-black ground (#1a1714, not a cold #000), warm-ivory ink, and the same
+// honey accent — lifted to #eaa63f so it stays legible on the dark ground. Both themes
+// are authored, not inverted. Resolved by `mosaic-compile --theme dark`.
+
+style TaskApp {
+  part app-shell {
+    background : "#1a1714" ;
+    color : "#f1ebe1" ;
+    font-family : "-apple-system, Segoe UI, system-ui, sans-serif" ;
+    padding : 28 ;
+    gap : 16 ;
+  }
+  part title {
+    font-size : 22 ;
+    font-weight : bold ;
+    color : "#f1ebe1" ;
+  }
+  part add-row {
+    gap : 8 ;
+    align : center-vertical ;
+  }
+  part name-input {
+    background : "#252019" ;
+    color : "#f1ebe1" ;
+    font-size : 14 ;
+    padding : 10 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 9 ;
+    state focused {
+      border-color : "#eaa63f" ;
+    }
+  }
+  part due-input {
+    background : "#252019" ;
+    color : "#f1ebe1" ;
+    font-size : 14 ;
+    padding : 10 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 9 ;
+    state focused {
+      border-color : "#eaa63f" ;
+    }
+  }
+  part add-btn {
+    background : "#eaa63f" ;
+    color : "#1a1714" ;
+    font-weight : bold ;
+    padding : 10 ;
+    border-radius : 9 ;
+    state hover {
+      background : "#d4922f" ;
+    }
+  }
+  part summary {
+    color : "#b3a99c" ;
+    font-size : 13 ;
+  }
+  part task-list {
+    gap : 8 ;
+  }
+  part task-row {
+    gap : 8 ;
+    align : center-vertical ;
+  }
+  part row-btn {
+    background : "#252019" ;
+    color : "#f1ebe1" ;
+    font-size : 14 ;
+    padding : 12 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 11 ;
+    state hover {
+      border-color : "#eaa63f" ;
+      background : "#3a2c17" ;
+    }
+  }
+  part del-btn {
+    background : "#3a221c" ;
+    color : "#e26a52" ;
+    font-weight : bold ;
+    padding : 10 ;
+    border-radius : 9 ;
+    state hover {
+      background : "#4a2a22" ;
+    }
+  }
+}

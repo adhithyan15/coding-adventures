@@ -19,10 +19,15 @@ fn task_app_sources_compile() {
         .expect("TaskApp.mll should compile against the interface");
     let light = mosstyle_compiler::compile(&read("TaskApp.light.msl"), Some(&mll.part_map_json))
         .expect("TaskApp.light.msl should compile against the layout parts");
+    // Both themes are authored and must compile against the same layout parts;
+    // `mosaic-compile --theme dark` resolves TaskApp.dark.msl.
+    let dark = mosstyle_compiler::compile(&read("TaskApp.dark.msl"), Some(&mll.part_map_json))
+        .expect("TaskApp.dark.msl should compile against the layout parts");
 
     assert_eq!(mil.component.component, "TaskApp");
     assert_eq!(mll.def.component_name, "TaskApp");
     assert_eq!(light.def.component_name, "TaskApp");
+    assert_eq!(dark.def.component_name, "TaskApp");
 
     // The interface exposes exactly the slots the web host fills.
     let slots: Vec<&str> = mil.component.slots.iter().map(|s| s.name.as_str()).collect();

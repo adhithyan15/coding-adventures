@@ -16,10 +16,17 @@ All notable changes to the `task-app` web program are documented here.
   Verified end-to-end: the sources compile (`cargo test -p task-app`), and the palette
   and the hover/focus selectors flow through `mosaic-compile --backend react` into the
   generated component's inline styles and CSS lattice.
+- **`TaskApp.dark.msl` added** — the dark half of the same identity, authored not
+  inverted: a warm near-black ground (`#1a1714`), warm-ivory ink, and the honey accent
+  lifted to `#eaa63f` so it stays legible on the dark ground. Resolved by
+  `mosaic-compile --theme dark`; verified the dark palette + states flow through to the
+  generated React (inline styles + CSS lattice) and that `--theme light` still resolves
+  the light theme. The compile test now compiles both themes against the layout parts.
+  Host-level theme *switching* (wiring `prefers-color-scheme` / a toggle in the web host
+  to select the emitted theme) is the remaining follow-on.
 - This is the first increment of the design spec's Phase-5 work (design tokens + app
-  shell). Richer rows (checkbox, chips, progressive-disclosure detail), the timeline and
-  board views, and a matching **dark theme** — which needs host-level theme switching —
-  are the follow-on increments; the prototype at
+  shell). Richer rows (checkbox, chips, progressive-disclosure detail) and the timeline
+  and board views are the follow-on increments; the prototype at
   `design/ui-prototype.html` remains the visual target.
 
 ### Changed
