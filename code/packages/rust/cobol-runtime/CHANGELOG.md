@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.42.0 — combined INSPECT TALLYING FOR LEADING with REPLACING ALL
+
+- The COMBINED `INSPECT source TALLYING counter FOR LEADING delim REPLACING ALL x BY
+  y` now executes instead of being rejected as a later rung. The TALLYING half of the
+  combined form may now be `FOR LEADING` (count only the **consecutive run** of
+  `delim` at the START of the source, stopping at the first non-match) as well as
+  `FOR ALL`; the REPLACING half stays `ALL`-only (a combined `REPLACING LEADING`
+  remains a later rung). ISO tally-then-replace ordering is unchanged: the tally
+  counts `delim` in the ORIGINAL bytes into `counter` FIRST (adding, not clearing),
+  then the `REPLACING ALL` rebuild overwrites the source — so a shared `delim == x`
+  is counted before it is substituted.
+- `Stmt::InspectTallyReplace` gains a `tally_leading: bool` field. The combined reader
+  no longer rejects a `FOR LEADING` tally half; it captures the `leading` flag from
+  `read_inspect_tally_all` into `tally_leading`. `exec_inspect_tally_replace` forwards
+  `tally_leading` to the SAME `inspect_tally` counting path the lone TALLYING uses
+  (`FOR LEADING` = `take_while(|c| c == delim)`, `FOR ALL` = `filter`), so there is no
+  second counting routine and the result matches the lone-form semantics exactly.
+- Every other combined gate is intact and unchanged: a combined `REPLACING LEADING`,
+  `CHARACTERS`/`FIRST`, `BEFORE`/`AFTER`, several counters/FOR/replace items, a
+  multi-character/figurative/wider operand, a numeric/group source, and a non-integer
+  or signed counter are all still clean `Unsupported`. The `FOR ALL` combined path is
+  byte-identical to the previous release.
+- The combined-later-rung oracle test updates the `FOR LEADING` sub-case from a reject
+  to a success (`"AABBB"` → C = `002`, S = `"AAXXX"`) and keeps the `REPLACING
+  LEADING` reject; new test
+  `inspect_tally_replace_for_leading_counts_only_the_leading_run` covers `"000X0"`
+  (shared `delim == search` → C = `003`, S = `"***X*"`), a no-leading-run source
+  (`"X00X"` → C = `000`, S = `"X**X"`), and an all-delimiter source (`"0000"` → C =
+  `004`, S = `"****"`). The `cobol-iir-compiler` matches this reference byte-for-byte.
+
 ## 0.41.0 — INSPECT REPLACING LEADING (leading-run replace)
 
 - A lone `INSPECT source REPLACING LEADING search BY replace` now executes instead of

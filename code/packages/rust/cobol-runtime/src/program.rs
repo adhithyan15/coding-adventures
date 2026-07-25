@@ -176,21 +176,29 @@ pub enum Stmt {
     /// `TALLYING … REPLACING` form, and a multi-character/figurative/wider search
     /// or replacement or a numeric/group source are later rungs.
     InspectReplacing { source: String, search: Operand, replace: Operand, leading: bool },
-    /// `INSPECT source TALLYING counter FOR ALL delim REPLACING ALL search BY
-    /// replace` — one INSPECT carrying BOTH phrases. Per ISO this executes "as
-    /// though an INSPECT TALLYING were specified, followed by an INSPECT
-    /// REPLACING": FIRST count occurrences of `delim` in the ORIGINAL source and
-    /// **ADD** them to `counter`, THEN replace every `search` with `replace` in
-    /// the source. The tally-first ordering matters when `delim == search`: the
-    /// count must see the pre-replacement bytes. Each of `delim`/`search`/
-    /// `replace` is a single character; the same single-form restrictions as the
-    /// lone phrases apply (LEADING/CHARACTERS/FIRST, BEFORE/AFTER, multiple
-    /// counters/FOR/replace items, multi-char/figurative/wider operands, and a
-    /// numeric/group source or non-integer counter are later rungs).
+    /// `INSPECT source TALLYING counter FOR {ALL|LEADING} delim REPLACING ALL
+    /// search BY replace` — one INSPECT carrying BOTH phrases. Per ISO this
+    /// executes "as though an INSPECT TALLYING were specified, followed by an
+    /// INSPECT REPLACING": FIRST count occurrences of `delim` in the ORIGINAL
+    /// source and **ADD** them to `counter`, THEN replace every `search` with
+    /// `replace` in the source. The tally-first ordering matters when
+    /// `delim == search`: the count must see the pre-replacement bytes. The
+    /// TALLYING half may be `FOR ALL` (count every occurrence) or `FOR LEADING`
+    /// (count only the consecutive run of `delim` at the start of the source),
+    /// selected by `tally_leading`; the REPLACING half stays `ALL`-only. Each of
+    /// `delim`/`search`/`replace` is a single character; the remaining single-form
+    /// restrictions as the lone phrases apply (a combined REPLACING LEADING,
+    /// CHARACTERS/FIRST, BEFORE/AFTER, multiple counters/FOR/replace items,
+    /// multi-char/figurative/wider operands, and a numeric/group source or
+    /// non-integer counter are later rungs).
     InspectTallyReplace {
         source: String,
         counter: String,
         delim: Operand,
+        /// `true` for `FOR LEADING` (count only the leading run of `delim`),
+        /// `false` for `FOR ALL` (count every occurrence). Applies to the
+        /// TALLYING half only — the REPLACING half is always `ALL`.
+        tally_leading: bool,
         search: Operand,
         replace: Operand,
     },
@@ -882,23 +890,26 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                 // ordering is enforced at exec time.
                 (true, true) => {
                     let (counter, delim, leading) = read_inspect_tally_all(verb)?;
-                    // The combined tally-then-replace form stays FOR ALL only: a
-                    // combined `TALLYING … FOR LEADING … REPLACING` is a later rung.
-                    if leading {
-                        return Err(RuntimeError::Unsupported(
-                            "INSPECT TALLYING … FOR LEADING combined with REPLACING is a later rung"
-                                .into(),
-                        ));
-                    }
+                    // The combined form's TALLYING half now supports BOTH `FOR ALL`
+                    // and `FOR LEADING`: `leading` selects the count semantics
+                    // (LEADING counts only the consecutive run of `delim` at the
+                    // start of the source). It rides along into the statement.
                     let (search, replace, repl_leading) = read_inspect_replacing_all(verb)?;
-                    // A combined `TALLYING … REPLACING LEADING` is a later rung too:
+                    // A combined `TALLYING … REPLACING LEADING` is still a later rung:
                     // the combined form's REPLACING half stays FOR ALL only.
                     if repl_leading {
                         return Err(RuntimeError::Unsupported(
                             "INSPECT TALLYING … REPLACING LEADING is a later rung".into(),
                         ));
                     }
-                    Ok(Stmt::InspectTallyReplace { source, counter, delim, search, replace })
+                    Ok(Stmt::InspectTallyReplace {
+                        source,
+                        counter,
+                        delim,
+                        tally_leading: leading,
+                        search,
+                        replace,
+                    })
                 }
                 (false, true) => {
                     let (search, replace, leading) = read_inspect_replacing_all(verb)?;

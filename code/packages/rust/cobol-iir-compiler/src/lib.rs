@@ -1712,11 +1712,11 @@ impl<'a> Compiler<'a> {
     /// uses (`store_scaled`, which mirrors the oracle's `store_result`/
     /// `move_into_numeric`), so a compiled program matches `cobol-runtime`'s
     /// `exec_inspect` byte-for-byte. Every later-rung form — a `CHARACTERS` tally,
-    /// `BEFORE`/`AFTER` phrases, several counters or `FOR` phrases, any `REPLACING`
-    /// (including a combined `TALLYING … FOR LEADING … REPLACING`), and a multi-
-    /// character/figurative/wider delimiter or a numeric source or a non-integer/
-    /// non-numeric counter — is a clean `Unsupported`, accepted by the grammar and
-    /// rejected here.
+    /// `BEFORE`/`AFTER` phrases, several counters or `FOR` phrases, a combined
+    /// `TALLYING … REPLACING LEADING`, and a multi-character/figurative/wider
+    /// delimiter or a numeric source or a non-integer/non-numeric counter — is a
+    /// clean `Unsupported`, accepted by the grammar and rejected here. (A combined
+    /// `TALLYING … FOR LEADING … REPLACING ALL` is now supported.)
     fn emit_inspect(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
         // This rung supports a LONE `TALLYING … FOR ALL`, a LONE `REPLACING ALL …
         // BY …`, or the COMBINED `TALLYING … REPLACING` in one INSPECT. The
@@ -1768,9 +1768,12 @@ impl<'a> Compiler<'a> {
         }
         match (has_tally, has_repl) {
             (true, true) => {
-                // The combined form is FOR ALL only: `allow_leading = false` makes a
-                // combined `TALLYING … FOR LEADING … REPLACING` a clean later rung.
-                self.emit_inspect_tallying(verb, &s_reg, false)?;
+                // The combined form's TALLYING half now supports BOTH `FOR ALL` and
+                // `FOR LEADING`: `allow_leading = true` lets a combined
+                // `TALLYING … FOR LEADING … REPLACING` count only the leading run
+                // (`emit_inspect_tallying` already emits the `leading ? end : nobump`
+                // branch that stops at the first non-match).
+                self.emit_inspect_tallying(verb, &s_reg, true)?;
                 // The combined REPLACING half is ALL only: `allow_leading = false`
                 // makes a combined `TALLYING … REPLACING LEADING` a clean later rung.
                 self.emit_inspect_replacing(verb, &s_reg, source_width, false)
@@ -1796,9 +1799,11 @@ impl<'a> Compiler<'a> {
     /// branch jumps: `FOR ALL` skips just the `cnt += 1` and keeps scanning
     /// (`nobump`), while `FOR LEADING` breaks out of the loop entirely (`end`).
     ///
-    /// `allow_leading` is `false` on the combined tally-then-replace path (a
-    /// combined `FOR LEADING … REPLACING` is a later rung); a lone TALLYING passes
-    /// `true`.
+    /// `allow_leading` gates whether `FOR LEADING` is accepted. Both the lone
+    /// TALLYING and the combined tally-then-replace path now pass `true` (a
+    /// combined `TALLYING … FOR LEADING … REPLACING` is supported); the guard is
+    /// retained so any future caller that must forbid `FOR LEADING` can pass
+    /// `false` and get the clean later-rung diagnostic.
     fn emit_inspect_tallying(
         &mut self,
         verb: &GrammarASTNode,
@@ -4303,8 +4308,8 @@ fn read_refmod_index(op: &GrammarASTNode) -> Result<RefIndex, CompileError> {
 ///   * a `CHARACTERS` tally (only `ALL`/`LEADING` this rung);
 ///   * a `BEFORE`/`AFTER` region restricting the scan.
 ///
-/// (`REPLACING`, a combined `FOR LEADING … REPLACING`, and a non-alphanumeric
-/// source are rejected by the caller.)
+/// (`REPLACING` and a non-alphanumeric source are rejected by the caller; the
+/// combined `FOR LEADING … REPLACING ALL` is now accepted.)
 fn inspect_tally_all(
     verb: &GrammarASTNode,
 ) -> Result<(String, &GrammarASTNode, bool), CompileError> {
@@ -5984,10 +5989,12 @@ mod tests {
     }
 
     #[test]
-    fn inspect_combined_with_a_deferred_half_is_a_later_rung() {
-        // The combined gate does not smuggle in the deferred sub-forms: a combined
-        // statement whose TALLYING half is FOR LEADING still rejects cleanly.
-        let err = compile_source(
+    fn inspect_combined_tally_for_leading_now_compiles() {
+        // The combined form's TALLYING half may now be FOR LEADING: it counts only
+        // the leading run of the delimiter, then the REPLACING ALL rebuild runs. It
+        // reuses the lone-TALLYING `leading` lowering, so the module must compile
+        // cleanly and the tally loop's leading-run break emits an `and` active flag.
+        let module = compile_source(
             &wrap(
                 &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
                 &[
@@ -5997,8 +6004,8 @@ mod tests {
             ),
             "insp_tr_lead",
         )
-        .unwrap_err();
-        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+        .expect("combined TALLYING FOR LEADING with REPLACING ALL should compile");
+        assert!(module.validate().is_empty(), "validate: {:?}", module.validate());
     }
 
     #[test]

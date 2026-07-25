@@ -8,6 +8,35 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.38.0: combined INSPECT TALLYING FOR LEADING with REPLACING ALL
+
+The COMBINED `INSPECT source TALLYING counter FOR LEADING delim REPLACING ALL x BY y`
+now compiles instead of being rejected as a later rung. The combined form's TALLYING
+half may now be `FOR LEADING` (count only the **consecutive run** of `delim` at the
+START of the source) as well as `FOR ALL`; the REPLACING half stays `ALL`-only.
+
+- The change is a single flag: `emit_inspect`'s `(has_tally, has_repl) == (true,
+  true)` arm now calls `emit_inspect_tallying(verb, &s_reg, /* allow_leading */
+  true)` for the tally half (the REPLACING-half call keeps `allow_leading = false`,
+  so a combined `TALLYING … REPLACING LEADING` is still a clean `Unsupported`).
+  `emit_inspect_tallying` already emitted the correct leading-run lowering — the
+  `leading ? end : nobump` mismatch jump that breaks out of the count loop at the
+  first non-match instead of merely skipping the `cnt += 1` — so no codegen change
+  was needed. Tally still emits FIRST (over the original `s_reg` bytes), then the
+  `REPLACING ALL` rebuild, matching the oracle's tally-then-replace order.
+- This composes the two existing lone-form lowerings, so the JIT output is
+  byte-identical to `coding-adventures-cobol-runtime` 0.42.0. Every other combined
+  gate is unchanged: a combined `REPLACING LEADING`, a second `FOR`/replace item,
+  `CHARACTERS`/`BEFORE`/`AFTER`, a multi-character/figurative/wider operand, a
+  numeric source, and a non-integer/signed counter remain clean `Unsupported`.
+- The combined-deferred-half unit test flips from a reject to a "now compiles"
+  assertion (`inspect_combined_tally_for_leading_now_compiles`). New e2e parity tests
+  in `jit_e2e.rs`: `inspect_combined_for_leading_counts_only_the_leading_run`
+  (`"000X0"`, shared `delim == search` → `003` / `"***X*"`),
+  `inspect_combined_for_leading_no_leading_run` (`"X00X"` → `000` / `"X**X"`),
+  `inspect_combined_for_leading_all_characters_match` (`"0000"` → `004` / `"****"`),
+  and `inspect_combined_replacing_leading_is_a_later_rung` (still rejected).
+
 ### Added — v0.37.0: INSPECT REPLACING LEADING (leading-run replace)
 
 A lone `INSPECT source REPLACING LEADING search BY replace` now compiles instead of
