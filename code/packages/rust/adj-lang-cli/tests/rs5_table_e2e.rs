@@ -460,6 +460,47 @@ fn shipped_pressure_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b9) Shipped table — reference/speed-conversions.adj resolves via import (speed
+//      unit → metres per second, EXACT SP 811 B.9 boldface factors), and a non-exact
+//      unit (`kilometer_per_hour`) — a rounded factor with no row — abstains.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_speed_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_speed");
+    let src = stdlib().join("reference/speed-conversions.adj");
+    std::fs::copy(&src, dir.join("speed-conversions.adj"))
+        .expect("copy shipped speed-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"speed-conversions.adj\"\n\
+         ? speed_to_metres_per_second(mile_per_hour, $mps)\n\
+         ? speed_to_metres_per_second(foot_per_second, $mps)\n\
+         ? speed_to_metres_per_second(mile_per_second, $mps)\n\
+         ? speed_to_metres_per_second(kilometer_per_hour, $mps)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 "Speed or velocity" exact factors resolve, character-for-
+    // character from the table (boldface = exact; scientific notation to plain decimal).
+    assert!(out.contains("\"mps\":\"0.44704\""), "mile/hour = 0.44704 m/s: {out}");
+    assert!(out.contains("\"mps\":\"0.3048\""), "foot/second = 0.3048 m/s: {out}");
+    assert!(out.contains("\"mps\":\"1609.344\""), "mile/second = 1609.344 m/s: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `kilometer_per_hour` is NOT a single exact factor (SP 811 lists 1000/3600 as a
+    // rounded value, not boldface) — no row, so the engine abstains rather than commit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a non-exact unit abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
