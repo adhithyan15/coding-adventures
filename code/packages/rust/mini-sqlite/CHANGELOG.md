@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.66 — DISTINCT applies before ORDER BY (representative selection)
+
+`SELECT DISTINCT x COLLATE NOCASE FROM t ORDER BY x` now keeps SQLite's
+scan-first row of each fold, not the byte-sort-first one — the VM applies DISTINCT
+before ORDER BY (SQL logical order) instead of after. Only WHICH original text
+survives a collation fold was affected; the folding itself was already correct.
+Retires the `distinct_collate_order_by_representative` ledger entry (and restores
+the `ORDER BY` to the `distinct_explicit_collate` case that had been trimmed to
+sidestep this bug). The oracle ledger is now down to a single entry
+(`order_by_ordinal_over_aggregate`). Verified against bundled real SQLite. Spans
+sql-vm 0.4.36.
+
 ## 0.5.65 — `*` composes in a SELECT comma list (`SELECT a, *`)
 
 `SELECT a, *`, `SELECT *, a` (and any mix) now parse and expand the `*` in place,

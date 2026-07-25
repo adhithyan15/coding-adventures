@@ -1076,21 +1076,32 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
 
     // ── Phase 3: post-processing ──────────────────────────────────────────────
 
+    // SQL logical order applies DISTINCT to the projected SELECT-list rows BEFORE
+    // ORDER BY: a deduped group keeps its FIRST row in SCAN order (matching
+    // SQLite), and ORDER BY then sorts the survivors. Running the sort first (the
+    // previous order) instead kept whichever row sorted first — observable when a
+    // collation folds rows with different original text
+    // (`SELECT DISTINCT x COLLATE NOCASE … ORDER BY x` kept the byte-sort-first
+    // 'A' rather than SQLite's scan-first 'a').
+    //
+    // Hidden `__sort_N__` columns (appended for an ORDER BY key that is not itself
+    // an output column) must survive until the sort can read them, so DISTINCT
+    // dedups on only the first `visible_cols` = SELECT-list columns, and the
+    // truncation that strips the hidden columns runs AFTER the sort. When there
+    // are no hidden columns `post_truncate` is `None` and every column is visible.
+    let visible_cols = post_truncate.unwrap_or(output_columns.len());
+    if post_distinct {
+        apply_distinct(&mut output_rows, &post_distinct_colls, visible_cols);
+    }
     if let Some(keys) = post_sort {
         apply_sort(&mut output_rows, &keys, &output_columns);
     }
-    // Strip hidden sort-key columns that were appended during compilation so
-    // that SortResult could find them by name.  This truncation must happen
-    // AFTER sorting and BEFORE distinct/limit so that only the SELECT-list
-    // columns remain in the output.
+    // Strip the hidden sort-key columns so only the SELECT-list columns remain.
     if let Some(n) = post_truncate {
         for row in &mut output_rows {
             row.truncate(n);
         }
         output_columns.truncate(n);
-    }
-    if post_distinct {
-        apply_distinct(&mut output_rows, &post_distinct_colls);
     }
     if let Some((count, offset)) = post_limit {
         apply_limit(&mut output_rows, count, offset);
@@ -3603,15 +3614,26 @@ fn collate_text(s: &str, collation: &str) -> String {
 /// average serialised row width — far better than the previous O(n²) Vec scan.
 /// The Debug output is deterministic for all `SqlValue` variants, so collisions
 /// can only happen between rows that are genuinely equal.
-fn apply_distinct(rows: &mut Vec<Vec<(String, SqlValue)>>, collations: &[Option<String>]) {
-    // The collation slice is indexed by output-column POSITION, so it is only
-    // meaningful when it describes exactly the row being keyed. If the widths
-    // disagree, the planner's view of the output columns and what was actually
-    // emitted have diverged (e.g. an unexpanded `SELECT DISTINCT *`), and
-    // applying it would put a collation on the WRONG column — silently folding
-    // values that must stay distinct, i.e. dropping rows. Fall back to BINARY,
-    // which dedupes strictly and can never merge rows that genuinely differ.
-    let widths_agree = rows.iter().all(|r| r.len() == collations.len());
+fn apply_distinct(
+    rows: &mut Vec<Vec<(String, SqlValue)>>,
+    collations: &[Option<String>],
+    visible_cols: usize,
+) {
+    // Dedup on the first `visible_cols` columns only — the SELECT-list output.
+    // Rows may carry trailing hidden `__sort_N__` columns (appended for an ORDER
+    // BY key that is not itself an output column and stripped after the sort);
+    // SQLite dedups on the visible select-list, NOT those, so they must be
+    // excluded from the key — otherwise two rows equal in the select list but
+    // differing in a hidden sort key would both survive.
+    //
+    // The collation slice is indexed by output-column POSITION and describes
+    // exactly those visible columns. If its width disagrees, the planner's view
+    // of the output columns and what was actually emitted have diverged (e.g. an
+    // unexpanded `SELECT DISTINCT *`), and applying it would put a collation on
+    // the WRONG column — silently folding values that must stay distinct. Fall
+    // back to BINARY, which dedupes strictly and can never merge rows that differ.
+    let widths_agree =
+        collations.len() == visible_cols && rows.iter().all(|r| r.len() >= visible_cols);
     let collations: &[Option<String>] = if widths_agree { collations } else { &[] };
 
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
@@ -3629,6 +3651,7 @@ fn apply_distinct(rows: &mut Vec<Vec<(String, SqlValue)>>, collations: &[Option<
         // BINARY, which is the stricter, fail-safe direction.
         let key: String = row
             .iter()
+            .take(visible_cols)
             .enumerate()
             .map(|(i, (col, val))| match (val, collations.get(i).and_then(|c| c.as_ref())) {
                 (SqlValue::Text(s), Some(coll)) => {
