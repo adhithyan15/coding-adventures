@@ -1,0 +1,109 @@
+% ============================================================================
+% dilution.adj — the dilution equation (M₁V₁ = M₂V₂) in the ADJ standard library.
+% ============================================================================
+% The dilution entry of the *chemistry* track, a sibling of `molarity.adj` and
+% `ideal-gas-law.adj`: the foundational solution-chemistry relation a first course
+% states as THE PRODUCT OF CONCENTRATION AND VOLUME IS CONSERVED WHEN A SOLUTION IS
+% DILUTED, as an importable, byte-provenanced, PARAMETERIZED `formula` — together
+% with the FOUR exact readings that one conservation law sanctions (solve for any one
+% of the initial concentration, initial volume, final concentration or final volume
+% from the other three). As with every compute library, a consumer states NO
+% arithmetic: it `import`s this file, binds the measured quantities from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited relation on
+% the CPU. Zero math is performed by the model; the engine computes each value
+% EXACTLY, carrying the relation's citation.
+%
+%     import "dilution.adj"
+%     observe initial_concentration(4)   % "…4 M stock…"   (span cited by the model)
+%     observe initial_volume(3)          % "…3 L of it…"   (span cited by the model)
+%     observe final_volume(6)            % "…diluted to 6 L…"
+%     ? final_concentration(initial_concentration, initial_volume, final_volume)
+%                                          % engine → 2, carrying M₁V₁ = M₂V₂
+%
+% It pairs directly with `molarity.adj`: molarity (M = n/V) DEFINES the concentration
+% of a single solution, and this dilution relation says that concentration times
+% volume — the amount of solute — is CONSERVED across a dilution, so the two libraries
+% compose (a molarity feeds a dilution, and a diluted concentration can feed a
+% molarity back to moles). One grounded artifact building on another
+% (write-once-use-many).
+%
+% All four formulas are EXACT over their parameters — each is a product divided by a
+% measured quantity — so every value the engine returns is exact; there is no
+% *separately grounded* constant here. The four COMPOSE and invert cleanly around the
+% worked case M₁ = 4, V₁ = 3, M₂ = 2, V₂ = 6 (note 4·3 = 12 = 2·6):
+%
+%   final_concentration(initial_concentration, initial_volume, final_volume)
+%       = initial_concentration * initial_volume / final_volume     % M₂ = M₁V₁ / V₂ = 4·3/6 = 2
+%   final_volume(initial_concentration, initial_volume, final_concentration)
+%       = initial_concentration * initial_volume / final_concentration % V₂ = M₁V₁ / M₂ = 4·3/2 = 6
+%   initial_concentration(final_concentration, final_volume, initial_volume)
+%       = final_concentration * final_volume / initial_volume        % M₁ = M₂V₂ / V₁ = 2·6/3 = 4
+%   initial_volume(final_concentration, final_volume, initial_concentration)
+%       = final_concentration * final_volume / initial_concentration % V₁ = M₂V₂ / M₁ = 2·6/4 = 3
+%
+% All four formulas are defended by the SAME sentence — "Because this quantity does
+% not change before and after the change in concentration, the product MV must be the
+% same before and after the concentration change." — because that one conservation
+% statement (the product of concentration and volume is unchanged by a dilution) is
+% exactly M₁V₁ = M₂V₂, and so sanctions the relation solved for any single variable.
+% The quote is transcribed verbatim from Chemistry LibreTexts (the same primary
+% reference `molarity.adj` cites), so each `formula` carries the provenance envelope
+% every shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the sentence is a verbatim span of the cited
+% page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. The dilution relation ranges over four observable quantities: the
+% concentration and volume of the solution BEFORE dilution and the concentration and
+% volume AFTER. Each appears BOTH as a derived result (of one formula) and as an
+% input (of the others), so each is a single dictionary term used in both roles. The
+% `surface` lists are the everyday names a decomposer maps onto the canonical term;
+% the trailing comment records the intended unit (a concentration in mol/L and a
+% volume in L, though the relation holds for ANY consistent concentration and volume
+% units, since only the products are compared).
+% ----------------------------------------------------------------------------
+dictionary dilution_vocab {
+    define initial_concentration : finding  surface "initial concentration", "stock concentration", "M1", "C1"   % before, e.g. mol/L
+    define initial_volume        : finding  surface "initial volume", "stock volume", "V1"                       % before, e.g. L
+    define final_concentration   : finding  surface "final concentration", "diluted concentration", "M2", "C2"   % after, e.g. mol/L
+    define final_volume          : finding  surface "final volume", "diluted volume", "V2"                       % after, e.g. L
+}
+
+% ----------------------------------------------------------------------------
+% The dilution equation, all four ways. Each is a named, importable, reusable `let`
+% over its formal parameters, bound at apply time, and each carries the conservation
+% sentence from LibreTexts (a quote is required on a shipped formula). Each body is a
+% product divided by a measured quantity, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook dilution_laws {
+    use dilution_vocab
+
+    % Final concentration — the concentration after diluting a stock to a larger
+    % volume (M₂ = M₁V₁ / V₂). The conserved product M₁V₁ divided by the new volume.
+    formula final_concentration(initial_concentration, initial_volume, final_volume) = initial_concentration * initial_volume / final_volume
+        source "Because this quantity does not change before and after the change in concentration, the product MV must be the same before and after the concentration change."
+        locator "https://chem.libretexts.org/Courses/Nassau_Community_College/Principles_of_Chemistry/11:_Solutions/11.04:_Dilutions_and_Concentrations"
+        trust authoritative
+
+    % Final volume — the volume the stock must reach to hit a target concentration
+    % (V₂ = M₁V₁ / M₂). Defended by the SAME conservation sentence, read another way.
+    formula final_volume(initial_concentration, initial_volume, final_concentration) = initial_concentration * initial_volume / final_concentration
+        source "Because this quantity does not change before and after the change in concentration, the product MV must be the same before and after the concentration change."
+        locator "https://chem.libretexts.org/Courses/Nassau_Community_College/Principles_of_Chemistry/11:_Solutions/11.04:_Dilutions_and_Concentrations"
+        trust authoritative
+
+    % Initial concentration — the stock concentration a known dilution came from
+    % (M₁ = M₂V₂ / V₁). Again the SAME conservation sentence, solved for M₁.
+    formula initial_concentration(final_concentration, final_volume, initial_volume) = final_concentration * final_volume / initial_volume
+        source "Because this quantity does not change before and after the change in concentration, the product MV must be the same before and after the concentration change."
+        locator "https://chem.libretexts.org/Courses/Nassau_Community_College/Principles_of_Chemistry/11:_Solutions/11.04:_Dilutions_and_Concentrations"
+        trust authoritative
+
+    % Initial volume — the amount of stock needed for a target dilution
+    % (V₁ = M₂V₂ / M₁). The fourth exact reading of the one conservation law.
+    formula initial_volume(final_concentration, final_volume, initial_concentration) = final_concentration * final_volume / initial_concentration
+        source "Because this quantity does not change before and after the change in concentration, the product MV must be the same before and after the concentration change."
+        locator "https://chem.libretexts.org/Courses/Nassau_Community_College/Principles_of_Chemistry/11:_Solutions/11.04:_Dilutions_and_Concentrations"
+        trust authoritative
+}
