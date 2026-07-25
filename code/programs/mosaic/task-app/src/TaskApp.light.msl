@@ -1,60 +1,94 @@
 // TaskApp — styling (mosstyle), light theme. Parts match the [ part-name ] labels
 // in TaskApp.mll.
+//
+// The "warm & approachable" identity from code/specs/task-app-ui-design.md: warm
+// paper ground, crisp warm-white surfaces, warm-charcoal ink, and a single honey
+// accent (#e0942a) spent only on the primary action and active affordances.
+// Semantic red (#cf4b34) is a separate axis, used only for the destructive Delete.
 
 style TaskApp {
   part app-shell {
-    background : "#f8fafc" ;
-    color : "#0f172a" ;
-    font-family : "system-ui, sans-serif" ;
-    padding : 24 ;
-    gap : 14 ;
+    background : "#f0ebe3" ;
+    color : "#2b2723" ;
+    font-family : "-apple-system, Segoe UI, system-ui, sans-serif" ;
+    padding : 28 ;
+    gap : 16 ;
   }
   part title {
+    font-size : 22 ;
     font-weight : bold ;
+    color : "#2b2723" ;
   }
   part add-row {
     gap : 8 ;
     align : center-vertical ;
   }
   part name-input {
-    padding : 8 ;
+    background : "#fffdfa" ;
+    color : "#2b2723" ;
+    font-size : 14 ;
+    padding : 10 ;
     border-width : 1 ;
-    border-color : "#cbd5e1" ;
-    border-radius : 6 ;
+    border-color : "#e6ded3" ;
+    border-radius : 9 ;
+    state focused {
+      border-color : "#e0942a" ;
+    }
   }
   part due-input {
-    padding : 8 ;
+    background : "#fffdfa" ;
+    color : "#2b2723" ;
+    font-size : 14 ;
+    padding : 10 ;
     border-width : 1 ;
-    border-color : "#cbd5e1" ;
-    border-radius : 6 ;
+    border-color : "#e6ded3" ;
+    border-radius : 9 ;
+    state focused {
+      border-color : "#e0942a" ;
+    }
   }
   part add-btn {
-    background : "#2563eb" ;
+    background : "#e0942a" ;
     color : "#ffffff" ;
-    padding : 8 ;
-    border-radius : 6 ;
+    font-weight : bold ;
+    padding : 10 ;
+    border-radius : 9 ;
+    state hover {
+      background : "#c67f1e" ;
+    }
   }
   part summary {
-    color : "#64748b" ;
+    color : "#6a625a" ;
+    font-size : 13 ;
   }
   part task-list {
-    gap : 6 ;
+    gap : 8 ;
   }
   part task-row {
     gap : 8 ;
     align : center-vertical ;
   }
   part row-btn {
-    padding : 8 ;
+    background : "#fffdfa" ;
+    color : "#2b2723" ;
+    font-size : 14 ;
+    padding : 12 ;
     border-width : 1 ;
-    border-color : "#e2e8f0" ;
-    border-radius : 6 ;
-    background : "#ffffff" ;
+    border-color : "#e6ded3" ;
+    border-radius : 11 ;
+    state hover {
+      border-color : "#e0942a" ;
+      background : "#faedd6" ;
+    }
   }
   part del-btn {
-    padding : 8 ;
-    border-radius : 6 ;
-    background : "#fee2e2" ;
-    color : "#991b1b" ;
+    background : "#f8e4df" ;
+    color : "#cf4b34" ;
+    font-weight : bold ;
+    padding : 10 ;
+    border-radius : 9 ;
+    state hover {
+      background : "#f1cabf" ;
+    }
   }
 }
