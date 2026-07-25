@@ -161,16 +161,21 @@ pub enum Stmt {
     /// character/figurative/wider delimiter or a numeric/group source or a
     /// non-integer/non-numeric counter are later rungs.
     Inspect { source: String, counter: String, delim: Operand, leading: bool },
-    /// `INSPECT source REPLACING ALL search BY replace` — replace EVERY
-    /// occurrence of the SINGLE character `search` in the alphanumeric `source`
-    /// with the SINGLE character `replace`, in place. Because both are single
-    /// characters the source's width is unchanged, so this is a per-position
-    /// map (`source := source with each search→replace`). Each of `search` and
-    /// `replace` is a 1-char literal or a `PIC X(1)` item. `REPLACING
-    /// CHARACTERS`/`LEADING`/`FIRST`, `BEFORE`/`AFTER` regions, several replace
-    /// items, and a multi-character/figurative/wider search or replacement or a
-    /// numeric/group source are later rungs.
-    InspectReplacing { source: String, search: Operand, replace: Operand },
+    /// `INSPECT source REPLACING ALL search BY replace` (or `REPLACING LEADING
+    /// search BY replace`) — substitute the SINGLE character `search` in the
+    /// alphanumeric `source` with the SINGLE character `replace`, in place.
+    /// Because both are single characters the source's width is unchanged, so
+    /// this is a per-position map. `ALL` replaces EVERY occurrence
+    /// (`source := source with each search→replace`); `LEADING` (`leading ==
+    /// true`) replaces only the run of CONSECUTIVE `search` characters at the
+    /// START of the source, stopping at the first character that is not `search`
+    /// — positions after that first gap are left unchanged even if they equal
+    /// `search`. Each of `search` and `replace` is a 1-char literal or a `PIC
+    /// X(1)` item. `REPLACING CHARACTERS`/`FIRST`, `BEFORE`/`AFTER` regions,
+    /// several replace items, a `LEADING` replacement inside the combined
+    /// `TALLYING … REPLACING` form, and a multi-character/figurative/wider search
+    /// or replacement or a numeric/group source are later rungs.
+    InspectReplacing { source: String, search: Operand, replace: Operand, leading: bool },
     /// `INSPECT source TALLYING counter FOR ALL delim REPLACING ALL search BY
     /// replace` — one INSPECT carrying BOTH phrases. Per ISO this executes "as
     /// though an INSPECT TALLYING were specified, followed by an INSPECT
@@ -885,12 +890,19 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                                 .into(),
                         ));
                     }
-                    let (search, replace) = read_inspect_replacing_all(verb)?;
+                    let (search, replace, repl_leading) = read_inspect_replacing_all(verb)?;
+                    // A combined `TALLYING … REPLACING LEADING` is a later rung too:
+                    // the combined form's REPLACING half stays FOR ALL only.
+                    if repl_leading {
+                        return Err(RuntimeError::Unsupported(
+                            "INSPECT TALLYING … REPLACING LEADING is a later rung".into(),
+                        ));
+                    }
                     Ok(Stmt::InspectTallyReplace { source, counter, delim, search, replace })
                 }
                 (false, true) => {
-                    let (search, replace) = read_inspect_replacing_all(verb)?;
-                    Ok(Stmt::InspectReplacing { source, search, replace })
+                    let (search, replace, leading) = read_inspect_replacing_all(verb)?;
+                    Ok(Stmt::InspectReplacing { source, search, replace, leading })
                 }
                 // A lone TALLYING (or neither phrase, which `read_inspect_tally_all`
                 // rejects as a missing TALLYING clause). Both `FOR ALL` and `FOR
@@ -958,14 +970,19 @@ fn read_inspect_tally_all(
     Ok((counter, read_operand(delim_node)?, leading))
 }
 
-/// Extract the single supported `REPLACING ALL search BY replace` phrase from an
-/// `inspect_stmt`, returning `(search_operand, replace_operand)` and rejecting
-/// every later-rung form the grammar also accepts: several replace items, a
-/// `CHARACTERS` or `LEADING` (or `FIRST`) replacement, and a `BEFORE`/`AFTER …
-/// INITIAL` region. (The combined `TALLYING … REPLACING` and a non-alphanumeric
-/// source are handled by the caller and exec; a multi-character/wider/figurative
-/// search or replacement is rejected by `single_delim_char` at exec time.)
-fn read_inspect_replacing_all(verb: &GrammarASTNode) -> Result<(Operand, Operand), RuntimeError> {
+/// Extract the supported `REPLACING ALL search BY replace` / `REPLACING LEADING
+/// search BY replace` phrase from an `inspect_stmt`, returning `(search_operand,
+/// replace_operand, leading)` where `leading` is `true` for `REPLACING LEADING`
+/// (replace only the leading run) and `false` for `REPLACING ALL` (replace every
+/// occurrence). Rejects every later-rung form the grammar also accepts: several
+/// replace items, a `CHARACTERS` or `FIRST` replacement, and a `BEFORE`/`AFTER …
+/// INITIAL` region. (A combined `TALLYING … REPLACING LEADING`, and a non-
+/// alphanumeric source, are rejected by the caller; a multi-character/wider/
+/// figurative search or replacement is rejected by `single_delim_char` at exec
+/// time.)
+fn read_inspect_replacing_all(
+    verb: &GrammarASTNode,
+) -> Result<(Operand, Operand, bool), RuntimeError> {
     let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
         RuntimeError::Unsupported("INSPECT without a REPLACING clause is a later rung".into())
     })?;
@@ -984,28 +1001,32 @@ fn read_inspect_replacing_all(verb: &GrammarASTNode) -> Result<(Operand, Operand
             "INSPECT REPLACING CHARACTERS is a later rung".into(),
         ));
     }
-    if toks.iter().any(|(k, v)| k == "KEYWORD" && (v == "LEADING" || v == "FIRST")) {
+    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "FIRST") {
         return Err(RuntimeError::Unsupported(
-            "INSPECT REPLACING LEADING/FIRST is a later rung".into(),
+            "INSPECT REPLACING FIRST is a later rung".into(),
         ));
     }
+    // `REPLACING LEADING` is now supported (leading-run replace); `REPLACING ALL`
+    // is the default. The keyword selects the stop-at-first-mismatch behaviour
+    // threaded through to `inspect_replace`.
+    let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
     if child_node(ri, "inspect_region").is_some() {
         return Err(RuntimeError::Unsupported(
             "INSPECT REPLACING … BEFORE/AFTER is a later rung".into(),
         ));
     }
-    // `ALL search BY replace` — the two `operand` children are the search
-    // (first) and the replacement (second), in order.
+    // `ALL`/`LEADING search BY replace` — the two `operand` children are the
+    // search (first) and the replacement (second), in order.
     let ops = child_nodes(ri, "operand");
     let (search_node, replace_node) = match ops.as_slice() {
         [s, r] => (*s, *r),
         _ => {
             return Err(RuntimeError::Unsupported(
-                "INSPECT REPLACING ALL without a search and a BY replacement".into(),
+                "INSPECT REPLACING ALL/LEADING without a search and a BY replacement".into(),
             ))
         }
     };
-    Ok((read_operand(search_node)?, read_operand(replace_node)?))
+    Ok((read_operand(search_node)?, read_operand(replace_node)?, leading))
 }
 
 /// Extract the `CONVERTING from TO to` phrase from an `inspect_stmt`, returning the

@@ -362,8 +362,8 @@ impl Machine {
             Stmt::Inspect { source, counter, delim, leading } => {
                 return self.exec_inspect(source, counter, delim, *leading)
             }
-            Stmt::InspectReplacing { source, search, replace } => {
-                self.exec_inspect_replacing(source, search, replace)?
+            Stmt::InspectReplacing { source, search, replace, leading } => {
+                self.exec_inspect_replacing(source, search, replace, *leading)?
             }
             Stmt::InspectTallyReplace { source, counter, delim, search, replace } => {
                 return self.exec_inspect_tally_replace(source, counter, delim, search, replace)
@@ -725,9 +725,10 @@ impl Machine {
         source: &str,
         search: &Operand,
         replace: &Operand,
+        leading: bool,
     ) -> Result<(), RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
-        self.inspect_replace(sidx, search, replace)
+        self.inspect_replace(sidx, search, replace, leading)
     }
 
     /// `INSPECT source TALLYING counter FOR ALL delim REPLACING ALL search BY
@@ -753,21 +754,29 @@ impl Machine {
         // source, so the subsequent replace still sees the original bytes too. The
         // combined form is FOR ALL only (`leading = false`).
         self.inspect_tally(sidx, counter, delim, false)?;
-        // THEN replace, overwriting the source in place.
-        self.inspect_replace(sidx, search, replace)?;
+        // THEN replace, overwriting the source in place. The combined form is
+        // REPLACING ALL only (`leading = false`).
+        self.inspect_replace(sidx, search, replace, false)?;
         Ok(Flow::Normal)
     }
 
-    /// The REPLACING half: map every `search` character to `replace` in the
+    /// The REPLACING half: substitute `search` characters with `replace` in the
     /// source's storage, in place (same width). Factored out of
     /// [`Self::exec_inspect_replacing`] so the combined exec can run it AFTER the
-    /// tally. A numeric/group source is rejected by the caller via
-    /// [`Self::inspect_alnum_source`].
+    /// tally. When `leading` is false (`REPLACING ALL`) EVERY occurrence of
+    /// `search` becomes `replace`; when true (`REPLACING LEADING`) only the run of
+    /// CONSECUTIVE `search` characters at the START of the source is replaced,
+    /// stopping at the first character that is not `search` — positions after that
+    /// first gap are left unchanged even if they equal `search`. The combined
+    /// tally-then-replace path always passes `leading = false` (a combined
+    /// `REPLACING LEADING` is a later rung). A numeric/group source is rejected by
+    /// the caller via [`Self::inspect_alnum_source`].
     fn inspect_replace(
         &mut self,
         sidx: usize,
         search: &Operand,
         replace: &Operand,
+        leading: bool,
     ) -> Result<(), RuntimeError> {
         // The single search and replacement characters (shared validation with
         // UNSTRING/TALLYING: a multi-character/figurative/wider/numeric operand is
@@ -776,13 +785,33 @@ impl Machine {
         let search_ch = self.single_delim_char(search, "INSPECT REPLACING")?;
         let replace_ch = self.single_delim_char(replace, "INSPECT REPLACING")?;
 
-        // Map each character in place (same width), then store through the
-        // alphanumeric char path.
-        let rebuilt: String = self.items[sidx]
-            .storage
-            .chars()
-            .map(|c| if c == search_ch { replace_ch } else { c })
-            .collect();
+        // Rebuild each character in place (same width), then store through the
+        // alphanumeric char path. `REPLACING ALL` maps every match; `REPLACING
+        // LEADING` replaces only while still in the leading run — a stateful map
+        // that flips `in_run` off at the first non-`search` character and never
+        // replaces again, even for a later `search`. That is the ONLY difference
+        // between the two forms.
+        let rebuilt: String = if leading {
+            let mut in_run = true;
+            self.items[sidx]
+                .storage
+                .chars()
+                .map(|c| {
+                    if in_run && c == search_ch {
+                        replace_ch
+                    } else {
+                        in_run = false;
+                        c
+                    }
+                })
+                .collect()
+        } else {
+            self.items[sidx]
+                .storage
+                .chars()
+                .map(|c| if c == search_ch { replace_ch } else { c })
+                .collect()
+        };
         self.move_into(sidx, Src::Chars(rebuilt))
     }
 

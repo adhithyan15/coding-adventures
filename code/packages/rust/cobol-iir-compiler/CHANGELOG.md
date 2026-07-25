@@ -8,6 +8,37 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.37.0: INSPECT REPLACING LEADING (leading-run replace)
+
+A lone `INSPECT source REPLACING LEADING search BY replace` now compiles instead of
+being rejected as a later rung. `REPLACING LEADING` replaces only the run of
+**consecutive** `search` characters at the START of the source, stopping at the
+first character that is not `search`; positions after that first gap are left
+unchanged **even if they equal `search`** (the contrast with `REPLACING ALL`, which
+replaces every occurrence). Width is unchanged (single char → single char).
+
+- The per-position **rebuild** unroll over the compile-time width `W` is reused
+  verbatim; the ONLY addition for `LEADING` is a runtime `active` flag (`i64`, init
+  `const 1`) threaded through the loop: at each `j`, `eq = cmp_eq(str_index(s,j),
+  search)`, the replace branch is taken iff `use_repl = and(active, eq)`, and then
+  `active = and(active, eq)` — so once a mismatch clears `active` it stays 0 for
+  every later position and no further character is replaced. This is byte-identical
+  to the oracle's stateful `in_run` map. When not `LEADING` the extra `and` is not
+  emitted and the unroll is byte-identical to the original `REPLACING ALL` lowering.
+- `inspect_replacing_all` now returns a `leading: bool` (true for `REPLACING
+  LEADING`, false for `REPLACING ALL`); `emit_inspect_replacing` takes an
+  `allow_leading` flag so the **combined** `TALLYING … REPLACING` path passes
+  `false` — a combined `TALLYING … REPLACING LEADING` stays a clean `Unsupported`.
+- `REPLACING ALL` is byte-identical to before. `REPLACING CHARACTERS`/`FIRST`,
+  `BEFORE`/`AFTER` regions, several replace items, a `REPLACING LEADING` inside the
+  combined form, and a multi-character/figurative/wider/numeric search or
+  replacement remain deferred and reject identically to the oracle.
+- Tests: `inspect_replacing_leading_now_compiles` (was
+  `…_is_a_later_rung`) and `inspect_combined_tally_replacing_leading_is_a_later_rung`
+  unit tests; JIT e2e `inspect_replacing_leading_*` (000123→***123, 00X00→**X00 vs
+  ALL **X**, 120003 unchanged, 0000→****, blank unchanged, PIC X(1) operands),
+  all pinned byte-for-byte against the oracle via `assert_matches_oracle`.
+
 ### Added — v0.36.0: INSPECT TALLYING FOR LEADING (leading-run count)
 
 A lone `INSPECT source TALLYING counter FOR LEADING delim` now compiles instead of

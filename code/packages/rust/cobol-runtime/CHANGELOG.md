@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.41.0 — INSPECT REPLACING LEADING (leading-run replace)
+
+- A lone `INSPECT source REPLACING LEADING search BY replace` now executes instead of
+  being rejected as a later rung. `REPLACING LEADING` replaces only the run of
+  **consecutive** `search` characters at the START of the source, stopping at the
+  first character that is not `search`; positions after that first gap are left
+  unchanged **even if they equal `search`** — the contrast with `REPLACING ALL`,
+  which replaces every occurrence. Width is unchanged (single char → single char).
+- `inspect_replace` gains a `leading: bool`. When false (`ALL`) the rebuild is the
+  existing stateless map `storage.chars().map(|c| if c == search { replace } else
+  { c })`; when true (`LEADING`) it is a **stateful** map keeping an `in_run` flag —
+  it replaces while `in_run && c == search` and flips `in_run` off permanently at the
+  first non-`search` character, so a later `search` past the gap is never replaced.
+  That flag is the ONLY difference between the two forms; the single-char search/
+  replace validation (`single_delim_char`) and the `move_into(Src::Chars)` store are
+  unchanged. `Stmt::InspectReplacing` carries a `leading` field; the reader captures
+  the `LEADING` keyword instead of rejecting it, and `FIRST` (which does not parse as
+  a replace keyword) is deferred at parse time.
+- The COMBINED tally-then-replace exec still passes `leading = false` to
+  `inspect_replace` — a combined `TALLYING … REPLACING LEADING` remains a clean
+  `Unsupported` (rejected in the combined reader), as do `REPLACING CHARACTERS`,
+  `REPLACING FIRST`, `BEFORE`/`AFTER` regions, several replace items, a
+  multi-character/figurative/wider search or replacement, and a numeric/group source.
+  The `REPLACING ALL` path (lone and combined) is byte-identical to the previous
+  release.
+- New oracle test `inspect_replacing_leading_replaces_only_the_leading_run`:
+  `"000123"` → `"***123"`, `"00X00"` → `"**X00"` (vs `REPLACING ALL` → `"**X**"`),
+  `"120003"` unchanged, `"0000"` → `"****"`, a blank `PIC X(3)` unchanged, and
+  `PIC X(1)` search/replace items. The prior "REPLACING LEADING is a later rung"
+  reject was removed from the replacing deferral test; a combined
+  `TALLYING … REPLACING LEADING` reject was added and the combined-FOR-LEADING reject
+  is retained.
+
 ## 0.40.0 — INSPECT TALLYING FOR LEADING (leading-run count)
 
 - A lone `INSPECT source TALLYING counter FOR LEADING delim` now executes instead of
