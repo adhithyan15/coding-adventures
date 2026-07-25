@@ -1,0 +1,27 @@
+% ============================================================================
+% frequency-period.query.adj — worked examples over the physics frequency-period library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a frequency/period
+% question: it states NO arithmetic and NO definition — it only `import`s the grounded
+% library, `observe`s the measured quantity it decomposed from the prompt (a
+% byte-provenanced span, elided here), and asks the engine to APPLY the cited relation.
+% The native adj-lang engine binds the parameter, computes the reciprocal EXACTLY on the
+% CPU, and returns it with the definition's source/locator/trust.
+%
+% The two questions INVERT: an oscillation with a period of 4 s has a frequency of
+% 0.25 Hz; an oscillation with a frequency of 0.5 Hz has a period of 2 s — each the exact
+% reciprocal of the other.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli frequency-period.query.adj
+% ============================================================================
+
+import "frequency-period.adj"
+
+% A period of 4 s: frequency = 1 / 4.
+observe period(4)
+? frequency(period)      % expect 0.25   (definition: f = 1/T)
+
+% A frequency of 0.5 Hz: period = 1 / 0.5.
+observe frequency(0.5)
+? period(frequency)      % expect 2      (same relation, solved for T = 1/f)
