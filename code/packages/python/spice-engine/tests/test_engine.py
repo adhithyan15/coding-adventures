@@ -408,7 +408,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 167
+    assert len(coverage) == 169
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -423,7 +423,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 167
+    assert len(records) == 169
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -497,9 +497,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 167
-    assert report.expected_canonical_parameter_count == 167
-    assert report.accepted_name_count == 237
+    assert report.canonical_parameter_count == 169
+    assert report.expected_canonical_parameter_count == 169
+    assert report.accepted_name_count == 239
     assert report.aliased_parameter_count == 57
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -507,7 +507,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t167\t167\t237\t57\t4\t0"
+        "true\t7\t7\t169\t169\t239\t57\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -535,8 +535,8 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 166
-    assert report.accepted_name_count == 234
+    assert report.canonical_parameter_count == 168
+    assert report.accepted_name_count == 236
     assert report.aliased_parameter_count == 56
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
@@ -551,7 +551,7 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t166\t167\t234\t56\t4\t4\n"
+        "false\t7\t7\t168\t169\t236\t56\t4\t4\n"
         "kind\tfield\tmessage\n"
         "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
         "supported parameters, found 17\n"
@@ -676,6 +676,7 @@ def test_model_card_aliases_build_device_instances() -> None:
             "VJ": 0.8,
             "FC": 0.35,
             "IS": 2.0e-13,
+            "XTI": 2.5,
             "RD": 125.0,
             "RS": 75.0,
             "T_NOM": 50.0,
@@ -695,6 +696,7 @@ def test_model_card_aliases_build_device_instances() -> None:
         "PB": 0.8,
         "FC": 0.35,
         "IS": 2.0e-13,
+        "XTI": 2.5,
         "RD": 125.0,
         "RS": 75.0,
         "TNOM": 50.0,
@@ -712,6 +714,7 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert jfet_model.Pb == pytest.approx(0.8)
     assert jfet_model.Fc == pytest.approx(0.35)
     assert jfet_model.Is == pytest.approx(2.0e-13)
+    assert jfet_model.Xti == pytest.approx(2.5)
     assert jfet_model.Rd == pytest.approx(125.0)
     assert jfet_model.Rs == pytest.approx(75.0)
     assert jfet_model.Tnom == pytest.approx(323.15)
@@ -2628,7 +2631,7 @@ def test_subcircuit_expansion_preserves_complete_jfet_model():
     cell = SubcircuitDefinition(
         "jfet-cell",
         ("d", "g", "s"),
-        (JFET("Jcell", "d", "g", "s", Kf=1.0e-12, Af=1.3, Pb=0.8, Fc=0.35, Is=2.0e-13, Rd=125.0, Rs=75.0, Tcv=0.01, Vtotc=-0.0025, Tnom=323.15, Bex=1.5, Betatce=-0.5),),
+        (JFET("Jcell", "d", "g", "s", Kf=1.0e-12, Af=1.3, Pb=0.8, Fc=0.35, Is=2.0e-13, Xti=2.5, Rd=125.0, Rs=75.0, Tcv=0.01, Vtotc=-0.0025, Tnom=323.15, Bex=1.5, Betatce=-0.5),),
     )
     circuit = Circuit()
     circuit.define_subcircuit(cell)
@@ -2640,6 +2643,7 @@ def test_subcircuit_expansion_preserves_complete_jfet_model():
     assert expanded.Pb == pytest.approx(0.8)
     assert expanded.Fc == pytest.approx(0.35)
     assert expanded.Is == pytest.approx(2.0e-13)
+    assert expanded.Xti == pytest.approx(2.5)
     assert expanded.Rd == pytest.approx(125.0)
     assert expanded.Rs == pytest.approx(75.0)
     assert expanded.Tcv == pytest.approx(0.01)
@@ -2953,8 +2957,10 @@ def test_jfet_temperature_scaling_uses_vtotc_betatce_and_model_nominal_temperatu
     assert at_model_nominal.beta == pytest.approx(1.0e-4)
     assert hot.vto == pytest.approx(-2.025)
     assert hot.beta == pytest.approx(1.0e-4 * 1.01**10.0)
+    assert hot.Is > at_model_nominal.Is
     assert cold.vto == pytest.approx(-1.975)
     assert cold.beta == pytest.approx(1.0e-4 * 1.01**-10.0)
+    assert cold.Is < at_model_nominal.Is
     assert invariant.vto == pytest.approx(-2.0)
     assert invariant.beta == pytest.approx(1.0e-4)
     assert bex_fallback.beta == pytest.approx(1.0e-4 * 320.0 / 310.0)
@@ -2966,6 +2972,14 @@ def test_jfet_temperature_scaling_uses_vtotc_betatce_and_model_nominal_temperatu
 
 
 def test_dc_rejects_invalid_jfet_temperature_parameters():
+    circuit = Circuit()
+    circuit.add(JFET("Jbad", "d", "g", "0", Xti=float("nan")))
+    with pytest.raises(
+        ValueError,
+        match="gate saturation-current temperature exponent must be finite",
+    ):
+        dc_op(circuit)
+
     circuit = Circuit()
     circuit.add(JFET("Jbad", "d", "g", "0", Tcv=float("nan")))
     with pytest.raises(ValueError, match="TCV must be finite"):

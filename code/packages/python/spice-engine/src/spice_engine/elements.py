@@ -517,6 +517,7 @@ class JFET:
     Pb: float = 1.0
     Fc: float = 0.5
     Is: float = 1.0e-14
+    Xti: float = 3.0
     Rd: float = 0.0
     Rs: float = 0.0
     Tcv: float = 0.0

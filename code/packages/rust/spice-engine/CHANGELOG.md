@@ -1,5 +1,8 @@
 # Changelog
 
+- Add JFET model-card `XTI` support, scaling gate saturation current from
+  `TNOM` with the standard silicon bandgap temperature law and a default
+  exponent of 3.
 - Add JFET model-card `VTOTC` support, applying the alternative
   `VTO(T) = VTO + VTOTC * (T - TNOM)` rule with precedence over `TCV` when
   explicitly present.
