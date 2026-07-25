@@ -2415,6 +2415,78 @@ mod tests {
     }
 
     #[test]
+    fn inspect_tallying_for_all_with_a_before_after_region() {
+        // BEFORE "C" restricts the count to "AB0" → one "0"; AFTER "C" restricts it
+        // to "D0" → one "0". Same source, complementary windows.
+        let before = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before, "001\n");
+
+        let after = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"0\" AFTER \"C\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after, "001\n");
+
+        // The not-found ASYMMETRY: BEFORE with the delimiter absent counts the WHOLE
+        // source (both "0"s → 2); AFTER with it absent counts NOTHING (0).
+        let before_absent = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"Z\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before_absent, "002\n");
+
+        let after_absent = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"0\" AFTER \"Z\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after_absent, "000\n");
+
+        // The region delimiter equal to the tally delimiter: AFTER "A" in "ABABA" —
+        // the first "A" (index 0) bounds the region to "BABA", where two "A"s remain.
+        let same = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"A\" AFTER \"A\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(same, "002\n");
+    }
+
+    #[test]
+    fn inspect_tallying_region_later_rung_forms_are_clean_errors() {
+        // FOR LEADING with a region is still deferred …
+        let leading = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"000CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"0\" BEFORE \"C\".", "STOP RUN."],
+        ));
+        assert!(leading.is_err(), "FOR LEADING + region must reject");
+
+        // … a MULTI-character region delimiter is deferred (rejected at exec, exactly
+        // like a multi-character tally delimiter) …
+        let multi = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"CD\".", "STOP RUN."],
+        ));
+        assert!(multi.is_err(), "multi-char region delimiter must reject");
+
+        // … and a region on the COMBINED TALLYING … REPLACING form is deferred.
+        let combined = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\" REPLACING ALL \"D\" BY \"X\".",
+                "STOP RUN.",
+            ],
+        ));
+        assert!(combined.is_err(), "combined form + region must reject");
+    }
+
+    #[test]
     fn inspect_replacing_maps_every_occurrence_in_place() {
         // "ABABA" with A→X → "XBXBX" (same width, per-position map).
         let out = run_cobol(&wrap(

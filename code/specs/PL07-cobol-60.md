@@ -479,11 +479,37 @@ oracle (`store_result(counter, counter + count)`) and the compiler
 byte-for-byte. FOR ALL and FOR LEADING share that identical loop — the ONLY
 difference is the not-equal branch: FOR ALL skips just the increment and keeps
 scanning, FOR LEADING breaks out of the loop (oracle: `filter…count` vs
-`take_while…count`). The grammar deliberately accepts the fuller `INSPECT`
-surface — a `CHARACTERS` tally, `BEFORE`/`AFTER` regions, several `TALLYING`
-counters or `FOR` phrases — so the reader/compiler reject each as a clean
-"later rung" error rather than a parse failure. A multi-character / figurative /
-numeric / wider-than-one delimiter, and a numeric/group source or a
+`take_while…count`).
+
+**`BEFORE`/`AFTER` region (FOR ALL follow-up rung).** The `FOR ALL` form now
+accepts an optional `{BEFORE|AFTER} x` **region** that narrows the count to a
+sub-slice of the source, bounded by the **FIRST (leftmost) occurrence** of the
+single-character region delimiter `x`:
+
+- `BEFORE x` counts `delim` only in `source[0 .. first_index_of(x)]`; if `x` is
+  **absent** the region is the **ENTIRE** source.
+- `AFTER x` counts `delim` only in `source[first_index_of(x)+1 .. end]`; if `x` is
+  **absent** the region is **EMPTY** (count `0`).
+
+This not-found **asymmetry** (BEFORE→whole, AFTER→empty) is the ISO rule and the
+crux of the rung. Worked (`counter` `PIC 9(3)`, source `"AB0CD0"`, `delim = "0"`):
+`BEFORE "C"` → region `"AB0"` → `1`; `AFTER "C"` → region `"D0"` → `1`; `BEFORE
+"Z"` (absent) → whole source → `2`; `AFTER "Z"` (absent) → empty → `0`; `AFTER "A"`
+in `"ABABA"` counting `"A"` (region delimiter equals tally delimiter) → the first
+`A` bounds the region to `"BABA"` → `2`. The oracle computes the window `[start,
+end)` over the source's chars and counts within it; the compiler emits a one-shot
+scan for the first occurrence of `x` (a `found` flag + first index), derives
+`[start, end)` with the same asymmetry, and bounds its count loop with `j < start
+|| j >= end → skip` — byte-identical, and with no region nothing extra is emitted.
+This rung is scoped SMALL: `FOR ALL` only and a **single-character** region
+delimiter only.
+
+The grammar deliberately accepts the fuller `INSPECT` surface — a `CHARACTERS`
+tally, several `TALLYING` counters or `FOR` phrases, a region on the `FOR
+LEADING`/`REPLACING`/`CONVERTING`/combined forms, and a multi-character region
+delimiter — so the reader/compiler reject each as a clean "later rung" error
+rather than a parse failure. A multi-character / figurative / numeric /
+wider-than-one delimiter (tally OR region), and a numeric/group source or a
 non-integer/signed/non-numeric counter, are likewise clean later rungs. (`FIRST`
 and `INITIAL`, needed only by `REPLACING FIRST` / `BEFORE INITIAL`, are left
 unreserved so common data names keep working.)

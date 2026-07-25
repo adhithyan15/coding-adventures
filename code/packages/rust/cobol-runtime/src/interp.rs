@@ -4,8 +4,8 @@
 use crate::error::RuntimeError;
 use crate::picture::Picture;
 use crate::program::{
-    ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program, RefIndex, RelOp, Stmt,
-    ValueSpec, WhenValue,
+    ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program, RefIndex, Region,
+    RegionKind, RelOp, Stmt, ValueSpec, WhenValue,
 };
 use crate::value::{add, div, move_into_char, move_into_numeric, mul, pow, round, sub, Decimal};
 use std::collections::HashMap;
@@ -359,8 +359,8 @@ impl Machine {
             Stmt::Unstring { source, delim, targets } => {
                 self.exec_unstring(source, delim, targets)?
             }
-            Stmt::Inspect { source, counter, delim, leading } => {
-                return self.exec_inspect(source, counter, delim, *leading)
+            Stmt::Inspect { source, counter, delim, leading, region } => {
+                return self.exec_inspect(source, counter, delim, *leading, region.as_ref())
             }
             Stmt::InspectReplacing { source, search, replace, leading } => {
                 self.exec_inspect_replacing(source, search, replace, *leading)?
@@ -647,9 +647,10 @@ impl Machine {
         counter: &str,
         delim: &Operand,
         leading: bool,
+        region: Option<&Region>,
     ) -> Result<Flow, RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
-        self.inspect_tally(sidx, counter, delim, leading)
+        self.inspect_tally(sidx, counter, delim, leading, region)
     }
 
     /// The source of any INSPECT must resolve to an alphanumeric item. Returns its
@@ -681,12 +682,27 @@ impl Machine {
     /// bytes) and share the counter validation and store path; the combined path
     /// passes through its own `FOR ALL`/`FOR LEADING` selection here.
     /// Does not mutate the source.
+    ///
+    /// An optional `region` (`{BEFORE|AFTER} x`) narrows the count to a sub-slice of
+    /// the source, bounded by the FIRST (leftmost) occurrence of the single region
+    /// delimiter `x` — computed over the source's CURRENT storage:
+    ///   * `BEFORE x` → count only within `source[0 .. first_index_of(x)]`; if `x`
+    ///     is absent the region is the ENTIRE source (`end = len`); and
+    ///   * `AFTER x`  → count only within `source[first_index_of(x)+1 .. len]`; if
+    ///     `x` is absent the region is EMPTY (`start = end = len` → count 0).
+    ///
+    /// This not-found asymmetry (BEFORE→whole, AFTER→empty) is the ISO rule and MUST
+    /// match the compiler byte-for-byte. With no region the window is the whole
+    /// source (`start = 0`, `end = len`), so behaviour is unchanged. The combined
+    /// tally-then-replace path never carries a region (rejected at read time), so it
+    /// always passes `None`.
     fn inspect_tally(
         &mut self,
         sidx: usize,
         counter: &str,
         delim: &Operand,
         leading: bool,
+        region: Option<&Region>,
     ) -> Result<Flow, RuntimeError> {
         // The counter must be an UNSIGNED INTEGER numeric item (`PIC 9(n)`): a
         // fractional (`V`) or signed (`S`) counter is a later rung.
@@ -708,14 +724,44 @@ impl Machine {
             }
         }
 
-        // The single delimiter character, then the occurrence count. `FOR ALL`
-        // counts every match; `FOR LEADING` counts only the leading run (stop at the
-        // first non-match) — the ONLY difference between the two forms.
+        // The single delimiter character to count.
         let delim_ch = self.single_delim_char(delim, "INSPECT")?;
+
+        // The character window `[start, end)` the count runs over. With no region
+        // this is the WHOLE source; a `{BEFORE|AFTER} x` region narrows it around the
+        // first occurrence of the single region delimiter `x`, applying the ISO
+        // not-found asymmetry (BEFORE→whole, AFTER→empty). We work on `chars()` (not
+        // bytes) so the window and the count agree on positions.
+        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+        let len = chars.len();
+        let (start, end) = match region {
+            None => (0, len),
+            Some(r) => {
+                let region_ch = self.single_delim_char(&r.delim, "INSPECT")?;
+                let first = chars.iter().position(|&c| c == region_ch);
+                match r.kind {
+                    // BEFORE: everything left of the first `x`; if `x` is absent the
+                    // region is the whole source (`end = len`).
+                    RegionKind::Before => (0, first.unwrap_or(len)),
+                    // AFTER: everything right of the first `x`; if `x` is absent the
+                    // region is EMPTY (`start = end = len`).
+                    RegionKind::After => match first {
+                        Some(i) => (i + 1, len),
+                        None => (len, len),
+                    },
+                }
+            }
+        };
+        let window = &chars[start..end];
+
+        // The occurrence count over the window. `FOR ALL` counts every match;
+        // `FOR LEADING` counts only the leading run (stop at the first non-match) —
+        // the ONLY difference between the two forms. (`FOR LEADING` with a region is
+        // rejected at read time, so `leading` and a narrowed window never combine.)
         let count = if leading {
-            self.items[sidx].storage.chars().take_while(|&c| c == delim_ch).count()
+            window.iter().take_while(|&&c| c == delim_ch).count()
         } else {
-            self.items[sidx].storage.chars().filter(|&c| c == delim_ch).count()
+            window.iter().filter(|&&c| c == delim_ch).count()
         };
 
         // counter := counter_value + count, reshaped into the counter's picture —
@@ -780,8 +826,10 @@ impl Machine {
         let sidx = self.inspect_alnum_source(source)?;
         // Tally FIRST, on the current (original) storage — it does not mutate the
         // source, so the subsequent replace still sees the original bytes too. The
-        // TALLYING half may be FOR ALL or FOR LEADING (`tally_leading`).
-        self.inspect_tally(sidx, counter, delim, tally_leading)?;
+        // TALLYING half may be FOR ALL or FOR LEADING (`tally_leading`). The combined
+        // form never carries a `{BEFORE|AFTER}` region (rejected at read time), so the
+        // window is always the whole source — pass `None`.
+        self.inspect_tally(sidx, counter, delim, tally_leading, None)?;
         // THEN replace, overwriting the source in place. The REPLACING half may be
         // ALL or LEADING (`replace_leading`) — the same leading-run map used by a
         // lone `INSPECT REPLACING LEADING`.

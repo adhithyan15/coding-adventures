@@ -160,7 +160,19 @@ pub enum Stmt {
     /// character/figurative/wider delimiter or a numeric/group source or a
     /// non-integer/non-numeric counter are later rungs. (A `REPLACING` phrase in
     /// the SAME statement is the combined form below, not this lone `Inspect`.)
-    Inspect { source: String, counter: String, delim: Operand, leading: bool },
+    ///
+    /// An optional `region` restricts the count to a sub-slice of the source — the
+    /// `{BEFORE|AFTER} x` phrase (see [`Region`]). This rung wires the region up for
+    /// `FOR ALL` only, with a SINGLE-character region delimiter `x`; `FOR LEADING`
+    /// with a region, a multi-character region delimiter, and a region on the
+    /// combined/`REPLACING`/`CONVERTING` forms are later rungs.
+    Inspect {
+        source: String,
+        counter: String,
+        delim: Operand,
+        leading: bool,
+        region: Option<Region>,
+    },
     /// `INSPECT source REPLACING ALL search BY replace` (or `REPLACING LEADING
     /// search BY replace`) — substitute the SINGLE character `search` in the
     /// alphanumeric `source` with the SINGLE character `replace`, in place.
@@ -288,6 +300,29 @@ pub enum Operand {
     /// are each a [`RefIndex`]: an integer literal *or* a data-name whose value
     /// is read at run time (a **computed** reference modification).
     RefMod { base: String, start: RefIndex, len: Option<RefIndex> },
+}
+
+/// Which side of a delimiter an `INSPECT … BEFORE`/`AFTER` region selects.
+/// `BEFORE x` restricts work to the source text to the LEFT of the first `x`;
+/// `AFTER x` restricts it to the text to the RIGHT of the first `x`.
+#[derive(Debug, Clone)]
+pub enum RegionKind {
+    Before,
+    After,
+}
+
+/// An `INSPECT … {BEFORE|AFTER} x` region: the phrase that narrows a TALLYING /
+/// REPLACING / CONVERTING operation to a sub-slice of the source, bounded by the
+/// FIRST occurrence of the single-character delimiter `delim`. This rung wires it
+/// up for the lone `TALLYING FOR ALL` form only (see [`Stmt::Inspect`]); the
+/// window it implies is computed at exec time over the ORIGINAL source (leftmost
+/// occurrence of `delim`), with the ISO not-found asymmetry:
+///   * `BEFORE x`, `x` absent → the region is the ENTIRE source; and
+///   * `AFTER x`, `x` absent → the region is EMPTY (nothing counted).
+#[derive(Debug, Clone)]
+pub struct Region {
+    pub kind: RegionKind,
+    pub delim: Operand,
 }
 
 /// One index (start or length) of a reference modification: a compile-time
@@ -897,7 +932,16 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                 // extracted here (each rejecting its own later-rung forms) and the
                 // ordering is enforced at exec time.
                 (true, true) => {
-                    let (counter, delim, leading) = read_inspect_tally_all(verb)?;
+                    let (counter, delim, leading, region) = read_inspect_tally_all(verb)?;
+                    // A `{BEFORE|AFTER}` region on the combined form's TALLYING half
+                    // is a later rung (regions ship for the LONE `FOR ALL` first);
+                    // reject it here so both engines diagnose it identically.
+                    if region.is_some() {
+                        return Err(RuntimeError::Unsupported(
+                            "INSPECT combined TALLYING … REPLACING with a BEFORE/AFTER region is a later rung"
+                                .into(),
+                        ));
+                    }
                     // The combined form's TALLYING half now supports BOTH `FOR ALL`
                     // and `FOR LEADING`: `leading` selects the count semantics
                     // (LEADING counts only the consecutive run of `delim` at the
@@ -926,8 +970,8 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                 // rejects as a missing TALLYING clause). Both `FOR ALL` and `FOR
                 // LEADING` are supported here; `leading` selects the count semantics.
                 _ => {
-                    let (counter, delim, leading) = read_inspect_tally_all(verb)?;
-                    Ok(Stmt::Inspect { source, counter, delim, leading })
+                    let (counter, delim, leading, region) = read_inspect_tally_all(verb)?;
+                    Ok(Stmt::Inspect { source, counter, delim, leading, region })
                 }
             }
         }
@@ -935,17 +979,21 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
     }
 }
 
-/// Extract the supported `TALLYING counter FOR ALL delim` / `FOR LEADING delim`
-/// phrase from an `inspect_stmt`, returning `(counter_name, delim_operand,
-/// leading)` where `leading` is `true` for `FOR LEADING` and `false` for `FOR
-/// ALL`. Rejects every later-rung form the grammar also accepts: several
-/// counters, several `FOR` phrases, a `CHARACTERS` tally, and a `BEFORE`/`AFTER
-/// … INITIAL` region. (`REPLACING` (lone or combined, `ALL` or `LEADING` on
-/// either half) and a non-alphanumeric source/counter are handled by the caller
-/// and exec.)
+/// Extract the supported `TALLYING counter FOR ALL delim [{BEFORE|AFTER} x]` /
+/// `FOR LEADING delim` phrase from an `inspect_stmt`, returning `(counter_name,
+/// delim_operand, leading, region)` where `leading` is `true` for `FOR LEADING`
+/// and `false` for `FOR ALL`, and `region` carries an optional `{BEFORE|AFTER} x`
+/// window (see [`Region`]). Rejects every later-rung form the grammar also
+/// accepts: several counters, several `FOR` phrases, a `CHARACTERS` tally, and —
+/// still — a `FOR LEADING` phrase carrying a region (`FOR LEADING … BEFORE/AFTER`
+/// is a later rung; only `FOR ALL` gets a region this rung). (`REPLACING` (lone
+/// or combined, `ALL` or `LEADING` on either half) and a non-alphanumeric
+/// source/counter are handled by the caller and exec; a multi-character region
+/// delimiter is rejected at exec by `single_delim_char`, exactly like the tally
+/// delimiter itself, so both engines diagnose it identically.)
 fn read_inspect_tally_all(
     verb: &GrammarASTNode,
-) -> Result<(String, Operand, bool), RuntimeError> {
+) -> Result<(String, Operand, bool, Option<Region>), RuntimeError> {
     let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
         RuntimeError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
     })?;
@@ -978,15 +1026,49 @@ fn read_inspect_tally_all(
     // `FOR LEADING` is now supported (leading-run count); `FOR ALL` is the default.
     // The keyword picks the count semantics threaded through to `inspect_tally`.
     let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
-    if child_node(ti, "inspect_region").is_some() {
-        return Err(RuntimeError::Unsupported(
-            "INSPECT TALLYING … BEFORE/AFTER is a later rung".into(),
-        ));
-    }
+    // A `{BEFORE|AFTER} x` region now PARSES into an `Option<Region>` (it used to
+    // be rejected wholesale here). Only `FOR ALL` gets a region this rung, so a
+    // `FOR LEADING` phrase carrying a region is still a clean later-rung error.
+    let region = match child_node(ti, "inspect_region") {
+        None => None,
+        Some(region_node) => {
+            if leading {
+                return Err(RuntimeError::Unsupported(
+                    "INSPECT TALLYING … FOR LEADING with a BEFORE/AFTER region is a later rung"
+                        .into(),
+                ));
+            }
+            Some(read_inspect_region(region_node)?)
+        }
+    };
     let delim_node = child_node(ti, "operand").ok_or_else(|| {
         RuntimeError::Unsupported("INSPECT TALLYING FOR ALL/LEADING without a delimiter".into())
     })?;
-    Ok((counter, read_operand(delim_node)?, leading))
+    Ok((counter, read_operand(delim_node)?, leading, region))
+}
+
+/// Read an `inspect_region` CST node — the `{BEFORE|AFTER} x` phrase — into a
+/// [`Region`]. The grammar's region rule is `(BEFORE | AFTER) operand` (the
+/// `INITIAL` keyword is optional/absent), so the leading keyword picks the side
+/// and the lone `operand` child is the delimiter `x`. The delimiter is NOT
+/// width-checked here: exactly like the tally delimiter, a multi-character region
+/// delimiter is a clean later-rung error raised by `single_delim_char` at exec
+/// time, keeping both engines' rejection identical.
+fn read_inspect_region(region_node: &GrammarASTNode) -> Result<Region, RuntimeError> {
+    let toks = child_tokens(region_node);
+    let kind = if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+        RegionKind::Before
+    } else if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+        RegionKind::After
+    } else {
+        return Err(RuntimeError::Unsupported(
+            "INSPECT region without a BEFORE or AFTER keyword".into(),
+        ));
+    };
+    let delim_node = child_node(region_node, "operand").ok_or_else(|| {
+        RuntimeError::Unsupported("INSPECT BEFORE/AFTER region without a delimiter".into())
+    })?;
+    Ok(Region { kind, delim: read_operand(delim_node)? })
 }
 
 /// Extract the supported `REPLACING ALL search BY replace` / `REPLACING LEADING

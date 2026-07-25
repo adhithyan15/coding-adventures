@@ -92,7 +92,11 @@ value); and `INSPECT source TALLYING counter FOR ALL delim` / `FOR LEADING delim
 `PIC X(1)` item — in the alphanumeric source and **ADD** them to the
 unsigned-integer counter; `FOR ALL` counts EVERY occurrence, `FOR LEADING` counts
 only the run of consecutive delimiters at the START, stopping at the first
-non-match; INSPECT adds, it does not clear the counter first); and `INSPECT source
+non-match; INSPECT adds, it does not clear the counter first) — and, for the `FOR
+ALL` form, an optional `{BEFORE|AFTER} x` **region** (narrow the count to the
+sub-slice bounded by the FIRST occurrence of the single-character delimiter `x`:
+`BEFORE x` counts left of it — the WHOLE source if `x` is absent — and `AFTER x`
+counts right of it — NOTHING if `x` is absent); and `INSPECT source
 REPLACING ALL x BY y` / `REPLACING LEADING x BY y` (substitute a single character
 `x` — a 1-char literal or a `PIC X(1)` item — with a single character `y` in the
 alphanumeric source, **in place**, a per-position map that leaves the width
@@ -115,13 +119,14 @@ modelled (the explicit
 `PERFORM … WITH TEST AFTER`/inline, `GO TO … DEPENDING`, `STRING` with a real
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `UNSTRING` with a multi-character
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `INSPECT` with a `CHARACTERS`
-tally, `BEFORE`/`AFTER` phrases, `REPLACING CHARACTERS`/`FIRST`, several
+tally, a `{BEFORE|AFTER}` region on any form OTHER than the lone `TALLYING FOR
+ALL` (a `FOR LEADING` region, a `REPLACING`/`CONVERTING`/combined region) or a
+MULTI-character region delimiter, `REPLACING CHARACTERS`/`FIRST`, several
 replace items, or a combined statement whose `TALLYING`/`REPLACING` half is a
 deferred sub-form (a combined `TALLYING … FOR LEADING` and a combined `REPLACING
 LEADING`, in any combination, are now supported), `CONVERTING` with
 unequal-length
-`FROM`/`TO`, a data-name/figurative/reference-modified `from`/`to`, or a
-`BEFORE`/`AFTER` region, tables,
+`FROM`/`TO`, or a data-name/figurative/reference-modified `from`/`to`, tables,
 files,
 and every other verb) returns a descriptive `RuntimeError` — never wrong output.
 See PL08 for the roadmap toward full COBOL and later standards.
