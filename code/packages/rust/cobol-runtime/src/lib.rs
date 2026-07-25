@@ -2487,18 +2487,21 @@ mod tests {
         .unwrap();
         assert_eq!(combined, "003\nAXAXA\n");
 
-        // A combined statement whose TALLYING half is itself a later rung (FOR
-        // LEADING) still rejects — the combined gate does not smuggle in the
-        // deferred sub-forms.
+        // A combined statement whose TALLYING half is FOR LEADING is now SUPPORTED:
+        // it counts only the leading run of "A" (2 in "AABBB") into C, THEN replaces
+        // ALL "B" with "X" → "AAXXX". (The dedicated ordering/edge cases live in
+        // `inspect_tally_replace_for_leading_*`.)
         let combined_lead = run_cobol(&wrap(
             &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
             &[
                 "INSPECT S TALLYING C FOR LEADING \"A\" REPLACING ALL \"B\" BY \"X\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
                 "STOP RUN.",
             ],
         ))
-        .unwrap_err();
-        assert!(matches!(combined_lead, RuntimeError::Unsupported(_)), "got {combined_lead:?}");
+        .unwrap();
+        assert_eq!(combined_lead, "002\nAAXXX\n");
 
         // … and a combined statement whose REPLACING half is REPLACING LEADING
         // still rejects — the LEADING replace inside the combined form stays
@@ -2606,6 +2609,57 @@ mod tests {
         ))
         .unwrap();
         assert_eq!(out, "004\nMIZZIZZIPPI\n");
+    }
+
+    /// The COMBINED form's TALLYING half may be `FOR LEADING`: count only the run of
+    /// consecutive delimiters at the START (on the ORIGINAL bytes), then run the
+    /// `REPLACING ALL` rebuild. The REPLACING half stays `ALL`, so it still touches
+    /// every occurrence regardless of where the leading run ended.
+    #[test]
+    fn inspect_tally_replace_for_leading_counts_only_the_leading_run() {
+        // "000X0": leading run of "0" = 3 (stops at 'X'), so C := 0 + 3 = 3. THEN
+        // REPLACING ALL "0" BY "*" hits every "0" → "***X*". delim == search proves
+        // the tally saw the original bytes before the replace overwrote them.
+        let shared = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"000X0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR LEADING \"0\" REPLACING ALL \"0\" BY \"*\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(shared, "003\n***X*\n");
+
+        // No leading run: the first character is not the delimiter, so the count
+        // stops immediately at 0 (whereas FOR ALL would count the two later "0"s).
+        // The REPLACING ALL still rewrites every "0" → "X**X".
+        let no_run = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"X00X\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR LEADING \"0\" REPLACING ALL \"0\" BY \"*\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(no_run, "000\nX**X\n");
+
+        // An all-delimiter source: the leading run spans the whole field (4), and
+        // the replace rewrites all of it → "****".
+        let all = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"0000\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR LEADING \"0\" REPLACING ALL \"0\" BY \"*\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(all, "004\n****\n");
     }
 
     #[test]
