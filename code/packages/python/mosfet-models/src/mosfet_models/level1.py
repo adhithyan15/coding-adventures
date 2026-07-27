@@ -31,6 +31,7 @@ class Level1Params:
     TOX: float = 1e-7  # gate oxide thickness (m)
     RD: float = 0.0  # external drain resistance (ohm)
     RS: float = 0.0  # external source resistance (ohm)
+    RSH: float = 0.0  # drain/source sheet resistance (ohm per square)
     IS: float = 1e-15  # saturation current (A)
     N_SUB: float = 1.4  # subthreshold slope factor
     T_NOM: float = 300.15  # nominal temperature (K)
@@ -128,6 +129,8 @@ def evaluate_level1(
         raise ValueError("MOSFET RD must be finite and non-negative")
     if not isfinite(p.RS) or p.RS < 0.0:
         raise ValueError("MOSFET RS must be finite and non-negative")
+    if not isfinite(p.RSH) or p.RSH < 0.0:
+        raise ValueError("MOSFET RSH must be finite and non-negative")
     beta = p.KP * (p.W / effective_length)
 
     # Threshold with body effect. The formula is well-defined whenever

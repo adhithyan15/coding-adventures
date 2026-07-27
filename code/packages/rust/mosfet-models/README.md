@@ -27,8 +27,9 @@ This crate implements the classical square-law MOSFET model used in introductory
 where β = KP × W/(L − 2LD) and V_OV = V_GS − V_t. `LD` defaults to zero
 and must leave a positive effective channel length. `TOX` defaults to
 `100 nm`, must be positive, and derives intrinsic Meyer gate capacitance from
-`Cox = epsilon_ox / TOX`. `RD` and `RS` are finite, non-negative external drain
-and source resistance parameters for engine topology and default to zero ohms.
+`Cox = epsilon_ox / TOX`. `RD`, `RS`, and `RSH` are finite, non-negative
+external drain, source, and sheet-resistance parameters for engine topology and
+default to zero ohms.
 
 ## Usage
 

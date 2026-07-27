@@ -194,6 +194,21 @@ fn test_source_resistance_rejects_negative_value() {
     );
 }
 
+#[test]
+#[should_panic(expected = "MOSFET RSH must be finite and non-negative")]
+fn test_sheet_resistance_rejects_negative_value() {
+    evaluate_level1(
+        &Level1Params {
+            rsh: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
 // ---------------------------------------------------------------------------
 // Body effect
 // ---------------------------------------------------------------------------

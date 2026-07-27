@@ -1,5 +1,8 @@
 # Changelog
 
+- Add Level-1 MOS model-card `RSH` support. A positive sheet resistance supplies
+  the default one-square drain/source terminal resistances when `RD` / `RS`
+  remain zero, reusing intrinsic-node stamping and terminal Johnson noise.
 - Add Level-1 MOS model-card `RS` support. Nonzero values create an intrinsic
   source node, stamp the external resistor in DC, TF, AC, and transient
   analyses, route source-side capacitances through it, and emit `:RS` Johnson
