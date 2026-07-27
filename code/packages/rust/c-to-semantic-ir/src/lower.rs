@@ -298,12 +298,31 @@ const MAX_EXPR_DEPTH: usize = 48;
 /// too, so this only adds a friendlier message for a pure guard chain.
 const MAX_LIFTED_GUARDS: usize = MAX_EXPR_DEPTH;
 
+/// One binding in a lexical scope: its C type, its SIR `Scope`, and the SIR name
+/// it lowers to.  The SIR name differs from the C name when the C name shadows an
+/// outer one or is re-used by a sibling scope — SIR's namespace is flat, so those
+/// get a unique suffix (see [`Lowerer::declare`]).
+#[derive(Clone)]
+struct Binding {
+    ty: IntSpec,
+    scope: Scope,
+    sir_name: String,
+}
+
 struct Lowerer {
     /// Function signatures for call-site type resolution.
     fns: HashMap<String, (Vec<IntSpec>, Option<IntSpec>)>,
-    /// Current function's in-scope names → (type, SIR scope).  Parameters bind
-    /// as `Scope::Param`, local declarations as `Scope::Local`.
-    vars: HashMap<String, (IntSpec, Scope)>,
+    /// Lexical **scope stack** (innermost last).  A declaration binds in the top
+    /// scope; a reference resolves inner→outer.  Replaces the old flat map, so
+    /// C's block scoping works — shadowing an outer variable, and two sequential
+    /// `for (int i …)` loops re-using `i`, are now accepted instead of rejected.
+    scopes: Vec<HashMap<String, Binding>>,
+    /// Every SIR local name already used in the current function.  Because the
+    /// SIR namespace is flat, a shadowing or re-used C name gets a fresh unique
+    /// SIR name checked against this set.  Monotonic within a function — it is
+    /// **not** rolled back when a scope pops (a sibling that re-uses the name
+    /// must still get a distinct SIR name).  Reset per function.
+    used_sir_names: std::collections::HashSet<String>,
     /// Early-return `if`s lifted in the function currently being lowered — see
     /// [`MAX_LIFTED_GUARDS`].  Reset per function.
     lifted: usize,
@@ -317,7 +336,8 @@ struct Lowerer {
 pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowerError> {
     let mut lo = Lowerer {
         fns: HashMap::new(),
-        vars: HashMap::new(),
+        scopes: Vec::new(),
+        used_sir_names: std::collections::HashSet::new(),
         lifted: 0,
         expr_depth: 0,
         stmt_depth: 0,
@@ -391,6 +411,71 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowe
 }
 
 impl Lowerer {
+    // ── lexical scope management (milestone 7) ───────────────────────────────
+
+    /// Enter a new innermost lexical scope (a `{ }` block, an `if`/`else`/loop
+    /// body, or a `for`'s init+body region).
+    fn push_scope(&mut self) {
+        self.scopes.push(HashMap::new());
+    }
+
+    /// Leave the innermost scope; its names go out of scope, but the SIR names
+    /// they consumed stay reserved (`used_sir_names` is not rolled back).
+    fn pop_scope(&mut self) {
+        self.scopes.pop();
+    }
+
+    /// Declare `cname` in the innermost scope and return the SIR name it binds
+    /// to.  Re-declaring the same name in the *same* block is a C error;
+    /// shadowing an outer scope (or re-using a name a sibling used) is fine and
+    /// gets a fresh unique SIR name.
+    fn declare(&mut self, cname: &str, ty: IntSpec, scope: Scope) -> Result<String, CLowerError> {
+        if self
+            .scopes
+            .last()
+            .map(|s| s.contains_key(cname))
+            .unwrap_or(false)
+        {
+            return Err(CLowerError {
+                message: format!("redeclaration of `{cname}` in the same block"),
+                line: 0,
+                column: 0,
+            });
+        }
+        let sir_name = self.unique_sir_name(cname);
+        self.used_sir_names.insert(sir_name.clone());
+        self.scopes.last_mut().unwrap().insert(
+            cname.to_string(),
+            Binding {
+                ty,
+                scope,
+                sir_name: sir_name.clone(),
+            },
+        );
+        Ok(sir_name)
+    }
+
+    /// The C name itself if unused in this function, else `name__2`, `name__3`, …
+    /// until one is free.  Guarantees a flat-namespace-unique SIR name.
+    fn unique_sir_name(&self, cname: &str) -> String {
+        if !self.used_sir_names.contains(cname) {
+            return cname.to_string();
+        }
+        let mut k = 2u32;
+        loop {
+            let candidate = format!("{cname}__{k}");
+            if !self.used_sir_names.contains(&candidate) {
+                return candidate;
+            }
+            k += 1;
+        }
+    }
+
+    /// Resolve a C name to its binding, searching innermost scope outward.
+    fn resolve(&self, cname: &str) -> Option<&Binding> {
+        self.scopes.iter().rev().find_map(|s| s.get(cname))
+    }
+
     /// Extract `(name, [(param_name, type)], return_type)` from a function_def.
     // Returns (function name, parameter (name, type) pairs, optional return type)
     // — a one-off internal tuple; a named type alias would not aid readability.
@@ -442,11 +527,14 @@ impl Lowerer {
 
     fn lower_function(&mut self, f: &GrammarASTNode) -> Result<Function, CLowerError> {
         let (name, params, ret) = self.function_header(f)?;
-        self.vars.clear();
+        // Fresh per-function symbol state: one outermost scope holding the
+        // parameters.  Params are declared first, so each keeps its own name.
+        self.scopes = vec![HashMap::new()];
+        self.used_sir_names.clear();
         self.lifted = 0;
         let mut sir_params = Vec::new();
         for (pname, ty) in &params {
-            self.vars.insert(pname.clone(), (*ty, Scope::Param));
+            self.declare(pname, *ty, Scope::Param)?;
             sir_params.push(Param {
                 name: pname.clone(),
                 sir_type: Some(SirType::Int(*ty)),
@@ -535,14 +623,34 @@ impl Lowerer {
             before: Vec<Stmt>,
         }
 
-        let mut work: std::collections::VecDeque<&GrammarASTNode> = items.iter().copied().collect();
+        // The work queue carries statement nodes plus a `PopScope` marker.  A
+        // nested `{ }` block (and a lifted `if`'s falling-through branch) is
+        // spliced in with its own scope: we `push_scope`, queue the block's
+        // items, then a `PopScope` — so the block's declarations go out of scope
+        // exactly at its `}`, and the continuation that follows is lowered in the
+        // enclosing scope.  That is what makes block scoping correct even though
+        // the lifting merges a branch body and the continuation into one block.
+        enum WorkItem<'a> {
+            Node(&'a GrammarASTNode),
+            PopScope,
+        }
+
+        let mut work: std::collections::VecDeque<WorkItem> =
+            items.iter().map(|n| WorkItem::Node(n)).collect();
         let mut stmts: Vec<Stmt> = Vec::new();
         let mut frames: Vec<Frame> = Vec::new();
         // The value of the innermost block, once the walk finishes.  Falling off
         // the end of a function yields nil.
         let mut value = Expr::NilLit { span: sp() };
 
-        while let Some(head) = work.pop_front() {
+        while let Some(item) = work.pop_front() {
+            let head = match item {
+                WorkItem::PopScope => {
+                    self.pop_scope();
+                    continue;
+                }
+                WorkItem::Node(n) => n,
+            };
             let e = seq_elem(head);
             match e.rule_name.as_str() {
                 // `return e;` supplies the value — anything after it is dead.
@@ -550,11 +658,13 @@ impl Lowerer {
                     value = self.lower_return(e, ret)?;
                     break;
                 }
-                // A nested `{ … }` splices into this sequence, in order (v1 has
-                // flat scoping).  Spliced in place rather than by recursing.
+                // A nested `{ … }` splices into this sequence with its own scope:
+                // its items are queued, then a `PopScope` closes the block.
                 "compound_stmt" => {
+                    self.push_scope();
+                    work.push_front(WorkItem::PopScope);
                     for it in block_items_of(e).into_iter().rev() {
-                        work.push_front(it);
+                        work.push_front(WorkItem::Node(it));
                     }
                 }
                 // An `if` that returns becomes a value-producing `If`.
@@ -590,12 +700,14 @@ impl Lowerer {
 
                     // Nothing left to thread (or both branches exit): lower both
                     // branches directly.  Any queued statements are unreachable.
+                    // Each branch is its own scope, isolated from the other.
                     if work.is_empty() || (then_ret && else_ret) {
-                        let saved = self.vars.clone();
+                        self.push_scope();
                         let tb = self.lower_seq(&then_items, ret)?;
-                        self.vars = saved.clone();
+                        self.pop_scope();
+                        self.push_scope();
                         let eb = self.lower_seq(&else_items, ret)?;
-                        self.vars = saved;
+                        self.pop_scope();
                         value = Expr::If {
                             cond: Box::new(cond),
                             then_branch: Box::new(tb),
@@ -626,17 +738,11 @@ impl Lowerer {
                         (else_items, then_items)
                     };
 
-                    // (A declaration in the falling-through branch that shadows
-                    // an outer name would silently re-bind it for the
-                    // continuation, which is lowered inside that branch.  That
-                    // is caught centrally by `lower_init_declarator`, which
-                    // refuses any re-use of a live name.)
-
-                    // Lower the exiting branch now (recursion here is per
-                    // *nesting* level; see the note in `lower_seq`).
-                    let saved = self.vars.clone();
+                    // Lower the exiting branch now, in its own scope (recursion
+                    // here is per *nesting* level; see the note in `lower_seq`).
+                    self.push_scope();
                     let branch = self.lower_seq(&ret_items, ret)?;
-                    self.vars = saved;
+                    self.pop_scope();
 
                     frames.push(Frame {
                         cond,
@@ -644,8 +750,13 @@ impl Lowerer {
                         branch_is_then: then_ret,
                         before: std::mem::take(&mut stmts),
                     });
+                    // The falling-through branch is a block scope too: push it,
+                    // queue its items, then a `PopScope` — so its declarations do
+                    // not leak into the continuation that follows on the queue.
+                    self.push_scope();
+                    work.push_front(WorkItem::PopScope);
                     for it in fall_items.into_iter().rev() {
-                        work.push_front(it);
+                        work.push_front(WorkItem::Node(it));
                     }
                 }
                 // Anything else is an ordinary statement; lower it and continue.
@@ -707,11 +818,15 @@ impl Lowerer {
     fn lower_stmt(&mut self, s: &GrammarASTNode, out: &mut Vec<Stmt>) -> Result<(), CLowerError> {
         match s.rule_name.as_str() {
             "compound_stmt" => {
-                // A nested `{ … }` block: splice its statements in (v1 shares one
-                // flat symbol table — no per-block scoping).  Charged for depth
-                // like any other nested body, so this recursion shares the
-                // budget too (see `charge_stmt_nesting`).
-                let inner = self.charge_stmt_nesting(s, |lo| lo.lower_block_items(s))?;
+                // A nested `{ … }` block: its own lexical scope, spliced into the
+                // enclosing statement list.  Charged for depth like any other
+                // nested body (see `charge_stmt_nesting`).
+                let inner = self.charge_stmt_nesting(s, |lo| {
+                    lo.push_scope();
+                    let r = lo.lower_block_items(s);
+                    lo.pop_scope();
+                    r
+                })?;
                 out.extend(inner);
             }
             "expr_stmt" => {
@@ -790,16 +905,18 @@ impl Lowerer {
     }
 
     fn lower_void_block_inner(&mut self, stmt: &GrammarASTNode) -> Result<Block, CLowerError> {
+        // A branch/loop body is its own lexical scope.
+        self.push_scope();
         let s = peel(stmt);
-        let stmts = if s.rule_name == "compound_stmt" {
-            self.lower_block_items(s)?
+        let result = if s.rule_name == "compound_stmt" {
+            self.lower_block_items(s)
         } else {
             let mut v = Vec::new();
-            self.lower_stmt(s, &mut v)?;
-            v
+            self.lower_stmt(s, &mut v).map(|_| v)
         };
+        self.pop_scope();
         Ok(Block {
-            stmts,
+            stmts: result?,
             value: Expr::NilLit { span: sp() },
             span: sp(),
         })
@@ -843,11 +960,14 @@ impl Lowerer {
                 line: n.start_line.unwrap_or(0),
                 column: n.start_column.unwrap_or(0),
             })?;
-        let (ty, scope) = self.vars.get(&name).copied().ok_or_else(|| CLowerError {
-            message: format!("assignment to undeclared variable `{name}`"),
-            line: n.start_line.unwrap_or(0),
-            column: n.start_column.unwrap_or(0),
-        })?;
+        let (ty, scope, sir_name) = {
+            let b = self.resolve(&name).ok_or_else(|| CLowerError {
+                message: format!("assignment to undeclared variable `{name}`"),
+                line: n.start_line.unwrap_or(0),
+                column: n.start_column.unwrap_or(0),
+            })?;
+            (b.ty, b.scope, b.sir_name.clone())
+        };
         let rhs = nodes.get(1).copied().ok_or_else(|| CLowerError {
             message: "assignment without a right-hand side".into(),
             line: n.start_line.unwrap_or(0),
@@ -855,7 +975,7 @@ impl Lowerer {
         })?;
         let (e, et) = self.lower_expr(rhs)?;
         Ok(Stmt::Assign {
-            name,
+            name: sir_name,
             scope,
             value: convert_to(e, et, ty),
             span: sp(),
@@ -941,6 +1061,26 @@ impl Lowerer {
             }
         }
 
+        // A `for`'s init declaration scopes to the whole loop (`for (int i …)`
+        // — `i` is not visible after the loop), so the init + desugared while go
+        // in their own scope.  Two sequential `for (int i …)` loops therefore
+        // each get a fresh `i`.
+        self.push_scope();
+        let result = self.lower_for_inner(s, out, init, cond, step, body);
+        self.pop_scope();
+        result
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn lower_for_inner(
+        &mut self,
+        s: &GrammarASTNode,
+        out: &mut Vec<Stmt>,
+        init: Option<&GrammarASTNode>,
+        cond: Option<&GrammarASTNode>,
+        step: Option<&GrammarASTNode>,
+        body: Option<&GrammarASTNode>,
+    ) -> Result<(), CLowerError> {
         // init clause: a declaration (`int i = 0`) or an expression (`i = 0`).
         if let Some(fc) = init {
             let inner = child_nodes(fc)
@@ -1189,25 +1329,8 @@ impl Lowerer {
             .find(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
             .unwrap_or_default();
-        // v1's symbol table is **flat** — it has no per-block scopes — and the
-        // lowering splices nested `{ }` blocks into the enclosing sequence.  So
-        // a declaration that re-uses a live name cannot be modelled: the two
-        // bindings collapse into one SIR block, which silently takes the wrong
-        // type (a wrong-value miscompile) and makes the emitted C a
-        // `redefinition of 'x'` error.  Refuse it here — one check covering
-        // every path that can bind a name (plain blocks, `if`/`else` branches,
-        // loop bodies, `for`-inits, and the lifted early-return continuation).
-        if self.vars.contains_key(&name) {
-            return err(
-                format!(
-                    "declaration of `{name}` re-uses a name that is already in scope; \
-                     shadowing is not supported yet, because the symbol table has no \
-                     per-block scopes (two sequential `for (int i = …)` loops hit this \
-                     too)"
-                ),
-                init,
-            );
-        }
+        // Lower the initializer *before* declaring the new name, so that in a
+        // shadowing block `{ int v = v + 1; }` the RHS reads the outer `v`.
         let value = match first_node(init, "expr") {
             Some(e) => {
                 let (ex, ety) = self.lower_expr(e)?;
@@ -1215,9 +1338,17 @@ impl Lowerer {
             }
             None => convert(int_lit(0), ty), // uninitialised → 0 of the type
         };
-        self.vars.insert(name.clone(), (ty, Scope::Local));
+        // Bind in the current scope; `declare` gives a unique SIR name when this
+        // shadows an outer variable or re-uses one a sibling block used.
+        let sir_name = self
+            .declare(&name, ty, Scope::Local)
+            .map_err(|e| CLowerError {
+                message: e.message,
+                line: init.start_line.unwrap_or(0),
+                column: init.start_column.unwrap_or(0),
+            })?;
         Ok(Stmt::LetStarBinding {
-            name,
+            name: sir_name,
             sir_type: Some(SirType::Int(ty)),
             value,
             span: sp(),
@@ -1524,18 +1655,18 @@ impl Lowerer {
             }
             "NAME" => {
                 let name = tok.value.clone();
-                let (ty, scope) = self.vars.get(&name).copied().ok_or_else(|| CLowerError {
+                let b = self.resolve(&name).ok_or_else(|| CLowerError {
                     message: format!("use of undeclared variable `{name}`"),
                     line: n.start_line.unwrap_or(0),
                     column: n.start_column.unwrap_or(0),
                 })?;
                 Ok((
                     Expr::VarRef {
-                        name,
-                        scope,
+                        name: b.sir_name.clone(),
+                        scope: b.scope,
                         span: sp(),
                     },
-                    ty,
+                    b.ty,
                 ))
             }
             other => err(format!("primary token `{other}` unsupported"), n),

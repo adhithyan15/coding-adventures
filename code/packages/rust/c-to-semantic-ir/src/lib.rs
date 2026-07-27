@@ -22,6 +22,9 @@
 //!   promoted left operand's type, not the usual common type).
 //! - **Milestone 6** — division/modulo `/ %`, which *truncate toward zero* in C
 //!   (unlike SIR/Ruby floor), via dedicated `tdiv`/`tmod` builtins.
+//! - **Milestone 7** — per-block scoping (a scope stack with unique SIR names),
+//!   so shadowing and re-used names (e.g. two sequential `for (int i …)` loops)
+//!   compile instead of being rejected.
 
 mod lower;
 
@@ -327,50 +330,72 @@ mod tests {
     }
 
     #[test]
-    fn shadowing_a_live_name_is_rejected_everywhere() {
-        // The symbol table is flat (no per-block scopes) and nested `{ }` blocks
-        // are spliced into the enclosing sequence, so a re-used name collapses
-        // two bindings into one — silently taking the wrong type, and making the
-        // emitted C a `redefinition of 'v'` error.  One central check in
-        // `lower_init_declarator` covers every path that can bind a name.
+    fn shadowing_and_reuse_now_lower_with_per_block_scopes() {
+        // Milestone 7: per-block scopes make all of these VALID C compile (they
+        // were rejected before).  Each binds a distinct SIR name, so the inner
+        // `v` shadows without clobbering the outer one.
         for src in [
-            // A plain nested block: C scopes the inner `v` and returns 1001.
             "int f(int x) { int v = 1; { uint8_t v = 250; v = v + 6; } return v + 1000; }",
-            // The falling-through branch of a lifted early return.
             "int f(int x) { int v = 1; if (x > 0) { return 5; } \
              else { uint8_t v = 250; } return v + 1000; }",
-            // Loops bind into the same flat table — `for`-init and `while` body.
             "int f(int x){ int v=1; if(x>0){return 5;} \
              else { for(uint8_t v=250; v>249; v=v+1){ x=x+1; } } return v+1000; }",
-            "int g(int x){ int v=1; if(x>0){return 5;} \
-             else { while(x<0){ uint8_t v=250; x=x+1; } } return v+1000; }",
-            // A branch that always returns: harmless in C, but the flat table
-            // still cannot represent it, and refusing is consistent.
             "int f(int x) { int v = 1; if (x > 0) { uint8_t v = 250; return v; } \
              return v + 1000; }",
-            // Two sequential `for (int i = …)` loops — the everyday form of the
-            // same limitation, which would otherwise emit non-compiling C.
+            // Two sequential `for (int i = …)` loops re-using `i` — the everyday
+            // case this milestone unlocks.
             "int f(int x) { for (int i = 0; i < 3; i = i + 1) { x = x + 1; } \
              for (int i = 0; i < 3; i = i + 1) { x = x + 1; } return x; }",
             // Shadowing a parameter.
             "int f(int v) { if (v > 0) { return 5; } else { uint8_t v = 250; } return v; }",
         ] {
-            let err = compile_source(src, "test")
-                .err()
-                .unwrap_or_else(|| panic!("should have been rejected: {src}"));
-            assert!(
-                err.message
-                    .contains("re-uses a name that is already in scope"),
-                "wrong error for {src}: {}",
-                err.message
-            );
+            let m = compile_source(src, "test")
+                .unwrap_or_else(|e| panic!("should compile now: {src}: {}", e.message));
+            assert!(semantic_ir::validate(&m).is_ok(), "invalid SIR for {src}");
         }
     }
 
     #[test]
+    fn shadowing_binds_a_distinct_sir_name() {
+        // The inner `v` must lower to a *different* SIR name (`v__2`) so it can't
+        // clobber the outer `v` in SIR's flat namespace.
+        let m = lower("int f(int x) { int v = 1; { uint8_t v = 250; } return v + 1000; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(text.contains("(let* v "), "no outer v:\n{text}");
+        assert!(
+            text.contains("(let* v__2 "),
+            "inner v not uniquified:\n{text}"
+        );
+    }
+
+    #[test]
+    fn redeclaration_in_the_same_block_is_still_an_error() {
+        // Per-block scoping accepts shadowing across blocks, but re-declaring the
+        // same name in one block is a C error.
+        let err =
+            compile_source("int f(void) { int v = 1; int v = 2; return v; }", "test").unwrap_err();
+        assert!(
+            err.message.contains("redeclaration of `v`"),
+            "wrong error: {}",
+            err.message
+        );
+    }
+
+    #[test]
+    fn a_variable_out_of_scope_is_undeclared() {
+        // A name declared in an inner block is not visible after the block ends.
+        let err =
+            compile_source("int f(int x) { { int a = 1; x = a; } return a; }", "test").unwrap_err();
+        assert!(
+            err.message.contains("undeclared variable `a`"),
+            "wrong error: {}",
+            err.message
+        );
+    }
+
+    #[test]
     fn distinct_names_in_sibling_branches_still_compile() {
-        // The check must not fire across *sibling* branches: only one runs, and
-        // the symbol table is restored between them.
+        // Sibling branches each open their own scope, so re-using a name is fine.
         let m = lower(
             "int f(int x) { if (x > 0) { int a = 1; return a; } \
              else { int a = 2; return a; } }",
