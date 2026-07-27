@@ -165,6 +165,28 @@ int64_t __gc_collect_precise(void);
  * must be built with frame pointers. Same threading contract as __gc_collect_precise. */
 int64_t __gc_collect_compacting(void);
 
+/* ── Incremental (bounded-pause) collection ─────────────────────────────────
+ * A three-call cooperative cycle (spec AOT00-T4-incremental-collector.md §6) that
+ * decomposes a full mark into bounded slices so the mutator sees short pauses instead of one
+ * long one. Drive it as:
+ *
+ *     __gc_collect_incremental_start();
+ *     while (!__gc_collect_incremental_step(BUDGET)) { ... mutator runs a slice ... }
+ *     freed = __gc_collect_incremental_finish();
+ *
+ * `start` captures the precise roots ONCE (the same frame-pointer walk as
+ * __gc_collect_precise) and shades them grey. Reference stores the mutator makes BETWEEN steps
+ * must go through __gc_write_barrier, whose incremental half shades the stored child grey
+ * (the Dijkstra insertion barrier) so a live object is never stranded. `step` advances marking
+ * by up to `budget` objects and returns 1 when marking is complete, 0 otherwise (a negative
+ * budget is treated as 0). `finish` sweeps the unreachable objects and returns the count
+ * reclaimed. If `start` could not trust the stack it enters no phase: `step` then returns 1
+ * immediately and `finish` returns 0, so nothing is freed (bias-to-leak, as __gc_collect_precise).
+ * Single-threaded; no other collection may run between start and finish. */
+void    __gc_collect_incremental_start(void);
+int64_t __gc_collect_incremental_step(int64_t budget);
+int64_t __gc_collect_incremental_finish(void);
+
 /* One compiled function's stack-map descriptor in a module table (see
  * __gc_register_stackmap_module). Mirrors the __gc_register_stackmap arguments;
  * frame_sizes / callee_masks may be NULL. Emitted into the image's read-only data,

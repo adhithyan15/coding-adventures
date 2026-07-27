@@ -106,14 +106,20 @@ impl GcAlgorithm {
 
     /// `true` if this algorithm is available in the current gc-core build.
     ///
-    /// `MarkAndSweep` (the conservative/precise full collector), `Generational`
-    /// (`FlatHeap::collect_minor` + the remembered-set write barrier), and
-    /// `Compacting` (`FlatHeap::collect_compacting` — the moving/evacuating
-    /// collector) are implemented; `Incremental` is still planned.
+    /// **All four are now implemented:** `MarkAndSweep` (the conservative/precise full
+    /// collector), `Generational` (`FlatHeap::collect_minor` + the remembered-set write
+    /// barrier), `Compacting` (`FlatHeap::collect_compacting` — the moving/evacuating
+    /// collector), and `Incremental` (`FlatHeap::incremental_start`/`incremental_step`/
+    /// `incremental_finish` — bounded-pause tri-colour marking with the Dijkstra insertion
+    /// write barrier). So this is unconditionally `true` — kept as a method for the policy's
+    /// enact/advise decision and forward compatibility with future algorithms.
     pub fn is_available(self) -> bool {
         matches!(
             self,
-            GcAlgorithm::MarkAndSweep | GcAlgorithm::Generational | GcAlgorithm::Compacting
+            GcAlgorithm::MarkAndSweep
+                | GcAlgorithm::Generational
+                | GcAlgorithm::Compacting
+                | GcAlgorithm::Incremental
         )
     }
 }

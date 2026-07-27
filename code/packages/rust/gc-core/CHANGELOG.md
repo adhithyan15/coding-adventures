@@ -1,5 +1,16 @@
 # Changelog — gc-core
 
+## 0.20.0 — 2026-07-25 — `Incremental` algorithm marked available — PR-3 (AOT00-T4)
+
+- **`GcAlgorithm::Incremental::is_available()` now returns `true`** — the incremental
+  collector (`FlatHeap::incremental_start`/`incremental_step`/`incremental_finish` + the
+  Dijkstra insertion write barrier, shipped in 0.18–0.19) is implemented, so the adaptive
+  policy's existing high-pause `SuggestSwitch(Incremental)` recommendation becomes actionable
+  rather than advisory. **All four `GcAlgorithm` variants are now available** — the precision
+  ladder is complete: mark-and-sweep → interior-precise → generational → precise-roots →
+  compacting → **incremental**. Tests updated (`gc_algorithm_incremental_is_available`,
+  `every_gc_algorithm_is_now_available`).
+
 ## 0.19.0 — 2026-07-25 — incremental Dijkstra insertion write barrier — PR-2 (AOT00-T4)
 
 Closes the incremental collector's soundness surface: the mutator may now safely store
