@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.46.0 — INSPECT CONVERTING with a BEFORE/AFTER region
+
+- `INSPECT source CONVERTING from TO to {BEFORE|AFTER} z` now executes instead of
+  being rejected as a later rung. The `{BEFORE|AFTER} z` region narrows the character
+  translation to a sub-slice of the source, bounded by the FIRST (leftmost)
+  occurrence of the SINGLE-character region delimiter `z` — the exact analogue of the
+  TALLYING- and REPLACING-region rungs applied to the translation instead of the
+  count/substitution:
+  - `BEFORE z` translates through the table only within `source[0 ..
+    first_index_of(z)]`; if `z` is ABSENT the region is the ENTIRE source
+    (whole-source translate).
+  - `AFTER z` translates only within `source[first_index_of(z)+1 .. end]`; if `z` is
+    ABSENT the region is EMPTY (nothing converted).
+  Positions OUTSIDE the region keep their ORIGINAL character, even if that character
+  appears in the `from` set. The window is computed over the ORIGINAL source and is
+  byte-identical to the one the count and ALL replacement use — all three now derive
+  it from the single shared `Interp::region_window` helper, so the BEFORE→whole /
+  AFTER→empty asymmetry can never drift between the three INSPECT operations.
+- `Stmt::InspectConverting` gains a `region: Option<Region>` field (mirroring
+  `Stmt::Inspect` and `Stmt::InspectReplacing`), reusing the existing
+  `Region`/`RegionKind` types. `read_inspect_converting` now PARSES the
+  `inspect_region` CST child (via the shared `read_inspect_region`) into that `Option`
+  instead of rejecting it, and `exec_inspect_converting` maps a character through the
+  table only when its position lies within `[start, end)`.
+- Scope unchanged elsewhere and rejected IDENTICALLY on both engines: a
+  multi-character region delimiter is still a later rung. A CONVERTING without a region
+  translates exactly as before.
+
 ## 0.45.0 — INSPECT REPLACING ALL with a BEFORE/AFTER region
 
 - `INSPECT source REPLACING ALL x BY y {BEFORE|AFTER} z` now executes instead of

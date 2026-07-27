@@ -3837,20 +3837,6 @@ fn inspect_converting_item_operand_is_a_later_rung() {
 }
 
 #[test]
-fn inspect_converting_before_region_is_a_later_rung() {
-    // A BEFORE/AFTER region restricting the conversion parses but is a later rung.
-    let err = compile_source(
-        &wrap(
-            &["01  S  PIC X(5) VALUE \"ABABA\"."],
-            &["INSPECT S CONVERTING \"A\" TO \"X\" BEFORE \"B\".", "STOP RUN."],
-        ),
-        "insp_conv_before",
-    )
-    .unwrap_err();
-    assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
-}
-
-#[test]
 fn inspect_converting_combined_with_replacing_is_rejected() {
     // CONVERTING is a STANDALONE INSPECT alternative — the grammar does not let it
     // sit beside a REPLACING clause in one statement — so a combined form is a
@@ -3868,6 +3854,159 @@ fn inspect_converting_combined_with_replacing_is_rejected() {
     )
     .unwrap_err();
     assert!(matches!(err, cobol_iir_compiler::CompileError::Parse(_)), "got {err:?}");
+}
+
+// ---------------------------------------------------------------------------
+// INSPECT … CONVERTING from TO to … {BEFORE|AFTER} z — restrict the translation
+// to the sub-slice of the source bounded by the FIRST occurrence of the single
+// region delimiter `z`. BEFORE translates left of `z`; AFTER translates right of
+// it; positions OUTSIDE the region keep their original character. The window is
+// the SAME one the TALLYING/REPLACING region rungs compute (shared helper), so the
+// ISO not-found asymmetry — BEFORE with `z` absent translates the WHOLE source,
+// AFTER with `z` absent translates NOTHING — must hold byte-for-byte on both
+// engines.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn inspect_converting_before_translates_only_left_of_the_delimiter() {
+    // "AXAYA" — table A→0; BEFORE "Y" restricts the translate to "AXA" (indices
+    // 0..3): the two "A"s there become "0", the trailing "A" (index 4, right of "Y")
+    // is UNTOUCHED → "0X0Y A" without the space = "0X0YA".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0X0YA\n");
+}
+
+#[test]
+fn inspect_converting_after_translates_only_right_of_the_delimiter() {
+    // Same source and table — AFTER "Y" restricts the translate to "A" (index 4):
+    // only that trailing "A" becomes "0"; the two "A"s left of "Y" are UNTOUCHED.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "AXAY0\n");
+}
+
+#[test]
+fn inspect_converting_before_absent_delimiter_translates_the_whole_source() {
+    // BEFORE "Z" with no "Z" present → the region is the ENTIRE source, so EVERY "A"
+    // is translated (the BEFORE not-found rule — the whole subtlety of the rung).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0X0Y0\n");
+}
+
+#[test]
+fn inspect_converting_after_absent_delimiter_translates_nothing() {
+    // AFTER "Z" with no "Z" present → the region is EMPTY, so NOTHING is translated
+    // and the source is unchanged (the AFTER not-found rule — asymmetric partner).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "AXAYA\n");
+}
+
+#[test]
+fn inspect_converting_after_region_delimiter_at_position_zero() {
+    // The region delimiter is the FIRST character: AFTER "Y" in "YABA" → region
+    // [1, 4) = "ABA", so both "A"s become "0" (B unmapped) → "Y0B0".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"YABA\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "Y0B0\n");
+}
+
+#[test]
+fn inspect_converting_before_region_delimiter_as_last_char() {
+    // The region delimiter is the LAST character: BEFORE "Y" in "AXAY" → region
+    // [0, 3) = "AXA", so both "A"s become "0"; the trailing "Y" is left → "0X0Y".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"AXAY\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0X0Y\n");
+}
+
+#[test]
+fn inspect_converting_region_delimiter_is_also_in_the_from_set() {
+    // The region delimiter "A" is ALSO a `from` character: AFTER "A" in "AXAYA" → the
+    // FIRST "A" (index 0) bounds the region [1, 5) = "XAYA". The translate runs over
+    // the ORIGINAL bytes, so the "A"s at indices 2 and 4 become "0", while the
+    // delimiter "A" at index 0 (left of the region) is KEPT → "AX0Y0".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"A\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "AX0Y0\n");
+}
+
+#[test]
+fn inspect_converting_before_delimiter_at_position_zero_is_an_empty_region() {
+    // BEFORE "Y" in "YAXA" → the first "Y" is at index 0, so the region is [0, 0) —
+    // EMPTY — and NOTHING is translated even though "A"s follow → "YAXA" unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"YAXA\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "YAXA\n");
+}
+
+#[test]
+fn inspect_converting_multichar_table_with_a_region() {
+    // A multi-entry table (A→1, E→2) narrowed by a region: "AEYAE" — BEFORE "Y" limits
+    // the translate to "AE" (indices 0..2) → "12"; the trailing "AE" (right of "Y") is
+    // UNTOUCHED → "12YAE".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AEYAE\"."],
+        &["INSPECT S CONVERTING \"AE\" TO \"12\" BEFORE \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "12YAE\n");
+}
+
+#[test]
+fn inspect_converting_region_delimiter_is_a_pic_x1_item() {
+    // The region delimiter may itself be a PIC X(1) item, read at run time: BEFORE DL
+    // (= "Y") in "AXAYA" restricts to "AXA" → "0X0YA", matching the literal case.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AXAYA\".", "01  DL PIC X(1) VALUE \"Y\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE DL.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0X0YA\n");
+}
+
+#[test]
+fn inspect_converting_region_shorter_than_the_from_set() {
+    // The region window is SHORTER than the `from` set: table A→1,E→2,I→3 but the
+    // BEFORE "Y" window is just "A" (index 0). Only that "A" translates → "1YEI"
+    // (the "E","I" right of "Y" keep their originals though they are in `from`).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"AYEI\"."],
+        &["INSPECT S CONVERTING \"AEI\" TO \"123\" BEFORE \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "1YEI\n");
+}
+
+#[test]
+fn inspect_converting_multi_char_region_delimiter_is_a_later_rung() {
+    // A MULTI-character region delimiter is deferred — rejected on both engines, just
+    // like a multi-character search/tally delimiter (the oracle rejects at exec, the
+    // compiler at emit, both via the shared single-delimiter check).
+    let src = wrap(
+        &["01  S  PIC X(6) VALUE \"AXAYAB\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE \"YB\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-char region delimiter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-char region delimiter"
+    );
 }
 
 #[test]

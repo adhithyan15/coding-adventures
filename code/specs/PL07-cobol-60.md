@@ -506,8 +506,9 @@ delimiter only.
 
 The grammar deliberately accepts the fuller `INSPECT` surface — a `CHARACTERS`
 tally, several `TALLYING` counters or `FOR` phrases, a region on the `FOR
-LEADING`/`REPLACING LEADING`/`CONVERTING`/combined forms (the lone `REPLACING ALL`
-region IS supported — see that section below), and a multi-character region
+LEADING`/`REPLACING LEADING`/combined forms (the lone `REPLACING ALL` and
+`CONVERTING` regions ARE supported — see those sections below), and a
+multi-character region
 delimiter — so the reader/compiler reject each as a clean "later rung" error
 rather than a parse failure. A multi-character / figurative / numeric /
 wider-than-one delimiter (tally OR region), and a numeric/group source or a
@@ -670,13 +671,35 @@ splicing the earliest matching `to[k]` — or the original character — onto a
 `str_concat` accumulator, then copies the `W`-wide result back (only after the last
 read). The two agree byte-for-byte.
 
+**`BEFORE`/`AFTER` region (CONVERTING follow-up rung).** `CONVERTING` now accepts an
+optional `{BEFORE|AFTER} z` **region** that restricts the translation to the sub-slice
+of the source bounded by the FIRST (leftmost) occurrence of the single-character
+region delimiter `z` — the exact analogue of the `TALLYING FOR ALL` and `REPLACING
+ALL` regions applied to the translation:
+
+- `BEFORE z` translates through the table only in `source[0 .. first_index_of(z)]`;
+  if `z` is **absent** the region is the **ENTIRE** source (whole-source translate).
+- `AFTER z` translates only in `source[first_index_of(z)+1 .. end]`; if `z` is
+  **absent** the region is **EMPTY** (nothing converted).
+
+Positions **outside** the region keep their **original** character, even if that
+character appears in the `from` set. The window is computed over the ORIGINAL source
+and is byte-identical to the one the count and replacement use — the oracle calls the
+same shared `region_window` helper, and the compiler reuses `emit_inspect_region_window`
+and, at each position outside the window, jumps past the table chain to keep the
+original char (translating only when `start <= j < end`). Worked: table `A→0`;
+`BEFORE "Y"` in `"AXAYA"` → region `"AXA"` → `"0X0YA"`; `AFTER "Y"` → region `"A"`
+(trailing) → `"AXAY0"`; `BEFORE "Z"` (absent) → whole source → `"0X0Y0"`; `AFTER "Z"`
+(absent) → empty → `"AXAYA"` unchanged; `AFTER "A"` (region delimiter also in the
+`from` set) → the first `A` bounds the region to `"XAYA"` → `"AX0Y0"` (the leading `A`
+is left of the region and kept). This rung is scoped SMALL: a **single-character**
+region delimiter. With no region the lowering is unchanged.
+
 `CONVERTING` is a **standalone** alternative — it is never combined with
 `TALLYING`/`REPLACING` in one statement (a combined form does not parse). Later
 rungs (clean `Unsupported`): an **unequal-length** (or non-ASCII) `from`/`to` pair,
-a `PIC X` **item** / figurative / reference-modified `from`/`to`, a `BEFORE`/`AFTER`
-region, and a numeric/group source. The trailing `{ inspect_region }` in the
-grammar lets a region-restricted `CONVERTING` parse so it rejects cleanly rather
-than failing to parse.
+a `PIC X` **item** / figurative / reference-modified `from`/`to`, a **multi-character**
+region delimiter, and a numeric/group source.
 
 Grammar scope tracks the lexer scope below.
 

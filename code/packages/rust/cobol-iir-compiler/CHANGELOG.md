@@ -8,6 +8,49 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.42.0: INSPECT CONVERTING with a BEFORE/AFTER region
+
+`INSPECT source CONVERTING from TO to {BEFORE|AFTER} z` now compiles instead of being
+rejected as a later rung — the exact analogue of the TALLYING- and REPLACING-region
+rungs applied to the character translation. A `{BEFORE|AFTER} z` region narrows the
+translation to a sub-slice of the source, bounded by the FIRST (leftmost) occurrence
+of the SINGLE-character region delimiter `z`, with the ISO not-found asymmetry:
+`BEFORE z` translates left of the first `z` (WHOLE source if `z` is absent); `AFTER z`
+translates right of it (EMPTY — nothing converted — if `z` is absent). Positions
+OUTSIDE the region keep their original character, even if that character appears in
+the `from` set.
+
+- `inspect_converting_pair` now PARSES the `inspect_region` CST child into
+  `Option<(RegionKind, delim_node)>` (reusing the same keyword/operand extraction the
+  count and replace sides use) instead of rejecting it, and returns it as the third
+  element of the new `ConvertPhrase` alias. `emit_inspect_converting` REUSES
+  `emit_inspect_region_window` — the SAME helper the TALLYING and REPLACING sides
+  emit — to derive `[start, end)` over the ORIGINAL source, then guards its
+  per-position translate unroll: when a region is active and position `j` lies outside
+  the window it jumps straight past the table chain to the "keep the original
+  character" fall-through (materialising the compile-time `j` into a register to
+  compare against the runtime window bounds).
+- With NO region the extra guard folds away — the lowering is byte-identical to
+  v0.41.0, and matches `coding-adventures-cobol-runtime` 0.46.0's
+  `exec_inspect_converting` window byte-for-byte on every accepted input (both now
+  share the oracle's `region_window` semantics). No grammar change was needed.
+- Scoped SMALL — CONVERTING only, single-character region delimiter only. A
+  MULTI-character region delimiter is still rejected identically on both engines via
+  `single_delim_code`, exactly like the search/tally delimiter.
+- New e2e parity tests in `jit_e2e.rs`:
+  `inspect_converting_before_translates_only_left_of_the_delimiter`,
+  `inspect_converting_after_translates_only_right_of_the_delimiter`, both not-found
+  branches, `inspect_converting_after_region_delimiter_at_position_zero`,
+  `inspect_converting_before_region_delimiter_as_last_char`,
+  `inspect_converting_region_delimiter_is_also_in_the_from_set`,
+  `inspect_converting_before_delimiter_at_position_zero_is_an_empty_region`,
+  `inspect_converting_multichar_table_with_a_region`,
+  `inspect_converting_region_delimiter_is_a_pic_x1_item`,
+  `inspect_converting_region_shorter_than_the_from_set`, and the reject test
+  `inspect_converting_multi_char_region_delimiter_is_a_later_rung`. The obsolete
+  `inspect_converting_before_region_is_a_later_rung` reject test is removed (the form
+  it guarded is now supported).
+
 ### Added — v0.41.0: INSPECT REPLACING ALL with a BEFORE/AFTER region
 
 `INSPECT source REPLACING ALL x BY y {BEFORE|AFTER} z` now compiles instead of being
