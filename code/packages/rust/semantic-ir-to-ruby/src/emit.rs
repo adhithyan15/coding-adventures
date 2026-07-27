@@ -98,6 +98,15 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     // `super` call — dispatches the superclass's `sir_um_m` on `self`.  (The
     // subclass relation itself rides on `Stmt::ClassDef { superclass }`.)
     "__super__",
+    // OOP classes slice 5 (class methods): `def self.m` registers via
+    // `__def_class_method__("Class", "m", MakeClosure(fn))` (a singleton method
+    // on the class), and `Class.m(args…)` dispatches via
+    // `__class_method__("Class", "m", args…)`.  Both use the SAME reserved
+    // `sir_um_` prefix as instance methods (a class's singleton method table is
+    // separate from its instance methods, so the shared prefix cannot collide),
+    // keeping dispatch CLOSED (anti-RCE).
+    "__def_class_method__",
+    "__class_method__",
 ];
 
 /// Emit a complete self-contained Ruby source file for `m`.
@@ -189,8 +198,10 @@ pub enum ScanHit {
 /// A first collection pass gathers that set (a dispatch can textually precede
 /// its registration), then the single scan validates against it.
 pub fn first_scan_issue(m: &Module) -> Option<ScanHit> {
+    let registered = collect_registered_methods(m);
     let scan = Scan {
-        registered_methods: collect_registered_methods(m),
+        registered_methods: registered.instance,
+        registered_class_methods: registered.class_methods,
     };
     for f in &m.functions {
         // A SIR19 parameter default is an expression evaluated at call time, so
@@ -218,13 +229,21 @@ pub fn first_scan_issue(m: &Module) -> Option<ScanHit> {
 /// rejected until then.  (The `sir_um_` dispatch prefix is the SECURITY
 /// guarantee against reflection-RCE; this allowlist is for clean COMPILE-TIME
 /// rejection of not-yet-supported built-in dispatch.)
-fn collect_registered_methods(m: &Module) -> HashSet<String> {
-    fn from_expr(e: &Expr, out: &mut HashSet<String>) {
+fn collect_registered_methods(m: &Module) -> Registered {
+    fn from_expr(e: &Expr, out: &mut Registered) {
         match e {
             Expr::BuiltinCall { name, args, .. } => {
+                // A registration's method name is `args[1]`.  Route an instance
+                // method (`__def_method__`) and a class method
+                // (`__def_class_method__`) into their SEPARATE allowlists — an
+                // instance dispatch and a class dispatch are distinct namespaces.
                 if name == "__def_method__" {
                     if let Some(Expr::StrLit { value, .. }) = args.get(1) {
-                        out.insert(value.clone());
+                        out.instance.insert(value.clone());
+                    }
+                } else if name == "__def_class_method__" {
+                    if let Some(Expr::StrLit { value, .. }) = args.get(1) {
+                        out.class_methods.insert(value.clone());
                     }
                 }
                 for a in args {
@@ -273,7 +292,7 @@ fn collect_registered_methods(m: &Module) -> HashSet<String> {
             _ => {}
         }
     }
-    fn from_stmt(s: &Stmt, out: &mut HashSet<String>) {
+    fn from_stmt(s: &Stmt, out: &mut Registered) {
         match s {
             Stmt::LetBinding { value, .. }
             | Stmt::LetStarBinding { value, .. }
@@ -330,11 +349,11 @@ fn collect_registered_methods(m: &Module) -> HashSet<String> {
             _ => {}
         }
     }
-    fn from_block(b: &Block, out: &mut HashSet<String>) {
+    fn from_block(b: &Block, out: &mut Registered) {
         b.stmts.iter().for_each(|s| from_stmt(s, out));
         from_expr(&b.value, out);
     }
-    let mut out = HashSet::new();
+    let mut out = Registered::default();
     for f in &m.functions {
         for p in &f.params {
             if let Some(d) = &p.default {
@@ -346,10 +365,21 @@ fn collect_registered_methods(m: &Module) -> HashSet<String> {
     out
 }
 
-/// The pre-emit scan, carrying the module's registered-method allowlist so the
-/// single co-total traversal can validate `__method__` dispatch.
+/// The module-wide sets of method names registered via `__def_method__` (instance
+/// methods) and `__def_class_method__` (class methods) — the two CLOSED sets that
+/// `__method__` / `__class_method__` dispatch may target.  A dispatch to any other
+/// name is a built-in-method call (the Collections batch), rejected until then.
+#[derive(Default)]
+struct Registered {
+    instance: HashSet<String>,
+    class_methods: HashSet<String>,
+}
+
+/// The pre-emit scan, carrying the module's registered-method allowlists so the
+/// single co-total traversal can validate instance- and class-method dispatch.
 struct Scan {
     registered_methods: HashSet<String>,
+    registered_class_methods: HashSet<String>,
 }
 
 impl Scan {
@@ -630,6 +660,51 @@ impl Scan {
                     (Some(Expr::StrLit { .. }), Some(Expr::StrLit { value, span })) => {
                         if !is_valid_constant_path(value) {
                             return Some(ScanHit::ConstantName(value.clone(), span.clone()));
+                        }
+                    }
+                    _ => return Some(ScanHit::Builtin(name.clone(), span.clone())),
+                }
+            }
+            // `__def_class_method__("Class", "m", closure)` (OOP slice 5) — like
+            // `__def_method__` but the class NAME (args[0], emitted as the
+            // `define_singleton_method` receiver) is a bare constant, so validate
+            // it as a constant path; require args[1] StrLit + args[2] MakeClosure.
+            if name == "__def_class_method__" {
+                match args.first() {
+                    Some(Expr::StrLit { value, span }) if !is_valid_constant_path(value) => {
+                        return Some(ScanHit::ConstantName(value.clone(), span.clone()));
+                    }
+                    Some(Expr::StrLit { .. }) => {}
+                    _ => return Some(ScanHit::Builtin(name.clone(), span.clone())),
+                }
+                if !matches!(args.get(1), Some(Expr::StrLit { .. }))
+                    || !matches!(args.get(2), Some(Expr::MakeClosure { .. }))
+                {
+                    return Some(ScanHit::Builtin(name.clone(), span.clone()));
+                }
+            }
+            // `__class_method__("Class", "m", args…)` (OOP slice 5) dispatches a
+            // class method: `(<Class>).public_send(:sir_um_m, …)`.  The class name
+            // (args[0]) is emitted verbatim as the bare-constant receiver, so
+            // validate it as a constant path; the method name (args[1]) rides the
+            // same `sir_um_` prefix (anti-RCE) but must be a method the module
+            // REGISTERS via `__def_class_method__` — else it is a built-in class
+            // method (`Foo.name`, …), the Collections batch, rejected cleanly.
+            if name == "__class_method__" {
+                match (args.first(), args.get(1)) {
+                    (Some(Expr::StrLit { value: cls, span: cspan }), Some(Expr::StrLit { value: m, span: mspan })) => {
+                        if !is_valid_constant_path(cls) {
+                            return Some(ScanHit::ConstantName(cls.clone(), cspan.clone()));
+                        }
+                        if !self.registered_class_methods.contains(m) {
+                            return Some(ScanHit::Unsupported(
+                                format!(
+                                    "a call to the built-in class method `{m}` (only \
+                                     user-defined class methods dispatch this slice; \
+                                     built-in methods are the Collections batch)"
+                                ),
+                                mspan.clone(),
+                            ));
                         }
                     }
                     _ => return Some(ScanHit::Builtin(name.clone(), span.clone())),
@@ -1314,6 +1389,29 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
                 "({class}).superclass.instance_method({sym}).bind(self).call({})",
                 a[2..].join(", ")
             )
+        }
+        // OOP classes slice 5 — register a class (singleton) method.  `args[0]` =
+        // class name (a bare validated constant), `args[1]` = method name,
+        // `args[2]` = the `MakeClosure` (in `a[2]`).  `define_singleton_method`
+        // installs it on the class's singleton, under the SAME reserved `sir_um_`
+        // prefix as instance methods (separate method tables, so no collision) —
+        // keeping class-method dispatch closed (anti-RCE).
+        "__def_class_method__" => {
+            let class = str_arg(args, 0);
+            let sym = emit_symbol(&format!("sir_um_{}", str_arg(args, 1)));
+            format!("{class}.define_singleton_method({sym}, &({}))", a[2])
+        }
+        // Dispatch a class method: `(<Class>).public_send(:sir_um_<m>, args…)`.
+        // The class NAME (`args[0]`) is the bare-constant receiver; the method
+        // name (`args[1]`) is `sir_um_`-prefixed so `public_send` can only reach a
+        // registered class method (anti-RCE).  `args[2..]` (in `a`) are the call
+        // arguments.
+        "__class_method__" => {
+            let class = str_arg(args, 0);
+            let sym = emit_symbol(&format!("sir_um_{}", str_arg(args, 1)));
+            let mut parts = vec![sym];
+            parts.extend_from_slice(&a[2..]);
+            format!("({class}).public_send({})", parts.join(", "))
         }
         // Unreachable: first_scan_issue rejected anything else.
         other => unreachable!("v0 Ruby backend reached unsupported builtin: {other}"),

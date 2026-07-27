@@ -127,10 +127,21 @@ in a hoisted top-level function (not a real method context) where native `super`
 is unavailable. It resolves a multi-level chain correctly, and the `sir_um_`
 prefix keeps `instance_method` restricted to user methods (anti-RCE).
 
+The fifth OOP slice (0.15.0) adds class (singleton) **methods**. `def self.m` →
+`__def_class_method__("Class", "m", closure)` → `Class.define_singleton_method(
+:sir_um_m, &closure)`, and `Class.m(args…)` → `__class_method__("Class", "m",
+args…)` → `(Class).public_send(:sir_um_m, args…)` — the receiver is the class
+NAME. It reuses the `sir_um_` prefix (a class's singleton and instance method
+tables are separate, so no collision), so class dispatch is closed (anti-RCE). A
+SECOND allowlist, collected from `__def_class_method__` independently of the
+instance one, gates `__class_method__`: a dispatch to an unregistered name is a
+built-in class method (the Collections batch), rejected cleanly, and an instance
+registration never authorises a class dispatch of the same name.
+
 **Still rejects** `TailCalls`, `Intrinsics`, `NDArrays`, and every not-yet-landed
-feature — including the rest of OOP: class methods (`__class_method__` /
-`__def_class_method__`), class variables (`@@x`), and modules; plus a malformed
-`__def_method__`, a
+feature — including the rest of OOP: class variables (`@@x`, with the class-body
+initializer they need) and modules; plus a malformed `__def_method__` /
+`__def_class_method__`, a
 non-empty class body, a namespaced (`Foo::Bar`) class/constant *definition*
 (`const_set` names one namespace), and a **singleton class** (`class << self` —
 `Stmt::SingletonClassDef`, which also observes `Feature::Classes`, so accepting
@@ -178,6 +189,8 @@ or temporaries:
 | `BuiltinCall("__self__", [])` | `self` — native |
 | `ClassDef { superclass: Some(S) }` | `Object.const_set(:<name>, Class.new(<S>))` — native inheritance (`S` a validated constant ref) |
 | `BuiltinCall("__super__", [m, class, args…])` | `(<class>).superclass.instance_method(:sir_um_<m>).bind(self).call(<args>)` — explicit prefixed ancestry walk |
+| `BuiltinCall("__def_class_method__", [class, m, closure])` | `<class>.define_singleton_method(:sir_um_<m>, &closure)` — class (singleton) method |
+| `BuiltinCall("__class_method__", [class, m, args…])` | `(<class>).public_send(:sir_um_<m>, <args>)` — class-name-receiver dispatch (allowlisted, anti-RCE) |
 | `If` | `(if sir_truthy(<cond>) then <then> else <else> end)` |
 | `LogicalAnd { lhs, rhs }` | `(<lhs> && <rhs>)` — native short-circuit, yields the deciding operand |
 | `LogicalOr { lhs, rhs }` | `(<lhs> \|\| <rhs>)` — native short-circuit, yields the deciding operand |
@@ -279,8 +292,9 @@ growing `ACCEPTED_FEATURES`, the runtime, and the conformance corpus in lockstep
    landed 0.11), instance **methods** (`define_method`/`public_send` under a
    reserved `sir_um_` prefix, landed 0.12), instance **variables** (`@v`, native,
    landed 0.13), **inheritance** + `super` (`Class.new(Super)` + an explicit
-   ancestry walk, landed 0.14), then **class variables** (`@@x`), class methods,
-   and **modules**/mixins.
+   ancestry walk, landed 0.14), class **methods** (`def self.m`, native
+   `define_singleton_method`, landed 0.15), then **class variables** (`@@x`) and
+   **modules**/mixins.
 6. **Collections** — the `__method__` catalog for built-in `String`/`Array`/
    `Hash`/numeric methods (Ruby methods are largely native), sharing the same
    `__method__` dispatch surface as OOP.

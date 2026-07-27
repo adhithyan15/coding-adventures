@@ -89,10 +89,14 @@ injection). **Inheritance** (slice 4): `class Dog < Animal` →
 ancestry walk (the body is a hoisted function, so native `super` is unavailable),
 still `sir_um_`-prefixed so `instance_method` can only fetch a user method
 (anti-RCE); the superclass and defining-class names are constant-path validated.
+**Class methods** (slice 5): `def self.m` → `Class.define_singleton_method(:sir_um_m,
+&closure)` and `Class.m(…)` → `(Class).public_send(:sir_um_m, …)` — the same
+`sir_um_` prefix (a separate singleton table, no collision), gated by an
+independent class-method allowlist so a built-in class-method call rejects cleanly.
 Rejects `TailCalls`, `Intrinsics`, and every not-yet-wired feature (array
 indexing / slicing via `IndexGet` — `NDArrays`; array-pattern destructuring;
-built-in collection methods; and the rest of OOP — class variables (`@@x`),
-class methods, modules — plus a non-empty class body or a namespaced
+built-in collection methods; and the rest of OOP — class variables (`@@x`,
+with the class-body initializer they need), modules — plus a namespaced
 class/constant definition) until its slice lands — each a clean,
 source-positioned `UnsupportedFeature`.
 
