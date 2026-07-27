@@ -88,6 +88,9 @@ Meyer gate capacitance from `Cox = epsilon_ox / TOX`.
 `RD` defaults to zero ohms. A finite positive value inserts an intrinsic drain
 node, routes the channel and drain-side capacitances through it, and contributes
 `4kT/RD` thermal noise.
+`RS` defaults to zero ohms. A finite positive value inserts an intrinsic source
+node, routes the channel and source-side capacitances through it, and contributes
+`4kT/RS` thermal noise.
 `FC` (default `0.5`) selects the continuous Berkeley forward-bias continuation
 for `CBS` / `CBD` depletion capacitance shaped by `PB` and `MJ`.
 All temperature coefficients honor model-card `TNOM` / `T_NOM`.

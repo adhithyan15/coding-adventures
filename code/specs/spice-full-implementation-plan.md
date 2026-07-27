@@ -33,16 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS drain resistance.
+1. Cross-language Level-1 MOS source resistance.
    - Status: current PR completion candidate.
-   - Add Berkeley Level-1 MOS `RD` model-card support in Rust, Python, and
+   - Add Berkeley Level-1 MOS `RS` model-card support in Rust, Python, and
      TypeScript, defaulting to zero ohms.
-   - For positive values, create an intrinsic drain node, stamp the external
+   - For positive values, create an intrinsic source node, stamp the external
      resistor in DC, TF, AC, and transient analyses, and route the channel plus
-     drain-side capacitances through the intrinsic node.
-   - Preserve `RD` through hierarchy and cloning, require a finite non-negative
-     value, emit the resistor's `4kT/RD` Johnson noise as `<name>:RD`, and
-     extend the supported-parameter coverage gate from 187 to 189 canonical
+     source-side capacitances through the intrinsic node.
+   - Preserve `RS` through hierarchy and cloning, require a finite non-negative
+     value, emit the resistor's `4kT/RS` Johnson noise as `<name>:RS`, and
+     extend the supported-parameter coverage gate from 189 to 191 canonical
      rows.
 
 ## Completed Slices
@@ -3431,8 +3431,18 @@ the Rust, Python, and TypeScript surfaces together.
      defaulting to `1e-7 m`, and derive intrinsic Meyer gate capacitance from
      `Cox = epsilon_ox / TOX`.
    - Hierarchy and cloning preserve the oxide thickness, shared validation
-     enforces finite positive `TOX`, and the supported-parameter release gate
-     now covers 187 canonical rows.
+   enforces finite positive `TOX`, and the supported-parameter release gate
+   now covers 187 canonical rows.
+
+269. Cross-language Level-1 MOS drain resistance.
+   - Status: completed in PR 9011.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `RD`,
+     defaulting to zero, and create an intrinsic drain node for positive values
+     across DC, transient, AC, transfer-function, and noise analyses.
+   - Hierarchy and cloning preserve `RD`, finite non-negative validation is
+     shared across analyses, drain-side capacitances terminate at the intrinsic
+     node, and the supported-parameter release gate now covers 189 canonical
+     rows.
 
 ## Backlog
 
