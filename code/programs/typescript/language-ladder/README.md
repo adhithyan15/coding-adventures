@@ -177,6 +177,15 @@ the first consonant's own row, and a ragged script yields **no matrix** rather
 than a mislabelled cell (unit-tested with a control). No new data — the same
 generated syllables, re-arranged.
 
+**The independent (word-initial) vowels.** Everything above is consonant + vowel
+*sign*; a word that *begins* with a vowel writes a different letter — the
+independent vowel (అ *a*, ఆ *ā* … ఔ *au*, ఋ *r̥*). Browse shows these as a small
+strip above the grid. They are generated the same way (`<SCRIPT> LETTER <V>`,
+ISO-15919 roman from the shared vowel table) but kept in a **separate
+`independentVowels` field**, not mixed into `letters`, so the syllabary and the
+gate/matrix that key on it being all-syllables are untouched. Control-tested
+(the 13 grounded glyphs; none leak into `letters`, so `isSyllabary` still holds).
+
 ## Design
 
 - **`src/core.ts`** — the pure, unit-tested heart: `buildScriptView`,

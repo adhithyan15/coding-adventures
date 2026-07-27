@@ -397,6 +397,32 @@ function renderGrid(views: LetterView[], dir: "ltr" | "rtl"): HTMLElement {
   return grid;
 }
 
+/**
+ * The independent (word-initial) vowels as a small read-only strip — the letters
+ * a word writes when it BEGINS with a vowel (అ a, ఆ ā), distinct from the vowel
+ * signs that ride on a consonant in the grid below. Recognition only; each tile
+ * shows the glyph and its ISO-15919 romanization.
+ */
+function renderIndependentVowels(vowels: Letter[]): HTMLElement {
+  const wrap = el("div", "ivowels");
+  const label = el("span", "ivowels__label");
+  label.textContent = "Independent vowels (word-initial):";
+  wrap.appendChild(label);
+  const row = el("div", "ivowels__row");
+  vowels.forEach((v) => {
+    const tile = el("div", "ivowel");
+    const glyph = el("span", "ivowel__glyph");
+    glyph.textContent = v.glyph;
+    const sound = el("span", "ivowel__sound");
+    sound.textContent = v.sound;
+    tile.append(glyph, sound);
+    tile.title = v.sound;
+    row.appendChild(tile);
+  });
+  wrap.appendChild(row);
+  return wrap;
+}
+
 /** For a syllabary, a "List / Matrix" switch — the flat grid, or the table. */
 function renderBrowseLayoutToggle(): HTMLElement {
   const wrap = el("div", "layouts");
@@ -1394,6 +1420,9 @@ function render(): void {
     // The syllabaries also offer a consonant × vowel matrix; alphabets stay a
     // plain list. A ragged syllabary yields no matrix, so we fall back to the grid.
     const syllabary = isSyllabary(data.letters);
+    if (data.independentVowels && data.independentVowels.length > 0) {
+      app!.appendChild(renderIndependentVowels(data.independentVowels));
+    }
     if (syllabary) app!.appendChild(renderBrowseLayoutToggle());
     const matrix = syllabary && browseLayout === "matrix" ? renderMatrix(data.letters) : null;
     const body = el("div", "body");

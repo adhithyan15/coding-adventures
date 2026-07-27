@@ -6,7 +6,7 @@
   "system": "abugida",
   "signature": "Rounded, curvy letters, most crowned with a small tick or check-mark headstroke; no continuous top line.",
   "complete": false,
-  "notes": "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. Recognition only — stroke order is a separate, source-gated effort and is omitted.",
+  "notes": "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. The independent (word-initial) vowels are in `independentVowels`. Recognition only — stroke order is a separate, source-gated effort and is omitted.",
   "letters": [
     {
       "glyph": "క",
@@ -5429,6 +5429,138 @@
       "components": [
         "ఱ  ṟa — base consonant",
         "ృ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    }
+  ],
+  "independentVowels": [
+    {
+      "glyph": "అ",
+      "sound": "a",
+      "role": "vowel",
+      "components": [
+        "అ  a — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ఆ",
+      "sound": "ā",
+      "role": "vowel",
+      "components": [
+        "ఆ  ā — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ఇ",
+      "sound": "i",
+      "role": "vowel",
+      "components": [
+        "ఇ  i — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ఈ",
+      "sound": "ī",
+      "role": "vowel",
+      "components": [
+        "ఈ  ī — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ఉ",
+      "sound": "u",
+      "role": "vowel",
+      "components": [
+        "ఉ  u — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ఊ",
+      "sound": "ū",
+      "role": "vowel",
+      "components": [
+        "ఊ  ū — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ఎ",
+      "sound": "e",
+      "role": "vowel",
+      "components": [
+        "ఎ  e — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ఏ",
+      "sound": "ē",
+      "role": "vowel",
+      "components": [
+        "ఏ  ē — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ఒ",
+      "sound": "o",
+      "role": "vowel",
+      "components": [
+        "ఒ  o — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ఓ",
+      "sound": "ō",
+      "role": "vowel",
+      "components": [
+        "ఓ  ō — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ఐ",
+      "sound": "ai",
+      "role": "vowel",
+      "components": [
+        "ఐ  ai — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ఔ",
+      "sound": "au",
+      "role": "vowel",
+      "components": [
+        "ఔ  au — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ఋ",
+      "sound": "r̥",
+      "role": "vowel",
+      "components": [
+        "ఋ  r̥ — independent vowel (word-initial)"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
