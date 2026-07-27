@@ -674,6 +674,49 @@ fn shipped_kinematic_viscosity_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b14) Shipped table — reference/magnetic-flux-density-conversions.adj resolves via
+//       import (a NEW dimension: magnetic flux density → tesla, the EXACT SP 811 B.9
+//       boldface factors gauss and gamma), and a unit with no row (`kilogauss`)
+//       abstains.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_magnetic_flux_density_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_mfd");
+    let src = stdlib().join("reference/magnetic-flux-density-conversions.adj");
+    std::fs::copy(&src, dir.join("magnetic-flux-density-conversions.adj"))
+        .expect("copy shipped magnetic-flux-density-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"magnetic-flux-density-conversions.adj\"\n\
+         ? magnetic_flux_density_to_teslas(gauss, $v)\n\
+         ? magnetic_flux_density_to_teslas(gamma, $v)\n\
+         ? magnetic_flux_density_to_teslas(kilogauss, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 magnetic-flux-density exact factors resolve, character-for-
+    // character from the table (boldface = exact; scientific notation to plain decimal).
+    assert!(out.contains("\"v\":\"0.0001\""), "gauss = 0.0001 T: {out}");
+    assert!(
+        out.contains("\"v\":\"0.000000001\""),
+        "gamma = 0.000000001 T: {out}"
+    );
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `kilogauss` has no row in this base-unit table, so the engine abstains rather than
+    // inventing a factor the table does not carry.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a unit with no row abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
