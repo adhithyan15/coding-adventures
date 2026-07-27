@@ -1,6 +1,6 @@
 # mosfet-models
 
-SPICE Level-1 (Shockley) MOSFET I-V model with full small-signal parameter extraction, body effect, subthreshold conduction, and PMOS sign conventions.
+SPICE Level-1 (Shockley) MOSFET I-V model with full small-signal parameter extraction, body effect, subthreshold conduction, and PMOS sign conventions. Bulk-junction capacitance supports Berkeley `PB`, `MJ`, and `FC` depletion shaping.
 
 ## What it does
 

@@ -81,6 +81,8 @@ noise model. `NLEV >= 3` selects the Berkeley linear-region equation, with
 `GDSNOI` (default `1`) scaling its channel-noise conductance.
 Level-1 MOS model cards accept `KF` (default `0`) and `AF` (default `1`) and add
 `KF * abs(Id)^AF / frequency` flicker noise alongside channel thermal noise.
+`FC` (default `0.5`) selects the continuous Berkeley forward-bias continuation
+for `CBS` / `CBD` depletion capacitance shaped by `PB` and `MJ`.
 All temperature coefficients honor model-card `TNOM` / `T_NOM`.
 `dcTemperatureSweep` and `dcTemperatureSweepCorners` run `.temp`-style DC
 operating-point snapshots across explicit analysis temperatures, with stable
@@ -306,8 +308,9 @@ Level-1 MOS charge audits. Diode `junctionCapacitance` / `transitTime`, BJT
 `reverseTransitTime`, and JFET `gateSourceCapacitance` /
 `gateDrainCapacitance` plus Level-1 MOS `CGSO` / `CGDO` / `CGBO` model-card
 parameters plus bulk-junction `CBS` / `CBD` model-card parameters also stamp
-transient storage, with MOS `PB` / `MJ` shaping reverse-biased source-body and
-drain-body capacitance to match their small-signal AC semantics.
+transient storage, with MOS `PB` / `MJ` / `FC` shaping source-body and
+drain-body capacitance continuously across reverse and forward bias to match
+their small-signal AC semantics.
 `deviceModelReferenceDeckAuditFixtures` flattens those DC, temperature, AC,
 noise, and transient fixture families into a stable reference-deck coverage
 matrix for each supported diode, BJT, JFET, and Level-1 MOS model family.

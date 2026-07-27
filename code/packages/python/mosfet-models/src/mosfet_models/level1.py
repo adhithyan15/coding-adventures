@@ -8,7 +8,7 @@ analytical Jacobian. Pedagogy-grade — for hand calculations and the canonical
 from __future__ import annotations
 
 from dataclasses import dataclass
-from math import exp, sqrt
+from math import exp, isfinite, sqrt
 
 from device_physics import thermal_voltage
 
@@ -35,6 +35,7 @@ class Level1Params:
     CBD: float = 0.0  # drain-bulk zero-bias junction capacitance (F)
     PB: float = 0.8  # bulk junction potential (V)
     MJ: float = 0.5  # bulk junction grading coefficient
+    FC: float = 0.5  # forward-bias depletion transition coefficient
     KF: float = 0.0  # flicker-noise coefficient
     AF: float = 1.0  # flicker-noise drain-current exponent
     subthreshold_enable: bool = True
@@ -61,6 +62,7 @@ def bulk_junction_capacitance(
     junction_voltage: float,
     junction_potential: float,
     grading_coefficient: float,
+    forward_bias_coefficient: float = 0.5,
 ) -> float:
     """Return the Level-1 bulk-junction depletion capacitance.
 
@@ -70,10 +72,28 @@ def bulk_junction_capacitance(
 
     if zero_bias_capacitance <= 0.0:
         return zero_bias_capacitance
+    if (
+        not isfinite(forward_bias_coefficient)
+        or forward_bias_coefficient < 0.0
+        or forward_bias_coefficient >= 1.0
+    ):
+        raise ValueError("MOSFET FC must be finite and in [0, 1)")
     if junction_potential <= 0.0 or grading_coefficient == 0.0:
         return zero_bias_capacitance
-    reverse_scale = max(0.0, -junction_voltage) / junction_potential
-    return zero_bias_capacitance / ((1.0 + reverse_scale) ** grading_coefficient)
+    normalized_voltage = junction_voltage / junction_potential
+    if normalized_voltage < forward_bias_coefficient:
+        return zero_bias_capacitance / (
+            (1.0 - normalized_voltage) ** grading_coefficient
+        )
+    denominator = (1.0 - forward_bias_coefficient) ** (
+        1.0 + grading_coefficient
+    )
+    continuation = (
+        1.0
+        - forward_bias_coefficient * (1.0 + grading_coefficient)
+        + grading_coefficient * normalized_voltage
+    )
+    return zero_bias_capacitance * continuation / denominator
 
 
 def evaluate_level1(
@@ -89,6 +109,8 @@ def evaluate_level1(
     sign of inputs/outputs externally.
     """
     p = params
+    if not isfinite(p.FC) or p.FC < 0.0 or p.FC >= 1.0:
+        raise ValueError("MOSFET FC must be finite and in [0, 1)")
     beta = p.KP * (p.W / p.L)
 
     # Threshold with body effect. The formula is well-defined whenever
@@ -108,8 +130,8 @@ def evaluate_level1(
     Cgs_intrinsic = (2.0 / 3.0) * p.W * p.L * p.KP / 1.0  # placeholder; Meyer model
     Cgd_intrinsic = 0.0
     Cgb_intrinsic = 0.0
-    Cbs_bulk = bulk_junction_capacitance(p.CBS, V_BS, p.PB, p.MJ)
-    Cbd_bulk = bulk_junction_capacitance(p.CBD, V_BS - V_DS, p.PB, p.MJ)
+    Cbs_bulk = bulk_junction_capacitance(p.CBS, V_BS, p.PB, p.MJ, p.FC)
+    Cbd_bulk = bulk_junction_capacitance(p.CBD, V_BS - V_DS, p.PB, p.MJ, p.FC)
 
     if V_OV <= 0:
         # Cutoff — optionally subthreshold.

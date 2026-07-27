@@ -4,6 +4,9 @@
 
 ### Added
 
+- `Level1Params::pb`, `Level1Params::mj`, and `Level1Params::fc` provide
+  continuous Berkeley bulk-junction depletion-capacitance shaping for `CBS`
+  and `CBD`.
 - `Level1Params::af` provides the Level-1 MOS flicker-noise current exponent,
   defaulting to one.
 

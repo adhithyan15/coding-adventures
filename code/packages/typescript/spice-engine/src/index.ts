@@ -1784,6 +1784,7 @@ export interface MosfetLevel1Params {
   readonly CBD: number;
   readonly PB: number;
   readonly MJ: number;
+  readonly FC: number;
   readonly KF: number;
   readonly AF: number;
 }
@@ -2045,8 +2046,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   PNP: [41, 58, 13, 4],
   NJF: [22, 30, 7, 3],
   PJF: [22, 30, 7, 3],
-  NMOS: [20, 27, 6, 3],
-  PMOS: [20, 27, 6, 3],
+  NMOS: [21, 28, 6, 3],
+  PMOS: [21, 28, 6, 3],
 };
 
 export interface Vccs {
@@ -8038,6 +8039,7 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     CBD: 0.0,
     PB: 0.8,
     MJ: 0.5,
+    FC: 0.5,
     KF: 0.0,
     AF: 1.0,
   };
@@ -8226,6 +8228,7 @@ const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   CJD: "CBD",
   PB: "PB",
   MJ: "MJ",
+  FC: "FC",
   KF: "KF",
   AF: "AF",
 };
@@ -8793,6 +8796,7 @@ export function mosfetFromModelCard(
     ...(p.CBD !== undefined ? { CBD: p.CBD } : {}),
     ...(p.PB !== undefined ? { PB: p.PB } : {}),
     ...(p.MJ !== undefined ? { MJ: p.MJ } : {}),
+    ...(p.FC !== undefined ? { FC: p.FC } : {}),
     ...(p.KF !== undefined ? { KF: p.KF } : {}),
     ...(p.AF !== undefined ? { AF: p.AF } : {}),
   };
@@ -19768,6 +19772,7 @@ function mosfetBulkJunctionCapacitance(
   junctionVoltage: number,
   junctionPotential: number,
   gradingCoefficient: number,
+  forwardBiasCoefficient: number,
 ): number {
   if (zeroBiasCapacitance <= 0.0) {
     return zeroBiasCapacitance;
@@ -19775,8 +19780,16 @@ function mosfetBulkJunctionCapacitance(
   if (junctionPotential <= 0.0 || gradingCoefficient === 0.0) {
     return zeroBiasCapacitance;
   }
-  const reverseScale = Math.max(0.0, -junctionVoltage) / junctionPotential;
-  return zeroBiasCapacitance / ((1.0 + reverseScale) ** gradingCoefficient);
+  const normalizedVoltage = junctionVoltage / junctionPotential;
+  if (normalizedVoltage < forwardBiasCoefficient) {
+    return zeroBiasCapacitance / ((1.0 - normalizedVoltage) ** gradingCoefficient);
+  }
+  const denominator = (1.0 - forwardBiasCoefficient) ** (1.0 + gradingCoefficient);
+  const continuation =
+    1.0 -
+    forwardBiasCoefficient * (1.0 + gradingCoefficient) +
+    gradingCoefficient * normalizedVoltage;
+  return zeroBiasCapacitance * continuation / denominator;
 }
 
 interface JfetDcResult {
@@ -20239,8 +20252,12 @@ function evaluateNmosLevel1(
   const cgdOverlap = params.CGDO * params.W;
   const cgbOverlap = params.CGBO * params.L;
   const cgsIntrinsic = (2.0 / 3.0) * params.W * params.L * params.KP;
-  const cbsBulk = mosfetBulkJunctionCapacitance(params.CBS, vbs, params.PB, params.MJ);
-  const cbdBulk = mosfetBulkJunctionCapacitance(params.CBD, vbs - vds, params.PB, params.MJ);
+  const cbsBulk = mosfetBulkJunctionCapacitance(
+    params.CBS, vbs, params.PB, params.MJ, params.FC,
+  );
+  const cbdBulk = mosfetBulkJunctionCapacitance(
+    params.CBD, vbs - vds, params.PB, params.MJ, params.FC,
+  );
   const capacitances = {
     cgs: cgsOverlap + cgsIntrinsic,
     cgd: cgdOverlap,
@@ -20841,6 +20858,7 @@ function mosfetChargeDynamicCapacitance(
     junctionVoltage,
     element.params.PB,
     element.params.MJ,
+    element.params.FC,
   );
 }
 
@@ -21011,6 +21029,9 @@ function validateMosfet(element: Mosfet): void {
   }
   if (params.PB <= 0.0 || params.MJ < 0.0) {
     throw invalidElement(element.name, "MOSFET PB must be positive and MJ must be non-negative");
+  }
+  if (params.FC < 0.0 || params.FC >= 1.0) {
+    throw invalidElement(element.name, "MOSFET FC must be in [0, 1)");
   }
   if (params.KF < 0.0) {
     throw invalidElement(element.name, "MOSFET KF must be non-negative");

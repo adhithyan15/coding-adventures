@@ -158,6 +158,38 @@ def test_bulk_junction_capacitance_uses_pb_mj_for_reverse_bias():
     assert r.Cbs == pytest.approx(4e-12 / (2.0 ** 0.5))
     assert r.Cbd == pytest.approx(8e-12 / (4.0 ** 0.5))
 
+def test_bulk_junction_capacitance_uses_continuous_forward_bias_transition():
+    early = Level1Params(
+        CBS=4e-12, PB=1.0, MJ=0.5, FC=0.4, subthreshold_enable=False
+    )
+    below = evaluate_level1(early, V_GS=0.0, V_DS=0.0, V_BS=0.4 - 1e-9)
+    above = evaluate_level1(early, V_GS=0.0, V_DS=0.0, V_BS=0.4 + 1e-9)
+    later = evaluate_level1(
+        Level1Params(
+            CBS=4e-12, PB=1.0, MJ=0.5, FC=0.8, subthreshold_enable=False
+        ),
+        V_GS=0.0,
+        V_DS=0.0,
+        V_BS=0.7,
+    )
+    transitioned = evaluate_level1(
+        early, V_GS=0.0, V_DS=0.0, V_BS=0.7
+    )
+
+    assert below.Cbs == pytest.approx(above.Cbs, rel=1e-8)
+    assert later.Cbs > transitioned.Cbs
+
+
+@pytest.mark.parametrize("fc", [float("nan"), -0.1, 1.0])
+def test_bulk_junction_capacitance_rejects_invalid_forward_bias_coefficient(fc):
+    with pytest.raises(ValueError, match=r"MOSFET FC must be finite and in \[0, 1\)"):
+        evaluate_level1(
+            Level1Params(CBS=1e-12, FC=fc),
+            V_GS=0.0,
+            V_DS=0.0,
+            V_BS=0.0,
+        )
+
 
 # ---- MOSFET wrapper ----
 
