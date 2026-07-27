@@ -33,6 +33,14 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     "/",
     "%",
     "neg",
+    // Bitwise / shift (SIR27 milestone 5) — native Ruby Integer operators.
+    "&",
+    "|",
+    "^",
+    "~",
+    "<<",
+    ">>",
+    "u>>",
     "=",
     "==",
     "!=",
@@ -1187,6 +1195,20 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         }
         "%" => format!("({} % {})", arg(&a, 0), arg(&a, 1)),
         "neg" => format!("(-{})", arg(&a, 0)),
+        // Bitwise / shift — Ruby's Integer supports all of these natively on
+        // arbitrary-precision two's-complement, so the width is enforced by the
+        // surrounding `sir_uN`/`sir_iN` mask (a `Convert`).  `>>` on a negative
+        // value arithmetic-shifts (a signed operand arrives negative); on a
+        // masked non-negative unsigned value it is a logical shift.
+        "&" => format!("({} & {})", arg(&a, 0), arg(&a, 1)),
+        "|" => format!("({} | {})", arg(&a, 0), arg(&a, 1)),
+        "^" => format!("({} ^ {})", arg(&a, 0), arg(&a, 1)),
+        "~" => format!("(~{})", arg(&a, 0)),
+        "<<" => format!("({} << {})", arg(&a, 0), arg(&a, 1)),
+        // Both `>>` and the unsigned `u>>` render the same: a Ruby unsigned
+        // value is a masked non-negative Integer, so `>>` is already logical
+        // there (the distinction only matters for the C backend's signed int64).
+        ">>" | "u>>" => format!("({} >> {})", arg(&a, 0), arg(&a, 1)),
         "not" => format!("(!sir_truthy({}))", arg(&a, 0)),
         "<" => format!("({} < {})", arg(&a, 0), arg(&a, 1)),
         ">" => format!("({} > {})", arg(&a, 0), arg(&a, 1)),

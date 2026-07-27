@@ -297,9 +297,39 @@ arithmetic chain — its width is charged against the shared depth budget.
 `Feature::ShortCircuit` is added to the module manifest (both backends already
 accept it and render `and`/`or`; the C backend gains a `_sir_not` for `!`).
 
-Bitwise (`& | ^ ~`, `<< >>`) and division/modulo (`/ %`) remain deferred:
-bitwise needs new builtins in both backends, and `/`/`%` need the truncate-vs-
-floor split (C truncates toward zero; SIR/Ruby floor), which is its own slice.
+Bitwise and division/modulo remain deferred (see below).
+
+## Bitwise & shifts (milestone 5)
+
+`& | ^` and unary `~` follow the ordinary path: promote, take the usual
+arithmetic conversions to a common type, apply the operator there, and wrap the
+result in a `Convert` to enforce the width — identical in shape to `+ - *`.
+
+**Shifts (`<< >>`) are the one exception to the usual arithmetic conversions.**
+C does *not* bring the two operands to a common type: each is promoted on its
+own, the result has the type of the promoted **left** operand, and the right
+operand is only a count.  So `uint8_t x; x << c` is performed at `int` (x's
+promoted type) and stays `int` until it is used — narrowed to `uint8_t` only at
+the assignment, exactly as C does.  `>>` is arithmetic on a signed operand and
+logical on an unsigned one.  This *almost* falls out for free — but the backends
+store every value in a signed `int64`, and a `uint64_t`/`size_t` with its top
+bit set is a *negative* int64, on which a native `>>` would sign-extend.  So the
+frontend picks the shift builtin by the promoted left operand's signedness:
+signed `>>` → `>>` (arithmetic); unsigned `>>` → **`u>>`**, which the C backend
+renders as a `uint64_t` shift (logical for every width) and Ruby renders as a
+plain `>>` (its unsigned value is already a non-negative Integer).
+
+The six operators lower to the builtins `&`, `|`, `^`, `~`, `<<`, `>>`.  Both
+backends gain them: Ruby renders the native `Integer` operators; the C backend
+gains `_sir_band`/`_sir_bor`/`_sir_bxor`/`_sir_bnot`/`_sir_shl`/`_sir_shr` runtime
+helpers over `int64_t` (`<<` through `uint64_t` so a shift into the sign bit is
+not UB; both mask the count `& 63` defensively — a count ≥ width is UB in C
+anyway).
+
+Division/modulo (`/ %`) remain deferred: they need the truncate-vs-floor split
+(C truncates toward zero; SIR/Ruby and the existing `_sir_ifloordiv` floor), so
+they are their own slice — a bare `/` or `%` is a clean positioned error, never a
+silently-wrong floor.
 
 ## Pipeline
 
