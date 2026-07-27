@@ -3480,22 +3480,305 @@ fn inspect_replacing_multi_char_region_delimiter_is_a_later_rung() {
     );
 }
 
+// INSPECT … TALLYING … REPLACING with a per-half `{BEFORE|AFTER}` region — the
+// combined form now accepts an INDEPENDENT single-char region on EACH half. Because
+// the tally does not mutate the source, BOTH windows (the count's and the
+// replacement's) are computed over the SAME original bytes, using the shared window
+// helper — so the JIT output stays byte-identical to the tree-walk oracle. Every
+// case pins the exact counter/source result; `assert_matches_oracle` independently
+// re-checks JIT == oracle.
+
 #[test]
-fn inspect_replacing_combined_with_a_region_is_a_later_rung() {
-    // A `{BEFORE|AFTER}` region on the REPLACING half of the COMBINED TALLYING …
-    // REPLACING form is still deferred (regions ship for the lone phrases first) —
-    // rejected identically on both engines.
-    let src = wrap(
+fn inspect_combined_region_tally_region_only() {
+    // Only the TALLYING half is narrowed: BEFORE "C" over "AB0CD0" counts the single
+    // "0" in "AB0" → C = 001. The REPLACING half has NO region, so it maps BOTH "0"s.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\"",
+            "    REPLACING ALL \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "001\nAB*CD*\n");
+}
+
+#[test]
+fn inspect_combined_region_replace_region_only() {
+    // Only the REPLACING half is narrowed: the region-less TALLYING counts all three
+    // "0"s (3), then REPLACING ALL "0" BEFORE "B" restricts to "0A0" → "*A*B0".
+    let out = assert_matches_oracle(&wrap(
         &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
         &[
-            "INSPECT S TALLYING C FOR ALL \"A\" REPLACING ALL \"0\" BY \"*\" BEFORE \"B\".",
+            "INSPECT S TALLYING C FOR ALL \"0\"",
+            "    REPLACING ALL \"0\" BY \"*\" BEFORE \"B\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "003\n*A*B0\n");
+}
+
+#[test]
+fn inspect_combined_region_both_before_distinct_delimiters() {
+    // BOTH halves BEFORE, DIFFERENT delimiters over "0A0B0C0": tally BEFORE "B"
+    // → region "0A0" → 2; replace BEFORE "C" → region "0A0B0" → the three "0"s at
+    // indices 0/2/4 become "*" → "*A*B*C0".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(7) VALUE \"0A0B0C0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"B\"",
+            "    REPLACING ALL \"0\" BY \"*\" BEFORE \"C\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n*A*B*C0\n");
+}
+
+#[test]
+fn inspect_combined_region_before_and_after_different_kinds() {
+    // DIFFERENT kinds over "0A0B0": tally BEFORE "B" → region "0A0" → 2; replace
+    // AFTER "B" → region "0" (index 4) → only the trailing "0" → "0A0B*".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"B\"",
+            "    REPLACING ALL \"0\" BY \"*\" AFTER \"B\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n0A0B*\n");
+}
+
+#[test]
+fn inspect_combined_region_both_after() {
+    // BOTH halves AFTER over "0A0B0": tally AFTER "A" → region "0B0" → two "0"s (2);
+    // replace AFTER "B" → region "0" → only index 4 → "0A0B*".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" AFTER \"A\"",
+            "    REPLACING ALL \"0\" BY \"*\" AFTER \"B\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n0A0B*\n");
+}
+
+#[test]
+fn inspect_combined_region_tally_after_not_found_replace_before_not_found() {
+    // The per-half not-found asymmetry, BOTH exercised at once over "0A0": tally
+    // AFTER "Z" (absent) → EMPTY window → 0; replace BEFORE "Z" (absent) → WHOLE
+    // source → both "0"s → "*A*".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"0A0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" AFTER \"Z\"",
+            "    REPLACING ALL \"0\" BY \"*\" BEFORE \"Z\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "000\n*A*\n");
+}
+
+#[test]
+fn inspect_combined_region_tally_before_not_found_whole_source() {
+    // Tally BEFORE "Z" (absent) → WHOLE source → both "0"s (2); replace AFTER "A"
+    // → region "0" (index 2) → only the trailing "0" → "0A*".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"0A0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"Z\"",
+            "    REPLACING ALL \"0\" BY \"*\" AFTER \"A\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n0A*\n");
+}
+
+#[test]
+fn inspect_combined_region_replace_after_not_found_empty() {
+    // Replace AFTER "Z" (absent) → EMPTY window → NOTHING replaced, source unchanged;
+    // the region-less tally still counts both "0"s (2).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"0A0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\"",
+            "    REPLACING ALL \"0\" BY \"*\" AFTER \"Z\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n0A0\n");
+}
+
+#[test]
+fn inspect_combined_region_delimiter_at_last_position() {
+    // Region delimiter is the LAST character over "0A0X": tally BEFORE "X" → region
+    // "0A0" → 2; replace BEFORE "X" → region "0A0" → both "0"s → "*A*X".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"0A0X\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"X\"",
+            "    REPLACING ALL \"0\" BY \"*\" BEFORE \"X\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n*A*X\n");
+}
+
+#[test]
+fn inspect_combined_region_delimiter_equals_search_char_each_half() {
+    // Each half's region delimiter EQUALS its own search char over "0A0B": tally
+    // AFTER "0" → first "0" at index 0 bounds region "A0B" → one "0"; replace AFTER
+    // "0" → same region → index 2 → "0A*B". The two halves are independent but land
+    // on the same window here.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"0A0B\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" AFTER \"0\"",
+            "    REPLACING ALL \"0\" BY \"*\" AFTER \"0\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "001\n0A*B\n");
+}
+
+#[test]
+fn inspect_combined_region_pic_x1_delimiter() {
+    // The TALLYING half's region delimiter is a PIC X(1) item read at run time:
+    // BEFORE DL (="C") over "AB0CD0" → region "AB0" → one "0"; the region-less
+    // REPLACING maps both "0"s → "AB*CD*".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(6) VALUE \"AB0CD0\".",
+            "01  C   PIC 9(3) VALUE 0.",
+            "01  DL  PIC X(1) VALUE \"C\".",
+        ],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE DL",
+            "    REPLACING ALL \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "001\nAB*CD*\n");
+}
+
+#[test]
+fn inspect_combined_region_adds_to_a_nonzero_counter() {
+    // The combined region form still ADDs to a preloaded counter: C starts at 5,
+    // tally BEFORE "A" over "0A0" → region "0" → one "0" → C = 5 + 1 = 006; the
+    // region-less REPLACING maps both "0"s → "*A*".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"0A0\".", "01  C  PIC 9(3) VALUE 5."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"A\"",
+            "    REPLACING ALL \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "006\n*A*\n");
+}
+
+#[test]
+fn inspect_combined_region_delimiter_at_position_zero_empty_before() {
+    // BEFORE with the delimiter at index 0 gives an EMPTY window on that half: tally
+    // BEFORE "0" over "0A0B0" → first "0" at index 0 → region [0,0) → 0; replace
+    // BEFORE "B" → region "0A0" → the two "0"s at 0/2 → "*A*B0".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"0\"",
+            "    REPLACING ALL \"0\" BY \"*\" BEFORE \"B\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "000\n*A*B0\n");
+}
+
+#[test]
+fn inspect_combined_for_leading_with_a_region_is_a_later_rung() {
+    // `FOR LEADING` carrying a region on the combined TALLYING half is still deferred
+    // — rejected identically on both engines (the shared tally reader rejects it, so
+    // the combined form inherits the rejection).
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"00A0B\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"0\" BEFORE \"A\"",
+            "    REPLACING ALL \"0\" BY \"*\".",
             "STOP RUN.",
         ],
     );
-    assert!(run_cobol(&src).is_err(), "oracle must reject a region on the combined REPLACING half");
+    assert!(run_cobol(&src).is_err(), "oracle must reject FOR LEADING + region on the combined form");
     assert!(
         compile_source(&src, "e2e").is_err(),
-        "compiler must reject a region on the combined REPLACING half"
+        "compiler must reject FOR LEADING + region on the combined form"
+    );
+}
+
+#[test]
+fn inspect_combined_replacing_leading_with_a_region_is_a_later_rung() {
+    // `REPLACING LEADING` carrying a region on the combined REPLACING half is still
+    // deferred — the exact analogue on the substitution side, rejected on both engines.
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"00A0B\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\"",
+            "    REPLACING LEADING \"0\" BY \"*\" BEFORE \"A\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(
+        run_cobol(&src).is_err(),
+        "oracle must reject REPLACING LEADING + region on the combined form"
+    );
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject REPLACING LEADING + region on the combined form"
+    );
+}
+
+#[test]
+fn inspect_combined_multi_char_region_delimiter_is_a_later_rung() {
+    // A MULTI-character region delimiter on a combined half is deferred — rejected on
+    // both engines via the shared single-delimiter check (oracle at exec, compiler at
+    // emit), exactly like the lone forms.
+    let src = wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"CD\"",
+            "    REPLACING ALL \"0\" BY \"*\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-char region delimiter (combined)");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-char region delimiter (combined)"
     );
 }
 

@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.47.0 — combined INSPECT TALLYING + REPLACING with a per-half BEFORE/AFTER region
+
+- The combined `INSPECT source TALLYING counter FOR ALL delim REPLACING ALL x BY y`
+  form now accepts an INDEPENDENT single-character `{BEFORE|AFTER}` region on EACH
+  half — the region that previously shipped only for the LONE `TALLYING FOR ALL`
+  (0.44.0) and `REPLACING ALL` (0.45.0) phrases. `tally_region` narrows the count,
+  `replace_region` narrows the substitution; each half is bounded by the FIRST
+  (leftmost) occurrence of its OWN region delimiter, with the ISO not-found asymmetry
+  (`BEFORE` → the WHOLE source if absent, `AFTER` → an EMPTY window if absent).
+  Positions outside a half's window are untouched. The two regions are fully
+  independent — either, both, or neither present, with their own kind and delimiter.
+- `Stmt::InspectTallyReplace` gains `tally_region: Option<Region>` and
+  `replace_region: Option<Region>` fields (reusing the existing `Region`/`RegionKind`
+  types). The combined arm of `read_statement` no longer rejects a region on either
+  half — each half's region is parsed by the shared `read_inspect_tally_all` /
+  `read_inspect_replacing_all` readers (which still reject `FOR LEADING` /
+  `REPLACING LEADING` carrying a region) and threaded into the statement.
+- `exec_inspect_tally_replace` passes each half's region into the existing
+  `inspect_tally` and `inspect_replace` passes. Because the tally does NOT mutate the
+  source, BOTH windows are derived (via the shared `Interp::region_window` helper) over
+  the SAME original storage — the count's window and the replacement's window each see
+  the pre-replacement bytes, so a shared delimiter/search character is counted before
+  it is substituted and both windows agree with the `cobol-iir-compiler` 0.43.0 JIT
+  byte-for-byte.
+- Scoped SMALL — `FOR ALL` / `REPLACING ALL` only, single-character region delimiter
+  only. Still rejected IDENTICALLY on both engines: `FOR LEADING` or `REPLACING
+  LEADING` carrying a region (at read time), and a multi-character region delimiter (at
+  exec time via `single_delim_char`). A combined statement with no region executes
+  exactly as before.
+- New oracle unit test `inspect_tally_replace_with_before_after_regions` (tally-region
+  only, replace-region only, both halves with different kinds/delimiters, and the
+  per-half not-found asymmetry). The obsolete combined-form-region reject sub-case of
+  `inspect_tallying_region_later_rung_forms_are_clean_errors` is removed (the form it
+  guarded is now supported); `FOR LEADING` + region and multi-character region
+  delimiter rejects remain.
+
 ## 0.46.0 — INSPECT CONVERTING with a BEFORE/AFTER region
 
 - `INSPECT source CONVERTING from TO to {BEFORE|AFTER} z` now executes instead of

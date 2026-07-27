@@ -115,7 +115,9 @@ tally-then-replace: count `delim` in the ORIGINAL source into `counter` FIRST,
 then replace `x` with `y`, so a shared `delim == x` is counted before it is
 substituted; the `TALLYING` half may be `FOR ALL` or `FOR LEADING` and the
 `REPLACING` half may independently be `ALL` or `LEADING`, so either, both, or
-neither half may be leading); and `INSPECT source CONVERTING from TO to` (translate each character
+neither half may be leading — and each `FOR ALL` / `REPLACING ALL` half
+independently accepts its OWN `{BEFORE|AFTER} x` **region**, both windows computed
+over the SAME original source since the tally does not mutate it); and `INSPECT source CONVERTING from TO to` (translate each character
 of the alphanumeric source through a per-character table built from the two
 equal-length string literals `from`/`to` — a character equal to `from[k]` becomes
 `to[k]`, the **first (leftmost) occurrence winning** if `from` repeats a
@@ -130,9 +132,9 @@ modelled (the explicit
 `PERFORM … WITH TEST AFTER`/inline, `GO TO … DEPENDING`, `STRING` with a real
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `UNSTRING` with a multi-character
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `INSPECT` with a `CHARACTERS`
-tally, a `{BEFORE|AFTER}` region on any form OTHER than the lone `TALLYING FOR
-ALL`, the lone `REPLACING ALL`, or `CONVERTING` (a `FOR LEADING`/`REPLACING
-LEADING` region, or a combined-form region) or a
+tally, a `{BEFORE|AFTER}` region on a `FOR LEADING`/`REPLACING LEADING` phrase
+(the region ships for `FOR ALL`/`REPLACING ALL` only — on the lone forms, on
+`CONVERTING`, and now on each half of the combined form) or a
 MULTI-character region delimiter, `REPLACING CHARACTERS`/`FIRST`, several
 replace items, or a combined statement whose `TALLYING`/`REPLACING` half is a
 deferred sub-form (a combined `TALLYING … FOR LEADING` and a combined `REPLACING

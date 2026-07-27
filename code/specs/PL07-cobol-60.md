@@ -506,8 +506,9 @@ delimiter only.
 
 The grammar deliberately accepts the fuller `INSPECT` surface — a `CHARACTERS`
 tally, several `TALLYING` counters or `FOR` phrases, a region on the `FOR
-LEADING`/`REPLACING LEADING`/combined forms (the lone `REPLACING ALL` and
-`CONVERTING` regions ARE supported — see those sections below), and a
+LEADING`/`REPLACING LEADING` forms (the lone `REPLACING ALL` and `CONVERTING`
+regions, and a region on each `ALL` half of the combined form, ARE supported — see
+those sections below), and a
 multi-character region
 delimiter — so the reader/compiler reject each as a clean "later rung" error
 rather than a parse failure. A multi-character / figurative / numeric /
@@ -584,10 +585,11 @@ region and kept). This rung is scoped SMALL: `REPLACING ALL` only and a
 Deferred as clean later rungs (accepted by the grammar, rejected at read/compile
 time): `REPLACING CHARACTERS BY`, `REPLACING FIRST` (`FIRST` does not parse as a
 replace keyword — it is deferred at parse time), a `{BEFORE|AFTER}` region on
-`REPLACING LEADING` or on the **combined** `TALLYING … REPLACING` form, a
+`REPLACING LEADING`, a
 multi-character region delimiter, **several** replace items, a multi-character /
 figurative / wider / numeric search or replacement, and a numeric/group source.
-(A `REPLACING LEADING` inside the combined `TALLYING … REPLACING` form is now
+(A `REPLACING LEADING` inside the combined `TALLYING … REPLACING` form, and a
+`{BEFORE|AFTER}` region on each `ALL` half of the combined form, are now
 supported — see the combined section below.)
 
 ### Combined `INSPECT … TALLYING … REPLACING` (one statement)
@@ -628,11 +630,39 @@ accepted `inspect_tallying [ inspect_replacing ]`. The `TALLYING` half accepts
 `FOR ALL`/`FOR LEADING` (reusing the lone-TALLYING leading-run count/break) and the
 `REPLACING` half independently accepts `ALL`/`LEADING` (reusing the lone-REPLACING
 `active` run flag): a combined statement whose either half is a deferred sub-form
-(`CHARACTERS`, several counters/FOR/replace items, `BEFORE`/`AFTER`, multi-char/
+(`CHARACTERS`, several counters/FOR/replace items, multi-char/
 figurative/wider/numeric operands, a numeric/group source, or a non-integer
 counter) remains a clean later rung. (A lone `FOR LEADING` tally, a lone
 `REPLACING LEADING`, and every combination of leading/`ALL` on the two combined
 halves are each supported.)
+
+**`BEFORE`/`AFTER` region per half (combined follow-up rung).** Each half of the
+combined form independently accepts its OWN `{BEFORE|AFTER}` **region** — the region
+that shipped for the lone `TALLYING FOR ALL` and `REPLACING ALL` phrases, now allowed
+on the combined `FOR ALL` count half and the combined `REPLACING ALL` replace half at
+once. The two regions are fully INDEPENDENT: the `TALLYING` half may carry its own
+`{BEFORE|AFTER} x1`, the `REPLACING` half its own `{BEFORE|AFTER} x2` — either, both,
+or neither, with their own kind and delimiter. Each half's window `[start, end)` is
+computed by the SAME shared helper (`region_window` in the oracle,
+`emit_inspect_region_window` in the compiler) over the ORIGINAL source, with the same
+leftmost-first-index and BEFORE→whole / AFTER→empty not-found asymmetry the lone forms
+use; only positions inside a half's window are counted / substituted, and positions
+outside are untouched. Because the tally does NOT mutate the source, BOTH windows are
+derived over the SAME original bytes — the ISO tally-then-replace order is preserved,
+and a shared `delim == x` (even with a shared region delimiter) is still counted
+before it is substituted. Worked (tally region only): `"AB0CD0"` TALLYING
+`FOR ALL "0" BEFORE "C"` → region `"AB0"` → `counter += 1`, then the region-less
+`REPLACING ALL "0" BY "*"` → `"AB*CD*"`. Worked (different kinds per half):
+`"0A0B0"` TALLYING `FOR ALL "0" BEFORE "B"` → region `"0A0"` → `2`, then
+`REPLACING ALL "0" BY "*" AFTER "B"` → region `"0"` (trailing) → `"0A0B*"`. Worked
+(both not-found): `"0A0"` TALLYING `FOR ALL "0" AFTER "Z"` → empty → `0`, then
+`REPLACING ALL "0" BY "*" BEFORE "Z"` → whole source → `"*A*"`. This rung is scoped
+SMALL: `FOR ALL` / `REPLACING ALL` only, and a **single-character** region delimiter
+per half. A region on a combined `FOR LEADING` / `REPLACING LEADING` half, and a
+multi-character region delimiter, remain clean later rungs rejected identically on
+both engines (the shared readers reject `LEADING` + region at read time; the shared
+single-delimiter check rejects a wider-than-one region delimiter). No grammar change
+was needed — the grammar already accepts a region on each phrase.
 
 ### `INSPECT … CONVERTING` (first rung)
 

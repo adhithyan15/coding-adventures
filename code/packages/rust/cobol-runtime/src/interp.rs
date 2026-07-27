@@ -370,18 +370,22 @@ impl Machine {
                 counter,
                 delim,
                 tally_leading,
+                tally_region,
                 search,
                 replace,
                 replace_leading,
+                replace_region,
             } => {
                 return self.exec_inspect_tally_replace(
                     source,
                     counter,
                     delim,
                     *tally_leading,
+                    tally_region.as_ref(),
                     search,
                     replace,
                     *replace_leading,
+                    replace_region.as_ref(),
                 )
             }
             Stmt::InspectConverting { source, from, to, region } => {
@@ -843,10 +847,19 @@ impl Machine {
     /// occurrence). The `cobol-iir-compiler` composes the same two lowerings in
     /// the same order with the same two flags, so the compiled program matches
     /// this reference byte-for-byte.
-    // Eight parameters: the source/counter/delim/search/replace operands plus the
-    // two INDEPENDENT leading flags (tally half, replace half). Grouping them into a
-    // struct would only re-spell the same fields the caller already destructured
-    // from `Stmt::InspectTallyReplace`, so the flat signature is clearer here.
+    ///
+    /// Each half independently carries an optional `{BEFORE|AFTER} x` region
+    /// (`tally_region` / `replace_region`). Because the tally does NOT mutate the
+    /// source, BOTH windows are derived (via [`Self::region_window`], the same
+    /// helper the lone forms use) over the SAME original storage — the count's
+    /// window and the replacement's window each see the pre-replacement bytes. The
+    /// two regions are otherwise fully independent (different kind, different
+    /// delimiter, either/both/neither present).
+    // Ten parameters: the source/counter/delim/search/replace operands, the two
+    // INDEPENDENT leading flags (tally half, replace half), and the two INDEPENDENT
+    // optional regions. Grouping them into a struct would only re-spell the same
+    // fields the caller already destructured from `Stmt::InspectTallyReplace`, so the
+    // flat signature is clearer here.
     #[allow(clippy::too_many_arguments)]
     fn exec_inspect_tally_replace(
         &mut self,
@@ -854,23 +867,25 @@ impl Machine {
         counter: &str,
         delim: &Operand,
         tally_leading: bool,
+        tally_region: Option<&Region>,
         search: &Operand,
         replace: &Operand,
         replace_leading: bool,
+        replace_region: Option<&Region>,
     ) -> Result<Flow, RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
         // Tally FIRST, on the current (original) storage — it does not mutate the
         // source, so the subsequent replace still sees the original bytes too. The
-        // TALLYING half may be FOR ALL or FOR LEADING (`tally_leading`). The combined
-        // form never carries a `{BEFORE|AFTER}` region (rejected at read time), so the
-        // window is always the whole source — pass `None`.
-        self.inspect_tally(sidx, counter, delim, tally_leading, None)?;
+        // TALLYING half may be FOR ALL or FOR LEADING (`tally_leading`) and may carry
+        // its OWN `{BEFORE|AFTER}` region (`tally_region`), whose window is computed
+        // over the original storage.
+        self.inspect_tally(sidx, counter, delim, tally_leading, tally_region)?;
         // THEN replace, overwriting the source in place. The REPLACING half may be
         // ALL or LEADING (`replace_leading`) — the same leading-run map used by a
-        // lone `INSPECT REPLACING LEADING`. The combined form never carries a
-        // `{BEFORE|AFTER}` region on its REPLACING half (rejected at read time), so
-        // the window is always the whole source — pass `None`.
-        self.inspect_replace(sidx, search, replace, replace_leading, None)?;
+        // lone `INSPECT REPLACING LEADING` — and carries its OWN INDEPENDENT
+        // `{BEFORE|AFTER}` region (`replace_region`). Since the tally left the source
+        // untouched, this half's window is also over the SAME original storage.
+        self.inspect_replace(sidx, search, replace, replace_leading, replace_region)?;
         Ok(Flow::Normal)
     }
 
