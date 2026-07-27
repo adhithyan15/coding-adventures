@@ -22,7 +22,7 @@ print(r.Id, r.gm, r.gds, r.region)
 
 ## v0.1.0 scope
 
-- `Level1Params`: Level-1 DC, capacitance, and noise parameter set with sane defaults for 130 nm-style NMOS, including `PB` / `MJ` bulk-junction depletion shaping for `CBS` / `CBD` and zero-default `KF` flicker noise.
+- `Level1Params`: Level-1 DC, capacitance, and noise parameter set with sane defaults for 130 nm-style NMOS, including `PB` / `MJ` bulk-junction depletion shaping for `CBS` / `CBD`, zero-default `KF` flicker noise, and a unit-default `AF` current exponent.
 - `evaluate_level1(params, V_GS, V_DS, V_BS, T)`: returns `MosResult` with Id, gm, gds, gmb, Cgs/Cgd/Cgb/Cbs/Cbd, region.
 - Region detection: cutoff (subthreshold-aware), triode, saturation.
 - Body effect via gamma * (sqrt(PHI-V_BS) - sqrt(PHI)) shift.

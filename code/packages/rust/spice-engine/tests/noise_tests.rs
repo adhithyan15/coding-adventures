@@ -1084,6 +1084,7 @@ fn noise_ac_adds_inverse_frequency_mosfet_flicker_noise() {
             vt0: 1.0,
             kp: 1.0e-3,
             flicker_noise_coefficient: 2.0e-18,
+            flicker_noise_exponent: 2.0,
             ..MosfetLevel1Params::default()
         },
     )));
@@ -1131,6 +1132,29 @@ fn noise_ac_rejects_invalid_mosfet_flicker_noise_coefficient() {
 
     let error = noise_ac(&circuit, "0", "Vgate", &[1_000.0], 300.0).unwrap_err();
     assert!(error.to_string().contains("MOSFET KF must be non-negative"));
+}
+
+#[test]
+fn noise_ac_rejects_invalid_mosfet_flicker_noise_exponent() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 3.0,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "0",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            flicker_noise_exponent: -1.0,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let error = noise_ac(&circuit, "0", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(error.to_string().contains("MOSFET AF must be non-negative"));
 }
 
 #[test]

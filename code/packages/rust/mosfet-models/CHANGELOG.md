@@ -1,5 +1,12 @@
 # Changelog — mosfet-models
 
+## Unreleased
+
+### Added
+
+- `Level1Params::af` provides the Level-1 MOS flicker-noise current exponent,
+  defaulting to one.
+
 ## [0.1.0] — 2026-06-13
 
 ### Added

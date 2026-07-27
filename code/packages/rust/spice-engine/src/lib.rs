@@ -3617,6 +3617,7 @@ pub struct MosfetLevel1Params {
     pub bulk_junction_potential: f64,
     pub bulk_junction_grading_coefficient: f64,
     pub flicker_noise_coefficient: f64,
+    pub flicker_noise_exponent: f64,
 }
 
 impl Default for MosfetLevel1Params {
@@ -3640,6 +3641,7 @@ impl Default for MosfetLevel1Params {
             bulk_junction_potential: 0.8,
             bulk_junction_grading_coefficient: 0.5,
             flicker_noise_coefficient: 0.0,
+            flicker_noise_exponent: 1.0,
         }
     }
 }
@@ -3983,8 +3985,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Pnp, 41, 58, 13, 4),
     (ModelCardKind::Njf, 22, 30, 7, 3),
     (ModelCardKind::Pjf, 22, 30, 7, 3),
-    (ModelCardKind::Nmos, 19, 26, 6, 3),
-    (ModelCardKind::Pmos, 19, 26, 6, 3),
+    (ModelCardKind::Nmos, 20, 27, 6, 3),
+    (ModelCardKind::Pmos, 20, 27, 6, 3),
 ];
 const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -4128,6 +4130,7 @@ const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("PB", "PB"),
     ("MJ", "MJ"),
     ("KF", "KF"),
+    ("AF", "AF"),
 ];
 
 fn model_type_key(text: &str) -> String {
@@ -4919,6 +4922,9 @@ pub fn mosfet_from_model_card(
     }
     if let Some(value) = model.parameters.get("KF") {
         params.flicker_noise_coefficient = *value;
+    }
+    if let Some(value) = model.parameters.get("AF") {
+        params.flicker_noise_exponent = *value;
     }
     Ok(Mosfet::with_model(
         name,
@@ -22793,7 +22799,10 @@ fn collect_noise_sources(
                         positive: drain,
                         negative: source,
                         source_psd: mosfet.params.flicker_noise_coefficient
-                            * result.drain_current.abs(),
+                            * result
+                                .drain_current
+                                .abs()
+                                .powf(mosfet.params.flicker_noise_exponent),
                         frequency_exponent: 1.0,
                     });
                 }
@@ -25488,6 +25497,7 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("PB", params.bulk_junction_potential),
         ("MJ", params.bulk_junction_grading_coefficient),
         ("KF", params.flicker_noise_coefficient),
+        ("AF", params.flicker_noise_exponent),
     ] {
         if !value.is_finite() {
             return Err(SpiceError::InvalidElement {
@@ -25530,6 +25540,12 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "MOSFET KF must be non-negative".to_string(),
+        });
+    }
+    if params.flicker_noise_exponent < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET AF must be non-negative".to_string(),
         });
     }
     if params.gate_source_overlap_capacitance < 0.0
