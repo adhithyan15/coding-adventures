@@ -630,6 +630,7 @@ fn model_card_aliases_build_device_instances() {
     assert_close(mos_model.params.drain_resistance, 125.0);
     assert_close(mos_model.params.source_resistance, 75.0);
     assert_close(mos_model.params.sheet_resistance, 50.0);
+    assert_close(mos_model.params.drain_squares, 1.0);
     assert_close(mos_model.params.oxide_thickness, 25.0e-9);
     assert_close(mos_model.params.flicker_noise_coefficient, 2.0e-24);
     assert_close(mos_model.params.flicker_noise_exponent, 1.4);
@@ -1679,6 +1680,7 @@ fn dc_mosfet_sheet_resistance_biases_both_intrinsic_terminals() {
         MosfetType::Nmos,
         MosfetLevel1Params {
             sheet_resistance: 1_000.0,
+            drain_squares: 2.0,
             ..MosfetLevel1Params::default()
         },
     )));
@@ -1793,6 +1795,7 @@ fn subcircuit_expansion_preserves_mos_geometry() {
             drain_resistance: 125.0,
             source_resistance: 75.0,
             sheet_resistance: 50.0,
+            drain_squares: 2.0,
             oxide_thickness: 25.0e-9,
             ..MosfetLevel1Params::default()
         },
@@ -1836,6 +1839,7 @@ fn subcircuit_expansion_preserves_mos_geometry() {
     assert_close(expanded.params.drain_resistance, 125.0);
     assert_close(expanded.params.source_resistance, 75.0);
     assert_close(expanded.params.sheet_resistance, 50.0);
+    assert_close(expanded.params.drain_squares, 2.0);
     assert_close(expanded.params.oxide_thickness, 25.0e-9);
 }
 
@@ -3975,6 +3979,38 @@ fn dc_mosfet_rejects_invalid_sheet_resistance() {
                     "MOSFET RSH must be non-negative".to_string()
                 } else {
                     "MOSFET RSH must be finite".to_string()
+                },
+            }
+        );
+    }
+}
+
+#[test]
+fn dc_mosfet_rejects_invalid_drain_squares() {
+    for drain_squares in [f64::NAN, -1.0] {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "Mbad",
+            "drain",
+            "gate",
+            "0",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                drain_squares,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+
+        let err = dc_op(&circuit).unwrap_err();
+        assert_eq!(
+            err,
+            SpiceError::InvalidElement {
+                name: "Mbad".to_string(),
+                reason: if drain_squares.is_finite() {
+                    "MOSFET NRD must be non-negative".to_string()
+                } else {
+                    "MOSFET NRD must be finite".to_string()
                 },
             }
         );

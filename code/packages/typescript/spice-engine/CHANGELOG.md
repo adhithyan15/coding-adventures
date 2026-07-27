@@ -1,5 +1,8 @@
 # Changelog
 
+- Add the Level-1 MOS `NRD` instance parameter. It defaults to one and scales
+  the `RSH` drain fallback while preserving explicit positive `RD` precedence,
+  intrinsic-node stamping, and `:RD` Johnson noise.
 - Add Level-1 MOS model-card `RSH` support. A positive sheet resistance supplies
   the default one-square drain/source terminal resistances when `RD` / `RS`
   remain zero, reusing intrinsic-node stamping and terminal Johnson noise.

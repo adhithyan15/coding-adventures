@@ -456,6 +456,7 @@ describe("dcOp", () => {
     expectClose(mosModel.params.RD, 125.0);
     expectClose(mosModel.params.RS, 75.0);
     expectClose(mosModel.params.RSH, 50.0);
+    expectClose(mosModel.params.NRD, 1.0);
     expectClose(mosModel.params.TOX, 25.0e-9);
     expectClose(mosModel.params.KF, 2.0e-24);
     expectClose(mosModel.params.AF, 1.4);
@@ -1181,6 +1182,7 @@ describe("dcOp", () => {
     circuit.add(voltageSource("Vgate", "gate", "0", 3.0));
     circuit.add(mosfet("M1", "drain", "gate", "0", "0", "NMOS", {
       RSH: 1_000.0,
+      NRD: 2.0,
     }));
 
     const result = dcOp(circuit);
@@ -1255,6 +1257,7 @@ describe("dcOp", () => {
           RD: 125.0,
           RS: 75.0,
           RSH: 50.0,
+          NRD: 2.0,
           TOX: 25.0e-9,
         }),
       ]),
@@ -1270,6 +1273,7 @@ describe("dcOp", () => {
     expectClose(expanded!.params.RD, 125.0);
     expectClose(expanded!.params.RS, 75.0);
     expectClose(expanded!.params.RSH, 50.0);
+    expectClose(expanded!.params.NRD, 2.0);
     expectClose(expanded!.params.TOX, 25.0e-9);
   });
 
@@ -2519,6 +2523,20 @@ describe("dcOp", () => {
         Number.isFinite(sheetResistance)
           ? "MOSFET RSH must be non-negative"
           : "MOSFET RSH must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET drain square counts", () => {
+    for (const drainSquares of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        NRD: drainSquares,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(drainSquares)
+          ? "MOSFET NRD must be non-negative"
+          : "MOSFET NRD must be finite",
       );
     }
   });

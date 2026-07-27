@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Parse Level-1 MOS model `RSH` and instance `NRD=<squares>` into the engine
+  parameter bundle so netlist-driven drain resistance uses `RSH * NRD`.
 - Add Berkeley SPICE app-deck shell dashboard dispatch queue lane tab panel
   card action menu group shortcut command palette search invocation receipt
   notification stack summary product handoff delivery package embed runtime

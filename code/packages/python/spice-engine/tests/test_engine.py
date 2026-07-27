@@ -788,6 +788,7 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(125.0) == mos_model.model.model.params.RD
     assert pytest.approx(75.0) == mos_model.model.model.params.RS
     assert pytest.approx(50.0) == mos_model.model.model.params.RSH
+    assert pytest.approx(1.0) == mos_model.model.model.params.NRD
     assert pytest.approx(25.0e-9) == mos_model.model.model.params.TOX
     assert pytest.approx(2.0e-24) == mos_model.model.model.params.KF
     assert pytest.approx(1.4) == mos_model.model.model.params.AF
@@ -959,7 +960,7 @@ def test_dc_mosfet_sheet_resistance_biases_both_intrinsic_terminals() -> None:
         "0",
         MOSFET(
             MosfetType.NMOS,
-            Level1Model(Level1Params(RSH=1_000.0)),
+            Level1Model(Level1Params(RSH=1_000.0, NRD=2.0)),
         ),
     ))
 
@@ -2058,6 +2059,30 @@ def test_mosfet_rejects_invalid_sheet_resistance(
         dc_op(circuit)
 
 
+@pytest.mark.parametrize("drain_squares", [float("nan"), -1.0])
+def test_mosfet_rejects_invalid_drain_squares(
+    drain_squares: float,
+) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(NRD=drain_squares)),
+        ),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET NRD must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
 def test_transient_diode_transit_time_holds_forward_charge_on_turnoff() -> None:
     def run(transit_time: float) -> TransientResult:
         circuit = Circuit()
@@ -3002,6 +3027,7 @@ def test_subcircuit_expansion_preserves_mos_geometry():
                             RD=125.0,
                             RS=75.0,
                             RSH=50.0,
+                            NRD=2.0,
                             TOX=25.0e-9,
                         )
                     ),
@@ -3021,6 +3047,7 @@ def test_subcircuit_expansion_preserves_mos_geometry():
     assert pytest.approx(125.0) == expanded.model.model.params.RD
     assert pytest.approx(75.0) == expanded.model.model.params.RS
     assert pytest.approx(50.0) == expanded.model.model.params.RSH
+    assert pytest.approx(2.0) == expanded.model.model.params.NRD
     assert pytest.approx(25.0e-9) == expanded.model.model.params.TOX
 
 
@@ -8286,19 +8313,19 @@ def test_noise_mosfet_rsh_adds_both_terminal_noise_sources() -> None:
         "0",
         MOSFET(
             MosfetType.NMOS,
-            Level1Model(Level1Params(RSH=250.0)),
+            Level1Model(Level1Params(RSH=250.0, NRD=2.0)),
         ),
     ))
 
     entries = noise_ac(circuit, "out", "Vgate", freqs=[1_000.0]).points[0].entries
-    for name in ("M1:RD", "M1:RS"):
+    for name, resistance in (("M1:RD", 500.0), ("M1:RS", 250.0)):
         entry = next(
             candidate
             for candidate in entries
             if candidate.element_name == name and candidate.noise_type == "thermal"
         )
         assert entry.source_psd == pytest.approx(
-            4.0 * 1.380_649e-23 * 300.0 / 250.0
+            4.0 * 1.380_649e-23 * 300.0 / resistance
         )
 
 

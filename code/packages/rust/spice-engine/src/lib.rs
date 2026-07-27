@@ -3612,6 +3612,7 @@ pub struct MosfetLevel1Params {
     pub drain_resistance: f64,
     pub source_resistance: f64,
     pub sheet_resistance: f64,
+    pub drain_squares: f64,
     pub saturation_current: f64,
     pub n_sub: f64,
     pub t_nom: f64,
@@ -3642,6 +3643,7 @@ impl Default for MosfetLevel1Params {
             drain_resistance: 0.0,
             source_resistance: 0.0,
             sheet_resistance: 0.0,
+            drain_squares: 1.0,
             saturation_current: 1.0e-15,
             n_sub: 1.4,
             t_nom: 300.15,
@@ -24959,7 +24961,7 @@ fn mosfet_drain_resistance(mosfet: &Mosfet) -> f64 {
     if mosfet.params.drain_resistance > 0.0 {
         mosfet.params.drain_resistance
     } else {
-        mosfet.params.sheet_resistance
+        mosfet.params.sheet_resistance * mosfet.params.drain_squares
     }
 }
 
@@ -25663,6 +25665,7 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("RD", params.drain_resistance),
         ("RS", params.source_resistance),
         ("RSH", params.sheet_resistance),
+        ("NRD", params.drain_squares),
         ("TOX", params.oxide_thickness),
         ("IS", params.saturation_current),
         ("N_SUB", params.n_sub),
@@ -25721,6 +25724,12 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "MOSFET RSH must be non-negative".to_string(),
+        });
+    }
+    if params.drain_squares < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET NRD must be non-negative".to_string(),
         });
     }
     if params.oxide_thickness <= 0.0 {

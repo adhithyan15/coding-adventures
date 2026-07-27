@@ -33,17 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS sheet resistance.
+1. Cross-language Level-1 MOS drain diffusion squares.
    - Status: current PR completion candidate.
-   - Add Berkeley Level-1 MOS `RSH` model-card support in Rust, Python, and
-     TypeScript, defaulting to zero ohms per square.
-   - With the current default one-square drain/source geometry, use `RSH` for
-     each terminal whose explicit `RD` or `RS` remains zero; positive explicit
-     terminal resistance takes precedence.
-   - Reuse the intrinsic terminal topology in DC, TF, AC, transient, and noise
-     analyses, preserve `RSH` through hierarchy and cloning, enforce finite
-     non-negative validation, and extend the supported-parameter coverage gate
-     from 191 to 193 canonical rows.
+   - Add the Berkeley Level-1 MOS `NRD` instance parameter in Rust, Python, and
+     TypeScript, defaulting to one drain diffusion square.
+   - When explicit `RD` remains zero, use `RSH * NRD` for the drain resistance;
+     positive explicit `RD` continues to take precedence.
+   - Reuse the existing intrinsic drain topology in DC, TF, AC, transient, and
+     noise analyses, preserve `NRD` through hierarchy and cloning, enforce
+     finite non-negative validation, and keep the model-card coverage gate at
+     193 canonical rows because `NRD` is an instance parameter.
 
 ## Completed Slices
 
@@ -3453,6 +3452,16 @@ the Rust, Python, and TypeScript surfaces together.
      shared across analyses, source-side capacitances terminate at the intrinsic
      node, and the supported-parameter release gate now covers 191 canonical
      rows.
+
+271. Cross-language Level-1 MOS sheet resistance.
+   - Status: completed in PR 9026.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `RSH`,
+     defaulting to zero ohms per square and supplying one-square drain/source
+     terminal resistances wherever explicit `RD` / `RS` remains zero.
+   - The shared intrinsic terminal topology covers DC, transient, AC,
+     transfer-function, and noise analyses, hierarchy preserves `RSH`, finite
+     non-negative validation is shared, and the supported-parameter release
+     gate now covers 193 canonical rows.
 
 ## Backlog
 
