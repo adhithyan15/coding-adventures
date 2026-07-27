@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.16.0 — classes slice 6: class variables (@@x)
+
+Accepts `Feature::ClassVars` — `@@` class variables.
+
+- `@@x = v` → `Stmt::Assign { scope: ClassVar }`; `@@x` → `Expr::VarRef { scope:
+  ClassVar }` (the name includes the leading `@@`).
+- A class-BODY initializer `@@x = init` — the FIRST accepted non-empty class body.
+
+**Why not a bare `@@x`.** A method body runs in a hoisted top-level function, not
+a lexical class scope, so a bare `@@x` is a Ruby error ("class variable access
+from toplevel"). Read/write in a method therefore routes through a new runtime
+helper: `sir_cvar_owner(self).class_variable_get/set(:"@@x")`, where
+`sir_cvar_owner(s) = s.is_a?(Module) ? s : s.class` resolves the owning class in
+*both* contexts — an instance method (`self.class`) and a class method (`self`
+*is* the class). So an instance method and a class method share the same `@@x`,
+matching Ruby.
+
+**The class-body initializer** runs where `self` is `main`, not the class, so it
+can't use the `sir_cvar_owner(self)` path; it writes on the class by NAME:
+`<Class>.class_variable_set(:"@@x", init)`. This is why a non-empty class body is
+now legal — but ONLY for `@@x` initializers; any other class-body content stays
+rejected.
+
+**Injection safety.** Every `@@`-name — a `ClassVar` `Assign`/`VarRef` and a
+class-body initializer — is validated as `@@<identifier>` (new
+`is_valid_classvar_name`) in the co-total scan and emitted as a safely-quoted
+symbol, so a crafted name cannot inject. The `emit_var_ref` scope match is now
+exhaustive (every `Scope` handled), so a new variant is a compile error rather
+than reaching a catch-all `unreachable!`.
+
+**Still rejects** modules (`__include__` / `__extend__`) — the last OOP slice.
+
 ## 0.15.0 — classes slice 5: class methods (def self.foo)
 
 Class (singleton) **methods**. No new `Feature` (they lower to builtins).

@@ -2195,3 +2195,137 @@ fn a_malformed_def_class_method_missing_its_closure_is_rejected() {
     let m = method_module(vec![classdef("Foo", None, vec![]), bad]);
     assert!(compile(&m).is_err(), "a malformed __def_class_method__ must be rejected");
 }
+
+// ── OOP classes slice 6 — class variables (@@x) ─────────────────────────────
+//
+// `@@x = v` / `@@x` (`Scope::ClassVar`, name incl. `@@`) can't be a bare `@@x` in
+// the hoisted method function (a Ruby toplevel error). A method-body read/write
+// routes through `sir_cvar_owner(self).class_variable_get/set(:"@@x")` (the owner
+// is the class in both instance- and class-method contexts). A class-BODY
+// initializer `@@x = init` (the only body content admitted) writes on the class
+// by name: `<Class>.class_variable_set(:"@@x", init)`. Each `@@`-name is validated.
+
+fn classvar_module(stmts: Vec<Stmt>) -> Module {
+    Module {
+        name: "cvprog".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::ClassVars,
+            Feature::MutableBindings,
+            Feature::Strings,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts, value: Expr::NilLit { span: s2() }, span: s2() },
+            effects: EffectSet::PURE.with(Effect::MayPrint),
+            metadata: Metadata::new().with_source_language("test"),
+            span: s2(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new().with_sir_version(CURRENT_SIR_VERSION),
+        span: s2(),
+    }
+}
+fn classvar_ref(name: &str) -> Expr {
+    Expr::VarRef { name: name.into(), scope: Scope::ClassVar, span: s2() }
+}
+fn classvar_assign(name: &str, value: Expr) -> Stmt {
+    Stmt::Assign { name: name.into(), scope: Scope::ClassVar, value, span: s2() }
+}
+
+// ---- positive, through the real frontend + interpreter --------------------
+
+#[test]
+fn e2e_class_variable_init_and_shared_reads() {
+    // `@@count` is initialised in the class body, mutated by a class method, and
+    // read by BOTH a class method and an instance method — all seeing the same
+    // value (2), proving the shared class-variable semantics.
+    let rb = ruby_to_ruby(
+        "class Counter\n  @@count = 0\n  def self.bump\n    @@count = @@count + 1\n  end\n  \
+         def self.total\n    @@count\n  end\n  def peek\n    @@count\n  end\nend\n\
+         Counter.bump\nCounter.bump\nputs Counter.total\nputs Counter.new.peek\n",
+    );
+    assert!(rb.contains("Counter.class_variable_set(:\"@@count\", 0)"), "class-body init:\n{rb}");
+    assert!(rb.contains("sir_cvar_owner(self).class_variable_get(:\"@@count\")"), "method read:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "2\n2"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+// ---- hand-built: emit shape + injection -----------------------------------
+
+#[test]
+fn classvar_read_and_write_emit_via_owner_helper() {
+    let m = classvar_module(vec![classvar_assign("@@n", ilit(1)), puts(classvar_ref("@@n"))]);
+    let rb = compile(&m).expect("classvar module compiles").source;
+    assert!(rb.contains("sir_cvar_owner(self).class_variable_set(:\"@@n\", 1)"), "write:\n{rb}");
+    assert!(rb.contains("sir_cvar_owner(self).class_variable_get(:\"@@n\")"), "read:\n{rb}");
+}
+
+#[test]
+fn a_class_body_of_only_classvar_inits_compiles() {
+    // A non-empty class body is now legal WHEN it holds only `@@x` initializers.
+    // (The module declares `Classes` + `ClassVars` — the body assign observes both.)
+    let m = Module {
+        name: "cfgprog".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Classes,
+            Feature::ClassVars,
+            Feature::MutableBindings,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![classdef("Cfg", None, vec![classvar_assign("@@v", ilit(7))])],
+                value: Expr::NilLit { span: s2() },
+                span: s2(),
+            },
+            effects: EffectSet::PURE.with(Effect::MayPrint),
+            metadata: Metadata::new().with_source_language("test"),
+            span: s2(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new().with_sir_version(CURRENT_SIR_VERSION),
+        span: s2(),
+    };
+    let rb = compile(&m).expect("classvar-init class body compiles").source;
+    assert!(rb.contains("Cfg.class_variable_set(:\"@@v\", 7)"), "by-name init:\n{rb}");
+}
+
+#[test]
+fn a_class_body_with_non_classvar_content_is_rejected() {
+    // Any other class-body content is still deferred.
+    let m = class_module(vec![classdef("Cfg", None, vec![puts(strlit("side effect"))])]);
+    assert!(compile(&m).is_err(), "non-classvar class body must be rejected");
+}
+
+#[test]
+fn an_injectable_classvar_write_name_is_rejected() {
+    let m = classvar_module(vec![classvar_assign("@@n = 1; system('x')", ilit(1))]);
+    let err = compile(&m).expect_err("an injectable classvar write must be rejected");
+    assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
+}
+
+#[test]
+fn an_injectable_classvar_read_name_is_rejected() {
+    let m = classvar_module(vec![puts(classvar_ref("@@n; system('x')"))]);
+    assert!(compile(&m).is_err(), "an injectable classvar read must be rejected");
+}
+
+#[test]
+fn a_non_double_at_classvar_name_is_rejected() {
+    // A `Scope::ClassVar` name must start with `@@` and a valid identifier.
+    assert!(compile(&classvar_module(vec![classvar_assign("@n", ilit(1))])).is_err(), "single @");
+    assert!(compile(&classvar_module(vec![classvar_assign("@@", ilit(1))])).is_err(), "bare @@");
+    assert!(compile(&classvar_module(vec![classvar_assign("@@1x", ilit(1))])).is_err(), "@@ + digit");
+}

@@ -185,6 +185,9 @@ pub enum ScanHit {
     /// metacharacter would inject source.  Same injection guard as `ConstantName`,
     /// at the instance-variable positions.
     InstanceVarName(String, semantic_ir::Span),
+    /// A `Scope::ClassVar` name (`@@x`) that is not a valid Ruby class-variable
+    /// name (`@@<identifier>`) — injection guard at the class-variable positions.
+    ClassVarName(String, semantic_ir::Span),
 }
 
 /// Scan the module — in a SINGLE traversal shared with the unsupported-builtin
@@ -428,6 +431,15 @@ impl Scan {
                 } else {
                     self.expr(value)
                 }
+            } else if matches!(scope, Scope::ClassVar) {
+                // A `Scope::ClassVar` target (`@@x = …`) emits the name into a
+                // `class_variable_set` symbol, so validate it as `@@<identifier>`
+                // at this position; then scan the value.
+                if !is_valid_classvar_name(name) {
+                    Some(ScanHit::ClassVarName(name.clone(), span.clone()))
+                } else {
+                    self.expr(value)
+                }
             } else {
                 self.expr(value)
             }
@@ -520,13 +532,32 @@ impl Scan {
                     superclass.clone().unwrap_or_default(),
                     span.clone(),
                 ))
-            } else if !body.is_empty() {
-                Some(ScanHit::Unsupported(
-                    "a non-empty class body (class-level code or constants)".to_string(),
-                    span.clone(),
-                ))
             } else {
-                None
+                // OOP slice 6: a class BODY may contain `@@x = <init>` class-
+                // variable initializers — the emitter renders each as
+                // `<Class>.class_variable_set(:"@@x", …)`.  Admit ONLY those (with a
+                // validated `@@`-name and a scanned value); any OTHER body content
+                // (class-level code / constants) stays deferred, rejected cleanly.
+                body.iter().find_map(|st| match st {
+                    Stmt::Assign {
+                        name: cv,
+                        scope: Scope::ClassVar,
+                        value,
+                        span: aspan,
+                    } => {
+                        if !is_valid_classvar_name(cv) {
+                            Some(ScanHit::ClassVarName(cv.clone(), aspan.clone()))
+                        } else {
+                            self.expr(value)
+                        }
+                    }
+                    _ => Some(ScanHit::Unsupported(
+                        "a class body with content other than `@@class` variable \
+                         initializers (class-level code / constants)"
+                            .to_string(),
+                        span.clone(),
+                    )),
+                })
             }
         }
         // A `Stmt::SingletonClassDef` (`class << self`) ALSO observes
@@ -570,6 +601,19 @@ fn is_valid_constant_path(name: &str) -> bool {
 fn is_valid_ivar_name(name: &str) -> bool {
     let mut chars = name.chars();
     chars.next() == Some('@')
+        && matches!(chars.next(), Some(c) if c.is_ascii_alphabetic() || c == '_')
+        && chars.all(|c| c.is_ascii_alphanumeric() || c == '_')
+}
+
+/// Whether `name` is a syntactically valid Ruby class-variable name — `@@`
+/// followed by an identifier (`@@count`).  The frontend puts the `@@` in the
+/// node's `name`; the emitter renders it through a quoted symbol in
+/// `class_variable_get/set`, but a `class_variable_*` still requires a
+/// `@@`-prefixed name and this gates any metacharacter (defence in depth).
+fn is_valid_classvar_name(name: &str) -> bool {
+    let mut chars = name.chars();
+    chars.next() == Some('@')
+        && chars.next() == Some('@')
         && matches!(chars.next(), Some(c) if c.is_ascii_alphabetic() || c == '_')
         && chars.all(|c| c.is_ascii_alphanumeric() || c == '_')
 }
@@ -766,6 +810,15 @@ impl Scan {
             scope: Scope::Instance,
             span,
         } if !is_valid_ivar_name(name) => Some(ScanHit::InstanceVarName(name.clone(), span.clone())),
+        // A `Scope::ClassVar` reference (`@@x`, `Feature::ClassVars`) emits its name
+        // into a `class_variable_get` symbol, so validate it as `@@<identifier>`.
+        Expr::VarRef {
+            name,
+            scope: Scope::ClassVar,
+            span,
+        } if !is_valid_classvar_name(name) => {
+            Some(ScanHit::ClassVarName(name.clone(), span.clone()))
+        }
         _ => None,
     }
     }
@@ -879,6 +932,18 @@ fn emit_stmt(s: &Stmt) -> String {
                 // Inside a `define_method`-installed method `self` is the receiver,
                 // so this writes the instance's own variable.
                 format!("{} = {}", name, emit_expr(value))
+            } else if matches!(scope, Scope::ClassVar) {
+                // A `Scope::ClassVar` target (`@@x = …`, `Feature::ClassVars`, OOP
+                // slice 6) IN A METHOD BODY: a bare `@@x = …` is a toplevel error in
+                // a hoisted function, so write it via `class_variable_set` on the
+                // owner (`sir_cvar_owner(self)`).  (The class-BODY initializer takes
+                // a different path — see the `ClassDef` emit, where the owner is the
+                // class by name.)  The `@@`-name is a validated, safely-quoted symbol.
+                format!(
+                    "sir_cvar_owner(self).class_variable_set({}, {})",
+                    emit_symbol(name),
+                    emit_expr(value)
+                )
             } else {
                 format!("{} = {}", sanitize_ident(name), emit_expr(value))
             }
@@ -1052,11 +1117,38 @@ fn emit_stmt(s: &Stmt) -> String {
         // scan validated it as a constant path), so the subclass inherits its
         // ancestry natively (`Dog.new.is_a?(Animal)`, and `super` resolves up it).
         Stmt::ClassDef {
-            name, superclass, ..
-        } => match superclass {
-            Some(sup) => format!("Object.const_set(:{name}, Class.new({sup}))"),
-            None => format!("Object.const_set(:{name}, Class.new)"),
-        },
+            name,
+            superclass,
+            body,
+            ..
+        } => {
+            let mut s = match superclass {
+                Some(sup) => format!("Object.const_set(:{name}, Class.new({sup}))"),
+                None => format!("Object.const_set(:{name}, Class.new)"),
+            };
+            // OOP slice 6: a class-BODY `@@x = <init>` (`Scope::ClassVar` Assign,
+            // the ONLY body content the scan admits) initialises a class variable.
+            // It runs where `self` is `main`, NOT the class, so it CANNOT use the
+            // method-body `sir_cvar_owner(self)` path — write it on the class by
+            // NAME instead.  The `@@`-name is a validated, safely-quoted symbol.
+            for st in body {
+                if let Stmt::Assign {
+                    name: cv,
+                    scope: Scope::ClassVar,
+                    value,
+                    ..
+                } = st
+                {
+                    let _ = write!(
+                        s,
+                        "\n{name}.class_variable_set({}, {})",
+                        emit_symbol(cv),
+                        emit_expr(value)
+                    );
+                }
+            }
+            s
+        }
         // Other not-yet-supported statements (e.g. index-set, module/singleton
         // defs) are rejected by the capability check / scan before emit.
         other => unreachable!("Ruby backend reached unsupported statement: {other:?}"),
@@ -1255,9 +1347,21 @@ fn emit_var_ref(name: &str, scope: Scope) -> String {
         // `define_method`-installed method (slice 2) `self` IS the receiver, so
         // `@v` reads the instance's own variable — no runtime plumbing.
         Scope::Instance => name.to_string(),
-        // `Scope::ClassVar` (`@@x`) is a later OOP slice's feature, not yet
-        // accepted → such a module is rejected before emit.
-        other => unreachable!("Ruby backend reached unsupported var scope: {other:?}"),
+        // A `Scope::ClassVar` reference (`@@x`, `Feature::ClassVars`, OOP slice 6).
+        // A method body runs in a hoisted top-level function, where a bare `@@x`
+        // is a Ruby error ("class variable access from toplevel"), so read it via
+        // `class_variable_get` on the owner resolved by `sir_cvar_owner(self)` (the
+        // class in both instance- and class-method contexts).  The name (incl.
+        // `@@`) is validated as `@@<identifier>` and emitted as a safe quoted
+        // symbol (no injection).
+        Scope::ClassVar => {
+            format!(
+                "sir_cvar_owner(self).class_variable_get({})",
+                emit_symbol(name)
+            )
+        }
+        // Every `Scope` is now handled; a new variant is a compile error here
+        // (the totality signal), so no `unreachable!` catch-all is needed.
     }
 }
 
