@@ -1796,11 +1796,26 @@ impl<'a> Compiler<'a> {
                 // `allow_leading_region = false`.
                 self.emit_inspect_replacing(verb, &s_reg, source_width, true, true, false)
             }
-            // A lone REPLACING: both `ALL` and `LEADING` are supported here, `REPLACING
-            // ALL` may carry a `{BEFORE|AFTER}` region, and the STANDALONE `REPLACING
-            // LEADING … BEFORE/AFTER` is supported too (`allow_leading_region = true`).
+            // A lone REPLACING. Dispatch on the number of replace items, mirroring the
+            // oracle's `read_statement`: exactly ONE item keeps the full single-item
+            // lowering (both `ALL` and `LEADING`, `REPLACING ALL` may carry a
+            // `{BEFORE|AFTER}` region, and the STANDALONE `REPLACING LEADING …
+            // BEFORE/AFTER` is supported via `allow_leading_region = true`); TWO OR
+            // MORE items take the multi-item lowering (`ALL`-only, single-char, no
+            // region — one left-to-right first-match-wins pass). Counting the same
+            // `replace_item` children the oracle counts keeps the two engines' accept/
+            // reject sets co-total.
             (false, true) => {
-                self.emit_inspect_replacing(verb, &s_reg, source_width, true, true, true)
+                let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
+                    CompileError::Unsupported(
+                        "INSPECT without a REPLACING clause is a later rung".into(),
+                    )
+                })?;
+                if child_nodes(replacing, "replace_item").len() >= 2 {
+                    self.emit_inspect_replacing_multi(verb, &s_reg, source_width)
+                } else {
+                    self.emit_inspect_replacing(verb, &s_reg, source_width, true, true, true)
+                }
             }
             // A lone TALLYING (or neither, which `inspect_tally_all` rejects). Both
             // `FOR ALL` and `FOR LEADING` are supported here, `FOR ALL` may carry a
@@ -2372,6 +2387,139 @@ impl<'a> Compiler<'a> {
         // stores. Copy through an empty concat so the source register (read during
         // the loop) is only overwritten now, after the last read.
         let empty = self.fresh("_irempty");
+        self.emit("str_const", Some(&empty), vec![Operand::Str(String::new())], "str");
+        self.emit(
+            "str_concat",
+            Some(s_reg),
+            vec![Operand::Var(result), Operand::Var(empty)],
+            "str",
+        );
+        Ok(())
+    }
+
+    /// `INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — the
+    /// multi-item REPLACING lowering: ONE left-to-right pass with FIRST-MATCH-WINS
+    /// and NO RE-CHAINING, matching `exec_inspect_replacing_multi` byte-for-byte.
+    ///
+    /// The subtlety the ordered chain encodes: at each source position the items are
+    /// considered IN WRITTEN ORDER and the FIRST whose search matches the ORIGINAL
+    /// byte wins; the byte a replacement produces is NEVER re-examined (we always
+    /// read `S[j]` from the original source register, never from `result`). We UNROLL
+    /// over the compile-time width `W`; at each position `j` we emit an ordered
+    /// if-else CHAIN, one link per item:
+    ///
+    /// ```text
+    ///   result = ""
+    ///   for j in 0..W:
+    ///     c = S[j]
+    ///     if c == x0: result += y0; goto done_j        # first match wins…
+    ///     if c == x1: result += y1; goto done_j        # …later items only reached
+    ///     …                                            #    when all earlier missed
+    ///     result += S[j, j+1)                          # no item matched → original
+    ///   done_j:
+    ///   S = result
+    /// ```
+    ///
+    /// The early `goto done_j` on a match is exactly first-match-wins: once item `k`
+    /// fires, items `k+1…` are skipped for this position. And because every compare
+    /// tests `c` (the ORIGINAL `S[j]`), never the just-appended replacement, a
+    /// produced character is never chained into a second replacement —
+    /// `ALL "a" BY "b" ALL "b" BY "z"` over `"ab"` compiles to `"bz"`, not `"zz"`.
+    ///
+    /// Each item's search reduces to a byte code (`single_delim_code`, for the
+    /// compare) and its replacement to a 1-char string (`single_delim_str`, for the
+    /// concat), sharing the SAME single-character validation the single-item path
+    /// uses — so a multi-character/figurative/wider/numeric operand is rejected
+    /// identically. The read-side `inspect_replacing_multi` has already rejected
+    /// LEADING/CHARACTERS/FIRST/region items, so every item here is a plain `ALL`
+    /// single-char pair. Like the single-item emitter, the width-`W` `result` is
+    /// copied back into `s_reg` through an empty concat AFTER the last read, so the
+    /// source register is not overwritten mid-scan.
+    fn emit_inspect_replacing_multi(
+        &mut self,
+        verb: &GrammarASTNode,
+        s_reg: &str,
+        width: usize,
+    ) -> Result<(), CompileError> {
+        // The written-order list of `(search_node, replace_node)` pairs (the reader
+        // has enforced the `ALL`-only, no-region scope bound). Reduce each to a
+        // `(search byte code, replacement 1-char string)` register pair, IN ORDER, so
+        // the per-position chain below can walk them written-first.
+        let item_nodes = inspect_replacing_multi(verb)?;
+        let mut regs: Vec<(String, String)> = Vec::with_capacity(item_nodes.len());
+        for (search_node, replace_node) in item_nodes {
+            let x_reg = self.single_delim_code(search_node, "INSPECT REPLACING")?;
+            let y_reg = self.single_delim_str(replace_node, "INSPECT REPLACING")?;
+            regs.push((x_reg, y_reg));
+        }
+
+        // result = "" — the accumulator we build W characters into.
+        let result = self.fresh("_irmres");
+        self.emit("str_const", Some(&result), vec![Operand::Str(String::new())], "str");
+
+        for j in 0..width {
+            // c = S[j] — read ONCE from the original source and compared against
+            // every item's search (so a replacement is never re-examined).
+            let jc = self.str_index(j as i64);
+            let c = self.fresh("_irmc");
+            self.emit(
+                "str_index",
+                Some(&c),
+                vec![Operand::Var(s_reg.to_string()), Operand::Var(jc.clone())],
+                "i64",
+            );
+            let done = self.fresh("irm_done");
+            // The ordered if-else chain: item 0, then item 1, … On the FIRST match we
+            // append that item's replacement and jump to `done`, skipping the rest —
+            // first-match-wins. A miss jumps to the next link (`next`); after the last
+            // link's `next` we fall through to the no-match branch below.
+            for (x_reg, y_reg) in &regs {
+                let eq = self.fresh("_irmeq");
+                self.emit(
+                    "cmp_eq",
+                    Some(&eq),
+                    vec![Operand::Var(c.clone()), Operand::Var(x_reg.clone())],
+                    "i64",
+                );
+                let next = self.fresh("irm_next");
+                self.emit(
+                    "jmp_if_false",
+                    None,
+                    vec![Operand::Var(eq), Operand::Var(next.clone())],
+                    "void",
+                );
+                self.emit(
+                    "str_concat",
+                    Some(&result),
+                    vec![Operand::Var(result.clone()), Operand::Var(y_reg.clone())],
+                    "str",
+                );
+                self.emit("jmp", None, vec![Operand::Var(done.clone())], "void");
+                self.emit("label", None, vec![Operand::Var(next)], "void");
+            }
+            // No item matched — append the ORIGINAL character `S[j, j+1)` unchanged.
+            let jc1 = self.str_index(j as i64 + 1);
+            let orig = self.fresh("_irmorig");
+            self.emit(
+                "str_slice",
+                Some(&orig),
+                vec![Operand::Var(s_reg.to_string()), Operand::Var(jc), Operand::Var(jc1)],
+                "str",
+            );
+            self.emit(
+                "str_concat",
+                Some(&result),
+                vec![Operand::Var(result.clone()), Operand::Var(orig)],
+                "str",
+            );
+            self.emit("label", None, vec![Operand::Var(done)], "void");
+        }
+
+        // source := result. `result` is exactly W chars (each position emitted one
+        // piece), so this is the same fixed-width image the oracle stores. Copy
+        // through an empty concat so `s_reg` (read all through the loop) is only
+        // overwritten now, after the last read.
+        let empty = self.fresh("_irmempty");
         self.emit("str_const", Some(&empty), vec![Operand::Str(String::new())], "str");
         self.emit(
             "str_concat",
@@ -4812,6 +4960,12 @@ fn inspect_tally_all(verb: &GrammarASTNode) -> Result<TallyPhrase<'_>, CompileEr
 type ReplacePhrase<'a> =
     (&'a GrammarASTNode, &'a GrammarASTNode, bool, Option<(RegionKind, &'a GrammarASTNode)>);
 
+/// One `ALL search BY replace` item of a MULTI-item REPLACING clause:
+/// `(search_node, replace_node)`. Regionless and `ALL`-only by construction (the
+/// multi-item scope bound), so — unlike [`ReplacePhrase`] — it carries no `leading`
+/// flag or region.
+type ReplaceItem<'a> = (&'a GrammarASTNode, &'a GrammarASTNode);
+
 /// Extract the supported `REPLACING ALL search BY replace [{BEFORE|AFTER} x]` /
 /// `REPLACING LEADING search BY replace` phrase from an `inspect_stmt`, returning
 /// `(search_node, replace_node, leading, region)` where `leading` is `true` for
@@ -4898,6 +5052,61 @@ fn inspect_replacing_all(verb: &GrammarASTNode) -> Result<ReplacePhrase<'_>, Com
             "INSPECT REPLACING ALL/LEADING without a search and a BY replacement".into(),
         )),
     }
+}
+
+/// Extract the `REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` phrase of a
+/// multi-item INSPECT, returning the `(search_node, replace_node)` pairs in WRITTEN
+/// ORDER — the compiler-side analogue of the oracle's `read_inspect_replacing_multi`,
+/// counting the SAME `replace_item` children so the two engines' accept/reject sets
+/// stay co-total. Only called after the caller has confirmed `>= 2` items; a single
+/// item keeps [`inspect_replacing_all`] and all its capabilities.
+///
+/// Scope bound (this rung, IDENTICAL messages to the oracle reader): every item must
+/// be a plain `ALL` item with NO region and NO `LEADING`/`CHARACTERS`/`FIRST`. Any
+/// violating item is a clean later-rung `Unsupported`. A multi-character/figurative/
+/// wider/numeric search or replacement is NOT rejected here — it falls to the SAME
+/// `single_delim_code`/`single_delim_str` checks the single-item emitter uses.
+fn inspect_replacing_multi(verb: &GrammarASTNode) -> Result<Vec<ReplaceItem<'_>>, CompileError> {
+    let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
+        CompileError::Unsupported("INSPECT without a REPLACING clause is a later rung".into())
+    })?;
+    let mut items = Vec::new();
+    for ri in child_nodes(replacing, "replace_item") {
+        let toks = child_tokens(ri);
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+            return Err(CompileError::Unsupported(
+                "INSPECT REPLACING CHARACTERS is a later rung".into(),
+            ));
+        }
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "FIRST") {
+            return Err(CompileError::Unsupported(
+                "INSPECT REPLACING FIRST is a later rung".into(),
+            ));
+        }
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
+            return Err(CompileError::Unsupported(
+                "INSPECT REPLACING with several items and a LEADING item is a later rung".into(),
+            ));
+        }
+        if child_node(ri, "inspect_region").is_some() {
+            return Err(CompileError::Unsupported(
+                "INSPECT REPLACING with several items and a BEFORE/AFTER region is a later rung"
+                    .into(),
+            ));
+        }
+        // `ALL search BY replace` — with no region the two direct `operand` children
+        // are exactly the search (first) and the replacement (second).
+        let ops = child_nodes(ri, "operand");
+        match ops.as_slice() {
+            [s, r] => items.push((*s, *r)),
+            _ => {
+                return Err(CompileError::Malformed(
+                    "INSPECT REPLACING ALL without a search and a BY replacement".into(),
+                ))
+            }
+        }
+    }
+    Ok(items)
 }
 
 /// The parsed pieces of a `CONVERTING from TO to [{BEFORE|AFTER} x]` phrase:
@@ -6470,17 +6679,20 @@ mod tests {
     }
 
     #[test]
-    fn inspect_replacing_several_items_is_a_later_rung() {
-        // Two `ALL … BY …` replace items in one INSPECT — a later rung; one this cut.
-        let err = compile_source(
+    fn inspect_replacing_several_items_now_compiles() {
+        // Two `ALL … BY …` replace items in one INSPECT is now supported (the
+        // multi-item first-match-wins path) — it must compile cleanly to a valid
+        // module. (Byte-for-byte agreement with the oracle is pinned by the e2e
+        // `assert_matches_oracle` cases.)
+        let module = compile_source(
             &wrap(
                 &["01  S  PIC X(5) VALUE \"ABABA\"."],
                 &["INSPECT S REPLACING ALL \"A\" BY \"X\" ALL \"B\" BY \"Y\".", "STOP RUN."],
             ),
             "insp_repl_many",
         )
-        .unwrap_err();
-        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+        .expect("multi-item INSPECT REPLACING should compile");
+        assert!(module.validate().is_empty(), "module should validate: {:?}", module.validate());
     }
 
     #[test]

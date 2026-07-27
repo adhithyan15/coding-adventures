@@ -112,7 +112,15 @@ window the count uses: `BEFORE z` replaces left of it — the WHOLE source if `z
 absent — and `AFTER z` replaces right of it — NOTHING if `z` is absent; positions
 outside the region keep their original character, and for `REPLACING LEADING` the run
 is ANCHORED at the window start, so `REPLACING LEADING "a" BY "*" AFTER "X"` over
-`"aaXaab"` rewrites only the in-window run → `"aaX**b"`); and the
+`"aaXaab"` rewrites only the in-window run → `"aaX**b"`); the **multi-item**
+`INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` (TWO OR MORE `ALL`
+replace items in one clause — ONE left-to-right pass in which each position takes the
+FIRST item, in WRITTEN ORDER, whose single-char search matches the ORIGINAL character;
+FIRST-MATCH-WINS, and — crucially — NO RE-CHAINING: a byte a replacement produces is
+never re-examined by a later item, so `REPLACING ALL "a" BY "b" ALL "b" BY "z"` over
+`"ab"` gives `"bz"`, not `"zz"`; this rung's multi path is `ALL`-only, single-char, with
+no `{BEFORE|AFTER}` region and no `LEADING`/`CHARACTERS`/`FIRST` — a single replace item
+keeps all its capabilities); and the
 **combined** `INSPECT source TALLYING counter FOR {ALL|LEADING} delim
 REPLACING {ALL|LEADING} x BY y` (one `INSPECT`, both phrases — per ISO it runs as
 tally-then-replace: count `delim` in the ORIGINAL source into `counter` FIRST,
@@ -142,8 +150,11 @@ delimiter / `WITH POINTER` / `ON OVERFLOW`, `INSPECT` with a `CHARACTERS`
 tally, a `{BEFORE|AFTER}` region on a `FOR LEADING`/`REPLACING LEADING` phrase
 (the region ships for `FOR ALL`/`REPLACING ALL` only — on the lone forms, on
 `CONVERTING`, and now on each half of the combined form) or a
-MULTI-character region delimiter, `REPLACING CHARACTERS`/`FIRST`, several
-replace items, or a combined statement whose `TALLYING`/`REPLACING` half is a
+MULTI-character region delimiter, `REPLACING CHARACTERS`/`FIRST`, a MULTI-item
+`REPLACING` list carrying a `LEADING`/`CHARACTERS`/`FIRST` item or a `{BEFORE|AFTER}`
+region (the multi-item list itself is now supported for plain single-char `ALL` items),
+several replace items in the COMBINED `TALLYING … REPLACING` form, or a combined
+statement whose `TALLYING`/`REPLACING` half is a
 deferred sub-form (a combined `TALLYING … FOR LEADING` and a combined `REPLACING
 LEADING`, in any combination, are now supported), `CONVERTING` with
 unequal-length

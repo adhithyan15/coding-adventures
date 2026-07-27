@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.49.0 — INSPECT REPLACING with multiple replace items
+
+- `INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — TWO OR MORE replace
+  items in one REPLACING clause — is now supported (previously rejected at read time as
+  "several replace items is a later rung"). One left-to-right pass over the source: at
+  each position the items are consulted IN WRITTEN ORDER and the FIRST whose single-char
+  search matches the ORIGINAL character wins, then the position advances.
+- Two properties, both pinned by tests on BOTH engines:
+  - FIRST-MATCH-WINS — only the earliest-written matching item fires at a position
+    (`ALL "a" BY "x" ALL "a" BY "y"` maps every `a` to `x`, never `y`).
+  - NO RE-CHAINING — the byte a replacement produces is never fed to a later item.
+    `REPLACING ALL "a" BY "b" ALL "b" BY "z"` over `"ab"` yields `"bz"`, not `"zz"`:
+    position 0's original `a`→`b` stops (the produced `b` is not re-inspected), and
+    position 1's ORIGINAL `b`→`z`. A naive sequential two-pass replace would give `"zz"`.
+- Implementation: a new `Stmt::InspectReplacingMulti { source, items }` variant carries
+  the items in written order; `read_statement` dispatches on the number of `replace_item`
+  children (exactly one keeps the full single-item path with LEADING/region; two or more
+  take the multi path). `exec_inspect_replacing_multi` resolves every `(search, replace)`
+  to a char pair FIRST (via the shared `single_delim_char`, so an invalid operand aborts
+  before mutating), then rebuilds the source in ONE pass reading only the original
+  characters — that read-original-only property IS the no-re-chaining guarantee. Width is
+  preserved, so the rebuilt string feeds the same alphanumeric char-store path a MOVE
+  uses, matching the compiled lowering byte-for-byte.
+- Scope bound (this rung): the multi-item path supports ONLY `ALL` items, each a
+  single-char search BY single-char replacement, with NO `{BEFORE|AFTER}` region and NO
+  `LEADING`/`CHARACTERS`/`FIRST`. A multi-item list carrying any of those, and the
+  combined `TALLYING … REPLACING` form with several items, remain later rungs — rejected
+  with identical messages on both engines. The single-item path (`read_inspect_replacing_all`
+  / `inspect_replace`) is untouched.
+
 ## 0.48.0 — standalone INSPECT FOR LEADING / REPLACING LEADING with a BEFORE/AFTER region
 
 - The STANDALONE `INSPECT source TALLYING counter FOR LEADING delim {BEFORE|AFTER} x`

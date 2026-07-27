@@ -620,13 +620,51 @@ decays the run only on an IN-WINDOW mismatch (`active := active AND ((s[j]==x) O
 NOT in_region)`) — byte-identical, and the `ALL` and no-region `LEADING` lowerings
 are untouched.
 
+**Multiple `REPLACING` items in one clause (follow-up rung).**
+`INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — TWO OR MORE `ALL`
+replace items in a single `REPLACING` clause — is now supported (previously rejected at
+read time as "several replace items is a later rung"). Per ISO this is ONE left-to-right
+pass over the source: at each position the items are considered **in written order** and
+the **first** item whose single-char search matches the ORIGINAL character is applied,
+then the position advances. Two properties follow:
+
+- **First-match-wins** — only the earliest-written matching item fires at a position
+  (`ALL "a" BY "x" ALL "a" BY "y"` maps every `a` to `x`, never `y`).
+- **No re-chaining** — the byte a replacement produces is NEVER re-examined by a later
+  item. `REPLACING ALL "a" BY "b" ALL "b" BY "z"` over `"ab"` → `"bz"`, NOT `"zz"`:
+  position 0's original `a`→`b` stops (the produced `b` is not turned into `z`), and
+  position 1's ORIGINAL `b`→`z`. A naive sequential two-pass replace would give `"zz"`;
+  the single-pass reading-only-the-original semantics is what makes `"bz"` correct.
+
+The oracle adds a `Stmt::InspectReplacingMulti { source, items }` variant read via
+`read_inspect_replacing_multi`; `read_statement` dispatches on the number of
+`replace_item` children (exactly one → the single-item path with all its capabilities;
+two or more → the multi path). `exec_inspect_replacing_multi` resolves every
+`(search, replace)` char pair FIRST (shared `single_delim_char`, so an invalid operand
+aborts before mutating) then rebuilds in one pass over the original characters. The
+compiler mirrors this with `emit_inspect_replacing_multi` and an `inspect_replacing_multi`
+CST reader that counts the SAME children, so the two engines' accept/reject sets are
+co-total; the per-position lowering is an ordered if-else chain that appends the first
+matching item's replacement and jumps to the position's done label (first-match-wins),
+always comparing against the original `s[j]` (no re-chaining).
+
+This multi-item path is scoped SMALL: only `ALL` items, each a single-char search BY
+single-char replacement, with **no** `{BEFORE|AFTER}` region and **no**
+`LEADING`/`CHARACTERS`/`FIRST`. A multi-item list carrying any of those, and the
+combined `TALLYING … REPLACING` form with several items, remain later rungs (rejected
+identically on both engines). A single replace item keeps the full single-item path
+(LEADING, region) unchanged.
+
 Deferred as clean later rungs (accepted by the grammar, rejected at read/compile
 time): `REPLACING CHARACTERS BY`, `REPLACING FIRST` (`FIRST` does not parse as a
 replace keyword — it is deferred at parse time), a `{BEFORE|AFTER}` region on the
 LEADING half of the **combined** form, a
-multi-character region delimiter, **several** replace items, a multi-character /
+multi-character region delimiter, a multi-item `REPLACING` list carrying a
+`LEADING`/`CHARACTERS`/`FIRST` item or a `{BEFORE|AFTER}` region, **several** replace
+items in the **combined** `TALLYING … REPLACING` form, a multi-character /
 figurative / wider / numeric search or replacement, and a numeric/group source.
-(A `REPLACING LEADING` inside the combined `TALLYING … REPLACING` form, and a
+(A single-clause multi-item `REPLACING ALL` list is now supported — see just above.
+A `REPLACING LEADING` inside the combined `TALLYING … REPLACING` form, and a
 `{BEFORE|AFTER}` region on each `ALL` half of the combined form, are supported — see
 the combined section below; the STANDALONE `REPLACING LEADING … {BEFORE|AFTER}` is
 supported as described just above.)
