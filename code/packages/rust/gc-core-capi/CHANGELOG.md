@@ -2,6 +2,14 @@
 
 All notable changes to this crate are documented here.
 
+## 0.18.0 - 2026-07-27 — twig-compat aliases `__twig_gc_collect_incremental_*` (frontend incremental GC)
+
+- **`__twig_gc_collect_incremental_{start,step,finish}`** (new `twig_compat` aliases →
+  `__gc_collect_incremental_*`) — the `__twig_gc_*` linker names a native code generator emits
+  for the `gc_collect_incremental_*` builtin trio, so a compiled program can drive the
+  bounded-pause incremental cycle. Mirror `__twig_gc_collect_compacting`. No new `unsafe`
+  beyond the delegated calls.
+
 ## 0.17.0 - 2026-07-25 — incremental collector C ABI `__gc_collect_incremental_{start,step,finish}` (AOT00-T4 §6)
 
 - **Three new exports in `stack_scan.rs`** — the bounded-pause incremental collection cycle,

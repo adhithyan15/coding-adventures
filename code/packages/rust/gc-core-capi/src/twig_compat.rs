@@ -26,7 +26,11 @@
 //! Once the code generators are migrated to emit the `__gc_*` names directly,
 //! this shim can be deleted.
 
-use crate::stack_scan::{__gc_collect, __gc_collect_compacting, __gc_collect_precise, __gc_safepoint};
+use crate::stack_scan::{
+    __gc_collect, __gc_collect_compacting, __gc_collect_incremental_finish,
+    __gc_collect_incremental_start, __gc_collect_incremental_step, __gc_collect_precise,
+    __gc_safepoint,
+};
 use crate::{__gc_alloc, __gc_collection_count, __gc_live_bytes};
 
 /// `__twig_gc_alloc(n)` → [`__gc_alloc`]. Called by the emitted code and by
@@ -100,6 +104,44 @@ pub unsafe extern "C" fn __twig_gc_collect_precise() -> i64 {
 #[inline(never)]
 pub unsafe extern "C" fn __twig_gc_collect_compacting() -> i64 {
     __gc_collect_compacting()
+}
+
+/// `__twig_gc_collect_incremental_start()` → [`__gc_collect_incremental_start`]. Begins a
+/// bounded-pause incremental collection rooted precisely at the caller's stack (spec
+/// AOT00-T4 §6). The `__twig_gc_*` name a native code generator emits for the
+/// `gc_collect_incremental_start` builtin. `#[inline(never)]` keeps it a real frame below the
+/// mutator so the root walk starts at the caller.
+///
+/// # Safety
+/// Same contract as [`__gc_collect_incremental_start`]: the calling thread owns its stack.
+#[no_mangle]
+#[inline(never)]
+pub unsafe extern "C" fn __twig_gc_collect_incremental_start() {
+    __gc_collect_incremental_start()
+}
+
+/// `__twig_gc_collect_incremental_step(budget)` → [`__gc_collect_incremental_step`]. Advances
+/// the in-progress incremental mark by up to `budget` objects; returns `1` when marking is
+/// complete, `0` otherwise.
+///
+/// # Safety
+/// Same contract as [`__gc_collect_incremental_step`]: called between a `start` and its
+/// `finish`; single mutator.
+#[no_mangle]
+#[inline(never)]
+pub unsafe extern "C" fn __twig_gc_collect_incremental_step(budget: i64) -> i64 {
+    __gc_collect_incremental_step(budget)
+}
+
+/// `__twig_gc_collect_incremental_finish()` → [`__gc_collect_incremental_finish`]. Sweeps the
+/// unreachable objects and ends the incremental cycle; returns the count reclaimed.
+///
+/// # Safety
+/// Same contract as [`__gc_collect_incremental_finish`]: called after marking is complete.
+#[no_mangle]
+#[inline(never)]
+pub unsafe extern "C" fn __twig_gc_collect_incremental_finish() -> i64 {
+    __gc_collect_incremental_finish()
 }
 
 /// `__twig_gc_live_bytes()` → [`__gc_live_bytes`].

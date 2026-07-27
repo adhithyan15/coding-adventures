@@ -1,6 +1,6 @@
 [package]
 name = "gc-core-capi"
-version = "0.17.0"
+version = "0.18.0"
 edition = "2021"
 description = "C ABI for gc-core's flat-native heap — the gc_runtime_<target> archive linked into native-AOT output (LANG16 / AOT00 T1)."
 license = "MIT"
