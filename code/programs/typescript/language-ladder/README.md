@@ -175,7 +175,9 @@ pure (`buildSyllableMatrix` in `src/matrix.ts`): rows reuse the grounded
 consonant boundary from `syllabary.ts`, the vowel column headers are read off
 the first consonant's own row, and a ragged script yields **no matrix** rather
 than a mislabelled cell (unit-tested with a control). No new data — the same
-generated syllables, re-arranged.
+generated syllables, re-arranged. The **special-consonant rows** (retroflex ḷa,
+alveolar ṟa / ṉa) are marked with a ★ in the grid, reusing the same
+`specialConsonant` classifier the tiles use so the confusable rows stand out.
 
 **The independent (word-initial) vowels.** Everything above is consonant + vowel
 *sign*; a word that *begins* with a vowel writes a different letter — the

@@ -493,6 +493,7 @@ body {
   background: var(--bg); color: var(--muted);
   font-size: 0.75rem; padding: 4px 8px; white-space: nowrap;
 }
+.matrix__consonant--special { background: var(--special-bg); color: var(--special); font-weight: 600; }
 .matrix__corner { position: sticky; left: 0; top: 0; z-index: 2; background: var(--bg); }
 .matrix__cell { padding: 0; }
 .matrix__cell--active { box-shadow: inset 0 0 0 2px var(--accent); }

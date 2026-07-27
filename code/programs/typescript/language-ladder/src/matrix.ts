@@ -20,6 +20,7 @@
 // ---------------------------------------------------------------------------
 
 import { consonantGroups } from "./syllabary.ts";
+import { specialConsonant } from "./core.ts";
 
 /** The minimal syllable shape the matrix needs. */
 interface MatrixLetter {
@@ -43,8 +44,10 @@ export interface SyllableMatrix {
   /** ISO-15919 vowel per column (a, ā, i, …, ai, au, r̥) — read off the data. */
   vowels: string[];
   /** Rows in consonant-major order; `label` is the consonant's inherent-"a"
-   *  form (ka, kha, ḷa), `cells` its syllables across the vowel columns. */
-  rows: { label: string; cells: MatrixCell[] }[];
+   *  form (ka, kha, ḷa), `cells` its syllables across the vowel columns, and
+   *  `special` marks the retroflex/alveolar consonants (ḷ/ṟ/ṉ) — the rows a
+   *  reader confuses with the ordinary la/ra/na. */
+  rows: { label: string; cells: MatrixCell[]; special: boolean }[];
 }
 
 /**
@@ -76,10 +79,16 @@ export function buildSyllableMatrix(letters: MatrixLetter[]): SyllableMatrix | n
     return s.startsWith(prefix) ? s.slice(prefix.length) : s;
   });
 
-  const rows = groups.map((g) => ({
-    label: letters[g[0]!]!.sound,
-    cells: g.map((i) => ({ index: i, glyph: letters[i]!.glyph, sound: letters[i]!.sound })),
-  }));
+  const rows = groups.map((g) => {
+    const label = letters[g[0]!]!.sound;
+    return {
+      label,
+      // Reuse the tested false-friend classifier so the matrix flags the same
+      // retroflex/alveolar rows the Browse tiles do — no separate judgement here.
+      special: specialConsonant({ sound: label }) !== null,
+      cells: g.map((i) => ({ index: i, glyph: letters[i]!.glyph, sound: letters[i]!.sound })),
+    };
+  });
 
   return { vowels, rows };
 }
