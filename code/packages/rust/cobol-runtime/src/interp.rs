@@ -371,6 +371,9 @@ impl Machine {
             Stmt::InspectTallyMulti { source, counter, delims } => {
                 return self.exec_inspect_tally_multi(source, counter, delims)
             }
+            Stmt::InspectTallyCounters { source, groups } => {
+                return self.exec_inspect_tally_counters(source, groups)
+            }
             Stmt::InspectTallyReplace {
                 source,
                 counter,
@@ -1010,6 +1013,93 @@ impl Machine {
         let addend = Decimal { neg: false, int: count.to_string(), frac: String::new() };
         let acc = checked(add(&self.named_decimal(counter)?, &addend))?;
         self.store_result(counter, acc, false, &[])
+    }
+
+    /// `INSPECT src TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d …` — several counters,
+    /// each with its own delimiter list, folded through ONE combined priority list in a
+    /// SINGLE left-to-right pass. This generalises [`Self::exec_inspect_tally_multi`]
+    /// from one counter to a list of `(counter, delimiter)` pairs where the matched
+    /// pair's OWN counter is bumped.
+    ///
+    /// ISO COMBINED-PRIORITY-LIST-ACROSS-COUNTERS semantics (the crux): all delimiters
+    /// of all groups, flattened in WRITTEN ORDER (group 1's items first, then group 2's,
+    /// …), form ONE ordered priority list. At each source position that list is walked in
+    /// order and the FIRST delimiter that matches bumps ITS OWN group's counter, then the
+    /// scan advances (single-char ⇒ a normal one-position step). The `break` means an
+    /// earlier group's delimiter CONSUMES the position — a character it claims NEVER
+    /// reaches a later group's delimiter, so `"aa" TALLYING C1 FOR ALL "a" C2 FOR ALL "a"`
+    /// gives C1 += 2, C2 += 0 (group 1 wins both positions). A position matching no
+    /// delimiter advances with no increment.
+    fn exec_inspect_tally_counters(
+        &mut self,
+        source: &str,
+        groups: &[(String, Vec<Operand>)],
+    ) -> Result<Flow, RuntimeError> {
+        let sidx = self.inspect_alnum_source(source)?;
+
+        // Validate EVERY counter FIRST — each must be an UNSIGNED INTEGER (`PIC 9(n)`),
+        // the SAME check the single-item tally applies. Doing all of them (and all the
+        // delimiter resolution below) before touching any counter means an invalid group
+        // aborts with every counter untouched. The same counter name may legally appear
+        // in two groups; validating it twice is harmless.
+        for (counter, _) in groups {
+            let cidx = *self
+                .by_name
+                .get(counter)
+                .ok_or_else(|| RuntimeError::UndefinedName(counter.to_string()))?;
+            match &self.items[cidx].picture {
+                Some(Picture::Numeric { dec_digits: 0, signed: false, .. }) => {}
+                Some(Picture::Numeric { .. }) => {
+                    return Err(RuntimeError::Unsupported(format!(
+                        "INSPECT TALLYING into a non-integer or signed counter {counter} is a later rung"
+                    )))
+                }
+                _ => {
+                    return Err(RuntimeError::Unsupported(format!(
+                        "INSPECT TALLYING into a non-numeric counter {counter} is a later rung"
+                    )))
+                }
+            }
+        }
+
+        // Flatten every delimiter to `(group_index, char)` in WRITTEN ORDER, resolving
+        // all of them (via the SAME `single_delim_char` the single-item path uses, so an
+        // invalid operand rejects identically) BEFORE the scan. `group_index` remembers
+        // which counter a match belongs to.
+        let mut flat: Vec<(usize, char)> = Vec::new();
+        for (gi, (_counter, delims)) in groups.iter().enumerate() {
+            for d in delims {
+                flat.push((gi, self.single_delim_char(d, "INSPECT")?));
+            }
+        }
+
+        // ONE pass over the source. Per position walk the flattened list in order; the
+        // FIRST match bumps that group's accumulator and breaks (first-match-wins across
+        // counters). A per-GROUP accumulator (not per counter NAME) keeps the counts
+        // separate even when two groups share a counter name — they are summed into that
+        // one item below.
+        let mut accs = vec![0usize; groups.len()];
+        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+        for ch in chars {
+            for (gi, dch) in &flat {
+                if ch == *dch {
+                    accs[*gi] += 1;
+                    break;
+                }
+            }
+        }
+
+        // Add each group's accumulator to its counter, via the SAME store path ADD (and
+        // the single-item tally) uses. `named_decimal` re-reads the counter each time, so
+        // if the SAME counter name appears in two groups both groups' shares accumulate
+        // into that one item correctly. INSPECT adds; it never clears a counter.
+        let mut flow = Flow::Normal;
+        for (gi, (counter, _)) in groups.iter().enumerate() {
+            let addend = Decimal { neg: false, int: accs[gi].to_string(), frac: String::new() };
+            let acc = checked(add(&self.named_decimal(counter)?, &addend))?;
+            flow = self.store_result(counter, acc, false, &[])?;
+        }
+        Ok(flow)
     }
 
     /// `INSPECT source TALLYING counter FOR {ALL|LEADING} delim REPLACING

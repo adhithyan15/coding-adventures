@@ -8,6 +8,46 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.47.0: INSPECT TALLYING with multiple counters
+
+`INSPECT source TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d [ALL e …] …` — TWO OR MORE
+`tally_for` groups, each with its OWN counter and one-or-more single-char `FOR ALL`
+delimiters — now compiles, byte-identical to the `coding-adventures-cobol-runtime` 0.51.0
+oracle. Previously any several-counter TALLYING was rejected at read time ("several
+counters is a later rung"). This GENERALISES the v0.46.0 multi-item single-counter lowering
+to a list of `(counter, delimiter)` pairs where the matched pair's OWN counter is bumped.
+
+Semantics (ISO COMBINED priority list ACROSS counters — the crux): ALL delimiters of ALL
+groups form ONE ordered priority list, scanned in a SINGLE left-to-right pass. At each
+position the delimiters are tried IN WRITTEN ORDER (group 1's items first, then group 2's,
+…) and the FIRST that matches increments ITS OWN group's counter by 1, then the scan
+advances. The per-position first-match `break` means an earlier group CONSUMES the
+position — a character it claims NEVER reaches a later group's delimiter, so the groups are
+NOT independent counts:
+
+- `"aa"  TALLYING C1 FOR ALL "a"  C2 FOR ALL "a"`  gives `C1 += 2, C2 += 0`
+- `"aba" TALLYING C1 FOR ALL "a" ALL "b"  C2 FOR ALL "a"`  gives `C1 += 3, C2 += 0`
+
+Lowering: `emit_inspect_tally_counters` keeps ONE accumulator register per GROUP (init 0)
+through a single RUNTIME `top:/end:` loop over `len = str_len(S)`. It reads `S[j]` once and
+walks an ordered `cmp_eq` chain over the flattened `(group, delimiter)` pairs in written
+order: on the FIRST match it bumps THAT group's accumulator and jumps past the rest to the
+continue label; no match falls through with no bump. After the loop, `counter := counter +
+accumulator` folds per group via the same `store_scaled` (silent high-order truncation on
+overflow) the single-item tally uses — and each final add re-reads the counter's storage
+register, so two groups naming the SAME counter both add to that one item correctly. A new
+`inspect_tally_counters` CST reader walks the same `tally_for`/`tally_item` children the
+oracle walks, and the dispatch keys PURELY on `fors.len() >= 2`, so the two engines'
+accept/reject sets stay co-total.
+
+Scope bound (this rung, identical messages on both engines): every item of every group must
+be an `ALL` single-char delimiter with NO `{BEFORE|AFTER}` region and NO
+`LEADING`/`CHARACTERS`; every counter must be an unsigned integer `PIC 9(n)`. A group
+carrying any of those, and the COMBINED `TALLYING … REPLACING` form with several counters
+(still rejected by `inspect_tally_all`'s several-counters guard), remain later rungs.
+Exactly ONE `tally_for` keeps the single-counter lowerings (`emit_inspect_tallying` /
+`emit_inspect_tally_multi`) UNCHANGED.
+
 ### Added — v0.46.0: INSPECT TALLYING with multiple FOR items (one counter)
 
 `INSPECT source TALLYING counter FOR ALL a ALL b [ALL d …]` — TWO OR MORE `FOR ALL` tally

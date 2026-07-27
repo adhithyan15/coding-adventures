@@ -1833,6 +1833,17 @@ impl<'a> Compiler<'a> {
             _ => {
                 if let Some(tallying) = child_node(verb, "inspect_tallying") {
                     let fors = child_nodes(tallying, "tally_for");
+                    // TWO OR MORE `tally_for` groups take the NEW multi-COUNTER lowering:
+                    // each group has its own counter, and ALL groups' delimiters form ONE
+                    // combined priority list scanned in a single left-to-right pass (see
+                    // `emit_inspect_tally_counters`). Dispatching PURELY on `fors.len() >=
+                    // 2` — BEFORE the single-`tally_for` multi-item branch — keeps this
+                    // co-total with the oracle's `read_statement`: several counters is no
+                    // longer rejected here (that reject still guards the COMBINED
+                    // `TALLYING … REPLACING` form via `inspect_tally_all`).
+                    if fors.len() >= 2 {
+                        return self.emit_inspect_tally_counters(verb, &s_reg);
+                    }
                     if fors.len() == 1 && child_nodes(fors[0], "tally_item").len() >= 2 {
                         return self.emit_inspect_tally_multi(verb, &s_reg);
                     }
@@ -2691,6 +2702,180 @@ impl<'a> Compiler<'a> {
         let sum = self.fresh("_itmsum");
         self.emit("add", Some(&sum), vec![Operand::Var(counter_reg), Operand::Var(cnt)], "i64");
         self.store_scaled(&counter_name, &sum, 0, int_digits + 1, false)
+    }
+
+    /// `INSPECT src TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d …` — several counters,
+    /// each with its OWN delimiter list, folded through ONE combined priority list in a
+    /// SINGLE runtime pass. This generalises [`Self::emit_inspect_tally_multi`] from one
+    /// shared counter to a list of `(counter, delimiter)` pairs where the matched pair's
+    /// OWN counter is bumped.
+    ///
+    /// ISO COMBINED-PRIORITY-LIST-ACROSS-COUNTERS semantics (the crux): all delimiters of
+    /// all groups, flattened in WRITTEN ORDER (group 1's items first, then group 2's, …),
+    /// form ONE ordered priority list. At each source position the flattened list is
+    /// walked in order and the FIRST delimiter that matches bumps ITS OWN group's
+    /// accumulator, then the scan advances (single-char ⇒ a normal one-position step). The
+    /// per-position `break` (a `jmp` to `cont`) means an earlier group's delimiter CONSUMES
+    /// the position — a character it claims NEVER reaches a later group's delimiter — so
+    /// `"aa" TALLYING C1 FOR ALL "a" C2 FOR ALL "a"` gives C1 += 2, C2 += 0. A position
+    /// matching no delimiter falls through to `cont` with no bump.
+    ///
+    /// ```text
+    ///   acc_0 = 0; acc_1 = 0; …            # one accumulator per GROUP
+    ///   j = 0;  len = str_len(S)
+    /// top:  if j >= len jmp end
+    ///       c = S[j]
+    ///       if c == flat[0].delim { acc[flat[0].group] += 1; jmp cont }   # written order,
+    ///       if c == flat[1].delim { acc[flat[1].group] += 1; jmp cont }   # first match wins,
+    ///       …                                                             # then stop
+    /// cont: j = j + 1;  jmp top
+    /// end:
+    ///   for each group g:  counter_g := counter_g + acc_g   # INSPECT ADDS; never clears
+    /// ```
+    ///
+    /// Each group keeps its OWN accumulator (indexed by GROUP, not by counter name), so two
+    /// groups that name the SAME counter stay separate through the loop and are BOTH added
+    /// into that one item afterwards. The final adds run sequentially and each reads the
+    /// counter's storage register FRESH (`self.items[idx].reg`, which `store_scaled` mutates
+    /// via `mov`), so a shared counter accumulates both shares correctly — mirroring the
+    /// oracle's per-add `named_decimal` re-read. Each delimiter reduces to a byte code via
+    /// the SAME `single_delim_code` the single-item path uses, and each counter is validated
+    /// unsigned-integer exactly as `emit_inspect_tally_multi` validates its lone counter, so
+    /// the compiled program matches `cobol-runtime`'s `exec_inspect_tally_counters`
+    /// byte-for-byte and the accept/reject sets stay co-total. The read-side
+    /// `inspect_tally_counters` has already rejected LEADING/CHARACTERS/region items.
+    fn emit_inspect_tally_counters(
+        &mut self,
+        verb: &GrammarASTNode,
+        s_reg: &str,
+    ) -> Result<(), CompileError> {
+        // The counter names and, per group, the written-order delimiter nodes (the reader
+        // has enforced the `ALL`-only, no-region scope bound on every item of every group).
+        let groups = inspect_tally_counters(verb)?;
+
+        // Validate EVERY counter (unsigned integer `PIC 9(n)`) and capture its item index
+        // FIRST — resolving all counters and all delimiters before emitting the loop means
+        // an invalid group aborts with nothing emitted. `int_digits` is remembered per
+        // group for the final store's overflow bound.
+        let mut counter_info: Vec<(String, usize, usize)> = Vec::with_capacity(groups.len());
+        for (counter_name, _) in &groups {
+            let cidx = self.numeric_index(counter_name)?;
+            let (int_digits, dec_digits) = self.numeric_dims(cidx);
+            if dec_digits != 0 {
+                return Err(CompileError::Unsupported(format!(
+                    "INSPECT TALLYING into a non-integer counter {counter_name} is a later rung"
+                )));
+            }
+            if self.item_signed(cidx) {
+                return Err(CompileError::Unsupported(format!(
+                    "INSPECT TALLYING into a signed counter {counter_name} is a later rung"
+                )));
+            }
+            counter_info.push((counter_name.clone(), cidx, int_digits));
+        }
+
+        // One accumulator register per GROUP, all init 0 (kept separate even when two
+        // groups share a counter name — they are summed into that one item at the end).
+        let mut accs: Vec<String> = Vec::with_capacity(groups.len());
+        for _ in &groups {
+            let acc = self.fresh("_itcacc");
+            self.emit("const", Some(&acc), vec![Operand::Int(0)], "i64");
+            accs.push(acc);
+        }
+
+        // Flatten every delimiter to `(group_index, byte_code_reg)` in WRITTEN ORDER, so
+        // the per-position chain walks all groups' items group-1-first. Resolving them all
+        // up front (via the SAME `single_delim_code` the single-item path uses, so an
+        // invalid delimiter rejects identically) means a bad operand aborts before the loop.
+        let mut flat: Vec<(usize, String)> = Vec::new();
+        for (gi, (_counter, delim_nodes)) in groups.iter().enumerate() {
+            for dn in delim_nodes {
+                flat.push((gi, self.single_delim_code(dn, "INSPECT")?));
+            }
+        }
+
+        // j = 0; len = str_len(S). A genuine runtime loop (the tally builds no string).
+        let len = self.fresh("_itclen");
+        self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.to_string())], "i64");
+        let j = self.fresh("_itcj");
+        self.emit("const", Some(&j), vec![Operand::Int(0)], "i64");
+
+        let top = self.fresh("itc_top");
+        let end = self.fresh("itc_end");
+        let cont = self.fresh("itc_cont");
+        self.emit("label", None, vec![Operand::Var(top.clone())], "void");
+        // if j >= len jmp end.
+        let ge = self.fresh("_itcge");
+        self.emit(
+            "cmp_ge",
+            Some(&ge),
+            vec![Operand::Var(j.clone()), Operand::Var(len.clone())],
+            "i64",
+        );
+        self.emit("jmp_if_true", None, vec![Operand::Var(ge), Operand::Var(end.clone())], "void");
+        // c = S[j] — read ONCE, then compared against each flattened delimiter in order.
+        let c = self.fresh("_itcc0");
+        self.emit(
+            "str_index",
+            Some(&c),
+            vec![Operand::Var(s_reg.to_string()), Operand::Var(j.clone())],
+            "i64",
+        );
+        // The ordered chain across ALL groups: on the FIRST match bump THAT group's
+        // accumulator and jump to `cont` (the j-advance), skipping the rest of the chain —
+        // first-match-wins across counters, so an earlier group consumes the position and a
+        // later group never sees it. A miss jumps to the next link; after the last link's
+        // `next` we fall through to `cont` with no bump (matched no delimiter).
+        for (gi, d_reg) in &flat {
+            let eq = self.fresh("_itceq");
+            self.emit(
+                "cmp_eq",
+                Some(&eq),
+                vec![Operand::Var(c.clone()), Operand::Var(d_reg.clone())],
+                "i64",
+            );
+            let next = self.fresh("itc_next");
+            self.emit(
+                "jmp_if_false",
+                None,
+                vec![Operand::Var(eq), Operand::Var(next.clone())],
+                "void",
+            );
+            let one = self.fresh("_itc1");
+            self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+            self.emit(
+                "add",
+                Some(&accs[*gi]),
+                vec![Operand::Var(accs[*gi].clone()), Operand::Var(one)],
+                "i64",
+            );
+            self.emit("jmp", None, vec![Operand::Var(cont.clone())], "void");
+            self.emit("label", None, vec![Operand::Var(next)], "void");
+        }
+        // cont: j = j + 1; jmp top.
+        self.emit("label", None, vec![Operand::Var(cont)], "void");
+        let one2 = self.fresh("_itc1b");
+        self.emit("const", Some(&one2), vec![Operand::Int(1)], "i64");
+        self.emit("add", Some(&j), vec![Operand::Var(j.clone()), Operand::Var(one2)], "i64");
+        self.emit("jmp", None, vec![Operand::Var(top)], "void");
+        self.emit("label", None, vec![Operand::Var(end)], "void");
+
+        // For each group: counter := counter_value + acc, reduced into the counter's
+        // picture. Read the counter's storage register FRESH here (re-fetch by index) so a
+        // shared counter's second group adds on top of the first group's already-stored
+        // value — the same ADD-into-counter store path the single-item tally uses.
+        for ((counter_name, cidx, int_digits), acc) in counter_info.iter().zip(accs.iter()) {
+            let counter_reg = self.items[*cidx].reg.clone();
+            let sum = self.fresh("_itcsum");
+            self.emit(
+                "add",
+                Some(&sum),
+                vec![Operand::Var(counter_reg), Operand::Var(acc.clone())],
+                "i64",
+            );
+            self.store_scaled(counter_name, &sum, 0, int_digits + 1, false)?;
+        }
+        Ok(())
     }
 
     /// `INSPECT source CONVERTING from TO to` — translate the alphanumeric `source`
@@ -5172,6 +5357,61 @@ fn inspect_tally_multi(verb: &GrammarASTNode) -> Result<(String, Vec<&GrammarAST
         delims.push(delim);
     }
     Ok((counter, delims))
+}
+
+/// Extract the `TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d …` phrase of a MULTI-counter
+/// INSPECT (`>= 2` `tally_for` groups), returning the `(counter_name, delim_nodes)` groups
+/// in WRITTEN ORDER (and, within each group, the single-char delimiter nodes in written
+/// order) — the compiler-side analogue of the oracle's `read_inspect_tally_counters`,
+/// walking the SAME `tally_for`/`tally_item` children so the two engines' accept/reject
+/// sets stay co-total. Only called after the caller has confirmed `>= 2` `tally_for`
+/// groups; exactly ONE group keeps the single-counter readers (`inspect_tally_all` /
+/// `inspect_tally_multi`) and all their capabilities UNCHANGED.
+///
+/// Scope bound (this rung, IDENTICAL messages to the oracle reader): every item of every
+/// group must be a plain `FOR ALL` item with NO region and NO `LEADING`/`CHARACTERS`. Any
+/// violating item is a clean later-rung `Unsupported`. A multi-character/figurative/wider/
+/// numeric delimiter is NOT rejected here — it falls to the SAME `single_delim_code` check
+/// the single-item emitter uses. The counters are validated (unsigned integer) in
+/// `emit_inspect_tally_counters`, exactly as the single-item path validates its counter.
+fn inspect_tally_counters(
+    verb: &GrammarASTNode,
+) -> Result<Vec<(String, Vec<&GrammarASTNode>)>, CompileError> {
+    let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
+        CompileError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
+    })?;
+    let mut groups = Vec::new();
+    for tf in child_nodes(tallying, "tally_for") {
+        let counter = first_token(tf, "NAME")
+            .ok_or_else(|| CompileError::Malformed("INSPECT TALLYING without a counter".into()))?;
+        let mut delims = Vec::new();
+        for ti in child_nodes(tf, "tally_item") {
+            let toks = child_tokens(ti);
+            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+                return Err(CompileError::Unsupported(
+                    "INSPECT TALLYING … FOR CHARACTERS is a later rung".into(),
+                ));
+            }
+            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
+                return Err(CompileError::Unsupported(
+                    "INSPECT TALLYING with several counters and a LEADING item is a later rung"
+                        .into(),
+                ));
+            }
+            if child_node(ti, "inspect_region").is_some() {
+                return Err(CompileError::Unsupported(
+                    "INSPECT TALLYING with several counters and a BEFORE/AFTER region is a later rung"
+                        .into(),
+                ));
+            }
+            let delim = child_node(ti, "operand").ok_or_else(|| {
+                CompileError::Malformed("INSPECT TALLYING FOR ALL without a delimiter".into())
+            })?;
+            delims.push(delim);
+        }
+        groups.push((counter, delims));
+    }
+    Ok(groups)
 }
 
 /// The parsed pieces of a `REPLACING ALL|LEADING search BY replace [{BEFORE|AFTER}

@@ -653,10 +653,55 @@ the rest on the first match) and an `inspect_tally_multi` CST reader counting th
 
 This multi-item path is scoped SMALL: only `ALL` items, each a single-char delimiter, with
 **no** `{BEFORE|AFTER}` region and **no** `LEADING`/`CHARACTERS`, under EXACTLY ONE counter.
-A multi-item list carrying any of those, **several counters** (more than one `tally_for`),
-and the combined `TALLYING … REPLACING` form with several tally items remain later rungs
-(rejected identically on both engines). A single tally item keeps the full single-item path
-(LEADING, region) unchanged, and the several-counters reject is unchanged.
+A multi-item list carrying any of those, and the combined `TALLYING … REPLACING` form with
+several tally items, remain later rungs (rejected identically on both engines). A single
+tally item keeps the full single-item path (LEADING, region) unchanged. **Several counters**
+(more than one `tally_for`) is now supported — see the next rung.
+
+**Multiple `TALLYING` counters (follow-up rung).**
+`INSPECT source TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d [ALL e …] …` — TWO OR MORE
+`tally_for` groups, each with its OWN counter and one-or-more single-char `FOR ALL`
+delimiters — is now supported (previously rejected at read time as "several counters is a
+later rung"). This GENERALISES the multi-item single-counter rung above to a list of
+`(counter, delimiter)` pairs where the matched pair's OWN counter is bumped.
+
+Per ISO, ALL the tally items across ALL groups form ONE **combined ordered priority list**,
+scanned in a SINGLE left-to-right pass over the source. At each position the items are tried
+**in written order** (group 1's items first, then group 2's, …) and the **first** that
+matches increments ITS OWN group's counter by 1, then the scan advances past the match. A
+position matching no item advances with no increment. The decisive consequence: a character
+CLAIMED by an earlier group's item NEVER reaches a later group's item — so the groups are
+NOT independent counts. Worked:
+
+- `"aa"  TALLYING C1 FOR ALL "a"  C2 FOR ALL "a"`  → `C1 += 2, C2 += 0` (C1's "a" wins both)
+- `"ab"  TALLYING C1 FOR ALL "a"  C2 FOR ALL "b"`  → `C1 += 1, C2 += 1`
+- `"aba" TALLYING C1 FOR ALL "a" ALL "b"  C2 FOR ALL "a"`  → `C1 += 3, C2 += 0`
+
+Each counter **adds** its own share (`INSPECT` never clears), and each truncates
+independently through the same store path. The SAME counter name may legally appear in two
+groups — both groups' matches then add to that one item (the counter is resolved by name at
+each add, so this stays correct).
+
+The oracle adds a `Stmt::InspectTallyCounters { source, groups }` variant read via
+`read_inspect_tally_counters`; `read_statement` dispatches PURELY on the number of
+`tally_for` groups (`>= 2` → this variant; exactly one keeps the unchanged single-counter
+`Inspect`/`InspectTallyMulti` paths). `exec_inspect_tally_counters` validates every counter
+as an unsigned `PIC 9(n)` integer FIRST, resolves every delimiter to `(group, char)` FIRST
+(shared `single_delim_char`), runs one first-match pass into per-group accumulators, then
+folds each accumulator into its counter via the same `store_result` path. The compiler
+mirrors this with `emit_inspect_tally_counters` (one accumulator register per group through
+a single `str_len`-bounded loop, an ordered `cmp_eq` chain over the flattened
+`(group, delimiter)` list per position, then a per-group `counter := counter + accumulator`
+via the same `store_scaled`, re-reading each counter's register so a shared counter
+accumulates both shares) and an `inspect_tally_counters` CST reader walking the SAME
+`tally_for`/`tally_item` children, so the two engines' accept/reject sets are co-total.
+
+This multi-counter path is scoped SMALL: only `ALL` items, each a single-char delimiter,
+with **no** `{BEFORE|AFTER}` region and **no** `LEADING`/`CHARACTERS`, every counter an
+unsigned `PIC 9(n)` integer. A group carrying any of those, and the combined
+`TALLYING … REPLACING` form with several counters (still routed through the several-counters
+reject in `read_inspect_tally_all`), remain later rungs (rejected identically on both
+engines). Exactly ONE `tally_for` keeps the single-counter paths unchanged.
 
 **Multiple `REPLACING` items in one clause (follow-up rung).**
 `INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — TWO OR MORE `ALL`
