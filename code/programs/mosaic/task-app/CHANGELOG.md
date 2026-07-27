@@ -4,6 +4,42 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - multiple projects in the UI
+
+- **You can now create projects and switch between them.** The engine has supported
+  multiple (and nested) projects since Phase 2, but nothing in the UI exposed it: the
+  app was hard-wired to one implicit project. Reported by the user — "I am not able to
+  create new projects."
+- A project bar above the title lists the workspace's top-level projects, renders the
+  active one as selected (honey fill), and carries an inline composer for creating
+  another. Selecting is by row index, matching how task rows report which row was acted
+  on. New parts in **both themes**: `project-bar`, `project-on`, `project-off`,
+  `project-input`, `project-add`.
+- `TaskApp.mil` gains `project-rows : list<list<text>>` (each row `[ name,
+  active-marker ]`), `new-project-name`, and the `onNewProjectNameChange` /
+  `onAddProject` / `onSelectProject` emits. The layout renders the selected/unselected
+  variants with `If`/`Else` on the marker cell — both branches dispatch the same
+  `onSelectProject` with the outer loop index.
+- `main.tsx` derives the bar from `workspace()` + `activeProject()`, creates projects
+  with a collision-probed id (rather than trusting a counter, so a snapshot restored
+  from elsewhere can't collide), and **switches to a project on creation** — otherwise
+  you'd have to hunt for it and an empty new project would look like nothing happened.
+  Per-project task lists fall out for free: the host's task order is workspace-global
+  and `rows()` keeps only the ids the active project's `table()` knows about.
+- **Required an ABI change** — see `task-wasm`'s changelog. Without `set_active_project`
+  a created project was unreachable.
+- **The selected project survives a reload.** The ABI deliberately keeps that cursor out
+  of the engine snapshot, so the host persists it alongside the row order and re-selects
+  after `load`. `WorkspaceRecord` gains an optional `activeProject`; records written
+  before projects existed simply lack it and fall back to the default. 2 new host tests.
+- Fixed in security review before landing: the new-project id probe checked only
+  *top-level* projects, but ids must be unique across the **whole** workspace — with a
+  nested project present it would have proposed an id the engine rejects, and "+ Project"
+  would have become a permanent silent no-op. It now probes every project, and surfaces
+  a failed create instead of swallowing it.
+- Follow-on: rendering *nested* projects as a hierarchy (the engine supports nesting; the
+  bar lists top-level projects only).
+
 ### Changed - structured task rows (UI design, step 2)
 
 - **Each task row is now a structured set of styled elements** — a round completion
