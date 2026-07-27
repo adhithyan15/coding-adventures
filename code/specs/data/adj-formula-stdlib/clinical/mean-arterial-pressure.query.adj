@@ -1,0 +1,35 @@
+% ============================================================================
+% mean-arterial-pressure.query.adj — worked examples over the clinical
+% mean-arterial-pressure library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a MAP question: it
+% states NO arithmetic and NO definition — it only `import`s the grounded library,
+% `observe`s the pressures it decomposed from the prompt (each a byte-provenanced
+% span, elided here), and asks the engine to APPLY the cited definition. The native
+% adj-lang engine binds the parameters, computes each value EXACTLY on the CPU, and
+% returns it with the definition's source/locator/trust.
+%
+% The three questions INVERT: a blood pressure of 110/80 mmHg has a pulse pressure of
+% 30 mmHg and a mean arterial pressure of 80 + 30/3 = 90 mmHg; that 90 mmHg MAP at the
+% same 80 mmHg diastolic is exactly what the systolic formula uses to recover the
+% 110 mmHg systolic (3·90 − 2·80 = 110), and that 90 mmHg MAP at the same 110 mmHg
+% systolic is exactly what the diastolic formula uses to recover the 80 mmHg diastolic
+% ((3·90 − 110)/2 = 80).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli mean-arterial-pressure.query.adj
+% ============================================================================
+
+import "mean-arterial-pressure.adj"
+
+% 110/80 mmHg: mean arterial pressure = 80 + (110 − 80)/3.
+observe systolic_pressure(110)
+observe diastolic_pressure(80)
+? mean_arterial_pressure(systolic_pressure, diastolic_pressure)   % expect 90   (definition: MAP = DBP + (SBP−DBP)/3)
+
+% That 90 mmHg MAP for the same 80 mmHg diastolic: systolic = 3·90 − 2·80.
+observe mean_arterial_pressure(90)
+? systolic_pressure(mean_arterial_pressure, diastolic_pressure)    % expect 110  (same definition, solved for SBP = 3·MAP − 2·DBP)
+
+% That 90 mmHg MAP at the same 110 mmHg systolic: diastolic = (3·90 − 110)/2.
+? diastolic_pressure(mean_arterial_pressure, systolic_pressure)    % expect 80   (same definition, solved for DBP = (3·MAP − SBP)/2)
