@@ -8,6 +8,39 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.49.0: STRING with DELIMITED BY a single-char delimiter
+
+`STRING a b c DELIMITED BY "," INTO r` — a real single-character delimiter now compiles,
+byte-identical to the `coding-adventures-cobol-runtime` 0.53.0 oracle. Previously only
+`DELIMITED BY SIZE` was supported; a real delimiter was rejected at emit time. No grammar
+change was needed — `string_delim` already parses `SIZE | operand`.
+
+With `DELIMITED BY delim` each sending field contributes only its PREFIX up to the first
+delimiter char. Where the `DELIMITED BY SIZE` path has all-compile-time-known lengths (a fixed
+`str_slice`/`str_concat` overlay), the delimited path's per-field boundaries are DATA-dependent,
+so `emit_string` now emits a genuine per-field scan LOOP (the same shape UNSTRING uses):
+`flen = str_len(F); j = 0; while j < flen && F[j] != d { j++ }; prefix = F[0,j]`. The prefixes
+are concatenated and the running length becomes a run-time value, so the receiver overlay also
+runs at run time: `clen = str_len(concat); take = min(clen, W); r = concat[0,take] ++ r[take,W]`
+— the preserved tail `r[take,W]` reproduces STRING's no-space-fill rule exactly as the
+compile-time branch does. The `DELIMITED BY SIZE` path is UNCHANGED and still emits the exact
+same fixed IIR as before.
+
+The delimiter is reduced by the SAME `single_delim_code` UNSTRING/INSPECT use, so a
+multi-character / numeric / figurative / reference-modified / wider-item delimiter rejects
+identically to the oracle.
+
+**ASCII guard.** A non-ASCII single-character LITERAL delimiter (`DELIMITED BY "é"`, one char /
+two bytes) is rejected before lowering (the scan compares bytes while the oracle scans chars),
+matching the oracle's reject with the same message. A non-ASCII string-LITERAL sending field
+under an active delimiter (`STRING "café" DELIMITED BY "," …`) is likewise rejected. A non-ASCII
+PIC X(1) delimiter ITEM is not build-time detectable, so — as with UNSTRING — it is left as the
+shared byte-vs-char chip (both engines accept), keeping the accept/reject sets co-total.
+
+Still deferred (rejected here and on the oracle alike): a multi-character delimiter, a non-ASCII
+literal delimiter, a non-ASCII literal sending field under a delimiter, per-field different
+delimiters, `WITH POINTER`, `ON OVERFLOW`, and a numeric receiver.
+
 ### Added — v0.48.0: UNSTRING with a literal source
 
 `UNSTRING "a,b,c" DELIMITED BY "," INTO w1 w2 w3` — an alphanumeric STRING LITERAL in the

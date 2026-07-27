@@ -2226,14 +2226,43 @@ mod tests {
     }
 
     #[test]
+    fn string_delimited_by_a_single_char_delimiter() {
+        // Each field contributes only its prefix up to its first delimiter char:
+        // "ab,cd" → "ab", "ef" (no comma) → "ef", "gh,ij" → "gh"; concat "abefgh".
+        let out = run_cobol(&wrap(
+            &[
+                "01  A  PIC X(5) VALUE \"ab,cd\".",
+                "01  B  PIC X(2) VALUE \"ef\".",
+                "01  C  PIC X(5) VALUE \"gh,ij\".",
+                "01  T  PIC X(20) VALUE SPACES.",
+            ],
+            &[
+                "STRING A B C DELIMITED BY \",\"",
+                "    INTO T.",
+                "DISPLAY T.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "abefgh              \n");
+    }
+
+    #[test]
     fn string_later_rung_options_are_clean_errors() {
-        // A real delimiter needs a scan (later rung) …
+        // A NON-ASCII delimiter is a later rung (byte-vs-char) …
         let delim = run_cobol(&wrap(
             &["01  A  PIC X(3) VALUE \"ABC\".", "01  T  PIC X(6) VALUE SPACES."],
-            &["STRING A DELIMITED BY \"-\" INTO T.", "STOP RUN."],
+            &["STRING A DELIMITED BY \"é\" INTO T.", "STOP RUN."],
         ))
         .unwrap_err();
         assert!(matches!(delim, RuntimeError::Unsupported(_)), "got {delim:?}");
+        // … a multi-character delimiter is a later rung …
+        let multi = run_cobol(&wrap(
+            &["01  A  PIC X(3) VALUE \"ABC\".", "01  T  PIC X(6) VALUE SPACES."],
+            &["STRING A DELIMITED BY \"ab\" INTO T.", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(multi, RuntimeError::Unsupported(_)), "got {multi:?}");
         // … and so is WITH POINTER.
         let ptr = run_cobol(&wrap(
             &[

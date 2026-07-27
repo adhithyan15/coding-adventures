@@ -405,9 +405,31 @@ FULL (`DELIMITED BY SIZE`), the pieces are concatenated left-to-right, and the
 result is stored LEFT-JUSTIFIED into the alphanumeric receiver `t`, truncated at
 `t`'s width. Per ANSI-85, STRING writes only what it produced and **does not
 space-fill** the untouched tail of `t` (unlike `MOVE`) — the receiver's trailing
-bytes keep their prior content. The grammar also *accepts* a real
-(identifier/literal) delimiter, `WITH POINTER`, and `ON`/`NOT ON OVERFLOW` so the
-reader can reject them as a clean "later rung" error rather than a parse failure.
+bytes keep their prior content.
+
+**Delimiter rung (now implemented).** `STRING s… DELIMITED BY delim INTO t`, where
+`delim` is a **single-character ASCII** delimiter (a 1-char literal or a `PIC X(1)`
+item, reduced by the same `single_delim_char`/`single_delim_code` helper `UNSTRING`
+uses), is now supported. Each sending field contributes only its PREFIX up to (but
+not including) the FIRST occurrence of the delimiter char in that field; a field
+with no delimiter contributes its whole image, and a field starting with the
+delimiter contributes the empty string. The prefixes are concatenated and overlaid
+onto `t` EXACTLY as `DELIMITED BY SIZE` does (leftmost `min(len, width)`, no tail
+space-fill). Example: `STRING "ab,cd" "ef" "gh,ij" DELIMITED BY "," INTO t` →
+`"abefgh"`. `Stmt::String` carries a `delim: Option<Operand>` (`None` = `SIZE`); the
+oracle truncates each field by CHARACTER while the compiler emits a byte-based
+per-field scan loop, so both must be ASCII: a **non-ASCII** literal delimiter and a
+non-ASCII string-LITERAL sending field WHEN a delimiter is active are clean "later
+rung" rejects on BOTH engines (byte-vs-char). A non-ASCII `PIC X(1)` delimiter ITEM
+is not build-time detectable on the compiler and — as with `UNSTRING` — is left as
+the shared byte-vs-char chip rather than a one-sided reject, keeping the accept/
+reject sets co-total.
+
+Still deferred as clean "later rung" errors: a **multi-character** delimiter, a
+non-ASCII delimiter, a non-ASCII literal sending field under a delimiter, **per-field
+different delimiters**, `WITH POINTER`, and `ON`/`NOT ON OVERFLOW` (all still
+*accepted* by the grammar so the reader can reject them cleanly rather than as a
+parse failure).
 
 ### `UNSTRING` (first rung)
 

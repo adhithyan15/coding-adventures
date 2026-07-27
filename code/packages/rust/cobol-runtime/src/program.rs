@@ -129,13 +129,31 @@ pub enum Stmt {
     /// runs its statements, with no fall-through. A value-list entry is a single
     /// value or an inclusive `THRU` range.
     Evaluate { subject: Operand, branches: Vec<(Option<Vec<WhenValue>>, Vec<Stmt>)> },
-    /// `STRING s… DELIMITED BY SIZE INTO t` — concatenate each source (taken in
-    /// full, `DELIMITED BY SIZE`) left-to-right and store the result into the
-    /// alphanumeric receiver `t`, LEFT-JUSTIFIED and truncated at `t`'s width,
-    /// **without** space-filling the untouched tail (bytes past what STRING wrote
-    /// keep their prior content — the ANSI-85 STRING rule). A real delimiter,
-    /// `WITH POINTER`, and `ON OVERFLOW` are later rungs (rejected at build time).
-    String { sources: Vec<Operand>, target: String },
+    /// `STRING s… DELIMITED BY {SIZE | delim} INTO t` — concatenate each source
+    /// left-to-right and store the result into the alphanumeric receiver `t`,
+    /// LEFT-JUSTIFIED and truncated at `t`'s width, **without** space-filling the
+    /// untouched tail (bytes past what STRING wrote keep their prior content — the
+    /// ANSI-85 STRING rule).
+    ///
+    /// `delim` selects HOW MUCH of each sending field is taken:
+    ///
+    ///   * `delim = None` (`DELIMITED BY SIZE`) — every field is taken in FULL.
+    ///   * `delim = Some(d)` — each field contributes only its PREFIX up to (but
+    ///     NOT including) the FIRST occurrence of the single character `d` in that
+    ///     field's image; a field with no `d` contributes its whole image, and a
+    ///     field that STARTS with `d` contributes the empty string. ONE delimiter
+    ///     applies to every field. The delimiter is reduced by the SAME
+    ///     `single_delim_char` helper UNSTRING uses (so a multi-char / numeric /
+    ///     figurative / reference-modified / wider-item delimiter rejects
+    ///     identically), and must be ASCII: the compiler's prefix scan is byte-
+    ///     based while this oracle scans by char, so a multi-byte delimiter would
+    ///     diverge (a clean later rung on both engines). For the same byte-vs-char
+    ///     reason a non-ASCII string-LITERAL sending field is a later rung WHEN a
+    ///     delimiter is active (its prefix boundary differs byte-vs-char).
+    ///
+    /// `WITH POINTER`, `ON OVERFLOW`, a multi-character delimiter, and per-field
+    /// different delimiters are later rungs (rejected at build time).
+    String { sources: Vec<Operand>, target: String, delim: Option<Operand> },
     /// `UNSTRING source DELIMITED BY delim INTO r1 [r2 …]` — the inverse of
     /// STRING. Scan the alphanumeric `source` left-to-right, splitting it into
     /// delimited fields on each occurrence of the SINGLE-character `delim` (a
@@ -955,18 +973,30 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     "STRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung".into(),
                 ));
             }
-            // The delimiter is `SIZE` or a general operand; only SIZE this rung.
-            let delim = child_node(verb, "string_delim")
+            // The delimiter is `SIZE` or a general operand. `DELIMITED BY SIZE`
+            // takes each field in full (`delim = None`); a real single-character
+            // delimiter (`delim = Some(op)`) truncates each field at its first
+            // occurrence. The `string_delim` grammar node parses both, so a real
+            // delimiter is NOT rejected here any more — it is read and its ASCII /
+            // single-character legality is enforced at exec time (via the same
+            // `single_delim_char` helper UNSTRING uses), keeping the oracle and the
+            // byte-based compiler co-total.
+            let delim_node = child_node(verb, "string_delim")
                 .ok_or_else(|| RuntimeError::Unsupported("STRING without DELIMITED BY".into()))?;
-            let is_size = child_tokens(delim).iter().any(|(k, v)| k == "KEYWORD" && v == "SIZE");
-            if !is_size {
-                return Err(RuntimeError::Unsupported(
-                    "STRING … DELIMITED BY <identifier/literal> (only DELIMITED BY SIZE) is a later rung"
-                        .into(),
-                ));
-            }
-            // The sending fields are the `operand` children (the delimiter operand
-            // is nested under `string_delim`, so it does not collide).
+            let is_size =
+                child_tokens(delim_node).iter().any(|(k, v)| k == "KEYWORD" && v == "SIZE");
+            let delim = if is_size {
+                None
+            } else {
+                // The delimiter operand is nested UNDER `string_delim` (so it never
+                // collides with the sending-field `operand` children of `verb`).
+                let dop = child_node(delim_node, "operand").ok_or_else(|| {
+                    RuntimeError::Unsupported("STRING DELIMITED BY without a delimiter".into())
+                })?;
+                Some(read_operand(dop)?)
+            };
+            // The sending fields are the DIRECT `operand` children (the delimiter
+            // operand is a grandchild under `string_delim`, so it does not collide).
             let sources = child_nodes(verb, "operand")
                 .into_iter()
                 .map(read_operand)
@@ -978,7 +1008,7 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             // name, which we have already rejected above).
             let target = first_token(verb, "NAME")
                 .ok_or_else(|| RuntimeError::Unsupported("STRING without an INTO receiver".into()))?;
-            Ok(Stmt::String { sources, target })
+            Ok(Stmt::String { sources, target, delim })
         }
         "unstring_stmt" => {
             // UNSTRING source DELIMITED BY delim INTO r1 [r2 …]. The grammar also
