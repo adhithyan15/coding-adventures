@@ -286,6 +286,7 @@ members = [
     "idl-repl",
     "idl-to-semantic-ir",
     "axiom-lexer",
+    "axiom-parser",
     "logic-gates",
     "logic-core",
     "lookup-core",

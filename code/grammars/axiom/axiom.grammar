@@ -1,0 +1,421 @@
+# @version 1
+
+# =============================================================================
+# axiom.grammar — Parser grammar for Axiom (the MA13-scoped consumer-view
+# subset)
+# =============================================================================
+#
+# Drives the generic grammar-driven parser engine (parser::GrammarParser) over
+# the token stream from axiom-lexer (MA-13b, code/grammars/axiom/axiom.tokens,
+# already merged). Axiom's arithmetic/comparison surface is an ordinary infix
+# expression grammar, closer in overall shape to Reduce/Derive/Maple's
+# `head(args)`-style CAS grammars than to any array-family grammar in this
+# repo (MA13 §5) — this file is structured accordingly, using reduce.grammar/
+# derive.grammar as its direct structural precedent, NOT forked from any
+# array-family sibling. The genuinely new productions here — declaration
+# (`:`), coercion (`::`), and category-query (`has`) — are the ones MA13 §3
+# says no prior symbolic-family grammar in this repo has ever needed; every
+# other production mirrors an already-established sibling shape.
+#
+# A future `axiom-runtime` (MA-13d) lowers this CST into `symbolic_ir::IRNode`
+# (arithmetic/comparison/assignment/definition/if/list — reused unchanged from
+# the shared `symbolic-vm`, per MA13 §2/§5) plus its own new `AxiomValue`/
+# `AxiomDomain` layer for the declaration/coercion/has-query nodes this file
+# introduces (MA13 §2's own "no domain/category concept anywhere in
+# symbolic-ir" finding).
+#
+# Token names (UPPERCASE) come from the Axiom lexer
+# (code/grammars/axiom/axiom.tokens):
+#   NUMBER STRING NAME          literals and symbols (NAME also covers every
+#                                  built-in domain/category name — see
+#                                  axiom.tokens's own header — this grammar
+#                                  does not distinguish them from ordinary
+#                                  identifiers; that is axiom-runtime's job)
+#   ASSIGN (:=)                  immediate assignment ONLY (never function
+#                                  definition — contrast Derive/Reduce, which
+#                                  share ONE operator for both roles, MA13 §4)
+#   DEFINE (==)                  held-body function definition ONLY (never
+#                                  plain-variable delayed assignment — MA13
+#                                  §4's own "bare-variable delayed `==` is
+#                                  deferred" scope note)
+#   EQ (=)  NE (~=)  LESS (<)  LE (<=)  GREATER (>)  GE (>=)   comparison —
+#                                  `=` lowers straight to Equal/Boolean in
+#                                  this cut (MA13 §3's own disclosed
+#                                  divergence from real Axiom's default
+#                                  `Equation`); `~=` is Axiom's real
+#                                  not-equal spelling, NOT Maple's `<>` or
+#                                  Wolfram's `!=`
+#   PLUS MINUS TIMES SLASH CARET POW (`^`/`**`, same operator)   arithmetic
+#   LPAREN RPAREN                grouping, parenthesised `;`-block, function
+#                                  application `f(...)`, and the declared
+#                                  function-header's typed parameter list
+#   LBRACKET RBRACKET            list literal `[a, b, c]`
+#   COMMA                        argument/list/parameter separator
+#   SEMI                         the ONLY separator inside a parenthesised
+#                                  block (`( e1; e2; ...; eN )`) — no other
+#                                  use anywhere in this grammar (axiom.tokens'
+#                                  own header)
+#   COLON                        declaration (`a : T`) AND the function-
+#                                  header type-annotation position AND the
+#                                  declared-function's return-type position —
+#                                  ONE lexer token, THREE grammar positions,
+#                                  disambiguated here (never by the lexer,
+#                                  per axiom.tokens' own documented
+#                                  "one glyph, one token type, multiple
+#                                  grammar-level meanings" discipline)
+#   COERCE (::)                  coercion (`e :: T`)
+#   "if" "then" "else"           conditional keywords (KEYWORD token type,
+#                                  matched here by literal spelling — same
+#                                  convention reduce.grammar's own
+#                                  "and"/"or"/"not"/"neq" word-operators use)
+#   "has"                        category-membership query infix keyword
+#
+# =============================================================================
+# WHY `program` IS A SINGLE EXPRESSION, NOT A REPEATED `{ statement_line }`
+# -----------------------------------------------------------------------------
+# Every sibling CAS-family grammar in this repo (`derive.grammar`,
+# `reduce.grammar`, `maple.grammar`) parses a whole worksheet FILE in one
+# call — `program = { statement_line }` — because each of those languages'
+# own `.tokens` file gives top-level statements a real separator: Derive's
+# significant NEWLINE, Reduce's/Maple's `;`/`$`. `axiom.tokens` deliberately
+# has NEITHER: newlines fold into ordinary WHITESPACE (axiom.tokens SECTION
+# 4's own comment — "axiom-repl tracks its own step counter as a REPL-layer
+# concern, not a lexer-level significant-NEWLINE token"), and `;` is reserved
+# EXCLUSIVELY for the parenthesised block (axiom.tokens SECTION 2's own
+# comment — "Axiom has no other in-scope use for `;`"). Inventing an
+# unconfirmed top-level separator here (there is no textual evidence in MA13
+# §3/§4 for one) would be exactly the kind of un-narrowed guess this repo's
+# own "confirm, don't assume" discipline warns against.
+#
+# This is not an oversight but a direct consequence of MA13's own framing of
+# Axiom as a **numbered, per-line interactive session** (§5: `axiom-repl`
+# mirrors real Axiom's own `(1) ->` prompt, incrementing per computation
+# step) rather than a batch worksheet file: a future `axiom-repl` (MA-13d)
+# reads one line, hands that ONE line's tokens to this parser, evaluates it,
+# prints `(n)`'s result, and repeats — exactly mirroring how `derive-repl`'s
+# OWN numbered-prompt convention (which this spec explicitly says
+# `axiom-repl` should mirror, MA13 §5) still calls `derive-parser` fresh
+# per submitted chunk, even though `derive.grammar` itself is capable of
+# parsing a whole multi-statement file at once. `program = expr` is
+# therefore this grammar's own deliberate, disclosed, conservative choice:
+# it parses exactly what one interactive input is ever confirmed to be — a
+# single expression, assignment, definition, declaration, coercion, has-query,
+# or conditional — and leaves "how does a REPL decide where one input ends
+# and the next begins" as the REPL-layer concern MA13 §5 already assigns it,
+# not a question this grammar answers by inventing syntax MA13 never shows.
+# =============================================================================
+
+program = expr ;
+
+# =============================================================================
+# `expr` — the top-level ordered choice (PEG). Every one of MA13 §4's
+# in-scope forms is treated as uniformly `expr`-shaped and mutually nestable
+# (an `if`-branch, an assignment's right-hand side, a function body, and a
+# list element are all just `expr`) — mirroring reduce.grammar's own
+# "`if`/`<<...>>` are usable as an expression" design, rather than inventing
+# a separate statement/expression bifurcation MA13 never asks for. Each
+# alternative commits on a unique leading shape (a keyword, or a specific
+# token found a fixed number of tokens after a leading NAME/LPAREN), so
+# ordinary PEG ordered choice with packrat backtracking resolves everything
+# below with NO lookahead predicate of any kind — precisely the same
+# "know which alternative you are inside, backtrack cleanly on failure"
+# discipline idl.grammar's own header comment documents at length.
+# =============================================================================
+
+expr = if_expr
+     | define
+     | assignment
+     | declaration
+     | has_query
+     | comparison ;
+
+# `if p then e1 else e2` (MA13 §4). Unlike reduce.grammar's/idl.grammar's own
+# OPTIONAL else, MA13 §4 explicitly says "missing else -- deferred" for this
+# cut, so `else` is MANDATORY here — a real, confirmed narrowing, not this
+# grammar's own choice. Both branches are `expr` (fully general), matching
+# every sibling's "usable as an expression" convention, so a definition,
+# assignment, or nested `if` can appear as either branch.
+if_expr = "if" expr "then" expr "else" expr ;
+
+# =============================================================================
+# Function definition — `==`, held-body (MA13 §4). This is a GENUINELY
+# different design from Derive's/Reduce's own `:=`, which shares ONE
+# production between plain variable assignment and function definition (the
+# D-4/R-4 runtime disambiguates by inspecting the parsed left-hand side's
+# shape post-hoc). That trick does not transfer here, for a concrete,
+# structural reason: Axiom's DECLARED function-definition form
+# (`f(x: T, ...): T == e`) needs a parameter list of TYPED declarations
+# (`x: T`), which is not a shape any ordinary call's `arglist` (a plain
+# comma-list of `expr`) can express — an ordinary `postfix` call production
+# has no way to parse `x: T` as one of its arguments (`declaration`, MA13's
+# own `:` production, is a full top-level `expr` alternative in its own
+# right, not an argument-list element). So, unlike Derive/Reduce, this
+# grammar cannot simply reuse "whatever the general call/assignment-target
+# production already parses" for `==`'s left-hand side — it needs its OWN,
+# narrower, dedicated shape.
+#
+# Two dedicated forms, matching MA13 §4's own two confirmed rows exactly (a
+# deliberately CONSERVATIVE choice: this grammar does not invent any
+# combination MA13 does not show, e.g. it does NOT accept a parenthesised
+# but UNTYPED parameter list `f(x) == e`, and does NOT make the declared
+# form's return-type annotation optional — both would be permissive
+# extensions beyond what MA13 §4's table literally states, and are left
+# unsupported rather than guessed):
+#
+#   1. declared_define   -- f(x: T, ...): T == e   (every parameter AND the
+#      return type carry an explicit `: T` annotation)
+#   2. undeclared_define  -- f x == e               (the paren-optional
+#      single-argument shape, duck-typed — "evaluated rather than
+#      'recompiled' since this is an interpreter, not Axiom's own compiler",
+#      MA13 §4)
+#
+# Ordering is not load-bearing for correctness (packrat backtracking makes
+# either order safe), but `declared_define` is tried first since its own
+# leading shape (`NAME LPAREN`) is a strict prefix-superset check away from
+# `undeclared_define`'s (`NAME NAME`) — trying the parenthesised form first
+# avoids a redundant failed attempt at `undeclared_define` on ordinary
+# declared input.
+define = declared_define
+       | undeclared_define ;
+
+declared_define = NAME LPAREN [ typed_param_list ] RPAREN COLON type_expr DEFINE expr ;
+
+typed_param_list = typed_param { COMMA typed_param } ;
+typed_param = NAME COLON type_expr ;
+
+undeclared_define = NAME NAME DEFINE expr ;
+
+# `x := e` (MA13 §4) — immediate assignment ONLY. Narrowed to a bare NAME
+# left-hand side, matching MA13's own single confirmed row literally (unlike
+# Derive's/Reduce's own `:=`, MA13 §4 never shows a `:=`-based function
+# definition form — that role belongs entirely to `==`, above). The
+# right-hand side is the fully general `expr`, which (since `assignment` is
+# itself one of `expr`'s own alternatives) gives a chained
+# `a := b := 5` right-associative reading FOR FREE, the identical
+# "RHS is `expr`, which loops back to `assignment`" trick
+# reduce.grammar's own header comment documents for its own `:=` — not
+# separately confirmed as real Axiom syntax by MA13, but costing nothing
+# extra to support and consistent with this grammar's uniform "everything is
+# `expr`-shaped" design (see `expr`'s own header comment above).
+assignment = NAME ASSIGN expr ;
+
+# `a : T` / `(a, b, c) : T` (MA13 §4) — declaration, restricting the domain a
+# name may hold. The left-hand side is deliberately narrow — a bare NAME or a
+# parenthesised, comma-separated list of bare NAMEs — matching MA13's own two
+# confirmed rows exactly; NOT a general `expr` the way `coercion`'s left-hand
+# side is (see `coercion`'s own comment below for why that asymmetry is
+# real and intentional, not an oversight).
+declaration = decl_target COLON type_expr ;
+
+decl_target = NAME
+            | LPAREN name_list RPAREN ;
+
+name_list = NAME { COMMA NAME } ;
+
+# `D has C` (MA13 §3/§4) — category-membership query. Deliberately its OWN
+# top-level `expr` alternative, NOT folded into the general arithmetic/
+# comparison cascade the way `coercion` (below) is: both of `has`'s operands
+# are always domain/category-shaped `type_expr`s per MA13 §3's own fixed
+# lookup-table design (`Polynomial(Integer) has Ring`, never an arbitrary
+# arithmetic value on either side) — every one of MA13's own worked `has`
+# examples appears as a standalone query, never nested inside a larger
+# arithmetic expression. This is a real, disclosed asymmetry with `coercion`
+# (whose left-hand side genuinely IS an arbitrary `expr`, MA13's own
+# `3 :: Fraction Integer` example coerces a plain literal, and nothing in
+# MA13 rules out `(a + b) :: Float`) — not a grammar-design inconsistency,
+# but two different constructs with two different confirmed operand shapes.
+has_query = type_expr "has" type_expr ;
+
+# =============================================================================
+# The ordinary arithmetic/comparison/coercion cascade (loosest -> tightest),
+# per MA13 §4's own precedence statement ("`^`/`**` (highest) -> `*`/`/` ->
+# `+`/`-` (lowest)") plus this crate's own placement of `comparison` and
+# `coercion` above it (mirroring derive.grammar's/reduce.grammar's own
+# placement of `comparison` above `additive`):
+# ---------------------------------------------------------------
+#   comparison       = ~= < <= > >=      (non-chaining -- one flat tier,
+#                                           mirroring reduce.grammar's own
+#                                           explicitly-disclosed non-chaining
+#                                           `comparison` simplification)
+#   coercion         ::                   (non-chaining; see below for why
+#                                           it sits BELOW comparison, i.e.
+#                                           binds TIGHTER)
+#   additive         + -
+#   multiplicative   * /
+#   unary            -                    (prefix; no unary `+`, matching
+#                                           Derive's/Reduce's identical
+#                                           asymmetry -- MA13 §4 lists only
+#                                           unary `-`)
+#   power            ^ **                 (right-associative; same operator,
+#                                           mirroring reduce.grammar's own
+#                                           CARET/POW collapse)
+#   postfix          f(...) / f a         (function application -- see
+#                                           this rule's own header comment
+#                                           for the paren-optional
+#                                           single-argument design)
+#   atom             literals, symbols, lists, ( ... ) / blocks
+# =============================================================================
+
+# Design decision: where `::` (coercion) binds, and why it is embedded in
+# this cascade while `has` (above) is not. `e :: T`'s left-hand side `e` is
+# confirmed to be an arbitrary expression (MA13's own worked example coerces
+# a bare literal, `3 :: Fraction Integer`, and nothing rules out coercing a
+# computed value, `(a + b) :: Float`) — so, unlike `has`, `coercion` belongs
+# INSIDE the general cascade, at a tier that lets it combine naturally with
+# arithmetic. It binds TIGHTER than `comparison` (so `x :: T = y` reads as
+# `(x :: T) = y` — comparing a coerced value against `y`, the only sensible
+# reading, since `T = y` alone is nonsensical) but LOOSER than `additive` (so
+# `a + b :: T` reads as `(a + b) :: T` — coercing the whole computed sum,
+# matching the natural "cast the value you just computed" intuition, rather
+# than the much stranger `a + (b :: T)`). Non-chaining (one optional
+# suffix), mirroring `comparison`'s own non-chaining shape immediately below.
+comparison = coercion [ ( EQ | NE | LE | LESS | GREATER | GE ) coercion ] ;
+
+coercion = additive [ COERCE type_expr ] ;
+
+additive       = multiplicative { ( PLUS | MINUS ) multiplicative } ;
+multiplicative = unary { ( TIMES | SLASH ) unary } ;
+
+# Prefix minus, self-recursive so a chain (`- - -5`) parses; the base case
+# dives into `power`. Binds looser than `power` (mirrors derive.grammar's/
+# reduce.grammar's identical `unary`/`power` split), so `-x^2` is
+# `Times[-1, Power[x, 2]]`, never `Power[Times[-1, x], 2]`.
+unary = MINUS unary | power ;
+
+# Exponentiation -- right-associative (MA13 §4's own precedence statement;
+# the recursive-descent shape gives this for free, RHS references `unary`,
+# which falls back to `power` absent a leading `-`, exactly
+# derive.grammar's/reduce.grammar's identical trick): `a^b^c` is
+# `Power[a, Power[b, c]]`. Both spellings (`^` CARET, `**` POW) are the SAME
+# operator, collapsed onto one production here (mirrors reduce.grammar's own
+# CARET/POW comment: "the parser, not the lexer, is where the two spellings
+# collapse").
+power = postfix [ ( CARET | POW ) unary ] ;
+
+# =============================================================================
+# Function application -- MA13 §4's confirmed `f(a, b)` AND paren-optional
+# single-argument `f a` (`factorial 7`, `ff z`) forms, unified into ONE
+# production (`call_args`'s own ordered choice), mirroring how
+# derive.grammar's/reduce.grammar's own single `postfix` production covers
+# every one of their own call-shaped uses. At most ONE call suffix per atom
+# (no `{ }` chaining the way derive.grammar's/reduce.grammar's own `postfix`
+# allows `f(x)(y)`) -- a deliberate, disclosed narrowing: MA13 confirms only
+# a SINGLE application per call (`factorial 7`, `ff z`, `f(a, b)`), never a
+# curried/chained one (`f(x)(y)`, `f a b`), and this grammar does not invent
+# multi-application syntax MA13 never shows.
+#
+# THE PAREN-OPTIONAL DISAMBIGUATION -- resolved structurally, with NO
+# lookahead predicate, mirroring idl.grammar's own "which production can
+# ever start on this token" reasoning for its own `/BOOLEAN`-vs-division
+# split: `call_args`'s second alternative is a single bare `atom` — NOT a
+# further `unary`/`power`/anything containing an OPERATOR. This means a
+# construct like `f -1` can NEVER be misread as "a call to `f` with the
+# negative literal `-1`": `atom` has no unary-minus alternative (only
+# `NUMBER | STRING | NAME | list_literal | group`), so `call_args`'s
+# atom-branch cannot start on a MINUS token at all, and `postfix` correctly
+# finds no call suffix at that position -- `f` parses alone, and the
+# outer `additive` tier is the ONLY thing that ever gets a chance to consume
+# the `-`, reading `f -1` as ordinary subtraction `f - 1`. This mirrors a
+# well-established convention in every language with both juxtaposition-
+# application and a unary/binary-overloaded `-` (Haskell's own `f -1` is
+# identically forced to parse as subtraction, for the identical structural
+# reason) -- not a gap, a correct and unsurprising resolution. The same
+# argument rules out any confusion with unary `+`, since MA13 §4 confirms no
+# unary `+` exists in this cut's grammar at all (only unary `-`), so `+` is
+# ALWAYS a binary operator and `f +1` is unambiguously `f + 1`.
+#
+# A bare NAME immediately followed by another bare NAME/NUMBER/STRING/list/
+# group with NO operator between them (`x y`) is therefore always read as a
+# CALL (`x(y)`) by this grammar -- whether `x` is actually callable is a
+# semantic question left to a future `axiom-runtime` (MA-13d), exactly as
+# idl.grammar leaves "is this NAME a known zero-arg procedure or a variable
+# to auto-display" to a future `idl-runtime`, not a gap this parser's CST
+# needs to paper over.
+postfix = atom [ call_args ] ;
+
+call_args = LPAREN [ arglist ] RPAREN
+          | atom ;
+
+arglist = expr { COMMA expr } ;
+
+atom = NUMBER
+     | STRING
+     | NAME
+     | list_literal
+     | group ;
+
+# `[a, b, c]` (MA13 §4) -- list literal, reusing the existing shared `List`
+# symbolic-ir handler at the lowering layer (MA13 §2/§5). Square brackets
+# only (mirroring maple.grammar's own `[a, b, c]`, NOT Reduce's curly
+# braces) -- axiom.tokens' own SECTION 2 comment confirms this bracket
+# choice. `[ elem_list ]` is optional so the empty list `[]` parses, mirroring
+# every sibling `*-parser`'s own optional-arglist convention.
+list_literal = LBRACKET [ elem_list ] RBRACKET ;
+elem_list = expr { COMMA expr } ;
+
+# =============================================================================
+# `( ... )` -- grouping AND the parenthesised, `;`-separated block
+# (MA13 §4's own TWO separate table rows: "grouping" and
+# "a parenthesised, semicolon-separated block; value is the last
+# expression's value"), unified into ONE production here, mirroring
+# derive.grammar's own `vector`/`row` unification of single-row vectors and
+# multi-row matrices: a `group` with exactly ONE `expr` child IS ordinary
+# grouping; a `group` with TWO OR MORE `expr` children (joined by `;`) IS a
+# block, its value the LAST child's value. A future `axiom-runtime` (MA-13d)
+# distinguishes the two the same way derive-runtime's own D-5 lowering
+# distinguishes a one-row vector from a multi-row matrix: by counting how
+# many `expr` children this rule actually matched, not by a grammar-level
+# distinction -- there is no separate `block` rule name in this grammar for
+# exactly that reason.
+# =============================================================================
+group = LPAREN expr { SEMI expr } RPAREN ;
+
+# =============================================================================
+# `type_expr` -- a domain/category-shaped expression, used everywhere MA13
+# §4's declaration (`:`), coercion (`::`), category-query (`has`), and
+# function-header type-annotation positions need one. Deliberately its OWN
+# rule, distinct from the ordinary `postfix`/`atom` cascade above, even
+# though the two are structurally close (both are "a NAME, optionally
+# applied to further arguments") -- giving type positions their own named
+# CST node is exactly the same "tag a semantically distinct grammar position
+# with its own rule name, even where the shape overlaps a general-purpose
+# production" discipline idl.grammar already applies to its own
+# `index_suffix`/`call_suffix` pair (both are "a bracketed argument list",
+# kept as two names for AST clarity). A future `axiom-runtime` can therefore
+# tell "this subtree is a type annotation" apart from "this subtree is an
+# ordinary value-producing call" by rule name alone, even on input like
+# `Polynomial(Integer)` that is byte-for-byte identical whichever position it
+# appears in -- a real, confirmed fact about Axiom's own design (MA13 §3:
+# domain construction reuses ordinary call syntax), not an accident of this
+# grammar.
+#
+# `type_ctor_args`'s own paren-optional second alternative is a single bare
+# NAME ONLY (never a further nested `type_expr` with its own optional args)
+# -- a deliberate, conservative narrowing, NOT a mirror of `type_expr`'s own
+# full recursive shape. MA13's only confirmed paren-optional example is the
+# simple two-level `Fraction Integer`; every RICHER nesting example MA13
+# shows (`List(Matrix(Polynomial(Complex(Fraction(Integer)))))`) uses FULLY
+# EXPLICIT parens at every level, never a paren-optional shorthand chained
+# more than once. Letting the paren-optional branch recurse into another
+# full `type_expr` (rather than a plain NAME) would, beyond being unconfirmed
+# syntax, ALSO reopen exactly the kind of "long chain of bare identifiers
+# with no delimiter, one recursion frame per identifier" adversarial shape
+# this grammar otherwise avoids everywhere else (`postfix`'s own
+# `call_args` has the identical bare-atom-only restriction, for the
+# identical reason) -- an adversarial `A A A A ... A` input of this shape
+# would cost one `type_expr`/`type_ctor_args` stack frame PER identifier with
+# no parenthesis needed to "pay" for each level, unlike every other
+# recursive shape in this grammar, which always costs at least one real
+# input character (a paren, a `-`, a `^`) per recursion level. `List
+# Fraction(Integer)` (paren-optional combined with a nested, EXPLICITLY
+# parenthesised argument) is consequently NOT accepted by this grammar --
+# write `List(Fraction(Integer))` instead (fully explicit parens, `type_expr`
+# first alternative, arbitrarily deep, and already covered by
+# `MAX_RULE_DEPTH` the same way ordinary `(((...)))` grouping is).
+# =============================================================================
+type_expr = NAME [ type_ctor_args ] ;
+
+type_ctor_args = LPAREN [ type_expr_list ] RPAREN
+               | NAME ;
+
+type_expr_list = type_expr { COMMA type_expr } ;
