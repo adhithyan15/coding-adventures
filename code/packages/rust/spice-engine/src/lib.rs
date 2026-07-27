@@ -3611,6 +3611,7 @@ pub struct MosfetLevel1Params {
     pub oxide_thickness: f64,
     pub drain_resistance: f64,
     pub source_resistance: f64,
+    pub sheet_resistance: f64,
     pub saturation_current: f64,
     pub n_sub: f64,
     pub t_nom: f64,
@@ -3640,6 +3641,7 @@ impl Default for MosfetLevel1Params {
             oxide_thickness: 1.0e-7,
             drain_resistance: 0.0,
             source_resistance: 0.0,
+            sheet_resistance: 0.0,
             saturation_current: 1.0e-15,
             n_sub: 1.4,
             t_nom: 300.15,
@@ -3996,8 +3998,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Pnp, 41, 58, 13, 4),
     (ModelCardKind::Njf, 22, 30, 7, 3),
     (ModelCardKind::Pjf, 22, 30, 7, 3),
-    (ModelCardKind::Nmos, 25, 32, 6, 3),
-    (ModelCardKind::Pmos, 25, 32, 6, 3),
+    (ModelCardKind::Nmos, 26, 33, 6, 3),
+    (ModelCardKind::Pmos, 26, 33, 6, 3),
 ];
 const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -4130,6 +4132,7 @@ const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("TOX", "TOX"),
     ("RD", "RD"),
     ("RS", "RS"),
+    ("RSH", "RSH"),
     ("IS", "IS"),
     ("NSUB", "N_SUB"),
     ("N_SUB", "N_SUB"),
@@ -4917,6 +4920,9 @@ pub fn mosfet_from_model_card(
     }
     if let Some(value) = model.parameters.get("RS") {
         params.source_resistance = *value;
+    }
+    if let Some(value) = model.parameters.get("RSH") {
+        params.sheet_resistance = *value;
     }
     if let Some(value) = model.parameters.get("IS") {
         params.saturation_current = *value;
@@ -22332,10 +22338,10 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
                 insert_node(&mut names, &mosfet.gate);
                 insert_node(&mut names, &mosfet.source);
                 insert_node(&mut names, &mosfet.body);
-                if mosfet.params.drain_resistance > 0.0 {
+                if mosfet_drain_resistance(mosfet) > 0.0 {
                     insert_node(&mut names, &mosfet_intrinsic_drain_node(mosfet));
                 }
-                if mosfet.params.source_resistance > 0.0 {
+                if mosfet_source_resistance(mosfet) > 0.0 {
                     insert_node(&mut names, &mosfet_intrinsic_source_node(mosfet));
                 }
             }
@@ -22845,25 +22851,25 @@ fn collect_noise_sources(
                         frequency_exponent: 1.0,
                     });
                 }
-                if mosfet.params.drain_resistance > 0.0 {
+                let drain_resistance = mosfet_drain_resistance(mosfet);
+                if drain_resistance > 0.0 {
                     sources.push(NoiseSource {
                         element_name: format!("{}:RD", mosfet.name),
                         noise_type: NoiseType::Thermal,
                         positive: node_index(node_indices, &mosfet.drain),
                         negative: drain,
-                        source_psd: 4.0 * BOLTZMANN * temperature_kelvin
-                            / mosfet.params.drain_resistance,
+                        source_psd: 4.0 * BOLTZMANN * temperature_kelvin / drain_resistance,
                         frequency_exponent: 0.0,
                     });
                 }
-                if mosfet.params.source_resistance > 0.0 {
+                let source_resistance = mosfet_source_resistance(mosfet);
+                if source_resistance > 0.0 {
                     sources.push(NoiseSource {
                         element_name: format!("{}:RS", mosfet.name),
                         noise_type: NoiseType::Thermal,
                         positive: node_index(node_indices, &mosfet.source),
                         negative: source,
-                        source_psd: 4.0 * BOLTZMANN * temperature_kelvin
-                            / mosfet.params.source_resistance,
+                        source_psd: 4.0 * BOLTZMANN * temperature_kelvin / source_resistance,
                         frequency_exponent: 0.0,
                     });
                 }
@@ -24190,20 +24196,22 @@ fn stamp_mosfet(
     stamp_transconductance(matrix, drain, source, body, source, result.gmb);
     stamp_equivalent_current_source(rhs, drain, source, equivalent_current);
     stamp_mosfet_charge(mosfet, capacitor_states, node_indices, matrix, rhs)?;
-    if mosfet.params.drain_resistance > 0.0 {
+    let drain_resistance = mosfet_drain_resistance(mosfet);
+    if drain_resistance > 0.0 {
         stamp_conductance(
             matrix,
             node_index(node_indices, &mosfet.drain),
             drain,
-            1.0 / mosfet.params.drain_resistance,
+            1.0 / drain_resistance,
         );
     }
-    if mosfet.params.source_resistance > 0.0 {
+    let source_resistance = mosfet_source_resistance(mosfet);
+    if source_resistance > 0.0 {
         stamp_conductance(
             matrix,
             node_index(node_indices, &mosfet.source),
             source,
-            1.0 / mosfet.params.source_resistance,
+            1.0 / source_resistance,
         );
     }
     Ok(())
@@ -24385,20 +24393,22 @@ fn stamp_mosfet_small_signal(
     stamp_conductance(matrix, drain, source, result.gds);
     stamp_transconductance(matrix, drain, source, gate, source, result.gm);
     stamp_transconductance(matrix, drain, source, body, source, result.gmb);
-    if mosfet.params.drain_resistance > 0.0 {
+    let drain_resistance = mosfet_drain_resistance(mosfet);
+    if drain_resistance > 0.0 {
         stamp_conductance(
             matrix,
             node_index(node_indices, &mosfet.drain),
             drain,
-            1.0 / mosfet.params.drain_resistance,
+            1.0 / drain_resistance,
         );
     }
-    if mosfet.params.source_resistance > 0.0 {
+    let source_resistance = mosfet_source_resistance(mosfet);
+    if source_resistance > 0.0 {
         stamp_conductance(
             matrix,
             node_index(node_indices, &mosfet.source),
             source,
-            1.0 / mosfet.params.source_resistance,
+            1.0 / source_resistance,
         );
     }
     Ok(())
@@ -24495,20 +24505,22 @@ fn stamp_ac_mosfet_small_signal(
         source,
         Complex::new(result.gmb, 0.0),
     );
-    if mosfet.params.drain_resistance > 0.0 {
+    let drain_resistance = mosfet_drain_resistance(mosfet);
+    if drain_resistance > 0.0 {
         stamp_complex_conductance(
             matrix,
             node_index(node_indices, &mosfet.drain),
             drain,
-            Complex::new(1.0 / mosfet.params.drain_resistance, 0.0),
+            Complex::new(1.0 / drain_resistance, 0.0),
         );
     }
-    if mosfet.params.source_resistance > 0.0 {
+    let source_resistance = mosfet_source_resistance(mosfet);
+    if source_resistance > 0.0 {
         stamp_complex_conductance(
             matrix,
             node_index(node_indices, &mosfet.source),
             source,
-            Complex::new(1.0 / mosfet.params.source_resistance, 0.0),
+            Complex::new(1.0 / source_resistance, 0.0),
         );
     }
     Ok(())
@@ -24926,7 +24938,8 @@ fn jfet_intrinsic_source_node(jfet: &Jfet) -> String {
 }
 
 fn mosfet_intrinsic_drain_node(mosfet: &Mosfet) -> String {
-    if !mosfet.params.drain_resistance.is_finite() || mosfet.params.drain_resistance <= 0.0 {
+    let drain_resistance = mosfet_drain_resistance(mosfet);
+    if !drain_resistance.is_finite() || drain_resistance <= 0.0 {
         mosfet.drain.clone()
     } else {
         format!("__spice_{}_drain", mosfet.name)
@@ -24934,10 +24947,27 @@ fn mosfet_intrinsic_drain_node(mosfet: &Mosfet) -> String {
 }
 
 fn mosfet_intrinsic_source_node(mosfet: &Mosfet) -> String {
-    if !mosfet.params.source_resistance.is_finite() || mosfet.params.source_resistance <= 0.0 {
+    let source_resistance = mosfet_source_resistance(mosfet);
+    if !source_resistance.is_finite() || source_resistance <= 0.0 {
         mosfet.source.clone()
     } else {
         format!("__spice_{}_source", mosfet.name)
+    }
+}
+
+fn mosfet_drain_resistance(mosfet: &Mosfet) -> f64 {
+    if mosfet.params.drain_resistance > 0.0 {
+        mosfet.params.drain_resistance
+    } else {
+        mosfet.params.sheet_resistance
+    }
+}
+
+fn mosfet_source_resistance(mosfet: &Mosfet) -> f64 {
+    if mosfet.params.source_resistance > 0.0 {
+        mosfet.params.source_resistance
+    } else {
+        mosfet.params.sheet_resistance
     }
 }
 
@@ -25632,6 +25662,7 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("LD", params.lateral_diffusion_length),
         ("RD", params.drain_resistance),
         ("RS", params.source_resistance),
+        ("RSH", params.sheet_resistance),
         ("TOX", params.oxide_thickness),
         ("IS", params.saturation_current),
         ("N_SUB", params.n_sub),
@@ -25684,6 +25715,12 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "MOSFET RS must be non-negative".to_string(),
+        });
+    }
+    if params.sheet_resistance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET RSH must be non-negative".to_string(),
         });
     }
     if params.oxide_thickness <= 0.0 {

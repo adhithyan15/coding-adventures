@@ -183,6 +183,14 @@ def test_source_resistance_rejects_negative_value():
         evaluate_level1(Level1Params(RS=-1.0), V_GS=1.8, V_DS=1.8)
 
 
+def test_sheet_resistance_rejects_negative_value():
+    with pytest.raises(
+        ValueError,
+        match="MOSFET RSH must be finite and non-negative",
+    ):
+        evaluate_level1(Level1Params(RSH=-1.0), V_GS=1.8, V_DS=1.8)
+
+
 def test_overlap_and_bulk_capacitances_are_reported():
     p = Level1Params(
         W=2e-6,

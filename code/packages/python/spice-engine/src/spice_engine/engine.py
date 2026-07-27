@@ -9064,7 +9064,12 @@ def _mosfet_drain_body_charge_state_name(el: Mosfet) -> str:
 
 def _mosfet_drain_resistance(el: Mosfet) -> float:
     params = getattr(getattr(el.model, "model", None), "params", None)
-    return float(getattr(params, "RD", 0.0))
+    drain_resistance = float(getattr(params, "RD", 0.0))
+    return (
+        drain_resistance
+        if drain_resistance > 0.0
+        else float(getattr(params, "RSH", 0.0))
+    )
 
 
 def _mosfet_intrinsic_drain_node(el: Mosfet) -> str:
@@ -9078,7 +9083,12 @@ def _mosfet_intrinsic_drain_node(el: Mosfet) -> str:
 
 def _mosfet_source_resistance(el: Mosfet) -> float:
     params = getattr(getattr(el.model, "model", None), "params", None)
-    return float(getattr(params, "RS", 0.0))
+    source_resistance = float(getattr(params, "RS", 0.0))
+    return (
+        source_resistance
+        if source_resistance > 0.0
+        else float(getattr(params, "RSH", 0.0))
+    )
 
 
 def _mosfet_intrinsic_source_node(el: Mosfet) -> str:

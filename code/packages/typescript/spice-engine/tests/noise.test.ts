@@ -203,6 +203,25 @@ describe("noiseAc", () => {
     );
   });
 
+  it("emits both MOSFET terminal noise sources from RSH", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdd", "vdd", "0", 5.0));
+    circuit.add(voltageSource("Vgate", "gate", "0", 3.0));
+    circuit.add(resistor("Rload", "vdd", "out", 1_000.0));
+    circuit.add(mosfet("M1", "out", "gate", "0", "0", "NMOS", { RSH: 250.0 }));
+
+    const entries = noiseAc(circuit, "out", "Vgate", [1_000.0], 300.0).points[0]!.entries;
+    for (const name of ["M1:RD", "M1:RS"]) {
+      const entry = entries.find((candidate) =>
+        candidate.elementName === name && candidate.noiseType === "thermal"
+      );
+      expect(entry?.sourcePsd).toBeCloseTo(
+        4.0 * 1.380_649e-23 * 300.0 / 250.0,
+        30,
+      );
+    }
+  });
+
   it("emits JFET source-resistance thermal noise", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vdd", "vdd", "0", 5.0));

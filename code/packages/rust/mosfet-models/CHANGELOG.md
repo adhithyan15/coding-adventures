@@ -4,6 +4,8 @@
 
 ### Added
 
+- `Level1Params::rsh` adds zero-default Berkeley drain/source sheet resistance
+  with finite, non-negative validation.
 - `Level1Params::rs` adds the zero-default Berkeley external source resistance
   parameter with finite, non-negative validation.
 - `Level1Params::rd` adds the zero-default Berkeley external drain resistance

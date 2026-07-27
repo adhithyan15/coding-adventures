@@ -140,6 +140,9 @@ node, routes the channel and drain-side capacitances through it, and contributes
 `RS` defaults to zero ohms. A finite positive value inserts an intrinsic source
 node, routes the channel and source-side capacitances through it, and contributes
 `4kT/RS` thermal noise.
+`RSH` defaults to zero ohms per square. With the default one-square terminal
+geometry, it supplies both terminal resistances wherever `RD` or `RS` remains
+zero; an explicit positive terminal resistance takes precedence.
 `FC` (default `0.5`) selects the continuous Berkeley forward-bias continuation
 for `CBS` / `CBD` depletion capacitance shaped by `PB` and `MJ`.
 All temperature coefficients honor model-card `TNOM` / `T_NOM`.
