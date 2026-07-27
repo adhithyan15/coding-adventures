@@ -2,6 +2,30 @@
 
 All notable changes to this crate are documented here.
 
+## 0.17.0 - 2026-07-25 — incremental collector C ABI `__gc_collect_incremental_{start,step,finish}` (AOT00-T4 §6)
+
+- **Three new exports in `stack_scan.rs`** — the bounded-pause incremental collection cycle,
+  driven as `start(); while (!step(BUDGET)) { …mutator… } finish();`:
+  - `__gc_collect_incremental_start()` captures the precise roots **once** via the *same*
+    frame-pointer walk as `__gc_collect_precise` (precise slots + conservative regions + the
+    spilled callee-saved registers) and shades them grey. Reference stores the mutator makes
+    *between* steps are caught by `__gc_write_barrier`'s incremental shading (the Dijkstra
+    insertion barrier landed in gc-core 0.19.0) — no capi change needed there, it already
+    forwards to `FlatHeap::write_barrier`.
+  - `__gc_collect_incremental_step(budget) -> i64` advances marking by up to `budget` objects,
+    returning `1` when complete / `0` otherwise (negative budget → 0).
+  - `__gc_collect_incremental_finish() -> i64` sweeps the unreachable objects and returns the
+    count reclaimed.
+  - **Untrustworthy stack ⇒ safe no-op cycle:** if `start` can't trust the stack it enters no
+    phase; `step` then returns `1` immediately and `finish` returns `0` (guarded by
+    `FlatHeap::incremental_in_progress()`), so nothing is swept — the same bias-to-leak as
+    `__gc_collect_precise`. Declared in `include/gc_core.h`.
+- **Tests (+2):** an end-to-end smoke test drives the real start→step(budget 1)→finish protocol
+  on this thread's stack (a live local is kept, a dead object reclaimed, several slices) + a
+  no-phase-safety test (step/finish without a start free nothing). Real-stack asm path isn't
+  Miri-able (same limitation as the `__gc_collect_precise` tests); the underlying gc-core
+  `incremental_*` logic is Miri-clean.
+
 ## 0.16.0 - 2026-07-24 — twig-compat alias `__twig_gc_collect_compacting` (frontend GC.compact)
 
 - **`__twig_gc_collect_compacting()`** (new `twig_compat` alias → [`__gc_collect_compacting`]) —

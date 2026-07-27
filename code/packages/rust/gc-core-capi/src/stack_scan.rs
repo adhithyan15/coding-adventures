@@ -467,6 +467,104 @@ pub unsafe extern "C" fn __gc_collect_precise() -> i64 {
     freed
 }
 
+/// **Begin** an incremental (bounded-pause) collection rooted precisely at this thread's
+/// stack — the first of the three-call cooperative cycle (spec
+/// `AOT00-T4-incremental-collector.md` §6). Captures the precise roots **once**, via the
+/// *same* frame-pointer walk as [`__gc_collect_precise`] (precise slots for stack-mapped
+/// frames, conservative regions for the rest, plus the spilled callee-saved registers), and
+/// shades them grey. The mutator then runs *between* [`__gc_collect_incremental_step`] calls;
+/// its reference stores are caught by [`__gc_write_barrier`]'s incremental shading (the
+/// Dijkstra insertion barrier). With no stack maps registered the walk tiles the stack
+/// conservatively, exactly as `__gc_collect_precise` degrades.
+///
+/// **Root-snapshot contract (spec §6).** Roots are captured here; a reference that becomes
+/// reachable only *after* this call is retained iff it passed through a barriered store or is
+/// still reachable from this snapshot. The driver must not pop a frame holding the sole
+/// reference to a white object without that reference having been stored. The gc-core mark
+/// re-reads neither the snapshotted slots nor regions (it drains only the grey worklist), so
+/// the fact that they point into *this* frame is safe.
+///
+/// **Untrustworthy stack ⇒ no-op cycle.** If the stack range can't be trusted (base
+/// undetectable, or an absurd span), no phase is entered — [`__gc_collect_incremental_step`]
+/// then reports "done" immediately and [`__gc_collect_incremental_finish`] reclaims nothing,
+/// so no live object is ever freed (the same bias-to-leak as `__gc_collect_precise`).
+///
+/// # Safety
+/// Same contract as [`__gc_collect_precise`]: the calling thread owns its stack; single
+/// mutator; **no other collection runs between `start` and `finish`** (enforced by gc-core's
+/// mixing guard). The driver loops `step` to "done" before calling `finish`.
+#[no_mangle]
+#[inline(never)]
+pub unsafe extern "C" fn __gc_collect_incremental_start() {
+    // Spill callee-saved registers into a stack buffer (in this frame), then SP.
+    let mut regs = [0usize; SPILL_SLOTS];
+    let sp = spill_and_sp(regs.as_mut_ptr());
+    let fp = current_fp();
+    let base = stack_base();
+
+    if base != 0 && sp < base && base - sp <= MAX_STACK_SCAN {
+        let mut slots: Vec<usize> = Vec::new();
+        let mut regions: Vec<(*const u8, usize)> = Vec::new();
+        // Walk the frame-pointer chain into precise slots + conservative regions.
+        crate::precise_walk::build_precise_roots(fp, sp, base, &mut slots, &mut regions);
+        // Always scan the spilled callee-saved registers (a ref live only in one is named by
+        // no stack map). Valid here because `incremental_start` greys these roots NOW, while
+        // `regs` and the walked frames are still live.
+        regions.push((
+            regs.as_ptr() as *const u8,
+            SPILL_SLOTS * core::mem::size_of::<usize>(),
+        ));
+        with_heap(|h| h.incremental_start(&slots, &regions));
+    }
+    // else: untrustworthy stack → don't enter a phase (see the bias-to-leak note above).
+
+    core::hint::black_box(&regs);
+}
+
+/// **Advance** an in-progress incremental mark by up to `budget` objects — the bounded-pause
+/// primitive (spec §6). Returns `1` when marking is complete (the caller should then call
+/// [`__gc_collect_incremental_finish`]), `0` if more steps remain. A negative `budget` is
+/// treated as `0`. If no incremental phase is in progress (e.g. an untrustworthy-stack
+/// `start`, or a spurious call), returns `1` ("done") without touching the heap — so the
+/// driver's `step`-to-done loop terminates and a no-op cycle stays safe.
+///
+/// # Safety
+/// Single-threaded; no other collection runs mid-cycle. Called only after
+/// [`__gc_collect_incremental_start`].
+#[no_mangle]
+#[inline(never)]
+pub unsafe extern "C" fn __gc_collect_incremental_step(budget: i64) -> i64 {
+    let budget = if budget < 0 { 0 } else { budget as usize };
+    with_heap(|h| {
+        if !h.incremental_in_progress() {
+            return 1; // no phase → nothing to mark → "done"
+        }
+        if h.incremental_step(budget) {
+            1
+        } else {
+            0
+        }
+    })
+}
+
+/// **Finish** an in-progress incremental cycle: sweep the unreachable (white) objects and end
+/// the phase (spec §6). Returns the number of objects reclaimed. Marking must be complete
+/// (drive [`__gc_collect_incremental_step`] to `1` first). If no phase is in progress, returns
+/// `0` without sweeping — so an untrustworthy-stack cycle reclaims nothing.
+///
+/// # Safety
+/// Single-threaded; no other collection mid-cycle; called only after marking is complete.
+#[no_mangle]
+#[inline(never)]
+pub unsafe extern "C" fn __gc_collect_incremental_finish() -> i64 {
+    with_heap(|h| {
+        if !h.incremental_in_progress() {
+            return 0; // no phase → nothing collected (no sweep)
+        }
+        h.incremental_finish().freed as i64
+    })
+}
+
 /// A full **moving/compacting** collection rooted precisely at this thread's stack —
 /// the argument-less entry that turns the precise-root machinery into a *relocating*
 /// GC (spec `AOT00-T3-moving-collector.md` §5). It is to
@@ -706,6 +804,67 @@ mod tests {
         assert!(__gc_live_bytes() >= 16);
         assert_eq!(__gc_collection_count(), 1);
         core::hint::black_box(kept);
+    }
+
+    /// End-to-end smoke test for the **incremental** C-ABI cycle
+    /// `__gc_collect_incremental_{start,step,finish}`: an object held in a live stack local
+    /// survives the interruptible collection; a dead one is reclaimed. Drives the real
+    /// three-call protocol (start → step-to-done → finish) on this thread's stack, with a
+    /// deliberately small budget so the mark takes several steps. With no stack maps
+    /// registered every frame is conservative, so the live local is pinned (kept) and the
+    /// unreferenced object is swept — exactly matching a stop-the-world collect, just in
+    /// bounded slices.
+    #[test]
+    fn incremental_collect_keeps_live_local_frees_dead() {
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+        run_incremental_collect_case();
+        __gc_reset();
+    }
+
+    #[inline(never)]
+    fn run_incremental_collect_case() {
+        let kept = __gc_alloc(16);
+        assert!(kept != 0);
+        let _ = __gc_alloc(16); // dead: no stack slot retains it
+        assert_eq!(__gc_live_bytes(), 32);
+        unsafe { *(kept as *mut i64) = 0x1ce5 };
+
+        // start → step (budget 1, so several slices) to done → finish.
+        unsafe { __gc_collect_incremental_start() };
+        let mut steps = 0;
+        while unsafe { __gc_collect_incremental_step(1) } == 0 {
+            steps += 1;
+            assert!(steps < 100_000, "incremental mark must converge");
+        }
+        let freed = unsafe { __gc_collect_incremental_finish() };
+
+        assert!(freed >= 1, "the unreferenced object must be reclaimed");
+        assert_eq!(
+            unsafe { *(kept as *const i64) },
+            0x1ce5,
+            "the conservatively-pinned live local survives the incremental collect intact"
+        );
+        assert!(__gc_live_bytes() >= 16);
+        assert_eq!(__gc_collection_count(), 1);
+        core::hint::black_box(kept);
+    }
+
+    /// The incremental C-ABI protocol is safe even if no phase is in progress: `step` reports
+    /// "done" and `finish` reclaims nothing (the no-op cycle an untrustworthy-stack `start`
+    /// produces). Nothing is swept, so no live object could be lost.
+    #[test]
+    fn incremental_step_finish_are_safe_with_no_phase() {
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+        let kept = __gc_alloc(16);
+        assert!(kept != 0);
+        // No `start` was called → no phase in progress.
+        assert_eq!(unsafe { __gc_collect_incremental_step(64) }, 1, "no phase ⇒ done");
+        assert_eq!(unsafe { __gc_collect_incremental_finish() }, 0, "no phase ⇒ nothing freed");
+        assert!(__gc_live_bytes() >= 16, "the object was NOT swept without a real cycle");
+        core::hint::black_box(kept);
+        __gc_reset();
     }
 
     /// `spill_and_sp` returns a plausible stack pointer (non-zero, and below the

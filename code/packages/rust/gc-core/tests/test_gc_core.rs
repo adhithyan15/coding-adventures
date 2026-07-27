@@ -504,9 +504,23 @@ fn gc_algorithm_compacting_is_available() {
 }
 
 #[test]
-fn gc_algorithm_incremental_not_yet_available() {
-    // Still a planned rung of the precision ladder.
-    assert!(!GcAlgorithm::Incremental.is_available());
+fn gc_algorithm_incremental_is_available() {
+    // Incremental became available with FlatHeap::incremental_start/step/finish + the
+    // Dijkstra insertion write barrier (the last rung of the precision ladder).
+    assert!(GcAlgorithm::Incremental.is_available());
+}
+
+#[test]
+fn every_gc_algorithm_is_now_available() {
+    // The whole ladder is implemented: mark-and-sweep, generational, compacting, incremental.
+    for algo in [
+        GcAlgorithm::MarkAndSweep,
+        GcAlgorithm::Generational,
+        GcAlgorithm::Compacting,
+        GcAlgorithm::Incremental,
+    ] {
+        assert!(algo.is_available(), "{} must be available", algo.name());
+    }
 }
 
 #[test]
