@@ -37,6 +37,8 @@ import {
   unlockedConsonantCount,
   unlockedLetterIndices,
 } from "./syllabary.ts";
+import { buildSyllableMatrix } from "./matrix.ts";
+import type { Letter } from "./types.ts";
 import { loadLessons, indicesByLanguage, nextDue } from "./lessons.ts";
 import {
   planSession,
@@ -205,6 +207,9 @@ function persistLessons(): void {
 }
 let currentScript = 0;
 let currentLetter = 0;
+// Browse layout for the syllabaries: the flat "list" of tiles, or the
+// consonant × vowel "matrix" that makes the abugida's regularity visible.
+let browseLayout: "list" | "matrix" = "list";
 
 // Practice state
 type Scope = "script" | "mixed";
@@ -390,6 +395,86 @@ function renderGrid(views: LetterView[], dir: "ltr" | "rtl"): HTMLElement {
     grid.appendChild(tile);
   });
   return grid;
+}
+
+/** For a syllabary, a "List / Matrix" switch — the flat grid, or the table. */
+function renderBrowseLayoutToggle(): HTMLElement {
+  const wrap = el("div", "layouts");
+  const label = el("span", "layouts__label");
+  label.textContent = "Layout:";
+  wrap.appendChild(label);
+  (
+    [
+      ["list", "List"],
+      ["matrix", "Matrix"],
+    ] as ["list" | "matrix", string][]
+  ).forEach(([l, text]) => {
+    const b = el("button", "layout" + (l === browseLayout ? " layout--active" : ""));
+    b.textContent = text;
+    b.setAttribute("aria-pressed", String(l === browseLayout));
+    b.onclick = () => {
+      if (browseLayout === l) return;
+      browseLayout = l;
+      render();
+    };
+    wrap.appendChild(b);
+  });
+  return wrap;
+}
+
+/**
+ * The consonant × vowel table for a syllabary. Rows are consonants, columns are
+ * the shared vowels; each cell is the syllable glyph + its romanization, and
+ * clicking it selects that syllable so the existing detail panel breaks it apart.
+ * The layout comes from the pure `buildSyllableMatrix`, so nothing here invents
+ * an alignment — a ragged script simply has no matrix to show.
+ */
+function renderMatrix(letters: Letter[]): HTMLElement | null {
+  const m = buildSyllableMatrix(letters);
+  if (!m) return null;
+
+  const scroll = el("div", "matrix-scroll");
+  const table = el("table", "matrix") as HTMLTableElement;
+
+  const thead = el("thead", "");
+  const hrow = el("tr", "");
+  hrow.appendChild(el("th", "matrix__corner")); // top-left, above the row labels
+  m.vowels.forEach((v) => {
+    const th = el("th", "matrix__vowel");
+    th.textContent = v;
+    hrow.appendChild(th);
+  });
+  thead.appendChild(hrow);
+  table.appendChild(thead);
+
+  const tbody = el("tbody", "");
+  m.rows.forEach((row) => {
+    const tr = el("tr", "");
+    const rh = el("th", "matrix__consonant");
+    rh.textContent = row.label;
+    tr.appendChild(rh);
+    row.cells.forEach((cell) => {
+      const td = el("td", "matrix__cell" + (cell.index === currentLetter ? " matrix__cell--active" : ""));
+      const btn = el("button", "matrix__syllable");
+      const glyph = el("span", "matrix__glyph");
+      glyph.textContent = cell.glyph;
+      const sound = el("span", "matrix__sound");
+      sound.textContent = bareSound(cell.sound);
+      btn.append(glyph, sound);
+      btn.title = cell.sound;
+      btn.onclick = () => {
+        currentLetter = cell.index;
+        render();
+      };
+      td.appendChild(btn);
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+
+  scroll.appendChild(table);
+  return scroll;
 }
 
 function renderDetail(v: LetterView): HTMLElement {
@@ -1306,8 +1391,13 @@ function render(): void {
     const views = buildScriptView(data);
     const active = views[currentLetter] ?? views[0]!;
     app!.appendChild(renderSummary(scriptSummary(data)));
+    // The syllabaries also offer a consonant × vowel matrix; alphabets stay a
+    // plain list. A ragged syllabary yields no matrix, so we fall back to the grid.
+    const syllabary = isSyllabary(data.letters);
+    if (syllabary) app!.appendChild(renderBrowseLayoutToggle());
+    const matrix = syllabary && browseLayout === "matrix" ? renderMatrix(data.letters) : null;
     const body = el("div", "body");
-    body.append(renderGrid(views, data.direction), renderDetail(active));
+    body.append(matrix ?? renderGrid(views, data.direction), renderDetail(active));
     app!.appendChild(body);
   } else {
     if (!question) startPractice();
