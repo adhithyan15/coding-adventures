@@ -205,6 +205,30 @@ pub enum Stmt {
         leading: bool,
         region: Option<Region>,
     },
+    /// `INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — one
+    /// INSPECT carrying TWO OR MORE replace items in a single REPLACING clause.
+    ///
+    /// Semantics (ISO): ONE left-to-right pass over the source. At each character
+    /// position the items are considered IN WRITTEN ORDER, and the FIRST item whose
+    /// (single-char) search matches the current character is applied — the position
+    /// then ADVANCES. Two consequences make this more than N independent replaces:
+    ///
+    ///   * FIRST-MATCH-WINS: only the earliest-written matching item fires at a
+    ///     position; later items with the same-position match never see it.
+    ///   * NO RE-CHAINING: the character a match produces is NOT re-examined by any
+    ///     later item — the output byte is final. So `ALL a BY b ALL b BY z` over
+    ///     "ab" yields "bz", NOT "zz": position 0's `a`→`b` is done (the produced
+    ///     `b` is not then turned into `z`), and position 1's `b`→`z` fires on the
+    ///     ORIGINAL `b`.
+    ///
+    /// Width is unchanged (each position maps to exactly one output char). This rung
+    /// supports ONLY `ALL` items, each a SINGLE-char search BY single-char
+    /// replacement, with NO `{BEFORE|AFTER}` region and NO `LEADING`/`CHARACTERS`/
+    /// `FIRST`; a multi-item list carrying any of those, and the combined
+    /// `TALLYING … REPLACING` form with several items, remain later rungs (see
+    /// `read_statement`). `items` are in written order — the exec walks them in that
+    /// order at every position, which is what realises first-match-wins.
+    InspectReplacingMulti { source: String, items: Vec<(Operand, Operand)> },
     /// `INSPECT source TALLYING counter FOR {ALL|LEADING} delim REPLACING
     /// {ALL|LEADING} search BY replace` — one INSPECT carrying BOTH phrases. Per
     /// ISO this executes "as though an INSPECT TALLYING were specified, followed by an
@@ -1028,8 +1052,27 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     })
                 }
                 (false, true) => {
-                    let (search, replace, leading, region) = read_inspect_replacing_all(verb)?;
-                    Ok(Stmt::InspectReplacing { source, search, replace, leading, region })
+                    // Dispatch on the number of replace items. Exactly ONE item
+                    // keeps the full single-item path (LEADING, region, …)
+                    // UNCHANGED via `read_inspect_replacing_all`; TWO OR MORE items
+                    // take the new multi-item path (`ALL`-only, single-char, no
+                    // region — enforced by `read_inspect_replacing_multi`). Reading
+                    // the phrase child once here keeps the compiler's CST-side
+                    // dispatch (which counts the same `replace_item` children)
+                    // co-total with this reader.
+                    let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
+                        RuntimeError::Unsupported(
+                            "INSPECT without a REPLACING clause is a later rung".into(),
+                        )
+                    })?;
+                    if child_nodes(replacing, "replace_item").len() >= 2 {
+                        let items = read_inspect_replacing_multi(verb)?;
+                        Ok(Stmt::InspectReplacingMulti { source, items })
+                    } else {
+                        let (search, replace, leading, region) =
+                            read_inspect_replacing_all(verb)?;
+                        Ok(Stmt::InspectReplacing { source, search, replace, leading, region })
+                    }
                 }
                 // A lone TALLYING (or neither phrase, which `read_inspect_tally_all`
                 // rejects as a missing TALLYING clause). Both `FOR ALL` and `FOR
@@ -1209,6 +1252,76 @@ fn read_inspect_replacing_all(
         }
     };
     Ok((read_operand(search_node)?, read_operand(replace_node)?, leading, region))
+}
+
+/// Extract the `REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` phrase from an
+/// `inspect_stmt` that carries TWO OR MORE replace items, returning the items as a
+/// `Vec<(search, replace)>` in WRITTEN ORDER (the order the exec walks them at each
+/// position to realise first-match-wins). Only called when the caller has already
+/// counted `>= 2` `replace_item` children — the single-item case keeps
+/// [`read_inspect_replacing_all`] and all its capabilities.
+///
+/// Scope bound for the multi-item path (this rung): EVERY item must be a plain `ALL`
+/// item with NO region and NO `LEADING`/`CHARACTERS`/`FIRST`. Any item violating
+/// that is a clean later-rung `Unsupported`, with the SAME messages the
+/// compiler-side reader raises, so both engines accept exactly the same multi-item
+/// statements and reject the same ones identically. (A multi-character/figurative/
+/// wider/numeric/reference-modified search or replacement is not rejected here — it
+/// falls to the SAME `single_delim_char` check the single-item exec uses, so that
+/// rejection is identical across single and multi.)
+fn read_inspect_replacing_multi(
+    verb: &GrammarASTNode,
+) -> Result<Vec<(Operand, Operand)>, RuntimeError> {
+    let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
+        RuntimeError::Unsupported("INSPECT without a REPLACING clause is a later rung".into())
+    })?;
+    let mut items = Vec::new();
+    for ri in child_nodes(replacing, "replace_item") {
+        let toks = child_tokens(ri);
+        // `CHARACTERS`/`FIRST` are not supported for a multi-item list this rung
+        // (they are not even supported for a single item). Reuse the single-item
+        // messages so the diagnostic is uniform.
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT REPLACING CHARACTERS is a later rung".into(),
+            ));
+        }
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "FIRST") {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT REPLACING FIRST is a later rung".into(),
+            ));
+        }
+        // A `LEADING` item in a multi-item list is a later rung: the multi path is
+        // `ALL`-only. (A LONE `REPLACING LEADING` is still supported — that goes
+        // through the single-item path, not here.)
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT REPLACING with several items and a LEADING item is a later rung".into(),
+            ));
+        }
+        // A `{BEFORE|AFTER}` region on any item of a multi-item list is a later rung.
+        if child_node(ri, "inspect_region").is_some() {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT REPLACING with several items and a BEFORE/AFTER region is a later rung"
+                    .into(),
+            ));
+        }
+        // `ALL search BY replace` — the two `operand` children are the search
+        // (first) and the replacement (second). With no region there is no nested
+        // region operand to disambiguate, so exactly two direct operands are
+        // expected.
+        let ops: Vec<&GrammarASTNode> = child_nodes(ri, "operand");
+        let (search_node, replace_node) = match ops.as_slice() {
+            [s, r] => (*s, *r),
+            _ => {
+                return Err(RuntimeError::Unsupported(
+                    "INSPECT REPLACING ALL without a search and a BY replacement".into(),
+                ))
+            }
+        };
+        items.push((read_operand(search_node)?, read_operand(replace_node)?));
+    }
+    Ok(items)
 }
 
 /// Extract the `CONVERTING from TO to [{BEFORE|AFTER} x]` phrase from an

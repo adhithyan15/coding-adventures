@@ -8,6 +8,40 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.45.0: INSPECT REPLACING with multiple replace items
+
+`INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — TWO OR MORE replace
+items in one REPLACING clause — now compiles, byte-identical to the
+`coding-adventures-cobol-runtime` 0.49.0 oracle. Previously any multi-item REPLACING was
+rejected at read time ("several replace items is a later rung").
+
+Semantics (ISO): ONE left-to-right pass over the source. At each position the items are
+considered IN WRITTEN ORDER and the FIRST whose single-char search matches the ORIGINAL
+character wins; the position then advances. Two properties follow, both pinned by tests:
+
+- FIRST-MATCH-WINS: only the earliest-written matching item fires at a position.
+- NO RE-CHAINING: the byte a replacement produces is never re-examined by a later item.
+  `REPLACING ALL "a" BY "b" ALL "b" BY "z"` over `"ab"` gives `"bz"`, not `"zz"` — a
+  naive sequential two-pass replace would give `"zz"`.
+
+Lowering: `emit_inspect_replacing_multi` unrolls over the compile-time width; at each
+position it reads `S[j]` ONCE from the original source register and emits an ordered
+if-else chain (one link per item) that appends the first matching item's replacement and
+jumps to the position's done label — the early jump is exactly first-match-wins, and
+always comparing against the original `S[j]` is exactly no-re-chaining. When no item
+matches, the original character slice is appended. The width-`W` result is copied back
+into the source register through an empty concat AFTER the last read, so the source is
+not overwritten mid-scan. A new `inspect_replacing_multi` CST reader counts the same
+`replace_item` children the oracle counts, so the two engines' accept/reject sets are
+co-total.
+
+Scope bound (this rung): the multi-item path supports ONLY `ALL` items, each a
+single-char search BY single-char replacement, with NO `{BEFORE|AFTER}` region and NO
+`LEADING`/`CHARACTERS`/`FIRST`. A multi-item list carrying any of those, and the combined
+`TALLYING … REPLACING` form with several items, remain later rungs — rejected on both
+engines with identical messages. A single replace item keeps the full single-item path
+(LEADING, region, …) unchanged.
+
 ### Added — v0.44.0: standalone INSPECT FOR LEADING / REPLACING LEADING with a BEFORE/AFTER region
 
 The STANDALONE `INSPECT source TALLYING counter FOR LEADING delim {BEFORE|AFTER} x` and

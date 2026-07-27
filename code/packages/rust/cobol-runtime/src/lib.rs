@@ -2568,13 +2568,18 @@ mod tests {
         .unwrap_err();
         assert!(matches!(multi, RuntimeError::Unsupported(_)), "got {multi:?}");
 
-        // … several replace items are a later rung …
+        // … several replace items are now SUPPORTED (the multi-item first-match-wins
+        // path): "ABABA" with A→X, B→Y in one pass → "XYXYX".
         let many = run_cobol(&wrap(
             &["01  S  PIC X(5) VALUE \"ABABA\"."],
-            &["INSPECT S REPLACING ALL \"A\" BY \"X\" ALL \"B\" BY \"Y\".", "STOP RUN."],
+            &[
+                "INSPECT S REPLACING ALL \"A\" BY \"X\" ALL \"B\" BY \"Y\".",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
         ))
-        .unwrap_err();
-        assert!(matches!(many, RuntimeError::Unsupported(_)), "got {many:?}");
+        .unwrap();
+        assert_eq!(many, "XYXYX\n");
 
         // … but the combined TALLYING … REPLACING in one INSPECT is now SUPPORTED:
         // it counts "A" (3 in "ABABA") into C, THEN replaces "B" with "X". The two

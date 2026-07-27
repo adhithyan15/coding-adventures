@@ -365,6 +365,9 @@ impl Machine {
             Stmt::InspectReplacing { source, search, replace, leading, region } => {
                 self.exec_inspect_replacing(source, search, replace, *leading, region.as_ref())?
             }
+            Stmt::InspectReplacingMulti { source, items } => {
+                self.exec_inspect_replacing_multi(source, items)?
+            }
             Stmt::InspectTallyReplace {
                 source,
                 counter,
@@ -839,6 +842,83 @@ impl Machine {
     ) -> Result<(), RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
         self.inspect_replace(sidx, search, replace, leading, region)
+    }
+
+    /// `INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — one
+    /// INSPECT with TWO OR MORE `ALL` replace items, applied in a SINGLE
+    /// left-to-right pass with FIRST-MATCH-WINS and NO RE-CHAINING.
+    ///
+    /// The whole subtlety is that this is NOT the same as running N single-item
+    /// replaces in sequence. At each source position we consult the items IN WRITTEN
+    /// ORDER and stop at the FIRST whose search matches the ORIGINAL character:
+    ///
+    /// ```text
+    ///   for i in 0..width {
+    ///       out[i] = src[i]                       // default: unchanged
+    ///       for (search, replace) in items {      // written order
+    ///           if src[i] == search { out[i] = replace; break }   // first wins
+    ///       }
+    ///   }
+    /// ```
+    ///
+    /// Two properties fall out of that inner `break`, both pinned by tests:
+    ///
+    ///   * FIRST-MATCH-WINS — if two items could match the same position, only the
+    ///     earlier-written one fires (`"a" BY "x"` before `"a" BY "y"` → `x`).
+    ///   * NO RE-CHAINING — the byte a replacement PRODUCES is never fed back to a
+    ///     later item, because the whole scan reads `src` (the original), never the
+    ///     output. So `ALL "a" BY "b" ALL "b" BY "z"` over `"ab"` gives `"bz"`, not
+    ///     `"zz"`: position 0 turns the original `a` into `b` and stops (the produced
+    ///     `b` is not re-inspected), and position 1 turns the ORIGINAL `b` into `z`.
+    ///
+    /// Width is preserved (each position emits exactly one char), so — exactly like
+    /// [`Self::inspect_replace`] — the rebuilt string feeds the SAME alphanumeric
+    /// char-store path a `MOVE` uses, and the compiled per-position lowering in
+    /// `cobol-iir-compiler` matches this reference output byte-for-byte.
+    ///
+    /// Every (search, replace) is validated with the SAME `single_delim_char` check
+    /// the single-item path uses (a multi-character/figurative/wider/numeric operand
+    /// is a later rung); ALL of them are read BEFORE any mutation so an invalid item
+    /// leaves the source untouched. A numeric/group source is rejected by
+    /// [`Self::inspect_alnum_source`]. The read-time reader
+    /// (`read_inspect_replacing_multi`) has already ruled out LEADING/CHARACTERS/
+    /// FIRST/region items, so here every item is a plain `ALL` single-char pair.
+    fn exec_inspect_replacing_multi(
+        &mut self,
+        source: &str,
+        items: &[(Operand, Operand)],
+    ) -> Result<(), RuntimeError> {
+        let sidx = self.inspect_alnum_source(source)?;
+        // Resolve every (search, replace) to a char pair FIRST — reading all items
+        // before touching storage means an invalid operand aborts with the source
+        // half-untouched, exactly like the single-item path reads both chars first.
+        let pairs: Vec<(char, char)> = items
+            .iter()
+            .map(|(search, replace)| {
+                let s = self.single_delim_char(search, "INSPECT REPLACING")?;
+                let r = self.single_delim_char(replace, "INSPECT REPLACING")?;
+                Ok((s, r))
+            })
+            .collect::<Result<_, RuntimeError>>()?;
+
+        // ONE pass over the ORIGINAL characters. At each position the first item in
+        // WRITTEN ORDER whose search matches wins; on no match the original char is
+        // kept. Because the scan reads `chars` (the original) and never the output,
+        // a produced character is never re-examined — that is the no-re-chaining
+        // property (see the doc comment above).
+        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+        let rebuilt: String = chars
+            .iter()
+            .map(|&c| {
+                for (search_ch, replace_ch) in &pairs {
+                    if c == *search_ch {
+                        return *replace_ch; // first match wins, stop scanning items
+                    }
+                }
+                c // matched no item — unchanged
+            })
+            .collect();
+        self.move_into(sidx, Src::Chars(rebuilt))
     }
 
     /// `INSPECT source TALLYING counter FOR {ALL|LEADING} delim REPLACING

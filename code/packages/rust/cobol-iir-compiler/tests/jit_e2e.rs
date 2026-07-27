@@ -3648,6 +3648,188 @@ fn inspect_replacing_multi_char_region_delimiter_is_a_later_rung() {
     );
 }
 
+// INSPECT … REPLACING ALL a BY x ALL b BY y [ALL c BY z …] — TWO OR MORE replace
+// items in ONE REPLACING clause. One left-to-right pass, first-match-wins, and (the
+// high-value case) NO re-chaining: a byte a replacement produces is never fed to a
+// later item. Each case pins the exact rebuilt source and `assert_matches_oracle`
+// independently re-checks JIT == tree-walk oracle.
+
+#[test]
+fn inspect_replacing_multi_two_items() {
+    // "abcab" with a→x, b→y → "xycxy": each position takes its own item, c untouched.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"abcab\"."],
+        &["INSPECT S REPLACING ALL \"a\" BY \"x\" ALL \"b\" BY \"y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "xycxy\n");
+}
+
+#[test]
+fn inspect_replacing_multi_three_items() {
+    // Three items over "abcabc": a→x, b→y, c→z → "xyzxyz".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"abcabc\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"x\"",
+            "    ALL \"b\" BY \"y\" ALL \"c\" BY \"z\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "xyzxyz\n");
+}
+
+#[test]
+fn inspect_replacing_multi_no_rechaining() {
+    // THE key correctness case. `ALL "a" BY "b" ALL "b" BY "z"` over "ab" → "bz":
+    // position 0's a→b STOPS (the produced 'b' is NOT then turned into 'z'), and
+    // position 1's original 'b'→z. A naive sequential two-pass replace would give
+    // "zz" — this pins the single-pass no-re-chaining semantics on BOTH engines.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(2) VALUE \"ab\"."],
+        &["INSPECT S REPLACING ALL \"a\" BY \"b\" ALL \"b\" BY \"z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "bz\n");
+}
+
+#[test]
+fn inspect_replacing_multi_first_match_wins() {
+    // Two items whose searches OVERLAP on 'a': `ALL "a" BY "x" ALL "a" BY "y"`. The
+    // FIRST written item wins at every 'a' → "x", never "y".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"aaa\"."],
+        &["INSPECT S REPLACING ALL \"a\" BY \"x\" ALL \"a\" BY \"y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "xxx\n");
+}
+
+#[test]
+fn inspect_replacing_multi_char_matched_by_no_item() {
+    // 'Q' matches neither item → it survives unchanged among replaced neighbours.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aQbQa\"."],
+        &["INSPECT S REPLACING ALL \"a\" BY \"x\" ALL \"b\" BY \"y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "xQyQx\n");
+}
+
+#[test]
+fn inspect_replacing_multi_source_all_one_item() {
+    // Every character of "aaaa" is matched by the FIRST item → "xxxx" (the second
+    // item never fires).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"aaaa\"."],
+        &["INSPECT S REPLACING ALL \"a\" BY \"x\" ALL \"b\" BY \"y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "xxxx\n");
+}
+
+#[test]
+fn inspect_replacing_single_item_still_works() {
+    // Regression: exactly ONE replace item keeps the single-item path unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABABA\"."],
+        &["INSPECT S REPLACING ALL \"A\" BY \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XBXBX\n");
+}
+
+#[test]
+fn inspect_replacing_multi_pic_x1_search_and_replacement() {
+    // A multi-item list whose search/replacement operands are PIC X(1) items: O→0,
+    // N→M over "MOON" → "M00M".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(4) VALUE \"MOON\".",
+            "01  A  PIC X(1) VALUE \"O\".",
+            "01  B  PIC X(1) VALUE \"0\".",
+            "01  C  PIC X(1) VALUE \"N\".",
+            "01  D  PIC X(1) VALUE \"M\".",
+        ],
+        &[
+            "INSPECT S REPLACING ALL A BY B ALL C BY D.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "M00M\n");
+}
+
+#[test]
+fn inspect_replacing_multi_with_leading_item_is_a_later_rung() {
+    // A LEADING item inside a MULTI-item list is deferred — rejected on BOTH engines
+    // with the same message (a LONE `REPLACING LEADING` is still supported).
+    let src = wrap(
+        &["01  S  PIC X(4) VALUE \"aabb\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"x\"",
+            "    LEADING \"b\" BY \"y\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-item LEADING item");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-item LEADING item"
+    );
+}
+
+#[test]
+fn inspect_replacing_multi_with_region_is_a_later_rung() {
+    // A `{BEFORE|AFTER}` region on any item of a MULTI-item list is deferred — both
+    // engines reject (a region on a LONE `REPLACING ALL` is supported).
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"a0b0a\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"x\"",
+            "    ALL \"0\" BY \"*\" BEFORE \"b\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-item region");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-item region"
+    );
+}
+
+#[test]
+fn inspect_replacing_multi_with_characters_is_a_later_rung() {
+    // A `CHARACTERS` item inside a MULTI-item list is deferred on BOTH engines.
+    let src = wrap(
+        &["01  S  PIC X(4) VALUE \"aabb\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"x\"",
+            "    CHARACTERS BY \"y\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-item CHARACTERS item");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-item CHARACTERS item"
+    );
+}
+
+#[test]
+fn inspect_combined_tallying_with_multi_replacing_is_a_later_rung() {
+    // The COMBINED `TALLYING … REPLACING` form with SEVERAL replace items stays
+    // rejected exactly as today — multi-item does not leak into the combined path.
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"abcab\".", "01  K  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING K FOR ALL \"a\"",
+            "    REPLACING ALL \"a\" BY \"x\" ALL \"b\" BY \"y\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject combined + multi-item REPLACING");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject combined + multi-item REPLACING"
+    );
+}
+
 // INSPECT … TALLYING … REPLACING with a per-half `{BEFORE|AFTER}` region — the
 // combined form now accepts an INDEPENDENT single-char region on EACH half. Because
 // the tally does not mutate the source, BOTH windows (the count's and the
