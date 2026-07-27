@@ -99,7 +99,15 @@ the single-character delimiter `x`: `BEFORE x` counts left of it — the WHOLE s
 if `x` is absent — and `AFTER x` counts right of it — NOTHING if `x` is absent; for
 `FOR LEADING` the run is ANCHORED at the window start, so `FOR LEADING "a" AFTER "X"`
 over `"aaXaab"` counts the run in the window `"aab"` — 2 — not the `"aa"` before the
-`X`); and `INSPECT source REPLACING ALL x BY y` / `REPLACING LEADING x BY y`
+`X`); the **multi-item** `INSPECT source TALLYING counter FOR ALL a ALL b [ALL d …]`
+(TWO OR MORE `FOR ALL` items sharing ONE counter — ONE left-to-right pass in which, at
+each position, the delimiters are tried in WRITTEN ORDER and the FIRST that matches adds
+1 to the shared counter, then the scan advances; so DUPLICATE delimiters do NOT
+double-count — `FOR ALL "a" ALL "a"` over `"aa"` adds 2, not 4 — and the count is just
+the number of positions whose char equals SOME delimiter, each counted once, ADDED to the
+counter; this rung's multi path is `ALL`-only, single-char, with no `{BEFORE|AFTER}`
+region and no `LEADING`/`CHARACTERS`, under EXACTLY ONE counter — several counters, and a
+single tally item's full capabilities, are unchanged); and `INSPECT source REPLACING ALL x BY y` / `REPLACING LEADING x BY y`
 (substitute a single character `x` — a 1-char literal or a `PIC X(1)` item — with a
 single character `y` in the alphanumeric source, **in place**, a per-position map
 that leaves the width unchanged; `ALL` replaces EVERY occurrence, `LEADING` replaces
@@ -153,7 +161,10 @@ tally, a `{BEFORE|AFTER}` region on a `FOR LEADING`/`REPLACING LEADING` phrase
 MULTI-character region delimiter, `REPLACING CHARACTERS`/`FIRST`, a MULTI-item
 `REPLACING` list carrying a `LEADING`/`CHARACTERS`/`FIRST` item or a `{BEFORE|AFTER}`
 region (the multi-item list itself is now supported for plain single-char `ALL` items),
-several replace items in the COMBINED `TALLYING … REPLACING` form, or a combined
+a MULTI-item `TALLYING` list carrying a `LEADING`/`CHARACTERS` item or a `{BEFORE|AFTER}`
+region (the multi-item tally list itself is now supported for plain single-char `ALL`
+items under ONE counter), several counters (more than one `FOR` phrase group) in a
+`TALLYING`, several replace or tally items in the COMBINED `TALLYING … REPLACING` form, or a combined
 statement whose `TALLYING`/`REPLACING` half is a
 deferred sub-form (a combined `TALLYING … FOR LEADING` and a combined `REPLACING
 LEADING`, in any combination, are now supported), `CONVERTING` with

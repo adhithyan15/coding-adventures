@@ -229,6 +229,40 @@ pub enum Stmt {
     /// `read_statement`). `items` are in written order — the exec walks them in that
     /// order at every position, which is what realises first-match-wins.
     InspectReplacingMulti { source: String, items: Vec<(Operand, Operand)> },
+    /// `INSPECT source TALLYING counter FOR ALL a ALL b [ALL d …]` — one INSPECT
+    /// whose SINGLE counter carries TWO OR MORE `FOR ALL` items, each a single-char
+    /// delimiter, all folding into the SAME `counter`.
+    ///
+    /// Semantics (ISO priority-list — the exact analogue of `InspectReplacingMulti`
+    /// on the count side): ONE left-to-right pass over the source. At each character
+    /// position the delimiters are tried IN WRITTEN ORDER and the FIRST that matches
+    /// increments the shared count by 1, then the scan advances past the match (a
+    /// single-char match is a normal one-position step, so no special skip). A
+    /// position matching NO delimiter advances with no increment:
+    ///
+    /// ```text
+    ///   for ch in source {
+    ///       for delim in delims {            // written order
+    ///           if ch == delim { count += 1; break }   // first match wins, stop
+    ///       }
+    ///   }
+    ///   counter := counter + count           // INSPECT ADDS; it does not clear
+    /// ```
+    ///
+    /// The `break` is what makes DUPLICATE delimiters NOT double-count: `FOR ALL "a"
+    /// ALL "a"` over `"aa"` adds 2 (each `a` position is counted once by the FIRST
+    /// item), not 4. Net: `count` is the number of source positions whose character
+    /// equals SOME delimiter, each such position counted exactly once. INSPECT adds to
+    /// the counter; it does not clear it first (`counter := counter + count`).
+    ///
+    /// This rung supports ONLY `ALL` items, each a SINGLE-char delimiter, with NO
+    /// `{BEFORE|AFTER}` region and NO `LEADING`/`CHARACTERS`; a multi-item list
+    /// carrying any of those, SEVERAL counters (more than one `FOR` phrase group), and
+    /// the combined `TALLYING … REPLACING` form with several tally items all remain
+    /// later rungs (see `read_statement`). `delims` are in written order — the exec
+    /// walks them in that order at every position, which is what realises the
+    /// first-match-per-position (and thus duplicate-safe) count.
+    InspectTallyMulti { source: String, counter: String, delims: Vec<Operand> },
     /// `INSPECT source TALLYING counter FOR {ALL|LEADING} delim REPLACING
     /// {ALL|LEADING} search BY replace` — one INSPECT carrying BOTH phrases. Per
     /// ISO this executes "as though an INSPECT TALLYING were specified, followed by an
@@ -1075,9 +1109,27 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     }
                 }
                 // A lone TALLYING (or neither phrase, which `read_inspect_tally_all`
-                // rejects as a missing TALLYING clause). Both `FOR ALL` and `FOR
-                // LEADING` are supported here; `leading` selects the count semantics.
+                // rejects as a missing TALLYING clause). Dispatch on the number of
+                // `FOR` items UNDER THE SOLE counter, mirroring the multi-REPLACING
+                // dispatch above: exactly ONE `tally_item` keeps the full single-item
+                // path (LEADING, region, …) UNCHANGED via `read_inspect_tally_all`; TWO
+                // OR MORE `tally_item`s under one `tally_for` take the new multi-item
+                // path (`ALL`-only, single-char, no region — one first-match-per-position
+                // pass into the shared counter, enforced by `read_inspect_tally_multi`).
+                // The multi path fires ONLY when there is EXACTLY ONE `tally_for`: SEVERAL
+                // counters (more than one `tally_for`) stays a later rung, rejected
+                // unchanged by `read_inspect_tally_all`. Counting the same `tally_item`
+                // children the compiler counts keeps the two engines' CST-side dispatch
+                // co-total.
                 _ => {
+                    if let Some(tallying) = child_node(verb, "inspect_tallying") {
+                        if let [tf] = child_nodes(tallying, "tally_for").as_slice() {
+                            if child_nodes(tf, "tally_item").len() >= 2 {
+                                let (counter, delims) = read_inspect_tally_multi(verb)?;
+                                return Ok(Stmt::InspectTallyMulti { source, counter, delims });
+                            }
+                        }
+                    }
                     let (counter, delim, leading, region) = read_inspect_tally_all(verb)?;
                     Ok(Stmt::Inspect { source, counter, delim, leading, region })
                 }
@@ -1152,6 +1204,75 @@ fn read_inspect_tally_all(
         RuntimeError::Unsupported("INSPECT TALLYING FOR ALL/LEADING without a delimiter".into())
     })?;
     Ok((counter, read_operand(delim_node)?, leading, region))
+}
+
+/// Extract the `TALLYING counter FOR ALL a ALL b [ALL d …]` phrase from an
+/// `inspect_stmt` whose SOLE counter carries TWO OR MORE `FOR` items, returning
+/// `(counter_name, delims)` where `delims` are the single-char delimiter operands in
+/// WRITTEN ORDER (the order the exec walks them at each position to realise
+/// first-match-per-position). Only called when the caller has already confirmed
+/// EXACTLY ONE `tally_for` with `>= 2` `tally_item` children — the single-item case
+/// keeps [`read_inspect_tally_all`] and all its capabilities (LEADING, region), and
+/// SEVERAL counters (more than one `tally_for`) stays a later rung rejected there.
+///
+/// Scope bound for the multi-item path (this rung): EVERY item must be a plain `ALL`
+/// item with NO region and NO `LEADING`/`CHARACTERS`. Any item violating that is a
+/// clean later-rung `Unsupported`, with the SAME messages the compiler-side reader
+/// raises, so both engines accept exactly the same multi-item statements and reject
+/// the same ones identically. (A multi-character/figurative/wider/numeric/reference-
+/// modified delimiter is NOT rejected here — it falls to the SAME `single_delim_char`
+/// check the single-item exec uses, so that rejection is identical across single and
+/// multi.)
+fn read_inspect_tally_multi(
+    verb: &GrammarASTNode,
+) -> Result<(String, Vec<Operand>), RuntimeError> {
+    let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
+        RuntimeError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
+    })?;
+    // Exactly one counter (`tally_for`): several counters is a later rung, diagnosed
+    // with the SAME message `read_inspect_tally_all` raises so the reject is uniform.
+    let fors = child_nodes(tallying, "tally_for");
+    let tf = match fors.as_slice() {
+        [one] => *one,
+        _ => {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT TALLYING with several counters is a later rung".into(),
+            ))
+        }
+    };
+    let counter = first_token(tf, "NAME")
+        .ok_or_else(|| RuntimeError::Unsupported("INSPECT TALLYING without a counter".into()))?;
+    let mut delims = Vec::new();
+    for ti in child_nodes(tf, "tally_item") {
+        let toks = child_tokens(ti);
+        // `CHARACTERS` is not supported for a multi-item list this rung (it is not
+        // even supported for a single item). Reuse the single-item message.
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT TALLYING … FOR CHARACTERS is a later rung".into(),
+            ));
+        }
+        // A `LEADING` item in a multi-item list is a later rung: the multi path is
+        // `ALL`-only. (A LONE `FOR LEADING` is still supported — it goes through the
+        // single-item path, not here.)
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT TALLYING with several items and a LEADING item is a later rung".into(),
+            ));
+        }
+        // A `{BEFORE|AFTER}` region on any item of a multi-item list is a later rung.
+        if child_node(ti, "inspect_region").is_some() {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT TALLYING with several items and a BEFORE/AFTER region is a later rung"
+                    .into(),
+            ));
+        }
+        let delim_node = child_node(ti, "operand").ok_or_else(|| {
+            RuntimeError::Unsupported("INSPECT TALLYING FOR ALL without a delimiter".into())
+        })?;
+        delims.push(read_operand(delim_node)?);
+    }
+    Ok((counter, delims))
 }
 
 /// Read an `inspect_region` CST node — the `{BEFORE|AFTER} x` phrase — into a

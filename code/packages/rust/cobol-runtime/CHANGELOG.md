@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.50.0 — INSPECT TALLYING with multiple FOR items (one counter)
+
+- `INSPECT source TALLYING counter FOR ALL a ALL b [ALL d …]` — TWO OR MORE `FOR ALL`
+  tally items sharing ONE counter — is now supported (previously rejected at read time as
+  "several FOR phrases is a later rung"). One left-to-right pass over the source: at each
+  position the delimiters form an ordered priority list, tried IN WRITTEN ORDER, and the
+  FIRST that matches increments the shared count by 1, then the scan advances past the
+  match (a single-char match is a normal one-position step). A position matching no
+  delimiter advances with no increment. INSPECT ADDS the count to the counter; it does not
+  clear it first (`counter := counter + count`).
+- The crux (pinned by tests on BOTH engines): DUPLICATE delimiters do NOT double-count.
+  `FOR ALL "a" ALL "a"` over `"aa"` adds 2 — each `a` position is counted ONCE by the
+  first item, the second never fires there. Net, the count is the number of source
+  positions whose character equals SOME delimiter, each counted exactly once (it collapses
+  to `chars.filter(|c| some delim equals c).count()`) — the exact count-side analogue of
+  the multi-REPLACING first-match-wins rule.
+- Implementation: a new `Stmt::InspectTallyMulti { source, counter, delims }` variant
+  carries the delimiters in written order; `read_statement` dispatches on the number of
+  `tally_item` children under the SOLE `tally_for` (exactly one keeps the full single-item
+  path with LEADING/region; two or more take the multi path). `exec_inspect_tally_multi`
+  resolves every delimiter to a char FIRST (via the shared `single_delim_char`, so an
+  invalid delimiter aborts before touching the counter), validates the counter as an
+  unsigned `PIC 9(n)` integer, counts in one pass, and folds via the same `store_result`
+  path (COBOL silent high-order truncation on overflow) the single-item tally uses.
+- Scope bound (this rung): the multi-item path supports ONLY `ALL` items, each a
+  single-char delimiter, with NO `{BEFORE|AFTER}` region and NO `LEADING`/`CHARACTERS`,
+  under EXACTLY ONE counter. A multi-item list carrying any of those, SEVERAL counters
+  (more than one `tally_for`), and the combined `TALLYING … REPLACING` form with several
+  tally items remain later rungs — rejected with identical messages on both engines. The
+  single-item path (`read_inspect_tally_all` / `inspect_tally`) and the several-counters
+  reject are untouched.
+
 ## 0.49.0 — INSPECT REPLACING with multiple replace items
 
 - `INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — TWO OR MORE replace

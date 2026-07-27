@@ -368,6 +368,9 @@ impl Machine {
             Stmt::InspectReplacingMulti { source, items } => {
                 self.exec_inspect_replacing_multi(source, items)?
             }
+            Stmt::InspectTallyMulti { source, counter, delims } => {
+                return self.exec_inspect_tally_multi(source, counter, delims)
+            }
             Stmt::InspectTallyReplace {
                 source,
                 counter,
@@ -919,6 +922,94 @@ impl Machine {
             })
             .collect();
         self.move_into(sidx, Src::Chars(rebuilt))
+    }
+
+    /// `INSPECT source TALLYING counter FOR ALL a ALL b [ALL d …]` — one INSPECT
+    /// whose SINGLE counter carries TWO OR MORE `FOR ALL` items, counted in a SINGLE
+    /// left-to-right pass with FIRST-MATCH-PER-POSITION into the shared counter.
+    ///
+    /// This is the count-side analogue of [`Self::exec_inspect_replacing_multi`]. The
+    /// delimiters form an ordered priority list. At each source position they are
+    /// tried IN WRITTEN ORDER and the FIRST that matches increments the shared count
+    /// by 1, then the scan advances past the match (a single-char match is a normal
+    /// one-position step, so nothing special is skipped):
+    ///
+    /// ```text
+    ///   for ch in source {
+    ///       for delim in delims {            // written order
+    ///           if ch == delim { count += 1; break }   // first match wins, stop
+    ///       }
+    ///   }
+    ///   counter := counter + count           // INSPECT ADDS; it does not clear
+    /// ```
+    ///
+    /// The inner `break` is why DUPLICATE delimiters do NOT double-count: `FOR ALL "a"
+    /// ALL "a"` over `"aa"` adds 2 — each `a` position is counted ONCE by the first
+    /// item, the second item never sees it. So the count collapses to "the number of
+    /// source positions whose character equals SOME delimiter, each counted exactly
+    /// once", which is exactly `chars.filter(|c| any delim equals c).count()`. INSPECT
+    /// adds to the counter; it does not clear it first, and the fold uses the SAME
+    /// `store_result` path [`Self::inspect_tally`] uses (COBOL's silent high-order
+    /// truncation on overflow), so the compiled `cobol-iir-compiler` scan loop matches
+    /// this reference output byte-for-byte.
+    ///
+    /// Every delimiter is validated with the SAME `single_delim_char` check the
+    /// single-item tally uses (a multi-character/figurative/wider/numeric operand is a
+    /// later rung); ALL of them are resolved BEFORE counting so an invalid delimiter
+    /// aborts without touching the counter. A numeric/group source is rejected by
+    /// [`Self::inspect_alnum_source`], and a non-integer/signed/non-numeric counter by
+    /// the validation below. The read-time reader (`read_inspect_tally_multi`) has
+    /// already ruled out LEADING/CHARACTERS/region items, so here every item is a plain
+    /// `ALL` single-char delimiter.
+    fn exec_inspect_tally_multi(
+        &mut self,
+        source: &str,
+        counter: &str,
+        delims: &[Operand],
+    ) -> Result<Flow, RuntimeError> {
+        let sidx = self.inspect_alnum_source(source)?;
+
+        // The counter must be an UNSIGNED INTEGER numeric item (`PIC 9(n)`): a
+        // fractional (`V`) or signed (`S`) counter is a later rung — the SAME
+        // validation `inspect_tally` performs for the single-item form.
+        let cidx = *self
+            .by_name
+            .get(counter)
+            .ok_or_else(|| RuntimeError::UndefinedName(counter.to_string()))?;
+        match &self.items[cidx].picture {
+            Some(Picture::Numeric { dec_digits: 0, signed: false, .. }) => {}
+            Some(Picture::Numeric { .. }) => {
+                return Err(RuntimeError::Unsupported(format!(
+                    "INSPECT TALLYING into a non-integer or signed counter {counter} is a later rung"
+                )))
+            }
+            _ => {
+                return Err(RuntimeError::Unsupported(format!(
+                    "INSPECT TALLYING into a non-numeric counter {counter} is a later rung"
+                )))
+            }
+        }
+
+        // Resolve every delimiter to a char FIRST — reading all of them before
+        // touching the counter means an invalid operand aborts with the counter
+        // untouched, exactly like the single-item path resolves its delimiter first.
+        let delim_chars: Vec<char> = delims
+            .iter()
+            .map(|d| self.single_delim_char(d, "INSPECT"))
+            .collect::<Result<_, RuntimeError>>()?;
+
+        // ONE pass over the source. A position contributes 1 iff its character equals
+        // SOME delimiter — the first-match-per-position `break` above collapses to
+        // "matched some delimiter" for a pure count, so duplicates never double-count.
+        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+        let count = chars.iter().filter(|c| delim_chars.contains(c)).count();
+
+        // counter := counter_value + count, reshaped into the counter's picture — the
+        // same store path ADD (and the single-item tally) uses. INSPECT adds; it does
+        // not clear the counter first.
+        let addend = Decimal { neg: false, int: count.to_string(), frac: String::new() };
+        let acc = checked(add(&self.named_decimal(counter)?, &addend))?;
+        self.store_result(counter, acc, false, &[])
     }
 
     /// `INSPECT source TALLYING counter FOR {ALL|LEADING} delim REPLACING

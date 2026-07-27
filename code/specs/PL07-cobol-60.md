@@ -526,7 +526,8 @@ combined caller re-imposes the deferral), and a multi-character / non-ASCII regi
 delimiter.
 
 The grammar deliberately accepts the fuller `INSPECT` surface — a `CHARACTERS`
-tally, several `TALLYING` counters or `FOR` phrases, a region on the LEADING half of
+tally, several `TALLYING` counters (several `FOR` items under ONE counter are now
+supported — see "Multiple `TALLYING` items under one counter" below), a region on the LEADING half of
 the **combined** form (the STANDALONE `FOR LEADING`/`REPLACING LEADING` regions, the
 lone `REPLACING ALL` and `CONVERTING` regions, and a region on each `ALL` half of the
 combined form, ARE supported — see those sections below), and a
@@ -619,6 +620,43 @@ untouched; the compiler threads `use_repl = active AND (s[j]==x) AND in_region` 
 decays the run only on an IN-WINDOW mismatch (`active := active AND ((s[j]==x) OR
 NOT in_region)`) — byte-identical, and the `ALL` and no-region `LEADING` lowerings
 are untouched.
+
+**Multiple `TALLYING` items under one counter (follow-up rung).**
+`INSPECT source TALLYING counter FOR ALL a ALL b [ALL d …]` — TWO OR MORE `FOR ALL`
+tally items sharing ONE counter — is now supported (previously rejected at read time as
+"several FOR phrases is a later rung"). This is the count-side analogue of the multi-item
+`REPLACING` rung below. Per ISO the delimiters form an ordered priority list: ONE
+left-to-right pass over the source, and at each position the delimiters are tried **in
+written order** and the **first** that matches adds 1 to the shared counter, then the scan
+advances past the match (a single-char match is a normal one-position step). A position
+matching no delimiter advances with no increment. `INSPECT` **adds** the count to the
+counter; it does not clear it first (`counter := counter + count`).
+
+The crux is that **duplicate delimiters do NOT double-count**: `FOR ALL "a" ALL "a"` over
+`"aa"` adds 2 — each `a` position is counted ONCE by the first item, the second never
+fires there. Net, the count is the number of source positions whose character equals SOME
+delimiter, each counted exactly once. Worked: `"abcab"` `FOR ALL "a" ALL "b"` → `4`;
+`"aQbQa"` `FOR ALL "a" ALL "b"` → `3` (the `Q`s match nothing).
+
+The oracle adds a `Stmt::InspectTallyMulti { source, counter, delims }` variant read via
+`read_inspect_tally_multi`; `read_statement` dispatches on the number of `tally_item`
+children under the SOLE `tally_for` (exactly one → the single-item path with all its
+capabilities; two or more → the multi path). `exec_inspect_tally_multi` resolves every
+delimiter char FIRST (shared `single_delim_char`, so an invalid delimiter aborts before
+touching the counter), validates the counter as an unsigned `PIC 9(n)` integer, counts in
+one pass, and folds via the same `store_result` path (silent high-order truncation on
+overflow) the single-item tally uses. The compiler mirrors this with
+`emit_inspect_tally_multi` (a genuine runtime `str_len`-bounded loop — the tally builds no
+fixed-width string — with an ordered `cmp_eq` chain per position that bumps and jumps past
+the rest on the first match) and an `inspect_tally_multi` CST reader counting the SAME
+`tally_item` children, so the two engines' accept/reject sets are co-total.
+
+This multi-item path is scoped SMALL: only `ALL` items, each a single-char delimiter, with
+**no** `{BEFORE|AFTER}` region and **no** `LEADING`/`CHARACTERS`, under EXACTLY ONE counter.
+A multi-item list carrying any of those, **several counters** (more than one `tally_for`),
+and the combined `TALLYING … REPLACING` form with several tally items remain later rungs
+(rejected identically on both engines). A single tally item keeps the full single-item path
+(LEADING, region) unchanged, and the several-counters reject is unchanged.
 
 **Multiple `REPLACING` items in one clause (follow-up rung).**
 `INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — TWO OR MORE `ALL`
