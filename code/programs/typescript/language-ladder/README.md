@@ -157,6 +157,15 @@ read-out is scoped to the open rows, and a cue shows *"Learning consonant N of M
 helper (with a control that keeps the 2nd consonant locked until row 1 is done);
 the alphabets and Mixed mode are unaffected.
 
+**The special consonants are flagged** the way Latin false friends are. The
+retroflex **ḷ** and the alveolar **ṟ / ṉ** are exactly the letters an outsider
+mistakes for the ordinary *l / r / n* (ల vs ళ), so Browse gives them a **★
+special consonant** badge, a *"tell it apart from 'l'"* note grounded in the
+retroflex/alveolar distinction, and a tinted tile. The classifier
+(`specialConsonant` in `core.ts`, unit-tested with a control) keys on the
+script-agnostic ISO-15919 mark — leading ḷ (U+1E37) / ṟ (U+1E5F) / ṉ (U+1E49) —
+which appears only on these consonants, so no data changed to add it.
+
 ## Design
 
 - **`src/core.ts`** — the pure, unit-tested heart: `buildScriptView`,
