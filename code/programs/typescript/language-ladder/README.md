@@ -194,6 +194,19 @@ these scripts write them with distinct glyphs (Telugu ౦౧౨…). Browse show
 romanized as its value, kept in a **separate `digits` field** (same non-breaking
 pattern as the vowels). Control-tested (the 10 grounded glyphs → 0–9).
 
+**The same syllable in its sister scripts.** The three cousins write one sound
+three ways — కి / ಕಿ / കി are all *ki* — and once you can read one, the others
+are a short hop. When you select a syllable in Browse, the detail panel shows it
+as the *other* syllabaries write it, under **"Same sound, sister scripts"**, so
+the family connection (the spiral model's core memory hook) is visible on the
+page. The pure `crossScriptSiblings` (`src/siblings.ts`) matches by the shared
+ISO-15919 romanization — safe because the trio come from one generator, so "ki"
+is byte-identical everywhere — and is **restricted to fully-syllabic scripts**
+(`isSyllabary`), so Tamil / Devanagari / Gujarati and the alphabets are never
+mis-matched, and a Malayalam-only row (alveolar *ṉa*) correctly shows none.
+Control-tested (Telugu *ki* → the real Kannada + Malayalam glyphs, never itself;
+read-only — `letters` / `isSyllabary` / the matrix untouched).
+
 ## Design
 
 - **`src/core.ts`** — the pure, unit-tested heart: `buildScriptView`,

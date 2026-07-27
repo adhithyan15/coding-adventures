@@ -38,6 +38,7 @@ import {
   unlockedLetterIndices,
 } from "./syllabary.ts";
 import { buildSyllableMatrix } from "./matrix.ts";
+import { crossScriptSiblings, type Sibling } from "./siblings.ts";
 import type { Letter } from "./types.ts";
 import { loadLessons, indicesByLanguage, nextDue } from "./lessons.ts";
 import {
@@ -531,7 +532,7 @@ function renderMatrix(letters: Letter[]): HTMLElement | null {
   return scroll;
 }
 
-function renderDetail(v: LetterView): HTMLElement {
+function renderDetail(v: LetterView, siblings: Sibling[] = []): HTMLElement {
   const d = el("div", "detail");
   const head = el("div", "detail__head");
   const big = el("div", "detail__glyph");
@@ -563,6 +564,23 @@ function renderDetail(v: LetterView): HTMLElement {
     const p = el("p", "detail__special");
     p.textContent = v.special.hint;
     d.appendChild(section(`Special letter — tell it apart from “${v.special.plain}”`, p));
+  }
+  // The same syllable in the sibling Dravidian scripts — Telugu కి next to
+  // Kannada ಕಿ next to Malayalam കി. Seeing the three shapes for one sound is
+  // how the cousins bootstrap each other (see siblings.ts). Only appears when
+  // there is at least one sibling, i.e. only for the syllabary trio.
+  if (siblings.length > 0) {
+    const strip = el("div", "siblings");
+    for (const s of siblings) {
+      const item = el("div", "sibling");
+      const g = el("div", "sibling__glyph");
+      g.textContent = s.glyph;
+      const label = el("div", "sibling__label");
+      label.textContent = s.name;
+      item.append(g, label);
+      strip.appendChild(item);
+    }
+    d.appendChild(section(`Same sound, sister scripts — “${v.sound}” elsewhere`, strip));
   }
   // Only offer stroke order when we actually have it. The Dravidian syllabaries
   // are recognition-only (their ductus is a separate, paused effort), so showing
@@ -1456,8 +1474,11 @@ function render(): void {
     }
     if (syllabary) app!.appendChild(renderBrowseLayoutToggle());
     const matrix = syllabary && browseLayout === "matrix" ? renderMatrix(data.letters) : null;
+    // For a syllabary, offer the same syllable in its sister scripts; alphabets
+    // (where the match would be meaningless) get none.
+    const siblings = syllabary ? crossScriptSiblings(active.sound, data.script, SCRIPTS) : [];
     const body = el("div", "body");
-    body.append(matrix ?? renderGrid(views, data.direction), renderDetail(active));
+    body.append(matrix ?? renderGrid(views, data.direction), renderDetail(active, siblings));
     app!.appendChild(body);
   } else {
     if (!question) startPractice();
