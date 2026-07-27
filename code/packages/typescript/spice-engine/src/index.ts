@@ -1778,6 +1778,7 @@ export interface MosfetLevel1Params {
   readonly LD: number;
   readonly TOX: number;
   readonly RD: number;
+  readonly RS: number;
   readonly IS: number;
   readonly N_SUB: number;
   readonly T_NOM: number;
@@ -2050,8 +2051,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   PNP: [41, 58, 13, 4],
   NJF: [22, 30, 7, 3],
   PJF: [22, 30, 7, 3],
-  NMOS: [24, 31, 6, 3],
-  PMOS: [24, 31, 6, 3],
+  NMOS: [25, 32, 6, 3],
+  PMOS: [25, 32, 6, 3],
 };
 
 export interface Vccs {
@@ -8036,6 +8037,7 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     LD: 0.0,
     TOX: 1.0e-7,
     RD: 0.0,
+    RS: 0.0,
     IS: 1.0e-15,
     N_SUB: 1.4,
     T_NOM: 300.15,
@@ -8224,6 +8226,7 @@ const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   LD: "LD",
   TOX: "TOX",
   RD: "RD",
+  RS: "RS",
   IS: "IS",
   NSUB: "N_SUB",
   N_SUB: "N_SUB",
@@ -8799,6 +8802,7 @@ export function mosfetFromModelCard(
     ...(p.LD !== undefined ? { LD: p.LD } : {}),
     ...(p.TOX !== undefined ? { TOX: p.TOX } : {}),
     ...(p.RD !== undefined ? { RD: p.RD } : {}),
+    ...(p.RS !== undefined ? { RS: p.RS } : {}),
     ...(p.IS !== undefined ? { IS: p.IS } : {}),
     ...(p.N_SUB !== undefined ? { N_SUB: p.N_SUB } : {}),
     ...(p.T_NOM !== undefined ? { T_NOM: p.T_NOM } : {}),
@@ -18571,6 +18575,9 @@ function collectNodeIndices(circuit: Circuit): Map<string, number> {
         if (element.params.RD > 0.0) {
           insertNode(names, mosfetIntrinsicDrainNode(element));
         }
+        if (element.params.RS > 0.0) {
+          insertNode(names, mosfetIntrinsicSourceNode(element));
+        }
         break;
       case "vccs":
         insertNode(names, element.positive);
@@ -18966,7 +18973,7 @@ function collectNoiseSources(
       validateMosfet(element);
       const drain = nodeIndex(nodeIndices, mosfetIntrinsicDrainNode(element));
       const gate = nodeIndex(nodeIndices, element.gate);
-      const source = nodeIndex(nodeIndices, element.source);
+      const source = nodeIndex(nodeIndices, mosfetIntrinsicSourceNode(element));
       const body = nodeIndex(nodeIndices, element.body);
       const drainVoltage = vectorVoltage(operatingPoint, drain);
       const gateVoltage = vectorVoltage(operatingPoint, gate);
@@ -19008,6 +19015,16 @@ function collectNoiseSources(
           positive: nodeIndex(nodeIndices, element.drain),
           negative: drain,
           sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin / element.params.RD,
+          frequencyExponent: 0.0,
+        });
+      }
+      if (element.params.RS > 0.0) {
+        sources.push({
+          elementName: `${element.name}:RS`,
+          noiseType: "thermal",
+          positive: nodeIndex(nodeIndices, element.source),
+          negative: source,
+          sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin / element.params.RS,
           frequencyExponent: 0.0,
         });
       }
@@ -20182,7 +20199,7 @@ function stampMosfet(
   validateMosfet(element);
   const drain = nodeIndex(nodeIndices, mosfetIntrinsicDrainNode(element));
   const gate = nodeIndex(nodeIndices, element.gate);
-  const source = nodeIndex(nodeIndices, element.source);
+  const source = nodeIndex(nodeIndices, mosfetIntrinsicSourceNode(element));
   const body = nodeIndex(nodeIndices, element.body);
   const drainVoltage = vectorVoltage(operatingPoint, drain);
   const gateVoltage = vectorVoltage(operatingPoint, gate);
@@ -20206,6 +20223,14 @@ function stampMosfet(
       nodeIndex(nodeIndices, element.drain),
       drain,
       1.0 / element.params.RD,
+    );
+  }
+  if (element.params.RS > 0.0) {
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.source),
+      source,
+      1.0 / element.params.RS,
     );
   }
 }
@@ -20769,6 +20794,12 @@ function mosfetIntrinsicDrainNode(element: Mosfet): string {
     : `__spice_${element.name}_drain`;
 }
 
+function mosfetIntrinsicSourceNode(element: Mosfet): string {
+  return !Number.isFinite(element.params.RS) || element.params.RS <= 0.0
+    ? element.source
+    : `__spice_${element.name}_source`;
+}
+
 function jfetChargeStateVoltage(
   spec: JfetChargeStateSpec,
   nodeVoltages: ReadonlyMap<string, number>,
@@ -20835,7 +20866,7 @@ function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
     specs.push({
       name: mosfetGateSourceChargeStateName(element),
       positive: element.gate,
-      negative: element.source,
+      negative: mosfetIntrinsicSourceNode(element),
       capacitance: gateSourceCapacitance,
       kind: "gate-overlap",
     });
@@ -20861,7 +20892,7 @@ function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
   if (sourceBodyCapacitance > 0.0) {
     specs.push({
       name: mosfetSourceBodyChargeStateName(element),
-      positive: element.source,
+      positive: mosfetIntrinsicSourceNode(element),
       negative: element.body,
       capacitance: sourceBodyCapacitance,
       kind: "source-body",
@@ -21068,6 +21099,9 @@ function validateMosfet(element: Mosfet): void {
   }
   if (params.RD < 0.0) {
     throw invalidElement(element.name, "MOSFET RD must be non-negative");
+  }
+  if (params.RS < 0.0) {
+    throw invalidElement(element.name, "MOSFET RS must be non-negative");
   }
   if (params.TOX <= 0.0) {
     throw invalidElement(element.name, "MOSFET TOX must be positive");
@@ -22488,7 +22522,7 @@ function stampMosfetSmallSignal(
   validateMosfet(element);
   const drain = nodeIndex(nodeIndices, mosfetIntrinsicDrainNode(element));
   const gate = nodeIndex(nodeIndices, element.gate);
-  const source = nodeIndex(nodeIndices, element.source);
+  const source = nodeIndex(nodeIndices, mosfetIntrinsicSourceNode(element));
   const body = nodeIndex(nodeIndices, element.body);
   const drainVoltage = vectorVoltage(operatingPoint, drain);
   const gateVoltage = vectorVoltage(operatingPoint, gate);
@@ -22509,6 +22543,14 @@ function stampMosfetSmallSignal(
       nodeIndex(nodeIndices, element.drain),
       drain,
       1.0 / element.params.RD,
+    );
+  }
+  if (element.params.RS > 0.0) {
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.source),
+      source,
+      1.0 / element.params.RS,
     );
   }
 }
@@ -23236,7 +23278,7 @@ function stampAcMosfetSmallSignal(
   validateMosfet(element);
   const drain = nodeIndex(nodeIndices, mosfetIntrinsicDrainNode(element));
   const gate = nodeIndex(nodeIndices, element.gate);
-  const source = nodeIndex(nodeIndices, element.source);
+  const source = nodeIndex(nodeIndices, mosfetIntrinsicSourceNode(element));
   const body = nodeIndex(nodeIndices, element.body);
   const drainVoltage = vectorVoltage(operatingPoint, drain);
   const gateVoltage = vectorVoltage(operatingPoint, gate);
@@ -23276,6 +23318,14 @@ function stampAcMosfetSmallSignal(
       nodeIndex(nodeIndices, element.drain),
       drain,
       complex(1.0 / element.params.RD, 0.0),
+    );
+  }
+  if (element.params.RS > 0.0) {
+    stampComplexConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.source),
+      source,
+      complex(1.0 / element.params.RS, 0.0),
     );
   }
 }

@@ -7336,6 +7336,8 @@ def _element_nodes(el: Element) -> list[str]:
         nodes = [el.drain, el.gate, el.source, el.body]
         if _mosfet_drain_resistance(el) > 0.0:
             nodes.append(_mosfet_intrinsic_drain_node(el))
+        if _mosfet_source_resistance(el) > 0.0:
+            nodes.append(_mosfet_intrinsic_source_node(el))
         return nodes
     if isinstance(el, BJT):
         nodes = [el.collector, el.base, el.emitter]
@@ -9074,6 +9076,20 @@ def _mosfet_intrinsic_drain_node(el: Mosfet) -> str:
     )
 
 
+def _mosfet_source_resistance(el: Mosfet) -> float:
+    params = getattr(getattr(el.model, "model", None), "params", None)
+    return float(getattr(params, "RS", 0.0))
+
+
+def _mosfet_intrinsic_source_node(el: Mosfet) -> str:
+    source_resistance = _mosfet_source_resistance(el)
+    return (
+        el.source
+        if not math.isfinite(source_resistance) or source_resistance <= 0.0
+        else f"__spice_{el.name}_source"
+    )
+
+
 def _mosfet_charge_state_specs(el: Mosfet) -> list[tuple[str, str, str, float]]:
     params = getattr(getattr(el.model, "model", None), "params", None)
     if params is None:
@@ -9087,7 +9103,14 @@ def _mosfet_charge_state_specs(el: Mosfet) -> list[tuple[str, str, str, float]]:
     cbs = getattr(params, "CBS", 0.0)
     cbd = getattr(params, "CBD", 0.0)
     if cgs > 0.0:
-        specs.append((_mosfet_gate_source_charge_state_name(el), el.gate, el.source, cgs))
+        specs.append(
+            (
+                _mosfet_gate_source_charge_state_name(el),
+                el.gate,
+                _mosfet_intrinsic_source_node(el),
+                cgs,
+            )
+        )
     if cgd > 0.0:
         specs.append(
             (
@@ -9100,7 +9123,14 @@ def _mosfet_charge_state_specs(el: Mosfet) -> list[tuple[str, str, str, float]]:
     if cgb > 0.0:
         specs.append((_mosfet_gate_body_charge_state_name(el), el.gate, el.body, cgb))
     if cbs > 0.0:
-        specs.append((_mosfet_source_body_charge_state_name(el), el.source, el.body, cbs))
+        specs.append(
+            (
+                _mosfet_source_body_charge_state_name(el),
+                _mosfet_intrinsic_source_node(el),
+                el.body,
+                cbs,
+            )
+        )
     if cbd > 0.0:
         specs.append(
             (
@@ -9164,9 +9194,10 @@ def _stamp_mosfet(
 ) -> None:
     """Linearized MOSFET via mosfet_models.MOSFET.dc()."""
     intrinsic_drain = _mosfet_intrinsic_drain_node(el)
+    intrinsic_source = _mosfet_intrinsic_source_node(el)
     Vd = 0.0 if _is_ground(intrinsic_drain) else x[node_to_idx[intrinsic_drain]]
     Vg = 0.0 if _is_ground(el.gate) else x[node_to_idx[el.gate]]
-    Vs = 0.0 if _is_ground(el.source) else x[node_to_idx[el.source]]
+    Vs = 0.0 if _is_ground(intrinsic_source) else x[node_to_idx[intrinsic_source]]
     Vb = 0.0 if _is_ground(el.body) else x[node_to_idx[el.body]]
 
     V_GS = Vg - Vs
@@ -9180,26 +9211,26 @@ def _stamp_mosfet(
     gds = r.gds
 
     # Stamp gds (drain-source conductance) + Id companion source.
-    _stamp_g(G, node_to_idx, intrinsic_drain, el.source, gds)
+    _stamp_g(G, node_to_idx, intrinsic_drain, intrinsic_source, gds)
     # Stamp gm (transconductance: drain-current per V_GS).
     if not _is_ground(intrinsic_drain):
         d = node_to_idx[intrinsic_drain]
         if not _is_ground(el.gate):
             G[d][node_to_idx[el.gate]] += gm
-        if not _is_ground(el.source):
-            G[d][node_to_idx[el.source]] -= gm
-    if not _is_ground(el.source):
-        s = node_to_idx[el.source]
+        if not _is_ground(intrinsic_source):
+            G[d][node_to_idx[intrinsic_source]] -= gm
+    if not _is_ground(intrinsic_source):
+        s = node_to_idx[intrinsic_source]
         if not _is_ground(el.gate):
             G[s][node_to_idx[el.gate]] -= gm
-        if not _is_ground(el.source):
-            G[s][node_to_idx[el.source]] += gm
+        if not _is_ground(intrinsic_source):
+            G[s][node_to_idx[intrinsic_source]] += gm
     # Companion current source for Id at this operating point
     Ieq = Id - gm * V_GS - gds * V_DS
     if not _is_ground(intrinsic_drain):
         b[node_to_idx[intrinsic_drain]] -= Ieq
-    if not _is_ground(el.source):
-        b[node_to_idx[el.source]] += Ieq
+    if not _is_ground(intrinsic_source):
+        b[node_to_idx[intrinsic_source]] += Ieq
     drain_resistance = _mosfet_drain_resistance(el)
     if drain_resistance > 0.0:
         _stamp_g(
@@ -9208,6 +9239,15 @@ def _stamp_mosfet(
             el.drain,
             intrinsic_drain,
             1.0 / drain_resistance,
+        )
+    source_resistance = _mosfet_source_resistance(el)
+    if source_resistance > 0.0:
+        _stamp_g(
+            G,
+            node_to_idx,
+            el.source,
+            intrinsic_source,
+            1.0 / source_resistance,
         )
 
 
@@ -13078,35 +13118,40 @@ def _stamp_ac(
         # Small-signal model: gds (output conductance) + gm (transconductance).
         # The gm VCCS is stamped as off-diagonal conductance entries.
         intrinsic_drain = _mosfet_intrinsic_drain_node(el)
+        intrinsic_source = _mosfet_intrinsic_source_node(el)
         Vd = (
             0.0
             if _is_ground(intrinsic_drain)
             else dc_x[node_to_idx[intrinsic_drain]]
         )
         Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
-        Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+        Vs = (
+            0.0
+            if _is_ground(intrinsic_source)
+            else dc_x[node_to_idx[intrinsic_source]]
+        )
         Vb = 0.0 if _is_ground(el.body) else dc_x[node_to_idx[el.body]]
         r = el.model.dc(Vg - Vs, Vd - Vs, Vb - Vs)  # type: ignore[attr-defined]
         gm_m: float = r.gm
         gds_m: float = r.gds
-        _stamp_g_c(G, node_to_idx, intrinsic_drain, el.source, gds_m + 0j)
-        _stamp_g_c(G, node_to_idx, el.gate, el.source, 1j * omega * r.Cgs)
+        _stamp_g_c(G, node_to_idx, intrinsic_drain, intrinsic_source, gds_m + 0j)
+        _stamp_g_c(G, node_to_idx, el.gate, intrinsic_source, 1j * omega * r.Cgs)
         _stamp_g_c(G, node_to_idx, el.gate, intrinsic_drain, 1j * omega * r.Cgd)
         _stamp_g_c(G, node_to_idx, el.gate, el.body, 1j * omega * r.Cgb)
-        _stamp_g_c(G, node_to_idx, el.body, el.source, 1j * omega * r.Cbs)
+        _stamp_g_c(G, node_to_idx, el.body, intrinsic_source, 1j * omega * r.Cbs)
         _stamp_g_c(G, node_to_idx, el.body, intrinsic_drain, 1j * omega * r.Cbd)
         if not _is_ground(intrinsic_drain):
             d = node_to_idx[intrinsic_drain]
             if not _is_ground(el.gate):
                 G[d][node_to_idx[el.gate]] += gm_m + 0j
-            if not _is_ground(el.source):
-                G[d][node_to_idx[el.source]] -= gm_m + 0j
-        if not _is_ground(el.source):
-            s = node_to_idx[el.source]
+            if not _is_ground(intrinsic_source):
+                G[d][node_to_idx[intrinsic_source]] -= gm_m + 0j
+        if not _is_ground(intrinsic_source):
+            s = node_to_idx[intrinsic_source]
             if not _is_ground(el.gate):
                 G[s][node_to_idx[el.gate]] -= gm_m + 0j
-            if not _is_ground(el.source):
-                G[s][node_to_idx[el.source]] += gm_m + 0j
+            if not _is_ground(intrinsic_source):
+                G[s][node_to_idx[intrinsic_source]] += gm_m + 0j
         drain_resistance = _mosfet_drain_resistance(el)
         if drain_resistance > 0.0:
             _stamp_g_c(
@@ -13115,6 +13160,15 @@ def _stamp_ac(
                 el.drain,
                 intrinsic_drain,
                 1.0 / drain_resistance,
+            )
+        source_resistance = _mosfet_source_resistance(el)
+        if source_resistance > 0.0:
+            _stamp_g_c(
+                G,
+                node_to_idx,
+                el.source,
+                intrinsic_source,
+                1.0 / source_resistance,
             )
 
     elif isinstance(el, BJT):
@@ -13819,30 +13873,35 @@ def _build_ss_matrix(
             # Small-signal model: gds (drain–source) + gm VCCS (gate–source
             # controls drain current).  Mirrors the AC _stamp_ac Mosfet block.
             intrinsic_drain = _mosfet_intrinsic_drain_node(el)
+            intrinsic_source = _mosfet_intrinsic_source_node(el)
             Vd = (
                 0.0
                 if _is_ground(intrinsic_drain)
                 else dc_x[node_to_idx[intrinsic_drain]]
             )
             Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
-            Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+            Vs = (
+                0.0
+                if _is_ground(intrinsic_source)
+                else dc_x[node_to_idx[intrinsic_source]]
+            )
             Vb = 0.0 if _is_ground(el.body) else dc_x[node_to_idx[el.body]]
             r = el.model.dc(Vg - Vs, Vd - Vs, Vb - Vs)  # type: ignore[attr-defined]
             gm_m: float = r.gm
             gds_m: float = r.gds
-            _stamp_g(G, node_to_idx, intrinsic_drain, el.source, gds_m)
+            _stamp_g(G, node_to_idx, intrinsic_drain, intrinsic_source, gds_m)
             if not _is_ground(intrinsic_drain):
                 d = node_to_idx[intrinsic_drain]
                 if not _is_ground(el.gate):
                     G[d][node_to_idx[el.gate]] += gm_m
-                if not _is_ground(el.source):
-                    G[d][node_to_idx[el.source]] -= gm_m
-            if not _is_ground(el.source):
-                s = node_to_idx[el.source]
+                if not _is_ground(intrinsic_source):
+                    G[d][node_to_idx[intrinsic_source]] -= gm_m
+            if not _is_ground(intrinsic_source):
+                s = node_to_idx[intrinsic_source]
                 if not _is_ground(el.gate):
                     G[s][node_to_idx[el.gate]] -= gm_m
-                if not _is_ground(el.source):
-                    G[s][node_to_idx[el.source]] += gm_m
+                if not _is_ground(intrinsic_source):
+                    G[s][node_to_idx[intrinsic_source]] += gm_m
             drain_resistance = _mosfet_drain_resistance(el)
             if drain_resistance > 0.0:
                 _stamp_g(
@@ -13851,6 +13910,15 @@ def _build_ss_matrix(
                     el.drain,
                     intrinsic_drain,
                     1.0 / drain_resistance,
+                )
+            source_resistance = _mosfet_source_resistance(el)
+            if source_resistance > 0.0:
+                _stamp_g(
+                    G,
+                    node_to_idx,
+                    el.source,
+                    intrinsic_source,
+                    1.0 / source_resistance,
                 )
 
         elif isinstance(el, BJT):
@@ -15677,13 +15745,18 @@ def _collect_noise_sources(
         elif isinstance(el, Mosfet):
             # Long-channel channel thermal noise plus model-card 1/f noise.
             intrinsic_drain = _mosfet_intrinsic_drain_node(el)
+            intrinsic_source = _mosfet_intrinsic_source_node(el)
             Vd = (
                 0.0
                 if _is_ground(intrinsic_drain)
                 else dc_x[node_to_idx[intrinsic_drain]]
             )
             Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
-            Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+            Vs = (
+                0.0
+                if _is_ground(intrinsic_source)
+                else dc_x[node_to_idx[intrinsic_source]]
+            )
             Vb = 0.0 if _is_ground(el.body) else dc_x[node_to_idx[el.body]]
             r = el.model.dc(Vg - Vs, Vd - Vs, Vb - Vs)  # type: ignore[attr-defined]
             flicker_noise_coefficient = el.model.model.params.KF  # type: ignore[attr-defined]
@@ -15705,7 +15778,11 @@ def _collect_noise_sources(
                 if _is_ground(intrinsic_drain)
                 else node_to_idx[intrinsic_drain]
             )
-            n_s = None if _is_ground(el.source) else node_to_idx[el.source]
+            n_s = (
+                None
+                if _is_ground(intrinsic_source)
+                else node_to_idx[intrinsic_source]
+            )
             if gm > 0.0:
                 psd = kT4 * _MOSFET_CHANNEL_NOISE_GAMMA * gm
                 sources.append((el.name, "thermal", n_d, n_s, psd, 0.0))
@@ -15730,6 +15807,18 @@ def _collect_noise_sources(
                         None if _is_ground(el.drain) else node_to_idx[el.drain],
                         n_d,
                         kT4 / drain_resistance,
+                        0.0,
+                    )
+                )
+            source_resistance = _mosfet_source_resistance(el)
+            if source_resistance > 0.0:
+                sources.append(
+                    (
+                        f"{el.name}:RS",
+                        "thermal",
+                        None if _is_ground(el.source) else node_to_idx[el.source],
+                        n_s,
+                        kT4 / source_resistance,
                         0.0,
                     )
                 )

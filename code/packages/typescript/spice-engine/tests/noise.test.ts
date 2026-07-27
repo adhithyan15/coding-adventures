@@ -186,6 +186,23 @@ describe("noiseAc", () => {
     );
   });
 
+  it("emits MOSFET source-resistance thermal noise", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdd", "vdd", "0", 5.0));
+    circuit.add(voltageSource("Vgate", "gate", "0", 3.0));
+    circuit.add(resistor("Rload", "vdd", "out", 1_000.0));
+    circuit.add(mosfet("M1", "out", "gate", "0", "0", "NMOS", { RS: 250.0 }));
+
+    const entry = noiseAc(circuit, "out", "Vgate", [1_000.0], 300.0).points[0]!.entries
+      .find((candidate) =>
+        candidate.elementName === "M1:RS" && candidate.noiseType === "thermal"
+      );
+    expect(entry?.sourcePsd).toBeCloseTo(
+      4.0 * 1.380_649e-23 * 300.0 / 250.0,
+      30,
+    );
+  });
+
   it("emits JFET source-resistance thermal noise", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vdd", "vdd", "0", 5.0));

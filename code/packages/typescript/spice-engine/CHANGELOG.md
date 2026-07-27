@@ -1,5 +1,9 @@
 # Changelog
 
+- Add Level-1 MOS model-card `RS` support. Nonzero values create an intrinsic
+  source node, stamp the external resistor in DC, TF, AC, and transient
+  analyses, route source-side capacitances through it, and emit `:RS` Johnson
+  noise.
 - Add Level-1 MOS model-card `RD` support. Nonzero values create an intrinsic
   drain node, stamp the external resistor in DC, TF, AC, and transient
   analyses, route drain-side capacitances through it, and emit `:RD` Johnson
