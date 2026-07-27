@@ -589,6 +589,48 @@ fn shipped_acceleration_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b12) Shipped table — reference/dynamic-viscosity-conversions.adj resolves via
+//       import (a NEW dimension: dynamic viscosity → pascal second, the EXACT SP 811
+//       B.9 boldface CGS factors poise and centipoise), and a non-exact customary
+//       unit (`pound_force_second_per_square_foot`) — a rounded factor with no row —
+//       abstains.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_dynamic_viscosity_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_visc");
+    let src = stdlib().join("reference/dynamic-viscosity-conversions.adj");
+    std::fs::copy(&src, dir.join("dynamic-viscosity-conversions.adj"))
+        .expect("copy shipped dynamic-viscosity-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"dynamic-viscosity-conversions.adj\"\n\
+         ? dynamic_viscosity_to_pascal_seconds(poise, $v)\n\
+         ? dynamic_viscosity_to_pascal_seconds(centipoise, $v)\n\
+         ? dynamic_viscosity_to_pascal_seconds(pound_force_second_per_square_foot, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 "Viscosity, dynamic" exact factors resolve, character-for-
+    // character from the table (boldface = exact; scientific notation to plain decimal).
+    assert!(out.contains("\"v\":\"0.1\""), "poise = 0.1 Pa·s: {out}");
+    assert!(out.contains("\"v\":\"0.001\""), "centipoise = 0.001 Pa·s: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `pound_force_second_per_square_foot` is a NIST customary row printed as a ROUNDED
+    // (non-boldface) factor — not an exact row here, so the engine abstains rather than
+    // committing to a rounded value.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a non-exact unit abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
