@@ -2,16 +2,15 @@ from __future__ import annotations
 
 import sys
 
-import pytest
-from pcm_audio import PCMBuffer, PCMFormat
-
 import audio_device_sink as audio_device_sink_module
+import pytest
 from audio_device_sink import (
     AudioDeviceError,
     PlaybackReport,
     play_pcm_buffer,
     play_samples,
 )
+from pcm_audio import PCMBuffer, PCMFormat
 
 
 def test_play_samples_normalizes_and_delegates_to_native_boundary(

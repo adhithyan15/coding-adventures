@@ -1,5 +1,4 @@
 import pytest
-
 from note_frequency import Note, note_to_frequency, parse_note
 
 
@@ -69,4 +68,3 @@ class TestFrequencyMapping:
 
     def test_note_to_frequency_wrapper(self) -> None:
         assert note_to_frequency("Bb3") == pytest.approx(parse_note("Bb3").frequency(), rel=1e-12)
-

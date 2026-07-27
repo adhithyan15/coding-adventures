@@ -43,16 +43,17 @@ curl http://127.0.0.1:3000/missing
 `hello.lua` exposes a `build_app()` factory that returns a configured
 `conduit.Application` without starting a server, plus a `serve()` helper. When
 run directly (`lua hello.lua`) it serves in the foreground on port 3000; when
-loaded as a module (by the tests) it only returns the factory. This is what lets
-the test suite construct the same app and drive it over a background server.
+loaded as a module it only returns the factory. The test helper loads that
+factory in a dedicated child process and runs the same foreground server mode.
 
 ## Tests
 
 `tests/test_hello.lua` is an end-to-end suite (busted): it loads `build_app()`,
-serves it on an ephemeral port in the background, and hits every route over real
-HTTP via `luasocket`, asserting status codes and bodies. If `luasocket` is not
-installed the E2E tests are skipped (pending), mirroring the conduit library's
-own server tests.
+starts the foreground server on an ephemeral port in a dedicated Lua child
+process, and hits every route over real HTTP via `luasocket`, asserting status
+codes and bodies. Isolating the server also prevents the test runner and native
+request threads from concurrently accessing one Lua state. If `luasocket` is
+not installed the E2E tests are skipped (pending).
 
 ```sh
 cd tests && busted . --pattern=test_
