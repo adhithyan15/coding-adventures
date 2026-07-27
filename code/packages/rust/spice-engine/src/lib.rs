@@ -19,6 +19,7 @@ const BOLTZMANN: f64 = 1.380_649e-23;
 const ELECTRON_CHARGE: f64 = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
 const DIGITAL_BRIDGE_TIME_EPSILON: f64 = 1.0e-18;
+const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
 
 fn real_solver_kind(matrix_size: usize) -> &'static str {
     if matrix_size == 0 {
@@ -434,6 +435,9 @@ fn clone_subckt_element(
             mapped.gate_saturation_current_temperature_exponent =
                 element.gate_saturation_current_temperature_exponent;
             mapped.bandgap_voltage = element.bandgap_voltage;
+            mapped.doping_tail_parameter = element.doping_tail_parameter;
+            mapped.noise_equation_level = element.noise_equation_level;
+            mapped.channel_noise_coefficient = element.channel_noise_coefficient;
             mapped.drain_resistance = element.drain_resistance;
             mapped.source_resistance = element.source_resistance;
             mapped.threshold_voltage_temperature_coefficient =
@@ -2812,6 +2816,28 @@ pub fn jfet_at_temperature(
             reason: "bandgap voltage must be finite and positive".to_string(),
         });
     }
+    if !jfet.doping_tail_parameter.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "doping-tail parameter must be finite".to_string(),
+        });
+    }
+    if !jfet.noise_equation_level.is_finite()
+        || jfet.noise_equation_level < 1.0
+        || jfet.noise_equation_level.fract() != 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "noise equation level must be a finite integer greater than or equal to 1"
+                .to_string(),
+        });
+    }
+    if !jfet.channel_noise_coefficient.is_finite() || jfet.channel_noise_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "channel noise coefficient must be finite and non-negative".to_string(),
+        });
+    }
     if !jfet.threshold_voltage_temperature_coefficient.is_finite() {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
@@ -2936,6 +2962,9 @@ pub struct Jfet {
     pub gate_saturation_current: f64,
     pub gate_saturation_current_temperature_exponent: f64,
     pub bandgap_voltage: f64,
+    pub doping_tail_parameter: f64,
+    pub noise_equation_level: f64,
+    pub channel_noise_coefficient: f64,
     pub drain_resistance: f64,
     pub source_resistance: f64,
     pub threshold_voltage_temperature_coefficient: f64,
@@ -3018,6 +3047,9 @@ impl Jfet {
             gate_saturation_current: 1.0e-14,
             gate_saturation_current_temperature_exponent: 3.0,
             bandgap_voltage: 1.11,
+            doping_tail_parameter: 1.0,
+            noise_equation_level: 1.0,
+            channel_noise_coefficient: 1.0,
             drain_resistance: 0.0,
             source_resistance: 0.0,
             threshold_voltage_temperature_coefficient: 0.0,
@@ -3575,6 +3607,8 @@ pub struct MosfetLevel1Params {
     pub phi: f64,
     pub w: f64,
     pub l: f64,
+    pub lateral_diffusion_length: f64,
+    pub oxide_thickness: f64,
     pub saturation_current: f64,
     pub n_sub: f64,
     pub t_nom: f64,
@@ -3585,6 +3619,9 @@ pub struct MosfetLevel1Params {
     pub drain_bulk_capacitance: f64,
     pub bulk_junction_potential: f64,
     pub bulk_junction_grading_coefficient: f64,
+    pub forward_bias_depletion_coefficient: f64,
+    pub flicker_noise_coefficient: f64,
+    pub flicker_noise_exponent: f64,
 }
 
 impl Default for MosfetLevel1Params {
@@ -3597,6 +3634,8 @@ impl Default for MosfetLevel1Params {
             phi: 0.84,
             w: 1.0e-6,
             l: 130.0e-9,
+            lateral_diffusion_length: 0.0,
+            oxide_thickness: 1.0e-7,
             saturation_current: 1.0e-15,
             n_sub: 1.4,
             t_nom: 300.15,
@@ -3607,6 +3646,9 @@ impl Default for MosfetLevel1Params {
             drain_bulk_capacitance: 0.0,
             bulk_junction_potential: 0.8,
             bulk_junction_grading_coefficient: 0.5,
+            forward_bias_depletion_coefficient: 0.5,
+            flicker_noise_coefficient: 0.0,
+            flicker_noise_exponent: 1.0,
         }
     }
 }
@@ -3948,10 +3990,10 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Diode, 15, 21, 5, 3),
     (ModelCardKind::Npn, 41, 58, 13, 4),
     (ModelCardKind::Pnp, 41, 58, 13, 4),
-    (ModelCardKind::Njf, 19, 27, 7, 3),
-    (ModelCardKind::Pjf, 19, 27, 7, 3),
-    (ModelCardKind::Nmos, 18, 25, 6, 3),
-    (ModelCardKind::Pmos, 18, 25, 6, 3),
+    (ModelCardKind::Njf, 22, 30, 7, 3),
+    (ModelCardKind::Pjf, 22, 30, 7, 3),
+    (ModelCardKind::Nmos, 23, 30, 6, 3),
+    (ModelCardKind::Pmos, 23, 30, 6, 3),
 ];
 const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -4056,6 +4098,9 @@ const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
     ("XTI", "XTI"),
     ("EG", "EG"),
+    ("B", "B"),
+    ("NLEV", "NLEV"),
+    ("GDSNOI", "GDSNOI"),
     ("RD", "RD"),
     ("RS", "RS"),
     ("TNOM", "TNOM"),
@@ -4077,6 +4122,8 @@ const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("PHI", "PHI"),
     ("W", "W"),
     ("L", "L"),
+    ("LD", "LD"),
+    ("TOX", "TOX"),
     ("IS", "IS"),
     ("NSUB", "N_SUB"),
     ("N_SUB", "N_SUB"),
@@ -4091,6 +4138,9 @@ const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("CJD", "CBD"),
     ("PB", "PB"),
     ("MJ", "MJ"),
+    ("FC", "FC"),
+    ("KF", "KF"),
+    ("AF", "AF"),
 ];
 
 fn model_type_key(text: &str) -> String {
@@ -4797,6 +4847,9 @@ pub fn jfet_from_model_card(
     jfet.gate_saturation_current = model_card_value(model, "IS", 1.0e-14);
     jfet.gate_saturation_current_temperature_exponent = model_card_value(model, "XTI", 3.0);
     jfet.bandgap_voltage = model_card_value(model, "EG", 1.11);
+    jfet.doping_tail_parameter = model_card_value(model, "B", 1.0);
+    jfet.noise_equation_level = model_card_value(model, "NLEV", 1.0);
+    jfet.channel_noise_coefficient = model_card_value(model, "GDSNOI", 1.0);
     jfet.drain_resistance = model_card_value(model, "RD", 0.0);
     jfet.source_resistance = model_card_value(model, "RS", 0.0);
     jfet.threshold_voltage_temperature_coefficient = model_card_value(model, "TCV", 0.0);
@@ -4847,6 +4900,12 @@ pub fn mosfet_from_model_card(
     if let Some(value) = model.parameters.get("L") {
         params.l = *value;
     }
+    if let Some(value) = model.parameters.get("LD") {
+        params.lateral_diffusion_length = *value;
+    }
+    if let Some(value) = model.parameters.get("TOX") {
+        params.oxide_thickness = *value;
+    }
     if let Some(value) = model.parameters.get("IS") {
         params.saturation_current = *value;
     }
@@ -4876,6 +4935,15 @@ pub fn mosfet_from_model_card(
     }
     if let Some(value) = model.parameters.get("MJ") {
         params.bulk_junction_grading_coefficient = *value;
+    }
+    if let Some(value) = model.parameters.get("FC") {
+        params.forward_bias_depletion_coefficient = *value;
+    }
+    if let Some(value) = model.parameters.get("KF") {
+        params.flicker_noise_coefficient = *value;
+    }
+    if let Some(value) = model.parameters.get("AF") {
+        params.flicker_noise_exponent = *value;
     }
     Ok(Mosfet::with_model(
         name,
@@ -22409,6 +22477,28 @@ fn input_source_type_error(input_source: &str, kind: &str) -> SpiceError {
     }
 }
 
+fn jfet_channel_noise_conductance(jfet: &Jfet, vgs: f64, vds: f64, gm: f64) -> f64 {
+    if jfet.noise_equation_level < 3.0 {
+        return MOSFET_CHANNEL_NOISE_GAMMA * gm.abs();
+    }
+    let (vgs, vds, threshold_voltage) = match jfet.polarity {
+        JfetPolarity::Njf => (vgs, vds, jfet.threshold_voltage),
+        JfetPolarity::Pjf => (-vgs, -vds, -jfet.threshold_voltage),
+    };
+    let overdrive = vgs - threshold_voltage;
+    if overdrive <= 0.0 || vds < 0.0 {
+        return 0.0;
+    }
+    let alpha = if overdrive >= vds {
+        1.0 - vds / overdrive
+    } else {
+        0.0
+    };
+    MOSFET_CHANNEL_NOISE_GAMMA * jfet.beta * overdrive * (1.0 + alpha + alpha * alpha)
+        / (1.0 + alpha)
+        * jfet.channel_noise_coefficient
+}
+
 fn collect_noise_sources(
     circuit: &Circuit,
     node_indices: &HashMap<String, usize>,
@@ -22622,17 +22712,19 @@ fn collect_noise_sources(
                     drain_voltage - source_voltage,
                 );
                 let gm = result.gm.max(0.0);
-                if gm > 0.0 {
+                let noise_conductance = jfet_channel_noise_conductance(
+                    jfet,
+                    gate_voltage - source_voltage,
+                    drain_voltage - source_voltage,
+                    gm,
+                );
+                if noise_conductance > 0.0 {
                     sources.push(NoiseSource {
                         element_name: jfet.name.clone(),
                         noise_type: NoiseType::Thermal,
                         positive: drain,
                         negative: source,
-                        source_psd: 4.0
-                            * BOLTZMANN
-                            * temperature_kelvin
-                            * MOSFET_CHANNEL_NOISE_GAMMA
-                            * gm,
+                        source_psd: 4.0 * BOLTZMANN * temperature_kelvin * noise_conductance,
                         frequency_exponent: 0.0,
                     });
                 }
@@ -22717,6 +22809,20 @@ fn collect_noise_sources(
                             * MOSFET_CHANNEL_NOISE_GAMMA
                             * gm,
                         frequency_exponent: 0.0,
+                    });
+                }
+                if mosfet.params.flicker_noise_coefficient > 0.0 {
+                    sources.push(NoiseSource {
+                        element_name: mosfet.name.clone(),
+                        noise_type: NoiseType::Flicker,
+                        positive: drain,
+                        negative: source,
+                        source_psd: mosfet.params.flicker_noise_coefficient
+                            * result
+                                .drain_current
+                                .abs()
+                                .powf(mosfet.params.flicker_noise_exponent),
+                        frequency_exponent: 1.0,
                     });
                 }
             }
@@ -23772,6 +23878,7 @@ fn mosfet_bulk_junction_capacitance(
     junction_voltage: f64,
     junction_potential: f64,
     grading_coefficient: f64,
+    forward_bias_coefficient: f64,
 ) -> f64 {
     if zero_bias_capacitance <= 0.0 {
         return zero_bias_capacitance;
@@ -23779,8 +23886,14 @@ fn mosfet_bulk_junction_capacitance(
     if junction_potential <= 0.0 || grading_coefficient == 0.0 {
         return zero_bias_capacitance;
     }
-    let reverse_scale = (-junction_voltage).max(0.0) / junction_potential;
-    zero_bias_capacitance / (1.0 + reverse_scale).powf(grading_coefficient)
+    let normalized_voltage = junction_voltage / junction_potential;
+    if normalized_voltage < forward_bias_coefficient {
+        return zero_bias_capacitance / (1.0 - normalized_voltage).powf(grading_coefficient);
+    }
+    let denominator = (1.0 - forward_bias_coefficient).powf(1.0 + grading_coefficient);
+    let continuation = 1.0 - forward_bias_coefficient * (1.0 + grading_coefficient)
+        + grading_coefficient * normalized_voltage;
+    zero_bias_capacitance * continuation / denominator
 }
 
 struct JfetDcResult {
@@ -23939,6 +24052,8 @@ fn evaluate_jfet(jfet: &Jfet, vgs: f64, vds: f64) -> JfetDcResult {
                 -jfet.threshold_voltage,
                 jfet.beta,
                 jfet.channel_length_modulation,
+                jfet.junction_potential,
+                jfet.doping_tail_parameter,
             );
             JfetDcResult {
                 drain_current: -result.drain_current,
@@ -23952,6 +24067,8 @@ fn evaluate_jfet(jfet: &Jfet, vgs: f64, vds: f64) -> JfetDcResult {
             jfet.threshold_voltage,
             jfet.beta,
             jfet.channel_length_modulation,
+            jfet.junction_potential,
+            jfet.doping_tail_parameter,
         ),
     }
 }
@@ -23962,6 +24079,8 @@ fn evaluate_njf(
     threshold_voltage: f64,
     beta: f64,
     channel_length_modulation: f64,
+    junction_potential: f64,
+    doping_tail_parameter: f64,
 ) -> JfetDcResult {
     let overdrive = vgs - threshold_voltage;
     if overdrive <= 0.0 || vds < 0.0 {
@@ -23971,20 +24090,30 @@ fn evaluate_njf(
             gds: 0.0,
         };
     }
+    let tail_factor = if doping_tail_parameter == 1.0 {
+        0.0
+    } else {
+        (1.0 - doping_tail_parameter) / (junction_potential - threshold_voltage)
+    };
+    let modulation = 1.0 + channel_length_modulation * vds;
     if vds < overdrive {
-        let channel = 2.0 * overdrive * vds - vds * vds;
-        let modulation = 1.0 + channel_length_modulation * vds;
+        let slope = 2.0 * doping_tail_parameter + 3.0 * tail_factor * (overdrive - vds);
+        let channel = vds * (vds * (tail_factor * vds - doping_tail_parameter) + overdrive * slope);
         return JfetDcResult {
             drain_current: beta * channel * modulation,
-            gm: 2.0 * beta * vds * modulation,
-            gds: beta * (2.0 * overdrive - 2.0 * vds) * modulation
+            gm: beta * modulation * vds * (slope + 3.0 * tail_factor * overdrive),
+            gds: beta * modulation * (overdrive - vds) * slope
                 + beta * channel * channel_length_modulation,
         };
     }
+    let channel = overdrive * overdrive * (doping_tail_parameter + overdrive * tail_factor);
     JfetDcResult {
-        drain_current: beta * overdrive * overdrive * (1.0 + channel_length_modulation * vds),
-        gm: 2.0 * beta * overdrive * (1.0 + channel_length_modulation * vds),
-        gds: beta * overdrive * overdrive * channel_length_modulation,
+        drain_current: beta * channel * modulation,
+        gm: beta
+            * modulation
+            * overdrive
+            * (2.0 * doping_tail_parameter + 3.0 * overdrive * tail_factor),
+        gds: beta * channel * channel_length_modulation,
     }
 }
 
@@ -24090,22 +24219,26 @@ fn evaluate_nmos_level1(
     vds: f64,
     vbs: f64,
 ) -> MosfetDcResult {
-    let beta = params.kp * (params.w / params.l);
+    let effective_length = params.l - 2.0 * params.lateral_diffusion_length;
+    let beta = params.kp * (params.w / effective_length);
     let cgs_overlap = params.gate_source_overlap_capacitance * params.w;
     let cgd_overlap = params.gate_drain_overlap_capacitance * params.w;
-    let cgb_overlap = params.gate_bulk_overlap_capacitance * params.l;
-    let cgs_intrinsic = (2.0 / 3.0) * params.w * params.l * params.kp;
+    let cgb_overlap = params.gate_bulk_overlap_capacitance * effective_length;
+    let channel_capacitance =
+        params.w * effective_length * (OXIDE_PERMITTIVITY / params.oxide_thickness);
     let cbs_bulk = mosfet_bulk_junction_capacitance(
         params.source_bulk_capacitance,
         vbs,
         params.bulk_junction_potential,
         params.bulk_junction_grading_coefficient,
+        params.forward_bias_depletion_coefficient,
     );
     let cbd_bulk = mosfet_bulk_junction_capacitance(
         params.drain_bulk_capacitance,
         vbs - vds,
         params.bulk_junction_potential,
         params.bulk_junction_grading_coefficient,
+        params.forward_bias_depletion_coefficient,
     );
     let threshold = if params.phi - vbs >= 0.0 {
         params.vt0 + params.gamma * ((params.phi - vbs).sqrt() - params.phi.sqrt())
@@ -24119,7 +24252,7 @@ fn evaluate_nmos_level1(
             gm: 0.0,
             gds: 0.0,
             gmb: 0.0,
-            cgs: cgs_overlap + cgs_intrinsic,
+            cgs: cgs_overlap + channel_capacitance,
             cgd: cgd_overlap,
             cgb: cgb_overlap,
             cbs: cbs_bulk,
@@ -24141,7 +24274,7 @@ fn evaluate_nmos_level1(
             gm,
             gds: beta * (overdrive - vds) * modulation + beta * channel * params.lambda,
             gmb: gm * body_factor,
-            cgs: cgs_overlap + cgs_intrinsic / 2.0,
+            cgs: cgs_overlap + channel_capacitance / 2.0,
             cgd: cgd_overlap,
             cgb: cgb_overlap,
             cbs: cbs_bulk,
@@ -24156,7 +24289,7 @@ fn evaluate_nmos_level1(
         gm,
         gds: 0.5 * beta * overdrive * overdrive * params.lambda,
         gmb: gm * body_factor,
-        cgs: cgs_overlap + (2.0 / 3.0) * cgs_intrinsic,
+        cgs: cgs_overlap + (2.0 / 3.0) * channel_capacitance,
         cgd: cgd_overlap,
         cgb: cgb_overlap,
         cbs: cbs_bulk,
@@ -24835,6 +24968,7 @@ fn mosfet_charge_dynamic_capacitance(
         junction_voltage,
         mosfet.params.bulk_junction_potential,
         mosfet.params.bulk_junction_grading_coefficient,
+        mosfet.params.forward_bias_depletion_coefficient,
     )
 }
 
@@ -25286,6 +25420,38 @@ fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
             reason: "bandgap voltage must be finite and positive".to_string(),
         });
     }
+    if !jfet.doping_tail_parameter.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "doping-tail parameter must be finite".to_string(),
+        });
+    }
+    if !jfet.noise_equation_level.is_finite()
+        || jfet.noise_equation_level < 1.0
+        || jfet.noise_equation_level.fract() != 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "noise equation level must be a finite integer greater than or equal to 1"
+                .to_string(),
+        });
+    }
+    if !jfet.channel_noise_coefficient.is_finite() || jfet.channel_noise_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "channel noise coefficient must be finite and non-negative".to_string(),
+        });
+    }
+    let effective_threshold = match jfet.polarity {
+        JfetPolarity::Njf => jfet.threshold_voltage,
+        JfetPolarity::Pjf => -jfet.threshold_voltage,
+    };
+    if jfet.doping_tail_parameter != 1.0 && jfet.junction_potential == effective_threshold {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "junction potential minus effective threshold voltage must be non-zero when doping-tail parameter differs from 1".to_string(),
+        });
+    }
     if !jfet.drain_resistance.is_finite() || jfet.drain_resistance < 0.0 {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
@@ -25351,6 +25517,8 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("PHI", params.phi),
         ("W", params.w),
         ("L", params.l),
+        ("LD", params.lateral_diffusion_length),
+        ("TOX", params.oxide_thickness),
         ("IS", params.saturation_current),
         ("N_SUB", params.n_sub),
         ("T_NOM", params.t_nom),
@@ -25361,6 +25529,9 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("CBD", params.drain_bulk_capacitance),
         ("PB", params.bulk_junction_potential),
         ("MJ", params.bulk_junction_grading_coefficient),
+        ("FC", params.forward_bias_depletion_coefficient),
+        ("KF", params.flicker_noise_coefficient),
+        ("AF", params.flicker_noise_exponent),
     ] {
         if !value.is_finite() {
             return Err(SpiceError::InvalidElement {
@@ -25381,6 +25552,20 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
             reason: "MOSFET W and L must be positive".to_string(),
         });
     }
+    if params.lateral_diffusion_length < 0.0
+        || params.l - 2.0 * params.lateral_diffusion_length <= 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET LD must be non-negative with L - 2*LD > 0".to_string(),
+        });
+    }
+    if params.oxide_thickness <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET TOX must be positive".to_string(),
+        });
+    }
     if params.phi <= 0.0 {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
@@ -25397,6 +25582,24 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "MOSFET PB must be positive and MJ must be non-negative".to_string(),
+        });
+    }
+    if !(0.0..1.0).contains(&params.forward_bias_depletion_coefficient) {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET FC must be in [0, 1)".to_string(),
+        });
+    }
+    if params.flicker_noise_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET KF must be non-negative".to_string(),
+        });
+    }
+    if params.flicker_noise_exponent < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET AF must be non-negative".to_string(),
         });
     }
     if params.gate_source_overlap_capacitance < 0.0

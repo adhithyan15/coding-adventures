@@ -33,6 +33,21 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     "/",
     "%",
     "neg",
+    // Bitwise / shift (SIR27 milestone 5) — native Ruby Integer operators.
+    "&",
+    "|",
+    "^",
+    "~",
+    "<<",
+    ">>",
+    "u>>",
+    // Truncating division / remainder (SIR27 milestone 6) — distinct from the
+    // flooring `/`/`%` because C truncates toward zero; `u`-variants for the
+    // unsigned common type.
+    "tdiv",
+    "tmod",
+    "utdiv",
+    "utmod",
     "=",
     "==",
     "!=",
@@ -1187,6 +1202,25 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         }
         "%" => format!("({} % {})", arg(&a, 0), arg(&a, 1)),
         "neg" => format!("(-{})", arg(&a, 0)),
+        // Bitwise / shift — Ruby's Integer supports all of these natively on
+        // arbitrary-precision two's-complement, so the width is enforced by the
+        // surrounding `sir_uN`/`sir_iN` mask (a `Convert`).  `>>` on a negative
+        // value arithmetic-shifts (a signed operand arrives negative); on a
+        // masked non-negative unsigned value it is a logical shift.
+        "&" => format!("({} & {})", arg(&a, 0), arg(&a, 1)),
+        "|" => format!("({} | {})", arg(&a, 0), arg(&a, 1)),
+        "^" => format!("({} ^ {})", arg(&a, 0), arg(&a, 1)),
+        "~" => format!("(~{})", arg(&a, 0)),
+        "<<" => format!("({} << {})", arg(&a, 0), arg(&a, 1)),
+        // Both `>>` and the unsigned `u>>` render the same: a Ruby unsigned
+        // value is a masked non-negative Integer, so `>>` is already logical
+        // there (the distinction only matters for the C backend's signed int64).
+        ">>" | "u>>" => format!("({} >> {})", arg(&a, 0), arg(&a, 1)),
+        // Truncating (C-style) division / remainder via the runtime helpers.
+        // The unsigned variants reuse them: a Ruby unsigned value is a
+        // non-negative Integer, for which truncation and flooring coincide.
+        "tdiv" | "utdiv" => format!("sir_tdiv({}, {})", arg(&a, 0), arg(&a, 1)),
+        "tmod" | "utmod" => format!("sir_tmod({}, {})", arg(&a, 0), arg(&a, 1)),
         "not" => format!("(!sir_truthy({}))", arg(&a, 0)),
         "<" => format!("({} < {})", arg(&a, 0), arg(&a, 1)),
         ">" => format!("({} > {})", arg(&a, 0), arg(&a, 1)),

@@ -312,6 +312,72 @@ fn jfet_flicker_noise_uses_kf_with_inverse_frequency_scaling() {
 }
 
 #[test]
+fn jfet_nlev_and_gdsnoi_select_and_scale_channel_noise() {
+    let source_psd = |noise_equation_level: f64, channel_noise_coefficient: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vdrain", "out", "0", 1.0,
+        )));
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vgate", "gate", "0", 0.0,
+        )));
+        let mut jfet = Jfet::new("J1", "out", "gate", "0");
+        jfet.beta = 1.0e-3;
+        jfet.threshold_voltage = -2.0;
+        jfet.noise_equation_level = noise_equation_level;
+        jfet.channel_noise_coefficient = channel_noise_coefficient;
+        circuit.add(Element::Jfet(jfet));
+        noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0)
+            .unwrap()
+            .points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "J1" && entry.noise_type == NoiseType::Thermal)
+            .unwrap()
+            .source_psd
+    };
+
+    let expected_conductance = (2.0 / 3.0) * 1.0e-3 * 2.0 * 1.75 / 1.5;
+    let expected_psd = 4.0 * BOLTZMANN * 300.0 * expected_conductance;
+    assert_close(source_psd(3.0, 1.0), expected_psd, expected_psd * 1.0e-10);
+    let legacy_psd = source_psd(1.0, 1.0);
+    assert_close(source_psd(2.0, 4.0), legacy_psd, legacy_psd * 1.0e-10);
+    let scaled_psd = 2.0 * source_psd(3.0, 1.0);
+    assert_close(source_psd(3.0, 2.0), scaled_psd, scaled_psd * 1.0e-10);
+}
+
+#[test]
+fn jfet_rejects_invalid_channel_noise_parameters() {
+    for (noise_equation_level, channel_noise_coefficient, expected_reason) in [
+        (
+            2.5,
+            1.0,
+            "noise equation level must be a finite integer greater than or equal to 1",
+        ),
+        (
+            1.0,
+            -1.0,
+            "channel noise coefficient must be finite and non-negative",
+        ),
+    ] {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vgate", "gate", "0", 0.0,
+        )));
+        let mut jfet = Jfet::new("J1", "out", "gate", "0");
+        jfet.noise_equation_level = noise_equation_level;
+        jfet.channel_noise_coefficient = channel_noise_coefficient;
+        circuit.add(Element::Jfet(jfet));
+
+        let error = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap_err();
+        assert!(matches!(
+            error,
+            SpiceError::InvalidElement { reason, .. } if reason == expected_reason
+        ));
+    }
+}
+
+#[test]
 fn jfet_rejects_invalid_flicker_noise_coefficient() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(
@@ -993,6 +1059,102 @@ fn noise_ac_includes_mosfet_channel_thermal_noise() {
         expected_source_psd * 1_000.0_f64.powi(2),
         1.0e-27,
     );
+}
+
+#[test]
+fn noise_ac_adds_inverse_frequency_mosfet_flicker_noise() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 3.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            vt0: 1.0,
+            kp: 1.0e-3,
+            flicker_noise_coefficient: 2.0e-18,
+            flicker_noise_exponent: 2.0,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let result = noise_ac(&circuit, "out", "Vgate", &[100.0, 1_000.0], 300.0).unwrap();
+    let flicker_psds = result
+        .points
+        .iter()
+        .map(|point| {
+            point
+                .entries
+                .iter()
+                .find(|entry| entry.element_name == "M1" && entry.noise_type == NoiseType::Flicker)
+                .expect("missing MOSFET flicker-noise entry")
+                .source_psd
+        })
+        .collect::<Vec<_>>();
+
+    assert!(flicker_psds[0] > 0.0);
+    assert_close(flicker_psds[0], 10.0 * flicker_psds[1], 1.0e-30);
+    assert!(result.points[0]
+        .entries
+        .iter()
+        .any(|entry| { entry.element_name == "M1" && entry.noise_type == NoiseType::Thermal }));
+}
+
+#[test]
+fn noise_ac_rejects_invalid_mosfet_flicker_noise_coefficient() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 3.0,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "0",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            flicker_noise_coefficient: -1.0,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let error = noise_ac(&circuit, "0", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(error.to_string().contains("MOSFET KF must be non-negative"));
+}
+
+#[test]
+fn noise_ac_rejects_invalid_mosfet_flicker_noise_exponent() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 3.0,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "0",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            flicker_noise_exponent: -1.0,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let error = noise_ac(&circuit, "0", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(error.to_string().contains("MOSFET AF must be non-negative"));
 }
 
 #[test]

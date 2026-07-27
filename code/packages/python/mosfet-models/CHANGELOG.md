@@ -3,6 +3,16 @@
 ## [0.1.0] — Unreleased
 
 ### Added
+- `Level1Params.TOX` adds Berkeley-default gate oxide thickness and derives
+  Meyer gate capacitance from `Cox = epsilon_ox / TOX`.
+- `Level1Params.LD` applies Berkeley lateral-diffusion geometry through
+  `L_eff = L - 2*LD` to channel current and length-scaled capacitance.
+- `Level1Params.FC` adds the continuous Berkeley forward-bias continuation to
+  the existing `PB` / `MJ` bulk-junction depletion-capacitance model.
+- `Level1Params.AF` provides the Level-1 MOS flicker-noise current exponent,
+  defaulting to one.
+- `Level1Params.KF` provides the Level-1 MOS flicker-noise coefficient, with a
+  noise-disabled default of zero.
 - `Level1Params` now includes MOS Level-1 capacitance footholds (`CGSO`,
   `CGDO`, `CGBO`, `CBS`, `CBD`) and reports them through `MosResult`.
 - `Level1Params.PB` and `Level1Params.MJ` now shape zero-bias bulk-junction

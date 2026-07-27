@@ -1,0 +1,108 @@
+% ============================================================================
+% boyles-law.adj — Boyle's law (P₁V₁ = P₂V₂) in the ADJ standard library.
+% ============================================================================
+% The Boyle's-law entry of the *chemistry* track, a sibling of `ideal-gas-law.adj`,
+% `dilution.adj` and `molarity.adj`: the foundational gas relation a first course states
+% as THE VOLUME OF A GAS AT CONSTANT TEMPERATURE IS INVERSELY PROPORTIONAL TO ITS
+% PRESSURE, as an importable, byte-provenanced, PARAMETERIZED `formula` — together with
+% the FOUR exact readings that one proportionality sanctions (solve for any one of the
+% initial pressure, initial volume, final pressure or final volume from the other
+% three). As with every compute library, a consumer states NO arithmetic: it `import`s
+% this file, binds the measured quantities from its own byte-provenance decomposition,
+% and asks the engine to APPLY the cited relation on the CPU. Zero math is performed by
+% the model; the engine computes each value EXACTLY, carrying the relation's citation.
+%
+%     import "boyles-law.adj"
+%     observe initial_pressure(6)    % "…at 6 atm…"          (span cited by the model)
+%     observe initial_volume(2)      % "…occupies 2 L…"      (span cited by the model)
+%     observe final_pressure(3)      % "…compressed to 3 atm…"
+%     ? final_volume(initial_pressure, initial_volume, final_pressure)
+%                                      % engine → 4, carrying P₁V₁ = P₂V₂
+%
+% It is the constant-temperature special case of `ideal-gas-law.adj` (PV = nRT with n
+% and T fixed): the ideal gas law DEFINES the full state, and Boyle's law says that for
+% a fixed amount of gas at fixed temperature the pressure–volume PRODUCT is conserved, so
+% the two libraries compose (an ideal-gas state feeds a Boyle's-law compression). This is
+% the pressure–volume analogue of `dilution.adj`'s M₁V₁ = M₂V₂ — the same conserved-
+% product algebra, a different physical law with its own grounding (write-once-use-many).
+%
+% All four formulas are EXACT over their parameters — each is a product divided by a
+% measured quantity — so every value the engine returns is exact; there is no
+% *separately grounded* constant here. The four COMPOSE and invert cleanly around the
+% worked case P₁ = 6, V₁ = 2, P₂ = 3, V₂ = 4 (note 6·2 = 12 = 3·4):
+%
+%   final_pressure(initial_pressure, initial_volume, final_volume)
+%       = initial_pressure * initial_volume / final_volume       % P₂ = P₁V₁ / V₂ = 6·2/4 = 3
+%   final_volume(initial_pressure, initial_volume, final_pressure)
+%       = initial_pressure * initial_volume / final_pressure     % V₂ = P₁V₁ / P₂ = 6·2/3 = 4
+%   initial_pressure(final_pressure, final_volume, initial_volume)
+%       = final_pressure * final_volume / initial_volume         % P₁ = P₂V₂ / V₁ = 3·4/2 = 6
+%   initial_volume(final_pressure, final_volume, initial_pressure)
+%       = final_pressure * final_volume / initial_pressure       % V₁ = P₂V₂ / P₁ = 3·4/6 = 2
+%
+% All four formulas are defended by the SAME sentence — "The volume of a given amount of
+% gas held at constant temperature is inversely proportional to the pressure under which
+% it is measured." — because inverse proportionality at constant temperature is exactly
+% the statement that the pressure–volume product is constant, P₁V₁ = P₂V₂, and so
+% sanctions the relation solved for any single variable. The quote is transcribed
+% verbatim from Chemistry LibreTexts (OpenStax Chemistry — the same primary reference
+% `molarity.adj`, `dilution.adj` and `ideal-gas-law.adj` cite), so each `formula` carries
+% the provenance envelope every shipped grounded clause carries; the linter rejects an
+% unsourced one. (See feedback_nothing_human_authored — the sentence is a verbatim span
+% of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Boyle's law ranges over four observable quantities: the pressure and
+% volume of the gas BEFORE the change and the pressure and volume AFTER (temperature and
+% amount held constant). Each appears BOTH as a derived result (of one formula) and as
+% an input (of the others), so each is a single dictionary term used in both roles. The
+% `surface` lists are the everyday names a decomposer maps onto the canonical term; the
+% trailing comment records the intended unit (a pressure e.g. in atm and a volume e.g. in
+% L, though the relation holds for ANY consistent pressure and volume units, since only
+% the products are compared).
+% ----------------------------------------------------------------------------
+dictionary boyles_law_vocab {
+    define initial_pressure : finding  surface "initial pressure", "P1"   % before, e.g. atm
+    define initial_volume   : finding  surface "initial volume", "V1"     % before, e.g. L
+    define final_pressure   : finding  surface "final pressure", "P2"     % after, e.g. atm
+    define final_volume     : finding  surface "final volume", "V2"       % after, e.g. L
+}
+
+% ----------------------------------------------------------------------------
+% Boyle's law, all four ways. Each is a named, importable, reusable `let` over its
+% formal parameters, bound at apply time, and each carries the proportionality sentence
+% from LibreTexts (a quote is required on a shipped formula). Each body is a product
+% divided by a measured quantity, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook boyles_law_laws {
+    use boyles_law_vocab
+
+    % Final pressure — the pressure after a fixed amount of gas is squeezed to a new
+    % volume (P₂ = P₁V₁ / V₂). The conserved product P₁V₁ divided by the new volume.
+    formula final_pressure(initial_pressure, initial_volume, final_volume) = initial_pressure * initial_volume / final_volume
+        source "The volume of a given amount of gas held at constant temperature is inversely proportional to the pressure under which it is measured."
+        locator "https://chem.libretexts.org/Bookshelves/General_Chemistry/Chemistry_1e_(OpenSTAX)/09:_Gases/9.2:_Relating_Pressure_Volume_Amount_and_Temperature:_The_Ideal_Gas_Law"
+        trust authoritative
+
+    % Final volume — the volume a fixed amount of gas reaches at a new pressure
+    % (V₂ = P₁V₁ / P₂). Defended by the SAME proportionality sentence, read another way.
+    formula final_volume(initial_pressure, initial_volume, final_pressure) = initial_pressure * initial_volume / final_pressure
+        source "The volume of a given amount of gas held at constant temperature is inversely proportional to the pressure under which it is measured."
+        locator "https://chem.libretexts.org/Bookshelves/General_Chemistry/Chemistry_1e_(OpenSTAX)/09:_Gases/9.2:_Relating_Pressure_Volume_Amount_and_Temperature:_The_Ideal_Gas_Law"
+        trust authoritative
+
+    % Initial pressure — the pressure a known compression started from
+    % (P₁ = P₂V₂ / V₁). Again the SAME proportionality sentence, solved for P₁.
+    formula initial_pressure(final_pressure, final_volume, initial_volume) = final_pressure * final_volume / initial_volume
+        source "The volume of a given amount of gas held at constant temperature is inversely proportional to the pressure under which it is measured."
+        locator "https://chem.libretexts.org/Bookshelves/General_Chemistry/Chemistry_1e_(OpenSTAX)/09:_Gases/9.2:_Relating_Pressure_Volume_Amount_and_Temperature:_The_Ideal_Gas_Law"
+        trust authoritative
+
+    % Initial volume — the volume a fixed amount of gas started at
+    % (V₁ = P₂V₂ / P₁). The fourth exact reading of the one proportionality law.
+    formula initial_volume(final_pressure, final_volume, initial_pressure) = final_pressure * final_volume / initial_pressure
+        source "The volume of a given amount of gas held at constant temperature is inversely proportional to the pressure under which it is measured."
+        locator "https://chem.libretexts.org/Bookshelves/General_Chemistry/Chemistry_1e_(OpenSTAX)/09:_Gases/9.2:_Relating_Pressure_Volume_Amount_and_Temperature:_The_Ideal_Gas_Law"
+        trust authoritative
+}

@@ -446,9 +446,21 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 let _ = writeln!(out, "{ipad}SirValue {};", sv(kind));
                 emit_assign(out, &sv(kind), e, inner);
             }
-            let _ = writeln!(out, "{ipad}int64_t _sir_fri{id} = _sir_as_int({});", sv("start"));
-            let _ = writeln!(out, "{ipad}int64_t _sir_frstop{id} = _sir_as_int({});", sv("stop"));
-            let _ = writeln!(out, "{ipad}int64_t _sir_frstep{id} = _sir_as_int({});", sv("step"));
+            let _ = writeln!(
+                out,
+                "{ipad}int64_t _sir_fri{id} = _sir_as_int({});",
+                sv("start")
+            );
+            let _ = writeln!(
+                out,
+                "{ipad}int64_t _sir_frstop{id} = _sir_as_int({});",
+                sv("stop")
+            );
+            let _ = writeln!(
+                out,
+                "{ipad}int64_t _sir_frstep{id} = _sir_as_int({});",
+                sv("step")
+            );
             let _ = writeln!(
                 out,
                 "{ipad}while (_sir_frstep{id} >= 0 ? _sir_fri{id} < _sir_frstop{id} : \
@@ -456,7 +468,11 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             );
             let body_i = inner + 1;
             let bpad = indent_str(body_i);
-            let _ = writeln!(out, "{bpad}SirValue {} = _sir_int(_sir_fri{id});", sanitize_ident(var));
+            let _ = writeln!(
+                out,
+                "{bpad}SirValue {} = _sir_int(_sir_fri{id});",
+                sanitize_ident(var)
+            );
             // A loop that never reads its counter (an empty body, or `for _ in
             // 0..n { … }`) would leave `var` unused — `(void)` silences
             // `-Wunused-variable` so a `-Werror` consumer still compiles.
@@ -504,8 +520,15 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             let inner = indent + 1;
             let ipad = indent_str(inner);
             let it = hoist_operands(out, &[iter], inner);
-            let _ = writeln!(out, "{ipad}SirValue _sir_feq{id} = _sir_seq_iter({});", it[0]);
-            let _ = writeln!(out, "{ipad}int64_t _sir_fen{id} = _sir_feq{id}.as.seq->len;");
+            let _ = writeln!(
+                out,
+                "{ipad}SirValue _sir_feq{id} = _sir_seq_iter({});",
+                it[0]
+            );
+            let _ = writeln!(
+                out,
+                "{ipad}int64_t _sir_fen{id} = _sir_feq{id}.as.seq->len;"
+            );
             let _ = writeln!(
                 out,
                 "{ipad}for (int64_t _sir_fei{id} = 0; _sir_fei{id} < _sir_fen{id}; _sir_fei{id}++) {{"
@@ -513,7 +536,10 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             let body_i = inner + 1;
             let bpad = indent_str(body_i);
             let v = sanitize_ident(var);
-            let _ = writeln!(out, "{bpad}SirValue {v} = _sir_feq{id}.as.seq->items[_sir_fei{id}];");
+            let _ = writeln!(
+                out,
+                "{bpad}SirValue {v} = _sir_feq{id}.as.seq->items[_sir_fei{id}];"
+            );
             let _ = writeln!(out, "{bpad}(void){v};");
             for st in &body.stmts {
                 emit_stmt(out, st, body_i);
@@ -594,8 +620,11 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                         "{p3}{kw} (_sir_rescue_matches(_sir_ex{id}, NULL, 0)) {{"
                     );
                 } else {
-                    let lits: Vec<String> =
-                        rc.exception_types.iter().map(|t| quote_c_string(t)).collect();
+                    let lits: Vec<String> = rc
+                        .exception_types
+                        .iter()
+                        .map(|t| quote_c_string(t))
+                        .collect();
                     let _ = writeln!(
                         out,
                         "{p3}{kw} (_sir_rescue_matches(_sir_ex{id}, (const char *const[]){{{}}}, {})) {{",
@@ -605,7 +634,11 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 }
                 if let Some(bind) = &rc.binding {
                     let b = sanitize_ident(bind);
-                    let _ = writeln!(out, "{}SirValue {b} = _sir_ex{id}; (void){b};", indent_str(i3 + 1));
+                    let _ = writeln!(
+                        out,
+                        "{}SirValue {b} = _sir_ex{id}; (void){b};",
+                        indent_str(i3 + 1)
+                    );
                 }
                 for st in &rc.body {
                     emit_stmt(out, st, i3 + 1);
@@ -777,7 +810,11 @@ fn emit_assign(out: &mut String, dst: &str, e: &Expr, indent: usize) {
             let inner = indent + 1;
             let ipad = indent_str(inner);
             let names = hoist_operands(out, &[seq.as_ref(), index.as_ref()], inner);
-            let _ = writeln!(out, "{ipad}{dst} = _sir_seq_index({}, {});", names[0], names[1]);
+            let _ = writeln!(
+                out,
+                "{ipad}{dst} = _sir_seq_index({}, {});",
+                names[0], names[1]
+            );
             let _ = writeln!(out, "{pad}}}");
         }
         Expr::SeqLen { seq, .. } => {
@@ -813,7 +850,11 @@ fn emit_assign(out: &mut String, dst: &str, e: &Expr, indent: usize) {
             let inner = indent + 1;
             let ipad = indent_str(inner);
             let names = hoist_operands(out, &[map.as_ref(), key.as_ref()], inner);
-            let _ = writeln!(out, "{ipad}{dst} = _sir_map_get({}, {});", names[0], names[1]);
+            let _ = writeln!(
+                out,
+                "{ipad}{dst} = _sir_map_get({}, {});",
+                names[0], names[1]
+            );
             let _ = writeln!(out, "{pad}}}");
         }
         // A call whose arguments contain control flow: hoist every argument
@@ -1489,6 +1530,19 @@ fn fixed_helper(name: &str) -> Option<(&'static str, usize)> {
         "!=" => ("_sir_ne", 2),
         // Milestone 4 logical negation (`&&`/`||` short-circuit via emit_assign).
         "not" => ("_sir_not", 1),
+        // Milestone 5 bitwise / shift.
+        "&" => ("_sir_band", 2),
+        "|" => ("_sir_bor", 2),
+        "^" => ("_sir_bxor", 2),
+        "~" => ("_sir_bnot", 1),
+        "<<" => ("_sir_shl", 2),
+        ">>" => ("_sir_shr", 2),
+        "u>>" => ("_sir_lshr", 2),
+        // Milestone 6 truncating division / remainder (signed + unsigned).
+        "tdiv" => ("_sir_itdiv", 2),
+        "tmod" => ("_sir_itmod", 2),
+        "utdiv" => ("_sir_utdiv", 2),
+        "utmod" => ("_sir_utmod", 2),
         "cons" => ("_sir_cons", 2),
         "car" => ("_sir_car", 1),
         "cdr" => ("_sir_cdr", 1),

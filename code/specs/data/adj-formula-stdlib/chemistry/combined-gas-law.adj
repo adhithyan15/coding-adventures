@@ -1,0 +1,134 @@
+% ============================================================================
+% combined-gas-law.adj — the combined gas law (P₁V₁/T₁ = P₂V₂/T₂) in the ADJ
+% standard library.
+% ============================================================================
+% The capstone of the *chemistry* gas-law track: where `boyles-law.adj` holds
+% temperature fixed (P₁V₁ = P₂V₂), `charles-law.adj` holds pressure fixed
+% (V₁/T₁ = V₂/T₂) and `gay-lussac-law.adj` holds volume fixed (P₁/T₁ = P₂/T₂), the
+% COMBINED gas law lets ALL THREE of pressure, volume and absolute temperature change
+% for a fixed amount of gas and conserves the single quantity P·V/T — i.e. the relation
+% P₁V₁/T₁ = P₂V₂/T₂. It is an importable, byte-provenanced, PARAMETERIZED `formula`,
+% together with the SIX exact readings that one conserved quantity sanctions (solve for
+% any one of the six state variables from the other five). As with every compute
+% library, a consumer states NO arithmetic: it `import`s this file, binds the measured
+% quantities from its own byte-provenance decomposition, and asks the engine to APPLY
+% the cited relation on the CPU. Zero math is performed by the model; the engine computes
+% each value EXACTLY, carrying the relation's citation.
+%
+%     import "combined-gas-law.adj"
+%     observe initial_pressure(2)       % "…2 atm…"      (span cited by the model)
+%     observe initial_volume(3)         % "…3 L…"
+%     observe initial_temperature(6)    % "…at 6 K…"
+%     observe final_volume(3)           % "…compressed/held at 3 L…"
+%     observe final_temperature(12)     % "…heated to 12 K…"
+%     ? final_pressure(initial_pressure, initial_volume, initial_temperature, final_volume, final_temperature)
+%                                          % engine → 4, carrying P₁V₁/T₁ = P₂V₂/T₂
+%
+% The combined gas law GENERALISES the three simple gas laws and is itself the
+% amount-fixed special case of `ideal-gas-law.adj` (PV = nRT): holding n constant makes
+% PV/T = nR constant, so P₁V₁/T₁ = P₂V₂/T₂. Fix any one variable and it degenerates to a
+% sibling — fix T and it is Boyle's, fix P and it is Charles's, fix V and it is
+% Gay-Lussac's — so all four libraries compose (write-once-use-many).
+%
+% NOTE: the temperature here MUST be the ABSOLUTE (kelvin) temperature — the relation
+% holds only on the kelvin scale. A decomposer that reads a Celsius temperature from a
+% prompt must convert to kelvin BEFORE binding it; this library computes the exact value
+% over whatever absolute temperatures it is given.
+%
+% All six formulas are EXACT over their parameters — each is a product of three measured
+% quantities divided by a product of two — so every value the engine returns is exact;
+% there is no *separately grounded* constant here (the nR that would appear in the ideal
+% gas law cancels between the two states). The six COMPOSE and invert cleanly around the
+% worked case P₁ = 2, V₁ = 3, T₁ = 6, P₂ = 4, V₂ = 3, T₂ = 12 (note P₁V₁/T₁ = 2·3/6 = 1
+% = 4·3/12 = P₂V₂/T₂, i.e. the cross-product P₁V₁T₂ = 2·3·12 = 72 = 4·3·6 = P₂V₂T₁):
+%
+%   final_pressure(P₁, V₁, T₁, V₂, T₂)      = P₁·V₁·T₂ / (T₁·V₂)   % P₂ = 2·3·12/(6·3) = 4
+%   final_volume(P₁, V₁, T₁, P₂, T₂)        = P₁·V₁·T₂ / (T₁·P₂)   % V₂ = 2·3·12/(6·4) = 3
+%   final_temperature(P₂, V₂, P₁, V₁, T₁)   = P₂·V₂·T₁ / (P₁·V₁)   % T₂ = 4·3·6/(2·3) = 12
+%   initial_pressure(P₂, V₂, T₁, T₂, V₁)    = P₂·V₂·T₁ / (T₂·V₁)   % P₁ = 4·3·6/(12·3) = 2
+%   initial_volume(P₂, V₂, T₁, T₂, P₁)      = P₂·V₂·T₁ / (T₂·P₁)   % V₁ = 4·3·6/(12·2) = 3
+%   initial_temperature(P₁, V₁, P₂, V₂, T₂) = P₁·V₁·T₂ / (P₂·V₂)   % T₁ = 2·3·12/(4·3) = 6
+%
+% All six formulas are defended by the SAME sentence — "The combined gas law expresses
+% the relationship between the pressure, volume, and absolute temperature of a fixed
+% amount of gas." — because that relationship IS the conserved quantity P·V/T (equal
+% between the two states, P₁V₁/T₁ = P₂V₂/T₂), which sanctions the relation solved for any
+% single variable. The quote is transcribed verbatim from Chemistry LibreTexts (the CK-12
+% Introductory Chemistry text — the same primary reference family `boyles-law.adj`,
+% `charles-law.adj`, `gay-lussac-law.adj`, `molarity.adj`, `dilution.adj` and
+% `ideal-gas-law.adj` cite), so each `formula` carries the provenance envelope every
+% shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the sentence is a verbatim span of the cited page,
+% not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. The combined gas law ranges over six observable quantities: the pressure,
+% volume and absolute temperature of the gas BEFORE the change and the pressure, volume
+% and absolute temperature AFTER (amount held constant). Each appears BOTH as a derived
+% result (of one formula) and as an input (of the others), so each is a single dictionary
+% term used in both roles. The `surface` lists are the everyday names a decomposer maps
+% onto the canonical term; the trailing comment records the intended unit (a pressure e.g.
+% in atm, a volume in L and a temperature in K — the temperature MUST be absolute/kelvin).
+% ----------------------------------------------------------------------------
+dictionary combined_gas_law_vocab {
+    define initial_pressure    : finding  surface "initial pressure", "P1"      % before, e.g. atm
+    define initial_volume      : finding  surface "initial volume", "V1"        % before, e.g. L
+    define initial_temperature : finding  surface "initial temperature", "T1"   % before, e.g. K (kelvin)
+    define final_pressure      : finding  surface "final pressure", "P2"        % after, e.g. atm
+    define final_volume        : finding  surface "final volume", "V2"          % after, e.g. L
+    define final_temperature   : finding  surface "final temperature", "T2"     % after, e.g. K (kelvin)
+}
+
+% ----------------------------------------------------------------------------
+% The combined gas law, all six ways. Each is a named, importable, reusable `let` over
+% its formal parameters, bound at apply time, and each carries the definitional sentence
+% from LibreTexts (a quote is required on a shipped formula). Each body is a product of
+% three measured quantities divided by a product of two, so the engine returns each value
+% EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook combined_gas_law_laws {
+    use combined_gas_law_vocab
+
+    % Final pressure — the pressure a fixed amount of gas reaches at a new volume and
+    % absolute temperature (P₂ = P₁V₁T₂ / (T₁V₂)).
+    formula final_pressure(initial_pressure, initial_volume, initial_temperature, final_volume, final_temperature) = initial_pressure * initial_volume * final_temperature / (initial_temperature * final_volume)
+        source "The combined gas law expresses the relationship between the pressure, volume, and absolute temperature of a fixed amount of gas."
+        locator "https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(CK-12)/14:_The_Behavior_of_Gases/14.06:_Combined_Gas_Law"
+        trust authoritative
+
+    % Final volume — the volume a fixed amount of gas reaches at a new pressure and
+    % absolute temperature (V₂ = P₁V₁T₂ / (T₁P₂)). Same relation, read another way.
+    formula final_volume(initial_pressure, initial_volume, initial_temperature, final_pressure, final_temperature) = initial_pressure * initial_volume * final_temperature / (initial_temperature * final_pressure)
+        source "The combined gas law expresses the relationship between the pressure, volume, and absolute temperature of a fixed amount of gas."
+        locator "https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(CK-12)/14:_The_Behavior_of_Gases/14.06:_Combined_Gas_Law"
+        trust authoritative
+
+    % Final temperature — the absolute temperature a fixed amount of gas reaches at a new
+    % pressure and volume (T₂ = P₂V₂T₁ / (P₁V₁)). Same relation, solved for T₂.
+    formula final_temperature(final_pressure, final_volume, initial_pressure, initial_volume, initial_temperature) = final_pressure * final_volume * initial_temperature / (initial_pressure * initial_volume)
+        source "The combined gas law expresses the relationship between the pressure, volume, and absolute temperature of a fixed amount of gas."
+        locator "https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(CK-12)/14:_The_Behavior_of_Gases/14.06:_Combined_Gas_Law"
+        trust authoritative
+
+    % Initial pressure — the pressure a fixed amount of gas started at
+    % (P₁ = P₂V₂T₁ / (T₂V₁)). Same relation, solved for P₁.
+    formula initial_pressure(final_pressure, final_volume, initial_temperature, final_temperature, initial_volume) = final_pressure * final_volume * initial_temperature / (final_temperature * initial_volume)
+        source "The combined gas law expresses the relationship between the pressure, volume, and absolute temperature of a fixed amount of gas."
+        locator "https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(CK-12)/14:_The_Behavior_of_Gases/14.06:_Combined_Gas_Law"
+        trust authoritative
+
+    % Initial volume — the volume a fixed amount of gas started at
+    % (V₁ = P₂V₂T₁ / (T₂P₁)). Same relation, solved for V₁.
+    formula initial_volume(final_pressure, final_volume, initial_temperature, final_temperature, initial_pressure) = final_pressure * final_volume * initial_temperature / (final_temperature * initial_pressure)
+        source "The combined gas law expresses the relationship between the pressure, volume, and absolute temperature of a fixed amount of gas."
+        locator "https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(CK-12)/14:_The_Behavior_of_Gases/14.06:_Combined_Gas_Law"
+        trust authoritative
+
+    % Initial temperature — the absolute temperature a fixed amount of gas started at
+    % (T₁ = P₁V₁T₂ / (P₂V₂)). The sixth exact reading of the one conserved quantity.
+    formula initial_temperature(initial_pressure, initial_volume, final_pressure, final_volume, final_temperature) = initial_pressure * initial_volume * final_temperature / (final_pressure * final_volume)
+        source "The combined gas law expresses the relationship between the pressure, volume, and absolute temperature of a fixed amount of gas."
+        locator "https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(CK-12)/14:_The_Behavior_of_Gases/14.06:_Combined_Gas_Law"
+        trust authoritative
+}

@@ -423,6 +423,8 @@ def jfet_at_temperature(
         )
     if not math.isfinite(jfet.Eg) or jfet.Eg <= 0.0:
         raise ValueError(f"{jfet.name}: JFET bandgap voltage must be finite and positive")
+    if not math.isfinite(jfet.B):
+        raise ValueError(f"{jfet.name}: JFET doping-tail parameter must be finite")
     if not math.isfinite(jfet.Tcv):
         raise ValueError(f"{jfet.name}: JFET TCV must be finite")
     if jfet.Vtotc is not None and not math.isfinite(jfet.Vtotc):
@@ -666,7 +668,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.Af,
         )
     if isinstance(element, JFET):
-        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb, element.Fc, element.Is, element.Xti, element.Eg, element.Rd, element.Rs, element.Tcv, element.Vtotc, element.Tnom, element.Bex, element.Betatce)
+        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb, element.Fc, element.Is, element.Xti, element.Eg, element.B, element.Nlev, element.Gdsnoi, element.Rd, element.Rs, element.Tcv, element.Vtotc, element.Tnom, element.Bex, element.Betatce)
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
@@ -9100,10 +9102,17 @@ def _mosfet_charge_dynamic_capacitance(
         return zero_bias_capacitance
     junction_potential = getattr(params, "PB", 0.8)
     grading_coefficient = getattr(params, "MJ", 0.5)
+    forward_bias_coefficient = getattr(params, "FC", 0.5)
     if not math.isfinite(junction_potential) or junction_potential <= 0.0:
         raise ValueError(f"{el.name}: MOSFET PB must be finite and positive")
     if not math.isfinite(grading_coefficient) or grading_coefficient < 0.0:
         raise ValueError(f"{el.name}: MOSFET MJ must be finite and non-negative")
+    if (
+        not math.isfinite(forward_bias_coefficient)
+        or forward_bias_coefficient < 0.0
+        or forward_bias_coefficient >= 1.0
+    ):
+        raise ValueError(f"{el.name}: MOSFET FC must be finite and in [0, 1)")
     mosfet_type = getattr(el.model, "type", None)
     junction_voltage = state_voltage if mosfet_type == MosfetType.PMOS else -state_voltage
     return bulk_junction_capacitance(
@@ -9111,6 +9120,7 @@ def _mosfet_charge_dynamic_capacitance(
         junction_voltage,
         junction_potential,
         grading_coefficient,
+        forward_bias_coefficient,
     )
 
 
@@ -9191,6 +9201,26 @@ def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
         raise ValueError(
             f"JFET '{el.name}' bandgap voltage must be finite and positive"
         )
+    if not math.isfinite(el.B):
+        raise ValueError(f"JFET '{el.name}' doping-tail parameter must be finite")
+    if (
+        not math.isfinite(el.Nlev)
+        or el.Nlev < 1.0
+        or el.Nlev != math.floor(el.Nlev)
+    ):
+        raise ValueError(
+            f"JFET '{el.name}' noise equation level must be a finite integer "
+            "greater than or equal to 1"
+        )
+    if not math.isfinite(el.Gdsnoi) or el.Gdsnoi < 0.0:
+        raise ValueError(
+            f"JFET '{el.name}' channel noise coefficient must be finite and non-negative"
+        )
+    effective_threshold = el.vto if el.polarity == "NJF" else -el.vto
+    if el.B != 1.0 and el.Pb == effective_threshold:
+        raise ValueError(
+            f"JFET '{el.name}' PB - effective VTO must be non-zero when B differs from 1"
+        )
     if not math.isfinite(el.Rd) or el.Rd < 0.0:
         raise ValueError(f"JFET '{el.name}' drain resistance must be finite and non-negative")
     if not math.isfinite(el.Rs) or el.Rs < 0.0:
@@ -9206,11 +9236,13 @@ def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
     if el.Betatce is not None and not math.isfinite(el.Betatce):
         raise ValueError(f"JFET '{el.name}' BETATCE must be finite")
     if el.polarity == "PJF":
-        ids, gm, gds = _eval_njf(-vgs, -vds, -el.vto, el.beta, el.lambda_)
+        ids, gm, gds = _eval_njf(
+            -vgs, -vds, -el.vto, el.beta, el.lambda_, el.Pb, el.B
+        )
         return -ids, gm, gds
     if el.polarity != "NJF":
         raise ValueError(f"JFET '{el.name}' polarity must be 'NJF' or 'PJF'")
-    return _eval_njf(vgs, vds, el.vto, el.beta, el.lambda_)
+    return _eval_njf(vgs, vds, el.vto, el.beta, el.lambda_, el.Pb, el.B)
 
 
 _JFET_THERMAL_VOLTAGE = 0.02585
@@ -9226,6 +9258,29 @@ def _jfet_gate_junction_current_conductance(
     return (
         el.Is * (exp_value - 1.0),
         el.Is / _JFET_THERMAL_VOLTAGE * exp_value,
+    )
+
+
+def _jfet_channel_noise_conductance(
+    el: JFET, vgs: float, vds: float, gm: float
+) -> float:
+    if el.Nlev < 3.0:
+        return _MOSFET_CHANNEL_NOISE_GAMMA * abs(gm)
+    if el.polarity == "PJF":
+        vgs, vds, threshold = -vgs, -vds, -el.vto
+    else:
+        threshold = el.vto
+    overdrive = vgs - threshold
+    if overdrive <= 0.0 or vds < 0.0:
+        return 0.0
+    alpha = 1.0 - vds / overdrive if overdrive >= vds else 0.0
+    return (
+        _MOSFET_CHANNEL_NOISE_GAMMA
+        * el.beta
+        * overdrive
+        * (1.0 + alpha + alpha * alpha)
+        / (1.0 + alpha)
+        * el.Gdsnoi
     )
 
 
@@ -9251,21 +9306,43 @@ def _stamp_jfet_gate_junction(
 
 
 def _eval_njf(
-    vgs: float, vds: float, vto: float, beta: float, lambda_: float
+    vgs: float,
+    vds: float,
+    vto: float,
+    beta: float,
+    lambda_: float,
+    junction_potential: float,
+    doping_tail: float,
 ) -> tuple[float, float, float]:
     overdrive = vgs - vto
     if overdrive <= 0.0 or vds < 0.0:
         return (0.0, 0.0, 0.0)
+    tail_factor = (
+        0.0
+        if doping_tail == 1.0
+        else (1.0 - doping_tail) / (junction_potential - vto)
+    )
+    modulation = 1.0 + lambda_ * vds
     if vds < overdrive:
-        channel = 2.0 * overdrive * vds - vds * vds
-        modulation = 1.0 + lambda_ * vds
+        slope = 2.0 * doping_tail + 3.0 * tail_factor * (overdrive - vds)
+        channel = vds * (
+            vds * (tail_factor * vds - doping_tail) + overdrive * slope
+        )
         ids = beta * channel * modulation
-        gm = 2.0 * beta * vds * modulation
-        gds = beta * (2.0 * overdrive - 2.0 * vds) * modulation + beta * channel * lambda_
+        gm = beta * modulation * vds * (slope + 3.0 * tail_factor * overdrive)
+        gds = (
+            beta * modulation * (overdrive - vds) * slope
+            + beta * channel * lambda_
+        )
         return (ids, gm, gds)
-    ids = beta * overdrive * overdrive * (1.0 + lambda_ * vds)
-    gm = 2.0 * beta * overdrive * (1.0 + lambda_ * vds)
-    gds = beta * overdrive * overdrive * lambda_
+    channel = overdrive * overdrive * (
+        doping_tail + overdrive * tail_factor
+    )
+    ids = beta * channel * modulation
+    gm = beta * modulation * overdrive * (
+        2.0 * doping_tail + 3.0 * overdrive * tail_factor
+    )
+    gds = beta * channel * lambda_
     return (ids, gm, gds)
 
 
@@ -15529,18 +15606,43 @@ def _collect_noise_sources(
                 sources.append((el.name, "flicker", n_b, n_e, el.Kf * abs(base_current) ** el.Af, 1.0))
 
         elif isinstance(el, Mosfet):
-            # Long-channel MOSFET channel thermal noise: S_i = 4kTγgm.
+            # Long-channel channel thermal noise plus model-card 1/f noise.
             Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
             Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
             Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
             Vb = 0.0 if _is_ground(el.body) else dc_x[node_to_idx[el.body]]
             r = el.model.dc(Vg - Vs, Vd - Vs, Vb - Vs)  # type: ignore[attr-defined]
+            flicker_noise_coefficient = el.model.model.params.KF  # type: ignore[attr-defined]
+            flicker_noise_exponent = el.model.model.params.AF  # type: ignore[attr-defined]
+            if (
+                not math.isfinite(flicker_noise_coefficient)
+                or flicker_noise_coefficient < 0.0
+            ):
+                raise ValueError(
+                    f"{el.name}: MOSFET KF must be finite and non-negative"
+                )
+            if not math.isfinite(flicker_noise_exponent) or flicker_noise_exponent < 0.0:
+                raise ValueError(
+                    f"{el.name}: MOSFET AF must be finite and non-negative"
+                )
             gm = max(0.0, float(r.gm))
+            n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
+            n_s = None if _is_ground(el.source) else node_to_idx[el.source]
             if gm > 0.0:
                 psd = kT4 * _MOSFET_CHANNEL_NOISE_GAMMA * gm
-                n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
-                n_s = None if _is_ground(el.source) else node_to_idx[el.source]
                 sources.append((el.name, "thermal", n_d, n_s, psd, 0.0))
+            if flicker_noise_coefficient > 0.0:
+                sources.append(
+                    (
+                        el.name,
+                        "flicker",
+                        n_d,
+                        n_s,
+                        flicker_noise_coefficient
+                        * abs(float(r.Id)) ** flicker_noise_exponent,
+                        1.0,
+                    )
+                )
 
         elif isinstance(el, JFET):
             intrinsic_drain = _jfet_intrinsic_drain_node(el)
@@ -15558,8 +15660,11 @@ def _collect_noise_sources(
             )
             drain_current, gm, _ = _eval_jfet(el, Vg - Vs, Vd - Vs)
             gm = max(0.0, float(gm))
-            if gm > 0.0:
-                psd = kT4 * _MOSFET_CHANNEL_NOISE_GAMMA * gm
+            noise_conductance = _jfet_channel_noise_conductance(
+                el, Vg - Vs, Vd - Vs, gm
+            )
+            if noise_conductance > 0.0:
+                psd = kT4 * noise_conductance
                 n_d = (
                     None
                     if _is_ground(intrinsic_drain)

@@ -157,6 +157,43 @@ read-out is scoped to the open rows, and a cue shows *"Learning consonant N of M
 helper (with a control that keeps the 2nd consonant locked until row 1 is done);
 the alphabets and Mixed mode are unaffected.
 
+**The special consonants are flagged** the way Latin false friends are. The
+retroflex **ḷ** and the alveolar **ṟ / ṉ** are exactly the letters an outsider
+mistakes for the ordinary *l / r / n* (ల vs ళ), so Browse gives them a **★
+special consonant** badge, a *"tell it apart from 'l'"* note grounded in the
+retroflex/alveolar distinction, and a tinted tile. The classifier
+(`specialConsonant` in `core.ts`, unit-tested with a control) keys on the
+script-agnostic ISO-15919 mark — leading ḷ (U+1E37) / ṟ (U+1E5F) / ṉ (U+1E49) —
+which appears only on these consonants, so no data changed to add it.
+
+**Browse them as a matrix.** An abugida is really a table, so for the
+syllabaries Browse offers a **List / Matrix** toggle (alphabets stay a plain
+list). Matrix lays the syllables out as **rows = consonants, columns = vowels**
+— the same ka/kā/ki… pattern repeating down every consonant, made visible at a
+glance — and clicking a cell opens the usual decomposition panel. The layout is
+pure (`buildSyllableMatrix` in `src/matrix.ts`): rows reuse the grounded
+consonant boundary from `syllabary.ts`, the vowel column headers are read off
+the first consonant's own row, and a ragged script yields **no matrix** rather
+than a mislabelled cell (unit-tested with a control). No new data — the same
+generated syllables, re-arranged. The **special-consonant rows** (retroflex ḷa,
+alveolar ṟa / ṉa) are marked with a ★ in the grid, reusing the same
+`specialConsonant` classifier the tiles use so the confusable rows stand out.
+
+**The independent (word-initial) vowels.** Everything above is consonant + vowel
+*sign*; a word that *begins* with a vowel writes a different letter — the
+independent vowel (అ *a*, ఆ *ā* … ఔ *au*, ఋ *r̥*). Browse shows these as a small
+strip above the grid. They are generated the same way (`<SCRIPT> LETTER <V>`,
+ISO-15919 roman from the shared vowel table) but kept in a **separate
+`independentVowels` field**, not mixed into `letters`, so the syllabary and the
+gate/matrix that key on it being all-syllables are untouched. Control-tested
+(the 13 grounded glyphs; none leak into `letters`, so `isSyllabary` still holds).
+
+**The script's numerals.** Reading a language means reading its numbers too, and
+these scripts write them with distinct glyphs (Telugu ౦౧౨…). Browse shows a
+**"Numerals (0–9)"** strip; each digit is generated from `<SCRIPT> DIGIT <N>` and
+romanized as its value, kept in a **separate `digits` field** (same non-breaking
+pattern as the vowels). Control-tested (the 10 grounded glyphs → 0–9).
+
 ## Design
 
 - **`src/core.ts`** — the pure, unit-tested heart: `buildScriptView`,

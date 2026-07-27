@@ -6,7 +6,7 @@
   "system": "abugida",
   "signature": "Highly rounded and loopy — full circles, hooks and curls, with almost no straight lines.",
   "complete": false,
-  "notes": "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. Recognition only — stroke order is a separate, source-gated effort and is omitted.",
+  "notes": "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. The independent (word-initial) vowels are in `independentVowels`; the script's own digits are in `digits`. Recognition only — stroke order is a separate, source-gated effort and is omitted.",
   "letters": [
     {
       "glyph": "ക",
@@ -5584,6 +5584,240 @@
       "components": [
         "ഩ  ṉa — base consonant",
         "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    }
+  ],
+  "independentVowels": [
+    {
+      "glyph": "അ",
+      "sound": "a",
+      "role": "vowel",
+      "components": [
+        "അ  a — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ആ",
+      "sound": "ā",
+      "role": "vowel",
+      "components": [
+        "ആ  ā — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഇ",
+      "sound": "i",
+      "role": "vowel",
+      "components": [
+        "ഇ  i — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഈ",
+      "sound": "ī",
+      "role": "vowel",
+      "components": [
+        "ഈ  ī — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഉ",
+      "sound": "u",
+      "role": "vowel",
+      "components": [
+        "ഉ  u — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഊ",
+      "sound": "ū",
+      "role": "vowel",
+      "components": [
+        "ഊ  ū — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "എ",
+      "sound": "e",
+      "role": "vowel",
+      "components": [
+        "എ  e — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഏ",
+      "sound": "ē",
+      "role": "vowel",
+      "components": [
+        "ഏ  ē — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഒ",
+      "sound": "o",
+      "role": "vowel",
+      "components": [
+        "ഒ  o — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഓ",
+      "sound": "ō",
+      "role": "vowel",
+      "components": [
+        "ഓ  ō — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഐ",
+      "sound": "ai",
+      "role": "vowel",
+      "components": [
+        "ഐ  ai — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഔ",
+      "sound": "au",
+      "role": "vowel",
+      "components": [
+        "ഔ  au — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഋ",
+      "sound": "r̥",
+      "role": "vowel",
+      "components": [
+        "ഋ  r̥ — independent vowel (word-initial)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    }
+  ],
+  "digits": [
+    {
+      "glyph": "൦",
+      "sound": "0",
+      "role": "digit",
+      "components": [
+        "൦  0 — Malayalam digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "൧",
+      "sound": "1",
+      "role": "digit",
+      "components": [
+        "൧  1 — Malayalam digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "൨",
+      "sound": "2",
+      "role": "digit",
+      "components": [
+        "൨  2 — Malayalam digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "൩",
+      "sound": "3",
+      "role": "digit",
+      "components": [
+        "൩  3 — Malayalam digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "൪",
+      "sound": "4",
+      "role": "digit",
+      "components": [
+        "൪  4 — Malayalam digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "൫",
+      "sound": "5",
+      "role": "digit",
+      "components": [
+        "൫  5 — Malayalam digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "൬",
+      "sound": "6",
+      "role": "digit",
+      "components": [
+        "൬  6 — Malayalam digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "൭",
+      "sound": "7",
+      "role": "digit",
+      "components": [
+        "൭  7 — Malayalam digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "൮",
+      "sound": "8",
+      "role": "digit",
+      "components": [
+        "൮  8 — Malayalam digit"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "൯",
+      "sound": "9",
+      "role": "digit",
+      "components": [
+        "൯  9 — Malayalam digit"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""

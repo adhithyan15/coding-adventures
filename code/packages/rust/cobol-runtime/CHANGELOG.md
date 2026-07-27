@@ -1,5 +1,191 @@
 # Changelog
 
+## 0.49.0 — INSPECT REPLACING with multiple replace items
+
+- `INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — TWO OR MORE replace
+  items in one REPLACING clause — is now supported (previously rejected at read time as
+  "several replace items is a later rung"). One left-to-right pass over the source: at
+  each position the items are consulted IN WRITTEN ORDER and the FIRST whose single-char
+  search matches the ORIGINAL character wins, then the position advances.
+- Two properties, both pinned by tests on BOTH engines:
+  - FIRST-MATCH-WINS — only the earliest-written matching item fires at a position
+    (`ALL "a" BY "x" ALL "a" BY "y"` maps every `a` to `x`, never `y`).
+  - NO RE-CHAINING — the byte a replacement produces is never fed to a later item.
+    `REPLACING ALL "a" BY "b" ALL "b" BY "z"` over `"ab"` yields `"bz"`, not `"zz"`:
+    position 0's original `a`→`b` stops (the produced `b` is not re-inspected), and
+    position 1's ORIGINAL `b`→`z`. A naive sequential two-pass replace would give `"zz"`.
+- Implementation: a new `Stmt::InspectReplacingMulti { source, items }` variant carries
+  the items in written order; `read_statement` dispatches on the number of `replace_item`
+  children (exactly one keeps the full single-item path with LEADING/region; two or more
+  take the multi path). `exec_inspect_replacing_multi` resolves every `(search, replace)`
+  to a char pair FIRST (via the shared `single_delim_char`, so an invalid operand aborts
+  before mutating), then rebuilds the source in ONE pass reading only the original
+  characters — that read-original-only property IS the no-re-chaining guarantee. Width is
+  preserved, so the rebuilt string feeds the same alphanumeric char-store path a MOVE
+  uses, matching the compiled lowering byte-for-byte.
+- Scope bound (this rung): the multi-item path supports ONLY `ALL` items, each a
+  single-char search BY single-char replacement, with NO `{BEFORE|AFTER}` region and NO
+  `LEADING`/`CHARACTERS`/`FIRST`. A multi-item list carrying any of those, and the
+  combined `TALLYING … REPLACING` form with several items, remain later rungs — rejected
+  with identical messages on both engines. The single-item path (`read_inspect_replacing_all`
+  / `inspect_replace`) is untouched.
+
+## 0.48.0 — standalone INSPECT FOR LEADING / REPLACING LEADING with a BEFORE/AFTER region
+
+- The STANDALONE `INSPECT source TALLYING counter FOR LEADING delim {BEFORE|AFTER} x`
+  and `INSPECT source REPLACING LEADING search BY replace {BEFORE|AFTER} x` forms are
+  now supported (both were rejected at read time before). The crux is that the LEADING
+  run is ANCHORED at the WINDOW START, not source position 0: `FOR LEADING` /
+  `LEADING` counts or replaces only the maximal run of matching characters that begins
+  AT the window's start index and stops at the first non-matching character INSIDE the
+  window (or the window end).
+- Examples: `INSPECT S TALLYING C FOR LEADING "a" AFTER "X"` over `"aaXaab"` narrows to
+  the window `"aab"` (indices 3..6) and counts the leading run there — 2 — ignoring the
+  `"aa"` before the `X` entirely. `INSPECT S REPLACING LEADING "a" BY "*" AFTER "X"`
+  over the same source rewrites only that in-window run → `"aaX**b"`. `BEFORE x` with a
+  prefix window works symmetrically. The ISO not-found asymmetry carries over: `AFTER x`
+  with `x` absent is an EMPTY window (count 0 / no substitution); `BEFORE x` with `x`
+  absent is the WHOLE source (the leading run from position 0).
+- `Interp::inspect_tally`'s window `take_while` was already anchored at the window
+  start, so the count side needed no code change — only the read-time gate. The
+  substitution side, `Interp::inspect_replace`, now iterates with position indices: a
+  position OUTSIDE `[start, end)` is copied through unchanged and leaves the run state
+  untouched (characters before `start` neither begin nor break the run), so the leading
+  run genuinely starts at the window start.
+- The read-time rejects that deferred `FOR LEADING`/`REPLACING LEADING` carrying a
+  region are relaxed in the SHARED readers (`read_inspect_tally_all` /
+  `read_inspect_replacing_all`). The COMBINED `TALLYING … REPLACING` form still defers
+  a LEADING half carrying a region; that gate moved into the combined arm of
+  `read_statement`, which re-imposes it with the exact same messages the readers used
+  to raise — so the combination is still a later rung, diagnosed identically on both
+  engines and forms.
+- Scoped SMALL — only the two STANDALONE forms. Still deferred, identically on both
+  engines: a combined `TALLYING … REPLACING` with a LEADING half AND a region, and a
+  multi-character / non-ASCII region delimiter. Byte-identical to the
+  `cobol-iir-compiler` 0.44.0 JIT for every supported case.
+
+## 0.47.0 — combined INSPECT TALLYING + REPLACING with a per-half BEFORE/AFTER region
+
+- The combined `INSPECT source TALLYING counter FOR ALL delim REPLACING ALL x BY y`
+  form now accepts an INDEPENDENT single-character `{BEFORE|AFTER}` region on EACH
+  half — the region that previously shipped only for the LONE `TALLYING FOR ALL`
+  (0.44.0) and `REPLACING ALL` (0.45.0) phrases. `tally_region` narrows the count,
+  `replace_region` narrows the substitution; each half is bounded by the FIRST
+  (leftmost) occurrence of its OWN region delimiter, with the ISO not-found asymmetry
+  (`BEFORE` → the WHOLE source if absent, `AFTER` → an EMPTY window if absent).
+  Positions outside a half's window are untouched. The two regions are fully
+  independent — either, both, or neither present, with their own kind and delimiter.
+- `Stmt::InspectTallyReplace` gains `tally_region: Option<Region>` and
+  `replace_region: Option<Region>` fields (reusing the existing `Region`/`RegionKind`
+  types). The combined arm of `read_statement` no longer rejects a region on either
+  half — each half's region is parsed by the shared `read_inspect_tally_all` /
+  `read_inspect_replacing_all` readers (which still reject `FOR LEADING` /
+  `REPLACING LEADING` carrying a region) and threaded into the statement.
+- `exec_inspect_tally_replace` passes each half's region into the existing
+  `inspect_tally` and `inspect_replace` passes. Because the tally does NOT mutate the
+  source, BOTH windows are derived (via the shared `Interp::region_window` helper) over
+  the SAME original storage — the count's window and the replacement's window each see
+  the pre-replacement bytes, so a shared delimiter/search character is counted before
+  it is substituted and both windows agree with the `cobol-iir-compiler` 0.43.0 JIT
+  byte-for-byte.
+- Scoped SMALL — `FOR ALL` / `REPLACING ALL` only, single-character region delimiter
+  only. Still rejected IDENTICALLY on both engines: `FOR LEADING` or `REPLACING
+  LEADING` carrying a region (at read time), and a multi-character region delimiter (at
+  exec time via `single_delim_char`). A combined statement with no region executes
+  exactly as before.
+- New oracle unit test `inspect_tally_replace_with_before_after_regions` (tally-region
+  only, replace-region only, both halves with different kinds/delimiters, and the
+  per-half not-found asymmetry). The obsolete combined-form-region reject sub-case of
+  `inspect_tallying_region_later_rung_forms_are_clean_errors` is removed (the form it
+  guarded is now supported); `FOR LEADING` + region and multi-character region
+  delimiter rejects remain.
+
+## 0.46.0 — INSPECT CONVERTING with a BEFORE/AFTER region
+
+- `INSPECT source CONVERTING from TO to {BEFORE|AFTER} z` now executes instead of
+  being rejected as a later rung. The `{BEFORE|AFTER} z` region narrows the character
+  translation to a sub-slice of the source, bounded by the FIRST (leftmost)
+  occurrence of the SINGLE-character region delimiter `z` — the exact analogue of the
+  TALLYING- and REPLACING-region rungs applied to the translation instead of the
+  count/substitution:
+  - `BEFORE z` translates through the table only within `source[0 ..
+    first_index_of(z)]`; if `z` is ABSENT the region is the ENTIRE source
+    (whole-source translate).
+  - `AFTER z` translates only within `source[first_index_of(z)+1 .. end]`; if `z` is
+    ABSENT the region is EMPTY (nothing converted).
+  Positions OUTSIDE the region keep their ORIGINAL character, even if that character
+  appears in the `from` set. The window is computed over the ORIGINAL source and is
+  byte-identical to the one the count and ALL replacement use — all three now derive
+  it from the single shared `Interp::region_window` helper, so the BEFORE→whole /
+  AFTER→empty asymmetry can never drift between the three INSPECT operations.
+- `Stmt::InspectConverting` gains a `region: Option<Region>` field (mirroring
+  `Stmt::Inspect` and `Stmt::InspectReplacing`), reusing the existing
+  `Region`/`RegionKind` types. `read_inspect_converting` now PARSES the
+  `inspect_region` CST child (via the shared `read_inspect_region`) into that `Option`
+  instead of rejecting it, and `exec_inspect_converting` maps a character through the
+  table only when its position lies within `[start, end)`.
+- Scope unchanged elsewhere and rejected IDENTICALLY on both engines: a
+  multi-character region delimiter is still a later rung. A CONVERTING without a region
+  translates exactly as before.
+
+## 0.45.0 — INSPECT REPLACING ALL with a BEFORE/AFTER region
+
+- `INSPECT source REPLACING ALL x BY y {BEFORE|AFTER} z` now executes instead of
+  being rejected as a later rung. The `{BEFORE|AFTER} z` region narrows the ALL
+  replacement to a sub-slice of the source, bounded by the FIRST (leftmost)
+  occurrence of the SINGLE-character region delimiter `z` — the exact analogue of
+  the TALLYING-region rung applied to the substitution instead of the count:
+  - `BEFORE z` replaces `x`→`y` only within `source[0 .. first_index_of(z)]`; if `z`
+    is ABSENT the region is the ENTIRE source (whole-source replace).
+  - `AFTER z` replaces only within `source[first_index_of(z)+1 .. end]`; if `z` is
+    ABSENT the region is EMPTY (no replacement).
+  Positions OUTSIDE the region keep their ORIGINAL character. The window is computed
+  over the ORIGINAL source and is byte-identical to the one the count uses — both now
+  derive it from a single shared `Interp::region_window` helper, so the BEFORE→whole
+  / AFTER→empty asymmetry can never drift between the two INSPECT operations.
+- `Stmt::InspectReplacing` gains a `region: Option<Region>` field (mirroring
+  `Stmt::Inspect`), reusing the existing `Region`/`RegionKind` types.
+  `read_inspect_replacing_all` now PARSES the `inspect_region` CST child (via the
+  shared `read_inspect_region`) into that `Option` instead of rejecting it, and
+  `inspect_replace` applies the ALL map only to positions within `[start, end)`.
+- Scope unchanged elsewhere and rejected IDENTICALLY on both engines: `REPLACING
+  LEADING` with a region, a region on the combined `TALLYING … REPLACING` form, and a
+  multi-character region delimiter are still later rungs. A lone `REPLACING ALL` /
+  `LEADING` without a region lowers exactly as before.
+
+## 0.44.0 — INSPECT TALLYING FOR ALL with a BEFORE/AFTER region
+
+- `INSPECT source TALLYING counter FOR ALL delim {BEFORE|AFTER} x` now executes
+  instead of being rejected as a later rung. The `{BEFORE|AFTER} x` region narrows
+  the count to a sub-slice of the source, bounded by the FIRST (leftmost) occurrence
+  of the SINGLE-character region delimiter `x`:
+  - `BEFORE x` counts `delim` only in `source[0 .. first_index_of(x)]`; if `x` is
+    ABSENT the region is the ENTIRE source.
+  - `AFTER x` counts `delim` only in `source[first_index_of(x)+1 .. end]`; if `x` is
+    ABSENT the region is EMPTY (count 0).
+  This not-found asymmetry (BEFORE→whole, AFTER→empty) is the ISO rule and the crux
+  of the rung. INSPECT still ADDs to the counter (it does not clear it), so a region
+  changes only WHICH positions are counted, not the accumulate-into-counter store.
+- `Stmt::Inspect` gains a `region: Option<Region>` field, where the new `Region {
+  kind: RegionKind, delim: Operand }` and `RegionKind { Before, After }` types
+  capture the phrase. `read_inspect_tally_all` now PARSES the `inspect_region` CST
+  child (via the new `read_inspect_region`) into that `Option` instead of rejecting
+  it. `inspect_tally` computes the window `[start, end)` over the source's current
+  storage and counts only within it; with no region the window is the whole source,
+  so behaviour is byte-identical to 0.43.0.
+- Scoped SMALL: this rung is `TALLYING FOR ALL` only, single-character region
+  delimiter only. Still rejected identically on both engines: `FOR LEADING` with a
+  region, a region on the combined `TALLYING … REPLACING` form, and (via
+  `single_delim_char`, exactly like the tally delimiter) a MULTI-character region
+  delimiter. `REPLACING`/`CONVERTING` regions, `CHARACTERS`, several counters/FOR
+  phrases, a numeric/group source, and a non-integer/signed counter remain later
+  rungs unchanged.
+- Tests: oracle unit coverage plus the shared e2e parity suite exercise BEFORE/AFTER
+  present, both not-found branches, the region delimiter at position 0 / last
+  position / equal to the tally delimiter, the empty region, a PIC X(1) region
+  delimiter, and the nonzero-counter ADD — each byte-identical to the compiler — and
+  assert that `FOR LEADING` + region and a multi-char region delimiter still reject.
+
 ## 0.43.0 — combined INSPECT TALLYING with REPLACING LEADING
 
 - The COMBINED `INSPECT source TALLYING counter FOR ALL|LEADING delim REPLACING

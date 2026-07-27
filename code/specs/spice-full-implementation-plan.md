@@ -33,16 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language JFET gate-junction bandgap voltage.
+1. Cross-language Level-1 MOS oxide thickness.
    - Status: current PR completion candidate.
-   - Add Berkeley JFET `EG` model-card support in Rust, Python, and TypeScript.
-   - Scale gate saturation current from `TNOM` with
-     `IS(T) = IS * (T / TNOM)^XTI * exp((EG * q / k) * (1 / TNOM - 1 / T))`,
-     using the configured bandgap voltage and the Level-1 silicon
-     `EG = 1.11 eV` default.
-   - Preserve the voltage through hierarchy and cloning, validate finite
-     positive values, and extend the supported-parameter coverage gate from
-     169 to 171 canonical rows.
+   - Add Berkeley Level-1 MOS `TOX` model-card support in Rust, Python, and
+     TypeScript, defaulting to `1e-7 m`.
+   - Derive `Cox = epsilon_ox / TOX` and use
+     `Cox * W * (L - 2*LD)` for region-partitioned intrinsic Meyer gate
+     capacitance while preserving overlap capacitance.
+   - Preserve the oxide thickness through hierarchy and cloning, require
+     finite positive `TOX`, and extend the supported-parameter coverage gate
+     from 185 to 187 canonical rows.
 
 ## Completed Slices
 
@@ -3358,6 +3358,71 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning paths preserve the exponent, finite validation is
      shared across analyses, and the supported-parameter release gate now
      covers 169 canonical rows.
+
+261. Cross-language JFET gate-junction bandgap voltage.
+   - Status: completed in PR 8972.
+   - Rust, Python, and TypeScript JFET model cards now accept `EG` and use the
+     configured bandgap voltage when scaling gate saturation current from
+     `TNOM`, preserving the Level-1 silicon default of 1.11 eV.
+   - Hierarchy and cloning paths preserve the voltage, finite-positive
+     validation is shared across analyses, and the supported-parameter release
+     gate now covers 171 canonical rows.
+
+262. Cross-language JFET doping-tail shaping.
+   - Status: completed in PR 8978.
+   - Rust, Python, and TypeScript JFET model cards now accept `B` and apply
+     Parker-Skellern doping-tail shaping to linear and saturation channel
+     current while preserving Shichman-Hodges behavior at the default of 1.
+   - Hierarchy and cloning preserve the parameter, finite and denominator
+   validation is shared across analyses, and the supported-parameter release
+   gate now covers 173 canonical rows.
+
+263. Cross-language JFET channel-noise equation selection.
+   - Status: completed in PR 8984.
+   - Rust, Python, and TypeScript JFET model cards now accept `NLEV` and
+     `GDSNOI`, preserving the legacy `2/3 * gm` channel thermal-noise path
+     below level 3 and selecting the Berkeley linear-region equation at level
+     3 and above.
+   - Hierarchy and cloning preserve both parameters, shared validation enforces
+   their domains, and the supported-parameter release gate now covers 177
+   canonical rows.
+
+264. Cross-language Level-1 MOS flicker-noise coefficient.
+   - Status: completed in PR 8985.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `KF`,
+     defaulting to zero, and emit a distinct drain-current-scaled
+     inverse-frequency flicker-noise source alongside channel thermal noise.
+   - Hierarchy and cloning preserve the coefficient, shared validation enforces
+     its finite non-negative domain, and the supported-parameter release gate
+     now covers 179 canonical rows.
+
+265. Cross-language Level-1 MOS flicker-noise current exponent.
+   - Status: completed in PR 8986.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `AF`,
+     defaulting to one, and apply `KF * abs(Id)^AF / frequency` to the MOS
+     flicker-noise source.
+   - Hierarchy and cloning preserve the exponent, shared validation enforces
+     its finite non-negative domain, and the supported-parameter release gate
+     now covers 181 canonical rows.
+
+266. Cross-language Level-1 MOS forward-bias depletion coefficient.
+   - Status: completed in PR 8995.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `FC`,
+     defaulting to `0.5`, and apply the continuous piecewise forward-bias
+     continuation to `CBS` and `CBD` depletion capacitance shaped by `PB` and
+     `MJ`.
+   - Hierarchy and cloning preserve the coefficient, shared validation
+     enforces its finite `[0, 1)` domain, and the supported-parameter release
+     gate now covers 183 canonical rows.
+
+267. Cross-language Level-1 MOS lateral diffusion.
+   - Status: completed in PR 9001.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `LD`,
+     defaulting to zero, and apply `L_eff = L - 2*LD` to channel current and
+     length-scaled intrinsic and `CGBO` capacitance.
+   - Hierarchy and cloning preserve the geometry, shared validation enforces
+     finite non-negative `LD` with positive effective length, and the
+     supported-parameter release gate now covers 185 canonical rows.
 
 ## Backlog
 

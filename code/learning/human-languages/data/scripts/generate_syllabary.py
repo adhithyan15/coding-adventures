@@ -125,6 +125,54 @@ def build_script(script_id: str, name: str, base: int, font: str, signature: str
                 "strokeOrder": [],       # recognition only — ductus is a separate, paused effort
                 "strokeOrderNote": "",
             })
+
+    # The independent (standalone) vowels — the letters a word writes when it
+    # BEGINS with a vowel (అ a, ఆ ā, …), as opposed to the vowel SIGNS above that
+    # ride on a consonant. Same vowels, different glyphs; without them a
+    # vowel-initial word can't be read. Grounded the same way: each is a Unicode
+    # "<SCRIPT> LETTER <V>" (the inherent /a/ is LETTER A), romanized in ISO-15919
+    # from the shared VOWELS table — never guessed. Kept in a SEPARATE list, not
+    # mixed into `letters`, so the consonant syllabary (and everything keyed on it
+    # being all-syllables) is untouched. Recognition only — no ductus.
+    independent = []
+    for vow_tok, vow_rom in VOWELS:
+        letter_tok = "A" if vow_tok == "" else vow_tok
+        cp = codepoint_by_name(f"{up} LETTER {letter_tok}", base)
+        if cp is None:
+            continue  # this script lacks this independent vowel — skip, never invent
+        ch = chr(cp)
+        independent.append({
+            "glyph": ch,
+            "sound": vow_rom,
+            "role": "vowel",
+            "components": [f"{ch}  {vow_rom} — independent vowel (word-initial)"],
+            "strokeOrder": [],
+            "strokeOrderNote": "",
+        })
+
+    # The script's own digits (౦౧౨…). Reading a language means reading its
+    # numbers too, and these are written with distinct glyphs, not Western 0-9.
+    # Grounded like everything else: each is a Unicode "<SCRIPT> DIGIT <N>", and
+    # the romanization is simply the digit's value (0-9) — the Unicode name (ZERO,
+    # ONE, …) fixes it unambiguously, nothing guessed. Kept in a SEPARATE list, not
+    # mixed into `letters`. Recognition only — no ductus.
+    DIGIT_NAMES = ["ZERO", "ONE", "TWO", "THREE", "FOUR",
+                   "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"]
+    digits = []
+    for value, dname in enumerate(DIGIT_NAMES):
+        cp = codepoint_by_name(f"{up} DIGIT {dname}", base)
+        if cp is None:
+            continue  # this script lacks its own digit — skip, never invent
+        ch = chr(cp)
+        digits.append({
+            "glyph": ch,
+            "sound": str(value),
+            "role": "digit",
+            "components": [f"{ch}  {value} — {name} digit"],
+            "strokeOrder": [],
+            "strokeOrderNote": "",
+        })
+
     return {
         "script": script_id,
         "name": name,
@@ -136,9 +184,13 @@ def build_script(script_id: str, name: str, base: int, font: str, signature: str
         "notes": (
             "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base "
             "consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. "
+            "The independent (word-initial) vowels are in `independentVowels`; the "
+            "script's own digits are in `digits`. "
             "Recognition only — stroke order is a separate, source-gated effort and is omitted."
         ),
         "letters": letters,
+        "independentVowels": independent,
+        "digits": digits,
     }
 
 

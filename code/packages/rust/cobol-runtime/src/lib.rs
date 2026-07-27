@@ -2415,6 +2415,111 @@ mod tests {
     }
 
     #[test]
+    fn inspect_tallying_for_all_with_a_before_after_region() {
+        // BEFORE "C" restricts the count to "AB0" → one "0"; AFTER "C" restricts it
+        // to "D0" → one "0". Same source, complementary windows.
+        let before = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before, "001\n");
+
+        let after = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"0\" AFTER \"C\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after, "001\n");
+
+        // The not-found ASYMMETRY: BEFORE with the delimiter absent counts the WHOLE
+        // source (both "0"s → 2); AFTER with it absent counts NOTHING (0).
+        let before_absent = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"Z\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before_absent, "002\n");
+
+        let after_absent = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"0\" AFTER \"Z\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after_absent, "000\n");
+
+        // The region delimiter equal to the tally delimiter: AFTER "A" in "ABABA" —
+        // the first "A" (index 0) bounds the region to "BABA", where two "A"s remain.
+        let same = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"A\" AFTER \"A\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(same, "002\n");
+    }
+
+    #[test]
+    fn inspect_tallying_for_leading_with_a_before_after_region() {
+        // The STANDALONE `FOR LEADING … {BEFORE|AFTER}` form is now supported, with the
+        // leading run ANCHORED at the window start. "aaXaab" AFTER "X" narrows to "aab"
+        // — the leading "a" run there is 2, the "aa" before the X ignored.
+        let after = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"aaXaab\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"X\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after, "002\n");
+
+        // The window's first char is a mismatch ⇒ leading run 0, even though a's
+        // precede the X: "aaXbb" AFTER "X" → window "bb" → 0.
+        let mismatch = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aaXbb\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"X\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(mismatch, "000\n");
+
+        // BEFORE counts the prefix run: "aaXaa" BEFORE "X" → window "aa" → 2.
+        let before = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aaXaa\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"a\" BEFORE \"X\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before, "002\n");
+
+        // Not-found asymmetry: AFTER "Z" absent ⇒ EMPTY window ⇒ 0; BEFORE "Z" absent ⇒
+        // WHOLE source ⇒ the leading run from position 0 (2 in "aaXaa").
+        let after_absent = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"aaXaab\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"Z\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after_absent, "000\n");
+
+        let before_absent = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aaXaa\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"a\" BEFORE \"Z\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before_absent, "002\n");
+    }
+
+    #[test]
+    fn inspect_tallying_region_later_rung_forms_are_clean_errors() {
+        // The STANDALONE `FOR LEADING … BEFORE/AFTER` form is now supported (see
+        // `inspect_tallying_for_leading_with_a_before_after_region`). What remains
+        // deferred is a MULTI-character region delimiter — rejected at exec, exactly
+        // like a multi-character tally delimiter. (A LEADING half PLUS a region on the
+        // COMBINED TALLYING … REPLACING form is still deferred — see
+        // `inspect_tally_replace_combined_leading_with_region_is_a_later_rung`.)
+        let multi = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"CD\".", "STOP RUN."],
+        ));
+        assert!(multi.is_err(), "multi-char region delimiter must reject");
+    }
+
+    #[test]
     fn inspect_replacing_maps_every_occurrence_in_place() {
         // "ABABA" with A→X → "XBXBX" (same width, per-position map).
         let out = run_cobol(&wrap(
@@ -2463,13 +2568,18 @@ mod tests {
         .unwrap_err();
         assert!(matches!(multi, RuntimeError::Unsupported(_)), "got {multi:?}");
 
-        // … several replace items are a later rung …
+        // … several replace items are now SUPPORTED (the multi-item first-match-wins
+        // path): "ABABA" with A→X, B→Y in one pass → "XYXYX".
         let many = run_cobol(&wrap(
             &["01  S  PIC X(5) VALUE \"ABABA\"."],
-            &["INSPECT S REPLACING ALL \"A\" BY \"X\" ALL \"B\" BY \"Y\".", "STOP RUN."],
+            &[
+                "INSPECT S REPLACING ALL \"A\" BY \"X\" ALL \"B\" BY \"Y\".",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
         ))
-        .unwrap_err();
-        assert!(matches!(many, RuntimeError::Unsupported(_)), "got {many:?}");
+        .unwrap();
+        assert_eq!(many, "XYXYX\n");
 
         // … but the combined TALLYING … REPLACING in one INSPECT is now SUPPORTED:
         // it counts "A" (3 in "ABABA") into C, THEN replaces "B" with "X". The two
@@ -2588,6 +2698,55 @@ mod tests {
         ))
         .unwrap();
         assert_eq!(via_items, "***123\n");
+    }
+
+    /// The STANDALONE `INSPECT … REPLACING LEADING search BY replace {BEFORE|AFTER} x`
+    /// anchors the leading substitution run at the WINDOW START: characters before the
+    /// window are untouched and neither begin nor break the run, the run begins at the
+    /// window start, and it stops at the first non-`search` INSIDE the window.
+    #[test]
+    fn inspect_replacing_leading_with_a_before_after_region() {
+        // AFTER "X" over "aaXaab" narrows to "aab" — only the two leading a's after the
+        // X are rewritten; the "aa" before the X is untouched.
+        let after = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"aaXaab\"."],
+            &["INSPECT S REPLACING LEADING \"a\" BY \"*\" AFTER \"X\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after, "aaX**b\n");
+
+        // The window's first char is not `search` ⇒ nothing replaced: "aaXbb" AFTER
+        // "X" → window "bb" → unchanged.
+        let mismatch = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aaXbb\"."],
+            &["INSPECT S REPLACING LEADING \"a\" BY \"*\" AFTER \"X\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(mismatch, "aaXbb\n");
+
+        // BEFORE rewrites the prefix run: "aaXaa" BEFORE "X" → window "aa" → "**Xaa".
+        let before = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aaXaa\"."],
+            &["INSPECT S REPLACING LEADING \"a\" BY \"*\" BEFORE \"X\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before, "**Xaa\n");
+
+        // Not-found asymmetry: AFTER "Z" absent ⇒ EMPTY window ⇒ nothing replaced;
+        // BEFORE "Z" absent ⇒ WHOLE source ⇒ the leading run from position 0.
+        let after_absent = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"aaXaab\"."],
+            &["INSPECT S REPLACING LEADING \"a\" BY \"*\" AFTER \"Z\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after_absent, "aaXaab\n");
+
+        let before_absent = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aaXaa\"."],
+            &["INSPECT S REPLACING LEADING \"a\" BY \"*\" BEFORE \"Z\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before_absent, "**Xaa\n");
     }
 
     /// The COMBINED `INSPECT … TALLYING … REPLACING` runs tally-then-replace: the
@@ -2717,6 +2876,102 @@ mod tests {
         assert_eq!(no_run, "002\nX00X\n");
     }
 
+    /// The COMBINED form's TWO halves each carry an INDEPENDENT `{BEFORE|AFTER}`
+    /// region. Because the tally does not mutate the source, BOTH windows are
+    /// computed over the SAME original bytes — the count's window and the
+    /// replacement's window each see the pre-replacement source.
+    #[test]
+    fn inspect_tally_replace_with_before_after_regions() {
+        // Tally region only: BEFORE "C" over "AB0CD0" counts one "0" (region "AB0");
+        // the region-less REPLACING ALL then maps BOTH "0"s → "AB*CD*".
+        let tally_only = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\"",
+                "    REPLACING ALL \"0\" BY \"*\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(tally_only, "001\nAB*CD*\n");
+
+        // Replace region only: the region-less TALLYING counts all three "0"s (3),
+        // then REPLACING ALL "0" BEFORE "B" restricts to "0A0" → "*A*B0".
+        let replace_only = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\"",
+                "    REPLACING ALL \"0\" BY \"*\" BEFORE \"B\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(replace_only, "003\n*A*B0\n");
+
+        // BOTH halves, DIFFERENT kinds and delimiters: tally BEFORE "B" over "0A0B0"
+        // counts "0A0" → 2; replace AFTER "B" restricts to "0" → "0A0B*".
+        let both = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"B\"",
+                "    REPLACING ALL \"0\" BY \"*\" AFTER \"B\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(both, "002\n0A0B*\n");
+
+        // The not-found asymmetry per half: tally AFTER "Z" (absent) counts NOTHING
+        // (empty window) → 0; replace BEFORE "Z" (absent) rewrites the WHOLE source →
+        // both "0"s replaced → "*A*".
+        let not_found = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"0A0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" AFTER \"Z\"",
+                "    REPLACING ALL \"0\" BY \"*\" BEFORE \"Z\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(not_found, "000\n*A*\n");
+    }
+
+    #[test]
+    fn inspect_tally_replace_combined_leading_with_region_is_a_later_rung() {
+        // The STANDALONE `FOR LEADING`/`REPLACING LEADING … BEFORE/AFTER` forms are
+        // supported, but a LEADING half carrying a region on the COMBINED form is still
+        // deferred — the combined reader re-imposes the rejection. A LEADING tally half
+        // with a region …
+        let tally_leading = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"00A0B\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR LEADING \"0\" BEFORE \"A\"",
+                "    REPLACING ALL \"0\" BY \"*\".",
+                "STOP RUN.",
+            ],
+        ));
+        assert!(tally_leading.is_err(), "combined FOR LEADING + region must reject");
+
+        // … and a LEADING replace half with a region are BOTH deferred.
+        let replace_leading = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"00A0B\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\"",
+                "    REPLACING LEADING \"0\" BY \"*\" BEFORE \"A\".",
+                "STOP RUN.",
+            ],
+        ));
+        assert!(replace_leading.is_err(), "combined REPLACING LEADING + region must reject");
+    }
+
     #[test]
     fn inspect_tallying_later_rung_forms_are_clean_errors() {
         // A multi-character delimiter needs a multi-char scan …
@@ -2766,6 +3021,53 @@ mod tests {
     }
 
     #[test]
+    fn inspect_converting_with_a_before_after_region() {
+        // BEFORE "Y" restricts the A→0 translate to "AXA" (indices 0..3) → the two
+        // "A"s there become "0"; the trailing "A" (right of "Y") is UNTOUCHED.
+        let before = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE \"Y\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before, "0X0YA\n");
+
+        // AFTER "Y" restricts it to "A" (index 4) → only that trailing "A" → "0".
+        let after = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"Y\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after, "AXAY0\n");
+
+        // The not-found ASYMMETRY: BEFORE with the delimiter absent translates the
+        // WHOLE source (all three "A"s → "0"); AFTER with it absent translates
+        // NOTHING (the source is unchanged).
+        let before_absent = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE \"Z\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before_absent, "0X0Y0\n");
+        let after_absent = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"Z\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after_absent, "AXAYA\n");
+
+        // The region delimiter equal to a `from` character: AFTER "A" in "AXAYA" —
+        // the FIRST "A" (index 0) bounds the region to "XAYA"; the translate runs over
+        // the ORIGINAL bytes, so the "A"s at indices 2 and 4 become "0", while the
+        // delimiter "A" at index 0 (left of the region) is KEPT → "AX0Y0".
+        let delim_in_from = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"A\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(delim_in_from, "AX0Y0\n");
+    }
+
+    #[test]
     fn inspect_converting_later_rung_forms_are_clean_errors() {
         // Unequal-length FROM/TO have no well-defined table — a later rung.
         let unequal = run_cobol(&wrap(
@@ -2783,13 +3085,15 @@ mod tests {
         .unwrap_err();
         assert!(matches!(item, RuntimeError::Unsupported(_)), "got {item:?}");
 
-        // A BEFORE/AFTER region restricting the conversion is a later rung.
-        let before = run_cobol(&wrap(
+        // A MULTI-character region delimiter restricting the conversion is a later
+        // rung (a single-character region delimiter is now supported — see
+        // `inspect_converting_with_a_before_after_region`).
+        let multi_region = run_cobol(&wrap(
             &["01  S  PIC X(5) VALUE \"ABABA\"."],
-            &["INSPECT S CONVERTING \"A\" TO \"X\" BEFORE \"B\".", "STOP RUN."],
+            &["INSPECT S CONVERTING \"A\" TO \"X\" BEFORE \"BC\".", "STOP RUN."],
         ))
         .unwrap_err();
-        assert!(matches!(before, RuntimeError::Unsupported(_)), "got {before:?}");
+        assert!(matches!(multi_region, RuntimeError::Unsupported(_)), "got {multi_region:?}");
 
         // CONVERTING is a STANDALONE alternative — combining it with a REPLACING
         // clause in one statement does not parse (the two are mutually exclusive

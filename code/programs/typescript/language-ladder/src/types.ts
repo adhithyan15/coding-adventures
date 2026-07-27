@@ -44,6 +44,14 @@ export interface ScriptData {
    *  "spot the script" identification mode. Verified by rendering the font. */
   signature?: string;
   letters: Letter[];
+  /** For an abugida: the independent (word-initial) vowels — the letters a word
+   *  writes when it BEGINS with a vowel (అ a, ఆ ā), as opposed to the vowel signs
+   *  that ride on a consonant. Kept separate from `letters` so the consonant
+   *  syllabary (and anything keyed on it being all-syllables) is untouched. */
+  independentVowels?: Letter[];
+  /** For a script with its own numerals: the digits 0–9 in the script's glyphs
+   *  (౦౧౨…). Kept separate from `letters`, like `independentVowels`. */
+  digits?: Letter[];
   marks?: unknown[];
   combination?: string;
   complete?: boolean;

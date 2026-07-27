@@ -541,6 +541,96 @@ fn shipped_force_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b11) Shipped table — reference/acceleration-conversions.adj resolves via import
+//       (acceleration unit → metres per second squared, EXACT SP 811 B.9 boldface
+//       factors, incl. the conventional standard gravity gₙ), and the SI unit itself
+//       (`metre_per_second_squared`) — which has no customary-conversion row — abstains.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_acceleration_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_accel");
+    let src = stdlib().join("reference/acceleration-conversions.adj");
+    std::fs::copy(&src, dir.join("acceleration-conversions.adj"))
+        .expect("copy shipped acceleration-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"acceleration-conversions.adj\"\n\
+         ? acceleration_to_metres_per_second_squared(free_fall_standard, $a)\n\
+         ? acceleration_to_metres_per_second_squared(foot_per_second_squared, $a)\n\
+         ? acceleration_to_metres_per_second_squared(gal, $a)\n\
+         ? acceleration_to_metres_per_second_squared(metre_per_second_squared, $a)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 "Acceleration" exact factors resolve, character-for-
+    // character from the table (boldface = exact; scientific notation to plain decimal).
+    assert!(
+        out.contains("\"a\":\"9.80665\""),
+        "standard acceleration of free fall gₙ = 9.80665 m/s²: {out}"
+    );
+    assert!(
+        out.contains("\"a\":\"0.3048\""),
+        "foot/second² = 0.3048 m/s²: {out}"
+    );
+    assert!(out.contains("\"a\":\"0.01\""), "gal = 0.01 m/s²: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `metre_per_second_squared` is the SI unit itself, not a customary-conversion row
+    // — the engine abstains rather than fabricating a factor.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "the SI unit itself abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// (b12) Shipped table — reference/dynamic-viscosity-conversions.adj resolves via
+//       import (a NEW dimension: dynamic viscosity → pascal second, the EXACT SP 811
+//       B.9 boldface CGS factors poise and centipoise), and a non-exact customary
+//       unit (`pound_force_second_per_square_foot`) — a rounded factor with no row —
+//       abstains.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_dynamic_viscosity_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_visc");
+    let src = stdlib().join("reference/dynamic-viscosity-conversions.adj");
+    std::fs::copy(&src, dir.join("dynamic-viscosity-conversions.adj"))
+        .expect("copy shipped dynamic-viscosity-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"dynamic-viscosity-conversions.adj\"\n\
+         ? dynamic_viscosity_to_pascal_seconds(poise, $v)\n\
+         ? dynamic_viscosity_to_pascal_seconds(centipoise, $v)\n\
+         ? dynamic_viscosity_to_pascal_seconds(pound_force_second_per_square_foot, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 "Viscosity, dynamic" exact factors resolve, character-for-
+    // character from the table (boldface = exact; scientific notation to plain decimal).
+    assert!(out.contains("\"v\":\"0.1\""), "poise = 0.1 Pa·s: {out}");
+    assert!(out.contains("\"v\":\"0.001\""), "centipoise = 0.001 Pa·s: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `pound_force_second_per_square_foot` is a NIST customary row printed as a ROUNDED
+    // (non-boldface) factor — not an exact row here, so the engine abstains rather than
+    // committing to a rounded value.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a non-exact unit abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 

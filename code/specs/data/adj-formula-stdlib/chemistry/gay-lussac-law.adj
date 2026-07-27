@@ -1,0 +1,119 @@
+% ============================================================================
+% gay-lussac-law.adj — Gay-Lussac's law (P₁/T₁ = P₂/T₂) in the ADJ standard library.
+% ============================================================================
+% The Gay-Lussac's-law entry of the *chemistry* track, a sibling of `boyles-law.adj`,
+% `charles-law.adj`, `ideal-gas-law.adj` and `dilution.adj`: the foundational gas
+% relation a first course states as THE PRESSURE OF A GAS AT CONSTANT VOLUME IS DIRECTLY
+% PROPORTIONAL TO ITS ABSOLUTE (KELVIN) TEMPERATURE, as an importable, byte-provenanced,
+% PARAMETERIZED `formula` — together with the FOUR exact readings that one
+% proportionality sanctions (solve for any one of the initial pressure, initial
+% temperature, final pressure or final temperature from the other three). As with every
+% compute library, a consumer states NO arithmetic: it `import`s this file, binds the
+% measured quantities from its own byte-provenance decomposition, and asks the engine to
+% APPLY the cited relation on the CPU. Zero math is performed by the model; the engine
+% computes each value EXACTLY, carrying the relation's citation.
+%
+%     import "gay-lussac-law.adj"
+%     observe initial_pressure(2)       % "…2 atm…"      (span cited by the model)
+%     observe initial_temperature(4)    % "…at 4 K…"     (span cited by the model)
+%     observe final_temperature(6)      % "…heated to 6 K…"
+%     ? final_pressure(initial_pressure, initial_temperature, final_temperature)
+%                                          % engine → 3, carrying P₁/T₁ = P₂/T₂
+%
+% Gay-Lussac's law is the constant-VOLUME member of the three simple gas laws, completing
+% the trio with its two merged siblings: `boyles-law.adj` holds TEMPERATURE fixed and
+% conserves the P·V product; `charles-law.adj` holds PRESSURE fixed and conserves the V/T
+% ratio; Gay-Lussac's holds VOLUME fixed and conserves the P/T ratio. All three are
+% special cases of `ideal-gas-law.adj` (PV = nRT): the ideal gas law DEFINES the full
+% state, and Gay-Lussac's law says that for a fixed amount of gas in a rigid (fixed-
+% volume) container the pressure-to-temperature RATIO is constant, so the libraries
+% compose (an ideal-gas state feeds a Gay-Lussac heating in a sealed rigid vessel). One
+% grounded artifact building on another (write-once-use-many).
+%
+% NOTE: the temperature here MUST be the ABSOLUTE (kelvin) temperature — the direct
+% proportionality holds only on the kelvin scale, since P → 0 as T → 0 K. A decomposer
+% that reads a Celsius temperature from a prompt must convert to kelvin BEFORE binding it;
+% this library computes the exact ratio over whatever absolute temperatures it is given.
+%
+% All four formulas are EXACT over their parameters — each is a product divided by a
+% measured quantity — so every value the engine returns is exact; there is no
+% *separately grounded* constant here. The four COMPOSE and invert cleanly around the
+% worked case P₁ = 2, T₁ = 4, P₂ = 3, T₂ = 6 (note P₁/T₁ = 2/4 = 3/6 = P₂/T₂, i.e. the
+% cross-product P₁T₂ = 2·6 = 12 = 3·4 = P₂T₁):
+%
+%   final_pressure(initial_pressure, initial_temperature, final_temperature)
+%       = initial_pressure * final_temperature / initial_temperature     % P₂ = P₁T₂/T₁ = 2·6/4 = 3
+%   final_temperature(final_pressure, initial_pressure, initial_temperature)
+%       = final_pressure * initial_temperature / initial_pressure        % T₂ = P₂T₁/P₁ = 3·4/2 = 6
+%   initial_pressure(final_pressure, final_temperature, initial_temperature)
+%       = final_pressure * initial_temperature / final_temperature       % P₁ = P₂T₁/T₂ = 3·4/6 = 2
+%   initial_temperature(initial_pressure, final_temperature, final_pressure)
+%       = initial_pressure * final_temperature / final_pressure          % T₁ = P₁T₂/P₂ = 2·6/3 = 4
+%
+% All four formulas are defended by the SAME sentence — "Gay-Lussac's Law states that the
+% pressure of a given mass of gas varies directly with the absolute temperature of the
+% gas, when the volume is kept constant." — because direct proportionality of pressure to
+% temperature at constant volume is exactly P/T = constant, i.e. P₁/T₁ = P₂/T₂, and so
+% sanctions the relation solved for any single variable. The quote is transcribed
+% verbatim from Chemistry LibreTexts (the CK-12 Introductory Chemistry text — the same
+% primary reference family `boyles-law.adj`, `charles-law.adj`, `molarity.adj`,
+% `dilution.adj` and `ideal-gas-law.adj` cite), so each `formula` carries the provenance
+% envelope every shipped grounded clause carries; the linter rejects an unsourced one.
+% (See feedback_nothing_human_authored — the sentence is a verbatim span of the cited
+% page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Gay-Lussac's law ranges over four observable quantities: the pressure and
+% absolute temperature of the gas BEFORE the change and the pressure and absolute
+% temperature AFTER (volume and amount held constant). Each appears BOTH as a derived
+% result (of one formula) and as an input (of the others), so each is a single dictionary
+% term used in both roles. The `surface` lists are the everyday names a decomposer maps
+% onto the canonical term; the trailing comment records the intended unit (a pressure e.g.
+% in atm and a temperature in K — the temperature MUST be absolute/kelvin).
+% ----------------------------------------------------------------------------
+dictionary gay_lussac_law_vocab {
+    define initial_pressure    : finding  surface "initial pressure", "P1"      % before, e.g. atm
+    define initial_temperature : finding  surface "initial temperature", "T1"   % before, e.g. K (kelvin)
+    define final_pressure      : finding  surface "final pressure", "P2"        % after, e.g. atm
+    define final_temperature   : finding  surface "final temperature", "T2"     % after, e.g. K (kelvin)
+}
+
+% ----------------------------------------------------------------------------
+% Gay-Lussac's law, all four ways. Each is a named, importable, reusable `let` over its
+% formal parameters, bound at apply time, and each carries the proportionality sentence
+% from LibreTexts (a quote is required on a shipped formula). Each body is a product
+% divided by a measured quantity, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook gay_lussac_law_laws {
+    use gay_lussac_law_vocab
+
+    % Final pressure — the pressure a fixed amount of gas reaches at a new absolute
+    % temperature in a rigid vessel (P₂ = P₁T₂/T₁). The conserved ratio P₁/T₁ scaled up
+    % to the new T.
+    formula final_pressure(initial_pressure, initial_temperature, final_temperature) = initial_pressure * final_temperature / initial_temperature
+        source "Gay-Lussac's Law states that the pressure of a given mass of gas varies directly with the absolute temperature of the gas, when the volume is kept constant."
+        locator "https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(CK-12)/14:_The_Behavior_of_Gases/14.05:_Gay-Lussac's_Law"
+        trust authoritative
+
+    % Final temperature — the absolute temperature a fixed amount of gas reaches at a new
+    % pressure (T₂ = P₂T₁/P₁). Defended by the SAME proportionality sentence, read another way.
+    formula final_temperature(final_pressure, initial_pressure, initial_temperature) = final_pressure * initial_temperature / initial_pressure
+        source "Gay-Lussac's Law states that the pressure of a given mass of gas varies directly with the absolute temperature of the gas, when the volume is kept constant."
+        locator "https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(CK-12)/14:_The_Behavior_of_Gases/14.05:_Gay-Lussac's_Law"
+        trust authoritative
+
+    % Initial pressure — the pressure a fixed amount of gas started at
+    % (P₁ = P₂T₁/T₂). Again the SAME proportionality sentence, solved for P₁.
+    formula initial_pressure(final_pressure, final_temperature, initial_temperature) = final_pressure * initial_temperature / final_temperature
+        source "Gay-Lussac's Law states that the pressure of a given mass of gas varies directly with the absolute temperature of the gas, when the volume is kept constant."
+        locator "https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(CK-12)/14:_The_Behavior_of_Gases/14.05:_Gay-Lussac's_Law"
+        trust authoritative
+
+    % Initial temperature — the absolute temperature a fixed amount of gas started at
+    % (T₁ = P₁T₂/P₂). The fourth exact reading of the one proportionality law.
+    formula initial_temperature(initial_pressure, final_temperature, final_pressure) = initial_pressure * final_temperature / final_pressure
+        source "Gay-Lussac's Law states that the pressure of a given mass of gas varies directly with the absolute temperature of the gas, when the volume is kept constant."
+        locator "https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(CK-12)/14:_The_Behavior_of_Gases/14.05:_Gay-Lussac's_Law"
+        trust authoritative
+}

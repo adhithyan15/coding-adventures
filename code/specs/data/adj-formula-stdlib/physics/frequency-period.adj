@@ -1,0 +1,80 @@
+% ============================================================================
+% frequency-period.adj — frequency is the reciprocal of period (f = 1/T) in the
+% ADJ standard library.
+% ============================================================================
+% The frequency/period entry of the *physics* track, a sibling of `wave-speed.adj`,
+% `power.adj` and `electric-charge.adj`: the foundational oscillations definition a
+% first course states as THE RELATIONSHIP BETWEEN FREQUENCY AND PERIOD — i.e. the
+% reciprocal relation f = 1/T (the frequency is one divided by the period, the time for
+% one cycle) — as an importable, byte-provenanced, PARAMETERIZED `formula`, together
+% with its single exact rearrangement (the period is one divided by the frequency,
+% T = 1/f). Unlike the two-input rate definitions (v = f·λ, P = W/t, I = Q/t), this is a
+% ONE-input RECIPROCAL: each quantity is exactly one over the other, so the two formulas
+% are a clean 2-way inverter rather than a 3-way one. As with every compute library, a
+% consumer states NO arithmetic: it `import`s this file, binds the measured quantity
+% from its own byte-provenance decomposition, and asks the engine to APPLY the cited
+% definition on the CPU. Zero math is performed by the model; the engine computes the
+% value EXACTLY, carrying the definition's citation.
+%
+%     import "frequency-period.adj"
+%     observe period(4)              % "…a period of 4 s…"  (span cited by the model)
+%     ? frequency(period)            % engine → 0.25, carrying f = 1/T
+%
+% Both formulas are EXACT over their parameter — each a reciprocal of a measured
+% quantity, computed as an exact rational (so 1/4 is exactly 0.25, 1/8 exactly 0.125).
+% There is no *separately grounded* physical constant here, so every value the engine
+% returns is exact. The two COMPOSE and invert cleanly: the `frequency` a consumer
+% computes from a period is exactly the `frequency` whose reciprocal the `period`
+% formula returns to recover the period.
+%
+%   frequency(period) = 1 / period      %  f = 1/T   (frequency is one over the period)
+%   period(frequency) = 1 / frequency     %  T = 1/f   (same relation, solved for T)
+%
+% Both formulas are defended by the SAME sentence — "The relationship between frequency
+% and period is:" — the sentence Physics LibreTexts uses to introduce the displayed
+% equation f = 1/T, exactly the lead-in-to-equation form `wave-speed.adj` already cites
+% ("The relationship of the speed of sound, its frequency, and wavelength is the same as
+% for all waves:"). Because the relation is a pure reciprocal, that one sentence
+% sanctions it read either way (f from T, or T from f). The quote is transcribed verbatim
+% from Physics LibreTexts (OpenStax College Physics — a primary educational reference,
+% the same publisher `wave-speed.adj`, `power.adj`, `electric-charge.adj` and
+% `hookes-law.adj` cite), so each `formula` carries the provenance envelope every shipped
+% grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the sentence is a verbatim span of the cited page,
+% not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each quantity is an observable the relation ranges over, and each is BOTH
+% a derived result and the input of the other formula, so each is a single dictionary
+% term used in both roles. The `surface` lists are the everyday names a decomposer maps
+% onto the canonical term; the trailing comment records the intended SI unit.
+% ----------------------------------------------------------------------------
+dictionary frequency_period_vocab {
+    define period    : finding  surface "period", "T"                % period, e.g. s (seconds per cycle)
+    define frequency : finding  surface "frequency", "f"            % frequency, e.g. Hz (cycles per second)
+}
+
+% ----------------------------------------------------------------------------
+% The relation, both ways. Each is a named, importable, reusable `let` over its formal
+% parameter, bound at apply time, and each carries the definitional quote from LibreTexts
+% (a quote is required on a shipped formula). Each is a reciprocal, computed as an exact
+% rational, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook frequency_period_laws {
+    use frequency_period_vocab
+
+    % Frequency — one divided by the period. LibreTexts introduces this as the
+    % relationship between frequency and period, f = 1/T.
+    formula frequency(period) = 1 / period
+        source "The relationship between frequency and period is:"
+        locator "https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/16:_Oscillatory_Motion_and_Waves/16.02:_Period_and_Frequency_in_Oscillations"
+        trust authoritative
+
+    % Period — the same reciprocal relation solved for the period, T = 1/f. Defended by
+    % the SAME sentence, read the other way.
+    formula period(frequency) = 1 / frequency
+        source "The relationship between frequency and period is:"
+        locator "https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/16:_Oscillatory_Motion_and_Waves/16.02:_Period_and_Frequency_in_Oscillations"
+        trust authoritative
+}

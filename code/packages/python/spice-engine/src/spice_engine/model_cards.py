@@ -309,10 +309,10 @@ _MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES = {
     "D": (15, 21, 5, 3),
     "NPN": (41, 58, 13, 4),
     "PNP": (41, 58, 13, 4),
-    "NJF": (19, 27, 7, 3),
-    "PJF": (19, 27, 7, 3),
-    "NMOS": (18, 25, 6, 3),
-    "PMOS": (18, 25, 6, 3),
+    "NJF": (22, 30, 7, 3),
+    "PJF": (22, 30, 7, 3),
+    "NMOS": (23, 30, 6, 3),
+    "PMOS": (23, 30, 6, 3),
 }
 
 
@@ -438,6 +438,9 @@ _JFET_PARAMETER_ALIASES: dict[str, str] = {
     "IS": "IS",
     "XTI": "XTI",
     "EG": "EG",
+    "B": "B",
+    "NLEV": "NLEV",
+    "GDSNOI": "GDSNOI",
     "RD": "RD",
     "RS": "RS",
     "TNOM": "TNOM",
@@ -460,6 +463,8 @@ _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
     "PHI": "PHI",
     "W": "W",
     "L": "L",
+    "LD": "LD",
+    "TOX": "TOX",
     "IS": "IS",
     "NSUB": "N_SUB",
     "N_SUB": "N_SUB",
@@ -474,6 +479,9 @@ _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
     "CJD": "CBD",
     "PB": "PB",
     "MJ": "MJ",
+    "FC": "FC",
+    "KF": "KF",
+    "AF": "AF",
 }
 
 
@@ -1025,6 +1033,9 @@ def jfet_from_model_card(
         Is=p.get("IS", 1.0e-14),
         Xti=p.get("XTI", 3.0),
         Eg=p.get("EG", 1.11),
+        B=p.get("B", 1.0),
+        Nlev=p.get("NLEV", 1.0),
+        Gdsnoi=p.get("GDSNOI", 1.0),
         Rd=p.get("RD", 0.0),
         Rs=p.get("RS", 0.0),
         Tcv=p.get("TCV", 0.0),
@@ -1058,6 +1069,8 @@ def mosfet_from_model_card(
         PHI=p.get("PHI", defaults.PHI),
         W=p.get("W", defaults.W),
         L=p.get("L", defaults.L),
+        LD=p.get("LD", defaults.LD),
+        TOX=p.get("TOX", defaults.TOX),
         IS=p.get("IS", defaults.IS),
         N_SUB=p.get("N_SUB", defaults.N_SUB),
         T_NOM=p.get("T_NOM", defaults.T_NOM),
@@ -1068,6 +1081,9 @@ def mosfet_from_model_card(
         CBD=p.get("CBD", defaults.CBD),
         PB=p.get("PB", defaults.PB),
         MJ=p.get("MJ", defaults.MJ),
+        FC=p.get("FC", defaults.FC),
+        KF=p.get("KF", defaults.KF),
+        AF=p.get("AF", defaults.AF),
     )
     mos_type = MosfetType.NMOS if model.kind == "NMOS" else MosfetType.PMOS
     return Mosfet(name, drain, gate, source, body, MOSFET(mos_type, Level1Model(params)))

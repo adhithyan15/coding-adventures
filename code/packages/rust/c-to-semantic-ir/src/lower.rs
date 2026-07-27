@@ -1320,17 +1320,58 @@ impl Lowerer {
         let rp = promote(rt);
         let le = convert_to(le, lt, lp);
         let re = convert_to(re, rt, rp);
+
+        // Shifts are the exception to the usual arithmetic conversions: C does
+        // *not* bring the operands to a common type.  Each is promoted on its
+        // own, the result has the type of the promoted **left** operand, and the
+        // right operand is only a count.  (`>>` on a signed value is arithmetic,
+        // on unsigned logical — the backends get that right because the operand
+        // carries its signedness through `Convert`.)
+        if op == "<<" || op == ">>" {
+            // `>>` is arithmetic on a signed operand and **logical** on an
+            // unsigned one.  The backends store everything in a signed int64, so
+            // a `uint64_t` whose top bit is set is a *negative* int64 and a
+            // native `>>` would sign-extend it.  Route unsigned `>>` to a
+            // distinct `u>>` builtin the backends render as a logical shift.
+            let name = if op == ">>" && !lp.signed { "u>>" } else { op };
+            return Ok((convert(builtin(name, vec![le, re]), lp), lp));
+        }
+
         let c = common_type(lp, rp);
         let le = convert_to(le, lp, c);
         let re = convert_to(re, rp, c);
-        // Milestone 1 supports only the operators both backends render
-        // identically: + - *.  Division needs the floor/trunc split (SIR21 E3),
-        // and %/bitwise/shift need backend builtins — all deferred.
+        // `+ - *` and the bitwise operators `& | ^` all take the usual
+        // arithmetic conversions and are performed at the common type.  Division
+        // and remainder use the *truncating* builtins (see below).
         let sir_op = match op {
-            "+" | "-" | "*" => op,
+            "+" | "-" | "*" | "&" | "|" | "^" => op,
+            // C division/remainder **truncate toward zero** (`-7 / 2 == -3`,
+            // `-7 % 2 == -1`), whereas SIR/Ruby `/`/`%` and the C backend's
+            // `_sir_ifloordiv` **floor** (`-7 / 2 == -4`).  So they lower to
+            // dedicated truncating builtins, distinct from the floor ones.
+            //
+            // Signedness matters for the same reason it does for `>>`: the
+            // backends store values in a signed int64, so an unsigned operand
+            // ≥ 2^63 is a negative int64 and a signed division would be wrong.
+            // Unsigned `/`/`%` therefore route to `utdiv`/`utmod` (which the C
+            // backend does over uint64).
+            "/" => {
+                if c.signed {
+                    "tdiv"
+                } else {
+                    "utdiv"
+                }
+            }
+            "%" => {
+                if c.signed {
+                    "tmod"
+                } else {
+                    "utmod"
+                }
+            }
             other => {
                 return Err(CLowerError {
-                    message: format!("binary operator `{other}` not supported in milestone 1"),
+                    message: format!("binary operator `{other}` not yet supported"),
                     line: 0,
                     column: 0,
                 })
@@ -1377,7 +1418,8 @@ impl Lowerer {
             // Unary minus as `0 - x` (both backends render binary `-`); the
             // subtract happens at the promoted type and its result is wrapped.
             "-" => Ok((convert(builtin("-", vec![int_lit(0), e]), tp), tp)),
-            // `~` (bitnot) is deferred to the bitwise milestone.
+            // Bitwise NOT at the promoted type, wrapped to enforce its width.
+            "~" => Ok((convert(builtin("~", vec![e]), tp), tp)),
             other => err(format!("unary `{other}` not yet supported"), n),
         }
     }

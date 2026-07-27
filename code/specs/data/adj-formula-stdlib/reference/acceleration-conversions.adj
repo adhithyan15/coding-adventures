@@ -1,0 +1,65 @@
+% ============================================================================
+% acceleration-conversions — acceleration-unit → metre-per-second-squared factors
+% (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `speed-conversions.adj` / `pressure-conversions.adj`: a
+% native tabular relation ingested VERBATIM from a published NIST conversion table.
+% Each row states the factor converting one acceleration unit to the SI unit of
+% acceleration, the metre per second squared (m/s²):
+%
+%     ? acceleration_to_metres_per_second_squared(free_fall_standard, $a) % 9.80665
+%     ? acceleration_to_metres_per_second_squared(gal, $a)                % 0.01  (a Gal)
+%
+% This is the next dimension after `speed-conversions.adj` (the time-derivative of
+% speed): where that table normalises a velocity given in customary units, this one
+% normalises an ACCELERATION. It pairs naturally with the mechanics libraries —
+% Newton's second law reads a force from a mass and an acceleration, and this table
+% puts that acceleration into SI first (write-once-use-many). Why a `table` and not
+% several hand-written `relate` clauses: this is exactly the shape reference data
+% comes in — a published table, not prose. The citable artifact IS the NIST
+% conversion-factors table at the `locator` below; every factor here is a CELL of NIST
+% Special Publication 811, Appendix B.9 ("Factors for units listed alphabetically"),
+% and the whole table is defended by one provenance envelope rather than repeating
+% `source`/`locator`/`trust` on every row. Each `row` lowers to a ground relation
+% `acceleration_to_metres_per_second_squared(unit, mpss)`, so the exact lookup above is
+% the ordinary SLD binding query — the engine returns the factor WITH this table's
+% citation as its proof, on the CPU, with zero model calls.
+%
+% HONESTY NOTE (like speed-conversions, these are EXACT defined factors, not rounded
+% ones): NIST SP 811 B.9 prints these four "Acceleration" factors in BOLDFACE, its
+% convention for factors that are EXACT by definition, transcribed here as the plain
+% decimal number of metres per second squared each unit names:
+%
+%     foot per second squared (ft/s²)             3.048    E-01  →  0.3048
+%     inch per second squared (in/s²)             2.54     E-02  →  0.0254
+%     gal (Gal)                                    1.0      E-02  →  0.01
+%     standard acceleration of free fall (gₙ)      9.806 65 E+00  →  9.80665
+%
+% These four are exact because the foot and inch are exact by definition (0.3048 m,
+% 0.0254 m) and the second is the SI base unit, so each ft/s² and in/s² factor is just
+% that exact length in metres; the gal is defined as exactly 10⁻² m/s² (1 cm/s²); and
+% the standard acceleration of free fall gₙ is FIXED by convention at exactly
+% 9.806 65 m/s² (the CGPM-adopted conventional value). Every factor therefore
+% terminates — nothing here is a rounded measurement. A unit NIST does NOT list among
+% these acceleration rows — e.g. the SI unit itself, the metre per second squared —
+% has no row, so a `? acceleration_to_metres_per_second_squared(metre_per_second_squared,
+% $a)` ABSTAINS rather than fabricating a factor. The only claim this table makes is
+% "these are the exact factors NIST SP 811 B.9 prints" — which is exactly what a
+% byte-check against the cited table verifies. `trust authoritative` — a primary,
+% re-fetchable standards reference. (See ADJ-TABLES.md; and
+% feedback_nothing_human_authored — every factor is a verbatim cell of the cited
+% table, nothing asserted from memory.)
+% ============================================================================
+
+table acceleration_to_metres_per_second_squared {
+    columns unit, mpss
+
+    row (foot_per_second_squared, 0.3048)
+    row (inch_per_second_squared, 0.0254)
+    row (gal, 0.01)
+    row (free_fall_standard, 9.80665)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

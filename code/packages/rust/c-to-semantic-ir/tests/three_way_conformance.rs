@@ -411,6 +411,139 @@ fn corpus() -> Vec<Case> {
                    int classify(int x, int y) { if ((x > 0 || y > 0) && !(x == y)) { return 1; } return 0; }\n\
                    int main(void) { printf(\"%d\\n\", classify(4, 4)); return 0; }",
         },
+        // ── milestone 5: bitwise & | ^ ~ and shifts << >> ────────────────────
+        Case {
+            label: "bitwise and 0xF0 & 0x3C → 48",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { printf(\"%d\\n\", 0xF0 & 0x3C); return 0; }",
+        },
+        Case {
+            label: "bitwise or | xor combine flags(7) → 5",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int flags(int x) { return (x & 1) | (x & 4); }\n\
+                   int main(void) { printf(\"%d\\n\", flags(7)); return 0; }",
+        },
+        Case {
+            label: "xor 0xFF ^ 0x0F → 240",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { printf(\"%d\\n\", 0xFF ^ 0x0F); return 0; }",
+        },
+        Case {
+            label: "~uint8 promotes to int, ~0 → -1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint8_t x = 0; printf(\"%d\\n\", ~x); return 0; }",
+        },
+        Case {
+            label: "(uint8_t)~0 narrows to 255",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint8_t x = ~0; printf(\"%d\\n\", x); return 0; }",
+        },
+        Case {
+            label: "left shift 1 << 10 → 1024",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { printf(\"%d\\n\", 1 << 10); return 0; }",
+        },
+        Case {
+            label: "left shift into a uint8 wraps 1<<9 → 0",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint8_t x = 1 << 9; printf(\"%d\\n\", x); return 0; }",
+        },
+        Case {
+            label: "unsigned right shift is logical 200u >> 1 → 100",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint32_t x = 200; printf(\"%u\\n\", x >> 1); return 0; }",
+        },
+        Case {
+            label: "signed right shift is arithmetic (int8)-128 >> 1 → -64",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { int8_t x = -128; printf(\"%d\\n\", x >> 1); return 0; }",
+        },
+        Case {
+            label: "mask a value x & 0xFF → 52",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int lo(int x) { return x & 0xFF; }\n\
+                   int main(void) { printf(\"%d\\n\", lo(0x1234)); return 0; }",
+        },
+        Case {
+            // The signedness trap: a uint64 with bit 63 set is stored as a
+            // negative int64, so `>>` must be *logical* — high-word extract.
+            label: "uint64 logical right shift of a high-bit value → 2147483648",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint64_t x = 1; uint64_t y = x << 63; \
+                   printf(\"%llu\\n\", (unsigned long long)(y >> 32)); return 0; }",
+        },
+        // ── milestone 6: division & modulo (truncate toward zero) ────────────
+        // All four sign combinations — the whole point is that `/` truncates
+        // (not floors) and `%` takes the sign of the dividend.
+        Case {
+            label: "div/mod + + : 7/2 → 3",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int d(int a, int b) { return a / b; }\n\
+                   int main(void) { printf(\"%d\\n\", d(7, 2)); return 0; }",
+        },
+        Case {
+            label: "div - + truncates toward zero: -7/2 → -3 (not -4)",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int d(int a, int b) { return a / b; }\n\
+                   int main(void) { printf(\"%d\\n\", d(-7, 2)); return 0; }",
+        },
+        Case {
+            label: "div + - : 7/-2 → -3",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int d(int a, int b) { return a / b; }\n\
+                   int main(void) { printf(\"%d\\n\", d(7, -2)); return 0; }",
+        },
+        Case {
+            label: "div - - : -7/-2 → 3",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int d(int a, int b) { return a / b; }\n\
+                   int main(void) { printf(\"%d\\n\", d(-7, -2)); return 0; }",
+        },
+        Case {
+            label: "mod takes the dividend's sign: -7%2 → -1 (not 1)",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int m(int a, int b) { return a % b; }\n\
+                   int main(void) { printf(\"%d\\n\", m(-7, 2)); return 0; }",
+        },
+        Case {
+            label: "mod + - : 7%-2 → 1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int m(int a, int b) { return a % b; }\n\
+                   int main(void) { printf(\"%d\\n\", m(7, -2)); return 0; }",
+        },
+        // (`INT_MIN / -1` is deliberately NOT a conformance case: it is signed-
+        // overflow UB, and real x86 hardware *traps* (SIGFPE) on it even under
+        // `-fwrapv`, so the reference program crashes rather than producing a
+        // value.  The backends still guard it — see the emitted-C `_sir_itdiv`
+        // INT64_MIN/-1 guard and the `int_min_div_is_guarded` unit test — so our
+        // own output is defined, we just don't claim to match a trapping oracle.)
+        Case {
+            label: "unsigned division 100u / 7u → 14",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint32_t a = 100; uint32_t b = 7; \
+                   printf(\"%u\\n\", a / b); return 0; }",
+        },
+        Case {
+            // A uint64 with bit 63 set is a negative int64 in the backends'
+            // storage, so a *signed* division would be wrong — unsigned `/` must
+            // route to the uint64 path.
+            label: "uint64 division of a high-bit value (2^63)/2 → 4611686018427387904",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint64_t x = 1; uint64_t hi = x << 63; \
+                   printf(\"%llu\\n\", (unsigned long long)(hi / 2)); return 0; }",
+        },
+        Case {
+            label: "uint64 modulo of a high-bit value (2^63 + 5) % 2 → 1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint64_t x = 1; uint64_t hi = (x << 63) + 5; \
+                   printf(\"%llu\\n\", (unsigned long long)(hi % 2)); return 0; }",
+        },
+        Case {
+            label: "gcd via a % b (Euclid) gcd(48,36) → 12",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int gcd(int a, int b) { while (b != 0) { int t = a % b; a = b; b = t; } return a; }\n\
+                   int main(void) { printf(\"%d\\n\", gcd(48, 36)); return 0; }",
+        },
     ]
 }
 

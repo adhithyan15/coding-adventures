@@ -92,36 +92,73 @@ value); and `INSPECT source TALLYING counter FOR ALL delim` / `FOR LEADING delim
 `PIC X(1)` item — in the alphanumeric source and **ADD** them to the
 unsigned-integer counter; `FOR ALL` counts EVERY occurrence, `FOR LEADING` counts
 only the run of consecutive delimiters at the START, stopping at the first
-non-match; INSPECT adds, it does not clear the counter first); and `INSPECT source
-REPLACING ALL x BY y` / `REPLACING LEADING x BY y` (substitute a single character
-`x` — a 1-char literal or a `PIC X(1)` item — with a single character `y` in the
-alphanumeric source, **in place**, a per-position map that leaves the width
-unchanged; `ALL` replaces EVERY occurrence, `LEADING` replaces only the run of
-consecutive `x` at the START, stopping at the first character that is not `x` —
-positions after that first gap are left unchanged even if they equal `x`); and the
+non-match; INSPECT adds, it does not clear the counter first) — and, on the
+STANDALONE form, an optional `{BEFORE|AFTER} x` **region** for BOTH `FOR ALL` and
+`FOR LEADING` (narrow the count to the sub-slice bounded by the FIRST occurrence of
+the single-character delimiter `x`: `BEFORE x` counts left of it — the WHOLE source
+if `x` is absent — and `AFTER x` counts right of it — NOTHING if `x` is absent; for
+`FOR LEADING` the run is ANCHORED at the window start, so `FOR LEADING "a" AFTER "X"`
+over `"aaXaab"` counts the run in the window `"aab"` — 2 — not the `"aa"` before the
+`X`); and `INSPECT source REPLACING ALL x BY y` / `REPLACING LEADING x BY y`
+(substitute a single character `x` — a 1-char literal or a `PIC X(1)` item — with a
+single character `y` in the alphanumeric source, **in place**, a per-position map
+that leaves the width unchanged; `ALL` replaces EVERY occurrence, `LEADING` replaces
+only the run of consecutive `x` at the START, stopping at the first character that is
+not `x` — positions after that first gap are left unchanged even if they equal `x`)
+— and, on the STANDALONE form, an optional `{BEFORE|AFTER} z` **region** for BOTH
+`REPLACING ALL` and `REPLACING LEADING` (restrict the substitution to the sub-slice
+bounded by the FIRST occurrence of the single-character delimiter `z`, using the SAME
+window the count uses: `BEFORE z` replaces left of it — the WHOLE source if `z` is
+absent — and `AFTER z` replaces right of it — NOTHING if `z` is absent; positions
+outside the region keep their original character, and for `REPLACING LEADING` the run
+is ANCHORED at the window start, so `REPLACING LEADING "a" BY "*" AFTER "X"` over
+`"aaXaab"` rewrites only the in-window run → `"aaX**b"`); the **multi-item**
+`INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` (TWO OR MORE `ALL`
+replace items in one clause — ONE left-to-right pass in which each position takes the
+FIRST item, in WRITTEN ORDER, whose single-char search matches the ORIGINAL character;
+FIRST-MATCH-WINS, and — crucially — NO RE-CHAINING: a byte a replacement produces is
+never re-examined by a later item, so `REPLACING ALL "a" BY "b" ALL "b" BY "z"` over
+`"ab"` gives `"bz"`, not `"zz"`; this rung's multi path is `ALL`-only, single-char, with
+no `{BEFORE|AFTER}` region and no `LEADING`/`CHARACTERS`/`FIRST` — a single replace item
+keeps all its capabilities); and the
 **combined** `INSPECT source TALLYING counter FOR {ALL|LEADING} delim
 REPLACING {ALL|LEADING} x BY y` (one `INSPECT`, both phrases — per ISO it runs as
 tally-then-replace: count `delim` in the ORIGINAL source into `counter` FIRST,
 then replace `x` with `y`, so a shared `delim == x` is counted before it is
 substituted; the `TALLYING` half may be `FOR ALL` or `FOR LEADING` and the
 `REPLACING` half may independently be `ALL` or `LEADING`, so either, both, or
-neither half may be leading); and `INSPECT source CONVERTING from TO to` (translate each character
+neither half may be leading — and each half independently accepts its OWN
+`{BEFORE|AFTER} x` **region** when that half is `FOR ALL` / `REPLACING ALL`, both
+windows computed over the SAME original source since the tally does not mutate it; a
+LEADING half carrying a region is still a later rung in the combined form even though
+the STANDALONE `FOR LEADING`/`REPLACING LEADING` + region forms are supported); and
+`INSPECT source CONVERTING from TO to` (translate each character
 of the alphanumeric source through a per-character table built from the two
 equal-length string literals `from`/`to` — a character equal to `from[k]` becomes
 `to[k]`, the **first (leftmost) occurrence winning** if `from` repeats a
-character, others left unchanged — **in place**, same width). Anything not yet
+character, others left unchanged — **in place**, same width), with an optional
+`{BEFORE|AFTER} z` **region** (restrict the translation to the sub-slice bounded by
+the FIRST occurrence of the single-character delimiter `z`, using the SAME window the
+count and replacement use: `BEFORE z` translates left of it — the WHOLE source if `z`
+is absent — and `AFTER z` translates right of it — NOTHING if `z` is absent;
+positions outside the region keep their original character). Anything not yet
 modelled (the explicit
 `SIGN` clause with `SEPARATE`/`LEADING`, editing pictures, `COMP`,
 `PERFORM … WITH TEST AFTER`/inline, `GO TO … DEPENDING`, `STRING` with a real
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `UNSTRING` with a multi-character
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `INSPECT` with a `CHARACTERS`
-tally, `BEFORE`/`AFTER` phrases, `REPLACING CHARACTERS`/`FIRST`, several
-replace items, or a combined statement whose `TALLYING`/`REPLACING` half is a
+tally, a `{BEFORE|AFTER}` region on a `FOR LEADING`/`REPLACING LEADING` phrase
+(the region ships for `FOR ALL`/`REPLACING ALL` only — on the lone forms, on
+`CONVERTING`, and now on each half of the combined form) or a
+MULTI-character region delimiter, `REPLACING CHARACTERS`/`FIRST`, a MULTI-item
+`REPLACING` list carrying a `LEADING`/`CHARACTERS`/`FIRST` item or a `{BEFORE|AFTER}`
+region (the multi-item list itself is now supported for plain single-char `ALL` items),
+several replace items in the COMBINED `TALLYING … REPLACING` form, or a combined
+statement whose `TALLYING`/`REPLACING` half is a
 deferred sub-form (a combined `TALLYING … FOR LEADING` and a combined `REPLACING
 LEADING`, in any combination, are now supported), `CONVERTING` with
 unequal-length
-`FROM`/`TO`, a data-name/figurative/reference-modified `from`/`to`, or a
-`BEFORE`/`AFTER` region, tables,
+`FROM`/`TO`, or a data-name/figurative/reference-modified `from`/`to`, tables,
 files,
 and every other verb) returns a descriptive `RuntimeError` — never wrong output.
 See PL08 for the roadmap toward full COBOL and later standards.

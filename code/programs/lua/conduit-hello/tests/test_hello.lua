@@ -1,8 +1,8 @@
 -- test_hello.lua — End-to-end tests for the conduit-hello Lua demo.
 --
--- Loads the demo's `build_app()` (without starting its foreground server),
--- serves it on an ephemeral port in the background, and drives every route over
--- real HTTP via luasocket — mirroring the conduit library's own `test_server`.
+-- Starts the demo's production foreground server in a dedicated child process,
+-- then drives every route over real HTTP via luasocket — mirroring the conduit
+-- library's own `test_server`.
 --
 -- If luasocket is not installed the E2E tests are pending (skipped), exactly
 -- like the library suite, so the demo still builds where the optional socket
@@ -30,7 +30,7 @@ if not (socket_http_ok and ltn12_ok and socket_ok) then
     return
 end
 
-local conduit = require("conduit")
+socket_http.TIMEOUT = 5
 
 -- ---------------------------------------------------------------------------
 -- HTTP helpers (same shape as the library's test_server.lua)
@@ -86,21 +86,23 @@ local server_port
 
 describe("conduit-hello demo (Lua)", function()
     setup(function()
-        -- `dofile` the demo: its bottom-of-file guard only serves when invoked
-        -- as `lua hello.lua` (arg[0] ends in hello.lua), so under busted it just
-        -- returns the module table without starting a foreground server.
-        local demo = dofile("../hello.lua")
-        local app = demo.build_app()
-        server_instance = conduit.Server.new(app, { host = "127.0.0.1", port = 0 })
-        server_instance:serve_background()
-        server_port = server_instance:local_port()
+        server_instance = assert(io.popen("lua server_process.lua 2>&1", "r"))
+        local ready_line = server_instance:read("*l")
+        assert.is_truthy(ready_line, "demo server process exited before startup")
+        server_port = tonumber(ready_line:match("^CONDUIT_READY (%d+)$"))
+        assert.is_truthy(
+            server_port,
+            "unexpected demo server startup output: " .. ready_line
+        )
         assert.is_true(wait_for_server(server_port, 5), "demo server did not start in time")
     end)
 
     teardown(function()
+        if server_instance and server_port then
+            pcall(get, server_port, "/__test_shutdown")
+        end
         if server_instance then
-            server_instance:stop()
-            socket.sleep(0.1)
+            server_instance:close()
         end
     end)
 

@@ -408,22 +408,22 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 171
+    assert len(coverage) == 187
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
     assert coverage[0].alias_count == 2
     assert coverage[-1].kind == "PMOS"
-    assert coverage[-1].canonical_parameter == "MJ"
-    assert coverage[-1].accepted_names == ("MJ",)
+    assert coverage[-1].canonical_parameter == "AF"
+    assert coverage[-1].accepted_names == ("AF",)
 
     table = format_model_card_supported_parameter_coverage_table()
     assert table.splitlines()[0] == "kind\tcanonical_parameter\taccepted_names\talias_count"
     assert table.splitlines()[1] == "D\tIS\tIS|JS\t2"
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
-    assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
+    assert table.splitlines()[-1] == "PMOS\tAF\tAF\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 171
+    assert len(records) == 187
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -446,8 +446,8 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     assert summary[0].max_alias_count == 3
     assert summary[0].aliased_parameters == ("IS", "VT", "CJO", "VJ", "M")
     assert summary[5].kind == "NMOS"
-    assert summary[5].canonical_parameter_count == 18
-    assert summary[5].accepted_name_count == 25
+    assert summary[5].canonical_parameter_count == 23
+    assert summary[5].accepted_name_count == 30
     assert summary[5].aliased_parameter_count == 6
     assert summary[5].max_alias_count == 3
     assert summary[5].aliased_parameters == (
@@ -469,7 +469,7 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     assert table.splitlines()[1] == "D\t15\t21\t5\t3\tIS|VT|CJO|VJ|M"
     assert (
         table.splitlines()[-1]
-        == "PMOS\t18\t25\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD"
+        == "PMOS\t23\t30\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD"
     )
     records = model_card_supported_parameter_coverage_summary_records()
     assert len(records) == 7
@@ -497,9 +497,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 171
-    assert report.expected_canonical_parameter_count == 171
-    assert report.accepted_name_count == 241
+    assert report.canonical_parameter_count == 187
+    assert report.expected_canonical_parameter_count == 187
+    assert report.accepted_name_count == 257
     assert report.aliased_parameter_count == 57
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -507,7 +507,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t171\t171\t241\t57\t4\t0"
+        "true\t7\t7\t187\t187\t257\t57\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -535,15 +535,15 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 170
-    assert report.accepted_name_count == 238
+    assert report.canonical_parameter_count == 186
+    assert report.accepted_name_count == 254
     assert report.aliased_parameter_count == 56
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
     assert report.issues[0].kind == "NMOS"
     assert report.issues[0].field == "canonical_parameter_count"
     assert report.issues[0].message == (
-        "expected NMOS to expose 18 canonical supported parameters, found 17"
+        "expected NMOS to expose 23 canonical supported parameters, found 22"
     )
     assert report.issues[-1].field == "max_alias_count"
     assert report.issues[-1].message == "expected NMOS max alias count 3, found 2"
@@ -551,12 +551,12 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t170\t171\t238\t56\t4\t4\n"
+        "false\t7\t7\t186\t187\t254\t56\t4\t4\n"
         "kind\tfield\tmessage\n"
-        "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
-        "supported parameters, found 17\n"
-        "NMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card "
-        "names, found 22\n"
+        "NMOS\tcanonical_parameter_count\texpected NMOS to expose 23 canonical "
+        "supported parameters, found 22\n"
+        "NMOS\taccepted_name_count\texpected NMOS to expose 30 accepted model-card "
+        "names, found 27\n"
         "NMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing "
         "parameters, found 5\n"
         "NMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
@@ -565,12 +565,12 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
     assert records[0] == {
         "kind": "NMOS",
         "field": "canonical_parameter_count",
-        "message": "expected NMOS to expose 18 canonical supported parameters, found 17",
+        "message": "expected NMOS to expose 23 canonical supported parameters, found 22",
     }
     assert format_model_card_supported_parameter_coverage_gate_issue_csv(report).startswith(
         "kind,field,message\n"
-        'NMOS,canonical_parameter_count,"expected NMOS to expose 18 canonical '
-        'supported parameters, found 17"\n'
+        'NMOS,canonical_parameter_count,"expected NMOS to expose 23 canonical '
+        'supported parameters, found 22"\n'
     )
     assert (
         json.loads(format_model_card_supported_parameter_coverage_gate_issue_json(report))
@@ -678,6 +678,9 @@ def test_model_card_aliases_build_device_instances() -> None:
             "IS": 2.0e-13,
             "XTI": 2.5,
             "EG": 1.05,
+            "B": 1.1,
+            "NLEV": 3.0,
+            "GDSNOI": 1.25,
             "RD": 125.0,
             "RS": 75.0,
             "T_NOM": 50.0,
@@ -699,6 +702,9 @@ def test_model_card_aliases_build_device_instances() -> None:
         "IS": 2.0e-13,
         "XTI": 2.5,
         "EG": 1.05,
+        "B": 1.1,
+        "NLEV": 3.0,
+        "GDSNOI": 1.25,
         "RD": 125.0,
         "RS": 75.0,
         "TNOM": 50.0,
@@ -718,6 +724,9 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert jfet_model.Is == pytest.approx(2.0e-13)
     assert jfet_model.Xti == pytest.approx(2.5)
     assert jfet_model.Eg == pytest.approx(1.05)
+    assert pytest.approx(1.1) == jfet_model.B
+    assert jfet_model.Nlev == pytest.approx(3.0)
+    assert jfet_model.Gdsnoi == pytest.approx(1.25)
     assert jfet_model.Rd == pytest.approx(125.0)
     assert jfet_model.Rs == pytest.approx(75.0)
     assert jfet_model.Tnom == pytest.approx(323.15)
@@ -737,6 +746,11 @@ def test_model_card_aliases_build_device_instances() -> None:
             "CJD": 3.0e-13,
             "PB": 0.9,
             "MJ": 0.45,
+            "FC": 0.4,
+            "LD": 50.0e-9,
+            "TOX": 25.0e-9,
+            "KF": 2.0e-24,
+            "AF": 1.4,
         },
     )
     mos_model = mosfet_from_model_card("M1", "d", "g", "s", "b", mos_card)
@@ -748,6 +762,11 @@ def test_model_card_aliases_build_device_instances() -> None:
         "CBD": 3.0e-13,
         "PB": 0.9,
         "MJ": 0.45,
+        "FC": 0.4,
+        "LD": 50.0e-9,
+        "TOX": 25.0e-9,
+        "KF": 2.0e-24,
+        "AF": 1.4,
     }
     assert isinstance(mos_model.model, MOSFET)
     assert mos_model.model.type == MosfetType.NMOS
@@ -758,6 +777,11 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(3.0e-13) == mos_model.model.model.params.CBD
     assert pytest.approx(0.9) == mos_model.model.model.params.PB
     assert pytest.approx(0.45) == mos_model.model.model.params.MJ
+    assert pytest.approx(0.4) == mos_model.model.model.params.FC
+    assert pytest.approx(50.0e-9) == mos_model.model.model.params.LD
+    assert pytest.approx(25.0e-9) == mos_model.model.model.params.TOX
+    assert pytest.approx(2.0e-24) == mos_model.model.model.params.KF
+    assert pytest.approx(1.4) == mos_model.model.model.params.AF
 
 
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
@@ -829,6 +853,37 @@ def test_dc_rejects_invalid_jfet_source_resistance() -> None:
         match="source resistance must be finite and non-negative",
     ):
         dc_op(circuit)
+
+
+def test_dc_rejects_invalid_jfet_doping_tail_parameter() -> None:
+    circuit = Circuit()
+    circuit.add(JFET("J1", "drain", "gate", "0", B=math.nan))
+
+    with pytest.raises(ValueError, match="doping-tail parameter must be finite"):
+        dc_op(circuit)
+
+
+def test_dc_jfet_doping_tail_parameter_shapes_linear_and_saturation_current() -> None:
+    def drain_current(drain_voltage: float, doping_tail_parameter: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vdrain", "drain", "0", drain_voltage))
+        circuit.add(VoltageSource("Vgate", "gate", "0", 0.0))
+        circuit.add(
+            JFET(
+                "J1",
+                "drain",
+                "gate",
+                "0",
+                beta=1.0e-3,
+                vto=-2.0,
+                Pb=1.0,
+                B=doping_tail_parameter,
+            )
+        )
+        return abs(dc_op(circuit).branch_currents["I(Vdrain)"])
+
+    assert drain_current(1.0, 1.1) > drain_current(1.0, 1.0)
+    assert drain_current(3.0, 1.1) > drain_current(3.0, 1.0)
 
 
 def test_dc_jfet_drain_resistance_drops_intrinsic_drain_voltage() -> None:
@@ -1640,7 +1695,15 @@ def test_transient_mosfet_overlap_capacitance_slows_gate_step() -> None:
             "0",
             MOSFET(
                 MosfetType.NMOS,
-                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CGSO=cgso)),
+                Level1Model(
+                    Level1Params(
+                        KP=1.0e-12,
+                        W=1.0,
+                        L=1.0,
+                        TOX=1.0e9,
+                        CGSO=cgso,
+                    )
+                ),
             ),
         ))
         return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
@@ -1734,6 +1797,122 @@ def test_transient_mosfet_bulk_junction_depletion_shaping_reduces_reverse_bias_c
     assert fixed_first == pytest.approx(1.5, rel=0.05)
     assert shaped_first > fixed_first + 0.04
     assert shaped_first < 1.7
+
+
+def test_transient_mosfet_forward_bias_depletion_coefficient_shapes_bulk_charge() -> None:
+    def first_drain_voltage(fc: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            -0.6,
+            waveform=PwlWaveform(((0.0, -0.6), (1.0e-9, -0.8), (5.0e-9, -0.8))),
+        ))
+        circuit.add(Resistor("Rin", "in", "drain", 1_000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(
+                    KP=1.0e-12,
+                    W=1.0,
+                    L=1.0,
+                    CBD=1.0e-12,
+                    PB=1.0,
+                    MJ=0.5,
+                    FC=fc,
+                )),
+            ),
+        ))
+        result = transient(
+            circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler"
+        )
+        assert result.converged
+        return result.points[1].node_voltages["drain"]
+
+    assert first_drain_voltage(0.2) < first_drain_voltage(0.8)
+
+
+@pytest.mark.parametrize("fc", [float("nan"), -0.1, 1.0])
+def test_mosfet_rejects_invalid_forward_bias_depletion_coefficient(fc: float) -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vin", "in", "0", 0.0))
+    circuit.add(Resistor("Rin", "in", "drain", 1_000.0))
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(MosfetType.NMOS, Level1Model(Level1Params(FC=fc))),
+    ))
+
+    with pytest.raises(ValueError, match=r"MOSFET FC must be finite and in \[0, 1\)"):
+        dc_op(circuit)
+
+
+@pytest.mark.parametrize("ld", [float("nan"), -0.1e-6, 0.5e-6])
+def test_mosfet_rejects_invalid_lateral_diffusion_length(ld: float) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(MosfetType.NMOS, Level1Model(Level1Params(L=1.0e-6, LD=ld))),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match=r"MOSFET LD must be finite and non-negative with L - 2\*LD > 0",
+    ):
+        dc_op(circuit)
+
+
+def test_mosfet_lateral_diffusion_uses_effective_channel_length() -> None:
+    def drain_current(ld: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vdrain", "drain", "0", 1.8))
+        circuit.add(VoltageSource("Vgate", "gate", "0", 1.8))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "gate",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(L=1.0e-6, LD=ld)),
+            ),
+        ))
+        return abs(dc_op(circuit).branch_currents["I(Vdrain)"])
+
+    assert drain_current(0.1e-6) / drain_current(0.0) == pytest.approx(1.25)
+
+
+@pytest.mark.parametrize("tox", [float("nan"), 0.0, -1.0e-9])
+def test_mosfet_rejects_invalid_oxide_thickness(tox: float) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(MosfetType.NMOS, Level1Model(Level1Params(TOX=tox))),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET TOX must be finite and positive",
+    ):
+        dc_op(circuit)
 
 
 def test_transient_diode_transit_time_holds_forward_charge_on_turnoff() -> None:
@@ -2634,7 +2813,7 @@ def test_subcircuit_expansion_preserves_complete_jfet_model():
     cell = SubcircuitDefinition(
         "jfet-cell",
         ("d", "g", "s"),
-        (JFET("Jcell", "d", "g", "s", Kf=1.0e-12, Af=1.3, Pb=0.8, Fc=0.35, Is=2.0e-13, Xti=2.5, Eg=1.05, Rd=125.0, Rs=75.0, Tcv=0.01, Vtotc=-0.0025, Tnom=323.15, Bex=1.5, Betatce=-0.5),),
+        (JFET("Jcell", "d", "g", "s", Kf=1.0e-12, Af=1.3, Pb=0.8, Fc=0.35, Is=2.0e-13, Xti=2.5, Eg=1.05, B=1.1, Nlev=3.0, Gdsnoi=1.25, Rd=125.0, Rs=75.0, Tcv=0.01, Vtotc=-0.0025, Tnom=323.15, Bex=1.5, Betatce=-0.5),),
     )
     circuit = Circuit()
     circuit.define_subcircuit(cell)
@@ -2648,6 +2827,9 @@ def test_subcircuit_expansion_preserves_complete_jfet_model():
     assert expanded.Is == pytest.approx(2.0e-13)
     assert expanded.Xti == pytest.approx(2.5)
     assert expanded.Eg == pytest.approx(1.05)
+    assert pytest.approx(1.1) == expanded.B
+    assert expanded.Nlev == pytest.approx(3.0)
+    assert expanded.Gdsnoi == pytest.approx(1.25)
     assert expanded.Rd == pytest.approx(125.0)
     assert expanded.Rs == pytest.approx(75.0)
     assert expanded.Tcv == pytest.approx(0.01)
@@ -2655,6 +2837,38 @@ def test_subcircuit_expansion_preserves_complete_jfet_model():
     assert expanded.Bex == pytest.approx(1.5)
     assert expanded.Betatce == pytest.approx(-0.5)
     assert expanded.Tnom == pytest.approx(323.15)
+
+
+def test_subcircuit_expansion_preserves_mos_geometry():
+    cell = SubcircuitDefinition(
+        "mos-cell",
+        ("d", "g", "s", "b"),
+        (
+            Mosfet(
+                "Mcell",
+                "d",
+                "g",
+                "s",
+                "b",
+                MOSFET(
+                    MosfetType.NMOS,
+                    Level1Model(
+                        Level1Params(L=1.0e-6, LD=0.1e-6, TOX=25.0e-9)
+                    ),
+                ),
+            ),
+        ),
+    )
+    circuit = Circuit()
+    circuit.define_subcircuit(cell)
+    circuit.add(XInstance("X1", ("d1", "g1", "0", "0"), "mos-cell"))
+
+    expanded = next(
+        element for element in circuit.elements if isinstance(element, Mosfet)
+    )
+    assert expanded.model.model.params.L == pytest.approx(1.0e-6)
+    assert expanded.model.model.params.LD == pytest.approx(0.1e-6)
+    assert expanded.model.model.params.TOX == pytest.approx(25.0e-9)
 
 
 def test_subcircuit_expansion_preserves_complete_bjt_model():
@@ -5307,7 +5521,15 @@ def test_ac_mosfet_overlap_capacitance_shunts_high_frequency_gate_drive():
             "0",
             MOSFET(
                 MosfetType.NMOS,
-                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CGSO=cgso)),
+                Level1Model(
+                    Level1Params(
+                        KP=1.0e-12,
+                        W=1.0,
+                        L=1.0,
+                        TOX=1.0e9,
+                        CGSO=cgso,
+                    )
+                ),
             ),
         ))
         result = ac_sweep(c, f_start=100000.0, f_stop=100000.0, n_points=1)
@@ -5318,6 +5540,28 @@ def test_ac_mosfet_overlap_capacitance_shunts_high_frequency_gate_drive():
 
     assert without_capacitance > 0.9
     assert with_capacitance < without_capacitance / 100.0
+
+
+def test_ac_mosfet_oxide_thickness_scales_intrinsic_gate_capacitance():
+    def gate_amplitude(tox: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "gate", 1.0e6))
+        circuit.add(Mosfet(
+            "M1",
+            "0",
+            "gate",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(W=10.0e-6, L=1.0e-6, TOX=tox)),
+            ),
+        ))
+        result = ac_sweep(circuit, f_start=1.0e9, f_stop=1.0e9, n_points=1)
+        return abs(result.points[0].node_voltages["gate"])
+
+    assert gate_amplitude(50.0e-9) < gate_amplitude(100.0e-9)
 
 
 # ============================================================================
@@ -7757,6 +8001,57 @@ def test_noise_jfet_kf_adds_inverse_frequency_flicker_noise() -> None:
     assert flicker_psds[0] / flicker_psds[1] == pytest.approx(100.0)
 
 
+def test_noise_jfet_nlev_and_gdsnoi_select_and_scale_channel_noise() -> None:
+    def source_psd(noise_level: float, coefficient: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vdrain", "out", "0", 1.0))
+        circuit.add(VoltageSource("Vgate", "gate", "0", 0.0))
+        circuit.add(
+            JFET(
+                "J1",
+                "out",
+                "gate",
+                "0",
+                beta=1.0e-3,
+                vto=-2.0,
+                Nlev=noise_level,
+                Gdsnoi=coefficient,
+            )
+        )
+        entries = noise_ac(
+            circuit, "out", "Vgate", freqs=[1_000.0], temperature=300.0
+        ).points[0].entries
+        return next(
+            entry.source_psd
+            for entry in entries
+            if entry.element_name == "J1" and entry.noise_type == "thermal"
+        )
+
+    expected_conductance = (2.0 / 3.0) * 1.0e-3 * 2.0 * 1.75 / 1.5
+    expected_psd = 4.0 * 1.380_649e-23 * 300.0 * expected_conductance
+    assert source_psd(3.0, 1.0) / expected_psd == pytest.approx(1.0)
+    assert source_psd(2.0, 4.0) / source_psd(1.0, 1.0) == pytest.approx(1.0)
+    assert source_psd(3.0, 2.0) / source_psd(3.0, 1.0) == pytest.approx(2.0)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("Nlev", 2.5, "noise equation level must be a finite integer"),
+        ("Gdsnoi", -1.0, "channel noise coefficient must be finite and non-negative"),
+    ],
+)
+def test_noise_rejects_invalid_jfet_channel_noise_parameters(
+    field: str, value: float, message: str
+) -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vgate", "gate", "0", 0.0))
+    circuit.add(JFET("J1", "out", "gate", "0", **{field: value}))
+
+    with pytest.raises(ValueError, match=message):
+        noise_ac(circuit, "out", "Vgate", freqs=[1_000.0])
+
+
 def test_noise_jfet_rd_adds_thermal_noise() -> None:
     circuit = Circuit()
     circuit.add(VoltageSource("Vdd", "vdd", "0", 5.0))
@@ -8028,6 +8323,80 @@ def test_noise_mosfet_channel_thermal_noise() -> None:
         expected_source_psd * 1000.0 ** 2,
         rel_tol=1e-6,
     )
+
+
+def test_noise_mosfet_flicker_noise_scales_inversely_with_frequency() -> None:
+    """KF adds drain-current-scaled inverse-frequency MOSFET noise."""
+    c = Circuit()
+    c.add(VoltageSource("Vdd", "vdd", "0", 5.0))
+    c.add(VoltageSource("Vgate", "gate", "0", 3.0))
+    c.add(Resistor("Rload", "vdd", "out", 1000.0))
+    c.add(Mosfet(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(VT0=1.0, KP=1.0e-3, KF=2.0e-18, AF=2.0)),
+        ),
+    ))
+
+    result = noise_ac(c, "out", "Vgate", freqs=[100.0, 1000.0])
+    flicker_psds = [
+        next(
+            entry.source_psd
+            for entry in point.entries
+            if entry.element_name == "M1" and entry.noise_type == "flicker"
+        )
+        for point in result.points
+    ]
+
+    assert flicker_psds[0] > 0.0
+    assert isclose(flicker_psds[0], 10.0 * flicker_psds[1], rel_tol=1e-12)
+    assert any(
+        entry.element_name == "M1" and entry.noise_type == "thermal"
+        for entry in result.points[0].entries
+    )
+
+
+def test_noise_rejects_invalid_mosfet_flicker_noise_coefficient() -> None:
+    """MOSFET KF must remain finite and non-negative."""
+    c = Circuit()
+    c.add(VoltageSource("Vgate", "gate", "0", 3.0))
+    c.add(Resistor("Rload", "out", "0", 1000.0))
+    c.add(Mosfet(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(KF=-1.0)),
+        ),
+    ))
+
+    with pytest.raises(ValueError, match="KF must be finite and non-negative"):
+        noise_ac(c, "out", "Vgate", freqs=[1000.0])
+
+
+def test_noise_rejects_invalid_mosfet_flicker_noise_exponent() -> None:
+    c = Circuit()
+    c.add(VoltageSource("Vgate", "gate", "0", 3.0))
+    c.add(Resistor("Rload", "out", "0", 1000.0))
+    c.add(Mosfet(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MOSFET(MosfetType.NMOS, Level1Model(Level1Params(AF=-1.0))),
+    ))
+
+    with pytest.raises(ValueError, match="AF must be finite and non-negative"):
+        noise_ac(c, "out", "Vgate", freqs=[1000.0])
 
 
 # ---------------------------------------------------------------------------

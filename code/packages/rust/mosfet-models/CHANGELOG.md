@@ -1,10 +1,24 @@
 # Changelog — mosfet-models
 
+## Unreleased
+
+### Added
+
+- `Level1Params::tox` adds Berkeley-default gate oxide thickness and derives
+  Meyer gate capacitance from `Cox = epsilon_ox / TOX`.
+- `Level1Params::ld` applies Berkeley lateral-diffusion geometry through
+  `L_eff = L - 2*LD` to channel current and length-scaled capacitance.
+- `Level1Params::pb`, `Level1Params::mj`, and `Level1Params::fc` provide
+  continuous Berkeley bulk-junction depletion-capacitance shaping for `CBS`
+  and `CBD`.
+- `Level1Params::af` provides the Level-1 MOS flicker-noise current exponent,
+  defaulting to one.
+
 ## [0.1.0] — 2026-06-13
 
 ### Added
 
-- `Level1Params` — 16-parameter SPICE Level-1 MOSFET parameter set with 130 nm NMOS defaults.
+- `Level1Params` — 17-parameter SPICE Level-1 MOSFET parameter set with 130 nm NMOS defaults, including the zero-default `KF` flicker-noise coefficient.
 - `Region` enum — `Cutoff`, `Subthreshold`, `Triode`, `Saturation` with `as_str()`.
 - `MosResult` — complete small-signal result: `Id`, `gm`, `gds`, `gmb`, 5 capacitances, `region`.
 - `evaluate_level1(params, V_GS, V_DS, V_BS, T)` — core Level-1 model:

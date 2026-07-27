@@ -81,7 +81,20 @@ JFET model cards use `TCV` for threshold-voltage scaling and `BEX` for
 `BETA(T) = BETA * (T / TNOM)^BEX`. When explicitly present, `VTOTC` overrides
 `TCV` with `VTO(T) = VTO + VTOTC * (T - TNOM)`, while `BETATCE` overrides
 `BEX` with `BETA(T) = BETA * 1.01^(BETATCE * (T - TNOM))`. JFET `XTI`
-and `EG` scale gate saturation current with the standard bandgap law.
+and `EG` scale gate saturation current with the standard bandgap law. JFET
+`B` applies Parker-Skellern doping-tail shaping to channel current and defaults
+to `1`, which preserves the Shichman-Hodges equations.
+JFET `NLEV` values below `3` preserve the legacy `2/3 * gm` channel thermal
+noise model. `NLEV >= 3` selects the Berkeley linear-region equation, with
+`GDSNOI` (default `1`) scaling its channel-noise conductance.
+Level-1 MOS model cards accept `KF` (default `0`) and `AF` (default `1`) and add
+`KF * abs(Id)^AF / frequency` flicker noise alongside channel thermal noise.
+`LD` defaults to zero and applies `L_eff = L - 2*LD` to channel current and
+length-scaled intrinsic/`CGBO` capacitance.
+`TOX` defaults to `1e-7 m`, must be finite and positive, and derives intrinsic
+Meyer gate capacitance from `Cox = epsilon_ox / TOX`.
+`FC` (default `0.5`) selects the continuous Berkeley forward-bias continuation
+for `CBS` / `CBD` depletion capacitance shaped by `PB` and `MJ`.
 All temperature coefficients honor model-card `TNOM` / `T_NOM`.
 `dc_temperature_sweep()` and `dc_temperature_sweep_corners()` run
 `.temp`-style DC operating-point snapshots across explicit analysis
@@ -311,8 +324,9 @@ probe-voltage windows, and charge-behavior notes for diode, BJT, JFET, and
 Level-1 MOS charge audits. Diode `Cjo` / `Tt`, BJT `Cje` / `Cjc` / `Tf` /
 `Tr`, JFET `Cgs` / `Cgd`, and Level-1 MOS `CGSO` / `CGDO` / `CGBO` plus
 bulk-junction `CBS` / `CBD` model-card parameters also stamp transient
-storage, with MOS `PB` / `MJ` shaping reverse-biased source-body and
-drain-body capacitance to match their small-signal AC semantics.
+storage, with MOS `PB` / `MJ` / `FC` shaping source-body and drain-body
+capacitance continuously across reverse and forward bias to match their
+small-signal AC semantics.
 `device_model_reference_deck_audit_fixtures()` flattens those DC,
 temperature, AC, noise, and transient fixture families into a stable
 reference-deck coverage matrix for each supported diode, BJT, JFET, and

@@ -1,5 +1,22 @@
 # Changelog
 
+- Add Level-1 MOS model-card `TOX` support, defaulting to `100 nm` and deriving
+  intrinsic Meyer gate capacitance from silicon-dioxide permittivity and oxide
+  thickness.
+- Add Level-1 MOS model-card `LD` support, using `L - 2*LD` for channel
+  current and length-scaled intrinsic/`CGBO` capacitance.
+- Add Level-1 MOS model-card `FC` support, applying the continuous Berkeley
+  forward-bias continuation to `CBS` / `CBD` in AC and transient analysis.
+- Add Level-1 MOS model-card `AF` support and apply the configurable
+  drain-current exponent to MOS flicker-noise power spectral density.
+- Add Level-1 MOS model-card `KF` support and emit drain-current-scaled
+  inverse-frequency flicker noise alongside channel thermal noise.
+- Add JFET model-card `NLEV` and `GDSNOI` support, preserving the legacy
+  channel thermal-noise path below level 3 and adding the Berkeley
+  linear-region equation at level 3 and above.
+- Add JFET model-card `B` support with Parker-Skellern doping-tail shaping in
+  linear and saturation operation, preserving Shichman-Hodges behavior at the
+  Berkeley default of 1.
 - Add JFET model-card `EG` support, replacing the fixed 1.11 eV silicon
   bandgap in gate saturation-current temperature scaling while preserving that
   value as the default.

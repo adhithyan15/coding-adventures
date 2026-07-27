@@ -1,5 +1,98 @@
 # Changelog
 
+## 0.24.0 — the script's numerals (syllabary, PR 8)
+
+- **The syllabaries now carry their own digits.** Reading a language means
+  reading its numbers, and Telugu / Kannada / Malayalam write them with distinct
+  glyphs, not Western 0-9 (Telugu ౦౧౨౩౪౫౬౭౮౯). Browse now shows a **"Numerals
+  (0–9)"** strip for the three Dravidian scripts, each digit tile the glyph over
+  its value.
+- **Grounded, additive, same pattern as the independent vowels.** The generator
+  composes each from `<SCRIPT> DIGIT <ZERO..NINE>` and romanizes it as the digit
+  value (the Unicode name fixes it unambiguously — these are decimal digits, no
+  guessing). They live in a **separate `digits` field**, not mixed into `letters`,
+  so the consonant syllabary and the gate/matrix that key on it being
+  all-syllables stay untouched (the generated `letters` and `independentVowels`
+  are byte-for-byte unchanged).
+- **Control test.** The real Telugu digits are the 10 expected glyphs mapped to
+  "0"…"9" (role `digit`, no fabricated ductus), all three scripts carry them, and
+  — the control — none leak into `letters`, so `isSyllabary` still holds and the
+  matrix is unaffected.
+
+## 0.23.0 — flag the special-consonant rows in the matrix (syllabary, PR 7)
+
+- **The matrix now marks its tricky rows.** In the consonant × vowel grid the
+  retroflex **ḷa** and alveolar **ṟa / ṉa** rows — the ones a reader confuses
+  with the ordinary *la / ra / na* — now carry a **★** and the same teal tint the
+  Browse tiles give them, so in the full grid the confusable rows stand out at a
+  glance. Connects the special-consonant flag (PR 4) to the matrix (PR 5).
+- **No new judgement.** `buildSyllableMatrix` gains a `special` flag per row,
+  computed by reusing the already-tested `specialConsonant` classifier on the
+  row's base syllable — so the matrix flags exactly the same rows the tiles do
+  (Telugu ḷa / ṟa; Malayalam also ṉa; Telugu has no ṉa). Control-tested: a "ḷa"
+  row is flagged, "ka"/"la"/"ra" are not, and the real Telugu grid flags exactly
+  the ḷa / ṟa rows. Zero new data.
+
+## 0.22.0 — the independent (word-initial) vowels (syllabary, PR 6)
+
+- **The syllabaries now carry their standalone vowels.** Everything so far was
+  consonant syllables (a consonant + a vowel *sign*); but a word that *begins*
+  with a vowel writes a different letter — the **independent vowel** (అ *a*,
+  ఆ *ā*, ఇ *i* … ఔ *au*, ఋ *r̥*). Without them a vowel-initial word can't be read.
+  Browse now shows an **"Independent vowels (word-initial)"** strip above the
+  grid for the three Dravidian scripts.
+- **Still Unicode-grounded, still additive.** The generator composes each from
+  `<SCRIPT> LETTER <V>` (the inherent /a/ is `LETTER A`), romanized in ISO-15919
+  from the same vetted vowel table as the signs — never re-typed, so the vocalic
+  R is r̥ (r + U+0325), not IAST ṛ. They live in a **separate `independentVowels`
+  field**, not mixed into `letters`, so the consonant syllabary — and the
+  slow-unlock gate and the matrix that key on it being all-syllables — is
+  completely untouched (the generated `letters` are byte-for-byte unchanged).
+- **Control test.** Asserts the real Telugu independent vowels are the 13 expected
+  glyphs + ISO-15919 romans (role `vowel`, no fabricated ductus, r̥ = r + U+0325),
+  all three scripts carry them, and — the control — none leak into `letters`, so
+  `isSyllabary` still holds and the matrix still builds its full 35 × 13 grid.
+
+## 0.21.0 — Browse a syllabary as its consonant × vowel matrix (syllabary, PR 5)
+
+- **The syllabaries now offer a grid view.** A Dravidian abugida isn't a flat
+  list of ~450 signs; it's a table — every consonant marching across the same
+  vowel row (ka kā ki … , kha khā khi … , ga gā gi …). Browse gains a **List /
+  Matrix** toggle (syllabaries only; alphabets stay a plain list): Matrix lays
+  the syllables out as **rows = consonants, columns = vowels**, so the abugida's
+  regularity is the first thing you see. Clicking any cell selects that syllable
+  and opens the existing "break it apart" detail panel. No new data — the same
+  generated syllables, re-arranged.
+- **New pure helper `buildSyllableMatrix(letters)` in `matrix.ts`.** It reuses
+  the grounded consonant boundary from `syllabary.ts` (a new row at each bare
+  consonant) and reads the column vowels off the first consonant's own row (its
+  base syllable's sound minus its inherent vowel gives the consonant prefix;
+  stripping that off each syllable yields the vowel it carries — kā → "ā",
+  kr̥ → "r̥"). Nothing is invented. If the rows don't all span the same vowels it
+  returns **null** rather than risk a syllable sitting under the wrong vowel
+  header. Unit-tested with a **control** that a ragged input yields no matrix,
+  plus a check against the real Telugu data (a full 35 × 13 grid; the vocalic-R
+  column header is ISO-15919 r̥ = r + U+0325, not the IAST dot-below ṛ).
+
+## 0.20.0 — flag the special consonants: retroflex ḷ, alveolar ṟ / ṉ (syllabary, PR 4)
+
+- **The three Dravidian "special" consonants now carry a contrast hint.** To an
+  outsider ల vs ళ (*la* vs *ḷa*) is the kind of near-miss that stalls reading, so
+  the app now flags the **retroflex ḷ** and the **alveolar ṟ / ṉ** the same way
+  it flags Latin false friends: a **★ special consonant** badge on the Browse
+  detail, a *"Special letter — tell it apart from 'l/r/n'"* section with a
+  grounded note on how it differs, and a tinted grid tile. No new data — these
+  letters were already generated (LLA / RRA / NNNA); this only surfaces them.
+- **New pure helper `specialConsonant(letter)` in `core.ts`** (mirrors
+  `isFalseFriend`): it keys on the syllable's ISO-15919 romanization, which is
+  script-agnostic — the leading code point ḷ (U+1E37, dot below) / ṟ (U+1E5F) /
+  ṉ (U+1E49, line below) is the retroflex/alveolar marker. Those marks appear
+  *only* on these consonants in our data — the vocalic-R vowel uses a different
+  code point (ring-below r̥, U+0325) — so the test is exact, not heuristic.
+  `LetterView` gains a `special` field. Unit-tested with a **control** that keeps
+  the ordinary l / r / n and the vocalic r̥ un-flagged, plus a check that exactly
+  the 26 LLA+RRA rows of the real Telugu data are marked (Telugu has no ṉ).
+
 ## 0.19.0 — the full vowel row: ai, au & vocalic R (syllabary, PR 3)
 
 - **Each consonant now carries three more syllables.** The generator's core

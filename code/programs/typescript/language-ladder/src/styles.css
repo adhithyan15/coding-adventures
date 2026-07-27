@@ -7,6 +7,8 @@
   --accent: #3b5bdb;
   --ff: #b4531a;
   --ff-bg: #fff4ec;
+  --special: #0f766e;
+  --special-bg: #ecfdf7;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -93,6 +95,19 @@ body {
   border: 1px solid #f0d7c4;
   border-radius: 6px;
   padding: 2px 8px;
+}
+
+.badge--special {
+  color: var(--special);
+  background: var(--special-bg);
+  border-color: #b8e6da;
+}
+.tile--special { background: var(--special-bg); }
+.tile--special.tile--ff { background: var(--ff-bg); } /* a false friend wins the tint; both can't apply */
+.detail__special {
+  margin: 0;
+  color: var(--special);
+  font-weight: 500;
 }
 
 .sec { margin-top: 14px; }
@@ -449,3 +464,56 @@ body {
   font-size: 0.82rem;
   cursor: pointer;
 }
+
+/* --- browse layout toggle (list / matrix, syllabaries only) ------------- */
+.layouts { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; }
+.layouts__label { color: var(--muted); font-size: 0.85rem; margin-right: 2px; }
+.layout {
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  padding: 4px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.layout--active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* --- syllabary matrix (consonant rows × vowel columns) ------------------ */
+.matrix-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+.matrix { border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.matrix th, .matrix td { border: 1px solid var(--line); text-align: center; }
+.matrix__vowel {
+  position: sticky; top: 0; z-index: 1;
+  background: var(--bg); color: var(--muted);
+  font-size: 0.8rem; font-weight: 600; padding: 4px 6px;
+}
+.matrix__consonant {
+  position: sticky; left: 0;
+  background: var(--bg); color: var(--muted);
+  font-size: 0.75rem; padding: 4px 8px; white-space: nowrap;
+}
+.matrix__consonant--special { background: var(--special-bg); color: var(--special); font-weight: 600; }
+.matrix__corner { position: sticky; left: 0; top: 0; z-index: 2; background: var(--bg); }
+.matrix__cell { padding: 0; }
+.matrix__cell--active { box-shadow: inset 0 0 0 2px var(--accent); }
+.matrix__syllable {
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  width: 100%; min-width: 46px; padding: 5px 4px;
+  background: var(--card); border: 0; cursor: pointer; color: inherit;
+}
+.matrix__syllable:hover { background: var(--special-bg); }
+.matrix__glyph { font-size: 1.25rem; line-height: 1.1; }
+.matrix__sound { font-size: 0.62rem; color: var(--muted); }
+
+/* --- independent (word-initial) vowels strip ---------------------------- */
+.ivowels { margin-bottom: 14px; }
+.ivowels__label { display: block; color: var(--muted); font-size: 0.85rem; margin-bottom: 6px; }
+.ivowels__row { display: flex; flex-wrap: wrap; gap: 6px; }
+.ivowel {
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  min-width: 44px; padding: 5px 6px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+}
+.ivowel__glyph { font-size: 1.35rem; line-height: 1.1; }
+.ivowel__sound { font-size: 0.68rem; color: var(--muted); }
