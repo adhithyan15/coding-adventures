@@ -169,7 +169,8 @@ modelled (the explicit
 `PERFORM … WITH TEST AFTER`/inline, `GO TO … DEPENDING`, `STRING` with a real
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `UNSTRING` with a multi-character
 delimiter / `WITH POINTER` / `ON OVERFLOW` / a NUMERIC-literal or FIGURATIVE or
-reference-modified source (an alphanumeric string-literal source IS supported),
+reference-modified source or a NON-ASCII literal source (an ASCII alphanumeric
+string-literal source IS supported),
 `INSPECT` with a `CHARACTERS`
 tally, a `{BEFORE|AFTER}` region on a `FOR LEADING`/`REPLACING LEADING` phrase
 (the region ships for `FOR ALL`/`REPLACING ALL` only — on the lone forms, on

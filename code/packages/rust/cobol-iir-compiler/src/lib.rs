@@ -1495,6 +1495,16 @@ impl<'a> Compiler<'a> {
                 self.items[sidx].reg.clone()
             }
             Operandy::Literal(Src::Str(s)) => {
+                // The downstream scan reads `s_reg` with BYTE-based IIR string ops
+                // (str_len/str_index/str_slice), whereas the oracle scans a literal
+                // by CHARACTER — the two agree only for ASCII (one byte per char).
+                // A non-ASCII literal source is a clean later rung on BOTH engines,
+                // keeping the accept/reject sets co-total.
+                if !s.is_ascii() {
+                    return Err(CompileError::Unsupported(
+                        "UNSTRING of a non-ASCII literal source is a later rung".into(),
+                    ));
+                }
                 let reg = self.fresh("_ussrc");
                 self.emit("str_const", Some(&reg), vec![Operand::Str(s)], "str");
                 reg

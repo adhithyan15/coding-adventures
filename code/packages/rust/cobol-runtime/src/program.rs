@@ -1015,6 +1015,15 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             // `Operand` so exec time can pick the provider.
             let source = match read_operand(source_op)? {
                 src @ Operand::Ident(_) => src,
+                // A string-literal source is scanned by CHARACTER here but the
+                // compiler lowers it to BYTE-based IIR string ops; the two agree
+                // only for ASCII (one byte per char). A non-ASCII literal source
+                // is therefore a clean later rung on BOTH engines (kept co-total).
+                Operand::Lit(Lit::Str(s)) if !s.is_ascii() => {
+                    return Err(RuntimeError::Unsupported(
+                        "UNSTRING of a non-ASCII literal source is a later rung".into(),
+                    ))
+                }
                 src @ Operand::Lit(Lit::Str(_)) => src,
                 Operand::Lit(Lit::Num(_)) => {
                     return Err(RuntimeError::Unsupported(

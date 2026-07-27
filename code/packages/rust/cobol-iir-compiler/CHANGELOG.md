@@ -24,11 +24,17 @@ exactly as the `spaces_const` register already does inside the same routine — 
 downstream scan-and-fill loop (delimiter scan, per-receiver slice, truncate/pad reshape,
 cursor advance, exhausted-source guard) is UNCHANGED and shared between the two providers.
 
+Only an **ASCII** string literal is accepted. The oracle scans a literal source by CHARACTER
+while `emit_unstring` lowers it to BYTE-based IIR string ops (`str_len`/`str_index`/
+`str_slice`), so the two agree only when each character is one byte; a non-ASCII literal is
+rejected before the `str_const` is emitted (`if !s.is_ascii()`), matching the oracle's
+read-time reject with the same message so the accept/reject sets stay co-total.
+
 Still deferred (rejected on the compiler and the oracle alike): a NUMERIC-literal source
-(`UNSTRING 123 …`) and a FIGURATIVE source (`UNSTRING SPACE …`) — only an alphanumeric string
-literal is supported — and a reference-modified source (unchanged). `WITH POINTER`, `ON
-OVERFLOW`, a multi-character/`ALL`/`OR` delimiter, and a numeric/group receiver remain later
-rungs.
+(`UNSTRING 123 …`), a FIGURATIVE source (`UNSTRING SPACE …`), a NON-ASCII string-literal
+source — only an ASCII alphanumeric string literal is supported — and a reference-modified
+source (unchanged). `WITH POINTER`, `ON OVERFLOW`, a multi-character/`ALL`/`OR` delimiter, and
+a numeric/group receiver remain later rungs.
 
 ### Added — v0.47.0: INSPECT TALLYING with multiple counters
 

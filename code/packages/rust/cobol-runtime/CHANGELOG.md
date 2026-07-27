@@ -15,11 +15,15 @@
   all UNCHANGED and shared between the two providers.
 - `Stmt::Unstring.source` widened from `String` to `Operand` so the executor can pick the
   provider at run time. `exec_unstring` now takes the `Operand` source and branches on it.
+- Only an **ASCII** string literal is accepted: the executor scans a literal by CHARACTER
+  while the compiler lowers it to BYTE-based IIR string ops, so the two agree only when each
+  character is one byte. A NON-ASCII literal source (e.g. `UNSTRING "café" …`) is a clean
+  later-rung reject at read time on BOTH engines, keeping their accept/reject sets co-total.
 - Still deferred (rejected on this engine and the compiler alike): a NUMERIC-literal source
-  (`UNSTRING 123 …`) and a FIGURATIVE source (`UNSTRING SPACE …`) — only an alphanumeric string
-  literal is supported — and a reference-modified source (unchanged). `WITH POINTER`, `ON
-  OVERFLOW`, a multi-character/`ALL`/`OR` delimiter, and a numeric/group receiver remain later
-  rungs.
+  (`UNSTRING 123 …`), a FIGURATIVE source (`UNSTRING SPACE …`), a NON-ASCII string-literal
+  source — only an ASCII alphanumeric string literal is supported — and a reference-modified
+  source (unchanged). `WITH POINTER`, `ON OVERFLOW`, a multi-character/`ALL`/`OR` delimiter,
+  and a numeric/group receiver remain later rungs.
 
 ## 0.51.0 — INSPECT TALLYING with multiple counters
 

@@ -139,9 +139,9 @@ with a real (identifier/literal) delimiter, `WITH POINTER`,
 `ON`/`NOT ON OVERFLOW`, a numeric item or figurative as a sending field, or a
 non-alphanumeric receiver, and an `UNSTRING` with a multi-character / `ALL` / `OR`
 delimiter, `WITH POINTER`, `ON`/`NOT ON OVERFLOW`, a numeric/figurative/reference-
-modified delimiter, a NUMERIC-literal / FIGURATIVE / reference-modified source (an
-alphanumeric string-literal source IS supported), or a numeric/group source or
-receiver.
+modified delimiter, a NUMERIC-literal / FIGURATIVE / reference-modified / NON-ASCII
+source (an ASCII alphanumeric string-literal source IS supported), or a
+numeric/group source or receiver.
 
 ## Usage
 

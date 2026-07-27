@@ -3062,6 +3062,41 @@ fn unstring_reference_modified_source_is_a_later_rung() {
     );
 }
 
+#[test]
+fn unstring_non_ascii_literal_source_is_a_later_rung() {
+    // The oracle scans a literal source by CHARACTER while the compiler lowers it
+    // to BYTE-based IIR string ops — the two agree only for ASCII (one byte per
+    // char). A NON-ASCII string-literal source (here "café", whose 'é' is a
+    // multi-byte character) is therefore deferred — rejected on BOTH engines so
+    // they stay co-total — even though an ASCII literal source IS supported.
+    let src = wrap(
+        &["01  R1 PIC X(4) VALUE SPACES.", "01  R2 PIC X(4) VALUE SPACES."],
+        &["UNSTRING \"café\" DELIMITED BY \",\" INTO R1 R2.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a non-ASCII literal source");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a non-ASCII literal source"
+    );
+}
+
+#[test]
+fn unstring_ascii_literal_source_still_works() {
+    // The all-ASCII counterpart of the rejected non-ASCII case still splits and
+    // reshapes exactly, byte-identical to the oracle — proving the guard is
+    // scoped to non-ASCII bytes only.
+    let out = assert_matches_oracle(&wrap(
+        &["01  R1 PIC X(4) VALUE SPACES.", "01  R2 PIC X(4) VALUE SPACES."],
+        &[
+            "UNSTRING \"cafe,X\" DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "cafe\nX   \n");
+}
+
 // ---------------------------------------------------------------------------
 // INSPECT … TALLYING — count the (non-overlapping, left-to-right) occurrences of
 // a single-character delimiter in an alphanumeric source and ADD the count to an

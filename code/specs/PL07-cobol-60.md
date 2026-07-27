@@ -454,10 +454,14 @@ storage (numeric/group items still rejected); a string-literal source scans the
 literal's own bytes (no item lookup, no picture check — a string literal is
 inherently alphanumeric); in the compiler the literal is materialised into a
 `str_const` register that the SAME scan loop reads. The delimiter scan and
-per-receiver reshape are entirely shared. Still deferred on both engines: a
+per-receiver reshape are entirely shared. Only an **ASCII** literal is accepted:
+the oracle scans a literal by CHARACTER while the compiler's IIR string ops are
+BYTE-based, so the two agree only when each character is one byte; a **non-ASCII**
+literal source (e.g. `UNSTRING "café" …`) is a clean later-rung reject at read
+time on both engines, keeping them co-total. Still deferred on both engines: a
 **NUMERIC**-literal source (`UNSTRING 123 …`), a **FIGURATIVE** source (`UNSTRING
-SPACE …`) — only an alphanumeric string literal is supported — and a
-**reference-modified** source (unchanged).
+SPACE …`), a **non-ASCII** string-literal source — only an ASCII alphanumeric
+string literal is supported — and a **reference-modified** source (unchanged).
 
 ### `INSPECT … TALLYING` (first rung)
 
@@ -1203,7 +1207,7 @@ list, `COPY`) is documented as future work.
 | Complete reserved-word list | The full ~300 COBOL-60 reserved words |
 | `COPY` library text | A pre-tokenize include-style hook |
 | `STRING` real delimiters / `WITH POINTER` / `ON OVERFLOW` | Later rungs beyond the first `DELIMITED BY SIZE` cut (need a run-time scan and a receiver pointer) |
-| `UNSTRING` multi-char / `ALL` / `OR` delimiters, `WITH POINTER`, `ON OVERFLOW`, multiple `DELIMITED` fields, `COUNT`/`DELIMITER IN`/`TALLYING`, a NUMERIC-literal / FIGURATIVE / reference-modified source | Later rungs beyond the single-character `DELIMITED BY delim INTO r1 [r2 …]` cut (an alphanumeric string-literal source IS now supported) |
+| `UNSTRING` multi-char / `ALL` / `OR` delimiters, `WITH POINTER`, `ON OVERFLOW`, multiple `DELIMITED` fields, `COUNT`/`DELIMITER IN`/`TALLYING`, a NUMERIC-literal / FIGURATIVE / NON-ASCII / reference-modified source | Later rungs beyond the single-character `DELIMITED BY delim INTO r1 [r2 …]` cut (an ASCII alphanumeric string-literal source IS now supported) |
 | `INSPECT`, other string verbs | The rest of the string-handling verb family |
 | IR / interpreter | Run a COBOL program; out of scope for the frontend |
 
