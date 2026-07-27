@@ -220,9 +220,20 @@ pub enum Stmt {
     /// source, stopping at the first byte that is not `search`). The two flags
     /// are independent — either, both, or neither half may be LEADING. Each of
     /// `delim`/`search`/`replace` is a single character; the remaining single-form
-    /// restrictions as the lone phrases apply (CHARACTERS/FIRST, BEFORE/AFTER,
-    /// multiple counters/FOR/replace items, multi-char/figurative/wider operands,
-    /// and a numeric/group source or non-integer counter are later rungs).
+    /// restrictions as the lone phrases apply (CHARACTERS/FIRST, multiple
+    /// counters/FOR/replace items, multi-char/figurative/wider operands, and a
+    /// numeric/group source or non-integer counter are later rungs).
+    ///
+    /// Each half independently carries an optional `{BEFORE|AFTER} x` region (see
+    /// [`Region`], shared with the lone TALLYING/REPLACING forms): `tally_region`
+    /// narrows the count, `replace_region` narrows the substitution. The two
+    /// regions are INDEPENDENT (different kinds, different delimiters, either/both/
+    /// neither present). Because tallying does not mutate the source, BOTH windows
+    /// are computed over the SAME original source — exactly as the lone forms do.
+    /// A single-character region delimiter is supported this rung on `FOR ALL` /
+    /// `REPLACING ALL` only; `FOR LEADING`/`REPLACING LEADING` with a region and a
+    /// multi-character region delimiter remain later rungs (rejected at read/exec
+    /// time by the shared readers, identically to the lone forms).
     InspectTallyReplace {
         source: String,
         counter: String,
@@ -231,12 +242,19 @@ pub enum Stmt {
         /// `false` for `FOR ALL` (count every occurrence). Applies to the
         /// TALLYING half only.
         tally_leading: bool,
+        /// Optional `{BEFORE|AFTER} x` region narrowing the TALLYING half's count,
+        /// computed over the original source (see [`Region`]). `None` = whole source.
+        tally_region: Option<Region>,
         search: Operand,
         replace: Operand,
         /// `true` for `REPLACING LEADING` (substitute only the leading run of
         /// `search`), `false` for `REPLACING ALL` (substitute every `search`).
         /// Applies to the REPLACING half only.
         replace_leading: bool,
+        /// Optional `{BEFORE|AFTER} x` region narrowing the REPLACING half's
+        /// substitution, computed over the same original source (see [`Region`]).
+        /// `None` = whole source. Independent of `tally_region`.
+        replace_region: Option<Region>,
     },
     /// `INSPECT source CONVERTING from TO to` — translate each character of the
     /// alphanumeric `source` through a per-character **translation table** built
@@ -957,33 +975,21 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                 // extracted here (each rejecting its own later-rung forms) and the
                 // ordering is enforced at exec time.
                 (true, true) => {
-                    let (counter, delim, leading, region) = read_inspect_tally_all(verb)?;
-                    // A `{BEFORE|AFTER}` region on the combined form's TALLYING half
-                    // is a later rung (regions ship for the LONE `FOR ALL` first);
-                    // reject it here so both engines diagnose it identically.
-                    if region.is_some() {
-                        return Err(RuntimeError::Unsupported(
-                            "INSPECT combined TALLYING … REPLACING with a BEFORE/AFTER region is a later rung"
-                                .into(),
-                        ));
-                    }
-                    // The combined form's TALLYING half now supports BOTH `FOR ALL`
+                    // Each half independently parses its OWN optional `{BEFORE|AFTER}
+                    // x` region from its own phrase child (the TALLYING half's region
+                    // rides on `inspect_tallying`, the REPLACING half's on
+                    // `inspect_replacing`). `read_inspect_tally_all` /
+                    // `read_inspect_replacing_all` already reject `FOR LEADING` /
+                    // `REPLACING LEADING` carrying a region (a later rung), so the
+                    // combined form inherits that rejection for free.
+                    let (counter, delim, leading, tally_region) = read_inspect_tally_all(verb)?;
+                    // The combined form's TALLYING half supports BOTH `FOR ALL`
                     // and `FOR LEADING`: `leading` selects the count semantics
                     // (LEADING counts only the consecutive run of `delim` at the
                     // start of the source). It rides along into the statement.
-                    let (search, replace, repl_leading, repl_region) =
+                    let (search, replace, repl_leading, replace_region) =
                         read_inspect_replacing_all(verb)?;
-                    // A `{BEFORE|AFTER}` region on the combined form's REPLACING half
-                    // is a later rung too (regions ship for the LONE `REPLACING ALL`
-                    // first, mirroring the lone `FOR ALL` above); reject it here so
-                    // both engines diagnose it identically.
-                    if repl_region.is_some() {
-                        return Err(RuntimeError::Unsupported(
-                            "INSPECT combined TALLYING … REPLACING with a BEFORE/AFTER region is a later rung"
-                                .into(),
-                        ));
-                    }
-                    // The combined form's REPLACING half now supports BOTH `ALL`
+                    // The combined form's REPLACING half supports BOTH `ALL`
                     // and `LEADING`: `repl_leading` selects the substitution
                     // semantics (LEADING rewrites only the consecutive run of
                     // `search` at the start of the source). It rides along into
@@ -993,9 +999,11 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                         counter,
                         delim,
                         tally_leading: leading,
+                        tally_region,
                         search,
                         replace,
                         replace_leading: repl_leading,
+                        replace_region,
                     })
                 }
                 (false, true) => {

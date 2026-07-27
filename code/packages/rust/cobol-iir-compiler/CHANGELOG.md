@@ -8,6 +8,51 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.43.0: combined INSPECT TALLYING + REPLACING with a per-half BEFORE/AFTER region
+
+The combined `INSPECT source TALLYING counter FOR ALL delim REPLACING ALL x BY y` form
+now accepts an INDEPENDENT single-character `{BEFORE|AFTER}` region on EACH half — the
+region that previously shipped only for the LONE `TALLYING FOR ALL` (v0.40.0) and
+`REPLACING ALL` (v0.41.0) phrases. Each half narrows its own operation to a sub-slice
+of the source bounded by the FIRST (leftmost) occurrence of that half's region
+delimiter, with the ISO not-found asymmetry: `BEFORE` → the WHOLE source if the
+delimiter is absent; `AFTER` → an EMPTY window if it is absent. Positions outside a
+half's window are untouched. The two halves are fully independent — either, both, or
+neither may carry a region, with their own kind and delimiter.
+
+- The combined arm of `emit_inspect` now passes `allow_region = true` to BOTH
+  `emit_inspect_tallying` and `emit_inspect_replacing` (previously `false`). Each
+  standalone emitter already parses its own half's region from its own phrase child
+  (`inspect_tallying` / `inspect_replacing`) and reuses the shared
+  `emit_inspect_region_window` helper, so the only compiler change is routing each
+  half's region through — no new region logic.
+- ISO order is preserved: the tally count is emitted FIRST (it only READS `s_reg`),
+  then the replace unroll rebuilds and stores back. Both halves' windows are therefore
+  scanned over the SAME original source bytes, matching
+  `coding-adventures-cobol-runtime` 0.47.0's `exec_inspect_tally_replace` byte-for-byte.
+- Scoped SMALL — `FOR ALL` / `REPLACING ALL` only, single-character region delimiter
+  only. Still rejected identically on both engines (each via the shared reader /
+  `single_delim_code`): `FOR LEADING` or `REPLACING LEADING` carrying a region, and a
+  multi-character region delimiter. No grammar change was needed.
+- New e2e parity tests in `jit_e2e.rs`: `inspect_combined_region_tally_region_only`,
+  `inspect_combined_region_replace_region_only`,
+  `inspect_combined_region_both_before_distinct_delimiters`,
+  `inspect_combined_region_before_and_after_different_kinds`,
+  `inspect_combined_region_both_after`,
+  `inspect_combined_region_tally_after_not_found_replace_before_not_found`,
+  `inspect_combined_region_tally_before_not_found_whole_source`,
+  `inspect_combined_region_replace_after_not_found_empty`,
+  `inspect_combined_region_delimiter_at_last_position`,
+  `inspect_combined_region_delimiter_equals_search_char_each_half`,
+  `inspect_combined_region_pic_x1_delimiter`,
+  `inspect_combined_region_adds_to_a_nonzero_counter`,
+  `inspect_combined_region_delimiter_at_position_zero_empty_before`, and the three
+  reject tests `inspect_combined_for_leading_with_a_region_is_a_later_rung`,
+  `inspect_combined_replacing_leading_with_a_region_is_a_later_rung`,
+  `inspect_combined_multi_char_region_delimiter_is_a_later_rung`. The obsolete
+  `inspect_replacing_combined_with_a_region_is_a_later_rung` reject test is removed
+  (the form it guarded is now supported).
+
 ### Added — v0.42.0: INSPECT CONVERTING with a BEFORE/AFTER region
 
 `INSPECT source CONVERTING from TO to {BEFORE|AFTER} z` now compiles instead of being

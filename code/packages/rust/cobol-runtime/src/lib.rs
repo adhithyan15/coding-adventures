@@ -2467,23 +2467,15 @@ mod tests {
         ));
         assert!(leading.is_err(), "FOR LEADING + region must reject");
 
-        // … a MULTI-character region delimiter is deferred (rejected at exec, exactly
-        // like a multi-character tally delimiter) …
+        // … and a MULTI-character region delimiter is deferred (rejected at exec,
+        // exactly like a multi-character tally delimiter). (A region on the COMBINED
+        // TALLYING … REPLACING form is NOW supported — see
+        // `inspect_tally_replace_with_before_after_regions` below.)
         let multi = run_cobol(&wrap(
             &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
             &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"CD\".", "STOP RUN."],
         ));
         assert!(multi.is_err(), "multi-char region delimiter must reject");
-
-        // … and a region on the COMBINED TALLYING … REPLACING form is deferred.
-        let combined = run_cobol(&wrap(
-            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
-            &[
-                "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\" REPLACING ALL \"D\" BY \"X\".",
-                "STOP RUN.",
-            ],
-        ));
-        assert!(combined.is_err(), "combined form + region must reject");
     }
 
     #[test]
@@ -2787,6 +2779,74 @@ mod tests {
         ))
         .unwrap();
         assert_eq!(no_run, "002\nX00X\n");
+    }
+
+    /// The COMBINED form's TWO halves each carry an INDEPENDENT `{BEFORE|AFTER}`
+    /// region. Because the tally does not mutate the source, BOTH windows are
+    /// computed over the SAME original bytes — the count's window and the
+    /// replacement's window each see the pre-replacement source.
+    #[test]
+    fn inspect_tally_replace_with_before_after_regions() {
+        // Tally region only: BEFORE "C" over "AB0CD0" counts one "0" (region "AB0");
+        // the region-less REPLACING ALL then maps BOTH "0"s → "AB*CD*".
+        let tally_only = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\"",
+                "    REPLACING ALL \"0\" BY \"*\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(tally_only, "001\nAB*CD*\n");
+
+        // Replace region only: the region-less TALLYING counts all three "0"s (3),
+        // then REPLACING ALL "0" BEFORE "B" restricts to "0A0" → "*A*B0".
+        let replace_only = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\"",
+                "    REPLACING ALL \"0\" BY \"*\" BEFORE \"B\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(replace_only, "003\n*A*B0\n");
+
+        // BOTH halves, DIFFERENT kinds and delimiters: tally BEFORE "B" over "0A0B0"
+        // counts "0A0" → 2; replace AFTER "B" restricts to "0" → "0A0B*".
+        let both = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"B\"",
+                "    REPLACING ALL \"0\" BY \"*\" AFTER \"B\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(both, "002\n0A0B*\n");
+
+        // The not-found asymmetry per half: tally AFTER "Z" (absent) counts NOTHING
+        // (empty window) → 0; replace BEFORE "Z" (absent) rewrites the WHOLE source →
+        // both "0"s replaced → "*A*".
+        let not_found = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"0A0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" AFTER \"Z\"",
+                "    REPLACING ALL \"0\" BY \"*\" BEFORE \"Z\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(not_found, "000\n*A*\n");
     }
 
     #[test]

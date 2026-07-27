@@ -1768,23 +1768,29 @@ impl<'a> Compiler<'a> {
         }
         match (has_tally, has_repl) {
             (true, true) => {
-                // The combined form's TALLYING half now supports BOTH `FOR ALL` and
+                // The combined form's TALLYING half supports BOTH `FOR ALL` and
                 // `FOR LEADING`: `allow_leading = true` lets a combined
                 // `TALLYING … FOR LEADING … REPLACING` count only the leading run
                 // (`emit_inspect_tallying` already emits the `leading ? end : nobump`
-                // branch that stops at the first non-match). A `{BEFORE|AFTER}`
-                // region on the combined TALLYING half is a later rung, so
-                // `allow_region = false`.
-                self.emit_inspect_tallying(verb, &s_reg, true, false)?;
-                // The combined REPLACING half now also supports BOTH `ALL` and
-                // `LEADING`: `allow_leading = true` lets a combined
-                // `TALLYING … REPLACING LEADING` rewrite only the leading run
-                // (`emit_inspect_replacing` already threads the `active`-guarded run
-                // unroll that stops at the first non-match). The two halves' leading
-                // flags are independent, so BOTH may be LEADING at once. A
-                // `{BEFORE|AFTER}` region on the combined REPLACING half is a later
-                // rung, so `allow_region = false`.
-                self.emit_inspect_replacing(verb, &s_reg, source_width, true, false)
+                // branch that stops at the first non-match). It also now accepts its
+                // OWN optional `{BEFORE|AFTER}` region (`allow_region = true`): the
+                // window rides on the `inspect_tallying` phrase child, is scanned over
+                // the ORIGINAL source (the tally loop only reads), and bounds the
+                // count. `FOR LEADING` + region is still rejected inside
+                // `inspect_tally_all`, so the combined form inherits that for free.
+                self.emit_inspect_tallying(verb, &s_reg, true, true)?;
+                // The combined REPLACING half supports BOTH `ALL` and `LEADING`:
+                // `allow_leading = true` lets a combined `TALLYING … REPLACING
+                // LEADING` rewrite only the leading run (`emit_inspect_replacing`
+                // already threads the `active`-guarded run unroll that stops at the
+                // first non-match). The two halves' leading flags are independent, so
+                // BOTH may be LEADING at once. It too now accepts its OWN INDEPENDENT
+                // `{BEFORE|AFTER}` region (`allow_region = true`): its window rides on
+                // the `inspect_replacing` phrase child and is scanned over the source
+                // BEFORE the unroll overwrites it — and since the tally left the
+                // source untouched, that is the SAME original bytes the count saw, so
+                // both windows agree with the oracle.
+                self.emit_inspect_replacing(verb, &s_reg, source_width, true, true)
             }
             // A lone REPLACING: both `ALL` and `LEADING` are supported here, and
             // `REPLACING ALL` may carry a `{BEFORE|AFTER}` region (`allow_region =
