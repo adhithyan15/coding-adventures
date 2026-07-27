@@ -1829,23 +1829,6 @@ fn an_injectable_def_method_class_name_is_rejected() {
     assert!(compile(&m).is_err(), "an injectable def_method class name must be rejected");
 }
 
-#[test]
-fn still_rejected_super_self_classmethod_builtins() {
-    // The remaining OOP builtins are later slices — a hand-built module carrying
-    // any is rejected cleanly (never `unreachable!`).  (`__self__` landed in
-    // slice 3 and `__super__` in slice 4, so they are no longer in this list.)
-    for bad in ["__class_method__", "__def_class_method__"] {
-        let call = Expr::BuiltinCall {
-            name: bad.into(),
-            args: vec![strlit("Foo"), strlit("m")],
-            effects: EffectSet::PURE,
-            span: s2(),
-        };
-        let m = method_module(vec![puts(call)]);
-        assert!(compile(&m).is_err(), "`{bad}` must still be rejected");
-    }
-}
-
 // ── OOP classes slice 3 — instance variables (@ivars) + self ────────────────
 //
 // `@v = x` / `@v` lower to a `Scope::Instance` `Assign` / `VarRef` whose `name`
@@ -2083,4 +2066,132 @@ fn a_malformed_super_missing_the_class_is_rejected() {
     };
     let m = method_module(vec![puts(bad)]);
     assert!(compile(&m).is_err(), "a malformed __super__ must be rejected");
+}
+
+// ── OOP classes slice 5 — class methods (def self.foo) ──────────────────────
+//
+// `def self.m` lowers to a hoisted top-level function `Class__m_cm`, a
+// `__def_class_method__("Class", "m", MakeClosure(fn))` registration, and a
+// `Class.m(args…)` dispatch → `__class_method__("Class", "m", args…)`. Rendered
+// as `Class.define_singleton_method(:sir_um_m, &closure)` and
+// `(Class).public_send(:sir_um_m, args…)` — the SAME reserved `sir_um_` prefix
+// (a class's singleton method table is separate from its instances, so no
+// collision), so class-method dispatch is closed (anti-RCE) just like instances.
+// A dispatch to a name the module never registers as a class method is a
+// built-in class method (`Foo.name`, …) — the Collections batch — rejected.
+
+fn def_class_method(class: &str, method: &str, fn_name: &str) -> Stmt {
+    Stmt::ExprStmt {
+        expr: Expr::BuiltinCall {
+            name: "__def_class_method__".into(),
+            args: vec![strlit(class), strlit(method), make_closure(fn_name)],
+            effects: EffectSet::PURE,
+            span: s2(),
+        },
+        span: s2(),
+    }
+}
+fn class_method_call(class: &str, method: &str, args: Vec<Expr>) -> Expr {
+    let mut a = vec![strlit(class), strlit(method)];
+    a.extend(args);
+    Expr::BuiltinCall { name: "__class_method__".into(), args: a, effects: EffectSet::PURE, span: s2() }
+}
+
+// ---- positive, through the real frontend + interpreter --------------------
+
+#[test]
+fn e2e_class_method_call() {
+    // `class Greeter; def self.hi; puts "class hi"; end; end; Greeter.hi`.
+    let rb = ruby_to_ruby("class Greeter\n  def self.hi\n    puts \"class hi\"\n  end\nend\nGreeter.hi\n");
+    assert!(rb.contains("define_singleton_method(:sir_um_hi"), "singleton registration:\n{rb}");
+    assert!(rb.contains("(Greeter).public_send(:sir_um_hi"), "class-name dispatch:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "class hi"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_class_method_with_args_and_return() {
+    let rb = ruby_to_ruby("class M\n  def self.double(x)\n    x * 2\n  end\nend\nputs M.double(21)\n");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "42"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+// ---- hand-built: anti-RCE + totality --------------------------------------
+
+#[test]
+fn class_method_dispatch_is_prefixed_so_reflection_is_unreachable() {
+    // A class method named `instance_eval` dispatches as `:sir_um_instance_eval`
+    // on the class — Ruby's real `Class.instance_eval` is unreachable.
+    let m = method_module_fns(
+        vec![
+            classdef("Foo", None, vec![]),
+            def_class_method("Foo", "instance_eval", "Foo__ie_cm"),
+            puts(class_method_call("Foo", "instance_eval", vec![strlit("code")])),
+        ],
+        vec![hoisted("Foo__ie_cm")],
+    );
+    let rb = compile(&m).expect("registered class-method dispatch compiles").source;
+    assert!(rb.contains(":sir_um_instance_eval"), "prefixed:\n{rb}");
+    assert!(!rb.contains(").public_send(:instance_eval"), "no unprefixed reflection dispatch:\n{rb}");
+}
+
+#[test]
+fn a_built_in_class_method_dispatch_is_rejected_cleanly() {
+    // `Foo.name` (no `__def_class_method__` for "name") is a built-in class
+    // method (Collections batch) — rejected, not compiled to a runtime error.
+    let m = method_module(vec![
+        classdef("Foo", None, vec![]),
+        puts(class_method_call("Foo", "name", vec![])),
+    ]);
+    let err = compile(&m).expect_err("a built-in class-method dispatch must be rejected");
+    assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
+}
+
+#[test]
+fn instance_and_class_method_allowlists_are_separate() {
+    // A method registered as an INSTANCE method does not authorise a CLASS-method
+    // dispatch of the same name (distinct namespaces), and vice-versa.
+    let m = method_module_fns(
+        vec![
+            classdef("Foo", None, vec![]),
+            def_method("Foo", "greet", "Foo__greet"), // instance only
+            puts(class_method_call("Foo", "greet", vec![])), // dispatched as a class method
+        ],
+        vec![hoisted("Foo__greet")],
+    );
+    assert!(compile(&m).is_err(), "an instance registration must not authorise a class dispatch");
+}
+
+#[test]
+fn an_injectable_def_class_method_class_name_is_rejected() {
+    let m = method_module_fns(
+        vec![def_class_method("Foo\n  system('x')", "hi", "Foo__hi_cm")],
+        vec![hoisted("Foo__hi_cm")],
+    );
+    assert!(compile(&m).is_err(), "an injectable def_class_method class must be rejected");
+}
+
+#[test]
+fn an_injectable_class_method_receiver_is_rejected() {
+    let m = method_module(vec![puts(class_method_call("Foo\n  system('x')", "hi", vec![]))]);
+    assert!(compile(&m).is_err(), "an injectable __class_method__ receiver must be rejected");
+}
+
+#[test]
+fn a_malformed_def_class_method_missing_its_closure_is_rejected() {
+    let bad = Stmt::ExprStmt {
+        expr: Expr::BuiltinCall {
+            name: "__def_class_method__".into(),
+            args: vec![strlit("Foo"), strlit("hi")], // no closure
+            effects: EffectSet::PURE,
+            span: s2(),
+        },
+        span: s2(),
+    };
+    let m = method_module(vec![classdef("Foo", None, vec![]), bad]);
+    assert!(compile(&m).is_err(), "a malformed __def_class_method__ must be rejected");
 }

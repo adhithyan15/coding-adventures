@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.15.0 — classes slice 5: class methods (def self.foo)
+
+Class (singleton) **methods**. No new `Feature` (they lower to builtins).
+
+- `def self.m` → a hoisted top-level function `Class__m_cm` +
+  `__def_class_method__("Class", "m", MakeClosure(fn))` →
+  `Class.define_singleton_method(:sir_um_m, &closure)`.
+- `Class.m(args…)` → `__class_method__("Class", "m", args…)` →
+  `(Class).public_send(:sir_um_m, args…)` — the receiver is the class *name* (a
+  bare constant), not an instance.
+
+Mirrors instance methods (slice 2) but installs on the class's **singleton**
+method table via `define_singleton_method`. The SAME reserved `sir_um_` prefix is
+reused: a class's singleton methods and its instance methods live in separate
+tables, so the shared prefix cannot collide, and class-method dispatch stays
+**closed** (anti-RCE) — `public_send` with a crafted class-method name can only
+reach a `sir_um_*` (user) method, never `Class.instance_eval`/`send`/etc.
+
+**Totality / clean rejection.** A SECOND allowlist (collected from
+`__def_class_method__`, alongside the instance-method allowlist) gates
+`__class_method__`: a dispatch to a name the module never registers as a class
+method is a **built-in class method** (`Foo.name`, …) — the Collections batch —
+rejected cleanly. The two allowlists are independent, so an instance registration
+does not authorise a class dispatch of the same name (and vice-versa). The class
+name in both builtins is emitted verbatim as a bare constant and validated as a
+constant path (co-total injection guard); a malformed `__def_class_method__`
+(missing/non-closure third argument) is rejected.
+
+**Still rejects** class variables (`@@x`, `Feature::ClassVars`) — which also pull
+in a non-empty class body — and modules; each a later slice.
+
 ## 0.14.0 — classes slice 4: inheritance + super
 
 Class **inheritance** and `super`. No new `Feature` (a superclass rides on
