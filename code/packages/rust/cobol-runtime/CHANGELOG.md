@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.48.0 — standalone INSPECT FOR LEADING / REPLACING LEADING with a BEFORE/AFTER region
+
+- The STANDALONE `INSPECT source TALLYING counter FOR LEADING delim {BEFORE|AFTER} x`
+  and `INSPECT source REPLACING LEADING search BY replace {BEFORE|AFTER} x` forms are
+  now supported (both were rejected at read time before). The crux is that the LEADING
+  run is ANCHORED at the WINDOW START, not source position 0: `FOR LEADING` /
+  `LEADING` counts or replaces only the maximal run of matching characters that begins
+  AT the window's start index and stops at the first non-matching character INSIDE the
+  window (or the window end).
+- Examples: `INSPECT S TALLYING C FOR LEADING "a" AFTER "X"` over `"aaXaab"` narrows to
+  the window `"aab"` (indices 3..6) and counts the leading run there — 2 — ignoring the
+  `"aa"` before the `X` entirely. `INSPECT S REPLACING LEADING "a" BY "*" AFTER "X"`
+  over the same source rewrites only that in-window run → `"aaX**b"`. `BEFORE x` with a
+  prefix window works symmetrically. The ISO not-found asymmetry carries over: `AFTER x`
+  with `x` absent is an EMPTY window (count 0 / no substitution); `BEFORE x` with `x`
+  absent is the WHOLE source (the leading run from position 0).
+- `Interp::inspect_tally`'s window `take_while` was already anchored at the window
+  start, so the count side needed no code change — only the read-time gate. The
+  substitution side, `Interp::inspect_replace`, now iterates with position indices: a
+  position OUTSIDE `[start, end)` is copied through unchanged and leaves the run state
+  untouched (characters before `start` neither begin nor break the run), so the leading
+  run genuinely starts at the window start.
+- The read-time rejects that deferred `FOR LEADING`/`REPLACING LEADING` carrying a
+  region are relaxed in the SHARED readers (`read_inspect_tally_all` /
+  `read_inspect_replacing_all`). The COMBINED `TALLYING … REPLACING` form still defers
+  a LEADING half carrying a region; that gate moved into the combined arm of
+  `read_statement`, which re-imposes it with the exact same messages the readers used
+  to raise — so the combination is still a later rung, diagnosed identically on both
+  engines and forms.
+- Scoped SMALL — only the two STANDALONE forms. Still deferred, identically on both
+  engines: a combined `TALLYING … REPLACING` with a LEADING half AND a region, and a
+  multi-character / non-ASCII region delimiter. Byte-identical to the
+  `cobol-iir-compiler` 0.44.0 JIT for every supported case.
+
 ## 0.47.0 — combined INSPECT TALLYING + REPLACING with a per-half BEFORE/AFTER region
 
 - The combined `INSPECT source TALLYING counter FOR ALL delim REPLACING ALL x BY y`

@@ -8,6 +8,41 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.44.0: standalone INSPECT FOR LEADING / REPLACING LEADING with a BEFORE/AFTER region
+
+The STANDALONE `INSPECT source TALLYING counter FOR LEADING delim {BEFORE|AFTER} x` and
+`INSPECT source REPLACING LEADING search BY replace {BEFORE|AFTER} x` forms now compile,
+byte-identical to the `coding-adventures-cobol-runtime` 0.48.0 oracle. The crux is that
+the LEADING run is ANCHORED at the WINDOW START, not source position 0: it counts /
+replaces only the maximal run of matching characters that begins AT the window's start
+index and stops at the first non-matching character INSIDE the window (or the window
+end).
+
+- `emit_inspect_tallying`: when a region is present on a `FOR LEADING` count, the scan
+  is anchored at the window start — the loop counter is seated at `start` (via a `mov`)
+  and the loop bound is the window `end` (not `0..len`), so the existing
+  stop-at-first-mismatch break yields the window-anchored run. The pre-window region
+  guard is skipped on that path (unnecessary once the loop is bounded to the window).
+  `FOR ALL`'s lowering is UNTOUCHED — it still scans `0..len` with the in-window guard,
+  byte-identical to before.
+- `emit_inspect_replacing`: the per-position unroll now computes an `in_region`
+  register once and derives the branch condition as `use_repl = active AND eq AND
+  in_region` for LEADING + region (`eq AND in_region` for ALL + region, `active AND eq`
+  for LEADING with no region, plain `eq` otherwise). The run decays ONLY on an
+  IN-WINDOW mismatch — `active := active AND (eq OR NOT in_region)` — so positions
+  before the window leave `active` untouched and the run truly starts at the window
+  start. The `ALL` and no-region `LEADING` lowerings are byte-identical to before.
+- A new `allow_leading_region` flag on both emitters re-imposes the combined-form
+  deferral: the standalone callers pass `true`, the combined caller passes `false`, so
+  a combined `TALLYING … REPLACING` whose LEADING half carries a region is a clean
+  later-rung error with the same message the shared reader used to raise. The shared
+  parsing helpers `inspect_tally_all` / `inspect_replacing_all` no longer reject a
+  LEADING phrase carrying a region (that gate moved to the emitters' flag).
+- Scoped SMALL — only the two STANDALONE forms. Still deferred, identically on both
+  engines: a combined `TALLYING … REPLACING` with a LEADING half AND a region, and a
+  multi-character region delimiter (rejected at emit via `single_delim_code`). No
+  grammar change — the rejects were read/emit-time only.
+
 ### Added — v0.43.0: combined INSPECT TALLYING + REPLACING with a per-half BEFORE/AFTER region
 
 The combined `INSPECT source TALLYING counter FOR ALL delim REPLACING ALL x BY y` form

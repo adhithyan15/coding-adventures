@@ -92,32 +92,39 @@ value); and `INSPECT source TALLYING counter FOR ALL delim` / `FOR LEADING delim
 `PIC X(1)` item — in the alphanumeric source and **ADD** them to the
 unsigned-integer counter; `FOR ALL` counts EVERY occurrence, `FOR LEADING` counts
 only the run of consecutive delimiters at the START, stopping at the first
-non-match; INSPECT adds, it does not clear the counter first) — and, for the `FOR
-ALL` form, an optional `{BEFORE|AFTER} x` **region** (narrow the count to the
-sub-slice bounded by the FIRST occurrence of the single-character delimiter `x`:
-`BEFORE x` counts left of it — the WHOLE source if `x` is absent — and `AFTER x`
-counts right of it — NOTHING if `x` is absent); and `INSPECT source
-REPLACING ALL x BY y` / `REPLACING LEADING x BY y` (substitute a single character
-`x` — a 1-char literal or a `PIC X(1)` item — with a single character `y` in the
-alphanumeric source, **in place**, a per-position map that leaves the width
-unchanged; `ALL` replaces EVERY occurrence, `LEADING` replaces only the run of
-consecutive `x` at the START, stopping at the first character that is not `x` —
-positions after that first gap are left unchanged even if they equal `x`) — and,
-for the `REPLACING ALL` form, an optional `{BEFORE|AFTER} z` **region** (restrict
-the substitution to the sub-slice bounded by the FIRST occurrence of the
-single-character delimiter `z`, using the SAME window the count uses: `BEFORE z`
-replaces left of it — the WHOLE source if `z` is absent — and `AFTER z` replaces
-right of it — NOTHING if `z` is absent; positions outside the region keep their
-original character); and the
+non-match; INSPECT adds, it does not clear the counter first) — and, on the
+STANDALONE form, an optional `{BEFORE|AFTER} x` **region** for BOTH `FOR ALL` and
+`FOR LEADING` (narrow the count to the sub-slice bounded by the FIRST occurrence of
+the single-character delimiter `x`: `BEFORE x` counts left of it — the WHOLE source
+if `x` is absent — and `AFTER x` counts right of it — NOTHING if `x` is absent; for
+`FOR LEADING` the run is ANCHORED at the window start, so `FOR LEADING "a" AFTER "X"`
+over `"aaXaab"` counts the run in the window `"aab"` — 2 — not the `"aa"` before the
+`X`); and `INSPECT source REPLACING ALL x BY y` / `REPLACING LEADING x BY y`
+(substitute a single character `x` — a 1-char literal or a `PIC X(1)` item — with a
+single character `y` in the alphanumeric source, **in place**, a per-position map
+that leaves the width unchanged; `ALL` replaces EVERY occurrence, `LEADING` replaces
+only the run of consecutive `x` at the START, stopping at the first character that is
+not `x` — positions after that first gap are left unchanged even if they equal `x`)
+— and, on the STANDALONE form, an optional `{BEFORE|AFTER} z` **region** for BOTH
+`REPLACING ALL` and `REPLACING LEADING` (restrict the substitution to the sub-slice
+bounded by the FIRST occurrence of the single-character delimiter `z`, using the SAME
+window the count uses: `BEFORE z` replaces left of it — the WHOLE source if `z` is
+absent — and `AFTER z` replaces right of it — NOTHING if `z` is absent; positions
+outside the region keep their original character, and for `REPLACING LEADING` the run
+is ANCHORED at the window start, so `REPLACING LEADING "a" BY "*" AFTER "X"` over
+`"aaXaab"` rewrites only the in-window run → `"aaX**b"`); and the
 **combined** `INSPECT source TALLYING counter FOR {ALL|LEADING} delim
 REPLACING {ALL|LEADING} x BY y` (one `INSPECT`, both phrases — per ISO it runs as
 tally-then-replace: count `delim` in the ORIGINAL source into `counter` FIRST,
 then replace `x` with `y`, so a shared `delim == x` is counted before it is
 substituted; the `TALLYING` half may be `FOR ALL` or `FOR LEADING` and the
 `REPLACING` half may independently be `ALL` or `LEADING`, so either, both, or
-neither half may be leading — and each `FOR ALL` / `REPLACING ALL` half
-independently accepts its OWN `{BEFORE|AFTER} x` **region**, both windows computed
-over the SAME original source since the tally does not mutate it); and `INSPECT source CONVERTING from TO to` (translate each character
+neither half may be leading — and each half independently accepts its OWN
+`{BEFORE|AFTER} x` **region** when that half is `FOR ALL` / `REPLACING ALL`, both
+windows computed over the SAME original source since the tally does not mutate it; a
+LEADING half carrying a region is still a later rung in the combined form even though
+the STANDALONE `FOR LEADING`/`REPLACING LEADING` + region forms are supported); and
+`INSPECT source CONVERTING from TO to` (translate each character
 of the alphanumeric source through a per-character table built from the two
 equal-length string literals `from`/`to` — a character equal to `from[k]` becomes
 `to[k]`, the **first (leftmost) occurrence winning** if `from` repeats a

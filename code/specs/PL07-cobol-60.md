@@ -501,14 +501,35 @@ end)` over the source's chars and counts within it; the compiler emits a one-sho
 scan for the first occurrence of `x` (a `found` flag + first index), derives
 `[start, end)` with the same asymmetry, and bounds its count loop with `j < start
 || j >= end → skip` — byte-identical, and with no region nothing extra is emitted.
-This rung is scoped SMALL: `FOR ALL` only and a **single-character** region
-delimiter only.
+This `FOR ALL` region rung is scoped SMALL: a **single-character** region delimiter
+only.
+
+**`BEFORE`/`AFTER` region on the STANDALONE `FOR LEADING` (follow-up rung).** The
+lone `FOR LEADING delim {BEFORE|AFTER} x` is now supported too, with the leading run
+**anchored at the window start**: `FOR LEADING` counts only the maximal run of
+`delim` that begins **at the window's start index** and stops at the first
+non-matching character INSIDE the window (or the window end) — a leading run that
+would start at position 0 but whose window starts at `first+1` (AFTER) begins
+mid-string. Worked (`delim = "a"`): `FOR LEADING "a" AFTER "X"` over `"aaXaab"` →
+window `"aab"` (indices 3..6) → `2` (the `"aa"` before the `X` does NOT contribute);
+`AFTER "X"` over `"aaXbb"` → window `"bb"` → `0` (the window opens on a mismatch);
+`BEFORE "X"` over `"aaXaa"` → window `"aa"` → `2`; `AFTER "Z"` absent → empty window
+→ `0`; `BEFORE "Z"` absent → whole source → `2`. The oracle's window `take_while`
+was already anchored at the window start (it slices `[start, end)` first); the
+compiler seats its count-loop counter at `start` and bounds it by the window `end`
+(instead of `0..len`), so the existing stop-at-first-mismatch break yields the
+window-anchored run — byte-identical, and the `FOR ALL` lowering is untouched.
+
+Still deferred (identically on both engines): a **combined** `TALLYING … REPLACING`
+whose LEADING half carries a region (the standalone forms are supported, but the
+combined caller re-imposes the deferral), and a multi-character / non-ASCII region
+delimiter.
 
 The grammar deliberately accepts the fuller `INSPECT` surface — a `CHARACTERS`
-tally, several `TALLYING` counters or `FOR` phrases, a region on the `FOR
-LEADING`/`REPLACING LEADING` forms (the lone `REPLACING ALL` and `CONVERTING`
-regions, and a region on each `ALL` half of the combined form, ARE supported — see
-those sections below), and a
+tally, several `TALLYING` counters or `FOR` phrases, a region on the LEADING half of
+the **combined** form (the STANDALONE `FOR LEADING`/`REPLACING LEADING` regions, the
+lone `REPLACING ALL` and `CONVERTING` regions, and a region on each `ALL` half of the
+combined form, ARE supported — see those sections below), and a
 multi-character region
 delimiter — so the reader/compiler reject each as a clean "later rung" error
 rather than a parse failure. A multi-character / figurative / numeric /
@@ -579,18 +600,36 @@ INSPECT operations. Worked (search `"0"`, replacement `"*"`, source `"0A0B0"`):
 `"0A0B*"`; `BEFORE "Z"` (absent) → whole source → `"*A*B*"`; `AFTER "Z"` (absent) →
 empty → `"0A0B0"` unchanged; `AFTER "0"` (region delimiter equals search) → the
 first `0` bounds the region to `"A0B0"` → `"0A*B*"` (the leading `0` is left of the
-region and kept). This rung is scoped SMALL: `REPLACING ALL` only and a
+region and kept). This `REPLACING ALL` region rung is scoped SMALL: a
 **single-character** region delimiter. With no region the lowering is unchanged.
+
+**`BEFORE`/`AFTER` region on the STANDALONE `REPLACING LEADING` (follow-up rung).**
+The lone `REPLACING LEADING x BY y {BEFORE|AFTER} z` is now supported too, the exact
+analogue of `FOR LEADING` + region on the count side, with the substitution run
+**anchored at the window start**: characters before the window are copied through
+unchanged and neither begin nor break the run, the run begins at the window start,
+and it stops at the first non-`x` INSIDE the window (or the window end). Worked
+(search `"a"`, replacement `"*"`): `AFTER "X"` over `"aaXaab"` → window `"aab"` →
+`"aaX**b"` (only the two leading `a`s after the `X`, NOT the `"aa"` before it);
+`AFTER "X"` over `"aaXbb"` → window `"bb"` → unchanged (window opens on a mismatch);
+`BEFORE "X"` over `"aaXaa"` → window `"aa"` → `"**Xaa"`; `AFTER "Z"` absent → empty
+window → unchanged; `BEFORE "Z"` absent → whole source → `"**Xaa"`. The oracle
+copies positions outside `[start, end)` through unchanged and leaves the run state
+untouched; the compiler threads `use_repl = active AND (s[j]==x) AND in_region` and
+decays the run only on an IN-WINDOW mismatch (`active := active AND ((s[j]==x) OR
+NOT in_region)`) — byte-identical, and the `ALL` and no-region `LEADING` lowerings
+are untouched.
 
 Deferred as clean later rungs (accepted by the grammar, rejected at read/compile
 time): `REPLACING CHARACTERS BY`, `REPLACING FIRST` (`FIRST` does not parse as a
-replace keyword — it is deferred at parse time), a `{BEFORE|AFTER}` region on
-`REPLACING LEADING`, a
+replace keyword — it is deferred at parse time), a `{BEFORE|AFTER}` region on the
+LEADING half of the **combined** form, a
 multi-character region delimiter, **several** replace items, a multi-character /
 figurative / wider / numeric search or replacement, and a numeric/group source.
 (A `REPLACING LEADING` inside the combined `TALLYING … REPLACING` form, and a
-`{BEFORE|AFTER}` region on each `ALL` half of the combined form, are now
-supported — see the combined section below.)
+`{BEFORE|AFTER}` region on each `ALL` half of the combined form, are supported — see
+the combined section below; the STANDALONE `REPLACING LEADING … {BEFORE|AFTER}` is
+supported as described just above.)
 
 ### Combined `INSPECT … TALLYING … REPLACING` (one statement)
 
@@ -660,9 +699,14 @@ before it is substituted. Worked (tally region only): `"AB0CD0"` TALLYING
 SMALL: `FOR ALL` / `REPLACING ALL` only, and a **single-character** region delimiter
 per half. A region on a combined `FOR LEADING` / `REPLACING LEADING` half, and a
 multi-character region delimiter, remain clean later rungs rejected identically on
-both engines (the shared readers reject `LEADING` + region at read time; the shared
-single-delimiter check rejects a wider-than-one region delimiter). No grammar change
-was needed — the grammar already accepts a region on each phrase.
+both engines. The STANDALONE `FOR LEADING`/`REPLACING LEADING … {BEFORE|AFTER}` forms
+are now supported (see their sections above), so the shared readers/parsers no longer
+reject a `LEADING` half carrying a region; instead the COMBINED caller re-imposes the
+deferral (the oracle's combined `read_statement` arm and the compiler's
+`allow_leading_region = false` on both emitters), with the same messages the readers
+used to raise. The shared single-delimiter check still rejects a wider-than-one region
+delimiter. No grammar change was needed — the grammar already accepts a region on each
+phrase.
 
 ### `INSPECT … CONVERTING` (first rung)
 
