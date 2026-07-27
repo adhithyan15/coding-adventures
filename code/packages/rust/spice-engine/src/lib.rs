@@ -3616,6 +3616,7 @@ pub struct MosfetLevel1Params {
     pub drain_bulk_capacitance: f64,
     pub bulk_junction_potential: f64,
     pub bulk_junction_grading_coefficient: f64,
+    pub forward_bias_depletion_coefficient: f64,
     pub flicker_noise_coefficient: f64,
     pub flicker_noise_exponent: f64,
 }
@@ -3640,6 +3641,7 @@ impl Default for MosfetLevel1Params {
             drain_bulk_capacitance: 0.0,
             bulk_junction_potential: 0.8,
             bulk_junction_grading_coefficient: 0.5,
+            forward_bias_depletion_coefficient: 0.5,
             flicker_noise_coefficient: 0.0,
             flicker_noise_exponent: 1.0,
         }
@@ -3985,8 +3987,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Pnp, 41, 58, 13, 4),
     (ModelCardKind::Njf, 22, 30, 7, 3),
     (ModelCardKind::Pjf, 22, 30, 7, 3),
-    (ModelCardKind::Nmos, 20, 27, 6, 3),
-    (ModelCardKind::Pmos, 20, 27, 6, 3),
+    (ModelCardKind::Nmos, 21, 28, 6, 3),
+    (ModelCardKind::Pmos, 21, 28, 6, 3),
 ];
 const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -4129,6 +4131,7 @@ const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("CJD", "CBD"),
     ("PB", "PB"),
     ("MJ", "MJ"),
+    ("FC", "FC"),
     ("KF", "KF"),
     ("AF", "AF"),
 ];
@@ -4919,6 +4922,9 @@ pub fn mosfet_from_model_card(
     }
     if let Some(value) = model.parameters.get("MJ") {
         params.bulk_junction_grading_coefficient = *value;
+    }
+    if let Some(value) = model.parameters.get("FC") {
+        params.forward_bias_depletion_coefficient = *value;
     }
     if let Some(value) = model.parameters.get("KF") {
         params.flicker_noise_coefficient = *value;
@@ -23859,6 +23865,7 @@ fn mosfet_bulk_junction_capacitance(
     junction_voltage: f64,
     junction_potential: f64,
     grading_coefficient: f64,
+    forward_bias_coefficient: f64,
 ) -> f64 {
     if zero_bias_capacitance <= 0.0 {
         return zero_bias_capacitance;
@@ -23866,8 +23873,14 @@ fn mosfet_bulk_junction_capacitance(
     if junction_potential <= 0.0 || grading_coefficient == 0.0 {
         return zero_bias_capacitance;
     }
-    let reverse_scale = (-junction_voltage).max(0.0) / junction_potential;
-    zero_bias_capacitance / (1.0 + reverse_scale).powf(grading_coefficient)
+    let normalized_voltage = junction_voltage / junction_potential;
+    if normalized_voltage < forward_bias_coefficient {
+        return zero_bias_capacitance / (1.0 - normalized_voltage).powf(grading_coefficient);
+    }
+    let denominator = (1.0 - forward_bias_coefficient).powf(1.0 + grading_coefficient);
+    let continuation = 1.0 - forward_bias_coefficient * (1.0 + grading_coefficient)
+        + grading_coefficient * normalized_voltage;
+    zero_bias_capacitance * continuation / denominator
 }
 
 struct JfetDcResult {
@@ -24203,12 +24216,14 @@ fn evaluate_nmos_level1(
         vbs,
         params.bulk_junction_potential,
         params.bulk_junction_grading_coefficient,
+        params.forward_bias_depletion_coefficient,
     );
     let cbd_bulk = mosfet_bulk_junction_capacitance(
         params.drain_bulk_capacitance,
         vbs - vds,
         params.bulk_junction_potential,
         params.bulk_junction_grading_coefficient,
+        params.forward_bias_depletion_coefficient,
     );
     let threshold = if params.phi - vbs >= 0.0 {
         params.vt0 + params.gamma * ((params.phi - vbs).sqrt() - params.phi.sqrt())
@@ -24938,6 +24953,7 @@ fn mosfet_charge_dynamic_capacitance(
         junction_voltage,
         mosfet.params.bulk_junction_potential,
         mosfet.params.bulk_junction_grading_coefficient,
+        mosfet.params.forward_bias_depletion_coefficient,
     )
 }
 
@@ -25496,6 +25512,7 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("CBD", params.drain_bulk_capacitance),
         ("PB", params.bulk_junction_potential),
         ("MJ", params.bulk_junction_grading_coefficient),
+        ("FC", params.forward_bias_depletion_coefficient),
         ("KF", params.flicker_noise_coefficient),
         ("AF", params.flicker_noise_exponent),
     ] {
@@ -25534,6 +25551,12 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "MOSFET PB must be positive and MJ must be non-negative".to_string(),
+        });
+    }
+    if !(0.0..1.0).contains(&params.forward_bias_depletion_coefficient) {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET FC must be in [0, 1)".to_string(),
         });
     }
     if params.flicker_noise_coefficient < 0.0 {

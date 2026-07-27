@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS flicker-noise exponent.
+1. Cross-language Level-1 MOS forward-bias depletion coefficient.
    - Status: current PR completion candidate.
-   - Add Berkeley Level-1 MOS `AF` model-card support in Rust, Python, and
-     TypeScript, defaulting to one.
-   - Apply `KF * abs(Id)^AF / frequency` to the existing MOS flicker-noise
-     source.
-   - Preserve the exponent through hierarchy and cloning, validate its finite
-     non-negative domain, and extend the supported-parameter coverage gate from
-     179 to 181 canonical rows.
+   - Add Berkeley Level-1 MOS `FC` model-card support in Rust, Python, and
+     TypeScript, defaulting to `0.5`.
+   - Apply the continuous piecewise forward-bias continuation to `CBS` and
+     `CBD` depletion capacitance shaped by `PB` and `MJ`.
+   - Preserve the coefficient through hierarchy and cloning, validate its
+     finite `[0, 1)` domain, and extend the supported-parameter coverage gate
+     from 181 to 183 canonical rows.
 
 ## Completed Slices
 
@@ -3394,6 +3394,15 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning preserve the coefficient, shared validation enforces
      its finite non-negative domain, and the supported-parameter release gate
      now covers 179 canonical rows.
+
+265. Cross-language Level-1 MOS flicker-noise current exponent.
+   - Status: completed in PR 8986.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `AF`,
+     defaulting to one, and apply `KF * abs(Id)^AF / frequency` to the MOS
+     flicker-noise source.
+   - Hierarchy and cloning preserve the exponent, shared validation enforces
+     its finite non-negative domain, and the supported-parameter release gate
+     now covers 181 canonical rows.
 
 ## Backlog
 

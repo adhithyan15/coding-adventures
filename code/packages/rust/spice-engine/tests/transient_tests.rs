@@ -518,6 +518,55 @@ fn transient_mosfet_bulk_junction_depletion_shaping_reduces_reverse_bias_capacit
 }
 
 #[test]
+fn transient_mosfet_forward_bias_depletion_coefficient_shapes_bulk_charge() {
+    fn first_drain_voltage(coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vstep",
+            "in",
+            "0",
+            -0.6,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, -0.6),
+                (1.0e-9, -0.8),
+                (5.0e-9, -0.8),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "drain", 1_000.0,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                kp: 1.0e-12,
+                w: 1.0,
+                l: 1.0,
+                drain_bulk_capacitance: 1.0e-12,
+                bulk_junction_potential: 1.0,
+                bulk_junction_grading_coefficient: 0.5,
+                forward_bias_depletion_coefficient: coefficient,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+        transient_with_method(&circuit, 1.0e-9, 5.0e-9, TransientMethod::Euler).unwrap()[0]
+            .voltage("drain")
+            .unwrap()
+    }
+
+    let early_transition = first_drain_voltage(0.2);
+    let late_transition = first_drain_voltage(0.8);
+    assert!(
+        early_transition < late_transition,
+        "expected early FC transition to reduce forward capacitance, got early={early_transition} late={late_transition}"
+    );
+}
+
+#[test]
 fn transient_diode_transit_time_holds_forward_charge_on_turnoff() {
     fn run(transit_time: f64) -> Vec<TransientPoint> {
         let mut circuit = Circuit::new();

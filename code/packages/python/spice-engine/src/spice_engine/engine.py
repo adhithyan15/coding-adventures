@@ -9102,10 +9102,17 @@ def _mosfet_charge_dynamic_capacitance(
         return zero_bias_capacitance
     junction_potential = getattr(params, "PB", 0.8)
     grading_coefficient = getattr(params, "MJ", 0.5)
+    forward_bias_coefficient = getattr(params, "FC", 0.5)
     if not math.isfinite(junction_potential) or junction_potential <= 0.0:
         raise ValueError(f"{el.name}: MOSFET PB must be finite and positive")
     if not math.isfinite(grading_coefficient) or grading_coefficient < 0.0:
         raise ValueError(f"{el.name}: MOSFET MJ must be finite and non-negative")
+    if (
+        not math.isfinite(forward_bias_coefficient)
+        or forward_bias_coefficient < 0.0
+        or forward_bias_coefficient >= 1.0
+    ):
+        raise ValueError(f"{el.name}: MOSFET FC must be finite and in [0, 1)")
     mosfet_type = getattr(el.model, "type", None)
     junction_voltage = state_voltage if mosfet_type == MosfetType.PMOS else -state_voltage
     return bulk_junction_capacitance(
@@ -9113,6 +9120,7 @@ def _mosfet_charge_dynamic_capacitance(
         junction_voltage,
         junction_potential,
         grading_coefficient,
+        forward_bias_coefficient,
     )
 
 

@@ -3,6 +3,8 @@
 ## [0.1.0] — Unreleased
 
 ### Added
+- `Level1Params.FC` adds the continuous Berkeley forward-bias continuation to
+  the existing `PB` / `MJ` bulk-junction depletion-capacitance model.
 - `Level1Params.AF` provides the Level-1 MOS flicker-noise current exponent,
   defaulting to one.
 - `Level1Params.KF` provides the Level-1 MOS flicker-noise coefficient, with a

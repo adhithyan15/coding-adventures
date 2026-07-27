@@ -1,6 +1,4 @@
-use mosfet_models::{
-    evaluate_level1, Level1Model, Level1Params, MosfetType, Mosfet, Region,
-};
+use mosfet_models::{evaluate_level1, Level1Model, Level1Params, Mosfet, MosfetType, Region};
 
 // ---------------------------------------------------------------------------
 // Level1Params defaults
@@ -81,7 +79,10 @@ fn test_gm_positive_in_saturation() {
 fn test_gds_positive_in_saturation() {
     let p = Level1Params::default();
     let r = evaluate_level1(&p, 1.8, 1.8, 0.0, 300.15);
-    assert!(r.gds > 0.0, "gds must be positive (channel-length modulation)");
+    assert!(
+        r.gds > 0.0,
+        "gds must be positive (channel-length modulation)"
+    );
 }
 
 #[test]
@@ -113,6 +114,35 @@ fn test_gmb_nonzero_with_body_bias() {
     let p = Level1Params::default();
     let r = evaluate_level1(&p, 1.8, 1.8, -0.5, 300.15);
     assert!(r.gmb > 0.0, "gmb must be positive with reverse body bias");
+}
+
+#[test]
+fn test_bulk_junction_capacitance_uses_continuous_forward_bias_transition() {
+    let params = Level1Params {
+        cbs: 4.0e-12,
+        pb: 1.0,
+        mj: 0.5,
+        fc: 0.4,
+        subthreshold_enable: false,
+        ..Level1Params::default()
+    };
+    let below = evaluate_level1(&params, 0.0, 0.0, 0.4 - 1.0e-9, 300.15).cbs;
+    let above = evaluate_level1(&params, 0.0, 0.0, 0.4 + 1.0e-9, 300.15).cbs;
+    let later_transition = evaluate_level1(
+        &Level1Params {
+            fc: 0.8,
+            ..params.clone()
+        },
+        0.0,
+        0.0,
+        0.7,
+        300.15,
+    )
+    .cbs;
+    let early_transition = evaluate_level1(&params, 0.0, 0.0, 0.7, 300.15).cbs;
+
+    assert!((below - above).abs() < 1.0e-19);
+    assert!(later_transition > early_transition);
 }
 
 // ---------------------------------------------------------------------------

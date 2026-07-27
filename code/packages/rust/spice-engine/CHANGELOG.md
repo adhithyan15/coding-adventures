@@ -1,5 +1,7 @@
 # Changelog
 
+- Add Level-1 MOS model-card `FC` support, applying the continuous Berkeley
+  forward-bias continuation to `CBS` / `CBD` in AC and transient analysis.
 - Add Level-1 MOS model-card `AF` support and apply the configurable
   drain-current exponent to MOS flicker-noise power spectral density.
 - Add Level-1 MOS model-card `KF` support and emit drain-current-scaled

@@ -73,6 +73,12 @@ pub struct Level1Params {
     pub cbs: f64,
     /// Drain–bulk zero-bias junction capacitance [F].
     pub cbd: f64,
+    /// Bulk-junction potential [V].
+    pub pb: f64,
+    /// Bulk-junction grading coefficient.
+    pub mj: f64,
+    /// Forward-bias depletion-capacitance transition coefficient.
+    pub fc: f64,
     /// Flicker-noise coefficient.
     pub kf: f64,
     /// Flicker-noise drain-current exponent.
@@ -99,11 +105,38 @@ impl Default for Level1Params {
             cgbo: 0.0,
             cbs: 0.0,
             cbd: 0.0,
+            pb: 0.8,
+            mj: 0.5,
+            fc: 0.5,
             kf: 0.0,
             af: 1.0,
             subthreshold_enable: true,
         }
     }
+}
+
+/// Return the Level-1 bulk-junction depletion capacitance.
+pub fn bulk_junction_capacitance(
+    zero_bias_capacitance: f64,
+    junction_voltage: f64,
+    junction_potential: f64,
+    grading_coefficient: f64,
+    forward_bias_coefficient: f64,
+) -> f64 {
+    if zero_bias_capacitance <= 0.0 {
+        return zero_bias_capacitance;
+    }
+    if junction_potential <= 0.0 || grading_coefficient == 0.0 {
+        return zero_bias_capacitance;
+    }
+    let normalized_voltage = junction_voltage / junction_potential;
+    if normalized_voltage < forward_bias_coefficient {
+        return zero_bias_capacitance / (1.0 - normalized_voltage).powf(grading_coefficient);
+    }
+    let denominator = (1.0 - forward_bias_coefficient).powf(1.0 + grading_coefficient);
+    let continuation = 1.0 - forward_bias_coefficient * (1.0 + grading_coefficient)
+        + grading_coefficient * normalized_voltage;
+    zero_bias_capacitance * continuation / denominator
 }
 
 // ---------------------------------------------------------------------------
@@ -215,6 +248,8 @@ pub fn evaluate_level1(
     // In saturation: C_gs_intrinsic ≈ (2/3) W L C_ox.
     // We approximate C_ox as KP (units collapse to F/m² in the placeholder).
     let cgs_intrinsic = (2.0 / 3.0) * p.w * p.l * p.kp;
+    let cbs_bulk = bulk_junction_capacitance(p.cbs, v_bs, p.pb, p.mj, p.fc);
+    let cbd_bulk = bulk_junction_capacitance(p.cbd, v_bs - v_ds, p.pb, p.mj, p.fc);
 
     // -----------------------------------------------------------------------
     // Cutoff / subthreshold
@@ -224,15 +259,10 @@ pub fn evaluate_level1(
             // Subthreshold: Id = β n V_T² exp(V_OV/(n V_T)) (1 − exp(−V_DS/V_T))
             // This smoothly matches the strong-inversion model at V_OV ≈ 0.
             let n = p.n_sub;
-            let id_sub = beta
-                * n
-                * vth
-                * vth
-                * (v_ov / (n * vth)).exp()
-                * (1.0 - (-v_ds / vth).exp());
+            let id_sub =
+                beta * n * vth * vth * (v_ov / (n * vth)).exp() * (1.0 - (-v_ds / vth).exp());
             let gm_sub = id_sub / (n * vth);
-            let gds_sub =
-                (beta * n * vth) * (v_ov / (n * vth)).exp() * (-v_ds / vth).exp();
+            let gds_sub = (beta * n * vth) * (v_ov / (n * vth)).exp() * (-v_ds / vth).exp();
             return MosResult {
                 id: id_sub,
                 gm: gm_sub,
@@ -241,8 +271,8 @@ pub fn evaluate_level1(
                 cgs: cgs_overlap + cgs_intrinsic,
                 cgd: cgd_overlap,
                 cgb: cgb_overlap,
-                cbs: p.cbs,
-                cbd: p.cbd,
+                cbs: cbs_bulk,
+                cbd: cbd_bulk,
                 region: Region::Subthreshold,
             };
         }
@@ -255,8 +285,8 @@ pub fn evaluate_level1(
             cgs: cgs_overlap + cgs_intrinsic,
             cgd: cgd_overlap,
             cgb: cgb_overlap,
-            cbs: p.cbs,
-            cbd: p.cbd,
+            cbs: cbs_bulk,
+            cbd: cbd_bulk,
             region: Region::Cutoff,
         };
     }
@@ -273,9 +303,7 @@ pub fn evaluate_level1(
     // Triode (linear) region: 0 < V_DS < V_OV
     // -----------------------------------------------------------------------
     if v_ds < v_ov {
-        let id = beta
-            * (v_ov * v_ds - v_ds * v_ds / 2.0)
-            * (1.0 + p.lambda * v_ds);
+        let id = beta * (v_ov * v_ds - v_ds * v_ds / 2.0) * (1.0 + p.lambda * v_ds);
         let gm = beta * v_ds * (1.0 + p.lambda * v_ds);
         let gds = beta * (v_ov - v_ds) * (1.0 + p.lambda * v_ds)
             + beta * (v_ov * v_ds - v_ds * v_ds / 2.0) * p.lambda;
@@ -288,8 +316,8 @@ pub fn evaluate_level1(
             cgs: cgs_overlap + cgs_intrinsic / 2.0,
             cgd: cgd_overlap + cgs_intrinsic / 2.0,
             cgb: cgb_overlap,
-            cbs: p.cbs,
-            cbd: p.cbd,
+            cbs: cbs_bulk,
+            cbd: cbd_bulk,
             region: Region::Triode,
         };
     }
@@ -309,8 +337,8 @@ pub fn evaluate_level1(
         cgs: cgs_overlap + (2.0 / 3.0) * cgs_intrinsic,
         cgd: cgd_overlap,
         cgb: cgb_overlap,
-        cbs: p.cbs,
-        cbd: p.cbd,
+        cbs: cbs_bulk,
+        cbd: cbd_bulk,
         region: Region::Saturation,
     }
 }
