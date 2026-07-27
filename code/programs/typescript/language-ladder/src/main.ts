@@ -370,7 +370,13 @@ function renderGrid(views: LetterView[], dir: "ltr" | "rtl"): HTMLElement {
   const grid = el("div", "grid");
   grid.dir = dir;
   views.forEach((v, i) => {
-    const tile = el("button", "tile" + (i === currentLetter ? " tile--active" : "") + (v.falseFriend ? " tile--ff" : ""));
+    const tile = el(
+      "button",
+      "tile" +
+        (i === currentLetter ? " tile--active" : "") +
+        (v.falseFriend ? " tile--ff" : "") +
+        (v.special ? " tile--special" : ""),
+    );
     const glyph = el("span", "tile__glyph");
     glyph.textContent = v.glyph;
     const sound = el("span", "tile__sound");
@@ -404,9 +410,21 @@ function renderDetail(v: LetterView): HTMLElement {
     badge.textContent = "⚠ false friend";
     meta.appendChild(badge);
   }
+  if (v.special) {
+    const badge = el("span", "badge badge--special");
+    badge.textContent = `★ special consonant`;
+    meta.appendChild(badge);
+  }
   head.append(big, meta);
   d.appendChild(head);
   d.appendChild(section("Break it apart — the pieces", listOf(v.components, "pieces")));
+  // The retroflex/alveolar special consonants (ḷ/ṟ/ṉ) — flag how they differ
+  // from the plain letter they're most confused with, the way false friends are.
+  if (v.special) {
+    const p = el("p", "detail__special");
+    p.textContent = v.special.hint;
+    d.appendChild(section(`Special letter — tell it apart from “${v.special.plain}”`, p));
+  }
   // Only offer stroke order when we actually have it. The Dravidian syllabaries
   // are recognition-only (their ductus is a separate, paused effort), so showing
   // an empty "Write it" section would imply data we don't have.

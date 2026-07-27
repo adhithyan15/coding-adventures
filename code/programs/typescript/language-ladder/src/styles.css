@@ -7,6 +7,8 @@
   --accent: #3b5bdb;
   --ff: #b4531a;
   --ff-bg: #fff4ec;
+  --special: #0f766e;
+  --special-bg: #ecfdf7;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -93,6 +95,19 @@ body {
   border: 1px solid #f0d7c4;
   border-radius: 6px;
   padding: 2px 8px;
+}
+
+.badge--special {
+  color: var(--special);
+  background: var(--special-bg);
+  border-color: #b8e6da;
+}
+.tile--special { background: var(--special-bg); }
+.tile--special.tile--ff { background: var(--ff-bg); } /* a false friend wins the tint; both can't apply */
+.detail__special {
+  margin: 0;
+  color: var(--special);
+  font-weight: 500;
 }
 
 .sec { margin-top: 14px; }

@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   isFalseFriend,
+  specialConsonant,
   toLetterView,
   buildScriptView,
   scriptSummary,
@@ -42,6 +43,31 @@ describe("isFalseFriend", () => {
     expect(isFalseFriend({ notes: "From Greek delta." })).toBe(false);
     expect(isFalseFriend({ notes: "" })).toBe(false);
     expect(isFalseFriend({})).toBe(false);
+  });
+});
+
+describe("specialConsonant", () => {
+  it("flags the retroflex/alveolar special consonants by their ISO-15919 mark", () => {
+    expect(specialConsonant({ sound: "ḷa" })?.plain).toBe("l"); // U+1E37 dot below
+    expect(specialConsonant({ sound: "ḷī" })?.plain).toBe("l"); // signed form too
+    expect(specialConsonant({ sound: "ṟa" })?.plain).toBe("r"); // U+1E5F line below
+    expect(specialConsonant({ sound: "ṉa" })?.plain).toBe("n"); // U+1E49 line below
+    expect(specialConsonant({ sound: "ḷa" })?.hint).toMatch(/retroflex/i);
+  });
+  it("CONTROL: the ordinary l / r / n and the ring-below vocalic r̥ are NOT special", () => {
+    expect(specialConsonant({ sound: "la" })).toBeNull();
+    expect(specialConsonant({ sound: "ra" })).toBeNull();
+    expect(specialConsonant({ sound: "na" })).toBeNull();
+    expect(specialConsonant({ sound: "kr̥" })).toBeNull(); // r + U+0325 ring, a vowel — not ṟ
+    expect(specialConsonant({ sound: "" })).toBeNull();
+  });
+  it("marks exactly the LLA/RRA/NNNA rows in the real generated data", () => {
+    // Telugu has ḷa and ṟa (no ṉa); every one of their 13 syllables is flagged,
+    // and nothing else in the 455-syllable inventory is.
+    const telugu = SCRIPTS.find((s) => s.script === "telugu")!;
+    const flagged = telugu.letters.filter((l) => specialConsonant(l) !== null);
+    expect(flagged.length).toBe(26); // 2 special consonants × 13 vowels
+    expect(new Set(flagged.map((l) => specialConsonant(l)!.plain))).toEqual(new Set(["l", "r"]));
   });
 });
 

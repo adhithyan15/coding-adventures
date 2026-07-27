@@ -22,6 +22,7 @@ function lv(glyph: string, over: Partial<LetterView> = {}): LetterView {
     strokeOrderNote: "",
     notes: "",
     falseFriend: false,
+    special: null,
     strokeCount: 0,
     ...over,
   };
