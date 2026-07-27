@@ -188,6 +188,12 @@ ISO-15919 roman from the shared vowel table) but kept in a **separate
 gate/matrix that key on it being all-syllables are untouched. Control-tested
 (the 13 grounded glyphs; none leak into `letters`, so `isSyllabary` still holds).
 
+**The script's numerals.** Reading a language means reading its numbers too, and
+these scripts write them with distinct glyphs (Telugu ౦౧౨…). Browse shows a
+**"Numerals (0–9)"** strip; each digit is generated from `<SCRIPT> DIGIT <N>` and
+romanized as its value, kept in a **separate `digits` field** (same non-breaking
+pattern as the vowels). Control-tested (the 10 grounded glyphs → 0–9).
+
 ## Design
 
 - **`src/core.ts`** — the pure, unit-tested heart: `buildScriptView`,
