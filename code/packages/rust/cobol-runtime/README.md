@@ -106,8 +106,19 @@ each position, the delimiters are tried in WRITTEN ORDER and the FIRST that matc
 double-count — `FOR ALL "a" ALL "a"` over `"aa"` adds 2, not 4 — and the count is just
 the number of positions whose char equals SOME delimiter, each counted once, ADDED to the
 counter; this rung's multi path is `ALL`-only, single-char, with no `{BEFORE|AFTER}`
-region and no `LEADING`/`CHARACTERS`, under EXACTLY ONE counter — several counters, and a
-single tally item's full capabilities, are unchanged); and `INSPECT source REPLACING ALL x BY y` / `REPLACING LEADING x BY y`
+region and no `LEADING`/`CHARACTERS`, under EXACTLY ONE counter — a single tally item's
+full capabilities are unchanged); the **multi-counter**
+`INSPECT source TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d …` (TWO OR MORE `tally_for`
+groups, each with its OWN counter and one-or-more single-char `FOR ALL` delimiters — ALL
+groups' delimiters form ONE combined priority list scanned in a SINGLE left-to-right pass:
+at each position they are tried in WRITTEN ORDER, group-1's items first, and the FIRST that
+matches adds 1 to ITS OWN group's counter, then the scan advances — so a position CLAIMED
+by an earlier group NEVER reaches a later group, `TALLYING C1 FOR ALL "a" C2 FOR ALL "a"`
+over `"aa"` gives `C1 += 2, C2 += 0`; each counter ADDS its own share and the SAME counter
+name may appear in two groups, both then adding to that one item; this rung's multi-counter
+path is `ALL`-only, single-char, with no `{BEFORE|AFTER}` region and no `LEADING`/
+`CHARACTERS`, every counter an unsigned integer `PIC 9(n)`, and the combined form with
+several counters is still a later rung); and `INSPECT source REPLACING ALL x BY y` / `REPLACING LEADING x BY y`
 (substitute a single character `x` — a 1-char literal or a `PIC X(1)` item — with a
 single character `y` in the alphanumeric source, **in place**, a per-position map
 that leaves the width unchanged; `ALL` replaces EVERY occurrence, `LEADING` replaces
@@ -163,8 +174,8 @@ MULTI-character region delimiter, `REPLACING CHARACTERS`/`FIRST`, a MULTI-item
 region (the multi-item list itself is now supported for plain single-char `ALL` items),
 a MULTI-item `TALLYING` list carrying a `LEADING`/`CHARACTERS` item or a `{BEFORE|AFTER}`
 region (the multi-item tally list itself is now supported for plain single-char `ALL`
-items under ONE counter), several counters (more than one `FOR` phrase group) in a
-`TALLYING`, several replace or tally items in the COMBINED `TALLYING … REPLACING` form, or a combined
+items under ONE counter, and several `tally_for` groups each with their own counter are now
+supported too), several replace or tally items — or several counters — in the COMBINED `TALLYING … REPLACING` form, or a combined
 statement whose `TALLYING`/`REPLACING` half is a
 deferred sub-form (a combined `TALLYING … FOR LEADING` and a combined `REPLACING
 LEADING`, in any combination, are now supported), `CONVERTING` with

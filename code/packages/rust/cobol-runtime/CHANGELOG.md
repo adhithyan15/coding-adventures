@@ -1,5 +1,43 @@
 # Changelog
 
+## 0.51.0 — INSPECT TALLYING with multiple counters
+
+- `INSPECT source TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d [ALL e …] …` — TWO OR MORE
+  `tally_for` groups, each with its OWN counter and one-or-more single-char `FOR ALL`
+  delimiters — is now supported (previously rejected at read time as "several counters is
+  a later rung"). This GENERALISES the 0.50.0 multi-item single-counter rung to a list of
+  `(counter, delimiter)` pairs where the matched pair's OWN counter is bumped.
+- Semantics (ISO COMBINED priority list ACROSS counters — the crux): ALL delimiters of ALL
+  groups form ONE ordered priority list, scanned in a SINGLE left-to-right pass over the
+  source. At each position the delimiters are tried IN WRITTEN ORDER (group 1's items
+  first, then group 2's, …) and the FIRST that matches increments ITS OWN group's counter
+  by 1, then the scan advances past the match (single-char ⇒ a normal one-position step).
+  A position matching no delimiter advances with no increment.
+- The decisive consequence (pinned by tests on BOTH engines): a character CLAIMED by an
+  earlier group's delimiter NEVER reaches a later group's delimiter, so the groups are NOT
+  independent counts — an earlier group can starve a later one of positions:
+  - `"aa"  TALLYING C1 FOR ALL "a"  C2 FOR ALL "a"`  gives `C1 += 2, C2 += 0`
+  - `"ab"  TALLYING C1 FOR ALL "a"  C2 FOR ALL "b"`  gives `C1 += 1, C2 += 1`
+  - `"aba" TALLYING C1 FOR ALL "a" ALL "b"  C2 FOR ALL "a"`  gives `C1 += 3, C2 += 0`
+- Each counter ADDS its own share (INSPECT does not clear it), and each truncates
+  independently through the same store path. The SAME counter name may legally appear in
+  two groups — both groups' matches then add to that one item (the counter is resolved by
+  name at each add, so this stays correct).
+- Implementation: a new `Stmt::InspectTallyCounters { source, groups }` variant carries the
+  `(counter_name, delims)` groups in written order; `read_statement` dispatches PURELY on
+  the number of `tally_for` groups (`>= 2` → this variant; exactly one keeps the unchanged
+  single-counter `Inspect` / `InspectTallyMulti` paths). `read_inspect_tally_counters` reads
+  every group enforcing the scope bound with the SAME messages the compiler raises, and
+  `exec_inspect_tally_counters` validates every counter unsigned-integer, flattens the
+  delimiters to `(group, char)`, runs the single first-match pass into per-group
+  accumulators, and folds each into its counter.
+- Scope bound (identical rejects on both engines): every item of every group must be a
+  plain `FOR ALL` single-char delimiter with NO `{BEFORE|AFTER}` region and NO
+  `LEADING`/`CHARACTERS`; every counter must be an unsigned integer `PIC 9(n)`. A group
+  carrying any of those, and the COMBINED `TALLYING … REPLACING` form with several counters
+  (still routed through `read_inspect_tally_all`'s several-counters reject), remain later
+  rungs. The single-counter paths and the combined-form reject are UNCHANGED.
+
 ## 0.50.0 — INSPECT TALLYING with multiple FOR items (one counter)
 
 - `INSPECT source TALLYING counter FOR ALL a ALL b [ALL d …]` — TWO OR MORE `FOR ALL`

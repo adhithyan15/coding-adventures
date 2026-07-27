@@ -4012,28 +4012,373 @@ fn inspect_tally_multi_with_characters_is_a_later_rung() {
     );
 }
 
+// INSPECT … TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d … — TWO OR MORE `tally_for`
+// groups, each with its OWN counter. ISO COMBINED-priority-list-ACROSS-COUNTERS
+// semantics: ALL delimiters of ALL groups form ONE ordered list scanned in a SINGLE
+// left-to-right pass; at each position the first matching delimiter (group-1's items
+// first, then group-2's, …) bumps ITS OWN counter and the scan advances — so a position
+// CLAIMED by an earlier group NEVER reaches a later group. Each case pins the exact
+// counters and `assert_matches_oracle` independently re-checks JIT == tree-walk oracle.
+
 #[test]
-fn inspect_tally_several_counters_is_a_later_rung() {
-    // TWO counters (`C FOR … D FOR …`) — several `tally_for` groups — stays a later
-    // rung, rejected unchanged on BOTH engines. The multi-item relaxation is confined
-    // to a SINGLE counter carrying several `FOR` items; it does not enable multiple
-    // counters.
-    let src = wrap(
+fn inspect_tally_counters_two_distinct_delims() {
+    // Two counters, disjoint delimiters over "abcab": C1 counts a,a = 2 and C2 counts
+    // b,b = 2 (c matches neither). Each delimiter bumps its OWN counter.
+    let out = assert_matches_oracle(&wrap(
         &[
-            "01  S  PIC X(5) VALUE \"abcab\".",
-            "01  C  PIC 9(3) VALUE 0.",
-            "01  D  PIC 9(3) VALUE 0.",
+            "01  S   PIC X(5) VALUE \"abcab\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
         ],
         &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR ALL \"b\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n002\n");
+}
+
+#[test]
+fn inspect_tally_counters_same_delim_first_group_wins() {
+    // THE crux case. Two counters, the SAME delimiter "a" over "aa": the combined
+    // priority list is [g0:a, g1:a]; each 'a' position matches g0 FIRST and the scan
+    // advances, so g1 never fires. C1 += 2, C2 += 0 — NOT 2 and 2. This pins that an
+    // earlier group consumes the position across counters.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(2) VALUE \"aa\".",
+            "01  C1  PIC 9(2) VALUE 0.",
+            "01  C2  PIC 9(2) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR ALL \"a\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "02\n00\n");
+}
+
+#[test]
+fn inspect_tally_counters_group_with_multiple_items() {
+    // A group carrying TWO items (`C1 FOR ALL "a" ALL "b"`) plus a second counter
+    // (`C2 FOR ALL "c"`) over "abcabc": C1 counts a,b,a,b = 4 and C2 counts c,c = 2.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(6) VALUE \"abcabc\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\" ALL \"b\"",
+            "    C2 FOR ALL \"c\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "004\n002\n");
+}
+
+#[test]
+fn inspect_tally_counters_starves_later_group() {
+    // The ISO "aba" example: `C1 FOR ALL "a" ALL "b" C2 FOR ALL "a"` over "aba". Group 1
+    // (items a,b) claims ALL three positions → C1 += 3; C2's "a" never reaches a
+    // position → C2 += 0.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(3) VALUE \"aba\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\" ALL \"b\"",
+            "    C2 FOR ALL \"a\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "003\n000\n");
+}
+
+#[test]
+fn inspect_tally_counters_three_counters() {
+    // Three counters, one delimiter each, over "abcabc": C1=a,a=2, C2=b,b=2, C3=c,c=2.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(6) VALUE \"abcabc\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+            "01  C3  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR ALL \"b\"",
+            "    C3 FOR ALL \"c\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "DISPLAY C3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n002\n002\n");
+}
+
+#[test]
+fn inspect_tally_counters_char_matched_by_no_group() {
+    // 'X' matches no group's delimiter → it advances with no increment: "aXbXa" gives
+    // C1 (a) = 2 and C2 (b) = 1.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(5) VALUE \"aXbXa\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR ALL \"b\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n001\n");
+}
+
+#[test]
+fn inspect_tally_counters_overflow_truncates_per_counter() {
+    // Each counter truncates INDEPENDENTLY via its own store path: 12 a's into a
+    // PIC 9(1) C1 overflows (12 mod 10 = 2); 3 b's into a PIC 9(3) C2 = 003.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(15) VALUE \"aaaaaaaaaaaabbb\".",
+            "01  C1  PIC 9(1) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR ALL \"b\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "2\n003\n");
+}
+
+#[test]
+fn inspect_tally_counters_add_to_nonzero_counters() {
+    // Distinct counters ACCUMULATE independently onto their starting values (INSPECT
+    // adds; it does not clear). C1 starts 5, C2 starts 10; "MISSISSIPPI" has four S's
+    // and two P's → C1 = 5 + 4 = 9, C2 = 10 + 2 = 12.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(11) VALUE \"MISSISSIPPI\".",
+            "01  C1  PIC 9(3) VALUE 5.",
+            "01  C2  PIC 9(3) VALUE 10.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"S\"",
+            "    C2 FOR ALL \"P\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "009\n012\n");
+}
+
+#[test]
+fn inspect_tally_counters_pic_x1_delimiters_across_groups() {
+    // The delimiters may be PIC X(1) items read at run time, one per group: ALL DL1 into
+    // C1, ALL DL2 into C2, over "abcab" → C1 = 2 (a), C2 = 2 (b).
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(5) VALUE \"abcab\".",
+            "01  DL1 PIC X(1) VALUE \"a\".",
+            "01  DL2 PIC X(1) VALUE \"b\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL DL1",
+            "    C2 FOR ALL DL2.",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n002\n");
+}
+
+#[test]
+fn inspect_tally_counters_same_counter_name_in_two_groups() {
+    // The SAME counter name may appear in two groups — a rare but legal form. Both
+    // groups' matches ADD to that ONE item: `C FOR ALL "a" C FOR ALL "b"` over "abab"
+    // gives 2 a's + 2 b's = C = 4 (each group resolves the counter by name at its add).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"abab\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
             "INSPECT S TALLYING C FOR ALL \"a\"",
-            "    D FOR ALL \"b\".",
+            "    C FOR ALL \"b\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "004\n");
+}
+
+#[test]
+fn inspect_tally_counters_single_counter_still_works() {
+    // Regression: exactly ONE `tally_for` keeps the single-counter paths unchanged (the
+    // multi-COUNTER dispatch fires only at >= 2 groups). One item → the `Inspect` path.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"A\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "003\n");
+}
+
+#[test]
+fn inspect_tally_counters_with_leading_item_is_a_later_rung() {
+    // A LEADING item in ANY group of the multi-COUNTER path is deferred — rejected on
+    // BOTH engines (a LONE `FOR LEADING` is still supported via the single path).
+    let src = wrap(
+        &[
+            "01  S   PIC X(4) VALUE \"aabb\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR LEADING \"b\".",
             "STOP RUN.",
         ],
     );
-    assert!(run_cobol(&src).is_err(), "oracle must reject several counters");
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-counter LEADING item");
     assert!(
         compile_source(&src, "e2e").is_err(),
-        "compiler must reject several counters"
+        "compiler must reject a multi-counter LEADING item"
+    );
+}
+
+#[test]
+fn inspect_tally_counters_with_region_is_a_later_rung() {
+    // A `{BEFORE|AFTER}` region on any item of any group is deferred on BOTH engines.
+    let src = wrap(
+        &[
+            "01  S   PIC X(5) VALUE \"a0b0a\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR ALL \"0\" BEFORE \"b\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-counter region");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-counter region"
+    );
+}
+
+#[test]
+fn inspect_tally_counters_with_characters_is_a_later_rung() {
+    // A `CHARACTERS` item in any group is deferred on BOTH engines.
+    let src = wrap(
+        &[
+            "01  S   PIC X(4) VALUE \"aabb\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR CHARACTERS.",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-counter CHARACTERS item");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-counter CHARACTERS item"
+    );
+}
+
+#[test]
+fn inspect_tally_counters_signed_counter_is_a_later_rung() {
+    // A signed (`PIC S9`) counter in ANY group is deferred — every counter must be an
+    // unsigned integer, validated identically on BOTH engines.
+    let src = wrap(
+        &[
+            "01  S   PIC X(4) VALUE \"aabb\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC S9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR ALL \"b\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a signed counter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a signed counter"
+    );
+}
+
+#[test]
+fn inspect_tally_counters_fractional_counter_is_a_later_rung() {
+    // A fractional (`PIC 9V9`) counter in any group is deferred on BOTH engines.
+    let src = wrap(
+        &[
+            "01  S   PIC X(4) VALUE \"aabb\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9V9 VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR ALL \"b\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a fractional counter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a fractional counter"
+    );
+}
+
+#[test]
+fn inspect_combined_several_counters_with_replacing_is_a_later_rung() {
+    // The COMBINED `TALLYING … REPLACING` form with SEVERAL counters stays rejected
+    // exactly as today — the multi-COUNTER relaxation is confined to the LONE TALLYING
+    // form and does not leak into the combined path (which still routes through the
+    // several-counters reject in `read_inspect_tally_all`/`inspect_tally_all`).
+    let src = wrap(
+        &[
+            "01  S   PIC X(5) VALUE \"abcab\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\" C2 FOR ALL \"b\"",
+            "    REPLACING ALL \"a\" BY \"x\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject combined + several counters");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject combined + several counters"
     );
 }
 
