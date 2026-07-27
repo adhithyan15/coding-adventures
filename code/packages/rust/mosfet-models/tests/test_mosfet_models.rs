@@ -14,6 +14,7 @@ fn test_default_params() {
     assert_eq!(p.phi, 0.84);
     assert_eq!(p.w, 1e-6);
     assert!((p.l - 130e-9).abs() < 1e-15);
+    assert_eq!(p.ld, 0.0);
     assert_eq!(p.kf, 0.0);
     assert_eq!(p.af, 1.0);
     assert!(p.subthreshold_enable);
@@ -94,6 +95,37 @@ fn test_gds_without_clm() {
     };
     let r = evaluate_level1(&p, 1.8, 1.8, 0.0, 300.15);
     assert!(r.gds.abs() < 1e-12, "gds≈0 when lambda=0");
+}
+
+#[test]
+fn test_lateral_diffusion_uses_effective_channel_length() {
+    let base = Level1Params {
+        l: 1.0e-6,
+        cgbo: 2.0e-6,
+        subthreshold_enable: false,
+        ..Level1Params::default()
+    };
+    let diffused = Level1Params {
+        ld: 0.1e-6,
+        ..base.clone()
+    };
+    let nominal = evaluate_level1(&base, 1.8, 1.8, 0.0, 300.15);
+    let shortened = evaluate_level1(&diffused, 1.8, 1.8, 0.0, 300.15);
+
+    assert!((shortened.id / nominal.id - 1.25).abs() < 1.0e-12);
+    assert!((shortened.cgb / nominal.cgb - 0.8).abs() < 1.0e-12);
+    assert!(shortened.cgs < nominal.cgs);
+}
+
+#[test]
+#[should_panic(expected = "MOSFET LD must be finite and non-negative with L - 2*LD > 0")]
+fn test_lateral_diffusion_rejects_nonpositive_effective_length() {
+    let params = Level1Params {
+        l: 1.0e-6,
+        ld: 0.5e-6,
+        ..Level1Params::default()
+    };
+    let _ = evaluate_level1(&params, 1.8, 1.8, 0.0, 300.15);
 }
 
 // ---------------------------------------------------------------------------

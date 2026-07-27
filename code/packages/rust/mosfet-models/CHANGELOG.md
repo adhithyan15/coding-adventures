@@ -4,6 +4,8 @@
 
 ### Added
 
+- `Level1Params::ld` applies Berkeley lateral-diffusion geometry through
+  `L_eff = L - 2*LD` to channel current and length-scaled capacitance.
 - `Level1Params::pb`, `Level1Params::mj`, and `Level1Params::fc` provide
   continuous Berkeley bulk-junction depletion-capacitance shaping for `CBS`
   and `CBD`.

@@ -125,6 +125,31 @@ def test_gds_increases_with_lambda():
     assert r_yes.gds > r_no.gds
 
 
+def test_lateral_diffusion_uses_effective_channel_length():
+    base = Level1Params(
+        L=1e-6, CGBO=2e-6, subthreshold_enable=False
+    )
+    diffused = Level1Params(
+        L=1e-6, LD=0.1e-6, CGBO=2e-6, subthreshold_enable=False
+    )
+
+    nominal = evaluate_level1(base, V_GS=1.8, V_DS=1.8)
+    shortened = evaluate_level1(diffused, V_GS=1.8, V_DS=1.8)
+
+    assert shortened.Id / nominal.Id == pytest.approx(1.25)
+    assert shortened.Cgb / nominal.Cgb == pytest.approx(0.8)
+    assert shortened.Cgs < nominal.Cgs
+
+
+@pytest.mark.parametrize("ld", [-1e-9, float("inf"), 0.5e-6])
+def test_lateral_diffusion_validates_effective_channel_length(ld):
+    with pytest.raises(
+        ValueError,
+        match=r"MOSFET LD must be finite and non-negative with L - 2\*LD > 0",
+    ):
+        evaluate_level1(Level1Params(L=1e-6, LD=ld), V_GS=1.8, V_DS=1.8)
+
+
 def test_overlap_and_bulk_capacitances_are_reported():
     p = Level1Params(
         W=2e-6,

@@ -1,5 +1,7 @@
 # Changelog
 
+- Add Level-1 MOS model-card `LD` support, using `L - 2*LD` for channel
+  current and length-scaled intrinsic/`CGBO` capacitance.
 - Add Level-1 MOS model-card `FC` support, applying the continuous Berkeley
   forward-bias continuation to `CBS` / `CBD` in AC and transient analysis.
 - Add Level-1 MOS model-card `AF` support and apply the configurable

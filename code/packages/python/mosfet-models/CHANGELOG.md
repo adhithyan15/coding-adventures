@@ -3,6 +3,8 @@
 ## [0.1.0] — Unreleased
 
 ### Added
+- `Level1Params.LD` applies Berkeley lateral-diffusion geometry through
+  `L_eff = L - 2*LD` to channel current and length-scaled capacitance.
 - `Level1Params.FC` adds the continuous Berkeley forward-bias continuation to
   the existing `PB` / `MJ` bulk-junction depletion-capacitance model.
 - `Level1Params.AF` provides the Level-1 MOS flicker-noise current exponent,
