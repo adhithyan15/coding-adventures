@@ -735,6 +735,98 @@ fn end_to_end_gc_compacting_relocates_and_preserves() {
     );
 }
 
+/// AOT00-T4 §6 — a native program drives a **bounded-pause incremental** collection end to
+/// end. The three-call cycle (`gc_collect_incremental_start` → `step(budget)` → `finish`) is
+/// invoked from compiled code around a live cons cell held in an `any` slot; the cell must
+/// survive and `car` must still read 42.
+///
+/// ```text
+///   main() -> i64:
+///       v    = dyn_box_int(42)
+///       cell = dyn_cons(v, dyn_box_int(7))     ; live cons in an `any` slot (a precise root)
+///       gc_collect_incremental_start()         ; snapshot roots, shade them grey
+///       _    = gc_collect_incremental_step(1e6) ; one big-budget step completes the mark
+///       _    = gc_collect_incremental_finish()  ; sweep the unreachable
+///       ret dyn_unbox_int(dyn_car(cell))       ; 42 — the live cell was kept
+/// ```
+///
+/// A single large-budget `step` finishes marking in one call, so the program needs no IIR
+/// loop; the mutator does no stores between start and the step, so the write barrier isn't
+/// exercised here (that is the gc-core load-bearing test's job — this proves the *native
+/// wiring* end to end). Returning 42 proves the incremental collect kept the live reference.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_incremental_keeps_live_ref() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    let body = vec![
+        IIRInstr::new("const", Some("k42".into()), vec![Operand::Int(42)], "i64"),
+        IIRInstr::new(
+            "call_builtin",
+            Some("v".into()),
+            vec![Operand::Var("dyn_box_int".into()), Operand::Var("k42".into())],
+            "any",
+        ),
+        IIRInstr::new("const", Some("k7".into()), vec![Operand::Int(7)], "i64"),
+        IIRInstr::new(
+            "call_builtin",
+            Some("w".into()),
+            vec![Operand::Var("dyn_box_int".into()), Operand::Var("k7".into())],
+            "any",
+        ),
+        IIRInstr::new(
+            "call_builtin",
+            Some("cell".into()),
+            vec![Operand::Var("dyn_cons".into()), Operand::Var("v".into()), Operand::Var("w".into())],
+            "any",
+        ),
+        // Drive the incremental cycle: start → one big-budget step → finish.
+        IIRInstr::new("call_builtin", None, vec![Operand::Var("gc_collect_incremental_start".into())], "void"),
+        IIRInstr::new("const", Some("budget".into()), vec![Operand::Int(1_000_000)], "i64"),
+        IIRInstr::new(
+            "call_builtin",
+            Some("done".into()),
+            vec![Operand::Var("gc_collect_incremental_step".into()), Operand::Var("budget".into())],
+            "i64",
+        ),
+        IIRInstr::new(
+            "call_builtin",
+            Some("freed".into()),
+            vec![Operand::Var("gc_collect_incremental_finish".into())],
+            "i64",
+        ),
+        // The live cell must have survived: read its car and unbox → 42.
+        IIRInstr::new(
+            "call_builtin",
+            Some("car".into()),
+            vec![Operand::Var("dyn_car".into()), Operand::Var("cell".into())],
+            "any",
+        ),
+        IIRInstr::new(
+            "call_builtin",
+            Some("r".into()),
+            vec![Operand::Var("dyn_unbox_int".into()), Operand::Var("car".into())],
+            "i64",
+        ),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ];
+    let mut m = IIRModule::new("gc_incremental", "twig");
+    m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+    m.entry_point = Some("main".into());
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let exe = dir.path().join("gc_incremental");
+    twig_aot::compile_module_to_macos_executable(&m, &exe)
+        .unwrap_or_else(|e| panic!("gc_incremental compiles+links: {e}"));
+    let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("gc_incremental runs: {e}"));
+    let code = out.status.code().unwrap_or_else(|| panic!("exited by signal: {out:?}"));
+    assert_eq!(
+        code, 42,
+        "car of the cons cell must be 42 after a native incremental collect — a wrong \
+         value/crash means the live reference was lost (got {code})",
+    );
+}
+
 /// AOT00-T1 (x86_64 PR-x4 / PR-x5) — precise roots reach through a **self-recursive**
 /// frame, not just the entry frame.
 ///

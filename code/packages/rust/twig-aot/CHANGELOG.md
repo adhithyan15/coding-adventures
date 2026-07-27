@@ -1,5 +1,17 @@
 # Changelog — `twig-aot`
 
+## 0.47.0 - 2026-07-27 — end-to-end native incremental collection (AOT00-T4 §6) — precision ladder COMPLETE
+
+- New macOS smoke test `end_to_end_gc_incremental_keeps_live_ref`: a compiled native program
+  drives the full three-call incremental cycle — `gc_collect_incremental_start` →
+  `gc_collect_incremental_step(1e6)` → `gc_collect_incremental_finish` — around a live cons
+  cell held in an `any` slot, then reads its `car` and returns 42. A single large-budget step
+  completes marking in one call (no IIR loop needed). Returning 42 proves a native program can
+  drive a **bounded-pause** collection end-to-end and its live reference survives.
+- This completes the incremental-collector arc (AOT00-T4) and the **entire precision ladder**:
+  mark-and-sweep → interior-precise → generational → precise-roots → compacting → **incremental**,
+  each now core + C ABI + frontend-triggerable end-to-end.
+
 ## 0.46.0 - 2026-07-24 — movable cons cells: the real compaction relocation payoff (AOT00-T3)
 
 The moving/compacting collector now actually **relocates** a live heap object in a compiled

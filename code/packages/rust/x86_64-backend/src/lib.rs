@@ -407,6 +407,12 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "gc_collect",            n_args: 0, returns: false },
     BuiltinSig { name: "gc_collect_precise",    n_args: 0, returns: true  },
     BuiltinSig { name: "gc_collect_compacting", n_args: 0, returns: true  },
+    // Incremental (bounded-pause) cycle (spec AOT00-T4 §6): start → step(budget)→done? →
+    // finish. Auto-emits `__twig_gc_collect_incremental_*` via the generic `__twig_<name>`
+    // dispatch. Mirrors the aarch64 backend.
+    BuiltinSig { name: "gc_collect_incremental_start",  n_args: 0, returns: false },
+    BuiltinSig { name: "gc_collect_incremental_step",   n_args: 1, returns: true  },
+    BuiltinSig { name: "gc_collect_incremental_finish", n_args: 0, returns: true  },
     BuiltinSig { name: "gc_live_bytes",         n_args: 0, returns: true  },
     BuiltinSig { name: "gc_stackmap_count",     n_args: 0, returns: true  },
 ];
@@ -2216,6 +2222,32 @@ mod tests {
             symbols.contains(&"__twig_gc_collect_compacting"),
             "missing compacting-collect call: {symbols:?}",
         );
+    }
+
+    /// The incremental-collector builtin trio (`gc_collect_incremental_{start,step,finish}`,
+    /// spec AOT00-T4 §6) lowers each to a `call` to its `__twig_gc_collect_incremental_*`
+    /// linker symbol via the generic `__twig_<name>` dispatch — `step` takes a budget arg.
+    #[test]
+    fn gc_collect_incremental_emits_external_twig_calls() {
+        let ir = vec![
+            call_builtin(None, "gc_collect_incremental_start", &[]),
+            instr("const_u64", Some("budget"), vec![Op::Int(1_000_000)]),
+            call_builtin(Some("done"), "gc_collect_incremental_step", &["budget"]),
+            call_builtin(Some("freed"), "gc_collect_incremental_finish", &[]),
+            instr("ret_u64", None, vec![Op::Var("freed".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("gc_incr", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("gc_collect_incremental_* must lower");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        for want in [
+            "__twig_gc_collect_incremental_start",
+            "__twig_gc_collect_incremental_step",
+            "__twig_gc_collect_incremental_finish",
+        ] {
+            assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
+        }
     }
 
     #[test]

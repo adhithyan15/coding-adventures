@@ -1,5 +1,14 @@
 # Changelog — `aarch64-backend`
 
+## 0.32.0 - 2026-07-27 — `gc_collect_incremental_*` builtin trio (frontend incremental GC, AOT00-T4 §6)
+
+- Three new `V1_BUILTINS` entries — `gc_collect_incremental_start` (0 args, void),
+  `gc_collect_incremental_step` (1 arg = budget, returns 1 done / 0 more),
+  `gc_collect_incremental_finish` (0 args, returns freed count) — the bounded-pause collection
+  cycle. The generic `__twig_<name>` `call_builtin` dispatch auto-emits `BL
+  __twig_gc_collect_incremental_*` (no per-name lowering). A native program can now drive an
+  incremental collection. New emission unit test asserts the three external reloc symbols.
+
 ## 0.31.0 - 2026-07-24 — `gc_collect_compacting` builtin (frontend GC.compact, AOT00-T3 §5)
 
 - New `V1_BUILTINS` entry `gc_collect_compacting` (0 args, returns the freed count) — the

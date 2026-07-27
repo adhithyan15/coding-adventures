@@ -259,6 +259,14 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "gc_collect",            n_args: 0, returns: false },
     BuiltinSig { name: "gc_collect_precise",    n_args: 0, returns: true  },
     BuiltinSig { name: "gc_collect_compacting", n_args: 0, returns: true  },
+    // The incremental (bounded-pause) collection cycle (spec AOT00-T4 §6), driven
+    // start → step(budget)→done? → finish; the mutator's ref stores between steps go through
+    // the write barrier. `step` takes a budget and returns 1 (done) / 0 (more); `finish`
+    // returns objects reclaimed. Auto-emit `__twig_gc_collect_incremental_*` via the generic
+    // `__twig_<name>` dispatch — no per-name lowering.
+    BuiltinSig { name: "gc_collect_incremental_start",  n_args: 0, returns: false },
+    BuiltinSig { name: "gc_collect_incremental_step",   n_args: 1, returns: true  },
+    BuiltinSig { name: "gc_collect_incremental_finish", n_args: 0, returns: true  },
     BuiltinSig { name: "gc_live_bytes",         n_args: 0, returns: true  },
     BuiltinSig { name: "gc_stackmap_count",     n_args: 0, returns: true  },
 ];
@@ -2347,6 +2355,32 @@ mod tests {
             symbols.contains(&"__twig_gc_collect_compacting"),
             "missing compacting-collect call: {symbols:?}",
         );
+    }
+
+    /// The incremental-collector builtin trio (`gc_collect_incremental_{start,step,finish}`,
+    /// spec AOT00-T4 §6) lowers each to a `BL` to its `__twig_gc_collect_incremental_*` linker
+    /// symbol via the generic `__twig_<name>` dispatch — `step` takes a budget arg. Proves a
+    /// native frontend can drive a bounded-pause collection.
+    #[test]
+    fn gc_collect_incremental_emits_external_twig_calls() {
+        let cir = vec![
+            call_builtin(None, "gc_collect_incremental_start", &[]),
+            const_u64("budget", 1_000_000),
+            call_builtin(Some("done"), "gc_collect_incremental_step", &["budget"]),
+            call_builtin(Some("freed"), "gc_collect_incremental_finish", &[]),
+            ret_u64("freed"),
+        ];
+        let (bytes, ext) = compile_with_relocs(&ctx("gc_incr", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("gc_collect_incremental_* must lower: {e}"));
+        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+        let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
+        for want in [
+            "__twig_gc_collect_incremental_start",
+            "__twig_gc_collect_incremental_step",
+            "__twig_gc_collect_incremental_finish",
+        ] {
+            assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
+        }
     }
 
     #[test]
