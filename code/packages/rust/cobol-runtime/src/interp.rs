@@ -516,29 +516,50 @@ impl Machine {
     /// so a compiled program matches this oracle byte-for-byte.
     fn exec_unstring(
         &mut self,
-        source: &str,
+        source: &Operand,
         delim: &Operand,
         targets: &[String],
     ) -> Result<(), RuntimeError> {
-        // The source must be an alphanumeric item; read its stored characters.
-        let sidx = *self
-            .by_name
-            .get(source)
-            .ok_or_else(|| RuntimeError::UndefinedName(source.to_string()))?;
-        match &self.items[sidx].picture {
-            Some(p) if p.is_numeric() => {
+        // The field characters come from ONE of two providers; everything after
+        // `src` is obtained (the delimiter scan and per-receiver reshape) is
+        // shared, so only this match differs between an item source and a literal
+        // source.
+        let src: Vec<char> = match source {
+            // Identifier source: the characters are an alphanumeric item's
+            // STORAGE (a numeric or group item is a later rung).
+            Operand::Ident(name) => {
+                let sidx = *self
+                    .by_name
+                    .get(name)
+                    .ok_or_else(|| RuntimeError::UndefinedName(name.clone()))?;
+                match &self.items[sidx].picture {
+                    Some(p) if p.is_numeric() => {
+                        return Err(RuntimeError::Unsupported(
+                            "UNSTRING of a numeric source is a later rung".into(),
+                        ))
+                    }
+                    Some(_) => {}
+                    None => {
+                        return Err(RuntimeError::Unsupported(
+                            "UNSTRING of a group source is a later rung".into(),
+                        ))
+                    }
+                }
+                self.items[sidx].storage.chars().collect()
+            }
+            // Literal source: the characters are the string literal's OWN bytes.
+            // A string literal is inherently alphanumeric, so there is no item to
+            // look up and no picture to check.
+            Operand::Lit(Lit::Str(s)) => s.chars().collect(),
+            // The reader rejected every other source variant (numeric/figurative
+            // literal, reference-modified), so these are unreachable in practice;
+            // guard defensively rather than panic.
+            Operand::Lit(_) | Operand::RefMod { .. } => {
                 return Err(RuntimeError::Unsupported(
-                    "UNSTRING of a numeric source is a later rung".into(),
+                    "UNSTRING with this source kind is a later rung".into(),
                 ))
             }
-            Some(_) => {}
-            None => {
-                return Err(RuntimeError::Unsupported(
-                    "UNSTRING of a group source is a later rung".into(),
-                ))
-            }
-        }
-        let src: Vec<char> = self.items[sidx].storage.chars().collect();
+        };
 
         // The single delimiter character.
         let delim_ch = self.single_delim_char(delim, "UNSTRING")?;

@@ -147,7 +147,16 @@ pub enum Stmt {
     /// source is exhausted the remaining receivers are left UNCHANGED (not
     /// space-filled). `WITH POINTER`, `ON OVERFLOW`, a multi-character or `ALL`/
     /// `OR` delimiter, and a numeric/group source or receiver are later rungs.
-    Unstring { source: String, delim: Operand, targets: Vec<String> },
+    ///
+    /// The `source` is an [`Operand`] so the field text can come from either of
+    /// two providers with IDENTICAL downstream scanning: an `Operand::Ident`
+    /// reads an alphanumeric item's *storage* (as before), while an
+    /// `Operand::Lit(Lit::Str(_))` scans the string literal's OWN bytes directly
+    /// (`UNSTRING "a,b,c" DELIMITED BY "," INTO w1 w2 w3` → w1="a", w2="b",
+    /// w3="c"). Only the source of the characters differs; the delimiter scan and
+    /// per-receiver reshape are shared. A NUMERIC or FIGURATIVE literal source and
+    /// a reference-modified source remain later rungs (rejected at read time).
+    Unstring { source: Operand, delim: Operand, targets: Vec<String> },
     /// `INSPECT source TALLYING counter FOR ALL delim` (or `FOR LEADING delim`)
     /// — count occurrences of the SINGLE-character `delim` (a 1-char literal or a
     /// `PIC X(1)` item) in the alphanumeric `source` and **ADD** that count to the
@@ -999,14 +1008,22 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     ))
                 }
             };
-            // The source must be a plain data-name (a PIC X item is checked at
-            // exec time); a literal or reference-modification source is a later
-            // rung.
+            // The source is either a plain data-name (a PIC X item, checked at
+            // exec time) OR an alphanumeric STRING literal, whose own bytes supply
+            // the field text. A NUMERIC or FIGURATIVE literal source and a
+            // reference-modified source are still later rungs. We keep the whole
+            // `Operand` so exec time can pick the provider.
             let source = match read_operand(source_op)? {
-                Operand::Ident(name) => name,
-                Operand::Lit(_) => {
+                src @ Operand::Ident(_) => src,
+                src @ Operand::Lit(Lit::Str(_)) => src,
+                Operand::Lit(Lit::Num(_)) => {
                     return Err(RuntimeError::Unsupported(
-                        "UNSTRING with a literal source is a later rung".into(),
+                        "UNSTRING of a numeric-literal source is a later rung".into(),
+                    ))
+                }
+                Operand::Lit(Lit::Fig(_)) => {
+                    return Err(RuntimeError::Unsupported(
+                        "UNSTRING of a figurative-constant source is a later rung".into(),
                     ))
                 }
                 Operand::RefMod { .. } => {

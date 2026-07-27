@@ -8,6 +8,28 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.48.0: UNSTRING with a literal source
+
+`UNSTRING "a,b,c" DELIMITED BY "," INTO w1 w2 w3` — an alphanumeric STRING LITERAL in the
+UNSTRING SOURCE position now compiles, byte-identical to the
+`coding-adventures-cobol-runtime` 0.52.0 oracle. Previously a literal source was rejected at
+emit time ("UNSTRING with a literal source is a later rung"). No grammar change was needed —
+the grammar already parses a literal operand there.
+
+Only the source PROVIDER changed. `emit_unstring` obtains its string register `s_reg` either
+from an alphanumeric item's own char register (identifier source, as before) or, for a string
+literal, from a fresh `str_const` register holding the literal's bytes. A `str_const` register
+behaves identically to an item's char register under `str_len` / `str_index` / `str_slice` —
+exactly as the `spaces_const` register already does inside the same routine — so the entire
+downstream scan-and-fill loop (delimiter scan, per-receiver slice, truncate/pad reshape,
+cursor advance, exhausted-source guard) is UNCHANGED and shared between the two providers.
+
+Still deferred (rejected on the compiler and the oracle alike): a NUMERIC-literal source
+(`UNSTRING 123 …`) and a FIGURATIVE source (`UNSTRING SPACE …`) — only an alphanumeric string
+literal is supported — and a reference-modified source (unchanged). `WITH POINTER`, `ON
+OVERFLOW`, a multi-character/`ALL`/`OR` delimiter, and a numeric/group receiver remain later
+rungs.
+
 ### Added — v0.47.0: INSPECT TALLYING with multiple counters
 
 `INSPECT source TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d [ALL e …] …` — TWO OR MORE

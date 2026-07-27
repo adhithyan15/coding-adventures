@@ -1471,12 +1471,42 @@ impl<'a> Compiler<'a> {
                 ))
             }
         };
-        // The source must be a plain alphanumeric data-name.
-        let source_name = match read_operand(source_node)? {
-            Operandy::Name(n) => n,
-            Operandy::Literal(_) => {
+        // The source supplies the field text from ONE of two providers, and the
+        // whole scan below reads it purely as a string register (`str_len` /
+        // `str_index` / `str_slice`) — so only how we obtain `s_reg` differs:
+        //   * an alphanumeric data-name → the item's own char register; or
+        //   * a STRING literal → a fresh `str_const` register holding its bytes
+        //     (a `str_const` register behaves identically to an item's char
+        //     register under str_len/str_index/str_slice, exactly as the
+        //     `spaces_const` register does further down this same routine).
+        // A NUMERIC or FIGURATIVE literal source and a reference-modified source
+        // stay later rungs, matching the oracle's read-time rejects.
+        let s_reg = match read_operand(source_node)? {
+            Operandy::Name(source_name) => {
+                let sidx = self.item_index(&source_name)?;
+                match &self.items[sidx].kind {
+                    ItemKind::Char { .. } => {}
+                    ItemKind::Numeric { .. } => {
+                        return Err(CompileError::Unsupported(
+                            "UNSTRING of a numeric source is a later rung".into(),
+                        ))
+                    }
+                }
+                self.items[sidx].reg.clone()
+            }
+            Operandy::Literal(Src::Str(s)) => {
+                let reg = self.fresh("_ussrc");
+                self.emit("str_const", Some(&reg), vec![Operand::Str(s)], "str");
+                reg
+            }
+            Operandy::Literal(Src::Num(_)) => {
                 return Err(CompileError::Unsupported(
-                    "UNSTRING with a literal source is a later rung".into(),
+                    "UNSTRING of a numeric-literal source is a later rung".into(),
+                ))
+            }
+            Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
+                return Err(CompileError::Unsupported(
+                    "UNSTRING of a figurative-constant source is a later rung".into(),
                 ))
             }
             Operandy::RefMod { .. } => {
@@ -1485,16 +1515,6 @@ impl<'a> Compiler<'a> {
                 ))
             }
         };
-        let sidx = self.item_index(&source_name)?;
-        match &self.items[sidx].kind {
-            ItemKind::Char { .. } => {}
-            ItemKind::Numeric { .. } => {
-                return Err(CompileError::Unsupported(
-                    "UNSTRING of a numeric source is a later rung".into(),
-                ))
-            }
-        }
-        let s_reg = self.items[sidx].reg.clone();
 
         // The delimiter reduced to a single byte code register.
         let d_reg = self.single_delim_code(delim_node, "UNSTRING")?;
