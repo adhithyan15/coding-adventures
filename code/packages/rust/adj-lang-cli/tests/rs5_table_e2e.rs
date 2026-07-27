@@ -541,6 +541,54 @@ fn shipped_force_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b11) Shipped table — reference/acceleration-conversions.adj resolves via import
+//       (acceleration unit → metres per second squared, EXACT SP 811 B.9 boldface
+//       factors, incl. the conventional standard gravity gₙ), and the SI unit itself
+//       (`metre_per_second_squared`) — which has no customary-conversion row — abstains.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_acceleration_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_accel");
+    let src = stdlib().join("reference/acceleration-conversions.adj");
+    std::fs::copy(&src, dir.join("acceleration-conversions.adj"))
+        .expect("copy shipped acceleration-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"acceleration-conversions.adj\"\n\
+         ? acceleration_to_metres_per_second_squared(free_fall_standard, $a)\n\
+         ? acceleration_to_metres_per_second_squared(foot_per_second_squared, $a)\n\
+         ? acceleration_to_metres_per_second_squared(gal, $a)\n\
+         ? acceleration_to_metres_per_second_squared(metre_per_second_squared, $a)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 "Acceleration" exact factors resolve, character-for-
+    // character from the table (boldface = exact; scientific notation to plain decimal).
+    assert!(
+        out.contains("\"a\":\"9.80665\""),
+        "standard acceleration of free fall gₙ = 9.80665 m/s²: {out}"
+    );
+    assert!(
+        out.contains("\"a\":\"0.3048\""),
+        "foot/second² = 0.3048 m/s²: {out}"
+    );
+    assert!(out.contains("\"a\":\"0.01\""), "gal = 0.01 m/s²: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `metre_per_second_squared` is the SI unit itself, not a customary-conversion row
+    // — the engine abstains rather than fabricating a factor.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "the SI unit itself abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
