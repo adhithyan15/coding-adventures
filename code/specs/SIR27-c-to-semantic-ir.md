@@ -213,7 +213,7 @@ onto the work queue, and the nested `If` is folded bottom-up once the walk ends.
 Recursion remains only for a *nested* sub-sequence, which the parser's rule-depth
 guard bounds.
 
-### Five shapes that are refused (rather than mis-handled)
+### Four shapes that are refused (rather than mis-handled)
 
 1. **`return` inside a loop.**  Leaving a `while`/`for` early needs a
    break-with-value, which SIR has no node for.
@@ -224,25 +224,10 @@ guard bounds.
    well under 1 KB of C can emit hundreds of megabytes.  A future version can
    hoist the continuation into a synthesized function called from both branches,
    making the transform linear; until then it is a positioned error.
-3. **A declaration that re-uses a name already in scope.**  v1's symbol table is
-   **flat** — it has no per-block scopes — and nested `{ }` blocks are spliced
-   into the enclosing sequence, so two bindings of one name collapse into a
-   single SIR block.  That silently takes the wrong type *and* makes the emitted
-   C a `redefinition of 'v'` error:
-
-   ```c
-   int f(int x) { int v = 1; { uint8_t v = 250; v = v + 6; } return v + 1000; }
-   ```
-
-   C scopes the inner `v` and yields **1001**; lowering it flat yields **1000**.
-   Early return sharpens the same hazard, because the continuation is lowered
-   *inside* the branch that falls through.  So the check lives in one place —
-   the declaration itself — covering every path that can bind a name: plain
-   blocks, `if`/`else` branches, loop bodies, `for`-inits, and the lifted
-   continuation.  Sibling branches are unaffected (only one runs, and the table
-   is restored between them).  Two sequential `for (int i = …)` loops are the
-   everyday form of this limitation.
-4. **An emitted tree deeper than the budget.**  Every consumer of the IR walks
+   (Shadowing / name re-use *used* to be refused here; milestone 7 makes it work
+   — see below.  Only re-declaring a name in the **same** block is still an
+   error.)
+3. **An emitted tree deeper than the budget.**  Every consumer of the IR walks
    it recursively, so the frontend caps how deep a tree it will build.  Depth
    accumulates from **three** independent sources that all add in the same tree
    and the same recursion, so they share **one** budget:
@@ -263,7 +248,7 @@ guard bounds.
    configuration — a **debug** build on a **1 MiB** stack.  Calibrating against
    a test-harness thread instead is exactly how earlier versions looked safe
    while crashing in the wild.
-5. **More than that many lifted early returns in one function.**  Each lifted guard
+4. **More than that many lifted early returns in one function.**  Each lifted guard
    nests the emitted IR one level deeper, and every consumer of that IR walks it
    *recursively* — the validator, all five backends, the text printer, even
    `Drop`.  Measured: 150 chained guards lower, validate and emit fine while 250
@@ -349,6 +334,36 @@ lower to **dedicated `tdiv`/`tmod` builtins**, never the flooring `/`/`%`.
 Both agree with `clang -fwrapv` across all four sign combinations.  `INT_MIN /
 -1` is deliberately *not* a conformance case — it is UB and the reference program
 traps — but the backends stay defined so they never crash on it.
+
+## Per-block scoping (milestone 7)
+
+Earlier milestones kept a **flat** symbol table and *refused* any declaration
+that re-used a live name — so shadowing, and even two sequential
+`for (int i = …)` loops, were errors.  Milestone 7 replaces it with a **scope
+stack**: a scope is pushed on entering a `{ }` block, an `if`/`else`/loop body,
+or a `for`'s init+body region, and popped on leaving it.  A declaration binds in
+the innermost scope; a reference resolves innermost-outward.
+
+Because SIR's namespace is flat while C's is not, every declaration is given a
+**unique SIR name** — the C name itself, or `name__2`, `name__3`, … if it
+shadows an outer binding or re-uses one a sibling block used.  References
+resolve to the binding's SIR name, so two distinct C variables that share a
+spelling never collide, and the emitted C/Ruby is correct.  This *removes* the
+milestone-3 shadowing miscompile hazard by construction: distinct variables have
+distinct names, so one can never clobber another.
+
+The subtlety is the interaction with early-return lifting, which merges a branch
+body and the continuation into one SIR block.  The lifting trampoline carries a
+**`PopScope` marker** on its work queue: a spliced block pushes a scope, queues
+its items, then a `PopScope`, so the block's declarations go out of scope exactly
+at its `}` and the following continuation is lowered in the enclosing scope —
+correct lifetime even though the two are concatenated.
+
+Still enforced: re-declaring a name in the **same** block is a C error; a
+variable is undeclared once its block has closed.  (A self-referential
+initializer like `int v = v + 1;` in a shadowing block reads the *uninitialized*
+inner `v` per C's scope rule — that is UB, and not something the translator
+conforms to.)
 
 ## Pipeline
 

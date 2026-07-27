@@ -544,6 +544,40 @@ fn corpus() -> Vec<Case> {
                    int gcd(int a, int b) { while (b != 0) { int t = a % b; a = b; b = t; } return a; }\n\
                    int main(void) { printf(\"%d\\n\", gcd(48, 36)); return 0; }",
         },
+        // ── milestone 7: per-block scoping (shadowing, re-used names) ────────
+        // These were all *rejected* before; each is valid C whose inner binding
+        // shadows an outer one without clobbering it.
+        Case {
+            label: "nested-block shadow doesn't touch the outer v → 1001",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int f(int x) { int v = 1; { uint8_t v = 250; v = v + 6; } return v + 1000; }\n\
+                   int main(void) { printf(\"%d\\n\", f(0)); return 0; }",
+        },
+        Case {
+            label: "shadow in a lifted else-branch, outer v survives → 1001",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int f(int x) { int v = 1; if (x > 0) { return 5; } \
+                   else { uint8_t v = 250; } return v + 1000; }\n\
+                   int main(void) { printf(\"%d\\n\", f(-1)); return 0; }",
+        },
+        // (A self-referential shadow like `int v = v + 5;` is deliberately not a
+        // case: C scopes the inner `v` from its declarator — before the
+        // initializer — so its RHS reads the *uninitialized* inner `v`, which is
+        // UB.  We only conform on well-defined shadowing.)
+        Case {
+            label: "two sequential for-loops re-use i → 13",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int f(void) { int s = 0; \
+                   for (int i = 0; i < 3; i = i + 1) { s = s + i; } \
+                   for (int i = 0; i < 5; i = i + 1) { s = s + i; } return s; }\n\
+                   int main(void) { printf(\"%d\\n\", f()); return 0; }",
+        },
+        Case {
+            label: "shadowing a parameter in a block → 5",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int f(int v) { { int v = 5; return v; } }\n\
+                   int main(void) { printf(\"%d\\n\", f(99)); return 0; }",
+        },
     ]
 }
 

@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+### Milestone 7 — per-block scoping
+
+- The flat symbol table is replaced with a **scope stack** (pushed at a `{ }`
+  block, an `if`/`else`/loop body, and a `for`'s init+body region).  Shadowing
+  and re-used names — including two sequential `for (int i = …)` loops — now
+  compile instead of being rejected.
+- Because SIR's namespace is flat, every declaration gets a **unique SIR name**
+  (`name`, then `name__2`, …), so two distinct C variables sharing a spelling
+  never collide.  This removes the milestone-3 shadowing miscompile hazard *by
+  construction* — distinct variables have distinct names.
+- The early-return lifting trampoline carries a **`PopScope` marker** on its work
+  queue, so a spliced block's declarations go out of scope at its `}` and the
+  continuation is lowered in the enclosing scope — correct lifetime even though
+  the two are merged into one SIR block.
+- Still enforced: re-declaring a name in the same block is a C error; a variable
+  is undeclared once its block closes.  (A self-referential initializer `int v =
+  v + 1;` in a shadowing block is UB in C — reads the uninitialized inner `v` —
+  and is not conformed to.)
+- Corpus grows with well-defined shadowing programs (nested-block shadow,
+  shadow in a lifted `else`, two sequential `for` loops, shadowing a parameter) —
+  byte-identical across reference `clang -fwrapv`, emitted Ruby, and emitted C
+  (and clang+gcc+MSVC).
+
 ### Milestone 6 — division & modulo (`/ %`, truncating)
 
 - C `/` **truncates toward zero** and `%` takes the dividend's sign (`-7/2 = -3`,
