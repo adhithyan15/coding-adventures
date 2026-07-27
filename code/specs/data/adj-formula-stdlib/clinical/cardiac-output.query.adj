@@ -1,0 +1,34 @@
+% ============================================================================
+% cardiac-output.query.adj — worked examples over the clinical cardiac-output library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a cardiac-output
+% question: it states NO arithmetic and NO definition — it only `import`s the
+% grounded library, `observe`s the physiological quantities it decomposed from the
+% prompt (each a byte-provenanced span, elided here), and asks the engine to APPLY
+% the cited definition. The native adj-lang engine binds the parameters, computes
+% each value EXACTLY on the CPU, and returns it with the definition's
+% source/locator/trust.
+%
+% The three questions INVERT: a heart pumping 70 mL per beat at 75 bpm has a cardiac
+% output of 75·70 = 5250 mL/min (5.25 L/min); that 5250 mL/min output at the same
+% 70 mL stroke volume is exactly what the heart-rate formula divides to recover the
+% 75 bpm, and that 5250 mL/min at the same 75 bpm is exactly what the stroke-volume
+% formula divides to recover the 70 mL.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli cardiac-output.query.adj
+% ============================================================================
+
+import "cardiac-output.adj"
+
+% 75 bpm at 70 mL/beat: cardiac output = 75 * 70.
+observe heart_rate(75)
+observe stroke_volume(70)
+? cardiac_output(heart_rate, stroke_volume)   % expect 5250   (definition: CO = HR·SV)
+
+% That 5250 mL/min output for the same 70 mL stroke volume: heart rate = 5250 / 70.
+observe cardiac_output(5250)
+? heart_rate(cardiac_output, stroke_volume)    % expect 75     (same definition, solved for HR = CO/SV)
+
+% That 5250 mL/min output at the same 75 bpm: stroke volume = 5250 / 75.
+? stroke_volume(cardiac_output, heart_rate)    % expect 70     (same definition, solved for SV = CO/HR)
