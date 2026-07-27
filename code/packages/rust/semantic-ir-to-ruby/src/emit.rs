@@ -107,6 +107,12 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     // keeping dispatch CLOSED (anti-RCE).
     "__def_class_method__",
     "__class_method__",
+    // OOP classes slice 7 (modules / mixins): `include M` / `extend M` render as
+    // Ruby's native `Class.include(Module)` / `Class.extend(Module)`.  Both
+    // operands are bare constant references (validated).  A module's own methods
+    // are hoisted + registered via `__def_method__`, reusing the slice-2 machinery.
+    "__include__",
+    "__extend__",
 ];
 
 /// Emit a complete self-contained Ruby source file for `m`.
@@ -566,13 +572,36 @@ impl Scan {
         // obligates handling it too, or a hand-built module carrying it would
         // pass validation + the capability check and reach the emitter's
         // `unreachable!` (a DoS).  It is deferred to a later OOP slice; reject it
-        // cleanly here.  (`Stmt::ModuleDef` is NOT handled here because it
-        // observes the unaccepted `Feature::Modules`, so the capability check
-        // rejects such a module before this scan.)
+        // cleanly here.
         Stmt::SingletonClassDef { span, .. } => Some(ScanHit::Unsupported(
             "a singleton class (`class << self`)".to_string(),
             span.clone(),
         )),
+        // A `Stmt::ModuleDef` (`module M; end`, `Feature::Modules`, OOP slice 7) —
+        // the sole observer of `Feature::Modules`, so accepting it obligates
+        // handling `ModuleDef` here (else it would reach the emitter's
+        // `unreachable!`).  Emitted as `Object.const_set(:M, Module.new)`, so
+        // validate the name as a single-segment constant (like a `ClassDef`); a
+        // non-empty module body (class-level code) is deferred — a method-only
+        // module has an EMPTY body (its methods are hoisted + registered via
+        // `__def_method__`).
+        Stmt::ModuleDef { name, body, span } => {
+            if !is_valid_constant_path(name) {
+                Some(ScanHit::ConstantName(name.clone(), span.clone()))
+            } else if name.contains("::") {
+                Some(ScanHit::Unsupported(
+                    "a namespaced module name (`module Foo::Bar`)".to_string(),
+                    span.clone(),
+                ))
+            } else if !body.is_empty() {
+                Some(ScanHit::Unsupported(
+                    "a non-empty module body (class-level code)".to_string(),
+                    span.clone(),
+                ))
+            } else {
+                None
+            }
+        }
         _ => None,
     }
     }
@@ -749,6 +778,26 @@ impl Scan {
                                 ),
                                 mspan.clone(),
                             ));
+                        }
+                    }
+                    _ => return Some(ScanHit::Builtin(name.clone(), span.clone())),
+                }
+            }
+            // `__include__("Class", "Module")` / `__extend__(…)` (OOP slice 7) mix
+            // a module into a class: `(<Class>).include(<Module>)`.  BOTH operands
+            // are emitted verbatim as bare constant references, so validate each as
+            // a constant path here (injection guard).
+            if name == "__include__" || name == "__extend__" {
+                match (args.first(), args.get(1)) {
+                    (
+                        Some(Expr::StrLit { value: cls, span: cspan }),
+                        Some(Expr::StrLit { value: m, span: mspan }),
+                    ) => {
+                        if !is_valid_constant_path(cls) {
+                            return Some(ScanHit::ConstantName(cls.clone(), cspan.clone()));
+                        }
+                        if !is_valid_constant_path(m) {
+                            return Some(ScanHit::ConstantName(m.clone(), mspan.clone()));
                         }
                     }
                     _ => return Some(ScanHit::Builtin(name.clone(), span.clone())),
@@ -1149,8 +1198,16 @@ fn emit_stmt(s: &Stmt) -> String {
             }
             s
         }
-        // Other not-yet-supported statements (e.g. index-set, module/singleton
-        // defs) are rejected by the capability check / scan before emit.
+        // OOP classes slice 7: a `module M; end` — defined REFLECTIVELY like a
+        // class (`const_set` is legal anywhere; a native `module` block is a Ruby
+        // error inside the `main` method), naming the module `M`.  The scan
+        // guarantees a single-segment constant name and an empty body, so this is
+        // a bare `Object.const_set(:M, Module.new)`.  Its methods are hoisted and
+        // registered separately with `__def_method__` (reusing slice-2 machinery),
+        // and a class mixes it in with the native `include`/`extend` below.
+        Stmt::ModuleDef { name, .. } => format!("Object.const_set(:{name}, Module.new)"),
+        // Other not-yet-supported statements (e.g. index-set, singleton defs) are
+        // rejected by the capability check / scan before emit.
         other => unreachable!("Ruby backend reached unsupported statement: {other:?}"),
     }
 }
@@ -1517,6 +1574,13 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
             parts.extend_from_slice(&a[2..]);
             format!("({class}).public_send({})", parts.join(", "))
         }
+        // OOP classes slice 7 — mix a module into a class.  `args[0]` = the class,
+        // `args[1]` = the module, BOTH bare validated constants.  `include` adds
+        // the module's methods as INSTANCE methods (resolved through the ancestry
+        // by the existing `__method__`/`public_send` dispatch); `extend` adds them
+        // as SINGLETON (class) methods.  Native Ruby — no runtime helper.
+        "__include__" => format!("({}).include({})", str_arg(args, 0), str_arg(args, 1)),
+        "__extend__" => format!("({}).extend({})", str_arg(args, 0), str_arg(args, 1)),
         // Unreachable: first_scan_issue rejected anything else.
         other => unreachable!("v0 Ruby backend reached unsupported builtin: {other}"),
     }

@@ -213,6 +213,20 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // runs where `self` is `main`, not the class.  Every `@@`-name is validated as
     // `@@<identifier>` in the co-total scan (no injection).
     Feature::ClassVars,
+    // ── OOP classes, slice 7: modules / mixins (the last OOP slice) ──────
+    // `Feature::Modules` is observed by a `Stmt::ModuleDef` (the sole observer).
+    //   `module M; …; end` → `Object.const_set(:M, Module.new)`
+    //   `include M` (in a class) → `__include__("Class", "M")` → `Class.include(M)`
+    //   `extend M`             → `__extend__("Class", "M")`  → `Class.extend(M)`
+    // A module's own methods are HOISTED and registered with the SAME
+    // `__def_method__` protocol as class methods (slice 2), so `Module#define_method`
+    // installs them and, once a class `include`s the module, they resolve through
+    // the ancestry via the existing `__method__`/`public_send` dispatch — no new
+    // method machinery.  This slice adds only the `ModuleDef` declaration and the
+    // native `include`/`extend` mixins (both operands validated as constant
+    // references, no injection).  A non-empty module body is deferred (a
+    // method-only module has an empty body — its methods are hoisted).
+    Feature::Modules,
 ];
 
 impl Backend for RubyBackend {

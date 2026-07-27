@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.17.0 — classes slice 7: modules / mixins (OOP arc complete)
+
+Accepts `Feature::Modules` — module definitions and `include`/`extend` mixins.
+This is the **last OOP slice**: the Ruby backend now covers the full class/module
+surface (classes, constants, instance & class methods, `@ivars`, `@@class vars`,
+inheritance + `super`, and now modules).
+
+- `module M; …; end` → `Object.const_set(:M, Module.new)` (reflective, like a
+  class — a native `module` block is illegal inside the `main` method).
+- `include M` (in a class) → `__include__("Class", "M")` → `(Class).include(M)`.
+- `extend M` → `__extend__("Class", "M")` → `(Class).extend(M)`.
+
+**Module methods reuse existing machinery.** A module's methods are hoisted and
+registered with the SAME `__def_method__` protocol as class methods (slice 2):
+`Module#define_method` installs each as `:sir_um_<m>`, and once a class `include`s
+the module they resolve through the ancestry via the existing
+`__method__`/`public_send` dispatch — so this slice adds **no new method
+machinery**, only the `ModuleDef` declaration and the two native mixin builtins.
+`include` adds instance methods; `extend` adds singleton (class) methods.
+
+**Injection safety.** The module name (`const_set`) and both mixin operands (the
+class and the module, emitted verbatim as bare constants in `.include`/`.extend`)
+are validated as constant paths in the co-total scan. A non-empty module body
+(class-level code) is deferred — a method-only module has an empty body.
+
+**OOP arc complete** for the Ruby backend. Remaining not-yet-wired features are
+the built-in **collection-method** catalog, `TailCalls`, `Intrinsics`,
+`NDArrays`, and array-pattern destructuring.
+
 ## 0.16.0 — classes slice 6: class variables (@@x)
 
 Accepts `Feature::ClassVars` — `@@` class variables.

@@ -97,12 +97,17 @@ independent class-method allowlist so a built-in class-method call rejects clean
 `sir_cvar_owner(self).class_variable_get/set(:"@@x")` (the owner is the class in
 both instance- and class-method contexts, so they share one `@@x`), and a
 class-body `@@x = init` — the first accepted non-empty class body — writes on the
-class by name; each `@@`-name validated (no injection).
+class by name; each `@@`-name validated (no injection). **Modules / mixins**
+(slice 7, completing the OOP arc): `module M; …; end` → `Object.const_set(:M,
+Module.new)`, and `include M` / `extend M` → native `(Class).include(M)` /
+`(Class).extend(M)` (both operands validated) — a module's methods reuse the
+existing `__def_method__` registration, so a mixed-in method resolves through the
+ancestry with no new machinery.
 Rejects `TailCalls`, `Intrinsics`, and every not-yet-wired feature (array
 indexing / slicing via `IndexGet` — `NDArrays`; array-pattern destructuring;
-built-in collection methods; and the last of OOP — modules — plus a namespaced
-class/constant definition or other class-body content) until its slice lands —
-each a clean, source-positioned `UnsupportedFeature`.
+built-in collection methods; plus a namespaced class/constant definition or a
+non-`@@x`-init class/module body) until its slice lands — each a clean,
+source-positioned `UnsupportedFeature`.
 
 ## Verification
 
