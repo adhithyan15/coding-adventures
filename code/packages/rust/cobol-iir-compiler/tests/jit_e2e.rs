@@ -2881,6 +2881,223 @@ fn unstring_truncates_a_long_field() {
 }
 
 // ---------------------------------------------------------------------------
+// UNSTRING with a LITERAL source — the field text comes from an alphanumeric
+// STRING literal's OWN bytes instead of an item's storage. Only the source
+// PROVIDER differs; the delimiter scan and per-receiver reshape are the SAME
+// shared machinery exercised by the identifier-source cases above, so every
+// splitting behaviour (exhaustion, empty fields, truncation, reshape) is
+// re-pinned here against the oracle to prove the two providers agree. A
+// NUMERIC-literal, a FIGURATIVE (SPACE), and a reference-modified source remain
+// later rungs — rejected on BOTH engines.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn unstring_literal_source_three_fields() {
+    // The canonical case: the source is the quoted literal "a,b,c" itself (no S
+    // item at all). Three comma-delimited fields fill three PIC X(1) receivers.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  R1 PIC X(1) VALUE SPACE.",
+            "01  R2 PIC X(1) VALUE SPACE.",
+            "01  R3 PIC X(1) VALUE SPACE.",
+        ],
+        &[
+            "UNSTRING \"a,b,c\" DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "a\nb\nc\n");
+}
+
+#[test]
+fn unstring_literal_source_exhausted_leaves_receiver_unchanged() {
+    // The literal "A,B" fills two receivers; the source is then exhausted, so R3
+    // keeps its prior VALUE "ZZZ" — it is NOT space-filled (identical rule to the
+    // identifier-source case, now driven by the literal's bytes).
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE \"ZZZ\".",
+        ],
+        &[
+            "UNSTRING \"A,B\" DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nZZZ\n");
+}
+
+#[test]
+fn unstring_literal_source_leading_trailing_consecutive_empty_fields() {
+    // Leading, consecutive, and trailing delimiters each bound an EMPTY field.
+    // ",A,,B," → f1="" f2="A" f3="" f4="B" f5="" ; the four receivers take the
+    // first four fields (f5 dropped), so R1/R3 become all spaces.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  R1 PIC X(3) VALUE \"...\".",
+            "01  R2 PIC X(3) VALUE \"...\".",
+            "01  R3 PIC X(3) VALUE \"...\".",
+            "01  R4 PIC X(3) VALUE \"...\".",
+        ],
+        &[
+            "UNSTRING \",A,,B,\" DELIMITED BY \",\" INTO R1 R2 R3 R4.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "DISPLAY R4.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "   \nA  \n   \nB  \n");
+}
+
+#[test]
+fn unstring_literal_source_reshapes_to_receiver_width() {
+    // The literal's fields are RESHAPED to each receiver's own width: "ABCDE" is
+    // wider than PIC X(3) (truncated to "ABC"), while "Z" is narrower than
+    // PIC X(4) (space-padded to "Z   ").
+    let out = assert_matches_oracle(&wrap(
+        &["01  R1 PIC X(3) VALUE SPACES.", "01  R2 PIC X(4) VALUE SPACES."],
+        &[
+            "UNSTRING \"ABCDE,Z\" DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ABC\nZ   \n");
+}
+
+#[test]
+fn unstring_literal_source_single_field_no_delimiter() {
+    // With the delimiter ABSENT from the literal, the whole literal is one field
+    // that lands in the sole receiver (reshaped to its width).
+    let out = assert_matches_oracle(&wrap(
+        &["01  R1 PIC X(5) VALUE SPACES."],
+        &[
+            "UNSTRING \"HI\" DELIMITED BY \",\" INTO R1.",
+            "DISPLAY R1.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "HI   \n");
+}
+
+#[test]
+fn unstring_identifier_source_still_works_regression() {
+    // Regression: an ordinary identifier source (an alphanumeric item's storage)
+    // still splits exactly as before the literal-source rung was added.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nC  \n");
+}
+
+#[test]
+fn unstring_numeric_literal_source_is_a_later_rung() {
+    // Only an ALPHANUMERIC string literal is a valid literal source. A NUMERIC
+    // literal source is deferred — rejected on BOTH engines (oracle at read time,
+    // compiler at emit time), mirroring the identifier path's numeric-source
+    // rejection intent.
+    let src = wrap(
+        &["01  R1 PIC X(3) VALUE SPACES.", "01  R2 PIC X(3) VALUE SPACES."],
+        &["UNSTRING 123 DELIMITED BY \",\" INTO R1 R2.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a numeric-literal source");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a numeric-literal source"
+    );
+}
+
+#[test]
+fn unstring_figurative_source_is_a_later_rung() {
+    // A FIGURATIVE constant (SPACE) source is deferred — rejected on BOTH engines.
+    let src = wrap(
+        &["01  R1 PIC X(3) VALUE SPACES.", "01  R2 PIC X(3) VALUE SPACES."],
+        &["UNSTRING SPACE DELIMITED BY \",\" INTO R1 R2.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a figurative source");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a figurative source"
+    );
+}
+
+#[test]
+fn unstring_reference_modified_source_is_a_later_rung() {
+    // A reference-modified source is still deferred (unchanged) — rejected on BOTH
+    // engines even though the modified item is itself alphanumeric.
+    let src = wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &["UNSTRING S(1:3) DELIMITED BY \",\" INTO R1 R2.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a reference-modified source");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a reference-modified source"
+    );
+}
+
+#[test]
+fn unstring_non_ascii_literal_source_is_a_later_rung() {
+    // The oracle scans a literal source by CHARACTER while the compiler lowers it
+    // to BYTE-based IIR string ops — the two agree only for ASCII (one byte per
+    // char). A NON-ASCII string-literal source (here "café", whose 'é' is a
+    // multi-byte character) is therefore deferred — rejected on BOTH engines so
+    // they stay co-total — even though an ASCII literal source IS supported.
+    let src = wrap(
+        &["01  R1 PIC X(4) VALUE SPACES.", "01  R2 PIC X(4) VALUE SPACES."],
+        &["UNSTRING \"café\" DELIMITED BY \",\" INTO R1 R2.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a non-ASCII literal source");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a non-ASCII literal source"
+    );
+}
+
+#[test]
+fn unstring_ascii_literal_source_still_works() {
+    // The all-ASCII counterpart of the rejected non-ASCII case still splits and
+    // reshapes exactly, byte-identical to the oracle — proving the guard is
+    // scoped to non-ASCII bytes only.
+    let out = assert_matches_oracle(&wrap(
+        &["01  R1 PIC X(4) VALUE SPACES.", "01  R2 PIC X(4) VALUE SPACES."],
+        &[
+            "UNSTRING \"cafe,X\" DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "cafe\nX   \n");
+}
+
+// ---------------------------------------------------------------------------
 // INSPECT … TALLYING — count the (non-overlapping, left-to-right) occurrences of
 // a single-character delimiter in an alphanumeric source and ADD the count to an
 // integer counter (INSPECT adds; it does not clear the counter first). Each case

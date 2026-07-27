@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.52.0 — UNSTRING with a literal source
+
+- `UNSTRING "a,b,c" DELIMITED BY "," INTO w1 w2 w3` — an alphanumeric STRING LITERAL is now
+  accepted in the UNSTRING SOURCE position (previously rejected at read time: "UNSTRING with
+  a literal source is a later rung"). No grammar change was needed — the grammar already
+  parses a literal operand there, so this is a read-time acceptance only.
+- Semantics are IDENTICAL to the existing identifier-source UNSTRING; only the source of the
+  characters differs. An `Operand::Ident` reads an alphanumeric item's STORAGE (as before); an
+  `Operand::Lit(Lit::Str(_))` scans the literal's OWN bytes directly (no item lookup, no
+  picture check — a string literal is inherently alphanumeric). The delimiter scan, the
+  per-receiver field extraction and width-reshape, the exhausted-source-leaves-receivers-
+  unchanged rule, and the empty-field-on-leading/trailing/consecutive-delimiters behaviour are
+  all UNCHANGED and shared between the two providers.
+- `Stmt::Unstring.source` widened from `String` to `Operand` so the executor can pick the
+  provider at run time. `exec_unstring` now takes the `Operand` source and branches on it.
+- Only an **ASCII** string literal is accepted: the executor scans a literal by CHARACTER
+  while the compiler lowers it to BYTE-based IIR string ops, so the two agree only when each
+  character is one byte. A NON-ASCII literal source (e.g. `UNSTRING "café" …`) is a clean
+  later-rung reject at read time on BOTH engines, keeping their accept/reject sets co-total.
+- Still deferred (rejected on this engine and the compiler alike): a NUMERIC-literal source
+  (`UNSTRING 123 …`), a FIGURATIVE source (`UNSTRING SPACE …`), a NON-ASCII string-literal
+  source — only an ASCII alphanumeric string literal is supported — and a reference-modified
+  source (unchanged). `WITH POINTER`, `ON OVERFLOW`, a multi-character/`ALL`/`OR` delimiter,
+  and a numeric/group receiver remain later rungs.
+
 ## 0.51.0 — INSPECT TALLYING with multiple counters
 
 - `INSPECT source TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d [ALL e …] …` — TWO OR MORE

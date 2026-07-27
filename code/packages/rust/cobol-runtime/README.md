@@ -87,7 +87,10 @@ r1 [r2 …]` (the inverse — split the alphanumeric source on a single-characte
 delimiter into successive receivers; each receiver including the last takes the
 field up to the next delimiter, extra fields are dropped, empty fields become
 spaces, and once the source is exhausted the remaining receivers keep their prior
-value); and `INSPECT source TALLYING counter FOR ALL delim` / `FOR LEADING delim`
+value; the source may be an alphanumeric item **or** an alphanumeric string
+literal — `UNSTRING "a,b,c" DELIMITED BY "," INTO w1 w2 w3` — with identical
+splitting, only the character provider differing); and `INSPECT source TALLYING
+counter FOR ALL delim` / `FOR LEADING delim`
 (count the occurrences of a single-character delimiter — a 1-char literal or a
 `PIC X(1)` item — in the alphanumeric source and **ADD** them to the
 unsigned-integer counter; `FOR ALL` counts EVERY occurrence, `FOR LEADING` counts
@@ -165,7 +168,10 @@ modelled (the explicit
 `SIGN` clause with `SEPARATE`/`LEADING`, editing pictures, `COMP`,
 `PERFORM … WITH TEST AFTER`/inline, `GO TO … DEPENDING`, `STRING` with a real
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `UNSTRING` with a multi-character
-delimiter / `WITH POINTER` / `ON OVERFLOW`, `INSPECT` with a `CHARACTERS`
+delimiter / `WITH POINTER` / `ON OVERFLOW` / a NUMERIC-literal or FIGURATIVE or
+reference-modified source or a NON-ASCII literal source (an ASCII alphanumeric
+string-literal source IS supported),
+`INSPECT` with a `CHARACTERS`
 tally, a `{BEFORE|AFTER}` region on a `FOR LEADING`/`REPLACING LEADING` phrase
 (the region ships for `FOR ALL`/`REPLACING ALL` only — on the lone forms, on
 `CONVERTING`, and now on each half of the combined form) or a
