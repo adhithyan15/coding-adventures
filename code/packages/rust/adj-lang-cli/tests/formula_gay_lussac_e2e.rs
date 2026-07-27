@@ -6,7 +6,7 @@
 //! formula libraries: a consumer states NO arithmetic; it imports the grounded library,
 //! binds the measured quantities with `observe`, and the engine applies the cited
 //! relation on the CPU — computing the EXACT value and rendering the relation's citation
-//! + trust tier in the `derived` section (the auditable answer). The four readings
+//! and trust tier in the `derived` section (the auditable answer). The four readings
 //! INVERT around the worked case P₁ = 2, T₁ = 4, P₂ = 3, T₂ = 6 (P₁/T₁ = 2/4 = 3/6 =
 //! P₂/T₂): 2*6/4 = 3, 3*4/2 = 6, 3*4/6 = 2, 2*6/3 = 4.
 
