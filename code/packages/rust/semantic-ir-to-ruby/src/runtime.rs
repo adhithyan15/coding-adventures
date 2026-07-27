@@ -56,6 +56,16 @@ def sir_eq(a, b) = a == b
 # Call a closure value (a Ruby lambda) with the given arguments.
 def sir_apply(target, *args) = target.call(*args)
 
+# OOP slice 6 — the class that owns a `@@class variable` in the CURRENT method.
+# A method body runs in a hoisted top-level function (not a lexical class scope),
+# so `@@x` cannot be written directly ("class variable access from toplevel").
+# Instead the emitter routes `@@x` through `.class_variable_get/set` on the owner
+# resolved here: inside an INSTANCE method `self` is the receiver, so the owner is
+# `self.class`; inside a CLASS method `self` IS the class (a `Module`), so it is
+# the owner itself.  This gives ONE class in both contexts, so an instance method
+# and a class method share the same `@@x` (matching Ruby).
+def sir_cvar_owner(s) = s.is_a?(Module) ? s : s.class
+
 # Indexed write `a[i] = v` with the SIR bounds rule.  The reference
 # (`_sir_seq_set`) treats ONLY `0 <= i < length` as valid and RAISES on a
 # negative or out-of-range index — whereas Ruby's native `a[i] = v` would

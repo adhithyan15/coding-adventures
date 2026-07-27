@@ -196,9 +196,23 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `define_method` (slice 2), which binds `self` to the receiver, so `@v`
     // inside a method reads/writes the instance's own variable — no runtime
     // support.  The `__self__` builtin (a bare `self`) rides in here too,
-    // rendering the native `self`.  `@@class` variables are the separate
-    // `Feature::ClassVars` (a later slice), still rejected.
+    // rendering the native `self`.
     Feature::InstanceVars,
+    // ── OOP classes, slice 6: class variables (`@@x`) ────────────────────
+    // `Feature::ClassVars` is observed by a `Scope::ClassVar` name (`@@x`).
+    //   `@@x = v` → `Stmt::Assign { scope: ClassVar }`
+    //   `@@x`     → `Expr::VarRef  { scope: ClassVar }`
+    // A method body runs in a HOISTED top-level function (not a lexical class
+    // scope), where a bare `@@x` is a Ruby error ("class variable access from
+    // toplevel").  So `@@x` read/write in a method routes through
+    // `sir_cvar_owner(self).class_variable_get/set(:"@@x")` — the owner is the
+    // class in both instance- (`self.class`) and class-method (`self`) contexts,
+    // so both share the same `@@x`.  A class-BODY `@@x = <init>` (the only body
+    // content accepted, making a non-empty class body legal for the first time)
+    // instead writes on the class by NAME (`<Class>.class_variable_set`), since it
+    // runs where `self` is `main`, not the class.  Every `@@`-name is validated as
+    // `@@<identifier>` in the co-total scan (no injection).
+    Feature::ClassVars,
 ];
 
 impl Backend for RubyBackend {
@@ -302,6 +316,17 @@ impl Backend for RubyBackend {
                     message: format!(
                         "the Ruby backend cannot emit the instance variable `{name}` \
                          (not a valid `@identifier`)"
+                    ),
+                    span,
+                });
+            }
+            // A `Scope::ClassVar` name that is not a valid `@@identifier`.
+            Some(emit::ScanHit::ClassVarName(name, span)) => {
+                return Err(BackendError {
+                    kind: BackendErrorKind::UnsupportedFeature,
+                    message: format!(
+                        "the Ruby backend cannot emit the class variable `{name}` \
+                         (not a valid `@@identifier`)"
                     ),
                     span,
                 });
