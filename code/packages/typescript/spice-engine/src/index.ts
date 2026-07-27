@@ -6,6 +6,7 @@ const BOLTZMANN = 1.380_649e-23;
 const ELECTRON_CHARGE = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA = 2.0 / 3.0;
 const DIGITAL_BRIDGE_TIME_EPSILON = 1.0e-18;
+const OXIDE_PERMITTIVITY = 3.453133e-11;
 const SPICE_SUFFIX_FACTORS: Readonly<Record<string, number>> = Object.freeze({
   t: 1.0e12,
   g: 1.0e9,
@@ -1775,6 +1776,7 @@ export interface MosfetLevel1Params {
   readonly W: number;
   readonly L: number;
   readonly LD: number;
+  readonly TOX: number;
   readonly IS: number;
   readonly N_SUB: number;
   readonly T_NOM: number;
@@ -2047,8 +2049,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   PNP: [41, 58, 13, 4],
   NJF: [22, 30, 7, 3],
   PJF: [22, 30, 7, 3],
-  NMOS: [22, 29, 6, 3],
-  PMOS: [22, 29, 6, 3],
+  NMOS: [23, 30, 6, 3],
+  PMOS: [23, 30, 6, 3],
 };
 
 export interface Vccs {
@@ -8031,6 +8033,7 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     W: 1.0e-6,
     L: 130.0e-9,
     LD: 0.0,
+    TOX: 1.0e-7,
     IS: 1.0e-15,
     N_SUB: 1.4,
     T_NOM: 300.15,
@@ -8217,6 +8220,7 @@ const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   W: "W",
   L: "L",
   LD: "LD",
+  TOX: "TOX",
   IS: "IS",
   NSUB: "N_SUB",
   N_SUB: "N_SUB",
@@ -8790,6 +8794,7 @@ export function mosfetFromModelCard(
     ...(p.W !== undefined ? { W: p.W } : {}),
     ...(p.L !== undefined ? { L: p.L } : {}),
     ...(p.LD !== undefined ? { LD: p.LD } : {}),
+    ...(p.TOX !== undefined ? { TOX: p.TOX } : {}),
     ...(p.IS !== undefined ? { IS: p.IS } : {}),
     ...(p.N_SUB !== undefined ? { N_SUB: p.N_SUB } : {}),
     ...(p.T_NOM !== undefined ? { T_NOM: p.T_NOM } : {}),
@@ -20256,7 +20261,8 @@ function evaluateNmosLevel1(
   const cgsOverlap = params.CGSO * params.W;
   const cgdOverlap = params.CGDO * params.W;
   const cgbOverlap = params.CGBO * effectiveLength;
-  const cgsIntrinsic = (2.0 / 3.0) * params.W * effectiveLength * params.KP;
+  const channelCapacitance =
+    params.W * effectiveLength * (OXIDE_PERMITTIVITY / params.TOX);
   const cbsBulk = mosfetBulkJunctionCapacitance(
     params.CBS, vbs, params.PB, params.MJ, params.FC,
   );
@@ -20264,7 +20270,7 @@ function evaluateNmosLevel1(
     params.CBD, vbs - vds, params.PB, params.MJ, params.FC,
   );
   const capacitances = {
-    cgs: cgsOverlap + cgsIntrinsic,
+    cgs: cgsOverlap + channelCapacitance,
     cgd: cgdOverlap,
     cgb: cgbOverlap,
     cbs: cbsBulk,
@@ -20291,7 +20297,7 @@ function evaluateNmosLevel1(
       gm,
       gds: beta * (overdrive - vds) * modulation + beta * channel * params.LAMBDA,
       gmb: gm * bodyFactor,
-      cgs: cgsOverlap + cgsIntrinsic / 2.0,
+      cgs: cgsOverlap + channelCapacitance / 2.0,
       cgd: cgdOverlap,
       cgb: cgbOverlap,
       cbs: cbsBulk,
@@ -20305,7 +20311,7 @@ function evaluateNmosLevel1(
     gm,
     gds: 0.5 * beta * overdrive * overdrive * params.LAMBDA,
     gmb: gm * bodyFactor,
-    cgs: cgsOverlap + (2.0 / 3.0) * cgsIntrinsic,
+    cgs: cgsOverlap + (2.0 / 3.0) * channelCapacitance,
     cgd: cgdOverlap,
     cgb: cgbOverlap,
     cbs: cbsBulk,
@@ -21028,6 +21034,9 @@ function validateMosfet(element: Mosfet): void {
   }
   if (params.LD < 0.0 || params.L - 2.0 * params.LD <= 0.0) {
     throw invalidElement(element.name, "MOSFET LD must be non-negative with L - 2*LD > 0");
+  }
+  if (params.TOX <= 0.0) {
+    throw invalidElement(element.name, "MOSFET TOX must be positive");
   }
   if (params.PHI <= 0.0) {
     throw invalidElement(element.name, "MOSFET PHI must be positive");

@@ -19,6 +19,7 @@ const BOLTZMANN: f64 = 1.380_649e-23;
 const ELECTRON_CHARGE: f64 = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
 const DIGITAL_BRIDGE_TIME_EPSILON: f64 = 1.0e-18;
+const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
 
 fn real_solver_kind(matrix_size: usize) -> &'static str {
     if matrix_size == 0 {
@@ -3607,6 +3608,7 @@ pub struct MosfetLevel1Params {
     pub w: f64,
     pub l: f64,
     pub lateral_diffusion_length: f64,
+    pub oxide_thickness: f64,
     pub saturation_current: f64,
     pub n_sub: f64,
     pub t_nom: f64,
@@ -3633,6 +3635,7 @@ impl Default for MosfetLevel1Params {
             w: 1.0e-6,
             l: 130.0e-9,
             lateral_diffusion_length: 0.0,
+            oxide_thickness: 1.0e-7,
             saturation_current: 1.0e-15,
             n_sub: 1.4,
             t_nom: 300.15,
@@ -3989,8 +3992,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Pnp, 41, 58, 13, 4),
     (ModelCardKind::Njf, 22, 30, 7, 3),
     (ModelCardKind::Pjf, 22, 30, 7, 3),
-    (ModelCardKind::Nmos, 22, 29, 6, 3),
-    (ModelCardKind::Pmos, 22, 29, 6, 3),
+    (ModelCardKind::Nmos, 23, 30, 6, 3),
+    (ModelCardKind::Pmos, 23, 30, 6, 3),
 ];
 const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -4120,6 +4123,7 @@ const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("W", "W"),
     ("L", "L"),
     ("LD", "LD"),
+    ("TOX", "TOX"),
     ("IS", "IS"),
     ("NSUB", "N_SUB"),
     ("N_SUB", "N_SUB"),
@@ -4898,6 +4902,9 @@ pub fn mosfet_from_model_card(
     }
     if let Some(value) = model.parameters.get("LD") {
         params.lateral_diffusion_length = *value;
+    }
+    if let Some(value) = model.parameters.get("TOX") {
+        params.oxide_thickness = *value;
     }
     if let Some(value) = model.parameters.get("IS") {
         params.saturation_current = *value;
@@ -24217,7 +24224,8 @@ fn evaluate_nmos_level1(
     let cgs_overlap = params.gate_source_overlap_capacitance * params.w;
     let cgd_overlap = params.gate_drain_overlap_capacitance * params.w;
     let cgb_overlap = params.gate_bulk_overlap_capacitance * effective_length;
-    let cgs_intrinsic = (2.0 / 3.0) * params.w * effective_length * params.kp;
+    let channel_capacitance =
+        params.w * effective_length * (OXIDE_PERMITTIVITY / params.oxide_thickness);
     let cbs_bulk = mosfet_bulk_junction_capacitance(
         params.source_bulk_capacitance,
         vbs,
@@ -24244,7 +24252,7 @@ fn evaluate_nmos_level1(
             gm: 0.0,
             gds: 0.0,
             gmb: 0.0,
-            cgs: cgs_overlap + cgs_intrinsic,
+            cgs: cgs_overlap + channel_capacitance,
             cgd: cgd_overlap,
             cgb: cgb_overlap,
             cbs: cbs_bulk,
@@ -24266,7 +24274,7 @@ fn evaluate_nmos_level1(
             gm,
             gds: beta * (overdrive - vds) * modulation + beta * channel * params.lambda,
             gmb: gm * body_factor,
-            cgs: cgs_overlap + cgs_intrinsic / 2.0,
+            cgs: cgs_overlap + channel_capacitance / 2.0,
             cgd: cgd_overlap,
             cgb: cgb_overlap,
             cbs: cbs_bulk,
@@ -24281,7 +24289,7 @@ fn evaluate_nmos_level1(
         gm,
         gds: 0.5 * beta * overdrive * overdrive * params.lambda,
         gmb: gm * body_factor,
-        cgs: cgs_overlap + (2.0 / 3.0) * cgs_intrinsic,
+        cgs: cgs_overlap + (2.0 / 3.0) * channel_capacitance,
         cgd: cgd_overlap,
         cgb: cgb_overlap,
         cbs: cbs_bulk,
@@ -25510,6 +25518,7 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("W", params.w),
         ("L", params.l),
         ("LD", params.lateral_diffusion_length),
+        ("TOX", params.oxide_thickness),
         ("IS", params.saturation_current),
         ("N_SUB", params.n_sub),
         ("T_NOM", params.t_nom),
@@ -25549,6 +25558,12 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "MOSFET LD must be non-negative with L - 2*LD > 0".to_string(),
+        });
+    }
+    if params.oxide_thickness <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET TOX must be positive".to_string(),
         });
     }
     if params.phi <= 0.0 {

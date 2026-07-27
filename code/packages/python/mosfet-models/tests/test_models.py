@@ -150,6 +150,23 @@ def test_lateral_diffusion_validates_effective_channel_length(ld):
         evaluate_level1(Level1Params(L=1e-6, LD=ld), V_GS=1.8, V_DS=1.8)
 
 
+def test_oxide_thickness_scales_intrinsic_gate_capacitance():
+    def capacitance(tox):
+        return evaluate_level1(
+            Level1Params(W=2e-6, L=1e-6, TOX=tox),
+            V_GS=1.8,
+            V_DS=1.8,
+        ).Cgs
+
+    assert capacitance(50e-9) / capacitance(100e-9) == pytest.approx(2.0)
+
+
+@pytest.mark.parametrize("tox", [float("nan"), 0.0, -1e-9])
+def test_oxide_thickness_validates_positive_finite_value(tox):
+    with pytest.raises(ValueError, match="MOSFET TOX must be finite and positive"):
+        evaluate_level1(Level1Params(TOX=tox), V_GS=1.8, V_DS=1.8)
+
+
 def test_overlap_and_bulk_capacitances_are_reported():
     p = Level1Params(
         W=2e-6,

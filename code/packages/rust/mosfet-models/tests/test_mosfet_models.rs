@@ -128,6 +128,42 @@ fn test_lateral_diffusion_rejects_nonpositive_effective_length() {
     let _ = evaluate_level1(&params, 1.8, 1.8, 0.0, 300.15);
 }
 
+#[test]
+fn test_oxide_thickness_scales_intrinsic_gate_capacitance() {
+    let capacitance = |tox| {
+        evaluate_level1(
+            &Level1Params {
+                w: 2.0e-6,
+                l: 1.0e-6,
+                tox,
+                ..Level1Params::default()
+            },
+            1.8,
+            1.8,
+            0.0,
+            300.15,
+        )
+        .cgs
+    };
+
+    assert!((capacitance(50.0e-9) / capacitance(100.0e-9) - 2.0).abs() < 1.0e-12);
+}
+
+#[test]
+#[should_panic(expected = "MOSFET TOX must be finite and positive")]
+fn test_oxide_thickness_rejects_nonpositive_value() {
+    evaluate_level1(
+        &Level1Params {
+            tox: 0.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
 // ---------------------------------------------------------------------------
 // Body effect
 // ---------------------------------------------------------------------------
