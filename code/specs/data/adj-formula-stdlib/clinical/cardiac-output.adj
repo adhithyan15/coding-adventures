@@ -1,0 +1,102 @@
+% ============================================================================
+% cardiac-output.adj — the definition of cardiac output (CO = HR × SV) in the
+% ADJ standard library.
+% ============================================================================
+% The cardiac-output entry of the *clinical* track, a physiology sibling of
+% `bmi.adj` and `cockcroft_gault.adj`: the foundational cardiovascular definition
+% a first course states as CARDIAC OUTPUT IS THE STROKE VOLUME MULTIPLIED BY THE
+% HEART RATE — the amount of blood each ventricle pumps per minute — as an
+% importable, byte-provenanced, PARAMETERIZED `formula`, together with its two exact
+% rearrangements (the heart rate a cardiac output implies for a stroke volume, and
+% the stroke volume it implies for a heart rate). As with every compute library, a
+% consumer states NO arithmetic: it `import`s this file, binds the measured
+% quantities from its own byte-provenance decomposition, and asks the engine to
+% APPLY the cited definition on the CPU. Zero math is performed by the model; the
+% engine computes each value EXACTLY, carrying the definition's citation.
+%
+%     import "cardiac-output.adj"
+%     observe heart_rate(75)            % "…75 bpm…"     (span cited by the model)
+%     observe stroke_volume(70)         % "…70 mL/beat…" (span cited by the model)
+%     ? cardiac_output(heart_rate, stroke_volume)
+%                                          % engine → 5250, carrying CO = HR·SV
+%
+% All three formulas are EXACT over their parameters — one a product, two quotients
+% of measured quantities. There is no *separately grounded* physiological constant
+% here, so every value the engine returns is exact. The three COMPOSE and invert
+% cleanly around the worked case HR = 75 bpm, SV = 70 mL (CO = 75·70 = 5250 mL/min
+% = 5.25 L/min, the average resting value): the `cardiac_output` a consumer computes
+% from a heart rate and stroke volume is exactly the `cardiac_output` the
+% `heart_rate` formula divides by that stroke volume to recover the heart rate, and
+% exactly the `cardiac_output` the `stroke_volume` formula divides by that heart
+% rate to recover the stroke volume.
+%
+%   cardiac_output(heart_rate, stroke_volume)   = heart_rate * stroke_volume     % CO = HR·SV  (definition)
+%   heart_rate(cardiac_output, stroke_volume)   = cardiac_output / stroke_volume  % HR = CO/SV  (same def, solved for HR)
+%   stroke_volume(cardiac_output, heart_rate)   = cardiac_output / heart_rate     % SV = CO/HR  (same def, solved for SV)
+%
+% NOTE: the units must be consistent — a stroke volume in millilitres per beat and a
+% heart rate in beats per minute give a cardiac output in millilitres per minute
+% (divide by 1000 for L/min); this library computes the exact value over whatever
+% consistent units it is given.
+%
+% All three formulas are defended by the SAME definitional sentence — "To calculate
+% this value, multiply stroke volume (SV), the amount of blood pumped by each
+% ventricle, by heart rate (HR), in contractions per minute (or beats per minute,
+% bpm)." — because that one definition (cardiac output IS stroke volume times heart
+% rate) sanctions the relation read every way (CO from HR and SV, HR from CO and SV,
+% or SV from CO and HR). The quote is transcribed verbatim from the OpenStax Anatomy
+% and Physiology 2e "Cardiac Physiology" chapter on Medicine LibreTexts (a
+% university-hosted open physiology text — the same primary reference family the
+% other clinical libraries draw on), so each `formula` carries the provenance
+% envelope every shipped grounded clause carries; the linter rejects an unsourced
+% one. (See feedback_nothing_human_authored — the definitional sentence is a
+% verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable physiological quantity the definition
+% ranges over, and each result is the derived quantity. `cardiac_output`,
+% `heart_rate` and `stroke_volume` each appear BOTH as a derived result and as an
+% input (of the other formulas), so each is a single dictionary term used in both
+% roles. The `surface` lists are the everyday names a decomposer maps onto the
+% canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary cardiac_output_vocab {
+    define heart_rate     : finding  surface "heart rate", "HR"                    % beats per minute (bpm)
+    define stroke_volume  : finding  surface "stroke volume", "SV"                 % millilitres per beat (mL)
+    define cardiac_output : finding  surface "cardiac output", "CO"                % millilitres per minute (mL/min)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable `let` over
+% its formal parameters, bound at apply time, and each carries the definitional
+% quote from OpenStax A&P on LibreTexts (a quote is required on a shipped formula).
+% One is a product and two are quotients, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook cardiac_output_laws {
+    use cardiac_output_vocab
+
+    % Cardiac output — the product of heart rate and stroke volume. OpenStax defines
+    % cardiac output as the stroke volume multiplied by the heart rate, i.e.
+    % CO = HR·SV.
+    formula cardiac_output(heart_rate, stroke_volume) = heart_rate * stroke_volume
+        source "To calculate this value, multiply stroke volume (SV), the amount of blood pumped by each ventricle, by heart rate (HR), in contractions per minute (or beats per minute, bpm)."
+        locator "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_2e_(OpenStax)/04:_Fluids_and_Transport/19:_The_Cardiovascular_System_-_The_Heart/19.05:_Cardiac_Physiology"
+        trust authoritative
+
+    % Heart rate — the same definition solved for the heart rate a cardiac output
+    % implies for a stroke volume (HR = CO/SV). Defended by the SAME definitional
+    % sentence, read the other way.
+    formula heart_rate(cardiac_output, stroke_volume) = cardiac_output / stroke_volume
+        source "To calculate this value, multiply stroke volume (SV), the amount of blood pumped by each ventricle, by heart rate (HR), in contractions per minute (or beats per minute, bpm)."
+        locator "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_2e_(OpenStax)/04:_Fluids_and_Transport/19:_The_Cardiovascular_System_-_The_Heart/19.05:_Cardiac_Physiology"
+        trust authoritative
+
+    % Stroke volume — the same definition solved for the stroke volume a cardiac
+    % output implies for a heart rate (SV = CO/HR). Again the SAME definitional
+    % sentence, read the third way.
+    formula stroke_volume(cardiac_output, heart_rate) = cardiac_output / heart_rate
+        source "To calculate this value, multiply stroke volume (SV), the amount of blood pumped by each ventricle, by heart rate (HR), in contractions per minute (or beats per minute, bpm)."
+        locator "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/Anatomy_and_Physiology_2e_(OpenStax)/04:_Fluids_and_Transport/19:_The_Cardiovascular_System_-_The_Heart/19.05:_Cardiac_Physiology"
+        trust authoritative
+}
