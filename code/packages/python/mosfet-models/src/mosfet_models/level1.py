@@ -25,6 +25,7 @@ class Level1Params:
     PHI: float = 0.84  # surface potential at threshold, 2*phi_F (V)
     W: float = 1e-6  # channel width (m)
     L: float = 130e-9  # channel length (m)
+    LD: float = 0.0  # source/drain lateral diffusion length (m)
     IS: float = 1e-15  # saturation current (A)
     N_SUB: float = 1.4  # subthreshold slope factor
     T_NOM: float = 300.15  # nominal temperature (K)
@@ -111,7 +112,12 @@ def evaluate_level1(
     p = params
     if not isfinite(p.FC) or p.FC < 0.0 or p.FC >= 1.0:
         raise ValueError("MOSFET FC must be finite and in [0, 1)")
-    beta = p.KP * (p.W / p.L)
+    effective_length = p.L - 2.0 * p.LD
+    if not isfinite(p.LD) or p.LD < 0.0 or effective_length <= 0.0:
+        raise ValueError(
+            "MOSFET LD must be finite and non-negative with L - 2*LD > 0"
+        )
+    beta = p.KP * (p.W / effective_length)
 
     # Threshold with body effect. The formula is well-defined whenever
     # PHI - V_BS >= 0 (sqrt domain). If V_BS rises above PHI (heavy forward
@@ -126,8 +132,8 @@ def evaluate_level1(
 
     Cgs_overlap = p.CGSO * p.W
     Cgd_overlap = p.CGDO * p.W
-    Cgb_overlap = p.CGBO * p.L
-    Cgs_intrinsic = (2.0 / 3.0) * p.W * p.L * p.KP / 1.0  # placeholder; Meyer model
+    Cgb_overlap = p.CGBO * effective_length
+    Cgs_intrinsic = (2.0 / 3.0) * p.W * effective_length * p.KP / 1.0  # placeholder; Meyer model
     Cgd_intrinsic = 0.0
     Cgb_intrinsic = 0.0
     Cbs_bulk = bulk_junction_capacitance(p.CBS, V_BS, p.PB, p.MJ, p.FC)

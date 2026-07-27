@@ -36,6 +36,7 @@ use device_physics::thermal_voltage;
 /// | PHI       | Surface potential 2φ_F (V)         | 0.84     |
 /// | W         | Channel width (m)                  | 1 µm     |
 /// | L         | Channel length (m)                 | 130 nm   |
+/// | LD        | Lateral diffusion length (m)       | 0        |
 /// | IS        | Drain–body saturation current (A)  | 1 fA     |
 /// | N_SUB     | Subthreshold slope factor          | 1.4      |
 /// | T_NOM     | Nominal temperature (K)            | 300.15   |
@@ -57,6 +58,8 @@ pub struct Level1Params {
     pub w: f64,
     /// Channel length [m].
     pub l: f64,
+    /// Source/drain lateral diffusion length [m].
+    pub ld: f64,
     /// Drain–body saturation current [A] (used for subthreshold floor).
     pub is: f64,
     /// Subthreshold slope factor n.  Subthreshold current ∝ exp(V_OV / (n V_T)).
@@ -97,6 +100,7 @@ impl Default for Level1Params {
             phi: 0.84,
             w: 1e-6,
             l: 130e-9,
+            ld: 0.0,
             is: 1e-15,
             n_sub: 1.4,
             t_nom: 300.15,
@@ -225,7 +229,12 @@ pub fn evaluate_level1(
     t: f64,
 ) -> MosResult {
     let p = params;
-    let beta = p.kp * (p.w / p.l);
+    let effective_length = p.l - 2.0 * p.ld;
+    assert!(
+        p.ld.is_finite() && p.ld >= 0.0 && effective_length > 0.0,
+        "MOSFET LD must be finite and non-negative with L - 2*LD > 0"
+    );
+    let beta = p.kp * (p.w / effective_length);
 
     // Threshold with body effect.
     // The formula √(PHI − V_BS) is valid when PHI ≥ V_BS.
@@ -242,12 +251,12 @@ pub fn evaluate_level1(
     // Overlap capacitances scale with W or L.
     let cgs_overlap = p.cgso * p.w;
     let cgd_overlap = p.cgdo * p.w;
-    let cgb_overlap = p.cgbo * p.l;
+    let cgb_overlap = p.cgbo * effective_length;
 
     // Placeholder intrinsic capacitance (Meyer model, saturation reference).
     // In saturation: C_gs_intrinsic ≈ (2/3) W L C_ox.
     // We approximate C_ox as KP (units collapse to F/m² in the placeholder).
-    let cgs_intrinsic = (2.0 / 3.0) * p.w * p.l * p.kp;
+    let cgs_intrinsic = (2.0 / 3.0) * p.w * effective_length * p.kp;
     let cbs_bulk = bulk_junction_capacitance(p.cbs, v_bs, p.pb, p.mj, p.fc);
     let cbd_bulk = bulk_junction_capacitance(p.cbd, v_bs - v_ds, p.pb, p.mj, p.fc);
 

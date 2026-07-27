@@ -1774,6 +1774,7 @@ export interface MosfetLevel1Params {
   readonly PHI: number;
   readonly W: number;
   readonly L: number;
+  readonly LD: number;
   readonly IS: number;
   readonly N_SUB: number;
   readonly T_NOM: number;
@@ -2046,8 +2047,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   PNP: [41, 58, 13, 4],
   NJF: [22, 30, 7, 3],
   PJF: [22, 30, 7, 3],
-  NMOS: [21, 28, 6, 3],
-  PMOS: [21, 28, 6, 3],
+  NMOS: [22, 29, 6, 3],
+  PMOS: [22, 29, 6, 3],
 };
 
 export interface Vccs {
@@ -8029,6 +8030,7 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     PHI: 0.84,
     W: 1.0e-6,
     L: 130.0e-9,
+    LD: 0.0,
     IS: 1.0e-15,
     N_SUB: 1.4,
     T_NOM: 300.15,
@@ -8214,6 +8216,7 @@ const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   PHI: "PHI",
   W: "W",
   L: "L",
+  LD: "LD",
   IS: "IS",
   NSUB: "N_SUB",
   N_SUB: "N_SUB",
@@ -8786,6 +8789,7 @@ export function mosfetFromModelCard(
     ...(p.PHI !== undefined ? { PHI: p.PHI } : {}),
     ...(p.W !== undefined ? { W: p.W } : {}),
     ...(p.L !== undefined ? { L: p.L } : {}),
+    ...(p.LD !== undefined ? { LD: p.LD } : {}),
     ...(p.IS !== undefined ? { IS: p.IS } : {}),
     ...(p.N_SUB !== undefined ? { N_SUB: p.N_SUB } : {}),
     ...(p.T_NOM !== undefined ? { T_NOM: p.T_NOM } : {}),
@@ -20247,11 +20251,12 @@ function evaluateNmosLevel1(
   vds: number,
   vbs: number,
 ): MosfetDcResult {
-  const beta = params.KP * (params.W / params.L);
+  const effectiveLength = params.L - 2.0 * params.LD;
+  const beta = params.KP * (params.W / effectiveLength);
   const cgsOverlap = params.CGSO * params.W;
   const cgdOverlap = params.CGDO * params.W;
-  const cgbOverlap = params.CGBO * params.L;
-  const cgsIntrinsic = (2.0 / 3.0) * params.W * params.L * params.KP;
+  const cgbOverlap = params.CGBO * effectiveLength;
+  const cgsIntrinsic = (2.0 / 3.0) * params.W * effectiveLength * params.KP;
   const cbsBulk = mosfetBulkJunctionCapacitance(
     params.CBS, vbs, params.PB, params.MJ, params.FC,
   );
@@ -21020,6 +21025,9 @@ function validateMosfet(element: Mosfet): void {
   }
   if (params.W <= 0.0 || params.L <= 0.0) {
     throw invalidElement(element.name, "MOSFET W and L must be positive");
+  }
+  if (params.LD < 0.0 || params.L - 2.0 * params.LD <= 0.0) {
+    throw invalidElement(element.name, "MOSFET LD must be non-negative with L - 2*LD > 0");
   }
   if (params.PHI <= 0.0) {
     throw invalidElement(element.name, "MOSFET PHI must be positive");

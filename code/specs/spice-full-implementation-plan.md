@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS forward-bias depletion coefficient.
+1. Cross-language Level-1 MOS lateral diffusion.
    - Status: current PR completion candidate.
-   - Add Berkeley Level-1 MOS `FC` model-card support in Rust, Python, and
-     TypeScript, defaulting to `0.5`.
-   - Apply the continuous piecewise forward-bias continuation to `CBS` and
-     `CBD` depletion capacitance shaped by `PB` and `MJ`.
-   - Preserve the coefficient through hierarchy and cloning, validate its
-     finite `[0, 1)` domain, and extend the supported-parameter coverage gate
-     from 181 to 183 canonical rows.
+   - Add Berkeley Level-1 MOS `LD` model-card support in Rust, Python, and
+     TypeScript, defaulting to zero.
+   - Apply `L_eff = L - 2*LD` to channel current and length-scaled intrinsic
+     and `CGBO` capacitance while preserving width-scaled overlap capacitance.
+   - Preserve the geometry through hierarchy and cloning, require finite
+     non-negative `LD` with positive effective length, and extend the
+     supported-parameter coverage gate from 183 to 185 canonical rows.
 
 ## Completed Slices
 
@@ -3403,6 +3403,16 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning preserve the exponent, shared validation enforces
      its finite non-negative domain, and the supported-parameter release gate
      now covers 181 canonical rows.
+
+266. Cross-language Level-1 MOS forward-bias depletion coefficient.
+   - Status: completed in PR 8995.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `FC`,
+     defaulting to `0.5`, and apply the continuous piecewise forward-bias
+     continuation to `CBS` and `CBD` depletion capacitance shaped by `PB` and
+     `MJ`.
+   - Hierarchy and cloning preserve the coefficient, shared validation
+     enforces its finite `[0, 1)` domain, and the supported-parameter release
+     gate now covers 183 canonical rows.
 
 ## Backlog
 

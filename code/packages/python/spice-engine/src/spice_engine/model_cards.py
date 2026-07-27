@@ -311,8 +311,8 @@ _MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES = {
     "PNP": (41, 58, 13, 4),
     "NJF": (22, 30, 7, 3),
     "PJF": (22, 30, 7, 3),
-    "NMOS": (21, 28, 6, 3),
-    "PMOS": (21, 28, 6, 3),
+    "NMOS": (22, 29, 6, 3),
+    "PMOS": (22, 29, 6, 3),
 }
 
 
@@ -463,6 +463,7 @@ _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
     "PHI": "PHI",
     "W": "W",
     "L": "L",
+    "LD": "LD",
     "IS": "IS",
     "NSUB": "N_SUB",
     "N_SUB": "N_SUB",
@@ -1067,6 +1068,7 @@ def mosfet_from_model_card(
         PHI=p.get("PHI", defaults.PHI),
         W=p.get("W", defaults.W),
         L=p.get("L", defaults.L),
+        LD=p.get("LD", defaults.LD),
         IS=p.get("IS", defaults.IS),
         N_SUB=p.get("N_SUB", defaults.N_SUB),
         T_NOM=p.get("T_NOM", defaults.T_NOM),

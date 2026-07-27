@@ -3606,6 +3606,7 @@ pub struct MosfetLevel1Params {
     pub phi: f64,
     pub w: f64,
     pub l: f64,
+    pub lateral_diffusion_length: f64,
     pub saturation_current: f64,
     pub n_sub: f64,
     pub t_nom: f64,
@@ -3631,6 +3632,7 @@ impl Default for MosfetLevel1Params {
             phi: 0.84,
             w: 1.0e-6,
             l: 130.0e-9,
+            lateral_diffusion_length: 0.0,
             saturation_current: 1.0e-15,
             n_sub: 1.4,
             t_nom: 300.15,
@@ -3987,8 +3989,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Pnp, 41, 58, 13, 4),
     (ModelCardKind::Njf, 22, 30, 7, 3),
     (ModelCardKind::Pjf, 22, 30, 7, 3),
-    (ModelCardKind::Nmos, 21, 28, 6, 3),
-    (ModelCardKind::Pmos, 21, 28, 6, 3),
+    (ModelCardKind::Nmos, 22, 29, 6, 3),
+    (ModelCardKind::Pmos, 22, 29, 6, 3),
 ];
 const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -4117,6 +4119,7 @@ const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("PHI", "PHI"),
     ("W", "W"),
     ("L", "L"),
+    ("LD", "LD"),
     ("IS", "IS"),
     ("NSUB", "N_SUB"),
     ("N_SUB", "N_SUB"),
@@ -4892,6 +4895,9 @@ pub fn mosfet_from_model_card(
     }
     if let Some(value) = model.parameters.get("L") {
         params.l = *value;
+    }
+    if let Some(value) = model.parameters.get("LD") {
+        params.lateral_diffusion_length = *value;
     }
     if let Some(value) = model.parameters.get("IS") {
         params.saturation_current = *value;
@@ -24206,11 +24212,12 @@ fn evaluate_nmos_level1(
     vds: f64,
     vbs: f64,
 ) -> MosfetDcResult {
-    let beta = params.kp * (params.w / params.l);
+    let effective_length = params.l - 2.0 * params.lateral_diffusion_length;
+    let beta = params.kp * (params.w / effective_length);
     let cgs_overlap = params.gate_source_overlap_capacitance * params.w;
     let cgd_overlap = params.gate_drain_overlap_capacitance * params.w;
-    let cgb_overlap = params.gate_bulk_overlap_capacitance * params.l;
-    let cgs_intrinsic = (2.0 / 3.0) * params.w * params.l * params.kp;
+    let cgb_overlap = params.gate_bulk_overlap_capacitance * effective_length;
+    let cgs_intrinsic = (2.0 / 3.0) * params.w * effective_length * params.kp;
     let cbs_bulk = mosfet_bulk_junction_capacitance(
         params.source_bulk_capacitance,
         vbs,
@@ -25502,6 +25509,7 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("PHI", params.phi),
         ("W", params.w),
         ("L", params.l),
+        ("LD", params.lateral_diffusion_length),
         ("IS", params.saturation_current),
         ("N_SUB", params.n_sub),
         ("T_NOM", params.t_nom),
@@ -25533,6 +25541,14 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "MOSFET W and L must be positive".to_string(),
+        });
+    }
+    if params.lateral_diffusion_length < 0.0
+        || params.l - 2.0 * params.lateral_diffusion_length <= 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET LD must be non-negative with L - 2*LD > 0".to_string(),
         });
     }
     if params.phi <= 0.0 {
