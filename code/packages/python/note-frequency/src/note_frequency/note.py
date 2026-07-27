@@ -13,8 +13,8 @@ From there, each semitone step changes frequency by a factor of ``2 ** (1/12)``.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import re
+from dataclasses import dataclass
 
 NOTE_PATTERN = re.compile(r"^([A-Ga-g])([#b]?)(-?\d+)$")
 
@@ -122,4 +122,3 @@ def note_to_frequency(text: str) -> float:
     """Parse a note label and return its equal-tempered frequency in Hertz."""
 
     return parse_note(text).frequency()
-

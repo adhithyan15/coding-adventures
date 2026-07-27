@@ -162,6 +162,13 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 
 ## Native extensions & FFI
 
+- **Do not drive a Lua state from the test runner while native worker threads
+  invoke callbacks on that same state.** A Rust mutex can serialize the worker
+  callbacks with each other, but it cannot guard ordinary Lua execution in the
+  parent test thread. The result is nondeterministic stack corruption and
+  SIGSEGVs. Exercise a foreground native server in a dedicated Lua child process
+  and drive it over TCP from the parent.
+
 - **Ruby `QNIL = 0x04` on 64-bit Ruby (USE_FLONUM), not `0x08`.** The pre-FLONUM `0x08` causes Ruby to dereference it as an object pointer (klass at `+8` → SIGSEGV at `0x10`). Constants: `QFALSE=0x00, QNIL=0x04, QTRUE=0x14, QUNDEF=0x24`. Confirm against `ruby/internal/special_consts.h`. When a Ruby native ext SIGSEGVs at low addresses like `0x10`, suspect a special-constant bit-pattern bug.
 - **Lua 5.4 `LUA_REGISTRYINDEX = -1_001_000`** (derived from `-LUAI_MAXSTACK - 1000`), NOT the Lua 5.1 value `-10000`. Using `-10000` in `luaL_ref` treats it as a regular negative stack index, landing 10000 slots below the frame and causing SIGBUS/SIGSEGV.
 - **Lua userdata GC + raw `luaL_ref` integers**: integer slots aren't tracked by the GC. If Rust holds `i32` registry refs derived from a userdata's state, pin the userdata itself in the registry (extra `lua_pushvalue` + `luaL_ref`) and unref it only after all integer refs retire — otherwise Linux's aggressive incremental GC collects the parent and your slots become nil mid-flight.
