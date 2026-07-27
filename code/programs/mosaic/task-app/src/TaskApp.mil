@@ -14,6 +14,13 @@ component TaskApp {
   slot new-task-name : text ;
   slot new-task-due  : text ;
 
+  // The workspace's projects, in workspace order. Each row is [ name, active-marker ],
+  // where the marker is non-empty for exactly the project currently being shown — the
+  // layout uses it to render that one as selected. Everything else in this interface
+  // (tasks, summary, schedule) describes the active project.
+  slot project-rows     : list<list<text>> ;
+  slot new-project-name : text ;
+
   // A one-line summary (counts, project finish).
   slot summary : text ;
 
@@ -22,9 +29,14 @@ component TaskApp {
   // due date) are the empty string, and the layout hides those chips.
   slot task-rows : list<list<text>> ;
 
-  // Typing in the two inputs.
+  // Typing in the inputs.
   emit onNewTaskNameChange ( value : text ) ;
   emit onNewTaskDueChange ( value : text ) ;
+  emit onNewProjectNameChange ( value : text ) ;
+
+  // Create a project, and switch which one is shown (by row index).
+  emit onAddProject ;
+  emit onSelectProject ( index : number ) ;
 
   // Add the typed task; toggle/delete a row (the row index is delivered as the number
   // payload of a single-number-param event).

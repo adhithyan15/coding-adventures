@@ -51,7 +51,12 @@ interface ControllerInit {
   initialOrder?: string[];
   initialCounter?: number;
   // Called after every *structural* mutation with the data worth persisting.
-  onMutate?: (snapshot: string, order: string[], counter: number) => void;
+  onMutate?: (
+    snapshot: string,
+    order: string[],
+    counter: number,
+    activeProject?: string,
+  ) => void;
 }
 
 // The controller is the web backend's native state container: it holds transient UI
@@ -62,13 +67,34 @@ function makeController(engine: any, init: ControllerInit = {}) {
   const { initialOrder = [], initialCounter = 0, onMutate } = init;
   let newName = "";
   let newDue = "";
+  let newProject = "";
+  // Task ids are workspace-global, so this stays one list across every project. The
+  // per-project view falls out for free: `rows()` keeps only the ids the ACTIVE
+  // project's table() knows about.
   const order: string[] = [...initialOrder]; // task ids in creation order
   let counter = initialCounter;
   const today = Math.floor(Date.now() / DAY_MS);
 
+  // The workspace's top-level projects, in the engine's own display order, plus which
+  // one is active. Nested projects are a later increment — the engine supports them,
+  // this bar doesn't render the hierarchy yet.
+  const projects = (): { ids: string[]; names: string[]; activeId: string } => {
+    const ws = engine.workspace().data;
+    const activeId = engine.activeProject().data as string;
+    const ids: string[] = ws.roots ?? [];
+    return {
+      ids,
+      names: ids.map((id) => ws.projects?.[id]?.name || id),
+      activeId,
+    };
+  };
+
   // Snapshot the engine + host state and hand it to the persistence sink. Called
-  // only after structural mutations (add/toggle/delete) — never on keystrokes.
-  const persist = () => onMutate?.(engine.snapshot(), order, counter);
+  // only after structural mutations (add/toggle/delete/project switch) — never on
+  // keystrokes. The active project rides along because the engine deliberately keeps
+  // that cursor out of its snapshot, making it the host's to remember.
+  const persist = () =>
+    onMutate?.(engine.snapshot(), order, counter, engine.activeProject()?.data);
 
   // Column order matches TASK_VIEW's visibleFields.
   const [DONE, NAME, DEADLINE, START, FINISH, OVERDUE] = [0, 1, 2, 3, 4, 5];
@@ -110,10 +136,19 @@ function makeController(engine: any, init: ControllerInit = {}) {
       });
       const doneCount = ids.filter((id) => byTask.get(id)!.value[DONE]?.value === true).length;
       const finish = engine.gantt(today).data.projectFinish;
+      // [ name, active-marker ] per project; the marker is non-empty for exactly the
+      // active one, which is what the layout keys its selected styling off.
+      const p = projects();
+      const projectRows: string[][] = p.ids.map((id, i) => [
+        p.names[i],
+        id === p.activeId ? "active" : "",
+      ]);
       return {
         appTitle: "Tasks — auto-scheduled",
         newTaskName: newName,
         newTaskDue: newDue,
+        newProjectName: newProject,
+        projectRows,
         summary: `${ids.length} task(s) · ${doneCount} done · projected finish ${
           finish != null ? daysToIso(finish) : "—"
         }`,
@@ -129,6 +164,40 @@ function makeController(engine: any, init: ControllerInit = {}) {
         case "newTaskDueChange":
           newDue = event.value;
           break;
+        case "newProjectNameChange":
+          newProject = event.value;
+          break;
+        case "addProject": {
+          const name = newProject.trim();
+          if (!name) break;
+          // Project ids must be unique across the WHOLE workspace, so probe every
+          // project — not just the top-level ones. A nested project is in `projects`
+          // but not in `roots`; probing `roots` alone would keep proposing an id the
+          // engine rejects, and "+ Project" would become a permanent silent no-op.
+          const taken = new Set<string>(Object.keys(engine.workspace().data.projects ?? {}));
+          let n = taken.size + 1;
+          while (taken.has(`p${n}`)) n += 1;
+          const id = `p${n}`;
+          const res = engine.createProject({ id, name, parent: null });
+          if (res?.ok === false) {
+            // Don't fail silently — the user pressed a button and nothing happened.
+            console.error("Could not create the project:", res.error ?? res);
+            break;
+          }
+          // Creating a project should land you in it — otherwise you'd have to hunt
+          // for it, and an empty new project would look like nothing happened.
+          engine.setActiveProject({ id });
+          newProject = "";
+          persist();
+          break;
+        }
+        case "selectProject": {
+          const id = projects().ids[event.index];
+          // Persist so the choice survives a reload — otherwise you'd come back to the
+          // first project and your tasks would look like they'd vanished.
+          if (id && engine.setActiveProject({ id })?.ok !== false) persist();
+          break;
+        }
         case "addTask": {
           const name = newName.trim();
           if (!name) break;
@@ -199,13 +268,22 @@ async function boot() {
     } catch (err) {
       console.error("Could not restore the saved workspace; starting fresh.", err);
     }
+    // `load` clears the engine's selection (it pointed into the replaced workspace),
+    // so re-apply the remembered one. A project that no longer exists is rejected and
+    // we simply stay on the default.
+    if (saved.activeProject) {
+      engine.setActiveProject({ id: saved.activeProject });
+    }
   }
 
   const controller = makeController(engine, {
     initialOrder: saved?.order ?? [],
     initialCounter: saved?.counter ?? 0,
-    onMutate: (snapshot, order, counter) =>
-      saveWorkspace(storage, makeWorkspaceRecord(snapshot, order, counter, Date.now())),
+    onMutate: (snapshot, order, counter, activeProject) =>
+      saveWorkspace(
+        storage,
+        makeWorkspaceRecord(snapshot, order, counter, Date.now(), activeProject),
+      ),
   });
 
   function Root() {

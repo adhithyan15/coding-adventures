@@ -5,6 +5,26 @@
 
 layout TaskApp {
   Column [ app-shell ] {
+    // Projects. One button per project — the active one styled as selected via the
+    // row's marker cell — plus an inline composer for creating another. Selecting is
+    // by row index, matching how task rows report which row was acted on.
+    Row [ project-bar ] {
+      For ( each: slot: project-rows , as: p , index: pi ) {
+        If ( when: ( p[1] ) ) {
+          HostButton [ project-on ] ( label : ( p[0] ) , onClick : emit: onSelectProject )
+        }
+        Else {
+          HostButton [ project-off ] ( label : ( p[0] ) , onClick : emit: onSelectProject )
+        }
+      }
+      HostInput [ project-input ] (
+        value : slot: new-project-name ,
+        placeholder : "New project" ,
+        onChange : emit: onNewProjectNameChange
+      )
+      HostButton [ project-add ] ( label : "+ Project" , onClick : emit: onAddProject )
+    }
+
     Text [ title ] ( content : slot: app-title , a11y-role : heading )
 
     Row [ add-row ] {

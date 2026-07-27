@@ -47,11 +47,37 @@ fn fresh() -> Workspace {
     )
 }
 
-/// The active project's id — the one the per-project ops/queries act on. It is the
-/// first root, falling back to the first project by id. Returns `None` only if a loaded
-/// workspace somehow has no projects at all (hostile input), in which case per-project
-/// calls answer with an error envelope rather than panicking.
+// The host's *chosen* active project, if it has selected one.
+//
+// This is deliberately ABI-local rather than part of the `Workspace`: which project you
+// are currently looking at is a property of *this view of* the workspace, not of the
+// workspace itself. Two hosts open on the same persisted data should be able to sit on
+// different projects, and a snapshot should not carry one host's cursor to another. It
+// is therefore also **not** serialized by `snapshot`; a host that wants to restore the
+// last-viewed project persists that id itself and calls `set_active_project` after
+// `load` (the same division of labour as the existing host-owned row order).
+thread_local! {
+    static ACTIVE: RefCell<Option<ProjectId>> = const { RefCell::new(None) };
+}
+
+/// The active project's id — the one the per-project ops/queries act on.
+///
+/// Resolution order:
+/// 1. the project the host selected via `set_active_project`, **if it still exists** —
+///    so deleting the selected project degrades to the default rather than wedging
+///    every per-project call behind a dangling id;
+/// 2. otherwise the first root, falling back to the first project by id.
+///
+/// Returns `None` only if a loaded workspace somehow has no projects at all (hostile
+/// input), in which case per-project calls answer with an error envelope rather than
+/// panicking.
 fn active_project_id(ws: &Workspace) -> Option<ProjectId> {
+    let chosen = ACTIVE.with(|a| a.borrow().clone());
+    if let Some(pid) = chosen {
+        if ws.projects.contains_key(&pid) {
+            return Some(pid);
+        }
+    }
     ws.roots
         .first()
         .cloned()
@@ -229,6 +255,55 @@ macro_rules! export_ws_op {
 #[no_mangle]
 pub extern "C" fn reset() {
     STATE.with(|s| *s.borrow_mut() = fresh());
+    // The selection points into the workspace we just threw away.
+    ACTIVE.with(|a| *a.borrow_mut() = None);
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct ProjectIdArgs {
+    id: String,
+}
+
+/// Choose which project the per-project ops and queries act on.
+///
+/// Without this the active project was permanently "the first root", so a project
+/// created through `create_project` was unreachable: you could make it, but nothing
+/// could ever target it. Rejects an unknown id rather than silently selecting nothing,
+/// so a typo surfaces as an error envelope instead of the host quietly operating on the
+/// wrong project.
+///
+/// # Safety
+/// `ptr`/`len` must describe readable bytes, or be null with a zero length.
+#[no_mangle]
+pub unsafe extern "C" fn set_active_project(ptr: *const u8, len: usize) -> *mut u8 {
+    let json = unsafe { read_input(ptr, len) };
+    pack(match serde_json::from_str::<ProjectIdArgs>(&json) {
+        Ok(args) => {
+            let pid = ProjectId::from_raw(args.id);
+            STATE.with(|s| {
+                if s.borrow().projects.contains_key(&pid) {
+                    ACTIVE.with(|a| *a.borrow_mut() = Some(pid));
+                    ok_json()
+                } else {
+                    // Same envelope shape as every other rejected op (`{ok,error,code}`),
+                    // so a host can switch on `code` rather than string-matching.
+                    op_error_json(&OpError::NotFound)
+                }
+            })
+        }
+        Err(e) => error_json(&format!("parse error: {e}")),
+    })
+}
+
+/// The id of the project the per-project surface is currently acting on, so a host can
+/// render which one is selected without duplicating the resolution rules above.
+#[no_mangle]
+pub extern "C" fn active_project() -> *mut u8 {
+    pack(STATE.with(|s| match active_project_id(&s.borrow()) {
+        Some(pid) => ok_data(&pid.as_str()),
+        None => error_json("no active project"),
+    }))
 }
 
 /// Serialize the whole **workspace** (for host-owned persistence).
@@ -252,14 +327,20 @@ pub extern "C" fn snapshot() -> *mut u8 {
 #[no_mangle]
 pub unsafe extern "C" fn load(ptr: *const u8, len: usize) -> *mut u8 {
     let json = unsafe { read_input(ptr, len) };
+    // Either branch replaces the workspace wholesale, so a selection made against the
+    // *previous* one must not survive: its id could name a different project (or none)
+    // in the loaded data. A host restoring a remembered project re-selects it after
+    // `load` returns.
     pack(if let Ok(ws) = serde_json::from_str::<Workspace>(&json) {
         STATE.with(|s| *s.borrow_mut() = ws);
+        ACTIVE.with(|a| *a.borrow_mut() = None);
         ok_json()
     } else {
         match serde_json::from_str::<ProjectState>(&json) {
             Ok(project) => {
                 let ws = Workspace::from_project(WorkspaceId::from_raw("workspace"), project);
                 STATE.with(|s| *s.borrow_mut() = ws);
+                ACTIVE.with(|a| *a.borrow_mut() = None);
                 ok_json()
             }
             Err(e) => error_json(&format!("parse error: {e}")),
@@ -625,12 +706,38 @@ export_ws_op!(
 struct ProjectIdArg {
     id: String,
 }
-export_ws_op!(
-    /// Delete a project (rejected while it still has sub-projects).
-    delete_project,
-    ProjectIdArg,
-    |w, a| w.delete_project(&ProjectId::from_raw(a.id))
-);
+/// Delete a project (rejected while it still has sub-projects).
+///
+/// Hand-rolled rather than `export_ws_op!` because deleting the *selected* project must
+/// also drop the selection. Merely letting it dangle is not enough: resolution would
+/// fall back to the first root (correct), but a later `create_project` that reuses the
+/// same id would make the stale selection resolve *again*, silently re-targeting the
+/// per-project surface at a project the host never selected.
+///
+/// # Safety
+/// `ptr`/`len` must describe readable bytes, or be null with a zero length.
+#[no_mangle]
+pub unsafe extern "C" fn delete_project(ptr: *const u8, len: usize) -> *mut u8 {
+    let json = unsafe { read_input(ptr, len) };
+    pack(match serde_json::from_str::<ProjectIdArg>(&json) {
+        Ok(args) => {
+            let pid = ProjectId::from_raw(args.id);
+            STATE.with(|s| match s.borrow_mut().delete_project(&pid) {
+                Ok(()) => {
+                    ACTIVE.with(|a| {
+                        let mut sel = a.borrow_mut();
+                        if sel.as_ref() == Some(&pid) {
+                            *sel = None;
+                        }
+                    });
+                    ok_json()
+                }
+                Err(e) => op_error_json(&e),
+            })
+        }
+        Err(e) => error_json(&format!("parse error: {e}")),
+    })
+}
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -1025,6 +1132,109 @@ mod tests {
         assert!(call1(create_task, r#"{"id":"a","name":"A"}"#).contains(r#""ok":true"#));
         let list = take(checklist());
         assert!(list.contains(r#""name":"A""#), "{list}");
+    }
+
+    #[test]
+    fn set_active_project_retargets_the_per_project_surface() {
+        // The bug this closes: without a way to switch, `active_project_id` was
+        // permanently "the first root", so a project you created could never be
+        // reached — you could make it, but nothing could ever act on it.
+        reset();
+        assert!(call1(create_project, r#"{"id":"p2","name":"Second"}"#).contains(r#""ok":true"#));
+        // Before switching, a task lands in the default project.
+        assert!(call1(create_task, r#"{"id":"a","name":"In first"}"#).contains(r#""ok":true"#));
+        assert!(take(active_project()).contains("project"));
+
+        // After switching, the *same* per-project export targets the new project.
+        assert!(call1(set_active_project, r#"{"id":"p2"}"#).contains(r#""ok":true"#));
+        assert!(take(active_project()).contains("p2"));
+        assert!(call1(create_task, r#"{"id":"b","name":"In second"}"#).contains(r#""ok":true"#));
+
+        let second = take(checklist());
+        assert!(second.contains(r#""name":"In second""#), "{second}");
+        assert!(
+            !second.contains(r#""name":"In first""#),
+            "second project must not show the first's tasks: {second}"
+        );
+
+        // ...and switching back shows the original project's tasks, unharmed.
+        assert!(call1(set_active_project, r#"{"id":"project"}"#).contains(r#""ok":true"#));
+        let first = take(checklist());
+        assert!(first.contains(r#""name":"In first""#), "{first}");
+        assert!(!first.contains(r#""name":"In second""#), "{first}");
+    }
+
+    #[test]
+    fn set_active_project_rejects_an_unknown_id() {
+        // Silently selecting nothing would leave the host operating on a different
+        // project than the one it thinks it selected — fail loudly instead.
+        reset();
+        let out = call1(set_active_project, r#"{"id":"nope"}"#);
+        assert!(out.contains(r#""ok":false"#), "{out}");
+        // The previous selection still stands.
+        assert!(take(active_project()).contains("project"));
+    }
+
+    #[test]
+    fn selection_degrades_when_its_project_disappears() {
+        // A dangling selection must not wedge every per-project call behind an id
+        // that no longer resolves: deleting the selected project falls back to the
+        // default rather than answering "no active project" forever.
+        reset();
+        assert!(call1(create_project, r#"{"id":"p2","name":"Second"}"#).contains(r#""ok":true"#));
+        assert!(call1(set_active_project, r#"{"id":"p2"}"#).contains(r#""ok":true"#));
+        assert!(call1(delete_project, r#"{"id":"p2"}"#).contains(r#""ok":true"#));
+        // Falls back to the first root, and per-project calls keep working.
+        assert!(take(active_project()).contains("project"));
+        assert!(call1(create_task, r#"{"id":"a","name":"Still fine"}"#).contains(r#""ok":true"#));
+        assert!(take(checklist()).contains(r#""name":"Still fine""#));
+    }
+
+    #[test]
+    fn deleting_the_selected_project_drops_the_selection_for_good() {
+        // Regression: letting the selection merely dangle meant that re-creating a
+        // project with the SAME id resurrected it — the per-project surface would
+        // silently retarget to a project the host never selected. Deleting must clear.
+        reset();
+        assert!(call1(create_project, r#"{"id":"p2","name":"Second"}"#).contains(r#""ok":true"#));
+        assert!(call1(set_active_project, r#"{"id":"p2"}"#).contains(r#""ok":true"#));
+        assert!(call1(delete_project, r#"{"id":"p2"}"#).contains(r#""ok":true"#));
+
+        // Re-create the same id WITHOUT selecting it...
+        assert!(call1(create_project, r#"{"id":"p2","name":"Reused"}"#).contains(r#""ok":true"#));
+        // ...and the active project must still be the default, not the resurrected one.
+        assert!(
+            take(active_project()).contains("project"),
+            "a re-created id must not silently re-activate"
+        );
+        assert!(call1(create_task, r#"{"id":"a","name":"Goes to default"}"#).contains(r#""ok":true"#));
+        assert!(take(checklist()).contains(r#""name":"Goes to default""#));
+    }
+
+    #[test]
+    fn rejected_selection_carries_an_error_code() {
+        // Hosts switch on `code`; a bare {ok,error} envelope would read as `undefined`.
+        reset();
+        let out = call1(set_active_project, r#"{"id":"nope"}"#);
+        assert!(out.contains(r#""ok":false"#), "{out}");
+        assert!(out.contains(r#""code":1"#), "expected NotFound code: {out}");
+    }
+
+    #[test]
+    fn load_and_reset_clear_a_stale_selection() {
+        // The selection points into the workspace being replaced; carrying it across a
+        // load could silently target a *different* project that happens to share an id.
+        reset();
+        assert!(call1(create_project, r#"{"id":"p2","name":"Second"}"#).contains(r#""ok":true"#));
+        assert!(call1(set_active_project, r#"{"id":"p2"}"#).contains(r#""ok":true"#));
+        let snap = take(snapshot());
+        assert!(call1(load, &snap).contains(r#""ok":true"#));
+        // Back to the default, not the pre-load selection.
+        assert!(take(active_project()).contains("project"));
+
+        assert!(call1(set_active_project, r#"{"id":"p2"}"#).contains(r#""ok":true"#));
+        reset();
+        assert!(take(active_project()).contains("project"));
     }
 
     #[test]

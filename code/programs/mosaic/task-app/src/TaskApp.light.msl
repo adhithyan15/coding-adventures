@@ -14,6 +14,56 @@ style TaskApp {
     padding : 28 ;
     gap : 16 ;
   }
+  part project-bar {
+    gap : 8 ;
+    align : center-vertical ;
+  }
+  // The project you are looking at: honey fill, so "where am I" is answerable at a
+  // glance. The others stay quiet surfaces.
+  part project-on {
+    background : "#e0942a" ;
+    color : "#ffffff" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding : 8 ;
+    border-radius : 20 ;
+  }
+  part project-off {
+    background : "#fffdfa" ;
+    color : "#6a625a" ;
+    font-size : 13 ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#e6ded3" ;
+    border-radius : 20 ;
+    state hover {
+      border-color : "#e0942a" ;
+      color : "#2b2723" ;
+    }
+  }
+  part project-input {
+    background : "#fffdfa" ;
+    color : "#2b2723" ;
+    font-size : 13 ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#e6ded3" ;
+    border-radius : 9 ;
+    state focused {
+      border-color : "#e0942a" ;
+    }
+  }
+  part project-add {
+    background : "#f7f2ea" ;
+    color : "#b6741a" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding : 8 ;
+    border-radius : 9 ;
+    state hover {
+      background : "#faedd6" ;
+    }
+  }
   part title {
     font-size : 22 ;
     font-weight : bold ;
