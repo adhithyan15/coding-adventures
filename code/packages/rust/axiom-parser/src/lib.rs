@@ -768,9 +768,9 @@ mod tests {
     /// real-input headroom for every shape still parses cleanly, and one
     /// level deeper cleanly trips the cap. These exact boundary counts were
     /// found empirically by binary-searching `try_parse_axiom` (the CAPPED
-    /// public API, `MAX_RULE_DEPTH = 128`) against increasing nesting counts
+    /// public API, `MAX_RULE_DEPTH = 140`) against increasing nesting counts
     /// for each shape -- see `MAX_RULE_DEPTH`'s own doc comment ("Measured
-    /// real-input headroom at `128`").
+    /// real-input headroom at `140`").
     #[test]
     fn test_headroom_boundary_for_every_shape() {
         assert!(try_parse_axiom(&nested_paren_source(13)).is_ok());
