@@ -420,6 +420,33 @@ SirValue _sir_ne(SirValue a, SirValue b) { return _sir_bool(!_sir_value_eq(a, b)
 /* Logical negation: `!v` under SIR truthiness (only nil/false are falsy). */
 SirValue _sir_not(SirValue v) { return _sir_bool(!_sir_truthy(v)); }
 
+/* Bitwise / shift on the int64 value domain.  The frontend wraps every result
+ * in a `Convert` to enforce the C width, so these operate on the full int64 and
+ * leave the masking to `_sir_convert`.
+ *   - `&`/`|`/`^`/`~` are pure bit operations.
+ *   - `<<` shifts the *bit pattern*: done through uint64 so a shift that moves
+ *     bits into or past the sign position is well-defined (no signed-overflow
+ *     UB), matching the two's-complement result the mask then reduces.
+ *   - `>>` uses the native int64 shift, which is arithmetic for a negative
+ *     (signed) operand and logical for a masked non-negative (unsigned) one —
+ *     exactly C's rule, since the operand carries its signedness. */
+SirValue _sir_band(SirValue a, SirValue b) { return _sir_int(a.as.i & b.as.i); }
+SirValue _sir_bor(SirValue a, SirValue b)  { return _sir_int(a.as.i | b.as.i); }
+SirValue _sir_bxor(SirValue a, SirValue b) { return _sir_int(a.as.i ^ b.as.i); }
+SirValue _sir_bnot(SirValue v)             { return _sir_int(~v.as.i); }
+SirValue _sir_shl(SirValue a, SirValue b) {
+    return _sir_int((int64_t)((uint64_t)a.as.i << (b.as.i & 63)));
+}
+SirValue _sir_shr(SirValue a, SirValue b) {
+    return _sir_int(a.as.i >> (b.as.i & 63));
+}
+/* Logical right shift for *unsigned* operands: shift the bit pattern through
+ * uint64 so a value whose top bit is set (a `uint64_t` stored as a negative
+ * int64) does not sign-extend.  `int64_t >>` would be arithmetic there. */
+SirValue _sir_lshr(SirValue a, SirValue b) {
+    return _sir_int((int64_t)((uint64_t)a.as.i >> (b.as.i & 63)));
+}
+
 /* Ruby `===` (case subsumption).  For the v0 value set — no classes, ranges, or
  * regexps yet — `pattern === value` reduces to structural equality, so `case`
  * / `when` over literals behaves correctly.  Later batches extend this for
@@ -932,6 +959,13 @@ SirValue _sir_builtin_dispatch(SirValue *caps, SirValue *args, int argc) {
     if (strcmp(name, "==") == 0)       return _sir_eq(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "!=") == 0)       return _sir_ne(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "not") == 0)      return _sir_not(_sir_arg(args, argc, 0));
+    if (strcmp(name, "&") == 0)        return _sir_band(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, "|") == 0)        return _sir_bor(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, "^") == 0)        return _sir_bxor(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, "~") == 0)        return _sir_bnot(_sir_arg(args, argc, 0));
+    if (strcmp(name, "<<") == 0)       return _sir_shl(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, ">>") == 0)       return _sir_shr(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, "u>>") == 0)      return _sir_lshr(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "cons") == 0)     return _sir_cons(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "car") == 0)      return _sir_car(_sir_arg(args, argc, 0));
     if (strcmp(name, "cdr") == 0)      return _sir_cdr(_sir_arg(args, argc, 0));

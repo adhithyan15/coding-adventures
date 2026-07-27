@@ -2,6 +2,31 @@
 
 ## Unreleased
 
+### Milestone 5 — bitwise `& | ^ ~` and shifts `<< >>`
+
+- `& | ^` and unary `~` take the usual arithmetic conversions and wrap the
+  result in a `Convert`, exactly like `+ - *`.
+- **Shifts are the exception:** C does not common-type the operands — each is
+  promoted alone, and the result has the promoted **left** operand's type (the
+  right operand is only a count).  So `uint8_t x; x << c` is done at `int` and
+  narrows to `uint8_t` only at the assignment.  `>>` is arithmetic on a signed
+  operand and logical on an unsigned one.  Because both backends store values in
+  a signed `int64`, an unsigned `>>` is routed to a distinct `u>>` builtin (C
+  renders it as a `uint64_t` shift, Ruby as a plain `>>`), so a `uint64_t`/
+  `size_t` with its top bit set shifts logically instead of sign-extending.
+- Both backends gain the six builtins `& | ^ ~ << >>`: Ruby renders the native
+  `Integer` operators; the C backend adds `_sir_band`/`_sir_bor`/`_sir_bxor`/
+  `_sir_bnot`/`_sir_shl`/`_sir_shr` over `int64_t` (`<<` through `uint64_t` to
+  avoid sign-bit UB; count masked `& 63`).  Both backends' builtin allowlists
+  were extended.
+- Corpus grows with 10 programs (and/or/xor, `~` promotion and narrowing, left
+  shift + wrap into a `uint8`, logical vs arithmetic `>>`, masking) — all
+  byte-identical across reference `clang -fwrapv`, emitted Ruby, and emitted C
+  (and clang+gcc+MSVC).
+- Division/modulo (`/ %`) still deferred — they need the truncate-vs-floor split
+  (C truncates toward zero; SIR/Ruby floor) — and remain a clean positioned
+  error rather than a silently-wrong floor.
+
 ### Milestone 4 — logical operators (`&&`, `||`, `!`)
 
 - The short-circuiting logical operators lower to SIR's `and`/`or`/`not`

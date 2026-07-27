@@ -411,6 +411,67 @@ fn corpus() -> Vec<Case> {
                    int classify(int x, int y) { if ((x > 0 || y > 0) && !(x == y)) { return 1; } return 0; }\n\
                    int main(void) { printf(\"%d\\n\", classify(4, 4)); return 0; }",
         },
+        // ── milestone 5: bitwise & | ^ ~ and shifts << >> ────────────────────
+        Case {
+            label: "bitwise and 0xF0 & 0x3C → 48",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { printf(\"%d\\n\", 0xF0 & 0x3C); return 0; }",
+        },
+        Case {
+            label: "bitwise or | xor combine flags(7) → 5",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int flags(int x) { return (x & 1) | (x & 4); }\n\
+                   int main(void) { printf(\"%d\\n\", flags(7)); return 0; }",
+        },
+        Case {
+            label: "xor 0xFF ^ 0x0F → 240",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { printf(\"%d\\n\", 0xFF ^ 0x0F); return 0; }",
+        },
+        Case {
+            label: "~uint8 promotes to int, ~0 → -1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint8_t x = 0; printf(\"%d\\n\", ~x); return 0; }",
+        },
+        Case {
+            label: "(uint8_t)~0 narrows to 255",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint8_t x = ~0; printf(\"%d\\n\", x); return 0; }",
+        },
+        Case {
+            label: "left shift 1 << 10 → 1024",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { printf(\"%d\\n\", 1 << 10); return 0; }",
+        },
+        Case {
+            label: "left shift into a uint8 wraps 1<<9 → 0",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint8_t x = 1 << 9; printf(\"%d\\n\", x); return 0; }",
+        },
+        Case {
+            label: "unsigned right shift is logical 200u >> 1 → 100",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint32_t x = 200; printf(\"%u\\n\", x >> 1); return 0; }",
+        },
+        Case {
+            label: "signed right shift is arithmetic (int8)-128 >> 1 → -64",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { int8_t x = -128; printf(\"%d\\n\", x >> 1); return 0; }",
+        },
+        Case {
+            label: "mask a value x & 0xFF → 52",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int lo(int x) { return x & 0xFF; }\n\
+                   int main(void) { printf(\"%d\\n\", lo(0x1234)); return 0; }",
+        },
+        Case {
+            // The signedness trap: a uint64 with bit 63 set is stored as a
+            // negative int64, so `>>` must be *logical* — high-word extract.
+            label: "uint64 logical right shift of a high-bit value → 2147483648",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint64_t x = 1; uint64_t y = x << 63; \
+                   printf(\"%llu\\n\", (unsigned long long)(y >> 32)); return 0; }",
+        },
     ]
 }
 

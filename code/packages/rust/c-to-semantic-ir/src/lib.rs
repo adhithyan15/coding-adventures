@@ -18,6 +18,8 @@
 //!   is what makes guard clauses and idiomatic recursion translatable.
 //! - **Milestone 4** — the short-circuiting logical operators `&&`, `||`, `!`,
 //!   reusing the truthiness bridge (`and`/`or`/`not` builtins).
+//! - **Milestone 5** — bitwise `& | ^ ~` and shifts `<< >>` (shifts take the
+//!   promoted left operand's type, not the usual common type).
 
 mod lower;
 
@@ -191,6 +193,59 @@ mod tests {
             "wrong error: {}",
             err.message
         );
+    }
+
+    // ── milestone 5: bitwise & shifts ───────────────────────────────────────
+
+    #[test]
+    fn bitwise_operators_emit_their_builtins() {
+        let m = lower("int f(int a, int b) { return (a & b) | (a ^ b); }");
+        let text = semantic_ir::print_module(&m);
+        assert!(text.contains("(builtin-call &"), "no &:\n{text}");
+        assert!(text.contains("(builtin-call |"), "no |:\n{text}");
+        assert!(text.contains("(builtin-call ^"), "no ^:\n{text}");
+    }
+
+    #[test]
+    fn bitwise_not_is_a_unary_builtin() {
+        let m = lower("int f(int x) { return ~x; }");
+        assert!(semantic_ir::print_module(&m).contains("(builtin-call ~"));
+    }
+
+    #[test]
+    fn shift_result_takes_the_left_operands_type_not_the_common_type() {
+        // `x << c` with x:uint8 → promoted to i32; the result is i32 (the
+        // promoted LEFT type), NOT common-typed with the count.  So the whole
+        // expression narrows only where C says: at the u8 assignment.
+        let m = lower("int main(void) { uint8_t x = 1 << 3; return 0; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(text.contains("(builtin-call <<"), "no shift:\n{text}");
+        // shift performed at i32, then the declaration narrows to u8.
+        assert!(
+            text.contains("(convert (int i32 ub)"),
+            "shift not at i32:\n{text}"
+        );
+        assert!(
+            text.contains("(convert (int u8 wrap)"),
+            "no u8 narrow:\n{text}"
+        );
+    }
+
+    #[test]
+    fn division_and_modulo_remain_deferred() {
+        // `/` and `%` need the truncate-vs-floor split (a later milestone), so
+        // they must still be a clean error, not a silently-wrong floor.
+        for src in [
+            "int f(int a, int b) { return a / b; }",
+            "int f(int a, int b) { return a % b; }",
+        ] {
+            let err = compile_source(src, "t").unwrap_err();
+            assert!(
+                err.message.contains("not yet supported"),
+                "wrong error for {src}: {}",
+                err.message
+            );
+        }
     }
 
     // ── milestone 3: early return ───────────────────────────────────────────
