@@ -2838,6 +2838,53 @@ mod tests {
     }
 
     #[test]
+    fn inspect_converting_with_a_before_after_region() {
+        // BEFORE "Y" restricts the A→0 translate to "AXA" (indices 0..3) → the two
+        // "A"s there become "0"; the trailing "A" (right of "Y") is UNTOUCHED.
+        let before = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE \"Y\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before, "0X0YA\n");
+
+        // AFTER "Y" restricts it to "A" (index 4) → only that trailing "A" → "0".
+        let after = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"Y\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after, "AXAY0\n");
+
+        // The not-found ASYMMETRY: BEFORE with the delimiter absent translates the
+        // WHOLE source (all three "A"s → "0"); AFTER with it absent translates
+        // NOTHING (the source is unchanged).
+        let before_absent = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE \"Z\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before_absent, "0X0Y0\n");
+        let after_absent = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"Z\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after_absent, "AXAYA\n");
+
+        // The region delimiter equal to a `from` character: AFTER "A" in "AXAYA" —
+        // the FIRST "A" (index 0) bounds the region to "XAYA"; the translate runs over
+        // the ORIGINAL bytes, so the "A"s at indices 2 and 4 become "0", while the
+        // delimiter "A" at index 0 (left of the region) is KEPT → "AX0Y0".
+        let delim_in_from = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"A\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(delim_in_from, "AX0Y0\n");
+    }
+
+    #[test]
     fn inspect_converting_later_rung_forms_are_clean_errors() {
         // Unequal-length FROM/TO have no well-defined table — a later rung.
         let unequal = run_cobol(&wrap(
@@ -2855,13 +2902,15 @@ mod tests {
         .unwrap_err();
         assert!(matches!(item, RuntimeError::Unsupported(_)), "got {item:?}");
 
-        // A BEFORE/AFTER region restricting the conversion is a later rung.
-        let before = run_cobol(&wrap(
+        // A MULTI-character region delimiter restricting the conversion is a later
+        // rung (a single-character region delimiter is now supported — see
+        // `inspect_converting_with_a_before_after_region`).
+        let multi_region = run_cobol(&wrap(
             &["01  S  PIC X(5) VALUE \"ABABA\"."],
-            &["INSPECT S CONVERTING \"A\" TO \"X\" BEFORE \"B\".", "STOP RUN."],
+            &["INSPECT S CONVERTING \"A\" TO \"X\" BEFORE \"BC\".", "STOP RUN."],
         ))
         .unwrap_err();
-        assert!(matches!(before, RuntimeError::Unsupported(_)), "got {before:?}");
+        assert!(matches!(multi_region, RuntimeError::Unsupported(_)), "got {multi_region:?}");
 
         // CONVERTING is a STANDALONE alternative — combining it with a REPLACING
         // clause in one statement does not parse (the two are mutually exclusive

@@ -2273,16 +2273,24 @@ impl<'a> Compiler<'a> {
     /// match-wins chain mirrors the oracle's char→char map (which also lets the
     /// earliest `from` occurrence win), so the compiled program is byte-identical to
     /// `cobol-runtime`'s `exec_inspect` CONVERTING path. Unequal-length or non-ASCII
-    /// literals, a data-name/figurative/reference-modified `from`/`to`, and a
-    /// `BEFORE`/`AFTER` region are clean later-rung `Unsupported`s.
+    /// literals and a data-name/figurative/reference-modified `from`/`to` are clean
+    /// later-rung `Unsupported`s.
+    ///
+    /// An optional `{BEFORE|AFTER} x` region narrows the translation to a sub-slice
+    /// of the source. When present we reuse [`Self::emit_inspect_region_window`] —
+    /// the SAME window the TALLYING and REPLACING sides emit — to derive `[start,
+    /// end)` over the ORIGINAL source, then at each unrolled position `j` translate
+    /// through the table iff `start <= j < end`; a position outside the window keeps
+    /// its original character. With NO region the extra guard folds away and the
+    /// emitted unroll is byte-identical to the pre-region CONVERTING lowering.
     fn emit_inspect_converting(
         &mut self,
         verb: &GrammarASTNode,
         s_reg: &str,
         width: usize,
     ) -> Result<(), CompileError> {
-        // The `CONVERTING from TO to` phrase (rejecting a BEFORE/AFTER region).
-        let (from_node, to_node) = inspect_converting_pair(verb)?;
+        // The `CONVERTING from TO to [{BEFORE|AFTER} x]` phrase.
+        let (from_node, to_node, region) = inspect_converting_pair(verb)?;
         let from = inspect_converting_literal(from_node, "from")?;
         let to = inspect_converting_literal(to_node, "to")?;
         // The table pairs `from[k]` with `to[k]`, so the two must be equal length.
@@ -2302,6 +2310,19 @@ impl<'a> Compiler<'a> {
         }
         let from_bytes = from.as_bytes();
         let to_bytes = to.as_bytes();
+
+        // The optional `{BEFORE|AFTER} x` window `[start, end)`, derived over the
+        // ORIGINAL source (before the unroll overwrites `s_reg`). We reuse the tally
+        // side's `emit_inspect_region_window`, which needs the runtime length; with no
+        // region nothing here is emitted and the per-position guard below folds away.
+        let region_window = match region {
+            None => None,
+            Some(_) => {
+                let len = self.fresh("_iclen");
+                self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.to_string())], "i64");
+                self.emit_inspect_region_window(region, s_reg, &len)?
+            }
+        };
 
         // Bake the compile-time table once: a `const` byte for each `from[k]`
         // (the compare target) and a 1-character `str_const` for each `to[k]`
@@ -2339,6 +2360,42 @@ impl<'a> Compiler<'a> {
                 "i64",
             );
             let pos_done = self.fresh("ic_done");
+            // When a `{BEFORE|AFTER}` region is active and this position lies OUTSIDE
+            // the window `[start, end)`, skip the whole table chain and keep the
+            // original character — the exact analogue of the REPLACING region guard.
+            // `pos_orig` labels the "append the original source char" fall-through,
+            // which the out-of-window jump targets directly. (No region ⇒ this whole
+            // block is elided and the lowering is byte-identical to the original.)
+            let pos_orig = region_window.as_ref().map(|_| self.fresh("ic_orig"));
+            if let Some((start, end_bound)) = &region_window {
+                // in_region = (j >= start) AND (j < end); j is the compile-time
+                // constant for this unrolled position, materialised into a register.
+                let jreg = self.fresh("_icjr");
+                self.emit("const", Some(&jreg), vec![Operand::Int(j as i64)], "i64");
+                let ge = self.fresh("_icge");
+                self.emit(
+                    "cmp_ge",
+                    Some(&ge),
+                    vec![Operand::Var(jreg.clone()), Operand::Var(start.clone())],
+                    "i64",
+                );
+                let lt = self.fresh("_iclt");
+                self.emit(
+                    "cmp_lt",
+                    Some(&lt),
+                    vec![Operand::Var(jreg), Operand::Var(end_bound.clone())],
+                    "i64",
+                );
+                let in_region = self.fresh("_icin");
+                self.emit("and", Some(&in_region), vec![Operand::Var(ge), Operand::Var(lt)], "i64");
+                // Out of window → jump straight to the original-append fall-through.
+                self.emit(
+                    "jmp_if_false",
+                    None,
+                    vec![Operand::Var(in_region), Operand::Var(pos_orig.clone().unwrap())],
+                    "void",
+                );
+            }
             // First-match-wins chain over the table: on the earliest `from[k]` that
             // equals `c`, append `to[k]` and jump past the rest.
             for (fc, tc) in from_consts.iter().zip(to_consts.iter()) {
@@ -2355,7 +2412,11 @@ impl<'a> Compiler<'a> {
                 self.emit("jmp", None, vec![Operand::Var(pos_done.clone())], "void");
                 self.emit("label", None, vec![Operand::Var(next_k)], "void");
             }
-            // No table entry matched: append the original source character.
+            // No table entry matched (or the position is outside the region window):
+            // append the original source character.
+            if let Some(po) = &pos_orig {
+                self.emit("label", None, vec![Operand::Var(po.clone())], "void");
+            }
             let jc1 = self.str_index(j as i64 + 1);
             let orig = self.fresh("_icorig");
             self.emit(
@@ -4706,26 +4767,50 @@ fn inspect_replacing_all(verb: &GrammarASTNode) -> Result<ReplacePhrase<'_>, Com
     }
 }
 
-/// Extract the `CONVERTING from TO to` phrase from an `inspect_stmt`, returning
-/// `(from_node, to_node)` and rejecting the one later-rung form the grammar also
-/// accepts here — a `BEFORE`/`AFTER` region restricting the conversion. (Unequal-
-/// length/non-ASCII/non-literal `from`/`to` are rejected by the caller.)
-fn inspect_converting_pair(
-    verb: &GrammarASTNode,
-) -> Result<(&GrammarASTNode, &GrammarASTNode), CompileError> {
+/// The parsed pieces of a `CONVERTING from TO to [{BEFORE|AFTER} x]` phrase:
+/// `(from_node, to_node, region)`, where `region` is the optional `{BEFORE|AFTER} x`
+/// window as `(kind, region_delim_node)` — the exact analogue of the region on the
+/// TALLYING ([`TallyPhrase`]) and REPLACING ([`ReplacePhrase`]) sides.
+type ConvertPhrase<'a> =
+    (&'a GrammarASTNode, &'a GrammarASTNode, Option<(RegionKind, &'a GrammarASTNode)>);
+
+/// Extract the `CONVERTING from TO to [{BEFORE|AFTER} x]` phrase from an
+/// `inspect_stmt`, returning `(from_node, to_node, region)`. A `{BEFORE|AFTER} x`
+/// region now PARSES into `Option<(RegionKind, node)>` (it used to be rejected
+/// wholesale here), using the SAME keyword/operand extraction as `inspect_tally_all`
+/// and `inspect_replacing_all` on the count/replace sides; a multi-character region
+/// delimiter stays a later rung, rejected by `single_delim_code` at emit time.
+/// (Unequal-length/non-ASCII/non-literal `from`/`to` are rejected by the caller.)
+fn inspect_converting_pair(verb: &GrammarASTNode) -> Result<ConvertPhrase<'_>, CompileError> {
     let converting = child_node(verb, "inspect_converting").ok_or_else(|| {
         CompileError::Unsupported("INSPECT without a CONVERTING clause is a later rung".into())
     })?;
-    if child_node(converting, "inspect_region").is_some() {
-        return Err(CompileError::Unsupported(
-            "INSPECT CONVERTING … BEFORE/AFTER is a later rung".into(),
-        ));
-    }
+    let region = match child_node(converting, "inspect_region") {
+        None => None,
+        Some(region_node) => {
+            let rtoks = child_tokens(region_node);
+            let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+                RegionKind::Before
+            } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+                RegionKind::After
+            } else {
+                return Err(CompileError::Unsupported(
+                    "INSPECT region without a BEFORE or AFTER keyword".into(),
+                ));
+            };
+            let rdelim = child_node(region_node, "operand").ok_or_else(|| {
+                CompileError::Malformed("INSPECT BEFORE/AFTER region without a delimiter".into())
+            })?;
+            Some((kind, rdelim))
+        }
+    };
     // `from TO to` — the two `operand` children are the FROM (first) and the TO
-    // (second), in order.
+    // (second), in order. (A `{BEFORE|AFTER}` region contributes its own operand
+    // nested under `inspect_region`, not a direct child of `inspect_converting`, so
+    // these two direct `operand` children are exactly the FROM and TO.)
     let ops = child_nodes(converting, "operand");
     match ops.as_slice() {
-        [f, t] => Ok((*f, *t)),
+        [f, t] => Ok((*f, *t, region)),
         _ => Err(CompileError::Malformed(
             "INSPECT CONVERTING without a FROM and a TO operand".into(),
         )),

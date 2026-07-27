@@ -119,15 +119,20 @@ neither half may be leading); and `INSPECT source CONVERTING from TO to` (transl
 of the alphanumeric source through a per-character table built from the two
 equal-length string literals `from`/`to` — a character equal to `from[k]` becomes
 `to[k]`, the **first (leftmost) occurrence winning** if `from` repeats a
-character, others left unchanged — **in place**, same width). Anything not yet
+character, others left unchanged — **in place**, same width), with an optional
+`{BEFORE|AFTER} z` **region** (restrict the translation to the sub-slice bounded by
+the FIRST occurrence of the single-character delimiter `z`, using the SAME window the
+count and replacement use: `BEFORE z` translates left of it — the WHOLE source if `z`
+is absent — and `AFTER z` translates right of it — NOTHING if `z` is absent;
+positions outside the region keep their original character). Anything not yet
 modelled (the explicit
 `SIGN` clause with `SEPARATE`/`LEADING`, editing pictures, `COMP`,
 `PERFORM … WITH TEST AFTER`/inline, `GO TO … DEPENDING`, `STRING` with a real
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `UNSTRING` with a multi-character
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `INSPECT` with a `CHARACTERS`
 tally, a `{BEFORE|AFTER}` region on any form OTHER than the lone `TALLYING FOR
-ALL` or the lone `REPLACING ALL` (a `FOR LEADING`/`REPLACING LEADING` region, a
-`CONVERTING` or combined-form region) or a
+ALL`, the lone `REPLACING ALL`, or `CONVERTING` (a `FOR LEADING`/`REPLACING
+LEADING` region, or a combined-form region) or a
 MULTI-character region delimiter, `REPLACING CHARACTERS`/`FIRST`, several
 replace items, or a combined statement whose `TALLYING`/`REPLACING` half is a
 deferred sub-form (a combined `TALLYING … FOR LEADING` and a combined `REPLACING

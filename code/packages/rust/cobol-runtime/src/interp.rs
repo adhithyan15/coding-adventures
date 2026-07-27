@@ -384,8 +384,8 @@ impl Machine {
                     *replace_leading,
                 )
             }
-            Stmt::InspectConverting { source, from, to } => {
-                self.exec_inspect_converting(source, from, to)?
+            Stmt::InspectConverting { source, from, to, region } => {
+                self.exec_inspect_converting(source, from, to, region.as_ref())?
             }
         }
         Ok(Flow::Normal)
@@ -968,13 +968,22 @@ impl Machine {
     ///
     /// This rung: `from`/`to` are string LITERALS of equal length. An unequal-
     /// length pair is a clean later-rung error; a `PIC X` item / figurative /
-    /// reference-modified `from`/`to`, a `BEFORE`/`AFTER` region, and a numeric/
-    /// group source are rejected by the reader and [`Self::inspect_alnum_source`].
+    /// reference-modified `from`/`to` and a numeric/group source are rejected by the
+    /// reader and [`Self::inspect_alnum_source`].
+    ///
+    /// An optional `region` (`{BEFORE|AFTER} x`) narrows the translation to the
+    /// window `[start, end)` [`Self::region_window`] derives over the ORIGINAL
+    /// source — the SAME helper the count and `ALL` replacement use, so all three
+    /// INSPECT operations narrow to byte-identical slices. A position INSIDE the
+    /// window is translated through the table; a position OUTSIDE keeps its original
+    /// character even if it appears in the `from` set. With no region the window is
+    /// the whole source, so every character is translated exactly as before.
     fn exec_inspect_converting(
         &mut self,
         source: &str,
         from: &str,
         to: &str,
+        region: Option<&Region>,
     ) -> Result<(), RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
 
@@ -994,12 +1003,25 @@ impl Machine {
             table.entry(*f).or_insert(*t);
         }
 
-        // Map each source character through the table (unmapped characters pass
-        // through unchanged), then store through the alphanumeric char path.
-        let rebuilt: String = self.items[sidx]
-            .storage
-            .chars()
-            .map(|c| *table.get(&c).unwrap_or(&c))
+        // The ORIGINAL source characters and the region window over them, derived by
+        // the SHARED helper (BEFORE→whole / AFTER→empty when `x` is absent). No
+        // region ⇒ `(0, len)` ⇒ every position translated, exactly as before.
+        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+        let (start, end) = self.region_window(&chars, region)?;
+
+        // Map each source character through the table only when its position lies
+        // inside the window; a position outside the window keeps its original
+        // character (unmapped in-window characters also pass through unchanged).
+        let rebuilt: String = chars
+            .iter()
+            .enumerate()
+            .map(|(i, &c)| {
+                if i >= start && i < end {
+                    *table.get(&c).unwrap_or(&c)
+                } else {
+                    c
+                }
+            })
             .collect();
         self.move_into(sidx, Src::Chars(rebuilt))
     }

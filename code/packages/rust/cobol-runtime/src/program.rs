@@ -245,8 +245,17 @@ pub enum Stmt {
     /// character), and a character in no table entry is left unchanged. In place,
     /// same width. This rung: `from`/`to` are string LITERALS of equal length; a
     /// `PIC X` item / figurative / reference-modified `from`/`to`, an unequal-length
-    /// pair, a `BEFORE`/`AFTER` region, and a numeric/group source are later rungs.
-    InspectConverting { source: String, from: String, to: String },
+    /// pair, and a numeric/group source are later rungs.
+    ///
+    /// An optional `region` restricts the translation to a sub-slice of the source —
+    /// the `{BEFORE|AFTER} x` phrase (see [`Region`], shared with the TALLYING and
+    /// REPLACING forms). A SINGLE-character region delimiter `x` is supported this
+    /// rung: only positions inside the window are translated; positions OUTSIDE keep
+    /// their original character. The window is computed over the ORIGINAL source with
+    /// the same leftmost-first-index and BEFORE→whole / AFTER→empty not-found
+    /// asymmetry the count/replace windows use. A multi-character region delimiter is
+    /// a later rung (rejected at exec time by `single_delim_char`).
+    InspectConverting { source: String, from: String, to: String, region: Option<Region> },
     StopRun,
 }
 
@@ -940,8 +949,8 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             // appear beside TALLYING/REPLACING — so it is handled on its own before
             // the tally/replace composition.
             if has_conv {
-                let (from, to) = read_inspect_converting(verb)?;
-                return Ok(Stmt::InspectConverting { source, from, to });
+                let (from, to, region) = read_inspect_converting(verb)?;
+                return Ok(Stmt::InspectConverting { source, from, to, region });
             }
             match (has_tally, has_repl) {
                 // Combined: tally-then-replace in one statement. Both phrases are
@@ -1176,23 +1185,30 @@ fn read_inspect_replacing_all(
     Ok((read_operand(search_node)?, read_operand(replace_node)?, leading, region))
 }
 
-/// Extract the `CONVERTING from TO to` phrase from an `inspect_stmt`, returning the
-/// two string-literal operands `(from, to)`. This rung only supports STRING-LITERAL
-/// translation tables and rejects the later-rung forms the grammar also accepts: a
-/// `BEFORE`/`AFTER` region, and a data-name / figurative / numeric-literal /
-/// reference-modified `from`/`to`. (The equal-length requirement is checked at exec
-/// time so it can share the same diagnostic as any other CONVERTING error.)
-fn read_inspect_converting(verb: &GrammarASTNode) -> Result<(String, String), RuntimeError> {
+/// Extract the `CONVERTING from TO to [{BEFORE|AFTER} x]` phrase from an
+/// `inspect_stmt`, returning the two string-literal operands and the optional region
+/// window `(from, to, region)`. This rung only supports STRING-LITERAL translation
+/// tables and rejects the later-rung forms the grammar also accepts: a data-name /
+/// figurative / numeric-literal / reference-modified `from`/`to`. A `{BEFORE|AFTER}
+/// x` region now PARSES into an `Option<Region>` (it used to be rejected wholesale
+/// here), reusing the SAME `read_inspect_region` the TALLYING/REPLACING readers use;
+/// a multi-character region delimiter stays a later rung, rejected at exec time by
+/// `single_delim_char`. (The equal-length requirement is checked at exec time so it
+/// can share the same diagnostic as any other CONVERTING error.)
+fn read_inspect_converting(
+    verb: &GrammarASTNode,
+) -> Result<(String, String, Option<Region>), RuntimeError> {
     let converting = child_node(verb, "inspect_converting").ok_or_else(|| {
         RuntimeError::Unsupported("INSPECT without a CONVERTING clause is a later rung".into())
     })?;
-    if child_node(converting, "inspect_region").is_some() {
-        return Err(RuntimeError::Unsupported(
-            "INSPECT CONVERTING … BEFORE/AFTER is a later rung".into(),
-        ));
-    }
+    let region = match child_node(converting, "inspect_region") {
+        None => None,
+        Some(region_node) => Some(read_inspect_region(region_node)?),
+    };
     // `from TO to` — the two `operand` children are the FROM (first) and the TO
-    // (second), in order.
+    // (second), in order. (A `{BEFORE|AFTER}` region contributes its OWN nested
+    // `operand` under the `inspect_region` child, not a direct `operand` here, so
+    // these two direct children are exactly the FROM and TO.)
     let ops = child_nodes(converting, "operand");
     let (from_node, to_node) = match ops.as_slice() {
         [f, t] => (*f, *t),
@@ -1202,7 +1218,11 @@ fn read_inspect_converting(verb: &GrammarASTNode) -> Result<(String, String), Ru
             ))
         }
     };
-    Ok((read_converting_literal(from_node, "from")?, read_converting_literal(to_node, "to")?))
+    Ok((
+        read_converting_literal(from_node, "from")?,
+        read_converting_literal(to_node, "to")?,
+        region,
+    ))
 }
 
 /// Read a CONVERTING `from`/`to` operand as a plain string literal. Only string
