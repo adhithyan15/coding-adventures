@@ -114,13 +114,14 @@ fn self_contained_no_external_headers() {
 
 #[test]
 fn unaccepted_feature_is_rejected_cleanly() {
-    // An (empty) class declaration declares Feature::Classes, which this
-    // backend does not accept. (Arrays now declare the accepted Sequences
-    // feature and hashes the accepted Maps feature, so neither exercises the
-    // rejection path any longer — a class still does. A class is a declaration,
-    // so — unlike a `true && false` short-circuit — it is not folded away.)
-    let m = lower_ruby("class Foo\nend");
-    let err = compile(&m).expect_err("backend rejects Classes");
+    // A `module` declaration declares Feature::Modules, which this backend does
+    // not accept. (Arrays/hashes declare the accepted Sequences/Maps features,
+    // and an empty `class` now declares the accepted Classes feature — the OOP
+    // mirror slice 1 — so none of those exercise the rejection path any longer. A
+    // module is the last OOP feature, still unaccepted, and — being a declaration
+    // — is not folded away like a `true && false` short-circuit.)
+    let m = lower_ruby("module Foo\nend");
+    let err = compile(&m).expect_err("backend rejects Modules");
     assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
 }
 

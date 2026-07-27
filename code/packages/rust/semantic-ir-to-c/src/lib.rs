@@ -147,6 +147,25 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `Const` reference → observes `Feature::Constants` (unaccepted) → rejected;
     // `retry` is not yet lowered (rejected by the builtin gate) — both deferred.
     Feature::Exceptions,
+    // ── OOP mirror, slice 1: instance runtime + empty class + constants ──
+    // Mirrors the Ruby backend's OOP slice 1.  `Feature::Classes` +
+    // `Feature::Constants` are ENTANGLED: the frontend records `Constants` for
+    // any `Foo.new` (the receiver is a constant), so an instantiable class needs
+    // both.  This slice accepts:
+    //   `class Foo; end`  → `Stmt::ClassDef` → a comment (a class is just a NAME
+    //                        in the C runtime — an instance carries its class
+    //                        string; there is no class object).
+    //   `Foo.new`         → `BuiltinCall("__new__", [StrLit("Foo")])` →
+    //                        `_sir_new_instance("Foo")` (a `SIR_INSTANCE` box).
+    //   `PI = 3` / `PI`   → a `Scope::Const` `Assign`/`VarRef` → a tiny runtime
+    //                        constant table (`_sir_const_set`/`_sir_const_get`).
+    // Names are emitted as QUOTED C string literals (no injection, as with rescue
+    // types).  Deferred to later slices (rejected cleanly): `__new__` with
+    // constructor arguments (needs `initialize`), a `class << self` singleton, the
+    // OOP method builtins (`__def_method__`/`__method__`/…), and — via their own
+    // unaccepted features — `@ivars`/`@@cvars`/inheritance-dispatch/modules.
+    Feature::Classes,
+    Feature::Constants,
 ];
 
 impl Backend for CBackend {

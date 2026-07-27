@@ -399,9 +399,31 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // SIR16 re-binding: the target `SirValue` is already declared (by an
         // earlier `LetStarBinding`), so this reuses `emit_assign` (which handles
         // a simple value or a compound `If`/`Convert`).
-        Stmt::Assign { name, value, .. } => {
-            let n = sanitize_ident(name);
-            emit_assign(out, &n, value, indent);
+        Stmt::Assign {
+            name, scope, value, ..
+        } => {
+            if matches!(scope, Scope::Const) {
+                // OOP slice 1: a `Scope::Const` definition (`PI = 3`) writes the
+                // runtime constant table.  The name is a QUOTED C string literal
+                // (no injection).  A compound value is hoisted into a temp first.
+                if is_simple(value) {
+                    let _ = write!(out, "{pad}(void)_sir_const_set({}, ", quote_c_string(name));
+                    emit_expr(out, value, indent);
+                    out.push_str(");\n");
+                } else {
+                    let tmp = format!("_sir_t{}", fresh_id());
+                    let _ = writeln!(out, "{pad}SirValue {tmp};");
+                    emit_assign(out, &tmp, value, indent);
+                    let _ = writeln!(
+                        out,
+                        "{pad}(void)_sir_const_set({}, {tmp});",
+                        quote_c_string(name)
+                    );
+                }
+            } else {
+                let n = sanitize_ident(name);
+                emit_assign(out, &n, value, indent);
+            }
         }
         // SIR16 loop.  Portable shape that re-evaluates a possibly-compound
         // condition every iteration:
@@ -670,6 +692,15 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 "{p1}if (_sir_esc{id}) {{ (void)_sir_raise(_sir_pend{id}); }}"
             );
             let _ = writeln!(out, "{pad}}}");
+        }
+        // OOP slice 1: an empty base class declaration.  A class is just a NAME
+        // in the C runtime (an instance carries its class string; there is no
+        // class object), so the declaration emits only a comment.  `superclass`
+        // is irrelevant without method dispatch (a later slice); a non-empty body
+        // observes the unaccepted `ClassVars` feature and is rejected by the
+        // capability check before emit.
+        Stmt::ClassDef { .. } => {
+            let _ = writeln!(out, "{pad}/* class declaration (no class object) */");
         }
         other => unreachable!("C backend reached unsupported statement: {other:?}"),
     }
@@ -1255,10 +1286,15 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
         Scope::Builtin => {
             let _ = write!(out, "_sir_builtin_closure({})", quote_c_string(name));
         }
-        // SIR17+ scopes (Instance / ClassVar / Const) belong to features the
-        // v0 backend does not accept, so the capability check rejects such
-        // modules before emit.  Unreachable.
-        other => unreachable!("v0 C backend reached unsupported var scope: {other:?}"),
+        // OOP slice 1: a `Scope::Const` reference (`PI`, `Foo::Bar`) reads the
+        // runtime constant table.  The name is a QUOTED C string literal (no
+        // injection); an undefined constant raises `NameError` at runtime.
+        Scope::Const => {
+            let _ = write!(out, "_sir_const_get({})", quote_c_string(name));
+        }
+        // `Instance` / `ClassVar` belong to features the backend does not yet
+        // accept, so the capability check rejects such modules before emit.
+        other => unreachable!("C backend reached unsupported var scope: {other:?}"),
     }
 }
 
@@ -1274,6 +1310,18 @@ fn emit_builtin_simple(out: &mut String, name: &str, args: &[Expr], indent: usiz
             out.push_str("_sir_raise_value(");
             emit_expr(out, &args[0], indent);
             out.push(')');
+        }
+        return;
+    }
+    // OOP slice 1: `Foo.new` → `_sir_new_instance("Foo")`.  `args[0]` is the class
+    // name (a `StrLit`), emitted as a QUOTED C string literal (no injection); the
+    // scan guarantees exactly one `StrLit` arg (constructor args need `initialize`,
+    // a later slice), so this arm never reaches the compound path.
+    if name == "__new__" {
+        if let Some(Expr::StrLit { value, .. }) = args.first() {
+            let _ = write!(out, "_sir_new_instance({})", quote_c_string(value));
+        } else {
+            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
         }
         return;
     }
@@ -1314,6 +1362,13 @@ fn emit_builtin_with_names(out: &mut String, name: &str, names: &[String]) {
         } else {
             let _ = write!(out, "_sir_raise_value({})", names[0]);
         }
+        return;
+    }
+    // `__new__`'s single `StrLit` class-name arg is always simple, so the call is
+    // never hoisted to the compound path — this arm is unreachable, but emit a
+    // clear marker rather than a wrong `_sir_str`-based construction.
+    if name == "__new__" {
+        let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
         return;
     }
     if let Some(helper) = variadic_helper(name) {
@@ -1370,7 +1425,10 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
 fn is_supported_builtin(name: &str) -> bool {
     variadic_helper(name).is_some()
         || fixed_helper(name).is_some()
-        || matches!(name, "and" | "or" | "raise")
+        // OOP slice 1: `__new__` constructs an instance.  (The other OOP builtins
+        // — `__def_method__`/`__method__`/`__super__`/… — stay unsupported, so a
+        // method-bearing class is rejected up front.)
+        || matches!(name, "and" | "or" | "raise" | "__new__")
 }
 
 /// The first `BuiltinCall` whose name the v0 emitter cannot lower, if any.  A
@@ -1463,6 +1521,15 @@ fn scan_stmt_for_builtin(s: &Stmt) -> Option<(String, Span)> {
                     .as_ref()
                     .and_then(|e| e.iter().find_map(scan_stmt_for_builtin))
             }),
+        // OOP slice 1: a `Stmt::SingletonClassDef` (`class << self`) ALSO observes
+        // `Feature::Classes`, so accepting `Classes` obligates rejecting it here —
+        // else it reaches the emitter's `unreachable!` (a DoS on a hand-built
+        // module).  Deferred to a later slice.  (`Stmt::ClassDef` is NOT rejected
+        // — it emits a comment; `Stmt::ModuleDef` observes the unaccepted
+        // `Feature::Modules`, so the capability check rejects it before this scan.)
+        Stmt::SingletonClassDef { span, .. } => {
+            Some(("class << self (singleton class)".to_string(), span.clone()))
+        }
         _ => None,
     }
 }
@@ -1474,6 +1541,18 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
         } => {
             if !is_supported_builtin(name) {
                 return Some((name.clone(), span.clone()));
+            }
+            // OOP slice 1: `__new__` must be `[StrLit(class)]` — exactly one
+            // constant class name, no constructor arguments (those need
+            // `initialize`, a later slice).  Anything else is rejected cleanly so
+            // the emitter's single-`StrLit` assumption holds.
+            if name == "__new__"
+                && !matches!(args.as_slice(), [Expr::StrLit { .. }])
+            {
+                return Some((
+                    "__new__ with constructor arguments or a non-constant class name".to_string(),
+                    span.clone(),
+                ));
             }
             args.iter().find_map(scan_expr_for_builtin)
         }
