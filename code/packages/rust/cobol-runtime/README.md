@@ -102,7 +102,13 @@ REPLACING ALL x BY y` / `REPLACING LEADING x BY y` (substitute a single characte
 alphanumeric source, **in place**, a per-position map that leaves the width
 unchanged; `ALL` replaces EVERY occurrence, `LEADING` replaces only the run of
 consecutive `x` at the START, stopping at the first character that is not `x` —
-positions after that first gap are left unchanged even if they equal `x`); and the
+positions after that first gap are left unchanged even if they equal `x`) — and,
+for the `REPLACING ALL` form, an optional `{BEFORE|AFTER} z` **region** (restrict
+the substitution to the sub-slice bounded by the FIRST occurrence of the
+single-character delimiter `z`, using the SAME window the count uses: `BEFORE z`
+replaces left of it — the WHOLE source if `z` is absent — and `AFTER z` replaces
+right of it — NOTHING if `z` is absent; positions outside the region keep their
+original character); and the
 **combined** `INSPECT source TALLYING counter FOR {ALL|LEADING} delim
 REPLACING {ALL|LEADING} x BY y` (one `INSPECT`, both phrases — per ISO it runs as
 tally-then-replace: count `delim` in the ORIGINAL source into `counter` FIRST,
@@ -120,7 +126,8 @@ modelled (the explicit
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `UNSTRING` with a multi-character
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `INSPECT` with a `CHARACTERS`
 tally, a `{BEFORE|AFTER}` region on any form OTHER than the lone `TALLYING FOR
-ALL` (a `FOR LEADING` region, a `REPLACING`/`CONVERTING`/combined region) or a
+ALL` or the lone `REPLACING ALL` (a `FOR LEADING`/`REPLACING LEADING` region, a
+`CONVERTING` or combined-form region) or a
 MULTI-character region delimiter, `REPLACING CHARACTERS`/`FIRST`, several
 replace items, or a combined statement whose `TALLYING`/`REPLACING` half is a
 deferred sub-form (a combined `TALLYING … FOR LEADING` and a combined `REPLACING

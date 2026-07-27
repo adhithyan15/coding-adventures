@@ -3337,6 +3337,168 @@ fn inspect_replacing_leading_search_and_replacement_are_pic_x1_items() {
     assert_eq!(out, "***123\n");
 }
 
+// INSPECT … REPLACING ALL x BY y … {BEFORE|AFTER} z — restrict the ALL replacement
+// to the sub-slice of the source bounded by the FIRST occurrence of the single
+// region delimiter `z`. BEFORE replaces left of `z`; AFTER replaces right of it;
+// positions OUTSIDE the region keep their original character. The window is the
+// SAME one the TALLYING region rung computes (shared helper), so the ISO not-found
+// asymmetry — BEFORE with `z` absent replaces the WHOLE source, AFTER with `z`
+// absent replaces NOTHING — must hold byte-for-byte on both engines.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn inspect_replacing_before_replaces_only_left_of_the_delimiter() {
+    // "0A0B0" — BEFORE "B" restricts the replace to "0A0" (indices 0..3): the two
+    // "0"s there become "*", the trailing "0" (index 4, right of "B") is UNTOUCHED.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE \"B\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "*A*B0\n");
+}
+
+#[test]
+fn inspect_replacing_after_replaces_only_right_of_the_delimiter() {
+    // Same source — AFTER "B" restricts the replace to "0" (index 4): only that
+    // trailing "0" becomes "*"; the two "0"s left of "B" are UNTOUCHED.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" AFTER \"B\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0A0B*\n");
+}
+
+#[test]
+fn inspect_replacing_before_absent_delimiter_replaces_the_whole_source() {
+    // BEFORE "Z" with no "Z" present → the region is the ENTIRE source, so EVERY "0"
+    // is replaced (the BEFORE not-found rule — the whole subtlety of the rung).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "*A*B*\n");
+}
+
+#[test]
+fn inspect_replacing_after_absent_delimiter_replaces_nothing() {
+    // AFTER "Z" with no "Z" present → the region is EMPTY, so NOTHING is replaced and
+    // the source is unchanged (the AFTER not-found rule — asymmetric partner above).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" AFTER \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0A0B0\n");
+}
+
+#[test]
+fn inspect_replacing_after_region_delimiter_at_position_zero() {
+    // The region delimiter is the FIRST character: AFTER "B" in "B0A0" → region
+    // [1, 4) = "0A0", so both "0"s become "*" → "B*A*".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"B0A0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" AFTER \"B\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "B*A*\n");
+}
+
+#[test]
+fn inspect_replacing_region_delimiter_equals_search() {
+    // The search char and the region delimiter are the SAME "0": AFTER "0" in "0A0B0"
+    // → the FIRST "0" (index 0) bounds the region [1, 5) = "A0B0". The replace runs
+    // over the ORIGINAL bytes, so the two "0"s at indices 2 and 4 become "*", while
+    // the delimiter "0" at index 0 (left of the region) is KEPT → "0A*B*".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" AFTER \"0\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0A*B*\n");
+}
+
+#[test]
+fn inspect_replacing_region_delimiter_equals_replacement() {
+    // The region delimiter and the replacement char are the SAME "*": BEFORE "*" in
+    // "0*0A0" → the first "*" (index 1) bounds the region [0, 1) = "0", so only the
+    // leading "0" becomes "*" → "**0A0" (the "*" delimiter and later "0"s untouched).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0*0A0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE \"*\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "**0A0\n");
+}
+
+#[test]
+fn inspect_replacing_before_delimiter_at_position_zero_is_an_empty_region() {
+    // BEFORE "B" in "B0A0" → the first "B" is at index 0, so the region is [0, 0) —
+    // EMPTY — and NOTHING is replaced even though "0"s follow → "B0A0" unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"B0A0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE \"B\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "B0A0\n");
+}
+
+#[test]
+fn inspect_replacing_region_delimiter_is_a_pic_x1_item() {
+    // The region delimiter may itself be a PIC X(1) item, read at run time: BEFORE DL
+    // (= "B") in "0A0B0" restricts to "0A0" → "*A*B0", matching the literal case.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  DL PIC X(1) VALUE \"B\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE DL.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "*A*B0\n");
+}
+
+#[test]
+fn inspect_replacing_leading_with_a_region_is_a_later_rung() {
+    // `REPLACING LEADING` combined with a `{BEFORE|AFTER}` region is still deferred —
+    // rejected IDENTICALLY on both engines (only REPLACING ALL gets a region this
+    // rung, the exact analogue of FOR LEADING + region on the count side).
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"00B00\"."],
+        &["INSPECT S REPLACING LEADING \"0\" BY \"*\" BEFORE \"B\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject REPLACING LEADING + region");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject REPLACING LEADING + region"
+    );
+}
+
+#[test]
+fn inspect_replacing_multi_char_region_delimiter_is_a_later_rung() {
+    // A MULTI-character region delimiter is deferred — rejected on both engines, just
+    // like a multi-character search/tally delimiter (the oracle rejects at exec, the
+    // compiler at emit, both via the shared single-delimiter check).
+    let src = wrap(
+        &["01  S  PIC X(6) VALUE \"0A0CD0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE \"CD\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-char region delimiter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-char region delimiter"
+    );
+}
+
+#[test]
+fn inspect_replacing_combined_with_a_region_is_a_later_rung() {
+    // A `{BEFORE|AFTER}` region on the REPLACING half of the COMBINED TALLYING …
+    // REPLACING form is still deferred (regions ship for the lone phrases first) —
+    // rejected identically on both engines.
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"A\" REPLACING ALL \"0\" BY \"*\" BEFORE \"B\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a region on the combined REPLACING half");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a region on the combined REPLACING half"
+    );
+}
+
 // INSPECT … TALLYING … REPLACING — one INSPECT carrying BOTH phrases. Per ISO the
 // statement runs "as though an INSPECT TALLYING were specified, followed by an
 // INSPECT REPLACING": count FIRST (into the counter, over the ORIGINAL bytes),

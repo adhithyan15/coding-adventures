@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.45.0 — INSPECT REPLACING ALL with a BEFORE/AFTER region
+
+- `INSPECT source REPLACING ALL x BY y {BEFORE|AFTER} z` now executes instead of
+  being rejected as a later rung. The `{BEFORE|AFTER} z` region narrows the ALL
+  replacement to a sub-slice of the source, bounded by the FIRST (leftmost)
+  occurrence of the SINGLE-character region delimiter `z` — the exact analogue of
+  the TALLYING-region rung applied to the substitution instead of the count:
+  - `BEFORE z` replaces `x`→`y` only within `source[0 .. first_index_of(z)]`; if `z`
+    is ABSENT the region is the ENTIRE source (whole-source replace).
+  - `AFTER z` replaces only within `source[first_index_of(z)+1 .. end]`; if `z` is
+    ABSENT the region is EMPTY (no replacement).
+  Positions OUTSIDE the region keep their ORIGINAL character. The window is computed
+  over the ORIGINAL source and is byte-identical to the one the count uses — both now
+  derive it from a single shared `Interp::region_window` helper, so the BEFORE→whole
+  / AFTER→empty asymmetry can never drift between the two INSPECT operations.
+- `Stmt::InspectReplacing` gains a `region: Option<Region>` field (mirroring
+  `Stmt::Inspect`), reusing the existing `Region`/`RegionKind` types.
+  `read_inspect_replacing_all` now PARSES the `inspect_region` CST child (via the
+  shared `read_inspect_region`) into that `Option` instead of rejecting it, and
+  `inspect_replace` applies the ALL map only to positions within `[start, end)`.
+- Scope unchanged elsewhere and rejected IDENTICALLY on both engines: `REPLACING
+  LEADING` with a region, a region on the combined `TALLYING … REPLACING` form, and a
+  multi-character region delimiter are still later rungs. A lone `REPLACING ALL` /
+  `LEADING` without a region lowers exactly as before.
+
 ## 0.44.0 — INSPECT TALLYING FOR ALL with a BEFORE/AFTER region
 
 - `INSPECT source TALLYING counter FOR ALL delim {BEFORE|AFTER} x` now executes

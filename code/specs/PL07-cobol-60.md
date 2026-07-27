@@ -506,7 +506,8 @@ delimiter only.
 
 The grammar deliberately accepts the fuller `INSPECT` surface — a `CHARACTERS`
 tally, several `TALLYING` counters or `FOR` phrases, a region on the `FOR
-LEADING`/`REPLACING`/`CONVERTING`/combined forms, and a multi-character region
+LEADING`/`REPLACING LEADING`/`CONVERTING`/combined forms (the lone `REPLACING ALL`
+region IS supported — see that section below), and a multi-character region
 delimiter — so the reader/compiler reject each as a clean "later rung" error
 rather than a parse failure. A multi-character / figurative / numeric /
 wider-than-one delimiter (tally OR region), and a numeric/group source or a
@@ -554,13 +555,39 @@ through the unroll: position `j` is replaced iff `active AND (s[j] == x)`, and
 extra `and` is the ONLY difference from `ALL`, and it folds away for `ALL`. The
 two engines agree byte-for-byte.
 
+**`BEFORE`/`AFTER` region (REPLACING ALL follow-up rung).** The `REPLACING ALL`
+form now accepts an optional `{BEFORE|AFTER} z` **region** that restricts the
+substitution to a sub-slice of the source, bounded by the FIRST (leftmost)
+occurrence of the single-character region delimiter `z` — the exact analogue of
+the `TALLYING FOR ALL` region applied to the replace instead of the count:
+
+- `BEFORE z` replaces `x`→`y` only in `source[0 .. first_index_of(z)]`; if `z` is
+  **absent** the region is the **ENTIRE** source (whole-source replace).
+- `AFTER z` replaces only in `source[first_index_of(z)+1 .. end]`; if `z` is
+  **absent** the region is **EMPTY** (no replacement).
+
+Positions **outside** the region keep their **original** character. The window is
+computed over the **ORIGINAL** source and is the SAME `[start, end)` the count
+uses — the oracle factors a shared `region_window` helper called by both
+`inspect_tally` and `inspect_replace`, and the compiler REUSES
+`emit_inspect_region_window` and guards its per-position unroll with `start <= j <
+end` — so the BEFORE→whole / AFTER→empty asymmetry is byte-identical across the two
+INSPECT operations. Worked (search `"0"`, replacement `"*"`, source `"0A0B0"`):
+`BEFORE "B"` → region `"0A0"` → `"*A*B0"`; `AFTER "B"` → region `"0"` (trailing) →
+`"0A0B*"`; `BEFORE "Z"` (absent) → whole source → `"*A*B*"`; `AFTER "Z"` (absent) →
+empty → `"0A0B0"` unchanged; `AFTER "0"` (region delimiter equals search) → the
+first `0` bounds the region to `"A0B0"` → `"0A*B*"` (the leading `0` is left of the
+region and kept). This rung is scoped SMALL: `REPLACING ALL` only and a
+**single-character** region delimiter. With no region the lowering is unchanged.
+
 Deferred as clean later rungs (accepted by the grammar, rejected at read/compile
 time): `REPLACING CHARACTERS BY`, `REPLACING FIRST` (`FIRST` does not parse as a
-replace keyword — it is deferred at parse time), `BEFORE`/`AFTER` regions,
-**several** replace items, a multi-character / figurative / wider / numeric
-search or replacement, and a numeric/group source. (A `REPLACING LEADING` inside
-the combined `TALLYING … REPLACING` form is now supported — see the combined
-section below.)
+replace keyword — it is deferred at parse time), a `{BEFORE|AFTER}` region on
+`REPLACING LEADING` or on the **combined** `TALLYING … REPLACING` form, a
+multi-character region delimiter, **several** replace items, a multi-character /
+figurative / wider / numeric search or replacement, and a numeric/group source.
+(A `REPLACING LEADING` inside the combined `TALLYING … REPLACING` form is now
+supported — see the combined section below.)
 
 ### Combined `INSPECT … TALLYING … REPLACING` (one statement)
 

@@ -362,8 +362,8 @@ impl Machine {
             Stmt::Inspect { source, counter, delim, leading, region } => {
                 return self.exec_inspect(source, counter, delim, *leading, region.as_ref())
             }
-            Stmt::InspectReplacing { source, search, replace, leading } => {
-                self.exec_inspect_replacing(source, search, replace, *leading)?
+            Stmt::InspectReplacing { source, search, replace, leading, region } => {
+                self.exec_inspect_replacing(source, search, replace, *leading, region.as_ref())?
             }
             Stmt::InspectTallyReplace {
                 source,
@@ -673,6 +673,48 @@ impl Machine {
         }
     }
 
+    /// The character window `[start, end)` an `INSPECT … {BEFORE|AFTER} x` region
+    /// selects over `chars` (the source's current storage as a `char` vector). With
+    /// no region the window is the WHOLE source (`(0, len)`); a region narrows it
+    /// around the FIRST (leftmost) occurrence of the single region delimiter `x`,
+    /// applying the ISO not-found asymmetry:
+    ///   * `BEFORE x` → `(0, first_index_of(x))`; if `x` is ABSENT → `(0, len)`
+    ///     (the ENTIRE source); and
+    ///   * `AFTER x`  → `(first_index_of(x)+1, len)`; if `x` is ABSENT → `(len, len)`
+    ///     (an EMPTY window).
+    ///
+    /// This is the ONE place both INSPECT operations derive their window: the count
+    /// ([`Self::inspect_tally`]) and the `ALL` replacement ([`Self::inspect_replace`])
+    /// call it with the SAME `chars`, so they narrow to byte-identical slices and the
+    /// BEFORE→whole / AFTER→empty rule can never drift between them. A multi-character
+    /// region delimiter is rejected here by `single_delim_char`, exactly like the
+    /// scan/search delimiters.
+    fn region_window(
+        &self,
+        chars: &[char],
+        region: Option<&Region>,
+    ) -> Result<(usize, usize), RuntimeError> {
+        let len = chars.len();
+        match region {
+            None => Ok((0, len)),
+            Some(r) => {
+                let region_ch = self.single_delim_char(&r.delim, "INSPECT")?;
+                let first = chars.iter().position(|&c| c == region_ch);
+                Ok(match r.kind {
+                    // BEFORE: everything left of the first `x`; if `x` is absent the
+                    // region is the whole source (`end = len`).
+                    RegionKind::Before => (0, first.unwrap_or(len)),
+                    // AFTER: everything right of the first `x`; if `x` is absent the
+                    // region is EMPTY (`start = end = len`).
+                    RegionKind::After => match first {
+                        Some(i) => (i + 1, len),
+                        None => (len, len),
+                    },
+                })
+            }
+        }
+    }
+
     /// The TALLYING half: count occurrences of the single-character `delim` in the
     /// source's CURRENT storage and ADD them to `counter`. When `leading` is false
     /// (`FOR ALL`) this counts EVERY occurrence; when true (`FOR LEADING`) it counts
@@ -731,27 +773,11 @@ impl Machine {
         // this is the WHOLE source; a `{BEFORE|AFTER} x` region narrows it around the
         // first occurrence of the single region delimiter `x`, applying the ISO
         // not-found asymmetry (BEFORE→whole, AFTER→empty). We work on `chars()` (not
-        // bytes) so the window and the count agree on positions.
+        // bytes) so the window and the count agree on positions. The window is derived
+        // by the SHARED [`Self::region_window`] helper — the SAME code the REPLACING
+        // half uses, so the two INSPECT operations narrow to byte-identical slices.
         let chars: Vec<char> = self.items[sidx].storage.chars().collect();
-        let len = chars.len();
-        let (start, end) = match region {
-            None => (0, len),
-            Some(r) => {
-                let region_ch = self.single_delim_char(&r.delim, "INSPECT")?;
-                let first = chars.iter().position(|&c| c == region_ch);
-                match r.kind {
-                    // BEFORE: everything left of the first `x`; if `x` is absent the
-                    // region is the whole source (`end = len`).
-                    RegionKind::Before => (0, first.unwrap_or(len)),
-                    // AFTER: everything right of the first `x`; if `x` is absent the
-                    // region is EMPTY (`start = end = len`).
-                    RegionKind::After => match first {
-                        Some(i) => (i + 1, len),
-                        None => (len, len),
-                    },
-                }
-            }
-        };
+        let (start, end) = self.region_window(&chars, region)?;
         let window = &chars[start..end];
 
         // The occurrence count over the window. `FOR ALL` counts every match;
@@ -782,15 +808,24 @@ impl Machine {
     /// this reference output byte-for-byte. A numeric/group source is a clean
     /// later-rung error; a multi-character/figurative/wider search or
     /// replacement is rejected by `single_delim_char`.
+    ///
+    /// An optional `region` (`{BEFORE|AFTER} x`) narrows the `ALL` replacement to a
+    /// sub-slice of the source, using the SAME window [`Self::inspect_tally`] uses
+    /// for the count (see [`Self::region_window`]): positions OUTSIDE the window keep
+    /// their original character. The window is computed over the ORIGINAL source
+    /// bytes (before any substitution). A region is only reached on the lone
+    /// `REPLACING ALL` path; `REPLACING LEADING` and the combined form always pass
+    /// `None` (rejected at read time).
     fn exec_inspect_replacing(
         &mut self,
         source: &str,
         search: &Operand,
         replace: &Operand,
         leading: bool,
+        region: Option<&Region>,
     ) -> Result<(), RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
-        self.inspect_replace(sidx, search, replace, leading)
+        self.inspect_replace(sidx, search, replace, leading, region)
     }
 
     /// `INSPECT source TALLYING counter FOR {ALL|LEADING} delim REPLACING
@@ -832,8 +867,10 @@ impl Machine {
         self.inspect_tally(sidx, counter, delim, tally_leading, None)?;
         // THEN replace, overwriting the source in place. The REPLACING half may be
         // ALL or LEADING (`replace_leading`) — the same leading-run map used by a
-        // lone `INSPECT REPLACING LEADING`.
-        self.inspect_replace(sidx, search, replace, replace_leading)?;
+        // lone `INSPECT REPLACING LEADING`. The combined form never carries a
+        // `{BEFORE|AFTER}` region on its REPLACING half (rejected at read time), so
+        // the window is always the whole source — pass `None`.
+        self.inspect_replace(sidx, search, replace, replace_leading, None)?;
         Ok(Flow::Normal)
     }
 
@@ -849,12 +886,22 @@ impl Machine {
     /// half selected — this map is shared verbatim by the lone `REPLACING LEADING`
     /// and the combined `TALLYING … REPLACING LEADING`. A numeric/group source is
     /// rejected by the caller via [`Self::inspect_alnum_source`].
+    ///
+    /// An optional `region` (`{BEFORE|AFTER} x`) narrows the `ALL` map to the window
+    /// `[start, end)` [`Self::region_window`] derives over the ORIGINAL source: a
+    /// position is rewritten only when it is BOTH inside the window AND equal to
+    /// `search`; a position outside the window keeps its original character even if
+    /// it equals `search`. With no region the window is the whole source, so the map
+    /// is unchanged. A region is only ever paired with `ALL` — `REPLACING LEADING`
+    /// (and the combined form) always pass `None`, so `leading` and a narrowed window
+    /// never combine.
     fn inspect_replace(
         &mut self,
         sidx: usize,
         search: &Operand,
         replace: &Operand,
         leading: bool,
+        region: Option<&Region>,
     ) -> Result<(), RuntimeError> {
         // The single search and replacement characters (shared validation with
         // UNSTRING/TALLYING: a multi-character/figurative/wider/numeric operand is
@@ -863,18 +910,24 @@ impl Machine {
         let search_ch = self.single_delim_char(search, "INSPECT REPLACING")?;
         let replace_ch = self.single_delim_char(replace, "INSPECT REPLACING")?;
 
+        // The ORIGINAL source characters and the region window over them. We compute
+        // the window BEFORE rebuilding so — exactly like the count — it sees the
+        // pre-replacement bytes, and we reuse the SAME helper the tally uses so both
+        // narrow to the identical slice.
+        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+        let (start, end) = self.region_window(&chars, region)?;
+
         // Rebuild each character in place (same width), then store through the
-        // alphanumeric char path. `REPLACING ALL` maps every match; `REPLACING
-        // LEADING` replaces only while still in the leading run — a stateful map
-        // that flips `in_run` off at the first non-`search` character and never
-        // replaces again, even for a later `search`. That is the ONLY difference
-        // between the two forms.
+        // alphanumeric char path. `REPLACING ALL` maps every in-window match;
+        // `REPLACING LEADING` replaces only while still in the leading run — a
+        // stateful map that flips `in_run` off at the first non-`search` character
+        // and never replaces again, even for a later `search`. LEADING never carries
+        // a region (window is the whole source), so its map is unchanged.
         let rebuilt: String = if leading {
             let mut in_run = true;
-            self.items[sidx]
-                .storage
-                .chars()
-                .map(|c| {
+            chars
+                .iter()
+                .map(|&c| {
                     if in_run && c == search_ch {
                         replace_ch
                     } else {
@@ -884,10 +937,19 @@ impl Machine {
                 })
                 .collect()
         } else {
-            self.items[sidx]
-                .storage
-                .chars()
-                .map(|c| if c == search_ch { replace_ch } else { c })
+            // ALL: rewrite a matching character only when its position `i` lies inside
+            // the region window `[start, end)`; outside the window the original char
+            // is kept. (No region ⇒ `start = 0`, `end = len` ⇒ every match rewritten.)
+            chars
+                .iter()
+                .enumerate()
+                .map(|(i, &c)| {
+                    if i >= start && i < end && c == search_ch {
+                        replace_ch
+                    } else {
+                        c
+                    }
+                })
                 .collect()
         };
         self.move_into(sidx, Src::Chars(rebuilt))
