@@ -1,0 +1,22 @@
+% ============================================================================
+% kinematic-viscosity-conversions.query.adj — a worked lookup over the kinematic-
+% viscosity table.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a "how many square
+% metres per second is one stokes?" question: it states no conversion fact — it only
+% `import`s the grounded table and asks binding queries. The native adj-lang engine
+% resolves each `?` against the table's rows (lowered to
+% `kinematic_viscosity_to_square_metres_per_second` relations) and returns the binding
+% + the table's source/locator/trust. A unit not in the table abstains honestly — the
+% engine never invents a factor (e.g. a `square_foot_per_second`, which this table
+% does not carry a row for).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli kinematic-viscosity-conversions.query.adj
+% ============================================================================
+
+import "kinematic-viscosity-conversions.adj"
+
+? kinematic_viscosity_to_square_metres_per_second(stokes, $v)                % expect 0.0001
+? kinematic_viscosity_to_square_metres_per_second(centistokes, $v)           % expect 0.000001
+? kinematic_viscosity_to_square_metres_per_second(square_foot_per_second, $v) % expect abstain — no row

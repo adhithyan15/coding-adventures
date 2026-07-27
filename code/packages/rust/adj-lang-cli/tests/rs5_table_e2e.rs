@@ -631,6 +631,49 @@ fn shipped_dynamic_viscosity_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b13) Shipped table — reference/kinematic-viscosity-conversions.adj resolves via
+//       import (a NEW dimension: kinematic viscosity → square metre per second, the
+//       EXACT SP 811 B.9 boldface CGS factors stokes and centistokes), and a unit
+//       with no row (`square_foot_per_second`) abstains.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_kinematic_viscosity_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_kvisc");
+    let src = stdlib().join("reference/kinematic-viscosity-conversions.adj");
+    std::fs::copy(&src, dir.join("kinematic-viscosity-conversions.adj"))
+        .expect("copy shipped kinematic-viscosity-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"kinematic-viscosity-conversions.adj\"\n\
+         ? kinematic_viscosity_to_square_metres_per_second(stokes, $v)\n\
+         ? kinematic_viscosity_to_square_metres_per_second(centistokes, $v)\n\
+         ? kinematic_viscosity_to_square_metres_per_second(square_foot_per_second, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 "Viscosity, kinematic" exact factors resolve, character-for-
+    // character from the table (boldface = exact; scientific notation to plain decimal).
+    assert!(out.contains("\"v\":\"0.0001\""), "stokes = 0.0001 m²/s: {out}");
+    assert!(
+        out.contains("\"v\":\"0.000001\""),
+        "centistokes = 0.000001 m²/s: {out}"
+    );
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `square_foot_per_second` has no row in this CGS-stokes-family table, so the engine
+    // abstains rather than inventing a factor the table does not carry.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a unit with no row abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 

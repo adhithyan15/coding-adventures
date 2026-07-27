@@ -1,0 +1,60 @@
+% ============================================================================
+% kinematic-viscosity-conversions — kinematic-viscosity-unit → square-metre-per-
+% second factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `dynamic-viscosity-conversions.adj` and `speed-conversions.adj`:
+% a native tabular relation ingested VERBATIM from a published NIST conversion table.
+% Each row states the factor converting one kinematic-viscosity unit to the SI
+% coherent unit of kinematic viscosity, the square metre per second (m²/s):
+%
+%     ? kinematic_viscosity_to_square_metres_per_second(stokes, $v)       % 0.0001
+%     ? kinematic_viscosity_to_square_metres_per_second(centistokes, $v)  % 0.000001
+%
+% This is a NEW dimension alongside the length/mass/area/volume/time/speed/energy/
+% pressure/force/acceleration/dynamic-viscosity tables: where those normalise their
+% own quantity, this one normalises a KINEMATIC VISCOSITY (a dynamic viscosity divided
+% by a mass density — units of area per time). It pairs naturally with the
+% dynamic-viscosity table: a dynamic viscosity in poise over a density gives a
+% kinematic viscosity in stokes, and this table then puts that stokes value into SI
+% (write-once-use-many). Why a `table` and not several hand-written `relate` clauses:
+% this is exactly the shape reference data comes in — a published table, not prose.
+% The citable artifact IS the NIST conversion-factors table at the `locator` below;
+% every factor here is a CELL of NIST Special Publication 811, Appendix B.9 ("Factors
+% for units listed alphabetically"), and the whole table is defended by one provenance
+% envelope rather than repeating `source`/`locator`/`trust` on every row. Each `row`
+% lowers to a ground relation
+% `kinematic_viscosity_to_square_metres_per_second(unit, m2s)`, so the exact lookup
+% above is the ordinary SLD binding query — the engine returns the factor WITH this
+% table's citation as its proof, on the CPU, with zero model calls.
+%
+% HONESTY NOTE: NIST SP 811 B.9 prints these two "Viscosity, kinematic" factors in
+% BOLDFACE, its convention for factors that are EXACT by definition, transcribed here
+% as the plain decimal number of square metres per second each unit names:
+%
+%     stokes (St)        1.0 E-04  →  0.0001
+%     centistokes (cSt)  1.0 E-06  →  0.000001
+%
+% These two are exact because the stokes is a coherent CGS unit — one stokes is one
+% centimetre squared per second, i.e. exactly 10⁻⁴ m²/s — and the centistokes is
+% exactly one hundredth of a stokes, i.e. exactly 10⁻⁶ m²/s. Both terminate; nothing
+% here is a rounded measurement. This table's scope is precisely that CGS stokes
+% family (the two boldface SI-coherent entries NIST lists under "Viscosity,
+% kinematic"); a unit with NO row — e.g. a `square_foot_per_second` — ABSTAINS rather
+% than returning a factor the table does not carry. The only claim this table makes is
+% "these are the exact factors NIST SP 811 B.9 prints", which is exactly what a
+% byte-check against the cited table verifies. `trust authoritative` — a primary,
+% re-fetchable standards reference. (See ADJ-TABLES.md; and
+% feedback_nothing_human_authored — every factor is a verbatim cell of the cited
+% table, nothing asserted from memory.)
+% ============================================================================
+
+table kinematic_viscosity_to_square_metres_per_second {
+    columns unit, m2s
+
+    row (stokes, 0.0001)
+    row (centistokes, 0.000001)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}
