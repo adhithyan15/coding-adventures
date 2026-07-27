@@ -786,8 +786,17 @@ impl Machine {
 
         // The occurrence count over the window. `FOR ALL` counts every match;
         // `FOR LEADING` counts only the leading run (stop at the first non-match) —
-        // the ONLY difference between the two forms. (`FOR LEADING` with a region is
-        // rejected at read time, so `leading` and a narrowed window never combine.)
+        // the ONLY difference between the two forms. Crucially the leading run is
+        // anchored at the WINDOW START, not source position 0: because `window` is
+        // already the `[start, end)` slice, `take_while` begins at `start` and stops
+        // at the first non-`delim` character INSIDE the window (or the window end).
+        // So a standalone `FOR LEADING … AFTER x` counts the run beginning at
+        // `first+1`, not at 0 — e.g. "aaXaab" AFTER "X" narrows to "aab" and counts
+        // the two leading a's, ignoring the "aa" before the X entirely. With `AFTER x`
+        // and `x` absent the window is empty, so the count is 0 (the ISO not-found
+        // asymmetry). (The combined `TALLYING … REPLACING` form still rejects a
+        // LEADING half carrying a region at read time, so that combination never
+        // reaches here.)
         let count = if leading {
             window.iter().take_while(|&&c| c == delim_ch).count()
         } else {
@@ -902,14 +911,22 @@ impl Machine {
     /// and the combined `TALLYING … REPLACING LEADING`. A numeric/group source is
     /// rejected by the caller via [`Self::inspect_alnum_source`].
     ///
-    /// An optional `region` (`{BEFORE|AFTER} x`) narrows the `ALL` map to the window
-    /// `[start, end)` [`Self::region_window`] derives over the ORIGINAL source: a
-    /// position is rewritten only when it is BOTH inside the window AND equal to
-    /// `search`; a position outside the window keeps its original character even if
-    /// it equals `search`. With no region the window is the whole source, so the map
-    /// is unchanged. A region is only ever paired with `ALL` — `REPLACING LEADING`
-    /// (and the combined form) always pass `None`, so `leading` and a narrowed window
-    /// never combine.
+    /// An optional `region` (`{BEFORE|AFTER} x`) narrows BOTH maps to the window
+    /// `[start, end)` [`Self::region_window`] derives over the ORIGINAL source. For
+    /// `ALL` a position is rewritten only when it is BOTH inside the window AND equal
+    /// to `search`; a position outside the window keeps its original character even if
+    /// it equals `search`. For `LEADING` the run is anchored at the WINDOW START, not
+    /// source position 0: characters before `start` are copied through UNCHANGED and
+    /// do NOT begin or break the run, the run begins at `start`, and it stops at the
+    /// first non-`search` character INSIDE the window (or the window end). So a
+    /// standalone `REPLACING LEADING … AFTER x` rewrites the leading run beginning at
+    /// `first+1` — e.g. "aaXaab" AFTER "X" narrows to "aab" and rewrites its leading
+    /// a's, leaving the "aa" before the X untouched. With `AFTER x` and `x` absent the
+    /// window is empty, so nothing is replaced (the ISO not-found asymmetry). With no
+    /// region the window is the whole source, so both maps are unchanged. The combined
+    /// `TALLYING … REPLACING` form still rejects a LEADING half carrying a region at
+    /// read time, so LEADING and a narrowed window only ever combine on the STANDALONE
+    /// `REPLACING LEADING … {BEFORE|AFTER}` path.
     fn inspect_replace(
         &mut self,
         sidx: usize,
@@ -936,14 +953,25 @@ impl Machine {
         // alphanumeric char path. `REPLACING ALL` maps every in-window match;
         // `REPLACING LEADING` replaces only while still in the leading run — a
         // stateful map that flips `in_run` off at the first non-`search` character
-        // and never replaces again, even for a later `search`. LEADING never carries
-        // a region (window is the whole source), so its map is unchanged.
+        // and never replaces again, even for a later `search`. The run is anchored at
+        // the WINDOW START: a position OUTSIDE `[start, end)` is copied through
+        // unchanged and leaves `in_run` untouched (characters before `start` neither
+        // begin nor break the run), so the run genuinely starts at `start`. With no
+        // region `start = 0` and `end = len`, so every position is "inside" and the
+        // map reduces to the plain leading-run rewrite. With `AFTER x` and `x` absent
+        // the window is empty (`start = end = len`), so no position is inside and
+        // nothing is replaced.
         let rebuilt: String = if leading {
             let mut in_run = true;
             chars
                 .iter()
-                .map(|&c| {
-                    if in_run && c == search_ch {
+                .enumerate()
+                .map(|(i, &c)| {
+                    if i < start || i >= end {
+                        // Outside the region window: keep the original character and
+                        // leave the run state untouched (anchor the run at `start`).
+                        c
+                    } else if in_run && c == search_ch {
                         replace_ch
                     } else {
                         in_run = false;

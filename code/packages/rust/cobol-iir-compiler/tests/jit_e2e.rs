@@ -3075,17 +3075,115 @@ fn inspect_region_delimiter_is_a_pic_x1_item() {
     assert_eq!(out, "001\n");
 }
 
+// INSPECT … TALLYING … FOR LEADING … {BEFORE|AFTER} x — the STANDALONE leading-run
+// count restricted to a `{BEFORE|AFTER}` sub-region. The crux of this rung: the
+// leading run is anchored at the WINDOW START, not source position 0. `FOR LEADING`
+// counts only the maximal run of the delimiter that begins AT the window's start
+// index and stops at the first non-matching char INSIDE the window (or the window
+// end). With `AFTER x` and `x` absent the window is empty (count 0); with `BEFORE x`
+// and `x` absent the window is the whole source. `assert_matches_oracle` re-checks
+// JIT == oracle for every case.
+
 #[test]
-fn inspect_for_leading_with_a_region_is_a_later_rung() {
-    // `FOR LEADING` combined with a `{BEFORE|AFTER}` region is still deferred — it
-    // must be rejected IDENTICALLY on both engines (a leading-run count restricted to
-    // a sub-region is a later rung).
-    let src = wrap(
-        &["01  S  PIC X(6) VALUE \"000CD0\".", "01  C  PIC 9(3) VALUE 0."],
-        &["INSPECT S TALLYING C FOR LEADING \"0\" BEFORE \"C\".", "STOP RUN."],
-    );
-    assert!(run_cobol(&src).is_err(), "oracle must reject FOR LEADING + region");
-    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject FOR LEADING + region");
+fn inspect_leading_after_anchors_the_run_at_the_window_start() {
+    // "aaXaab" AFTER "X" narrows to "aab" (indices 3..6). The leading run of 'a'
+    // there is 2 — the two a's right after the X. The "aa" BEFORE the X is outside
+    // the window and must NOT contribute (that is the whole anchoring point).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"aaXaab\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"X\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_leading_after_delimiter_at_position_zero() {
+    // Delimiter is the FIRST char: "Xaab" AFTER "X" → window "aab" (1..4), leading
+    // 'a' run = 2. Pins the `start = first + 1` edge for the leading scan.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"Xaab\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"X\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_leading_after_window_starts_on_a_mismatch() {
+    // "aaXbb" AFTER "X" → window "bb" (3..5). The window's FIRST char is 'b', not the
+    // delimiter 'a', so the leading run is 0 even though a's appear before the X.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXbb\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"X\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000\n");
+}
+
+#[test]
+fn inspect_leading_before_counts_the_prefix_run() {
+    // "aaXaa" BEFORE "X" → window "aa" (0..2), leading 'a' run = 2. The trailing "aa"
+    // after the X is outside the BEFORE window.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXaa\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" BEFORE \"X\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_leading_before_delimiter_at_last_position() {
+    // Delimiter is the LAST char: "aaX" BEFORE "X" → window "aa" (0..2), leading run
+    // = 2. Pins the `end = first` prefix edge for the leading scan.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"aaX\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" BEFORE \"X\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_leading_after_absent_delimiter_is_an_empty_window() {
+    // AFTER "Z" with no 'Z' present → the window is EMPTY, so the leading count is 0
+    // (the ISO not-found asymmetry on the AFTER side).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"aaXaab\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"Z\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000\n");
+}
+
+#[test]
+fn inspect_leading_before_absent_delimiter_is_the_whole_source() {
+    // BEFORE "Z" with no 'Z' present → the window is the WHOLE source "aaXaa", where
+    // the leading 'a' run (from position 0) is 2 (stops at the X). The BEFORE
+    // not-found rule, the asymmetric partner of the AFTER case above.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXaa\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" BEFORE \"Z\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_leading_region_delimiter_equals_tally_delimiter() {
+    // Region delimiter == tally delimiter: "aaXaa" AFTER "a" bounds on the FIRST 'a'
+    // (index 0), window "aXaa" (1..5). The leading 'a' run there is 1 (position 1 is
+    // 'a', position 2 is 'X'). The bounding 'a' itself is excluded.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXaa\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"a\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "001\n");
+}
+
+#[test]
+fn inspect_leading_region_adds_to_a_nonzero_counter() {
+    // INSPECT ADDs to the counter; the window does not change that. C starts at 5;
+    // AFTER "X" on "aaXaab" counts 2 leading a's → C = 5 + 2 = 7.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"aaXaab\".", "01  C  PIC 9(3) VALUE 5."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"X\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "007\n");
 }
 
 #[test]
@@ -3448,20 +3546,90 @@ fn inspect_replacing_region_delimiter_is_a_pic_x1_item() {
     assert_eq!(out, "*A*B0\n");
 }
 
+// INSPECT … REPLACING LEADING x BY y … {BEFORE|AFTER} z — the STANDALONE
+// leading-run substitution restricted to a `{BEFORE|AFTER}` sub-region, the exact
+// analogue of `FOR LEADING … {BEFORE|AFTER}` on the count side. The run is anchored
+// at the WINDOW START: characters before the window are copied through unchanged and
+// neither begin nor break the run; the run begins at the window start and stops at
+// the first non-`x` INSIDE the window. `AFTER z` with `z` absent is an empty window
+// (no substitution); `BEFORE z` with `z` absent is the whole source.
+
 #[test]
-fn inspect_replacing_leading_with_a_region_is_a_later_rung() {
-    // `REPLACING LEADING` combined with a `{BEFORE|AFTER}` region is still deferred —
-    // rejected IDENTICALLY on both engines (only REPLACING ALL gets a region this
-    // rung, the exact analogue of FOR LEADING + region on the count side).
-    let src = wrap(
-        &["01  S  PIC X(5) VALUE \"00B00\"."],
-        &["INSPECT S REPLACING LEADING \"0\" BY \"*\" BEFORE \"B\".", "STOP RUN."],
-    );
-    assert!(run_cobol(&src).is_err(), "oracle must reject REPLACING LEADING + region");
-    assert!(
-        compile_source(&src, "e2e").is_err(),
-        "compiler must reject REPLACING LEADING + region"
-    );
+fn inspect_replacing_leading_after_anchors_the_run_at_the_window_start() {
+    // "aaXaab" REPLACING LEADING "a" BY "*" AFTER "X" → window "aab" (3..6). Only the
+    // two leading a's AFTER the X are rewritten; the "aa" before the X is untouched.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"aaXaab\"."],
+        &["INSPECT S REPLACING LEADING \"a\" BY \"*\" AFTER \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "aaX**b\n");
+}
+
+#[test]
+fn inspect_replacing_leading_after_window_starts_on_a_mismatch() {
+    // "aaXbb" AFTER "X" → window "bb" (3..5); its first char is not 'a', so nothing is
+    // replaced even though a's precede the X. The source is returned unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXbb\"."],
+        &["INSPECT S REPLACING LEADING \"a\" BY \"*\" AFTER \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "aaXbb\n");
+}
+
+#[test]
+fn inspect_replacing_leading_before_rewrites_the_prefix_run() {
+    // "aaXaa" REPLACING LEADING "a" BY "*" BEFORE "X" → window "aa" (0..2) → the two
+    // leading a's become '*'; the "aa" after the X is outside the BEFORE window.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXaa\"."],
+        &["INSPECT S REPLACING LEADING \"a\" BY \"*\" BEFORE \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "**Xaa\n");
+}
+
+#[test]
+fn inspect_replacing_leading_after_delimiter_at_position_zero() {
+    // Delimiter is the FIRST char: "Xaaab" AFTER "X" → window "aaab" (1..5), the three
+    // leading a's are rewritten → "X***b". Pins the `start = first + 1` edge.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"Xaaab\"."],
+        &["INSPECT S REPLACING LEADING \"a\" BY \"*\" AFTER \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "X***b\n");
+}
+
+#[test]
+fn inspect_replacing_leading_after_absent_delimiter_is_an_empty_window() {
+    // AFTER "Z" with no 'Z' present → the window is EMPTY, so nothing is replaced (the
+    // ISO not-found asymmetry on the AFTER side). The source is unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"aaXaab\"."],
+        &["INSPECT S REPLACING LEADING \"a\" BY \"*\" AFTER \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "aaXaab\n");
+}
+
+#[test]
+fn inspect_replacing_leading_before_absent_delimiter_is_the_whole_source() {
+    // BEFORE "Z" with no 'Z' present → the window is the WHOLE source "aaXaa", where
+    // the leading 'a' run (from position 0) is the two a's before the X → "**Xaa".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXaa\"."],
+        &["INSPECT S REPLACING LEADING \"a\" BY \"*\" BEFORE \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "**Xaa\n");
+}
+
+#[test]
+fn inspect_replacing_leading_region_delimiter_equals_search_char() {
+    // Region delimiter == search char: "aaXaa" AFTER "a" bounds on the FIRST 'a'
+    // (index 0), window "aXaa" (1..5). The leading 'a' run there is 1 (position 1),
+    // stopping at the X → only that one 'a' is rewritten → "a*Xaa".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXaa\"."],
+        &["INSPECT S REPLACING LEADING \"a\" BY \"*\" AFTER \"a\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "a*Xaa\n");
 }
 
 #[test]
@@ -3723,8 +3891,9 @@ fn inspect_combined_region_delimiter_at_position_zero_empty_before() {
 #[test]
 fn inspect_combined_for_leading_with_a_region_is_a_later_rung() {
     // `FOR LEADING` carrying a region on the combined TALLYING half is still deferred
-    // — rejected identically on both engines (the shared tally reader rejects it, so
-    // the combined form inherits the rejection).
+    // — rejected identically on both engines. The STANDALONE `FOR LEADING …
+    // BEFORE/AFTER` form is now supported, so the shared reader accepts it; the
+    // combined caller re-imposes the deferral, keeping the combination a later rung.
     let src = wrap(
         &["01  S  PIC X(5) VALUE \"00A0B\".", "01  C  PIC 9(3) VALUE 0."],
         &[
@@ -3743,7 +3912,9 @@ fn inspect_combined_for_leading_with_a_region_is_a_later_rung() {
 #[test]
 fn inspect_combined_replacing_leading_with_a_region_is_a_later_rung() {
     // `REPLACING LEADING` carrying a region on the combined REPLACING half is still
-    // deferred — the exact analogue on the substitution side, rejected on both engines.
+    // deferred — the exact analogue on the substitution side. The standalone form is
+    // now supported, so the combined caller re-imposes the deferral; rejected on both
+    // engines.
     let src = wrap(
         &["01  S  PIC X(5) VALUE \"00A0B\".", "01  C  PIC 9(3) VALUE 0."],
         &[

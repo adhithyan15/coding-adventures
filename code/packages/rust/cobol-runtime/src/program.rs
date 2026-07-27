@@ -978,10 +978,13 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     // Each half independently parses its OWN optional `{BEFORE|AFTER}
                     // x` region from its own phrase child (the TALLYING half's region
                     // rides on `inspect_tallying`, the REPLACING half's on
-                    // `inspect_replacing`). `read_inspect_tally_all` /
-                    // `read_inspect_replacing_all` already reject `FOR LEADING` /
-                    // `REPLACING LEADING` carrying a region (a later rung), so the
-                    // combined form inherits that rejection for free.
+                    // `inspect_replacing`). The shared readers now ACCEPT a LEADING half
+                    // carrying a region (the STANDALONE `FOR LEADING …`/`REPLACING
+                    // LEADING … BEFORE/AFTER` forms are supported this rung), so the
+                    // combined form re-imposes the deferral itself just below: a
+                    // combined LEADING half PLUS a region is still a later rung. (A
+                    // combined `FOR ALL`/`ALL` half WITH a region, and a LEADING half
+                    // WITHOUT one, both remain supported.)
                     let (counter, delim, leading, tally_region) = read_inspect_tally_all(verb)?;
                     // The combined form's TALLYING half supports BOTH `FOR ALL`
                     // and `FOR LEADING`: `leading` selects the count semantics
@@ -994,6 +997,24 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     // semantics (LEADING rewrites only the consecutive run of
                     // `search` at the start of the source). It rides along into
                     // the statement, independent of the TALLYING half's `leading`.
+                    //
+                    // Re-impose the combined-form deferral the shared readers no longer
+                    // enforce: a LEADING half carrying a `{BEFORE|AFTER}` region is a
+                    // later rung ONLY in the combined form. The exact messages match
+                    // the standalone rejects these readers used to raise, so both
+                    // engines and both forms diagnose it identically.
+                    if leading && tally_region.is_some() {
+                        return Err(RuntimeError::Unsupported(
+                            "INSPECT TALLYING … FOR LEADING with a BEFORE/AFTER region is a later rung"
+                                .into(),
+                        ));
+                    }
+                    if repl_leading && replace_region.is_some() {
+                        return Err(RuntimeError::Unsupported(
+                            "INSPECT REPLACING LEADING with a BEFORE/AFTER region is a later rung"
+                                .into(),
+                        ));
+                    }
                     Ok(Stmt::InspectTallyReplace {
                         source,
                         counter,
@@ -1028,13 +1049,16 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
 /// delim_operand, leading, region)` where `leading` is `true` for `FOR LEADING`
 /// and `false` for `FOR ALL`, and `region` carries an optional `{BEFORE|AFTER} x`
 /// window (see [`Region`]). Rejects every later-rung form the grammar also
-/// accepts: several counters, several `FOR` phrases, a `CHARACTERS` tally, and —
-/// still — a `FOR LEADING` phrase carrying a region (`FOR LEADING … BEFORE/AFTER`
-/// is a later rung; only `FOR ALL` gets a region this rung). (`REPLACING` (lone
-/// or combined, `ALL` or `LEADING` on either half) and a non-alphanumeric
-/// source/counter are handled by the caller and exec; a multi-character region
-/// delimiter is rejected at exec by `single_delim_char`, exactly like the tally
-/// delimiter itself, so both engines diagnose it identically.)
+/// accepts: several counters, several `FOR` phrases, and a `CHARACTERS` tally. A
+/// `FOR LEADING` phrase carrying a region is now ACCEPTED here — the STANDALONE
+/// `FOR LEADING … BEFORE/AFTER` form is supported this rung (the count anchors the
+/// leading run at the window start). The COMBINED `TALLYING … REPLACING` form still
+/// defers a LEADING half with a region; that gate lives in the caller
+/// (`read_statement`), not here. (`REPLACING` (lone or combined, `ALL` or `LEADING`
+/// on either half) and a non-alphanumeric source/counter are handled by the caller
+/// and exec; a multi-character region delimiter is rejected at exec by
+/// `single_delim_char`, exactly like the tally delimiter itself, so both engines
+/// diagnose it identically.)
 fn read_inspect_tally_all(
     verb: &GrammarASTNode,
 ) -> Result<(String, Operand, bool, Option<Region>), RuntimeError> {
@@ -1071,19 +1095,15 @@ fn read_inspect_tally_all(
     // The keyword picks the count semantics threaded through to `inspect_tally`.
     let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
     // A `{BEFORE|AFTER} x` region now PARSES into an `Option<Region>` (it used to
-    // be rejected wholesale here). Only `FOR ALL` gets a region this rung, so a
-    // `FOR LEADING` phrase carrying a region is still a clean later-rung error.
+    // be rejected wholesale here) REGARDLESS of `leading`: the STANDALONE
+    // `FOR LEADING … BEFORE/AFTER` form is supported this rung (the count anchors the
+    // leading run at the window start — see `inspect_tally`). The COMBINED
+    // `TALLYING … REPLACING` form still rejects a LEADING half carrying a region; that
+    // gate lives in the combined caller (`read_statement`), not here, so relaxing this
+    // shared reader does not leak the combination into the combined form.
     let region = match child_node(ti, "inspect_region") {
         None => None,
-        Some(region_node) => {
-            if leading {
-                return Err(RuntimeError::Unsupported(
-                    "INSPECT TALLYING … FOR LEADING with a BEFORE/AFTER region is a later rung"
-                        .into(),
-                ));
-            }
-            Some(read_inspect_region(region_node)?)
-        }
+        Some(region_node) => Some(read_inspect_region(region_node)?),
     };
     let delim_node = child_node(ti, "operand").ok_or_else(|| {
         RuntimeError::Unsupported("INSPECT TALLYING FOR ALL/LEADING without a delimiter".into())
@@ -1122,14 +1142,15 @@ fn read_inspect_region(region_node: &GrammarASTNode) -> Result<Region, RuntimeEr
 /// `REPLACING ALL` (replace every occurrence), and `region` carries an optional
 /// `{BEFORE|AFTER} x` window (see [`Region`], shared with the TALLYING reader).
 /// Rejects every later-rung form the grammar also accepts: several replace items,
-/// a `CHARACTERS` or `FIRST` replacement, and — still — a `REPLACING LEADING`
-/// phrase carrying a region (`REPLACING LEADING … BEFORE/AFTER` is a later rung;
-/// only `REPLACING ALL` gets a region this rung, exactly mirroring the TALLYING
-/// side). Both `ALL` and `LEADING` are accepted here, whether the phrase is lone
-/// or combined with `TALLYING`; the combined caller separately rejects any region.
-/// (A non-alphanumeric source is rejected by the caller; a multi-character/wider/
-/// figurative search, replacement, or region delimiter is rejected by
-/// `single_delim_char` at exec time.)
+/// and a `CHARACTERS` or `FIRST` replacement. A `REPLACING LEADING` phrase carrying
+/// a region is now ACCEPTED here — the STANDALONE `REPLACING LEADING … BEFORE/AFTER`
+/// form is supported this rung (the substitution anchors the leading run at the
+/// window start), exactly mirroring the TALLYING side. Both `ALL` and `LEADING` are
+/// accepted here, whether the phrase is lone or combined with `TALLYING`; for the
+/// combined form the caller (`read_statement`) separately defers a LEADING half that
+/// carries a region. (A non-alphanumeric source is rejected by the caller; a
+/// multi-character/wider/figurative search, replacement, or region delimiter is
+/// rejected by `single_delim_char` at exec time.)
 fn read_inspect_replacing_all(
     verb: &GrammarASTNode,
 ) -> Result<(Operand, Operand, bool, Option<Region>), RuntimeError> {
@@ -1161,20 +1182,17 @@ fn read_inspect_replacing_all(
     // threaded through to `inspect_replace`.
     let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
     // A `{BEFORE|AFTER} x` region now PARSES into an `Option<Region>` (it used to be
-    // rejected wholesale here), reusing the SAME `read_inspect_region` the TALLYING
-    // reader uses. Only `REPLACING ALL` gets a region this rung, so a `REPLACING
-    // LEADING` phrase carrying a region is still a clean later-rung error — the exact
-    // analogue of the `FOR LEADING … BEFORE/AFTER` rejection on the count side.
+    // rejected wholesale here) REGARDLESS of `leading`, reusing the SAME
+    // `read_inspect_region` the TALLYING reader uses: the STANDALONE
+    // `REPLACING LEADING … BEFORE/AFTER` form is supported this rung (the substitution
+    // anchors the leading run at the window start — see `inspect_replace`), the exact
+    // analogue of the count side. The COMBINED `TALLYING … REPLACING` form still
+    // rejects a LEADING half carrying a region; that gate lives in the combined caller
+    // (`read_statement`), so relaxing this shared reader does not leak the combination
+    // into the combined form.
     let region = match child_node(ri, "inspect_region") {
         None => None,
-        Some(region_node) => {
-            if leading {
-                return Err(RuntimeError::Unsupported(
-                    "INSPECT REPLACING LEADING with a BEFORE/AFTER region is a later rung".into(),
-                ));
-            }
-            Some(read_inspect_region(region_node)?)
-        }
+        Some(region_node) => Some(read_inspect_region(region_node)?),
     };
     // `ALL`/`LEADING search BY replace` — the two `operand` children are the
     // search (first) and the replacement (second), in order. (A `BEFORE`/`AFTER`
