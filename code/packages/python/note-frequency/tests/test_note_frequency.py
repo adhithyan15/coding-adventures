@@ -1,4 +1,5 @@
 import pytest
+
 from note_frequency import Note, note_to_frequency, parse_note
 
 
