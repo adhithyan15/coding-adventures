@@ -49,6 +49,9 @@ export interface ScriptData {
    *  that ride on a consonant. Kept separate from `letters` so the consonant
    *  syllabary (and anything keyed on it being all-syllables) is untouched. */
   independentVowels?: Letter[];
+  /** For a script with its own numerals: the digits 0–9 in the script's glyphs
+   *  (౦౧౨…). Kept separate from `letters`, like `independentVowels`. */
+  digits?: Letter[];
   marks?: unknown[];
   combination?: string;
   complete?: boolean;

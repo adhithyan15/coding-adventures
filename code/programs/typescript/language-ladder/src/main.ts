@@ -423,6 +423,31 @@ function renderIndependentVowels(vowels: Letter[]): HTMLElement {
   return wrap;
 }
 
+/**
+ * The script's own numerals as a small read-only strip (౦౧౨… = 0–9). Reading a
+ * language means reading its numbers, and these are distinct glyphs, not Western
+ * 0-9. Recognition only; each tile shows the glyph and its value.
+ */
+function renderNumerals(digits: Letter[]): HTMLElement {
+  const wrap = el("div", "ivowels");
+  const label = el("span", "ivowels__label");
+  label.textContent = "Numerals (0–9):";
+  wrap.appendChild(label);
+  const row = el("div", "ivowels__row");
+  digits.forEach((d) => {
+    const tile = el("div", "ivowel");
+    const glyph = el("span", "ivowel__glyph");
+    glyph.textContent = d.glyph;
+    const value = el("span", "ivowel__sound");
+    value.textContent = d.sound;
+    tile.append(glyph, value);
+    tile.title = d.sound;
+    row.appendChild(tile);
+  });
+  wrap.appendChild(row);
+  return wrap;
+}
+
 /** For a syllabary, a "List / Matrix" switch — the flat grid, or the table. */
 function renderBrowseLayoutToggle(): HTMLElement {
   const wrap = el("div", "layouts");
@@ -1425,6 +1450,9 @@ function render(): void {
     const syllabary = isSyllabary(data.letters);
     if (data.independentVowels && data.independentVowels.length > 0) {
       app!.appendChild(renderIndependentVowels(data.independentVowels));
+    }
+    if (data.digits && data.digits.length > 0) {
+      app!.appendChild(renderNumerals(data.digits));
     }
     if (syllabary) app!.appendChild(renderBrowseLayoutToggle());
     const matrix = syllabary && browseLayout === "matrix" ? renderMatrix(data.letters) : null;
