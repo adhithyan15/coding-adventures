@@ -3,6 +3,8 @@
 ## [0.1.0] — Unreleased
 
 ### Added
+- `Level1Params.RD` adds the zero-default Berkeley external drain resistance
+  parameter with finite, non-negative validation.
 - `Level1Params.TOX` adds Berkeley-default gate oxide thickness and derives
   Meyer gate capacitance from `Cox = epsilon_ox / TOX`.
 - `Level1Params.LD` applies Berkeley lateral-diffusion geometry through

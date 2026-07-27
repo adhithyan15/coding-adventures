@@ -40,6 +40,7 @@ const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
 /// | L         | Channel length (m)                 | 130 nm   |
 /// | LD        | Lateral diffusion length (m)       | 0        |
 /// | TOX       | Gate oxide thickness (m)           | 100 nm   |
+/// | RD        | Drain resistance (ohm)              | 0        |
 /// | IS        | Drain–body saturation current (A)  | 1 fA     |
 /// | N_SUB     | Subthreshold slope factor          | 1.4      |
 /// | T_NOM     | Nominal temperature (K)            | 300.15   |
@@ -65,6 +66,8 @@ pub struct Level1Params {
     pub ld: f64,
     /// Gate oxide thickness [m].
     pub tox: f64,
+    /// External drain resistance [ohm].
+    pub rd: f64,
     /// Drain–body saturation current [A] (used for subthreshold floor).
     pub is: f64,
     /// Subthreshold slope factor n.  Subthreshold current ∝ exp(V_OV / (n V_T)).
@@ -107,6 +110,7 @@ impl Default for Level1Params {
             l: 130e-9,
             ld: 0.0,
             tox: 1.0e-7,
+            rd: 0.0,
             is: 1e-15,
             n_sub: 1.4,
             t_nom: 300.15,
@@ -243,6 +247,10 @@ pub fn evaluate_level1(
     assert!(
         p.tox.is_finite() && p.tox > 0.0,
         "MOSFET TOX must be finite and positive"
+    );
+    assert!(
+        p.rd.is_finite() && p.rd >= 0.0,
+        "MOSFET RD must be finite and non-negative"
     );
     let beta = p.kp * (p.w / effective_length);
 

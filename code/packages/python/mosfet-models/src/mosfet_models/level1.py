@@ -29,6 +29,7 @@ class Level1Params:
     L: float = 130e-9  # channel length (m)
     LD: float = 0.0  # source/drain lateral diffusion length (m)
     TOX: float = 1e-7  # gate oxide thickness (m)
+    RD: float = 0.0  # external drain resistance (ohm)
     IS: float = 1e-15  # saturation current (A)
     N_SUB: float = 1.4  # subthreshold slope factor
     T_NOM: float = 300.15  # nominal temperature (K)
@@ -122,6 +123,8 @@ def evaluate_level1(
         )
     if not isfinite(p.TOX) or p.TOX <= 0.0:
         raise ValueError("MOSFET TOX must be finite and positive")
+    if not isfinite(p.RD) or p.RD < 0.0:
+        raise ValueError("MOSFET RD must be finite and non-negative")
     beta = p.KP * (p.W / effective_length)
 
     # Threshold with body effect. The formula is well-defined whenever

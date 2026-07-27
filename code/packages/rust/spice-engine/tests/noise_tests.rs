@@ -533,6 +533,44 @@ fn jfet_drain_resistance_emits_thermal_noise() {
 }
 
 #[test]
+fn mosfet_drain_resistance_emits_thermal_noise() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 3.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            drain_resistance: 250.0,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let result = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap();
+    let entry = result.points[0]
+        .entries
+        .iter()
+        .find(|entry| entry.element_name == "M1:RD" && entry.noise_type == NoiseType::Thermal)
+        .unwrap();
+    assert_close(
+        entry.source_psd,
+        4.0 * 1.380_649e-23 * 300.0 / 250.0,
+        1.0e-30,
+    );
+}
+
+#[test]
 fn jfet_source_resistance_emits_thermal_noise() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(

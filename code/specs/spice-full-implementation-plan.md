@@ -33,16 +33,17 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS oxide thickness.
+1. Cross-language Level-1 MOS drain resistance.
    - Status: current PR completion candidate.
-   - Add Berkeley Level-1 MOS `TOX` model-card support in Rust, Python, and
-     TypeScript, defaulting to `1e-7 m`.
-   - Derive `Cox = epsilon_ox / TOX` and use
-     `Cox * W * (L - 2*LD)` for region-partitioned intrinsic Meyer gate
-     capacitance while preserving overlap capacitance.
-   - Preserve the oxide thickness through hierarchy and cloning, require
-     finite positive `TOX`, and extend the supported-parameter coverage gate
-     from 185 to 187 canonical rows.
+   - Add Berkeley Level-1 MOS `RD` model-card support in Rust, Python, and
+     TypeScript, defaulting to zero ohms.
+   - For positive values, create an intrinsic drain node, stamp the external
+     resistor in DC, TF, AC, and transient analyses, and route the channel plus
+     drain-side capacitances through the intrinsic node.
+   - Preserve `RD` through hierarchy and cloning, require a finite non-negative
+     value, emit the resistor's `4kT/RD` Johnson noise as `<name>:RD`, and
+     extend the supported-parameter coverage gate from 187 to 189 canonical
+     rows.
 
 ## Completed Slices
 
@@ -3423,6 +3424,15 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning preserve the geometry, shared validation enforces
      finite non-negative `LD` with positive effective length, and the
      supported-parameter release gate now covers 185 canonical rows.
+
+268. Cross-language Level-1 MOS oxide thickness.
+   - Status: completed in PR 9007.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `TOX`,
+     defaulting to `1e-7 m`, and derive intrinsic Meyer gate capacitance from
+     `Cox = epsilon_ox / TOX`.
+   - Hierarchy and cloning preserve the oxide thickness, shared validation
+     enforces finite positive `TOX`, and the supported-parameter release gate
+     now covers 187 canonical rows.
 
 ## Backlog
 
