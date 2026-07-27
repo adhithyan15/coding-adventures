@@ -150,9 +150,19 @@ holding ONLY such initializers) instead writes on the class by name
 `@@`-name is validated as `@@<identifier>` and emitted as a quoted symbol (no
 injection); `emit_var_ref` now matches every `Scope` exhaustively.
 
+The seventh OOP slice (0.17.0) **completes the arc** with modules / mixins.
+`module M; …; end` (`Stmt::ModuleDef`, `Feature::Modules`) → `Object.const_set(:M,
+Module.new)`, and `include M` / `extend M` → `__include__` / `__extend__` →
+native `(Class).include(M)` / `(Class).extend(M)` (both operands validated
+constants). A module's methods are hoisted and registered with the SAME
+`__def_method__` protocol as a class (`Module#define_method`), so once a class
+`include`s the module they resolve through the ancestry via the existing
+`__method__` / `public_send` dispatch — no new method machinery. The Ruby backend
+now covers the full class/module surface.
+
 **Still rejects** `TailCalls`, `Intrinsics`, `NDArrays`, and every not-yet-landed
-feature — including the last of OOP, modules (`__include__` / `__extend__`); plus
-a malformed `__def_method__` / `__def_class_method__`, a class body with content
+feature — the built-in **collection-method** catalog; plus a malformed
+`__def_method__` / `__def_class_method__`, a class or module body with content
 other than `@@x` initializers, a namespaced (`Foo::Bar`) class/constant
 *definition* (`const_set` names one namespace), and a **singleton class**
 (`class << self` —
@@ -205,6 +215,9 @@ or temporaries:
 | `BuiltinCall("__class_method__", [class, m, args…])` | `(<class>).public_send(:sir_um_<m>, <args>)` — class-name-receiver dispatch (allowlisted, anti-RCE) |
 | `VarRef { ClassVar }` / `Assign { ClassVar }` (method body) | `sir_cvar_owner(self).class_variable_get/set(:"@@x", …)` — owner is the class in both contexts |
 | `Assign { ClassVar }` (class body) | `<Class>.class_variable_set(:"@@x", <init>)` — the only accepted non-empty class-body content |
+| `ModuleDef { name }` | `Object.const_set(:<name>, Module.new)` — reflective module declaration |
+| `BuiltinCall("__include__", [class, module])` | `(<class>).include(<module>)` — native mixin (both validated constants) |
+| `BuiltinCall("__extend__", [class, module])` | `(<class>).extend(<module>)` — native singleton-method mixin |
 | `If` | `(if sir_truthy(<cond>) then <then> else <else> end)` |
 | `LogicalAnd { lhs, rhs }` | `(<lhs> && <rhs>)` — native short-circuit, yields the deciding operand |
 | `LogicalOr { lhs, rhs }` | `(<lhs> \|\| <rhs>)` — native short-circuit, yields the deciding operand |
@@ -308,11 +321,11 @@ growing `ACCEPTED_FEATURES`, the runtime, and the conformance corpus in lockstep
    landed 0.13), **inheritance** + `super` (`Class.new(Super)` + an explicit
    ancestry walk, landed 0.14), class **methods** (`def self.m`, native
    `define_singleton_method`, landed 0.15), class **variables** (`@@x` via
-   `class_variable_get/set`, landed 0.16), then **modules**/mixins (the last
-   slice).
+   `class_variable_get/set`, landed 0.16), and **modules**/mixins (native
+   `include`/`extend`, landed 0.17 — OOP arc complete).
 6. **Collections** — the `__method__` catalog for built-in `String`/`Array`/
-   `Hash`/numeric methods (Ruby methods are largely native), sharing the same
-   `__method__` dispatch surface as OOP.
+   `Hash`/numeric methods (Ruby methods are largely native), the remaining large
+   batch, sharing the same `__method__` dispatch surface as OOP.
 
 ## Out of scope (v0)
 

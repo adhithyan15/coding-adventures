@@ -1693,6 +1693,7 @@ fn method_module_fns(stmts: Vec<Stmt>, extra: Vec<Function>) -> Module {
             Feature::Constants,
             Feature::Strings,
             Feature::Closures,
+            Feature::Modules,
         ]),
         imports: vec![],
         exports: vec![],
@@ -2328,4 +2329,109 @@ fn a_non_double_at_classvar_name_is_rejected() {
     assert!(compile(&classvar_module(vec![classvar_assign("@n", ilit(1))])).is_err(), "single @");
     assert!(compile(&classvar_module(vec![classvar_assign("@@", ilit(1))])).is_err(), "bare @@");
     assert!(compile(&classvar_module(vec![classvar_assign("@@1x", ilit(1))])).is_err(), "@@ + digit");
+}
+
+// ── OOP classes slice 7 — modules / mixins (the LAST OOP slice) ─────────────
+//
+// `module M; def m;…;end; end` lowers to a `Stmt::ModuleDef` + a hoisted `M__m`
+// function + `__def_method__("M", "m", closure)` (the SAME registration as a
+// class), and `include M` (in a class) to `__include__("Class", "M")`. Rendered
+// as `Object.const_set(:M, Module.new)`, `Object.const_set(:Class, Class.new)`,
+// `M.define_method(:sir_um_m, &closure)` (existing slice-2 path — `Module` has
+// `define_method`), and `(Class).include(M)`. A mixed-in method then resolves
+// through the ancestry via the existing `__method__`/`public_send` dispatch — so
+// module methods need NO new machinery.
+
+fn moduledef(name: &str, body: Vec<Stmt>) -> Stmt {
+    Stmt::ModuleDef { name: name.into(), body, span: s2() }
+}
+fn mixin_call(builtin: &str, class: &str, module: &str) -> Expr {
+    Expr::BuiltinCall {
+        name: builtin.into(),
+        args: vec![strlit(class), strlit(module)],
+        effects: EffectSet::PURE,
+        span: s2(),
+    }
+}
+
+// ---- positive, through the real frontend + interpreter --------------------
+
+#[test]
+fn e2e_module_mixed_into_a_class() {
+    // `module Greet; def hello; …; end; end; class Person; include Greet; end` —
+    // a `Person` instance answers the module's method.
+    let rb = ruby_to_ruby(
+        "module Greet\n  def hello\n    puts \"hi\"\n  end\nend\n\
+         class Person\n  include Greet\nend\nPerson.new.hello\n",
+    );
+    assert!(rb.contains("Object.const_set(:Greet, Module.new)"), "module decl:\n{rb}");
+    assert!(rb.contains("(Person).include(Greet)"), "native include:\n{rb}");
+    assert!(rb.contains("Greet.define_method(:sir_um_hello"), "module method via slice-2 path:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "hi"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_one_module_shared_by_two_classes() {
+    // The same module mixed into two classes — both share its method.
+    let rb = ruby_to_ruby(
+        "module Named\n  def label\n    \"L\"\n  end\nend\n\
+         class A\n  include Named\nend\nclass B\n  include Named\nend\n\
+         puts A.new.label\nputs B.new.label\n",
+    );
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "L\nL"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+// ---- hand-built: emit shape + injection + totality ------------------------
+
+#[test]
+fn module_and_extend_emit_natively() {
+    let m = method_module(vec![
+        moduledef("Mod", vec![]),
+        classdef("Cls", None, vec![]),
+        puts(mixin_call("__extend__", "Cls", "Mod")),
+    ]);
+    let rb = compile(&m).expect("module + extend compiles").source;
+    assert!(rb.contains("Object.const_set(:Mod, Module.new)"), "module:\n{rb}");
+    assert!(rb.contains("(Cls).extend(Mod)"), "native extend:\n{rb}");
+}
+
+#[test]
+fn an_injectable_module_name_is_rejected() {
+    let m = method_module(vec![moduledef("Mod\n  system('x')", vec![])]);
+    let err = compile(&m).expect_err("an injectable module name must be rejected");
+    assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
+}
+
+#[test]
+fn an_injectable_include_operand_is_rejected() {
+    // Both the class and the module operand are emitted verbatim — a crafted
+    // either must be rejected.
+    let bad_class = method_module(vec![puts(mixin_call("__include__", "Cls\n system('x')", "Mod"))]);
+    assert!(compile(&bad_class).is_err(), "injectable include class must be rejected");
+    let bad_mod = method_module(vec![puts(mixin_call("__include__", "Cls", "Mod\n system('x')"))]);
+    assert!(compile(&bad_mod).is_err(), "injectable include module must be rejected");
+}
+
+#[test]
+fn a_malformed_include_missing_the_module_is_rejected() {
+    let bad = Expr::BuiltinCall {
+        name: "__include__".into(),
+        args: vec![strlit("Cls")], // no module operand
+        effects: EffectSet::PURE,
+        span: s2(),
+    };
+    let m = method_module(vec![puts(bad)]);
+    assert!(compile(&m).is_err(), "a malformed __include__ must be rejected");
+}
+
+#[test]
+fn a_non_empty_module_body_is_rejected() {
+    let m = method_module(vec![moduledef("Mod", vec![puts(strlit("side effect"))])]);
+    assert!(compile(&m).is_err(), "a non-empty module body must be rejected");
 }
