@@ -12,6 +12,8 @@ from math import exp, isfinite, sqrt
 
 from device_physics import thermal_voltage
 
+OXIDE_PERMITTIVITY = 3.453133e-11
+
 
 @dataclass(frozen=True, slots=True)
 class Level1Params:
@@ -26,6 +28,7 @@ class Level1Params:
     W: float = 1e-6  # channel width (m)
     L: float = 130e-9  # channel length (m)
     LD: float = 0.0  # source/drain lateral diffusion length (m)
+    TOX: float = 1e-7  # gate oxide thickness (m)
     IS: float = 1e-15  # saturation current (A)
     N_SUB: float = 1.4  # subthreshold slope factor
     T_NOM: float = 300.15  # nominal temperature (K)
@@ -117,6 +120,8 @@ def evaluate_level1(
         raise ValueError(
             "MOSFET LD must be finite and non-negative with L - 2*LD > 0"
         )
+    if not isfinite(p.TOX) or p.TOX <= 0.0:
+        raise ValueError("MOSFET TOX must be finite and positive")
     beta = p.KP * (p.W / effective_length)
 
     # Threshold with body effect. The formula is well-defined whenever
@@ -133,7 +138,9 @@ def evaluate_level1(
     Cgs_overlap = p.CGSO * p.W
     Cgd_overlap = p.CGDO * p.W
     Cgb_overlap = p.CGBO * effective_length
-    Cgs_intrinsic = (2.0 / 3.0) * p.W * effective_length * p.KP / 1.0  # placeholder; Meyer model
+    channel_capacitance = (
+        p.W * effective_length * OXIDE_PERMITTIVITY / p.TOX
+    )
     Cgd_intrinsic = 0.0
     Cgb_intrinsic = 0.0
     Cbs_bulk = bulk_junction_capacitance(p.CBS, V_BS, p.PB, p.MJ, p.FC)
@@ -152,7 +159,7 @@ def evaluate_level1(
             gds_sub = (beta * n * V_T) * exp(V_OV / (n * V_T)) * exp(-V_DS / V_T)
             return MosResult(
                 Id=Id_sub, gm=gm_sub, gds=gds_sub, gmb=0.0,
-                Cgs=Cgs_overlap + Cgs_intrinsic,
+                Cgs=Cgs_overlap + channel_capacitance,
                 Cgd=Cgd_overlap + Cgd_intrinsic,
                 Cgb=Cgb_overlap + Cgb_intrinsic,
                 Cbs=Cbs_bulk,
@@ -161,7 +168,7 @@ def evaluate_level1(
             )
         return MosResult(
             Id=0.0, gm=0.0, gds=0.0, gmb=0.0,
-            Cgs=Cgs_overlap + Cgs_intrinsic,
+            Cgs=Cgs_overlap + channel_capacitance,
             Cgd=Cgd_overlap + Cgd_intrinsic,
             Cgb=Cgb_overlap + Cgb_intrinsic,
             Cbs=Cbs_bulk,
@@ -185,8 +192,8 @@ def evaluate_level1(
             gmb = 0.0
         return MosResult(
             Id=Id, gm=gm, gds=gds, gmb=gmb,
-            Cgs=Cgs_overlap + Cgs_intrinsic / 2.0,
-            Cgd=Cgd_overlap + Cgd_intrinsic / 2.0,
+            Cgs=Cgs_overlap + channel_capacitance / 2.0,
+            Cgd=Cgd_overlap + channel_capacitance / 2.0,
             Cgb=Cgb_overlap + Cgb_intrinsic,
             Cbs=Cbs_bulk,
             Cbd=Cbd_bulk,
@@ -204,7 +211,7 @@ def evaluate_level1(
         gmb = 0.0
     return MosResult(
         Id=Id, gm=gm, gds=gds, gmb=gmb,
-        Cgs=Cgs_overlap + (2.0 / 3.0) * Cgs_intrinsic,
+        Cgs=Cgs_overlap + (2.0 / 3.0) * channel_capacitance,
         Cgd=Cgd_overlap,
         Cgb=Cgb_overlap,
         Cbs=Cbs_bulk,

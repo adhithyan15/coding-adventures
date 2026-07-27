@@ -1336,6 +1336,7 @@ fn ac_mosfet_overlap_capacitance_shunts_high_frequency_gate_drive() {
                 kp: 1.0e-12,
                 w: 1.0,
                 l: 1.0,
+                oxide_thickness: 1.0e9,
                 gate_source_overlap_capacitance: cgso,
                 ..MosfetLevel1Params::default()
             },
@@ -1352,6 +1353,38 @@ fn ac_mosfet_overlap_capacitance_shunts_high_frequency_gate_drive() {
 
     assert!(without_capacitance > 0.9);
     assert!(with_capacitance < without_capacitance / 100.0);
+}
+
+#[test]
+fn ac_mosfet_oxide_thickness_scales_intrinsic_gate_capacitance() {
+    let gate_amplitude = |oxide_thickness| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new("Rin", "in", "gate", 1.0e6)));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "0",
+            "gate",
+            "0",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                w: 10.0e-6,
+                l: 1.0e-6,
+                oxide_thickness,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+
+        ac_sweep(&circuit, 1.0e9, 1.0e9, 1).unwrap()[0]
+            .voltage("gate")
+            .unwrap()
+            .abs()
+    };
+
+    assert!(gate_amplitude(50.0e-9) < gate_amplitude(100.0e-9));
 }
 
 #[test]

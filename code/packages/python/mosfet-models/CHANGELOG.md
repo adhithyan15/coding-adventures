@@ -3,6 +3,8 @@
 ## [0.1.0] — Unreleased
 
 ### Added
+- `Level1Params.TOX` adds Berkeley-default gate oxide thickness and derives
+  Meyer gate capacitance from `Cox = epsilon_ox / TOX`.
 - `Level1Params.LD` applies Berkeley lateral-diffusion geometry through
   `L_eff = L - 2*LD` to channel current and length-scaled capacitance.
 - `Level1Params.FC` adds the continuous Berkeley forward-bias continuation to

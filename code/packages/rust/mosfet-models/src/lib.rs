@@ -19,6 +19,8 @@
 
 use device_physics::thermal_voltage;
 
+const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
+
 // ---------------------------------------------------------------------------
 // Level-1 parameter set
 // ---------------------------------------------------------------------------
@@ -37,6 +39,7 @@ use device_physics::thermal_voltage;
 /// | W         | Channel width (m)                  | 1 µm     |
 /// | L         | Channel length (m)                 | 130 nm   |
 /// | LD        | Lateral diffusion length (m)       | 0        |
+/// | TOX       | Gate oxide thickness (m)           | 100 nm   |
 /// | IS        | Drain–body saturation current (A)  | 1 fA     |
 /// | N_SUB     | Subthreshold slope factor          | 1.4      |
 /// | T_NOM     | Nominal temperature (K)            | 300.15   |
@@ -60,6 +63,8 @@ pub struct Level1Params {
     pub l: f64,
     /// Source/drain lateral diffusion length [m].
     pub ld: f64,
+    /// Gate oxide thickness [m].
+    pub tox: f64,
     /// Drain–body saturation current [A] (used for subthreshold floor).
     pub is: f64,
     /// Subthreshold slope factor n.  Subthreshold current ∝ exp(V_OV / (n V_T)).
@@ -101,6 +106,7 @@ impl Default for Level1Params {
             w: 1e-6,
             l: 130e-9,
             ld: 0.0,
+            tox: 1.0e-7,
             is: 1e-15,
             n_sub: 1.4,
             t_nom: 300.15,
@@ -234,6 +240,10 @@ pub fn evaluate_level1(
         p.ld.is_finite() && p.ld >= 0.0 && effective_length > 0.0,
         "MOSFET LD must be finite and non-negative with L - 2*LD > 0"
     );
+    assert!(
+        p.tox.is_finite() && p.tox > 0.0,
+        "MOSFET TOX must be finite and positive"
+    );
     let beta = p.kp * (p.w / effective_length);
 
     // Threshold with body effect.
@@ -253,10 +263,8 @@ pub fn evaluate_level1(
     let cgd_overlap = p.cgdo * p.w;
     let cgb_overlap = p.cgbo * effective_length;
 
-    // Placeholder intrinsic capacitance (Meyer model, saturation reference).
-    // In saturation: C_gs_intrinsic ≈ (2/3) W L C_ox.
-    // We approximate C_ox as KP (units collapse to F/m² in the placeholder).
-    let cgs_intrinsic = (2.0 / 3.0) * p.w * effective_length * p.kp;
+    // Meyer gate-to-channel capacitance, partitioned by operating region below.
+    let channel_capacitance = p.w * effective_length * (OXIDE_PERMITTIVITY / p.tox);
     let cbs_bulk = bulk_junction_capacitance(p.cbs, v_bs, p.pb, p.mj, p.fc);
     let cbd_bulk = bulk_junction_capacitance(p.cbd, v_bs - v_ds, p.pb, p.mj, p.fc);
 
@@ -277,7 +285,7 @@ pub fn evaluate_level1(
                 gm: gm_sub,
                 gds: gds_sub,
                 gmb: 0.0,
-                cgs: cgs_overlap + cgs_intrinsic,
+                cgs: cgs_overlap + channel_capacitance,
                 cgd: cgd_overlap,
                 cgb: cgb_overlap,
                 cbs: cbs_bulk,
@@ -291,7 +299,7 @@ pub fn evaluate_level1(
             gm: 0.0,
             gds: 0.0,
             gmb: 0.0,
-            cgs: cgs_overlap + cgs_intrinsic,
+            cgs: cgs_overlap + channel_capacitance,
             cgd: cgd_overlap,
             cgb: cgb_overlap,
             cbs: cbs_bulk,
@@ -322,8 +330,8 @@ pub fn evaluate_level1(
             gm,
             gds,
             gmb,
-            cgs: cgs_overlap + cgs_intrinsic / 2.0,
-            cgd: cgd_overlap + cgs_intrinsic / 2.0,
+            cgs: cgs_overlap + channel_capacitance / 2.0,
+            cgd: cgd_overlap + channel_capacitance / 2.0,
             cgb: cgb_overlap,
             cbs: cbs_bulk,
             cbd: cbd_bulk,
@@ -343,7 +351,7 @@ pub fn evaluate_level1(
         gm,
         gds,
         gmb,
-        cgs: cgs_overlap + (2.0 / 3.0) * cgs_intrinsic,
+        cgs: cgs_overlap + (2.0 / 3.0) * channel_capacitance,
         cgd: cgd_overlap,
         cgb: cgb_overlap,
         cbs: cbs_bulk,

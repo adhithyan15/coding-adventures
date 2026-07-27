@@ -33,15 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS lateral diffusion.
+1. Cross-language Level-1 MOS oxide thickness.
    - Status: current PR completion candidate.
-   - Add Berkeley Level-1 MOS `LD` model-card support in Rust, Python, and
-     TypeScript, defaulting to zero.
-   - Apply `L_eff = L - 2*LD` to channel current and length-scaled intrinsic
-     and `CGBO` capacitance while preserving width-scaled overlap capacitance.
-   - Preserve the geometry through hierarchy and cloning, require finite
-     non-negative `LD` with positive effective length, and extend the
-     supported-parameter coverage gate from 183 to 185 canonical rows.
+   - Add Berkeley Level-1 MOS `TOX` model-card support in Rust, Python, and
+     TypeScript, defaulting to `1e-7 m`.
+   - Derive `Cox = epsilon_ox / TOX` and use
+     `Cox * W * (L - 2*LD)` for region-partitioned intrinsic Meyer gate
+     capacitance while preserving overlap capacitance.
+   - Preserve the oxide thickness through hierarchy and cloning, require
+     finite positive `TOX`, and extend the supported-parameter coverage gate
+     from 185 to 187 canonical rows.
 
 ## Completed Slices
 
@@ -3413,6 +3414,15 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning preserve the coefficient, shared validation
      enforces its finite `[0, 1)` domain, and the supported-parameter release
      gate now covers 183 canonical rows.
+
+267. Cross-language Level-1 MOS lateral diffusion.
+   - Status: completed in PR 9001.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `LD`,
+     defaulting to zero, and apply `L_eff = L - 2*LD` to channel current and
+     length-scaled intrinsic and `CGBO` capacitance.
+   - Hierarchy and cloning preserve the geometry, shared validation enforces
+     finite non-negative `LD` with positive effective length, and the
+     supported-parameter release gate now covers 185 canonical rows.
 
 ## Backlog
 

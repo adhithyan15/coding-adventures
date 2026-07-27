@@ -561,6 +561,7 @@ describe("acSweep", () => {
         KP: 1.0e-12,
         W: 1.0,
         L: 1.0,
+        TOX: 1.0e9,
         CGSO,
       }));
       return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("gate")!);
@@ -571,6 +572,22 @@ describe("acSweep", () => {
 
     expect(withoutCapacitance).toBeGreaterThan(0.9);
     expect(withCapacitance).toBeLessThan(withoutCapacitance / 100.0);
+  });
+
+  it("uses MOSFET oxide thickness to scale intrinsic gate capacitance", () => {
+    function gateAmplitude(TOX: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
+      circuit.add(resistor("Rin", "in", "gate", 1.0e6));
+      circuit.add(mosfet("M1", "0", "gate", "0", "0", "NMOS", {
+        W: 10.0e-6,
+        L: 1.0e-6,
+        TOX,
+      }));
+      return complexAbs(acSweep(circuit, 1.0e9, 1.0e9, 1)[0].voltage("gate")!);
+    }
+
+    expect(gateAmplitude(50.0e-9)).toBeLessThan(gateAmplitude(100.0e-9));
   });
 
   it("uses BJT base-emitter capacitance in AC analysis", () => {
