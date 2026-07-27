@@ -164,6 +164,21 @@ fn test_oxide_thickness_rejects_nonpositive_value() {
     );
 }
 
+#[test]
+#[should_panic(expected = "MOSFET RD must be finite and non-negative")]
+fn test_drain_resistance_rejects_negative_value() {
+    evaluate_level1(
+        &Level1Params {
+            rd: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
 // ---------------------------------------------------------------------------
 // Body effect
 // ---------------------------------------------------------------------------

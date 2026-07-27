@@ -93,6 +93,9 @@ Level-1 MOS model cards accept `KF` (default `0`) and `AF` (default `1`) and add
 length-scaled intrinsic/`CGBO` capacitance.
 `TOX` defaults to `1e-7 m`, must be finite and positive, and derives intrinsic
 Meyer gate capacitance from `Cox = epsilon_ox / TOX`.
+`RD` defaults to zero ohms. A finite positive value inserts an intrinsic drain
+node, routes the channel and drain-side capacitances through it, and contributes
+`4kT/RD` thermal noise.
 `FC` (default `0.5`) selects the continuous Berkeley forward-bias continuation
 for `CBS` / `CBD` depletion capacitance shaped by `PB` and `MJ`.
 All temperature coefficients honor model-card `TNOM` / `T_NOM`.
