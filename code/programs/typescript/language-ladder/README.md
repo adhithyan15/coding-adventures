@@ -166,6 +166,17 @@ retroflex/alveolar distinction, and a tinted tile. The classifier
 script-agnostic ISO-15919 mark — leading ḷ (U+1E37) / ṟ (U+1E5F) / ṉ (U+1E49) —
 which appears only on these consonants, so no data changed to add it.
 
+**Browse them as a matrix.** An abugida is really a table, so for the
+syllabaries Browse offers a **List / Matrix** toggle (alphabets stay a plain
+list). Matrix lays the syllables out as **rows = consonants, columns = vowels**
+— the same ka/kā/ki… pattern repeating down every consonant, made visible at a
+glance — and clicking a cell opens the usual decomposition panel. The layout is
+pure (`buildSyllableMatrix` in `src/matrix.ts`): rows reuse the grounded
+consonant boundary from `syllabary.ts`, the vowel column headers are read off
+the first consonant's own row, and a ragged script yields **no matrix** rather
+than a mislabelled cell (unit-tested with a control). No new data — the same
+generated syllables, re-arranged.
+
 ## Design
 
 - **`src/core.ts`** — the pure, unit-tested heart: `buildScriptView`,
