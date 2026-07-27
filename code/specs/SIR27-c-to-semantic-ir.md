@@ -326,10 +326,29 @@ helpers over `int64_t` (`<<` through `uint64_t` so a shift into the sign bit is
 not UB; both mask the count `& 63` defensively — a count ≥ width is UB in C
 anyway).
 
-Division/modulo (`/ %`) remain deferred: they need the truncate-vs-floor split
-(C truncates toward zero; SIR/Ruby and the existing `_sir_ifloordiv` floor), so
-they are their own slice — a bare `/` or `%` is a clean positioned error, never a
-silently-wrong floor.
+Division/modulo (`/ %`) are handled in milestone 6 (below).
+
+## Division & modulo (milestone 6)
+
+`/` and `%` are the one place C and SIR **disagree on rounding**: C division
+*truncates toward zero* and `%` takes the sign of the dividend (`-7 / 2 == -3`,
+`-7 % 2 == -1`), whereas SIR/Ruby `/`/`%` and the C backend's existing
+`_sir_ifloordiv` *floor* toward −∞ (`-7 / 2 == -4`, `-7 % 2 == 1`).  So they
+lower to **dedicated `tdiv`/`tmod` builtins**, never the flooring `/`/`%`.
+
+- **C backend** — C's native `int64_t /` and `%` already truncate, so
+  `_sir_itdiv`/`_sir_itmod` are thin wrappers with two guards: division by zero
+  (UB in C; fail loudly) and `INT64_MIN / -1` (signed-overflow UB, and x86
+  hardware traps on it — return the two's-complement wrap `-fwrapv` would give,
+  which the width `Convert` then narrows).
+- **Ruby backend** — `Integer#/` floors, so `sir_tdiv`/`sir_tmod` recover
+  truncation exactly: `Integer#remainder` is already C's `%` (dividend sign), and
+  `(a - a.remainder(b)) / b` is an exact multiple of `b`, so flooring it yields
+  the truncated quotient.
+
+Both agree with `clang -fwrapv` across all four sign combinations.  `INT_MIN /
+-1` is deliberately *not* a conformance case — it is UB and the reference program
+traps — but the backends stay defined so they never crash on it.
 
 ## Pipeline
 

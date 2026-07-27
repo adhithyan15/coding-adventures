@@ -306,6 +306,34 @@ int64_t _sir_ifloordiv(int64_t a, int64_t b) {
     return q;
 }
 
+/* C truncating division / remainder (the SIR27 `tdiv`/`tmod` builtins).  C's
+ * native int64 `/` and `%` already truncate toward zero and give a remainder
+ * with the sign of the dividend, so these are thin wrappers.  Two guards keep
+ * them UB-free: division by zero (UB in C — fail loudly) and INT64_MIN / -1
+ * (signed-overflow UB — return the two's-complement wrap that `-fwrapv` gives,
+ * so it agrees with the reference and the width `Convert` then narrows it). */
+SirValue _sir_itdiv(SirValue a, SirValue b) {
+    if (b.as.i == 0) { fprintf(stderr, "sir: divided by 0\n"); exit(1); }
+    if (a.as.i == INT64_MIN && b.as.i == -1) return _sir_int(INT64_MIN);
+    return _sir_int(a.as.i / b.as.i);
+}
+SirValue _sir_itmod(SirValue a, SirValue b) {
+    if (b.as.i == 0) { fprintf(stderr, "sir: divided by 0\n"); exit(1); }
+    if (a.as.i == INT64_MIN && b.as.i == -1) return _sir_int(0);
+    return _sir_int(a.as.i % b.as.i);
+}
+/* Unsigned truncating division / remainder.  A uint64_t whose top bit is set is
+ * a negative int64, so signed division would be wrong — do it over uint64.  No
+ * INT64_MIN/-1 guard is needed: unsigned division never overflows or traps. */
+SirValue _sir_utdiv(SirValue a, SirValue b) {
+    if (b.as.i == 0) { fprintf(stderr, "sir: divided by 0\n"); exit(1); }
+    return _sir_int((int64_t)((uint64_t)a.as.i / (uint64_t)b.as.i));
+}
+SirValue _sir_utmod(SirValue a, SirValue b) {
+    if (b.as.i == 0) { fprintf(stderr, "sir: divided by 0\n"); exit(1); }
+    return _sir_int((int64_t)((uint64_t)a.as.i % (uint64_t)b.as.i));
+}
+
 SirValue _sir_divide_v(SirValue *xs, int n) {
     int i;
     if (n <= 0) return _sir_int(1);
@@ -966,6 +994,10 @@ SirValue _sir_builtin_dispatch(SirValue *caps, SirValue *args, int argc) {
     if (strcmp(name, "<<") == 0)       return _sir_shl(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, ">>") == 0)       return _sir_shr(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "u>>") == 0)      return _sir_lshr(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, "tdiv") == 0)     return _sir_itdiv(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, "tmod") == 0)     return _sir_itmod(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, "utdiv") == 0)    return _sir_utdiv(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, "utmod") == 0)    return _sir_utmod(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "cons") == 0)     return _sir_cons(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "car") == 0)      return _sir_car(_sir_arg(args, argc, 0));
     if (strcmp(name, "cdr") == 0)      return _sir_cdr(_sir_arg(args, argc, 0));

@@ -1342,10 +1342,33 @@ impl Lowerer {
         let re = convert_to(re, rp, c);
         // `+ - *` and the bitwise operators `& | ^` all take the usual
         // arithmetic conversions and are performed at the common type.  Division
-        // and remainder (`/ %`) still need the truncate-vs-floor split (C
-        // truncates toward zero; SIR/Ruby floor), so they stay deferred.
+        // and remainder use the *truncating* builtins (see below).
         let sir_op = match op {
             "+" | "-" | "*" | "&" | "|" | "^" => op,
+            // C division/remainder **truncate toward zero** (`-7 / 2 == -3`,
+            // `-7 % 2 == -1`), whereas SIR/Ruby `/`/`%` and the C backend's
+            // `_sir_ifloordiv` **floor** (`-7 / 2 == -4`).  So they lower to
+            // dedicated truncating builtins, distinct from the floor ones.
+            //
+            // Signedness matters for the same reason it does for `>>`: the
+            // backends store values in a signed int64, so an unsigned operand
+            // ≥ 2^63 is a negative int64 and a signed division would be wrong.
+            // Unsigned `/`/`%` therefore route to `utdiv`/`utmod` (which the C
+            // backend does over uint64).
+            "/" => {
+                if c.signed {
+                    "tdiv"
+                } else {
+                    "utdiv"
+                }
+            }
+            "%" => {
+                if c.signed {
+                    "tmod"
+                } else {
+                    "utmod"
+                }
+            }
             other => {
                 return Err(CLowerError {
                     message: format!("binary operator `{other}` not yet supported"),

@@ -1538,6 +1538,11 @@ fn fixed_helper(name: &str) -> Option<(&'static str, usize)> {
         "<<" => ("_sir_shl", 2),
         ">>" => ("_sir_shr", 2),
         "u>>" => ("_sir_lshr", 2),
+        // Milestone 6 truncating division / remainder (signed + unsigned).
+        "tdiv" => ("_sir_itdiv", 2),
+        "tmod" => ("_sir_itmod", 2),
+        "utdiv" => ("_sir_utdiv", 2),
+        "utmod" => ("_sir_utmod", 2),
         "cons" => ("_sir_cons", 2),
         "car" => ("_sir_car", 1),
         "cdr" => ("_sir_cdr", 1),

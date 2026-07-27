@@ -101,6 +101,14 @@ def sir_i128(v)
   m >= (1 << 127) ? m - (1 << 128) : m
 end
 
+# C truncating division / remainder (SIR27 `tdiv`/`tmod`).  Ruby's Integer#/ and
+# #% FLOOR (toward -inf), but C TRUNCATES toward zero, so `-7 / 2` must be -3 not
+# -4.  Integer#remainder already gives C's remainder (sign of the dividend), and
+# `(a - a.remainder(b))` is an exact multiple of b, so flooring it recovers the
+# truncated quotient.  Division by zero raises (as in C it is undefined).
+def sir_tdiv(a, b) = (a - a.remainder(b)) / b
+def sir_tmod(a, b) = a.remainder(b)
+
 # The key is normalised with to_s so a name that arrives as a Symbol (how the
 # _init function's global_set passes it) and the same name as a String (how a
 # VarRef Global reads it) hit the same entry.

@@ -2,6 +2,31 @@
 
 ## Unreleased
 
+### Milestone 6 — division & modulo (`/ %`, truncating)
+
+- C `/` **truncates toward zero** and `%` takes the dividend's sign (`-7/2 = -3`,
+  `-7%2 = -1`), unlike SIR/Ruby `/`/`%` and the C backend's `_sir_ifloordiv`,
+  which floor.  So they lower to dedicated `tdiv`/`tmod` builtins, never the
+  flooring ones.
+- **C backend** — `_sir_itdiv`/`_sir_itmod`: C's native `int64_t /`/`%` already
+  truncate, so these are thin wrappers, guarded against division by zero and
+  `INT64_MIN / -1` (returns the two's-complement wrap, which the width `Convert`
+  narrows — x86 hardware traps on it otherwise).  As with `>>`, an unsigned
+  common type routes to `utdiv`/`utmod` (`_sir_utdiv`/`_sir_utmod`, done over
+  `uint64_t`), because a `uint64_t` ≥ 2^63 is a negative int64 on which a signed
+  division would be wrong.
+- **Ruby backend** — `sir_tdiv`/`sir_tmod`: `Integer#remainder` is already C's
+  `%`, and `(a - a.remainder(b)) / b` recovers the truncated quotient exactly.
+- Both backends' builtin allowlists (`SUPPORTED_BUILTINS` / `fixed_helper` +
+  dispatch) extended with `tdiv`/`tmod`.
+- Corpus grows with all four sign combinations, an unsigned division, and a real
+  Euclid `gcd` (`%` in a loop) — byte-identical across reference `clang -fwrapv`,
+  emitted Ruby, and emitted C (and clang+gcc+MSVC).  `INT_MIN / -1` is UB (the
+  reference traps) so it is not a conformance case, but a unit test confirms the
+  emitted C is guarded and does not crash.
+- With this, **every C integer operator is implemented** — arithmetic, bitwise,
+  shifts, comparisons, logical, and now division/modulo.
+
 ### Milestone 5 — bitwise `& | ^ ~` and shifts `<< >>`
 
 - `& | ^` and unary `~` take the usual arithmetic conversions and wrap the
