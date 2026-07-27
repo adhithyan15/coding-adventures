@@ -8,6 +8,39 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.46.0: INSPECT TALLYING with multiple FOR items (one counter)
+
+`INSPECT source TALLYING counter FOR ALL a ALL b [ALL d …]` — TWO OR MORE `FOR ALL` tally
+items sharing ONE counter — now compiles, byte-identical to the
+`coding-adventures-cobol-runtime` 0.50.0 oracle. Previously any multi-item TALLYING was
+rejected at read time ("several FOR phrases is a later rung").
+
+Semantics (ISO priority-list, the count-side analogue of multi-REPLACING): ONE
+left-to-right pass over the source. At each position the delimiters are tried IN WRITTEN
+ORDER and the FIRST that matches increments the shared count by 1, then the scan advances.
+The per-position first-match rule is what makes DUPLICATE delimiters NOT double-count:
+`FOR ALL "a" ALL "a"` over `"aa"` adds 2 (each `a` counted once by the first item), not 4.
+Net, the count is the number of source positions whose char equals SOME delimiter, each
+counted once, ADDED to the counter (INSPECT adds; it does not clear it first).
+
+Lowering: unlike the REPLACING emitter (which rebuilds a fixed-width string and so unrolls
+`0..width` at compile time), the tally builds no string, so `emit_inspect_tally_multi`
+emits a genuine RUNTIME `top:/end:` loop over `len = str_len(S)` — mirroring the
+single-item `emit_inspect_tallying` loop shape. At each position it reads `S[j]` once and
+walks an ordered `cmp_eq` chain (one link per delimiter): on the FIRST match it bumps
+`cnt` and jumps past the rest to the continue label (so a position is counted at most
+once); no match falls through with no bump. Then `counter := counter + cnt` folds via the
+same `store_scaled` (silent high-order truncation on overflow) the single-item tally uses.
+A new `inspect_tally_multi` CST reader counts the same `tally_item` children the oracle
+counts, so the two engines' accept/reject sets are co-total.
+
+Scope bound (this rung): the multi-item path supports ONLY `ALL` items, each a single-char
+delimiter, with NO `{BEFORE|AFTER}` region and NO `LEADING`/`CHARACTERS`, under EXACTLY ONE
+counter. A multi-item list carrying any of those, SEVERAL counters (more than one
+`tally_for`), and the combined `TALLYING … REPLACING` form with several tally items remain
+later rungs — rejected with identical messages on both engines. A single tally item keeps
+the full single-item path (LEADING, region).
+
 ### Added — v0.45.0: INSPECT REPLACING with multiple replace items
 
 `INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — TWO OR MORE replace

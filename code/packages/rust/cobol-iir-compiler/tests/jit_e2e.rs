@@ -3830,6 +3830,233 @@ fn inspect_combined_tallying_with_multi_replacing_is_a_later_rung() {
     );
 }
 
+// INSPECT … TALLYING counter FOR ALL a ALL b [ALL d …] — TWO OR MORE `FOR ALL`
+// items under ONE counter. One left-to-right pass with FIRST-MATCH-PER-POSITION into
+// the shared counter, so a position is counted at most once even when several (or
+// duplicate) delimiters would match it — duplicates never double-count. Each case
+// pins the exact counter and `assert_matches_oracle` independently re-checks JIT ==
+// tree-walk oracle.
+
+#[test]
+fn inspect_tally_multi_two_delims() {
+    // "abcab" counting ALL "a" ALL "b" into one counter: a,b,_,a,b → 4 (c ignored).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"abcab\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"a\" ALL \"b\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "004\n");
+}
+
+#[test]
+fn inspect_tally_multi_three_delims() {
+    // Three delimiters over "abcabc": every position matches one of a/b/c → 6.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"abcabc\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\"",
+            "    ALL \"b\" ALL \"c\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "006\n");
+}
+
+#[test]
+fn inspect_tally_multi_duplicate_delim_counts_each_once() {
+    // THE key correctness case. `FOR ALL "a" ALL "a"` over "aa" adds 2, NOT 4: each
+    // 'a' position is counted ONCE by the first item — the per-position break means
+    // the second (duplicate) item never fires there. A naive "sum of independent
+    // per-delimiter counts" would give 4; this pins the single-pass first-match rule.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(2) VALUE \"aa\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"a\" ALL \"a\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "02\n");
+}
+
+#[test]
+fn inspect_tally_multi_disjoint_delims() {
+    // Disjoint delimiters over "a1b2a3": only the a's and b's match → 3, the digits
+    // are ignored, and both delimiters fold into the SAME counter.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"a1b2a3\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"a\" ALL \"b\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "03\n");
+}
+
+#[test]
+fn inspect_tally_multi_char_matched_by_no_delim() {
+    // 'Q' matches neither delimiter → it is skipped among counted neighbours: "aQbQa"
+    // counts a,b,a = 3.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aQbQa\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"a\" ALL \"b\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "03\n");
+}
+
+#[test]
+fn inspect_tally_multi_source_all_matching() {
+    // Every character of "aabb" matches one of the two delimiters → 4.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"aabb\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"a\" ALL \"b\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn inspect_tally_single_item_still_works() {
+    // Regression: exactly ONE `FOR` item keeps the single-item path unchanged (the
+    // multi dispatch fires only at >= 2 items). "ABABA" has three A's → 3.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"A\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "003\n");
+}
+
+#[test]
+fn inspect_tally_multi_pic_x1_delimiters() {
+    // The delimiters in a multi list may be PIC X(1) items (their single stored
+    // character), read at run time: ALL DL1 ALL DL2 over "abcab" counts a,b,_,a,b = 4.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(5) VALUE \"abcab\".",
+            "01  DL1 PIC X(1) VALUE \"a\".",
+            "01  DL2 PIC X(1) VALUE \"b\".",
+            "01  C   PIC 9(2) VALUE 0.",
+        ],
+        &["INSPECT S TALLYING C FOR ALL DL1 ALL DL2.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn inspect_tally_multi_counter_overflow_truncates() {
+    // 12 matches (six a's + six b's) added into a PIC 9(1) counter overflows: COBOL's
+    // silent high-order truncation keeps the low digit → 12 mod 10 = 2.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(12) VALUE \"aaaaaabbbbbb\".", "01  C  PIC 9(1) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"a\" ALL \"b\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "2\n");
+}
+
+#[test]
+fn inspect_tally_multi_adds_to_a_nonzero_counter() {
+    // C starts at 5; "MISSISSIPPI" has four S's and two P's → six matched positions →
+    // C = 5 + 6 = 11 (proves ADD into the shared counter, not a fresh assignment).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(11) VALUE \"MISSISSIPPI\".", "01  C  PIC 9(3) VALUE 5."],
+        &["INSPECT S TALLYING C FOR ALL \"S\" ALL \"P\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "011\n");
+}
+
+#[test]
+fn inspect_tally_multi_with_leading_item_is_a_later_rung() {
+    // A LEADING item inside a MULTI-item tally list is deferred — rejected on BOTH
+    // engines with the same message (a LONE `FOR LEADING` is still supported).
+    let src = wrap(
+        &["01  S  PIC X(4) VALUE \"aabb\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\"",
+            "    LEADING \"b\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-item LEADING item");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-item LEADING item"
+    );
+}
+
+#[test]
+fn inspect_tally_multi_with_region_is_a_later_rung() {
+    // A `{BEFORE|AFTER}` region on any item of a MULTI-item tally list is deferred —
+    // both engines reject (a region on a LONE `FOR ALL` is supported).
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"a0b0a\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\"",
+            "    ALL \"0\" BEFORE \"b\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-item region");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-item region"
+    );
+}
+
+#[test]
+fn inspect_tally_multi_with_characters_is_a_later_rung() {
+    // A `CHARACTERS` item inside a MULTI-item tally list is deferred on BOTH engines.
+    let src = wrap(
+        &["01  S  PIC X(4) VALUE \"aabb\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\"",
+            "    CHARACTERS.",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-item CHARACTERS item");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-item CHARACTERS item"
+    );
+}
+
+#[test]
+fn inspect_tally_several_counters_is_a_later_rung() {
+    // TWO counters (`C FOR … D FOR …`) — several `tally_for` groups — stays a later
+    // rung, rejected unchanged on BOTH engines. The multi-item relaxation is confined
+    // to a SINGLE counter carrying several `FOR` items; it does not enable multiple
+    // counters.
+    let src = wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"abcab\".",
+            "01  C  PIC 9(3) VALUE 0.",
+            "01  D  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\"",
+            "    D FOR ALL \"b\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject several counters");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject several counters"
+    );
+}
+
+#[test]
+fn inspect_combined_multi_tallying_with_replacing_is_a_later_rung() {
+    // The COMBINED `TALLYING … REPLACING` form with SEVERAL tally items stays rejected
+    // exactly as today — the multi-item tally relaxation does not leak into the
+    // combined path.
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"abcab\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\" ALL \"b\"",
+            "    REPLACING ALL \"a\" BY \"x\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject combined + multi-item TALLYING");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject combined + multi-item TALLYING"
+    );
+}
+
 // INSPECT … TALLYING … REPLACING with a per-half `{BEFORE|AFTER}` region — the
 // combined form now accepts an INDEPENDENT single-char region on EACH half. Because
 // the tally does not mutate the source, BOTH windows (the count's and the
