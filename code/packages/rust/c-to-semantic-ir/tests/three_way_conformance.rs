@@ -472,6 +472,78 @@ fn corpus() -> Vec<Case> {
                    int main(void) { uint64_t x = 1; uint64_t y = x << 63; \
                    printf(\"%llu\\n\", (unsigned long long)(y >> 32)); return 0; }",
         },
+        // ── milestone 6: division & modulo (truncate toward zero) ────────────
+        // All four sign combinations — the whole point is that `/` truncates
+        // (not floors) and `%` takes the sign of the dividend.
+        Case {
+            label: "div/mod + + : 7/2 → 3",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int d(int a, int b) { return a / b; }\n\
+                   int main(void) { printf(\"%d\\n\", d(7, 2)); return 0; }",
+        },
+        Case {
+            label: "div - + truncates toward zero: -7/2 → -3 (not -4)",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int d(int a, int b) { return a / b; }\n\
+                   int main(void) { printf(\"%d\\n\", d(-7, 2)); return 0; }",
+        },
+        Case {
+            label: "div + - : 7/-2 → -3",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int d(int a, int b) { return a / b; }\n\
+                   int main(void) { printf(\"%d\\n\", d(7, -2)); return 0; }",
+        },
+        Case {
+            label: "div - - : -7/-2 → 3",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int d(int a, int b) { return a / b; }\n\
+                   int main(void) { printf(\"%d\\n\", d(-7, -2)); return 0; }",
+        },
+        Case {
+            label: "mod takes the dividend's sign: -7%2 → -1 (not 1)",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int m(int a, int b) { return a % b; }\n\
+                   int main(void) { printf(\"%d\\n\", m(-7, 2)); return 0; }",
+        },
+        Case {
+            label: "mod + - : 7%-2 → 1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int m(int a, int b) { return a % b; }\n\
+                   int main(void) { printf(\"%d\\n\", m(7, -2)); return 0; }",
+        },
+        // (`INT_MIN / -1` is deliberately NOT a conformance case: it is signed-
+        // overflow UB, and real x86 hardware *traps* (SIGFPE) on it even under
+        // `-fwrapv`, so the reference program crashes rather than producing a
+        // value.  The backends still guard it — see the emitted-C `_sir_itdiv`
+        // INT64_MIN/-1 guard and the `int_min_div_is_guarded` unit test — so our
+        // own output is defined, we just don't claim to match a trapping oracle.)
+        Case {
+            label: "unsigned division 100u / 7u → 14",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint32_t a = 100; uint32_t b = 7; \
+                   printf(\"%u\\n\", a / b); return 0; }",
+        },
+        Case {
+            // A uint64 with bit 63 set is a negative int64 in the backends'
+            // storage, so a *signed* division would be wrong — unsigned `/` must
+            // route to the uint64 path.
+            label: "uint64 division of a high-bit value (2^63)/2 → 4611686018427387904",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint64_t x = 1; uint64_t hi = x << 63; \
+                   printf(\"%llu\\n\", (unsigned long long)(hi / 2)); return 0; }",
+        },
+        Case {
+            label: "uint64 modulo of a high-bit value (2^63 + 5) % 2 → 1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint64_t x = 1; uint64_t hi = (x << 63) + 5; \
+                   printf(\"%llu\\n\", (unsigned long long)(hi % 2)); return 0; }",
+        },
+        Case {
+            label: "gcd via a % b (Euclid) gcd(48,36) → 12",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int gcd(int a, int b) { while (b != 0) { int t = a % b; a = b; b = t; } return a; }\n\
+                   int main(void) { printf(\"%d\\n\", gcd(48, 36)); return 0; }",
+        },
     ]
 }
 

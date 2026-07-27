@@ -41,6 +41,13 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     "<<",
     ">>",
     "u>>",
+    // Truncating division / remainder (SIR27 milestone 6) — distinct from the
+    // flooring `/`/`%` because C truncates toward zero; `u`-variants for the
+    // unsigned common type.
+    "tdiv",
+    "tmod",
+    "utdiv",
+    "utmod",
     "=",
     "==",
     "!=",
@@ -1209,6 +1216,11 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // value is a masked non-negative Integer, so `>>` is already logical
         // there (the distinction only matters for the C backend's signed int64).
         ">>" | "u>>" => format!("({} >> {})", arg(&a, 0), arg(&a, 1)),
+        // Truncating (C-style) division / remainder via the runtime helpers.
+        // The unsigned variants reuse them: a Ruby unsigned value is a
+        // non-negative Integer, for which truncation and flooring coincide.
+        "tdiv" | "utdiv" => format!("sir_tdiv({}, {})", arg(&a, 0), arg(&a, 1)),
+        "tmod" | "utmod" => format!("sir_tmod({}, {})", arg(&a, 0), arg(&a, 1)),
         "not" => format!("(!sir_truthy({}))", arg(&a, 0)),
         "<" => format!("({} < {})", arg(&a, 0), arg(&a, 1)),
         ">" => format!("({} > {})", arg(&a, 0), arg(&a, 1)),

@@ -20,6 +20,8 @@
 //!   reusing the truthiness bridge (`and`/`or`/`not` builtins).
 //! - **Milestone 5** — bitwise `& | ^ ~` and shifts `<< >>` (shifts take the
 //!   promoted left operand's type, not the usual common type).
+//! - **Milestone 6** — division/modulo `/ %`, which *truncate toward zero* in C
+//!   (unlike SIR/Ruby floor), via dedicated `tdiv`/`tmod` builtins.
 
 mod lower;
 
@@ -232,19 +234,26 @@ mod tests {
     }
 
     #[test]
-    fn division_and_modulo_remain_deferred() {
-        // `/` and `%` need the truncate-vs-floor split (a later milestone), so
-        // they must still be a clean error, not a silently-wrong floor.
-        for src in [
-            "int f(int a, int b) { return a / b; }",
-            "int f(int a, int b) { return a % b; }",
-        ] {
-            let err = compile_source(src, "t").unwrap_err();
-            assert!(
-                err.message.contains("not yet supported"),
-                "wrong error for {src}: {}",
-                err.message
-            );
+    fn division_and_modulo_lower_to_truncating_builtins() {
+        // C `/` truncates toward zero (unlike SIR/Ruby floor), so it must lower
+        // to the dedicated `tdiv`/`tmod` builtins, not the flooring `/`/`%`.
+        let m = lower("int f(int a, int b) { return a / b; }");
+        assert!(semantic_ir::print_module(&m).contains("(builtin-call tdiv"));
+        let m = lower("int f(int a, int b) { return a % b; }");
+        assert!(semantic_ir::print_module(&m).contains("(builtin-call tmod"));
+    }
+
+    #[test]
+    fn int_min_div_is_guarded() {
+        // INT_MIN / -1 is signed-overflow UB (and traps on x86).  Our emitted C
+        // must *not* trap — the `_sir_itdiv` INT64_MIN/-1 guard returns the
+        // two's-complement wrap.  Compile+run the emitted C and confirm it exits
+        // cleanly with the wrapped value rather than a SIGFPE.
+        if let Some(out) = run_c(&lower(
+            "int main(void) { int32_t a = -2147483647 - 1; int32_t b = -1; \
+             printf(\"%d\\n\", a / b); return 0; }",
+        )) {
+            assert_eq!(out, "-2147483648", "guarded INT_MIN/-1");
         }
     }
 
