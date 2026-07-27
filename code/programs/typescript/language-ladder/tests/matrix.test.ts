@@ -41,6 +41,27 @@ describe("buildSyllableMatrix", () => {
   });
 });
 
+describe("special-consonant rows", () => {
+  it("flags the retroflex/alveolar rows and leaves the ordinary ones alone", () => {
+    // Two consonant rows: ordinary "la" and retroflex "ḷa" (LLA).
+    const letters = [
+      base("la"), signed("li"), signed("lu"),
+      base("ḷa"), signed("ḷi"), signed("ḷu"),
+    ];
+    const m = buildSyllableMatrix(letters)!;
+    expect(m.rows.map((r) => r.label)).toEqual(["la", "ḷa"]);
+    // CONTROL: only the special consonant's row is flagged.
+    expect(m.rows.map((r) => r.special)).toEqual([false, true]);
+  });
+
+  it("flags exactly the ḷa / ṟa rows of the real Telugu grid (Telugu has no ṉa)", () => {
+    const telugu = SCRIPTS.find((s) => s.script === "telugu")!;
+    const m = buildSyllableMatrix(telugu.letters as never)!;
+    const flagged = m.rows.filter((r) => r.special).map((r) => r.label);
+    expect(flagged).toEqual(["ḷa", "ṟa"]);
+  });
+});
+
 describe("against the real generated Telugu syllabary", () => {
   const telugu = SCRIPTS.find((s) => s.script === "telugu")!;
 

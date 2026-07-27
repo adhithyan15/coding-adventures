@@ -476,8 +476,11 @@ function renderMatrix(letters: Letter[]): HTMLElement | null {
   const tbody = el("tbody", "");
   m.rows.forEach((row) => {
     const tr = el("tr", "");
-    const rh = el("th", "matrix__consonant");
-    rh.textContent = row.label;
+    const rh = el("th", "matrix__consonant" + (row.special ? " matrix__consonant--special" : ""));
+    // Mark the retroflex/alveolar rows (ḷ/ṟ/ṉ) so the confusable ones stand out
+    // in the full grid, the same rows the tiles flag as special consonants.
+    rh.textContent = row.special ? `★ ${row.label}` : row.label;
+    if (row.special) rh.title = "Special consonant — tell it apart from the ordinary letter";
     tr.appendChild(rh);
     row.cells.forEach((cell) => {
       const td = el("td", "matrix__cell" + (cell.index === currentLetter ? " matrix__cell--active" : ""));
