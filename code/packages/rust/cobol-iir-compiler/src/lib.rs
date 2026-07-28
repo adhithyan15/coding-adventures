@@ -1255,18 +1255,33 @@ impl<'a> Compiler<'a> {
         reg
     }
 
-    /// `STRING s… DELIMITED BY SIZE INTO t` — concatenate the sending fields
-    /// (each taken in full) with a `str_concat` chain, then overlay the result
-    /// onto the receiver from the left. COBOL's STRING writes only what it
-    /// produced and leaves the rest of `t` UNCHANGED (no space-fill, unlike
-    /// `MOVE`), truncating at `t`'s width. Every source and the receiver have a
-    /// compile-time-known length, so the overlay is a fixed `str_slice`/`str_concat`
-    /// sequence — and byte-identical to the `cobol-runtime` oracle's `exec_string`:
+    /// `STRING s… DELIMITED BY {SIZE | delim} INTO t` — concatenate the sending
+    /// fields with a `str_concat` chain, then overlay the result onto the receiver
+    /// from the left. COBOL's STRING writes only what it produced and leaves the
+    /// rest of `t` UNCHANGED (no space-fill, unlike `MOVE`), truncating at `t`'s
+    /// width. The overlay is byte-identical to the `cobol-runtime` oracle's
+    /// `exec_string`.
+    ///
+    /// **`DELIMITED BY SIZE` (`delim = None`).** Every field is taken in full, and
+    /// each source and the receiver have a compile-time-known length, so BOTH the
+    /// concatenation and the overlay are fixed `str_slice`/`str_concat` sequences:
     ///
     ///   * result longer than `t`  →  `t = str_slice(concat, 0, width)` (truncate);
     ///   * result shorter than `t` →  `t = str_concat(concat, str_slice(t, len, width))`
     ///     — the head is the whole concatenation, the preserved tail is the
     ///     receiver's old `[len, width)` bytes.
+    ///
+    /// **`DELIMITED BY delim` (`delim = Some`).** Each field contributes only its
+    /// PREFIX up to the first delimiter char — a DATA-dependent boundary — so we
+    /// emit a genuine per-field scan loop (the same shape UNSTRING uses) and the
+    /// running length becomes a RUNTIME value. The overlay therefore also runs at
+    /// run time: `clen = str_len(concat); take = min(clen, W); t = concat[0,take] ++
+    /// t[take,W]` — the preserved tail `t[take,W]` gives STRING's no-space-fill
+    /// rule exactly as the compile-time branch does. The delimiter is reduced by
+    /// the SAME `single_delim_code` UNSTRING uses, and must be ASCII: the scan
+    /// compares BYTES while the oracle scans CHARS, so a non-ASCII delimiter (and a
+    /// non-ASCII string-literal sending field under an active delimiter) is a clean
+    /// later rung on both engines.
     fn emit_string(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
         // Reject the later-rung options the grammar accepts (so the message is a
         // clean Unsupported, not a parse error).
@@ -1281,40 +1296,40 @@ impl<'a> Compiler<'a> {
                 "STRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung".into(),
             ));
         }
-        let delim = child_node(verb, "string_delim")
+        let delim_node = child_node(verb, "string_delim")
             .ok_or_else(|| CompileError::Malformed("STRING without DELIMITED BY".into()))?;
-        let is_size = child_tokens(delim).iter().any(|(k, v)| k == "KEYWORD" && v == "SIZE");
-        if !is_size {
-            return Err(CompileError::Unsupported(
-                "STRING … DELIMITED BY <identifier/literal> (only DELIMITED BY SIZE) is a later rung"
-                    .into(),
-            ));
-        }
-        // Each sending field as a (register, compile-time length) pair. The
-        // delimiter operand is nested under `string_delim`, so it does not appear
-        // among these `operand` children.
+        let is_size = child_tokens(delim_node).iter().any(|(k, v)| k == "KEYWORD" && v == "SIZE");
+        // Reduce a real delimiter to a single byte-code register (or `None` for
+        // `DELIMITED BY SIZE`). The delimiter operand is nested UNDER `string_delim`,
+        // so it never collides with the sending-field `operand` children of `verb`.
+        let delim_code: Option<String> = if is_size {
+            None
+        } else {
+            let dop = child_node(delim_node, "operand")
+                .ok_or_else(|| CompileError::Malformed("STRING DELIMITED BY without a delimiter".into()))?;
+            // A single but NON-ASCII string literal (`","` is ASCII, `"é"` is one
+            // char but two bytes) is a clean later rung with the SAME message the
+            // oracle emits — checked before `single_delim_code`, whose byte-length
+            // test would otherwise mislabel it as "multi-character". A multi-char
+            // literal (ASCII or not) still reaches `single_delim_code` and is
+            // rejected as multi-character, matching the oracle's char-count test.
+            if let Operandy::Literal(Src::Str(s)) = read_operand(dop)? {
+                if s.chars().count() == 1 && !s.is_ascii() {
+                    return Err(CompileError::Unsupported(
+                        "STRING with a non-ASCII delimiter is a later rung".into(),
+                    ));
+                }
+            }
+            Some(self.single_delim_code(dop, "STRING")?)
+        };
+        // The sending fields are the DIRECT `operand` children (the delimiter
+        // operand is a grandchild under `string_delim`, so it does not collide).
         let sources = child_nodes(verb, "operand");
         if sources.is_empty() {
             return Err(CompileError::Malformed("STRING without a sending field".into()));
         }
-        let mut pieces: Vec<(String, usize)> = Vec::with_capacity(sources.len());
-        for op in sources {
-            pieces.push(self.string_source(op)?);
-        }
-        // Concatenate left-to-right; the total length is known at compile time.
-        let (mut concat, mut total) = pieces[0].clone();
-        for (reg, len) in &pieces[1..] {
-            let out = self.fresh("_scat");
-            self.emit(
-                "str_concat",
-                Some(&out),
-                vec![Operand::Var(concat), Operand::Var(reg.clone())],
-                "str",
-            );
-            concat = out;
-            total += len;
-        }
-        // Resolve the receiver — an alphanumeric item this rung.
+
+        // Resolve the receiver — an alphanumeric item this rung — up front (shared).
         let target = first_token(verb, "NAME")
             .ok_or_else(|| CompileError::Malformed("STRING without an INTO receiver".into()))?;
         let didx = self.item_index(&target)?;
@@ -1327,37 +1342,181 @@ impl<'a> Compiler<'a> {
             }
         };
         let recv = self.items[didx].reg.clone();
-        if total >= width {
-            // Truncate at the receiver width; the whole receiver is overwritten.
-            let start = self.str_index(0);
-            let end = self.str_index(width as i64);
-            self.emit(
-                "str_slice",
-                Some(&recv),
-                vec![Operand::Var(concat), Operand::Var(start), Operand::Var(end)],
-                "str",
-            );
-        } else {
-            // Preserve the receiver's tail `[total, width)`: the head is the entire
-            // concatenation (its length is exactly `total`), then re-append the old
-            // tail read from the receiver's current register.
-            let start = self.str_index(total as i64);
-            let end = self.str_index(width as i64);
-            let tail = self.fresh("_stail");
-            self.emit(
-                "str_slice",
-                Some(&tail),
-                vec![Operand::Var(recv.clone()), Operand::Var(start), Operand::Var(end)],
-                "str",
-            );
-            self.emit(
-                "str_concat",
-                Some(&recv),
-                vec![Operand::Var(concat), Operand::Var(tail)],
-                "str",
-            );
+
+        match &delim_code {
+            // `DELIMITED BY SIZE` — every boundary is compile-time-known.
+            None => {
+                let mut pieces: Vec<(String, usize)> = Vec::with_capacity(sources.len());
+                for op in sources {
+                    pieces.push(self.string_source(op)?);
+                }
+                // Concatenate left-to-right; the total length is known at compile time.
+                let (mut concat, mut total) = pieces[0].clone();
+                for (reg, len) in &pieces[1..] {
+                    let out = self.fresh("_scat");
+                    self.emit(
+                        "str_concat",
+                        Some(&out),
+                        vec![Operand::Var(concat), Operand::Var(reg.clone())],
+                        "str",
+                    );
+                    concat = out;
+                    total += len;
+                }
+                if total >= width {
+                    // Truncate at the receiver width; the whole receiver is overwritten.
+                    let start = self.str_index(0);
+                    let end = self.str_index(width as i64);
+                    self.emit(
+                        "str_slice",
+                        Some(&recv),
+                        vec![Operand::Var(concat), Operand::Var(start), Operand::Var(end)],
+                        "str",
+                    );
+                } else {
+                    // Preserve the receiver's tail `[total, width)`: the head is the
+                    // entire concatenation (length exactly `total`), then re-append
+                    // the old tail read from the receiver's current register.
+                    let start = self.str_index(total as i64);
+                    let end = self.str_index(width as i64);
+                    let tail = self.fresh("_stail");
+                    self.emit(
+                        "str_slice",
+                        Some(&tail),
+                        vec![Operand::Var(recv.clone()), Operand::Var(start), Operand::Var(end)],
+                        "str",
+                    );
+                    self.emit(
+                        "str_concat",
+                        Some(&recv),
+                        vec![Operand::Var(concat), Operand::Var(tail)],
+                        "str",
+                    );
+                }
+            }
+            // `DELIMITED BY delim` — each field's prefix is a run-time value.
+            Some(d_reg) => {
+                let mut concat: Option<String> = None;
+                for op in sources {
+                    // A non-ASCII string-LITERAL field under an active delimiter is a
+                    // later rung (its prefix boundary differs byte-vs-char); guard it
+                    // BEFORE lowering. A non-ASCII IDENTIFIER field is the pre-existing
+                    // byte-vs-char chip and is not guarded here.
+                    if let Operandy::Literal(Src::Str(s)) = read_operand(op)? {
+                        if !s.is_ascii() {
+                            return Err(CompileError::Unsupported(
+                                "STRING with a non-ASCII sending field under DELIMITED BY is a later rung"
+                                    .into(),
+                            ));
+                        }
+                    }
+                    // Lower the field to a string register (its compile-time length is
+                    // irrelevant now — the prefix boundary is found at run time).
+                    let (field_reg, _len) = self.string_source(op)?;
+                    let prefix = self.emit_prefix_before_delim(&field_reg, d_reg);
+                    concat = Some(match concat {
+                        None => prefix,
+                        Some(acc) => {
+                            let out = self.fresh("_scat");
+                            self.emit(
+                                "str_concat",
+                                Some(&out),
+                                vec![Operand::Var(acc), Operand::Var(prefix)],
+                                "str",
+                            );
+                            out
+                        }
+                    });
+                }
+                // `sources` is non-empty, so `concat` is always `Some` here.
+                let concat = concat.expect("at least one sending field");
+                // Run-time overlay: take = min(str_len(concat), W); the receiver
+                // becomes concat[0,take] ++ recv[take,W] (the preserved tail).
+                let clen = self.fresh("_sclen");
+                self.emit("str_len", Some(&clen), vec![Operand::Var(concat.clone())], "i64");
+                let wconst = self.fresh("_scw");
+                self.emit("const", Some(&wconst), vec![Operand::Int(width as i64)], "i64");
+                let take = self.fresh("_sctk");
+                self.emit("mov", Some(&take), vec![Operand::Var(clen.clone())], "i64");
+                let gt = self.fresh("_scgt");
+                self.emit("cmp_gt", Some(&gt), vec![Operand::Var(clen), Operand::Var(wconst.clone())], "i64");
+                let noclip = self.fresh("sc_noclip");
+                self.emit("jmp_if_false", None, vec![Operand::Var(gt), Operand::Var(noclip.clone())], "void");
+                self.emit("mov", Some(&take), vec![Operand::Var(wconst.clone())], "i64");
+                self.emit("label", None, vec![Operand::Var(noclip)], "void");
+                // head = concat[0, take].
+                let z0 = self.str_index(0);
+                let head = self.fresh("_schd");
+                self.emit(
+                    "str_slice",
+                    Some(&head),
+                    vec![Operand::Var(concat), Operand::Var(z0), Operand::Var(take.clone())],
+                    "str",
+                );
+                // tail = recv[take, W] — the receiver bytes STRING did not overwrite.
+                let tail = self.fresh("_sctail");
+                self.emit(
+                    "str_slice",
+                    Some(&tail),
+                    vec![Operand::Var(recv.clone()), Operand::Var(take), Operand::Var(wconst)],
+                    "str",
+                );
+                self.emit(
+                    "str_concat",
+                    Some(&recv),
+                    vec![Operand::Var(head), Operand::Var(tail)],
+                    "str",
+                );
+            }
         }
         Ok(())
+    }
+
+    /// Emit the run-time scan that returns a fresh `str` register holding the
+    /// prefix of `field_reg` up to (but not including) the first byte equal to the
+    /// delimiter code `d_reg` — the per-field contribution of `STRING … DELIMITED
+    /// BY delim`. A field with no delimiter yields its whole image; a field
+    /// starting with the delimiter yields the empty string. The loop is the same
+    /// shape UNSTRING's field scan uses:
+    ///
+    /// ```text
+    ///   flen = str_len(F);  j = 0
+    /// top:  if j >= flen        jmp done      # ran off the end, no delimiter
+    ///       if F[j] == d_reg    jmp done      # delimiter found at j
+    ///       j = j + 1;  jmp top
+    /// done:
+    ///   prefix = str_slice(F, 0, j)
+    /// ```
+    fn emit_prefix_before_delim(&mut self, field_reg: &str, d_reg: &str) -> String {
+        let flen = self.fresh("_spfl");
+        self.emit("str_len", Some(&flen), vec![Operand::Var(field_reg.to_string())], "i64");
+        let j = self.fresh("_spj");
+        self.emit("const", Some(&j), vec![Operand::Int(0)], "i64");
+        let top = self.fresh("sp_top");
+        let done = self.fresh("sp_done");
+        self.emit("label", None, vec![Operand::Var(top.clone())], "void");
+        let ge = self.fresh("_spge");
+        self.emit("cmp_ge", Some(&ge), vec![Operand::Var(j.clone()), Operand::Var(flen)], "i64");
+        self.emit("jmp_if_true", None, vec![Operand::Var(ge), Operand::Var(done.clone())], "void");
+        let c = self.fresh("_spc");
+        self.emit("str_index", Some(&c), vec![Operand::Var(field_reg.to_string()), Operand::Var(j.clone())], "i64");
+        let eq = self.fresh("_speq");
+        self.emit("cmp_eq", Some(&eq), vec![Operand::Var(c), Operand::Var(d_reg.to_string())], "i64");
+        self.emit("jmp_if_true", None, vec![Operand::Var(eq), Operand::Var(done.clone())], "void");
+        let one = self.fresh("_sp1");
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        self.emit("add", Some(&j), vec![Operand::Var(j.clone()), Operand::Var(one)], "i64");
+        self.emit("jmp", None, vec![Operand::Var(top)], "void");
+        self.emit("label", None, vec![Operand::Var(done)], "void");
+        let z0 = self.str_index(0);
+        let prefix = self.fresh("_sppfx");
+        self.emit(
+            "str_slice",
+            Some(&prefix),
+            vec![Operand::Var(field_reg.to_string()), Operand::Var(z0), Operand::Var(j)],
+            "str",
+        );
+        prefix
     }
 
     /// A `STRING` sending field lowered to a `(register, length)` pair. An
@@ -6948,13 +7107,34 @@ mod tests {
     }
 
     #[test]
-    fn string_delimited_by_real_delimiter_is_a_later_rung() {
-        // Only DELIMITED BY SIZE this rung; a real (literal) delimiter needs a
-        // run-time scan — a clean Unsupported, not a parse error.
+    fn string_delimited_by_ascii_delimiter_emits_a_scan_loop() {
+        // A real single-char ASCII delimiter is now supported: each field is
+        // truncated at its first delimiter char by a run-time scan (str_index +
+        // cmp_eq), then the prefixes are concatenated and overlaid.
+        let module = compile_source(
+            &wrap(
+                &["01  A  PIC X(5) VALUE \"AB-CD\".", "01  T  PIC X(6) VALUE SPACES."],
+                &["STRING A DELIMITED BY \"-\" INTO T.", "DISPLAY T.", "STOP RUN."],
+            ),
+            "str_delim",
+        )
+        .unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"str_index".to_string()), "STRING delim scans for the delimiter");
+        assert!(os.contains(&"cmp_eq".to_string()), "STRING delim compares each byte");
+        assert!(os.contains(&"str_slice".to_string()), "STRING delim slices the prefix");
+    }
+
+    #[test]
+    fn string_non_ascii_literal_delimiter_is_a_later_rung() {
+        // A single but NON-ASCII delimiter (`"é"`, one char / two bytes) would make
+        // the byte-based scan diverge from the char-based oracle — a clean
+        // Unsupported on both engines, keeping them co-total.
         let err = compile_source(
             &wrap(
                 &["01  A  PIC X(3) VALUE \"ABC\".", "01  T  PIC X(6) VALUE SPACES."],
-                &["STRING A DELIMITED BY \"-\" INTO T.", "STOP RUN."],
+                &["STRING A DELIMITED BY \"é\" INTO T.", "STOP RUN."],
             ),
             "str_delim",
         )

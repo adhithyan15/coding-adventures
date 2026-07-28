@@ -2699,6 +2699,210 @@ fn string_with_numeric_literal_source() {
 }
 
 // ---------------------------------------------------------------------------
+// STRING … DELIMITED BY a single-char delimiter — each sending field contributes
+// only its PREFIX up to (not including) the first occurrence of the delimiter in
+// that field; the per-field prefixes are concatenated and overlaid EXACTLY as the
+// DELIMITED BY SIZE path does (leftmost min(len, width), no tail space-fill). The
+// delimiter and any string-literal sending field must be ASCII (the compiler's
+// prefix scan is byte-based; the oracle scans by char). Each case pins the
+// compiled JIT output to the oracle byte-for-byte.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn string_delim_truncates_each_field_at_the_first_delimiter() {
+    // Three fields, each cut at its first comma: "ab,cd"→"ab", "ef"→"ef" (no
+    // comma), "gh,ij"→"gh"; concatenation "abefgh" into a 20-wide receiver.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(5) VALUE \"ab,cd\".",
+            "01  B  PIC X(2) VALUE \"ef\".",
+            "01  C  PIC X(5) VALUE \"gh,ij\".",
+            "01  T  PIC X(20) VALUE SPACES.",
+        ],
+        &[
+            "STRING A B C",
+            "    DELIMITED BY \",\" INTO T.",
+            "DISPLAY T.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "abefgh              \n");
+}
+
+#[test]
+fn string_delim_field_without_the_delimiter_is_taken_whole() {
+    // A field that does not contain the delimiter contributes its ENTIRE image.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \"xy\".", "01  T  PIC X(10) VALUE SPACES."],
+        &["STRING A DELIMITED BY \",\" INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "xy        \n");
+}
+
+#[test]
+fn string_delim_field_starting_with_the_delimiter_contributes_nothing() {
+    // A field whose first char IS the delimiter contributes the empty string, so
+    // only the following field's prefix reaches the receiver.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \",xy\".",
+            "01  B  PIC X(2) VALUE \"AB\".",
+            "01  T  PIC X(6) VALUE SPACES.",
+        ],
+        &[
+            "STRING A B",
+            "    DELIMITED BY \",\" INTO T.",
+            "DISPLAY T.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "AB    \n");
+}
+
+#[test]
+fn string_delim_from_a_pic_x1_identifier() {
+    // The delimiter may be a PIC X(1) item (reduced by the same single_delim_code
+    // UNSTRING uses): DL holds "," so "ab,cd" contributes "ab".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  DL PIC X(1) VALUE \",\".",
+            "01  A  PIC X(5) VALUE \"ab,cd\".",
+            "01  T  PIC X(10) VALUE SPACES.",
+        ],
+        &["STRING A DELIMITED BY DL INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ab        \n");
+}
+
+#[test]
+fn string_delim_result_longer_than_receiver_is_truncated() {
+    // The prefix "abcde" (5 chars) overflows a 4-wide receiver → truncated "abcd".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(7) VALUE \"abcde,f\".", "01  T  PIC X(4) VALUE SPACES."],
+        &["STRING A DELIMITED BY \",\" INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "abcd\n");
+}
+
+#[test]
+fn string_delim_result_shorter_than_receiver_preserves_the_tail() {
+    // The prefix "ab" (2 chars) is overlaid onto a 6-wide receiver holding "ZZZZZZ";
+    // STRING does NOT space-fill, so the untouched tail "ZZZZ" survives.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(5) VALUE \"ab,cd\".", "01  T  PIC X(6) VALUE \"ZZZZZZ\"."],
+        &["STRING A DELIMITED BY \",\" INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "abZZZZ\n");
+}
+
+#[test]
+fn string_delim_mixes_fields_with_and_without_the_delimiter() {
+    // "p,q"→"p", "rs"→"rs" (no comma), "t,u"→"t"; concatenation "prst".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"p,q\".",
+            "01  B  PIC X(2) VALUE \"rs\".",
+            "01  C  PIC X(3) VALUE \"t,u\".",
+            "01  T  PIC X(10) VALUE SPACES.",
+        ],
+        &[
+            "STRING A B C",
+            "    DELIMITED BY \",\" INTO T.",
+            "DISPLAY T.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "prst      \n");
+}
+
+#[test]
+fn string_delimited_by_size_still_takes_each_field_whole() {
+    // Regression: with DELIMITED BY SIZE the delimiter char is NOT special — the
+    // comma inside "ab,cd" stays, and each field is taken in full.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(5) VALUE \"ab,cd\".", "01  T  PIC X(10) VALUE SPACES."],
+        &["STRING A DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ab,cd     \n");
+}
+
+#[test]
+fn string_delim_non_ascii_delimiter_is_a_later_rung() {
+    // A single but NON-ASCII delimiter ("é" is one char / two UTF-8 bytes) would
+    // make the byte-based compiler scan diverge from the char-based oracle, so it
+    // is deferred — rejected on BOTH engines to stay co-total.
+    let src = wrap(
+        &["01  A  PIC X(3) VALUE \"abc\".", "01  T  PIC X(6) VALUE SPACES."],
+        &["STRING A DELIMITED BY \"é\" INTO T.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a non-ASCII delimiter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a non-ASCII delimiter"
+    );
+}
+
+#[test]
+fn string_delim_multi_char_delimiter_is_a_later_rung() {
+    // Only a SINGLE-character delimiter this rung; a 2-char delimiter is deferred.
+    let src = wrap(
+        &["01  A  PIC X(3) VALUE \"abc\".", "01  T  PIC X(6) VALUE SPACES."],
+        &["STRING A DELIMITED BY \"ab\" INTO T.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-char delimiter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-char delimiter"
+    );
+}
+
+#[test]
+fn string_delim_non_ascii_literal_sending_field_is_a_later_rung() {
+    // Under an ACTIVE delimiter a field's prefix boundary is byte-vs-char sensitive,
+    // so a non-ASCII string-LITERAL sending field ("café") is deferred on BOTH
+    // engines. (Under DELIMITED BY SIZE such a literal is fine — no boundary scan.)
+    let src = wrap(
+        &["01  T  PIC X(10) VALUE SPACES."],
+        &["STRING \"café\" DELIMITED BY \",\" INTO T.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a non-ASCII literal field under a delimiter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a non-ASCII literal field under a delimiter"
+    );
+}
+
+#[test]
+fn string_delim_with_pointer_is_a_later_rung() {
+    // WITH POINTER over a delimited STRING remains a later rung on both engines.
+    let src = wrap(
+        &[
+            "01  A  PIC X(5) VALUE \"ab,cd\".",
+            "01  T  PIC X(10) VALUE SPACES.",
+            "01  P  PIC 9(2) VALUE 1.",
+        ],
+        &["STRING A DELIMITED BY \",\" INTO T WITH POINTER P.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject WITH POINTER");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject WITH POINTER");
+}
+
+#[test]
+fn string_delim_on_overflow_is_a_later_rung() {
+    // ON OVERFLOW over a delimited STRING remains a later rung on both engines.
+    let src = wrap(
+        &["01  A  PIC X(5) VALUE \"ab,cd\".", "01  T  PIC X(2) VALUE SPACES."],
+        &[
+            "STRING A DELIMITED BY \",\" INTO T",
+            "    ON OVERFLOW DISPLAY \"O\" END-STRING.",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject ON OVERFLOW");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject ON OVERFLOW");
+}
+
+// ---------------------------------------------------------------------------
 // UNSTRING — split one alphanumeric source on a single delimiter into several
 // receivers (the inverse of STRING). Each receiver — INCLUDING the last — takes
 // only the field up to the NEXT delimiter; extra fields are dropped, an empty

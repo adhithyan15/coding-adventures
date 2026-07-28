@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.53.0 — STRING with DELIMITED BY a single-char delimiter
+
+- `STRING a b c DELIMITED BY "," INTO r` — a real single-character delimiter is now accepted
+  in the STRING statement (previously only `DELIMITED BY SIZE` was supported; a real delimiter
+  was rejected at read time: "STRING … DELIMITED BY <identifier/literal> (only DELIMITED BY
+  SIZE) is a later rung"). No grammar change was needed — `string_delim` already parses
+  `SIZE | operand`.
+- Semantics: with `DELIMITED BY delim` each sending field contributes only its PREFIX up to
+  (but NOT including) the FIRST occurrence of the delimiter char in that field's image; a
+  field with no delimiter contributes its whole image, and a field starting with the delimiter
+  contributes the empty string. ONE delimiter applies to all fields. The per-field prefixes
+  are concatenated left-to-right and overlaid onto the receiver EXACTLY as `DELIMITED BY SIZE`
+  does (leftmost `min(len, width)`, no tail space-fill — the ANSI-85 STRING rule). Example:
+  `STRING "ab,cd" "ef" "gh,ij" DELIMITED BY "," INTO R` → "ab"+"ef"+"gh" = "abefgh".
+- `Stmt::String` gained a `delim: Option<Operand>` field (`None` = `DELIMITED BY SIZE`,
+  `Some` = a real delimiter). `exec_string` now takes the delimiter and truncates each field
+  at its first delimiter char; the receiver overlay is unchanged. The `DELIMITED BY SIZE`
+  path is byte-identical to before.
+- The delimiter is reduced by the SAME `single_delim_char` helper UNSTRING/INSPECT use, so a
+  multi-character / numeric / figurative / reference-modified / wider-item delimiter rejects
+  identically on this engine and the compiler.
+- **ASCII guard.** A non-ASCII single-character LITERAL delimiter (e.g. `DELIMITED BY "é"`) is
+  a clean later-rung reject on BOTH engines: the oracle scans by CHARACTER while the compiler
+  lowers the prefix scan to BYTE-based `str_index`/`str_slice`, so they agree only for ASCII.
+  A non-ASCII string-LITERAL sending field WHEN a delimiter is active (e.g.
+  `STRING "café" DELIMITED BY "," …`) is likewise deferred for the same byte-vs-char reason.
+  Under `DELIMITED BY SIZE` no per-char boundary is computed, so sending fields are
+  unrestricted there. (A non-ASCII PIC X(1) delimiter ITEM is not build-time detectable on the
+  compiler, so — as with UNSTRING — it is left as the shared byte-vs-char chip rather than a
+  one-sided reject, keeping the accept/reject sets co-total.)
+- Still deferred (rejected on this engine and the compiler alike): a multi-character delimiter,
+  a non-ASCII literal delimiter, a non-ASCII literal sending field under a delimiter,
+  per-field different delimiters, `WITH POINTER`, `ON OVERFLOW` / `NOT ON OVERFLOW`, and a
+  numeric or group receiver.
+
 ## 0.52.0 — UNSTRING with a literal source
 
 - `UNSTRING "a,b,c" DELIMITED BY "," INTO w1 w2 w3` — an alphanumeric STRING LITERAL is now

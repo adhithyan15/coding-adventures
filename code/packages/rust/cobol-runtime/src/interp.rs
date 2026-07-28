@@ -355,7 +355,9 @@ impl Machine {
             }
             Stmt::SetTrue { cond_name } => self.exec_set_true(cond_name)?,
             Stmt::Evaluate { subject, branches } => return self.exec_evaluate(subject, branches),
-            Stmt::String { sources, target } => self.exec_string(sources, target)?,
+            Stmt::String { sources, target, delim } => {
+                self.exec_string(sources, target, delim.as_ref())?
+            }
             Stmt::Unstring { source, delim, targets } => {
                 self.exec_unstring(source, delim, targets)?
             }
@@ -404,20 +406,85 @@ impl Machine {
         Ok(Flow::Normal)
     }
 
-    /// `STRING s… DELIMITED BY SIZE INTO t` — concatenate every sending field,
-    /// each taken in FULL (`DELIMITED BY SIZE`), then overlay the result onto the
-    /// receiver `t` from the left. COBOL's STRING is unusual: it writes only as
-    /// many characters as it produced and **leaves the rest of `t` unchanged** — no
-    /// space-fill (unlike `MOVE`). So a result longer than `t` is truncated at
-    /// `t`'s width, and a shorter one leaves `t`'s trailing bytes exactly as they
-    /// were. This is the ANSI-85 rule, implemented identically in the
-    /// `cobol-iir-compiler` so the compiled program matches this oracle
-    /// byte-for-byte.
-    fn exec_string(&mut self, sources: &[Operand], target: &str) -> Result<(), RuntimeError> {
-        // Concatenate the sending fields left-to-right.
+    /// `STRING s… DELIMITED BY {SIZE | delim} INTO t` — concatenate every sending
+    /// field, then overlay the result onto the receiver `t` from the left. COBOL's
+    /// STRING is unusual: it writes only as many characters as it produced and
+    /// **leaves the rest of `t` unchanged** — no space-fill (unlike `MOVE`). So a
+    /// result longer than `t` is truncated at `t`'s width, and a shorter one leaves
+    /// `t`'s trailing bytes exactly as they were. This is the ANSI-85 rule,
+    /// implemented identically in the `cobol-iir-compiler` so the compiled program
+    /// matches this oracle byte-for-byte.
+    ///
+    /// The `delim` argument selects how much of each field is taken:
+    ///
+    ///   * `None` (`DELIMITED BY SIZE`) — each field is taken in FULL.
+    ///   * `Some(d)` — each field contributes only the run of characters BEFORE the
+    ///     first `d` in that field (`"ab,cd"` with `d=','` → `"ab"`); a field with
+    ///     no `d` contributes its whole image, and a field starting with `d`
+    ///     contributes `""`. ONE delimiter applies to all fields.
+    ///
+    /// **Why the delimiter and any delimited literal field must be ASCII.** The
+    /// prefix boundary is "up to the first delimiter char". The oracle finds it by
+    /// scanning CHARACTERS; the compiler lowers it to byte-based `str_index` /
+    /// `str_slice`. The two agree only when one char == one byte, i.e. ASCII. So a
+    /// non-ASCII delimiter, and a non-ASCII string-LITERAL sending field WHEN a
+    /// delimiter is active, are clean later rungs rejected identically on BOTH
+    /// engines. (Under `DELIMITED BY SIZE` no per-char boundary is computed, so
+    /// sending fields are unrestricted — the guard is delimiter-only.)
+    fn exec_string(
+        &mut self,
+        sources: &[Operand],
+        target: &str,
+        delim: Option<&Operand>,
+    ) -> Result<(), RuntimeError> {
+        // Resolve the single delimiter character once (it applies to every field).
+        // A multi-char / numeric / figurative / reference-modified / wider-item
+        // delimiter is rejected by the SAME `single_delim_char` UNSTRING uses.
+        //
+        // The non-ASCII guard is scoped to a LITERAL delimiter. A non-ASCII single
+        // char makes the char-based oracle and the byte-based compiler diverge, so
+        // it must be rejected on BOTH engines to stay co-total — but the compiler
+        // can only SEE the delimiter's bytes at build time when it is a literal (a
+        // multi-byte literal like `"é"` fails its byte-length test). A non-ASCII
+        // PIC X(1) delimiter ITEM has no build-time byte on the compiler (its byte
+        // is a run-time `str_index`), so — exactly as UNSTRING does — we do NOT add
+        // a one-sided reject for it; it stays the shared byte-vs-char chip (both
+        // engines accept, and for ASCII sending fields still agree).
+        let delim_ch = match delim {
+            Some(d) => {
+                let ch = self.single_delim_char(d, "STRING")?;
+                if matches!(d, Operand::Lit(Lit::Str(_))) && !ch.is_ascii() {
+                    return Err(RuntimeError::Unsupported(
+                        "STRING with a non-ASCII delimiter is a later rung".into(),
+                    ));
+                }
+                Some(ch)
+            }
+            None => None,
+        };
+        // Concatenate the sending fields left-to-right. With a delimiter each field
+        // is truncated at its first delimiter char; without one it is taken in full.
         let mut concat = String::new();
         for op in sources {
-            concat.push_str(&self.string_source_chars(op)?);
+            // A non-ASCII string-LITERAL field under an active delimiter is a later
+            // rung (its prefix boundary differs byte-vs-char). A non-ASCII IDENTIFIER
+            // field is the pre-existing byte-vs-char chip and is not guarded here.
+            if delim_ch.is_some() {
+                if let Operand::Lit(Lit::Str(s)) = op {
+                    if !s.is_ascii() {
+                        return Err(RuntimeError::Unsupported(
+                            "STRING with a non-ASCII sending field under DELIMITED BY is a later rung"
+                                .into(),
+                        ));
+                    }
+                }
+            }
+            let image = self.string_source_chars(op)?;
+            match delim_ch {
+                // Prefix up to (not including) the first delimiter char.
+                Some(d) => concat.extend(image.chars().take_while(|c| *c != d)),
+                None => concat.push_str(&image),
+            }
         }
         let idx = *self
             .by_name

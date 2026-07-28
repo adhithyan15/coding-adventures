@@ -79,10 +79,13 @@ predicate the compiled `str_slice` enforces, so both engines error identically);
 VARYING id FROM x BY y UNTIL cond]` (out-of-line paragraph or paragraph-range
 invocation — fixed-count, conditional, and counted loops, with a recursion
 guard); `GO TO para` (unconditional transfer, run as a program counter over
-paragraphs, so back-edge loops work); and `STRING s… DELIMITED BY SIZE INTO t`
-(concatenate the sending fields — each taken in full — into the alphanumeric
-receiver, left-justified, truncated at its width, and, per ANSI-85, **without**
-space-filling the untouched tail); and `UNSTRING source DELIMITED BY delim INTO
+paragraphs, so back-edge loops work); and `STRING s… DELIMITED BY {SIZE | delim}
+INTO t` (concatenate the sending fields into the alphanumeric receiver, left-
+justified, truncated at its width, and, per ANSI-85, **without** space-filling the
+untouched tail; `DELIMITED BY SIZE` takes each field in full, while `DELIMITED BY`
+a single-character delimiter takes only each field's prefix up to its first
+occurrence of the delimiter — `STRING "ab,cd" "ef" DELIMITED BY "," INTO t` →
+`"abef"`); and `UNSTRING source DELIMITED BY delim INTO
 r1 [r2 …]` (the inverse — split the alphanumeric source on a single-character
 delimiter into successive receivers; each receiver including the last takes the
 field up to the next delimiter, extra fields are dropped, empty fields become
@@ -166,8 +169,11 @@ is absent — and `AFTER z` translates right of it — NOTHING if `z` is absent;
 positions outside the region keep their original character). Anything not yet
 modelled (the explicit
 `SIGN` clause with `SEPARATE`/`LEADING`, editing pictures, `COMP`,
-`PERFORM … WITH TEST AFTER`/inline, `GO TO … DEPENDING`, `STRING` with a real
-delimiter / `WITH POINTER` / `ON OVERFLOW`, `UNSTRING` with a multi-character
+`PERFORM … WITH TEST AFTER`/inline, `GO TO … DEPENDING`, `STRING` with a
+multi-character or non-ASCII delimiter / a non-ASCII literal sending field under a
+delimiter / per-field different delimiters / `WITH POINTER` / `ON OVERFLOW` (a
+single-character ASCII `DELIMITED BY` delimiter IS supported), `UNSTRING` with a
+multi-character
 delimiter / `WITH POINTER` / `ON OVERFLOW` / a NUMERIC-literal or FIGURATIVE or
 reference-modified source or a NON-ASCII literal source (an ASCII alphanumeric
 string-literal source IS supported),
