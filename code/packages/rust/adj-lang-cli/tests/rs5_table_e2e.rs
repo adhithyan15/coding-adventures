@@ -756,6 +756,45 @@ fn shipped_illuminance_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b16) Shipped table — reference/luminance-conversions.adj resolves via import (a
+//       NEW dimension: luminance → candela per square metre, the EXACT SP 811 B.9
+//       boldface CGS factor stilb), and a non-exact customary unit (`footlambert`) — a
+//       rounded factor with no row — abstains.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_luminance_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_lumin");
+    let src = stdlib().join("reference/luminance-conversions.adj");
+    std::fs::copy(&src, dir.join("luminance-conversions.adj"))
+        .expect("copy shipped luminance-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"luminance-conversions.adj\"\n\
+         ? luminance_to_candela_per_square_metre(stilb, $v)\n\
+         ? luminance_to_candela_per_square_metre(footlambert, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 "Luminance" exact factor resolves, character-for-character from
+    // the table (boldface = exact; scientific notation to plain decimal).
+    assert!(out.contains("\"v\":\"10000\""), "stilb = 10000 cd/m^2: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `footlambert` is a NIST customary row printed as a ROUNDED (non-boldface) factor —
+    // not an exact row here, so the engine abstains rather than committing to a rounded
+    // value.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a non-exact unit abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
