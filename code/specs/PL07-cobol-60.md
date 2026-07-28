@@ -425,11 +425,51 @@ is not build-time detectable on the compiler and — as with `UNSTRING` — is l
 the shared byte-vs-char chip rather than a one-sided reject, keeping the accept/
 reject sets co-total.
 
+**`WITH POINTER p` rung (now implemented).** `STRING s1 s2 … DELIMITED BY {SIZE |
+delim} INTO t WITH POINTER p` — `p` is an **unsigned-integer** item (`PIC 9(n)`,
+`n ≤ 18`) holding the **1-based** character position in the RECEIVER at which the
+first transferred character is placed. No grammar change was needed (the grammar
+already parses `WITH POINTER NAME`); the reader/compiler take the receiver as the
+first NAME (`INTO t` precedes the phrase) and the pointer as the first NAME after
+the `POINTER` keyword. This directly mirrors the `UNSTRING … WITH POINTER` rung. Two
+things change, and the concatenation of the sending fields is UNCHANGED:
+
+- **Overlay offset.** The concatenation is overlaid starting at 0-based index
+  `p − 1` (instead of 0), placing `chars_placed = min(concat_len, size − (p−1))`
+  characters. Receiver positions BEFORE `p−1` and AFTER `(p−1) + chars_placed` keep
+  their prior bytes (STRING overwrites only the run it fills). `p = 1` (start at 0)
+  is exactly the no-pointer overlay — the correctness anchor: the same statement with
+  `p = 1` fills the SAME receiver as the statement WITHOUT the phrase (verified on
+  both engines).
+- **Write-back.** After the operation `p` is set to `p + chars_placed`, the 1-based
+  position one past the last character stored. When the content does not all fit
+  (`concat_len > size − (p−1)`) the excess is **dropped** — this is ISO's overflow,
+  and since `ON OVERFLOW` is still deferred no imperative runs — and `chars_placed =
+  size − (p−1)`, so `p` becomes `size + 1`. Worked: `"WXYZ"` into a 5-wide receiver
+  with `p = 3` → `"..WXY"` (the `Z` dropped), and `p` becomes 6.
+
+**Out-of-range initial pointer.** Because `p` is a **run-time** value, neither engine
+can range-check it at build time — the compiler emits a run-time `p < 1 || p > size`
+guard (jumping past the overlay and the write-back to a trailing `st_end` label), and
+the oracle returns early. When the initial `p` is outside `[1, size]` — either
+`p == 0` (a 0-based start of −1) or `p > size` (past the receiver end) — this is
+ISO's **overflow** condition. Since `ON OVERFLOW` is **still deferred**, both engines
+apply the ISO "overflow ⇒ data movement does not occur" rule DETERMINISTICALLY: **no
+character is transferred (receiver unchanged) and `p` is left unchanged**. Both
+engines produce byte-identical receiver AND final `p` for every initial value —
+fuzz-proven across `[0, size+2]`.
+
+**Pointer picture validation** (co-total): `p` must be an unsigned integer `PIC
+9(n)`, `n ≤ 18` (the same class the `INSPECT` counter demands). A **signed** (`S9`),
+**fractional** (`9V9`), **non-numeric** (`PIC X`), **group**, or **over-wide**
+(`> 18`-digit) pointer is a clean later rung, rejected on BOTH engines (the compiler
+validates the picture at build time, the oracle at exec time — with matching
+messages).
+
 Still deferred as clean "later rung" errors: a **multi-character** delimiter, a
 non-ASCII delimiter, a non-ASCII literal sending field under a delimiter, **per-field
-different delimiters**, `WITH POINTER`, and `ON`/`NOT ON OVERFLOW` (all still
-*accepted* by the grammar so the reader can reject them cleanly rather than as a
-parse failure).
+different delimiters**, and `ON`/`NOT ON OVERFLOW` (all still *accepted* by the
+grammar so the reader can reject them cleanly rather than as a parse failure).
 
 ### `UNSTRING` (first rung)
 

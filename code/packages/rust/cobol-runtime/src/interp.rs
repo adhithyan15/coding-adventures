@@ -355,8 +355,8 @@ impl Machine {
             }
             Stmt::SetTrue { cond_name } => self.exec_set_true(cond_name)?,
             Stmt::Evaluate { subject, branches } => return self.exec_evaluate(subject, branches),
-            Stmt::String { sources, target, delim } => {
-                self.exec_string(sources, target, delim.as_ref())?
+            Stmt::String { sources, target, delim, pointer } => {
+                self.exec_string(sources, target, delim.as_ref(), pointer.as_deref())?
             }
             Stmt::Unstring { source, delim, targets, pointer } => {
                 self.exec_unstring(source, delim, targets, pointer.as_deref())?
@@ -436,6 +436,7 @@ impl Machine {
         sources: &[Operand],
         target: &str,
         delim: Option<&Operand>,
+        pointer: Option<&str>,
     ) -> Result<(), RuntimeError> {
         // Resolve the single delimiter character once (it applies to every field).
         // A multi-char / numeric / figurative / reference-modified / wider-item
@@ -503,19 +504,113 @@ impl Machine {
                 ))
             }
         };
-        // Overlay the leftmost `min(len, size)` characters, preserving the tail.
+        // Overlay the concatenation, preserving the receiver bytes STRING did not
+        // fill. `src` is the built image; `dst` is the receiver's current storage,
+        // normalised to exactly `size` chars (elementary alphanumeric storage is
+        // already `size` wide, but keep the overlay robust against any drift).
         let src: Vec<char> = concat.chars().collect();
         let mut dst: Vec<char> = self.items[idx].storage.chars().collect();
-        // Elementary alphanumeric storage is always exactly `size` chars; keep the
-        // overlay robust against any drift.
         if dst.len() < size {
             dst.resize(size, ' ');
         } else {
             dst.truncate(size);
         }
-        let n = src.len().min(size);
-        dst[..n].copy_from_slice(&src[..n]);
-        self.items[idx].storage = dst.into_iter().collect();
+
+        // # `WITH POINTER p`
+        //
+        // `p` is an unsigned-integer item (`PIC 9(n)`) holding the **1-based**
+        // character position in the RECEIVER at which the first transferred
+        // character is placed. Without the phrase (`None`) the overlay starts at
+        // position 0 and nothing is written back — today's behaviour, unchanged.
+        //
+        // With the phrase two things change:
+        //
+        //   * **Overlay offset.** Characters go to receiver positions `p-1, p, …`
+        //     (0-based `start = p-1`). Only what fits from `start` to the end of the
+        //     `size`-wide receiver is placed: `chars_placed = min(concat.len(),
+        //     size - start)`. Positions BEFORE `start` and AFTER `start +
+        //     chars_placed` keep their prior bytes (STRING overwrites only the run
+        //     it fills). `p = 1` (start 0) is byte-identical to the no-pointer
+        //     overlay above — the correctness anchor.
+        //
+        //   * **Write-back.** `p` becomes `p + chars_placed`, the 1-based position
+        //     one past the last character stored. When the content does not all fit
+        //     (`concat.len() > size - start`) the excess is dropped — this is ISO's
+        //     overflow, and since `ON OVERFLOW` is still deferred no imperative runs
+        //     — and `chars_placed = size - start`, so `p` becomes `size + 1`.
+        //
+        // ## Out-of-range initial pointer
+        //
+        // `p` is `PIC 9(n)` so `p ≥ 0`. When the initial value is OUTSIDE `[1,
+        // size]` — either `p == 0` (a 0-based start of −1) or `p > size` (start past
+        // the receiver end) — this is ISO's overflow condition. Since `ON OVERFLOW`
+        // is deferred we apply the ISO "overflow ⇒ no data movement" rule
+        // DETERMINISTICALLY: NO character is transferred (receiver UNCHANGED) and `p`
+        // is left UNCHANGED. Because `p` is a run-time value neither engine can
+        // range-check it at build time; the compiler emits the identical guard so
+        // the accept/skip decision is byte-identical.
+        match pointer {
+            None => {
+                let n = src.len().min(size);
+                dst[..n].copy_from_slice(&src[..n]);
+                self.items[idx].storage = dst.into_iter().collect();
+            }
+            Some(pname) => {
+                // Validate the pointer item: an UNSIGNED INTEGER `PIC 9(n)`, n ≤ 18
+                // (so the value fits the `i64` the compiler stores it in) — the same
+                // class INSPECT's counter demands. A signed, fractional, non-numeric,
+                // or group `p` is a clean later rung, rejected identically on the
+                // compiler (which checks the picture at build time).
+                let pidx = *self
+                    .by_name
+                    .get(pname)
+                    .ok_or_else(|| RuntimeError::UndefinedName(pname.to_string()))?;
+                match &self.items[pidx].picture {
+                    Some(Picture::Numeric { signed: true, .. }) => {
+                        return Err(RuntimeError::Unsupported(format!(
+                            "STRING … WITH POINTER: a signed pointer {pname} is a later rung"
+                        )))
+                    }
+                    Some(Picture::Numeric { dec_digits, .. }) if *dec_digits != 0 => {
+                        return Err(RuntimeError::Unsupported(format!(
+                            "STRING … WITH POINTER: a non-integer pointer {pname} is a later rung"
+                        )))
+                    }
+                    Some(Picture::Numeric { int_digits, .. }) if *int_digits > 18 => {
+                        return Err(RuntimeError::Unsupported(format!(
+                            "STRING … WITH POINTER: a pointer {pname} wider than 18 digits is a later rung"
+                        )))
+                    }
+                    Some(Picture::Numeric { .. }) => {}
+                    _ => {
+                        return Err(RuntimeError::Unsupported(format!(
+                            "STRING … WITH POINTER: a non-numeric pointer {pname} is a later rung"
+                        )))
+                    }
+                }
+                // The unsigned integer value of `p` (leading zeros stripped; an
+                // all-zero image parses to 0). Comparing at u128 width cannot
+                // overflow for ≤18 digits and keeps a huge `pv` safely greater than
+                // any `size`.
+                let pv_dec = self.named_decimal(pname)?;
+                let pv: u128 = pv_dec.int.trim_start_matches('0').parse().unwrap_or(0);
+                if pv == 0 || pv > size as u128 {
+                    // Out of range: no data movement, pointer unchanged.
+                    return Ok(());
+                }
+                let start = (pv - 1) as usize; // 0-based overlay offset
+                let avail = size - start; // ≥ 1 here (pv ≤ size)
+                let chars_placed = src.len().min(avail);
+                dst[start..start + chars_placed].copy_from_slice(&src[..chars_placed]);
+                self.items[idx].storage = dst.into_iter().collect();
+                // Write `p` back to `p + chars_placed`, reshaped into its `PIC 9(n)`
+                // picture through the same numeric store path ADD/INSPECT use.
+                let resume = pv + chars_placed as u128;
+                let value =
+                    Decimal { neg: false, int: resume.to_string(), frac: String::new() };
+                self.store_result(pname, value, false, &[])?;
+            }
+        }
         Ok(())
     }
 

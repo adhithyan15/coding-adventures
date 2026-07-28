@@ -1283,14 +1283,10 @@ impl<'a> Compiler<'a> {
     /// non-ASCII string-literal sending field under an active delimiter) is a clean
     /// later rung on both engines.
     fn emit_string(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
-        // Reject the later-rung options the grammar accepts (so the message is a
-        // clean Unsupported, not a parse error).
+        // Reject the remaining later-rung option the grammar accepts (so the message
+        // is a clean Unsupported, not a parse error). `WITH POINTER` is now MODELLED
+        // (see the pointer handling below), so only `ON OVERFLOW` is rejected here.
         let toks = child_tokens(verb);
-        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "POINTER") {
-            return Err(CompileError::Unsupported(
-                "STRING … WITH POINTER is a later rung".into(),
-            ));
-        }
         if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "OVERFLOW") {
             return Err(CompileError::Unsupported(
                 "STRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung".into(),
@@ -1343,6 +1339,53 @@ impl<'a> Compiler<'a> {
         };
         let recv = self.items[didx].reg.clone();
 
+        // The optional `WITH POINTER p` phrase. `INTO t` always precedes it, so the
+        // receiver is the first direct NAME (resolved above) and the pointer NAME is
+        // the first NAME after the `POINTER` keyword. (Sending-field identifiers are
+        // nested under `operand` nodes, so they are not direct NAME tokens here.)
+        let ptr_pos = toks.iter().position(|(k, v)| k == "KEYWORD" && v == "POINTER");
+        let pointer_name: Option<String> = ptr_pos.and_then(|pp| {
+            toks[pp + 1..].iter().find(|(k, _)| k == "NAME").map(|(_, v)| v.clone())
+        });
+        // Validate the pointer item's picture at BUILD time — it must be an unsigned
+        // integer `PIC 9(n)` (n ≤ 18 so the value fits the `i64` we store it in), the
+        // same class INSPECT's counter demands. A signed, fractional, non-numeric, or
+        // group pointer is a clean later rung, rejected here with the SAME message the
+        // oracle raises at exec time so the accept/reject sets stay co-total. We
+        // capture `(index, int_digits)` for the run-time read/write-back below; the
+        // range check on the pointer's VALUE cannot be done here (it is a run-time
+        // datum), so it is emitted as a guard, exactly like the oracle.
+        let pointer: Option<(usize, usize)> = match &pointer_name {
+            Some(pname) => {
+                let pidx = self.item_index(pname)?;
+                let ptr_int_digits = match &self.items[pidx].kind {
+                    ItemKind::Numeric { signed: true, .. } => {
+                        return Err(CompileError::Unsupported(format!(
+                            "STRING … WITH POINTER: a signed pointer {pname} is a later rung"
+                        )))
+                    }
+                    ItemKind::Numeric { dec_digits, .. } if *dec_digits != 0 => {
+                        return Err(CompileError::Unsupported(format!(
+                            "STRING … WITH POINTER: a non-integer pointer {pname} is a later rung"
+                        )))
+                    }
+                    ItemKind::Numeric { int_digits, .. } if *int_digits > 18 => {
+                        return Err(CompileError::Unsupported(format!(
+                            "STRING … WITH POINTER: a pointer {pname} wider than 18 digits is a later rung"
+                        )))
+                    }
+                    ItemKind::Numeric { int_digits, .. } => *int_digits,
+                    ItemKind::Char { .. } => {
+                        return Err(CompileError::Unsupported(format!(
+                            "STRING … WITH POINTER: a non-numeric pointer {pname} is a later rung"
+                        )))
+                    }
+                };
+                Some((pidx, ptr_int_digits))
+            }
+            None => None,
+        };
+
         match &delim_code {
             // `DELIMITED BY SIZE` — every boundary is compile-time-known.
             None => {
@@ -1363,7 +1406,18 @@ impl<'a> Compiler<'a> {
                     concat = out;
                     total += len;
                 }
-                if total >= width {
+                // `WITH POINTER p`: the overlay offset `p-1` is a RUN-TIME value, so
+                // the compile-time slicing below no longer applies — hand off to the
+                // shared run-time overlay. The concat length is compile-time-known
+                // here, materialised as a `const` so the overlay helper is uniform.
+                if let Some((pidx, ptr_int_digits)) = pointer {
+                    let clen = self.fresh("_stclen");
+                    self.emit("const", Some(&clen), vec![Operand::Int(total as i64)], "i64");
+                    let pname = pointer_name.as_deref().expect("pointer present");
+                    self.emit_string_pointer_overlay(
+                        &recv, &concat, &clen, width, pname, pidx, ptr_int_digits,
+                    )?;
+                } else if total >= width {
                     // Truncate at the receiver width; the whole receiver is overwritten.
                     let start = self.str_index(0);
                     let end = self.str_index(width as i64);
@@ -1430,10 +1484,21 @@ impl<'a> Compiler<'a> {
                 }
                 // `sources` is non-empty, so `concat` is always `Some` here.
                 let concat = concat.expect("at least one sending field");
-                // Run-time overlay: take = min(str_len(concat), W); the receiver
-                // becomes concat[0,take] ++ recv[take,W] (the preserved tail).
+                // The concatenation's length is a run-time value here.
                 let clen = self.fresh("_sclen");
                 self.emit("str_len", Some(&clen), vec![Operand::Var(concat.clone())], "i64");
+                // `WITH POINTER p`: overlay at the run-time offset `p-1` via the
+                // shared helper (byte-identical to the SIZE-branch pointer path). The
+                // no-pointer run-time overlay below (start at 0) is unchanged.
+                if let Some((pidx, ptr_int_digits)) = pointer {
+                    let pname = pointer_name.as_deref().expect("pointer present");
+                    self.emit_string_pointer_overlay(
+                        &recv, &concat, &clen, width, pname, pidx, ptr_int_digits,
+                    )?;
+                    return Ok(());
+                }
+                // Run-time overlay: take = min(clen, W); the receiver becomes
+                // concat[0,take] ++ recv[take,W] (the preserved tail).
                 let wconst = self.fresh("_scw");
                 self.emit("const", Some(&wconst), vec![Operand::Int(width as i64)], "i64");
                 let take = self.fresh("_sctk");
@@ -1469,6 +1534,148 @@ impl<'a> Compiler<'a> {
                 );
             }
         }
+        Ok(())
+    }
+
+    /// Emit the `STRING … WITH POINTER p` overlay: place `concat` (its length in
+    /// register `clen`) into the receiver `recv` (a `size`-wide alphanumeric item)
+    /// starting at the 1-based position held by the unsigned-integer pointer item
+    /// `pidx`, then write the pointer back. Byte-identical to the oracle's
+    /// `exec_string` pointer arm.
+    ///
+    /// The pointer's VALUE is a RUN-TIME datum, so the offset and the out-of-range
+    /// decision are emitted as run-time IIR (which is exactly why the range can't be
+    /// checked at compile time — only the pointer's *picture* is):
+    ///
+    /// ```text
+    ///   pv = <pointer register>;  one = 1;  W = size
+    ///   if pv < 1  jmp st_end          # pv == 0 (PIC 9 is unsigned) → overflow
+    ///   if pv > W  jmp st_end          # start past the receiver end → overflow
+    ///   start = pv - 1                 # 0-based overlay offset
+    ///   avail = W - start              # room from start to the receiver end (≥ 1)
+    ///   cp = min(clen, avail)          # chars actually placed (excess is dropped)
+    ///   end = start + cp
+    ///   recv = recv[0,start] ++ concat[0,cp] ++ recv[end,W]   # keep the untouched runs
+    ///   p := pv + cp                   # 1-based position one past the last char
+    /// st_end:                          # out-of-range lands here: recv + p unchanged
+    /// ```
+    ///
+    /// `avail` is `≥ 1` because the guard has already established `1 ≤ pv ≤ W`, so
+    /// `start ≤ W-1`. When the content does not all fit (`clen > avail`) the excess
+    /// is dropped — ISO's overflow, with `ON OVERFLOW` still deferred so no
+    /// imperative runs — and `cp = avail`, giving `p := W + 1`. `pv = 1` (start 0)
+    /// reproduces the no-pointer overlay exactly, the correctness anchor. The
+    /// out-of-range jump skips BOTH the overlay and the write-back, leaving the
+    /// receiver and pointer with their prior values, matching the oracle's early
+    /// `return Ok(())`.
+    #[allow(clippy::too_many_arguments)]
+    fn emit_string_pointer_overlay(
+        &mut self,
+        recv: &str,
+        concat: &str,
+        clen: &str,
+        width: usize,
+        pname: &str,
+        pidx: usize,
+        ptr_int_digits: usize,
+    ) -> Result<(), CompileError> {
+        let pv = self.items[pidx].reg.clone();
+        let one = self.fresh("_stpone");
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        let wconst = self.fresh("_stpw");
+        self.emit("const", Some(&wconst), vec![Operand::Int(width as i64)], "i64");
+        let st_end = self.fresh("st_end");
+        // Out of range: pv < 1 (i.e. pv == 0, since PIC 9 is unsigned) …
+        let lt1 = self.fresh("_stplt");
+        self.emit(
+            "cmp_lt",
+            Some(&lt1),
+            vec![Operand::Var(pv.clone()), Operand::Var(one.clone())],
+            "i64",
+        );
+        self.emit("jmp_if_true", None, vec![Operand::Var(lt1), Operand::Var(st_end.clone())], "void");
+        // … or pv > W (start past the receiver end).
+        let gt = self.fresh("_stpgt");
+        self.emit(
+            "cmp_gt",
+            Some(&gt),
+            vec![Operand::Var(pv.clone()), Operand::Var(wconst.clone())],
+            "i64",
+        );
+        self.emit("jmp_if_true", None, vec![Operand::Var(gt), Operand::Var(st_end.clone())], "void");
+        // start = pv - 1 (0-based overlay offset).
+        let start = self.fresh("_stps");
+        self.emit(
+            "sub",
+            Some(&start),
+            vec![Operand::Var(pv.clone()), Operand::Var(one)],
+            "i64",
+        );
+        // avail = W - start (room from start to the receiver end; ≥ 1 here).
+        let avail = self.fresh("_stpav");
+        self.emit(
+            "sub",
+            Some(&avail),
+            vec![Operand::Var(wconst.clone()), Operand::Var(start.clone())],
+            "i64",
+        );
+        // cp = min(clen, avail): what actually fits (the rest is dropped).
+        let cp = self.fresh("_stpcp");
+        self.emit("mov", Some(&cp), vec![Operand::Var(clen.to_string())], "i64");
+        let over = self.fresh("_stpov");
+        self.emit(
+            "cmp_gt",
+            Some(&over),
+            vec![Operand::Var(clen.to_string()), Operand::Var(avail.clone())],
+            "i64",
+        );
+        let keep = self.fresh("st_keep");
+        self.emit("jmp_if_false", None, vec![Operand::Var(over), Operand::Var(keep.clone())], "void");
+        self.emit("mov", Some(&cp), vec![Operand::Var(avail)], "i64");
+        self.emit("label", None, vec![Operand::Var(keep)], "void");
+        // end = start + cp.
+        let end = self.fresh("_stpe");
+        self.emit(
+            "add",
+            Some(&end),
+            vec![Operand::Var(start.clone()), Operand::Var(cp.clone())],
+            "i64",
+        );
+        // recv = recv[0,start] ++ concat[0,cp] ++ recv[end,W]: overwrite only the
+        // filled run, keeping the receiver's head (before start) and tail (from end).
+        let z0 = self.str_index(0);
+        let headpre = self.fresh("_stph");
+        self.emit(
+            "str_slice",
+            Some(&headpre),
+            vec![Operand::Var(recv.to_string()), Operand::Var(z0.clone()), Operand::Var(start)],
+            "str",
+        );
+        let mid = self.fresh("_stpm");
+        self.emit(
+            "str_slice",
+            Some(&mid),
+            vec![Operand::Var(concat.to_string()), Operand::Var(z0), Operand::Var(cp.clone())],
+            "str",
+        );
+        let tail = self.fresh("_stpt");
+        self.emit(
+            "str_slice",
+            Some(&tail),
+            vec![Operand::Var(recv.to_string()), Operand::Var(end), Operand::Var(wconst)],
+            "str",
+        );
+        let hm = self.fresh("_stphm");
+        self.emit("str_concat", Some(&hm), vec![Operand::Var(headpre), Operand::Var(mid)], "str");
+        self.emit("str_concat", Some(recv), vec![Operand::Var(hm), Operand::Var(tail)], "str");
+        // Write the pointer back to `pv + cp` (1-based, one past the last char
+        // stored), reshaped into its `PIC 9(n)` picture through the same numeric path
+        // ADD/UNSTRING use — byte-identical to the oracle's `store_result`.
+        let resume = self.fresh("_stpres");
+        self.emit("add", Some(&resume), vec![Operand::Var(pv), Operand::Var(cp)], "i64");
+        self.store_scaled(pname, &resume, 0, ptr_int_digits + 1, false)?;
+        // The out-of-range guard lands here, skipping the overlay AND the write-back.
+        self.emit("label", None, vec![Operand::Var(st_end)], "void");
         Ok(())
     }
 
@@ -7263,9 +7470,12 @@ mod tests {
     }
 
     #[test]
-    fn string_with_pointer_is_a_later_rung() {
-        // WITH POINTER is accepted by the grammar but rejected here as a later rung.
-        let err = compile_source(
+    fn string_with_pointer_emits_a_guarded_overlay() {
+        // WITH POINTER over a `PIC 9(n)` pointer now compiles: the overlay reads the
+        // pointer register to seat the start, guards the out-of-range case (`cmp_lt`
+        // for p < 1, `cmp_gt` for p > size), computes `p - 1` (a `sub`), and writes
+        // the resume position back (`store_scaled` reshape). It passes validation.
+        let module = compile_source(
             &wrap(
                 &[
                     "01  A  PIC X(3) VALUE \"ABC\".",
@@ -7275,6 +7485,30 @@ mod tests {
                 &["STRING A DELIMITED BY SIZE INTO T WITH POINTER P.", "STOP RUN."],
             ),
             "str_ptr",
+        )
+        .unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"cmp_lt".to_string()), "guards p < 1 (out of range low)");
+        assert!(os.contains(&"cmp_gt".to_string()), "guards p > size (out of range high)");
+        assert!(os.contains(&"sub".to_string()), "start offset p - 1");
+    }
+
+    #[test]
+    fn string_with_signed_pointer_is_a_later_rung() {
+        // The pointer must be an UNSIGNED integer. A signed pointer (`PIC S9`) is a
+        // clean later rung, rejected at build time with the same message the oracle
+        // raises at exec time.
+        let err = compile_source(
+            &wrap(
+                &[
+                    "01  A  PIC X(3) VALUE \"ABC\".",
+                    "01  T  PIC X(6) VALUE SPACES.",
+                    "01  P  PIC S9(2) VALUE 1.",
+                ],
+                &["STRING A DELIMITED BY SIZE INTO T WITH POINTER P.", "STOP RUN."],
+            ),
+            "str_ptr_signed",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
