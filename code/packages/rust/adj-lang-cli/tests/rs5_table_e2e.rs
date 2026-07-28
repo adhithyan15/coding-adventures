@@ -875,6 +875,46 @@ fn shipped_absorbed_dose_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b19) Shipped table — reference/dose-equivalent-conversions.adj resolves via import (a
+//       NEW dimension: dose equivalent → sievert, the EXACT SP 811 B.9 boldface factor
+//       rem = 1.0 E-02 = 0.01, the rem DEFINED as exactly 10⁻² sievert), and a unit of a
+//       DIFFERENT quantity (`rad`, an absorbed-dose unit → gray, not sievert) — no row —
+//       abstains rather than mis-converting across dimensions.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_dose_equivalent_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_doseeq");
+    let src = stdlib().join("reference/dose-equivalent-conversions.adj");
+    std::fs::copy(&src, dir.join("dose-equivalent-conversions.adj"))
+        .expect("copy shipped dose-equivalent-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"dose-equivalent-conversions.adj\"\n\
+         ? dose_equivalent_to_sievert(rem, $v)\n\
+         ? dose_equivalent_to_sievert(rad, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 "Radiology" exact factor resolves, character-for-character from
+    // the table (boldface = exact; the rem is defined as exactly 10⁻² sievert = 0.01).
+    assert!(out.contains("\"v\":\"0.01\""), "rem = 0.01 Sv: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `rad` is an ABSORBED-DOSE unit (it converts to the gray, a DIFFERENT quantity), so this
+    // dose-equivalent table has no row for it — the engine abstains rather than mis-converting
+    // an absorbed-dose unit as if it were a dose-equivalent unit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 

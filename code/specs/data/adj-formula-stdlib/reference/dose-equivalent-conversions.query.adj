@@ -1,0 +1,22 @@
+% ============================================================================
+% dose-equivalent-conversions.query.adj — worked lookup over the dose-equivalent table.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to convert a dose equivalent given in
+% the traditional unit (the rem) into the SI coherent unit (the sievert): it states NO
+% arithmetic — it `import`s the grounded table and asks the exact lookup. The engine answers
+% by ordinary SLD binding against the table's rows, returning the factor WITH the table's NIST
+% citation as its proof, on the CPU, with zero model calls.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli dose-equivalent-conversions.query.adj
+% ============================================================================
+
+import "dose-equivalent-conversions.adj"
+
+% The exact defined factor: one rem IS exactly 10⁻² sievert (0.01 Sv).
+? dose_equivalent_to_sievert(rem, $sv)          % expect 0.01  (NIST SP 811 B.9, EXACT by definition)
+
+% The "rad" is an ABSORBED-DOSE unit (it converts to the gray, not the sievert — see
+% absorbed-dose-conversions.adj), a DIFFERENT radiological quantity, so this dose-equivalent
+% table has no row for it and the engine ABSTAINS rather than mis-converting it.
+? dose_equivalent_to_sievert(rad, $sv)          % expect abstention (rad is absorbed dose, not dose equivalent)
