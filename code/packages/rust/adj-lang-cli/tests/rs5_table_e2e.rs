@@ -795,6 +795,47 @@ fn shipped_luminance_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b17) Shipped table — reference/radioactivity-conversions.adj resolves via import (a
+//       NEW dimension: radioactivity/activity → becquerel, the EXACT SP 811 B.9 boldface
+//       factor curie = 3.7 E+10), and a traditional activity unit NIST does not tabulate
+//       (`rutherford`) — no row — abstains.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_radioactivity_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_radioact");
+    let src = stdlib().join("reference/radioactivity-conversions.adj");
+    std::fs::copy(&src, dir.join("radioactivity-conversions.adj"))
+        .expect("copy shipped radioactivity-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"radioactivity-conversions.adj\"\n\
+         ? activity_to_becquerel(curie, $v)\n\
+         ? activity_to_becquerel(rutherford, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 "Radiology" exact factor resolves, character-for-character from
+    // the table (boldface = exact; scientific notation to plain decimal).
+    assert!(
+        out.contains("\"v\":\"37000000000\""),
+        "curie = 37000000000 Bq: {out}"
+    );
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `rutherford` is a real activity unit that NIST SP 811 B.9 does NOT tabulate — no row
+    // here, so the engine abstains rather than committing to a fabricated factor.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "an untabulated unit abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
