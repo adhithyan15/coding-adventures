@@ -375,8 +375,15 @@ impl Machine {
                     not_on_overflow,
                 );
             }
-            Stmt::Inspect { source, counter, delim, leading, region } => {
-                return self.exec_inspect(source, counter, delim, *leading, region.as_ref())
+            Stmt::Inspect { source, counter, delim, leading, characters, region } => {
+                return self.exec_inspect(
+                    source,
+                    counter,
+                    delim,
+                    *leading,
+                    *characters,
+                    region.as_ref(),
+                )
             }
             Stmt::InspectReplacing { source, search, replace, leading, region } => {
                 self.exec_inspect_replacing(source, search, replace, *leading, region.as_ref())?
@@ -1052,10 +1059,11 @@ impl Machine {
         counter: &str,
         delim: &Operand,
         leading: bool,
+        characters: bool,
         region: Option<&Region>,
     ) -> Result<Flow, RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
-        self.inspect_tally(sidx, counter, delim, leading, region)
+        self.inspect_tally(sidx, counter, delim, leading, characters, region)
     }
 
     /// The source of any INSPECT must resolve to an alphanumeric item. Returns its
@@ -1149,6 +1157,7 @@ impl Machine {
         counter: &str,
         delim: &Operand,
         leading: bool,
+        characters: bool,
         region: Option<&Region>,
     ) -> Result<Flow, RuntimeError> {
         // The counter must be an UNSIGNED INTEGER numeric item (`PIC 9(n)`): a
@@ -1171,8 +1180,15 @@ impl Machine {
             }
         }
 
-        // The single delimiter character to count.
-        let delim_ch = self.single_delim_char(delim, "INSPECT")?;
+        // The single delimiter character to count — ONLY the ALL/LEADING forms match a
+        // delimiter, so we resolve it only when `characters == false`. The CHARACTERS
+        // form counts POSITIONS, not delimiter matches, so it never reads `delim` (which
+        // carries a never-read placeholder on that path) and never runs `single_delim_char`.
+        let delim_ch = if characters {
+            None
+        } else {
+            Some(self.single_delim_char(delim, "INSPECT")?)
+        };
 
         // The character window `[start, end)` the count runs over. With no region
         // this is the WHOLE source; a `{BEFORE|AFTER} x` region narrows it around the
@@ -1198,10 +1214,17 @@ impl Machine {
         // asymmetry). (The combined `TALLYING … REPLACING` form still rejects a
         // LEADING half carrying a region at read time, so that combination never
         // reaches here.)
-        let count = if leading {
-            window.iter().take_while(|&&c| c == delim_ch).count()
-        } else {
-            window.iter().filter(|&&c| c == delim_ch).count()
+        // `FOR CHARACTERS` is the "count every position" form: it adds the NUMBER OF
+        // CHARACTER POSITIONS in the window — `window.len()` — regardless of content.
+        // With no region that is the full source length; with a `{BEFORE|AFTER} x`
+        // region it is `end - start` of the SAME window ALL/LEADING use, so it inherits
+        // the identical BEFORE→whole / AFTER→empty not-found asymmetry (a `BEFORE x`
+        // with `x` absent counts the whole string; an `AFTER x` with `x` absent counts
+        // 0, because the window is empty). No delimiter is matched.
+        let count = match delim_ch {
+            None => window.len(),
+            Some(dch) if leading => window.iter().take_while(|&&c| c == dch).count(),
+            Some(dch) => window.iter().filter(|&&c| c == dch).count(),
         };
 
         // counter := counter_value + count, reshaped into the counter's picture —
@@ -1541,7 +1564,9 @@ impl Machine {
         // TALLYING half may be FOR ALL or FOR LEADING (`tally_leading`) and may carry
         // its OWN `{BEFORE|AFTER}` region (`tally_region`), whose window is computed
         // over the original storage.
-        self.inspect_tally(sidx, counter, delim, tally_leading, tally_region)?;
+        // The combined form never carries a CHARACTERS tally (rejected at read time),
+        // so `characters` is always `false` here.
+        self.inspect_tally(sidx, counter, delim, tally_leading, false, tally_region)?;
         // THEN replace, overwriting the source in place. The REPLACING half may be
         // ALL or LEADING (`replace_leading`) — the same leading-run map used by a
         // lone `INSPECT REPLACING LEADING` — and carries its OWN INDEPENDENT

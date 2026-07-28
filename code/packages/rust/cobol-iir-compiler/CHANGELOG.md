@@ -8,6 +8,28 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.55.0: INSPECT TALLYING … FOR CHARACTERS (+ optional region)
+
+`INSPECT source TALLYING counter FOR CHARACTERS [ {BEFORE|AFTER} x ]` — the "count every
+position" tally form is now compiled, byte-identical to the `coding-adventures-cobol-runtime`
+0.59.0 oracle. Previously it was rejected at emit time ("INSPECT TALLYING … FOR CHARACTERS is a
+later rung"). No grammar change was needed.
+
+- `FOR CHARACTERS` does NOT scan for a delimiter. The count is the LENGTH of the region window,
+  ADDed to the counter: with no region `cnt = str_len(S)`; with a `{BEFORE|AFTER} x` region
+  `cnt = end - start` (`sub`) over the SAME window `emit_inspect_region_window` produces for
+  `FOR ALL`, so it inherits the identical BEFORE→whole / AFTER→empty not-found asymmetry. The
+  count folds into the counter via the SAME `store_scaled` ADD the ALL/LEADING path uses.
+- `emit_inspect_tallying` gains an `allow_characters` gate: the standalone lone-TALLYING caller
+  passes `true`; the combined `TALLYING … REPLACING` caller passes `false`, so a combined
+  CHARACTERS half is a clean later-rung error matching the oracle. `inspect_tally_all` now
+  detects `CHARACTERS`, returns `characters: bool`, and reads NO delimiter operand on that path
+  (`delim_node` becomes `Option`).
+- The per-character match loop, `single_delim_code`, and delimiter registers are skipped
+  entirely on the CHARACTERS path — only `str_len`, the optional window, and one `sub`/`add`
+  are emitted.
+- Multi-item / multi-counter `CHARACTERS` remain later rungs, rejected identically to before.
+
 ### Added — v0.54.0: UNSTRING … ON OVERFLOW / NOT ON OVERFLOW
 
 `UNSTRING source DELIMITED BY delim INTO r1 [r2 …] [WITH POINTER p] [ON OVERFLOW imp…] [NOT ON

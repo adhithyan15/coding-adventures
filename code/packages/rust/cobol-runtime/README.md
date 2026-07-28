@@ -130,7 +130,13 @@ the single-character delimiter `x`: `BEFORE x` counts left of it — the WHOLE s
 if `x` is absent — and `AFTER x` counts right of it — NOTHING if `x` is absent; for
 `FOR LEADING` the run is ANCHORED at the window start, so `FOR LEADING "a" AFTER "X"`
 over `"aaXaab"` counts the run in the window `"aab"` — 2 — not the `"aa"` before the
-`X`); the **multi-item** `INSPECT source TALLYING counter FOR ALL a ALL b [ALL d …]`
+`X`); the **`FOR CHARACTERS`** form `INSPECT source TALLYING counter FOR CHARACTERS
+[ {BEFORE|AFTER} x ]` (single item, single counter — count NOT a delimiter match but the
+NUMBER OF CHARACTER POSITIONS in the region window, ADDed to the counter: with no region
+that is `length(source)`, with a region it is the window length of the SAME window
+`FOR ALL` uses, inheriting the identical not-found asymmetry — `BEFORE x` absent ⇒ whole
+source, `AFTER x` absent ⇒ empty ⇒ 0; a MULTI-item / MULTI-counter `CHARACTERS` and a
+`CHARACTERS` half in a combined `TALLYING … REPLACING` stay later rungs); the **multi-item** `INSPECT source TALLYING counter FOR ALL a ALL b [ALL d …]`
 (TWO OR MORE `FOR ALL` items sharing ONE counter — ONE left-to-right pass in which, at
 each position, the delimiters are tried in WRITTEN ORDER and the FIRST that matches adds
 1 to the shared counter, then the scan advances; so DUPLICATE delimiters do NOT

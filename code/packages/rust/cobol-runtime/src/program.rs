@@ -232,11 +232,26 @@ pub enum Stmt {
     /// `FOR ALL` only, with a SINGLE-character region delimiter `x`; `FOR LEADING`
     /// with a region, a multi-character region delimiter, and a region on the
     /// combined/`REPLACING`/`CONVERTING` forms are later rungs.
+    ///
+    /// `FOR CHARACTERS` (`characters == true`) is the "count every position" form:
+    /// instead of matching a delimiter, it tallies the NUMBER OF CHARACTER POSITIONS
+    /// in the region window. With no region that is `length(source)`; with a region
+    /// it is the window length `end - start` (the SAME window `FOR ALL` uses, so it
+    /// inherits the BEFORE→whole / AFTER→empty not-found asymmetry). When
+    /// `characters == true` neither `delim` nor `leading` is ever consumed, so `delim`
+    /// carries a never-read placeholder and `leading` is `false`. Multi-item and
+    /// multi-counter `CHARACTERS` remain later rungs (see the multi variants below).
     Inspect {
         source: String,
         counter: String,
+        /// The delimiter to match for `FOR ALL`/`FOR LEADING`. UNUSED (and set to a
+        /// placeholder) when `characters == true`, because CHARACTERS counts
+        /// positions rather than matching a delimiter.
         delim: Operand,
         leading: bool,
+        /// `true` for the `FOR CHARACTERS` form — count every position in the window
+        /// rather than matching `delim`. Mutually exclusive with `leading`.
+        characters: bool,
         region: Option<Region>,
     },
     /// `INSPECT source REPLACING ALL search BY replace` (or `REPLACING LEADING
@@ -1244,7 +1259,19 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     // combined LEADING half PLUS a region is still a later rung. (A
                     // combined `FOR ALL`/`ALL` half WITH a region, and a LEADING half
                     // WITHOUT one, both remain supported.)
-                    let (counter, delim, leading, tally_region) = read_inspect_tally_all(verb)?;
+                    let (counter, delim, leading, tally_characters, tally_region) =
+                        read_inspect_tally_all(verb)?;
+                    // The shared reader now ACCEPTS `FOR CHARACTERS` (standalone), but the
+                    // COMBINED `TALLYING … REPLACING` form does not support a CHARACTERS
+                    // tally this rung. Re-impose the deferral here, mirroring the LEADING+
+                    // region deferral below, so the combined form stays a later rung on
+                    // both engines identically.
+                    if tally_characters {
+                        return Err(RuntimeError::Unsupported(
+                            "INSPECT TALLYING … FOR CHARACTERS in a combined TALLYING/REPLACING is a later rung"
+                                .into(),
+                        ));
+                    }
                     // The combined form's TALLYING half supports BOTH `FOR ALL`
                     // and `FOR LEADING`: `leading` selects the count semantics
                     // (LEADING counts only the consecutive run of `delim` at the
@@ -1344,8 +1371,9 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                             }
                         }
                     }
-                    let (counter, delim, leading, region) = read_inspect_tally_all(verb)?;
-                    Ok(Stmt::Inspect { source, counter, delim, leading, region })
+                    let (counter, delim, leading, characters, region) =
+                        read_inspect_tally_all(verb)?;
+                    Ok(Stmt::Inspect { source, counter, delim, leading, characters, region })
                 }
             }
         }
@@ -1354,11 +1382,16 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
 }
 
 /// Extract the supported `TALLYING counter FOR ALL delim [{BEFORE|AFTER} x]` /
-/// `FOR LEADING delim` phrase from an `inspect_stmt`, returning `(counter_name,
-/// delim_operand, leading, region)` where `leading` is `true` for `FOR LEADING`
-/// and `false` for `FOR ALL`, and `region` carries an optional `{BEFORE|AFTER} x`
-/// window (see [`Region`]). Rejects every later-rung form the grammar also
-/// accepts: several counters, several `FOR` phrases, and a `CHARACTERS` tally. A
+/// `FOR LEADING delim` (or `FOR CHARACTERS`) phrase from an `inspect_stmt`,
+/// returning `(counter_name, delim_operand, leading, characters, region)` where
+/// `leading` is `true` for `FOR LEADING` and `false` for `FOR ALL`, `characters` is
+/// `true` for the `FOR CHARACTERS` form (in which case `delim` is a never-read
+/// placeholder and `leading` is `false`), and `region` carries an optional
+/// `{BEFORE|AFTER} x` window (see [`Region`]). Rejects every later-rung form the
+/// grammar also accepts: several counters and several `FOR` phrases. `CHARACTERS`
+/// is now ACCEPTED for the single-item single-counter case (count = window length);
+/// only the multi-item / multi-counter `CHARACTERS` forms remain later rungs, guarded
+/// in `read_inspect_tally_multi` / the several-counters dispatch. A
 /// `FOR LEADING` phrase carrying a region is now ACCEPTED here — the STANDALONE
 /// `FOR LEADING … BEFORE/AFTER` form is supported this rung (the count anchors the
 /// leading run at the window start). The COMBINED `TALLYING … REPLACING` form still
@@ -1370,7 +1403,7 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
 /// diagnose it identically.)
 fn read_inspect_tally_all(
     verb: &GrammarASTNode,
-) -> Result<(String, Operand, bool, Option<Region>), RuntimeError> {
+) -> Result<(String, Operand, bool, bool, Option<Region>), RuntimeError> {
     let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
         RuntimeError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
     })?;
@@ -1395,29 +1428,46 @@ fn read_inspect_tally_all(
         }
     };
     let toks = child_tokens(ti);
-    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
-        return Err(RuntimeError::Unsupported(
-            "INSPECT TALLYING … FOR CHARACTERS is a later rung".into(),
-        ));
-    }
-    // `FOR LEADING` is now supported (leading-run count); `FOR ALL` is the default.
-    // The keyword picks the count semantics threaded through to `inspect_tally`.
-    let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
+    // `FOR CHARACTERS` is the "count every position" form — it tallies the NUMBER OF
+    // CHARACTER POSITIONS in the region window rather than matching a delimiter. The
+    // grammar's `tally_item` CHARACTERS branch is `CHARACTERS { inspect_region }`: it
+    // carries NO delimiter operand, so on this path we must NOT read an `operand`
+    // child (there is none). We read the optional region EXACTLY as the ALL/LEADING
+    // path does, set `characters = true`, `leading = false`, and hand back a never-
+    // read placeholder for `delim` (the exec skips `single_delim_char` and every other
+    // delimiter use when `characters == true`). The count then becomes the window
+    // length — `length(source)` with no region, or `end - start` with one — inheriting
+    // the SAME BEFORE→whole / AFTER→empty not-found asymmetry `FOR ALL` uses.
+    let characters = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS");
     // A `{BEFORE|AFTER} x` region now PARSES into an `Option<Region>` (it used to
-    // be rejected wholesale here) REGARDLESS of `leading`: the STANDALONE
-    // `FOR LEADING … BEFORE/AFTER` form is supported this rung (the count anchors the
-    // leading run at the window start — see `inspect_tally`). The COMBINED
-    // `TALLYING … REPLACING` form still rejects a LEADING half carrying a region; that
-    // gate lives in the combined caller (`read_statement`), not here, so relaxing this
-    // shared reader does not leak the combination into the combined form.
+    // be rejected wholesale here) REGARDLESS of `leading`/`characters`: the STANDALONE
+    // `FOR LEADING … BEFORE/AFTER` and `FOR CHARACTERS … BEFORE/AFTER` forms are
+    // supported this rung. The COMBINED `TALLYING … REPLACING` form still rejects a
+    // LEADING half carrying a region (and any CHARACTERS half); those gates live in
+    // the combined caller (`read_statement`), not here, so relaxing this shared reader
+    // does not leak the combination into the combined form.
     let region = match child_node(ti, "inspect_region") {
         None => None,
         Some(region_node) => Some(read_inspect_region(region_node)?),
     };
+    if characters {
+        // No delimiter to read on the CHARACTERS path. Stash a placeholder in `delim`
+        // that is NEVER consumed (guaranteed by `characters == true` at every use).
+        return Ok((
+            counter,
+            Operand::Lit(Lit::Str(" ".to_string())),
+            false,
+            true,
+            region,
+        ));
+    }
+    // `FOR LEADING` is supported (leading-run count); `FOR ALL` is the default.
+    // The keyword picks the count semantics threaded through to `inspect_tally`.
+    let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
     let delim_node = child_node(ti, "operand").ok_or_else(|| {
         RuntimeError::Unsupported("INSPECT TALLYING FOR ALL/LEADING without a delimiter".into())
     })?;
-    Ok((counter, read_operand(delim_node)?, leading, region))
+    Ok((counter, read_operand(delim_node)?, leading, false, region))
 }
 
 /// Extract the `TALLYING counter FOR ALL a ALL b [ALL d …]` phrase from an

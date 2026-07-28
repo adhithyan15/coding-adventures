@@ -2449,7 +2449,9 @@ impl<'a> Compiler<'a> {
                 // deferred: `allow_leading_region = false` makes `emit_inspect_tallying`
                 // reject it (the standalone `FOR LEADING … BEFORE/AFTER` form is
                 // supported, but only standalone).
-                self.emit_inspect_tallying(verb, &s_reg, true, true, false)?;
+                // `allow_characters = false`: a combined `TALLYING … FOR CHARACTERS …
+                // REPLACING` is a later rung, matching the oracle's combined-form reject.
+                self.emit_inspect_tallying(verb, &s_reg, true, true, false, false)?;
                 // The combined REPLACING half supports BOTH `ALL` and `LEADING`:
                 // `allow_leading = true` lets a combined `TALLYING … REPLACING
                 // LEADING` rewrite only the leading run (`emit_inspect_replacing`
@@ -2517,7 +2519,9 @@ impl<'a> Compiler<'a> {
                         return self.emit_inspect_tally_multi(verb, &s_reg);
                     }
                 }
-                self.emit_inspect_tallying(verb, &s_reg, true, true, true)
+                // `allow_characters = true`: the STANDALONE `FOR CHARACTERS` form is
+                // supported this rung.
+                self.emit_inspect_tallying(verb, &s_reg, true, true, true, true)
             }
         }
     }
@@ -2566,10 +2570,20 @@ impl<'a> Compiler<'a> {
         allow_leading: bool,
         allow_region: bool,
         allow_leading_region: bool,
+        allow_characters: bool,
     ) -> Result<(), CompileError> {
-        // Extract the single `FOR ALL`/`FOR LEADING delim [{BEFORE|AFTER} x]` phrase
-        // (rejecting the later rungs).
-        let (counter_name, delim_node, leading, region) = inspect_tally_all(verb)?;
+        // Extract the single `FOR ALL`/`FOR LEADING delim [{BEFORE|AFTER} x]` (or
+        // `FOR CHARACTERS [{BEFORE|AFTER} x]`) phrase (rejecting the later rungs).
+        let (counter_name, delim_node, leading, characters, region) = inspect_tally_all(verb)?;
+        // `FOR CHARACTERS` is supported standalone (`allow_characters = true`) but not
+        // in the combined `TALLYING … REPLACING` form (`allow_characters = false`),
+        // matching the oracle's combined-form read-time reject exactly.
+        if characters && !allow_characters {
+            return Err(CompileError::Unsupported(
+                "INSPECT TALLYING … FOR CHARACTERS in a combined TALLYING/REPLACING is a later rung"
+                    .into(),
+            ));
+        }
         if leading && !allow_leading {
             return Err(CompileError::Unsupported(
                 "INSPECT TALLYING … FOR LEADING combined with REPLACING is a later rung".into(),
@@ -2606,8 +2620,53 @@ impl<'a> Compiler<'a> {
         }
         let counter_reg = self.items[cidx].reg.clone();
 
-        // The delimiter reduced to a single byte code register.
-        let d_reg = self.single_delim_code(delim_node, "INSPECT")?;
+        // `FOR CHARACTERS` is the "count every position" form: instead of scanning for
+        // delimiter matches, the count is simply the NUMBER OF POSITIONS in the region
+        // window. There is NO delimiter to reduce (`delim_node` is `None`), so we skip
+        // `single_delim_code` and the per-position match loop entirely and emit only:
+        //   * `len = str_len(S)`;
+        //   * the optional `{BEFORE|AFTER} x` window `[start, end)` (the SAME window the
+        //     ALL/LEADING count uses, so the not-found asymmetry is inherited verbatim);
+        //   * `cnt = end - start` when a region is present, else `cnt = len`.
+        // This is exactly the oracle's `window.len()` — with no region that is
+        // `len(S)`, with a region it is `end - start` of the identical window — so the
+        // count value is byte-identical across the two engines. A `BEFORE x` with `x`
+        // absent yields the whole source (`end = len`, `start = 0`); an `AFTER x` with
+        // `x` absent yields 0 (`start = end = len`), both by the shared window helper.
+        if characters {
+            let len = self.fresh("_insplen");
+            self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.to_string())], "i64");
+            let region_window = self.emit_inspect_region_window(region, s_reg, &len)?;
+            let cnt = match region_window {
+                Some((start, win_end)) => {
+                    // count = end - start (the window length).
+                    let c = self.fresh("_inspclen");
+                    self.emit(
+                        "sub",
+                        Some(&c),
+                        vec![Operand::Var(win_end), Operand::Var(start)],
+                        "i64",
+                    );
+                    c
+                }
+                // No region → count the WHOLE source: `len(S)`.
+                None => len,
+            };
+            // counter := counter_value + cnt, reduced into the counter's picture — the
+            // SAME numeric-store ADD the ALL/LEADING path uses below, so the reshape
+            // (COBOL's silent high-order truncation) matches the oracle's
+            // `store_result(counter, counter + count)`.
+            let sum = self.fresh("_inspsum");
+            self.emit("add", Some(&sum), vec![Operand::Var(counter_reg), Operand::Var(cnt)], "i64");
+            return self.store_scaled(&counter_name, &sum, 0, int_digits + 1, false);
+        }
+
+        // The delimiter reduced to a single byte code register (ALL/LEADING only —
+        // `delim_node` is `Some` here because `characters` is `false`).
+        let d_reg = self.single_delim_code(
+            delim_node.expect("ALL/LEADING tally carries a delimiter node"),
+            "INSPECT",
+        )?;
 
         // cnt = 0; j = 0; len = str_len(S).
         let cnt = self.fresh("_inspc");
@@ -5881,21 +5940,30 @@ enum RegionKind {
 }
 
 /// The parsed pieces of a `TALLYING counter FOR ALL|LEADING delim [{BEFORE|AFTER}
-/// x]` phrase: `(counter_name, delim_node, leading, region)`, where `region` is the
-/// optional `{BEFORE|AFTER} x` window as `(kind, region_delim_node)`. The node
-/// references borrow from the `inspect_stmt` CST the reader was handed.
-type TallyPhrase<'a> = (String, &'a GrammarASTNode, bool, Option<(RegionKind, &'a GrammarASTNode)>);
+/// x]` (or `FOR CHARACTERS [{BEFORE|AFTER} x]`) phrase: `(counter_name, delim_node,
+/// leading, characters, region)`, where `region` is the optional `{BEFORE|AFTER} x`
+/// window as `(kind, region_delim_node)`. `delim_node` is `None` on the `CHARACTERS`
+/// path (that form carries no delimiter operand — it counts positions), and `Some`
+/// otherwise. The node references borrow from the `inspect_stmt` CST the reader was
+/// handed.
+type TallyPhrase<'a> =
+    (String, Option<&'a GrammarASTNode>, bool, bool, Option<(RegionKind, &'a GrammarASTNode)>);
 
 /// Extract the supported `TALLYING counter FOR ALL delim [{BEFORE|AFTER} x]` /
-/// `FOR LEADING delim` phrase from an `inspect_stmt`, returning `(counter_name,
-/// delim_operand_node, leading, region)` where `leading` is `true` for `FOR
-/// LEADING` (count only the leading run) and `false` for `FOR ALL` (count every
-/// occurrence), and `region` carries an optional `{BEFORE|AFTER} x` window as
-/// `(kind, region_delim_node)`. Rejects every later-rung form the grammar also
-/// accepts:
+/// `FOR LEADING delim` / `FOR CHARACTERS [{BEFORE|AFTER} x]` phrase from an
+/// `inspect_stmt`, returning `(counter_name, delim_operand_node, leading,
+/// characters, region)` where `leading` is `true` for `FOR LEADING` (count only the
+/// leading run) and `false` for `FOR ALL` (count every occurrence), `characters` is
+/// `true` for `FOR CHARACTERS` (count every POSITION in the window; `delim_node` is
+/// then `None` and `leading` is `false`), and `region` carries an optional
+/// `{BEFORE|AFTER} x` window as `(kind, region_delim_node)`. Rejects every later-rung
+/// form the grammar also accepts:
 ///   * more than one `TALLYING` counter (`{ tally_for }`) — one counter this rung;
-///   * more than one `FOR` phrase on that counter (`{ tally_item }`);
-///   * a `CHARACTERS` tally (only `ALL`/`LEADING` this rung).
+///   * more than one `FOR` phrase on that counter (`{ tally_item }`).
+///
+/// `CHARACTERS` is now ACCEPTED for this single-item single-counter phrase (count =
+/// window length); only the multi-item / multi-counter `CHARACTERS` forms remain
+/// later rungs, rejected in `inspect_tally_multi` / `inspect_tally_counters`.
 ///
 /// A `FOR LEADING` phrase carrying a region is now ACCEPTED — the STANDALONE
 /// `FOR LEADING … BEFORE/AFTER` form is supported this rung (the count anchors the
@@ -5930,21 +5998,23 @@ fn inspect_tally_all(verb: &GrammarASTNode) -> Result<TallyPhrase<'_>, CompileEr
         }
     };
     let toks = child_tokens(ti);
-    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
-        return Err(CompileError::Unsupported(
-            "INSPECT TALLYING … FOR CHARACTERS is a later rung".into(),
-        ));
-    }
-    // `FOR LEADING` is now supported (count only the leading run); `FOR ALL` is the
-    // default. The keyword selects the scan's stop-on-mismatch behaviour.
+    // `FOR CHARACTERS` is the "count every position" form. The grammar's CHARACTERS
+    // branch of `tally_item` is `CHARACTERS { inspect_region }` — it carries NO
+    // delimiter operand — so on this path `delim_node` is `None` and the emitter counts
+    // the window LENGTH rather than scanning for delimiter matches. Detected at the
+    // SAME point the oracle's reader detects it, so the two engines' accept sets match.
+    let characters = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS");
+    // `FOR LEADING` is supported (count only the leading run); `FOR ALL` is the
+    // default. The keyword selects the scan's stop-on-mismatch behaviour. CHARACTERS
+    // never carries LEADING, so this stays `false` on that path.
     let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
     // A `{BEFORE|AFTER} x` region now PARSES into `Option<(RegionKind, node)>` (it
-    // used to be rejected wholesale here) REGARDLESS of `leading`: the STANDALONE
-    // `FOR LEADING … BEFORE/AFTER` form is supported this rung (the count anchors the
-    // leading run at the window start — see `emit_inspect_tallying`). The COMBINED
-    // form still defers a LEADING half with a region; `emit_inspect_tallying` re-imposes
-    // that via its `allow_leading_region` flag, so relaxing this shared reader does not
-    // leak the combination into the combined form.
+    // used to be rejected wholesale here) REGARDLESS of `leading`/`characters`: the
+    // STANDALONE `FOR LEADING … BEFORE/AFTER` and `FOR CHARACTERS … BEFORE/AFTER` forms
+    // are supported this rung (see `emit_inspect_tallying`). The COMBINED form still
+    // defers a LEADING half with a region; `emit_inspect_tallying` re-imposes that via
+    // its `allow_leading_region` flag, so relaxing this shared reader does not leak the
+    // combination into the combined form.
     let region = match child_node(ti, "inspect_region") {
         None => None,
         Some(region_node) => {
@@ -5964,10 +6034,16 @@ fn inspect_tally_all(verb: &GrammarASTNode) -> Result<TallyPhrase<'_>, CompileEr
             Some((kind, rdelim))
         }
     };
-    let delim = child_node(ti, "operand").ok_or_else(|| {
-        CompileError::Malformed("INSPECT TALLYING FOR ALL/LEADING without a delimiter".into())
-    })?;
-    Ok((counter, delim, leading, region))
+    // The CHARACTERS path has no delimiter operand to read (`delim_node = None`); the
+    // ALL/LEADING path reads its single-char delimiter as before.
+    let delim = if characters {
+        None
+    } else {
+        Some(child_node(ti, "operand").ok_or_else(|| {
+            CompileError::Malformed("INSPECT TALLYING FOR ALL/LEADING without a delimiter".into())
+        })?)
+    };
+    Ok((counter, delim, leading, characters, region))
 }
 
 /// Extract the `TALLYING counter FOR ALL a ALL b [ALL d …]` phrase of a multi-item
