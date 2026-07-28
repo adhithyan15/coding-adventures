@@ -1530,6 +1530,17 @@ fn scan_stmt_for_builtin(s: &Stmt) -> Option<(String, Span)> {
         Stmt::SingletonClassDef { span, .. } => {
             Some(("class << self (singleton class)".to_string(), span.clone()))
         }
+        // OOP slice 1: a `Stmt::ClassDef` emits only a comment (the empty base
+        // class is a bare name), so REJECT the two shapes that comment would
+        // silently drop — a superclass (inheritance dispatch is a later slice)
+        // and a non-empty body (class-level code / `@@x` initializers) — rather
+        // than mis-emit.  The empty base class passes through.
+        Stmt::ClassDef {
+            superclass, body, span, ..
+        } if superclass.is_some() || !body.is_empty() => Some((
+            "a class with a superclass or a non-empty body (later OOP slices)".to_string(),
+            span.clone(),
+        )),
         _ => None,
     }
 }

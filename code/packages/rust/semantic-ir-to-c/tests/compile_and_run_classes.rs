@@ -203,4 +203,28 @@ fn deferred_oop_shapes_are_rejected_cleanly() {
         ),
         "__method__ dispatch must be rejected"
     );
+    // A superclass (inheritance dispatch is a later slice) — the empty-class
+    // comment emit would otherwise silently drop the link.
+    assert!(
+        rejects(
+            vec![Stmt::ClassDef { name: "Dog".into(), superclass: Some("Animal".into()), body: vec![], span: s() }],
+            &[Feature::Classes]
+        ),
+        "a superclass must be rejected"
+    );
+    // A non-empty class body (its content would be silently dropped by the
+    // comment emit) — here a `Const`-assign body stmt (an accepted feature, so it
+    // passes the manifest gate and must be caught by the scan, not dropped).
+    assert!(
+        rejects(
+            vec![Stmt::ClassDef {
+                name: "Foo".into(),
+                superclass: None,
+                body: vec![Stmt::Assign { name: "PI".into(), scope: Scope::Const, value: ilit(3), span: s() }],
+                span: s(),
+            }],
+            &[Feature::Classes, Feature::Constants]
+        ),
+        "a non-empty class body must be rejected"
+    );
 }
