@@ -145,9 +145,17 @@ incremental_finish() -> GcCycleStats
 - `incremental_step` is the *only* bounded-pause primitive; the budget maps directly to
   worst-case step latency (objects × per-object scan cost). A caller drives it to `done`,
   then calls `finish`.
-- The **sweep is still monolithic** in this rung (it walks the all-list once). If sweep pause
-  itself becomes the bottleneck, an incremental *sweep* (a sweep cursor carried between steps)
-  is a strictly-additive follow-up; marking is the harder invariant and lands first.
+- ~~The **sweep is still monolithic** in this rung (it walks the all-list once).~~
+  **Implemented (gc-core 0.21.0).** `FlatHeap::incremental_sweep_step(budget)` carries a
+  persistent sweep cursor (`SweepState`) between calls, freeing/aging at most `budget` blocks
+  per step; `incremental_finish` drains any remainder (so `start → step* → sweep_step* → finish`
+  and `start → step* → finish` yield byte-identical results). A block allocated between sweep
+  steps is born **black** and survives the running sweep. The stepped and monolithic sweeps
+  share one `sweep_free_or_keep` helper so their free/age logic cannot drift. Two soundness
+  fixes came with it: read the successor link *before* the helper frees the block (a UAF the
+  monolithic sweep also latently had), and persist the resume point as a **block pointer**
+  re-deriving the `&mut self.all` cursor freshly each slice (a `self`-derived pointer cannot
+  survive a call boundary — Stacked-Borrows UB, now Miri-clean).
 
 ---
 
@@ -296,5 +304,6 @@ defer the barrier PRs, exactly as T3 offered a pin-only fallback.
   optional `finish`-time root re-scan. Documented, not silently assumed.
 - **Floating garbage.** Insertion barrier + alloc-black retain some dead objects one extra
   cycle — a throughput/footprint cost, never a safety one; acceptable and self-correcting.
-- **Sweep pause.** This rung bounds *mark*, not *sweep*. If sweep dominates, incremental sweep
-  is a clean additive follow-up (a persistent sweep cursor).
+- **Sweep pause.** Now bounded too (gc-core 0.21.0): `incremental_sweep_step(budget)` carries a
+  persistent sweep cursor, so a full `start → step* → sweep_step* → finish` cycle bounds *both*
+  the mark and the sweep pause. See the §4 note above.

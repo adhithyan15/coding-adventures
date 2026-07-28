@@ -218,6 +218,42 @@ pub struct FlatHeap {
     /// (`mark_regions`), exactly the pair [`Self::collect_mixed`] consumes. Cleared at finish.
     mark_roots: Vec<usize>,
     mark_regions: Vec<(*const u8, usize)>,
+    /// Persistent state of an **in-progress incremental sweep** (AOT00-T4 §4): the sweep
+    /// cursor + running tallies, carried across [`Self::incremental_sweep_step`] calls so the
+    /// sweep pause is bounded exactly like the mark. `None` unless a stepped sweep is under
+    /// way. [`Self::incremental_finish`] drains any remainder and consumes it.
+    sweep_state: Option<SweepState>,
+}
+
+/// The resumable state of an incremental sweep — the sweep-phase analogue of the mark's
+/// [`FlatHeap::mark_worklist`] (AOT00-T4 §4). The monolithic [`FlatHeap::sweep`] keeps this on
+/// its stack; a *stepped* sweep hoists it here so one slice can stop mid-list and the next
+/// resume from the same link.
+struct SweepState {
+    /// The last **kept** block — the resume point. The next slice recomputes its live cursor
+    /// as `&mut (*resume_after).next` (or `&mut self.all` when null, i.e. nothing kept yet).
+    ///
+    /// Crucially this is a pointer *into a malloc'd block* (or null), **not** a `&mut self.all`
+    /// re-derived pointer: persisting the latter across slices is Undefined Behaviour, because
+    /// each `&mut self` at the next `incremental_sweep_step`/`incremental_finish` call performs a
+    /// function-entry retag that invalidates any tag previously derived from `self` (caught by
+    /// Miri's Stacked Borrows). A block pointer survives those retags, so each slice re-derives
+    /// the `&mut self.all`/`&mut (*resume_after).next` cursor *freshly* under its own `&mut self`.
+    resume_after: *mut FlatHeader,
+    /// Objects freed / survived / live-payload-bytes accumulated so far this sweep.
+    freed: usize,
+    survived: usize,
+    live: usize,
+    /// Heap object count / live bytes captured at sweep start, for the cycle's `GcCycleStats`.
+    before: usize,
+    prev_live: usize,
+}
+
+/// The outcome of visiting one block in a full sweep (see [`FlatHeap::sweep_free_or_keep`]):
+/// a live block is **kept** (carrying its live payload bytes) or a dead block is **freed**.
+enum SweepVisit {
+    Kept(usize),
+    Freed,
 }
 
 /// Default [`FlatHeap::tenure_age`]: **1** — a survivor tenures on its first
@@ -344,6 +380,7 @@ impl FlatHeap {
             mark_in_progress: false,
             mark_roots: Vec::new(),
             mark_regions: Vec::new(),
+            sweep_state: None,
         }
     }
 
@@ -1081,33 +1118,150 @@ impl FlatHeap {
         done
     }
 
-    /// **Finish** the incremental cycle (AOT00-T4 §4): sweep every white (unreachable) object,
-    /// rebuild the remembered set, adapt the threshold, and end the phase. Marking must be
-    /// complete (the worklist empty) — the caller drives [`Self::incremental_step`] to `true`
-    /// first. Returns the cycle's [`GcCycleStats`]. The sweep is monolithic in this rung
-    /// (bounding *sweep* pauses is a strictly-additive follow-up).
+    /// **Advance the sweep** by up to `budget` blocks (AOT00-T4 §4) — the sweep-phase analogue
+    /// of [`Self::incremental_step`], so the *sweep* pause is bounded just like the mark. Frees
+    /// each unreachable (white) block and ages each survivor, resuming from a persistent cursor
+    /// ([`FlatHeap::sweep_state`]); returns `true` once the whole all-list has been swept.
+    ///
+    /// Optional: a caller that wants a fully bounded cycle drives
+    /// `start → step* → sweep_step* → finish`; a caller happy with a monolithic sweep just
+    /// calls `finish` directly (which sweeps whatever the stepped sweep left, including all of
+    /// it). Marking must be complete before the first sweep step.
+    ///
+    /// # Budget & mutation. `budget` bounds *blocks visited* (freed or kept) per call, so the
+    /// pause scales with `budget`. Objects allocated between sweep steps are born **black**
+    /// (`mark_in_progress` is still set) and are prepended ahead of the cursor, so the running
+    /// sweep never visits or frees them — they simply survive to the next cycle.
     ///
     /// # Safety
-    /// Must be called only after [`Self::incremental_start`] with marking complete.
+    /// Called only after [`Self::incremental_start`] with marking complete; single mutator; no
+    /// other collection runs mid-cycle.
+    pub unsafe fn incremental_sweep_step(&mut self, budget: usize) -> bool {
+        debug_assert!(self.mark_in_progress, "incremental_sweep_step outside a mark phase");
+        debug_assert!(self.mark_worklist.is_empty(), "sweep before marking is complete");
+        // Lazily begin the sweep on the first call: resume at the list head, tallies zeroed.
+        if self.sweep_state.is_none() {
+            let before = self.object_count();
+            let prev_live = self.live_bytes;
+            self.sweep_state = Some(SweepState {
+                resume_after: ptr::null_mut(),
+                freed: 0,
+                survived: 0,
+                live: 0,
+                before,
+                prev_live,
+            });
+        }
+        // Operate on the state out-of-band so `sweep_free_or_keep` (which borrows nothing of
+        // `self`) and the raw-pointer cursor writes don't collide with the field borrow.
+        let mut st = self.sweep_state.take().expect("just initialised");
+        let tenure = self.tenure_age;
+        // Promotions are subsumed by the finish-time `rebuild_remembered`, so a throwaway
+        // scratch suffices (matching how `collect_mixed` discards `sweep`'s `promoted`).
+        let mut promoted_scratch: Vec<*mut FlatHeader> = Vec::new();
+        // Re-derive the live cursor *freshly* under this call's `&mut self` from the persisted
+        // resume block — never carry a `self`-derived pointer across the call boundary.
+        let mut cursor: *mut *mut FlatHeader = if st.resume_after.is_null() {
+            &mut self.all
+        } else {
+            &mut (*st.resume_after).next
+        };
+        let mut visited = 0usize;
+        while visited < budget && !(*cursor).is_null() {
+            let h = *cursor;
+            // Read the successor *before* `sweep_free_or_keep`, whose `Freed` arm deallocates
+            // `h` — touching `(*h).next` afterward would be a use-after-free.
+            let next = (*h).next;
+            match Self::sweep_free_or_keep(h, tenure, &mut promoted_scratch) {
+                SweepVisit::Kept(sz) => {
+                    st.survived += 1;
+                    st.live += sz;
+                    st.resume_after = h;
+                    cursor = &mut (*h).next;
+                }
+                SweepVisit::Freed => {
+                    *cursor = next;
+                    st.freed += 1;
+                }
+            }
+            visited += 1;
+        }
+        let done = (*cursor).is_null();
+        self.sweep_state = Some(st);
+        done
+    }
+
+    /// Whether an incremental **sweep** is currently in progress (test/introspection).
+    pub fn incremental_sweeping(&self) -> bool {
+        self.sweep_state.is_some()
+    }
+
+    /// **Finish** the incremental cycle (AOT00-T4 §4): ensure the sweep is complete (draining
+    /// any remainder — or doing the whole sweep monolithically if the caller never stepped it),
+    /// rebuild the remembered set, adapt the threshold, and end the phase. Marking must already
+    /// be complete (the worklist empty). Returns the cycle's [`GcCycleStats`].
+    ///
+    /// This is robust to either drive style: `start → step* → finish` (finish sweeps
+    /// monolithically) **or** `start → step* → sweep_step* → finish` (finish just consumes the
+    /// stepped tallies, draining any blocks a short final `sweep_step` left).
+    ///
+    /// # Safety
+    /// Called only after [`Self::incremental_start`] with marking complete.
     pub unsafe fn incremental_finish(&mut self) -> GcCycleStats {
         debug_assert!(self.mark_in_progress, "incremental_finish outside a mark phase");
         debug_assert!(self.mark_worklist.is_empty(), "marking not complete — step to done first");
-        let before = self.object_count();
-        let prev_live = self.live_bytes;
 
-        // Free every white object; keep + age every marked (black) survivor. Identical sweep
-        // to a full `collect_mixed` — the incremental mark just computed the same mark bits in
-        // slices.
-        let (freed, survived, live, _promoted) = self.sweep(false);
-        self.live_bytes = live;
+        let (freed, survived, before, prev_live) = if let Some(mut st) = self.sweep_state.take() {
+            // A stepped sweep is under way. Drain any remaining blocks monolithically so finish
+            // always leaves the all-list fully swept, whatever the caller's last `sweep_step`
+            // budget was (or if they never reached the end).
+            let tenure = self.tenure_age;
+            // Promotions are recomputed by `rebuild_remembered` below, so a throwaway suffices.
+            let mut promoted_scratch: Vec<*mut FlatHeader> = Vec::new();
+            // Re-derive the cursor freshly under this `&mut self` from the persisted resume block.
+            let mut cursor: *mut *mut FlatHeader = if st.resume_after.is_null() {
+                &mut self.all
+            } else {
+                &mut (*st.resume_after).next
+            };
+            while !(*cursor).is_null() {
+                let h = *cursor;
+                // As in `incremental_sweep_step`: capture the successor before the helper's
+                // `Freed` arm frees `h`.
+                let next = (*h).next;
+                match Self::sweep_free_or_keep(h, tenure, &mut promoted_scratch) {
+                    SweepVisit::Kept(sz) => {
+                        st.survived += 1;
+                        st.live += sz;
+                        st.resume_after = h;
+                        cursor = &mut (*h).next;
+                    }
+                    SweepVisit::Freed => {
+                        *cursor = next;
+                        st.freed += 1;
+                    }
+                }
+            }
+            self.live_bytes = st.live;
+            (st.freed, st.survived, st.before, st.prev_live)
+        } else {
+            // No stepped sweep — do the whole sweep now (identical to a full `collect_mixed`).
+            let before = self.object_count();
+            let prev_live = self.live_bytes;
+            let (freed, survived, live, _promoted) = self.sweep(false);
+            self.live_bytes = live;
+            (freed, survived, before, prev_live)
+        };
+
         self.adapt_threshold(prev_live);
         self.rebuild_remembered();
 
-        // End the phase; drop the root snapshot and (already-empty) worklist.
+        // End the phase; drop the root snapshot, the (already-empty) worklist, and sweep state.
         self.mark_in_progress = false;
         self.mark_roots.clear();
         self.mark_regions.clear();
         self.mark_worklist.clear();
+        self.sweep_state = None;
 
         let stats = GcCycleStats {
             freed,
@@ -1792,52 +1946,74 @@ impl FlatHeap {
                     cursor = &mut (*h).next;
                     continue;
                 }
-                if (*h).marked {
-                    (*h).marked = false;
-                    // Tenure the survivor, but only once it has *aged* enough. A
-                    // young object that lives through a collection has its `age`
-                    // bumped (saturating); when `age` reaches `tenure_age` it is
-                    // promoted to the old generation so a future minor GC can skip
-                    // it. With the default threshold of 1 this is immediate
-                    // tenuring (age 0 → 1 ≥ 1). Already-old objects never age and
-                    // simply stay old. Keeping soon-to-die objects young a little
-                    // longer means a cheap minor GC reclaims them, instead of a
-                    // full GC being needed to clear the old generation.
-                    if (*h).generation == GEN_YOUNG {
-                        (*h).age = (*h).age.saturating_add(1);
-                        if (*h).age >= self.tenure_age {
-                            (*h).generation = GEN_OLD;
-                            // Record newly-promoted objects so the caller can add
-                            // any that hold an old→young pointer to the remembered
-                            // set (the promotion barrier — see `record_promoted_
-                            // old_to_young` / `rebuild_remembered`). A store made
-                            // into this object *while it was young* fired no write
-                            // barrier, so under aging (where a parent can tenure a
-                            // cycle before its child) that edge would otherwise be
-                            // invisible to the next minor GC → use-after-free.
-                            promoted.push(h);
-                        }
+                // Capture the successor *before* `sweep_free_or_keep`, whose `Freed` arm
+                // deallocates `h` — reading `(*h).next` after that is a use-after-free.
+                let next = (*h).next;
+                match Self::sweep_free_or_keep(h, self.tenure_age, &mut promoted) {
+                    SweepVisit::Kept(sz) => {
+                        survived += 1;
+                        live += sz;
+                        cursor = &mut (*h).next;
                     }
-                    survived += 1;
-                    live += (*h).size;
-                    cursor = &mut (*h).next;
-                } else {
-                    // Unlink the dead block from the all-list either way.
-                    *cursor = (*h).next;
-                    // Provenance: an **arena-backed** block is a slice of a big arena
-                    // allocation — it must NOT be `dealloc`'d individually (that is UB);
-                    // its storage is reclaimed when the whole arena drops. Only a normal
-                    // per-object `alloc`'d block is freed here.
-                    if !(*h).arena_backed {
-                        let layout =
-                            Layout::from_size_align_unchecked(HEADER_SIZE + (*h).size, ALIGN);
-                        dealloc(h as *mut u8, layout);
+                    SweepVisit::Freed => {
+                        // Unlink the dead block; the successor moves under the same cursor.
+                        *cursor = next;
+                        freed += 1;
                     }
-                    freed += 1;
                 }
             }
         }
         (freed, survived, live, promoted)
+    }
+
+    /// Decide the fate of one block during a **full** sweep and enact it: a **marked** (live)
+    /// block has its mark cleared, is aged, and tenured to [`GEN_OLD`] once its
+    /// [`FlatHeader::age`] reaches [`Self::tenure_age`] (recording it in `promoted` for the
+    /// promotion barrier); an **unmarked** (dead) block is **freed** here — unless it is
+    /// [`FlatHeader::arena_backed`] (a slice of an arena, freed en masse when the arena drops,
+    /// never individually — that would be UB). Returns [`SweepVisit::Kept`] (with the live
+    /// payload bytes) or [`SweepVisit::Freed`]; the caller advances/unlinks the cursor. Shared
+    /// verbatim by the monolithic [`Self::sweep`] and the stepped
+    /// [`Self::incremental_sweep_step`] so their free/age logic can never drift apart.
+    ///
+    /// # Safety
+    /// `h` is a live block owned by this heap; on `Freed` it is deallocated, so the caller must
+    /// not touch `h` afterward (it reads `(*h).next` *before* calling to relink).
+    unsafe fn sweep_free_or_keep(
+        h: *mut FlatHeader,
+        tenure_age: u8,
+        promoted: &mut Vec<*mut FlatHeader>,
+    ) -> SweepVisit {
+        if (*h).marked {
+            (*h).marked = false;
+            // Tenure the survivor, but only once it has *aged* enough. A young object that
+            // lives through a collection has its `age` bumped (saturating); when `age` reaches
+            // `tenure_age` it is promoted to the old generation so a future minor GC can skip
+            // it. With the default threshold of 1 this is immediate tenuring (age 0 → 1 ≥ 1).
+            // Already-old objects never age. Keeping soon-to-die objects young a little longer
+            // means a cheap minor GC reclaims them instead of a full GC.
+            if (*h).generation == GEN_YOUNG {
+                (*h).age = (*h).age.saturating_add(1);
+                if (*h).age >= tenure_age {
+                    (*h).generation = GEN_OLD;
+                    // Record newly-promoted objects so the caller can add any that hold an
+                    // old→young pointer to the remembered set (the promotion barrier). A store
+                    // made into this object *while it was young* fired no write barrier, so
+                    // under aging that edge would otherwise be invisible to the next minor GC.
+                    promoted.push(h);
+                }
+            }
+            SweepVisit::Kept((*h).size)
+        } else {
+            // Provenance: an **arena-backed** block is a slice of a big arena allocation — it
+            // must NOT be `dealloc`'d individually (UB); its storage is reclaimed when the
+            // whole arena drops. Only a normal per-object `alloc`'d block is freed here.
+            if !(*h).arena_backed {
+                let layout = Layout::from_size_align_unchecked(HEADER_SIZE + (*h).size, ALIGN);
+                dealloc(h as *mut u8, layout);
+            }
+            SweepVisit::Freed
+        }
     }
 
     /// Return `true` iff the object `h` holds a pointer to a live **young** block —
@@ -3761,6 +3937,136 @@ mod tests {
         let next = unsafe { heap.collect_mixed(&[&root2 as *const usize as usize], &[]) };
         assert_eq!(next.freed, 1, "newborn reclaimed on the following cycle");
         assert_eq!(heap.object_count(), 1);
+    }
+
+    // ── Incremental collector — the bounded SWEEP (AOT00-T4 §4) ──
+
+    /// Build a heap with `live` rooted survivors (a chain `r → …`) and `garbage` unreachable
+    /// objects, mark it to completion incrementally, and return `(heap, root, ())` poised at
+    /// the start of the sweep. Every object uses a single-ref-field kind.
+    unsafe fn swept_heap(live: usize, garbage: usize) -> (FlatHeap, usize) {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        // A chain of `live` reachable objects: root -> n1 -> n2 -> … (all kept).
+        let root = heap.alloc(16, k) as usize;
+        let mut prev = root;
+        for _ in 1..live {
+            let next = heap.alloc(16, k) as usize;
+            *(prev as *mut usize) = next;
+            prev = next;
+        }
+        // Unreachable garbage, rooted nowhere.
+        for _ in 0..garbage {
+            let _g = heap.alloc(16, k);
+        }
+        // Mark to completion so the sweep can run.
+        let slots = [&root as *const usize as usize];
+        heap.incremental_start(&slots, &[]);
+        while !heap.incremental_step(4) {}
+        (heap, root)
+    }
+
+    /// **A stepped sweep reclaims exactly what a monolithic one does.** Twin heaps of identical
+    /// shape (3 live, 5 garbage): one is swept in `budget=1` steps then finished; the other is
+    /// finished directly (monolithic sweep). Freed/survived/live counts must match byte-for-byte.
+    #[test]
+    fn incremental_stepped_sweep_equals_monolithic_sweep() {
+        let (mut hs, _rs) = unsafe { swept_heap(3, 5) }; // stepped
+        let (mut hm, _rm) = unsafe { swept_heap(3, 5) }; // monolithic
+
+        // Stepped: one block per call until the whole list is swept, then finish.
+        assert!(!hs.incremental_sweeping(), "no sweep until the first step");
+        let mut steps = 0;
+        while !unsafe { hs.incremental_sweep_step(1) } {
+            assert!(hs.incremental_sweeping(), "a sweep is in progress mid-drain");
+            steps += 1;
+            assert!(steps < 100, "must converge");
+        }
+        let s_stats = unsafe { hs.incremental_finish() };
+
+        // Monolithic: finish with no prior sweep step does the whole sweep at once.
+        let m_stats = unsafe { hm.incremental_finish() };
+
+        assert_eq!(s_stats.freed, m_stats.freed, "same garbage reclaimed");
+        assert_eq!(s_stats.freed, 5, "all five garbage objects freed");
+        assert_eq!(s_stats.survived, m_stats.survived, "same survivor count");
+        assert_eq!(hs.object_count(), hm.object_count(), "same live object count");
+        assert_eq!(hs.object_count(), 3, "the three-object live chain survives");
+        assert_eq!(hs.live_bytes(), hm.live_bytes(), "same live bytes");
+        assert!(!hs.incremental_sweeping(), "sweep state cleared at finish");
+        assert!(!hs.incremental_in_progress(), "mark phase ended at finish");
+    }
+
+    /// **A sweep step is bounded by its budget.** With every step visiting exactly one block
+    /// (`budget=1`), the number of steps to completion equals the total block count — the pause
+    /// per step is O(budget), not O(heap). 2 live + 6 garbage = 8 blocks ⇒ 8 single-block steps.
+    #[test]
+    fn incremental_sweep_step_is_bounded() {
+        let (mut heap, _root) = unsafe { swept_heap(2, 6) };
+        assert_eq!(heap.object_count(), 8, "2 live + 6 garbage");
+
+        let mut steps = 0;
+        loop {
+            let done = unsafe { heap.incremental_sweep_step(1) };
+            steps += 1;
+            if done {
+                break;
+            }
+            assert!(steps < 100, "must converge");
+        }
+        // Exactly one block visited per step ⇒ steps == total blocks (8).
+        assert_eq!(steps, 8, "one block visited per budget-1 step across all eight blocks");
+
+        let stats = unsafe { heap.incremental_finish() };
+        assert_eq!(stats.freed, 6, "the six garbage objects reclaimed");
+        assert_eq!(heap.object_count(), 2, "the two live objects survive");
+    }
+
+    /// **Finish drains a partially-stepped sweep.** After only a couple of `sweep_step`s over an
+    /// 8-block heap, `finish` must sweep the remaining blocks monolithically so the all-list ends
+    /// fully swept — regardless of how far the stepped sweep got.
+    #[test]
+    fn incremental_finish_drains_partial_sweep() {
+        let (mut heap, _root) = unsafe { swept_heap(2, 6) };
+        // Take only two small steps — the sweep is nowhere near done.
+        let d1 = unsafe { heap.incremental_sweep_step(2) };
+        let d2 = unsafe { heap.incremental_sweep_step(2) };
+        assert!(!d1 && !d2, "four of eight blocks visited — not finished");
+        assert!(heap.incremental_sweeping(), "a partial sweep is outstanding");
+
+        // Finish drains the rest.
+        let stats = unsafe { heap.incremental_finish() };
+        assert_eq!(stats.freed, 6, "all garbage reclaimed even though only half was stepped");
+        assert_eq!(heap.object_count(), 2, "the live chain survives");
+        assert!(!heap.incremental_sweeping(), "sweep fully drained at finish");
+    }
+
+    /// **An object born mid-sweep survives the cycle** (alloc-black). Allocated between sweep
+    /// steps, unrooted, it must not be reclaimed by the running sweep — it is coloured black on
+    /// birth (`mark_in_progress` still set), so whether or not the cursor revisits the list head
+    /// it is kept. The *following* cycle, where it is white and unrooted, reclaims it.
+    #[test]
+    fn incremental_newborn_during_sweep_survives() {
+        let (mut heap, root) = unsafe { swept_heap(1, 3) }; // 1 live, 3 garbage
+        let k = heap.register_kind(&[0]);
+
+        // Start sweeping, then allocate mid-sweep — born black, rooted nowhere.
+        let _d = unsafe { heap.incremental_sweep_step(1) };
+        assert!(heap.incremental_sweeping());
+        let _newborn = heap.alloc(16, k);
+        // Drive the sweep to completion and finish.
+        while !unsafe { heap.incremental_sweep_step(2) } {}
+        let stats = unsafe { heap.incremental_finish() };
+
+        assert_eq!(stats.freed, 3, "only the three original garbage objects are reclaimed");
+        assert_eq!(heap.object_count(), 2, "rooted survivor + the mid-sweep newborn both live");
+
+        // Next cycle: the newborn is now white and unrooted ⇒ reclaimed, proving it was spared
+        // only because it was born black during the sweep.
+        let root2 = root;
+        let next = unsafe { heap.collect_mixed(&[&root2 as *const usize as usize], &[]) };
+        assert_eq!(next.freed, 1, "the newborn is reclaimed on the following cycle");
+        assert_eq!(heap.object_count(), 1, "just the rooted survivor remains");
     }
 
     // ── Incremental collector — the Dijkstra insertion write barrier (AOT00-T4 PR-2) ──
