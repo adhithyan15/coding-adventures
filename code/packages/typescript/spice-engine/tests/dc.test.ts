@@ -1265,6 +1265,7 @@ describe("dcOp", () => {
           NRD: 2.0,
           NRS: 3.0,
           AD: 4.0e-12,
+          AS: 5.0e-12,
           CJ: 2.0e-3,
           TOX: 25.0e-9,
         }),
@@ -1284,6 +1285,7 @@ describe("dcOp", () => {
     expectClose(expanded!.params.NRD, 2.0);
     expectClose(expanded!.params.NRS, 3.0);
     expectClose(expanded!.params.AD, 4.0e-12);
+    expectClose(expanded!.params.AS, 5.0e-12);
     expectClose(expanded!.params.CJ, 2.0e-3);
     expectClose(expanded!.params.TOX, 25.0e-9);
   });
@@ -2576,6 +2578,20 @@ describe("dcOp", () => {
         Number.isFinite(drainArea)
           ? "MOSFET AD must be non-negative"
           : "MOSFET AD must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET source areas", () => {
+    for (const sourceArea of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        AS: sourceArea,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(sourceArea)
+          ? "MOSFET AS must be non-negative"
+          : "MOSFET AS must be finite",
       );
     }
   });

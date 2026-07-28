@@ -35,6 +35,7 @@ class Level1Params:
     NRD: float = 1.0  # number of drain diffusion squares
     NRS: float = 1.0  # number of source diffusion squares
     AD: float = 0.0  # drain diffusion area (m^2)
+    AS: float = 0.0  # source diffusion area (m^2)
     CJ: float = 0.0  # bottom junction capacitance per area (F/m^2)
     IS: float = 1e-15  # saturation current (A)
     N_SUB: float = 1.4  # subthreshold slope factor
@@ -141,6 +142,8 @@ def evaluate_level1(
         raise ValueError("MOSFET NRS must be finite and non-negative")
     if not isfinite(p.AD) or p.AD < 0.0:
         raise ValueError("MOSFET AD must be finite and non-negative")
+    if not isfinite(p.AS) or p.AS < 0.0:
+        raise ValueError("MOSFET AS must be finite and non-negative")
     if not isfinite(p.CJ) or p.CJ < 0.0:
         raise ValueError("MOSFET CJ must be finite and non-negative")
     beta = p.KP * (p.W / effective_length)
@@ -164,7 +167,13 @@ def evaluate_level1(
     )
     Cgd_intrinsic = 0.0
     Cgb_intrinsic = 0.0
-    Cbs_bulk = bulk_junction_capacitance(p.CBS, V_BS, p.PB, p.MJ, p.FC)
+    Cbs_bulk = bulk_junction_capacitance(
+        p.CBS + p.CJ * p.AS,
+        V_BS,
+        p.PB,
+        p.MJ,
+        p.FC,
+    )
     Cbd_bulk = bulk_junction_capacitance(
         p.CBD + p.CJ * p.AD,
         V_BS - V_DS,

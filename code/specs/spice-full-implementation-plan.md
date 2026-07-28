@@ -33,17 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS drain diffusion area and bottom capacitance.
+1. Cross-language Level-1 MOS source diffusion area.
    - Status: current PR completion candidate.
-   - Add the Berkeley Level-1 MOS `AD` instance parameter and model-card `CJ`
-     bottom-junction capacitance density in Rust, Python, and TypeScript,
-     defaulting both to zero.
-   - Use `CBD + CJ * AD` as the zero-bias drain-body capacitance in AC and
+   - Add the Berkeley Level-1 MOS `AS` instance parameter in Rust, Python, and
+     TypeScript, defaulting to zero.
+   - Use `CBS + CJ * AS` as the zero-bias source-body capacitance in AC and
      transient analysis while preserving existing `PB`, `MJ`, and `FC`
      depletion shaping.
-   - Preserve `AD` / `CJ` through hierarchy and cloning, enforce finite
-     non-negative validation, parse both in the Rust netlist facade, and raise
-     the model-card coverage gate to 195 canonical rows for `CJ`.
+   - Preserve `AS` through hierarchy and cloning, enforce finite non-negative
+     validation, and parse it in the Rust netlist facade.
 
 ## Completed Slices
 
@@ -3483,6 +3481,17 @@ the Rust, Python, and TypeScript surfaces together.
      cloning preserve `NRS`, finite non-negative validation is shared, and the
      model-card coverage gate remains at 193 canonical rows because `NRS` is
      an instance parameter.
+
+274. Cross-language Level-1 MOS drain diffusion area and bottom capacitance.
+   - Status: completed in PR 9038.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `AD`, and
+     model cards accept `CJ`, both defaulting to zero.
+   - `CBD + CJ * AD` supplies the zero-bias drain-body capacitance in AC and
+     transient analysis while preserving `PB`, `MJ`, and `FC` depletion
+     shaping.
+   - Hierarchy and cloning preserve `AD` / `CJ`, finite non-negative
+     validation is shared, the Rust netlist facade parses both, and the
+     model-card coverage gate now covers 195 canonical rows.
 
 ## Backlog
 

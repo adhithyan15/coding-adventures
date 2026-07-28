@@ -1908,6 +1908,9 @@ fn build_mosfet_params(
     if let Some(value) = instance_params.get("AD") {
         params.drain_area = *value;
     }
+    if let Some(value) = instance_params.get("AS") {
+        params.source_area = *value;
+    }
     params
 }
 

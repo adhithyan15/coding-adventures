@@ -3615,6 +3615,7 @@ pub struct MosfetLevel1Params {
     pub drain_squares: f64,
     pub source_squares: f64,
     pub drain_area: f64,
+    pub source_area: f64,
     pub bottom_junction_capacitance: f64,
     pub saturation_current: f64,
     pub n_sub: f64,
@@ -3649,6 +3650,7 @@ impl Default for MosfetLevel1Params {
             drain_squares: 1.0,
             source_squares: 1.0,
             drain_area: 0.0,
+            source_area: 0.0,
             bottom_junction_capacitance: 0.0,
             saturation_current: 1.0e-15,
             n_sub: 1.4,
@@ -24307,7 +24309,7 @@ fn evaluate_nmos_level1(
     let channel_capacitance =
         params.w * effective_length * (OXIDE_PERMITTIVITY / params.oxide_thickness);
     let cbs_bulk = mosfet_bulk_junction_capacitance(
-        params.source_bulk_capacitance,
+        params.source_bulk_capacitance + params.bottom_junction_capacitance * params.source_area,
         vbs,
         params.bulk_junction_potential,
         params.bulk_junction_grading_coefficient,
@@ -25045,7 +25047,8 @@ fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec> {
     let gate_source_capacitance = params.gate_source_overlap_capacitance * params.w;
     let gate_drain_capacitance = params.gate_drain_overlap_capacitance * params.w;
     let gate_body_capacitance = params.gate_bulk_overlap_capacitance * params.l;
-    let source_body_capacitance = params.source_bulk_capacitance;
+    let source_body_capacitance =
+        params.source_bulk_capacitance + params.bottom_junction_capacitance * params.source_area;
     let drain_body_capacitance =
         params.drain_bulk_capacitance + params.bottom_junction_capacitance * params.drain_area;
     if gate_source_capacitance > 0.0 {
@@ -25679,6 +25682,7 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("NRD", params.drain_squares),
         ("NRS", params.source_squares),
         ("AD", params.drain_area),
+        ("AS", params.source_area),
         ("CJ", params.bottom_junction_capacitance),
         ("TOX", params.oxide_thickness),
         ("IS", params.saturation_current),
@@ -25756,6 +25760,12 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "MOSFET AD must be non-negative".to_string(),
+        });
+    }
+    if params.source_area < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET AS must be non-negative".to_string(),
         });
     }
     if params.bottom_junction_capacitance < 0.0 {

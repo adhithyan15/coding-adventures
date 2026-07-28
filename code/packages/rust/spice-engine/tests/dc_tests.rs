@@ -1803,6 +1803,7 @@ fn subcircuit_expansion_preserves_mos_geometry() {
             drain_squares: 2.0,
             source_squares: 3.0,
             drain_area: 4.0e-12,
+            source_area: 5.0e-12,
             bottom_junction_capacitance: 2.0e-3,
             oxide_thickness: 25.0e-9,
             ..MosfetLevel1Params::default()
@@ -1850,6 +1851,7 @@ fn subcircuit_expansion_preserves_mos_geometry() {
     assert_close(expanded.params.drain_squares, 2.0);
     assert_close(expanded.params.source_squares, 3.0);
     assert_close(expanded.params.drain_area, 4.0e-12);
+    assert_close(expanded.params.source_area, 5.0e-12);
     assert_close(expanded.params.bottom_junction_capacitance, 2.0e-3);
     assert_close(expanded.params.oxide_thickness, 25.0e-9);
 }
@@ -4086,6 +4088,38 @@ fn dc_mosfet_rejects_invalid_drain_area() {
                     "MOSFET AD must be non-negative".to_string()
                 } else {
                     "MOSFET AD must be finite".to_string()
+                },
+            }
+        );
+    }
+}
+
+#[test]
+fn dc_mosfet_rejects_invalid_source_area() {
+    for source_area in [f64::NAN, -1.0] {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "Mbad",
+            "drain",
+            "gate",
+            "0",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                source_area,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+
+        let err = dc_op(&circuit).unwrap_err();
+        assert_eq!(
+            err,
+            SpiceError::InvalidElement {
+                name: "Mbad".to_string(),
+                reason: if source_area.is_finite() {
+                    "MOSFET AS must be non-negative".to_string()
+                } else {
+                    "MOSFET AS must be finite".to_string()
                 },
             }
         );

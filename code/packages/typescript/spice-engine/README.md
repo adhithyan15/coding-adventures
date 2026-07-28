@@ -94,9 +94,9 @@ node, routes the channel and source-side capacitances through it, and contribute
 `RSH` defaults to zero ohms per square. `NRD` and `NRS` default to one drain
 and source square, so the fallbacks are `RSH * NRD` and `RSH * NRS`; explicit
 positive `RD` / `RS` values take precedence.
-`AD` and model-card `CJ` default to zero, are finite and non-negative, and add
-`CJ * AD` to the zero-bias drain-body capacitance `CBD` in AC and transient
-analysis.
+`AD`, `AS`, and model-card `CJ` default to zero and are finite and non-negative.
+They add `CJ * AD` to drain-body `CBD` and `CJ * AS` to source-body `CBS` in
+AC and transient analysis.
 `FC` (default `0.5`) selects the continuous Berkeley forward-bias continuation
 for `CBS` / `CBD` depletion capacitance shaped by `PB` and `MJ`.
 All temperature coefficients honor model-card `TNOM` / `T_NOM`.
