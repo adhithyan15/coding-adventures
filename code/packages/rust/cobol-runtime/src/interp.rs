@@ -358,8 +358,8 @@ impl Machine {
             Stmt::String { sources, target, delim } => {
                 self.exec_string(sources, target, delim.as_ref())?
             }
-            Stmt::Unstring { source, delim, targets } => {
-                self.exec_unstring(source, delim, targets)?
+            Stmt::Unstring { source, delim, targets, pointer } => {
+                self.exec_unstring(source, delim, targets, pointer.as_deref())?
             }
             Stmt::Inspect { source, counter, delim, leading, region } => {
                 return self.exec_inspect(source, counter, delim, *leading, region.as_ref())
@@ -581,11 +581,42 @@ impl Machine {
     /// dropped (that would be `ON OVERFLOW`, a later rung). The
     /// `cobol-iir-compiler` emits a run-time scan loop with these exact semantics,
     /// so a compiled program matches this oracle byte-for-byte.
+    ///
+    /// # `WITH POINTER p`
+    ///
+    /// `p` is an unsigned-integer item (`PIC 9(n)`) holding a **1-based** character
+    /// position in the source. Two things change; the field extraction and receiver
+    /// reshape are otherwise IDENTICAL:
+    ///
+    ///   * **Start offset.** Scanning begins at 0-based index `p_value - 1` instead
+    ///     of 0. So `p = 1` is exactly today's no-pointer behaviour (start at 0),
+    ///     which is the correctness anchor: `… INTO r… WITH POINTER p` with `p = 1`
+    ///     must fill the SAME receivers as the same statement WITHOUT the phrase.
+    ///
+    ///   * **Write-back.** After the scan, `p` is set to the 1-based position of the
+    ///     character immediately following the last one examined. The existing scan
+    ///     leaves its 0-based cursor at `q + 1` past the terminating delimiter; when
+    ///     the last field instead ran to end-of-source (no delimiter) that step is a
+    ///     phantom one past the end. Clamping to `len` removes the phantom, so the
+    ///     write-back value is `min(final_cursor, len) + 1` (the `+ 1` restores
+    ///     1-basing). Worked: source `"a,b,c"` (len 5), `p = 3` → start at index 2
+    ///     ("b,c"), r1="b", r2="c", final cursor 6 → `min(6,5)+1 = 6`.
+    ///
+    /// # Out-of-range initial pointer
+    ///
+    /// `p` is `PIC 9(n)` so `p ≥ 0`. When the initial value is OUTSIDE the valid
+    /// range `[1, len]` — either `p == 0` (a 0-based start of −1) or `p > len` (past
+    /// the source) — this is ISO's overflow condition. Since `ON OVERFLOW` is still
+    /// deferred, we apply the ISO "overflow ⇒ no data movement" rule DETERMINISTIC-
+    /// ally: NO receiver is modified and `p` is left UNCHANGED. Because `p` is a
+    /// run-time value, neither engine can range-check it at build time; the compiler
+    /// emits the identical guard so the accept/skip decision is byte-identical.
     fn exec_unstring(
         &mut self,
         source: &Operand,
         delim: &Operand,
         targets: &[String],
+        pointer: Option<&str>,
     ) -> Result<(), RuntimeError> {
         // The field characters come from ONE of THREE providers; everything after
         // `src` is obtained (the delimiter scan and per-receiver reshape) is
@@ -665,9 +696,66 @@ impl Machine {
             tidx.push(idx);
         }
 
+        // Resolve `WITH POINTER p` (if present) into the scan's initial 0-based
+        // cursor. The pointer item must be an UNSIGNED INTEGER `PIC 9(n)` — the
+        // same class INSPECT's counter demands — so a signed, fractional, non-
+        // numeric, or group `p` is a clean later rung, rejected identically on the
+        // compiler (which checks the picture at build time). We also bound it to 18
+        // digits so the value fits the `i64` the compiler stores it in.
+        //
+        // With a pointer we read its value `pv`, then apply the out-of-range rule:
+        // `pv == 0` (0-based start would underflow to −1) or `pv > len` (start past
+        // the source) is ISO's overflow ⇒ leave every receiver and `p` UNCHANGED
+        // and return. Otherwise the 0-based start is `pv − 1`. The guard runs BEFORE
+        // computing `pv − 1`, so the `usize` never underflows. Without a pointer the
+        // start is 0 and nothing is written back — today's behaviour, unchanged.
+        let start: usize = if let Some(pname) = pointer {
+            let pidx = *self
+                .by_name
+                .get(pname)
+                .ok_or_else(|| RuntimeError::UndefinedName(pname.to_string()))?;
+            match &self.items[pidx].picture {
+                Some(Picture::Numeric { signed: true, .. }) => {
+                    return Err(RuntimeError::Unsupported(format!(
+                        "UNSTRING … WITH POINTER: a signed pointer {pname} is a later rung"
+                    )))
+                }
+                Some(Picture::Numeric { dec_digits, .. }) if *dec_digits != 0 => {
+                    return Err(RuntimeError::Unsupported(format!(
+                        "UNSTRING … WITH POINTER: a non-integer pointer {pname} is a later rung"
+                    )))
+                }
+                Some(Picture::Numeric { int_digits, .. }) if *int_digits > 18 => {
+                    return Err(RuntimeError::Unsupported(format!(
+                        "UNSTRING … WITH POINTER: a pointer {pname} wider than 18 digits is a later rung"
+                    )))
+                }
+                Some(Picture::Numeric { .. }) => {}
+                _ => {
+                    return Err(RuntimeError::Unsupported(format!(
+                        "UNSTRING … WITH POINTER: a non-numeric pointer {pname} is a later rung"
+                    )))
+                }
+            }
+            // The unsigned integer value of `p`. A `PIC 9(n)` item is non-negative
+            // with no fraction, so the magnitude is its integer digits (leading
+            // zeros stripped; an all-zero image parses to 0). Comparing at u128
+            // width cannot overflow for ≤18 digits and keeps a huge `pv` safely
+            // greater than any `len`.
+            let pv_dec = self.named_decimal(pname)?;
+            let pv: u128 = pv_dec.int.trim_start_matches('0').parse().unwrap_or(0);
+            if pv == 0 || pv > src.len() as u128 {
+                // Out of range: no data movement, pointer unchanged.
+                return Ok(());
+            }
+            (pv - 1) as usize
+        } else {
+            0
+        };
+
         // Scan: cursor `p` over `src`; for each receiver take the field up to the
         // next delimiter (or end-of-source), then step past the delimiter.
-        let mut p: usize = 0;
+        let mut p: usize = start;
         for &idx in &tidx {
             // `p > len` means the previous field ran off the end WITHOUT a
             // trailing delimiter — the source is exhausted, so leave this and every
@@ -683,6 +771,19 @@ impl Machine {
             let field: String = src[p..q].iter().collect();
             self.move_into(idx, Src::Chars(field))?;
             p = q + 1;
+        }
+
+        // Write the pointer back to the 1-based resume position. `p` is the scan's
+        // final 0-based cursor, which sits one past the terminating delimiter — but
+        // for a field that ran to end-of-source that step is a phantom one past the
+        // end, so clamp to `len` before restoring 1-basing: `min(p, len) + 1`. This
+        // is exactly "one after the last character examined" (see the doc comment).
+        // Stored through the same numeric path ADD/INSPECT use, so it reshapes into
+        // the pointer's `PIC 9(n)` picture byte-for-byte as the compiler does.
+        if let Some(pname) = pointer {
+            let resume = p.min(src.len()) + 1;
+            let value = Decimal { neg: false, int: resume.to_string(), frac: String::new() };
+            self.store_result(pname, value, false, &[])?;
         }
         Ok(())
     }

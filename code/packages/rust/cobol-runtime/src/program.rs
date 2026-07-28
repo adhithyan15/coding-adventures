@@ -174,7 +174,14 @@ pub enum Stmt {
     /// w3="c"). Only the source of the characters differs; the delimiter scan and
     /// per-receiver reshape are shared. A NUMERIC or FIGURATIVE literal source and
     /// a reference-modified source remain later rungs (rejected at read time).
-    Unstring { source: Operand, delim: Operand, targets: Vec<String> },
+    ///
+    /// `pointer` is the optional `WITH POINTER p` phrase: `p` is an unsigned
+    /// integer item (`PIC 9(n)`) giving the 1-BASED character position in the
+    /// source at which the scan STARTS, and it is UPDATED after the operation to
+    /// the 1-based position of the character immediately following the last
+    /// character examined. `None` when the phrase is absent (start at position 1,
+    /// no write-back).
+    Unstring { source: Operand, delim: Operand, targets: Vec<String>, pointer: Option<String> },
     /// `INSPECT source TALLYING counter FOR ALL delim` (or `FOR LEADING delim`)
     /// — count occurrences of the SINGLE-character `delim` (a 1-char literal or a
     /// `PIC X(1)` item) in the alphanumeric `source` and **ADD** that count to the
@@ -1011,16 +1018,13 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             Ok(Stmt::String { sources, target, delim })
         }
         "unstring_stmt" => {
-            // UNSTRING source DELIMITED BY delim INTO r1 [r2 …]. The grammar also
-            // *accepts* the later-rung options (WITH POINTER, ON OVERFLOW) so we
-            // reject them here with a friendly Unsupported rather than a parse
-            // error — exactly as the STRING arm above does.
+            // UNSTRING source DELIMITED BY delim INTO r1 [r2 …] [WITH POINTER p].
+            // The grammar also *accepts* `ON OVERFLOW` (still a later rung), which
+            // we reject here with a friendly Unsupported rather than a parse error
+            // — exactly as the STRING arm above does. `WITH POINTER` is now
+            // MODELLED (see the pointer extraction below), so it is no longer
+            // rejected.
             let toks = child_tokens(verb);
-            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "POINTER") {
-                return Err(RuntimeError::Unsupported(
-                    "UNSTRING … WITH POINTER is a later rung".into(),
-                ));
-            }
             if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "OVERFLOW") {
                 return Err(RuntimeError::Unsupported(
                     "UNSTRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung".into(),
@@ -1073,19 +1077,29 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                 }
             };
             let delim = read_operand(delim_op)?;
-            // Receivers: the direct NAME tokens after INTO (a WITH POINTER name,
-            // which would also appear here, has already been rejected above).
-            let targets: Vec<String> = child_tokens(verb)
-                .into_iter()
-                .filter(|(k, _)| k == "NAME")
-                .map(|(_, v)| v)
+            // The grammar is flat — `INTO NAME { NAME } [ WITH POINTER NAME ]` —
+            // so the child tokens appear in source order: every receiver NAME,
+            // then (optionally) the `POINTER` keyword, then the pointer NAME. We
+            // therefore split the NAME tokens at the `POINTER` keyword's position:
+            // NAMEs BEFORE it are the INTO receivers; the first NAME AFTER it is
+            // the pointer. (Taking "the last NAME" blindly would misread a
+            // single-receiver `INTO r WITH POINTER p` as two receivers.)
+            let ptr_pos = toks.iter().position(|(k, v)| k == "KEYWORD" && v == "POINTER");
+            let pointer: Option<String> = ptr_pos.and_then(|pp| {
+                toks[pp + 1..].iter().find(|(k, _)| k == "NAME").map(|(_, v)| v.clone())
+            });
+            let targets: Vec<String> = toks
+                .iter()
+                .enumerate()
+                .filter(|(i, (k, _))| k == "NAME" && ptr_pos.is_none_or(|pp| *i < pp))
+                .map(|(_, (_, v))| v.clone())
                 .collect();
             if targets.is_empty() {
                 return Err(RuntimeError::Unsupported(
                     "UNSTRING without an INTO receiver".into(),
                 ));
             }
-            Ok(Stmt::Unstring { source, delim, targets })
+            Ok(Stmt::Unstring { source, delim, targets, pointer })
         }
         "inspect_stmt" => {
             // The grammar accepts the full INSPECT surface — a TALLYING clause, a

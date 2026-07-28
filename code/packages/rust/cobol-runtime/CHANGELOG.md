@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.55.0 — UNSTRING … WITH POINTER
+
+- `UNSTRING S DELIMITED BY "," INTO r1 r2 … WITH POINTER p` — the optional `WITH POINTER`
+  phrase is now MODELLED (previously rejected at read time: "UNSTRING … WITH POINTER is a later
+  rung"). No grammar change was needed — the grammar already parses `WITH POINTER NAME`.
+- `p` is an UNSIGNED-INTEGER item (`PIC 9(n)`) holding a **1-based** character position:
+  - **Start offset.** Scanning starts at 0-based index `p_value − 1` instead of 0. Field
+    extraction, receiver reshape, exhaustion (trailing receivers keep their prior VALUE), and
+    empty-field-on-consecutive/leading-delimiters are all UNCHANGED — just started from the
+    offset. `p = 1` is exactly the no-pointer behaviour, and is the correctness anchor: the same
+    statement with `p = 1` fills the SAME receivers as the statement WITHOUT the phrase.
+  - **Write-back.** After the operation `p` is updated to the 1-based position of the character
+    immediately following the last one examined: `min(final_cursor, len) + 1`. The scan's final
+    0-based cursor sits one past the terminating delimiter; for a field that ran to end-of-source
+    that is a phantom step past the end, which the clamp to `len` removes. Worked: `"a,b,c"`,
+    `p = 3` → r1="b", r2="c", `p` becomes 6.
+- **Out-of-range initial pointer** (the pointer is a run-time value, so it cannot be range-checked
+  at read time): when `p` is outside `[1, len]` — either `p == 0` (a 0-based start of −1) or
+  `p > len` (past the source) — this is ISO's overflow condition. Since `ON OVERFLOW` is still
+  deferred, we apply the ISO "overflow ⇒ no data movement" rule deterministically: NO receiver is
+  modified and `p` is left UNCHANGED. The `usize` start never underflows because the guard runs
+  before `p − 1` is computed.
+- **Pointer picture validation** (co-total with the compiler): `p` must be an unsigned integer
+  `PIC 9(n)` with `n ≤ 18`. A signed (`S9`), fractional (`9V9`), non-numeric (`PIC X`), group, or
+  over-wide pointer is a clean later rung, rejected with the SAME message the compiler raises at
+  build time. `Stmt::Unstring` gained a `pointer: Option<String>` field; the reader splits the
+  flat `INTO NAME { NAME } [WITH POINTER NAME]` token run at the `POINTER` keyword.
+- `ON OVERFLOW` / `NOT ON OVERFLOW` remain deferred (still rejected at read time).
+
 ## 0.54.0 — UNSTRING with a reference-modified source
 
 - `UNSTRING S(2:3) DELIMITED BY "," INTO w1 w2 w3` — a reference-modified item slice

@@ -95,8 +95,13 @@ literal — `UNSTRING "a,b,c" DELIMITED BY "," INTO w1 w2 w3` — **or** a
 reference-modified item slice `base(start:len)` — `UNSTRING S(2:3) DELIMITED BY
 "," INTO w1 w2 w3` (the sliced characters supply the field text via the shared
 reference-modification machinery, so it stays byte-identical to `DISPLAY
-S(2:3)`) — with identical splitting, only the character provider differing); and
-`INSPECT source TALLYING
+S(2:3)`) — with identical splitting, only the character provider differing;
+optionally with a `WITH POINTER p` phrase — `UNSTRING S DELIMITED BY "," INTO w1
+w2 WITH POINTER P` — where `p` (a `PIC 9(n)` unsigned integer) gives the 1-based
+character position at which scanning STARTS and is UPDATED afterwards to one past
+the last character examined (`min(final_cursor, len) + 1`); an initial `p` outside
+`[1, len]` (0 or `> len`) is ISO overflow, leaving every receiver and `p`
+unchanged); and `INSPECT source TALLYING
 counter FOR ALL delim` / `FOR LEADING delim`
 (count the occurrences of a single-character delimiter — a 1-char literal or a
 `PIC X(1)` item — in the alphanumeric source and **ADD** them to the
@@ -178,10 +183,12 @@ multi-character or non-ASCII delimiter / a non-ASCII literal sending field under
 delimiter / per-field different delimiters / `WITH POINTER` / `ON OVERFLOW` (a
 single-character ASCII `DELIMITED BY` delimiter IS supported), `UNSTRING` with a
 multi-character
-delimiter / `WITH POINTER` / `ON OVERFLOW` / a NUMERIC-literal or FIGURATIVE
+delimiter / `ON`/`NOT ON OVERFLOW` / a signed, fractional, non-numeric or
+over-wide (`> 18`-digit) `WITH POINTER` item / a NUMERIC-literal or FIGURATIVE
 source or a NON-ASCII literal source or a NUMERIC-base reference-modified source
-(an ASCII alphanumeric string-literal source and an alphanumeric-base
-reference-modified source `S(2:3)` — literal or computed index — ARE supported),
+(an ASCII alphanumeric string-literal source, an alphanumeric-base
+reference-modified source `S(2:3)` — literal or computed index — and a `WITH
+POINTER p` phrase over a `PIC 9(n)` pointer ARE supported),
 `INSPECT` with a `CHARACTERS`
 tally, a `{BEFORE|AFTER}` region on a `FOR LEADING`/`REPLACING LEADING` phrase
 (the region ships for `FOR ALL`/`REPLACING ALL` only — on the lone forms, on

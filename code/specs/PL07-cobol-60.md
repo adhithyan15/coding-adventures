@@ -459,8 +459,9 @@ R1 R2 R3` (R3 `VALUE "ZZZ"`) leaves `R3="ZZZ"`; `"A,,C" INTO R1 R2 R3` →
 
 The grammar takes a single `operand` for the delimiter and `{ NAME }` receivers;
 the reader/compiler enforce the 1-character restriction and reject a
-multi-character / `ALL` / `OR` delimiter, `WITH POINTER`, `ON`/`NOT ON OVERFLOW`,
-and a numeric/group source or receiver as clean "later rung" errors. Because the
+multi-character / `ALL` / `OR` delimiter, `ON`/`NOT ON OVERFLOW`,
+and a numeric/group source or receiver as clean "later rung" errors (`WITH POINTER`
+is now supported — see below). Because the
 delimiter position is data-dependent, the compiler lowers `UNSTRING` to a run-time
 **scan loop** (`str_len` + `str_index`/`cmp` to find each delimiter, then a
 `str_slice`/`str_concat` reshape into each receiver), whereas `STRING`'s boundaries
@@ -500,11 +501,49 @@ both engines, so `UNSTRING N(2:3) …` errors identically; a GROUP base,
 out-of-range indices, and a signed/fractional index behave exactly as the existing
 reference-modification machinery does (this rung only routes the source through it).
 
+**`WITH POINTER p` (later rung, now implemented).** `UNSTRING source DELIMITED BY
+delim INTO r1 [r2 …] WITH POINTER p` — `p` is an **unsigned-integer** item (`PIC
+9(n)`, `n ≤ 18`) holding a **1-based** character position. No grammar change was
+needed (the grammar already parses `WITH POINTER NAME`); the reader/compiler split
+the receiver NAMEs from the pointer NAME at the `POINTER` keyword (the grammar is
+flat). Two things change, and everything else — field extraction, receiver
+reshape, exhaustion, empty fields — is UNCHANGED:
+
+- **Start offset.** Scanning starts at 0-based index `p_value − 1` instead of 0. So
+  `p = 1` is exactly the no-pointer behaviour, and is the correctness anchor: the
+  same statement with `p = 1` fills the SAME receivers as the statement WITHOUT the
+  phrase (verified on both engines).
+- **Write-back.** After the operation `p` is set to the 1-based position of the
+  character immediately following the last one examined: `min(final_cursor, len) +
+  1`. The scan's final 0-based cursor sits one past the terminating delimiter; for a
+  field that ran to end-of-source that step is a phantom one past the end, which the
+  clamp to `len` removes. Worked: source `"a,b,c"` (len 5), `p = 3` → start at index
+  2 ("b,c"), `r1="b"`, `r2="c"`, and `p` is updated to 6.
+
+**Out-of-range initial pointer.** Because `p` is a **run-time** value, neither
+engine can range-check it at build time — the compiler emits a run-time guard, and
+the oracle checks at exec time. When the initial `p` is outside the valid range
+`[1, len]` — either `p == 0` (a 0-based start of −1) or `p > len` (past the source)
+— this is ISO's **overflow** condition. Since `ON OVERFLOW` is **still deferred**,
+we apply the ISO "overflow ⇒ data movement does not occur" rule DETERMINISTICALLY:
+**no receiver is modified and `p` is left unchanged**. Both engines produce
+byte-identical receivers AND a byte-identical final `p` for every initial value (0,
+1, mid, len, len+1, huge) — fuzz-proven across `[0, len+2]`.
+
+**Pointer picture validation** (co-total): `p` must be an unsigned integer `PIC
+9(n)` (the same class the `INSPECT` counter demands). A **signed** (`S9`),
+**fractional** (`9V9`), **non-numeric** (`PIC X`), **group**, or **over-wide**
+(`> 18`-digit) pointer is a clean later rung, rejected on BOTH engines (the compiler
+validates the picture at build time, the oracle at exec time — with matching
+messages).
+
 Still deferred on both engines: a
 **NUMERIC**-literal source (`UNSTRING 123 …`), a **FIGURATIVE** source (`UNSTRING
 SPACE …`), a **non-ASCII** string-literal source — only an ASCII alphanumeric
-string literal is supported — and a **NUMERIC-base** reference-modified source
-(an alphanumeric-base reference-modified source is now supported).
+string literal is supported — a **NUMERIC-base** reference-modified source
+(an alphanumeric-base reference-modified source is now supported), and `ON`/`NOT ON
+OVERFLOW` (a signed/fractional/non-numeric `WITH POINTER` item is also deferred,
+but the `WITH POINTER` phrase itself over a `PIC 9(n)` pointer is now supported).
 
 ### `INSPECT … TALLYING` (first rung)
 
@@ -1250,7 +1289,7 @@ list, `COPY`) is documented as future work.
 | Complete reserved-word list | The full ~300 COBOL-60 reserved words |
 | `COPY` library text | A pre-tokenize include-style hook |
 | `STRING` real delimiters / `WITH POINTER` / `ON OVERFLOW` | Later rungs beyond the first `DELIMITED BY SIZE` cut (need a run-time scan and a receiver pointer) |
-| `UNSTRING` multi-char / `ALL` / `OR` delimiters, `WITH POINTER`, `ON OVERFLOW`, multiple `DELIMITED` fields, `COUNT`/`DELIMITER IN`/`TALLYING`, a NUMERIC-literal / FIGURATIVE / NON-ASCII source, a NUMERIC-base reference-modified source | Later rungs beyond the single-character `DELIMITED BY delim INTO r1 [r2 …]` cut (an ASCII alphanumeric string-literal source AND an alphanumeric-base reference-modified source `S(2:3)`, literal or computed index, ARE now supported) |
+| `UNSTRING` multi-char / `ALL` / `OR` delimiters, `ON OVERFLOW`, a signed/fractional/non-numeric/over-wide `WITH POINTER` item, multiple `DELIMITED` fields, `COUNT`/`DELIMITER IN`/`TALLYING`, a NUMERIC-literal / FIGURATIVE / NON-ASCII source, a NUMERIC-base reference-modified source | Later rungs beyond the single-character `DELIMITED BY delim INTO r1 [r2 …]` cut (an ASCII alphanumeric string-literal source, an alphanumeric-base reference-modified source `S(2:3)`, literal or computed index, AND a `WITH POINTER p` phrase over a `PIC 9(n)` unsigned-integer pointer ARE now supported) |
 | `INSPECT`, other string verbs | The rest of the string-handling verb family |
 | IR / interpreter | Run a COBOL program; out of scope for the frontend |
 
