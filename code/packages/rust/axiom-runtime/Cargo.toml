@@ -1,0 +1,26 @@
+[package]
+name = "coding-adventures-axiom-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Axiom runtime — lowers Axiom's arithmetic to symbolic-ir/symbolic-vm, and adds a fixed domain/category layer for `:`/`::`/`has`"
+license = "MIT"
+
+[dependencies]
+# The MA-13c frontend: parses Axiom source into a generic GrammarASTNode this
+# crate walks and evaluates.
+coding-adventures-axiom-parser = { path = "../axiom-parser" }
+# The MA-13b lexer. Tokenized once up front (the lexer is iterative, so unlike
+# the parser it cannot stack-overflow) to measure the whole input's token
+# count, mirroring derive-runtime's/reduce-runtime's identical guard against a
+# long flat operator chain folding into a deeply nested evaluated tree (see
+# MAX_STATEMENT_TOKENS's doc comment in src/lib.rs).
+coding-adventures-axiom-lexer = { path = "../axiom-lexer" }
+# The shared symbolic substrate: the term IR every CAS-family language here
+# lowers to, and the VM that evaluates it. Reused UNCHANGED (MA13 §2) — this
+# crate adds no custom Backend and makes no modification to either crate.
+symbolic-ir = { path = "../symbolic-ir" }
+symbolic-vm = { path = "../symbolic-vm" }
+# The generic parser AST types (GrammarASTNode / ASTNodeOrToken) and the lexer
+# Token type the evaluator walks.
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
