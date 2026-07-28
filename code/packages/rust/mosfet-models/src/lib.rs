@@ -48,6 +48,7 @@ const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
 /// | AD        | Drain diffusion area (m²)             | 0        |
 /// | AS        | Source diffusion area (m²)            | 0        |
 /// | PD        | Drain diffusion perimeter (m)          | 0        |
+/// | PS        | Source diffusion perimeter (m)         | 0        |
 /// | CJ        | Bottom junction capacitance (F/m²)    | 0        |
 /// | CJSW      | Sidewall junction capacitance (F/m)    | 0        |
 /// | IS        | Drain–body saturation current (A)  | 1 fA     |
@@ -91,6 +92,8 @@ pub struct Level1Params {
     pub as_: f64,
     /// Drain diffusion perimeter [m].
     pub pd: f64,
+    /// Source diffusion perimeter [m].
+    pub ps: f64,
     /// Bottom junction capacitance per unit area [F/m²].
     pub cj: f64,
     /// Sidewall junction capacitance per unit perimeter [F/m].
@@ -145,6 +148,7 @@ impl Default for Level1Params {
             ad: 0.0,
             as_: 0.0,
             pd: 0.0,
+            ps: 0.0,
             cj: 0.0,
             cjsw: 0.0,
             is: 1e-15,
@@ -317,6 +321,10 @@ pub fn evaluate_level1(
         "MOSFET PD must be finite and non-negative"
     );
     assert!(
+        p.ps.is_finite() && p.ps >= 0.0,
+        "MOSFET PS must be finite and non-negative"
+    );
+    assert!(
         p.cj.is_finite() && p.cj >= 0.0,
         "MOSFET CJ must be finite and non-negative"
     );
@@ -345,7 +353,8 @@ pub fn evaluate_level1(
 
     // Meyer gate-to-channel capacitance, partitioned by operating region below.
     let channel_capacitance = p.w * effective_length * (OXIDE_PERMITTIVITY / p.tox);
-    let cbs_bulk = bulk_junction_capacitance(p.cbs + p.cj * p.as_, v_bs, p.pb, p.mj, p.fc);
+    let cbs_bulk =
+        bulk_junction_capacitance(p.cbs + p.cj * p.as_ + p.cjsw * p.ps, v_bs, p.pb, p.mj, p.fc);
     let cbd_bulk = bulk_junction_capacitance(
         p.cbd + p.cj * p.ad + p.cjsw * p.pd,
         v_bs - v_ds,

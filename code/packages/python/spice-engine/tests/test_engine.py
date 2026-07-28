@@ -1912,6 +1912,50 @@ def test_transient_mosfet_source_area_scales_bottom_junction_capacitance() -> No
     assert charged_first < uncharged_first
 
 
+def test_transient_mosfet_source_perimeter_scales_sidewall_capacitance() -> None:
+    def run(cjsw: float, source_perimeter: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0), (5.0e-9, 1.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "source", 1_000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "0",
+            "0",
+            "source",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(
+                    Level1Params(
+                        KP=1.0e-12,
+                        W=1.0,
+                        L=1.0,
+                        CJSW=cjsw,
+                        PS=source_perimeter,
+                    )
+                ),
+            ),
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0, 0.0)
+    charged = run(0.5, 2.0e-9)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["source"]
+    charged_first = charged.points[1].node_voltages["source"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
 def test_transient_mosfet_bulk_junction_depletion_shaping_reduces_reverse_bias_capacitance() -> None:
     def run(grading_coefficient: float) -> TransientResult:
         circuit = Circuit()
@@ -2231,6 +2275,28 @@ def test_mosfet_rejects_invalid_source_area(source_area: float) -> None:
     with pytest.raises(
         ValueError,
         match="MOSFET AS must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+@pytest.mark.parametrize("source_perimeter", [float("nan"), -1.0])
+def test_mosfet_rejects_invalid_source_perimeter(source_perimeter: float) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(PS=source_perimeter)),
+        ),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET PS must be finite and non-negative",
     ):
         dc_op(circuit)
 
@@ -3207,6 +3273,7 @@ def test_subcircuit_expansion_preserves_mos_geometry():
                             NRS=3.0,
                             AD=4.0e-12,
                             AS=5.0e-12,
+                            PS=6.0e-6,
                             CJ=2.0e-3,
                             TOX=25.0e-9,
                         )
@@ -3231,6 +3298,7 @@ def test_subcircuit_expansion_preserves_mos_geometry():
     assert pytest.approx(3.0) == expanded.model.model.params.NRS
     assert pytest.approx(4.0e-12) == expanded.model.model.params.AD
     assert pytest.approx(5.0e-12) == expanded.model.model.params.AS
+    assert pytest.approx(6.0e-6) == expanded.model.model.params.PS
     assert pytest.approx(2.0e-3) == expanded.model.model.params.CJ
     assert pytest.approx(25.0e-9) == expanded.model.model.params.TOX
 
@@ -6009,6 +6077,41 @@ def test_ac_mosfet_source_area_scales_bottom_junction_capacitance():
 
     assert without_area_capacitance > 0.9
     assert with_area_capacitance < without_area_capacitance / 100.0
+
+
+def test_ac_mosfet_source_perimeter_scales_sidewall_capacitance():
+    def source_amplitude(cjsw: float, source_perimeter: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "source", 1000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "0",
+            "0",
+            "source",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(
+                    Level1Params(
+                        KP=1.0e-12,
+                        W=1.0,
+                        L=1.0,
+                        TOX=1.0e9,
+                        CJSW=cjsw,
+                        PS=source_perimeter,
+                    )
+                ),
+            ),
+        ))
+        result = ac_sweep(circuit, f_start=100000.0, f_stop=100000.0, n_points=1)
+        return abs(result.points[0].node_voltages["source"])
+
+    without_sidewall_capacitance = source_amplitude(0.5, 0.0)
+    with_sidewall_capacitance = source_amplitude(0.5, 2.0e-6)
+
+    assert without_sidewall_capacitance > 0.9
+    assert with_sidewall_capacitance < without_sidewall_capacitance / 100.0
 
 
 def test_ac_mosfet_oxide_thickness_scales_intrinsic_gate_capacitance():

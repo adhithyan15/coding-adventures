@@ -37,6 +37,7 @@ class Level1Params:
     AD: float = 0.0  # drain diffusion area (m^2)
     AS: float = 0.0  # source diffusion area (m^2)
     PD: float = 0.0  # drain diffusion perimeter (m)
+    PS: float = 0.0  # source diffusion perimeter (m)
     CJ: float = 0.0  # bottom junction capacitance per area (F/m^2)
     CJSW: float = 0.0  # sidewall junction capacitance per perimeter (F/m)
     IS: float = 1e-15  # saturation current (A)
@@ -148,6 +149,8 @@ def evaluate_level1(
         raise ValueError("MOSFET AS must be finite and non-negative")
     if not isfinite(p.PD) or p.PD < 0.0:
         raise ValueError("MOSFET PD must be finite and non-negative")
+    if not isfinite(p.PS) or p.PS < 0.0:
+        raise ValueError("MOSFET PS must be finite and non-negative")
     if not isfinite(p.CJ) or p.CJ < 0.0:
         raise ValueError("MOSFET CJ must be finite and non-negative")
     if not isfinite(p.CJSW) or p.CJSW < 0.0:
@@ -174,7 +177,7 @@ def evaluate_level1(
     Cgd_intrinsic = 0.0
     Cgb_intrinsic = 0.0
     Cbs_bulk = bulk_junction_capacitance(
-        p.CBS + p.CJ * p.AS,
+        p.CBS + p.CJ * p.AS + p.CJSW * p.PS,
         V_BS,
         p.PB,
         p.MJ,

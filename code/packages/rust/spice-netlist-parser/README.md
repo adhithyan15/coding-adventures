@@ -761,7 +761,8 @@ parameters, `.model <name> NPN|PNP(...)` BJT cards with `IS`, `BF` /
 cards with common SPICE aliases (`VT0` / `VTO`, `KP`, `LAMBDA`, `GAMMA`, `PHI`,
 `W`, `L`, `RSH`, `IS`, `N_SUB` / `NSUB`, `T_NOM` / `TNOM`, `CGSO`, `CGDO`,
 `CGBO`, `CBS`, `CBD`, `CJ`, and `CJSW`), MOS instance `NRD=<squares>` /
-`NRS=<squares>` / `AD=<area>` / `AS=<area>` / `PD=<perimeter>`, SPICE
+`NRS=<squares>` / `AD=<area>` / `AS=<area>` / `PD=<perimeter>` /
+`PS=<perimeter>`, SPICE
 engineering suffixes, capacitor
 `IC=<voltage>` and inductor `IC=<current>` initial
 conditions, independent-source `AC <magnitude> [phase]` forms,

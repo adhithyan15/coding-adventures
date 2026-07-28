@@ -1785,6 +1785,7 @@ export interface MosfetLevel1Params {
   readonly AD: number;
   readonly AS: number;
   readonly PD: number;
+  readonly PS: number;
   readonly CJ: number;
   readonly CJSW: number;
   readonly IS: number;
@@ -8052,6 +8053,7 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     AD: 0.0,
     AS: 0.0,
     PD: 0.0,
+    PS: 0.0,
     CJ: 0.0,
     CJSW: 0.0,
     IS: 1.0e-15,
@@ -20340,7 +20342,8 @@ function evaluateNmosLevel1(
   const channelCapacitance =
     params.W * effectiveLength * (OXIDE_PERMITTIVITY / params.TOX);
   const cbsBulk = mosfetBulkJunctionCapacitance(
-    params.CBS + params.CJ * params.AS, vbs, params.PB, params.MJ, params.FC,
+    params.CBS + params.CJ * params.AS + params.CJSW * params.PS,
+    vbs, params.PB, params.MJ, params.FC,
   );
   const cbdBulk = mosfetBulkJunctionCapacitance(
     params.CBD + params.CJ * params.AD + params.CJSW * params.PD,
@@ -20902,7 +20905,9 @@ function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
   const gateDrainCapacitance = element.params.CGDO * element.params.W;
   const gateBodyCapacitance = element.params.CGBO * element.params.L;
   const sourceBodyCapacitance =
-    element.params.CBS + element.params.CJ * element.params.AS;
+    element.params.CBS
+    + element.params.CJ * element.params.AS
+    + element.params.CJSW * element.params.PS;
   const drainBodyCapacitance =
     element.params.CBD
     + element.params.CJ * element.params.AD
@@ -21168,6 +21173,9 @@ function validateMosfet(element: Mosfet): void {
   }
   if (params.PD < 0.0) {
     throw invalidElement(element.name, "MOSFET PD must be non-negative");
+  }
+  if (params.PS < 0.0) {
+    throw invalidElement(element.name, "MOSFET PS must be non-negative");
   }
   if (params.CJSW < 0.0) {
     throw invalidElement(element.name, "MOSFET CJSW must be non-negative");

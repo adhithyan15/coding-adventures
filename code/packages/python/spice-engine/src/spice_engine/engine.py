@@ -9112,8 +9112,10 @@ def _mosfet_charge_state_specs(el: Mosfet) -> list[tuple[str, str, str, float]]:
     cgs = getattr(params, "CGSO", 0.0) * width
     cgd = getattr(params, "CGDO", 0.0) * width
     cgb = getattr(params, "CGBO", 0.0) * length
-    cbs = getattr(params, "CBS", 0.0) + (
-        getattr(params, "CJ", 0.0) * getattr(params, "AS", 0.0)
+    cbs = (
+        getattr(params, "CBS", 0.0)
+        + getattr(params, "CJ", 0.0) * getattr(params, "AS", 0.0)
+        + getattr(params, "CJSW", 0.0) * getattr(params, "PS", 0.0)
     )
     cbd = (
         getattr(params, "CBD", 0.0)

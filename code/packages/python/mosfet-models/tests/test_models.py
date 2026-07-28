@@ -234,12 +234,22 @@ def test_source_area_scales_bottom_junction_capacitance():
     assert result.Cbs == pytest.approx(7.0e-12)
 
 
+def test_source_perimeter_scales_sidewall_junction_capacitance():
+    result = evaluate_level1(
+        Level1Params(CBS=1.0e-12, PS=3.0e-6, CJSW=2.0e-6, MJ=0.0),
+        V_GS=1.8,
+        V_DS=0.0,
+    )
+    assert result.Cbs == pytest.approx(7.0e-12)
+
+
 @pytest.mark.parametrize(
     ("params", "message"),
     [
         (Level1Params(AD=-1.0), "MOSFET AD must be finite and non-negative"),
         (Level1Params(AS=-1.0), "MOSFET AS must be finite and non-negative"),
         (Level1Params(PD=-1.0), "MOSFET PD must be finite and non-negative"),
+        (Level1Params(PS=-1.0), "MOSFET PS must be finite and non-negative"),
         (Level1Params(CJ=-1.0), "MOSFET CJ must be finite and non-negative"),
         (Level1Params(CJSW=-1.0), "MOSFET CJSW must be finite and non-negative"),
     ],
