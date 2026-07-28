@@ -549,6 +549,46 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
                 return TaggedStatement::EmptyStatement(EmptyStatement { cv: s.cv.clone() });
             }
 
+            // `void <impure>;` → `<impure>;` — the `void` operator (ECMAScript
+            // §13.5.2) evaluates its operand for its side effects and always
+            // yields `undefined`. An expression statement already discards its
+            // value, so at statement position the `void` wrapper is pure noise
+            // and is dropped, keeping the operand:
+            //
+            //   void f();       →  f();
+            //   void a.b();     →  a.b();
+            //   void new C();   →  new C();
+            //
+            // This matches the reference compiler at SIMPLE. Deliberately scoped:
+            //   * STATEMENT position only — `var x = void f();`,
+            //     `return void f()`, `h(void f())` keep the `void` because the
+            //     `undefined` result IS observed there (they fall through to the
+            //     verbatim rebuild below);
+            //   * IMPURE operand only — a `void <pure>` (e.g. `void 0;`) is left
+            //     untouched. The reference removes the whole statement in that
+            //     case, but constant-fold folds `void <pure>` to `undefined`
+            //     before this pass runs, so a from-source `void 0;` and a
+            //     from-source `undefined;` are indistinguishable here and the
+            //     reference keeps the latter. Matching the removal needs
+            //     pass-order work (tracked separately), so we decline the pure
+            //     case rather than risk removing an observable `undefined;`.
+            //   A `void` nested in a larger discarding expression
+            //   (`c && void f()`) is a separate, narrower transform, not here.
+            if let Expression::UnaryExpression(u) = &expression {
+                if u.operator == UnaryOperator::Void && !is_side_effect_free(&u.argument) {
+                    st.record(
+                        &s.cv,
+                        "void_operator_dropped",
+                        "ExpressionStatement{ void <impure> }",
+                        "ExpressionStatement{ <impure> }",
+                    );
+                    return TaggedStatement::ExpressionStatement(ExpressionStatement {
+                        cv: s.cv.clone(),
+                        expression: (*u.argument).clone(),
+                    });
+                }
+            }
+
             TaggedStatement::ExpressionStatement(ExpressionStatement {
                 cv: s.cv.clone(),
                 expression,
@@ -3676,6 +3716,58 @@ mod tests {
             prefix: true,
             argument: Box::new(arg),
         })
+    }
+    fn voidop(arg: Expression) -> Expression {
+        Expression::UnaryExpression(UnaryExpression {
+            cv: None,
+            operator: UnaryOperator::Void,
+            prefix: true,
+            argument: Box::new(arg),
+        })
+    }
+
+    /// `void f();` → `f();` — an impure operand is unwrapped, keeping the call
+    /// but dropping the redundant `void`.
+    #[test]
+    fn void_impure_operand_unwraps_to_operand() {
+        let prog = program()
+            .with_body(vec![ProgramItem::Statement(expr_stmt(voidop(call0("f"))))]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1, "the statement is kept, unwrapped");
+        match &out.body[0] {
+            ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(es))) => {
+                assert!(
+                    matches!(&es.expression, Expression::CallExpression(_)),
+                    "expected the bare call `f()`; got {:?}",
+                    es.expression
+                );
+            }
+            other => panic!("expected an ExpressionStatement; got {other:?}"),
+        }
+    }
+
+    /// `void 0;` → KEPT — a pure operand is deliberately left untouched (see the
+    /// scoping note in the handler): the reference keeps a from-source
+    /// `undefined;`, which is indistinguishable here from a folded `void 0`, so
+    /// declining avoids removing an observable `undefined;`.
+    #[test]
+    fn void_pure_operand_is_kept() {
+        let prog = program()
+            .with_body(vec![ProgramItem::Statement(expr_stmt(voidop(num(0.0))))]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(!changed, "`void 0;` must be kept (pure operand)");
+        assert_eq!(out.body.len(), 1);
+        match &out.body[0] {
+            ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(es))) => {
+                assert!(
+                    matches!(&es.expression, Expression::UnaryExpression(u) if u.operator == UnaryOperator::Void),
+                    "the `void 0` should be untouched; got {:?}",
+                    es.expression
+                );
+            }
+            other => panic!("expected an ExpressionStatement; got {other:?}"),
+        }
     }
 
     #[test]
