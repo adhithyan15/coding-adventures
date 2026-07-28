@@ -1,0 +1,19 @@
+% ============================================================================
+% illuminance-conversions.query.adj — a worked lookup over the illuminance table.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a "how many lux is one
+% phot?" question: it states no conversion fact — it only `import`s the grounded table
+% and asks binding queries. The native adj-lang engine resolves each `?` against the
+% table's row (lowered to an `illuminance_to_lux` relation) and returns the binding + the
+% table's source/locator/trust. A unit not in the table abstains honestly — the engine
+% never invents a factor (notably NIST's non-exact customary rows, e.g. the footcandle,
+% which is rounded and therefore gets no row).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli illuminance-conversions.query.adj
+% ============================================================================
+
+import "illuminance-conversions.adj"
+
+? illuminance_to_lux(phot, $v)       % expect 10000
+? illuminance_to_lux(footcandle, $v) % expect abstain — non-exact, no row
