@@ -205,15 +205,9 @@ fn deferred_oop_shapes_are_rejected_cleanly() {
         ),
         "an unregistered (built-in) __method__ dispatch must be rejected"
     );
-    // A superclass (inheritance dispatch is a later slice) — the empty-class
-    // comment emit would otherwise silently drop the link.
-    assert!(
-        rejects(
-            vec![Stmt::ClassDef { name: "Dog".into(), superclass: Some("Animal".into()), body: vec![], span: s() }],
-            &[Feature::Classes]
-        ),
-        "a superclass must be rejected"
-    );
+    // (A superclass is now SUPPORTED — OOP slice 4 registers `class Dog < Animal`
+    // as a `_sir_register_super` edge — so it is no longer a rejected shape; see
+    // `compile_and_run_inheritance.rs` for its execution proof.)
     // A non-empty class body (its content would be silently dropped by the
     // comment emit) — here a `Const`-assign body stmt (an accepted feature, so it
     // passes the manifest gate and must be caught by the scan, not dropped).
