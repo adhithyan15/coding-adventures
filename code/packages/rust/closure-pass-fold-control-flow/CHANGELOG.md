@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.37.0] - 2026-07-25
+
+### Added - normalize an empty loop body `{}` to `;`
+
+A `for` loop whose body folds to an empty block (`{}`, `{;;}`, `{{}}`) now
+normalizes that body to an empty statement (`;`), matching the reference
+Closure Compiler at SIMPLE:
+
+```text
+  for (; c;) {}   ->  for (; c;) ;
+  while (c) {}    ->  for (; c;) ;   (while first lowers to for, then re-folds)
+```
+
+An empty block declares no bindings, so the `;` form is behaviour-identical.
+Because `while` is already rewritten to `for` (0.31.0) and re-folded here, this
+one change covers both `for` and `while` empty bodies. The existing
+`statement_is_empty` helper (used by the if-empty-then fold) recognises the
+do-nothing body, so nested empties (`{{}}`) collapse too.
+
+Not handled here (follow-up #226): an empty-bodied `do … while` (`do{}while(c)`
+-> `for(; c;) ;`), which additionally needs the do -> while/for rewrite.
+
 ## [0.36.0] - 2026-07-24
 
 ### Added - do-while loop-body comma-fusion
