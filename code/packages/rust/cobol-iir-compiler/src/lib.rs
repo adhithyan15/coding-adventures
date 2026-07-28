@@ -1606,13 +1606,10 @@ impl<'a> Compiler<'a> {
     /// receiver are later rungs (clean `Unsupported`).
     fn emit_unstring(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
         // Reject the later-rung options the grammar accepts (clean Unsupported,
-        // not a parse error) — exactly as emit_string does.
+        // not a parse error) — exactly as emit_string does. `WITH POINTER` is now
+        // MODELLED (see the pointer handling below), so only `ON OVERFLOW` remains
+        // a later rung here.
         let toks = child_tokens(verb);
-        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "POINTER") {
-            return Err(CompileError::Unsupported(
-                "UNSTRING … WITH POINTER is a later rung".into(),
-            ));
-        }
         if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "OVERFLOW") {
             return Err(CompileError::Unsupported(
                 "UNSTRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung".into(),
@@ -1700,16 +1697,63 @@ impl<'a> Compiler<'a> {
         // The delimiter reduced to a single byte code register.
         let d_reg = self.single_delim_code(delim_node, "UNSTRING")?;
 
-        // Receivers: the direct NAME tokens after INTO (a WITH POINTER name, also a
-        // direct NAME, has already been rejected above). Each must be alphanumeric.
+        // Split the NAME tokens at the optional `POINTER` keyword — the grammar is
+        // flat (`INTO NAME { NAME } [ WITH POINTER NAME ]`), so every receiver NAME
+        // precedes `POINTER` and the pointer NAME is the first NAME after it. (This
+        // mirrors the oracle reader; taking "the last NAME" blindly would misread a
+        // single-receiver `INTO r WITH POINTER p` as two receivers.)
+        let ptr_pos = toks.iter().position(|(k, v)| k == "KEYWORD" && v == "POINTER");
+        let pointer_name: Option<String> = ptr_pos.and_then(|pp| {
+            toks[pp + 1..].iter().find(|(k, _)| k == "NAME").map(|(_, v)| v.clone())
+        });
         let targets: Vec<String> = toks
             .iter()
-            .filter(|(k, _)| k == "NAME")
-            .map(|(_, v)| v.clone())
+            .enumerate()
+            .filter(|(i, (k, _))| k == "NAME" && ptr_pos.is_none_or(|pp| *i < pp))
+            .map(|(_, (_, v))| v.clone())
             .collect();
         if targets.is_empty() {
             return Err(CompileError::Malformed("UNSTRING without an INTO receiver".into()));
         }
+
+        // Validate the pointer item's picture at BUILD time — it must be an unsigned
+        // integer `PIC 9(n)` (n ≤ 18 so the value fits the `i64` we store it in),
+        // the same class INSPECT's counter demands. A signed, fractional, non-
+        // numeric, or group pointer is a clean later rung, rejected here with the
+        // SAME message the oracle raises at exec time so the accept/reject sets stay
+        // co-total. We capture `(index, int_digits)` for the run-time read/write-back
+        // below; the range check on the pointer's VALUE cannot be done here (it is a
+        // run-time datum), so it is emitted as a guard, exactly like the oracle.
+        let pointer: Option<(usize, usize)> = match &pointer_name {
+            Some(pname) => {
+                let pidx = self.item_index(pname)?;
+                let ptr_int_digits = match &self.items[pidx].kind {
+                    ItemKind::Numeric { signed: true, .. } => {
+                        return Err(CompileError::Unsupported(format!(
+                            "UNSTRING … WITH POINTER: a signed pointer {pname} is a later rung"
+                        )))
+                    }
+                    ItemKind::Numeric { dec_digits, .. } if *dec_digits != 0 => {
+                        return Err(CompileError::Unsupported(format!(
+                            "UNSTRING … WITH POINTER: a non-integer pointer {pname} is a later rung"
+                        )))
+                    }
+                    ItemKind::Numeric { int_digits, .. } if *int_digits > 18 => {
+                        return Err(CompileError::Unsupported(format!(
+                            "UNSTRING … WITH POINTER: a pointer {pname} wider than 18 digits is a later rung"
+                        )))
+                    }
+                    ItemKind::Numeric { int_digits, .. } => *int_digits,
+                    ItemKind::Char { .. } => {
+                        return Err(CompileError::Unsupported(format!(
+                            "UNSTRING … WITH POINTER: a non-numeric pointer {pname} is a later rung"
+                        )))
+                    }
+                };
+                Some((pidx, ptr_int_digits))
+            }
+            None => None,
+        };
         let mut recvs: Vec<(usize, usize)> = Vec::with_capacity(targets.len());
         for t in &targets {
             let idx = self.item_index(t)?;
@@ -1724,11 +1768,41 @@ impl<'a> Compiler<'a> {
             recvs.push((idx, width));
         }
 
-        // len = str_len(S); p = 0.
+        // len = str_len(S).
         let len = self.fresh("_uslen");
         self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.clone())], "i64");
+
+        // The initial 0-based scan cursor `p`. Without a pointer it is 0 (today's
+        // behaviour). With `WITH POINTER q`, `q` holds a 1-BASED start position, so
+        // `p = q_value − 1`; but first the out-of-range guard: if `q_value == 0` or
+        // `q_value > len` (ISO's overflow) we must leave every receiver AND the
+        // pointer UNCHANGED. We emit a jump to `us_end` — placed AFTER the receiver
+        // loop and the write-back — so the whole operation is skipped, matching the
+        // oracle's early `return Ok(())`. The pointer's VALUE cannot be range-checked
+        // at build time (it is a run-time datum), which is exactly why this is a
+        // run-time guard rather than a compile-time reject.
         let p = self.fresh("_usp");
-        self.emit("const", Some(&p), vec![Operand::Int(0)], "i64");
+        let us_end = self.fresh("us_end");
+        match &pointer {
+            Some((pidx, _)) => {
+                let pv = self.items[*pidx].reg.clone();
+                let one = self.fresh("_uspone");
+                self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+                // out of range if pv < 1 (i.e. pv == 0, since PIC 9 is unsigned) …
+                let lt1 = self.fresh("_usplt");
+                self.emit("cmp_lt", Some(&lt1), vec![Operand::Var(pv.clone()), Operand::Var(one.clone())], "i64");
+                self.emit("jmp_if_true", None, vec![Operand::Var(lt1), Operand::Var(us_end.clone())], "void");
+                // … or pv > len (start past the source).
+                let gtlen = self.fresh("_uspgt");
+                self.emit("cmp_gt", Some(&gtlen), vec![Operand::Var(pv.clone()), Operand::Var(len.clone())], "i64");
+                self.emit("jmp_if_true", None, vec![Operand::Var(gtlen), Operand::Var(us_end.clone())], "void");
+                // In range: p = pv − 1.
+                self.emit("sub", Some(&p), vec![Operand::Var(pv), Operand::Var(one)], "i64");
+            }
+            None => {
+                self.emit("const", Some(&p), vec![Operand::Int(0)], "i64");
+            }
+        }
 
         for (idx, width) in recvs {
             let recv_reg = self.items[idx].reg.clone();
@@ -1814,6 +1888,40 @@ impl<'a> Compiler<'a> {
             self.emit("const", Some(&one2), vec![Operand::Int(1)], "i64");
             self.emit("add", Some(&p), vec![Operand::Var(j), Operand::Var(one2)], "i64");
             self.emit("label", None, vec![Operand::Var(skip)], "void");
+        }
+
+        // Write the pointer back to the 1-based resume position: `min(p, len) + 1`.
+        // `p` is the scan's final 0-based cursor, sitting one past the terminating
+        // delimiter; for a field that ran to end-of-source that step is a phantom
+        // one past the end, so clamp to `len` (removing the phantom) before restoring
+        // 1-basing with `+ 1`. This is byte-identical to the oracle's
+        // `min(p, src.len()) + 1`, stored through the same numeric path so it reshapes
+        // into the pointer's `PIC 9(n)` picture the same way.
+        if let Some((_, ptr_int_digits)) = pointer {
+            // clamped = min(p, len).
+            let clamped = self.fresh("_uspc2");
+            self.emit("mov", Some(&clamped), vec![Operand::Var(p.clone())], "i64");
+            let over = self.fresh("_uspov");
+            self.emit("cmp_gt", Some(&over), vec![Operand::Var(p.clone()), Operand::Var(len.clone())], "i64");
+            let keep = self.fresh("us_keep");
+            self.emit("jmp_if_false", None, vec![Operand::Var(over), Operand::Var(keep.clone())], "void");
+            self.emit("mov", Some(&clamped), vec![Operand::Var(len.clone())], "i64");
+            self.emit("label", None, vec![Operand::Var(keep)], "void");
+            // resume = clamped + 1, reshaped into the pointer's picture.
+            let one = self.fresh("_uspr1");
+            self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+            let resume = self.fresh("_uspres");
+            self.emit("add", Some(&resume), vec![Operand::Var(clamped), Operand::Var(one)], "i64");
+            let pname = pointer_name.as_deref().expect("pointer present");
+            self.store_scaled(pname, &resume, 0, ptr_int_digits + 1, false)?;
+        }
+
+        // The out-of-range guard (only emitted WITH a pointer) lands here, skipping
+        // every move and the write-back so the receivers and pointer keep their prior
+        // values. Emitted only when a pointer exists, so the no-pointer lowering is
+        // byte-identical to before (no dangling label).
+        if pointer_name.is_some() {
+            self.emit("label", None, vec![Operand::Var(us_end)], "void");
         }
         Ok(())
     }
@@ -7203,9 +7311,12 @@ mod tests {
     }
 
     #[test]
-    fn unstring_with_pointer_is_a_later_rung() {
-        // WITH POINTER is accepted by the grammar but rejected here as a later rung.
-        let err = compile_source(
+    fn unstring_with_pointer_emits_a_guarded_scan() {
+        // WITH POINTER over a `PIC 9(n)` pointer now compiles: the scan reads the
+        // pointer register to seat the start, guards the out-of-range case, and
+        // writes the resume position back (`store_scaled` reshape). A `sub` (p − 1)
+        // start offset and the extra `cmp_lt`/`cmp_gt` guards are the tell.
+        let module = compile_source(
             &wrap(
                 &[
                     "01  S  PIC X(3) VALUE \"A,B\".",
@@ -7215,6 +7326,30 @@ mod tests {
                 &["UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.", "STOP RUN."],
             ),
             "unstr_ptr",
+        )
+        .unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"cmp_lt".to_string()), "guards p < 1 (out of range low)");
+        assert!(os.contains(&"cmp_gt".to_string()), "guards p > len (out of range high)");
+        assert!(os.contains(&"sub".to_string()), "start offset p - 1");
+    }
+
+    #[test]
+    fn unstring_with_signed_pointer_is_a_later_rung() {
+        // The pointer must be an UNSIGNED integer. A signed pointer (`PIC S9`) is a
+        // clean later rung, rejected at build time with the same message the oracle
+        // raises at exec time.
+        let err = compile_source(
+            &wrap(
+                &[
+                    "01  S  PIC X(3) VALUE \"A,B\".",
+                    "01  R1 PIC X(3) VALUE SPACES.",
+                    "01  P  PIC S9(2) VALUE 1.",
+                ],
+                &["UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.", "STOP RUN."],
+            ),
+            "unstr_ptr_signed",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");

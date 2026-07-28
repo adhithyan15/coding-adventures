@@ -3441,6 +3441,293 @@ fn unstring_ascii_literal_source_still_works() {
 }
 
 // ---------------------------------------------------------------------------
+// UNSTRING … WITH POINTER p — `p` (a `PIC 9(n)` unsigned integer) holds the
+// 1-BASED character position at which the scan STARTS, and is UPDATED afterwards
+// to one past the last character examined (`min(final_cursor, len) + 1`). An
+// initial `p` outside `[1, len]` (either 0 or > len) is ISO's overflow: NO
+// receiver is modified and `p` is left unchanged. Both engines apply the SAME
+// start offset, the SAME write-back, and the SAME out-of-range rule, so each case
+// pins the compiled JIT output to the tree-walk oracle byte-for-byte.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn unstring_pointer_one_equals_no_pointer() {
+    // The correctness ANCHOR: `WITH POINTER p` with `p = 1` starts at index 0, so
+    // the receivers must be IDENTICAL to the same statement WITHOUT the phrase. We
+    // run both and assert the receiver lines coincide; the pointer version then
+    // additionally writes the resume position back (final cursor 6 clamped to len
+    // 5, +1 → 6 → "06").
+    let with_ptr = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE SPACES.",
+            "01  P  PIC 9(2) VALUE 1.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3 WITH POINTER P.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    let no_ptr = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(no_ptr, "a  \nb  \nc  \n");
+    // p = 1 fills the SAME receivers, then appends the resume pointer "06".
+    assert_eq!(with_ptr, format!("{no_ptr}06\n"));
+}
+
+#[test]
+fn unstring_pointer_mid_string() {
+    // The task's canonical example: source "a,b,c", p = 3 → start at 0-based index
+    // 2 ("b,c"). R1="b", R2="c"; the scan's final cursor is 6, clamped to len 5,
+    // +1 → the resume pointer is 6 ("06").
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  P  PIC 9(2) VALUE 3.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 WITH POINTER P.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "b  \nc  \n06\n");
+}
+
+#[test]
+fn unstring_pointer_at_len_reads_final_char() {
+    // p = len (= 5) is the last in-range value: start at 0-based index 4, the final
+    // character "c". R1="c"; final cursor 6 clamped to 5, +1 → 6 ("06").
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  P  PIC 9(2) VALUE 5.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.",
+            "DISPLAY R1.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "c  \n06\n");
+}
+
+#[test]
+fn unstring_pointer_writeback_after_delimiter_terminated_field() {
+    // A field terminated by a DELIMITER (not end-of-source): "AA/BB" split on "/"
+    // with p = 1 fills F1="AA"; the scan stops at the delimiter (index 2), so the
+    // cursor advances past it to 3 — NOT clamped (3 < len 5) — and the resume
+    // pointer is 3 + 1 = 4 ("04"). This pins the non-clamped write-back path,
+    // distinct from the end-of-source cases above.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"AA/BB\".",
+            "01  F1 PIC X(2) VALUE SPACES.",
+            "01  P  PIC 9(2) VALUE 1.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \"/\" INTO F1 WITH POINTER P.",
+            "DISPLAY F1.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "AA\n04\n");
+}
+
+#[test]
+fn unstring_pointer_source_exhausted_before_receivers_filled() {
+    // With a pointer, the exhaustion rule is unchanged: "A,B" (len 3), p = 1 fills
+    // R1="A" and R2="B", then the source is exhausted so R3 keeps its prior VALUE
+    // "ZZZ" (NOT space-filled). The cursor ends at 4, clamped to len 3, +1 → the
+    // resume pointer is 4 ("04").
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"A,B\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE \"ZZZ\".",
+            "01  P  PIC 9(2) VALUE 1.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3 WITH POINTER P.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nZZZ\n04\n");
+}
+
+#[test]
+fn unstring_pointer_past_end_is_overflow_no_moves() {
+    // p = len + 1 (= 6 > 5) is out of range: ISO overflow ⇒ NO receiver is modified
+    // (R1 keeps "ZZZ") and the pointer is left UNCHANGED (stays 6 → "06"). Both
+    // engines skip the whole operation identically.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE \"ZZZ\".",
+            "01  P  PIC 9(2) VALUE 6.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.",
+            "DISPLAY R1.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ZZZ\n06\n");
+}
+
+#[test]
+fn unstring_pointer_zero_is_overflow_no_moves() {
+    // p = 0 would make the 0-based start −1 (underflow); it is out of range, so ISO
+    // overflow ⇒ no moves and the pointer is left unchanged (stays 0 → "00"). This
+    // is the guard that keeps the `usize`/`i64` start computation from underflowing.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE \"ZZZ\".",
+            "01  P  PIC 9(2) VALUE 0.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.",
+            "DISPLAY R1.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ZZZ\n00\n");
+}
+
+#[test]
+fn unstring_pointer_huge_is_overflow_no_moves() {
+    // A far-out-of-range pointer (9999 ≫ len 5) is still just "> len": no moves, the
+    // pointer unchanged (stays 9999). Proves the guard uses the source length, not a
+    // fixed bound.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE \"ZZZ\".",
+            "01  P  PIC 9(4) VALUE 9999.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.",
+            "DISPLAY R1.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ZZZ\n9999\n");
+}
+
+#[test]
+fn unstring_pointer_fuzz_across_full_range() {
+    // Sweep the initial pointer across the WHOLE range `[0, len + 2]` = `[0, 7]` for
+    // source "a,b,c" (len 5). For every value — the two out-of-range ends (0, 6, 7)
+    // and every in-range start (1..=5) — the compiled JIT output must be byte-
+    // identical to the oracle (receivers AND the written-back pointer). This is the
+    // co-totality proof: both engines agree for EVERY initial pointer value.
+    for pstart in 0..=7u32 {
+        let data = [
+            "01  S  PIC X(5) VALUE \"a,b,c\".".to_string(),
+            "01  R1 PIC X(3) VALUE \"ZZZ\".".to_string(),
+            "01  R2 PIC X(3) VALUE \"ZZZ\".".to_string(),
+            format!("01  P  PIC 9(2) VALUE {pstart}."),
+        ];
+        let data_refs: Vec<&str> = data.iter().map(String::as_str).collect();
+        // assert_matches_oracle panics with a clear message on any divergence.
+        assert_matches_oracle(&wrap(
+            &data_refs,
+            &[
+                "UNSTRING S DELIMITED BY \",\" INTO R1 R2 WITH POINTER P.",
+                "DISPLAY R1.",
+                "DISPLAY R2.",
+                "DISPLAY P.",
+                "STOP RUN.",
+            ],
+        ));
+    }
+}
+
+#[test]
+fn unstring_pointer_signed_is_a_later_rung() {
+    // The pointer must be an UNSIGNED integer. A signed pointer (`PIC S9`) is a
+    // clean later rung, rejected on BOTH engines (the compiler at build time, the
+    // oracle at exec time).
+    let src = wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  P  PIC S9(2) VALUE 1.",
+        ],
+        &["UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a signed pointer");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a signed pointer");
+}
+
+#[test]
+fn unstring_pointer_fractional_is_a_later_rung() {
+    // A fractional pointer (`PIC 9V9`) is not an integer position — a later rung,
+    // rejected identically on both engines.
+    let src = wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  P  PIC 9V9 VALUE 1.",
+        ],
+        &["UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a fractional pointer");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a fractional pointer");
+}
+
+#[test]
+fn unstring_pointer_non_numeric_is_a_later_rung() {
+    // A non-numeric pointer (`PIC X`) has no integer position — a later rung,
+    // rejected identically on both engines.
+    let src = wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  P  PIC X(2) VALUE \"12\".",
+        ],
+        &["UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a non-numeric pointer");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a non-numeric pointer");
+}
+
+// ---------------------------------------------------------------------------
 // INSPECT … TALLYING — count the (non-overlapping, left-to-right) occurrences of
 // a single-character delimiter in an alphanumeric source and ADD the count to an
 // integer counter (INSPECT adds; it does not clear the counter first). Each case

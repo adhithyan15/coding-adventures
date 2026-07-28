@@ -2342,17 +2342,18 @@ mod tests {
 
     #[test]
     fn unstring_later_rung_options_are_clean_errors() {
-        // WITH POINTER needs a receiving pointer (later rung) …
-        let ptr = run_cobol(&wrap(
+        // ON OVERFLOW (dropped fields beyond the receiver count) is still a later
+        // rung. (WITH POINTER is now modelled — see `unstring_with_pointer_*`.)
+        let overflow = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"A,B\".", "01  R1 PIC X(3) VALUE SPACES."],
             &[
-                "01  S  PIC X(3) VALUE \"A,B\".",
-                "01  R1 PIC X(3) VALUE SPACES.",
-                "01  P  PIC 9(2) VALUE 1.",
+                "UNSTRING S DELIMITED BY \",\" INTO R1",
+                "    ON OVERFLOW DISPLAY \"OVF\".",
+                "STOP RUN.",
             ],
-            &["UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.", "STOP RUN."],
         ))
         .unwrap_err();
-        assert!(matches!(ptr, RuntimeError::Unsupported(_)), "got {ptr:?}");
+        assert!(matches!(overflow, RuntimeError::Unsupported(_)), "got {overflow:?}");
 
         // … a multi-character delimiter needs a multi-char scan …
         let multi = run_cobol(&wrap(
@@ -2369,6 +2370,109 @@ mod tests {
         ))
         .unwrap_err();
         assert!(matches!(numeric, RuntimeError::Unsupported(_)), "got {numeric:?}");
+    }
+
+    #[test]
+    fn unstring_with_pointer_starts_offset_and_writes_resume_back() {
+        // p = 3 over "a,b,c" starts at 0-based index 2 ("b,c"): R1="b", R2="c",
+        // and the pointer is updated to one past the last examined char — final
+        // cursor 6, clamped to len 5, +1 → 6 ("06").
+        let out = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(5) VALUE \"a,b,c\".",
+                "01  R1 PIC X(3) VALUE SPACES.",
+                "01  R2 PIC X(3) VALUE SPACES.",
+                "01  P  PIC 9(2) VALUE 3.",
+            ],
+            &[
+                "UNSTRING S DELIMITED BY \",\" INTO R1 R2 WITH POINTER P.",
+                "DISPLAY R1.",
+                "DISPLAY R2.",
+                "DISPLAY P.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "b  \nc  \n06\n");
+    }
+
+    #[test]
+    fn unstring_with_pointer_one_matches_no_pointer_receivers() {
+        // The anchor: p = 1 fills the SAME receivers as the no-pointer statement.
+        let data: &[&str] = &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE SPACES.",
+        ];
+        let no_ptr = run_cobol(&wrap(
+            data,
+            &[
+                "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+                "DISPLAY R1.",
+                "DISPLAY R2.",
+                "DISPLAY R3.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        let mut data_ptr = data.to_vec();
+        data_ptr.push("01  P  PIC 9(2) VALUE 1.");
+        let with_ptr = run_cobol(&wrap(
+            &data_ptr,
+            &[
+                "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3 WITH POINTER P.",
+                "DISPLAY R1.",
+                "DISPLAY R2.",
+                "DISPLAY R3.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(no_ptr, "a  \nb  \nc  \n");
+        assert_eq!(with_ptr, no_ptr, "p = 1 must fill the same receivers");
+    }
+
+    #[test]
+    fn unstring_with_pointer_out_of_range_leaves_everything_unchanged() {
+        // p = 0 and p > len are ISO overflow: no receiver modified, pointer
+        // unchanged. R1 keeps "ZZZ"; P keeps its initial value.
+        for pval in ["0", "6", "9"] {
+            let out = run_cobol(&wrap(
+                &[
+                    "01  S  PIC X(5) VALUE \"a,b,c\".",
+                    "01  R1 PIC X(3) VALUE \"ZZZ\".",
+                    &format!("01  P  PIC 9(2) VALUE {pval}."),
+                ],
+                &[
+                    "UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.",
+                    "DISPLAY R1.",
+                    "DISPLAY P.",
+                    "STOP RUN.",
+                ],
+            ))
+            .unwrap();
+            // Two-digit zero-padded echo of the UNCHANGED pointer value.
+            let expected = format!("ZZZ\n{:02}\n", pval.parse::<u32>().unwrap());
+            assert_eq!(out, expected, "pval={pval}");
+        }
+    }
+
+    #[test]
+    fn unstring_with_pointer_bad_picture_is_a_later_rung() {
+        // Signed, fractional, and non-numeric pointers are clean later rungs.
+        for pic in ["S9(2)", "9V9", "X(2)"] {
+            let err = run_cobol(&wrap(
+                &[
+                    "01  S  PIC X(5) VALUE \"a,b,c\".",
+                    "01  R1 PIC X(3) VALUE SPACES.",
+                    &format!("01  P  PIC {pic}."),
+                ],
+                &["UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.", "STOP RUN."],
+            ))
+            .unwrap_err();
+            assert!(matches!(err, RuntimeError::Unsupported(_)), "pic={pic}: got {err:?}");
+        }
     }
 
     #[test]

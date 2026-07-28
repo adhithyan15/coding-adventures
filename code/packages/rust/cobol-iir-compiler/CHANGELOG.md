@@ -8,6 +8,35 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.51.0: UNSTRING … WITH POINTER
+
+`UNSTRING S DELIMITED BY "," INTO r1 r2 … WITH POINTER p` — the optional `WITH POINTER`
+phrase is now MODELLED, byte-identical to the `coding-adventures-cobol-runtime` 0.55.0 oracle.
+Previously it was rejected at emit time ("UNSTRING … WITH POINTER is a later rung"). No grammar
+change was needed — the grammar already parses `WITH POINTER NAME`.
+
+`p` is an unsigned-integer item (`PIC 9(n)`) holding a **1-based** start position:
+
+- **Start offset.** `emit_unstring` initialises the scan cursor from `p_value − 1` (a run-time
+  read of the pointer item's register) instead of the constant 0. Everything downstream — the
+  delimiter scan, per-receiver `str_slice`/reshape, exhaustion, empty fields — is UNCHANGED. With
+  `p = 1` the lowering is behaviourally the no-pointer scan.
+- **Out-of-range guard.** Because the pointer's VALUE is a run-time datum, it cannot be checked at
+  build time. The emitter lowers a guard: if `p < 1` or `p > len` it jumps past the whole
+  operation (receiver moves AND write-back) to a trailing `us_end` label, leaving the receivers
+  and the pointer untouched — the ISO "overflow ⇒ no data movement" rule, matching the oracle's
+  early return byte-for-byte.
+- **Write-back.** After the scan the pointer is stored as `min(p, len) + 1` (clamp removes the
+  scan's phantom step past end-of-source, `+ 1` restores 1-basing), reshaped into the pointer's
+  `PIC 9(n)` picture through the same `store_scaled` path INSPECT's counter uses.
+- **Build-time picture validation** (co-total with the oracle): the pointer must be an unsigned
+  integer `PIC 9(n)`, `n ≤ 18` (so the value fits the `i64` slot). A signed, fractional,
+  non-numeric, group, or over-wide pointer is a clean later rung, rejected with the SAME message
+  the oracle raises. The receiver NAME list is split off from the pointer NAME at the `POINTER`
+  keyword (the grammar is flat), matching the oracle reader.
+
+`ON OVERFLOW` / `NOT ON OVERFLOW` remain deferred.
+
 ### Added — v0.50.0: UNSTRING with a reference-modified source
 
 `UNSTRING S(2:3) DELIMITED BY "," INTO w1 w2 w3` — a reference-modified item slice
