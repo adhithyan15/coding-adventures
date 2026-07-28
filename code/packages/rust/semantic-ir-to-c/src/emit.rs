@@ -420,6 +420,24 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                         quote_c_string(name)
                     );
                 }
+            } else if matches!(scope, Scope::Instance) {
+                // OOP slice 3: `@v = …` writes the current receiver's ivar map.
+                // The `@`-name is a QUOTED C string literal (no injection).  A
+                // compound value is hoisted into a temp first.
+                if is_simple(value) {
+                    let _ = write!(out, "{pad}(void)_sir_ivar_set({}, ", quote_c_string(name));
+                    emit_expr(out, value, indent);
+                    out.push_str(");\n");
+                } else {
+                    let tmp = format!("_sir_t{}", fresh_id());
+                    let _ = writeln!(out, "{pad}SirValue {tmp};");
+                    emit_assign(out, &tmp, value, indent);
+                    let _ = writeln!(
+                        out,
+                        "{pad}(void)_sir_ivar_set({}, {tmp});",
+                        quote_c_string(name)
+                    );
+                }
             } else {
                 let n = sanitize_ident(name);
                 emit_assign(out, &n, value, indent);
@@ -613,6 +631,11 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             let p2 = indent_str(i2);
             let p3 = indent_str(i3);
             let _ = writeln!(out, "{pad}{{");
+            // OOP slice 3: snapshot the current `self` — a method that `raise`s
+            // inside the guarded body `longjmp`s past `_sir_call_method`'s own
+            // restore, so the rescue/ensure paths below re-bind `self` to what it
+            // was when this `begin` started (else `@x` would read the raiser's).
+            let _ = writeln!(out, "{p1}SirValue _sir_selfsave{id} = _sir_current_self;");
             let _ = writeln!(out, "{p1}int _sir_eh{id} = _sir_push_handler();");
             let _ = writeln!(out, "{p1}volatile int _sir_esc{id} = 0;");
             let _ = writeln!(
@@ -633,6 +656,9 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             let _ = writeln!(out, "{p2}}}");
             let _ = writeln!(out, "{p2}_sir_pop_handler();");
             let _ = writeln!(out, "{p2}if (_sir_c{id}) {{");
+            // Restore `self` before a rescue body runs (the body raised & was
+            // caught, so `_sir_current_self` may be the raiser's).
+            let _ = writeln!(out, "{p3}_sir_current_self = _sir_selfsave{id};");
             let _ = writeln!(out, "{p3}SirValue _sir_ex{id} = _sir_current_error;");
             for (k, rc) in rescues.iter().enumerate() {
                 let kw = if k == 0 { "if" } else { "} else if" };
@@ -681,6 +707,10 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             // and propagate the WRONG exception.  (Meaningful only when
             // `_sir_esc` is set; harmlessly nil on the normal path.)
             let _ = writeln!(out, "{p1}SirValue _sir_pend{id} = _sir_current_error;");
+            // Restore `self` on the escape path too (reached whether the body
+            // completed normally or an exception unwound to here) before `ensure`
+            // runs and before control leaves the `begin`.
+            let _ = writeln!(out, "{p1}_sir_current_self = _sir_selfsave{id};");
             let _ = writeln!(out, "{p1}_sir_pop_handler();");
             if let Some(ens) = ensure_body {
                 for st in ens {
@@ -1292,8 +1322,14 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
         Scope::Const => {
             let _ = write!(out, "_sir_const_get({})", quote_c_string(name));
         }
-        // `Instance` / `ClassVar` belong to features the backend does not yet
-        // accept, so the capability check rejects such modules before emit.
+        // OOP slice 3: a `Scope::Instance` reference (`@v`) reads the current
+        // receiver's instance-variable map (nil when unset).  The name (incl. the
+        // `@`) is a QUOTED C string literal (no injection).
+        Scope::Instance => {
+            let _ = write!(out, "_sir_ivar_get({})", quote_c_string(name));
+        }
+        // `ClassVar` belongs to `Feature::ClassVars` (a later slice), not yet
+        // accepted, so the capability check rejects such modules before emit.
         other => unreachable!("C backend reached unsupported var scope: {other:?}"),
     }
 }
@@ -1359,6 +1395,11 @@ fn emit_builtin_simple(out: &mut String, name: &str, args: &[Expr], indent: usiz
         }
         return;
     }
+    // OOP slice 3: a bare `self` → the current receiver (`_sir_self()`).
+    if name == "__self__" {
+        out.push_str("_sir_self()");
+        return;
+    }
     // Variadic-shaped builtins take (count, args...).
     if let Some(helper) = variadic_helper(name) {
         let _ = write!(out, "{}({}", helper, args.len());
@@ -1405,6 +1446,11 @@ fn emit_builtin_with_names(out: &mut String, name: &str, names: &[String]) {
     // unreachable — emit a clear marker rather than a wrong construction.
     if matches!(name, "__new__" | "__def_method__" | "__method__") {
         let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+        return;
+    }
+    // `__self__` takes no arguments, so it is always simple; render it here too.
+    if name == "__self__" {
+        out.push_str("_sir_self()");
         return;
     }
     if let Some(helper) = variadic_helper(name) {
@@ -1465,7 +1511,12 @@ fn is_supported_builtin(name: &str) -> bool {
         // methods: `__def_method__` (register a `(class,method)` closure) and
         // `__method__` (dispatch it).  (`__super__`/`__self__`/`__class_method__`/
         // … stay unsupported — later slices.)
-        || matches!(name, "and" | "or" | "raise" | "__new__" | "__def_method__" | "__method__")
+        // Slice 3 adds `__self__` (a bare `self`).  (`__super__`/`__class_method__`
+        // /… stay unsupported — later slices.)
+        || matches!(
+            name,
+            "and" | "or" | "raise" | "__new__" | "__def_method__" | "__method__" | "__self__"
+        )
 }
 
 // The structural gate below (`first_unsupported_builtin`) reports the first

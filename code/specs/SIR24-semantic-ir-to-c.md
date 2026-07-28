@@ -362,8 +362,19 @@ lockstep:
 4. **Collections** — the `__method__` dispatch catalog
    (String / Array / Hash / Numeric / Symbol / Object, block and non-block).
 5. **Exceptions** — `setjmp`/`longjmp` + typed runtime errors.
-6. **OOP** — `Classes` / `Constants` / `InstanceVars` / `ClassVars`, then
-   `Modules` (mixins / MRO).
+6. **OOP** (mirroring the Ruby backend's landed 7-slice arc) — slice 1
+   (`Classes` + `Constants`: the `SIR_INSTANCE` runtime, an empty class, `Foo.new`
+   → `_sir_new_instance`, and a `_sir_const_set`/`_sir_const_get` table) landed in
+   0.13.0; instance **methods** (an explicit `(class,method)`→closure table —
+   `_sir_def_method`/`_sir_call_method` — a data lookup, never reflection, per
+   §Security #2, so anti-RCE by construction) landed in 0.14.0;
+   `InstanceVars` + `self` (`@v` → `_sir_ivar_get`/`_sir_ivar_set` on the
+   receiver's lazily-allocated `@name → value` map; the receiver is carried in
+   `_sir_current_self`, saved/restored by `_sir_call_method` and re-bound at each
+   `TryCatch` handler since `longjmp` unwinds past the restore) landed in 0.15.0;
+   then inheritance + `super` (a user-ancestry table
+   consulted before the baked-in exception ancestry, so both share one
+   `super_of`), class methods, `ClassVars`, and `Modules` (mixins / MRO).
 7. **Optional / later** — `Bignum`; SIR21 sized-integer native lowering
    (`int64_t`/`uint32_t` from `IntSpec`); `Range` / regex / backtick shims.
 

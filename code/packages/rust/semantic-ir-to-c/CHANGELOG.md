@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.15.0 — OOP mirror slice 3: instance variables (`@x`) + `self`
+
+Instance state — the third slice of the C OOP mirror. Accepts
+`Feature::InstanceVars`, so a method body can now read and write the receiver's
+instance variables and refer to the receiver directly.
+
+- `@v = x` (a `Scope::Instance` `Assign`) → `_sir_ivar_set("@v", x)`, and `@v`
+  (a `Scope::Instance` `VarRef`) → `_sir_ivar_get("@v")`. Each instance carries a
+  lazily-allocated `@name → value` map (`struct SirInstance` gains an `ivars`
+  slot, `NULL` until the first write); an unset `@v` reads **nil**, matching Ruby.
+- A bare `self` (`__self__`) → `_sir_self()`, the current receiver — so a method
+  can return `self` for chaining (`w.me.size`).
+- **How a hoisted method body finds its receiver.** A method lowers to a
+  top-level function with no lexical `self`, so dispatch carries the receiver in a
+  process-global `_sir_current_self`: `_sir_call_method` saves the caller's
+  `self`, binds it to the receiver for the call, and restores it after (nested
+  calls stack correctly through these C-local saves). `@x`/`self` read that
+  global; the top-level `main` object gets its own ivar bag (`_sir_toplevel_ivars`).
+- **Exceptions interaction.** A method that `raise`s inside a `begin` `longjmp`s
+  past `_sir_call_method`'s own restore, so an enclosing `TryCatch` snapshots
+  `_sir_current_self` at the `begin` and restores it on the rescue/ensure/escape
+  paths — so `@x` in a rescue body reads the *catcher's* ivars, not the raiser's.
+
+**Anti-RCE by construction.** The `@`-name (including the leading `@`) emits as a
+**quoted C string literal** and is used only as an interned map key — never as C
+source — so no `@`-name can inject code, exactly as with class/method/rescue
+names. `@@class` variables (`Feature::ClassVars`), inheritance/`super`, class
+methods, and modules remain the next slices (still rejected cleanly).
+
 ## 0.14.0 — OOP mirror slice 2: instance methods
 
 Instance-method definition and dispatch — the second slice of the C OOP mirror.

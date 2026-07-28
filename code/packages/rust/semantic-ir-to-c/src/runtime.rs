@@ -92,10 +92,10 @@ struct SirPair { SirValue car; SirValue cdr; };
  * `SIR_STR`, or nil for a bare `raise Class` — then the class name is shown). */
 struct SirError { const char *sir_class; SirValue msg; };
 
-/* A SIR OOP instance.  `sir_class` is the interned class name (`"Foo"`); it is
- * how method dispatch (later slices) keys the method table and how the ancestry
- * walk finds the superclass.  Instance variables (`@x`) join in a later slice. */
-struct SirInstance { const char *sir_class; };
+/* A SIR OOP instance.  `sir_class` is the interned class name (`"Foo"`) — how
+ * method dispatch keys the method table.  `ivars` is a lazily-allocated
+ * `@name -> value` map (NULL until the first `@x = …`; an unset `@x` reads nil). */
+struct SirInstance { const char *sir_class; SirMap *ivars; };
 
 /* A SIR16 sequence (`[1, 2, 3]`) — a heap-boxed dynamic array. `items` points
  * at `len` `SirValue`s (arena-allocated, never freed like every other heap
@@ -177,6 +177,7 @@ SirValue _sir_sym(const char *s) { SirValue v; v.tag = SIR_SYM; v.as.s = _sir_in
 SirValue _sir_new_instance(const char *cls) {
     SirInstance *o = (SirInstance *)_sir_alloc(sizeof(SirInstance));
     o->sir_class = _sir_intern(cls);
+    o->ivars = NULL;  /* lazily allocated on the first `@x = …` */
     { SirValue v; v.tag = SIR_INSTANCE; v.as.inst = o; return v; }
 }
 
@@ -1013,6 +1014,45 @@ SirValue _sir_const_get(const char *name) {
     return _sir_raise(_sir_error("NameError", _sir_str(_sir_cat("uninitialized constant ", name))));
 }
 
+/* ---- OOP: current self + instance variables (@x) ------------ */
+
+/* The receiver of the method currently executing.  A method body runs in a
+ * hoisted top-level function (no lexical `self`), so `_sir_call_method` sets this
+ * before applying the closure and restores it after; `@x` and `self` read it.
+ * Nil at top level (Ruby's `main`). */
+static SirValue _sir_current_self = { SIR_NIL, { 0 } };
+
+/* Instance variables (`@x`) when `self` is NOT an instance (top-level `main`).
+ * Lazily allocated, matching Ruby's `main`-object ivars. */
+static SirMap *_sir_toplevel_ivars = NULL;
+
+SirValue _sir_self(void) { return _sir_current_self; }
+
+/* The `@name -> value` map owner for the current `self`: the instance's own
+ * `ivars` slot (an instance), else the top-level bag. */
+static SirMap **_sir_ivar_owner(void) {
+    if (_sir_current_self.tag == SIR_INSTANCE) return &_sir_current_self.as.inst->ivars;
+    return &_sir_toplevel_ivars;
+}
+
+/* `@x` read — nil when unset (Ruby's semantics), never an error. */
+SirValue _sir_ivar_get(const char *name) {
+    SirMap *m = *_sir_ivar_owner();
+    SirValue mv;
+    if (!m) return _sir_nil();
+    mv.tag = SIR_MAP; mv.as.map = m;
+    return _sir_map_get(mv, _sir_sym(name));
+}
+
+/* `@x = v` write — lazily allocates the owner's ivar map.  The `@`-name is an
+ * interned symbol key (so lookup is a pointer compare). */
+SirValue _sir_ivar_set(const char *name, SirValue v) {
+    SirMap **owner = _sir_ivar_owner();
+    if (!*owner) *owner = _sir_map_new(4);
+    _sir_map_put(*owner, _sir_sym(name), v);
+    return v;
+}
+
 /* ---- OOP: instance-method table & dispatch ------------------ */
 
 /* An EXPLICIT (class, method) -> closure table, populated by emitted
@@ -1075,7 +1115,16 @@ SirValue _sir_call_method(SirValue recv, const char *method, int argc, ...) {
     va_start(ap, argc);
     args = _sir_va_collect(argc, ap);
     va_end(ap);
-    r = fn.as.clo->fn(fn.as.clo->caps, args, argc);
+    /* Bind `self` to the receiver for the method body (so `@x`/`self` see it),
+     * restoring the caller's `self` afterwards.  Nested calls stack correctly via
+     * these C-local saves.  If the body `raise`s, `longjmp` skips this restore —
+     * an enclosing `TryCatch` restores `_sir_current_self` on the unwind path. */
+    {
+        SirValue saved_self = _sir_current_self;
+        _sir_current_self = recv;
+        r = fn.as.clo->fn(fn.as.clo->caps, args, argc);
+        _sir_current_self = saved_self;
+    }
     if (args) free(args);
     return r;
 }
