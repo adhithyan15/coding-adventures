@@ -194,6 +194,38 @@ fn explicit_self_renders_as_sir_self() {
 }
 
 #[test]
+fn subclass_registers_its_superclass_edge() {
+    // OOP slice 4: `class Dog < Animal` emits a `_sir_register_super` edge (both
+    // names QUOTED C string literals — no injection), and the runtime carries the
+    // ancestry-walking resolver + `super` dispatcher.
+    let m = lower_ruby("class Animal\n  def legs\n    4\n  end\nend\nclass Dog < Animal\nend\nputs Dog.new.legs");
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_register_super(\"Dog\", \"Animal\")"),
+        "a subclass registers its `sub -> super` edge\n{src}"
+    );
+    assert!(
+        src.contains("_sir_resolve_method"),
+        "the runtime resolves methods up the ancestry\n{src}"
+    );
+}
+
+#[test]
+fn super_lowers_to_call_super() {
+    // OOP slice 4: `super` (`__super__`) renders as `_sir_call_super(method,
+    // definingClass, argc, …)` — both names quoted; dispatch is an ancestry walk.
+    let m = lower_ruby(
+        "class Base\n  def val\n    10\n  end\nend\n\
+         class Derived < Base\n  def val\n    super + 5\n  end\nend\nputs Derived.new.val",
+    );
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_call_super(\"val\", \"Derived\""),
+        "`super` resolves from the defining class's superclass\n{src}"
+    );
+}
+
+#[test]
 fn sanitize_ident_maps_into_c() {
     assert_eq!(sanitize_ident("foo"), "foo");
     assert_eq!(sanitize_ident("foo_bar1"), "foo_bar1");

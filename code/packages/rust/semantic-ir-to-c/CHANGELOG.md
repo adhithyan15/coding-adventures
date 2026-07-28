@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.16.0 — OOP mirror slice 4: inheritance + `super`
+
+Class inheritance and `super` — the fourth slice of the C OOP mirror. No new
+`Feature` (a superclass is a `ClassDef` field; `super` is a builtin).
+
+- `class Dog < Animal` (a `ClassDef` with a `superclass`) emits
+  `_sir_register_super("Dog", "Animal")`, recording the `sub → super` edge in a
+  mutable user-ancestry table.
+- **One ancestry, two consumers.** `_sir_class_super` now consults that user
+  table **first**, falling back to the baked-in exception hierarchy — so the same
+  `super_of` relation drives BOTH `rescue`-by-class matching (a user class that
+  subclasses `StandardError` is caught) AND OOP method resolution.
+- **Inherited dispatch.** `_sir_call_method` resolves a method by walking the
+  ancestry (`_sir_resolve_method`: look up on the class, else climb `super`),
+  so a subclass that doesn't define a method inherits the parent's closure.
+- `super` (`__super__(method, definingClass, …args)`) → `_sir_call_super`, which
+  resolves `method` from the **superclass of the defining class** (so it doesn't
+  re-enter the override) and applies it to the **current** receiver — `super`
+  does not rebind `self`, so `@x` and nested calls still see the original object.
+  No ancestor defines it ⇒ a (rescuable) `NoMethodError`.
+- **DoS guard.** Every ancestry walk (`_sir_class_is_a`, `_sir_resolve_method`)
+  is bounded by `SIR_ANCESTRY_MAX` steps, so a hand-built cyclic hierarchy
+  (`A<B`, `B<A` — which the Ruby frontend never emits) resolves to a clean "not
+  found" instead of looping.
+
+**Anti-RCE by construction.** Class / method / defining-class names emit as
+**quoted C string literals** used only as table keys and `strcmp` targets —
+never as C source — so no name can inject code. Class methods, `@@class` vars,
+and modules remain the next slices (still rejected cleanly).
+
 ## 0.15.0 — OOP mirror slice 3: instance variables (`@x`) + `self`
 
 Instance state — the third slice of the C OOP mirror. Accepts

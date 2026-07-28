@@ -723,14 +723,26 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             );
             let _ = writeln!(out, "{pad}}}");
         }
-        // OOP slice 1: an empty base class declaration.  A class is just a NAME
-        // in the C runtime (an instance carries its class string; there is no
-        // class object), so the declaration emits only a comment.  `superclass`
-        // is irrelevant without method dispatch (a later slice); a non-empty body
-        // observes the unaccepted `ClassVars` feature and is rejected by the
-        // capability check before emit.
-        Stmt::ClassDef { .. } => {
-            let _ = writeln!(out, "{pad}/* class declaration (no class object) */");
+        // OOP slice 1/4: a class is just a NAME in the C runtime (an instance
+        // carries its class string; there is no class object).  A base class
+        // (no superclass) emits only a comment.  OOP slice 4: a subclass
+        // (`class Dog < Animal`) registers its `sub -> super` edge so method
+        // resolution and `rescue`-matching walk the user hierarchy — both names
+        // are QUOTED C string literals (no injection).  A non-empty body is still
+        // rejected by the scan (class-level code / `@@x` is a later slice).
+        Stmt::ClassDef {
+            name, superclass, ..
+        } => {
+            if let Some(sup) = superclass {
+                let _ = writeln!(
+                    out,
+                    "{pad}_sir_register_super({}, {});",
+                    quote_c_string(name),
+                    quote_c_string(sup)
+                );
+            } else {
+                let _ = writeln!(out, "{pad}/* class declaration (no class object) */");
+            }
         }
         other => unreachable!("C backend reached unsupported statement: {other:?}"),
     }
@@ -1395,6 +1407,32 @@ fn emit_builtin_simple(out: &mut String, name: &str, args: &[Expr], indent: usiz
         }
         return;
     }
+    // OOP slice 4: `super` — `args = [StrLit(method), StrLit(definingClass),
+    // call-args…]`.  Resolve `method` from the SUPERCLASS of the defining class
+    // and apply to the current self.  Method / defining-class are QUOTED C string
+    // literals (no injection); the walk is an ancestry table lookup (anti-RCE).
+    if name == "__super__" {
+        if let (Some(Expr::StrLit { value: m, .. }), Some(Expr::StrLit { value: dc, .. })) =
+            (args.first(), args.get(1))
+        {
+            let call_args = &args[2..];
+            let _ = write!(
+                out,
+                "_sir_call_super({}, {}, {}",
+                quote_c_string(m),
+                quote_c_string(dc),
+                call_args.len()
+            );
+            for a in call_args {
+                out.push_str(", ");
+                emit_expr(out, a, indent);
+            }
+            out.push(')');
+        } else {
+            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+        }
+        return;
+    }
     // OOP slice 3: a bare `self` → the current receiver (`_sir_self()`).
     if name == "__self__" {
         out.push_str("_sir_self()");
@@ -1511,11 +1549,18 @@ fn is_supported_builtin(name: &str) -> bool {
         // methods: `__def_method__` (register a `(class,method)` closure) and
         // `__method__` (dispatch it).  (`__super__`/`__self__`/`__class_method__`/
         // … stay unsupported — later slices.)
-        // Slice 3 adds `__self__` (a bare `self`).  (`__super__`/`__class_method__`
-        // /… stay unsupported — later slices.)
+        // Slice 3 adds `__self__` (a bare `self`); slice 4 adds `__super__`
+        // (`super`).  (`__class_method__`/`__def_class_method__`/… stay
+        // unsupported — later slices.)
         || matches!(
             name,
-            "and" | "or" | "raise" | "__new__" | "__def_method__" | "__method__" | "__self__"
+            "and" | "or"
+                | "raise"
+                | "__new__"
+                | "__def_method__"
+                | "__method__"
+                | "__self__"
+                | "__super__"
         )
 }
 
@@ -1758,15 +1803,13 @@ fn scan_stmt_for_builtin(s: &Stmt) -> Option<(String, Span)> {
         Stmt::SingletonClassDef { span, .. } => {
             Some(("class << self (singleton class)".to_string(), span.clone()))
         }
-        // OOP slice 1: a `Stmt::ClassDef` emits only a comment (the empty base
-        // class is a bare name), so REJECT the two shapes that comment would
-        // silently drop — a superclass (inheritance dispatch is a later slice)
-        // and a non-empty body (class-level code / `@@x` initializers) — rather
-        // than mis-emit.  The empty base class passes through.
-        Stmt::ClassDef {
-            superclass, body, span, ..
-        } if superclass.is_some() || !body.is_empty() => Some((
-            "a class with a superclass or a non-empty body (later OOP slices)".to_string(),
+        // OOP slice 4: a `Stmt::ClassDef` emits a `_sir_register_super` (subclass)
+        // or a comment (base class) — neither carries the body, so REJECT a
+        // non-empty body (class-level code / `@@x` initializers, a later slice)
+        // that the emit would silently drop.  A superclass is now SUPPORTED
+        // (registered), so it no longer triggers rejection.
+        Stmt::ClassDef { body, span, .. } if !body.is_empty() => Some((
+            "a class with a non-empty body (class-level code is a later OOP slice)".to_string(),
             span.clone(),
         )),
         _ => None,
@@ -1810,11 +1853,22 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
             {
                 return Some(("a malformed __method__ dispatch".to_string(), span.clone()));
             }
-            // `__def_method__`/`__method__` carry a `StrLit` class/method name that
-            // must stay a raw C literal.  The compound (control-flow-argument) path
-            // cannot recover it, so reject a call that is not `is_simple` —
-            // deferred, not mis-emitted.
-            if matches!(name.as_str(), "__def_method__" | "__method__") && !is_simple(e) {
+            // OOP slice 4: `__super__` must be `[StrLit(method), StrLit(class), …]`
+            // — the emitter reads both names as raw C literals.
+            if name == "__super__"
+                && !matches!(
+                    (args.first(), args.get(1)),
+                    (Some(Expr::StrLit { .. }), Some(Expr::StrLit { .. }))
+                )
+            {
+                return Some(("a malformed __super__ call".to_string(), span.clone()));
+            }
+            // `__def_method__`/`__method__`/`__super__` carry `StrLit` class/method
+            // names that must stay raw C literals.  The compound (control-flow-
+            // argument) path cannot recover them, so reject a call that is not
+            // `is_simple` — deferred, not mis-emitted.
+            if matches!(name.as_str(), "__def_method__" | "__method__" | "__super__") && !is_simple(e)
+            {
                 return Some((
                     format!("a `{name}` call with a control-flow argument"),
                     span.clone(),

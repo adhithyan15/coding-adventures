@@ -119,13 +119,23 @@ un-registered (built-in) method is rejected cleanly (the Collections batch).  An
 value` map (an unset `@v` reads nil), and a bare `self` → `_sir_self()`.  The
 receiver is carried across the hoisted method body in `_sir_current_self` (saved
 and restored by `_sir_call_method`; an enclosing `begin`/`rescue` restores it on
-the unwind path).  The `@`-name is a quoted C string literal (no injection).
+the unwind path).  The `@`-name is a quoted C string literal (no injection).  And
+**slice 4** — inheritance + `super`: `class Dog < Animal` emits
+`_sir_register_super("Dog", "Animal")` into a mutable user-ancestry table that
+`_sir_class_super` consults **before** the baked-in exception hierarchy (so ONE
+`super_of` drives both `rescue`-matching and method resolution); `_sir_call_method`
+resolves a method up the ancestry (`_sir_resolve_method`), so a subclass inherits
+its parent's methods; and `super` → `_sir_call_super`, resolving the method from
+the superclass of the defining class and applying it to the current `self`.  Every
+ancestry walk is bounded (`SIR_ANCESTRY_MAX`), so a cyclic hand-built hierarchy
+cannot hang.  Class / method / super-class names are all quoted C string literals
+(no injection).
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
-`Intrinsics`, `NDArrays`, the rest of OOP (`@@class vars`, inheritance dispatch,
-class methods, modules — later mirror slices, so `__new__` with constructor
-args, a `class << self` singleton, `super`, and the `@@` scope are all refused
-for now), and every other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
+`Intrinsics`, `NDArrays`, the rest of OOP (`@@class vars`, class methods,
+modules — later mirror slices, so `__new__` with constructor args, a
+`class << self` singleton, and the `@@` scope are all refused for now), and
+every other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
 until a bignum runtime ships — a module needing arbitrary precision is refused,
 never silently truncated.
 

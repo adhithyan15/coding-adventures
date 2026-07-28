@@ -900,12 +900,48 @@ SirValue _sir_error(const char *sir_class, SirValue msg) {
     return v;
 }
 
-/* The built-in exception-class ancestry (`sub → super`), baked in from the
- * shared exception hierarchy so a `rescue StandardError` matches a raised
- * `RuntimeError`.  A NULL super terminates the chain (`Exception` is the root).
- * An unlisted class is treated as having no super (matches only itself / a bare
- * rescue) — a user exception class needs the OOP `Classes` batch. */
+/* OOP slice 4: user-declared inheritance (`class Dog < Animal`), registered in
+ * program order by the emitted `_sir_register_super`.  A class has ONE super, so
+ * this is a `sub -> super` table (update-or-append on the interned sub name).
+ * `_sir_class_super` consults it FIRST, so the SAME `super_of` relation drives
+ * BOTH `rescue`-by-class matching AND OOP method resolution (a user class that
+ * subclasses a built-in exception is picked up by rescue too). */
+#define SIR_USER_SUPER_MAX 4096
+static struct { const char *sub; const char *sup; } _sir_user_super_tab[SIR_USER_SUPER_MAX];
+static int _sir_user_super_n = 0;
+
+void _sir_register_super(const char *sub, const char *sup) {
+    const char *b = _sir_intern(sub), *p = _sir_intern(sup);
+    int i;
+    for (i = 0; i < _sir_user_super_n; i++) {
+        if (_sir_user_super_tab[i].sub == b) { _sir_user_super_tab[i].sup = p; return; }
+    }
+    if (_sir_user_super_n < SIR_USER_SUPER_MAX) {
+        _sir_user_super_tab[_sir_user_super_n].sub = b;
+        _sir_user_super_tab[_sir_user_super_n].sup = p;
+        _sir_user_super_n++;
+    }
+}
+
+/* An ancestry walk is bounded by this many steps: a well-formed hierarchy is far
+ * shorter, but a HAND-BUILT module could register a cycle (`A<B`, `B<A`) the Ruby
+ * frontend never emits (Ruby rejects cyclic inheritance) — the cap turns that
+ * into a clean "not found" instead of an infinite loop (DoS). */
+#define SIR_ANCESTRY_MAX 4096
+
+/* The class ancestry (`sub → super`): a user-declared super wins; otherwise the
+ * built-in exception hierarchy (baked in so a `rescue StandardError` matches a
+ * raised `RuntimeError`).  A NULL super terminates the chain (`Exception` /
+ * `Object` is the root).  An unlisted class has no super (matches only itself /
+ * a bare rescue). */
 static const char *_sir_class_super(const char *cls) {
+    {
+        const char *c = _sir_intern(cls);
+        int i;
+        for (i = 0; i < _sir_user_super_n; i++) {
+            if (_sir_user_super_tab[i].sub == c) return _sir_user_super_tab[i].sup;
+        }
+    }
     static const struct { const char *sub; const char *sup; } A[] = {
         { "RuntimeError", "StandardError" },
         { "ArgumentError", "StandardError" },
@@ -931,7 +967,8 @@ static const char *_sir_class_super(const char *cls) {
  * through the ancestry chain. */
 int _sir_class_is_a(const char *actual, const char *target) {
     const char *cur = actual;
-    while (cur) {
+    int steps = 0;
+    while (cur && steps++ < SIR_ANCESTRY_MAX) {
         if (strcmp(cur, target) == 0) return 1;
         cur = _sir_class_super(cur);
     }
@@ -1085,7 +1122,8 @@ SirValue _sir_def_method(const char *cls, const char *method, SirValue fn) {
     return fn;
 }
 
-/* Look up `(cls, method)` -> closure, or a `SIR_NIL` sentinel on a miss. */
+/* Look up `(cls, method)` -> closure on THIS class only (no ancestry), or a
+ * `SIR_NIL` sentinel on a miss. */
 static SirValue _sir_lookup_method(const char *cls, const char *method) {
     const char *c = _sir_intern(cls), *m = _sir_intern(method);
     int i;
@@ -1093,6 +1131,22 @@ static SirValue _sir_lookup_method(const char *cls, const char *method) {
         if (_sir_method_tab[i].cls == c && _sir_method_tab[i].method == m) {
             return _sir_method_tab[i].fn;
         }
+    }
+    return _sir_nil();
+}
+
+/* OOP slice 4: resolve `method` starting at `cls` and walking UP the ancestry
+ * (`_sir_class_super`) until a defining class is found — so an inherited method
+ * dispatches to the closure the superclass registered.  Returns the closure or
+ * `SIR_NIL`.  Bounded by `SIR_ANCESTRY_MAX` steps (a cyclic hand-built hierarchy
+ * cannot hang). */
+static SirValue _sir_resolve_method(const char *cls, const char *method) {
+    const char *cur = cls;
+    int steps = 0;
+    while (cur && steps++ < SIR_ANCESTRY_MAX) {
+        SirValue fn = _sir_lookup_method(cur, method);
+        if (fn.tag == SIR_CLOSURE) return fn;
+        cur = _sir_class_super(cur);
     }
     return _sir_nil();
 }
@@ -1107,7 +1161,8 @@ SirValue _sir_call_method(SirValue recv, const char *method, int argc, ...) {
         return _sir_raise(_sir_error(
             "NoMethodError", _sir_str(_sir_cat("undefined method for a non-object receiver: ", method))));
     }
-    fn = _sir_lookup_method(recv.as.inst->sir_class, method);
+    /* Slice 4: resolve up the ancestry so an inherited method dispatches. */
+    fn = _sir_resolve_method(recv.as.inst->sir_class, method);
     if (fn.tag != SIR_CLOSURE) {
         return _sir_raise(
             _sir_error("NoMethodError", _sir_str(_sir_cat("undefined method ", method))));
@@ -1125,6 +1180,29 @@ SirValue _sir_call_method(SirValue recv, const char *method, int argc, ...) {
         r = fn.as.clo->fn(fn.as.clo->caps, args, argc);
         _sir_current_self = saved_self;
     }
+    if (args) free(args);
+    return r;
+}
+
+/* OOP slice 4: `super` from within `defining_class`'s method `method`.  Resolve
+ * `method` starting at the SUPERCLASS of `defining_class` (so it does not
+ * re-enter the same override) and apply it to the CURRENT `self` — `super` runs
+ * in the same receiver (it does NOT rebind `self`), so `@x` and a nested method
+ * call still see the original object.  No ancestor defines `method` => a
+ * (rescuable) `NoMethodError`. */
+SirValue _sir_call_super(const char *method, const char *defining_class, int argc, ...) {
+    va_list ap;
+    SirValue *args, fn, r;
+    const char *sup = _sir_class_super(defining_class);
+    fn = sup ? _sir_resolve_method(sup, method) : _sir_nil();
+    if (fn.tag != SIR_CLOSURE) {
+        return _sir_raise(_sir_error(
+            "NoMethodError", _sir_str(_sir_cat("super: no superclass method ", method))));
+    }
+    va_start(ap, argc);
+    args = _sir_va_collect(argc, ap);
+    va_end(ap);
+    r = fn.as.clo->fn(fn.as.clo->caps, args, argc);
     if (args) free(args);
     return r;
 }

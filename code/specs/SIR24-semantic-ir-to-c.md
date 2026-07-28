@@ -372,9 +372,13 @@ lockstep:
    receiver's lazily-allocated `@name → value` map; the receiver is carried in
    `_sir_current_self`, saved/restored by `_sir_call_method` and re-bound at each
    `TryCatch` handler since `longjmp` unwinds past the restore) landed in 0.15.0;
-   then inheritance + `super` (a user-ancestry table
-   consulted before the baked-in exception ancestry, so both share one
-   `super_of`), class methods, `ClassVars`, and `Modules` (mixins / MRO).
+   inheritance + `super` (`class Dog < Animal` → `_sir_register_super` into a
+   mutable user-ancestry table `_sir_class_super` consults BEFORE the baked-in
+   exception ancestry, so ONE `super_of` drives both `rescue`-matching and method
+   resolution; `_sir_call_method` resolves up the chain, `super` → `_sir_call_super`
+   from the superclass of the defining class; every walk bounded by
+   `SIR_ANCESTRY_MAX` against a cyclic hand-built hierarchy) landed in 0.16.0;
+   then class methods, `ClassVars`, and `Modules` (mixins / MRO).
 7. **Optional / later** — `Bignum`; SIR21 sized-integer native lowering
    (`int64_t`/`uint32_t` from `IntSpec`); `Range` / regex / backtick shims.
 
