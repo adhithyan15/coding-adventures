@@ -1638,8 +1638,12 @@ impl<'a> Compiler<'a> {
         //     (a `str_const` register behaves identically to an item's char
         //     register under str_len/str_index/str_slice, exactly as the
         //     `spaces_const` register does further down this same routine).
-        // A NUMERIC or FIGURATIVE literal source and a reference-modified source
-        // stay later rungs, matching the oracle's read-time rejects.
+        // A NUMERIC or FIGURATIVE literal source stays a later rung, matching the
+        // oracle's read-time rejects; a REFERENCE-MODIFIED source `base(start:len)`
+        // is supported by routing the sliced characters through the SHARED
+        // `ref_mod_slice` helper — the identical slice DISPLAY / comparisons emit,
+        // so the source register is byte-for-byte what the oracle's `refmod_string`
+        // produces. Only how we obtain `s_reg` changes; the scan below is untouched.
         let s_reg = match read_operand(source_node)? {
             Operandy::Name(source_name) => {
                 let sidx = self.item_index(&source_name)?;
@@ -1678,10 +1682,18 @@ impl<'a> Compiler<'a> {
                     "UNSTRING of a figurative-constant source is a later rung".into(),
                 ))
             }
-            Operandy::RefMod { .. } => {
-                return Err(CompileError::Unsupported(
-                    "UNSTRING with a reference-modified source is a later rung".into(),
-                ))
+            Operandy::RefMod { base, start, len } => {
+                // The source characters are the ref-mod slice `base(start:len)`.
+                // `ref_mod_slice` emits the SAME `str_slice` DISPLAY/comparison
+                // use (constant-folded for literal indices, register-computed for a
+                // data-name index) and enforces the SAME numeric-base and
+                // out-of-range rejects — so the slice register is byte-identical to
+                // the oracle's `refmod_string`, and everything downstream reads it
+                // exactly like a plain item's char register. We only need the
+                // register; the length metadata (used by comparisons) is unused
+                // here because the scan measures the source with `str_len`.
+                let (reg, _len) = self.ref_mod_slice(&base, &start, &len)?;
+                reg
             }
         };
 

@@ -480,10 +480,31 @@ per-receiver reshape are entirely shared. Only an **ASCII** literal is accepted:
 the oracle scans a literal by CHARACTER while the compiler's IIR string ops are
 BYTE-based, so the two agree only when each character is one byte; a **non-ASCII**
 literal source (e.g. `UNSTRING "café" …`) is a clean later-rung reject at read
-time on both engines, keeping them co-total. Still deferred on both engines: a
+time on both engines, keeping them co-total.
+
+**Reference-modified source (later rung, now implemented).** The source may also
+be a **reference-modified item slice** `base(start:len)` — `UNSTRING S(2:3)
+DELIMITED BY "," INTO w1 w2 w3` takes the 1-based 3-character slice of `S` and
+splits it exactly as an item source would. This is a direct mirror of the
+literal-source rung: the ONLY thing that changes is the character **provider** —
+the field text is the ref-mod slice, obtained through the SAME slice machinery
+`DISPLAY` / comparisons already use (the oracle's `refmod_string`, the compiler's
+`ref_mod_slice`). No grammar change was needed (the grammar already parses a
+ref-mod operand in the source position) and everything downstream — the delimiter
+scan and per-receiver reshape — is unchanged. Because the slice register is
+byte-for-byte what the two engines already agree on for `DISPLAY S(2:3)`, the
+split matches on both. Both a literal start index (`S(2:3)`) and a **computed**
+data-name index (`S(J:3)`) are supported. A **NUMERIC-base** reference-modified
+source is **still deferred** — the shared slice helper rejects a numeric base on
+both engines, so `UNSTRING N(2:3) …` errors identically; a GROUP base,
+out-of-range indices, and a signed/fractional index behave exactly as the existing
+reference-modification machinery does (this rung only routes the source through it).
+
+Still deferred on both engines: a
 **NUMERIC**-literal source (`UNSTRING 123 …`), a **FIGURATIVE** source (`UNSTRING
 SPACE …`), a **non-ASCII** string-literal source — only an ASCII alphanumeric
-string literal is supported — and a **reference-modified** source (unchanged).
+string literal is supported — and a **NUMERIC-base** reference-modified source
+(an alphanumeric-base reference-modified source is now supported).
 
 ### `INSPECT … TALLYING` (first rung)
 
@@ -1229,7 +1250,7 @@ list, `COPY`) is documented as future work.
 | Complete reserved-word list | The full ~300 COBOL-60 reserved words |
 | `COPY` library text | A pre-tokenize include-style hook |
 | `STRING` real delimiters / `WITH POINTER` / `ON OVERFLOW` | Later rungs beyond the first `DELIMITED BY SIZE` cut (need a run-time scan and a receiver pointer) |
-| `UNSTRING` multi-char / `ALL` / `OR` delimiters, `WITH POINTER`, `ON OVERFLOW`, multiple `DELIMITED` fields, `COUNT`/`DELIMITER IN`/`TALLYING`, a NUMERIC-literal / FIGURATIVE / NON-ASCII / reference-modified source | Later rungs beyond the single-character `DELIMITED BY delim INTO r1 [r2 …]` cut (an ASCII alphanumeric string-literal source IS now supported) |
+| `UNSTRING` multi-char / `ALL` / `OR` delimiters, `WITH POINTER`, `ON OVERFLOW`, multiple `DELIMITED` fields, `COUNT`/`DELIMITER IN`/`TALLYING`, a NUMERIC-literal / FIGURATIVE / NON-ASCII source, a NUMERIC-base reference-modified source | Later rungs beyond the single-character `DELIMITED BY delim INTO r1 [r2 …]` cut (an ASCII alphanumeric string-literal source AND an alphanumeric-base reference-modified source `S(2:3)`, literal or computed index, ARE now supported) |
 | `INSPECT`, other string verbs | The rest of the string-handling verb family |
 | IR / interpreter | Run a COBOL program; out of scope for the frontend |
 

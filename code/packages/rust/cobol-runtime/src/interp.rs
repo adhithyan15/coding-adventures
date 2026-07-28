@@ -587,10 +587,10 @@ impl Machine {
         delim: &Operand,
         targets: &[String],
     ) -> Result<(), RuntimeError> {
-        // The field characters come from ONE of two providers; everything after
+        // The field characters come from ONE of THREE providers; everything after
         // `src` is obtained (the delimiter scan and per-receiver reshape) is
-        // shared, so only this match differs between an item source and a literal
-        // source.
+        // shared, so only this match differs between an item source, a literal
+        // source, and a reference-modified item slice.
         let src: Vec<char> = match source {
             // Identifier source: the characters are an alphanumeric item's
             // STORAGE (a numeric or group item is a later rung).
@@ -618,10 +618,19 @@ impl Machine {
             // A string literal is inherently alphanumeric, so there is no item to
             // look up and no picture to check.
             Operand::Lit(Lit::Str(s)) => s.chars().collect(),
-            // The reader rejected every other source variant (numeric/figurative
-            // literal, reference-modified), so these are unreachable in practice;
-            // guard defensively rather than panic.
-            Operand::Lit(_) | Operand::RefMod { .. } => {
+            // Reference-modified source: the characters are the ref-mod slice
+            // `base(start:len)` of the base item. `refmod_string` returns EXACTLY
+            // the char range the compiler emits as a `str_slice` (so DISPLAY of the
+            // same slice already agrees byte-for-byte) and already rejects a
+            // numeric base and out-of-range indices. Only obtaining `src` differs;
+            // the delimiter scan and receiver fill below are UNCHANGED.
+            Operand::RefMod { base, start, len } => {
+                self.refmod_string(base, start, len)?.chars().collect()
+            }
+            // The reader rejected every remaining source variant (numeric or
+            // figurative literal), so this is unreachable in practice; guard
+            // defensively rather than panic.
+            Operand::Lit(_) => {
                 return Err(RuntimeError::Unsupported(
                     "UNSTRING with this source kind is a later rung".into(),
                 ))

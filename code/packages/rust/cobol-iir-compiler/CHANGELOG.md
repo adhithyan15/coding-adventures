@@ -8,6 +8,37 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.50.0: UNSTRING with a reference-modified source
+
+`UNSTRING S(2:3) DELIMITED BY "," INTO w1 w2 w3` — a reference-modified item slice
+`base(start:len)` is now accepted as the UNSTRING source, byte-identical to the
+`coding-adventures-cobol-runtime` 0.54.0 oracle. Previously it was rejected at emit time
+("UNSTRING with a reference-modified source is a later rung"). No grammar change was needed —
+the grammar already parses a ref-mod operand in that position.
+
+This is a direct mirror of the literal-source rung: the ONLY thing that changed is the source
+character provider. `emit_unstring` now has an `Operandy::RefMod` arm that obtains `s_reg` by
+calling the SHARED `ref_mod_slice` helper (the same helper DISPLAY / comparisons use) — which
+emits the identical `str_slice` (constant-folded for literal indices, register-computed for a
+data-name index) and enforces the identical numeric-base and out-of-range rejects. Everything
+downstream — the delimiter scan (`str_len` / `str_index` / `str_slice` loop) and the
+per-receiver reshape — is UNCHANGED, because it reads `s_reg` purely as a string register.
+
+Because the slice register is byte-for-byte what the oracle's `refmod_string` produces (DISPLAY
+of the same slice already agreed between the engines), the split behaviour matches the oracle
+for every case: field boundaries, empty fields, source exhaustion (trailing receivers keep
+their prior VALUE), and per-receiver width reshaping. Both the literal-index path (`S(2:3)`)
+and the computed-index path (`S(J:3)`, J a `PIC 9` data-name) are supported.
+
+**Still deferred / unchanged.** A NUMERIC base under ref-mod is a later rung — the shared
+`ref_mod_slice` rejects a numeric base, so UNSTRING inherits that reject identically to the
+oracle. A GROUP base, out-of-range indices, and a signed/fractional index item behave exactly
+as the existing reference-modification machinery already does (this rung only routes the
+UNSTRING source through it; it does not change that machinery). No new ASCII guard is added:
+the source base is an IDENTIFIER, so there is no new literal-scanning surface — a non-ASCII
+base under ref-mod is the SAME pre-existing byte-vs-char behaviour the reference-modification
+rungs already have (reachable via `DISPLAY S(2:3)`), tracked as the shared chip.
+
 ### Added — v0.49.0: STRING with DELIMITED BY a single-char delimiter
 
 `STRING a b c DELIMITED BY "," INTO r` — a real single-character delimiter now compiles,
