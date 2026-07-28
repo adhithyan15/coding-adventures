@@ -408,7 +408,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 193
+    assert len(coverage) == 195
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -423,7 +423,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tAF\tAF\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 193
+    assert len(records) == 195
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -446,8 +446,8 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     assert summary[0].max_alias_count == 3
     assert summary[0].aliased_parameters == ("IS", "VT", "CJO", "VJ", "M")
     assert summary[5].kind == "NMOS"
-    assert summary[5].canonical_parameter_count == 26
-    assert summary[5].accepted_name_count == 33
+    assert summary[5].canonical_parameter_count == 27
+    assert summary[5].accepted_name_count == 34
     assert summary[5].aliased_parameter_count == 6
     assert summary[5].max_alias_count == 3
     assert summary[5].aliased_parameters == (
@@ -469,7 +469,7 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     assert table.splitlines()[1] == "D\t15\t21\t5\t3\tIS|VT|CJO|VJ|M"
     assert (
         table.splitlines()[-1]
-        == "PMOS\t26\t33\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD"
+        == "PMOS\t27\t34\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD"
     )
     records = model_card_supported_parameter_coverage_summary_records()
     assert len(records) == 7
@@ -497,9 +497,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 193
-    assert report.expected_canonical_parameter_count == 193
-    assert report.accepted_name_count == 263
+    assert report.canonical_parameter_count == 195
+    assert report.expected_canonical_parameter_count == 195
+    assert report.accepted_name_count == 265
     assert report.aliased_parameter_count == 57
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -507,7 +507,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t193\t193\t263\t57\t4\t0"
+        "true\t7\t7\t195\t195\t265\t57\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -535,15 +535,15 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 192
-    assert report.accepted_name_count == 260
+    assert report.canonical_parameter_count == 194
+    assert report.accepted_name_count == 262
     assert report.aliased_parameter_count == 56
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
     assert report.issues[0].kind == "NMOS"
     assert report.issues[0].field == "canonical_parameter_count"
     assert report.issues[0].message == (
-        "expected NMOS to expose 26 canonical supported parameters, found 25"
+        "expected NMOS to expose 27 canonical supported parameters, found 26"
     )
     assert report.issues[-1].field == "max_alias_count"
     assert report.issues[-1].message == "expected NMOS max alias count 3, found 2"
@@ -551,12 +551,12 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t192\t193\t260\t56\t4\t4\n"
+        "false\t7\t7\t194\t195\t262\t56\t4\t4\n"
         "kind\tfield\tmessage\n"
-        "NMOS\tcanonical_parameter_count\texpected NMOS to expose 26 canonical "
-        "supported parameters, found 25\n"
-        "NMOS\taccepted_name_count\texpected NMOS to expose 33 accepted model-card "
-        "names, found 30\n"
+        "NMOS\tcanonical_parameter_count\texpected NMOS to expose 27 canonical "
+        "supported parameters, found 26\n"
+        "NMOS\taccepted_name_count\texpected NMOS to expose 34 accepted model-card "
+        "names, found 31\n"
         "NMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing "
         "parameters, found 5\n"
         "NMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
@@ -565,12 +565,12 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
     assert records[0] == {
         "kind": "NMOS",
         "field": "canonical_parameter_count",
-        "message": "expected NMOS to expose 26 canonical supported parameters, found 25",
+        "message": "expected NMOS to expose 27 canonical supported parameters, found 26",
     }
     assert format_model_card_supported_parameter_coverage_gate_issue_csv(report).startswith(
         "kind,field,message\n"
-        'NMOS,canonical_parameter_count,"expected NMOS to expose 26 canonical '
-        'supported parameters, found 25"\n'
+        'NMOS,canonical_parameter_count,"expected NMOS to expose 27 canonical '
+        'supported parameters, found 26"\n'
     )
     assert (
         json.loads(format_model_card_supported_parameter_coverage_gate_issue_json(report))
@@ -751,6 +751,7 @@ def test_model_card_aliases_build_device_instances() -> None:
             "RD": 125.0,
             "RS": 75.0,
             "RSH": 50.0,
+            "CJ": 2.0e-3,
             "TOX": 25.0e-9,
             "KF": 2.0e-24,
             "AF": 1.4,
@@ -770,6 +771,7 @@ def test_model_card_aliases_build_device_instances() -> None:
         "RD": 125.0,
         "RS": 75.0,
         "RSH": 50.0,
+        "CJ": 2.0e-3,
         "TOX": 25.0e-9,
         "KF": 2.0e-24,
         "AF": 1.4,
@@ -790,6 +792,7 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(50.0) == mos_model.model.model.params.RSH
     assert pytest.approx(1.0) == mos_model.model.model.params.NRD
     assert pytest.approx(1.0) == mos_model.model.model.params.NRS
+    assert pytest.approx(2.0e-3) == mos_model.model.model.params.CJ
     assert pytest.approx(25.0e-9) == mos_model.model.model.params.TOX
     assert pytest.approx(2.0e-24) == mos_model.model.model.params.KF
     assert pytest.approx(1.4) == mos_model.model.model.params.AF
@@ -1793,8 +1796,8 @@ def test_transient_mosfet_overlap_capacitance_slows_gate_step() -> None:
     assert charged_first < uncharged_first
 
 
-def test_transient_mosfet_bulk_junction_capacitance_slows_drain_step() -> None:
-    def run(cbd: float) -> TransientResult:
+def test_transient_mosfet_drain_area_scales_bottom_junction_capacitance() -> None:
+    def run(cj: float, ad: float) -> TransientResult:
         circuit = Circuit()
         circuit.add(VoltageSource(
             "Vstep",
@@ -1812,13 +1815,13 @@ def test_transient_mosfet_bulk_junction_capacitance_slows_drain_step() -> None:
             "0",
             MOSFET(
                 MosfetType.NMOS,
-                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CBD=cbd)),
+                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CJ=cj, AD=ad)),
             ),
         ))
         return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
 
-    uncharged = run(0.0)
-    charged = run(1.0e-9)
+    uncharged = run(0.0, 0.0)
+    charged = run(0.5, 2.0e-9)
 
     assert uncharged.converged
     assert charged.converged
@@ -2104,6 +2107,52 @@ def test_mosfet_rejects_invalid_source_squares(
     with pytest.raises(
         ValueError,
         match="MOSFET NRS must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+@pytest.mark.parametrize("drain_area", [float("nan"), -1.0])
+def test_mosfet_rejects_invalid_drain_area(drain_area: float) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(AD=drain_area)),
+        ),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET AD must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+@pytest.mark.parametrize("bottom_junction_capacitance", [float("nan"), -1.0])
+def test_mosfet_rejects_invalid_bottom_junction_capacitance(
+    bottom_junction_capacitance: float,
+) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(CJ=bottom_junction_capacitance)),
+        ),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET CJ must be finite and non-negative",
     ):
         dc_op(circuit)
 
@@ -3054,6 +3103,8 @@ def test_subcircuit_expansion_preserves_mos_geometry():
                             RSH=50.0,
                             NRD=2.0,
                             NRS=3.0,
+                            AD=4.0e-12,
+                            CJ=2.0e-3,
                             TOX=25.0e-9,
                         )
                     ),
@@ -3075,6 +3126,8 @@ def test_subcircuit_expansion_preserves_mos_geometry():
     assert pytest.approx(50.0) == expanded.model.model.params.RSH
     assert pytest.approx(2.0) == expanded.model.model.params.NRD
     assert pytest.approx(3.0) == expanded.model.model.params.NRS
+    assert pytest.approx(4.0e-12) == expanded.model.model.params.AD
+    assert pytest.approx(2.0e-3) == expanded.model.model.params.CJ
     assert pytest.approx(25.0e-9) == expanded.model.model.params.TOX
 
 
@@ -5747,6 +5800,41 @@ def test_ac_mosfet_overlap_capacitance_shunts_high_frequency_gate_drive():
 
     assert without_capacitance > 0.9
     assert with_capacitance < without_capacitance / 100.0
+
+
+def test_ac_mosfet_drain_area_scales_bottom_junction_capacitance():
+    def drain_amplitude(cj: float, ad: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "drain", 1000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(
+                    Level1Params(
+                        KP=1.0e-12,
+                        W=1.0,
+                        L=1.0,
+                        TOX=1.0e9,
+                        CJ=cj,
+                        AD=ad,
+                    )
+                ),
+            ),
+        ))
+        result = ac_sweep(circuit, f_start=100000.0, f_stop=100000.0, n_points=1)
+        return abs(result.points[0].node_voltages["drain"])
+
+    without_area_capacitance = drain_amplitude(0.5, 0.0)
+    with_area_capacitance = drain_amplitude(0.5, 2.0e-6)
+
+    assert without_area_capacitance > 0.9
+    assert with_area_capacitance < without_area_capacitance / 100.0
 
 
 def test_ac_mosfet_oxide_thickness_scales_intrinsic_gate_capacitance():

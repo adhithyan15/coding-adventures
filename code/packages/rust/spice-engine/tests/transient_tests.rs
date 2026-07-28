@@ -421,8 +421,8 @@ fn transient_mosfet_overlap_capacitance_slows_gate_step() {
 }
 
 #[test]
-fn transient_mosfet_bulk_junction_capacitance_slows_drain_step() {
-    fn run(drain_bulk_capacitance: f64) -> Vec<TransientPoint> {
+fn transient_mosfet_drain_area_scales_bottom_junction_capacitance() {
+    fn run(bottom_junction_capacitance: f64, drain_area: f64) -> Vec<TransientPoint> {
         let mut circuit = Circuit::new();
         circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
             "Vstep",
@@ -449,15 +449,16 @@ fn transient_mosfet_bulk_junction_capacitance_slows_drain_step() {
                 kp: 1.0e-12,
                 w: 1.0,
                 l: 1.0,
-                drain_bulk_capacitance,
+                bottom_junction_capacitance,
+                drain_area,
                 ..MosfetLevel1Params::default()
             },
         )));
         transient_with_method(&circuit, 1.0e-9, 5.0e-9, TransientMethod::Euler).unwrap()
     }
 
-    let uncharged = run(0.0);
-    let charged = run(1.0e-9);
+    let uncharged = run(0.0, 0.0);
+    let charged = run(0.5, 2.0e-9);
     let uncharged_first = uncharged[0].voltage("drain").unwrap();
     let charged_first = charged[0].voltage("drain").unwrap();
 

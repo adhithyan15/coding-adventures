@@ -1,5 +1,7 @@
 # Changelog
 
+- Add the Level-1 MOS `AD` instance parameter and model-card `CJ` density.
+  Their product augments `CBD` in AC and transient drain-body capacitance.
 - Add the Level-1 MOS `NRS` instance parameter. It defaults to one and scales
   the `RSH` source fallback while preserving explicit positive `RS` precedence,
   intrinsic-node stamping, and `:RS` Johnson noise.

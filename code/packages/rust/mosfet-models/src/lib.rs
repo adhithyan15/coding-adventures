@@ -45,6 +45,8 @@ const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
 /// | RSH       | Drain/source sheet resistance (ohm) | 0        |
 /// | NRD       | Number of drain squares              | 1        |
 /// | NRS       | Number of source squares             | 1        |
+/// | AD        | Drain diffusion area (m²)             | 0        |
+/// | CJ        | Bottom junction capacitance (F/m²)    | 0        |
 /// | IS        | Drain–body saturation current (A)  | 1 fA     |
 /// | N_SUB     | Subthreshold slope factor          | 1.4      |
 /// | T_NOM     | Nominal temperature (K)            | 300.15   |
@@ -80,6 +82,10 @@ pub struct Level1Params {
     pub nrd: f64,
     /// Number of squares in the source diffusion.
     pub nrs: f64,
+    /// Drain diffusion area [m²].
+    pub ad: f64,
+    /// Bottom junction capacitance per unit area [F/m²].
+    pub cj: f64,
     /// Drain–body saturation current [A] (used for subthreshold floor).
     pub is: f64,
     /// Subthreshold slope factor n.  Subthreshold current ∝ exp(V_OV / (n V_T)).
@@ -127,6 +133,8 @@ impl Default for Level1Params {
             rsh: 0.0,
             nrd: 1.0,
             nrs: 1.0,
+            ad: 0.0,
+            cj: 0.0,
             is: 1e-15,
             n_sub: 1.4,
             t_nom: 300.15,
@@ -284,6 +292,14 @@ pub fn evaluate_level1(
         p.nrs.is_finite() && p.nrs >= 0.0,
         "MOSFET NRS must be finite and non-negative"
     );
+    assert!(
+        p.ad.is_finite() && p.ad >= 0.0,
+        "MOSFET AD must be finite and non-negative"
+    );
+    assert!(
+        p.cj.is_finite() && p.cj >= 0.0,
+        "MOSFET CJ must be finite and non-negative"
+    );
     let beta = p.kp * (p.w / effective_length);
 
     // Threshold with body effect.
@@ -306,7 +322,7 @@ pub fn evaluate_level1(
     // Meyer gate-to-channel capacitance, partitioned by operating region below.
     let channel_capacitance = p.w * effective_length * (OXIDE_PERMITTIVITY / p.tox);
     let cbs_bulk = bulk_junction_capacitance(p.cbs, v_bs, p.pb, p.mj, p.fc);
-    let cbd_bulk = bulk_junction_capacitance(p.cbd, v_bs - v_ds, p.pb, p.mj, p.fc);
+    let cbd_bulk = bulk_junction_capacitance(p.cbd + p.cj * p.ad, v_bs - v_ds, p.pb, p.mj, p.fc);
 
     // -----------------------------------------------------------------------
     // Cutoff / subthreshold

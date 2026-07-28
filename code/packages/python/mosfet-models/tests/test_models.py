@@ -207,6 +207,27 @@ def test_source_squares_rejects_negative_value():
         evaluate_level1(Level1Params(NRS=-1.0), V_GS=1.8, V_DS=1.8)
 
 
+def test_drain_area_scales_bottom_junction_capacitance():
+    result = evaluate_level1(
+        Level1Params(CBD=1.0e-12, CJ=2.0e-3, AD=3.0e-9, MJ=0.0),
+        V_GS=1.8,
+        V_DS=0.0,
+    )
+    assert result.Cbd == pytest.approx(7.0e-12)
+
+
+@pytest.mark.parametrize(
+    ("params", "message"),
+    [
+        (Level1Params(AD=-1.0), "MOSFET AD must be finite and non-negative"),
+        (Level1Params(CJ=-1.0), "MOSFET CJ must be finite and non-negative"),
+    ],
+)
+def test_drain_geometry_rejects_negative_values(params, message):
+    with pytest.raises(ValueError, match=message):
+        evaluate_level1(params, V_GS=1.8, V_DS=1.8)
+
+
 def test_overlap_and_bulk_capacitances_are_reported():
     p = Level1Params(
         W=2e-6,

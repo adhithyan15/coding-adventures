@@ -1782,6 +1782,8 @@ export interface MosfetLevel1Params {
   readonly RSH: number;
   readonly NRD: number;
   readonly NRS: number;
+  readonly AD: number;
+  readonly CJ: number;
   readonly IS: number;
   readonly N_SUB: number;
   readonly T_NOM: number;
@@ -2054,8 +2056,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   PNP: [41, 58, 13, 4],
   NJF: [22, 30, 7, 3],
   PJF: [22, 30, 7, 3],
-  NMOS: [26, 33, 6, 3],
-  PMOS: [26, 33, 6, 3],
+  NMOS: [27, 34, 6, 3],
+  PMOS: [27, 34, 6, 3],
 };
 
 export interface Vccs {
@@ -8044,6 +8046,8 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     RSH: 0.0,
     NRD: 1.0,
     NRS: 1.0,
+    AD: 0.0,
+    CJ: 0.0,
     IS: 1.0e-15,
     N_SUB: 1.4,
     T_NOM: 300.15,
@@ -8246,6 +8250,7 @@ const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   CJS: "CBS",
   CBD: "CBD",
   CJD: "CBD",
+  CJ: "CJ",
   PB: "PB",
   MJ: "MJ",
   FC: "FC",
@@ -8819,6 +8824,7 @@ export function mosfetFromModelCard(
     ...(p.CGBO !== undefined ? { CGBO: p.CGBO } : {}),
     ...(p.CBS !== undefined ? { CBS: p.CBS } : {}),
     ...(p.CBD !== undefined ? { CBD: p.CBD } : {}),
+    ...(p.CJ !== undefined ? { CJ: p.CJ } : {}),
     ...(p.PB !== undefined ? { PB: p.PB } : {}),
     ...(p.MJ !== undefined ? { MJ: p.MJ } : {}),
     ...(p.FC !== undefined ? { FC: p.FC } : {}),
@@ -20329,7 +20335,7 @@ function evaluateNmosLevel1(
     params.CBS, vbs, params.PB, params.MJ, params.FC,
   );
   const cbdBulk = mosfetBulkJunctionCapacitance(
-    params.CBD, vbs - vds, params.PB, params.MJ, params.FC,
+    params.CBD + params.CJ * params.AD, vbs - vds, params.PB, params.MJ, params.FC,
   );
   const capacitances = {
     cgs: cgsOverlap + channelCapacitance,
@@ -20887,7 +20893,8 @@ function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
   const gateDrainCapacitance = element.params.CGDO * element.params.W;
   const gateBodyCapacitance = element.params.CGBO * element.params.L;
   const sourceBodyCapacitance = element.params.CBS;
-  const drainBodyCapacitance = element.params.CBD;
+  const drainBodyCapacitance =
+    element.params.CBD + element.params.CJ * element.params.AD;
   if (gateSourceCapacitance > 0.0) {
     specs.push({
       name: mosfetGateSourceChargeStateName(element),
@@ -21137,6 +21144,12 @@ function validateMosfet(element: Mosfet): void {
   }
   if (params.NRS < 0.0) {
     throw invalidElement(element.name, "MOSFET NRS must be non-negative");
+  }
+  if (params.AD < 0.0) {
+    throw invalidElement(element.name, "MOSFET AD must be non-negative");
+  }
+  if (params.CJ < 0.0) {
+    throw invalidElement(element.name, "MOSFET CJ must be non-negative");
   }
   if (params.TOX <= 0.0) {
     throw invalidElement(element.name, "MOSFET TOX must be positive");
