@@ -1,5 +1,7 @@
 # Changelog
 
+- Add the Level-1 MOS `PS` instance parameter. With model-card `CJSW`, its
+  product augments `CBS` in AC and transient source-body capacitance.
 - Add the Level-1 MOS `PD` instance parameter and model-card `CJSW` density.
   Their product augments `CBD` in AC and transient drain-body capacitance.
 - Add the Level-1 MOS `AS` instance parameter. With model-card `CJ`, its

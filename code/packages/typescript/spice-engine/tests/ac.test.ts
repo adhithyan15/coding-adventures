@@ -643,6 +643,29 @@ describe("acSweep", () => {
     expect(withAreaCapacitance).toBeLessThan(withoutAreaCapacitance / 100.0);
   });
 
+  it("scales MOSFET sidewall junction capacitance by source perimeter", () => {
+    function sourceAmplitude(sidewallCapacitance: number, sourcePerimeter: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
+      circuit.add(resistor("Rin", "in", "source", 1_000.0));
+      circuit.add(mosfet("M1", "0", "0", "source", "0", "NMOS", {
+        KP: 1.0e-12,
+        W: 1.0,
+        L: 1.0,
+        TOX: 1.0e9,
+        CJSW: sidewallCapacitance,
+        PS: sourcePerimeter,
+      }));
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("source")!);
+    }
+
+    const withoutSidewallCapacitance = sourceAmplitude(0.5, 0.0);
+    const withSidewallCapacitance = sourceAmplitude(0.5, 2.0e-6);
+
+    expect(withoutSidewallCapacitance).toBeGreaterThan(0.9);
+    expect(withSidewallCapacitance).toBeLessThan(withoutSidewallCapacitance / 100.0);
+  });
+
   it("uses MOSFET oxide thickness to scale intrinsic gate capacitance", () => {
     function gateAmplitude(TOX: number): number {
       const circuit = new Circuit();

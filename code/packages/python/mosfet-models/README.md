@@ -29,9 +29,9 @@ print(r.Id, r.gm, r.gds, r.region)
   Meyer capacitance through `Cox = epsilon_ox / TOX`, zero-default `RD` / `RS`
   external drain/source resistance, zero-default `RSH` sheet resistance,
   one-default `NRD` / `NRS` drain/source diffusion square counts, zero-default
-  drain/source diffusion areas `AD` / `AS`, drain perimeter `PD`, and
+  drain/source diffusion areas `AD` / `AS`, perimeters `PD` / `PS`, and
   bottom/sidewall junction capacitance densities `CJ` / `CJSW` contributing
-  `CJ * AD + CJSW * PD` to `CBD` and `CJ * AS` to `CBS`, and
+  `CJ * AD + CJSW * PD` to `CBD` and `CJ * AS + CJSW * PS` to `CBS`, and
   `KF` / `AF` flicker noise.
 - `evaluate_level1(params, V_GS, V_DS, V_BS, T)`: returns `MosResult` with Id, gm, gds, gmb, Cgs/Cgd/Cgb/Cbs/Cbd, region.
 - Region detection: cutoff (subthreshold-aware), triode, saturation.

@@ -2610,6 +2610,20 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects invalid MOSFET source perimeters", () => {
+    for (const sourcePerimeter of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        PS: sourcePerimeter,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(sourcePerimeter)
+          ? "MOSFET PS must be non-negative"
+          : "MOSFET PS must be finite",
+      );
+    }
+  });
+
   it("rejects invalid MOSFET bottom junction capacitance densities", () => {
     for (const bottomJunctionCapacitance of [Number.NaN, -1.0]) {
       const circuit = new Circuit();

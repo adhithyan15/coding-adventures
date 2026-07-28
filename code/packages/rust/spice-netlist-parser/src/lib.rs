@@ -1914,6 +1914,9 @@ fn build_mosfet_params(
     if let Some(value) = instance_params.get("PD") {
         params.drain_perimeter = *value;
     }
+    if let Some(value) = instance_params.get("PS") {
+        params.source_perimeter = *value;
+    }
     params
 }
 
