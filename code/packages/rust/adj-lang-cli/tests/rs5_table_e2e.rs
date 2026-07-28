@@ -836,6 +836,45 @@ fn shipped_radioactivity_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b18) Shipped table — reference/absorbed-dose-conversions.adj resolves via import (a
+//       NEW dimension: absorbed dose → gray, the EXACT SP 811 B.9 boldface factor
+//       rad = 1.0 E-02 = 0.01, the rad DEFINED as exactly 10⁻² gray), and a traditional
+//       absorbed-dose unit NIST does not tabulate (`rep`) — no row — abstains.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_absorbed_dose_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_absdose");
+    let src = stdlib().join("reference/absorbed-dose-conversions.adj");
+    std::fs::copy(&src, dir.join("absorbed-dose-conversions.adj"))
+        .expect("copy shipped absorbed-dose-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"absorbed-dose-conversions.adj\"\n\
+         ? absorbed_dose_to_gray(rad, $v)\n\
+         ? absorbed_dose_to_gray(rep, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 "Radiology" exact factor resolves, character-for-character from
+    // the table (boldface = exact; the rad is defined as exactly 10⁻² gray = 0.01).
+    assert!(out.contains("\"v\":\"0.01\""), "rad = 0.01 Gy: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `rep` (roentgen equivalent physical) is a historical absorbed-dose unit that NIST SP
+    // 811 B.9 does NOT tabulate — no row here, so the engine abstains rather than committing
+    // to a fabricated factor.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "an untabulated unit abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
