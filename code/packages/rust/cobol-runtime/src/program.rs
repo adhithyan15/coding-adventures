@@ -199,7 +199,21 @@ pub enum Stmt {
     /// the 1-based position of the character immediately following the last
     /// character examined. `None` when the phrase is absent (start at position 1,
     /// no write-back).
-    Unstring { source: Operand, delim: Operand, targets: Vec<String>, pointer: Option<String> },
+    ///
+    /// `ON OVERFLOW` / `NOT ON OVERFLOW` are MODELLED (the DIRECT sibling of the
+    /// STRING clauses): `on_overflow` holds the imperative statement list run when
+    /// the UNSTRING overflows — all receivers are filled but the source is NOT
+    /// exhausted (more delimited fields remain), OR the initial `WITH POINTER` value
+    /// is out of range — and `not_on_overflow` holds the list run when it does NOT.
+    /// Either list may be empty (clause absent).
+    Unstring {
+        source: Operand,
+        delim: Operand,
+        targets: Vec<String>,
+        pointer: Option<String>,
+        on_overflow: Vec<Stmt>,
+        not_on_overflow: Vec<Stmt>,
+    },
     /// `INSPECT source TALLYING counter FOR ALL delim` (or `FOR LEADING delim`)
     /// — count occurrences of the SINGLE-character `delim` (a 1-char literal or a
     /// `PIC X(1)` item) in the alphanumeric `source` and **ADD** that count to the
@@ -1067,18 +1081,12 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             Ok(Stmt::String { sources, target, delim, pointer, on_overflow, not_on_overflow })
         }
         "unstring_stmt" => {
-            // UNSTRING source DELIMITED BY delim INTO r1 [r2 …] [WITH POINTER p].
-            // The grammar also *accepts* `ON OVERFLOW` (still a later rung), which
-            // we reject here with a friendly Unsupported rather than a parse error
-            // — exactly as the STRING arm above does. `WITH POINTER` is now
-            // MODELLED (see the pointer extraction below), so it is no longer
-            // rejected.
+            // UNSTRING source DELIMITED BY delim INTO r1 [r2 …] [WITH POINTER p]
+            //          [ON OVERFLOW imp…] [NOT ON OVERFLOW imp…]. Both `WITH POINTER`
+            // and the two OVERFLOW imperatives are now MODELLED (see the extraction
+            // below), so nothing is rejected here — the DIRECT sibling of the STRING
+            // arm above.
             let toks = child_tokens(verb);
-            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "OVERFLOW") {
-                return Err(RuntimeError::Unsupported(
-                    "UNSTRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung".into(),
-                ));
-            }
             // The two direct `operand` children are the source and the delimiter,
             // in order (a reference-modification suffix nests *under* an operand,
             // so it never appears as a third top-level operand).
@@ -1148,7 +1156,42 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     "UNSTRING without an INTO receiver".into(),
                 ));
             }
-            Ok(Stmt::Unstring { source, delim, targets, pointer })
+            // The optional imperatives are direct `statement` child nodes of the
+            // `unstring_stmt`, appearing ONLY after the `ON OVERFLOW` / `NOT ON
+            // OVERFLOW` keywords (the receiver/pointer NAMEs are direct token
+            // children — never `statement` nodes — so the split below never sees a
+            // receiver). Mirror the `string_stmt` reader above and the `if_stmt`
+            // then/else split at `ELSE`:
+            //
+            //   UNSTRING … ON OVERFLOW  MOVE 1 TO F   NOT ON OVERFLOW  MOVE 0 TO F
+            //                           └ on_overflow ┘  ▲NOT flips    └ not_on_overflow ┘
+            //
+            // A nested statement's OWN `NOT` (e.g. `IF A NOT = B …`) is buried inside
+            // that `statement` node, never a direct token child of `unstring_stmt`,
+            // so the split cannot be fooled. Once `seen_not` flips, every subsequent
+            // `statement` belongs to NOT ON OVERFLOW.
+            let mut on_overflow = Vec::new();
+            let mut not_on_overflow = Vec::new();
+            let mut seen_not = false;
+            for child in &verb.children {
+                match child {
+                    ASTNodeOrToken::Token(t)
+                        if t.value == "NOT" && t.effective_type_name() == "KEYWORD" =>
+                    {
+                        seen_not = true;
+                    }
+                    ASTNodeOrToken::Node(n) if n.rule_name == "statement" => {
+                        let stmt = read_statement(n)?;
+                        if seen_not {
+                            not_on_overflow.push(stmt);
+                        } else {
+                            on_overflow.push(stmt);
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            Ok(Stmt::Unstring { source, delim, targets, pointer, on_overflow, not_on_overflow })
         }
         "inspect_stmt" => {
             // The grammar accepts the full INSPECT surface — a TALLYING clause, a

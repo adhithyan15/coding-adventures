@@ -111,7 +111,13 @@ w2 WITH POINTER P` — where `p` (a `PIC 9(n)` unsigned integer) gives the 1-bas
 character position at which scanning STARTS and is UPDATED afterwards to one past
 the last character examined (`min(final_cursor, len) + 1`); an initial `p` outside
 `[1, len]` (0 or `> len`) is ISO overflow, leaving every receiver and `p`
-unchanged); and `INSPECT source TALLYING
+unchanged; and optionally with `ON OVERFLOW imp…` / `NOT ON OVERFLOW imp…`
+handlers — after the scan and pointer write-back the `ON OVERFLOW` imperative runs
+when the UNSTRING overflows, else the `NOT ON OVERFLOW` one, mirroring `ON SIZE
+ERROR` structurally. Overflow here means all receivers are filled but the source is
+NOT exhausted — more delimited fields remain (`final_cursor <= len`) — OR the
+initial `WITH POINTER` value is out of range; the out-of-range case runs `ON
+OVERFLOW` with no data movement); and `INSPECT source TALLYING
 counter FOR ALL delim` / `FOR LEADING delim`
 (count the occurrences of a single-character delimiter — a 1-char literal or a
 `PIC X(1)` item — in the alphanumeric source and **ADD** them to the
@@ -195,12 +201,13 @@ over-wide (`> 18`-digit) `WITH POINTER` item / `ON OVERFLOW` (a single-character
 ASCII `DELIMITED BY` delimiter and a `WITH POINTER p` phrase over a `PIC 9(n)`
 pointer ARE supported), `UNSTRING` with a
 multi-character
-delimiter / `ON`/`NOT ON OVERFLOW` / a signed, fractional, non-numeric or
+delimiter / a signed, fractional, non-numeric or
 over-wide (`> 18`-digit) `WITH POINTER` item / a NUMERIC-literal or FIGURATIVE
 source or a NON-ASCII literal source or a NUMERIC-base reference-modified source
 (an ASCII alphanumeric string-literal source, an alphanumeric-base
-reference-modified source `S(2:3)` — literal or computed index — and a `WITH
-POINTER p` phrase over a `PIC 9(n)` pointer ARE supported),
+reference-modified source `S(2:3)` — literal or computed index — a `WITH
+POINTER p` phrase over a `PIC 9(n)` pointer, and `ON OVERFLOW` / `NOT ON OVERFLOW`
+handlers ARE supported),
 `INSPECT` with a `CHARACTERS`
 tally, a `{BEFORE|AFTER}` region on a `FOR LEADING`/`REPLACING LEADING` phrase
 (the region ships for `FOR ALL`/`REPLACING ALL` only — on the lone forms, on

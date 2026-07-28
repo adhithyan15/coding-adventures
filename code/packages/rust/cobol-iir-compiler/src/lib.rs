@@ -1887,16 +1887,10 @@ impl<'a> Compiler<'a> {
     /// `ON OVERFLOW`, a multi-character delimiter, and a numeric/group source or
     /// receiver are later rungs (clean `Unsupported`).
     fn emit_unstring(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
-        // Reject the later-rung options the grammar accepts (clean Unsupported,
-        // not a parse error) — exactly as emit_string does. `WITH POINTER` is now
-        // MODELLED (see the pointer handling below), so only `ON OVERFLOW` remains
-        // a later rung here.
+        // `WITH POINTER` and the two OVERFLOW imperatives are now MODELLED (see the
+        // handling below), so nothing is rejected up front — the DIRECT sibling of
+        // emit_string's ON OVERFLOW dispatch.
         let toks = child_tokens(verb);
-        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "OVERFLOW") {
-            return Err(CompileError::Unsupported(
-                "UNSTRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung".into(),
-            ));
-        }
         // The two direct `operand` children are the source and the delimiter, in
         // order (a reference-modification suffix nests under an operand, so it is
         // never a third top-level operand).
@@ -2050,6 +2044,41 @@ impl<'a> Compiler<'a> {
             recvs.push((idx, width));
         }
 
+        // # ON OVERFLOW / NOT ON OVERFLOW split
+        //
+        // The two imperatives are direct `statement` child nodes of `unstring_stmt`,
+        // appearing ONLY after the `ON OVERFLOW` / `NOT ON OVERFLOW` keyword tokens.
+        // Split them at the `NOT` keyword exactly as the oracle reader and emit_if's
+        // ELSE split do — a nested statement's own `NOT` is buried inside its
+        // `statement` node, never a direct token child here, so the split is
+        // unambiguous. We collect the node refs NOW (no emission) so we can decide
+        // whether to plumb the `overflow` flag at all: a plain UNSTRING with neither
+        // clause lowers EXACTLY as before this rung.
+        //
+        //   UNSTRING … ON OVERFLOW  <A…>   NOT ON OVERFLOW  <B…>
+        //                           └ on ┘    ▲NOT flips     └ not_on ┘
+        let mut on_stmts: Vec<&GrammarASTNode> = Vec::new();
+        let mut not_stmts: Vec<&GrammarASTNode> = Vec::new();
+        let mut seen_not = false;
+        for child in &verb.children {
+            match child {
+                ASTNodeOrToken::Token(t)
+                    if t.value == "NOT" && t.effective_type_name() == "KEYWORD" =>
+                {
+                    seen_not = true;
+                }
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => {
+                    if seen_not {
+                        not_stmts.push(n);
+                    } else {
+                        on_stmts.push(n);
+                    }
+                }
+                _ => {}
+            }
+        }
+        let has_clauses = !on_stmts.is_empty() || !not_stmts.is_empty();
+
         // len = str_len(S).
         let len = self.fresh("_uslen");
         self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.clone())], "i64");
@@ -2065,6 +2094,20 @@ impl<'a> Compiler<'a> {
         // run-time guard rather than a compile-time reject.
         let p = self.fresh("_usp");
         let us_end = self.fresh("us_end");
+        // The `overflow` flag drives ON / NOT ON OVERFLOW — computed ONLY when a
+        // clause is present so a plain UNSTRING lowers byte-identically to before.
+        // We PRE-SEED it to 1 and let the out-of-range pointer guards fall through to
+        // `us_end` with it still set (out-of-range IS overflow, mirroring the
+        // oracle); the in-range path OVERWRITES it after the scan with `p <= len`
+        // (source not yet exhausted). This is the SAME pre-seed trick STRING's
+        // emit_string_pointer_overlay uses.
+        let overflow = if has_clauses {
+            let ov = self.fresh("_usof");
+            self.emit("const", Some(&ov), vec![Operand::Int(1)], "i64");
+            Some(ov)
+        } else {
+            None
+        };
         match &pointer {
             Some((pidx, _)) => {
                 let pv = self.items[*pidx].reg.clone();
@@ -2172,6 +2215,18 @@ impl<'a> Compiler<'a> {
             self.emit("label", None, vec![Operand::Var(skip)], "void");
         }
 
+        // In range (the out-of-range pointer guard skipped straight to `us_end` with
+        // `overflow` still pre-seeded to 1): the source is exhausted iff the final
+        // cursor ran past its end, so overflow ⇔ `p <= len`. This is the IDENTICAL
+        // comparison the oracle applies (`overflow = p <= src.len()`), so the
+        // accept/skip decision is byte-identical. Emitted BEFORE the `us_end` label
+        // so the out-of-range jump bypasses it, keeping overflow = 1 there.
+        if let Some(ov) = &overflow {
+            let le_ov = self.fresh("_usofle");
+            self.emit("cmp_le", Some(&le_ov), vec![Operand::Var(p.clone()), Operand::Var(len.clone())], "i64");
+            self.emit("mov", Some(ov), vec![Operand::Var(le_ov)], "i64");
+        }
+
         // Write the pointer back to the 1-based resume position: `min(p, len) + 1`.
         // `p` is the scan's final 0-based cursor, sitting one past the terminating
         // delimiter; for a field that ran to end-of-source that step is a phantom
@@ -2200,10 +2255,33 @@ impl<'a> Compiler<'a> {
 
         // The out-of-range guard (only emitted WITH a pointer) lands here, skipping
         // every move and the write-back so the receivers and pointer keep their prior
-        // values. Emitted only when a pointer exists, so the no-pointer lowering is
+        // values — and, with a clause present, arriving with `overflow` still 1.
+        // Emitted only when a pointer exists, so the no-pointer lowering is
         // byte-identical to before (no dangling label).
         if pointer_name.is_some() {
             self.emit("label", None, vec![Operand::Var(us_end)], "void");
+        }
+
+        // # ON OVERFLOW / NOT ON OVERFLOW dispatch
+        //
+        // With the `overflow` register settled (see the split + pre-seed above), emit
+        // the usual `jmp_if_false`/branch/`label` skeleton emit_if uses, guarding on
+        // it. When both clauses are absent there is nothing to run — `overflow` is
+        // `None` and the whole skeleton is skipped, so a plain UNSTRING lowers exactly
+        // as before this rung.
+        if let Some(ov) = overflow {
+            let not_lbl = self.fresh("us_notov");
+            let end_lbl = self.fresh("us_ovend");
+            self.emit("jmp_if_false", None, vec![Operand::Var(ov), Operand::Var(not_lbl.clone())], "void");
+            for stmt in on_stmts {
+                self.emit_statement(stmt)?;
+            }
+            self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
+            self.emit("label", None, vec![Operand::Var(not_lbl)], "void");
+            for stmt in not_stmts {
+                self.emit_statement(stmt)?;
+            }
+            self.emit("label", None, vec![Operand::Var(end_lbl)], "void");
         }
         Ok(())
     }

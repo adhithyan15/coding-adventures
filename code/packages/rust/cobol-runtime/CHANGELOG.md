@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.58.0 — UNSTRING … ON OVERFLOW / NOT ON OVERFLOW
+
+- `UNSTRING source DELIMITED BY delim INTO r1 [r2 …] [WITH POINTER p] [ON OVERFLOW imp…] [NOT ON
+  OVERFLOW imp…]` — the two optional overflow imperatives are now MODELLED (previously rejected
+  at read time: "UNSTRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung"). The DIRECT sibling
+  of the STRING clauses added in 0.57.0. No grammar change was needed — the grammar already
+  parses `[ "ON" "OVERFLOW" { statement } ]` and `[ "NOT" "ON" "OVERFLOW" { statement } ]`.
+- The `overflow` condition is defined exactly as ISO requires — all receivers are filled but the
+  source is NOT exhausted (more delimited fields remain), OR the initial `WITH POINTER` value is
+  out of range:
+  - **Scan path (in-range or no pointer):** `overflow = p <= src.len()` where `p` is the scan's
+    final 0-based cursor. This ONE comparison covers every case: loop broke early (`p > len`,
+    source exhausted first) → false; all receivers filled with the last field ending AT a
+    delimiter (`p ≤ len`, more source remains) → true; last field ran to end-of-source
+    (`p = len+1 > len`) → false; trailing delimiter as the last consumed char (`p == len`, an
+    empty field remains) → true.
+  - **`WITH POINTER p`, p out of range (`p == 0 || p > len`):** `overflow = true`, with NO data
+    movement and the pointer left UNCHANGED (as before).
+- After the (unchanged) scan and pointer write-back, `exec_unstring` runs the `ON OVERFLOW`
+  statement list when `overflow` is true, else the `NOT ON OVERFLOW` list, via the same
+  `run_stmts` path STRING uses. Either list may be empty (clause absent) — `run_stmts` returns
+  `Flow::Normal`. A `STOP RUN` / `GO TO` inside the chosen imperative propagates its `Flow`, so
+  `exec_unstring` now returns `Result<Flow, RuntimeError>`.
+- **Behaviour change:** the out-of-range `WITH POINTER` case previously returned with no
+  imperative; it now runs the `ON OVERFLOW` list (still no data movement / pointer write-back).
+
 ## 0.57.0 — STRING … ON OVERFLOW / NOT ON OVERFLOW
 
 - `STRING s1 s2 … DELIMITED BY {SIZE | delim} INTO t [WITH POINTER p] [ON OVERFLOW imp…] [NOT ON

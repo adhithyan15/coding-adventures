@@ -4301,6 +4301,303 @@ fn unstring_pointer_non_numeric_is_a_later_rung() {
 }
 
 // ---------------------------------------------------------------------------
+// UNSTRING … ON OVERFLOW / NOT ON OVERFLOW — the DIRECT sibling of STRING's
+// overflow clauses. Overflow fires when every receiver is filled but the source
+// is NOT exhausted (more delimited fields remain) OR the initial WITH POINTER
+// value is out of range. The overflow BOOLEAN is the identical comparison on both
+// engines (`p <= len` after the scan, or `true` for an out-of-range pointer); each
+// case pins the compiled JIT output to the oracle byte-for-byte via
+// `assert_matches_oracle`, plus the exact expected bytes.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn unstring_overflow_fires_more_fields_than_receivers() {
+    // (a) "A,B,C" (three fields) into TWO receivers: R1="A", R2="B", then the source
+    // is NOT exhausted (final cursor p = 4 ≤ len 5) ⇒ overflow. The ON OVERFLOW body
+    // writes "YES"; "C" is dropped (no third receiver).
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nYES\n");
+}
+
+#[test]
+fn unstring_no_overflow_runs_not_clause() {
+    // (b) "A,B" (exactly two fields) into TWO receivers: R1="A", R2="B", and the
+    // source IS exhausted (the last field ran to end-of-source, p = 4 > len 3) ⇒ NO
+    // overflow, so the NOT ON OVERFLOW body runs, writing "NON".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"A,B\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nNON\n");
+}
+
+#[test]
+fn unstring_trailing_delimiter_fires_overflow() {
+    // (c) Trailing delimiter "A,B," into TWO receivers: R1="A", R2="B", and the
+    // cursor stops AT the trailing delimiter (p = 4 = len 4) — an empty field still
+    // remains ⇒ overflow (`p <= len`). The `p == len` boundary is exactly the
+    // trailing-delimiter case both engines must agree on. ON OVERFLOW ⇒ "YES".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(4) VALUE \"A,B,\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nYES\n");
+}
+
+#[test]
+fn unstring_on_overflow_only_present() {
+    // (d) ON OVERFLOW present, NOT ON OVERFLOW absent. When overflow fires the flag
+    // flips to "YES"; when it does not, the flag is UNCHANGED (no NOT clause to run).
+    let fires = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2",
+            "    ON OVERFLOW MOVE \"YES\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(fires, "A  \nB  \nYES\n");
+    let quiet = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"A,B\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2",
+            "    ON OVERFLOW MOVE \"YES\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    // No overflow and no NOT clause ⇒ F keeps its initial "no ".
+    assert_eq!(quiet, "A  \nB  \nno \n");
+}
+
+#[test]
+fn unstring_not_on_overflow_only_present() {
+    // (e) NOT ON OVERFLOW present, ON OVERFLOW absent, source exhausted ⇒ the NOT
+    // body runs (jmp_if_false over an EMPTY on-branch), writing "NON".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"A,B\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nNON\n");
+}
+
+#[test]
+fn unstring_pointer_zero_out_of_range_fires_on_overflow() {
+    // (f) WITH POINTER out of range, p = 0. No data movement, pointer UNCHANGED, but
+    // ON OVERFLOW now runs (the behaviour change this rung introduces). R1 keeps
+    // "ZZZ", P stays "00", F becomes "YES".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE \"ZZZ\".",
+            "01  P  PIC 9(2) VALUE 0.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY P.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ZZZ\n00\nYES\n");
+}
+
+#[test]
+fn unstring_pointer_past_end_out_of_range_fires_on_overflow() {
+    // (f cont.) WITH POINTER out of range, p > len. p = 6 into a 5-char source: no
+    // movement, P unchanged ("06"), ON OVERFLOW runs ⇒ F = "YES".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE \"ZZZ\".",
+            "01  P  PIC 9(2) VALUE 6.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY P.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ZZZ\n06\nYES\n");
+}
+
+#[test]
+fn unstring_pointer_in_range_fields_remain_fires_overflow_with_writeback() {
+    // (g) WITH POINTER p = 1, ONE receiver, source "a,b,c" has more fields left after
+    // R1="a" ⇒ overflow. The write-back STILL happens before the imperative: the
+    // cursor stops at the delimiter (index 1), advances to 2, so P := 2 + 1 = 3
+    // ("03"). ON OVERFLOW ⇒ F = "YES". Pins overflow + a correct write-back together.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  P  PIC 9(2) VALUE 1.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY P.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "a  \n03\nYES\n");
+}
+
+#[test]
+fn unstring_pointer_anchor_no_overflow_runs_not_clause() {
+    // (h) WITH POINTER p = 1 anchor, "a,b" into TWO receivers exhausts the source ⇒
+    // NO overflow, so the NOT ON OVERFLOW body runs. R1="a", R2="b", the cursor ends
+    // at 4 clamped to len 3, P := 3 + 1 = 4 ("04"), F = "NON".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"a,b\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  P  PIC 9(2) VALUE 1.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 WITH POINTER P",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY P.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "a  \nb  \n04\nNON\n");
+}
+
+#[test]
+fn unstring_on_overflow_body_propagates_control_flow() {
+    // (i) The ON OVERFLOW body contains a GO TO, proving the handler's `Flow` unwinds
+    // out of exec_unstring / the emitted block. Overflow fires (three fields, two
+    // receivers), GO TO jumps to OVF, which DISPLAYs and stops — the "AFTER" line
+    // after UNSTRING is never reached.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 ON OVERFLOW GO TO OVF.",
+            "DISPLAY \"AFTER\".",
+            "STOP RUN.",
+            "OVF.",
+            "DISPLAY \"JUMPED\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "JUMPED\n");
+}
+
+#[test]
+fn unstring_with_no_overflow_clauses_still_works_regression() {
+    // (j) A plain UNSTRING with NEITHER clause lowers exactly as before this rung —
+    // no overflow flag, no branch skeleton. Regression anchor for the empty-clause
+    // path: "A,B,C" into two receivers still fills R1="A", R2="B" and drops "C".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \n");
+}
+
+// ---------------------------------------------------------------------------
 // INSPECT … TALLYING — count the (non-overlapping, left-to-right) occurrences of
 // a single-character delimiter in an alphanumeric source and ADD the count to an
 // integer counter (INSPECT adds; it does not clear the counter first). Each case

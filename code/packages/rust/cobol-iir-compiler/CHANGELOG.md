@@ -8,6 +8,29 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.54.0: UNSTRING … ON OVERFLOW / NOT ON OVERFLOW
+
+`UNSTRING source DELIMITED BY delim INTO r1 [r2 …] [WITH POINTER p] [ON OVERFLOW imp…] [NOT ON
+OVERFLOW imp…]` — the two optional overflow imperatives are now compiled, byte-identical to the
+`coding-adventures-cobol-runtime` 0.58.0 oracle. Previously they were rejected at emit time
+("UNSTRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung"). The DIRECT sibling of the STRING
+overflow dispatch (v0.53.0). No grammar change was needed.
+
+- `emit_unstring` now yields an `overflow` i64 register (`1`/`0`) computed with the IDENTICAL
+  comparison the oracle uses:
+  - **Scan path:** after the receiver loop, `overflow = cmp_le(p, len)` (the final cursor `p` did
+    not run past the source ⇒ fields remain), overwriting the pre-seed.
+  - **`WITH POINTER` out of range:** the flag is PRE-SEEDED to `1` before the out-of-range guards,
+    which jump straight to `us_end` with it still set (out-of-range IS overflow), skipping the
+    scan, the `cmp_le` overwrite, and the write-back.
+- After settling the flag, `emit_unstring` splits the `statement` children at the `NOT` keyword
+  (exactly as the oracle reader and `emit_if`'s `ELSE` split do) into the ON / NOT-ON lists, then
+  emits the usual `jmp_if_false`/branch/`label` skeleton guarding on the `overflow` register.
+- The whole flag + skeleton is emitted ONLY when a clause is present — a plain UNSTRING with
+  neither clause lowers EXACTLY as before this rung (no `overflow` register, no branch).
+- **Behaviour change:** the out-of-range `WITH POINTER` case now runs the `ON OVERFLOW` list
+  (still no data movement / pointer write-back), matching the oracle.
+
 ### Added — v0.53.0: STRING … ON OVERFLOW / NOT ON OVERFLOW
 
 `STRING s1 s2 … DELIMITED BY {SIZE | delim} INTO t [WITH POINTER p] [ON OVERFLOW imp…] [NOT ON
