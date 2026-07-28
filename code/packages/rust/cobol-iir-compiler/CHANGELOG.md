@@ -8,6 +8,43 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.52.0: STRING … WITH POINTER
+
+`STRING s1 s2 … DELIMITED BY {SIZE | delim} INTO t WITH POINTER p` — the optional `WITH POINTER`
+phrase is now MODELLED, byte-identical to the `coding-adventures-cobol-runtime` 0.56.0 oracle.
+Previously it was rejected at emit time ("STRING … WITH POINTER is a later rung"). No grammar
+change was needed — the grammar already parses `WITH POINTER NAME`. This is the direct mirror of
+the UNSTRING … WITH POINTER rung (v0.51.0).
+
+`p` is an unsigned-integer item (`PIC 9(n)`) holding the **1-based** character position in the
+RECEIVER at which the first transferred character is placed:
+
+- **Overlay offset.** `emit_string` builds the concatenation register as before, then (with a
+  pointer) hands off to a shared run-time overlay `emit_string_pointer_overlay`: it reads the
+  pointer register `pv`, computes the 0-based start `pv − 1`, `avail = size − start`, and
+  `chars_placed = min(concat_len, avail)`, and rebuilds the receiver as `recv[0,start] ++
+  concat[0,chars_placed] ++ recv[start+chars_placed, size]` — overwriting only the filled run,
+  keeping the untouched head and tail. Because the offset is a run-time value, the compile-time
+  slicing of the no-pointer `DELIMITED BY SIZE` path no longer applies; the concat length is
+  materialised as a `const` and the overlay runs at run time. With `p = 1` the result is the
+  no-pointer overlay exactly.
+- **Out-of-range guard.** The pointer's VALUE is a run-time datum, so it cannot be checked at
+  build time. The overlay lowers a guard: if `p < 1` or `p > size` it jumps past the whole
+  operation (overlay AND write-back) to a trailing `st_end` label, leaving the receiver and the
+  pointer untouched — the ISO "overflow ⇒ no data movement" rule, matching the oracle's early
+  return byte-for-byte.
+- **Write-back.** After the overlay the pointer is stored as `pv + chars_placed` (the 1-based
+  position one past the last character stored; `size + 1` when the content filled to or past the
+  receiver end), reshaped into the pointer's `PIC 9(n)` picture through the same `store_scaled`
+  path INSPECT's counter and UNSTRING's pointer use.
+- **Build-time picture validation** (co-total with the oracle): the pointer must be an unsigned
+  integer `PIC 9(n)`, `n ≤ 18`. A signed, fractional, non-numeric, group, or over-wide pointer is
+  a clean later rung, rejected with the SAME message the oracle raises. The receiver NAME is split
+  off from the pointer NAME at the `POINTER` keyword (the grammar is flat), matching the oracle
+  reader.
+
+`ON OVERFLOW` / `NOT ON OVERFLOW` remain deferred.
+
 ### Added — v0.51.0: UNSTRING … WITH POINTER
 
 `UNSTRING S DELIMITED BY "," INTO r1 r2 … WITH POINTER p` — the optional `WITH POINTER`

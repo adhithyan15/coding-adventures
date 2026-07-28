@@ -85,7 +85,13 @@ justified, truncated at its width, and, per ANSI-85, **without** space-filling t
 untouched tail; `DELIMITED BY SIZE` takes each field in full, while `DELIMITED BY`
 a single-character delimiter takes only each field's prefix up to its first
 occurrence of the delimiter — `STRING "ab,cd" "ef" DELIMITED BY "," INTO t` →
-`"abef"`); and `UNSTRING source DELIMITED BY delim INTO
+`"abef"`; optionally with a `WITH POINTER p` phrase — `STRING A B DELIMITED BY
+SIZE INTO T WITH POINTER P` — where `p` (a `PIC 9(n)` unsigned integer) gives the
+1-based RECEIVER position at which the first transferred character is placed and is
+UPDATED afterwards to `p + chars_placed` (one past the last character stored;
+`size + 1` when the content fills to or past the receiver end, the excess dropped as
+ISO overflow); an initial `p` outside `[1, size]` (0 or `> size`) is ISO overflow,
+leaving the receiver and `p` unchanged); and `UNSTRING source DELIMITED BY delim INTO
 r1 [r2 …]` (the inverse — split the alphanumeric source on a single-character
 delimiter into successive receivers; each receiver including the last takes the
 field up to the next delimiter, extra fields are dropped, empty fields become
@@ -180,8 +186,10 @@ modelled (the explicit
 `SIGN` clause with `SEPARATE`/`LEADING`, editing pictures, `COMP`,
 `PERFORM … WITH TEST AFTER`/inline, `GO TO … DEPENDING`, `STRING` with a
 multi-character or non-ASCII delimiter / a non-ASCII literal sending field under a
-delimiter / per-field different delimiters / `WITH POINTER` / `ON OVERFLOW` (a
-single-character ASCII `DELIMITED BY` delimiter IS supported), `UNSTRING` with a
+delimiter / per-field different delimiters / a signed, fractional, non-numeric or
+over-wide (`> 18`-digit) `WITH POINTER` item / `ON OVERFLOW` (a single-character
+ASCII `DELIMITED BY` delimiter and a `WITH POINTER p` phrase over a `PIC 9(n)`
+pointer ARE supported), `UNSTRING` with a
 multi-character
 delimiter / `ON`/`NOT ON OVERFLOW` / a signed, fractional, non-numeric or
 over-wide (`> 18`-digit) `WITH POINTER` item / a NUMERIC-literal or FIGURATIVE

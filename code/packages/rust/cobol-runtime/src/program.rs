@@ -151,9 +151,16 @@ pub enum Stmt {
     ///     reason a non-ASCII string-LITERAL sending field is a later rung WHEN a
     ///     delimiter is active (its prefix boundary differs byte-vs-char).
     ///
-    /// `WITH POINTER`, `ON OVERFLOW`, a multi-character delimiter, and per-field
-    /// different delimiters are later rungs (rejected at build time).
-    String { sources: Vec<Operand>, target: String, delim: Option<Operand> },
+    /// `pointer` is the optional `WITH POINTER p` phrase: `p` is an unsigned
+    /// integer item (`PIC 9(n)`) giving the 1-BASED character position in the
+    /// RECEIVER at which the first transferred character is placed, and it is
+    /// UPDATED after the operation to `p + chars_placed` (one past the last
+    /// character stored). `None` when the phrase is absent (overlay at position 0,
+    /// no write-back).
+    ///
+    /// `ON OVERFLOW`, a multi-character delimiter, and per-field different
+    /// delimiters remain later rungs (rejected at build time).
+    String { sources: Vec<Operand>, target: String, delim: Option<Operand>, pointer: Option<String> },
     /// `UNSTRING source DELIMITED BY delim INTO r1 [r2 …]` — the inverse of
     /// STRING. Scan the alphanumeric `source` left-to-right, splitting it into
     /// delimited fields on each occurrence of the SINGLE-character `delim` (a
@@ -965,16 +972,12 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             Ok(Stmt::If { cond, then_branch, else_branch })
         }
         "string_stmt" => {
-            // STRING s… DELIMITED BY SIZE INTO t. The grammar also *accepts* the
-            // later-rung options (a real delimiter, WITH POINTER, ON OVERFLOW) so
-            // that we can reject them here with a friendly Unsupported instead of a
-            // bare parse error.
+            // STRING s… DELIMITED BY {SIZE | delim} INTO t [WITH POINTER p]. The
+            // grammar also *accepts* the remaining later-rung option (ON OVERFLOW)
+            // so that we can reject it here with a friendly Unsupported instead of a
+            // bare parse error. `WITH POINTER` is now MODELLED (see the pointer
+            // extraction below), so it is no longer rejected.
             let toks = child_tokens(verb);
-            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "POINTER") {
-                return Err(RuntimeError::Unsupported(
-                    "STRING … WITH POINTER is a later rung".into(),
-                ));
-            }
             if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "OVERFLOW") {
                 return Err(RuntimeError::Unsupported(
                     "STRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung".into(),
@@ -1011,11 +1014,18 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             if sources.is_empty() {
                 return Err(RuntimeError::Unsupported("STRING without a sending field".into()));
             }
-            // The receiver is the first NAME token (INTO t precedes any WITH POINTER
-            // name, which we have already rejected above).
+            // The receiver is the first NAME token: `INTO t` always precedes a
+            // `WITH POINTER p` phrase, so the first direct NAME is the receiver and
+            // the pointer NAME (if any) is the first NAME AFTER the `POINTER`
+            // keyword. (Sending-field identifiers are nested under `operand` nodes,
+            // not direct NAME tokens, so they never appear in this flat run.)
             let target = first_token(verb, "NAME")
                 .ok_or_else(|| RuntimeError::Unsupported("STRING without an INTO receiver".into()))?;
-            Ok(Stmt::String { sources, target, delim })
+            let ptr_pos = toks.iter().position(|(k, v)| k == "KEYWORD" && v == "POINTER");
+            let pointer: Option<String> = ptr_pos.and_then(|pp| {
+                toks[pp + 1..].iter().find(|(k, _)| k == "NAME").map(|(_, v)| v.clone())
+            });
+            Ok(Stmt::String { sources, target, delim, pointer })
         }
         "unstring_stmt" => {
             // UNSTRING source DELIMITED BY delim INTO r1 [r2 …] [WITH POINTER p].

@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.56.0 — STRING … WITH POINTER
+
+- `STRING s1 s2 … DELIMITED BY {SIZE | delim} INTO t WITH POINTER p` — the optional `WITH
+  POINTER` phrase is now MODELLED (previously rejected at read time: "STRING … WITH POINTER is a
+  later rung"). No grammar change was needed — the grammar already parses `WITH POINTER NAME`.
+- `p` is an UNSIGNED-INTEGER item (`PIC 9(n)`) holding the **1-based** character position in the
+  RECEIVER at which the first transferred character is placed:
+  - **Overlay offset.** The concatenation is overlaid starting at 0-based index `p − 1` instead
+    of 0, placing `chars_placed = min(concat_len, size − (p−1))` characters. Receiver positions
+    BEFORE `p−1` and AFTER `(p−1) + chars_placed` keep their prior bytes (STRING overwrites only
+    the run it fills). `p = 1` (start at 0) is exactly the no-pointer behaviour — the correctness
+    anchor: the same statement with `p = 1` fills the SAME receiver as the statement WITHOUT the
+    phrase.
+  - **Write-back.** After the operation `p` is updated to `p + chars_placed`, the 1-based
+    position one past the last character stored. When the content does not all fit
+    (`concat_len > size − (p−1)`) the excess is DROPPED — this is ISO's overflow, and since
+    `ON OVERFLOW` is still deferred no imperative runs — and `chars_placed = size − (p−1)`, so
+    `p` becomes `size + 1`.
+- **Out-of-range initial pointer** (the pointer is a run-time value, so it cannot be
+  range-checked at read time): when `p` is outside `[1, size]` — either `p == 0` (a 0-based start
+  of −1) or `p > size` (start past the receiver end) — this is ISO overflow. Since `ON OVERFLOW`
+  is deferred, both engines apply the ISO "overflow ⇒ no data movement" rule deterministically:
+  NO character is transferred (receiver UNCHANGED) and `p` is left UNCHANGED. `exec_string`
+  returns early; the compiler emits the identical `p < 1 || p > size` guard.
+- **Pointer picture validation** (co-total with the compiler): a signed (`S9`), fractional
+  (`9V9`), non-numeric (`PIC X`), group, or over-wide (> 18-digit) pointer is a clean later rung,
+  rejected here at exec time with the same messages the compiler raises at build time.
+- `ON OVERFLOW / NOT ON OVERFLOW` remains a later rung (no imperative runs on overflow yet).
+
 ## 0.55.0 — UNSTRING … WITH POINTER
 
 - `UNSTRING S DELIMITED BY "," INTO r1 r2 … WITH POINTER p` — the optional `WITH POINTER`

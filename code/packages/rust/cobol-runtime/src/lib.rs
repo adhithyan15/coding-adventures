@@ -2263,17 +2263,79 @@ mod tests {
         ))
         .unwrap_err();
         assert!(matches!(multi, RuntimeError::Unsupported(_)), "got {multi:?}");
-        // … and so is WITH POINTER.
-        let ptr = run_cobol(&wrap(
+        // … and so is ON OVERFLOW (WITH POINTER is now modelled — see the
+        // `string_with_pointer_*` tests below).
+        let overflow = run_cobol(&wrap(
+            &["01  A  PIC X(3) VALUE \"ABC\".", "01  T  PIC X(2) VALUE SPACES."],
+            &[
+                "STRING A DELIMITED BY SIZE INTO T",
+                "    ON OVERFLOW DISPLAY \"O\" END-STRING.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap_err();
+        assert!(matches!(overflow, RuntimeError::Unsupported(_)), "got {overflow:?}");
+    }
+
+    #[test]
+    fn string_with_pointer_overlays_at_offset_and_writes_resume_back() {
+        // `WITH POINTER p` overlays the concatenation starting at 0-based `p-1` and
+        // writes the pointer back to `p + chars_placed`. "XY" (2 chars) at p = 3 into
+        // a 6-wide receiver lands at positions 2–3, preserving head and tail dots, and
+        // p becomes 3 + 2 = 5.
+        let out = run_cobol(&wrap(
+            &[
+                "01  A  PIC X(2) VALUE \"XY\".",
+                "01  T  PIC X(6) VALUE \"......\".",
+                "01  P  PIC 9(2) VALUE 3.",
+            ],
+            &[
+                "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+                "DISPLAY T.",
+                "DISPLAY P.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "..XY..\n05\n");
+    }
+
+    #[test]
+    fn string_with_pointer_out_of_range_leaves_everything_unchanged() {
+        // An out-of-range initial pointer (p = 0 or p > size) is ISO overflow: no
+        // character is transferred and the pointer is left unchanged. p = 0 here → the
+        // receiver keeps its sentinel and p stays 0.
+        let out = run_cobol(&wrap(
+            &[
+                "01  A  PIC X(3) VALUE \"XYZ\".",
+                "01  T  PIC X(4) VALUE \"....\".",
+                "01  P  PIC 9(2) VALUE 0.",
+            ],
+            &[
+                "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+                "DISPLAY T.",
+                "DISPLAY P.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "....\n00\n");
+    }
+
+    #[test]
+    fn string_with_pointer_bad_picture_is_a_later_rung() {
+        // The pointer must be an unsigned integer `PIC 9(n)`. A signed pointer is a
+        // clean later rung, rejected at exec time (co-total with the compiler).
+        let err = run_cobol(&wrap(
             &[
                 "01  A  PIC X(3) VALUE \"ABC\".",
-                "01  T  PIC X(6) VALUE SPACES.",
-                "01  P  PIC 9(2) VALUE 1.",
+                "01  T  PIC X(6) VALUE \"......\".",
+                "01  P  PIC S9(2) VALUE 1.",
             ],
             &["STRING A DELIMITED BY SIZE INTO T WITH POINTER P.", "STOP RUN."],
         ))
         .unwrap_err();
-        assert!(matches!(ptr, RuntimeError::Unsupported(_)), "got {ptr:?}");
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
     }
 
     #[test]

@@ -2873,21 +2873,6 @@ fn string_delim_non_ascii_literal_sending_field_is_a_later_rung() {
 }
 
 #[test]
-fn string_delim_with_pointer_is_a_later_rung() {
-    // WITH POINTER over a delimited STRING remains a later rung on both engines.
-    let src = wrap(
-        &[
-            "01  A  PIC X(5) VALUE \"ab,cd\".",
-            "01  T  PIC X(10) VALUE SPACES.",
-            "01  P  PIC 9(2) VALUE 1.",
-        ],
-        &["STRING A DELIMITED BY \",\" INTO T WITH POINTER P.", "STOP RUN."],
-    );
-    assert!(run_cobol(&src).is_err(), "oracle must reject WITH POINTER");
-    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject WITH POINTER");
-}
-
-#[test]
 fn string_delim_on_overflow_is_a_later_rung() {
     // ON OVERFLOW over a delimited STRING remains a later rung on both engines.
     let src = wrap(
@@ -2900,6 +2885,270 @@ fn string_delim_on_overflow_is_a_later_rung() {
     );
     assert!(run_cobol(&src).is_err(), "oracle must reject ON OVERFLOW");
     assert!(compile_source(&src, "e2e").is_err(), "compiler must reject ON OVERFLOW");
+}
+
+// ---------------------------------------------------------------------------
+// STRING … WITH POINTER — overlay the concatenation into the receiver starting
+// at the 1-based position held by an unsigned-integer pointer item, then write
+// the pointer back to `p + chars_placed`. An out-of-range initial pointer (`p ==
+// 0` or `p > size`) is ISO overflow: no transfer, receiver AND pointer left
+// unchanged (ON OVERFLOW is still deferred). Receivers are preloaded with a "."
+// sentinel VALUE so every "unchanged" byte is observable. Every case pins the
+// compiled JIT output to the oracle byte-for-byte (receiver AND pointer).
+// ---------------------------------------------------------------------------
+
+#[test]
+fn string_pointer_one_equals_no_pointer() {
+    // The correctness ANCHOR: `WITH POINTER p` with `p = 1` overlays at position 0,
+    // so the receiver must be IDENTICAL to the same STRING WITHOUT the phrase. The
+    // pointer version then additionally writes the resume position back: 3 chars
+    // placed from position 1 → p := 1 + 3 = 4 ("04").
+    let with_ptr = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"abc\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  P  PIC 9(2) VALUE 1.",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    let no_ptr = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(3) VALUE \"abc\".", "01  T  PIC X(6) VALUE \"......\"."],
+        &["STRING A DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    // No-pointer STRING overlays "abc" over the leftmost 3, preserving the tail.
+    assert_eq!(no_ptr, "abc...\n");
+    // p = 1 fills the SAME receiver, then appends the resume pointer "04".
+    assert_eq!(with_ptr, format!("{no_ptr}04\n"));
+}
+
+#[test]
+fn string_pointer_mid_receiver_preserves_head_and_tail() {
+    // p = 3 overlays at 0-based index 2; "XY" (2 chars) lands at positions 2–3, so
+    // the head (0–1) and tail (4–5) keep their sentinel dots: "..XY..". p := 3 + 2
+    // = 5 ("05"). This pins the overlay-at-offset with BOTH ends preserved.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(2) VALUE \"XY\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  P  PIC 9(2) VALUE 3.",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "..XY..\n05\n");
+}
+
+#[test]
+fn string_pointer_content_exactly_fills_to_the_end() {
+    // p = 3 into a 5-wide receiver leaves room for exactly 3 chars (positions 2–4);
+    // "XYZ" fills them precisely: "..XYZ". chars_placed = 3, p := 3 + 3 = 6 = size +
+    // 1 ("06") — the boundary where the last char sits at the receiver's end.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"XYZ\".",
+            "01  T  PIC X(5) VALUE \".....\".",
+            "01  P  PIC 9(2) VALUE 3.",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "..XYZ\n06\n");
+}
+
+#[test]
+fn string_pointer_overflow_drops_the_excess() {
+    // "WXYZ" (4 chars) into a 5-wide receiver at p = 3 has room for only 3 chars
+    // (positions 2–4): "WXY" is placed, "Z" is DROPPED (ISO overflow; ON OVERFLOW
+    // still deferred, so no imperative runs). chars_placed = size − (p−1) = 3, so
+    // p := size + 1 = 6 ("06"). Receiver "..WXY".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(4) VALUE \"WXYZ\".",
+            "01  T  PIC X(5) VALUE \".....\".",
+            "01  P  PIC 9(2) VALUE 3.",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "..WXY\n06\n");
+}
+
+#[test]
+fn string_pointer_at_size_places_one_char() {
+    // p = size (= 4) is the last in-range value: only one position (index 3) remains,
+    // so just the first char "X" of "XYZ" is placed ("...X") and the rest dropped.
+    // chars_placed = 1, p := 4 + 1 = 5 = size + 1 ("05").
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"XYZ\".",
+            "01  T  PIC X(4) VALUE \"....\".",
+            "01  P  PIC 9(2) VALUE 4.",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "...X\n05\n");
+}
+
+#[test]
+fn string_pointer_past_end_is_overflow_no_transfer() {
+    // p = size + 1 (= 5 > 4) is out of range: ISO overflow ⇒ NO character is
+    // transferred (receiver keeps its sentinel "....") and the pointer is left
+    // UNCHANGED (stays 5 → "05"). Both engines skip the whole operation identically.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"XYZ\".",
+            "01  T  PIC X(4) VALUE \"....\".",
+            "01  P  PIC 9(2) VALUE 5.",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "....\n05\n");
+}
+
+#[test]
+fn string_pointer_zero_is_overflow_no_transfer() {
+    // p = 0 would make the 0-based start −1 (underflow); it is out of range, so ISO
+    // overflow ⇒ no transfer and the pointer is left unchanged (stays 0 → "00").
+    // This is the guard that keeps the start computation from underflowing.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"XYZ\".",
+            "01  T  PIC X(4) VALUE \"....\".",
+            "01  P  PIC 9(2) VALUE 0.",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "....\n00\n");
+}
+
+#[test]
+fn string_pointer_with_delimited_by_delimiter() {
+    // The pointer path over the DELIMITED BY delim branch (a run-time concat). Each
+    // field is cut at its first comma: "ab,cd"→"ab", "ef"→"ef"; concat "abef" (4).
+    // p = 2 overlays at index 1 → ".abef...". p := 2 + 4 = 6 ("06").
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(5) VALUE \"ab,cd\".",
+            "01  B  PIC X(2) VALUE \"ef\".",
+            "01  T  PIC X(8) VALUE \"........\".",
+            "01  P  PIC 9(2) VALUE 2.",
+        ],
+        &[
+            "STRING A B",
+            "    DELIMITED BY \",\" INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, ".abef...\n06\n");
+}
+
+#[test]
+fn string_pointer_fuzz_across_full_range() {
+    // Sweep the initial pointer across the WHOLE range `[0, size + 2]` = `[0, 6]` for
+    // a 4-wide receiver and a 2-char sending field "XY". For every value — the two
+    // out-of-range ends (0, 5, 6) and every in-range start (1..=4) — the compiled
+    // JIT output must be byte-identical to the oracle (receiver AND written-back
+    // pointer). This is the co-totality proof: both engines agree for EVERY value.
+    for pstart in 0..=6u32 {
+        let data = [
+            "01  A  PIC X(2) VALUE \"XY\".".to_string(),
+            "01  T  PIC X(4) VALUE \"....\".".to_string(),
+            format!("01  P  PIC 9(2) VALUE {pstart}."),
+        ];
+        let data_refs: Vec<&str> = data.iter().map(String::as_str).collect();
+        // assert_matches_oracle panics with a clear message on any divergence.
+        assert_matches_oracle(&wrap(
+            &data_refs,
+            &[
+                "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+                "DISPLAY T.",
+                "DISPLAY P.",
+                "STOP RUN.",
+            ],
+        ));
+    }
+}
+
+#[test]
+fn string_pointer_signed_is_a_later_rung() {
+    // The pointer must be an UNSIGNED integer. A signed pointer (`PIC S9`) is a clean
+    // later rung, rejected on BOTH engines (compiler at build time, oracle at exec).
+    let src = wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"abc\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  P  PIC S9(2) VALUE 1.",
+        ],
+        &["STRING A DELIMITED BY SIZE INTO T WITH POINTER P.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a signed pointer");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a signed pointer");
+}
+
+#[test]
+fn string_pointer_fractional_is_a_later_rung() {
+    // A fractional pointer (`PIC 9V9`) is not an integer position — a later rung,
+    // rejected identically on both engines.
+    let src = wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"abc\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  P  PIC 9V9 VALUE 1.",
+        ],
+        &["STRING A DELIMITED BY SIZE INTO T WITH POINTER P.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a fractional pointer");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a fractional pointer");
+}
+
+#[test]
+fn string_pointer_non_numeric_is_a_later_rung() {
+    // A non-numeric pointer (`PIC X`) has no integer position — a later rung,
+    // rejected identically on both engines.
+    let src = wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"abc\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  P  PIC X(2) VALUE \"12\".",
+        ],
+        &["STRING A DELIMITED BY SIZE INTO T WITH POINTER P.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a non-numeric pointer");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a non-numeric pointer");
 }
 
 // ---------------------------------------------------------------------------
