@@ -141,17 +141,18 @@ fn string_literals_are_trigraph_safe() {
 }
 
 #[test]
-fn method_dispatch_is_rejected_in_v0() {
-    // `"hi".length` lowers to the `__method__` collection-dispatch builtin.
-    // It is not gated by an unaccepted *feature* (its receiver is a String,
-    // which v0 accepts), so the structural builtin gate must reject it rather
-    // than emit a call that fails at runtime.
+fn builtin_method_dispatch_is_rejected() {
+    // `"hi".length` lowers to a `__method__` dispatch to `length` — a BUILT-IN
+    // method the module never registers via `__def_method__`.  OOP slice 2 now
+    // lowers user-defined instance methods, but a built-in method call is the
+    // separate Collections batch, so the allowlist rejects it cleanly (rather
+    // than emitting a call that `NoMethodError`s at runtime).
     let m = lower_ruby("puts \"hi\".length");
-    let err = compile(&m).expect_err("v0 rejects __method__ dispatch");
+    let err = compile(&m).expect_err("rejects a built-in method dispatch");
     assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
     assert!(
-        err.message.contains("__method__"),
-        "names the builtin: {}",
+        err.message.contains("length"),
+        "names the built-in method: {}",
         err.message
     );
 }

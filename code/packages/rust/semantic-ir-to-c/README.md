@@ -107,7 +107,13 @@ mirror **slice 1** — `Classes` + `Constants`: an empty class
 (`class Foo; end` → a comment), construction (`Foo.new` → `_sir_new_instance`, a
 new `SIR_INSTANCE` box stored inline in the union that prints `#<Foo>`), and
 constants (`PI = 3` / `PI` → a runtime `_sir_const_set` / `_sir_const_get`
-table).  Class/constant names are quoted C string literals (no injection).
+table).  Class/constant names are quoted C string literals (no injection).  And
+**slice 2** — instance methods: `__def_method__` registers a `(class, method) →
+closure` into an explicit table (`_sir_def_method`), and `__method__` dispatches
+via `_sir_call_method` (resolve `(recv's class, method)`, apply the closure; miss
+→ `NoMethodError`).  Dispatch is an explicit data lookup — **never reflection** on
+a source string — so it is anti-RCE by construction; a dispatch to an
+un-registered (built-in) method is rejected cleanly (the Collections batch).
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
 `Intrinsics`, `NDArrays`, the rest of OOP (instance methods, `@ivars`,
