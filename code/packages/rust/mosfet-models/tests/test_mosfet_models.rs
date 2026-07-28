@@ -17,6 +17,8 @@ fn test_default_params() {
     assert_eq!(p.ld, 0.0);
     assert_eq!(p.nrd, 1.0);
     assert_eq!(p.nrs, 1.0);
+    assert_eq!(p.ad, 0.0);
+    assert_eq!(p.cj, 0.0);
     assert_eq!(p.kf, 0.0);
     assert_eq!(p.af, 1.0);
     assert!(p.subthreshold_enable);
@@ -232,6 +234,54 @@ fn test_source_squares_rejects_negative_value() {
     let _ = evaluate_level1(
         &Level1Params {
             nrs: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+fn test_drain_area_scales_bottom_junction_capacitance() {
+    let result = evaluate_level1(
+        &Level1Params {
+            cbd: 1.0e-12,
+            cj: 2.0e-3,
+            ad: 3.0e-9,
+            mj: 0.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        0.0,
+        0.0,
+        300.15,
+    );
+    assert!((result.cbd - 7.0e-12).abs() < 1.0e-24);
+}
+
+#[test]
+#[should_panic(expected = "MOSFET AD must be finite and non-negative")]
+fn test_drain_area_rejects_negative_value() {
+    let _ = evaluate_level1(
+        &Level1Params {
+            ad: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET CJ must be finite and non-negative")]
+fn test_bottom_junction_capacitance_rejects_negative_value() {
+    let _ = evaluate_level1(
+        &Level1Params {
+            cj: -1.0,
             ..Level1Params::default()
         },
         1.8,

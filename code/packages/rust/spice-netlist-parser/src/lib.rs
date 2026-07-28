@@ -1905,6 +1905,9 @@ fn build_mosfet_params(
     if let Some(value) = instance_params.get("NRS") {
         params.source_squares = *value;
     }
+    if let Some(value) = instance_params.get("AD") {
+        params.drain_area = *value;
+    }
     params
 }
 
@@ -1926,6 +1929,7 @@ fn apply_mosfet_param(params: &mut MosfetLevel1Params, name: &str, value: f64) {
         "CGBO" => params.gate_bulk_overlap_capacitance = value,
         "CBS" => params.source_bulk_capacitance = value,
         "CBD" => params.drain_bulk_capacitance = value,
+        "CJ" => params.bottom_junction_capacitance = value,
         _ => {}
     }
 }

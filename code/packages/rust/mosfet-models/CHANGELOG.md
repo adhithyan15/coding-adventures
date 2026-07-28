@@ -4,6 +4,9 @@
 
 ### Added
 
+- `Level1Params::ad` and `Level1Params::cj` add zero-default Berkeley drain
+  diffusion area and bottom-junction capacitance density, contributing
+  `CJ * AD` to the zero-bias drain-body capacitance.
 - `Level1Params::nrs` adds the Berkeley source diffusion square count,
   defaulting to one with finite, non-negative validation.
 - `Level1Params::nrd` adds the Berkeley drain diffusion square count, defaulting

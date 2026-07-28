@@ -373,8 +373,8 @@ describe("transient", () => {
     expect(chargedFirst!).toBeLessThan(unchargedFirst!);
   });
 
-  it("uses MOSFET bulk junction capacitance during transient drain steps", () => {
-    function run(drainBulkCapacitance: number): TransientPoint[] {
+  it("scales MOSFET bottom junction capacitance by drain area", () => {
+    function run(bottomJunctionCapacitance: number, drainArea: number): TransientPoint[] {
       const circuit = new Circuit();
       circuit.add(voltageSourceWithWaveform(
         "Vstep",
@@ -392,13 +392,14 @@ describe("transient", () => {
         KP: 1.0e-12,
         W: 1.0,
         L: 1.0,
-        CBD: drainBulkCapacitance,
+        CJ: bottomJunctionCapacitance,
+        AD: drainArea,
       }));
       return transient(circuit, 1.0e-9, 5.0e-9, "euler");
     }
 
-    const unchargedFirst = run(0.0)[0].voltage("drain");
-    const chargedFirst = run(1.0e-9)[0].voltage("drain");
+    const unchargedFirst = run(0.0, 0.0)[0].voltage("drain");
+    const chargedFirst = run(0.5, 2.0e-9)[0].voltage("drain");
     expect(unchargedFirst).not.toBeUndefined();
     expect(chargedFirst).not.toBeUndefined();
     expect(unchargedFirst!).toBeGreaterThan(0.5);

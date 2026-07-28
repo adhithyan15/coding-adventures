@@ -311,8 +311,8 @@ _MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES = {
     "PNP": (41, 58, 13, 4),
     "NJF": (22, 30, 7, 3),
     "PJF": (22, 30, 7, 3),
-    "NMOS": (26, 33, 6, 3),
-    "PMOS": (26, 33, 6, 3),
+    "NMOS": (27, 34, 6, 3),
+    "PMOS": (27, 34, 6, 3),
 }
 
 
@@ -480,6 +480,7 @@ _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
     "CJS": "CBS",
     "CBD": "CBD",
     "CJD": "CBD",
+    "CJ": "CJ",
     "PB": "PB",
     "MJ": "MJ",
     "FC": "FC",
@@ -1085,6 +1086,7 @@ def mosfet_from_model_card(
         CGBO=p.get("CGBO", defaults.CGBO),
         CBS=p.get("CBS", defaults.CBS),
         CBD=p.get("CBD", defaults.CBD),
+        CJ=p.get("CJ", defaults.CJ),
         PB=p.get("PB", defaults.PB),
         MJ=p.get("MJ", defaults.MJ),
         FC=p.get("FC", defaults.FC),

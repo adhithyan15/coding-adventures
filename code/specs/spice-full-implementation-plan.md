@@ -33,16 +33,17 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS source diffusion squares.
+1. Cross-language Level-1 MOS drain diffusion area and bottom capacitance.
    - Status: current PR completion candidate.
-   - Add the Berkeley Level-1 MOS `NRS` instance parameter in Rust, Python, and
-     TypeScript, defaulting to one source diffusion square.
-   - When explicit `RS` remains zero, use `RSH * NRS` for the source resistance;
-     positive explicit `RS` continues to take precedence.
-   - Reuse the existing intrinsic source topology in DC, TF, AC, transient, and
-     noise analyses, preserve `NRS` through hierarchy and cloning, enforce
-     finite non-negative validation, and keep the model-card coverage gate at
-     193 canonical rows because `NRS` is an instance parameter.
+   - Add the Berkeley Level-1 MOS `AD` instance parameter and model-card `CJ`
+     bottom-junction capacitance density in Rust, Python, and TypeScript,
+     defaulting both to zero.
+   - Use `CBD + CJ * AD` as the zero-bias drain-body capacitance in AC and
+     transient analysis while preserving existing `PB`, `MJ`, and `FC`
+     depletion shaping.
+   - Preserve `AD` / `CJ` through hierarchy and cloning, enforce finite
+     non-negative validation, parse both in the Rust netlist facade, and raise
+     the model-card coverage gate to 195 canonical rows for `CJ`.
 
 ## Completed Slices
 
@@ -3471,6 +3472,16 @@ the Rust, Python, and TypeScript surfaces together.
      resistance across DC, TF, AC, transient, and noise analyses; hierarchy and
      cloning preserve `NRD`, finite non-negative validation is shared, and the
      model-card coverage gate remains at 193 canonical rows because `NRD` is
+     an instance parameter.
+
+273. Cross-language Level-1 MOS source diffusion squares.
+   - Status: completed in PR 9034.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `NRS`,
+     defaulting to one source diffusion square.
+   - When explicit `RS` remains zero, `RSH * NRS` supplies the source
+     resistance across DC, TF, AC, transient, and noise analyses; hierarchy and
+     cloning preserve `NRS`, finite non-negative validation is shared, and the
+     model-card coverage gate remains at 193 canonical rows because `NRS` is
      an instance parameter.
 
 ## Backlog

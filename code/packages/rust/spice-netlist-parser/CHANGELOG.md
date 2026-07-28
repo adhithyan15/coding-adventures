@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Parse Level-1 MOS instance `AD=<area>` and model-card `CJ=<capacitance/area>`
+  into the engine parameter bundle for drain-body junction capacitance.
 - Parse Level-1 MOS instance `NRS=<squares>` into the engine parameter bundle
   so netlist-driven source resistance uses `RSH * NRS`.
 - Parse Level-1 MOS model `RSH` and instance `NRD=<squares>` into the engine

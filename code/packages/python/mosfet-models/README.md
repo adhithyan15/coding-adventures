@@ -28,8 +28,9 @@ print(r.Id, r.gm, r.gds, r.region)
   depletion shaping, Berkeley-default `TOX` gate oxide thickness for intrinsic
   Meyer capacitance through `Cox = epsilon_ox / TOX`, zero-default `RD` / `RS`
   external drain/source resistance, zero-default `RSH` sheet resistance,
-  one-default `NRD` / `NRS` drain/source diffusion square counts, and `KF` /
-  `AF` flicker noise.
+  one-default `NRD` / `NRS` drain/source diffusion square counts, zero-default
+  drain diffusion area `AD` and bottom-junction capacitance density `CJ`
+  contributing `CJ * AD` to `CBD`, and `KF` / `AF` flicker noise.
 - `evaluate_level1(params, V_GS, V_DS, V_BS, T)`: returns `MosResult` with Id, gm, gds, gmb, Cgs/Cgd/Cgb/Cbs/Cbd, region.
 - Region detection: cutoff (subthreshold-aware), triode, saturation.
 - Body effect via gamma * (sqrt(PHI-V_BS) - sqrt(PHI)) shift.
