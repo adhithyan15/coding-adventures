@@ -2,6 +2,35 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.110.0] - 2026-07-24
+
+### Added - Math.fround(n) at a float32 fixed point
+
+`Math.fround(x)` (ECMAScript §21.3.2.19) rounds `x` to the nearest float32 and
+widens back to a double — exactly Rust's `x as f32 as f64`, so the round-trip is
+bit-for-bit reproducible (no `powf`-style last-ULP hazard). The reference
+compiler folds `Math.fround(x)` ONLY when `x` is already an exact float32 — a
+fixed point where `fround(x) === x` and the fold changes nothing:
+
+```text
+  Math.fround(1.5)      -> 1.5      (exactly a float32)
+  Math.fround(-2.5)     -> -2.5
+  Math.fround(0)        -> 0
+  Math.fround(1.1)      -> Math.fround(1.1)      (rounds; DECLINED)
+  Math.fround(16777217) -> Math.fround(16777217) (2^24+1; rounds; DECLINED)
+```
+
+We mirror that: fold only when `x.is_finite() && (x as f32 as f64) == x`, and
+DECLINE a `-0` fixed point (`-0` has no numeric-literal token — the same
+negative-zero care as the Math.abs/floor block). `NaN`/`Infinity` are
+identifiers, never numeric literals, so they never reach the numeric-literal
+handler; the `is_finite` guard is defense-in-depth. Only the bare-global
+`Math.fround` callee with exactly one numeric-literal argument folds.
+
+This closes the `fround` half of the Math static-fold task; `Math.pow` remains
+declined (unsound to fold via `powf`; a safe pow needs integer-exponent-only
+exact arithmetic).
+
 ## [0.109.0] - 2026-07-22
 
 ### Added - fold `Math.clz32(n)` and `Math.imul(a, b)` on numeric literals
