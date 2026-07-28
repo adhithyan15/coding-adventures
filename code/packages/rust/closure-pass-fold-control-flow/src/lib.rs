@@ -1965,21 +1965,39 @@ fn fold_for_statement(s: &ForStatement, st: &mut FoldState) -> Statement {
     // `for (…) { if (x) a(); b(); }` → `for (…) x && a(), b();`.
     let body = match &body {
         Statement::Tagged(TaggedStatement::BlockStatement(_)) => {
-            match stmts_as_sequence_expr(&body) {
-                Some(expr) => {
-                    let body_cv = statement_cv(&body);
-                    st.record_fold(
-                        &s.cv,
-                        "loop-body-fuse",
-                        "for (…) { s1; s2; … }",
-                        "for (…) s1, s2, …",
-                    );
-                    Statement::expression_statement(ExpressionStatement {
-                        cv: body_cv,
-                        expression: expr,
-                    })
+            if statement_is_empty(&body) {
+                // Empty loop body: `for (…) {}` (or `{;;}`, `{{}}`) normalizes to
+                // `for (…) ;` — the reference compiler drops the braces of a
+                // do-nothing body. An empty block declares no bindings, so the
+                // `;` form is behaviour-identical. This also catches a `while`
+                // loop, since `while` is first rewritten to `for` (0.31.0) and
+                // then re-folded here: `while (c) {}` → `for (; c;) {}` → `for
+                // (; c;) ;`.
+                let body_cv = statement_cv(&body);
+                st.record_fold(
+                    &s.cv,
+                    "empty-loop-body",
+                    "for (…) {}",
+                    "for (…) ;",
+                );
+                Statement::empty_statement(EmptyStatement { cv: body_cv })
+            } else {
+                match stmts_as_sequence_expr(&body) {
+                    Some(expr) => {
+                        let body_cv = statement_cv(&body);
+                        st.record_fold(
+                            &s.cv,
+                            "loop-body-fuse",
+                            "for (…) { s1; s2; … }",
+                            "for (…) s1, s2, …",
+                        );
+                        Statement::expression_statement(ExpressionStatement {
+                            cv: body_cv,
+                            expression: expr,
+                        })
+                    }
+                    None => body,
                 }
-                None => body,
             }
         }
         _ => body,
@@ -2787,6 +2805,27 @@ mod tests {
                 }
                 other => panic!("expected a bare expression-statement body; got {other:?}"),
             },
+            other => panic!("expected ForStatement; got {other:?}"),
+        }
+    }
+
+    /// `for (;;) {}` → `for (;;) ;` — an empty block body normalizes to an
+    /// empty statement (dropping the braces). Also covers `while (c) {}`, which
+    /// first lowers to `for` and then re-folds through this same path.
+    #[test]
+    fn for_empty_block_body_normalizes_to_empty_statement() {
+        let body = block(Some("blk.1"), vec![]);
+        let f = for_stmt(None, None, body);
+        let (out, contribs, changed, _) =
+            run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "empty-loop-body"));
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ForStatement(f)) => assert!(
+                matches!(f.body.as_ref(), Statement::Tagged(TaggedStatement::EmptyStatement(_))),
+                "empty for body must normalize to `;`; got {:?}",
+                f.body
+            ),
             other => panic!("expected ForStatement; got {other:?}"),
         }
     }
