@@ -1,0 +1,33 @@
+% ============================================================================
+% cerebral-perfusion-pressure.query.adj — worked examples over the clinical CPP library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a cerebral-perfusion-pressure
+% question: it states NO arithmetic and NO relation — it only `import`s the grounded library,
+% `observe`s the quantities it decomposed from the prompt (each a byte-provenanced span,
+% elided here), and asks the engine to APPLY the cited definition. The native adj-lang engine
+% binds the parameters, computes each value EXACTLY on the CPU, and returns it with the
+% definition's source/locator/trust.
+%
+% The three questions INVERT: a mean arterial pressure of 90 mmHg less an intracranial
+% pressure of 10 mmHg gives a cerebral perfusion pressure of 90 − 10 = 80 mmHg; that 80 mmHg
+% CPP added back to the same 10 mmHg intracranial pressure is exactly what the MAP formula
+% recovers the 90 mmHg from, and that 80 mmHg CPP subtracted from the same 90 mmHg mean
+% arterial pressure is exactly what the ICP formula recovers the 10 mmHg from.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli cerebral-perfusion-pressure.query.adj
+% ============================================================================
+
+import "cerebral-perfusion-pressure.adj"
+
+% MAP 90 mmHg, ICP 10 mmHg: cerebral perfusion pressure = 90 − 10.
+observe mean_arterial_pressure(90)
+observe intracranial_pressure(10)
+? cerebral_perfusion_pressure(mean_arterial_pressure, intracranial_pressure)   % expect 80   (CPP = MAP − ICP)
+
+% That 80 mmHg CPP with the same 10 mmHg intracranial pressure: MAP = 80 + 10.
+observe cerebral_perfusion_pressure(80)
+? mean_arterial_pressure(cerebral_perfusion_pressure, intracranial_pressure)   % expect 90   (same def, solved for MAP = CPP + ICP)
+
+% That 80 mmHg CPP with the same 90 mmHg mean arterial pressure: ICP = 90 − 80.
+? intracranial_pressure(mean_arterial_pressure, cerebral_perfusion_pressure)   % expect 10   (same def, solved for ICP = MAP − CPP)
