@@ -154,11 +154,9 @@ string_delim  = "SIZE" | operand ;
 # receiver (INCLUDING the last) gets the field up to the NEXT delimiter; extra
 # fields beyond the receiver count are dropped, and once the source is exhausted
 # the remaining receivers are left UNCHANGED.  `WITH POINTER`, `ON OVERFLOW`, and
-# `NOT ON OVERFLOW` are now MODELLED (the DIRECT sibling of the STRING clauses):
-# overflow fires when all receivers are filled but the source is NOT exhausted (more
-# delimited fields remain) OR the initial pointer is out of range, running the
-# `ON OVERFLOW` imperative list (else the `NOT ON OVERFLOW` one).  `END-UNSTRING`
-# closes the scope; like the other verbs the statement also ends at a period.
+# `NOT ON OVERFLOW` are accepted here but rejected as later rungs by the
+# reader/compiler (a clean Unsupported, not a parse error).  `END-UNSTRING` closes
+# the scope; like the other verbs the statement also ends at a period.
 unstring_stmt = "UNSTRING" operand "DELIMITED" "BY" operand "INTO" NAME { NAME }
                         [ "WITH" "POINTER" NAME ]
                         [ "ON" "OVERFLOW" { statement } ]
