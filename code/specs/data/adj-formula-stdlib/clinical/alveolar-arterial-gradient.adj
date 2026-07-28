@@ -1,0 +1,108 @@
+% ============================================================================
+% alveolar-arterial-gradient.adj — the definition of the A–a oxygen gradient
+% (A–a gradient = alveolar PO2 − arterial PO2) in the ADJ standard library.
+% ============================================================================
+% The alveolar–arterial oxygen gradient entry of the *clinical* track, a respiratory
+% sibling of the hemodynamics libraries (`stroke-volume.adj`, `cardiac-output.adj`,
+% `pulse-pressure.adj`, `mean-arterial-pressure.adj`) and the pulmonary
+% `minute-ventilation.adj`. Where `pulse-pressure.adj` grounds the arterial pulse pressure
+% as a difference of two blood pressures, this grounds the A–a OXYGEN GRADIENT as a
+% difference of two oxygen partial pressures: THE A–a GRADIENT IS THE ALVEOLAR OXYGEN
+% PARTIAL PRESSURE MINUS THE ARTERIAL OXYGEN PARTIAL PRESSURE — how much higher the oxygen
+% tension is in the alveolar gas than in the arterial blood, the bedside measure of how well
+% oxygen is crossing the alveolar–capillary membrane (a widened gradient points to a
+% diffusion defect, a shunt, or a V/Q mismatch; a normal gradient with hypoxaemia points to
+% hypoventilation or low inspired oxygen). It ships as an importable, byte-provenanced,
+% PARAMETERIZED `formula`, together with its two exact rearrangements (the alveolar PO2 a
+% gradient implies for a given arterial PO2, and the arterial PO2 the other two imply). As
+% with every compute library, a consumer states NO arithmetic: it `import`s this file, binds
+% the measured partial pressures from its own byte-provenance decomposition, and asks the
+% engine to APPLY the cited definition on the CPU. Zero math is performed by the model; the
+% engine computes each value EXACTLY, carrying the definition's citation.
+%
+%     import "alveolar-arterial-gradient.adj"
+%     observe alveolar_partial_pressure_o2(100)   % "…PAO2 100 mmHg…"  (span cited by the model)
+%     observe arterial_partial_pressure_o2(90)    % "…PaO2 90 mmHg…"   (span cited by the model)
+%     ? aa_gradient(alveolar_partial_pressure_o2, arterial_partial_pressure_o2)
+%                                                    % engine → 10, carrying A–a = PAO2 − PaO2
+%
+% All three formulas are EXACT over their parameters (a difference and two of its inverse
+% readings), so every value the engine returns is exact. The three COMPOSE and invert
+% cleanly around the worked case PAO2 = 100 mmHg, PaO2 = 90 mmHg (A–a = 100 − 90 = 10 mmHg, a
+% normal gradient for a young adult breathing room air): the `aa_gradient` a consumer computes
+% from the two partial pressures is exactly the `aa_gradient` the `alveolar_partial_pressure_o2`
+% formula adds the arterial PO2 back to, to recover the 100 mmHg alveolar PO2, and exactly the
+% `aa_gradient` the `arterial_partial_pressure_o2` formula subtracts from the alveolar PO2 to
+% recover the 90 mmHg arterial PO2.
+%
+%   aa_gradient(alveolar_partial_pressure_o2, arterial_partial_pressure_o2)
+%       = alveolar_partial_pressure_o2 - arterial_partial_pressure_o2   % A–a = PAO2 − PaO2   (definition)
+%   alveolar_partial_pressure_o2(aa_gradient, arterial_partial_pressure_o2)
+%       = aa_gradient + arterial_partial_pressure_o2                    % PAO2 = A–a + PaO2   (same def, solved for PAO2)
+%   arterial_partial_pressure_o2(alveolar_partial_pressure_o2, aa_gradient)
+%       = alveolar_partial_pressure_o2 - aa_gradient                    % PaO2 = PAO2 − A–a   (same def, solved for PaO2)
+%
+% NOTE ON UNITS: the two partial pressures must be in the SAME unit (both millimetres of
+% mercury, as in the worked case), and the gradient comes out in that same unit; this library
+% computes the exact value over whatever consistent unit it is given. (The alveolar PO2 is
+% itself usually obtained from the alveolar gas equation; this library takes it as a given
+% input and grounds only the gradient definition that stands on top of it.)
+%
+% All three formulas are defended by the SAME definitional sentence — "The A-a gradient, or
+% the alveolar-arterial gradient, measures the difference between the oxygen concentration in
+% the alveoli and arterial system." — because that one definition (the gradient IS the
+% alveolar minus the arterial oxygen tension) sanctions the relation read every way (the
+% gradient from the two pressures, the alveolar PO2 from the gradient and arterial PO2, or the
+% arterial PO2 from the alveolar PO2 and gradient). The quote is transcribed verbatim from the
+% StatPearls "Physiology, Alveolar to Arterial Oxygen Gradient" article on the NCBI Bookshelf,
+% so each `formula` carries the provenance envelope every shipped grounded clause carries; the
+% linter rejects an unsourced one. (See feedback_nothing_human_authored — the definitional
+% sentence is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable oxygen partial pressure the definition ranges
+% over, and each result is a derived quantity. `aa_gradient`, `alveolar_partial_pressure_o2`
+% and `arterial_partial_pressure_o2` each appear BOTH as a derived result and as an input (of
+% the other formulas), so each is a single dictionary term used in both roles. The `surface`
+% lists are the everyday names a decomposer maps onto the canonical term; the trailing comment
+% records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary aa_gradient_vocab {
+    define alveolar_partial_pressure_o2 : finding  surface "alveolar oxygen partial pressure", "alveolar PO2", "PAO2"   % millimetres of mercury (mmHg)
+    define arterial_partial_pressure_o2 : finding  surface "arterial oxygen partial pressure", "arterial PO2", "PaO2"   % millimetres of mercury (mmHg)
+    define aa_gradient                  : finding  surface "A-a gradient", "alveolar-arterial gradient", "A-a oxygen gradient"   % millimetres of mercury (mmHg)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the definitional sentence from
+% StatPearls on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an
+% exact difference/sum of measured quantities, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook aa_gradient_laws {
+    use aa_gradient_vocab
+
+    % A–a gradient — the alveolar oxygen partial pressure less the arterial oxygen partial
+    % pressure, i.e. A–a = PAO2 − PaO2.
+    formula aa_gradient(alveolar_partial_pressure_o2, arterial_partial_pressure_o2) = alveolar_partial_pressure_o2 - arterial_partial_pressure_o2
+        source "The A-a gradient, or the alveolar-arterial gradient, measures the difference between the oxygen concentration in the alveoli and arterial system."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545153/"
+        trust authoritative
+
+    % Alveolar PO2 — the same definition solved for the alveolar oxygen partial pressure a
+    % gradient implies for an arterial PO2 (PAO2 = A–a + PaO2). Defended by the SAME
+    % definitional sentence, read the other way.
+    formula alveolar_partial_pressure_o2(aa_gradient, arterial_partial_pressure_o2) = aa_gradient + arterial_partial_pressure_o2
+        source "The A-a gradient, or the alveolar-arterial gradient, measures the difference between the oxygen concentration in the alveoli and arterial system."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545153/"
+        trust authoritative
+
+    % Arterial PO2 — the same definition solved for the arterial oxygen partial pressure the
+    % other two imply (PaO2 = PAO2 − A–a). Again the SAME definitional sentence, read the third
+    % way.
+    formula arterial_partial_pressure_o2(alveolar_partial_pressure_o2, aa_gradient) = alveolar_partial_pressure_o2 - aa_gradient
+        source "The A-a gradient, or the alveolar-arterial gradient, measures the difference between the oxygen concentration in the alveoli and arterial system."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545153/"
+        trust authoritative
+}
