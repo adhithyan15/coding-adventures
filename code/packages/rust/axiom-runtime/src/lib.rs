@@ -77,12 +77,40 @@
 //!    `derive-runtime`'s/`reduce-runtime`'s identical guard), since this
 //!    crate cannot fully vouch for every shape the shared, unmodified
 //!    `symbolic-vm` handler table might itself produce for an unresolved
-//!    symbolic chain.
-//! 3. **Unwinding panics** (e.g. a malformed `Assign` left-hand side inside
-//!    a function body, which the shared `assign_handler` panics on) run
-//!    inside [`catch_unwind`] on a worker thread with a large bounded stack;
-//!    the session is rebuilt afterward, trading lost bindings for a
-//!    guaranteed-usable session on the next call.
+//!    symbolic chain. This guard now runs *inside* the worker thread
+//!    described in point 3 below (not on the caller's own thread), so even
+//!    a hypothetical future panic in the lexer's own tokenizing would be
+//!    caught, not just a panic from parsing/evaluation.
+//! 3. **Unbounded *recursive-call* depth** (a self- or mutually-recursive
+//!    user-defined function, e.g. `fact(n) == if n = 0 then 1 else n *
+//!    fact(n - 1)` then `fact(50000000)`) is a *third*, independent
+//!    recursion vector from the two above — neither `MAX_RULE_DEPTH` (which
+//!    bounds the *parsed source's* static nesting) nor `MAX_STATEMENT_TOKENS`
+//!    (which bounds *one submission's* token count) has any bearing on how
+//!    many times a function calls itself at *evaluation* time, since that
+//!    depends on the runtime *value* passed in, not the program's static
+//!    size. `crate::eval::MAX_CALL_DEPTH`, checked on every user-function
+//!    invocation, closes this vector — see that constant's own doc comment,
+//!    and `crate::eval`'s module doc comment, for the full incident this was
+//!    added to close (a genuine, review-caught gap: this crate used to
+//!    delegate function calls to `symbolic_vm`'s own `Define`/
+//!    user-function-call mechanism, whose recursive-call handling runs
+//!    *inside `symbolic_vm`'s own Rust call stack*, un-instrumentable from
+//!    outside without modifying that crate — which MA13 §2 rules out. A
+//!    large worker-thread stack alone does **not** fix this: it only raises
+//!    how deep the recursion must go before crashing, and a genuine native
+//!    stack overflow is **not** catchable by `catch_unwind` at all — Rust's
+//!    runtime response to one is to abort the *whole process*).
+//! 4. **Unwinding panics** from the reused shared handler table (a latent
+//!    bug in `symbolic-vm`'s own arithmetic handlers, or any other panic
+//!    this crate hasn't anticipated) run inside [`catch_unwind`] on a worker
+//!    thread with a large bounded stack; the session (VM environment,
+//!    declared-domain table, *and* function table) is rebuilt afterward,
+//!    trading lost bindings for a guaranteed-usable session on the next
+//!    call. Note this is a *different*, narrower guarantee than point 3 —
+//!    `catch_unwind` only ever catches an unwinding `panic!`, never a
+//!    genuine stack overflow, which is exactly why point 3 needs its own,
+//!    independent depth cap rather than relying on this one.
 
 mod builtins;
 mod domains;
@@ -90,7 +118,7 @@ mod eval;
 mod value;
 
 pub use domains::{AxiomCategory, AxiomDomain};
-pub use eval::EvalError;
+pub use eval::{EvalError, MAX_CALL_DEPTH};
 pub use value::{print_axiom, AxiomValue};
 
 use coding_adventures_axiom_parser::try_parse_axiom;
@@ -123,15 +151,38 @@ pub const MAX_STATEMENT_TOKENS: usize = 2000;
 const EVAL_STACK_SIZE: usize = 512 * 1024 * 1024;
 
 /// The context an in-progress evaluation is threaded through: the shared
-/// symbolic VM (for arithmetic/comparison/assignment/definition/if/list, all
-/// reused unchanged, MA13 §2) and this crate's own declared-domain
-/// constraint table (`a : T`, MA13 §3/§4) — kept as a *separate* map from the
-/// VM's own name-binding environment (`vm.backend`'s `env`), since
-/// `symbolic-ir`/`symbolic-vm` have no concept of a domain at all to store
-/// one in (MA13 §2's own central finding).
+/// symbolic VM (for arithmetic/comparison/if/list, all reused unchanged,
+/// MA13 §2), this crate's own declared-domain constraint table (`a : T`,
+/// MA13 §3/§4), this crate's own user-defined-function table, and a
+/// per-evaluation call-depth counter.
+///
+/// `declared`/`functions` are kept as *separate* maps from the VM's own
+/// name-binding environment (`vm.backend`'s `env`), since `symbolic-ir`/
+/// `symbolic-vm` have no concept of a domain at all to store one in (MA13
+/// §2's own central finding), and — a deliberate, security-motivated
+/// design choice, not merely a layering preference — user-defined function
+/// *calls* are dispatched entirely within `crate::eval` (`crate::eval::
+/// call_user_function`/`eval_ir`) rather than through `symbolic_vm::VM`'s
+/// own `Define`/user-function-call mechanism: that mechanism's own
+/// recursive-call handling happens *inside* `VM::eval_apply`'s Rust call
+/// stack, which this crate cannot instrument (or cap) without modifying
+/// `symbolic-vm` itself (ruled out, MA13 §2). Dispatching calls here instead
+/// lets `call_depth` — checked against [`eval::MAX_CALL_DEPTH`] on every
+/// user-function invocation, at *any* nesting position in a body, not just
+/// the top level — turn unbounded recursion (`fact(n) == ... fact(n - 1)`
+/// then `fact(50000000)`) into a clean `EvalError` instead of an
+/// uncatchable native stack overflow (a real overflow aborts the whole
+/// process; `catch_unwind` cannot catch it, so bounding *depth* is the only
+/// fix, not a bigger worker-thread stack).
 pub(crate) struct EvalContext<'a> {
     pub vm: &'a mut VM,
     pub declared: &'a mut HashMap<String, AxiomDomain>,
+    pub functions: &'a mut HashMap<String, (Vec<String>, symbolic_ir::IRNode)>,
+    /// How many nested user-function calls are currently in progress. Reset
+    /// to `0` at the start of every top-level [`AxiomSession::eval_to_output`]
+    /// call — this is per-evaluation state, unlike `declared`/`functions`,
+    /// which persist across calls for the lifetime of the session.
+    pub call_depth: usize,
 }
 
 /// One displayed result from an [`AxiomSession::eval_to_output`] call.
@@ -146,14 +197,18 @@ pub struct Output {
 
 /// A persistent Axiom session.
 ///
-/// Owns the [`VM`] (so variable bindings and user-defined functions persist
-/// across calls to [`feed`](AxiomSession::feed)) and this crate's own
-/// declared-domain constraint table (so a `a : PositiveInteger` declared in
-/// one call is still enforced against a later `a := -1` in a subsequent
-/// call), exactly as an interactive Axiom session would.
+/// Owns the [`VM`] (so variable bindings persist across calls to
+/// [`feed`](AxiomSession::feed)), this crate's own declared-domain
+/// constraint table (so a `a : PositiveInteger` declared in one call is
+/// still enforced against a later `a := -1` in a subsequent call), and this
+/// crate's own user-defined-function table (`f(x: T, ...): T == e`/`f x ==
+/// e`, dispatched by `crate::eval` itself rather than through the shared
+/// VM's own `Define` mechanism — see [`EvalContext`]'s own doc comment for
+/// why), exactly as an interactive Axiom session would persist all three.
 pub struct AxiomSession {
     vm: VM,
     declared_domains: HashMap<String, AxiomDomain>,
+    functions: HashMap<String, (Vec<String>, symbolic_ir::IRNode)>,
     /// 1-based counter of displayed results so far — the `(n)` prompt index.
     output_index: usize,
 }
@@ -166,11 +221,12 @@ impl Default for AxiomSession {
 
 impl AxiomSession {
     /// Create a fresh session with an empty environment, declared-domain
-    /// table, and `(n)` counter.
+    /// table, function table, and `(n)` counter.
     pub fn new() -> Self {
         AxiomSession {
             vm: VM::new(Box::new(SymbolicBackend::new())),
             declared_domains: HashMap::new(),
+            functions: HashMap::new(),
             output_index: 0,
         }
     }
@@ -193,7 +249,10 @@ impl AxiomSession {
 
     /// Evaluate one Axiom statement and return the structured [`Output`].
     pub fn eval_to_output(&mut self, src: &str) -> Result<Output, String> {
-        // Guard 1: bound total input size (cheap memory/time gate).
+        // Guard 1: bound total input size (cheap memory/time gate). Cheap
+        // enough, and needed before any allocation proportional to `src`'s
+        // length, to run on the caller's own thread rather than inside the
+        // worker below.
         if src.len() > MAX_INPUT_LEN {
             return Err(format!(
                 "input too large: {} bytes exceeds the {}-byte limit",
@@ -201,22 +260,26 @@ impl AxiomSession {
                 MAX_INPUT_LEN
             ));
         }
-        // Guard 2: reject an overly complex single statement before
-        // evaluation ever starts (defense-in-depth; see the crate doc
-        // comment's "Robustness" point 2).
-        check_statement_token_count(src)?;
 
-        // Guard 3 + panics: evaluation runs on a worker thread with a large
-        // bounded stack, and any unwinding panic from the reused symbolic
-        // stack is caught.
+        // Guards 2-3 + panics: run entirely on a worker thread with a large
+        // bounded stack, inside `catch_unwind`, so that EVERY step touching
+        // untrusted `src` -- lexing for the token-count guard, parsing, and
+        // evaluation -- is covered by the same panic boundary (Guard 2 used
+        // to run on the caller's own thread, outside `catch_unwind`; moved
+        // in here so a hypothetical future lexer panic can never escape
+        // uncaught either).
         let vm = &mut self.vm;
         let declared = &mut self.declared_domains;
+        let functions = &mut self.functions;
         let src_owned = src.to_string();
         let outcome = std::thread::scope(|scope| {
             std::thread::Builder::new()
                 .stack_size(EVAL_STACK_SIZE)
                 .spawn_scoped(scope, || {
-                    catch_unwind(AssertUnwindSafe(|| eval_source(vm, declared, &src_owned)))
+                    catch_unwind(AssertUnwindSafe(|| {
+                        check_statement_token_count(&src_owned)?;
+                        eval_source(vm, declared, functions, &src_owned)
+                    }))
                 })
                 .expect("failed to spawn axiom evaluation thread")
                 .join()
@@ -237,6 +300,7 @@ impl AxiomSession {
             Ok(Err(payload)) | Err(payload) => {
                 self.vm = VM::new(Box::new(SymbolicBackend::new()));
                 self.declared_domains.clear();
+                self.functions.clear();
                 self.output_index = 0;
                 Err(panic_message(payload))
             }
@@ -258,15 +322,22 @@ fn format_value(value: &AxiomValue) -> String {
     }
 }
 
-/// Evaluate `src` (one statement) against `vm`/`declared`. Runs on the
-/// worker thread.
+/// Evaluate `src` (one statement) against `vm`/`declared`/`functions`. Runs
+/// on the worker thread. `call_depth` always starts fresh at `0` -- it is
+/// per-evaluation state, never persisted across calls.
 fn eval_source(
     vm: &mut VM,
     declared: &mut HashMap<String, AxiomDomain>,
+    functions: &mut HashMap<String, (Vec<String>, symbolic_ir::IRNode)>,
     src: &str,
 ) -> Result<AxiomValue, String> {
     let ast = try_parse_axiom(src)?;
-    let mut ctx = EvalContext { vm, declared };
+    let mut ctx = EvalContext {
+        vm,
+        declared,
+        functions,
+        call_depth: 0,
+    };
     eval::eval_expr(&mut ctx, &ast).map_err(|e| e.to_string())
 }
 
@@ -579,6 +650,125 @@ mod tests {
         s.feed("fact(n: Integer): Integer == if n = 0 then 1 else n * fact(n - 1)")
             .unwrap();
         assert_eq!(s.feed("fact(5)").unwrap(), "(2) 120 : PositiveInteger\n");
+    }
+
+    #[test]
+    fn mutual_recursion_between_two_defined_functions_works() {
+        // Axiom's own surface has no `true`/`false` literal syntax this cut
+        // (`true`/`false` are only ever produced by evaluating a comparison
+        // or `has`-query, never lexed as keywords -- axiom.tokens' own
+        // keyword set is just `if`/`then`/`else`/`has`), so the branches
+        // here use `1 = 1`/`1 ~= 1` to produce genuine Boolean values.
+        let mut s = AxiomSession::new();
+        s.feed("isEven(n: Integer): Boolean == if n = 0 then 1 = 1 else isOdd(n - 1)")
+            .unwrap();
+        s.feed("isOdd(n: Integer): Boolean == if n = 0 then 1 ~= 1 else isEven(n - 1)")
+            .unwrap();
+        assert_eq!(s.feed("isEven(10)").unwrap(), "(3) true : Boolean\n");
+    }
+
+    // --- Call-depth guard: a genuine, review-caught fix (see crate::eval's
+    // own module doc comment and MAX_CALL_DEPTH's doc comment) -- an
+    // unbounded self-recursive function call used to recurse natively
+    // through symbolic-vm's own Rust call stack with NO depth cap at all,
+    // eventually overflowing the native stack in a way `catch_unwind`
+    // cannot catch (a real stack overflow aborts the whole process). These
+    // tests confirm deep recursion now fails with a clean `Err` instead.
+    // -------------------------------------------------------------------
+
+    #[test]
+    fn unbounded_self_recursion_is_rejected_with_a_clean_error_not_a_crash() {
+        let mut s = AxiomSession::new();
+        s.feed("loop(n: Integer): Integer == loop(n + 1)").unwrap();
+        // A worker thread with a generous 32 MiB stack, so the CALL-DEPTH
+        // GUARD -- not the thread's own stack running out -- is what stops
+        // the recursion (mirrors axiom-parser's own
+        // `test_deeply_nested_input_returns_error_not_overflow_for_every_shape`
+        // methodology).
+        let handle = std::thread::Builder::new()
+            .name("axiom-runtime-call-depth-guard-regression".to_string())
+            .stack_size(32 * 1024 * 1024)
+            .spawn(move || {
+                let err = s.feed("loop(0)").unwrap_err();
+                assert!(
+                    err.contains("recursion too deep"),
+                    "expected a clean recursion-depth error, got {err:?}"
+                );
+            })
+            .expect("failed to spawn worker thread");
+        handle
+            .join()
+            .expect("the call-depth guard must keep the worker thread from crashing");
+    }
+
+    #[test]
+    fn call_depth_guard_trips_before_overflow_on_a_small_default_ish_stack() {
+        // A caller relying on MAX_CALL_DEPTH must have the guard trip
+        // *before* the native stack overflows even on a comparatively small
+        // stack (here 8 MiB, well under crate::EVAL_STACK_SIZE's own 512
+        // MiB production stack, which only makes this margin larger in
+        // practice) -- otherwise the guard would be decorative.
+        let mut s = AxiomSession::new();
+        s.feed("loop(n: Integer): Integer == loop(n + 1)").unwrap();
+        let handle = std::thread::Builder::new()
+            .stack_size(8 * 1024 * 1024)
+            .spawn(move || {
+                assert!(s.feed("loop(0)").is_err());
+            })
+            .expect("failed to spawn worker thread");
+        handle
+            .join()
+            .expect("MAX_CALL_DEPTH must trip before native overflow on a small stack");
+    }
+
+    #[test]
+    fn recursion_up_to_the_cap_still_works_one_past_it_fails_cleanly() {
+        let mut s = AxiomSession::new();
+        s.feed("countdown(n: Integer): Integer == if n = 0 then 0 else countdown(n - 1)")
+            .unwrap();
+        // Comfortably under MAX_CALL_DEPTH.
+        assert!(s.feed("countdown(100)").is_ok());
+        // Comfortably over it -- a clean Err, not a crash (small-stack
+        // thread, matching the two tests above).
+        let handle = std::thread::spawn(move || {
+            let err = s.feed("countdown(100000)").unwrap_err();
+            assert!(err.contains("recursion too deep"), "got {err:?}");
+        });
+        handle.join().expect("must not crash the worker thread");
+    }
+
+    #[test]
+    fn session_survives_a_rejected_deep_recursion_and_keeps_working() {
+        let mut s = AxiomSession::new();
+        s.feed("loop(n: Integer): Integer == loop(n + 1)").unwrap();
+        assert!(s.feed("loop(0)").is_err());
+        // The function table (and the rest of the session) must still be
+        // usable afterward -- a clean `Err` does not rebuild the session
+        // (only a caught panic does), so `loop` itself is still callable
+        // (just as deeply-recursive as before), and ordinary evaluation
+        // keeps working. Index (2), not (3): the failed `loop(0)` call is
+        // never itself assigned a result number (`output_index` only
+        // advances on success), mirroring `axiom-repl`'s own documented
+        // prompt-vs-result-counter divergence after an error.
+        assert_eq!(s.feed("1 + 1").unwrap(), "(2) 2 : PositiveInteger\n");
+    }
+
+    #[test]
+    fn recursive_call_nested_inside_an_if_branch_and_arithmetic_is_still_depth_guarded() {
+        // Confirms MAX_CALL_DEPTH is enforced at EVERY nesting position
+        // inside a body (via crate::eval::eval_ir walking the whole
+        // substituted body itself), not just when the recursive call is the
+        // body's own top-level expression. `n` counts UP from 1, away from
+        // the `n = 0` base case, so it never actually terminates -- calling
+        // with `n = 0` directly would hit the base case on the very first
+        // call and prove nothing.
+        let mut s = AxiomSession::new();
+        s.feed("loop(n: Integer): Integer == 1 + (if n = 0 then 0 else loop(n + 1))")
+            .unwrap();
+        let handle = std::thread::spawn(move || {
+            assert!(s.feed("loop(1)").is_err());
+        });
+        handle.join().expect("must not crash the worker thread");
     }
 
     // --- Robustness guards ---------------------------------------------------

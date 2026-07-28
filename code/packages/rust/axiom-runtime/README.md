@@ -93,28 +93,44 @@ independently-verified-to-the-byte second quotation from the book.
 | `D has C` | Looked up in the fixed category table, `Boolean` result |
 | `+ - * / ^ ** = ~= < <= > >=` | Delegated to the shared, unmodified `symbolic-vm` handler table |
 | `x := e` | Evaluates `e`, domain-checks against any `a : T` constraint, binds |
-| `f(x: T, ...): T == e`, `f x == e` | Held-body function definition, registered via the shared VM's own `Define`/user-function-call mechanism (reused unchanged — see "Function bodies" below) |
+| `f(x: T, ...): T == e`, `f x == e` | Held-body function definition, registered in this crate's own function table and dispatched by this crate's own call mechanism (see "Function bodies" below) |
 | `if p then e1 else e2` | `p` must evaluate to `Boolean`; only the chosen branch is evaluated |
 | `( e1; e2; ...; eN )` | Sequencing; each statement's side effects (bindings, declarations, definitions) persist; the block's value is the last statement's |
 
-## Function bodies: a disclosed, narrower subset
+## Function bodies: a disclosed, narrower subset, and a depth-guarded call mechanism
 
-A held function body is registered via `symbolic_vm`'s own `Define`/
-user-function-call mechanism, **reused completely unchanged** — the exact
-mechanism Derive/Reduce/Maple already use for their own user-defined
-functions, which means Axiom's own user functions get exactly the same
-(lack of an extra) recursion-depth guard every sibling CAS-family runtime
-here already has, rather than a new bespoke one.
+A held function body is registered in this crate's *own* function table
+(`name -> (params, body)`, in `AxiomSession`), and a call to it is dispatched
+by this crate's own `crate::eval::call_user_function`/`eval_ir` — **not**
+`symbolic_vm`'s own `Define`/user-function-call mechanism. This is a
+deliberate, security-motivated design, not a layering preference: an
+earlier version of this crate *did* register functions via `symbolic_vm`'s
+own mechanism and hand a call straight to `VM::eval`, and that mechanism's
+own recursive-call handling runs **inside `VM::eval_apply`'s own Rust call
+stack**, which this crate cannot instrument or cap without modifying
+`symbolic-vm` itself (ruled out, MA13 §2). A self-recursive function with no
+terminating base case (`fact(n) == ... fact(n - 1)`, called with a huge `n`)
+would recurse natively through `symbolic-vm`'s own call stack with **no
+depth limit at all**, and a genuine native stack overflow is **not**
+catchable by `catch_unwind` — Rust's runtime response to one is to abort
+the whole process, not unwind a thread. A large worker-thread stack does not
+fix this either: it only raises how deep the recursion must go before
+crashing.
 
-The trade-off: since `::`/`:`/`has` have no `IRNode` representation at all,
-a function body **cannot** contain them (there is nothing for the shared
-VM's substitution mechanism to evaluate them *as*). Bodies are restricted to
-the arithmetic/comparison/`if`/call/list subset — matching MA13 §4's own
-single confirmed function-definition example
-(`power(x: Integer, n: NonNegativeInteger): Integer == x ** n`, a pure
-arithmetic expression) exactly. Writing `:=`/`:`/`::`/`has`, or a
-`;`-sequenced block, inside a body is a clean `EvalError`, not a silent
-mis-lowering.
+Dispatching calls in this crate instead lets `crate::eval::MAX_CALL_DEPTH`
+(re-exported as `coding_adventures_axiom_runtime::MAX_CALL_DEPTH`) be
+enforced on every user-function invocation, at *any* nesting position
+inside a body (an `if` branch, an arithmetic operand, …), turning unbounded
+recursion into a clean `Err` instead of a process abort.
+
+Separately, since `::`/`:`/`has` have no `IRNode` representation at all, a
+function body **cannot** contain them (there is nothing for a stored body
+to represent them *as*). Bodies are restricted to the
+arithmetic/comparison/`if`/call/list subset — matching MA13 §4's own single
+confirmed function-definition example (`power(x: Integer, n:
+NonNegativeInteger): Integer == x ** n`, a pure arithmetic expression)
+exactly. Writing `:=`/`:`/`::`/`has`, or a `;`-sequenced block, inside a
+body is a clean `EvalError`, not a silent mis-lowering.
 
 ## Usage
 
@@ -137,19 +153,34 @@ callers that don't need a persistent session.
 
 ## Robustness
 
-`feed`/`eval_to_output` are the trust boundary for arbitrary Axiom source:
+`feed`/`eval_to_output` are the trust boundary for arbitrary Axiom source —
+**four** independent recursion/panic vectors are closed, not three:
 
 1. **Deeply nested source** (`((((…))))`) — already rejected by
    `axiom-parser`'s own `MAX_RULE_DEPTH`.
 2. **A long flat chain** (`1+1+1+…`) — evaluated **iteratively**, one small
    `VM::eval` call per fold step, sidestepping the "flat chain folds into a
    deep tree" DoS vector by construction. `MAX_STATEMENT_TOKENS` (measured
-   against the real lexer token stream) still exists as defense-in-depth.
-
-Evaluation runs on a worker thread with a large bounded stack inside
-`catch_unwind`, so a reused-handler panic becomes a clean `Err` and the
-session (VM environment *and* declared-domain table) is rebuilt rather than
-left corrupted.
+   against the real lexer token stream, and now checked *inside* the same
+   worker thread/`catch_unwind` boundary as evaluation itself, not on the
+   caller's own thread) still exists as defense-in-depth.
+3. **Unbounded recursive-call depth** — a self- or mutually-recursive
+   user-defined function (`fact(n) == ... fact(n - 1)`, called with a huge
+   `n`) is a *third*, independent vector from the two above: neither
+   `MAX_RULE_DEPTH` (static source nesting) nor `MAX_STATEMENT_TOKENS` (one
+   submission's token count) bounds how many times a function calls itself
+   at *evaluation* time, since that depends on the runtime value passed in.
+   `MAX_CALL_DEPTH` closes it — see "Function bodies," above, for the full
+   incident this was added to close in review (this crate used to delegate
+   function calls to `symbolic_vm`'s own uncapped mechanism, and a genuine
+   native stack overflow is not catchable by `catch_unwind` at all).
+4. **Unwinding panics** from the reused shared handler table run inside
+   `catch_unwind` on a worker thread with a large bounded stack; the session
+   (VM environment, declared-domain table, *and* function table) is rebuilt
+   afterward rather than left corrupted. This is a narrower guarantee than
+   point 3 — `catch_unwind` only ever catches an unwinding `panic!`, never a
+   genuine stack overflow, which is exactly why point 3 needs its own,
+   independent depth cap.
 
 ## Tests
 
@@ -163,5 +194,8 @@ every built-in domain/category pair (including the confirmed
 examples); the `PositiveInteger`/`NonNegativeInteger` subdomain predicates;
 the coercion/declaration-mismatch error shape; arithmetic/comparison
 correctness delegated to the shared engine; `:=`/`==`/`if`/block evaluation
-(including recursion through a defined function); the disclosed
-function-body restriction; and both robustness guards.
+(including recursion and mutual recursion through defined functions); the
+disclosed function-body restriction; the `MAX_CALL_DEPTH` guard (both on a
+generously-sized worker-thread stack, confirming the cap — not the stack —
+is what trips, and on a deliberately small one, confirming the cap trips
+*before* any native overflow risk); and all four robustness guards.

@@ -75,6 +75,16 @@ pub struct AxiomRepl {
     /// The 1-based index shown in the `(n) ->` prompt. Advances once per
     /// *submitted* statement, mirroring real Axiom's own numbered prompt.
     input_index: usize,
+    /// Running bracket depth (`(`/`[` vs `)`/`]`) of `buffer`, updated
+    /// *incrementally* by [`scan_line`] as each new physical line is fed,
+    /// rather than recomputed by rescanning the whole buffer on every call
+    /// -- see [`scan_line`]'s own doc comment for why a full-buffer rescan
+    /// per line is a real, if bounded, algorithmic-complexity concern this
+    /// avoids.
+    bracket_depth: i32,
+    /// Whether `buffer` currently ends inside an unterminated `"..."` string
+    /// literal (which, per `axiom.tokens`, may itself span physical lines).
+    in_string: bool,
 }
 
 impl Default for AxiomRepl {
@@ -89,6 +99,8 @@ impl AxiomRepl {
             session: AxiomSession::new(),
             buffer: String::new(),
             input_index: 1,
+            bracket_depth: 0,
+            in_string: false,
         }
     }
 
@@ -127,6 +139,8 @@ impl AxiomRepl {
             > MAX_INPUT_LEN
         {
             self.buffer.clear();
+            self.bracket_depth = 0;
+            self.in_string = false;
             self.input_index += 1;
             return ReplResponse::Output(format!(
                 "input too large: exceeds the {MAX_INPUT_LEN}-byte limit"
@@ -135,12 +149,15 @@ impl AxiomRepl {
 
         self.buffer.push_str(line);
         self.buffer.push('\n');
+        scan_line(line, &mut self.bracket_depth, &mut self.in_string);
 
-        if is_incomplete(&self.buffer) {
+        if self.bracket_depth > 0 || self.in_string {
             return ReplResponse::NeedMore;
         }
 
         let src = std::mem::take(&mut self.buffer);
+        self.bracket_depth = 0;
+        self.in_string = false;
         if src.trim().is_empty() {
             return ReplResponse::Output(String::new());
         }
@@ -232,8 +249,10 @@ fn read_bounded_line<R: BufRead>(reader: &mut R) -> std::io::Result<Option<Resul
     }
 }
 
-/// Is the accumulated source *incomplete* -- i.e. should the REPL keep
-/// reading?
+/// Scan one freshly-fed physical `line` (no embedded newline), updating
+/// `depth` (bracket nesting) and `in_string` (open-string state) to reflect
+/// having consumed it -- the incremental counterpart of a "rescan the whole
+/// buffer" check.
 ///
 /// Axiom's `(`/`[` grouping, blocks, and calls (round parens) and list
 /// literals (square brackets) are complete once bracket depth returns to
@@ -242,43 +261,48 @@ fn read_bounded_line<R: BufRead>(reader: &mut R) -> std::io::Result<Option<Resul
 /// (`axiom.tokens` SECTION 3/4), and a stray `(`/`[`/`"` *inside* either of
 /// those must never be counted -- `x := "a (unbalanced paren"` is already a
 /// complete statement, and a `--` comment's content is arbitrary text that
-/// is never re-lexed as code. This single-pass state machine tracks
-/// "currently inside a string" and skips a `--`-opened comment to its
-/// line's end before ever looking at a character for bracket-depth
-/// purposes, so those two constructs cannot falsely extend (or end)
-/// continuation. This is only a heuristic: whatever is submitted still
-/// passes through `AxiomSession::feed`, which re-lexes with the real
-/// `axiom-lexer` and applies the real size/complexity guards, so a mismatch
-/// here can never crash -- at worst it submits early or asks for one more
-/// line.
-fn is_incomplete(src: &str) -> bool {
-    let mut depth: i32 = 0;
-    let mut in_string = false;
-    let mut chars = src.chars().peekable();
+/// is never re-lexed as code. This scan tracks "currently inside a string"
+/// (which may itself span physical lines, so `in_string` is carried in by
+/// the caller rather than reset per line) and stops at a `--`-opened
+/// comment (comments never span lines, so there is nothing left worth
+/// scanning in `line` once one starts) before ever looking at a character
+/// for bracket-depth purposes, so those two constructs cannot falsely
+/// extend (or end) continuation.
+///
+/// **Why incremental, not a full-buffer rescan per line:** an earlier
+/// version of this function took the *entire accumulated buffer* and
+/// recomputed `depth`/`in_string` from scratch on every physical line fed
+/// to [`AxiomRepl::feed`]. For a single statement spanning N physical
+/// lines, that is `1 + 2 + ... + N` = O(N²) total character-visits before
+/// the statement completes -- bounded (since `AxiomRepl::feed`'s own
+/// `MAX_INPUT_LEN` check caps the buffer at 64 KiB), but real, wasted,
+/// attacker-influenceable CPU work for something that is O(N) total when
+/// each line only re-scans *itself*. This is only a heuristic either way:
+/// whatever is submitted still passes through `AxiomSession::feed`, which
+/// re-lexes with the real `axiom-lexer` and applies the real
+/// size/complexity guards, so a mismatch here can never crash -- at worst
+/// it submits early or asks for one more line.
+fn scan_line(line: &str, depth: &mut i32, in_string: &mut bool) {
+    let mut chars = line.chars().peekable();
     while let Some(ch) = chars.next() {
-        if in_string {
+        if *in_string {
             if ch == '"' {
-                in_string = false;
+                *in_string = false;
             }
             continue;
         }
         match ch {
-            '"' => in_string = true,
+            '"' => *in_string = true,
             '-' if chars.peek() == Some(&'-') => {
-                // A `--` line comment: consume through the end of the line
-                // (or EOF) without inspecting any of its content.
-                for c in chars.by_ref() {
-                    if c == '\n' {
-                        break;
-                    }
-                }
+                // A `--` line comment: the rest of THIS line is its content
+                // -- nothing more to scan (comments never span lines).
+                return;
             }
-            '(' | '[' => depth += 1,
-            ')' | ']' => depth -= 1,
+            '(' | '[' => *depth += 1,
+            ')' | ']' => *depth -= 1,
             _ => {}
         }
     }
-    depth > 0 || in_string
 }
 
 /// Drive a full interactive Axiom session over the given reader and writer.
@@ -379,6 +403,33 @@ mod tests {
     fn an_unterminated_string_still_asks_for_more() {
         let mut r = AxiomRepl::new();
         assert_eq!(r.feed("\"unterminated"), ReplResponse::NeedMore);
+    }
+
+    #[test]
+    fn a_string_open_across_several_physical_lines_carries_state_correctly() {
+        // Regression test for the incremental `scan_line` refactor (fixed a
+        // security-review finding: an earlier full-buffer rescan per line
+        // was O(n^2) worst case): `in_string` must carry over correctly
+        // across MULTIPLE separately-fed lines, not just within one.
+        let mut r = AxiomRepl::new();
+        assert_eq!(r.feed("x := \"line one"), ReplResponse::NeedMore);
+        assert_eq!(r.feed("line two ( not a real paren"), ReplResponse::NeedMore);
+        assert!(matches!(r.feed("line three\""), ReplResponse::Output(_)));
+    }
+
+    #[test]
+    fn bracket_depth_carries_correctly_across_a_comment_on_an_intermediate_line() {
+        // A `(` opened on one line, an intervening line whose OWN `--`
+        // comment contains an unbalanced `)`, then the real closing `)` on
+        // a third line -- confirms the incremental scan's per-line comment
+        // handling doesn't corrupt the carried-over bracket depth.
+        let mut r = AxiomRepl::new();
+        assert_eq!(r.feed("f(1,"), ReplResponse::NeedMore);
+        assert_eq!(
+            r.feed("-- a comment with a stray ) in it"),
+            ReplResponse::NeedMore
+        );
+        assert!(matches!(r.feed("2)"), ReplResponse::Output(_)));
     }
 
     #[test]

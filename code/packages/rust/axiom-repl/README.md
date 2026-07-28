@@ -55,6 +55,18 @@ Both are covered by regression tests in `src/lib.rs` (see
 `an_unterminated_buffer_is_submitted_once_over_the_size_cap` and the
 `read_bounded_line_*`/`run_reports_an_oversized_line_cleanly_*` tests).
 
+**A third, `axiom-repl`-specific issue was found and fixed in this crate's
+own security review, before merge:** the continuation heuristic originally
+rescanned the *entire accumulated buffer* from scratch on every physical
+line fed to it, an O(n²) worst case across the lines of one long statement
+(bounded by `MAX_INPUT_LEN`, so not severe, but real wasted,
+attacker-influenceable CPU work). `scan_line` now updates the running
+bracket-depth/open-string state *incrementally*, scanning only the
+newly-fed line each time — O(n) total. See `scan_line`'s own doc comment,
+and the cross-line-state regression tests (`a_string_open_across_several_
+physical_lines_carries_state_correctly`,
+`bracket_depth_carries_correctly_across_a_comment_on_an_intermediate_line`).
+
 ## Usage
 
 ```sh

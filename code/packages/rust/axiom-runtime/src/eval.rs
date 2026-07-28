@@ -37,34 +37,53 @@
 //! defense-in-depth).
 //!
 //! ## Function bodies are the one place this module still *lowers* rather
-//! than evaluates
+//! than evaluates -- and function *calls* are dispatched here, not by
+//! `symbolic_vm`, because that is what makes recursion depth cappable
 //!
 //! A held function body must **not** be evaluated at definition time (MA13
 //! §4: `f(x: T, ...): T == e` — the body is stored, substituted, and
 //! evaluated fresh at *call* time, "duck-typed... since this is an
-//! interpreter, not Axiom's own compiler"). This module therefore reuses
-//! `symbolic_vm`'s own `Define`/user-function-call machinery **unchanged**
-//! (the exact mechanism Derive/Reduce/Maple already use for their own
-//! user-defined functions) rather than inventing a second, bespoke
-//! recursive-call mechanism of its own — which would need its own
-//! call-depth guard against unbounded native recursion (an infinitely
-//! self-recursive function). Reusing the shared mechanism means Axiom's own
-//! user functions carry exactly the same (lack of an extra) recursion-depth
-//! guard every sibling CAS-family runtime here already has, matching that
-//! established convention rather than introducing a new one.
-//!
-//! The trade-off, disclosed rather than silently accepted: since `::`/`:`/
-//! `has` have **no** `IRNode` representation at all, a function body cannot
-//! contain them (there would be nothing for the shared VM's substitution
-//! mechanism to evaluate them *as*) — [`lower_pure_body`] structurally
+//! interpreter, not Axiom's own compiler"). [`lower_pure_body`] structurally
 //! lowers a body through the arithmetic/comparison/`if`/call/list subset
-//! only, and cleanly rejects `:=`/`:`/`::`/`has`/a `;`-sequenced block
-//! inside a body with an [`EvalError`]. This is a real, disclosed
+//! only (never evaluating it), and cleanly rejects `:=`/`:`/`::`/`has`/a
+//! `;`-sequenced block inside a body with an [`EvalError`] -- since those
+//! constructs have **no** `IRNode` representation at all, there is nothing
+//! for a stored body to represent them *as*. This is a real, disclosed
 //! narrowing, not a silent gap: it matches MA13 §4's own single confirmed
 //! function-definition example (`power(x: Integer, n: NonNegativeInteger):
-//! Integer == x ** n`, a pure arithmetic expression) exactly, and every
-//! sibling CAS-family runtime's own function bodies are equally
-//! single-expression-only.
+//! Integer == x ** n`, a pure arithmetic expression) exactly.
+//!
+//! An earlier version of this crate registered the lowered body via
+//! `symbolic_vm`'s own `Define`/user-function-call mechanism (the same
+//! mechanism Derive/Reduce/Maple use for their own user-defined functions)
+//! and simply handed a call to `VM::eval` unchanged. **This was a real,
+//! since-fixed security gap, caught in review**: `VM::eval_apply`'s own
+//! substitution-and-recurse path for a bound `Define` record calls
+//! `self.eval(...)` *inside its own Rust function body*, so a
+//! self-recursive user function (`fact(n) == if n = 0 then 1 else n *
+//! fact(n - 1)`, then `fact(50000000)`) recurses natively through
+//! `symbolic_vm`'s own call stack, entirely outside this crate's control --
+//! there is no seam inside `VM::eval_apply` this crate can hook a
+//! call-depth counter into without editing `symbolic-vm` itself, which
+//! MA13 §2 rules out. A large worker-thread stack does not fix this: it
+//! only raises how deep the recursion must go before crashing, and a
+//! genuine native stack overflow is **not** catchable by `catch_unwind` --
+//! Rust's runtime response to one is to abort the whole process, not
+//! unwind a thread.
+//!
+//! The fix: this crate's own [`register_function`]/`call_user_function`/
+//! [`eval_ir`] now dispatch every user-function call **themselves**, never
+//! handing a call to a registered function to `VM::eval` at all (ordinary
+//! arithmetic/comparison/`if`/`List` heads still go through `VM::eval`
+//! exactly as before -- only the "is this Apply's head a user-defined
+//! function?" branch is now this crate's own). `call_user_function`
+//! increments [`EvalContext::call_depth`] on every invocation, at *every*
+//! nesting position inside a body (not just the top level -- `eval_ir`
+//! walks the *entire* substituted body itself, rather than handing it to
+//! `VM::eval` in one shot, specifically so a recursive call buried inside
+//! an `if`-branch or an arithmetic operand is intercepted too), and returns
+//! a clean [`EvalError`] once [`MAX_CALL_DEPTH`] is exceeded -- turning
+//! unbounded recursion into an ordinary `Err`, not a process abort.
 
 use crate::domains::{
     coerce_value, domain_has_category, resolve_category, resolve_domain, AxiomDomain, DomainError,
@@ -253,16 +272,21 @@ fn eval_undeclared_define(ctx: &mut EvalContext, node: &GrammarASTNode) -> Resul
     register_function(ctx, name, vec![param.clone()], body_ir)
 }
 
+/// Register a held function body in this crate's own function table (see
+/// the module doc comment for why this is *not* `symbolic_vm`'s own
+/// `Define` mechanism). Redefining an existing name overwrites it, matching
+/// the shared VM's own rebind-on-redefine behaviour every sibling CAS
+/// runtime here relies on. Returns the bare name as the definition's
+/// displayed value, exactly what `symbolic_vm::handlers::define_handler`
+/// itself returns for a `Define`.
 fn register_function(
     ctx: &mut EvalContext,
     name: &str,
     params: Vec<String>,
     body: IRNode,
 ) -> Result<AxiomValue, EvalError> {
-    let params_list = apply(sym(symbolic_ir::LIST), params.into_iter().map(sym).collect());
-    let define_node = apply(sym(symbolic_ir::DEFINE), vec![sym(name), params_list, body]);
-    let result = ctx.vm.eval(define_node);
-    Ok(AxiomValue::inferred(result))
+    ctx.functions.insert(name.to_string(), (params, body));
+    Ok(AxiomValue::inferred(sym(name)))
 }
 
 /// `typed_param_list = typed_param { COMMA typed_param } ;  typed_param =
@@ -546,28 +570,147 @@ fn eval_postfix(ctx: &mut EvalContext, node: &GrammarASTNode) -> Result<AxiomVal
         .find(|n| n.rule_name == "call_args")
         .ok_or_else(|| EvalError::new("malformed postfix node"))?;
 
-    let head = postfix_head(ctx, atom_node)?;
     let arg_nodes = call_args_exprs(call_args_node);
     let mut args = Vec::with_capacity(arg_nodes.len());
     for a in arg_nodes {
         args.push(eval_expr(ctx, a)?.node);
     }
+
+    // A bare `NAME` callee: check this crate's OWN function table first
+    // (see the module doc comment for why user-function calls are
+    // dispatched here, never handed to `VM::eval`, and never looked up as
+    // an ordinary bound value first -- doing so would strip away the
+    // "this is a call, not a value read" information before we get a
+    // chance to check the function table).
+    if let Some(name) = bare_name(atom_node) {
+        if let Some((params, body)) = ctx.functions.get(&name).cloned() {
+            let result = call_user_function(ctx, &name, &params, &body, args)?;
+            return Ok(AxiomValue::inferred(result));
+        }
+        // Not a registered function -- an ordinary bound variable used as a
+        // call head, or an unbound/free symbolic call -- delegate to the
+        // shared VM exactly as before.
+        let result = ctx.vm.eval(apply(sym(name), args));
+        return Ok(AxiomValue::inferred(result));
+    }
+
+    // A non-bare-name callee (e.g. a parenthesised expression used as a
+    // call head) -- evaluate it and delegate to the shared VM.
+    let head = eval_expr(ctx, atom_node)?.node;
     let result = ctx.vm.eval(apply(head, args));
     Ok(AxiomValue::inferred(result))
 }
 
-/// The call's head -- a bare `NAME` atom is read as a raw, **unevaluated**
-/// `Symbol`, not looked up first: the shared VM's own `eval_apply` decides
-/// how to resolve a `Symbol` head (a bound `Define` record vs. a free
-/// symbol) itself, and evaluating it here first would strip that
-/// information away before the VM ever sees it (mirrors
-/// `derive-runtime::lower::lower_postfix`'s identical "don't evaluate the
-/// callee" design).
-fn postfix_head(ctx: &mut EvalContext, atom_node: &GrammarASTNode) -> Result<IRNode, EvalError> {
-    if let Some(name) = bare_name(atom_node) {
-        return Ok(sym(name));
+/// Maximum number of nested user-function calls in progress at once,
+/// checked by [`call_user_function`] on every invocation (at *any* nesting
+/// position inside a body, via [`eval_ir`] -- not just the top level).
+///
+/// This is the guard against unbounded native recursion through a
+/// self-recursive (or mutually recursive) user-defined function -- see the
+/// module doc comment's "Function bodies" section for the full incident
+/// this was added to close (a genuine, review-caught security gap: without
+/// this, `fact(n) == if n = 0 then 1 else n * fact(n - 1)` then
+/// `fact(50000000)` recurses natively until the process aborts on a stack
+/// overflow, which `catch_unwind` cannot catch).
+///
+/// 500 is a conservative, generously-safe round number, not a
+/// binary-searched floor the way `axiom-parser`'s `MAX_RULE_DEPTH` is: each
+/// level costs `eval_ir`/`call_user_function`/`symbolic_vm::substitute`'s
+/// own modest stack frames plus a cloned, `MAX_STATEMENT_TOKENS`-bounded
+/// body tree, all comfortably within `crate::EVAL_STACK_SIZE`'s 512 MiB
+/// worker-thread stack even at many times this depth (confirmed directly:
+/// `deeply_recursive_call_is_rejected_before_native_overflow`, below, drives
+/// recursion to 5,000 -- ten times the cap -- on a worker thread with a
+/// deliberately small 8 MiB stack, and the cap still trips cleanly with
+/// margin to spare). Ordinary hand-written recursive functions (factorial,
+/// Fibonacci, list-style recursion over realistic inputs) stay far below it.
+pub const MAX_CALL_DEPTH: usize = 500;
+
+/// Call a registered user-defined function: substitute `args` for `params`
+/// in `body`, then evaluate the substituted body via [`eval_ir`] -- entirely
+/// within this crate's own control, so [`MAX_CALL_DEPTH`] can actually be
+/// enforced (see the module doc comment).
+fn call_user_function(
+    ctx: &mut EvalContext,
+    name: &str,
+    params: &[String],
+    body: &IRNode,
+    args: Vec<IRNode>,
+) -> Result<IRNode, EvalError> {
+    if params.len() != args.len() {
+        return Err(EvalError::new(format!(
+            "`{name}` expects {} argument(s), got {}",
+            params.len(),
+            args.len()
+        )));
     }
-    Ok(eval_expr(ctx, atom_node)?.node)
+
+    ctx.call_depth += 1;
+    if ctx.call_depth > MAX_CALL_DEPTH {
+        ctx.call_depth -= 1;
+        return Err(EvalError::new(format!(
+            "recursion too deep calling `{name}`: exceeded {MAX_CALL_DEPTH} nested function calls"
+        )));
+    }
+
+    let mapping: std::collections::HashMap<String, IRNode> =
+        params.iter().cloned().zip(args).collect();
+    let substituted = symbolic_vm::vm::substitute(body.clone(), &mapping);
+    let result = eval_ir(ctx, &substituted);
+
+    ctx.call_depth -= 1;
+    result
+}
+
+/// Evaluate an already-lowered, pure [`IRNode`] tree (a substituted function
+/// body) -- the counterpart to [`eval_expr`] for the one place this crate
+/// evaluates `IRNode` directly rather than a `GrammarASTNode`.
+///
+/// Walks the **entire** tree itself (rather than handing it to
+/// [`symbolic_vm::VM::eval`] in one shot) specifically so that a call to a
+/// registered user function *at any position* inside the body -- an `if`
+/// branch, an arithmetic operand, a list element -- is intercepted by this
+/// same [`call_user_function`] depth-guarded path, not silently handed off
+/// to the shared VM's own uncapped recursion. `If` is special-cased so only
+/// the taken branch is evaluated (mirroring the shared VM's own held-head
+/// treatment of `If`); every other head (arithmetic, comparison, `List`, an
+/// unregistered/free call) has its arguments evaluated here first and is
+/// then delegated to `VM::eval` for the actual operation, exactly as
+/// `eval_expr`'s own arithmetic handling does.
+fn eval_ir(ctx: &mut EvalContext, node: &IRNode) -> Result<IRNode, EvalError> {
+    match node {
+        IRNode::Apply(app) => {
+            if let IRNode::Symbol(name) = &app.head {
+                if let Some((params, body)) = ctx.functions.get(name).cloned() {
+                    let mut arg_values = Vec::with_capacity(app.args.len());
+                    for a in &app.args {
+                        arg_values.push(eval_ir(ctx, a)?);
+                    }
+                    return call_user_function(ctx, name, &params, &body, arg_values);
+                }
+                if name == symbolic_ir::IF {
+                    if app.args.len() != 3 {
+                        return Err(EvalError::new("malformed `if` node"));
+                    }
+                    let predicate = eval_ir(ctx, &app.args[0])?;
+                    return match &predicate {
+                        IRNode::Symbol(s) if s == "True" => eval_ir(ctx, &app.args[1]),
+                        IRNode::Symbol(s) if s == "False" => eval_ir(ctx, &app.args[2]),
+                        other => Err(EvalError::new(format!(
+                            "`if` predicate must evaluate to Boolean, got: {}",
+                            print_axiom(other)
+                        ))),
+                    };
+                }
+            }
+            let mut args = Vec::with_capacity(app.args.len());
+            for a in &app.args {
+                args.push(eval_ir(ctx, a)?);
+            }
+            Ok(ctx.vm.eval(apply(app.head.clone(), args)))
+        }
+        other => Ok(ctx.vm.eval(other.clone())),
+    }
 }
 
 /// `call_args = LPAREN [ arglist ] RPAREN | atom`. Returns the argument

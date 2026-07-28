@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/axiom-runtime",
   "capabilities": [],
-  "justification": "Pure computation: parses Axiom source, evaluates arithmetic via symbolic-ir/symbolic-vm, and resolves `:`/`::`/`has` against a fixed, in-memory domain/category table. No filesystem, network, or process access. (A bounded worker thread with a large stack is spawned per evaluation to contain deep-recursion stack overflows; this is in-process compute, not OS-level process spawning.)"
+  "justification": "Pure computation: parses Axiom source, evaluates arithmetic via symbolic-ir/symbolic-vm, and resolves `:`/`::`/`has` against a fixed, in-memory domain/category table. No filesystem, network, or process access. (A bounded worker thread with a large stack is spawned per evaluation as defense-in-depth against a latent panic in the reused handler table; the actual guard against unbounded recursion through a self-recursive user-defined function is an explicit call-depth cap enforced by this crate's own evaluator (MAX_CALL_DEPTH), since a genuine native stack overflow is not itself catchable and a large stack alone would not prevent one. This is in-process compute, not OS-level process spawning.)"
 }
