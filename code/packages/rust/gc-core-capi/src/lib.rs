@@ -150,6 +150,49 @@ pub unsafe extern "C" fn __gc_register_kind(field_offsets: *const i64, count: i6
     with_heap(|h| h.register_kind(&offsets) as i64)
 }
 
+/// Register a **variable-length reference-array** kind and return the `kind` id (≥ 1) to pass
+/// to [`__gc_alloc_kind`]. An object of this kind is traced precisely as `fixed_count` reference
+/// fields (byte offsets at `fixed`, exactly like [`__gc_register_kind`]) **followed by a tail
+/// region**: every aligned 8-byte word in `[tail_from, size)` of the *instance's* payload is a
+/// reference. Because the tail's extent follows the instance's own allocation size, **one kind
+/// describes arrays of every length** — the layout a fixed offset list cannot express.
+///
+/// This is the C-ABI seam a native runtime / language frontend uses to make its arrays, vectors,
+/// lists, and hash backing stores — the dominant heap object of a real language — traced (and,
+/// under the compacting collector, **relocatable**) precisely rather than conservatively. A
+/// conservatively-traced array pins itself and every element it references, so nothing moves; a
+/// precise array and its elements are movable. See
+/// `code/specs/AOT00-T5-variable-length-ref-arrays.md`.
+///
+/// **Layout contract:** every word in `[tail_from, size)` must hold a *reference* (a base
+/// pointer, low-3 NaN-box tag permitted, or null) — never an inline non-pointer datum. A packed
+/// array of unboxed values must box them, pick a `tail_from` that excludes the non-reference
+/// region, or use `__gc_register_kind` / kind 0 instead. `tail_from` is rounded up to a multiple
+/// of 8 by the core so the tail scan stays aligned; a negative `tail_from` is treated as `0`
+/// (the whole payload after the fixed fields is the tail).
+///
+/// # Safety
+///
+/// `fixed` must point to `fixed_count` readable `int64` words (or be null with
+/// `fixed_count <= 0`). Negative fixed offsets are ignored. Standard C-array contract.
+#[no_mangle]
+pub unsafe extern "C" fn __gc_register_ref_array_kind(
+    fixed: *const i64,
+    fixed_count: i64,
+    tail_from: i64,
+) -> i64 {
+    let offsets: Vec<usize> = if fixed.is_null() || fixed_count <= 0 {
+        Vec::new()
+    } else {
+        // SAFETY: caller guarantees `fixed` covers `fixed_count` readable words.
+        let slice = std::slice::from_raw_parts(fixed, fixed_count as usize);
+        slice.iter().filter(|&&o| o >= 0).map(|&o| o as usize).collect()
+    };
+    // A negative tail start is nonsensical; treat it as 0 (trace the whole payload tail).
+    let tail = if tail_from < 0 { 0usize } else { tail_from as usize };
+    with_heap(|h| h.register_ref_array_kind(&offsets, tail) as i64)
+}
+
 /// **Generational write barrier.** The native runtime calls this whenever it
 /// stores a heap reference `child` into a field of heap object `parent` (both
 /// payload addresses). If `parent` is **old**, it is recorded so a later
@@ -596,6 +639,49 @@ mod tests {
         assert_eq!(__gc_live_bytes(), 16, "the container survives");
         // Container memory is still valid.
         assert_eq!(unsafe { *(container as *const i64) }, 0);
+
+        __gc_reset();
+    }
+
+    /// `__gc_register_ref_array_kind` + `__gc_alloc_kind` trace a **variable-length reference
+    /// array** through the C ABI: every word of the tail region is followed, so an element is
+    /// retained while it is referenced and reclaimed once its only slot is cleared — and one kind
+    /// serves arrays of different lengths.
+    #[test]
+    fn c_abi_register_ref_array_kind_traces_tail() {
+        let _guard = TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+
+        // A pure reference array: no fixed fields, tail from offset 0 (every word is a ref).
+        let arr_kind = unsafe { __gc_register_ref_array_kind(std::ptr::null(), 0, 0) };
+        assert!(arr_kind >= 1, "kind ids are 1-based");
+
+        // A length-2 array [elem, <cleared>] and a length-3 array — same kind, different sizes.
+        let elem = __gc_alloc(16);
+        let arr2 = __gc_alloc_kind(16, arr_kind as u16);
+        let arr3 = __gc_alloc_kind(24, arr_kind as u16); // same kind, longer instance
+        assert!(elem != 0 && arr2 != 0 && arr3 != 0);
+        unsafe {
+            *(arr2 as *mut i64) = elem; // arr2[0] = elem (a real reference in the tail)
+            *((arr2 as usize + 8) as *mut i64) = 0; // arr2[1] = null
+            *(arr3 as *mut i64) = 0;
+            *((arr3 as usize + 8) as *mut i64) = 0;
+            *((arr3 as usize + 16) as *mut i64) = 0; // arr3 all-null (its 3-slot tail is scanned)
+        }
+
+        // Root both arrays: `elem` is reachable via arr2's tail → nothing freed. Live bytes =
+        // elem(16) + arr2(16) + arr3(24) = 56.
+        let roots = [arr2, arr3];
+        let freed = unsafe { __gc_collect_roots(roots.as_ptr(), 2) };
+        assert_eq!(freed, 0, "the element is retained via the array's reference tail");
+        assert_eq!(__gc_live_bytes(), 56, "elem + both arrays survive");
+
+        // Clear arr2[0] and collect again: `elem` is now unreferenced → reclaimed, proving the
+        // tail slot (not some other path) was what kept it alive.
+        unsafe { *(arr2 as *mut i64) = 0 };
+        let freed2 = unsafe { __gc_collect_roots(roots.as_ptr(), 2) };
+        assert_eq!(freed2, 1, "clearing the tail slot reclaims the element");
+        assert_eq!(__gc_live_bytes(), 40, "only the two arrays remain (16 + 24)");
 
         __gc_reset();
     }

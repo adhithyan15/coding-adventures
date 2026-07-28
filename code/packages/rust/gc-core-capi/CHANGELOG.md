@@ -2,6 +2,24 @@
 
 All notable changes to this crate are documented here.
 
+## 0.19.0 - 2026-07-28 — C ABI `__gc_register_ref_array_kind` — PR-3 (AOT00-T5)
+
+- **`__gc_register_ref_array_kind(fixed, fixed_count, tail_from) -> kind_id`** (new `#[no_mangle]`
+  export + `gc_core.h` declaration) — the C-ABI seam for `gc_core::FlatHeap::register_ref_array_kind`
+  (gc-core 0.23.0). Registers a **variable-length reference-array** kind: `fixed_count` fixed
+  ref-field offsets followed by a tail region where every aligned 8-byte word in `[tail_from, size)`
+  of an instance is a reference. One kind describes arrays of every length (the tail follows the
+  instance's alloc size), so a native runtime's JS/Ruby/Python array, vector, or hash backing store
+  is traced — and under the compacting collector **relocated** — precisely instead of conservatively
+  (a conservative array pins itself and every element it references, defeating compaction). Mirrors
+  `__gc_register_kind`: `fixed` null / `fixed_count <= 0` ⇒ tail-only; negative fixed offsets are
+  ignored; a negative `tail_from` is treated as `0`. Layout contract (documented): every word in
+  the tail must be a reference (base/tagged-base or null).
+- **Test:** `c_abi_register_ref_array_kind_traces_tail` — one kind serves a length-2 and a length-3
+  array; an element is retained via a tail slot and reclaimed once that slot is cleared (proving the
+  tail, not another path, kept it alive).
+- PR-3 of 4 (AOT00-T5 §7); PR-4 wires the native backend + an end-to-end relocation differential.
+
 ## 0.18.0 - 2026-07-27 — twig-compat aliases `__twig_gc_collect_incremental_*` (frontend incremental GC)
 
 - **`__twig_gc_collect_incremental_{start,step,finish}`** (new `twig_compat` aliases →
