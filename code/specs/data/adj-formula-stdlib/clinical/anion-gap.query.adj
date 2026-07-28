@@ -1,0 +1,35 @@
+% ============================================================================
+% anion-gap.query.adj — worked examples over the clinical anion-gap library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER an anion-gap question: it
+% states NO arithmetic and NO definition — it only `import`s the grounded library,
+% `observe`s the electrolytes it decomposed from the prompt (each a byte-provenanced span,
+% elided here), and asks the engine to APPLY the cited definition. The native adj-lang
+% engine binds the parameters, computes each value EXACTLY on the CPU, and returns it with
+% the definition's source/locator/trust.
+%
+% The three questions INVERT: a comprehensive metabolic panel with Na 140, K 5, Cl 100,
+% HCO3 25 mEq/L has an anion gap of (140 + 5) − (100 + 25) = 20 mEq/L; that 20 mEq/L anion
+% gap with the same K, Cl and HCO3 is exactly what the sodium formula recovers the 140
+% mEq/L sodium from, and that 20 mEq/L anion gap with the same Na, K and Cl is exactly
+% what the bicarbonate formula recovers the 25 mEq/L bicarbonate from.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli anion-gap.query.adj
+% ============================================================================
+
+import "anion-gap.adj"
+
+% Na 140, K 5, Cl 100, HCO3 25 mEq/L: anion gap = (140 + 5) − (100 + 25).
+observe sodium(140)
+observe potassium(5)
+observe chloride(100)
+observe bicarbonate(25)
+? anion_gap(sodium, potassium, chloride, bicarbonate)     % expect 20   (definition: AG = (Na + K) − (Cl + HCO3))
+
+% That 20 mEq/L anion gap with the same K, Cl and HCO3: sodium = 20 + 100 + 25 − 5.
+observe anion_gap(20)
+? sodium(anion_gap, potassium, chloride, bicarbonate)      % expect 140  (same definition, solved for Na = AG + Cl + HCO3 − K)
+
+% That 20 mEq/L anion gap with the same Na, K and Cl: bicarbonate = 140 + 5 − 100 − 20.
+? bicarbonate(sodium, potassium, chloride, anion_gap)      % expect 25   (same definition, solved for HCO3 = Na + K − Cl − AG)
