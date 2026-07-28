@@ -1630,6 +1630,13 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             // Round half away from zero (SQLite semantics), to `digits` decimal places.
             let factor = 10_f64.powi(digits);
             let rounded = (x * factor).round() / factor;
+            // Normalize negative zero to positive zero: Rust's `f64::round` yields
+            // `-0.0` for a value that rounds to zero from below (`round(-0.4)` →
+            // `-0.0`), but SQLite's `round()` always reports a zero result as
+            // `0.0`. `-0.0 == 0.0` is true, so this maps `-0.0` → `+0.0` and leaves
+            // every non-zero result untouched. (A bare `-0.0` literal elsewhere in
+            // the engine still keeps its sign — this is round()-specific.)
+            let rounded = if rounded == 0.0 { 0.0 } else { rounded };
             Ok(SqlValue::Float(rounded))
         }
 

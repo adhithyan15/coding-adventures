@@ -2309,6 +2309,20 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT total(v), sum(v) FROM t",
     },
+    // `round()` reports a zero result as POSITIVE zero, matching SQLite:
+    // `round(-0.4)` and `round(-0.0)` are `0.0`, not `-0.0` (Rust's `f64::round`
+    // returns `-0.0` for a value rounding to zero from below). A non-zero result
+    // keeps its sign (`round(-0.5)` = `-1.0`), and rounding to N places behaves
+    // the same (`round(-0.004, 2)` = `0.0`). `Real(0.0)` vs `Real(-0.0)` is caught
+    // by the oracle's value comparison — the two are not bit-equal.
+    // (Aliased so the column names match trivially — an un-aliased `round(-0.4)`
+    // is named `?` here because the negative-literal argument has no rendered
+    // label; that naming gap is orthogonal. What we assert is the VALUE.)
+    Case {
+        id: "round_negative_zero_is_positive",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT round(-0.4) AS a, round(-0.0) AS b, round(-0.5) AS c, round(-0.004, 2) AS d FROM t",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
