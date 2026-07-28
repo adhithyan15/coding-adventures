@@ -1,0 +1,22 @@
+% ============================================================================
+% exposure-conversions.query.adj — worked lookup over the exposure table.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to convert an exposure given in the
+% traditional unit (the roentgen) into the SI coherent unit (the coulomb per kilogram): it
+% states NO arithmetic — it `import`s the grounded table and asks the exact lookup. The engine
+% answers by ordinary SLD binding against the table's rows, returning the factor WITH the
+% table's NIST citation as its proof, on the CPU, with zero model calls.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli exposure-conversions.query.adj
+% ============================================================================
+
+import "exposure-conversions.adj"
+
+% The exact defined factor: one roentgen IS exactly 2.58 x 10^-4 coulomb per kilogram.
+? exposure_to_coulomb_per_kilogram(roentgen, $ckg)   % expect 0.000258  (NIST SP 811 B.9, EXACT by definition)
+
+% The "rad" is an ABSORBED-DOSE unit (it converts to the gray, not the coulomb per kilogram —
+% see absorbed-dose-conversions.adj), a DIFFERENT radiological quantity, so this exposure
+% table has no row for it and the engine ABSTAINS rather than mis-converting it.
+? exposure_to_coulomb_per_kilogram(rad, $ckg)        % expect abstention (rad is absorbed dose, not exposure)
