@@ -113,14 +113,19 @@ closure` into an explicit table (`_sir_def_method`), and `__method__` dispatches
 via `_sir_call_method` (resolve `(recv's class, method)`, apply the closure; miss
 → `NoMethodError`).  Dispatch is an explicit data lookup — **never reflection** on
 a source string — so it is anti-RCE by construction; a dispatch to an
-un-registered (built-in) method is rejected cleanly (the Collections batch).
+un-registered (built-in) method is rejected cleanly (the Collections batch).  And
+**slice 3** — `InstanceVars`: `@v = x` / `@v` (`Scope::Instance`) →
+`_sir_ivar_set` / `_sir_ivar_get` on the receiver's lazily-allocated `@name →
+value` map (an unset `@v` reads nil), and a bare `self` → `_sir_self()`.  The
+receiver is carried across the hoisted method body in `_sir_current_self` (saved
+and restored by `_sir_call_method`; an enclosing `begin`/`rescue` restores it on
+the unwind path).  The `@`-name is a quoted C string literal (no injection).
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
-`Intrinsics`, `NDArrays`, the rest of OOP (instance methods, `@ivars`,
-`@@class vars`, inheritance dispatch, class methods, modules — later mirror
-slices, so `__new__` with constructor args, `__def_method__`/`__method__`, a
-`class << self` singleton, and `@`/`@@` scopes are all refused for now), and
-every other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
+`Intrinsics`, `NDArrays`, the rest of OOP (`@@class vars`, inheritance dispatch,
+class methods, modules — later mirror slices, so `__new__` with constructor
+args, a `class << self` singleton, `super`, and the `@@` scope are all refused
+for now), and every other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
 until a bignum runtime ships — a module needing arbitrary precision is refused,
 never silently truncated.
 

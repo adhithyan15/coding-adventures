@@ -166,6 +166,14 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // unaccepted features — `@ivars`/`@@cvars`/inheritance-dispatch/modules.
     Feature::Classes,
     Feature::Constants,
+    // ── OOP mirror, slice 3: instance variables (`@x`) + `self` ──────────
+    // `Feature::InstanceVars` — `@v = x` / `@v` (`Scope::Instance`).  A method
+    // body runs in a hoisted function, so `@v` routes through
+    // `_sir_ivar_get`/`_sir_ivar_set` on `_sir_current_self` (the receiver the
+    // dispatch bound), and `__self__` renders `_sir_self()`.  The `@`-name is a
+    // quoted C string literal (no injection).  `@@class` variables are the
+    // separate `Feature::ClassVars`, still rejected.
+    Feature::InstanceVars,
 ];
 
 impl Backend for CBackend {

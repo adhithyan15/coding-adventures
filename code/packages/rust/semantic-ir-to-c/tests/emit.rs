@@ -158,6 +158,42 @@ fn builtin_method_dispatch_is_rejected() {
 }
 
 #[test]
+fn instance_vars_route_through_ivar_helpers() {
+    // OOP slice 3: `@v = v` is a `Scope::Instance` Assign → `_sir_ivar_set`, and
+    // `@v` a `Scope::Instance` VarRef → `_sir_ivar_get`.  The `@`-name is a QUOTED
+    // C string literal (no name injection), and the runtime carries the helpers.
+    let m = lower_ruby("class Box\n  def set(v)\n    @v = v\n  end\n  def get\n    @v\n  end\nend");
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_ivar_set(\"@v\","),
+        "an `@v =` write calls the setter with the quoted `@`-name\n{src}"
+    );
+    assert!(
+        src.contains("_sir_ivar_get(\"@v\")"),
+        "an `@v` read calls the getter with the quoted `@`-name\n{src}"
+    );
+    // The runtime defines the helpers + the current-self machinery they read.
+    assert!(src.contains("_sir_ivar_get"), "runtime declares the getter");
+    assert!(src.contains("_sir_ivar_set"), "runtime declares the setter");
+    assert!(
+        src.contains("_sir_current_self"),
+        "dispatch binds the receiver into `_sir_current_self`\n{src}"
+    );
+}
+
+#[test]
+fn explicit_self_renders_as_sir_self() {
+    // A bare `self` (`__self__`) renders as the `_sir_self()` accessor, so a method
+    // can return the receiver for chaining.
+    let m = lower_ruby("class Widget\n  def me\n    self\n  end\nend");
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_self()"),
+        "`self` lowers to the `_sir_self()` accessor\n{src}"
+    );
+}
+
+#[test]
 fn sanitize_ident_maps_into_c() {
     assert_eq!(sanitize_ident("foo"), "foo");
     assert_eq!(sanitize_ident("foo_bar1"), "foo_bar1");
