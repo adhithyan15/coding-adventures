@@ -591,6 +591,8 @@ fn mosfet_source_resistance_emits_thermal_noise() {
         MosfetType::Nmos,
         MosfetLevel1Params {
             source_resistance: 250.0,
+            sheet_resistance: 100.0,
+            source_squares: 10.0,
             ..MosfetLevel1Params::default()
         },
     )));
@@ -630,12 +632,13 @@ fn mosfet_sheet_resistance_emits_both_terminal_noise_sources() {
         MosfetLevel1Params {
             sheet_resistance: 250.0,
             drain_squares: 2.0,
+            source_squares: 3.0,
             ..MosfetLevel1Params::default()
         },
     )));
 
     let result = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap();
-    for (name, resistance) in [("M1:RD", 500.0), ("M1:RS", 250.0)] {
+    for (name, resistance) in [("M1:RD", 500.0), ("M1:RS", 750.0)] {
         let entry = result.points[0]
             .entries
             .iter()

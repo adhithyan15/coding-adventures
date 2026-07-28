@@ -1362,7 +1362,7 @@ fn parses_mosfet_models_into_operating_point_circuits() {
 .model nch NMOS(VTO=0.45 KP=250u LAMBDA=0.02 GAMMA=0.3 PHI=0.8 W=2u L=180n RSH=250 NSUB=1.5 TNOM=300 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p)
 Vdd vdd 0 DC 5
 Vgate gate 0 DC 2.5
-M1 vdd gate out 0 nch W=4u L=200n NRD=2
+M1 vdd gate out 0 nch W=4u L=200n NRD=2 NRS=3
 Rload out 0 1k
 .op
 "#,
@@ -1394,6 +1394,7 @@ Rload out 0 1k
     assert_close(mosfet.params.l, 200.0e-9);
     assert_close(mosfet.params.sheet_resistance, 250.0);
     assert_close(mosfet.params.drain_squares, 2.0);
+    assert_close(mosfet.params.source_squares, 3.0);
     assert_close(mosfet.params.n_sub, 1.5);
     assert_close(mosfet.params.t_nom, 300.0);
     assert_close(mosfet.params.gate_source_overlap_capacitance, 3.0e-12);

@@ -9089,6 +9089,7 @@ def _mosfet_source_resistance(el: Mosfet) -> float:
         source_resistance
         if source_resistance > 0.0
         else float(getattr(params, "RSH", 0.0))
+        * float(getattr(params, "NRS", 1.0))
     )
 
 

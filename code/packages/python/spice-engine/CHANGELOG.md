@@ -1,5 +1,8 @@
 # Changelog
 
+- Add the Level-1 MOS `NRS` instance parameter. It defaults to one and scales
+  the `RSH` source fallback while preserving explicit positive `RS` precedence,
+  intrinsic-node stamping, and `:RS` Johnson noise.
 - Add the Level-1 MOS `NRD` instance parameter. It defaults to one and scales
   the `RSH` drain fallback while preserving explicit positive `RD` precedence,
   intrinsic-node stamping, and `:RD` Johnson noise.

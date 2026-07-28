@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Parse Level-1 MOS instance `NRS=<squares>` into the engine parameter bundle
+  so netlist-driven source resistance uses `RSH * NRS`.
 - Parse Level-1 MOS model `RSH` and instance `NRD=<squares>` into the engine
   parameter bundle so netlist-driven drain resistance uses `RSH * NRD`.
 - Add Berkeley SPICE app-deck shell dashboard dispatch queue lane tab panel

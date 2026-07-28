@@ -1902,6 +1902,9 @@ fn build_mosfet_params(
     if let Some(value) = instance_params.get("NRD") {
         params.drain_squares = *value;
     }
+    if let Some(value) = instance_params.get("NRS") {
+        params.source_squares = *value;
+    }
     params
 }
 

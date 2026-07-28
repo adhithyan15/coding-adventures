@@ -16,6 +16,7 @@ fn test_default_params() {
     assert!((p.l - 130e-9).abs() < 1e-15);
     assert_eq!(p.ld, 0.0);
     assert_eq!(p.nrd, 1.0);
+    assert_eq!(p.nrs, 1.0);
     assert_eq!(p.kf, 0.0);
     assert_eq!(p.af, 1.0);
     assert!(p.subthreshold_enable);
@@ -216,6 +217,21 @@ fn test_drain_squares_rejects_negative_value() {
     let _ = evaluate_level1(
         &Level1Params {
             nrd: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET NRS must be finite and non-negative")]
+fn test_source_squares_rejects_negative_value() {
+    let _ = evaluate_level1(
+        &Level1Params {
+            nrs: -1.0,
             ..Level1Params::default()
         },
         1.8,
