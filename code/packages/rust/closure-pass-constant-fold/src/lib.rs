@@ -2807,6 +2807,58 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                     }
                 }
 
+                // ---- Math.fround(n) → n, ONLY at a float32 fixed point ----
+                //
+                // `Math.fround(x)` (ECMAScript §21.3.2.19) rounds `x` to the
+                // nearest IEEE-754 *single-precision* (float32) value, then widens
+                // back to a double. That is EXACTLY Rust's `x as f32 as f64`, so
+                // the round-trip is bit-for-bit reproducible with no `powf`-style
+                // last-ULP hazard.
+                //
+                // The reference compiler folds `Math.fround(x)` ONLY when `x` is
+                // already an exact float32 — i.e. a *fixed point* of the round
+                // trip, where `fround(x) === x` and the fold changes nothing:
+                //
+                //   Math.fround(1.5)      → 1.5     (1.5 is exactly a float32)
+                //   Math.fround(-2.5)     → -2.5
+                //   Math.fround(0)        → 0
+                //   Math.fround(1.1)      → Math.fround(1.1)   (1.1 rounds — DECLINED)
+                //   Math.fround(16777217) → Math.fround(16777217)  (2^24+1 rounds)
+                //
+                // When `fround(x) !== x` the reference LEAVES the call intact (the
+                // rounded constant is no shorter and would change the printed
+                // value), so we mirror that by folding only the fixed point and
+                // declining everything else. The gate `x as f32 as f64 == x`
+                // captures exactly the exact-float32 doubles.
+                //
+                // Scope guards (each keeps us strictly inside the reference's
+                // behaviour and away from unspellable tokens):
+                //   * bare-global `Math.fround` callee, exactly ONE argument, and
+                //     that argument is a NUMERIC LITERAL (no ToNumber side effect);
+                //   * `x.is_finite()` — `NaN`/`Infinity` are identifiers, never
+                //     numeric literals, so they cannot reach here from source; the
+                //     guard is defense-in-depth against a pre-folded infinity;
+                //   * a `-0` fixed point is DECLINED (`-0` has no numeric-literal
+                //     token; declining is always safe), mirroring the negative-zero
+                //     care in the Math.abs/floor block above.
+                if obj.name == "Math"
+                    && prop.name == "fround"
+                    && arguments.len() == 1
+                {
+                    if let Expression::NumericLiteral(n) = &arguments[0] {
+                        let x = n.value;
+                        let is_float32_fixed_point = x.is_finite() && (x as f32 as f64) == x;
+                        let neg_zero = x == 0.0 && x.is_sign_negative();
+                        if is_float32_fixed_point && !neg_zero {
+                            let parent = c.cv.clone();
+                            let before = format!("Math.fround({x})");
+                            let after = format_js_number(x);
+                            let new_cv = st.fork_cv(&parent, &before, &after);
+                            return stamp_literal_cv(FoldedLiteral::Number(x), new_cv);
+                        }
+                    }
+                }
+
                 // ---- Object.fromEntries([[k, v], …]) → object literal ----
                 //
                 // `Object.fromEntries` (ECMAScript §20.1.2.7) is the inverse of
@@ -12791,6 +12843,51 @@ mod tests {
             assert!(!changed, "a -0 result must not fold (no -0 literal spelling)");
             assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
         }
+    }
+
+    #[test]
+    fn fold_math_fround_fixed_point() {
+        // Math.fround folds ONLY at a float32 fixed point (fround(x) === x), and
+        // then leaves the value unchanged. Every dyadic rational with a small
+        // enough denominator and exponent is exactly representable in float32.
+        assert_eq!(folded_number(math_call("fround", vec![num(1.5, None)])), 1.5);
+        assert_eq!(folded_number(math_call("fround", vec![num(-2.5, None)])), -2.5);
+        assert_eq!(folded_number(math_call("fround", vec![num(0.0, None)])), 0.0);
+        assert_eq!(folded_number(math_call("fround", vec![num(0.5, None)])), 0.5);
+        assert_eq!(folded_number(math_call("fround", vec![num(0.25, None)])), 0.25);
+        // Any integer up to 2^24 is exactly a float32.
+        assert_eq!(
+            folded_number(math_call("fround", vec![num(16777216.0, None)])),
+            16777216.0
+        );
+    }
+
+    #[test]
+    fn fold_math_fround_declines_non_float32() {
+        // A double that is NOT already a float32 would be CHANGED by fround, so
+        // the reference (and we) leave the call intact.
+        let cases = [
+            math_call("fround", vec![num(1.1, None)]),        // rounds
+            math_call("fround", vec![num(0.1, None)]),        // rounds
+            math_call("fround", vec![num(16777217.0, None)]), // 2^24+1, rounds
+        ];
+        for c in cases {
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "a non-float32 double must not fold via fround");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn fold_math_fround_declines_negative_zero() {
+        // fround(-0) === -0, but -0 has no numeric-literal spelling, so decline
+        // (matching the Math.abs/floor negative-zero policy). `-0` also cannot
+        // reach here from source — it parses as unary minus on `0` — so this
+        // guards only a hypothetically pre-folded -0 literal.
+        let c = math_call("fround", vec![num(-0.0, None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "a -0 fround fixed point must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
     #[test]
