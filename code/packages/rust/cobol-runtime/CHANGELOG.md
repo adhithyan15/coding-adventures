@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.57.0 — STRING … ON OVERFLOW / NOT ON OVERFLOW
+
+- `STRING s1 s2 … DELIMITED BY {SIZE | delim} INTO t [WITH POINTER p] [ON OVERFLOW imp…] [NOT ON
+  OVERFLOW imp…]` — the two optional overflow imperatives are now MODELLED (previously rejected
+  at read time: "STRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung"). No grammar change was
+  needed — the grammar already parses `[ "ON" "OVERFLOW" { statement } ]` and `[ "NOT" "ON"
+  "OVERFLOW" { statement } ]` as inline optional sequences.
+- The `overflow` condition is defined exactly as ISO requires — the receiver filled before every
+  sending character was transferred (characters dropped), OR the initial `WITH POINTER` value is
+  out of range:
+  - **No `WITH POINTER`:** `overflow = concat_len > size`. (`concat_len == size` fills the
+    receiver exactly, dropping nothing, so it is NOT overflow.)
+  - **`WITH POINTER p`, p in range (`1 ≤ p ≤ size`):** `start = p−1`, `avail = size − start`,
+    `overflow = concat_len > avail`.
+  - **`WITH POINTER p`, p out of range (`p == 0 || p > size`):** `overflow = true`, with NO data
+    movement and the pointer left UNCHANGED (as before).
+- After the (unchanged) data movement, `exec_string` runs the `ON OVERFLOW` statement list when
+  `overflow` is true, else the `NOT ON OVERFLOW` list, via the same `run_stmts` path `COMPUTE …
+  ON SIZE ERROR` uses. Either list may be empty (clause absent) — `run_stmts` returns
+  `Flow::Normal`. A `STOP RUN` / `GO TO` inside the chosen imperative propagates its `Flow` up to
+  unwind the enclosing paragraph, so `exec_string` now returns `Result<Flow, RuntimeError>`.
+- **Behaviour change:** the out-of-range `WITH POINTER` case previously returned with no
+  imperative; it now runs the `ON OVERFLOW` list (still no data movement / pointer write-back).
+
 ## 0.56.0 — STRING … WITH POINTER
 
 - `STRING s1 s2 … DELIMITED BY {SIZE | delim} INTO t WITH POINTER p` — the optional `WITH

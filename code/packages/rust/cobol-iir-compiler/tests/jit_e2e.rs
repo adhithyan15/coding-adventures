@@ -2873,18 +2873,27 @@ fn string_delim_non_ascii_literal_sending_field_is_a_later_rung() {
 }
 
 #[test]
-fn string_delim_on_overflow_is_a_later_rung() {
-    // ON OVERFLOW over a delimited STRING remains a later rung on both engines.
-    let src = wrap(
-        &["01  A  PIC X(5) VALUE \"ab,cd\".", "01  T  PIC X(2) VALUE SPACES."],
+fn string_delim_no_overflow_runs_not_clause() {
+    // A delimited STRING whose delimited concatenation FITS ⇒ no overflow, so the
+    // NOT ON OVERFLOW body runs. Each field's prefix (up to ",") is "ab" then "cd" =
+    // "abcd" (4) into a 6-wide receiver — fits, tail preserved. Both engines agree.
+    let out = assert_matches_oracle(&wrap(
         &[
-            "STRING A DELIMITED BY \",\" INTO T",
-            "    ON OVERFLOW DISPLAY \"O\" END-STRING.",
+            "01  A  PIC X(5) VALUE \"ab,zz\".",
+            "01  B  PIC X(5) VALUE \"cd,zz\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A B DELIMITED BY \",\" INTO T",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY F.",
             "STOP RUN.",
         ],
-    );
-    assert!(run_cobol(&src).is_err(), "oracle must reject ON OVERFLOW");
-    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject ON OVERFLOW");
+    ));
+    assert_eq!(out, "abcd..\nNON\n");
 }
 
 // ---------------------------------------------------------------------------
@@ -3149,6 +3158,321 @@ fn string_pointer_non_numeric_is_a_later_rung() {
     );
     assert!(run_cobol(&src).is_err(), "oracle must reject a non-numeric pointer");
     assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a non-numeric pointer");
+}
+
+// ---------------------------------------------------------------------------
+// STRING … ON OVERFLOW / NOT ON OVERFLOW — run a nested imperative depending on
+// whether the STRING overflowed. Overflow = the receiver filled before every
+// sending character was transferred (chars dropped) OR the initial WITH POINTER
+// value was out of range. The overflow BOOLEAN is computed with the identical
+// comparison on both engines; each case pins the compiled JIT output (receiver +
+// a flag item the imperative writes) to the oracle byte-for-byte.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn string_overflow_fires_when_concat_longer_than_receiver() {
+    // (a) "abcd"+"efgh" = 8 chars into a 5-wide receiver: 3 chars dropped ⇒
+    // overflow. The ON OVERFLOW body writes the "YES" sentinel into F; the receiver
+    // holds the truncated head "abcde".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(4) VALUE \"abcd\".",
+            "01  B  PIC X(4) VALUE \"efgh\".",
+            "01  T  PIC X(5) VALUE \".....\".",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A B DELIMITED BY SIZE INTO T",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "abcde\nYES\n");
+}
+
+#[test]
+fn string_no_overflow_runs_not_on_overflow() {
+    // (b) "ab"+"cd" = 4 chars fit in a 5-wide receiver ⇒ NO overflow. The NOT ON
+    // OVERFLOW body runs, writing "NON"; the receiver keeps its untouched tail dot.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(2) VALUE \"ab\".",
+            "01  B  PIC X(2) VALUE \"cd\".",
+            "01  T  PIC X(5) VALUE \".....\".",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A B DELIMITED BY SIZE INTO T",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "abcd.\nNON\n");
+}
+
+#[test]
+fn string_exact_fit_is_not_overflow() {
+    // Boundary: concat length EQUALS the receiver width (nothing dropped) ⇒ NOT
+    // overflow, so the NOT ON OVERFLOW body runs. Pins `total == width` on the
+    // not-overflow side (the `>` vs `>=` boundary both engines must agree on).
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(5) VALUE \"abcde\".",
+            "01  T  PIC X(5) VALUE \".....\".",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "abcde\nNON\n");
+}
+
+#[test]
+fn string_on_overflow_only_present() {
+    // (c) ON OVERFLOW present, NOT ON OVERFLOW absent. Two sub-cases share the flag:
+    // when overflow fires the flag flips; when it does not, the flag is UNCHANGED
+    // (no NOT clause to run).
+    let fires = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(8) VALUE \"abcdefgh\".",
+            "01  T  PIC X(4) VALUE \"....\".",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T ON OVERFLOW MOVE \"YES\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(fires, "abcd\nYES\n");
+    let quiet = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(2) VALUE \"ab\".",
+            "01  T  PIC X(4) VALUE \"....\".",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T ON OVERFLOW MOVE \"YES\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    // No overflow and no NOT clause ⇒ F keeps its initial "no ".
+    assert_eq!(quiet, "ab..\nno \n");
+}
+
+#[test]
+fn string_not_on_overflow_only_present() {
+    // (d) NOT ON OVERFLOW present, ON OVERFLOW absent, content fits ⇒ the NOT body
+    // runs, writing "NON". The overflow-SKIPS-a-lone-NOT-clause path (jmp_if_false
+    // over an empty on-branch) is the SAME skeleton the both-clause tests above
+    // exercise. (Note: a bare trailing imperative is greedy — a following statement
+    // would fold into its `{ statement }` — so the observation stays inside the same
+    // sentence structure the passing both-clause cases use.)
+    let fits = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(2) VALUE \"ab\".",
+            "01  T  PIC X(4) VALUE \"....\".",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(fits, "ab..\nNON\n");
+}
+
+#[test]
+fn string_pointer_drop_fires_on_overflow() {
+    // (e) WITH POINTER where the pointer causes a drop. p = 4 into a 6-wide receiver
+    // leaves 3 chars of room (positions 3–5); "abcde" (5) drops 2 ⇒ overflow. The
+    // receiver becomes "...abc" (head dots preserved), p := 4 + 3 = 7 ("07"), and the
+    // ON OVERFLOW body writes "YES".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(5) VALUE \"abcde\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  P  PIC 9(2) VALUE 4.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "...abc\n07\nYES\n");
+}
+
+#[test]
+fn string_pointer_zero_out_of_range_fires_on_overflow() {
+    // (f) WITH POINTER out of range, p = 0. No data movement, pointer UNCHANGED, but
+    // ON OVERFLOW now runs (the behaviour change this rung introduces). Receiver keeps
+    // all its dots, P stays "00", F becomes "YES".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"abc\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  P  PIC 9(2) VALUE 0.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "......\n00\nYES\n");
+}
+
+#[test]
+fn string_pointer_past_end_out_of_range_fires_on_overflow() {
+    // (f cont.) WITH POINTER out of range, p > size. p = 9 into a 6-wide receiver:
+    // no movement, P unchanged ("09"), ON OVERFLOW runs ⇒ F = "YES".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"abc\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  P  PIC 9(2) VALUE 9.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "......\n09\nYES\n");
+}
+
+#[test]
+fn string_pointer_anchor_no_overflow_runs_not_clause() {
+    // (g) WITH POINTER p = 1 anchor, content fits ⇒ NO overflow, so the NOT ON
+    // OVERFLOW body runs. "ab" overlays at position 0 of a 5-wide receiver, tail
+    // preserved ("ab..."), p := 1 + 2 = 3 ("03"), F = "NON".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(2) VALUE \"ab\".",
+            "01  T  PIC X(5) VALUE \".....\".",
+            "01  P  PIC 9(2) VALUE 1.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ab...\n03\nNON\n");
+}
+
+#[test]
+fn string_on_overflow_body_propagates_control_flow() {
+    // (h) The ON OVERFLOW body contains a GO TO, proving the handler's `Flow` unwinds
+    // out of exec_string / the emitted block. Overflow fires, GO TO jumps to OVF,
+    // which DISPLAYs and stops — the "AFTER" line after STRING is never reached.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(8) VALUE \"abcdefgh\".",
+            "01  T  PIC X(4) VALUE \"....\".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T ON OVERFLOW GO TO OVF.",
+            "DISPLAY \"AFTER\".",
+            "STOP RUN.",
+            "OVF.",
+            "DISPLAY \"JUMPED\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "JUMPED\n");
+}
+
+#[test]
+fn string_not_on_overflow_body_propagates_control_flow() {
+    // (h cont.) A GO TO inside NOT ON OVERFLOW when the STRING fits — the not-overflow
+    // path must ALSO unwind its handler's `Flow`. "ab" fits, so NOT runs, jumps to OK.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \"ab\".", "01  T  PIC X(4) VALUE \"....\"."],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T NOT ON OVERFLOW GO TO OKAY.",
+            "DISPLAY \"AFTER\".",
+            "STOP RUN.",
+            "OKAY.",
+            "DISPLAY \"FITS\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "FITS\n");
+}
+
+#[test]
+fn string_with_no_overflow_clauses_still_works() {
+    // (i) A plain STRING with NEITHER clause lowers exactly as before this rung — no
+    // imperative, no branch skeleton. Regression anchor for the empty-clause path.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(3) VALUE \"abc\".", "01  T  PIC X(5) VALUE \".....\"."],
+        &["STRING A DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "abc..\n");
+}
+
+#[test]
+fn string_delim_overflow_fires_on_run_time_drop() {
+    // A DELIMITED-BY-delimiter STRING whose run-time concatenation overflows the
+    // receiver. Each field's prefix (up to ",") concatenates to "abXY" = 4 chars into
+    // a 3-wide receiver ⇒ overflow via the run-time `clen > W` test. F becomes "YES".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(4) VALUE \"ab,z\".",
+            "01  B  PIC X(4) VALUE \"XY,z\".",
+            "01  T  PIC X(3) VALUE \"...\".",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A B DELIMITED BY \",\" INTO T",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "abX\nYES\n");
 }
 
 // ---------------------------------------------------------------------------

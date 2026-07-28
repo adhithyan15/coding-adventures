@@ -443,21 +443,21 @@ things change, and the concatenation of the sending fields is UNCHANGED:
   both engines).
 - **Write-back.** After the operation `p` is set to `p + chars_placed`, the 1-based
   position one past the last character stored. When the content does not all fit
-  (`concat_len > size − (p−1)`) the excess is **dropped** — this is ISO's overflow,
-  and since `ON OVERFLOW` is still deferred no imperative runs — and `chars_placed =
-  size − (p−1)`, so `p` becomes `size + 1`. Worked: `"WXYZ"` into a 5-wide receiver
-  with `p = 3` → `"..WXY"` (the `Z` dropped), and `p` becomes 6.
+  (`concat_len > size − (p−1)`) the excess is **dropped** — this is ISO's overflow
+  (it now sets the overflow flag; see the `ON OVERFLOW` rung below) — and
+  `chars_placed = size − (p−1)`, so `p` becomes `size + 1`. Worked: `"WXYZ"` into a
+  5-wide receiver with `p = 3` → `"..WXY"` (the `Z` dropped), and `p` becomes 6.
 
 **Out-of-range initial pointer.** Because `p` is a **run-time** value, neither engine
 can range-check it at build time — the compiler emits a run-time `p < 1 || p > size`
 guard (jumping past the overlay and the write-back to a trailing `st_end` label), and
 the oracle returns early. When the initial `p` is outside `[1, size]` — either
 `p == 0` (a 0-based start of −1) or `p > size` (past the receiver end) — this is
-ISO's **overflow** condition. Since `ON OVERFLOW` is **still deferred**, both engines
-apply the ISO "overflow ⇒ data movement does not occur" rule DETERMINISTICALLY: **no
-character is transferred (receiver unchanged) and `p` is left unchanged**. Both
-engines produce byte-identical receiver AND final `p` for every initial value —
-fuzz-proven across `[0, size+2]`.
+ISO's **overflow** condition. Both engines apply the ISO "overflow ⇒ data movement
+does not occur" rule DETERMINISTICALLY: **no character is transferred (receiver
+unchanged) and `p` is left unchanged** — and, with the `ON OVERFLOW` rung below, the
+`ON OVERFLOW` imperative now runs. Both engines produce byte-identical receiver AND
+final `p` for every initial value — fuzz-proven across `[0, size+2]`.
 
 **Pointer picture validation** (co-total): `p` must be an unsigned integer `PIC
 9(n)`, `n ≤ 18` (the same class the `INSPECT` counter demands). A **signed** (`S9`),
@@ -466,10 +466,37 @@ fuzz-proven across `[0, size+2]`.
 validates the picture at build time, the oracle at exec time — with matching
 messages).
 
+**`ON OVERFLOW` / `NOT ON OVERFLOW` rung (now implemented).** `STRING s1 s2 …
+DELIMITED BY {SIZE | delim} INTO t [WITH POINTER p] [ON OVERFLOW imp…] [NOT ON
+OVERFLOW imp…]` — the two optional imperative statement lists now run conditionally,
+mirroring `ON SIZE ERROR` structurally. No grammar change was needed (the grammar
+already parses `[ "ON" "OVERFLOW" { statement } ]` and `[ "NOT" "ON" "OVERFLOW" {
+statement } ]` as inline optional sequences). The `overflow` boolean is defined
+exactly as ISO requires and computed with the **identical** comparison on both
+engines:
+
+- **No `WITH POINTER`:** `overflow = concat_len > size` (compile-time-known; the
+  compiler materialises it as a `const`). `concat_len == size` fills the receiver
+  exactly, dropping nothing, so it is NOT overflow.
+- **`WITH POINTER p`, in range:** `overflow = concat_len > avail` where `avail = size
+  − (p−1)` (a run-time drop test).
+- **`WITH POINTER p`, out of range** (`p == 0 || p > size`): `overflow = true`, with
+  no data movement / pointer write-back.
+
+After the (unchanged) data movement, the `ON OVERFLOW` imperative runs when `overflow`
+is true, else the `NOT ON OVERFLOW` imperative; either list may be empty (clause
+absent). The oracle runs the selected list through the same `run_stmts` path `COMPUTE
+… ON SIZE ERROR` uses (so a `STOP RUN`/`GO TO` inside propagates its `Flow`);
+`exec_string` now returns `Result<Flow, RuntimeError>`. The compiler splits the
+`statement` children at the `NOT` keyword (as the `IF` reader splits at `ELSE`) and
+emits the usual `jmp_if_false`/branch/`label` skeleton guarding on the `overflow`
+register. **Behaviour change:** the out-of-range `WITH POINTER` case previously
+returned with no imperative; it now runs `ON OVERFLOW`.
+
 Still deferred as clean "later rung" errors: a **multi-character** delimiter, a
-non-ASCII delimiter, a non-ASCII literal sending field under a delimiter, **per-field
-different delimiters**, and `ON`/`NOT ON OVERFLOW` (all still *accepted* by the
-grammar so the reader can reject them cleanly rather than as a parse failure).
+non-ASCII delimiter, a non-ASCII literal sending field under a delimiter, and
+**per-field different delimiters** (all still *accepted* by the grammar so the reader
+can reject them cleanly rather than as a parse failure).
 
 ### `UNSTRING` (first rung)
 
