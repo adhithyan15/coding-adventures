@@ -33,15 +33,14 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS source diffusion area.
+1. Cross-language Level-1 MOS drain diffusion perimeter.
    - Status: current PR completion candidate.
-   - Add the Berkeley Level-1 MOS `AS` instance parameter in Rust, Python, and
-     TypeScript, defaulting to zero.
-   - Use `CBS + CJ * AS` as the zero-bias source-body capacitance in AC and
-     transient analysis while preserving existing `PB`, `MJ`, and `FC`
-     depletion shaping.
-   - Preserve `AS` through hierarchy and cloning, enforce finite non-negative
-     validation, and parse it in the Rust netlist facade.
+   - Add the Berkeley Level-1 MOS `PD` instance parameter and model-card
+     `CJSW` in Rust, Python, and TypeScript, defaulting both to zero.
+   - Use `CBD + CJ * AD + CJSW * PD` as the zero-bias drain-body capacitance
+     in AC and transient analysis while preserving existing depletion shaping.
+   - Preserve `PD` / `CJSW` through hierarchy and cloning, enforce finite
+     non-negative validation, and parse both in the Rust netlist facade.
 
 ## Completed Slices
 
@@ -3492,6 +3491,15 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning preserve `AD` / `CJ`, finite non-negative
      validation is shared, the Rust netlist facade parses both, and the
      model-card coverage gate now covers 195 canonical rows.
+
+275. Cross-language Level-1 MOS source diffusion area.
+   - Status: completed in PR 9043.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `AS`,
+     defaulting to zero.
+   - `CBS + CJ * AS` supplies zero-bias source-body capacitance in AC and
+     transient analysis while preserving `PB`, `MJ`, and `FC` shaping.
+   - Hierarchy and cloning preserve `AS`, finite non-negative validation is
+     shared, and the Rust netlist facade parses it.
 
 ## Backlog
 

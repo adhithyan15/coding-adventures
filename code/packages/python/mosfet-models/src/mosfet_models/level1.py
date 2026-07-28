@@ -36,7 +36,9 @@ class Level1Params:
     NRS: float = 1.0  # number of source diffusion squares
     AD: float = 0.0  # drain diffusion area (m^2)
     AS: float = 0.0  # source diffusion area (m^2)
+    PD: float = 0.0  # drain diffusion perimeter (m)
     CJ: float = 0.0  # bottom junction capacitance per area (F/m^2)
+    CJSW: float = 0.0  # sidewall junction capacitance per perimeter (F/m)
     IS: float = 1e-15  # saturation current (A)
     N_SUB: float = 1.4  # subthreshold slope factor
     T_NOM: float = 300.15  # nominal temperature (K)
@@ -144,8 +146,12 @@ def evaluate_level1(
         raise ValueError("MOSFET AD must be finite and non-negative")
     if not isfinite(p.AS) or p.AS < 0.0:
         raise ValueError("MOSFET AS must be finite and non-negative")
+    if not isfinite(p.PD) or p.PD < 0.0:
+        raise ValueError("MOSFET PD must be finite and non-negative")
     if not isfinite(p.CJ) or p.CJ < 0.0:
         raise ValueError("MOSFET CJ must be finite and non-negative")
+    if not isfinite(p.CJSW) or p.CJSW < 0.0:
+        raise ValueError("MOSFET CJSW must be finite and non-negative")
     beta = p.KP * (p.W / effective_length)
 
     # Threshold with body effect. The formula is well-defined whenever
@@ -175,7 +181,7 @@ def evaluate_level1(
         p.FC,
     )
     Cbd_bulk = bulk_junction_capacitance(
-        p.CBD + p.CJ * p.AD,
+        p.CBD + p.CJ * p.AD + p.CJSW * p.PD,
         V_BS - V_DS,
         p.PB,
         p.MJ,

@@ -597,6 +597,29 @@ describe("acSweep", () => {
     expect(withAreaCapacitance).toBeLessThan(withoutAreaCapacitance / 100.0);
   });
 
+  it("scales MOSFET sidewall junction capacitance by drain perimeter", () => {
+    function drainAmplitude(sidewallCapacitance: number, drainPerimeter: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
+      circuit.add(resistor("Rin", "in", "drain", 1_000.0));
+      circuit.add(mosfet("M1", "drain", "0", "0", "0", "NMOS", {
+        KP: 1.0e-12,
+        W: 1.0,
+        L: 1.0,
+        TOX: 1.0e9,
+        CJSW: sidewallCapacitance,
+        PD: drainPerimeter,
+      }));
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("drain")!);
+    }
+
+    const withoutSidewallCapacitance = drainAmplitude(0.5, 0.0);
+    const withSidewallCapacitance = drainAmplitude(0.5, 2.0e-6);
+
+    expect(withoutSidewallCapacitance).toBeGreaterThan(0.9);
+    expect(withSidewallCapacitance).toBeLessThan(withoutSidewallCapacitance / 100.0);
+  });
+
   it("scales MOSFET bottom junction capacitance by source area", () => {
     function sourceAmplitude(bottomJunctionCapacitance: number, sourceArea: number): number {
       const circuit = new Circuit();

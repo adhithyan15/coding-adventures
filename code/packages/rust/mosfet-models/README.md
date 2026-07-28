@@ -8,8 +8,9 @@ This crate implements the classical square-law MOSFET model used in introductory
 
 - **`Level1Params`** — Level-1 geometry, DC, capacitance, temperature, and
   noise parameters, including zero-default `LD` lateral diffusion,
-  Berkeley-default `TOX` gate oxide thickness, drain diffusion area `AD`,
-  bottom-junction capacitance density `CJ`, `KF` flicker noise, and a
+  Berkeley-default `TOX` gate oxide thickness, drain diffusion area/perimeter
+  `AD` / `PD`, bottom/sidewall junction capacitance densities `CJ` / `CJSW`,
+  `KF` flicker noise, and a
   unit-default `AF` exponent.
 - **`evaluate_level1`** — core I-V evaluation returning `MosResult` with `Id`, `gm`, `gds`, `gmb`, gate/body capacitances, and the operating `Region`.
 - **`Region`** — `Cutoff`, `Subthreshold`, `Triode`, `Saturation`.
@@ -32,8 +33,9 @@ and must leave a positive effective channel length. `TOX` defaults to
 external drain, source, and sheet-resistance parameters for engine topology and
 default to zero ohms. `NRD` and `NRS` are finite, non-negative drain/source
 diffusion square counts and default to one.
-`AD`, `AS`, and `CJ` are finite, non-negative and default to zero. They add
-`CJ * AD` to drain-body `CBD` and `CJ * AS` to source-body `CBS`.
+`AD`, `AS`, `PD`, `CJ`, and `CJSW` are finite, non-negative and default to
+zero. They add `CJ * AD + CJSW * PD` to drain-body `CBD` and `CJ * AS` to
+source-body `CBS`.
 
 ## Usage
 

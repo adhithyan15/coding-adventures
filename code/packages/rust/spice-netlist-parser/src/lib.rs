@@ -1911,6 +1911,9 @@ fn build_mosfet_params(
     if let Some(value) = instance_params.get("AS") {
         params.source_area = *value;
     }
+    if let Some(value) = instance_params.get("PD") {
+        params.drain_perimeter = *value;
+    }
     params
 }
 
@@ -1933,6 +1936,7 @@ fn apply_mosfet_param(params: &mut MosfetLevel1Params, name: &str, value: f64) {
         "CBS" => params.source_bulk_capacitance = value,
         "CBD" => params.drain_bulk_capacitance = value,
         "CJ" => params.bottom_junction_capacitance = value,
+        "CJSW" => params.sidewall_junction_capacitance = value,
         _ => {}
     }
 }
