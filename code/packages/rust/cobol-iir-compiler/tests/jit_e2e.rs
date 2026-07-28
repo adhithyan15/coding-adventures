@@ -4896,6 +4896,24 @@ fn inspect_characters_alongside_for_all_leaves_the_all_path_unaffected() {
     assert_eq!(out, "003\n006\n");
 }
 
+#[test]
+fn inspect_characters_counts_bytes_not_codepoints_on_non_ascii_source() {
+    // `FOR CHARACTERS` returns a LENGTH, so it is the first tally form that would
+    // surface the oracle's `char` basis vs the compiler's BYTE basis directly. COBOL
+    // `PIC X` positions are BYTES, so both engines must count BYTES. `PIC X(5) VALUE
+    // "café"` right-pads the 4-character value to 5 CHARACTER positions — "café " (a
+    // trailing space) — whose BYTE length is 6 (é is a 2-byte UTF-8 sequence, the other
+    // four positions are one byte each). `assert_matches_oracle` asserts the two engines
+    // AGREE (it panics on any divergence), so this pins the byte-count fix: the oracle
+    // sums `len_utf8()` over the window to match the compiler's `str_len`, and both
+    // report 6 — a char-based count would have wrongly reported 5 on the oracle.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"café\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR CHARACTERS.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "06\n");
+}
+
 // INSPECT … TALLYING … FOR LEADING … {BEFORE|AFTER} x — the STANDALONE leading-run
 // count restricted to a `{BEFORE|AFTER}` sub-region. The crux of this rung: the
 // leading run is anchored at the WINDOW START, not source position 0. `FOR LEADING`

@@ -1215,14 +1215,26 @@ impl Machine {
         // LEADING half carrying a region at read time, so that combination never
         // reaches here.)
         // `FOR CHARACTERS` is the "count every position" form: it adds the NUMBER OF
-        // CHARACTER POSITIONS in the window — `window.len()` — regardless of content.
-        // With no region that is the full source length; with a `{BEFORE|AFTER} x`
-        // region it is `end - start` of the SAME window ALL/LEADING use, so it inherits
-        // the identical BEFORE→whole / AFTER→empty not-found asymmetry (a `BEFORE x`
-        // with `x` absent counts the whole string; an `AFTER x` with `x` absent counts
-        // 0, because the window is empty). No delimiter is matched.
+        // CHARACTER POSITIONS in the window, regardless of content. With no region that
+        // is the whole source; with a `{BEFORE|AFTER} x` region it is the `[start, end)`
+        // slice ALL/LEADING use, so it inherits the identical BEFORE→whole / AFTER→empty
+        // not-found asymmetry (a `BEFORE x` with `x` absent counts the whole string; an
+        // `AFTER x` with `x` absent counts 0, because the window is empty). No delimiter
+        // is matched.
+        //
+        // COUNT IN BYTES, NOT `char`s. COBOL `PIC X` positions are BYTES, and the
+        // `cobol-iir-compiler` measures the window with `str_len`/byte indices, so the
+        // count MUST be the window's BYTE length to stay byte-identical. For ASCII every
+        // char is one byte, so `sum(len_utf8) == window.len()` and nothing changes; a
+        // non-ASCII source (a degenerate input for single-byte COBOL) would otherwise
+        // diverge — the oracle would count code points while the compiler counts bytes.
+        // Summing `len_utf8()` over the SAME `[start, end)` window equals the compiler's
+        // `end - start` byte span because the two engines' region windows cover the same
+        // substring (a non-ASCII region *delimiter* stays the pre-existing byte-vs-char
+        // chip; here the delimiter, when present, is matched in char space and never
+        // reaches this branch).
         let count = match delim_ch {
-            None => window.len(),
+            None => window.iter().map(|c| c.len_utf8()).sum::<usize>(),
             Some(dch) if leading => window.iter().take_while(|&&c| c == dch).count(),
             Some(dch) => window.iter().filter(|&&c| c == dch).count(),
         };
