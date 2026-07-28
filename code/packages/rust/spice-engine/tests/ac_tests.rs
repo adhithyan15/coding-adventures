@@ -1397,6 +1397,47 @@ fn ac_mosfet_drain_area_scales_bottom_junction_capacitance() {
 }
 
 #[test]
+fn ac_mosfet_drain_perimeter_scales_sidewall_junction_capacitance() {
+    fn drain_amplitude(sidewall_capacitance: f64, drain_perimeter: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "drain", 1_000.0,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                kp: 1.0e-12,
+                w: 1.0,
+                l: 1.0,
+                oxide_thickness: 1.0e9,
+                drain_perimeter,
+                sidewall_junction_capacitance: sidewall_capacitance,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("drain")
+            .unwrap()
+            .abs()
+    }
+
+    let without_sidewall_capacitance = drain_amplitude(0.5, 0.0);
+    let with_sidewall_capacitance = drain_amplitude(0.5, 2.0e-6);
+
+    assert!(without_sidewall_capacitance > 0.9);
+    assert!(with_sidewall_capacitance < without_sidewall_capacitance / 100.0);
+}
+
+#[test]
 fn ac_mosfet_source_area_scales_bottom_junction_capacitance() {
     fn source_amplitude(bottom_junction_capacitance: f64, source_area: f64) -> f64 {
         let mut circuit = Circuit::new();

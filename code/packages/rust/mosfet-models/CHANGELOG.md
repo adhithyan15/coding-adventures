@@ -4,6 +4,9 @@
 
 ### Added
 
+- `Level1Params::pd` and `Level1Params::cjsw` add zero-default Berkeley drain
+  diffusion perimeter and sidewall capacitance density, contributing
+  `CJSW * PD` to the zero-bias drain-body capacitance.
 - `Level1Params::as_` adds the zero-default Berkeley source diffusion area,
   contributing `CJ * AS` to the zero-bias source-body capacitance.
 - `Level1Params::ad` and `Level1Params::cj` add zero-default Berkeley drain

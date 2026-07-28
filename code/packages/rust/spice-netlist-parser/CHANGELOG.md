@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Parse Level-1 MOS instance `PD=<perimeter>` and model-card
+  `CJSW=<capacitance/length>` into the engine parameter bundle for drain-body
+  sidewall capacitance.
 - Parse Level-1 MOS instance `AS=<area>` into the engine parameter bundle for
   source-body junction capacitance.
 - Parse Level-1 MOS instance `AD=<area>` and model-card `CJ=<capacitance/area>`

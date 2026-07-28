@@ -3616,7 +3616,9 @@ pub struct MosfetLevel1Params {
     pub source_squares: f64,
     pub drain_area: f64,
     pub source_area: f64,
+    pub drain_perimeter: f64,
     pub bottom_junction_capacitance: f64,
+    pub sidewall_junction_capacitance: f64,
     pub saturation_current: f64,
     pub n_sub: f64,
     pub t_nom: f64,
@@ -3651,7 +3653,9 @@ impl Default for MosfetLevel1Params {
             source_squares: 1.0,
             drain_area: 0.0,
             source_area: 0.0,
+            drain_perimeter: 0.0,
             bottom_junction_capacitance: 0.0,
+            sidewall_junction_capacitance: 0.0,
             saturation_current: 1.0e-15,
             n_sub: 1.4,
             t_nom: 300.15,
@@ -4008,8 +4012,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Pnp, 41, 58, 13, 4),
     (ModelCardKind::Njf, 22, 30, 7, 3),
     (ModelCardKind::Pjf, 22, 30, 7, 3),
-    (ModelCardKind::Nmos, 27, 34, 6, 3),
-    (ModelCardKind::Pmos, 27, 34, 6, 3),
+    (ModelCardKind::Nmos, 28, 35, 6, 3),
+    (ModelCardKind::Pmos, 28, 35, 6, 3),
 ];
 const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -4156,6 +4160,7 @@ const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("CBD", "CBD"),
     ("CJD", "CBD"),
     ("CJ", "CJ"),
+    ("CJSW", "CJSW"),
     ("PB", "PB"),
     ("MJ", "MJ"),
     ("FC", "FC"),
@@ -4961,6 +4966,9 @@ pub fn mosfet_from_model_card(
     }
     if let Some(value) = model.parameters.get("CJ") {
         params.bottom_junction_capacitance = *value;
+    }
+    if let Some(value) = model.parameters.get("CJSW") {
+        params.sidewall_junction_capacitance = *value;
     }
     if let Some(value) = model.parameters.get("PB") {
         params.bulk_junction_potential = *value;
@@ -24316,7 +24324,9 @@ fn evaluate_nmos_level1(
         params.forward_bias_depletion_coefficient,
     );
     let cbd_bulk = mosfet_bulk_junction_capacitance(
-        params.drain_bulk_capacitance + params.bottom_junction_capacitance * params.drain_area,
+        params.drain_bulk_capacitance
+            + params.bottom_junction_capacitance * params.drain_area
+            + params.sidewall_junction_capacitance * params.drain_perimeter,
         vbs - vds,
         params.bulk_junction_potential,
         params.bulk_junction_grading_coefficient,
@@ -25049,8 +25059,9 @@ fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec> {
     let gate_body_capacitance = params.gate_bulk_overlap_capacitance * params.l;
     let source_body_capacitance =
         params.source_bulk_capacitance + params.bottom_junction_capacitance * params.source_area;
-    let drain_body_capacitance =
-        params.drain_bulk_capacitance + params.bottom_junction_capacitance * params.drain_area;
+    let drain_body_capacitance = params.drain_bulk_capacitance
+        + params.bottom_junction_capacitance * params.drain_area
+        + params.sidewall_junction_capacitance * params.drain_perimeter;
     if gate_source_capacitance > 0.0 {
         specs.push(MosfetChargeStateSpec {
             name: mosfet_gate_source_charge_state_name(mosfet),
@@ -25683,7 +25694,9 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("NRS", params.source_squares),
         ("AD", params.drain_area),
         ("AS", params.source_area),
+        ("PD", params.drain_perimeter),
         ("CJ", params.bottom_junction_capacitance),
+        ("CJSW", params.sidewall_junction_capacitance),
         ("TOX", params.oxide_thickness),
         ("IS", params.saturation_current),
         ("N_SUB", params.n_sub),
@@ -25768,10 +25781,22 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
             reason: "MOSFET AS must be non-negative".to_string(),
         });
     }
+    if params.drain_perimeter < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET PD must be non-negative".to_string(),
+        });
+    }
     if params.bottom_junction_capacitance < 0.0 {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "MOSFET CJ must be non-negative".to_string(),
+        });
+    }
+    if params.sidewall_junction_capacitance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET CJSW must be non-negative".to_string(),
         });
     }
     if params.oxide_thickness <= 0.0 {

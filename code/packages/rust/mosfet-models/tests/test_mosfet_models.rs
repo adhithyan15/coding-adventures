@@ -262,6 +262,24 @@ fn test_drain_area_scales_bottom_junction_capacitance() {
 }
 
 #[test]
+fn test_drain_perimeter_scales_sidewall_junction_capacitance() {
+    let result = evaluate_level1(
+        &Level1Params {
+            cbd: 1.0e-12,
+            pd: 3.0e-6,
+            cjsw: 2.0e-6,
+            mj: 0.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        0.0,
+        0.0,
+        300.15,
+    );
+    assert!((result.cbd - 7.0e-12).abs() < 1.0e-24);
+}
+
+#[test]
 fn test_source_area_scales_bottom_junction_capacitance() {
     let result = evaluate_level1(
         &Level1Params {
@@ -300,6 +318,36 @@ fn test_source_area_rejects_negative_value() {
     let _ = evaluate_level1(
         &Level1Params {
             as_: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET PD must be finite and non-negative")]
+fn test_drain_perimeter_rejects_negative_value() {
+    let _ = evaluate_level1(
+        &Level1Params {
+            pd: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET CJSW must be finite and non-negative")]
+fn test_sidewall_junction_capacitance_rejects_negative_value() {
+    let _ = evaluate_level1(
+        &Level1Params {
+            cjsw: -1.0,
             ..Level1Params::default()
         },
         1.8,

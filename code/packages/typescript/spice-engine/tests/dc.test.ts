@@ -121,7 +121,7 @@ describe("dcOp", () => {
 
   it("exports stable model-card supported parameter coverage", () => {
     const coverage = modelCardSupportedParameterCoverage();
-    expect(coverage).toHaveLength(195);
+    expect(coverage).toHaveLength(197);
     expect(coverage[0]).toStrictEqual({
       kind: "D",
       canonicalParameter: "IS",
@@ -141,7 +141,7 @@ describe("dcOp", () => {
     expect(table).toContain("NMOS\tVT0\tVT0|VTO|VTH\t3");
     expect(table.split("\n").at(-1)).toBe("PMOS\tAF\tAF\t1");
     const records = modelCardSupportedParameterCoverageRecords();
-    expect(records).toHaveLength(195);
+    expect(records).toHaveLength(197);
     expect(records[0]).toStrictEqual({
       kind: "D",
       canonical_parameter: "IS",
@@ -167,8 +167,8 @@ describe("dcOp", () => {
     });
     expect(summary[5]).toStrictEqual({
       kind: "NMOS",
-      canonicalParameterCount: 27,
-      acceptedNameCount: 34,
+      canonicalParameterCount: 28,
+      acceptedNameCount: 35,
       aliasedParameterCount: 6,
       maxAliasCount: 3,
       aliasedParameters: ["VT0", "LAMBDA", "N_SUB", "T_NOM", "CBS", "CBD"],
@@ -181,7 +181,7 @@ describe("dcOp", () => {
     );
     expect(table.split("\n")[1]).toBe("D\t15\t21\t5\t3\tIS|VT|CJO|VJ|M");
     expect(table.split("\n").at(-1)).toBe(
-      "PMOS\t27\t34\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD",
+      "PMOS\t28\t35\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD",
     );
     const records = modelCardSupportedParameterCoverageSummaryRecords();
     expect(records).toHaveLength(7);
@@ -206,15 +206,15 @@ describe("dcOp", () => {
       passed: true,
       kindCount: 7,
       expectedKindCount: 7,
-      canonicalParameterCount: 195,
-      expectedCanonicalParameterCount: 195,
-      acceptedNameCount: 265,
+      canonicalParameterCount: 197,
+      expectedCanonicalParameterCount: 197,
+      acceptedNameCount: 267,
       aliasedParameterCount: 57,
       maxAliasCount: 4,
       issues: [],
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t195\t195\t265\t57\t4\t0",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t197\t197\t267\t57\t4\t0",
     );
     expect(formatModelCardSupportedParameterCoverageGateIssueTable(report)).toBe(
       "kind\tfield\tmessage",
@@ -237,15 +237,15 @@ describe("dcOp", () => {
 
     expect(report.passed).toBe(false);
     expect(report.kindCount).toBe(7);
-    expect(report.canonicalParameterCount).toBe(194);
-    expect(report.acceptedNameCount).toBe(262);
+    expect(report.canonicalParameterCount).toBe(196);
+    expect(report.acceptedNameCount).toBe(264);
     expect(report.aliasedParameterCount).toBe(56);
     expect(report.maxAliasCount).toBe(4);
     expect(report.issues).toHaveLength(4);
     expect(report.issues[0]).toStrictEqual({
       kind: "NMOS",
       field: "canonical_parameter_count",
-      message: "expected NMOS to expose 27 canonical supported parameters, found 26",
+      message: "expected NMOS to expose 28 canonical supported parameters, found 27",
     });
     expect(report.issues.at(-1)).toStrictEqual({
       kind: "NMOS",
@@ -253,16 +253,16 @@ describe("dcOp", () => {
       message: "expected NMOS max alias count 3, found 2",
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t194\t195\t262\t56\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 27 canonical supported parameters, found 26\nNMOS\taccepted_name_count\texpected NMOS to expose 34 accepted model-card names, found 31\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t196\t197\t264\t56\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 28 canonical supported parameters, found 27\nNMOS\taccepted_name_count\texpected NMOS to expose 35 accepted model-card names, found 32\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
     );
     const records = modelCardSupportedParameterCoverageGateIssueRecords(report);
     expect(records[0]).toStrictEqual({
       kind: "NMOS",
       field: "canonical_parameter_count",
-      message: "expected NMOS to expose 27 canonical supported parameters, found 26",
+      message: "expected NMOS to expose 28 canonical supported parameters, found 27",
     });
     expect(formatModelCardSupportedParameterCoverageGateIssueCsv(report)).toMatch(
-      /^kind,field,message\nNMOS,canonical_parameter_count,"expected NMOS to expose 27 canonical supported parameters, found 26"\n/,
+      /^kind,field,message\nNMOS,canonical_parameter_count,"expected NMOS to expose 28 canonical supported parameters, found 27"\n/,
     );
     expect(JSON.parse(formatModelCardSupportedParameterCoverageGateIssueJson(report))).toStrictEqual(
       records,
@@ -2596,6 +2596,20 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects invalid MOSFET drain perimeters", () => {
+    for (const drainPerimeter of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        PD: drainPerimeter,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(drainPerimeter)
+          ? "MOSFET PD must be non-negative"
+          : "MOSFET PD must be finite",
+      );
+    }
+  });
+
   it("rejects invalid MOSFET bottom junction capacitance densities", () => {
     for (const bottomJunctionCapacitance of [Number.NaN, -1.0]) {
       const circuit = new Circuit();
@@ -2606,6 +2620,20 @@ describe("dcOp", () => {
         Number.isFinite(bottomJunctionCapacitance)
           ? "MOSFET CJ must be non-negative"
           : "MOSFET CJ must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET sidewall junction capacitance densities", () => {
+    for (const sidewallCapacitance of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        CJSW: sidewallCapacitance,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(sidewallCapacitance)
+          ? "MOSFET CJSW must be non-negative"
+          : "MOSFET CJSW must be finite",
       );
     }
   });

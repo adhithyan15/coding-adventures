@@ -47,7 +47,9 @@ const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
 /// | NRS       | Number of source squares             | 1        |
 /// | AD        | Drain diffusion area (m²)             | 0        |
 /// | AS        | Source diffusion area (m²)            | 0        |
+/// | PD        | Drain diffusion perimeter (m)          | 0        |
 /// | CJ        | Bottom junction capacitance (F/m²)    | 0        |
+/// | CJSW      | Sidewall junction capacitance (F/m)    | 0        |
 /// | IS        | Drain–body saturation current (A)  | 1 fA     |
 /// | N_SUB     | Subthreshold slope factor          | 1.4      |
 /// | T_NOM     | Nominal temperature (K)            | 300.15   |
@@ -87,8 +89,12 @@ pub struct Level1Params {
     pub ad: f64,
     /// Source diffusion area [m²].
     pub as_: f64,
+    /// Drain diffusion perimeter [m].
+    pub pd: f64,
     /// Bottom junction capacitance per unit area [F/m²].
     pub cj: f64,
+    /// Sidewall junction capacitance per unit perimeter [F/m].
+    pub cjsw: f64,
     /// Drain–body saturation current [A] (used for subthreshold floor).
     pub is: f64,
     /// Subthreshold slope factor n.  Subthreshold current ∝ exp(V_OV / (n V_T)).
@@ -138,7 +144,9 @@ impl Default for Level1Params {
             nrs: 1.0,
             ad: 0.0,
             as_: 0.0,
+            pd: 0.0,
             cj: 0.0,
+            cjsw: 0.0,
             is: 1e-15,
             n_sub: 1.4,
             t_nom: 300.15,
@@ -305,8 +313,16 @@ pub fn evaluate_level1(
         "MOSFET AS must be finite and non-negative"
     );
     assert!(
+        p.pd.is_finite() && p.pd >= 0.0,
+        "MOSFET PD must be finite and non-negative"
+    );
+    assert!(
         p.cj.is_finite() && p.cj >= 0.0,
         "MOSFET CJ must be finite and non-negative"
+    );
+    assert!(
+        p.cjsw.is_finite() && p.cjsw >= 0.0,
+        "MOSFET CJSW must be finite and non-negative"
     );
     let beta = p.kp * (p.w / effective_length);
 
@@ -330,7 +346,13 @@ pub fn evaluate_level1(
     // Meyer gate-to-channel capacitance, partitioned by operating region below.
     let channel_capacitance = p.w * effective_length * (OXIDE_PERMITTIVITY / p.tox);
     let cbs_bulk = bulk_junction_capacitance(p.cbs + p.cj * p.as_, v_bs, p.pb, p.mj, p.fc);
-    let cbd_bulk = bulk_junction_capacitance(p.cbd + p.cj * p.ad, v_bs - v_ds, p.pb, p.mj, p.fc);
+    let cbd_bulk = bulk_junction_capacitance(
+        p.cbd + p.cj * p.ad + p.cjsw * p.pd,
+        v_bs - v_ds,
+        p.pb,
+        p.mj,
+        p.fc,
+    );
 
     // -----------------------------------------------------------------------
     // Cutoff / subthreshold
