@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.30.0] - 2026-07-25
+
+### Added - drop a `void` operator in statement position
+
+`void <expr>;` as an expression statement is simplified, matching the reference
+Closure Compiler at SIMPLE. The `void` operator (ECMAScript §13.5.2) evaluates
+its operand and always yields `undefined`; an expression statement already
+discards its value, so the `void` is redundant:
+
+```text
+  void f();   ->  f();      (impure operand: unwrap, keep the effect)
+  void 0;     ->  removed   (pure operand: nothing observable at all)
+```
+
+Scoped to the statement position only: `var x = void f();`, `return void f()`,
+and `h(void f())` keep the `void` because the `undefined` result is observed
+there. A `void` nested inside a larger discarding expression (`c && void f()`)
+is a separate, narrower transform, not handled here.
+
 ## [0.29.0] - 2026-07-17
 
 ### Added — bare-identifier self-assignment removal: `x = x;` → (removed)
