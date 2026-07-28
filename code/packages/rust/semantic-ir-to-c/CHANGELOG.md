@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.13.0 — OOP mirror slice 1: instance runtime + empty class + constants
+
+Accepts `Feature::Classes` + `Feature::Constants` — the first slice of the C
+backend's OOP mirror (the Ruby backend just finished the full 7-slice arc). This
+slice is the **instance-runtime foundation**:
+
+- A new `SIR_INSTANCE` value tag + `struct SirInstance { const char *sir_class; }`
+  stored **inline in the `SirValue` union** — unlike the Go/Rust backends (which
+  hold an integer id into a side-table because their value type is `Copy`), the
+  C pointer IS the handle, so pointer-identity is object identity (no id table).
+- `class Foo; end` → `Stmt::ClassDef` → a comment: a class is just a NAME in the
+  C runtime (an instance carries its class string; there is no class object).
+- `Foo.new` → `_sir_new_instance("Foo")`, printing `#<Foo>` (deterministic — no
+  address, so tests can assert on it). `_sir_value_eq` gains a `SIR_INSTANCE` arm
+  (pointer identity, Ruby's default `==` on an object).
+- **Constants** ride in (entangled: the frontend records `Constants` for any
+  `Foo.new`, since the receiver is a constant). `PI = 3` / `PI` →
+  `_sir_const_set` / `_sir_const_get` over a tiny runtime name→value table; an
+  undefined constant raises a rescuable `NameError`. Class/constant names are
+  emitted as **quoted C string literals** (no injection, as with rescue types).
+
+**Deferred, rejected cleanly** (each a later slice): `__new__` with constructor
+arguments (needs `initialize`), a `class << self` singleton, the OOP method
+builtins (`__def_method__` / `__method__` / …), and — via their still-unaccepted
+features — `@ivars`, `@@class vars`, method-resolving inheritance, and modules.
+
 ## 0.12.0 — exceptions (SIR17)
 
 Accepts `Feature::Exceptions`. C has no stack unwinding, so `begin … rescue …

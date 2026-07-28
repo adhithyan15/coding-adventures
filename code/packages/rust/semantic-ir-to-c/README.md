@@ -102,12 +102,19 @@ producing a plain positional C call (omitted optional keywords filled with
 handler stack (a `SIR_ERROR` value, a baked-in exception-class ancestry table
 for `rescue`-by-class matching, and a two-handler structure so `ensure` runs
 even when a rescue body raises). Rescue-type names are emitted as quoted string
-literals (no injection). `raise SomeClass` (needs `Constants`) and `retry` are
-deferred, rejected cleanly.
+literals (no injection); `retry` is deferred, rejected cleanly. And the OOP
+mirror **slice 1** — `Classes` + `Constants`: an empty class
+(`class Foo; end` → a comment), construction (`Foo.new` → `_sir_new_instance`, a
+new `SIR_INSTANCE` box stored inline in the union that prints `#<Foo>`), and
+constants (`PI = 3` / `PI` → a runtime `_sir_const_set` / `_sir_const_get`
+table).  Class/constant names are quoted C string literals (no injection).
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
-`Intrinsics`, `NDArrays`, `Constants`/OOP, and every
-other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
+`Intrinsics`, `NDArrays`, the rest of OOP (instance methods, `@ivars`,
+`@@class vars`, inheritance dispatch, class methods, modules — later mirror
+slices, so `__new__` with constructor args, `__def_method__`/`__method__`, a
+`class << self` singleton, and `@`/`@@` scopes are all refused for now), and
+every other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
 until a bignum runtime ships — a module needing arbitrary precision is refused,
 never silently truncated.
 

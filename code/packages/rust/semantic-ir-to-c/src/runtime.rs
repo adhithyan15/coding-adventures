@@ -51,7 +51,13 @@ typedef enum {
     SIR_MISSING,
     /* A SIR17 exception value (`raise`d and `rescue`d) — a class name plus an
      * optional message. */
-    SIR_ERROR
+    SIR_ERROR,
+    /* A SIR OOP instance (`Foo.new`) — a heap object carrying its class name.
+     * Unlike the Go/Rust backends (which hold an integer id into a side-table
+     * because their value type is `Copy`), C stores the `SirInstance *` INLINE in
+     * the union: the pointer IS the handle, so pointer-identity is object
+     * identity.  A dedicated tag means no built-in-type helper mis-handles it. */
+    SIR_INSTANCE
 } SirTag;
 
 typedef struct SirValue SirValue;
@@ -60,6 +66,7 @@ typedef struct SirClosure SirClosure;
 typedef struct SirSeq SirSeq;
 typedef struct SirMap SirMap;
 typedef struct SirError SirError;
+typedef struct SirInstance SirInstance;
 
 struct SirValue {
     SirTag tag;
@@ -73,6 +80,7 @@ struct SirValue {
         SirSeq *seq;      /* SIR_SEQ */
         SirMap *map;      /* SIR_MAP */
         SirError *err;    /* SIR_ERROR */
+        SirInstance *inst;/* SIR_INSTANCE */
     } as;
 };
 
@@ -83,6 +91,11 @@ struct SirPair { SirValue car; SirValue cdr; };
  * `rescue` clause via the baked-in ancestry table.  `msg` is the message (a
  * `SIR_STR`, or nil for a bare `raise Class` — then the class name is shown). */
 struct SirError { const char *sir_class; SirValue msg; };
+
+/* A SIR OOP instance.  `sir_class` is the interned class name (`"Foo"`); it is
+ * how method dispatch (later slices) keys the method table and how the ancestry
+ * walk finds the superclass.  Instance variables (`@x`) join in a later slice. */
+struct SirInstance { const char *sir_class; };
 
 /* A SIR16 sequence (`[1, 2, 3]`) — a heap-boxed dynamic array. `items` points
  * at `len` `SirValue`s (arena-allocated, never freed like every other heap
@@ -155,6 +168,40 @@ SirValue _sir_int(int64_t i)   { SirValue v; v.tag = SIR_INT;  v.as.i = i;   ret
 SirValue _sir_float(double f)  { SirValue v; v.tag = SIR_FLOAT; v.as.f = f;  return v; }
 SirValue _sir_str(const char *s) { SirValue v; v.tag = SIR_STR; v.as.s = s;  return v; }
 SirValue _sir_sym(const char *s) { SirValue v; v.tag = SIR_SYM; v.as.s = _sir_intern(s); return v; }
+
+/* ---- OOP: instances & constants ----------------------------- */
+
+/* Construct a fresh instance of class `cls` (`Foo.new`).  The class name is
+ * interned so later method dispatch keys the method table by pointer/`strcmp`.
+ * Arena-allocated, never freed (like every heap box). */
+SirValue _sir_new_instance(const char *cls) {
+    SirInstance *o = (SirInstance *)_sir_alloc(sizeof(SirInstance));
+    o->sir_class = _sir_intern(cls);
+    { SirValue v; v.tag = SIR_INSTANCE; v.as.inst = o; return v; }
+}
+
+/* A SIR constant (`PI = 3`, referenced as `PI`).  Ruby constants are named,
+ * top-level, and set-once-at-runtime; C has no such construct, so a tiny
+ * name -> value table backs them.  The name is an interned string emitted from a
+ * quoted C string literal (no injection).  A read of an undefined constant is a
+ * `NameError` (matching Ruby), routed through the existing exception path. */
+#define SIR_CONST_MAX 4096
+static struct { const char *name; SirValue val; } _sir_const_tab[SIR_CONST_MAX];
+static int _sir_const_n = 0;
+
+SirValue _sir_const_set(const char *name, SirValue v) {
+    const char *n = _sir_intern(name);
+    int i;
+    for (i = 0; i < _sir_const_n; i++) {
+        if (_sir_const_tab[i].name == n) { _sir_const_tab[i].val = v; return v; }
+    }
+    if (_sir_const_n < SIR_CONST_MAX) {
+        _sir_const_tab[_sir_const_n].name = n;
+        _sir_const_tab[_sir_const_n].val = v;
+        _sir_const_n++;
+    }
+    return v;
+}
 
 /* The SIR19 "argument omitted" sentinel (see `SIR_MISSING`).  `_sir_missing()`
  * is passed at a call site for each trailing defaulted parameter left off; the
@@ -437,6 +484,10 @@ int _sir_value_eq_d(SirValue a, SirValue b, int depth) {
          * default `==` is object identity), so a `rescue => e` binding compares
          * equal to itself. */
         case SIR_ERROR:   return a.as.err == b.as.err;
+        /* Two instances are equal only when they are the SAME object (Ruby's
+         * default `==` on a user object is identity) — the inline pointer IS the
+         * identity, so this is a plain pointer compare. */
+        case SIR_INSTANCE: return a.as.inst == b.as.inst;
         default:          return 0;
     }
 }
@@ -825,6 +876,11 @@ void _sir_fmt(FILE *out, SirValue v) {
             if (v.as.err->msg.tag == SIR_NIL) fputs(v.as.err->sir_class, out);
             else _sir_fmt(out, v.as.err->msg);
             break;
+        /* An instance prints as `#<Foo>` (its class name).  Deterministic — no
+         * address — so tests can assert on it (Ruby's default `#<Foo:0x…>` would
+         * embed a non-reproducible pointer). */
+        case SIR_INSTANCE:
+            fputs("#<", out); fputs(v.as.inst->sir_class, out); fputc('>', out); break;
         default: break;
     }
     _sir_fmt_depth--;
@@ -943,6 +999,18 @@ SirValue _sir_raise(SirValue exc) {
 SirValue _sir_raise_value(SirValue v) {
     if (v.tag == SIR_ERROR) return _sir_raise(v);
     return _sir_raise(_sir_error("RuntimeError", v));
+}
+
+/* Read a SIR constant by name (`_sir_const_set` populated it).  A read of an
+ * undefined constant raises `NameError` — a rescuable exception (matching Ruby's
+ * `uninitialized constant`), not a hard exit. */
+SirValue _sir_const_get(const char *name) {
+    const char *n = _sir_intern(name);
+    int i;
+    for (i = 0; i < _sir_const_n; i++) {
+        if (_sir_const_tab[i].name == n) return _sir_const_tab[i].val;
+    }
+    return _sir_raise(_sir_error("NameError", _sir_str(_sir_cat("uninitialized constant ", name))));
 }
 
 SirValue _sir_print_v(SirValue *xs, int n) {
