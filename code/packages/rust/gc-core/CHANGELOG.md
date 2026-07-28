@@ -1,5 +1,39 @@
 # Changelog — gc-core
 
+## 0.21.0 — 2026-07-28 — bounded incremental **sweep** — §4 (AOT00-T4)
+
+Completes the incremental cycle's second half: the **sweep** pause is now bounded too, so a
+full `start → step* → sweep_step* → finish` cycle never stops the mutator for longer than a
+caller-chosen budget — the property a language runtime (JS/Ruby/Python) needs to keep frame
+latency flat regardless of heap size.
+
+- **New `FlatHeap::incremental_sweep_step(budget) -> bool`** — reclaims / ages at most `budget`
+  blocks per call, returning `true` when the all-list is fully swept. Objects allocated between
+  sweep steps are born **black** (`mark_in_progress` still set) so a running sweep never frees a
+  mid-sweep newborn — it survives to the next cycle (verified by
+  `incremental_newborn_during_sweep_survives`).
+- **New `FlatHeap::incremental_sweeping() -> bool`** — introspection: is a stepped sweep
+  outstanding.
+- **`incremental_finish` now drains a partial stepped sweep.** Either drive style works and
+  yields byte-identical results: `start → step* → finish` (finish sweeps monolithically) **or**
+  `start → step* → sweep_step* → finish` (finish consumes the stepped tallies and drains any
+  remainder). Backward compatible — existing callers that never call `sweep_step` are unchanged.
+- **Shared `sweep_free_or_keep` helper** factors the per-block free/age/tenure decision so the
+  monolithic `sweep` and the stepped `incremental_sweep_step` can never drift apart.
+- **Soundness fixes (Miri-verified).** Two bugs the bounded sweep surfaced and this release
+  fixes in the shared path:
+  - *Use-after-free in the sweep loop.* `sweep_free_or_keep`'s `Freed` arm deallocates the
+    block, so the successor link is now read **before** the call, not after. The monolithic
+    `sweep` had the same latent UAF (masked by its tight loop) and is fixed identically.
+  - *Stale cross-slice provenance.* The resumable sweep cursor is persisted as the last-kept
+    **block pointer** (into malloc'd memory), and the `&mut self.all` / `&mut (*resume).next`
+    cursor is re-derived **freshly** under each slice's `&mut self`. Persisting a
+    `self`-derived pointer across calls is Undefined Behaviour — each call's function-entry
+    retag invalidates it (Stacked Borrows) — now caught clean by `cargo miri` on all
+    `flat_heap::tests::incremental_*` tests.
+- Tests: `incremental_stepped_sweep_equals_monolithic_sweep`, `incremental_sweep_step_is_bounded`,
+  `incremental_finish_drains_partial_sweep`, `incremental_newborn_during_sweep_survives`.
+
 ## 0.20.0 — 2026-07-25 — `Incremental` algorithm marked available — PR-3 (AOT00-T4)
 
 - **`GcAlgorithm::Incremental::is_available()` now returns `true`** — the incremental
