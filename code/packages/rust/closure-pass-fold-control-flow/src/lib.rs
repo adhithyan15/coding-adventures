@@ -415,6 +415,37 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> Statemen
         // `do { if (x) a(); b(); } while(c);` → `do x && a(), b(); while(c);`.
         TaggedStatement::DoWhileStatement(s) => {
             let body = fold_statement(&s.body, st);
+
+            // Empty-bodied `do … while` ≡ `while`. `do {} while(test)` runs the
+            // (empty) body once and then evaluates `test`; because the body is a
+            // no-op, its test-evaluation sequence is IDENTICAL to `while(test){}`
+            // (the leading empty run changes nothing observable). We rewrite to
+            // the equivalent `while`, which lowers to `for` and — via the empty
+            // loop-body normalization — collapses the braces:
+            //
+            //   do {} while(c);   →  while(c){}  →  for(; c;) {}  →  for(; c;) ;
+            //   do {} while(0);   →  while(0){}  →  dead loop     →  ;  (dce drops)
+            //
+            // A NON-empty body keeps the `do` form (a `do` body runs before its
+            // test, so it can't generally become a `while`); those fall through
+            // to the loop-body comma-fusion below.
+            if statement_is_empty(&body) {
+                st.record_fold(
+                    &s.cv,
+                    "empty-do-while-to-while",
+                    "do {} while(<test>)",
+                    "while(<test>) {}",
+                );
+                return fold_while_statement(
+                    &WhileStatement {
+                        cv: s.cv.clone(),
+                        test: s.test.clone(),
+                        body: Box::new(body),
+                    },
+                    st,
+                );
+            }
+
             let body = match &body {
                 Statement::Tagged(TaggedStatement::BlockStatement(_)) => {
                     match stmts_as_sequence_expr(&body) {
@@ -2753,6 +2784,34 @@ mod tests {
                 other => panic!("expected a fused expression-statement body; got {other:?}"),
             },
             other => panic!("expected DoWhileStatement; got {other:?}"),
+        }
+    }
+
+    /// `do {} while(c);` → an empty-bodied do-while lowers to the equivalent
+    /// `while`, which the pass rewrites to `for(; c;)` (with the empty body
+    /// normalized to `;`). The result is a `ForStatement`, not a `DoWhile`.
+    #[test]
+    fn empty_do_while_lowers_to_for() {
+        let dw = Statement::Tagged(TaggedStatement::DoWhileStatement(DoWhileStatement {
+            cv: Some("dw.1".to_string()),
+            body: Box::new(block(Some("blk.1"), vec![])),
+            test: ident("c"),
+        }));
+        let (out, contribs, changed, _) =
+            run_pass(program().with_body(vec![ProgramItem::Statement(dw)]));
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "empty-do-while-to-while"));
+        // One pass lowers `do{}while(c)` to `for(;c;){}`; the empty-block -> `;`
+        // normalization runs on the next sweep (covered by
+        // `for_empty_block_body_normalizes_to_empty_statement`). Either way the
+        // body is empty, and it is now a `for`, not a `do`.
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ForStatement(f)) => assert!(
+                statement_is_empty(f.body.as_ref()),
+                "empty do-while must lower to a for with an empty body; got {:?}",
+                f.body
+            ),
+            other => panic!("expected ForStatement; got {other:?}"),
         }
     }
 
