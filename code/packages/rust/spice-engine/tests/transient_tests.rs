@@ -468,6 +468,53 @@ fn transient_mosfet_drain_area_scales_bottom_junction_capacitance() {
 }
 
 #[test]
+fn transient_mosfet_source_area_scales_bottom_junction_capacitance() {
+    fn run(bottom_junction_capacitance: f64, source_area: f64) -> Vec<TransientPoint> {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 0.0),
+                (1.0e-9, 1.0),
+                (5.0e-9, 1.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "source", 1_000.0,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "0",
+            "0",
+            "source",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                kp: 1.0e-12,
+                w: 1.0,
+                l: 1.0,
+                bottom_junction_capacitance,
+                source_area,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+        transient_with_method(&circuit, 1.0e-9, 5.0e-9, TransientMethod::Euler).unwrap()
+    }
+
+    let uncharged = run(0.0, 0.0);
+    let charged = run(0.5, 2.0e-9);
+    let uncharged_first = uncharged[0].voltage("source").unwrap();
+    let charged_first = charged[0].voltage("source").unwrap();
+
+    assert!(uncharged_first > 0.5);
+    assert!(charged_first < 0.01);
+    assert!(charged_first < uncharged_first);
+}
+
+#[test]
 fn transient_mosfet_bulk_junction_depletion_shaping_reduces_reverse_bias_capacitance() {
     fn run(grading_coefficient: f64) -> Vec<TransientPoint> {
         let mut circuit = Circuit::new();

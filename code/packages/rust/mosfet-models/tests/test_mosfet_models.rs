@@ -262,11 +262,44 @@ fn test_drain_area_scales_bottom_junction_capacitance() {
 }
 
 #[test]
+fn test_source_area_scales_bottom_junction_capacitance() {
+    let result = evaluate_level1(
+        &Level1Params {
+            cbs: 1.0e-12,
+            cj: 2.0e-3,
+            as_: 3.0e-9,
+            mj: 0.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        0.0,
+        0.0,
+        300.15,
+    );
+    assert!((result.cbs - 7.0e-12).abs() < 1.0e-24);
+}
+
+#[test]
 #[should_panic(expected = "MOSFET AD must be finite and non-negative")]
 fn test_drain_area_rejects_negative_value() {
     let _ = evaluate_level1(
         &Level1Params {
             ad: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET AS must be finite and non-negative")]
+fn test_source_area_rejects_negative_value() {
+    let _ = evaluate_level1(
+        &Level1Params {
+            as_: -1.0,
             ..Level1Params::default()
         },
         1.8,

@@ -1397,6 +1397,47 @@ fn ac_mosfet_drain_area_scales_bottom_junction_capacitance() {
 }
 
 #[test]
+fn ac_mosfet_source_area_scales_bottom_junction_capacitance() {
+    fn source_amplitude(bottom_junction_capacitance: f64, source_area: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "source", 1_000.0,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "0",
+            "0",
+            "source",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                kp: 1.0e-12,
+                w: 1.0,
+                l: 1.0,
+                oxide_thickness: 1.0e9,
+                source_area,
+                bottom_junction_capacitance,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("source")
+            .unwrap()
+            .abs()
+    }
+
+    let without_area_capacitance = source_amplitude(0.5, 0.0);
+    let with_area_capacitance = source_amplitude(0.5, 2.0e-6);
+
+    assert!(without_area_capacitance > 0.9);
+    assert!(with_area_capacitance < without_area_capacitance / 100.0);
+}
+
+#[test]
 fn ac_mosfet_oxide_thickness_scales_intrinsic_gate_capacitance() {
     let gate_amplitude = |oxide_thickness| {
         let mut circuit = Circuit::new();

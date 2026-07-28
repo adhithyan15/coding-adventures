@@ -32,8 +32,8 @@ and must leave a positive effective channel length. `TOX` defaults to
 external drain, source, and sheet-resistance parameters for engine topology and
 default to zero ohms. `NRD` and `NRS` are finite, non-negative drain/source
 diffusion square counts and default to one.
-`AD` and `CJ` are finite, non-negative and default to zero; together they add
-`CJ * AD` to the zero-bias drain-body capacitance `CBD`.
+`AD`, `AS`, and `CJ` are finite, non-negative and default to zero. They add
+`CJ * AD` to drain-body `CBD` and `CJ * AS` to source-body `CBS`.
 
 ## Usage
 

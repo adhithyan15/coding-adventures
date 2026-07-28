@@ -4,6 +4,8 @@
 
 ### Added
 
+- `Level1Params::as_` adds the zero-default Berkeley source diffusion area,
+  contributing `CJ * AS` to the zero-bias source-body capacitance.
 - `Level1Params::ad` and `Level1Params::cj` add zero-default Berkeley drain
   diffusion area and bottom-junction capacitance density, contributing
   `CJ * AD` to the zero-bias drain-body capacitance.

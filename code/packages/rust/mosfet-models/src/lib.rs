@@ -46,6 +46,7 @@ const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
 /// | NRD       | Number of drain squares              | 1        |
 /// | NRS       | Number of source squares             | 1        |
 /// | AD        | Drain diffusion area (m²)             | 0        |
+/// | AS        | Source diffusion area (m²)            | 0        |
 /// | CJ        | Bottom junction capacitance (F/m²)    | 0        |
 /// | IS        | Drain–body saturation current (A)  | 1 fA     |
 /// | N_SUB     | Subthreshold slope factor          | 1.4      |
@@ -84,6 +85,8 @@ pub struct Level1Params {
     pub nrs: f64,
     /// Drain diffusion area [m²].
     pub ad: f64,
+    /// Source diffusion area [m²].
+    pub as_: f64,
     /// Bottom junction capacitance per unit area [F/m²].
     pub cj: f64,
     /// Drain–body saturation current [A] (used for subthreshold floor).
@@ -134,6 +137,7 @@ impl Default for Level1Params {
             nrd: 1.0,
             nrs: 1.0,
             ad: 0.0,
+            as_: 0.0,
             cj: 0.0,
             is: 1e-15,
             n_sub: 1.4,
@@ -297,6 +301,10 @@ pub fn evaluate_level1(
         "MOSFET AD must be finite and non-negative"
     );
     assert!(
+        p.as_.is_finite() && p.as_ >= 0.0,
+        "MOSFET AS must be finite and non-negative"
+    );
+    assert!(
         p.cj.is_finite() && p.cj >= 0.0,
         "MOSFET CJ must be finite and non-negative"
     );
@@ -321,7 +329,7 @@ pub fn evaluate_level1(
 
     // Meyer gate-to-channel capacitance, partitioned by operating region below.
     let channel_capacitance = p.w * effective_length * (OXIDE_PERMITTIVITY / p.tox);
-    let cbs_bulk = bulk_junction_capacitance(p.cbs, v_bs, p.pb, p.mj, p.fc);
+    let cbs_bulk = bulk_junction_capacitance(p.cbs + p.cj * p.as_, v_bs, p.pb, p.mj, p.fc);
     let cbd_bulk = bulk_junction_capacitance(p.cbd + p.cj * p.ad, v_bs - v_ds, p.pb, p.mj, p.fc);
 
     // -----------------------------------------------------------------------

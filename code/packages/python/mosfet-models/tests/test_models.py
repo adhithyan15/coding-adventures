@@ -216,10 +216,20 @@ def test_drain_area_scales_bottom_junction_capacitance():
     assert result.Cbd == pytest.approx(7.0e-12)
 
 
+def test_source_area_scales_bottom_junction_capacitance():
+    result = evaluate_level1(
+        Level1Params(CBS=1.0e-12, CJ=2.0e-3, AS=3.0e-9, MJ=0.0),
+        V_GS=1.8,
+        V_DS=0.0,
+    )
+    assert result.Cbs == pytest.approx(7.0e-12)
+
+
 @pytest.mark.parametrize(
     ("params", "message"),
     [
         (Level1Params(AD=-1.0), "MOSFET AD must be finite and non-negative"),
+        (Level1Params(AS=-1.0), "MOSFET AS must be finite and non-negative"),
         (Level1Params(CJ=-1.0), "MOSFET CJ must be finite and non-negative"),
     ],
 )
