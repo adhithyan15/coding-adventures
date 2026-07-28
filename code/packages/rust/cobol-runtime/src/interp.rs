@@ -365,8 +365,15 @@ impl Machine {
                     not_on_overflow,
                 );
             }
-            Stmt::Unstring { source, delim, targets, pointer } => {
-                self.exec_unstring(source, delim, targets, pointer.as_deref())?
+            Stmt::Unstring { source, delim, targets, pointer, on_overflow, not_on_overflow } => {
+                return self.exec_unstring(
+                    source,
+                    delim,
+                    targets,
+                    pointer.as_deref(),
+                    on_overflow,
+                    not_on_overflow,
+                );
             }
             Stmt::Inspect { source, counter, delim, leading, region } => {
                 return self.exec_inspect(source, counter, delim, *leading, region.as_ref())
@@ -752,7 +759,9 @@ impl Machine {
         delim: &Operand,
         targets: &[String],
         pointer: Option<&str>,
-    ) -> Result<(), RuntimeError> {
+        on_overflow: &[Stmt],
+        not_on_overflow: &[Stmt],
+    ) -> Result<Flow, RuntimeError> {
         // The field characters come from ONE of THREE providers; everything after
         // `src` is obtained (the delimiter scan and per-receiver reshape) is
         // shared, so only this match differs between an item source, a literal
@@ -840,10 +849,32 @@ impl Machine {
         //
         // With a pointer we read its value `pv`, then apply the out-of-range rule:
         // `pv == 0` (0-based start would underflow to −1) or `pv > len` (start past
-        // the source) is ISO's overflow ⇒ leave every receiver and `p` UNCHANGED
-        // and return. Otherwise the 0-based start is `pv − 1`. The guard runs BEFORE
-        // computing `pv − 1`, so the `usize` never underflows. Without a pointer the
-        // start is 0 and nothing is written back — today's behaviour, unchanged.
+        // the source) is ISO's overflow ⇒ leave every receiver and `p` UNCHANGED.
+        // Otherwise the 0-based start is `pv − 1`. The guard runs BEFORE computing
+        // `pv − 1`, so the `usize` never underflows. Without a pointer the start is 0
+        // and nothing is written back — today's behaviour, unchanged.
+        //
+        // # The `overflow` condition (drives ON / NOT ON OVERFLOW)
+        //
+        // ISO: UNSTRING overflow occurs when all receivers are filled but the source
+        // is NOT exhausted (more delimited fields remain), OR the initial `WITH
+        // POINTER` value is out of range. `overflow` starts `false` and is SET in the
+        // two places the condition can arise, so BOTH engines compute the identical
+        // boolean (a mismatch would diverge):
+        //
+        //   * out-of-range pointer → `overflow = true` (no data movement below);
+        //   * after the scan loop  → `overflow = (p <= src.len())`, where `p` is the
+        //     scan's final 0-based cursor. This SINGLE comparison is correct for every
+        //     case:
+        //       - loop broke early (`p > len`, fewer fields than receivers, source
+        //         exhausted first) → `p > len` → `false`. ✓
+        //       - all receivers filled, last field ended AT a delimiter (`q < len`, so
+        //         `p = q+1 ≤ len`, more source remains) → `true`. ✓
+        //       - all receivers filled, last field ran to end-of-source (`q == len`,
+        //         `p = len+1 > len`, exhausted) → `false`. ✓
+        //       - trailing delimiter as the last consumed char (`p == len`, an empty
+        //         field remains) → `true`. ✓
+        let mut overflow = false;
         let start: usize = if let Some(pname) = pointer {
             let pidx = *self
                 .by_name
@@ -880,47 +911,75 @@ impl Machine {
             let pv_dec = self.named_decimal(pname)?;
             let pv: u128 = pv_dec.int.trim_start_matches('0').parse().unwrap_or(0);
             if pv == 0 || pv > src.len() as u128 {
-                // Out of range: no data movement, pointer unchanged.
-                return Ok(());
+                // Out of range IS overflow: no data movement, pointer unchanged, but
+                // the ON OVERFLOW imperative still runs (a behaviour change from the
+                // pre-overflow rung, which returned here with no imperative). Set the
+                // flag and skip the scan + write-back with the `!overflow` guard
+                // below; `start` is a never-read sentinel on this path.
+                overflow = true;
+                0
+            } else {
+                (pv - 1) as usize
             }
-            (pv - 1) as usize
         } else {
             0
         };
 
-        // Scan: cursor `p` over `src`; for each receiver take the field up to the
-        // next delimiter (or end-of-source), then step past the delimiter.
-        let mut p: usize = start;
-        for &idx in &tidx {
-            // `p > len` means the previous field ran off the end WITHOUT a
-            // trailing delimiter — the source is exhausted, so leave this and every
-            // later receiver UNCHANGED. (`p == len` still yields one empty field,
-            // the trailing-delimiter case.)
-            if p > src.len() {
-                break;
+        // The scan and write-back are skipped entirely on the out-of-range-pointer
+        // path (no data movement, pointer unchanged), matching the oracle's former
+        // early return. On every other path this runs and then RE-derives `overflow`
+        // from the final cursor (see the truth table above), replacing its `false`
+        // start.
+        if !overflow {
+            // Scan: cursor `p` over `src`; for each receiver take the field up to the
+            // next delimiter (or end-of-source), then step past the delimiter.
+            let mut p: usize = start;
+            for &idx in &tidx {
+                // `p > len` means the previous field ran off the end WITHOUT a
+                // trailing delimiter — the source is exhausted, so leave this and
+                // every later receiver UNCHANGED. (`p == len` still yields one empty
+                // field, the trailing-delimiter case.)
+                if p > src.len() {
+                    break;
+                }
+                let mut q = p;
+                while q < src.len() && src[q] != delim_ch {
+                    q += 1;
+                }
+                let field: String = src[p..q].iter().collect();
+                self.move_into(idx, Src::Chars(field))?;
+                p = q + 1;
             }
-            let mut q = p;
-            while q < src.len() && src[q] != delim_ch {
-                q += 1;
+
+            // Write the pointer back to the 1-based resume position. `p` is the scan's
+            // final 0-based cursor, which sits one past the terminating delimiter —
+            // but for a field that ran to end-of-source that step is a phantom one
+            // past the end, so clamp to `len` before restoring 1-basing:
+            // `min(p, len) + 1`. This is exactly "one after the last character
+            // examined" (see the doc comment). Stored through the same numeric path
+            // ADD/INSPECT use, so it reshapes into the pointer's `PIC 9(n)` picture
+            // byte-for-byte as the compiler does. The write-back happens BEFORE the
+            // imperative dispatch, unchanged.
+            if let Some(pname) = pointer {
+                let resume = p.min(src.len()) + 1;
+                let value = Decimal { neg: false, int: resume.to_string(), frac: String::new() };
+                self.store_result(pname, value, false, &[])?;
             }
-            let field: String = src[p..q].iter().collect();
-            self.move_into(idx, Src::Chars(field))?;
-            p = q + 1;
+
+            // The one comparison the compiler mirrors: source not yet exhausted after
+            // filling every receiver ⇒ overflow. See the worked cases above.
+            overflow = p <= src.len();
         }
 
-        // Write the pointer back to the 1-based resume position. `p` is the scan's
-        // final 0-based cursor, which sits one past the terminating delimiter — but
-        // for a field that ran to end-of-source that step is a phantom one past the
-        // end, so clamp to `len` before restoring 1-basing: `min(p, len) + 1`. This
-        // is exactly "one after the last character examined" (see the doc comment).
-        // Stored through the same numeric path ADD/INSPECT use, so it reshapes into
-        // the pointer's `PIC 9(n)` picture byte-for-byte as the compiler does.
-        if let Some(pname) = pointer {
-            let resume = p.min(src.len()) + 1;
-            let value = Decimal { neg: false, int: resume.to_string(), frac: String::new() };
-            self.store_result(pname, value, false, &[])?;
+        // Run the conditional imperative. An empty list → `run_stmts` = `Flow::Normal`
+        // (mirrors STRING's `exec_string`). A `STOP RUN` / `GO TO` inside the chosen
+        // list propagates its `Flow` up to unwind the enclosing paragraph, exactly
+        // like an IF branch.
+        if overflow {
+            self.run_stmts(on_overflow)
+        } else {
+            self.run_stmts(not_on_overflow)
         }
-        Ok(())
     }
 
     /// The single delimiter character of a scan delimiter. It is either a

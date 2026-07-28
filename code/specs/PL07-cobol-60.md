@@ -511,7 +511,8 @@ truth, compiler byte-identical):
 
 - Each receiver **including the last** takes the field up to the NEXT delimiter (or
   end-of-source) — the last receiver does *not* absorb the remainder. Fields beyond
-  the receiver count are dropped (that would be `ON OVERFLOW`, a later rung).
+  the receiver count are dropped (this is ISO's `ON OVERFLOW` condition — now
+  implemented; see the `ON OVERFLOW` rung below).
 - Consecutive or leading delimiters bound an EMPTY field → the receiver gets all
   spaces.
 - When the source is exhausted (a field ran to end-of-source with no trailing
@@ -526,9 +527,9 @@ R1 R2 R3` (R3 `VALUE "ZZZ"`) leaves `R3="ZZZ"`; `"A,,C" INTO R1 R2 R3` →
 
 The grammar takes a single `operand` for the delimiter and `{ NAME }` receivers;
 the reader/compiler enforce the 1-character restriction and reject a
-multi-character / `ALL` / `OR` delimiter, `ON`/`NOT ON OVERFLOW`,
+multi-character / `ALL` / `OR` delimiter
 and a numeric/group source or receiver as clean "later rung" errors (`WITH POINTER`
-is now supported — see below). Because the
+and `ON OVERFLOW` / `NOT ON OVERFLOW` are now supported — see below). Because the
 delimiter position is data-dependent, the compiler lowers `UNSTRING` to a run-time
 **scan loop** (`str_len` + `str_index`/`cmp` to find each delimiter, then a
 `str_slice`/`str_concat` reshape into each receiver), whereas `STRING`'s boundaries
@@ -591,9 +592,10 @@ reshape, exhaustion, empty fields — is UNCHANGED:
 engine can range-check it at build time — the compiler emits a run-time guard, and
 the oracle checks at exec time. When the initial `p` is outside the valid range
 `[1, len]` — either `p == 0` (a 0-based start of −1) or `p > len` (past the source)
-— this is ISO's **overflow** condition. Since `ON OVERFLOW` is **still deferred**,
-we apply the ISO "overflow ⇒ data movement does not occur" rule DETERMINISTICALLY:
-**no receiver is modified and `p` is left unchanged**. Both engines produce
+— this is ISO's **overflow** condition. We apply the ISO "overflow ⇒ data movement
+does not occur" rule DETERMINISTICALLY: **no receiver is modified and `p` is left
+unchanged** — and, with the `ON OVERFLOW` rung below, the out-of-range case now sets
+the overflow flag and runs the `ON OVERFLOW` imperative. Both engines produce
 byte-identical receivers AND a byte-identical final `p` for every initial value (0,
 1, mid, len, len+1, huge) — fuzz-proven across `[0, len+2]`.
 
@@ -607,10 +609,45 @@ messages).
 Still deferred on both engines: a
 **NUMERIC**-literal source (`UNSTRING 123 …`), a **FIGURATIVE** source (`UNSTRING
 SPACE …`), a **non-ASCII** string-literal source — only an ASCII alphanumeric
-string literal is supported — a **NUMERIC-base** reference-modified source
-(an alphanumeric-base reference-modified source is now supported), and `ON`/`NOT ON
-OVERFLOW` (a signed/fractional/non-numeric `WITH POINTER` item is also deferred,
-but the `WITH POINTER` phrase itself over a `PIC 9(n)` pointer is now supported).
+string literal is supported — and a **NUMERIC-base** reference-modified source
+(an alphanumeric-base reference-modified source is now supported). A
+signed/fractional/non-numeric `WITH POINTER` item is also deferred, but the `WITH
+POINTER` phrase itself over a `PIC 9(n)` pointer and the `ON OVERFLOW` / `NOT ON
+OVERFLOW` handlers (see the rung below) are now supported.
+
+**`ON OVERFLOW` / `NOT ON OVERFLOW` rung (now implemented).** `UNSTRING source
+DELIMITED BY delim INTO r1 [r2 …] [WITH POINTER p] [ON OVERFLOW imp…] [NOT ON
+OVERFLOW imp…]` — the DIRECT sibling of the `STRING` overflow rung above. No grammar
+change was needed; the grammar already parses `[ "ON" "OVERFLOW" { statement } ]`
+and `[ "NOT" "ON" "OVERFLOW" { statement } ]`. The reader/compiler split the two
+`statement` lists at the `NOT` keyword (exactly as the `IF` reader splits then/else
+at `ELSE`, and as `STRING` now does); receiver/pointer NAMEs are direct token
+children, never `statement` nodes, so the split never sees them.
+
+The **overflow condition** — computed IDENTICALLY on both engines (a mismatch would
+diverge) — is: all receivers are filled but the source is NOT exhausted (more
+delimited fields remain), OR the initial `WITH POINTER` value is out of range.
+Concretely:
+
+- **Scan path (in-range or no pointer):** `overflow = (final_cursor <= len)`, where
+  `final_cursor` is the scan's final 0-based cursor `p`. This ONE comparison is
+  correct for every case: the loop broke early because the source was exhausted first
+  (`p > len`) → not overflow; every receiver filled with the last field ending AT a
+  delimiter (`p ≤ len`, more source remains) → overflow; the last field ran to
+  end-of-source (`p = len+1 > len`) → not overflow; a trailing delimiter as the last
+  consumed char (`p == len`, an empty field still remains) → overflow.
+- **Out-of-range pointer (`p == 0 || p > len`):** `overflow = true`, with NO data
+  movement and `p` left unchanged (the write-back is also skipped).
+
+After the (unchanged) scan and pointer write-back, the `ON OVERFLOW` imperative runs
+when `overflow` is true, else the `NOT ON OVERFLOW` imperative; either list may be
+empty (clause absent), and control flow (`GO TO` / `STOP RUN`) inside the chosen list
+propagates. The compiler emits the `overflow` register (pre-seeded to `1`, the
+out-of-range guards fall through with it set, the in-range path overwrites it with
+`cmp_le(p, len)`) and the `jmp_if_false`/branch/`label` skeleton ONLY when a clause
+is present — a plain `UNSTRING` lowers exactly as before. **Behaviour change:** the
+out-of-range `WITH POINTER` case previously returned with no imperative; it now runs
+`ON OVERFLOW`.
 
 ### `INSPECT … TALLYING` (first rung)
 
@@ -1356,7 +1393,7 @@ list, `COPY`) is documented as future work.
 | Complete reserved-word list | The full ~300 COBOL-60 reserved words |
 | `COPY` library text | A pre-tokenize include-style hook |
 | `STRING` real delimiters / `WITH POINTER` / `ON OVERFLOW` | Later rungs beyond the first `DELIMITED BY SIZE` cut (need a run-time scan and a receiver pointer) |
-| `UNSTRING` multi-char / `ALL` / `OR` delimiters, `ON OVERFLOW`, a signed/fractional/non-numeric/over-wide `WITH POINTER` item, multiple `DELIMITED` fields, `COUNT`/`DELIMITER IN`/`TALLYING`, a NUMERIC-literal / FIGURATIVE / NON-ASCII source, a NUMERIC-base reference-modified source | Later rungs beyond the single-character `DELIMITED BY delim INTO r1 [r2 …]` cut (an ASCII alphanumeric string-literal source, an alphanumeric-base reference-modified source `S(2:3)`, literal or computed index, AND a `WITH POINTER p` phrase over a `PIC 9(n)` unsigned-integer pointer ARE now supported) |
+| `UNSTRING` multi-char / `ALL` / `OR` delimiters, a signed/fractional/non-numeric/over-wide `WITH POINTER` item, multiple `DELIMITED` fields, `COUNT`/`DELIMITER IN`/`TALLYING`, a NUMERIC-literal / FIGURATIVE / NON-ASCII source, a NUMERIC-base reference-modified source | Later rungs beyond the single-character `DELIMITED BY delim INTO r1 [r2 …]` cut (an ASCII alphanumeric string-literal source, an alphanumeric-base reference-modified source `S(2:3)`, literal or computed index, a `WITH POINTER p` phrase over a `PIC 9(n)` unsigned-integer pointer, AND `ON OVERFLOW` / `NOT ON OVERFLOW` handlers ARE now supported) |
 | `INSPECT`, other string verbs | The rest of the string-handling verb family |
 | IR / interpreter | Run a COBOL program; out of scope for the frontend |
 

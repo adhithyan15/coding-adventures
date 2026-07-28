@@ -2466,8 +2466,9 @@ mod tests {
 
     #[test]
     fn unstring_later_rung_options_are_clean_errors() {
-        // ON OVERFLOW (dropped fields beyond the receiver count) is still a later
-        // rung. (WITH POINTER is now modelled — see `unstring_with_pointer_*`.)
+        // ON OVERFLOW is now MODELLED (see `unstring_on_overflow_*`); here "A,B" into
+        // ONE receiver fills R1="A" and leaves the source unexhausted (field "B"
+        // remains), so overflow fires and the imperative runs.
         let overflow = run_cobol(&wrap(
             &["01  S  PIC X(3) VALUE \"A,B\".", "01  R1 PIC X(3) VALUE SPACES."],
             &[
@@ -2476,8 +2477,8 @@ mod tests {
                 "STOP RUN.",
             ],
         ))
-        .unwrap_err();
-        assert!(matches!(overflow, RuntimeError::Unsupported(_)), "got {overflow:?}");
+        .unwrap();
+        assert_eq!(overflow, "OVF\n");
 
         // … a multi-character delimiter needs a multi-char scan …
         let multi = run_cobol(&wrap(
