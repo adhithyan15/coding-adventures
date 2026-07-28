@@ -717,6 +717,45 @@ fn shipped_magnetic_flux_density_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b15) Shipped table — reference/illuminance-conversions.adj resolves via import (a
+//       NEW dimension: illuminance → lux, the EXACT SP 811 B.9 boldface CGS factor
+//       phot), and a non-exact customary unit (`footcandle`) — a rounded factor with no
+//       row — abstains.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_illuminance_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_illum");
+    let src = stdlib().join("reference/illuminance-conversions.adj");
+    std::fs::copy(&src, dir.join("illuminance-conversions.adj"))
+        .expect("copy shipped illuminance-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"illuminance-conversions.adj\"\n\
+         ? illuminance_to_lux(phot, $v)\n\
+         ? illuminance_to_lux(footcandle, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 "Illuminance" exact factor resolves, character-for-character
+    // from the table (boldface = exact; scientific notation to plain decimal).
+    assert!(out.contains("\"v\":\"10000\""), "phot = 10000 lx: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `footcandle` is a NIST customary row printed as a ROUNDED (non-boldface) factor —
+    // not an exact row here, so the engine abstains rather than committing to a rounded
+    // value.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a non-exact unit abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
