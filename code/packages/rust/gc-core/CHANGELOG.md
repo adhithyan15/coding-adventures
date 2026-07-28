@@ -1,5 +1,35 @@
 # Changelog — gc-core
 
+## 0.22.0 — 2026-07-28 — `KindLayout` + `for_each_ref_slot` refactor — PR-1 (AOT00-T5)
+
+Structural, **zero-behaviour-change** prep for variable-length reference arrays (spec
+`AOT00-T5-variable-length-ref-arrays.md`). It de-risks the multi-site change before any tail
+tracing lands — the collector behaves identically, proven by the unchanged test suite + Miri.
+
+- **`field_maps: Vec<Box<[usize]>>` → `Vec<KindLayout>`**, where
+  `KindLayout { fixed: Box<[usize]>, tail_from: Option<usize> }`. `register_kind` builds
+  `KindLayout { fixed, tail_from: None }`, so every kind is a pure record and tracing is
+  byte-for-byte identical to before. `tail_from == Some(start)` (the variable-length array
+  tail — every aligned word in `[start, size)` is a reference) is reserved for PR-2's
+  `register_ref_array_kind`; no registration sets it yet.
+- **New shared `unsafe fn for_each_ref_slot(&self, h, f) -> bool`** — the *single* place a
+  `KindLayout` is walked (fixed offsets, then the tail region when present), returning whether
+  `h` had a registered kind. All **four** tracer sites now route through it so they cannot
+  disagree about *which words are references* — the co-totality that keeps mark, relocate, and
+  the remembered set in lockstep:
+  - `scan_payload` (mark — precise slots, then conservative fallback for `kind 0`),
+  - `precise_children` (compaction classify — precise out-edges),
+  - `fixup_ref_fields` (compaction fixup — rewrite moved refs; the interior-pointer
+    `debug_assert` is preserved inside the callback),
+  - `points_to_live_young` (generational barrier — old→young edge, via a `found` flag).
+- The wrap-safe bound `off <= size - 8` (never `off + 8 <= size`, which could overflow for a
+  near-`usize::MAX` offset) is applied to every produced slot, fixed or tail.
+- **No behaviour change:** all 94 gc-core lib tests pass unchanged, clippy clean,
+  `cargo miri test` clean over the whole lib (the four sites are the UAF-critical surface),
+  and `gc-core-capi` / `aarch64-backend` / `x86_64-backend` build unchanged. This is PR-1 of 4
+  (spec §7); PR-2 adds tail tracing + `register_ref_array_kind`, PR-3 the C ABI, PR-4 the
+  native relocation differential.
+
 ## 0.21.0 — 2026-07-28 — bounded incremental **sweep** — §4 (AOT00-T4)
 
 Completes the incremental cycle's second half: the **sweep** pause is now bounded too, so a
