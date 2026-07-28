@@ -90,9 +90,13 @@ r1 [r2 …]` (the inverse — split the alphanumeric source on a single-characte
 delimiter into successive receivers; each receiver including the last takes the
 field up to the next delimiter, extra fields are dropped, empty fields become
 spaces, and once the source is exhausted the remaining receivers keep their prior
-value; the source may be an alphanumeric item **or** an alphanumeric string
-literal — `UNSTRING "a,b,c" DELIMITED BY "," INTO w1 w2 w3` — with identical
-splitting, only the character provider differing); and `INSPECT source TALLYING
+value; the source may be an alphanumeric item, an alphanumeric string
+literal — `UNSTRING "a,b,c" DELIMITED BY "," INTO w1 w2 w3` — **or** a
+reference-modified item slice `base(start:len)` — `UNSTRING S(2:3) DELIMITED BY
+"," INTO w1 w2 w3` (the sliced characters supply the field text via the shared
+reference-modification machinery, so it stays byte-identical to `DISPLAY
+S(2:3)`) — with identical splitting, only the character provider differing); and
+`INSPECT source TALLYING
 counter FOR ALL delim` / `FOR LEADING delim`
 (count the occurrences of a single-character delimiter — a 1-char literal or a
 `PIC X(1)` item — in the alphanumeric source and **ADD** them to the
@@ -174,9 +178,10 @@ multi-character or non-ASCII delimiter / a non-ASCII literal sending field under
 delimiter / per-field different delimiters / `WITH POINTER` / `ON OVERFLOW` (a
 single-character ASCII `DELIMITED BY` delimiter IS supported), `UNSTRING` with a
 multi-character
-delimiter / `WITH POINTER` / `ON OVERFLOW` / a NUMERIC-literal or FIGURATIVE or
-reference-modified source or a NON-ASCII literal source (an ASCII alphanumeric
-string-literal source IS supported),
+delimiter / `WITH POINTER` / `ON OVERFLOW` / a NUMERIC-literal or FIGURATIVE
+source or a NON-ASCII literal source or a NUMERIC-base reference-modified source
+(an ASCII alphanumeric string-literal source and an alphanumeric-base
+reference-modified source `S(2:3)` — literal or computed index — ARE supported),
 `INSPECT` with a `CHARACTERS`
 tally, a `{BEFORE|AFTER}` region on a `FOR LEADING`/`REPLACING LEADING` phrase
 (the region ships for `FOR ALL`/`REPLACING ALL` only — on the lone forms, on

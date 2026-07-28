@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.54.0 — UNSTRING with a reference-modified source
+
+- `UNSTRING S(2:3) DELIMITED BY "," INTO w1 w2 w3` — a reference-modified item slice
+  `base(start:len)` is now accepted as the UNSTRING source (previously rejected at read time:
+  "UNSTRING with a reference-modified source is a later rung"). No grammar change was needed —
+  the grammar already parses a ref-mod operand there. The reader now accepts an
+  `Operand::RefMod` source and keeps the whole operand so exec time can slice it.
+- Semantics: identical to the existing identifier/literal source, except the field characters
+  are the ref-mod slice `base(start:len)` of the base item (1-based char position + length, per
+  COBOL reference modification). `exec_unstring` gained an `Operand::RefMod` arm that obtains the
+  source characters via the SHARED `refmod_string` helper — exactly parallel to the `Ident` and
+  `Lit(Str)` arms. Everything after `src` is obtained (the delimiter scan and per-receiver
+  reshape) is UNCHANGED.
+- Because `refmod_string` returns the SAME character range the compiler emits as a `str_slice`
+  (so DISPLAY of the same slice already agreed byte-for-byte), the split behaviour matches the
+  compiler for every case: field boundaries, empty fields, source exhaustion (trailing receivers
+  keep their prior VALUE), and per-receiver width reshaping. Both a literal start index (`S(2:3)`)
+  and a computed data-name index (`S(J:3)`) are supported — `refmod_string` resolves both.
+- **Still deferred / unchanged.** A NUMERIC base under ref-mod is a later rung — `refmod_string`
+  already returns Unsupported for a numeric base, so UNSTRING inherits that reject identically to
+  the compiler's `ref_mod_slice`. A GROUP base, out-of-range indices, and a signed/fractional
+  index item behave exactly as the existing reference-modification machinery already does (this
+  rung only routes the UNSTRING source through it). No new ASCII guard is added: the source base
+  is an IDENTIFIER, so there is no new literal-scanning surface — a non-ASCII base under ref-mod
+  is the SAME pre-existing byte-vs-char behaviour the reference-modification rungs already carry
+  (reachable via `DISPLAY S(2:3)`), left as the shared chip.
+- Still deferred (rejected on this engine and the compiler alike): a numeric/figurative literal
+  source, `WITH POINTER`, `ON OVERFLOW` / `NOT ON OVERFLOW`, and a numeric or group receiver.
+
 ## 0.53.0 — STRING with DELIMITED BY a single-char delimiter
 
 - `STRING a b c DELIMITED BY "," INTO r` — a real single-character delimiter is now accepted

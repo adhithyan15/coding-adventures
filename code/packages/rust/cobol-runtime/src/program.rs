@@ -1038,13 +1038,19 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     ))
                 }
             };
-            // The source is either a plain data-name (a PIC X item, checked at
-            // exec time) OR an alphanumeric STRING literal, whose own bytes supply
-            // the field text. A NUMERIC or FIGURATIVE literal source and a
-            // reference-modified source are still later rungs. We keep the whole
-            // `Operand` so exec time can pick the provider.
+            // The source is a plain data-name (a PIC X item, checked at exec
+            // time), an alphanumeric STRING literal (its own bytes supply the field
+            // text), OR a reference-modified item slice `base(start:len)` (its
+            // sliced characters supply the field text — the numeric-base and
+            // out-of-range checks live in the shared `refmod_string` at exec time).
+            // A NUMERIC or FIGURATIVE literal source is still a later rung. We keep
+            // the whole `Operand` so exec time can pick the provider.
             let source = match read_operand(source_op)? {
                 src @ Operand::Ident(_) => src,
+                // Reference-modified source: accepted here; the slice bounds and
+                // numeric-base reject are enforced by `refmod_string` at exec time,
+                // identically to the compiler's `ref_mod_slice`.
+                src @ Operand::RefMod { .. } => src,
                 // A string-literal source is scanned by CHARACTER here but the
                 // compiler lowers it to BYTE-based IIR string ops; the two agree
                 // only for ASCII (one byte per char). A non-ASCII literal source
@@ -1063,11 +1069,6 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                 Operand::Lit(Lit::Fig(_)) => {
                     return Err(RuntimeError::Unsupported(
                         "UNSTRING of a figurative-constant source is a later rung".into(),
-                    ))
-                }
-                Operand::RefMod { .. } => {
-                    return Err(RuntimeError::Unsupported(
-                        "UNSTRING with a reference-modified source is a later rung".into(),
                     ))
                 }
             };

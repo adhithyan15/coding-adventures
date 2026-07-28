@@ -3247,22 +3247,161 @@ fn unstring_figurative_source_is_a_later_rung() {
     );
 }
 
+// ---------------------------------------------------------------------------
+// UNSTRING with a REFERENCE-MODIFIED source `base(start:len)`. This is a direct
+// mirror of the literal-source rung: the ONLY thing that changes is the source
+// character provider — the field text is the ref-mod slice of the base item
+// (obtained through the SAME slice machinery DISPLAY / comparisons already use,
+// so the source register is byte-identical between the oracle's `refmod_string`
+// and the compiler's `ref_mod_slice`). The delimiter scan and receiver reshape
+// are entirely unchanged, so every split/exhaustion rule matches the plain
+// identifier source. A NUMERIC base under ref-mod stays a later rung (rejected
+// by the shared slice helper on both engines).
+// ---------------------------------------------------------------------------
+
 #[test]
-fn unstring_reference_modified_source_is_a_later_rung() {
-    // A reference-modified source is still deferred (unchanged) — rejected on BOTH
-    // engines even though the modified item is itself alphanumeric.
-    let src = wrap(
+fn unstring_refmod_source_splits_into_receivers() {
+    // The canonical case: source is the slice S(2:3) of "XA,BY" = "A,B", split on
+    // "," into two receivers. The reference modification carves the field text out
+    // of the middle of the base item; the split then proceeds exactly as for a
+    // plain item source.
+    let out = assert_matches_oracle(&wrap(
         &[
-            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  S  PIC X(5) VALUE \"XA,BY\".",
             "01  R1 PIC X(3) VALUE SPACES.",
             "01  R2 PIC X(3) VALUE SPACES.",
         ],
-        &["UNSTRING S(1:3) DELIMITED BY \",\" INTO R1 R2.", "STOP RUN."],
+        &[
+            "UNSTRING S(2:3) DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \n");
+}
+
+#[test]
+fn unstring_refmod_source_single_field_no_delimiter() {
+    // The delimiter is ABSENT from the slice: S(2:3) of "HELLO" = "ELL" has no
+    // comma, so the whole slice is one field, reshaped to the sole receiver's
+    // width (X(5) → space-padded).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"HELLO\".", "01  R1 PIC X(5) VALUE SPACES."],
+        &[
+            "UNSTRING S(2:3) DELIMITED BY \",\" INTO R1.",
+            "DISPLAY R1.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ELL  \n");
+}
+
+#[test]
+fn unstring_refmod_source_slice_at_start_of_base() {
+    // A slice anchored at the START of the base — S(1:3) of "A,BCD" = "A,B" —
+    // splits into two fields, proving the 1-based start position is honoured at
+    // the very first character.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,BCD\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S(1:3) DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \n");
+}
+
+#[test]
+fn unstring_refmod_source_slice_at_end_of_base() {
+    // A slice anchored at the END of the base — S(3:3) of "XYA,B" spans positions
+    // 3..5 ("A,B"), i.e. start0+len = 2+3 = 5 = the item width exactly — splits
+    // into two fields. This pins the upper slice bound at the item boundary.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"XYA,B\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S(3:3) DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \n");
+}
+
+#[test]
+fn unstring_refmod_source_with_computed_start_index() {
+    // The start index is a DATA-NAME (`J` = 2), exercising the computed ref-mod
+    // path (register-computed bounds) rather than the constant-folded literal
+    // path. S(J:3) of "XA,BY" = "A,B" → two fields, identical to the literal-index
+    // case above, so both slice paths agree with the oracle.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"XA,BY\".",
+            "01  J  PIC 9  VALUE 2.",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S(J:3) DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \n");
+}
+
+#[test]
+fn unstring_refmod_source_exhausted_leaves_receiver_unchanged() {
+    // The slice S(2:3) = "A,B" fills two receivers; the source is then exhausted,
+    // so R3 keeps its prior VALUE "ZZZ" (NOT space-filled) — the same exhaustion
+    // rule as the identifier/literal source, now driven by the slice characters.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"XA,BY\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE \"ZZZ\".",
+        ],
+        &[
+            "UNSTRING S(2:3) DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nZZZ\n");
+}
+
+#[test]
+fn unstring_numeric_base_refmod_source_is_a_later_rung() {
+    // A NUMERIC base item under reference modification is a later rung: the shared
+    // slice helper (oracle `refmod_string`, compiler `ref_mod_slice`) rejects a
+    // numeric base identically, so UNSTRING inherits that reject on BOTH engines.
+    let src = wrap(
+        &[
+            "01  N  PIC 9(5) VALUE 12345.",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &["UNSTRING N(2:3) DELIMITED BY \",\" INTO R1 R2.", "STOP RUN."],
     );
-    assert!(run_cobol(&src).is_err(), "oracle must reject a reference-modified source");
+    assert!(run_cobol(&src).is_err(), "oracle must reject a numeric-base ref-mod source");
     assert!(
         compile_source(&src, "e2e").is_err(),
-        "compiler must reject a reference-modified source"
+        "compiler must reject a numeric-base ref-mod source"
     );
 }
 
