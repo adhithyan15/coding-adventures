@@ -1,0 +1,110 @@
+% ============================================================================
+% fick-principle.adj — the Fick principle for cardiac output
+% (CO = VO2 / (CaO2 − CvO2)) in the ADJ standard library.
+% ============================================================================
+% The Fick-principle entry of the *clinical* track, a hemodynamics sibling of
+% `cardiac-output.adj`, `mean-arterial-pressure.adj` and `pulse-pressure.adj`. It is a
+% SECOND, independent determination of cardiac output: where `cardiac-output.adj` grounds
+% the definitional CO = stroke volume × heart rate, this grounds the Fick principle —
+% CARDIAC OUTPUT IS THE OXYGEN CONSUMPTION DIVIDED BY THE ARTERIOVENOUS OXYGEN-CONTENT
+% DIFFERENCE — as an importable, byte-provenanced, PARAMETERIZED `formula`, together with
+% its two exact rearrangements (the oxygen consumption a cardiac output implies for an
+% a–v difference, and the venous content implied by the other three). As with every
+% compute library, a consumer states NO arithmetic: it `import`s this file, binds the
+% measured quantities from its own byte-provenance decomposition, and asks the engine to
+% APPLY the cited relation on the CPU. Zero math is performed by the model; the engine
+% computes each value EXACTLY, carrying the relation's citation.
+%
+%     import "fick-principle.adj"
+%     observe oxygen_consumption(250)          % "…VO2 250 mL/min…"          (span cited by the model)
+%     observe arterial_oxygen_content(200)     % "…CaO2 200 mL O2/L blood…"  (span cited by the model)
+%     observe venous_oxygen_content(150)       % "…CvO2 150 mL O2/L blood…"  (span cited by the model)
+%     ? cardiac_output(oxygen_consumption, arterial_oxygen_content, venous_oxygen_content)
+%                                                % engine → 5, carrying CO = VO2 / (CaO2 − CvO2)
+%
+% All three formulas are EXACT over their parameters (a quotient over a difference, a
+% product of a difference, and a difference of a quotient); there is no separately
+% grounded physiological constant, so every value the engine returns is exact. The three
+% COMPOSE and invert cleanly around the worked case VO2 = 250 mL/min, CaO2 = 200 mL O2/L,
+% CvO2 = 150 mL O2/L (CO = 250 / (200 − 150) = 250 / 50 = 5 L/min): the `cardiac_output` a
+% consumer computes from the consumption and the two contents is exactly the
+% `cardiac_output` the `oxygen_consumption` formula multiplies the a–v difference back by
+% to recover the 250 mL/min consumption, and exactly the `cardiac_output` the
+% `venous_oxygen_content` formula divides the consumption by to recover the 150 mL O2/L
+% venous content.
+%
+%   cardiac_output(oxygen_consumption, arterial_oxygen_content, venous_oxygen_content)
+%       = oxygen_consumption / (arterial_oxygen_content - venous_oxygen_content)   % CO = VO2 / (CaO2 − CvO2)   (Fick principle)
+%   oxygen_consumption(cardiac_output, arterial_oxygen_content, venous_oxygen_content)
+%       = cardiac_output * (arterial_oxygen_content - venous_oxygen_content)        % VO2 = CO × (CaO2 − CvO2)   (same relation, solved for VO2)
+%   venous_oxygen_content(arterial_oxygen_content, oxygen_consumption, cardiac_output)
+%       = arterial_oxygen_content - oxygen_consumption / cardiac_output             % CvO2 = CaO2 − VO2 / CO     (same relation, solved for CvO2)
+%
+% NOTE ON UNITS: the two oxygen contents must be in the SAME unit of oxygen per unit
+% volume of blood; the consumption is oxygen per unit time. With contents in millilitres
+% of O2 per LITRE of blood and consumption in millilitres of O2 per minute, the cardiac
+% output comes out directly in litres per minute (as in the worked case). Clinical
+% content is often quoted per DECILITRE (mL O2/dL); a consumer that observes contents in
+% mL/dL must convert them to the same basis as the consumption first — this library
+% computes the exact value over whatever consistent units it is given, it does not itself
+% carry the dL↔L factor.
+%
+% All three formulas are defended by the SAME relation statement — "Cardiac output =
+% Tissue oxygen consumption/(Arterial oxygen content - Venous oxygen content)" — because
+% that one relation (cardiac output IS the consumption over the arteriovenous difference)
+% sanctions it read every way (CO from the three, VO2 from CO and the difference, or CvO2
+% from the other three). The quote is transcribed verbatim from the StatPearls
+% "Physiology, Cardiac Output" article on the NCBI Bookshelf, so each `formula` carries
+% the provenance envelope every shipped grounded clause carries; the linter rejects an
+% unsourced one. (See feedback_nothing_human_authored — the relation is a verbatim span of
+% the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable hemodynamic/respiratory quantity the Fick
+% relation ranges over, and each result is a derived quantity. `cardiac_output`,
+% `oxygen_consumption` and `venous_oxygen_content` each appear BOTH as a derived result
+% and as an input (of the other formulas), so each is a single dictionary term used in
+% both roles. The `surface` lists are the everyday names a decomposer maps onto the
+% canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary fick_vocab {
+    define oxygen_consumption      : finding  surface "oxygen consumption", "VO2", "tissue oxygen consumption"   % millilitres of O2 per minute (mL/min)
+    define arterial_oxygen_content : finding  surface "arterial oxygen content", "CaO2"                          % millilitres of O2 per litre of blood (mL/L)
+    define venous_oxygen_content   : finding  surface "venous oxygen content", "CvO2", "mixed venous oxygen content"  % millilitres of O2 per litre of blood (mL/L)
+    define cardiac_output          : finding  surface "cardiac output", "CO"                                     % litres per minute (L/min)
+}
+
+% ----------------------------------------------------------------------------
+% The Fick relation, all three ways. Each is a named, importable, reusable `let` over its
+% formal parameters, bound at apply time, and each carries the relation statement from
+% StatPearls on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an
+% exact quotient/product over a difference of measured quantities, so the engine returns
+% each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook fick_laws {
+    use fick_vocab
+
+    % Cardiac output — the oxygen consumption over the arteriovenous oxygen-content
+    % difference, i.e. CO = VO2 / (CaO2 − CvO2).
+    formula cardiac_output(oxygen_consumption, arterial_oxygen_content, venous_oxygen_content) = oxygen_consumption / (arterial_oxygen_content - venous_oxygen_content)
+        source "Cardiac output = Tissue oxygen consumption/(Arterial oxygen content - Venous oxygen content)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470455/"
+        trust authoritative
+
+    % Oxygen consumption — the same relation solved for the consumption a cardiac output
+    % implies for an a–v difference (VO2 = CO × (CaO2 − CvO2)). Defended by the SAME
+    % relation statement, read the other way.
+    formula oxygen_consumption(cardiac_output, arterial_oxygen_content, venous_oxygen_content) = cardiac_output * (arterial_oxygen_content - venous_oxygen_content)
+        source "Cardiac output = Tissue oxygen consumption/(Arterial oxygen content - Venous oxygen content)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470455/"
+        trust authoritative
+
+    % Venous oxygen content — the same relation solved for the venous content the other
+    % three imply (CvO2 = CaO2 − VO2 / CO). Again the SAME relation statement, read the
+    % third way.
+    formula venous_oxygen_content(arterial_oxygen_content, oxygen_consumption, cardiac_output) = arterial_oxygen_content - oxygen_consumption / cardiac_output
+        source "Cardiac output = Tissue oxygen consumption/(Arterial oxygen content - Venous oxygen content)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470455/"
+        trust authoritative
+}
