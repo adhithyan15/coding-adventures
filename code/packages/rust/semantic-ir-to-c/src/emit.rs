@@ -11,7 +11,7 @@
 //! See [SIR24](../../../specs/SIR24-semantic-ir-to-c.md) for the design.
 
 use std::cell::{Cell, RefCell};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fmt::Write;
 
 use semantic_ir::{Block, Expr, Function, Global, IntSpec, IntWidth, Module, Scope, Span, Stmt};
@@ -1325,6 +1325,40 @@ fn emit_builtin_simple(out: &mut String, name: &str, args: &[Expr], indent: usiz
         }
         return;
     }
+    // OOP slice 2: register an instance method.  `args = [StrLit(class),
+    // StrLit(method), MakeClosure(fn)]`.  Class/method are QUOTED C string
+    // literals (no injection); the closure is emitted as a `_sir_make_closure`.
+    if name == "__def_method__" {
+        if let (Some(Expr::StrLit { value: cls, .. }), Some(Expr::StrLit { value: m, .. }), Some(clo)) =
+            (args.first(), args.get(1), args.get(2))
+        {
+            let _ = write!(out, "_sir_def_method({}, {}, ", quote_c_string(cls), quote_c_string(m));
+            emit_expr(out, clo, indent);
+            out.push(')');
+        } else {
+            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+        }
+        return;
+    }
+    // OOP slice 2: dispatch an instance method.  `args = [recv, StrLit(method),
+    // call-args…]`.  The method name is a QUOTED C string literal; dispatch is an
+    // explicit `(class,method)` table lookup (anti-RCE — never reflection).
+    if name == "__method__" {
+        if let (Some(recv), Some(Expr::StrLit { value: m, .. })) = (args.first(), args.get(1)) {
+            let call_args = &args[2..];
+            out.push_str("_sir_call_method(");
+            emit_expr(out, recv, indent);
+            let _ = write!(out, ", {}, {}", quote_c_string(m), call_args.len());
+            for a in call_args {
+                out.push_str(", ");
+                emit_expr(out, a, indent);
+            }
+            out.push(')');
+        } else {
+            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+        }
+        return;
+    }
     // Variadic-shaped builtins take (count, args...).
     if let Some(helper) = variadic_helper(name) {
         let _ = write!(out, "{}({}", helper, args.len());
@@ -1364,10 +1398,12 @@ fn emit_builtin_with_names(out: &mut String, name: &str, names: &[String]) {
         }
         return;
     }
-    // `__new__`'s single `StrLit` class-name arg is always simple, so the call is
-    // never hoisted to the compound path — this arm is unreachable, but emit a
-    // clear marker rather than a wrong `_sir_str`-based construction.
-    if name == "__new__" {
+    // `__new__`/`__def_method__`/`__method__` carry a `StrLit` class/method name
+    // (and a `MakeClosure`) that must stay a raw C literal, which the compound
+    // (already-emitted `names`) path cannot recover.  The scan rejects any such
+    // call that is not `is_simple` (a control-flow argument), so these arms are
+    // unreachable — emit a clear marker rather than a wrong construction.
+    if matches!(name, "__new__" | "__def_method__" | "__method__") {
         let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
         return;
     }
@@ -1425,19 +1461,160 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
 fn is_supported_builtin(name: &str) -> bool {
     variadic_helper(name).is_some()
         || fixed_helper(name).is_some()
-        // OOP slice 1: `__new__` constructs an instance.  (The other OOP builtins
-        // — `__def_method__`/`__method__`/`__super__`/… — stay unsupported, so a
-        // method-bearing class is rejected up front.)
-        || matches!(name, "and" | "or" | "raise" | "__new__")
+        // OOP slice 1 `__new__` (construct an instance) + slice 2 instance
+        // methods: `__def_method__` (register a `(class,method)` closure) and
+        // `__method__` (dispatch it).  (`__super__`/`__self__`/`__class_method__`/
+        // … stay unsupported — later slices.)
+        || matches!(name, "and" | "or" | "raise" | "__new__" | "__def_method__" | "__method__")
 }
 
-/// The first `BuiltinCall` whose name the v0 emitter cannot lower, if any.  A
-/// structural gate (the C analogue of the Go backend's `check_exception_soundness`):
-/// some builtins — notably `__method__` — are not gated by an *unaccepted
-/// feature*, so a module can pass the capability check yet still contain a
-/// builtin this v0 has no lowering for.  Reporting it lets `compile` reject
-/// cleanly.
+// The structural gate below (`first_unsupported_builtin`) reports the first
+// `BuiltinCall` the v0 emitter cannot lower — some builtins (notably `__method__`)
+// are not gated by an unaccepted feature, so a module can pass the capability
+// check yet still contain an unlowerable builtin — plus the out-of-slice OOP
+// shapes.  The thread-local below carries its `__method__` allowlist.
+thread_local! {
+    // The set of method names the module registers via `__def_method__` — the
+    // CLOSED set that `__method__` dispatch may target (OOP slice 2). A dispatch to
+    // any OTHER name is a built-in-method call (the Collections batch), rejected
+    // until then. Populated once per `first_unsupported_builtin` run (compilation
+    // is single-threaded per module), read in the scan. (Dispatch is already
+    // anti-RCE by construction — an explicit (class,method) table lookup — so this
+    // allowlist is purely for clean COMPILE-TIME rejection.)
+    static DEFINED_METHODS: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
+}
+
+/// Collect the `__def_method__("Class", "m", …)` method names anywhere in `m`
+/// (a full recursive walk, so a dispatch is never wrongly rejected for a
+/// registration nested in a loop/branch/closure).
+fn collect_defined_methods(m: &Module, out: &mut HashSet<String>) {
+    fn from_expr(e: &Expr, out: &mut HashSet<String>) {
+        match e {
+            Expr::BuiltinCall { name, args, .. } => {
+                if name == "__def_method__" {
+                    if let Some(Expr::StrLit { value, .. }) = args.get(1) {
+                        out.insert(value.clone());
+                    }
+                }
+                args.iter().for_each(|a| from_expr(a, out));
+            }
+            Expr::DirectCall { args, .. } => args.iter().for_each(|a| from_expr(a, out)),
+            Expr::IndirectCall { target, args, .. } => {
+                from_expr(target, out);
+                args.iter().for_each(|a| from_expr(a, out));
+            }
+            Expr::KeywordArg { value, .. } => from_expr(value, out),
+            Expr::If {
+                cond,
+                then_branch,
+                else_branch,
+                ..
+            } => {
+                from_expr(cond, out);
+                from_block(then_branch, out);
+                from_block(else_branch, out);
+            }
+            Expr::Block(b) => from_block(b, out),
+            Expr::MakeClosure { captures, .. } => {
+                captures.iter().for_each(|c| from_expr(&c.value, out))
+            }
+            Expr::Convert { value, .. } => from_expr(value, out),
+            Expr::SeqLit { items, .. } => items.iter().for_each(|i| from_expr(i, out)),
+            Expr::SeqIndex { seq, index, .. } => {
+                from_expr(seq, out);
+                from_expr(index, out);
+            }
+            Expr::SeqLen { seq, .. } => from_expr(seq, out),
+            Expr::MapLit { entries, .. } => entries.iter().for_each(|e| {
+                from_expr(&e.key, out);
+                from_expr(&e.value, out);
+            }),
+            Expr::MapGet { map, key, .. } => {
+                from_expr(map, out);
+                from_expr(key, out);
+            }
+            Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+                from_expr(lhs, out);
+                from_expr(rhs, out);
+            }
+            _ => {}
+        }
+    }
+    fn from_stmt(s: &Stmt, out: &mut HashSet<String>) {
+        match s {
+            Stmt::LetBinding { value, .. }
+            | Stmt::LetStarBinding { value, .. }
+            | Stmt::ExprStmt { expr: value, .. }
+            | Stmt::Assign { value, .. } => from_expr(value, out),
+            Stmt::While { cond, body, .. } => {
+                from_expr(cond, out);
+                from_block(body, out);
+            }
+            Stmt::ForRange {
+                start,
+                stop,
+                step,
+                body,
+                ..
+            } => {
+                from_expr(start, out);
+                from_expr(stop, out);
+                from_expr(step, out);
+                from_block(body, out);
+            }
+            Stmt::ForEach { iter, body, .. } => {
+                from_expr(iter, out);
+                from_block(body, out);
+            }
+            Stmt::SeqSet {
+                seq, index, value, ..
+            } => {
+                from_expr(seq, out);
+                from_expr(index, out);
+                from_expr(value, out);
+            }
+            Stmt::MapSet {
+                map, key, value, ..
+            } => {
+                from_expr(map, out);
+                from_expr(key, out);
+                from_expr(value, out);
+            }
+            Stmt::TryCatch {
+                body,
+                rescues,
+                ensure_body,
+                ..
+            } => {
+                body.iter().for_each(|s| from_stmt(s, out));
+                rescues
+                    .iter()
+                    .for_each(|rc| rc.body.iter().for_each(|s| from_stmt(s, out)));
+                if let Some(e) = ensure_body {
+                    e.iter().for_each(|s| from_stmt(s, out));
+                }
+            }
+            _ => {}
+        }
+    }
+    fn from_block(b: &Block, out: &mut HashSet<String>) {
+        b.stmts.iter().for_each(|s| from_stmt(s, out));
+        from_expr(&b.value, out);
+    }
+    for f in &m.functions {
+        for p in &f.params {
+            if let Some(d) = &p.default {
+                from_expr(d, out);
+            }
+        }
+        from_block(&f.body, out);
+    }
+}
+
 pub fn first_unsupported_builtin(m: &Module) -> Option<(String, Span)> {
+    let mut defined = HashSet::new();
+    collect_defined_methods(m, &mut defined);
+    DEFINED_METHODS.with(|d| *d.borrow_mut() = defined);
     for f in &m.functions {
         // A SIR19 parameter default is an expression the prologue evaluates at
         // call time, so a deferred builtin nested in one must be pre-checked
@@ -1564,6 +1741,51 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
                     "__new__ with constructor arguments or a non-constant class name".to_string(),
                     span.clone(),
                 ));
+            }
+            // OOP slice 2: `__def_method__` must be `[StrLit(class), StrLit(method),
+            // MakeClosure]` — the emitter reads all three; a malformed shape would
+            // otherwise emit a runtime-failing marker instead of rejecting.
+            if name == "__def_method__"
+                && !matches!(
+                    args.as_slice(),
+                    [Expr::StrLit { .. }, Expr::StrLit { .. }, Expr::MakeClosure { .. }]
+                )
+            {
+                return Some(("a malformed __def_method__ registration".to_string(), span.clone()));
+            }
+            // `__method__` must have a receiver and a `StrLit` method name.
+            if name == "__method__"
+                && !matches!((args.first(), args.get(1)), (Some(_), Some(Expr::StrLit { .. })))
+            {
+                return Some(("a malformed __method__ dispatch".to_string(), span.clone()));
+            }
+            // `__def_method__`/`__method__` carry a `StrLit` class/method name that
+            // must stay a raw C literal.  The compound (control-flow-argument) path
+            // cannot recover it, so reject a call that is not `is_simple` —
+            // deferred, not mis-emitted.
+            if matches!(name.as_str(), "__def_method__" | "__method__") && !is_simple(e) {
+                return Some((
+                    format!("a `{name}` call with a control-flow argument"),
+                    span.clone(),
+                ));
+            }
+            // `__method__(recv, "m", …)` dispatch to a method the module never
+            // registers via `__def_method__` is a BUILT-IN method call (the
+            // Collections batch) — rejected cleanly (dispatch is already anti-RCE
+            // by construction; this preserves clean compile-time rejection).
+            if name == "__method__" {
+                if let Some(Expr::StrLit { value, .. }) = args.get(1) {
+                    let known = DEFINED_METHODS.with(|d| d.borrow().contains(value));
+                    if !known {
+                        return Some((
+                            format!(
+                                "a call to the built-in method `{value}` (only \
+                                 user-defined methods dispatch this slice)"
+                            ),
+                            span.clone(),
+                        ));
+                    }
+                }
             }
             args.iter().find_map(scan_expr_for_builtin)
         }

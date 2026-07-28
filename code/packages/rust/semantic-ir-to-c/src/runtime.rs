@@ -1013,6 +1013,73 @@ SirValue _sir_const_get(const char *name) {
     return _sir_raise(_sir_error("NameError", _sir_str(_sir_cat("uninitialized constant ", name))));
 }
 
+/* ---- OOP: instance-method table & dispatch ------------------ */
+
+/* An EXPLICIT (class, method) -> closure table, populated by emitted
+ * `__def_method__` registrations.  Dispatch (`__method__`) is a DATA lookup on
+ * the (interned class, interned method) key — NEVER reflection on a
+ * source-derived string — so a user method literally named `system`/`eval` is
+ * only ever a table KEY, and an unresolved method is a controlled `NoMethodError`
+ * (the anti-RCE invariant, SIR24 §Security #2).  Keys are interned, so the scan
+ * is a pointer compare.  (Slice 2: a flat table; inheritance walks the ancestry
+ * in a later slice.) */
+#define SIR_METHOD_MAX 8192
+static struct { const char *cls; const char *method; SirValue fn; } _sir_method_tab[SIR_METHOD_MAX];
+static int _sir_method_n = 0;
+
+SirValue _sir_def_method(const char *cls, const char *method, SirValue fn) {
+    const char *c = _sir_intern(cls), *m = _sir_intern(method);
+    int i;
+    for (i = 0; i < _sir_method_n; i++) {
+        if (_sir_method_tab[i].cls == c && _sir_method_tab[i].method == m) {
+            _sir_method_tab[i].fn = fn;
+            return fn;
+        }
+    }
+    if (_sir_method_n < SIR_METHOD_MAX) {
+        _sir_method_tab[_sir_method_n].cls = c;
+        _sir_method_tab[_sir_method_n].method = m;
+        _sir_method_tab[_sir_method_n].fn = fn;
+        _sir_method_n++;
+    }
+    return fn;
+}
+
+/* Look up `(cls, method)` -> closure, or a `SIR_NIL` sentinel on a miss. */
+static SirValue _sir_lookup_method(const char *cls, const char *method) {
+    const char *c = _sir_intern(cls), *m = _sir_intern(method);
+    int i;
+    for (i = 0; i < _sir_method_n; i++) {
+        if (_sir_method_tab[i].cls == c && _sir_method_tab[i].method == m) {
+            return _sir_method_tab[i].fn;
+        }
+    }
+    return _sir_nil();
+}
+
+/* Dispatch an instance method: resolve `(recv's class, method)` and apply the
+ * closure to the args.  A non-instance receiver or an unresolved method is a
+ * (rescuable) `NoMethodError`. */
+SirValue _sir_call_method(SirValue recv, const char *method, int argc, ...) {
+    va_list ap;
+    SirValue *args, fn, r;
+    if (recv.tag != SIR_INSTANCE) {
+        return _sir_raise(_sir_error(
+            "NoMethodError", _sir_str(_sir_cat("undefined method for a non-object receiver: ", method))));
+    }
+    fn = _sir_lookup_method(recv.as.inst->sir_class, method);
+    if (fn.tag != SIR_CLOSURE) {
+        return _sir_raise(
+            _sir_error("NoMethodError", _sir_str(_sir_cat("undefined method ", method))));
+    }
+    va_start(ap, argc);
+    args = _sir_va_collect(argc, ap);
+    va_end(ap);
+    r = fn.as.clo->fn(fn.as.clo->caps, args, argc);
+    if (args) free(args);
+    return r;
+}
+
 SirValue _sir_print_v(SirValue *xs, int n) {
     int i;
     for (i = 0; i < n; i++) _sir_fmt(stdout, xs[i]);

@@ -176,7 +176,8 @@ fn deferred_oop_shapes_are_rejected_cleanly() {
         ),
         "__new__ with ctor args must be rejected"
     );
-    // A method-bearing class surfaces `__def_method__` (an unsupported builtin).
+    // A MALFORMED `__def_method__` (no closure) — a well-formed one is now
+    // supported (slice 2), but a missing closure must reject, not mis-emit.
     assert!(
         rejects(
             vec![
@@ -185,7 +186,7 @@ fn deferred_oop_shapes_are_rejected_cleanly() {
             ],
             &[Feature::Classes, Feature::Constants, Feature::Strings]
         ),
-        "__def_method__ must be rejected"
+        "a malformed __def_method__ must be rejected"
     );
     // A `class << self` singleton (also observes Feature::Classes).
     assert!(
@@ -195,13 +196,14 @@ fn deferred_oop_shapes_are_rejected_cleanly() {
         ),
         "singleton class must be rejected"
     );
-    // An instance-method dispatch (`__method__`) is a later slice.
+    // A `__method__` dispatch to a method the module never registers is a
+    // built-in method call (the Collections batch) — rejected cleanly.
     assert!(
         rejects(
             vec![puts(bc("__method__", vec![bc("__new__", vec![strlit("Foo")]), strlit("m")]))],
             &[Feature::Classes, Feature::Constants, Feature::Strings]
         ),
-        "__method__ dispatch must be rejected"
+        "an unregistered (built-in) __method__ dispatch must be rejected"
     );
     // A superclass (inheritance dispatch is a later slice) — the empty-class
     // comment emit would otherwise silently drop the link.

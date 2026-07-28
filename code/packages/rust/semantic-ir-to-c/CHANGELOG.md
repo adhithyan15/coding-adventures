@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.14.0 — OOP mirror slice 2: instance methods
+
+Instance-method definition and dispatch — the second slice of the C OOP mirror.
+
+- `__def_method__("Class", "m", MakeClosure(fn))` registers a method: it inserts
+  the closure into an explicit `(class, method) → closure` table
+  (`_sir_def_method`, keyed on the interned class + method).
+- `__method__(recv, "m", args…)` dispatches: `_sir_call_method` resolves
+  `(recv's class, "m")` in the table and applies the closure to the args; a
+  non-instance receiver or an unresolved method is a (rescuable) `NoMethodError`.
+
+**Anti-RCE by construction.** Dispatch is an **explicit data lookup** on the
+`(class, method)` key — never reflection on a source-derived string (the SIR24
+§Security invariant). A user method literally named `system`/`eval` is only ever
+a table KEY; an unknown method is a controlled `NoMethodError`, never a jump.
+(Class/method names emit as quoted C string literals, so there is no injection
+surface either.)
+
+**Totality / clean rejection.** A `__method__` dispatch to a name the module
+never registers via `__def_method__` is a **built-in method call** (`.length`,
+`.upcase`, … — the separate Collections batch) and is rejected cleanly, not
+compiled to a runtime `NoMethodError`: a first pass collects the registered
+method names (a thread-local allowlist), and the scan validates each dispatch. A
+malformed `__def_method__` (not `[StrLit, StrLit, MakeClosure]`) or `__method__`,
+and a `__def_method__`/`__method__` with a control-flow argument (which the
+compound emit path cannot render), are also rejected. `self`/`@ivars` are the
+next slice, so method bodies here don't yet reference the instance.
+
 ## 0.13.0 — OOP mirror slice 1: instance runtime + empty class + constants
 
 Accepts `Feature::Classes` + `Feature::Constants` — the first slice of the C
