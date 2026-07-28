@@ -2263,18 +2263,8 @@ mod tests {
         ))
         .unwrap_err();
         assert!(matches!(multi, RuntimeError::Unsupported(_)), "got {multi:?}");
-        // … and so is ON OVERFLOW (WITH POINTER is now modelled — see the
-        // `string_with_pointer_*` tests below).
-        let overflow = run_cobol(&wrap(
-            &["01  A  PIC X(3) VALUE \"ABC\".", "01  T  PIC X(2) VALUE SPACES."],
-            &[
-                "STRING A DELIMITED BY SIZE INTO T",
-                "    ON OVERFLOW DISPLAY \"O\" END-STRING.",
-                "STOP RUN.",
-            ],
-        ))
-        .unwrap_err();
-        assert!(matches!(overflow, RuntimeError::Unsupported(_)), "got {overflow:?}");
+        // (`WITH POINTER` and `ON OVERFLOW` / `NOT ON OVERFLOW` are now modelled — see
+        // the `string_with_pointer_*` and `string_on_overflow_*` tests below.)
     }
 
     #[test]
@@ -2336,6 +2326,78 @@ mod tests {
         ))
         .unwrap_err();
         assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn string_on_overflow_runs_when_content_is_dropped() {
+        // Overflow: "abcd"+"efgh" (8 chars) into a 5-wide receiver drops 3 chars, so
+        // the ON OVERFLOW imperative runs (sets F = "YES") and the NOT clause does not.
+        let out = run_cobol(&wrap(
+            &[
+                "01  A  PIC X(4) VALUE \"abcd\".",
+                "01  B  PIC X(4) VALUE \"efgh\".",
+                "01  T  PIC X(5) VALUE \".....\".",
+                "01  F  PIC X(3) VALUE \"no \".",
+            ],
+            &[
+                "STRING A B DELIMITED BY SIZE INTO T",
+                "    ON OVERFLOW MOVE \"YES\" TO F",
+                "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+                "DISPLAY T.",
+                "DISPLAY F.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "abcde\nYES\n");
+    }
+
+    #[test]
+    fn string_not_on_overflow_runs_when_content_fits() {
+        // No overflow: "ab"+"cd" (4 chars) fits a 5-wide receiver, so the NOT ON
+        // OVERFLOW imperative runs (F = "NON") and the ON clause does not.
+        let out = run_cobol(&wrap(
+            &[
+                "01  A  PIC X(2) VALUE \"ab\".",
+                "01  B  PIC X(2) VALUE \"cd\".",
+                "01  T  PIC X(5) VALUE \".....\".",
+                "01  F  PIC X(3) VALUE \"no \".",
+            ],
+            &[
+                "STRING A B DELIMITED BY SIZE INTO T",
+                "    ON OVERFLOW MOVE \"YES\" TO F",
+                "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+                "DISPLAY T.",
+                "DISPLAY F.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "abcd.\nNON\n");
+    }
+
+    #[test]
+    fn string_pointer_out_of_range_runs_on_overflow() {
+        // An out-of-range initial pointer (p = 0) is overflow: NO data movement and
+        // the pointer is left unchanged, but the ON OVERFLOW imperative now runs.
+        let out = run_cobol(&wrap(
+            &[
+                "01  A  PIC X(3) VALUE \"abc\".",
+                "01  T  PIC X(6) VALUE \"......\".",
+                "01  P  PIC 9(2) VALUE 0.",
+                "01  F  PIC X(3) VALUE \"no \".",
+            ],
+            &[
+                "STRING A DELIMITED BY SIZE INTO T WITH POINTER P",
+                "    ON OVERFLOW MOVE \"YES\" TO F.",
+                "DISPLAY T.",
+                "DISPLAY P.",
+                "DISPLAY F.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "......\n00\nYES\n");
     }
 
     #[test]

@@ -158,9 +158,20 @@ pub enum Stmt {
     /// character stored). `None` when the phrase is absent (overlay at position 0,
     /// no write-back).
     ///
-    /// `ON OVERFLOW`, a multi-character delimiter, and per-field different
-    /// delimiters remain later rungs (rejected at build time).
-    String { sources: Vec<Operand>, target: String, delim: Option<Operand>, pointer: Option<String> },
+    /// `ON OVERFLOW` / `NOT ON OVERFLOW` are now MODELLED: `on_overflow` holds the
+    /// imperative statement list run when the STRING overflows (the receiver fills
+    /// before every sending character is transferred, OR the initial `WITH POINTER`
+    /// value is out of range), and `not_on_overflow` holds the list run when it does
+    /// NOT. Either list may be empty (clause absent). A multi-character delimiter and
+    /// per-field different delimiters remain later rungs (rejected at build time).
+    String {
+        sources: Vec<Operand>,
+        target: String,
+        delim: Option<Operand>,
+        pointer: Option<String>,
+        on_overflow: Vec<Stmt>,
+        not_on_overflow: Vec<Stmt>,
+    },
     /// `UNSTRING source DELIMITED BY delim INTO r1 [r2 …]` — the inverse of
     /// STRING. Scan the alphanumeric `source` left-to-right, splitting it into
     /// delimited fields on each occurrence of the SINGLE-character `delim` (a
@@ -972,17 +983,11 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             Ok(Stmt::If { cond, then_branch, else_branch })
         }
         "string_stmt" => {
-            // STRING s… DELIMITED BY {SIZE | delim} INTO t [WITH POINTER p]. The
-            // grammar also *accepts* the remaining later-rung option (ON OVERFLOW)
-            // so that we can reject it here with a friendly Unsupported instead of a
-            // bare parse error. `WITH POINTER` is now MODELLED (see the pointer
-            // extraction below), so it is no longer rejected.
+            // STRING s… DELIMITED BY {SIZE | delim} INTO t [WITH POINTER p]
+            //        [ON OVERFLOW imp…] [NOT ON OVERFLOW imp…]. Both `WITH POINTER`
+            // and the two OVERFLOW imperatives are now MODELLED (see the extraction
+            // below), so nothing is rejected here.
             let toks = child_tokens(verb);
-            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "OVERFLOW") {
-                return Err(RuntimeError::Unsupported(
-                    "STRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung".into(),
-                ));
-            }
             // The delimiter is `SIZE` or a general operand. `DELIMITED BY SIZE`
             // takes each field in full (`delim = None`); a real single-character
             // delimiter (`delim = Some(op)`) truncates each field at its first
@@ -1025,7 +1030,41 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             let pointer: Option<String> = ptr_pos.and_then(|pp| {
                 toks[pp + 1..].iter().find(|(k, _)| k == "NAME").map(|(_, v)| v.clone())
             });
-            Ok(Stmt::String { sources, target, delim, pointer })
+            // The optional imperatives are direct `statement` child nodes of the
+            // `string_stmt`, appearing ONLY after the `ON OVERFLOW` / `NOT ON
+            // OVERFLOW` keywords (the grammar emits the keywords as leaf tokens and
+            // the imperatives as `statement` siblings — mirror the `if_stmt` reader
+            // above, which splits its then/else statement children at `ELSE`).
+            //
+            //   STRING … ON OVERFLOW  MOVE 1 TO F   NOT ON OVERFLOW  MOVE 0 TO F
+            //                         └─ on_overflow ┘  ▲NOT flips   └ not_on_overflow ┘
+            //
+            // A nested statement's OWN `NOT` (e.g. `IF A NOT = B …`) is buried inside
+            // that `statement` node, never a direct token child of `string_stmt`, so
+            // the split cannot be fooled. Once `seen_not` flips, every subsequent
+            // `statement` belongs to NOT ON OVERFLOW.
+            let mut on_overflow = Vec::new();
+            let mut not_on_overflow = Vec::new();
+            let mut seen_not = false;
+            for child in &verb.children {
+                match child {
+                    ASTNodeOrToken::Token(t)
+                        if t.value == "NOT" && t.effective_type_name() == "KEYWORD" =>
+                    {
+                        seen_not = true;
+                    }
+                    ASTNodeOrToken::Node(n) if n.rule_name == "statement" => {
+                        let stmt = read_statement(n)?;
+                        if seen_not {
+                            not_on_overflow.push(stmt);
+                        } else {
+                            on_overflow.push(stmt);
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            Ok(Stmt::String { sources, target, delim, pointer, on_overflow, not_on_overflow })
         }
         "unstring_stmt" => {
             // UNSTRING source DELIMITED BY delim INTO r1 [r2 …] [WITH POINTER p].

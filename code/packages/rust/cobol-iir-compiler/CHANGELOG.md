@@ -8,6 +8,27 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.53.0: STRING … ON OVERFLOW / NOT ON OVERFLOW
+
+`STRING s1 s2 … DELIMITED BY {SIZE | delim} INTO t [WITH POINTER p] [ON OVERFLOW imp…] [NOT ON
+OVERFLOW imp…]` — the two optional overflow imperatives are now compiled, byte-identical to the
+`coding-adventures-cobol-runtime` 0.57.0 oracle. Previously they were rejected at emit time
+("STRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung"). No grammar change was needed.
+
+- `emit_string` (and the shared `emit_string_pointer_overlay`) now yield an `overflow` i64
+  register (`1`/`0`) computed with the IDENTICAL comparison the oracle uses:
+  - **No `WITH POINTER`:** overflow ⇔ `total > width`, a COMPILE-TIME-known boolean materialised
+    as a `const`.
+  - **`WITH POINTER`:** `emit_string_pointer_overlay` pre-seeds the flag to `1`, lets the two
+    out-of-range guards fall through to `st_end` with it still set (out-of-range IS overflow),
+    and OVERWRITES it in the in-range path with the drop test `clen > avail`.
+  - **`DELIMITED BY delim`, no pointer:** overflow ⇔ the run-time `clen > width` test (`gt`),
+    reused directly as the flag.
+- After the overlay, `emit_string` splits the `statement` children at the `NOT` keyword (exactly
+  as the oracle reader and `emit_if`'s `ELSE` split do) into the ON / NOT-ON lists, then emits the
+  usual `jmp_if_false`/branch/`label` skeleton guarding on the `overflow` register. Both clauses
+  absent ⇒ no branch skeleton is emitted (a plain STRING lowers exactly as before).
+
 ### Added — v0.52.0: STRING … WITH POINTER
 
 `STRING s1 s2 … DELIMITED BY {SIZE | delim} INTO t WITH POINTER p` — the optional `WITH POINTER`

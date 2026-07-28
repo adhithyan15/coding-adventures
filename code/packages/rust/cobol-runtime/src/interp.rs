@@ -355,8 +355,15 @@ impl Machine {
             }
             Stmt::SetTrue { cond_name } => self.exec_set_true(cond_name)?,
             Stmt::Evaluate { subject, branches } => return self.exec_evaluate(subject, branches),
-            Stmt::String { sources, target, delim, pointer } => {
-                self.exec_string(sources, target, delim.as_ref(), pointer.as_deref())?
+            Stmt::String { sources, target, delim, pointer, on_overflow, not_on_overflow } => {
+                return self.exec_string(
+                    sources,
+                    target,
+                    delim.as_ref(),
+                    pointer.as_deref(),
+                    on_overflow,
+                    not_on_overflow,
+                );
             }
             Stmt::Unstring { source, delim, targets, pointer } => {
                 self.exec_unstring(source, delim, targets, pointer.as_deref())?
@@ -437,7 +444,9 @@ impl Machine {
         target: &str,
         delim: Option<&Operand>,
         pointer: Option<&str>,
-    ) -> Result<(), RuntimeError> {
+        on_overflow: &[Stmt],
+        not_on_overflow: &[Stmt],
+    ) -> Result<Flow, RuntimeError> {
         // Resolve the single delimiter character once (it applies to every field).
         // A multi-char / numeric / figurative / reference-modified / wider-item
         // delimiter is rejected by the SAME `single_delim_char` UNSTRING uses.
@@ -535,22 +544,40 @@ impl Machine {
         //
         //   * **Write-back.** `p` becomes `p + chars_placed`, the 1-based position
         //     one past the last character stored. When the content does not all fit
-        //     (`concat.len() > size - start`) the excess is dropped — this is ISO's
-        //     overflow, and since `ON OVERFLOW` is still deferred no imperative runs
-        //     — and `chars_placed = size - start`, so `p` becomes `size + 1`.
+        //     (`concat.len() > size - start`) the excess is dropped — this IS ISO's
+        //     overflow, and `chars_placed = size - start`, so `p` becomes `size + 1`.
         //
         // ## Out-of-range initial pointer
         //
         // `p` is `PIC 9(n)` so `p ≥ 0`. When the initial value is OUTSIDE `[1,
         // size]` — either `p == 0` (a 0-based start of −1) or `p > size` (start past
-        // the receiver end) — this is ISO's overflow condition. Since `ON OVERFLOW`
-        // is deferred we apply the ISO "overflow ⇒ no data movement" rule
-        // DETERMINISTICALLY: NO character is transferred (receiver UNCHANGED) and `p`
-        // is left UNCHANGED. Because `p` is a run-time value neither engine can
-        // range-check it at build time; the compiler emits the identical guard so
-        // the accept/skip decision is byte-identical.
+        // the receiver end) — this is ISO's overflow condition. We apply the ISO
+        // "overflow ⇒ no data movement" rule DETERMINISTICALLY: NO character is
+        // transferred (receiver UNCHANGED) and `p` is left UNCHANGED. Because `p` is
+        // a run-time value neither engine can range-check it at build time; the
+        // compiler emits the identical guard so the accept/skip decision is
+        // byte-identical.
+        //
+        // # The `overflow` condition (drives ON / NOT ON OVERFLOW)
+        //
+        // ISO: overflow occurs when the receiver fills before every sending character
+        // is transferred (characters dropped), OR the initial pointer is out of
+        // range. Concretely, with `avail` = characters reachable from the start:
+        //
+        //   | case                       | start | avail       | overflow           |
+        //   | -------------------------- | ----- | ----------- | ------------------ |
+        //   | no WITH POINTER            | 0     | size        | concat.len > size  |
+        //   | POINTER p, p∈[1,size]      | p-1   | size-(p-1)  | concat.len > avail |
+        //   | POINTER p, p==0 || p>size  | —     | —           | true (no movement) |
+        //
+        // Both engines MUST compute this identical comparison; a mismatch diverges.
+        // After the (unchanged) data movement we run `on_overflow` when `overflow` is
+        // set, else `not_on_overflow` — either list may be empty (clause absent),
+        // in which case `run_stmts` returns `Flow::Normal`.
+        let overflow: bool;
         match pointer {
             None => {
+                overflow = src.len() > size;
                 let n = src.len().min(size);
                 dst[..n].copy_from_slice(&src[..n]);
                 self.items[idx].storage = dst.into_iter().collect();
@@ -595,23 +622,36 @@ impl Machine {
                 let pv_dec = self.named_decimal(pname)?;
                 let pv: u128 = pv_dec.int.trim_start_matches('0').parse().unwrap_or(0);
                 if pv == 0 || pv > size as u128 {
-                    // Out of range: no data movement, pointer unchanged.
-                    return Ok(());
+                    // Out of range IS overflow: no data movement, pointer unchanged,
+                    // but the ON OVERFLOW imperative still runs (a behaviour change
+                    // from the pre-overflow rung, which returned here with no
+                    // imperative). Fall through to the shared imperative dispatch.
+                    overflow = true;
+                } else {
+                    let start = (pv - 1) as usize; // 0-based overlay offset
+                    let avail = size - start; // ≥ 1 here (pv ≤ size)
+                    overflow = src.len() > avail; // some sending chars would be dropped
+                    let chars_placed = src.len().min(avail);
+                    dst[start..start + chars_placed].copy_from_slice(&src[..chars_placed]);
+                    self.items[idx].storage = dst.into_iter().collect();
+                    // Write `p` back to `p + chars_placed`, reshaped into its `PIC
+                    // 9(n)` picture through the same numeric store ADD/INSPECT use.
+                    let resume = pv + chars_placed as u128;
+                    let value =
+                        Decimal { neg: false, int: resume.to_string(), frac: String::new() };
+                    self.store_result(pname, value, false, &[])?;
                 }
-                let start = (pv - 1) as usize; // 0-based overlay offset
-                let avail = size - start; // ≥ 1 here (pv ≤ size)
-                let chars_placed = src.len().min(avail);
-                dst[start..start + chars_placed].copy_from_slice(&src[..chars_placed]);
-                self.items[idx].storage = dst.into_iter().collect();
-                // Write `p` back to `p + chars_placed`, reshaped into its `PIC 9(n)`
-                // picture through the same numeric store path ADD/INSPECT use.
-                let resume = pv + chars_placed as u128;
-                let value =
-                    Decimal { neg: false, int: resume.to_string(), frac: String::new() };
-                self.store_result(pname, value, false, &[])?;
             }
         }
-        Ok(())
+        // Run the conditional imperative. An empty list → `run_stmts` = `Flow::Normal`
+        // (mirrors how `store_result` dispatches `ON SIZE ERROR`). A `STOP RUN` / `GO
+        // TO` inside the chosen list propagates its `Flow` up to unwind the enclosing
+        // paragraph, exactly like an IF branch.
+        if overflow {
+            self.run_stmts(on_overflow)
+        } else {
+            self.run_stmts(not_on_overflow)
+        }
     }
 
     /// The character image a sending field contributes to a `STRING` (taken in

@@ -1283,15 +1283,9 @@ impl<'a> Compiler<'a> {
     /// non-ASCII string-literal sending field under an active delimiter) is a clean
     /// later rung on both engines.
     fn emit_string(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
-        // Reject the remaining later-rung option the grammar accepts (so the message
-        // is a clean Unsupported, not a parse error). `WITH POINTER` is now MODELLED
-        // (see the pointer handling below), so only `ON OVERFLOW` is rejected here.
+        // `WITH POINTER` and the two OVERFLOW imperatives are now MODELLED (see the
+        // handling below), so nothing is rejected up front.
         let toks = child_tokens(verb);
-        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "OVERFLOW") {
-            return Err(CompileError::Unsupported(
-                "STRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung".into(),
-            ));
-        }
         let delim_node = child_node(verb, "string_delim")
             .ok_or_else(|| CompileError::Malformed("STRING without DELIMITED BY".into()))?;
         let is_size = child_tokens(delim_node).iter().any(|(k, v)| k == "KEYWORD" && v == "SIZE");
@@ -1386,7 +1380,10 @@ impl<'a> Compiler<'a> {
             None => None,
         };
 
-        match &delim_code {
+        // Each arm yields the `overflow` i64 register (1 / 0) selecting the ON /
+        // NOT ON OVERFLOW imperative below. The comparison MUST be the identical one
+        // the oracle uses so the accept/skip decision is byte-identical.
+        let overflow: String = match &delim_code {
             // `DELIMITED BY SIZE` — every boundary is compile-time-known.
             None => {
                 let mut pieces: Vec<(String, usize)> = Vec::with_capacity(sources.len());
@@ -1410,42 +1407,52 @@ impl<'a> Compiler<'a> {
                 // the compile-time slicing below no longer applies — hand off to the
                 // shared run-time overlay. The concat length is compile-time-known
                 // here, materialised as a `const` so the overlay helper is uniform.
+                // The helper returns the overflow flag (out-of-range OR drop).
                 if let Some((pidx, ptr_int_digits)) = pointer {
                     let clen = self.fresh("_stclen");
                     self.emit("const", Some(&clen), vec![Operand::Int(total as i64)], "i64");
                     let pname = pointer_name.as_deref().expect("pointer present");
                     self.emit_string_pointer_overlay(
                         &recv, &concat, &clen, width, pname, pidx, ptr_int_digits,
-                    )?;
-                } else if total >= width {
-                    // Truncate at the receiver width; the whole receiver is overwritten.
-                    let start = self.str_index(0);
-                    let end = self.str_index(width as i64);
-                    self.emit(
-                        "str_slice",
-                        Some(&recv),
-                        vec![Operand::Var(concat), Operand::Var(start), Operand::Var(end)],
-                        "str",
-                    );
+                    )?
                 } else {
-                    // Preserve the receiver's tail `[total, width)`: the head is the
-                    // entire concatenation (length exactly `total`), then re-append
-                    // the old tail read from the receiver's current register.
-                    let start = self.str_index(total as i64);
-                    let end = self.str_index(width as i64);
-                    let tail = self.fresh("_stail");
-                    self.emit(
-                        "str_slice",
-                        Some(&tail),
-                        vec![Operand::Var(recv.clone()), Operand::Var(start), Operand::Var(end)],
-                        "str",
-                    );
-                    self.emit(
-                        "str_concat",
-                        Some(&recv),
-                        vec![Operand::Var(concat), Operand::Var(tail)],
-                        "str",
-                    );
+                    if total >= width {
+                        // Truncate at the receiver width; the whole receiver is
+                        // overwritten.
+                        let start = self.str_index(0);
+                        let end = self.str_index(width as i64);
+                        self.emit(
+                            "str_slice",
+                            Some(&recv),
+                            vec![Operand::Var(concat), Operand::Var(start), Operand::Var(end)],
+                            "str",
+                        );
+                    } else {
+                        // Preserve the receiver's tail `[total, width)`: the head is
+                        // the entire concatenation (length exactly `total`), then
+                        // re-append the old tail read from the receiver's register.
+                        let start = self.str_index(total as i64);
+                        let end = self.str_index(width as i64);
+                        let tail = self.fresh("_stail");
+                        self.emit(
+                            "str_slice",
+                            Some(&tail),
+                            vec![Operand::Var(recv.clone()), Operand::Var(start), Operand::Var(end)],
+                            "str",
+                        );
+                        self.emit(
+                            "str_concat",
+                            Some(&recv),
+                            vec![Operand::Var(concat), Operand::Var(tail)],
+                            "str",
+                        );
+                    }
+                    // No pointer: overflow ⇔ concat longer than the receiver
+                    // (`total > width`), a COMPILE-TIME-known boolean — `total ==
+                    // width` fills exactly, dropping nothing, so it is NOT overflow.
+                    let ov = self.fresh("_stof");
+                    self.emit("const", Some(&ov), vec![Operand::Int((total > width) as i64)], "i64");
+                    ov
                 }
             }
             // `DELIMITED BY delim` — each field's prefix is a run-time value.
@@ -1488,52 +1495,106 @@ impl<'a> Compiler<'a> {
                 let clen = self.fresh("_sclen");
                 self.emit("str_len", Some(&clen), vec![Operand::Var(concat.clone())], "i64");
                 // `WITH POINTER p`: overlay at the run-time offset `p-1` via the
-                // shared helper (byte-identical to the SIZE-branch pointer path). The
-                // no-pointer run-time overlay below (start at 0) is unchanged.
+                // shared helper (byte-identical to the SIZE-branch pointer path),
+                // which returns the overflow flag. The no-pointer run-time overlay
+                // below (start at 0) is unchanged.
                 if let Some((pidx, ptr_int_digits)) = pointer {
                     let pname = pointer_name.as_deref().expect("pointer present");
                     self.emit_string_pointer_overlay(
                         &recv, &concat, &clen, width, pname, pidx, ptr_int_digits,
-                    )?;
-                    return Ok(());
+                    )?
+                } else {
+                    // Run-time overlay: take = min(clen, W); the receiver becomes
+                    // concat[0,take] ++ recv[take,W] (the preserved tail). overflow ⇔
+                    // clen > W (some sending chars dropped) — the SAME run-time test.
+                    let wconst = self.fresh("_scw");
+                    self.emit("const", Some(&wconst), vec![Operand::Int(width as i64)], "i64");
+                    let take = self.fresh("_sctk");
+                    self.emit("mov", Some(&take), vec![Operand::Var(clen.clone())], "i64");
+                    let gt = self.fresh("_scgt");
+                    self.emit("cmp_gt", Some(&gt), vec![Operand::Var(clen.clone()), Operand::Var(wconst.clone())], "i64");
+                    let noclip = self.fresh("sc_noclip");
+                    self.emit("jmp_if_false", None, vec![Operand::Var(gt.clone()), Operand::Var(noclip.clone())], "void");
+                    self.emit("mov", Some(&take), vec![Operand::Var(wconst.clone())], "i64");
+                    self.emit("label", None, vec![Operand::Var(noclip)], "void");
+                    // head = concat[0, take].
+                    let z0 = self.str_index(0);
+                    let head = self.fresh("_schd");
+                    self.emit(
+                        "str_slice",
+                        Some(&head),
+                        vec![Operand::Var(concat), Operand::Var(z0), Operand::Var(take.clone())],
+                        "str",
+                    );
+                    // tail = recv[take, W] — the receiver bytes STRING left untouched.
+                    let tail = self.fresh("_sctail");
+                    self.emit(
+                        "str_slice",
+                        Some(&tail),
+                        vec![Operand::Var(recv.clone()), Operand::Var(take), Operand::Var(wconst)],
+                        "str",
+                    );
+                    self.emit(
+                        "str_concat",
+                        Some(&recv),
+                        vec![Operand::Var(head), Operand::Var(tail)],
+                        "str",
+                    );
+                    // `gt` (clen > W) IS the overflow flag; reuse it directly.
+                    gt
                 }
-                // Run-time overlay: take = min(clen, W); the receiver becomes
-                // concat[0,take] ++ recv[take,W] (the preserved tail).
-                let wconst = self.fresh("_scw");
-                self.emit("const", Some(&wconst), vec![Operand::Int(width as i64)], "i64");
-                let take = self.fresh("_sctk");
-                self.emit("mov", Some(&take), vec![Operand::Var(clen.clone())], "i64");
-                let gt = self.fresh("_scgt");
-                self.emit("cmp_gt", Some(&gt), vec![Operand::Var(clen), Operand::Var(wconst.clone())], "i64");
-                let noclip = self.fresh("sc_noclip");
-                self.emit("jmp_if_false", None, vec![Operand::Var(gt), Operand::Var(noclip.clone())], "void");
-                self.emit("mov", Some(&take), vec![Operand::Var(wconst.clone())], "i64");
-                self.emit("label", None, vec![Operand::Var(noclip)], "void");
-                // head = concat[0, take].
-                let z0 = self.str_index(0);
-                let head = self.fresh("_schd");
-                self.emit(
-                    "str_slice",
-                    Some(&head),
-                    vec![Operand::Var(concat), Operand::Var(z0), Operand::Var(take.clone())],
-                    "str",
-                );
-                // tail = recv[take, W] — the receiver bytes STRING did not overwrite.
-                let tail = self.fresh("_sctail");
-                self.emit(
-                    "str_slice",
-                    Some(&tail),
-                    vec![Operand::Var(recv.clone()), Operand::Var(take), Operand::Var(wconst)],
-                    "str",
-                );
-                self.emit(
-                    "str_concat",
-                    Some(&recv),
-                    vec![Operand::Var(head), Operand::Var(tail)],
-                    "str",
-                );
+            }
+        };
+
+        // # ON OVERFLOW / NOT ON OVERFLOW dispatch
+        //
+        // The two imperatives are direct `statement` child nodes of `string_stmt`,
+        // appearing ONLY after the `ON OVERFLOW` / `NOT ON OVERFLOW` keyword tokens.
+        // Split them at the `NOT` keyword exactly as the oracle reader and `emit_if`'s
+        // ELSE split do:
+        //
+        //   STRING … ON OVERFLOW  <A…>   NOT ON OVERFLOW  <B…>
+        //                         └ on ┘    ▲NOT flips     └ not_on ┘
+        //
+        // A nested statement's own `NOT` is buried inside its `statement` node, never
+        // a direct token child here, so the split is unambiguous. We then emit the
+        // usual `jmp_if_false`/branch/`label` skeleton `emit_if` uses, guarding on the
+        // `overflow` register computed above.
+        let mut on_stmts: Vec<&GrammarASTNode> = Vec::new();
+        let mut not_stmts: Vec<&GrammarASTNode> = Vec::new();
+        let mut seen_not = false;
+        for child in &verb.children {
+            match child {
+                ASTNodeOrToken::Token(t) if t.value == "NOT" && t.effective_type_name() == "KEYWORD" => {
+                    seen_not = true;
+                }
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => {
+                    if seen_not {
+                        not_stmts.push(n);
+                    } else {
+                        on_stmts.push(n);
+                    }
+                }
+                _ => {}
             }
         }
+        // Nothing to run when both clauses are absent — skip the branch skeleton
+        // entirely (a plain STRING lowers exactly as before this rung).
+        if on_stmts.is_empty() && not_stmts.is_empty() {
+            return Ok(());
+        }
+        let not_lbl = self.fresh("st_notov");
+        let end_lbl = self.fresh("st_ovend");
+        self.emit("jmp_if_false", None, vec![Operand::Var(overflow), Operand::Var(not_lbl.clone())], "void");
+        for stmt in on_stmts {
+            self.emit_statement(stmt)?;
+        }
+        self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
+        self.emit("label", None, vec![Operand::Var(not_lbl)], "void");
+        for stmt in not_stmts {
+            self.emit_statement(stmt)?;
+        }
+        self.emit("label", None, vec![Operand::Var(end_lbl)], "void");
         Ok(())
     }
 
@@ -1562,12 +1623,15 @@ impl<'a> Compiler<'a> {
     ///
     /// `avail` is `≥ 1` because the guard has already established `1 ≤ pv ≤ W`, so
     /// `start ≤ W-1`. When the content does not all fit (`clen > avail`) the excess
-    /// is dropped — ISO's overflow, with `ON OVERFLOW` still deferred so no
-    /// imperative runs — and `cp = avail`, giving `p := W + 1`. `pv = 1` (start 0)
-    /// reproduces the no-pointer overlay exactly, the correctness anchor. The
-    /// out-of-range jump skips BOTH the overlay and the write-back, leaving the
+    /// is dropped — ISO's overflow — and `cp = avail`, giving `p := W + 1`. `pv = 1`
+    /// (start 0) reproduces the no-pointer overlay exactly, the correctness anchor.
+    /// The out-of-range jump skips BOTH the overlay and the write-back, leaving the
     /// receiver and pointer with their prior values, matching the oracle's early
-    /// `return Ok(())`.
+    /// no-movement path.
+    ///
+    /// Returns the `overflow` i64 register (1 / 0) the caller uses to select the
+    /// `ON OVERFLOW` vs `NOT ON OVERFLOW` imperative — `true` when the pointer is out
+    /// of range OR the content was dropped (`clen > avail`), matching the oracle.
     #[allow(clippy::too_many_arguments)]
     fn emit_string_pointer_overlay(
         &mut self,
@@ -1578,13 +1642,20 @@ impl<'a> Compiler<'a> {
         pname: &str,
         pidx: usize,
         ptr_int_digits: usize,
-    ) -> Result<(), CompileError> {
+    ) -> Result<String, CompileError> {
         let pv = self.items[pidx].reg.clone();
         let one = self.fresh("_stpone");
         self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
         let wconst = self.fresh("_stpw");
         self.emit("const", Some(&wconst), vec![Operand::Int(width as i64)], "i64");
         let st_end = self.fresh("st_end");
+        // The `overflow` flag drives ON / NOT ON OVERFLOW. We PRE-SEED it to 1 and
+        // let the out-of-range guards fall through to `st_end` with it still set
+        // (out-of-range IS overflow); the in-range path OVERWRITES it with the drop
+        // test `clen > avail` below. This matches the oracle exactly: overflow = true
+        // when pv∉[1,W], else overflow = (src.len() > avail).
+        let overflow = self.fresh("_stpof");
+        self.emit("const", Some(&overflow), vec![Operand::Int(1)], "i64");
         // Out of range: pv < 1 (i.e. pv == 0, since PIC 9 is unsigned) …
         let lt1 = self.fresh("_stplt");
         self.emit(
@@ -1629,6 +1700,9 @@ impl<'a> Compiler<'a> {
             vec![Operand::Var(clen.to_string()), Operand::Var(avail.clone())],
             "i64",
         );
+        // In range: overflow ⇔ a drop occurred (`clen > avail`). Overwrite the
+        // pre-seeded 1 with this exact boolean — the same test the oracle uses.
+        self.emit("mov", Some(&overflow), vec![Operand::Var(over.clone())], "i64");
         let keep = self.fresh("st_keep");
         self.emit("jmp_if_false", None, vec![Operand::Var(over), Operand::Var(keep.clone())], "void");
         self.emit("mov", Some(&cp), vec![Operand::Var(avail)], "i64");
@@ -1674,9 +1748,10 @@ impl<'a> Compiler<'a> {
         let resume = self.fresh("_stpres");
         self.emit("add", Some(&resume), vec![Operand::Var(pv), Operand::Var(cp)], "i64");
         self.store_scaled(pname, &resume, 0, ptr_int_digits + 1, false)?;
-        // The out-of-range guard lands here, skipping the overlay AND the write-back.
+        // The out-of-range guard lands here, skipping the overlay AND the write-back
+        // (with `overflow` still 1 from its pre-seed).
         self.emit("label", None, vec![Operand::Var(st_end)], "void");
-        Ok(())
+        Ok(overflow)
     }
 
     /// Emit the run-time scan that returns a fresh `str` register holding the
