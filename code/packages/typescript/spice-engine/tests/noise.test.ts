@@ -191,7 +191,11 @@ describe("noiseAc", () => {
     circuit.add(voltageSource("Vdd", "vdd", "0", 5.0));
     circuit.add(voltageSource("Vgate", "gate", "0", 3.0));
     circuit.add(resistor("Rload", "vdd", "out", 1_000.0));
-    circuit.add(mosfet("M1", "out", "gate", "0", "0", "NMOS", { RS: 250.0 }));
+    circuit.add(mosfet("M1", "out", "gate", "0", "0", "NMOS", {
+      RS: 250.0,
+      RSH: 100.0,
+      NRS: 10.0,
+    }));
 
     const entry = noiseAc(circuit, "out", "Vgate", [1_000.0], 300.0).points[0]!.entries
       .find((candidate) =>
@@ -211,10 +215,11 @@ describe("noiseAc", () => {
     circuit.add(mosfet("M1", "out", "gate", "0", "0", "NMOS", {
       RSH: 250.0,
       NRD: 2.0,
+      NRS: 3.0,
     }));
 
     const entries = noiseAc(circuit, "out", "Vgate", [1_000.0], 300.0).points[0]!.entries;
-    for (const [name, resistance] of [["M1:RD", 500.0], ["M1:RS", 250.0]] as const) {
+    for (const [name, resistance] of [["M1:RD", 500.0], ["M1:RS", 750.0]] as const) {
       const entry = entries.find((candidate) =>
         candidate.elementName === name && candidate.noiseType === "thermal"
       );

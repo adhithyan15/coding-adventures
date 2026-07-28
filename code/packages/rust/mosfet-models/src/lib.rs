@@ -44,6 +44,7 @@ const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
 /// | RS        | Source resistance (ohm)             | 0        |
 /// | RSH       | Drain/source sheet resistance (ohm) | 0        |
 /// | NRD       | Number of drain squares              | 1        |
+/// | NRS       | Number of source squares             | 1        |
 /// | IS        | Drain–body saturation current (A)  | 1 fA     |
 /// | N_SUB     | Subthreshold slope factor          | 1.4      |
 /// | T_NOM     | Nominal temperature (K)            | 300.15   |
@@ -77,6 +78,8 @@ pub struct Level1Params {
     pub rsh: f64,
     /// Number of squares in the drain diffusion.
     pub nrd: f64,
+    /// Number of squares in the source diffusion.
+    pub nrs: f64,
     /// Drain–body saturation current [A] (used for subthreshold floor).
     pub is: f64,
     /// Subthreshold slope factor n.  Subthreshold current ∝ exp(V_OV / (n V_T)).
@@ -123,6 +126,7 @@ impl Default for Level1Params {
             rs: 0.0,
             rsh: 0.0,
             nrd: 1.0,
+            nrs: 1.0,
             is: 1e-15,
             n_sub: 1.4,
             t_nom: 300.15,
@@ -275,6 +279,10 @@ pub fn evaluate_level1(
     assert!(
         p.nrd.is_finite() && p.nrd >= 0.0,
         "MOSFET NRD must be finite and non-negative"
+    );
+    assert!(
+        p.nrs.is_finite() && p.nrs >= 0.0,
+        "MOSFET NRS must be finite and non-negative"
     );
     let beta = p.kp * (p.w / effective_length);
 

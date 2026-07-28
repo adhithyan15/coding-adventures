@@ -1781,6 +1781,7 @@ export interface MosfetLevel1Params {
   readonly RS: number;
   readonly RSH: number;
   readonly NRD: number;
+  readonly NRS: number;
   readonly IS: number;
   readonly N_SUB: number;
   readonly T_NOM: number;
@@ -8042,6 +8043,7 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     RS: 0.0,
     RSH: 0.0,
     NRD: 1.0,
+    NRS: 1.0,
     IS: 1.0e-15,
     N_SUB: 1.4,
     T_NOM: 300.15,
@@ -20819,7 +20821,9 @@ function mosfetDrainResistance(element: Mosfet): number {
 }
 
 function mosfetSourceResistance(element: Mosfet): number {
-  return element.params.RS > 0.0 ? element.params.RS : element.params.RSH;
+  return element.params.RS > 0.0
+    ? element.params.RS
+    : element.params.RSH * element.params.NRS;
 }
 
 function jfetChargeStateVoltage(
@@ -21130,6 +21134,9 @@ function validateMosfet(element: Mosfet): void {
   }
   if (params.NRD < 0.0) {
     throw invalidElement(element.name, "MOSFET NRD must be non-negative");
+  }
+  if (params.NRS < 0.0) {
+    throw invalidElement(element.name, "MOSFET NRS must be non-negative");
   }
   if (params.TOX <= 0.0) {
     throw invalidElement(element.name, "MOSFET TOX must be positive");

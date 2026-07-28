@@ -4,6 +4,8 @@
 
 ### Added
 
+- `Level1Params::nrs` adds the Berkeley source diffusion square count,
+  defaulting to one with finite, non-negative validation.
 - `Level1Params::nrd` adds the Berkeley drain diffusion square count, defaulting
   to one with finite, non-negative validation.
 - `Level1Params::rsh` adds zero-default Berkeley drain/source sheet resistance

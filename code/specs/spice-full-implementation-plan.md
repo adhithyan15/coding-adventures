@@ -33,16 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS drain diffusion squares.
+1. Cross-language Level-1 MOS source diffusion squares.
    - Status: current PR completion candidate.
-   - Add the Berkeley Level-1 MOS `NRD` instance parameter in Rust, Python, and
-     TypeScript, defaulting to one drain diffusion square.
-   - When explicit `RD` remains zero, use `RSH * NRD` for the drain resistance;
-     positive explicit `RD` continues to take precedence.
-   - Reuse the existing intrinsic drain topology in DC, TF, AC, transient, and
-     noise analyses, preserve `NRD` through hierarchy and cloning, enforce
+   - Add the Berkeley Level-1 MOS `NRS` instance parameter in Rust, Python, and
+     TypeScript, defaulting to one source diffusion square.
+   - When explicit `RS` remains zero, use `RSH * NRS` for the source resistance;
+     positive explicit `RS` continues to take precedence.
+   - Reuse the existing intrinsic source topology in DC, TF, AC, transient, and
+     noise analyses, preserve `NRS` through hierarchy and cloning, enforce
      finite non-negative validation, and keep the model-card coverage gate at
-     193 canonical rows because `NRD` is an instance parameter.
+     193 canonical rows because `NRS` is an instance parameter.
 
 ## Completed Slices
 
@@ -3462,6 +3462,16 @@ the Rust, Python, and TypeScript surfaces together.
      transfer-function, and noise analyses, hierarchy preserves `RSH`, finite
      non-negative validation is shared, and the supported-parameter release
      gate now covers 193 canonical rows.
+
+272. Cross-language Level-1 MOS drain diffusion squares.
+   - Status: completed in PR 9029.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `NRD`,
+     defaulting to one drain diffusion square.
+   - When explicit `RD` remains zero, `RSH * NRD` supplies the drain
+     resistance across DC, TF, AC, transient, and noise analyses; hierarchy and
+     cloning preserve `NRD`, finite non-negative validation is shared, and the
+     model-card coverage gate remains at 193 canonical rows because `NRD` is
+     an instance parameter.
 
 ## Backlog
 
