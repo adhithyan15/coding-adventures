@@ -146,6 +146,36 @@ pub const GEN_OLD: u8 = 1;
 // changes size this fails to build rather than silently misaligning payloads.
 const _: () = assert!(std::mem::size_of::<FlatHeader>() == HEADER_SIZE);
 
+/// The **reference layout** of one registered kind — where an object of that kind holds
+/// its garbage-collected references, so the collector can trace it *precisely* (follow only
+/// the reference words) instead of *conservatively* (treat every payload word as a
+/// maybe-pointer).
+///
+/// A layout has two parts, visited in order by [`FlatHeap::for_each_ref_slot`]:
+///
+/// - **`fixed`** — reference fields at statically-known byte offsets, shared by every
+///   instance of the kind. This is the **record** case (a cons cell `{car, cdr}`, a
+///   `Point{x, y}`, a closure header): the reference offsets don't depend on the instance.
+/// - **`tail_from`** — if `Some(start)`, every aligned 8-byte word in `[start, size)` of the
+///   instance's payload is a reference. This is the **variable-length array** case (a JS
+///   `Array`, a Ruby `Array`, a Python `list`, a vector, a hash's backing store), where the
+///   number of reference slots is a property of the *instance* (its `size`), not the kind, so
+///   a fixed offset list cannot describe it. `None` ⇒ a pure record (the pre-T5 behaviour).
+///
+/// `fixed` before `tail_from` composes: a boxed array object can carry a reference header
+/// field *and* a variable reference tail. A pure record is `tail_from == None`, which
+/// reproduces the original fixed-offset tracer byte-for-byte — so this type is a **strict
+/// generalization** of the old `Box<[usize]>` field map. See
+/// `code/specs/AOT00-T5-variable-length-ref-arrays.md`.
+struct KindLayout {
+    /// Reference fields at statically-known offsets (the record case). As registered.
+    fixed: Box<[usize]>,
+    /// If `Some(start)`, every aligned 8-byte word in `[start, size)` is a reference (the
+    /// variable-length array tail). `None` ⇒ pure record. Populated by a later rung
+    /// (`register_ref_array_kind`); today every registration sets `None`.
+    tail_from: Option<usize>,
+}
+
 /// A flat, real-memory mark-and-sweep heap.
 ///
 /// Owns every block it hands out and frees them on `collect` (unreachable ones)
@@ -173,15 +203,14 @@ pub struct FlatHeap {
     /// Cleared by every **full** [`Self::collect`] (which may free old objects,
     /// invalidating entries) and rebuilt lazily by the barrier afterwards.
     remembered: HashSet<usize>,
-    /// Per-kind **reference-field maps** for *precise* interior tracing, indexed
-    /// by `kind_id - 1` (see [`Self::register_kind`]). Entry *k* is the byte
-    /// offsets of the `ref`-typed fields in an object of kind `k + 1`. When an
-    /// object carries a registered kind, [`Self::scan_payload`] follows *only*
-    /// those offsets instead of scanning every payload word conservatively — so
-    /// a look-alike-pointer integer sitting in a non-reference field no longer
-    /// pins a phantom child. Kind id `0` is reserved for "opaque / trace
+    /// Per-kind **reference layouts** for *precise* interior tracing, indexed by
+    /// `kind_id - 1` (see [`Self::register_kind`]). Entry *k* is the [`KindLayout`] of
+    /// kind `k + 1`. When an object carries a registered kind, [`Self::scan_payload`]
+    /// follows *only* that layout's reference words instead of scanning every payload
+    /// word conservatively — so a look-alike-pointer integer sitting in a non-reference
+    /// field no longer pins a phantom child. Kind id `0` is reserved for "opaque / trace
     /// conservatively" and never appears here.
-    field_maps: Vec<Box<[usize]>>,
+    field_maps: Vec<KindLayout>,
     /// **Tenuring threshold**: a young object is promoted to [`GEN_OLD`] once its
     /// [`FlatHeader::age`] (collections survived) reaches this value. Default
     /// [`DEFAULT_TENURE_AGE`] = `1` reproduces immediate tenuring (survive one
@@ -501,7 +530,10 @@ impl FlatHeap {
             id <= u16::MAX as usize,
             "flat-heap kind registry overflow: more than 65534 kinds registered"
         );
-        self.field_maps.push(field_offsets.into());
+        // A pure record: fixed reference offsets, no variable-length tail. The tail case
+        // (`tail_from == Some`) arrives with `register_ref_array_kind` in a later rung; this
+        // keeps the tracer behaviour byte-for-byte identical to the pre-`KindLayout` field map.
+        self.field_maps.push(KindLayout { fixed: field_offsets.into(), tail_from: None });
         id as u16
     }
 
@@ -1363,34 +1395,74 @@ impl FlatHeap {
     /// `young_only` is threaded to [`Self::mark_candidate`]: in a minor cycle,
     /// children that resolve to old objects are ignored (they are live and not
     /// swept), so only young children are followed.
-    fn scan_payload(&self, h: *mut FlatHeader, work: &mut Vec<*mut FlatHeader>, young_only: bool) {
-        // SAFETY: `h` is a live block; its payload is `size` bytes at `h + 32`.
-        let (base, size, kind) = unsafe {
-            let payload = (h.add(1)) as *const u8;
-            (payload, (*h).size, (*h).kind)
+    /// Invoke `f(slot)` for each **precise reference slot** of a *registered-kind* object `h` —
+    /// first its [`KindLayout::fixed`] offsets (the record case), then, if the kind has a tail
+    /// region, every aligned 8-byte word in `[tail_from, size)` (the variable-length array
+    /// case). Returns `true` iff `h` had a registered kind (so precise tracing applied);
+    /// returns `false` for `kind == 0` / an unregistered id, leaving the caller to trace
+    /// **conservatively** if it needs to (the mark and remembered-set sites do; the compaction
+    /// sites treat `kind == 0` as *"holds no precise reference"* and do nothing).
+    ///
+    /// This is the single place the [`KindLayout`] is walked, so the four consumers
+    /// ([`Self::scan_payload`], [`Self::precise_children`], [`Self::fixup_ref_fields`],
+    /// [`Self::points_to_live_young`]) cannot disagree about *which words are references* — the
+    /// co-totality that keeps mark, relocate, and remembered-set in lockstep. Each `slot` is a
+    /// `*mut usize` inside `h`'s payload whose 8-byte access is in bounds; the callback reads
+    /// (and, for fixup, writes) the word.
+    ///
+    /// # Safety
+    /// `h` is a live block owned by this heap. The wrap-safe bound `off <= size - 8` (never
+    /// `off + 8 <= size`, which could overflow for a near-`usize::MAX` offset from a bad map)
+    /// keeps every produced `slot` inside the payload.
+    unsafe fn for_each_ref_slot(&self, h: *mut FlatHeader, mut f: impl FnMut(*mut usize)) -> bool {
+        let kind = (*h).kind;
+        if kind == 0 {
+            return false;
+        }
+        let layout = match self.field_maps.get((kind - 1) as usize) {
+            Some(l) => l,
+            None => return false,
         };
-
-        // Precise path: an object of a registered kind is traced through exactly
-        // its ref-field offsets. `kind` ids are 1-based (`0` = conservative).
-        if kind != 0 {
-            if let Some(offsets) = self.field_maps.get((kind - 1) as usize) {
-                for &off in offsets.iter() {
-                    // A malformed map (offset past the payload) is skipped, never
-                    // read out of bounds. Written as `off <= size - 8` (not
-                    // `off + 8 <= size`) so a near-`usize::MAX` offset from a bad
-                    // map can't wrap the add and slip past the guard.
-                    if size >= 8 && off <= size - 8 {
-                        // SAFETY: `off + 8 <= size` keeps the 8-byte read inside
-                        // the payload; `read_unaligned` tolerates sub-alignment.
-                        let word = unsafe { ptr::read_unaligned(base.add(off) as *const usize) };
-                        self.mark_word(word, work, young_only);
-                    }
-                }
-                return;
+        let base = h.add(1) as *mut u8;
+        let size = (*h).size;
+        // Fixed reference fields (the record case).
+        for &off in layout.fixed.iter() {
+            if size >= 8 && off <= size - 8 {
+                f(base.add(off) as *mut usize);
             }
         }
+        // Variable-length reference tail (the array case): every aligned word in
+        // `[tail_from, size)`. Empty when `tail_from` is past `size - 8`. `None` today.
+        if let Some(start) = layout.tail_from {
+            let mut off = start;
+            while size >= 8 && off <= size - 8 {
+                f(base.add(off) as *mut usize);
+                off += 8;
+            }
+        }
+        true
+    }
 
-        // Conservative fallback: scan every aligned word of the payload.
+    fn scan_payload(&self, h: *mut FlatHeader, work: &mut Vec<*mut FlatHeader>, young_only: bool) {
+        // Precise path: an object of a registered kind is traced through exactly its
+        // reference slots (fixed offsets + any tail region). `kind` ids are 1-based
+        // (`0` = conservative). `for_each_ref_slot` returns `true` when it handled `h`.
+        // SAFETY: `h` is a live block we own; `for_each_ref_slot` bounds every slot access.
+        let precise = unsafe {
+            self.for_each_ref_slot(h, |slot| {
+                // SAFETY: `slot` is an in-bounds 8-byte reference word; `read_unaligned`
+                // tolerates sub-alignment.
+                let word = ptr::read_unaligned(slot);
+                self.mark_word(word, work, young_only);
+            })
+        };
+        if precise {
+            return;
+        }
+
+        // Conservative fallback (kind 0 / unregistered): scan every aligned word.
+        // SAFETY: `h` is a live block; its payload is `size` bytes at `h + 32`.
+        let (base, size) = unsafe { ((h.add(1)) as *const u8, (*h).size) };
         let mut off = 0usize;
         while off + 8 <= size {
             // SAFETY: `off + 8 <= size`, so the 8-byte read stays inside the
@@ -1430,23 +1502,12 @@ impl FlatHeap {
     /// # Safety
     /// `h` is a live block owned by this heap.
     unsafe fn precise_children(&self, h: *mut FlatHeader, out: &mut Vec<*mut FlatHeader>) {
-        let kind = (*h).kind;
-        if kind == 0 {
-            return;
-        }
-        let offsets = match self.field_maps.get((kind - 1) as usize) {
-            Some(o) => o,
-            None => return,
-        };
-        let base = h.add(1) as *const u8;
-        let size = (*h).size;
-        for &off in offsets.iter() {
-            // Wrap-safe bound (a bad map's near-usize::MAX offset must not overflow).
-            if size >= 8 && off <= size - 8 {
-                let word = ptr::read_unaligned(base.add(off) as *const usize);
-                self.push_candidates(word, out);
-            }
-        }
+        // A `kind == 0` / unregistered object contributes no *precise* children (its out-edges
+        // are conservative and handled by the pinning wave), so ignore the returned flag.
+        self.for_each_ref_slot(h, |slot| {
+            let word = ptr::read_unaligned(slot);
+            self.push_candidates(word, out);
+        });
     }
 
     /// Append every block any aligned word of `h`'s payload points at — the
@@ -1663,42 +1724,36 @@ impl FlatHeap {
     /// # Safety
     /// `h` is a live block owned by this heap (or its arena copy).
     unsafe fn fixup_ref_fields(&self, h: *mut FlatHeader, forward: &HashMap<usize, usize>) {
-        let kind = (*h).kind;
-        let offsets = match self.field_maps.get((kind.wrapping_sub(1)) as usize) {
-            Some(o) if kind != 0 => o,
-            _ => return, // kind==0 / unregistered holds no pointers to moved objects
-        };
-        let base = h.add(1) as *const u8;
-        let size = (*h).size;
-        for &off in offsets.iter() {
-            if size >= 8 && off <= size - 8 {
-                let slot = base.add(off) as *mut usize;
-                let w = ptr::read_unaligned(slot);
-                // PR-3b reviewer follow-up: a *precise* reference field holds a reference —
-                // a **base** pointer (payload start, low-3 NaN-box tag permitted) or null —
-                // never an *interior* pointer. `forwarded` only rewrites base keys, so an
-                // interior pointer in a ref field would silently escape relocation and dangle
-                // once its target's from-space block is freed. This catches a frontend that
-                // registered a ref-field offset holding an interior/derived pointer (a
-                // genuine non-pointer datum belongs in a non-ref field, scanned
-                // conservatively, not at a registered ref offset). Compiled out of release
-                // builds; exercised under tests + Miri. `find_header` is a live read
-                // (from-space is still intact during fixup, before any sweep).
-                #[cfg(debug_assertions)]
-                {
-                    let cand = w & !0x7usize;
-                    let bh = self.find_header(cand);
-                    debug_assert!(
-                        bh.is_null() || bh as usize + HEADER_SIZE == cand,
-                        "precise ref field at offset {off} holds an interior pointer \
-                         (0x{cand:x}); precise ref fields must hold base/tagged-base pointers",
-                    );
-                }
-                if let Some(nw) = self.forwarded(w, forward) {
-                    ptr::write_unaligned(slot, nw);
-                }
+        // A `kind == 0` / unregistered object provably holds no pointer to a moved object (its
+        // targets were pinned by the conservative pinning wave), so `for_each_ref_slot` visits
+        // nothing for it — exactly the old early-return. Rewrite each *precise* reference word
+        // (fixed field or array-tail element) that names a moved object.
+        self.for_each_ref_slot(h, |slot| {
+            let w = ptr::read_unaligned(slot);
+            // PR-3b reviewer follow-up: a *precise* reference word holds a reference —
+            // a **base** pointer (payload start, low-3 NaN-box tag permitted) or null —
+            // never an *interior* pointer. `forwarded` only rewrites base keys, so an
+            // interior pointer in a ref word would silently escape relocation and dangle
+            // once its target's from-space block is freed. This catches a frontend that
+            // declared a ref slot holding an interior/derived pointer (a genuine
+            // non-pointer datum belongs in a non-ref field, scanned conservatively, not at
+            // a registered ref offset or in a ref tail). Compiled out of release builds;
+            // exercised under tests + Miri. `find_header` is a live read (from-space is
+            // still intact during fixup, before any sweep).
+            #[cfg(debug_assertions)]
+            {
+                let cand = w & !0x7usize;
+                let bh = self.find_header(cand);
+                debug_assert!(
+                    bh.is_null() || bh as usize + HEADER_SIZE == cand,
+                    "precise ref slot holds an interior pointer \
+                     (0x{cand:x}); precise ref slots must hold base/tagged-base pointers",
+                );
             }
-        }
+            if let Some(nw) = self.forwarded(w, forward) {
+                ptr::write_unaligned(slot, nw);
+            }
+        });
     }
 
     /// **AOT00-T3 PR-3b — evacuate + pointer fixup (the moving cycle's steps 1–3).**
@@ -2026,9 +2081,6 @@ impl FlatHeap {
     /// # Safety
     /// `h` must be a live block owned by this heap.
     unsafe fn points_to_live_young(&self, h: *mut FlatHeader) -> bool {
-        let base = h.add(1) as *const u8;
-        let size = (*h).size;
-        let kind = (*h).kind;
         let has_young = |word: usize| -> bool {
             for cand in [word, word & !0b111usize] {
                 let child = self.find_header(cand);
@@ -2038,23 +2090,21 @@ impl FlatHeap {
             }
             false
         };
-        if kind != 0 {
-            if let Some(offsets) = self.field_maps.get((kind - 1) as usize) {
-                for &off in offsets.iter() {
-                    // Wrap-safe bound (`off + 8 <= size` could overflow for a
-                    // near-usize::MAX field offset): the 8-byte read must stay
-                    // inside the payload.
-                    if size >= 8 && off <= size - 8 {
-                        let w = ptr::read_unaligned(base.add(off) as *const usize);
-                        if has_young(w) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
+        // Precise path: check each reference slot (fixed field or array-tail element). The
+        // closure keeps scanning after a hit (the remembered-set rebuild is cold), which is
+        // result-identical to the old early `return true`.
+        let mut found = false;
+        let precise = self.for_each_ref_slot(h, |slot| {
+            if !found && has_young(ptr::read_unaligned(slot)) {
+                found = true;
             }
+        });
+        if precise {
+            return found;
         }
-        // Conservative: scan every aligned word.
+        // Conservative fallback (kind 0 / unregistered): scan every aligned word.
+        let base = h.add(1) as *const u8;
+        let size = (*h).size;
         let mut off = 0usize;
         while size >= 8 && off <= size - 8 {
             let w = ptr::read_unaligned(base.add(off) as *const usize);
