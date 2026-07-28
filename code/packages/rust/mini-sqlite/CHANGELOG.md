@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.68 — `round()` returns positive zero
+
+`round(-0.4)` and `round(-0.0)` now return `0.0`, not `-0.0`, matching SQLite —
+a zero `round()` result is always positive zero. Non-zero results keep their sign
+(`round(-0.5)` = `-1.0`), rounding to N places behaves the same, and a bare
+`-0.0` literal is unaffected. Found by probing real SQLite. Verified against
+bundled real SQLite. Spans sql-vm 0.4.38.
+
 ## 0.5.67 — `TOTAL()` aggregate
 
 `SELECT total(v) FROM t` is now supported — SQLite's NULL-free companion to

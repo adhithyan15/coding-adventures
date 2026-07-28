@@ -3,6 +3,16 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.38] - Unreleased
+
+### Fixed
+
+- **`round()` reports a zero result as positive zero.** Rust's `f64::round`
+  returns `-0.0` for a value that rounds to zero from below (`round(-0.4)`,
+  `round(-0.0)`), but SQLite's `round()` always yields `0.0`. Normalized in the
+  `ROUND` builtin (`-0.0 → +0.0`); non-zero results keep their sign, and a bare
+  `-0.0` literal elsewhere is unaffected (round()-specific).
+
 ## [0.4.37] - Unreleased
 
 ### Added
