@@ -1,0 +1,33 @@
+% ============================================================================
+% cardiac-index.query.adj — worked examples over the clinical cardiac-index library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a cardiac-index question: it
+% states NO arithmetic and NO relation — it only `import`s the grounded library, `observe`s the
+% quantities it decomposed from the prompt (each a byte-provenanced span, elided here), and asks
+% the engine to APPLY the cited definition. The native adj-lang engine binds the parameters,
+% computes each value EXACTLY on the CPU, and returns it with the definition's source/locator/
+% trust.
+%
+% The three questions INVERT: a cardiac output of 6 L/min over a body surface area of 2 m² gives
+% a cardiac index of 6 ÷ 2 = 3 L/min/m²; that 3 cardiac index multiplied back by the same 2 m²
+% body surface area is exactly what the cardiac-output formula recovers the 6 L/min from, and
+% that 3 cardiac index divided into the same 6 L/min cardiac output is exactly what the
+% body-surface-area formula recovers the 2 m² from.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli cardiac-index.query.adj
+% ============================================================================
+
+import "cardiac-index.adj"
+
+% CO 6 L/min, BSA 2 m²: cardiac index = 6 ÷ 2.
+observe cardiac_output(6)
+observe body_surface_area(2)
+? cardiac_index(cardiac_output, body_surface_area)              % expect 3  (CI = CO ÷ BSA)
+
+% That 3 cardiac index with the same 2 m² body surface area: CO = 3 × 2.
+observe cardiac_index(3)
+? cardiac_output(cardiac_index, body_surface_area)             % expect 6  (same def, solved for CO = CI × BSA)
+
+% That 3 cardiac index with the same 6 L/min cardiac output: BSA = 6 ÷ 3.
+? body_surface_area(cardiac_output, cardiac_index)             % expect 2  (same def, solved for BSA = CO ÷ CI)
