@@ -629,12 +629,13 @@ fn mosfet_sheet_resistance_emits_both_terminal_noise_sources() {
         MosfetType::Nmos,
         MosfetLevel1Params {
             sheet_resistance: 250.0,
+            drain_squares: 2.0,
             ..MosfetLevel1Params::default()
         },
     )));
 
     let result = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap();
-    for name in ["M1:RD", "M1:RS"] {
+    for (name, resistance) in [("M1:RD", 500.0), ("M1:RS", 250.0)] {
         let entry = result.points[0]
             .entries
             .iter()
@@ -642,7 +643,7 @@ fn mosfet_sheet_resistance_emits_both_terminal_noise_sources() {
             .unwrap();
         assert_close(
             entry.source_psd,
-            4.0 * 1.380_649e-23 * 300.0 / 250.0,
+            4.0 * 1.380_649e-23 * 300.0 / resistance,
             1.0e-30,
         );
     }

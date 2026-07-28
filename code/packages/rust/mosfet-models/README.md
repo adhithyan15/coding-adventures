@@ -29,7 +29,8 @@ and must leave a positive effective channel length. `TOX` defaults to
 `100 nm`, must be positive, and derives intrinsic Meyer gate capacitance from
 `Cox = epsilon_ox / TOX`. `RD`, `RS`, and `RSH` are finite, non-negative
 external drain, source, and sheet-resistance parameters for engine topology and
-default to zero ohms.
+default to zero ohms. `NRD` is the finite, non-negative drain diffusion square
+count and defaults to one.
 
 ## Usage
 

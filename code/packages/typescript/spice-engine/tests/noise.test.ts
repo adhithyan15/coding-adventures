@@ -208,15 +208,18 @@ describe("noiseAc", () => {
     circuit.add(voltageSource("Vdd", "vdd", "0", 5.0));
     circuit.add(voltageSource("Vgate", "gate", "0", 3.0));
     circuit.add(resistor("Rload", "vdd", "out", 1_000.0));
-    circuit.add(mosfet("M1", "out", "gate", "0", "0", "NMOS", { RSH: 250.0 }));
+    circuit.add(mosfet("M1", "out", "gate", "0", "0", "NMOS", {
+      RSH: 250.0,
+      NRD: 2.0,
+    }));
 
     const entries = noiseAc(circuit, "out", "Vgate", [1_000.0], 300.0).points[0]!.entries;
-    for (const name of ["M1:RD", "M1:RS"]) {
+    for (const [name, resistance] of [["M1:RD", 500.0], ["M1:RS", 250.0]] as const) {
       const entry = entries.find((candidate) =>
         candidate.elementName === name && candidate.noiseType === "thermal"
       );
       expect(entry?.sourcePsd).toBeCloseTo(
-        4.0 * 1.380_649e-23 * 300.0 / 250.0,
+        4.0 * 1.380_649e-23 * 300.0 / resistance,
         30,
       );
     }

@@ -1780,6 +1780,7 @@ export interface MosfetLevel1Params {
   readonly RD: number;
   readonly RS: number;
   readonly RSH: number;
+  readonly NRD: number;
   readonly IS: number;
   readonly N_SUB: number;
   readonly T_NOM: number;
@@ -8040,6 +8041,7 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     RD: 0.0,
     RS: 0.0,
     RSH: 0.0,
+    NRD: 1.0,
     IS: 1.0e-15,
     N_SUB: 1.4,
     T_NOM: 300.15,
@@ -20811,7 +20813,9 @@ function mosfetIntrinsicSourceNode(element: Mosfet): string {
 }
 
 function mosfetDrainResistance(element: Mosfet): number {
-  return element.params.RD > 0.0 ? element.params.RD : element.params.RSH;
+  return element.params.RD > 0.0
+    ? element.params.RD
+    : element.params.RSH * element.params.NRD;
 }
 
 function mosfetSourceResistance(element: Mosfet): number {
@@ -21123,6 +21127,9 @@ function validateMosfet(element: Mosfet): void {
   }
   if (params.RSH < 0.0) {
     throw invalidElement(element.name, "MOSFET RSH must be non-negative");
+  }
+  if (params.NRD < 0.0) {
+    throw invalidElement(element.name, "MOSFET NRD must be non-negative");
   }
   if (params.TOX <= 0.0) {
     throw invalidElement(element.name, "MOSFET TOX must be positive");

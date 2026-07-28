@@ -9069,6 +9069,7 @@ def _mosfet_drain_resistance(el: Mosfet) -> float:
         drain_resistance
         if drain_resistance > 0.0
         else float(getattr(params, "RSH", 0.0))
+        * float(getattr(params, "NRD", 1.0))
     )
 
 

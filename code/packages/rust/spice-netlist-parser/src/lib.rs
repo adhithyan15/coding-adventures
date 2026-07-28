@@ -1899,6 +1899,9 @@ fn build_mosfet_params(
     for (name, value) in model.params.iter().chain(instance_params.iter()) {
         apply_mosfet_param(&mut params, name, *value);
     }
+    if let Some(value) = instance_params.get("NRD") {
+        params.drain_squares = *value;
+    }
     params
 }
 
@@ -1911,6 +1914,7 @@ fn apply_mosfet_param(params: &mut MosfetLevel1Params, name: &str, value: f64) {
         "PHI" => params.phi = value,
         "W" => params.w = value,
         "L" => params.l = value,
+        "RSH" => params.sheet_resistance = value,
         "IS" => params.saturation_current = value,
         "N_SUB" | "NSUB" | "N" => params.n_sub = value,
         "T_NOM" | "TNOM" => params.t_nom = value,
