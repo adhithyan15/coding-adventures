@@ -1,0 +1,14 @@
+[package]
+name = "html-to-paint"
+version = "0.1.0"
+edition = "2021"
+description = "Composes HTML render-tree adaptation, block layout, and shared paint-scene emission."
+
+[dependencies]
+coding-adventures-html-parser = { path = "../html-parser" }
+html-to-layout = { path = "../html-to-layout" }
+layout-block = { path = "../layout-block" }
+layout-ir = { path = "../layout-ir" }
+layout-to-paint = { path = "../layout-to-paint" }
+paint-instructions = { path = "../paint-instructions" }
+text-interfaces = { path = "../text-interfaces" }
