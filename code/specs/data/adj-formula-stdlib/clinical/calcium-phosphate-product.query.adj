@@ -1,0 +1,27 @@
+% ============================================================================
+% calcium-phosphate-product.query.adj — worked applications of the calcium-phosphate-product definition.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a renal/bone-mineral vignette into observed
+% serum labs: it `import`s the grounded formulabook, `observe`s the measured calcium and phosphate,
+% and asks the engine to APPLY the cited definition. No arithmetic is stated by the consumer; the
+% engine computes each value EXACTLY (over exact rationals) and carries the review's citation as its
+% proof, on the CPU, with zero model calls.
+%
+% Worked case (serum calcium = 9 mg/dL, serum phosphate = 4 mg/dL): CPP = 9 × 4 = 36. Each query
+% below fixes two of the three quantities and asks the engine to recover the third; every answer is
+% exact and the three COMPOSE (each inversion recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli calcium-phosphate-product.query.adj
+% ============================================================================
+
+import "calcium-phosphate-product.adj"
+
+% --- Forward: the calcium phosphate product the two labs imply (expect 36). -------------------
+observe serum_calcium(9)
+observe serum_phosphate(4)
+? calcium_phosphate_product(serum_calcium, serum_phosphate)   % expect 36
+
+% --- Inverse: the serum calcium a product of 36 implies at that phosphate (9). ----------------
+observe calcium_phosphate_product(36)
+? serum_calcium(calcium_phosphate_product, serum_phosphate)   % expect 9
