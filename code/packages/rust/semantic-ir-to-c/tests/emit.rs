@@ -244,6 +244,30 @@ fn class_methods_route_through_the_singleton_table() {
 }
 
 #[test]
+fn class_vars_route_through_the_cvar_table() {
+    // OOP slice 6: a class-body `@@x = 0` seeds `_sir_cvar_set_in("Class", "@@x")`;
+    // a method-body read/write uses `_sir_cvar_get`/`_sir_cvar_set` (resolved via
+    // the current class).  All names are quoted C string literals (no injection).
+    let m = lower_ruby(
+        "class Counter\n  @@count = 0\n  def self.bump\n    @@count = @@count + 1\n  end\n  \
+         def peek\n    @@count\n  end\nend\nCounter.bump\nputs Counter.new.peek",
+    );
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_cvar_set_in(\"Counter\", \"@@count\""),
+        "the class-body initializer seeds the named class's storage\n{src}"
+    );
+    assert!(
+        src.contains("_sir_cvar_set(\"@@count\","),
+        "a method-body `@@x =` writes via the current class\n{src}"
+    );
+    assert!(
+        src.contains("_sir_cvar_get(\"@@count\")"),
+        "a method-body `@@x` read resolves via the current class\n{src}"
+    );
+}
+
+#[test]
 fn sanitize_ident_maps_into_c() {
     assert_eq!(sanitize_ident("foo"), "foo");
     assert_eq!(sanitize_ident("foo_bar1"), "foo_bar1");
