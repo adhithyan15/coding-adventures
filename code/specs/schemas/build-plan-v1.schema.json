@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/build-plan-v1.json",
+  "title": "Build Plan v1",
+  "description": "Serialized build plan for cross-job and cross-language build orchestration.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "packages",
+    "dependency_edges",
+    "languages_needed"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "diff_base": {
+      "type": "string"
+    },
+    "force": {
+      "type": "boolean",
+      "default": false
+    },
+    "affected_packages": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/package_name"
+      },
+      "uniqueItems": true
+    },
+    "packages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/package_entry"
+      }
+    },
+    "dependency_edges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/edge"
+      },
+      "uniqueItems": true
+    },
+    "languages_needed": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/language"
+      },
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    },
+    "shards": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/shard_entry"
+      }
+    }
+  },
+  "$defs": {
+    "language": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "maxLength": 64
+    },
+    "package_name": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*/[a-z0-9][a-z0-9._/-]*$",
+      "maxLength": 240
+    },
+    "safe_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//)[^<>:\"|?*\\u0000-\\u001F/]+(?:/[^<>:\"|?*\\u0000-\\u001F/]+)*$"
+    },
+    "edge": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/package_name"
+        },
+        {
+          "$ref": "#/$defs/package_name"
+        }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "package_entry": {
+      "type": "object",
+      "required": [
+        "name",
+        "rel_path",
+        "language",
+        "build_commands"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/package_name"
+        },
+        "rel_path": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "language": {
+          "$ref": "#/$defs/language"
+        },
+        "build_commands": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 65536
+          }
+        },
+        "is_starlark": {
+          "type": "boolean",
+          "default": false
+        },
+        "declared_srcs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 4096
+          },
+          "default": []
+        },
+        "declared_deps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/package_name"
+          },
+          "uniqueItems": true,
+          "default": []
+        }
+      }
+    },
+    "shard_entry": {
+      "type": "object",
+      "required": [
+        "index",
+        "name",
+        "assigned_packages",
+        "package_names"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "assigned_packages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/package_name"
+          },
+          "uniqueItems": true
+        },
+        "package_names": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/package_name"
+          },
+          "uniqueItems": true
+        },
+        "languages_needed": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/language"
+          },
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        },
+        "estimated_cost": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

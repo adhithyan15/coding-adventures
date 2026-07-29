@@ -256,6 +256,189 @@
             "$ref": "#/$defs/safe_path"
           }
         }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "discovery"
+              }
+            },
+            "required": [
+              "operation"
+            ]
+          },
+          "then": {
+            "properties": {
+              "options": {
+                "$ref": "#/$defs/discovery_options"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "resolution"
+              }
+            },
+            "required": [
+              "operation"
+            ]
+          },
+          "then": {
+            "properties": {
+              "options": {
+                "$ref": "#/$defs/resolution_options"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "graph"
+              }
+            },
+            "required": [
+              "operation"
+            ]
+          },
+          "then": {
+            "properties": {
+              "options": {
+                "$ref": "#/$defs/graph_options"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "plan"
+              }
+            },
+            "required": [
+              "operation"
+            ]
+          },
+          "then": {
+            "properties": {
+              "options": {
+                "$ref": "#/$defs/plan_options"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "package_name": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*/[a-z0-9][a-z0-9._/-]*$",
+      "maxLength": 240
+    },
+    "edge": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/package_name"
+        },
+        {
+          "$ref": "#/$defs/package_name"
+        }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "discovery_options": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code_root",
+        "platform"
+      ],
+      "properties": {
+        "code_root": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "platform": {
+          "enum": [
+            "darwin",
+            "linux",
+            "windows"
+          ]
+        }
+      }
+    },
+    "resolution_options": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code_root",
+        "language"
+      ],
+      "properties": {
+        "code_root": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "maxLength": 64
+        }
+      }
+    },
+    "graph_options": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packages",
+        "edges"
+      ],
+      "properties": {
+        "packages": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/package_name"
+          }
+        },
+        "edges": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/edge"
+          }
+        }
+      }
+    },
+    "plan_options": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "plan"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "read",
+            "write",
+            "round_trip"
+          ]
+        },
+        "plan": {
+          "type": "object",
+          "maxProperties": 1024,
+          "additionalProperties": {
+            "$ref": "#/$defs/json_value"
+          }
+        }
       }
     },
     "diagnostic": {
@@ -282,9 +465,7 @@
           "$ref": "#/$defs/safe_path"
         },
         "package": {
-          "type": "string",
-          "pattern": "^[a-z0-9][a-z0-9._-]*/[a-z0-9][a-z0-9._/-]*$",
-          "maxLength": 240
+          "$ref": "#/$defs/package_name"
         },
         "message": {
           "type": "string",

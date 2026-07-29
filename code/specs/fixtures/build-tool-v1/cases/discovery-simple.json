@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "id": "discovery/windows-override",
+  "id": "discovery/simple",
   "domain": "discovery",
-  "summary": "A Windows shell override wins over generic and Starlark BUILD content.",
+  "summary": "A canonical BUILD file establishes one Python package.",
   "platforms": [
     "darwin",
     "linux",
@@ -15,19 +15,19 @@
     "files": [
       {
         "path": "code/packages/python/demo/BUILD",
-        "content_utf8": "load(\"//rules:python.star\", \"python_library\")\npython_library(name = \"demo\")\n"
+        "content_utf8": "python -m unittest discover tests\n"
       },
       {
-        "path": "code/packages/python/demo/BUILD_windows",
-        "content_utf8": "python -m unittest discover tests\n"
+        "path": "code/packages/python/demo/pyproject.toml",
+        "content_utf8": "[project]\nname = \"demo\"\nversion = \"0.1.0\"\ndependencies = []\n"
       }
     ]
   },
   "input": {
     "operation": "discovery",
     "options": {
-      "platform": "windows",
-      "code_root": "code"
+      "code_root": "code",
+      "platform": "linux"
     },
     "arguments": [],
     "environment": {},
@@ -35,13 +35,13 @@
   },
   "expected": {
     "schema_version": 1,
-    "case_id": "discovery/windows-override",
+    "case_id": "discovery/simple",
     "domain": "discovery",
     "outcome": "ok",
     "result": {
       "packages": [
         {
-          "build_file": "code/packages/python/demo/BUILD_windows",
+          "build_file": "code/packages/python/demo/BUILD",
           "is_starlark": false,
           "language": "python",
           "name": "python/demo",

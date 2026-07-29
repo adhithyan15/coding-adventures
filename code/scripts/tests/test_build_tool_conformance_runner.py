@@ -45,6 +45,19 @@ class StrictJsonTests(unittest.TestCase):
             with self.subTest(code=code):
                 self.assert_parse_error(raw, code)
 
+    def test_rejects_invalid_utf8_syntax_delimiters_and_top_level_values(
+        self,
+    ) -> None:
+        cases = {
+            b'{"value":"\xff"}': "JSON_UTF8_INVALID",
+            b"}": "JSON_SYNTAX_INVALID",
+            b'{"value":': "JSON_SYNTAX_INVALID",
+            b"[]": "JSON_TOP_LEVEL_INVALID",
+        }
+        for raw, code in cases.items():
+            with self.subTest(code=code):
+                self.assert_parse_error(raw, code)
+
     def test_rejects_moderate_and_extreme_depth_with_the_same_code(self) -> None:
         for depth in (65, 1100):
             raw = b'{"value":' + (b"[" * depth) + b"0" + (b"]" * depth) + b"}"
@@ -56,6 +69,18 @@ class StrictJsonTests(unittest.TestCase):
             runner.strict_load_bytes(b'{"value":"oversized"}', max_bytes=8)
         self.assertEqual(raised.exception.code, "JSON_INPUT_TOO_LARGE")
 
+    def test_load_document_reports_missing_files(self) -> None:
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.load_document(Path("definitely-not-present.json"))
+        self.assertEqual(raised.exception.code, "DOCUMENT_READ_FAILED")
+
+    def test_portable_path_validation_covers_canonical_edge_cases(self) -> None:
+        self.assertIsNotNone(runner.portable_path_error(None))
+        self.assertIsNotNone(runner.portable_path_error("a" * 513))
+        self.assertIsNotNone(runner.portable_path_error("fixtures/e\u0301.txt"))
+        self.assertIsNotNone(runner.portable_path_error("fixtures/name."))
+        self.assertIsNone(runner.portable_path_error("fixtures/.hidden"))
+
 
 class CorpusTests(unittest.TestCase):
     def test_checked_in_corpus_and_manifest_validate(self) -> None:
@@ -66,6 +91,10 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
+        self.assertEqual(summary["front_door_count"], 12)
+        self.assertEqual(summary["adapter_ready_count"], 0)
+        self.assertEqual(summary["conformance_run_count"], 0)
+        self.assertEqual(summary["conformance_status"], "not-run")
         self.assertEqual(
             summary["domains"],
             ["discovery", "graph", "plan", "resolution"],
@@ -160,6 +189,19 @@ class ExecutionDenialTests(unittest.TestCase):
         trusted_capability["capabilities"].append("trusted_execution")
         self.assert_denied_before_side_effects(trusted_capability)
 
+    def test_validate_result_rejects_execution_before_reading_the_result(
+        self,
+    ) -> None:
+        case = load_case("discovery-windows-override.json")
+        case["domain"] = "execution"
+        with tempfile.TemporaryDirectory() as directory:
+            case_path = Path(directory) / "case.json"
+            case_path.write_text(json.dumps(case), encoding="utf-8")
+            missing_result = Path(directory) / "missing-result.json"
+            with self.assertRaises(runner.ConformanceError) as raised:
+                runner.validate_result_files(case_path, missing_result)
+        self.assertEqual(raised.exception.code, "EXECUTION_DISABLED")
+
 
 class MaterializationTests(unittest.TestCase):
     def test_materializes_exact_regular_files_and_cleans_up(self) -> None:
@@ -198,7 +240,8 @@ class MaterializationTests(unittest.TestCase):
             mock.patch.object(runner.tempfile, "TemporaryDirectory") as temporary,
             self.assertRaises(runner.ConformanceError) as raised,
         ):
-            runner.materialized_workspace(invalid)
+            with runner.materialized_workspace(invalid):
+                pass
         self.assertEqual(raised.exception.code, "WORKSPACE_BASE64_NONCANONICAL")
         temporary.assert_not_called()
 
@@ -208,9 +251,36 @@ class MaterializationTests(unittest.TestCase):
             mock.patch.object(runner.tempfile, "TemporaryDirectory") as temporary,
             self.assertRaises(runner.ConformanceError) as raised,
         ):
-            runner.materialized_workspace(oversized)
+            with runner.materialized_workspace(oversized):
+                pass
         self.assertEqual(raised.exception.code, "WORKSPACE_BYTE_LIMIT")
         temporary.assert_not_called()
+
+        malformed = load_case("discovery-simple.json")
+        malformed["workspace"]["files"][0] = {
+            "path": "code/packages/python/demo/BUILD",
+            "content_base64": "not base64!",
+        }
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.preflight_workspace(malformed)
+        self.assertEqual(raised.exception.code, "WORKSPACE_BASE64_INVALID")
+
+    def test_malformed_workspace_shapes_are_rejected(self) -> None:
+        base = load_case("discovery-simple.json")
+        for workspace, code in (
+            ({}, "WORKSPACE_FILES_INVALID"),
+            ({"files": ["not-an-object"]}, "WORKSPACE_FILE_INVALID"),
+            (
+                {"files": [{"path": "fixtures/no-content"}]},
+                "WORKSPACE_CONTENT_MISSING",
+            ),
+        ):
+            case = copy.deepcopy(base)
+            case["workspace"] = workspace
+            with self.subTest(code=code):
+                with self.assertRaises(runner.ConformanceError) as raised:
+                    runner.preflight_workspace(case)
+                self.assertEqual(raised.exception.code, code)
 
     def test_path_aliases_collisions_and_prefix_conflicts_fail_preflight(self) -> None:
         base = load_case("discovery-simple.json")
@@ -234,7 +304,8 @@ class MaterializationTests(unittest.TestCase):
                     ) as temporary,
                     self.assertRaises(runner.ConformanceError) as raised,
                 ):
-                    runner.materialized_workspace(case)
+                    with runner.materialized_workspace(case):
+                        pass
                 self.assertEqual(raised.exception.code, "WORKSPACE_PATH_UNSAFE")
                 temporary.assert_not_called()
 
@@ -289,7 +360,10 @@ class ResultValidationTests(unittest.TestCase):
     def test_result_mismatch_and_identity_mismatch_are_distinct(self) -> None:
         case = load_case("graph-diamond.json")
         mismatch = copy.deepcopy(case["expected"])
-        mismatch["result"]["levels"] = [["python/a"]]
+        mismatch["result"]["edges"][0] = [
+            "python/pkg-a",
+            "python/pkg-b",
+        ]
         with self.assertRaises(runner.ConformanceError) as raised:
             runner.assert_result_matches(case, mismatch)
         self.assertEqual(raised.exception.code, "RESULT_MISMATCH")
@@ -299,6 +373,37 @@ class ResultValidationTests(unittest.TestCase):
         with self.assertRaises(runner.ConformanceError) as raised:
             runner.assert_result_matches(case, wrong_identity)
         self.assertEqual(raised.exception.code, "RESULT_CASE_ID_MISMATCH")
+
+    def test_plan_semantics_reject_unknown_references_and_duplicate_names(
+        self,
+    ) -> None:
+        case = load_case("plan-affected-empty.json")
+
+        duplicate = copy.deepcopy(case["expected"])
+        duplicate_package = copy.deepcopy(
+            duplicate["result"]["plan"]["packages"][0]
+        )
+        duplicate_package["build_commands"] = ["different"]
+        duplicate["result"]["plan"]["packages"].append(duplicate_package)
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.assert_result_matches(case, duplicate)
+        self.assertEqual(raised.exception.code, "RESULT_PLAN_PACKAGE_DUPLICATE")
+
+        unknown_edge = copy.deepcopy(case["expected"])
+        unknown_edge["result"]["plan"]["dependency_edges"] = [
+            ["python/missing", "python/pkg-a"]
+        ]
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.assert_result_matches(case, unknown_edge)
+        self.assertEqual(raised.exception.code, "RESULT_PLAN_EDGE_UNKNOWN")
+
+        unknown_affected = copy.deepcopy(case["expected"])
+        unknown_affected["result"]["plan"]["affected_packages"] = [
+            "python/missing"
+        ]
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.assert_result_matches(case, unknown_affected)
+        self.assertEqual(raised.exception.code, "RESULT_PLAN_AFFECTED_UNKNOWN")
 
     def test_validate_result_uses_the_bounded_parser_for_result_bytes(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"
@@ -356,6 +461,31 @@ class CommandLineTests(unittest.TestCase):
         with redirect_stderr(stderr):
             exit_code = runner.main(["validate-corpus", "--allow-execution"])
         self.assertEqual(exit_code, 2)
+
+    def test_result_mismatch_is_a_conformance_exit_not_an_input_exit(self) -> None:
+        case_path = CASES_ROOT / "graph-diamond.json"
+        case = load_case(case_path.name)
+        mismatch = copy.deepcopy(case["expected"])
+        mismatch["result"]["edges"][0] = [
+            "python/pkg-a",
+            "python/pkg-b",
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            result_path = Path(directory) / "result.json"
+            result_path.write_text(json.dumps(mismatch), encoding="utf-8")
+            stderr = io.StringIO()
+            with redirect_stderr(stderr):
+                exit_code = runner.main(
+                    [
+                        "validate-result",
+                        "--case",
+                        str(case_path),
+                        "--result",
+                        str(result_path),
+                    ]
+                )
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(json.loads(stderr.getvalue())["code"], "RESULT_MISMATCH")
 
 
 if __name__ == "__main__":
