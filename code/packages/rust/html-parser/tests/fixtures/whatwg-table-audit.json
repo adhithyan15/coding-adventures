@@ -1,5 +1,5 @@
 {
-  "case_count": 455,
+  "case_count": 456,
   "cases": [
     {
       "axis": "foster-parenting",
@@ -2730,12 +2730,18 @@
       "id": "webkit02-dat-35",
       "reason": "select handling while table insertion modes are active",
       "source": "webkit02.dat:35"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "adoption02-dat-3",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "adoption02.dat:3"
     }
   ],
   "counts_by_axis": {
     "caption-colgroup": 69,
     "cell-boundary": 103,
-    "foster-parenting": 58,
+    "foster-parenting": 59,
     "row-group-boundary": 54,
     "select-in-table": 51,
     "table-fragment-context": 91,
