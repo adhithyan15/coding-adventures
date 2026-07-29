@@ -39,12 +39,14 @@ Deliberately small and honest, focused on the type/wrap/truncate story:
   `<stdint.h>` fixed-width typedef names `int8_t int16_t int32_t int64_t
   uint8_t uint16_t uint32_t uint64_t` plus `size_t`.
 - **Declarations:** local variables with an optional initialiser
-  (`int32_t x = 5;`), function parameters.
-- **Expressions** with full C precedence: assignment `=`; `|| &&`; bitwise
-  `| ^ &`; equality `== !=`; relational `< <= > >=`; shifts `<< >>`; additive
-  `+ -`; multiplicative `* / %`; unary `- ~ !` and the **cast** `(T)e`; postfix
-  function calls; primaries (identifier, integer literal with optional
-  `u`/`l`/`ll` suffix, parenthesised expression).
+  (`int32_t x = 5;`), function parameters, and **fixed-size arrays** (`int a[3]`,
+  `int a[3] = {1,2,3}`, `int a[] = {…}` — see the arrays milestone).
+- **Expressions** with full C precedence: assignment `=` (to a scalar or an
+  array element `a[i] = e`); `|| &&`; bitwise `| ^ &`; equality `== !=`;
+  relational `< <= > >=`; shifts `<< >>`; additive `+ -`; multiplicative
+  `* / %`; unary `- ~ !` and the **cast** `(T)e`; postfix function calls and
+  **array indexing** `a[i]`; primaries (identifier, integer literal with
+  optional `u`/`l`/`ll` suffix, parenthesised expression).
 - **Statements:** expression statement, `if`/`else`, `while`, `for`, `return`,
   compound `{ … }`.
 - **Output:** a restricted `printf` — `printf("<fmt>", e)` where `<fmt>` is a
@@ -419,6 +421,40 @@ and what is actually proven is the floating-point *computation* — mixed
 promotion, true division, loop accumulation, and float→int truncation — is
 identical across reference C, emitted Ruby, and emitted C.
 
+## Fixed-size arrays (milestone 11)
+
+The first of the four "aggregate" axes (arrays → structs → pointers → strings).
+A C array maps to a SIR **sequence**, which the core and both backends already
+support (`Expr::SeqLit`, `Expr::SeqIndex`, `Stmt::SeqSet`, under
+`Feature::Sequences`) — so this is a **frontend-only** slice: grammar plus
+lowering.
+
+**Grammar.**  `init_declarator` gains an optional dimension and a brace
+initializer (`int a[3]`, `int a[3] = {1,2,3}`, `int a[] = {…}`); `postfix` gains
+`index_suffix` so `a[i]` parses (as an rvalue and as an assignment target).
+
+**Lowering.**  Array-ness lives **only in the symbol table** — a `Binding` gains
+`array_len: Option<usize>`, and every *expression* still carries a scalar
+`CType`, so the entire expression machinery is untouched (there is no
+array-typed expression: a bare array name does **not** decay to a pointer yet,
+and using one as a value is a positioned error).
+
+- `int a[N] = {e₀, …}` → a `SeqLit` of the element expressions, each converted to
+  the element type, then **zero-filled** to length N (C's aggregate rule); an
+  uninitialised `int a[N];` is all-zero (safe — reading indeterminate values is
+  UB, so no conformance case does).  The size is `N`, or the initializer count
+  when written `int a[] = {…}`.  Too many initializers, a zero/absent size with
+  no initializer, and a length past `MAX_ARRAY_LEN` (a DoS guard) are refused.
+- `a[i]` (rvalue) → `SeqIndex`; result type is the element type.
+- `a[i] = e` → `Stmt::SeqSet`, with `e` converted to the element type — so a
+  narrowing store still wraps (`uint8_t a[…]; a[0] = 200 + 100;` stores 44).
+- Refused: whole-array assignment, indexing a non-array, a non-integer index,
+  and chained/mixed postfix (`a[i][j]`, `f(x)[i]`) — each a later slice.
+
+The corpus proves literal/loop reads, indexed writes, loop fill, computed
+indices, partial-init zero-fill, and per-element width wraparound byte-identical
+across reference C, emitted Ruby, and emitted C.
+
 ## Pipeline
 
 ```text
@@ -465,7 +501,11 @@ pub struct CLowerError { pub message: String, pub line: usize, pub column: usize
 
 ## Out of scope (v1)
 
-- Pointers, arrays, structs, unions, enums, `typedef`.
+- Multi-dimensional / nested arrays, array parameters (pointer decay), and a
+  bare array name used as a value.  Fixed-size 1-D arrays are supported
+  (milestone 11); the rest arrives with pointers.
+- Pointers, structs, unions, enums, `typedef`, and `char *` strings (the other
+  three aggregate axes, rotating after arrays).
 - `long double` (SIR has a single 64-bit `Float`; `float`/`double`/`long double`
   all map to it — see the floating-point section).  Precise `float` (32-bit)
   rounding is therefore not modelled: `float` is treated as `double`.

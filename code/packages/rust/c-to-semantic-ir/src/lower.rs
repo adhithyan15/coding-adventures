@@ -292,6 +292,16 @@ fn int_lit(v: i64) -> Expr {
     }
 }
 
+/// The zero value of a C type — `0.0` for `double`, `0` masked to its width for
+/// an integer type.  Used to zero-fill uninitialised scalars and the trailing
+/// (un-initialised) elements of an array, matching C's aggregate zero-fill.
+fn zero_of(ct: CType) -> Expr {
+    match ct {
+        CType::Double => float_lit(0.0),
+        CType::Int(s) => convert(int_lit(0), s),
+    }
+}
+
 fn convert(e: Expr, to: IntSpec) -> Expr {
     Expr::Convert {
         value: Box::new(e),
@@ -377,6 +387,17 @@ const MAX_EXPR_DEPTH: usize = 48;
 /// too, so this only adds a friendlier message for a pure guard chain.
 const MAX_LIFTED_GUARDS: usize = MAX_EXPR_DEPTH;
 
+/// Largest fixed array the frontend will materialise.  Each element becomes an
+/// `Expr` in a `SeqLit`, so an enormous size would blow up the emitted code —
+/// this caps it (a source baking in `int a[1000000000]` is rejected cleanly).
+const MAX_ARRAY_LEN: usize = 65536;
+
+/// Whole-module budget on the *total* number of materialised array elements.
+/// [`MAX_ARRAY_LEN`] bounds a single array, but each element becomes an `Expr`
+/// in a `SeqLit`, so many large arrays could still amplify a tiny source into
+/// gigabytes of IR.  This caps the aggregate across the whole translation unit.
+const MAX_TOTAL_ARRAY_ELEMS: usize = 1 << 20; // ~1M elements
+
 /// One binding in a lexical scope: its C type, its SIR `Scope`, and the SIR name
 /// it lowers to.  The SIR name differs from the C name when the C name shadows an
 /// outer one or is re-used by a sibling scope — SIR's namespace is flat, so those
@@ -386,6 +407,12 @@ struct Binding {
     ty: CType,
     scope: Scope,
     sir_name: String,
+    /// `Some(n)` if this is a fixed-size array of `n` elements of type `ty`
+    /// (arrays slice 1); `None` for an ordinary scalar.  Arrays live only in the
+    /// symbol table — every *expression* still has a scalar `CType`, so the whole
+    /// expression machinery is unchanged (there is no array-typed expression yet:
+    /// a bare array name does not decay to a pointer in this slice).
+    array_len: Option<usize>,
 }
 
 struct Lowerer {
@@ -415,6 +442,13 @@ struct Lowerer {
     /// floating point (an integer-only program stays float-free, and backends
     /// that gate on the feature are not forced to support it needlessly).
     uses_floats: bool,
+    /// Set once any fixed array is declared (arrays slice 1), so the module
+    /// declares [`Feature::Sequences`] only when it actually uses one.
+    uses_arrays: bool,
+    /// Running total of materialised array elements across the whole module —
+    /// bounded by [`MAX_TOTAL_ARRAY_ELEMS`] so many large arrays cannot amplify
+    /// a tiny source into an enormous IR (a per-array cap alone does not).
+    array_elems_total: usize,
 }
 
 pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowerError> {
@@ -426,6 +460,8 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowe
         expr_depth: 0,
         stmt_depth: 0,
         uses_floats: false,
+        uses_arrays: false,
+        array_elems_total: 0,
     };
 
     // Pre-pass: collect function signatures.
@@ -466,6 +502,11 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowe
     // modules stay float-free.
     if lo.uses_floats {
         features.push(Feature::Floats);
+    }
+    // Arrays (slice 1): a fixed C array lowers to a `SeqLit`/`SeqIndex`/`SeqSet`,
+    // which both backends render under `Feature::Sequences`.
+    if lo.uses_arrays {
+        features.push(Feature::Sequences);
     }
     let manifest = FeatureManifest::from_features(&features);
 
@@ -521,7 +562,13 @@ impl Lowerer {
     /// to.  Re-declaring the same name in the *same* block is a C error;
     /// shadowing an outer scope (or re-using a name a sibling used) is fine and
     /// gets a fresh unique SIR name.
-    fn declare(&mut self, cname: &str, ty: CType, scope: Scope) -> Result<String, CLowerError> {
+    fn declare(
+        &mut self,
+        cname: &str,
+        ty: CType,
+        scope: Scope,
+        array_len: Option<usize>,
+    ) -> Result<String, CLowerError> {
         if self
             .scopes
             .last()
@@ -542,6 +589,7 @@ impl Lowerer {
                 ty,
                 scope,
                 sir_name: sir_name.clone(),
+                array_len,
             },
         );
         Ok(sir_name)
@@ -628,7 +676,7 @@ impl Lowerer {
         let mut sir_params = Vec::new();
         for (pname, ty) in &params {
             self.uses_floats |= ty.is_double();
-            self.declare(pname, *ty, Scope::Param)?;
+            self.declare(pname, *ty, Scope::Param, None)?;
             sir_params.push(Param {
                 name: pname.clone(),
                 sir_type: Some(ty.sir()),
@@ -1036,8 +1084,9 @@ impl Lowerer {
         Ok(())
     }
 
-    /// `x = e` → `Stmt::Assign` with the RHS converted to `x`'s declared type.
-    /// The LHS must be a bare, already-declared name (the only lvalue in v1).
+    /// `x = e` → `Stmt::Assign`, or `a[i] = e` → `Stmt::SeqSet`, with the RHS
+    /// converted to the target's (element) type.  The LHS must be a declared
+    /// scalar name or an array index — the only lvalues in this subset.
     fn lower_assignment(&mut self, n: &GrammarASTNode) -> Result<Stmt, CLowerError> {
         let nodes = child_nodes(n);
         let lhs = nodes.first().copied().ok_or_else(|| CLowerError {
@@ -1045,6 +1094,28 @@ impl Lowerer {
             line: n.start_line.unwrap_or(0),
             column: n.start_column.unwrap_or(0),
         })?;
+        let rhs = nodes.get(1).copied().ok_or_else(|| CLowerError {
+            message: "assignment without a right-hand side".into(),
+            line: n.start_line.unwrap_or(0),
+            column: n.start_column.unwrap_or(0),
+        })?;
+        // An indexed lvalue `a[i]` peels to a `postfix` carrying an
+        // `index_suffix` — route it to a `SeqSet`.
+        let lp = peel(lhs);
+        if lp.rule_name == "postfix" {
+            if let Some(idx) = child_nodes(lp)
+                .into_iter()
+                .find(|x| x.rule_name == "index_suffix")
+            {
+                let callee = child_nodes(lp).into_iter().next().ok_or_else(|| CLowerError {
+                    message: "malformed indexed assignment".into(),
+                    line: n.start_line.unwrap_or(0),
+                    column: n.start_column.unwrap_or(0),
+                })?;
+                return self.lower_index_write(callee, idx, rhs);
+            }
+        }
+        // ── scalar `x = e` ──
         let name = child_tokens(peel(lhs))
             .iter()
             .find(|t| t.effective_type_name() == "NAME")
@@ -1054,24 +1125,75 @@ impl Lowerer {
                 line: n.start_line.unwrap_or(0),
                 column: n.start_column.unwrap_or(0),
             })?;
-        let (ty, scope, sir_name) = {
+        let (ty, scope, sir_name, is_array) = {
             let b = self.resolve(&name).ok_or_else(|| CLowerError {
                 message: format!("assignment to undeclared variable `{name}`"),
                 line: n.start_line.unwrap_or(0),
                 column: n.start_column.unwrap_or(0),
             })?;
-            (b.ty, b.scope, b.sir_name.clone())
+            (b.ty, b.scope, b.sir_name.clone(), b.array_len.is_some())
         };
-        let rhs = nodes.get(1).copied().ok_or_else(|| CLowerError {
-            message: "assignment without a right-hand side".into(),
-            line: n.start_line.unwrap_or(0),
-            column: n.start_column.unwrap_or(0),
-        })?;
+        if is_array {
+            return err(
+                format!("cannot assign to the whole array `{name}`; assign an element `{name}[i]`"),
+                n,
+            );
+        }
         let (e, et) = self.lower_expr(rhs)?;
         Ok(Stmt::Assign {
             name: sir_name,
             scope,
             value: convert_ct(e, et, ty),
+            span: sp(),
+        })
+    }
+
+    /// Lower an indexed write `a[i] = e` → `Stmt::SeqSet`.  `callee` must be a
+    /// bare array name; the value is converted to the element type.
+    fn lower_index_write(
+        &mut self,
+        callee: &GrammarASTNode,
+        index_suffix: &GrammarASTNode,
+        rhs: &GrammarASTNode,
+    ) -> Result<Stmt, CLowerError> {
+        let name = child_tokens(peel(callee))
+            .iter()
+            .find(|t| t.effective_type_name() == "NAME")
+            .map(|t| t.value.clone())
+            .ok_or_else(|| CLowerError {
+                message: "only a named array element can be assigned".into(),
+                line: callee.start_line.unwrap_or(0),
+                column: callee.start_column.unwrap_or(0),
+            })?;
+        let b = self.resolve(&name).ok_or_else(|| CLowerError {
+            message: format!("assignment to undeclared variable `{name}`"),
+            line: callee.start_line.unwrap_or(0),
+            column: callee.start_column.unwrap_or(0),
+        })?;
+        let (elem, scope, sir_name, is_array) =
+            (b.ty, b.scope, b.sir_name.clone(), b.array_len.is_some());
+        if !is_array {
+            return err(format!("`{name}` is not an array and cannot be indexed"), callee);
+        }
+        let idx_node = first_node(index_suffix, "expr").ok_or_else(|| CLowerError {
+            message: "empty array index".into(),
+            line: index_suffix.start_line.unwrap_or(0),
+            column: index_suffix.start_column.unwrap_or(0),
+        })?;
+        let (ie, it) = self.lower_expr(idx_node)?;
+        if it.is_double() {
+            return err("an array index must be an integer, not a double", idx_node);
+        }
+        let (ve, vt) = self.lower_expr(rhs)?;
+        let value = convert_ct(ve, vt, elem);
+        Ok(Stmt::SeqSet {
+            seq: Expr::VarRef {
+                name: sir_name,
+                scope,
+                span: sp(),
+            },
+            index: ie,
+            value,
             span: sp(),
         })
     }
@@ -1409,14 +1531,16 @@ impl Lowerer {
         self.lower_init_declarator(init)
     }
 
-    /// Lower an `init_declarator` (`T name [= expr]`) to a `LetStarBinding`.
-    /// Shared by ordinary declarations and `for`-init clauses.
+    /// Lower an `init_declarator` (`T name [= init]`, or the array form
+    /// `T a[N] = {…}`) to a `LetStarBinding`.  Shared by ordinary declarations
+    /// and `for`-init clauses.
     fn lower_init_declarator(&mut self, init: &GrammarASTNode) -> Result<Stmt, CLowerError> {
         let ts = first_node(init, "type_spec").ok_or_else(|| CLowerError {
             message: "declaration without a type specifier".into(),
             line: init.start_line.unwrap_or(0),
             column: init.start_column.unwrap_or(0),
         })?;
+        // For an array, `ty` is the *element* type.
         let ty = resolve_type_spec(ts)?.ok_or_else(|| CLowerError {
             message: "void variable".into(),
             line: init.start_line.unwrap_or(0),
@@ -1428,24 +1552,29 @@ impl Lowerer {
             .find(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
             .unwrap_or_default();
+        // The `= …` part is now an `initializer` node (a brace list for arrays,
+        // or a single `expr` for scalars).
+        let initr = first_node(init, "initializer");
+        // An array declarator carries a `[` token (`int a[3]`, `int a[]`).
+        let is_array = child_tokens(init)
+            .iter()
+            .any(|t| t.effective_type_name() == "LBRACKET");
+        if is_array {
+            return self.lower_array_declaration(init, &name, ty, initr);
+        }
+        // ── scalar ──
         // Lower the initializer *before* declaring the new name, so that in a
         // shadowing block `{ int v = v + 1; }` the RHS reads the outer `v`.
-        let value = match first_node(init, "expr") {
+        let value = match initr.and_then(|z| first_node(z, "expr")) {
             Some(e) => {
                 let (ex, ety) = self.lower_expr(e)?;
                 convert_ct(ex, ety, ty) // assignment conversion to the declared type
             }
-            // Uninitialised → the type's zero: `0.0` for `double`, `0` (wrapped
-            // to the width) for an integer type.
-            None => match ty {
-                CType::Double => float_lit(0.0),
-                CType::Int(s) => convert(int_lit(0), s),
-            },
+            // Uninitialised → the type's zero.
+            None => zero_of(ty),
         };
-        // Bind in the current scope; `declare` gives a unique SIR name when this
-        // shadows an outer variable or re-uses one a sibling block used.
         let sir_name = self
-            .declare(&name, ty, Scope::Local)
+            .declare(&name, ty, Scope::Local, None)
             .map_err(|e| CLowerError {
                 message: e.message,
                 line: init.start_line.unwrap_or(0),
@@ -1454,6 +1583,103 @@ impl Lowerer {
         Ok(Stmt::LetStarBinding {
             name: sir_name,
             sir_type: Some(ty.sir()),
+            value,
+            span: sp(),
+        })
+    }
+
+    /// Lower a fixed-size array declaration (`T a[N]`, `T a[N] = {…}`, or
+    /// `T a[] = {…}`) to a `LetStarBinding` whose value is a `SeqLit`.  `elem` is
+    /// the element type; the array is recorded in the symbol table with its
+    /// length so `a[i]` type-checks and a bare `a` (no pointer decay yet) is
+    /// rejected.
+    fn lower_array_declaration(
+        &mut self,
+        init: &GrammarASTNode,
+        name: &str,
+        elem: CType,
+        initr: Option<&GrammarASTNode>,
+    ) -> Result<Stmt, CLowerError> {
+        let err_here = |msg: String| CLowerError {
+            message: msg,
+            line: init.start_line.unwrap_or(0),
+            column: init.start_column.unwrap_or(0),
+        };
+        self.uses_arrays = true;
+        // The declared size, if written (`int a[3]`): the `INT_LIT` inside `[ ]`.
+        let declared: Option<usize> = child_tokens(init)
+            .iter()
+            .find(|t| t.effective_type_name() == "INT_LIT")
+            .map(|t| parse_int_literal(&t.value).0.max(0) as usize);
+        // The brace-list elements, if any (`= {e, e, …}`).
+        let elem_nodes: Vec<&GrammarASTNode> = match initr {
+            Some(z) => match first_node(z, "init_list") {
+                Some(il) => child_nodes(il)
+                    .into_iter()
+                    .filter(|x| x.rule_name == "expr")
+                    .collect(),
+                // An initializer that is *not* a brace list — `int a[3] = 5;`.
+                None => {
+                    return Err(err_here(
+                        "an array must be initialised with a brace list `{…}`".into(),
+                    ))
+                }
+            },
+            None => Vec::new(),
+        };
+        // Determine the length: the declared size, else the initializer count.
+        let len = match declared {
+            Some(n) => {
+                if elem_nodes.len() > n {
+                    return Err(err_here(format!(
+                        "too many initializers for `{name}[{n}]` ({} given)",
+                        elem_nodes.len()
+                    )));
+                }
+                n
+            }
+            None => {
+                if elem_nodes.is_empty() {
+                    return Err(err_here(format!(
+                        "array `{name}[]` needs either a size or an initializer to size it"
+                    )));
+                }
+                elem_nodes.len()
+            }
+        };
+        if len == 0 {
+            return Err(err_here(format!("array `{name}` has zero length")));
+        }
+        if len > MAX_ARRAY_LEN {
+            return Err(err_here(format!(
+                "array length {len} exceeds the limit of {MAX_ARRAY_LEN}"
+            )));
+        }
+        // Aggregate budget: many large arrays must not amplify a tiny source.
+        self.array_elems_total = self.array_elems_total.saturating_add(len);
+        if self.array_elems_total > MAX_TOTAL_ARRAY_ELEMS {
+            return Err(err_here(format!(
+                "total array elements exceed the module limit of {MAX_TOTAL_ARRAY_ELEMS}"
+            )));
+        }
+        // Build the element expressions: the given initializers (converted to the
+        // element type), then C's zero-fill for any remaining slots.
+        let mut items: Vec<Expr> = Vec::with_capacity(len);
+        for e in &elem_nodes {
+            let (ex, ety) = self.lower_expr(e)?;
+            items.push(convert_ct(ex, ety, elem));
+        }
+        while items.len() < len {
+            items.push(zero_of(elem));
+        }
+        let value = Expr::SeqLit { items, span: sp() };
+        let sir_name = self
+            .declare(name, elem, Scope::Local, Some(len))
+            .map_err(|e| err_here(e.message))?;
+        Ok(Stmt::LetStarBinding {
+            name: sir_name,
+            // A sequence value carries no scalar type annotation.
+            sir_type: None,
             value,
             span: sp(),
         })
@@ -1697,13 +1923,32 @@ impl Lowerer {
     }
 
     fn lower_postfix(&mut self, n: &GrammarASTNode) -> Result<(Expr, CType), CLowerError> {
-        // postfix = primary { call_suffix }
+        // postfix = primary { call_suffix | index_suffix }
         let nodes = child_nodes(n);
         let callee = nodes.first().copied().unwrap();
-        let call = nodes.iter().find(|x| x.rule_name == "call_suffix").copied();
-        let Some(call) = call else {
+        let suffixes: Vec<&GrammarASTNode> = nodes
+            .iter()
+            .skip(1)
+            .filter(|x| x.rule_name == "call_suffix" || x.rule_name == "index_suffix")
+            .copied()
+            .collect();
+        if suffixes.is_empty() {
             return self.lower_primary(callee);
-        };
+        }
+        // Slice 1 supports either a single array index `a[i]` OR a function call
+        // `f(x)`, but not chains or mixes (`a[i][j]`, `f(x)[i]`, `a[i](x)`).
+        let has_index = suffixes.iter().any(|x| x.rule_name == "index_suffix");
+        if has_index {
+            if suffixes.len() > 1 {
+                return err(
+                    "chained or mixed postfix (e.g. `a[i][j]`, `f(x)[i]`) is not yet supported",
+                    n,
+                );
+            }
+            return self.lower_index_read(callee, suffixes[0]);
+        }
+        // Otherwise it is a function call.
+        let call = suffixes[0];
         // The callee is a bare name (function).
         let name = child_tokens(peel(callee))
             .iter()
@@ -1723,6 +1968,57 @@ impl Lowerer {
             })
             .unwrap_or_default();
         self.lower_call(&name, &arg_exprs, call)
+    }
+
+    /// Lower an array index read `a[i]` → `SeqIndex`.  `callee` must be a bare
+    /// name bound as an array; the result has the element type.
+    fn lower_index_read(
+        &mut self,
+        callee: &GrammarASTNode,
+        index_suffix: &GrammarASTNode,
+    ) -> Result<(Expr, CType), CLowerError> {
+        let name = child_tokens(peel(callee))
+            .iter()
+            .find(|t| t.effective_type_name() == "NAME")
+            .map(|t| t.value.clone())
+            .ok_or_else(|| CLowerError {
+                message: "only a named array can be indexed".into(),
+                line: callee.start_line.unwrap_or(0),
+                column: callee.start_column.unwrap_or(0),
+            })?;
+        let b = self.resolve(&name).ok_or_else(|| CLowerError {
+            message: format!("use of undeclared variable `{name}`"),
+            line: callee.start_line.unwrap_or(0),
+            column: callee.start_column.unwrap_or(0),
+        })?;
+        // Copy what we need out of the borrow before lowering the index.
+        let (elem, scope, sir_name, is_array) =
+            (b.ty, b.scope, b.sir_name.clone(), b.array_len.is_some());
+        if !is_array {
+            return err(format!("`{name}` is not an array and cannot be indexed"), callee);
+        }
+        let idx_node = first_node(index_suffix, "expr").ok_or_else(|| CLowerError {
+            message: "empty array index".into(),
+            line: index_suffix.start_line.unwrap_or(0),
+            column: index_suffix.start_column.unwrap_or(0),
+        })?;
+        let (ie, it) = self.lower_expr(idx_node)?;
+        if it.is_double() {
+            return err("an array index must be an integer, not a double", idx_node);
+        }
+        let seq = Expr::VarRef {
+            name: sir_name,
+            scope,
+            span: sp(),
+        };
+        Ok((
+            Expr::SeqIndex {
+                seq: Box::new(seq),
+                index: Box::new(ie),
+                span: sp(),
+            },
+            elem,
+        ))
     }
 
     fn lower_call(
@@ -1808,6 +2104,17 @@ impl Lowerer {
                     line: n.start_line.unwrap_or(0),
                     column: n.start_column.unwrap_or(0),
                 })?;
+                // A bare array name has no scalar value in this slice — C would
+                // decay it to a pointer, which we do not model yet.  Only `a[i]`
+                // is allowed.
+                if b.array_len.is_some() {
+                    return err(
+                        format!(
+                            "array `{name}` cannot be used as a value yet (no pointer decay); index it with `{name}[i]`"
+                        ),
+                        n,
+                    );
+                }
                 Ok((
                     Expr::VarRef {
                         name: b.sir_name.clone(),

@@ -170,6 +170,24 @@ mod tests {
         assert!(has_rule(&ast, "declaration"));
     }
 
+    #[test]
+    fn array_declaration_with_brace_initializer_parses() {
+        // `int a[3] = {1, 2, 3};` — an array dimension and a brace initializer
+        // list, both new in the arrays grammar slice.
+        let ast = root("int main(void) { int a[3] = {1, 2, 3}; return a[0]; }");
+        assert!(has_rule(&ast, "init_declarator"));
+        assert!(has_rule(&ast, "init_list"), "no init_list:\n{ast:#?}");
+        assert!(has_rule(&ast, "index_suffix"), "no index_suffix:\n{ast:#?}");
+    }
+
+    #[test]
+    fn array_sized_from_initializer_and_indexed_assignment_parse() {
+        // `int a[] = {…}` (size inferred) and `a[i] = v` (indexed write).
+        let ast = root("int main(void) { int a[] = {5, 6}; a[1] = 9; return a[1]; }");
+        assert!(has_rule(&ast, "init_list"));
+        assert_eq!(count_rule(&ast, "index_suffix"), 2, "a[1]=… and return a[1]");
+    }
+
     // -------------------------------------------------------------------
     // Recursion-depth guard (DoS hardening, interim DEFAULT_MAX_RULE_DEPTH
     // pass -- see MAX_RULE_DEPTH's own doc comment).
