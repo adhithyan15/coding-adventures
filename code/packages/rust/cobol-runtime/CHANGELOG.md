@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.66.0 — STRING with a reference-modification sending field — 2026-07-29
+
+- `STRING base(start:len) DELIMITED BY … INTO dst` — a reference modification is now accepted as a
+  STRING **sending field**. Previously any refmod STRING sending field was rejected up front ("a
+  reference modification as a STRING sending field is a later rung"); that reject is now LIFTED for
+  **constant (literal) indices**. No grammar change was needed — the grammar already parses a refmod
+  suffix on the STRING sending operand.
+- Semantics: the sliced substring comes from `refmod_string` (the SAME char range DISPLAY,
+  comparison, and MOVE-source already slice, so every context agrees byte-for-byte), and it drops into
+  the STRING concat as just another char image. Everything downstream — `DELIMITED BY SIZE` (field
+  taken whole), `DELIMITED BY <delim>` (field truncated at its first delimiter char), the left-
+  justified receiver overlay with no tail space-fill, and `WITH POINTER` — consumes it exactly as it
+  does an alphanumeric ITEM sending field. Constant indices `WS(2:3)` and an omitted length `WS(3:)`
+  are supported.
+- Boundary: a **computed (data-name) index** `WS(J:K)` gives a run-time length the compile-time STRING
+  image contract cannot carry, so it stays a later rung — rejected here ("a computed reference
+  modification as a STRING sending field is a later rung") IDENTICALLY to the compiler so both engines
+  refuse the same programs (co-totality).
+- Byte-vs-char discipline: `refmod_string` is char-based here and the compiler's `ref_mod_slice` is
+  byte-based; they coincide on the ASCII-clean windows this rung targets, so accepted programs emit
+  byte-identical output. A multi-byte character inside or after the window is the PRE-EXISTING refmod
+  byte-vs-char chip, shared with DISPLAY / MOVE-source and not introduced here.
+
 ## 0.65.0 — MOVE with a reference-modification source — 2026-07-29
 
 - `MOVE base(start:len) TO dst` — a reference modification is now accepted as a MOVE **source** when

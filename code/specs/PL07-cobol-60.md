@@ -512,8 +512,34 @@ emits the usual `jmp_if_false`/branch/`label` skeleton guarding on the `overflow
 register. **Behaviour change:** the out-of-range `WITH POINTER` case previously
 returned with no imperative; it now runs `ON OVERFLOW`.
 
+**Reference-modification sending-field rung (now implemented).** A STRING sending
+field may itself be a **reference modification** — `STRING WS(2:3) DELIMITED BY {SIZE
+| delim} INTO t` — with **CONSTANT (literal) indices**. No grammar change was needed
+(the grammar's `operand` already carries an optional refmod suffix). The sliced
+substring is produced by the SAME shared refmod-substring evaluators every other
+context uses — the oracle's `refmod_string`, the compiler's `ref_mod_slice` — so a
+STRING of `WS(2:3)` is byte-identical to `DISPLAY WS(2:3)` and to a `MOVE WS(2:3)`
+source. Once produced, the substring is just another char image: it drops into the
+concatenation, the delimiter prefix-scan, the receiver overlay, and `WITH POINTER`
+UNCHANGED — no downstream logic special-cases it. Constant indices `WS(2:3)` and an
+omitted length `WS(3:)` are supported.
+
+The boundary is the **index kind**, and it is co-total: a **computed (data-name)
+index** — `STRING WS(J:K) …` — has a length known only at run time, which the STRING
+image contract (a compile-time `(register, length)` pair on the compiler; a produced
+`String` on the oracle) cannot carry, so it stays a clean "later rung" reject on BOTH
+engines. The compiler rejects it UP FRONT — before emitting any slice instructions —
+so no dead code is produced, and the oracle applies the identical literal-index test,
+keeping the accept/reject sets exactly aligned. Byte-vs-char: `ref_mod_slice` is
+byte-based and `refmod_string` char-based; they coincide on the ASCII-clean windows
+this rung targets (accepted programs emit byte-identical output). A multi-byte char
+inside or after the window is the PRE-EXISTING refmod byte-vs-char chip, shared with
+`DISPLAY`/`MOVE`-source and not new to STRING; positive tests keep any multi-byte char
+strictly OUTSIDE the window.
+
 Still deferred as clean "later rung" errors: a **multi-character** delimiter, a
-non-ASCII delimiter, a non-ASCII literal sending field under a delimiter, and
+non-ASCII delimiter, a non-ASCII literal sending field under a delimiter, a
+**computed (data-name) index** reference-modification sending field, and
 **per-field different delimiters** (all still *accepted* by the grammar so the reader
 can reject them cleanly rather than as a parse failure).
 

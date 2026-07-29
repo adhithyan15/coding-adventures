@@ -1887,6 +1887,16 @@ impl<'a> Compiler<'a> {
     /// its text; a numeric literal its lexed source digits verbatim (the same text
     /// the oracle concatenates). A numeric item and a figurative constant as a
     /// sending field are later rungs.
+    ///
+    /// A reference-modification sending field — `WS(start:len)` — lowers to the
+    /// slice register the shared [`Self::ref_mod_slice`] emits (the same `str_slice`
+    /// DISPLAY / comparison / MOVE-source take), paired with its length. Only
+    /// **constant (literal) indices** are accepted: they yield a
+    /// [`SliceLen::Const`], a compile-time-known length the `(reg, usize)` STRING
+    /// image contract can carry. A **computed (data-name) index** would yield a
+    /// [`SliceLen::Runtime`] length known only at run time, which this contract
+    /// cannot express, so it is rejected up front — before any slice code is emitted
+    /// — keeping the reject co-total with the oracle's identical refusal.
     fn string_source(&mut self, op: &GrammarASTNode) -> Result<(String, usize), CompileError> {
         match read_operand(op)? {
             Operandy::Name(name) => {
@@ -1915,9 +1925,29 @@ impl<'a> Compiler<'a> {
                     "a figurative constant as a STRING sending field is a later rung".into(),
                 ))
             }
-            Operandy::RefMod { .. } => Err(CompileError::Unsupported(
-                "a reference modification as a STRING sending field is a later rung".into(),
-            )),
+            Operandy::RefMod { base, start, len } => {
+                // Reject a computed (data-name) index BEFORE emitting any slice code
+                // (avoid dead instructions), keeping the (reg, usize) compile-time-
+                // length contract and staying co-total with the oracle's identical
+                // reject.
+                let const_ix = matches!(start, RefIndex::Lit(_))
+                    && len.as_ref().is_none_or(|l| matches!(l, RefIndex::Lit(_)));
+                if !const_ix {
+                    return Err(CompileError::Unsupported(
+                        "a computed reference modification as a STRING sending field is a later rung"
+                            .into(),
+                    ));
+                }
+                let (reg, slice_len) = self.ref_mod_slice(&base, &start, &len)?;
+                match slice_len {
+                    SliceLen::Const(n) => Ok((reg, n)),
+                    // Unreachable given the const_ix guard, but keep total:
+                    SliceLen::Runtime { .. } => Err(CompileError::Unsupported(
+                        "a computed reference modification as a STRING sending field is a later rung"
+                            .into(),
+                    )),
+                }
+            }
         }
     }
 
