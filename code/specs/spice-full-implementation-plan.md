@@ -33,12 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS electrostatic temperature preprocessing.
+1. Cross-language Level-1 MOS bulk-junction potential temperature preprocessing.
    - Status: current PR completion candidate.
-   - Replace the fixed threshold-voltage shift with Berkeley MOS1 silicon
-     band-gap preprocessing for `PHI` and `VT0`.
-   - Preserve NMOS/PMOS polarity semantics through direct MOS temperature
-     helpers and circuit-level transforms.
+   - Apply the Berkeley MOS1 silicon potential correction to bulk-junction
+     potential `PB` alongside the existing electrostatic transform.
+   - Preserve direct MOS helper and circuit-level temperature-transform parity.
    - Keep Rust, Python, and TypeScript helper behavior, tests, docs, and
      changelogs aligned.
 
@@ -3581,6 +3580,13 @@ the Rust, Python, and TypeScript surfaces together.
      transforms using the shared silicon energy-gap saturation-current law.
    - The nominal `JS / IS` relationship is preserved, and circuit-level
      energy-gap configuration reaches MOS transforms in all three languages.
+
+286. Cross-language Level-1 MOS electrostatic temperature preprocessing.
+   - Status: completed in PR 9135.
+   - Berkeley MOS1 silicon band-gap preprocessing replaces the fixed threshold
+     shift for `PHI` and polarity-aware `VT0`.
+   - Direct MOS helpers and circuit-level transforms preserve matching
+     NMOS/PMOS behavior in Rust, Python, and TypeScript.
 
 ## Backlog
 
