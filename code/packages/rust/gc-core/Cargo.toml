@@ -1,6 +1,6 @@
 [package]
 name = "gc-core"
-version = "0.23.1"
+version = "0.23.2"
 edition = "2021"
 description = "LANG16 — adaptive GC adapter layer wiring garbage-collector into the LANG VM pipeline."
 license = "MIT"
