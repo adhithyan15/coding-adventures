@@ -33,13 +33,13 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS bulk-junction leakage temperature scaling.
+1. Cross-language Level-1 MOS electrostatic temperature preprocessing.
    - Status: current PR completion candidate.
-   - Scale scalar `IS` and area-density `JS` through Level-1 MOS temperature
-     transforms using the shared silicon energy-gap saturation-current law.
-   - Preserve the nominal `JS / IS` relationship and route circuit-level
-     energy-gap configuration through MOS transforms.
-   - Keep Rust, Python, and TypeScript helper behavior, validation, tests, and
+   - Replace the fixed threshold-voltage shift with Berkeley MOS1 silicon
+     band-gap preprocessing for `PHI` and `VT0`.
+   - Preserve NMOS/PMOS polarity semantics through direct MOS temperature
+     helpers and circuit-level transforms.
+   - Keep Rust, Python, and TypeScript helper behavior, tests, docs, and
      changelogs aligned.
 
 ## Completed Slices
@@ -3574,6 +3574,13 @@ the Rust, Python, and TypeScript surfaces together.
      mobility law already applied to `KP`.
    - Direct MOS temperature helpers and circuit-level transforms preserve the
      nominal `KP / U0` relationship in Rust, Python, and TypeScript.
+
+285. Cross-language Level-1 MOS bulk-junction leakage temperature scaling.
+   - Status: completed in PR 9126.
+   - Scalar `IS` and area-density `JS` scale through Level-1 MOS temperature
+     transforms using the shared silicon energy-gap saturation-current law.
+   - The nominal `JS / IS` relationship is preserved, and circuit-level
+     energy-gap configuration reaches MOS transforms in all three languages.
 
 ## Backlog
 

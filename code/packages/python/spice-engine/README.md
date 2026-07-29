@@ -77,6 +77,8 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 `mosfet_at_temperature()`, and `circuit_at_temperature()` provide
 operating-temperature footholds for diode, BJT, JFET, and Level-1 MOSFET
 models before running an analysis.
+Level-1 MOS temperature preprocessing follows the Berkeley MOS1 silicon
+band-gap correction for `PHI` and polarity-aware `VT0`.
 JFET model cards use `TCV` for threshold-voltage scaling and `BEX` for
 `BETA(T) = BETA * (T / TNOM)^BEX`. When explicitly present, `VTOTC` overrides
 `TCV` with `VTO(T) = VTO + VTOTC * (T - TNOM)`, while `BETATCE` overrides

@@ -7736,7 +7736,37 @@ export function mosfetAtTemperature(
     throw invalidElement(element.name, "energy gap must be finite and positive");
   }
   const ratio = temperatureKelvin / nominalTemperatureKelvin;
-  const thresholdShift = -2.0e-3 * (temperatureKelvin - nominalTemperatureKelvin);
+  const referenceTemperatureKelvin = 300.15;
+  const siliconBandGap = (temperature: number): number =>
+    1.16 - (7.02e-4 * temperature * temperature) / (temperature + 1108.0);
+  const potentialCorrection = (temperature: number): number => {
+    const thermalVoltage = (BOLTZMANN * temperature) / ELECTRON_CHARGE;
+    const argument =
+      (-siliconBandGap(temperature) * ELECTRON_CHARGE) /
+        (2.0 * BOLTZMANN * temperature) +
+      (1.115_087_7 * ELECTRON_CHARGE) /
+        (2.0 * BOLTZMANN * referenceTemperatureKelvin);
+    return (
+      -2.0 *
+      thermalVoltage *
+      (1.5 * Math.log(temperature / referenceTemperatureKelvin) + argument)
+    );
+  };
+  const nominalFactor = nominalTemperatureKelvin / referenceTemperatureKelvin;
+  const temperatureFactor = temperatureKelvin / referenceTemperatureKelvin;
+  const nominalPhi =
+    (element.params.PHI - potentialCorrection(nominalTemperatureKelvin)) / nominalFactor;
+  const temperaturePhi =
+    temperatureFactor * nominalPhi + potentialCorrection(temperatureKelvin);
+  const polarity = element.type === "NMOS" ? 1.0 : -1.0;
+  const temperatureVbi =
+    element.params.VT0 -
+    polarity * element.params.GAMMA * Math.sqrt(element.params.PHI) +
+    0.5 *
+      (siliconBandGap(nominalTemperatureKelvin) - siliconBandGap(temperatureKelvin)) +
+    polarity * 0.5 * (temperaturePhi - element.params.PHI);
+  const temperatureVt0 =
+    temperatureVbi + polarity * element.params.GAMMA * Math.sqrt(temperaturePhi);
   const saturationExponent =
     (energyGapElectronVolts * ELECTRON_CHARGE) /
     BOLTZMANN *
@@ -7747,7 +7777,8 @@ export function mosfetAtTemperature(
     ...element,
     params: {
       ...element.params,
-      VT0: element.params.VT0 + thresholdShift,
+      VT0: temperatureVt0,
+      PHI: temperaturePhi,
       KP: element.params.KP * ratio ** -1.5,
       U0: element.params.U0 * ratio ** -1.5,
       IS: element.params.IS * saturationScale,

@@ -1,5 +1,7 @@
 # Changelog
 
+- Apply Berkeley MOS1 electrostatic temperature preprocessing to Level-1 MOS
+  `PHI` and polarity-aware `VT0` instead of a fixed threshold-voltage shift.
 - Scale Level-1 MOS bulk-junction `IS` and `JS` with temperature using the
   silicon energy-gap law already shared by semiconductor junction models.
 - Scale Level-1 MOS `U0` alongside `KP` by `(T / T_NOM)^-3/2` so temperature
