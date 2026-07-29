@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "id": "discovery/windows-override",
+  "domain": "discovery",
+  "summary": "A Windows shell override wins over generic and Starlark BUILD content.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "discovery"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/python/demo/BUILD",
+        "content_utf8": "load(\"//rules:python.star\", \"python_library\")\npython_library(name = \"demo\")\n"
+      },
+      {
+        "path": "code/packages/python/demo/BUILD_windows",
+        "content_utf8": "python -m unittest discover tests\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "discovery",
+    "options": {
+      "platform": "windows",
+      "code_root": "code"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "discovery/windows-override",
+    "domain": "discovery",
+    "outcome": "ok",
+    "result": {
+      "packages": [
+        {
+          "build_file": "code/packages/python/demo/BUILD_windows",
+          "is_starlark": false,
+          "language": "python",
+          "name": "python/demo",
+          "rel_path": "code/packages/python/demo"
+        }
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

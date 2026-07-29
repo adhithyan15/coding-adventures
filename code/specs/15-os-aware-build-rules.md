@@ -1,4 +1,13 @@
 # OS-Aware Starlark BUILD Rules
+
+## Status
+
+Target behavior; not yet implemented consistently by the build-tool ports. The
+Go reference has partial Starlark evaluation and a structured-command renderer,
+but `_ctx` propagation and production structured-command use remain work.
+Conformance is defined by
+[`build-tool-conformance.md`](build-tool-conformance.md).
+
 ## Specification
 
 ### Problem
@@ -26,7 +35,9 @@ BUILD file authors write a single Starlark BUILD file. No BUILD_windows, no BUIL
 
 - Changing how shell BUILD files work (full backward compatibility).
 - Adding OS detection to the Starlark VM itself (the VM is language-agnostic).
-- Rewriting the executor's shell dispatch (it already handles `sh -c` vs `cmd /C`).
+- Rewriting the executor's shell dispatch. The current `cmd /C` Windows path is
+  a known gap governed by `B05-build-windows-executor.md`; it is not accepted as
+  portable behavior.
 
 ---
 
@@ -210,3 +221,8 @@ def py_library(name, srcs=[], deps=[], test_runner="pytest"):
 3. **Delete**: Remove all BUILD_windows files.
 
 After migration, a package that previously needed two files (BUILD + BUILD_windows) has one Starlark BUILD file that works everywhere.
+
+Until that migration is complete, platform-specific shell overrides take
+precedence over Starlark according to the conformance contract. Structured
+command support must not cause an existing `BUILD_windows`, `BUILD_mac`, or
+`BUILD_linux` escape hatch to be ignored.
