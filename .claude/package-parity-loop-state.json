@@ -8,7 +8,12 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": {
+    "item_id": "build-tool-pure-domain-corpus",
+    "pr_number": 9167,
+    "branch": "codex/build-tool-pure-domain-corpus",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9167"
+  },
   "last_inventory": {
     "revision": "3201fb42078f40ef27f11aefb5e3b4b1bcf8551e",
     "schema_version": 2,
@@ -60,11 +65,11 @@
     {
       "id": "build-tool-pure-domain-corpus",
       "title": "Close the remaining non-execution build-tool domain schemas and fixtures",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-fixtures"],
       "branch": "codex/build-tool-pure-domain-corpus",
-      "pr_number": null,
-      "notes": "Selected after PR #9157 merged because this pure, process-free corpus expansion unlocks the Go oracle, Java/Kotlin, Dart, every existing front door, and OCaml promotion. The branch now validates 30 cases across all 11 process-free domains with closed pure records, semantic oracles, conservative diff behavior, typed cache states, inline-only Starlark loads, sharding verification, normalized BUILD-file validation, and the OCaml-aware toolchain registry."
+      "pr_number": 9167,
+      "notes": "Ready-for-review PR #9167. Selected after PR #9157 merged because this pure, process-free corpus expansion unlocks the Go oracle, Java/Kotlin, Dart, every existing front door, and OCaml promotion. The branch validates 30 cases across all 11 process-free domains with closed pure records, semantic oracles, conservative diff behavior, typed cache states, inline-only Starlark loads, sharding verification, normalized BUILD-file validation, and the OCaml-aware toolchain registry."
     },
     {
       "id": "build-tool-cli-parser-corpus",
