@@ -1,0 +1,57 @@
+% ============================================================================
+% wave-number-conversions — wave-number-unit → reciprocal-metre factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of the NIST-cited conversion tables (length, mass, energy, the electric-EMU
+% family, and the rest): a native tabular relation ingested VERBATIM from a published NIST
+% conversion table. The row states the factor converting the traditional (CGS) unit of WAVE NUMBER
+% to the SI coherent derived unit, the reciprocal metre (m⁻¹):
+%
+%     ? wave_number_to_reciprocal_metre(kayser, $v)   % 100
+%
+% This opens a NEW dimension — WAVE NUMBER (the spatial frequency of a wave, the number of
+% wavelengths per unit length, used throughout spectroscopy) — alongside the already-tabulated
+% length/mass/area/volume/time/speed/energy/pressure/force/acceleration/dynamic-viscosity/
+% kinematic-viscosity/magnetic-flux-density/magnetic-flux/illuminance/luminance/radioactivity/
+% absorbed-dose/dose-equivalent/exposure/power and electric charge/potential/resistance/capacitance/
+% inductance/conductance/current tables. Wave number is the RECIPROCAL of wavelength: the kayser is
+% one reciprocal centimetre (1 cm⁻¹), so it equals exactly 100 reciprocal metres. Do NOT confuse
+% WAVE NUMBER (the kayser → the reciprocal metre) with LENGTH or WAVELENGTH (e.g. the angstrom → the
+% metre): those are RECIPROCAL quantities that convert to DIFFERENT SI units (m⁻¹ vs m). A quantity
+% given in kaysers must be put into SI first, then reasoned over (write-once-use-many). Why a
+% `table` and not a hand-written `relate` clause: this is exactly the shape reference data comes in —
+% a published table, not prose. The citable artifact IS the NIST conversion-factors table at the
+% `locator` below; the factor here is a CELL of NIST Special Publication 811, Appendix B.9, defended
+% by one provenance envelope. Each `row` lowers to a ground relation
+% `wave_number_to_reciprocal_metre(unit, v)`, so the exact lookup above is the ordinary SLD binding
+% query — the engine returns the factor WITH this table's citation as its proof, on the CPU, with
+% zero model calls.
+%
+% HONESTY NOTE (like every other NIST table, only the EXACT defined factor gets a row): NIST SP 811
+% B.9 prints the "kayser" wave-number factor in BOLDFACE, its convention for factors that are EXACT
+% by definition, transcribed here as the plain decimal number of reciprocal metres it names:
+%
+%     kayser (K)   1 E+02  →  100
+%
+% This is exact because the kayser is DEFINED as exactly one reciprocal centimetre = 1 E+02
+% reciprocal metres. It terminates; nothing here is a rounded measurement. This table is SPECIFIC to
+% wave number: a unit of a DIFFERENT quantity — e.g. the "angstrom", which NIST SP 811 B.9 lists
+% separately as a LENGTH unit converting to the metre, NOT the reciprocal metre — therefore gets no
+% row here, and a `? wave_number_to_reciprocal_metre(angstrom, $v)` ABSTAINS rather than
+% mis-converting a length (wavelength) unit as if it were a wave-number unit. Since wave number is
+% the reciprocal of wavelength, this abstain guards exactly the wavelength-versus-wavenumber
+% confusion. The only claim this table makes is "this is the exact factor NIST SP 811 B.9 prints for
+% the kayser's conversion to the reciprocal metre" — which is exactly what a byte-check against the
+% cited table verifies. `trust authoritative` — a primary, re-fetchable standards reference. (See
+% ADJ-TABLES.md; and feedback_nothing_human_authored — the factor is a verbatim cell of the cited
+% table, nothing asserted from memory.)
+% ============================================================================
+
+table wave_number_to_reciprocal_metre {
+    columns unit, reciprocal_metre
+
+    row (kayser, 100)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

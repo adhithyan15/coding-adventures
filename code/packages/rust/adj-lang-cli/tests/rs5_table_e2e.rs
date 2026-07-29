@@ -1344,6 +1344,48 @@ fn shipped_electric_current_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b30) The shipped NIST SP 811 B.9 wave-number → reciprocal-metre table resolves the exact kayser
+//       factor with its citation, and ABSTAINS on a wrong-dimension unit. This opens a NEW dimension
+//       — WAVE NUMBER (spatial frequency, wavelengths per unit length) — beyond the length/mass/…/
+//       electric family. The kayser (wave number) and the angstrom (length/wavelength) are RECIPROCAL
+//       quantities that convert to DIFFERENT SI units (m⁻¹ vs m), so the abstain guards the
+//       wavelength-versus-wavenumber confusion directly, not mere absence of a value: the kayser is
+//       one reciprocal centimetre = exactly 100 reciprocal metres.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_wave_number_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_wavenumber");
+    let src = stdlib().join("reference/wave-number-conversions.adj");
+    std::fs::copy(&src, dir.join("wave-number-conversions.adj"))
+        .expect("copy shipped wave-number-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"wave-number-conversions.adj\"\n\
+         ? wave_number_to_reciprocal_metre(kayser, $v)\n\
+         ? wave_number_to_reciprocal_metre(angstrom, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table
+    // (boldface = exact; the kayser is one reciprocal centimetre = exactly 1 E+02 reciprocal metres).
+    assert!(out.contains("\"v\":\"100\""), "kayser = 1 E+02 m^-1: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `angstrom` is a LENGTH (wavelength) unit (it converts to the metre, a DIFFERENT quantity), so
+    // this wave-number table has no row for it — the engine abstains rather than mis-converting a
+    // length unit as if it were a wave-number unit (its reciprocal).
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
