@@ -960,6 +960,51 @@ fn shipped_exposure_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b21) Shipped table — reference/magnetic-flux-conversions.adj resolves via import (a
+//       NEW dimension: magnetic flux → weber, the EXACT SP 811 B.9 boldface factor
+//       maxwell = 1.0 E-08 = 0.00000001, the maxwell DEFINED as exactly 10⁻⁸ Wb), and a unit
+//       of a DIFFERENT quantity (`gauss`, a magnetic-flux-DENSITY unit → tesla, not the weber)
+//       — no row — abstains rather than mis-converting across dimensions. Distinct from
+//       magnetic-flux-density (gauss→tesla): flux is the total field through a surface, flux
+//       density is the field per unit area; one weber over one square metre is one tesla.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_magnetic_flux_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_magnetic_flux");
+    let src = stdlib().join("reference/magnetic-flux-conversions.adj");
+    std::fs::copy(&src, dir.join("magnetic-flux-conversions.adj"))
+        .expect("copy shipped magnetic-flux-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"magnetic-flux-conversions.adj\"\n\
+         ? magnetic_flux_to_weber(maxwell, $v)\n\
+         ? magnetic_flux_to_weber(gauss, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table
+    // (boldface = exact; the maxwell is defined as exactly 10^-8 Wb).
+    assert!(
+        out.contains("\"v\":\"0.00000001\""),
+        "maxwell = 0.00000001 Wb: {out}"
+    );
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `gauss` is a magnetic-flux-DENSITY unit (it converts to the tesla, a DIFFERENT quantity),
+    // so this flux table has no row for it — the engine abstains rather than mis-converting a
+    // flux-density unit as if it were a flux unit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 

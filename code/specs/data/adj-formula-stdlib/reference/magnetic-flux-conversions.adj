@@ -1,0 +1,59 @@
+% ============================================================================
+% magnetic-flux-conversions — magnetic-flux-unit → weber factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `magnetic-flux-density-conversions.adj` and the other NIST-cited
+% conversion tables: a native tabular relation ingested VERBATIM from a published NIST
+% conversion table. The row states the factor converting the traditional (CGS-Gaussian /
+% EMU) unit of MAGNETIC FLUX — the total magnetic field threading a surface — to the SI
+% coherent derived unit, the weber (Wb):
+%
+%     ? magnetic_flux_to_weber(maxwell, $v)   % 0.00000001
+%
+% This is a NEW dimension alongside the length/mass/area/volume/time/speed/energy/
+% pressure/force/acceleration/dynamic-viscosity/kinematic-viscosity/magnetic-flux-density/
+% illuminance/luminance/radioactivity/absorbed-dose/dose-equivalent/exposure tables. Do NOT
+% confuse it with magnetic-flux-DENSITY: those are DIFFERENT quantities. MAGNETIC FLUX
+% (the maxwell → the weber) is the total field through a surface; MAGNETIC FLUX DENSITY
+% (the gauss → the tesla, see `magnetic-flux-density-conversions.adj`) is the field per unit
+% area. One weber spread over one square metre is one tesla; the maxwell and the gauss are
+% their respective traditional units and convert to DIFFERENT SI units. The traditional unit
+% here is the maxwell (Mx); the SI unit is the weber. Put a flux given in maxwells into SI
+% first, then reason (write-once-use-many). Why a `table` and not a hand-written `relate`
+% clause: this is exactly the shape reference data comes in — a published table, not prose.
+% The citable artifact IS the NIST conversion-factors table at the `locator` below; the
+% factor here is a CELL of NIST Special Publication 811, Appendix B.9 ("Factors for units
+% listed alphabetically"), defended by one provenance envelope. Each `row` lowers to a ground
+% relation `magnetic_flux_to_weber(unit, wb)`, so the exact lookup above is the ordinary SLD
+% binding query — the engine returns the factor WITH this table's citation as its proof, on
+% the CPU, with zero model calls.
+%
+% HONESTY NOTE (like the magnetic-flux-density / radioactivity / absorbed-dose tables, only
+% the EXACT defined factor gets a row): NIST SP 811 B.9 prints the "maxwell" flux factor in
+% BOLDFACE, its convention for factors that are EXACT by definition, transcribed here as the
+% plain decimal number of webers it names:
+%
+%     maxwell (Mx)   1.0 E-08  →  0.00000001
+%
+% This is exact because the maxwell is DEFINED as exactly 10^-8 weber (one maxwell is exactly
+% one line of the CGS-Gaussian magnetic field, defined as 10^-8 Wb). It terminates; nothing
+% here is a rounded measurement. This table is SPECIFIC to magnetic flux: a unit of a
+% DIFFERENT quantity — e.g. the "gauss", which NIST SP 811 B.9 lists separately as a magnetic-
+% flux-DENSITY unit converting to the tesla, NOT the weber (see
+% `magnetic-flux-density-conversions.adj`) — therefore gets no row here, and a
+% `? magnetic_flux_to_weber(gauss, $v)` ABSTAINS rather than mis-converting a flux-density unit
+% as if it were a flux unit. The only claim this table makes is "this is the exact factor NIST
+% SP 811 B.9 prints for the maxwell's conversion to the weber" — which is exactly what a
+% byte-check against the cited table verifies. `trust authoritative` — a primary, re-fetchable
+% standards reference. (See ADJ-TABLES.md; and feedback_nothing_human_authored — the factor is
+% a verbatim cell of the cited table, nothing asserted from memory.)
+% ============================================================================
+
+table magnetic_flux_to_weber {
+    columns unit, weber
+
+    row (maxwell, 0.00000001)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}
