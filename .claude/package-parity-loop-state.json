@@ -64,7 +64,25 @@
       "depends_on": ["build-tool-fixtures"],
       "branch": "codex/build-tool-pure-domain-corpus",
       "pr_number": null,
-      "notes": "Selected after PR #9157 merged because this pure, process-free corpus expansion unlocks the Go oracle, Java/Kotlin, Dart, every existing front door, and OCaml promotion. Add closed inputs/results and positive plus adversarial cases for diff selection, hashing/cache, Starlark, sharding, validation, toolchain detection, and CLI before those domains can report success."
+      "notes": "Selected after PR #9157 merged because this pure, process-free corpus expansion unlocks the Go oracle, Java/Kotlin, Dart, every existing front door, and OCaml promotion. The branch now validates 30 cases across all 11 process-free domains with closed pure records, semantic oracles, conservative diff behavior, typed cache states, inline-only Starlark loads, sharding verification, normalized validation, and the OCaml-aware toolchain registry."
+    },
+    {
+      "id": "build-tool-cli-parser-corpus",
+      "title": "Define the inert cross-language CLI argv grammar and parser corpus",
+      "status": "pending",
+      "depends_on": ["build-tool-pure-domain-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the pure-domain security review. Replace exit-decision-only coverage with bounded argv parsing, typed parse results, reserved-flag/path rejection, and adversarial shell/env/@file tokens without dispatch or host reads."
+    },
+    {
+      "id": "build-tool-starlark-metering-corpus",
+      "title": "Add adversarial Starlark evaluator metering fixtures",
+      "status": "pending",
+      "depends_on": ["build-tool-pure-domain-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the pure-domain security review. Cover fuel, recursion, aggregate allocations, range/value sizes, load depth/count/cycles, and print/trace limits before any native evaluator claims final Starlark conformance."
     },
     {
       "id": "build-file-standalone-integrity",
