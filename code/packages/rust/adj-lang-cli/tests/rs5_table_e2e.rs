@@ -1429,6 +1429,50 @@ fn shipped_linear_mass_density_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b32) The shipped NIST SP 811 B.9 temperature-interval → kelvin table resolves the exact degree-
+//       Celsius factor with its citation, and ABSTAINS on a wrong-dimension unit. This opens a NEW
+//       dimension — TEMPERATURE INTERVAL (a DIFFERENCE of temperatures, not a point reading) — beyond
+//       the length/mass/…/linear-mass-density and electric families. A Celsius-degree interval is
+//       EXACTLY one kelvin (the scales share a unit step; the 273.15 offset applies only to POINTS,
+//       which are an ADDITION, not a factor, hence absent). The Celsius degree (temperature interval →
+//       kelvin) and the bare "degree" (plane angle → radian) are DIFFERENT quantities that convert to
+//       DIFFERENT SI units (K vs rad) yet share the "°" symbol, so the abstain guards that notational
+//       confusion directly, not mere absence of a value.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_temperature_interval_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_tempinterval");
+    let src = stdlib().join("reference/temperature-interval-conversions.adj");
+    std::fs::copy(&src, dir.join("temperature-interval-conversions.adj"))
+        .expect("copy shipped temperature-interval-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"temperature-interval-conversions.adj\"\n\
+         ? temperature_interval_to_kelvin(degree_celsius, $v)\n\
+         ? temperature_interval_to_kelvin(degree, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table
+    // (boldface = exact; a Celsius-degree interval is exactly 1 kelvin).
+    assert!(out.contains("\"v\":\"1\""), "degree Celsius interval = 1.0 E+00 K: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // The bare `degree` is a PLANE-ANGLE unit (it converts to the radian, a DIFFERENT quantity), so
+    // this temperature-interval table has no row for it — the engine abstains rather than mis-
+    // converting an angle as if it were a temperature, despite the shared "°" symbol.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
