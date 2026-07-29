@@ -3661,46 +3661,55 @@ impl<'a> Compiler<'a> {
         self.store_scaled(&counter_name, &sum, 0, int_digits + 1, false)
     }
 
-    /// `INSPECT src TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d …` — several counters,
-    /// each with its OWN delimiter list, folded through ONE combined priority list in a
-    /// SINGLE runtime pass. This generalises [`Self::emit_inspect_tally_multi`] from one
-    /// shared counter to a list of `(counter, delimiter)` pairs where the matched pair's
-    /// OWN counter is bumped.
+    /// `INSPECT src TALLYING c1 FOR ALL a [{BEFORE|AFTER} p] [ALL b …] c2 FOR ALL d …` —
+    /// several counters, each with its OWN delimiter list, and each delimiter item now
+    /// carrying its OWN optional `{BEFORE|AFTER}` region window, folded through ONE combined
+    /// priority list in a SINGLE runtime pass. This generalises
+    /// [`Self::emit_inspect_tally_multi`] from one shared counter to a list of `(counter,
+    /// delimiter, window)` entries where the matched entry's OWN counter is bumped.
     ///
     /// ISO COMBINED-PRIORITY-LIST-ACROSS-COUNTERS semantics (the crux): all delimiters of
     /// all groups, flattened in WRITTEN ORDER (group 1's items first, then group 2's, …),
-    /// form ONE ordered priority list. At each source position the flattened list is
-    /// walked in order and the FIRST delimiter that matches bumps ITS OWN group's
-    /// accumulator, then the scan advances (single-char ⇒ a normal one-position step). The
-    /// per-position `break` (a `jmp` to `cont`) means an earlier group's delimiter CONSUMES
-    /// the position — a character it claims NEVER reaches a later group's delimiter — so
-    /// `"aa" TALLYING C1 FOR ALL "a" C2 FOR ALL "a"` gives C1 += 2, C2 += 0. A position
-    /// matching no delimiter falls through to `cont` with no bump.
+    /// form ONE ordered priority list, each entry carrying its item's `[start, end)`
+    /// window. At each source position the flattened list is walked in order and the FIRST
+    /// entry whose window contains the position AND whose delimiter matches bumps ITS OWN
+    /// group's accumulator, then the scan advances (single-char ⇒ a normal one-position
+    /// step). The per-position `break` (a `jmp` to `cont`) means an earlier group's
+    /// (in-window) delimiter CONSUMES the position — a character it claims NEVER reaches a
+    /// later group's delimiter — so `"aa" TALLYING C1 FOR ALL "a" C2 FOR ALL "a"` gives
+    /// C1 += 2, C2 += 0. A position matching no in-window delimiter falls through to `cont`
+    /// with no bump.
     ///
     /// ```text
     ///   acc_0 = 0; acc_1 = 0; …            # one accumulator per GROUP
-    ///   j = 0;  len = str_len(S)
+    ///   len = str_len(S)                   # windows + the j-bound both need it
+    ///   # per flat entry: [start, end) window (region-less item → whole source)
+    ///   j = 0
     /// top:  if j >= len jmp end
     ///       c = S[j]
-    ///       if c == flat[0].delim { acc[flat[0].group] += 1; jmp cont }   # written order,
-    ///       if c == flat[1].delim { acc[flat[1].group] += 1; jmp cont }   # first match wins,
-    ///       …                                                             # then stop
+    ///       if (s0 <= j < e0) AND c == flat[0].delim { acc[flat[0].group] += 1; jmp cont }
+    ///       if (s1 <= j < e1) AND c == flat[1].delim { acc[flat[1].group] += 1; jmp cont }
+    ///       …                                                 # first in-window match wins
     /// cont: j = j + 1;  jmp top
     /// end:
     ///   for each group g:  counter_g := counter_g + acc_g   # INSPECT ADDS; never clears
     /// ```
     ///
-    /// Each group keeps its OWN accumulator (indexed by GROUP, not by counter name), so two
-    /// groups that name the SAME counter stay separate through the loop and are BOTH added
-    /// into that one item afterwards. The final adds run sequentially and each reads the
-    /// counter's storage register FRESH (`self.items[idx].reg`, which `store_scaled` mutates
-    /// via `mov`), so a shared counter accumulates both shares correctly — mirroring the
-    /// oracle's per-add `named_decimal` re-read. Each delimiter reduces to a byte code via
-    /// the SAME `single_delim_code` the single-item path uses, and each counter is validated
-    /// unsigned-integer exactly as `emit_inspect_tally_multi` validates its lone counter, so
-    /// the compiled program matches `cobol-runtime`'s `exec_inspect_tally_counters`
-    /// byte-for-byte and the accept/reject sets stay co-total. The read-side
-    /// `inspect_tally_counters` has already rejected LEADING/CHARACTERS/region items.
+    /// Each item's `[start, end)` window is derived by the SAME `emit_inspect_region_window`
+    /// the single-item region emitter uses (a region-less item folds to `eq` alone — the
+    /// whole-source window), materialised BEFORE the loop, so both engines narrow to
+    /// identical slices. Each group keeps its OWN accumulator (indexed by GROUP, not by
+    /// counter name), so two groups that name the SAME counter stay separate through the
+    /// loop and are BOTH added into that one item afterwards. The final adds run
+    /// sequentially and each reads the counter's storage register FRESH
+    /// (`self.items[idx].reg`, which `store_scaled` mutates via `mov`), so a shared counter
+    /// accumulates both shares correctly — mirroring the oracle's per-add `named_decimal`
+    /// re-read. Each delimiter reduces to a byte code via the SAME `single_delim_code` the
+    /// single-item path uses, and each counter is validated unsigned-integer exactly as
+    /// `emit_inspect_tally_multi` validates its lone counter, so the compiled program
+    /// matches `cobol-runtime`'s `exec_inspect_tally_counters` byte-for-byte and the
+    /// accept/reject sets stay co-total. The read-side `inspect_tally_counters` has already
+    /// rejected LEADING/CHARACTERS items.
     fn emit_inspect_tally_counters(
         &mut self,
         verb: &GrammarASTNode,
@@ -3740,20 +3749,29 @@ impl<'a> Compiler<'a> {
             accs.push(acc);
         }
 
-        // Flatten every delimiter to `(group_index, byte_code_reg)` in WRITTEN ORDER, so
-        // the per-position chain walks all groups' items group-1-first. Resolving them all
-        // up front (via the SAME `single_delim_code` the single-item path uses, so an
-        // invalid delimiter rejects identically) means a bad operand aborts before the loop.
-        let mut flat: Vec<(usize, String)> = Vec::new();
-        for (gi, (_counter, delim_nodes)) in groups.iter().enumerate() {
-            for dn in delim_nodes {
-                flat.push((gi, self.single_delim_code(dn, "INSPECT")?));
+        // len = str_len(S). Materialised ONCE up front — the per-item window helper needs
+        // it, and the loop below reuses it for the `j >= len` bound. (The tally builds no
+        // fixed-width string, so the length is a genuine runtime value.)
+        let len = self.fresh("_itclen");
+        self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.to_string())], "i64");
+
+        // Flatten every delimiter to `(group_index, byte_code_reg, window)` in WRITTEN
+        // ORDER, so the per-position chain walks all groups' items group-1-first. Each
+        // item's window (when present) is derived by the SAME `emit_inspect_region_window`
+        // the single-item region emitter uses, so both engines narrow to identical slices.
+        // Resolving every delimiter AND window up front (via the SAME `single_delim_code`
+        // the single-item path uses, so an invalid delimiter/region delimiter rejects
+        // identically) means a bad operand aborts before the loop, mirroring the oracle.
+        let mut flat: Vec<FlatCounterDelim> = Vec::new();
+        for (gi, (_counter, item_nodes)) in groups.iter().enumerate() {
+            for (dn, region) in item_nodes {
+                let d_reg = self.single_delim_code(dn, "INSPECT")?;
+                let window = self.emit_inspect_region_window(*region, s_reg, &len)?;
+                flat.push((gi, d_reg, window));
             }
         }
 
-        // j = 0; len = str_len(S). A genuine runtime loop (the tally builds no string).
-        let len = self.fresh("_itclen");
-        self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.to_string())], "i64");
+        // j = 0. A genuine runtime loop (the tally builds no string).
         let j = self.fresh("_itcj");
         self.emit("const", Some(&j), vec![Operand::Int(0)], "i64");
 
@@ -3783,7 +3801,7 @@ impl<'a> Compiler<'a> {
         // first-match-wins across counters, so an earlier group consumes the position and a
         // later group never sees it. A miss jumps to the next link; after the last link's
         // `next` we fall through to `cont` with no bump (matched no delimiter).
-        for (gi, d_reg) in &flat {
+        for (gi, d_reg, window) in &flat {
             let eq = self.fresh("_itceq");
             self.emit(
                 "cmp_eq",
@@ -3791,11 +3809,39 @@ impl<'a> Compiler<'a> {
                 vec![Operand::Var(c.clone()), Operand::Var(d_reg.clone())],
                 "i64",
             );
+            // Gate the compare by this item's window: `matched = (start <= j < end) AND
+            // (c == D)`. `j` is the RUNTIME loop position register, compared directly
+            // against the runtime bounds. A region-less item folds down to `eq` alone (no
+            // window emitted → whole-source window) — byte-identical to the old lowering.
+            let matched = match window {
+                None => eq,
+                Some((start, end_bound)) => {
+                    let ge2 = self.fresh("_itcge2");
+                    self.emit(
+                        "cmp_ge",
+                        Some(&ge2),
+                        vec![Operand::Var(j.clone()), Operand::Var(start.clone())],
+                        "i64",
+                    );
+                    let lt = self.fresh("_itclt");
+                    self.emit(
+                        "cmp_lt",
+                        Some(&lt),
+                        vec![Operand::Var(j.clone()), Operand::Var(end_bound.clone())],
+                        "i64",
+                    );
+                    let inw = self.fresh("_itcin");
+                    self.emit("and", Some(&inw), vec![Operand::Var(ge2), Operand::Var(lt)], "i64");
+                    let m = self.fresh("_itcm");
+                    self.emit("and", Some(&m), vec![Operand::Var(inw), Operand::Var(eq)], "i64");
+                    m
+                }
+            };
             let next = self.fresh("itc_next");
             self.emit(
                 "jmp_if_false",
                 None,
-                vec![Operand::Var(eq), Operand::Var(next.clone())],
+                vec![Operand::Var(matched), Operand::Var(next.clone())],
                 "void",
             );
             let one = self.fresh("_itc1");
@@ -6284,6 +6330,22 @@ fn inspect_tally_all(verb: &GrammarASTNode) -> Result<TallyPhrase<'_>, CompileEr
 /// window (this rung lifts the region reject).
 type TallyItem<'a> = (&'a GrammarASTNode, Option<(RegionKind, &'a GrammarASTNode)>);
 
+/// One `counter FOR ALL a [{BEFORE|AFTER} p] ALL b … ` group of a MULTI-counter
+/// `TALLYING` list: the counter name plus its written-order [`TallyItem`]s (each a
+/// delimiter node + its OWN optional region window). Named so
+/// [`inspect_tally_counters`]'s return type stays legible (and below clippy's
+/// type-complexity threshold) — the compiler-side analogue of the oracle's
+/// `TallyCounterGroup`.
+type TallyCounterGroup<'a> = (String, Vec<TallyItem<'a>>);
+
+/// One entry of the FLATTENED combined-priority list a multi-counter `TALLYING` scan
+/// walks per position: `(group_index, delimiter_byte_code_reg, window)` where `window` is
+/// the optional `[start, end)` byte-bound register pair for the item's `{BEFORE|AFTER}`
+/// region (`None` = whole-source, region-less). Named so
+/// `emit_inspect_tally_counters`'s flat vector stays below clippy's type-complexity
+/// threshold.
+type FlatCounterDelim = (usize, String, Option<(String, String)>);
+
 /// Extract the `TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q]
 /// …` phrase of a multi-item INSPECT whose SOLE counter carries TWO OR MORE `FOR`
 /// items, returning `(counter_name, items)` with the `(delim_node, region)` items in
@@ -6376,14 +6438,15 @@ fn inspect_tally_multi(verb: &GrammarASTNode) -> Result<(String, Vec<TallyItem<'
 /// `inspect_tally_multi`) and all their capabilities UNCHANGED.
 ///
 /// Scope bound (this rung, IDENTICAL messages to the oracle reader): every item of every
-/// group must be a plain `FOR ALL` item with NO region and NO `LEADING`/`CHARACTERS`. Any
-/// violating item is a clean later-rung `Unsupported`. A multi-character/figurative/wider/
-/// numeric delimiter is NOT rejected here — it falls to the SAME `single_delim_code` check
-/// the single-item emitter uses. The counters are validated (unsigned integer) in
-/// `emit_inspect_tally_counters`, exactly as the single-item path validates its counter.
-fn inspect_tally_counters(
-    verb: &GrammarASTNode,
-) -> Result<Vec<(String, Vec<&GrammarASTNode>)>, CompileError> {
+/// group must be a plain `FOR ALL` item with NO `LEADING`/`CHARACTERS`; each item MAY now
+/// carry its OWN optional `{BEFORE|AFTER}` region (the region reject is LIFTED this rung),
+/// parsed with the SAME keyword/operand extraction `inspect_tally_all` uses on the
+/// single-item side. Any violating item is a clean later-rung `Unsupported`. A
+/// multi-character/figurative/wider/numeric delimiter is NOT rejected here — it falls to
+/// the SAME `single_delim_code` check the single-item emitter uses. The counters are
+/// validated (unsigned integer) in `emit_inspect_tally_counters`, exactly as the
+/// single-item path validates its counter.
+fn inspect_tally_counters(verb: &GrammarASTNode) -> Result<Vec<TallyCounterGroup<'_>>, CompileError> {
     let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
         CompileError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
     })?;
@@ -6391,7 +6454,7 @@ fn inspect_tally_counters(
     for tf in child_nodes(tallying, "tally_for") {
         let counter = first_token(tf, "NAME")
             .ok_or_else(|| CompileError::Malformed("INSPECT TALLYING without a counter".into()))?;
-        let mut delims = Vec::new();
+        let mut items = Vec::new();
         for ti in child_nodes(tf, "tally_item") {
             let toks = child_tokens(ti);
             if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
@@ -6405,18 +6468,39 @@ fn inspect_tally_counters(
                         .into(),
                 ));
             }
-            if child_node(ti, "inspect_region").is_some() {
-                return Err(CompileError::Unsupported(
-                    "INSPECT TALLYING with several counters and a BEFORE/AFTER region is a later rung"
-                        .into(),
-                ));
-            }
+            // A `{BEFORE|AFTER} x` region on an item is now ACCEPTED (this rung): parse it
+            // into `Option<(RegionKind, node)>` with the SAME keyword/operand extraction
+            // `inspect_tally_all` uses on the single-item side. The region contributes its
+            // own delimiter operand under the `inspect_region` child, not a direct child of
+            // `tally_item`, so the DIRECT `operand` child below is still exactly the tally
+            // delimiter.
+            let region = match child_node(ti, "inspect_region") {
+                None => None,
+                Some(region_node) => {
+                    let rtoks = child_tokens(region_node);
+                    let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+                        RegionKind::Before
+                    } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+                        RegionKind::After
+                    } else {
+                        return Err(CompileError::Unsupported(
+                            "INSPECT region without a BEFORE or AFTER keyword".into(),
+                        ));
+                    };
+                    let rdelim = child_node(region_node, "operand").ok_or_else(|| {
+                        CompileError::Malformed(
+                            "INSPECT BEFORE/AFTER region without a delimiter".into(),
+                        )
+                    })?;
+                    Some((kind, rdelim))
+                }
+            };
             let delim = child_node(ti, "operand").ok_or_else(|| {
                 CompileError::Malformed("INSPECT TALLYING FOR ALL without a delimiter".into())
             })?;
-            delims.push(delim);
+            items.push((delim, region));
         }
-        groups.push((counter, delims));
+        groups.push((counter, items));
     }
     Ok(groups)
 }

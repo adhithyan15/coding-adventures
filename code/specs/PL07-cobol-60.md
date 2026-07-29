@@ -1139,6 +1139,70 @@ non-ASCII item/region delimiter *operand* stays the pre-existing `single_delim_c
 combined `TALLYING … REPLACING` form with several tally items. The single-item
 `TALLYING FOR ALL … {BEFORE|AFTER}` path is untouched.
 
+### Several-counters `TALLYING` where each item carries a per-item `{BEFORE|AFTER}` region (follow-up rung, v0.63.0 / v0.59.0)
+
+The multi-**counter** analogue of the multi-item `TALLYING`-region rung above. The several-counters
+`TALLYING` form (`TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d …`, two or more `tally_for` groups)
+and the per-item `{BEFORE|AFTER}` region now **compose**: each `ALL` delimiter item of ANY counter
+group may carry its OWN optional `{BEFORE|AFTER}` window. Previously any region in the multi-counter
+path was a later rung (rejected on both engines with "INSPECT TALLYING with several counters and a
+BEFORE/AFTER region is a later rung"); that reject is now **lifted**. No grammar change is needed —
+`tally_item = (ALL|LEADING) operand inspect_region*` already parses per-item regions.
+
+**Semantics (ISO COMBINED priority list ACROSS counters, now windowed).** ONE left-to-right pass. All
+delimiters of all groups, flattened in WRITTEN ORDER (group 1's items first, then group 2's, …), form
+ONE ordered priority list, each entry carrying its item's `[start, end)` window (computed over the
+source via the SAME `region_window` helper the lone/single-item forms use; a region-less item = the
+whole source, with the not-found asymmetry BEFORE→whole / AFTER→empty). At each position the flat
+list is walked in order and the FIRST entry that is BOTH in-window AND whose single-char delimiter
+equals the current char increments ITS OWN GROUP's accumulator, then `break`s (first-match-wins across
+counters). A per-GROUP accumulator (not per counter NAME) keeps counts separate even when two groups
+share a counter name; each group's accumulator is ADDED to its counter at the end. `INSPECT` **adds**;
+it does not clear. Every counter must be an unsigned integer `PIC 9(n)` (validated first, before the
+scan, so an invalid group aborts with every counter untouched).
+
+Worked:
+- `"aXaXa"` (`X` at 1,3) with `C1 FOR ALL "a" BEFORE "X"  C2 FOR ALL "a" AFTER "X"` → `C1 += 1`
+  (index 0 in `[0,1)`), `C2 += 2` (indices 2,4 in `[2,5)`).
+- `"0a0a0"` with `C1 FOR ALL "0" AFTER "a"  C2 FOR ALL "a"` → `C1 += 2` (the `0`s at 2,4 in `[2,5)`),
+  `C2 += 2` (the two `a`s); index 0's `0` is outside C1's window and C2 does not match it.
+- `"abab"` with `C1 FOR ALL "a" AFTER "Z"  C2 FOR ALL "b"` → `C1 += 0` (`AFTER "Z"` with `Z` absent is
+  an EMPTY window), `C2 += 2`.
+- `"aZa"` (`Z` at 1) with `C1 FOR ALL "a" BEFORE "Z"  C2 FOR ALL "a"` → `C1 += 1` (index 0), `C2 += 1`
+  (index 2) — index 0 is STARVED from C2 by C1's in-window delimiter (else C2 would be 2).
+- `"0b0"` with `C FOR ALL "0" BEFORE "b"  C FOR ALL "0" AFTER "b"` → the SAME counter `C += 2` (each
+  group contributes 1 through its own window; both add to the one item).
+
+**Implementation.** The oracle's `Stmt::InspectTallyCounters` groups type becomes
+`Vec<TallyCounterGroup>` where `TallyCounterGroup = (String, Vec<TallyMultiItem>)` and
+`TallyMultiItem = (Operand, Option<Region>)` (each group's items carry their own optional region);
+`read_inspect_tally_counters` reads each item's region with the same `read_inspect_region` the
+single-item reader uses, keeping the LEADING/CHARACTERS rejects. `exec_inspect_tally_counters` resolves
+every `(group_index, delimiter char, [start, end) window)` over the source chars BEFORE the scan, then
+per position walks the flat list and the first in-window match bumps `accs[group_index]` and breaks;
+each per-group accumulator is added to its counter via the same numeric store path. The compiler
+mirrors this: `inspect_tally_counters` returns `Vec<TallyCounterGroup>` (`= (String, Vec<TallyItem>)`)
+parsing each item's region with the same extraction the single-item `inspect_tally_all` uses, and
+`emit_inspect_tally_counters` materialises `str_len` ONCE, derives each flat entry's `[start, end)`
+with the SAME `emit_inspect_region_window` the single-item region emitter uses, then — in its runtime
+`str_len`-bounded loop — gates each delimiter's `cmp_eq` link by `start ≤ j < end` against the RUNTIME
+position register `j` (a region-less item folds to `eq` alone). The two engines' CST readers count the
+same `tally_for`/`tally_item` children, so their accept/reject sets stay co-total.
+
+**Non-ASCII-clean (a POSITIVE parity, NOT a trap).** As for the multi-item rung: `TALLYING` only
+**counts** — it never reconstructs the source via `str_slice` — so there is NO UTF-8-boundary trap.
+ASCII delimiters never equal a multi-byte continuation byte, and each window is content-defined, so
+the char-based oracle and the byte-based compiler count identically EVEN ON A NON-ASCII SOURCE. Worked
+positive parity: `"aé0b0"` with `C1 FOR ALL "0" BEFORE "b"  C2 FOR ALL "0" AFTER "b"` → `C1 += 1`,
+`C2 += 1` on BOTH engines (the `é` and its continuation byte match no ASCII delimiter). A non-ASCII
+item/region delimiter *operand* stays the pre-existing `single_delim_char` vs `single_delim_code`
+chip — no new one-sided guard.
+
+**Scope kept for a later rung** (unchanged, identical messages on both engines): a `LEADING` or
+`CHARACTERS` item in ANY group of the multi-counter path; and the combined `TALLYING … REPLACING`
+form with several counters. This variant fires only for two or more `tally_for` groups; exactly one
+group keeps the single-counter paths (`Inspect` / `InspectTallyMulti`) unchanged.
+
 ### Combined `INSPECT … TALLYING … REPLACING` (one statement)
 
 A single `INSPECT` may carry **both** phrases:

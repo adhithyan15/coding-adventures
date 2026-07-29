@@ -412,24 +412,30 @@ pub enum Stmt {
     /// that order at every position, which is what realises first-match-per-position
     /// (and thus duplicate-safe) counting.
     InspectTallyMulti { source: String, counter: String, items: Vec<(Operand, Option<Region>)> },
-    /// `INSPECT source TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d [ALL e …] …` —
-    /// one INSPECT carrying TWO OR MORE `tally_for` groups, each with its OWN counter
-    /// and one-or-more single-char `FOR ALL` delimiters. `groups` holds
-    /// `(counter_name, delims)` pairs in WRITTEN ORDER (group 1 first, then group 2, …),
-    /// and within each group the delimiters are also in written order.
+    /// `INSPECT source TALLYING c1 FOR ALL a [{BEFORE|AFTER} p] [ALL b …] c2 FOR ALL d
+    /// [{BEFORE|AFTER} q] …` — one INSPECT carrying TWO OR MORE `tally_for` groups, each
+    /// with its OWN counter and one-or-more single-char `FOR ALL` delimiters, and each
+    /// delimiter item now carrying its OWN optional `{BEFORE|AFTER}` region window.
+    /// `groups` holds [`TallyCounterGroup`] pairs `(counter_name, items)` in WRITTEN
+    /// ORDER (group 1 first, then group 2, …), and within each group the items — each a
+    /// `(delim, Option<Region>)` — are also in written order.
     ///
     /// Semantics (ISO COMBINED priority list ACROSS counters — the crux of this rung):
     /// ALL the delimiters of ALL groups form ONE combined ordered priority list, and
     /// the source is scanned in a SINGLE left-to-right pass. At each character position
     /// the delimiters are tried in WRITTEN ORDER — group 1's items first, then group
-    /// 2's, and so on — and the FIRST delimiter that matches increments ITS OWN group's
-    /// counter by 1; the scan then advances past the match (single-char ⇒ a normal
-    /// one-position step). A position matching NO delimiter advances with no increment.
+    /// 2's, and so on — and the FIRST delimiter that is BOTH inside its own item's
+    /// window AND matches the character increments ITS OWN group's counter by 1; the
+    /// scan then advances past the match (single-char ⇒ a normal one-position step). A
+    /// position matching NO in-window delimiter advances with no increment. Each item's
+    /// window is `[start, end)` derived by `region_window` over the source (a region-less
+    /// item = the whole source `(0, len)`), applying the ISO not-found asymmetry
+    /// (BEFORE→whole, AFTER→empty).
     ///
     /// The decisive consequence of the SINGLE shared pass with first-match-wins: a
-    /// character CLAIMED by an earlier group's delimiter NEVER reaches a later group's
-    /// delimiter. So the groups are NOT independent counts — an earlier group can
-    /// "starve" a later one of positions:
+    /// character CLAIMED by an earlier group's (in-window) delimiter NEVER reaches a
+    /// later group's delimiter. So the groups are NOT independent counts — an earlier
+    /// group can "starve" a later one of positions:
     ///
     /// ```text
     ///   "aa"  TALLYING C1 FOR ALL "a"  C2 FOR ALL "a"          -> C1 += 2, C2 += 0
@@ -442,14 +448,15 @@ pub enum Stmt {
     /// matches add to that one item (resolve the counter by name at each add, do not
     /// assume the counters are distinct).
     ///
-    /// This rung supports ONLY plain `FOR ALL` single-char delimiters: NO
-    /// `{BEFORE|AFTER}` region, NO `LEADING`/`CHARACTERS`, on ANY item of ANY group.
-    /// Every counter must be an unsigned integer (`PIC 9(n)`). A group carrying any of
-    /// those forms is a clean later-rung `Unsupported`. This variant fires ONLY when
-    /// there are TWO OR MORE `tally_for` groups; exactly one group keeps the single-
-    /// counter paths (`Inspect` / `InspectTallyMulti`) UNCHANGED, and the combined
-    /// `TALLYING … REPLACING` form with several counters stays a later rung.
-    InspectTallyCounters { source: String, groups: Vec<(String, Vec<Operand>)> },
+    /// This rung supports ONLY plain `FOR ALL` single-char delimiters, EACH with an
+    /// OPTIONAL `{BEFORE|AFTER}` region (the region reject is LIFTED this rung): NO
+    /// `LEADING`/`CHARACTERS` on ANY item of ANY group. Every counter must be an unsigned
+    /// integer (`PIC 9(n)`). A group carrying a LEADING/CHARACTERS item is a clean
+    /// later-rung `Unsupported`. This variant fires ONLY when there are TWO OR MORE
+    /// `tally_for` groups; exactly one group keeps the single-counter paths (`Inspect` /
+    /// `InspectTallyMulti`) UNCHANGED, and the combined `TALLYING … REPLACING` form with
+    /// several counters stays a later rung.
+    InspectTallyCounters { source: String, groups: Vec<TallyCounterGroup> },
     /// `INSPECT source TALLYING counter FOR {ALL|LEADING} delim REPLACING
     /// {ALL|LEADING} search BY replace` — one INSPECT carrying BOTH phrases. Per
     /// ISO this executes "as though an INSPECT TALLYING were specified, followed by an
@@ -619,6 +626,14 @@ pub struct Region {
 /// `REPLACING` item carries; named so [`read_inspect_tally_multi`]'s return type stays
 /// legible (and below clippy's type-complexity threshold).
 pub type TallyMultiItem = (Operand, Option<Region>);
+
+/// One `counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q] …` group of a
+/// MULTI-counter `TALLYING` list: the counter name plus its written-order items, each a
+/// [`TallyMultiItem`] (single-char delimiter + its OWN optional region window). The
+/// several-counters analogue of a single group's item list; named so
+/// [`read_inspect_tally_counters`]'s return type stays legible (and below clippy's
+/// type-complexity threshold).
+pub type TallyCounterGroup = (String, Vec<TallyMultiItem>);
 
 /// One index (start or length) of a reference modification: a compile-time
 /// integer literal, or a data-name whose integer value is the index at run time.
@@ -1663,8 +1678,10 @@ fn read_inspect_tally_multi(
 /// counter readers (`read_inspect_tally_all` / `read_inspect_tally_multi`) UNCHANGED.
 ///
 /// Scope bound for the multi-counter path (this rung): EVERY item of EVERY group must
-/// be a plain `FOR ALL` item with NO region and NO `LEADING`/`CHARACTERS`. Any item
-/// violating that is a clean later-rung `Unsupported`, with the SAME messages the
+/// be a plain `FOR ALL` item with NO `LEADING`/`CHARACTERS`; each item MAY now carry its
+/// OWN optional `{BEFORE|AFTER}` region (the region reject is LIFTED this rung), read
+/// with the SAME `read_inspect_region` the single-item reader uses. Any item violating
+/// the remaining scope is a clean later-rung `Unsupported`, with the SAME messages the
 /// compiler-side `inspect_tally_counters` reader raises, so both engines accept exactly
 /// the same multi-counter statements and reject the same ones identically. (A
 /// multi-character/figurative/wider/numeric/reference-modified delimiter is NOT rejected
@@ -1674,7 +1691,7 @@ fn read_inspect_tally_multi(
 /// exactly as the single-item tally validates its lone counter at exec time.
 fn read_inspect_tally_counters(
     verb: &GrammarASTNode,
-) -> Result<Vec<(String, Vec<Operand>)>, RuntimeError> {
+) -> Result<Vec<TallyCounterGroup>, RuntimeError> {
     let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
         RuntimeError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
     })?;
@@ -1683,7 +1700,7 @@ fn read_inspect_tally_counters(
         let counter = first_token(tf, "NAME").ok_or_else(|| {
             RuntimeError::Unsupported("INSPECT TALLYING without a counter".into())
         })?;
-        let mut delims = Vec::new();
+        let mut items = Vec::new();
         for ti in child_nodes(tf, "tally_item") {
             let toks = child_tokens(ti);
             // `CHARACTERS` is not supported in the multi-counter path (nor anywhere yet).
@@ -1700,19 +1717,21 @@ fn read_inspect_tally_counters(
                         .into(),
                 ));
             }
-            // A `{BEFORE|AFTER}` region on any item is a later rung in this path.
-            if child_node(ti, "inspect_region").is_some() {
-                return Err(RuntimeError::Unsupported(
-                    "INSPECT TALLYING with several counters and a BEFORE/AFTER region is a later rung"
-                        .into(),
-                ));
-            }
+            // A `{BEFORE|AFTER}` region on an item is now ACCEPTED (this rung): read it
+            // into an `Option<Region>` with the SAME `read_inspect_region` the single-item
+            // reader uses. The region contributes its OWN nested `operand` (the region
+            // delimiter) under the `inspect_region` child, so the item's DIRECT `operand`
+            // child below is still exactly the tally delimiter.
+            let region = match child_node(ti, "inspect_region") {
+                None => None,
+                Some(region_node) => Some(read_inspect_region(region_node)?),
+            };
             let delim_node = child_node(ti, "operand").ok_or_else(|| {
                 RuntimeError::Unsupported("INSPECT TALLYING FOR ALL without a delimiter".into())
             })?;
-            delims.push(read_operand(delim_node)?);
+            items.push((read_operand(delim_node)?, region));
         }
-        groups.push((counter, delims));
+        groups.push((counter, items));
     }
     Ok(groups)
 }

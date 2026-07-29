@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.63.0 — INSPECT TALLYING several counters each item with a BEFORE/AFTER region — 2026-07-29
+
+- `INSPECT source TALLYING c1 FOR ALL a [{BEFORE|AFTER} p] [ALL b …] c2 FOR ALL d [{BEFORE|AFTER} q]
+  …` — the SEVERAL-COUNTERS TALLYING form (two or more `tally_for` groups) where each `ALL`
+  delimiter item of ANY group may now carry its OWN optional `{BEFORE|AFTER}` window. Previously any
+  region in the multi-counter path was rejected at read time ("INSPECT TALLYING with several counters
+  and a BEFORE/AFTER region is a later rung"); that reject is now LIFTED. No grammar change was needed
+  — `tally_item = (ALL|LEADING) operand inspect_region*` already parses per-item regions. This is the
+  multi-COUNTER analogue of the v0.62.0 single-counter multi-item TALLYING-region rung (#9104).
+- Semantics (ISO COMBINED priority list ACROSS counters, now windowed): ONE left-to-right pass. All
+  delimiters of all groups, flattened in WRITTEN ORDER (group 1's items first, then group 2's, …),
+  form ONE ordered priority list, each entry carrying its item's `[start, end)` window (via the SAME
+  `region_window` helper the lone/single-item forms use; a region-less item = the whole source, with
+  the not-found asymmetry BEFORE→whole / AFTER→empty). At each position the first entry that is BOTH
+  in-window AND whose delimiter matches bumps ITS OWN group's accumulator, then breaks
+  (first-match-wins across counters — an earlier group's in-window delimiter can starve a later
+  group). A per-GROUP accumulator keeps counts separate even when two groups share a counter name;
+  each accumulator is ADDED to its counter at the end. INSPECT ADDS; it does not clear.
+- `Stmt::InspectTallyCounters` groups type becomes `Vec<TallyCounterGroup>` where
+  `TallyCounterGroup = (String, Vec<TallyMultiItem>)` and `TallyMultiItem = (Operand,
+  Option<Region>)`. `read_inspect_tally_counters` reads each item's region with the same
+  `read_inspect_region` the single-item reader uses; the LEADING/CHARACTERS rejects are UNCHANGED
+  (the path stays `ALL`-only), as is the combined-with-several-counters reject.
+  `exec_inspect_tally_counters` resolves every `(group_index, delimiter char, [start, end) window)`
+  over the source chars BEFORE the scan (so an invalid operand aborts with every counter untouched),
+  then per position walks the flat list and the first in-window match bumps `accs[group_index]`;
+  every counter is validated unsigned-integer `PIC 9(n)` first.
+- Non-ASCII-clean (a POSITIVE parity, NOT a trap): TALLYING only COUNTS — it never reconstructs the
+  source via `str_slice` — so there is no UTF-8-boundary trap. ASCII delimiters never equal a
+  multi-byte continuation byte, and each window is content-defined, so the char-based oracle and the
+  byte-based compiler count identically EVEN ON A NON-ASCII SOURCE (`"aé0b0"` with `C1 FOR ALL "0"
+  BEFORE "b"  C2 FOR ALL "0" AFTER "b"` → C1=1, C2=1 on both engines). A non-ASCII item/region
+  delimiter operand stays the pre-existing `single_delim_char` vs `single_delim_code` chip — no new
+  one-sided guard.
+- Scope kept for a later rung (unchanged, identical messages on both engines): a LEADING or
+  CHARACTERS item in ANY group; and the combined `TALLYING … REPLACING` with several counters. The
+  variant fires only for two or more `tally_for` groups; exactly one group keeps the single-counter
+  paths (`Inspect` / `InspectTallyMulti`) unchanged.
+- New oracle unit tests: per-item regions across counters, an earlier window starving a later group,
+  the same counter in two groups each with a region, a multi-counter LEADING item still rejected.
+
 ## 0.62.0 — INSPECT TALLYING several items each with a BEFORE/AFTER region — 2026-07-28
 
 - `INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q] …` —
