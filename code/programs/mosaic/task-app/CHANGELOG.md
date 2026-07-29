@@ -4,6 +4,41 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - light/dark theme switching in the web host
+
+- **The app follows your OS theme, and you can override it.** A toggle sits top-right;
+  the rule is *explicit choice > OS `prefers-color-scheme` > light*. Only an explicit
+  choice is persisted, so someone who never touches the toggle keeps following their OS —
+  including when it flips at sunset, which is handled live via a `matchMedia` listener
+  rather than needing a reload.
+- **Why a component swap rather than a CSS class:** mosstyle bakes colours into each
+  emitted component's *inline* styles, so there is no variable or class to flip at
+  runtime. `scripts/build-web.{sh,ps1}` now emit **both** themes
+  (`TaskApp.light.tsx` / `TaskApp.dark.tsx` via `mosaic-compile --theme`), and the host
+  renders whichever one the rule selects. The two share an identical props/event type,
+  so they're interchangeable.
+- New `src/theme.ts` isolates the selection rules from React. Notable edge cases it
+  handles, each with a test: a browser reporting `false` for *both* media queries (it
+  doesn't understand the feature) is treated as **no opinion** rather than a vote for
+  light; a missing `matchMedia` degrades instead of throwing; a corrupted stored value
+  is ignored; storage failures (private mode) fall through to the OS preference; and
+  the OS listener stops steering once the user has chosen. 7 new tests (13 total).
+- The theme toggle is styled by hand because it belongs to the *host*, not to the
+  emitted component — mosstyle never sees it.
+- **Focus and caret survive the swap.** Changing theme swaps the component *type*, so
+  React unmounts the old tree and destroys the focused `<input>`. Harmless when you click
+  the toggle (that already blurred the field), but the OS can flip at sunset while you
+  are mid-sentence — so the host remembers which field had focus and where the caret sat
+  and restores both in a layout effect, before paint. (Found in security review.)
+- Also from review: `matchMedia` is wrapped in `try`/`catch`, not merely checked for
+  existence — privacy-hardened builds can *throw* on a fingerprintable query, and since
+  this feeds `useState`'s lazy initializer an escape would blank the whole app.
+- `vitest.config.ts` now includes `src/theme.ts` in the coverage gate. It had tests but
+  was absent from `coverage.include`, so the 90% threshold silently didn't measure it —
+  adding it immediately failed at 84% and surfaced three untested paths (a throwing
+  storage backend, a throwing `matchMedia`, and Safari's legacy `addListener`). 16 tests
+  total; coverage 95.65%.
+
 ### Added - multiple projects in the UI
 
 - **You can now create projects and switch between them.** The engine has supported
