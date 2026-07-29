@@ -9,7 +9,7 @@ BrowserRenderTree
   -> html-to-layout
   -> layout-block
   -> layout-to-paint
-  -> HtmlPaintOutput { positioned, scene }
+  -> HtmlPaintOutput { positioned, links, scene }
 ```
 
 The package keeps the individual parser, adapter, layout, and paint stages
@@ -32,19 +32,25 @@ pub fn html_render_tree_to_paint<M, S, FM, R>(
 ) -> HtmlPaintOutput
 ```
 
-The returned positioned tree is retained because the next browser slice uses
-its preserved `html` metadata to derive link hit regions. The scene height is
-at least the viewport height and expands to the laid-out document height for
-scrolling.
+The returned positioned tree retains preserved `html` metadata, while `links`
+contains resolved link rectangles in logical document-content coordinates.
+`hit_test_link` converts viewport coordinates using the current vertical scroll
+offset. The scene height is at least the viewport height and expands to the
+laid-out document height for scrolling.
+
+```rust
+let target = hit_test_link(&output.links, mouse_x, mouse_y, scroll_y)
+    .map(|region| region.url.as_str());
+```
 
 ## Current boundary
 
 - HTML source parsing remains in `html-parser`.
 - Resource fetching and image decoding are not performed here.
-- Link hit-region extraction and host navigation remain follow-up work.
+- Host navigation and visited-link policy remain follow-up work.
 - Paint backends consume the returned `PaintScene`; this package does not
   rasterize it.
 
-Two tests cover viewport normalization and the end-to-end canned HTML
-acceptance path, including page background, heading text, inline link color,
-resolved image URI, and document-height expansion.
+Four tests cover viewport normalization, end-to-end canned HTML paint output,
+absolute link-region extraction, empty-box filtering, scroll-aware hit testing,
+and half-open boundary behavior.
