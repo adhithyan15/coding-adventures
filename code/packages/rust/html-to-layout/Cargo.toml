@@ -1,0 +1,12 @@
+[package]
+name = "html-to-layout"
+version = "0.1.0"
+edition = "2021"
+description = "Converts html-parser browser render trees into the shared Layout IR."
+
+[dependencies]
+coding-adventures-html-parser = { path = "../html-parser" }
+layout-ir = { path = "../layout-ir" }
+
+[dev-dependencies]
+layout-block = { path = "../layout-block" }

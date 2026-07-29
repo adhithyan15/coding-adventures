@@ -41,6 +41,18 @@ ecosystem. The web in 1993 was simple enough that a single developer can
 understand the entire stack — from TCP socket to rendered pixel — and that is
 exactly the educational goal.
 
+## Implementation Status
+
+The current `html-parser` corpus gates are complete: the checked WPT
+tree-construction audit and html5lib tokenizer audit both ratchet missing
+upstream cases at zero. The `html-to-layout` package now provides the first
+executable browser seam from `BrowserRenderTree` to the shared Layout IR and
+`layout-block`.
+
+That does not make Venture complete. The remaining acceptance work includes a
+real inline-formatting pass, paint-scene acceptance, resource loading, link
+hit-testing, and a platform host that wires navigation through pixels.
+
 ## Where It Fits
 
 Venture sits at the top of the stack. It is a **program** (not a library) that
@@ -56,18 +68,18 @@ Layer 6 — Platform Paint VMs
   └── P2D08 paint-vm-cairo (Linux, future)
 
 Layer 5 — Layout & Paint Translation
+  ├── html-to-layout
   ├── layout-block
-  ├── layout-to-paint
-  └── document-ast-to-layout
+  └── layout-to-paint
 
 Layer 4 — Document Model
-  ├── document-ast
+  ├── html-parser / dom-core
   ├── layout-ir
   └── paint-instructions
 
 Layer 3 — Protocol Parsers
   ├── http1.0-lexer / http1.0-parser / http1.0-client
-  └── html1.0-lexer / html1.0-parser
+  └── html-lexer / html-parser
 
 Layer 2 — Network Primitives
   ├── tcp-client
@@ -80,7 +92,7 @@ Layer 1 — Data Formats
 
 Every box is a separate crate. Improving any crate automatically improves the
 browser. Adding CSS support in the future means adding a `css-lexer`,
-`css-parser`, and updating `document-ast-to-layout` — Venture itself barely
+`css-parser`, and updating `html-to-layout` — Venture itself barely
 changes.
 
 ## Concepts
@@ -103,10 +115,10 @@ tcp-client ──────────────────► TcpStream (
 http1.0-client ──────────────► HttpResponse { status, headers, body }
   │
   ▼
-html1.0-parser ──────────────► DocumentNode (tree of elements & text)
+html-parser ─────────────────► BrowserRenderTree (display-ready HTML tree)
   │
   ▼
-document-ast-to-layout ──────► LayoutNode (styled tree with fonts/colors)
+html-to-layout ───────────────► LayoutNode (styled tree with fonts/colors)
   │
   ▼
 layout-block ────────────────► PositionedNode (x, y, width, height for each node)
@@ -215,9 +227,9 @@ PaintScene before rendering. The paint VM sees pre-translated coordinates.
 │  │                                                            │   │
 │  │  url-parser → tcp-client → frame-extractor                │   │
 │  │                  → http1.0-lexer → http1.0-parser         │   │
-│  │                      → html1.0-lexer → html1.0-parser     │   │
-│  │                          → document-ast                    │   │
-│  │                              → document-ast-to-layout      │   │
+│  │                      → html-lexer → html-parser           │   │
+│  │                          → BrowserRenderTree              │   │
+│  │                              → html-to-layout              │   │
 │  │                                  → layout-block            │   │
 │  │                                      → layout-to-paint     │   │
 │  │                                          → paint-vm-direct2d│  │
@@ -298,9 +310,10 @@ User action (Enter key / link click)
   │     - "image/*"   → display standalone image
   │     - other       → show raw text in monospace
   │
-  ├─ 6. html1_0_parser::parse(response.body) → DocumentNode tree
+  ├─ 6. html_parser::parse_browser_render_tree(response.body)
+  │       → BrowserRenderTree
   │
-  ├─ 7. document_ast_to_layout(doc, mosaic_theme) → LayoutNode tree
+  ├─ 7. html_render_tree_to_layout(tree, mosaic_theme) → LayoutNode tree
   │     - Apply Mosaic-era font/color defaults
   │     - Annotate links with destination URLs
   │
@@ -321,8 +334,10 @@ User action (Enter key / link click)
 
 ### Link Handling
 
-During `document-ast-to-layout`, each `<a href="...">` is annotated with both
-its destination URL and a color/underline style:
+During `html-to-layout`, each `<a href="...">` retains its resolved destination
+in the `html` extension namespace and receives the default unvisited color.
+The browser host combines that target with session history to select the final
+color and underline style:
 
 - **Unvisited links**: `#0000EE` (blue) with underline
 - **Visited links**: `#551A8B` (purple) with underline
@@ -343,8 +358,9 @@ On **WM_LBUTTONDOWN**:
 
 When the HTML parser encounters `<img src="photo.gif">`:
 
-1. The `DocumentNode` tree contains an `ImageNode { src, alt }`.
-2. During layout, the image source URL is resolved against the page base URL.
+1. The `BrowserRenderTree` contains an image node with resolved `src`, `alt`,
+   and authored dimensions.
+2. `html-to-layout` carries that resolved resource URL into `ImageContent`.
 3. A separate `http1_0_client::get()` call fetches the image data.
 4. The `image` crate decodes the data (GIF or JPEG for v0.1) into pixels.
 5. The pixel data becomes a `PaintImage` instruction in the `PaintScene`.
@@ -419,10 +435,8 @@ frame-extractor        = { path = "../../../packages/rust/frame-extractor" }
 http1_0_lexer          = { path = "../../../packages/rust/http1.0-lexer" }
 http1_0_parser         = { path = "../../../packages/rust/http1.0-parser" }
 http1_0_client         = { path = "../../../packages/rust/http1.0-client" }
-html1_0_lexer          = { path = "../../../packages/rust/html1.0-lexer" }
-html1_0_parser         = { path = "../../../packages/rust/html1.0-parser" }
-document_ast           = { path = "../../../packages/rust/document-ast" }
-document_ast_to_layout = { path = "../../../packages/rust/document-ast-to-layout" }
+coding-adventures-html-parser = { path = "../../../packages/rust/html-parser" }
+html-to-layout         = { path = "../../../packages/rust/html-to-layout" }
 layout_ir              = { path = "../../../packages/rust/layout-ir" }
 layout_block           = { path = "../../../packages/rust/layout-block" }
 layout_to_paint        = { path = "../../../packages/rust/layout-to-paint" }
@@ -485,7 +499,7 @@ image                  = "0.25"  # GIF and JPEG decoding
 
 - URL bar navigation with Enter key
 - Back, Forward, Home, Reload toolbar buttons
-- HTML 1.0 rendering via the full pipeline
+- Mosaic-era HTML rendering via the full pipeline
 - Vertical scrolling with mouse wheel and scrollbar
 - Link clicking with hit-testing and navigation
 - Inline images (GIF, JPEG) loaded synchronously
