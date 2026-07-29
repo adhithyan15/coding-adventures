@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.67.0 — level-88 condition-name on an alphanumeric item (read + SET TO TRUE) — 2026-07-29
+
+- A level-88 condition-name declared on an **alphanumeric** (`PIC X`) conditional variable is now
+  supported in BOTH directions — reading it (`IF IS-YES`) and setting it (`SET IS-YES TO TRUE`) — for
+  the **discrete-string VALUE** case, mirroring the already-shipped numeric level-88. Previously both
+  paths rejected ("a level-88 condition-name on a non-numeric item is a later rung" / "SET … TO TRUE
+  on an alphanumeric conditional variable is a later rung").
+- Read (`eval_condition_name`): when every VALUE item is a discrete string literal, the name holds
+  when the variable equals ANY of them under COBOL's alphanumeric comparison — the SAME space-padded
+  byte compare an `IF var = "…"` relation runs, routed through `compare_operands`, OR-folded over the
+  values. `88 IS-YES VALUE "Y"` on `FLAG PIC X VALUE "N"` is false; after the variable holds `"Y"` it
+  is true. Multiple discrete values (`88 VOWEL VALUE "A" "E" "I"`) OR-fold. A VALUE shorter than the
+  field is space-padded to the field width before comparison, so `88 IS-Y VALUE "Y"` matches
+  `FLAG PIC X(3)` holding `"Y  "`.
+- Set (`SET … TO TRUE`): stores the FIRST value into the slot exactly as `MOVE "…" TO item`
+  (`src_from_lit` → `move_into`, the alphanumeric string-MOVE path), so it fits to the receiver width.
+- Scope / boundary (co-total with the compiler): accepted iff the variable is alphanumeric AND every
+  VALUE item is a discrete string (`Single(Lit::Str)`). An alphanumeric **THRU range**
+  (`88 X VALUE "A" THRU "Z"`) and a **numeric or figurative** VALUE on an alphanumeric 88
+  (`88 X VALUE 5`, `88 X VALUE SPACES`) stay later rungs — rejected IDENTICALLY on both engines, so
+  both accept and reject the very same programs. The numeric level-88 paths are unchanged.
+- Byte-vs-char: the comparison and store reuse the existing alphanumeric-comparison and string-MOVE
+  machinery, which is byte-identical between engines for ASCII. A non-ASCII string VALUE or runtime
+  value is the PRE-EXISTING alphanumeric byte-vs-char behavior inherited from the IF-alphanumeric path,
+  not introduced here.
+- FILLER guard (co-total): a level-88 whose conditional variable is an **unnamed** (`FILLER`) item is
+  now rejected at build time ("a level-88 condition-name on an unnamed (FILLER) conditional variable is
+  a later rung") — detected via an empty `var_name`. A FILLER-88 bound to different items on the two
+  engines (the compiler drops FILLERs from its item table), so this closes that divergence for BOTH
+  the new alphanumeric AND the pre-existing numeric FILLER-88 case; both engines reject the same
+  programs.
+
 ## 0.66.0 — STRING with a reference-modification sending field — 2026-07-29
 
 - `STRING base(start:len) DELIMITED BY … INTO dst` — a reference modification is now accepted as a

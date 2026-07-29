@@ -99,6 +99,17 @@ fn num_value(lit: &Lit) -> Result<Decimal, RuntimeError> {
     }
 }
 
+/// Whether every level-88 `VALUE` item is a discrete string literal
+/// (`Single(Lit::Str)`). This is the accept predicate for a condition-name on an
+/// ALPHANUMERIC (`PIC X`) conditional variable: a discrete string VALUE reads and
+/// SETs exactly like `MOVE "…" TO item`. A `THRU` range or a numeric/figurative
+/// VALUE on an alphanumeric item stays a later rung, so this returns `false` and
+/// the caller rejects — the identical predicate the compiler applies, so both
+/// engines accept and reject the very same programs.
+fn all_single_str(values: &[ValueSpec]) -> bool {
+    values.iter().all(|v| matches!(v, ValueSpec::Single(Lit::Str(_))))
+}
+
 /// The character form of a source value for an alphanumeric comparison (a
 /// figurative yields `""` here — it is expanded to the other operand's length
 /// by the caller).
@@ -162,6 +173,13 @@ pub struct Machine {
 /// when the variable equals any single value or falls within any `THRU` range.
 struct ConditionName {
     var: usize,
+    /// The conditional variable's data-name. Used to form an `Operand::Ident` when
+    /// an ALPHANUMERIC level-88 read compares the variable through
+    /// [`Machine::compare_operands`] — reusing the exact space-padded byte compare
+    /// an `IF var = "…"` relation runs, so the read is byte-identical to the
+    /// compiler. Empty for the degenerate case of an unnamed conditional variable
+    /// (which cannot be compared and errors cleanly at read time).
+    var_name: String,
     values: Vec<ValueSpec>,
 }
 
@@ -191,6 +209,12 @@ impl Machine {
     fn build_items(&mut self, program: &Program) -> Result<(), RuntimeError> {
         // `stack` holds indices of currently-open group ancestors.
         let mut stack: Vec<usize> = Vec::new();
+        // The data-name of the most recently defined item (levels 01–49/77). A
+        // level-88 entry qualifies exactly that item, so this carries its name into
+        // the condition-name registration below (an unnamed `FILLER` item leaves it
+        // empty). Level-88 entries `continue` without touching it, so it always
+        // names the item the next 88 refers to.
+        let mut last_item_name = String::new();
 
         for def in &program.data {
             // A level-88 entry is not an item — it declares a boolean
@@ -208,7 +232,22 @@ impl Machine {
                 let var = self.items.len().checked_sub(1).ok_or_else(|| {
                     RuntimeError::Unsupported("a level-88 entry must follow an item".into())
                 })?;
-                if self.conditions.insert(name.clone(), ConditionName { var, values }).is_some() {
+                let var_name = last_item_name.clone();
+                // A level-88 whose conditional variable is an UNNAMED (`FILLER`)
+                // item — an empty `var_name` — is a later rung. Reject it BEFORE
+                // registering, co-totally with the compiler (whose FILLER-88 would
+                // otherwise bind to the wrong item, since it does not model FILLERs).
+                if var_name.is_empty() {
+                    return Err(RuntimeError::Unsupported(
+                        "a level-88 condition-name on an unnamed (FILLER) conditional variable is a later rung"
+                            .into(),
+                    ));
+                }
+                if self
+                    .conditions
+                    .insert(name.clone(), ConditionName { var, var_name, values })
+                    .is_some()
+                {
                     return Err(RuntimeError::DuplicateName(name));
                 }
                 continue;
@@ -245,10 +284,14 @@ impl Machine {
             });
 
             // Register the name (duplicates need qualification — not yet supported).
+            // Remember it as the conditional variable a following level-88 qualifies.
             if let Some(name) = &def.name {
                 if self.by_name.insert(name.clone(), idx).is_some() {
                     return Err(RuntimeError::DuplicateName(name.clone()));
                 }
+                last_item_name = name.clone();
+            } else {
+                last_item_name = String::new();
             }
 
             // Attach into the level hierarchy. 01 and 77 are top-level; 77 never
@@ -1996,25 +2039,58 @@ impl Machine {
 
     /// `SET cond-name TO TRUE` — assign the condition-name's conditional variable
     /// the value that makes it hold: the **first** of its `VALUE` items (the low
-    /// bound of a leading range). Numeric variable only, matching the test path.
+    /// bound of a leading range).
+    ///
+    /// Two accepted variable kinds, decided by the picture:
+    ///
+    /// A **numeric** variable takes the first value's numeric image formatted into
+    /// its slot (`src_from_lit` → `move_into`) — the same store `MOVE 9 TO N` does.
+    /// A leading `THRU` range contributes its low bound.
+    ///
+    /// An **alphanumeric** (`PIC X`) variable is now supported for the
+    /// discrete-string case: when every VALUE item is a discrete string literal
+    /// ([`all_single_str`]), SET stores the FIRST value into the slot exactly as
+    /// `MOVE "…" TO item` (`src_from_lit` yields `Src::Chars`, which `move_into`
+    /// fits to the receiver width). A `THRU` range with string bounds, or a
+    /// numeric/figurative VALUE, on an alphanumeric variable stays a later rung —
+    /// rejected identically to the compiler. A group conditional variable (no
+    /// picture) likewise stays a later rung.
     fn exec_set_true(&mut self, cond_name: &str) -> Result<(), RuntimeError> {
         let cn = self
             .conditions
             .get(cond_name)
             .ok_or_else(|| RuntimeError::UndefinedName(cond_name.to_string()))?;
         let var = cn.var;
-        // The first value item — a single value, or a range's low bound.
-        let lit = match cn.values.first() {
-            Some(ValueSpec::Single(lit)) | Some(ValueSpec::Range(lit, _)) => lit.clone(),
-            None => return Err(RuntimeError::Unsupported(format!("condition-name {cond_name} has no VALUE"))),
-        };
-        if !self.items[var].picture.as_ref().is_some_and(|p| p.is_numeric()) {
-            return Err(RuntimeError::Unsupported(
-                "SET … TO TRUE on an alphanumeric conditional variable is a later rung".into(),
-            ));
+        let is_numeric = self.items[var].picture.as_ref().is_some_and(|p| p.is_numeric());
+        if is_numeric {
+            // Numeric slot: the first value item — a single value, or a range's low
+            // bound — formatted into the numeric picture (unchanged behaviour).
+            let lit = match cn.values.first() {
+                Some(ValueSpec::Single(lit)) | Some(ValueSpec::Range(lit, _)) => lit.clone(),
+                None => {
+                    return Err(RuntimeError::Unsupported(format!(
+                        "condition-name {cond_name} has no VALUE"
+                    )))
+                }
+            };
+            let src = self.src_from_lit(&lit)?;
+            return self.move_into(var, src);
         }
-        let src = self.src_from_lit(&lit)?;
-        self.move_into(var, src)
+        // Alphanumeric (`PIC X`) slot: accept only when every VALUE is a discrete
+        // string; store the first into the slot exactly as `MOVE "…" TO item`.
+        if self.items[var].picture.is_some() && all_single_str(&cn.values) {
+            if let Some(ValueSpec::Single(lit)) = cn.values.first() {
+                let lit = lit.clone();
+                let src = self.src_from_lit(&lit)?;
+                return self.move_into(var, src);
+            }
+        }
+        Err(RuntimeError::Unsupported(
+            "SET … TO TRUE needs a numeric condition-name, or an alphanumeric one with \
+             discrete-string VALUEs (a THRU range, a numeric/figurative VALUE, or a group \
+             conditional variable is a later rung)"
+                .into(),
+        ))
     }
 
     /// Execute a sequence of statements, short-circuiting on the first non-normal
@@ -2209,34 +2285,67 @@ impl Machine {
     }
 
     /// Evaluate a level-88 condition-name: does its conditional variable equal any
-    /// single value, or fall within any inclusive `THRU` range? This rung compares
-    /// a **numeric** variable against numeric values; an alphanumeric conditional
-    /// variable is a later rung (a clean error, never a wrong answer).
+    /// single value, or fall within any inclusive `THRU` range?
+    ///
+    /// A **numeric** variable compares its decimal value against each numeric VALUE
+    /// / `THRU` range (unchanged).
+    ///
+    /// An **alphanumeric** (`PIC X`) variable is now supported for the
+    /// discrete-string case: when every VALUE item is a discrete string literal
+    /// ([`all_single_str`]), the name holds when the variable equals ANY of them
+    /// under COBOL's alphanumeric comparison — the SAME space-padded byte compare
+    /// an `IF var = "…"` relation runs, routed through [`Self::compare_operands`]
+    /// (which pads both sides to a common width and byte-compares), OR-folded over
+    /// the values. Reusing that machinery is what makes the read byte-identical to
+    /// the compiler's `str_cmp`. A `THRU` range with string bounds, or a
+    /// numeric/figurative VALUE, on an alphanumeric variable stays a later rung; a
+    /// group conditional variable (no picture) likewise.
     fn eval_condition_name(&self, name: &str) -> Result<bool, RuntimeError> {
         let cn = self
             .conditions
             .get(name)
             .ok_or_else(|| RuntimeError::UndefinedName(name.to_string()))?;
         let item = &self.items[cn.var];
-        if !item.picture.as_ref().is_some_and(|p| p.is_numeric()) {
-            return Err(RuntimeError::Unsupported(
-                "a level-88 condition-name on a non-numeric item is a later rung".into(),
-            ));
-        }
-        let lhs = self.item_as_decimal(cn.var);
-        for spec in &cn.values {
-            let hit = match spec {
-                ValueSpec::Single(lit) => lhs.cmp_value(&num_value(lit)?) == std::cmp::Ordering::Equal,
-                ValueSpec::Range(lo, hi) => {
-                    lhs.cmp_value(&num_value(lo)?) != std::cmp::Ordering::Less
-                        && lhs.cmp_value(&num_value(hi)?) != std::cmp::Ordering::Greater
+        let is_numeric = item.picture.as_ref().is_some_and(|p| p.is_numeric());
+        if is_numeric {
+            let lhs = self.item_as_decimal(cn.var);
+            for spec in &cn.values {
+                let hit = match spec {
+                    ValueSpec::Single(lit) => {
+                        lhs.cmp_value(&num_value(lit)?) == std::cmp::Ordering::Equal
+                    }
+                    ValueSpec::Range(lo, hi) => {
+                        lhs.cmp_value(&num_value(lo)?) != std::cmp::Ordering::Less
+                            && lhs.cmp_value(&num_value(hi)?) != std::cmp::Ordering::Greater
+                    }
+                };
+                if hit {
+                    return Ok(true);
                 }
-            };
-            if hit {
-                return Ok(true);
             }
+            return Ok(false);
         }
-        Ok(false)
+        // Alphanumeric (`PIC X`) variable: accept only discrete-string VALUEs, then
+        // hold when the variable equals ANY of them under the alphanumeric byte
+        // compare — the identical `compare_operands` path an `IF var = "…"` uses.
+        if item.picture.is_some() && all_single_str(&cn.values) {
+            let var_op = Operand::Ident(cn.var_name.clone());
+            for spec in &cn.values {
+                if let ValueSpec::Single(lit @ Lit::Str(_)) = spec {
+                    let ord = self.compare_operands(&var_op, &Operand::Lit(lit.clone()))?;
+                    if ord == std::cmp::Ordering::Equal {
+                        return Ok(true);
+                    }
+                }
+            }
+            return Ok(false);
+        }
+        Err(RuntimeError::Unsupported(
+            "a level-88 condition-name needs a numeric variable, or an alphanumeric one with \
+             discrete-string VALUEs (a THRU range, a numeric/figurative VALUE, or a group \
+             conditional variable is a later rung)"
+                .into(),
+        ))
     }
 
     fn eval_relation(

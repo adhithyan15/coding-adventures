@@ -8,6 +8,39 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.63.0: level-88 condition-name on an alphanumeric item (read + SET TO TRUE)
+
+A level-88 condition-name declared on an **alphanumeric** (`PIC X`) conditional variable now lowers in
+BOTH directions — reading it (`IF IS-YES`) and setting it (`SET IS-YES TO TRUE`) — for the
+**discrete-string VALUE** case, compiled byte-identical to the `coding-adventures-cobol-runtime`
+0.67.0 oracle. Previously both paths rejected at emit time ("a level-88 condition-name on an
+alphanumeric item is a later rung" / "SET … TO TRUE on an alphanumeric conditional variable is a later
+rung"). This mirrors the numeric level-88 already shipped.
+
+- Read (`emit_condition_name`): when every VALUE item is a discrete string literal, each value becomes
+  a `cmp_eq` over the SAME alphanumeric `str_cmp` path (`emit_str_condition`) an `IF var = "…"`
+  relation runs — the variable's slot against the value's `str_const`, space-padded to a common
+  width — and the value-list OR-folds with `or`, mirroring the numeric `emit_value_test` fold exactly.
+- Set (`emit_set`): stores the FIRST value into the slot exactly as `MOVE "…" TO item` — the string is
+  fit to the receiver width by `format_into_picture` and emitted as the slot's `str_const`, the same
+  const-into-slot store the MOVE-literal path emits.
+- Scope / boundary (co-total with the oracle): accepted iff the variable is a `Char` item AND every
+  VALUE item is a discrete string (`Single(Src::Str)`) — the same `all_single_str` predicate the
+  oracle applies. An alphanumeric **THRU range** (`88 X VALUE "A" THRU "Z"`) and a **numeric or
+  figurative** VALUE on an alphanumeric 88 (`88 X VALUE 5`) stay later rungs — rejected UP FRONT
+  (before any dead instructions) IDENTICALLY to the oracle. The numeric level-88 paths are unchanged.
+- No grammar change: the same `value_clause` / `condition_name` / `set_stmt` rules the numeric
+  level-88 uses already parse this. Byte-vs-char is ASCII-clean; a non-ASCII value is the pre-existing
+  alphanumeric byte-vs-char behavior inherited from the IF-alphanumeric path.
+- FILLER guard (co-total): a level-88 whose conditional variable is an **unnamed** (`FILLER`) item is
+  now rejected at collect time ("a level-88 condition-name on an unnamed (FILLER) conditional variable
+  is a later rung"), matching the oracle's message. The compiler does not push FILLERs to its item
+  table, so a FILLER-88's `var = items.len()-1` would otherwise bind to the wrong (last named) item; a
+  new `prev_entry_unnamed_filler` flag — set on a FILLER entry, cleared on a NAMED non-88 entry, left
+  unchanged on a level-88 — lets `collect_condition_name` reject before `checked_sub`. This closes the
+  divergence for BOTH the new alphanumeric AND the pre-existing numeric FILLER-88 case. A level-88
+  following a FILLER *and then a named item* still binds to the named item and is accepted.
+
 ### Added — v0.62.0: STRING with a reference-modification sending field
 
 `STRING base(start:len) DELIMITED BY … INTO dst` — a reference modification is now accepted as a STRING
