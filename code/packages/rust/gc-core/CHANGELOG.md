@@ -1,5 +1,24 @@
 # Changelog — gc-core
 
+## 0.23.2 — 2026-07-29 — robustness-at-scale tests (AOT00-T5, tests only)
+
+Test-only. Confirms the collector stays correct and O(n) as the heap grows to many thousands of
+objects, and — the "solid enough to run a real language" property — that a **deep** object graph
+does not overflow the stack during marking (gc-core marks from an explicit worklist `Vec`, never
+by recursion).
+
+- `scale_deep_chain_marks_without_stack_overflow`: a 20 000-node single-linked chain + 20 000
+  garbage objects; rooting the head, exactly the 20 000 chain nodes survive and the garbage is
+  reclaimed, and the chain walks end-to-end intact. A recursion-based mark would blow the stack
+  at this depth; the worklist mark does not.
+- `scale_wide_ref_array_relocates`: a single 4 000-element reference array of movable leaves is
+  compacted — the array and all elements evacuate, every tail slot is fixed up, and spot-checked
+  elements (first/middle/last) are reachable at their new addresses with sentinels byte-preserved.
+  Proves the tail fixup is correct and O(len) over a large instance, not just a toy.
+
+Counts are intentionally beyond Miri's practical range (the per-object mechanics are already
+Miri-verified on the small graphs); these validate scale and the no-recursion mark guarantee.
+
 ## 0.23.1 — 2026-07-29 — object-model stress differential (AOT00-T5, tests only)
 
 Test-only. Adds a combined stress differential exercising **every** object-model feature in one

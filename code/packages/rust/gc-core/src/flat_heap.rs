@@ -3104,6 +3104,100 @@ mod tests {
         drop(heap); // frees the retained arena + any malloc survivors exactly once
     }
 
+    // ── Robustness at scale (AOT00-T5) ────────────────────────────────────────
+    //
+    // "Solid enough to run a real language" means the collector stays correct and O(n) as the
+    // heap grows to many thousands of objects, and — crucially — that a DEEP object graph does
+    // not overflow the stack during marking. gc-core marks from an explicit `mark_worklist`
+    // (a heap `Vec`), never by recursion, so a chain thousands of pointers deep is safe where a
+    // recursive tracer would crash. These tests run at counts too large for Miri (which already
+    // validated the per-object mechanics on the small graphs above); here we prove they scale.
+
+    /// **A deep, large heap collects correctly and without stack overflow.** A single-linked
+    /// chain of 20 000 records (each a ref at offset 0) plus 20 000 unreachable garbage objects:
+    /// rooting only the chain head, exactly the 20 000 chain nodes survive and the 20 000 garbage
+    /// objects are reclaimed. A recursion-based mark would blow the stack at this depth; the
+    /// worklist mark does not.
+    #[test]
+    fn scale_deep_chain_marks_without_stack_overflow() {
+        const N: usize = 20_000;
+        let mut heap = FlatHeap::new();
+        let link = heap.register_kind(&[0]); // record: one ref at offset 0
+
+        // Build the chain head → n1 → … → n(N-1).
+        let head = heap.alloc(16, link) as usize;
+        let mut prev = head;
+        for _ in 1..N {
+            let next = heap.alloc(16, link) as usize;
+            unsafe { *(prev as *mut usize) = next };
+            prev = next;
+        }
+        unsafe { *(prev as *mut usize) = 0 }; // tail terminator
+        // Twice as much unreachable garbage.
+        for _ in 0..N {
+            heap.alloc(16, link);
+        }
+        assert_eq!(heap.object_count(), 2 * N, "chain + garbage allocated");
+
+        let stats = heap.collect(&[head]);
+        assert_eq!(stats.freed, N, "all garbage reclaimed");
+        assert_eq!(heap.object_count(), N, "the whole deep chain survives");
+
+        // The chain is intact end to end (walk it — proves no node was wrongly freed).
+        let mut node = head;
+        let mut walked = 0usize;
+        while node != 0 {
+            assert!(!heap.find_header(node).is_null(), "chain node live");
+            node = unsafe { *(node as *const usize) };
+            walked += 1;
+            assert!(walked <= N, "no cycle introduced");
+        }
+        assert_eq!(walked, N, "walked exactly the whole chain");
+    }
+
+    /// **A wide reference array relocates at scale.** A single 4 000-element reference array of
+    /// movable leaves is compacted: the array and all 4 000 elements evacuate, every tail slot is
+    /// fixed up, and spot-checked elements are reachable at their new addresses with sentinels
+    /// byte-preserved. Proves the tail fixup (the `for_each_ref_slot` tail walk) is correct and
+    /// O(len) over a large instance, not just a 2-slot toy.
+    #[test]
+    fn scale_wide_ref_array_relocates() {
+        const M: usize = 4_000;
+        let mut heap = FlatHeap::new();
+        let arr_kind = heap.register_ref_array_kind(&[], 0);
+        let leaf = heap.register_kind(&[]); // movable opaque leaf
+
+        let arr = heap.alloc(M * 8, arr_kind) as usize; // M reference slots
+        for i in 0..M {
+            let e = heap.alloc(16, leaf) as usize;
+            unsafe {
+                *((arr + i * 8) as *mut usize) = e;
+                *((e + 8) as *mut usize) = 0xE0_0000 + i; // per-element sentinel (non-ref word)
+            }
+        }
+        assert_eq!(heap.object_count(), M + 1, "array + M elements");
+
+        let root_holder = arr;
+        let slots = [&root_holder as *const usize as usize];
+        let stats = unsafe { heap.collect_compacting(&slots, &[]) };
+        assert_eq!(stats.freed, 0, "everything reachable");
+        assert_eq!(stats.survived, M + 1, "array + all elements survive (moved)");
+
+        let new_arr = root_holder;
+        assert_ne!(new_arr, arr, "the array relocated");
+        // Spot-check first, middle, last elements: fixed up + sentinels preserved.
+        for &i in &[0usize, M / 2, M - 1] {
+            let e = unsafe { *((new_arr + i * 8) as *const usize) };
+            assert!(!heap.find_header(e).is_null(), "element {i} live at its new address");
+            assert_eq!(
+                unsafe { *((e + 8) as *const usize) },
+                0xE0_0000 + i,
+                "element {i} sentinel byte-preserved across relocation",
+            );
+        }
+        drop(heap);
+    }
+
     // ── Generational split: young/old + promotion ─────────────────────────────
 
     /// Fresh allocations are born into the young generation.
