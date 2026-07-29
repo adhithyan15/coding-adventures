@@ -51,6 +51,19 @@ int64_t __gc_alloc_kind(int64_t n, uint16_t kind);
  * its object layouts (records, tuples, Ruby/Python/JS objects). */
 int64_t __gc_register_kind(const int64_t *field_offsets, int64_t count);
 
+/* Register a VARIABLE-LENGTH REFERENCE-ARRAY kind: `fixed_count` fixed ref-field
+ * offsets at `fixed` (like __gc_register_kind), followed by a TAIL region — every
+ * aligned 8-byte word in [tail_from, size) of an instance is a reference. One kind
+ * thus describes arrays of every length (the tail follows the instance's own alloc
+ * size), so a JS/Ruby/Python array, a vector, or a hash's backing store is traced —
+ * and under the compacting collector RELOCATED — precisely instead of conservatively
+ * (a conservative array pins itself and every element it references). Every word in
+ * [tail_from, size) MUST hold a reference (base pointer, NaN-box tag ok, or null);
+ * tail_from is rounded up to a multiple of 8; a negative tail_from is treated as 0.
+ * A null `fixed` or fixed_count <= 0 means "no fixed fields, tail only". */
+int64_t __gc_register_ref_array_kind(const int64_t *fixed, int64_t fixed_count,
+                                     int64_t tail_from);
+
 /* Mark from `count` root words at `roots`, then sweep. Returns objects freed.
  * A null `roots` or count <= 0 means "no roots". */
 int64_t __gc_collect_roots(const int64_t *roots, int64_t count);
