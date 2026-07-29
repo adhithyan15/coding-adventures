@@ -1,5 +1,7 @@
 # Changelog
 
+- Add Level-1 MOS model-card `MJSW`, defaulting to `0.33`, to shape `CJSW`
+  sidewall depletion independently from `MJ` bottom-junction capacitance.
 - Add the Level-1 MOS `PS` instance parameter. With model-card `CJSW`, its
   product augments `CBS` in AC and transient source-body capacitance.
 - Add the Level-1 MOS `PD` instance parameter and model-card `CJSW` density.

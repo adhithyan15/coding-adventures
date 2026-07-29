@@ -760,7 +760,7 @@ parameters, `.model <name> NPN|PNP(...)` BJT cards with `IS`, `BF` /
 `.model <name> NMOS|PMOS(...)` Level-1 MOSFET
 cards with common SPICE aliases (`VT0` / `VTO`, `KP`, `LAMBDA`, `GAMMA`, `PHI`,
 `W`, `L`, `RSH`, `IS`, `N_SUB` / `NSUB`, `T_NOM` / `TNOM`, `CGSO`, `CGDO`,
-`CGBO`, `CBS`, `CBD`, `CJ`, and `CJSW`), MOS instance `NRD=<squares>` /
+`CGBO`, `CBS`, `CBD`, `CJ`, `CJSW`, and `MJSW`), MOS instance `NRD=<squares>` /
 `NRS=<squares>` / `AD=<area>` / `AS=<area>` / `PD=<perimeter>` /
 `PS=<perimeter>`, SPICE
 engineering suffixes, capacitor

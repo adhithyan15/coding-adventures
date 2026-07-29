@@ -118,6 +118,8 @@ pub struct Level1Params {
     pub pb: f64,
     /// Bulk-junction grading coefficient.
     pub mj: f64,
+    /// Sidewall-junction grading coefficient.
+    pub mjsw: f64,
     /// Forward-bias depletion-capacitance transition coefficient.
     pub fc: f64,
     /// Flicker-noise coefficient.
@@ -161,6 +163,7 @@ impl Default for Level1Params {
             cbd: 0.0,
             pb: 0.8,
             mj: 0.5,
+            mjsw: 0.33,
             fc: 0.5,
             kf: 0.0,
             af: 1.0,
@@ -332,6 +335,10 @@ pub fn evaluate_level1(
         p.cjsw.is_finite() && p.cjsw >= 0.0,
         "MOSFET CJSW must be finite and non-negative"
     );
+    assert!(
+        p.mjsw.is_finite() && p.mjsw >= 0.0,
+        "MOSFET MJSW must be finite and non-negative"
+    );
     let beta = p.kp * (p.w / effective_length);
 
     // Threshold with body effect.
@@ -353,15 +360,10 @@ pub fn evaluate_level1(
 
     // Meyer gate-to-channel capacitance, partitioned by operating region below.
     let channel_capacitance = p.w * effective_length * (OXIDE_PERMITTIVITY / p.tox);
-    let cbs_bulk =
-        bulk_junction_capacitance(p.cbs + p.cj * p.as_ + p.cjsw * p.ps, v_bs, p.pb, p.mj, p.fc);
-    let cbd_bulk = bulk_junction_capacitance(
-        p.cbd + p.cj * p.ad + p.cjsw * p.pd,
-        v_bs - v_ds,
-        p.pb,
-        p.mj,
-        p.fc,
-    );
+    let cbs_bulk = bulk_junction_capacitance(p.cbs + p.cj * p.as_, v_bs, p.pb, p.mj, p.fc)
+        + bulk_junction_capacitance(p.cjsw * p.ps, v_bs, p.pb, p.mjsw, p.fc);
+    let cbd_bulk = bulk_junction_capacitance(p.cbd + p.cj * p.ad, v_bs - v_ds, p.pb, p.mj, p.fc)
+        + bulk_junction_capacitance(p.cjsw * p.pd, v_bs - v_ds, p.pb, p.mjsw, p.fc);
 
     // -----------------------------------------------------------------------
     // Cutoff / subthreshold

@@ -1798,6 +1798,7 @@ export interface MosfetLevel1Params {
   readonly CBD: number;
   readonly PB: number;
   readonly MJ: number;
+  readonly MJSW: number;
   readonly FC: number;
   readonly KF: number;
   readonly AF: number;
@@ -2060,8 +2061,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   PNP: [41, 58, 13, 4],
   NJF: [22, 30, 7, 3],
   PJF: [22, 30, 7, 3],
-  NMOS: [28, 35, 6, 3],
-  PMOS: [28, 35, 6, 3],
+  NMOS: [29, 36, 6, 3],
+  PMOS: [29, 36, 6, 3],
 };
 
 export interface Vccs {
@@ -8066,6 +8067,7 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     CBD: 0.0,
     PB: 0.8,
     MJ: 0.5,
+    MJSW: 0.33,
     FC: 0.5,
     KF: 0.0,
     AF: 1.0,
@@ -8262,6 +8264,7 @@ const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   CJSW: "CJSW",
   PB: "PB",
   MJ: "MJ",
+  MJSW: "MJSW",
   FC: "FC",
   KF: "KF",
   AF: "AF",
@@ -8837,6 +8840,7 @@ export function mosfetFromModelCard(
     ...(p.CJSW !== undefined ? { CJSW: p.CJSW } : {}),
     ...(p.PB !== undefined ? { PB: p.PB } : {}),
     ...(p.MJ !== undefined ? { MJ: p.MJ } : {}),
+    ...(p.MJSW !== undefined ? { MJSW: p.MJSW } : {}),
     ...(p.FC !== undefined ? { FC: p.FC } : {}),
     ...(p.KF !== undefined ? { KF: p.KF } : {}),
     ...(p.AF !== undefined ? { AF: p.AF } : {}),
@@ -20342,12 +20346,18 @@ function evaluateNmosLevel1(
   const channelCapacitance =
     params.W * effectiveLength * (OXIDE_PERMITTIVITY / params.TOX);
   const cbsBulk = mosfetBulkJunctionCapacitance(
-    params.CBS + params.CJ * params.AS + params.CJSW * params.PS,
+    params.CBS + params.CJ * params.AS,
     vbs, params.PB, params.MJ, params.FC,
+  ) + mosfetBulkJunctionCapacitance(
+    params.CJSW * params.PS,
+    vbs, params.PB, params.MJSW, params.FC,
   );
   const cbdBulk = mosfetBulkJunctionCapacitance(
-    params.CBD + params.CJ * params.AD + params.CJSW * params.PD,
+    params.CBD + params.CJ * params.AD,
     vbs - vds, params.PB, params.MJ, params.FC,
+  ) + mosfetBulkJunctionCapacitance(
+    params.CJSW * params.PD,
+    vbs - vds, params.PB, params.MJSW, params.FC,
   );
   const capacitances = {
     cgs: cgsOverlap + channelCapacitance,
@@ -20976,11 +20986,23 @@ function mosfetChargeDynamicCapacitance(
     return spec.capacitance;
   }
   const junctionVoltage = element.type === "PMOS" ? stateVoltage : -stateVoltage;
+  const bottomCapacitance = spec.kind === "source-body"
+    ? element.params.CBS + element.params.CJ * element.params.AS
+    : element.params.CBD + element.params.CJ * element.params.AD;
+  const sidewallCapacitance = spec.kind === "source-body"
+    ? element.params.CJSW * element.params.PS
+    : element.params.CJSW * element.params.PD;
   return mosfetBulkJunctionCapacitance(
-    spec.capacitance,
+    bottomCapacitance,
     junctionVoltage,
     element.params.PB,
     element.params.MJ,
+    element.params.FC,
+  ) + mosfetBulkJunctionCapacitance(
+    sidewallCapacitance,
+    junctionVoltage,
+    element.params.PB,
+    element.params.MJSW,
     element.params.FC,
   );
 }
@@ -21191,6 +21213,9 @@ function validateMosfet(element: Mosfet): void {
   }
   if (params.PB <= 0.0 || params.MJ < 0.0) {
     throw invalidElement(element.name, "MOSFET PB must be positive and MJ must be non-negative");
+  }
+  if (params.MJSW < 0.0) {
+    throw invalidElement(element.name, "MOSFET MJSW must be non-negative");
   }
   if (params.FC < 0.0 || params.FC >= 1.0) {
     throw invalidElement(element.name, "MOSFET FC must be in [0, 1)");

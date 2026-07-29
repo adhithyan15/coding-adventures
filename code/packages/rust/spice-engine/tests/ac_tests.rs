@@ -1520,6 +1520,46 @@ fn ac_mosfet_source_perimeter_scales_sidewall_junction_capacitance() {
 }
 
 #[test]
+fn ac_mosfet_sidewall_grading_coefficient_shapes_reverse_bias_capacitance() {
+    fn source_amplitude(grading_coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 1.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "source", 1_000.0,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "0",
+            "0",
+            "source",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                kp: 1.0e-12,
+                w: 1.0,
+                l: 1.0,
+                oxide_thickness: 1.0e9,
+                source_perimeter: 2.0e-6,
+                sidewall_junction_capacitance: 0.5,
+                sidewall_junction_grading_coefficient: grading_coefficient,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("source")
+            .unwrap()
+            .abs()
+    }
+
+    let fixed = source_amplitude(0.0);
+    let shaped = source_amplitude(0.5);
+    assert!(shaped > fixed * 1.3);
+}
+
+#[test]
 fn ac_mosfet_oxide_thickness_scales_intrinsic_gate_capacitance() {
     let gate_amplitude = |oxide_thickness| {
         let mut circuit = Circuit::new();

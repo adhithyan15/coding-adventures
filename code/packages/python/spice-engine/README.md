@@ -105,8 +105,10 @@ positive `RD` / `RS` values take precedence.
 `AD`, `AS`, `PD`, `PS`, and model-card `CJ` / `CJSW` default to zero and are
 finite and non-negative. They add `CJ * AD + CJSW * PD` to drain-body `CBD`
 and `CJ * AS + CJSW * PS` to source-body `CBS` in AC and transient analysis.
+`MJ` shapes bottom-junction depletion while `MJSW` defaults to `0.33` and
+independently shapes the sidewall terms.
 `FC` (default `0.5`) selects the continuous Berkeley forward-bias continuation
-for `CBS` / `CBD` depletion capacitance shaped by `PB` and `MJ`.
+for `CBS` / `CBD` depletion capacitance shaped by `PB`, `MJ`, and `MJSW`.
 All temperature coefficients honor model-card `TNOM` / `T_NOM`.
 `dc_temperature_sweep()` and `dc_temperature_sweep_corners()` run
 `.temp`-style DC operating-point snapshots across explicit analysis

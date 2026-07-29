@@ -316,6 +316,25 @@ fn test_source_perimeter_scales_sidewall_junction_capacitance() {
 }
 
 #[test]
+fn test_sidewall_grading_coefficient_shapes_reverse_bias_capacitance() {
+    let result = evaluate_level1(
+        &Level1Params {
+            pd: 1.0e-6,
+            cjsw: 4.0e-6,
+            mj: 0.0,
+            mjsw: 0.5,
+            pb: 1.0,
+            ..Level1Params::default()
+        },
+        0.0,
+        1.0,
+        0.0,
+        300.15,
+    );
+    assert!((result.cbd - 4.0e-12 / 2.0_f64.sqrt()).abs() < 1.0e-24);
+}
+
+#[test]
 #[should_panic(expected = "MOSFET AD must be finite and non-negative")]
 fn test_drain_area_rejects_negative_value() {
     let _ = evaluate_level1(
@@ -366,6 +385,21 @@ fn test_source_perimeter_rejects_negative_value() {
     let _ = evaluate_level1(
         &Level1Params {
             ps: -1.0,
+            ..Level1Params::default()
+        },
+        1.8,
+        1.8,
+        0.0,
+        300.15,
+    );
+}
+
+#[test]
+#[should_panic(expected = "MOSFET MJSW must be finite and non-negative")]
+fn test_sidewall_grading_coefficient_rejects_negative_value() {
+    let _ = evaluate_level1(
+        &Level1Params {
+            mjsw: -1.0,
             ..Level1Params::default()
         },
         1.8,

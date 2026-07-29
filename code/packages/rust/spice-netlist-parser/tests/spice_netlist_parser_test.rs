@@ -1359,7 +1359,7 @@ Jpull drain gate source pch
 fn parses_mosfet_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model nch NMOS(VTO=0.45 KP=250u LAMBDA=0.02 GAMMA=0.3 PHI=0.8 W=2u L=180n RSH=250 NSUB=1.5 TNOM=300 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p CJ=2m CJSW=5u)
+.model nch NMOS(VTO=0.45 KP=250u LAMBDA=0.02 GAMMA=0.3 PHI=0.8 W=2u L=180n RSH=250 NSUB=1.5 TNOM=300 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p CJ=2m CJSW=5u MJSW=0.25)
 Vdd vdd 0 DC 5
 Vgate gate 0 DC 2.5
 M1 vdd gate out 0 nch W=4u L=200n NRD=2 NRS=3 AD=3n AS=4n PD=6u PS=7u
@@ -1401,6 +1401,7 @@ Rload out 0 1k
     assert_close(mosfet.params.source_perimeter, 7.0e-6);
     assert_close(mosfet.params.bottom_junction_capacitance, 2.0e-3);
     assert_close(mosfet.params.sidewall_junction_capacitance, 5.0e-6);
+    assert_close(mosfet.params.sidewall_junction_grading_coefficient, 0.25);
     assert_close(mosfet.params.n_sub, 1.5);
     assert_close(mosfet.params.t_nom, 300.0);
     assert_close(mosfet.params.gate_source_overlap_capacitance, 3.0e-12);

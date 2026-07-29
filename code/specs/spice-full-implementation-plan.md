@@ -33,14 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS source diffusion perimeter.
+1. Cross-language Level-1 MOS sidewall grading coefficient.
    - Status: current PR completion candidate.
-   - Add the Berkeley Level-1 MOS `PS` instance parameter in Rust, Python, and
-     TypeScript, defaulting to zero.
-   - Use `CBS + CJ * AS + CJSW * PS` as the zero-bias source-body capacitance
-     in AC and transient analysis while preserving existing depletion shaping.
-   - Preserve `PS` through hierarchy and cloning, enforce finite non-negative
-     validation, and parse it in the Rust netlist facade.
+   - Add Berkeley Level-1 MOS model-card `MJSW` in Rust, Python, and TypeScript,
+     defaulting to `0.33`.
+   - Shape `CJSW * PD` and `CJSW * PS` independently from the `MJ`-controlled
+     bottom-junction terms in AC and transient analysis.
+   - Preserve `MJSW` through hierarchy and cloning, enforce finite non-negative
+     validation, parse it through the Rust netlist facade, and extend the
+     supported-parameter release gate.
 
 ## Completed Slices
 
@@ -3509,6 +3510,15 @@ the Rust, Python, and TypeScript surfaces together.
      AC and transient analysis while preserving depletion shaping.
    - Hierarchy and cloning preserve `PD` / `CJSW`, finite non-negative
      validation is shared, and the Rust netlist facade parses both.
+
+277. Cross-language Level-1 MOS source diffusion perimeter.
+   - Status: completed in PR 9064.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `PS`,
+     defaulting to zero.
+   - `CBS + CJ * AS + CJSW * PS` supplies zero-bias source-body capacitance in
+     AC and transient analysis while preserving depletion shaping.
+   - Hierarchy and cloning preserve `PS`, finite non-negative validation is
+     shared, and the Rust netlist facade parses it.
 
 ## Backlog
 

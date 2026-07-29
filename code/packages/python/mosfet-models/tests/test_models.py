@@ -243,6 +243,15 @@ def test_source_perimeter_scales_sidewall_junction_capacitance():
     assert result.Cbs == pytest.approx(7.0e-12)
 
 
+def test_sidewall_grading_coefficient_shapes_reverse_bias_capacitance():
+    result = evaluate_level1(
+        Level1Params(PD=1.0e-6, CJSW=4.0e-6, MJ=0.0, MJSW=0.5, PB=1.0),
+        V_GS=0.0,
+        V_DS=1.0,
+    )
+    assert result.Cbd == pytest.approx(4.0e-12 / (2.0 ** 0.5))
+
+
 @pytest.mark.parametrize(
     ("params", "message"),
     [
@@ -252,6 +261,7 @@ def test_source_perimeter_scales_sidewall_junction_capacitance():
         (Level1Params(PS=-1.0), "MOSFET PS must be finite and non-negative"),
         (Level1Params(CJ=-1.0), "MOSFET CJ must be finite and non-negative"),
         (Level1Params(CJSW=-1.0), "MOSFET CJSW must be finite and non-negative"),
+        (Level1Params(MJSW=-1.0), "MOSFET MJSW must be finite and non-negative"),
     ],
 )
 def test_drain_geometry_rejects_negative_values(params, message):

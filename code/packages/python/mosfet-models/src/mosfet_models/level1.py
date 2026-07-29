@@ -50,6 +50,7 @@ class Level1Params:
     CBD: float = 0.0  # drain-bulk zero-bias junction capacitance (F)
     PB: float = 0.8  # bulk junction potential (V)
     MJ: float = 0.5  # bulk junction grading coefficient
+    MJSW: float = 0.33  # sidewall junction grading coefficient
     FC: float = 0.5  # forward-bias depletion transition coefficient
     KF: float = 0.0  # flicker-noise coefficient
     AF: float = 1.0  # flicker-noise drain-current exponent
@@ -155,6 +156,8 @@ def evaluate_level1(
         raise ValueError("MOSFET CJ must be finite and non-negative")
     if not isfinite(p.CJSW) or p.CJSW < 0.0:
         raise ValueError("MOSFET CJSW must be finite and non-negative")
+    if not isfinite(p.MJSW) or p.MJSW < 0.0:
+        raise ValueError("MOSFET MJSW must be finite and non-negative")
     beta = p.KP * (p.W / effective_length)
 
     # Threshold with body effect. The formula is well-defined whenever
@@ -177,18 +180,20 @@ def evaluate_level1(
     Cgd_intrinsic = 0.0
     Cgb_intrinsic = 0.0
     Cbs_bulk = bulk_junction_capacitance(
-        p.CBS + p.CJ * p.AS + p.CJSW * p.PS,
+        p.CBS + p.CJ * p.AS,
         V_BS,
         p.PB,
         p.MJ,
         p.FC,
-    )
+    ) + bulk_junction_capacitance(p.CJSW * p.PS, V_BS, p.PB, p.MJSW, p.FC)
     Cbd_bulk = bulk_junction_capacitance(
-        p.CBD + p.CJ * p.AD + p.CJSW * p.PD,
+        p.CBD + p.CJ * p.AD,
         V_BS - V_DS,
         p.PB,
         p.MJ,
         p.FC,
+    ) + bulk_junction_capacitance(
+        p.CJSW * p.PD, V_BS - V_DS, p.PB, p.MJSW, p.FC
     )
 
     if V_OV <= 0:

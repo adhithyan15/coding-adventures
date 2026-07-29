@@ -666,6 +666,28 @@ describe("acSweep", () => {
     expect(withSidewallCapacitance).toBeLessThan(withoutSidewallCapacitance / 100.0);
   });
 
+  it("uses MOSFET MJSW to shape reverse-biased sidewall capacitance", () => {
+    function sourceAmplitude(gradingCoefficient: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 1.0, 1.0));
+      circuit.add(resistor("Rin", "in", "source", 1_000.0));
+      circuit.add(mosfet("M1", "0", "0", "source", "0", "NMOS", {
+        KP: 1.0e-12,
+        W: 1.0,
+        L: 1.0,
+        TOX: 1.0e9,
+        CJSW: 0.5,
+        PS: 2.0e-6,
+        MJSW: gradingCoefficient,
+      }));
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("source")!);
+    }
+
+    const fixed = sourceAmplitude(0.0);
+    const shaped = sourceAmplitude(0.5);
+    expect(shaped).toBeGreaterThan(fixed * 1.3);
+  });
+
   it("uses MOSFET oxide thickness to scale intrinsic gate capacitance", () => {
     function gateAmplitude(TOX: number): number {
       const circuit = new Circuit();
