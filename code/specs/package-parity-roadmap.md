@@ -908,10 +908,14 @@ Delivery order:
 2. Add a cross-implementation runner. The runner may orchestrate processes in
    Python, but the fixtures and canonical JSON are the behavior oracle. Start
    with non-execution domains and fail closed on every execution case.
+   Completed by PR #9157 with the process-free bootstrap runner, implementation
+   inventory, and closed discovery, resolution, graph, and plan corpus.
 3. Expand the bootstrap's closed input/result schemas and positive plus
    adversarial corpus from discovery, resolution, graph, and plan into the
    remaining non-execution domains: diff selection, hashing/cache, Starlark,
-   sharding, validation, toolchain detection, and CLI.
+   sharding, validation, toolchain detection, and CLI. This is the current
+   selected tranche because it unlocks every implementation workstream without
+   entering the trusted-execution boundary.
 4. Add the trusted-execution sandbox and adversarial execution corpus. No
    repository command may run until filesystem and network isolation,
    no-follow path handling, sanitized environments, direct argv, and hard

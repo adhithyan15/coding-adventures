@@ -8,14 +8,9 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": {
-    "number": 9157,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9157",
-    "branch": "codex/build-tool-conformance-runner",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "edddc9b46af7662ce08799c1b5d9cd4d373025aa",
+    "revision": "cdb596b99523e557fc83b4ea6932f8728e662088",
     "schema_version": 2,
     "established_languages": 15,
     "implementation_identities": 1184,
@@ -47,7 +42,7 @@
     {
       "id": "build-tool-fixtures",
       "title": "Cross-implementation build-tool fixture runner and inventory gate",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-contract"],
       "branch": "codex/build-tool-conformance-runner",
       "pr_number": 9157,
@@ -65,11 +60,11 @@
     {
       "id": "build-tool-pure-domain-corpus",
       "title": "Close the remaining non-execution build-tool domain schemas and fixtures",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-fixtures"],
-      "branch": null,
+      "branch": "codex/build-tool-pure-domain-corpus",
       "pr_number": null,
-      "notes": "Newly explicit after the bootstrap schema audit. Add closed inputs/results and positive plus adversarial cases for diff selection, hashing/cache, Starlark, sharding, validation, toolchain detection, and CLI before those domains can report success."
+      "notes": "Selected after PR #9157 merged because this pure, process-free corpus expansion unlocks the Go oracle, Java/Kotlin, Dart, every existing front door, and OCaml promotion. Add closed inputs/results and positive plus adversarial cases for diff selection, hashing/cache, Starlark, sharding, validation, toolchain detection, and CLI before those domains can report success."
     },
     {
       "id": "build-file-standalone-integrity",
