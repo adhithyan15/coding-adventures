@@ -1009,14 +1009,70 @@ literal replacement (see just above), `REPLACING FIRST` (`FIRST` does not parse 
 replace keyword — it is deferred at parse time), a `{BEFORE|AFTER}` region on the
 LEADING half of the **combined** form, a
 multi-character region delimiter, a multi-item `REPLACING` list carrying a
-`LEADING`/`CHARACTERS`/`FIRST` item or a `{BEFORE|AFTER}` region, **several** replace
-items in the **combined** `TALLYING … REPLACING` form, a multi-character /
+`LEADING`/`CHARACTERS`/`FIRST` item (a `{BEFORE|AFTER}` region on each item of a
+multi-item list is now supported — see the per-item-region section just below),
+**several** replace items in the **combined** `TALLYING … REPLACING` form, a multi-character /
 figurative / wider / numeric search or replacement, and a numeric/group source.
 (A single-clause multi-item `REPLACING ALL` list is now supported — see just above.
 A `REPLACING LEADING` inside the combined `TALLYING … REPLACING` form, and a
 `{BEFORE|AFTER}` region on each `ALL` half of the combined form, are supported — see
 the combined section below; the STANDALONE `REPLACING LEADING … {BEFORE|AFTER}` is
 supported as described just above.)
+
+### Multi-item `REPLACING` with a per-item `{BEFORE|AFTER}` region (follow-up rung, v0.61.0 / v0.57.0)
+
+The multi-item `REPLACING` rung above and the single-item `REPLACING ALL … {BEFORE|AFTER}`
+region rung now **compose**: each item of a multi-item `REPLACING` list may carry its OWN
+optional `{BEFORE|AFTER}` region. Previously any region on a multi-item list was a later rung
+(rejected on both engines with "INSPECT REPLACING with several items and a BEFORE/AFTER region
+is a later rung"); that reject is now **lifted**. No grammar change is needed —
+`replace_item = (ALL|LEADING) operand BY operand inspect_region*` already parses per-item
+regions.
+
+**Semantics (ISO, exact composition of two shipped features).** ONE left-to-right pass over the
+ORIGINAL source. Each item's window is computed over the original via the SAME `region_window`
+helper the lone/single-item forms use: `BEFORE p`→`[0, first_index_of_p)`,
+`AFTER p`→`(first_index_of_p, len]`, with the not-found asymmetry BEFORE→whole / AFTER→empty; an
+item with NO region has the whole source as its window. At each position the items are tried IN
+WRITTEN ORDER and the FIRST item that BOTH (i) contains the position in its window AND (ii) whose
+single-char search equals the current ORIGINAL character WINS — the composition of multi-item
+first-match-wins with the per-item region gate. First-match-wins and no-re-chaining are unchanged
+(the scan always reads the original, never the produced char).
+
+Worked (`PIC X(5)`):
+- `"a0b0a"` with `ALL "a" BY "x" ALL "0" BY "*" BEFORE "b"` → `"x*b0x"` (both `a`s → `x`; only the
+  `0` at index 1, inside `[0,2)`, → `*`; the `0` at index 3 is outside its window and stays).
+- `"aXaXa"` with `ALL "a" BY "b" BEFORE "X" ALL "a" BY "c" AFTER "X"` → `"bXcXc"` (index 0 claimed
+  by the earlier `BEFORE` item; indices 2,4 by the `AFTER` item).
+- `"abab"` with `ALL "a" BY "*" AFTER "Z" ALL "b" BY "y"` → `"ayay"` (`AFTER "Z"` with `Z` absent
+  is an EMPTY window, so that item never fires; the region-less item still rewrites the `b`s).
+
+**Implementation.** The oracle's `Stmt::InspectReplacingMulti.items` becomes
+`Vec<(Operand, Operand, Option<Region>)>` (the third slot is the per-item region);
+`read_inspect_replacing_multi` reads each item's region with the same `read_inspect_region` the
+single-item reader uses, keeping the LEADING/CHARACTERS/FIRST rejects. `exec_inspect_replacing_multi`
+resolves every `(search, replace)` char pair AND its `[start, end)` window over the original
+source BEFORE mutating storage, then rebuilds in one pass gating each item's compare by
+`start <= i < end`. The compiler mirrors this: `ReplaceItem` carries the region node,
+`inspect_replacing_multi` parses it with the same extraction the single-item `inspect_replacing_all`
+uses, and `emit_inspect_replacing_multi` derives each item's `[start, end)` ONCE (before the
+unrolled `0..W` pass) with the SAME `emit_inspect_region_window` the single-item region emitter
+uses, then ANDs the position-in-window test into that item's `cmp_eq` link. The two engines' CST
+readers count the same `replace_item` children, so their accept/reject sets stay co-total.
+
+**Byte-safety.** The match only fires on a single-char ASCII search, so a multi-byte source char
+never equals a search byte (never falsely matched), and each window is content-defined (bounded by
+the first occurrence of an ASCII region delimiter), so the oracle (char indices) and the byte-based
+compiler (byte indices) agree on which positions are inside. The MATCH side is byte-safe. The
+RECONSTRUCTION of a source that itself contains a multi-byte char remains the PRE-EXISTING
+byte-vs-char chip shared by EVERY `REPLACING` lowering: the compiler rebuilds the field with
+per-position `str_slice`, which cannot slice a multi-byte char and traps — EXACTLY as the merged
+single-item `REPLACING ALL` does on the same source (the oracle iterates `char`s and succeeds; this
+divergence is not introduced here). This rung adds no new non-ASCII behavior.
+
+**Scope kept for a later rung** (unchanged, identical messages on both engines): a `LEADING` or
+`CHARACTERS`/`FIRST` item in a multi-item list, and the combined `TALLYING … REPLACING` form with
+several items. The single-item `REPLACING ALL … {BEFORE|AFTER}` path is untouched.
 
 ### Combined `INSPECT … TALLYING … REPLACING` (one statement)
 

@@ -2846,6 +2846,91 @@ mod tests {
     }
 
     #[test]
+    fn inspect_replacing_multi_items_each_with_a_region() {
+        // Per-item regions on a multi-item REPLACING (this rung). Source "a0b0a":
+        // item 1 `ALL "a" BY "x"` (no region → whole source) turns both "a"s to "x";
+        // item 2 `ALL "0" BY "*" BEFORE "b"` (window [0, index_of_b) = [0,2)) turns
+        // only the "0" at index 1 to "*"; the "0" at index 3 is outside the window and
+        // stays. Result "x*b0x".
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"a0b0a\"."],
+            &[
+                "INSPECT S REPLACING ALL \"a\" BY \"x\" ALL \"0\" BY \"*\" BEFORE \"b\".",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "x*b0x\n");
+    }
+
+    #[test]
+    fn inspect_replacing_multi_before_and_after_windows_first_match_wins() {
+        // Two items with differing windows over "aXaXa" (X at index 1, 3): item 1
+        // `ALL "a" BY "b" BEFORE "X"` (window [0,1)) claims only index 0; item 2
+        // `ALL "a" BY "c" AFTER "X"` (window (1,5]) claims indices 2 and 4. The "a" at
+        // index 0 is claimed by the earlier item (first-match-wins). Result "bXcXc".
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aXaXa\"."],
+            &[
+                "INSPECT S REPLACING ALL \"a\" BY \"b\" BEFORE \"X\"",
+                "    ALL \"a\" BY \"c\" AFTER \"X\".",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "bXcXc\n");
+    }
+
+    #[test]
+    fn inspect_replacing_multi_after_absent_delimiter_is_an_empty_window() {
+        // `AFTER x` with x absent → an EMPTY window: that item NEVER fires; the other
+        // (region-less) item still applies. Source "abab", item 1 `ALL "a" BY "*"
+        // AFTER "Z"` (no "Z" → empty window), item 2 `ALL "b" BY "y"` rewrites both
+        // "b"s. The "a"s stay untouched. Result "ayay".
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"abab\"."],
+            &[
+                "INSPECT S REPLACING ALL \"a\" BY \"*\" AFTER \"Z\" ALL \"b\" BY \"y\".",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "ayay\n");
+    }
+
+    #[test]
+    fn inspect_replacing_multi_leading_item_is_a_later_rung() {
+        // A LEADING item inside a multi-item list stays a later rung even now that
+        // per-item regions are supported — the multi path is ALL-only.
+        let err = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"aabb\"."],
+            &[
+                "INSPECT S REPLACING ALL \"a\" BY \"x\" LEADING \"b\" BY \"y\".",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_replacing_multi_characters_item_is_a_later_rung() {
+        // A CHARACTERS item inside a multi-item list stays a later rung.
+        let err = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"aabb\"."],
+            &[
+                "INSPECT S REPLACING ALL \"a\" BY \"x\" CHARACTERS BY \"y\".",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
     fn inspect_replacing_characters_non_ascii_literal_is_a_later_rung() {
         // A single but NON-ASCII replacement LITERAL ("é") is deferred so the oracle
         // stays co-total with the byte-based compiler (guard 2).

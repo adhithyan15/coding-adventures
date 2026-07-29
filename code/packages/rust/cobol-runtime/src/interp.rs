@@ -1314,44 +1314,80 @@ impl Machine {
     ///
     /// Every (search, replace) is validated with the SAME `single_delim_char` check
     /// the single-item path uses (a multi-character/figurative/wider/numeric operand
-    /// is a later rung); ALL of them are read BEFORE any mutation so an invalid item
-    /// leaves the source untouched. A numeric/group source is rejected by
-    /// [`Self::inspect_alnum_source`]. The read-time reader
-    /// (`read_inspect_replacing_multi`) has already ruled out LEADING/CHARACTERS/
-    /// FIRST/region items, so here every item is a plain `ALL` single-char pair.
+    /// is a later rung); ALL of them — AND every item's region window — are resolved
+    /// BEFORE any mutation so an invalid item leaves the source untouched. A
+    /// numeric/group source is rejected by [`Self::inspect_alnum_source`]. The
+    /// read-time reader (`read_inspect_replacing_multi`) has already ruled out
+    /// LEADING/CHARACTERS/FIRST items, so here every item is a plain `ALL` single-char
+    /// pair with an OPTIONAL `{BEFORE|AFTER} x` region.
+    ///
+    /// # Per-item regions (this rung)
+    ///
+    /// Each item may carry its OWN optional `{BEFORE|AFTER} x` window, computed over
+    /// the ORIGINAL source via the SAME [`Self::region_window`] helper the lone/
+    /// single-item forms use (BEFORE→`[0, first_x)`; AFTER→`(first_x, len]`; not-found
+    /// asymmetry BEFORE→whole, AFTER→empty). An item with NO region has the whole
+    /// source as its window. The single-pass first-match model is otherwise unchanged:
+    /// at each position the items are tried IN WRITTEN ORDER and the FIRST whose window
+    /// CONTAINS the position AND whose search equals the ORIGINAL char wins:
+    ///
+    /// ```text
+    ///   for i in 0..width {
+    ///       out[i] = src[i]                                   // default: unchanged
+    ///       for (search, replace, (start, end)) in items {    // written order
+    ///           if start <= i < end && src[i] == search { out[i] = replace; break }
+    ///       }
+    ///   }
+    /// ```
+    ///
+    /// This is the exact composition of the two already-merged features — multi-item
+    /// first-match-wins and single-item REPLACING-ALL-with-region — with the per-item
+    /// window ANDed into each link's compare. First-match-wins and no-re-chaining are
+    /// unchanged: the scan reads `chars` (the original) and never the output, and each
+    /// window is computed over that same original, so both engines agree byte-for-byte
+    /// (the match-based replacement only fires on a single-char ASCII search, so
+    /// multi-byte source chars pass through untouched and the rebuilt string stays
+    /// valid UTF-8 — the same byte-safety the single-item region form relies on).
     fn exec_inspect_replacing_multi(
         &mut self,
         source: &str,
-        items: &[(Operand, Operand)],
+        items: &[(Operand, Operand, Option<Region>)],
     ) -> Result<(), RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
-        // Resolve every (search, replace) to a char pair FIRST — reading all items
-        // before touching storage means an invalid operand aborts with the source
-        // half-untouched, exactly like the single-item path reads both chars first.
-        let pairs: Vec<(char, char)> = items
+        // ONE pass over the ORIGINAL characters — resolve them FIRST so the window
+        // (like the single-item path) sees the pre-replacement bytes, and so an
+        // invalid operand aborts with the source untouched.
+        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+        // Resolve every (search char, replace char, [start, end) window) FIRST —
+        // reading all items (and computing their windows over the original `chars`)
+        // before touching storage means an invalid operand aborts cleanly, exactly
+        // like the single-item path reads both chars and the window first.
+        let resolved: Vec<(char, char, usize, usize)> = items
             .iter()
-            .map(|(search, replace)| {
+            .map(|(search, replace, region)| {
                 let s = self.single_delim_char(search, "INSPECT REPLACING")?;
                 let r = self.single_delim_char(replace, "INSPECT REPLACING")?;
-                Ok((s, r))
+                let (start, end) = self.region_window(&chars, region.as_ref())?;
+                Ok((s, r, start, end))
             })
             .collect::<Result<_, RuntimeError>>()?;
 
-        // ONE pass over the ORIGINAL characters. At each position the first item in
-        // WRITTEN ORDER whose search matches wins; on no match the original char is
+        // At each position the first item in WRITTEN ORDER whose window CONTAINS the
+        // position AND whose search matches wins; on no match the original char is
         // kept. Because the scan reads `chars` (the original) and never the output,
         // a produced character is never re-examined — that is the no-re-chaining
-        // property (see the doc comment above).
-        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+        // property (see the doc comment above), and each window was computed over that
+        // same original, so first-match-per-position within windows is exact.
         let rebuilt: String = chars
             .iter()
-            .map(|&c| {
-                for (search_ch, replace_ch) in &pairs {
-                    if c == *search_ch {
-                        return *replace_ch; // first match wins, stop scanning items
+            .enumerate()
+            .map(|(i, &c)| {
+                for (search_ch, replace_ch, start, end) in &resolved {
+                    if *start <= i && i < *end && c == *search_ch {
+                        return *replace_ch; // first in-window match wins, stop scanning
                     }
                 }
-                c // matched no item — unchanged
+                c // matched no item's window — unchanged
             })
             .collect();
         self.move_into(sidx, Src::Chars(rebuilt))

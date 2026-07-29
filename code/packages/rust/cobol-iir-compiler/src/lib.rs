@@ -3266,11 +3266,14 @@ impl<'a> Compiler<'a> {
     ///
     /// ```text
     ///   result = ""
+    ///   # each item's window [start_k, end_k) is computed ONCE, before the unroll,
+    ///   # over the ORIGINAL source (via emit_inspect_region_window); a region-less
+    ///   # item has no window and its `in_win` guard folds away.
     ///   for j in 0..W:
     ///     c = S[j]
-    ///     if c == x0: result += y0; goto done_j        # first match wins…
-    ///     if c == x1: result += y1; goto done_j        # …later items only reached
-    ///     …                                            #    when all earlier missed
+    ///     if (start0 <= j < end0) && c == x0: result += y0; goto done_j   # first…
+    ///     if (start1 <= j < end1) && c == x1: result += y1; goto done_j   # …match…
+    ///     …                                            #    …in its window wins
     ///     result += S[j, j+1)                          # no item matched → original
     ///   done_j:
     ///   S = result
@@ -3282,31 +3285,68 @@ impl<'a> Compiler<'a> {
     /// produced character is never chained into a second replacement —
     /// `ALL "a" BY "b" ALL "b" BY "z"` over `"ab"` compiles to `"bz"`, not `"zz"`.
     ///
+    /// # Per-item regions (this rung)
+    ///
+    /// Each item may carry its OWN optional `{BEFORE|AFTER} x` window. We reuse
+    /// [`Self::emit_inspect_region_window`] — the SAME window the single-item region
+    /// emitter and the TALLYING side emit — to derive each item's `[start, end)` over
+    /// the ORIGINAL source ONCE, before the unroll (the runtime length is materialised
+    /// once, shared across all items that carry a region). At each unrolled position
+    /// `j` a region-carrying item's link tests `start <= j < end AND c == x`; a
+    /// region-less item's link is just `c == x` (its guard folds away). This is the
+    /// exact composition of the pre-existing multi-item first-match chain with the
+    /// single-item region gate, so the emitted output matches
+    /// `exec_inspect_replacing_multi` byte-for-byte.
+    ///
     /// Each item's search reduces to a byte code (`single_delim_code`, for the
     /// compare) and its replacement to a 1-char string (`single_delim_str`, for the
     /// concat), sharing the SAME single-character validation the single-item path
     /// uses — so a multi-character/figurative/wider/numeric operand is rejected
     /// identically. The read-side `inspect_replacing_multi` has already rejected
-    /// LEADING/CHARACTERS/FIRST/region items, so every item here is a plain `ALL`
-    /// single-char pair. Like the single-item emitter, the width-`W` `result` is
-    /// copied back into `s_reg` through an empty concat AFTER the last read, so the
-    /// source register is not overwritten mid-scan.
+    /// LEADING/CHARACTERS/FIRST items, so every item here is a plain `ALL` single-char
+    /// pair with an OPTIONAL region. Like the single-item emitter, the width-`W`
+    /// `result` is copied back into `s_reg` through an empty concat AFTER the last
+    /// read, so the source register is not overwritten mid-scan.
     fn emit_inspect_replacing_multi(
         &mut self,
         verb: &GrammarASTNode,
         s_reg: &str,
         width: usize,
     ) -> Result<(), CompileError> {
-        // The written-order list of `(search_node, replace_node)` pairs (the reader
-        // has enforced the `ALL`-only, no-region scope bound). Reduce each to a
-        // `(search byte code, replacement 1-char string)` register pair, IN ORDER, so
-        // the per-position chain below can walk them written-first.
+        // The written-order list of `(search_node, replace_node, region)` items (the
+        // reader has enforced the `ALL`-only scope bound; each item MAY carry its own
+        // region). If ANY item has a region we materialise the runtime length ONCE,
+        // over the ORIGINAL source, since `emit_inspect_region_window` needs it (and
+        // all region windows are computed over that same original, before the unroll
+        // overwrites `s_reg` at the very end).
         let item_nodes = inspect_replacing_multi(verb)?;
-        let mut regs: Vec<(String, String)> = Vec::with_capacity(item_nodes.len());
-        for (search_node, replace_node) in item_nodes {
+        let len = if item_nodes.iter().any(|(_, _, region)| region.is_some()) {
+            let l = self.fresh("_irmlen");
+            self.emit("str_len", Some(&l), vec![Operand::Var(s_reg.to_string())], "i64");
+            Some(l)
+        } else {
+            None
+        };
+        // Reduce each item to a `(search byte code, replacement 1-char string, window)`
+        // triple, IN ORDER, so the per-position chain below can walk them written-first.
+        // The window (when present) is derived by the SAME `emit_inspect_region_window`
+        // the single-item region emitter uses, so both engines narrow to identical
+        // slices. Operands and window are resolved BEFORE the unroll (mirroring the
+        // oracle, which resolves both chars and the window per item up front).
+        #[allow(clippy::type_complexity)]
+        let mut regs: Vec<(String, String, Option<(String, String)>)> =
+            Vec::with_capacity(item_nodes.len());
+        for (search_node, replace_node, region) in item_nodes {
             let x_reg = self.single_delim_code(search_node, "INSPECT REPLACING")?;
             let y_reg = self.single_delim_str(replace_node, "INSPECT REPLACING")?;
-            regs.push((x_reg, y_reg));
+            let window = match region {
+                None => None,
+                Some(_) => {
+                    let len = len.as_ref().expect("length materialised when a region is present");
+                    self.emit_inspect_region_window(region, s_reg, len)?
+                }
+            };
+            regs.push((x_reg, y_reg, window));
         }
 
         // result = "" — the accumulator we build W characters into.
@@ -3329,7 +3369,7 @@ impl<'a> Compiler<'a> {
             // append that item's replacement and jump to `done`, skipping the rest —
             // first-match-wins. A miss jumps to the next link (`next`); after the last
             // link's `next` we fall through to the no-match branch below.
-            for (x_reg, y_reg) in &regs {
+            for (x_reg, y_reg, window) in &regs {
                 let eq = self.fresh("_irmeq");
                 self.emit(
                     "cmp_eq",
@@ -3337,11 +3377,41 @@ impl<'a> Compiler<'a> {
                     vec![Operand::Var(c.clone()), Operand::Var(x_reg.clone())],
                     "i64",
                 );
+                // Gate the compare by this item's window: `matched = (start <= j < end)
+                // AND (c == x)`. `j` is the compile-time position materialised into a
+                // register so it can be compared against the runtime bounds. A
+                // region-less item folds down to `eq` alone (no window emitted).
+                let matched = match window {
+                    None => eq,
+                    Some((start, end_bound)) => {
+                        let jreg = self.fresh("_irmjr");
+                        self.emit("const", Some(&jreg), vec![Operand::Int(j as i64)], "i64");
+                        let ge = self.fresh("_irmge");
+                        self.emit(
+                            "cmp_ge",
+                            Some(&ge),
+                            vec![Operand::Var(jreg.clone()), Operand::Var(start.clone())],
+                            "i64",
+                        );
+                        let lt = self.fresh("_irmlt");
+                        self.emit(
+                            "cmp_lt",
+                            Some(&lt),
+                            vec![Operand::Var(jreg), Operand::Var(end_bound.clone())],
+                            "i64",
+                        );
+                        let inw = self.fresh("_irmin");
+                        self.emit("and", Some(&inw), vec![Operand::Var(ge), Operand::Var(lt)], "i64");
+                        let m = self.fresh("_irmm");
+                        self.emit("and", Some(&m), vec![Operand::Var(inw), Operand::Var(eq)], "i64");
+                        m
+                    }
+                };
                 let next = self.fresh("irm_next");
                 self.emit(
                     "jmp_if_false",
                     None,
-                    vec![Operand::Var(eq), Operand::Var(next.clone())],
+                    vec![Operand::Var(matched), Operand::Var(next.clone())],
                     "void",
                 );
                 self.emit(
@@ -6266,11 +6336,15 @@ fn inspect_tally_counters(
 type ReplacePhrase<'a> =
     (&'a GrammarASTNode, &'a GrammarASTNode, bool, Option<(RegionKind, &'a GrammarASTNode)>);
 
-/// One `ALL search BY replace` item of a MULTI-item REPLACING clause:
-/// `(search_node, replace_node)`. Regionless and `ALL`-only by construction (the
-/// multi-item scope bound), so — unlike [`ReplacePhrase`] — it carries no `leading`
-/// flag or region.
-type ReplaceItem<'a> = (&'a GrammarASTNode, &'a GrammarASTNode);
+/// One `ALL search BY replace [{BEFORE|AFTER} x]` item of a MULTI-item REPLACING
+/// clause: `(search_node, replace_node, region)`, where `region` is the optional
+/// `{BEFORE|AFTER} x` window as `(kind, region_delim_node)` — the SAME shape
+/// [`ReplacePhrase`] carries. `ALL`-only by construction (the multi-item scope
+/// bound), so — unlike [`ReplacePhrase`] — it carries no `leading` flag, but each
+/// item now carries its OWN optional region window (this rung lifts the region
+/// reject).
+type ReplaceItem<'a> =
+    (&'a GrammarASTNode, &'a GrammarASTNode, Option<(RegionKind, &'a GrammarASTNode)>);
 
 /// Extract the supported `REPLACING ALL search BY replace [{BEFORE|AFTER} x]` /
 /// `REPLACING LEADING search BY replace` phrase from an `inspect_stmt`, returning
@@ -6368,10 +6442,13 @@ fn inspect_replacing_all(verb: &GrammarASTNode) -> Result<ReplacePhrase<'_>, Com
 /// item keeps [`inspect_replacing_all`] and all its capabilities.
 ///
 /// Scope bound (this rung, IDENTICAL messages to the oracle reader): every item must
-/// be a plain `ALL` item with NO region and NO `LEADING`/`CHARACTERS`/`FIRST`. Any
-/// violating item is a clean later-rung `Unsupported`. A multi-character/figurative/
-/// wider/numeric search or replacement is NOT rejected here — it falls to the SAME
-/// `single_delim_code`/`single_delim_str` checks the single-item emitter uses.
+/// be a plain `ALL` item with NO `LEADING`/`CHARACTERS`/`FIRST`. Each item MAY now
+/// carry its OWN optional `{BEFORE|AFTER} x` region — the region reject is LIFTED,
+/// parsed with the SAME keyword/operand extraction [`inspect_replacing_all`] uses on
+/// the single-item side. Any violating item is a clean later-rung `Unsupported`. A
+/// multi-character/figurative/wider/numeric search, replacement, or region delimiter
+/// is NOT rejected here — it falls to the SAME `single_delim_code`/`single_delim_str`
+/// checks the single-item emitter uses.
 fn inspect_replacing_multi(verb: &GrammarASTNode) -> Result<Vec<ReplaceItem<'_>>, CompileError> {
     let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
         CompileError::Unsupported("INSPECT without a REPLACING clause is a later rung".into())
@@ -6394,17 +6471,39 @@ fn inspect_replacing_multi(verb: &GrammarASTNode) -> Result<Vec<ReplaceItem<'_>>
                 "INSPECT REPLACING with several items and a LEADING item is a later rung".into(),
             ));
         }
-        if child_node(ri, "inspect_region").is_some() {
-            return Err(CompileError::Unsupported(
-                "INSPECT REPLACING with several items and a BEFORE/AFTER region is a later rung"
-                    .into(),
-            ));
-        }
-        // `ALL search BY replace` — with no region the two direct `operand` children
-        // are exactly the search (first) and the replacement (second).
+        // A `{BEFORE|AFTER} x` region on an item is now ACCEPTED (this rung): parse it
+        // into `Option<(RegionKind, node)>` with the SAME keyword/operand extraction
+        // `inspect_replacing_all` uses on the single-item side. The region contributes
+        // its own delimiter operand under the `inspect_region` child, not a direct
+        // child of `replace_item`, so the two DIRECT `operand` children below are still
+        // exactly the search and replacement.
+        let region = match child_node(ri, "inspect_region") {
+            None => None,
+            Some(region_node) => {
+                let rtoks = child_tokens(region_node);
+                let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+                    RegionKind::Before
+                } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+                    RegionKind::After
+                } else {
+                    return Err(CompileError::Unsupported(
+                        "INSPECT region without a BEFORE or AFTER keyword".into(),
+                    ));
+                };
+                let rdelim = child_node(region_node, "operand").ok_or_else(|| {
+                    CompileError::Malformed(
+                        "INSPECT BEFORE/AFTER region without a delimiter".into(),
+                    )
+                })?;
+                Some((kind, rdelim))
+            }
+        };
+        // `ALL search BY replace` — the two DIRECT `operand` children are exactly the
+        // search (first) and the replacement (second); a region's delimiter rides on
+        // the `inspect_region` child, not here.
         let ops = child_nodes(ri, "operand");
         match ops.as_slice() {
-            [s, r] => items.push((*s, *r)),
+            [s, r] => items.push((*s, *r, region)),
             _ => {
                 return Err(CompileError::Malformed(
                     "INSPECT REPLACING ALL without a search and a BY replacement".into(),
