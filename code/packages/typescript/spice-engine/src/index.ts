@@ -7763,6 +7763,27 @@ export function mosfetAtTemperature(
   const temperatureBulkJunctionPotential =
     temperatureFactor * nominalBulkJunctionPotential +
     potentialCorrection(temperatureKelvin);
+  const nominalBulkPotentialShift =
+    (element.params.PB - nominalBulkJunctionPotential) / nominalBulkJunctionPotential;
+  const temperatureBulkPotentialShift =
+    (temperatureBulkJunctionPotential - nominalBulkJunctionPotential) /
+    nominalBulkJunctionPotential;
+  const capacitanceScale = (gradingCoefficient: number): number => {
+    const nominalScale =
+      1.0 /
+      (1.0 +
+        gradingCoefficient *
+          (4.0e-4 * (nominalTemperatureKelvin - referenceTemperatureKelvin) -
+            nominalBulkPotentialShift));
+    const temperatureScale =
+      1.0 +
+      gradingCoefficient *
+        (4.0e-4 * (temperatureKelvin - referenceTemperatureKelvin) -
+          temperatureBulkPotentialShift);
+    return nominalScale * temperatureScale;
+  };
+  const bottomCapacitanceScale = capacitanceScale(element.params.MJ);
+  const sidewallCapacitanceScale = capacitanceScale(element.params.MJSW);
   const polarity = element.type === "NMOS" ? 1.0 : -1.0;
   const temperatureVbi =
     element.params.VT0 -
@@ -7785,6 +7806,10 @@ export function mosfetAtTemperature(
       VT0: temperatureVt0,
       PHI: temperaturePhi,
       PB: temperatureBulkJunctionPotential,
+      CJ: element.params.CJ * bottomCapacitanceScale,
+      CBS: element.params.CBS * bottomCapacitanceScale,
+      CBD: element.params.CBD * bottomCapacitanceScale,
+      CJSW: element.params.CJSW * sidewallCapacitanceScale,
       KP: element.params.KP * ratio ** -1.5,
       U0: element.params.U0 * ratio ** -1.5,
       IS: element.params.IS * saturationScale,
