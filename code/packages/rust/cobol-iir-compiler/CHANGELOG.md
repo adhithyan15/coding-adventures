@@ -8,6 +8,36 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.59.0: INSPECT TALLYING several counters each item with a BEFORE/AFTER region
+
+`INSPECT source TALLYING c1 FOR ALL a [{BEFORE|AFTER} p] [ALL b …] c2 FOR ALL d [{BEFORE|AFTER} q] …`
+— the SEVERAL-COUNTERS TALLYING form (two or more `tally_for` groups) where each `ALL` delimiter item
+of ANY group may now carry its OWN optional `{BEFORE|AFTER}` window, compiled byte-identical to the
+`coding-adventures-cobol-runtime` 0.63.0 oracle. Previously any region in the multi-counter path was
+rejected at emit time ("INSPECT TALLYING with several counters and a BEFORE/AFTER region is a later
+rung"); that reject is now LIFTED. No grammar change was needed. This is the multi-COUNTER analogue
+of the v0.58.0 single-counter multi-item TALLYING-region rung.
+
+- `inspect_tally_counters` now returns `Vec<TallyCounterGroup>` (`= (String, Vec<TallyItem>)`),
+  parsing each item's region with the same keyword/operand extraction the single-item
+  `inspect_tally_all` uses. The LEADING/CHARACTERS rejects are UNCHANGED (the path stays `ALL`-only).
+- `emit_inspect_tally_counters` materialises `str_len(S)` ONCE up front, then flattens every delimiter
+  to a new `FlatCounterDelim` = `(group_index, delim_byte_code, Option<[start,end) window>)` in
+  WRITTEN ORDER — deriving each item's window with the SAME `emit_inspect_region_window` the
+  single-item region emitter uses, materialised BEFORE the loop. In its runtime `str_len`-bounded
+  scan each region-carrying entry's `cmp_eq` link now gates on `start <= j < end AND c == D` against
+  the RUNTIME position register `j` (a region-less entry folds to `eq` alone — byte-identical to the
+  old lowering). The first in-window match bumps that group's accumulator and jumps to the j-advance
+  (first-match-wins across counters); each per-group accumulator is added to its counter afterward,
+  re-reading the counter's register fresh so a shared counter accumulates both shares.
+- Non-ASCII-clean POSITIVE parity (NOT a trap): TALLYING only COUNTS, so the byte-based scan and the
+  char-based oracle count identically even on a non-ASCII source; a new e2e test pins `"aé0b0"` with
+  `C1 FOR ALL "0" BEFORE "b"  C2 FOR ALL "0" AFTER "b"` → C1=1, C2=1 on both engines.
+- New e2e tests (all via `assert_matches_oracle`): two groups with mixed BEFORE/AFTER regions, a
+  region item + a region-less item across groups, an empty AFTER-absent window, an earlier window
+  starving a later group, the same counter in two groups each with a region, the non-ASCII positive
+  parity, and the still-rejected LEADING / CHARACTERS items.
+
 ### Added — v0.58.0: INSPECT TALLYING several items each with a BEFORE/AFTER region
 
 `INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q] …` — each

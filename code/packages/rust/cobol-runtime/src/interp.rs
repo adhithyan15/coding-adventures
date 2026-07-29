@@ -5,7 +5,7 @@ use crate::error::RuntimeError;
 use crate::picture::Picture;
 use crate::program::{
     ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program, RefIndex, Region,
-    RegionKind, RelOp, Stmt, ValueSpec, WhenValue,
+    RegionKind, RelOp, Stmt, TallyCounterGroup, ValueSpec, WhenValue,
 };
 use crate::value::{add, div, move_into_char, move_into_numeric, mul, pow, round, sub, Decimal};
 use std::collections::HashMap;
@@ -1568,25 +1568,32 @@ impl Machine {
         self.store_result(counter, acc, false, &[])
     }
 
-    /// `INSPECT src TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d …` — several counters,
-    /// each with its own delimiter list, folded through ONE combined priority list in a
-    /// SINGLE left-to-right pass. This generalises [`Self::exec_inspect_tally_multi`]
-    /// from one counter to a list of `(counter, delimiter)` pairs where the matched
-    /// pair's OWN counter is bumped.
+    /// `INSPECT src TALLYING c1 FOR ALL a [{BEFORE|AFTER} p] [ALL b …] c2 FOR ALL d …` —
+    /// several counters, each with its own delimiter list, and each delimiter item now
+    /// carrying its OWN optional `{BEFORE|AFTER}` region window, folded through ONE
+    /// combined priority list in a SINGLE left-to-right pass. This generalises
+    /// [`Self::exec_inspect_tally_multi`] from one counter to a list of `(counter,
+    /// delimiter, window)` entries where the matched entry's OWN counter is bumped.
     ///
     /// ISO COMBINED-PRIORITY-LIST-ACROSS-COUNTERS semantics (the crux): all delimiters
     /// of all groups, flattened in WRITTEN ORDER (group 1's items first, then group 2's,
-    /// …), form ONE ordered priority list. At each source position that list is walked in
-    /// order and the FIRST delimiter that matches bumps ITS OWN group's counter, then the
-    /// scan advances (single-char ⇒ a normal one-position step). The `break` means an
-    /// earlier group's delimiter CONSUMES the position — a character it claims NEVER
-    /// reaches a later group's delimiter, so `"aa" TALLYING C1 FOR ALL "a" C2 FOR ALL "a"`
-    /// gives C1 += 2, C2 += 0 (group 1 wins both positions). A position matching no
-    /// delimiter advances with no increment.
+    /// …), form ONE ordered priority list, each entry carrying its item's `[start, end)`
+    /// window. At each source position that list is walked in order and the FIRST entry
+    /// whose window contains the position AND whose delimiter matches bumps ITS OWN
+    /// group's counter, then the scan advances (single-char ⇒ a normal one-position
+    /// step). The `break` means an earlier group's (in-window) delimiter CONSUMES the
+    /// position — a character it claims NEVER reaches a later group's delimiter, so
+    /// `"aa" TALLYING C1 FOR ALL "a" C2 FOR ALL "a"` gives C1 += 2, C2 += 0 (group 1
+    /// wins both positions). A position matching no in-window delimiter advances with no
+    /// increment. Each item's window is derived by the SHARED [`Self::region_window`]
+    /// helper over the source chars (a region-less item = the whole source), applying the
+    /// ISO not-found asymmetry (BEFORE→whole, AFTER→empty). Every delimiter and every
+    /// region delimiter is resolved BEFORE the scan, so an invalid operand aborts with
+    /// every counter untouched.
     fn exec_inspect_tally_counters(
         &mut self,
         source: &str,
-        groups: &[(String, Vec<Operand>)],
+        groups: &[TallyCounterGroup],
     ) -> Result<Flow, RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
 
@@ -1615,27 +1622,34 @@ impl Machine {
             }
         }
 
-        // Flatten every delimiter to `(group_index, char)` in WRITTEN ORDER, resolving
-        // all of them (via the SAME `single_delim_char` the single-item path uses, so an
-        // invalid operand rejects identically) BEFORE the scan. `group_index` remembers
-        // which counter a match belongs to.
-        let mut flat: Vec<(usize, char)> = Vec::new();
-        for (gi, (_counter, delims)) in groups.iter().enumerate() {
-            for d in delims {
-                flat.push((gi, self.single_delim_char(d, "INSPECT")?));
+        // The source characters — resolved FIRST so every item's window is computed over
+        // these same chars (and so an invalid operand aborts with the counters untouched).
+        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+
+        // Flatten every delimiter to `(group_index, char, start, end)` in WRITTEN ORDER,
+        // resolving all delimiters AND all windows (via the SAME `single_delim_char` /
+        // `region_window` the single-item path uses, so an invalid operand rejects
+        // identically) BEFORE the scan. `group_index` remembers which counter a match
+        // belongs to; `[start, end)` is the item's window (a region-less item =
+        // `region_window(None) == (0, len)`, the whole source).
+        let mut flat: Vec<(usize, char, usize, usize)> = Vec::new();
+        for (gi, (_counter, items)) in groups.iter().enumerate() {
+            for (delim, region) in items {
+                let dch = self.single_delim_char(delim, "INSPECT")?;
+                let (start, end) = self.region_window(&chars, region.as_ref())?;
+                flat.push((gi, dch, start, end));
             }
         }
 
-        // ONE pass over the source. Per position walk the flattened list in order; the
-        // FIRST match bumps that group's accumulator and breaks (first-match-wins across
-        // counters). A per-GROUP accumulator (not per counter NAME) keeps the counts
-        // separate even when two groups share a counter name — they are summed into that
-        // one item below.
+        // ONE pass over the source. Per position `i` walk the flattened list in order;
+        // the FIRST entry whose window contains `i` AND whose delimiter matches bumps that
+        // group's accumulator and breaks (first-match-wins across counters). A per-GROUP
+        // accumulator (not per counter NAME) keeps the counts separate even when two
+        // groups share a counter name — they are summed into that one item below.
         let mut accs = vec![0usize; groups.len()];
-        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
-        for ch in chars {
-            for (gi, dch) in &flat {
-                if ch == *dch {
+        for (i, ch) in chars.iter().enumerate() {
+            for (gi, dch, start, end) in &flat {
+                if *start <= i && i < *end && *ch == *dch {
                     accs[*gi] += 1;
                     break;
                 }

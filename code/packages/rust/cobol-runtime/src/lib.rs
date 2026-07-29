@@ -2998,6 +2998,95 @@ mod tests {
     }
 
     #[test]
+    fn inspect_tally_counters_items_each_with_a_region() {
+        // Per-item regions in the SEVERAL-COUNTERS form (this rung). Source "aXaXa"
+        // (X at char indices 1 and 3), two counter groups:
+        //   C1 `ALL "a" BEFORE "X"`: window [0,1) → the "a" at index 0 → C1=1;
+        //   C2 `ALL "a" AFTER "X"`:  window [2,5) → the "a"s at indices 2, 4 → C2=2.
+        // The combined pass counts each position for the first in-window matching entry.
+        let out = run_cobol(&wrap(
+            &[
+                "01  S   PIC X(5) VALUE \"aXaXa\".",
+                "01  C1  PIC 9(3) VALUE 0.",
+                "01  C2  PIC 9(3) VALUE 0.",
+            ],
+            &[
+                "INSPECT S TALLYING C1 FOR ALL \"a\" BEFORE \"X\"",
+                "    C2 FOR ALL \"a\" AFTER \"X\".",
+                "DISPLAY C1.",
+                "DISPLAY C2.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "001\n002\n");
+    }
+
+    #[test]
+    fn inspect_tally_counters_earlier_window_starves_later_group() {
+        // CROSS-COUNTER first-match with a WINDOW: an earlier group's IN-WINDOW delimiter
+        // claims a position, starving a later group of it. Source "aZa" (Z at index 1),
+        // both groups matching "a": C1 `ALL "a" BEFORE "Z"` (window [0,1) → only index 0)
+        // claims index 0; C2 `ALL "a"` (whole source) then only sees index 2 → C1=1, C2=1
+        // (NOT C2=2 — index 0 was starved by C1's in-window delimiter).
+        let out = run_cobol(&wrap(
+            &[
+                "01  S   PIC X(3) VALUE \"aZa\".",
+                "01  C1  PIC 9(3) VALUE 0.",
+                "01  C2  PIC 9(3) VALUE 0.",
+            ],
+            &[
+                "INSPECT S TALLYING C1 FOR ALL \"a\" BEFORE \"Z\"",
+                "    C2 FOR ALL \"a\".",
+                "DISPLAY C1.",
+                "DISPLAY C2.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "001\n001\n");
+    }
+
+    #[test]
+    fn inspect_tally_counters_same_counter_two_groups_with_regions() {
+        // The SAME counter name in two groups, each with its OWN region — both regions'
+        // hits ADD to that one item. Source "0b0" (b at index 1): group0 `C FOR ALL "0"
+        // BEFORE "b"` (window [0,1) → index 0) and group1 `C FOR ALL "0" AFTER "b"`
+        // (window [2,3) → index 2) each contribute 1 → C = 0 + 1 + 1 = 2.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"0b0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"b\"",
+                "    C FOR ALL \"0\" AFTER \"b\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "002\n");
+    }
+
+    #[test]
+    fn inspect_tally_counters_leading_item_is_a_later_rung() {
+        // A LEADING item in ANY group of the several-counters path stays a later rung
+        // even now that per-item regions are supported — the multi-counter path is
+        // ALL-only.
+        let err = run_cobol(&wrap(
+            &[
+                "01  S   PIC X(4) VALUE \"aabb\".",
+                "01  C1  PIC 9(3) VALUE 0.",
+                "01  C2  PIC 9(3) VALUE 0.",
+            ],
+            &[
+                "INSPECT S TALLYING C1 FOR ALL \"a\"",
+                "    C2 FOR LEADING \"b\".",
+                "STOP RUN.",
+            ],
+        ));
+        assert!(err.is_err(), "a multi-counter LEADING item must be a later rung");
+    }
+
+    #[test]
     fn inspect_replacing_multi_leading_item_is_a_later_rung() {
         // A LEADING item inside a multi-item list stays a later rung even now that
         // per-item regions are supported — the multi path is ALL-only.
