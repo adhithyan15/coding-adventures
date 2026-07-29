@@ -780,6 +780,14 @@ fn mos_model_card_gate_material_shifts_process_derived_threshold() {
         Err(SpiceError::InvalidElement { reason, .. })
             if reason == "MOSFET TPG must be -1, 0, or 1"
     ));
+
+    for invalid_nss in [-1.0, f64::INFINITY, f64::NAN] {
+        assert!(matches!(
+            normalize_model_card("Minvalid", "nmos", &[("NSS", invalid_nss)]),
+            Err(SpiceError::InvalidElement { reason, .. })
+                if reason == "MOSFET NSS must be finite and non-negative"
+        ));
+    }
 }
 
 #[test]

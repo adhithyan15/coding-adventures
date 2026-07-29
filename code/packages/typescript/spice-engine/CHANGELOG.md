@@ -1,5 +1,7 @@
 # Changelog
 
+- Reject negative or non-finite Level-1 MOS model-card `NSS` surface-state
+  densities with a stable diagnostic before threshold preprocessing.
 - Accept Berkeley Level-1 MOS model-card `TPG` gate-material selectors and use
   their `-1`, `0`, or `1` work-function branches when deriving `VT0`, while
   preserving explicit threshold-voltage precedence.
