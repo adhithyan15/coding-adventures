@@ -44,21 +44,21 @@
 //! ### Explicit non-goals (v1)
 //!
 //! - `float` / `clear` / absolute positioning
-//! - Mixed block + inline children with anonymous-block promotion. The
-//!   primary upstream producer (`document-ast-to-layout`) already emits
-//!   strictly block-or-leaf trees, so the missing inline-flow path is
-//!   not a blocker for Markdown.
+//! - Full CSS inline formatting: text-run fragmentation, baseline alignment,
+//!   justification, and splitting one inline box across multiple line boxes.
+//!   The bounded inline path implemented here treats each child as an atomic
+//!   inline box and wraps it as a unit.
 //! - RTL / bidi
 //! - CSS columns
 //!
 //! Each exclusion matches the spec's documented non-goals.
 
 use layout_ir::{
-    Constraints, Content, Edges, LayoutNode, MeasureResult, PositionedNode, SizeValue,
+    Constraints, Content, Edges, ExtValue, LayoutNode, MeasureResult, PositionedNode, SizeValue,
     TextContent, TextMeasurer,
 };
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Entry point
@@ -123,7 +123,15 @@ fn lay_out_any<M: TextMeasurer>(
     if is_leaf_text {
         if let Some(Content::Text(tc)) = &node.content {
             return lay_out_text_leaf(
-                node, tc, constraints, measurer, x, y, margin, padding, outer_max_width,
+                node,
+                tc,
+                constraints,
+                measurer,
+                x,
+                y,
+                margin,
+                padding,
+                outer_max_width,
                 padding_horizontal,
             );
         }
@@ -149,7 +157,7 @@ fn lay_out_any<M: TextMeasurer>(
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Container layout — stack block children vertically
+// Container layout — block stacking plus bounded atomic inline flow
 // ═══════════════════════════════════════════════════════════════════════════
 
 #[allow(clippy::too_many_arguments)]
@@ -164,27 +172,93 @@ fn lay_out_container<M: TextMeasurer>(
     outer_max_width: f64,
     padding_horizontal: f64,
 ) -> PositionedNode {
-    // Resolve the container's outer width.
+    // Use the full available width while placing children. Inline containers
+    // with `Wrap` width shrink to their occupied line width after placement.
     let outer_width = resolve_container_width(node, outer_max_width);
     let inner_max_width = (outer_width - padding_horizontal).max(0.0);
 
-    // Lay out children in source order, stacking vertically.
+    // Lay out children in source order. Nodes without display metadata retain
+    // the original block-stacking behavior. Consecutive inline-level nodes
+    // share an atomic line box and wrap as units when the next box does not fit.
     let mut children_positioned: Vec<PositionedNode> = Vec::with_capacity(node.children.len());
     let mut cursor_y = padding.top;
+    let mut inline_cursor_x = padding.left;
+    let mut inline_line_height: f64 = 0.0;
+    let mut max_inline_right = padding.left;
     let mut prev_margin_bottom: f64 = 0.0;
-    let mut have_placed_a_child = false;
+    let mut have_placed_block = false;
+    let mut inline_line_open = false;
 
     for child in &node.children {
         let child_margin = child.margin.unwrap_or_default();
+        let child_display = display_value(child);
+
+        if is_inline_level(child_display) || child_display == Some("line-break") {
+            if child_display == Some("line-break") {
+                let mut positioned = lay_out_any(
+                    child,
+                    unconstrained_height(inner_max_width),
+                    measurer,
+                    inline_cursor_x,
+                    cursor_y,
+                );
+                positioned.width = 0.0;
+                positioned.x = inline_cursor_x;
+                positioned.y = cursor_y;
+                let break_height = positioned.height + child_margin.top + child_margin.bottom;
+                children_positioned.push(positioned);
+                cursor_y += inline_line_height.max(break_height);
+                inline_cursor_x = padding.left;
+                inline_line_height = 0.0;
+                inline_line_open = false;
+                have_placed_block = false;
+                prev_margin_bottom = 0.0;
+                continue;
+            }
+
+            let mut positioned = lay_out_any(
+                child,
+                unconstrained_height(inner_max_width),
+                measurer,
+                0.0,
+                0.0,
+            );
+            let item_width = child_margin.left + positioned.width + child_margin.right;
+            let remaining = padding.left + inner_max_width - inline_cursor_x;
+            if inline_line_open && item_width > remaining {
+                cursor_y += inline_line_height;
+                inline_cursor_x = padding.left;
+                inline_line_height = 0.0;
+            }
+
+            positioned.x = inline_cursor_x + child_margin.left;
+            positioned.y = cursor_y + child_margin.top;
+            inline_cursor_x += item_width;
+            inline_line_height =
+                inline_line_height.max(child_margin.top + positioned.height + child_margin.bottom);
+            max_inline_right = max_inline_right.max(inline_cursor_x);
+            inline_line_open = true;
+            have_placed_block = false;
+            prev_margin_bottom = 0.0;
+            children_positioned.push(positioned);
+            continue;
+        }
+
+        if inline_line_open {
+            cursor_y += inline_line_height;
+            inline_cursor_x = padding.left;
+            inline_line_height = 0.0;
+            inline_line_open = false;
+        }
 
         // Margin collapse between adjacent block siblings.
-        let collapsed_top = if have_placed_a_child {
+        let collapsed_top = if have_placed_block {
             collapse_margin(prev_margin_bottom, child_margin.top)
         } else {
             child_margin.top
         };
 
-        if have_placed_a_child {
+        if have_placed_block {
             // Subtract the previously-added margin.bottom because we
             // are replacing it with the collapsed value.
             cursor_y -= prev_margin_bottom;
@@ -196,12 +270,7 @@ fn lay_out_container<M: TextMeasurer>(
         // Child constraints: width-limited by the container's inner
         // content area; height is unconstrained here — the parent
         // accumulates it from children.
-        let child_constraints = Constraints {
-            min_width: 0.0,
-            max_width: inner_max_width,
-            min_height: 0.0,
-            max_height: f64::MAX,
-        };
+        let child_constraints = unconstrained_height(inner_max_width);
 
         // Pass parent-relative x/y to the child. Coordinates are
         // relative to the parent's content-area origin (per UI02
@@ -214,14 +283,25 @@ fn lay_out_container<M: TextMeasurer>(
         cursor_y += positioned.height + child_margin.bottom;
 
         prev_margin_bottom = child_margin.bottom;
-        have_placed_a_child = true;
+        have_placed_block = true;
         children_positioned.push(positioned);
     }
 
+    if inline_line_open {
+        cursor_y += inline_line_height;
+    }
     let content_height = cursor_y + padding.bottom;
 
     // Resolve outer height: explicit hint overrides content height.
     let outer_height = resolve_container_height(node, content_height);
+    let occupied_inline_width = max_inline_right + padding.right;
+    let outer_width = if is_inline_level(display_value(node))
+        && matches!(node.width, Some(SizeValue::Wrap) | None)
+    {
+        clamp_with_min_max(occupied_inline_width, node.min_width, node.max_width).min(outer_width)
+    } else {
+        outer_width
+    };
 
     PositionedNode {
         x,
@@ -233,6 +313,29 @@ fn lay_out_container<M: TextMeasurer>(
         children: children_positioned,
         ext: node.ext.clone(),
     }
+}
+
+fn unconstrained_height(max_width: f64) -> Constraints {
+    Constraints {
+        min_width: 0.0,
+        max_width,
+        min_height: 0.0,
+        max_height: f64::MAX,
+    }
+}
+
+fn display_value(node: &LayoutNode) -> Option<&str> {
+    let ExtValue::Map(values) = node.ext.get("block")? else {
+        return None;
+    };
+    let ExtValue::Str(display) = values.get("display")? else {
+        return None;
+    };
+    Some(display)
+}
+
+fn is_inline_level(display: Option<&str>) -> bool {
+    matches!(display, Some("inline" | "inline-text" | "inline-replaced"))
 }
 
 fn resolve_container_width(node: &LayoutNode, outer_max_width: f64) -> f64 {
@@ -285,13 +388,7 @@ fn lay_out_text_leaf<M: TextMeasurer>(
     let inner_max_width = (outer_max_width - padding_horizontal).max(0.0);
 
     // Ask the measurer to wrap within the inner max width.
-    let max_wrap_width = if node.width == Some(SizeValue::Wrap) {
-        None
-    } else {
-        Some(inner_max_width)
-    };
-
-    let measured: MeasureResult = measurer.measure(&tc.value, &tc.font, max_wrap_width);
+    let measured: MeasureResult = measurer.measure(&tc.value, &tc.font, Some(inner_max_width));
 
     // The node's outer width: for Fill / None, use the full outer_max_width.
     // For Wrap or Fixed, base on the measurement (or the hint).
@@ -300,8 +397,8 @@ fn lay_out_text_leaf<M: TextMeasurer>(
         Some(SizeValue::Wrap) => (measured.width + padding_horizontal).min(outer_max_width),
         Some(SizeValue::Fill) | None => outer_max_width,
     };
-    let outer_width = clamp_with_min_max(outer_width, node.min_width, node.max_width)
-        .min(outer_max_width);
+    let outer_width =
+        clamp_with_min_max(outer_width, node.min_width, node.max_width).min(outer_max_width);
 
     let content_height = measured.height;
     let outer_height_raw = content_height + padding.top + padding.bottom;
@@ -346,8 +443,8 @@ fn lay_out_image_leaf(
         Some(SizeValue::Fixed(v)) => v,
         _ => outer_max_width,
     };
-    let outer_width = clamp_with_min_max(outer_width, node.min_width, node.max_width)
-        .min(outer_max_width);
+    let outer_width =
+        clamp_with_min_max(outer_width, node.min_width, node.max_width).min(outer_max_width);
 
     let outer_height = match node.height {
         Some(SizeValue::Fixed(v)) => v,
@@ -388,17 +485,14 @@ mod tests {
 
     impl MonoMeasurer {
         fn new() -> Self {
-            Self { char_width_factor: 0.5 }
+            Self {
+                char_width_factor: 0.5,
+            }
         }
     }
 
     impl TextMeasurer for MonoMeasurer {
-        fn measure(
-            &self,
-            text: &str,
-            font: &FontSpec,
-            max_width: Option<f64>,
-        ) -> MeasureResult {
+        fn measure(&self, text: &str, font: &FontSpec, max_width: Option<f64>) -> MeasureResult {
             let chars = text.chars().count() as f64;
             let full_width = chars * self.char_width_factor * font.size;
             let line_h = font.size * font.line_height;
@@ -430,7 +524,12 @@ mod tests {
         TextContent {
             value: value.into(),
             font: font_spec("Test", size),
-            color: Color { r: 0, g: 0, b: 0, a: 255 },
+            color: Color {
+                r: 0,
+                g: 0,
+                b: 0,
+                a: 255,
+            },
             max_lines: None,
             text_align: TextAlign::Start,
         }
@@ -458,6 +557,58 @@ mod tests {
         let p = layout_block(&node, constraints_fixed(500.0, 500.0), &MonoMeasurer::new());
         // "Hi" = 2 × 0.5 × 10 = 10 wide
         assert_eq!(p.width, 10.0);
+    }
+
+    #[test]
+    fn inline_children_share_a_line() {
+        let node = LayoutNode::container(vec![
+            inline_text("ab", 10.0),
+            inline_container(vec![inline_text("cd", 10.0)]),
+            inline_text("ef", 10.0),
+        ]);
+        let p = layout_block(&node, constraints_fixed(100.0, 500.0), &MonoMeasurer::new());
+
+        assert_eq!(p.children[0].x, 0.0);
+        assert_eq!(p.children[1].x, 10.0);
+        assert_eq!(p.children[1].width, 10.0);
+        assert_eq!(p.children[2].x, 20.0);
+        assert_eq!(p.children[0].y, p.children[1].y);
+        assert_eq!(p.children[1].y, p.children[2].y);
+        assert_eq!(p.height, 12.0);
+    }
+
+    #[test]
+    fn atomic_inline_children_wrap_to_the_next_line() {
+        let node =
+            LayoutNode::container(vec![inline_text("abcd", 10.0), inline_text("efgh", 10.0)]);
+        let p = layout_block(&node, constraints_fixed(30.0, 500.0), &MonoMeasurer::new());
+
+        assert_eq!(p.children[0].x, 0.0);
+        assert_eq!(p.children[0].y, 0.0);
+        assert_eq!(p.children[1].x, 0.0);
+        assert_eq!(p.children[1].y, 12.0);
+        assert_eq!(p.height, 24.0);
+    }
+
+    #[test]
+    fn explicit_line_break_starts_a_new_inline_line() {
+        let line_break = LayoutNode::leaf_text(text("\n", 10.0))
+            .with_width(size_wrap())
+            .with_ext("block", display("line-break"));
+        let node = LayoutNode::container(vec![
+            inline_text("ab", 10.0),
+            line_break,
+            inline_text("cd", 10.0),
+        ]);
+        let p = layout_block(&node, constraints_fixed(100.0, 500.0), &MonoMeasurer::new());
+
+        assert_eq!(p.children[0].x, 0.0);
+        assert_eq!(p.children[0].y, 0.0);
+        assert_eq!(p.children[1].x, 10.0);
+        assert_eq!(p.children[1].width, 0.0);
+        assert_eq!(p.children[2].x, 0.0);
+        assert_eq!(p.children[2].y, 12.0);
+        assert_eq!(p.height, 24.0);
     }
 
     #[test]
@@ -514,10 +665,19 @@ mod tests {
         // Collapsed gap = max(10, 6) = 10.
         let node = LayoutNode::container(vec![
             LayoutNode::leaf_text(text("a", 10.0))
-                .with_margin(edges_xy(0.0, 5.0))  // top:5 bottom:5... but edges_xy sets y on top & bottom
-                .with_margin(Edges { top: 0.0, right: 0.0, bottom: 10.0, left: 0.0 }),
-            LayoutNode::leaf_text(text("b", 10.0))
-                .with_margin(Edges { top: 6.0, right: 0.0, bottom: 0.0, left: 0.0 }),
+                .with_margin(edges_xy(0.0, 5.0)) // top:5 bottom:5... but edges_xy sets y on top & bottom
+                .with_margin(Edges {
+                    top: 0.0,
+                    right: 0.0,
+                    bottom: 10.0,
+                    left: 0.0,
+                }),
+            LayoutNode::leaf_text(text("b", 10.0)).with_margin(Edges {
+                top: 6.0,
+                right: 0.0,
+                bottom: 0.0,
+                left: 0.0,
+            }),
         ]);
         let p = layout_block(&node, constraints_fixed(300.0, 300.0), &MonoMeasurer::new());
         // child0 y = 0, height = 12. With child0.bottom=10 and child1.top=6 collapsed to 10,
@@ -534,7 +694,11 @@ mod tests {
         let inner = LayoutNode::container(vec![LayoutNode::leaf_text(text("hi", 10.0))])
             .with_padding(edges_all(3.0));
         let outer = LayoutNode::container(vec![inner]).with_padding(edges_all(5.0));
-        let p = layout_block(&outer, constraints_fixed(300.0, 300.0), &MonoMeasurer::new());
+        let p = layout_block(
+            &outer,
+            constraints_fixed(300.0, 300.0),
+            &MonoMeasurer::new(),
+        );
         assert_eq!(p.children.len(), 1);
         let inner_p = &p.children[0];
         assert_eq!(inner_p.x, 5.0);
@@ -564,11 +728,14 @@ mod tests {
 
     #[test]
     fn min_max_width_clamping() {
-        let node = LayoutNode::leaf_text(text("Hello", 10.0))
-            .with_width(size_fixed(200.0));
+        let node = LayoutNode::leaf_text(text("Hello", 10.0)).with_width(size_fixed(200.0));
         let mut constrained = node.clone();
         constrained.max_width = Some(100.0);
-        let p = layout_block(&constrained, constraints_fixed(500.0, 500.0), &MonoMeasurer::new());
+        let p = layout_block(
+            &constrained,
+            constraints_fixed(500.0, 500.0),
+            &MonoMeasurer::new(),
+        );
         assert!(p.width <= 100.0);
     }
 
@@ -621,10 +788,18 @@ mod tests {
     fn realistic_document_lays_out_sensibly() {
         // h1 "Hello" + paragraph "World lorem ipsum"
         let _ = rgb(0, 0, 0); // silence unused-import on builds that don't need it
-        let h1 = LayoutNode::leaf_text(text("Hello", 24.0))
-            .with_margin(Edges { top: 0.0, right: 0.0, bottom: 12.0, left: 0.0 });
-        let p1 = LayoutNode::leaf_text(text("World lorem ipsum", 16.0))
-            .with_margin(Edges { top: 8.0, right: 0.0, bottom: 8.0, left: 0.0 });
+        let h1 = LayoutNode::leaf_text(text("Hello", 24.0)).with_margin(Edges {
+            top: 0.0,
+            right: 0.0,
+            bottom: 12.0,
+            left: 0.0,
+        });
+        let p1 = LayoutNode::leaf_text(text("World lorem ipsum", 16.0)).with_margin(Edges {
+            top: 8.0,
+            right: 0.0,
+            bottom: 8.0,
+            left: 0.0,
+        });
         let doc = LayoutNode::container(vec![h1, p1]).with_padding(edges_all(24.0));
         let out = layout_block(&doc, constraints_fixed(800.0, 1000.0), &MonoMeasurer::new());
         // Document starts at 0, 0. Inner children offset by padding 24 on both axes.
@@ -636,5 +811,24 @@ mod tests {
         // h1 height = 24 × 1.2 = 28.8. Collapsed margin between children = max(12, 8) = 12
         // p1 y = 24 + 28.8 + 12 = 64.8
         assert!((out.children[1].y - 64.8).abs() < 1e-6);
+    }
+
+    fn inline_text(value: &str, size: f64) -> LayoutNode {
+        LayoutNode::leaf_text(text(value, size))
+            .with_width(size_wrap())
+            .with_ext("block", display("inline-text"))
+    }
+
+    fn inline_container(children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode::container(children)
+            .with_width(size_wrap())
+            .with_ext("block", display("inline"))
+    }
+
+    fn display(value: &str) -> ExtValue {
+        ExtValue::Map(std::collections::HashMap::from([(
+            "display".into(),
+            ExtValue::Str(value.into()),
+        )]))
     }
 }

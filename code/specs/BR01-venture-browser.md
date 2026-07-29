@@ -49,9 +49,10 @@ upstream cases at zero. The `html-to-layout` package now provides the first
 executable browser seam from `BrowserRenderTree` to the shared Layout IR and
 `layout-block`.
 
-That does not make Venture complete. The remaining acceptance work includes a
-real inline-formatting pass, paint-scene acceptance, resource loading, link
-hit-testing, and a platform host that wires navigation through pixels.
+That does not make Venture complete. The current layout path places atomic
+inline boxes on shared lines; text-run fragmentation and baseline alignment
+remain. Paint-scene acceptance, resource loading, link hit-testing, and a
+platform host must still wire navigation through pixels.
 
 ## Where It Fits
 
