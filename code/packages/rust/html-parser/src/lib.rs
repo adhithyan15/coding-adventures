@@ -5295,11 +5295,24 @@ impl HtmlParser {
         if namespace.is_none() && name == "form" {
             self.form_element_pointer_set = true;
         }
-        let child_index = self.append_node(element_node(name.clone(), attributes, namespace));
-        if !acknowledges_self_closing && !html_void_element {
+        let node = element_node(name.clone(), attributes, namespace);
+        let inserted_path = if !in_foreign_content
+            && self.current_element_is_table_structure()
+            && self.has_open_element("table")
+            && !starts_table_context(&name)
+            && !is_head_element(&name)
+        {
+            self.insert_node_before_open_table(node)
+        } else {
+            let child_index = self.append_node(node);
             let mut path = self.current_parent_path().to_vec();
             path.push(child_index);
-            self.open_elements.push(path);
+            Some(path)
+        };
+        if !acknowledges_self_closing && !html_void_element {
+            if let Some(path) = inserted_path {
+                self.open_elements.push(path);
+            }
         }
         if namespace.is_none()
             && name == "div"

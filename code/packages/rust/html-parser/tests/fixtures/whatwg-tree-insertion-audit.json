@@ -1,5 +1,5 @@
 {
-  "case_count": 299,
+  "case_count": 300,
   "cases": [
     {
       "axis": "adoption-agency",
@@ -1794,10 +1794,16 @@
       "id": "tests-innerhtml-1-dat-76",
       "reason": "innerHTML fragment shell recovery across HTML contexts",
       "source": "tests_innerHTML_1.dat:76"
+    },
+    {
+      "axis": "adoption-agency",
+      "id": "adoption02-dat-3",
+      "reason": "misnested formatting elements and adoption-agency recovery",
+      "source": "adoption02.dat:3"
     }
   ],
   "counts_by_axis": {
-    "adoption-agency": 20,
+    "adoption-agency": 21,
     "foreign-fragment": 66,
     "html-fragment": 81,
     "table-insertion": 19,

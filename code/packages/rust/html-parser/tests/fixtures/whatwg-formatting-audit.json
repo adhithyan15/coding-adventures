@@ -1,5 +1,5 @@
 {
-  "case_count": 638,
+  "case_count": 639,
   "cases": [
     {
       "axis": "interactive-formatting-boundary",
@@ -3828,13 +3828,19 @@
       "id": "webkit02-dat-49",
       "reason": "standalone active formatting element reconstruction and stack cleanup",
       "source": "webkit02.dat:49"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption02-dat-3",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption02.dat:3"
     }
   ],
   "counts_by_axis": {
     "adoption-agency-formatting": 114,
     "formatting-reconstruction": 30,
     "heading-boundary": 26,
-    "interactive-formatting-boundary": 150,
+    "interactive-formatting-boundary": 151,
     "list-definition-boundary": 57,
     "paragraph-boundary": 218,
     "ruby-implied-end-tags": 43

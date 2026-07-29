@@ -1,5 +1,5 @@
 {
-  "case_count": 410,
+  "case_count": 411,
   "cases": [
     {
       "axis": "interactive-formatting",
@@ -2460,13 +2460,19 @@
       "id": "tests-innerhtml-1-dat-76",
       "reason": "fragment parsing in form and interactive element contexts",
       "source": "tests_innerHTML_1.dat:76"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "adoption02-dat-3",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "adoption02.dat:3"
     }
   ],
   "counts_by_axis": {
     "button-boundary": 96,
     "form-control": 33,
     "fragment-context": 7,
-    "interactive-formatting": 123,
+    "interactive-formatting": 124,
     "select-option": 123,
     "stray-interactive-end-tags": 4,
     "textarea-rawtext": 24

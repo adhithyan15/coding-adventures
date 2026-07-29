@@ -121,6 +121,9 @@ documented in this file.
   accesskey, autofocus, and related focus metadata.
 
 ### Fixed
+- Residual HTML start tags processed through the table insertion mode now use
+  foster parenting after table-context and head-element exceptions, keeping a
+  `marquee` sibling before its open table in the current adoption-agency WPT.
 - Replacement characters from null input are now stripped only at MathML and
   SVG HTML integration points, preserving them in ordinary foreign-content
   text while matching the current WPT fragment and CDATA cases.
