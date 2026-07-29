@@ -136,15 +136,21 @@ NUMBER OF CHARACTER POSITIONS in the region window, ADDed to the counter: with n
 that is `length(source)`, with a region it is the window length of the SAME window
 `FOR ALL` uses, inheriting the identical not-found asymmetry — `BEFORE x` absent ⇒ whole
 source, `AFTER x` absent ⇒ empty ⇒ 0; a MULTI-item / MULTI-counter `CHARACTERS` and a
-`CHARACTERS` half in a combined `TALLYING … REPLACING` stay later rungs); the **multi-item** `INSPECT source TALLYING counter FOR ALL a ALL b [ALL d …]`
-(TWO OR MORE `FOR ALL` items sharing ONE counter — ONE left-to-right pass in which, at
-each position, the delimiters are tried in WRITTEN ORDER and the FIRST that matches adds
-1 to the shared counter, then the scan advances; so DUPLICATE delimiters do NOT
-double-count — `FOR ALL "a" ALL "a"` over `"aa"` adds 2, not 4 — and the count is just
-the number of positions whose char equals SOME delimiter, each counted once, ADDED to the
-counter; this rung's multi path is `ALL`-only, single-char, with no `{BEFORE|AFTER}`
-region and no `LEADING`/`CHARACTERS`, under EXACTLY ONE counter — a single tally item's
-full capabilities are unchanged); the **multi-counter**
+`CHARACTERS` half in a combined `TALLYING … REPLACING` stay later rungs); the **multi-item** `INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q] …`
+(TWO OR MORE `FOR ALL` items sharing ONE counter, **each item with its OWN optional
+`{BEFORE|AFTER}` window** — ONE left-to-right pass in which, at each position, the items
+are tried in WRITTEN ORDER and the FIRST item that BOTH contains the position in its window
+AND whose delimiter matches adds 1 to the shared counter, then the scan advances; so
+DUPLICATE/overlapping items do NOT double-count — `FOR ALL "a" ALL "a"` over `"aa"` adds 2,
+not 4 — and the count is just the number of positions matched by SOME in-window item, each
+counted once, ADDED to the counter; each item's window is computed via the SAME
+`region_window` helper the lone/single-item forms use — `BEFORE p` ⇒ `[0, first_p)`,
+`AFTER p` ⇒ `(first_p, len]`, not-found asymmetry `BEFORE`→whole / `AFTER`→empty, a
+region-less item ⇒ whole source; non-ASCII-clean since TALLYING only COUNTS — it never
+reconstructs the source — so a multi-byte char matches no ASCII delimiter and both engines
+count the same, e.g. `"aé0b0"` with `ALL "0" BEFORE "b" ALL "0" AFTER "b"` counts 2; this
+rung's multi path is `ALL`-only, single-char, with no `LEADING`/`CHARACTERS`, under EXACTLY
+ONE counter — a single tally item's full capabilities are unchanged); the **multi-counter**
 `INSPECT source TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d …` (TWO OR MORE `tally_for`
 groups, each with its OWN counter and one-or-more single-char `FOR ALL` delimiters — ALL
 groups' delimiters form ONE combined priority list scanned in a SINGLE left-to-right pass:
@@ -238,10 +244,11 @@ MULTI-character region delimiter, a `REPLACING CHARACTERS` item carrying a
 `REPLACING CHARACTERS BY x` is now supported), a MULTI-item
 `REPLACING` list carrying a `LEADING`/`CHARACTERS`/`FIRST` item or a `{BEFORE|AFTER}`
 region (the multi-item list itself is now supported for plain single-char `ALL` items),
-a MULTI-item `TALLYING` list carrying a `LEADING`/`CHARACTERS` item or a `{BEFORE|AFTER}`
-region (the multi-item tally list itself is now supported for plain single-char `ALL`
-items under ONE counter, and several `tally_for` groups each with their own counter are now
-supported too), several replace or tally items — or several counters — in the COMBINED `TALLYING … REPLACING` form, or a combined
+a MULTI-item `TALLYING` list carrying a `LEADING`/`CHARACTERS` item
+(the multi-item tally list itself is now supported for plain single-char `ALL`
+items under ONE counter, and each such item may now carry its OWN `{BEFORE|AFTER}`
+region; several `tally_for` groups each with their own counter are also supported —
+though a region on a multi-COUNTER item is still a later rung), several replace or tally items — or several counters — in the COMBINED `TALLYING … REPLACING` form, or a combined
 statement whose `TALLYING`/`REPLACING` half is a
 deferred sub-form (a combined `TALLYING … FOR LEADING` and a combined `REPLACING
 LEADING`, in any combination, are now supported), `CONVERTING` with

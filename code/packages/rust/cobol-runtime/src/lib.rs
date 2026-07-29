@@ -2902,6 +2902,102 @@ mod tests {
     }
 
     #[test]
+    fn inspect_tally_multi_items_each_with_a_region() {
+        // Per-item regions on a multi-item TALLYING (this rung, the count-side analogue
+        // of the REPLACING form above). Source "0a0a0" into one counter:
+        // item 1 `ALL "0" AFTER "a"` (first "a" at index 1 → window [2,5)) counts the
+        // "0"s at indices 2 and 4; item 2 `ALL "a"` (no region → whole source) counts
+        // both "a"s at indices 1 and 3. The "0" at index 0 is outside item 1's window
+        // and is not an "a", so it is not counted → 4.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"0a0a0\".", "01  C  PIC 9(2) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" AFTER \"a\" ALL \"a\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "04\n");
+    }
+
+    #[test]
+    fn inspect_tally_multi_before_and_after_windows_first_match_per_position() {
+        // Two items with differing windows over "aXaXa" (X at indices 1, 3): item 1
+        // `ALL "a" BEFORE "X"` (window [0,1)) counts only index 0; item 2 `ALL "a"
+        // AFTER "X"` (window [2,5)) counts indices 2 and 4. Each position is counted by
+        // the FIRST item whose window contains it and whose delimiter matches → 3.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aXaXa\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"a\" BEFORE \"X\"",
+                "    ALL \"a\" AFTER \"X\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "003\n");
+    }
+
+    #[test]
+    fn inspect_tally_multi_after_absent_delimiter_is_an_empty_window() {
+        // `AFTER x` with x absent → an EMPTY window: that item contributes 0; the other
+        // (region-less) item still counts. Source "abab": item 1 `ALL "a" AFTER "Z"`
+        // (no "Z" → empty window, contributes 0), item 2 `ALL "b"` counts both "b"s → 2.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"abab\".", "01  C  PIC 9(2) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"a\" AFTER \"Z\" ALL \"b\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "02\n");
+    }
+
+    #[test]
+    fn inspect_tally_multi_duplicate_windows_first_match_counts_once() {
+        // FIRST-MATCH-PER-POSITION with a DUPLICATE delimiter over overlapping windows:
+        // a position matched by BOTH items is counted ONCE. Source "aabaa" (b at index
+        // 2): item 1 `ALL "a" BEFORE "b"` (window [0,2) → indices 0,1) and item 2
+        // `ALL "a"` (whole source → 0,1,3,4). Indices 0,1 are counted once (by item 1),
+        // and item 2 adds indices 3,4 → 4, NOT 6 (a naive per-item sum would double the
+        // shared positions).
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aabaa\".", "01  C  PIC 9(2) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"a\" BEFORE \"b\" ALL \"a\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "04\n");
+    }
+
+    #[test]
+    fn inspect_tally_multi_non_ascii_source_counts_correctly() {
+        // POSITIVE non-ASCII parity: TALLYING only COUNTS (it never reconstructs the
+        // source), so the char-based oracle counts ASCII delimiters correctly even on a
+        // non-ASCII source — the "é" matches no ASCII delimiter. Source "aé0b0":
+        // item 1 `ALL "0" BEFORE "b"` counts the "0" before "b"; item 2 `ALL "0" AFTER
+        // "b"` counts the "0" after "b" → 2. (The compiler's byte-based scan agrees; the
+        // e2e test `inspect_tally_multi_non_ascii_source_positive_parity` pins that.)
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aé0b0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"b\" ALL \"0\" AFTER \"b\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "002\n");
+    }
+
+    #[test]
     fn inspect_replacing_multi_leading_item_is_a_later_rung() {
         // A LEADING item inside a multi-item list stays a later rung even now that
         // per-item regions are supported — the multi path is ALL-only.
