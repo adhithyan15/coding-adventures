@@ -8,7 +8,12 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 9157,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9157",
+    "branch": "codex/build-tool-conformance-runner",
+    "status": "open"
+  },
   "last_inventory": {
     "revision": "edddc9b46af7662ce08799c1b5d9cd4d373025aa",
     "schema_version": 2,
@@ -42,10 +47,10 @@
     {
       "id": "build-tool-fixtures",
       "title": "Cross-implementation build-tool fixture runner and inventory gate",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-contract"],
       "branch": "codex/build-tool-conformance-runner",
-      "pr_number": null,
+      "pr_number": 9157,
       "notes": "Selected after PR #9151 merged because one safe non-execution runner, adapter manifest, domain result schemas, and representative corpus unlock the Go oracle, every existing front-door remediation, Java/Kotlin/Dart implementations, and OCaml promotion."
     },
     {
