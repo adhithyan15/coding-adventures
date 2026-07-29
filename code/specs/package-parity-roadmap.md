@@ -933,9 +933,8 @@ Delivery order:
 
 OCaml begins as an `emerging_implementation` lane. It must not silently change
 the current 15-language denominator until its package, build, security, and CI
-substrate is real. Use OCaml 5.2.1, opam 2.5.x, Dune 3.17.2, Alcotest,
-`bisect_ppx`, and `ocamlformat`. Dune 3.16.1 is not published in the current
-opam repository; 3.17.2 is the nearest available compatible release.
+substrate is real. Use OCaml 5.2.1, opam 2.5.x, Dune 3.16.x, Alcotest,
+`bisect_ppx`, and `ocamlformat`.
 
 Bootstrap order:
 

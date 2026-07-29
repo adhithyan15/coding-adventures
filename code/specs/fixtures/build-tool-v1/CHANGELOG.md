@@ -7,5 +7,5 @@
 - Added the 16-lane implementation inventory with 12 present front doors,
   three missing established implementations, and emerging OCaml.
 - Added seven representative discovery, resolution, graph, and plan cases.
-- Added bounded parsing, two-phase pure workspace materialization,
+- Added bounded parsing, two-phase in-memory workspace preflight,
   domain-aware canonical comparison, and fail-closed execution rejection.

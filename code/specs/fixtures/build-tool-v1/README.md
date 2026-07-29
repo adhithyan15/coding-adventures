@@ -57,9 +57,9 @@ python code/scripts/build_tool_conformance.py validate-result \
 Both commands use bounded strict JSON parsing, formal Draft 2020-12 validation,
 semantic path and identity checks, domain-aware result canonicalization, and
 stable error codes. `validate-corpus` also performs two-phase validation and
-temporary materialization of pure fixture workspaces so invalid base64, path
+bounded in-memory decoding of pure fixture workspaces so invalid base64, path
 aliases, collisions, prefix conflicts, and aggregate size violations fail
-before any root is created.
+without creating a filesystem root.
 
 ## Security boundary
 
@@ -69,13 +69,11 @@ This tranche is intentionally process-free:
 - it never applies fixture environment data;
 - it never interprets manifest content as a command;
 - it rejects `execution` or `trusted_execution` intent before decoding files,
-  creating a temporary directory, changing permissions, or using a process
-  API; and
+  changing permissions, or using a process API; and
 - it has no flag that can enable execution.
 
-The temporary materializer is only a data-validation stage in a private
-runner-owned directory. Its output must not be handed to untrusted code.
-Adapter orchestration and execution fixtures remain blocked until the separate
+The bootstrap runner performs no workspace materialization. Adapter
+orchestration and execution fixtures remain blocked until the separate
 trusted-sandbox item implements atomic no-follow filesystem access, network
 isolation, a sanitized environment, direct argument vectors, and complete
 process-tree resource limits.

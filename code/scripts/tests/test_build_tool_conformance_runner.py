@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import io
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -74,12 +75,52 @@ class StrictJsonTests(unittest.TestCase):
             runner.load_document(Path("definitely-not-present.json"))
         self.assertEqual(raised.exception.code, "DOCUMENT_READ_FAILED")
 
+    def test_load_document_bounds_the_file_read_and_rejects_links(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            oversized = root / "oversized.json"
+            oversized.write_bytes(b'{"value":"' + (b"x" * 100) + b'"}')
+            with self.assertRaises(runner.ConformanceError) as raised:
+                runner.load_document(oversized, max_bytes=16)
+            self.assertEqual(raised.exception.code, "JSON_INPUT_TOO_LARGE")
+
+            target = root / "target.json"
+            target.write_text("{}", encoding="utf-8")
+            link = root / "link.json"
+            try:
+                link.symlink_to(target)
+            except OSError:
+                return
+            with self.assertRaises(runner.ConformanceError) as raised:
+                runner.load_document(link)
+            self.assertIn(
+                raised.exception.code,
+                {"DOCUMENT_READ_FAILED", "DOCUMENT_TYPE_INVALID"},
+            )
+
     def test_portable_path_validation_covers_canonical_edge_cases(self) -> None:
         self.assertIsNotNone(runner.portable_path_error(None))
         self.assertIsNotNone(runner.portable_path_error("a" * 513))
         self.assertIsNotNone(runner.portable_path_error("fixtures/e\u0301.txt"))
         self.assertIsNotNone(runner.portable_path_error("fixtures/name."))
+        self.assertIsNotNone(runner.portable_path_error("fixtures/COM¹.txt"))
+        self.assertIsNotNone(runner.portable_path_error("fixtures/LPT².txt"))
         self.assertIsNone(runner.portable_path_error("fixtures/.hidden"))
+
+    def test_schema_validation_never_retrieves_external_references(self) -> None:
+        for keyword in ("$ref", "$dynamicRef"):
+            schema = {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                keyword: "http://127.0.0.1:9/schema.json",
+            }
+            with (
+                self.subTest(keyword=keyword),
+                mock.patch("urllib.request.urlopen") as retrieve,
+                self.assertRaises(runner.ConformanceError) as raised,
+            ):
+                runner._schema_errors({}, schema)
+            self.assertEqual(raised.exception.code, "SCHEMA_REFERENCE_FORBIDDEN")
+            retrieve.assert_not_called()
 
 
 class CorpusTests(unittest.TestCase):
@@ -180,13 +221,30 @@ class CorpusTests(unittest.TestCase):
             )
         self.assertEqual(raised.exception.code, "CASE_DOMAIN_UNMODELED")
 
+    def test_malformed_capabilities_fail_schema_validation_not_routing(self) -> None:
+        case = load_case("discovery-simple.json")
+        case["capabilities"] = [{"execution": False}]
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(
+                case,
+                case_schema=runner.load_document(FIXTURE_ROOT / "schema.json"),
+                result_schema=runner.load_document(
+                    FIXTURE_ROOT / "result.schema.json"
+                ),
+                plan_schema=runner.load_document(
+                    runner.REPO_ROOT
+                    / "code/specs/schemas/build-plan-v1.schema.json"
+                ),
+            )
+        self.assertEqual(raised.exception.code, "CASE_SCHEMA_INVALID")
+
 
 class ExecutionDenialTests(unittest.TestCase):
     def assert_denied_before_side_effects(self, case: dict[str, object]) -> None:
         with (
-            mock.patch.object(runner.tempfile, "TemporaryDirectory") as temporary,
+            mock.patch.object(tempfile, "TemporaryDirectory") as temporary,
             mock.patch.object(runner.base64, "b64decode") as decode,
-            mock.patch.object(runner.os, "chmod") as chmod,
+            mock.patch.object(os, "chmod") as chmod,
             mock.patch.object(subprocess, "run") as process,
             self.assertRaises(runner.ConformanceError) as raised,
         ):
@@ -231,8 +289,8 @@ class ExecutionDenialTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, "EXECUTION_DISABLED")
 
 
-class MaterializationTests(unittest.TestCase):
-    def test_materializes_exact_regular_files_and_cleans_up(self) -> None:
+class WorkspacePreflightTests(unittest.TestCase):
+    def test_decodes_exact_files_without_creating_a_workspace(self) -> None:
         case = load_case("discovery-simple.json")
         case["workspace"]["files"].append(
             {
@@ -241,22 +299,24 @@ class MaterializationTests(unittest.TestCase):
             }
         )
 
-        with runner.materialized_workspace(case) as root:
-            retained_root = root
-            self.assertEqual(
-                (root / "code/packages/python/demo/BUILD").read_bytes(),
-                b"python -m unittest discover tests\n",
-            )
-            self.assertEqual(
-                (root / "fixtures/space and & metacharacters.bin").read_bytes(),
-                b"\x00\x01\x02\xff",
-            )
-            for path in root.rglob("*"):
-                self.assertFalse(path.is_symlink())
-                if path.is_file():
-                    self.assertTrue(path.stat().st_mode & 0o100000)
+        with mock.patch.object(
+            tempfile,
+            "TemporaryDirectory",
+        ) as temporary:
+            staged = {
+                entry.path: entry.content
+                for entry in runner.preflight_workspace(case)
+            }
 
-        self.assertFalse(retained_root.exists())
+        temporary.assert_not_called()
+        self.assertEqual(
+            staged["code/packages/python/demo/BUILD"],
+            b"python -m unittest discover tests\n",
+        )
+        self.assertEqual(
+            staged["fixtures/space and & metacharacters.bin"],
+            b"\x00\x01\x02\xff",
+        )
 
     def test_invalid_base64_and_workspace_limit_fail_before_root_creation(self) -> None:
         invalid = load_case("discovery-simple.json")
@@ -265,22 +325,20 @@ class MaterializationTests(unittest.TestCase):
             "content_base64": "AB==",
         }
         with (
-            mock.patch.object(runner.tempfile, "TemporaryDirectory") as temporary,
+            mock.patch.object(tempfile, "TemporaryDirectory") as temporary,
             self.assertRaises(runner.ConformanceError) as raised,
         ):
-            with runner.materialized_workspace(invalid):
-                pass
+            runner.preflight_workspace(invalid)
         self.assertEqual(raised.exception.code, "WORKSPACE_BASE64_NONCANONICAL")
         temporary.assert_not_called()
 
         oversized = load_case("discovery-simple.json")
         oversized["limits"]["workspace_bytes"] = 1
         with (
-            mock.patch.object(runner.tempfile, "TemporaryDirectory") as temporary,
+            mock.patch.object(tempfile, "TemporaryDirectory") as temporary,
             self.assertRaises(runner.ConformanceError) as raised,
         ):
-            with runner.materialized_workspace(oversized):
-                pass
+            runner.preflight_workspace(oversized)
         self.assertEqual(raised.exception.code, "WORKSPACE_BYTE_LIMIT")
         temporary.assert_not_called()
 
@@ -327,13 +385,12 @@ class MaterializationTests(unittest.TestCase):
             with self.subTest(path=unsafe_path):
                 with (
                     mock.patch.object(
-                        runner.tempfile,
+                        tempfile,
                         "TemporaryDirectory",
                     ) as temporary,
                     self.assertRaises(runner.ConformanceError) as raised,
                 ):
-                    with runner.materialized_workspace(case):
-                        pass
+                    runner.preflight_workspace(case)
                 self.assertEqual(raised.exception.code, "WORKSPACE_PATH_UNSAFE")
                 temporary.assert_not_called()
 
@@ -449,6 +506,19 @@ class ResultValidationTests(unittest.TestCase):
                 runner.validate_result_files(case_path, result_path)
         self.assertEqual(raised.exception.code, "JSON_DEPTH_EXCEEDED")
 
+    def test_validate_result_enforces_the_case_output_limit(self) -> None:
+        case_path = CASES_ROOT / "graph-diamond.json"
+        case = load_case(case_path.name)
+        payload = json.dumps(case["expected"]).encode("utf-8")
+        output_limit = case["limits"]["output_bytes"]
+        oversized = (b" " * (output_limit + 1 - len(payload))) + payload
+        with tempfile.TemporaryDirectory() as directory:
+            result_path = Path(directory) / "result.json"
+            result_path.write_bytes(oversized)
+            with self.assertRaises(runner.ConformanceError) as raised:
+                runner.validate_result_files(case_path, result_path)
+        self.assertEqual(raised.exception.code, "JSON_INPUT_TOO_LARGE")
+
 
 class CommandLineTests(unittest.TestCase):
     def test_validate_corpus_prints_a_machine_readable_summary(self) -> None:
@@ -483,7 +553,9 @@ class CommandLineTests(unittest.TestCase):
                     ]
                 )
             self.assertEqual(exit_code, 0)
-            self.assertEqual(json.loads(stdout.getvalue())["status"], "pass")
+            result = json.loads(stdout.getvalue())
+            self.assertEqual(result["status"], "matched")
+            self.assertEqual(result["conformance_status"], "pass")
 
         stderr = io.StringIO()
         with redirect_stderr(stderr):
@@ -514,6 +586,47 @@ class CommandLineTests(unittest.TestCase):
                 )
         self.assertEqual(exit_code, 1)
         self.assertEqual(json.loads(stderr.getvalue())["code"], "RESULT_MISMATCH")
+
+    def test_matching_unsupported_result_is_never_reported_as_passing(self) -> None:
+        case = load_case("discovery-simple.json")
+        case["id"] = "discovery/unsupported"
+        case["expected"] = {
+            "schema_version": 1,
+            "case_id": "discovery/unsupported",
+            "domain": "discovery",
+            "outcome": "unsupported",
+            "result": {},
+            "diagnostics": [
+                {
+                    "code": "DISCOVERY_UNSUPPORTED",
+                    "severity": "error",
+                }
+            ],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            case_path = Path(directory) / "case.json"
+            result_path = Path(directory) / "result.json"
+            case_path.write_text(json.dumps(case), encoding="utf-8")
+            result_path.write_text(
+                json.dumps(case["expected"]),
+                encoding="utf-8",
+            )
+            stdout = io.StringIO()
+            with redirect_stdout(stdout):
+                exit_code = runner.main(
+                    [
+                        "validate-result",
+                        "--case",
+                        str(case_path),
+                        "--result",
+                        str(result_path),
+                    ]
+                )
+        result = json.loads(stdout.getvalue())
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(result["status"], "matched")
+        self.assertEqual(result["conformance_status"], "non-passing")
+        self.assertEqual(result["outcome"], "unsupported")
 
 
 if __name__ == "__main__":

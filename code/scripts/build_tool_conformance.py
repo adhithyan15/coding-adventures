@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Validate the language-neutral build-tool conformance corpus and results.
 
-This bootstrap runner is intentionally process-free. It validates and
-materializes data-only, non-execution cases, and it compares externally
-produced results with the shared fixture oracle. Adapter orchestration belongs
-to the later trusted-sandbox tranche.
+This bootstrap runner is intentionally process-free. It validates data-only,
+non-execution cases entirely in memory, and it compares externally produced
+results with the shared fixture oracle. Adapter orchestration belongs to the
+later trusted-sandbox tranche.
 """
 
 from __future__ import annotations
@@ -17,12 +17,10 @@ import os
 import re
 import stat
 import sys
-import tempfile
 import unicodedata
-from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterator, Sequence
+from typing import Any, Sequence
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -79,6 +77,8 @@ WINDOWS_RESERVED_BASENAMES = {
     "CLOCK$",
     *(f"COM{index}" for index in range(1, 10)),
     *(f"LPT{index}" for index in range(1, 10)),
+    *(f"COM{index}" for index in "¹²³"),
+    *(f"LPT{index}" for index in "¹²³"),
 }
 
 
@@ -250,18 +250,118 @@ def strict_load_bytes(
     return value
 
 
+def _open_windows_regular_no_follow(path: Path) -> Any:
+    import ctypes
+    import msvcrt
+    from ctypes import wintypes
+
+    path_text = str(path)
+    if path_text.startswith("\\\\"):
+        raise ConformanceError(
+            "DOCUMENT_PATH_UNSAFE",
+            "Windows UNC, device, and extended paths are forbidden",
+        )
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    create_file = kernel32.CreateFileW
+    create_file.argtypes = (
+        wintypes.LPCWSTR,
+        wintypes.DWORD,
+        wintypes.DWORD,
+        wintypes.LPVOID,
+        wintypes.DWORD,
+        wintypes.DWORD,
+        wintypes.HANDLE,
+    )
+    create_file.restype = wintypes.HANDLE
+    close_handle = kernel32.CloseHandle
+    close_handle.argtypes = (wintypes.HANDLE,)
+    close_handle.restype = wintypes.BOOL
+
+    handle = create_file(
+        path_text,
+        0x80000000,
+        0x00000001,
+        None,
+        3,
+        0x00200000 | 0x08000000,
+        None,
+    )
+    invalid_handle = ctypes.c_void_p(-1).value
+    if handle == invalid_handle:
+        raise OSError(ctypes.get_last_error(), "CreateFileW failed")
+
+    class FileAttributeTagInfo(ctypes.Structure):
+        _fields_ = [
+            ("file_attributes", wintypes.DWORD),
+            ("reparse_tag", wintypes.DWORD),
+        ]
+
+    info = FileAttributeTagInfo()
+    get_info = kernel32.GetFileInformationByHandleEx
+    get_info.argtypes = (
+        wintypes.HANDLE,
+        ctypes.c_int,
+        wintypes.LPVOID,
+        wintypes.DWORD,
+    )
+    get_info.restype = wintypes.BOOL
+    if not get_info(handle, 9, ctypes.byref(info), ctypes.sizeof(info)):
+        error_code = ctypes.get_last_error()
+        close_handle(handle)
+        raise OSError(error_code, "GetFileInformationByHandleEx failed")
+    if info.file_attributes & 0x00000400:
+        close_handle(handle)
+        raise ConformanceError(
+            "DOCUMENT_TYPE_INVALID",
+            "symbolic links and reparse points are forbidden",
+        )
+    try:
+        descriptor = msvcrt.open_osfhandle(
+            handle,
+            os.O_RDONLY | os.O_BINARY,
+        )
+    except OSError:
+        close_handle(handle)
+        raise
+    return os.fdopen(descriptor, "rb")
+
+
+def _open_regular_no_follow(path: Path) -> Any:
+    if os.name == "nt":
+        return _open_windows_regular_no_follow(path)
+    flags = os.O_RDONLY
+    for option in ("O_CLOEXEC", "O_NOFOLLOW", "O_NONBLOCK"):
+        flags |= getattr(os, option, 0)
+    descriptor = os.open(path, flags)
+    return os.fdopen(descriptor, "rb")
+
+
 def load_document(
     path: Path,
     *,
     max_bytes: int = MAX_DOCUMENT_BYTES,
 ) -> dict[str, Any]:
     try:
-        raw = path.read_bytes()
-    except OSError as error:
+        with _open_regular_no_follow(path) as source:
+            if not stat.S_ISREG(os.fstat(source.fileno()).st_mode):
+                raise ConformanceError(
+                    "DOCUMENT_TYPE_INVALID",
+                    f"document is not a regular file: {path}",
+                )
+            raw = source.read(max_bytes + 1)
+    except ConformanceError:
+        raise
+    except (OSError, ValueError) as error:
         raise ConformanceError(
             "DOCUMENT_READ_FAILED",
             f"could not read {path}",
         ) from error
+    if len(raw) > max_bytes:
+        raise ConformanceError(
+            "JSON_INPUT_TOO_LARGE",
+            f"JSON input exceeds {max_bytes} bytes",
+        )
     return strict_load_bytes(raw, max_bytes=max_bytes)
 
 
@@ -301,11 +401,15 @@ def reject_execution_intent(case: dict[str, Any]) -> None:
         input_value.get("operation") if isinstance(input_value, dict) else None
     )
     capabilities = case.get("capabilities")
-    capability_set = set(capabilities) if isinstance(capabilities, list) else set()
+    capability_values = capabilities if isinstance(capabilities, list) else []
     if (
         domain == "execution"
         or operation == "execution"
-        or capability_set.intersection(EXECUTION_CAPABILITIES)
+        or any(
+            isinstance(capability, str)
+            and capability in EXECUTION_CAPABILITIES
+            for capability in capability_values
+        )
     ):
         raise ConformanceError(
             "EXECUTION_DISABLED",
@@ -422,53 +526,6 @@ def preflight_workspace(case: dict[str, Any]) -> list[WorkspaceFile]:
     return sorted(staged_files, key=lambda entry: entry.path.casefold())
 
 
-def _ensure_beneath(root: Path, destination: Path) -> None:
-    try:
-        destination.relative_to(root)
-    except ValueError as error:
-        raise ConformanceError(
-            "WORKSPACE_PATH_ESCAPE",
-            "workspace destination escapes the temporary root",
-        ) from error
-
-
-@contextmanager
-def materialized_workspace(case: dict[str, Any]) -> Iterator[Path]:
-    """Materialize a preflighted pure case in a private temporary directory."""
-
-    staged_files = preflight_workspace(case)
-    with tempfile.TemporaryDirectory(prefix="build-tool-conformance-") as directory:
-        root = Path(directory).resolve(strict=True)
-        for entry in staged_files:
-            destination = root.joinpath(*entry.path.split("/"))
-            _ensure_beneath(root, destination)
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            _ensure_beneath(root, destination.parent.resolve(strict=True))
-            flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
-            if hasattr(os, "O_BINARY"):
-                flags |= os.O_BINARY
-            if hasattr(os, "O_NOFOLLOW"):
-                flags |= os.O_NOFOLLOW
-            mode = 0o700 if entry.executable else 0o600
-            try:
-                descriptor = os.open(destination, flags, mode)
-                with os.fdopen(descriptor, "wb") as output:
-                    output.write(entry.content)
-                if entry.executable:
-                    os.chmod(destination, 0o700)
-            except OSError as error:
-                raise ConformanceError(
-                    "WORKSPACE_WRITE_FAILED",
-                    f"could not materialize {entry.path}",
-                ) from error
-            if not stat.S_ISREG(destination.stat(follow_symlinks=False).st_mode):
-                raise ConformanceError(
-                    "WORKSPACE_FILE_TYPE_INVALID",
-                    f"materialized path is not a regular file: {entry.path}",
-                )
-        yield root
-
-
 def _schema_errors(
     instance: dict[str, Any],
     schema: dict[str, Any],
@@ -481,12 +538,36 @@ def _schema_errors(
             "install jsonschema==4.26.0 to validate conformance documents",
         ) from error
 
-    jsonschema.Draft202012Validator.check_schema(schema)
-    validator = jsonschema.Draft202012Validator(schema)
-    errors = sorted(
-        validator.iter_errors(instance),
-        key=lambda error: [str(part) for part in error.absolute_path],
-    )
+    def reject_external_refs(value: Any) -> None:
+        if isinstance(value, dict):
+            for keyword in ("$ref", "$dynamicRef"):
+                reference = value.get(keyword)
+                if isinstance(reference, str) and not reference.startswith("#"):
+                    raise ConformanceError(
+                        "SCHEMA_REFERENCE_FORBIDDEN",
+                        f"external schema reference is forbidden: {reference}",
+                    )
+            for item in value.values():
+                reject_external_refs(item)
+        elif isinstance(value, list):
+            for item in value:
+                reject_external_refs(item)
+
+    reject_external_refs(schema)
+    try:
+        jsonschema.Draft202012Validator.check_schema(schema)
+        validator = jsonschema.Draft202012Validator(schema)
+        errors = sorted(
+            validator.iter_errors(instance),
+            key=lambda error: [str(part) for part in error.absolute_path],
+        )
+    except ConformanceError:
+        raise
+    except Exception as error:
+        raise ConformanceError(
+            "SCHEMA_VALIDATION_FAILED",
+            "schema validation could not be completed safely",
+        ) from error
     formatted: list[str] = []
     for error in errors:
         path = "/".join(str(part) for part in error.absolute_path) or "<root>"
@@ -877,10 +958,10 @@ def validate_corpus(
     fixture_root: Path = DEFAULT_FIXTURE_ROOT,
 ) -> dict[str, Any]:
     fixture_root = fixture_root.resolve()
-    case_schema = load_document(fixture_root / "schema.json")
-    result_schema = load_document(fixture_root / "result.schema.json")
+    case_schema = load_document(DEFAULT_FIXTURE_ROOT / "schema.json")
+    result_schema = load_document(DEFAULT_FIXTURE_ROOT / "result.schema.json")
     manifest_schema = load_document(
-        fixture_root / "implementations.schema.json"
+        DEFAULT_FIXTURE_ROOT / "implementations.schema.json"
     )
     manifest = load_document(fixture_root / "implementations.json")
     plan_schema = load_document(
@@ -896,7 +977,7 @@ def validate_corpus(
         )
     case_ids: set[str] = set()
     domains: set[str] = set()
-    materialized_files = 0
+    validated_files = 0
     for case_path in case_paths:
         case = load_document(case_path)
         if case.get("id") in case_ids:
@@ -910,11 +991,9 @@ def validate_corpus(
             result_schema=result_schema,
             plan_schema=plan_schema,
         )
-        with materialized_workspace(case):
-            pass
         case_ids.add(case["id"])
         domains.add(case["domain"])
-        materialized_files += len(staged_files)
+        validated_files += len(staged_files)
 
     return {
         "schema_version": 1,
@@ -926,7 +1005,7 @@ def validate_corpus(
         "conformance_run_count": 0,
         "conformance_status": "not-run",
         "execution_case_count": 0,
-        "materialized_file_count": materialized_files,
+        "validated_file_count": validated_files,
         "domains": sorted(domains),
         "status": "valid",
     }
@@ -935,7 +1014,6 @@ def validate_corpus(
 def validate_result_files(case_path: Path, result_path: Path) -> dict[str, Any]:
     case = load_document(case_path)
     reject_execution_intent(case)
-    result = load_document(result_path, max_bytes=MAX_RESULT_BYTES)
     case_schema = load_document(DEFAULT_FIXTURE_ROOT / "schema.json")
     result_schema = load_document(DEFAULT_FIXTURE_ROOT / "result.schema.json")
     plan_schema = load_document(
@@ -947,6 +1025,8 @@ def validate_result_files(case_path: Path, result_path: Path) -> dict[str, Any]:
         result_schema=result_schema,
         plan_schema=plan_schema,
     )
+    output_limit = min(case["limits"]["output_bytes"], MAX_RESULT_BYTES)
+    result = load_document(result_path, max_bytes=output_limit)
     return assert_result_matches(
         case,
         result,
@@ -963,7 +1043,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     corpus_parser = subparsers.add_parser(
         "validate-corpus",
-        help="Validate and safely materialize the non-execution corpus.",
+        help="Validate the non-execution corpus without filesystem staging.",
     )
     corpus_parser.add_argument(
         "--fixture-root",
@@ -986,6 +1066,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         arguments = parser.parse_args(argv)
     except SystemExit as error:
         return int(error.code)
+    exit_code = 0
     try:
         if arguments.command == "validate-corpus":
             output = validate_corpus(arguments.fixture_root)
@@ -997,8 +1078,16 @@ def main(argv: Sequence[str] | None = None) -> int:
             output = {
                 "case_id": canonical["case_id"],
                 "domain": canonical["domain"],
-                "status": "pass",
+                "outcome": canonical["outcome"],
+                "status": "matched",
+                "conformance_status": (
+                    "non-passing"
+                    if canonical["outcome"] in {"unsupported", "skipped"}
+                    else "pass"
+                ),
             }
+            if output["conformance_status"] == "non-passing":
+                exit_code = 1
     except ConformanceError as error:
         print(
             json.dumps(
@@ -1014,7 +1103,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 1 if error.code == "RESULT_MISMATCH" else 2
 
     print(json.dumps(output, sort_keys=True))
-    return 0
+    return exit_code
 
 
 if __name__ == "__main__":

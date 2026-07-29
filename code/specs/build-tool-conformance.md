@@ -121,8 +121,8 @@ python code/scripts/build_tool_conformance.py validate-result \
 
 `validate-corpus` strictly parses and validates the implementation manifest,
 every case, every expected result, path semantics, corpus-wide identity
-uniqueness, canonical ordering, and bounded materialization of non-execution
-workspaces into runner-owned temporary directories.
+uniqueness, canonical ordering, and bounded in-memory decoding of non-execution
+workspaces. The bootstrap runner never stages fixture files on disk.
 
 `validate-result` strictly parses one case and one externally produced result,
 validates both against their schemas, verifies the echoed case identity and
@@ -133,8 +133,9 @@ tests before sandboxed process orchestration is enabled.
 Neither mode launches an adapter, invokes a shell, reads an executable command
 from a manifest, or runs fixture content. The bootstrap runner MUST reject any
 case whose domain, operation, or capabilities request execution before it
-creates a temporary directory, decodes file content, changes permissions, or
-uses a process API. There is no command-line flag that can weaken this rule.
+decodes file content or uses a process API. It MUST NOT create a temporary
+workspace or change filesystem permissions. There is no command-line flag that
+can weaken this rule.
 Trusted execution becomes a separate delivery gate only after the runner can
 enforce the complete filesystem, network, environment, and process-tree
 boundary in this contract.

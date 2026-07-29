@@ -118,7 +118,7 @@
       "depends_on": ["ocaml-lane-contract", "build-tool-go-oracle"],
       "branch": null,
       "pr_number": null,
-      "notes": "Use OCaml 5.2.1, opam 2.5.x, Dune 3.17.2 (the nearest available compatible release; 3.16.1 is absent from opam), Alcotest, bisect_ppx, and ocamlformat."
+      "notes": "Use OCaml 5.2.1, opam 2.5.x, Dune 3.16.x, Alcotest, bisect_ppx, and ocamlformat."
     },
     {
       "id": "ocaml-representative-core",
