@@ -107,11 +107,11 @@
       ]
     },
     {
-      "description": "question-mark tag open recovers as a bogus comment",
+      "description": "the reserved xml processing-instruction target recovers as a bogus comment",
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "disallowed-processing-instruction-target"
       ],
-      "id": "processing-instruction-bogus-comment",
+      "id": "disallowed-processing-instruction-target-comment",
       "input": "a<?xml version='1.0'?>b",
       "tokens": [
         "Text(data=a)",

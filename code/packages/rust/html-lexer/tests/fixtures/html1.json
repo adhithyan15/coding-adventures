@@ -1257,8 +1257,8 @@
       ]
     },
     {
-      "id": "question-mark-tag-open-bogus-comment",
-      "description": "Processing-instruction-looking markup recovers as a bogus comment",
+      "id": "disallowed-processing-instruction-target-comment",
+      "description": "The reserved xml processing-instruction target recovers as a bogus comment",
       "input": "Before<?xml version=\"1.0\"?>After",
       "tokens": [
         "Text(data=Before)",
@@ -1267,20 +1267,19 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "disallowed-processing-instruction-target"
       ]
     },
     {
-      "id": "question-mark-tag-open-bogus-comment-eof",
-      "description": "EOF in bogus-comment recovery emits the comment without eof-in-comment",
+      "id": "processing-instruction-target-eof",
+      "description": "EOF in a processing-instruction target discards the incomplete token",
       "input": "Before<?xml",
       "tokens": [
         "Text(data=Before)",
-        "Comment(data=?xml)",
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "eof-in-processing-instruction"
       ]
     },
     {

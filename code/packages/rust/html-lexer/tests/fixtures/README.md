@@ -334,13 +334,13 @@ generated normalized tokenizer corpus together:
 HTML5LIB_TESTS_ROOT=/path/to/html5lib-tests \
 WPT_ROOT=/path/to/wpt \
   python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py \
-  --expect-tree-missing 156 \
+  --expect-tree-missing 0 \
   --expect-tokenizer-missing 0
 ```
 
 Without exact missing-case expectations, the command exits nonzero if an
 upstream tokenizer or tree-construction case is absent locally. The current
-checked debt is 156 WPT tree cases and zero html5lib tokenizer cases.
+checked debt is zero WPT tree cases and zero html5lib tokenizer cases.
 `html5lib-smoke.json` runtime skips always fail.
 
 The same audit can verify the checked
@@ -547,6 +547,12 @@ bogus-comment recovery paths. Character-reference continuation coverage
 exercises seeded named/numeric reference recovery returning to data and RCDATA.
 DOCTYPE continuation coverage exercises partial keyword/name, identifier,
 diagnostic, and bogus-doctype recovery paths.
+
+The upstream html5lib corpus predates the current HTML processing-instruction
+states. Its 40 data-state `<?` inputs remain in the zero-skip normalized corpus,
+but the normalizer derives their expected tokens and diagnostics from the
+current processing-instruction algorithm instead of retaining the obsolete
+always-bogus-comment expectations.
 
 To regenerate the normalized corpus:
 

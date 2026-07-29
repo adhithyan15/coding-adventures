@@ -4312,7 +4312,7 @@ FOO&#111111111111ZOO
 |     "∉"
 
 
-#source html5test-com.dat:282
+#source html5test-com.dat:12
 #data
 <?import namespace="foo" implementation="#bar">
 #errors
@@ -4321,7 +4321,7 @@ FOO&#111111111111ZOO
 #new-errors
 (1:2) unexpected-question-mark-instead-of-tag-name
 #document
-| <!-- ?import namespace="foo" implementation="#bar" -->
+| <?import namespace="foo" implementation="#bar"?>
 | <html>
 |   <head>
 |   <body>
@@ -9693,7 +9693,6 @@ Line1<br>Line2<br>Line3<br>Line4
 #new-errors
 (1:2) unexpected-question-mark-instead-of-tag-name
 #document
-| <!-- ? -->
 | <html>
 |   <head>
 |   <body>
@@ -9753,7 +9752,7 @@ Line1<br>Line2<br>Line3<br>Line4
 #new-errors
 (1:2) unexpected-question-mark-instead-of-tag-name
 #document
-| <!-- ?COMMENT? -->
+| <?COMMENT ?>
 | <html>
 |   <head>
 |   <body>
@@ -9798,7 +9797,7 @@ Line1<br>Line2<br>Line3<br>Line4
 #new-errors
 (1:2) unexpected-question-mark-instead-of-tag-name
 #document
-| <!-- ?COM--MENT? -->
+| <?COM--MENT ?>
 | <html>
 |   <head>
 |   <body>
@@ -26217,7 +26216,6 @@ Line1<br>Line2<br>Line3<br>Line4
 #new-errors
 (1:2) unexpected-question-mark-instead-of-tag-name
 #document
-| <!-- ? -->
 | <html>
 |   <head>
 |   <body>
@@ -26273,7 +26271,7 @@ Line1<br>Line2<br>Line3<br>Line4
 #new-errors
 (1:2) unexpected-question-mark-instead-of-tag-name
 #document
-| <!-- ?COMMENT? -->
+| <?COMMENT ?>
 | <html>
 |   <head>
 |   <body>
@@ -26315,7 +26313,7 @@ Line1<br>Line2<br>Line3<br>Line4
 #new-errors
 (1:2) unexpected-question-mark-instead-of-tag-name
 #document
-| <!-- ?COM--MENT? -->
+| <?COM--MENT ?>
 | <html>
 |   <head>
 |   <body>
@@ -40759,3 +40757,1258 @@ math annotation-xml
 |       <math mtext>
 |         <i>
 |           <!-- [CDATA[x]] -->
+#source processing-instructions.dat:1
+#data
+<body><?something>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?something ?>
+
+#source processing-instructions.dat:2
+#data
+<body><?something><span>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?something ?>
+|     <span>
+
+#source processing-instructions.dat:3
+#data
+<body><?something good>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?something good?>
+
+#source processing-instructions.dat:4
+#data
+<body><?something else is good>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?something else is good?>
+
+#source processing-instructions.dat:5
+#data
+<body><?one><?two>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?one ?>
+|     <?two ?>
+
+#source processing-instructions.dat:6
+#data
+<body><?a$><?b$><?good?>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?a$ -->
+|     <!-- ?b$ -->
+|     <?good ?>
+
+#source processing-instructions.dat:7
+#data
+<body><?hey there?>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?hey there?>
+
+#source processing-instructions.dat:8
+#data
+<body><?hey   there?>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?hey there?>
+
+#source processing-instructions.dat:9
+#data
+<body><?hey?there>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?hey ?there?>
+
+#source processing-instructions.dat:10
+#data
+<body><?hey	there=1?>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?hey there=1?>
+
+#source processing-instructions.dat:11
+#data
+<body><?hey
+there=1?>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?hey there=1?>
+
+#source processing-instructions.dat:12
+#data
+<body><?heythere=1?>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?hey there=1?>
+
+#source processing-instructions.dat:13
+#data
+<body><?heythere=1?>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?hey there=1?>
+
+#source processing-instructions.dat:14
+#data
+<body><?something ? >
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?something ? ?>
+
+#source processing-instructions.dat:15
+#data
+<body><?something x >
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?something x ?>
+
+#source processing-instructions.dat:16
+#data
+<body><?something ?\t   ??>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?something ?\t   ??>
+
+#source processing-instructions.dat:17
+#data
+<body><?t d > ?>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?t d ?>
+|     " ?>"
+
+#source processing-instructions.dat:18
+#data
+<body><?module-handler>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?module-handler ?>
+
+#source processing-instructions.dat:19
+#data
+<body><?module-handler data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?module-handler data?>
+
+#source processing-instructions.dat:20
+#data
+<body><?view-port>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?view-port ?>
+
+#source processing-instructions.dat:21
+#data
+<body><?view-port data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?view-port data?>
+
+#source processing-instructions.dat:22
+#data
+<body><?config-v2>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?config-v2 ?>
+
+#source processing-instructions.dat:23
+#data
+<body><?config-v2 data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?config-v2 data?>
+
+#source processing-instructions.dat:24
+#data
+<body><?x>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?x ?>
+
+#source processing-instructions.dat:25
+#data
+<body><?x data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?x data?>
+
+#source processing-instructions.dat:26
+#data
+<body><?zz2op>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?zz2op ?>
+
+#source processing-instructions.dat:27
+#data
+<body><?zz2op data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?zz2op data?>
+
+#source processing-instructions.dat:28
+#data
+<body><?xla->
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?xla- ?>
+
+#source processing-instructions.dat:29
+#data
+<body><?xla- data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?xla- data?>
+
+#source processing-instructions.dat:30
+#data
+<body><?a-b-c>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?a-b-c ?>
+
+#source processing-instructions.dat:31
+#data
+<body><?a-b-c data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?a-b-c data?>
+
+#source processing-instructions.dat:32
+#data
+<body><?v-123>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?v-123 ?>
+
+#source processing-instructions.dat:33
+#data
+<body><?v-123 data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?v-123 data?>
+
+#source processing-instructions.dat:34
+#data
+<body><?a0-b1-c2>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?a0-b1-c2 ?>
+
+#source processing-instructions.dat:35
+#data
+<body><?a0-b1-c2 data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?a0-b1-c2 data?>
+
+#source processing-instructions.dat:36
+#data
+<body><?page-404>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?page-404 ?>
+
+#source processing-instructions.dat:37
+#data
+<body><?page-404 data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?page-404 data?>
+
+#source processing-instructions.dat:38
+#data
+<body><?r2-d2>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?r2-d2 ?>
+
+#source processing-instructions.dat:39
+#data
+<body><?r2-d2 data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?r2-d2 data?>
+
+#source processing-instructions.dat:40
+#data
+<body><?level-99>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?level-99 ?>
+
+#source processing-instructions.dat:41
+#data
+<body><?level-99 data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?level-99 data?>
+
+#source processing-instructions.dat:42
+#data
+<body><?UPPERCASE>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?UPPERCASE ?>
+
+#source processing-instructions.dat:43
+#data
+<body><?UPPERCASE data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?UPPERCASE data?>
+
+#source processing-instructions.dat:44
+#data
+<body><?all-KINDS-of-CaSeS>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?all-KINDS-of-CaSeS ?>
+
+#source processing-instructions.dat:45
+#data
+<body><?all-KINDS-of-CaSeS data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?all-KINDS-of-CaSeS data?>
+
+#source processing-instructions.dat:46
+#data
+<body><?user_name>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?user_name ?>
+
+#source processing-instructions.dat:47
+#data
+<body><?user_name data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?user_name data?>
+
+#source processing-instructions.dat:48
+#data
+<body><?S_S-S_S>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?S_S-S_S ?>
+
+#source processing-instructions.dat:49
+#data
+<body><?S_S-S_S data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?S_S-S_S data?>
+
+#source processing-instructions.dat:50
+#data
+<body><?b_>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?b_ ?>
+
+#source processing-instructions.dat:51
+#data
+<body><?b_ data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?b_ data?>
+
+#source processing-instructions.dat:52
+#data
+<body><?_prefix>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?_prefix ?>
+
+#source processing-instructions.dat:53
+#data
+<body><?_prefix data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?_prefix data?>
+
+#source processing-instructions.dat:54
+#data
+<body><?_x132>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?_x132 ?>
+
+#source processing-instructions.dat:55
+#data
+<body><?_x132 data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?_x132 data?>
+
+#source processing-instructions.dat:56
+#data
+<body><?_-_>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?_-_ ?>
+
+#source processing-instructions.dat:57
+#data
+<body><?_-_ data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?_-_ data?>
+
+#source processing-instructions.dat:58
+#data
+<body><?_>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?_ ?>
+
+#source processing-instructions.dat:59
+#data
+<body><?_ data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?_ data?>
+
+#source processing-instructions.dat:60
+#data
+<body><?A---------------->
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?A---------------- ?>
+
+#source processing-instructions.dat:61
+#data
+<body><?A---------------- data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?A---------------- data?>
+
+#source processing-instructions.dat:62
+#data
+<body><?z0123456789>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?z0123456789 ?>
+
+#source processing-instructions.dat:63
+#data
+<body><?z0123456789 data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?z0123456789 data?>
+
+#source processing-instructions.dat:64
+#data
+<body><?m-0>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?m-0 ?>
+
+#source processing-instructions.dat:65
+#data
+<body><?m-0 data>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <?m-0 data?>
+
+#source processing-instructions.dat:66
+#data
+<body><?xml>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?xml -->
+
+#source processing-instructions.dat:67
+#data
+<body><?xml-stylesheet>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?xml-stylesheet -->
+
+#source processing-instructions.dat:68
+#data
+<body><?XML>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?XML -->
+
+#source processing-instructions.dat:69
+#data
+<body><?XML-stylesheet>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?XML-stylesheet -->
+
+#source processing-instructions.dat:70
+#data
+<body><?xML>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?xML -->
+
+#source processing-instructions.dat:71
+#data
+<body><?xml-STYLesheet>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?xml-STYLesheet -->
+
+#source processing-instructions.dat:72
+#data
+<body><?1st-place>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?1st-place -->
+
+#source processing-instructions.dat:73
+#data
+<body><?2-factor>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?2-factor -->
+
+#source processing-instructions.dat:74
+#data
+<body><?99-problems>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?99-problems -->
+
+#source processing-instructions.dat:75
+#data
+<body><?٥-star>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?٥-star -->
+
+#source processing-instructions.dat:76
+#data
+<body><?-prefix>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?-prefix -->
+
+#source processing-instructions.dat:77
+#data
+<body><?--internal>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?--internal -->
+
+#source processing-instructions.dat:78
+#data
+<body><?-data->
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?-data- -->
+
+#source processing-instructions.dat:79
+#data
+<body><?-100>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?-100 -->
+
+#source processing-instructions.dat:80
+#data
+<body><?·middle-dot>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?·middle-dot -->
+
+#source processing-instructions.dat:81
+#data
+<body><?͵greek-numeral>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?͵greek-numeral -->
+
+#source processing-instructions.dat:82
+#data
+<body><?́accent-start>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?́accent-start -->
+
+#source processing-instructions.dat:83
+#data
+<body><?price$value>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?price$value -->
+
+#source processing-instructions.dat:84
+#data
+<body><?user@domain>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?user@domain -->
+
+#source processing-instructions.dat:85
+#data
+<body><?tag#id>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?tag#id -->
+
+#source processing-instructions.dat:86
+#data
+<body><?a+b>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?a+b -->
+
+#source processing-instructions.dat:87
+#data
+<body><?100%>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?100% -->
+
+#source processing-instructions.dat:88
+#data
+<body><?data.v1>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?data.v1 -->
+
+#source processing-instructions.dat:89
+#data
+<body><?namespace:tag>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?namespace:tag -->
+
+#source processing-instructions.dat:90
+#data
+<body><?error!code>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?error!code -->
+
+#source processing-instructions.dat:91
+#data
+<body><?x=y>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?x=y -->
+
+#source processing-instructions.dat:92
+#data
+<body><?a<b>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?a<b -->
+
+#source processing-instructions.dat:93
+#data
+<body><?true&false>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?true&false -->
+
+#source processing-instructions.dat:94
+#data
+<body><?not|or>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?not|or -->
+
+#source processing-instructions.dat:95
+#data
+<body><?lit$123456789>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?lit$123456789 -->
+
+#source processing-instructions.dat:96
+#data
+<body><?lit$$4x>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?lit$$4x -->
+
+#source processing-instructions.dat:97
+#data
+<body><?🚀-launch>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?🚀-launch -->
+
+#source processing-instructions.dat:98
+#data
+<body><?error-⚠️>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?error-⚠️ -->
+
+#source processing-instructions.dat:99
+#data
+<body><?fire-🔥>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?fire-🔥 -->
+
+#source processing-instructions.dat:100
+#data
+<body><?v1-✅>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?v1-✅ -->
+
+#source processing-instructions.dat:101
+#data
+<body><?start
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+
+#source processing-instructions.dat:102
+#data
+<body><?start?
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+
+#source processing-instructions.dat:103
+#data
+<body><?start 
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+
+#source processing-instructions.dat:104
+#data
+<body><?start data
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+
+#source processing-instructions.dat:105
+#data
+<body><?start ? ?
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+
+#source processing-instructions.dat:106
+#data
+<body><?
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+
+#source processing-instructions.dat:107
+#data
+<body><? 
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <!-- ?  -->
+
+#source processing-instructions.dat:108
+#data
+<div><?something></div>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <?something ?>
+
+#source processing-instructions.dat:109
+#data
+<div><?something good></div>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <?something good?>
+
+#source processing-instructions.dat:110
+#data
+<table><?something></table>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <?something ?>
+
+#source processing-instructions.dat:111
+#data
+<table><tr><?something></tr></table>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <?something ?>
+
+#source processing-instructions.dat:112
+#data
+<script><?something></script>
+#errors
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<?something>"
+|   <body>
+
+#source processing-instructions.dat:113
+#data
+<style><?something></style>
+#errors
+#document
+| <html>
+|   <head>
+|     <style>
+|       "<?something>"
+|   <body>
+
+#source processing-instructions.dat:114
+#data
+<?something>
+#errors
+#document
+| <?something ?>
+| <html>
+|   <head>
+|   <body>
+
+#source processing-instructions.dat:115
+#data
+<head><?something>
+#errors
+#document
+| <html>
+|   <head>
+|     <?something ?>
+|   <body>
+
+#source processing-instructions.dat:116
+#data
+<html><?something><head>
+#errors
+#document
+| <html>
+|   <?something ?>
+|   <head>
+|   <body>
+
+#source processing-instructions.dat:117
+#data
+<html><head></head><?something><body>
+#errors
+#document
+| <html>
+|   <head>
+|   <?something ?>
+|   <body>
+
+#source processing-instructions.dat:118
+#data
+<html><body></body><?something>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|   <?something ?>
+
+#source processing-instructions.dat:119
+#data
+<html><body></body></html><?something>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+| <?something ?>
+
+#source processing-instructions.dat:120
+#data
+<body><template><?something></template>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <template>
+|       content
+|         <?something ?>
+
+#source processing-instructions.dat:121
+#data
+<body><textarea><?something></textarea>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <textarea>
+|       "<?something>"
+
+#source processing-instructions.dat:122
+#data
+<body><title><?something></title>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <title>
+|       "<?something>"
+
+#source processing-instructions.dat:123
+#data
+<noscript><?pi>
+#errors
+#script-off
+#document
+| <html>
+|   <head>
+|     <noscript>
+|       <?pi ?>
+|   <body>
+
+#source processing-instructions.dat:124
+#data
+<template><?pi>
+#errors
+#document
+| <html>
+|   <head>
+|     <template>
+|       content
+|         <?pi ?>
+|   <body>

@@ -1,5 +1,5 @@
 {
-  "case_count": 456,
+  "case_count": 458,
   "cases": [
     {
       "axis": "foster-parenting",
@@ -2736,16 +2736,28 @@
       "id": "adoption02-dat-3",
       "reason": "non-table content, formatting, and form recovery around tables",
       "source": "adoption02.dat:3"
+    },
+    {
+      "axis": "table-shell",
+      "id": "processing-instructions-dat-110",
+      "reason": "table start/end handling and parser recovery around table shells",
+      "source": "processing-instructions.dat:110"
+    },
+    {
+      "axis": "row-group-boundary",
+      "id": "processing-instructions-dat-111",
+      "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
+      "source": "processing-instructions.dat:111"
     }
   ],
   "counts_by_axis": {
     "caption-colgroup": 69,
     "cell-boundary": 103,
     "foster-parenting": 59,
-    "row-group-boundary": 54,
+    "row-group-boundary": 55,
     "select-in-table": 51,
     "table-fragment-context": 91,
-    "table-shell": 29
+    "table-shell": 30
   },
   "description": "Focused parser audit over selected html5lib tree-construction cases that stress table insertion modes, foster parenting, and table fragments.",
   "format": "whatwg-html-table-audit/v1",

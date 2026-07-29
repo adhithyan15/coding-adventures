@@ -3,3 +3,6 @@
 # would cause false mismatches in heredoc-based assertions (Elixir, Ruby,
 # Python docstrings, etc.).
 * text=auto eol=lf
+
+# WPT tree-construction data includes inputs whose trailing spaces are semantic.
+code/packages/rust/html-parser/tests/fixtures/html5lib-tree-construction-smoke.dat whitespace=-trailing-space

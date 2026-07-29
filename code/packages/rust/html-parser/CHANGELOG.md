@@ -6,16 +6,18 @@ documented in this file.
 ## Unreleased
 
 ### Added
-- Processing instructions now have first-class tokenizer and DOM plumbing,
-  ready for the declarative HTML tokenizer states to emit target/data nodes.
+- The declarative HTML lexer now implements the current processing-instruction
+  states, and the canonical 2,637-case tree corpus covers every source
+  signature in the current 1,934-case upstream WPT tree-construction corpus.
+- Processing instructions now have first-class tokenizer and DOM plumbing from
+  declarative target/data emission through tree construction.
 - The current WPT void-in-phrasing and foreign-content CDATA cases are now
   mirrored in the canonical tree-construction corpus and its focused void and
-  foreign-content audits, leaving only processing-instruction signatures in
-  the checked upstream debt.
+  foreign-content audits.
 - The conformance coverage audit now reads tree-construction cases from WPT and
   tokenizer cases from html5lib-tests, pins every missing WPT source signature,
-  and accepts only explicit missing-case debt counts so the current 156-case gap
-  can be ratcheted to zero without hiding upstream drift.
+  and accepts only explicit missing-case debt counts so the now-zero gap cannot
+  silently regress as upstream evolves.
 - Fostered `nobr` table-cell continuation nodes are now repaired while
   processing the EOF token, retiring the final `finish_document` post-parse
   shim and the now-obsolete focused post-parse repair audit while preserving

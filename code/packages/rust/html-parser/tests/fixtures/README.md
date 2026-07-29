@@ -185,7 +185,7 @@ source signature:
 HTML5LIB_TESTS_ROOT=/path/to/html5lib-tests \
 WPT_ROOT=/path/to/wpt \
   python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py \
-  --expect-tree-missing 128 \
+  --expect-tree-missing 0 \
   --expect-tokenizer-missing 0
 ```
 
@@ -201,8 +201,8 @@ python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py
   /path/to/html5lib-tests \
   --wpt-root /path/to/wpt \
   --expect-tree-upstream-cases 1934 \
-  --expect-tree-local-cases 2513 \
-  --expect-tree-missing 128 \
+  --expect-tree-local-cases 2637 \
+  --expect-tree-missing 0 \
   --expect-tokenizer-upstream-cases 6806 \
   --expect-tokenizer-local-raw-cases 7015 \
   --expect-tokenizer-missing 0 \
@@ -216,10 +216,10 @@ Regenerate or check it with:
 ```bash
 python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py \
   /path/to/html5lib-tests --wpt-root /path/to/wpt \
-  --expect-tree-missing 128 --expect-tokenizer-missing 0 --write-report
+  --expect-tree-missing 0 --expect-tokenizer-missing 0 --write-report
 python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py \
   /path/to/html5lib-tests --wpt-root /path/to/wpt \
-  --expect-tree-missing 128 --expect-tokenizer-missing 0 --check-report
+  --expect-tree-missing 0 --expect-tokenizer-missing 0 --check-report
 ```
 
 `whatwg-tree-insertion-audit.json` is a generated index over the high-signal
@@ -445,6 +445,17 @@ doctypes, unknown elements, and legacy compatibility elements:
 ```bash
 python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_misc_recovery_audit_fixture.py
 python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_misc_recovery_audit_fixture.py \
+  --check
+```
+
+`whatwg-processing-instruction-audit.json` is a generated index over all
+current WPT processing-instruction tree-construction cases. It separates
+valid targets and data, invalid-target comment recovery, EOF recovery, and
+tree-builder insertion contexts:
+
+```bash
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_processing_instruction_audit_fixture.py
+python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_processing_instruction_audit_fixture.py \
   --check
 ```
 

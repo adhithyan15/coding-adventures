@@ -525,6 +525,12 @@ def normalize_case(
     ]
     diagnostics = normalize_diagnostic_set(diagnostics, test)
 
+    processing_instruction_override = normalize_current_processing_instruction_case(
+        test, initial_state
+    )
+    if processing_instruction_override is not None:
+        tokens, diagnostics = processing_instruction_override
+
     normalized = {
         "id": normalized_case_id(index, variant),
         "description": test.get("description", f"case {index}"),
@@ -565,6 +571,130 @@ def normalize_case(
         normalized["current_doctype"] = current_doctype
 
     return normalized
+
+
+def normalize_current_processing_instruction_case(
+    test: dict[str, Any], initial_state: str | None
+) -> tuple[list[str], list[str]] | None:
+    """Replace obsolete html5lib ``<?`` expectations with the current HTML rules.
+
+    html5lib's tokenizer corpus predates the HTML processing-instruction states
+    and therefore models every question mark after ``<`` as a bogus comment.
+    Keep those inputs in the normalized zero-skip corpus, but derive their
+    expected tokens and diagnostics from the current standard instead.
+    """
+
+    source = test["input"]
+    if initial_state is not None or "<?" not in source:
+        return None
+    if any(token[0] not in {"Character", "Comment"} for token in test["output"]):
+        return None
+
+    source = source.replace("\r\n", "\n").replace("\r", "\n")
+    tokens: list[str] = []
+    diagnostics: list[str] = []
+    text = ""
+    index = 0
+
+    def flush_text() -> None:
+        nonlocal text
+        if text:
+            tokens.append(f"Text(data={normalize_token_data(text)})")
+            text = ""
+
+    def consume_bogus_comment(data: str, cursor: int) -> int:
+        while cursor < len(source) and source[cursor] != ">":
+            character = source[cursor]
+            if character == "\0":
+                diagnostics.append("unexpected-null-character")
+                data += "\uFFFD"
+            else:
+                data += character
+            cursor += 1
+        tokens.append(f"Comment(data={data})")
+        return cursor + 1 if cursor < len(source) else cursor
+
+    while index < len(source):
+        if not source.startswith("<?", index):
+            text += source[index]
+            index += 1
+            continue
+
+        flush_text()
+        index += 2
+        if index == len(source):
+            diagnostics.append("eof-in-processing-instruction")
+            break
+
+        first = source[index]
+        if not (first.isascii() and (first.isalpha() or first == "_")):
+            diagnostics.append(
+                "invalid-first-character-of-processing-instruction-target"
+            )
+            index = consume_bogus_comment("?", index)
+            continue
+
+        target = ""
+        while index < len(source):
+            character = source[index]
+            if character.isascii() and (
+                character.isalnum() or character in {"-", "_"}
+            ):
+                target += character
+                index += 1
+                continue
+            break
+
+        if index == len(source):
+            diagnostics.append("eof-in-processing-instruction")
+            break
+
+        character = source[index]
+        if character not in {"\t", "\n", "\f", " ", "?", ">"}:
+            diagnostics.append("invalid-processing-instruction-target")
+            index = consume_bogus_comment(f"?{target}", index)
+            continue
+
+        if target.lower() in {"xml", "xml-stylesheet"}:
+            diagnostics.append("disallowed-processing-instruction-target")
+            index = consume_bogus_comment(f"?{target}", index)
+            continue
+
+        while index < len(source) and source[index] in {"\t", "\n", "\f", " "}:
+            index += 1
+
+        data = ""
+        emitted = False
+        while index < len(source):
+            character = source[index]
+            if character == ">":
+                tokens.append(
+                    f"ProcessingInstruction(target={target}, data={data})"
+                )
+                index += 1
+                emitted = True
+                break
+            if character == "?":
+                if index + 1 < len(source) and source[index + 1] == ">":
+                    tokens.append(
+                        f"ProcessingInstruction(target={target}, data={data})"
+                    )
+                    index += 2
+                    emitted = True
+                    break
+                data += "?"
+                index += 1
+                continue
+            data += character
+            index += 1
+
+        if not emitted:
+            diagnostics.append("eof-in-processing-instruction")
+            break
+
+    flush_text()
+    tokens.append("EOF")
+    return tokens, diagnostics
 
 
 def normalize_token_summaries(
