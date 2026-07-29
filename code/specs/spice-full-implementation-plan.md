@@ -33,10 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS bulk-junction potential temperature preprocessing.
+1. Cross-language Level-1 MOS junction-capacitance temperature scaling.
    - Status: current PR completion candidate.
-   - Apply the Berkeley MOS1 silicon potential correction to bulk-junction
-     potential `PB` alongside the existing electrostatic transform.
+   - Scale zero-bias `CJ`, `CBS`, and `CBD` through the Berkeley MOS1 `MJ`
+     bottom-junction grading path.
+   - Scale zero-bias `CJSW` through the independent `MJSW` sidewall grading
+     path, reusing the temperature-adjusted bulk-junction potential.
    - Preserve direct MOS helper and circuit-level temperature-transform parity.
    - Keep Rust, Python, and TypeScript helper behavior, tests, docs, and
      changelogs aligned.
@@ -3587,6 +3589,13 @@ the Rust, Python, and TypeScript surfaces together.
      shift for `PHI` and polarity-aware `VT0`.
    - Direct MOS helpers and circuit-level transforms preserve matching
      NMOS/PMOS behavior in Rust, Python, and TypeScript.
+
+287. Cross-language Level-1 MOS bulk-junction potential temperature preprocessing.
+   - Status: completed in PR 9142.
+   - Bulk-junction potential `PB` follows the Berkeley MOS1 silicon potential
+     correction alongside the existing electrostatic transform.
+   - Direct MOS helpers and circuit-level transforms preserve matching behavior
+     in Rust, Python, and TypeScript.
 
 ## Backlog
 

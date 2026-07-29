@@ -2801,6 +2801,28 @@ pub fn mosfet_at_temperature(
         (mosfet.params.bulk_junction_potential - nominal_potential_correction) / nominal_factor;
     let temperature_bulk_junction_potential =
         temperature_factor * nominal_bulk_junction_potential + temperature_potential_correction;
+    let nominal_bulk_potential_shift = (mosfet.params.bulk_junction_potential
+        - nominal_bulk_junction_potential)
+        / nominal_bulk_junction_potential;
+    let temperature_bulk_potential_shift = (temperature_bulk_junction_potential
+        - nominal_bulk_junction_potential)
+        / nominal_bulk_junction_potential;
+    let capacitance_scale = |grading_coefficient: f64| {
+        let nominal_scale = 1.0
+            / (1.0
+                + grading_coefficient
+                    * (4.0e-4 * (nominal_temperature_kelvin - reference_temperature_kelvin)
+                        - nominal_bulk_potential_shift));
+        let temperature_scale = 1.0
+            + grading_coefficient
+                * (4.0e-4 * (temperature_kelvin - reference_temperature_kelvin)
+                    - temperature_bulk_potential_shift);
+        nominal_scale * temperature_scale
+    };
+    let bottom_capacitance_scale =
+        capacitance_scale(mosfet.params.bulk_junction_grading_coefficient);
+    let sidewall_capacitance_scale =
+        capacitance_scale(mosfet.params.sidewall_junction_grading_coefficient);
     let polarity = match mosfet.mosfet_type {
         MosfetType::Nmos => 1.0,
         MosfetType::Pmos => -1.0,
@@ -2818,6 +2840,10 @@ pub fn mosfet_at_temperature(
     adjusted.params.vt0 = temperature_vt0;
     adjusted.params.phi = temperature_phi;
     adjusted.params.bulk_junction_potential = temperature_bulk_junction_potential;
+    adjusted.params.bottom_junction_capacitance *= bottom_capacitance_scale;
+    adjusted.params.source_bulk_capacitance *= bottom_capacitance_scale;
+    adjusted.params.drain_bulk_capacitance *= bottom_capacitance_scale;
+    adjusted.params.sidewall_junction_capacitance *= sidewall_capacitance_scale;
     adjusted.params.kp *= ratio.powf(-1.5);
     adjusted.params.surface_mobility *= ratio.powf(-1.5);
     adjusted.params.saturation_current *= saturation_scale;

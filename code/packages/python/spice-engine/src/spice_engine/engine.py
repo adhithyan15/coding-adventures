@@ -426,6 +426,31 @@ def mosfet_at_temperature(
         temperature_factor * nominal_bulk_junction_potential
         + potential_correction(temperature_kelvin)
     )
+    nominal_bulk_potential_shift = (
+        params.PB - nominal_bulk_junction_potential
+    ) / nominal_bulk_junction_potential
+    temperature_bulk_potential_shift = (
+        temperature_bulk_junction_potential - nominal_bulk_junction_potential
+    ) / nominal_bulk_junction_potential
+
+    def capacitance_scale(grading_coefficient: float) -> float:
+        nominal_scale = 1.0 / (
+            1.0
+            + grading_coefficient
+            * (
+                4.0e-4
+                * (nominal_temperature_kelvin - reference_temperature_kelvin)
+                - nominal_bulk_potential_shift
+            )
+        )
+        temperature_scale = 1.0 + grading_coefficient * (
+            4.0e-4 * (temperature_kelvin - reference_temperature_kelvin)
+            - temperature_bulk_potential_shift
+        )
+        return nominal_scale * temperature_scale
+
+    bottom_capacitance_scale = capacitance_scale(params.MJ)
+    sidewall_capacitance_scale = capacitance_scale(params.MJSW)
     polarity = 1.0 if model.type is MosfetType.NMOS else -1.0
     temperature_vbi = (
         params.VT0
@@ -454,6 +479,10 @@ def mosfet_at_temperature(
         VT0=temperature_vt0,
         PHI=temperature_phi,
         PB=temperature_bulk_junction_potential,
+        CJ=params.CJ * bottom_capacitance_scale,
+        CBS=params.CBS * bottom_capacitance_scale,
+        CBD=params.CBD * bottom_capacitance_scale,
+        CJSW=params.CJSW * sidewall_capacitance_scale,
         KP=params.KP * ratio**-1.5,
         U0=params.U0 * ratio**-1.5,
         IS=params.IS * saturation_scale,

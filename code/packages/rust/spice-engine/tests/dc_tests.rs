@@ -3588,6 +3588,65 @@ fn mosfet_temperature_scaling_adjusts_bulk_junction_potential() {
 }
 
 #[test]
+fn mosfet_temperature_scaling_adjusts_zero_bias_junction_capacitances() {
+    let nominal = Mosfet::with_model(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            bottom_junction_capacitance: 2.0e-12,
+            source_bulk_capacitance: 3.0e-12,
+            drain_bulk_capacitance: 4.0e-12,
+            sidewall_junction_capacitance: 5.0e-12,
+            ..MosfetLevel1Params::default()
+        },
+    );
+
+    let cold = mosfet_at_temperature(&nominal, 275.0, 300.15, 1.11).unwrap();
+    let hot = mosfet_at_temperature(&nominal, 350.0, 300.15, 1.11).unwrap();
+    let cold_bottom_scale = 0.970_502_066_286_684_6;
+    let cold_sidewall_scale = 0.980_531_363_923_873_3;
+    let hot_bottom_scale = 1.060_159_235_535_130_4;
+    let hot_sidewall_scale = 1.039_705_095_096_974_2;
+
+    assert_close(
+        cold.params.bottom_junction_capacitance,
+        2.0e-12 * cold_bottom_scale,
+    );
+    assert_close(
+        cold.params.source_bulk_capacitance,
+        3.0e-12 * cold_bottom_scale,
+    );
+    assert_close(
+        cold.params.drain_bulk_capacitance,
+        4.0e-12 * cold_bottom_scale,
+    );
+    assert_close(
+        cold.params.sidewall_junction_capacitance,
+        5.0e-12 * cold_sidewall_scale,
+    );
+    assert_close(
+        hot.params.bottom_junction_capacitance,
+        2.0e-12 * hot_bottom_scale,
+    );
+    assert_close(
+        hot.params.source_bulk_capacitance,
+        3.0e-12 * hot_bottom_scale,
+    );
+    assert_close(
+        hot.params.drain_bulk_capacitance,
+        4.0e-12 * hot_bottom_scale,
+    );
+    assert_close(
+        hot.params.sidewall_junction_capacitance,
+        5.0e-12 * hot_sidewall_scale,
+    );
+}
+
+#[test]
 fn mosfet_temperature_scaling_adjusts_bulk_junction_saturation_currents() {
     let nominal = Mosfet::with_model(
         "M1",

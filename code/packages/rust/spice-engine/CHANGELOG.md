@@ -1,5 +1,8 @@
 # Changelog
 
+- Scale Level-1 MOS zero-bias bottom-junction `CJ`, source/drain `CBS`/`CBD`,
+  and sidewall `CJSW` capacitances with temperature using Berkeley MOS1
+  `MJ`/`MJSW` grading paths.
 - Apply Berkeley MOS1 temperature preprocessing to the Level-1 MOS
   bulk-junction potential `PB`.
 - Apply Berkeley MOS1 electrostatic temperature preprocessing to Level-1 MOS

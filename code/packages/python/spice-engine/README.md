@@ -78,7 +78,9 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 operating-temperature footholds for diode, BJT, JFET, and Level-1 MOSFET
 models before running an analysis.
 Level-1 MOS temperature preprocessing follows the Berkeley MOS1 silicon
-band-gap correction for `PHI`, polarity-aware `VT0`, and bulk-junction `PB`.
+band-gap correction for `PHI`, polarity-aware `VT0`, and bulk-junction `PB`,
+and scales zero-bias `CJ`/`CBS`/`CBD` and `CJSW` through their respective
+`MJ` and `MJSW` grading paths.
 JFET model cards use `TCV` for threshold-voltage scaling and `BEX` for
 `BETA(T) = BETA * (T / TNOM)^BEX`. When explicitly present, `VTOTC` overrides
 `TCV` with `VTO(T) = VTO + VTOTC * (T - TNOM)`, while `BETATCE` overrides

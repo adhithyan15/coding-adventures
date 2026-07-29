@@ -4304,6 +4304,40 @@ def test_mosfet_temperature_scaling_adjusts_bulk_junction_potential():
     assert pytest.approx(0.719_697_229_921_455) == hot.model.model.params.PB
 
 
+def test_mosfet_temperature_scaling_adjusts_zero_bias_junction_capacitances():
+    nominal = Mosfet(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(
+                Level1Params(CJ=2.0e-12, CBS=3.0e-12, CBD=4.0e-12, CJSW=5.0e-12)
+            ),
+        ),
+    )
+
+    cold = mosfet_at_temperature(nominal, 275.0)
+    hot = mosfet_at_temperature(nominal, 350.0)
+    cold_params = cold.model.model.params
+    hot_params = hot.model.model.params
+    cold_bottom_scale = 0.970_502_066_286_684_6
+    cold_sidewall_scale = 0.980_531_363_923_873_3
+    hot_bottom_scale = 1.060_159_235_535_130_4
+    hot_sidewall_scale = 1.039_705_095_096_974_2
+
+    assert pytest.approx(2.0e-12 * cold_bottom_scale) == cold_params.CJ
+    assert pytest.approx(3.0e-12 * cold_bottom_scale) == cold_params.CBS
+    assert pytest.approx(4.0e-12 * cold_bottom_scale) == cold_params.CBD
+    assert pytest.approx(5.0e-12 * cold_sidewall_scale) == cold_params.CJSW
+    assert pytest.approx(2.0e-12 * hot_bottom_scale) == hot_params.CJ
+    assert pytest.approx(3.0e-12 * hot_bottom_scale) == hot_params.CBS
+    assert pytest.approx(4.0e-12 * hot_bottom_scale) == hot_params.CBD
+    assert pytest.approx(5.0e-12 * hot_sidewall_scale) == hot_params.CJSW
+
+
 def test_mosfet_temperature_scaling_adjusts_bulk_junction_saturation_currents():
     nominal = Mosfet(
         "M1",

@@ -2367,6 +2367,31 @@ describe("dcOp", () => {
     expectClose(hot.params.PB, 0.719_697_229_921_455);
   });
 
+  it("scales MOSFET zero-bias junction capacitances with temperature", () => {
+    const nominal = mosfet("M1", "d", "g", "s", "b", "NMOS", {
+      CJ: 2.0e-12,
+      CBS: 3.0e-12,
+      CBD: 4.0e-12,
+      CJSW: 5.0e-12,
+    });
+
+    const cold = mosfetAtTemperature(nominal, 275.0);
+    const hot = mosfetAtTemperature(nominal, 350.0);
+    const coldBottomScale = 0.970_502_066_286_684_6;
+    const coldSidewallScale = 0.980_531_363_923_873_3;
+    const hotBottomScale = 1.060_159_235_535_130_4;
+    const hotSidewallScale = 1.039_705_095_096_974_2;
+
+    expectClose(cold.params.CJ, 2.0e-12 * coldBottomScale);
+    expectClose(cold.params.CBS, 3.0e-12 * coldBottomScale);
+    expectClose(cold.params.CBD, 4.0e-12 * coldBottomScale);
+    expectClose(cold.params.CJSW, 5.0e-12 * coldSidewallScale);
+    expectClose(hot.params.CJ, 2.0e-12 * hotBottomScale);
+    expectClose(hot.params.CBS, 3.0e-12 * hotBottomScale);
+    expectClose(hot.params.CBD, 4.0e-12 * hotBottomScale);
+    expectClose(hot.params.CJSW, 5.0e-12 * hotSidewallScale);
+  });
+
   it("scales MOSFET bulk-junction saturation currents with temperature", () => {
     const nominal = mosfet("M1", "d", "g", "s", "b", "NMOS", {
       IS: 2.0e-15,
