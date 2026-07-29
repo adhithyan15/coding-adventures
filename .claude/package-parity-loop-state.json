@@ -67,6 +67,15 @@
       "notes": "Newly explicit after the bootstrap schema audit. Add closed inputs/results and positive plus adversarial cases for diff selection, hashing/cache, Starlark, sharding, validation, toolchain detection, and CLI before those domains can report success."
     },
     {
+      "id": "build-file-standalone-integrity",
+      "title": "Repair stale BUILD_windows standalone prerequisite declarations",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The rebased Go oracle full dry-run currently reports 73 pre-existing validation gaps: 12 Python, 3 Swift, and 58 TypeScript. Deliver dependency-shaped waves and preserve the broader July 29 audit queue for Perl, Dart, Kotlin, and related packages."
+    },
+    {
       "id": "build-tool-go-oracle",
       "title": "Bring the Go build tool to the canonical contract",
       "status": "pending",
