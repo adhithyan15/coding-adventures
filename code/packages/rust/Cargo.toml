@@ -291,6 +291,7 @@ members = [
     "axiom-parser",
     "axiom-runtime",
     "axiom-repl",
+    "axiom-to-semantic-ir",
     "logic-gates",
     "logic-core",
     "lookup-core",
