@@ -1,6 +1,6 @@
 # mosfet-models
 
-SPICE Level-1 (Shockley) MOSFET I-V model with full small-signal parameter extraction, body effect, subthreshold conduction, and PMOS sign conventions. Bulk-junction capacitance supports Berkeley `PB`, `MJ`, and `FC` depletion shaping.
+SPICE Level-1 (Shockley) MOSFET I-V model with full small-signal parameter extraction, body effect, subthreshold conduction, and PMOS sign conventions. Bulk-junction capacitance supports Berkeley `PB`, `MJ`, `MJSW`, and `FC` depletion shaping.
 
 ## What it does
 
@@ -36,7 +36,8 @@ default to zero ohms. `NRD` and `NRS` are finite, non-negative drain/source
 diffusion square counts and default to one.
 `AD`, `AS`, `PD`, `PS`, `CJ`, and `CJSW` are finite, non-negative and default
 to zero. They add `CJ * AD + CJSW * PD` to drain-body `CBD` and
-`CJ * AS + CJSW * PS` to source-body `CBS`.
+`CJ * AS + CJSW * PS` to source-body `CBS`. `MJ` shapes bottom-junction
+depletion while `MJSW` defaults to `0.33` and shapes the sidewall terms.
 
 ## Usage
 

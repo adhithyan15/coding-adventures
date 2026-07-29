@@ -9183,11 +9183,17 @@ def _mosfet_charge_dynamic_capacitance(
         return zero_bias_capacitance
     junction_potential = getattr(params, "PB", 0.8)
     grading_coefficient = getattr(params, "MJ", 0.5)
+    sidewall_grading_coefficient = getattr(params, "MJSW", 0.33)
     forward_bias_coefficient = getattr(params, "FC", 0.5)
     if not math.isfinite(junction_potential) or junction_potential <= 0.0:
         raise ValueError(f"{el.name}: MOSFET PB must be finite and positive")
     if not math.isfinite(grading_coefficient) or grading_coefficient < 0.0:
         raise ValueError(f"{el.name}: MOSFET MJ must be finite and non-negative")
+    if (
+        not math.isfinite(sidewall_grading_coefficient)
+        or sidewall_grading_coefficient < 0.0
+    ):
+        raise ValueError(f"{el.name}: MOSFET MJSW must be finite and non-negative")
     if (
         not math.isfinite(forward_bias_coefficient)
         or forward_bias_coefficient < 0.0
@@ -9196,11 +9202,31 @@ def _mosfet_charge_dynamic_capacitance(
         raise ValueError(f"{el.name}: MOSFET FC must be finite and in [0, 1)")
     mosfet_type = getattr(el.model, "type", None)
     junction_voltage = state_voltage if mosfet_type == MosfetType.PMOS else -state_voltage
+    if state_name == _mosfet_source_body_charge_state_name(el):
+        bottom_capacitance = getattr(params, "CBS", 0.0) + (
+            getattr(params, "CJ", 0.0) * getattr(params, "AS", 0.0)
+        )
+        sidewall_capacitance = getattr(params, "CJSW", 0.0) * getattr(
+            params, "PS", 0.0
+        )
+    else:
+        bottom_capacitance = getattr(params, "CBD", 0.0) + (
+            getattr(params, "CJ", 0.0) * getattr(params, "AD", 0.0)
+        )
+        sidewall_capacitance = getattr(params, "CJSW", 0.0) * getattr(
+            params, "PD", 0.0
+        )
     return bulk_junction_capacitance(
-        zero_bias_capacitance,
+        bottom_capacitance,
         junction_voltage,
         junction_potential,
         grading_coefficient,
+        forward_bias_coefficient,
+    ) + bulk_junction_capacitance(
+        sidewall_capacitance,
+        junction_voltage,
+        junction_potential,
+        sidewall_grading_coefficient,
         forward_bias_coefficient,
     )
 

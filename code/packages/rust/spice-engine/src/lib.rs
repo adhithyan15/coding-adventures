@@ -3630,6 +3630,7 @@ pub struct MosfetLevel1Params {
     pub drain_bulk_capacitance: f64,
     pub bulk_junction_potential: f64,
     pub bulk_junction_grading_coefficient: f64,
+    pub sidewall_junction_grading_coefficient: f64,
     pub forward_bias_depletion_coefficient: f64,
     pub flicker_noise_coefficient: f64,
     pub flicker_noise_exponent: f64,
@@ -3668,6 +3669,7 @@ impl Default for MosfetLevel1Params {
             drain_bulk_capacitance: 0.0,
             bulk_junction_potential: 0.8,
             bulk_junction_grading_coefficient: 0.5,
+            sidewall_junction_grading_coefficient: 0.33,
             forward_bias_depletion_coefficient: 0.5,
             flicker_noise_coefficient: 0.0,
             flicker_noise_exponent: 1.0,
@@ -4014,8 +4016,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Pnp, 41, 58, 13, 4),
     (ModelCardKind::Njf, 22, 30, 7, 3),
     (ModelCardKind::Pjf, 22, 30, 7, 3),
-    (ModelCardKind::Nmos, 28, 35, 6, 3),
-    (ModelCardKind::Pmos, 28, 35, 6, 3),
+    (ModelCardKind::Nmos, 29, 36, 6, 3),
+    (ModelCardKind::Pmos, 29, 36, 6, 3),
 ];
 const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -4165,6 +4167,7 @@ const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("CJSW", "CJSW"),
     ("PB", "PB"),
     ("MJ", "MJ"),
+    ("MJSW", "MJSW"),
     ("FC", "FC"),
     ("KF", "KF"),
     ("AF", "AF"),
@@ -4977,6 +4980,9 @@ pub fn mosfet_from_model_card(
     }
     if let Some(value) = model.parameters.get("MJ") {
         params.bulk_junction_grading_coefficient = *value;
+    }
+    if let Some(value) = model.parameters.get("MJSW") {
+        params.sidewall_junction_grading_coefficient = *value;
     }
     if let Some(value) = model.parameters.get("FC") {
         params.forward_bias_depletion_coefficient = *value;
@@ -24319,21 +24325,29 @@ fn evaluate_nmos_level1(
     let channel_capacitance =
         params.w * effective_length * (OXIDE_PERMITTIVITY / params.oxide_thickness);
     let cbs_bulk = mosfet_bulk_junction_capacitance(
-        params.source_bulk_capacitance
-            + params.bottom_junction_capacitance * params.source_area
-            + params.sidewall_junction_capacitance * params.source_perimeter,
+        params.source_bulk_capacitance + params.bottom_junction_capacitance * params.source_area,
         vbs,
         params.bulk_junction_potential,
         params.bulk_junction_grading_coefficient,
         params.forward_bias_depletion_coefficient,
+    ) + mosfet_bulk_junction_capacitance(
+        params.sidewall_junction_capacitance * params.source_perimeter,
+        vbs,
+        params.bulk_junction_potential,
+        params.sidewall_junction_grading_coefficient,
+        params.forward_bias_depletion_coefficient,
     );
     let cbd_bulk = mosfet_bulk_junction_capacitance(
-        params.drain_bulk_capacitance
-            + params.bottom_junction_capacitance * params.drain_area
-            + params.sidewall_junction_capacitance * params.drain_perimeter,
+        params.drain_bulk_capacitance + params.bottom_junction_capacitance * params.drain_area,
         vbs - vds,
         params.bulk_junction_potential,
         params.bulk_junction_grading_coefficient,
+        params.forward_bias_depletion_coefficient,
+    ) + mosfet_bulk_junction_capacitance(
+        params.sidewall_junction_capacitance * params.drain_perimeter,
+        vbs - vds,
+        params.bulk_junction_potential,
+        params.sidewall_junction_grading_coefficient,
         params.forward_bias_depletion_coefficient,
     );
     let threshold = if params.phi - vbs >= 0.0 {
@@ -25137,11 +25151,30 @@ fn mosfet_charge_dynamic_capacitance(
         MosfetType::Pmos => state_voltage,
         MosfetType::Nmos => -state_voltage,
     };
+    let (bottom_capacitance, sidewall_capacitance) = match spec.kind {
+        MosfetChargeStateKind::SourceBody => (
+            mosfet.params.source_bulk_capacitance
+                + mosfet.params.bottom_junction_capacitance * mosfet.params.source_area,
+            mosfet.params.sidewall_junction_capacitance * mosfet.params.source_perimeter,
+        ),
+        MosfetChargeStateKind::DrainBody => (
+            mosfet.params.drain_bulk_capacitance
+                + mosfet.params.bottom_junction_capacitance * mosfet.params.drain_area,
+            mosfet.params.sidewall_junction_capacitance * mosfet.params.drain_perimeter,
+        ),
+        _ => unreachable!(),
+    };
     mosfet_bulk_junction_capacitance(
-        spec.capacitance,
+        bottom_capacitance,
         junction_voltage,
         mosfet.params.bulk_junction_potential,
         mosfet.params.bulk_junction_grading_coefficient,
+        mosfet.params.forward_bias_depletion_coefficient,
+    ) + mosfet_bulk_junction_capacitance(
+        sidewall_capacitance,
+        junction_voltage,
+        mosfet.params.bulk_junction_potential,
+        mosfet.params.sidewall_junction_grading_coefficient,
         mosfet.params.forward_bias_depletion_coefficient,
     )
 }
@@ -25714,6 +25747,7 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("CBD", params.drain_bulk_capacitance),
         ("PB", params.bulk_junction_potential),
         ("MJ", params.bulk_junction_grading_coefficient),
+        ("MJSW", params.sidewall_junction_grading_coefficient),
         ("FC", params.forward_bias_depletion_coefficient),
         ("KF", params.flicker_noise_coefficient),
         ("AF", params.flicker_noise_exponent),
@@ -25833,6 +25867,12 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "MOSFET PB must be positive and MJ must be non-negative".to_string(),
+        });
+    }
+    if params.sidewall_junction_grading_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET MJSW must be non-negative".to_string(),
         });
     }
     if !(0.0..1.0).contains(&params.forward_bias_depletion_coefficient) {

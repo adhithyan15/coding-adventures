@@ -4,6 +4,8 @@
 
 ### Added
 
+- `Level1Params::mjsw` adds Berkeley sidewall-junction depletion grading,
+  defaulting to `0.33` independently from bottom-junction `MJ`.
 - `Level1Params::ps` adds zero-default Berkeley source diffusion perimeter,
   contributing `CJSW * PS` to the zero-bias source-body capacitance.
 - `Level1Params::pd` and `Level1Params::cjsw` add zero-default Berkeley drain
