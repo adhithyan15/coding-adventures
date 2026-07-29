@@ -1,5 +1,5 @@
 {
-  "case_count": 731,
+  "case_count": 744,
   "cases": [
     {
       "axis": "comment-whitespace-shell",
@@ -4386,10 +4386,88 @@
       "id": "webkit02-dat-5",
       "reason": "explicit html start/end tags and late html-tag recovery",
       "source": "webkit02.dat:5"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "void-in-phrasing-dat-1",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "void-in-phrasing.dat:1"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "void-in-phrasing-dat-2",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "void-in-phrasing.dat:2"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "void-in-phrasing-dat-3",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "void-in-phrasing.dat:3"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "void-in-phrasing-dat-4",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "void-in-phrasing.dat:4"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "void-in-phrasing-dat-5",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "void-in-phrasing.dat:5"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "void-in-phrasing-dat-6",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "void-in-phrasing.dat:6"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "void-in-phrasing-dat-7",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "void-in-phrasing.dat:7"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "void-in-phrasing-dat-8",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "void-in-phrasing.dat:8"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "void-in-phrasing-dat-9",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "void-in-phrasing.dat:9"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "void-in-phrasing-dat-10",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "void-in-phrasing.dat:10"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "void-in-phrasing-dat-11",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "void-in-phrasing.dat:11"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "void-in-phrasing-dat-12",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "void-in-phrasing.dat:12"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "void-in-phrasing-dat-13",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "void-in-phrasing.dat:13"
     }
   ],
   "counts_by_axis": {
-    "body-frameset-boundary": 310,
+    "body-frameset-boundary": 323,
     "comment-whitespace-shell": 15,
     "doctype-and-quirks": 37,
     "head-element-boundary": 132,

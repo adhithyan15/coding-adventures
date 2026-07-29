@@ -40521,3 +40521,241 @@ math annotation-xml
 |       <marquee>
 |       <table>
 |     <nobr>
+
+#source void-in-phrasing.dat:1
+#data
+<!DOCTYPE html><body><p><br></p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <br>
+
+#source void-in-phrasing.dat:2
+#data
+<!DOCTYPE html><body><p><br>text</p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <br>
+|       "text"
+
+#source void-in-phrasing.dat:3
+#data
+<!DOCTYPE html><body><p>before<br>after</p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       "before"
+|       <br>
+|       "after"
+
+#source void-in-phrasing.dat:4
+#data
+<!DOCTYPE html><body><p><br><br></p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <br>
+|       <br>
+
+#source void-in-phrasing.dat:5
+#data
+<!DOCTYPE html><body><p>a<br>b<br>c</p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       "a"
+|       <br>
+|       "b"
+|       <br>
+|       "c"
+
+#source void-in-phrasing.dat:6
+#data
+<!DOCTYPE html><body><h1><br></h1>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <h1>
+|       <br>
+
+#source void-in-phrasing.dat:7
+#data
+<!DOCTYPE html><body><p><input></p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <input>
+
+#source void-in-phrasing.dat:8
+#data
+<!DOCTYPE html><body><p><img></p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <img>
+
+#source void-in-phrasing.dat:9
+#data
+<!DOCTYPE html><body><p><wbr></p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <wbr>
+
+#source void-in-phrasing.dat:10
+#data
+<!DOCTYPE html><body><p><embed></p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <embed>
+
+#source void-in-phrasing.dat:11
+#data
+<!DOCTYPE html><body><h2><input></h2>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <h2>
+|       <input>
+
+#source void-in-phrasing.dat:12
+#data
+<!DOCTYPE html><body><em><br></em>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <em>
+|       <br>
+
+#source void-in-phrasing.dat:13
+#data
+<!DOCTYPE html><body><strong><br>text</strong>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <strong>
+|       <br>
+|       "text"
+
+#source html5test-com.dat:14
+#data
+<svg><title><![CDATA[x]]>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg title>
+|         "x"
+
+#source html5test-com.dat:15
+#data
+<svg><foreignobject><![CDATA[x]]>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg foreignObject>
+|         "x"
+
+#source html5test-com.dat:16
+#data
+<svg><foreignobject><p><![CDATA[x]]>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg foreignObject>
+|         <p>
+|           <!-- [CDATA[x]] -->
+
+#source html5test-com.dat:17
+#data
+<math><![CDATA[x]]>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       "x"
+
+#source html5test-com.dat:18
+#data
+<math><mtext><![CDATA[x]]>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math mtext>
+|         "x"
+
+#source html5test-com.dat:19
+#data
+<math><mtext><i><![CDATA[x]]>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math mtext>
+|         <i>
+|           <!-- [CDATA[x]] -->

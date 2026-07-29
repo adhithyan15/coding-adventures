@@ -1,5 +1,5 @@
 {
-  "case_count": 435,
+  "case_count": 441,
   "cases": [
     {
       "axis": "table-foreign-boundary",
@@ -2610,12 +2610,48 @@
       "id": "plain-text-unsafe-dat-41",
       "reason": "SVG and MathML fragment parsing with foreign-content context seeding",
       "source": "plain-text-unsafe.dat:41"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "html5test-com-dat-14",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "html5test-com.dat:14"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "html5test-com-dat-15",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "html5test-com.dat:15"
+    },
+    {
+      "axis": "html-integration-point",
+      "id": "html5test-com-dat-16",
+      "reason": "foreignObject, desc/title, and annotation-xml HTML integration points",
+      "source": "html5test-com.dat:16"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "html5test-com-dat-17",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "html5test-com.dat:17"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "html5test-com-dat-18",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "html5test-com.dat:18"
+    },
+    {
+      "axis": "mathml-boundary",
+      "id": "html5test-com-dat-19",
+      "reason": "MathML insertion-mode boundaries and text-integration recovery",
+      "source": "html5test-com.dat:19"
     }
   ],
   "counts_by_axis": {
     "foreign-fragment": 70,
-    "html-integration-point": 98,
-    "mathml-boundary": 80,
+    "html-integration-point": 101,
+    "mathml-boundary": 83,
     "svg-boundary": 130,
     "table-foreign-boundary": 57
   },

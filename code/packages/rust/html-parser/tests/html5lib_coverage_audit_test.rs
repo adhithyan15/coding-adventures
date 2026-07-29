@@ -74,8 +74,8 @@ fn html5lib_coverage_audit_fixture_matches_checked_local_corpora() {
     );
     assert_eq!(audit.tree_construction.upstream_cases, 1934);
     assert_eq!(audit.tree_construction.local_cases, tree_cases.len());
-    assert_eq!(audit.tree_construction.local_cases, 2494);
-    assert_eq!(audit.tree_construction.missing, 147);
+    assert_eq!(audit.tree_construction.local_cases, 2513);
+    assert_eq!(audit.tree_construction.missing, 128);
     assert_eq!(
         audit.tree_construction.missing_sources.len(),
         audit.tree_construction.missing
@@ -86,7 +86,7 @@ fn html5lib_coverage_audit_fixture_matches_checked_local_corpora() {
     );
     assert_eq!(
         missing_source_count(&audit.tree_construction, "void-in-phrasing.dat:"),
-        13
+        0
     );
     assert_eq!(
         missing_source_count(&audit.tree_construction, "plain-text-unsafe.dat:"),
@@ -94,7 +94,7 @@ fn html5lib_coverage_audit_fixture_matches_checked_local_corpora() {
     );
     assert_eq!(
         missing_source_count(&audit.tree_construction, "html5test-com.dat:"),
-        7
+        1
     );
     assert_eq!(
         missing_source_count(&audit.tree_construction, "tests1.dat:"),

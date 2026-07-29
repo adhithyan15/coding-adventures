@@ -1,5 +1,5 @@
 {
-  "case_count": 639,
+  "case_count": 654,
   "cases": [
     {
       "axis": "interactive-formatting-boundary",
@@ -3834,15 +3834,105 @@
       "id": "adoption02-dat-3",
       "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
       "source": "adoption02.dat:3"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "void-in-phrasing-dat-1",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "void-in-phrasing.dat:1"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "void-in-phrasing-dat-2",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "void-in-phrasing.dat:2"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "void-in-phrasing-dat-3",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "void-in-phrasing.dat:3"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "void-in-phrasing-dat-4",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "void-in-phrasing.dat:4"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "void-in-phrasing-dat-5",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "void-in-phrasing.dat:5"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "void-in-phrasing-dat-6",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "void-in-phrasing.dat:6"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "void-in-phrasing-dat-7",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "void-in-phrasing.dat:7"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "void-in-phrasing-dat-8",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "void-in-phrasing.dat:8"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "void-in-phrasing-dat-9",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "void-in-phrasing.dat:9"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "void-in-phrasing-dat-10",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "void-in-phrasing.dat:10"
+    },
+    {
+      "axis": "heading-boundary",
+      "id": "void-in-phrasing-dat-11",
+      "reason": "heading implied end tags and nested heading recovery",
+      "source": "void-in-phrasing.dat:11"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "void-in-phrasing-dat-12",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "void-in-phrasing.dat:12"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "void-in-phrasing-dat-13",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "void-in-phrasing.dat:13"
+    },
+    {
+      "axis": "paragraph-boundary",
+      "id": "html5test-com-dat-16",
+      "reason": "paragraph implied end tags around block and phrasing boundaries",
+      "source": "html5test-com.dat:16"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "html5test-com-dat-19",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "html5test-com.dat:19"
     }
   ],
   "counts_by_axis": {
     "adoption-agency-formatting": 114,
-    "formatting-reconstruction": 30,
-    "heading-boundary": 26,
+    "formatting-reconstruction": 33,
+    "heading-boundary": 28,
     "interactive-formatting-boundary": 151,
     "list-definition-boundary": 57,
-    "paragraph-boundary": 218,
+    "paragraph-boundary": 228,
     "ruby-implied-end-tags": 43
   },
   "description": "Focused parser audit over selected html5lib tree-construction cases that stress active formatting elements, implied end tags, ruby scopes, headings, and paragraph/list boundaries.",

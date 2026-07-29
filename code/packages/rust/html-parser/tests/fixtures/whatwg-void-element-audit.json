@@ -1,5 +1,5 @@
 {
-  "case_count": 227,
+  "case_count": 240,
   "cases": [
     {
       "axis": "void-in-table",
@@ -1362,10 +1362,88 @@
       "id": "tests-innerhtml-1-dat-76",
       "reason": "void elements in html5lib fragment contexts",
       "source": "tests_innerHTML_1.dat:76"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "void-in-phrasing-dat-1",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "void-in-phrasing.dat:1"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "void-in-phrasing-dat-2",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "void-in-phrasing.dat:2"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "void-in-phrasing-dat-3",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "void-in-phrasing.dat:3"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "void-in-phrasing-dat-4",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "void-in-phrasing.dat:4"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "void-in-phrasing-dat-5",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "void-in-phrasing.dat:5"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "void-in-phrasing-dat-6",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "void-in-phrasing.dat:6"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "void-in-phrasing-dat-7",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "void-in-phrasing.dat:7"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "void-in-phrasing-dat-8",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "void-in-phrasing.dat:8"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "void-in-phrasing-dat-9",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "void-in-phrasing.dat:9"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "void-in-phrasing-dat-10",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "void-in-phrasing.dat:10"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "void-in-phrasing-dat-11",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "void-in-phrasing.dat:11"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "void-in-phrasing-dat-12",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "void-in-phrasing.dat:12"
+    },
+    {
+      "axis": "body-void-elements",
+      "id": "void-in-phrasing-dat-13",
+      "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
+      "source": "void-in-phrasing.dat:13"
     }
   ],
   "counts_by_axis": {
-    "body-void-elements": 61,
+    "body-void-elements": 74,
     "legacy-void-elements": 15,
     "metadata-void-elements": 56,
     "stray-void-end-tags": 5,

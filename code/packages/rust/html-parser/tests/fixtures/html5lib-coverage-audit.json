@@ -9,16 +9,10 @@
     "upstream_source": "html5lib-tests/tokenizer"
   },
   "tree_construction": {
-    "local_cases": 2494,
-    "missing": 147,
+    "local_cases": 2513,
+    "missing": 128,
     "missing_sources": [
       "html5test-com.dat:12",
-      "html5test-com.dat:14",
-      "html5test-com.dat:15",
-      "html5test-com.dat:16",
-      "html5test-com.dat:17",
-      "html5test-com.dat:18",
-      "html5test-com.dat:19",
       "processing-instructions.dat:1",
       "processing-instructions.dat:2",
       "processing-instructions.dat:3",
@@ -145,20 +139,7 @@
       "processing-instructions.dat:124",
       "tests1.dat:40",
       "tests1.dat:44",
-      "tests1.dat:47",
-      "void-in-phrasing.dat:1",
-      "void-in-phrasing.dat:2",
-      "void-in-phrasing.dat:3",
-      "void-in-phrasing.dat:4",
-      "void-in-phrasing.dat:5",
-      "void-in-phrasing.dat:6",
-      "void-in-phrasing.dat:7",
-      "void-in-phrasing.dat:8",
-      "void-in-phrasing.dat:9",
-      "void-in-phrasing.dat:10",
-      "void-in-phrasing.dat:11",
-      "void-in-phrasing.dat:12",
-      "void-in-phrasing.dat:13"
+      "tests1.dat:47"
     ],
     "upstream_cases": 1934,
     "upstream_source": "wpt/html/syntax/parsing/resources"
