@@ -2741,6 +2741,121 @@ fn refmod_move_source_into_numeric_receiver_is_a_later_rung() {
     );
 }
 
+// STRING with a reference-modification SENDING FIELD — `WS(start:len)`
+// contributes its sliced substring as the field's char image, produced by the
+// SAME refmod-substring evaluators DISPLAY / comparison / MOVE-source use
+// (`refmod_string` in the oracle, `ref_mod_slice` in the compiler). Only
+// CONSTANT (literal) indices are accepted; a computed (data-name) index stays a
+// later rung, rejected IDENTICALLY on both engines. Positive tests use ASCII
+// data so the byte-based (compiler) and char-based (oracle) slices coincide.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn string_refmod_source_mid_substring() {
+    // A single refmod sending field, DELIMITED BY SIZE: WS(2:3) of "ABCDEF" is the
+    // 3-char slice starting at 1-based position 2 → "BCD", left-justified into a
+    // 6-wide receiver whose untouched tail stays blank.
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(6) VALUE \"ABCDEF\".", "01  DST PIC X(6) VALUE SPACES."],
+        &["STRING WS(2:3) DELIMITED BY SIZE INTO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "BCD   \n");
+}
+
+#[test]
+fn string_refmod_source_omitted_length_runs_to_end() {
+    // An omitted length runs to the end of the base item: WS(3:) of "ABCDEF" →
+    // "CDEF".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(6) VALUE \"ABCDEF\".", "01  DST PIC X(6) VALUE SPACES."],
+        &["STRING WS(3:) DELIMITED BY SIZE INTO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "CDEF  \n");
+}
+
+#[test]
+fn string_refmod_source_concatenated_with_literal_and_item() {
+    // The refmod image composes in the concat exactly like a plain field: WS(1:2)
+    // ++ "-" ++ WS(4:2) of "ABCDEF" → "AB" ++ "-" ++ "DE" = "AB-DE".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(6) VALUE \"ABCDEF\".", "01  DST PIC X(8) VALUE SPACES."],
+        &[
+            "STRING WS(1:2) \"-\" WS(4:2) DELIMITED BY SIZE INTO DST.",
+            "DISPLAY DST.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "AB-DE   \n");
+}
+
+#[test]
+fn string_refmod_source_under_a_delimiter() {
+    // Under DELIMITED BY a single-char delimiter the refmod image is truncated at
+    // its first delimiter char, like any field: WS(1:5) of "ab,cdef" is "ab,cd",
+    // whose prefix up to the first "," is "ab".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(7) VALUE \"ab,cdef\".", "01  DST PIC X(6) VALUE SPACES."],
+        &["STRING WS(1:5) DELIMITED BY \",\" INTO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ab    \n");
+}
+
+#[test]
+fn string_refmod_source_with_pointer() {
+    // The refmod image composes with WITH POINTER without special-casing: WS(2:3)
+    // of "ABCDEF" = "BCD" overlaid from pointer 1 into a "......" receiver → "BCD..."
+    // with the pointer written back to 1 + 3 = 4 ("04").
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  WS  PIC X(6) VALUE \"ABCDEF\".",
+            "01  DST PIC X(6) VALUE \"......\".",
+            "01  P   PIC 9(2) VALUE 1.",
+        ],
+        &[
+            "STRING WS(2:3) DELIMITED BY SIZE INTO DST WITH POINTER P.",
+            "DISPLAY DST.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "BCD...\n04\n");
+}
+
+#[test]
+fn string_refmod_source_ascii_window_non_ascii_outside() {
+    // Non-ASCII CLEANLINESS: 'é' sits at the END of "abcdé", strictly OUTSIDE the
+    // (1:3) window, so byte-index == char-index within the window and the byte-based
+    // (compiler) and char-based (oracle) slices coincide → "abc", byte-identical. (A
+    // window covering/following a multi-byte char is the pre-existing refmod
+    // byte-vs-char chip, deliberately not exercised here.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"abcdé\".", "01  DST PIC X(3) VALUE SPACES."],
+        &["STRING WS(1:3) DELIMITED BY SIZE INTO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "abc\n");
+}
+
+#[test]
+fn string_refmod_source_computed_index_is_a_later_rung() {
+    // A COMPUTED (data-name) index gives a run-time length the compiler's compile-
+    // time STRING image contract cannot carry, so a refmod sending field with a
+    // data-name index stays a later rung — rejected IDENTICALLY on BOTH engines.
+    let src = wrap(
+        &[
+            "01  WS  PIC X(6) VALUE \"ABCDEF\".",
+            "01  DST PIC X(6) VALUE SPACES.",
+            "01  J   PIC 9 VALUE 2.",
+            "01  K   PIC 9 VALUE 3.",
+        ],
+        &["STRING WS(J:K) DELIMITED BY SIZE INTO DST.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a computed-index refmod STRING source");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a computed-index refmod STRING source"
+    );
+}
+
 // STRING — concatenate sending fields into an alphanumeric receiver
 // (DELIMITED BY SIZE = each source taken in full). The receiver is LEFT-
 // justified, truncated at its width, and — the COBOL surprise — its tail beyond

@@ -677,6 +677,16 @@ impl Machine {
     /// literal gives its source digits verbatim (matching the compiler, which
     /// concatenates the literal's lexed text). A numeric item, a group item, and a
     /// figurative constant as a source are later rungs.
+    ///
+    /// A reference-modification sending field — `WS(start:len)` — contributes the
+    /// sliced substring, produced by the shared [`Self::refmod_string`] evaluator
+    /// (the exact same slice DISPLAY / comparison / MOVE-source take). Only
+    /// **constant (literal) indices** are accepted: with a `PIC X` base and literal
+    /// `start`/`len` the substring is a compile-time-known char image, so it drops
+    /// into the concat like any alphanumeric field. A **computed (data-name) index**
+    /// has a run-time length the compiler's compile-time STRING image contract
+    /// cannot carry, so it stays a later rung — rejected here identically to the
+    /// compiler so both engines refuse the same programs.
     fn string_source_chars(&self, op: &Operand) -> Result<String, RuntimeError> {
         match op {
             Operand::Lit(Lit::Str(s)) => Ok(s.clone()),
@@ -684,9 +694,20 @@ impl Machine {
             Operand::Lit(Lit::Fig(_)) => Err(RuntimeError::Unsupported(
                 "a figurative constant as a STRING sending field is a later rung".into(),
             )),
-            Operand::RefMod { .. } => Err(RuntimeError::Unsupported(
-                "a reference modification as a STRING sending field is a later rung".into(),
-            )),
+            Operand::RefMod { base, start, len } => {
+                // Constant (literal) indices only: a computed data-name index gives a
+                // run-time length the compiler's compile-time STRING image contract
+                // cannot take, so it stays a later rung, rejected on BOTH engines.
+                let const_ix = matches!(start, RefIndex::Lit(_))
+                    && len.as_ref().is_none_or(|l| matches!(l, RefIndex::Lit(_)));
+                if !const_ix {
+                    return Err(RuntimeError::Unsupported(
+                        "a computed reference modification as a STRING sending field is a later rung"
+                            .into(),
+                    ));
+                }
+                self.refmod_string(base, start, len)
+            }
             Operand::Ident(name) => {
                 let idx = *self
                     .by_name

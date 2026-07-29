@@ -8,6 +8,33 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.62.0: STRING with a reference-modification sending field
+
+`STRING base(start:len) DELIMITED BY … INTO dst` — a reference modification is now accepted as a STRING
+**sending field**, compiled byte-identical to the `coding-adventures-cobol-runtime` 0.66.0 oracle.
+Previously any refmod STRING sending field was rejected at emit time ("a reference modification as a
+STRING sending field is a later rung"); that reject is now LIFTED for **constant (literal) indices**.
+No grammar change was needed — the grammar already parses a refmod suffix on the STRING sending
+operand.
+
+- Lowering: `string_source` now handles `Operandy::RefMod` by calling the shared `ref_mod_slice` (the
+  SAME `str_slice` DISPLAY / comparison / MOVE-source emit, so the slice bytes already agree with the
+  oracle), returning `(slice_reg, len)`. Because the STRING image contract is `(reg, usize)` — a
+  COMPILE-TIME length — only a `SliceLen::Const` is usable, so literal indices `WS(2:3)` and an omitted
+  length `WS(3:)` are supported.
+- Boundary: a **computed (data-name) index** would yield a `SliceLen::Runtime` length known only at
+  run time, which the `(reg, usize)` contract cannot express. It is rejected UP FRONT — before any
+  slice code is emitted (no dead instructions) — with "a computed reference modification as a STRING
+  sending field is a later rung", IDENTICALLY to the oracle, keeping the two engines co-total.
+- Downstream unchanged: the refmod image is just another char image, so `DELIMITED BY SIZE`,
+  `DELIMITED BY <delim>`, the concat/overlay, and `WITH POINTER` consume it exactly as they do a plain
+  alphanumeric-item sending field — no special-casing.
+- Byte-vs-char: `ref_mod_slice` is byte-based and the oracle's `refmod_string` is char-based; they
+  coincide on the ASCII-clean windows this rung targets, so accepted programs emit byte-identical
+  output. A multi-byte char inside/after the window is the PRE-EXISTING refmod byte-vs-char chip
+  (shared with DISPLAY / MOVE-source), not introduced here — the non-ASCII parity test keeps the
+  multi-byte char strictly OUTSIDE the window.
+
 ### Added — v0.61.0: MOVE with a reference-modification source
 
 `MOVE base(start:len) TO dst` — a reference modification is now accepted as a MOVE **source** when the
