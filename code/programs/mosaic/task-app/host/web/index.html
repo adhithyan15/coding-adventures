@@ -8,6 +8,35 @@
       name="description"
       content="A to-do app with automatic critical-path scheduling, built on the shared task-core engine. Tasks persist locally via IndexedDB."
     />
+    <style>
+      /*
+        The only CSS the host owns. Everything else is emitted from mosstyle — this
+        just clears the browser's own defaults so the app can reach the viewport edge.
+        Without the margin reset the shell floats 8px off every side, which reads as a
+        rendering bug rather than a design choice.
+
+        The background here is ONLY a pre-hydration hint, so the first paint isn't a
+        white flash before React mounts. It follows the OS because that is all this
+        file can know; once the app boots it sets the real ground from the resolved
+        theme (which may be an explicit choice that outranks the OS) — see theme.ts.
+
+        Deliberately NOT a place to style the app: a rule here would be invisible to
+        every other Mosaic host and would silently diverge from the .msl.
+      */
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        background: #f0ebe3;
+      }
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: #1a1714;
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

@@ -11,7 +11,13 @@ import { createRoot } from "react-dom/client";
 // scripts/build-web; the event type is identical, so either can be used interchangeably.
 import { TaskApp as TaskAppLight, type TaskAppEvent } from "./TaskApp.light";
 import { TaskApp as TaskAppDark } from "./TaskApp.dark";
-import { resolveTheme, storeTheme, watchSystemTheme, type Theme } from "./theme";
+import {
+  applyThemeGround,
+  resolveTheme,
+  storeTheme,
+  watchSystemTheme,
+  type Theme,
+} from "./theme";
 import { buildTimeline, type GanttBar } from "./timeline";
 import { createTaskEngine } from "./task-engine.mjs";
 import {
@@ -182,6 +188,19 @@ function makeController(engine: any, init: ControllerInit = {}) {
   };
   const visible = (): string[] => rows().ids;
 
+  // The list is drawn in GROUP order, so a click index refers to that order — not to
+  // creation order. Both the rows and every index lookup must go through this, or a
+  // click lands on the wrong task the moment the two disagree.
+  const displayIds = (): string[] => {
+    const { byTask, ids } = rows();
+    const groupRank = (id: string) => {
+      const c = byTask.get(id)!;
+      if (c.value[DONE]?.value === true) return 2;
+      return c.display[START] ? 0 : 1;
+    };
+    return [...ids].sort((a, b) => groupRank(a) - groupRank(b));
+  };
+
   return {
     getProps() {
       // Ask the ENGINE for render-ready cells. The host no longer formats dates,
@@ -219,13 +238,30 @@ function makeController(engine: any, init: ControllerInit = {}) {
         ];
       };
 
-      const taskRows: string[][] = ids.map((id) => {
+      // Group the list the way the design does: what's underway, what's next, and
+      // what's finished. The heading rides on the row that OPENS each group, so the
+      // layout can print it without knowing anything about grouping.
+      const groupOf = (id: string): string => {
+        const c = byTask.get(id)!;
+        if (c.value[DONE]?.value === true) return "Done";
+        return c.display[START] ? "In progress" : "Up next";
+      };
+      let lastGroup = "";
+
+      // displayIds() is the ONE ordering: the rows are drawn from it and every click
+      // index is resolved through it. Deriving them separately is how this app got a
+      // row-index desync before — a click landed on whatever task happened to sit at
+      // that position in the *other* ordering.
+      const taskRows: string[][] = displayIds().map((id) => {
         const c = byTask.get(id)!;
         const due = c.display[DEADLINE] ? `due ${c.display[DEADLINE]}` : "";
         const window = c.display[START] ? `${c.display[START]} → ${c.display[FINISH]}` : "";
         const late = c.value[OVERDUE]?.value === true ? "⚠ overdue" : "";
         const isOpen = id === expanded;
         const [d1, d2, d3] = isOpen ? detailFor(id) : ["", "", ""];
+        const group = groupOf(id);
+        const heading = group === lastGroup ? "" : group;
+        lastGroup = group;
         return [
           c.display[DONE],
           c.display[NAME],
@@ -236,6 +272,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
           d1,
           d2,
           d3,
+          heading,
         ];
       });
       const doneCount = ids.filter((id) => byTask.get(id)!.value[DONE]?.value === true).length;
@@ -251,12 +288,18 @@ function makeController(engine: any, init: ControllerInit = {}) {
         p.depths[i] > 0 ? `${" ".repeat((p.depths[i] - 1) * 2)}↳` : "",
       ]);
       const tl = showTimeline ? timeline() : { scale: "", rows: [] };
+      // The engine's verdict on the plan. Overdue work is the one thing worth
+      // colouring red in the header; everything else reads as on track.
+      const overdue = ids.filter(
+        (id) => byTask.get(id)!.value[OVERDUE]?.value === true,
+      ).length;
       return {
         appTitle: "Tasks — auto-scheduled",
+        statusLabel: overdue > 0 ? `${overdue} overdue` : "On track",
+        statusWarn: overdue > 0 ? "warn" : "",
         timelineMode: showTimeline ? "timeline" : "",
         timelineScale: tl.scale,
         timelineRows: tl.rows,
-        viewToggleLabel: showTimeline ? "List" : "Timeline",
         newTaskName: newName,
         newTaskDue: newDue,
         newProjectName: newProject,
@@ -279,12 +322,15 @@ function makeController(engine: any, init: ControllerInit = {}) {
         case "expandTask": {
           // Resolve through the same ordered id list the rows were drawn from, so the
           // clicked index can't drift onto a different task.
-          const id = rows().ids[event.index];
+          const id = displayIds()[event.index];
           if (id) expanded = expanded === id ? null : id;
           break;
         }
-        case "toggleView":
-          showTimeline = !showTimeline;
+        case "showList":
+          showTimeline = false;
+          break;
+        case "showTimeline":
+          showTimeline = true;
           break;
         case "newProjectNameChange":
           newProject = event.value;
@@ -355,8 +401,8 @@ function makeController(engine: any, init: ControllerInit = {}) {
         case "toggleTask": {
           // Resolve the row AND its current state from the same selection the UI drew,
           // so the index and the completed flag can never disagree.
-          const { byTask, ids } = rows();
-          const id = ids[event.index];
+          const { byTask } = rows();
+          const id = displayIds()[event.index];
           if (id) {
             const done = byTask.get(id)?.value[DONE]?.value === true;
             engine.setCompleted({ id, completed: !done });
@@ -365,7 +411,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
           break;
         }
         case "deleteTask": {
-          const id = visible()[event.index];
+          const id = displayIds()[event.index];
           if (id) {
             engine.deleteTask({ id });
             if (expanded === id) expanded = null;
@@ -464,6 +510,10 @@ async function boot() {
     // Follow the OS while the user hasn't overridden it — so a machine that flips to
     // dark at sunset takes the app with it, without a reload.
     useEffect(() => watchSystemTheme(changeTheme), [changeTheme]);
+
+    // Repaint the page ground. index.html guesses from the OS before React mounts;
+    // an explicit choice outranks the OS, so the guess can be wrong.
+    useEffect(() => applyThemeGround(theme), [theme]);
 
     const toggle = useCallback(() => {
       // Compute off the rendered value, not inside the updater: React double-invokes

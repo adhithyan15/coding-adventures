@@ -4,6 +4,33 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - two styles that were silently discarded
+
+Both were found while polishing the task-app UI, and both had the same shape: the
+emitter accepted the author's input and then produced nothing, with no diagnostic.
+
+- **`align: center-vertical` emitted `align: "center-vertical"`** — which is not a CSS
+  property, so browsers dropped it. **Nothing using it was ever actually centred.** It
+  is now translated to `alignItems: "center"` (with `center-horizontal`, `center`,
+  `start`, `end`, `space-between` mapped alongside). An unrecognised value still falls
+  through to the escaped generic path rather than being dropped.
+- **`Text ( content : "literal" )` rendered `<span></span>`** — a literal `content:`
+  returned `None`, and the doc comment claimed the "standard Text walker" handled it
+  instead. There was no such path. It is now emitted as a JS string expression, so the
+  text appears *and* is escaped. This went unnoticed because no `.mll` in the repo used
+  a literal `content:` until the task-app rail needed a static wordmark and a section
+  heading — both of which came out blank.
+
+4 new tests (196 total).
+
+**Worth knowing:** nothing in the pipeline validates mosstyle property names, which is
+exactly how `align` survived. A sweep of all 109 `.msl` files (4 026 declarations, 44
+distinct property names) found `align` to be the *only* non-CSS name in the repo, so
+there is no second instance today — but a typo in any `.msl` still becomes a dead
+declaration with no warning. A validation pass in `mosaic-analyzer` is the durable fix
+for the class and is not attempted here.
+
+
 ### Added - UI36 data-driven sizing (`width` / `height` from a slot or expression)
 
 The size props `width`, `height`, `min-width`, `max-width`, `min-height` and
