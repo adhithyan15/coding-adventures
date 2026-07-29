@@ -703,4 +703,250 @@ mod tests {
         assert_eq!(graph.edges().len(), 0);
         assert!(!graph.has_cycle());
     }
+
+    #[test]
+    fn copies_and_mutates_property_bags() {
+        let mut graph = MultiDirectedGraph::new();
+        graph.add_node(
+            "a".to_string(),
+            prop("role", PropertyValue::String("input".into())),
+        );
+        graph.add_node(
+            "a".to_string(),
+            prop("shape", PropertyValue::String("[1]".into())),
+        );
+        graph.set_graph_property("name", PropertyValue::String("generic".into()));
+
+        let mut graph_properties = graph.graph_properties();
+        graph_properties.insert("name".to_string(), PropertyValue::String("mutated".into()));
+        assert_eq!(
+            graph.graph_properties()["name"],
+            PropertyValue::String("generic".into())
+        );
+
+        let mut node_properties = graph.node_properties(&"a".to_string()).unwrap();
+        node_properties.insert("role".to_string(), PropertyValue::String("mutated".into()));
+        graph
+            .set_node_property(
+                &"a".to_string(),
+                "kind",
+                PropertyValue::String("feature".into()),
+            )
+            .unwrap();
+        graph
+            .remove_node_property(&"a".to_string(), "shape")
+            .unwrap();
+        let node_properties = graph.node_properties(&"a".to_string()).unwrap();
+        assert_eq!(
+            node_properties["role"],
+            PropertyValue::String("input".into())
+        );
+        assert_eq!(
+            node_properties["kind"],
+            PropertyValue::String("feature".into())
+        );
+        assert!(!node_properties.contains_key("shape"));
+
+        graph.remove_graph_property("name");
+        assert!(graph.graph_properties().is_empty());
+    }
+
+    #[test]
+    fn controls_self_loops_and_auto_edge_ids() {
+        let mut graph = MultiDirectedGraph::new();
+        assert!(matches!(
+            graph.add_edge(
+                "a".to_string(),
+                "a".to_string(),
+                1.0,
+                PropertyBag::new(),
+                None,
+            ),
+            Err(GraphError::SelfLoopNotAllowed(_))
+        ));
+
+        let mut graph = MultiDirectedGraph::new_allow_self_loops();
+        graph
+            .add_edge(
+                "a".to_string(),
+                "a".to_string(),
+                1.0,
+                PropertyBag::new(),
+                Some("e0".to_string()),
+            )
+            .unwrap();
+        let allocated = graph
+            .add_edge(
+                "a".to_string(),
+                "b".to_string(),
+                1.0,
+                PropertyBag::new(),
+                None,
+            )
+            .unwrap();
+        assert_eq!(allocated, "e1");
+        assert!(graph.has_cycle());
+    }
+
+    #[test]
+    fn reports_missing_nodes_and_edges() {
+        let mut graph = MultiDirectedGraph::<String>::new();
+        let missing = "missing".to_string();
+
+        assert!(matches!(
+            graph.node_properties(&missing),
+            Err(GraphError::NodeNotFound(_))
+        ));
+        assert!(matches!(
+            graph.outgoing_edges(&missing),
+            Err(GraphError::NodeNotFound(_))
+        ));
+        assert!(matches!(
+            graph.incoming_edges(&missing),
+            Err(GraphError::NodeNotFound(_))
+        ));
+        assert!(matches!(
+            graph.successors(&missing),
+            Err(GraphError::NodeNotFound(_))
+        ));
+        assert!(matches!(
+            graph.predecessors(&missing),
+            Err(GraphError::NodeNotFound(_))
+        ));
+        assert!(matches!(
+            graph.set_node_property(&missing, "key", PropertyValue::Null),
+            Err(GraphError::NodeNotFound(_))
+        ));
+        assert!(matches!(
+            graph.remove_node_property(&missing, "key"),
+            Err(GraphError::NodeNotFound(_))
+        ));
+        assert!(matches!(
+            graph.remove_node(&missing),
+            Err(GraphError::NodeNotFound(_))
+        ));
+
+        assert!(matches!(
+            graph.edge("missing"),
+            Err(GraphError::EdgeNotFound(_))
+        ));
+        assert!(matches!(
+            graph.edge_weight("missing"),
+            Err(GraphError::EdgeNotFound(_))
+        ));
+        assert!(matches!(
+            graph.edge_properties("missing"),
+            Err(GraphError::EdgeNotFound(_))
+        ));
+        assert!(matches!(
+            graph.set_edge_property("missing", "key", PropertyValue::Null),
+            Err(GraphError::EdgeNotFound(_))
+        ));
+        assert!(matches!(
+            graph.remove_edge_property("missing", "key"),
+            Err(GraphError::EdgeNotFound(_))
+        ));
+        assert!(matches!(
+            graph.remove_edge("missing"),
+            Err(GraphError::EdgeNotFound(_))
+        ));
+    }
+
+    #[test]
+    fn validates_and_resets_edge_weights() {
+        let mut graph = MultiDirectedGraph::new();
+        graph
+            .add_edge(
+                "a".to_string(),
+                "b".to_string(),
+                2.0,
+                prop("channel", PropertyValue::String("left".into())),
+                Some("w".to_string()),
+            )
+            .unwrap();
+        let mut properties = graph.edge_properties("w").unwrap();
+        properties.insert(
+            "channel".to_string(),
+            PropertyValue::String("mutated".into()),
+        );
+        assert_eq!(
+            graph.edge_properties("w").unwrap()["channel"],
+            PropertyValue::String("left".into())
+        );
+
+        graph
+            .set_edge_property("w", "weight", PropertyValue::Number(3.5))
+            .unwrap();
+        assert_eq!(graph.edge_weight("w").unwrap(), 3.5);
+        assert!(matches!(
+            graph.set_edge_property("w", "weight", PropertyValue::String("heavy".into())),
+            Err(GraphError::InvalidWeight(_))
+        ));
+        assert!(matches!(
+            graph.set_edge_property("w", "weight", PropertyValue::Number(f64::NAN)),
+            Err(GraphError::InvalidWeight(_))
+        ));
+        graph.remove_edge_property("w", "weight").unwrap();
+        assert_eq!(graph.edge_weight("w").unwrap(), 1.0);
+    }
+
+    #[test]
+    fn topological_algorithms_count_parallel_edges() {
+        let mut graph = MultiDirectedGraph::new();
+        for edge_id in ["a_to_c_0", "a_to_c_1"] {
+            graph
+                .add_edge(
+                    "a".to_string(),
+                    "c".to_string(),
+                    1.0,
+                    PropertyBag::new(),
+                    Some(edge_id.to_string()),
+                )
+                .unwrap();
+        }
+        graph
+            .add_edge(
+                "b".to_string(),
+                "c".to_string(),
+                1.0,
+                PropertyBag::new(),
+                None,
+            )
+            .unwrap();
+        graph
+            .add_edge(
+                "c".to_string(),
+                "d".to_string(),
+                1.0,
+                PropertyBag::new(),
+                None,
+            )
+            .unwrap();
+
+        assert_eq!(
+            graph.topological_sort().unwrap(),
+            vec![
+                "a".to_string(),
+                "b".to_string(),
+                "c".to_string(),
+                "d".to_string()
+            ]
+        );
+        assert_eq!(
+            graph.independent_groups().unwrap(),
+            vec![
+                vec!["a".to_string(), "b".to_string()],
+                vec!["c".to_string()],
+                vec!["d".to_string()]
+            ]
+        );
+        assert_eq!(
+            graph.successors(&"a".to_string()).unwrap(),
+            vec!["c".to_string()]
+        );
+        assert_eq!(
+            graph.predecessors(&"c".to_string()).unwrap(),
+            vec!["a".to_string(), "b".to_string()]
+        );
+    }
 }

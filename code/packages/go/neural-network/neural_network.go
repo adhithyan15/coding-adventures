@@ -48,6 +48,32 @@ func (g *Graph) AddEdge(from, to string, weight float64, properties PropertyBag,
 	return id
 }
 
+// NodeProperties preserves the original neural-network facade while the
+// generic graph package exposes missing nodes as idiomatic Go errors.
+func (g *Graph) NodeProperties(node string) PropertyBag {
+	properties, err := g.MultiDirectedGraph.NodeProperties(node)
+	if err != nil {
+		panic(err)
+	}
+	return properties
+}
+
+// IncomingEdges preserves the original neural-network facade. Neural graph
+// nodes are authored through the helpers below, so a missing node is a
+// programmer error at this layer.
+func (g *Graph) IncomingEdges(node string) []Edge {
+	edges, err := g.MultiDirectedGraph.IncomingEdges(node)
+	if err != nil {
+		panic(err)
+	}
+	return edges
+}
+
+func (g *Graph) EdgeProperties(edgeID string) (PropertyBag, bool) {
+	properties, err := g.MultiDirectedGraph.EdgeProperties(edgeID)
+	return properties, err == nil
+}
+
 type NeuralNetwork struct {
 	Graph *Graph
 }

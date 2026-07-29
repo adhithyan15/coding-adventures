@@ -159,9 +159,9 @@ func (g *MultiDirectedGraph[T]) AddEdge(from, to T, weight float64, properties P
 }
 
 func (g *MultiDirectedGraph[T]) RemoveEdge(edgeID string) error {
-	edge, ok := g.edges[edgeID]
-	if !ok {
-		return EdgeNotFoundError{EdgeID: edgeID}
+	edge, err := g.Edge(edgeID)
+	if err != nil {
+		return err
 	}
 	g.outgoing[edge.From] = removeString(g.outgoing[edge.From], edgeID)
 	g.incoming[edge.To] = removeString(g.incoming[edge.To], edgeID)
@@ -176,9 +176,12 @@ func (g *MultiDirectedGraph[T]) HasEdge(edgeID string) bool {
 	return ok
 }
 
-func (g *MultiDirectedGraph[T]) Edge(edgeID string) (Edge[T], bool) {
+func (g *MultiDirectedGraph[T]) Edge(edgeID string) (Edge[T], error) {
 	edge, ok := g.edges[edgeID]
-	return edge, ok
+	if !ok {
+		return Edge[T]{}, EdgeNotFoundError{EdgeID: edgeID}
+	}
+	return edge, nil
 }
 
 func (g *MultiDirectedGraph[T]) Edges() []Edge[T] {
@@ -197,7 +200,11 @@ func (g *MultiDirectedGraph[T]) EdgesBetween(from, to T) ([]Edge[T], error) {
 		return nil, NodeNotFoundError[T]{Node: to}
 	}
 	result := []Edge[T]{}
-	for _, edge := range g.OutgoingEdges(from) {
+	outgoing, err := g.OutgoingEdges(from)
+	if err != nil {
+		return nil, err
+	}
+	for _, edge := range outgoing {
 		if edge.To == to {
 			result = append(result, edge)
 		}
@@ -205,20 +212,26 @@ func (g *MultiDirectedGraph[T]) EdgesBetween(from, to T) ([]Edge[T], error) {
 	return result, nil
 }
 
-func (g *MultiDirectedGraph[T]) OutgoingEdges(node T) []Edge[T] {
+func (g *MultiDirectedGraph[T]) OutgoingEdges(node T) ([]Edge[T], error) {
+	if !g.nodeSet[node] {
+		return nil, NodeNotFoundError[T]{Node: node}
+	}
 	result := []Edge[T]{}
 	for _, edgeID := range g.outgoing[node] {
 		result = append(result, g.edges[edgeID])
 	}
-	return result
+	return result, nil
 }
 
-func (g *MultiDirectedGraph[T]) IncomingEdges(node T) []Edge[T] {
+func (g *MultiDirectedGraph[T]) IncomingEdges(node T) ([]Edge[T], error) {
+	if !g.nodeSet[node] {
+		return nil, NodeNotFoundError[T]{Node: node}
+	}
 	result := []Edge[T]{}
 	for _, edgeID := range g.incoming[node] {
 		result = append(result, g.edges[edgeID])
 	}
-	return result
+	return result, nil
 }
 
 func (g *MultiDirectedGraph[T]) Successors(node T) ([]T, error) {
@@ -227,7 +240,11 @@ func (g *MultiDirectedGraph[T]) Successors(node T) ([]T, error) {
 	}
 	seen := map[T]bool{}
 	result := []T{}
-	for _, edge := range g.OutgoingEdges(node) {
+	outgoing, err := g.OutgoingEdges(node)
+	if err != nil {
+		return nil, err
+	}
+	for _, edge := range outgoing {
 		if !seen[edge.To] {
 			seen[edge.To] = true
 			result = append(result, edge.To)
@@ -242,7 +259,11 @@ func (g *MultiDirectedGraph[T]) Predecessors(node T) ([]T, error) {
 	}
 	seen := map[T]bool{}
 	result := []T{}
-	for _, edge := range g.IncomingEdges(node) {
+	incoming, err := g.IncomingEdges(node)
+	if err != nil {
+		return nil, err
+	}
+	for _, edge := range incoming {
 		if !seen[edge.From] {
 			seen[edge.From] = true
 			result = append(result, edge.From)
@@ -251,9 +272,12 @@ func (g *MultiDirectedGraph[T]) Predecessors(node T) ([]T, error) {
 	return result, nil
 }
 
-func (g *MultiDirectedGraph[T]) EdgeWeight(edgeID string) (float64, bool) {
-	edge, ok := g.edges[edgeID]
-	return edge.Weight, ok
+func (g *MultiDirectedGraph[T]) EdgeWeight(edgeID string) (float64, error) {
+	edge, err := g.Edge(edgeID)
+	if err != nil {
+		return 0, err
+	}
+	return edge.Weight, nil
 }
 
 func (g *MultiDirectedGraph[T]) GraphProperties() PropertyBag {
@@ -268,8 +292,11 @@ func (g *MultiDirectedGraph[T]) RemoveGraphProperty(key string) {
 	delete(g.graphProperties, key)
 }
 
-func (g *MultiDirectedGraph[T]) NodeProperties(node T) PropertyBag {
-	return cloneBag(g.nodeProperties[node])
+func (g *MultiDirectedGraph[T]) NodeProperties(node T) (PropertyBag, error) {
+	if !g.nodeSet[node] {
+		return nil, NodeNotFoundError[T]{Node: node}
+	}
+	return cloneBag(g.nodeProperties[node]), nil
 }
 
 func (g *MultiDirectedGraph[T]) SetNodeProperty(node T, key string, value PropertyValue) error {
@@ -288,13 +315,14 @@ func (g *MultiDirectedGraph[T]) RemoveNodeProperty(node T, key string) error {
 	return nil
 }
 
-func (g *MultiDirectedGraph[T]) EdgeProperties(edgeID string) (PropertyBag, bool) {
-	if _, ok := g.edges[edgeID]; !ok {
-		return nil, false
+func (g *MultiDirectedGraph[T]) EdgeProperties(edgeID string) (PropertyBag, error) {
+	edge, err := g.Edge(edgeID)
+	if err != nil {
+		return nil, err
 	}
 	properties := cloneBag(g.edgeProperties[edgeID])
-	properties["weight"] = g.edges[edgeID].Weight
-	return properties, true
+	properties["weight"] = edge.Weight
+	return properties, nil
 }
 
 func (g *MultiDirectedGraph[T]) SetEdgeProperty(edgeID, key string, value PropertyValue) error {
@@ -349,7 +377,11 @@ func (g *MultiDirectedGraph[T]) TopologicalSort() ([]T, error) {
 		node := ready[0]
 		ready = ready[1:]
 		order = append(order, node)
-		for _, edge := range g.OutgoingEdges(node) {
+		outgoing, err := g.OutgoingEdges(node)
+		if err != nil {
+			return nil, err
+		}
+		for _, edge := range outgoing {
 			indegree[edge.To]--
 			if indegree[edge.To] == 0 {
 				ready = append(ready, edge.To)
@@ -389,7 +421,11 @@ func (g *MultiDirectedGraph[T]) IndependentGroups() ([][]T, error) {
 		next := []T{}
 		seenNext := map[T]bool{}
 		for _, node := range current {
-			for _, edge := range g.OutgoingEdges(node) {
+			outgoing, err := g.OutgoingEdges(node)
+			if err != nil {
+				return nil, err
+			}
+			for _, edge := range outgoing {
 				indegree[edge.To]--
 				if indegree[edge.To] == 0 && !seenNext[edge.To] {
 					seenNext[edge.To] = true
@@ -434,14 +470,30 @@ func cloneBag(input PropertyBag) PropertyBag {
 
 func numberValue(value PropertyValue) (float64, bool) {
 	switch typed := value.(type) {
-	case float64:
-		return typed, true
-	case float32:
-		return float64(typed), true
 	case int:
+		return float64(typed), true
+	case int8:
+		return float64(typed), true
+	case int16:
+		return float64(typed), true
+	case int32:
 		return float64(typed), true
 	case int64:
 		return float64(typed), true
+	case uint:
+		return float64(typed), true
+	case uint8:
+		return float64(typed), true
+	case uint16:
+		return float64(typed), true
+	case uint32:
+		return float64(typed), true
+	case uint64:
+		return float64(typed), true
+	case float32:
+		return float64(typed), true
+	case float64:
+		return typed, true
 	default:
 		return 0, false
 	}
