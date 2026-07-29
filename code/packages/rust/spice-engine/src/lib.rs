@@ -4109,8 +4109,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Pnp, 41, 58, 13, 4),
     (ModelCardKind::Njf, 22, 30, 7, 3),
     (ModelCardKind::Pjf, 22, 30, 7, 3),
-    (ModelCardKind::Nmos, 31, 39, 7, 3),
-    (ModelCardKind::Pmos, 31, 39, 7, 3),
+    (ModelCardKind::Nmos, 32, 40, 7, 3),
+    (ModelCardKind::Pmos, 32, 40, 7, 3),
 ];
 const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -4250,6 +4250,7 @@ const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("JS", "JS"),
     ("NSUB", "N_SUB"),
     ("N_SUB", "N_SUB"),
+    ("NSS", "NSS"),
     ("TNOM", "T_NOM"),
     ("T_NOM", "T_NOM"),
     ("CGSO", "CGSO"),
@@ -5069,6 +5070,7 @@ pub fn mosfet_from_model_card(
             });
         }
         if *oxide_thickness > 0.0 {
+            let oxide_capacitance = OXIDE_PERMITTIVITY / oxide_thickness;
             if !model.parameters.contains_key("PHI") {
                 let thermal_voltage = BOLTZMANN * params.t_nom / ELECTRON_CHARGE;
                 params.phi = (2.0
@@ -5079,7 +5081,6 @@ pub fn mosfet_from_model_card(
                 .max(0.1);
             }
             if !model.parameters.contains_key("GAMMA") {
-                let oxide_capacitance = OXIDE_PERMITTIVITY / oxide_thickness;
                 params.gamma = (2.0
                     * SILICON_PERMITTIVITY
                     * ELECTRON_CHARGE
@@ -5092,9 +5093,13 @@ pub fn mosfet_from_model_card(
                     MosfetType::Nmos => 1.0,
                     MosfetType::Pmos => -1.0,
                 };
+                let surface_state_shift =
+                    model_card_value(model, "NSS", 0.0) * 1.0e4 * ELECTRON_CHARGE
+                        / oxide_capacitance;
                 params.vt0 = polarity
                     * (params.gamma * params.phi.sqrt()
-                        + 0.5 * (params.phi - silicon_band_gap_electron_volts(params.t_nom)));
+                        + 0.5 * (params.phi - silicon_band_gap_electron_volts(params.t_nom)))
+                    - surface_state_shift;
             }
         }
     }

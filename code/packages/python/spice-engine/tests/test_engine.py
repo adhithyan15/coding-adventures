@@ -409,7 +409,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 203
+    assert len(coverage) == 205
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -424,7 +424,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tAF\tAF\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 203
+    assert len(records) == 205
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -447,8 +447,8 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     assert summary[0].max_alias_count == 3
     assert summary[0].aliased_parameters == ("IS", "VT", "CJO", "VJ", "M")
     assert summary[5].kind == "NMOS"
-    assert summary[5].canonical_parameter_count == 31
-    assert summary[5].accepted_name_count == 39
+    assert summary[5].canonical_parameter_count == 32
+    assert summary[5].accepted_name_count == 40
     assert summary[5].aliased_parameter_count == 7
     assert summary[5].max_alias_count == 3
     assert summary[5].aliased_parameters == (
@@ -471,7 +471,7 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     assert table.splitlines()[1] == "D\t15\t21\t5\t3\tIS|VT|CJO|VJ|M"
     assert (
         table.splitlines()[-1]
-        == "PMOS\t31\t39\t7\t3\tVT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD"
+        == "PMOS\t32\t40\t7\t3\tVT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD"
     )
     records = model_card_supported_parameter_coverage_summary_records()
     assert len(records) == 7
@@ -499,9 +499,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 203
-    assert report.expected_canonical_parameter_count == 203
-    assert report.accepted_name_count == 275
+    assert report.canonical_parameter_count == 205
+    assert report.expected_canonical_parameter_count == 205
+    assert report.accepted_name_count == 277
     assert report.aliased_parameter_count == 59
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -509,7 +509,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t203\t203\t275\t59\t4\t0"
+        "true\t7\t7\t205\t205\t277\t59\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -537,15 +537,15 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 202
-    assert report.accepted_name_count == 272
+    assert report.canonical_parameter_count == 204
+    assert report.accepted_name_count == 274
     assert report.aliased_parameter_count == 58
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
     assert report.issues[0].kind == "NMOS"
     assert report.issues[0].field == "canonical_parameter_count"
     assert report.issues[0].message == (
-        "expected NMOS to expose 31 canonical supported parameters, found 30"
+        "expected NMOS to expose 32 canonical supported parameters, found 31"
     )
     assert report.issues[-1].field == "max_alias_count"
     assert report.issues[-1].message == "expected NMOS max alias count 3, found 2"
@@ -553,12 +553,12 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t202\t203\t272\t58\t4\t4\n"
+        "false\t7\t7\t204\t205\t274\t58\t4\t4\n"
         "kind\tfield\tmessage\n"
-        "NMOS\tcanonical_parameter_count\texpected NMOS to expose 31 canonical "
-        "supported parameters, found 30\n"
-        "NMOS\taccepted_name_count\texpected NMOS to expose 39 accepted model-card "
-        "names, found 36\n"
+        "NMOS\tcanonical_parameter_count\texpected NMOS to expose 32 canonical "
+        "supported parameters, found 31\n"
+        "NMOS\taccepted_name_count\texpected NMOS to expose 40 accepted model-card "
+        "names, found 37\n"
         "NMOS\taliased_parameter_count\texpected NMOS to expose 7 alias-bearing "
         "parameters, found 6\n"
         "NMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
@@ -567,12 +567,12 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
     assert records[0] == {
         "kind": "NMOS",
         "field": "canonical_parameter_count",
-        "message": "expected NMOS to expose 31 canonical supported parameters, found 30",
+        "message": "expected NMOS to expose 32 canonical supported parameters, found 31",
     }
     assert format_model_card_supported_parameter_coverage_gate_issue_csv(report).startswith(
         "kind,field,message\n"
-        'NMOS,canonical_parameter_count,"expected NMOS to expose 31 canonical '
-        'supported parameters, found 30"\n'
+        'NMOS,canonical_parameter_count,"expected NMOS to expose 32 canonical '
+        'supported parameters, found 31"\n'
     )
     assert (
         json.loads(format_model_card_supported_parameter_coverage_gate_issue_json(report))
@@ -853,7 +853,9 @@ def test_mos_model_card_substrate_doping_derives_electrostatics_with_precedence(
         "s",
         "b",
         normalize_model_card(
-            "Mderived", "nmos", {"NSUB": 4.0e15, "TOX": 100.0e-9}
+            "Mderived",
+            "nmos",
+            {"NSUB": 4.0e15, "TOX": 100.0e-9, "NSS": 1.0e10},
         ),
     )
     thermal_voltage = 1.380_649e-23 * 300.15 / 1.602_176_634e-19
@@ -864,9 +866,13 @@ def test_mos_model_card_substrate_doping_derives_electrostatics_with_precedence(
         2.0 * (11.70 * 8.854_214_871e-12) * 1.602_176_634e-19 * 4.0e21
     ) / (3.453133e-11 / 100.0e-9)
     expected_band_gap = 1.16 - 7.02e-4 * 300.15**2 / (300.15 + 1108.0)
-    expected_vt0 = expected_gamma * math.sqrt(expected_phi) + 0.5 * (
+    process_vt0 = expected_gamma * math.sqrt(expected_phi) + 0.5 * (
         expected_phi - expected_band_gap
     )
+    surface_state_shift = (
+        1.0e10 * 1.0e4 * 1.602_176_634e-19 / (3.453133e-11 / 100.0e-9)
+    )
+    expected_vt0 = process_vt0 - surface_state_shift
     assert pytest.approx(expected_phi) == derived.model.model.params.PHI
     assert pytest.approx(expected_gamma) == derived.model.model.params.GAMMA
     assert pytest.approx(expected_vt0) == derived.model.model.params.VT0
@@ -878,10 +884,14 @@ def test_mos_model_card_substrate_doping_derives_electrostatics_with_precedence(
         "s",
         "b",
         normalize_model_card(
-            "Mp", "pmos", {"NSUB": 4.0e15, "TOX": 100.0e-9}
+            "Mp",
+            "pmos",
+            {"NSUB": 4.0e15, "TOX": 100.0e-9, "NSS": 1.0e10},
         ),
     )
-    assert pytest.approx(-expected_vt0) == pmos.model.model.params.VT0
+    assert pytest.approx(
+        -process_vt0 - surface_state_shift
+    ) == pmos.model.model.params.VT0
 
     explicit = mosfet_from_model_card(
         "M3",
@@ -897,6 +907,7 @@ def test_mos_model_card_substrate_doping_derives_electrostatics_with_precedence(
                 "TOX": 100.0e-9,
                 "PHI": 0.72,
                 "GAMMA": 0.41,
+                "NSS": 1.0e10,
                 "VTO": 0.63,
             },
         ),
