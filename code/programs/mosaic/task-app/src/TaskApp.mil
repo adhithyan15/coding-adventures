@@ -39,9 +39,19 @@ component TaskApp {
   slot timeline-rows     : list<list<text>> ;
   slot view-toggle-label : text ;
 
-  // One row per task, in schedule order; each row is a list of pre-formatted cells
-  // in the order [ done-glyph, name, due, schedule, overdue ]. Empty cells (e.g. no
-  // due date) are the empty string, and the layout hides those chips.
+  // One row per task, in schedule order. Each row is a list of pre-formatted cells:
+  //
+  //   [ 0 ] done-glyph      [ 5 ] expanded-marker  — non-empty for the ONE open row
+  //   [ 1 ] name            [ 6 ] detail: scheduled / earliest / latest
+  //   [ 2 ] due             [ 7 ] detail: slack, or "on the critical path"
+  //   [ 3 ] schedule        [ 8 ] detail: free slack (only when it differs)
+  //   [ 4 ] overdue
+  //
+  // Every cell is optional: an empty one (no due date, not overdue, nothing to add)
+  // is the empty string and the layout hides it. Cells 6-8 are the
+  // progressive-disclosure payload, filled ONLY for the expanded row — so a collapsed
+  // list stays a plain to-do list, and the host skips the CPM recompute entirely when
+  // nothing is open.
   slot task-rows : list<list<text>> ;
 
   // Typing in the inputs.
@@ -57,6 +67,9 @@ component TaskApp {
 
   // Switch between the task list and the timeline.
   emit onToggleView ;
+
+  // Expand (or collapse) a task row to reveal its scheduling detail.
+  emit onExpandTask ( index : number ) ;
 
   // Add the typed task; toggle/delete a row (the row index is delivered as the number
   // payload of a single-number-param event).

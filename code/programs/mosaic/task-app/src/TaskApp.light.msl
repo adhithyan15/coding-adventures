@@ -205,8 +205,15 @@ style TaskApp {
     }
   }
   part task-name {
+    background : "#fffdfa" ;
     color : "#2b2723" ;
     font-size : 14 ;
+    padding : 4 ;
+    border-radius : 7 ;
+    state hover {
+      background : "#faedd6" ;
+      color : "#b6741a" ;
+    }
   }
   // Meta chips. Due is honey (time), schedule is a quiet surface, overdue is the
   // one place semantic red appears in a row.
@@ -231,6 +238,25 @@ style TaskApp {
     font-weight : bold ;
     padding : 5 ;
     border-radius : 20 ;
+  }
+  // Progressive disclosure: the scheduling detail, inset under its row.
+  part task-detail {
+    background : "#f7f2ea" ;
+    border-radius : 11 ;
+    padding : 12 ;
+    gap : 4 ;
+  }
+  part detail-sched {
+    color : "#6a625a" ;
+    font-size : 12 ;
+  }
+  part detail-slack {
+    color : "#6a625a" ;
+    font-size : 12 ;
+  }
+  part detail-free {
+    color : "#6a625a" ;
+    font-size : 12 ;
   }
   part del-btn {
     background : "#f8e4df" ;

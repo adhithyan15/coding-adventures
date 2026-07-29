@@ -4,6 +4,31 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - progressive disclosure on task rows
+
+- **Click a task's name to reveal its scheduling detail** — when it's scheduled for,
+  its earliest and latest possible start, and how much slack it has (or that it's on
+  the critical path, where any delay delays the whole project). Clicking again closes
+  it. This is the "simple by default, complexity on request" principle from
+  `code/specs/task-app-ui-design.md`: the collapsed list stays a plain to-do list, and
+  the CPM detail is there the moment you ask for it.
+- Every detail line is phrased from the ENGINE's own numbers — early/late dates, total
+  and free slack, criticality — never recomputed in the host.
+- The open row is tracked by **task id, not row index**, so it follows the right task
+  when the list re-sorts or something above it is deleted; deleting the open task
+  clears it.
+- **The CPM recompute is skipped entirely when nothing is open.** `getProps` runs after
+  every dispatch — including each keystroke in the composer — so an unconditional
+  `schedule()` call would have made typing progressively more expensive as a project
+  grew. (Caught in security review.)
+- Also from review: pluralisation now reads the number actually shown (479 minutes
+  renders as "1.0" and must not then say "1.0 days" by accident); each detail line is
+  guarded on its own cell so an unscheduled task shows one explanatory line instead of
+  a panel padded with blanks; and a documented-but-never-populated "notes" cell was
+  removed along with its dead style part rather than left as a promise the code
+  didn't keep.
+
+
 ### Added - timeline (Gantt) view
 
 - **A real proportional Gantt**, switchable from the task list via a toggle beside the

@@ -91,7 +91,8 @@ layout TaskApp {
       For ( each: slot: task-rows , as: row , index: i ) {
         Row [ task-row ] {
           HostButton [ toggle ] ( label : ( row[0] ) , onClick : emit: onToggleTask )
-          Text [ task-name ] ( content : ( row[1] ) )
+          // The name is the disclosure control: clicking it opens this row's detail.
+          HostButton [ task-name ] ( label : ( row[1] ) , onClick : emit: onExpandTask )
           If ( when: ( row[2] ) ) {
             Text [ chip-due ] ( content : ( row[2] ) )
           }
@@ -102,6 +103,23 @@ layout TaskApp {
             Text [ chip-over ] ( content : ( row[4] ) )
           }
           HostButton [ del-btn ] ( label : "Delete" , onClick : emit: onDeleteTask )
+        }
+        // Progressive disclosure: the scheduling detail exists for every task but is
+        // only rendered for the open row, so the default list stays a plain to-do list.
+        If ( when: ( row[5] ) ) {
+          Column [ task-detail ] {
+            // Every line is guarded on its own cell, so an unscheduled task shows one
+            // explanatory line rather than a panel padded with blanks.
+            If ( when: ( row[6] ) ) {
+              Text [ detail-sched ] ( content : ( row[6] ) )
+            }
+            If ( when: ( row[7] ) ) {
+              Text [ detail-slack ] ( content : ( row[7] ) )
+            }
+            If ( when: ( row[8] ) ) {
+              Text [ detail-free ] ( content : ( row[8] ) )
+            }
+          }
         }
       }
     }
