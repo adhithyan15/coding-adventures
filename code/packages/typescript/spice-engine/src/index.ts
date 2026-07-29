@@ -7758,6 +7758,11 @@ export function mosfetAtTemperature(
     (element.params.PHI - potentialCorrection(nominalTemperatureKelvin)) / nominalFactor;
   const temperaturePhi =
     temperatureFactor * nominalPhi + potentialCorrection(temperatureKelvin);
+  const nominalBulkJunctionPotential =
+    (element.params.PB - potentialCorrection(nominalTemperatureKelvin)) / nominalFactor;
+  const temperatureBulkJunctionPotential =
+    temperatureFactor * nominalBulkJunctionPotential +
+    potentialCorrection(temperatureKelvin);
   const polarity = element.type === "NMOS" ? 1.0 : -1.0;
   const temperatureVbi =
     element.params.VT0 -
@@ -7779,6 +7784,7 @@ export function mosfetAtTemperature(
       ...element.params,
       VT0: temperatureVt0,
       PHI: temperaturePhi,
+      PB: temperatureBulkJunctionPotential,
       KP: element.params.KP * ratio ** -1.5,
       U0: element.params.U0 * ratio ** -1.5,
       IS: element.params.IS * saturationScale,

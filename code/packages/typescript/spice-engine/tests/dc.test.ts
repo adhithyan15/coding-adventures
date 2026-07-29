@@ -2357,6 +2357,16 @@ describe("dcOp", () => {
     expectClose(hotPmos.params.VT0, -0.365_036_965_282_786_06);
   });
 
+  it("adjusts the MOSFET bulk-junction potential across temperature", () => {
+    const nominal = mosfet("M1", "d", "g", "s", "b", "NMOS");
+
+    const cold = mosfetAtTemperature(nominal, 275.0);
+    const hot = mosfetAtTemperature(nominal, 350.0);
+
+    expectClose(cold.params.PB, 0.839_148_690_629_946_5);
+    expectClose(hot.params.PB, 0.719_697_229_921_455);
+  });
+
   it("scales MOSFET bulk-junction saturation currents with temperature", () => {
     const nominal = mosfet("M1", "d", "g", "s", "b", "NMOS", {
       IS: 2.0e-15,

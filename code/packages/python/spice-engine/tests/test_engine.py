@@ -4287,6 +4287,23 @@ def test_mosfet_temperature_scaling_adjusts_phi_and_threshold_by_polarity():
     assert pytest.approx(-0.365_036_965_282_786_06) == pmos_params.VT0
 
 
+def test_mosfet_temperature_scaling_adjusts_bulk_junction_potential():
+    nominal = Mosfet(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        MOSFET(MosfetType.NMOS, Level1Model(Level1Params())),
+    )
+
+    cold = mosfet_at_temperature(nominal, 275.0)
+    hot = mosfet_at_temperature(nominal, 350.0)
+
+    assert pytest.approx(0.839_148_690_629_946_5) == cold.model.model.params.PB
+    assert pytest.approx(0.719_697_229_921_455) == hot.model.model.params.PB
+
+
 def test_mosfet_temperature_scaling_adjusts_bulk_junction_saturation_currents():
     nominal = Mosfet(
         "M1",

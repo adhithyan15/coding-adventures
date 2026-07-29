@@ -3569,6 +3569,25 @@ fn mosfet_temperature_scaling_adjusts_phi_and_threshold_by_polarity() {
 }
 
 #[test]
+fn mosfet_temperature_scaling_adjusts_bulk_junction_potential() {
+    let nominal = Mosfet::with_model(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        MosfetType::Nmos,
+        MosfetLevel1Params::default(),
+    );
+
+    let cold = mosfet_at_temperature(&nominal, 275.0, 300.15, 1.11).unwrap();
+    let hot = mosfet_at_temperature(&nominal, 350.0, 300.15, 1.11).unwrap();
+
+    assert_close(cold.params.bulk_junction_potential, 0.839_148_690_629_946_5);
+    assert_close(hot.params.bulk_junction_potential, 0.719_697_229_921_455);
+}
+
+#[test]
 fn mosfet_temperature_scaling_adjusts_bulk_junction_saturation_currents() {
     let nominal = Mosfet::with_model(
         "M1",

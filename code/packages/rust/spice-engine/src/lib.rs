@@ -2797,6 +2797,10 @@ pub fn mosfet_at_temperature(
     let temperature_potential_correction = potential_correction(temperature_kelvin);
     let nominal_phi = (mosfet.params.phi - nominal_potential_correction) / nominal_factor;
     let temperature_phi = temperature_factor * nominal_phi + temperature_potential_correction;
+    let nominal_bulk_junction_potential =
+        (mosfet.params.bulk_junction_potential - nominal_potential_correction) / nominal_factor;
+    let temperature_bulk_junction_potential =
+        temperature_factor * nominal_bulk_junction_potential + temperature_potential_correction;
     let polarity = match mosfet.mosfet_type {
         MosfetType::Nmos => 1.0,
         MosfetType::Pmos => -1.0,
@@ -2813,6 +2817,7 @@ pub fn mosfet_at_temperature(
     let mut adjusted = mosfet.clone();
     adjusted.params.vt0 = temperature_vt0;
     adjusted.params.phi = temperature_phi;
+    adjusted.params.bulk_junction_potential = temperature_bulk_junction_potential;
     adjusted.params.kp *= ratio.powf(-1.5);
     adjusted.params.surface_mobility *= ratio.powf(-1.5);
     adjusted.params.saturation_current *= saturation_scale;

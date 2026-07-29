@@ -419,6 +419,13 @@ def mosfet_at_temperature(
     temperature_phi = (
         temperature_factor * nominal_phi + potential_correction(temperature_kelvin)
     )
+    nominal_bulk_junction_potential = (
+        params.PB - potential_correction(nominal_temperature_kelvin)
+    ) / nominal_factor
+    temperature_bulk_junction_potential = (
+        temperature_factor * nominal_bulk_junction_potential
+        + potential_correction(temperature_kelvin)
+    )
     polarity = 1.0 if model.type is MosfetType.NMOS else -1.0
     temperature_vbi = (
         params.VT0
@@ -446,6 +453,7 @@ def mosfet_at_temperature(
         params,
         VT0=temperature_vt0,
         PHI=temperature_phi,
+        PB=temperature_bulk_junction_potential,
         KP=params.KP * ratio**-1.5,
         U0=params.U0 * ratio**-1.5,
         IS=params.IS * saturation_scale,
