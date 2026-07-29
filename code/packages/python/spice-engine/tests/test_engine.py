@@ -329,6 +329,7 @@ from spice_engine import (
     model_card_supported_parameter_coverage_records,
     model_card_supported_parameter_coverage_summary,
     model_card_supported_parameter_coverage_summary_records,
+    mosfet_at_temperature,
     mosfet_from_model_card,
     noise_ac,
     noise_ac_corners,
@@ -4227,6 +4228,34 @@ def test_mosfet_temperature_scaling_changes_common_source_bias():
     assert hot_result.converged
     assert cold_result.node_voltages["out"] > nominal_result.node_voltages["out"]
     assert hot_result.node_voltages["out"] < nominal_result.node_voltages["out"]
+
+
+def test_mosfet_temperature_scaling_keeps_surface_mobility_and_kp_aligned():
+    nominal = Mosfet(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(KP=200.0e-6, U0=500.0)),
+        ),
+    )
+    hot = mosfet_at_temperature(
+        nominal,
+        600.3,
+        nominal_temperature_kelvin=300.15,
+    )
+    scale = 2.0**-1.5
+    nominal_params = nominal.model.model.params
+    hot_params = hot.model.model.params
+
+    assert pytest.approx(nominal_params.KP * scale) == hot_params.KP
+    assert pytest.approx(nominal_params.U0 * scale) == hot_params.U0
+    assert pytest.approx(nominal_params.KP / nominal_params.U0) == (
+        hot_params.KP / hot_params.U0
+    )
 
 
 # ---- DC: Capacitor (open in DC) ----

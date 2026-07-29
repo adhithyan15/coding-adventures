@@ -33,14 +33,14 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS surface mobility preprocessing.
+1. Cross-language Level-1 MOS mobility temperature scaling.
    - Status: current PR completion candidate.
-   - Accept model-card `U0` and its `UO` alias in Rust, Python, and TypeScript,
-     defaulting to the Berkeley MOS1 value of 600 cm^2/V/s.
-   - When a model card supplies `TOX` but omits `KP`, derive
-     `KP = U0 * Cox * 1e-4`; preserve explicit `KP` precedence.
-   - Keep normalized model-card coverage, validation, changelogs, and Rust
-     Berkeley netlist lowering aligned across the three implementations.
+   - Scale Level-1 MOS `U0` with the same Berkeley `(T / T_NOM)^-3/2`
+     mobility law already applied to `KP`.
+   - Preserve the nominal `KP / U0` relationship through direct MOS
+     temperature helpers and circuit-level temperature transforms.
+   - Keep Rust, Python, and TypeScript helper behavior, tests, and changelogs
+     aligned.
 
 ## Completed Slices
 
@@ -3558,6 +3558,15 @@ the Rust, Python, and TypeScript surfaces together.
      diffusion area is absent.
    - Rust, Python, and TypeScript apply the effective currents consistently to
      nonlinear, AC, transfer-function, and shot-noise behavior.
+
+283. Cross-language Level-1 MOS surface mobility preprocessing.
+   - Status: completed in PR 9117.
+   - Model cards accept `U0` and its `UO` alias in Rust, Python, and TypeScript,
+     defaulting to the Berkeley MOS1 value of 600 cm^2/V/s.
+   - When `TOX` is supplied and `KP` is omitted, all three implementations
+     derive `KP = U0 * Cox * 1e-4` while preserving explicit `KP` precedence.
+   - Normalized model-card coverage, validation, changelogs, and the Rust
+     Berkeley netlist facade preserve the parameter.
 
 ## Backlog
 

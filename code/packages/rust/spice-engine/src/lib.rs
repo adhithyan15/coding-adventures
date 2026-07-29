@@ -2777,6 +2777,7 @@ pub fn mosfet_at_temperature(
     let mut adjusted = mosfet.clone();
     adjusted.params.vt0 += threshold_shift;
     adjusted.params.kp *= ratio.powf(-1.5);
+    adjusted.params.surface_mobility *= ratio.powf(-1.5);
     adjusted.params.t_nom = temperature_kelvin;
     Ok(adjusted)
 }
