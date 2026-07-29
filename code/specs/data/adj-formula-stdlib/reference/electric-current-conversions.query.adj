@@ -1,0 +1,25 @@
+% ============================================================================
+% electric-current-conversions.query.adj — worked lookups over the NIST current → ampere table.
+% ============================================================================
+% The shape a consumer produces to convert a current given in a traditional CGS-EMU unit into SI:
+% it `import`s the grounded table and asks the engine to bind the factor. No arithmetic and no
+% factor is stated by the consumer; the engine returns the cell WITH the table's NIST citation as
+% its proof, on the CPU.
+%
+%   ? electric_current_to_ampere(abampere, $v)   % 10   (abampere = 1.0 E+01 A, exact)
+%
+% And the dimension guard: a unit of a DIFFERENT quantity has no row, so the lookup ABSTAINS rather
+% than mis-converting across dimensions. The "abcoulomb" is an electric-CHARGE unit (it converts to
+% the coulomb), NOT a current unit — and NIST prints the SAME numeric factor 1.0 E+01 for it, so the
+% abstain is a genuine dimension check, not a value coincidence:
+%
+%   ? electric_current_to_ampere(abcoulomb, $v)   % abstains (abcoulomb is charge → coulomb)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli electric-current-conversions.query.adj
+% ============================================================================
+
+import "electric-current-conversions.adj"
+
+? electric_current_to_ampere(abampere, $v)    % expect 10       (exact NIST SP 811 B.9 factor)
+? electric_current_to_ampere(abcoulomb, $v)   % expect abstain  (charge unit, wrong dimension)
