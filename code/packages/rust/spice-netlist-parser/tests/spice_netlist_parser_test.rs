@@ -1359,7 +1359,7 @@ Jpull drain gate source pch
 fn parses_mosfet_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model nch NMOS(VTO=0.45 KP=250u LAMBDA=0.02 GAMMA=0.3 PHI=0.8 W=2u L=180n LD=10n TOX=20n RD=10 RS=20 RSH=250 IS=4p JS=2m NSUB=1.5 TNOM=300 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p CJ=2m CJSW=5u PB=0.9 MJ=0.45 MJSW=0.25 FC=0.4 KF=1p AF=1.2)
+.model nch NMOS(VTO=0.45 KP=250u UO=500 LAMBDA=0.02 GAMMA=0.3 PHI=0.8 W=2u L=180n LD=10n TOX=20n RD=10 RS=20 RSH=250 IS=4p JS=2m NSUB=1.5 TNOM=300 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p CJ=2m CJSW=5u PB=0.9 MJ=0.45 MJSW=0.25 FC=0.4 KF=1p AF=1.2)
 Vdd vdd 0 DC 5
 Vgate gate 0 DC 2.5
 M1 vdd gate out 0 nch W=4u L=200n NRD=2 NRS=3 AD=3n AS=4n PD=6u PS=7u
@@ -1387,6 +1387,7 @@ Rload out 0 1k
     assert_eq!(mosfet.mosfet_type, MosfetType::Nmos);
     assert_close(mosfet.params.vt0, 0.45);
     assert_close(mosfet.params.kp, 250.0e-6);
+    assert_close(mosfet.params.surface_mobility, 500.0);
     assert_close(mosfet.params.lambda, 0.02);
     assert_close(mosfet.params.gamma, 0.3);
     assert_close(mosfet.params.phi, 0.8);
@@ -1425,6 +1426,17 @@ Rload out 0 1k
     let out = result.voltage("out").unwrap();
     assert!(out > 0.0, "expected source follower output, got {out}");
     assert!(out < 2.5, "expected source below gate bias, got {out}");
+}
+
+#[test]
+fn derives_mosfet_transconductance_from_surface_mobility_and_oxide_thickness() {
+    let parsed = parse_netlist(".model mobile NMOS(TOX=100n UO=500)\nM1 d g s b mobile\n").unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_close(mosfet.params.surface_mobility, 500.0);
+    assert_close(mosfet.params.kp, 500.0 * 1.0e-4 * 3.453_133e-11 / 100.0e-9);
 }
 
 #[test]

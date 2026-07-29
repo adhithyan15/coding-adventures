@@ -1777,6 +1777,7 @@ export interface MosfetLevel1Params {
   readonly L: number;
   readonly LD: number;
   readonly TOX: number;
+  readonly U0: number;
   readonly RD: number;
   readonly RS: number;
   readonly RSH: number;
@@ -2062,8 +2063,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   PNP: [41, 58, 13, 4],
   NJF: [22, 30, 7, 3],
   PJF: [22, 30, 7, 3],
-  NMOS: [30, 37, 6, 3],
-  PMOS: [30, 37, 6, 3],
+  NMOS: [31, 39, 7, 3],
+  PMOS: [31, 39, 7, 3],
 };
 
 export interface Vccs {
@@ -8047,6 +8048,7 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     L: 130.0e-9,
     LD: 0.0,
     TOX: 1.0e-7,
+    U0: 600.0,
     RD: 0.0,
     RS: 0.0,
     RSH: 0.0,
@@ -8247,6 +8249,8 @@ const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   L: "L",
   LD: "LD",
   TOX: "TOX",
+  U0: "U0",
+  UO: "U0",
   RD: "RD",
   RS: "RS",
   RSH: "RSH",
@@ -8818,9 +8822,15 @@ export function mosfetFromModelCard(
     throw invalidElement(name, `expected MOSFET model card, got ${model.kind}`);
   }
   const p = model.parameters;
+  const surfaceMobility = p.U0 ?? 600.0;
+  const transconductance =
+    p.KP ??
+    (p.TOX !== undefined && p.TOX > 0.0
+      ? surfaceMobility * 1.0e-4 * OXIDE_PERMITTIVITY / p.TOX
+      : undefined);
   const params: Partial<MosfetLevel1Params> = {
     ...(p.VT0 !== undefined ? { VT0: p.VT0 } : {}),
-    ...(p.KP !== undefined ? { KP: p.KP } : {}),
+    ...(transconductance !== undefined ? { KP: transconductance } : {}),
     ...(p.LAMBDA !== undefined ? { LAMBDA: p.LAMBDA } : {}),
     ...(p.GAMMA !== undefined ? { GAMMA: p.GAMMA } : {}),
     ...(p.PHI !== undefined ? { PHI: p.PHI } : {}),
@@ -8828,6 +8838,7 @@ export function mosfetFromModelCard(
     ...(p.L !== undefined ? { L: p.L } : {}),
     ...(p.LD !== undefined ? { LD: p.LD } : {}),
     ...(p.TOX !== undefined ? { TOX: p.TOX } : {}),
+    U0: surfaceMobility,
     ...(p.RD !== undefined ? { RD: p.RD } : {}),
     ...(p.RS !== undefined ? { RS: p.RS } : {}),
     ...(p.RSH !== undefined ? { RSH: p.RSH } : {}),
@@ -21316,6 +21327,9 @@ function validateMosfet(element: Mosfet): void {
   }
   if (params.TOX <= 0.0) {
     throw invalidElement(element.name, "MOSFET TOX must be positive");
+  }
+  if (params.U0 < 0.0) {
+    throw invalidElement(element.name, "MOSFET U0 must be non-negative");
   }
   if (params.PHI <= 0.0) {
     throw invalidElement(element.name, "MOSFET PHI must be positive");

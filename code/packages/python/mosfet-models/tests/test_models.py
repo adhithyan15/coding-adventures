@@ -81,6 +81,7 @@ def test_triode_id_formula():
 
 def test_id_increases_with_vgs_in_saturation():
     p = Level1Params()
+    assert p.U0 == 600.0
     r1 = evaluate_level1(p, V_GS=0.8, V_DS=1.8)
     r2 = evaluate_level1(p, V_GS=1.4, V_DS=1.8)
     assert r2.Id > r1.Id
@@ -165,6 +166,19 @@ def test_oxide_thickness_scales_intrinsic_gate_capacitance():
 def test_oxide_thickness_validates_positive_finite_value(tox):
     with pytest.raises(ValueError, match="MOSFET TOX must be finite and positive"):
         evaluate_level1(Level1Params(TOX=tox), V_GS=1.8, V_DS=1.8)
+
+
+@pytest.mark.parametrize("surface_mobility", [float("nan"), -1.0])
+def test_surface_mobility_validates_non_negative_finite_value(surface_mobility):
+    with pytest.raises(
+        ValueError,
+        match="MOSFET U0 must be finite and non-negative",
+    ):
+        evaluate_level1(
+            Level1Params(U0=surface_mobility),
+            V_GS=1.8,
+            V_DS=1.8,
+        )
 
 
 def test_drain_resistance_rejects_negative_value():

@@ -11,6 +11,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, replace
 
 from mosfet_models import MOSFET, Level1Model, Level1Params, MosfetType
+from mosfet_models.level1 import OXIDE_PERMITTIVITY
 
 from spice_engine.elements import (
     BJT,
@@ -311,8 +312,8 @@ _MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES = {
     "PNP": (41, 58, 13, 4),
     "NJF": (22, 30, 7, 3),
     "PJF": (22, 30, 7, 3),
-    "NMOS": (30, 37, 6, 3),
-    "PMOS": (30, 37, 6, 3),
+    "NMOS": (31, 39, 7, 3),
+    "PMOS": (31, 39, 7, 3),
 }
 
 
@@ -465,6 +466,8 @@ _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
     "L": "L",
     "LD": "LD",
     "TOX": "TOX",
+    "U0": "U0",
+    "UO": "U0",
     "RD": "RD",
     "RS": "RS",
     "RSH": "RSH",
@@ -1067,10 +1070,16 @@ def mosfet_from_model_card(
         raise ValueError(f"{name}: expected MOSFET model card, got {model.kind}")
     p = model.parameters
     defaults = Level1Params()
+    surface_mobility = p.get("U0", defaults.U0)
+    transconductance = p.get("KP", defaults.KP)
+    if "KP" not in p and "TOX" in p and p["TOX"] > 0.0:
+        transconductance = (
+            surface_mobility * 1.0e-4 * OXIDE_PERMITTIVITY / p["TOX"]
+        )
     params = replace(
         defaults,
         VT0=p.get("VT0", defaults.VT0),
-        KP=p.get("KP", defaults.KP),
+        KP=transconductance,
         LAMBDA=p.get("LAMBDA", defaults.LAMBDA),
         GAMMA=p.get("GAMMA", defaults.GAMMA),
         PHI=p.get("PHI", defaults.PHI),
@@ -1078,6 +1087,7 @@ def mosfet_from_model_card(
         L=p.get("L", defaults.L),
         LD=p.get("LD", defaults.LD),
         TOX=p.get("TOX", defaults.TOX),
+        U0=surface_mobility,
         RD=p.get("RD", defaults.RD),
         RS=p.get("RS", defaults.RS),
         RSH=p.get("RSH", defaults.RSH),

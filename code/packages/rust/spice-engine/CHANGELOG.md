@@ -1,5 +1,8 @@
 # Changelog
 
+- Add Level-1 MOS model-card `U0` / `UO` surface mobility with the Berkeley
+  default of 600 cm^2/V/s. When `TOX` is explicit and `KP` is omitted, derive
+  `KP = U0 * Cox * 1e-4`; explicit `KP` retains precedence.
 - Add Level-1 MOS model-card `JS` as bulk-junction saturation-current density,
   scaling source/drain leakage and shot noise by `AS` / `AD` when both areas
   are present and otherwise retaining Berkeley-compatible `IS` fallback.

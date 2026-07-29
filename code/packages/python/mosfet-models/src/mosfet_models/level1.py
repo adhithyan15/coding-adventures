@@ -29,6 +29,7 @@ class Level1Params:
     L: float = 130e-9  # channel length (m)
     LD: float = 0.0  # source/drain lateral diffusion length (m)
     TOX: float = 1e-7  # gate oxide thickness (m)
+    U0: float = 600.0  # zero-bias surface mobility (cm^2/V/s)
     RD: float = 0.0  # external drain resistance (ohm)
     RS: float = 0.0  # external source resistance (ohm)
     RSH: float = 0.0  # drain/source sheet resistance (ohm per square)
@@ -135,6 +136,8 @@ def evaluate_level1(
         )
     if not isfinite(p.TOX) or p.TOX <= 0.0:
         raise ValueError("MOSFET TOX must be finite and positive")
+    if not isfinite(p.U0) or p.U0 < 0.0:
+        raise ValueError("MOSFET U0 must be finite and non-negative")
     if not isfinite(p.RD) or p.RD < 0.0:
         raise ValueError("MOSFET RD must be finite and non-negative")
     if not isfinite(p.RS) or p.RS < 0.0:

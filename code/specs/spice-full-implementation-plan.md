@@ -33,14 +33,14 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS bulk-junction saturation current density.
+1. Cross-language Level-1 MOS surface mobility preprocessing.
    - Status: current PR completion candidate.
-   - Preserve model-card `JS` independently from scalar `IS` and scale it by
-     source/drain diffusion area when both `AS` and `AD` are present.
-   - Match Berkeley MOS1 fallback behavior by using scalar `IS` for both
-     junctions when `JS` is zero or either diffusion area is absent.
-   - Apply the effective terminal currents consistently to nonlinear, AC,
-     transfer-function, and shot-noise behavior in Rust, Python, and TypeScript.
+   - Accept model-card `U0` and its `UO` alias in Rust, Python, and TypeScript,
+     defaulting to the Berkeley MOS1 value of 600 cm^2/V/s.
+   - When a model card supplies `TOX` but omits `KP`, derive
+     `KP = U0 * Cox * 1e-4`; preserve explicit `KP` precedence.
+   - Keep normalized model-card coverage, validation, changelogs, and Rust
+     Berkeley netlist lowering aligned across the three implementations.
 
 ## Completed Slices
 
@@ -3549,6 +3549,15 @@ the Rust, Python, and TypeScript surfaces together.
    - Junction thermal voltage follows `T_NOM`, forward exponential continuation
      remains Newton-consistent, and noise emits distinct `IBS` and `IBD` shot
      sources.
+
+282. Cross-language Level-1 MOS bulk-junction saturation current density.
+   - Status: completed in PR 9108.
+   - Model-card `JS` is preserved independently from scalar `IS` and scales
+     source/drain junction leakage by `AS` / `AD` when both areas are present.
+   - Berkeley fallback retains scalar `IS` when `JS` is zero or either
+     diffusion area is absent.
+   - Rust, Python, and TypeScript apply the effective currents consistently to
+     nonlinear, AC, transfer-function, and shot-noise behavior.
 
 ## Backlog
 

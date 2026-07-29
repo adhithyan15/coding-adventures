@@ -121,7 +121,7 @@ describe("dcOp", () => {
 
   it("exports stable model-card supported parameter coverage", () => {
     const coverage = modelCardSupportedParameterCoverage();
-    expect(coverage).toHaveLength(201);
+    expect(coverage).toHaveLength(203);
     expect(coverage[0]).toStrictEqual({
       kind: "D",
       canonicalParameter: "IS",
@@ -141,7 +141,7 @@ describe("dcOp", () => {
     expect(table).toContain("NMOS\tVT0\tVT0|VTO|VTH\t3");
     expect(table.split("\n").at(-1)).toBe("PMOS\tAF\tAF\t1");
     const records = modelCardSupportedParameterCoverageRecords();
-    expect(records).toHaveLength(201);
+    expect(records).toHaveLength(203);
     expect(records[0]).toStrictEqual({
       kind: "D",
       canonical_parameter: "IS",
@@ -167,11 +167,11 @@ describe("dcOp", () => {
     });
     expect(summary[5]).toStrictEqual({
       kind: "NMOS",
-      canonicalParameterCount: 30,
-      acceptedNameCount: 37,
-      aliasedParameterCount: 6,
+      canonicalParameterCount: 31,
+      acceptedNameCount: 39,
+      aliasedParameterCount: 7,
       maxAliasCount: 3,
-      aliasedParameters: ["VT0", "LAMBDA", "N_SUB", "T_NOM", "CBS", "CBD"],
+      aliasedParameters: ["VT0", "LAMBDA", "U0", "N_SUB", "T_NOM", "CBS", "CBD"],
     });
     expect(summary.at(-1)?.kind).toBe("PMOS");
 
@@ -181,7 +181,7 @@ describe("dcOp", () => {
     );
     expect(table.split("\n")[1]).toBe("D\t15\t21\t5\t3\tIS|VT|CJO|VJ|M");
     expect(table.split("\n").at(-1)).toBe(
-      "PMOS\t30\t37\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD",
+      "PMOS\t31\t39\t7\t3\tVT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD",
     );
     const records = modelCardSupportedParameterCoverageSummaryRecords();
     expect(records).toHaveLength(7);
@@ -206,15 +206,15 @@ describe("dcOp", () => {
       passed: true,
       kindCount: 7,
       expectedKindCount: 7,
-      canonicalParameterCount: 201,
-      expectedCanonicalParameterCount: 201,
-      acceptedNameCount: 271,
-      aliasedParameterCount: 57,
+      canonicalParameterCount: 203,
+      expectedCanonicalParameterCount: 203,
+      acceptedNameCount: 275,
+      aliasedParameterCount: 59,
       maxAliasCount: 4,
       issues: [],
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t201\t201\t271\t57\t4\t0",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t203\t203\t275\t59\t4\t0",
     );
     expect(formatModelCardSupportedParameterCoverageGateIssueTable(report)).toBe(
       "kind\tfield\tmessage",
@@ -237,15 +237,15 @@ describe("dcOp", () => {
 
     expect(report.passed).toBe(false);
     expect(report.kindCount).toBe(7);
-    expect(report.canonicalParameterCount).toBe(200);
-    expect(report.acceptedNameCount).toBe(268);
-    expect(report.aliasedParameterCount).toBe(56);
+    expect(report.canonicalParameterCount).toBe(202);
+    expect(report.acceptedNameCount).toBe(272);
+    expect(report.aliasedParameterCount).toBe(58);
     expect(report.maxAliasCount).toBe(4);
     expect(report.issues).toHaveLength(4);
     expect(report.issues[0]).toStrictEqual({
       kind: "NMOS",
       field: "canonical_parameter_count",
-      message: "expected NMOS to expose 30 canonical supported parameters, found 29",
+      message: "expected NMOS to expose 31 canonical supported parameters, found 30",
     });
     expect(report.issues.at(-1)).toStrictEqual({
       kind: "NMOS",
@@ -253,16 +253,16 @@ describe("dcOp", () => {
       message: "expected NMOS max alias count 3, found 2",
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t200\t201\t268\t56\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 30 canonical supported parameters, found 29\nNMOS\taccepted_name_count\texpected NMOS to expose 37 accepted model-card names, found 34\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t202\t203\t272\t58\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 31 canonical supported parameters, found 30\nNMOS\taccepted_name_count\texpected NMOS to expose 39 accepted model-card names, found 36\nNMOS\taliased_parameter_count\texpected NMOS to expose 7 alias-bearing parameters, found 6\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
     );
     const records = modelCardSupportedParameterCoverageGateIssueRecords(report);
     expect(records[0]).toStrictEqual({
       kind: "NMOS",
       field: "canonical_parameter_count",
-      message: "expected NMOS to expose 30 canonical supported parameters, found 29",
+      message: "expected NMOS to expose 31 canonical supported parameters, found 30",
     });
     expect(formatModelCardSupportedParameterCoverageGateIssueCsv(report)).toMatch(
-      /^kind,field,message\nNMOS,canonical_parameter_count,"expected NMOS to expose 30 canonical supported parameters, found 29"\n/,
+      /^kind,field,message\nNMOS,canonical_parameter_count,"expected NMOS to expose 31 canonical supported parameters, found 30"\n/,
     );
     expect(JSON.parse(formatModelCardSupportedParameterCoverageGateIssueJson(report))).toStrictEqual(
       records,
@@ -427,6 +427,7 @@ describe("dcOp", () => {
       JS: 2.0e-3,
       CJ: 2.0e-3,
       TOX: 25.0e-9,
+      UO: 500.0,
       KF: 2.0e-24,
       AF: 1.4,
     });
@@ -449,6 +450,7 @@ describe("dcOp", () => {
       JS: 2.0e-3,
       CJ: 2.0e-3,
       TOX: 25.0e-9,
+      U0: 500.0,
       KF: 2.0e-24,
       AF: 1.4,
     });
@@ -471,8 +473,38 @@ describe("dcOp", () => {
     expectClose(mosModel.params.NRS, 1.0);
     expectClose(mosModel.params.CJ, 2.0e-3);
     expectClose(mosModel.params.TOX, 25.0e-9);
+    expectClose(mosModel.params.U0, 500.0);
+    expectClose(mosModel.params.KP, 500.0 * 1.0e-4 * 3.453133e-11 / 25.0e-9);
     expectClose(mosModel.params.KF, 2.0e-24);
     expectClose(mosModel.params.AF, 1.4);
+  });
+
+  it("derives MOS KP from surface mobility with explicit-KP precedence", () => {
+    const defaultMobility = mosfetFromModelCard(
+      "M1",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mdefault", "nmos", { TOX: 100.0e-9 }),
+    );
+    expectClose(defaultMobility.params.U0, 600.0);
+    expectClose(defaultMobility.params.KP, 600.0 * 1.0e-4 * 3.453133e-11 / 100.0e-9);
+
+    const explicit = mosfetFromModelCard(
+      "M2",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mexplicit", "nmos", {
+        TOX: 100.0e-9,
+        U0: 500.0,
+        KP: 250.0e-6,
+      }),
+    );
+    expectClose(explicit.params.U0, 500.0);
+    expectClose(explicit.params.KP, 250.0e-6);
   });
 
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
@@ -2554,6 +2586,20 @@ describe("dcOp", () => {
         Number.isFinite(oxideThickness)
           ? "MOSFET TOX must be positive"
           : "MOSFET TOX must be finite",
+      );
+    }
+  });
+
+  it("rejects invalid MOSFET surface mobilities", () => {
+    for (const surfaceMobility of [Number.NaN, -1.0]) {
+      const circuit = new Circuit();
+      circuit.add(mosfet("Mbad", "drain", "gate", "0", "0", "NMOS", {
+        U0: surfaceMobility,
+      }));
+      expect(() => dcOp(circuit)).toThrowError(
+        Number.isFinite(surfaceMobility)
+          ? "MOSFET U0 must be non-negative"
+          : "MOSFET U0 must be finite",
       );
     }
   });

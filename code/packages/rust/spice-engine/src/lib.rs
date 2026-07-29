@@ -3609,6 +3609,7 @@ pub struct MosfetLevel1Params {
     pub l: f64,
     pub lateral_diffusion_length: f64,
     pub oxide_thickness: f64,
+    pub surface_mobility: f64,
     pub drain_resistance: f64,
     pub source_resistance: f64,
     pub sheet_resistance: f64,
@@ -3649,6 +3650,7 @@ impl Default for MosfetLevel1Params {
             l: 130.0e-9,
             lateral_diffusion_length: 0.0,
             oxide_thickness: 1.0e-7,
+            surface_mobility: 600.0,
             drain_resistance: 0.0,
             source_resistance: 0.0,
             sheet_resistance: 0.0,
@@ -4018,8 +4020,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Pnp, 41, 58, 13, 4),
     (ModelCardKind::Njf, 22, 30, 7, 3),
     (ModelCardKind::Pjf, 22, 30, 7, 3),
-    (ModelCardKind::Nmos, 30, 37, 6, 3),
-    (ModelCardKind::Pmos, 30, 37, 6, 3),
+    (ModelCardKind::Nmos, 31, 39, 7, 3),
+    (ModelCardKind::Pmos, 31, 39, 7, 3),
 ];
 const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -4150,6 +4152,8 @@ const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("L", "L"),
     ("LD", "LD"),
     ("TOX", "TOX"),
+    ("U0", "U0"),
+    ("UO", "U0"),
     ("RD", "RD"),
     ("RS", "RS"),
     ("RSH", "RSH"),
@@ -4915,9 +4919,6 @@ pub fn mosfet_from_model_card(
     if let Some(value) = model.parameters.get("VT0") {
         params.vt0 = *value;
     }
-    if let Some(value) = model.parameters.get("KP") {
-        params.kp = *value;
-    }
     if let Some(value) = model.parameters.get("LAMBDA") {
         params.lambda = *value;
     }
@@ -4938,6 +4939,14 @@ pub fn mosfet_from_model_card(
     }
     if let Some(value) = model.parameters.get("TOX") {
         params.oxide_thickness = *value;
+    }
+    if let Some(value) = model.parameters.get("U0") {
+        params.surface_mobility = *value;
+    }
+    if let Some(value) = model.parameters.get("KP") {
+        params.kp = *value;
+    } else if model.parameters.contains_key("TOX") && params.oxide_thickness > 0.0 {
+        params.kp = params.surface_mobility * 1.0e-4 * OXIDE_PERMITTIVITY / params.oxide_thickness;
     }
     if let Some(value) = model.parameters.get("RD") {
         params.drain_resistance = *value;
@@ -25900,6 +25909,7 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("CJ", params.bottom_junction_capacitance),
         ("CJSW", params.sidewall_junction_capacitance),
         ("TOX", params.oxide_thickness),
+        ("U0", params.surface_mobility),
         ("IS", params.saturation_current),
         ("JS", params.saturation_current_density),
         ("N_SUB", params.n_sub),
@@ -26013,6 +26023,12 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "MOSFET TOX must be positive".to_string(),
+        });
+    }
+    if params.surface_mobility < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET U0 must be non-negative".to_string(),
         });
     }
     if params.phi <= 0.0 {
