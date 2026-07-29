@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.38.0] - 2026-07-28
+
+### Added - empty-bodied `do … while` becomes the equivalent `while`/`for`
+
+An empty-bodied `do … while` now lowers to the equivalent loop, matching the
+reference Closure Compiler at SIMPLE:
+
+```text
+  do {} while(c);   ->  for(; c;) ;
+  do {} while(0);   ->  removed      (dead loop; dce drops the residual `;`)
+```
+
+`do {} while(test)` runs the (empty) body once and then evaluates `test`;
+because the body is a no-op, its test-evaluation sequence is IDENTICAL to
+`while(test){}` (the leading empty run changes nothing observable). We rewrite
+the empty case to a `while`, which the existing machinery lowers to `for` and —
+via the empty loop-body normalization (0.37.0) — collapses to `for(; test;) ;`;
+a statically-falsy test makes it a dead loop that collapses to `;` (removed
+downstream by dce). A NON-empty `do` body keeps the `do` form (a `do` body runs
+before its test, so it cannot generally become a `while`) and still gets the
+loop-body comma-fusion (0.36.0).
+
+This completes the empty-body follow-up noted in 0.37.0. (The other do-while
+gaps -- trailing `continue` removal, trailing `return` -> `break` -- remain
+tracked separately.)
+
 ## [0.37.0] - 2026-07-25
 
 ### Added - normalize an empty loop body `{}` to `;`
