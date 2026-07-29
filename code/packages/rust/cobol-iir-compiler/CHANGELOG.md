@@ -8,6 +8,37 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.61.0: MOVE with a reference-modification source
+
+`MOVE base(start:len) TO dst` — a reference modification is now accepted as a MOVE **source** when the
+receiver is **alphanumeric**, compiled byte-identical to the `coding-adventures-cobol-runtime` 0.65.0
+oracle. Previously any refmod MOVE source was rejected at emit time (`REFMOD_CONTEXT_MSG` — "reference
+modification is only supported in DISPLAY and comparison contexts on this rung"); that reject is now
+LIFTED for an alphanumeric receiver. No grammar change was needed — the grammar already parses a
+refmod suffix on the MOVE source operand.
+
+- Lowering: `ref_mod_slice` emits the SAME `str_slice` DISPLAY/comparison use (so the slice bytes
+  already agree with the oracle) and reports its length as a `SliceLen`. The new `move_slice_into_char`
+  fits the slice to the receiver's width by the ordinary alphanumeric char rule (left-justify;
+  space-pad the tail if wider; truncate on the right if narrower):
+  - `SliceLen::Const` (a literal:literal or literal: refmod) defers to `move_str_into_char`, the SAME
+    const-width char fit a plain alphanumeric-item MOVE uses.
+  - `SliceLen::Runtime` (a computed data-name index) — the slice width is unknown at compile time, so
+    a single width-agnostic form is lowered: concat `recv_w` trailing spaces onto the slice (making it
+    at least `recv_w` characters for any length `L ≥ 0`), then keep the leftmost `recv_w`. For
+    `L ≥ recv_w` that is the slice's first `recv_w` characters (truncate); for `L < recv_w` it is the
+    `L` slice characters followed by `recv_w − L` spaces (pad) — exactly `move_into_char`'s two cases,
+    so the bytes match the oracle regardless of the run-time length.
+- Constant `SRC(2:3)`, omitted-length `SRC(3:)`, and computed `SRC(J:K)` indices are all supported;
+  an out-of-range slice traps identically to the oracle. Multiple receivers `MOVE SRC(1:3) TO A B`
+  reshape the same slice into each (the existing per-receiver loop in `emit_move`).
+- Byte-vs-char: `ref_mod_slice` is byte-based and the oracle's `refmod_string` is char-based; they
+  coincide on the ASCII-prefix windows this rung targets, so accepted programs emit byte-identical
+  output. A multi-byte char inside/after the window is the PRE-EXISTING refmod byte-vs-char chip
+  (shared with DISPLAY/comparison), not introduced here — the non-ASCII parity test keeps the
+  multi-byte char strictly OUTSIDE the window (`"abcdé"`, `SRC(1:3)` → `"abc"`).
+- Remaining boundary: a **numeric** receiver stays a later rung, rejected on both engines.
+
 ### Added — v0.60.0: INSPECT TALLYING multi-item list with a LEADING item
 
 `INSPECT source TALLYING counter FOR {ALL|LEADING} a [{BEFORE|AFTER} p] {ALL|LEADING} b … ` — the

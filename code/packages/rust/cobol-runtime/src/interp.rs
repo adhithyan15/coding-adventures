@@ -2359,16 +2359,40 @@ impl Machine {
     }
 
     fn exec_move(&mut self, src: &Operand, dsts: &[String]) -> Result<(), RuntimeError> {
-        // A reference modification as a MOVE source is a later rung — the
-        // supported contexts on this rung are DISPLAY and comparison (as in the
-        // compiler, which rejects the same shape).
-        if let Operand::RefMod { .. } = src {
-            return Err(RuntimeError::Unsupported(
-                "reference modification is only supported in DISPLAY and comparison contexts on this rung — a MOVE source is a later rung".into(),
-            ));
-        }
         for dst in dsts {
             let idx = *self.by_name.get(dst).ok_or_else(|| RuntimeError::UndefinedName(dst.clone()))?;
+            // Reference-modification SOURCE `base(start:len)` moved into an
+            // ALPHANUMERIC receiver. The slice is obtained from `refmod_string`
+            // (the SAME char range the compiler emits as a `str_slice`, so DISPLAY
+            // of that slice already agrees byte-for-byte), then char-moved into the
+            // receiver by the ordinary alphanumeric rule (`Src::Chars` →
+            // `move_into_char`): LEFT-justified, space-padded on the right when the
+            // receiver is wider, truncated on the right when narrower — exactly the
+            // path a plain alphanumeric ident source takes. `refmod_string` handles
+            // constant AND computed (data-name) indices and an omitted length, and
+            // already traps an out-of-range slice identically to the compiled
+            // `str_slice`. A NUMERIC receiver (de-editing a slice into a numeric
+            // field) stays a later rung, rejected on both engines. The slice is
+            // char-based here and byte-based in the compiler; on the ASCII-prefix
+            // windows this rung targets they coincide, so output is byte-identical
+            // (a non-ASCII char inside/after the window is the pre-existing refmod
+            // char-vs-byte chip, shared with DISPLAY/comparison — not introduced
+            // here).
+            if let Operand::RefMod { base, start, len } = src {
+                let alpha_recv = matches!(
+                    self.items[idx].picture,
+                    Some(Picture::Alphanumeric { .. }) | Some(Picture::Alphabetic { .. })
+                );
+                if !alpha_recv {
+                    return Err(RuntimeError::Unsupported(format!(
+                        "MOVE of a reference-modification source into the non-alphanumeric \
+                         receiver {dst} is a later rung (an alphanumeric receiver is supported)"
+                    )));
+                }
+                let slice = self.refmod_string(base, start, len)?;
+                self.move_into(idx, Src::Chars(slice))?;
+                continue;
+            }
             // Cross-category numeric → alphanumeric MOVE: COBOL treats a numeric
             // sending item as though it were an alphanumeric item holding its digit
             // characters, then moves it by the alphanumeric rules (via

@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.65.0 — MOVE with a reference-modification source — 2026-07-29
+
+- `MOVE base(start:len) TO dst` — a reference modification is now accepted as a MOVE **source** when
+  the receiver is **alphanumeric**. Previously any refmod MOVE source was rejected up front
+  ("reference modification is only supported in DISPLAY and comparison contexts on this rung — a MOVE
+  source is a later rung"); that reject is now LIFTED for an alphanumeric receiver. No grammar change
+  was needed — the grammar already parses a refmod suffix on the MOVE source operand.
+- Semantics: the sliced substring comes from `refmod_string` (the SAME char range DISPLAY and
+  comparison already slice, so those contexts and a MOVE of the same slice agree byte-for-byte), then
+  it is char-moved into the receiver by the ordinary alphanumeric rule (`Src::Chars` →
+  `move_into_char`): LEFT-justified, space-padded on the right when the receiver is wider than the
+  slice, truncated on the right when narrower — the same reshape a plain alphanumeric ident source
+  takes. Constant indices `SRC(2:3)`, an omitted length `SRC(3:)`, and computed (data-name) indices
+  `SRC(J:K)` are all supported; an out-of-range slice traps identically to the compiled `str_slice`.
+  Multiple receivers `MOVE SRC(1:3) TO A B` reshape the same slice into each.
+- Byte-vs-char discipline: `refmod_string` is char-based here and the compiler's `ref_mod_slice` is
+  byte-based; they coincide on the ASCII-prefix windows this rung targets, so accepted programs emit
+  byte-identical output. A multi-byte character inside or after the window is the PRE-EXISTING refmod
+  char-vs-byte chip (already present in DISPLAY/comparison/STRING-source contexts), not introduced by
+  this rung — the non-ASCII parity test keeps the multi-byte char strictly OUTSIDE the window.
+- Remaining boundary: a **numeric** receiver (de-editing a slice into a numeric field) stays a later
+  rung, rejected on both engines.
+
 ## 0.64.0 — INSPECT TALLYING multi-item list with a LEADING item — 2026-07-29
 
 - `INSPECT source TALLYING counter FOR {ALL|LEADING} a [{BEFORE|AFTER} p] {ALL|LEADING} b … ` — the

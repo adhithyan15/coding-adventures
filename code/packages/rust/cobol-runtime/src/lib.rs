@@ -3872,15 +3872,30 @@ mod tests {
     }
 
     #[test]
-    fn refmod_computed_as_move_source_is_a_later_rung() {
-        // A computed refmod in a MOVE-source (numeric) context stays a later rung.
-        let err = run_cobol(&wrap(
+    fn refmod_move_source_into_alnum_receiver() {
+        // A reference-modification MOVE source into an ALPHANUMERIC receiver is now
+        // supported (this rung), including a computed (data-name) index: the slice
+        // is char-fit to the receiver width. WS(J:2) with J=2 → "BC" into DST X(3)
+        // → left-justified, one trailing space.
+        let out = run_cobol(&wrap(
             &[
                 "01  WS  PIC X(5) VALUE \"ABCDE\".",
                 "01  J   PIC 9 VALUE 2.",
                 "01  DST PIC X(3).",
             ],
-            &["MOVE WS(J:2) TO DST.", "STOP RUN."],
+            &["MOVE WS(J:2) TO DST.", "DISPLAY DST \"|\".", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "BC |\n");
+    }
+
+    #[test]
+    fn refmod_move_source_into_numeric_receiver_is_a_later_rung() {
+        // The remaining boundary: a refmod MOVE source into a NUMERIC receiver stays
+        // a later rung (de-editing a slice into a numeric field is not lowered here).
+        let err = run_cobol(&wrap(
+            &["01  WS  PIC X(5) VALUE \"12345\".", "01  NUM PIC 9(3)."],
+            &["MOVE WS(1:3) TO NUM.", "STOP RUN."],
         ))
         .unwrap_err();
         assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");

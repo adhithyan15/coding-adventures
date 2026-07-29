@@ -669,10 +669,37 @@ impl<'a> Compiler<'a> {
                         }
                     }
                 }
-                // A reference modification as a MOVE source is a later rung — the
-                // supported contexts on this rung are DISPLAY and comparison.
-                Operandy::RefMod { .. } => {
-                    return Err(CompileError::Unsupported(REFMOD_CONTEXT_MSG.into()));
+                // Reference-modification SOURCE `base(start:len)` moved into an
+                // ALPHANUMERIC receiver. `ref_mod_slice` emits the SAME `str_slice`
+                // DISPLAY/comparison use (so the slice bytes already agree with the
+                // oracle) and reports its length as a `SliceLen` — compile-time
+                // constant for a literal:literal (or literal:) refmod, run-time for a
+                // computed (data-name) index. `move_slice_into_char` then fits the
+                // slice to the receiver's width by the ordinary alphanumeric char
+                // rule (LEFT-justify; space-pad on the right if wider; truncate on
+                // the right if narrower) — the same reshape a same-category char MOVE
+                // performs — so the receiver holds byte-identical bytes to the oracle
+                // (`move_into` → `move_into_char`). A NUMERIC receiver (de-editing a
+                // slice into a numeric field) stays a later rung on both engines. The
+                // slice is byte-based here and char-based in the oracle; they coincide
+                // on the ASCII-prefix windows this rung targets (a multi-byte char
+                // inside/after the window is the pre-existing refmod byte-vs-char chip
+                // shared with DISPLAY/comparison, not introduced here).
+                Operandy::RefMod { base, start, len } => {
+                    let didx = self.item_index(&dst)?;
+                    match &self.items[didx].kind {
+                        ItemKind::Char { .. } => {
+                            let (reg, slice_len) = self.ref_mod_slice(base, start, len)?;
+                            self.move_slice_into_char(&reg, slice_len, didx);
+                        }
+                        ItemKind::Numeric { .. } => {
+                            return Err(CompileError::Unsupported(format!(
+                                "MOVE of a reference-modification source into the numeric \
+                                 receiver {dst} is a later rung (an alphanumeric receiver \
+                                 is supported)"
+                            )));
+                        }
+                    }
                 }
             }
         }
@@ -1055,6 +1082,60 @@ impl<'a> Compiler<'a> {
                 vec![Operand::Var(src_reg.to_string()), Operand::Var(pad)],
                 "str",
             );
+        }
+    }
+
+    /// Fit a reference-modification slice — held in `reg` with length `slice_len`
+    /// — into the alphanumeric receiver `didx`, by the ordinary alphanumeric char
+    /// rule: LEFT-justify, space-pad the tail when the receiver is wider than the
+    /// slice, truncate on the right when narrower. This is the very reshape
+    /// [`move_into_char`](../../cobol-runtime) applies on the oracle side, so the
+    /// receiver ends up holding byte-identical bytes.
+    ///
+    /// Two length regimes:
+    ///
+    /// * **compile-time constant** (`SliceLen::Const`, a literal:literal or
+    ///   literal: refmod) — the slice width is known, so this defers to
+    ///   [`Self::move_str_into_char`], the SAME const-width char fit a plain
+    ///   alphanumeric-item MOVE uses.
+    ///
+    /// * **run-time** (`SliceLen::Runtime`, a computed data-name index) — the slice
+    ///   width is unknown at compile time, so neither branch of `move_str_into_char`
+    ///   can be chosen statically. Instead we lower a single width-agnostic form:
+    ///   concatenate `recv_w` trailing spaces onto the slice (making the result at
+    ///   least `recv_w` characters for ANY slice length `L ≥ 0`), then keep the
+    ///   leftmost `recv_w`. For `L ≥ recv_w` that is the slice's first `recv_w`
+    ///   characters (right-truncation); for `L < recv_w` it is the `L` slice
+    ///   characters followed by `recv_w − L` spaces (right space-pad) — exactly
+    ///   `move_into_char`'s two cases, so the bytes match the oracle regardless of
+    ///   the run-time length.
+    fn move_slice_into_char(&mut self, reg: &str, slice_len: SliceLen, didx: usize) {
+        match slice_len {
+            SliceLen::Const(len) => self.move_str_into_char(reg, len, didx),
+            SliceLen::Runtime { .. } => {
+                let recv_w = self.items[didx].width();
+                let recv_reg = self.items[didx].reg.clone();
+                // slice ++ recv_w spaces  →  length L + recv_w ≥ recv_w always.
+                let pad = self.spaces_const(recv_w);
+                let padded = self.fresh("_mrc");
+                self.emit(
+                    "str_concat",
+                    Some(&padded),
+                    vec![Operand::Var(reg.to_string()), Operand::Var(pad)],
+                    "str",
+                );
+                // Keep the leftmost recv_w characters of the padded slice.
+                let start = self.fresh("_mrs0");
+                self.emit("const", Some(&start), vec![Operand::Int(0)], "i64");
+                let end = self.fresh("_mrsn");
+                self.emit("const", Some(&end), vec![Operand::Int(recv_w as i64)], "i64");
+                self.emit(
+                    "str_slice",
+                    Some(&recv_reg),
+                    vec![Operand::Var(padded), Operand::Var(start), Operand::Var(end)],
+                    "str",
+                );
+            }
         }
     }
 
@@ -8088,10 +8169,11 @@ mod tests {
     }
 
     #[test]
-    fn refmod_computed_as_move_source_is_a_later_rung() {
-        // A computed refmod in a numeric/MOVE-target context stays a later rung,
-        // exactly as the constant refmod does.
-        let err = compile_source(
+    fn refmod_computed_as_move_source_into_alnum_receiver_compiles() {
+        // A reference-modification MOVE source into an ALPHANUMERIC receiver is now
+        // supported (this rung), including a computed (data-name) index — it lowers
+        // to the run-time slice-fit path rather than being rejected as a later rung.
+        compile_source(
             &wrap(
                 &[
                     "01  WS  PIC X(5) VALUE \"ABCDE\".",
@@ -8101,6 +8183,23 @@ mod tests {
                 &["MOVE WS(J:2) TO DST.", "STOP RUN."],
             ),
             "rmmv",
+        )
+        .expect("computed refmod MOVE source into an alphanumeric receiver compiles");
+    }
+
+    #[test]
+    fn refmod_as_move_source_into_numeric_receiver_is_a_later_rung() {
+        // The remaining boundary: a refmod MOVE source into a NUMERIC receiver
+        // (de-editing a slice into a numeric field) is still a later rung.
+        let err = compile_source(
+            &wrap(
+                &[
+                    "01  WS  PIC X(5) VALUE \"12345\".",
+                    "01  NUM PIC 9(3).",
+                ],
+                &["MOVE WS(1:3) TO NUM.", "STOP RUN."],
+            ),
+            "rmmvn",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");

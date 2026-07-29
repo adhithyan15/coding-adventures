@@ -69,11 +69,15 @@ signed / scaled numeric sides, figuratives, and the same numeric-literal-vs-alph
 deferral — is compared identically to `IF subject <relop> value`, and the compiler now
 reuses its relation dispatch to match byte-for-byte);
 **reference modification** `IDENT(start:len)` /
-`IDENT(start:)` (a 1-based substring of an alphanumeric item, in `DISPLAY` and
-alphanumeric-comparison operands — with **constant** integer indices *or*
-**computed** data-name indices like `WS(J:K)`, the index item an unsigned integer;
-an out-of-range computed refmod is a `RefModOutOfRange` trap under the same
-predicate the compiled `str_slice` enforces, so both engines error identically);
+`IDENT(start:)` (a 1-based substring of an alphanumeric item, in `DISPLAY`,
+alphanumeric-comparison operands, and as a **MOVE source** into an **alphanumeric**
+receiver `MOVE base(start:len) TO dst` — the slice is char-fit to the receiver's
+width by the ordinary alphanumeric rule, left-justify / space-pad / truncate, into
+one or more receivers, a **numeric** receiver a later rung — with **constant**
+integer indices *or* **computed** data-name indices like `WS(J:K)`, the index item
+an unsigned integer; an out-of-range computed refmod is a `RefModOutOfRange` trap
+under the same predicate the compiled `str_slice` enforces, so both engines error
+identically);
 `PERFORM para
 [THRU para2] [n TIMES | UNTIL cond |
 VARYING id FROM x BY y UNTIL cond]` (out-of-line paragraph or paragraph-range
