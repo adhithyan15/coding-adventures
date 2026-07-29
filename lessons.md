@@ -1780,3 +1780,22 @@ Fix: normalize to LF on disk, which is what git stores and what CI sees anyway
 (`git check-attr text eol -- <file>` to confirm). When scripting an edit to a
 tracked file, read and write **binary** (`open(p,'rb')` / `'wb'`) so you never
 silently re-encode line endings you weren't asked to touch.
+
+**Third occurrence (moslayout-compiler), with a new symptom.** Inserting a test before
+an existing one splits that test's `#[test]` from its `fn` too, giving:
+
+```rust
+/// G3-4: Index access …
+#[test]                      // <- orphaned from its fn
+/// A string literal …
+#[test]
+fn my_new_test() { … }       // <- now carries TWO #[test] attributes
+```
+
+`cargo test` still passes — it just silently runs `my_new_test` **twice** (the count
+went 82 → 86 instead of 85, which is the tell). Only `clippy -D warnings` fails, as
+`duplicate_macro_attributes`. Same root cause, so the same rule applies and is worth
+restating as a hard habit: **anchor an insertion on the previous item's closing brace,
+never on the next item's signature** — attributes and doc comments both live above the
+signature, and anchoring there always cuts through them.
+

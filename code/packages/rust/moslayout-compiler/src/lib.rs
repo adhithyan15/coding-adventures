@@ -1569,10 +1569,46 @@ fn reconstruct_expr_text(node: &GrammarASTNode) -> String {
 fn collect_tokens(node: &GrammarASTNode, out: &mut Vec<String>) {
     for child in &node.children {
         match child {
-            ASTNodeOrToken::Token(t) => out.push(t.value.clone()),
+            ASTNodeOrToken::Token(t) => out.push(token_source_text(t)),
             ASTNodeOrToken::Node(n) => collect_tokens(n, out),
         }
     }
+}
+
+/// A token's text as it must appear in *reconstructed source*.
+///
+/// For every token type but one this is just the token's value. The exception is
+/// `String`: the lexer strips a string literal's surrounding quotes and resolves its
+/// escapes before storing the value (see `TokenType::String`), so pushing that value
+/// verbatim silently rewrites the author's expression —
+///
+/// ```text
+/// ( status == "done" )   reconstructs as   status == done
+/// ```
+///
+/// — turning a string comparison into a comparison against an undefined identifier.
+/// Re-quoting restores the author's meaning. It also means a string's contents can no
+/// longer contribute structural characters (`}`, `,`, a bare quote) to the emitted
+/// source, which is what kept expression text from being able to break out of the
+/// construct it was interpolated into. See `code/specs/UI36-data-driven-sizing.md` §6.
+fn token_source_text(t: &Token) -> String {
+    if t.type_ != TokenType::String {
+        return t.value.clone();
+    }
+    let mut out = String::with_capacity(t.value.len() + 2);
+    out.push('"');
+    for c in t.value.chars() {
+        match c {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            _ => out.push(c),
+        }
+    }
+    out.push('"');
+    out
 }
 
 /// Resolve the standard `\`-escapes (`\n`, `\t`, `\\`, `\"`, `\r`, `\0`)
@@ -2630,6 +2666,84 @@ mod tests {
                     text.contains("editable"),
                     "Expr should include field name: {text:?}"
                 );
+            }
+            other => panic!("expected Expr, got {other:?}"),
+        }
+    }
+
+    /// A string literal inside an expression must keep its quotes.
+    ///
+    /// The lexer strips them (and resolves escapes) before storing a STRING token's
+    /// value, so reconstructing from `token.value` verbatim silently rewrote
+    /// `status == "done"` into `status == done` — a comparison against an undefined
+    /// identifier. Every backend interpolates this text into generated source, so the
+    /// bug reached all of them.
+    #[test]
+    fn expr_string_literal_keeps_its_quotes() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: ( status == "done" ) ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        match first_prop_value(src) {
+            LayoutPropValue::Expr(text) => assert!(
+                text.contains("\"done\""),
+                "the string literal lost its quotes: {text:?}"
+            ),
+            other => panic!("expected Expr, got {other:?}"),
+        }
+    }
+
+    /// A quote inside the string must come back escaped, so the reconstructed text
+    /// can't terminate the literal early — which is also what stops a string's
+    /// contents from contributing structural characters to the emitted source.
+    #[test]
+    fn expr_string_literal_reescapes_an_inner_quote() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: ( label == "he said \"hi\"" ) ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        match first_prop_value(src) {
+            LayoutPropValue::Expr(text) => {
+                assert!(text.contains("\\\""), "inner quote not re-escaped: {text:?}");
+                // Exactly two unescaped quotes: the ones that delimit the literal.
+                let bare = text
+                    .char_indices()
+                    .filter(|(i, c)| {
+                        *c == '"' && (*i == 0 || text.as_bytes()[i - 1] != b'\\')
+                    })
+                    .count();
+                assert_eq!(bare, 2, "unbalanced delimiters in {text:?}");
+            }
+            other => panic!("expected Expr, got {other:?}"),
+        }
+    }
+
+    /// A non-string token is untouched — the fix must not start quoting identifiers.
+    #[test]
+    fn expr_non_string_tokens_are_unquoted() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              If ( when: ( count > 3 ) ) {
+                Text ( slot: label )
+              }
+            }
+          }
+        "#;
+        match first_prop_value(src) {
+            LayoutPropValue::Expr(text) => {
+                assert!(!text.contains('"'), "identifiers got quoted: {text:?}");
+                assert!(text.contains("count") && text.contains('3'), "{text:?}");
             }
             other => panic!("expected Expr, got {other:?}"),
         }

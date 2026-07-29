@@ -2,6 +2,26 @@
 
 ## [Unreleased]
 
+### Fixed - a string literal inside an expression lost its quotes
+
+`( status == "done" )` reconstructed as `status == done` — a comparison against an
+undefined identifier rather than against the string. The lexer strips a STRING token's
+surrounding quotes and resolves its escapes before storing the value, and
+`reconstruct_expr_text` pushed that value verbatim. Every backend interpolates this text
+into generated source, so the bug reached all of them; any `.mll` expression comparing
+against a string was silently wrong.
+
+String tokens are now re-quoted and re-escaped when the expression text is rebuilt.
+Non-string tokens are untouched, so identifiers and numbers are unaffected.
+
+This also closes the only route by which expression text could contribute *structural*
+characters (`}`, `,`, a bare quote) to emitted source — see
+`code/specs/UI36-data-driven-sizing.md` §6, which recorded it as a follow-on.
+
+3 new tests (86 total). All eight Mosaic emit backends plus the resolver and
+`mosaic-compile` re-run clean (1,078 tests).
+
+
 ### Added — U29-G3: `expr` non-terminal in prop values
 
 - Ten new tokens in `moslayout.tokens` for the expression grammar:
