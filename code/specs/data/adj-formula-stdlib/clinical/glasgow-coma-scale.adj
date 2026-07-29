@@ -1,0 +1,111 @@
+% ============================================================================
+% glasgow-coma-scale.adj — the definition of the total Glasgow Coma Scale score
+% (Glasgow Coma Scale = eye response + verbal response + motor response) in the ADJ
+% standard library.
+% ============================================================================
+% The glasgow-coma-scale entry of the *clinical* track, a neurology/trauma-assessment
+% library. Where the two-quantity clinical libraries ground a sum, difference, or ratio of
+% TWO measurements, this grounds a three-component SUM: THE TOTAL GLASGOW COMA SCALE SCORE
+% IS THE SUM OF ITS THREE ELEMENT SCORES — the eye-opening response (E), the verbal
+% response (V), and the motor response (M). It ships as an importable, byte-provenanced,
+% PARAMETERIZED `formula`, together with its three exact rearrangements (each element score
+% the total leaves once the other two are removed). It is the first n-ary (three-input)
+% inverter in the clinical track: the same substrate that inverts a two-input relation three
+% ways inverts a three-input sum four ways. As with every compute library, a consumer states
+% NO arithmetic: it `import`s this file, binds the measured element scores from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited definition on the
+% CPU. Zero math is performed by the model; the engine computes each value EXACTLY, carrying
+% the definition's citation.
+%
+%     import "glasgow-coma-scale.adj"
+%     observe eye_response(4)          % "…eyes open to speech, E4…"   (span cited by the model)
+%     observe verbal_response(5)       % "…oriented, V5…"              (span cited by the model)
+%     observe motor_response(6)        % "…obeys commands, M6…"        (span cited by the model)
+%     ? glasgow_coma_scale(eye_response, verbal_response, motor_response)
+%                                        % engine → 15, carrying GCS = E + V + M
+%
+% All four formulas are EXACT over their parameters (a three-term sum and its three inverse
+% readings), so every value the engine returns is exact. The four COMPOSE and invert cleanly
+% around the worked case E = 4, V = 5, M = 6 (GCS = 4 + 5 + 6 = 15): the `glasgow_coma_scale`
+% a consumer computes from the three element scores is exactly the total the `eye_response`
+% formula subtracts the verbal and motor scores from to recover the 4, that the
+% `verbal_response` formula subtracts the eye and motor scores from to recover the 5, and
+% that the `motor_response` formula subtracts the eye and verbal scores from to recover the 6.
+%
+%   glasgow_coma_scale(eye_response, verbal_response, motor_response)
+%       = eye_response + verbal_response + motor_response      % GCS = E + V + M   (definition)
+%   eye_response(glasgow_coma_scale, verbal_response, motor_response)
+%       = glasgow_coma_scale - verbal_response - motor_response % E = GCS − V − M   (solved for E)
+%   verbal_response(glasgow_coma_scale, eye_response, motor_response)
+%       = glasgow_coma_scale - eye_response - motor_response    % V = GCS − E − M   (solved for V)
+%   motor_response(glasgow_coma_scale, eye_response, verbal_response)
+%       = glasgow_coma_scale - eye_response - verbal_response   % M = GCS − E − V   (solved for M)
+%
+% NOTE ON RANGE: each element score is an integer within its own clinical range (eye 1–4,
+% verbal 1–5, motor 1–6), so the total ranges 3–15. This library performs no range checking;
+% it computes the exact sum (or the exact complementary difference) over whatever integer
+% element scores it is given. A consumer that needs the per-element ranges enforces them
+% upstream.
+%
+% All four formulas are defended by the SAME defining span — "The score is the sum of the
+% individual elements' scores" — because that one definition (the total GCS IS the sum of its
+% element scores) sanctions the relation read every way (the total from the three elements, or
+% any one element from the total and the other two). The three elements are the eye, verbal,
+% and motor responses named on the same page. The span is transcribed verbatim from the
+% StatPearls "Glasgow Coma Scale" article on the NCBI Bookshelf, so each `formula` carries the
+% provenance envelope every shipped grounded clause carries; the linter rejects an unsourced
+% one. (See feedback_nothing_human_authored — the defining span is a verbatim quote of the
+% cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each element score is an observable finding the definition ranges over, and the
+% total is the derived score. `glasgow_coma_scale`, `eye_response`, `verbal_response` and
+% `motor_response` each appear BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are
+% the everyday names a decomposer maps onto the canonical term.
+% ----------------------------------------------------------------------------
+dictionary glasgow_coma_scale_vocab {
+    define eye_response        : finding  surface "eye response", "eye-opening response", "E"   % integer 1–4
+    define verbal_response     : finding  surface "verbal response", "V"                        % integer 1–5
+    define motor_response      : finding  surface "motor response", "M"                         % integer 1–6
+    define glasgow_coma_scale  : finding  surface "Glasgow Coma Scale", "GCS", "GCS score"      % integer 3–15
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all four ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the defining span from StatPearls
+% on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact
+% sum/difference of measured element scores, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook glasgow_coma_scale_laws {
+    use glasgow_coma_scale_vocab
+
+    % Total GCS — the sum of the three element scores, i.e. GCS = E + V + M.
+    formula glasgow_coma_scale(eye_response, verbal_response, motor_response) = eye_response + verbal_response + motor_response
+        source "The score is the sum of the individual elements' scores"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK513298/"
+        trust authoritative
+
+    % Eye response — the same definition solved for the eye score a total leaves once the
+    % verbal and motor scores are removed (E = GCS − V − M). Defended by the SAME defining span.
+    formula eye_response(glasgow_coma_scale, verbal_response, motor_response) = glasgow_coma_scale - verbal_response - motor_response
+        source "The score is the sum of the individual elements' scores"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK513298/"
+        trust authoritative
+
+    % Verbal response — the same definition solved for the verbal score a total leaves once the
+    % eye and motor scores are removed (V = GCS − E − M). Again the SAME defining span.
+    formula verbal_response(glasgow_coma_scale, eye_response, motor_response) = glasgow_coma_scale - eye_response - motor_response
+        source "The score is the sum of the individual elements' scores"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK513298/"
+        trust authoritative
+
+    % Motor response — the same definition solved for the motor score a total leaves once the
+    % eye and verbal scores are removed (M = GCS − E − V). The fourth reading of the one
+    % definition.
+    formula motor_response(glasgow_coma_scale, eye_response, verbal_response) = glasgow_coma_scale - eye_response - verbal_response
+        source "The score is the sum of the individual elements' scores"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK513298/"
+        trust authoritative
+}
