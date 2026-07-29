@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.19.0 — `fmt_float`: C-printf-faithful float formatting
+
+One builtin, for the C frontend's faithful `printf` (SIR27 milestone 10).
+
+- `fmt_float(value, precision, kind)` → `sir_fmt_float_c`, which renders a
+  `double` exactly as C's `printf` would for the conversion `kind`
+  (`'f'`/`'F'`/`'e'`/`'E'`/`'g'`/`'G'`) and precision. Ruby's `sprintf` is
+  C-compatible, and the runtime switches on the fixed `kind` character (never
+  interpolating a source-derived format string), so `printf("%.2f", 3.14159)`
+  and the emitted C both produce `"3.14"`.
+
+This leaves the backend's *default* float display (`sir_fmt_float`, `3.14`)
+untouched — `fmt_float` is only reached through an explicit C `printf`.
+
 ## 0.18.1 — fix: `Foo.new` runs the `initialize` constructor
 
 Fixes a cross-backend conformance failure (`counter_state`): a `def initialize`

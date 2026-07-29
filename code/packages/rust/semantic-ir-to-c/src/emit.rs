@@ -2026,6 +2026,9 @@ fn fixed_helper(name: &str) -> Option<(&'static str, usize)> {
         // (double → int, truncating toward zero, matching C's `(int)double`).
         "to_f" => ("_sir_to_f", 1),
         "to_i" => ("_sir_to_i", 1),
+        // Milestone 10 faithful printf: `fmt_float(value, precision, kind)`
+        // renders a double exactly as C's printf `%f`/`%e`/`%g` (+ uppercase).
+        "fmt_float" => ("_sir_fmt_float_c", 3),
         "cons" => ("_sir_cons", 2),
         "car" => ("_sir_car", 1),
         "cdr" => ("_sir_cdr", 1),

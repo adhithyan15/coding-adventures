@@ -292,6 +292,10 @@ fn int_lit(v: i64) -> Expr {
     }
 }
 
+fn str_lit(value: String) -> Expr {
+    Expr::StrLit { value, span: sp() }
+}
+
 fn convert(e: Expr, to: IntSpec) -> Expr {
     Expr::Convert {
         value: Box::new(e),
@@ -415,6 +419,10 @@ struct Lowerer {
     /// floating point (an integer-only program stays float-free, and backends
     /// that gate on the feature are not forced to support it needlessly).
     uses_floats: bool,
+    /// Set once any `Expr::StrLit` or string-producing builtin (the `printf`
+    /// format literals / `fmt_float`) is emitted, so the module declares
+    /// [`Feature::Strings`] only when it actually uses strings.
+    uses_strings: bool,
 }
 
 pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowerError> {
@@ -426,6 +434,7 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowe
         expr_depth: 0,
         stmt_depth: 0,
         uses_floats: false,
+        uses_strings: false,
     };
 
     // Pre-pass: collect function signatures.
@@ -466,6 +475,13 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowe
     // modules stay float-free.
     if lo.uses_floats {
         features.push(Feature::Floats);
+    }
+    // Strings: the `printf` lowering emits `StrLit` format chunks and the
+    // `fmt_float` builtin produces a string, so a program that calls `printf`
+    // with any literal text uses strings.  Declared conditionally so a program
+    // that never prints stays string-free.
+    if lo.uses_strings {
+        features.push(Feature::Strings);
     }
     let manifest = FeatureManifest::from_features(&features);
 
@@ -1725,25 +1741,98 @@ impl Lowerer {
         self.lower_call(&name, &arg_exprs, call)
     }
 
+    /// Lower `printf("<fmt>", args…)` faithfully.
+    ///
+    /// The format string is parsed (in the frontend, so no source text ever
+    /// reaches a backend's `printf`) into a sequence of literal chunks and
+    /// typed conversions.  The result is a single `print(seg₀, seg₁, …)`:
+    ///
+    /// - a **literal chunk** becomes a `StrLit` (C escapes already decoded, so
+    ///   the backend re-escapes correctly);
+    /// - `%d`/`%i`/`%u` pass the (already width-correct) integer value straight
+    ///   through — `print` renders an int as decimal, which is what `%d` wants;
+    /// - `%f`/`%e`/`%g` (with optional `.precision`) become a `fmt_float`
+    ///   builtin that formats the `double` exactly as C's `printf` does.
+    ///
+    /// `print` concatenates its arguments with no separator and adds no trailing
+    /// newline, so a `\n` in the format is emitted as literal text — matching C.
+    fn lower_printf(
+        &mut self,
+        args: &[&GrammarASTNode],
+        call: &GrammarASTNode,
+    ) -> Result<(Expr, CType), CLowerError> {
+        let err_here = |msg: String| CLowerError {
+            message: msg,
+            line: call.start_line.unwrap_or(0),
+            column: call.start_column.unwrap_or(0),
+        };
+        let raw_fmt = call_string_literal(call).ok_or_else(|| {
+            err_here("printf's first argument must be a string-literal format".into())
+        })?;
+        let fmt = decode_c_string(&raw_fmt);
+        let segs = parse_printf_format(&fmt).map_err(err_here)?;
+        // The value arguments follow the format string (`args[0]`).
+        let value_args = args.get(1..).unwrap_or(&[]);
+        let mut parts: Vec<Expr> = Vec::new();
+        let mut argi = 0usize;
+        for seg in segs {
+            match seg {
+                PrintfSeg::Lit(text) => {
+                    if !text.is_empty() {
+                        self.uses_strings = true;
+                        parts.push(str_lit(text));
+                    }
+                }
+                PrintfSeg::Conv { kind, precision } => {
+                    let a = value_args.get(argi).ok_or_else(|| {
+                        err_here("printf has more conversions than arguments".into())
+                    })?;
+                    argi += 1;
+                    let (e, t) = self.lower_expr(a)?;
+                    match kind {
+                        PrintfConv::Int => {
+                            if t.is_double() {
+                                return Err(err_here(
+                                    "printf `%d`/`%i`/`%u` expects an integer argument, got a double"
+                                        .into(),
+                                ));
+                            }
+                            parts.push(e);
+                        }
+                        PrintfConv::Float(c) => {
+                            // C promotes a `float` argument to `double` (default
+                            // argument promotions); an integer arg to `%f` is UB
+                            // in C, so we require a numeric operand and widen it.
+                            let d = convert_ct(e, t, CType::Double);
+                            self.uses_strings = true;
+                            parts.push(builtin(
+                                "fmt_float",
+                                vec![d, int_lit(precision as i64), str_lit(c.to_string())],
+                            ));
+                        }
+                    }
+                }
+            }
+        }
+        if argi != value_args.len() {
+            return Err(err_here(
+                "printf has more arguments than conversions".into(),
+            ));
+        }
+        Ok((builtin("print", parts), i32_ct()))
+    }
+
     fn lower_call(
         &mut self,
         name: &str,
         args: &[&GrammarASTNode],
         call: &GrammarASTNode,
     ) -> Result<(Expr, CType), CLowerError> {
-        // printf("<fmt>", e) → puts(e) when <fmt> ends in \n, else print(e).
+        // printf("<fmt>", args…) → a faithful format: the format string is
+        // parsed into literal chunks and conversions, each conversion formatted
+        // per C's rules, then concatenated and printed (see `lower_printf`).
         if name == "printf" {
-            let fmt = call_string_literal(call);
-            let newline = fmt.map(|s| s.ends_with("\\n")).unwrap_or(false);
-            // The value argument (skip the format string) — the last expr.
-            let val = args.last().ok_or_else(|| CLowerError {
-                message: "printf without a value argument".into(),
-                line: call.start_line.unwrap_or(0),
-                column: call.start_column.unwrap_or(0),
-            })?;
-            let (e, _t) = self.lower_expr(val)?;
-            let helper = if newline { "puts" } else { "print" };
-            return Ok((builtin(helper, vec![e]), i32_ct()));
+            return self.lower_printf(args, call);
         }
         // Ordinary function call: convert each argument to its parameter type.
         let (ptypes, ret) = self.fns.get(name).cloned().ok_or_else(|| CLowerError {
@@ -1942,6 +2031,160 @@ fn call_string_literal(call: &GrammarASTNode) -> Option<String> {
         }
     }
     None
+}
+
+// ── printf format parsing (milestone 10) ────────────────────────────────────
+//
+// The C frontend owns all format-string parsing: a backend never receives a
+// source-derived format string (which would be a classic format-string
+// vulnerability), only a fixed sequence of typed pieces.
+
+/// One piece of a parsed `printf` format string.
+enum PrintfSeg {
+    /// Literal text between conversions (C escapes already decoded).
+    Lit(String),
+    /// A `%…` conversion.
+    Conv { kind: PrintfConv, precision: u32 },
+}
+
+/// The kinds of `printf` conversion the subset supports.
+enum PrintfConv {
+    /// `%d` / `%i` / `%u` — printed as a decimal integer (the stored value is
+    /// already width-correct and, for `%u`, masked non-negative).
+    Int,
+    /// `%f` / `%F` / `%e` / `%E` / `%g` / `%G` — the exact conversion character
+    /// is carried through so the backend uses the matching format.
+    Float(char),
+}
+
+/// The largest floating-point precision accepted — a DoS guard so a source
+/// program cannot bake in `%.99999999f` and make the emitted program allocate
+/// an enormous formatting buffer.
+const MAX_PRINTF_PRECISION: u32 = 512;
+
+/// Decode C string-literal escape sequences (`\n`, `\t`, `\\`, `\"`, …) into the
+/// characters they denote, so the resulting `String` holds real bytes.  Each
+/// backend's own string emitter then re-escapes them for its target language.
+fn decode_c_string(raw: &str) -> String {
+    let mut out = String::new();
+    let mut chars = raw.chars();
+    while let Some(c) = chars.next() {
+        if c != '\\' {
+            out.push(c);
+            continue;
+        }
+        match chars.next() {
+            Some('n') => out.push('\n'),
+            Some('t') => out.push('\t'),
+            Some('r') => out.push('\r'),
+            Some('0') => out.push('\0'),
+            Some('\\') => out.push('\\'),
+            Some('"') => out.push('"'),
+            Some('\'') => out.push('\''),
+            Some('a') => out.push('\u{07}'),
+            Some('b') => out.push('\u{08}'),
+            Some('f') => out.push('\u{0C}'),
+            Some('v') => out.push('\u{0B}'),
+            Some(other) => out.push(other), // unknown escape → the char itself
+            None => out.push('\\'),
+        }
+    }
+    out
+}
+
+/// Parse a (already escape-decoded) `printf` format string into segments.  The
+/// subset supports `%d`/`%i`/`%u` and `%f`/`%F`/`%e`/`%E`/`%g`/`%G` with an
+/// optional `.precision`, plus `%%`.  Flags, field width, and other conversions
+/// (`%c`, `%s`, `%x`, `%p`, `%n`, …) are refused with a clear message rather
+/// than mis-formatted.
+fn parse_printf_format(fmt: &str) -> Result<Vec<PrintfSeg>, String> {
+    let chars: Vec<char> = fmt.chars().collect();
+    let mut segs: Vec<PrintfSeg> = Vec::new();
+    let mut lit = String::new();
+    let mut i = 0;
+    while i < chars.len() {
+        if chars[i] != '%' {
+            lit.push(chars[i]);
+            i += 1;
+            continue;
+        }
+        i += 1; // consume '%'
+        if i >= chars.len() {
+            return Err("printf format ends with a lone `%`".into());
+        }
+        if chars[i] == '%' {
+            lit.push('%');
+            i += 1;
+            continue;
+        }
+        // A real conversion begins: flush any pending literal text.
+        if !lit.is_empty() {
+            segs.push(PrintfSeg::Lit(std::mem::take(&mut lit)));
+        }
+        if matches!(chars[i], '-' | '+' | ' ' | '#' | '0') {
+            return Err(format!(
+                "printf flag `{}` is not supported (only plain conversions)",
+                chars[i]
+            ));
+        }
+        if chars[i].is_ascii_digit() {
+            return Err("printf field width is not supported".into());
+        }
+        // Optional `.precision`.
+        let mut precision: Option<u32> = None;
+        if chars[i] == '.' {
+            i += 1;
+            let mut p: u32 = 0;
+            while i < chars.len() && chars[i].is_ascii_digit() {
+                p = p
+                    .saturating_mul(10)
+                    .saturating_add(chars[i].to_digit(10).unwrap());
+                i += 1;
+            }
+            precision = Some(p); // `.` with no digits means precision 0
+        }
+        // Length modifiers (`l`, `ll`, `h`, `z`, …) don't change our formatting
+        // — everything is stored as int64 / double — so accept and skip them.
+        while i < chars.len() && matches!(chars[i], 'l' | 'h' | 'z' | 'j' | 't' | 'L') {
+            i += 1;
+        }
+        if i >= chars.len() {
+            return Err("printf conversion is missing its type character".into());
+        }
+        let conv = chars[i];
+        i += 1;
+        let seg = match conv {
+            'd' | 'i' | 'u' => {
+                if precision.is_some() {
+                    return Err(format!(
+                        "printf precision on the integer conversion `%.{conv}` is not supported"
+                    ));
+                }
+                PrintfSeg::Conv {
+                    kind: PrintfConv::Int,
+                    precision: 0,
+                }
+            }
+            'f' | 'F' | 'e' | 'E' | 'g' | 'G' => {
+                let prec = precision.unwrap_or(6); // C's default precision
+                if prec > MAX_PRINTF_PRECISION {
+                    return Err(format!(
+                        "printf precision larger than {MAX_PRINTF_PRECISION} is not supported"
+                    ));
+                }
+                PrintfSeg::Conv {
+                    kind: PrintfConv::Float(conv),
+                    precision: prec,
+                }
+            }
+            other => return Err(format!("printf conversion `%{other}` is not supported")),
+        };
+        segs.push(seg);
+    }
+    if !lit.is_empty() {
+        segs.push(PrintfSeg::Lit(lit));
+    }
+    Ok(segs)
 }
 
 /// Parse a C integer literal (hex/decimal + u/l suffix) → (value, type).
