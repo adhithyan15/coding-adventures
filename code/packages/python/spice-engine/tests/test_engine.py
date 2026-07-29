@@ -993,6 +993,12 @@ def test_mos_model_card_gate_material_shifts_process_derived_threshold() -> None
     with pytest.raises(ValueError, match="MOSFET TPG must be -1, 0, or 1"):
         normalize_model_card("Minvalid", "nmos", {"TPG": 0.5})
 
+    for invalid_nss in (-1.0, math.inf, math.nan):
+        with pytest.raises(
+            ValueError, match="MOSFET NSS must be finite and non-negative"
+        ):
+            normalize_model_card("Minvalid", "nmos", {"NSS": invalid_nss})
+
 
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
     circuit = Circuit()

@@ -8430,6 +8430,8 @@ export function normalizeModelCard(
       normalized[canonical] = 1.0;
     } else if (canonical === "TPG" && value !== -1.0 && value !== 0.0 && value !== 1.0) {
       throw invalidElement(name, "MOSFET TPG must be -1, 0, or 1");
+    } else if (canonical === "NSS" && (!Number.isFinite(value) || value < 0.0)) {
+      throw invalidElement(name, "MOSFET NSS must be finite and non-negative");
     } else {
       normalized[canonical] = value;
     }

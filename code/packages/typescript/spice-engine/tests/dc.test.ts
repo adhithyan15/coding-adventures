@@ -660,6 +660,12 @@ describe("dcOp", () => {
     expect(() => normalizeModelCard("Minvalid", "nmos", { TPG: 0.5 })).toThrow(
       "MOSFET TPG must be -1, 0, or 1",
     );
+
+    for (const invalidNss of [-1.0, Number.POSITIVE_INFINITY, Number.NaN]) {
+      expect(() => normalizeModelCard("Minvalid", "nmos", { NSS: invalidNss })).toThrow(
+        "MOSFET NSS must be finite and non-negative",
+      );
+    }
   });
 
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
