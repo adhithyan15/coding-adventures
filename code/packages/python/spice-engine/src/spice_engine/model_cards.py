@@ -7,6 +7,7 @@ duplicating diode, BJT, JFET, and Level-1 MOS parameter mapping logic.
 
 from __future__ import annotations
 
+import math
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, replace
 
@@ -29,6 +30,12 @@ from spice_engine.engine import (
     format_deck_table_csv,
     format_deck_table_json,
 )
+
+_BOLTZMANN = 1.380_649e-23
+_ELECTRON_CHARGE = 1.602_176_634e-19
+_SILICON_PERMITTIVITY = 11.70 * 8.854_214_871e-12
+_INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER = 1.45e16
+_CUBIC_CENTIMETERS_PER_CUBIC_METER = 1.0e6
 
 
 @dataclass(frozen=True, slots=True)
@@ -1076,13 +1083,48 @@ def mosfet_from_model_card(
         transconductance = (
             surface_mobility * 1.0e-4 * OXIDE_PERMITTIVITY / p["TOX"]
         )
+    surface_potential = p.get("PHI", defaults.PHI)
+    body_effect_coefficient = p.get("GAMMA", defaults.GAMMA)
+    if "N_SUB" in p and "TOX" in p:
+        substrate_doping_per_cubic_meter = (
+            p["N_SUB"] * _CUBIC_CENTIMETERS_PER_CUBIC_METER
+        )
+        if (
+            substrate_doping_per_cubic_meter
+            <= _INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER
+        ):
+            raise ValueError(
+                f"{name}: MOSFET NSUB must exceed the intrinsic carrier density"
+            )
+        if p["TOX"] > 0.0:
+            if "PHI" not in p:
+                thermal_voltage = (
+                    _BOLTZMANN * p.get("T_NOM", defaults.T_NOM) / _ELECTRON_CHARGE
+                )
+                surface_potential = max(
+                    0.1,
+                    2.0
+                    * thermal_voltage
+                    * math.log(
+                        substrate_doping_per_cubic_meter
+                        / _INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER
+                    ),
+                )
+            if "GAMMA" not in p:
+                oxide_capacitance = OXIDE_PERMITTIVITY / p["TOX"]
+                body_effect_coefficient = math.sqrt(
+                    2.0
+                    * _SILICON_PERMITTIVITY
+                    * _ELECTRON_CHARGE
+                    * substrate_doping_per_cubic_meter
+                ) / oxide_capacitance
     params = replace(
         defaults,
         VT0=p.get("VT0", defaults.VT0),
         KP=transconductance,
         LAMBDA=p.get("LAMBDA", defaults.LAMBDA),
-        GAMMA=p.get("GAMMA", defaults.GAMMA),
-        PHI=p.get("PHI", defaults.PHI),
+        GAMMA=body_effect_coefficient,
+        PHI=surface_potential,
         W=p.get("W", defaults.W),
         L=p.get("L", defaults.L),
         LD=p.get("LD", defaults.LD),

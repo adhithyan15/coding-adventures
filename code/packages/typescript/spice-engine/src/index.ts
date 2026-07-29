@@ -7,6 +7,9 @@ const ELECTRON_CHARGE = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA = 2.0 / 3.0;
 const DIGITAL_BRIDGE_TIME_EPSILON = 1.0e-18;
 const OXIDE_PERMITTIVITY = 3.453133e-11;
+const SILICON_PERMITTIVITY = 11.70 * 8.854_214_871e-12;
+const INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER = 1.45e16;
+const CUBIC_CENTIMETERS_PER_CUBIC_METER = 1.0e6;
 const SPICE_SUFFIX_FACTORS: Readonly<Record<string, number>> = Object.freeze({
   t: 1.0e12,
   g: 1.0e9,
@@ -8917,12 +8920,46 @@ export function mosfetFromModelCard(
     (p.TOX !== undefined && p.TOX > 0.0
       ? surfaceMobility * 1.0e-4 * OXIDE_PERMITTIVITY / p.TOX
       : undefined);
+  let surfacePotential = p.PHI;
+  let bodyEffectCoefficient = p.GAMMA;
+  if (p.N_SUB !== undefined && p.TOX !== undefined) {
+    const substrateDopingPerCubicMeter =
+      p.N_SUB * CUBIC_CENTIMETERS_PER_CUBIC_METER;
+    if (substrateDopingPerCubicMeter <= INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER) {
+      throw invalidElement(name, "MOSFET NSUB must exceed the intrinsic carrier density");
+    }
+    if (p.TOX > 0.0) {
+      if (surfacePotential === undefined) {
+        const nominalTemperature = p.T_NOM ?? 300.15;
+        const thermalVoltage = BOLTZMANN * nominalTemperature / ELECTRON_CHARGE;
+        surfacePotential = Math.max(
+          0.1,
+          2.0 *
+            thermalVoltage *
+            Math.log(
+              substrateDopingPerCubicMeter /
+                INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER,
+            ),
+        );
+      }
+      if (bodyEffectCoefficient === undefined) {
+        const oxideCapacitance = OXIDE_PERMITTIVITY / p.TOX;
+        bodyEffectCoefficient =
+          Math.sqrt(
+            2.0 *
+              SILICON_PERMITTIVITY *
+              ELECTRON_CHARGE *
+              substrateDopingPerCubicMeter,
+          ) / oxideCapacitance;
+      }
+    }
+  }
   const params: Partial<MosfetLevel1Params> = {
     ...(p.VT0 !== undefined ? { VT0: p.VT0 } : {}),
     ...(transconductance !== undefined ? { KP: transconductance } : {}),
     ...(p.LAMBDA !== undefined ? { LAMBDA: p.LAMBDA } : {}),
-    ...(p.GAMMA !== undefined ? { GAMMA: p.GAMMA } : {}),
-    ...(p.PHI !== undefined ? { PHI: p.PHI } : {}),
+    ...(bodyEffectCoefficient !== undefined ? { GAMMA: bodyEffectCoefficient } : {}),
+    ...(surfacePotential !== undefined ? { PHI: surfacePotential } : {}),
     ...(p.W !== undefined ? { W: p.W } : {}),
     ...(p.L !== undefined ? { L: p.L } : {}),
     ...(p.LD !== undefined ? { LD: p.LD } : {}),

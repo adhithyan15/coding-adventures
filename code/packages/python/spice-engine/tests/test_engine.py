@@ -744,7 +744,7 @@ def test_model_card_aliases_build_device_instances() -> None:
             "LEVEL": 1.0,
             "VTO": 0.55,
             "LAM": 0.04,
-            "NSUB": 1.6,
+            "NSUB": 1.6e16,
             "CJD": 3.0e-13,
             "PB": 0.9,
             "MJ": 0.45,
@@ -768,7 +768,7 @@ def test_model_card_aliases_build_device_instances() -> None:
         "LEVEL": 1.0,
         "VT0": 0.55,
         "LAMBDA": 0.04,
-        "N_SUB": 1.6,
+        "N_SUB": 1.6e16,
         "CBD": 3.0e-13,
         "PB": 0.9,
         "MJ": 0.45,
@@ -791,7 +791,7 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert isinstance(mos_model.model.model, Level1Model)
     assert pytest.approx(0.55) == mos_model.model.model.params.VT0
     assert pytest.approx(0.04) == mos_model.model.model.params.LAMBDA
-    assert pytest.approx(1.6) == mos_model.model.model.params.N_SUB
+    assert pytest.approx(1.6e16) == mos_model.model.model.params.N_SUB
     assert pytest.approx(3.0e-13) == mos_model.model.model.params.CBD
     assert pytest.approx(0.9) == mos_model.model.model.params.PB
     assert pytest.approx(0.45) == mos_model.model.model.params.MJ
@@ -843,6 +843,63 @@ def test_mos_model_card_surface_mobility_derives_kp_with_explicit_precedence() -
     )
     assert pytest.approx(500.0) == explicit.model.model.params.U0
     assert pytest.approx(250.0e-6) == explicit.model.model.params.KP
+
+
+def test_mos_model_card_substrate_doping_derives_electrostatics_with_precedence() -> None:
+    derived = mosfet_from_model_card(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        normalize_model_card(
+            "Mderived", "nmos", {"NSUB": 4.0e15, "TOX": 100.0e-9}
+        ),
+    )
+    thermal_voltage = 1.380_649e-23 * 300.15 / 1.602_176_634e-19
+    expected_phi = max(
+        0.1, 2.0 * thermal_voltage * math.log(4.0e21 / 1.45e16)
+    )
+    expected_gamma = math.sqrt(
+        2.0 * (11.70 * 8.854_214_871e-12) * 1.602_176_634e-19 * 4.0e21
+    ) / (3.453133e-11 / 100.0e-9)
+    assert pytest.approx(expected_phi) == derived.model.model.params.PHI
+    assert pytest.approx(expected_gamma) == derived.model.model.params.GAMMA
+
+    explicit = mosfet_from_model_card(
+        "M2",
+        "d",
+        "g",
+        "s",
+        "b",
+        normalize_model_card(
+            "Mexplicit",
+            "nmos",
+            {
+                "NSUB": 4.0e15,
+                "TOX": 100.0e-9,
+                "PHI": 0.72,
+                "GAMMA": 0.41,
+            },
+        ),
+    )
+    assert pytest.approx(0.72) == explicit.model.model.params.PHI
+    assert pytest.approx(0.41) == explicit.model.model.params.GAMMA
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET NSUB must exceed the intrinsic carrier density",
+    ):
+        mosfet_from_model_card(
+            "M3",
+            "d",
+            "g",
+            "s",
+            "b",
+            normalize_model_card(
+                "Minvalid", "nmos", {"NSUB": 1.0e10, "TOX": 1.0e-7}
+            ),
+        )
 
 
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:

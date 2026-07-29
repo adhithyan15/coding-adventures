@@ -20,6 +20,9 @@ const ELECTRON_CHARGE: f64 = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
 const DIGITAL_BRIDGE_TIME_EPSILON: f64 = 1.0e-18;
 const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
+const SILICON_PERMITTIVITY: f64 = 11.70 * 8.854_214_871e-12;
+const INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER: f64 = 1.45e16;
+const CUBIC_CENTIMETERS_PER_CUBIC_METER: f64 = 1.0e6;
 
 fn real_solver_kind(matrix_size: usize) -> &'static str {
     if matrix_size == 0 {
@@ -5050,6 +5053,37 @@ pub fn mosfet_from_model_card(
     }
     if let Some(value) = model.parameters.get("T_NOM") {
         params.t_nom = *value;
+    }
+    if let (Some(substrate_doping), Some(oxide_thickness)) =
+        (model.parameters.get("N_SUB"), model.parameters.get("TOX"))
+    {
+        let substrate_doping_per_cubic_meter = substrate_doping * CUBIC_CENTIMETERS_PER_CUBIC_METER;
+        if substrate_doping_per_cubic_meter <= INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER {
+            return Err(SpiceError::InvalidElement {
+                name: name.clone(),
+                reason: "MOSFET NSUB must exceed the intrinsic carrier density".to_string(),
+            });
+        }
+        if *oxide_thickness > 0.0 {
+            if !model.parameters.contains_key("PHI") {
+                let thermal_voltage = BOLTZMANN * params.t_nom / ELECTRON_CHARGE;
+                params.phi = (2.0
+                    * thermal_voltage
+                    * (substrate_doping_per_cubic_meter
+                        / INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER)
+                        .ln())
+                .max(0.1);
+            }
+            if !model.parameters.contains_key("GAMMA") {
+                let oxide_capacitance = OXIDE_PERMITTIVITY / oxide_thickness;
+                params.gamma = (2.0
+                    * SILICON_PERMITTIVITY
+                    * ELECTRON_CHARGE
+                    * substrate_doping_per_cubic_meter)
+                    .sqrt()
+                    / oxide_capacitance;
+            }
+        }
     }
     if let Some(value) = model.parameters.get("CGSO") {
         params.gate_source_overlap_capacitance = *value;

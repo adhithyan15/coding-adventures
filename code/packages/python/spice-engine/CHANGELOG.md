@@ -1,5 +1,8 @@
 # Changelog
 
+- Derive Level-1 MOS `PHI` and `GAMMA` from explicit model-card `NSUB` plus
+  `TOX`, preserving explicit electrostatic parameters and rejecting substrate
+  doping at or below the intrinsic carrier density.
 - Prefer a non-default Level-1 MOS model-card `TNOM` over the circuit nominal
   temperature when applying Berkeley temperature preprocessing.
 - Scale Level-1 MOS zero-bias bottom-junction `CJ`, source/drain `CBS`/`CBD`,

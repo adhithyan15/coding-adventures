@@ -414,7 +414,7 @@ describe("dcOp", () => {
       LEVEL: 1.0,
       VTO: 0.55,
       LAM: 0.04,
-      NSUB: 1.6,
+      NSUB: 1.6e16,
       CJD: 3.0e-13,
       PB: 0.9,
       MJ: 0.45,
@@ -437,7 +437,7 @@ describe("dcOp", () => {
       LEVEL: 1.0,
       VT0: 0.55,
       LAMBDA: 0.04,
-      N_SUB: 1.6,
+      N_SUB: 1.6e16,
       CBD: 3.0e-13,
       PB: 0.9,
       MJ: 0.45,
@@ -458,7 +458,7 @@ describe("dcOp", () => {
     expect(mosModel.type).toBe("NMOS");
     expectClose(mosModel.params.VT0, 0.55);
     expectClose(mosModel.params.LAMBDA, 0.04);
-    expectClose(mosModel.params.N_SUB, 1.6);
+    expectClose(mosModel.params.N_SUB, 1.6e16);
     expectClose(mosModel.params.CBD, 3.0e-13);
     expectClose(mosModel.params.PB, 0.9);
     expectClose(mosModel.params.MJ, 0.45);
@@ -506,6 +506,62 @@ describe("dcOp", () => {
     );
     expectClose(explicit.params.U0, 500.0);
     expectClose(explicit.params.KP, 250.0e-6);
+  });
+
+  it("derives MOS electrostatics from substrate doping with explicit precedence", () => {
+    const derived = mosfetFromModelCard(
+      "M1",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mderived", "nmos", {
+        NSUB: 4.0e15,
+        TOX: 100.0e-9,
+      }),
+    );
+    const thermalVoltage = 1.380_649e-23 * 300.15 / 1.602_176_634e-19;
+    const expectedPhi = Math.max(
+      0.1,
+      2.0 * thermalVoltage * Math.log(4.0e21 / 1.45e16),
+    );
+    const expectedGamma =
+      Math.sqrt(
+        2.0 * (11.70 * 8.854_214_871e-12) * 1.602_176_634e-19 * 4.0e21,
+      ) /
+      (3.453133e-11 / 100.0e-9);
+    expectClose(derived.params.PHI, expectedPhi);
+    expectClose(derived.params.GAMMA, expectedGamma);
+
+    const explicit = mosfetFromModelCard(
+      "M2",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mexplicit", "nmos", {
+        NSUB: 4.0e15,
+        TOX: 100.0e-9,
+        PHI: 0.72,
+        GAMMA: 0.41,
+      }),
+    );
+    expectClose(explicit.params.PHI, 0.72);
+    expectClose(explicit.params.GAMMA, 0.41);
+
+    expect(() =>
+      mosfetFromModelCard(
+        "M3",
+        "d",
+        "g",
+        "s",
+        "b",
+        normalizeModelCard("Minvalid", "nmos", {
+          NSUB: 1.0e10,
+          TOX: 1.0e-7,
+        }),
+      ),
+    ).toThrow("MOSFET NSUB must exceed the intrinsic carrier density");
   });
 
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
