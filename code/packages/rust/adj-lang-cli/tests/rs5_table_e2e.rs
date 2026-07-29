@@ -1005,6 +1005,53 @@ fn shipped_magnetic_flux_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b22) Shipped table — reference/power-conversions.adj resolves via import (a NEW
+//       dimension: power → watt, the EXACT SP 811 B.9 boldface factor
+//       erg per second = 1.0 E-07 = 0.0000001, the erg DEFINED as exactly 10⁻⁷ J so an erg
+//       per second is exactly 10⁻⁷ W), and a unit of a DIFFERENT quantity (`erg`, an ENERGY
+//       unit → joule, not the watt) — no row — abstains rather than mis-converting across
+//       dimensions. The sharp case: the erg (energy) and the erg per second (power) share the
+//       numeric factor 1.0 E-07, but they name DIFFERENT SI units (joule vs watt), so the
+//       abstain proves dimension safety, not mere absence of a value: power is energy per unit
+//       time; one watt is one joule per second.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_power_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_power");
+    let src = stdlib().join("reference/power-conversions.adj");
+    std::fs::copy(&src, dir.join("power-conversions.adj")).expect("copy shipped power-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"power-conversions.adj\"\n\
+         ? power_to_watt(erg_per_second, $v)\n\
+         ? power_to_watt(erg, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table
+    // (boldface = exact; the erg is defined as exactly 10^-7 J, so erg/s is exactly 10^-7 W).
+    assert!(
+        out.contains("\"v\":\"0.0000001\""),
+        "erg per second = 0.0000001 W: {out}"
+    );
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `erg` is an ENERGY unit (it converts to the joule, a DIFFERENT quantity), so this power
+    // table has no row for it — the engine abstains rather than mis-converting an energy unit
+    // as if it were a power unit (and rather than silently reusing the coincidentally-equal
+    // 1.0 E-07 factor for the wrong SI unit).
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 

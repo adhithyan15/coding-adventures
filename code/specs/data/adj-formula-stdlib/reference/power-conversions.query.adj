@@ -1,0 +1,26 @@
+% ============================================================================
+% power-conversions.query.adj — worked lookups over the NIST power → watt table.
+% ============================================================================
+% The shape a consumer produces to convert a power given in a traditional CGS unit into
+% SI: it `import`s the grounded table and asks the engine to bind the factor. No arithmetic
+% and no factor is stated by the consumer — the engine returns the cell WITH the table's
+% NIST citation as its proof, on the CPU.
+%
+%   ? power_to_watt(erg_per_second, $v)   % 0.0000001   (erg/s = 1.0 E-07 W, exact)
+%
+% And the dimension guard: a unit of a DIFFERENT quantity has no row, so the lookup ABSTAINS
+% rather than mis-converting across dimensions. The "erg" is an ENERGY unit (it converts to
+% the joule, see energy-conversions.adj), NOT a power unit — even though the erg and the
+% erg per second share the numeric factor 1.0 E-07, they name different SI units, so reusing
+% the factor here would be a dimension error:
+%
+%   ? power_to_watt(erg, $v)              % abstains (erg is energy → joule, not power → watt)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli power-conversions.query.adj
+% ============================================================================
+
+import "power-conversions.adj"
+
+? power_to_watt(erg_per_second, $v)   % expect 0.0000001  (exact NIST SP 811 B.9 factor)
+? power_to_watt(erg, $v)              % expect abstain    (energy unit, wrong dimension)
