@@ -41,6 +41,7 @@ param = type_spec NAME ;
 type_spec = type_kw { type_kw } ;
 
 type_kw = "void" | "char" | "short" | "int" | "long" | "signed" | "unsigned"
+        | "float" | "double"
         | "int8_t" | "int16_t" | "int32_t" | "int64_t"
         | "uint8_t" | "uint16_t" | "uint32_t" | "uint64_t" | "size_t" ;
 
@@ -102,7 +103,8 @@ postfix = primary { call_suffix } ;
 call_suffix = LPAREN [ arg_list ] RPAREN ;
 arg_list = expr { COMMA expr } ;
 
-primary = INT_LIT
+primary = FLOAT_LIT
+        | INT_LIT
         | CHAR_LIT
         | STR_LIT
         | NAME

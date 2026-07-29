@@ -61,6 +61,25 @@ mod tests {
     }
 
     #[test]
+    fn floating_point_is_parsed_but_lowering_rejects_it_cleanly() {
+        // The grammar slice (milestone 9a) recognises `float`/`double` and float
+        // literals; the lowering is still integer-only, so it must reject them
+        // with a clear message rather than mis-typing a `double` as `int`.
+        let err = compile_source("double f(double r) { return r; }", "test").unwrap_err();
+        assert!(
+            err.message.contains("floating-point types"),
+            "wrong error: {}",
+            err.message
+        );
+        let err = compile_source("int main(void) { return 3.14; }", "test").unwrap_err();
+        assert!(
+            err.message.contains("floating-point literals"),
+            "wrong error: {}",
+            err.message
+        );
+    }
+
+    #[test]
     fn source_language_is_c_and_validates() {
         let m = lower("int main(void) { return 0; }");
         assert_eq!(m.metadata.source_language.as_deref(), Some("c"));
