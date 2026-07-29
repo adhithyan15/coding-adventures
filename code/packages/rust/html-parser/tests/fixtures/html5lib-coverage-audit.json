@@ -9,10 +9,9 @@
     "upstream_source": "html5lib-tests/tokenizer"
   },
   "tree_construction": {
-    "local_cases": 2493,
-    "missing": 148,
+    "local_cases": 2494,
+    "missing": 147,
     "missing_sources": [
-      "adoption02.dat:3",
       "html5test-com.dat:12",
       "html5test-com.dat:14",
       "html5test-com.dat:15",
