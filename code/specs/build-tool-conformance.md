@@ -429,6 +429,63 @@ Required stable process semantics:
 Machine output is JSON. Human progress output may vary and is not compared by
 the conformance runner.
 
+### 13. Closed pure-domain fixture model
+
+The process-free bootstrap closes the remaining non-execution domains with the
+following v1 input and result records. All lists named below are bounded by the
+fixture schema. Package names, paths, toolchain keys, diagnostic codes, and
+structured command fields use the shared definitions in the corpus schema.
+
+| Domain | `input.options` | Successful `result` |
+|---|---|---|
+| `diff_selection` | packages with repository-relative roots and optional strict source globs, dependency edges, forced packages, and an `ignore` or `all` unknown-path policy | sorted `changed_packages`, `affected_packages`, and prerequisite-only `prerequisite_packages` |
+| `hashing_cache` | SHA-256 mode, package, included paths, dependency digests, and prior-cache state | lowercase `package_digest`, `dependencies_digest`, `combined_digest`, cache status, and sorted invalidated packages |
+| `starlark` | repository-contained entrypoint, v1 `_ctx`, and declared legacy fallback | sorted targets containing structured commands and a fallback-use flag |
+| `sharding` | package costs and languages, dependency edges, scheduled packages, shard count, and optional shard index | stable prerequisite-closed shard records with assignments, package closure, toolchains, and estimated cost |
+| `validation` | platform and an explicit set of validation checks | `valid` plus sorted stable diagnostic codes |
+| `toolchain_detection` | package-language records, `null`/empty/explicit package selection, and forced toolchains | the complete canonical toolchain registry as a sorted boolean map |
+| `cli` | portable build-tool arguments and an invocation condition | exit code, normalized mode, and bounded machine-output data |
+
+These records intentionally model decisions, not host operations:
+
+- diff selection receives `changed_paths`; it never invokes Git;
+- hashing receives inline bytes; it never reads host metadata;
+- Starlark receives inline source and context; it never executes a command;
+- validation inspects inline repository data only;
+- toolchain detection never probes installed programs; and
+- CLI fixtures model parsing/reporting outcomes without launching a build.
+
+Hashing v1 uses SHA-256 over an unambiguous byte stream. Included files are
+sorted by normalized forward-slash path. For each file, append the unsigned
+64-bit big-endian path-byte length, UTF-8 path bytes, unsigned 64-bit
+big-endian content length, and exact content bytes. Dependency digests are
+sorted by package name and encoded the same way, using the package name as the
+first byte string and the 32 decoded digest bytes as the second. The package
+stream and dependency stream are hashed separately; `combined_digest` is
+SHA-256 over the 32 package-digest bytes followed by the 32 dependency-digest
+bytes. An empty stream therefore has the standard SHA-256 empty digest.
+
+Canonical result ordering is domain-aware:
+
+- every package, path, toolchain, diagnostic-code, and invalidation set is
+  lexicographically sorted;
+- diff-selection sets are disjoint where
+  `prerequisite_packages` excludes already affected packages;
+- targets sort by `(rule, name)` and commands retain execution order;
+- shards sort by index while their assignment, closure, and toolchain sets
+  sort lexicographically; and
+- toolchain maps contain every registry key even when all values are false.
+
+The canonical v1 toolchain registry is:
+
+`cpp`, `dart`, `dotnet`, `elixir`, `go`, `haskell`, `java`, `kotlin`, `lua`,
+`ocaml`, `perl`, `python`, `ruby`, `rust`, `swift`, and `typescript`.
+
+`c` and `cpp` packages map to `cpp`; C#, F#, and .NET map to `dotnet`; WASM
+maps to `rust`. OCaml is present in this decision registry before its build-tool
+implementation is promoted. Unknown package languages and unknown forced
+toolchains are stable validation errors rather than new result-map keys.
+
 ## Security and trust boundary
 
 A fixture is data supplied to a program that can execute commands. Therefore:

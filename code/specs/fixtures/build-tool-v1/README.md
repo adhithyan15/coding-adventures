@@ -78,6 +78,23 @@ trusted-sandbox item implements atomic no-follow filesystem access, network
 isolation, a sanitized environment, direct argument vectors, and complete
 process-tree resource limits.
 
+The pure-domain expansion keeps that boundary intact. Diff selection consumes
+declared changed paths instead of Git, hashing consumes inline bytes instead of
+filesystem metadata, Starlark returns structured commands without running
+them, validation reads only fixture data, toolchain detection never probes the
+host, and CLI cases model parse/report behavior without invoking a build.
+
+The corpus now closes all process-free v1 domains:
+
+- discovery, resolution, graph, and plan;
+- diff selection and hashing/cache;
+- Starlark evaluation and structured-command extraction;
+- prerequisite-closed sharding;
+- validation and toolchain detection; and
+- CLI exit/report semantics.
+
+Execution remains the only intentionally unmodeled domain.
+
 ## Validation
 
 ```text
