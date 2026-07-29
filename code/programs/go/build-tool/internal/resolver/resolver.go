@@ -685,28 +685,15 @@ func parseSwiftDeps(pkg discovery.Package, knownNames map[string]string) []strin
 // We scan settings.gradle.kts for includeBuild("../...") entries, which is
 // the primary mechanism for monorepo-local dependencies. The directory name
 // inside the "../" reference maps directly to our internal package names.
-// parseHaskellDeps extracts internal dependencies from a Haskell .cabal file.
+// parseHaskellDeps extracts internal dependencies from every build-depends
+// field in a Haskell .cabal file.
 //
-// A Cabal file lists dependencies in a build-depends block:
-//
-//	build-depends: base >= 4.7 && < 5,
-//	               coding-adventures-logic-gates
-//
-// We scan the file for package names starting with the "coding-adventures-" prefix
-// and map them to internal package names.
+// Most repository Cabal packages use plain names, while a few older packages
+// retain the coding-adventures-* prefix. Both aliases are registered in
+// buildKnownNamesForLanguage, so this parser maps only names belonging to
+// discovered Haskell packages.
 func parseHaskellDeps(pkg discovery.Package, knownNames map[string]string) []string {
-	entries, err := os.ReadDir(pkg.Path)
-	if err != nil {
-		return nil
-	}
-
-	var cabalFile string
-	for _, entry := range entries {
-		if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".cabal") {
-			cabalFile = filepath.Join(pkg.Path, entry.Name())
-			break
-		}
-	}
+	cabalFile := findCabalFile(pkg.Path)
 	if cabalFile == "" {
 		return nil
 	}
@@ -716,12 +703,35 @@ func parseHaskellDeps(pkg discovery.Package, knownNames map[string]string) []str
 		return nil
 	}
 
+	nameRe := regexp.MustCompile(`^([a-zA-Z0-9][a-zA-Z0-9-]*)`)
+	fieldRe := regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9-]*\s*:`)
+	seen := make(map[string]bool)
 	var internalDeps []string
-	re := regexp.MustCompile(`coding-adventures-([a-z0-9-]+)`)
-	for _, match := range re.FindAllStringSubmatch(string(data), -1) {
-		if len(match) >= 2 {
-			depName := "coding-adventures-" + strings.ToLower(match[1])
-			if pkgName, ok := knownNames[depName]; ok && pkgName != pkg.Name {
+	inBuildDepends := false
+	for _, rawLine := range strings.Split(string(data), "\n") {
+		line := strings.TrimSpace(strings.SplitN(rawLine, "--", 2)[0])
+		lowerLine := strings.ToLower(line)
+		if strings.HasPrefix(lowerLine, "build-depends:") {
+			inBuildDepends = true
+			line = strings.TrimSpace(line[len("build-depends:"):])
+		} else if inBuildDepends &&
+			(line == "" || fieldRe.MatchString(line) ||
+				(len(rawLine) > 0 && rawLine[0] != ' ' && rawLine[0] != '\t')) {
+			inBuildDepends = false
+		}
+		if !inBuildDepends {
+			continue
+		}
+
+		for _, piece := range strings.Split(line, ",") {
+			match := nameRe.FindStringSubmatch(strings.TrimSpace(piece))
+			if len(match) != 2 {
+				continue
+			}
+			depName := strings.ToLower(match[1])
+			if pkgName, ok := knownNames[depName]; ok &&
+				pkgName != pkg.Name && !seen[pkgName] {
+				seen[pkgName] = true
 				internalDeps = append(internalDeps, pkgName)
 			}
 		}
@@ -1066,9 +1076,14 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			setKnown(dirBase, pkg.Name, pkg.Path, pkg.Language)
 
 		case "haskell":
-			// Haskell Cabal package names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
-			cabalName := "coding-adventures-" + strings.ToLower(filepath.Base(pkg.Path))
-			setKnown(cabalName, pkg.Name, pkg.Path, pkg.Language)
+			// Modern repository Cabal packages use the plain directory name.
+			// Keep the legacy prefix and the manifest's declared name as aliases.
+			dirBase := strings.ToLower(filepath.Base(pkg.Path))
+			setKnown(dirBase, pkg.Name, pkg.Path, pkg.Language)
+			setKnown("coding-adventures-"+dirBase, pkg.Name, pkg.Path, pkg.Language)
+			if cabalName := readCabalPackageName(pkg.Path); cabalName != "" {
+				setKnown(cabalName, pkg.Name, pkg.Path, pkg.Language)
+			}
 
 		case "java", "kotlin":
 			// Java and Kotlin packages use Gradle composite builds. Dependencies
@@ -1102,6 +1117,43 @@ func readCargoPackageName(pkgPath string) string {
 		return ""
 	}
 
+	return strings.ToLower(strings.TrimSpace(string(match[1])))
+}
+
+// findCabalFile returns the sole Cabal manifest in a package directory.
+// Multiple manifests are ambiguous, so reject them instead of allowing
+// directory enumeration order to change package identity or dependencies.
+func findCabalFile(pkgPath string) string {
+	entries, err := os.ReadDir(pkgPath)
+	if err != nil {
+		return ""
+	}
+	var cabalFile string
+	for _, entry := range entries {
+		if !entry.IsDir() && strings.HasSuffix(strings.ToLower(entry.Name()), ".cabal") {
+			if cabalFile != "" {
+				return ""
+			}
+			cabalFile = filepath.Join(pkgPath, entry.Name())
+		}
+	}
+	return cabalFile
+}
+
+func readCabalPackageName(pkgPath string) string {
+	cabalFile := findCabalFile(pkgPath)
+	if cabalFile == "" {
+		return ""
+	}
+	data, err := os.ReadFile(cabalFile)
+	if err != nil {
+		return ""
+	}
+	re := regexp.MustCompile(`(?m)^\s*name\s*:\s*([a-zA-Z0-9][a-zA-Z0-9-]*)\s*$`)
+	match := re.FindSubmatch(data)
+	if len(match) != 2 {
+		return ""
+	}
 	return strings.ToLower(strings.TrimSpace(string(match[1])))
 }
 

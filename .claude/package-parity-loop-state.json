@@ -1,0 +1,190 @@
+{
+  "job": "full-language-and-build-tool-parity",
+  "automation_id": "package-parity-pr-loop",
+  "started": "2026-07-29",
+  "policy": {
+    "maximum_active_parity_prs": 1,
+    "merge_authority": "user",
+    "reprioritize_after_every_merge": true,
+    "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
+  },
+  "active_pr": {
+    "number": 9144,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9144",
+    "branch": "codex/haskell-http-core-parity",
+    "status": "open"
+  },
+  "items": [
+    {
+      "id": "haskell-http-core",
+      "title": "Haskell http-core plus Haskell scaffold and resolver integrity",
+      "status": "pr-open",
+      "depends_on": [],
+      "branch": "codex/haskell-http-core-parity",
+      "pr_number": 9144,
+      "notes": "Current slice. Locally validated with GHC 9.4.8, 19 Hspec examples, 96% expression coverage, and 95% alternative coverage."
+    },
+    {
+      "id": "build-tool-contract",
+      "title": "Language-neutral build-tool contract and shared fixture schema",
+      "status": "pending",
+      "depends_on": ["haskell-http-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Reconcile specs 12, 15, build-plan-v1, sharding, and B05; define canonical machine-readable behavior."
+    },
+    {
+      "id": "build-tool-fixtures",
+      "title": "Cross-implementation build-tool fixture runner and inventory gate",
+      "status": "pending",
+      "depends_on": ["build-tool-contract"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Cover discovery, resolution, graph order, diff, hashing, Starlark, plan interchange, sharding, execution, validation, and toolchain detection."
+    },
+    {
+      "id": "build-tool-go-oracle",
+      "title": "Bring the Go build tool to the canonical contract",
+      "status": "pending",
+      "depends_on": ["build-tool-fixtures"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Wire structured Starlark context/commands and complete the B05 Windows executor contract."
+    },
+    {
+      "id": "build-tool-existing-remediation",
+      "title": "Remediate all 12 existing build-tool front doors against shared fixtures",
+      "status": "pending",
+      "depends_on": ["build-tool-go-oracle"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Deliver one independent engine per PR; explicitly review the shared C#/F# engine exception."
+    },
+    {
+      "id": "build-tool-jvm",
+      "title": "Add language-native Java and Kotlin build tools",
+      "status": "pending",
+      "depends_on": ["build-tool-fixtures"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Use shared JVM fixture infrastructure but separate idiomatic engines."
+    },
+    {
+      "id": "build-tool-dart",
+      "title": "Add the Dart build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-fixtures"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Must pass the same plan, resolver, execution, and platform fixtures as the reference."
+    },
+    {
+      "id": "ocaml-lane-contract",
+      "title": "Define OCaml emerging-lane and denominator-safe reporter contracts",
+      "status": "pending",
+      "depends_on": ["build-tool-contract"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "OCaml remains outside the established denominator until all promotion gates pass."
+    },
+    {
+      "id": "ocaml-infrastructure",
+      "title": "Add OCaml scaffolding, build integration, CI, capabilities, and logic-gates",
+      "status": "pending",
+      "depends_on": ["ocaml-lane-contract", "build-tool-go-oracle"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Use OCaml 5.2.1, opam 2.5.x, Dune 3.16.x, Alcotest, bisect_ppx, and ocamlformat."
+    },
+    {
+      "id": "ocaml-representative-core",
+      "title": "Port graph, directed-graph, and state-machine to OCaml",
+      "status": "pending",
+      "depends_on": ["ocaml-infrastructure"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "This dependency chain validates opam metadata, resolver edges, BUILD order, and affected-node expansion."
+    },
+    {
+      "id": "ocaml-build-tool-and-promotion",
+      "title": "Implement the OCaml build tool and review 16-lane promotion",
+      "status": "pending",
+      "depends_on": ["ocaml-representative-core", "build-tool-fixtures"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Require conformance, two-way Go plan interchange, three-OS CI, capability enforcement, and explicit backlog acceptance."
+    },
+    {
+      "id": "dart-current-14-of-15",
+      "title": "Close the 13-package Dart-only 14-of-15 frontier",
+      "status": "pending",
+      "depends_on": ["haskell-http-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Deliver small dependency-shaped PRs: ML, trig/wave, data structures, ciphers, document-ast, and uuid."
+    },
+    {
+      "id": "haskell-http1",
+      "title": "Port http1 to Haskell on the new http-core",
+      "status": "pending",
+      "depends_on": ["haskell-http-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Next protocol dependency node; validate the repaired Cabal dependency graph."
+    },
+    {
+      "id": "haskell-high-consensus-tail",
+      "title": "Close Haskell event-loop and brotli",
+      "status": "pending",
+      "depends_on": ["haskell-http1"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Keep the event loop generic and portable; use byte-exact Brotli conformance vectors."
+    },
+    {
+      "id": "java-kotlin-high-consensus",
+      "title": "Close paired Java/Kotlin high-consensus families",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Start with lz78/deflate, zstd, and state-machine, then move through shared dependency chains."
+    },
+    {
+      "id": "swift-dart-high-consensus",
+      "title": "Close Swift/Dart data-structure, storage, parser, WASM, ML, and protocol families",
+      "status": "pending",
+      "depends_on": ["dart-current-14-of-15"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Use generated grammars and dependency-first storage/compiler sequences."
+    },
+    {
+      "id": "portable-core-expansion",
+      "title": "Expand through 9-language and then 5-8-language portable packages",
+      "status": "pending",
+      "depends_on": ["haskell-high-consensus-tail", "java-kotlin-high-consensus", "swift-dart-high-consensus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Recompute and reprioritize after every merged wave."
+    },
+    {
+      "id": "singleton-classification",
+      "title": "Classify all singleton families and enforce declared parity work",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Current singleton leaders are Rust 538, Python 86, and TypeScript 84; do not port blindly."
+    },
+    {
+      "id": "c-cpp-graduation",
+      "title": "Review C/C++ graduation and native build-tool requirements",
+      "status": "pending",
+      "depends_on": ["build-tool-fixtures"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Keep both emerging until package/scaffold/build-tool maturity and applicability are explicit."
+    }
+  ]
+}
