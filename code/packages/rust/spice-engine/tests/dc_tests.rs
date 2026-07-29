@@ -3691,6 +3691,60 @@ fn mosfet_temperature_scaling_adjusts_bulk_junction_saturation_currents() {
 }
 
 #[test]
+fn mosfet_temperature_scaling_prefers_model_nominal_temperature() {
+    let nominal = Mosfet::with_model(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            kp: 200.0e-6,
+            surface_mobility: 500.0,
+            t_nom: 325.0,
+            ..MosfetLevel1Params::default()
+        },
+    );
+    let expected_scale = (350.0_f64 / 325.0).powf(-1.5);
+    let hot = mosfet_at_temperature(&nominal, 350.0, 300.15, 1.11).unwrap();
+
+    assert_close(hot.params.kp, nominal.params.kp * expected_scale);
+    assert_close(
+        hot.params.surface_mobility,
+        nominal.params.surface_mobility * expected_scale,
+    );
+
+    let mut circuit = Circuit::new();
+    circuit.add(Element::Mosfet(nominal));
+    let adjusted = circuit_at_temperature(&circuit, 350.0, 300.15, 1.11).unwrap();
+    let circuit_kp = adjusted
+        .elements()
+        .iter()
+        .find_map(|element| match element {
+            Element::Mosfet(mosfet) => Some(mosfet.params.kp),
+            _ => None,
+        })
+        .unwrap();
+    assert_close(circuit_kp, 200.0e-6 * expected_scale);
+
+    let fallback = Mosfet::with_model(
+        "M2",
+        "d",
+        "g",
+        "s",
+        "b",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            kp: 200.0e-6,
+            ..MosfetLevel1Params::default()
+        },
+    );
+    let fallback_hot = mosfet_at_temperature(&fallback, 350.0, 325.0, 1.11).unwrap();
+    assert_close(fallback_hot.params.kp, 200.0e-6 * expected_scale);
+}
+
+#[test]
 fn dc_bjt_solves_npn_emitter_follower_operating_point() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(

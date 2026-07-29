@@ -33,12 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS junction-capacitance temperature scaling.
+1. Cross-language Level-1 MOS model nominal-temperature precedence.
    - Status: current PR completion candidate.
-   - Scale zero-bias `CJ`, `CBS`, and `CBD` through the Berkeley MOS1 `MJ`
-     bottom-junction grading path.
-   - Scale zero-bias `CJSW` through the independent `MJSW` sidewall grading
-     path, reusing the temperature-adjusted bulk-junction potential.
+   - Make a non-default model-card `TNOM` authoritative for Berkeley MOS1
+     temperature preprocessing while preserving the circuit nominal
+     temperature as the default-model fallback.
    - Preserve direct MOS helper and circuit-level temperature-transform parity.
    - Keep Rust, Python, and TypeScript helper behavior, tests, docs, and
      changelogs aligned.
@@ -3596,6 +3595,13 @@ the Rust, Python, and TypeScript surfaces together.
      correction alongside the existing electrostatic transform.
    - Direct MOS helpers and circuit-level transforms preserve matching behavior
      in Rust, Python, and TypeScript.
+
+288. Cross-language Level-1 MOS junction-capacitance temperature scaling.
+   - Status: completed in PR 9148.
+   - Zero-bias `CJ`, `CBS`, and `CBD` scale through the Berkeley MOS1 `MJ`
+     bottom-junction grading path.
+   - Zero-bias `CJSW` scales independently through `MJSW`, reusing the
+     temperature-adjusted bulk-junction potential in all three languages.
 
 ## Backlog
 

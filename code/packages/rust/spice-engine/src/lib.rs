@@ -2773,14 +2773,25 @@ pub fn mosfet_at_temperature(
             reason: "nominal temperature must be finite and positive".to_string(),
         });
     }
+    let reference_temperature_kelvin = 300.15;
+    let nominal_temperature = if mosfet.params.t_nom != reference_temperature_kelvin {
+        mosfet.params.t_nom
+    } else {
+        nominal_temperature_kelvin
+    };
+    if !nominal_temperature.is_finite() || nominal_temperature <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "nominal temperature must be finite and positive".to_string(),
+        });
+    }
     if !energy_gap_electron_volts.is_finite() || energy_gap_electron_volts <= 0.0 {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "energy gap must be finite and positive".to_string(),
         });
     }
-    let ratio = temperature_kelvin / nominal_temperature_kelvin;
-    let reference_temperature_kelvin = 300.15;
+    let ratio = temperature_kelvin / nominal_temperature;
     let silicon_band_gap =
         |temperature: f64| 1.16 - 7.02e-4 * temperature * temperature / (temperature + 1108.0);
     let potential_correction = |temperature: f64| {
@@ -2791,9 +2802,9 @@ pub fn mosfet_at_temperature(
         -2.0 * thermal_voltage
             * (1.5 * (temperature / reference_temperature_kelvin).ln() + argument)
     };
-    let nominal_factor = nominal_temperature_kelvin / reference_temperature_kelvin;
+    let nominal_factor = nominal_temperature / reference_temperature_kelvin;
     let temperature_factor = temperature_kelvin / reference_temperature_kelvin;
-    let nominal_potential_correction = potential_correction(nominal_temperature_kelvin);
+    let nominal_potential_correction = potential_correction(nominal_temperature);
     let temperature_potential_correction = potential_correction(temperature_kelvin);
     let nominal_phi = (mosfet.params.phi - nominal_potential_correction) / nominal_factor;
     let temperature_phi = temperature_factor * nominal_phi + temperature_potential_correction;
@@ -2811,7 +2822,7 @@ pub fn mosfet_at_temperature(
         let nominal_scale = 1.0
             / (1.0
                 + grading_coefficient
-                    * (4.0e-4 * (nominal_temperature_kelvin - reference_temperature_kelvin)
+                    * (4.0e-4 * (nominal_temperature - reference_temperature_kelvin)
                         - nominal_bulk_potential_shift));
         let temperature_scale = 1.0
             + grading_coefficient
@@ -2829,12 +2840,11 @@ pub fn mosfet_at_temperature(
     };
     let temperature_vbi = mosfet.params.vt0
         - polarity * mosfet.params.gamma * mosfet.params.phi.sqrt()
-        + 0.5
-            * (silicon_band_gap(nominal_temperature_kelvin) - silicon_band_gap(temperature_kelvin))
+        + 0.5 * (silicon_band_gap(nominal_temperature) - silicon_band_gap(temperature_kelvin))
         + polarity * 0.5 * (temperature_phi - mosfet.params.phi);
     let temperature_vt0 = temperature_vbi + polarity * mosfet.params.gamma * temperature_phi.sqrt();
     let saturation_exponent = energy_gap_electron_volts * ELECTRON_CHARGE / BOLTZMANN
-        * (1.0 / nominal_temperature_kelvin - 1.0 / temperature_kelvin);
+        * (1.0 / nominal_temperature - 1.0 / temperature_kelvin);
     let saturation_scale = ratio.powi(3) * saturation_exponent.clamp(-100.0, 100.0).exp();
     let mut adjusted = mosfet.clone();
     adjusted.params.vt0 = temperature_vt0;

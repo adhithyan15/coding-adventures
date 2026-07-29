@@ -7735,8 +7735,15 @@ export function mosfetAtTemperature(
   if (!Number.isFinite(energyGapElectronVolts) || energyGapElectronVolts <= 0.0) {
     throw invalidElement(element.name, "energy gap must be finite and positive");
   }
-  const ratio = temperatureKelvin / nominalTemperatureKelvin;
   const referenceTemperatureKelvin = 300.15;
+  const nominalTemperature =
+    element.params.T_NOM !== referenceTemperatureKelvin
+      ? element.params.T_NOM
+      : nominalTemperatureKelvin;
+  if (!Number.isFinite(nominalTemperature) || nominalTemperature <= 0.0) {
+    throw invalidElement(element.name, "nominal temperature must be finite and positive");
+  }
+  const ratio = temperatureKelvin / nominalTemperature;
   const siliconBandGap = (temperature: number): number =>
     1.16 - (7.02e-4 * temperature * temperature) / (temperature + 1108.0);
   const potentialCorrection = (temperature: number): number => {
@@ -7752,14 +7759,14 @@ export function mosfetAtTemperature(
       (1.5 * Math.log(temperature / referenceTemperatureKelvin) + argument)
     );
   };
-  const nominalFactor = nominalTemperatureKelvin / referenceTemperatureKelvin;
+  const nominalFactor = nominalTemperature / referenceTemperatureKelvin;
   const temperatureFactor = temperatureKelvin / referenceTemperatureKelvin;
   const nominalPhi =
-    (element.params.PHI - potentialCorrection(nominalTemperatureKelvin)) / nominalFactor;
+    (element.params.PHI - potentialCorrection(nominalTemperature)) / nominalFactor;
   const temperaturePhi =
     temperatureFactor * nominalPhi + potentialCorrection(temperatureKelvin);
   const nominalBulkJunctionPotential =
-    (element.params.PB - potentialCorrection(nominalTemperatureKelvin)) / nominalFactor;
+    (element.params.PB - potentialCorrection(nominalTemperature)) / nominalFactor;
   const temperatureBulkJunctionPotential =
     temperatureFactor * nominalBulkJunctionPotential +
     potentialCorrection(temperatureKelvin);
@@ -7773,7 +7780,7 @@ export function mosfetAtTemperature(
       1.0 /
       (1.0 +
         gradingCoefficient *
-          (4.0e-4 * (nominalTemperatureKelvin - referenceTemperatureKelvin) -
+          (4.0e-4 * (nominalTemperature - referenceTemperatureKelvin) -
             nominalBulkPotentialShift));
     const temperatureScale =
       1.0 +
@@ -7789,14 +7796,14 @@ export function mosfetAtTemperature(
     element.params.VT0 -
     polarity * element.params.GAMMA * Math.sqrt(element.params.PHI) +
     0.5 *
-      (siliconBandGap(nominalTemperatureKelvin) - siliconBandGap(temperatureKelvin)) +
+      (siliconBandGap(nominalTemperature) - siliconBandGap(temperatureKelvin)) +
     polarity * 0.5 * (temperaturePhi - element.params.PHI);
   const temperatureVt0 =
     temperatureVbi + polarity * element.params.GAMMA * Math.sqrt(temperaturePhi);
   const saturationExponent =
     (energyGapElectronVolts * ELECTRON_CHARGE) /
     BOLTZMANN *
-    (1.0 / nominalTemperatureKelvin - 1.0 / temperatureKelvin);
+    (1.0 / nominalTemperature - 1.0 / temperatureKelvin);
   const saturationScale =
     ratio ** 3 * Math.exp(Math.max(-100.0, Math.min(100.0, saturationExponent)));
   return {
