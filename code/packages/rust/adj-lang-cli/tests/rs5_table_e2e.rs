@@ -1178,6 +1178,47 @@ fn shipped_electric_resistance_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b26) The shipped NIST SP 811 B.9 electric-capacitance → farad table resolves the exact abfarad
+//       factor with its citation, and ABSTAINS on a wrong-dimension unit. This EXTENDS the
+//       electromagnetic-EMU family (charge/potential/resistance) with capacitance. The abfarad
+//       (capacitance) and the abhenry (inductance) are DIFFERENT quantities that convert to
+//       DIFFERENT SI units (farad vs henry), so the abstain proves dimension safety, not mere
+//       absence of a value: the farad is charge per unit potential.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_electric_capacitance_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_capacitance");
+    let src = stdlib().join("reference/electric-capacitance-conversions.adj");
+    std::fs::copy(&src, dir.join("electric-capacitance-conversions.adj"))
+        .expect("copy shipped electric-capacitance-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"electric-capacitance-conversions.adj\"\n\
+         ? electric_capacitance_to_farad(abfarad, $v)\n\
+         ? electric_capacitance_to_farad(abhenry, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table
+    // (boldface = exact; the abfarad is defined as exactly 1.0 E+09 farad).
+    assert!(out.contains("\"v\":\"1000000000\""), "abfarad = 1.0 E+09 F: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `abhenry` is an INDUCTANCE unit (it converts to the henry, a DIFFERENT quantity), so this
+    // capacitance table has no row for it — the engine abstains rather than mis-converting an
+    // inductance unit as if it were a capacitance unit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
