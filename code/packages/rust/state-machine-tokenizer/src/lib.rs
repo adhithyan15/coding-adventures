@@ -32,6 +32,13 @@ pub enum Token {
     },
     /// Comment token.
     Comment(String),
+    /// Processing instruction token.
+    ProcessingInstruction {
+        /// Processing-instruction target.
+        target: String,
+        /// Processing-instruction data.
+        data: String,
+    },
     /// Doctype token.
     Doctype {
         /// Optional doctype name.
@@ -396,6 +403,29 @@ impl Tokenizer {
         self.current_attribute = None;
     }
 
+    /// Seed the in-progress processing-instruction token used by continuation states.
+    pub fn with_current_processing_instruction(
+        mut self,
+        target: impl Into<String>,
+        data: impl Into<String>,
+    ) -> Self {
+        self.set_current_processing_instruction(target, data);
+        self
+    }
+
+    /// Store the in-progress processing-instruction token used by continuation states.
+    pub fn set_current_processing_instruction(
+        &mut self,
+        target: impl Into<String>,
+        data: impl Into<String>,
+    ) {
+        self.current_token = Some(CurrentToken::ProcessingInstruction {
+            target: target.into(),
+            data: data.into(),
+        });
+        self.current_attribute = None;
+    }
+
     /// Seed the in-progress DOCTYPE token used by tokenizer continuation states.
     pub fn with_current_doctype(mut self, doctype: DoctypeSeed) -> Self {
         self.set_current_doctype(doctype);
@@ -653,6 +683,37 @@ impl Tokenizer {
                     });
                     self.current_attribute = None;
                 }
+                "convert_temporary_buffer_to_comment" => {
+                    let mut data = String::from("?");
+                    data.push_str(&std::mem::take(&mut self.temporary_buffer));
+                    self.current_token = Some(CurrentToken::Comment { data });
+                    self.current_attribute = None;
+                }
+                "finalize_processing_instruction_target" => {
+                    let target = std::mem::take(&mut self.temporary_buffer);
+                    if target.eq_ignore_ascii_case("xml")
+                        || target.eq_ignore_ascii_case("xml-stylesheet")
+                    {
+                        let mut data = String::from("?");
+                        data.push_str(&target);
+                        self.current_token = Some(CurrentToken::Comment { data });
+                        self.current_attribute = None;
+                        self.diagnostics.push(Diagnostic {
+                            code: "disallowed-processing-instruction-target".to_string(),
+                            position,
+                            state: state.to_string(),
+                        });
+                        self.machine
+                            .set_current_state("bogus_comment".to_string())
+                            .map_err(TokenizerError::Machine)?;
+                    } else {
+                        self.current_token = Some(CurrentToken::ProcessingInstruction {
+                            target,
+                            data: String::new(),
+                        });
+                        self.current_attribute = None;
+                    }
+                }
                 "create_doctype" => {
                     self.current_token = Some(CurrentToken::Doctype {
                         name: None,
@@ -721,6 +782,12 @@ impl Tokenizer {
                 }
                 "append_comment_replacement" => {
                     self.append_comment(action, '\u{FFFD}', false)?;
+                }
+                "append_processing_instruction_data(current)" => {
+                    let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
+                        action: action.clone(),
+                    })?;
+                    self.processing_instruction_data_mut(action)?.push(ch);
                 }
                 "append_doctype_name(current)" => {
                     let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
@@ -986,6 +1053,15 @@ impl Tokenizer {
                         .trim_start_matches("append_comment(")
                         .trim_end_matches(')');
                     self.comment_data_mut(action)?.push_str(literal);
+                }
+                _ if action.starts_with("append_processing_instruction_data(")
+                    && action.ends_with(')') =>
+                {
+                    let literal = action
+                        .trim_start_matches("append_processing_instruction_data(")
+                        .trim_end_matches(')');
+                    self.processing_instruction_data_mut(action)?
+                        .push_str(literal);
                 }
                 _ if action.starts_with("append_doctype_name(") && action.ends_with(')') => {
                     let literal = action
@@ -1265,6 +1341,9 @@ impl Tokenizer {
             }
             CurrentToken::EndTag { name } => self.tokens.push_back(Token::EndTag { name }),
             CurrentToken::Comment { data } => self.tokens.push_back(Token::Comment(data)),
+            CurrentToken::ProcessingInstruction { target, data } => self
+                .tokens
+                .push_back(Token::ProcessingInstruction { target, data }),
             CurrentToken::Doctype {
                 name,
                 public_identifier,
@@ -1493,6 +1572,17 @@ impl Tokenizer {
         }
     }
 
+    fn processing_instruction_data_mut(&mut self, action: &str) -> Result<&mut String> {
+        match self.current_token_mut(action)? {
+            CurrentToken::ProcessingInstruction { data, .. } => Ok(data),
+            other => Err(TokenizerError::InvalidCurrentToken {
+                action: action.to_string(),
+                expected: "processing-instruction",
+                actual: other.kind_name(),
+            }),
+        }
+    }
+
     fn doctype_name_mut(&mut self, action: &str) -> Result<&mut String> {
         match self.current_token_mut(action)? {
             CurrentToken::Doctype { name, .. } => Ok(name.get_or_insert_with(String::new)),
@@ -1560,6 +1650,10 @@ enum CurrentToken {
     Comment {
         data: String,
     },
+    ProcessingInstruction {
+        target: String,
+        data: String,
+    },
     Doctype {
         name: Option<String>,
         public_identifier: Option<String>,
@@ -1574,6 +1668,7 @@ impl CurrentToken {
             Self::StartTag { .. } => "start-tag",
             Self::EndTag { .. } => "end-tag",
             Self::Comment { .. } => "comment",
+            Self::ProcessingInstruction { .. } => "processing-instruction",
             Self::Doctype { .. } => "doctype",
         }
     }

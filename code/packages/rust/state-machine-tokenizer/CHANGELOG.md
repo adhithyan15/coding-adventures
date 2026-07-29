@@ -2,6 +2,14 @@
 
 All notable changes to the `state-machine-tokenizer` crate will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Added processing-instruction token construction, data accumulation, target
+  finalization, comment recovery, and continuation-state seeding actions for
+  declarative HTML tokenizer definitions.
+
 ## [0.1.0] - 2026-04-23
 
 ### Added

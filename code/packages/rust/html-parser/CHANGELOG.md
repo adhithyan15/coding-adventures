@@ -6,6 +6,8 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Processing instructions now have first-class tokenizer and DOM plumbing,
+  ready for the declarative HTML tokenizer states to emit target/data nodes.
 - The current WPT void-in-phrasing and foreign-content CDATA cases are now
   mirrored in the canonical tree-construction corpus and its focused void and
   foreign-content audits, leaving only processing-instruction signatures in

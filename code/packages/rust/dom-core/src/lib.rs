@@ -1,8 +1,9 @@
 //! Small DOM tree model for Venture browser packages.
 //!
 //! This crate is intentionally lower-level than `document-ast`: it preserves
-//! HTML element names, attributes, comments, and doctypes so browser-facing
-//! packages can later layer CSS, layout, and scripting semantics on top.
+//! HTML element names, attributes, comments, processing instructions, and
+//! doctypes so browser-facing packages can later layer CSS, layout, and
+//! scripting semantics on top.
 
 /// A parsed DOM document.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -27,6 +28,7 @@ pub enum Node {
     Element(Element),
     Text(Text),
     Comment(Comment),
+    ProcessingInstruction(ProcessingInstruction),
 }
 
 impl Node {
@@ -58,6 +60,13 @@ impl Node {
 
     pub fn comment(data: impl Into<String>) -> Self {
         Self::Comment(Comment { data: data.into() })
+    }
+
+    pub fn processing_instruction(target: impl Into<String>, data: impl Into<String>) -> Self {
+        Self::ProcessingInstruction(ProcessingInstruction {
+            target: target.into(),
+            data: data.into(),
+        })
     }
 
     pub fn children(&self) -> Option<&[Node]> {
@@ -121,12 +130,19 @@ pub struct Comment {
     pub data: String,
 }
 
+/// A processing instruction node.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ProcessingInstruction {
+    pub target: String,
+    pub data: String,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn document_can_hold_element_text_and_comment_nodes() {
+    fn document_can_hold_browser_facing_node_types() {
         let mut document = Document::new();
         document.push_child(Node::element(
             "p",
@@ -137,8 +153,12 @@ mod tests {
         ));
         document.push_child(Node::text("hello"));
         document.push_child(Node::comment("note"));
+        document.push_child(Node::processing_instruction(
+            "xml-model",
+            "href=\"schema.rng\"",
+        ));
 
-        assert_eq!(document.children.len(), 3);
+        assert_eq!(document.children.len(), 4);
         match &document.children[0] {
             Node::Element(element) => {
                 assert_eq!(element.name, "p");
@@ -146,5 +166,12 @@ mod tests {
             }
             other => panic!("expected element, got {other:?}"),
         }
+        assert_eq!(
+            document.children[3],
+            Node::ProcessingInstruction(ProcessingInstruction {
+                target: "xml-model".to_string(),
+                data: "href=\"schema.rng\"".to_string(),
+            })
+        );
     }
 }
