@@ -286,6 +286,55 @@ pub enum Stmt {
         leading: bool,
         region: Option<Region>,
     },
+    /// `INSPECT source REPLACING CHARACTERS BY x` — overwrite EVERY character
+    /// position of the alphanumeric `source` with the single replacement character
+    /// `x`. With NO region this is the "fill the whole field with `x`" form: a field
+    /// of byte-length N becomes N copies of `x`, its width UNCHANGED.
+    ///
+    /// # Byte-basis (the crux — why this variant carries NO region)
+    ///
+    /// The compiled `cobol-iir-compiler` models storage as a **byte** buffer (COBOL
+    /// `PIC X` positions ARE bytes; its `str_len` is a BYTE length). The oracle
+    /// models storage as a Rust `String`. "Replace EVERY position" must therefore be
+    /// computed on a common basis so both engines agree for ANY source — ASCII and
+    /// non-ASCII alike. We pick the BYTE basis: the exec fills
+    /// `n = storage.len()` (the field's BYTE length) copies of `x`, then stores the
+    /// image through the SAME `move_into` path a `MOVE`/`inspect_replace` uses, which
+    /// re-pads/truncates to the picture's fixed CHAR size. Because `x` is a single
+    /// ASCII byte, the rebuilt image is `n` ASCII bytes (a valid `String`), and after
+    /// `move_into` caps it to the picture's `size` characters the stored image is
+    /// exactly `size` copies of `x` — identical to the compiler's `width`-many fill.
+    ///
+    /// Worked example (non-ASCII source): `PIC X(5) VALUE "café"` stores `"café "`
+    /// (padded to 5 CHARS = 6 BYTES). `REPLACING CHARACTERS BY "Z"` fills
+    /// `n = 6` copies → `"ZZZZZZ"`, which `move_into` caps to the picture's 5 chars →
+    /// `"ZZZZZ"` (5 `Z`s). The compiler builds `width = 5` copies → also `"ZZZZZ"`.
+    /// Both engines land on the SAME image byte-for-byte.
+    ///
+    /// # Deferred: a `{BEFORE|AFTER}` region
+    ///
+    /// A region window is computed as a BYTE span on the compiler but a CHAR span on
+    /// the oracle, and a byte window can split a multi-byte character mid-position —
+    /// a state the oracle's `String` storage cannot represent while the compiler's
+    /// byte buffer can. Including a region would be unsound (the two engines could
+    /// diverge on a non-ASCII source), so `REPLACING CHARACTERS … {BEFORE|AFTER}` is
+    /// rejected at read time on BOTH engines and this variant carries no region.
+    ///
+    /// # Guards (applied IDENTICALLY on both engines — co-total)
+    ///
+    ///   1. `x` must be a SINGLE character (the shared `single_delim_char` check).
+    ///   2. A single-char but NON-ASCII **literal** `x` (e.g. `"é"`, one char / two
+    ///      bytes) is a later rung — mirroring the compiler, whose byte-based
+    ///      single-char validator rejects it. (A `PIC X(1)` *item* replacement is not
+    ///      ASCII-gated: the byte-fill above is co-total for a multi-byte item too.)
+    ///   3. A `{BEFORE|AFTER}` region is deferred (see above).
+    ///   4. A numeric/group/reference-modified/literal source is a later rung, exactly
+    ///      as for every other INSPECT form (`inspect_alnum_source`).
+    ///
+    /// `REPLACING CHARACTERS` inside a MULTI-item REPLACING list, or inside the
+    /// COMBINED `TALLYING … REPLACING` form, remain later rungs — only the SINGLE-item
+    /// lone-REPLACING path produces this variant.
+    InspectReplacingCharacters { source: String, replace: Operand },
     /// `INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — one
     /// INSPECT carrying TWO OR MORE replace items in a single REPLACING clause.
     ///
@@ -1327,7 +1376,41 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                             "INSPECT without a REPLACING clause is a later rung".into(),
                         )
                     })?;
-                    if child_nodes(replacing, "replace_item").len() >= 2 {
+                    let items = child_nodes(replacing, "replace_item");
+                    // Detect a lone `REPLACING CHARACTERS BY x` FIRST — a SINGLE
+                    // replace item whose tokens carry the CHARACTERS keyword — before
+                    // the ALL/LEADING operand logic. (A MULTI-item list containing a
+                    // CHARACTERS item stays a later rung, rejected by
+                    // `read_inspect_replacing_multi` below; the CHARACTERS reject in
+                    // `read_inspect_replacing_all` still guards the COMBINED form.)
+                    if let [ri] = items.as_slice() {
+                        let toks = child_tokens(ri);
+                        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+                            // Guard 3 — a `{BEFORE|AFTER}` region on the CHARACTERS item
+                            // is a later rung (a byte window can split a multi-byte char
+                            // mid-position, which the oracle's `String` storage cannot
+                            // represent; the same reject fires on the compiler).
+                            if child_node(ri, "inspect_region").is_some() {
+                                return Err(RuntimeError::Unsupported(
+                                    "INSPECT REPLACING CHARACTERS with a BEFORE/AFTER region is a later rung"
+                                        .into(),
+                                ));
+                            }
+                            // The lone `operand` child is the replacement `x`
+                            // (guards 1/2/4 are applied at exec time / by the caller's
+                            // source-category check, identically to the compiler).
+                            let replace_node = child_node(ri, "operand").ok_or_else(|| {
+                                RuntimeError::Unsupported(
+                                    "INSPECT REPLACING CHARACTERS without a BY replacement".into(),
+                                )
+                            })?;
+                            return Ok(Stmt::InspectReplacingCharacters {
+                                source,
+                                replace: read_operand(replace_node)?,
+                            });
+                        }
+                    }
+                    if items.len() >= 2 {
                         let items = read_inspect_replacing_multi(verb)?;
                         Ok(Stmt::InspectReplacingMulti { source, items })
                     } else {

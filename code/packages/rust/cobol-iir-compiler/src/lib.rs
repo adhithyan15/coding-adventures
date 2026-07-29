@@ -2482,7 +2482,19 @@ impl<'a> Compiler<'a> {
                         "INSPECT without a REPLACING clause is a later rung".into(),
                     )
                 })?;
-                if child_nodes(replacing, "replace_item").len() >= 2 {
+                let items = child_nodes(replacing, "replace_item");
+                // Detect a lone `REPLACING CHARACTERS BY x` FIRST — a SINGLE replace
+                // item whose tokens carry the CHARACTERS keyword — mirroring the
+                // oracle's `read_statement`. (A MULTI-item list containing CHARACTERS
+                // stays a later rung via `inspect_replacing_multi`; the CHARACTERS
+                // reject in `inspect_replacing_all` still guards the combined form.)
+                if let [ri] = items.as_slice() {
+                    let toks = child_tokens(ri);
+                    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+                        return self.emit_inspect_replacing_characters(ri, &s_reg, source_width);
+                    }
+                }
+                if items.len() >= 2 {
                     self.emit_inspect_replacing_multi(verb, &s_reg, source_width)
                 } else {
                     self.emit_inspect_replacing(verb, &s_reg, source_width, true, true, true)
@@ -3143,6 +3155,94 @@ impl<'a> Compiler<'a> {
         // stores. Copy through an empty concat so the source register (read during
         // the loop) is only overwritten now, after the last read.
         let empty = self.fresh("_irempty");
+        self.emit("str_const", Some(&empty), vec![Operand::Str(String::new())], "str");
+        self.emit(
+            "str_concat",
+            Some(s_reg),
+            vec![Operand::Var(result), Operand::Var(empty)],
+            "str",
+        );
+        Ok(())
+    }
+
+    /// `INSPECT source REPLACING CHARACTERS BY x` — overwrite EVERY position of the
+    /// alphanumeric `source` with the single replacement character `x`. With no
+    /// region the WHOLE field becomes `x`s; its width is unchanged.
+    ///
+    /// This reuses [`Self::emit_inspect_replacing`]'s rebuild scaffold, but every
+    /// position becomes `x` UNCONDITIONALLY — there is no `S[j]`-vs-search compare, so
+    /// we need not even read the source bytes. We append the 1-character replacement
+    /// string `width` times (the picture's compile-time CHAR width) into a fresh
+    /// accumulator, then copy it back to the source register.
+    ///
+    /// # Byte-basis co-totality (why `width` copies, not `str_len(S)` copies)
+    ///
+    /// The oracle fills `n = storage.len()` (BYTE-length) copies of `x` and then
+    /// stores through `move_into`, which re-pads/truncates to the picture's CHAR size.
+    /// For an ASCII field `str_len == width`, so this is just `width` copies. For a
+    /// non-ASCII source whose byte length exceeds its char width (e.g.
+    /// `PIC X(5) VALUE "café"` = 5 chars / 6 bytes) the oracle's `n = 6` copies cap to
+    /// the picture's 5 chars. Emitting exactly `width` copies here reproduces that
+    /// capped image byte-for-byte on both engines.
+    ///
+    /// # Guards (IDENTICAL to the oracle)
+    ///
+    ///   3. A `{BEFORE|AFTER}` region on the CHARACTERS item is a later rung (a byte
+    ///      window can split a multi-byte char mid-position, which the oracle's
+    ///      `String` storage cannot represent — unsound to include, so deferred).
+    ///   2. A single-char but NON-ASCII **literal** `x` is a later rung, so the
+    ///      byte-based compiler stays co-total with the char-based oracle. Applied to
+    ///      LITERALS only: a `PIC X(1)` *item* replacement is co-total under the fill.
+    ///   1. `x` is a SINGLE character — the shared [`Self::single_delim_str`] check.
+    fn emit_inspect_replacing_characters(
+        &mut self,
+        ri: &GrammarASTNode,
+        s_reg: &str,
+        width: usize,
+    ) -> Result<(), CompileError> {
+        // Guard 3 — a `{BEFORE|AFTER}` region on the CHARACTERS item is a later rung.
+        if child_node(ri, "inspect_region").is_some() {
+            return Err(CompileError::Unsupported(
+                "INSPECT REPLACING CHARACTERS with a BEFORE/AFTER region is a later rung".into(),
+            ));
+        }
+        // The lone `operand` child is the replacement `x` (the `BY` operand).
+        let replace_node = child_node(ri, "operand").ok_or_else(|| {
+            CompileError::Malformed("INSPECT REPLACING CHARACTERS without a BY replacement".into())
+        })?;
+        // Guard 2 — a single-char but non-ASCII LITERAL replacement is deferred so the
+        // messages/gating match the oracle exactly (`single_delim_str`'s byte-based
+        // check would otherwise diagnose `"é"` as "multi-character" rather than as a
+        // non-ASCII replacement). Applied to LITERALS only: an item is not gated.
+        if let Operandy::Literal(Src::Str(s)) = read_operand(replace_node)? {
+            if s.chars().count() == 1 && !s.is_ascii() {
+                return Err(CompileError::Unsupported(
+                    "INSPECT REPLACING CHARACTERS with a non-ASCII replacement is a later rung"
+                        .into(),
+                ));
+            }
+        }
+        // Guard 1 — the single replacement char as a 1-character string register,
+        // reusing REPLACING ALL's validation (multi-character/figurative/wider/numeric
+        // operands are rejected with the shared messages).
+        let y_reg = self.single_delim_str(replace_node, "INSPECT REPLACING")?;
+
+        // result = "" — append `x` for each of the `width` positions.
+        let result = self.fresh("_ircres");
+        self.emit("str_const", Some(&result), vec![Operand::Str(String::new())], "str");
+        for _ in 0..width {
+            self.emit(
+                "str_concat",
+                Some(&result),
+                vec![Operand::Var(result.clone()), Operand::Var(y_reg.clone())],
+                "str",
+            );
+        }
+        // source := result. `result` is exactly `width` characters, the same
+        // fixed-width image the oracle stores after its `move_into` cap. Copy through
+        // an empty concat for symmetry with `emit_inspect_replacing` (the fill never
+        // reads `s_reg`, so no aliasing hazard either way).
+        let empty = self.fresh("_ircempty");
         self.emit("str_const", Some(&empty), vec![Operand::Str(String::new())], "str");
         self.emit(
             "str_concat",
@@ -7890,18 +7990,27 @@ mod tests {
     }
 
     #[test]
-    fn inspect_replacing_characters_is_a_later_rung() {
-        // REPLACING CHARACTERS BY replaces every position unconditionally — a
-        // later rung; only ALL x BY y is modelled this cut.
-        let err = compile_source(
+    fn inspect_replacing_characters_now_compiles() {
+        // REPLACING CHARACTERS BY replaces every position UNCONDITIONALLY — now
+        // supported (fill the whole field with the replacement char). Unlike
+        // REPLACING ALL there is no per-position compare, so the lowering rebuilds the
+        // source purely by concatenating the replacement `width` times: `str_concat`
+        // appears, but NO `cmp_eq` (nothing is compared).
+        let module = compile_source(
             &wrap(
                 &["01  S  PIC X(5) VALUE \"ABABA\"."],
                 &["INSPECT S REPLACING CHARACTERS BY \"X\".", "STOP RUN."],
             ),
             "insp_repl_chars",
         )
-        .unwrap_err();
-        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+        .expect("compiles");
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"str_concat".to_string()), "rebuilds the source string");
+        assert!(
+            !os.contains(&"cmp_eq".to_string()),
+            "CHARACTERS replaces unconditionally — no per-position compare"
+        );
     }
 
     #[test]

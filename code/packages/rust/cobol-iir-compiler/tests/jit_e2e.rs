@@ -5274,6 +5274,93 @@ fn inspect_replacing_leading_search_and_replacement_are_pic_x1_items() {
     assert_eq!(out, "***123\n");
 }
 
+// INSPECT … REPLACING CHARACTERS BY x — overwrite EVERY position of the source with
+// the single replacement char `x` (no region this rung): the WHOLE field becomes
+// `x`s, its width unchanged. Both engines compute the fill on a BYTE basis so a
+// non-ASCII source stays co-total (the oracle's `move_into` re-pads/truncates to the
+// picture's CHAR size, exactly the compiler's `width`-many fill).
+// ---------------------------------------------------------------------------
+
+#[test]
+fn inspect_replacing_characters_fills_the_whole_field() {
+    // "ABABA" → REPLACING CHARACTERS BY "X" → "XXXXX": every position overwritten.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABABA\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XXXXX\n");
+}
+
+#[test]
+fn inspect_replacing_characters_overwrites_spaces_and_mixed_content() {
+    // A field with embedded spaces and mixed content is FULLY overwritten — even the
+    // blanks become the replacement char. "A B C" (5 chars) → "-----".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"A B C\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"-\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "-----\n");
+}
+
+#[test]
+fn inspect_replacing_characters_replacement_is_a_pic_x1_item() {
+    // The replacement `x` can be a PIC X(1) DATA ITEM, not just a literal:
+    // "hello" filled with the item R = "*" → "*****".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"hello\".", "01  R  PIC X(1) VALUE \"*\"."],
+        &["INSPECT S REPLACING CHARACTERS BY R.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "*****\n");
+}
+
+#[test]
+fn inspect_replacing_characters_non_ascii_source_is_byte_co_total() {
+    // The byte-basis regression. `PIC X(5) VALUE "café"` stores "café " (padded to
+    // 5 CHARS = 6 BYTES). REPLACING CHARACTERS BY "Z" fills the field: the oracle
+    // builds n = 6 (BYTE-length) copies then `move_into` caps to the picture's 5
+    // CHARS → "ZZZZZ"; the compiler builds width = 5 copies → also "ZZZZZ". So both
+    // engines land on FIVE "Z"s ("ZZZZZ\n"), byte-for-byte identical — the whole
+    // point of computing the fill on a common (byte) basis. (Note: NOT six "Z"s —
+    // the picture's fixed 5-char width caps the padded 6-byte image on both sides.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"café\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ZZZZZ\n");
+}
+
+#[test]
+fn inspect_replacing_characters_non_ascii_literal_is_a_later_rung() {
+    // A single but NON-ASCII replacement LITERAL ("é" is one char / two UTF-8 bytes)
+    // is deferred so the byte-based compiler stays co-total with the char-based
+    // oracle — rejected on BOTH engines (guard 2).
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"ABABA\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"é\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a non-ASCII replacement");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a non-ASCII replacement"
+    );
+}
+
+#[test]
+fn inspect_replacing_characters_with_a_region_is_a_later_rung() {
+    // A `{BEFORE|AFTER}` region on the CHARACTERS item is deferred (a byte window can
+    // split a multi-byte char mid-position, which the oracle's String storage cannot
+    // represent) — rejected on BOTH engines (guard 3).
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"ABQBA\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"X\" BEFORE \"Q\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a CHARACTERS region");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a CHARACTERS region"
+    );
+}
+
 // INSPECT … REPLACING ALL x BY y … {BEFORE|AFTER} z — restrict the ALL replacement
 // to the sub-slice of the source bounded by the FIRST occurrence of the single
 // region delimiter `z`. BEFORE replaces left of `z`; AFTER replaces right of it;

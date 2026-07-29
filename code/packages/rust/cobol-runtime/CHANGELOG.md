@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.60.0 — INSPECT REPLACING CHARACTERS BY x (no region) — 2026-07-28
+
+- `INSPECT source REPLACING CHARACTERS BY x` — the "replace every position" form is now
+  modelled (previously rejected at read time: "INSPECT REPLACING CHARACTERS is a later rung").
+  No grammar change was needed — the grammar already parses the `CHARACTERS BY operand
+  { inspect_region }` branch of `replace_item`.
+- Semantics: unlike `REPLACING ALL …` there is no search character — EVERY position of the
+  alphanumeric `source` is overwritten with the single replacement char `x`, so with no region
+  the WHOLE field becomes `x`s. The field's width is unchanged.
+- New `Stmt::InspectReplacingCharacters { source, replace }` (NO region field — a region is
+  rejected at read time). Read in the SINGLE-item lone-REPLACING path, detecting the CHARACTERS
+  keyword BEFORE the ALL/LEADING operand logic.
+- Byte basis: the exec fills `n = storage.len()` (the field's BYTE length) copies of `x`, then
+  stores through the SAME `move_into` path a MOVE uses, which re-pads/truncates to the
+  picture's fixed CHAR size. Because `x` is a single ASCII byte, the stored image is exactly the
+  picture's `size` copies of `x` — identical to the byte-based compiler's `width`-many fill.
+  Worked non-ASCII regression: `PIC X(5) VALUE "café"` stores `"café "` (6 bytes); REPLACING
+  CHARACTERS BY `"Z"` fills `n = 6` copies, capped by `move_into` to 5 chars → `"ZZZZZ"` (FIVE
+  `Z`s), the same image the compiler produces.
+- Guards, applied identically to the compiler: (1) `x` must be a single character
+  (`single_delim_char`); (2) a single-char but NON-ASCII *literal* `x` (e.g. `"é"`) is a later
+  rung (an `is_ascii()` check on the resolved literal char, matching the byte-based compiler
+  validator) — a `PIC X(1)` *item* replacement is not ASCII-gated (the byte-fill is co-total for
+  a multi-byte item too); (3) a `{BEFORE|AFTER}` region on the CHARACTERS item is deferred (a
+  byte window can split a multi-byte char mid-position); (4) the numeric/group/reference-
+  modified/literal source guard is unchanged.
+- Scope unchanged elsewhere: a CHARACTERS item inside a MULTI-item `REPLACING` list, and inside a
+  combined `TALLYING … REPLACING`, remain later rungs, rejected identically to before.
+
 ## 0.59.0 — INSPECT TALLYING … FOR CHARACTERS (+ optional region) — 2026-07-28
 
 - `INSPECT source TALLYING counter FOR CHARACTERS [ {BEFORE|AFTER} x ]` — the "count every
