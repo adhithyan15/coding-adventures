@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import base64
 import binascii
+import fnmatch
 import hashlib
 import json
 import os
@@ -21,6 +22,7 @@ import stat
 import sys
 import unicodedata
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -982,6 +984,93 @@ def _framed_digest(items: list[tuple[str, bytes]]) -> bytes:
     return digest.digest()
 
 
+def _portable_glob_matches(pattern: str, path: str) -> bool:
+    pattern_segments = pattern.split("/")
+    path_segments = path.split("/")
+
+    @lru_cache(maxsize=None)
+    def matches(pattern_index: int, path_index: int) -> bool:
+        if pattern_index == len(pattern_segments):
+            return path_index == len(path_segments)
+        segment = pattern_segments[pattern_index]
+        if segment == "**":
+            return matches(pattern_index + 1, path_index) or (
+                path_index < len(path_segments)
+                and matches(pattern_index, path_index + 1)
+            )
+        return (
+            path_index < len(path_segments)
+            and fnmatch.fnmatchcase(path_segments[path_index], segment)
+            and matches(pattern_index + 1, path_index + 1)
+        )
+
+    return matches(0, 0)
+
+
+def _expected_diff_selection(
+    options: dict[str, Any],
+    changed_paths: list[str],
+) -> tuple[set[str], set[str], set[str]] | None:
+    packages = options["packages"]
+    changed: set[str] = set(options["forced_packages"])
+    unknown = False
+    build_names = {
+        "BUILD",
+        "BUILD_windows",
+        "BUILD_mac",
+        "BUILD_linux",
+        "BUILD_mac_and_linux",
+    }
+    for path in changed_paths:
+        path_known = False
+        for package in packages:
+            root = package["rel_path"]
+            if path != root and not path.startswith(f"{root}/"):
+                continue
+            path_known = True
+            relative = path[len(root) :].lstrip("/")
+            if package["source_mode"] == "package_prefix":
+                changed.add(package["name"])
+            elif relative in build_names or any(
+                _portable_glob_matches(pattern, relative)
+                for pattern in package["source_globs"]
+            ):
+                changed.add(package["name"])
+        if not path_known:
+            unknown = True
+
+    package_names = {package["name"] for package in packages}
+    if unknown:
+        if options["unknown_path_policy"] == "error":
+            return None
+        changed = set(package_names)
+
+    dependents: dict[str, set[str]] = {name: set() for name in package_names}
+    prerequisites: dict[str, set[str]] = {name: set() for name in package_names}
+    for prerequisite, dependent in options["edges"]:
+        dependents[prerequisite].add(dependent)
+        prerequisites[dependent].add(prerequisite)
+
+    affected = set(changed)
+    pending = list(changed)
+    while pending:
+        name = pending.pop()
+        for dependent in dependents[name]:
+            if dependent not in affected:
+                affected.add(dependent)
+                pending.append(dependent)
+
+    closed = set(affected)
+    pending = list(affected)
+    while pending:
+        name = pending.pop()
+        for prerequisite in prerequisites[name]:
+            if prerequisite not in closed:
+                closed.add(prerequisite)
+                pending.append(prerequisite)
+    return changed, affected, closed - affected
+
+
 def _expected_hashes(
     options: dict[str, Any],
     staged_files: list[WorkspaceFile],
@@ -1141,17 +1230,11 @@ def _validate_pure_result_semantics(
     diagnostic_codes = [item["code"] for item in result["diagnostics"]]
 
     if domain == "diff_selection":
-        package_names = {package["name"] for package in options["packages"]}
-        unknown_paths = [
-            path
-            for path in case["input"]["changed_paths"]
-            if not any(
-                path == package["rel_path"]
-                or path.startswith(f"{package['rel_path']}/")
-                for package in options["packages"]
-            )
-        ]
-        if unknown_paths and options["unknown_path_policy"] == "error":
+        expected_sets = _expected_diff_selection(
+            options,
+            case["input"]["changed_paths"],
+        )
+        if expected_sets is None:
             if outcome != "error" or "DIFF_UNKNOWN_PATH" not in diagnostic_codes:
                 raise ConformanceError(
                     f"{prefix}_DIFF_UNKNOWN_PATH_INVALID",
@@ -1160,24 +1243,15 @@ def _validate_pure_result_semantics(
             return
         if outcome != "ok":
             return
-        changed = set(payload["changed_packages"])
-        affected = set(payload["affected_packages"])
-        prerequisites = set(payload["prerequisite_packages"])
-        if (
-            not (changed | affected | prerequisites).issubset(package_names)
-            or not changed.issubset(affected)
-            or affected.intersection(prerequisites)
-        ):
+        actual_sets = (
+            set(payload["changed_packages"]),
+            set(payload["affected_packages"]),
+            set(payload["prerequisite_packages"]),
+        )
+        if actual_sets != expected_sets:
             raise ConformanceError(
                 f"{prefix}_DIFF_RESULT_INVALID",
-                "diff result contains unknown or inconsistent package sets",
-            )
-        if unknown_paths and (
-            changed != package_names or affected != package_names or prerequisites
-        ):
-            raise ConformanceError(
-                f"{prefix}_DIFF_UNKNOWN_PATH_INVALID",
-                "unknown changed paths under all policy must select every package",
+                "diff result does not match changed, affected, and prerequisite closure",
             )
     elif domain == "hashing_cache" and outcome == "ok":
         expected_hashes = _expected_hashes(options, staged_files)
@@ -1305,6 +1379,22 @@ def _validate_pure_result_semantics(
     elif domain == "validation":
         codes = payload.get("diagnostic_codes", [])
         valid = payload.get("valid")
+        if set(options["checks"]) == {"build_file_presence"}:
+            expected_codes = sorted(
+                {
+                    {
+                        "missing": "BUILD_FILE_MISSING",
+                        "empty": "BUILD_FILE_EMPTY",
+                    }[package["build_file_state"]]
+                    for package in options["packages"]
+                    if package["build_file_state"] != "present"
+                }
+            )
+            if sorted(codes) != expected_codes:
+                raise ConformanceError(
+                    f"{prefix}_VALIDATION_INCONSISTENT",
+                    "build-file diagnostics do not match the normalized snapshot",
+                )
         consistent = (
             outcome == "ok" and valid is True and not codes and not diagnostic_codes
         ) or (
