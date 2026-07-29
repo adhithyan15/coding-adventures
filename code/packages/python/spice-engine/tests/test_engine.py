@@ -409,7 +409,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 203
+    assert len(coverage) == 207
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -424,7 +424,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tAF\tAF\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 203
+    assert len(records) == 207
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -447,8 +447,8 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     assert summary[0].max_alias_count == 3
     assert summary[0].aliased_parameters == ("IS", "VT", "CJO", "VJ", "M")
     assert summary[5].kind == "NMOS"
-    assert summary[5].canonical_parameter_count == 31
-    assert summary[5].accepted_name_count == 39
+    assert summary[5].canonical_parameter_count == 33
+    assert summary[5].accepted_name_count == 41
     assert summary[5].aliased_parameter_count == 7
     assert summary[5].max_alias_count == 3
     assert summary[5].aliased_parameters == (
@@ -471,7 +471,7 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     assert table.splitlines()[1] == "D\t15\t21\t5\t3\tIS|VT|CJO|VJ|M"
     assert (
         table.splitlines()[-1]
-        == "PMOS\t31\t39\t7\t3\tVT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD"
+        == "PMOS\t33\t41\t7\t3\tVT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD"
     )
     records = model_card_supported_parameter_coverage_summary_records()
     assert len(records) == 7
@@ -499,9 +499,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 203
-    assert report.expected_canonical_parameter_count == 203
-    assert report.accepted_name_count == 275
+    assert report.canonical_parameter_count == 207
+    assert report.expected_canonical_parameter_count == 207
+    assert report.accepted_name_count == 279
     assert report.aliased_parameter_count == 59
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -509,7 +509,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t203\t203\t275\t59\t4\t0"
+        "true\t7\t7\t207\t207\t279\t59\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -537,15 +537,15 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 202
-    assert report.accepted_name_count == 272
+    assert report.canonical_parameter_count == 206
+    assert report.accepted_name_count == 276
     assert report.aliased_parameter_count == 58
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
     assert report.issues[0].kind == "NMOS"
     assert report.issues[0].field == "canonical_parameter_count"
     assert report.issues[0].message == (
-        "expected NMOS to expose 31 canonical supported parameters, found 30"
+        "expected NMOS to expose 33 canonical supported parameters, found 32"
     )
     assert report.issues[-1].field == "max_alias_count"
     assert report.issues[-1].message == "expected NMOS max alias count 3, found 2"
@@ -553,12 +553,12 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t202\t203\t272\t58\t4\t4\n"
+        "false\t7\t7\t206\t207\t276\t58\t4\t4\n"
         "kind\tfield\tmessage\n"
-        "NMOS\tcanonical_parameter_count\texpected NMOS to expose 31 canonical "
-        "supported parameters, found 30\n"
-        "NMOS\taccepted_name_count\texpected NMOS to expose 39 accepted model-card "
-        "names, found 36\n"
+        "NMOS\tcanonical_parameter_count\texpected NMOS to expose 33 canonical "
+        "supported parameters, found 32\n"
+        "NMOS\taccepted_name_count\texpected NMOS to expose 41 accepted model-card "
+        "names, found 38\n"
         "NMOS\taliased_parameter_count\texpected NMOS to expose 7 alias-bearing "
         "parameters, found 6\n"
         "NMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
@@ -567,12 +567,12 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
     assert records[0] == {
         "kind": "NMOS",
         "field": "canonical_parameter_count",
-        "message": "expected NMOS to expose 31 canonical supported parameters, found 30",
+        "message": "expected NMOS to expose 33 canonical supported parameters, found 32",
     }
     assert format_model_card_supported_parameter_coverage_gate_issue_csv(report).startswith(
         "kind,field,message\n"
-        'NMOS,canonical_parameter_count,"expected NMOS to expose 31 canonical '
-        'supported parameters, found 30"\n'
+        'NMOS,canonical_parameter_count,"expected NMOS to expose 33 canonical '
+        'supported parameters, found 32"\n'
     )
     assert (
         json.loads(format_model_card_supported_parameter_coverage_gate_issue_json(report))
@@ -744,7 +744,7 @@ def test_model_card_aliases_build_device_instances() -> None:
             "LEVEL": 1.0,
             "VTO": 0.55,
             "LAM": 0.04,
-            "NSUB": 1.6,
+            "NSUB": 1.6e16,
             "CJD": 3.0e-13,
             "PB": 0.9,
             "MJ": 0.45,
@@ -768,7 +768,7 @@ def test_model_card_aliases_build_device_instances() -> None:
         "LEVEL": 1.0,
         "VT0": 0.55,
         "LAMBDA": 0.04,
-        "N_SUB": 1.6,
+        "N_SUB": 1.6e16,
         "CBD": 3.0e-13,
         "PB": 0.9,
         "MJ": 0.45,
@@ -791,7 +791,7 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert isinstance(mos_model.model.model, Level1Model)
     assert pytest.approx(0.55) == mos_model.model.model.params.VT0
     assert pytest.approx(0.04) == mos_model.model.model.params.LAMBDA
-    assert pytest.approx(1.6) == mos_model.model.model.params.N_SUB
+    assert pytest.approx(1.6e16) == mos_model.model.model.params.N_SUB
     assert pytest.approx(3.0e-13) == mos_model.model.model.params.CBD
     assert pytest.approx(0.9) == mos_model.model.model.params.PB
     assert pytest.approx(0.45) == mos_model.model.model.params.MJ
@@ -843,6 +843,155 @@ def test_mos_model_card_surface_mobility_derives_kp_with_explicit_precedence() -
     )
     assert pytest.approx(500.0) == explicit.model.model.params.U0
     assert pytest.approx(250.0e-6) == explicit.model.model.params.KP
+
+
+def test_mos_model_card_substrate_doping_derives_electrostatics_with_precedence() -> None:
+    derived = mosfet_from_model_card(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        normalize_model_card(
+            "Mderived",
+            "nmos",
+            {"NSUB": 4.0e15, "TOX": 100.0e-9, "NSS": 1.0e10},
+        ),
+    )
+    thermal_voltage = 1.380_649e-23 * 300.15 / 1.602_176_634e-19
+    expected_phi = max(
+        0.1, 2.0 * thermal_voltage * math.log(4.0e21 / 1.45e16)
+    )
+    expected_gamma = math.sqrt(
+        2.0 * (11.70 * 8.854_214_871e-12) * 1.602_176_634e-19 * 4.0e21
+    ) / (3.453133e-11 / 100.0e-9)
+    expected_band_gap = 1.16 - 7.02e-4 * 300.15**2 / (300.15 + 1108.0)
+    process_vt0 = expected_gamma * math.sqrt(expected_phi) + 0.5 * (
+        expected_phi - expected_band_gap
+    )
+    surface_state_shift = (
+        1.0e10 * 1.0e4 * 1.602_176_634e-19 / (3.453133e-11 / 100.0e-9)
+    )
+    expected_vt0 = process_vt0 - surface_state_shift
+    assert pytest.approx(expected_phi) == derived.model.model.params.PHI
+    assert pytest.approx(expected_gamma) == derived.model.model.params.GAMMA
+    assert pytest.approx(expected_vt0) == derived.model.model.params.VT0
+
+    pmos = mosfet_from_model_card(
+        "M2",
+        "d",
+        "g",
+        "s",
+        "b",
+        normalize_model_card(
+            "Mp",
+            "pmos",
+            {"NSUB": 4.0e15, "TOX": 100.0e-9, "NSS": 1.0e10},
+        ),
+    )
+    assert pytest.approx(
+        -process_vt0 - surface_state_shift
+    ) == pmos.model.model.params.VT0
+
+    explicit = mosfet_from_model_card(
+        "M3",
+        "d",
+        "g",
+        "s",
+        "b",
+        normalize_model_card(
+            "Mexplicit",
+            "nmos",
+            {
+                "NSUB": 4.0e15,
+                "TOX": 100.0e-9,
+                "PHI": 0.72,
+                "GAMMA": 0.41,
+                "NSS": 1.0e10,
+                "VTO": 0.63,
+            },
+        ),
+    )
+    assert pytest.approx(0.72) == explicit.model.model.params.PHI
+    assert pytest.approx(0.41) == explicit.model.model.params.GAMMA
+    assert pytest.approx(0.63) == explicit.model.model.params.VT0
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET NSUB must exceed the intrinsic carrier density",
+    ):
+        mosfet_from_model_card(
+            "M4",
+            "d",
+            "g",
+            "s",
+            "b",
+            normalize_model_card(
+                "Minvalid", "nmos", {"NSUB": 1.0e10, "TOX": 1.0e-7}
+            ),
+        )
+
+
+def test_mos_model_card_gate_material_shifts_process_derived_threshold() -> None:
+    process = {"NSUB": 4.0e15, "TOX": 100.0e-9}
+    default_nmos = mosfet_from_model_card(
+        "M1", "d", "g", "s", "b", normalize_model_card("Mdefault", "nmos", process)
+    )
+    band_gap = 1.16 - 7.02e-4 * 300.15**2 / (300.15 + 1108.0)
+
+    opposite_nmos = mosfet_from_model_card(
+        "M2",
+        "d",
+        "g",
+        "s",
+        "b",
+        normalize_model_card("Mopposite", "nmos", {**process, "TPG": -1.0}),
+    )
+    assert pytest.approx(
+        default_nmos.model.model.params.VT0 + band_gap
+    ) == opposite_nmos.model.model.params.VT0
+
+    metal_nmos = mosfet_from_model_card(
+        "M3",
+        "d",
+        "g",
+        "s",
+        "b",
+        normalize_model_card("Mmetal", "nmos", {**process, "TPG": 0.0}),
+    )
+    assert pytest.approx(
+        default_nmos.model.model.params.VT0 - 0.05
+    ) == metal_nmos.model.model.params.VT0
+
+    default_pmos = mosfet_from_model_card(
+        "M4", "d", "g", "s", "b", normalize_model_card("Mpdefault", "pmos", process)
+    )
+    opposite_pmos = mosfet_from_model_card(
+        "M5",
+        "d",
+        "g",
+        "s",
+        "b",
+        normalize_model_card("Mpopposite", "pmos", {**process, "TPG": -1.0}),
+    )
+    assert pytest.approx(
+        default_pmos.model.model.params.VT0 - band_gap
+    ) == opposite_pmos.model.model.params.VT0
+
+    explicit = mosfet_from_model_card(
+        "M6",
+        "d",
+        "g",
+        "s",
+        "b",
+        normalize_model_card(
+            "Mexplicit", "nmos", {**process, "TPG": -1.0, "VTO": 0.63}
+        ),
+    )
+    assert pytest.approx(0.63) == explicit.model.model.params.VT0
+
+    with pytest.raises(ValueError, match="MOSFET TPG must be -1, 0, or 1"):
+        normalize_model_card("Minvalid", "nmos", {"TPG": 0.5})
 
 
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
@@ -4193,7 +4342,7 @@ def test_dc_rejects_invalid_bjt_depletion_parameters(kwargs, message):
 
 
 def test_mosfet_temperature_scaling_changes_common_source_bias():
-    """Hotter Level-1 NMOS lowers VT0 enough to pull the drain node down."""
+    """Berkeley MOS1 temperature preprocessing changes common-source bias."""
     nominal = Circuit()
     nominal.add(VoltageSource("Vdd", "vdd", "0", 1.8))
     nominal.add(VoltageSource("Vgate", "gate", "0", 1.1))
@@ -4226,8 +4375,8 @@ def test_mosfet_temperature_scaling_changes_common_source_bias():
     assert cold_result.converged
     assert nominal_result.converged
     assert hot_result.converged
-    assert cold_result.node_voltages["out"] > nominal_result.node_voltages["out"]
-    assert hot_result.node_voltages["out"] < nominal_result.node_voltages["out"]
+    assert cold_result.node_voltages["out"] < nominal_result.node_voltages["out"]
+    assert hot_result.node_voltages["out"] > nominal_result.node_voltages["out"]
 
 
 def test_mosfet_temperature_scaling_keeps_surface_mobility_and_kp_aligned():
@@ -4256,6 +4405,86 @@ def test_mosfet_temperature_scaling_keeps_surface_mobility_and_kp_aligned():
     assert pytest.approx(nominal_params.KP / nominal_params.U0) == (
         hot_params.KP / hot_params.U0
     )
+
+
+def test_mosfet_temperature_scaling_adjusts_phi_and_threshold_by_polarity():
+    nmos = Mosfet(
+        "Mn",
+        "d",
+        "g",
+        "s",
+        "b",
+        MOSFET(MosfetType.NMOS, Level1Model(Level1Params())),
+    )
+    pmos = Mosfet(
+        "Mp",
+        "d",
+        "g",
+        "s",
+        "b",
+        MOSFET(MosfetType.PMOS, Level1Model(Level1Params(VT0=-0.42))),
+    )
+
+    hot_nmos = mosfet_at_temperature(nmos, 350.0)
+    hot_pmos = mosfet_at_temperature(pmos, 350.0)
+    nmos_params = hot_nmos.model.model.params
+    pmos_params = hot_pmos.model.model.params
+
+    assert pytest.approx(0.766_340_574_915_624_6) == nmos_params.PHI
+    assert pytest.approx(nmos_params.PHI) == pmos_params.PHI
+    assert pytest.approx(0.379_106_188_982_781_14) == nmos_params.VT0
+    assert pytest.approx(-0.365_036_965_282_786_06) == pmos_params.VT0
+
+
+def test_mosfet_temperature_scaling_adjusts_bulk_junction_potential():
+    nominal = Mosfet(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        MOSFET(MosfetType.NMOS, Level1Model(Level1Params())),
+    )
+
+    cold = mosfet_at_temperature(nominal, 275.0)
+    hot = mosfet_at_temperature(nominal, 350.0)
+
+    assert pytest.approx(0.839_148_690_629_946_5) == cold.model.model.params.PB
+    assert pytest.approx(0.719_697_229_921_455) == hot.model.model.params.PB
+
+
+def test_mosfet_temperature_scaling_adjusts_zero_bias_junction_capacitances():
+    nominal = Mosfet(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(
+                Level1Params(CJ=2.0e-12, CBS=3.0e-12, CBD=4.0e-12, CJSW=5.0e-12)
+            ),
+        ),
+    )
+
+    cold = mosfet_at_temperature(nominal, 275.0)
+    hot = mosfet_at_temperature(nominal, 350.0)
+    cold_params = cold.model.model.params
+    hot_params = hot.model.model.params
+    cold_bottom_scale = 0.970_502_066_286_684_6
+    cold_sidewall_scale = 0.980_531_363_923_873_3
+    hot_bottom_scale = 1.060_159_235_535_130_4
+    hot_sidewall_scale = 1.039_705_095_096_974_2
+
+    assert pytest.approx(2.0e-12 * cold_bottom_scale) == cold_params.CJ
+    assert pytest.approx(3.0e-12 * cold_bottom_scale) == cold_params.CBS
+    assert pytest.approx(4.0e-12 * cold_bottom_scale) == cold_params.CBD
+    assert pytest.approx(5.0e-12 * cold_sidewall_scale) == cold_params.CJSW
+    assert pytest.approx(2.0e-12 * hot_bottom_scale) == hot_params.CJ
+    assert pytest.approx(3.0e-12 * hot_bottom_scale) == hot_params.CBS
+    assert pytest.approx(4.0e-12 * hot_bottom_scale) == hot_params.CBD
+    assert pytest.approx(5.0e-12 * hot_sidewall_scale) == hot_params.CJSW
 
 
 def test_mosfet_temperature_scaling_adjusts_bulk_junction_saturation_currents():
@@ -4291,6 +4520,58 @@ def test_mosfet_temperature_scaling_adjusts_bulk_junction_saturation_currents():
     silicon_params = silicon.elements[0].model.model.params
     lower_gap_params = lower_gap.elements[0].model.model.params
     assert silicon_params.IS > lower_gap_params.IS
+
+
+def test_mosfet_temperature_scaling_prefers_model_nominal_temperature():
+    nominal = Mosfet(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(KP=200.0e-6, U0=500.0, T_NOM=325.0)),
+        ),
+    )
+    expected_scale = (350.0 / 325.0) ** -1.5
+    hot = mosfet_at_temperature(
+        nominal,
+        350.0,
+        nominal_temperature_kelvin=300.15,
+    )
+
+    assert pytest.approx(200.0e-6 * expected_scale) == hot.model.model.params.KP
+    assert pytest.approx(500.0 * expected_scale) == hot.model.model.params.U0
+
+    adjusted = circuit_at_temperature(
+        Circuit([nominal]),
+        350.0,
+        nominal_temperature_kelvin=300.15,
+    )
+    assert pytest.approx(200.0e-6 * expected_scale) == (
+        adjusted.elements[0].model.model.params.KP
+    )
+
+    fallback = Mosfet(
+        "M2",
+        "d",
+        "g",
+        "s",
+        "b",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(KP=200.0e-6)),
+        ),
+    )
+    fallback_hot = mosfet_at_temperature(
+        fallback,
+        350.0,
+        nominal_temperature_kelvin=325.0,
+    )
+    assert pytest.approx(200.0e-6 * expected_scale) == (
+        fallback_hot.model.model.params.KP
+    )
 
 
 # ---- DC: Capacitor (open in DC) ----

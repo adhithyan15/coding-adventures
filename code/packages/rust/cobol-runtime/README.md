@@ -69,11 +69,15 @@ signed / scaled numeric sides, figuratives, and the same numeric-literal-vs-alph
 deferral — is compared identically to `IF subject <relop> value`, and the compiler now
 reuses its relation dispatch to match byte-for-byte);
 **reference modification** `IDENT(start:len)` /
-`IDENT(start:)` (a 1-based substring of an alphanumeric item, in `DISPLAY` and
-alphanumeric-comparison operands — with **constant** integer indices *or*
-**computed** data-name indices like `WS(J:K)`, the index item an unsigned integer;
-an out-of-range computed refmod is a `RefModOutOfRange` trap under the same
-predicate the compiled `str_slice` enforces, so both engines error identically);
+`IDENT(start:)` (a 1-based substring of an alphanumeric item, in `DISPLAY`,
+alphanumeric-comparison operands, and as a **MOVE source** into an **alphanumeric**
+receiver `MOVE base(start:len) TO dst` — the slice is char-fit to the receiver's
+width by the ordinary alphanumeric rule, left-justify / space-pad / truncate, into
+one or more receivers, a **numeric** receiver a later rung — with **constant**
+integer indices *or* **computed** data-name indices like `WS(J:K)`, the index item
+an unsigned integer; an out-of-range computed refmod is a `RefModOutOfRange` trap
+under the same predicate the compiled `str_slice` enforces, so both engines error
+identically);
 `PERFORM para
 [THRU para2] [n TIMES | UNTIL cond |
 VARYING id FROM x BY y UNTIL cond]` (out-of-line paragraph or paragraph-range
@@ -85,7 +89,11 @@ justified, truncated at its width, and, per ANSI-85, **without** space-filling t
 untouched tail; `DELIMITED BY SIZE` takes each field in full, while `DELIMITED BY`
 a single-character delimiter takes only each field's prefix up to its first
 occurrence of the delimiter — `STRING "ab,cd" "ef" DELIMITED BY "," INTO t` →
-`"abef"`; optionally with a `WITH POINTER p` phrase — `STRING A B DELIMITED BY
+`"abef"`; a sending field may itself be a reference-modified item slice with
+CONSTANT (literal) indices — `STRING WS(2:3) DELIMITED BY SIZE INTO T` contributes
+the substring via the shared reference-modification machinery, so it stays byte-
+identical to `DISPLAY WS(2:3)`, while a computed (data-name) index sending field —
+`STRING WS(J:K) …` — is a later rung; optionally with a `WITH POINTER p` phrase — `STRING A B DELIMITED BY
 SIZE INTO T WITH POINTER P` — where `p` (a `PIC 9(n)` unsigned integer) gives the
 1-based RECEIVER position at which the first transferred character is placed and is
 UPDATED afterwards to `p + chars_placed` (one past the last character stored;
@@ -236,10 +244,12 @@ modelled (the explicit
 `SIGN` clause with `SEPARATE`/`LEADING`, editing pictures, `COMP`,
 `PERFORM … WITH TEST AFTER`/inline, `GO TO … DEPENDING`, `STRING` with a
 multi-character or non-ASCII delimiter / a non-ASCII literal sending field under a
-delimiter / per-field different delimiters / a signed, fractional, non-numeric or
-over-wide (`> 18`-digit) `WITH POINTER` item / `ON OVERFLOW` (a single-character
-ASCII `DELIMITED BY` delimiter and a `WITH POINTER p` phrase over a `PIC 9(n)`
-pointer ARE supported), `UNSTRING` with a
+delimiter / a COMPUTED (data-name) index reference-modification sending field
+(`STRING WS(J:K) …`) / per-field different delimiters / a signed, fractional,
+non-numeric or over-wide (`> 18`-digit) `WITH POINTER` item / `ON OVERFLOW` (a
+single-character ASCII `DELIMITED BY` delimiter, a `WITH POINTER p` phrase over a
+`PIC 9(n)` pointer, and a CONSTANT-index reference-modification sending field
+`STRING WS(2:3) …` ARE supported), `UNSTRING` with a
 multi-character
 delimiter / a signed, fractional, non-numeric or
 over-wide (`> 18`-digit) `WITH POINTER` item / a NUMERIC-literal or FIGURATIVE

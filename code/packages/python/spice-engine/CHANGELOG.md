@@ -1,5 +1,26 @@
 # Changelog
 
+- Accept Berkeley Level-1 MOS model-card `TPG` gate-material selectors and use
+  their `-1`, `0`, or `1` work-function branches when deriving `VT0`, while
+  preserving explicit threshold-voltage precedence.
+- Accept Level-1 MOS model-card `NSS` surface-state density and include its
+  oxide-charge flat-band shift when deriving `VT0` from process parameters,
+  while preserving explicit threshold-voltage precedence.
+- Derive Level-1 MOS `VT0` from explicit model-card `NSUB` plus `TOX` using
+  Berkeley MOS1 default gate-work-function and surface-state assumptions,
+  preserving explicit `VTO` / `VT0` precedence for NMOS and PMOS.
+- Derive Level-1 MOS `PHI` and `GAMMA` from explicit model-card `NSUB` plus
+  `TOX`, preserving explicit electrostatic parameters and rejecting substrate
+  doping at or below the intrinsic carrier density.
+- Prefer a non-default Level-1 MOS model-card `TNOM` over the circuit nominal
+  temperature when applying Berkeley temperature preprocessing.
+- Scale Level-1 MOS zero-bias bottom-junction `CJ`, source/drain `CBS`/`CBD`,
+  and sidewall `CJSW` capacitances with temperature using Berkeley MOS1
+  `MJ`/`MJSW` grading paths.
+- Apply Berkeley MOS1 temperature preprocessing to the Level-1 MOS
+  bulk-junction potential `PB`.
+- Apply Berkeley MOS1 electrostatic temperature preprocessing to Level-1 MOS
+  `PHI` and polarity-aware `VT0` instead of a fixed threshold-voltage shift.
 - Scale Level-1 MOS bulk-junction `IS` and `JS` with temperature using the
   silicon energy-gap law already shared by semiconductor junction models.
 - Scale Level-1 MOS `U0` alongside `KP` by `(T / T_NOM)^-3/2` so temperature

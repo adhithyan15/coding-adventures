@@ -56,6 +56,25 @@ def sir_eq(a, b) = a == b
 # Call a closure value (a Ruby lambda) with the given arguments.
 def sir_apply(target, *args) = target.call(*args)
 
+# OOP slice 1 — `Foo.new(args…)` construction (the frontend's `__new__`).
+# A `def initialize` is registered like every method (slice 2) under the reserved
+# `sir_um_` prefix as `sir_um_initialize` — NOT Ruby's native `initialize`, which
+# `Class#new` would call.  So `.new` alone would allocate an object whose
+# constructor never runs (its `@ivar` initialisers skipped, leaving them nil).
+# Mirror the Go/C/Rust runtimes explicitly: `allocate` a bare instance (skipping
+# the empty native `initialize`), and — if the class or any ancestor defines
+# `sir_um_initialize` — invoke it on the new object with `args`, so the
+# constructor's `@ivar` assignments land on it.  Dispatch stays CLOSED: the method
+# name is the fixed literal `sir_um_initialize`, never source-derived, so no
+# reflection/eval sink is reachable (the repo's anti-RCE discipline, as with
+# `public_send` dispatch).  Always returns the object, even with no constructor
+# (a plain allocation) — matching `Class#new` on a class with no `initialize`.
+def sir_new(cls, *args)
+  obj = cls.allocate
+  obj.public_send(:sir_um_initialize, *args) if obj.respond_to?(:sir_um_initialize)
+  obj
+end
+
 # OOP slice 6 — the class that owns a `@@class variable` in the CURRENT method.
 # A method body runs in a hoisted top-level function (not a lexical class scope),
 # so `@@x` cannot be written directly ("class variable access from toplevel").
@@ -167,6 +186,26 @@ def sir_fmt_float(f)
   return "NaN" if f.nan?
   return (f.positive? ? "Infinity" : "-Infinity") if f.infinite?
   f.to_s
+end
+
+# C-printf-faithful float formatting for the `fmt_float` builtin (SIR27
+# milestone 10): render `value` as C's `printf` would for the given conversion
+# `kind` ('f'/'F'/'e'/'E'/'g'/'G') and `precision`.  Ruby's `sprintf` is
+# C-compatible, and we switch on the fixed kind character (never interpolating
+# a source-derived format string), so `printf("%.2f", 3.14159)` and the emitted
+# C produce byte-identical "3.14".
+def sir_fmt_float_c(value, precision, kind)
+  v = value.to_f
+  p = precision.to_i
+  case kind
+  when "f" then sprintf("%.*f", p, v)
+  when "F" then sprintf("%.*F", p, v)
+  when "e" then sprintf("%.*e", p, v)
+  when "E" then sprintf("%.*E", p, v)
+  when "g" then sprintf("%.*g", p, v)
+  when "G" then sprintf("%.*G", p, v)
+  else sprintf("%.*f", p, v)
+  end
 end
 
 def sir_puts(*xs)

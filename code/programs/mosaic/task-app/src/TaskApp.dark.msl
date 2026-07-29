@@ -1,151 +1,414 @@
 // TaskApp — styling (mosstyle), dark theme. Parts match the [ part-name ] labels
 // in TaskApp.mll, and mirror TaskApp.light.msl part-for-part.
 //
-// The dark half of the "warm & approachable" identity (code/specs/task-app-ui-design.md):
-// a warm near-black ground (#1a1714, not a cold #000), warm-ivory ink, and the same
-// honey accent — lifted to #eaa63f so it stays legible on the dark ground. Both themes
-// are authored, not inverted. Resolved by `mosaic-compile --theme dark`.
+// The "warm & approachable" identity from code/specs/task-app-ui-design.md: a warm
+// paper ground, crisp warm-white cards, warm-charcoal ink, and a single honey accent
+// (#eaa63f) spent only on *now* — the active project, the primary action, focus.
+// Semantic colour is a separate axis: sage for on-track, red for critical/overdue.
+// Shadows carry a brown tint rather than neutral black, so they sit in the same warm
+// world instead of greying the page.
 
 style TaskApp {
+  // ── shell ───────────────────────────────────────────────────────────────
   part app-shell {
     background : "#1a1714" ;
     color : "#f1ebe1" ;
     font-family : "-apple-system, Segoe UI, system-ui, sans-serif" ;
-    padding : 28 ;
-    gap : 16 ;
+    min-height : "100vh" ;
   }
-  part project-bar {
-    gap : 8 ;
+  part rail {
+    width : 236 ;
+    flex-shrink : 0 ;
+    padding : 20 ;
+    gap : 18 ;
+    border-right-width : 1 ;
+    border-right-color : "#352e25" ;
+    border-right-style : "solid" ;
+  }
+  part main {
+    flex-grow : 1 ;
+    min-width : 0 ;
+    padding : 20 ;
+    gap : 14 ;
+  }
+  part content {
+    gap : 14 ;
+  }
+
+  // ── brand ───────────────────────────────────────────────────────────────
+  part brand {
+    gap : 10 ;
     align : center-vertical ;
+    padding : 4 ;
   }
-  // The project you are looking at: honey fill, so "where am I" is answerable at a
-  // glance. The others stay quiet surfaces.
-  part project-on {
+  part brand-mark {
+    width : 28 ;
+    height : 28 ;
+    border-radius : 8 ;
     background : "#eaa63f" ;
-    color : "#1a1714" ;
-    font-size : 13 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.35), 0 4px 14px rgba(0,0,0,.35)" ;
+  }
+  part brand-name {
+    font-size : 15 ;
     font-weight : bold ;
-    padding : 8 ;
-    border-radius : 20 ;
-  }
-  part project-off {
-    background : "#252019" ;
-    color : "#b3a99c" ;
-    font-size : 13 ;
-    padding : 8 ;
-    border-width : 1 ;
-    border-color : "#352e25" ;
-    border-radius : 20 ;
-    state hover {
-      border-color : "#eaa63f" ;
-      color : "#f1ebe1" ;
-    }
-  }
-  part project-input {
-    background : "#252019" ;
     color : "#f1ebe1" ;
-    font-size : 13 ;
-    padding : 8 ;
-    border-width : 1 ;
-    border-color : "#352e25" ;
-    border-radius : 9 ;
-    state focused {
-      border-color : "#eaa63f" ;
-    }
   }
-  part project-add {
-    background : "#2d271f" ;
-    color : "#eaa63f" ;
-    font-size : 13 ;
+
+  // ── rail: projects ──────────────────────────────────────────────────────
+  part rail-label {
+    font-size : 10 ;
     font-weight : bold ;
-    padding : 8 ;
-    border-radius : 9 ;
-    state hover {
-      background : "#3a2c17" ;
-    }
+    color : "#867c70" ;
+    letter-spacing : "0.08em" ;
+    text-transform : "uppercase" ;
+    padding : 4 ;
+  }
+  part rail-projects {
+    gap : 2 ;
+  }
+  part rail-row {
+    gap : 4 ;
+    align : center-vertical ;
   }
   part project-indent {
     color : "#867c70" ;
     font-size : 13 ;
   }
-  part project-sub {
-    background : "#2d271f" ;
+  // The project you are looking at. Honey fill, so "where am I" is answerable at a
+  // glance; the rest stay quiet until hovered.
+  part project-on {
+    width : 100% ;
+    background : "#eaa63f" ;
+    color : "#1a1714" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    text-align : "left" ;
+    padding : 8 ;
+    border-radius : 8 ;
+    border-width : 0 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.35)" ;
+  }
+  part project-off {
+    width : 100% ;
+    background : "transparent" ;
     color : "#b3a99c" ;
     font-size : 13 ;
+    text-align : "left" ;
     padding : 8 ;
-    border-radius : 9 ;
+    border-radius : 8 ;
+    border-width : 0 ;
+    state hover {
+      background : "#332c23" ;
+      color : "#f1ebe1" ;
+    }
+  }
+  part rail-composer {
+    gap : 6 ;
+    align : center-vertical ;
+  }
+  part project-input {
+    width : 100% ;
+    background : "#252019" ;
+    color : "#f1ebe1" ;
+    font-size : 12 ;
+    padding : 7 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 8 ;
+    state focused {
+      border-color : "#eaa63f" ;
+    }
+  }
+  part project-add {
+    background : "#252019" ;
+    color : "#eaa63f" ;
+    font-size : 15 ;
+    font-weight : bold ;
+    padding : 6 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 8 ;
     state hover {
       background : "#3a2c17" ;
+      border-color : "#eaa63f" ;
+    }
+  }
+  part project-sub {
+    background : "transparent" ;
+    color : "#867c70" ;
+    font-size : 12 ;
+    text-align : "left" ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+    state hover {
       color : "#eaa63f" ;
     }
+  }
+
+  // ── topbar ──────────────────────────────────────────────────────────────
+  part topbar {
+    gap : 16 ;
+    align : center-vertical ;
+    padding : 4 ;
+  }
+  part title-block {
+    width : 100% ;
+    gap : 3 ;
   }
   part title {
     font-size : 22 ;
     font-weight : bold ;
     color : "#f1ebe1" ;
+    letter-spacing : "-0.02em" ;
   }
-  part add-row {
+  part subline {
     gap : 8 ;
     align : center-vertical ;
-  }
-  part name-input {
-    background : "#252019" ;
-    color : "#f1ebe1" ;
-    font-size : 14 ;
-    padding : 10 ;
-    border-width : 1 ;
-    border-color : "#352e25" ;
-    border-radius : 9 ;
-    state focused {
-      border-color : "#eaa63f" ;
-    }
-  }
-  part due-input {
-    background : "#252019" ;
-    color : "#f1ebe1" ;
-    font-size : 14 ;
-    padding : 10 ;
-    border-width : 1 ;
-    border-color : "#352e25" ;
-    border-radius : 9 ;
-    state focused {
-      border-color : "#eaa63f" ;
-    }
-  }
-  part add-btn {
-    background : "#eaa63f" ;
-    color : "#1a1714" ;
-    font-weight : bold ;
-    padding : 10 ;
-    border-radius : 9 ;
-    state hover {
-      background : "#d4922f" ;
-    }
   }
   part summary {
     color : "#b3a99c" ;
     font-size : 13 ;
   }
-  part summary-row {
-    gap : 10 ;
-    align : center-vertical ;
-  }
-  part view-toggle {
-    background : "#252019" ;
-    color : "#b3a99c" ;
+  // The engine's verdict. Semantic colour, deliberately not the honey accent.
+  part pill-ok {
+    background : "#22301f" ;
+    color : "#6fb489" ;
     font-size : 12 ;
-    padding : 6 ;
+    font-weight : bold ;
+    padding : 3 ;
+    border-radius : 20 ;
+  }
+  part pill-warn {
+    background : "#3a221c" ;
+    color : "#e26a52" ;
+    font-size : 12 ;
+    font-weight : bold ;
+    padding : 3 ;
+    border-radius : 20 ;
+  }
+
+  // ── segmented view switch ───────────────────────────────────────────────
+  part seg {
+    gap : 2 ;
+    align : center-vertical ;
+    background : "#2d271f" ;
+    padding : 3 ;
     border-width : 1 ;
     border-color : "#352e25" ;
+    border-radius : 10 ;
+  }
+  part seg-list-on {
+    background : "#252019" ;
+    color : "#f1ebe1" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.4)" ;
+  }
+  part seg-tl-on {
+    background : "#252019" ;
+    color : "#f1ebe1" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.4)" ;
+  }
+  part seg-list-off {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-tl-off {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+
+  // ── list ────────────────────────────────────────────────────────────────
+  part list-wrap {
+    max-width : 760 ;
+    gap : 16 ;
+  }
+  part composer {
+    gap : 8 ;
+    align : center-vertical ;
+    background : "#252019" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 13 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.35), 0 4px 14px rgba(0,0,0,.35)" ;
+  }
+  part name-input {
+    width : 100% ;
+    background : "transparent" ;
+    color : "#f1ebe1" ;
+    font-size : 14 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+  }
+  part due-input {
+    width : 150 ;
+    flex-shrink : 0 ;
+    background : "transparent" ;
+    color : "#f1ebe1" ;
+    font-size : 14 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-left-width : 1 ;
+    border-left-color : "#2c2620" ;
+    border-left-style : "solid" ;
+  }
+  part add-btn {
+    background : "#eaa63f" ;
+    color : "#1a1714" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding : 8 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+    state hover {
+      background : "#d4922f" ;
+    }
+  }
+
+  part task-list {
+    gap : 7 ;
+  }
+  // Section heading between groups — the engine decides the grouping.
+  part group-head {
+    font-size : 11 ;
+    font-weight : bold ;
+    color : "#867c70" ;
+    letter-spacing : "0.07em" ;
+    text-transform : "uppercase" ;
+    padding : 10 ;
+  }
+  part task-card {
+    background : "#252019" ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 13 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.35), 0 4px 14px rgba(0,0,0,.35)" ;
+  }
+  part task-row {
+    gap : 10 ;
+    align : center-vertical ;
+    padding : 12 ;
+  }
+  // The completion toggle — a round control whose label is the engine's glyph.
+  part toggle {
+    background : "transparent" ;
+    color : "#6fb489" ;
+    font-size : 14 ;
+    padding : 3 ;
+    border-width : 2 ;
+    border-color : "#4a4136" ;
     border-radius : 20 ;
     state hover {
       border-color : "#eaa63f" ;
+    }
+  }
+  part task-name {
+    width : 100% ;
+    background : "transparent" ;
+    color : "#f1ebe1" ;
+    font-size : 14 ;
+    text-align : "left" ;
+    padding : 4 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
       color : "#eaa63f" ;
     }
   }
-  // ── Timeline (Gantt) ──────────────────────────────────────────────────
-  part timeline {
-    gap : 6 ;
+  // Meta chips: due is honey (time), schedule a quiet surface, overdue the one place
+  // semantic red appears in a row.
+  part chip-due {
+    background : "#3a2c17" ;
+    color : "#eaa63f" ;
+    font-size : 11 ;
+    font-weight : bold ;
+    padding : 4 ;
+    border-radius : 20 ;
+  }
+  part chip-sched {
+    background : "#2d271f" ;
+    color : "#b3a99c" ;
+    font-size : 11 ;
+    padding : 4 ;
+    border-radius : 20 ;
+  }
+  part chip-over {
+    background : "#3a221c" ;
+    color : "#e26a52" ;
+    font-size : 11 ;
+    font-weight : bold ;
+    padding : 4 ;
+    border-radius : 20 ;
+  }
+  part del-btn {
+    background : "transparent" ;
+    color : "#867c70" ;
+    font-size : 12 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+    state hover {
+      background : "#3a221c" ;
+      color : "#e26a52" ;
+    }
+  }
+
+  // ── progressive disclosure ──────────────────────────────────────────────
+  part task-detail {
+    background : "#2d271f" ;
+    border-top-width : 1 ;
+    border-top-color : "#2c2620" ;
+    border-top-style : "solid" ;
+    padding : 14 ;
+    gap : 5 ;
+  }
+  part detail-sched {
+    color : "#b3a99c" ;
+    font-size : 12 ;
+  }
+  part detail-slack {
+    color : "#b3a99c" ;
+    font-size : 12 ;
+  }
+  part detail-free {
+    color : "#867c70" ;
+    font-size : 12 ;
+  }
+
+  // ── timeline ────────────────────────────────────────────────────────────
+  part timeline-card {
+    background : "#252019" ;
+    padding : 16 ;
+    gap : 8 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 13 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.35), 0 4px 14px rgba(0,0,0,.35)" ;
   }
   part tl-scale {
     color : "#867c70" ;
@@ -159,11 +422,12 @@ style TaskApp {
     color : "#f1ebe1" ;
     font-size : 13 ;
     width : 150 ;
+    flex-shrink : 0 ;
   }
   // The shared track every bar is measured against. Bars are positioned by a
-  // percentage pad, so the track must be a fixed, common width.
+  // percentage pad, so the track is one common width for every row.
   part tl-track {
-    width : 420 ;
+    width : 100% ;
     background : "#2d271f" ;
     border-radius : 6 ;
   }
@@ -183,89 +447,7 @@ style TaskApp {
   part tl-window {
     color : "#b3a99c" ;
     font-size : 11 ;
-  }
-  part task-list {
-    gap : 8 ;
-  }
-  part task-row {
-    gap : 10 ;
-    align : center-vertical ;
-  }
-  // The completion toggle — a round button whose label is the engine's done glyph.
-  part toggle {
-    background : "#252019" ;
-    color : "#6fb489" ;
-    font-size : 15 ;
-    padding : 6 ;
-    border-width : 2 ;
-    border-color : "#4a4136" ;
-    border-radius : 20 ;
-    state hover {
-      border-color : "#eaa63f" ;
-    }
-  }
-  part task-name {
-    background : "#252019" ;
-    color : "#f1ebe1" ;
-    font-size : 14 ;
-    padding : 4 ;
-    border-radius : 7 ;
-    state hover {
-      background : "#3a2c17" ;
-      color : "#eaa63f" ;
-    }
-  }
-  // Meta chips. Due is honey (time), schedule is a quiet surface, overdue is the
-  // one place semantic red appears in a row.
-  part chip-due {
-    background : "#3a2c17" ;
-    color : "#eaa63f" ;
-    font-size : 12 ;
-    padding : 5 ;
-    border-radius : 20 ;
-  }
-  part chip-sched {
-    background : "#2d271f" ;
-    color : "#b3a99c" ;
-    font-size : 12 ;
-    padding : 5 ;
-    border-radius : 20 ;
-  }
-  part chip-over {
-    background : "#3a221c" ;
-    color : "#e26a52" ;
-    font-size : 12 ;
-    font-weight : bold ;
-    padding : 5 ;
-    border-radius : 20 ;
-  }
-  // Progressive disclosure: the scheduling detail, inset under its row.
-  part task-detail {
-    background : "#2d271f" ;
-    border-radius : 11 ;
-    padding : 12 ;
-    gap : 4 ;
-  }
-  part detail-sched {
-    color : "#b3a99c" ;
-    font-size : 12 ;
-  }
-  part detail-slack {
-    color : "#b3a99c" ;
-    font-size : 12 ;
-  }
-  part detail-free {
-    color : "#b3a99c" ;
-    font-size : 12 ;
-  }
-  part del-btn {
-    background : "#3a221c" ;
-    color : "#e26a52" ;
-    font-weight : bold ;
-    padding : 10 ;
-    border-radius : 9 ;
-    state hover {
-      background : "#4a2a22" ;
-    }
+    width : 190 ;
+    flex-shrink : 0 ;
   }
 }

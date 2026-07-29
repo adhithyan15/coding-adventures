@@ -7,6 +7,7 @@ duplicating diode, BJT, JFET, and Level-1 MOS parameter mapping logic.
 
 from __future__ import annotations
 
+import math
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, replace
 
@@ -29,6 +30,16 @@ from spice_engine.engine import (
     format_deck_table_csv,
     format_deck_table_json,
 )
+
+_BOLTZMANN = 1.380_649e-23
+_ELECTRON_CHARGE = 1.602_176_634e-19
+_SILICON_PERMITTIVITY = 11.70 * 8.854_214_871e-12
+_INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER = 1.45e16
+_CUBIC_CENTIMETERS_PER_CUBIC_METER = 1.0e6
+
+
+def _silicon_band_gap_electron_volts(temperature_kelvin: float) -> float:
+    return 1.16 - 7.02e-4 * temperature_kelvin**2 / (temperature_kelvin + 1108.0)
 
 
 @dataclass(frozen=True, slots=True)
@@ -312,8 +323,8 @@ _MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES = {
     "PNP": (41, 58, 13, 4),
     "NJF": (22, 30, 7, 3),
     "PJF": (22, 30, 7, 3),
-    "NMOS": (31, 39, 7, 3),
-    "PMOS": (31, 39, 7, 3),
+    "NMOS": (33, 41, 7, 3),
+    "PMOS": (33, 41, 7, 3),
 }
 
 
@@ -475,6 +486,8 @@ _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
     "JS": "JS",
     "NSUB": "N_SUB",
     "N_SUB": "N_SUB",
+    "NSS": "NSS",
+    "TPG": "TPG",
     "TNOM": "T_NOM",
     "T_NOM": "T_NOM",
     "CGSO": "CGSO",
@@ -553,6 +566,8 @@ def normalize_model_card(
             if abs(value - 1.0) > 1.0e-12:
                 raise ValueError(f"{name}: only MOS LEVEL=1 model cards are supported")
             normalized[canonical] = 1.0
+        elif canonical == "TPG" and value not in {-1.0, 0.0, 1.0}:
+            raise ValueError(f"{name}: MOSFET TPG must be -1, 0, or 1")
         else:
             normalized[canonical] = value
     return NormalizedModelCard(
@@ -1076,13 +1091,75 @@ def mosfet_from_model_card(
         transconductance = (
             surface_mobility * 1.0e-4 * OXIDE_PERMITTIVITY / p["TOX"]
         )
+    surface_potential = p.get("PHI", defaults.PHI)
+    body_effect_coefficient = p.get("GAMMA", defaults.GAMMA)
+    if "N_SUB" in p and "TOX" in p:
+        substrate_doping_per_cubic_meter = (
+            p["N_SUB"] * _CUBIC_CENTIMETERS_PER_CUBIC_METER
+        )
+        if (
+            substrate_doping_per_cubic_meter
+            <= _INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER
+        ):
+            raise ValueError(
+                f"{name}: MOSFET NSUB must exceed the intrinsic carrier density"
+            )
+        if p["TOX"] > 0.0:
+            if "PHI" not in p:
+                thermal_voltage = (
+                    _BOLTZMANN * p.get("T_NOM", defaults.T_NOM) / _ELECTRON_CHARGE
+                )
+                surface_potential = max(
+                    0.1,
+                    2.0
+                    * thermal_voltage
+                    * math.log(
+                        substrate_doping_per_cubic_meter
+                        / _INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER
+                    ),
+                )
+            if "GAMMA" not in p:
+                oxide_capacitance = OXIDE_PERMITTIVITY / p["TOX"]
+                body_effect_coefficient = math.sqrt(
+                    2.0
+                    * _SILICON_PERMITTIVITY
+                    * _ELECTRON_CHARGE
+                    * substrate_doping_per_cubic_meter
+                ) / oxide_capacitance
+    threshold_voltage = p.get("VT0", defaults.VT0)
+    if "VT0" not in p and "N_SUB" in p and "TOX" in p and p["TOX"] > 0.0:
+        nominal_temperature = p.get("T_NOM", defaults.T_NOM)
+        oxide_capacitance = OXIDE_PERMITTIVITY / p["TOX"]
+        polarity = 1.0 if model.kind == "NMOS" else -1.0
+        band_gap = _silicon_band_gap_electron_volts(nominal_temperature)
+        gate_type = p.get("TPG", 1.0)
+        substrate_fermi_potential = polarity * 0.5 * surface_potential
+        gate_work_function = 3.2
+        if gate_type != 0.0:
+            gate_fermi_potential = polarity * gate_type * 0.5 * band_gap
+            gate_work_function = 3.25 + 0.5 * band_gap - gate_fermi_potential
+        gate_substrate_work_function = gate_work_function - (
+            3.25 + 0.5 * band_gap + substrate_fermi_potential
+        )
+        surface_state_shift = (
+            p.get("NSS", 0.0) * 1.0e4 * _ELECTRON_CHARGE / oxide_capacitance
+        )
+        threshold_voltage = (
+            gate_substrate_work_function
+            - surface_state_shift
+            + polarity
+            * (
+                body_effect_coefficient * math.sqrt(surface_potential)
+                + surface_potential
+            )
+        )
     params = replace(
         defaults,
-        VT0=p.get("VT0", defaults.VT0),
+        VT0=threshold_voltage,
         KP=transconductance,
         LAMBDA=p.get("LAMBDA", defaults.LAMBDA),
-        GAMMA=p.get("GAMMA", defaults.GAMMA),
-        PHI=p.get("PHI", defaults.PHI),
+        GAMMA=body_effect_coefficient,
+        PHI=surface_potential,
         W=p.get("W", defaults.W),
         L=p.get("L", defaults.L),
         LD=p.get("LD", defaults.LD),

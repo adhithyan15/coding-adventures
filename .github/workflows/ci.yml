@@ -78,9 +78,13 @@ jobs:
         with:
           go-version: '1.23'
 
-      - name: Test package parity reporter
+      - name: Test parity metadata contracts
         run: |
+          python3 -m pip install --disable-pip-version-check --quiet jsonschema==4.26.0
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_schema.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_runner.py'
+          python3 code/scripts/build_tool_conformance.py validate-corpus
           python3 code/scripts/package_parity_report.py --format json --fail-on-collisions > /tmp/package-parity-report.json
 
       - name: Determine diff base

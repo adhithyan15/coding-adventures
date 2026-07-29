@@ -1,0 +1,419 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/build-tool-conformance-result-v1.json",
+  "title": "Build-tool conformance result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case_id",
+    "domain",
+    "outcome",
+    "result",
+    "diagnostics"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "case_id": {
+      "$ref": "#/$defs/case_id"
+    },
+    "domain": {
+      "$ref": "#/$defs/domain"
+    },
+    "outcome": {
+      "enum": [
+        "ok",
+        "error",
+        "unsupported",
+        "skipped"
+      ]
+    },
+    "result": {
+      "$ref": "#/$defs/generic_result"
+    },
+    "diagnostics": {
+      "type": "array",
+      "maxItems": 4096,
+      "items": {
+        "$ref": "#/$defs/diagnostic"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "domain": {
+            "const": "discovery"
+          },
+          "outcome": {
+            "const": "ok"
+          }
+        },
+        "required": [
+          "domain",
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "$ref": "#/$defs/discovery_result"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "domain": {
+            "const": "resolution"
+          },
+          "outcome": {
+            "const": "ok"
+          }
+        },
+        "required": [
+          "domain",
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "$ref": "#/$defs/resolution_result"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "domain": {
+            "const": "graph"
+          },
+          "outcome": {
+            "const": "ok"
+          }
+        },
+        "required": [
+          "domain",
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "$ref": "#/$defs/graph_result"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "domain": {
+            "const": "plan"
+          },
+          "outcome": {
+            "const": "ok"
+          }
+        },
+        "required": [
+          "domain",
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "$ref": "#/$defs/plan_result"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "domain": {
+            "const": "plan"
+          },
+          "outcome": {
+            "const": "error"
+          }
+        },
+        "required": [
+          "domain",
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "$ref": "#/$defs/empty_result"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "enum": [
+              "unsupported",
+              "skipped"
+            ]
+          }
+        },
+        "required": [
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "$ref": "#/$defs/empty_result"
+          },
+          "diagnostics": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "case_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*(/[a-z0-9][a-z0-9._-]*)+$",
+      "maxLength": 160
+    },
+    "domain": {
+      "enum": [
+        "discovery",
+        "resolution",
+        "graph",
+        "diff_selection",
+        "hashing_cache",
+        "starlark",
+        "plan",
+        "sharding",
+        "execution",
+        "validation",
+        "toolchain_detection",
+        "cli"
+      ]
+    },
+    "safe_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//)[^<>:\"|?*\\u0000-\\u001F/]+(?:/[^<>:\"|?*\\u0000-\\u001F/]+)*$"
+    },
+    "package_name": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*(/[a-z0-9][a-z0-9._-]*)+$",
+      "maxLength": 240
+    },
+    "edge": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/package_name"
+        },
+        {
+          "$ref": "#/$defs/package_name"
+        }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "rel_path",
+        "language",
+        "build_file",
+        "is_starlark"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/package_name"
+        },
+        "rel_path": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "maxLength": 64
+        },
+        "build_file": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "is_starlark": {
+          "type": "boolean"
+        }
+      }
+    },
+    "discovery_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packages"
+      ],
+      "properties": {
+        "packages": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/package"
+          }
+        }
+      }
+    },
+    "resolution_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "edges"
+      ],
+      "properties": {
+        "edges": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/edge"
+          }
+        }
+      }
+    },
+    "graph_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "edges",
+        "levels"
+      ],
+      "properties": {
+        "edges": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/edge"
+          }
+        },
+        "levels": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/$defs/package_name"
+            }
+          }
+        }
+      }
+    },
+    "plan_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "plan"
+      ],
+      "properties": {
+        "plan": {
+          "type": "object"
+        }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "severity"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*$",
+          "maxLength": 96
+        },
+        "severity": {
+          "enum": [
+            "info",
+            "warning",
+            "error"
+          ]
+        },
+        "path": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "package": {
+          "$ref": "#/$defs/package_name"
+        },
+        "message": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "details": {
+          "type": "object",
+          "maxProperties": 256,
+          "additionalProperties": {
+            "$ref": "#/$defs/json_value"
+          }
+        }
+      }
+    },
+    "generic_result": {
+      "type": "object",
+      "maxProperties": 1024,
+      "additionalProperties": {
+        "$ref": "#/$defs/json_value"
+      }
+    },
+    "empty_result": {
+      "type": "object",
+      "maxProperties": 0,
+      "additionalProperties": false
+    },
+    "json_value": {
+      "oneOf": [
+        {
+          "type": "string",
+          "maxLength": 1048576
+        },
+        {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "$ref": "#/$defs/json_value"
+          }
+        },
+        {
+          "type": "object",
+          "maxProperties": 1024,
+          "additionalProperties": {
+            "$ref": "#/$defs/json_value"
+          }
+        }
+      ]
+    }
+  }
+}

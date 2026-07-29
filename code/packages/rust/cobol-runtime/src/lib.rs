@@ -1332,10 +1332,10 @@ mod tests {
     }
 
     #[test]
-    fn level_88_on_a_non_numeric_item_is_a_later_rung() {
-        // A condition-name whose conditional variable is alphanumeric is deferred
-        // — a clean error, never a wrong answer.
-        let err = run_cobol(&program(&[
+    fn level_88_on_an_alphanumeric_item_with_a_discrete_string_value_holds() {
+        // A condition-name over an alphanumeric variable with a discrete string
+        // VALUE now reads: FLAG holds "Y", so IS-YES (VALUE "Y") is true.
+        let out = run_cobol(&program(&[
             "IDENTIFICATION DIVISION.",
             "PROGRAM-ID. P.",
             "DATA DIVISION.",
@@ -1345,6 +1345,45 @@ mod tests {
             "PROCEDURE DIVISION.",
             "MAIN.",
             "    IF IS-YES DISPLAY \"YES\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "YES\n");
+    }
+
+    #[test]
+    fn level_88_alphanumeric_thru_range_is_still_a_later_rung() {
+        // A `THRU` range on an alphanumeric conditional variable stays deferred —
+        // a clean error, never a wrong answer.
+        let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  FLAG  PIC X VALUE \"M\".",
+            "88  IN-RANGE  VALUE \"A\" THRU \"Z\".",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    IF IN-RANGE DISPLAY \"YES\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn level_88_alphanumeric_numeric_value_is_still_a_later_rung() {
+        // A numeric VALUE on an alphanumeric conditional variable stays deferred.
+        let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  FLAG  PIC X VALUE \"5\".",
+            "88  IS-FIVE  VALUE 5.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    IF IS-FIVE DISPLAY \"YES\".",
             "    STOP RUN.",
         ]))
         .unwrap_err();
@@ -3872,15 +3911,30 @@ mod tests {
     }
 
     #[test]
-    fn refmod_computed_as_move_source_is_a_later_rung() {
-        // A computed refmod in a MOVE-source (numeric) context stays a later rung.
-        let err = run_cobol(&wrap(
+    fn refmod_move_source_into_alnum_receiver() {
+        // A reference-modification MOVE source into an ALPHANUMERIC receiver is now
+        // supported (this rung), including a computed (data-name) index: the slice
+        // is char-fit to the receiver width. WS(J:2) with J=2 → "BC" into DST X(3)
+        // → left-justified, one trailing space.
+        let out = run_cobol(&wrap(
             &[
                 "01  WS  PIC X(5) VALUE \"ABCDE\".",
                 "01  J   PIC 9 VALUE 2.",
                 "01  DST PIC X(3).",
             ],
-            &["MOVE WS(J:2) TO DST.", "STOP RUN."],
+            &["MOVE WS(J:2) TO DST.", "DISPLAY DST \"|\".", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "BC |\n");
+    }
+
+    #[test]
+    fn refmod_move_source_into_numeric_receiver_is_a_later_rung() {
+        // The remaining boundary: a refmod MOVE source into a NUMERIC receiver stays
+        // a later rung (de-editing a slice into a numeric field is not lowered here).
+        let err = run_cobol(&wrap(
+            &["01  WS  PIC X(5) VALUE \"12345\".", "01  NUM PIC 9(3)."],
+            &["MOVE WS(1:3) TO NUM.", "STOP RUN."],
         ))
         .unwrap_err();
         assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");

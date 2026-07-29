@@ -53,6 +53,10 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     // (the frontend then masks it to the target width with a `Convert`).
     "to_f",
     "to_i",
+    // Faithful `printf` float formatting (SIR27 milestone 10): `fmt_float(value,
+    // precision, kind)` renders a `double` exactly as C's `printf` `%f`/`%e`/`%g`
+    // (and their uppercase forms) would.
+    "fmt_float",
     "=",
     "==",
     "!=",
@@ -1466,6 +1470,15 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // `Float#to_i` (truncates toward zero, matching C's `(int)double` cast).
         "to_f" => format!("({}).to_f", arg(&a, 0)),
         "to_i" => format!("({}).to_i", arg(&a, 0)),
+        // `fmt_float(value, precision, kind)` → the runtime C-printf-faithful
+        // formatter (Ruby's `sprintf` is C-compatible; the runtime switches on
+        // the fixed `kind` character so no format string is source-derived).
+        "fmt_float" => format!(
+            "sir_fmt_float_c({}, {}, {})",
+            arg(&a, 0),
+            arg(&a, 1),
+            arg(&a, 2)
+        ),
         "not" => format!("(!sir_truthy({}))", arg(&a, 0)),
         "<" => format!("({} < {})", arg(&a, 0), arg(&a, 1)),
         ">" => format!("({} > {})", arg(&a, 0), arg(&a, 1)),
@@ -1505,14 +1518,26 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // holding the class name, emitted VERBATIM as the constant receiver
         // (the scan validated it as a constant path at this position, so no
         // source can inject); `args[1..]` (already in `a`) are the constructor
-        // arguments.  Native Ruby construction — no runtime helper.
+        // arguments.
+        //
+        // Route through the `sir_new` runtime helper, NOT a native `Class.new`.
+        // A `def initialize` is registered (like every method, OOP slice 2)
+        // under the reserved `sir_um_` prefix as `sir_um_initialize` — a name
+        // Ruby's own `new`/`initialize` never calls — so a native `.new` would
+        // allocate an instance whose constructor body (its `@ivar` initialisers)
+        // NEVER runs, leaving every `@ivar` nil (the `counter_state` conformance
+        // failure: `@n + 1` on a nil `@n`).  `sir_new` mirrors the Go/C/Rust
+        // runtimes: allocate, then explicitly invoke the registered constructor
+        // with these args (see the runtime preamble).
         "__new__" => {
             let class = match args.first() {
                 Some(Expr::StrLit { value, .. }) => value.clone(),
                 // The scan rejects a malformed `__new__` before emit.
                 _ => unreachable!("__new__ requires a string class-name first argument"),
             };
-            format!("{class}.new({})", a[1..].join(", "))
+            let mut parts = vec![class];
+            parts.extend_from_slice(&a[1..]);
+            format!("sir_new({})", parts.join(", "))
         }
         // OOP classes slice 2 — register a hoisted instance method on the class.
         // `args[0]` = class name (`StrLit`, a bare validated constant receiver),

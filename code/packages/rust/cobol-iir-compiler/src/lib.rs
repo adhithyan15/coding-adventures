@@ -173,6 +173,17 @@ enum ValueTest {
     InRange(i64, i64),
 }
 
+/// Whether every level-88 `VALUE` item is a discrete string literal
+/// (`Single(Src::Str)`). This is the accept predicate for a condition-name on an
+/// ALPHANUMERIC (`PIC X`) conditional variable: a discrete string VALUE reads and
+/// SETs exactly like `MOVE "…" TO item`. A `THRU` range or a numeric/figurative
+/// VALUE on an alphanumeric item stays a later rung, so this returns `false` and
+/// the caller rejects — the identical predicate the oracle applies, so both
+/// engines accept and reject the very same programs.
+fn all_single_str(values: &[ValueSpec]) -> bool {
+    values.iter().all(|v| matches!(v, ValueSpec::Single(Src::Str(_))))
+}
+
 impl Item {
     /// The item's display width in characters/digits.
     fn width(&self) -> usize {
@@ -233,6 +244,16 @@ struct Compiler<'a> {
     para_index: HashMap<String, usize>,
     /// Current `PERFORM` inline depth (recursion / code-size bound).
     perform_depth: usize,
+    /// Whether the most recent non-88 data entry was an UNNAMED (`FILLER`) item.
+    /// A `FILLER` takes no `by_name` slot and — with group items deferred — is not
+    /// pushed to [`Self::items`], so a following level-88's `var = items.len()-1`
+    /// would silently bind to the LAST NAMED item instead of the FILLER, diverging
+    /// from the oracle (which does model the FILLER). This flag lets
+    /// [`Self::collect_condition_name`] reject a level-88 whose conditional variable
+    /// is a FILLER — co-totally with the oracle, which rejects the same via an empty
+    /// `var_name`. It is set true for a FILLER entry, false for a NAMED non-88 entry,
+    /// and LEFT UNCHANGED for a level-88 (so several 88s after one FILLER all reject).
+    prev_entry_unnamed_filler: bool,
 }
 
 impl<'a> Compiler<'a> {
@@ -315,17 +336,25 @@ impl<'a> Compiler<'a> {
 
     fn collect_entry(&mut self, entry: &GrammarASTNode) -> Result<(), CompileError> {
         // A data_entry is `NUMBER (NAME | FILLER) data_clause* DOT`. FILLER has
-        // no referable name; with group items deferred it plays no role yet.
+        // no referable name; with group items deferred it plays no role yet. Record
+        // that the most recent non-88 entry was a FILLER, so a following level-88 —
+        // which would bind `var` to the last NAMED item, not this FILLER — is
+        // rejected co-totally with the oracle instead of silently diverging.
         let Some(name) = first_token(entry, "NAME") else {
+            self.prev_entry_unnamed_filler = true;
             return Ok(());
         };
         // A level-88 entry declares a boolean condition-name over the most recent
         // item (its "conditional variable"). It takes no storage and no picture —
-        // register the name → (variable, value) and return.
+        // register the name → (variable, value) and return. It leaves the
+        // FILLER flag UNCHANGED (so several 88s after one FILLER all reject).
         let level = first_token(entry, "NUMBER").and_then(|s| s.parse::<u32>().ok());
         if level == Some(88) {
             return self.collect_condition_name(&name, entry);
         }
+        // A NAMED non-88 data entry (elementary or group) clears the FILLER flag:
+        // a following level-88 now qualifies this named item.
+        self.prev_entry_unnamed_filler = false;
         // Each `data_clause` wraps one `picture_clause` or `value_clause`. The
         // PICTURE clause (if present) makes this an elementary item.
         let Some(pic_node) = find_clause(entry, "picture_clause") else {
@@ -410,6 +439,17 @@ impl<'a> Compiler<'a> {
         let values = read_value_specs(vc)?;
         if values.is_empty() {
             return Err(CompileError::Malformed(format!("level-88 {name} without a VALUE")));
+        }
+        // A level-88 whose conditional variable is an UNNAMED (FILLER) item is a
+        // later rung — rejected BEFORE `checked_sub` so the message matches the
+        // oracle's whether or not a prior named item exists. The FILLER is not in
+        // `self.items` here, so `var` would otherwise bind to the wrong (last named)
+        // item; the oracle rejects the same case via an empty `var_name`.
+        if self.prev_entry_unnamed_filler {
+            return Err(CompileError::Unsupported(
+                "a level-88 condition-name on an unnamed (FILLER) conditional variable is a later rung"
+                    .into(),
+            ));
         }
         let var = self.items.len().checked_sub(1).ok_or_else(|| {
             CompileError::Unsupported(format!("level-88 {name} must follow an item"))
@@ -669,10 +709,37 @@ impl<'a> Compiler<'a> {
                         }
                     }
                 }
-                // A reference modification as a MOVE source is a later rung — the
-                // supported contexts on this rung are DISPLAY and comparison.
-                Operandy::RefMod { .. } => {
-                    return Err(CompileError::Unsupported(REFMOD_CONTEXT_MSG.into()));
+                // Reference-modification SOURCE `base(start:len)` moved into an
+                // ALPHANUMERIC receiver. `ref_mod_slice` emits the SAME `str_slice`
+                // DISPLAY/comparison use (so the slice bytes already agree with the
+                // oracle) and reports its length as a `SliceLen` — compile-time
+                // constant for a literal:literal (or literal:) refmod, run-time for a
+                // computed (data-name) index. `move_slice_into_char` then fits the
+                // slice to the receiver's width by the ordinary alphanumeric char
+                // rule (LEFT-justify; space-pad on the right if wider; truncate on
+                // the right if narrower) — the same reshape a same-category char MOVE
+                // performs — so the receiver holds byte-identical bytes to the oracle
+                // (`move_into` → `move_into_char`). A NUMERIC receiver (de-editing a
+                // slice into a numeric field) stays a later rung on both engines. The
+                // slice is byte-based here and char-based in the oracle; they coincide
+                // on the ASCII-prefix windows this rung targets (a multi-byte char
+                // inside/after the window is the pre-existing refmod byte-vs-char chip
+                // shared with DISPLAY/comparison, not introduced here).
+                Operandy::RefMod { base, start, len } => {
+                    let didx = self.item_index(&dst)?;
+                    match &self.items[didx].kind {
+                        ItemKind::Char { .. } => {
+                            let (reg, slice_len) = self.ref_mod_slice(base, start, len)?;
+                            self.move_slice_into_char(&reg, slice_len, didx);
+                        }
+                        ItemKind::Numeric { .. } => {
+                            return Err(CompileError::Unsupported(format!(
+                                "MOVE of a reference-modification source into the numeric \
+                                 receiver {dst} is a later rung (an alphanumeric receiver \
+                                 is supported)"
+                            )));
+                        }
+                    }
                 }
             }
         }
@@ -711,9 +778,19 @@ impl<'a> Compiler<'a> {
 
     /// `SET cond-name TO TRUE` — assign the condition-name's conditional variable
     /// the value that makes it hold: the **first** of its `VALUE` items (a range's
-    /// low bound). The value is formatted into the variable's picture at compile
-    /// time — the same `const`-into-slot store `MOVE <literal>` emits. Numeric
-    /// variable only, matching the test path; an alphanumeric one is a later rung.
+    /// low bound).
+    ///
+    /// A **numeric** variable takes the first value formatted into its picture at
+    /// compile time — the same `const`-into-slot store `MOVE <literal>` emits.
+    ///
+    /// An **alphanumeric** (`PIC X`) variable is now supported for the
+    /// discrete-string case: when every VALUE item is a discrete string literal
+    /// ([`all_single_str`]), SET stores the FIRST value into the slot exactly as
+    /// `MOVE "…" TO item` — [`format_into_picture`] fits the string to the
+    /// receiver width and it is emitted as the slot's `str_const`, byte-identical to
+    /// the oracle's `move_into_char`. A `THRU` range with string bounds, or a
+    /// numeric/figurative VALUE, on an alphanumeric variable stays a later rung —
+    /// rejected identically to the oracle.
     fn emit_set(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
         let cond_name = first_token(verb, "NAME")
             .ok_or_else(|| CompileError::Malformed("SET without a condition-name".into()))?;
@@ -721,13 +798,34 @@ impl<'a> Compiler<'a> {
             CompileError::Unsupported(format!("reference to condition-name {cond_name} (undeclared)"))
         })?;
         let var = cn.var;
+        // An alphanumeric slot stores a discrete string exactly as `MOVE "…" TO
+        // item`; extract the fitted image while the (immutable) `cn` borrow is live,
+        // then emit. A THRU range or a non-string VALUE stays a later rung.
+        if matches!(&self.items[var].kind, ItemKind::Char { .. }) {
+            if !all_single_str(&cn.values) {
+                return Err(CompileError::Unsupported(
+                    "SET … TO TRUE on an alphanumeric conditional variable needs discrete-string \
+                     VALUEs (a THRU range or a numeric/figurative VALUE is a later rung)"
+                        .into(),
+                ));
+            }
+            let picture = Picture::Alphanumeric { size: self.items[var].width() };
+            let image = match cn.values.first() {
+                Some(ValueSpec::Single(s)) => format_into_picture(s, &picture)
+                    .map_err(|m| CompileError::Unsupported(format!("SET {cond_name}: {m}")))?,
+                _ => {
+                    return Err(CompileError::Malformed(format!(
+                        "condition-name {cond_name} has no discrete string VALUE"
+                    )))
+                }
+            };
+            let reg = self.items[var].reg.clone();
+            self.emit("str_const", Some(&reg), vec![Operand::Str(image)], "str");
+            return Ok(());
+        }
         let (int_digits, dec_digits, signed) = match &self.items[var].kind {
             ItemKind::Numeric { int_digits, dec_digits, signed, .. } => (*int_digits, *dec_digits, *signed),
-            ItemKind::Char { .. } => {
-                return Err(CompileError::Unsupported(
-                    "SET … TO TRUE on an alphanumeric conditional variable is a later rung".into(),
-                ))
-            }
+            ItemKind::Char { .. } => unreachable!("the Char case returned above"),
         };
         let picture = Picture::Numeric { int_digits, dec_digits, signed };
         let src = match cn.values.first() {
@@ -1055,6 +1153,60 @@ impl<'a> Compiler<'a> {
                 vec![Operand::Var(src_reg.to_string()), Operand::Var(pad)],
                 "str",
             );
+        }
+    }
+
+    /// Fit a reference-modification slice — held in `reg` with length `slice_len`
+    /// — into the alphanumeric receiver `didx`, by the ordinary alphanumeric char
+    /// rule: LEFT-justify, space-pad the tail when the receiver is wider than the
+    /// slice, truncate on the right when narrower. This is the very reshape
+    /// [`move_into_char`](../../cobol-runtime) applies on the oracle side, so the
+    /// receiver ends up holding byte-identical bytes.
+    ///
+    /// Two length regimes:
+    ///
+    /// * **compile-time constant** (`SliceLen::Const`, a literal:literal or
+    ///   literal: refmod) — the slice width is known, so this defers to
+    ///   [`Self::move_str_into_char`], the SAME const-width char fit a plain
+    ///   alphanumeric-item MOVE uses.
+    ///
+    /// * **run-time** (`SliceLen::Runtime`, a computed data-name index) — the slice
+    ///   width is unknown at compile time, so neither branch of `move_str_into_char`
+    ///   can be chosen statically. Instead we lower a single width-agnostic form:
+    ///   concatenate `recv_w` trailing spaces onto the slice (making the result at
+    ///   least `recv_w` characters for ANY slice length `L ≥ 0`), then keep the
+    ///   leftmost `recv_w`. For `L ≥ recv_w` that is the slice's first `recv_w`
+    ///   characters (right-truncation); for `L < recv_w` it is the `L` slice
+    ///   characters followed by `recv_w − L` spaces (right space-pad) — exactly
+    ///   `move_into_char`'s two cases, so the bytes match the oracle regardless of
+    ///   the run-time length.
+    fn move_slice_into_char(&mut self, reg: &str, slice_len: SliceLen, didx: usize) {
+        match slice_len {
+            SliceLen::Const(len) => self.move_str_into_char(reg, len, didx),
+            SliceLen::Runtime { .. } => {
+                let recv_w = self.items[didx].width();
+                let recv_reg = self.items[didx].reg.clone();
+                // slice ++ recv_w spaces  →  length L + recv_w ≥ recv_w always.
+                let pad = self.spaces_const(recv_w);
+                let padded = self.fresh("_mrc");
+                self.emit(
+                    "str_concat",
+                    Some(&padded),
+                    vec![Operand::Var(reg.to_string()), Operand::Var(pad)],
+                    "str",
+                );
+                // Keep the leftmost recv_w characters of the padded slice.
+                let start = self.fresh("_mrs0");
+                self.emit("const", Some(&start), vec![Operand::Int(0)], "i64");
+                let end = self.fresh("_mrsn");
+                self.emit("const", Some(&end), vec![Operand::Int(recv_w as i64)], "i64");
+                self.emit(
+                    "str_slice",
+                    Some(&recv_reg),
+                    vec![Operand::Var(padded), Operand::Var(start), Operand::Var(end)],
+                    "str",
+                );
+            }
         }
     }
 
@@ -1806,6 +1958,16 @@ impl<'a> Compiler<'a> {
     /// its text; a numeric literal its lexed source digits verbatim (the same text
     /// the oracle concatenates). A numeric item and a figurative constant as a
     /// sending field are later rungs.
+    ///
+    /// A reference-modification sending field — `WS(start:len)` — lowers to the
+    /// slice register the shared [`Self::ref_mod_slice`] emits (the same `str_slice`
+    /// DISPLAY / comparison / MOVE-source take), paired with its length. Only
+    /// **constant (literal) indices** are accepted: they yield a
+    /// [`SliceLen::Const`], a compile-time-known length the `(reg, usize)` STRING
+    /// image contract can carry. A **computed (data-name) index** would yield a
+    /// [`SliceLen::Runtime`] length known only at run time, which this contract
+    /// cannot express, so it is rejected up front — before any slice code is emitted
+    /// — keeping the reject co-total with the oracle's identical refusal.
     fn string_source(&mut self, op: &GrammarASTNode) -> Result<(String, usize), CompileError> {
         match read_operand(op)? {
             Operandy::Name(name) => {
@@ -1834,9 +1996,29 @@ impl<'a> Compiler<'a> {
                     "a figurative constant as a STRING sending field is a later rung".into(),
                 ))
             }
-            Operandy::RefMod { .. } => Err(CompileError::Unsupported(
-                "a reference modification as a STRING sending field is a later rung".into(),
-            )),
+            Operandy::RefMod { base, start, len } => {
+                // Reject a computed (data-name) index BEFORE emitting any slice code
+                // (avoid dead instructions), keeping the (reg, usize) compile-time-
+                // length contract and staying co-total with the oracle's identical
+                // reject.
+                let const_ix = matches!(start, RefIndex::Lit(_))
+                    && len.as_ref().is_none_or(|l| matches!(l, RefIndex::Lit(_)));
+                if !const_ix {
+                    return Err(CompileError::Unsupported(
+                        "a computed reference modification as a STRING sending field is a later rung"
+                            .into(),
+                    ));
+                }
+                let (reg, slice_len) = self.ref_mod_slice(&base, &start, &len)?;
+                match slice_len {
+                    SliceLen::Const(n) => Ok((reg, n)),
+                    // Unreachable given the const_ix guard, but keep total:
+                    SliceLen::Runtime { .. } => Err(CompileError::Unsupported(
+                        "a computed reference modification as a STRING sending field is a later rung"
+                            .into(),
+                    )),
+                }
+            }
         }
     }
 
@@ -4572,27 +4754,78 @@ impl<'a> Compiler<'a> {
 
     /// Evaluate a level-88 condition-name to a boolean `i64` register: does its
     /// conditional variable equal any single value, or fall within any inclusive
-    /// `THRU` range? This rung compares a **numeric** variable against numeric
-    /// values; an alphanumeric conditional variable is a later rung.
+    /// `THRU` range?
     ///
-    /// Each value-item becomes one boolean (`cmp_eq` for a single value; `and` of
-    /// `cmp_ge`/`cmp_le` for a range) and they are OR-folded with `or` — because
-    /// each `cmp_*` yields `0`/`1`, bitwise `and`/`or` are exactly logical AND/OR,
-    /// and the combined `i64` feeds `jmp_if_false` like any relational condition.
+    /// A **numeric** variable compares its slot against each numeric VALUE / `THRU`
+    /// range: each value-item becomes one boolean (`cmp_eq` for a single value;
+    /// `and` of `cmp_ge`/`cmp_le` for a range) OR-folded with `or` — because each
+    /// `cmp_*` yields `0`/`1`, bitwise `and`/`or` are exactly logical AND/OR, and
+    /// the combined `i64` feeds `jmp_if_false` like any relational condition.
+    ///
+    /// An **alphanumeric** (`PIC X`) variable is now supported for the
+    /// discrete-string case: when every VALUE item is a discrete string literal
+    /// ([`all_single_str`]), each value becomes a `cmp_eq` over the SAME alphanumeric
+    /// `str_cmp` path ([`Self::emit_str_condition`]) an `IF var = "…"` relation
+    /// runs — the variable's slot against the value's `str_const`, space-padded to a
+    /// common width — and the value-list OR-folds with `or`, mirroring the numeric
+    /// fold exactly. Reusing `emit_str_condition` is what makes the read
+    /// byte-identical to the oracle's `compare_operands`. A `THRU` range with string
+    /// bounds, or a numeric/figurative VALUE, on an alphanumeric variable stays a
+    /// later rung — rejected identically to the oracle.
     fn emit_condition_name(&mut self, name: &str) -> Result<String, CompileError> {
-        // Phase 1 (immutable): resolve the variable and scale every value into the
-        // slot's representation, so the emitted constants compare exactly.
+        // Phase 1 (immutable): resolve the variable and, per its kind, gather the
+        // owned data phase 2 needs — numeric constants, or the discrete string
+        // VALUEs — so the mutable emits below hold no borrow into `self.conditions`.
         let cn = self.conditions.get(name).ok_or_else(|| {
             CompileError::Unsupported(format!("reference to condition-name {name} (undeclared)"))
         })?;
         let var = cn.var;
+        // Alphanumeric slot: an OR-fold of alphanumeric equalities against each
+        // discrete string VALUE, via the very `str_cmp` path `IF var = "…"` uses.
+        if matches!(&self.items[var].kind, ItemKind::Char { .. }) {
+            if !all_single_str(&cn.values) {
+                return Err(CompileError::Unsupported(
+                    "a level-88 condition-name on an alphanumeric item needs discrete-string \
+                     VALUEs (a THRU range or a numeric/figurative VALUE is a later rung)"
+                        .into(),
+                ));
+            }
+            let strs: Vec<String> = cn
+                .values
+                .iter()
+                .filter_map(|v| match v {
+                    ValueSpec::Single(Src::Str(s)) => Some(s.clone()),
+                    _ => None,
+                })
+                .collect();
+            let slot_reg = self.items[var].reg.clone();
+            let slot_len = self.items[var].width();
+            let mut acc: Option<String> = None;
+            for s in strs {
+                // Both sides become the same fixed `StrOperand`s `str_operand`
+                // builds for a Char item and a string literal, then run the shared
+                // space-padded `str_cmp` equality — byte-identical to `IF`.
+                let subject = StrOperand::Fixed { reg: slot_reg.clone(), len: slot_len };
+                let vlen = s.len();
+                let vreg = self.fresh("_sl");
+                self.emit("str_const", Some(&vreg), vec![Operand::Str(s)], "str");
+                let value = StrOperand::Fixed { reg: vreg, len: vlen };
+                let b = self.emit_str_condition(subject, value, "cmp_eq")?;
+                acc = Some(match acc {
+                    None => b,
+                    Some(prev) => {
+                        let or = self.fresh("_c88or");
+                        self.emit("or", Some(&or), vec![Operand::Var(prev), Operand::Var(b)], "i64");
+                        or
+                    }
+                });
+            }
+            // `values` is non-empty (enforced at registration), so `acc` is set.
+            return acc.ok_or_else(|| CompileError::Malformed(format!("level-88 {name} has no VALUE")));
+        }
         let (int_digits, dec_digits, signed) = match &self.items[var].kind {
             ItemKind::Numeric { int_digits, dec_digits, signed, .. } => (*int_digits, *dec_digits, *signed),
-            ItemKind::Char { .. } => {
-                return Err(CompileError::Unsupported(
-                    "a level-88 condition-name on an alphanumeric item is a later rung".into(),
-                ))
-            }
+            ItemKind::Char { .. } => unreachable!("the Char case returned above"),
         };
         let picture = Picture::Numeric { int_digits, dec_digits, signed };
         let mut tests: Vec<ValueTest> = Vec::with_capacity(cn.values.len());
@@ -7716,13 +7949,44 @@ mod tests {
     }
 
     #[test]
-    fn level_88_on_an_alphanumeric_item_is_deferred() {
-        // A condition-name whose conditional variable is alphanumeric needs a
-        // string compare — a clean later rung, matching the oracle's own deferral.
-        let err = compile_source(
+    fn level_88_on_an_alphanumeric_item_with_a_discrete_string_value_lowers() {
+        // A condition-name over an alphanumeric variable with a discrete string
+        // VALUE now lowers to valid IIR (a `str_cmp`-based equality OR-fold).
+        let m = compile_source(
             &wrap(
                 &["01  FLAG  PIC X VALUE \"Y\".", "88  IS-YES  VALUE \"Y\"."],
                 &["IF IS-YES DISPLAY \"YES\".", "STOP RUN."],
+            ),
+            "c88",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_cmp".to_string()), "expected `str_cmp`: {os:?}");
+    }
+
+    #[test]
+    fn level_88_alphanumeric_thru_range_is_still_a_later_rung() {
+        // A `THRU` range on an alphanumeric conditional variable stays deferred —
+        // a clean later rung, matching the oracle's own deferral.
+        let err = compile_source(
+            &wrap(
+                &["01  FLAG  PIC X VALUE \"M\".", "88  IN-RANGE  VALUE \"A\" THRU \"Z\"."],
+                &["IF IN-RANGE DISPLAY \"YES\".", "STOP RUN."],
+            ),
+            "c88",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn level_88_alphanumeric_numeric_value_is_still_a_later_rung() {
+        // A numeric VALUE on an alphanumeric conditional variable stays deferred.
+        let err = compile_source(
+            &wrap(
+                &["01  FLAG  PIC X VALUE \"5\".", "88  IS-FIVE  VALUE 5."],
+                &["IF IS-FIVE DISPLAY \"YES\".", "STOP RUN."],
             ),
             "c88",
         )
@@ -8088,10 +8352,11 @@ mod tests {
     }
 
     #[test]
-    fn refmod_computed_as_move_source_is_a_later_rung() {
-        // A computed refmod in a numeric/MOVE-target context stays a later rung,
-        // exactly as the constant refmod does.
-        let err = compile_source(
+    fn refmod_computed_as_move_source_into_alnum_receiver_compiles() {
+        // A reference-modification MOVE source into an ALPHANUMERIC receiver is now
+        // supported (this rung), including a computed (data-name) index — it lowers
+        // to the run-time slice-fit path rather than being rejected as a later rung.
+        compile_source(
             &wrap(
                 &[
                     "01  WS  PIC X(5) VALUE \"ABCDE\".",
@@ -8101,6 +8366,23 @@ mod tests {
                 &["MOVE WS(J:2) TO DST.", "STOP RUN."],
             ),
             "rmmv",
+        )
+        .expect("computed refmod MOVE source into an alphanumeric receiver compiles");
+    }
+
+    #[test]
+    fn refmod_as_move_source_into_numeric_receiver_is_a_later_rung() {
+        // The remaining boundary: a refmod MOVE source into a NUMERIC receiver
+        // (de-editing a slice into a numeric field) is still a later rung.
+        let err = compile_source(
+            &wrap(
+                &[
+                    "01  WS  PIC X(5) VALUE \"12345\".",
+                    "01  NUM PIC 9(3).",
+                ],
+                &["MOVE WS(1:3) TO NUM.", "STOP RUN."],
+            ),
+            "rmmvn",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");

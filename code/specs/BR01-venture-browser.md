@@ -49,9 +49,14 @@ upstream cases at zero. The `html-to-layout` package now provides the first
 executable browser seam from `BrowserRenderTree` to the shared Layout IR and
 `layout-block`.
 
-That does not make Venture complete. The remaining acceptance work includes a
-real inline-formatting pass, paint-scene acceptance, resource loading, link
-hit-testing, and a platform host that wires navigation through pixels.
+That does not make Venture complete. The current layout path places atomic
+inline boxes on shared lines; text-run fragmentation and baseline alignment
+remain. The `html-to-paint` composition package now carries canned HTML
+through shared layout into a backend-neutral `PaintScene`, extracts clickable
+link regions, resolves host-fetched GIF/JPEG image bytes into shared pixels,
+and proves text and inline-image scenes rasterize to RGBA pixels with Cairo.
+The concrete network transport, broken-image fallback policy, and platform host
+must still wire navigation through pixels.
 
 ## Where It Fits
 
@@ -166,7 +171,8 @@ When the user clicks somewhere in the content area, the browser needs to
 determine what they clicked on. This is **hit-testing**: given an (x, y) screen
 coordinate, find the element at that position.
 
-During the layout-to-paint stage, each link gets recorded as a `LinkRegion`:
+The `html-to-paint` stage records each positioned link as a `LinkRegion` in
+logical document-content coordinates:
 
 ```rust
 struct LinkRegion {
@@ -180,6 +186,10 @@ On mouse click:
 2. Linear scan through link regions (fine for Mosaic-era page complexity)
 3. If a region contains the point → navigate to that URL
 4. If no region matches → do nothing
+
+`extract_link_regions` and `hit_test_link` implement these geometry steps.
+Navigation history, visited-link policy, and host event dispatch remain the
+browser shell's responsibility.
 
 ### Scrolling
 
@@ -361,8 +371,10 @@ When the HTML parser encounters `<img src="photo.gif">`:
 1. The `BrowserRenderTree` contains an image node with resolved `src`, `alt`,
    and authored dimensions.
 2. `html-to-layout` carries that resolved resource URL into `ImageContent`.
-3. A separate `http1_0_client::get()` call fetches the image data.
-4. The `image` crate decodes the data (GIF or JPEG for v0.1) into pixels.
+3. The browser host fetches the image data through the `HtmlImageFetcher`
+   boundary.
+4. `html-to-paint` uses the repo's `image-codec-gif` or `image-codec-jpeg`
+   decoder to convert the fetched bytes into pixels.
 5. The pixel data becomes a `PaintImage` instruction in the `PaintScene`.
 6. If the image fails to load: render the alt text inside a bordered box
    (the classic "broken image" experience).
@@ -444,7 +456,9 @@ paint_instructions     = { path = "../../../packages/rust/paint-instructions" }
 paint_vm_direct2d      = { path = "../../../packages/rust/paint-vm-direct2d" }
 text_measure_directwrite = { path = "../../../packages/rust/text-measure-directwrite" }
 windows                = { version = "0.58", features = ["..."] }
-image                  = "0.25"  # GIF and JPEG decoding
+html-to-paint          = { path = "../../../packages/rust/html-to-paint" }
+image-codec-gif        = { path = "../../../packages/rust/image-codec-gif" }
+image-codec-jpeg       = { path = "../../../packages/rust/image-codec-jpeg" }
 ```
 
 ## Testing Strategy

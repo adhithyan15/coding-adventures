@@ -432,24 +432,101 @@ func readSwiftDeps(pkgDir string) ([]string, error) {
 	return deps, nil
 }
 
-// readHaskellDeps reads cabal file for build-depends entries targeting coding-adventures-* packages.
+// readHaskellDeps reads the local package paths from cabal.project. Modern
+// Haskell packages in this repository use plain Cabal names, and cabal.project
+// is the authoritative list of sibling packages needed to build them.
+//
+// The Cabal-file fallback keeps older prefixed packages discoverable when they
+// predate the cabal.project convention.
 func readHaskellDeps(pkgDir string) ([]string, error) {
-	cabalPath := filepath.Join(pkgDir, "coding-adventures-"+filepath.Base(pkgDir)+".cabal")
-	data, err := os.ReadFile(cabalPath)
-	if err != nil {
-		return nil, nil // no cabal file = no deps
-	}
-	re := regexp.MustCompile(`coding-adventures-([a-zA-Z0-9-]+)`)
-	selfName := filepath.Base(pkgDir)
-	var deps []string
-	for _, line := range strings.Split(string(data), "\n") {
-		m := re.FindStringSubmatch(line)
-		if len(m) == 2 {
-			// Ignore metadata lines and the package's own test-suite self-reference.
-			if strings.Contains(line, "name:") || strings.Contains(line, "executable") || strings.Contains(line, "library") || m[1] == selfName {
+	projectPath := filepath.Join(pkgDir, "cabal.project")
+	if data, err := os.ReadFile(projectPath); err == nil {
+		re := regexp.MustCompile(`\.\.[/\\]([a-zA-Z0-9-]+)`)
+		seen := make(map[string]bool)
+		var deps []string
+		inPackages := false
+		for _, rawLine := range strings.Split(string(data), "\n") {
+			line := strings.TrimSpace(strings.SplitN(rawLine, "--", 2)[0])
+			lowerLine := strings.ToLower(line)
+			if strings.HasPrefix(lowerLine, "packages:") {
+				inPackages = true
+				line = strings.TrimSpace(line[len("packages:"):])
+			} else if inPackages &&
+				line != "" &&
+				len(rawLine) > 0 &&
+				rawLine[0] != ' ' &&
+				rawLine[0] != '\t' {
+				inPackages = false
+			}
+			if !inPackages {
 				continue
 			}
-			deps = append(deps, m[1])
+
+			for _, match := range re.FindAllStringSubmatch(line, -1) {
+				if len(match) != 2 || seen[match[1]] {
+					continue
+				}
+				siblingPath := filepath.Join(filepath.Dir(pkgDir), match[1])
+				if info, statErr := os.Stat(siblingPath); statErr != nil || !info.IsDir() {
+					continue
+				}
+				seen[match[1]] = true
+				deps = append(deps, match[1])
+			}
+		}
+		return deps, nil
+	}
+
+	cabalFiles, err := filepath.Glob(filepath.Join(pkgDir, "*.cabal"))
+	if err != nil || len(cabalFiles) == 0 {
+		return nil, nil
+	}
+	data, err := os.ReadFile(cabalFiles[0])
+	if err != nil {
+		return nil, nil
+	}
+
+	selfName := filepath.Base(pkgDir)
+	siblingEntries, _ := os.ReadDir(filepath.Dir(pkgDir))
+	knownSiblings := make(map[string]bool)
+	for _, entry := range siblingEntries {
+		if entry.IsDir() {
+			knownSiblings[strings.ToLower(entry.Name())] = true
+		}
+	}
+
+	nameRe := regexp.MustCompile(`^([a-zA-Z0-9][a-zA-Z0-9-]*)`)
+	fieldRe := regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9-]*\s*:`)
+	seen := make(map[string]bool)
+	var deps []string
+	inBuildDepends := false
+	for _, rawLine := range strings.Split(string(data), "\n") {
+		line := strings.TrimSpace(strings.SplitN(rawLine, "--", 2)[0])
+		lowerLine := strings.ToLower(line)
+		if strings.HasPrefix(lowerLine, "build-depends:") {
+			inBuildDepends = true
+			line = strings.TrimSpace(line[len("build-depends:"):])
+		} else if inBuildDepends &&
+			(line == "" || fieldRe.MatchString(line) ||
+				(len(rawLine) > 0 && rawLine[0] != ' ' && rawLine[0] != '\t')) {
+			inBuildDepends = false
+		}
+		if !inBuildDepends {
+			continue
+		}
+
+		for _, piece := range strings.Split(line, ",") {
+			match := nameRe.FindStringSubmatch(strings.TrimSpace(piece))
+			if len(match) != 2 {
+				continue
+			}
+			name := strings.ToLower(match[1])
+			name = strings.TrimPrefix(name, "coding-adventures-")
+			if name == selfName || !knownSiblings[name] || seen[name] {
+				continue
+			}
+			seen[name] = true
+			deps = append(deps, name)
 		}
 	}
 	return deps, nil
@@ -1700,57 +1777,77 @@ final class %sTests: XCTestCase {
 // =========================================================================
 
 func generateHaskell(targetDir, pkgName, description, layerCtx string, directDeps, orderedDeps []string) error {
-	pkgNameHaskell := "coding-adventures-" + pkgName
 	moduleName := toCamelCase(pkgName)
+	qualifiedModuleName := "CodingAdventures." + moduleName
 
 	cabal := fmt.Sprintf(`cabal-version: 3.0
 name:          %s
 version:       0.1.0
 synopsis:      %s
+description:   %s. This package is generated as a publishable library in the coding-adventures monorepo.
+category:      Development
 license:       MIT
 author:        Adhithya Rajasekaran
 maintainer:    Adhithya Rajasekaran
 build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
 
 library
     exposed-modules:  %s
-    build-depends:    base >=4.14
-`, pkgNameHaskell, description, moduleName)
+    build-depends:    base >=4.14 && <5
+`, pkgName, description, description, qualifiedModuleName)
 
-	for _, dep := range orderedDeps {
-		cabal += fmt.Sprintf("                      , coding-adventures-%s\n", dep)
+	for _, dep := range directDeps {
+		cabal += fmt.Sprintf("                    , %s >=0.1 && <0.2\n", dep)
 	}
-	cabal += `    hs-source-dirs:   src
+	cabal += fmt.Sprintf(`    hs-source-dirs:   src
+    ghc-options:      -Wall
     default-language: Haskell2010
 
 test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
-    build-depends:    base >=4.14
+    other-modules:    %sSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
                     , %s
-`
-	for _, dep := range orderedDeps {
-		cabal += fmt.Sprintf("                    , coding-adventures-%s\n", dep)
-	}
-	cabal = fmt.Sprintf(cabal, pkgNameHaskell, pkgNameHaskell)
-	cabal += `    hs-source-dirs:   test
+                    , hspec ==2.*
+    ghc-options:      -Wall
     default-language: Haskell2010
-`
+`, moduleName, pkgName)
 
-	libHs := fmt.Sprintf(`module %s where
-
--- | %s
+	libHs := fmt.Sprintf(`-- | %s
+--
 -- %s
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
-`, moduleName, description, layerCtx)
+module %s
+  ( version
+  ) where
 
-	specHs := fmt.Sprintf(`import %s
+-- | Package version shared across implementation languages.
+version :: String
+version = "0.1.0"
+`, description, layerCtx, qualifiedModuleName)
+
+	specHs := fmt.Sprintf(`import %sSpec (spec)
+import Test.Hspec (hspec)
 
 main :: IO ()
-main = do
-    putStrLn "Test suite not yet implemented."
+main = hspec spec
 `, moduleName)
+
+	packageSpecHs := fmt.Sprintf(`module %sSpec (spec) where
+
+import %s (version)
+import Test.Hspec
+
+spec :: Spec
+spec =
+  describe "package metadata" $
+    it "reports version 0.1.0" $
+      shouldBe version "0.1.0"
+`, moduleName, qualifiedModuleName)
 
 	cabalProject := "packages: ."
 	for _, dep := range orderedDeps {
@@ -1758,15 +1855,15 @@ main = do
 	}
 	cabalProject += "\n"
 
-	// BUILD
-	build := "cabal test all\n"
-
 	files := map[string]string{
-		fmt.Sprintf("%s.cabal", pkgNameHaskell): cabal,
-		"cabal.project":                         cabalProject,
-		"src/" + moduleName + ".hs":             libHs,
-		"test/Spec.hs":                          specHs,
-		"BUILD":                                 build,
+		fmt.Sprintf("%s.cabal", pkgName):             cabal,
+		"cabal.project":                              cabalProject,
+		"src/CodingAdventures/" + moduleName + ".hs": libHs,
+		"test/Spec.hs":                               specHs,
+		"test/" + moduleName + "Spec.hs":             packageSpecHs,
+		"BUILD":                                      "cabal test\n",
+		"BUILD_windows":                              "echo \"haskell support not enabled in windows CI yet -- skipping\"\n",
+		"required_capabilities.json":                 "{\"capabilities\": []}\n",
 	}
 
 	for path, content := range files {
@@ -2189,7 +2286,7 @@ int main() {
 		"BUILD":                                    build,
 		"BUILD_windows":                            buildWin,
 		filepath.Join("tools", "run.sh"):           runSh,
-		filepath.Join("tools", "run.ps1"):          runPs1,
+		filepath.Join("tools", "run.ps1"):           runPs1,
 		".gitignore":                               "_build/\n",
 	})
 }

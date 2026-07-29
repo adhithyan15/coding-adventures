@@ -1,0 +1,60 @@
+% ============================================================================
+% linear-mass-density-conversions — linear-mass-density-unit → kilogram-per-metre factors
+% (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of the NIST-cited conversion tables (length, mass, area, volume, energy, the
+% electric-EMU family, wave number, and the rest): a native tabular relation ingested VERBATIM from a
+% published NIST conversion table. The row states the factor converting the traditional textile unit
+% of LINEAR MASS DENSITY (mass per unit length) to the SI coherent unit, the kilogram per metre
+% (kg/m):
+%
+%     ? linear_mass_density_to_kilogram_per_metre(tex, $v)   % 0.000001
+%
+% This opens a NEW dimension — LINEAR MASS DENSITY (a.k.a. linear density or titre: the mass per unit
+% length of a fibre or yarn, the workhorse quantity of textile engineering) — alongside the already-
+% tabulated length/mass/area/volume/time/speed/energy/pressure/force/acceleration/dynamic-viscosity/
+% kinematic-viscosity/magnetic-flux-density/magnetic-flux/illuminance/luminance/radioactivity/
+% absorbed-dose/dose-equivalent/exposure/power/wave-number tables and the electric charge/potential/
+% resistance/capacitance/inductance/conductance/current tables. The tex is DEFINED as one gram per
+% thousand metres (1 g / 1000 m), so it equals exactly 1 E-06 kilogram per metre. Do NOT confuse
+% LINEAR MASS DENSITY (the tex → the kilogram per metre, kg/m) with plain MASS (e.g. the pound → the
+% kilogram, kg): those are DIFFERENT quantities that convert to DIFFERENT SI units (kg/m vs kg) —
+% dropping the "per metre" is exactly the mistake this table's abstain guards against. A quantity
+% given in tex must be put into SI first, then reasoned over (write-once-use-many). Why a `table` and
+% not a hand-written `relate` clause: this is exactly the shape reference data comes in — a published
+% table, not prose. The citable artifact IS the NIST conversion-factors table at the `locator` below;
+% the factor here is a CELL of NIST Special Publication 811, Appendix B.9, defended by one provenance
+% envelope. Each `row` lowers to a ground relation
+% `linear_mass_density_to_kilogram_per_metre(unit, v)`, so the exact lookup above is the ordinary SLD
+% binding query — the engine returns the factor WITH this table's citation as its proof, on the CPU,
+% with zero model calls.
+%
+% HONESTY NOTE (like every other NIST table, only the EXACT defined factor gets a row): NIST SP 811
+% B.9 prints the "tex" linear-mass-density factor in BOLDFACE, its convention for factors that are
+% EXACT by definition, transcribed here as the plain decimal number of kilograms per metre it names:
+%
+%     tex   1.0 E-06  →  0.000001
+%
+% This is exact because the tex is DEFINED as exactly one gram per kilometre = 1 E-06 kilogram per
+% metre. It terminates; nothing here is a rounded measurement. (Its textile sibling the "denier" is
+% one gram per 9000 metres = 1/9 E-06 kg/m, which does NOT terminate, so — like every non-exact
+% factor — it gets no row.) This table is SPECIFIC to linear mass density: a unit of a DIFFERENT
+% quantity — e.g. the "pound", which NIST SP 811 B.9 lists separately as a MASS unit converting to
+% the kilogram, NOT the kilogram per metre — therefore gets no row here, and a
+% `? linear_mass_density_to_kilogram_per_metre(pound, $v)` ABSTAINS rather than mis-converting a mass
+% unit as if it were a mass-per-length unit. The only claim this table makes is "this is the exact
+% factor NIST SP 811 B.9 prints for the tex's conversion to the kilogram per metre" — which is
+% exactly what a byte-check against the cited table verifies. `trust authoritative` — a primary,
+% re-fetchable standards reference. (See ADJ-TABLES.md; and feedback_nothing_human_authored — the
+% factor is a verbatim cell of the cited table, nothing asserted from memory.)
+% ============================================================================
+
+table linear_mass_density_to_kilogram_per_metre {
+    columns unit, kilogram_per_metre
+
+    row (tex, 0.000001)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

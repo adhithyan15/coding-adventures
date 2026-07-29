@@ -1,0 +1,105 @@
+% ============================================================================
+% vital-capacity.adj — the definition of the vital capacity
+% (VC = tidal volume + inspiratory reserve volume + expiratory reserve volume) in the ADJ standard
+% library.
+% ============================================================================
+% The vital-capacity entry of the *clinical* track — a pulmonary-function bedside capacity, a sum
+% sibling of the shipped total-lung-capacity.adj and functional-residual-capacity.adj. A lung CAPACITY
+% is a sum of the elementary lung VOLUMES; the vital capacity is the maximal air a person can expire
+% after a maximal inspiration: THE VITAL CAPACITY IS THE TOTAL OF THE TIDAL VOLUME, THE INSPIRATORY
+% RESERVE VOLUME, AND THE EXPIRATORY RESERVE VOLUME. It ships as an importable, byte-provenanced,
+% PARAMETERIZED `formula`, together with its three exact rearrangements (each elementary volume the
+% capacity implies once the other two are known). As with every compute library, a consumer states NO
+% arithmetic: it `import`s this file, binds the measured volumes from its own byte-provenance
+% decomposition, and asks the engine to APPLY the cited definition on the CPU. Zero math is performed
+% by the model; the engine computes each value EXACTLY (over exact rationals), carrying the
+% definition's citation.
+%
+%     import "vital-capacity.adj"
+%     observe tidal_volume(1)                % "…tidal volume 1 …"        (span cited by the model)
+%     observe inspiratory_reserve_volume(3)  % "…IRV 3 …"                  (span cited by the model)
+%     observe expiratory_reserve_volume(2)   % "…ERV 2 …"                  (span cited by the model)
+%     ? vital_capacity(tidal_volume, inspiratory_reserve_volume, expiratory_reserve_volume)
+%                                             % engine → 6, carrying the VC sum
+%
+% All four formulas are EXACT over their parameters (sums and differences of measured volumes), so
+% every value the engine returns is exact. They COMPOSE and invert cleanly around the worked case
+% tidal volume = 1, inspiratory reserve volume = 3, expiratory reserve volume = 2 (VC = 1 + 3 + 2 = 6):
+% the `vital_capacity` a consumer computes from the three volumes is exactly the value each of the
+% three volume formulas subtracts the other two from to recover its own volume.
+%
+%   vital_capacity(tidal_volume, inspiratory_reserve_volume, expiratory_reserve_volume)
+%       = tidal_volume + inspiratory_reserve_volume + expiratory_reserve_volume   % VC = TV + IRV + ERV  (definition)
+%   tidal_volume(vital_capacity, inspiratory_reserve_volume, expiratory_reserve_volume)
+%       = vital_capacity - inspiratory_reserve_volume - expiratory_reserve_volume % TV = VC − IRV − ERV  (solved for TV)
+%   inspiratory_reserve_volume(vital_capacity, tidal_volume, expiratory_reserve_volume)
+%       = vital_capacity - tidal_volume - expiratory_reserve_volume               % IRV = VC − TV − ERV  (solved for IRV)
+%   expiratory_reserve_volume(vital_capacity, tidal_volume, inspiratory_reserve_volume)
+%       = vital_capacity - tidal_volume - inspiratory_reserve_volume              % ERV = VC − TV − IRV  (solved for ERV)
+%
+% NOTE ON UNITS: all volumes are in the same unit (litres or millilitres by convention); the vital
+% capacity comes out in that same unit. This capacity does NOT include the residual volume (the air
+% that cannot be expired) — that is why VC < total lung capacity (TLC = VC + residual volume). The
+% engine computes the exact sum over whatever consistent inputs it is given.
+%
+% All four formulas are defended by the SAME definitional clause — "Vital capacity (VC) refers to the
+% maximal volume of air that can be expired following maximum inspiration. It is the total of tidal
+% volume, inspiratory reserve volume, and expiratory reserve volume (VC = V + IRV + ERV)." — because
+% that one definition (the VC IS the tidal + inspiratory-reserve + expiratory-reserve sum) sanctions
+% the relation read every way (VC from the three volumes, or any one volume from VC and the other
+% two). The quote is transcribed verbatim from the StatPearls "Vital Capacity" article on the NCBI
+% Bookshelf, so each `formula` carries the provenance envelope every shipped grounded clause carries;
+% the linter rejects an unsourced one. (See feedback_nothing_human_authored — the definitional clause
+% is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable lung volume the definition ranges over, and each result
+% is a derived quantity. `tidal_volume`, `inspiratory_reserve_volume`, `expiratory_reserve_volume` and
+% `vital_capacity` each appear BOTH as a derived result and as an input (of the other formulas), so
+% each is a single dictionary term used in both roles. The `surface` lists are the everyday names a
+% decomposer maps onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary vital_capacity_vocab {
+    define tidal_volume               : finding  surface "tidal volume", "TV", "VT"                             % litres (L)
+    define inspiratory_reserve_volume : finding  surface "inspiratory reserve volume", "IRV"                    % litres (L)
+    define expiratory_reserve_volume  : finding  surface "expiratory reserve volume", "ERV"                     % litres (L)
+    define vital_capacity             : finding  surface "vital capacity", "VC"                                 % litres (L)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all four ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the definitional clause from the StatPearls "Vital
+% Capacity" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact
+% sum or difference of lung volumes, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook vital_capacity_laws {
+    use vital_capacity_vocab
+
+    % Vital capacity — the sum of the tidal, inspiratory-reserve and expiratory-reserve volumes.
+    formula vital_capacity(tidal_volume, inspiratory_reserve_volume, expiratory_reserve_volume) = tidal_volume + inspiratory_reserve_volume + expiratory_reserve_volume
+        source "Vital capacity (VC) refers to the maximal volume of air that can be expired following maximum inspiration. It is the total of tidal volume, inspiratory reserve volume, and expiratory reserve volume (VC = V + IRV + ERV)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541099/"
+        trust authoritative
+
+    % Tidal volume — the same definition solved for the tidal volume (TV = VC − IRV − ERV). Defended by
+    % the SAME clause.
+    formula tidal_volume(vital_capacity, inspiratory_reserve_volume, expiratory_reserve_volume) = vital_capacity - inspiratory_reserve_volume - expiratory_reserve_volume
+        source "Vital capacity (VC) refers to the maximal volume of air that can be expired following maximum inspiration. It is the total of tidal volume, inspiratory reserve volume, and expiratory reserve volume (VC = V + IRV + ERV)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541099/"
+        trust authoritative
+
+    % Inspiratory reserve volume — the same definition solved for the IRV (IRV = VC − TV − ERV). The
+    % SAME clause, read the third way.
+    formula inspiratory_reserve_volume(vital_capacity, tidal_volume, expiratory_reserve_volume) = vital_capacity - tidal_volume - expiratory_reserve_volume
+        source "Vital capacity (VC) refers to the maximal volume of air that can be expired following maximum inspiration. It is the total of tidal volume, inspiratory reserve volume, and expiratory reserve volume (VC = V + IRV + ERV)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541099/"
+        trust authoritative
+
+    % Expiratory reserve volume — the same definition solved for the ERV (ERV = VC − TV − IRV). The
+    % SAME clause, read the fourth way.
+    formula expiratory_reserve_volume(vital_capacity, tidal_volume, inspiratory_reserve_volume) = vital_capacity - tidal_volume - inspiratory_reserve_volume
+        source "Vital capacity (VC) refers to the maximal volume of air that can be expired following maximum inspiration. It is the total of tidal volume, inspiratory reserve volume, and expiratory reserve volume (VC = V + IRV + ERV)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541099/"
+        trust authoritative
+}

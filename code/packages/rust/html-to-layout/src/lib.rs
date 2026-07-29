@@ -13,7 +13,7 @@ use layout_ir::{
     FontSpec, ImageContent, ImageFit, LayoutNode, SizeValue, TextAlign, TextContent,
 };
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 /// Fully resolved visual defaults applied before a future CSS cascade exists.
 #[derive(Clone, Debug, PartialEq)]
@@ -153,7 +153,7 @@ fn text_leaf(value: &str, style: &InheritedStyle) -> LayoutNode {
         max_lines: None,
         text_align: TextAlign::Start,
     })
-    .with_width(SizeValue::Fill)
+    .with_width(SizeValue::Wrap)
     .with_height(SizeValue::Wrap)
 }
 
@@ -378,6 +378,12 @@ mod tests {
             vec!["Mosaic lives", "The browser pipeline is", "connected", "."]
         );
         let link = find_positioned_by_html_role(&positioned, "link").unwrap();
+        let leading_text = find_positioned_text(&positioned, "The browser pipeline is").unwrap();
+        let trailing_text = find_positioned_text(&positioned, ".").unwrap();
+        assert_eq!(link.y, leading_text.y);
+        assert_eq!(trailing_text.y, link.y);
+        assert!(link.x > leading_text.x);
+        assert!(trailing_text.x > link.x);
         assert_eq!(
             positioned_html_string(link, "href"),
             Some("https://example.test/status")
@@ -437,6 +443,18 @@ mod tests {
             values.extend(positioned_text(child));
         }
         values
+    }
+
+    fn find_positioned_text<'a>(
+        node: &'a PositionedNode,
+        value: &str,
+    ) -> Option<&'a PositionedNode> {
+        if matches!(&node.content, Some(Content::Text(text)) if text.value == value) {
+            return Some(node);
+        }
+        node.children
+            .iter()
+            .find_map(|child| find_positioned_text(child, value))
     }
 
     fn find_positioned_by_html_role<'a>(

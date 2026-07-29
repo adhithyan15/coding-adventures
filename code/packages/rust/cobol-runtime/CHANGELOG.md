@@ -1,5 +1,83 @@
 # Changelog
 
+## 0.67.0 — level-88 condition-name on an alphanumeric item (read + SET TO TRUE) — 2026-07-29
+
+- A level-88 condition-name declared on an **alphanumeric** (`PIC X`) conditional variable is now
+  supported in BOTH directions — reading it (`IF IS-YES`) and setting it (`SET IS-YES TO TRUE`) — for
+  the **discrete-string VALUE** case, mirroring the already-shipped numeric level-88. Previously both
+  paths rejected ("a level-88 condition-name on a non-numeric item is a later rung" / "SET … TO TRUE
+  on an alphanumeric conditional variable is a later rung").
+- Read (`eval_condition_name`): when every VALUE item is a discrete string literal, the name holds
+  when the variable equals ANY of them under COBOL's alphanumeric comparison — the SAME space-padded
+  byte compare an `IF var = "…"` relation runs, routed through `compare_operands`, OR-folded over the
+  values. `88 IS-YES VALUE "Y"` on `FLAG PIC X VALUE "N"` is false; after the variable holds `"Y"` it
+  is true. Multiple discrete values (`88 VOWEL VALUE "A" "E" "I"`) OR-fold. A VALUE shorter than the
+  field is space-padded to the field width before comparison, so `88 IS-Y VALUE "Y"` matches
+  `FLAG PIC X(3)` holding `"Y  "`.
+- Set (`SET … TO TRUE`): stores the FIRST value into the slot exactly as `MOVE "…" TO item`
+  (`src_from_lit` → `move_into`, the alphanumeric string-MOVE path), so it fits to the receiver width.
+- Scope / boundary (co-total with the compiler): accepted iff the variable is alphanumeric AND every
+  VALUE item is a discrete string (`Single(Lit::Str)`). An alphanumeric **THRU range**
+  (`88 X VALUE "A" THRU "Z"`) and a **numeric or figurative** VALUE on an alphanumeric 88
+  (`88 X VALUE 5`, `88 X VALUE SPACES`) stay later rungs — rejected IDENTICALLY on both engines, so
+  both accept and reject the very same programs. The numeric level-88 paths are unchanged.
+- Byte-vs-char: the comparison and store reuse the existing alphanumeric-comparison and string-MOVE
+  machinery, which is byte-identical between engines for ASCII. A non-ASCII string VALUE or runtime
+  value is the PRE-EXISTING alphanumeric byte-vs-char behavior inherited from the IF-alphanumeric path,
+  not introduced here.
+- FILLER guard (co-total): a level-88 whose conditional variable is an **unnamed** (`FILLER`) item is
+  now rejected at build time ("a level-88 condition-name on an unnamed (FILLER) conditional variable is
+  a later rung") — detected via an empty `var_name`. A FILLER-88 bound to different items on the two
+  engines (the compiler drops FILLERs from its item table), so this closes that divergence for BOTH
+  the new alphanumeric AND the pre-existing numeric FILLER-88 case; both engines reject the same
+  programs.
+
+## 0.66.0 — STRING with a reference-modification sending field — 2026-07-29
+
+- `STRING base(start:len) DELIMITED BY … INTO dst` — a reference modification is now accepted as a
+  STRING **sending field**. Previously any refmod STRING sending field was rejected up front ("a
+  reference modification as a STRING sending field is a later rung"); that reject is now LIFTED for
+  **constant (literal) indices**. No grammar change was needed — the grammar already parses a refmod
+  suffix on the STRING sending operand.
+- Semantics: the sliced substring comes from `refmod_string` (the SAME char range DISPLAY,
+  comparison, and MOVE-source already slice, so every context agrees byte-for-byte), and it drops into
+  the STRING concat as just another char image. Everything downstream — `DELIMITED BY SIZE` (field
+  taken whole), `DELIMITED BY <delim>` (field truncated at its first delimiter char), the left-
+  justified receiver overlay with no tail space-fill, and `WITH POINTER` — consumes it exactly as it
+  does an alphanumeric ITEM sending field. Constant indices `WS(2:3)` and an omitted length `WS(3:)`
+  are supported.
+- Boundary: a **computed (data-name) index** `WS(J:K)` gives a run-time length the compile-time STRING
+  image contract cannot carry, so it stays a later rung — rejected here ("a computed reference
+  modification as a STRING sending field is a later rung") IDENTICALLY to the compiler so both engines
+  refuse the same programs (co-totality).
+- Byte-vs-char discipline: `refmod_string` is char-based here and the compiler's `ref_mod_slice` is
+  byte-based; they coincide on the ASCII-clean windows this rung targets, so accepted programs emit
+  byte-identical output. A multi-byte character inside or after the window is the PRE-EXISTING refmod
+  byte-vs-char chip, shared with DISPLAY / MOVE-source and not introduced here.
+
+## 0.65.0 — MOVE with a reference-modification source — 2026-07-29
+
+- `MOVE base(start:len) TO dst` — a reference modification is now accepted as a MOVE **source** when
+  the receiver is **alphanumeric**. Previously any refmod MOVE source was rejected up front
+  ("reference modification is only supported in DISPLAY and comparison contexts on this rung — a MOVE
+  source is a later rung"); that reject is now LIFTED for an alphanumeric receiver. No grammar change
+  was needed — the grammar already parses a refmod suffix on the MOVE source operand.
+- Semantics: the sliced substring comes from `refmod_string` (the SAME char range DISPLAY and
+  comparison already slice, so those contexts and a MOVE of the same slice agree byte-for-byte), then
+  it is char-moved into the receiver by the ordinary alphanumeric rule (`Src::Chars` →
+  `move_into_char`): LEFT-justified, space-padded on the right when the receiver is wider than the
+  slice, truncated on the right when narrower — the same reshape a plain alphanumeric ident source
+  takes. Constant indices `SRC(2:3)`, an omitted length `SRC(3:)`, and computed (data-name) indices
+  `SRC(J:K)` are all supported; an out-of-range slice traps identically to the compiled `str_slice`.
+  Multiple receivers `MOVE SRC(1:3) TO A B` reshape the same slice into each.
+- Byte-vs-char discipline: `refmod_string` is char-based here and the compiler's `ref_mod_slice` is
+  byte-based; they coincide on the ASCII-prefix windows this rung targets, so accepted programs emit
+  byte-identical output. A multi-byte character inside or after the window is the PRE-EXISTING refmod
+  char-vs-byte chip (already present in DISPLAY/comparison/STRING-source contexts), not introduced by
+  this rung — the non-ASCII parity test keeps the multi-byte char strictly OUTSIDE the window.
+- Remaining boundary: a **numeric** receiver (de-editing a slice into a numeric field) stays a later
+  rung, rejected on both engines.
+
 ## 0.64.0 — INSPECT TALLYING multi-item list with a LEADING item — 2026-07-29
 
 - `INSPECT source TALLYING counter FOR {ALL|LEADING} a [{BEFORE|AFTER} p] {ALL|LEADING} b … ` — the

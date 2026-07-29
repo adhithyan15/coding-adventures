@@ -122,7 +122,7 @@ describe("dcOp", () => {
 
   it("exports stable model-card supported parameter coverage", () => {
     const coverage = modelCardSupportedParameterCoverage();
-    expect(coverage).toHaveLength(203);
+    expect(coverage).toHaveLength(207);
     expect(coverage[0]).toStrictEqual({
       kind: "D",
       canonicalParameter: "IS",
@@ -142,7 +142,7 @@ describe("dcOp", () => {
     expect(table).toContain("NMOS\tVT0\tVT0|VTO|VTH\t3");
     expect(table.split("\n").at(-1)).toBe("PMOS\tAF\tAF\t1");
     const records = modelCardSupportedParameterCoverageRecords();
-    expect(records).toHaveLength(203);
+    expect(records).toHaveLength(207);
     expect(records[0]).toStrictEqual({
       kind: "D",
       canonical_parameter: "IS",
@@ -168,8 +168,8 @@ describe("dcOp", () => {
     });
     expect(summary[5]).toStrictEqual({
       kind: "NMOS",
-      canonicalParameterCount: 31,
-      acceptedNameCount: 39,
+      canonicalParameterCount: 33,
+      acceptedNameCount: 41,
       aliasedParameterCount: 7,
       maxAliasCount: 3,
       aliasedParameters: ["VT0", "LAMBDA", "U0", "N_SUB", "T_NOM", "CBS", "CBD"],
@@ -182,7 +182,7 @@ describe("dcOp", () => {
     );
     expect(table.split("\n")[1]).toBe("D\t15\t21\t5\t3\tIS|VT|CJO|VJ|M");
     expect(table.split("\n").at(-1)).toBe(
-      "PMOS\t31\t39\t7\t3\tVT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD",
+      "PMOS\t33\t41\t7\t3\tVT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD",
     );
     const records = modelCardSupportedParameterCoverageSummaryRecords();
     expect(records).toHaveLength(7);
@@ -207,15 +207,15 @@ describe("dcOp", () => {
       passed: true,
       kindCount: 7,
       expectedKindCount: 7,
-      canonicalParameterCount: 203,
-      expectedCanonicalParameterCount: 203,
-      acceptedNameCount: 275,
+      canonicalParameterCount: 207,
+      expectedCanonicalParameterCount: 207,
+      acceptedNameCount: 279,
       aliasedParameterCount: 59,
       maxAliasCount: 4,
       issues: [],
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t203\t203\t275\t59\t4\t0",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t207\t207\t279\t59\t4\t0",
     );
     expect(formatModelCardSupportedParameterCoverageGateIssueTable(report)).toBe(
       "kind\tfield\tmessage",
@@ -238,15 +238,15 @@ describe("dcOp", () => {
 
     expect(report.passed).toBe(false);
     expect(report.kindCount).toBe(7);
-    expect(report.canonicalParameterCount).toBe(202);
-    expect(report.acceptedNameCount).toBe(272);
+    expect(report.canonicalParameterCount).toBe(206);
+    expect(report.acceptedNameCount).toBe(276);
     expect(report.aliasedParameterCount).toBe(58);
     expect(report.maxAliasCount).toBe(4);
     expect(report.issues).toHaveLength(4);
     expect(report.issues[0]).toStrictEqual({
       kind: "NMOS",
       field: "canonical_parameter_count",
-      message: "expected NMOS to expose 31 canonical supported parameters, found 30",
+      message: "expected NMOS to expose 33 canonical supported parameters, found 32",
     });
     expect(report.issues.at(-1)).toStrictEqual({
       kind: "NMOS",
@@ -254,16 +254,16 @@ describe("dcOp", () => {
       message: "expected NMOS max alias count 3, found 2",
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t202\t203\t272\t58\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 31 canonical supported parameters, found 30\nNMOS\taccepted_name_count\texpected NMOS to expose 39 accepted model-card names, found 36\nNMOS\taliased_parameter_count\texpected NMOS to expose 7 alias-bearing parameters, found 6\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t206\t207\t276\t58\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 33 canonical supported parameters, found 32\nNMOS\taccepted_name_count\texpected NMOS to expose 41 accepted model-card names, found 38\nNMOS\taliased_parameter_count\texpected NMOS to expose 7 alias-bearing parameters, found 6\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
     );
     const records = modelCardSupportedParameterCoverageGateIssueRecords(report);
     expect(records[0]).toStrictEqual({
       kind: "NMOS",
       field: "canonical_parameter_count",
-      message: "expected NMOS to expose 31 canonical supported parameters, found 30",
+      message: "expected NMOS to expose 33 canonical supported parameters, found 32",
     });
     expect(formatModelCardSupportedParameterCoverageGateIssueCsv(report)).toMatch(
-      /^kind,field,message\nNMOS,canonical_parameter_count,"expected NMOS to expose 31 canonical supported parameters, found 30"\n/,
+      /^kind,field,message\nNMOS,canonical_parameter_count,"expected NMOS to expose 33 canonical supported parameters, found 32"\n/,
     );
     expect(JSON.parse(formatModelCardSupportedParameterCoverageGateIssueJson(report))).toStrictEqual(
       records,
@@ -414,7 +414,7 @@ describe("dcOp", () => {
       LEVEL: 1.0,
       VTO: 0.55,
       LAM: 0.04,
-      NSUB: 1.6,
+      NSUB: 1.6e16,
       CJD: 3.0e-13,
       PB: 0.9,
       MJ: 0.45,
@@ -437,7 +437,7 @@ describe("dcOp", () => {
       LEVEL: 1.0,
       VT0: 0.55,
       LAMBDA: 0.04,
-      N_SUB: 1.6,
+      N_SUB: 1.6e16,
       CBD: 3.0e-13,
       PB: 0.9,
       MJ: 0.45,
@@ -458,7 +458,7 @@ describe("dcOp", () => {
     expect(mosModel.type).toBe("NMOS");
     expectClose(mosModel.params.VT0, 0.55);
     expectClose(mosModel.params.LAMBDA, 0.04);
-    expectClose(mosModel.params.N_SUB, 1.6);
+    expectClose(mosModel.params.N_SUB, 1.6e16);
     expectClose(mosModel.params.CBD, 3.0e-13);
     expectClose(mosModel.params.PB, 0.9);
     expectClose(mosModel.params.MJ, 0.45);
@@ -506,6 +506,160 @@ describe("dcOp", () => {
     );
     expectClose(explicit.params.U0, 500.0);
     expectClose(explicit.params.KP, 250.0e-6);
+  });
+
+  it("derives MOS electrostatics from substrate doping with explicit precedence", () => {
+    const derived = mosfetFromModelCard(
+      "M1",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mderived", "nmos", {
+        NSUB: 4.0e15,
+        TOX: 100.0e-9,
+        NSS: 1.0e10,
+      }),
+    );
+    const thermalVoltage = 1.380_649e-23 * 300.15 / 1.602_176_634e-19;
+    const expectedPhi = Math.max(
+      0.1,
+      2.0 * thermalVoltage * Math.log(4.0e21 / 1.45e16),
+    );
+    const expectedGamma =
+      Math.sqrt(
+        2.0 * (11.70 * 8.854_214_871e-12) * 1.602_176_634e-19 * 4.0e21,
+      ) /
+      (3.453133e-11 / 100.0e-9);
+    const expectedBandGap =
+      1.16 - (7.02e-4 * 300.15 * 300.15) / (300.15 + 1108.0);
+    const processVt0 =
+      expectedGamma * Math.sqrt(expectedPhi) +
+      0.5 * (expectedPhi - expectedBandGap);
+    const surfaceStateShift =
+      (1.0e10 * 1.0e4 * 1.602_176_634e-19) /
+      (3.453133e-11 / 100.0e-9);
+    const expectedVt0 = processVt0 - surfaceStateShift;
+    expectClose(derived.params.PHI, expectedPhi);
+    expectClose(derived.params.GAMMA, expectedGamma);
+    expectClose(derived.params.VT0, expectedVt0);
+
+    const pmos = mosfetFromModelCard(
+      "M2",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mp", "pmos", {
+        NSUB: 4.0e15,
+        TOX: 100.0e-9,
+        NSS: 1.0e10,
+      }),
+    );
+    expectClose(pmos.params.VT0, -processVt0 - surfaceStateShift);
+
+    const explicit = mosfetFromModelCard(
+      "M3",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mexplicit", "nmos", {
+        NSUB: 4.0e15,
+        TOX: 100.0e-9,
+        PHI: 0.72,
+        GAMMA: 0.41,
+        NSS: 1.0e10,
+        VTO: 0.63,
+      }),
+    );
+    expectClose(explicit.params.PHI, 0.72);
+    expectClose(explicit.params.GAMMA, 0.41);
+    expectClose(explicit.params.VT0, 0.63);
+
+    expect(() =>
+      mosfetFromModelCard(
+        "M4",
+        "d",
+        "g",
+        "s",
+        "b",
+        normalizeModelCard("Minvalid", "nmos", {
+          NSUB: 1.0e10,
+          TOX: 1.0e-7,
+        }),
+      ),
+    ).toThrow("MOSFET NSUB must exceed the intrinsic carrier density");
+  });
+
+  it("shifts process-derived MOS threshold voltage by gate material", () => {
+    const process = { NSUB: 4.0e15, TOX: 100.0e-9 };
+    const defaultNmos = mosfetFromModelCard(
+      "M1",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mdefault", "nmos", process),
+    );
+    const bandGap =
+      1.16 - (7.02e-4 * 300.15 * 300.15) / (300.15 + 1108.0);
+
+    const oppositeNmos = mosfetFromModelCard(
+      "M2",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mopposite", "nmos", { ...process, TPG: -1.0 }),
+    );
+    expectClose(oppositeNmos.params.VT0, defaultNmos.params.VT0! + bandGap);
+
+    const metalNmos = mosfetFromModelCard(
+      "M3",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mmetal", "nmos", { ...process, TPG: 0.0 }),
+    );
+    expectClose(metalNmos.params.VT0, defaultNmos.params.VT0! - 0.05);
+
+    const defaultPmos = mosfetFromModelCard(
+      "M4",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mpdefault", "pmos", process),
+    );
+    const oppositePmos = mosfetFromModelCard(
+      "M5",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mpopposite", "pmos", { ...process, TPG: -1.0 }),
+    );
+    expectClose(oppositePmos.params.VT0, defaultPmos.params.VT0! - bandGap);
+
+    const explicit = mosfetFromModelCard(
+      "M6",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mexplicit", "nmos", {
+        ...process,
+        TPG: -1.0,
+        VTO: 0.63,
+      }),
+    );
+    expectClose(explicit.params.VT0, 0.63);
+
+    expect(() => normalizeModelCard("Minvalid", "nmos", { TPG: 0.5 })).toThrow(
+      "MOSFET TPG must be -1, 0, or 1",
+    );
   });
 
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
@@ -2322,8 +2476,8 @@ describe("dcOp", () => {
     const coldResult = dcOp(cold);
     const hotResult = dcOp(hot);
 
-    expect(coldResult.voltage("out")).toBeGreaterThan(nominalResult.voltage("out")!);
-    expect(hotResult.voltage("out")).toBeLessThan(nominalResult.voltage("out")!);
+    expect(coldResult.voltage("out")).toBeLessThan(nominalResult.voltage("out")!);
+    expect(hotResult.voltage("out")).toBeGreaterThan(nominalResult.voltage("out")!);
   });
 
   it("keeps MOSFET surface mobility and KP aligned across temperature", () => {
@@ -2340,6 +2494,56 @@ describe("dcOp", () => {
       hot.params.KP / hot.params.U0,
       nominal.params.KP / nominal.params.U0,
     );
+  });
+
+  it("adjusts MOSFET PHI and threshold voltage by device polarity", () => {
+    const nmos = mosfet("Mn", "d", "g", "s", "b", "NMOS");
+    const pmos = mosfet("Mp", "d", "g", "s", "b", "PMOS", {
+      VT0: -0.42,
+    });
+
+    const hotNmos = mosfetAtTemperature(nmos, 350.0);
+    const hotPmos = mosfetAtTemperature(pmos, 350.0);
+
+    expectClose(hotNmos.params.PHI, 0.766_340_574_915_624_6);
+    expectClose(hotPmos.params.PHI, hotNmos.params.PHI);
+    expectClose(hotNmos.params.VT0, 0.379_106_188_982_781_14);
+    expectClose(hotPmos.params.VT0, -0.365_036_965_282_786_06);
+  });
+
+  it("adjusts the MOSFET bulk-junction potential across temperature", () => {
+    const nominal = mosfet("M1", "d", "g", "s", "b", "NMOS");
+
+    const cold = mosfetAtTemperature(nominal, 275.0);
+    const hot = mosfetAtTemperature(nominal, 350.0);
+
+    expectClose(cold.params.PB, 0.839_148_690_629_946_5);
+    expectClose(hot.params.PB, 0.719_697_229_921_455);
+  });
+
+  it("scales MOSFET zero-bias junction capacitances with temperature", () => {
+    const nominal = mosfet("M1", "d", "g", "s", "b", "NMOS", {
+      CJ: 2.0e-12,
+      CBS: 3.0e-12,
+      CBD: 4.0e-12,
+      CJSW: 5.0e-12,
+    });
+
+    const cold = mosfetAtTemperature(nominal, 275.0);
+    const hot = mosfetAtTemperature(nominal, 350.0);
+    const coldBottomScale = 0.970_502_066_286_684_6;
+    const coldSidewallScale = 0.980_531_363_923_873_3;
+    const hotBottomScale = 1.060_159_235_535_130_4;
+    const hotSidewallScale = 1.039_705_095_096_974_2;
+
+    expectClose(cold.params.CJ, 2.0e-12 * coldBottomScale);
+    expectClose(cold.params.CBS, 3.0e-12 * coldBottomScale);
+    expectClose(cold.params.CBD, 4.0e-12 * coldBottomScale);
+    expectClose(cold.params.CJSW, 5.0e-12 * coldSidewallScale);
+    expectClose(hot.params.CJ, 2.0e-12 * hotBottomScale);
+    expectClose(hot.params.CBS, 3.0e-12 * hotBottomScale);
+    expectClose(hot.params.CBD, 4.0e-12 * hotBottomScale);
+    expectClose(hot.params.CJSW, 5.0e-12 * hotSidewallScale);
   });
 
   it("scales MOSFET bulk-junction saturation currents with temperature", () => {
@@ -2370,6 +2574,33 @@ describe("dcOp", () => {
       (element): element is Mosfet => element.kind === "mosfet",
     );
     expect(siliconMosfet!.params.IS).toBeGreaterThan(lowerGapMosfet!.params.IS);
+  });
+
+  it("prefers the MOSFET model nominal temperature", () => {
+    const nominal = mosfet("M1", "d", "g", "s", "b", "NMOS", {
+      KP: 200.0e-6,
+      U0: 500.0,
+      T_NOM: 325.0,
+    });
+    const expectedScale = (350.0 / 325.0) ** -1.5;
+    const hot = mosfetAtTemperature(nominal, 350.0, 300.15);
+
+    expectClose(hot.params.KP, 200.0e-6 * expectedScale);
+    expectClose(hot.params.U0, 500.0 * expectedScale);
+
+    const circuit = new Circuit();
+    circuit.add(nominal);
+    const adjusted = circuitAtTemperature(circuit, 350.0, 300.15);
+    const adjustedMosfet = adjusted
+      .elements()
+      .find((element): element is Mosfet => element.kind === "mosfet");
+    expectClose(adjustedMosfet!.params.KP, 200.0e-6 * expectedScale);
+
+    const fallback = mosfet("M2", "d", "g", "s", "b", "NMOS", {
+      KP: 200.0e-6,
+    });
+    const fallbackHot = mosfetAtTemperature(fallback, 350.0, 325.0);
+    expectClose(fallbackHot.params.KP, 200.0e-6 * expectedScale);
   });
 
   it("preserves subcircuits when applying temperature helpers", () => {

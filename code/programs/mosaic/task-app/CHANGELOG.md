@@ -4,6 +4,36 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed - the app now looks like the design
+
+A polish pass bringing the real app up to `design/ui-prototype.html`, which it had
+drifted well behind.
+
+- **Two-column shell.** A quiet left rail holds the workspace's projects (active one
+  honey-filled, nested ones indented) with the new-project composer at its foot; the
+  main column holds a topbar and the content.
+- **Topbar** — title, the summary line, and the engine's verdict as a **status pill**
+  (sage "On track", red "N overdue"), with a proper **segmented view switch**. The
+  switch uses two explicit events rather than one toggle, so clicking the view you are
+  already on is a no-op instead of switching away from it.
+- **The list reads as sections** — In progress / Up next / Done, with the heading
+  riding on the row that opens each group.
+- **Card treatment throughout** — the composer and every task are warm-white cards with
+  the design's radii and warm-tinted shadows; chips, the round completion toggle, and
+  the disclosure panel all match the prototype.
+- Both themes stay in lockstep: 57 parts with identical name *and* property sets, since
+  the dark theme is generated from the light one by token substitution.
+- `index.html` gained the host's only CSS — a margin reset so the shell reaches the
+  viewport edge (it had been floating 8px off every side), plus a pre-hydration
+  background so the first paint isn't white. The *real* ground is set by the app from
+  the resolved theme, because an explicit theme choice outranks the OS and the static
+  guess can therefore be wrong.
+
+Depends on two emitter fixes in the same change — see `mosaic-emit-react`'s changelog.
+Without them nothing in this layout would have been vertically centred, and the rail's
+"Planner" and "Projects" labels would have rendered as empty spans.
+
+
 ### Added - progressive disclosure on task rows
 
 - **Click a task's name to reveal its scheduling detail** — when it's scheduled for,

@@ -20,6 +20,13 @@ const ELECTRON_CHARGE: f64 = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
 const DIGITAL_BRIDGE_TIME_EPSILON: f64 = 1.0e-18;
 const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
+const SILICON_PERMITTIVITY: f64 = 11.70 * 8.854_214_871e-12;
+const INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER: f64 = 1.45e16;
+const CUBIC_CENTIMETERS_PER_CUBIC_METER: f64 = 1.0e6;
+
+fn silicon_band_gap_electron_volts(temperature_kelvin: f64) -> f64 {
+    1.16 - 7.02e-4 * temperature_kelvin * temperature_kelvin / (temperature_kelvin + 1108.0)
+}
 
 fn real_solver_kind(matrix_size: usize) -> &'static str {
     if matrix_size == 0 {
@@ -2773,19 +2780,87 @@ pub fn mosfet_at_temperature(
             reason: "nominal temperature must be finite and positive".to_string(),
         });
     }
+    let reference_temperature_kelvin = 300.15;
+    let nominal_temperature = if mosfet.params.t_nom != reference_temperature_kelvin {
+        mosfet.params.t_nom
+    } else {
+        nominal_temperature_kelvin
+    };
+    if !nominal_temperature.is_finite() || nominal_temperature <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "nominal temperature must be finite and positive".to_string(),
+        });
+    }
     if !energy_gap_electron_volts.is_finite() || energy_gap_electron_volts <= 0.0 {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "energy gap must be finite and positive".to_string(),
         });
     }
-    let ratio = temperature_kelvin / nominal_temperature_kelvin;
-    let threshold_shift = -2.0e-3 * (temperature_kelvin - nominal_temperature_kelvin);
+    let ratio = temperature_kelvin / nominal_temperature;
+    let potential_correction = |temperature: f64| {
+        let thermal_voltage = BOLTZMANN * temperature / ELECTRON_CHARGE;
+        let argument = -silicon_band_gap_electron_volts(temperature) * ELECTRON_CHARGE
+            / (2.0 * BOLTZMANN * temperature)
+            + 1.115_087_7 * ELECTRON_CHARGE / (2.0 * BOLTZMANN * reference_temperature_kelvin);
+        -2.0 * thermal_voltage
+            * (1.5 * (temperature / reference_temperature_kelvin).ln() + argument)
+    };
+    let nominal_factor = nominal_temperature / reference_temperature_kelvin;
+    let temperature_factor = temperature_kelvin / reference_temperature_kelvin;
+    let nominal_potential_correction = potential_correction(nominal_temperature);
+    let temperature_potential_correction = potential_correction(temperature_kelvin);
+    let nominal_phi = (mosfet.params.phi - nominal_potential_correction) / nominal_factor;
+    let temperature_phi = temperature_factor * nominal_phi + temperature_potential_correction;
+    let nominal_bulk_junction_potential =
+        (mosfet.params.bulk_junction_potential - nominal_potential_correction) / nominal_factor;
+    let temperature_bulk_junction_potential =
+        temperature_factor * nominal_bulk_junction_potential + temperature_potential_correction;
+    let nominal_bulk_potential_shift = (mosfet.params.bulk_junction_potential
+        - nominal_bulk_junction_potential)
+        / nominal_bulk_junction_potential;
+    let temperature_bulk_potential_shift = (temperature_bulk_junction_potential
+        - nominal_bulk_junction_potential)
+        / nominal_bulk_junction_potential;
+    let capacitance_scale = |grading_coefficient: f64| {
+        let nominal_scale = 1.0
+            / (1.0
+                + grading_coefficient
+                    * (4.0e-4 * (nominal_temperature - reference_temperature_kelvin)
+                        - nominal_bulk_potential_shift));
+        let temperature_scale = 1.0
+            + grading_coefficient
+                * (4.0e-4 * (temperature_kelvin - reference_temperature_kelvin)
+                    - temperature_bulk_potential_shift);
+        nominal_scale * temperature_scale
+    };
+    let bottom_capacitance_scale =
+        capacitance_scale(mosfet.params.bulk_junction_grading_coefficient);
+    let sidewall_capacitance_scale =
+        capacitance_scale(mosfet.params.sidewall_junction_grading_coefficient);
+    let polarity = match mosfet.mosfet_type {
+        MosfetType::Nmos => 1.0,
+        MosfetType::Pmos => -1.0,
+    };
+    let temperature_vbi = mosfet.params.vt0
+        - polarity * mosfet.params.gamma * mosfet.params.phi.sqrt()
+        + 0.5
+            * (silicon_band_gap_electron_volts(nominal_temperature)
+                - silicon_band_gap_electron_volts(temperature_kelvin))
+        + polarity * 0.5 * (temperature_phi - mosfet.params.phi);
+    let temperature_vt0 = temperature_vbi + polarity * mosfet.params.gamma * temperature_phi.sqrt();
     let saturation_exponent = energy_gap_electron_volts * ELECTRON_CHARGE / BOLTZMANN
-        * (1.0 / nominal_temperature_kelvin - 1.0 / temperature_kelvin);
+        * (1.0 / nominal_temperature - 1.0 / temperature_kelvin);
     let saturation_scale = ratio.powi(3) * saturation_exponent.clamp(-100.0, 100.0).exp();
     let mut adjusted = mosfet.clone();
-    adjusted.params.vt0 += threshold_shift;
+    adjusted.params.vt0 = temperature_vt0;
+    adjusted.params.phi = temperature_phi;
+    adjusted.params.bulk_junction_potential = temperature_bulk_junction_potential;
+    adjusted.params.bottom_junction_capacitance *= bottom_capacitance_scale;
+    adjusted.params.source_bulk_capacitance *= bottom_capacitance_scale;
+    adjusted.params.drain_bulk_capacitance *= bottom_capacitance_scale;
+    adjusted.params.sidewall_junction_capacitance *= sidewall_capacitance_scale;
     adjusted.params.kp *= ratio.powf(-1.5);
     adjusted.params.surface_mobility *= ratio.powf(-1.5);
     adjusted.params.saturation_current *= saturation_scale;
@@ -4034,8 +4109,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Pnp, 41, 58, 13, 4),
     (ModelCardKind::Njf, 22, 30, 7, 3),
     (ModelCardKind::Pjf, 22, 30, 7, 3),
-    (ModelCardKind::Nmos, 31, 39, 7, 3),
-    (ModelCardKind::Pmos, 31, 39, 7, 3),
+    (ModelCardKind::Nmos, 33, 41, 7, 3),
+    (ModelCardKind::Pmos, 33, 41, 7, 3),
 ];
 const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -4175,6 +4250,8 @@ const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("JS", "JS"),
     ("NSUB", "N_SUB"),
     ("N_SUB", "N_SUB"),
+    ("NSS", "NSS"),
+    ("TPG", "TPG"),
     ("TNOM", "T_NOM"),
     ("T_NOM", "T_NOM"),
     ("CGSO", "CGSO"),
@@ -4268,6 +4345,11 @@ pub fn normalize_model_card(
                     });
                 }
                 normalized.insert(canonical.to_string(), 1.0);
+            } else if canonical == "TPG" && !matches!(*raw_value, -1.0 | 0.0 | 1.0) {
+                return Err(SpiceError::InvalidElement {
+                    name: name.clone(),
+                    reason: "MOSFET TPG must be -1, 0, or 1".to_string(),
+                });
             } else {
                 normalized.insert(canonical.to_string(), *raw_value);
             }
@@ -4982,6 +5064,59 @@ pub fn mosfet_from_model_card(
     }
     if let Some(value) = model.parameters.get("T_NOM") {
         params.t_nom = *value;
+    }
+    if let (Some(substrate_doping), Some(oxide_thickness)) =
+        (model.parameters.get("N_SUB"), model.parameters.get("TOX"))
+    {
+        let substrate_doping_per_cubic_meter = substrate_doping * CUBIC_CENTIMETERS_PER_CUBIC_METER;
+        if substrate_doping_per_cubic_meter <= INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER {
+            return Err(SpiceError::InvalidElement {
+                name: name.clone(),
+                reason: "MOSFET NSUB must exceed the intrinsic carrier density".to_string(),
+            });
+        }
+        if *oxide_thickness > 0.0 {
+            let oxide_capacitance = OXIDE_PERMITTIVITY / oxide_thickness;
+            if !model.parameters.contains_key("PHI") {
+                let thermal_voltage = BOLTZMANN * params.t_nom / ELECTRON_CHARGE;
+                params.phi = (2.0
+                    * thermal_voltage
+                    * (substrate_doping_per_cubic_meter
+                        / INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER)
+                        .ln())
+                .max(0.1);
+            }
+            if !model.parameters.contains_key("GAMMA") {
+                params.gamma = (2.0
+                    * SILICON_PERMITTIVITY
+                    * ELECTRON_CHARGE
+                    * substrate_doping_per_cubic_meter)
+                    .sqrt()
+                    / oxide_capacitance;
+            }
+            if !model.parameters.contains_key("VT0") {
+                let polarity = match mosfet_type {
+                    MosfetType::Nmos => 1.0,
+                    MosfetType::Pmos => -1.0,
+                };
+                let band_gap = silicon_band_gap_electron_volts(params.t_nom);
+                let gate_type = model_card_value(model, "TPG", 1.0);
+                let substrate_fermi_potential = polarity * 0.5 * params.phi;
+                let gate_work_function = if gate_type == 0.0 {
+                    3.2
+                } else {
+                    let gate_fermi_potential = polarity * gate_type * 0.5 * band_gap;
+                    3.25 + 0.5 * band_gap - gate_fermi_potential
+                };
+                let gate_substrate_work_function =
+                    gate_work_function - (3.25 + 0.5 * band_gap + substrate_fermi_potential);
+                let surface_state_shift =
+                    model_card_value(model, "NSS", 0.0) * 1.0e4 * ELECTRON_CHARGE
+                        / oxide_capacitance;
+                params.vt0 = gate_substrate_work_function - surface_state_shift
+                    + polarity * (params.gamma * params.phi.sqrt() + params.phi);
+            }
+        }
     }
     if let Some(value) = model.parameters.get("CGSO") {
         params.gate_source_overlap_capacitance = *value;

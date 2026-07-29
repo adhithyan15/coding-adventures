@@ -211,6 +211,87 @@ mod tests {
         );
     }
 
+    // ── milestone 10: faithful printf ───────────────────────────────────────
+
+    #[test]
+    fn printf_float_lowers_to_fmt_float_with_precision_and_kind() {
+        // `printf("%.2f\n", x)` → print(fmt_float(x, 2, "f"), "\n").
+        let m = lower("int main(void) { double x = 3.14; printf(\"%.2f\\n\", x); return 0; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(text.contains("fmt_float"), "no fmt_float:\n{text}");
+        assert!(text.contains("(int 2)"), "precision not 2:\n{text}");
+        assert!(text.contains("(builtin-call print"), "not a print:\n{text}");
+        // The trailing newline is emitted as literal text, not an auto-newline.
+        assert!(text.contains("(str \"\\n\")"), "no literal newline:\n{text}");
+        // Using a string makes the module declare Strings.
+        assert!(m.manifest.contains(semantic_ir::Feature::Strings));
+    }
+
+    #[test]
+    fn printf_default_float_precision_is_six() {
+        let m = lower("int main(void) { printf(\"%f\", 1.5); return 0; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(text.contains("fmt_float"), "no fmt_float:\n{text}");
+        assert!(text.contains("(int 6)"), "default precision not 6:\n{text}");
+    }
+
+    #[test]
+    fn printf_integer_conversion_passes_the_value_through() {
+        // `%d` needs no formatting builtin — the int prints as decimal directly.
+        let m = lower("int main(void) { int n = 5; printf(\"n=%d\\n\", n); return 0; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(!text.contains("fmt_float"), "int used fmt_float:\n{text}");
+        assert!(text.contains("(str \"n=\")"), "no literal prefix:\n{text}");
+        assert!(text.contains("(builtin-call print"), "not a print:\n{text}");
+    }
+
+    #[test]
+    fn printf_literal_only_format_needs_no_arguments() {
+        // Previously an error ("printf without a value argument"); now it prints
+        // the (escape-decoded) literal, and `%%` becomes a single `%`.
+        let m = lower("int main(void) { printf(\"100%% done\\n\"); return 0; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(text.contains("(str \"100% done\\n\")"), "bad literal:\n{text}");
+    }
+
+    #[test]
+    fn printf_unsupported_conversion_is_rejected() {
+        for (fmt, needle) in [
+            ("\"%s\\n\", 0", "%s"),
+            ("\"%x\\n\", 0", "%x"),
+            ("\"%5d\\n\", 0", "width"),
+            ("\"%-d\\n\", 0", "flag"),
+        ] {
+            let src = format!("int main(void) {{ printf({fmt}); return 0; }}");
+            let err = compile_source(&src, "test").unwrap_err();
+            assert!(
+                err.message.contains(needle),
+                "for {fmt}: wrong error: {}",
+                err.message
+            );
+        }
+    }
+
+    #[test]
+    fn printf_argument_count_mismatch_is_rejected() {
+        let err =
+            compile_source("int main(void) { printf(\"%d %d\\n\", 1); return 0; }", "test")
+                .unwrap_err();
+        assert!(
+            err.message.contains("more conversions than arguments"),
+            "wrong error: {}",
+            err.message
+        );
+        let err =
+            compile_source("int main(void) { printf(\"%d\\n\", 1, 2); return 0; }", "test")
+                .unwrap_err();
+        assert!(
+            err.message.contains("more arguments than conversions"),
+            "wrong error: {}",
+            err.message
+        );
+    }
+
     #[test]
     fn bitwise_operator_on_double_is_rejected() {
         // `%`, `&`, `<<`, `~` etc. are not defined on `double` in C — lowering

@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "id": "sharding/prerequisite-closed",
+  "domain": "sharding",
+  "summary": "Stable greedy assignments expand into prerequisite-closed shards with shared C/C++ toolchains.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "sharding"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "sharding",
+    "options": {
+      "packages": [
+        {
+          "name": "c/base",
+          "language": "c",
+          "build_command_count": 0
+        },
+        {
+          "name": "rust/heavy",
+          "language": "rust",
+          "build_command_count": 1
+        },
+        {
+          "name": "typescript/ui",
+          "language": "typescript",
+          "build_command_count": 0
+        }
+      ],
+      "edges": [
+        [
+          "c/base",
+          "rust/heavy"
+        ],
+        [
+          "c/base",
+          "typescript/ui"
+        ]
+      ],
+      "scheduled_packages": [
+        "rust/heavy",
+        "typescript/ui"
+      ],
+      "shard_count": 2
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "sharding/prerequisite-closed",
+    "domain": "sharding",
+    "outcome": "ok",
+    "result": {
+      "shards": [
+        {
+          "index": 0,
+          "name": "shard-1-of-2",
+          "assigned_packages": [
+            "rust/heavy"
+          ],
+          "package_names": [
+            "c/base",
+            "rust/heavy"
+          ],
+          "toolchains": [
+            "cpp",
+            "rust"
+          ],
+          "estimated_cost": 9
+        },
+        {
+          "index": 1,
+          "name": "shard-2-of-2",
+          "assigned_packages": [
+            "typescript/ui"
+          ],
+          "package_names": [
+            "c/base",
+            "typescript/ui"
+          ],
+          "toolchains": [
+            "cpp",
+            "typescript"
+          ],
+          "estimated_cost": 6
+        }
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

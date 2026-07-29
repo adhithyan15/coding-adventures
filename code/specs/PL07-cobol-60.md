@@ -207,7 +207,25 @@ new `COLON` token.
 
 Semantics are 1-based, so the byte range is `[start-1, start-1+length)`; an
 omitted length runs to the item end (`end = item_width`). Reference modification
-is supported in `DISPLAY` and alphanumeric-comparison (`IF`/`EVALUATE`) operands.
+is supported in `DISPLAY`, alphanumeric-comparison (`IF`/`EVALUATE`) operands, and
+as a **MOVE source** into an **alphanumeric** receiver (`MOVE base(start:length) TO
+dst`).
+
+**As a MOVE source.** A reference-modified source moved into an alphanumeric
+receiver reshapes the slice to the receiver's width by the ordinary alphanumeric
+char rule — LEFT-justified, space-padded on the right when the receiver is wider
+than the slice, truncated on the right when narrower — exactly as a same-category
+alphanumeric MOVE reshapes. The slice comes from the SAME helper `DISPLAY` and
+comparison use (the oracle's `refmod_string`, the compiler's `ref_mod_slice`), so a
+MOVE of a slice and a `DISPLAY` of the same slice agree byte-for-byte. Constant
+`SRC(2:3)`, omitted-length `SRC(3:)`, and computed `SRC(J:K)` indices are all
+supported, into one or more receivers (`MOVE SRC(1:3) TO A B`). A **numeric**
+receiver (de-editing a slice into a numeric field) remains a later rung, rejected
+on both engines. The compiler slices by BYTE offset and the oracle by CHAR index;
+on the ASCII-prefix windows this targets they coincide, so accepted programs emit
+byte-identical output (a multi-byte char inside or after the window is the
+pre-existing refmod byte-vs-char chip, shared with `DISPLAY`/comparison, not new to
+the MOVE-source path).
 
 **Constant (literal) indices.** When `start` and `length` are both integer
 literals, the compiler validates the range at compile time and lowers to a
@@ -238,9 +256,10 @@ applies the same predicate in `refmod_string`, returning `RefModOutOfRange`. So 
 **in-range** computed refmod slices byte-identically on the compiler and the
 oracle, and an **out-of-range** one errors on both — never a silently wrong slice.
 
-Reference modification of a numeric item, and use in a
-numeric/arithmetic/`MOVE`-source context, remain later rungs (for both constant
-and computed indices).
+Reference modification of a numeric item, and use in a numeric/arithmetic context
+(including a `MOVE` into a **numeric** receiver), remain later rungs (for both
+constant and computed indices). A `MOVE` of a reference-modified source into an
+**alphanumeric** receiver is supported (see "As a MOVE source" above).
 
 ## Layer Position
 
@@ -493,8 +512,34 @@ emits the usual `jmp_if_false`/branch/`label` skeleton guarding on the `overflow
 register. **Behaviour change:** the out-of-range `WITH POINTER` case previously
 returned with no imperative; it now runs `ON OVERFLOW`.
 
+**Reference-modification sending-field rung (now implemented).** A STRING sending
+field may itself be a **reference modification** — `STRING WS(2:3) DELIMITED BY {SIZE
+| delim} INTO t` — with **CONSTANT (literal) indices**. No grammar change was needed
+(the grammar's `operand` already carries an optional refmod suffix). The sliced
+substring is produced by the SAME shared refmod-substring evaluators every other
+context uses — the oracle's `refmod_string`, the compiler's `ref_mod_slice` — so a
+STRING of `WS(2:3)` is byte-identical to `DISPLAY WS(2:3)` and to a `MOVE WS(2:3)`
+source. Once produced, the substring is just another char image: it drops into the
+concatenation, the delimiter prefix-scan, the receiver overlay, and `WITH POINTER`
+UNCHANGED — no downstream logic special-cases it. Constant indices `WS(2:3)` and an
+omitted length `WS(3:)` are supported.
+
+The boundary is the **index kind**, and it is co-total: a **computed (data-name)
+index** — `STRING WS(J:K) …` — has a length known only at run time, which the STRING
+image contract (a compile-time `(register, length)` pair on the compiler; a produced
+`String` on the oracle) cannot carry, so it stays a clean "later rung" reject on BOTH
+engines. The compiler rejects it UP FRONT — before emitting any slice instructions —
+so no dead code is produced, and the oracle applies the identical literal-index test,
+keeping the accept/reject sets exactly aligned. Byte-vs-char: `ref_mod_slice` is
+byte-based and `refmod_string` char-based; they coincide on the ASCII-clean windows
+this rung targets (accepted programs emit byte-identical output). A multi-byte char
+inside or after the window is the PRE-EXISTING refmod byte-vs-char chip, shared with
+`DISPLAY`/`MOVE`-source and not new to STRING; positive tests keep any multi-byte char
+strictly OUTSIDE the window.
+
 Still deferred as clean "later rung" errors: a **multi-character** delimiter, a
-non-ASCII delimiter, a non-ASCII literal sending field under a delimiter, and
+non-ASCII delimiter, a non-ASCII literal sending field under a delimiter, a
+**computed (data-name) index** reference-modification sending field, and
 **per-field different delimiters** (all still *accepted* by the grammar so the reader
 can reject them cleanly rather than as a parse failure).
 
@@ -1650,6 +1695,58 @@ of rejecting it, so `ZERO = ZERO` / `SPACE = SPACE` are true, `ZERO ≠ SPACE`, 
 byte value (`'0'` = 0x30 > `' '` = 0x20) `ZERO > SPACE` / `SPACE < ZERO` — byte-for-byte
 identical on both engines. (This closed a reject-vs-answer gate divergence: the oracle
 already answered these while the compiler rejected them.)
+
+### Level-88 condition-name on an alphanumeric item (read + `SET … TO TRUE`, v0.67.0 / v0.63.0)
+
+A `88` condition-name registers a boolean over the immediately preceding item — its
+**conditional variable** — that holds when the variable equals any listed `VALUE`
+or falls within any inclusive `THRU` range. The earlier rung implemented this for a
+**numeric** conditional variable in both directions: reading it (`IF IS-DONE`) and
+setting it (`SET IS-DONE TO TRUE`, which assigns the first value / a range's low
+bound). This rung lifts both directions for an **alphanumeric** (`PIC X`) conditional
+variable, for the **discrete-string VALUE** case:
+
+```
+01  FLAG  PIC X VALUE "N".
+    88  IS-YES  VALUE "Y".
+    88  IS-NO   VALUE "N".
+```
+
+`IF IS-NO` is true (`FLAG` = `"N"`), `SET IS-YES TO TRUE` stores `"Y"`, and `IF IS-YES`
+is then true. Multiple discrete values OR-fold: `88 VOWEL VALUE "A" "E" "I"` holds when
+`FLAG` is any of them, and `SET VOWEL TO TRUE` assigns the first (`"A"`).
+
+- **Read.** When every VALUE item is a discrete string literal, the name holds when
+  the variable equals ANY of them under COBOL's **alphanumeric (byte) comparison** —
+  the *same* space-padded byte compare an `IF var = "…"` relation runs — OR-folded over
+  the values. A VALUE shorter than the field is space-padded to the field width, so
+  `88 IS-Y VALUE "Y"` matches `FLAG PIC X(3)` holding `"Y  "`. The oracle routes the
+  variable and each value through `compare_operands` (its alphanumeric arm); the
+  compiler emits a `cmp_eq` over the same `str_cmp` / space-pad path
+  (`emit_str_condition`) an alphanumeric `IF` uses, OR-folded with `or`. Reusing that
+  shared machinery is what makes the read byte-identical between the engines.
+- **Set.** `SET cond-name TO TRUE` stores the FIRST value into the slot exactly as
+  `MOVE "…" TO item`: the oracle's `move_into` (via `src_from_lit` → `Src::Chars`) and
+  the compiler's `format_into_picture` → slot `str_const`, both fitting the string to
+  the receiver width by the ordinary alphanumeric rule.
+- **Accept predicate (co-total).** Accepted **iff** the conditional variable is
+  alphanumeric AND every VALUE item is a discrete string (`Single(Str)`) — the same
+  `all_single_str` check on both engines, so they accept and reject the very same
+  programs.
+
+Deferred as clean later rungs (rejected identically on both engines): an alphanumeric
+**THRU range** (`88 X VALUE "A" THRU "Z"`) and a **numeric or figurative** VALUE on an
+alphanumeric 88 (`88 X VALUE 5`, `88 X VALUE SPACES`), plus a `88` over a **group**
+conditional variable. A `88` over an **unnamed** (`FILLER`) conditional variable
+(`01 FILLER PIC X. 88 IS-B VALUE "B".`) is likewise a later rung, rejected at
+build/collect time on both engines: the compiler does not model FILLERs in its item
+table (so the 88 would bind to the wrong, last-named item), while the oracle does, so
+this reject closes the divergence for both the alphanumeric and the (pre-existing
+latent) numeric FILLER-88 case. A `88` that follows a FILLER *and then a named item*
+binds to the named item and is accepted. The numeric level-88 paths are unchanged. The comparison and
+store are ASCII-clean (byte = char); a non-ASCII string VALUE or runtime value is the
+pre-existing alphanumeric byte-vs-char behavior inherited from the IF-alphanumeric
+path, not introduced here.
 
 ## Scope
 

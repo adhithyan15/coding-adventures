@@ -1,0 +1,26 @@
+% ============================================================================
+% linear-mass-density-conversions.query.adj — worked lookups over the NIST linear-mass-density →
+% kilogram-per-metre table.
+% ============================================================================
+% The shape a consumer produces to convert a linear mass density given in the traditional textile
+% unit into SI: it `import`s the grounded table and asks the engine to bind the factor. No arithmetic
+% and no factor is stated by the consumer; the engine returns the cell WITH the table's NIST citation
+% as its proof, on the CPU.
+%
+%   ? linear_mass_density_to_kilogram_per_metre(tex, $v)   % 0.000001   (tex = 1 E-06 kg/m, exact)
+%
+% And the dimension guard: a unit of a DIFFERENT quantity has no row, so the lookup ABSTAINS rather
+% than mis-converting across dimensions. The "pound" is a MASS unit (it converts to the kilogram),
+% NOT a linear-mass-density unit — so dropping the "per metre" that separates mass from mass-per-
+% length is caught rather than silently mis-converted:
+%
+%   ? linear_mass_density_to_kilogram_per_metre(pound, $v)   % abstains (pound is mass → kilogram)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli linear-mass-density-conversions.query.adj
+% ============================================================================
+
+import "linear-mass-density-conversions.adj"
+
+? linear_mass_density_to_kilogram_per_metre(tex, $v)     % expect 0.000001  (exact NIST SP 811 B.9 factor)
+? linear_mass_density_to_kilogram_per_metre(pound, $v)   % expect abstain   (mass unit, wrong dimension)

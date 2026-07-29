@@ -383,36 +383,53 @@ func TestResolveDependenciesDotnetPrefersSameLanguageOnSharedBasename(t *testing
 	}
 }
 
-func TestParseHaskellDepsSkipsSelfReference(t *testing.T) {
+func TestParseHaskellDepsSupportsPlainAndPrefixedNames(t *testing.T) {
 	root := makeFixture(t, map[string]string{
-		"build-tool/coding-adventures-build-tool.cabal": `cabal-version: 3.0
-name:          coding-adventures-build-tool
+		"build-tool/build-tool.cabal": `cabal-version: 3.0
+name:          build-tool
 version:       0.1.0
 
 library
     exposed-modules:  BuildTool
     build-depends:    base >=4.14
+                    , logic-gates >=0.1 && <0.2
+                    , coding-adventures-bitset
 
 test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
     build-depends:    base >=4.14
-                    , coding-adventures-build-tool
+                    , build-tool
                     , coding-adventures-logic-gates
 `,
-		"logic-gates/coding-adventures-logic-gates.cabal": `name: coding-adventures-logic-gates`,
+		"logic-gates/logic-gates.cabal":         `name: logic-gates`,
+		"bitset/coding-adventures-bitset.cabal": `name: coding-adventures-bitset`,
 	})
 
 	packages := []discovery.Package{
 		{Name: "haskell/programs/build-tool", Path: filepath.Join(root, "build-tool"), Language: "haskell"},
 		{Name: "haskell/logic-gates", Path: filepath.Join(root, "logic-gates"), Language: "haskell"},
+		{Name: "haskell/bitset", Path: filepath.Join(root, "bitset"), Language: "haskell"},
 	}
 
 	known := BuildKnownNames(packages)
 	deps := parseHaskellDeps(packages[0], known)
 
-	if len(deps) != 1 || deps[0] != "haskell/logic-gates" {
-		t.Fatalf("expected only haskell/logic-gates dependency, got %v", deps)
+	if len(deps) != 2 ||
+		deps[0] != "haskell/logic-gates" ||
+		deps[1] != "haskell/bitset" {
+		t.Fatalf("expected plain and prefixed Haskell dependencies without self-reference, got %v", deps)
+	}
+}
+
+func TestFindCabalFileRejectsMultipleManifests(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/first.cabal":  "name: first\n",
+		"pkg/second.cabal": "name: second\n",
+	})
+
+	if got := findCabalFile(filepath.Join(root, "pkg")); got != "" {
+		t.Fatalf("findCabalFile() = %q, want ambiguous manifests rejected", got)
 	}
 }
 

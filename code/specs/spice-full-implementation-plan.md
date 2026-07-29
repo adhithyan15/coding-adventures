@@ -33,14 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS bulk-junction leakage temperature scaling.
+1. Cross-language Level-1 MOS gate material.
    - Status: current PR completion candidate.
-   - Scale scalar `IS` and area-density `JS` through Level-1 MOS temperature
-     transforms using the shared silicon energy-gap saturation-current law.
-   - Preserve the nominal `JS / IS` relationship and route circuit-level
-     energy-gap configuration through MOS transforms.
-   - Keep Rust, Python, and TypeScript helper behavior, validation, tests, and
-     changelogs aligned.
+   - Accept Berkeley model-card `TPG` values `-1`, `0`, and `1` and include the
+     selected gate work function when deriving `VT0` from `NSUB` plus `TOX`.
+   - Preserve explicit `VTO` / `VT0` precedence and stable parameter coverage.
+   - Keep Rust, Python, and TypeScript model lowering, tests, and docs aligned.
 
 ## Completed Slices
 
@@ -3574,6 +3572,63 @@ the Rust, Python, and TypeScript surfaces together.
      mobility law already applied to `KP`.
    - Direct MOS temperature helpers and circuit-level transforms preserve the
      nominal `KP / U0` relationship in Rust, Python, and TypeScript.
+
+285. Cross-language Level-1 MOS bulk-junction leakage temperature scaling.
+   - Status: completed in PR 9126.
+   - Scalar `IS` and area-density `JS` scale through Level-1 MOS temperature
+     transforms using the shared silicon energy-gap saturation-current law.
+   - The nominal `JS / IS` relationship is preserved, and circuit-level
+     energy-gap configuration reaches MOS transforms in all three languages.
+
+286. Cross-language Level-1 MOS electrostatic temperature preprocessing.
+   - Status: completed in PR 9135.
+   - Berkeley MOS1 silicon band-gap preprocessing replaces the fixed threshold
+     shift for `PHI` and polarity-aware `VT0`.
+   - Direct MOS helpers and circuit-level transforms preserve matching
+     NMOS/PMOS behavior in Rust, Python, and TypeScript.
+
+287. Cross-language Level-1 MOS bulk-junction potential temperature preprocessing.
+   - Status: completed in PR 9142.
+   - Bulk-junction potential `PB` follows the Berkeley MOS1 silicon potential
+     correction alongside the existing electrostatic transform.
+   - Direct MOS helpers and circuit-level transforms preserve matching behavior
+     in Rust, Python, and TypeScript.
+
+288. Cross-language Level-1 MOS junction-capacitance temperature scaling.
+   - Status: completed in PR 9148.
+   - Zero-bias `CJ`, `CBS`, and `CBD` scale through the Berkeley MOS1 `MJ`
+     bottom-junction grading path.
+   - Zero-bias `CJSW` scales independently through `MJSW`, reusing the
+     temperature-adjusted bulk-junction potential in all three languages.
+
+289. Cross-language Level-1 MOS model nominal-temperature precedence.
+   - Status: completed in PR 9153.
+   - Non-default model-card `TNOM` is authoritative for Berkeley MOS1
+     temperature preprocessing while the default model value preserves the
+     circuit nominal temperature as the fallback.
+   - Direct MOS helpers and circuit-level temperature transforms preserve
+     matching behavior in Rust, Python, and TypeScript.
+
+290. Cross-language Level-1 MOS substrate-doping electrostatic derivation.
+   - Status: completed in PR 9156.
+   - Model-card `NSUB` plus `TOX` derives `PHI` and `GAMMA` using the Berkeley
+     MOS1 process-parameter equations.
+   - Explicit `PHI` / `GAMMA` takes precedence, and substrate doping at or below
+     the intrinsic carrier density is rejected in Rust, Python, and TypeScript.
+
+291. Cross-language Level-1 MOS process-derived threshold voltage.
+   - Status: completed in PR 9160.
+   - Model-card `NSUB` plus `TOX` derives polarity-aware `VT0` using Berkeley
+     MOS1 default gate-work-function and surface-state assumptions.
+   - Explicit `VTO` / `VT0` takes precedence for NMOS and PMOS across Rust,
+     Python, and TypeScript.
+
+292. Cross-language Level-1 MOS surface-state density.
+   - Status: completed in PR 9163.
+   - Model-card `NSS` contributes the Berkeley oxide-charge flat-band shift
+     when `VT0` is derived from `NSUB` plus `TOX`.
+   - Explicit `VTO` / `VT0` precedence, normalized parameter coverage, and
+     matching NMOS/PMOS behavior are preserved across all three languages.
 
 ## Backlog
 

@@ -1302,6 +1302,177 @@ fn shipped_electric_conductance_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b29) The shipped NIST SP 811 B.9 electric-current → ampere table resolves the exact abampere
+//       factor with its citation, and ABSTAINS on a wrong-dimension unit. This EXTENDS the
+//       electromagnetic-EMU family (charge/potential/resistance/capacitance/inductance/conductance)
+//       with current — the abampere is the BASE EMU electrical unit. The abampere (current) and the
+//       abcoulomb (charge) are DIFFERENT quantities that convert to DIFFERENT SI units (ampere vs
+//       coulomb) yet NIST prints the SAME numeric factor 1.0 E+01 for both, so the abstain is a
+//       genuine dimension check rather than a value coincidence, not mere absence of a value.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_electric_current_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_current");
+    let src = stdlib().join("reference/electric-current-conversions.adj");
+    std::fs::copy(&src, dir.join("electric-current-conversions.adj"))
+        .expect("copy shipped electric-current-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"electric-current-conversions.adj\"\n\
+         ? electric_current_to_ampere(abampere, $v)\n\
+         ? electric_current_to_ampere(abcoulomb, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table
+    // (boldface = exact; the abampere is defined as exactly 1.0 E+01 ampere, the base EMU unit).
+    assert!(out.contains("\"v\":\"10\""), "abampere = 1.0 E+01 A: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `abcoulomb` is a CHARGE unit (it converts to the coulomb, a DIFFERENT quantity), so this
+    // current table has no row for it — the engine abstains rather than mis-converting a charge
+    // unit as if it were a current unit, even though NIST prints the same 1.0 E+01 factor for it.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// (b30) The shipped NIST SP 811 B.9 wave-number → reciprocal-metre table resolves the exact kayser
+//       factor with its citation, and ABSTAINS on a wrong-dimension unit. This opens a NEW dimension
+//       — WAVE NUMBER (spatial frequency, wavelengths per unit length) — beyond the length/mass/…/
+//       electric family. The kayser (wave number) and the angstrom (length/wavelength) are RECIPROCAL
+//       quantities that convert to DIFFERENT SI units (m⁻¹ vs m), so the abstain guards the
+//       wavelength-versus-wavenumber confusion directly, not mere absence of a value: the kayser is
+//       one reciprocal centimetre = exactly 100 reciprocal metres.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_wave_number_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_wavenumber");
+    let src = stdlib().join("reference/wave-number-conversions.adj");
+    std::fs::copy(&src, dir.join("wave-number-conversions.adj"))
+        .expect("copy shipped wave-number-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"wave-number-conversions.adj\"\n\
+         ? wave_number_to_reciprocal_metre(kayser, $v)\n\
+         ? wave_number_to_reciprocal_metre(angstrom, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table
+    // (boldface = exact; the kayser is one reciprocal centimetre = exactly 1 E+02 reciprocal metres).
+    assert!(out.contains("\"v\":\"100\""), "kayser = 1 E+02 m^-1: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `angstrom` is a LENGTH (wavelength) unit (it converts to the metre, a DIFFERENT quantity), so
+    // this wave-number table has no row for it — the engine abstains rather than mis-converting a
+    // length unit as if it were a wave-number unit (its reciprocal).
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// (b31) The shipped NIST SP 811 B.9 linear-mass-density → kilogram-per-metre table resolves the exact
+//       tex factor with its citation, and ABSTAINS on a wrong-dimension unit. This opens a NEW
+//       dimension — LINEAR MASS DENSITY (mass per unit length, the titre of a fibre/yarn) — beyond
+//       the length/mass/…/wave-number and electric families. The tex (linear mass density → kg/m) and
+//       the pound (plain mass → kg) are DIFFERENT quantities that convert to DIFFERENT SI units
+//       (kg/m vs kg), so the abstain guards the mass-versus-mass-per-length confusion (dropping the
+//       "per metre") directly, not mere absence of a value: the tex is one gram per kilometre =
+//       exactly 1 E-06 kilogram per metre.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_linear_mass_density_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_lineardensity");
+    let src = stdlib().join("reference/linear-mass-density-conversions.adj");
+    std::fs::copy(&src, dir.join("linear-mass-density-conversions.adj"))
+        .expect("copy shipped linear-mass-density-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"linear-mass-density-conversions.adj\"\n\
+         ? linear_mass_density_to_kilogram_per_metre(tex, $v)\n\
+         ? linear_mass_density_to_kilogram_per_metre(pound, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table
+    // (boldface = exact; the tex is one gram per kilometre = exactly 1 E-06 kilogram per metre).
+    assert!(out.contains("\"v\":\"0.000001\""), "tex = 1 E-06 kg/m: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `pound` is a MASS unit (it converts to the kilogram, a DIFFERENT quantity), so this
+    // linear-mass-density table has no row for it — the engine abstains rather than mis-converting a
+    // mass unit as if it were a mass-per-length unit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// (b32) The shipped NIST SP 811 B.9 temperature-interval → kelvin table resolves the exact degree-
+//       Celsius factor with its citation, and ABSTAINS on a wrong-dimension unit. This opens a NEW
+//       dimension — TEMPERATURE INTERVAL (a DIFFERENCE of temperatures, not a point reading) — beyond
+//       the length/mass/…/linear-mass-density and electric families. A Celsius-degree interval is
+//       EXACTLY one kelvin (the scales share a unit step; the 273.15 offset applies only to POINTS,
+//       which are an ADDITION, not a factor, hence absent). The Celsius degree (temperature interval →
+//       kelvin) and the bare "degree" (plane angle → radian) are DIFFERENT quantities that convert to
+//       DIFFERENT SI units (K vs rad) yet share the "°" symbol, so the abstain guards that notational
+//       confusion directly, not mere absence of a value.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_temperature_interval_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_tempinterval");
+    let src = stdlib().join("reference/temperature-interval-conversions.adj");
+    std::fs::copy(&src, dir.join("temperature-interval-conversions.adj"))
+        .expect("copy shipped temperature-interval-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"temperature-interval-conversions.adj\"\n\
+         ? temperature_interval_to_kelvin(degree_celsius, $v)\n\
+         ? temperature_interval_to_kelvin(degree, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table
+    // (boldface = exact; a Celsius-degree interval is exactly 1 kelvin).
+    assert!(out.contains("\"v\":\"1\""), "degree Celsius interval = 1.0 E+00 K: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // The bare `degree` is a PLANE-ANGLE unit (it converts to the radian, a DIFFERENT quantity), so
+    // this temperature-interval table has no row for it — the engine abstains rather than mis-
+    // converting an angle as if it were a temperature, despite the shared "°" symbol.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 

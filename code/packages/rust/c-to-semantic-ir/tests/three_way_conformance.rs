@@ -676,6 +676,56 @@ fn corpus() -> Vec<Case> {
                    int main(void) { int a[3] = {10, 20, 30}; int i = 0; \
                    printf(\"%d\\n\", a[i + 1]); return 0; }",
         },
+        // ── milestone 10: faithful printf (float DISPLAY, no (int) cast) ──────
+        // These print doubles *directly* with `%f`/`%.Nf` and assert the emitted
+        // text is byte-identical to reference C's printf — the payoff of the
+        // faithful format lowering.  Restricted to FIXED notation (`%f`): the
+        // exponent forms `%e`/`%g` format their exponent with a platform-varying
+        // digit count (Windows libc `e+004` vs Ruby/UCRT `e+04`), so those are
+        // supported by the lowering but deliberately kept out of the byte-
+        // identical corpus.  Values avoid exact-half precision boundaries so C
+        // and Ruby rounding never disagree.
+        Case {
+            label: "printf %f default precision 3.14 → 3.140000",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { double x = 3.14; printf(\"%f\\n\", x); return 0; }",
+        },
+        Case {
+            label: "printf %.2f rounds 3.14159 → 3.14",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { printf(\"%.2f\\n\", 3.14159); return 0; }",
+        },
+        Case {
+            label: "printf %.4f rounds up 3.14159 → 3.1416 with literal text",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { printf(\"pi is about %.4f today\\n\", 3.14159); return 0; }",
+        },
+        Case {
+            label: "printf %.1f of a computed double 7.0/2.0 → 3.5",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { printf(\"%.1f\\n\", 7.0 / 2.0); return 0; }",
+        },
+        Case {
+            label: "printf negative double %.2f -1.5 → -1.50",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { printf(\"%.2f\\n\", -1.5); return 0; }",
+        },
+        Case {
+            label: "printf mixed %d and %.2f in one call → n=3 avg=2.50",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { printf(\"n=%d avg=%.2f\\n\", 3, 2.5); return 0; }",
+        },
+        Case {
+            label: "printf %.2f of a double param/return area(3.0) → 12.00",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   double area(double r) { return r * r + r; }\n\
+                   int main(void) { printf(\"%.2f\\n\", area(3.0)); return 0; }",
+        },
+        Case {
+            label: "printf literal-only format (no conversions) passes through",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { printf(\"no args, 100%% literal\\n\"); return 0; }",
+        },
     ]
 }
 

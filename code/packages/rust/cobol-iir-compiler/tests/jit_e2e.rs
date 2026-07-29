@@ -815,6 +815,181 @@ fn level_88_mixed_singles_and_range() {
 }
 
 // -------------------------------------------------------------------------
+// Level-88 condition-name on an ALPHANUMERIC (`PIC X`) item (read + SET TO
+// TRUE) — vs the oracle. A discrete-string VALUE reads and SETs like a MOVE;
+// a THRU range or a non-string VALUE stays a later rung, rejected on both.
+// -------------------------------------------------------------------------
+
+#[test]
+fn level_88_alphanumeric_read_true_branch() {
+    // FLAG holds "N"; IS-N (VALUE "N") is true, so the THEN branch runs.
+    let out = assert_matches_oracle(&wrap(
+        &["01  FLAG  PIC X VALUE \"N\".", "88  IS-N  VALUE \"N\"."],
+        &["IF IS-N DISPLAY \"yes\" ELSE DISPLAY \"no\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "yes\n");
+}
+
+#[test]
+fn level_88_alphanumeric_read_false_branch() {
+    // FLAG holds "Y"; IS-N (VALUE "N") is false, so the ELSE branch runs.
+    let out = assert_matches_oracle(&wrap(
+        &["01  FLAG  PIC X VALUE \"Y\".", "88  IS-N  VALUE \"N\"."],
+        &["IF IS-N DISPLAY \"yes\" ELSE DISPLAY \"no\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "no\n");
+}
+
+#[test]
+fn level_88_alphanumeric_set_to_true_then_display() {
+    // SET IS-Y TO TRUE stores "Y" (IS-Y VALUE "Y") into FLAG; DISPLAY shows "Y".
+    let out = assert_matches_oracle(&wrap(
+        &["01  FLAG  PIC X VALUE \"N\".", "88  IS-Y  VALUE \"Y\"."],
+        &["SET IS-Y TO TRUE.", "DISPLAY FLAG.", "STOP RUN."],
+    ));
+    assert_eq!(out, "Y\n");
+}
+
+#[test]
+fn level_88_alphanumeric_set_to_true_then_read() {
+    // After SET IS-Y TO TRUE, IS-Y holds, so the guarded DISPLAY runs.
+    let out = assert_matches_oracle(&wrap(
+        &["01  FLAG  PIC X VALUE \"N\".", "88  IS-Y  VALUE \"Y\"."],
+        &["SET IS-Y TO TRUE.", "IF IS-Y DISPLAY \"ok\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "ok\n");
+}
+
+#[test]
+fn level_88_alphanumeric_multiple_discrete_values_or_fold() {
+    // 88 VOWEL VALUE "A" "E" "I" — an OR-fold of alphanumeric equalities. FLAG="E"
+    // hits; FLAG="B" misses. Byte-identical to the oracle's any-value match.
+    let hit = assert_matches_oracle(&wrap(
+        &["01  FLAG  PIC X VALUE \"E\".", "88  VOWEL  VALUE \"A\" \"E\" \"I\"."],
+        &["IF VOWEL DISPLAY \"Y\" ELSE DISPLAY \"N\".", "STOP RUN."],
+    ));
+    assert_eq!(hit, "Y\n");
+    let miss = assert_matches_oracle(&wrap(
+        &["01  FLAG  PIC X VALUE \"B\".", "88  VOWEL  VALUE \"A\" \"E\" \"I\"."],
+        &["IF VOWEL DISPLAY \"Y\" ELSE DISPLAY \"N\".", "STOP RUN."],
+    ));
+    assert_eq!(miss, "N\n");
+    // And SET assigns the FIRST value "A", which then satisfies VOWEL.
+    let set = assert_matches_oracle(&wrap(
+        &["01  FLAG  PIC X VALUE \"B\".", "88  VOWEL  VALUE \"A\" \"E\" \"I\"."],
+        &["SET VOWEL TO TRUE.", "DISPLAY FLAG.", "STOP RUN."],
+    ));
+    assert_eq!(set, "A\n");
+}
+
+#[test]
+fn level_88_alphanumeric_multi_char_field_space_padding() {
+    // FLAG PIC X(3) VALUE "Y" holds "Y  " (space-padded); 88 IS-Y VALUE "Y" is one
+    // character. The comparison space-pads the value to the field width, so the
+    // shorter VALUE still matches — byte-identical padding on both engines.
+    let out = assert_matches_oracle(&wrap(
+        &["01  FLAG  PIC X(3) VALUE \"Y\".", "88  IS-Y  VALUE \"Y\"."],
+        &["IF IS-Y DISPLAY \"yes\" ELSE DISPLAY \"no\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "yes\n");
+    // The exact multi-character VALUE "YES" against a PIC X(3) field also matches.
+    let exact = assert_matches_oracle(&wrap(
+        &["01  FLAG  PIC X(3) VALUE \"YES\".", "88  IS-YES  VALUE \"YES\"."],
+        &["IF IS-YES DISPLAY \"yes\" ELSE DISPLAY \"no\".", "STOP RUN."],
+    ));
+    assert_eq!(exact, "yes\n");
+}
+
+#[test]
+fn level_88_alphanumeric_thru_range_is_a_later_rung() {
+    // 88 X VALUE "A" THRU "Z" on an alphanumeric variable — the alphanumeric THRU
+    // range stays a later rung, rejected IDENTICALLY on both engines.
+    let src = wrap(
+        &["01  FLAG  PIC X VALUE \"M\".", "88  IN-RANGE  VALUE \"A\" THRU \"Z\"."],
+        &["IF IN-RANGE DISPLAY \"yes\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject an alphanumeric THRU 88");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject an alphanumeric THRU 88");
+}
+
+#[test]
+fn level_88_alphanumeric_numeric_value_is_a_later_rung() {
+    // 88 X VALUE 5 on a PIC X variable — a non-string VALUE on an alphanumeric 88
+    // stays a later rung, rejected IDENTICALLY on both engines.
+    let src = wrap(
+        &["01  FLAG  PIC X VALUE \"5\".", "88  IS-FIVE  VALUE 5."],
+        &["IF IS-FIVE DISPLAY \"yes\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a numeric VALUE on an alphanumeric 88");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a numeric VALUE on an alphanumeric 88"
+    );
+}
+
+#[test]
+fn level_88_on_an_alphanumeric_filler_is_a_later_rung() {
+    // A level-88 whose conditional variable is an UNNAMED (FILLER) alphanumeric item
+    // binds to DIFFERENT items on the two engines (the compiler drops the FILLER, the
+    // oracle models it), so it is rejected co-totally on BOTH — reading and setting.
+    let read = wrap(
+        &["01  FILLER  PIC X VALUE \"Z\".", "88  IS-B  VALUE \"B\"."],
+        &["IF IS-B DISPLAY \"yes\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&read).is_err(), "oracle must reject a FILLER alphanumeric 88 (read)");
+    assert!(
+        compile_source(&read, "e2e").is_err(),
+        "compiler must reject a FILLER alphanumeric 88 (read)"
+    );
+    let set = wrap(
+        &["01  FILLER  PIC X VALUE \"Z\".", "88  IS-B  VALUE \"B\"."],
+        &["SET IS-B TO TRUE.", "STOP RUN."],
+    );
+    assert!(run_cobol(&set).is_err(), "oracle must reject a FILLER alphanumeric 88 (SET)");
+    assert!(
+        compile_source(&set, "e2e").is_err(),
+        "compiler must reject a FILLER alphanumeric 88 (SET)"
+    );
+}
+
+#[test]
+fn level_88_on_a_numeric_filler_is_a_later_rung() {
+    // The pre-existing latent divergence: a numeric FILLER-88 was already reachable
+    // and diverging. It is now rejected co-totally on BOTH engines, reading and
+    // setting — the numeric level-88 FILLER case is closed alongside the new
+    // alphanumeric one.
+    let read = wrap(
+        &["01  FILLER  PIC 9 VALUE 5.", "88  IS-NINE  VALUE 9."],
+        &["IF IS-NINE DISPLAY \"yes\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&read).is_err(), "oracle must reject a FILLER numeric 88 (read)");
+    assert!(
+        compile_source(&read, "e2e").is_err(),
+        "compiler must reject a FILLER numeric 88 (read)"
+    );
+    let set = wrap(
+        &["01  FILLER  PIC 9 VALUE 5.", "88  IS-NINE  VALUE 9."],
+        &["SET IS-NINE TO TRUE.", "STOP RUN."],
+    );
+    assert!(run_cobol(&set).is_err(), "oracle must reject a FILLER numeric 88 (SET)");
+    assert!(
+        compile_source(&set, "e2e").is_err(),
+        "compiler must reject a FILLER numeric 88 (SET)"
+    );
+}
+
+#[test]
+fn level_88_after_a_filler_then_named_item_still_works() {
+    // Only an 88 IMMEDIATELY following a FILLER rejects: here the 88 follows the
+    // NAMED KEEP (not the preceding FILLER), so it is accepted and answers normally.
+    let out = assert_matches_oracle(&wrap(
+        &["01  FILLER  PIC X VALUE \"Z\".", "01  KEEP  PIC X VALUE \"Y\".", "88  IS-Y  VALUE \"Y\"."],
+        &["IF IS-Y DISPLAY \"ok\" ELSE DISPLAY \"no\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "ok\n");
+}
+
+// -------------------------------------------------------------------------
 // Scaled-decimal ADD / SUBTRACT + item→item MOVE (PR3) — vs the oracle.
 // -------------------------------------------------------------------------
 
@@ -2604,6 +2779,256 @@ fn refmod_computed_zero_start_traps_on_both_engines() {
         &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J   PIC 9 VALUE 0."],
         &["DISPLAY WS(J:2).", "STOP RUN."],
     ));
+}
+
+// ---------------------------------------------------------------------------
+// Reference-modification SOURCE of a MOVE — `MOVE base(start:len) TO dst` into
+// an ALPHANUMERIC receiver. The slice is fit to the receiver's width by the
+// ordinary alphanumeric char rule (left-justify; space-pad if wider; truncate
+// if narrower), exactly as a same-category char MOVE reshapes. A numeric
+// receiver stays a later rung, rejected on both engines. Every accepted case
+// pins the compiled JIT output to the oracle byte-for-byte.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn refmod_move_source_mid_substring() {
+    // WS = "ABCDE"; MOVE WS(2:3) → "BCD" into an equal-width receiver.
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  DST PIC X(3)."],
+        &["MOVE WS(2:3) TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "BCD\n");
+}
+
+#[test]
+fn refmod_move_source_omitted_length_runs_to_end() {
+    // MOVE WS(3:) → from position 3 to the end → "CDE".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  DST PIC X(3)."],
+        &["MOVE WS(3:) TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "CDE\n");
+}
+
+#[test]
+fn refmod_move_source_single_leading_char() {
+    // MOVE WS(1:1) → the first character "A".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  DST PIC X(1)."],
+        &["MOVE WS(1:1) TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "A\n");
+}
+
+#[test]
+fn refmod_move_source_into_wider_receiver_space_pads() {
+    // The 2-char slice "BC" into a 5-wide receiver → left-justified, tail spaces.
+    // A trailing marker proves the two padding spaces are present.
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  DST PIC X(5)."],
+        &["MOVE WS(2:2) TO DST.", "DISPLAY DST \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "BC   |\n");
+}
+
+#[test]
+fn refmod_move_source_into_narrower_receiver_truncates() {
+    // The 4-char slice "BCDE" into a 2-wide receiver → keep the leftmost two "BC".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  DST PIC X(2)."],
+        &["MOVE WS(2:4) TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "BC\n");
+}
+
+#[test]
+fn refmod_move_source_computed_index() {
+    // A computed (data-name) index takes the run-time slice-fit path: WS(J:K) with
+    // J=2, K=3 → "BCD", into an equal-width receiver.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  WS  PIC X(5) VALUE \"ABCDE\".",
+            "01  J   PIC 9 VALUE 2.",
+            "01  K   PIC 9 VALUE 3.",
+            "01  DST PIC X(3).",
+        ],
+        &["MOVE WS(J:K) TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "BCD\n");
+}
+
+#[test]
+fn refmod_move_source_computed_index_into_wider_receiver_space_pads() {
+    // Run-time-length slice fit into a WIDER receiver: WS(J:2)="BC" (J=2) into a
+    // 5-wide receiver → "BC   ". Exercises the run-time concat-then-truncate pad.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  WS  PIC X(5) VALUE \"ABCDE\".",
+            "01  J   PIC 9 VALUE 2.",
+            "01  DST PIC X(5).",
+        ],
+        &["MOVE WS(J:2) TO DST.", "DISPLAY DST \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "BC   |\n");
+}
+
+#[test]
+fn refmod_move_source_multiple_receivers() {
+    // MOVE WS(1:2) TO A B → "AB" into both receivers (the loop over receivers).
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  WS  PIC X(5) VALUE \"ABCDE\".",
+            "01  A   PIC X(2).",
+            "01  B   PIC X(4).",
+        ],
+        &["MOVE WS(1:2) TO A B.", "DISPLAY A \"|\".", "DISPLAY B \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "AB|\nAB  |\n");
+}
+
+#[test]
+fn refmod_move_source_ascii_prefix_window_non_ascii_outside() {
+    // Non-ASCII CLEANLINESS: the multi-byte char 'é' sits at the END of the source,
+    // strictly OUTSIDE the (1:3) window, so byte-index == char-index within the
+    // window and the byte-based (compiler) and char-based (oracle) slices coincide
+    // → "abc", byte-identical. (A window covering/following a multi-byte char is
+    // the pre-existing refmod byte-vs-char chip, deliberately not exercised here.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"abcdé\".", "01  DST PIC X(3)."],
+        &["MOVE WS(1:3) TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "abc\n");
+}
+
+#[test]
+fn refmod_move_source_into_numeric_receiver_is_a_later_rung() {
+    // The remaining boundary: a refmod MOVE source into a NUMERIC receiver stays a
+    // later rung, rejected on BOTH engines (de-editing a slice into a numeric field
+    // is not lowered on this rung).
+    let src = wrap(
+        &["01  WS  PIC X(5) VALUE \"12345\".", "01  NUM PIC 9(3)."],
+        &["MOVE WS(1:3) TO NUM.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a refmod MOVE into a numeric receiver");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a refmod MOVE into a numeric receiver"
+    );
+}
+
+// STRING with a reference-modification SENDING FIELD — `WS(start:len)`
+// contributes its sliced substring as the field's char image, produced by the
+// SAME refmod-substring evaluators DISPLAY / comparison / MOVE-source use
+// (`refmod_string` in the oracle, `ref_mod_slice` in the compiler). Only
+// CONSTANT (literal) indices are accepted; a computed (data-name) index stays a
+// later rung, rejected IDENTICALLY on both engines. Positive tests use ASCII
+// data so the byte-based (compiler) and char-based (oracle) slices coincide.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn string_refmod_source_mid_substring() {
+    // A single refmod sending field, DELIMITED BY SIZE: WS(2:3) of "ABCDEF" is the
+    // 3-char slice starting at 1-based position 2 → "BCD", left-justified into a
+    // 6-wide receiver whose untouched tail stays blank.
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(6) VALUE \"ABCDEF\".", "01  DST PIC X(6) VALUE SPACES."],
+        &["STRING WS(2:3) DELIMITED BY SIZE INTO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "BCD   \n");
+}
+
+#[test]
+fn string_refmod_source_omitted_length_runs_to_end() {
+    // An omitted length runs to the end of the base item: WS(3:) of "ABCDEF" →
+    // "CDEF".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(6) VALUE \"ABCDEF\".", "01  DST PIC X(6) VALUE SPACES."],
+        &["STRING WS(3:) DELIMITED BY SIZE INTO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "CDEF  \n");
+}
+
+#[test]
+fn string_refmod_source_concatenated_with_literal_and_item() {
+    // The refmod image composes in the concat exactly like a plain field: WS(1:2)
+    // ++ "-" ++ WS(4:2) of "ABCDEF" → "AB" ++ "-" ++ "DE" = "AB-DE".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(6) VALUE \"ABCDEF\".", "01  DST PIC X(8) VALUE SPACES."],
+        &[
+            "STRING WS(1:2) \"-\" WS(4:2) DELIMITED BY SIZE INTO DST.",
+            "DISPLAY DST.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "AB-DE   \n");
+}
+
+#[test]
+fn string_refmod_source_under_a_delimiter() {
+    // Under DELIMITED BY a single-char delimiter the refmod image is truncated at
+    // its first delimiter char, like any field: WS(1:5) of "ab,cdef" is "ab,cd",
+    // whose prefix up to the first "," is "ab".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(7) VALUE \"ab,cdef\".", "01  DST PIC X(6) VALUE SPACES."],
+        &["STRING WS(1:5) DELIMITED BY \",\" INTO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ab    \n");
+}
+
+#[test]
+fn string_refmod_source_with_pointer() {
+    // The refmod image composes with WITH POINTER without special-casing: WS(2:3)
+    // of "ABCDEF" = "BCD" overlaid from pointer 1 into a "......" receiver → "BCD..."
+    // with the pointer written back to 1 + 3 = 4 ("04").
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  WS  PIC X(6) VALUE \"ABCDEF\".",
+            "01  DST PIC X(6) VALUE \"......\".",
+            "01  P   PIC 9(2) VALUE 1.",
+        ],
+        &[
+            "STRING WS(2:3) DELIMITED BY SIZE INTO DST WITH POINTER P.",
+            "DISPLAY DST.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "BCD...\n04\n");
+}
+
+#[test]
+fn string_refmod_source_ascii_window_non_ascii_outside() {
+    // Non-ASCII CLEANLINESS: 'é' sits at the END of "abcdé", strictly OUTSIDE the
+    // (1:3) window, so byte-index == char-index within the window and the byte-based
+    // (compiler) and char-based (oracle) slices coincide → "abc", byte-identical. (A
+    // window covering/following a multi-byte char is the pre-existing refmod
+    // byte-vs-char chip, deliberately not exercised here.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"abcdé\".", "01  DST PIC X(3) VALUE SPACES."],
+        &["STRING WS(1:3) DELIMITED BY SIZE INTO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "abc\n");
+}
+
+#[test]
+fn string_refmod_source_computed_index_is_a_later_rung() {
+    // A COMPUTED (data-name) index gives a run-time length the compiler's compile-
+    // time STRING image contract cannot carry, so a refmod sending field with a
+    // data-name index stays a later rung — rejected IDENTICALLY on BOTH engines.
+    let src = wrap(
+        &[
+            "01  WS  PIC X(6) VALUE \"ABCDEF\".",
+            "01  DST PIC X(6) VALUE SPACES.",
+            "01  J   PIC 9 VALUE 2.",
+            "01  K   PIC 9 VALUE 3.",
+        ],
+        &["STRING WS(J:K) DELIMITED BY SIZE INTO DST.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a computed-index refmod STRING source");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a computed-index refmod STRING source"
+    );
 }
 
 // STRING — concatenate sending fields into an alphanumeric receiver

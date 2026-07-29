@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "id": "toolchain-detection/shared-and-forced",
+  "domain": "toolchain_detection",
+  "summary": "Selected shared-language families collapse to canonical toolchains and forced CI toolchains union in.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "toolchain_detection"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "toolchain_detection",
+    "options": {
+      "packages": [
+        {
+          "name": "csharp/app",
+          "language": "csharp"
+        },
+        {
+          "name": "python/unused",
+          "language": "python"
+        },
+        {
+          "name": "wasm/plugin",
+          "language": "wasm"
+        }
+      ],
+      "scheduled_packages": [
+        "csharp/app",
+        "wasm/plugin"
+      ],
+      "forced_toolchains": [
+        "kotlin"
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "toolchain-detection/shared-and-forced",
+    "domain": "toolchain_detection",
+    "outcome": "ok",
+    "result": {
+      "toolchains": {
+        "cpp": false,
+        "dart": false,
+        "dotnet": true,
+        "elixir": false,
+        "go": false,
+        "haskell": false,
+        "java": false,
+        "kotlin": true,
+        "lua": false,
+        "ocaml": false,
+        "perl": false,
+        "python": false,
+        "ruby": false,
+        "rust": true,
+        "swift": false,
+        "typescript": false
+      }
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

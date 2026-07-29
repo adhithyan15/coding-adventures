@@ -49,9 +49,10 @@ Deliberately small and honest, focused on the type/wrap/truncate story:
   optional `u`/`l`/`ll` suffix, parenthesised expression).
 - **Statements:** expression statement, `if`/`else`, `while`, `for`, `return`,
   compound `{ … }`.
-- **Output:** a restricted `printf` — `printf("<fmt>", e)` where `<fmt>` is a
-  single integer conversion (`%d`/`%u`/`%ld`/`%lld`/…) optionally followed by
-  `\n` — lowers to the SIR `print`/`puts` builtin; and `putchar(e)`.
+- **Output:** a faithful `printf` (see the milestone-10 section) — the format
+  string is parsed into literal chunks and `%d`/`%i`/`%u` and `%f`/`%e`/`%g`
+  conversions (with optional `.precision`), each formatted per C's rules; and
+  `putchar(e)`.
 - **Preprocessor:** only `#include <stdint.h>` / `#include <stdio.h>` (ignored).
   No `#define`, no macros, no other directives.
 
@@ -455,6 +456,48 @@ The corpus proves literal/loop reads, indexed writes, loop fill, computed
 indices, partial-init zero-fill, and per-element width wraparound byte-identical
 across reference C, emitted Ruby, and emitted C.
 
+## Faithful `printf` (milestone 10)
+
+Milestone 9's conformance dodged float *display* by casting to `(int)`.
+Milestone 10 removes the dodge: a C program can print a `double` with `%f` and
+get byte-identical output across all three legs.
+
+**The format string never reaches a backend.**  The frontend owns all
+format-string parsing (`parse_printf_format`) — a backend receiving a
+source-derived format string would be a classic format-string vulnerability.
+`printf("<fmt>", args…)` lowers to a single **`print(seg₀, seg₁, …)`** whose
+segments are a *fixed* sequence of typed pieces:
+
+- a **literal chunk** (the text between conversions, with C escapes like `\n`
+  already decoded) → a `StrLit`.  The backend's own string emitter re-escapes it,
+  so no source text is emitted raw.  `%%` becomes a literal `%`.
+- `%d` / `%i` / `%u` → the matched integer value **passed straight through**.
+  `print` renders an integer as decimal, which is exactly `%d`; and because a
+  `%u` value has already been masked non-negative by its `Convert`, its decimal
+  is the unsigned value.  No new builtin is needed.
+- `%f` / `%F` / `%e` / `%E` / `%g` / `%G` (with an optional `.precision`,
+  default 6) → a **`fmt_float(value, precision, kind)`** builtin.  Both backends
+  implement it with their C-compatible `sprintf`/`snprintf`, switching on the
+  *fixed* `kind` character to choose a literal format (`"%.*f"`, `"%.*e"`, …) —
+  so the precision is a runtime `*` argument but the format itself is never
+  built from source text.
+
+`print` concatenates its arguments with no separator and adds **no** trailing
+newline, so a `\n` in the format is emitted as literal text — unlike the old
+lowering, which auto-added a newline and discarded the format's literal content.
+
+**Honest boundaries.**  Field width (`%5d`), flags (`%-`, `%+`, `%0`, `%#`), and
+the conversions `%c`/`%s`/`%x`/`%p`/`%n` are **refused** with a positioned error
+rather than mis-formatted — each is a future slice.  Precision is capped
+(`MAX_PRINTF_PRECISION`) as a DoS guard against a source baking in `%.99999999f`.
+
+**Conformance.**  The corpus now prints doubles *directly* with `%f`/`%.Nf` and
+asserts byte-identical text.  It is restricted to **fixed notation**: `%e`/`%g`
+format their exponent with a platform-varying digit count (Windows libc `e+004`
+vs Ruby/UCRT `e+04`), so those conversions are supported by the lowering but kept
+out of the byte-identical corpus, and the corpus values avoid exact-half
+precision boundaries so C and Ruby rounding never disagree.
+
 ## Pipeline
 
 ```text
@@ -512,4 +555,6 @@ pub struct CLowerError { pub message: String, pub line: usize, pub column: usize
 - The full preprocessor (`#define`, macros, conditional compilation).
 - Multiple translation units / real headers (only `#include <stdint.h|stdio.h>`
   is recognised and ignored).
-- Full `printf` format-string semantics (only a single integer conversion).
+- Full `printf` format-string semantics: `%d`/`%i`/`%u` and `%f`/`%e`/`%g`
+  (with `.precision`) are supported (milestone 10), but field width, flags, and
+  `%c`/`%s`/`%x`/`%p`/`%n` are not yet.

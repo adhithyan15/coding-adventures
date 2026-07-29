@@ -8,6 +8,97 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.63.0: level-88 condition-name on an alphanumeric item (read + SET TO TRUE)
+
+A level-88 condition-name declared on an **alphanumeric** (`PIC X`) conditional variable now lowers in
+BOTH directions — reading it (`IF IS-YES`) and setting it (`SET IS-YES TO TRUE`) — for the
+**discrete-string VALUE** case, compiled byte-identical to the `coding-adventures-cobol-runtime`
+0.67.0 oracle. Previously both paths rejected at emit time ("a level-88 condition-name on an
+alphanumeric item is a later rung" / "SET … TO TRUE on an alphanumeric conditional variable is a later
+rung"). This mirrors the numeric level-88 already shipped.
+
+- Read (`emit_condition_name`): when every VALUE item is a discrete string literal, each value becomes
+  a `cmp_eq` over the SAME alphanumeric `str_cmp` path (`emit_str_condition`) an `IF var = "…"`
+  relation runs — the variable's slot against the value's `str_const`, space-padded to a common
+  width — and the value-list OR-folds with `or`, mirroring the numeric `emit_value_test` fold exactly.
+- Set (`emit_set`): stores the FIRST value into the slot exactly as `MOVE "…" TO item` — the string is
+  fit to the receiver width by `format_into_picture` and emitted as the slot's `str_const`, the same
+  const-into-slot store the MOVE-literal path emits.
+- Scope / boundary (co-total with the oracle): accepted iff the variable is a `Char` item AND every
+  VALUE item is a discrete string (`Single(Src::Str)`) — the same `all_single_str` predicate the
+  oracle applies. An alphanumeric **THRU range** (`88 X VALUE "A" THRU "Z"`) and a **numeric or
+  figurative** VALUE on an alphanumeric 88 (`88 X VALUE 5`) stay later rungs — rejected UP FRONT
+  (before any dead instructions) IDENTICALLY to the oracle. The numeric level-88 paths are unchanged.
+- No grammar change: the same `value_clause` / `condition_name` / `set_stmt` rules the numeric
+  level-88 uses already parse this. Byte-vs-char is ASCII-clean; a non-ASCII value is the pre-existing
+  alphanumeric byte-vs-char behavior inherited from the IF-alphanumeric path.
+- FILLER guard (co-total): a level-88 whose conditional variable is an **unnamed** (`FILLER`) item is
+  now rejected at collect time ("a level-88 condition-name on an unnamed (FILLER) conditional variable
+  is a later rung"), matching the oracle's message. The compiler does not push FILLERs to its item
+  table, so a FILLER-88's `var = items.len()-1` would otherwise bind to the wrong (last named) item; a
+  new `prev_entry_unnamed_filler` flag — set on a FILLER entry, cleared on a NAMED non-88 entry, left
+  unchanged on a level-88 — lets `collect_condition_name` reject before `checked_sub`. This closes the
+  divergence for BOTH the new alphanumeric AND the pre-existing numeric FILLER-88 case. A level-88
+  following a FILLER *and then a named item* still binds to the named item and is accepted.
+
+### Added — v0.62.0: STRING with a reference-modification sending field
+
+`STRING base(start:len) DELIMITED BY … INTO dst` — a reference modification is now accepted as a STRING
+**sending field**, compiled byte-identical to the `coding-adventures-cobol-runtime` 0.66.0 oracle.
+Previously any refmod STRING sending field was rejected at emit time ("a reference modification as a
+STRING sending field is a later rung"); that reject is now LIFTED for **constant (literal) indices**.
+No grammar change was needed — the grammar already parses a refmod suffix on the STRING sending
+operand.
+
+- Lowering: `string_source` now handles `Operandy::RefMod` by calling the shared `ref_mod_slice` (the
+  SAME `str_slice` DISPLAY / comparison / MOVE-source emit, so the slice bytes already agree with the
+  oracle), returning `(slice_reg, len)`. Because the STRING image contract is `(reg, usize)` — a
+  COMPILE-TIME length — only a `SliceLen::Const` is usable, so literal indices `WS(2:3)` and an omitted
+  length `WS(3:)` are supported.
+- Boundary: a **computed (data-name) index** would yield a `SliceLen::Runtime` length known only at
+  run time, which the `(reg, usize)` contract cannot express. It is rejected UP FRONT — before any
+  slice code is emitted (no dead instructions) — with "a computed reference modification as a STRING
+  sending field is a later rung", IDENTICALLY to the oracle, keeping the two engines co-total.
+- Downstream unchanged: the refmod image is just another char image, so `DELIMITED BY SIZE`,
+  `DELIMITED BY <delim>`, the concat/overlay, and `WITH POINTER` consume it exactly as they do a plain
+  alphanumeric-item sending field — no special-casing.
+- Byte-vs-char: `ref_mod_slice` is byte-based and the oracle's `refmod_string` is char-based; they
+  coincide on the ASCII-clean windows this rung targets, so accepted programs emit byte-identical
+  output. A multi-byte char inside/after the window is the PRE-EXISTING refmod byte-vs-char chip
+  (shared with DISPLAY / MOVE-source), not introduced here — the non-ASCII parity test keeps the
+  multi-byte char strictly OUTSIDE the window.
+
+### Added — v0.61.0: MOVE with a reference-modification source
+
+`MOVE base(start:len) TO dst` — a reference modification is now accepted as a MOVE **source** when the
+receiver is **alphanumeric**, compiled byte-identical to the `coding-adventures-cobol-runtime` 0.65.0
+oracle. Previously any refmod MOVE source was rejected at emit time (`REFMOD_CONTEXT_MSG` — "reference
+modification is only supported in DISPLAY and comparison contexts on this rung"); that reject is now
+LIFTED for an alphanumeric receiver. No grammar change was needed — the grammar already parses a
+refmod suffix on the MOVE source operand.
+
+- Lowering: `ref_mod_slice` emits the SAME `str_slice` DISPLAY/comparison use (so the slice bytes
+  already agree with the oracle) and reports its length as a `SliceLen`. The new `move_slice_into_char`
+  fits the slice to the receiver's width by the ordinary alphanumeric char rule (left-justify;
+  space-pad the tail if wider; truncate on the right if narrower):
+  - `SliceLen::Const` (a literal:literal or literal: refmod) defers to `move_str_into_char`, the SAME
+    const-width char fit a plain alphanumeric-item MOVE uses.
+  - `SliceLen::Runtime` (a computed data-name index) — the slice width is unknown at compile time, so
+    a single width-agnostic form is lowered: concat `recv_w` trailing spaces onto the slice (making it
+    at least `recv_w` characters for any length `L ≥ 0`), then keep the leftmost `recv_w`. For
+    `L ≥ recv_w` that is the slice's first `recv_w` characters (truncate); for `L < recv_w` it is the
+    `L` slice characters followed by `recv_w − L` spaces (pad) — exactly `move_into_char`'s two cases,
+    so the bytes match the oracle regardless of the run-time length.
+- Constant `SRC(2:3)`, omitted-length `SRC(3:)`, and computed `SRC(J:K)` indices are all supported;
+  an out-of-range slice traps identically to the oracle. Multiple receivers `MOVE SRC(1:3) TO A B`
+  reshape the same slice into each (the existing per-receiver loop in `emit_move`).
+- Byte-vs-char: `ref_mod_slice` is byte-based and the oracle's `refmod_string` is char-based; they
+  coincide on the ASCII-prefix windows this rung targets, so accepted programs emit byte-identical
+  output. A multi-byte char inside/after the window is the PRE-EXISTING refmod byte-vs-char chip
+  (shared with DISPLAY/comparison), not introduced here — the non-ASCII parity test keeps the
+  multi-byte char strictly OUTSIDE the window (`"abcdé"`, `SRC(1:3)` → `"abc"`).
+- Remaining boundary: a **numeric** receiver stays a later rung, rejected on both engines.
+
 ### Added — v0.60.0: INSPECT TALLYING multi-item list with a LEADING item
 
 `INSPECT source TALLYING counter FOR {ALL|LEADING} a [{BEFORE|AFTER} p] {ALL|LEADING} b … ` — the

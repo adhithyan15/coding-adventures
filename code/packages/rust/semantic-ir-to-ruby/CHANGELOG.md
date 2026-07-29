@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.19.0 — `fmt_float`: C-printf-faithful float formatting
+
+One builtin, for the C frontend's faithful `printf` (SIR27 milestone 10).
+
+- `fmt_float(value, precision, kind)` → `sir_fmt_float_c`, which renders a
+  `double` exactly as C's `printf` would for the conversion `kind`
+  (`'f'`/`'F'`/`'e'`/`'E'`/`'g'`/`'G'`) and precision. Ruby's `sprintf` is
+  C-compatible, and the runtime switches on the fixed `kind` character (never
+  interpolating a source-derived format string), so `printf("%.2f", 3.14159)`
+  and the emitted C both produce `"3.14"`.
+
+This leaves the backend's *default* float display (`sir_fmt_float`, `3.14`)
+untouched — `fmt_float` is only reached through an explicit C `printf`.
+
+## 0.18.1 — fix: `Foo.new` runs the `initialize` constructor
+
+Fixes a cross-backend conformance failure (`counter_state`): a `def initialize`
+was registered like every method under the reserved `sir_um_` prefix as
+`sir_um_initialize`, which Ruby's own `Class#new`/`initialize` never calls — so a
+native `Foo.new` allocated an instance whose constructor body (its `@ivar`
+initialisers) NEVER ran, leaving every `@ivar` nil. `Counter.new; c.inc` then
+raised `undefined method '+' for nil` on `@n + 1`.
+
+- `__new__` now emits `sir_new(Foo, args…)` instead of a native `Foo.new(args…)`.
+- New `sir_new` runtime helper mirrors the Go/C/Rust runtimes: `allocate` a bare
+  instance, then — if the class or an ancestor defines `sir_um_initialize` —
+  invoke it on the new object with the constructor args, so `@ivar` assignments
+  land on it. Dispatch stays CLOSED (the method name is the fixed literal
+  `sir_um_initialize`, never source-derived — the anti-RCE discipline). A class
+  with no constructor is a plain allocation, as before.
+- Regression tests: `e2e_initialize_runs_on_construction` and
+  `e2e_initialize_with_constructor_argument` (the prior ivar e2e tests used an
+  explicit `start`/`set` method, sidestepping the constructor — which is why the
+  gap escaped).
+
 ## 0.18.0 — numeric conversions: `to_f` / `to_i`
 
 Two numeric-conversion builtins, for the C frontend's floating-point value track

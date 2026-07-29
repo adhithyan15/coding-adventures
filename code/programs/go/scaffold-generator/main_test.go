@@ -780,19 +780,109 @@ func TestGeneratePerlNoDeps(t *testing.T) {
 	}
 }
 
-func TestGenerateHaskellUsesShortTestSuiteName(t *testing.T) {
+func TestGenerateHaskellUsesRepositoryConventions(t *testing.T) {
 	tmpDir := t.TempDir()
-	if err := generateHaskell(tmpDir, "my-pkg", "My package", "", nil, nil); err != nil {
+	if err := generateHaskell(
+		tmpDir,
+		"my-pkg",
+		"100% compatible package",
+		"Layer context",
+		[]string{"graph"},
+		[]string{"bitset", "graph"},
+	); err != nil {
 		t.Fatalf("generateHaskell: %v", err)
 	}
 
-	cabal, err := os.ReadFile(filepath.Join(tmpDir, "coding-adventures-my-pkg.cabal"))
+	cabal, err := os.ReadFile(filepath.Join(tmpDir, "my-pkg.cabal"))
 	if err != nil {
 		t.Fatalf("cannot read cabal file: %v", err)
 	}
 
-	if !strings.Contains(string(cabal), "test-suite spec") {
-		t.Fatal("cabal file should use a short test-suite name")
+	cabalText := string(cabal)
+	for _, want := range []string{
+		"name:          my-pkg",
+		"synopsis:      100% compatible package",
+		"description:   100% compatible package.",
+		"category:      Development",
+		"exposed-modules:  CodingAdventures.MyPkg",
+		", graph >=0.1 && <0.2",
+		"other-modules:    MyPkgSpec",
+		", hspec ==2.*",
+		"ghc-options:      -Wall",
+	} {
+		if !strings.Contains(cabalText, want) {
+			t.Errorf("cabal file missing %q", want)
+		}
+	}
+	if strings.Contains(cabalText, "coding-adventures-") {
+		t.Error("cabal file should use the repository's plain package names")
+	}
+	if strings.Contains(cabalText, ", bitset") {
+		t.Error("cabal build-depends should contain direct dependencies only")
+	}
+
+	project, err := os.ReadFile(filepath.Join(tmpDir, "cabal.project"))
+	if err != nil {
+		t.Fatalf("cannot read cabal.project: %v", err)
+	}
+	projectText := string(project)
+	if !strings.Contains(projectText, "../bitset") || !strings.Contains(projectText, "../graph") {
+		t.Errorf("cabal.project should contain the transitive local closure, got %q", projectText)
+	}
+
+	for _, path := range []string{
+		"BUILD",
+		"BUILD_windows",
+		"required_capabilities.json",
+		filepath.Join("src", "CodingAdventures", "MyPkg.hs"),
+		filepath.Join("test", "MyPkgSpec.hs"),
+		filepath.Join("test", "Spec.hs"),
+	} {
+		if _, err := os.Stat(filepath.Join(tmpDir, path)); err != nil {
+			t.Errorf("generated Haskell file %s missing: %v", path, err)
+		}
+	}
+
+	build, err := os.ReadFile(filepath.Join(tmpDir, "BUILD"))
+	if err != nil {
+		t.Fatalf("cannot read BUILD: %v", err)
+	}
+	if string(build) != "cabal test\n" {
+		t.Errorf("BUILD = %q, want plain cabal test", build)
+	}
+}
+
+func TestReadHaskellDepsUsesCabalProjectSiblingPaths(t *testing.T) {
+	root := t.TempDir()
+	pkgDir := filepath.Join(root, "http1")
+	if err := os.MkdirAll(pkgDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	for _, sibling := range []string{"http-core", "parser"} {
+		if err := os.MkdirAll(filepath.Join(root, sibling), 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	project := `packages: . ../http-core
+          ../parser
+          ../missing
+          -- ../commented-out
+repository: ../not-a-package
+`
+	if err := os.WriteFile(
+		filepath.Join(pkgDir, "cabal.project"),
+		[]byte(project),
+		0o644,
+	); err != nil {
+		t.Fatal(err)
+	}
+
+	deps, err := readHaskellDeps(pkgDir)
+	if err != nil {
+		t.Fatalf("readHaskellDeps: %v", err)
+	}
+	if strings.Join(deps, ",") != "http-core,parser" {
+		t.Fatalf("readHaskellDeps = %v, want [http-core parser]", deps)
 	}
 }
 

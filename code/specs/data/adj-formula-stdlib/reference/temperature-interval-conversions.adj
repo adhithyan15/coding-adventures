@@ -1,0 +1,64 @@
+% ============================================================================
+% temperature-interval-conversions — temperature-INTERVAL-unit → kelvin factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of the NIST-cited conversion tables (length, mass, energy, the electric-EMU
+% family, wave number, linear mass density, and the rest): a native tabular relation ingested VERBATIM
+% from a published NIST conversion table. The row states the factor converting a temperature INTERVAL
+% (a DIFFERENCE of temperatures, e.g. "the temperature rose by 5 degrees Celsius") expressed in
+% degrees Celsius to the SI base unit, the kelvin (K):
+%
+%     ? temperature_interval_to_kelvin(degree_celsius, $v)   % 1
+%
+% This opens a NEW dimension — TEMPERATURE INTERVAL — alongside the already-tabulated length/mass/
+% area/volume/time/speed/energy/pressure/force/acceleration/dynamic-viscosity/kinematic-viscosity/
+% magnetic-flux-density/magnetic-flux/illuminance/luminance/radioactivity/absorbed-dose/dose-
+% equivalent/exposure/power/wave-number/linear-mass-density tables and the electric charge/potential/
+% resistance/capacitance/inductance/conductance/current tables. A Celsius-degree INTERVAL equals
+% exactly one kelvin: the two scales are offset (0 °C = 273.15 K) but share the SAME step size, so a
+% DIFFERENCE of temperatures converts by the exact factor 1.
+%
+% CRUCIAL DISTINCTION — INTERVAL vs POINT: this table converts temperature INTERVALS (differences),
+% NOT temperature POINTS (a reading on the scale). A temperature POINT in °C converts to kelvin by the
+% OFFSET formula T/K = t/°C + 273.15, which is an addition, NOT a multiplicative factor — so it is not
+% a conversion-factor row at all and is deliberately absent here (this table only holds multiplicative
+% factors). Do NOT use this factor to convert a thermometer reading; use it to convert a temperature
+% CHANGE or a per-degree quantity (a heat capacity in J/°C, a gradient in °C/m, etc.).
+%
+% Why a `table` and not a hand-written `relate` clause: this is exactly the shape reference data comes
+% in — a published table, not prose. The citable artifact IS the NIST conversion-factors table at the
+% `locator` below; the factor here is a CELL of NIST Special Publication 811, Appendix B.9, defended by
+% one provenance envelope. Each `row` lowers to a ground relation
+% `temperature_interval_to_kelvin(unit, v)`, so the exact lookup above is the ordinary SLD binding
+% query — the engine returns the factor WITH this table's citation as its proof, on the CPU, with zero
+% model calls.
+%
+% HONESTY NOTE (like every other NIST table, only the EXACT defined factor gets a row): NIST SP 811
+% B.9 prints the "degree Celsius" interval factor in BOLDFACE, its convention for factors that are
+% EXACT by definition, transcribed here as the plain decimal number of kelvins it names:
+%
+%     degree Celsius (°C)   1.0 E+00  →  1
+%
+% This is exact because the Celsius and kelvin scales are defined with an identical unit step, so one
+% Celsius-degree interval IS one kelvin, exactly. It terminates; nothing here is a rounded measurement.
+% (The "degree Fahrenheit" interval, by contrast, is 5/9 K — a NON-terminating factor — so, like every
+% non-exact factor, it gets no row.) This table is SPECIFIC to temperature interval: a unit of a
+% DIFFERENT quantity — e.g. the "degree" of PLANE ANGLE, which NIST SP 811 B.9 lists separately as
+% converting to the radian, NOT the kelvin — therefore gets no row here, and a
+% `? temperature_interval_to_kelvin(degree, $v)` ABSTAINS rather than mis-converting an angle as if it
+% were a temperature. (The degree symbol "°" is shared by the Celsius degree and the angular degree,
+% so this abstain guards a real notational confusion.) The only claim this table makes is "this is the
+% exact factor NIST SP 811 B.9 prints for the Celsius interval's conversion to the kelvin" — which is
+% exactly what a byte-check against the cited table verifies. `trust authoritative` — a primary,
+% re-fetchable standards reference. (See ADJ-TABLES.md; and feedback_nothing_human_authored — the
+% factor is a verbatim cell of the cited table, nothing asserted from memory.)
+% ============================================================================
+
+table temperature_interval_to_kelvin {
+    columns unit, kelvin
+
+    row (degree_celsius, 1)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

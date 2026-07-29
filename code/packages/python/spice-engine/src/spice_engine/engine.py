@@ -391,20 +391,105 @@ def mosfet_at_temperature(
     params = model.model.params
     if not isinstance(params, Level1Params):
         raise ValueError(f"{mosfet.name}: only Level-1 MOSFET parameters are supported")
-    ratio = temperature_kelvin / nominal_temperature_kelvin
-    threshold_shift = -2.0e-3 * (temperature_kelvin - nominal_temperature_kelvin)
+    reference_temperature_kelvin = 300.15
+    nominal_temperature = (
+        params.T_NOM
+        if reference_temperature_kelvin != params.T_NOM
+        else nominal_temperature_kelvin
+    )
+    if not math.isfinite(nominal_temperature) or nominal_temperature <= 0.0:
+        raise ValueError("nominal_temperature_kelvin must be finite and positive")
+    ratio = temperature_kelvin / nominal_temperature
+
+    def silicon_band_gap(temperature: float) -> float:
+        return 1.16 - 7.02e-4 * temperature**2 / (temperature + 1108.0)
+
+    def potential_correction(temperature: float) -> float:
+        thermal_voltage = _BOLTZMANN * temperature / _ELECTRON_CHARGE
+        argument = (
+            -silicon_band_gap(temperature)
+            * _ELECTRON_CHARGE
+            / (2.0 * _BOLTZMANN * temperature)
+            + 1.115_087_7
+            * _ELECTRON_CHARGE
+            / (2.0 * _BOLTZMANN * reference_temperature_kelvin)
+        )
+        return -2.0 * thermal_voltage * (
+            1.5 * math.log(temperature / reference_temperature_kelvin) + argument
+        )
+
+    nominal_factor = nominal_temperature / reference_temperature_kelvin
+    temperature_factor = temperature_kelvin / reference_temperature_kelvin
+    nominal_phi = (
+        params.PHI - potential_correction(nominal_temperature)
+    ) / nominal_factor
+    temperature_phi = (
+        temperature_factor * nominal_phi + potential_correction(temperature_kelvin)
+    )
+    nominal_bulk_junction_potential = (
+        params.PB - potential_correction(nominal_temperature)
+    ) / nominal_factor
+    temperature_bulk_junction_potential = (
+        temperature_factor * nominal_bulk_junction_potential
+        + potential_correction(temperature_kelvin)
+    )
+    nominal_bulk_potential_shift = (
+        params.PB - nominal_bulk_junction_potential
+    ) / nominal_bulk_junction_potential
+    temperature_bulk_potential_shift = (
+        temperature_bulk_junction_potential - nominal_bulk_junction_potential
+    ) / nominal_bulk_junction_potential
+
+    def capacitance_scale(grading_coefficient: float) -> float:
+        nominal_scale = 1.0 / (
+            1.0
+            + grading_coefficient
+            * (
+                4.0e-4
+                * (nominal_temperature - reference_temperature_kelvin)
+                - nominal_bulk_potential_shift
+            )
+        )
+        temperature_scale = 1.0 + grading_coefficient * (
+            4.0e-4 * (temperature_kelvin - reference_temperature_kelvin)
+            - temperature_bulk_potential_shift
+        )
+        return nominal_scale * temperature_scale
+
+    bottom_capacitance_scale = capacitance_scale(params.MJ)
+    sidewall_capacitance_scale = capacitance_scale(params.MJSW)
+    polarity = 1.0 if model.type is MosfetType.NMOS else -1.0
+    temperature_vbi = (
+        params.VT0
+        - polarity * params.GAMMA * math.sqrt(params.PHI)
+        + 0.5
+        * (
+            silicon_band_gap(nominal_temperature)
+            - silicon_band_gap(temperature_kelvin)
+        )
+        + polarity * 0.5 * (temperature_phi - params.PHI)
+    )
+    temperature_vt0 = (
+        temperature_vbi + polarity * params.GAMMA * math.sqrt(temperature_phi)
+    )
     saturation_exponent = (
         energy_gap_ev
         * _ELECTRON_CHARGE
         / _BOLTZMANN
-        * (1.0 / nominal_temperature_kelvin - 1.0 / temperature_kelvin)
+        * (1.0 / nominal_temperature - 1.0 / temperature_kelvin)
     )
     saturation_scale = ratio**3 * math.exp(
         max(-100.0, min(100.0, saturation_exponent))
     )
     adjusted_params = replace(
         params,
-        VT0=params.VT0 + threshold_shift,
+        VT0=temperature_vt0,
+        PHI=temperature_phi,
+        PB=temperature_bulk_junction_potential,
+        CJ=params.CJ * bottom_capacitance_scale,
+        CBS=params.CBS * bottom_capacitance_scale,
+        CBD=params.CBD * bottom_capacitance_scale,
+        CJSW=params.CJSW * sidewall_capacitance_scale,
         KP=params.KP * ratio**-1.5,
         U0=params.U0 * ratio**-1.5,
         IS=params.IS * saturation_scale,

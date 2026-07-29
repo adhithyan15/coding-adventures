@@ -7,6 +7,14 @@ const ELECTRON_CHARGE = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA = 2.0 / 3.0;
 const DIGITAL_BRIDGE_TIME_EPSILON = 1.0e-18;
 const OXIDE_PERMITTIVITY = 3.453133e-11;
+const SILICON_PERMITTIVITY = 11.70 * 8.854_214_871e-12;
+const INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER = 1.45e16;
+const CUBIC_CENTIMETERS_PER_CUBIC_METER = 1.0e6;
+
+function siliconBandGapElectronVolts(temperatureKelvin: number): number {
+  return 1.16 - (7.02e-4 * temperatureKelvin * temperatureKelvin) / (temperatureKelvin + 1108.0);
+}
+
 const SPICE_SUFFIX_FACTORS: Readonly<Record<string, number>> = Object.freeze({
   t: 1.0e12,
   g: 1.0e9,
@@ -2063,8 +2071,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   PNP: [41, 58, 13, 4],
   NJF: [22, 30, 7, 3],
   PJF: [22, 30, 7, 3],
-  NMOS: [31, 39, 7, 3],
-  PMOS: [31, 39, 7, 3],
+  NMOS: [33, 41, 7, 3],
+  PMOS: [33, 41, 7, 3],
 };
 
 export interface Vccs {
@@ -7735,19 +7743,87 @@ export function mosfetAtTemperature(
   if (!Number.isFinite(energyGapElectronVolts) || energyGapElectronVolts <= 0.0) {
     throw invalidElement(element.name, "energy gap must be finite and positive");
   }
-  const ratio = temperatureKelvin / nominalTemperatureKelvin;
-  const thresholdShift = -2.0e-3 * (temperatureKelvin - nominalTemperatureKelvin);
+  const referenceTemperatureKelvin = 300.15;
+  const nominalTemperature =
+    element.params.T_NOM !== referenceTemperatureKelvin
+      ? element.params.T_NOM
+      : nominalTemperatureKelvin;
+  if (!Number.isFinite(nominalTemperature) || nominalTemperature <= 0.0) {
+    throw invalidElement(element.name, "nominal temperature must be finite and positive");
+  }
+  const ratio = temperatureKelvin / nominalTemperature;
+  const potentialCorrection = (temperature: number): number => {
+    const thermalVoltage = (BOLTZMANN * temperature) / ELECTRON_CHARGE;
+    const argument =
+      (-siliconBandGapElectronVolts(temperature) * ELECTRON_CHARGE) /
+        (2.0 * BOLTZMANN * temperature) +
+      (1.115_087_7 * ELECTRON_CHARGE) /
+        (2.0 * BOLTZMANN * referenceTemperatureKelvin);
+    return (
+      -2.0 *
+      thermalVoltage *
+      (1.5 * Math.log(temperature / referenceTemperatureKelvin) + argument)
+    );
+  };
+  const nominalFactor = nominalTemperature / referenceTemperatureKelvin;
+  const temperatureFactor = temperatureKelvin / referenceTemperatureKelvin;
+  const nominalPhi =
+    (element.params.PHI - potentialCorrection(nominalTemperature)) / nominalFactor;
+  const temperaturePhi =
+    temperatureFactor * nominalPhi + potentialCorrection(temperatureKelvin);
+  const nominalBulkJunctionPotential =
+    (element.params.PB - potentialCorrection(nominalTemperature)) / nominalFactor;
+  const temperatureBulkJunctionPotential =
+    temperatureFactor * nominalBulkJunctionPotential +
+    potentialCorrection(temperatureKelvin);
+  const nominalBulkPotentialShift =
+    (element.params.PB - nominalBulkJunctionPotential) / nominalBulkJunctionPotential;
+  const temperatureBulkPotentialShift =
+    (temperatureBulkJunctionPotential - nominalBulkJunctionPotential) /
+    nominalBulkJunctionPotential;
+  const capacitanceScale = (gradingCoefficient: number): number => {
+    const nominalScale =
+      1.0 /
+      (1.0 +
+        gradingCoefficient *
+          (4.0e-4 * (nominalTemperature - referenceTemperatureKelvin) -
+            nominalBulkPotentialShift));
+    const temperatureScale =
+      1.0 +
+      gradingCoefficient *
+        (4.0e-4 * (temperatureKelvin - referenceTemperatureKelvin) -
+          temperatureBulkPotentialShift);
+    return nominalScale * temperatureScale;
+  };
+  const bottomCapacitanceScale = capacitanceScale(element.params.MJ);
+  const sidewallCapacitanceScale = capacitanceScale(element.params.MJSW);
+  const polarity = element.type === "NMOS" ? 1.0 : -1.0;
+  const temperatureVbi =
+    element.params.VT0 -
+    polarity * element.params.GAMMA * Math.sqrt(element.params.PHI) +
+    0.5 *
+      (siliconBandGapElectronVolts(nominalTemperature) -
+        siliconBandGapElectronVolts(temperatureKelvin)) +
+    polarity * 0.5 * (temperaturePhi - element.params.PHI);
+  const temperatureVt0 =
+    temperatureVbi + polarity * element.params.GAMMA * Math.sqrt(temperaturePhi);
   const saturationExponent =
     (energyGapElectronVolts * ELECTRON_CHARGE) /
     BOLTZMANN *
-    (1.0 / nominalTemperatureKelvin - 1.0 / temperatureKelvin);
+    (1.0 / nominalTemperature - 1.0 / temperatureKelvin);
   const saturationScale =
     ratio ** 3 * Math.exp(Math.max(-100.0, Math.min(100.0, saturationExponent)));
   return {
     ...element,
     params: {
       ...element.params,
-      VT0: element.params.VT0 + thresholdShift,
+      VT0: temperatureVt0,
+      PHI: temperaturePhi,
+      PB: temperatureBulkJunctionPotential,
+      CJ: element.params.CJ * bottomCapacitanceScale,
+      CBS: element.params.CBS * bottomCapacitanceScale,
+      CBD: element.params.CBD * bottomCapacitanceScale,
+      CJSW: element.params.CJSW * sidewallCapacitanceScale,
       KP: element.params.KP * ratio ** -1.5,
       U0: element.params.U0 * ratio ** -1.5,
       IS: element.params.IS * saturationScale,
@@ -8278,6 +8354,8 @@ const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   JS: "JS",
   NSUB: "N_SUB",
   N_SUB: "N_SUB",
+  NSS: "NSS",
+  TPG: "TPG",
   TNOM: "T_NOM",
   T_NOM: "T_NOM",
   CGSO: "CGSO",
@@ -8350,6 +8428,8 @@ export function normalizeModelCard(
         throw invalidElement(name, "only MOS LEVEL=1 model cards are supported");
       }
       normalized[canonical] = 1.0;
+    } else if (canonical === "TPG" && value !== -1.0 && value !== 0.0 && value !== 1.0) {
+      throw invalidElement(name, "MOSFET TPG must be -1, 0, or 1");
     } else {
       normalized[canonical] = value;
     }
@@ -8848,12 +8928,71 @@ export function mosfetFromModelCard(
     (p.TOX !== undefined && p.TOX > 0.0
       ? surfaceMobility * 1.0e-4 * OXIDE_PERMITTIVITY / p.TOX
       : undefined);
+  let surfacePotential = p.PHI;
+  let bodyEffectCoefficient = p.GAMMA;
+  if (p.N_SUB !== undefined && p.TOX !== undefined) {
+    const substrateDopingPerCubicMeter =
+      p.N_SUB * CUBIC_CENTIMETERS_PER_CUBIC_METER;
+    if (substrateDopingPerCubicMeter <= INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER) {
+      throw invalidElement(name, "MOSFET NSUB must exceed the intrinsic carrier density");
+    }
+    if (p.TOX > 0.0) {
+      if (surfacePotential === undefined) {
+        const nominalTemperature = p.T_NOM ?? 300.15;
+        const thermalVoltage = BOLTZMANN * nominalTemperature / ELECTRON_CHARGE;
+        surfacePotential = Math.max(
+          0.1,
+          2.0 *
+            thermalVoltage *
+            Math.log(
+              substrateDopingPerCubicMeter /
+                INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER,
+            ),
+        );
+      }
+      if (bodyEffectCoefficient === undefined) {
+        const oxideCapacitance = OXIDE_PERMITTIVITY / p.TOX;
+        bodyEffectCoefficient =
+          Math.sqrt(
+            2.0 *
+              SILICON_PERMITTIVITY *
+              ELECTRON_CHARGE *
+              substrateDopingPerCubicMeter,
+          ) / oxideCapacitance;
+      }
+    }
+  }
+  const nominalTemperature = p.T_NOM ?? 300.15;
+  const polarity = model.kind === "NMOS" ? 1.0 : -1.0;
+  const bandGap = siliconBandGapElectronVolts(nominalTemperature);
+  const gateType = p.TPG ?? 1.0;
+  const substrateFermiPotential = polarity * 0.5 * (surfacePotential ?? 0.0);
+  const gateWorkFunction =
+    gateType === 0.0
+      ? 3.2
+      : 3.25 + 0.5 * bandGap - polarity * gateType * 0.5 * bandGap;
+  const gateSubstrateWorkFunction =
+    gateWorkFunction - (3.25 + 0.5 * bandGap + substrateFermiPotential);
+  const surfaceStateShift =
+    p.TOX !== undefined && p.TOX > 0.0
+      ? ((p.NSS ?? 0.0) * 1.0e4 * ELECTRON_CHARGE) /
+        (OXIDE_PERMITTIVITY / p.TOX)
+      : 0.0;
+  const thresholdVoltage =
+    p.VT0 ??
+    (p.N_SUB !== undefined && p.TOX !== undefined && p.TOX > 0.0
+      ? gateSubstrateWorkFunction -
+        surfaceStateShift +
+        polarity *
+          ((bodyEffectCoefficient ?? 0.0) * Math.sqrt(surfacePotential ?? 0.0) +
+            (surfacePotential ?? 0.0))
+      : undefined);
   const params: Partial<MosfetLevel1Params> = {
-    ...(p.VT0 !== undefined ? { VT0: p.VT0 } : {}),
+    ...(thresholdVoltage !== undefined ? { VT0: thresholdVoltage } : {}),
     ...(transconductance !== undefined ? { KP: transconductance } : {}),
     ...(p.LAMBDA !== undefined ? { LAMBDA: p.LAMBDA } : {}),
-    ...(p.GAMMA !== undefined ? { GAMMA: p.GAMMA } : {}),
-    ...(p.PHI !== undefined ? { PHI: p.PHI } : {}),
+    ...(bodyEffectCoefficient !== undefined ? { GAMMA: bodyEffectCoefficient } : {}),
+    ...(surfacePotential !== undefined ? { PHI: surfacePotential } : {}),
     ...(p.W !== undefined ? { W: p.W } : {}),
     ...(p.L !== undefined ? { L: p.L } : {}),
     ...(p.LD !== undefined ? { LD: p.LD } : {}),

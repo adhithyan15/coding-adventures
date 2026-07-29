@@ -96,7 +96,7 @@ fn model_card_type_aliases_are_normalized() {
 #[test]
 fn model_card_supported_parameter_coverage_exports_are_stable() {
     let coverage = model_card_supported_parameter_coverage();
-    assert_eq!(coverage.len(), 203);
+    assert_eq!(coverage.len(), 207);
     assert_eq!(coverage[0].kind, ModelCardKind::Diode);
     assert_eq!(coverage[0].canonical_parameter, "IS");
     assert_eq!(coverage[0].accepted_names, vec!["IS", "JS"]);
@@ -115,7 +115,7 @@ fn model_card_supported_parameter_coverage_exports_are_stable() {
     assert!(table.contains("NMOS\tVT0\tVT0|VTO|VTH\t3"));
     assert_eq!(lines.last().unwrap(), &"PMOS\tAF\tAF\t1");
     let records = model_card_supported_parameter_coverage_records();
-    assert_eq!(records.len(), 203);
+    assert_eq!(records.len(), 207);
     assert_eq!(records[0]["kind"], "D");
     assert_eq!(records[0]["canonical_parameter"], "IS");
     assert_eq!(records[0]["accepted_names"], "IS|JS");
@@ -148,8 +148,8 @@ fn model_card_supported_parameter_coverage_summary_exports_are_stable() {
         vec!["IS", "VT", "CJO", "VJ", "M"]
     );
     assert_eq!(summary[5].kind, ModelCardKind::Nmos);
-    assert_eq!(summary[5].canonical_parameter_count, 31);
-    assert_eq!(summary[5].accepted_name_count, 39);
+    assert_eq!(summary[5].canonical_parameter_count, 33);
+    assert_eq!(summary[5].accepted_name_count, 41);
     assert_eq!(summary[5].aliased_parameter_count, 7);
     assert_eq!(summary[5].max_alias_count, 3);
     assert_eq!(
@@ -167,7 +167,7 @@ fn model_card_supported_parameter_coverage_summary_exports_are_stable() {
     assert_eq!(lines[1], "D\t15\t21\t5\t3\tIS|VT|CJO|VJ|M");
     assert_eq!(
         lines.last().unwrap(),
-        &"PMOS\t31\t39\t7\t3\tVT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD"
+        &"PMOS\t33\t41\t7\t3\tVT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD"
     );
     let records = model_card_supported_parameter_coverage_summary_records();
     assert_eq!(records.len(), 7);
@@ -185,7 +185,7 @@ fn model_card_supported_parameter_coverage_summary_exports_are_stable() {
         "[{\"kind\":\"D\",\"canonical_parameter_count\":\"15\",\"accepted_name_count\":\"21\",\"aliased_parameter_count\":\"5\",\"max_alias_count\":\"3\",\"aliased_parameters\":\"IS|VT|CJO|VJ|M\"}"
     ));
     assert!(json.ends_with(
-        "{\"kind\":\"PMOS\",\"canonical_parameter_count\":\"31\",\"accepted_name_count\":\"39\",\"aliased_parameter_count\":\"7\",\"max_alias_count\":\"3\",\"aliased_parameters\":\"VT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD\"}]\n"
+        "{\"kind\":\"PMOS\",\"canonical_parameter_count\":\"33\",\"accepted_name_count\":\"41\",\"aliased_parameter_count\":\"7\",\"max_alias_count\":\"3\",\"aliased_parameters\":\"VT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD\"}]\n"
     ));
 }
 
@@ -196,15 +196,15 @@ fn model_card_supported_parameter_coverage_gate_passes_current_catalog() {
     assert!(report.passed);
     assert_eq!(report.kind_count, 7);
     assert_eq!(report.expected_kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 203);
-    assert_eq!(report.expected_canonical_parameter_count, 203);
-    assert_eq!(report.accepted_name_count, 275);
+    assert_eq!(report.canonical_parameter_count, 207);
+    assert_eq!(report.expected_canonical_parameter_count, 207);
+    assert_eq!(report.accepted_name_count, 279);
     assert_eq!(report.aliased_parameter_count, 59);
     assert_eq!(report.max_alias_count, 4);
     assert!(report.issues.is_empty());
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t203\t203\t275\t59\t4\t0"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t207\t207\t279\t59\t4\t0"
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_issue_table(&report),
@@ -231,8 +231,8 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
 
     assert!(!report.passed);
     assert_eq!(report.kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 202);
-    assert_eq!(report.accepted_name_count, 272);
+    assert_eq!(report.canonical_parameter_count, 206);
+    assert_eq!(report.accepted_name_count, 276);
     assert_eq!(report.aliased_parameter_count, 58);
     assert_eq!(report.max_alias_count, 4);
     assert_eq!(report.issues.len(), 4);
@@ -240,7 +240,7 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
     assert_eq!(report.issues[0].field, "canonical_parameter_count");
     assert_eq!(
         report.issues[0].message,
-        "expected NMOS to expose 31 canonical supported parameters, found 30"
+        "expected NMOS to expose 33 canonical supported parameters, found 32"
     );
     assert_eq!(report.issues.last().unwrap().field, "max_alias_count");
     assert_eq!(
@@ -249,20 +249,20 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t202\t203\t272\t58\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 31 canonical supported parameters, found 30\nNMOS\taccepted_name_count\texpected NMOS to expose 39 accepted model-card names, found 36\nNMOS\taliased_parameter_count\texpected NMOS to expose 7 alias-bearing parameters, found 6\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t206\t207\t276\t58\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 33 canonical supported parameters, found 32\nNMOS\taccepted_name_count\texpected NMOS to expose 41 accepted model-card names, found 38\nNMOS\taliased_parameter_count\texpected NMOS to expose 7 alias-bearing parameters, found 6\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
     );
     let records = model_card_supported_parameter_coverage_gate_issue_records(&report);
     assert_eq!(records[0]["kind"], "NMOS");
     assert_eq!(records[0]["field"], "canonical_parameter_count");
     assert_eq!(
         records[0]["message"],
-        "expected NMOS to expose 31 canonical supported parameters, found 30"
+        "expected NMOS to expose 33 canonical supported parameters, found 32"
     );
     assert!(format_model_card_supported_parameter_coverage_gate_issue_csv(&report).starts_with(
-        "kind,field,message\nNMOS,canonical_parameter_count,\"expected NMOS to expose 31 canonical supported parameters, found 30\"\n"
+        "kind,field,message\nNMOS,canonical_parameter_count,\"expected NMOS to expose 33 canonical supported parameters, found 32\"\n"
     ));
     assert!(format_model_card_supported_parameter_coverage_gate_issue_json(&report).starts_with(
-        "[{\"kind\":\"NMOS\",\"field\":\"canonical_parameter_count\",\"message\":\"expected NMOS to expose 31 canonical supported parameters, found 30\"}"
+        "[{\"kind\":\"NMOS\",\"field\":\"canonical_parameter_count\",\"message\":\"expected NMOS to expose 33 canonical supported parameters, found 32\"}"
     ));
 }
 
@@ -284,8 +284,8 @@ fn model_card_supported_parameter_coverage_dashboard_exports_are_stable() {
     assert_eq!(dashboard[0].issue_count, 0);
     assert!(dashboard[0].issue_fields.is_empty());
     assert_eq!(dashboard[5].kind, ModelCardKind::Nmos);
-    assert_eq!(dashboard[5].canonical_parameter_count, 31);
-    assert_eq!(dashboard[5].accepted_name_count, 39);
+    assert_eq!(dashboard[5].canonical_parameter_count, 33);
+    assert_eq!(dashboard[5].accepted_name_count, 41);
     assert_eq!(dashboard[5].issue_count, 0);
 
     let table = format_model_card_supported_parameter_coverage_dashboard_table(&coverage);
@@ -297,7 +297,7 @@ fn model_card_supported_parameter_coverage_dashboard_exports_are_stable() {
     assert_eq!(lines[1], "D\ttrue\t15\t15\t21\t21\t5\t5\t3\t3\t0\t");
     assert_eq!(
         lines.last().unwrap(),
-        &"PMOS\ttrue\t31\t31\t39\t39\t7\t7\t3\t3\t0\t"
+        &"PMOS\ttrue\t33\t33\t41\t41\t7\t7\t3\t3\t0\t"
     );
     let records = model_card_supported_parameter_coverage_dashboard_records(&coverage);
     assert_eq!(records.len(), 7);
@@ -329,10 +329,10 @@ fn model_card_supported_parameter_coverage_dashboard_reports_missing_alias_famil
         .unwrap();
 
     assert!(!nmos.passed);
-    assert_eq!(nmos.canonical_parameter_count, 30);
-    assert_eq!(nmos.expected_canonical_parameter_count, 31);
-    assert_eq!(nmos.accepted_name_count, 36);
-    assert_eq!(nmos.expected_accepted_name_count, 39);
+    assert_eq!(nmos.canonical_parameter_count, 32);
+    assert_eq!(nmos.expected_canonical_parameter_count, 33);
+    assert_eq!(nmos.accepted_name_count, 38);
+    assert_eq!(nmos.expected_accepted_name_count, 41);
     assert_eq!(nmos.aliased_parameter_count, 6);
     assert_eq!(nmos.expected_aliased_parameter_count, 7);
     assert_eq!(nmos.max_alias_count, 2);
@@ -348,7 +348,7 @@ fn model_card_supported_parameter_coverage_dashboard_reports_missing_alias_famil
         ]
     );
     assert!(format_model_card_supported_parameter_coverage_dashboard_table(&coverage).contains(
-        "NMOS\tfalse\t30\t31\t36\t39\t6\t7\t2\t3\t4\tcanonical_parameter_count|accepted_name_count|aliased_parameter_count|max_alias_count"
+        "NMOS\tfalse\t32\t33\t38\t41\t6\t7\t2\t3\t4\tcanonical_parameter_count|accepted_name_count|aliased_parameter_count|max_alias_count"
     ));
 }
 
@@ -589,7 +589,7 @@ fn model_card_aliases_build_device_instances() {
             ("LEVEL", 1.0),
             ("VTO", 0.55),
             ("LAM", 0.04),
-            ("NSUB", 1.6),
+            ("NSUB", 1.6e16),
             ("CJD", 3.0e-13),
             ("PB", 0.9),
             ("MJ", 0.45),
@@ -612,7 +612,7 @@ fn model_card_aliases_build_device_instances() {
     let mos_model = mosfet_from_model_card("M1", "d", "g", "s", "b", &mos_card).unwrap();
     assert_close(*mos_card.parameters.get("VT0").unwrap(), 0.55);
     assert_close(*mos_card.parameters.get("LAMBDA").unwrap(), 0.04);
-    assert_close(*mos_card.parameters.get("N_SUB").unwrap(), 1.6);
+    assert_close(*mos_card.parameters.get("N_SUB").unwrap(), 1.6e16);
     assert_close(*mos_card.parameters.get("CBD").unwrap(), 3.0e-13);
     assert_close(*mos_card.parameters.get("PB").unwrap(), 0.9);
     assert_close(*mos_card.parameters.get("MJ").unwrap(), 0.45);
@@ -632,7 +632,7 @@ fn model_card_aliases_build_device_instances() {
     assert_eq!(mos_model.mosfet_type, MosfetType::Nmos);
     assert_close(mos_model.params.vt0, 0.55);
     assert_close(mos_model.params.lambda, 0.04);
-    assert_close(mos_model.params.n_sub, 1.6);
+    assert_close(mos_model.params.n_sub, 1.6e16);
     assert_close(mos_model.params.drain_bulk_capacitance, 3.0e-13);
     assert_close(mos_model.params.bulk_junction_potential, 0.9);
     assert_close(mos_model.params.bulk_junction_grading_coefficient, 0.45);
@@ -673,6 +673,113 @@ fn mos_model_card_surface_mobility_derives_kp_with_explicit_precedence() {
     let explicit = mosfet_from_model_card("M2", "d", "g", "s", "b", &explicit).unwrap();
     assert_close(explicit.params.surface_mobility, 500.0);
     assert_close(explicit.params.kp, 250.0e-6);
+}
+
+#[test]
+fn mos_model_card_substrate_doping_derives_electrostatics_with_explicit_precedence() {
+    let derived_card = normalize_model_card(
+        "Mderived",
+        "nmos",
+        &[("NSUB", 4.0e15), ("TOX", 100.0e-9), ("NSS", 1.0e10)],
+    )
+    .unwrap();
+    let derived = mosfet_from_model_card("M1", "d", "g", "s", "b", &derived_card).unwrap();
+    let thermal_voltage = 1.380_649e-23 * 300.15 / 1.602_176_634e-19;
+    let expected_phi = (2.0 * thermal_voltage * (4.0e21_f64 / 1.45e16).ln()).max(0.1);
+    let expected_gamma = (2.0_f64 * (11.70 * 8.854_214_871e-12) * 1.602_176_634e-19 * 4.0e21)
+        .sqrt()
+        / (3.453_133e-11 / 100.0e-9);
+    let expected_band_gap = 1.16 - 7.02e-4 * 300.15 * 300.15 / (300.15 + 1108.0);
+    let process_vt0 =
+        expected_gamma * expected_phi.sqrt() + 0.5 * (expected_phi - expected_band_gap);
+    let surface_state_shift = 1.0e10 * 1.0e4 * 1.602_176_634e-19 / (3.453_133e-11 / 100.0e-9);
+    let expected_vt0 = process_vt0 - surface_state_shift;
+    assert_close(derived.params.phi, expected_phi);
+    assert_close(derived.params.gamma, expected_gamma);
+    assert_close(derived.params.vt0, expected_vt0);
+
+    let pmos_card = normalize_model_card(
+        "Mp",
+        "pmos",
+        &[("NSUB", 4.0e15), ("TOX", 100.0e-9), ("NSS", 1.0e10)],
+    )
+    .unwrap();
+    let pmos = mosfet_from_model_card("M2", "d", "g", "s", "b", &pmos_card).unwrap();
+    assert_close(pmos.params.vt0, -process_vt0 - surface_state_shift);
+
+    let explicit_card = normalize_model_card(
+        "Mexplicit",
+        "nmos",
+        &[
+            ("NSUB", 4.0e15),
+            ("TOX", 100.0e-9),
+            ("PHI", 0.72),
+            ("GAMMA", 0.41),
+            ("NSS", 1.0e10),
+            ("VTO", 0.63),
+        ],
+    )
+    .unwrap();
+    let explicit = mosfet_from_model_card("M3", "d", "g", "s", "b", &explicit_card).unwrap();
+    assert_close(explicit.params.phi, 0.72);
+    assert_close(explicit.params.gamma, 0.41);
+    assert_close(explicit.params.vt0, 0.63);
+
+    let invalid_card =
+        normalize_model_card("Minvalid", "nmos", &[("NSUB", 1.0e10), ("TOX", 1.0e-7)]).unwrap();
+    assert!(matches!(
+        mosfet_from_model_card("M4", "d", "g", "s", "b", &invalid_card),
+        Err(SpiceError::InvalidElement { reason, .. })
+            if reason == "MOSFET NSUB must exceed the intrinsic carrier density"
+    ));
+}
+
+#[test]
+fn mos_model_card_gate_material_shifts_process_derived_threshold() {
+    let process = [("NSUB", 4.0e15), ("TOX", 100.0e-9)];
+    let default_nmos = normalize_model_card("Mdefault", "nmos", &process).unwrap();
+    let default_nmos = mosfet_from_model_card("M1", "d", "g", "s", "b", &default_nmos).unwrap();
+    let band_gap = 1.16 - 7.02e-4 * 300.15 * 300.15 / (300.15 + 1108.0);
+
+    let opposite_nmos = normalize_model_card(
+        "Mopposite",
+        "nmos",
+        &[process[0], process[1], ("TPG", -1.0)],
+    )
+    .unwrap();
+    let opposite_nmos = mosfet_from_model_card("M2", "d", "g", "s", "b", &opposite_nmos).unwrap();
+    assert_close(opposite_nmos.params.vt0, default_nmos.params.vt0 + band_gap);
+
+    let metal_nmos =
+        normalize_model_card("Mmetal", "nmos", &[process[0], process[1], ("TPG", 0.0)]).unwrap();
+    let metal_nmos = mosfet_from_model_card("M3", "d", "g", "s", "b", &metal_nmos).unwrap();
+    assert_close(metal_nmos.params.vt0, default_nmos.params.vt0 - 0.05);
+
+    let default_pmos = normalize_model_card("Mpdefault", "pmos", &process).unwrap();
+    let default_pmos = mosfet_from_model_card("M4", "d", "g", "s", "b", &default_pmos).unwrap();
+    let opposite_pmos = normalize_model_card(
+        "Mpopposite",
+        "pmos",
+        &[process[0], process[1], ("TPG", -1.0)],
+    )
+    .unwrap();
+    let opposite_pmos = mosfet_from_model_card("M5", "d", "g", "s", "b", &opposite_pmos).unwrap();
+    assert_close(opposite_pmos.params.vt0, default_pmos.params.vt0 - band_gap);
+
+    let explicit = normalize_model_card(
+        "Mexplicit",
+        "nmos",
+        &[process[0], process[1], ("TPG", -1.0), ("VTO", 0.63)],
+    )
+    .unwrap();
+    let explicit = mosfet_from_model_card("M6", "d", "g", "s", "b", &explicit).unwrap();
+    assert_close(explicit.params.vt0, 0.63);
+
+    assert!(matches!(
+        normalize_model_card("Minvalid", "nmos", &[("TPG", 0.5)]),
+        Err(SpiceError::InvalidElement { reason, .. })
+            if reason == "MOSFET TPG must be -1, 0, or 1"
+    ));
 }
 
 #[test]
@@ -3502,8 +3609,8 @@ fn dc_mosfet_temperature_scaling_changes_common_source_bias() {
     let cold_result = dc_op(&cold).unwrap();
     let hot_result = dc_op(&hot).unwrap();
 
-    assert!(cold_result.voltage("out").unwrap() > nominal_result.voltage("out").unwrap());
-    assert!(hot_result.voltage("out").unwrap() < nominal_result.voltage("out").unwrap());
+    assert!(cold_result.voltage("out").unwrap() < nominal_result.voltage("out").unwrap());
+    assert!(hot_result.voltage("out").unwrap() > nominal_result.voltage("out").unwrap());
 }
 
 #[test]
@@ -3532,6 +3639,117 @@ fn mosfet_temperature_scaling_keeps_surface_mobility_and_kp_aligned() {
     assert_close(
         hot.params.kp / hot.params.surface_mobility,
         nominal.params.kp / nominal.params.surface_mobility,
+    );
+}
+
+#[test]
+fn mosfet_temperature_scaling_adjusts_phi_and_threshold_by_polarity() {
+    let nmos = Mosfet::with_model(
+        "Mn",
+        "d",
+        "g",
+        "s",
+        "b",
+        MosfetType::Nmos,
+        MosfetLevel1Params::default(),
+    );
+    let pmos = Mosfet::with_model(
+        "Mp",
+        "d",
+        "g",
+        "s",
+        "b",
+        MosfetType::Pmos,
+        MosfetLevel1Params {
+            vt0: -0.42,
+            ..MosfetLevel1Params::default()
+        },
+    );
+
+    let hot_nmos = mosfet_at_temperature(&nmos, 350.0, 300.15, 1.11).unwrap();
+    let hot_pmos = mosfet_at_temperature(&pmos, 350.0, 300.15, 1.11).unwrap();
+
+    assert_close(hot_nmos.params.phi, 0.766_340_574_915_624_6);
+    assert_close(hot_pmos.params.phi, hot_nmos.params.phi);
+    assert_close(hot_nmos.params.vt0, 0.379_106_188_982_781_14);
+    assert_close(hot_pmos.params.vt0, -0.365_036_965_282_786_06);
+}
+
+#[test]
+fn mosfet_temperature_scaling_adjusts_bulk_junction_potential() {
+    let nominal = Mosfet::with_model(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        MosfetType::Nmos,
+        MosfetLevel1Params::default(),
+    );
+
+    let cold = mosfet_at_temperature(&nominal, 275.0, 300.15, 1.11).unwrap();
+    let hot = mosfet_at_temperature(&nominal, 350.0, 300.15, 1.11).unwrap();
+
+    assert_close(cold.params.bulk_junction_potential, 0.839_148_690_629_946_5);
+    assert_close(hot.params.bulk_junction_potential, 0.719_697_229_921_455);
+}
+
+#[test]
+fn mosfet_temperature_scaling_adjusts_zero_bias_junction_capacitances() {
+    let nominal = Mosfet::with_model(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            bottom_junction_capacitance: 2.0e-12,
+            source_bulk_capacitance: 3.0e-12,
+            drain_bulk_capacitance: 4.0e-12,
+            sidewall_junction_capacitance: 5.0e-12,
+            ..MosfetLevel1Params::default()
+        },
+    );
+
+    let cold = mosfet_at_temperature(&nominal, 275.0, 300.15, 1.11).unwrap();
+    let hot = mosfet_at_temperature(&nominal, 350.0, 300.15, 1.11).unwrap();
+    let cold_bottom_scale = 0.970_502_066_286_684_6;
+    let cold_sidewall_scale = 0.980_531_363_923_873_3;
+    let hot_bottom_scale = 1.060_159_235_535_130_4;
+    let hot_sidewall_scale = 1.039_705_095_096_974_2;
+
+    assert_close(
+        cold.params.bottom_junction_capacitance,
+        2.0e-12 * cold_bottom_scale,
+    );
+    assert_close(
+        cold.params.source_bulk_capacitance,
+        3.0e-12 * cold_bottom_scale,
+    );
+    assert_close(
+        cold.params.drain_bulk_capacitance,
+        4.0e-12 * cold_bottom_scale,
+    );
+    assert_close(
+        cold.params.sidewall_junction_capacitance,
+        5.0e-12 * cold_sidewall_scale,
+    );
+    assert_close(
+        hot.params.bottom_junction_capacitance,
+        2.0e-12 * hot_bottom_scale,
+    );
+    assert_close(
+        hot.params.source_bulk_capacitance,
+        3.0e-12 * hot_bottom_scale,
+    );
+    assert_close(
+        hot.params.drain_bulk_capacitance,
+        4.0e-12 * hot_bottom_scale,
+    );
+    assert_close(
+        hot.params.sidewall_junction_capacitance,
+        5.0e-12 * hot_sidewall_scale,
     );
 }
 
@@ -3577,6 +3795,60 @@ fn mosfet_temperature_scaling_adjusts_bulk_junction_saturation_currents() {
             .unwrap()
     };
     assert!(junction_current(&silicon) > junction_current(&lower_gap));
+}
+
+#[test]
+fn mosfet_temperature_scaling_prefers_model_nominal_temperature() {
+    let nominal = Mosfet::with_model(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            kp: 200.0e-6,
+            surface_mobility: 500.0,
+            t_nom: 325.0,
+            ..MosfetLevel1Params::default()
+        },
+    );
+    let expected_scale = (350.0_f64 / 325.0).powf(-1.5);
+    let hot = mosfet_at_temperature(&nominal, 350.0, 300.15, 1.11).unwrap();
+
+    assert_close(hot.params.kp, nominal.params.kp * expected_scale);
+    assert_close(
+        hot.params.surface_mobility,
+        nominal.params.surface_mobility * expected_scale,
+    );
+
+    let mut circuit = Circuit::new();
+    circuit.add(Element::Mosfet(nominal));
+    let adjusted = circuit_at_temperature(&circuit, 350.0, 300.15, 1.11).unwrap();
+    let circuit_kp = adjusted
+        .elements()
+        .iter()
+        .find_map(|element| match element {
+            Element::Mosfet(mosfet) => Some(mosfet.params.kp),
+            _ => None,
+        })
+        .unwrap();
+    assert_close(circuit_kp, 200.0e-6 * expected_scale);
+
+    let fallback = Mosfet::with_model(
+        "M2",
+        "d",
+        "g",
+        "s",
+        "b",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            kp: 200.0e-6,
+            ..MosfetLevel1Params::default()
+        },
+    );
+    let fallback_hot = mosfet_at_temperature(&fallback, 350.0, 325.0, 1.11).unwrap();
+    assert_close(fallback_hot.params.kp, 200.0e-6 * expected_scale);
 }
 
 #[test]
