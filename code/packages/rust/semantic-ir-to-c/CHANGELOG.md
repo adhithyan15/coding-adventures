@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.19.0 — OOP mirror slice 5: class methods
+
+Class (singleton) methods — the fifth slice of the C OOP mirror. No new
+`Feature` (class methods lower to builtins).
+
+- `def self.m` → a hoisted function + `__def_class_method__("C", "m",
+  MakeClosure(fn))` → `_sir_def_class_method`, which registers the closure in a
+  **separate** `(class, method) → closure` table from instance methods. A class
+  method `m` and an instance method `m` on the same class therefore never
+  collide (both are legal and distinct in Ruby).
+- `Class.m(args…)` → `__class_method__("C", "m", args…)` →
+  `_sir_call_class_method`, an explicit table lookup — never reflection — that
+  **walks the ancestry** (`_sir_class_super`), so a subclass inherits its
+  parent's class methods (`class A; def self.m; end; end; class B < A; end; B.m`).
+- A class method has no instance receiver, so `_sir_current_self` is bound to
+  **nil** for its body (and restored after) — a class method called from inside
+  an instance method never sees the caller's `self`.
+
+**Anti-RCE / totality.** Class and method names emit as **quoted C string
+literals** used only as table keys (no injection). A `__class_method__` dispatch
+to a name the module never registers via `__def_class_method__` is a built-in
+class method (`Foo.name`, the Collections batch) and is rejected cleanly via a
+`DEFINED_CLASS_METHODS` allowlist (collected in the same walk as the instance-
+method allowlist); a malformed registration/dispatch, or one carrying a
+control-flow argument, is likewise rejected rather than mis-emitted. `@@class`
+variables and modules remain the last two slices (still rejected cleanly).
+
 ## 0.18.0 — `fmt_float`: C-printf-faithful float formatting
 
 One builtin, mirroring the Ruby backend, for the C frontend's faithful `printf`

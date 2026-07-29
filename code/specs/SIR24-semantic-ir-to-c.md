@@ -378,7 +378,11 @@ lockstep:
    resolution; `_sir_call_method` resolves up the chain, `super` → `_sir_call_super`
    from the superclass of the defining class; every walk bounded by
    `SIR_ANCESTRY_MAX` against a cyclic hand-built hierarchy) landed in 0.16.0;
-   then class methods, `ClassVars`, and `Modules` (mixins / MRO).
+   class methods (`def self.m` → `__def_class_method__` into a SEPARATE
+   class-method/singleton table — no collision with an instance method of the
+   same name — and `Class.m` → `__class_method__` → `_sir_call_class_method`, an
+   ancestry-walking lookup so class methods inherit, binding `self` to nil)
+   landed in 0.19.0; then `ClassVars`, and `Modules` (mixins / MRO).
 7. **Optional / later** — `Bignum`; SIR21 sized-integer native lowering
    (`int64_t`/`uint32_t` from `IntSpec`); `Range` / regex / backtick shims.
 
