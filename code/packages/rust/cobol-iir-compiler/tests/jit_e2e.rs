@@ -2606,6 +2606,141 @@ fn refmod_computed_zero_start_traps_on_both_engines() {
     ));
 }
 
+// ---------------------------------------------------------------------------
+// Reference-modification SOURCE of a MOVE — `MOVE base(start:len) TO dst` into
+// an ALPHANUMERIC receiver. The slice is fit to the receiver's width by the
+// ordinary alphanumeric char rule (left-justify; space-pad if wider; truncate
+// if narrower), exactly as a same-category char MOVE reshapes. A numeric
+// receiver stays a later rung, rejected on both engines. Every accepted case
+// pins the compiled JIT output to the oracle byte-for-byte.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn refmod_move_source_mid_substring() {
+    // WS = "ABCDE"; MOVE WS(2:3) → "BCD" into an equal-width receiver.
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  DST PIC X(3)."],
+        &["MOVE WS(2:3) TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "BCD\n");
+}
+
+#[test]
+fn refmod_move_source_omitted_length_runs_to_end() {
+    // MOVE WS(3:) → from position 3 to the end → "CDE".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  DST PIC X(3)."],
+        &["MOVE WS(3:) TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "CDE\n");
+}
+
+#[test]
+fn refmod_move_source_single_leading_char() {
+    // MOVE WS(1:1) → the first character "A".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  DST PIC X(1)."],
+        &["MOVE WS(1:1) TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "A\n");
+}
+
+#[test]
+fn refmod_move_source_into_wider_receiver_space_pads() {
+    // The 2-char slice "BC" into a 5-wide receiver → left-justified, tail spaces.
+    // A trailing marker proves the two padding spaces are present.
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  DST PIC X(5)."],
+        &["MOVE WS(2:2) TO DST.", "DISPLAY DST \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "BC   |\n");
+}
+
+#[test]
+fn refmod_move_source_into_narrower_receiver_truncates() {
+    // The 4-char slice "BCDE" into a 2-wide receiver → keep the leftmost two "BC".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  DST PIC X(2)."],
+        &["MOVE WS(2:4) TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "BC\n");
+}
+
+#[test]
+fn refmod_move_source_computed_index() {
+    // A computed (data-name) index takes the run-time slice-fit path: WS(J:K) with
+    // J=2, K=3 → "BCD", into an equal-width receiver.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  WS  PIC X(5) VALUE \"ABCDE\".",
+            "01  J   PIC 9 VALUE 2.",
+            "01  K   PIC 9 VALUE 3.",
+            "01  DST PIC X(3).",
+        ],
+        &["MOVE WS(J:K) TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "BCD\n");
+}
+
+#[test]
+fn refmod_move_source_computed_index_into_wider_receiver_space_pads() {
+    // Run-time-length slice fit into a WIDER receiver: WS(J:2)="BC" (J=2) into a
+    // 5-wide receiver → "BC   ". Exercises the run-time concat-then-truncate pad.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  WS  PIC X(5) VALUE \"ABCDE\".",
+            "01  J   PIC 9 VALUE 2.",
+            "01  DST PIC X(5).",
+        ],
+        &["MOVE WS(J:2) TO DST.", "DISPLAY DST \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "BC   |\n");
+}
+
+#[test]
+fn refmod_move_source_multiple_receivers() {
+    // MOVE WS(1:2) TO A B → "AB" into both receivers (the loop over receivers).
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  WS  PIC X(5) VALUE \"ABCDE\".",
+            "01  A   PIC X(2).",
+            "01  B   PIC X(4).",
+        ],
+        &["MOVE WS(1:2) TO A B.", "DISPLAY A \"|\".", "DISPLAY B \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "AB|\nAB  |\n");
+}
+
+#[test]
+fn refmod_move_source_ascii_prefix_window_non_ascii_outside() {
+    // Non-ASCII CLEANLINESS: the multi-byte char 'é' sits at the END of the source,
+    // strictly OUTSIDE the (1:3) window, so byte-index == char-index within the
+    // window and the byte-based (compiler) and char-based (oracle) slices coincide
+    // → "abc", byte-identical. (A window covering/following a multi-byte char is
+    // the pre-existing refmod byte-vs-char chip, deliberately not exercised here.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"abcdé\".", "01  DST PIC X(3)."],
+        &["MOVE WS(1:3) TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "abc\n");
+}
+
+#[test]
+fn refmod_move_source_into_numeric_receiver_is_a_later_rung() {
+    // The remaining boundary: a refmod MOVE source into a NUMERIC receiver stays a
+    // later rung, rejected on BOTH engines (de-editing a slice into a numeric field
+    // is not lowered on this rung).
+    let src = wrap(
+        &["01  WS  PIC X(5) VALUE \"12345\".", "01  NUM PIC 9(3)."],
+        &["MOVE WS(1:3) TO NUM.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a refmod MOVE into a numeric receiver");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a refmod MOVE into a numeric receiver"
+    );
+}
+
 // STRING — concatenate sending fields into an alphanumeric receiver
 // (DELIMITED BY SIZE = each source taken in full). The receiver is LEFT-
 // justified, truncated at its width, and — the COBOL surprise — its tail beyond

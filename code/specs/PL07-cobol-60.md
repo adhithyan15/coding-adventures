@@ -207,7 +207,25 @@ new `COLON` token.
 
 Semantics are 1-based, so the byte range is `[start-1, start-1+length)`; an
 omitted length runs to the item end (`end = item_width`). Reference modification
-is supported in `DISPLAY` and alphanumeric-comparison (`IF`/`EVALUATE`) operands.
+is supported in `DISPLAY`, alphanumeric-comparison (`IF`/`EVALUATE`) operands, and
+as a **MOVE source** into an **alphanumeric** receiver (`MOVE base(start:length) TO
+dst`).
+
+**As a MOVE source.** A reference-modified source moved into an alphanumeric
+receiver reshapes the slice to the receiver's width by the ordinary alphanumeric
+char rule — LEFT-justified, space-padded on the right when the receiver is wider
+than the slice, truncated on the right when narrower — exactly as a same-category
+alphanumeric MOVE reshapes. The slice comes from the SAME helper `DISPLAY` and
+comparison use (the oracle's `refmod_string`, the compiler's `ref_mod_slice`), so a
+MOVE of a slice and a `DISPLAY` of the same slice agree byte-for-byte. Constant
+`SRC(2:3)`, omitted-length `SRC(3:)`, and computed `SRC(J:K)` indices are all
+supported, into one or more receivers (`MOVE SRC(1:3) TO A B`). A **numeric**
+receiver (de-editing a slice into a numeric field) remains a later rung, rejected
+on both engines. The compiler slices by BYTE offset and the oracle by CHAR index;
+on the ASCII-prefix windows this targets they coincide, so accepted programs emit
+byte-identical output (a multi-byte char inside or after the window is the
+pre-existing refmod byte-vs-char chip, shared with `DISPLAY`/comparison, not new to
+the MOVE-source path).
 
 **Constant (literal) indices.** When `start` and `length` are both integer
 literals, the compiler validates the range at compile time and lowers to a
@@ -238,9 +256,10 @@ applies the same predicate in `refmod_string`, returning `RefModOutOfRange`. So 
 **in-range** computed refmod slices byte-identically on the compiler and the
 oracle, and an **out-of-range** one errors on both — never a silently wrong slice.
 
-Reference modification of a numeric item, and use in a
-numeric/arithmetic/`MOVE`-source context, remain later rungs (for both constant
-and computed indices).
+Reference modification of a numeric item, and use in a numeric/arithmetic context
+(including a `MOVE` into a **numeric** receiver), remain later rungs (for both
+constant and computed indices). A `MOVE` of a reference-modified source into an
+**alphanumeric** receiver is supported (see "As a MOVE source" above).
 
 ## Layer Position
 
