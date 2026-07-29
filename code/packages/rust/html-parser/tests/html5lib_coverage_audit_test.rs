@@ -19,6 +19,7 @@ struct CoverageAudit {
 
 #[derive(Debug, Deserialize)]
 struct TreeConstructionAudit {
+    upstream_source: String,
     upstream_cases: usize,
     local_cases: usize,
     missing: usize,
@@ -27,6 +28,7 @@ struct TreeConstructionAudit {
 
 #[derive(Debug, Deserialize)]
 struct TokenizerAudit {
+    upstream_source: String,
     upstream_cases: usize,
     local_raw_cases: usize,
     missing: usize,
@@ -66,12 +68,44 @@ fn html5lib_coverage_audit_fixture_matches_checked_local_corpora() {
         serde_json::from_str(HTML5LIB_NORMALIZED_FIXTURES)
             .expect("normalized html5lib fixture should parse");
 
-    assert_eq!(audit.tree_construction.upstream_cases, 1778);
+    assert_eq!(
+        audit.tree_construction.upstream_source,
+        "wpt/html/syntax/parsing/resources"
+    );
+    assert_eq!(audit.tree_construction.upstream_cases, 1934);
     assert_eq!(audit.tree_construction.local_cases, tree_cases.len());
     assert_eq!(audit.tree_construction.local_cases, 2485);
-    assert_eq!(audit.tree_construction.missing, 0);
-    assert!(audit.tree_construction.missing_sources.is_empty());
+    assert_eq!(audit.tree_construction.missing, 156);
+    assert_eq!(
+        audit.tree_construction.missing_sources.len(),
+        audit.tree_construction.missing
+    );
+    assert_eq!(
+        missing_source_count(&audit.tree_construction, "processing-instructions.dat:"),
+        124
+    );
+    assert_eq!(
+        missing_source_count(&audit.tree_construction, "void-in-phrasing.dat:"),
+        13
+    );
+    assert_eq!(
+        missing_source_count(&audit.tree_construction, "plain-text-unsafe.dat:"),
+        8
+    );
+    assert_eq!(
+        missing_source_count(&audit.tree_construction, "html5test-com.dat:"),
+        7
+    );
+    assert_eq!(
+        missing_source_count(&audit.tree_construction, "tests1.dat:"),
+        3
+    );
+    assert_eq!(
+        missing_source_count(&audit.tree_construction, "adoption02.dat:"),
+        1
+    );
 
+    assert_eq!(audit.tokenizer.upstream_source, "html5lib-tests/tokenizer");
     assert_eq!(audit.tokenizer.upstream_cases, 6806);
     assert_eq!(audit.tokenizer.local_raw_cases, raw_tokenizer.tests.len());
     assert_eq!(audit.tokenizer.local_raw_cases, 7015);
@@ -87,4 +121,12 @@ fn html5lib_coverage_audit_fixture_matches_checked_local_corpora() {
     assert_eq!(audit.tokenizer.normalized_skipped, 0);
     assert_eq!(audit.tokenizer.missing, 0);
     assert!(audit.tokenizer.missing_sources.is_empty());
+}
+
+fn missing_source_count(audit: &TreeConstructionAudit, prefix: &str) -> usize {
+    audit
+        .missing_sources
+        .iter()
+        .filter(|source| source.starts_with(prefix))
+        .count()
 }

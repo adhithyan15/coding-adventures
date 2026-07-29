@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- The conformance coverage audit now reads tree-construction cases from WPT and
+  tokenizer cases from html5lib-tests, pins every missing WPT source signature,
+  and accepts only explicit missing-case debt counts so the current 156-case gap
+  can be ratcheted to zero without hiding upstream drift.
 - Fostered `nobr` table-cell continuation nodes are now repaired while
   processing the EOF token, retiring the final `finish_document` post-parse
   shim and the now-obsolete focused post-parse repair audit while preserving

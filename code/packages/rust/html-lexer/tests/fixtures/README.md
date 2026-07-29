@@ -326,19 +326,22 @@ python3 code/packages/rust/html-lexer/tests/fixtures/generate_whatwg_doctype_bou
 
 ## Conformance Audit
 
-The parser package owns a shared html5lib source-coverage audit that checks the
-tree-construction fixture, this raw tokenizer mirror, and the generated
-normalized tokenizer corpus together:
+The parser package owns a shared upstream source-coverage audit that checks WPT
+tree-construction resources, this raw html5lib tokenizer mirror, and the
+generated normalized tokenizer corpus together:
 
 ```bash
 HTML5LIB_TESTS_ROOT=/path/to/html5lib-tests \
-  python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py
+WPT_ROOT=/path/to/wpt \
+  python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py \
+  --expect-tree-missing 156 \
+  --expect-tokenizer-missing 0
 ```
 
-The command exits nonzero if any upstream tokenizer case is missing from
-`upstream-html5lib-smoke.test`, if any upstream tree-construction case is
-missing from the parser fixture, or if `html5lib-smoke.json` still records
-skipped runtime gaps.
+Without exact missing-case expectations, the command exits nonzero if an
+upstream tokenizer or tree-construction case is absent locally. The current
+checked debt is 156 WPT tree cases and zero html5lib tokenizer cases.
+`html5lib-smoke.json` runtime skips always fail.
 
 The same audit can verify the checked
 `html-parser/tests/fixtures/html5lib-coverage-audit.json` report with
@@ -351,9 +354,10 @@ do not require fresh upstream downloads, run:
 python3 code/packages/rust/html-lexer/tests/fixtures/check_generated_html_fixtures.py
 ```
 
-Pass `--html5lib-tests /path/to/html5lib-tests` to include the parser coverage
-audit report and pinned-count checks, or `--entities-json /path/to/entities.json`
-to include the generated WHATWG named-character-reference table.
+Pass `--html5lib-tests /path/to/html5lib-tests --wpt-tests /path/to/wpt` to
+include the parser coverage audit report and pinned-count checks, or
+`--entities-json /path/to/entities.json` to include the generated WHATWG
+named-character-reference table.
 
 To verify that new self-contained WHATWG fixture generators are added to the
 manifest, run:

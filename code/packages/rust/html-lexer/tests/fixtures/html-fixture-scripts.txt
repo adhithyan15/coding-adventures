@@ -59,3 +59,4 @@ html-parser/tests/fixtures/generate_whatwg_template_audit_fixture.py
 html-parser/tests/fixtures/generate_whatwg_text_control_audit_fixture.py
 html-parser/tests/fixtures/generate_whatwg_tree_insertion_audit_fixture.py
 html-parser/tests/fixtures/generate_whatwg_void_element_audit_fixture.py
+html-parser/tests/fixtures/test_html_conformance_coverage_audit.py

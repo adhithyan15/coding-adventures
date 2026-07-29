@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
-"""Audit Venture's checked-in HTML fixtures against upstream html5lib tests.
+"""Audit Venture's checked-in HTML fixtures against upstream HTML tests.
 
 The script is intentionally dependency-free so it can run from a fresh checkout
-with only Python 3 installed. Point it at an html5lib-tests checkout:
+with only Python 3 installed. Tree-construction tests are maintained in WPT,
+while tokenizer tests remain in html5lib-tests:
 
-    HTML5LIB_TESTS_ROOT=/path/to/html5lib-tests python3 \
+    HTML5LIB_TESTS_ROOT=/path/to/html5lib-tests \
+    WPT_ROOT=/path/to/wpt \
+    python3 \
       code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py
 
 It compares source fixture signatures rather than test descriptions so local
@@ -50,7 +53,11 @@ class TokenizerCase:
 def main() -> int:
     args = parse_args()
     project_rust_root = Path(__file__).resolve().parents[3]
-    upstream_root = resolve_upstream_root(args.upstream_root)
+    html5lib_root = resolve_html5lib_root(args.upstream_root)
+    upstream_tree_path, upstream_tree_source = resolve_upstream_tree_path(
+        args.wpt_root,
+        html5lib_root,
+    )
 
     local_tree_path = (
         project_rust_root
@@ -74,11 +81,11 @@ def main() -> int:
         / "html5lib-smoke.json"
     )
 
-    upstream_tree = load_tree_cases(upstream_root / "tree-construction")
+    upstream_tree = load_tree_cases(upstream_tree_path)
     local_tree = parse_tree_construction_dat(local_tree_path)
     missing_tree = missing_cases(upstream_tree, local_tree)
 
-    upstream_tokenizer = load_tokenizer_cases(upstream_root / "tokenizer")
+    upstream_tokenizer = load_tokenizer_cases(html5lib_root / "tokenizer")
     local_tokenizer = load_tokenizer_cases(local_tokenizer_raw_path)
     missing_tokenizer = missing_cases(upstream_tokenizer, local_tokenizer)
 
@@ -88,18 +95,18 @@ def main() -> int:
 
     report = {
         "tree_construction": {
+            "upstream_source": upstream_tree_source,
             "upstream_cases": len(upstream_tree),
             "local_cases": len(local_tree),
             "missing": len(missing_tree),
-            "missing_sources": [case.source for case in missing_tree[: args.max_missing]],
+            "missing_sources": [case.source for case in missing_tree],
         },
         "tokenizer": {
+            "upstream_source": "html5lib-tests/tokenizer",
             "upstream_cases": len(upstream_tokenizer),
             "local_raw_cases": len(local_tokenizer),
             "missing": len(missing_tokenizer),
-            "missing_sources": [
-                case.source for case in missing_tokenizer[: args.max_missing]
-            ],
+            "missing_sources": [case.source for case in missing_tokenizer],
             "normalized_cases": len(normalized_cases),
             "normalized_skipped": len(normalized_skipped),
         },
@@ -108,7 +115,12 @@ def main() -> int:
     if args.json:
         print(json.dumps(report, indent=2, sort_keys=True))
     else:
-        print_report(report, upstream_root)
+        print_report(
+            report,
+            upstream_tree_path,
+            html5lib_root / "tokenizer",
+            args.max_missing,
+        )
 
     report_mismatch = None
     if args.write_report:
@@ -125,8 +137,8 @@ def main() -> int:
         print(f"expectation mismatch: {mismatch}", file=sys.stderr)
 
     if (
-        missing_tree
-        or missing_tokenizer
+        (missing_tree and args.expect_tree_missing is None)
+        or (missing_tokenizer and args.expect_tokenizer_missing is None)
         or normalized_skipped
         or report_mismatch
         or expectation_mismatches
@@ -146,6 +158,15 @@ def parse_args() -> argparse.Namespace:
         help=(
             "Path to html5lib-tests, or a checkout containing that directory. "
             "Defaults to HTML5LIB_TESTS_ROOT."
+        ),
+    )
+    parser.add_argument(
+        "--wpt-root",
+        default=os.environ.get("WPT_ROOT"),
+        help=(
+            "Path to a WPT checkout or html/syntax/parsing/resources. "
+            "Defaults to WPT_ROOT. When omitted, a legacy html5lib-tests "
+            "tree-construction directory is used if present."
         ),
     )
     parser.add_argument(
@@ -186,6 +207,14 @@ def parse_args() -> argparse.Namespace:
         help="Require the checked-in tree-construction case count to match.",
     )
     parser.add_argument(
+        "--expect-tree-missing",
+        type=int,
+        help=(
+            "Require this many upstream tree-construction cases to be missing. "
+            "Supplying the flag accepts that exact checked debt baseline."
+        ),
+    )
+    parser.add_argument(
         "--expect-tokenizer-upstream-cases",
         type=int,
         help="Require the upstream tokenizer case count to match.",
@@ -194,6 +223,14 @@ def parse_args() -> argparse.Namespace:
         "--expect-tokenizer-local-raw-cases",
         type=int,
         help="Require the checked-in raw tokenizer case count to match.",
+    )
+    parser.add_argument(
+        "--expect-tokenizer-missing",
+        type=int,
+        help=(
+            "Require this many upstream tokenizer cases to be missing. "
+            "Supplying the flag accepts that exact checked debt baseline."
+        ),
     )
     parser.add_argument(
         "--expect-normalized-cases",
@@ -208,7 +245,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def resolve_upstream_root(raw_root: str | None) -> Path:
+def resolve_html5lib_root(raw_root: str | None) -> Path:
     if not raw_root:
         raise SystemExit(
             "Provide html5lib-tests via an argument or HTML5LIB_TESTS_ROOT."
@@ -217,12 +254,38 @@ def resolve_upstream_root(raw_root: str | None) -> Path:
     root = Path(raw_root).expanduser().resolve()
     candidates = [root, root / "html5lib-tests"]
     for candidate in candidates:
-        if (candidate / "tree-construction").is_dir() and (
-            candidate / "tokenizer"
-        ).is_dir():
+        if (candidate / "tokenizer").is_dir():
             return candidate
 
     raise SystemExit(f"{root} does not look like an html5lib-tests checkout")
+
+
+def resolve_upstream_tree_path(
+    raw_wpt_root: str | None,
+    html5lib_root: Path,
+) -> tuple[Path, str]:
+    if raw_wpt_root:
+        root = Path(raw_wpt_root).expanduser().resolve()
+        candidates = [
+            root,
+            root / "html" / "syntax" / "parsing" / "resources",
+            root / "wpt" / "html" / "syntax" / "parsing" / "resources",
+        ]
+        for candidate in candidates:
+            if candidate.is_dir() and any(candidate.glob("*.dat")):
+                return candidate, "wpt/html/syntax/parsing/resources"
+        raise SystemExit(
+            f"{root} does not look like a WPT checkout or parsing resources directory"
+        )
+
+    legacy_tree_path = html5lib_root / "tree-construction"
+    if legacy_tree_path.is_dir():
+        return legacy_tree_path, "html5lib-tests/tree-construction"
+
+    raise SystemExit(
+        "Current html5lib-tests no longer contains tree-construction tests. "
+        "Provide WPT via --wpt-root or WPT_ROOT."
+    )
 
 
 def load_tree_cases(path: Path) -> list[TreeCase]:
@@ -397,6 +460,11 @@ def collect_expectation_mismatches(
             args.expect_tree_local_cases,
         ),
         (
+            "tree-construction missing cases",
+            tree["missing"],
+            args.expect_tree_missing,
+        ),
+        (
             "tokenizer upstream cases",
             tokenizer["upstream_cases"],
             args.expect_tokenizer_upstream_cases,
@@ -405,6 +473,11 @@ def collect_expectation_mismatches(
             "tokenizer local raw cases",
             tokenizer["local_raw_cases"],
             args.expect_tokenizer_local_raw_cases,
+        ),
+        (
+            "tokenizer missing cases",
+            tokenizer["missing"],
+            args.expect_tokenizer_missing,
         ),
         (
             "tokenizer normalized cases",
@@ -425,33 +498,39 @@ def collect_expectation_mismatches(
     return mismatches
 
 
-def print_report(report: dict[str, Any], upstream_root: Path) -> None:
+def print_report(
+    report: dict[str, Any],
+    upstream_tree_path: Path,
+    upstream_tokenizer_path: Path,
+    max_missing: int,
+) -> None:
     tree = report["tree_construction"]
     tokenizer = report["tokenizer"]
 
-    print("html5lib coverage audit")
-    print(f"upstream: {upstream_root}")
+    print("HTML conformance coverage audit")
     print("")
     print("tree-construction:")
+    print(f"  upstream:       {upstream_tree_path}")
     print(f"  upstream cases: {tree['upstream_cases']}")
     print(f"  local cases:    {tree['local_cases']}")
     print(f"  missing:        {tree['missing']}")
-    print_missing(tree["missing_sources"])
+    print_missing(tree["missing_sources"], max_missing)
     print("")
     print("tokenizer:")
+    print(f"  upstream:           {upstream_tokenizer_path}")
     print(f"  upstream cases:     {tokenizer['upstream_cases']}")
     print(f"  local raw cases:    {tokenizer['local_raw_cases']}")
     print(f"  missing:            {tokenizer['missing']}")
     print(f"  normalized cases:   {tokenizer['normalized_cases']}")
     print(f"  normalized skipped: {tokenizer['normalized_skipped']}")
-    print_missing(tokenizer["missing_sources"])
+    print_missing(tokenizer["missing_sources"], max_missing)
 
 
-def print_missing(sources: list[str]) -> None:
+def print_missing(sources: list[str], max_missing: int) -> None:
     if not sources:
         return
     print("  first missing sources:")
-    for source in sources:
+    for source in sources[:max_missing]:
         print(f"    - {source}")
 
 
