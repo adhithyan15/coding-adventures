@@ -33,13 +33,13 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Berkeley netlist lowering for Level-1 MOS junction shaping.
+1. Berkeley netlist lowering for remaining Level-1 MOS model fields.
    - Status: current PR completion candidate.
-   - Preserve model-card `PB`, `MJ`, and `FC` when the Rust Berkeley netlist
-     facade lowers Level-1 MOS devices into the engine parameter bundle.
-   - Prove source-deck values reach the existing cross-language AC and transient
-     depletion-capacitance behavior instead of silently falling back to
-     defaults.
+   - Preserve canonical `LD`, `TOX`, `RD`, `RS`, `KF`, and `AF` values plus
+     the supported `VTH`, `LAM`, `CJS`, and `CJD` aliases when the Rust
+     Berkeley facade lowers Level-1 MOS devices.
+   - Prove canonical and alias forms reach their existing engine fields instead
+     of silently falling back to defaults.
 
 ## Completed Slices
 
@@ -3526,6 +3526,13 @@ the Rust, Python, and TypeScript surfaces together.
      `MJ`-controlled bottom-junction terms in AC and transient analysis.
    - Hierarchy, cloning, validation, model-card coverage, and the Rust netlist
      facade preserve the parameter.
+
+279. Berkeley netlist lowering for Level-1 MOS junction shaping.
+   - Status: completed in PR 9088.
+   - The Rust Berkeley netlist facade now preserves model-card `PB`, `MJ`, and
+     `FC` in the Level-1 engine parameter bundle.
+   - Source-deck integration coverage proves all three values reach the existing
+     cross-language depletion-capacitance behavior.
 
 ## Backlog
 

@@ -1922,13 +1922,17 @@ fn build_mosfet_params(
 
 fn apply_mosfet_param(params: &mut MosfetLevel1Params, name: &str, value: f64) {
     match name {
-        "VT0" | "VTO" => params.vt0 = value,
+        "VT0" | "VTO" | "VTH" => params.vt0 = value,
         "KP" => params.kp = value,
-        "LAMBDA" => params.lambda = value,
+        "LAMBDA" | "LAM" => params.lambda = value,
         "GAMMA" => params.gamma = value,
         "PHI" => params.phi = value,
         "W" => params.w = value,
         "L" => params.l = value,
+        "LD" => params.lateral_diffusion_length = value,
+        "TOX" => params.oxide_thickness = value,
+        "RD" => params.drain_resistance = value,
+        "RS" => params.source_resistance = value,
         "RSH" => params.sheet_resistance = value,
         "IS" => params.saturation_current = value,
         "N_SUB" | "NSUB" | "N" => params.n_sub = value,
@@ -1936,14 +1940,16 @@ fn apply_mosfet_param(params: &mut MosfetLevel1Params, name: &str, value: f64) {
         "CGSO" => params.gate_source_overlap_capacitance = value,
         "CGDO" => params.gate_drain_overlap_capacitance = value,
         "CGBO" => params.gate_bulk_overlap_capacitance = value,
-        "CBS" => params.source_bulk_capacitance = value,
-        "CBD" => params.drain_bulk_capacitance = value,
+        "CBS" | "CJS" => params.source_bulk_capacitance = value,
+        "CBD" | "CJD" => params.drain_bulk_capacitance = value,
         "CJ" => params.bottom_junction_capacitance = value,
         "CJSW" => params.sidewall_junction_capacitance = value,
         "PB" => params.bulk_junction_potential = value,
         "MJ" => params.bulk_junction_grading_coefficient = value,
         "MJSW" => params.sidewall_junction_grading_coefficient = value,
         "FC" => params.forward_bias_depletion_coefficient = value,
+        "KF" => params.flicker_noise_coefficient = value,
+        "AF" => params.flicker_noise_exponent = value,
         _ => {}
     }
 }
