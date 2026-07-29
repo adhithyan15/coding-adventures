@@ -1,5 +1,8 @@
 # Changelog
 
+- Accept Berkeley Level-1 MOS model-card `TPG` gate-material selectors and use
+  their `-1`, `0`, or `1` work-function branches when deriving `VT0`, while
+  preserving explicit threshold-voltage precedence.
 - Accept Level-1 MOS model-card `NSS` surface-state density and include its
   oxide-charge flat-band shift when deriving `VT0` from process parameters,
   while preserving explicit threshold-voltage precedence.

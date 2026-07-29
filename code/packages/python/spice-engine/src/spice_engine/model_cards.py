@@ -323,8 +323,8 @@ _MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES = {
     "PNP": (41, 58, 13, 4),
     "NJF": (22, 30, 7, 3),
     "PJF": (22, 30, 7, 3),
-    "NMOS": (32, 40, 7, 3),
-    "PMOS": (32, 40, 7, 3),
+    "NMOS": (33, 41, 7, 3),
+    "PMOS": (33, 41, 7, 3),
 }
 
 
@@ -487,6 +487,7 @@ _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
     "NSUB": "N_SUB",
     "N_SUB": "N_SUB",
     "NSS": "NSS",
+    "TPG": "TPG",
     "TNOM": "T_NOM",
     "T_NOM": "T_NOM",
     "CGSO": "CGSO",
@@ -565,6 +566,8 @@ def normalize_model_card(
             if abs(value - 1.0) > 1.0e-12:
                 raise ValueError(f"{name}: only MOS LEVEL=1 model cards are supported")
             normalized[canonical] = 1.0
+        elif canonical == "TPG" and value not in {-1.0, 0.0, 1.0}:
+            raise ValueError(f"{name}: MOSFET TPG must be -1, 0, or 1")
         else:
             normalized[canonical] = value
     return NormalizedModelCard(
@@ -1125,20 +1128,31 @@ def mosfet_from_model_card(
                 ) / oxide_capacitance
     threshold_voltage = p.get("VT0", defaults.VT0)
     if "VT0" not in p and "N_SUB" in p and "TOX" in p and p["TOX"] > 0.0:
-        polarity = 1.0 if model.kind == "NMOS" else -1.0
         nominal_temperature = p.get("T_NOM", defaults.T_NOM)
         oxide_capacitance = OXIDE_PERMITTIVITY / p["TOX"]
+        polarity = 1.0 if model.kind == "NMOS" else -1.0
+        band_gap = _silicon_band_gap_electron_volts(nominal_temperature)
+        gate_type = p.get("TPG", 1.0)
+        substrate_fermi_potential = polarity * 0.5 * surface_potential
+        gate_work_function = 3.2
+        if gate_type != 0.0:
+            gate_fermi_potential = polarity * gate_type * 0.5 * band_gap
+            gate_work_function = 3.25 + 0.5 * band_gap - gate_fermi_potential
+        gate_substrate_work_function = gate_work_function - (
+            3.25 + 0.5 * band_gap + substrate_fermi_potential
+        )
         surface_state_shift = (
             p.get("NSS", 0.0) * 1.0e4 * _ELECTRON_CHARGE / oxide_capacitance
         )
-        threshold_voltage = polarity * (
-            body_effect_coefficient * math.sqrt(surface_potential)
-            + 0.5
+        threshold_voltage = (
+            gate_substrate_work_function
+            - surface_state_shift
+            + polarity
             * (
-                surface_potential
-                - _silicon_band_gap_electron_volts(nominal_temperature)
+                body_effect_coefficient * math.sqrt(surface_potential)
+                + surface_potential
             )
-        ) - surface_state_shift
+        )
     params = replace(
         defaults,
         VT0=threshold_voltage,

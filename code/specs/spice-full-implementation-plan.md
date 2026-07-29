@@ -33,10 +33,10 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS surface-state density.
+1. Cross-language Level-1 MOS gate material.
    - Status: current PR completion candidate.
-   - Accept model-card `NSS` and include its oxide-charge flat-band shift when
-     deriving `VT0` from `NSUB` plus `TOX`.
+   - Accept Berkeley model-card `TPG` values `-1`, `0`, and `1` and include the
+     selected gate work function when deriving `VT0` from `NSUB` plus `TOX`.
    - Preserve explicit `VTO` / `VT0` precedence and stable parameter coverage.
    - Keep Rust, Python, and TypeScript model lowering, tests, and docs aligned.
 
@@ -3622,6 +3622,13 @@ the Rust, Python, and TypeScript surfaces together.
      MOS1 default gate-work-function and surface-state assumptions.
    - Explicit `VTO` / `VT0` takes precedence for NMOS and PMOS across Rust,
      Python, and TypeScript.
+
+292. Cross-language Level-1 MOS surface-state density.
+   - Status: completed in PR 9163.
+   - Model-card `NSS` contributes the Berkeley oxide-charge flat-band shift
+     when `VT0` is derived from `NSUB` plus `TOX`.
+   - Explicit `VTO` / `VT0` precedence, normalized parameter coverage, and
+     matching NMOS/PMOS behavior are preserved across all three languages.
 
 ## Backlog
 
