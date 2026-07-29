@@ -1,5 +1,8 @@
 # Changelog
 
+- Add Level-1 MOS model-card `JS` as bulk-junction saturation-current density,
+  scaling source/drain leakage and shot noise by `AS` / `AD` when both areas
+  are present and otherwise retaining Berkeley-compatible `IS` fallback.
 - Apply Level-1 MOS model-card `IS` to the source-body and drain-body junctions
   in DC, transient, transfer-function, and AC analysis, and emit distinct
   `IBS` / `IBD` shot-noise sources.

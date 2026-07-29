@@ -1935,6 +1935,7 @@ fn apply_mosfet_param(params: &mut MosfetLevel1Params, name: &str, value: f64) {
         "RS" => params.source_resistance = value,
         "RSH" => params.sheet_resistance = value,
         "IS" => params.saturation_current = value,
+        "JS" => params.saturation_current_density = value,
         "N_SUB" | "NSUB" | "N" => params.n_sub = value,
         "T_NOM" | "TNOM" => params.t_nom = value,
         "CGSO" => params.gate_source_overlap_capacitance = value,

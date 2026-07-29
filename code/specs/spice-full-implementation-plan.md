@@ -33,12 +33,14 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS bulk-junction saturation current.
+1. Cross-language Level-1 MOS bulk-junction saturation current density.
    - Status: current PR completion candidate.
-   - Route existing model-card `IS` into source-body and drain-body junction
-     leakage for NMOS and PMOS across DC, transient, transfer-function, and AC.
-   - Emit distinct `IBS` and `IBD` shot-noise sources while preserving existing
-     model-card and hierarchy contracts.
+   - Preserve model-card `JS` independently from scalar `IS` and scale it by
+     source/drain diffusion area when both `AS` and `AD` are present.
+   - Match Berkeley MOS1 fallback behavior by using scalar `IS` for both
+     junctions when `JS` is zero or either diffusion area is absent.
+   - Apply the effective terminal currents consistently to nonlinear, AC,
+     transfer-function, and shot-noise behavior in Rust, Python, and TypeScript.
 
 ## Completed Slices
 
@@ -3539,6 +3541,14 @@ the Rust, Python, and TypeScript surfaces together.
      `RD`, `RS`, `KF`, and `AF` plus aliases `VTH`, `LAM`, `CJS`, and `CJD`.
    - Source-deck tests prove the values reach their existing engine fields
      instead of silently falling back to defaults.
+
+281. Cross-language Level-1 MOS bulk-junction saturation current.
+   - Status: completed in PR 9100.
+   - Existing model-card `IS` now drives source-body and drain-body leakage for
+     NMOS and PMOS across DC, transient, transfer-function, and AC analysis.
+   - Junction thermal voltage follows `T_NOM`, forward exponential continuation
+     remains Newton-consistent, and noise emits distinct `IBS` and `IBD` shot
+     sources.
 
 ## Backlog
 

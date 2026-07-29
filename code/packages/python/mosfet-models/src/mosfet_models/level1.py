@@ -41,6 +41,7 @@ class Level1Params:
     CJ: float = 0.0  # bottom junction capacitance per area (F/m^2)
     CJSW: float = 0.0  # sidewall junction capacitance per perimeter (F/m)
     IS: float = 1e-15  # saturation current (A)
+    JS: float = 0.0  # saturation current density (A/m^2)
     N_SUB: float = 1.4  # subthreshold slope factor
     T_NOM: float = 300.15  # nominal temperature (K)
     CGSO: float = 0.0  # gate-source overlap capacitance per width (F/m)
@@ -156,6 +157,8 @@ def evaluate_level1(
         raise ValueError("MOSFET CJ must be finite and non-negative")
     if not isfinite(p.CJSW) or p.CJSW < 0.0:
         raise ValueError("MOSFET CJSW must be finite and non-negative")
+    if not isfinite(p.JS) or p.JS < 0.0:
+        raise ValueError("MOSFET JS must be finite and non-negative")
     if not isfinite(p.MJSW) or p.MJSW < 0.0:
         raise ValueError("MOSFET MJSW must be finite and non-negative")
     beta = p.KP * (p.W / effective_length)

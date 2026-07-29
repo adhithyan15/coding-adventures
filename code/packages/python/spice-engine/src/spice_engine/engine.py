@@ -9285,6 +9285,7 @@ def _stamp_mosfet(
         intrinsic_source,
         Vs,
         Vb,
+        el.model.model.params.AS,  # type: ignore[attr-defined]
     )
     _stamp_mosfet_bulk_junction(
         G,
@@ -9294,6 +9295,7 @@ def _stamp_mosfet(
         intrinsic_drain,
         Vd,
         Vb,
+        el.model.model.params.AD,  # type: ignore[attr-defined]
     )
     drain_resistance = _mosfet_drain_resistance(el)
     if drain_resistance > 0.0:
@@ -9319,8 +9321,14 @@ def _mosfet_bulk_junction_current_conductance(
     el: Mosfet,
     terminal_voltage: float,
     body_voltage: float,
+    terminal_area: float,
 ) -> tuple[float, float]:
     params = el.model.model.params  # type: ignore[attr-defined]
+    saturation_current = (
+        params.JS * terminal_area
+        if params.JS > 0.0 and params.AD > 0.0 and params.AS > 0.0
+        else params.IS
+    )
     junction_voltage = (
         body_voltage - terminal_voltage
         if el.model.type == MosfetType.NMOS  # type: ignore[attr-defined]
@@ -9336,8 +9344,8 @@ def _mosfet_bulk_junction_current_conductance(
         current_factor = limited_exp
         conductance_factor = limited_exp
     return (
-        params.IS * (current_factor - 1.0),
-        params.IS / thermal_voltage * conductance_factor,
+        saturation_current * (current_factor - 1.0),
+        saturation_current / thermal_voltage * conductance_factor,
     )
 
 
@@ -9349,11 +9357,13 @@ def _stamp_mosfet_bulk_junction(
     terminal: str,
     terminal_voltage: float,
     body_voltage: float,
+    terminal_area: float,
 ) -> None:
     current, conductance = _mosfet_bulk_junction_current_conductance(
         el,
         terminal_voltage,
         body_voltage,
+        terminal_area,
     )
     is_nmos = el.model.type == MosfetType.NMOS  # type: ignore[attr-defined]
     junction_voltage = (
@@ -13256,10 +13266,10 @@ def _stamp_ac(
         gm_m: float = r.gm
         gds_m: float = r.gds
         _, source_bulk_conductance = _mosfet_bulk_junction_current_conductance(
-            el, Vs, Vb
+            el, Vs, Vb, el.model.model.params.AS  # type: ignore[attr-defined]
         )
         _, drain_bulk_conductance = _mosfet_bulk_junction_current_conductance(
-            el, Vd, Vb
+            el, Vd, Vb, el.model.model.params.AD  # type: ignore[attr-defined]
         )
         _stamp_g_c(G, node_to_idx, intrinsic_drain, intrinsic_source, gds_m + 0j)
         _stamp_g_c(G, node_to_idx, el.gate, intrinsic_source, 1j * omega * r.Cgs)
@@ -14029,10 +14039,10 @@ def _build_ss_matrix(
             gm_m: float = r.gm
             gds_m: float = r.gds
             _, source_bulk_conductance = _mosfet_bulk_junction_current_conductance(
-                el, Vs, Vb
+                el, Vs, Vb, el.model.model.params.AS  # type: ignore[attr-defined]
             )
             _, drain_bulk_conductance = _mosfet_bulk_junction_current_conductance(
-                el, Vd, Vb
+                el, Vd, Vb, el.model.model.params.AD  # type: ignore[attr-defined]
             )
             _stamp_g(G, node_to_idx, intrinsic_drain, intrinsic_source, gds_m)
             _stamp_g(
@@ -15958,10 +15968,10 @@ def _collect_noise_sources(
                     )
                 )
             source_bulk_current, _ = _mosfet_bulk_junction_current_conductance(
-                el, Vs, Vb
+                el, Vs, Vb, el.model.model.params.AS  # type: ignore[attr-defined]
             )
             drain_bulk_current, _ = _mosfet_bulk_junction_current_conductance(
-                el, Vd, Vb
+                el, Vd, Vb, el.model.model.params.AD  # type: ignore[attr-defined]
             )
             n_b = None if _is_ground(el.body) else node_to_idx[el.body]
             is_nmos = el.model.type == MosfetType.NMOS  # type: ignore[attr-defined]

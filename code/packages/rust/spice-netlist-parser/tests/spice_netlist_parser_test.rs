@@ -1359,7 +1359,7 @@ Jpull drain gate source pch
 fn parses_mosfet_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model nch NMOS(VTO=0.45 KP=250u LAMBDA=0.02 GAMMA=0.3 PHI=0.8 W=2u L=180n LD=10n TOX=20n RD=10 RS=20 RSH=250 NSUB=1.5 TNOM=300 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p CJ=2m CJSW=5u PB=0.9 MJ=0.45 MJSW=0.25 FC=0.4 KF=1p AF=1.2)
+.model nch NMOS(VTO=0.45 KP=250u LAMBDA=0.02 GAMMA=0.3 PHI=0.8 W=2u L=180n LD=10n TOX=20n RD=10 RS=20 RSH=250 IS=4p JS=2m NSUB=1.5 TNOM=300 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p CJ=2m CJSW=5u PB=0.9 MJ=0.45 MJSW=0.25 FC=0.4 KF=1p AF=1.2)
 Vdd vdd 0 DC 5
 Vgate gate 0 DC 2.5
 M1 vdd gate out 0 nch W=4u L=200n NRD=2 NRS=3 AD=3n AS=4n PD=6u PS=7u
@@ -1397,6 +1397,8 @@ Rload out 0 1k
     assert_close(mosfet.params.drain_resistance, 10.0);
     assert_close(mosfet.params.source_resistance, 20.0);
     assert_close(mosfet.params.sheet_resistance, 250.0);
+    assert_close(mosfet.params.saturation_current, 4.0e-12);
+    assert_close(mosfet.params.saturation_current_density, 2.0e-3);
     assert_close(mosfet.params.drain_squares, 2.0);
     assert_close(mosfet.params.source_squares, 3.0);
     assert_close(mosfet.params.drain_area, 3.0e-9);
