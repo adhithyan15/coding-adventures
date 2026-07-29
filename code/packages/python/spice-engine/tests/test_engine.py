@@ -4193,7 +4193,7 @@ def test_dc_rejects_invalid_bjt_depletion_parameters(kwargs, message):
 
 
 def test_mosfet_temperature_scaling_changes_common_source_bias():
-    """Hotter Level-1 NMOS lowers VT0 enough to pull the drain node down."""
+    """Berkeley MOS1 temperature preprocessing changes common-source bias."""
     nominal = Circuit()
     nominal.add(VoltageSource("Vdd", "vdd", "0", 1.8))
     nominal.add(VoltageSource("Vgate", "gate", "0", 1.1))
@@ -4226,8 +4226,8 @@ def test_mosfet_temperature_scaling_changes_common_source_bias():
     assert cold_result.converged
     assert nominal_result.converged
     assert hot_result.converged
-    assert cold_result.node_voltages["out"] > nominal_result.node_voltages["out"]
-    assert hot_result.node_voltages["out"] < nominal_result.node_voltages["out"]
+    assert cold_result.node_voltages["out"] < nominal_result.node_voltages["out"]
+    assert hot_result.node_voltages["out"] > nominal_result.node_voltages["out"]
 
 
 def test_mosfet_temperature_scaling_keeps_surface_mobility_and_kp_aligned():
@@ -4256,6 +4256,35 @@ def test_mosfet_temperature_scaling_keeps_surface_mobility_and_kp_aligned():
     assert pytest.approx(nominal_params.KP / nominal_params.U0) == (
         hot_params.KP / hot_params.U0
     )
+
+
+def test_mosfet_temperature_scaling_adjusts_phi_and_threshold_by_polarity():
+    nmos = Mosfet(
+        "Mn",
+        "d",
+        "g",
+        "s",
+        "b",
+        MOSFET(MosfetType.NMOS, Level1Model(Level1Params())),
+    )
+    pmos = Mosfet(
+        "Mp",
+        "d",
+        "g",
+        "s",
+        "b",
+        MOSFET(MosfetType.PMOS, Level1Model(Level1Params(VT0=-0.42))),
+    )
+
+    hot_nmos = mosfet_at_temperature(nmos, 350.0)
+    hot_pmos = mosfet_at_temperature(pmos, 350.0)
+    nmos_params = hot_nmos.model.model.params
+    pmos_params = hot_pmos.model.model.params
+
+    assert pytest.approx(0.766_340_574_915_624_6) == nmos_params.PHI
+    assert pytest.approx(nmos_params.PHI) == pmos_params.PHI
+    assert pytest.approx(0.379_106_188_982_781_14) == nmos_params.VT0
+    assert pytest.approx(-0.365_036_965_282_786_06) == pmos_params.VT0
 
 
 def test_mosfet_temperature_scaling_adjusts_bulk_junction_saturation_currents():

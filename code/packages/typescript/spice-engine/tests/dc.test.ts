@@ -2322,8 +2322,8 @@ describe("dcOp", () => {
     const coldResult = dcOp(cold);
     const hotResult = dcOp(hot);
 
-    expect(coldResult.voltage("out")).toBeGreaterThan(nominalResult.voltage("out")!);
-    expect(hotResult.voltage("out")).toBeLessThan(nominalResult.voltage("out")!);
+    expect(coldResult.voltage("out")).toBeLessThan(nominalResult.voltage("out")!);
+    expect(hotResult.voltage("out")).toBeGreaterThan(nominalResult.voltage("out")!);
   });
 
   it("keeps MOSFET surface mobility and KP aligned across temperature", () => {
@@ -2340,6 +2340,21 @@ describe("dcOp", () => {
       hot.params.KP / hot.params.U0,
       nominal.params.KP / nominal.params.U0,
     );
+  });
+
+  it("adjusts MOSFET PHI and threshold voltage by device polarity", () => {
+    const nmos = mosfet("Mn", "d", "g", "s", "b", "NMOS");
+    const pmos = mosfet("Mp", "d", "g", "s", "b", "PMOS", {
+      VT0: -0.42,
+    });
+
+    const hotNmos = mosfetAtTemperature(nmos, 350.0);
+    const hotPmos = mosfetAtTemperature(pmos, 350.0);
+
+    expectClose(hotNmos.params.PHI, 0.766_340_574_915_624_6);
+    expectClose(hotPmos.params.PHI, hotNmos.params.PHI);
+    expectClose(hotNmos.params.VT0, 0.379_106_188_982_781_14);
+    expectClose(hotPmos.params.VT0, -0.365_036_965_282_786_06);
   });
 
   it("scales MOSFET bulk-junction saturation currents with temperature", () => {

@@ -3502,8 +3502,8 @@ fn dc_mosfet_temperature_scaling_changes_common_source_bias() {
     let cold_result = dc_op(&cold).unwrap();
     let hot_result = dc_op(&hot).unwrap();
 
-    assert!(cold_result.voltage("out").unwrap() > nominal_result.voltage("out").unwrap());
-    assert!(hot_result.voltage("out").unwrap() < nominal_result.voltage("out").unwrap());
+    assert!(cold_result.voltage("out").unwrap() < nominal_result.voltage("out").unwrap());
+    assert!(hot_result.voltage("out").unwrap() > nominal_result.voltage("out").unwrap());
 }
 
 #[test]
@@ -3533,6 +3533,39 @@ fn mosfet_temperature_scaling_keeps_surface_mobility_and_kp_aligned() {
         hot.params.kp / hot.params.surface_mobility,
         nominal.params.kp / nominal.params.surface_mobility,
     );
+}
+
+#[test]
+fn mosfet_temperature_scaling_adjusts_phi_and_threshold_by_polarity() {
+    let nmos = Mosfet::with_model(
+        "Mn",
+        "d",
+        "g",
+        "s",
+        "b",
+        MosfetType::Nmos,
+        MosfetLevel1Params::default(),
+    );
+    let pmos = Mosfet::with_model(
+        "Mp",
+        "d",
+        "g",
+        "s",
+        "b",
+        MosfetType::Pmos,
+        MosfetLevel1Params {
+            vt0: -0.42,
+            ..MosfetLevel1Params::default()
+        },
+    );
+
+    let hot_nmos = mosfet_at_temperature(&nmos, 350.0, 300.15, 1.11).unwrap();
+    let hot_pmos = mosfet_at_temperature(&pmos, 350.0, 300.15, 1.11).unwrap();
+
+    assert_close(hot_nmos.params.phi, 0.766_340_574_915_624_6);
+    assert_close(hot_pmos.params.phi, hot_nmos.params.phi);
+    assert_close(hot_nmos.params.vt0, 0.379_106_188_982_781_14);
+    assert_close(hot_pmos.params.vt0, -0.365_036_965_282_786_06);
 }
 
 #[test]

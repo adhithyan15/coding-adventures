@@ -2780,12 +2780,39 @@ pub fn mosfet_at_temperature(
         });
     }
     let ratio = temperature_kelvin / nominal_temperature_kelvin;
-    let threshold_shift = -2.0e-3 * (temperature_kelvin - nominal_temperature_kelvin);
+    let reference_temperature_kelvin = 300.15;
+    let silicon_band_gap =
+        |temperature: f64| 1.16 - 7.02e-4 * temperature * temperature / (temperature + 1108.0);
+    let potential_correction = |temperature: f64| {
+        let thermal_voltage = BOLTZMANN * temperature / ELECTRON_CHARGE;
+        let argument = -silicon_band_gap(temperature) * ELECTRON_CHARGE
+            / (2.0 * BOLTZMANN * temperature)
+            + 1.115_087_7 * ELECTRON_CHARGE / (2.0 * BOLTZMANN * reference_temperature_kelvin);
+        -2.0 * thermal_voltage
+            * (1.5 * (temperature / reference_temperature_kelvin).ln() + argument)
+    };
+    let nominal_factor = nominal_temperature_kelvin / reference_temperature_kelvin;
+    let temperature_factor = temperature_kelvin / reference_temperature_kelvin;
+    let nominal_potential_correction = potential_correction(nominal_temperature_kelvin);
+    let temperature_potential_correction = potential_correction(temperature_kelvin);
+    let nominal_phi = (mosfet.params.phi - nominal_potential_correction) / nominal_factor;
+    let temperature_phi = temperature_factor * nominal_phi + temperature_potential_correction;
+    let polarity = match mosfet.mosfet_type {
+        MosfetType::Nmos => 1.0,
+        MosfetType::Pmos => -1.0,
+    };
+    let temperature_vbi = mosfet.params.vt0
+        - polarity * mosfet.params.gamma * mosfet.params.phi.sqrt()
+        + 0.5
+            * (silicon_band_gap(nominal_temperature_kelvin) - silicon_band_gap(temperature_kelvin))
+        + polarity * 0.5 * (temperature_phi - mosfet.params.phi);
+    let temperature_vt0 = temperature_vbi + polarity * mosfet.params.gamma * temperature_phi.sqrt();
     let saturation_exponent = energy_gap_electron_volts * ELECTRON_CHARGE / BOLTZMANN
         * (1.0 / nominal_temperature_kelvin - 1.0 / temperature_kelvin);
     let saturation_scale = ratio.powi(3) * saturation_exponent.clamp(-100.0, 100.0).exp();
     let mut adjusted = mosfet.clone();
-    adjusted.params.vt0 += threshold_shift;
+    adjusted.params.vt0 = temperature_vt0;
+    adjusted.params.phi = temperature_phi;
     adjusted.params.kp *= ratio.powf(-1.5);
     adjusted.params.surface_mobility *= ratio.powf(-1.5);
     adjusted.params.saturation_current *= saturation_scale;

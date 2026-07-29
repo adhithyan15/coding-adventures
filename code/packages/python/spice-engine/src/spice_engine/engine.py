@@ -392,7 +392,47 @@ def mosfet_at_temperature(
     if not isinstance(params, Level1Params):
         raise ValueError(f"{mosfet.name}: only Level-1 MOSFET parameters are supported")
     ratio = temperature_kelvin / nominal_temperature_kelvin
-    threshold_shift = -2.0e-3 * (temperature_kelvin - nominal_temperature_kelvin)
+    reference_temperature_kelvin = 300.15
+
+    def silicon_band_gap(temperature: float) -> float:
+        return 1.16 - 7.02e-4 * temperature**2 / (temperature + 1108.0)
+
+    def potential_correction(temperature: float) -> float:
+        thermal_voltage = _BOLTZMANN * temperature / _ELECTRON_CHARGE
+        argument = (
+            -silicon_band_gap(temperature)
+            * _ELECTRON_CHARGE
+            / (2.0 * _BOLTZMANN * temperature)
+            + 1.115_087_7
+            * _ELECTRON_CHARGE
+            / (2.0 * _BOLTZMANN * reference_temperature_kelvin)
+        )
+        return -2.0 * thermal_voltage * (
+            1.5 * math.log(temperature / reference_temperature_kelvin) + argument
+        )
+
+    nominal_factor = nominal_temperature_kelvin / reference_temperature_kelvin
+    temperature_factor = temperature_kelvin / reference_temperature_kelvin
+    nominal_phi = (
+        params.PHI - potential_correction(nominal_temperature_kelvin)
+    ) / nominal_factor
+    temperature_phi = (
+        temperature_factor * nominal_phi + potential_correction(temperature_kelvin)
+    )
+    polarity = 1.0 if model.type is MosfetType.NMOS else -1.0
+    temperature_vbi = (
+        params.VT0
+        - polarity * params.GAMMA * math.sqrt(params.PHI)
+        + 0.5
+        * (
+            silicon_band_gap(nominal_temperature_kelvin)
+            - silicon_band_gap(temperature_kelvin)
+        )
+        + polarity * 0.5 * (temperature_phi - params.PHI)
+    )
+    temperature_vt0 = (
+        temperature_vbi + polarity * params.GAMMA * math.sqrt(temperature_phi)
+    )
     saturation_exponent = (
         energy_gap_ev
         * _ELECTRON_CHARGE
@@ -404,7 +444,8 @@ def mosfet_at_temperature(
     )
     adjusted_params = replace(
         params,
-        VT0=params.VT0 + threshold_shift,
+        VT0=temperature_vt0,
+        PHI=temperature_phi,
         KP=params.KP * ratio**-1.5,
         U0=params.U0 * ratio**-1.5,
         IS=params.IS * saturation_scale,
