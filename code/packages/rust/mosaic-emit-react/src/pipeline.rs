@@ -4614,10 +4614,38 @@ fn build_part_style_map(style: &StyleDef) -> HashMap<String, String> {
 fn build_inline_style_fragment(props: &[StyleProp]) -> String {
     let mut parts: Vec<String> = Vec::with_capacity(props.len());
     for p in props {
+        if let Some(translated) = translate_layout_alias(&p.name, p.value.trim()) {
+            parts.push(translated);
+            continue;
+        }
         let key = css_property_to_camel(&p.name);
         parts.push(format!("{key}: {}", react_style_value_literal(&p.value)));
     }
     parts.join(", ")
+}
+
+/// Translate a mosstyle **layout intent** into real CSS.
+///
+/// Most mosstyle properties are CSS property names and pass straight through. A few
+/// describe intent in mosstyle's own vocabulary and have no CSS property of that name —
+/// they must be translated, or they emit a declaration the browser silently discards.
+///
+/// `align: center-vertical` was the live example: it emitted `align: "center-vertical"`,
+/// which is not a CSS property at all, so **nothing using it was ever actually centred**
+/// on any Mosaic web app. It means "centre on the cross axis", which in a `Row` (the
+/// only place it is used) is the vertical one — i.e. `alignItems: center`.
+///
+/// Returns `None` for anything that isn't an alias, so ordinary CSS is untouched.
+fn translate_layout_alias(name: &str, value: &str) -> Option<String> {
+    match (name, value) {
+        ("align", "center-vertical") => Some("alignItems: \"center\"".to_string()),
+        ("align", "center-horizontal") => Some("justifyContent: \"center\"".to_string()),
+        ("align", "center") => Some("alignItems: \"center\", justifyContent: \"center\"".to_string()),
+        ("align", "start") => Some("alignItems: \"flex-start\"".to_string()),
+        ("align", "end") => Some("alignItems: \"flex-end\"".to_string()),
+        ("align", "space-between") => Some("justifyContent: \"space-between\"".to_string()),
+        _ => None,
+    }
 }
 
 /// Render a mosstyle value as a React inline-style literal.
@@ -4682,12 +4710,16 @@ fn merge_styles(builtin: &str, author: &str) -> String {
 ///     `For (as: row) { … }` the JS engine
 ///     resolves it just like any other
 ///     closure variable).
-///   - `content: "string"`       → None (a literal string is rendered
-///     by the standard Text walker as its
-///     own `<span>literal</span>`; this
-///     helper only surfaces the JSX-
-///     expression form so the cell flatten
-///     path can inline it).
+///   - `content: "string"`       → `{"literal"}` (a JS string literal, so the
+///     text is escaped rather than pasted
+///     into JSX as markup).
+///
+/// A literal used to return `None` here, and the doc claimed the "standard Text
+/// walker" rendered it instead. There is no such path: `emit_jsx_tree` took the
+/// no-content branch and emitted `<span></span>`, so `Text ( content : "Projects" )`
+/// silently rendered NOTHING. It went unnoticed because no `.mll` in the repo used a
+/// literal `content:` until the task-app rail needed a static wordmark and a section
+/// heading — both of which came out blank.
 ///
 /// The Keyword arm is the L10 wiring that lets HostTable composers
 /// write `For (as: row) { Text (content: row) }` and have the row
@@ -4705,6 +4737,9 @@ fn jsx_text_content(node: &LayoutNode) -> Option<String> {
                 LayoutPropValue::SlotRef(slot) => {
                     Some(format!("{{{}}}", to_camel_case_first_lower(slot)))
                 }
+                // A static label. Emitted as a JS string expression rather than raw
+                // JSX text so `{`, `}` and `<` in the literal stay literal.
+                LayoutPropValue::String(text) => Some(jsx_string_expr(text)),
                 LayoutPropValue::Keyword(name) => {
                     let camel = to_camel_case_first_lower(name);
                     if is_safe_js_identifier(&camel) {
@@ -7535,6 +7570,105 @@ mod tests {
         let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
         assert!(!out.contains("mosaic$grab"), "controller leaked:\n{out}");
         assert!(!out.contains("useState"), "useState leaked:\n{out}");
+    }
+
+    // ===================================================================
+    // Layout aliases + literal text
+    // ===================================================================
+
+    fn text_layout(prop: LayoutProp) -> LayoutDef {
+        LayoutDef {
+            component_name: "T".to_string(),
+            root: LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![prop],
+                children: vec![],
+            },
+        }
+    }
+
+    /// A static label must render. It used to emit `<span></span>` — the text simply
+    /// vanished — because a literal `content:` returned None and nothing else handled
+    /// it. Two blank labels in the task-app rail are what surfaced this.
+    #[test]
+    fn literal_text_content_actually_renders() {
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &text_layout(LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::String("Projects".to_string()),
+            }),
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains("Projects"), "literal label missing:
+{out}");
+        assert!(!out.contains("<span></span>"), "rendered an empty span:
+{out}");
+    }
+
+    /// ...and it is escaped, not pasted into JSX as markup.
+    #[test]
+    fn literal_text_content_is_escaped() {
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &text_layout(LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::String("a{b}<c>".to_string()),
+            }),
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        // A JS string expression, so the braces are data rather than a JSX hole.
+        assert!(out.contains("{\"a{b}<c>\"}"), "not emitted as a string:
+{out}");
+    }
+
+    fn aligned(value: &str) -> String {
+        let style = StyleDef {
+            component_name: "A".to_string(),
+            parts: vec![PartStyle {
+                name: "r".to_string(),
+                base: vec![StyleProp {
+                    name: "align".to_string(),
+                    value: value.to_string(),
+                }],
+                states: vec![],
+            }],
+        };
+        let layout = LayoutDef {
+            component_name: "A".to_string(),
+            root: LayoutNode {
+                tag: "Row".to_string(),
+                part_name: Some("r".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        from_pipeline(&component("A", vec![], vec![]), &layout, &style)
+            .unwrap()
+            .output
+    }
+
+    /// `align` is NOT a CSS property, so it was emitted verbatim and browsers threw it
+    /// away — nothing using it was ever actually centred.
+    #[test]
+    fn align_center_vertical_becomes_align_items() {
+        let out = aligned("center-vertical");
+        assert!(out.contains("alignItems: \"center\""), "{out}");
+        assert!(!out.contains("align: \"center-vertical\""), "alias leaked:
+{out}");
+    }
+
+    /// An unrecognised value must still fall through to the escaped generic path
+    /// rather than being silently dropped.
+    #[test]
+    fn an_unknown_align_value_falls_through_unchanged() {
+        let out = aligned("sideways");
+        assert!(out.contains("align: \"sideways\""), "{out}");
     }
 
     // ===================================================================

@@ -90,3 +90,24 @@ export function watchSystemTheme(onChange: (theme: Theme) => void): () => void {
   query.addListener(listener);
   return () => query.removeListener(listener);
 }
+
+/**
+ * The page ground for a theme. `index.html` paints an OS-derived guess before React
+ * mounts; once the real theme is resolved the app must repaint it, or an explicit
+ * choice that disagrees with the OS leaves the wrong colour showing in the overscroll
+ * area and behind the app.
+ *
+ * These two values are the `app-shell` background from TaskApp.{light,dark}.msl. They
+ * are duplicated here because the emitted component inlines its styles and exposes no
+ * token to read back — if the .msl ground changes, change it here too.
+ */
+const GROUND: Record<Theme, string> = {
+  light: "#f0ebe3",
+  dark: "#1a1714",
+};
+
+/** Paint the page ground to match the resolved theme. */
+export function applyThemeGround(theme: Theme): void {
+  const root = globalThis.document?.documentElement;
+  if (root) root.style.background = GROUND[theme];
+}

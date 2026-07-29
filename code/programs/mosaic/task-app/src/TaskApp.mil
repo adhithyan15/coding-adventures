@@ -23,8 +23,12 @@ component TaskApp {
   slot project-rows     : list<list<text>> ;
   slot new-project-name : text ;
 
-  // A one-line summary (counts, project finish).
-  slot summary : text ;
+  // A one-line summary (counts, project finish), plus the engine's verdict on the
+  // plan rendered as a pill. `status-warn` is non-empty when that verdict is bad
+  // news, which is the layout's cue to colour it as a warning rather than as OK.
+  slot summary      : text ;
+  slot status-label : text ;
+  slot status-warn  : text ;
 
   // Timeline (Gantt). `timeline-mode` is non-empty when the timeline is showing instead
   // of the task list, and `view-toggle-label` names the view you'd switch TO.
@@ -37,7 +41,6 @@ component TaskApp {
   slot timeline-mode     : text ;
   slot timeline-scale    : text ;
   slot timeline-rows     : list<list<text>> ;
-  slot view-toggle-label : text ;
 
   // One row per task, in schedule order. Each row is a list of pre-formatted cells:
   //
@@ -45,7 +48,8 @@ component TaskApp {
   //   [ 1 ] name            [ 6 ] detail: scheduled / earliest / latest
   //   [ 2 ] due             [ 7 ] detail: slack, or "on the critical path"
   //   [ 3 ] schedule        [ 8 ] detail: free slack (only when it differs)
-  //   [ 4 ] overdue
+  //   [ 4 ] overdue         [ 9 ] group heading — present ONLY on the row that
+  //                               opens a group, so the list reads as sections
   //
   // Every cell is optional: an empty one (no due date, not overdue, nothing to add)
   // is the empty string and the layout hides it. Cells 6-8 are the
@@ -65,8 +69,10 @@ component TaskApp {
   emit onAddSubproject ;
   emit onSelectProject ( index : number ) ;
 
-  // Switch between the task list and the timeline.
-  emit onToggleView ;
+  // Choose a view. Two explicit events rather than one toggle, so clicking the view
+  // you are already on is a no-op instead of switching away from it.
+  emit onShowList ;
+  emit onShowTimeline ;
 
   // Expand (or collapse) a task row to reveal its scheduling detail.
   emit onExpandTask ( index : number ) ;
