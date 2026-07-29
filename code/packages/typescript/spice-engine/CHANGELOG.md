@@ -1,5 +1,7 @@
 # Changelog
 
+- Scale Level-1 MOS `U0` alongside `KP` by `(T / T_NOM)^-3/2` so temperature
+  helpers preserve Berkeley surface-mobility state and their nominal ratio.
 - Add Level-1 MOS model-card `U0` / `UO` surface mobility and derive `KP` from
   explicit `TOX` when `KP` is omitted, preserving explicit-`KP` precedence.
 - Add Level-1 MOS model-card `JS` as bulk-junction saturation-current density,

@@ -1,5 +1,5 @@
 {
-  "case_count": 151,
+  "case_count": 152,
   "cases": [
     {
       "axis": "character-reference-named-boundary",
@@ -906,13 +906,19 @@
       "id": "webkit01-dat-16",
       "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
       "source": "webkit01.dat:16"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "processing-instructions-dat-93",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "processing-instructions.dat:93"
     }
   ],
   "counts_by_axis": {
     "character-reference-ambiguous-ampersand": 11,
     "character-reference-attribute-boundary": 20,
     "character-reference-fragment-context": 1,
-    "character-reference-named-boundary": 40,
+    "character-reference-named-boundary": 41,
     "character-reference-numeric-boundary": 63,
     "character-reference-rcdata-boundary": 16
   },

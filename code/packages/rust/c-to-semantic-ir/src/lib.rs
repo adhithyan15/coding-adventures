@@ -25,6 +25,12 @@
 //! - **Milestone 7** — per-block scoping (a scope stack with unique SIR names),
 //!   so shadowing and re-used names (e.g. two sequential `for (int i …)` loops)
 //!   compile instead of being rejected.
+//! - **Milestone 9** — floating point (`float`/`double`): a second value track
+//!   (`CType::Double` → `SirType::Float`) alongside the integer one.  Mixed
+//!   int/double arithmetic promotes the integer operand with `to_f`; `/` is true
+//!   division (not the integer truncating `tdiv`); a float↔int cast goes through
+//!   `to_f`/`to_i`.  The `Feature::Floats` flag is declared only when the program
+//!   actually uses floating point, so integer-only output is unchanged.
 
 mod lower;
 
@@ -60,20 +66,74 @@ mod tests {
         compile_source(src, "test").expect("C lowering succeeded")
     }
 
+    // ── milestone 9: floating point ─────────────────────────────────────────
+
     #[test]
-    fn floating_point_is_parsed_but_lowering_rejects_it_cleanly() {
-        // The grammar slice (milestone 9a) recognises `float`/`double` and float
-        // literals; the lowering is still integer-only, so it must reject them
-        // with a clear message rather than mis-typing a `double` as `int`.
-        let err = compile_source("double f(double r) { return r; }", "test").unwrap_err();
+    fn float_literal_lowers_to_a_float_node_and_declares_the_feature() {
+        // `double pi = 3.14;` lowers to a `FloatLit` bound at SIR type `float`,
+        // and the module declares `Feature::Floats` (only because it uses one).
+        let m = lower("int main(void) { double pi = 3.14; return 0; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(text.contains("(float 3.14)"), "no float literal:\n{text}");
+        assert!(text.contains("(let* pi float "), "not typed float:\n{text}");
         assert!(
-            err.message.contains("floating-point types"),
-            "wrong error: {}",
-            err.message
+            m.manifest.contains(semantic_ir::Feature::Floats),
+            "Floats feature not declared"
         );
-        let err = compile_source("int main(void) { return 3.14; }", "test").unwrap_err();
+    }
+
+    #[test]
+    fn integer_only_program_stays_float_free() {
+        // The float feature is *conditional*: a program with no float type or
+        // literal must not declare it (so integer-only output is unchanged).
+        let m = lower("int main(void) { int32_t x = 1 + 2; return x; }");
         assert!(
-            err.message.contains("floating-point literals"),
+            !m.manifest.contains(semantic_ir::Feature::Floats),
+            "Floats wrongly declared for an integer-only program"
+        );
+    }
+
+    #[test]
+    fn mixed_int_and_double_arithmetic_promotes_via_to_f() {
+        // `1 + 2.0` — the integer operand is widened to `double` with `to_f`
+        // before the (float) add; the result is a float, no width `Convert`.
+        let m = lower("int main(void) { double r = 1 + 2.0; return 0; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(text.contains("to_f"), "int operand not widened:\n{text}");
+        assert!(text.contains("(builtin-call +"), "no float add:\n{text}");
+    }
+
+    #[test]
+    fn double_division_is_true_division_not_truncating() {
+        // `/` on doubles must be the plain `/` builtin (true division), never the
+        // integer `tdiv`/`utdiv` truncating helpers.
+        let m = lower("int main(void) { double q = 7.0 / 2.0; return 0; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(text.contains("(builtin-call /"), "no true `/`:\n{text}");
+        assert!(!text.contains("tdiv"), "double `/` used tdiv:\n{text}");
+    }
+
+    #[test]
+    fn cast_double_to_int_truncates_via_to_i_then_narrows() {
+        // `(int)3.9` — the double truncates toward zero with `to_i`, then the
+        // int64 is narrowed to the destination width with a `Convert`.
+        let m = lower("int main(void) { int n = (int)3.9; return n; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(text.contains("to_i"), "no truncation:\n{text}");
+        assert!(
+            text.contains("(convert (int i32"),
+            "no width narrow:\n{text}"
+        );
+    }
+
+    #[test]
+    fn bitwise_operator_on_double_is_rejected() {
+        // `%`, `&`, `<<`, `~` etc. are not defined on `double` in C — lowering
+        // must reject them with a clear message, not silently mis-emit.
+        let err = compile_source("int main(void) { double x = 3.0 % 2.0; return 0; }", "test")
+            .unwrap_err();
+        assert!(
+            err.message.contains("not defined on `double`"),
             "wrong error: {}",
             err.message
         );

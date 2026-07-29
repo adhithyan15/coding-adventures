@@ -416,6 +416,22 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> Statemen
         TaggedStatement::DoWhileStatement(s) => {
             let body = fold_statement(&s.body, st);
 
+            // Strip a redundant trailing bare `continue`
+            // (`do { …; continue } while(c)` → `do { … } while(c)`), then let the
+            // empty-body / fusion steps below simplify the shortened body.
+            let body = match strip_trailing_continue(&body) {
+                Some(stripped) => {
+                    st.record_fold(
+                        &s.cv,
+                        "trailing-continue-removed",
+                        "do { …; continue } while(…)",
+                        "do { … } while(…)",
+                    );
+                    stripped
+                }
+                None => body,
+            };
+
             // Empty-bodied `do … while` ≡ `while`. `do {} while(test)` runs the
             // (empty) body once and then evaluates `test`; because the body is a
             // no-op, its test-evaluation sequence is IDENTICAL to `while(test){}`
@@ -1521,6 +1537,48 @@ fn statement_is_empty(stmt: &Statement) -> bool {
     }
 }
 
+/// If `body` is a loop body ending in a BARE (unlabeled) `continue`, return the
+/// body with that redundant `continue` removed; otherwise `None`.
+///
+/// A bare `continue` at the tail of a loop body is a no-op: it jumps to the next
+/// iteration, which is exactly what falling off the end of the body already
+/// does. Only an UNLABELED `continue` is stripped — `continue L` may target an
+/// OUTER loop, so it must stay. Two shapes are handled:
+///
+///   for (…) { a(); continue; }   →  for (…) { a(); }   (drop the last stmt)
+///   for (…) { continue; }        →  for (…) { }        (block emptied)
+///   for (…) continue;            →  for (…) ;          (bare-continue body)
+///
+/// The enclosing loop fold then unwraps the single-statement block, comma-fuses,
+/// or normalizes the now-empty body as usual. A `continue` that is NOT the
+/// literal last statement (dead code follows, `{a(); continue; b()}`) is left
+/// alone — removing the unreachable `b()` is a separate dead-code-after-jump
+/// transform.
+fn strip_trailing_continue(body: &Statement) -> Option<Statement> {
+    fn is_bare_continue(s: &Statement) -> bool {
+        matches!(
+            s,
+            Statement::Tagged(TaggedStatement::ContinueStatement(c)) if c.label.is_none()
+        )
+    }
+    match body {
+        Statement::Tagged(TaggedStatement::BlockStatement(b))
+            if b.body.last().is_some_and(is_bare_continue) =>
+        {
+            let mut kept = b.body.clone();
+            kept.pop();
+            Some(Statement::Tagged(TaggedStatement::BlockStatement(BlockStatement {
+                cv: b.cv.clone(),
+                body: kept,
+            })))
+        }
+        s if is_bare_continue(s) => {
+            Some(Statement::empty_statement(EmptyStatement { cv: statement_cv(s) }))
+        }
+        _ => None,
+    }
+}
+
 /// Helper for the return-then-return fold (gap-019). Returns the
 /// `argument` expression when `stmt` is exactly one ReturnStatement
 /// whose argument is `Some` (possibly wrapped in single-statement
@@ -1879,6 +1937,23 @@ fn fold_for_statement(s: &ForStatement, st: &mut FoldState) -> Statement {
     let test = s.test.as_ref().map(|e| fold_expression(e, st));
     let update = s.update.as_ref().map(|e| fold_expression(e, st));
     let body = fold_statement(&s.body, st);
+
+    // Strip a redundant trailing bare `continue` (`for(…){…;continue}` →
+    // `for(…){…}`). This also covers a `while` loop, since `while` is rewritten
+    // to `for` (0.31.0) and re-folded here. Runs before the empty-body / fusion
+    // steps below so the shortened body then unwraps or normalizes.
+    let body = match strip_trailing_continue(&body) {
+        Some(stripped) => {
+            st.record_fold(
+                &s.cv,
+                "trailing-continue-removed",
+                "for (…) { …; continue }",
+                "for (…) { … }",
+            );
+            stripped
+        }
+        None => body,
+    };
 
     // Always-FALSE test → dead loop: it collapses to just its `init` (which
     // runs once, before the first, failing, test) — BUT only when that collapse
@@ -2809,6 +2884,62 @@ mod tests {
             Statement::Tagged(TaggedStatement::ForStatement(f)) => assert!(
                 statement_is_empty(f.body.as_ref()),
                 "empty do-while must lower to a for with an empty body; got {:?}",
+                f.body
+            ),
+            other => panic!("expected ForStatement; got {other:?}"),
+        }
+    }
+
+    /// `for (;;) { a(); continue; }` → the trailing bare `continue` is stripped,
+    /// leaving a single-statement body that then unwraps to `for (;;) a();`.
+    #[test]
+    fn for_body_trailing_continue_is_stripped() {
+        use coding_adventures_javascript_ast::ContinueStatement;
+        let cont = Statement::Tagged(TaggedStatement::ContinueStatement(ContinueStatement {
+            cv: None,
+            label: None,
+        }));
+        let body = block(Some("blk.1"), vec![expr_stmt(call_expr("a"), None), cont]);
+        let f = for_stmt(None, None, body);
+        let (out, contribs, changed, _) =
+            run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "trailing-continue-removed"));
+        // The body no longer contains a `continue`; it unwrapped to bare `a()`.
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ForStatement(f)) => {
+                assert!(
+                    matches!(
+                        f.body.as_ref(),
+                        Statement::Tagged(TaggedStatement::ExpressionStatement(_))
+                    ),
+                    "expected the `continue` gone and body unwrapped to `a()`; got {:?}",
+                    f.body
+                );
+            }
+            other => panic!("expected ForStatement; got {other:?}"),
+        }
+    }
+
+    /// `for (;;) { a(); continue L; }` — a LABELED `continue` may target an outer
+    /// loop, so it is NOT stripped; the block is kept intact.
+    #[test]
+    fn for_body_labeled_continue_is_kept() {
+        use coding_adventures_javascript_ast::ContinueStatement;
+        let cont = Statement::Tagged(TaggedStatement::ContinueStatement(ContinueStatement {
+            cv: None,
+            label: Some(Identifier { cv: None, name: "L".to_string() }),
+        }));
+        let body = block(Some("blk.1"), vec![expr_stmt(call_expr("a"), None), cont]);
+        let f = for_stmt(None, None, body);
+        let (out, contribs, _changed, _) =
+            run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(!contribs.iter().any(|c| c.tag == "trailing-continue-removed"));
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ForStatement(f)) => assert!(
+                matches!(f.body.as_ref(), Statement::Tagged(TaggedStatement::BlockStatement(b))
+                    if b.body.len() == 2),
+                "labeled continue must be kept; got {:?}",
                 f.body
             ),
             other => panic!("expected ForStatement; got {other:?}"),

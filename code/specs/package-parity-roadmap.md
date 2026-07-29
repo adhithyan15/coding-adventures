@@ -741,6 +741,15 @@ After the high-consensus set is complete:
 
 This phase covers 121 package identities and 911 current missing slots.
 
+The DT02 graph-substrate slice adds pure Go and Rust
+`multi-directed-graph` implementations alongside the existing Python and
+TypeScript references. Both ports provide stable edge identity, parallel
+directed edges, copied property bags, multiplicity-aware DAG algorithms,
+package-native tests, capability declarations, and downstream integration with
+their `neural-network` and `neural-graph-vm` packages. This moves the portable
+package from two to four established implementation lanes; the remaining
+language ports stay eligible for later dependency-shaped waves.
+
 ## Priority 4: Classify Sparse And Singleton Families
 
 The singleton inventory is led by 520 Rust, 86 Python, and 84 TypeScript

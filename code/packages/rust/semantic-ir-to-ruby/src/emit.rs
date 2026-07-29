@@ -48,6 +48,11 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     "tmod",
     "utdiv",
     "utmod",
+    // Numeric conversions (SIR27 milestone 9, floating point): `to_f` widens an
+    // integer to `double`, `to_i` truncates a `double` toward zero to an integer
+    // (the frontend then masks it to the target width with a `Convert`).
+    "to_f",
+    "to_i",
     "=",
     "==",
     "!=",
@@ -1457,6 +1462,10 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // non-negative Integer, for which truncation and flooring coincide.
         "tdiv" | "utdiv" => format!("sir_tdiv({}, {})", arg(&a, 0), arg(&a, 1)),
         "tmod" | "utmod" => format!("sir_tmod({}, {})", arg(&a, 0), arg(&a, 1)),
+        // `to_f`/`to_i`: Ruby's native `Numeric#to_f` (int → Float) and
+        // `Float#to_i` (truncates toward zero, matching C's `(int)double` cast).
+        "to_f" => format!("({}).to_f", arg(&a, 0)),
+        "to_i" => format!("({}).to_i", arg(&a, 0)),
         "not" => format!("(!sir_truthy({}))", arg(&a, 0)),
         "<" => format!("({} < {})", arg(&a, 0), arg(&a, 1)),
         ">" => format!("({} > {})", arg(&a, 0), arg(&a, 1)),

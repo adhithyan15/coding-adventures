@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+### Milestone 9b — floating-point value track
+
+The lowering gains a **second value track** for floating point.  Each expression
+now carries a `CType` (`Int(IntSpec)` or `Double`) instead of a bare `IntSpec`;
+`float`/`double` map to `CType::Double` → `SirType::Float` (SIR's single 64-bit
+IEEE float, so `float` is treated as `double`).
+
+- **Float literals** (`3.14`, `.5`, `1e10`, `1.0f`) now lower to `Expr::FloatLit`
+  (the `f`/`l` suffix is dropped) rather than being rejected.
+- **Mixed int/double arithmetic** promotes the integer operand to `double` with a
+  `to_f` builtin (the usual arithmetic conversions), and the float op emits the
+  bare `+`/`-`/`*`/`/` builtin with **no** width `Convert` (a `double` has no
+  width to wrap to).
+- **`/` on `double` is true division** (the plain `/` builtin), not the integer
+  truncating `tdiv`/`utdiv`.  `%`, `&`, `|`, `^`, `<<`, `>>`, `~` are **rejected**
+  on `double` (undefined on floating point in C).
+- **Conversions:** a float↔int cast flows through `to_f` (int→double) and `to_i`
+  (double→int, truncating toward zero like C's `(int)double`); a double→int cast
+  is `Convert(to_i(e), spec)` — truncate then narrow.
+- **`Feature::Floats` is declared only when the program uses floating point**, so
+  an integer-only program's SIR (and every backend's output) is unchanged.
+- Verified by the three-way conformance corpus (8 new float cases: mixed
+  promotion, true division, loop accumulation, float→int truncation, `double`
+  parameters/returns) — byte-identical across reference C (`clang -fwrapv`),
+  emitted Ruby, and emitted C, the last also compile-clean on clang + gcc + MSVC.
+- Supersedes the milestone-9a "lowering rejects floats" boundary below.
+
 ### Milestone 9a — floating-point grammar (foundation)
 
 - The C grammar now recognises **`float`/`double`** type keywords and

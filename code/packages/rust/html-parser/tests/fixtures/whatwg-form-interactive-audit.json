@@ -1,5 +1,5 @@
 {
-  "case_count": 413,
+  "case_count": 414,
   "cases": [
     {
       "axis": "interactive-formatting",
@@ -2478,6 +2478,12 @@
       "id": "void-in-phrasing-dat-11",
       "reason": "form, input, label, and fieldset insertion recovery",
       "source": "void-in-phrasing.dat:11"
+    },
+    {
+      "axis": "textarea-rawtext",
+      "id": "processing-instructions-dat-121",
+      "reason": "textarea RCDATA handoff and form-associated text control recovery",
+      "source": "processing-instructions.dat:121"
     }
   ],
   "counts_by_axis": {
@@ -2487,7 +2493,7 @@
     "interactive-formatting": 124,
     "select-option": 123,
     "stray-interactive-end-tags": 4,
-    "textarea-rawtext": 24
+    "textarea-rawtext": 25
   },
   "description": "Focused parser audit over selected html5lib tree-construction cases that stress form-associated controls and interactive-element recovery.",
   "format": "whatwg-html-form-interactive-audit/v1",

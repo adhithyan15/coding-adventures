@@ -13,6 +13,8 @@ at full fidelity:
 - **Four views** — List (with progressive-disclosure task detail), Board (Kanban
   with pointer *and* keyboard drag), Timeline (Gantt with critical path, slack, and
   dependency arrows), and Calendar.
+- **Three projects that really switch**, plus a composer to create more. Each project
+  owns its own plan, so picking one in the rail reloads every view from it.
 - **Warm & approachable** visual identity — a honey accent reserved for *now*,
   warm-biased neutrals, tabular figures, authored **light and dark** themes (toggle
   top-right, and it respects your OS preference).

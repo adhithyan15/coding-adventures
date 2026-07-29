@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.64.0 — INSPECT TALLYING multi-item list with a LEADING item — 2026-07-29
+
+- `INSPECT source TALLYING counter FOR {ALL|LEADING} a [{BEFORE|AFTER} p] {ALL|LEADING} b … ` — the
+  single-counter MULTI-item TALLYING list (two or more `tally_item`s under one `tally_for`) may now
+  MIX `ALL` and `LEADING` items, each still carrying its own optional `{BEFORE|AFTER}` region.
+  Previously any `LEADING` item in a multi-item list was rejected at read time ("INSPECT TALLYING with
+  several items and a LEADING item is a later rung"); that reject is now LIFTED. Only a `CHARACTERS`
+  item in a multi-item list, SEVERAL counters, and the combined `TALLYING … REPLACING` form with
+  several items remain later rungs. No grammar change was needed —
+  `tally_item = (ALL|LEADING) operand inspect_region*` already parses a per-item `LEADING` keyword.
+- Semantics (single counter, per-item `active` run flags): resolve each item to
+  `(delim_char, leading, start, end)` where `[start, end)` is its window (`region_window`; a
+  region-less item = the whole source `(0, len)`). ONE left-to-right pass carries a per-item `active`
+  flag (only consulted for `LEADING` items, all init `true`). At each position the FIRST ELIGIBLE item
+  in WRITTEN ORDER counts once and the scan stops — an `ALL` item is eligible iff its window contains
+  the position AND its delimiter matches, a `LEADING` item ALSO requires its `active` flag still
+  `true`. AFTER the tally decision, EVERY `LEADING` item's run flag is updated INDEPENDENTLY of which
+  item tallied: a run breaks at the FIRST in-window position whose char is NOT its delimiter (a
+  matching char keeps the run alive even if a higher-priority item claimed that position; positions
+  outside the window neither begin nor break the run — so a `LEADING` run is anchored at its window
+  start). INSPECT ADDS; it does not clear the counter.
+- Non-ASCII-clean (POSITIVE parity, NOT a trap): TALLYING only COUNTS (no `str_slice`), and a
+  `LEADING` run breaks at the SAME logical position on both engines (the multi-byte char / its first
+  byte), so the char-based oracle and the byte-based compiler count identically on a non-ASCII source.
+  Verified: `"aaébb"` `FOR LEADING "a" ALL "b"` → `4` on both engines. A non-ASCII item/region
+  delimiter operand stays the pre-existing `single_delim_char` vs `single_delim_code` chip — no new
+  one-sided guard.
+- `Stmt::InspectTallyMulti.items` is now `Vec<TallyMultiLeadingItem>` (a new
+  `(Operand, bool, Option<Region>)` alias, adding the `leading` flag); the several-counters path keeps
+  the `ALL`-only `TallyMultiItem`. The counter must remain an unsigned-integer `PIC 9(n)`.
+- Tests: oracle-only unit tests for the `LEADING`+`ALL` mix, the run-survives-a-higher-priority-claim
+  subtlety, a `LEADING` item with a region anchored at the window start, two `LEADING` items with
+  disjoint windows, and the non-ASCII positive parity.
+
 ## 0.63.0 — INSPECT TALLYING several counters each item with a BEFORE/AFTER region — 2026-07-29
 
 - `INSPECT source TALLYING c1 FOR ALL a [{BEFORE|AFTER} p] [ALL b …] c2 FOR ALL d [{BEFORE|AFTER} q]

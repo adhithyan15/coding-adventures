@@ -1134,10 +1134,12 @@ its continuation byte match no ASCII delimiter; the two `0`s are counted, one pe
 non-ASCII item/region delimiter *operand* stays the pre-existing `single_delim_char` vs
 `single_delim_code` chip, identical across single- and multi-item tallying — no new one-sided guard.
 
-**Scope kept for a later rung** (unchanged, identical messages on both engines): a `LEADING` or
+**Scope kept for a later rung** (unchanged, identical messages on both engines): a
 `CHARACTERS` item in a multi-item list; SEVERAL counters (more than one `tally_for`); and the
 combined `TALLYING … REPLACING` form with several tally items. The single-item
-`TALLYING FOR ALL … {BEFORE|AFTER}` path is untouched.
+`TALLYING FOR ALL … {BEFORE|AFTER}` path is untouched. (A `LEADING` item in a multi-item list —
+which this rung still deferred — is now **lifted** by the follow-up rung "multi-item `TALLYING`
+list with a `LEADING` item" below.)
 
 ### Several-counters `TALLYING` where each item carries a per-item `{BEFORE|AFTER}` region (follow-up rung, v0.63.0 / v0.59.0)
 
@@ -1202,6 +1204,81 @@ chip — no new one-sided guard.
 `CHARACTERS` item in ANY group of the multi-counter path; and the combined `TALLYING … REPLACING`
 form with several counters. This variant fires only for two or more `tally_for` groups; exactly one
 group keeps the single-counter paths (`Inspect` / `InspectTallyMulti`) unchanged.
+
+### Multi-item `TALLYING` list with a `LEADING` item (follow-up rung, v0.64.0 / v0.60.0)
+
+The single-counter multi-item `TALLYING` list (`TALLYING C FOR … a … b …`, two or more `tally_item`s
+under one `tally_for`) now accepts a `LEADING` item alongside `ALL` items — a MIX of `ALL` and
+`LEADING`, each with its own optional `{BEFORE|AFTER}` region. Previously any `LEADING` item in a
+multi-item list was a later rung (rejected on both engines with "INSPECT TALLYING with several items
+and a LEADING item is a later rung"); that reject is now **lifted**. Only a `CHARACTERS` item in a
+multi-item list, SEVERAL counters, and the combined `TALLYING … REPLACING` form with several items
+remain later rungs. No grammar change is needed — `tally_item = (ALL|LEADING) operand inspect_region*`
+already parses a per-item `LEADING` keyword.
+
+**Semantics (single counter, per-item `active` run flags).** Resolve each item to
+`(delim_char, leading, start, end)` where `[start, end)` is its window over the source
+(`region_window`; a region-less item = the whole source `(0, len)`). ONE left-to-right pass over the
+source positions carries a per-item `active` flag (only consulted for `LEADING` items, all init
+`true`):
+
+```text
+count = 0;  active = [true; N]
+for i in 0..len:
+    c = chars[i]
+    # tally decision: first ELIGIBLE item in WRITTEN ORDER, count once, then stop
+    for k in 0..N:
+        (d, leading, start, end) = resolved[k]
+        in_win = start <= i && i < end
+        if in_win && c == d && (!leading || active[k]): count += 1; break
+    # then update EVERY LEADING item's run flag — INDEPENDENT of which item tallied:
+    for k in 0..N:
+        (d, leading, start, end) = resolved[k]
+        if leading && start <= i && i < end && c != d: active[k] = false
+counter := counter + count            # INSPECT ADDS; does not clear
+```
+
+The decisive subtleties (identical on both engines, or they diverge): (1) the `active` update is a
+SEPARATE pass over ALL leading items AFTER the tally decision, breaking a run ONLY on an IN-WINDOW
+`c != d` — **not** when another item claimed the position; a matching char keeps the run alive even
+if a higher-priority item tallied it. (2) A `LEADING` item is eligible only while its `active` flag is
+STILL `true` at position `i` (the char equals `d` AND every prior in-window position also equalled
+`d`). (3) First-match-per-position: a position tallies at most once (the first eligible item), but the
+active-update still runs for all leading items. (4) A region-less `LEADING` item anchors its run at
+source position 0; a `LEADING` item WITH a region anchors it at its window start (composing with the
+per-item regions of the rung above). Worked: `"aabab"` `FOR LEADING "a" ALL "b"` → the leading run
+`"aa"` (breaks at the first `b`) gives 2, `ALL "b"` gives 2, and the `a` at index 3 is not counted
+(run dead) → `4`. Worked (run anchored at window start): `"aaXaab"` `FOR LEADING "a" AFTER "X" ALL "b"`
+→ leading window `"aab"` counts the two a's after the `X` (the two before are ignored) plus one `b` →
+`3`. Worked (run survives a claim): `"aab"` `FOR ALL "a" LEADING "a"` → `ALL "a"` claims both a's
+(count 2), the leading run stays alive through them and decays only at the `b`; the leading item never
+tallies, count `2`.
+
+**Compiler lowering.** The runtime scan loop of `emit_inspect_tally_multi` gains a per-`LEADING`-item
+`active` register (i64, init `1`, allocated before the loop — the runtime-loop analogue of the
+compile-time-unrolled `active` flag in the single-item `emit_inspect_replacing` LEADING lowering). In
+the tally-decision chain a `LEADING` item's eligibility AND-gates on its `active` register; at the
+per-position convergence label (reached by both a tally match and a no-match fall-through) EVERY
+leading item's run is updated — `active := active AND eq` (region-less) or
+`active := active AND (eq OR NOT in_win)` (windowed, so out-of-window positions never touch the run),
+recomputing `eq`/`in_win` there because an early match `jmp` skips the later chain registers. This
+mirrors the oracle's separate active-update pass exactly, so the compiled program matches the
+tree-walk reference byte-for-byte.
+
+**Non-ASCII-clean (a POSITIVE parity, NOT a trap).** As for the sibling tally rungs, `TALLYING` only
+**counts** — it never reconstructs the source via `str_slice` — so there is NO UTF-8-boundary trap.
+An ASCII delimiter never equals a multi-byte continuation byte, and a `LEADING` run breaks at the SAME
+logical position on both engines: the char-based oracle breaks at the multi-byte char, the byte-based
+compiler breaks at that char's FIRST byte (and its continuation bytes match nothing). Worked positive
+parity: `"aaébb"` `FOR LEADING "a" ALL "b"` → leading `"aa"` (breaks at `é`) `+` `ALL "b"` `= 4` on
+BOTH engines. A non-ASCII item/region delimiter *operand* stays the pre-existing `single_delim_char`
+vs `single_delim_code` chip — no new one-sided guard.
+
+**Scope kept for a later rung** (unchanged, identical messages on both engines): a `CHARACTERS` item
+in a multi-item list; SEVERAL counters (more than one `tally_for`); and the combined
+`TALLYING … REPLACING` form with several tally items. The single-item path (which already supports a
+lone `FOR LEADING`, a region, and `CHARACTERS`) is untouched, and the several-counters path stays
+`ALL`-only. The counter must remain an unsigned-integer `PIC 9(n)`.
 
 ### Combined `INSPECT … TALLYING … REPLACING` (one statement)
 

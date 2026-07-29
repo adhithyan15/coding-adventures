@@ -59,13 +59,14 @@ use spice_engine::{
     model_card_supported_parameter_coverage_gate_issue_records,
     model_card_supported_parameter_coverage_records,
     model_card_supported_parameter_coverage_summary,
-    model_card_supported_parameter_coverage_summary_records, mosfet_from_model_card,
-    normalize_model_card, normalize_model_card_type, resolve_deck_initial_conditions, BSource, Bjt,
-    BjtPolarity, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CornerTemperatureDcResult,
-    CurrentSource, CustomModel, DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet,
-    JfetPolarity, ModelCardKind, Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform,
-    SpiceError, SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs, Vcvs,
-    VoltageSource, Waveform, XInstance,
+    model_card_supported_parameter_coverage_summary_records, mosfet_at_temperature,
+    mosfet_from_model_card, normalize_model_card, normalize_model_card_type,
+    resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit,
+    CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource, CustomModel,
+    DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity, ModelCardKind,
+    Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError,
+    SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs, Vcvs, VoltageSource,
+    Waveform, XInstance,
 };
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -3503,6 +3504,35 @@ fn dc_mosfet_temperature_scaling_changes_common_source_bias() {
 
     assert!(cold_result.voltage("out").unwrap() > nominal_result.voltage("out").unwrap());
     assert!(hot_result.voltage("out").unwrap() < nominal_result.voltage("out").unwrap());
+}
+
+#[test]
+fn mosfet_temperature_scaling_keeps_surface_mobility_and_kp_aligned() {
+    let nominal = Mosfet::with_model(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            kp: 200.0e-6,
+            surface_mobility: 500.0,
+            ..MosfetLevel1Params::default()
+        },
+    );
+    let hot = mosfet_at_temperature(&nominal, 600.3, 300.15).unwrap();
+    let scale = 2.0_f64.powf(-1.5);
+
+    assert_close(hot.params.kp, nominal.params.kp * scale);
+    assert_close(
+        hot.params.surface_mobility,
+        nominal.params.surface_mobility * scale,
+    );
+    assert_close(
+        hot.params.kp / hot.params.surface_mobility,
+        nominal.params.kp / nominal.params.surface_mobility,
+    );
 }
 
 #[test]

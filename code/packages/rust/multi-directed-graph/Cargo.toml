@@ -1,0 +1,7 @@
+[package]
+name = "multi-directed-graph"
+version = "0.1.0"
+edition = "2021"
+description = "Generic multi-directed graph with stable edge IDs and metadata"
+
+[dependencies]

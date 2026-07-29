@@ -1,0 +1,758 @@
+{
+  "case_count": 124,
+  "cases": [
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-1",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:1"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-2",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:2"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-3",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:3"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-4",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:4"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-5",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:5"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-6",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:6"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-7",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:7"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-8",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:8"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-9",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:9"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-10",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:10"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-11",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:11"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-12",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:12"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-13",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:13"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-14",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:14"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-15",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:15"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-16",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:16"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-17",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:17"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-18",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:18"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-19",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:19"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-20",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:20"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-21",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:21"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-22",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:22"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-23",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:23"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-24",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:24"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-25",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:25"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-26",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:26"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-27",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:27"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-28",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:28"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-29",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:29"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-30",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:30"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-31",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:31"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-32",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:32"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-33",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:33"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-34",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:34"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-35",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:35"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-36",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:36"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-37",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:37"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-38",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:38"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-39",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:39"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-40",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:40"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-41",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:41"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-42",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:42"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-43",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:43"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-44",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:44"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-45",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:45"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-46",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:46"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-47",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:47"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-48",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:48"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-49",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:49"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-50",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:50"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-51",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:51"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-52",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:52"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-53",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:53"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-54",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:54"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-55",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:55"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-56",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:56"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-57",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:57"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-58",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:58"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-59",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:59"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-60",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:60"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-61",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:61"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-62",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:62"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-63",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:63"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-64",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:64"
+    },
+    {
+      "axis": "valid-target-and-data",
+      "id": "processing-instructions-dat-65",
+      "reason": "valid processing-instruction targets and normalized data",
+      "source": "processing-instructions.dat:65"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-66",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:66"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-67",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:67"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-68",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:68"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-69",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:69"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-70",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:70"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-71",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:71"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-72",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:72"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-73",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:73"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-74",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:74"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-75",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:75"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-76",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:76"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-77",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:77"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-78",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:78"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-79",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:79"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-80",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:80"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-81",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:81"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-82",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:82"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-83",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:83"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-84",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:84"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-85",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:85"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-86",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:86"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-87",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:87"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-88",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:88"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-89",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:89"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-90",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:90"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-91",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:91"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-92",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:92"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-93",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:93"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-94",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:94"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-95",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:95"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-96",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:96"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-97",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:97"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-98",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:98"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-99",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:99"
+    },
+    {
+      "axis": "invalid-target-recovery",
+      "id": "processing-instructions-dat-100",
+      "reason": "reserved or invalid targets recovered as bogus comments",
+      "source": "processing-instructions.dat:100"
+    },
+    {
+      "axis": "eof-recovery",
+      "id": "processing-instructions-dat-101",
+      "reason": "incomplete processing instructions at end of input",
+      "source": "processing-instructions.dat:101"
+    },
+    {
+      "axis": "eof-recovery",
+      "id": "processing-instructions-dat-102",
+      "reason": "incomplete processing instructions at end of input",
+      "source": "processing-instructions.dat:102"
+    },
+    {
+      "axis": "eof-recovery",
+      "id": "processing-instructions-dat-103",
+      "reason": "incomplete processing instructions at end of input",
+      "source": "processing-instructions.dat:103"
+    },
+    {
+      "axis": "eof-recovery",
+      "id": "processing-instructions-dat-104",
+      "reason": "incomplete processing instructions at end of input",
+      "source": "processing-instructions.dat:104"
+    },
+    {
+      "axis": "eof-recovery",
+      "id": "processing-instructions-dat-105",
+      "reason": "incomplete processing instructions at end of input",
+      "source": "processing-instructions.dat:105"
+    },
+    {
+      "axis": "eof-recovery",
+      "id": "processing-instructions-dat-106",
+      "reason": "incomplete processing instructions at end of input",
+      "source": "processing-instructions.dat:106"
+    },
+    {
+      "axis": "eof-recovery",
+      "id": "processing-instructions-dat-107",
+      "reason": "incomplete processing instructions at end of input",
+      "source": "processing-instructions.dat:107"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-108",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:108"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-109",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:109"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-110",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:110"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-111",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:111"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-112",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:112"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-113",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:113"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-114",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:114"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-115",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:115"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-116",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:116"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-117",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:117"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-118",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:118"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-119",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:119"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-120",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:120"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-121",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:121"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-122",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:122"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-123",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:123"
+    },
+    {
+      "axis": "insertion-context",
+      "id": "processing-instructions-dat-124",
+      "reason": "processing instructions across tree-builder insertion contexts",
+      "source": "processing-instructions.dat:124"
+    }
+  ],
+  "counts_by_axis": {
+    "eof-recovery": 7,
+    "insertion-context": 17,
+    "invalid-target-recovery": 35,
+    "valid-target-and-data": 65
+  },
+  "description": "Focused parser audit over the current WPT processing-instruction tree-construction corpus, including target validation, data normalization, EOF recovery, and insertion contexts.",
+  "format": "whatwg-html-processing-instruction-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

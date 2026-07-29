@@ -197,6 +197,7 @@ fn whatwg_noscript_audit_fixture_parses() {
     assert_axis_count(&suite, "textmode-descendant", 10);
     assert_axis_count(&suite, "stray-noscript-end-tag", 4);
     assert_axis_count(&suite, "paragraph-noscript", 2);
+    assert_axis_count(&suite, "processing-instruction", 1);
 }
 
 #[test]

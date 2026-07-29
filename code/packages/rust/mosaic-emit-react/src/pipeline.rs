@@ -1174,10 +1174,24 @@ fn emit_jsx_tree(
         }
     }
 
-    let style_attr = if merged_style.is_empty() && state_spreads.is_empty() {
+    // UI36 — data-driven sizing. A bound size is *data*, so it is emitted LAST of all:
+    // after the author's part style and after any state spreads. Otherwise a
+    // `state X { width: … }` block would silently clobber the value the host bound,
+    // which is exactly the "my binding did nothing" confusion this feature removes.
+    // See `dynamic_size_style` for why this can't live in mosstyle.
+    let size_style = dynamic_size_style(node)?;
+
+    let style_attr = if merged_style.is_empty() && state_spreads.is_empty() && size_style.is_empty()
+    {
         String::new()
     } else if state_spreads.is_empty() {
-        format!(" style={{{{ {merged_style} }}}}")
+        // No spreads: just the merged style plus any bound sizes.
+        let body = if merged_style.is_empty() {
+            size_style.trim_start_matches(", ").to_string()
+        } else {
+            format!("{merged_style}{size_style}")
+        };
+        format!(" style={{{{ {body} }}}}")
     } else {
         // Both static merged style + conditional state spreads. The static
         // style is the first spread inside the object so author state
@@ -1187,7 +1201,7 @@ fn emit_jsx_tree(
         } else {
             merged_style.clone()
         };
-        format!(" style={{{{ {base}{state_spreads} }}}}")
+        format!(" style={{{{ {base}{state_spreads}{size_style} }}}}")
     };
     let mut open = format!("{tag_name}{extra_attrs}{style_attr}");
 
@@ -4261,6 +4275,95 @@ fn find_keyword_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a st
 
 /// Find a prop on `node` whose value is a `Number`. Returns the f64, or
 /// `None`.
+/// UI36 — **data-driven sizing**: a size prop whose value comes from the host.
+///
+/// (See `find_number_prop` below for the literal-number-only reader this generalises.)
+///
+/// mosstyle is the right home for *static* appearance, and deliberately bakes its
+/// values at compile time. But some sizes are only knowable at runtime — the length of
+/// a Gantt bar, a progress fill, a proportional column — and there is no amount of
+/// authored CSS that can express "as wide as this row's data says". Before this, such a
+/// node had no way to be sized: `width: slot: x` parsed fine and was then silently
+/// dropped, because the only reader was `find_number_prop`, which matches a literal
+/// number and nothing else. Silently ignoring an author's binding is the worst of the
+/// options, so these props now accept the same three value shapes the rest of the
+/// emitter does.
+///
+/// | author writes                  | emitted                    |
+/// |--------------------------------|----------------------------|
+/// | `width: 120`                   | `width: 120` (CSS px)      |
+/// | `width: slot: bar-width`       | `width: barWidth`          |
+/// | `width: ( row[1] )`            | `width: row[1]`            |
+///
+/// The value is passed through as a JS expression, so a host may supply either a number
+/// (React reads a bare number as px) or a string like `"42%"` — which is what makes a
+/// bar that scales with its container expressible at all.
+///
+/// Returns a `, key: value` fragment ready to append inside a JSX style object.
+fn dynamic_size_style(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+    /// The mosstyle-style kebab prop name paired with its JSX style key.
+    const SIZE_PROPS: [(&str, &str); 6] = [
+        ("width", "width"),
+        ("height", "height"),
+        ("min-width", "minWidth"),
+        ("max-width", "maxWidth"),
+        ("min-height", "minHeight"),
+        ("max-height", "maxHeight"),
+    ];
+
+    let mut out = String::new();
+    for (prop_name, css_key) in SIZE_PROPS {
+        let Some(prop) = node.props.iter().find(|p| p.name == prop_name) else {
+            continue;
+        };
+        let expr = match &prop.value {
+            // Render `120` as `120`, not `120.0` — React reads a bare number as px.
+            LayoutPropValue::Number(n) => {
+                // A literal long enough to overflow f64 parses to infinity, and
+                // `format!("{inf}")` would emit a bare `inf` identifier that doesn't
+                // compile. Reject it rather than emitting broken TSX.
+                if !n.is_finite() {
+                    return Err(PipelineEmitError::UnsafeSlotName(format!(
+                        "`{prop_name}:` is not a finite number"
+                    )));
+                }
+                if n.fract() == 0.0 {
+                    format!("{}", *n as i64)
+                } else {
+                    format!("{n}")
+                }
+            }
+            LayoutPropValue::SlotRef(slot) => {
+                let camel = to_camel_case_first_lower(slot);
+                validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+                camel
+            }
+            LayoutPropValue::Expr(text) => text.clone(),
+            // A string literal is a legitimate CSS size ("50%", "12rem") but must be
+            // emitted as a JS string, not a bare identifier.
+            LayoutPropValue::String(lit) => js_string_literal(lit),
+            // A bare keyword is how an author naturally writes a CSS keyword size —
+            // `width: auto`, `height: fit-content`. The mosmodel grammar restricts a
+            // keyword to `[A-Za-z][A-Za-z0-9-]*`, so quoting it is safe.
+            LayoutPropValue::Keyword(k) => js_string_literal(k),
+            // Anything else (an emit ref) is not a size. Fail loudly rather than
+            // silently dropping it — the bug this whole function exists to stop.
+            _ => {
+                return Err(PipelineEmitError::UnsafeSlotName(format!(
+                    "`{prop_name}:` must be a number, a string, a keyword, a slot ref,                      or an expression"
+                )))
+            }
+        };
+        out.push_str(&format!(", {css_key}: {expr}"));
+    }
+    Ok(out)
+}
+
+/// Find a prop on `node` whose value is a literal `Number`.
+///
+/// Deliberately narrow: it ignores a slot or expression binding. `dynamic_size_style`
+/// above is the general reader for size props; this one remains for the places that
+/// genuinely require a compile-time constant (a table `Col`'s width, for instance).
 fn find_number_prop(node: &LayoutNode, prop_name: &str) -> Option<f64> {
     node.props.iter().find_map(|p| {
         if p.name == prop_name {
@@ -7432,6 +7535,220 @@ mod tests {
         let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
         assert!(!out.contains("mosaic$grab"), "controller leaked:\n{out}");
         assert!(!out.contains("useState"), "useState leaked:\n{out}");
+    }
+
+    // ===================================================================
+    // UI36 — data-driven sizing
+    // ===================================================================
+
+    /// A one-component layout whose root `Box` carries the given props.
+    fn sized_box_layout(props: Vec<LayoutProp>) -> LayoutDef {
+        LayoutDef {
+            component_name: "S".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props,
+                children: vec![],
+            },
+        }
+    }
+    fn size_prop(name: &str, value: LayoutPropValue) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value,
+        }
+    }
+    fn sized(props: Vec<LayoutProp>) -> String {
+        from_pipeline(
+            &component("S", vec![], vec![]),
+            &sized_box_layout(props),
+            &empty_style("S"),
+        )
+        .unwrap()
+        .output
+    }
+
+    /// A slot-bound size is the whole point: mosstyle bakes static values, so the
+    /// length of a Gantt bar or a progress fill — knowable only at runtime — had no
+    /// way to be expressed. It used to parse and then be *silently dropped*.
+    #[test]
+    fn ui36_width_can_come_from_a_slot() {
+        let out = sized(vec![size_prop(
+            "width",
+            LayoutPropValue::SlotRef("bar-width".to_string()),
+        )]);
+        assert!(out.contains("width: barWidth"), "slot width missing:\n{out}");
+    }
+
+    /// An expression works too, so a size can be computed from a loop binding —
+    /// `width: ( row[1] )` inside a `For`.
+    #[test]
+    fn ui36_width_can_come_from_an_expression() {
+        let out = sized(vec![size_prop(
+            "width",
+            LayoutPropValue::Expr("row[1]".to_string()),
+        )]);
+        assert!(out.contains("width: row[1]"), "expr width missing:\n{out}");
+    }
+
+    /// A literal number still means CSS pixels, and must not print as `120.0`.
+    #[test]
+    fn ui36_numeric_width_is_pixels_without_a_decimal_tail() {
+        let out = sized(vec![size_prop("width", LayoutPropValue::Number(120.0))]);
+        assert!(out.contains("width: 120"), "{out}");
+        assert!(!out.contains("120.0"), "numeric width printed a float tail:\n{out}");
+    }
+
+    /// A string literal is a legitimate CSS size ("50%") and must be quoted, not
+    /// emitted as a bare identifier.
+    #[test]
+    fn ui36_string_width_is_quoted() {
+        let out = sized(vec![size_prop(
+            "width",
+            LayoutPropValue::String("50%".to_string()),
+        )]);
+        assert!(out.contains("width: \"50%\""), "{out}");
+    }
+
+    /// All six size props lower, so height/min/max are equally bindable.
+    #[test]
+    fn ui36_every_size_prop_lowers() {
+        let out = sized(vec![
+            size_prop("width", LayoutPropValue::Number(1.0)),
+            size_prop("height", LayoutPropValue::Number(2.0)),
+            size_prop("min-width", LayoutPropValue::Number(3.0)),
+            size_prop("max-width", LayoutPropValue::Number(4.0)),
+            size_prop("min-height", LayoutPropValue::Number(5.0)),
+            size_prop("max-height", LayoutPropValue::Number(6.0)),
+        ]);
+        for key in ["width: 1", "height: 2", "minWidth: 3", "maxWidth: 4", "minHeight: 5", "maxHeight: 6"] {
+            assert!(out.contains(key), "missing {key}:\n{out}");
+        }
+    }
+
+    /// A bound size must beat the author's static one — otherwise binding a width
+    /// would appear to do nothing whenever a part style also set it.
+    #[test]
+    fn ui36_bound_size_overrides_the_part_style() {
+        let m = component("S", vec![], vec![]);
+        let layout = LayoutDef {
+            component_name: "S".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("bar".to_string()),
+                props: vec![size_prop(
+                    "width",
+                    LayoutPropValue::SlotRef("bar-width".to_string()),
+                )],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "S".to_string(),
+            parts: vec![PartStyle {
+                name: "bar".to_string(),
+                base: vec![StyleProp {
+                    name: "width".to_string(),
+                    value: "10".to_string(),
+                }],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &layout, &style).unwrap().output;
+        let at_static = out.find("width: 10").expect("static width missing");
+        let at_bound = out.find("width: barWidth").expect("bound width missing");
+        assert!(
+            at_bound > at_static,
+            "the bound width must come last so it wins:\n{out}"
+        );
+    }
+
+    /// A prop shape that isn't a size fails loudly. Silently dropping it is exactly
+    /// the bug this feature exists to fix.
+    #[test]
+    fn ui36_a_non_size_value_is_rejected() {
+        let m = component("S", vec![], vec![]);
+        let l = sized_box_layout(vec![size_prop(
+            "width",
+            LayoutPropValue::EmitRef("onWidth".to_string()),
+        )]);
+        assert!(
+            from_pipeline(&m, &l, &empty_style("S")).is_err(),
+            "an emit ref is not a width and must not be silently ignored"
+        );
+    }
+
+    /// `width: auto` is how an author naturally writes a CSS keyword size. It used to
+    /// be silently dropped; briefly it hard-errored; it must simply work.
+    #[test]
+    fn ui36_a_css_keyword_size_is_quoted() {
+        let out = sized(vec![size_prop(
+            "width",
+            LayoutPropValue::Keyword("auto".to_string()),
+        )]);
+        assert!(out.contains("width: \"auto\""), "{out}");
+    }
+
+    /// A literal too large for f64 parses to infinity; emitting `width: inf` would be
+    /// a bare identifier that doesn't compile, so it must be rejected instead.
+    #[test]
+    fn ui36_a_non_finite_number_is_rejected() {
+        let m = component("S", vec![], vec![]);
+        let l = sized_box_layout(vec![size_prop(
+            "width",
+            LayoutPropValue::Number(f64::INFINITY),
+        )]);
+        assert!(
+            from_pipeline(&m, &l, &empty_style("S")).is_err(),
+            "an infinite width must not emit `width: inf`"
+        );
+    }
+
+    /// A bound size must beat a STATE block too, not just the base part style —
+    /// otherwise a `state hover { width: … }` would silently override the host's data.
+    #[test]
+    fn ui36_bound_size_outranks_a_state_block() {
+        let m = component("S", vec![], vec![]);
+        let layout = LayoutDef {
+            component_name: "S".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("bar".to_string()),
+                props: vec![
+                    size_prop("width", LayoutPropValue::SlotRef("bar-width".to_string())),
+                    size_prop("state-when-hover", LayoutPropValue::Expr("hot".to_string())),
+                ],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "S".to_string(),
+            parts: vec![PartStyle {
+                name: "bar".to_string(),
+                base: vec![],
+                states: vec![StateStyle {
+                    state: "hover".to_string(),
+                    props: vec![StyleProp {
+                        name: "width".to_string(),
+                        value: "99".to_string(),
+                    }],
+                }],
+            }],
+        };
+        let out = from_pipeline(&m, &layout, &style).unwrap().output;
+        let at_state = out.find("width: 99").expect("state width missing");
+        let at_bound = out.find("width: barWidth").expect("bound width missing");
+        assert!(at_bound > at_state, "the bound width must come last:
+{out}");
+    }
+
+    /// A layout that binds no size emits exactly what it did before.
+    #[test]
+    fn ui36_absent_size_props_change_nothing() {
+        let out = sized(vec![]);
+        assert!(!out.contains("width:"), "phantom width:\n{out}");
+        assert!(!out.contains("height:"), "phantom height:\n{out}");
     }
 
     /// Helper: a one-component layout def rooted at a `HostCheckbox`.

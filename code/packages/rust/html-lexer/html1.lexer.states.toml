@@ -67,6 +67,7 @@ alphabet = [
   "X",
   "x",
   "?",
+  "_",
 ]
 
 [[tokens]]
@@ -84,6 +85,10 @@ fields = ["name"]
 [[tokens]]
 name = "Comment"
 fields = ["data"]
+
+[[tokens]]
+name = "ProcessingInstruction"
+fields = ["target", "data"]
 
 [[tokens]]
 name = "Doctype"
@@ -459,6 +464,21 @@ id = "attribute_named_character_reference_reg"
 
 [[states]]
 id = "tag_open"
+
+[[states]]
+id = "processing_instruction_open"
+
+[[states]]
+id = "processing_instruction_target"
+
+[[states]]
+id = "after_processing_instruction_target"
+
+[[states]]
+id = "processing_instruction_data"
+
+[[states]]
+id = "processing_instruction_questionable"
 
 [[states]]
 id = "end_tag_open"
@@ -3400,9 +3420,216 @@ to = "markup_declaration_open"
 [[transitions]]
 from = "tag_open"
 matcher = { literal = "?" }
+to = "processing_instruction_open"
+actions = ["clear_temporary_buffer"]
+
+[[transitions]]
+from = "processing_instruction_open"
+matcher = { range = ["A", "Z"] }
+to = "processing_instruction_target"
+consume = false
+
+[[transitions]]
+from = "processing_instruction_open"
+matcher = { range = ["a", "z"] }
+to = "processing_instruction_target"
+consume = false
+
+[[transitions]]
+from = "processing_instruction_open"
+matcher = { literal = "_" }
+to = "processing_instruction_target"
+consume = false
+
+[[transitions]]
+from = "processing_instruction_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(eof-in-processing-instruction)", "emit(EOF)"]
+
+[[transitions]]
+from = "processing_instruction_open"
+matcher = { anything = true }
 to = "bogus_comment"
 consume = false
-actions = ["parse_error(unexpected-question-mark-instead-of-tag-name)", "create_comment"]
+actions = [
+  "parse_error(invalid-first-character-of-processing-instruction-target)",
+  "convert_temporary_buffer_to_comment",
+]
+
+[[transitions]]
+from = "processing_instruction_target"
+matcher = { literal = "\t" }
+to = "after_processing_instruction_target"
+consume = false
+actions = ["finalize_processing_instruction_target"]
+
+[[transitions]]
+from = "processing_instruction_target"
+matcher = { literal = "\n" }
+to = "after_processing_instruction_target"
+consume = false
+actions = ["finalize_processing_instruction_target"]
+
+[[transitions]]
+from = "processing_instruction_target"
+matcher = { literal = "\u000C" }
+to = "after_processing_instruction_target"
+consume = false
+actions = ["finalize_processing_instruction_target"]
+
+[[transitions]]
+from = "processing_instruction_target"
+matcher = { literal = " " }
+to = "after_processing_instruction_target"
+consume = false
+actions = ["finalize_processing_instruction_target"]
+
+[[transitions]]
+from = "processing_instruction_target"
+matcher = { literal = "?" }
+to = "after_processing_instruction_target"
+consume = false
+actions = ["finalize_processing_instruction_target"]
+
+[[transitions]]
+from = "processing_instruction_target"
+matcher = { literal = ">" }
+to = "after_processing_instruction_target"
+consume = false
+actions = ["finalize_processing_instruction_target"]
+
+[[transitions]]
+from = "processing_instruction_target"
+matcher = { range = ["A", "Z"] }
+to = "processing_instruction_target"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "processing_instruction_target"
+matcher = { range = ["a", "z"] }
+to = "processing_instruction_target"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "processing_instruction_target"
+matcher = { range = ["0", "9"] }
+to = "processing_instruction_target"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "processing_instruction_target"
+matcher = { literal = "-" }
+to = "processing_instruction_target"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "processing_instruction_target"
+matcher = { literal = "_" }
+to = "processing_instruction_target"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "processing_instruction_target"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(eof-in-processing-instruction)", "emit(EOF)"]
+
+[[transitions]]
+from = "processing_instruction_target"
+matcher = { anything = true }
+to = "bogus_comment"
+consume = false
+actions = [
+  "parse_error(invalid-processing-instruction-target)",
+  "convert_temporary_buffer_to_comment",
+]
+
+[[transitions]]
+from = "after_processing_instruction_target"
+matcher = { literal = "\t" }
+to = "after_processing_instruction_target"
+
+[[transitions]]
+from = "after_processing_instruction_target"
+matcher = { literal = "\n" }
+to = "after_processing_instruction_target"
+
+[[transitions]]
+from = "after_processing_instruction_target"
+matcher = { literal = "\u000C" }
+to = "after_processing_instruction_target"
+
+[[transitions]]
+from = "after_processing_instruction_target"
+matcher = { literal = " " }
+to = "after_processing_instruction_target"
+
+[[transitions]]
+from = "after_processing_instruction_target"
+matcher = { eof = true }
+to = "processing_instruction_data"
+consume = false
+
+[[transitions]]
+from = "after_processing_instruction_target"
+matcher = { anything = true }
+to = "processing_instruction_data"
+consume = false
+
+[[transitions]]
+from = "processing_instruction_data"
+matcher = { literal = "?" }
+to = "processing_instruction_questionable"
+
+[[transitions]]
+from = "processing_instruction_data"
+matcher = { literal = ">" }
+to = "data"
+actions = ["emit_current_token"]
+
+[[transitions]]
+from = "processing_instruction_data"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-processing-instruction)",
+  "discard_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "processing_instruction_data"
+matcher = { anything = true }
+to = "processing_instruction_data"
+actions = ["append_processing_instruction_data(current)"]
+
+[[transitions]]
+from = "processing_instruction_questionable"
+matcher = { literal = ">" }
+to = "data"
+actions = ["emit_current_token"]
+
+[[transitions]]
+from = "processing_instruction_questionable"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-processing-instruction)",
+  "discard_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "processing_instruction_questionable"
+matcher = { anything = true }
+to = "processing_instruction_data"
+consume = false
+actions = ["append_processing_instruction_data(?)"]
 
 [[transitions]]
 from = "tag_open"

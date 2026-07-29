@@ -404,14 +404,26 @@ pub enum Stmt {
     /// the number of source positions matched by SOME in-window item, each counted
     /// exactly once. INSPECT adds to the counter; it does not clear it first.
     ///
-    /// This rung supports ONLY `ALL` items (a `LEADING` or `CHARACTERS` item in a
-    /// multi-item list stays a later rung); a multi-item list lifting the region reject
-    /// is THIS rung. SEVERAL counters (more than one `FOR` phrase group) and the
-    /// combined `TALLYING … REPLACING` form with several tally items remain later rungs
-    /// (see `read_statement`). `items` are in written order — the exec walks them in
-    /// that order at every position, which is what realises first-match-per-position
+    /// Each item may be `ALL` OR `LEADING` (each with its own optional region — THIS
+    /// rung lifts the multi-item `LEADING` reject); a `CHARACTERS` item in a multi-item
+    /// list stays a later rung. SEVERAL counters (more than one `FOR` phrase group) and
+    /// the combined `TALLYING … REPLACING` form with several tally items remain later
+    /// rungs (see `read_statement`). `items` are in written order — the exec walks them
+    /// in that order at every position, which is what realises first-match-per-position
     /// (and thus duplicate-safe) counting.
-    InspectTallyMulti { source: String, counter: String, items: Vec<(Operand, Option<Region>)> },
+    ///
+    /// A `LEADING` item counts only the CONSECUTIVE run of its delimiter anchored at the
+    /// START of its window (a region-less item's window is the whole source, so anchored
+    /// at source position 0). The single left-to-right pass carries a per-item `active`
+    /// flag (only consulted for `LEADING` items, all init `true`): a `LEADING` item is
+    /// eligible to tally at position `i` only while `active` is still `true` (every prior
+    /// IN-WINDOW position equalled its delimiter). AFTER the tally decision at each
+    /// position, EVERY `LEADING` item's run flag is updated INDEPENDENTLY of which item
+    /// tallied — its run breaks at the FIRST in-window position whose char is NOT its
+    /// delimiter (a matching char keeps the run alive even if a higher-priority item
+    /// claimed that position; positions outside the window neither begin nor break the
+    /// run). See [`TallyMultiLeadingItem`].
+    InspectTallyMulti { source: String, counter: String, items: Vec<TallyMultiLeadingItem> },
     /// `INSPECT source TALLYING c1 FOR ALL a [{BEFORE|AFTER} p] [ALL b …] c2 FOR ALL d
     /// [{BEFORE|AFTER} q] …` — one INSPECT carrying TWO OR MORE `tally_for` groups, each
     /// with its OWN counter and one-or-more single-char `FOR ALL` delimiters, and each
@@ -620,12 +632,23 @@ pub struct Region {
     pub delim: Operand,
 }
 
-/// One `ALL delim [{BEFORE|AFTER} x]` item of a multi-item `TALLYING` list: the
+/// One `ALL delim [{BEFORE|AFTER} x]` item of a multi-COUNTER `TALLYING` list: the
 /// single-char delimiter operand plus its OWN optional `{BEFORE|AFTER}` region window.
 /// The count-side analogue of the `(search, replace, region)` triple a multi-item
-/// `REPLACING` item carries; named so [`read_inspect_tally_multi`]'s return type stays
-/// legible (and below clippy's type-complexity threshold).
+/// `REPLACING` item carries; named so [`read_inspect_tally_counters`]'s return type stays
+/// legible (and below clippy's type-complexity threshold). The several-COUNTERS path
+/// stays `ALL`-only, so this item carries no `leading` flag; the single-counter multi-item
+/// path uses [`TallyMultiLeadingItem`], which adds one.
 pub type TallyMultiItem = (Operand, Option<Region>);
+
+/// One `{ALL|LEADING} delim [{BEFORE|AFTER} x]` item of a SINGLE-counter multi-item
+/// `TALLYING` list: the single-char delimiter operand, a `leading` flag (`true` for a
+/// `LEADING` item — count only its run anchored at the window start; `false` for `ALL`),
+/// and its OWN optional `{BEFORE|AFTER}` region window. Extends [`TallyMultiItem`] with the
+/// `leading` flag this rung lifts into the multi-item list; named so
+/// [`read_inspect_tally_multi`]'s return type stays legible (and below clippy's
+/// type-complexity threshold).
+pub type TallyMultiLeadingItem = (Operand, bool, Option<Region>);
 
 /// One `counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q] …` group of a
 /// MULTI-counter `TALLYING` list: the counter name plus its written-order items, each a
@@ -1605,19 +1628,21 @@ fn read_inspect_tally_all(
 /// capabilities (LEADING, region), and SEVERAL counters (more than one `tally_for`)
 /// stays a later rung rejected there.
 ///
-/// Scope bound for the multi-item path (this rung): EVERY item must be a plain `ALL`
-/// item with NO `LEADING`/`CHARACTERS`. Each item MAY now carry its OWN optional
-/// `{BEFORE|AFTER} x` region (the second tuple slot), read with the SAME
-/// `read_inspect_region` the single-item reader uses — the region reject is LIFTED
-/// this rung. Any item violating the remaining scope is a clean later-rung
-/// `Unsupported`, with the SAME messages the compiler-side reader raises, so both
-/// engines accept exactly the same multi-item statements and reject the same ones
-/// identically. (A multi-character/figurative/wider/numeric/reference-modified
-/// delimiter is NOT rejected here — it falls to the SAME `single_delim_char` check the
-/// single-item exec uses, so that rejection is identical across single and multi.)
+/// Scope bound for the multi-item path (this rung): EVERY item must be `ALL` or
+/// `LEADING` (NO `CHARACTERS`). Each item carries a `leading` flag (`true` for a
+/// `LEADING` item) AND its OWN optional `{BEFORE|AFTER} x` region (the third tuple
+/// slot), read with the SAME `read_inspect_region` the single-item reader uses — the
+/// per-item region reject and the multi-item `LEADING` reject are BOTH LIFTED this rung.
+/// Only `CHARACTERS` in a multi-item list remains a later rung. Any item violating the
+/// remaining scope is a clean later-rung `Unsupported`, with the SAME messages the
+/// compiler-side reader raises, so both engines accept exactly the same multi-item
+/// statements and reject the same ones identically. (A multi-character/figurative/
+/// wider/numeric/reference-modified delimiter is NOT rejected here — it falls to the
+/// SAME `single_delim_char` check the single-item exec uses, so that rejection is
+/// identical across single and multi.)
 fn read_inspect_tally_multi(
     verb: &GrammarASTNode,
-) -> Result<(String, Vec<TallyMultiItem>), RuntimeError> {
+) -> Result<(String, Vec<TallyMultiLeadingItem>), RuntimeError> {
     let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
         RuntimeError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
     })?;
@@ -1644,14 +1669,12 @@ fn read_inspect_tally_multi(
                 "INSPECT TALLYING … FOR CHARACTERS is a later rung".into(),
             ));
         }
-        // A `LEADING` item in a multi-item list is a later rung: the multi path is
-        // `ALL`-only. (A LONE `FOR LEADING` is still supported — it goes through the
-        // single-item path, not here.)
-        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
-            return Err(RuntimeError::Unsupported(
-                "INSPECT TALLYING with several items and a LEADING item is a later rung".into(),
-            ));
-        }
+        // A `LEADING` item in a multi-item list is now ACCEPTED (this rung): the multi
+        // path supports a MIX of `ALL` and `LEADING` items. The keyword picks per-item
+        // count semantics threaded to `exec_inspect_tally_multi` (a `LEADING` item counts
+        // only its run anchored at its window start). (A LONE `FOR LEADING` is still
+        // supported via the single-item path, not here.)
+        let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
         // A `{BEFORE|AFTER}` region on an item is now ACCEPTED (this rung): read it
         // into an `Option<Region>` with the SAME `read_inspect_region` the single-item
         // reader uses. The region contributes its OWN nested `operand` (the region
@@ -1663,9 +1686,9 @@ fn read_inspect_tally_multi(
             Some(region_node) => Some(read_inspect_region(region_node)?),
         };
         let delim_node = child_node(ti, "operand").ok_or_else(|| {
-            RuntimeError::Unsupported("INSPECT TALLYING FOR ALL without a delimiter".into())
+            RuntimeError::Unsupported("INSPECT TALLYING FOR ALL/LEADING without a delimiter".into())
         })?;
-        items.push((read_operand(delim_node)?, region));
+        items.push((read_operand(delim_node)?, leading, region));
     }
     Ok((counter, items))
 }

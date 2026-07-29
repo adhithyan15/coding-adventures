@@ -394,6 +394,7 @@ def mosfet_at_temperature(
         params,
         VT0=params.VT0 + threshold_shift,
         KP=params.KP * ratio**-1.5,
+        U0=params.U0 * ratio**-1.5,
         T_NOM=temperature_kelvin,
     )
     return replace(

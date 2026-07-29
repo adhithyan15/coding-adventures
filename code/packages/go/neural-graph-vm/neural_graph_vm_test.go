@@ -2,6 +2,7 @@ package neuralgraphvm
 
 import (
 	"errors"
+	"math"
 	"testing"
 
 	neuralnetwork "github.com/adhithyan15/coding-adventures/code/packages/go/neural-network"
@@ -112,5 +113,42 @@ func TestRejectsUnsupportedOps(t *testing.T) {
 	var compileError CompileError
 	if !errors.As(err, &compileError) {
 		t.Fatalf("expected CompileError, got %v", err)
+	}
+}
+
+func TestActivationFunctions(t *testing.T) {
+	tests := []struct {
+		name       string
+		value      float64
+		activation string
+		want       float64
+	}{
+		{name: "relu positive", value: 2, activation: "relu", want: 2},
+		{name: "relu negative", value: -2, activation: "relu", want: 0},
+		{name: "sigmoid", value: 0, activation: "sigmoid", want: 0.5},
+		{name: "tanh", value: 1, activation: "tanh", want: math.Tanh(1)},
+		{name: "none", value: -3, activation: "none", want: -3},
+		{name: "unknown remains compatible", value: 4, activation: "custom", want: 4},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			if got := ApplyNeuralActivation(test.value, test.activation); math.Abs(got-test.want) > 1e-12 {
+				t.Fatalf("activation result = %v, want %v", got, test.want)
+			}
+		})
+	}
+}
+
+func TestForwardInterpreterReportsMissingProgramAndInput(t *testing.T) {
+	if _, err := RunNeuralBytecodeForward(Module{}, nil); err == nil {
+		t.Fatal("expected a missing forward function error")
+	}
+
+	module, err := CompileNeuralGraphToBytecode(tinyWeightedSumGraph(t))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := RunNeuralBytecodeForward(module, map[string]float64{"x0": 4}); err == nil {
+		t.Fatal("expected a missing input error")
 	}
 }

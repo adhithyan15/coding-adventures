@@ -158,11 +158,11 @@ CASES = [
         "diagnostics": ["eof-in-comment"],
     },
     {
-        "id": "bogus-comment",
-        "description": "EOF in bogus comment emits the comment without eof-in-comment",
+        "id": "processing-instruction-target",
+        "description": "EOF in a processing-instruction target discards the incomplete token",
         "input": "<?xml",
-        "tokens": ["Comment(data=?xml)", "EOF"],
-        "diagnostics": ["unexpected-question-mark-instead-of-tag-name"],
+        "tokens": ["EOF"],
+        "diagnostics": ["eof-in-processing-instruction"],
     },
     {
         "id": "markup-declaration-open",

@@ -12,6 +12,7 @@ import { createRoot } from "react-dom/client";
 import { TaskApp as TaskAppLight, type TaskAppEvent } from "./TaskApp.light";
 import { TaskApp as TaskAppDark } from "./TaskApp.dark";
 import { resolveTheme, storeTheme, watchSystemTheme, type Theme } from "./theme";
+import { buildTimeline, type GanttBar } from "./timeline";
 import { createTaskEngine } from "./task-engine.mjs";
 import {
   loadWorkspace,
@@ -73,6 +74,10 @@ function makeController(engine: any, init: ControllerInit = {}) {
   let newName = "";
   let newDue = "";
   let newProject = "";
+  let showTimeline = false;
+  // Which row is expanded, by task id (not index — an index would follow the wrong
+  // task the moment the list is re-sorted or something above it is deleted).
+  let expanded: string | null = null;
   // Task ids are workspace-global, so this stays one list across every project. The
   // per-project view falls out for free: `rows()` keeps only the ids the ACTIVE
   // project's table() knows about.
@@ -141,6 +146,14 @@ function makeController(engine: any, init: ControllerInit = {}) {
     return { ids, names: ids.map((id) => all[id]?.name || id), depths, activeId };
   };
 
+  // The timeline: hand the engine's own gantt bars to the geometry module. Every
+  // date here was computed by the ENGINE; the host only asks how far across the track
+  // that falls. See timeline.ts for the inclusive-date rule that governs the maths.
+  const timeline = () => {
+    const bars = (engine.gantt(today).data?.bars ?? []) as GanttBar[];
+    return buildTimeline(bars);
+  };
+
   // Snapshot the engine + host state and hand it to the persistence sink. Called
   // only after structural mutations (add/toggle/delete/project switch) — never on
   // keystrokes. The active project rides along because the engine deliberately keeps
@@ -179,12 +192,51 @@ function makeController(engine: any, init: ControllerInit = {}) {
       // layout places each cell in its own styled element (toggle, name, chips).
       // Empty cells become empty strings, which the layout hides.
       const { byTask, ids } = rows();
+      // The scheduling detail for the ONE open row. Everything here is the engine's
+      // answer — early/late dates, slack, criticality — merely phrased.
+      // Only when a row is open: this is a full CPM recompute, and getProps runs
+      // after every dispatch — including each keystroke in the composer.
+      const sched = expanded === null ? undefined : engine.schedule(today).data;
+      const detailFor = (id: string): [string, string, string] => {
+        const d = sched?.dates?.[id];
+        if (!d) return ["Not scheduled yet.", "", ""];
+        const mins = (m: number) => {
+          const days = m / (8 * 60);
+          // Pluralise on the number the reader sees: 479 minutes is 0.998 days, which
+          // renders as "1.0" and must not then say "1.0 days" vs "1.0 day" by accident.
+          const shown = Number.isInteger(days) ? String(days) : days.toFixed(1);
+          return `${shown} day${Number(shown) === 1 ? "" : "s"}`;
+        };
+        return [
+          `Scheduled ${daysToIso(d.scheduledStart)} → ${daysToIso(d.scheduledFinish)}` +
+            ` · earliest ${daysToIso(d.earlyStart)}, latest ${daysToIso(d.lateStart)}`,
+          d.critical
+            ? "On the critical path — any delay here delays the project."
+            : `${mins(d.totalSlack)} of slack — it can slip that much without moving the finish.`,
+          d.freeSlack > 0 && !d.critical
+            ? `${mins(d.freeSlack)} of it without disturbing the next task.`
+            : "",
+        ];
+      };
+
       const taskRows: string[][] = ids.map((id) => {
         const c = byTask.get(id)!;
         const due = c.display[DEADLINE] ? `due ${c.display[DEADLINE]}` : "";
-        const sched = c.display[START] ? `${c.display[START]} → ${c.display[FINISH]}` : "";
+        const window = c.display[START] ? `${c.display[START]} → ${c.display[FINISH]}` : "";
         const late = c.value[OVERDUE]?.value === true ? "⚠ overdue" : "";
-        return [c.display[DONE], c.display[NAME], due, sched, late];
+        const isOpen = id === expanded;
+        const [d1, d2, d3] = isOpen ? detailFor(id) : ["", "", ""];
+        return [
+          c.display[DONE],
+          c.display[NAME],
+          due,
+          window,
+          late,
+          isOpen ? "open" : "",
+          d1,
+          d2,
+          d3,
+        ];
       });
       const doneCount = ids.filter((id) => byTask.get(id)!.value[DONE]?.value === true).length;
       const finish = engine.gantt(today).data.projectFinish;
@@ -198,8 +250,13 @@ function makeController(engine: any, init: ControllerInit = {}) {
         // top-level row stays flush left.
         p.depths[i] > 0 ? `${" ".repeat((p.depths[i] - 1) * 2)}↳` : "",
       ]);
+      const tl = showTimeline ? timeline() : { scale: "", rows: [] };
       return {
         appTitle: "Tasks — auto-scheduled",
+        timelineMode: showTimeline ? "timeline" : "",
+        timelineScale: tl.scale,
+        timelineRows: tl.rows,
+        viewToggleLabel: showTimeline ? "List" : "Timeline",
         newTaskName: newName,
         newTaskDue: newDue,
         newProjectName: newProject,
@@ -218,6 +275,16 @@ function makeController(engine: any, init: ControllerInit = {}) {
           break;
         case "newTaskDueChange":
           newDue = event.value;
+          break;
+        case "expandTask": {
+          // Resolve through the same ordered id list the rows were drawn from, so the
+          // clicked index can't drift onto a different task.
+          const id = rows().ids[event.index];
+          if (id) expanded = expanded === id ? null : id;
+          break;
+        }
+        case "toggleView":
+          showTimeline = !showTimeline;
           break;
         case "newProjectNameChange":
           newProject = event.value;
@@ -301,6 +368,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
           const id = visible()[event.index];
           if (id) {
             engine.deleteTask({ id });
+            if (expanded === id) expanded = null;
             const at = order.indexOf(id);
             if (at >= 0) order.splice(at, 1);
             persist();

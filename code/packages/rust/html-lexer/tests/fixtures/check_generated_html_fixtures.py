@@ -88,7 +88,7 @@ def upstream_coverage_checks(
     upstream_args = [str(html5lib_tests), "--wpt-root", str(wpt_tests)]
     accepted_missing_args = [
         "--expect-tree-missing",
-        "156",
+        "0",
         "--expect-tokenizer-missing",
         "0",
     ]
@@ -111,7 +111,7 @@ def upstream_coverage_checks(
                 "--expect-tree-upstream-cases",
                 "1934",
                 "--expect-tree-local-cases",
-                "2485",
+                "2637",
                 "--expect-tokenizer-upstream-cases",
                 "6806",
                 "--expect-tokenizer-local-raw-cases",
@@ -331,6 +331,16 @@ def default_checks() -> list[FixtureCheck]:
             "whatwg-select-list-audit",
             (
                 str(PARSER_FIXTURE_DIR / "generate_whatwg_select_list_audit_fixture.py"),
+                "--check",
+            ),
+        ),
+        FixtureCheck(
+            "whatwg-processing-instruction-audit",
+            (
+                str(
+                    PARSER_FIXTURE_DIR
+                    / "generate_whatwg_processing_instruction_audit_fixture.py"
+                ),
                 "--check",
             ),
         ),

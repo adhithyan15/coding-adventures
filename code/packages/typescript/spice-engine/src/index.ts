@@ -7739,6 +7739,7 @@ export function mosfetAtTemperature(
       ...element.params,
       VT0: element.params.VT0 + thresholdShift,
       KP: element.params.KP * ratio ** -1.5,
+      U0: element.params.U0 * ratio ** -1.5,
       T_NOM: temperatureKelvin,
     },
   };

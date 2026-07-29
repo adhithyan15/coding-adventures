@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.16.1 — fix: `raise ClassName, "msg"` constructs the exception
+## 0.17.1 — fix: `raise ClassName, "msg"` constructs the exception
 
 Fixes a cross-backend conformance failure (`exception_reflection` / `puts(e)`): a
 `raise ArgumentError, "boom"` lowers to `BuiltinCall("raise", [VarRef(Const
@@ -28,6 +28,22 @@ ArgumentError` (crashing the program) while dropping the `"boom"` message.
   `raise_named_class_with_a_compound_message_still_constructs_the_exception` (the
   prior exception tests only raised bare string messages, so the class-name path
   was never exercised).
+
+## 0.17.0 — numeric conversions: `to_f` / `to_i`
+
+Two numeric-conversion builtins mirroring the Ruby backend, for the C frontend's
+floating-point value track (SIR27 milestone 9b).
+
+- `to_f` → `_sir_to_f` = `_sir_float(_sir_as_num(v))` (numeric → double).
+- `to_i` → `_sir_to_i` = `_sir_int(_sir_as_int(v))` (double → int, **truncating
+  toward zero** like C's `(int)double`; the frontend then narrows to the target
+  width with a `Convert`, i.e. `_sir_iN`/`_sir_uN`).
+
+Float arithmetic itself needs no new code: `_sir_plus/minus/times/divide_v` and
+the comparison helpers already promote to `double` when any operand is a
+`SIR_FLOAT` (so `_sir_divide_v` does true division), and `Feature::Floats` /
+`Expr::FloatLit` were already supported.  The emitted C compiles clean on
+clang + gcc + MSVC and matches the reference / emitted-Ruby legs byte-for-byte.
 
 ## 0.16.0 — OOP mirror slice 4: inheritance + `super`
 
