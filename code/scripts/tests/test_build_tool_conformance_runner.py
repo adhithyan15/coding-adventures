@@ -260,6 +260,22 @@ class MaterializationTests(unittest.TestCase):
 
 
 class ResultValidationTests(unittest.TestCase):
+    def test_domain_result_schema_rejects_field_name_drift(self) -> None:
+        discovery = load_case("discovery-simple.json")
+        typo = copy.deepcopy(discovery["expected"])
+        package = typo["result"]["packages"][0]
+        package["buildfile"] = package.pop("build_file")
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.assert_result_matches(discovery, typo)
+        self.assertEqual(raised.exception.code, "RESULT_SCHEMA_INVALID")
+
+        graph = load_case("graph-diamond.json")
+        extra = copy.deepcopy(graph["expected"])
+        extra["result"]["unexpected"] = []
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.assert_result_matches(graph, extra)
+        self.assertEqual(raised.exception.code, "RESULT_SCHEMA_INVALID")
+
     def test_domain_aware_canonicalization_accepts_set_order_variation(self) -> None:
         case = load_case("graph-diamond.json")
         actual = copy.deepcopy(case["expected"])
