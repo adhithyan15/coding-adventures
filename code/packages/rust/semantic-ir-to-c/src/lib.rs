@@ -182,6 +182,15 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `class C`) seeds it via `_sir_cvar_set_in("C", …)`.  The `@@`-name is a
     // quoted C string literal (no injection).
     Feature::ClassVars,
+    // ── OOP mirror, slice 7: modules / mixins (FINAL OOP slice) ──────────
+    // `Feature::Modules` — `module M; …; end` + `include`/`extend`.  A module's
+    // methods are registered exactly like a class's (`__def_method__`, keyed on
+    // the module name), so a mixin adds no method storage — only a `(class,
+    // module)` record: `__include__` makes the module's methods part of the
+    // class's INSTANCE-method resolution, `__extend__` makes them the class's
+    // CLASS-method resolution.  Names are quoted C string literals (no injection).
+    // This completes the C backend's OOP surface (full 6-backend OOP parity).
+    Feature::Modules,
 ];
 
 impl Backend for CBackend {

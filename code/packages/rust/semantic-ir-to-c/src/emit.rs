@@ -812,6 +812,15 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 }
             }
         }
+        // OOP slice 7: a `module M; … end` is, like a class, just a NAME in the C
+        // runtime — its methods are registered via `__def_method__` keyed on the
+        // module name (so no module object is needed), and `include`/`extend`
+        // (separate top-level `__include__`/`__extend__` builtins) record the
+        // mixin.  The declaration itself emits only a comment; a non-empty module
+        // body (module-level code) is rejected by the scan, as with a class.
+        Stmt::ModuleDef { .. } => {
+            let _ = writeln!(out, "{pad}/* module declaration (no module object) */");
+        }
         other => unreachable!("C backend reached unsupported statement: {other:?}"),
     }
 }
@@ -1609,6 +1618,24 @@ fn emit_builtin_simple(out: &mut String, name: &str, args: &[Expr], indent: usiz
         }
         return;
     }
+    // OOP slice 7: `include M` / `extend M` — `args = [StrLit(class),
+    // StrLit(module)]`.  Both names are QUOTED C string literals (no injection);
+    // each records a `(class, module)` mixin the method resolvers consult.
+    if name == "__include__" || name == "__extend__" {
+        if let (Some(Expr::StrLit { value: cls, .. }), Some(Expr::StrLit { value: m, .. })) =
+            (args.first(), args.get(1))
+        {
+            let helper = if name == "__include__" {
+                "_sir_register_include"
+            } else {
+                "_sir_register_extend"
+            };
+            let _ = write!(out, "{}({}, {})", helper, quote_c_string(cls), quote_c_string(m));
+        } else {
+            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+        }
+        return;
+    }
     // OOP slice 3: a bare `self` → the current receiver (`_sir_self()`).
     if name == "__self__" {
         out.push_str("_sir_self()");
@@ -1740,6 +1767,8 @@ fn is_supported_builtin(name: &str) -> bool {
                 | "__super__"
                 | "__def_class_method__"
                 | "__class_method__"
+                | "__include__"
+                | "__extend__"
         )
 }
 
@@ -1991,11 +2020,17 @@ fn scan_stmt_for_builtin(s: &Stmt) -> Option<(String, Span)> {
         // `Feature::Classes`, so accepting `Classes` obligates rejecting it here —
         // else it reaches the emitter's `unreachable!` (a DoS on a hand-built
         // module).  Deferred to a later slice.  (`Stmt::ClassDef` is NOT rejected
-        // — it emits a comment; `Stmt::ModuleDef` observes the unaccepted
-        // `Feature::Modules`, so the capability check rejects it before this scan.)
+        // — it emits a comment / mixin registrations.)
         Stmt::SingletonClassDef { span, .. } => {
             Some(("class << self (singleton class)".to_string(), span.clone()))
         }
+        // OOP slice 7: a `Stmt::ModuleDef` emits only a comment (its methods are
+        // registered separately via `__def_method__`), so a NON-EMPTY module body
+        // (module-level code) would be silently dropped — reject it cleanly.
+        Stmt::ModuleDef { body, span, .. } if !body.is_empty() => Some((
+            "a module with a non-empty body (module-level code is not yet lowered)".to_string(),
+            span.clone(),
+        )),
         // OOP slice 6: a `Stmt::ClassDef` body may contain ONLY `@@x = …`
         // class-variable initializers (emitted as `_sir_cvar_set_in`).  Any other
         // class-level statement would be silently dropped by the emit, so reject
@@ -2076,6 +2111,16 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
             {
                 return Some(("a malformed __super__ call".to_string(), span.clone()));
             }
+            // OOP slice 7: `__include__`/`__extend__` are `[StrLit(class),
+            // StrLit(module)]` — both names emitted as raw C literals.
+            if matches!(name.as_str(), "__include__" | "__extend__")
+                && !matches!(
+                    (args.first(), args.get(1)),
+                    (Some(Expr::StrLit { .. }), Some(Expr::StrLit { .. }))
+                )
+            {
+                return Some((format!("a malformed {name} call"), span.clone()));
+            }
             // OOP slice 5: `__def_class_method__` mirrors `__def_method__` —
             // `[StrLit(class), StrLit(method), MakeClosure]`.
             if name == "__def_class_method__"
@@ -2110,6 +2155,8 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
                     | "__super__"
                     | "__def_class_method__"
                     | "__class_method__"
+                    | "__include__"
+                    | "__extend__"
             ) && !is_simple(e)
             {
                 return Some((
@@ -2141,7 +2188,13 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
             // cleanly.  (The method name is args[1]; args[0] is the class NAME.)
             if name == "__class_method__" {
                 if let Some(Expr::StrLit { value, .. }) = args.get(1) {
-                    let known = DEFINED_CLASS_METHODS.with(|d| d.borrow().contains(value));
+                    // A class-method dispatch may target a registered class method
+                    // OR — via OOP slice 7 `extend M` — one of a module's INSTANCE
+                    // methods (registered through `__def_method__`).  So the
+                    // allowlist is the UNION; a name in neither is a built-in class
+                    // method (`Foo.name`, the Collections batch), rejected cleanly.
+                    let known = DEFINED_CLASS_METHODS.with(|d| d.borrow().contains(value))
+                        || DEFINED_METHODS.with(|d| d.borrow().contains(value));
                     if !known {
                         return Some((
                             format!(

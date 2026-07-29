@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.21.0 — OOP mirror slice 7: modules / mixins (final OOP slice)
+
+Modules and mixins — the **final** slice of the C OOP mirror. Accepts
+`Feature::Modules`. With it the C backend covers the full class/module surface,
+giving **6-backend OOP parity** (C now joins Ruby/Go/Rust/Python/JS).
+
+- `module M; def m; …; end; end` — a module's methods are registered exactly
+  like a class's (`__def_method__`, keyed on the module NAME), so a mixin needs
+  **no new method storage**. The `ModuleDef` declaration itself emits only a
+  comment (a non-empty module body is rejected cleanly, as with a class).
+- `include M` → `__include__("Class", "M")` → `_sir_register_include`, folding
+  M's methods into the class's **instance**-method resolution; `extend M` →
+  `__extend__` → `_sir_register_extend`, folding them into the class's **class**-
+  method resolution. Both are recorded in `(class, module)` tables.
+- `_sir_resolve_method` now checks, at each ancestor class, the class's own
+  methods **then its included modules'** (most-recently-included first, matching
+  Ruby precedence); `_sir_resolve_class_method` likewise consults **extended**
+  modules. Both remain bounded by `SIR_ANCESTRY_MAX`.
+- The `__class_method__` compile-time allowlist widens to the **union** of
+  registered class methods and instance methods, since `extend` makes a module's
+  instance method a valid class-method dispatch target.
+
+**Anti-RCE.** Class and module names emit as **quoted C string literals** used
+only as table keys (no injection); dispatch stays an explicit data lookup, never
+reflection. This closes the C OOP arc (slices 1–7).
+
 ## 0.20.0 — OOP mirror slice 6: class variables (`@@x`)
 
 Class variables — the sixth slice of the C OOP mirror. Accepts

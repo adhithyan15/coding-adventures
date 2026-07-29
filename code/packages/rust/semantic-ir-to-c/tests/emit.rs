@@ -114,14 +114,15 @@ fn self_contained_no_external_headers() {
 
 #[test]
 fn unaccepted_feature_is_rejected_cleanly() {
-    // A `module` declaration declares Feature::Modules, which this backend does
-    // not accept. (Arrays/hashes declare the accepted Sequences/Maps features,
-    // and an empty `class` now declares the accepted Classes feature — the OOP
-    // mirror slice 1 — so none of those exercise the rejection path any longer. A
-    // module is the last OOP feature, still unaccepted, and — being a declaration
-    // — is not folded away like a `true && false` short-circuit.)
-    let m = lower_ruby("module Foo\nend");
-    let err = compile(&m).expect_err("backend rejects Modules");
+    // The whole OOP surface — classes, instance/class methods, `@`/`@@` vars,
+    // inheritance, `super`, and now modules (`include`/`extend`) — is accepted, so
+    // those no longer exercise the rejection path.  A `class << self` singleton
+    // (`Stmt::SingletonClassDef`) is the nearest still-deferred OOP construct: it
+    // observes the accepted `Feature::Classes`, so the capability check passes and
+    // the STRUCTURAL scan rejects it cleanly (rather than reaching an emitter
+    // `unreachable!`).
+    let m = lower_ruby("class << self\n  def x\n    1\n  end\nend");
+    let err = compile(&m).expect_err("backend rejects a singleton class");
     assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
 }
 
@@ -264,6 +265,32 @@ fn class_vars_route_through_the_cvar_table() {
     assert!(
         src.contains("_sir_cvar_get(\"@@count\")"),
         "a method-body `@@x` read resolves via the current class\n{src}"
+    );
+}
+
+#[test]
+fn modules_register_include_and_extend() {
+    // OOP slice 7: `include`/`extend` render as `_sir_register_include` /
+    // `_sir_register_extend` (both names quoted); a `module` declaration is a
+    // comment.  Module methods reuse `__def_method__` (keyed on the module name).
+    let m = lower_ruby(
+        "module Greet\n  def hi\n    42\n  end\nend\n\
+         class Person\n  include Greet\nend\n\
+         module Cls\n  def tag\n    7\n  end\nend\n\
+         class Widget\n  extend Cls\nend\nputs Person.new.hi",
+    );
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_register_include(\"Person\", \"Greet\")"),
+        "`include` records the mixin\n{src}"
+    );
+    assert!(
+        src.contains("_sir_register_extend(\"Widget\", \"Cls\")"),
+        "`extend` records the class-method mixin\n{src}"
+    );
+    assert!(
+        src.contains("_sir_def_method(\"Greet\", \"hi\""),
+        "a module method is registered like a class method, keyed on the module\n{src}"
     );
 }
 
