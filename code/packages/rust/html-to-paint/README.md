@@ -50,18 +50,23 @@ The host chooses HTTP, file, cache, and security policy; this package decodes
 fetched GIF or baseline JPEG bytes into `ImageSrc::Pixels`. Resolution is
 atomic: the input scene is unchanged when any resource fails.
 
+Browser hosts can instead call
+`resolve_scene_image_resources_with_mosaic_fallback`. That tolerant path keeps
+successful images, replaces each failure with a clipped black border and its
+HTML `alt` text, and returns the failures for host diagnostics.
+
 ## Current boundary
 
 - HTML source parsing remains in `html-parser`.
 - Resource transport remains host-owned behind `HtmlImageFetcher`.
 - GIF and baseline JPEG decoding convert fetched bytes into shared pixels.
-- Broken-image alt-text policy remains a browser-host follow-up.
+- Mosaic broken-image borders and alt text recover fetch/decode failures.
 - Host navigation and visited-link policy remain follow-up work.
 - Paint backends consume the returned `PaintScene`; Cairo acceptance proves
   both text-only and inline-image HTML reaches RGBA pixels, while host backend
   selection remains outside this package.
 
-Eight tests cover viewport normalization, end-to-end canned HTML paint output,
+Nine tests cover viewport normalization, end-to-end canned HTML paint output,
 absolute link-region extraction, empty-box filtering, scroll-aware hit testing,
 half-open boundary behavior, atomic image resolution, GIF/JPEG decoding, and
-real Cairo rasterization into RGBA pixels.
+real Cairo rasterization of decoded and broken-image fallback pixels.

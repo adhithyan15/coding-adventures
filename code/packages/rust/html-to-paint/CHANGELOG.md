@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0
+
+- Preserved HTML image `alt` text in paint instruction metadata.
+- Added tolerant Mosaic image resolution that keeps successful resources,
+  replaces failures with clipped bordered alt-text boxes, and reports every
+  recoverable failure to the host.
+- Added real Cairo acceptance for fetch-failure fallback rasterization.
+
 ## 0.3.0
 
 - Added the host-supplied `HtmlImageFetcher` resource boundary.
