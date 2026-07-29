@@ -415,6 +415,12 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "gc_collect_incremental_finish", n_args: 0, returns: true  },
     BuiltinSig { name: "gc_live_bytes",         n_args: 0, returns: true  },
     BuiltinSig { name: "gc_stackmap_count",     n_args: 0, returns: true  },
+    // AOT00-T5 — declare a variable-length reference-array layout so the collector traces (and
+    // under compaction relocates) the array + its elements precisely. `(fixed, fixed_count,
+    // tail_from) -> kind_id`: the seam a language frontend's array type calls; auto-emits
+    // `__twig_gc_register_ref_array_kind` via the generic `__twig_<name>` dispatch. Pass
+    // `fixed = 0, fixed_count = 0, tail_from = 0` for a pure reference array (every word a ref).
+    BuiltinSig { name: "gc_register_ref_array_kind", n_args: 3, returns: true },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
@@ -2248,6 +2254,30 @@ mod tests {
         ] {
             assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
         }
+    }
+
+    /// `call_builtin "gc_register_ref_array_kind" (fixed, fixed_count, tail_from) -> kind`
+    /// lowers to a `call` to `__twig_gc_register_ref_array_kind` (the C-ABI seam a language
+    /// frontend's array type calls, spec AOT00-T5) via the generic `__twig_<name>` dispatch —
+    /// three args in rdi/rsi/rdx. `(0, 0, 0)` declares a pure reference array.
+    #[test]
+    fn gc_register_ref_array_kind_emits_external_twig_call() {
+        let ir = vec![
+            instr("const_u64", Some("fixed"), vec![Op::Int(0)]), // null fixed-offsets pointer
+            instr("const_u64", Some("fcount"), vec![Op::Int(0)]), // no fixed ref fields
+            instr("const_u64", Some("tail"), vec![Op::Int(0)]), // tail from offset 0 (all refs)
+            call_builtin(Some("kind"), "gc_register_ref_array_kind", &["fixed", "fcount", "tail"]),
+            instr("ret_u64", None, vec![Op::Var("kind".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("gc_refarray", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("gc_register_ref_array_kind must lower");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(
+            symbols.contains(&"__twig_gc_register_ref_array_kind"),
+            "missing ref-array-kind registration call: {symbols:?}",
+        );
     }
 
     #[test]

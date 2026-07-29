@@ -269,6 +269,12 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "gc_collect_incremental_finish", n_args: 0, returns: true  },
     BuiltinSig { name: "gc_live_bytes",         n_args: 0, returns: true  },
     BuiltinSig { name: "gc_stackmap_count",     n_args: 0, returns: true  },
+    // AOT00-T5 — declare a variable-length reference-array layout so the collector traces (and
+    // under compaction relocates) the array + its elements precisely. `(fixed, fixed_count,
+    // tail_from) -> kind_id`: the seam a language frontend's array type calls; auto-emits
+    // `__twig_gc_register_ref_array_kind` via the generic `__twig_<name>` dispatch. Pass
+    // `fixed = 0, fixed_count = 0, tail_from = 0` for a pure reference array (every word a ref).
+    BuiltinSig { name: "gc_register_ref_array_kind", n_args: 3, returns: true },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
@@ -1245,7 +1251,8 @@ fn emit_instr(
                 "call_builtin '{name}': returns void but dest is Some",
             )));
         }
-        // AAPCS64 supplies 8 GPR arg slots — all V1 helpers fit in ≤ 2.
+        // AAPCS64 supplies 8 GPR arg slots — every builtin's arity fits (max is 3, for
+        // `gc_register_ref_array_kind`), so `ARG_REGS[i]` is always in range.
         const ARG_REGS: [Reg; 8] = [
             Reg::X0, Reg::X1, Reg::X2, Reg::X3,
             Reg::X4, Reg::X5, Reg::X6, Reg::X7,
@@ -2381,6 +2388,29 @@ mod tests {
         ] {
             assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
         }
+    }
+
+    /// `call_builtin "gc_register_ref_array_kind" (fixed, fixed_count, tail_from) -> kind`
+    /// lowers to a `BL` to `__twig_gc_register_ref_array_kind` (the C-ABI seam a language
+    /// frontend's array type calls, spec AOT00-T5) via the generic `__twig_<name>` dispatch —
+    /// three args marshalled into x0/x1/x2. `(0, 0, 0)` declares a pure reference array.
+    #[test]
+    fn gc_register_ref_array_kind_emits_external_twig_call() {
+        let cir = vec![
+            const_u64("fixed", 0), // null fixed-offsets pointer
+            const_u64("fcount", 0), // no fixed ref fields
+            const_u64("tail", 0), // tail region from offset 0 — every word is a reference
+            call_builtin(Some("kind"), "gc_register_ref_array_kind", &["fixed", "fcount", "tail"]),
+            ret_u64("kind"),
+        ];
+        let (bytes, ext) = compile_with_relocs(&ctx("gc_refarray", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("gc_register_ref_array_kind must lower: {e}"));
+        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+        let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(
+            symbols.contains(&"__twig_gc_register_ref_array_kind"),
+            "missing ref-array-kind registration call: {symbols:?}",
+        );
     }
 
     #[test]

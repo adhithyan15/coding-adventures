@@ -2,6 +2,21 @@
 
 All notable changes to this crate are documented here.
 
+## 0.20.0 - 2026-07-29 — twig-compat alias `__twig_gc_register_ref_array_kind` — PR-4 (AOT00-T5)
+
+- **`__twig_gc_register_ref_array_kind(fixed, fixed_count, tail_from)`** (new `twig_compat` alias
+  → `__gc_register_ref_array_kind`, 0.19.0) — the `__twig_gc_*` linker name the native code
+  generators emit for the `gc_register_ref_array_kind` builtin, so a language frontend's **array**
+  type can declare its layout (fixed ref fields + a variable reference tail) and have the
+  collector trace — and under compaction **relocate** — the array and its elements precisely
+  instead of pinning them. A plain forwarding alias (registers a kind; no allocation or stack
+  scan), mirroring `__twig_gc_alloc`.
+- **Test** `twig_register_ref_array_kind_alias_forwards`: an array allocated under the alias's
+  returned kind has its tail traced — an element in a tail slot is retained via the array and
+  reclaimed once the slot is cleared.
+- Completes the AOT00-T5 arc's native seam (PR-4 of 4): the backends' new
+  `gc_register_ref_array_kind` `BuiltinSig` row auto-emits this symbol.
+
 ## 0.19.0 - 2026-07-28 — C ABI `__gc_register_ref_array_kind` — PR-3 (AOT00-T5)
 
 - **`__gc_register_ref_array_kind(fixed, fixed_count, tail_from) -> kind_id`** (new `#[no_mangle]`
