@@ -9,6 +9,10 @@ cross-job communication in CI: the `detect` job computes the plan once, and all
 
 ## Motivation
 
+This is the interchange schema, not a claim that every build-tool front door
+already implements it. Cross-language behavior and fixtures are governed by
+[`build-tool-conformance.md`](build-tool-conformance.md).
+
 The CI pipeline has two jobs:
 
 1. **detect** — compiles the build tool, discovers packages, resolves
@@ -25,7 +29,7 @@ the build job skips straight to step 6 (hashing), saving time on each of the
 
 ```json
 {
-  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Build Plan v1",
   "description": "Serialized build plan for cross-job/cross-platform build orchestration.",
   "type": "object",
@@ -97,7 +101,7 @@ the build job skips straight to step 6 (hashing), saving time on each of the
         },
         "language": {
           "type": "string",
-          "enum": ["python", "ruby", "go", "typescript", "rust", "elixir", "starlark", "unknown"],
+          "enum": ["c", "cpp", "csharp", "dart", "dotnet", "elixir", "fsharp", "go", "haskell", "java", "kotlin", "lua", "ocaml", "perl", "python", "ruby", "rust", "starlark", "swift", "typescript", "wasm", "unknown"],
           "description": "The package's programming language, inferred from its path."
         },
         "build_commands": {
@@ -269,6 +273,15 @@ normal flow.
 
 ## Cross-Language Compatibility
 
-All 6 build tool implementations (Go, Python, Ruby, TypeScript, Rust, Elixir)
-read and write the same JSON schema. A plan emitted by the Go build tool can
-be consumed by the Python build tool, and vice versa.
+Cross-language compatibility is a target that must be demonstrated, not
+inferred from similarly named structs. Implementations currently differ in
+whether they write plans, read plans, preserve `null` versus `[]`, support
+shards, validate paths, and honor platform BUILD overrides.
+
+The shared conformance corpus proves compatibility through a writer/reader
+cross-product:
+
+- every supported implementation must consume a Go-emitted plan; and
+- Go must consume a plan emitted by every supported implementation.
+
+No implementation is described as plan-compatible until those fixtures pass.

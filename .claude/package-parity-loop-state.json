@@ -8,17 +8,23 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": {
-    "number": 9144,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9144",
-    "branch": "codex/haskell-http-core-parity",
-    "status": "open"
+  "active_pr": null,
+  "last_inventory": {
+    "revision": "326de7c72c24605cc935006d11b24d50dfbd9c65",
+    "schema_version": 2,
+    "established_languages": 15,
+    "implementation_identities": 1183,
+    "implementation_package_slots": 4324,
+    "high_consensus_packages": 172,
+    "high_consensus_missing_slots": 278,
+    "canonical_collisions": 0,
+    "unknown_language_buckets": 0
   },
   "items": [
     {
       "id": "haskell-http-core",
       "title": "Haskell http-core plus Haskell scaffold and resolver integrity",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/haskell-http-core-parity",
       "pr_number": 9144,
@@ -27,11 +33,11 @@
     {
       "id": "build-tool-contract",
       "title": "Language-neutral build-tool contract and shared fixture schema",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["haskell-http-core"],
-      "branch": null,
+      "branch": "codex/build-tool-conformance-contract",
       "pr_number": null,
-      "notes": "Reconcile specs 12, 15, build-plan-v1, sharding, and B05; define canonical machine-readable behavior."
+      "notes": "Selected after the 2026-07-29 post-merge reprioritization because it unlocks every existing build-tool remediation lane, missing Java/Kotlin/Dart implementations, and the future OCaml build tool. Reconcile specs 12, 15, build-plan-v1, sharding, and B05; define canonical machine-readable behavior."
     },
     {
       "id": "build-tool-fixtures",
