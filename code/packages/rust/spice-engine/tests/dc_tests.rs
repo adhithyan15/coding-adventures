@@ -3521,7 +3521,7 @@ fn mosfet_temperature_scaling_keeps_surface_mobility_and_kp_aligned() {
             ..MosfetLevel1Params::default()
         },
     );
-    let hot = mosfet_at_temperature(&nominal, 600.3, 300.15).unwrap();
+    let hot = mosfet_at_temperature(&nominal, 600.3, 300.15, 1.11).unwrap();
     let scale = 2.0_f64.powf(-1.5);
 
     assert_close(hot.params.kp, nominal.params.kp * scale);
@@ -3533,6 +3533,50 @@ fn mosfet_temperature_scaling_keeps_surface_mobility_and_kp_aligned() {
         hot.params.kp / hot.params.surface_mobility,
         nominal.params.kp / nominal.params.surface_mobility,
     );
+}
+
+#[test]
+fn mosfet_temperature_scaling_adjusts_bulk_junction_saturation_currents() {
+    let nominal = Mosfet::with_model(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            saturation_current: 2.0e-15,
+            saturation_current_density: 3.0e-12,
+            ..MosfetLevel1Params::default()
+        },
+    );
+    let hot = mosfet_at_temperature(&nominal, 350.0, 300.15, 1.11).unwrap();
+    let ratio: f64 = 350.0 / 300.15;
+    let exponent: f64 = 1.11 * 1.602_176_634e-19 / 1.380_649e-23 * (1.0 / 300.15 - 1.0 / 350.0);
+    let scale = ratio.powi(3) * exponent.exp();
+
+    assert_close(hot.params.saturation_current, 2.0e-15 * scale);
+    assert_close(hot.params.saturation_current_density, 3.0e-12 * scale);
+    assert_close(
+        hot.params.saturation_current_density / hot.params.saturation_current,
+        1_500.0,
+    );
+
+    let mut circuit = Circuit::new();
+    circuit.add(Element::Mosfet(nominal));
+    let silicon = circuit_at_temperature(&circuit, 350.0, 300.15, 1.11).unwrap();
+    let lower_gap = circuit_at_temperature(&circuit, 350.0, 300.15, 0.8).unwrap();
+    let junction_current = |adjusted: &Circuit| {
+        adjusted
+            .elements()
+            .iter()
+            .find_map(|element| match element {
+                Element::Mosfet(mosfet) => Some(mosfet.params.saturation_current),
+                _ => None,
+            })
+            .unwrap()
+    };
+    assert!(junction_current(&silicon) > junction_current(&lower_gap));
 }
 
 #[test]

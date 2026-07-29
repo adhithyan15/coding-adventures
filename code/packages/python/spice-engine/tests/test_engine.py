@@ -4258,6 +4258,41 @@ def test_mosfet_temperature_scaling_keeps_surface_mobility_and_kp_aligned():
     )
 
 
+def test_mosfet_temperature_scaling_adjusts_bulk_junction_saturation_currents():
+    nominal = Mosfet(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(IS=2.0e-15, JS=3.0e-12)),
+        ),
+    )
+    hot = mosfet_at_temperature(nominal, 350.0)
+    ratio = 350.0 / 300.15
+    exponent = (
+        1.11
+        * 1.602_176_634e-19
+        / 1.380_649e-23
+        * (1.0 / 300.15 - 1.0 / 350.0)
+    )
+    scale = ratio**3 * math.exp(exponent)
+    params = hot.model.model.params
+
+    assert pytest.approx(2.0e-15 * scale) == params.IS
+    assert pytest.approx(3.0e-12 * scale) == params.JS
+    assert pytest.approx(1_500.0) == params.JS / params.IS
+
+    circuit = Circuit([nominal])
+    silicon = circuit_at_temperature(circuit, 350.0, energy_gap_ev=1.11)
+    lower_gap = circuit_at_temperature(circuit, 350.0, energy_gap_ev=0.8)
+    silicon_params = silicon.elements[0].model.model.params
+    lower_gap_params = lower_gap.elements[0].model.model.params
+    assert silicon_params.IS > lower_gap_params.IS
+
+
 # ---- DC: Capacitor (open in DC) ----
 
 
