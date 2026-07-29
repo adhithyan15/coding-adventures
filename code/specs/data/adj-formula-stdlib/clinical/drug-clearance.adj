@@ -1,0 +1,96 @@
+% ============================================================================
+% drug-clearance.adj — the definition of drug clearance (CL = rate of drug removal ÷ plasma
+% concentration) in the ADJ standard library.
+% ============================================================================
+% The drug-clearance entry of the *clinical* track — the second PHARMACOKINETICS library, the
+% companion of volume-of-distribution.adj. Vd and clearance are THE two independent primary
+% pharmacokinetic parameters (the elimination half-life derives from both). Like the volume of
+% distribution, clearance is DEFINED as a RATIO: CLEARANCE IS THE RATE AT WHICH A DRUG IS REMOVED
+% FROM PLASMA DIVIDED BY THE CONCENTRATION OF THE DRUG IN THE PLASMA — the volume of plasma cleared
+% of drug per unit time (units of volume/time). It sets the maintenance dosing rate (at steady
+% state the rate in equals the rate out, so the dose rate needed to hold a target concentration
+% scales with clearance). It ships as an importable, byte-provenanced, PARAMETERIZED `formula`,
+% together with its two exact rearrangements (the elimination rate a clearance implies for a given
+% concentration, and the concentration it implies for a given rate). As with every compute
+% library, a consumer states NO arithmetic: it `import`s this file, binds the measured quantities
+% from its own byte-provenance decomposition, and asks the engine to APPLY the cited definition on
+% the CPU. Zero math is performed by the model; the engine computes each value EXACTLY (over exact
+% rationals), carrying the definition's citation.
+%
+%     import "drug-clearance.adj"
+%     observe rate_of_drug_removal(100)    % "…removed at 100 mg/min…"      (span cited by the model)
+%     observe plasma_concentration(5)       % "…plasma concentration 5 mg/mL…" (span cited by the model)
+%     ? clearance(rate_of_drug_removal, plasma_concentration)
+%                                           % engine → 20, carrying CL = rate ÷ Cp
+%
+% All three formulas are EXACT over their parameters, so every value the engine returns is exact.
+% They COMPOSE and invert cleanly around the worked case rate of removal = 100 mg/min, plasma
+% concentration = 5 mg/mL (CL = 100 ÷ 5 = 20 mL/min): the `clearance` a consumer computes from the
+% rate and concentration is exactly the value the `rate_of_drug_removal` formula multiplies by the
+% concentration to recover 100, and exactly the value the `plasma_concentration` formula divides
+% the rate by to recover 5.
+%
+%   clearance(rate_of_drug_removal, plasma_concentration)
+%       = rate_of_drug_removal / plasma_concentration     % CL = rate ÷ Cp   (definition)
+%   rate_of_drug_removal(clearance, plasma_concentration)
+%       = clearance * plasma_concentration                 % rate = CL × Cp   (solved for rate)
+%   plasma_concentration(rate_of_drug_removal, clearance)
+%       = rate_of_drug_removal / clearance                 % Cp = rate ÷ CL   (solved for Cp)
+%
+% NOTE ON UNITS: the cited source states the rate at which the drug is removed in milligrams per
+% minute and the plasma concentration in milligrams per millilitre; the clearance therefore comes
+% out in millilitres per minute (a volume-per-time), and this library computes the exact quotient
+% over whatever consistent inputs it is given.
+%
+% All three formulas are defended by the SAME clause — "Clearance is equal to the rate at which a
+% drug is removed from plasma(mg/min) divided by the concentration of that drug in the plasma
+% (mg/mL)" — because that one definition (clearance IS the rate-over-concentration ratio) sanctions
+% the relation read every way. The quote is transcribed verbatim from a peer-reviewed article
+% archived on the NCBI Bookshelf, so each `formula` carries the provenance envelope every shipped
+% grounded clause carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored
+% — the clause is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable pharmacokinetic quantity the definition ranges over,
+% and each result is a derived quantity. `rate_of_drug_removal`, `plasma_concentration` and
+% `clearance` each appear BOTH as a derived result and as an input (of the other formulas), so each
+% is a single dictionary term used in both roles. The `surface` lists are the everyday names a
+% decomposer maps onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary drug_clearance_vocab {
+    define rate_of_drug_removal  : finding  surface "rate at which a drug is removed from plasma", "rate of elimination", "elimination rate"   % milligrams per minute (mg/min)
+    define plasma_concentration  : finding  surface "plasma concentration", "concentration of the drug in the plasma", "Cp"                    % milligrams per millilitre (mg/mL)
+    define clearance             : finding  surface "clearance", "drug clearance", "CL"                                                        % millilitres per minute (mL/min)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the definitional clause from the cited article
+% on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact quotient or
+% product of measured quantities, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook drug_clearance_laws {
+    use drug_clearance_vocab
+
+    % Clearance — the rate at which the drug is removed from plasma divided by the plasma
+    % concentration, i.e. CL = rate ÷ Cp.
+    formula clearance(rate_of_drug_removal, plasma_concentration) = rate_of_drug_removal / plasma_concentration
+        source "Clearance is equal to the rate at which a drug is removed from plasma(mg/min) divided by the concentration of that drug in the plasma (mg/mL)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557758/"
+        trust authoritative
+
+    % Rate of drug removal — the same definition solved for the elimination rate a clearance implies
+    % for a given concentration (rate = CL × Cp). Defended by the SAME clause.
+    formula rate_of_drug_removal(clearance, plasma_concentration) = clearance * plasma_concentration
+        source "Clearance is equal to the rate at which a drug is removed from plasma(mg/min) divided by the concentration of that drug in the plasma (mg/mL)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557758/"
+        trust authoritative
+
+    % Plasma concentration — the same definition solved for the concentration (Cp = rate ÷ CL): the
+    % rate of drug removal divided by the clearance. The SAME clause, read the third way.
+    formula plasma_concentration(rate_of_drug_removal, clearance) = rate_of_drug_removal / clearance
+        source "Clearance is equal to the rate at which a drug is removed from plasma(mg/min) divided by the concentration of that drug in the plasma (mg/mL)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557758/"
+        trust authoritative
+}
