@@ -4,3 +4,6 @@ Graph-native neural network authoring primitives for Go.
 
 This package mirrors the TypeScript `@coding-adventures/neural-network` surface
 for the NN00 graph-to-bytecode track.
+
+Graph storage comes from the generic `multi-directed-graph` package. This package
+owns only neural primitives and their `nn.*` metadata.

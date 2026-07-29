@@ -324,6 +324,7 @@ members = [
     "numeric-tower",
     "math-core",
     "matrix",
+    "multi-directed-graph",
     "neural-network",
     "neural-graph-vm",
     "ml-framework-core",
