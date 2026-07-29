@@ -1,7 +1,8 @@
 # scaffold-generator
 
 A CLI tool that generates CI-ready package scaffolding for the coding-adventures
-monorepo across all six languages: Python, Go, Ruby, TypeScript, Rust, and Elixir.
+monorepo across 14 languages: Python, Go, Ruby, TypeScript, Rust, Elixir, Perl,
+Lua, Swift, Haskell, Java, Kotlin, C, and C++.
 
 ## Why
 
@@ -15,7 +16,7 @@ producing correct-by-construction packages.
 # Scaffold a Python library with dependencies
 scaffold-generator my-package --language python --depends-on arithmetic,logic-gates --description "My new package"
 
-# Scaffold across all 6 languages
+# Scaffold across all supported languages
 scaffold-generator my-package --language all --description "My new package"
 
 # Preview without creating files
