@@ -1,6 +1,6 @@
 [package]
 name = "html-to-paint"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 description = "Composes HTML render-tree adaptation, block layout, and shared paint-scene emission."
 
@@ -12,3 +12,6 @@ layout-ir = { path = "../layout-ir" }
 layout-to-paint = { path = "../layout-to-paint" }
 paint-instructions = { path = "../paint-instructions" }
 text-interfaces = { path = "../text-interfaces" }
+
+[dev-dependencies]
+paint-vm-cairo = { path = "../paint-vm-cairo" }

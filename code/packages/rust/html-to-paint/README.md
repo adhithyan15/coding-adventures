@@ -48,9 +48,10 @@ let target = hit_test_link(&output.links, mouse_x, mouse_y, scroll_y)
 - HTML source parsing remains in `html-parser`.
 - Resource fetching and image decoding are not performed here.
 - Host navigation and visited-link policy remain follow-up work.
-- Paint backends consume the returned `PaintScene`; this package does not
-  rasterize it.
+- Paint backends consume the returned `PaintScene`; Cairo acceptance proves
+  text-only HTML reaches RGBA pixels, while host backend selection remains
+  outside this package.
 
-Four tests cover viewport normalization, end-to-end canned HTML paint output,
+Five tests cover viewport normalization, end-to-end canned HTML paint output,
 absolute link-region extraction, empty-box filtering, scroll-aware hit testing,
-and half-open boundary behavior.
+half-open boundary behavior, and real Cairo rasterization into RGBA pixels.

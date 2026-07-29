@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1
+
+- Added a cross-platform Cairo acceptance test proving canned text-only HTML
+  traverses parsing, shared layout, paint-scene emission, and rasterization
+  into a non-uniform RGBA pixel buffer.
+- Kept URI image decoding outside the raster test so resource loading remains
+  an explicit follow-up gate rather than a hidden backend responsibility.
+
 ## 0.2.0
 
 - Added `LinkRegion` values in logical document-content coordinates.
