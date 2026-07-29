@@ -353,12 +353,25 @@ pub enum Stmt {
     ///
     /// Width is unchanged (each position maps to exactly one output char). This rung
     /// supports ONLY `ALL` items, each a SINGLE-char search BY single-char
-    /// replacement, with NO `{BEFORE|AFTER}` region and NO `LEADING`/`CHARACTERS`/
-    /// `FIRST`; a multi-item list carrying any of those, and the combined
-    /// `TALLYING … REPLACING` form with several items, remain later rungs (see
-    /// `read_statement`). `items` are in written order — the exec walks them in that
-    /// order at every position, which is what realises first-match-wins.
-    InspectReplacingMulti { source: String, items: Vec<(Operand, Operand)> },
+    /// replacement. Each item MAY now carry its OWN optional `{BEFORE|AFTER} x` region
+    /// (the third tuple slot); `LEADING`/`CHARACTERS`/`FIRST` items in a multi-item
+    /// list, and the combined `TALLYING … REPLACING` form with several items, remain
+    /// later rungs (see `read_statement`). `items` are in written order — the exec
+    /// walks them in that order at every position, which is what realises
+    /// first-match-wins.
+    ///
+    /// PER-ITEM WINDOWS: each item's optional region defines a window over the
+    /// ORIGINAL source (via the SAME `region_window` helper the lone/single-item forms
+    /// use — BEFORE x → `[0, first_index_of_x)`; AFTER x → `(first_index_of_x, len]`;
+    /// not-found asymmetry BEFORE→whole, AFTER→empty). An item with NO region has a
+    /// whole-source window (every position inside). At each position the items are
+    /// tried IN WRITTEN ORDER and the FIRST item that BOTH (i) has the position inside
+    /// its OWN window AND (ii) whose search equals the current ORIGINAL char wins; the
+    /// rest are skipped for that position. This is the exact composition of multi-item
+    /// first-match-wins with the per-item region window — the match at each link is now
+    /// `window_i.contains(pos) AND src[pos] == search_i`, always compared against the
+    /// ORIGINAL char (no re-chaining).
+    InspectReplacingMulti { source: String, items: Vec<(Operand, Operand, Option<Region>)> },
     /// `INSPECT source TALLYING counter FOR ALL a ALL b [ALL d …]` — one INSPECT
     /// whose SINGLE counter carries TWO OR MORE `FOR ALL` items, each a single-char
     /// delimiter, all folding into the SAME `counter`.
@@ -1792,16 +1805,19 @@ fn read_inspect_replacing_all(
 /// [`read_inspect_replacing_all`] and all its capabilities.
 ///
 /// Scope bound for the multi-item path (this rung): EVERY item must be a plain `ALL`
-/// item with NO region and NO `LEADING`/`CHARACTERS`/`FIRST`. Any item violating
-/// that is a clean later-rung `Unsupported`, with the SAME messages the
-/// compiler-side reader raises, so both engines accept exactly the same multi-item
-/// statements and reject the same ones identically. (A multi-character/figurative/
-/// wider/numeric/reference-modified search or replacement is not rejected here — it
-/// falls to the SAME `single_delim_char` check the single-item exec uses, so that
-/// rejection is identical across single and multi.)
+/// item with NO `LEADING`/`CHARACTERS`/`FIRST`. Each item MAY now carry its OWN
+/// optional `{BEFORE|AFTER} x` region (the third tuple slot), read with the SAME
+/// `read_inspect_region` the single-item reader uses — the region reject is LIFTED
+/// this rung. Any item violating the remaining scope is a clean later-rung
+/// `Unsupported`, with the SAME messages the compiler-side reader raises, so both
+/// engines accept exactly the same multi-item statements and reject the same ones
+/// identically. (A multi-character/figurative/wider/numeric/reference-modified
+/// search, replacement, or region delimiter is not rejected here — it falls to the
+/// SAME `single_delim_char` check the single-item exec uses, so that rejection is
+/// identical across single and multi.)
 fn read_inspect_replacing_multi(
     verb: &GrammarASTNode,
-) -> Result<Vec<(Operand, Operand)>, RuntimeError> {
+) -> Result<Vec<(Operand, Operand, Option<Region>)>, RuntimeError> {
     let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
         RuntimeError::Unsupported("INSPECT without a REPLACING clause is a later rung".into())
     })?;
@@ -1829,17 +1845,20 @@ fn read_inspect_replacing_multi(
                 "INSPECT REPLACING with several items and a LEADING item is a later rung".into(),
             ));
         }
-        // A `{BEFORE|AFTER}` region on any item of a multi-item list is a later rung.
-        if child_node(ri, "inspect_region").is_some() {
-            return Err(RuntimeError::Unsupported(
-                "INSPECT REPLACING with several items and a BEFORE/AFTER region is a later rung"
-                    .into(),
-            ));
-        }
-        // `ALL search BY replace` — the two `operand` children are the search
-        // (first) and the replacement (second). With no region there is no nested
-        // region operand to disambiguate, so exactly two direct operands are
-        // expected.
+        // A `{BEFORE|AFTER}` region on an item is now ACCEPTED (this rung): read it
+        // into an `Option<Region>` with the SAME `read_inspect_region` the single-item
+        // reader uses. The region contributes its OWN nested `operand` (the delimiter)
+        // under the `inspect_region` child, so the item's two DIRECT `operand` children
+        // are still exactly the search/replacement (see below) — the region delimiter
+        // is not among them.
+        let region = match child_node(ri, "inspect_region") {
+            None => None,
+            Some(region_node) => Some(read_inspect_region(region_node)?),
+        };
+        // `ALL search BY replace` — the two DIRECT `operand` children are the search
+        // (first) and the replacement (second), in written order. A region's delimiter
+        // rides on the `inspect_region` child, not as a direct child of `replace_item`,
+        // so exactly two direct operands are expected whether or not a region is present.
         let ops: Vec<&GrammarASTNode> = child_nodes(ri, "operand");
         let (search_node, replace_node) = match ops.as_slice() {
             [s, r] => (*s, *r),
@@ -1849,7 +1868,7 @@ fn read_inspect_replacing_multi(
                 ))
             }
         };
-        items.push((read_operand(search_node)?, read_operand(replace_node)?));
+        items.push((read_operand(search_node)?, read_operand(replace_node)?, region));
     }
     Ok(items)
 }

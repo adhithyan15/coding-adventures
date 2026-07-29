@@ -169,14 +169,20 @@ absent — and `AFTER z` replaces right of it — NOTHING if `z` is absent; posi
 outside the region keep their original character, and for `REPLACING LEADING` the run
 is ANCHORED at the window start, so `REPLACING LEADING "a" BY "*" AFTER "X"` over
 `"aaXaab"` rewrites only the in-window run → `"aaX**b"`); the **multi-item**
-`INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` (TWO OR MORE `ALL`
-replace items in one clause — ONE left-to-right pass in which each position takes the
-FIRST item, in WRITTEN ORDER, whose single-char search matches the ORIGINAL character;
-FIRST-MATCH-WINS, and — crucially — NO RE-CHAINING: a byte a replacement produces is
-never re-examined by a later item, so `REPLACING ALL "a" BY "b" ALL "b" BY "z"` over
-`"ab"` gives `"bz"`, not `"zz"`; this rung's multi path is `ALL`-only, single-char, with
-no `{BEFORE|AFTER}` region and no `LEADING`/`CHARACTERS`/`FIRST` — a single replace item
-keeps all its capabilities); the **replace-every-position** `INSPECT source REPLACING
+`INSPECT source REPLACING ALL a BY x [{BEFORE|AFTER} p] ALL b BY y [{BEFORE|AFTER} q] …`
+(TWO OR MORE `ALL` replace items in one clause, **each item optionally carrying its OWN
+`{BEFORE|AFTER}` region** — ONE left-to-right pass in which each position takes the
+FIRST item, in WRITTEN ORDER, that BOTH contains the position in its own window AND whose
+single-char search matches the ORIGINAL character; FIRST-MATCH-WINS, and — crucially — NO
+RE-CHAINING: a byte a replacement produces is never re-examined by a later item, so
+`REPLACING ALL "a" BY "b" ALL "b" BY "z"` over `"ab"` gives `"bz"`, not `"zz"`. Each
+item's window is computed over the ORIGINAL source with the SAME `region_window` helper the
+lone/single-item forms use — `BEFORE p`→`[0, first_index_of_p)`, `AFTER p`→`(first_index_of_p, len]`,
+not-found asymmetry BEFORE→whole / AFTER→empty; an item with no region has the whole source
+as its window. So `ALL "a" BY "b" BEFORE "X" ALL "a" BY "c" AFTER "X"` over `"aXaXa"` →
+`"bXcXc"`. This rung's multi path stays `ALL`-only, single-char; a `LEADING`/`CHARACTERS`/`FIRST`
+item in the list is a later rung — a single replace item keeps all its capabilities);
+the **replace-every-position** `INSPECT source REPLACING
 CHARACTERS BY x` (no search character — EVERY position of the alphanumeric source is
 overwritten with the single replacement char `x`, so with no region the WHOLE field
 becomes `x`s, its width unchanged: `"ABABA"` → CHARACTERS BY `"X"` → `"XXXXX"`; the fill

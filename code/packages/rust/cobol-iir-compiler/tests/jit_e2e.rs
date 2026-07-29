@@ -5701,22 +5701,161 @@ fn inspect_replacing_multi_with_leading_item_is_a_later_rung() {
 }
 
 #[test]
-fn inspect_replacing_multi_with_region_is_a_later_rung() {
-    // A `{BEFORE|AFTER}` region on any item of a MULTI-item list is deferred — both
-    // engines reject (a region on a LONE `REPLACING ALL` is supported).
-    let src = wrap(
+fn inspect_replacing_multi_each_item_with_a_region() {
+    // Two items, one with BEFORE and one with AFTER, over a source where the windows
+    // differ. Source "a0b0a" (positions 0..5): item 1 `ALL "a" BY "x"` has NO region
+    // (whole source); item 2 `ALL "0" BY "*" BEFORE "b"` fires only left of the first
+    // "b" (index 2 → window [0,2)). Both "a"s become "x"; only the "0" at index 1
+    // (inside [0,2)) becomes "*", the "0" at index 3 (outside) stays "0".
+    let out = assert_matches_oracle(&wrap(
         &["01  S  PIC X(5) VALUE \"a0b0a\"."],
         &[
             "INSPECT S REPLACING ALL \"a\" BY \"x\"",
             "    ALL \"0\" BY \"*\" BEFORE \"b\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "x*b0x\n");
+}
+
+#[test]
+fn inspect_replacing_multi_before_and_after_windows() {
+    // One item windowed BEFORE, one AFTER, over "aXaXa" (X at index 1 and 3).
+    // Item 1 `ALL "a" BY "b" BEFORE "X"`: window [0,1) → only index 0's "a" → "b".
+    // Item 2 `ALL "a" BY "c" AFTER "X"`: window (1,5] → indices 2 and 4's "a" → "c".
+    // The "a" at index 0 is claimed by item 1 first (first-match-wins), the rest by
+    // item 2. The "X"s match neither item and pass through.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aXaXa\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"b\" BEFORE \"X\"",
+            "    ALL \"a\" BY \"c\" AFTER \"X\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "bXcXc\n");
+}
+
+#[test]
+fn inspect_replacing_multi_region_plus_regionless_item() {
+    // A region item mixed with a whole-source (region-less) item. Source "0a0a0"
+    // Item 1 `ALL "0" BY "*" AFTER "a"`: first "a" at index 1 → window (1,5] →
+    // the "0"s at indices 2 and 4 become "*"; the "0" at index 0 (outside) stays.
+    // Item 2 `ALL "a" BY "z"` (no region): both "a"s become "z" everywhere.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0a0a0\"."],
+        &[
+            "INSPECT S REPLACING ALL \"0\" BY \"*\" AFTER \"a\"",
+            "    ALL \"a\" BY \"z\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "0z*z*\n");
+}
+
+#[test]
+fn inspect_replacing_multi_after_absent_delimiter_empty_window() {
+    // `AFTER x` where x is ABSENT → an EMPTY window, so that item NEVER fires; the
+    // other (region-less) item still applies everywhere. Source "abab", item 1
+    // `ALL "a" BY "*" AFTER "Z"` (no "Z" present → empty window, never fires),
+    // item 2 `ALL "b" BY "y"` rewrites both "b"s. The "a"s stay untouched.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"abab\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"*\" AFTER \"Z\"",
+            "    ALL \"b\" BY \"y\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ayay\n");
+}
+
+#[test]
+fn inspect_replacing_multi_first_match_wins_overlapping_windows() {
+    // FIRST-MATCH precedence when TWO items' windows both cover a position and both
+    // match — the EARLIER-written item wins. Source "aaaa" with no region on either
+    // (both whole-source windows): `ALL "a" BY "x"` then `ALL "a" BY "y"`. Every "a"
+    // is claimed by item 1 → all "x", none "y".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"aaaa\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"x\"",
+            "    ALL \"a\" BY \"y\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "xxxx\n");
+}
+
+#[test]
+fn inspect_replacing_multi_first_match_wins_within_overlapping_regions() {
+    // Both items carry a region and both windows cover the same position, and both
+    // searches match it — the earlier item still wins. Source "aXaa": item 1
+    // `ALL "a" BY "p" AFTER "X"` (window (1,4] → indices 2,3), item 2
+    // `ALL "a" BY "q" AFTER "X"` (same window). Index 0's "a" is outside BOTH windows
+    // (before the "X") so it stays "a"; indices 2 and 3 are claimed by item 1 → "p".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"aXaa\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"p\" AFTER \"X\"",
+            "    ALL \"a\" BY \"q\" AFTER \"X\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "aXpp\n");
+}
+
+#[test]
+fn inspect_replacing_multi_non_ascii_source_shares_the_reconstruction_chip() {
+    // NON-ASCII SOURCE: this rung's MATCHING is byte-safe — a multi-byte "é" never
+    // equals an ASCII search byte, so it is never falsely matched or replaced, and the
+    // per-item window (computed over the ORIGINAL source, bounded by the first
+    // occurrence of an ASCII region delimiter) selects the SAME ASCII positions on
+    // both engines. BUT the RECONSTRUCTION is the PRE-EXISTING byte-vs-char chip shared
+    // by EVERY REPLACING lowering: the byte-based compiler rebuilds the field with
+    // per-position `str_slice`, which cannot slice a multi-byte char, so it traps —
+    // EXACTLY as the merged single-item `REPLACING ALL` does on the same source. The
+    // multi-item + per-item-region path introduces NO new non-ASCII behavior: it traps
+    // identically. (The oracle iterates `char`s and succeeds char-based; that
+    // divergence is the documented pre-existing chip, NOT introduced here.) We pin that
+    // the MULTI path and the SINGLE-item path share the chip byte-for-byte.
+    let multi = wrap(
+        &["01  S  PIC X(5) VALUE \"aéaba\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"x\" BEFORE \"b\"",
+            "    ALL \"b\" BY \"y\".",
+            "DISPLAY S.",
             "STOP RUN.",
         ],
     );
-    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-item region");
-    assert!(
-        compile_source(&src, "e2e").is_err(),
-        "compiler must reject a multi-item region"
+    let single = wrap(
+        &["01  S  PIC X(5) VALUE \"aéaba\"."],
+        &["INSPECT S REPLACING ALL \"a\" BY \"x\".", "STOP RUN."],
     );
+    // The compiled reconstruction traps on the multi-byte char on BOTH the multi path
+    // (per-item regions) and the pre-existing single-item path — the chip is shared,
+    // unchanged by this rung.
+    assert!(
+        run_on_jit_result(&multi).is_err(),
+        "multi + per-item-region path must trap on a non-ASCII source, like single-item"
+    );
+    assert!(
+        run_on_jit_result(&single).is_err(),
+        "single-item REPLACING ALL traps on a non-ASCII source (pre-existing chip)"
+    );
+    // The oracle iterates chars and succeeds on the multi path: item 1
+    // `ALL "a" BY "x" BEFORE "b"` (window [0, index_of_b)=[0,3)) rewrites the two "a"s
+    // left of "b"; item 2 `ALL "b" BY "y"` rewrites the "b" (index 3); the "a" at
+    // index 4 is outside item 1's window and is not a "b", so it stays. The "é" (a
+    // non-ASCII byte) matches no ASCII search and passes through untouched → "xéxya".
+    // This pins the MATCH-side byte-safety and the per-item window agreement.
+    assert_eq!(run_cobol(&multi).expect("oracle succeeds char-based"), "xéxya\n");
 }
 
 #[test]
@@ -7155,3 +7294,4 @@ fn mixed_unsigned_numeric_vs_space_figurative_agrees() {
     ));
     assert_eq!(out, "NO\n");
 }
+

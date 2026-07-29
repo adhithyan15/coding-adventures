@@ -8,6 +8,35 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.57.0: INSPECT REPLACING several items each with a BEFORE/AFTER region
+
+`INSPECT source REPLACING ALL a BY x [{BEFORE|AFTER} p] ALL b BY y [{BEFORE|AFTER} q] …` — each
+item of a MULTI-item REPLACING may now carry its OWN optional `{BEFORE|AFTER}` region, compiled
+byte-identical to the `coding-adventures-cobol-runtime` 0.61.0 oracle. Previously any region on a
+multi-item list was rejected at emit time ("INSPECT REPLACING with several items and a BEFORE/AFTER
+region is a later rung"); that reject is now LIFTED. No grammar change was needed.
+
+- `ReplaceItem` now carries `Option<(RegionKind, &GrammarASTNode)>` (its own region node);
+  `inspect_replacing_multi` parses each item's region with the same keyword/operand extraction the
+  single-item `inspect_replacing_all` uses. The LEADING/CHARACTERS/FIRST rejects for a multi-item
+  list are UNCHANGED (the multi path stays `ALL`-only).
+- `emit_inspect_replacing_multi` reuses `emit_inspect_region_window` — the SAME window the
+  single-item region emitter and the TALLYING side emit — to derive each item's `[start, end)`
+  ONCE, over the ORIGINAL source, before the unrolled `0..W` pass (the runtime length is
+  materialised once, shared by every item that carries a region). In the per-position ordered
+  if-else chain each region-carrying item's link now gates on `start <= j < end AND c == x`; a
+  region-less item's link stays `c == x` (the window guard folds away). This is the exact
+  composition of the pre-existing multi-item first-match chain with the single-item region gate.
+- Byte-safety: the match only fires on a single-char ASCII search, so a multi-byte source char is
+  never falsely matched, and each content-defined window selects the same positions on both
+  engines. Reconstruction of a source that itself contains a multi-byte char remains the
+  PRE-EXISTING byte-vs-char chip shared by every REPLACING lowering (per-position `str_slice`
+  cannot slice a multi-byte char and traps, identically to the single-item `REPLACING ALL`); this
+  rung adds no new non-ASCII behavior.
+- Scope kept for a later rung (unchanged, identical messages to the oracle): a `LEADING` or
+  `CHARACTERS`/`FIRST` item in a multi-item list, and the combined `TALLYING … REPLACING` form with
+  several items. The single-item `REPLACING ALL … {BEFORE|AFTER}` path is untouched.
+
 ### Added — v0.56.0: INSPECT REPLACING CHARACTERS BY x (no region)
 
 `INSPECT source REPLACING CHARACTERS BY x` — the "replace every position" form is now compiled,
