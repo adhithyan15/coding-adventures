@@ -4,12 +4,12 @@
 use coding_adventures_html_parser::BrowserRenderTree;
 use html_to_layout::{html_render_tree_to_layout, HtmlTheme};
 use layout_block::layout_block;
-use layout_ir::{Constraints, PositionedNode, TextMeasurer};
+use layout_ir::{Constraints, ExtValue, PositionedNode, TextMeasurer};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
 use paint_instructions::PaintScene;
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 /// Viewport and device scale used by the composed HTML paint pipeline.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -29,10 +29,36 @@ impl HtmlPaintViewport {
     }
 }
 
-/// Geometry and paint output retained for rendering and later hit-testing.
+/// A clickable link rectangle in logical document-content coordinates.
+#[derive(Clone, Debug, PartialEq)]
+pub struct LinkRegion {
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    pub url: String,
+}
+
+impl LinkRegion {
+    /// Return whether a content-space point falls inside the region.
+    ///
+    /// The right and bottom edges are exclusive so adjacent regions do not
+    /// both claim a point on their shared boundary.
+    pub fn contains(&self, x: f64, y: f64) -> bool {
+        x.is_finite()
+            && y.is_finite()
+            && x >= self.x
+            && x < self.x + self.width
+            && y >= self.y
+            && y < self.y + self.height
+    }
+}
+
+/// Geometry, link hit regions, and paint output for a browser host.
 #[derive(Clone, Debug, PartialEq)]
 pub struct HtmlPaintOutput {
     pub positioned: PositionedNode,
+    pub links: Vec<LinkRegion>,
     pub scene: PaintScene,
 }
 
@@ -80,8 +106,64 @@ where
         resolver,
     };
     let scene = layout_to_paint(&positioned, &options);
+    let links = extract_link_regions(&positioned);
 
-    HtmlPaintOutput { positioned, scene }
+    HtmlPaintOutput {
+        positioned,
+        links,
+        scene,
+    }
+}
+
+/// Extract resolved link rectangles while accumulating parent-relative layout
+/// coordinates into absolute logical document coordinates.
+pub fn extract_link_regions(root: &PositionedNode) -> Vec<LinkRegion> {
+    let mut regions = Vec::new();
+    let mut stack = vec![(root, 0.0, 0.0)];
+
+    while let Some((node, parent_x, parent_y)) = stack.pop() {
+        let absolute_x = parent_x + node.x;
+        let absolute_y = parent_y + node.y;
+        if positioned_html_string(node, "role") == Some("link") {
+            if let Some(url) = positioned_html_string(node, "href") {
+                if valid_link_box(absolute_x, absolute_y, node.width, node.height)
+                    && !url.is_empty()
+                {
+                    regions.push(LinkRegion {
+                        x: absolute_x,
+                        y: absolute_y,
+                        width: node.width,
+                        height: node.height,
+                        url: url.to_string(),
+                    });
+                }
+            }
+        }
+
+        for child in node.children.iter().rev() {
+            stack.push((child, absolute_x, absolute_y));
+        }
+    }
+
+    regions
+}
+
+/// Hit-test a viewport-space point against logical document link regions.
+///
+/// `scroll_y` is added to the viewport y coordinate to recover document
+/// content coordinates. Negative or non-finite scroll offsets are treated as
+/// zero; scrolling policy and clamping remain the browser host's concern.
+pub fn hit_test_link(
+    regions: &[LinkRegion],
+    viewport_x: f64,
+    viewport_y: f64,
+    scroll_y: f64,
+) -> Option<&LinkRegion> {
+    let scroll_y = finite_non_negative(scroll_y);
+    let content_y = viewport_y + scroll_y;
+    regions
+        .iter()
+        .find(|region| region.contains(viewport_x, content_y))
 }
 
 fn finite_non_negative(value: f64) -> f64 {
@@ -92,12 +174,31 @@ fn finite_non_negative(value: f64) -> f64 {
     }
 }
 
+fn valid_link_box(x: f64, y: f64, width: f64, height: f64) -> bool {
+    x.is_finite()
+        && y.is_finite()
+        && width.is_finite()
+        && height.is_finite()
+        && width > 0.0
+        && height > 0.0
+}
+
+fn positioned_html_string<'a>(node: &'a PositionedNode, key: &str) -> Option<&'a str> {
+    let ExtValue::Map(values) = node.ext.get("html")? else {
+        return None;
+    };
+    let ExtValue::Str(value) = values.get(key)? else {
+        return None;
+    };
+    Some(value)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use coding_adventures_html_parser::parse_browser_render_tree;
     use html_to_layout::mosaic_html_theme;
-    use layout_ir::{Color, Content, ExtValue, FontSpec, MeasureResult};
+    use layout_ir::{Color, Content, FontSpec, MeasureResult};
     use paint_instructions::{ImageSrc, PaintInstruction};
     use text_interfaces::{
         Direction, FontQuery, FontResolutionError, Glyph, ShapeOptions, ShapedRun, ShapedText,
@@ -276,7 +377,73 @@ mod tests {
             positioned_html_string(link, "href"),
             Some("https://example.test/status")
         );
+        assert_eq!(output.links.len(), 1);
+        assert_eq!(output.links[0].url, "https://example.test/status");
+        assert_eq!(
+            hit_test_link(
+                &output.links,
+                output.links[0].x + output.links[0].width / 2.0,
+                output.links[0].y + output.links[0].height / 2.0,
+                0.0,
+            ),
+            Some(&output.links[0])
+        );
         assert!(positioned_texts(&output.positioned).contains(&"connected"));
+    }
+
+    #[test]
+    fn extraction_accumulates_parent_coordinates_and_skips_empty_boxes() {
+        let visible = positioned_link(5.0, 7.0, 20.0, 10.0, "https://example.test/visible");
+        let empty = positioned_link(30.0, 7.0, 0.0, 10.0, "https://example.test/empty");
+        let root = PositionedNode {
+            x: 10.0,
+            y: 20.0,
+            width: 100.0,
+            height: 100.0,
+            id: None,
+            content: None,
+            children: vec![visible, empty],
+            ext: Default::default(),
+        };
+
+        assert_eq!(
+            extract_link_regions(&root),
+            vec![LinkRegion {
+                x: 15.0,
+                y: 27.0,
+                width: 20.0,
+                height: 10.0,
+                url: "https://example.test/visible".into(),
+            }]
+        );
+    }
+
+    #[test]
+    fn hit_testing_applies_scroll_and_uses_half_open_edges() {
+        let region = LinkRegion {
+            x: 10.0,
+            y: 80.0,
+            width: 30.0,
+            height: 12.0,
+            url: "https://example.test/next".into(),
+        };
+
+        assert_eq!(
+            hit_test_link(std::slice::from_ref(&region), 10.0, 20.0, 60.0),
+            Some(&region)
+        );
+        assert_eq!(
+            hit_test_link(std::slice::from_ref(&region), 40.0, 20.0, 60.0),
+            None
+        );
+        assert_eq!(
+            hit_test_link(std::slice::from_ref(&region), 10.0, 32.0, 60.0),
+            None
+        );
+        assert_eq!(
+            hit_test_link(std::slice::from_ref(&region), f64::NAN, 20.0, 60.0),
+            None
+        );
     }
 
     fn color_css(color: Color) -> String {
@@ -307,12 +474,25 @@ mod tests {
     }
 
     fn positioned_html_string<'a>(node: &'a PositionedNode, key: &str) -> Option<&'a str> {
-        let ExtValue::Map(values) = node.ext.get("html")? else {
-            return None;
-        };
-        let ExtValue::Str(value) = values.get(key)? else {
-            return None;
-        };
-        Some(value)
+        super::positioned_html_string(node, key)
+    }
+
+    fn positioned_link(x: f64, y: f64, width: f64, height: f64, url: &str) -> PositionedNode {
+        PositionedNode {
+            x,
+            y,
+            width,
+            height,
+            id: None,
+            content: None,
+            children: Vec::new(),
+            ext: std::collections::HashMap::from([(
+                "html".into(),
+                ExtValue::Map(std::collections::HashMap::from([
+                    ("role".into(), ExtValue::Str("link".into())),
+                    ("href".into(), ExtValue::Str(url.into())),
+                ])),
+            )]),
+        }
     }
 }

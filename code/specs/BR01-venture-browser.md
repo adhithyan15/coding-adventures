@@ -169,7 +169,8 @@ When the user clicks somewhere in the content area, the browser needs to
 determine what they clicked on. This is **hit-testing**: given an (x, y) screen
 coordinate, find the element at that position.
 
-During the layout-to-paint stage, each link gets recorded as a `LinkRegion`:
+The `html-to-paint` stage records each positioned link as a `LinkRegion` in
+logical document-content coordinates:
 
 ```rust
 struct LinkRegion {
@@ -183,6 +184,10 @@ On mouse click:
 2. Linear scan through link regions (fine for Mosaic-era page complexity)
 3. If a region contains the point → navigate to that URL
 4. If no region matches → do nothing
+
+`extract_link_regions` and `hit_test_link` implement these geometry steps.
+Navigation history, visited-link policy, and host event dispatch remain the
+browser shell's responsibility.
 
 ### Scrolling
 
