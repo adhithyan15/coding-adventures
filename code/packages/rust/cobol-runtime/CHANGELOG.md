@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.59.0 — INSPECT TALLYING … FOR CHARACTERS (+ optional region) — 2026-07-28
+
+- `INSPECT source TALLYING counter FOR CHARACTERS [ {BEFORE|AFTER} x ]` — the "count every
+  position" tally form is now modelled (previously rejected at read time: "INSPECT TALLYING …
+  FOR CHARACTERS is a later rung"). No grammar change was needed — the grammar already parses
+  the `CHARACTERS { inspect_region }` branch of `tally_item`.
+- Semantics: `FOR CHARACTERS` does NOT match a delimiter — it ADDs the NUMBER OF CHARACTER
+  POSITIONS in the region window to the counter. With no region that is `length(source)`; with
+  a `{BEFORE|AFTER} x` region it is the window length `end - start` of the SAME window
+  `FOR ALL` uses, so it inherits the identical not-found asymmetry (BEFORE→whole source,
+  AFTER→empty window ⇒ 0). INSPECT ADDs to the counter (it does not clear it), reshaping into
+  the counter's `PIC 9(n)` picture through the existing `store_result` path.
+- `Stmt::Inspect` gains a `characters: bool` field. On the CHARACTERS path `delim` carries a
+  never-read placeholder and `leading` is `false`; the exec skips `single_delim_char` entirely
+  and sets the count to `window.len()`.
+- Scope unchanged elsewhere: multi-item and multi-counter `CHARACTERS`, and a `CHARACTERS` half
+  in a combined `TALLYING … REPLACING`, remain later rungs, rejected identically to before.
+
 ## 0.58.0 — UNSTRING … ON OVERFLOW / NOT ON OVERFLOW
 
 - `UNSTRING source DELIMITED BY delim INTO r1 [r2 …] [WITH POINTER p] [ON OVERFLOW imp…] [NOT ON

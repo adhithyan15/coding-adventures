@@ -725,14 +725,36 @@ compiler seats its count-loop counter at `start` and bounds it by the window `en
 (instead of `0..len`), so the existing stop-at-first-mismatch break yields the
 window-anchored run — byte-identical, and the `FOR ALL` lowering is untouched.
 
+**`FOR CHARACTERS` (follow-up rung).** `INSPECT source TALLYING counter FOR
+CHARACTERS [ {BEFORE|AFTER} x ]` is the **count-every-position** form: it does NOT
+match a delimiter (the grammar's `CHARACTERS` branch of `tally_item` carries no
+operand). Instead the count is the **number of character positions in the region
+window** — exactly the window LENGTH — ADDed to the counter (INSPECT adds, it does
+not clear). With **no region** that is `length(source)`; with a `{BEFORE|AFTER} x`
+region it is `end - start` of the SAME window `FOR ALL` uses, so it inherits the
+identical not-found asymmetry: `BEFORE x` with `x` absent ⇒ WHOLE source, `AFTER x`
+with `x` absent ⇒ EMPTY window ⇒ `0`. Worked (`counter` `PIC 9(3)`): `"BANANA"` FOR
+CHARACTERS → `6`; `"AB0CD0"` FOR CHARACTERS BEFORE `"C"` → window `"AB0"` → `3`;
+FOR CHARACTERS AFTER `"C"` → window `"D0"` → `2`; `"HELLO"` FOR CHARACTERS BEFORE
+`"Z"` (absent) → `5`; AFTER `"Z"` (absent) → `0`.
+
+The count is byte-identical on both engines because both derive the window from the
+SAME shared helper: the oracle's `inspect_tally` sets `count = window.len()` (skipping
+`single_delim_char` entirely — there is no delimiter), and the compiler emits
+`cnt = end - start` (a `sub`) when a region is present or `cnt = str_len(S)` when it
+is not, skipping the per-character match loop. Only the **single-item single-counter**
+CHARACTERS phrase is enabled this rung; a MULTI-item or MULTI-counter `CHARACTERS`,
+and a `CHARACTERS` half inside a combined `TALLYING … REPLACING`, stay later rungs
+rejected identically on both engines.
+
 Still deferred (identically on both engines): a **combined** `TALLYING … REPLACING`
 whose LEADING half carries a region (the standalone forms are supported, but the
 combined caller re-imposes the deferral), and a multi-character / non-ASCII region
 delimiter.
 
-The grammar deliberately accepts the fuller `INSPECT` surface — a `CHARACTERS`
-tally, several `TALLYING` counters (several `FOR` items under ONE counter are now
-supported — see "Multiple `TALLYING` items under one counter" below), a region on the LEADING half of
+The grammar deliberately accepts the fuller `INSPECT` surface — a MULTI-item or
+MULTI-counter `CHARACTERS` tally (the single-item single-counter `CHARACTERS` form is
+now supported — see "`FOR CHARACTERS`" above), a region on the LEADING half of
 the **combined** form (the STANDALONE `FOR LEADING`/`REPLACING LEADING` regions, the
 lone `REPLACING ALL` and `CONVERTING` regions, and a region on each `ALL` half of the
 combined form, ARE supported — see those sections below), and a
