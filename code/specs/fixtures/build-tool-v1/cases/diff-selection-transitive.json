@@ -54,7 +54,7 @@
         ]
       ],
       "forced_packages": [],
-      "unknown_path_policy": "ignore"
+      "unknown_path_policy": "error"
     },
     "changed_paths": [
       "code/packages/python/lib/src/lib.py"

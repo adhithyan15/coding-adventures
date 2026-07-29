@@ -128,7 +128,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 26)
+        self.assertEqual(summary["case_count"], 30)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -218,12 +218,9 @@ class CorpusTests(unittest.TestCase):
             runner.validate_case_document(
                 case,
                 case_schema=runner.load_document(FIXTURE_ROOT / "schema.json"),
-                result_schema=runner.load_document(
-                    FIXTURE_ROOT / "result.schema.json"
-                ),
+                result_schema=runner.load_document(FIXTURE_ROOT / "result.schema.json"),
                 plan_schema=runner.load_document(
-                    runner.REPO_ROOT
-                    / "code/specs/schemas/build-plan-v1.schema.json"
+                    runner.REPO_ROOT / "code/specs/schemas/build-plan-v1.schema.json"
                 ),
             )
         self.assertEqual(raised.exception.code, "CASE_SCHEMA_INVALID")
@@ -278,6 +275,29 @@ class ExecutionDenialTests(unittest.TestCase):
                 runner.validate_result_files(case_path, missing_result)
         self.assertEqual(raised.exception.code, "EXECUTION_DISABLED")
 
+    def test_cli_execution_intent_is_denied_before_workspace_decoding(
+        self,
+    ) -> None:
+        case = load_case("cli-dry-run-success.json")
+        case["input"]["options"]["requires_execution"] = True
+        case["workspace"]["files"] = [
+            {
+                "path": "fixtures/invalid.bin",
+                "content_base64": "not base64!",
+            }
+        ]
+        with (
+            mock.patch.object(tempfile, "TemporaryDirectory") as temporary,
+            mock.patch.object(runner.base64, "b64decode") as decode,
+            mock.patch.object(subprocess, "run") as process,
+            self.assertRaises(runner.ConformanceError) as raised,
+        ):
+            runner.preflight_workspace(case)
+        self.assertEqual(raised.exception.code, "EXECUTION_DISABLED")
+        temporary.assert_not_called()
+        decode.assert_not_called()
+        process.assert_not_called()
+
 
 class WorkspacePreflightTests(unittest.TestCase):
     def test_decodes_exact_files_without_creating_a_workspace(self) -> None:
@@ -294,8 +314,7 @@ class WorkspacePreflightTests(unittest.TestCase):
             "TemporaryDirectory",
         ) as temporary:
             staged = {
-                entry.path: entry.content
-                for entry in runner.preflight_workspace(case)
+                entry.path: entry.content for entry in runner.preflight_workspace(case)
             }
 
         temporary.assert_not_called()
@@ -465,9 +484,7 @@ class ResultValidationTests(unittest.TestCase):
         case = load_case("plan-affected-empty.json")
 
         duplicate = copy.deepcopy(case["expected"])
-        duplicate_package = copy.deepcopy(
-            duplicate["result"]["plan"]["packages"][0]
-        )
+        duplicate_package = copy.deepcopy(duplicate["result"]["plan"]["packages"][0])
         duplicate_package["build_commands"] = ["different"]
         duplicate["result"]["plan"]["packages"].append(duplicate_package)
         with self.assertRaises(runner.ConformanceError) as raised:
@@ -483,9 +500,7 @@ class ResultValidationTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, "RESULT_PLAN_EDGE_UNKNOWN")
 
         unknown_affected = copy.deepcopy(case["expected"])
-        unknown_affected["result"]["plan"]["affected_packages"] = [
-            "python/missing"
-        ]
+        unknown_affected["result"]["plan"]["affected_packages"] = ["python/missing"]
         with self.assertRaises(runner.ConformanceError) as raised:
             runner.assert_result_matches(case, unknown_affected)
         self.assertEqual(raised.exception.code, "RESULT_PLAN_AFFECTED_UNKNOWN")
@@ -522,17 +537,12 @@ class ResultValidationTests(unittest.TestCase):
 
 class PureDomainValidationTests(unittest.TestCase):
     def test_semantics_reject_unknown_references_and_bad_oracles(self) -> None:
-        pure_schema = runner.load_document(
-            FIXTURE_ROOT / "pure-domains.schema.json"
-        )
+        pure_schema = runner.load_document(FIXTURE_ROOT / "pure-domains.schema.json")
         schema_args = {
             "case_schema": runner.load_document(FIXTURE_ROOT / "schema.json"),
-            "result_schema": runner.load_document(
-                FIXTURE_ROOT / "result.schema.json"
-            ),
+            "result_schema": runner.load_document(FIXTURE_ROOT / "result.schema.json"),
             "plan_schema": runner.load_document(
-                runner.REPO_ROOT
-                / "code/specs/schemas/build-plan-v1.schema.json"
+                runner.REPO_ROOT / "code/specs/schemas/build-plan-v1.schema.json"
             ),
             "pure_domain_schema": pure_schema,
         }
@@ -566,9 +576,7 @@ class PureDomainValidationTests(unittest.TestCase):
             ),
             (
                 "validation-missing-build.json",
-                lambda result: result["result"].__setitem__(
-                    "diagnostic_codes", []
-                ),
+                lambda result: result["result"].__setitem__("diagnostic_codes", []),
                 "RESULT_VALIDATION_INCONSISTENT",
             ),
             (
@@ -597,6 +605,55 @@ class PureDomainValidationTests(unittest.TestCase):
                     )
                 self.assertEqual(raised.exception.code, code)
 
+    def test_nested_paths_and_pure_authority_are_rejected(self) -> None:
+        schema_args = {
+            "case_schema": runner.load_document(FIXTURE_ROOT / "schema.json"),
+            "result_schema": runner.load_document(FIXTURE_ROOT / "result.schema.json"),
+            "plan_schema": runner.load_document(
+                runner.REPO_ROOT / "code/specs/schemas/build-plan-v1.schema.json"
+            ),
+            "pure_domain_schema": runner.load_document(
+                FIXTURE_ROOT / "pure-domains.schema.json"
+            ),
+        }
+        mutations = (
+            (
+                "diff-selection-transitive.json",
+                lambda case: case["input"]["options"]["packages"][0].__setitem__(
+                    "rel_path", "code/packages/python/NUL"
+                ),
+                "CASE_NESTED_PATH_UNSAFE",
+            ),
+            (
+                "hashing-cache-hit.json",
+                lambda case: case["input"]["options"]["include_paths"].append(
+                    "code/packages/python/demo/host-only"
+                ),
+                "CASE_HASH_PATH_UNKNOWN",
+            ),
+            (
+                "starlark-structured-context.json",
+                lambda case: case["input"]["options"].__setitem__(
+                    "entrypoint", "code/packages/python/demo/missing.star"
+                ),
+                "CASE_STARLARK_ENTRYPOINT_MISSING",
+            ),
+            (
+                "hashing-cache-hit.json",
+                lambda case: case["workspace"]["files"][0].__setitem__(
+                    "executable", True
+                ),
+                "CASE_PURE_AUTHORITY",
+            ),
+        )
+        for filename, mutate, code in mutations:
+            with self.subTest(filename=filename, code=code):
+                case = load_case(filename)
+                mutate(case)
+                with self.assertRaises(runner.ConformanceError) as raised:
+                    runner.validate_case_document(case, **schema_args)
+                self.assertEqual(raised.exception.code, code)
+
     def test_pure_domain_set_order_is_canonicalized(self) -> None:
         diff = load_case("diff-selection-transitive.json")
         actual = copy.deepcopy(diff["expected"])
@@ -614,18 +671,13 @@ class PureDomainValidationTests(unittest.TestCase):
         )
 
     def test_pure_domain_validation_has_no_host_side_effects(self) -> None:
-        pure_schema = runner.load_document(
-            FIXTURE_ROOT / "pure-domains.schema.json"
-        )
+        pure_schema = runner.load_document(FIXTURE_ROOT / "pure-domains.schema.json")
         pure_domains = set(pure_schema["$defs"]["pure_domain"]["enum"])
         schema_args = {
             "case_schema": runner.load_document(FIXTURE_ROOT / "schema.json"),
-            "result_schema": runner.load_document(
-                FIXTURE_ROOT / "result.schema.json"
-            ),
+            "result_schema": runner.load_document(FIXTURE_ROOT / "result.schema.json"),
             "plan_schema": runner.load_document(
-                runner.REPO_ROOT
-                / "code/specs/schemas/build-plan-v1.schema.json"
+                runner.REPO_ROOT / "code/specs/schemas/build-plan-v1.schema.json"
             ),
             "pure_domain_schema": pure_schema,
         }
@@ -662,7 +714,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 26)
+        self.assertEqual(summary["case_count"], 30)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

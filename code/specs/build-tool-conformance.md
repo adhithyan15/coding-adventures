@@ -283,7 +283,8 @@ the host Git binary. Implementations MUST map:
 - shared workflow/toolchain changes to the declared toolchain set;
 - strict Starlark `srcs` globs only to matching packages;
 - package changes to all transitive dependents; and
-- changes outside known packages according to explicit fixture policy.
+- changes outside known packages according to the explicit conservative
+  fixture policy: select all declared packages or return an error.
 
 The adapter must not read the caller's real checkout, Git config, hooks, or
 credentials.
@@ -438,8 +439,8 @@ structured command fields use the shared definitions in the corpus schema.
 
 | Domain | `input.options` | Successful `result` |
 |---|---|---|
-| `diff_selection` | packages with repository-relative roots and an explicit `package_prefix` or `strict_globs` source mode, dependency edges, forced packages, and an `ignore` or `all` unknown-path policy | sorted `changed_packages`, `affected_packages`, and prerequisite-only `prerequisite_packages` |
-| `hashing_cache` | SHA-256 mode, package, included paths, dependency digests, dependents, and missing or raw serialized prior-cache data | lowercase `package_digest`, `dependencies_digest`, `combined_digest`, cache status, and sorted invalidated packages |
+| `diff_selection` | packages with repository-relative roots and an explicit `package_prefix` or `strict_globs` source mode, dependency edges, forced packages, and an `all` or `error` unknown-path policy | sorted `changed_packages`, `affected_packages`, and prerequisite-only `prerequisite_packages` |
+| `hashing_cache` | SHA-256 mode, package, included paths, dependency digests, dependents, and a closed missing, corrupt, or typed prior-cache record | lowercase `package_digest`, `dependencies_digest`, `combined_digest`, cache status, and sorted invalidated packages |
 | `starlark` | repository-contained entrypoint, v1 `_ctx`, and declared legacy fallback policy | sorted targets containing rule metadata, structured commands, deterministic display rendering, and the per-target command source |
 | `sharding` | package languages and build-command counts, dependency edges, scheduled packages, shard count, and optional shard index | stable prerequisite-closed shard records with assignments, package closure, toolchains, and estimated cost |
 | `validation` | platform, selected checks, normalized package declarations, and dependency edges | `valid` plus sorted stable diagnostic codes |
@@ -465,6 +466,12 @@ first byte string and the 32 decoded digest bytes as the second. The package
 stream and dependency stream are hashed separately; `combined_digest` is
 SHA-256 over the 32 package-digest bytes followed by the 32 dependency-digest
 bytes. An empty stream therefore has the standard SHA-256 empty digest.
+Prior cache records are data, not nested executable or parser input:
+`missing` and `corrupt` carry no payload; `record` carries exactly a combined
+digest and `success` or `failed` status. A matching successful record is a
+`hit` with no invalidations. Missing, failed, or stale records are a `miss`;
+corrupt records are `recovered`. Every non-hit invalidates the package and its
+declared dependent closure.
 
 Sharding v1 normalizes package languages to the canonical toolchain registry
 before computing cost. Each package costs `1 + build_command_count` plus the
@@ -491,9 +498,15 @@ reference a declared package.
 
 Starlark v1 injects `repo_root` into `_ctx` from the runner-owned workspace; it
 is never accepted from fixture input. Repository `load()` labels are resolved
-only against inline files and cannot escape the root. A target with structured
-commands reports `command_source: "structured"`; a target that uses the
-declared generator reports `"legacy_fallback"`. For process-free comparison,
+only against the immutable inline file table and cannot escape the root.
+`//` labels and normalized labels without a `./` or `../` prefix are
+repository-root-relative; explicit dot-prefixed labels are relative to the
+loading module. Missing inline modules never fall back to the host filesystem.
+Each fixture declares bounded step, recursion, load-depth, module-count,
+aggregate-value, and diagnostic-output requests, all capped by stricter
+runner policy. A target with structured commands reports
+`command_source: "structured"`; a target that uses the declared generator
+reports `"legacy_fallback"`. For process-free comparison,
 `rendered_commands` is a deterministic display form, not executable authority:
 tokens containing only ASCII letters, digits, `_`, `@`, `%`, `+`, `=`, `:`,
 `,`, `.`, `/`, and `-` are emitted unchanged; every other token is emitted as a
@@ -510,6 +523,9 @@ Validation v1 uses the stable diagnostic registry
 `valid: false`, one or more codes, and matching diagnostic-envelope codes.
 Platform BUILD precedence is a discovery decision; validation does not invent
 a missing-platform error when canonical `BUILD` fallback is available.
+Validation input is the sole normalized repository-data snapshot for this
+domain. It does not carry a second inline BUILD-file source of truth, and the
+adapter MUST NOT consult the workspace or host checkout.
 
 Canonical result ordering is domain-aware:
 

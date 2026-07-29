@@ -143,7 +143,9 @@ def semantic_errors(case: dict[str, Any]) -> list[str]:
     required_capabilities = DOMAIN_CAPABILITIES.get(domain, set())
     if domain == "plan":
         if not required_capabilities.intersection(capabilities):
-            errors.append("plan cases require a plan_v1_read or plan_v1_write capability")
+            errors.append(
+                "plan cases require a plan_v1_read or plan_v1_write capability"
+            )
     elif not required_capabilities.issubset(capabilities):
         errors.append(f"{domain} case is missing its domain capability")
 
@@ -222,9 +224,7 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
         cls.pure_schema = load_json(PURE_SCHEMA_PATH)
         cls.examples = [load_json(path) for path in sorted(EXAMPLE_ROOT.glob("*.json"))]
         cls.base_example = next(
-            example
-            for example in cls.examples
-            if example["id"] == "discovery/simple"
+            example for example in cls.examples if example["id"] == "discovery/simple"
         )
 
     def test_schema_is_draft_2020_12_and_closed_at_the_boundary(self) -> None:
@@ -256,7 +256,9 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
         jsonschema.Draft202012Validator.check_schema(self.schema)
         validator = jsonschema.Draft202012Validator(self.schema)
         for example in self.examples:
-            errors = sorted(validator.iter_errors(example), key=lambda error: list(error.path))
+            errors = sorted(
+                validator.iter_errors(example), key=lambda error: list(error.path)
+            )
             self.assertEqual(
                 errors,
                 [],
@@ -328,11 +330,25 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
         }
         record["result"]["targets"][0]["srcs"] = ["src/**/*.py"]
         errors = list(
-            jsonschema.Draft202012Validator(self.pure_schema).iter_errors(
-                record
-            )
+            jsonschema.Draft202012Validator(self.pure_schema).iter_errors(record)
         )
         self.assertEqual(errors, [])
+
+    def test_package_names_require_nonempty_safe_segments(self) -> None:
+        pattern = re.compile(self.pure_schema["$defs"]["package_name"]["pattern"])
+        for valid in (
+            "python/demo",
+            "rust/http-core",
+            "typescript/pkg/subpkg",
+        ):
+            self.assertIsNotNone(pattern.fullmatch(valid), valid)
+        for invalid in (
+            "python/",
+            "python//demo",
+            "python/../demo",
+            "python/./demo",
+        ):
+            self.assertIsNone(pattern.fullmatch(invalid), invalid)
 
     def test_pure_domain_cases_carry_no_executable_or_host_input(self) -> None:
         pure_domains = set(self.pure_schema["$defs"]["pure_domain"]["enum"])
@@ -380,9 +396,9 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
 
     def test_fixture_environment_is_data_with_a_narrow_key_namespace(self) -> None:
         environment_pattern = re.compile(
-            self.schema["$defs"]["input"]["properties"]["environment"][
-                "propertyNames"
-            ]["pattern"]
+            self.schema["$defs"]["input"]["properties"]["environment"]["propertyNames"][
+                "pattern"
+            ]
         )
         self.assertIsNotNone(environment_pattern.fullmatch("CONFORMANCE_MODE"))
         for dangerous in (
@@ -433,7 +449,10 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
             mismatch = copy.deepcopy(base)
             mismatch["input"]["options"]["code_root"] = unsafe
             self.assertTrue(
-                any(error.startswith("unsafe portable path") for error in semantic_errors(mismatch)),
+                any(
+                    error.startswith("unsafe portable path")
+                    for error in semantic_errors(mismatch)
+                ),
                 unsafe,
             )
 
@@ -446,7 +465,10 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
             }
         )
         self.assertTrue(
-            any(error.startswith("duplicate normalized path:") for error in semantic_errors(duplicate))
+            any(
+                error.startswith("duplicate normalized path:")
+                for error in semantic_errors(duplicate)
+            )
         )
 
         prefix_conflict = copy.deepcopy(self.base_example)
@@ -474,7 +496,10 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
         invalid_base64["workspace"]["files"][0].pop("content_utf8")
         invalid_base64["workspace"]["files"][0]["content_base64"] = "not base64!"
         self.assertTrue(
-            any(error.startswith("invalid base64 content:") for error in semantic_errors(invalid_base64))
+            any(
+                error.startswith("invalid base64 content:")
+                for error in semantic_errors(invalid_base64)
+            )
         )
 
         noncanonical_base64 = copy.deepcopy(self.base_example)
@@ -487,12 +512,17 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
             )
         )
 
-    def test_windows_reserved_and_trailing_names_are_semantically_rejected(self) -> None:
+    def test_windows_reserved_and_trailing_names_are_semantically_rejected(
+        self,
+    ) -> None:
         for unsafe in ("fixtures/NUL.txt", "fixtures/name.", "fixtures/name "):
             invalid = copy.deepcopy(self.base_example)
             invalid["workspace"]["files"][0]["path"] = unsafe
             self.assertTrue(
-                any(error.startswith("unsafe portable path") for error in semantic_errors(invalid)),
+                any(
+                    error.startswith("unsafe portable path")
+                    for error in semantic_errors(invalid)
+                ),
                 unsafe,
             )
 

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "id": "starlark/host-load-denied",
+  "id": "starlark/module-missing",
   "domain": "starlark",
-  "summary": "A Starlark load that escapes the inline repository is rejected without consulting the host.",
+  "summary": "A contained module absent from the inline source table fails without falling back to the host filesystem.",
   "platforms": [
     "darwin",
     "linux",
@@ -15,7 +15,7 @@
     "files": [
       {
         "path": "code/packages/python/demo/BUILD",
-        "content_utf8": "load(\"../../../../../outside.star\", \"secret\")\n"
+        "content_utf8": "load(\"code/build/host-only.star\", \"target\")\n_targets = [target]\n"
       }
     ]
   },
@@ -25,7 +25,7 @@
       "entrypoint": "code/packages/python/demo/BUILD",
       "context": {
         "version": 1,
-        "os": "windows",
+        "os": "linux",
         "arch": "amd64",
         "cpu_count": 2,
         "ci": true
@@ -43,15 +43,15 @@
   },
   "expected": {
     "schema_version": 1,
-    "case_id": "starlark/host-load-denied",
+    "case_id": "starlark/module-missing",
     "domain": "starlark",
     "outcome": "error",
     "result": {},
     "diagnostics": [
       {
-        "code": "STARLARK_LOAD_OUTSIDE_REPOSITORY",
+        "code": "STARLARK_MODULE_MISSING",
         "severity": "error",
-        "path": "code/packages/python/demo/BUILD"
+        "path": "code/build/host-only.star"
       }
     ]
   },

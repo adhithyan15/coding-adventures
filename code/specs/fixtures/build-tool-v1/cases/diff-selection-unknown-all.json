@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "id": "diff-selection/unknown-path-ignore",
+  "id": "diff-selection/unknown-path-all",
   "domain": "diff_selection",
-  "summary": "An unknown repository path is ignored only when the fixture policy explicitly says so.",
+  "summary": "An unknown repository path conservatively selects every declared package.",
   "platforms": [
     "darwin",
     "linux",
@@ -29,7 +29,7 @@
       ],
       "edges": [],
       "forced_packages": [],
-      "unknown_path_policy": "ignore"
+      "unknown_path_policy": "all"
     },
     "changed_paths": [
       "docs/notes.md"
@@ -37,12 +37,16 @@
   },
   "expected": {
     "schema_version": 1,
-    "case_id": "diff-selection/unknown-path-ignore",
+    "case_id": "diff-selection/unknown-path-all",
     "domain": "diff_selection",
     "outcome": "ok",
     "result": {
-      "changed_packages": [],
-      "affected_packages": [],
+      "changed_packages": [
+        "python/demo"
+      ],
+      "affected_packages": [
+        "python/demo"
+      ],
       "prerequisite_packages": []
     },
     "diagnostics": []

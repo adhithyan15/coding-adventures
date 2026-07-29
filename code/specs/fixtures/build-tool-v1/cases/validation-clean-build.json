@@ -10,12 +10,7 @@
     "validation"
   ],
   "workspace": {
-    "files": [
-      {
-        "path": "code/packages/python/demo/BUILD",
-        "content_utf8": "python -m unittest\n"
-      }
-    ]
+    "files": []
   },
   "input": {
     "operation": "validation",

@@ -12,8 +12,10 @@ from __future__ import annotations
 import argparse
 import base64
 import binascii
+import hashlib
 import json
 import os
+import posixpath
 import re
 import stat
 import sys
@@ -24,9 +26,7 @@ from typing import Any, Sequence
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_FIXTURE_ROOT = (
-    REPO_ROOT / "code" / "specs" / "fixtures" / "build-tool-v1"
-)
+DEFAULT_FIXTURE_ROOT = REPO_ROOT / "code" / "specs" / "fixtures" / "build-tool-v1"
 MAX_SAFE_INTEGER = 9_007_199_254_740_991
 MAX_DOCUMENT_BYTES = 2_000_000
 MAX_RESULT_BYTES = 16_777_216
@@ -35,7 +35,22 @@ MAX_WORKSPACE_FILES = 4096
 MAX_WORKSPACE_BYTES = 268_435_456
 RESERVED_ADAPTER_FLAGS = ("--conformance", "--workspace-root", "--output")
 EXECUTION_CAPABILITIES = {"execution", "trusted_execution"}
-BOOTSTRAP_DOMAINS = {"discovery", "graph", "plan", "resolution"}
+PURE_DOMAINS = {
+    "cli",
+    "diff_selection",
+    "hashing_cache",
+    "sharding",
+    "starlark",
+    "toolchain_detection",
+    "validation",
+}
+BOOTSTRAP_DOMAINS = {
+    "discovery",
+    "graph",
+    "plan",
+    "resolution",
+    *PURE_DOMAINS,
+}
 ESTABLISHED_LANGUAGES = (
     "csharp",
     "dart",
@@ -67,6 +82,44 @@ DOMAIN_CAPABILITIES = {
     "toolchain_detection": {"toolchain_detection"},
     "cli": {"cli"},
 }
+TOOLCHAINS = (
+    "cpp",
+    "dart",
+    "dotnet",
+    "elixir",
+    "go",
+    "haskell",
+    "java",
+    "kotlin",
+    "lua",
+    "ocaml",
+    "perl",
+    "python",
+    "ruby",
+    "rust",
+    "swift",
+    "typescript",
+)
+LANGUAGE_TOOLCHAINS = {
+    **{toolchain: toolchain for toolchain in TOOLCHAINS},
+    "c": "cpp",
+    "csharp": "dotnet",
+    "fsharp": "dotnet",
+    "wasm": "rust",
+}
+TOOLCHAIN_WEIGHTS = {
+    "rust": 6,
+    "dotnet": 4,
+    "haskell": 4,
+    "swift": 4,
+    "typescript": 4,
+    "java": 3,
+    "kotlin": 3,
+    "elixir": 2,
+    "python": 2,
+    "ruby": 2,
+}
+DISPLAY_SAFE_TOKEN = re.compile(r"^[A-Za-z0-9_@%+=:,./-]+$")
 WINDOWS_RESERVED_BASENAMES = {
     "CON",
     "PRN",
@@ -377,10 +430,7 @@ def portable_path_error(path: Any) -> str | None:
         or re.match(r"^[A-Za-z]:", path)
         or "\\" in path
         or "//" in path
-        or any(
-            ord(character) < 32 or character in '<>:"|?*'
-            for character in path
-        )
+        or any(ord(character) < 32 or character in '<>:"|?*' for character in path)
     ):
         return "path is not a portable relative path"
     for segment in path.split("/"):
@@ -394,20 +444,52 @@ def portable_path_error(path: Any) -> str | None:
     return None
 
 
+def portable_glob_error(value: Any) -> str | None:
+    if not isinstance(value, str) or not value:
+        return "glob is empty or not a string"
+    if len(value) > 512:
+        return "glob exceeds 512 characters"
+    if value != unicodedata.normalize("NFC", value):
+        return "glob is not NFC-normalized"
+    if (
+        value.startswith("/")
+        or re.match(r"^[A-Za-z]:", value)
+        or "\\" in value
+        or "//" in value
+        or any(ord(character) < 32 or character in '<>:"|?' for character in value)
+    ):
+        return "glob is not portable"
+    for segment in value.split("/"):
+        if segment in {"", ".", ".."}:
+            return "glob contains an empty or dot segment"
+        literal = segment.replace("*", "")
+        if literal.endswith((" ", ".")):
+            return "glob segment has a trailing dot or space"
+        if not any(character in segment for character in "*[]{}"):
+            basename = segment.split(".", 1)[0].upper()
+            if basename in WINDOWS_RESERVED_BASENAMES:
+                return "glob segment uses a Windows reserved basename"
+    return None
+
+
 def reject_execution_intent(case: dict[str, Any]) -> None:
     domain = case.get("domain")
     input_value = case.get("input")
-    operation = (
-        input_value.get("operation") if isinstance(input_value, dict) else None
-    )
+    operation = input_value.get("operation") if isinstance(input_value, dict) else None
     capabilities = case.get("capabilities")
     capability_values = capabilities if isinstance(capabilities, list) else []
+    cli_requires_execution = (
+        domain == "cli"
+        and isinstance(input_value, dict)
+        and isinstance(input_value.get("options"), dict)
+        and input_value["options"].get("requires_execution") is True
+    )
     if (
         domain == "execution"
         or operation == "execution"
+        or cli_requires_execution
         or any(
-            isinstance(capability, str)
-            and capability in EXECUTION_CAPABILITIES
+            isinstance(capability, str) and capability in EXECUTION_CAPABILITIES
             for capability in capability_values
         )
     ):
@@ -495,9 +577,8 @@ def preflight_workspace(case: dict[str, Any]) -> list[WorkspaceFile]:
                 f"workspace path collides with {normalized_paths[normalized]}",
             )
         for existing, original in normalized_paths.items():
-            if (
-                normalized.startswith(f"{existing}/")
-                or existing.startswith(f"{normalized}/")
+            if normalized.startswith(f"{existing}/") or existing.startswith(
+                f"{normalized}/"
             ):
                 raise ConformanceError(
                     "WORKSPACE_PATH_PREFIX_CONFLICT",
@@ -689,12 +770,591 @@ def _validate_plan_semantics(plan: dict[str, Any]) -> None:
                 )
 
 
+def _pure_record(
+    case: dict[str, Any],
+    result: dict[str, Any],
+) -> dict[str, Any]:
+    return {
+        "domain": case["domain"],
+        "outcome": result["outcome"],
+        "input": case["input"],
+        "result": result["result"],
+    }
+
+
+def _validate_pure_domain_record(
+    case: dict[str, Any],
+    result: dict[str, Any],
+    schema: dict[str, Any],
+    code: str,
+) -> None:
+    if case["domain"] in PURE_DOMAINS:
+        _validate_schema(_pure_record(case, result), schema, code)
+
+
+def _package_index(
+    packages: list[dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    result: dict[str, dict[str, Any]] = {}
+    normalized: set[str] = set()
+    for package in packages:
+        name = package["name"]
+        identity = unicodedata.normalize("NFC", name).casefold()
+        if identity in normalized:
+            raise ConformanceError(
+                "CASE_PACKAGE_DUPLICATE",
+                f"duplicate normalized package identity: {name}",
+            )
+        normalized.add(identity)
+        result[name] = package
+    return result
+
+
+def _validate_known_edges(
+    edges: list[list[str]],
+    package_names: set[str],
+) -> None:
+    for edge in edges:
+        if edge[0] == edge[1]:
+            raise ConformanceError(
+                "CASE_EDGE_SELF",
+                f"self dependency edge is forbidden: {edge[0]}",
+            )
+        if edge[0] not in package_names or edge[1] not in package_names:
+            raise ConformanceError(
+                "CASE_EDGE_UNKNOWN",
+                f"dependency edge references an unknown package: {edge}",
+            )
+
+
+def _validate_unique_paths(
+    paths: list[str],
+    code: str,
+) -> None:
+    normalized: dict[str, str] = {}
+    for path in paths:
+        if error := portable_path_error(path):
+            raise ConformanceError(code, f"unsafe nested path {path!r}: {error}")
+        identity = unicodedata.normalize("NFC", path).casefold()
+        if identity in normalized:
+            raise ConformanceError(
+                code,
+                f"nested path collides with {normalized[identity]}: {path}",
+            )
+        for existing, original in normalized.items():
+            if identity.startswith(f"{existing}/") or existing.startswith(
+                f"{identity}/"
+            ):
+                raise ConformanceError(
+                    code,
+                    f"nested paths have a prefix conflict: {original} and {path}",
+                )
+        normalized[identity] = path
+
+
+def _toolchain_for_language(language: str) -> str:
+    toolchain = LANGUAGE_TOOLCHAINS.get(language)
+    if toolchain is None:
+        raise ConformanceError(
+            "CASE_TOOLCHAIN_UNSUPPORTED",
+            f"unsupported implementation language: {language}",
+        )
+    return toolchain
+
+
+def _validate_pure_case_semantics(
+    case: dict[str, Any],
+    staged_files: list[WorkspaceFile],
+) -> None:
+    domain = case["domain"]
+    if domain not in PURE_DOMAINS:
+        return
+    if any(file.executable for file in staged_files):
+        raise ConformanceError(
+            "CASE_PURE_AUTHORITY",
+            "pure-domain workspace files must not be executable",
+        )
+
+    options = case["input"]["options"]
+    if domain == "diff_selection":
+        packages = options["packages"]
+        by_name = _package_index(packages)
+        roots = [package["rel_path"] for package in packages]
+        _validate_unique_paths(roots, "CASE_NESTED_PATH_UNSAFE")
+        for package in packages:
+            for pattern in package.get("source_globs", []):
+                if error := portable_glob_error(pattern):
+                    raise ConformanceError(
+                        "CASE_NESTED_GLOB_UNSAFE",
+                        f"unsafe source glob {pattern!r}: {error}",
+                    )
+        _validate_known_edges(options["edges"], set(by_name))
+        for name in options["forced_packages"]:
+            if name not in by_name:
+                raise ConformanceError(
+                    "CASE_PACKAGE_REFERENCE_UNKNOWN",
+                    f"forced package is not declared: {name}",
+                )
+    elif domain == "hashing_cache":
+        workspace_paths = {entry.path for entry in staged_files}
+        include_paths = options["include_paths"]
+        _validate_unique_paths(include_paths, "CASE_NESTED_PATH_UNSAFE")
+        for path in include_paths:
+            if path not in workspace_paths:
+                raise ConformanceError(
+                    "CASE_HASH_PATH_UNKNOWN",
+                    f"hash include path is not in the inline workspace: {path}",
+                )
+        dependency_names: set[str] = set()
+        for dependency in options["dependency_digests"]:
+            name = dependency["package"]
+            if name == options["package"] or name in dependency_names:
+                raise ConformanceError(
+                    "CASE_HASH_DEPENDENCY_DUPLICATE",
+                    f"invalid or duplicate hash dependency: {name}",
+                )
+            dependency_names.add(name)
+        if options["package"] in options["dependents"]:
+            raise ConformanceError(
+                "CASE_HASH_DEPENDENT_SELF",
+                "a package cannot be its own dependent",
+            )
+    elif domain == "starlark":
+        workspace_paths = {entry.path for entry in staged_files}
+        entrypoint = options["entrypoint"]
+        if entrypoint not in workspace_paths:
+            raise ConformanceError(
+                "CASE_STARLARK_ENTRYPOINT_MISSING",
+                f"Starlark entrypoint is not in the inline workspace: {entrypoint}",
+            )
+    elif domain == "sharding":
+        by_name = _package_index(options["packages"])
+        _validate_known_edges(options["edges"], set(by_name))
+        for name in options["scheduled_packages"]:
+            if name not in by_name:
+                raise ConformanceError(
+                    "CASE_PACKAGE_REFERENCE_UNKNOWN",
+                    f"scheduled package is not declared: {name}",
+                )
+        for package in by_name.values():
+            _toolchain_for_language(package["language"])
+    elif domain == "validation":
+        by_name = _package_index(options["packages"])
+        _validate_unique_paths(
+            [package["rel_path"] for package in by_name.values()],
+            "CASE_NESTED_PATH_UNSAFE",
+        )
+        _validate_known_edges(options["dependency_edges"], set(by_name))
+        for package in by_name.values():
+            for pattern in package["declared_srcs"]:
+                if error := portable_glob_error(pattern):
+                    raise ConformanceError(
+                        "CASE_NESTED_GLOB_UNSAFE",
+                        f"unsafe declared source {pattern!r}: {error}",
+                    )
+            for field in ("build_references", "declared_deps"):
+                for name in package[field]:
+                    if name not in by_name:
+                        raise ConformanceError(
+                            "CASE_PACKAGE_REFERENCE_UNKNOWN",
+                            f"{field} references an unknown package: {name}",
+                        )
+    elif domain == "toolchain_detection":
+        by_name = _package_index(options["packages"])
+        selected = options["scheduled_packages"]
+        if isinstance(selected, list):
+            for name in selected:
+                if name not in by_name:
+                    raise ConformanceError(
+                        "CASE_PACKAGE_REFERENCE_UNKNOWN",
+                        f"scheduled package is not declared: {name}",
+                    )
+
+
+def _framed_digest(items: list[tuple[str, bytes]]) -> bytes:
+    digest = hashlib.sha256()
+    for name, content in sorted(items, key=lambda item: item[0]):
+        name_bytes = name.encode("utf-8")
+        digest.update(len(name_bytes).to_bytes(8, "big"))
+        digest.update(name_bytes)
+        digest.update(len(content).to_bytes(8, "big"))
+        digest.update(content)
+    return digest.digest()
+
+
+def _expected_hashes(
+    options: dict[str, Any],
+    staged_files: list[WorkspaceFile],
+) -> tuple[str, str, str]:
+    workspace = {entry.path: entry.content for entry in staged_files}
+    package_digest = _framed_digest(
+        [(path, workspace[path]) for path in options["include_paths"]]
+    )
+    dependencies_digest = _framed_digest(
+        [
+            (entry["package"], bytes.fromhex(entry["digest"]))
+            for entry in options["dependency_digests"]
+        ]
+    )
+    combined = hashlib.sha256(package_digest + dependencies_digest).hexdigest()
+    return package_digest.hex(), dependencies_digest.hex(), combined
+
+
+def _render_display_command(command: dict[str, Any]) -> str:
+    tokens = [command["program"], *command["args"]]
+    rendered = [
+        token
+        if DISPLAY_SAFE_TOKEN.fullmatch(token)
+        else json.dumps(token, ensure_ascii=False, separators=(",", ":"))
+        for token in tokens
+    ]
+    return " ".join(rendered)
+
+
+def _starlark_module_error(
+    options: dict[str, Any],
+    staged_files: list[WorkspaceFile],
+) -> tuple[str, str] | None:
+    sources = {entry.path: entry.content for entry in staged_files}
+    pending = [(options["entrypoint"], 0)]
+    visited: set[str] = set()
+    limits = options["evaluation_limits"]
+    load_pattern = re.compile(r"""load\(\s*(?P<quote>["'])(?P<label>.+?)(?P=quote)""")
+    while pending:
+        module, depth = pending.pop()
+        if module in visited:
+            continue
+        visited.add(module)
+        if len(visited) > limits["module_count"]:
+            return "STARLARK_MODULE_LIMIT", module
+        if depth > limits["load_depth"]:
+            return "STARLARK_LOAD_DEPTH_LIMIT", module
+        try:
+            source = sources[module].decode("utf-8", errors="strict")
+        except UnicodeDecodeError:
+            return "STARLARK_SOURCE_INVALID", module
+        for match in load_pattern.finditer(source):
+            label = match.group("label")
+            if label.startswith("//"):
+                resolved = label[2:]
+            elif label.startswith(("./", "../")):
+                resolved = posixpath.normpath(
+                    posixpath.join(posixpath.dirname(module), label)
+                )
+            else:
+                resolved = label
+            if (
+                resolved in {"", ".", ".."}
+                or resolved.startswith("../")
+                or portable_path_error(resolved)
+            ):
+                return "STARLARK_LOAD_OUTSIDE_REPOSITORY", module
+            if resolved not in sources:
+                return "STARLARK_MODULE_MISSING", resolved
+            pending.append((resolved, depth + 1))
+    return None
+
+
+def _expected_toolchains(
+    options: dict[str, Any],
+) -> dict[str, bool]:
+    by_name = {package["name"]: package for package in options["packages"]}
+    selected = options["scheduled_packages"]
+    selected_names = sorted(by_name) if selected is None else selected
+    enabled = {
+        _toolchain_for_language(by_name[name]["language"]) for name in selected_names
+    }
+    enabled.update(options["forced_toolchains"])
+    return {toolchain: toolchain in enabled for toolchain in TOOLCHAINS}
+
+
+def _package_cost(package: dict[str, Any]) -> int:
+    toolchain = _toolchain_for_language(package["language"])
+    return 1 + package["build_command_count"] + TOOLCHAIN_WEIGHTS.get(toolchain, 0)
+
+
+def _expected_shards(options: dict[str, Any]) -> list[dict[str, Any]]:
+    packages = {package["name"]: package for package in options["packages"]}
+    scheduled = options["scheduled_packages"]
+    count = 1 if not scheduled else min(options["shard_count"], len(scheduled))
+    assigned: list[list[str]] = [[] for _ in range(count)]
+    direct_costs = [0] * count
+    for name in sorted(
+        scheduled,
+        key=lambda item: (-_package_cost(packages[item]), item),
+    ):
+        index = min(range(count), key=lambda item: (direct_costs[item], item))
+        assigned[index].append(name)
+        direct_costs[index] += _package_cost(packages[name])
+
+    prerequisites: dict[str, set[str]] = {name: set() for name in packages}
+    for prerequisite, dependent in options["edges"]:
+        prerequisites[dependent].add(prerequisite)
+
+    def closure(roots: list[str]) -> set[str]:
+        result = set(roots)
+        pending = list(roots)
+        while pending:
+            package = pending.pop()
+            for prerequisite in prerequisites[package]:
+                if prerequisite not in result:
+                    result.add(prerequisite)
+                    pending.append(prerequisite)
+        return result
+
+    shards: list[dict[str, Any]] = []
+    for index, roots in enumerate(assigned):
+        package_names = closure(roots)
+        toolchains = sorted(
+            {
+                _toolchain_for_language(packages[name]["language"])
+                for name in package_names
+            }
+        )
+        shards.append(
+            {
+                "index": index,
+                "name": f"shard-{index + 1}-of-{count}",
+                "assigned_packages": sorted(roots),
+                "package_names": sorted(package_names),
+                "toolchains": toolchains,
+                "estimated_cost": sum(
+                    _package_cost(packages[name]) for name in package_names
+                ),
+            }
+        )
+    return shards
+
+
+def _validate_pure_result_semantics(
+    case: dict[str, Any],
+    result: dict[str, Any],
+    staged_files: list[WorkspaceFile],
+    prefix: str,
+) -> None:
+    domain = case["domain"]
+    if domain not in PURE_DOMAINS:
+        return
+    options = case["input"]["options"]
+    payload = result["result"]
+    outcome = result["outcome"]
+    diagnostic_codes = [item["code"] for item in result["diagnostics"]]
+
+    if domain == "diff_selection":
+        package_names = {package["name"] for package in options["packages"]}
+        unknown_paths = [
+            path
+            for path in case["input"]["changed_paths"]
+            if not any(
+                path == package["rel_path"]
+                or path.startswith(f"{package['rel_path']}/")
+                for package in options["packages"]
+            )
+        ]
+        if unknown_paths and options["unknown_path_policy"] == "error":
+            if outcome != "error" or "DIFF_UNKNOWN_PATH" not in diagnostic_codes:
+                raise ConformanceError(
+                    f"{prefix}_DIFF_UNKNOWN_PATH_INVALID",
+                    "unknown changed paths require a stable error",
+                )
+            return
+        if outcome != "ok":
+            return
+        changed = set(payload["changed_packages"])
+        affected = set(payload["affected_packages"])
+        prerequisites = set(payload["prerequisite_packages"])
+        if (
+            not (changed | affected | prerequisites).issubset(package_names)
+            or not changed.issubset(affected)
+            or affected.intersection(prerequisites)
+        ):
+            raise ConformanceError(
+                f"{prefix}_DIFF_RESULT_INVALID",
+                "diff result contains unknown or inconsistent package sets",
+            )
+        if unknown_paths and (
+            changed != package_names or affected != package_names or prerequisites
+        ):
+            raise ConformanceError(
+                f"{prefix}_DIFF_UNKNOWN_PATH_INVALID",
+                "unknown changed paths under all policy must select every package",
+            )
+    elif domain == "hashing_cache" and outcome == "ok":
+        expected_hashes = _expected_hashes(options, staged_files)
+        actual_hashes = (
+            payload["package_digest"],
+            payload["dependencies_digest"],
+            payload["combined_digest"],
+        )
+        allowed_invalidations = {
+            options["package"],
+            *options["dependents"],
+        }
+        if actual_hashes != expected_hashes:
+            raise ConformanceError(
+                f"{prefix}_HASH_MISMATCH",
+                "hash result does not match the framed SHA-256 oracle",
+            )
+        prior = options["prior_cache"]
+        if prior["state"] == "corrupt":
+            expected_status = "recovered"
+            expected_invalidations = allowed_invalidations
+        elif prior["state"] == "missing":
+            expected_status = "miss"
+            expected_invalidations = allowed_invalidations
+        elif (
+            prior["status"] == "success"
+            and prior["combined_digest"] == expected_hashes[2]
+        ):
+            expected_status = "hit"
+            expected_invalidations = set()
+        else:
+            expected_status = "miss"
+            expected_invalidations = allowed_invalidations
+        if (
+            payload["cache_status"] != expected_status
+            or set(payload["invalidated_packages"]) != expected_invalidations
+        ):
+            raise ConformanceError(
+                f"{prefix}_HASH_INVALIDATION_INVALID",
+                "cache status and invalidations do not match the prior record",
+            )
+        if prior["state"] == "corrupt" and (
+            "CACHE_CORRUPT_RECOVERED" not in diagnostic_codes
+        ):
+            raise ConformanceError(
+                f"{prefix}_HASH_RECOVERY_DIAGNOSTIC_MISSING",
+                "corrupt cache recovery requires a stable diagnostic",
+            )
+    elif domain == "starlark":
+        module_error = _starlark_module_error(options, staged_files)
+        if module_error is not None:
+            code, path = module_error
+            matching = [
+                diagnostic
+                for diagnostic in result["diagnostics"]
+                if diagnostic["code"] == code and diagnostic.get("path") == path
+            ]
+            if outcome != "error" or not matching:
+                raise ConformanceError(
+                    f"{prefix}_STARLARK_MODULE_ERROR_INVALID",
+                    f"Starlark module resolution must report {code}: {path}",
+                )
+            return
+        if outcome != "ok":
+            return
+        target_ids: set[tuple[str, str]] = set()
+        for target in payload["targets"]:
+            identity = (target["rule"], target["name"])
+            if identity in target_ids:
+                raise ConformanceError(
+                    f"{prefix}_STARLARK_TARGET_DUPLICATE",
+                    f"duplicate Starlark target: {identity}",
+                )
+            target_ids.add(identity)
+            rendered = [
+                _render_display_command(command) for command in target["commands"]
+            ]
+            if rendered != target["rendered_commands"]:
+                raise ConformanceError(
+                    f"{prefix}_STARLARK_RENDER_MISMATCH",
+                    "rendered commands do not match structured commands",
+                )
+            if (
+                target["command_source"] == "legacy_fallback"
+                and options["legacy_fallback"] == "error"
+            ):
+                raise ConformanceError(
+                    f"{prefix}_STARLARK_FALLBACK_FORBIDDEN",
+                    "legacy fallback was used under the error policy",
+                )
+    elif domain == "sharding":
+        shard_count = options["shard_count"]
+        scheduled = options["scheduled_packages"]
+        produced_count = 1 if not scheduled else min(shard_count, len(scheduled))
+        index = options.get("shard_index")
+        invalid_code = None
+        if shard_count < 1:
+            invalid_code = "SHARD_COUNT_INVALID"
+        elif index is not None and (index < 0 or index >= produced_count):
+            invalid_code = "SHARD_INDEX_INVALID"
+        if invalid_code is not None:
+            if outcome != "error" or diagnostic_codes != [invalid_code]:
+                raise ConformanceError(
+                    f"{prefix}_SHARD_ERROR_INVALID",
+                    f"invalid shard input must report {invalid_code}",
+                )
+        elif outcome == "ok":
+            expected = _expected_shards(options)
+            actual = sorted(payload["shards"], key=lambda item: item["index"])
+            normalized = []
+            for shard in actual:
+                copy_value = dict(shard)
+                for key in (
+                    "assigned_packages",
+                    "package_names",
+                    "toolchains",
+                ):
+                    copy_value[key] = sorted(copy_value[key])
+                normalized.append(copy_value)
+            if normalized != expected:
+                raise ConformanceError(
+                    f"{prefix}_SHARD_MISMATCH",
+                    "shard result does not match the closed balancing oracle",
+                )
+    elif domain == "validation":
+        codes = payload.get("diagnostic_codes", [])
+        valid = payload.get("valid")
+        consistent = (
+            outcome == "ok" and valid is True and not codes and not diagnostic_codes
+        ) or (
+            outcome == "error"
+            and valid is False
+            and bool(codes)
+            and sorted(codes) == sorted(diagnostic_codes)
+        )
+        if not consistent:
+            raise ConformanceError(
+                f"{prefix}_VALIDATION_INCONSISTENT",
+                "validation outcome, valid flag, and diagnostics disagree",
+            )
+    elif domain == "toolchain_detection":
+        unsupported = any(
+            package["language"] not in LANGUAGE_TOOLCHAINS
+            for package in options["packages"]
+        ) or any(
+            toolchain not in TOOLCHAINS for toolchain in options["forced_toolchains"]
+        )
+        if unsupported:
+            if outcome != "error" or "TOOLCHAIN_UNSUPPORTED" not in diagnostic_codes:
+                raise ConformanceError(
+                    f"{prefix}_TOOLCHAIN_ERROR_INVALID",
+                    "unsupported toolchains require a stable error",
+                )
+        elif outcome != "ok" or payload["toolchains"] != _expected_toolchains(options):
+            raise ConformanceError(
+                f"{prefix}_TOOLCHAIN_MISMATCH",
+                "toolchain map does not match the selected packages",
+            )
+    elif domain == "cli":
+        expected_exit = {
+            "success": 0,
+            "package_failure": 1,
+            "validation_failure": 1,
+            "invalid_usage": 2,
+            "unsafe_input": 2,
+        }[options["condition"]]
+        expected_outcome = "ok" if expected_exit == 0 else "error"
+        if payload["exit_code"] != expected_exit or outcome != expected_outcome:
+            raise ConformanceError(
+                f"{prefix}_CLI_EXIT_MISMATCH",
+                "CLI condition, outcome, and exit code disagree",
+            )
+
+
 def _sort_json_objects(value: Any) -> Any:
     if isinstance(value, dict):
-        return {
-            key: _sort_json_objects(value[key])
-            for key in sorted(value)
-        }
+        return {key: _sort_json_objects(value[key]) for key in sorted(value)}
     if isinstance(value, list):
         return [_sort_json_objects(item) for item in value]
     return value
@@ -735,6 +1395,30 @@ def canonicalize_result(result: dict[str, Any]) -> dict[str, Any]:
             for shard in plan["shards"]:
                 shard["assigned_packages"].sort()
                 shard["package_names"].sort()
+    elif domain == "diff_selection":
+        for key in (
+            "changed_packages",
+            "affected_packages",
+            "prerequisite_packages",
+        ):
+            if key in payload:
+                payload[key].sort()
+    elif domain == "hashing_cache":
+        if "invalidated_packages" in payload:
+            payload["invalidated_packages"].sort()
+    elif domain == "starlark" and "targets" in payload:
+        payload["targets"].sort(key=lambda target: (target["rule"], target["name"]))
+        for target in payload["targets"]:
+            target["srcs"].sort()
+            target["deps"].sort()
+    elif domain == "sharding" and "shards" in payload:
+        payload["shards"].sort(key=lambda shard: shard["index"])
+        for shard in payload["shards"]:
+            shard["assigned_packages"].sort()
+            shard["package_names"].sort()
+            shard["toolchains"].sort()
+    elif domain == "validation" and "diagnostic_codes" in payload:
+        payload["diagnostic_codes"].sort()
 
     return _sort_json_objects(canonical)
 
@@ -745,9 +1429,21 @@ def _validate_result_shape(
     *,
     result_schema: dict[str, Any],
     plan_schema: dict[str, Any],
+    pure_domain_schema: dict[str, Any],
     code: str,
 ) -> None:
     _validate_schema(result, result_schema, code)
+    pure_code = (
+        "RESULT_PURE_SCHEMA_INVALID"
+        if code == "RESULT_SCHEMA_INVALID"
+        else "EXPECTED_PURE_SCHEMA_INVALID"
+    )
+    _validate_pure_domain_record(
+        case,
+        result,
+        pure_domain_schema,
+        pure_code,
+    )
     if result["case_id"] != case["id"]:
         raise ConformanceError(
             "RESULT_CASE_ID_MISMATCH",
@@ -759,6 +1455,28 @@ def _validate_result_shape(
             "result domain does not match the fixture",
         )
     payload = result["result"]
+    diagnostic_identities = [
+        (
+            item["code"],
+            item.get("path", ""),
+            item.get("package", ""),
+            json.dumps(item.get("details", {}), sort_keys=True),
+        )
+        for item in result["diagnostics"]
+    ]
+    if len(diagnostic_identities) != len(set(diagnostic_identities)):
+        raise ConformanceError(
+            "RESULT_DIAGNOSTIC_DUPLICATE",
+            "result contains a duplicate diagnostic identity",
+        )
+    if (
+        result["outcome"] in {"error", "unsupported", "skipped"}
+        and not result["diagnostics"]
+    ):
+        raise ConformanceError(
+            "RESULT_DIAGNOSTIC_MISSING",
+            f"{result['outcome']} requires a diagnostic",
+        )
     if result["outcome"] == "ok" and result["domain"] == "discovery":
         names = [package["name"] for package in payload["packages"]]
         if len(names) != len(set(names)):
@@ -767,22 +1485,14 @@ def _validate_result_shape(
                 "discovery result contains a duplicate package name",
             )
     if result["outcome"] == "ok" and result["domain"] == "graph":
-        flattened = [
-            package
-            for level in payload["levels"]
-            for package in level
-        ]
+        flattened = [package for level in payload["levels"] for package in level]
         if len(flattened) != len(set(flattened)):
             raise ConformanceError(
                 "RESULT_GRAPH_LEVEL_DUPLICATE",
                 "a graph package appears in more than one level",
             )
         level_packages = set(flattened)
-        edge_packages = {
-            package
-            for edge in payload["edges"]
-            for package in edge
-        }
+        edge_packages = {package for edge in payload["edges"] for package in edge}
         if not edge_packages.issubset(level_packages):
             raise ConformanceError(
                 "RESULT_GRAPH_LEVEL_MISSING",
@@ -804,6 +1514,7 @@ def assert_result_matches(
     *,
     result_schema: dict[str, Any] | None = None,
     plan_schema: dict[str, Any] | None = None,
+    pure_domain_schema: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     reject_execution_intent(case)
     reject_unmodeled_domain(case)
@@ -813,12 +1524,24 @@ def assert_result_matches(
     plan_schema = plan_schema or load_document(
         REPO_ROOT / "code" / "specs" / "schemas" / "build-plan-v1.schema.json"
     )
+    pure_domain_schema = pure_domain_schema or load_document(
+        DEFAULT_FIXTURE_ROOT / "pure-domains.schema.json"
+    )
     _validate_result_shape(
         case,
         actual,
         result_schema=result_schema,
         plan_schema=plan_schema,
+        pure_domain_schema=pure_domain_schema,
         code="RESULT_SCHEMA_INVALID",
+    )
+    staged_files = preflight_workspace(case)
+    _validate_pure_case_semantics(case, staged_files)
+    _validate_pure_result_semantics(
+        case,
+        actual,
+        staged_files,
+        "RESULT",
     )
     canonical_actual = canonicalize_result(actual)
     canonical_expected = canonicalize_result(case["expected"])
@@ -836,6 +1559,7 @@ def validate_case_document(
     case_schema: dict[str, Any],
     result_schema: dict[str, Any],
     plan_schema: dict[str, Any],
+    pure_domain_schema: dict[str, Any] | None = None,
 ) -> list[WorkspaceFile]:
     reject_execution_intent(case)
     _validate_schema(case, case_schema, "CASE_SCHEMA_INVALID")
@@ -843,12 +1567,23 @@ def validate_case_document(
     _validate_case_identity(case)
     _validate_input_paths(case)
     staged_files = preflight_workspace(case)
+    pure_domain_schema = pure_domain_schema or load_document(
+        DEFAULT_FIXTURE_ROOT / "pure-domains.schema.json"
+    )
+    _validate_pure_case_semantics(case, staged_files)
     _validate_result_shape(
         case,
         case["expected"],
         result_schema=result_schema,
         plan_schema=plan_schema,
+        pure_domain_schema=pure_domain_schema,
         code="EXPECTED_SCHEMA_INVALID",
+    )
+    _validate_pure_result_semantics(
+        case,
+        case["expected"],
+        staged_files,
+        "EXPECTED",
     )
     expected = case["expected"]
     if expected["outcome"] in {"unsupported", "skipped"}:
@@ -948,8 +1683,7 @@ def _validate_manifest(
             for item in implementations
         ),
         "adapter_ready_count": sum(
-            item["adapter_status"] == "ready"
-            for item in implementations
+            item["adapter_status"] == "ready" for item in implementations
         ),
     }
 
@@ -960,6 +1694,9 @@ def validate_corpus(
     fixture_root = fixture_root.resolve()
     case_schema = load_document(DEFAULT_FIXTURE_ROOT / "schema.json")
     result_schema = load_document(DEFAULT_FIXTURE_ROOT / "result.schema.json")
+    pure_domain_schema = load_document(
+        DEFAULT_FIXTURE_ROOT / "pure-domains.schema.json"
+    )
     manifest_schema = load_document(
         DEFAULT_FIXTURE_ROOT / "implementations.schema.json"
     )
@@ -990,6 +1727,7 @@ def validate_corpus(
             case_schema=case_schema,
             result_schema=result_schema,
             plan_schema=plan_schema,
+            pure_domain_schema=pure_domain_schema,
         )
         case_ids.add(case["id"])
         domains.add(case["domain"])
@@ -1016,6 +1754,9 @@ def validate_result_files(case_path: Path, result_path: Path) -> dict[str, Any]:
     reject_execution_intent(case)
     case_schema = load_document(DEFAULT_FIXTURE_ROOT / "schema.json")
     result_schema = load_document(DEFAULT_FIXTURE_ROOT / "result.schema.json")
+    pure_domain_schema = load_document(
+        DEFAULT_FIXTURE_ROOT / "pure-domains.schema.json"
+    )
     plan_schema = load_document(
         REPO_ROOT / "code" / "specs" / "schemas" / "build-plan-v1.schema.json"
     )
@@ -1024,6 +1765,7 @@ def validate_result_files(case_path: Path, result_path: Path) -> dict[str, Any]:
         case_schema=case_schema,
         result_schema=result_schema,
         plan_schema=plan_schema,
+        pure_domain_schema=pure_domain_schema,
     )
     output_limit = min(case["limits"]["output_bytes"], MAX_RESULT_BYTES)
     result = load_document(result_path, max_bytes=output_limit)
@@ -1032,6 +1774,7 @@ def validate_result_files(case_path: Path, result_path: Path) -> dict[str, Any]:
         result,
         result_schema=result_schema,
         plan_schema=plan_schema,
+        pure_domain_schema=pure_domain_schema,
     )
 
 

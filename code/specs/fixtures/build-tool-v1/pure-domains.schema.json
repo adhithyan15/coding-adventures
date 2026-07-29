@@ -78,7 +78,7 @@
     },
     "package_name": {
       "type": "string",
-      "pattern": "^[a-z0-9][a-z0-9._-]*/[a-z0-9][a-z0-9._/-]*$",
+      "pattern": "^[a-z0-9][a-z0-9._-]*(/[a-z0-9][a-z0-9._-]*)+$",
       "maxLength": 240
     },
     "language": {
@@ -246,8 +246,8 @@
             },
             "unknown_path_policy": {
               "enum": [
-                "ignore",
-                "all"
+                "all",
+                "error"
               ]
             }
           }
@@ -400,41 +400,50 @@
               "$ref": "#/$defs/package_names"
             },
             "prior_cache": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "state"
-              ],
-              "properties": {
-                "state": {
-                  "enum": [
-                    "missing",
-                    "record"
-                  ]
-                },
-                "content_utf8": {
-                  "type": "string",
-                  "maxLength": 1048576
-                }
-              },
-              "allOf": [
+              "oneOf": [
                 {
-                  "if": {
-                    "properties": {
-                      "state": {
-                        "const": "record"
-                      }
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "state"
+                  ],
+                  "properties": {
+                    "state": {
+                      "const": "missing"
                     }
-                  },
-                  "then": {
-                    "required": [
-                      "content_utf8"
-                    ]
-                  },
-                  "else": {
-                    "not": {
-                      "required": [
-                        "content_utf8"
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "state"
+                  ],
+                  "properties": {
+                    "state": {
+                      "const": "corrupt"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "state",
+                    "combined_digest",
+                    "status"
+                  ],
+                  "properties": {
+                    "state": {
+                      "const": "record"
+                    },
+                    "combined_digest": {
+                      "$ref": "#/$defs/digest"
+                    },
+                    "status": {
+                      "enum": [
+                        "success",
+                        "failed"
                       ]
                     }
                   }
@@ -567,6 +576,50 @@
         }
       }
     },
+    "starlark_evaluation_limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "step_count",
+        "recursion_depth",
+        "load_depth",
+        "module_count",
+        "value_items",
+        "output_bytes"
+      ],
+      "properties": {
+        "step_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "recursion_depth": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 128
+        },
+        "load_depth": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "module_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1024
+        },
+        "value_items": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "output_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        }
+      }
+    },
     "starlark_input": {
       "type": "object",
       "additionalProperties": false,
@@ -584,7 +637,8 @@
           "required": [
             "entrypoint",
             "context",
-            "legacy_fallback"
+            "legacy_fallback",
+            "evaluation_limits"
           ],
           "properties": {
             "entrypoint": {
@@ -598,6 +652,9 @@
                 "generate_commands",
                 "error"
               ]
+            },
+            "evaluation_limits": {
+              "$ref": "#/$defs/starlark_evaluation_limits"
             }
           }
         }
@@ -820,12 +877,12 @@
             },
             "shard_count": {
               "type": "integer",
-              "minimum": 0,
+              "minimum": -64,
               "maximum": 64
             },
             "shard_index": {
               "type": "integer",
-              "minimum": 0,
+              "minimum": -64,
               "maximum": 63
             }
           }
@@ -1236,7 +1293,7 @@
               "maxItems": 16,
               "uniqueItems": true,
               "items": {
-                "$ref": "#/$defs/toolchain"
+                "$ref": "#/$defs/language"
               }
             }
           }

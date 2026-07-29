@@ -38,7 +38,15 @@
         "cpu_count": 4,
         "ci": true
       },
-      "legacy_fallback": "generate_commands"
+      "legacy_fallback": "generate_commands",
+      "evaluation_limits": {
+        "step_count": 100000,
+        "recursion_depth": 64,
+        "load_depth": 32,
+        "module_count": 128,
+        "value_items": 100000,
+        "output_bytes": 65536
+      }
     }
   },
   "expected": {

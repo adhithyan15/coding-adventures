@@ -10,12 +10,7 @@
     "validation"
   ],
   "workspace": {
-    "files": [
-      {
-        "path": "code/packages/python/demo/pyproject.toml",
-        "content_utf8": "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n"
-      }
-    ]
+    "files": []
   },
   "input": {
     "operation": "validation",
