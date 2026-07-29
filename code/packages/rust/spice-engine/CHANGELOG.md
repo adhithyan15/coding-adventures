@@ -1,5 +1,7 @@
 # Changelog
 
+- Prefer a non-default Level-1 MOS model-card `TNOM` over the circuit nominal
+  temperature when applying Berkeley temperature preprocessing.
 - Scale Level-1 MOS zero-bias bottom-junction `CJ`, source/drain `CBS`/`CBD`,
   and sidewall `CJSW` capacitances with temperature using Berkeley MOS1
   `MJ`/`MJSW` grading paths.

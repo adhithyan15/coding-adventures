@@ -4373,6 +4373,58 @@ def test_mosfet_temperature_scaling_adjusts_bulk_junction_saturation_currents():
     assert silicon_params.IS > lower_gap_params.IS
 
 
+def test_mosfet_temperature_scaling_prefers_model_nominal_temperature():
+    nominal = Mosfet(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(KP=200.0e-6, U0=500.0, T_NOM=325.0)),
+        ),
+    )
+    expected_scale = (350.0 / 325.0) ** -1.5
+    hot = mosfet_at_temperature(
+        nominal,
+        350.0,
+        nominal_temperature_kelvin=300.15,
+    )
+
+    assert pytest.approx(200.0e-6 * expected_scale) == hot.model.model.params.KP
+    assert pytest.approx(500.0 * expected_scale) == hot.model.model.params.U0
+
+    adjusted = circuit_at_temperature(
+        Circuit([nominal]),
+        350.0,
+        nominal_temperature_kelvin=300.15,
+    )
+    assert pytest.approx(200.0e-6 * expected_scale) == (
+        adjusted.elements[0].model.model.params.KP
+    )
+
+    fallback = Mosfet(
+        "M2",
+        "d",
+        "g",
+        "s",
+        "b",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(KP=200.0e-6)),
+        ),
+    )
+    fallback_hot = mosfet_at_temperature(
+        fallback,
+        350.0,
+        nominal_temperature_kelvin=325.0,
+    )
+    assert pytest.approx(200.0e-6 * expected_scale) == (
+        fallback_hot.model.model.params.KP
+    )
+
+
 # ---- DC: Capacitor (open in DC) ----
 
 

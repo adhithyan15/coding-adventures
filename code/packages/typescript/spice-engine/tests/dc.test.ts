@@ -2422,6 +2422,33 @@ describe("dcOp", () => {
     expect(siliconMosfet!.params.IS).toBeGreaterThan(lowerGapMosfet!.params.IS);
   });
 
+  it("prefers the MOSFET model nominal temperature", () => {
+    const nominal = mosfet("M1", "d", "g", "s", "b", "NMOS", {
+      KP: 200.0e-6,
+      U0: 500.0,
+      T_NOM: 325.0,
+    });
+    const expectedScale = (350.0 / 325.0) ** -1.5;
+    const hot = mosfetAtTemperature(nominal, 350.0, 300.15);
+
+    expectClose(hot.params.KP, 200.0e-6 * expectedScale);
+    expectClose(hot.params.U0, 500.0 * expectedScale);
+
+    const circuit = new Circuit();
+    circuit.add(nominal);
+    const adjusted = circuitAtTemperature(circuit, 350.0, 300.15);
+    const adjustedMosfet = adjusted
+      .elements()
+      .find((element): element is Mosfet => element.kind === "mosfet");
+    expectClose(adjustedMosfet!.params.KP, 200.0e-6 * expectedScale);
+
+    const fallback = mosfet("M2", "d", "g", "s", "b", "NMOS", {
+      KP: 200.0e-6,
+    });
+    const fallbackHot = mosfetAtTemperature(fallback, 350.0, 325.0);
+    expectClose(fallbackHot.params.KP, 200.0e-6 * expectedScale);
+  });
+
   it("preserves subcircuits when applying temperature helpers", () => {
     const nominal = new Circuit();
     nominal.defineSubcircuit(

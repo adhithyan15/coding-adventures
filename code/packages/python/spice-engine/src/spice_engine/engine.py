@@ -391,8 +391,15 @@ def mosfet_at_temperature(
     params = model.model.params
     if not isinstance(params, Level1Params):
         raise ValueError(f"{mosfet.name}: only Level-1 MOSFET parameters are supported")
-    ratio = temperature_kelvin / nominal_temperature_kelvin
     reference_temperature_kelvin = 300.15
+    nominal_temperature = (
+        params.T_NOM
+        if reference_temperature_kelvin != params.T_NOM
+        else nominal_temperature_kelvin
+    )
+    if not math.isfinite(nominal_temperature) or nominal_temperature <= 0.0:
+        raise ValueError("nominal_temperature_kelvin must be finite and positive")
+    ratio = temperature_kelvin / nominal_temperature
 
     def silicon_band_gap(temperature: float) -> float:
         return 1.16 - 7.02e-4 * temperature**2 / (temperature + 1108.0)
@@ -411,16 +418,16 @@ def mosfet_at_temperature(
             1.5 * math.log(temperature / reference_temperature_kelvin) + argument
         )
 
-    nominal_factor = nominal_temperature_kelvin / reference_temperature_kelvin
+    nominal_factor = nominal_temperature / reference_temperature_kelvin
     temperature_factor = temperature_kelvin / reference_temperature_kelvin
     nominal_phi = (
-        params.PHI - potential_correction(nominal_temperature_kelvin)
+        params.PHI - potential_correction(nominal_temperature)
     ) / nominal_factor
     temperature_phi = (
         temperature_factor * nominal_phi + potential_correction(temperature_kelvin)
     )
     nominal_bulk_junction_potential = (
-        params.PB - potential_correction(nominal_temperature_kelvin)
+        params.PB - potential_correction(nominal_temperature)
     ) / nominal_factor
     temperature_bulk_junction_potential = (
         temperature_factor * nominal_bulk_junction_potential
@@ -439,7 +446,7 @@ def mosfet_at_temperature(
             + grading_coefficient
             * (
                 4.0e-4
-                * (nominal_temperature_kelvin - reference_temperature_kelvin)
+                * (nominal_temperature - reference_temperature_kelvin)
                 - nominal_bulk_potential_shift
             )
         )
@@ -457,7 +464,7 @@ def mosfet_at_temperature(
         - polarity * params.GAMMA * math.sqrt(params.PHI)
         + 0.5
         * (
-            silicon_band_gap(nominal_temperature_kelvin)
+            silicon_band_gap(nominal_temperature)
             - silicon_band_gap(temperature_kelvin)
         )
         + polarity * 0.5 * (temperature_phi - params.PHI)
@@ -469,7 +476,7 @@ def mosfet_at_temperature(
         energy_gap_ev
         * _ELECTRON_CHARGE
         / _BOLTZMANN
-        * (1.0 / nominal_temperature_kelvin - 1.0 / temperature_kelvin)
+        * (1.0 / nominal_temperature - 1.0 / temperature_kelvin)
     )
     saturation_scale = ratio**3 * math.exp(
         max(-100.0, min(100.0, saturation_exponent))
