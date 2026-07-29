@@ -1052,6 +1052,51 @@ fn shipped_power_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b23) Shipped table — reference/electric-charge-conversions.adj resolves via import (a NEW
+//       dimension: electric charge → coulomb, the EXACT SP 811 B.9 boldface factor
+//       abcoulomb = 1.0 E+01 = 10, the abcoulomb DEFINED as exactly 10 C), and a unit of a
+//       DIFFERENT quantity (`abampere`, an electric-CURRENT unit → ampere, not the coulomb)
+//       — no row — abstains rather than mis-converting across dimensions. The sharp case: the
+//       abcoulomb (charge) and the abampere (current) share the numeric factor 1.0 E+01, but
+//       they name DIFFERENT SI units (coulomb vs ampere), so the abstain proves dimension
+//       safety, not mere absence of a value: current is charge per unit time; one coulomb is
+//       one ampere-second.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_electric_charge_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_charge");
+    let src = stdlib().join("reference/electric-charge-conversions.adj");
+    std::fs::copy(&src, dir.join("electric-charge-conversions.adj"))
+        .expect("copy shipped electric-charge-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"electric-charge-conversions.adj\"\n\
+         ? electric_charge_to_coulomb(abcoulomb, $v)\n\
+         ? electric_charge_to_coulomb(abampere, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table
+    // (boldface = exact; the abcoulomb is defined as exactly 10 C).
+    assert!(out.contains("\"v\":\"10\""), "abcoulomb = 10 C: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `abampere` is an electric-CURRENT unit (it converts to the ampere, a DIFFERENT quantity),
+    // so this charge table has no row for it — the engine abstains rather than mis-converting a
+    // current unit as if it were a charge unit (and rather than silently reusing the
+    // coincidentally-equal 1.0 E+01 factor for the wrong SI unit).
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
