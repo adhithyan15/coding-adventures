@@ -8,7 +8,12 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 9151,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9151",
+    "branch": "codex/build-tool-conformance-contract",
+    "status": "open"
+  },
   "last_inventory": {
     "revision": "326de7c72c24605cc935006d11b24d50dfbd9c65",
     "schema_version": 2,
@@ -33,11 +38,11 @@
     {
       "id": "build-tool-contract",
       "title": "Language-neutral build-tool contract and shared fixture schema",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["haskell-http-core"],
       "branch": "codex/build-tool-conformance-contract",
-      "pr_number": null,
-      "notes": "Selected after the 2026-07-29 post-merge reprioritization because it unlocks every existing build-tool remediation lane, missing Java/Kotlin/Dart implementations, and the future OCaml build tool. Reconcile specs 12, 15, build-plan-v1, sharding, and B05; define canonical machine-readable behavior."
+      "pr_number": 9151,
+      "notes": "PR #9151 defines the reconciled v1 conformance contract, strict fixture schema, representative Windows override case, CI schema tests, and security boundary. It unlocks every existing build-tool remediation lane, missing Java/Kotlin/Dart implementations, and the future OCaml build tool."
     },
     {
       "id": "build-tool-fixtures",
