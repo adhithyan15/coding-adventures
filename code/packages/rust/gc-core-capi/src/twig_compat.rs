@@ -31,13 +31,33 @@ use crate::stack_scan::{
     __gc_collect_incremental_start, __gc_collect_incremental_step, __gc_collect_precise,
     __gc_safepoint,
 };
-use crate::{__gc_alloc, __gc_collection_count, __gc_live_bytes};
+use crate::{__gc_alloc, __gc_collection_count, __gc_live_bytes, __gc_register_ref_array_kind};
 
 /// `__twig_gc_alloc(n)` → [`__gc_alloc`]. Called by the emitted code and by
 /// `dynval_runtime.c` for every heap allocation.
 #[no_mangle]
 pub extern "C" fn __twig_gc_alloc(n: i64) -> i64 {
     __gc_alloc(n)
+}
+
+/// `__twig_gc_register_ref_array_kind(fixed, fixed_count, tail_from)` →
+/// [`__gc_register_ref_array_kind`]. The `__twig_gc_*` linker name a native code generator
+/// emits for the `gc_register_ref_array_kind` builtin — the seam a language frontend's **array**
+/// type calls to declare its layout (fixed ref fields + a variable reference tail), so the
+/// collector traces and, under compaction, **relocates** the array and its elements precisely
+/// instead of pinning them. Registers a kind; performs no allocation or stack scan.
+///
+/// # Safety
+///
+/// Same contract as [`__gc_register_ref_array_kind`]: `fixed` must point to `fixed_count`
+/// readable `int64` words (or be null with `fixed_count <= 0`).
+#[no_mangle]
+pub unsafe extern "C" fn __twig_gc_register_ref_array_kind(
+    fixed: *const i64,
+    fixed_count: i64,
+    tail_from: i64,
+) -> i64 {
+    __gc_register_ref_array_kind(fixed, fixed_count, tail_from)
 }
 
 /// `__twig_gc_collect()` → [`__gc_collect`] (return value discarded to match the
@@ -195,6 +215,40 @@ mod tests {
         assert_eq!(__twig_gc_collection_count(), 1);
         assert_eq!(unsafe { *(p as *const i64) }, 0x7161);
         core::hint::black_box(p);
+
+        __gc_reset();
+    }
+
+    /// `__twig_gc_register_ref_array_kind` forwards to the ref-array kind registration: an array
+    /// allocated under the returned kind has its reference **tail** traced, so an element stored
+    /// in a tail slot is retained via the array and reclaimed once that slot is cleared.
+    #[test]
+    fn twig_register_ref_array_kind_alias_forwards() {
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+
+        // Register a pure reference array (no fixed fields, tail from offset 0) via the twig alias.
+        let kind = unsafe { __twig_gc_register_ref_array_kind(core::ptr::null(), 0, 0) };
+        assert!(kind >= 1, "kind ids are 1-based");
+
+        let elem = __twig_gc_alloc(16);
+        let arr = crate::__gc_alloc_kind(16, kind as u16); // a 2-slot array of the registered kind
+        assert!(elem != 0 && arr != 0);
+        unsafe {
+            *(arr as *mut i64) = elem; // arr[0] = elem (a reference in the tail)
+            *((arr as usize + 8) as *mut i64) = 0; // arr[1] = null
+        }
+
+        // Root only the array: `elem` survives via the tail → 32 live bytes.
+        let roots = [arr];
+        let freed = unsafe { crate::__gc_collect_roots(roots.as_ptr(), 1) };
+        assert_eq!(freed, 0, "the element is retained via the array's reference tail");
+        assert_eq!(__twig_gc_live_bytes(), 32);
+
+        // Clear the tail slot → the element is reclaimed, proving the tail was traced.
+        unsafe { *(arr as *mut i64) = 0 };
+        let freed2 = unsafe { crate::__gc_collect_roots(roots.as_ptr(), 1) };
+        assert_eq!(freed2, 1, "clearing the tail slot reclaims the element");
 
         __gc_reset();
     }

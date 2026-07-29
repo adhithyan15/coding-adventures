@@ -1,5 +1,14 @@
 # Changelog — `aarch64-backend`
 
+## 0.33.0 - 2026-07-29 — `gc_register_ref_array_kind` builtin (frontend array GC, AOT00-T5 §7)
+
+- **`gc_register_ref_array_kind` `BuiltinSig` row** (`(fixed, fixed_count, tail_from) -> kind_id`)
+  — a `call_builtin` lowers to a `BL` to `__twig_gc_register_ref_array_kind` via the generic
+  `__twig_<name>` dispatch (three args in x0/x1/x2), the C-ABI seam a language frontend's **array**
+  type calls to declare its layout so the collector traces — and under compaction relocates — the
+  array + its elements precisely instead of pinning them. Adding the row is the whole change (no
+  per-name lowering). Test `gc_register_ref_array_kind_emits_external_twig_call`.
+
 ## 0.32.0 - 2026-07-27 — `gc_collect_incremental_*` builtin trio (frontend incremental GC, AOT00-T4 §6)
 
 - Three new `V1_BUILTINS` entries — `gc_collect_incremental_start` (0 args, void),
