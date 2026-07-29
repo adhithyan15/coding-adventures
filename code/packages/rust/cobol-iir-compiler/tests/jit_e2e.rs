@@ -6021,25 +6021,6 @@ fn inspect_tally_multi_adds_to_a_nonzero_counter() {
     assert_eq!(out, "011\n");
 }
 
-#[test]
-fn inspect_tally_multi_with_leading_item_is_a_later_rung() {
-    // A LEADING item inside a MULTI-item tally list is deferred — rejected on BOTH
-    // engines with the same message (a LONE `FOR LEADING` is still supported).
-    let src = wrap(
-        &["01  S  PIC X(4) VALUE \"aabb\".", "01  C  PIC 9(3) VALUE 0."],
-        &[
-            "INSPECT S TALLYING C FOR ALL \"a\"",
-            "    LEADING \"b\".",
-            "STOP RUN.",
-        ],
-    );
-    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-item LEADING item");
-    assert!(
-        compile_source(&src, "e2e").is_err(),
-        "compiler must reject a multi-item LEADING item"
-    );
-}
-
 // A `{BEFORE|AFTER}` region on each item of a MULTI-item tally list is now SUPPORTED
 // (this rung): each item carries its OWN window over the source, and one first-match-
 // per-position pass counts a position for the FIRST item whose window contains it AND
@@ -6150,6 +6131,162 @@ fn inspect_tally_multi_non_ascii_source_positive_parity() {
         ],
     ));
     assert_eq!(out, "002\n");
+}
+
+// A MULTI-item tally list may now MIX `ALL` and `LEADING` items (this rung lifts the
+// multi-item LEADING reject). A `LEADING` item counts only its CONSECUTIVE run anchored
+// at its window start; ONE left-to-right pass carries a per-item `active` run flag
+// (consulted only for LEADING items) — a LEADING item is eligible only while its run is
+// alive, and every LEADING run breaks at the FIRST in-window mismatch, INDEPENDENTLY of
+// which item tallied the position. Each case pins the exact counter and
+// `assert_matches_oracle` independently re-checks JIT == tree-walk oracle.
+
+#[test]
+fn inspect_tally_multi_leading_then_all() {
+    // `FOR LEADING "a" ALL "b"` over "aabab": the leading run of "a" is positions 0,1
+    // (breaks at the "b" at index 2), then ALL "b" counts the b's at 2 and 4. The "a"
+    // at index 3 is NOT counted — the leading run is already dead. 2 + 2 = 4.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aabab\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"a\" ALL \"b\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "004\n");
+}
+
+#[test]
+fn inspect_tally_multi_all_then_leading_run_breaks_at_start() {
+    // `FOR ALL "b" LEADING "a"` (ALL first, DIFFERENT delims) over "baaab": the leading
+    // "a" run is anchored at SOURCE START, but position 0 is "b", so the run breaks
+    // immediately and LEADING "a" counts 0. ALL "b" counts the b's at 0 and 4 → 2.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"baaab\".", "01  C  PIC 9(2) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"b\" LEADING \"a\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "02\n");
+}
+
+#[test]
+fn inspect_tally_multi_all_then_leading_same_delim_run_survives_claim() {
+    // THE run-stays-alive subtlety, `ALL` FIRST. `FOR ALL "a" LEADING "a"` over "aab":
+    // ALL "a" claims positions 0 and 1 (count 2); the LEADING "a" item never tallies
+    // (ALL wins every "a"), but crucially the active-flag update KEEPS the leading run
+    // alive at 0 and 1 (each char equals "a"), so a matching char claimed by a
+    // higher-priority item does NOT break the leading run — the run only decays at the
+    // "b" (index 2). Count = 2 (a naive "break the run whenever this item didn't tally"
+    // impl would still give 2 here, but this pins the correct active-update wiring).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"aab\".", "01  C  PIC 9(2) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\" LEADING \"a\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "02\n");
+}
+
+#[test]
+fn inspect_tally_multi_leading_then_all_same_delim() {
+    // The run-stays-alive subtlety, `LEADING` FIRST. `FOR LEADING "a" ALL "a"` over
+    // "aab": the LEADING item (higher priority) claims positions 0,1 as its run, and ALL
+    // "a" never sees them (first-match). The run decays at the "b". Count = 2. Pins that
+    // the leading eligibility gate and the run-decay compose correctly when a duplicate
+    // ALL item of the SAME delimiter follows.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"aab\".", "01  C  PIC 9(2) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"a\" ALL \"a\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "02\n");
+}
+
+#[test]
+fn inspect_tally_multi_leading_with_region_plus_all() {
+    // A LEADING item WITH a region + an ALL item — the leading run is anchored at the
+    // WINDOW START, not source position 0. `FOR LEADING "a" AFTER "X" ALL "b"` over
+    // "aaXaab" (X at index 2): the window for the leading item is "aab" (indices 3..6),
+    // so the two "a"s BEFORE the X (indices 0,1) are IGNORED and the run counts the two
+    // "a"s at 3,4 (breaks at the "b" at 5). ALL "b" counts the "b" at 5. 2 + 1 = 3.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"aaXaab\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"X\"",
+            "    ALL \"b\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "003\n");
+}
+
+#[test]
+fn inspect_tally_multi_two_leading_items_different_delims() {
+    // Two LEADING items with DIFFERENT delimiters, no region. Both runs anchor at source
+    // start, but position 0 can equal only ONE delimiter, so the OTHER run breaks
+    // immediately. `FOR LEADING "a" LEADING "b"` over "aabb": LEADING "a" counts the run
+    // at 0,1 = 2; LEADING "b"'s run breaks at index 0 ("a" != "b") → 0. Total 2.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"aabb\".", "01  C  PIC 9(2) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"a\" LEADING \"b\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "02\n");
+}
+
+#[test]
+fn inspect_tally_multi_two_leading_items_disjoint_windows() {
+    // Two LEADING items with DIFFERENT delimiters AND disjoint windows, so BOTH runs can
+    // count — each anchored at its OWN window start. `FOR LEADING "a" BEFORE "X"
+    // LEADING "b" AFTER "X"` over "aaXbb" (X at index 2): item 1's window is "aa" (the
+    // two leading a's → 2), item 2's window is "bb" (the two leading b's → 2). Total 4.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXbb\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"a\" BEFORE \"X\"",
+            "    LEADING \"b\" AFTER \"X\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "004\n");
+}
+
+#[test]
+fn inspect_tally_multi_leading_non_ascii_source_positive_parity() {
+    // POSITIVE non-ASCII byte-identity parity WITH a LEADING item (NOT a trap): TALLYING
+    // only COUNTS, so there is no UTF-8-boundary trap. The multi-byte "é" (bytes
+    // 0xC3 0xA9) equals NEITHER ASCII delimiter, and it BREAKS the leading run at the
+    // SAME logical position on both engines — the oracle's char scan breaks at the "é"
+    // (char index 2), the compiler's byte scan breaks at 0xC3 (byte index 2), and the
+    // continuation byte 0xA9 (byte 3) also matches nothing. Source "aaébb" (chars
+    // a,a,é,b,b):
+    //   item 1 `LEADING "a"`: the leading run "aa" (breaks at "é") → 2;
+    //   item 2 `ALL "b"`:     the two "b"s after "é" → 2.
+    // Total = 4 on BOTH engines. `assert_matches_oracle` asserts the DISPLAYed counter is
+    // byte-identical.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaébb\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"a\" ALL \"b\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "004\n");
 }
 
 #[test]

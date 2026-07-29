@@ -2998,6 +2998,100 @@ mod tests {
     }
 
     #[test]
+    fn inspect_tally_multi_leading_and_all_items() {
+        // A MULTI-item list mixing a LEADING and an ALL item (this rung lifts the
+        // multi-item LEADING reject). `FOR LEADING "a" ALL "b"` over "aabab": the leading
+        // run of "a" is indices 0,1 (breaks at the "b" at 2), then ALL "b" counts the b's
+        // at 2 and 4; the "a" at index 3 is NOT counted (the leading run is dead). 2+2=4.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aabab\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR LEADING \"a\" ALL \"b\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "004\n");
+    }
+
+    #[test]
+    fn inspect_tally_multi_all_then_leading_same_delim_run_survives_claim() {
+        // The run-stays-alive subtlety: `FOR ALL "a" LEADING "a"` over "aab". ALL "a"
+        // claims indices 0,1 (count 2); the LEADING item never tallies (ALL wins every
+        // "a"), but the per-item run flag KEEPS the leading run alive at 0,1 (each char
+        // equals "a") — a matching char claimed by a higher-priority item does NOT break
+        // the run — and the run decays only at the "b". Count = 2.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"aab\".", "01  C  PIC 9(2) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"a\" LEADING \"a\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "02\n");
+    }
+
+    #[test]
+    fn inspect_tally_multi_leading_with_region_anchored_at_window_start() {
+        // A LEADING item WITH a region + an ALL item — the leading run is anchored at the
+        // WINDOW START. `FOR LEADING "a" AFTER "X" ALL "b"` over "aaXaab" (X at index 2):
+        // the leading window is "aab" (indices 3..6), so the two "a"s before the X are
+        // IGNORED; the run counts the "a"s at 3,4 (breaks at the "b" at 5), and ALL "b"
+        // counts the "b" at 5. 2 + 1 = 3.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"aaXaab\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"X\" ALL \"b\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "003\n");
+    }
+
+    #[test]
+    fn inspect_tally_multi_two_leading_items_disjoint_windows() {
+        // Two LEADING items with different delimiters AND disjoint windows, so BOTH runs
+        // count — each anchored at its OWN window start. `FOR LEADING "a" BEFORE "X"
+        // LEADING "b" AFTER "X"` over "aaXbb" (X at index 2): item 1's window "aa" → 2
+        // leading a's; item 2's window "bb" → 2 leading b's. Total 4.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aaXbb\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR LEADING \"a\" BEFORE \"X\"",
+                "    LEADING \"b\" AFTER \"X\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "004\n");
+    }
+
+    #[test]
+    fn inspect_tally_multi_leading_non_ascii_source_counts_correctly() {
+        // POSITIVE non-ASCII parity WITH a LEADING item: the multi-byte "é" equals no
+        // ASCII delimiter and BREAKS the leading run at char index 2 (the compiler's byte
+        // scan breaks at 0xC3, byte index 2). Source "aaébb": LEADING "a" run "aa" → 2,
+        // ALL "b" → 2. Total 4. (The compiler's byte scan agrees; the e2e test
+        // `inspect_tally_multi_leading_non_ascii_source_positive_parity` pins that.)
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aaébb\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR LEADING \"a\" ALL \"b\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "004\n");
+    }
+
+    #[test]
     fn inspect_tally_counters_items_each_with_a_region() {
         // Per-item regions in the SEVERAL-COUNTERS form (this rung). Source "aXaXa"
         // (X at char indices 1 and 3), two counter groups:

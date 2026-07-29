@@ -5,7 +5,7 @@ use crate::error::RuntimeError;
 use crate::picture::Picture;
 use crate::program::{
     ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program, RefIndex, Region,
-    RegionKind, RelOp, Stmt, TallyCounterGroup, ValueSpec, WhenValue,
+    RegionKind, RelOp, Stmt, TallyCounterGroup, TallyMultiLeadingItem, ValueSpec, WhenValue,
 };
 use crate::value::{add, div, move_into_char, move_into_numeric, mul, pow, round, sub, Decimal};
 use std::collections::HashMap;
@@ -1453,16 +1453,28 @@ impl Machine {
     /// left-to-right pass with FIRST-MATCH-PER-POSITION into the shared counter.
     ///
     /// This is the count-side analogue of [`Self::exec_inspect_replacing_multi`]. The
-    /// items form an ordered priority list, each carrying its OWN window over the
-    /// source. At each source position they are tried IN WRITTEN ORDER and the FIRST
-    /// item that BOTH (i) has the position inside its window AND (ii) whose delimiter
-    /// equals the current char increments the shared count by 1, then the scan advances
-    /// past the match:
+    /// items form an ordered priority list, each `ALL` OR `LEADING`, each carrying its OWN
+    /// window over the source. ONE left-to-right pass with a per-item `active` flag (only
+    /// consulted for `LEADING` items, all init `true`). At each position the FIRST
+    /// ELIGIBLE item in WRITTEN ORDER increments the shared count by 1 and the scan
+    /// advances; an `ALL` item is eligible iff its window contains the position AND its
+    /// delimiter matches, a `LEADING` item ALSO requires its `active` flag still `true`.
+    /// AFTER the tally decision, EVERY `LEADING` item's `active` flag is updated
+    /// INDEPENDENTLY of which item tallied — its run breaks at the FIRST in-window
+    /// position whose char is NOT its delimiter (a matching char keeps the run alive even
+    /// if a higher-priority item claimed that position; positions outside the window
+    /// neither begin nor break the run, so a `LEADING` run is anchored at its window start):
     ///
     /// ```text
-    ///   for (i, ch) in source {
-    ///       for (delim, start, end) in items {          // written order
-    ///           if start <= i < end && ch == delim { count += 1; break }  // first wins
+    ///   count = 0;  active = [true; N]                   // one per item; LEADING-only
+    ///   for i in 0..len {
+    ///       c = chars[i]
+    ///       for (d, leading, start, end) in items {      // written order — tally decision
+    ///           in_win = start <= i < end
+    ///           if in_win && c == d && (!leading || active[k]) { count += 1; break }
+    ///       }
+    ///       for (d, leading, start, end) in items {      // then update EVERY leading run
+    ///           if leading && start <= i < end && c != d { active[k] = false }
     ///       }
     ///   }
     ///   counter := counter + count                       // INSPECT ADDS; never clears
@@ -1471,11 +1483,12 @@ impl Machine {
     /// PER-ITEM WINDOWS: each item's optional region defines a window over the source
     /// via the SAME [`Self::region_window`] helper the lone/single-item forms use
     /// (BEFORE→`[0, first_x)`; AFTER→`(first_x, len]`; not-found asymmetry BEFORE→whole,
-    /// AFTER→empty). An item with NO region has the whole source as its window. The
-    /// inner `break` is why DUPLICATE items do NOT double-count a position: `FOR ALL "a"
-    /// ALL "a"` over `"aa"` adds 2 — each `a` position is counted ONCE by the first
-    /// item, the second item never sees it. So the count collapses to "the number of
-    /// source positions matched by SOME in-window item, each counted exactly once".
+    /// AFTER→empty). An item with NO region has the whole source as its window (so a
+    /// region-less `LEADING` item anchors its run at source position 0). The first-match
+    /// `break` is why DUPLICATE items do NOT double-count a position: `FOR ALL "a" ALL
+    /// "a"` over `"aa"` adds 2 — each `a` position is counted ONCE by the first item, the
+    /// second item never sees it. So the count collapses to "the number of source
+    /// positions counted by the FIRST eligible in-window item, each counted exactly once".
     /// INSPECT adds to the counter; it does not clear it first, and the fold uses the
     /// SAME `store_result` path [`Self::inspect_tally`] uses (COBOL's silent high-order
     /// truncation on overflow), so the compiled `cobol-iir-compiler` scan loop matches
@@ -1498,13 +1511,13 @@ impl Machine {
     /// resolved BEFORE counting so an invalid operand aborts without touching the
     /// counter. A numeric/group source is rejected by [`Self::inspect_alnum_source`], and
     /// a non-integer/signed/non-numeric counter by the validation below. The read-time
-    /// reader (`read_inspect_tally_multi`) has already ruled out LEADING/CHARACTERS items,
-    /// so here every item is a plain `ALL` single-char delimiter with an optional region.
+    /// reader (`read_inspect_tally_multi`) has already ruled out CHARACTERS items, so here
+    /// every item is a single-char `ALL` OR `LEADING` delimiter with an optional region.
     fn exec_inspect_tally_multi(
         &mut self,
         source: &str,
         counter: &str,
-        items: &[(Operand, Option<Region>)],
+        items: &[TallyMultiLeadingItem],
     ) -> Result<Flow, RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
 
@@ -1534,31 +1547,49 @@ impl Machine {
         // operand aborts with the counter untouched.
         let chars: Vec<char> = self.items[sidx].storage.chars().collect();
 
-        // Resolve every (delimiter char, [start, end) window) FIRST. Reading all items
-        // (and computing their windows over `chars`) before touching the counter means
-        // an invalid operand aborts cleanly, exactly like the single-item path resolves
-        // both its delimiter and its window first. A region-less item's window is the
-        // whole source (`region_window(None) == (0, len)`).
-        let resolved: Vec<(char, usize, usize)> = items
+        // Resolve every (delimiter char, leading flag, [start, end) window) FIRST. Reading
+        // all items (and computing their windows over `chars`) before touching the counter
+        // means an invalid operand aborts cleanly, exactly like the single-item path
+        // resolves both its delimiter and its window first. A region-less item's window is
+        // the whole source (`region_window(None) == (0, len)`).
+        let resolved: Vec<(char, bool, usize, usize)> = items
             .iter()
-            .map(|(delim, region)| {
+            .map(|(delim, leading, region)| {
                 let d = self.single_delim_char(delim, "INSPECT")?;
                 let (start, end) = self.region_window(&chars, region.as_ref())?;
-                Ok((d, start, end))
+                Ok((d, *leading, start, end))
             })
             .collect::<Result<_, RuntimeError>>()?;
 
-        // A position `i` contributes 1 iff SOME item in WRITTEN ORDER has `i` inside its
-        // window AND its delimiter equals `chars[i]`. `any` realises first-match-per-
-        // position for a pure count (a position matched by several/duplicate items is
-        // still counted once).
-        let count = chars
-            .iter()
-            .enumerate()
-            .filter(|(i, &c)| {
-                resolved.iter().any(|(d, start, end)| *start <= *i && *i < *end && c == *d)
-            })
-            .count();
+        // ONE left-to-right pass with a per-item `active` run flag (only consulted for
+        // `LEADING` items, all init `true`). At each position the FIRST ELIGIBLE item in
+        // WRITTEN ORDER contributes 1: an `ALL` item is eligible iff its window contains
+        // the position AND its delimiter matches; a `LEADING` item ALSO requires its run
+        // still active (every prior IN-WINDOW position equalled its delimiter). This
+        // realises first-match-per-position for a pure count (a position matched by
+        // several/duplicate items is still counted once).
+        let mut active = vec![true; resolved.len()];
+        let mut count: usize = 0;
+        for (i, &c) in chars.iter().enumerate() {
+            // Tally decision: first eligible item wins, count once, stop.
+            for (k, &(d, leading, start, end)) in resolved.iter().enumerate() {
+                let in_win = start <= i && i < end;
+                if in_win && c == d && (!leading || active[k]) {
+                    count += 1;
+                    break;
+                }
+            }
+            // Then update EVERY `LEADING` item's run flag, INDEPENDENTLY of which item
+            // tallied: a run breaks at the FIRST in-window position whose char is NOT its
+            // delimiter (a matching char keeps the run alive even if a higher-priority item
+            // claimed the position; positions outside the window neither begin nor break
+            // the run — anchoring the run at the window start).
+            for (k, &(d, leading, start, end)) in resolved.iter().enumerate() {
+                if leading && start <= i && i < end && c != d {
+                    active[k] = false;
+                }
+            }
+        }
 
         // counter := counter_value + count, reshaped into the counter's picture — the
         // same store path ADD (and the single-item tally) uses. INSPECT adds; it does

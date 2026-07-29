@@ -8,6 +8,43 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.60.0: INSPECT TALLYING multi-item list with a LEADING item
+
+`INSPECT source TALLYING counter FOR {ALL|LEADING} a [{BEFORE|AFTER} p] {ALL|LEADING} b … ` — the
+single-counter MULTI-item TALLYING list (two or more `tally_item`s under one `tally_for`) may now MIX
+`ALL` and `LEADING` items, each still carrying its own optional `{BEFORE|AFTER}` region, compiled
+byte-identical to the `coding-adventures-cobol-runtime` 0.64.0 oracle. Previously any `LEADING` item
+in a multi-item list was rejected at emit time ("INSPECT TALLYING with several items and a LEADING
+item is a later rung"); that reject is now LIFTED. Only a `CHARACTERS` item in a multi-item list,
+SEVERAL counters, and the combined `TALLYING … REPLACING` form with several items remain later rungs.
+No grammar change was needed.
+
+- Semantics: ONE runtime left-to-right pass with a per-`LEADING`-item `active` run flag (i64, init
+  `1`, allocated before the loop — the runtime-loop analogue of the compile-time-unrolled `active`
+  flag in the single-item `emit_inspect_replacing` LEADING lowering). In the tally-decision chain a
+  `LEADING` item's eligibility AND-gates on its `active` register (so it counts only while its run is
+  alive); at the per-position convergence label — reached by BOTH a tally match (`jmp`) and a no-match
+  fall-through — EVERY leading item's run is updated: `active := active AND eq` (region-less) or
+  `active := active AND (eq OR NOT in_win)` (windowed, so positions outside the window never touch the
+  run, anchoring it at the window start). `eq`/`in_win` are recomputed at the convergence label
+  because an early match `jmp` skips the later chain registers. This mirrors the oracle's separate
+  active-update pass exactly, so a compiled program matches the tree-walk reference byte-for-byte.
+- The `LEADING` run stays alive when a higher-priority item claims a matching char (the active-update
+  breaks a run only on an in-window `c != d`, NOT on "this item didn't tally") — verified.
+- Non-ASCII-clean POSITIVE parity (NOT a trap): the byte-index scan counts identically to the
+  char-index oracle on a non-ASCII source; a `LEADING` run breaks at the multi-byte char's FIRST byte
+  (its continuation bytes match nothing). Verified: `"aaébb"` `FOR LEADING "a" ALL "b"` → `4` on both
+  engines (`assert_matches_oracle` asserts the DISPLAYed counter is byte-identical).
+- `inspect_tally_multi` now returns `Vec<TallyLeadingItem<'_>>` (a new
+  `(&GrammarASTNode, bool, Option<(RegionKind, &GrammarASTNode)>)` alias adding the `leading` flag);
+  the several-counters reader keeps the `ALL`-only `TallyItem`. The counter must remain an
+  unsigned-integer `PIC 9(n)`.
+- Tests (jit_e2e via `assert_matches_oracle`): `LEADING … ALL`, `ALL … LEADING` (different delims,
+  run breaks at start), `ALL … LEADING`/`LEADING … ALL` same-delim run-survival, a `LEADING` item with
+  a region anchored at the window start, two `LEADING` items (same-source and disjoint windows), the
+  non-ASCII positive parity, and the still-rejected multi-item `CHARACTERS` item. The obsolete
+  multi-item-LEADING reject test was removed.
+
 ### Added — v0.59.0: INSPECT TALLYING several counters each item with a BEFORE/AFTER region
 
 `INSPECT source TALLYING c1 FOR ALL a [{BEFORE|AFTER} p] [ALL b …] c2 FOR ALL d [{BEFORE|AFTER} q] …`

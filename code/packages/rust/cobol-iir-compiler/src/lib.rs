@@ -3489,16 +3489,29 @@ impl<'a> Compiler<'a> {
     /// ```text
     ///   len = str_len(S)
     ///   [start_k, end_k) = region_window(item_k)      # per item with a region
+    ///   active_k = 1                                   # per LEADING item only
     ///   cnt = 0;  j = 0
     /// top:  if j >= len jmp end
     ///       c = S[j]
-    ///       if (start_0<=j<end_0) && c == D0 { cnt += 1; jmp cont }  # first match wins…
-    ///       if (start_1<=j<end_1) && c == D1 { cnt += 1; jmp cont }  # …then stop
+    ///       # tally decision — first ELIGIBLE item wins, then stop:
+    ///       if (s0<=j<e0) && c==D0 && (ALL_0 || active_0) { cnt += 1; jmp cont }
+    ///       if (s1<=j<e1) && c==D1 && (ALL_1 || active_1) { cnt += 1; jmp cont }
     ///       …                                    # after the last: fall through (no match)
-    /// cont: j = j + 1;  jmp top
+    /// cont: # update EVERY LEADING item's run flag, independent of which item tallied:
+    ///       for each LEADING item k:  if (sk<=j<ek) && c != Dk { active_k = 0 }
+    ///       j = j + 1;  jmp top
     /// end:
     ///   counter := (counter_value + cnt) reduced into counter's picture
     /// ```
+    ///
+    /// A `LEADING` item counts only its CONSECUTIVE run anchored at its window start: it
+    /// is eligible only while `active_k` is still `1` (every prior in-window position
+    /// equalled `Dk`), and its run breaks at the FIRST in-window mismatch. The active
+    /// update at `cont` runs for EVERY leading item regardless of which item tallied —
+    /// so a matching char keeps a run alive even if a higher-priority item claimed that
+    /// position; positions outside the window neither begin nor break the run. This is
+    /// the runtime-loop analogue of the single-item `emit_inspect_replacing` LEADING
+    /// active flag (whose loop is a compile-time unroll instead).
     ///
     /// The count folds into the counter with the SAME numeric-store path (`store_scaled`,
     /// which mirrors the oracle's `store_result`) the single-item tally uses, so a
@@ -3513,8 +3526,8 @@ impl<'a> Compiler<'a> {
     /// cover the SAME substring and count the SAME ASCII matches even on a non-ASCII
     /// source — no UTF-8-boundary trap.
     ///
-    /// The read-side `inspect_tally_multi` has already rejected LEADING/CHARACTERS items
-    /// and SEVERAL counters, so here every item is a plain `ALL` single-char delimiter
+    /// The read-side `inspect_tally_multi` has already rejected CHARACTERS items and
+    /// SEVERAL counters, so here every item is a single-char `ALL` OR `LEADING` delimiter
     /// with an optional region, under one counter.
     fn emit_inspect_tally_multi(
         &mut self,
@@ -3548,18 +3561,27 @@ impl<'a> Compiler<'a> {
         let len = self.fresh("_itmlen");
         self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.to_string())], "i64");
 
-        // Reduce each item to a `(delimiter byte code, window)` pair, IN ORDER, so the
-        // per-position chain walks them written-first. The window (when present) is
-        // derived by the SAME `emit_inspect_region_window` the single-item region
-        // emitter uses, so both engines narrow to identical slices. Resolving all of
-        // them BEFORE the loop means an invalid delimiter/region delimiter aborts
-        // without emitting the loop, mirroring the oracle's resolve-first order.
-        let mut regs: Vec<(String, Option<(String, String)>)> =
-            Vec::with_capacity(item_nodes.len());
-        for (dn, region) in item_nodes {
+        // Reduce each item to a `(delimiter byte code, leading, active, window)` tuple,
+        // IN ORDER, so the per-position chain walks them written-first. The window (when
+        // present) is derived by the SAME `emit_inspect_region_window` the single-item
+        // region emitter uses, so both engines narrow to identical slices. A `LEADING`
+        // item ALSO allocates a runtime `active` register (i64, init `1` = its run is
+        // still alive), materialised HERE — before the loop — exactly like the
+        // single-item `emit_inspect_replacing` LEADING active flag. Resolving all of them
+        // BEFORE the loop means an invalid delimiter/region delimiter aborts without
+        // emitting the loop, mirroring the oracle's resolve-first order.
+        let mut regs: Vec<ResolvedTallyLeadingItem> = Vec::with_capacity(item_nodes.len());
+        for (dn, leading, region) in item_nodes {
             let d_reg = self.single_delim_code(dn, "INSPECT")?;
             let window = self.emit_inspect_region_window(region, s_reg, &len)?;
-            regs.push((d_reg, window));
+            let active = if leading {
+                let a = self.fresh("_itmact");
+                self.emit("const", Some(&a), vec![Operand::Int(1)], "i64");
+                Some(a)
+            } else {
+                None
+            };
+            regs.push((d_reg, leading, active, window));
         }
 
         // cnt = 0; j = 0. A genuine runtime loop over the source positions.
@@ -3570,6 +3592,10 @@ impl<'a> Compiler<'a> {
 
         let top = self.fresh("itm_top");
         let end = self.fresh("itm_end");
+        // `cont` is the per-position CONVERGENCE point: BOTH a tally match (via `jmp cont`)
+        // and a no-match fall-through reach it, and it hosts the LEADING run updates before
+        // the j-advance — so every LEADING item's run flag is updated INDEPENDENTLY of
+        // which item (if any) tallied this position.
         let cont = self.fresh("itm_cont");
         self.emit("label", None, vec![Operand::Var(top.clone())], "void");
         // if j >= len jmp end.
@@ -3589,13 +3615,15 @@ impl<'a> Compiler<'a> {
             vec![Operand::Var(s_reg.to_string()), Operand::Var(j.clone())],
             "i64",
         );
-        // The ordered chain: item 0, then 1, … On the FIRST match we bump `cnt` and
-        // jump to `cont` (the j-advance), skipping the rest of the chain —
-        // first-match-per-position, so a position is counted at most once even if
-        // several (or duplicate) items would match it. A miss jumps to the next link
-        // (`next`); after the last link's `next` we fall through to `cont` with no bump
-        // (matched no item).
-        for (d_reg, window) in &regs {
+        // The ordered TALLY-DECISION chain: item 0, then 1, … On the FIRST eligible item
+        // we bump `cnt` and jump to `cont` (the LEADING-update + j-advance section),
+        // skipping the rest of the chain — first-match-per-position, so a position is
+        // counted at most once even if several (or duplicate) items would match it. A
+        // miss jumps to the next link (`next`); after the last link's `next` we fall
+        // through to `cont` with no bump (matched no item). An `ALL` item is eligible iff
+        // `(start <= j < end) AND c == D`; a `LEADING` item ALSO requires its `active` run
+        // flag still `1` (every prior in-window position equalled its delimiter).
+        for (d_reg, leading, active, window) in &regs {
             let eq = self.fresh("_itmeq");
             self.emit(
                 "cmp_eq",
@@ -3603,12 +3631,12 @@ impl<'a> Compiler<'a> {
                 vec![Operand::Var(c.clone()), Operand::Var(d_reg.clone())],
                 "i64",
             );
-            // Gate the compare by this item's window: `matched = (start <= j < end) AND
+            // Gate the compare by this item's window: `base = (start <= j < end) AND
             // (c == D)`. `j` is the RUNTIME loop position register, compared directly
             // against the runtime bounds (no compile-time `const` needed, unlike the
             // REPLACING unroll whose `j` is a compile-time constant). A region-less item
             // folds down to `eq` alone (no window emitted → whole-source window).
-            let matched = match window {
+            let base = match window {
                 None => eq,
                 Some((start, end_bound)) => {
                     let ge2 = self.fresh("_itmge2");
@@ -3632,6 +3660,16 @@ impl<'a> Compiler<'a> {
                     m
                 }
             };
+            // A `LEADING` item ALSO AND-gates on its `active` run flag; an `ALL` item's
+            // eligibility is `base` alone (it never reads `active`).
+            let matched = match (leading, active) {
+                (true, Some(a)) => {
+                    let m = self.fresh("_itmel");
+                    self.emit("and", Some(&m), vec![Operand::Var(base), Operand::Var(a.clone())], "i64");
+                    m
+                }
+                _ => base,
+            };
             let next = self.fresh("itm_next");
             self.emit(
                 "jmp_if_false",
@@ -3645,8 +3683,79 @@ impl<'a> Compiler<'a> {
             self.emit("jmp", None, vec![Operand::Var(cont.clone())], "void");
             self.emit("label", None, vec![Operand::Var(next)], "void");
         }
-        // cont: j = j + 1; jmp top.
+        // cont: update EVERY LEADING item's run, then j = j + 1; jmp top. The updates run
+        // whether or not a position tallied and INDEPENDENTLY of which item tallied — a
+        // matching char keeps a run alive even if a higher-priority item claimed it. Each
+        // LEADING run breaks at the FIRST IN-WINDOW mismatch; positions outside the window
+        // never touch `active`, so the run is anchored at the window start. We RECOMPUTE
+        // `eq`/`in_win` per leading item here (the chain's registers may not have been
+        // reached on an early `jmp cont`), mirroring the oracle's separate active-update
+        // pass and the single-item `emit_inspect_replacing` LEADING decay.
         self.emit("label", None, vec![Operand::Var(cont)], "void");
+        for (d_reg, leading, active, window) in &regs {
+            let (true, Some(a)) = (leading, active) else { continue };
+            // eq2 = (c == D).
+            let eq2 = self.fresh("_itmeq2");
+            self.emit(
+                "cmp_eq",
+                Some(&eq2),
+                vec![Operand::Var(c.clone()), Operand::Var(d_reg.clone())],
+                "i64",
+            );
+            match window {
+                // No region: active := active AND eq2 — once an (in-window ⇒ whole-source)
+                // mismatch clears it, it sticks at 0, so the run never revives.
+                None => {
+                    self.emit(
+                        "and",
+                        Some(a),
+                        vec![Operand::Var(a.clone()), Operand::Var(eq2)],
+                        "i64",
+                    );
+                }
+                // With a region, decay ONLY on an IN-WINDOW mismatch:
+                //   active := active AND (eq2 OR NOT in_win)
+                // A position OUTSIDE the window has `NOT in_win == 1`, so the OR is 1 and
+                // `active` is left unchanged — characters before the window neither start
+                // nor break the run, anchoring it at the window start (identical to the
+                // single-item REPLACING LEADING+region decay).
+                Some((start, end_bound)) => {
+                    let ge3 = self.fresh("_itmge3");
+                    self.emit(
+                        "cmp_ge",
+                        Some(&ge3),
+                        vec![Operand::Var(j.clone()), Operand::Var(start.clone())],
+                        "i64",
+                    );
+                    let lt2 = self.fresh("_itmlt2");
+                    self.emit(
+                        "cmp_lt",
+                        Some(&lt2),
+                        vec![Operand::Var(j.clone()), Operand::Var(end_bound.clone())],
+                        "i64",
+                    );
+                    let inw = self.fresh("_itmin2");
+                    self.emit("and", Some(&inw), vec![Operand::Var(ge3), Operand::Var(lt2)], "i64");
+                    let zero = self.fresh("_itmz");
+                    self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+                    let not_in = self.fresh("_itmni");
+                    self.emit(
+                        "cmp_eq",
+                        Some(&not_in),
+                        vec![Operand::Var(inw), Operand::Var(zero)],
+                        "i64",
+                    );
+                    let keep = self.fresh("_itmkeep");
+                    self.emit("or", Some(&keep), vec![Operand::Var(eq2), Operand::Var(not_in)], "i64");
+                    self.emit(
+                        "and",
+                        Some(a),
+                        vec![Operand::Var(a.clone()), Operand::Var(keep)],
+                        "i64",
+                    );
+                }
+            }
+        }
         let one2 = self.fresh("_itm1b");
         self.emit("const", Some(&one2), vec![Operand::Int(1)], "i64");
         self.emit("add", Some(&j), vec![Operand::Var(j.clone()), Operand::Var(one2)], "i64");
@@ -6330,6 +6439,15 @@ fn inspect_tally_all(verb: &GrammarASTNode) -> Result<TallyPhrase<'_>, CompileEr
 /// window (this rung lifts the region reject).
 type TallyItem<'a> = (&'a GrammarASTNode, Option<(RegionKind, &'a GrammarASTNode)>);
 
+/// One `{ALL|LEADING} delim [{BEFORE|AFTER} x]` item of a SINGLE-counter multi-item
+/// TALLYING clause: `(delim_node, leading, region)`. Extends [`TallyItem`] with a
+/// `leading` flag (`true` for a `LEADING` item — count only its run anchored at its
+/// window start) this rung lifts into the multi-item list; the several-COUNTERS path
+/// stays `ALL`-only and keeps [`TallyItem`]. Named so [`inspect_tally_multi`]'s return
+/// type stays legible (and below clippy's type-complexity threshold) — the compiler-side
+/// analogue of the oracle's `TallyMultiLeadingItem`.
+type TallyLeadingItem<'a> = (&'a GrammarASTNode, bool, Option<(RegionKind, &'a GrammarASTNode)>);
+
 /// One `counter FOR ALL a [{BEFORE|AFTER} p] ALL b … ` group of a MULTI-counter
 /// `TALLYING` list: the counter name plus its written-order [`TallyItem`]s (each a
 /// delimiter node + its OWN optional region window). Named so
@@ -6337,6 +6455,15 @@ type TallyItem<'a> = (&'a GrammarASTNode, Option<(RegionKind, &'a GrammarASTNode
 /// type-complexity threshold) — the compiler-side analogue of the oracle's
 /// `TallyCounterGroup`.
 type TallyCounterGroup<'a> = (String, Vec<TallyItem<'a>>);
+
+/// One resolved item of a single-counter multi-item `TALLYING` scan (with a possible
+/// `LEADING` item): `(delimiter_byte_code_reg, leading, active_reg, window)` where
+/// `active_reg` is the per-`LEADING`-item runtime run flag register (i64, init 1;
+/// `None` for an `ALL` item) and `window` is the optional `[start, end)` byte-bound
+/// register pair for the item's `{BEFORE|AFTER}` region (`None` = whole-source). Named so
+/// `emit_inspect_tally_multi`'s resolved vector stays below clippy's type-complexity
+/// threshold.
+type ResolvedTallyLeadingItem = (String, bool, Option<String>, Option<(String, String)>);
 
 /// One entry of the FLATTENED combined-priority list a multi-counter `TALLYING` scan
 /// walks per position: `(group_index, delimiter_byte_code_reg, window)` where `window` is
@@ -6356,14 +6483,18 @@ type FlatCounterDelim = (usize, String, Option<(String, String)>);
 /// (LEADING, region), and SEVERAL counters (more than one `tally_for`) stays a later
 /// rung.
 ///
-/// Scope bound (this rung, IDENTICAL messages to the oracle reader): every item must
-/// be a plain `ALL` item with NO `LEADING`/`CHARACTERS`. Each item MAY now carry its
-/// OWN optional `{BEFORE|AFTER} x` region (the region reject is LIFTED this rung),
-/// parsed with the SAME keyword/operand extraction `inspect_tally_all` uses on the
-/// single-item side. Any item violating the remaining scope is a clean later-rung
-/// `Unsupported`. A multi-character/figurative/wider/numeric delimiter is NOT rejected
-/// here — it falls to the SAME `single_delim_code` check the single-item emitter uses.
-fn inspect_tally_multi(verb: &GrammarASTNode) -> Result<(String, Vec<TallyItem<'_>>), CompileError> {
+/// Scope bound (this rung, IDENTICAL messages to the oracle reader): every item must be
+/// `ALL` or `LEADING` (NO `CHARACTERS`). Each item carries a `leading` flag (`true` for a
+/// `LEADING` item) AND its OWN optional `{BEFORE|AFTER} x` region (the per-item region
+/// reject and the multi-item `LEADING` reject are BOTH LIFTED this rung), parsed with the
+/// SAME keyword/operand extraction `inspect_tally_all` uses on the single-item side. Only
+/// `CHARACTERS` in a multi-item list stays a later rung. Any item violating the remaining
+/// scope is a clean later-rung `Unsupported`. A multi-character/figurative/wider/numeric
+/// delimiter is NOT rejected here — it falls to the SAME `single_delim_code` check the
+/// single-item emitter uses.
+fn inspect_tally_multi(
+    verb: &GrammarASTNode,
+) -> Result<(String, Vec<TallyLeadingItem<'_>>), CompileError> {
     let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
         CompileError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
     })?;
@@ -6388,11 +6519,11 @@ fn inspect_tally_multi(verb: &GrammarASTNode) -> Result<(String, Vec<TallyItem<'
                 "INSPECT TALLYING … FOR CHARACTERS is a later rung".into(),
             ));
         }
-        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
-            return Err(CompileError::Unsupported(
-                "INSPECT TALLYING with several items and a LEADING item is a later rung".into(),
-            ));
-        }
+        // A `LEADING` item in a multi-item list is now ACCEPTED (this rung): the multi
+        // path supports a MIX of `ALL` and `LEADING` items. The keyword picks per-item
+        // count semantics threaded to `emit_inspect_tally_multi` (a `LEADING` item counts
+        // only its run anchored at its window start). Matches the oracle reader's flag.
+        let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
         // A `{BEFORE|AFTER} x` region on an item is now ACCEPTED (this rung): parse it
         // into `Option<(RegionKind, node)>` with the SAME keyword/operand extraction
         // `inspect_tally_all` uses on the single-item side. The region contributes its
@@ -6421,9 +6552,9 @@ fn inspect_tally_multi(verb: &GrammarASTNode) -> Result<(String, Vec<TallyItem<'
             }
         };
         let delim = child_node(ti, "operand").ok_or_else(|| {
-            CompileError::Malformed("INSPECT TALLYING FOR ALL without a delimiter".into())
+            CompileError::Malformed("INSPECT TALLYING FOR ALL/LEADING without a delimiter".into())
         })?;
-        items.push((delim, region));
+        items.push((delim, leading, region));
     }
     Ok((counter, items))
 }
