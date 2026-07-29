@@ -44,38 +44,14 @@ def main() -> int:
             )
         )
 
-    if args.html5lib_tests is not None:
-        html5lib_tests = str(Path(args.html5lib_tests).expanduser().resolve())
-        checks.extend(
-            [
-                FixtureCheck(
-                    "html5lib-coverage-audit-report",
-                    (
-                        str(PARSER_FIXTURE_DIR / "audit_html5lib_coverage.py"),
-                        html5lib_tests,
-                        "--check-report",
-                    ),
-                ),
-                FixtureCheck(
-                    "html5lib-coverage-audit-counts",
-                    (
-                        str(PARSER_FIXTURE_DIR / "audit_html5lib_coverage.py"),
-                        html5lib_tests,
-                        "--expect-tree-upstream-cases",
-                        "1778",
-                        "--expect-tree-local-cases",
-                        "2485",
-                        "--expect-tokenizer-upstream-cases",
-                        "6806",
-                        "--expect-tokenizer-local-raw-cases",
-                        "7015",
-                        "--expect-normalized-cases",
-                        "7242",
-                        "--expect-normalized-skipped",
-                        "0",
-                    ),
-                ),
-            ]
+    if args.html5lib_tests is not None and args.wpt_tests is not None:
+        html5lib_tests = Path(args.html5lib_tests).expanduser().resolve()
+        wpt_tests = Path(args.wpt_tests).expanduser().resolve()
+        checks.extend(upstream_coverage_checks(html5lib_tests, wpt_tests))
+    elif args.html5lib_tests is not None or args.wpt_tests is not None:
+        raise SystemExit(
+            "--html5lib-tests and --wpt-tests must be provided together for "
+            "split tokenizer/tree-construction coverage"
         )
 
     for check in checks:
@@ -93,9 +69,61 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--html5lib-tests",
-        help="Optional html5lib-tests checkout for coverage audit report checks.",
+        help="Optional html5lib-tests checkout for tokenizer coverage audit checks.",
+    )
+    parser.add_argument(
+        "--wpt-tests",
+        help=(
+            "Optional WPT checkout or html/syntax/parsing/resources directory for "
+            "tree-construction coverage audit checks."
+        ),
     )
     return parser.parse_args()
+
+
+def upstream_coverage_checks(
+    html5lib_tests: Path,
+    wpt_tests: Path,
+) -> list[FixtureCheck]:
+    upstream_args = [str(html5lib_tests), "--wpt-root", str(wpt_tests)]
+    accepted_missing_args = [
+        "--expect-tree-missing",
+        "156",
+        "--expect-tokenizer-missing",
+        "0",
+    ]
+
+    return [
+        FixtureCheck(
+            "html-conformance-coverage-audit-report",
+            (
+                str(PARSER_FIXTURE_DIR / "audit_html5lib_coverage.py"),
+                *upstream_args,
+                "--check-report",
+                *accepted_missing_args,
+            ),
+        ),
+        FixtureCheck(
+            "html-conformance-coverage-audit-counts",
+            (
+                str(PARSER_FIXTURE_DIR / "audit_html5lib_coverage.py"),
+                *upstream_args,
+                "--expect-tree-upstream-cases",
+                "1934",
+                "--expect-tree-local-cases",
+                "2485",
+                "--expect-tokenizer-upstream-cases",
+                "6806",
+                "--expect-tokenizer-local-raw-cases",
+                "7015",
+                "--expect-normalized-cases",
+                "7242",
+                "--expect-normalized-skipped",
+                "0",
+                *accepted_missing_args,
+            ),
+        ),
+    ]
 
 
 def default_checks() -> list[FixtureCheck]:

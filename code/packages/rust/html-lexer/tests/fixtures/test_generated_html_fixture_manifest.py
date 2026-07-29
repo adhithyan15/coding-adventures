@@ -62,6 +62,38 @@ class GeneratedHtmlFixtureManifestTest(unittest.TestCase):
         for check in checks:
             self.assertIn("--check", check.command)
 
+    def test_wpt_upstream_checks_pin_current_conformance_debt(self) -> None:
+        checks = manifest.upstream_coverage_checks(
+            Path("/tmp/html5lib-tests"),
+            Path("/tmp/wpt"),
+        )
+
+        self.assertEqual(
+            [check.name for check in checks],
+            [
+                "html-conformance-coverage-audit-report",
+                "html-conformance-coverage-audit-counts",
+            ],
+        )
+        for check in checks:
+            self.assertIn("--wpt-root", check.command)
+            self.assertIn("--expect-tree-missing", check.command)
+            self.assertEqual(
+                check.command[check.command.index("--expect-tree-missing") + 1],
+                "156",
+            )
+            self.assertIn("--expect-tokenizer-missing", check.command)
+            self.assertEqual(
+                check.command[check.command.index("--expect-tokenizer-missing") + 1],
+                "0",
+            )
+
+        counts = checks[1].command
+        self.assertEqual(
+            counts[counts.index("--expect-tree-upstream-cases") + 1],
+            "1934",
+        )
+
 
 def scripts_in(checks: list[manifest.FixtureCheck]) -> set[str]:
     return {Path(check.command[0]).name for check in checks}
