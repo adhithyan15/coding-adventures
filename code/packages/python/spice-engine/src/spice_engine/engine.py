@@ -9277,6 +9277,24 @@ def _stamp_mosfet(
         b[node_to_idx[intrinsic_drain]] -= Ieq
     if not _is_ground(intrinsic_source):
         b[node_to_idx[intrinsic_source]] += Ieq
+    _stamp_mosfet_bulk_junction(
+        G,
+        b,
+        node_to_idx,
+        el,
+        intrinsic_source,
+        Vs,
+        Vb,
+    )
+    _stamp_mosfet_bulk_junction(
+        G,
+        b,
+        node_to_idx,
+        el,
+        intrinsic_drain,
+        Vd,
+        Vb,
+    )
     drain_resistance = _mosfet_drain_resistance(el)
     if drain_resistance > 0.0:
         _stamp_g(
@@ -9295,6 +9313,63 @@ def _stamp_mosfet(
             intrinsic_source,
             1.0 / source_resistance,
         )
+
+
+def _mosfet_bulk_junction_current_conductance(
+    el: Mosfet,
+    terminal_voltage: float,
+    body_voltage: float,
+) -> tuple[float, float]:
+    params = el.model.model.params  # type: ignore[attr-defined]
+    junction_voltage = (
+        body_voltage - terminal_voltage
+        if el.model.type == MosfetType.NMOS  # type: ignore[attr-defined]
+        else terminal_voltage - body_voltage
+    )
+    thermal_voltage = _BOLTZMANN * params.T_NOM / _ELECTRON_CHARGE
+    normalized_voltage = junction_voltage / thermal_voltage
+    limited_exp = math.exp(max(-40.0, min(40.0, normalized_voltage)))
+    if normalized_voltage > 40.0:
+        current_factor = limited_exp * (1.0 + normalized_voltage - 40.0)
+        conductance_factor = limited_exp
+    else:
+        current_factor = limited_exp
+        conductance_factor = limited_exp
+    return (
+        params.IS * (current_factor - 1.0),
+        params.IS / thermal_voltage * conductance_factor,
+    )
+
+
+def _stamp_mosfet_bulk_junction(
+    G: list[list[float]],
+    b: list[float],
+    node_to_idx: dict[str, int],
+    el: Mosfet,
+    terminal: str,
+    terminal_voltage: float,
+    body_voltage: float,
+) -> None:
+    current, conductance = _mosfet_bulk_junction_current_conductance(
+        el,
+        terminal_voltage,
+        body_voltage,
+    )
+    is_nmos = el.model.type == MosfetType.NMOS  # type: ignore[attr-defined]
+    junction_voltage = (
+        body_voltage - terminal_voltage
+        if is_nmos
+        else terminal_voltage - body_voltage
+    )
+    positive, negative = (
+        (el.body, terminal) if is_nmos else (terminal, el.body)
+    )
+    equivalent_current = current - conductance * junction_voltage
+    _stamp_g(G, node_to_idx, positive, negative, conductance)
+    if not _is_ground(positive):
+        b[node_to_idx[positive]] -= equivalent_current
+    if not _is_ground(negative):
+        b[node_to_idx[negative]] += equivalent_current
 
 
 def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
@@ -13180,12 +13255,30 @@ def _stamp_ac(
         r = el.model.dc(Vg - Vs, Vd - Vs, Vb - Vs)  # type: ignore[attr-defined]
         gm_m: float = r.gm
         gds_m: float = r.gds
+        _, source_bulk_conductance = _mosfet_bulk_junction_current_conductance(
+            el, Vs, Vb
+        )
+        _, drain_bulk_conductance = _mosfet_bulk_junction_current_conductance(
+            el, Vd, Vb
+        )
         _stamp_g_c(G, node_to_idx, intrinsic_drain, intrinsic_source, gds_m + 0j)
         _stamp_g_c(G, node_to_idx, el.gate, intrinsic_source, 1j * omega * r.Cgs)
         _stamp_g_c(G, node_to_idx, el.gate, intrinsic_drain, 1j * omega * r.Cgd)
         _stamp_g_c(G, node_to_idx, el.gate, el.body, 1j * omega * r.Cgb)
-        _stamp_g_c(G, node_to_idx, el.body, intrinsic_source, 1j * omega * r.Cbs)
-        _stamp_g_c(G, node_to_idx, el.body, intrinsic_drain, 1j * omega * r.Cbd)
+        _stamp_g_c(
+            G,
+            node_to_idx,
+            el.body,
+            intrinsic_source,
+            source_bulk_conductance + 1j * omega * r.Cbs,
+        )
+        _stamp_g_c(
+            G,
+            node_to_idx,
+            el.body,
+            intrinsic_drain,
+            drain_bulk_conductance + 1j * omega * r.Cbd,
+        )
         if not _is_ground(intrinsic_drain):
             d = node_to_idx[intrinsic_drain]
             if not _is_ground(el.gate):
@@ -13935,7 +14028,27 @@ def _build_ss_matrix(
             r = el.model.dc(Vg - Vs, Vd - Vs, Vb - Vs)  # type: ignore[attr-defined]
             gm_m: float = r.gm
             gds_m: float = r.gds
+            _, source_bulk_conductance = _mosfet_bulk_junction_current_conductance(
+                el, Vs, Vb
+            )
+            _, drain_bulk_conductance = _mosfet_bulk_junction_current_conductance(
+                el, Vd, Vb
+            )
             _stamp_g(G, node_to_idx, intrinsic_drain, intrinsic_source, gds_m)
+            _stamp_g(
+                G,
+                node_to_idx,
+                el.body,
+                intrinsic_source,
+                source_bulk_conductance,
+            )
+            _stamp_g(
+                G,
+                node_to_idx,
+                el.body,
+                intrinsic_drain,
+                drain_bulk_conductance,
+            )
             if not _is_ground(intrinsic_drain):
                 d = node_to_idx[intrinsic_drain]
                 if not _is_ground(el.gate):
@@ -15844,6 +15957,34 @@ def _collect_noise_sources(
                         1.0,
                     )
                 )
+            source_bulk_current, _ = _mosfet_bulk_junction_current_conductance(
+                el, Vs, Vb
+            )
+            drain_bulk_current, _ = _mosfet_bulk_junction_current_conductance(
+                el, Vd, Vb
+            )
+            n_b = None if _is_ground(el.body) else node_to_idx[el.body]
+            is_nmos = el.model.type == MosfetType.NMOS  # type: ignore[attr-defined]
+            sources.append(
+                (
+                    f"{el.name}:IBS",
+                    "shot",
+                    n_b if is_nmos else n_s,
+                    n_s if is_nmos else n_b,
+                    q2 * abs(source_bulk_current),
+                    0.0,
+                )
+            )
+            sources.append(
+                (
+                    f"{el.name}:IBD",
+                    "shot",
+                    n_b if is_nmos else n_d,
+                    n_d if is_nmos else n_b,
+                    q2 * abs(drain_bulk_current),
+                    0.0,
+                )
+            )
             drain_resistance = _mosfet_drain_resistance(el)
             if drain_resistance > 0.0:
                 sources.append(

@@ -33,13 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Berkeley netlist lowering for remaining Level-1 MOS model fields.
+1. Cross-language Level-1 MOS bulk-junction saturation current.
    - Status: current PR completion candidate.
-   - Preserve canonical `LD`, `TOX`, `RD`, `RS`, `KF`, and `AF` values plus
-     the supported `VTH`, `LAM`, `CJS`, and `CJD` aliases when the Rust
-     Berkeley facade lowers Level-1 MOS devices.
-   - Prove canonical and alias forms reach their existing engine fields instead
-     of silently falling back to defaults.
+   - Route existing model-card `IS` into source-body and drain-body junction
+     leakage for NMOS and PMOS across DC, transient, transfer-function, and AC.
+   - Emit distinct `IBS` and `IBD` shot-noise sources while preserving existing
+     model-card and hierarchy contracts.
 
 ## Completed Slices
 
@@ -3533,6 +3532,13 @@ the Rust, Python, and TypeScript surfaces together.
      `FC` in the Level-1 engine parameter bundle.
    - Source-deck integration coverage proves all three values reach the existing
      cross-language depletion-capacitance behavior.
+
+280. Berkeley netlist lowering for remaining Level-1 MOS model fields.
+   - Status: completed in PR 9094.
+   - The Rust Berkeley netlist facade now preserves canonical `LD`, `TOX`,
+     `RD`, `RS`, `KF`, and `AF` plus aliases `VTH`, `LAM`, `CJS`, and `CJD`.
+   - Source-deck tests prove the values reach their existing engine fields
+     instead of silently falling back to defaults.
 
 ## Backlog
 

@@ -935,6 +935,38 @@ def test_dc_mosfet_drain_resistance_drops_intrinsic_drain_voltage() -> None:
     assert result.node_voltages["__spice_M1_drain"] < 5.0
 
 
+def test_dc_mosfet_bulk_junction_saturation_current_sets_reverse_leakage() -> None:
+    def bias_current(
+        mosfet_type: MosfetType,
+        bias_voltage: float,
+        saturation_current: float,
+    ) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbias", "body", "0", bias_voltage))
+        circuit.add(
+            Mosfet(
+                "M1",
+                "0",
+                "0",
+                "0",
+                "body",
+                MOSFET(
+                    mosfet_type,
+                    Level1Model(Level1Params(IS=saturation_current)),
+                ),
+            )
+        )
+        return abs(dc_op(circuit).branch_currents["I(Vbias)"])
+
+    for mosfet_type, bias_voltage in (
+        (MosfetType.NMOS, -0.3),
+        (MosfetType.PMOS, 0.3),
+    ):
+        unloaded = bias_current(mosfet_type, bias_voltage, 1.0e-30)
+        loaded = bias_current(mosfet_type, bias_voltage, 1.0e-12)
+        assert loaded > unloaded
+
+
 def test_dc_mosfet_source_resistance_raises_intrinsic_source_voltage() -> None:
     circuit = Circuit()
     circuit.add(VoltageSource("Vdrain", "drain", "0", 5.0))
@@ -9074,6 +9106,35 @@ def test_noise_mosfet_channel_thermal_noise() -> None:
         expected_source_psd * 1000.0 ** 2,
         rel_tol=1e-6,
     )
+
+
+def test_noise_mosfet_bulk_junctions_emit_distinct_shot_noise_sources() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vbody", "body", "0", -0.3))
+    circuit.add(
+        Mosfet(
+            "M1",
+            "0",
+            "0",
+            "0",
+            "body",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(IS=1.0e-12)),
+            ),
+        )
+    )
+
+    entries = noise_ac(
+        circuit, "body", "Vbody", freqs=[1_000.0], temperature=300.0
+    ).points[0].entries
+    for name in ("M1:IBS", "M1:IBD"):
+        entry = next(
+            entry
+            for entry in entries
+            if entry.element_name == name and entry.noise_type == "shot"
+        )
+        assert entry.source_psd > 0.0
 
 
 def test_noise_mosfet_flicker_noise_scales_inversely_with_frequency() -> None:

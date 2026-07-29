@@ -706,6 +706,36 @@ fn jfet_gate_junctions_emit_distinct_shot_noise_sources() {
 }
 
 #[test]
+fn mosfet_bulk_junctions_emit_distinct_shot_noise_sources() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbody", "body", "0", -0.3,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "0",
+        "0",
+        "0",
+        "body",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            saturation_current: 1.0e-12,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let result = noise_ac(&circuit, "body", "Vbody", &[1_000.0], 300.0).unwrap();
+    let entries = &result.points[0].entries;
+    for name in ["M1:IBS", "M1:IBD"] {
+        let entry = entries
+            .iter()
+            .find(|entry| entry.element_name == name && entry.noise_type == NoiseType::Shot)
+            .unwrap();
+        assert!(entry.source_psd > 0.0);
+    }
+}
+
+#[test]
 fn jfet_flicker_noise_uses_af_current_exponent() {
     let source_psd = |exponent: f64| {
         let mut circuit = Circuit::new();
