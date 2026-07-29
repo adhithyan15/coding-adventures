@@ -1473,6 +1473,49 @@ fn shipped_temperature_interval_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b33) The shipped NIST SP 811 B.9 mass-density → kilogram-per-cubic-metre table resolves the exact
+//       gram-per-cubic-centimetre factor with its citation, and ABSTAINS on a wrong-dimension unit.
+//       This opens a NEW dimension — MASS DENSITY (mass per unit VOLUME) — beyond the length/mass/…/
+//       linear-mass-density/temperature-interval and electric families. One gram per cubic centimetre
+//       is exactly 1000 kg/m³ (the metric units relate by exact powers of ten). The gram per cubic
+//       centimetre (mass density → kg/m³) and the pound (plain mass → kg) are DIFFERENT quantities
+//       converting to DIFFERENT SI units (kg/m³ vs kg), so the abstain guards the mass-versus-mass-
+//       per-volume confusion (dropping the "per cubic metre") directly, not mere absence of a value.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_mass_density_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_massdensity");
+    let src = stdlib().join("reference/mass-density-conversions.adj");
+    std::fs::copy(&src, dir.join("mass-density-conversions.adj"))
+        .expect("copy shipped mass-density-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"mass-density-conversions.adj\"\n\
+         ? mass_density_to_kilogram_per_cubic_metre(gram_per_cubic_centimetre, $v)\n\
+         ? mass_density_to_kilogram_per_cubic_metre(pound, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table
+    // (boldface = exact; one gram per cubic centimetre is exactly 1 E+03 kilograms per cubic metre).
+    assert!(out.contains("\"v\":\"1000\""), "gram per cubic centimetre = 1 E+03 kg/m^3: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `pound` is a MASS unit (it converts to the kilogram, a DIFFERENT quantity), so this mass-density
+    // table has no row for it — the engine abstains rather than mis-converting a mass unit as if it
+    // were a mass-per-volume unit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 

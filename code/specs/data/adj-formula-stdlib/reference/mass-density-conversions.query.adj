@@ -1,0 +1,26 @@
+% ============================================================================
+% mass-density-conversions.query.adj — worked lookups over the NIST mass-density → kilogram-per-cubic-
+% metre table.
+% ============================================================================
+% The shape a consumer produces to convert a mass density given in the everyday metric unit into SI:
+% it `import`s the grounded table and asks the engine to bind the factor. No arithmetic and no factor
+% is stated by the consumer; the engine returns the cell WITH the table's NIST citation as its proof,
+% on the CPU.
+%
+%   ? mass_density_to_kilogram_per_cubic_metre(gram_per_cubic_centimetre, $v)   % 1000
+%
+% And the dimension guard: a unit of a DIFFERENT quantity has no row, so the lookup ABSTAINS rather
+% than mis-converting across dimensions. The "pound" is a MASS unit (it converts to the kilogram), NOT
+% a mass-density unit — so dropping the "per cubic metre" that separates mass from mass-per-volume is
+% caught rather than silently mis-converted:
+%
+%   ? mass_density_to_kilogram_per_cubic_metre(pound, $v)   % abstains (pound is mass → kilogram)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli mass-density-conversions.query.adj
+% ============================================================================
+
+import "mass-density-conversions.adj"
+
+? mass_density_to_kilogram_per_cubic_metre(gram_per_cubic_centimetre, $v)   % expect 1000     (exact NIST SP 811 B.9 factor)
+? mass_density_to_kilogram_per_cubic_metre(pound, $v)                       % expect abstain  (mass unit, wrong dimension)
