@@ -6432,6 +6432,9 @@ fn token_summary(token: Token) -> String {
         ),
         Token::EndTag { name } => format!("EndTag(name={name})"),
         Token::Comment(data) => format!("Comment(data={data})"),
+        Token::ProcessingInstruction { target, data } => {
+            format!("ProcessingInstruction(target={target}, data={data})")
+        }
         Token::Doctype {
             name,
             public_identifier,
