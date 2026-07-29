@@ -438,13 +438,13 @@ structured command fields use the shared definitions in the corpus schema.
 
 | Domain | `input.options` | Successful `result` |
 |---|---|---|
-| `diff_selection` | packages with repository-relative roots and optional strict source globs, dependency edges, forced packages, and an `ignore` or `all` unknown-path policy | sorted `changed_packages`, `affected_packages`, and prerequisite-only `prerequisite_packages` |
-| `hashing_cache` | SHA-256 mode, package, included paths, dependency digests, and prior-cache state | lowercase `package_digest`, `dependencies_digest`, `combined_digest`, cache status, and sorted invalidated packages |
-| `starlark` | repository-contained entrypoint, v1 `_ctx`, and declared legacy fallback | sorted targets containing structured commands and a fallback-use flag |
-| `sharding` | package costs and languages, dependency edges, scheduled packages, shard count, and optional shard index | stable prerequisite-closed shard records with assignments, package closure, toolchains, and estimated cost |
-| `validation` | platform and an explicit set of validation checks | `valid` plus sorted stable diagnostic codes |
+| `diff_selection` | packages with repository-relative roots and an explicit `package_prefix` or `strict_globs` source mode, dependency edges, forced packages, and an `ignore` or `all` unknown-path policy | sorted `changed_packages`, `affected_packages`, and prerequisite-only `prerequisite_packages` |
+| `hashing_cache` | SHA-256 mode, package, included paths, dependency digests, dependents, and missing or raw serialized prior-cache data | lowercase `package_digest`, `dependencies_digest`, `combined_digest`, cache status, and sorted invalidated packages |
+| `starlark` | repository-contained entrypoint, v1 `_ctx`, and declared legacy fallback policy | sorted targets containing rule metadata, structured commands, deterministic display rendering, and the per-target command source |
+| `sharding` | package languages and build-command counts, dependency edges, scheduled packages, shard count, and optional shard index | stable prerequisite-closed shard records with assignments, package closure, toolchains, and estimated cost |
+| `validation` | platform, selected checks, normalized package declarations, and dependency edges | `valid` plus sorted stable diagnostic codes |
 | `toolchain_detection` | package-language records, `null`/empty/explicit package selection, and forced toolchains | the complete canonical toolchain registry as a sorted boolean map |
-| `cli` | portable build-tool arguments and an invocation condition | exit code, normalized mode, and bounded machine-output data |
+| `cli` | a portable action, decision condition, and whether the action would require later execution | exit code only |
 
 These records intentionally model decisions, not host operations:
 
@@ -453,7 +453,8 @@ These records intentionally model decisions, not host operations:
 - Starlark receives inline source and context; it never executes a command;
 - validation inspects inline repository data only;
 - toolchain detection never probes installed programs; and
-- CLI fixtures model parsing/reporting outcomes without launching a build.
+- CLI fixtures classify exit decisions without standardizing native argument
+  grammar, invoking a front door, or launching a build.
 
 Hashing v1 uses SHA-256 over an unambiguous byte stream. Included files are
 sorted by normalized forward-slash path. For each file, append the unsigned
@@ -464,6 +465,51 @@ first byte string and the 32 decoded digest bytes as the second. The package
 stream and dependency stream are hashed separately; `combined_digest` is
 SHA-256 over the 32 package-digest bytes followed by the 32 dependency-digest
 bytes. An empty stream therefore has the standard SHA-256 empty digest.
+
+Sharding v1 normalizes package languages to the canonical toolchain registry
+before computing cost. Each package costs `1 + build_command_count` plus the
+following toolchain weight:
+
+| Toolchain | Weight |
+|---|---:|
+| `rust` | 6 |
+| `dotnet`, `haskell`, `swift`, `typescript` | 4 |
+| `java`, `kotlin` | 3 |
+| `elixir`, `python`, `ruby` | 2 |
+| every other registered toolchain | 0 |
+
+Scheduled roots sort by descending package cost and then qualified package
+name. Each root is assigned to the shard with the lowest current direct-root
+cost, breaking ties by lowest shard index. A positive shard count larger than
+the number of scheduled roots is clamped to that number. An empty selection
+produces one stable empty shard. Zero or negative counts are
+`SHARD_COUNT_INVALID`; an index outside the produced shard range is
+`SHARD_INDEX_INVALID`. `package_names` is the transitive prerequisite closure
+of each shard's direct assignments, and `estimated_cost` is the sum of every
+closed package's cost. Every declared edge endpoint and scheduled name MUST
+reference a declared package.
+
+Starlark v1 injects `repo_root` into `_ctx` from the runner-owned workspace; it
+is never accepted from fixture input. Repository `load()` labels are resolved
+only against inline files and cannot escape the root. A target with structured
+commands reports `command_source: "structured"`; a target that uses the
+declared generator reports `"legacy_fallback"`. For process-free comparison,
+`rendered_commands` is a deterministic display form, not executable authority:
+tokens containing only ASCII letters, digits, `_`, `@`, `%`, `+`, `=`, `:`,
+`,`, `.`, `/`, and `-` are emitted unchanged; every other token is emitted as a
+JSON string; tokens are joined by one ASCII space. Trusted execution MUST use
+the structured `program` and `args` through the platform executor rather than
+executing this display string.
+
+Validation v1 uses the stable diagnostic registry
+`BUILD_FILE_MISSING`, `BUILD_FILE_EMPTY`, `LOCAL_DEPENDENCY_UNDECLARED`,
+`STANDALONE_PREREQUISITE_MISSING`, `STARLARK_SOURCE_INVALID`,
+`STARLARK_DEPENDENCY_INVALID`, `IDENTITY_AMBIGUOUS`, `MANIFEST_AMBIGUOUS`,
+`TOOLCHAIN_UNSUPPORTED`, and `PATH_UNSAFE`. `outcome: "ok"` requires
+`valid: true` with no diagnostic codes. `outcome: "error"` requires
+`valid: false`, one or more codes, and matching diagnostic-envelope codes.
+Platform BUILD precedence is a discovery decision; validation does not invent
+a missing-platform error when canonical `BUILD` fallback is available.
 
 Canonical result ordering is domain-aware:
 
@@ -485,6 +531,21 @@ The canonical v1 toolchain registry is:
 maps to `rust`. OCaml is present in this decision registry before its build-tool
 implementation is promoted. Unknown package languages and unknown forced
 toolchains are stable validation errors rather than new result-map keys.
+`scheduled_packages: null` selects every supplied package, while `[]` selects
+none. Forced toolchains are unioned into the derived set.
+
+The process-free CLI record is a decision table only:
+
+| Condition | Exit code |
+|---|---:|
+| `success` | `0` |
+| `package_failure`, `validation_failure` | `1` |
+| `invalid_usage`, `unsafe_input` | `2` |
+
+An action marked `requires_execution: true` remains inert fixture data in this
+tranche. Native argument parsing and machine-output compatibility become
+conformance claims only when a later sandbox executes each language front
+door.
 
 ## Security and trust boundary
 

@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "id": "hashing-cache/corrupt-cache-recovery",
+  "domain": "hashing_cache",
+  "summary": "Exact inline bytes and dependency digests produce deterministic hashes while a corrupt cache recovers safely.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "hashing_cache"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/python/demo/src/demo.py",
+        "content_utf8": "VALUE = 1\n"
+      },
+      {
+        "path": "code/packages/python/demo/.venv/ignored",
+        "content_utf8": "ignore\n"
+      },
+      {
+        "path": "code/packages/python/demo/BUILD",
+        "content_utf8": "python -m unittest\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "hashing_cache",
+    "options": {
+      "algorithm": "sha256-v1",
+      "package": "python/demo",
+      "include_paths": [
+        "code/packages/python/demo/BUILD",
+        "code/packages/python/demo/src/demo.py"
+      ],
+      "dependency_digests": [
+        {
+          "package": "python/base",
+          "digest": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "dependents": [
+        "python/app"
+      ],
+      "prior_cache": {
+        "state": "record",
+        "content_utf8": "{not valid json"
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "hashing-cache/corrupt-cache-recovery",
+    "domain": "hashing_cache",
+    "outcome": "ok",
+    "result": {
+      "package_digest": "e12569d3648a33838d0bc363c42503e01146af8d3e9d40752d1acb7c5c914750",
+      "dependencies_digest": "ebb0556468049bcf84d265e6727c3dc959232bf8c897efbf9ded4e923bd22539",
+      "combined_digest": "1baaba8a64ddf3b3dade2bccd74e50432e04f96beff6c6b97f396cdf222155a4",
+      "cache_status": "recovered",
+      "invalidated_packages": [
+        "python/app",
+        "python/demo"
+      ]
+    },
+    "diagnostics": [
+      {
+        "code": "CACHE_CORRUPT_RECOVERED",
+        "severity": "warning",
+        "package": "python/demo"
+      }
+    ]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

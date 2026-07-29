@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "id": "validation/clean-build",
+  "domain": "validation",
+  "summary": "A non-empty canonical BUILD file passes the selected repository-data checks.",
+  "platforms": [
+    "linux"
+  ],
+  "capabilities": [
+    "validation"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/python/demo/BUILD",
+        "content_utf8": "python -m unittest\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": [
+        "build_file_presence"
+      ],
+      "packages": [
+        {
+          "name": "python/demo",
+          "rel_path": "code/packages/python/demo",
+          "language": "python",
+          "build_file_state": "present",
+          "build_references": [],
+          "is_starlark": false,
+          "declared_srcs": [],
+          "declared_deps": []
+        }
+      ],
+      "dependency_edges": []
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/clean-build",
+    "domain": "validation",
+    "outcome": "ok",
+    "result": {
+      "valid": true,
+      "diagnostic_codes": []
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

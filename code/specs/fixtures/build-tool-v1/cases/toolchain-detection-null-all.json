@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "id": "toolchain-detection/null-selects-all-packages",
+  "domain": "toolchain_detection",
+  "summary": "A null selection schedules every supplied package while retaining a complete false-filled registry.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "toolchain_detection"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "toolchain_detection",
+    "options": {
+      "packages": [
+        {
+          "name": "dart/app",
+          "language": "dart"
+        },
+        {
+          "name": "ocaml/graph",
+          "language": "ocaml"
+        }
+      ],
+      "scheduled_packages": null,
+      "forced_toolchains": []
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "toolchain-detection/null-selects-all-packages",
+    "domain": "toolchain_detection",
+    "outcome": "ok",
+    "result": {
+      "toolchains": {
+        "cpp": false,
+        "dart": true,
+        "dotnet": false,
+        "elixir": false,
+        "go": false,
+        "haskell": false,
+        "java": false,
+        "kotlin": false,
+        "lua": false,
+        "ocaml": true,
+        "perl": false,
+        "python": false,
+        "ruby": false,
+        "rust": false,
+        "swift": false,
+        "typescript": false
+      }
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

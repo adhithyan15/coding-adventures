@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "id": "starlark/host-load-denied",
+  "domain": "starlark",
+  "summary": "A Starlark load that escapes the inline repository is rejected without consulting the host.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "starlark"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/python/demo/BUILD",
+        "content_utf8": "load(\"../../../../outside.star\", \"secret\")\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "starlark",
+    "options": {
+      "entrypoint": "code/packages/python/demo/BUILD",
+      "context": {
+        "version": 1,
+        "os": "windows",
+        "arch": "amd64",
+        "cpu_count": 2,
+        "ci": true
+      },
+      "legacy_fallback": "error"
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "starlark/host-load-denied",
+    "domain": "starlark",
+    "outcome": "error",
+    "result": {},
+    "diagnostics": [
+      {
+        "code": "STARLARK_LOAD_OUTSIDE_REPOSITORY",
+        "severity": "error",
+        "path": "code/packages/python/demo/BUILD"
+      }
+    ]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}
