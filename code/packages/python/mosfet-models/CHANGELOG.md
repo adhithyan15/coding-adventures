@@ -3,6 +3,8 @@
 ## [0.1.0] — Unreleased
 
 ### Added
+- `Level1Params.U0` adds Berkeley zero-bias surface mobility with a
+  600 cm^2/V/s default and finite, non-negative validation.
 - `Level1Params.JS` adds zero-default Berkeley bulk-junction saturation-current
   density for source/drain area scaling while preserving scalar `IS`.
 - `Level1Params.MJSW` adds Berkeley sidewall-junction depletion grading,

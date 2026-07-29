@@ -12,6 +12,8 @@ use spice_engine::{
     TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
+const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
+
 mod syntax;
 
 pub use syntax::{
@@ -1899,6 +1901,11 @@ fn build_mosfet_params(
     for (name, value) in model.params.iter().chain(instance_params.iter()) {
         apply_mosfet_param(&mut params, name, *value);
     }
+    if !model.params.contains_key("KP") && !instance_params.contains_key("KP") {
+        if let Some(oxide_thickness) = model.params.get("TOX").filter(|value| **value > 0.0) {
+            params.kp = params.surface_mobility * 1.0e-4 * OXIDE_PERMITTIVITY / oxide_thickness;
+        }
+    }
     if let Some(value) = instance_params.get("NRD") {
         params.drain_squares = *value;
     }
@@ -1931,6 +1938,7 @@ fn apply_mosfet_param(params: &mut MosfetLevel1Params, name: &str, value: f64) {
         "L" => params.l = value,
         "LD" => params.lateral_diffusion_length = value,
         "TOX" => params.oxide_thickness = value,
+        "U0" | "UO" => params.surface_mobility = value,
         "RD" => params.drain_resistance = value,
         "RS" => params.source_resistance = value,
         "RSH" => params.sheet_resistance = value,

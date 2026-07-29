@@ -1,5 +1,7 @@
 # Changelog
 
+- Add Level-1 MOS model-card `U0` / `UO` surface mobility and derive `KP` from
+  explicit `TOX` when `KP` is omitted, preserving explicit-`KP` precedence.
 - Add Level-1 MOS model-card `JS` as bulk-junction saturation-current density,
   scaling source/drain leakage and shot noise by `AS` / `AD` when both areas
   are present and otherwise retaining Berkeley-compatible `IS` fallback.
