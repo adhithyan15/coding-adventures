@@ -25,11 +25,12 @@ hidden content, stable IDs, and resolved link/resource URLs. Browser metadata
 needed after layout is retained under `LayoutNode.ext["html"]`, so positioned
 nodes still carry link targets and semantic roles for hit testing.
 
-This first bridge intentionally does not implement CSS cascade or a complete
-CSS inline-formatting context. Inline nodes remain explicit layout containers;
-the current `layout-block` engine positions them using its documented v1 block
-flow. A dedicated inline layout pass is the next rendering-fidelity boundary,
-not parser conformance work.
+This bridge intentionally does not implement CSS cascade or a complete CSS
+inline-formatting context. `layout-block` now places consecutive inline nodes
+on shared lines and wraps atomic boxes, which is sufficient to give links
+meaningful horizontal geometry. Word-boundary fragmentation, baseline
+alignment, and splitting a styled inline box across lines remain later
+rendering-fidelity work, not parser conformance work.
 
 ## Verification
 

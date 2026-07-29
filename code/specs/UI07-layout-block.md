@@ -35,7 +35,8 @@ Block/inline properties live in `ext["block"]`:
 
 ```
 BlockExt {
-  display:     "block" | "inline"    // default: "block"
+  display:     "block" | "inline" | "inline-text"
+             | "inline-replaced" | "line-break" // default: "block"
   // Block-specific
   float:       "none" | "left" | "right"   // default: "none" (future)
   clear:       "none" | "left" | "right" | "both"  // default: "none" (future)
@@ -74,7 +75,9 @@ All direct children of a block container are classified as either block-level
 or inline-level based on `ext["block"]["display"]`:
 
 - `"block"` → block-level: stacks vertically, full available width
-- `"inline"` → inline-level: flows horizontally, wraps
+- `"inline"` / `"inline-text"` / `"inline-replaced"` → inline-level: flows
+  horizontally and wraps
+- `"line-break"` → terminates the current line box
 
 When a block container has a **mix** of block and inline children, inline
 children are wrapped in an anonymous block container (inline formatting
@@ -96,6 +99,11 @@ For each block-level child in source order:
    own `margin.bottom`
 
 ### Inline formatting context
+
+The current executable slice implements the line-box cursor and atomic child
+placement described below. Each child is kept intact and moves to the next
+line when it does not fit. Text splitting at word boundaries, one inline box
+spanning multiple lines, and baseline alignment remain planned refinements.
 
 When laying out a sequence of inline children:
 
