@@ -173,15 +173,36 @@ enum ValueTest {
     InRange(i64, i64),
 }
 
-/// Whether every level-88 `VALUE` item is a discrete string literal
-/// (`Single(Src::Str)`). This is the accept predicate for a condition-name on an
-/// ALPHANUMERIC (`PIC X`) conditional variable: a discrete string VALUE reads and
-/// SETs exactly like `MOVE "…" TO item`. A `THRU` range or a numeric/figurative
-/// VALUE on an alphanumeric item stays a later rung, so this returns `false` and
-/// the caller rejects — the identical predicate the oracle applies, so both
-/// engines accept and reject the very same programs.
-fn all_single_str(values: &[ValueSpec]) -> bool {
-    values.iter().all(|v| matches!(v, ValueSpec::Single(Src::Str(_))))
+/// A value-test for an alphanumeric (`PIC X`) level-88, resolved to owned strings
+/// so the mutable emit phase holds no borrow into `self.conditions`: equality with
+/// one discrete string, or membership in an inclusive `lo THRU hi` string range.
+/// Mirrors [`ValueTest`] for the alphanumeric `str_cmp` path.
+enum StrValueTest {
+    Eq(String),
+    InRange(String, String),
+}
+
+/// Whether every level-88 `VALUE` item is a STRING value: a discrete string
+/// literal (`Single(Src::Str)`) OR an inclusive `THRU` range BOTH of whose bounds
+/// are string literals (`Range(Src::Str, Src::Str)`). This is the accept predicate
+/// for a condition-name on an ALPHANUMERIC (`PIC X`) conditional variable:
+///
+///   * a discrete string VALUE reads (equality) and SETs (store) exactly like
+///     `MOVE "…" TO item`;
+///   * a string `THRU` range reads as an inclusive `lo <= var <= hi` alphanumeric
+///     comparison and SETs to its low bound `lo` — both through the SAME `str_cmp`
+///     machinery an `IF`/`MOVE` uses.
+///
+/// A range with a NON-string bound (`"A" THRU 5`), a numeric/figurative VALUE, or
+/// a mixed string/numeric list still fails → still a later rung, so this returns
+/// `false` and the caller rejects. The predicate is logically IDENTICAL to the
+/// oracle's (`Lit::Str` there, `Src::Str` here), so both engines accept and reject
+/// the very same programs.
+fn all_str_values(values: &[ValueSpec]) -> bool {
+    values.iter().all(|v| match v {
+        ValueSpec::Single(s) => matches!(s, Src::Str(_)),
+        ValueSpec::Range(lo, hi) => matches!(lo, Src::Str(_)) && matches!(hi, Src::Str(_)),
+    })
 }
 
 impl Item {
@@ -783,13 +804,15 @@ impl<'a> Compiler<'a> {
     /// A **numeric** variable takes the first value formatted into its picture at
     /// compile time — the same `const`-into-slot store `MOVE <literal>` emits.
     ///
-    /// An **alphanumeric** (`PIC X`) variable is now supported for the
-    /// discrete-string case: when every VALUE item is a discrete string literal
-    /// ([`all_single_str`]), SET stores the FIRST value into the slot exactly as
-    /// `MOVE "…" TO item` — [`format_into_picture`] fits the string to the
-    /// receiver width and it is emitted as the slot's `str_const`, byte-identical to
-    /// the oracle's `move_into_char`. A `THRU` range with string bounds, or a
-    /// numeric/figurative VALUE, on an alphanumeric variable stays a later rung —
+    /// An **alphanumeric** (`PIC X`) variable is supported for STRING values: when
+    /// every VALUE item is a discrete string literal or a string `THRU` range
+    /// ([`all_str_values`]), SET stores the FIRST value's string into the slot
+    /// exactly as `MOVE "…" TO item` — a leading discrete string `s` stores `s`; a
+    /// leading range `lo THRU _` stores its LOW bound `lo`, mirroring the numeric
+    /// arm. [`format_into_picture`] fits the string to the receiver width and it is
+    /// emitted as the slot's `str_const`, byte-identical to the oracle's
+    /// `move_into_char`. A range with a NON-string bound, a numeric/figurative
+    /// VALUE, or a mixed list on an alphanumeric variable stays a later rung —
     /// rejected identically to the oracle.
     fn emit_set(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
         let cond_name = first_token(verb, "NAME")
@@ -802,23 +825,26 @@ impl<'a> Compiler<'a> {
         // item`; extract the fitted image while the (immutable) `cn` borrow is live,
         // then emit. A THRU range or a non-string VALUE stays a later rung.
         if matches!(&self.items[var].kind, ItemKind::Char { .. }) {
-            if !all_single_str(&cn.values) {
+            if !all_str_values(&cn.values) {
                 return Err(CompileError::Unsupported(
-                    "SET … TO TRUE on an alphanumeric conditional variable needs discrete-string \
-                     VALUEs (a THRU range or a numeric/figurative VALUE is a later rung)"
+                    "SET … TO TRUE on an alphanumeric conditional variable needs string VALUEs (a \
+                     discrete string or a string THRU range; a range with a non-string bound or a \
+                     numeric/figurative VALUE is a later rung)"
                         .into(),
                 ));
             }
             let picture = Picture::Alphanumeric { size: self.items[var].width() };
-            let image = match cn.values.first() {
-                Some(ValueSpec::Single(s)) => format_into_picture(s, &picture)
-                    .map_err(|m| CompileError::Unsupported(format!("SET {cond_name}: {m}")))?,
-                _ => {
+            // The FIRST value's string: a discrete string, or a range's LOW bound.
+            let src = match cn.values.first() {
+                Some(ValueSpec::Single(s)) | Some(ValueSpec::Range(s, _)) => s,
+                None => {
                     return Err(CompileError::Malformed(format!(
-                        "condition-name {cond_name} has no discrete string VALUE"
+                        "condition-name {cond_name} has no VALUE"
                     )))
                 }
             };
+            let image = format_into_picture(src, &picture)
+                .map_err(|m| CompileError::Unsupported(format!("SET {cond_name}: {m}")))?;
             let reg = self.items[var].reg.clone();
             self.emit("str_const", Some(&reg), vec![Operand::Str(image)], "str");
             return Ok(());
@@ -4762,15 +4788,21 @@ impl<'a> Compiler<'a> {
     /// `cmp_*` yields `0`/`1`, bitwise `and`/`or` are exactly logical AND/OR, and
     /// the combined `i64` feeds `jmp_if_false` like any relational condition.
     ///
-    /// An **alphanumeric** (`PIC X`) variable is now supported for the
-    /// discrete-string case: when every VALUE item is a discrete string literal
-    /// ([`all_single_str`]), each value becomes a `cmp_eq` over the SAME alphanumeric
-    /// `str_cmp` path ([`Self::emit_str_condition`]) an `IF var = "…"` relation
-    /// runs — the variable's slot against the value's `str_const`, space-padded to a
-    /// common width — and the value-list OR-folds with `or`, mirroring the numeric
-    /// fold exactly. Reusing `emit_str_condition` is what makes the read
-    /// byte-identical to the oracle's `compare_operands`. A `THRU` range with string
-    /// bounds, or a numeric/figurative VALUE, on an alphanumeric variable stays a
+    /// An **alphanumeric** (`PIC X`) variable is supported for STRING values: when
+    /// every VALUE item is a discrete string literal or a string `THRU` range
+    /// ([`all_str_values`]), each value becomes a boolean over the SAME alphanumeric
+    /// `str_cmp` path ([`Self::emit_str_condition`]) an `IF var = "…"` /
+    /// `IF var >= "…"` relation runs — the variable's slot against the value's
+    /// `str_const`, space-padded to a common width:
+    ///
+    ///   * a discrete string `s` is `cmp_eq(var, s)`;
+    ///   * an inclusive range `lo THRU hi` is `and(cmp_ge(var, lo), cmp_le(var, hi))`
+    ///     — exactly how the numeric range and an alphanumeric `IF var >= "…"` lower.
+    ///
+    /// The value-list OR-folds with `or`, mirroring the numeric fold exactly.
+    /// Reusing `emit_str_condition` is what makes the read byte-identical to the
+    /// oracle's `compare_operands`. A `THRU` range with a NON-string bound, a
+    /// numeric/figurative VALUE, or a mixed list on an alphanumeric variable stays a
     /// later rung — rejected identically to the oracle.
     fn emit_condition_name(&mut self, name: &str) -> Result<String, CompileError> {
         // Phase 1 (immutable): resolve the variable and, per its kind, gather the
@@ -4780,37 +4812,71 @@ impl<'a> Compiler<'a> {
             CompileError::Unsupported(format!("reference to condition-name {name} (undeclared)"))
         })?;
         let var = cn.var;
-        // Alphanumeric slot: an OR-fold of alphanumeric equalities against each
-        // discrete string VALUE, via the very `str_cmp` path `IF var = "…"` uses.
+        // Alphanumeric slot: an OR-fold of alphanumeric tests against each string
+        // VALUE, via the very `str_cmp` path `IF var = "…"` / `IF var >= "…"` uses.
         if matches!(&self.items[var].kind, ItemKind::Char { .. }) {
-            if !all_single_str(&cn.values) {
+            if !all_str_values(&cn.values) {
                 return Err(CompileError::Unsupported(
-                    "a level-88 condition-name on an alphanumeric item needs discrete-string \
-                     VALUEs (a THRU range or a numeric/figurative VALUE is a later rung)"
+                    "a level-88 condition-name on an alphanumeric item needs string VALUEs (a \
+                     discrete string or a string THRU range; a range with a non-string bound or a \
+                     numeric/figurative VALUE is a later rung)"
                         .into(),
                 ));
             }
-            let strs: Vec<String> = cn
+            // Phase 1 (immutable): gather owned string tests so the emits below hold
+            // no borrow into `self.conditions`. `all_str_values` guarantees every
+            // item is a string `Single` or a string `Range`.
+            let str_tests: Vec<StrValueTest> = cn
                 .values
                 .iter()
-                .filter_map(|v| match v {
-                    ValueSpec::Single(Src::Str(s)) => Some(s.clone()),
-                    _ => None,
+                .map(|v| match v {
+                    ValueSpec::Single(Src::Str(s)) => StrValueTest::Eq(s.clone()),
+                    ValueSpec::Range(Src::Str(lo), Src::Str(hi)) => {
+                        StrValueTest::InRange(lo.clone(), hi.clone())
+                    }
+                    _ => unreachable!("all_str_values guarantees string Singles/Ranges"),
                 })
                 .collect();
             let slot_reg = self.items[var].reg.clone();
             let slot_len = self.items[var].width();
+            // Build the fixed subject `StrOperand` `str_operand` builds for a Char
+            // item; a fresh clone per comparison since `emit_str_condition` consumes
+            // it.
+            let subject = |reg: &str, len| StrOperand::Fixed { reg: reg.to_string(), len };
+            // Phase 2 (mutable): emit one boolean per test, OR-folded with `or`.
             let mut acc: Option<String> = None;
-            for s in strs {
-                // Both sides become the same fixed `StrOperand`s `str_operand`
-                // builds for a Char item and a string literal, then run the shared
-                // space-padded `str_cmp` equality — byte-identical to `IF`.
-                let subject = StrOperand::Fixed { reg: slot_reg.clone(), len: slot_len };
-                let vlen = s.len();
-                let vreg = self.fresh("_sl");
-                self.emit("str_const", Some(&vreg), vec![Operand::Str(s)], "str");
-                let value = StrOperand::Fixed { reg: vreg, len: vlen };
-                let b = self.emit_str_condition(subject, value, "cmp_eq")?;
+            for test in str_tests {
+                let b = match test {
+                    // Discrete string: the value's `str_const` as a fixed `StrOperand`,
+                    // then the shared space-padded `str_cmp` equality — byte-identical
+                    // to `IF var = "…"`.
+                    StrValueTest::Eq(s) => {
+                        let vlen = s.len();
+                        let vreg = self.fresh("_sl");
+                        self.emit("str_const", Some(&vreg), vec![Operand::Str(s)], "str");
+                        let value = StrOperand::Fixed { reg: vreg, len: vlen };
+                        self.emit_str_condition(subject(&slot_reg, slot_len), value, "cmp_eq")?
+                    }
+                    // Inclusive range: `and(cmp_ge(var, lo), cmp_le(var, hi))` — the
+                    // SAME `str_cmp` lowering an alphanumeric `IF var >= "…"` /
+                    // `IF var <= "…"` relation uses, and the same `and` the numeric
+                    // range emits.
+                    StrValueTest::InRange(lo, hi) => {
+                        let lo_len = lo.len();
+                        let lo_reg = self.fresh("_sl");
+                        self.emit("str_const", Some(&lo_reg), vec![Operand::Str(lo)], "str");
+                        let lo_op = StrOperand::Fixed { reg: lo_reg, len: lo_len };
+                        let ge = self.emit_str_condition(subject(&slot_reg, slot_len), lo_op, "cmp_ge")?;
+                        let hi_len = hi.len();
+                        let hi_reg = self.fresh("_sl");
+                        self.emit("str_const", Some(&hi_reg), vec![Operand::Str(hi)], "str");
+                        let hi_op = StrOperand::Fixed { reg: hi_reg, len: hi_len };
+                        let le = self.emit_str_condition(subject(&slot_reg, slot_len), hi_op, "cmp_le")?;
+                        let r = self.fresh("_c88rng");
+                        self.emit("and", Some(&r), vec![Operand::Var(ge), Operand::Var(le)], "i64");
+                        r
+                    }
+                };
                 acc = Some(match acc {
                     None => b,
                     Some(prev) => {
@@ -7966,12 +8032,30 @@ mod tests {
     }
 
     #[test]
-    fn level_88_alphanumeric_thru_range_is_still_a_later_rung() {
-        // A `THRU` range on an alphanumeric conditional variable stays deferred —
-        // a clean later rung, matching the oracle's own deferral.
+    fn level_88_alphanumeric_string_thru_range_lowers() {
+        // A `THRU` range with STRING bounds on an alphanumeric conditional variable
+        // now lowers to valid IIR: an `and(cmp_ge, cmp_le)` over the `str_cmp` path.
+        let m = compile_source(
+            &wrap(
+                &["01  GRADE  PIC X VALUE \"C\".", "88  PASSING  VALUE \"A\" THRU \"D\"."],
+                &["IF PASSING DISPLAY \"pass\".", "STOP RUN."],
+            ),
+            "c88",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_cmp".to_string()), "expected `str_cmp`: {os:?}");
+    }
+
+    #[test]
+    fn level_88_alphanumeric_numeric_bound_thru_range_is_still_a_later_rung() {
+        // A `THRU` range with a NON-string (numeric) bound on an alphanumeric
+        // conditional variable stays deferred — a clean later rung, matching the
+        // oracle's own deferral.
         let err = compile_source(
             &wrap(
-                &["01  FLAG  PIC X VALUE \"M\".", "88  IN-RANGE  VALUE \"A\" THRU \"Z\"."],
+                &["01  GRADE  PIC X VALUE \"C\".", "88  IN-RANGE  VALUE \"A\" THRU 5."],
                 &["IF IN-RANGE DISPLAY \"YES\".", "STOP RUN."],
             ),
             "c88",

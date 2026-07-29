@@ -901,15 +901,133 @@ fn level_88_alphanumeric_multi_char_field_space_padding() {
 }
 
 #[test]
-fn level_88_alphanumeric_thru_range_is_a_later_rung() {
-    // 88 X VALUE "A" THRU "Z" on an alphanumeric variable — the alphanumeric THRU
-    // range stays a later rung, rejected IDENTICALLY on both engines.
+fn level_88_alphanumeric_string_thru_range_read_in_range_true() {
+    // GRADE holds "C"; PASSING (VALUE "A" THRU "D") is an inclusive string range
+    // that contains it → the THEN branch runs. Byte-identical to the oracle.
+    let out = assert_matches_oracle(&wrap(
+        &["01  GRADE  PIC X VALUE \"C\".", "88  PASSING  VALUE \"A\" THRU \"D\"."],
+        &["IF PASSING DISPLAY \"pass\" ELSE DISPLAY \"fail\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "pass\n");
+}
+
+#[test]
+fn level_88_alphanumeric_string_thru_range_read_out_of_range_false() {
+    // A value BELOW the low bound and a value ABOVE the high bound both fall out of
+    // "B" THRU "Y" → the ELSE branch runs. "A" < "B" (below); "Z" > "Y" (above).
+    let below = assert_matches_oracle(&wrap(
+        &["01  GRADE  PIC X VALUE \"A\".", "88  MID  VALUE \"B\" THRU \"Y\"."],
+        &["IF MID DISPLAY \"in\" ELSE DISPLAY \"out\".", "STOP RUN."],
+    ));
+    assert_eq!(below, "out\n");
+    let above = assert_matches_oracle(&wrap(
+        &["01  GRADE  PIC X VALUE \"Z\".", "88  MID  VALUE \"B\" THRU \"Y\"."],
+        &["IF MID DISPLAY \"in\" ELSE DISPLAY \"out\".", "STOP RUN."],
+    ));
+    assert_eq!(above, "out\n");
+}
+
+#[test]
+fn level_88_alphanumeric_string_thru_range_boundaries_are_inclusive() {
+    // The range is inclusive at BOTH ends: var == lo ("A") and var == hi ("D") each
+    // satisfy PASSING (VALUE "A" THRU "D").
+    let lo = assert_matches_oracle(&wrap(
+        &["01  GRADE  PIC X VALUE \"A\".", "88  PASSING  VALUE \"A\" THRU \"D\"."],
+        &["IF PASSING DISPLAY \"in\" ELSE DISPLAY \"out\".", "STOP RUN."],
+    ));
+    assert_eq!(lo, "in\n");
+    let hi = assert_matches_oracle(&wrap(
+        &["01  GRADE  PIC X VALUE \"D\".", "88  PASSING  VALUE \"A\" THRU \"D\"."],
+        &["IF PASSING DISPLAY \"in\" ELSE DISPLAY \"out\".", "STOP RUN."],
+    ));
+    assert_eq!(hi, "in\n");
+}
+
+#[test]
+fn level_88_alphanumeric_string_thru_range_set_stores_low_bound() {
+    // SET PASSING TO TRUE stores the range's LOW bound "A" into GRADE; DISPLAY shows
+    // "A". Byte-identical to the oracle's `MOVE`-into-slot store of the low bound.
+    let out = assert_matches_oracle(&wrap(
+        &["01  GRADE  PIC X VALUE \"C\".", "88  PASSING  VALUE \"A\" THRU \"D\"."],
+        &["SET PASSING TO TRUE.", "DISPLAY GRADE.", "STOP RUN."],
+    ));
+    assert_eq!(out, "A\n");
+}
+
+#[test]
+fn level_88_alphanumeric_range_or_folded_with_a_discrete_single() {
+    // 88 X VALUE "A" THRU "C" "Z" — a range OR-folded with a discrete single. A
+    // value inside the range ("B") → true; the discrete "Z" → true; a value outside
+    // both ("M") → false. Byte-identical any-match on both engines.
+    let in_range = assert_matches_oracle(&wrap(
+        &["01  CH  PIC X VALUE \"B\".", "88  OK  VALUE \"A\" THRU \"C\" \"Z\"."],
+        &["IF OK DISPLAY \"y\" ELSE DISPLAY \"n\".", "STOP RUN."],
+    ));
+    assert_eq!(in_range, "y\n");
+    let discrete = assert_matches_oracle(&wrap(
+        &["01  CH  PIC X VALUE \"Z\".", "88  OK  VALUE \"A\" THRU \"C\" \"Z\"."],
+        &["IF OK DISPLAY \"y\" ELSE DISPLAY \"n\".", "STOP RUN."],
+    ));
+    assert_eq!(discrete, "y\n");
+    let neither = assert_matches_oracle(&wrap(
+        &["01  CH  PIC X VALUE \"M\".", "88  OK  VALUE \"A\" THRU \"C\" \"Z\"."],
+        &["IF OK DISPLAY \"y\" ELSE DISPLAY \"n\".", "STOP RUN."],
+    ));
+    assert_eq!(neither, "n\n");
+    // And SET stores the FIRST value item's low bound "A", which satisfies OK.
+    let set = assert_matches_oracle(&wrap(
+        &["01  CH  PIC X VALUE \"M\".", "88  OK  VALUE \"A\" THRU \"C\" \"Z\"."],
+        &["SET OK TO TRUE.", "DISPLAY CH.", "STOP RUN."],
+    ));
+    assert_eq!(set, "A\n");
+}
+
+#[test]
+fn level_88_alphanumeric_multi_char_string_thru_range_space_padding() {
+    // A PIC X(2) field with a two-character string range "AA" THRU "ZZ": the
+    // space-padded `str_cmp` ordering agrees on both engines. "MN" is inside;
+    // SET stores the low bound "AA".
+    let in_range = assert_matches_oracle(&wrap(
+        &["01  PAIR  PIC X(2) VALUE \"MN\".", "88  OK  VALUE \"AA\" THRU \"ZZ\"."],
+        &["IF OK DISPLAY \"y\" ELSE DISPLAY \"n\".", "STOP RUN."],
+    ));
+    assert_eq!(in_range, "y\n");
+    let set = assert_matches_oracle(&wrap(
+        &["01  PAIR  PIC X(2) VALUE \"MN\".", "88  OK  VALUE \"AA\" THRU \"ZZ\"."],
+        &["SET OK TO TRUE.", "DISPLAY PAIR.", "STOP RUN."],
+    ));
+    assert_eq!(set, "AA\n");
+}
+
+#[test]
+fn level_88_alphanumeric_numeric_bound_thru_range_is_a_later_rung() {
+    // 88 X VALUE "A" THRU 5 on a PIC X variable — a range with a NON-string
+    // (numeric) bound stays a later rung, rejected IDENTICALLY on both engines.
     let src = wrap(
-        &["01  FLAG  PIC X VALUE \"M\".", "88  IN-RANGE  VALUE \"A\" THRU \"Z\"."],
+        &["01  FLAG  PIC X VALUE \"C\".", "88  IN-RANGE  VALUE \"A\" THRU 5."],
         &["IF IN-RANGE DISPLAY \"yes\".", "STOP RUN."],
     );
-    assert!(run_cobol(&src).is_err(), "oracle must reject an alphanumeric THRU 88");
-    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject an alphanumeric THRU 88");
+    assert!(run_cobol(&src).is_err(), "oracle must reject a numeric-bound THRU 88 on a PIC X");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a numeric-bound THRU 88 on a PIC X"
+    );
+}
+
+#[test]
+fn level_88_alphanumeric_filler_string_thru_range_is_a_later_rung() {
+    // The FILLER-88 reject still holds for a string THRU range: a level-88 on an
+    // unnamed alphanumeric FILLER binds to DIFFERENT items on the two engines, so it
+    // is rejected co-totally on BOTH even with a now-accepted string range.
+    let src = wrap(
+        &["01  FILLER  PIC X VALUE \"C\".", "88  P  VALUE \"A\" THRU \"Z\"."],
+        &["IF P DISPLAY \"yes\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a FILLER string-range 88");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a FILLER string-range 88"
+    );
 }
 
 #[test]
