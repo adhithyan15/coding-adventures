@@ -176,7 +176,16 @@ FIRST-MATCH-WINS, and — crucially — NO RE-CHAINING: a byte a replacement pro
 never re-examined by a later item, so `REPLACING ALL "a" BY "b" ALL "b" BY "z"` over
 `"ab"` gives `"bz"`, not `"zz"`; this rung's multi path is `ALL`-only, single-char, with
 no `{BEFORE|AFTER}` region and no `LEADING`/`CHARACTERS`/`FIRST` — a single replace item
-keeps all its capabilities); and the
+keeps all its capabilities); the **replace-every-position** `INSPECT source REPLACING
+CHARACTERS BY x` (no search character — EVERY position of the alphanumeric source is
+overwritten with the single replacement char `x`, so with no region the WHOLE field
+becomes `x`s, its width unchanged: `"ABABA"` → CHARACTERS BY `"X"` → `"XXXXX"`; the fill
+is computed on a BYTE basis — `n = storage.len()` copies stored through `move_into`,
+which re-pads/truncates to the picture's CHAR size — so a non-ASCII source stays co-total
+with the byte-based compiler: `PIC X(5) VALUE "café"` → CHARACTERS BY `"Z"` → `"ZZZZZ"`
+(FIVE `Z`s — the fixed 5-char width caps the padded 6-byte image on both engines); a
+`{BEFORE|AFTER}` region on the CHARACTERS item and a single-char but non-ASCII *literal*
+replacement are later rungs, a `PIC X(1)` *item* replacement is supported); and the
 **combined** `INSPECT source TALLYING counter FOR {ALL|LEADING} delim
 REPLACING {ALL|LEADING} x BY y` (one `INSPECT`, both phrases — per ISO it runs as
 tally-then-replace: count `delim` in the ORIGINAL source into `counter` FIRST,
@@ -218,7 +227,9 @@ handlers ARE supported),
 tally, a `{BEFORE|AFTER}` region on a `FOR LEADING`/`REPLACING LEADING` phrase
 (the region ships for `FOR ALL`/`REPLACING ALL` only — on the lone forms, on
 `CONVERTING`, and now on each half of the combined form) or a
-MULTI-character region delimiter, `REPLACING CHARACTERS`/`FIRST`, a MULTI-item
+MULTI-character region delimiter, a `REPLACING CHARACTERS` item carrying a
+`{BEFORE|AFTER}` region or a non-ASCII literal replacement / `REPLACING FIRST` (a lone
+`REPLACING CHARACTERS BY x` is now supported), a MULTI-item
 `REPLACING` list carrying a `LEADING`/`CHARACTERS`/`FIRST` item or a `{BEFORE|AFTER}`
 region (the multi-item list itself is now supported for plain single-char `ALL` items),
 a MULTI-item `TALLYING` list carrying a `LEADING`/`CHARACTERS` item or a `{BEFORE|AFTER}`

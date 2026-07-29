@@ -8,6 +8,31 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.56.0: INSPECT REPLACING CHARACTERS BY x (no region)
+
+`INSPECT source REPLACING CHARACTERS BY x` — the "replace every position" form is now compiled,
+byte-identical to the `coding-adventures-cobol-runtime` 0.60.0 oracle. Previously it was rejected
+at emit time ("INSPECT REPLACING CHARACTERS is a later rung"). No grammar change was needed.
+
+- Unlike `REPLACING ALL …` there is no per-position compare — EVERY position becomes `x`
+  unconditionally. `emit_inspect_replacing_characters` reuses the REPLACING-ALL rebuild scaffold
+  minus the `cmp_eq`: it appends the 1-character replacement string `width` times (the picture's
+  compile-time CHAR width) into a fresh accumulator, then copies it back to the source register.
+- Byte-basis co-totality: the oracle fills `n = storage.len()` (BYTE-length) copies then
+  `move_into` re-pads/truncates to the picture's CHAR size. Emitting exactly `width` copies here
+  reproduces that capped image on both engines. Worked non-ASCII regression: `PIC X(5) VALUE
+  "café"` (5 chars / 6 bytes) REPLACING CHARACTERS BY `"Z"` → `"ZZZZZ"` (FIVE `Z`s) on both.
+- Dispatch: the lone-REPLACING branch of `emit_inspect` detects the CHARACTERS keyword on the
+  SINGLE replace item FIRST and routes to `emit_inspect_replacing_characters`, mirroring the
+  oracle's `read_statement`.
+- Guards, applied identically to the oracle: (3) a `{BEFORE|AFTER}` region on the CHARACTERS item
+  is deferred; (2) a single-char but NON-ASCII *literal* `x` is a later rung (an explicit
+  `is_ascii()` pre-check so the diagnostic/gating match the oracle rather than
+  `single_delim_str`'s byte-based "multi-character" reject) — a `PIC X(1)` *item* replacement is
+  not ASCII-gated; (1) `x` must be a single character (`single_delim_str`).
+- Scope unchanged elsewhere: a CHARACTERS item inside a MULTI-item `REPLACING` list, and inside a
+  combined `TALLYING … REPLACING`, remain later rungs, rejected identically to before.
+
 ### Added — v0.55.0: INSPECT TALLYING … FOR CHARACTERS (+ optional region)
 
 `INSPECT source TALLYING counter FOR CHARACTERS [ {BEFORE|AFTER} x ]` — the "count every

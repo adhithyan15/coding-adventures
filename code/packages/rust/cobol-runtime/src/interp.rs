@@ -391,6 +391,9 @@ impl Machine {
             Stmt::InspectReplacingMulti { source, items } => {
                 self.exec_inspect_replacing_multi(source, items)?
             }
+            Stmt::InspectReplacingCharacters { source, replace } => {
+                self.exec_inspect_replacing_characters(source, replace)?
+            }
             Stmt::InspectTallyMulti { source, counter, delims } => {
                 return self.exec_inspect_tally_multi(source, counter, delims)
             }
@@ -1351,6 +1354,60 @@ impl Machine {
                 c // matched no item — unchanged
             })
             .collect();
+        self.move_into(sidx, Src::Chars(rebuilt))
+    }
+
+    /// `INSPECT source REPLACING CHARACTERS BY x` — overwrite EVERY position of the
+    /// alphanumeric `source` with the single replacement character `x`. With no
+    /// region the WHOLE field becomes `x`s; its width is unchanged.
+    ///
+    /// # Byte-basis fill (co-total with the byte-based compiler)
+    ///
+    /// The compiler fills `str_len(S)` (BYTE-length) positions; to agree with it for
+    /// ANY source we compute the fill on the BYTE basis too: `n = storage.len()` is
+    /// the field's BYTE length, and we build `n` copies of `x`. Because `x` is a
+    /// single ASCII byte (guard 2), the `n`-copy image is `n` ASCII bytes — a valid
+    /// `String`. We then store it through the SAME `move_into` path `inspect_replace`
+    /// uses, which re-pads/truncates the image to the picture's fixed CHAR size. So
+    /// for a non-ASCII source whose byte length exceeds its char size (e.g.
+    /// `PIC X(5) VALUE "café"` stores `"café "` = 5 chars / 6 bytes), the `n = 6`
+    /// copies cap to the picture's 5 chars — exactly the compiler's `width = 5` fill.
+    ///
+    /// # Guards (IDENTICAL to the compiler)
+    ///
+    ///   1. `x` is a SINGLE character — the shared `single_delim_char` check (a
+    ///      multi-character/figurative/wider/numeric operand is a later rung).
+    ///   2. A single-char but NON-ASCII **literal** `x` is a later rung, mirroring the
+    ///      compiler's byte-based single-char validator. Applied to LITERALS only: a
+    ///      `PIC X(1)` *item* replacement is naturally co-total under the byte-fill
+    ///      (both engines emit `width` copies of the item's char), so it is not gated.
+    ///   4. A numeric/group source is rejected by `inspect_alnum_source` (guard 4).
+    ///
+    /// (Guard 3 — a `{BEFORE|AFTER}` region — is rejected earlier, at read time.)
+    fn exec_inspect_replacing_characters(
+        &mut self,
+        source: &str,
+        replace: &Operand,
+    ) -> Result<(), RuntimeError> {
+        let sidx = self.inspect_alnum_source(source)?;
+        // Guard 2 — a single-char but non-ASCII LITERAL replacement is deferred so the
+        // char-based oracle stays co-total with the byte-based compiler (whose
+        // single-char validator rejects a multi-byte literal). Items are not gated.
+        if let Operand::Lit(Lit::Str(s)) = replace {
+            if s.chars().count() == 1 && !s.is_ascii() {
+                return Err(RuntimeError::Unsupported(
+                    "INSPECT REPLACING CHARACTERS with a non-ASCII replacement is a later rung"
+                        .into(),
+                ));
+            }
+        }
+        // Guard 1 — resolve the single replacement char (also validates a PIC X(1)
+        // item), reusing the SAME check REPLACING ALL uses.
+        let ch = self.single_delim_char(replace, "INSPECT REPLACING")?;
+        // Byte-basis fill: n = storage BYTE length copies of `ch`. `move_into`
+        // re-pads/truncates to the picture's char size (see the doc comment).
+        let n = self.items[sidx].storage.len();
+        let rebuilt: String = std::iter::repeat_n(ch, n).collect();
         self.move_into(sidx, Src::Chars(rebuilt))
     }
 

@@ -2809,14 +2809,75 @@ mod tests {
     }
 
     #[test]
-    fn inspect_replacing_later_rung_forms_are_clean_errors() {
-        // REPLACING CHARACTERS replaces unconditionally — a later rung …
-        let chars = run_cobol(&wrap(
+    fn inspect_replacing_characters_fills_the_whole_field() {
+        // REPLACING CHARACTERS BY overwrites EVERY position unconditionally — even
+        // embedded spaces. "A B C" (5 chars) → "-----".
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"A B C\"."],
+            &["INSPECT S REPLACING CHARACTERS BY \"-\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "-----\n");
+    }
+
+    #[test]
+    fn inspect_replacing_characters_replacement_can_be_a_pic_x1_item() {
+        // The replacement `x` may be a PIC X(1) DATA ITEM, not just a literal.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"hello\".", "01  R  PIC X(1) VALUE \"*\"."],
+            &["INSPECT S REPLACING CHARACTERS BY R.", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "*****\n");
+    }
+
+    #[test]
+    fn inspect_replacing_characters_non_ascii_source_caps_to_picture_width() {
+        // `PIC X(5) VALUE "café"` stores "café " (5 CHARS / 6 BYTES). The byte-basis
+        // fill builds n = 6 copies of "Z", then `move_into` caps to the picture's
+        // 5 chars → "ZZZZZ" (FIVE, not six). This is the co-total answer the
+        // byte-based compiler also produces (width = 5 copies).
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"café\"."],
+            &["INSPECT S REPLACING CHARACTERS BY \"Z\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "ZZZZZ\n");
+    }
+
+    #[test]
+    fn inspect_replacing_characters_non_ascii_literal_is_a_later_rung() {
+        // A single but NON-ASCII replacement LITERAL ("é") is deferred so the oracle
+        // stays co-total with the byte-based compiler (guard 2).
+        let err = run_cobol(&wrap(
             &["01  S  PIC X(5) VALUE \"ABABA\"."],
-            &["INSPECT S REPLACING CHARACTERS BY \"X\".", "STOP RUN."],
+            &["INSPECT S REPLACING CHARACTERS BY \"é\".", "STOP RUN."],
         ))
         .unwrap_err();
-        assert!(matches!(chars, RuntimeError::Unsupported(_)), "got {chars:?}");
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_replacing_characters_with_a_region_is_a_later_rung() {
+        // A `{BEFORE|AFTER}` region on the CHARACTERS item is deferred (guard 3).
+        let err = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABQBA\"."],
+            &["INSPECT S REPLACING CHARACTERS BY \"X\" BEFORE \"Q\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_replacing_later_rung_forms_are_clean_errors() {
+        // REPLACING CHARACTERS BY replaces every position unconditionally — now
+        // SUPPORTED (fills the whole field with the replacement char): "ABABA" → "XXXXX".
+        let chars = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\"."],
+            &["INSPECT S REPLACING CHARACTERS BY \"X\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(chars, "XXXXX\n");
 
         // … a multi-character search needs a multi-char scan …
         let multi = run_cobol(&wrap(
