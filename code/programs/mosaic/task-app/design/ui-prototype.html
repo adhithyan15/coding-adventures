@@ -126,6 +126,19 @@
   .nav .sub { padding-left: 26px; font-size: 13px; }
 
   .rail .foot { margin-top: auto; }
+  .newproj { display: flex; gap: 6px; padding: 6px 8px 0; }
+  .newproj input {
+    flex: 1; min-width: 0; font-family: var(--font); font-size: 12.5px;
+    background: var(--surface); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px;
+  }
+  .newproj input:focus { outline: none; border-color: var(--honey); }
+  .newproj button {
+    border: 1px solid var(--line); background: var(--surface); color: var(--honey-ink);
+    border-radius: 8px; width: 30px; font-size: 15px; line-height: 1;
+    transition: background var(--ease), border-color var(--ease);
+  }
+  .newproj button:hover { background: var(--honey-tint); border-color: var(--honey); }
 
   /* ============================================================ MAIN */
   .main { min-width: 0; display: flex; flex-direction: column; }
@@ -495,11 +508,10 @@
 
     <nav>
       <div class="label">Projects</div>
-      <div class="nav">
-        <a href="#" class="active"><span class="dot" style="background:var(--honey)"></span> Launch the website <span class="count">9</span></a>
-        <a href="#"><span class="dot" style="background:var(--blue)"></span> Q3 marketing <span class="count">14</span></a>
-        <a href="#"><span class="dot" style="background:var(--sage)"></span> Hiring <span class="count">6</span></a>
-        <a href="#" style="color:var(--ink-faint)">＋ New project</a>
+      <div class="nav" id="projectnav"></div>
+      <div class="newproj">
+        <input id="newprojname" placeholder="New project" aria-label="New project name" />
+        <button id="newprojadd" title="Create project">＋</button>
       </div>
     </nav>
 
@@ -651,7 +663,17 @@
   const DAYS = 18;
   const COLW = 40, ROWH = 42, NAMEW = 190;
 
-  let tasks = [
+  // Each project owns its own tasks, so switching genuinely loads a different plan —
+  // the rail used to be dead `href="#"` links over one hard-coded list.
+  const PROJECTS = [
+    { id: "web",     name: "Launch the website", color: "var(--honey)" },
+    { id: "q3",      name: "Q3 marketing",       color: "var(--blue)"  },
+    { id: "hiring",  name: "Hiring",             color: "var(--sage)"  },
+  ];
+  let activeProject = "web";
+
+  const WORKSPACES = {};
+  WORKSPACES.web = [
     { id:"research", name:"Research & audit",   start:0,  dur:2, pct:100, crit:true,  deps:[],                    labels:["research"], prio:"med",  notes:"Competitive scan and content inventory. Signed off." },
     { id:"spec",     name:"Draft the spec",     start:2,  dur:3, pct:55,  crit:true,  deps:["research"],          labels:["design"],   prio:"high", due:TODAY, notes:"Scope, information architecture, and the schedule model itself." },
     { id:"outline",  name:"Content outline",    start:2,  dur:2, pct:100, crit:false, deps:["research"],          labels:["content"],  prio:"low",  notes:"Page-by-page outline to unblock writing." },
@@ -662,6 +684,24 @@
     { id:"review",   name:"Review with team",   start:15, dur:1, pct:0,   crit:true,  deps:["build","write"],     labels:[],           prio:"med",  notes:"Whole-team walkthrough before go-live." },
     { id:"launch",   name:"Launch 🎉",          start:16, dur:0, pct:0,   crit:true,  deps:["review"], milestone:true, labels:[], prio:"high", notes:"Flip the DNS. Celebrate." },
   ];
+  WORKSPACES.q3 = [
+    { id:"brief",   name:"Campaign brief",     start:0,  dur:2, pct:100, crit:true,  deps:[],         labels:["content"], prio:"high", notes:"Positioning, audience, and the one thing we want remembered." },
+    { id:"creative",name:"Creative concepts",  start:2,  dur:4, pct:40,  crit:true,  deps:["brief"],  labels:["design"],  prio:"high", due:TODAY, notes:"Three routes to review, one to build." },
+    { id:"budget",  name:"Media budget",       start:2,  dur:2, pct:100, crit:false, deps:["brief"], slack:3, labels:[],   prio:"med",  notes:"Split across search, social, and print." },
+    { id:"produce", name:"Produce assets",     start:6,  dur:5, pct:0,   crit:true,  deps:["creative"], labels:["design"], prio:"med", notes:"Film, stills, and the cutdowns." },
+    { id:"launchq3",name:"Go live 🎉",         start:11, dur:0, pct:0,   crit:true,  deps:["produce"], milestone:true, labels:[], prio:"high", notes:"Campaign live across all channels." },
+  ];
+  WORKSPACES.hiring = [
+    { id:"scope",   name:"Scope the role",     start:0,  dur:1, pct:100, crit:true,  deps:[],         labels:[],          prio:"med",  notes:"Level, salary band, and the must-haves." },
+    { id:"post",    name:"Post the listing",   start:1,  dur:1, pct:100, crit:true,  deps:["scope"],  labels:["content"], prio:"med",  notes:"Careers page plus two boards." },
+    { id:"screen",  name:"Screen applicants",  start:2,  dur:5, pct:20,  crit:true,  deps:["post"],   labels:[],          prio:"high", notes:"Aiming for eight to first round." },
+    { id:"onsite",  name:"Onsite interviews",  start:7,  dur:3, pct:0,   crit:true,  deps:["screen"], labels:[],          prio:"high", notes:"Four panels, same rubric for everyone." },
+    { id:"offer",   name:"Make an offer 🎉",   start:10, dur:0, pct:0,   crit:true,  deps:["onsite"], milestone:true, labels:[], prio:"high", notes:"Then breathe." },
+  ];
+
+  // `tasks` always points at the active project's list, so every existing view keeps
+  // working unchanged — switching a project just repoints it.
+  let tasks = WORKSPACES[activeProject];
 
   const LABELS = {
     design:  { name:"design",   color:"#8b6db0" },
@@ -1126,10 +1166,19 @@
     const name = document.getElementById("newname").value.trim();
     if (!name) return;
     const id = "t"+Date.now();
-    // schedule it right after the current last non-milestone task
-    const last = tasks.filter(function(t){return !t.milestone;}).reduce(function(a,b){ return (b.start+b.dur)>(a.start+a.dur)?b:a; });
-    tasks.splice(tasks.length-1, 0, {
-      id:id, name:name, start:Math.min(last.start+last.dur, DAYS-2), dur:2, pct:0, crit:false,
+    // Schedule it right after the current last non-milestone task. `reduce` WITHOUT an
+    // initial value throws on an empty array — which is exactly the state of a project
+    // you just created, so the first task in every new project used to fail silently.
+    const schedulable = tasks.filter(function (t) { return !t.milestone; });
+    const end = schedulable.reduce(function (acc, t) {
+      return Math.max(acc, t.start + t.dur);
+    }, 0);
+    // Keep the milestone last if there is one; otherwise just append.
+    const at = tasks.length > 0 && tasks[tasks.length - 1].milestone
+      ? tasks.length - 1
+      : tasks.length;
+    tasks.splice(at, 0, {
+      id:id, name:name, start:Math.min(end, DAYS-2), dur:2, pct:0, crit:false,
       deps:[], labels:[], prio:"med", notes:"Added just now."
     });
     document.getElementById("newname").value = "";
@@ -1180,9 +1229,76 @@
     if (document.getElementById("view-gantt").classList.contains("show")) requestAnimationFrame(drawDeps);
   });
 
+  /* ============================================================ PROJECT RAIL
+     The rail used to be three dead `href="#"` links over one hard-coded task list —
+     clicking a project did nothing, and "New project" wasn't wired at all. It now
+     drives the whole page: each project owns its tasks, so switching reloads every
+     view from that project's plan. */
+  function renderRail() {
+    const nav = document.getElementById("projectnav");
+    nav.innerHTML = PROJECTS.map(function (p) {
+      const list = WORKSPACES[p.id] || [];
+      const open = list.filter(function (t) { return t.pct < 100; }).length;
+      return '<a href="#" data-project="' + esc(p.id) + '"' +
+        (p.id === activeProject ? ' class="active"' : '') + '>' +
+        '<span class="dot" style="background:' + p.color + '"></span> ' +
+        esc(p.name) + ' <span class="count">' + open + '</span></a>';
+    }).join("");
+  }
+
+  function selectProject(id) {
+    if (!WORKSPACES[id] || id === activeProject) return;
+    activeProject = id;
+    tasks = WORKSPACES[id];
+    initCols();
+    const proj = PROJECTS.find(function (p) { return p.id === id; });
+    document.querySelector(".title-block h1").textContent = proj.name;
+    // Every view is derived, so re-render whichever one is showing.
+    renderRail();
+    renderList();
+    const showing = VIEWS.find(function (v) {
+      return document.getElementById(v.sec).classList.contains("show");
+    });
+    if (showing && showing.key !== "list") show(showing.key);
+    announce("Switched to " + proj.name);
+  }
+
+  function addProject() {
+    const input = document.getElementById("newprojname");
+    const name = input.value.trim();
+    if (!name) return;
+    // Ids must stay unique; probe rather than trusting a counter.
+    let n = PROJECTS.length + 1;
+    while (WORKSPACES["p" + n]) n += 1;
+    const id = "p" + n;
+    const palette = ["var(--honey)", "var(--blue)", "var(--sage)", "#8b6db0"];
+    PROJECTS.push({ id: id, name: name, color: palette[PROJECTS.length % palette.length] });
+    WORKSPACES[id] = [];
+    input.value = "";
+    // Land in the new project — otherwise an empty one looks like nothing happened.
+    activeProject = id;
+    tasks = WORKSPACES[id];
+    document.querySelector(".title-block h1").textContent = name;
+    renderRail();
+    renderList();
+    announce("Created " + name);
+  }
+
+  document.getElementById("projectnav").addEventListener("click", function (e) {
+    const link = e.target.closest("[data-project]");
+    if (!link) return;
+    e.preventDefault();
+    selectProject(link.dataset.project);
+  });
+  document.getElementById("newprojadd").addEventListener("click", addProject);
+  document.getElementById("newprojname").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") addProject();
+  });
+
   // boot
   initCols();
   wireBoard();
+  renderRail();
   renderList();
 })();
 </script>
