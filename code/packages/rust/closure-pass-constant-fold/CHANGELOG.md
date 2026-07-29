@@ -2,6 +2,115 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.111.0] - 2026-07-28
+
+### Added - flatten a spread of an array literal inside an array literal
+
+A `...[…]` whose argument is an array LITERAL is inlined into the enclosing
+array literal, matching the reference Closure Compiler at SIMPLE:
+
+```text
+  [...[1, 2], 3]     ->  [1, 2, 3]
+  [0, ...[1, 2], 3]  ->  [0, 1, 2, 3]
+  [...[]]            ->  []
+```
+
+A spread over an array literal produces exactly that array's elements, in
+order, so inlining them is behaviour-preserving. Nesting is handled by the
+fixed-point pass (`[...[...[1]]]` -> `[1]`).
+
+HOLE GUARD: a spread uses the array ITERATOR, which yields `undefined` for an
+elision, so `[...[1, , 3]]` is `[1, undefined, 3]` -- observably different from
+`[1, , 3]` (a hole, testable via `in`). We therefore inline ONLY a hole-free
+inner literal; a spread whose argument has a hole, or is a string / identifier /
+call (`[..."ab"]`, `[...y]`), is left intact.
+
+Object spread (`{...{a: 1}}`) and call-argument spread (`f(...[1, 2])`) are
+separate transforms, not handled here.
+
+## [0.110.0] - 2026-07-24
+
+### Added - Math.fround(n) at a float32 fixed point
+
+`Math.fround(x)` (ECMAScript §21.3.2.19) rounds `x` to the nearest float32 and
+widens back to a double — exactly Rust's `x as f32 as f64`, so the round-trip is
+bit-for-bit reproducible (no `powf`-style last-ULP hazard). The reference
+compiler folds `Math.fround(x)` ONLY when `x` is already an exact float32 — a
+fixed point where `fround(x) === x` and the fold changes nothing:
+
+```text
+  Math.fround(1.5)      -> 1.5      (exactly a float32)
+  Math.fround(-2.5)     -> -2.5
+  Math.fround(0)        -> 0
+  Math.fround(1.1)      -> Math.fround(1.1)      (rounds; DECLINED)
+  Math.fround(16777217) -> Math.fround(16777217) (2^24+1; rounds; DECLINED)
+```
+
+We mirror that: fold only when `x.is_finite() && (x as f32 as f64) == x`, and
+DECLINE a `-0` fixed point (`-0` has no numeric-literal token — the same
+negative-zero care as the Math.abs/floor block). `NaN`/`Infinity` are
+identifiers, never numeric literals, so they never reach the numeric-literal
+handler; the `is_finite` guard is defense-in-depth. Only the bare-global
+`Math.fround` callee with exactly one numeric-literal argument folds.
+
+This closes the `fround` half of the Math static-fold task; `Math.pow` remains
+declined (unsound to fold via `powf`; a safe pow needs integer-exponent-only
+exact arithmetic).
+
+## [0.109.0] - 2026-07-22
+
+### Added - fold `Math.clz32(n)` and `Math.imul(a, b)` on numeric literals
+
+Two more static `Math` folds, verified byte-identical to the reference Closure
+Compiler (`closure-compiler-v20260712.jar`, SIMPLE) across a 95-case
+differential probe:
+
+- `Math.clz32(n)` -> leading zero bits of `ToUint32(n)` (`0..=32`): `clz32(0)`
+  -> 32, `clz32(1)` -> 31, `clz32(256)` -> 23, `clz32(-1)` -> 0.
+- `Math.imul(a, b)` -> 32-bit signed product of `ToUint32(a)·ToUint32(b)`:
+  `imul(3, 4)` -> 12, `imul(-1, 5)` -> -5, `imul(65536, 65536)` -> 0.
+
+Both compute their result by pure modular arithmetic via the existing
+`to_uint32` helper (`ToUint32`/`ToInt32` semantics) - NO libm - so they are
+bit-exact independent of the platform math library. Each folds only on the bare
+global `Math` with exactly its argument count (clz32/1, imul/2), all numeric
+literals; other arities and non-literal args decline (leaving the call intact is
+always safe). Results are always finite 32-bit integers, never `-0`, so no
+negative-zero gate is needed. clz32 is handled outside the shared single-argument
+`-0` gate because a negative input mapping to a `0` result (`clz32(-1)`) is a
+legitimate `+0` that must still fold.
+
+Not modelled: `Math.pow` - a differential probe showed Rust's `f64::powf`
+diverges from the reference's `Math.pow` in the last ULP for fractional/negative
+exponents (e.g. `pow(2, 1.5)`, `pow(7, -2)`), so folding it via `powf` would emit
+different bytes; a safe pow fold would need integer-exponent-only exact
+arithmetic (tracked separately). The wrong-arity `Math.imul` cases the reference
+folds (`imul(2)` -> 0, `imul(2, 3, 4)` -> 6) are declined here (rare; tracked).
+
+## [0.108.0] - 2026-07-22
+
+### Added - fold `Math.trunc(n)` and `Math.sign(n)` on a numeric literal
+
+Extended the existing single-argument `Math` fold (which already handled
+`abs`/`floor`/`ceil`/`round`) to two more static methods, verified byte-identical
+to the reference Closure Compiler (`closure-compiler-v20260712.jar`, SIMPLE):
+
+- `Math.trunc(4.9)` -> `4`, `Math.trunc(-4.9)` -> `-4` (round toward zero).
+- `Math.sign(7)` -> `1`, `Math.sign(-3)` -> `-1`, `Math.sign(0)` -> `0`.
+
+Both reuse the handler's existing safety gates: fold only when the single
+argument is a numeric literal, and DECLINE any result that is negative zero
+(`Math.trunc(-0.5)` === -0, `Math.sign(-0)` === -0) — the same conservative
+policy already applied to `Math.ceil(-0.5)`, since `-0` has no faithful
+numeric-literal spelling. `js_math_sign` implements the ECMAScript §21.3.2.34
+sign (which preserves signed zero and maps NaN to NaN) rather than Rust's
+`f64::signum`, whose `+-0 -> +-1` mapping would be wrong.
+
+The reference compiler does NOT fold the transcendental `Math` methods
+(`sqrt`/`cbrt`/`hypot`/`exp`/`log*`/`sin`/`cos`/`tan`/`atan`) even when the
+result is exact, so those remain declined and unchanged. `Math.pow`, `clz32`,
+`imul`, and the conditional `fround` are tracked separately.
+
 ## [0.107.0] - 2026-07-18
 
 ### Fixed — keep `a / b` unfolded past 7 fractional digits (match Closure)

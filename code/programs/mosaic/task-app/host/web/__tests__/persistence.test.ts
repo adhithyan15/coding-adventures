@@ -35,6 +35,23 @@ describe("workspace persistence", () => {
     expect(rec!.savedAt).toBe(123);
   });
 
+  it("round-trips the active project so a reload returns you to it", async () => {
+    // The engine deliberately keeps this cursor out of its snapshot (two hosts on the
+    // same data may sit on different projects), which makes remembering it the host's
+    // job. Without it, a reload silently drops you back on the first project and your
+    // tasks look like they vanished.
+    const storage = await openWorkspaceStorage();
+    saveWorkspace(storage, makeWorkspaceRecord("{}", [], 0, 1, "p2"));
+    expect((await loadWorkspace(storage))!.activeProject).toBe("p2");
+  });
+
+  it("omits the active project when there isn't one, so old records still load", () => {
+    // Records written before projects existed have no such field; the key must be
+    // absent rather than `undefined` so the stored shape stays clean.
+    const rec = makeWorkspaceRecord("{}", [], 0, 1);
+    expect("activeProject" in rec).toBe(false);
+  });
+
   it("copies the order array so the record can't alias the live list", () => {
     const order = ["a"];
     const rec = makeWorkspaceRecord("{}", order, 1, 0);

@@ -67,9 +67,109 @@ pub fn compile(module: &Module) -> Result<Artifact, BackendError>;
 
 **v0 accepts** the SIR-v0 feature set: `Closures`, `Pairs`, `Symbols`,
 `Strings`, `DynamicTyping`, `OptionalTypeAnnotations`, `MutualRecursion`,
-`Globals`.  **v0 rejects** `TailCalls`, `Intrinsics`, and every later feature
-until its batch lands (each rejection is a clean, source-positioned
-`UnsupportedFeature`).
+`Globals`.
+
+**Landed since v0** (one version-bumped batch at a time — see the roadmap): the
+SIR26 integer conversions (`Conversions`, `SizedIntegers`, `Unsigned`,
+`WrappingArithmetic`); and the SIR16 batches `Loops` + `MutableBindings`
+(0.3.0), `Sequences` (native `Array`, 0.4.0), `Maps` (native `Hash`, 0.5.0),
+`Floats` (native `Float`, 0.6.0), and `ShortCircuit` (native `&&`/`||`, 0.7.0);
+the SIR19 parameter batches `DefaultParams` (native `def f(a, b =
+<default>)`, 0.8.0) and `KeywordParams` (native `def f(x:)` / `f(x: 5)`, matched
+by name, 0.9.0); SIR17 `Exceptions` (native `begin/rescue/ensure` +
+`raise`/`retry`, 0.10.0 — rescue types validated as constant paths); and the
+first OOP slice, `Constants` + `Classes` (0.11.0). A constant (`PI = 3`;
+references `PI` / `Foo::Bar`) and an **empty base class** (`class Foo; end` +
+`Foo.new`) are defined **reflectively** with `Object.const_set` rather than a
+native `class`/`= ` block: the frontend wraps a program's top-level code in
+`main`, where both a `class` definition and a constant assignment are Ruby
+errors, whereas `const_set` is legal anywhere, executes in place, and still names
+the class (`Foo.name == "Foo"`, so `Foo.new` / `x.is_a?(Foo)` work). The two
+features are **entangled** — a class name is a Ruby constant, so the frontend
+records `Constants` for any `Foo.new` — hence they land together; `Constants`
+also unblocks `raise SomeClass` (a `Const` reference the 0.10 slice deferred).
+Every verbatim-emitted constant name (a `ClassDef` name, a `__new__` class name,
+a `Const` reference, a `Const` assignment target) is validated as a constant path
+in the SAME pre-emit traversal as the builtin scan (co-total with the emitter),
+so no name can inject.
+
+The second OOP slice (0.12.0) adds instance-method **definition** and
+**dispatch**: a method-bearing class lowers to a hoisted top-level function plus
+`__def_method__("Class", "m", MakeClosure(fn))` and `__method__(recv, "m",
+args…)`, rendered as `Class.define_method(:sir_um_m, &closure)` and
+`(recv).public_send(:sir_um_m, args…)`. A **reserved `sir_um_` method-name
+prefix** makes dispatch CLOSED: no reflection/eval built-in is named `sir_um_*`,
+so `public_send` with an IR-supplied method name can reach only a method
+installed by `__def_method__` — never `instance_eval`/`send`/`eval` (the
+"explicit dispatch, never reflection" anti-RCE invariant, achieved natively).
+`define_method` binds `self` to the receiver, so the hoisted body sees the
+instance. A `__method__` to a name the module never registers is a **built-in
+method call** (the Collections batch) — rejected cleanly (the scan collects the
+module's registered method names, then validates each dispatch), never a runtime
+`NoMethodError`.
+
+The third OOP slice (0.13.0) adds instance **variables**: `@v = x` and `@v`
+(`Scope::Instance`, `Feature::InstanceVars`) render as native `@v` (the name
+includes the leading `@`, emitted verbatim), and the `__self__` builtin as native
+`self`. Because a method body is installed with `define_method`, `self` is the
+receiver, so `@v` in a method reads/writes that instance's own variable and
+persists across dispatches — no runtime support. Each `@`-name is validated as
+`@<identifier>` in the co-total scan (no injection).
+
+The fourth OOP slice (0.14.0) adds **inheritance** and `super`. `class Dog <
+Animal` (`ClassDef { superclass: Some("Animal") }`) becomes
+`Object.const_set(:Dog, Class.new(Animal))` — the subclass inherits Animal's
+ancestry natively (the superclass is a validated bare constant reference). `super`
+(bare or explicit, the frontend forwards arguments in both) →
+`__super__("m", "Dog", args…)` → `(Dog).superclass.instance_method(:sir_um_m)
+.bind(self).call(args…)`: an EXPLICIT ancestry walk, because a method body lives
+in a hoisted top-level function (not a real method context) where native `super`
+is unavailable. It resolves a multi-level chain correctly, and the `sir_um_`
+prefix keeps `instance_method` restricted to user methods (anti-RCE).
+
+The fifth OOP slice (0.15.0) adds class (singleton) **methods**. `def self.m` →
+`__def_class_method__("Class", "m", closure)` → `Class.define_singleton_method(
+:sir_um_m, &closure)`, and `Class.m(args…)` → `__class_method__("Class", "m",
+args…)` → `(Class).public_send(:sir_um_m, args…)` — the receiver is the class
+NAME. It reuses the `sir_um_` prefix (a class's singleton and instance method
+tables are separate, so no collision), so class dispatch is closed (anti-RCE). A
+SECOND allowlist, collected from `__def_class_method__` independently of the
+instance one, gates `__class_method__`: a dispatch to an unregistered name is a
+built-in class method (the Collections batch), rejected cleanly, and an instance
+registration never authorises a class dispatch of the same name.
+
+The sixth OOP slice (0.16.0) adds `@@` class **variables**. A method-body `@@x`
+read/write (`Scope::ClassVar`) cannot be a bare `@@x` (a Ruby toplevel error in
+the hoisted method function), so it routes through
+`sir_cvar_owner(self).class_variable_get/set(:"@@x")`, where `sir_cvar_owner(s) =
+s.is_a?(Module) ? s : s.class` yields the class in both instance-method
+(`self.class`) and class-method (`self`) contexts — so both share one `@@x`. The
+class-BODY initializer `@@x = init` (the FIRST accepted non-empty class body,
+holding ONLY such initializers) instead writes on the class by name
+(`<Class>.class_variable_set`), since it runs where `self` is `main`. Each
+`@@`-name is validated as `@@<identifier>` and emitted as a quoted symbol (no
+injection); `emit_var_ref` now matches every `Scope` exhaustively.
+
+The seventh OOP slice (0.17.0) **completes the arc** with modules / mixins.
+`module M; …; end` (`Stmt::ModuleDef`, `Feature::Modules`) → `Object.const_set(:M,
+Module.new)`, and `include M` / `extend M` → `__include__` / `__extend__` →
+native `(Class).include(M)` / `(Class).extend(M)` (both operands validated
+constants). A module's methods are hoisted and registered with the SAME
+`__def_method__` protocol as a class (`Module#define_method`), so once a class
+`include`s the module they resolve through the ancestry via the existing
+`__method__` / `public_send` dispatch — no new method machinery. The Ruby backend
+now covers the full class/module surface.
+
+**Still rejects** `TailCalls`, `Intrinsics`, `NDArrays`, and every not-yet-landed
+feature — the built-in **collection-method** catalog; plus a malformed
+`__def_method__` / `__def_class_method__`, a class or module body with content
+other than `@@x` initializers, a namespaced (`Foo::Bar`) class/constant
+*definition* (`const_set` names one namespace), and a **singleton class**
+(`class << self` —
+`Stmt::SingletonClassDef`, which also observes `Feature::Classes`, so accepting
+`Classes` obligates rejecting it in the scan lest it reach the emitter's
+`unreachable!`). Each rejection is a clean, source-positioned
+`UnsupportedFeature`.
 
 ## Value model
 
@@ -93,6 +193,7 @@ or temporaries:
 | SIR node | Emitted Ruby |
 |---|---|
 | `IntLit { value }` | `<value>` |
+| `FloatLit { value }` | `<value>` as a Ruby `Float` — `7.0` (never the Integer `7`), `Float::INFINITY` / `Float::NAN` |
 | `BoolLit { value }` | `true` / `false` |
 | `NilLit` | `nil` |
 | `SymLit { name }` | `:<name>` (or `:"<escaped>"`) |
@@ -100,7 +201,26 @@ or temporaries:
 | `VarRef { Local\|Param\|Capture }` | `<name>` |
 | `VarRef { Global }` | `sir_global_get("<name>")` |
 | `VarRef { Builtin }` | `sir_builtin_closure("<name>")` |
+| `VarRef { Const }` | `<name>` — the bare Ruby constant (`PI` / `Foo::Bar`), validated as a constant path |
+| `ClassDef { name, superclass: None, body: [] }` | `Object.const_set(:<name>, Class.new)` — reflective (a native `class` block is illegal in the `main` method) |
+| `Assign { Const }` | `Object.const_set(:<name>, <value>)` — reflective constant definition |
+| `BuiltinCall("__new__", [name, args…])` | `<name>.new(<args>)` — native construction |
+| `BuiltinCall("__def_method__", [class, m, closure])` | `<class>.define_method(:sir_um_<m>, &closure)` — reserved-prefix registration |
+| `BuiltinCall("__method__", [recv, m, args…])` | `(<recv>).public_send(:sir_um_<m>, <args>)` — closed prefixed dispatch (anti-RCE) |
+| `VarRef { Instance }` / `Assign { Instance }` | `@v` — native instance variable (name incl. `@`, verbatim, validated `@<identifier>`) |
+| `BuiltinCall("__self__", [])` | `self` — native |
+| `ClassDef { superclass: Some(S) }` | `Object.const_set(:<name>, Class.new(<S>))` — native inheritance (`S` a validated constant ref) |
+| `BuiltinCall("__super__", [m, class, args…])` | `(<class>).superclass.instance_method(:sir_um_<m>).bind(self).call(<args>)` — explicit prefixed ancestry walk |
+| `BuiltinCall("__def_class_method__", [class, m, closure])` | `<class>.define_singleton_method(:sir_um_<m>, &closure)` — class (singleton) method |
+| `BuiltinCall("__class_method__", [class, m, args…])` | `(<class>).public_send(:sir_um_<m>, <args>)` — class-name-receiver dispatch (allowlisted, anti-RCE) |
+| `VarRef { ClassVar }` / `Assign { ClassVar }` (method body) | `sir_cvar_owner(self).class_variable_get/set(:"@@x", …)` — owner is the class in both contexts |
+| `Assign { ClassVar }` (class body) | `<Class>.class_variable_set(:"@@x", <init>)` — the only accepted non-empty class-body content |
+| `ModuleDef { name }` | `Object.const_set(:<name>, Module.new)` — reflective module declaration |
+| `BuiltinCall("__include__", [class, module])` | `(<class>).include(<module>)` — native mixin (both validated constants) |
+| `BuiltinCall("__extend__", [class, module])` | `(<class>).extend(<module>)` — native singleton-method mixin |
 | `If` | `(if sir_truthy(<cond>) then <then> else <else> end)` |
+| `LogicalAnd { lhs, rhs }` | `(<lhs> && <rhs>)` — native short-circuit, yields the deciding operand |
+| `LogicalOr { lhs, rhs }` | `(<lhs> \|\| <rhs>)` — native short-circuit, yields the deciding operand |
 | `Block` (stmts + value) | method body: `<stmts>` then `<value>`; as an expression: `(begin; <stmts>; <value>; end)` |
 | `LetBinding` / `LetStarBinding` | `<name> = <value>` |
 | `ExprStmt` | `<expr>` |
@@ -194,8 +314,18 @@ growing `ACCEPTED_FEATURES`, the runtime, and the conformance corpus in lockstep
 4. **[`Convert`](SIR26-integer-conversions.md)** — render integer
    narrow/reinterpret via mask helpers (`sir_u8`/`sir_i32`/…) — the C→Ruby
    faithfulness payoff.
-5. **Collections / exceptions / OOP** — the `__method__` catalog (Ruby methods
-   are largely native), `begin/rescue`, `class`/`module` (native).
+5. **Exceptions / OOP** — `begin/rescue` (native, landed 0.10); then OOP in
+   slices: `Constants` + an empty `class`/`Foo.new` (reflective `const_set`,
+   landed 0.11), instance **methods** (`define_method`/`public_send` under a
+   reserved `sir_um_` prefix, landed 0.12), instance **variables** (`@v`, native,
+   landed 0.13), **inheritance** + `super` (`Class.new(Super)` + an explicit
+   ancestry walk, landed 0.14), class **methods** (`def self.m`, native
+   `define_singleton_method`, landed 0.15), class **variables** (`@@x` via
+   `class_variable_get/set`, landed 0.16), and **modules**/mixins (native
+   `include`/`extend`, landed 0.17 — OOP arc complete).
+6. **Collections** — the `__method__` catalog for built-in `String`/`Array`/
+   `Hash`/numeric methods (Ruby methods are largely native), the remaining large
+   batch, sharing the same `__method__` dispatch surface as OOP.
 
 ## Out of scope (v0)
 

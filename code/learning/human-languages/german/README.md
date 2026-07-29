@@ -28,6 +28,28 @@ French *nuit* — one Indo-European word, split four ways.
 - **Chapter 2 — Introducing Yourself** ([`lessons/GE-C02-*`](./lessons/)): ich,
   heißen, **ich heiße** ("my name is"), **du / Sie**, wie, **wie heißen Sie?**
   ("what's your name?"), freut mich, practice. In the book.
+- **Chapter 3 — How Are You**: danke, bitte, gehen, *wie geht es*, *es geht*,
+  practice.
+- **Chapter 4 — Farewells**: auf Wiedersehen, tschüss, bis bald, bis morgen,
+  practice.
+- **Chapter 5 — The First Verbs**: wohnen, machen, lernen, *ich lerne Deutsch*,
+  practice.
+- **Chapter 6 — Numbers One to Ten**: Zahlen 1–5, 6–10 (Grimm's law).
+- **Chapter 7 — The Days of the Week**: Wochentage (the gods, and Mittwoch).
+- **Chapter 8 — Telling the Time**: Uhr, Mittag/Mitternacht.
+- **Chapter 9 — Months and Seasons**: Monate, Jahreszeiten (*Herbst*/harvest).
+- **Chapter 10 — Family**: Eltern, Geschwister.
+- **Chapter 11 — Bread, Water, Wine**: Brot, Wasser/Wein.
+- **Chapter 12 — Numbers Eleven to Twenty**: elf/zwölf (the *-lif* "left over"
+  story), 13–20.
+- **Chapter 13 — Colours**: schwarz/weiß, rot/blau.
+- **Chapter 14 — To Have, and How Old You Are**: haben (the *habēre* false
+  cognate), Alter.
+- **Chapter 15 — The Two Past Tenses**: Perfekt, Präteritum.
+- **Chapter 16 — To Be, and the Past That Takes It**: sein (three ancient verbs
+  in one paradigm), the Perfekt with *sein*.
+
+**All sixteen chapters are authored and in the book (84 pages).**
 
 ## Files
 

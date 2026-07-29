@@ -1,5 +1,134 @@
 # Changelog
 
+## [0.1.1] - 2026-07-22
+
+### Added
+
+- **`tests/oracle.rs` — HML01 §7 oracle/golden testing, cross-checking
+  `maple-runtime` (ground truth) against `maple_to_semantic_ir::
+  compile_source` → `semantic_ir::Module` → `semantic_ir_to_javascript::
+  compile` → a real `node` process.** The direct Maple sibling of
+  `reduce-to-semantic-ir/tests/oracle.rs` (itself sibling to
+  `derive-to-semantic-ir`'s/`j-to-semantic-ir`'s/`apl-to-semantic-ir`'s/
+  `matlab-to-semantic-ir`'s/`octave-to-semantic-ir`'s) — this is the
+  LAST of the five SIR23 CAS-family frontends to get its own oracle file,
+  closing HML01 §5's Stream B rollout note for the whole family. 43-case
+  corpus, chosen to exercise Maple's own distinctive surface (MA09 §3)
+  rather than generic filler already covered by the other four oracle
+  files: bare integer/float/symbol/boolean atoms; ordinary operator
+  precedence and right-associative `^` (no `**` synonym, unlike
+  Reduce's); unary minus binding looser than `^`; exact-integer vs.
+  genuine-rational division; an additive-identity simplification; every
+  comparison including Maple's own `<>` not-equal spelling (neither
+  Reduce's `neq` keyword nor Wolfram's `!=`); `and`/`or`/`not` including a
+  3-term `and` chain (the n-ary fold); `:=` assignment and the
+  arrow-operator `Define` (`f := x -> e` / `f := (x, y) -> e`, MA09 §1's
+  own documented trap — the general-definition idiom, NOT the excluded
+  `f(x) := e` remember-table spelling); `if`/`elif`/`else`/`end if`
+  (the right-folded elif chain, the no-`else` "unresolved -> false"
+  surface, and the unresolved-condition case that reconstructs Maple's
+  own `if...then...else...end if` surface on the ground-truth side);
+  flat/singleton/empty/elementwise-evaluated `[...]` list literals;
+  flat/empty/elementwise-evaluated `{...}` SET literals (MA09's own
+  aggregate type new to this repo, kept textually distinct from the list
+  cases per MA09 §1's "same brackets, different family conventions"
+  warning); and `diff`/`int` (MA09's own lowercase calculus bridge).
+- Adds a dev-dependency on `coding-adventures-maple-runtime` (this
+  frontend's own sibling native-runtime crate) for `tests/oracle.rs`'s
+  ground truth only — the non-dev `[dependencies]` section still does
+  not depend on it; lowering itself only ever needs the parse-tree shape.
+
+### Found, NOT fixed here (shared `semantic-ir-to-javascript` crate — follow-up task)
+
+Every finding below was **confirmed by actually running each case
+through `node`** (a temporary probe that called the compiled path
+unconditionally for every corpus entry, including `known_bug` ones, then
+removed before this file's `tests/oracle.rs` was finalized) — not
+assumed from reading the shared crate's source alone, even though that
+source reading is what generated the initial hypotheses.
+
+- **Finding one (already documented — `derive-to-semantic-ir`'s and
+  `reduce-to-semantic-ir`'s own oracle PRs, `semantic-ir-to-javascript`
+  `CHANGELOG.md`'s `[0.49.0]` entry): held-form execution (`Assign`/
+  `Define`/`If`), calculus (`D`/`Integrate`), and a per-source-language
+  SIR23 display convention are all still missing.** `Symbolic.evalTerm`
+  folds arithmetic/comparison/logic (confirmed: 12 of this corpus's 43
+  cases need no `known_bug` marker at all — bare atoms, precedence,
+  right-associative `^`, exact/rational division, the additive-identity
+  law, and unary-minus folding), but `HELD_HEADS = {"Assign", "Define",
+  "If"}` has no handler wired, so `Assign(x, 5)` never binds, `Define(f,
+  ...)` never registers, and `If(cond, ...)` never selects a branch —
+  confirmed directly: `variable_assignment_and_later_reference`'s second
+  statement compiles to and prints the literal, still-symbolic
+  `"Add(x, 1)"`, never `6`. `D`/`Integrate` are absent from `HANDLERS`
+  entirely, so `diff(x^2, x)` compiles to and prints
+  `"D(Pow(x, 2), x)"`, never `"2*x"` (even though `maple-runtime`'s own
+  ground truth genuinely differentiates, via the same shared `symbolic-
+  vm` handler). And the sole stringifier, `Symbolic.toDisplayString`,
+  still renders every compound term generically as `head(args, ...)` —
+  confirmed for `List`/`Set`/infix-arithmetic/`If`/`Equal` shapes alike
+  (e.g. `[1, 2, 3]` prints `"List(1, 2, 3)"`; `x = 4` prints
+  `"Equal(x, 4)"`).
+- **Finding two — GENUINELY NEW here, not hit by either of Maple's two
+  Wave-5 CAS siblings: a `True`/`False` CASE mismatch.** Every
+  comparison/logic handler folds to the literal, capitalized symbol
+  `symTerm("True")`/`symTerm("False")`, and `toDisplayString`'s `symbol`
+  case is a bare, unbridged `return node.name` — confirmed by grep that
+  the SIR23 domain has no per-language display flag analogous to
+  SIR16/SIR22's `SIR_DISPLAY_APL_HIGH_MINUS`/`SIR_DISPLAY_J_UNDERSCORE`/
+  `SIR_DISPLAY_RUBY`. Reduce's and Derive's own native printers *also*
+  render `True`/`False` capitalized, so their own oracle corpora never
+  hit this — the JS backend's hardcoded spelling already happened to
+  agree with those two languages' own convention. Maple's is genuinely
+  different: MA09 §3's own `true`/`false` lowercase boolean surface (the
+  `type/truefalseFAIL` Help page) is bridged back from the shared `True`/
+  `False` symbol by `maple-runtime::printer::render` alone — confirmed
+  directly, e.g. `comparison_true` (`5 > 3;`) folds to the identical
+  `True` term on BOTH sides, but ground truth prints `"true"` while the
+  compiled side prints `"True"`. 10 of this corpus's 43 cases hit ONLY
+  this case-mismatch (every bare boolean literal, comparison, and
+  logic-chain case — one further case, the no-`else` unresolved-`if`
+  case, stacks this case mismatch on TOP of finding one's evaluation
+  gap) — a `known_bug`-worthy set neither sibling oracle file's
+  equivalent cases ever needed, which is exactly why this crate's corpus
+  deliberately keeps them as their own dedicated cases rather than
+  folding them into the "generic filler" the module doc comment says
+  this corpus avoids.
+- **Finding three — Maple-specific, but the SAME shape as `List`'s
+  display-only gap, not a deeper one: `Set` (MA09 §5) folds its elements
+  "for free" on BOTH sides, confirmed empirically.** Neither
+  `symbolic-vm` nor `semantic-ir-to-javascript`'s `HANDLERS` map has a
+  `Set` entry, but an unmatched head's arguments still evaluate in
+  applicative order before the rebuild — confirmed directly:
+  `set_of_expressions_evaluates_elementwise` (`{1+1, 2*3};`) evaluates to
+  `{2, 6}` on the ground-truth side (matching `maple-runtime`'s own
+  `set_literal_evaluates_its_elements_but_stays_structurally_unresolved`
+  test) AND to `Set(2, 6)` (elements already folded, only the bracket
+  notation missing) on the compiled side — unlike Reduce's `first`/
+  `append`, which have no shared handler AND leave the ground truth
+  itself unevaluated. So every `Set` case in this corpus is a
+  display-convention-only `known_bug`, never an evaluation-gap one.
+
+### Known limitations
+
+- **No local lowering bugs were found in this pass** — this crate's
+  lowering was already independently verified, node-by-node, against
+  `maple-runtime::lower`'s identical dispatch table (see this crate's
+  0.1.0 entry below), and `tests/test_lower.rs`'s own shape-assertion
+  tests already cover every grammar production directly.
+- Mirrors `reduce-to-semantic-ir/tests/oracle.rs`'s test-local
+  `wrap_top_level_in_print` transformation (using only `semantic_ir`'s
+  own public `Module`/`Stmt`/`Expr` types, applied AFTER
+  `semantic_ir::validate` so validation still exercises exactly what
+  `compile_source` shipped, unmodified) — `maple_to_semantic_ir::
+  compile_source` itself is intentionally unchanged and still emits no
+  `print`/`console.log` of its own for any other caller.
+- Given the three findings above, only 12 of the 43 corpus cases are
+  `known_bug: None` — reflecting the current, actual state of the shared
+  SIR23 JS backend (items 2-4 of the addendum's 4-item rollout are not
+  yet landed) plus Maple's own genuinely new case-mismatch finding, not
+  a shortfall in this frontend's own corpus design.
+
 ## [0.1.0] - 2026-07-20
 
 ### Added

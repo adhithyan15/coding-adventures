@@ -2,6 +2,85 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.33] - Unreleased
+
+### Added
+
+- **`TOTAL(x)` aggregate.** Recognized as an aggregate function name (both
+  aggregate-detection sites), lowering to the new `AggFunc::Total`. `TOTAL` is
+  SQLite's NULL-free companion to `SUM`: it accumulates identically but always
+  returns a REAL and yields `0.0` (never NULL) for an empty or all-NULL group.
+
+## [0.2.32] - Unreleased
+
+### Changed
+
+- **`SELECT` items are all `select_item` nodes now, including a bare `*`.**
+  `plan_select_list` dropped its special-case shortcut (which returned a single
+  `*` column whenever any `*` token appeared) and simply maps `plan_select_item`
+  over the items. `plan_select_item` detects a bare-`*` item (no child expr node
+  + a `*` token) and emits the `*` placeholder (new `star_output_column` helper);
+  `expand_star_columns` then expands each placeholder in place. This is what lets
+  `SELECT a, *` / `SELECT *, a` expand correctly (`a, *` → `a` then the whole
+  row), matching SQLite, now that the grammar produces the mixed shape.
+
+## [0.2.31] - Unreleased
+
+### Added
+
+- **Explicit `COLLATE` on DISTINCT select-items and GROUP BY keys folds the key.**
+  A trailing `COLLATE name` (newly parsed by sql-parser) is lowered to the
+  internal `__collate(inner, 'NAME')` wrapper — the same representation explicit
+  COLLATE already uses in WHERE comparisons:
+  - `plan_select_item` wraps the select-item expression; `distinct_output_collations`
+    reads the collation from the wrapper (via `effective_output_collation` /
+    `collate_wrapper_name`) into the DISTINCT vector, so `SELECT DISTINCT b COLLATE
+    NOCASE` dedupes case-insensitively. An explicit `COLLATE BINARY` overrides a
+    column's declared NOCASE (explicit outranks declared).
+  - `plan_group_by_exprs` now walks `group_clause` children in order, pairing each
+    `column_ref` with the `COLLATE name` tokens that follow it, and wraps that key
+    — so `GROUP BY b COLLATE NOCASE` (and per-key `GROUP BY g, b COLLATE NOCASE`)
+    groups on the collated value while codegen emits the original.
+  - `extract_as_alias` skips the `COLLATE` tail (both tokens are `NAME`-type) so a
+    collation name is never mistaken for an implicit alias. New helpers:
+    `tail_collation`, `direct_token_uppers`.
+
+## [0.2.30] - Unreleased
+
+### Changed
+
+- **`SELECT *` is expanded into the base table's columns at plan time.** A `*`
+  in the select list was previously carried through as a placeholder output
+  column `SqlExpr::Column { name: "*" }`. Nothing downstream could resolve it —
+  `LoadColumn("*")` reads no such column and yields NULL — so `SELECT *` (plain
+  or `DISTINCT`) returned a single NULL column literally named `*`. The new
+  `expand_star_columns` (called after the output list is built, before the
+  DISTINCT collation vector) replaces the `*` with the table's concrete columns
+  in schema-declaration order, matching SQLite. Because expansion precedes
+  DISTINCT-collation and ORDER-BY-ordinal resolution, `SELECT DISTINCT *` now
+  folds per-column collations correctly and `SELECT * ... ORDER BY 1` binds to
+  the first real column.
+- Scoped to a single base table with no JOIN: a joined or comma-joined `*` would
+  need every table's columns in join order, which is a separate gap and keeps
+  the `*` placeholder. Unknown tables / tables with no reported columns also
+  pass through unchanged (the query errors elsewhere). `*` mixed with other
+  select items (`SELECT a, *`) is expanded in place once the grammar produces
+  it — a separate parser follow-up tracks the mixed-list parse.
+
+## [0.2.29] - Unreleased
+
+### Changed
+
+- **`GROUP_CONCAT` lowers to `SqlExpr::Aggregate` in expression context.**
+  `plan_function_call` previously left `group_concat(...)` as a `SqlExpr::
+  FunctionCall` (while a separate path recognised it for accumulator
+  allocation), so an aggregate SELECT item had two representations. It now
+  produces `SqlExpr::Aggregate { func: GroupConcat { sep }, arg, distinct }` like
+  COUNT/SUM/…, so codegen's `compile_expr` can resolve it to its slot — which is
+  what lets a `group_concat` column be re-projected into SELECT-list order. The
+  separator is captured onto the func via the same `group_concat_separator`
+  helper the accumulator path uses, so the two stay consistent.
+
 ## [0.2.28] - Unreleased
 
 ### Fixed

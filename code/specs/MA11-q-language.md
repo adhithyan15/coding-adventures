@@ -272,6 +272,22 @@ their own harder extras:**
   one, since it depends on what the shared IR already has by the time
   `q-to-semantic-ir` starts.
 
+  **Resolved by MA-11e itself**: `semantic-ir`'s core (not a SIR22
+  addendum at all — this need predates Q, from the general-purpose-language
+  frontends) already had everything required: an ordinary
+  `semantic_ir::Function` with named parameters, `Expr::DirectCall` (a
+  statically-known callee), `Expr::MakeClosure` (a bare reference to a
+  named function used as a value), and `Expr::IndirectCall` (a call through
+  a value whose identity is not statically known). No SIR addendum item was
+  needed at all. A function literal does **not** lower to a single
+  `Closure`-shaped node the way this section's own phrasing speculated —
+  each one becomes its own genuine top-level `Function` (this is closer to
+  Python's/Ruby's own lambda-lifting than to a single first-class-closure
+  value node), simplified considerably by the fact that Q's own function
+  values capture nothing at all (§2's own finding): no free-variable
+  analysis, no capture list, ever. See `q-to-semantic-ir/src/lower.rs`'s
+  module doc comment for the full design.
+
 ## §6 Crate layout and rollout (one item = one PR)
 
 ```

@@ -52,6 +52,49 @@ that needs it.
   Dravidian family showing its bones the way *blanc/bianco/branco* did for
   Romance. **Authored.**
 
+### Writing the letters *(authored)* — the "break it apart and write it" strand
+
+The **first handwriting track for any Dravidian language**. Until now
+`data/scripts/` held Arabic, Chinese, Cyrillic, Devanagari, Gujarati and Hebrew —
+nothing for Tamil, Telugu, Kannada or Malayalam — so four tracks had vocabulary
+through Chapter 6 and no way to learn to read it. `tamil.json` is new here.
+
+Lessons follow **book order**, taking the letters the Chapter 1 words actually
+need, and rise one piece at a time:
+
+- **`TA-W01`** — **வ, க**. Opens on the question the whole script answers: *why
+  is Tamil round?* The usual account is **palm leaves**: incised with a stylus,
+  where a straight stroke along the grain can **split the leaf**, so strokes bend
+  into curves. The lesson gives that as the standard explanation *rather than a
+  settled fact* — earliest Tamil-Brahmi is angular, the rounding arrived later
+  via Vaṭṭeḻuttu, and Devanagari used the same leaves without going round. The
+  durable point is that **the tool leaves fingerprints on the letters**. Then the
+  **abugida** principle (க is *ka*, not *k*), and the fact that **one letter க
+  spells k, g and h**, decided by position — which is why Tamil needs 18
+  consonant letters where Devanagari needs 33.
+- **`TA-W02`** — **ம, ண**, and the **retroflex**: ண is said with the tongue
+  curled back, a sound English lacks and cannot hear at first. Introduces the
+  three-n table (**ந** dental · **ன** alveolar · **ண** retroflex) without yet
+  drawing the other two.
+- **`TA-W03`** — the **puḷḷi** ் ("the dot"), which removes the inherent vowel —
+  and the sharp divergence from Devanagari: Tamil does **not fuse** the bare
+  consonant into a conjunct. Both letters keep their shape and the dot stays
+  visible, which is why Tamil's whole character set is ~247 where Devanagari has
+  hundreds of ligatures. **Assembles வணக்கம்** — the first word of the course.
+- **`TA-W04`** — **ந, ன, ற** and the first vowel sign **ி**, completing the
+  three n's. **Assembles நன்றி**, and shows why the three n's earn their keep:
+  **ன் + ற** is said together as *ndr* — one instance of the general rule that a
+  **nasal voices the stop after it** (ந்த *nd* · ண்ட *ṇḍ* · ன்ற *ndr*), so each
+  n produces its own cluster and the spelling tells you which. It is also why
+  *naṉṟi* is so often written *nandri* in English.
+
+Next in this strand: the remaining vowel signs (**ை** is written *before* the
+consonant and pronounced *after*, the same trap as Devanagari's ि), then the
+letters the lessons already quote but do not yet teach — **ப, ள, ு** from
+*puḷḷi*'s own name, and ங, ட, த, ர among others. W03 carries a **standing
+read-now-draw-later note** for the whole track rather than an enumerated list,
+since the list grows with every example.
+
 ## Planned
 
 | Chapter | Theme |

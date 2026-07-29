@@ -519,6 +519,38 @@ describe("acSweep", () => {
     expect(withCapacitance).toBeLessThan(withoutCapacitance / 100.0);
   });
 
+  it("uses JFET junction potential to shape reverse-biased gate capacitance", () => {
+    function gateAmplitude(junctionPotential: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", -0.5, 1.0));
+      circuit.add(resistor("Rin", "in", "gate", 1_000.0));
+      circuit.add(resistor("Rdrain", "drain", "0", 1_000.0));
+      circuit.add({
+        ...jfet("J1", "drain", "gate", "0", "NJF", 1.0e-12, -2.0, 0.0, 1.0e-9),
+        junctionPotential,
+      });
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("gate")!);
+    }
+
+    expect(gateAmplitude(0.5)).toBeGreaterThan(gateAmplitude(2.0));
+  });
+
+  it("uses JFET forward-bias depletion coefficient to shape gate capacitance", () => {
+    function gateAmplitude(coefficient: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.6, 1.0));
+      circuit.add(resistor("Rin", "in", "gate", 1_000.0));
+      circuit.add(resistor("Rdrain", "drain", "0", 1_000.0));
+      circuit.add({
+        ...jfet("J1", "drain", "gate", "0", "NJF", 1.0e-12, -2.0, 0.0, 1.0e-9),
+        forwardBiasDepletionCoefficient: coefficient,
+      });
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("gate")!);
+    }
+
+    expect(gateAmplitude(0.2)).toBeGreaterThan(gateAmplitude(0.8));
+  });
+
   it("uses MOSFET overlap capacitance in AC analysis", () => {
     function gateAmplitude(CGSO: number): number {
       const circuit = new Circuit();
@@ -529,6 +561,7 @@ describe("acSweep", () => {
         KP: 1.0e-12,
         W: 1.0,
         L: 1.0,
+        TOX: 1.0e9,
         CGSO,
       }));
       return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("gate")!);
@@ -539,6 +572,136 @@ describe("acSweep", () => {
 
     expect(withoutCapacitance).toBeGreaterThan(0.9);
     expect(withCapacitance).toBeLessThan(withoutCapacitance / 100.0);
+  });
+
+  it("scales MOSFET bottom junction capacitance by drain area", () => {
+    function drainAmplitude(bottomJunctionCapacitance: number, drainArea: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
+      circuit.add(resistor("Rin", "in", "drain", 1_000.0));
+      circuit.add(mosfet("M1", "drain", "0", "0", "0", "NMOS", {
+        KP: 1.0e-12,
+        W: 1.0,
+        L: 1.0,
+        TOX: 1.0e9,
+        CJ: bottomJunctionCapacitance,
+        AD: drainArea,
+      }));
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("drain")!);
+    }
+
+    const withoutAreaCapacitance = drainAmplitude(0.5, 0.0);
+    const withAreaCapacitance = drainAmplitude(0.5, 2.0e-6);
+
+    expect(withoutAreaCapacitance).toBeGreaterThan(0.9);
+    expect(withAreaCapacitance).toBeLessThan(withoutAreaCapacitance / 100.0);
+  });
+
+  it("scales MOSFET sidewall junction capacitance by drain perimeter", () => {
+    function drainAmplitude(sidewallCapacitance: number, drainPerimeter: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
+      circuit.add(resistor("Rin", "in", "drain", 1_000.0));
+      circuit.add(mosfet("M1", "drain", "0", "0", "0", "NMOS", {
+        KP: 1.0e-12,
+        W: 1.0,
+        L: 1.0,
+        TOX: 1.0e9,
+        CJSW: sidewallCapacitance,
+        PD: drainPerimeter,
+      }));
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("drain")!);
+    }
+
+    const withoutSidewallCapacitance = drainAmplitude(0.5, 0.0);
+    const withSidewallCapacitance = drainAmplitude(0.5, 2.0e-6);
+
+    expect(withoutSidewallCapacitance).toBeGreaterThan(0.9);
+    expect(withSidewallCapacitance).toBeLessThan(withoutSidewallCapacitance / 100.0);
+  });
+
+  it("scales MOSFET bottom junction capacitance by source area", () => {
+    function sourceAmplitude(bottomJunctionCapacitance: number, sourceArea: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
+      circuit.add(resistor("Rin", "in", "source", 1_000.0));
+      circuit.add(mosfet("M1", "0", "0", "source", "0", "NMOS", {
+        KP: 1.0e-12,
+        W: 1.0,
+        L: 1.0,
+        TOX: 1.0e9,
+        CJ: bottomJunctionCapacitance,
+        AS: sourceArea,
+      }));
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("source")!);
+    }
+
+    const withoutAreaCapacitance = sourceAmplitude(0.5, 0.0);
+    const withAreaCapacitance = sourceAmplitude(0.5, 2.0e-6);
+
+    expect(withoutAreaCapacitance).toBeGreaterThan(0.9);
+    expect(withAreaCapacitance).toBeLessThan(withoutAreaCapacitance / 100.0);
+  });
+
+  it("scales MOSFET sidewall junction capacitance by source perimeter", () => {
+    function sourceAmplitude(sidewallCapacitance: number, sourcePerimeter: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
+      circuit.add(resistor("Rin", "in", "source", 1_000.0));
+      circuit.add(mosfet("M1", "0", "0", "source", "0", "NMOS", {
+        KP: 1.0e-12,
+        W: 1.0,
+        L: 1.0,
+        TOX: 1.0e9,
+        CJSW: sidewallCapacitance,
+        PS: sourcePerimeter,
+      }));
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("source")!);
+    }
+
+    const withoutSidewallCapacitance = sourceAmplitude(0.5, 0.0);
+    const withSidewallCapacitance = sourceAmplitude(0.5, 2.0e-6);
+
+    expect(withoutSidewallCapacitance).toBeGreaterThan(0.9);
+    expect(withSidewallCapacitance).toBeLessThan(withoutSidewallCapacitance / 100.0);
+  });
+
+  it("uses MOSFET MJSW to shape reverse-biased sidewall capacitance", () => {
+    function sourceAmplitude(gradingCoefficient: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 1.0, 1.0));
+      circuit.add(resistor("Rin", "in", "source", 1_000.0));
+      circuit.add(mosfet("M1", "0", "0", "source", "0", "NMOS", {
+        KP: 1.0e-12,
+        W: 1.0,
+        L: 1.0,
+        TOX: 1.0e9,
+        CJSW: 0.5,
+        PS: 2.0e-6,
+        MJSW: gradingCoefficient,
+      }));
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("source")!);
+    }
+
+    const fixed = sourceAmplitude(0.0);
+    const shaped = sourceAmplitude(0.5);
+    expect(shaped).toBeGreaterThan(fixed * 1.3);
+  });
+
+  it("uses MOSFET oxide thickness to scale intrinsic gate capacitance", () => {
+    function gateAmplitude(TOX: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
+      circuit.add(resistor("Rin", "in", "gate", 1.0e6));
+      circuit.add(mosfet("M1", "0", "gate", "0", "0", "NMOS", {
+        W: 10.0e-6,
+        L: 1.0e-6,
+        TOX,
+      }));
+      return complexAbs(acSweep(circuit, 1.0e9, 1.0e9, 1)[0].voltage("gate")!);
+    }
+
+    expect(gateAmplitude(50.0e-9)).toBeLessThan(gateAmplitude(100.0e-9));
   });
 
   it("uses BJT base-emitter capacitance in AC analysis", () => {
@@ -575,6 +738,59 @@ describe("acSweep", () => {
     expect(withTransitTime).toBeLessThan(withoutTransitTime / 100.0);
   });
 
+  it("rotates BJT transconductance by the forward excess phase", () => {
+    function collectorVoltage(forwardExcessPhaseDegrees: number): Complex {
+      const forwardTransitTime = 1.0e-6;
+      const frequency = 1.0 / (TWO_PI_FOR_TEST * forwardTransitTime);
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "base", "0", 0.0, 1.0));
+      circuit.add(resistor("Rc", "col", "0", 1.0));
+      circuit.add({
+        ...bjt("Q1", "col", "base", "0", "NPN", 25.85e-6, 100.0, 0.02585, 0.0, 0.0, forwardTransitTime),
+        forwardExcessPhaseDegrees,
+      });
+      return acSweep(circuit, frequency, frequency, 1)[0].voltage("col")!;
+    }
+
+    const withoutExcessPhase = collectorVoltage(0.0);
+    const withExcessPhase = collectorVoltage(90.0);
+
+    expect(withoutExcessPhase.real).toBeLessThan(-0.0009);
+    expect(Math.abs(withoutExcessPhase.imag)).toBeLessThan(1.0e-9);
+    expect(withExcessPhase.imag).toBeGreaterThan(0.0009);
+    expect(Math.abs(withExcessPhase.real)).toBeLessThan(1.0e-9);
+  });
+
+  it("scales BJT diffusion capacitance by the forward transit-time bias coefficient", () => {
+    function baseAmplitude(
+      coefficient: number,
+      transitTimeCurrent = 0.0,
+      transitTimeVoltage = 0.0,
+      collectorVoltage = 0.0,
+    ): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add(voltageSource("Vcol", "col", "0", collectorVoltage));
+      circuit.add({
+        ...bjt("Q1", "col", "base", "0", "NPN", 25.85e-6, 100.0, 0.02585, 0.0, 0.0, 1.0e-6),
+        forwardTransitTimeBiasCoefficient: coefficient,
+        forwardTransitTimeCurrent: transitTimeCurrent,
+        forwardTransitTimeVoltage: transitTimeVoltage,
+      });
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("base")!);
+    }
+
+    const nominal = baseAmplitude(0.0);
+    const biasScaled = baseAmplitude(9.0);
+    const currentLimited = baseAmplitude(9.0, 1.0);
+    const voltageLimited = baseAmplitude(9.0, 0.0, 0.1, 1.0);
+
+    expect(biasScaled).toBeLessThan(nominal / 5.0);
+    expect(currentLimited).toBeGreaterThan(biasScaled * 5.0);
+    expect(voltageLimited).toBeGreaterThan(biasScaled * 5.0);
+  });
+
   it("uses BJT reverse transit time as base-collector diffusion capacitance in AC analysis", () => {
     function baseAmplitude(reverseTransitTime: number): number {
       const circuit = new Circuit();
@@ -590,6 +806,134 @@ describe("acSweep", () => {
 
     expect(withoutTransitTime).toBeGreaterThan(0.9);
     expect(withTransitTime).toBeLessThan(withoutTransitTime / 100.0);
+  });
+
+  it("uses BJT reverse emission coefficient to reduce base-collector diffusion capacitance", () => {
+    function baseAmplitude(reverseEmissionCoefficient: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add(resistor("Rc", "col", "0", 1.0));
+      circuit.add(bjt("Q1", "col", "base", "0", "NPN", 25.85e-6, 100.0, 0.02585, 0.0, 0.0, 0.0, 1.0e-2, 3.0, 1.11, 0.0, 1.0, reverseEmissionCoefficient));
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("base")!);
+    }
+
+    expect(baseAmplitude(2.0)).toBeGreaterThan(baseAmplitude(1.0));
+  });
+
+  it("uses BJT reverse Early voltage to reduce AC gain", () => {
+    function gain(reverseEarlyVoltage: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vin", "base", "0", 0.65, 1.0));
+      circuit.add(resistor("Rload", "out", "0", 1_000.0));
+      circuit.add({ ...bjt("Q1", "out", "base", "0"), reverseEarlyVoltage });
+      return complexAbs(acSweep(circuit, 1_000.0, 1_000.0, 1, "lin")[0].voltage("out")!);
+    }
+
+    expect(gain(1.0)).toBeLessThan(gain(0.0));
+  });
+
+  it("uses BJT forward beta roll-off to reduce AC gain", () => {
+    function gain(forwardBetaRolloffCurrent: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vin", "base", "0", 0.65, 1.0));
+      circuit.add(resistor("Rload", "out", "0", 1_000.0));
+      circuit.add({ ...bjt("Q1", "out", "base", "0"), forwardBetaRolloffCurrent });
+      return complexAbs(acSweep(circuit, 1_000.0, 1_000.0, 1, "lin")[0].voltage("out")!);
+    }
+
+    expect(gain(1.0e-4)).toBeLessThan(gain(0.0));
+  });
+
+  it("uses BJT base-emitter leakage to reduce gain through source resistance", () => {
+    function gain(baseEmitterLeakageSaturationCurrent: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vin", "in", "0", 0.65, 1.0));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add(resistor("Rload", "out", "0", 1_000.0));
+      circuit.add({
+        ...bjt("Q1", "out", "base", "0"),
+        baseEmitterLeakageSaturationCurrent,
+        baseEmitterLeakageEmissionCoefficient: 1.5,
+      });
+      return complexAbs(acSweep(circuit, 1_000.0, 1_000.0, 1, "lin")[0].voltage("out")!);
+    }
+
+    expect(gain(1.0e-10)).toBeLessThan(gain(0.0));
+  });
+
+  it("uses BJT base-collector leakage to load source resistance", () => {
+    function amplitude(baseCollectorLeakageSaturationCurrent: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vin", "in", "0", 0.65, 1.0));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add({
+        ...bjt("Q1", "0", "base", "base"),
+        baseCollectorLeakageSaturationCurrent,
+        baseCollectorLeakageEmissionCoefficient: 1.5,
+      });
+      return complexAbs(acSweep(circuit, 1_000.0, 1_000.0, 1, "lin")[0].voltage("base")!);
+    }
+
+    expect(amplitude(1.0e-10)).toBeLessThan(amplitude(0.0));
+  });
+
+  it("shapes BJT base-emitter depletion capacitance under reverse bias", () => {
+    function baseAmplitude(baseEmitterGradingCoefficient: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", -1.0, 1.0));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add(bjt("Q1", "0", "base", "0", "NPN", 1.0e-14, 100.0, 0.02585, 1.0e-6, 0.0, 0.0, 0.0, 3.0, 1.11, 0.0, 1.0, 1.0, 0.75, baseEmitterGradingCoefficient));
+      return complexAbs(acSweep(circuit, 1_000.0, 1_000.0, 1)[0].voltage("base")!);
+    }
+
+    expect(baseAmplitude(0.5)).toBeGreaterThan(baseAmplitude(0.0));
+  });
+
+  it("shapes BJT base-collector depletion capacitance under reverse bias", () => {
+    function collectorAmplitude(baseCollectorGradingCoefficient: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 1.0, 1.0));
+      circuit.add(resistor("Rin", "in", "collector", 1_000.0));
+      circuit.add(bjt("Q1", "collector", "0", "0", "NPN", 1.0e-14, 100.0, 0.02585, 0.0, 1.0e-6, 0.0, 0.0, 3.0, 1.11, 0.0, 1.0, 1.0, 0.75, 0.33, 0.75, baseCollectorGradingCoefficient));
+      return complexAbs(acSweep(circuit, 1_000.0, 1_000.0, 1)[0].voltage("collector")!);
+    }
+
+    expect(collectorAmplitude(0.5)).toBeGreaterThan(collectorAmplitude(0.0));
+  });
+
+  it("uses BJT XCJC to partition depletion capacitance to the external base", () => {
+    function baseAmplitude(baseCollectorCapacitanceFraction: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add({
+        ...bjt("Q1", "0", "base", "0"),
+        saturationCurrent: 1.0e-30,
+        baseCollectorCapacitance: 1.0e-9,
+        baseResistance: 10_000.0,
+        baseCollectorCapacitanceFraction,
+      });
+      return complexAbs(acSweep(circuit, 1.0e6, 1.0e6, 1)[0].voltage("base")!);
+    }
+
+    expect(baseAmplitude(1.0)).toBeGreaterThan(baseAmplitude(0.0));
+  });
+
+  it("uses BJT FC to shape both forward-biased depletion junctions", () => {
+    function junctionAmplitude(coefficient: number, baseEmitter: boolean): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.6, 1.0));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add(bjt("Q1", "0", "base", "0", "NPN", 1.0e-30, 100.0, 0.02585, baseEmitter ? 1.0e-6 : 0.0, baseEmitter ? 0.0 : 1.0e-6, 0.0, 0.0, 3.0, 1.11, 0.0, 1.0, 1.0, 0.75, 0.33, 0.75, 0.33, coefficient));
+      return complexAbs(acSweep(circuit, 1_000.0, 1_000.0, 1)[0].voltage("base")!);
+    }
+
+    for (const baseEmitter of [true, false]) {
+      expect(junctionAmplitude(0.8, baseEmitter)).toBeLessThan(
+        junctionAmplitude(0.2, baseEmitter) * 0.9,
+      );
+    }
   });
 
   it("applies VCVS gain in AC analysis", () => {

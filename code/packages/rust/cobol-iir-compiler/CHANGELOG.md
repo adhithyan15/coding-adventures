@@ -8,6 +8,1304 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.59.0: INSPECT TALLYING several counters each item with a BEFORE/AFTER region
+
+`INSPECT source TALLYING c1 FOR ALL a [{BEFORE|AFTER} p] [ALL b …] c2 FOR ALL d [{BEFORE|AFTER} q] …`
+— the SEVERAL-COUNTERS TALLYING form (two or more `tally_for` groups) where each `ALL` delimiter item
+of ANY group may now carry its OWN optional `{BEFORE|AFTER}` window, compiled byte-identical to the
+`coding-adventures-cobol-runtime` 0.63.0 oracle. Previously any region in the multi-counter path was
+rejected at emit time ("INSPECT TALLYING with several counters and a BEFORE/AFTER region is a later
+rung"); that reject is now LIFTED. No grammar change was needed. This is the multi-COUNTER analogue
+of the v0.58.0 single-counter multi-item TALLYING-region rung.
+
+- `inspect_tally_counters` now returns `Vec<TallyCounterGroup>` (`= (String, Vec<TallyItem>)`),
+  parsing each item's region with the same keyword/operand extraction the single-item
+  `inspect_tally_all` uses. The LEADING/CHARACTERS rejects are UNCHANGED (the path stays `ALL`-only).
+- `emit_inspect_tally_counters` materialises `str_len(S)` ONCE up front, then flattens every delimiter
+  to a new `FlatCounterDelim` = `(group_index, delim_byte_code, Option<[start,end) window>)` in
+  WRITTEN ORDER — deriving each item's window with the SAME `emit_inspect_region_window` the
+  single-item region emitter uses, materialised BEFORE the loop. In its runtime `str_len`-bounded
+  scan each region-carrying entry's `cmp_eq` link now gates on `start <= j < end AND c == D` against
+  the RUNTIME position register `j` (a region-less entry folds to `eq` alone — byte-identical to the
+  old lowering). The first in-window match bumps that group's accumulator and jumps to the j-advance
+  (first-match-wins across counters); each per-group accumulator is added to its counter afterward,
+  re-reading the counter's register fresh so a shared counter accumulates both shares.
+- Non-ASCII-clean POSITIVE parity (NOT a trap): TALLYING only COUNTS, so the byte-based scan and the
+  char-based oracle count identically even on a non-ASCII source; a new e2e test pins `"aé0b0"` with
+  `C1 FOR ALL "0" BEFORE "b"  C2 FOR ALL "0" AFTER "b"` → C1=1, C2=1 on both engines.
+- New e2e tests (all via `assert_matches_oracle`): two groups with mixed BEFORE/AFTER regions, a
+  region item + a region-less item across groups, an empty AFTER-absent window, an earlier window
+  starving a later group, the same counter in two groups each with a region, the non-ASCII positive
+  parity, and the still-rejected LEADING / CHARACTERS items.
+
+### Added — v0.58.0: INSPECT TALLYING several items each with a BEFORE/AFTER region
+
+`INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q] …` — each
+`ALL` delimiter item of a single-counter MULTI-item TALLYING may now carry its OWN optional
+`{BEFORE|AFTER}` window, compiled byte-identical to the `coding-adventures-cobol-runtime` 0.62.0
+oracle. Previously any region on a multi-item tally list was rejected at emit time ("INSPECT
+TALLYING with several items and a BEFORE/AFTER region is a later rung"); that reject is now LIFTED.
+No grammar change was needed. This is the count-side analogue of the v0.57.0 multi-item
+REPLACING-region rung.
+
+- A new `TallyItem` type carries `(&GrammarASTNode, Option<(RegionKind, &GrammarASTNode)>)` (the
+  delimiter node plus its own region node); `inspect_tally_multi` parses each item's region with the
+  same keyword/operand extraction the single-item `inspect_tally_all` uses. The LEADING/CHARACTERS
+  rejects for a multi-item list are UNCHANGED (the multi path stays `ALL`-only), as is the
+  several-counters reject.
+- `emit_inspect_tally_multi` materialises `str_len(S)` ONCE up front (the per-item window helper
+  needs it, and the loop reuses it for the `j >= len` bound), then reuses `emit_inspect_region_window`
+  — the SAME window the single-item region emitter and the REPLACING side emit — to derive each
+  item's `[start, end)` before the loop. In its runtime `str_len`-bounded scan loop each
+  region-carrying item's `cmp_eq` link now gates on `start <= j < end AND c == D` against the RUNTIME
+  position register `j`; a region-less item's link stays `c == D` (the window guard folds away). This
+  composes the pre-existing multi-item first-match-per-position count chain with the single-item
+  region gate.
+- Non-ASCII-clean (a POSITIVE parity, NOT a trap): the tally only COUNTS — it never `str_slice`s the
+  source into a new string — and each window is content-defined (bounded by the first ASCII region
+  delimiter), so this byte-index scan and the oracle's char-index scan count the SAME ASCII matches
+  even on a non-ASCII source. Added a POSITIVE non-ASCII e2e parity test (`assert_matches_oracle`):
+  `"aé0b0"` with `ALL "0" BEFORE "b" ALL "0" AFTER "b"` DISPLAYs `002` on both engines. A non-ASCII
+  item/region delimiter *operand* stays the pre-existing `single_delim_code` chip.
+- Scope kept for a later rung (unchanged, identical messages to the oracle): a `LEADING` or
+  `CHARACTERS` item in a multi-item list; SEVERAL counters (more than one `tally_for`); and the
+  combined `TALLYING … REPLACING` form with several tally items. The single-item
+  `TALLYING FOR ALL … {BEFORE|AFTER}` path is untouched.
+
+### Added — v0.57.0: INSPECT REPLACING several items each with a BEFORE/AFTER region
+
+`INSPECT source REPLACING ALL a BY x [{BEFORE|AFTER} p] ALL b BY y [{BEFORE|AFTER} q] …` — each
+item of a MULTI-item REPLACING may now carry its OWN optional `{BEFORE|AFTER}` region, compiled
+byte-identical to the `coding-adventures-cobol-runtime` 0.61.0 oracle. Previously any region on a
+multi-item list was rejected at emit time ("INSPECT REPLACING with several items and a BEFORE/AFTER
+region is a later rung"); that reject is now LIFTED. No grammar change was needed.
+
+- `ReplaceItem` now carries `Option<(RegionKind, &GrammarASTNode)>` (its own region node);
+  `inspect_replacing_multi` parses each item's region with the same keyword/operand extraction the
+  single-item `inspect_replacing_all` uses. The LEADING/CHARACTERS/FIRST rejects for a multi-item
+  list are UNCHANGED (the multi path stays `ALL`-only).
+- `emit_inspect_replacing_multi` reuses `emit_inspect_region_window` — the SAME window the
+  single-item region emitter and the TALLYING side emit — to derive each item's `[start, end)`
+  ONCE, over the ORIGINAL source, before the unrolled `0..W` pass (the runtime length is
+  materialised once, shared by every item that carries a region). In the per-position ordered
+  if-else chain each region-carrying item's link now gates on `start <= j < end AND c == x`; a
+  region-less item's link stays `c == x` (the window guard folds away). This is the exact
+  composition of the pre-existing multi-item first-match chain with the single-item region gate.
+- Byte-safety: the match only fires on a single-char ASCII search, so a multi-byte source char is
+  never falsely matched, and each content-defined window selects the same positions on both
+  engines. Reconstruction of a source that itself contains a multi-byte char remains the
+  PRE-EXISTING byte-vs-char chip shared by every REPLACING lowering (per-position `str_slice`
+  cannot slice a multi-byte char and traps, identically to the single-item `REPLACING ALL`); this
+  rung adds no new non-ASCII behavior.
+- Scope kept for a later rung (unchanged, identical messages to the oracle): a `LEADING` or
+  `CHARACTERS`/`FIRST` item in a multi-item list, and the combined `TALLYING … REPLACING` form with
+  several items. The single-item `REPLACING ALL … {BEFORE|AFTER}` path is untouched.
+
+### Added — v0.56.0: INSPECT REPLACING CHARACTERS BY x (no region)
+
+`INSPECT source REPLACING CHARACTERS BY x` — the "replace every position" form is now compiled,
+byte-identical to the `coding-adventures-cobol-runtime` 0.60.0 oracle. Previously it was rejected
+at emit time ("INSPECT REPLACING CHARACTERS is a later rung"). No grammar change was needed.
+
+- Unlike `REPLACING ALL …` there is no per-position compare — EVERY position becomes `x`
+  unconditionally. `emit_inspect_replacing_characters` reuses the REPLACING-ALL rebuild scaffold
+  minus the `cmp_eq`: it appends the 1-character replacement string `width` times (the picture's
+  compile-time CHAR width) into a fresh accumulator, then copies it back to the source register.
+- Byte-basis co-totality: the oracle fills `n = storage.len()` (BYTE-length) copies then
+  `move_into` re-pads/truncates to the picture's CHAR size. Emitting exactly `width` copies here
+  reproduces that capped image on both engines. Worked non-ASCII regression: `PIC X(5) VALUE
+  "café"` (5 chars / 6 bytes) REPLACING CHARACTERS BY `"Z"` → `"ZZZZZ"` (FIVE `Z`s) on both.
+- Dispatch: the lone-REPLACING branch of `emit_inspect` detects the CHARACTERS keyword on the
+  SINGLE replace item FIRST and routes to `emit_inspect_replacing_characters`, mirroring the
+  oracle's `read_statement`.
+- Guards, applied identically to the oracle: (3) a `{BEFORE|AFTER}` region on the CHARACTERS item
+  is deferred; (2) a single-char but NON-ASCII *literal* `x` is a later rung (an explicit
+  `is_ascii()` pre-check so the diagnostic/gating match the oracle rather than
+  `single_delim_str`'s byte-based "multi-character" reject) — a `PIC X(1)` *item* replacement is
+  not ASCII-gated; (1) `x` must be a single character (`single_delim_str`).
+- Scope unchanged elsewhere: a CHARACTERS item inside a MULTI-item `REPLACING` list, and inside a
+  combined `TALLYING … REPLACING`, remain later rungs, rejected identically to before.
+
+### Added — v0.55.0: INSPECT TALLYING … FOR CHARACTERS (+ optional region)
+
+`INSPECT source TALLYING counter FOR CHARACTERS [ {BEFORE|AFTER} x ]` — the "count every
+position" tally form is now compiled, byte-identical to the `coding-adventures-cobol-runtime`
+0.59.0 oracle. Previously it was rejected at emit time ("INSPECT TALLYING … FOR CHARACTERS is a
+later rung"). No grammar change was needed.
+
+- `FOR CHARACTERS` does NOT scan for a delimiter. The count is the LENGTH of the region window,
+  ADDed to the counter: with no region `cnt = str_len(S)`; with a `{BEFORE|AFTER} x` region
+  `cnt = end - start` (`sub`) over the SAME window `emit_inspect_region_window` produces for
+  `FOR ALL`, so it inherits the identical BEFORE→whole / AFTER→empty not-found asymmetry. The
+  count folds into the counter via the SAME `store_scaled` ADD the ALL/LEADING path uses.
+- `emit_inspect_tallying` gains an `allow_characters` gate: the standalone lone-TALLYING caller
+  passes `true`; the combined `TALLYING … REPLACING` caller passes `false`, so a combined
+  CHARACTERS half is a clean later-rung error matching the oracle. `inspect_tally_all` now
+  detects `CHARACTERS`, returns `characters: bool`, and reads NO delimiter operand on that path
+  (`delim_node` becomes `Option`).
+- The per-character match loop, `single_delim_code`, and delimiter registers are skipped
+  entirely on the CHARACTERS path — only `str_len`, the optional window, and one `sub`/`add`
+  are emitted.
+- Multi-item / multi-counter `CHARACTERS` remain later rungs, rejected identically to before.
+
+### Added — v0.54.0: UNSTRING … ON OVERFLOW / NOT ON OVERFLOW
+
+`UNSTRING source DELIMITED BY delim INTO r1 [r2 …] [WITH POINTER p] [ON OVERFLOW imp…] [NOT ON
+OVERFLOW imp…]` — the two optional overflow imperatives are now compiled, byte-identical to the
+`coding-adventures-cobol-runtime` 0.58.0 oracle. Previously they were rejected at emit time
+("UNSTRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung"). The DIRECT sibling of the STRING
+overflow dispatch (v0.53.0). No grammar change was needed.
+
+- `emit_unstring` now yields an `overflow` i64 register (`1`/`0`) computed with the IDENTICAL
+  comparison the oracle uses:
+  - **Scan path:** after the receiver loop, `overflow = cmp_le(p, len)` (the final cursor `p` did
+    not run past the source ⇒ fields remain), overwriting the pre-seed.
+  - **`WITH POINTER` out of range:** the flag is PRE-SEEDED to `1` before the out-of-range guards,
+    which jump straight to `us_end` with it still set (out-of-range IS overflow), skipping the
+    scan, the `cmp_le` overwrite, and the write-back.
+- After settling the flag, `emit_unstring` splits the `statement` children at the `NOT` keyword
+  (exactly as the oracle reader and `emit_if`'s `ELSE` split do) into the ON / NOT-ON lists, then
+  emits the usual `jmp_if_false`/branch/`label` skeleton guarding on the `overflow` register.
+- The whole flag + skeleton is emitted ONLY when a clause is present — a plain UNSTRING with
+  neither clause lowers EXACTLY as before this rung (no `overflow` register, no branch).
+- **Behaviour change:** the out-of-range `WITH POINTER` case now runs the `ON OVERFLOW` list
+  (still no data movement / pointer write-back), matching the oracle.
+
+### Added — v0.53.0: STRING … ON OVERFLOW / NOT ON OVERFLOW
+
+`STRING s1 s2 … DELIMITED BY {SIZE | delim} INTO t [WITH POINTER p] [ON OVERFLOW imp…] [NOT ON
+OVERFLOW imp…]` — the two optional overflow imperatives are now compiled, byte-identical to the
+`coding-adventures-cobol-runtime` 0.57.0 oracle. Previously they were rejected at emit time
+("STRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung"). No grammar change was needed.
+
+- `emit_string` (and the shared `emit_string_pointer_overlay`) now yield an `overflow` i64
+  register (`1`/`0`) computed with the IDENTICAL comparison the oracle uses:
+  - **No `WITH POINTER`:** overflow ⇔ `total > width`, a COMPILE-TIME-known boolean materialised
+    as a `const`.
+  - **`WITH POINTER`:** `emit_string_pointer_overlay` pre-seeds the flag to `1`, lets the two
+    out-of-range guards fall through to `st_end` with it still set (out-of-range IS overflow),
+    and OVERWRITES it in the in-range path with the drop test `clen > avail`.
+  - **`DELIMITED BY delim`, no pointer:** overflow ⇔ the run-time `clen > width` test (`gt`),
+    reused directly as the flag.
+- After the overlay, `emit_string` splits the `statement` children at the `NOT` keyword (exactly
+  as the oracle reader and `emit_if`'s `ELSE` split do) into the ON / NOT-ON lists, then emits the
+  usual `jmp_if_false`/branch/`label` skeleton guarding on the `overflow` register. Both clauses
+  absent ⇒ no branch skeleton is emitted (a plain STRING lowers exactly as before).
+
+### Added — v0.52.0: STRING … WITH POINTER
+
+`STRING s1 s2 … DELIMITED BY {SIZE | delim} INTO t WITH POINTER p` — the optional `WITH POINTER`
+phrase is now MODELLED, byte-identical to the `coding-adventures-cobol-runtime` 0.56.0 oracle.
+Previously it was rejected at emit time ("STRING … WITH POINTER is a later rung"). No grammar
+change was needed — the grammar already parses `WITH POINTER NAME`. This is the direct mirror of
+the UNSTRING … WITH POINTER rung (v0.51.0).
+
+`p` is an unsigned-integer item (`PIC 9(n)`) holding the **1-based** character position in the
+RECEIVER at which the first transferred character is placed:
+
+- **Overlay offset.** `emit_string` builds the concatenation register as before, then (with a
+  pointer) hands off to a shared run-time overlay `emit_string_pointer_overlay`: it reads the
+  pointer register `pv`, computes the 0-based start `pv − 1`, `avail = size − start`, and
+  `chars_placed = min(concat_len, avail)`, and rebuilds the receiver as `recv[0,start] ++
+  concat[0,chars_placed] ++ recv[start+chars_placed, size]` — overwriting only the filled run,
+  keeping the untouched head and tail. Because the offset is a run-time value, the compile-time
+  slicing of the no-pointer `DELIMITED BY SIZE` path no longer applies; the concat length is
+  materialised as a `const` and the overlay runs at run time. With `p = 1` the result is the
+  no-pointer overlay exactly.
+- **Out-of-range guard.** The pointer's VALUE is a run-time datum, so it cannot be checked at
+  build time. The overlay lowers a guard: if `p < 1` or `p > size` it jumps past the whole
+  operation (overlay AND write-back) to a trailing `st_end` label, leaving the receiver and the
+  pointer untouched — the ISO "overflow ⇒ no data movement" rule, matching the oracle's early
+  return byte-for-byte.
+- **Write-back.** After the overlay the pointer is stored as `pv + chars_placed` (the 1-based
+  position one past the last character stored; `size + 1` when the content filled to or past the
+  receiver end), reshaped into the pointer's `PIC 9(n)` picture through the same `store_scaled`
+  path INSPECT's counter and UNSTRING's pointer use.
+- **Build-time picture validation** (co-total with the oracle): the pointer must be an unsigned
+  integer `PIC 9(n)`, `n ≤ 18`. A signed, fractional, non-numeric, group, or over-wide pointer is
+  a clean later rung, rejected with the SAME message the oracle raises. The receiver NAME is split
+  off from the pointer NAME at the `POINTER` keyword (the grammar is flat), matching the oracle
+  reader.
+
+`ON OVERFLOW` / `NOT ON OVERFLOW` remain deferred.
+
+### Added — v0.51.0: UNSTRING … WITH POINTER
+
+`UNSTRING S DELIMITED BY "," INTO r1 r2 … WITH POINTER p` — the optional `WITH POINTER`
+phrase is now MODELLED, byte-identical to the `coding-adventures-cobol-runtime` 0.55.0 oracle.
+Previously it was rejected at emit time ("UNSTRING … WITH POINTER is a later rung"). No grammar
+change was needed — the grammar already parses `WITH POINTER NAME`.
+
+`p` is an unsigned-integer item (`PIC 9(n)`) holding a **1-based** start position:
+
+- **Start offset.** `emit_unstring` initialises the scan cursor from `p_value − 1` (a run-time
+  read of the pointer item's register) instead of the constant 0. Everything downstream — the
+  delimiter scan, per-receiver `str_slice`/reshape, exhaustion, empty fields — is UNCHANGED. With
+  `p = 1` the lowering is behaviourally the no-pointer scan.
+- **Out-of-range guard.** Because the pointer's VALUE is a run-time datum, it cannot be checked at
+  build time. The emitter lowers a guard: if `p < 1` or `p > len` it jumps past the whole
+  operation (receiver moves AND write-back) to a trailing `us_end` label, leaving the receivers
+  and the pointer untouched — the ISO "overflow ⇒ no data movement" rule, matching the oracle's
+  early return byte-for-byte.
+- **Write-back.** After the scan the pointer is stored as `min(p, len) + 1` (clamp removes the
+  scan's phantom step past end-of-source, `+ 1` restores 1-basing), reshaped into the pointer's
+  `PIC 9(n)` picture through the same `store_scaled` path INSPECT's counter uses.
+- **Build-time picture validation** (co-total with the oracle): the pointer must be an unsigned
+  integer `PIC 9(n)`, `n ≤ 18` (so the value fits the `i64` slot). A signed, fractional,
+  non-numeric, group, or over-wide pointer is a clean later rung, rejected with the SAME message
+  the oracle raises. The receiver NAME list is split off from the pointer NAME at the `POINTER`
+  keyword (the grammar is flat), matching the oracle reader.
+
+`ON OVERFLOW` / `NOT ON OVERFLOW` remain deferred.
+
+### Added — v0.50.0: UNSTRING with a reference-modified source
+
+`UNSTRING S(2:3) DELIMITED BY "," INTO w1 w2 w3` — a reference-modified item slice
+`base(start:len)` is now accepted as the UNSTRING source, byte-identical to the
+`coding-adventures-cobol-runtime` 0.54.0 oracle. Previously it was rejected at emit time
+("UNSTRING with a reference-modified source is a later rung"). No grammar change was needed —
+the grammar already parses a ref-mod operand in that position.
+
+This is a direct mirror of the literal-source rung: the ONLY thing that changed is the source
+character provider. `emit_unstring` now has an `Operandy::RefMod` arm that obtains `s_reg` by
+calling the SHARED `ref_mod_slice` helper (the same helper DISPLAY / comparisons use) — which
+emits the identical `str_slice` (constant-folded for literal indices, register-computed for a
+data-name index) and enforces the identical numeric-base and out-of-range rejects. Everything
+downstream — the delimiter scan (`str_len` / `str_index` / `str_slice` loop) and the
+per-receiver reshape — is UNCHANGED, because it reads `s_reg` purely as a string register.
+
+Because the slice register is byte-for-byte what the oracle's `refmod_string` produces (DISPLAY
+of the same slice already agreed between the engines), the split behaviour matches the oracle
+for every case: field boundaries, empty fields, source exhaustion (trailing receivers keep
+their prior VALUE), and per-receiver width reshaping. Both the literal-index path (`S(2:3)`)
+and the computed-index path (`S(J:3)`, J a `PIC 9` data-name) are supported.
+
+**Still deferred / unchanged.** A NUMERIC base under ref-mod is a later rung — the shared
+`ref_mod_slice` rejects a numeric base, so UNSTRING inherits that reject identically to the
+oracle. A GROUP base, out-of-range indices, and a signed/fractional index item behave exactly
+as the existing reference-modification machinery already does (this rung only routes the
+UNSTRING source through it; it does not change that machinery). No new ASCII guard is added:
+the source base is an IDENTIFIER, so there is no new literal-scanning surface — a non-ASCII
+base under ref-mod is the SAME pre-existing byte-vs-char behaviour the reference-modification
+rungs already have (reachable via `DISPLAY S(2:3)`), tracked as the shared chip.
+
+### Added — v0.49.0: STRING with DELIMITED BY a single-char delimiter
+
+`STRING a b c DELIMITED BY "," INTO r` — a real single-character delimiter now compiles,
+byte-identical to the `coding-adventures-cobol-runtime` 0.53.0 oracle. Previously only
+`DELIMITED BY SIZE` was supported; a real delimiter was rejected at emit time. No grammar
+change was needed — `string_delim` already parses `SIZE | operand`.
+
+With `DELIMITED BY delim` each sending field contributes only its PREFIX up to the first
+delimiter char. Where the `DELIMITED BY SIZE` path has all-compile-time-known lengths (a fixed
+`str_slice`/`str_concat` overlay), the delimited path's per-field boundaries are DATA-dependent,
+so `emit_string` now emits a genuine per-field scan LOOP (the same shape UNSTRING uses):
+`flen = str_len(F); j = 0; while j < flen && F[j] != d { j++ }; prefix = F[0,j]`. The prefixes
+are concatenated and the running length becomes a run-time value, so the receiver overlay also
+runs at run time: `clen = str_len(concat); take = min(clen, W); r = concat[0,take] ++ r[take,W]`
+— the preserved tail `r[take,W]` reproduces STRING's no-space-fill rule exactly as the
+compile-time branch does. The `DELIMITED BY SIZE` path is UNCHANGED and still emits the exact
+same fixed IIR as before.
+
+The delimiter is reduced by the SAME `single_delim_code` UNSTRING/INSPECT use, so a
+multi-character / numeric / figurative / reference-modified / wider-item delimiter rejects
+identically to the oracle.
+
+**ASCII guard.** A non-ASCII single-character LITERAL delimiter (`DELIMITED BY "é"`, one char /
+two bytes) is rejected before lowering (the scan compares bytes while the oracle scans chars),
+matching the oracle's reject with the same message. A non-ASCII string-LITERAL sending field
+under an active delimiter (`STRING "café" DELIMITED BY "," …`) is likewise rejected. A non-ASCII
+PIC X(1) delimiter ITEM is not build-time detectable, so — as with UNSTRING — it is left as the
+shared byte-vs-char chip (both engines accept), keeping the accept/reject sets co-total.
+
+Still deferred (rejected here and on the oracle alike): a multi-character delimiter, a non-ASCII
+literal delimiter, a non-ASCII literal sending field under a delimiter, per-field different
+delimiters, `WITH POINTER`, `ON OVERFLOW`, and a numeric receiver.
+
+### Added — v0.48.0: UNSTRING with a literal source
+
+`UNSTRING "a,b,c" DELIMITED BY "," INTO w1 w2 w3` — an alphanumeric STRING LITERAL in the
+UNSTRING SOURCE position now compiles, byte-identical to the
+`coding-adventures-cobol-runtime` 0.52.0 oracle. Previously a literal source was rejected at
+emit time ("UNSTRING with a literal source is a later rung"). No grammar change was needed —
+the grammar already parses a literal operand there.
+
+Only the source PROVIDER changed. `emit_unstring` obtains its string register `s_reg` either
+from an alphanumeric item's own char register (identifier source, as before) or, for a string
+literal, from a fresh `str_const` register holding the literal's bytes. A `str_const` register
+behaves identically to an item's char register under `str_len` / `str_index` / `str_slice` —
+exactly as the `spaces_const` register already does inside the same routine — so the entire
+downstream scan-and-fill loop (delimiter scan, per-receiver slice, truncate/pad reshape,
+cursor advance, exhausted-source guard) is UNCHANGED and shared between the two providers.
+
+Only an **ASCII** string literal is accepted. The oracle scans a literal source by CHARACTER
+while `emit_unstring` lowers it to BYTE-based IIR string ops (`str_len`/`str_index`/
+`str_slice`), so the two agree only when each character is one byte; a non-ASCII literal is
+rejected before the `str_const` is emitted (`if !s.is_ascii()`), matching the oracle's
+read-time reject with the same message so the accept/reject sets stay co-total.
+
+Still deferred (rejected on the compiler and the oracle alike): a NUMERIC-literal source
+(`UNSTRING 123 …`), a FIGURATIVE source (`UNSTRING SPACE …`), a NON-ASCII string-literal
+source — only an ASCII alphanumeric string literal is supported — and a reference-modified
+source (unchanged). `WITH POINTER`, `ON OVERFLOW`, a multi-character/`ALL`/`OR` delimiter, and
+a numeric/group receiver remain later rungs.
+
+### Added — v0.47.0: INSPECT TALLYING with multiple counters
+
+`INSPECT source TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d [ALL e …] …` — TWO OR MORE
+`tally_for` groups, each with its OWN counter and one-or-more single-char `FOR ALL`
+delimiters — now compiles, byte-identical to the `coding-adventures-cobol-runtime` 0.51.0
+oracle. Previously any several-counter TALLYING was rejected at read time ("several
+counters is a later rung"). This GENERALISES the v0.46.0 multi-item single-counter lowering
+to a list of `(counter, delimiter)` pairs where the matched pair's OWN counter is bumped.
+
+Semantics (ISO COMBINED priority list ACROSS counters — the crux): ALL delimiters of ALL
+groups form ONE ordered priority list, scanned in a SINGLE left-to-right pass. At each
+position the delimiters are tried IN WRITTEN ORDER (group 1's items first, then group 2's,
+…) and the FIRST that matches increments ITS OWN group's counter by 1, then the scan
+advances. The per-position first-match `break` means an earlier group CONSUMES the
+position — a character it claims NEVER reaches a later group's delimiter, so the groups are
+NOT independent counts:
+
+- `"aa"  TALLYING C1 FOR ALL "a"  C2 FOR ALL "a"`  gives `C1 += 2, C2 += 0`
+- `"aba" TALLYING C1 FOR ALL "a" ALL "b"  C2 FOR ALL "a"`  gives `C1 += 3, C2 += 0`
+
+Lowering: `emit_inspect_tally_counters` keeps ONE accumulator register per GROUP (init 0)
+through a single RUNTIME `top:/end:` loop over `len = str_len(S)`. It reads `S[j]` once and
+walks an ordered `cmp_eq` chain over the flattened `(group, delimiter)` pairs in written
+order: on the FIRST match it bumps THAT group's accumulator and jumps past the rest to the
+continue label; no match falls through with no bump. After the loop, `counter := counter +
+accumulator` folds per group via the same `store_scaled` (silent high-order truncation on
+overflow) the single-item tally uses — and each final add re-reads the counter's storage
+register, so two groups naming the SAME counter both add to that one item correctly. A new
+`inspect_tally_counters` CST reader walks the same `tally_for`/`tally_item` children the
+oracle walks, and the dispatch keys PURELY on `fors.len() >= 2`, so the two engines'
+accept/reject sets stay co-total.
+
+Scope bound (this rung, identical messages on both engines): every item of every group must
+be an `ALL` single-char delimiter with NO `{BEFORE|AFTER}` region and NO
+`LEADING`/`CHARACTERS`; every counter must be an unsigned integer `PIC 9(n)`. A group
+carrying any of those, and the COMBINED `TALLYING … REPLACING` form with several counters
+(still rejected by `inspect_tally_all`'s several-counters guard), remain later rungs.
+Exactly ONE `tally_for` keeps the single-counter lowerings (`emit_inspect_tallying` /
+`emit_inspect_tally_multi`) UNCHANGED.
+
+### Added — v0.46.0: INSPECT TALLYING with multiple FOR items (one counter)
+
+`INSPECT source TALLYING counter FOR ALL a ALL b [ALL d …]` — TWO OR MORE `FOR ALL` tally
+items sharing ONE counter — now compiles, byte-identical to the
+`coding-adventures-cobol-runtime` 0.50.0 oracle. Previously any multi-item TALLYING was
+rejected at read time ("several FOR phrases is a later rung").
+
+Semantics (ISO priority-list, the count-side analogue of multi-REPLACING): ONE
+left-to-right pass over the source. At each position the delimiters are tried IN WRITTEN
+ORDER and the FIRST that matches increments the shared count by 1, then the scan advances.
+The per-position first-match rule is what makes DUPLICATE delimiters NOT double-count:
+`FOR ALL "a" ALL "a"` over `"aa"` adds 2 (each `a` counted once by the first item), not 4.
+Net, the count is the number of source positions whose char equals SOME delimiter, each
+counted once, ADDED to the counter (INSPECT adds; it does not clear it first).
+
+Lowering: unlike the REPLACING emitter (which rebuilds a fixed-width string and so unrolls
+`0..width` at compile time), the tally builds no string, so `emit_inspect_tally_multi`
+emits a genuine RUNTIME `top:/end:` loop over `len = str_len(S)` — mirroring the
+single-item `emit_inspect_tallying` loop shape. At each position it reads `S[j]` once and
+walks an ordered `cmp_eq` chain (one link per delimiter): on the FIRST match it bumps
+`cnt` and jumps past the rest to the continue label (so a position is counted at most
+once); no match falls through with no bump. Then `counter := counter + cnt` folds via the
+same `store_scaled` (silent high-order truncation on overflow) the single-item tally uses.
+A new `inspect_tally_multi` CST reader counts the same `tally_item` children the oracle
+counts, so the two engines' accept/reject sets are co-total.
+
+Scope bound (this rung): the multi-item path supports ONLY `ALL` items, each a single-char
+delimiter, with NO `{BEFORE|AFTER}` region and NO `LEADING`/`CHARACTERS`, under EXACTLY ONE
+counter. A multi-item list carrying any of those, SEVERAL counters (more than one
+`tally_for`), and the combined `TALLYING … REPLACING` form with several tally items remain
+later rungs — rejected with identical messages on both engines. A single tally item keeps
+the full single-item path (LEADING, region).
+
+### Added — v0.45.0: INSPECT REPLACING with multiple replace items
+
+`INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — TWO OR MORE replace
+items in one REPLACING clause — now compiles, byte-identical to the
+`coding-adventures-cobol-runtime` 0.49.0 oracle. Previously any multi-item REPLACING was
+rejected at read time ("several replace items is a later rung").
+
+Semantics (ISO): ONE left-to-right pass over the source. At each position the items are
+considered IN WRITTEN ORDER and the FIRST whose single-char search matches the ORIGINAL
+character wins; the position then advances. Two properties follow, both pinned by tests:
+
+- FIRST-MATCH-WINS: only the earliest-written matching item fires at a position.
+- NO RE-CHAINING: the byte a replacement produces is never re-examined by a later item.
+  `REPLACING ALL "a" BY "b" ALL "b" BY "z"` over `"ab"` gives `"bz"`, not `"zz"` — a
+  naive sequential two-pass replace would give `"zz"`.
+
+Lowering: `emit_inspect_replacing_multi` unrolls over the compile-time width; at each
+position it reads `S[j]` ONCE from the original source register and emits an ordered
+if-else chain (one link per item) that appends the first matching item's replacement and
+jumps to the position's done label — the early jump is exactly first-match-wins, and
+always comparing against the original `S[j]` is exactly no-re-chaining. When no item
+matches, the original character slice is appended. The width-`W` result is copied back
+into the source register through an empty concat AFTER the last read, so the source is
+not overwritten mid-scan. A new `inspect_replacing_multi` CST reader counts the same
+`replace_item` children the oracle counts, so the two engines' accept/reject sets are
+co-total.
+
+Scope bound (this rung): the multi-item path supports ONLY `ALL` items, each a
+single-char search BY single-char replacement, with NO `{BEFORE|AFTER}` region and NO
+`LEADING`/`CHARACTERS`/`FIRST`. A multi-item list carrying any of those, and the combined
+`TALLYING … REPLACING` form with several items, remain later rungs — rejected on both
+engines with identical messages. A single replace item keeps the full single-item path
+(LEADING, region, …) unchanged.
+
+### Added — v0.44.0: standalone INSPECT FOR LEADING / REPLACING LEADING with a BEFORE/AFTER region
+
+The STANDALONE `INSPECT source TALLYING counter FOR LEADING delim {BEFORE|AFTER} x` and
+`INSPECT source REPLACING LEADING search BY replace {BEFORE|AFTER} x` forms now compile,
+byte-identical to the `coding-adventures-cobol-runtime` 0.48.0 oracle. The crux is that
+the LEADING run is ANCHORED at the WINDOW START, not source position 0: it counts /
+replaces only the maximal run of matching characters that begins AT the window's start
+index and stops at the first non-matching character INSIDE the window (or the window
+end).
+
+- `emit_inspect_tallying`: when a region is present on a `FOR LEADING` count, the scan
+  is anchored at the window start — the loop counter is seated at `start` (via a `mov`)
+  and the loop bound is the window `end` (not `0..len`), so the existing
+  stop-at-first-mismatch break yields the window-anchored run. The pre-window region
+  guard is skipped on that path (unnecessary once the loop is bounded to the window).
+  `FOR ALL`'s lowering is UNTOUCHED — it still scans `0..len` with the in-window guard,
+  byte-identical to before.
+- `emit_inspect_replacing`: the per-position unroll now computes an `in_region`
+  register once and derives the branch condition as `use_repl = active AND eq AND
+  in_region` for LEADING + region (`eq AND in_region` for ALL + region, `active AND eq`
+  for LEADING with no region, plain `eq` otherwise). The run decays ONLY on an
+  IN-WINDOW mismatch — `active := active AND (eq OR NOT in_region)` — so positions
+  before the window leave `active` untouched and the run truly starts at the window
+  start. The `ALL` and no-region `LEADING` lowerings are byte-identical to before.
+- A new `allow_leading_region` flag on both emitters re-imposes the combined-form
+  deferral: the standalone callers pass `true`, the combined caller passes `false`, so
+  a combined `TALLYING … REPLACING` whose LEADING half carries a region is a clean
+  later-rung error with the same message the shared reader used to raise. The shared
+  parsing helpers `inspect_tally_all` / `inspect_replacing_all` no longer reject a
+  LEADING phrase carrying a region (that gate moved to the emitters' flag).
+- Scoped SMALL — only the two STANDALONE forms. Still deferred, identically on both
+  engines: a combined `TALLYING … REPLACING` with a LEADING half AND a region, and a
+  multi-character region delimiter (rejected at emit via `single_delim_code`). No
+  grammar change — the rejects were read/emit-time only.
+
+### Added — v0.43.0: combined INSPECT TALLYING + REPLACING with a per-half BEFORE/AFTER region
+
+The combined `INSPECT source TALLYING counter FOR ALL delim REPLACING ALL x BY y` form
+now accepts an INDEPENDENT single-character `{BEFORE|AFTER}` region on EACH half — the
+region that previously shipped only for the LONE `TALLYING FOR ALL` (v0.40.0) and
+`REPLACING ALL` (v0.41.0) phrases. Each half narrows its own operation to a sub-slice
+of the source bounded by the FIRST (leftmost) occurrence of that half's region
+delimiter, with the ISO not-found asymmetry: `BEFORE` → the WHOLE source if the
+delimiter is absent; `AFTER` → an EMPTY window if it is absent. Positions outside a
+half's window are untouched. The two halves are fully independent — either, both, or
+neither may carry a region, with their own kind and delimiter.
+
+- The combined arm of `emit_inspect` now passes `allow_region = true` to BOTH
+  `emit_inspect_tallying` and `emit_inspect_replacing` (previously `false`). Each
+  standalone emitter already parses its own half's region from its own phrase child
+  (`inspect_tallying` / `inspect_replacing`) and reuses the shared
+  `emit_inspect_region_window` helper, so the only compiler change is routing each
+  half's region through — no new region logic.
+- ISO order is preserved: the tally count is emitted FIRST (it only READS `s_reg`),
+  then the replace unroll rebuilds and stores back. Both halves' windows are therefore
+  scanned over the SAME original source bytes, matching
+  `coding-adventures-cobol-runtime` 0.47.0's `exec_inspect_tally_replace` byte-for-byte.
+- Scoped SMALL — `FOR ALL` / `REPLACING ALL` only, single-character region delimiter
+  only. Still rejected identically on both engines (each via the shared reader /
+  `single_delim_code`): `FOR LEADING` or `REPLACING LEADING` carrying a region, and a
+  multi-character region delimiter. No grammar change was needed.
+- New e2e parity tests in `jit_e2e.rs`: `inspect_combined_region_tally_region_only`,
+  `inspect_combined_region_replace_region_only`,
+  `inspect_combined_region_both_before_distinct_delimiters`,
+  `inspect_combined_region_before_and_after_different_kinds`,
+  `inspect_combined_region_both_after`,
+  `inspect_combined_region_tally_after_not_found_replace_before_not_found`,
+  `inspect_combined_region_tally_before_not_found_whole_source`,
+  `inspect_combined_region_replace_after_not_found_empty`,
+  `inspect_combined_region_delimiter_at_last_position`,
+  `inspect_combined_region_delimiter_equals_search_char_each_half`,
+  `inspect_combined_region_pic_x1_delimiter`,
+  `inspect_combined_region_adds_to_a_nonzero_counter`,
+  `inspect_combined_region_delimiter_at_position_zero_empty_before`, and the three
+  reject tests `inspect_combined_for_leading_with_a_region_is_a_later_rung`,
+  `inspect_combined_replacing_leading_with_a_region_is_a_later_rung`,
+  `inspect_combined_multi_char_region_delimiter_is_a_later_rung`. The obsolete
+  `inspect_replacing_combined_with_a_region_is_a_later_rung` reject test is removed
+  (the form it guarded is now supported).
+
+### Added — v0.42.0: INSPECT CONVERTING with a BEFORE/AFTER region
+
+`INSPECT source CONVERTING from TO to {BEFORE|AFTER} z` now compiles instead of being
+rejected as a later rung — the exact analogue of the TALLYING- and REPLACING-region
+rungs applied to the character translation. A `{BEFORE|AFTER} z` region narrows the
+translation to a sub-slice of the source, bounded by the FIRST (leftmost) occurrence
+of the SINGLE-character region delimiter `z`, with the ISO not-found asymmetry:
+`BEFORE z` translates left of the first `z` (WHOLE source if `z` is absent); `AFTER z`
+translates right of it (EMPTY — nothing converted — if `z` is absent). Positions
+OUTSIDE the region keep their original character, even if that character appears in
+the `from` set.
+
+- `inspect_converting_pair` now PARSES the `inspect_region` CST child into
+  `Option<(RegionKind, delim_node)>` (reusing the same keyword/operand extraction the
+  count and replace sides use) instead of rejecting it, and returns it as the third
+  element of the new `ConvertPhrase` alias. `emit_inspect_converting` REUSES
+  `emit_inspect_region_window` — the SAME helper the TALLYING and REPLACING sides
+  emit — to derive `[start, end)` over the ORIGINAL source, then guards its
+  per-position translate unroll: when a region is active and position `j` lies outside
+  the window it jumps straight past the table chain to the "keep the original
+  character" fall-through (materialising the compile-time `j` into a register to
+  compare against the runtime window bounds).
+- With NO region the extra guard folds away — the lowering is byte-identical to
+  v0.41.0, and matches `coding-adventures-cobol-runtime` 0.46.0's
+  `exec_inspect_converting` window byte-for-byte on every accepted input (both now
+  share the oracle's `region_window` semantics). No grammar change was needed.
+- Scoped SMALL — CONVERTING only, single-character region delimiter only. A
+  MULTI-character region delimiter is still rejected identically on both engines via
+  `single_delim_code`, exactly like the search/tally delimiter.
+- New e2e parity tests in `jit_e2e.rs`:
+  `inspect_converting_before_translates_only_left_of_the_delimiter`,
+  `inspect_converting_after_translates_only_right_of_the_delimiter`, both not-found
+  branches, `inspect_converting_after_region_delimiter_at_position_zero`,
+  `inspect_converting_before_region_delimiter_as_last_char`,
+  `inspect_converting_region_delimiter_is_also_in_the_from_set`,
+  `inspect_converting_before_delimiter_at_position_zero_is_an_empty_region`,
+  `inspect_converting_multichar_table_with_a_region`,
+  `inspect_converting_region_delimiter_is_a_pic_x1_item`,
+  `inspect_converting_region_shorter_than_the_from_set`, and the reject test
+  `inspect_converting_multi_char_region_delimiter_is_a_later_rung`. The obsolete
+  `inspect_converting_before_region_is_a_later_rung` reject test is removed (the form
+  it guarded is now supported).
+
+### Added — v0.41.0: INSPECT REPLACING ALL with a BEFORE/AFTER region
+
+`INSPECT source REPLACING ALL x BY y {BEFORE|AFTER} z` now compiles instead of being
+rejected as a later rung — the exact analogue of the TALLYING-region rung applied to
+the substitution instead of the count. A `{BEFORE|AFTER} z` region narrows the ALL
+replacement to a sub-slice of the source, bounded by the FIRST (leftmost) occurrence
+of the SINGLE-character region delimiter `z`, with the ISO not-found asymmetry:
+`BEFORE z` replaces left of the first `z` (WHOLE source if `z` is absent); `AFTER z`
+replaces right of it (EMPTY — no replacement — if `z` is absent). Positions OUTSIDE
+the region keep their original character.
+
+- `inspect_replacing_all` now PARSES the `inspect_region` CST child into
+  `Option<(RegionKind, delim_node)>` (reusing the count side's keyword/operand
+  extraction) instead of rejecting it, and rejects `REPLACING LEADING` carrying a
+  region. `emit_inspect_replacing` REUSES `emit_inspect_region_window` — the SAME
+  helper the TALLYING side emits — to derive `[start, end)` over the ORIGINAL source,
+  then guards its per-position `ALL` unroll so a match at position `j` is rewritten
+  only when `start <= j < end` (materialising the compile-time `j` into a register to
+  compare against the runtime window bounds). It gains an `allow_region` gate: the
+  lone `REPLACING ALL` path passes `true`, the combined path `false`.
+- With NO region the extra guard folds away — the lowering is byte-identical to
+  v0.40.0, and matches `coding-adventures-cobol-runtime` 0.45.0's `inspect_replace`
+  window byte-for-byte on every accepted input (both now share the oracle's
+  `region_window` semantics).
+- Scoped SMALL — `REPLACING ALL` only, single-character region delimiter only. Still
+  rejected identically on both engines: `REPLACING LEADING` + region, a region on the
+  combined `TALLYING … REPLACING` form (`allow_region == false`), and — via
+  `single_delim_code`, exactly like the search delimiter — a MULTI-character region
+  delimiter.
+- New e2e parity tests in `jit_e2e.rs`:
+  `inspect_replacing_before_replaces_only_left_of_the_delimiter`,
+  `inspect_replacing_after_replaces_only_right_of_the_delimiter`, both not-found
+  branches, `inspect_replacing_after_region_delimiter_at_position_zero`,
+  `inspect_replacing_region_delimiter_equals_search`,
+  `inspect_replacing_region_delimiter_equals_replacement`,
+  `inspect_replacing_before_delimiter_at_position_zero_is_an_empty_region`,
+  `inspect_replacing_region_delimiter_is_a_pic_x1_item`, and the reject tests
+  `inspect_replacing_leading_with_a_region_is_a_later_rung`,
+  `inspect_replacing_multi_char_region_delimiter_is_a_later_rung`, and
+  `inspect_replacing_combined_with_a_region_is_a_later_rung`.
+
+### Added — v0.40.0: INSPECT TALLYING FOR ALL with a BEFORE/AFTER region
+
+`INSPECT source TALLYING counter FOR ALL delim {BEFORE|AFTER} x` now compiles
+instead of being rejected as a later rung. A `{BEFORE|AFTER} x` region narrows the
+count to a sub-slice of the source, bounded by the FIRST (leftmost) occurrence of
+the SINGLE-character region delimiter `x`, with the ISO not-found asymmetry:
+`BEFORE x` counts left of the first `x` (whole source if `x` is absent); `AFTER x`
+counts right of it (EMPTY if `x` is absent).
+
+- `inspect_tally_all` now PARSES the `inspect_region` CST child into `Option<
+  (RegionKind, delim_node)>` (a new compiler-side `RegionKind { Before, After }`)
+  instead of rejecting it, and rejects `FOR LEADING` carrying a region. A new
+  `emit_inspect_region_window` helper emits a single scan for the first occurrence of
+  the region delimiter (a `found` flag + first index `fidx`), then derives the window
+  `[start, end)` per the BEFORE→whole / AFTER→empty rule. `emit_inspect_tallying`
+  gains an `allow_region` gate (lone TALLYING passes `true`, the combined path
+  `false`) and, when a region is present, bounds its existing per-position `FOR ALL`
+  count loop with `j < start || j >= end → skip` (jump to `nobump`, keep scanning).
+- With NO region the lowering emits nothing extra — it is byte-identical to v0.39.0,
+  and matches `coding-adventures-cobol-runtime` 0.44.0's `inspect_tally` window
+  byte-for-byte on every accepted input.
+- Scoped SMALL — `TALLYING FOR ALL` only, single-character region delimiter only.
+  Still rejected identically on both engines: `FOR LEADING` + region, a region on the
+  combined `TALLYING … REPLACING` form (`allow_region == false`), and — via
+  `single_delim_code`, exactly like the tally delimiter — a MULTI-character region
+  delimiter. `REPLACING`/`CONVERTING` regions, `CHARACTERS`, several counters/FOR
+  phrases, a numeric source, and a non-integer/signed counter remain clean
+  `Unsupported`.
+- New e2e parity tests in `jit_e2e.rs`: `inspect_before_counts_only_left_of_the_
+  delimiter`, `inspect_after_counts_only_right_of_the_delimiter`, both not-found
+  branches, `inspect_after_delimiter_at_position_zero`, `inspect_before_delimiter_at_
+  last_position`, `inspect_region_delimiter_equals_tally_delimiter`, `inspect_before_
+  delimiter_at_position_zero_is_an_empty_region`, `inspect_region_adds_to_a_nonzero_
+  counter`, `inspect_region_delimiter_is_a_pic_x1_item`, and the two reject tests
+  `inspect_for_leading_with_a_region_is_a_later_rung` and `inspect_multi_char_region_
+  delimiter_is_a_later_rung`.
+
+### Added — v0.39.0: combined INSPECT TALLYING with REPLACING LEADING
+
+The COMBINED `INSPECT source TALLYING counter FOR ALL|LEADING delim REPLACING LEADING
+x BY y` now compiles instead of being rejected as a later rung. This is the exact
+MIRROR of v0.38.0: where that rung let the TALLYING half be `FOR LEADING`, this rung
+lets the REPLACING half be `LEADING` (rewrite only the **consecutive run** of `x` at
+the START of the source, stopping at the first non-match). The two halves' leading
+flags are now fully independent — either, both, or neither may be LEADING.
+
+- The change is a single flag: `emit_inspect`'s `(has_tally, has_repl) == (true,
+  true)` arm now calls `emit_inspect_replacing(verb, &s_reg, source_width, /*
+  allow_leading */ true)` for the replace half (matching the tally half, which
+  already passed `true`). `emit_inspect_replacing` already threaded the `active`-
+  guarded run unroll from the lone `REPLACING LEADING` rung — the per-position
+  `use_repl = and(active, eq)` with `active` sticking at 0 after the first mismatch —
+  so no codegen change was needed. Tally still emits FIRST (over the original `s_reg`
+  bytes), then the leading replace rebuild, matching the oracle's tally-then-replace
+  order; a shared `delim == x` is counted before it is substituted.
+- This composes the two existing lone-form lowerings, so the JIT output is
+  byte-identical to `coding-adventures-cobol-runtime` 0.43.0. Every other combined
+  gate is unchanged: a second `FOR`/replace item, `CHARACTERS`/`BEFORE`/`AFTER`, a
+  multi-character/figurative/wider operand, a numeric source, and a non-integer/
+  signed counter remain clean `Unsupported`.
+- The combined-deferred-half unit test flips from a reject to a "now compiles"
+  assertion (`inspect_combined_tally_replacing_leading_now_compiles`). New e2e parity
+  tests in `jit_e2e.rs`: `inspect_combined_replacing_leading_all_tally` (`"00X00"`,
+  `FOR ALL` tally + leading replace, shared `delim == search` → `004` / `"**X00"`),
+  `inspect_combined_both_halves_leading` (`"00X00"` both halves leading → `002` /
+  `"**X00"`), `inspect_combined_replacing_leading_no_run` (`"X00X"` → `002` /
+  unchanged), and `inspect_combined_characters_is_still_a_later_rung` (a still-
+  deferred combined `CHARACTERS` sub-form remains rejected on both engines).
+
+### Added — v0.38.0: combined INSPECT TALLYING FOR LEADING with REPLACING ALL
+
+The COMBINED `INSPECT source TALLYING counter FOR LEADING delim REPLACING ALL x BY y`
+now compiles instead of being rejected as a later rung. The combined form's TALLYING
+half may now be `FOR LEADING` (count only the **consecutive run** of `delim` at the
+START of the source) as well as `FOR ALL`; the REPLACING half stays `ALL`-only.
+
+- The change is a single flag: `emit_inspect`'s `(has_tally, has_repl) == (true,
+  true)` arm now calls `emit_inspect_tallying(verb, &s_reg, /* allow_leading */
+  true)` for the tally half (the REPLACING-half call keeps `allow_leading = false`,
+  so a combined `TALLYING … REPLACING LEADING` is still a clean `Unsupported`).
+  `emit_inspect_tallying` already emitted the correct leading-run lowering — the
+  `leading ? end : nobump` mismatch jump that breaks out of the count loop at the
+  first non-match instead of merely skipping the `cnt += 1` — so no codegen change
+  was needed. Tally still emits FIRST (over the original `s_reg` bytes), then the
+  `REPLACING ALL` rebuild, matching the oracle's tally-then-replace order.
+- This composes the two existing lone-form lowerings, so the JIT output is
+  byte-identical to `coding-adventures-cobol-runtime` 0.42.0. Every other combined
+  gate is unchanged: a combined `REPLACING LEADING`, a second `FOR`/replace item,
+  `CHARACTERS`/`BEFORE`/`AFTER`, a multi-character/figurative/wider operand, a
+  numeric source, and a non-integer/signed counter remain clean `Unsupported`.
+- The combined-deferred-half unit test flips from a reject to a "now compiles"
+  assertion (`inspect_combined_tally_for_leading_now_compiles`). New e2e parity tests
+  in `jit_e2e.rs`: `inspect_combined_for_leading_counts_only_the_leading_run`
+  (`"000X0"`, shared `delim == search` → `003` / `"***X*"`),
+  `inspect_combined_for_leading_no_leading_run` (`"X00X"` → `000` / `"X**X"`),
+  `inspect_combined_for_leading_all_characters_match` (`"0000"` → `004` / `"****"`),
+  and `inspect_combined_replacing_leading_is_a_later_rung` (still rejected).
+
+### Added — v0.37.0: INSPECT REPLACING LEADING (leading-run replace)
+
+A lone `INSPECT source REPLACING LEADING search BY replace` now compiles instead of
+being rejected as a later rung. `REPLACING LEADING` replaces only the run of
+**consecutive** `search` characters at the START of the source, stopping at the
+first character that is not `search`; positions after that first gap are left
+unchanged **even if they equal `search`** (the contrast with `REPLACING ALL`, which
+replaces every occurrence). Width is unchanged (single char → single char).
+
+- The per-position **rebuild** unroll over the compile-time width `W` is reused
+  verbatim; the ONLY addition for `LEADING` is a runtime `active` flag (`i64`, init
+  `const 1`) threaded through the loop: at each `j`, `eq = cmp_eq(str_index(s,j),
+  search)`, the replace branch is taken iff `use_repl = and(active, eq)`, and then
+  `active = and(active, eq)` — so once a mismatch clears `active` it stays 0 for
+  every later position and no further character is replaced. This is byte-identical
+  to the oracle's stateful `in_run` map. When not `LEADING` the extra `and` is not
+  emitted and the unroll is byte-identical to the original `REPLACING ALL` lowering.
+- `inspect_replacing_all` now returns a `leading: bool` (true for `REPLACING
+  LEADING`, false for `REPLACING ALL`); `emit_inspect_replacing` takes an
+  `allow_leading` flag so the **combined** `TALLYING … REPLACING` path passes
+  `false` — a combined `TALLYING … REPLACING LEADING` stays a clean `Unsupported`.
+- `REPLACING ALL` is byte-identical to before. `REPLACING CHARACTERS`/`FIRST`,
+  `BEFORE`/`AFTER` regions, several replace items, a `REPLACING LEADING` inside the
+  combined form, and a multi-character/figurative/wider/numeric search or
+  replacement remain deferred and reject identically to the oracle.
+- Tests: `inspect_replacing_leading_now_compiles` (was
+  `…_is_a_later_rung`) and `inspect_combined_tally_replacing_leading_is_a_later_rung`
+  unit tests; JIT e2e `inspect_replacing_leading_*` (000123→***123, 00X00→**X00 vs
+  ALL **X**, 120003 unchanged, 0000→****, blank unchanged, PIC X(1) operands),
+  all pinned byte-for-byte against the oracle via `assert_matches_oracle`.
+
+### Added — v0.36.0: INSPECT TALLYING FOR LEADING (leading-run count)
+
+A lone `INSPECT source TALLYING counter FOR LEADING delim` now compiles instead of
+being rejected as a later rung. `FOR LEADING` counts only the run of **consecutive**
+`delim` characters at the START of the source, stopping at the first character that
+is not `delim`, then ADDs that count to the counter (INSPECT adds; it does not clear
+the counter first — identical to `FOR ALL` in that respect).
+
+- The scan reuses the exact `FOR ALL` count loop (`str_len` + `str_index`/`cmp_eq`,
+  then `store_scaled`). The **only** difference is the not-equal branch's jump
+  target: `FOR ALL` jumps to `nobump` (skip the `cnt += 1`, keep scanning), while
+  `FOR LEADING` jumps to `end` (break out of the loop). This mirrors the oracle's
+  `filter(…).count()` vs `take_while(…).count()`.
+- `inspect_tally_all` now returns a `leading: bool` (true for `FOR LEADING`, false
+  for `FOR ALL`); `emit_inspect_tallying` takes an `allow_leading` flag so the
+  **combined** `TALLYING … REPLACING` path passes `false` — a combined
+  `TALLYING … FOR LEADING … REPLACING` stays a clean `Unsupported`.
+- Still deferred and rejected identically to before: `LEADING` inside a `REPLACING`
+  clause, `LEADING` in the combined form, `BEFORE`/`AFTER` regions, `CHARACTERS`,
+  `FIRST`, a multi-character/figurative delimiter, and a numeric/group source. The
+  `FOR ALL` lowering is byte-identical to the previous release.
+- New JIT e2e tests pin the compiled leading-run scan to the oracle byte-for-byte:
+  `"000123"` FOR LEADING → 3 (and FOR ALL → 3, agreeing here); `"120003"` FOR
+  LEADING → 0 (FOR ALL would be 3); `"0000"` → 4; a blank `PIC X(3)` → 0; a
+  `PIC X(1)` delimiter item; and adding onto a nonzero counter. The lone-tally unit
+  test now asserts it compiles; the combined-LEADING reject test is retained.
+
+### Changed — v0.35.0: EVALUATE reuses the IF relation dispatch (mixed numeric↔alphanumeric subject/WHEN)
+
+An `EVALUATE` whose subject and a `WHEN` value are in **different** categories —
+a numeric subject vs an alphanumeric `WHEN` (`EVALUATE NUM WHEN "042"`), or an
+alphanumeric subject vs a numeric `WHEN` — now compiles instead of being rejected.
+Previously `EVALUATE` split into two same-category paths (`emit_when_match` reading
+each `WHEN` via `read_arith_term`, or `emit_when_match_str` via `str_value`), each of
+which rejected the other category — a reject-vs-answer gate divergence, since the
+oracle already routes every subject-vs-`WHEN` comparison through `compare_operands`
+(which handles mixed pairs exactly as an `IF` relation does).
+
+The fix factors the category-dispatching core of `emit_relation` into a reusable
+`emit_operand_relation(left, right, op)` helper, then rewrites `EVALUATE`'s `WHEN`
+matching to call it: a single value `[v]` emits `emit_operand_relation(subject, v,
+"cmp_eq")`, a `THRU` range `[lo, hi]` emits `and(cmp_ge, cmp_le)`, and the value-list
+`OR`-folds as before. Each subject-vs-`WHEN` comparison is now identical to
+`IF subject <relop> value`, so `EVALUATE` inherits `IF`'s full category dispatch —
+numeric (scaled `cmp_*`), alphanumeric (`str_cmp`), and mixed numeric↔alphanumeric
+with **unsigned / signed (overpunch) / scaled** digit images, figuratives, and the
+`ZERO`-numeric routing (`WHEN ZERO` stays a numeric comparison) — and its **deferral
+set**: a numeric-literal `WHEN` against an alphanumeric subject (and a group operand)
+is a clean reject on both engines, exactly as the oracle defers it. Byte-identical to
+`coding-adventures-cobol-runtime` 0.39.0 by construction.
+
+- Factored `emit_operand_relation` out of `emit_relation` (behaviour of `IF`
+  relations unchanged — all existing relation tests still pass).
+- Deleted the now-dead `emit_when_match_str`, `str_value`, and `emit_scaled_cmp`;
+  `emit_when_match` is rewritten to take the subject grammar node and dispatch through
+  the shared helper. `emit_evaluate` no longer pre-classifies the subject.
+- New e2e tests: `evaluate_numeric_subject_alphanumeric_when`,
+  `evaluate_signed_numeric_subject_alphanumeric_when`,
+  `evaluate_scaled_numeric_subject_alphanumeric_when`,
+  `evaluate_scaled_numeric_subject_numeric_when_stays_numeric`,
+  `evaluate_mixed_thru_range`, `evaluate_numeric_subject_when_zero_stays_numeric`,
+  and `evaluate_alpha_subject_numeric_literal_when_is_a_later_rung` (both engines
+  reject the deferred numeric-literal pairing identically).
+
+### Added — v0.34.0: figurative-vs-figurative comparison
+
+A relational condition comparing **two figurative constants** (`IF ZERO = ZERO`,
+`IF ZERO = SPACE`, `IF SPACE < ZERO`, …) now compiles instead of being rejected as
+a later rung. Each figurative has no operand length to borrow, so both resolve to a
+single fill character (width 1) — `ZERO` → `"0"`, `SPACE` → `" "` — and are compared
+by the ordinary space-padded `str_cmp` path. This is byte-identical to the oracle,
+whose `src_chars` of a figurative is empty so both `fill_fig` to `len().max(1)` = 1.
+So `ZERO = ZERO` and `SPACE = SPACE` are true, `ZERO ≠ SPACE`, and by byte value
+(`'0'` = 0x30 > `' '` = 0x20) `ZERO > SPACE` / `SPACE < ZERO`. Fixes a
+reject-vs-answer gate divergence surfaced by adversarial review of v0.33.0 (the
+oracle already answered these; the compiler rejected them). One-line change in
+`emit_str_condition` (the `(None, None)` width arm); no grammar / lexer / parser
+change.
+
+### Added — v0.33.0: SIGNED numeric ↔ alphanumeric COMPARISON (overpunched image)
+
+The mixed numeric ↔ alphanumeric relation (`IF NUM = "str"`, `<`, `>`, …) now
+accepts a **SIGNED** numeric operand (`PIC S9(i)V9(d)`, integer or scaled), not only
+an unsigned one. Oracle-first and byte-identical to
+`coding-adventures-cobol-runtime` 0.37.0. No grammar / lexer / parser change.
+
+- **The comparison image carries a trailing sign overpunch.** When a signed DISPLAY
+  numeric is compared against an alphanumeric operand, its comparison image is its
+  `(i + d)`-digit zero-padded MAGNITUDE with the operational sign folded into a
+  TRAILING OVERPUNCH on the units (last) digit — the SAME image the signed
+  numeric → alphanumeric MOVE (v0.32.0) produces. The units digit `u` maps: positive
+  `{ A B C D E F G H I`, negative `} J K L M N O P Q R`. So `PIC S9(3) = -123`
+  compares **equal** to `"12L"`, `= +123` equal to `"12C"`, and a scaled
+  `PIC S9V9 = -4.2` equal to `"4K"`. Ordering follows the byte comparison of these
+  images.
+- **Fixed: `numeric = ZERO` is now a NUMERIC comparison.** `emit_relation`
+  previously routed a numeric item compared against the `ZERO` figurative through the
+  alphanumeric mixed path (`str_operand` carries `ZERO` as `Fig('0')`). For an unsigned
+  item that happened to agree with the oracle (a zero-padded magnitude string orders
+  like its value); for a SIGNED item the overpunched image (`"00{"`, `"12L"`, …)
+  compared against `"000"` answered wrongly — silently miscompiling the ubiquitous
+  `IF BALANCE = ZERO`. `numeric ↔ ZERO` now takes the numeric comparison path (`ZERO`
+  → `0`), matching the oracle (whose mixed gate excludes `Fig::Zero` and numeric-compares
+  `Num` vs `Fig::Zero`). `ZERO` stays alphanumeric only against a character operand;
+  `ZERO`-vs-`ZERO` stays a string compare.
+- **The lowering reuses `emit_signed_num_alpha_image`.** `num_digit_str_operand`'s
+  signed arm (previously a clean `Unsupported`) now binds `int_digits`/`dec_digits`,
+  computes `n = i + d`, and returns `StrOperand::Fixed { reg:
+  emit_signed_num_alpha_image(&num_reg, n), len: n }` — the exact same overpunched
+  image builder the signed MOVE uses (magnitude via `emit_num_digit_string`, units
+  overpunch by slicing the combined `"{ABCDEFGHI}JKLMNOPQR"` table at
+  `units + neg*10`). Both operands then flow through the identical space-padded
+  `str_cmp` an all-alphanumeric relation takes, so the byte comparison matches the
+  oracle exactly. The unsigned path and the pure numeric-vs-numeric path are
+  byte-identical to before.
+- **Sign-of-zero (no regression).** A value that truncates to a zero magnitude stores
+  `neg = false` (COBOL has no negative zero), so `emit_signed_num_alpha_image` on a
+  zero slot yields `"00{"` — equal to the oracle's `overpunch_trailing("000", false)`.
+- **Still deferred (rejected identically on both engines).** A numeric LITERAL vs an
+  alphanumeric operand (a different pairing, out of scope) and a group item in a
+  mixed comparison remain clean `Unsupported`s. The old
+  `mixed_signed_numeric_vs_alphanumeric_is_a_later_rung` reject e2e test is replaced
+  by positive oracle-parity tests (negative/positive equality, units-digit-0,
+  scaled, an ordering relation, and sign-of-zero); a
+  `signed_numeric_vs_alphanumeric_comparison_now_compiles` and a
+  `numeric_literal_vs_alphanumeric_comparison_is_still_a_later_rung` unit test are
+  added, and the group-item reject test is kept.
+
+### Added — v0.32.0: SIGNED numeric → alphanumeric MOVE (trailing sign overpunch)
+
+The cross-category numeric → alphanumeric MOVE now accepts a **SIGNED** source
+(`PIC S9(i)V9(d)`, integer or scaled), not only an unsigned one. Oracle-first and
+byte-identical to `coding-adventures-cobol-runtime` 0.36.0. No grammar / lexer /
+parser change.
+
+- **The image carries a trailing sign overpunch.** A signed DISPLAY numeric's
+  alphanumeric image is its `(i + d)`-digit zero-padded MAGNITUDE with the
+  operational sign folded into a TRAILING OVERPUNCH on the units (last) digit — the
+  same zoned-decimal encoding the runtime's `overpunch_trailing` /
+  `__cob_print_signed` produce on `DISPLAY`. The units digit `u` maps: positive
+  `{ A B C D E F G H I`, negative `} J K L M N O P Q R`. So `S9(3) = +123 → "12C"`,
+  `= -123 → "12L"`, `S9V9 = -4.2 → "4K"`.
+- **The lowering builds the overpunched last byte arithmetically.** The match arm
+  is generalized from `signed: false` to `signed: _`. For a signed source,
+  `emit_signed_num_alpha_image` computes `neg = (slot < 0) ? 1 : 0` (`cmp_lt`),
+  `mag = |slot|` (`emit_abs`), the `(i+d)`-digit magnitude image (the existing
+  `emit_num_digit_string`), and `units = mag % 10`. It then slices ONE combined
+  20-character constant `"{ABCDEFGHI}JKLMNOPQR"` at `idx = units + neg*10` — the
+  positive row `{…I` at indices `0..=9`, the negative row `}…R` at `10..=19` — so
+  `table[idx..idx+1]` is exactly `overpunch_trailing`'s character (`POS[u]` at `u`,
+  `NEG[u]` at `10+u`). The final image is `image[0..n-1] ++ overpunch_char`
+  (`str_slice` + `str_concat`); for `n == 1` the head slice is empty, so the result
+  is just the overpunch char. It then feeds the same `move_str_into_char` reshape
+  (left-justify, space-pad, or truncate) the unsigned image uses.
+- **Why it matches `overpunch_trailing` byte-for-byte.** The overpunch table's
+  positive/negative rows are laid end to end in the combined constant, so indexing
+  at `units + neg*10` selects the identical byte the oracle picks by
+  `POS[u]`/`NEG[u]`; the units digit is `|slot| % 10` and the sign is `slot < 0`,
+  matching the oracle's magnitude-last-digit + `item.neg`. A signed *positive*
+  source (`neg = 0`) takes the positive row, so `"12C"` — differing from an unsigned
+  `"123"`. The unsigned path is unchanged (no overpunch, plain magnitude).
+- **Still deferred (clean `Unsupported`).** An alphanumeric → SIGNED numeric MOVE, a
+  `SIGN` clause with `SEPARATE`/`LEADING`, and a group on either side (the compiler
+  models no group items, so a group receiver is rejected). The old
+  `signed_numeric_to_alphanumeric_move_is_deferred` reject test is replaced by
+  `signed_numeric_to_alphanumeric_move_lowers`; a
+  `signed_numeric_to_group_receiver_is_deferred` unit test and seven `jit_e2e`
+  oracle-parity tests (positive exact-fit, wider space-pad, narrower truncate,
+  negative, units-digit-0, scaled `±4.2`, and a computed value) are added.
+
+### Added — v0.31.0: alphanumeric → SCALED-receiver MOVE (`MOVE PIC X(m) TO 9(i)V9(d)`)
+
+The REVERSE cross-category MOVE (alphanumeric → numeric) now accepts an
+**unsigned SCALED** receiver `PIC 9(i)V9(d)` (`d > 0`), not only an unsigned
+integer. Oracle-first and byte-identical to `coding-adventures-cobol-runtime`
+0.35.0. No grammar / lexer / parser change.
+
+- **The fold-is-the-slot rule.** The source's `m` characters fold left-to-right
+  into an unsigned integer `V` (`V = V*10 + (byte - '0')`), and that fold **is the
+  receiver's scaled-slot magnitude directly** — it fills the `(i + d)` digit
+  positions RIGHT-justified with the implied point `d` places from the right. So
+  the slot is `V mod 10^(i+d)`: left-zero-padded when the source is shorter than
+  `i + d`, high-order-truncated when longer. This is **NOT** the arithmetic
+  decimal-align rule — `V` is *not* multiplied by `10^d`. Examples:
+  `MOVE "042" TO 9(2)V9` → slot `042` (reads `4.2`);
+  `MOVE "42" TO 9(2)V9` → `042`; `MOVE "12345" TO 9(2)V9` → `345` (reads `34.5`);
+  `MOVE "5" TO 9(1)V99` → `005` (reads `0.05`).
+- **The lowering.** The compiler folds `V` exactly as for the integer receiver
+  (`emit_str_to_int`), then hands `store_scaled` the **receiver's own scale `d`**
+  as the value scale. `store_scaled` rescales `d → d` (a no-op — no shift) and
+  keeps the low-order `(i + d)` digits (`mag mod 10^(i+d)`) = `V mod 10^(i+d)`.
+  Passing scale `0` instead would up-shift by `10^d` (the wrong, arithmetic rule).
+  For `d = 0` this reproduces the old integer-receiver path byte-for-byte. The
+  match arm's `dec_digits: 0` gate is relaxed to `dec_digits: d` (any unsigned
+  receiver); the `value_max_int = m` argument only feeds the up-scale overflow
+  guard, which never fires here (from-scale == to-scale), so its exact value is
+  immaterial.
+- **Still deferred (clean `Unsupported`).** A **signed** (`PIC S9`) receiver, a
+  source wider than 18 characters (its `i64` fold could overflow), and group items.
+- **Tests.** The former `alphanumeric_to_scaled_numeric_move_is_a_later_rung`
+  reject test becomes the positive `alphanumeric_to_scaled_numeric_move_lowers`;
+  new `jit_e2e` cases cover exact-fit, shorter-source zero-pad, longer-source
+  high-order truncation, more-fraction-than-source digits, MOVE-then-arithmetic,
+  and the SPACE-source no-stray-sign regression, all through
+  `assert_matches_oracle`. A new `alphanumeric_to_signed_scaled_numeric_move_is_a_later_rung`
+  keeps the signed-scaled deferral.
+
+### Added — v0.30.0: unsigned SCALED operand in num→alpha MOVE and mixed comparison
+
+The numeric→alphanumeric MOVE and the mixed numeric↔alphanumeric comparison now
+accept an **unsigned SCALED** numeric operand (`PIC 9(i)V9(d)`, `d > 0`, no `S`),
+not only an unsigned integer. Oracle-first and byte-identical to
+`coding-adventures-cobol-runtime` 0.34.0. No grammar / lexer / parser change.
+
+- **The digit-image rule.** A scaled numeric moved to / compared as alphanumeric
+  uses its **digit image = all its digits, integer part followed by fractional
+  part, concatenated with NO decimal point** — the `(i + d)`-digit zero-padded
+  magnitude. The scaled `i64` slot already holds `value * 10^d`, so its full
+  `(i + d)` digits *are* the image (no point inserted). This is exactly what the
+  oracle's `Decimal::digits()` (`int + frac`) yields. Examples:
+  `PIC 9(2)V9 = 4.2` → `"042"`; `PIC 9(1)V99 = 3.14` → `"314"`.
+- **MOVE.** `MOVE 9(2)V9=4.2 TO X(3)` → `"042"`, `→ X(5)` → `"042  "` (pad),
+  `→ X(2)` → `"04"` (truncate). The MOVE arm's `dec_digits: 0` gate is relaxed to
+  `signed: false` (any `dec_digits`) and `emit_num_digit_string` is called over
+  `n = int_digits + dec_digits` digits — the identical `div`/`mod`/table-slice
+  loop, just over more digits.
+- **Comparison.** `IF 9(2)V9=4.2 = "042"` → **true**; `IF … > "040"` → **true**.
+  `num_digit_str_operand` builds the same `(i + d)`-digit image, and both operands
+  run the same space-padded `str_cmp` path a same-category alphanumeric relation
+  uses, so the byte comparison is byte-identical to the oracle.
+- **Still deferred (clean `Unsupported`).** A **signed** (`PIC S9`) numeric
+  operand (integer or scaled), the **reverse** alphanumeric→scaled-receiver MOVE, a
+  numeric-edited receiver, and group items.
+- **Tests.** The former `scaled_numeric_to_alphanumeric_move_is_deferred` unit test
+  is now the positive `scaled_numeric_to_alphanumeric_move_lowers`; new `jit_e2e`
+  cases cover the exact-fit, more-fraction-digit, pad, truncate, and computed-value
+  MOVEs and the equal / ordering / more-fraction-digit comparisons, all through
+  `assert_matches_oracle`. The signed operand stays a deferral test.
+
+### Added — v0.29.0: numeric ↔ alphanumeric comparison
+
+A relational condition (in `IF` / `EVALUATE` / any condition context) comparing
+an **unsigned-integer** numeric operand (`PIC 9(n)` — no `S`, no `V`) with an
+**alphanumeric** operand (a `PIC X` item **or** a string literal). Oracle-first
+and byte-identical to `coding-adventures-cobol-runtime` 0.33.0. No grammar /
+lexer / parser change was needed — a `relation` already parses; this fills in a
+formerly-`Unsupported` mixed pairing.
+
+- **The rule.** When a numeric and a non-numeric operand are compared, COBOL
+  treats the **numeric operand as though moved to an alphanumeric field** — its
+  `n`-digit zero-padded **digit image** (the exact bytes a numeric→alphanumeric
+  `MOVE` or a `DISPLAY` of the same item yields) — and the comparison proceeds by
+  the **alphanumeric byte rule**: the shorter operand is space-padded on the right
+  to the longer's length, then the two are compared byte-by-byte. So `IF NUM =
+  "042"` with `NUM PIC 9(3) = 42` compares `"042"` = `"042"` → **true**; `IF NUM =
+  "42"` compares `"042"` vs `"42 "` (space-padded) → **false**; `IF NUM > "040"`
+  → **true**.
+- **Lowering (`emit_relation` / `num_digit_str_operand`).** In the mixed arm the
+  numeric side's digit image is built by **reusing `emit_num_digit_string`** (the
+  same run-time image the numeric→alphanumeric `MOVE` builds) as a fixed-length
+  `StrOperand`, and **both** operands are then fed through the **same**
+  `emit_str_condition` path (space-pad each side to their common length, `str_cmp`,
+  compare the ordering against `0`) a same-category alphanumeric relation uses —
+  so the emitted byte comparison is identical to the oracle's.
+- **Either side, item or literal.** The numeric operand may be the left or the
+  right operand; the alphanumeric operand may be a `PIC X` item or a string
+  literal. `EVALUATE`'s subject-vs-`WHEN` comparison in the oracle reuses the same
+  `compare_operands`, so it benefits identically; the compiler's `EVALUATE` mixed
+  lowering stays a later rung (its subject/`WHEN` paths are same-category only).
+- **Deferral gate.** Only an unsigned-integer numeric item has an unambiguous
+  image on this rung. A **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) numeric
+  operand (`num_digit_str_operand` → `Unsupported`), a **group** item on either
+  side (its name is unregistered → `item_index` → `Unsupported`), and a
+  **numeric-literal-vs-alphanumeric** pairing (a different pairing, kept out of
+  scope → `Unsupported`) are all clean later rungs — matching the oracle, which
+  rejects the same shapes.
+- **Tests.** Seven `jit_e2e.rs` cases through `assert_matches_oracle`
+  (`=` match / space-pad mismatch / `>` ordering / numeric on the right / against
+  a `PIC X` item / symbolic `>=` and `<` / wider field) plus three compiler-unit
+  rejects (signed, scaled, group).
+
+### Added — v0.28.0: reverse cross-category MOVE (alphanumeric → unsigned-integer numeric)
+
+The **reverse** cross-category `MOVE`: `MOVE alphanumeric-item TO numeric-item`,
+restricted to an alphanumeric source (`PIC X(m)`) into an **unsigned integer**
+receiver (`PIC 9(n)` — no `S`, no `V`). Oracle-first and byte-identical to
+`cobol-runtime` 0.32.0. No grammar change was needed — `MOVE` already parses and
+this reuses existing IIR ops.
+
+- **The rule.** COBOL reads the alphanumeric source's `m` characters as an
+  unsigned integer and de-scales it into the numeric receiver **right-justified**:
+  the receiver keeps the **low-order `n` digits** — left-zero-padded when the
+  source has fewer than `n` digits, high-order-truncated when more —
+  i.e. `receiver = (integer formed from the m source chars) mod 10^n`. So
+  `X(3)="042"` → `9(3)` is `42` (displays `"042"`), `X(2)="05"` → `9(4)` is `0005`,
+  `X(5)="12345"` → `9(3)` is `345`.
+- **Lowering (`emit_str_to_int`).** The `m` source bytes are folded left-to-right
+  into an `i64`: for the character at position `k`, `d = str_index(src,k) - '0'`
+  (each byte read with the IIR `str_index` op, the constant `'0'`=48 subtracted),
+  then `value = value*10 + d` (`mul`/`add`). The folded `value` is stored through
+  the **same** numeric-store helper a numeric `MOVE`/`COMPUTE` uses
+  (`store_scaled` at scale 0), whose `mod 10^(int+dec)` applies the receiver-width
+  truncation — so the compiled result matches the oracle, which folds the identical
+  per-character arithmetic and stores via `move_into_numeric` at scale 0.
+- **All-digit scope / non-digit choice.** This rung scopes to an **all-digit**
+  source. A non-digit byte is *not* rejected: the same `(byte - '0')` arithmetic
+  runs on both engines (defined-but-unspecified, identical by construction), so a
+  clean identical runtime reject is unnecessary and no test exercises it. This was
+  chosen over a runtime reject because the compiled path has no clean way to raise
+  a runtime error for a non-digit that the oracle could mirror byte-for-byte.
+- **Overflow guard.** An `i64` fold of an all-digit source of `≤ 18` characters
+  stays below `10^18 < i64::MAX`, so it never overflows on either engine; a source
+  **wider than 18 characters** is a clean `Unsupported` later rung, rejected
+  identically on both engines.
+- **Deferral gate.** A **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) numeric
+  receiver, and a **group** item on either side, remain clean `Unsupported` later
+  rungs (only `(ItemKind::Char, ItemKind::Numeric { signed:false, dec_digits:0 })`
+  is admitted; every other cross-category shape falls to the catch-all reject).
+- **Tests.** Seven `jit_e2e.rs` cases through `assert_matches_oracle` (exact-fit,
+  shorter source zero-pads, longer source high-order-truncates, single digit,
+  MOVE-then-`ADD`, MOVE-then-`COMPUTE`, and a numeric→alpha→numeric round-trip),
+  plus compiler-unit tests: the reverse move now lowers (asserting `str_index` +
+  `mod`), and clean rejects for a signed receiver, a scaled receiver, a >18-char
+  source, and a group source.
+
+### Added — v0.27.0: cross-category MOVE (unsigned-integer numeric → alphanumeric)
+
+The first **cross-category** `MOVE`: `MOVE numeric-item TO alphanumeric-item`,
+restricted to an **unsigned integer** source (`PIC 9(n)` — no `S`, no `V`) into a
+`PIC X(m)` receiver. Oracle-first and byte-identical to `cobol-runtime` 0.31.0. No
+grammar change was needed — `MOVE` already parses and this reuses existing IIR ops.
+
+- **The rule.** COBOL treats a numeric sending item moved to an alphanumeric
+  receiver as though it were an alphanumeric item holding its **digit characters**
+  — the item's `n`-digit zero-padded magnitude, exactly what `DISPLAY` prints —
+  then moves it by the alphanumeric rules: **LEFT-justified**, space-padded on the
+  right when the receiver is wider, truncated on the right when narrower. So
+  `PIC 9(3)` holding `42` (image `"042"`) → `X(3)` is `"042"`, → `X(5)` is
+  `"042  "`, → `X(2)` is `"04"`.
+- **Lowering (`emit_num_digit_string`).** The `n`-character digit image is built at
+  run time from the numeric slot: for each position the digit is
+  `(slot / 10^k) % 10`, sliced out of a constant `"0123456789"` table
+  (`str_slice [d, d+1)`) and concatenated onto an accumulator — no per-digit branch
+  table. The `% 10` per position gives COBOL's silent high-order truncation, the
+  same as the recursive `__cob_print_padded` DISPLAY helper.
+- **Char reshape (`move_str_into_char`).** The `n`-wide digit string is then stored
+  into the receiver through the **same `str_slice`/`str_concat` reshape** a
+  same-category alphanumeric `MOVE` (`move_char_item`) uses — the string-source
+  twin of that helper. Both funnel through the one alphanumeric-receiver rule the
+  oracle's `move_into_char` performs, so the stored bytes agree.
+- **Deferred (clean `Unsupported`, never wrong output):** the **reverse** direction
+  (alphanumeric → numeric), a **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) or
+  **edited** numeric source, a **numeric-edited** receiver, and a **group** item on
+  either side.
+- **Tests.** Six `jit_e2e.rs` cases through `assert_matches_oracle` (exact-fit, pad,
+  truncate, single digit `PIC 9`, a computed source via `ADD`, and a MOVE result
+  compared alphanumerically), plus compiler-unit tests for the supported lowering
+  and each deferred reject (signed / scaled source, alpha → numeric).
+
+### Added — v0.26.0: computed (data-name) reference modification
+
+Generalised reference modification `IDENT(start:len)` to accept **data-name**
+(run-time integer) indices — `WS(J:K)`, `WS(J:)`, `WS(2:K)` — oracle-first and
+byte-identical to `cobol-runtime` 0.30.0. No grammar change was needed: the
+indices already parse as `operand`s; only the readers rejected non-literals.
+
+- **Data model.** `Operandy::RefMod` / `Operand::RefMod` now carry `start`/`len`
+  as a new `RefIndex` (`Lit(usize)` **or** `Name(String)`) instead of raw
+  `usize`, so the literal and computed cases flow through one path.
+  `read_refmod_index` returns a `RefIndex`; a bare `NAME` index is
+  `RefIndex::Name`, an integer literal is `RefIndex::Lit`, and a
+  signed/fractional literal or nested reference modification as the index is a
+  clean later-rung reject.
+- **`ref_mod_slice`** now returns `(reg, SliceLen)`:
+  - **literal:literal** (and `literal:`) is **constant-folded exactly as before**
+    (`const_refmod_len` validates the range at compile time and rejects an
+    out-of-range constant slice — #8673's behaviour is preserved verbatim);
+  - **computed** — the moment either index is a data-name — reads each index into
+    an `i64` register (`refmod_index_reg`: a `const` for a literal, a `mov` of the
+    live slot for an unsigned-integer item) and builds `start0 = start - 1` and
+    `end = start0 + len` (or `end = width` for an omitted length) with `sub`/`add`,
+    feeding a run-time `str_slice(src, start0, end)`. The slice's run-time length
+    (`end - start0`) rides along as a register.
+- **Out-of-range rule.** The emitted `str_slice` traps in the VM/wasm backends
+  exactly when `start0 < 0 || end < start0 || end > width`; the oracle's
+  `refmod_string` applies the identical predicate (returning `RefModOutOfRange`),
+  so an in-range program slices byte-identically and an out-of-range one errors on
+  both engines.
+- **Comparison contexts.** `StrOperand` gained a `Runtime { reg, len_reg, max_len }`
+  variant for a computed slice whose length is only known at run time.
+  `emit_str_condition` now sizes the common comparison width from each operand's
+  compile-time upper bound and space-pads each side to it — a `Fixed`/`Fig` side
+  at compile time (`pad_spaces`/`fig_const`), a `Runtime` side at run time
+  (`pad_runtime`, slicing a max-width space constant to the run-time pad count, the
+  same trick UNSTRING uses). Padding both sides to any common width ≥ their actual
+  lengths gives the same `str_cmp` result COBOL's max-of-actual-lengths padding
+  does, so a run-time-length slice compares byte-identically to the oracle.
+- **Deferred (unchanged):** a signed/fractional/non-numeric reference-modification
+  index item, reference modification of a numeric item, and use in a
+  numeric/arithmetic/`MOVE`-source context remain later rungs.
+- Tests: 9 new `jit_e2e` cases (computed mid-substring, omitted length, mixed
+  literal-start/data-name-length, `IF` comparison, `EVALUATE` subject,
+  `COMPUTE`-driven index, an equal/unequal computed-vs-computed comparison, and
+  two out-of-range cases asserting **both** engines trap), plus compiler-unit
+  tests for the computed lowering and the still-deferred signed/fractional index,
+  numeric base, and MOVE-source rejects. All #8673 literal-refmod tests still pass.
+
+### Added — v0.25.0: `INSPECT … CONVERTING from TO to`
+
+Lowered the `INSPECT … CONVERTING` verb — a per-character translation table —
+oracle-first and byte-identical to `cobol-runtime` 0.29.0.
+
+- **`emit_inspect_converting`** — dispatched from `emit_inspect` on the standalone
+  `inspect_converting` node (checked before the tally/replace composition, since
+  the grammar never lets `CONVERTING` sit beside `TALLYING`/`REPLACING`). The
+  `from`/`to` string literals give a compile-time table: each `from[k]` is baked as
+  a `const` compare byte and each `to[k]` as a 1-character `str_const`. The lowering
+  UNROLLS over the compile-time source width `W`, and at each position reads
+  `S[j]` once and runs a **first-match-wins** chain over the table — on the earliest
+  `from[k]` equal to `S[j]` it appends `to[k]` and jumps past the rest; if nothing
+  matches it appends the original `S[j, j+1)`. The `W`-wide accumulator is copied
+  back into the source register only after the last read (no read-after-write
+  hazard), exactly as `emit_inspect_replacing` does.
+- **First-match-wins** mirrors the oracle's char→char map (which lets the earliest
+  `from` occurrence win via `or_insert`), so a duplicated `from` character (e.g.
+  `CONVERTING "AAB" TO "XYZ"` → A→X, not A→Y) is byte-identical between the two.
+- Later rungs (clean `CompileError::Unsupported`): an unequal-length or non-ASCII
+  `from`/`to` pair, a data-name (`PIC X` item) / figurative / numeric-literal /
+  reference-modified `from`/`to`, and a `BEFORE`/`AFTER` region. A `CONVERTING`
+  combined with `TALLYING`/`REPLACING` in one statement does not parse (mutually
+  exclusive grammar alternatives), so it is a `CompileError::Parse` rejection.
+
+### Added — v0.24.0: combined `INSPECT … TALLYING … REPLACING` (one statement)
+
+Lowered the combined `INSPECT` — one statement carrying BOTH the `TALLYING` and
+the `REPLACING` phrases — oracle-first and byte-identical to `cobol-runtime`
+0.28.0.
+
+- **`emit_inspect` dispatch** — when both phrases are present, `emit_inspect` now
+  composes the two existing lowerings on the SAME source register in ISO order:
+  the tally loop FIRST (reading the ORIGINAL bytes into the counter), then the
+  replace rebuild (overwriting the source). Per the standard the combined form
+  executes "as though an `INSPECT TALLYING` were specified, followed by an
+  `INSPECT REPLACING`", so counting before replacing is what makes a shared
+  delimiter/search character correct — the count sees every occurrence before any
+  is substituted.
+- **`emit_inspect_tallying`** — the count loop and counter store were factored out
+  of `emit_inspect` into this helper so the combined case reuses it verbatim (no
+  duplicated logic); the lone-`TALLYING` path calls the same helper. The tally
+  loop only reads the source register, so a following `REPLACING` still sees the
+  original image.
+- No grammar/lexer/parser change: the grammar already accepted
+  `inspect_tallying [inspect_replacing]`; only the two `has_tally && has_repl`
+  rejects (in the compiler and the oracle) were removed.
+- Later rungs unchanged (clean `CompileError::Unsupported`): a combined statement
+  whose `TALLYING` half is `LEADING`/`CHARACTERS`, has several counters or FOR
+  phrases, or a `BEFORE`/`AFTER` region — or whose `REPLACING` half is
+  `CHARACTERS`/`LEADING`/`FIRST`, has several replace items, or a region — still
+  rejects; the combined gate does not admit the deferred sub-forms. Multi-char /
+  figurative / wider / numeric operands and a numeric/group source stay deferred.
+- Tests: four new `jit_e2e` cases through `assert_matches_oracle` — distinct
+  tally/search/replace chars, the `delim == search` ordering case (proving
+  tally-before-replace), a non-zero counter (ADD preserved), and tallied/replaced
+  chars at the source's ends — plus a still-deferred combined reject
+  (`FOR ALL … ALL …`). The former "combined is a later rung" unit test became a
+  positive "combined now compiles" test.
+
+### Added — v0.23.0: `INSPECT … REPLACING ALL … BY …` (first rung)
+
+Lowered COBOL's `INSPECT … REPLACING` verb (the substitution form), oracle-first
+and byte-identical to `cobol-runtime` 0.27.0.
+
+- **`emit_inspect_replacing`** — `INSPECT source REPLACING ALL x BY y` rebuilds the
+  alphanumeric `source` **in place**, replacing every occurrence of the SINGLE
+  character `x` with the SINGLE character `y`. Because both are single characters
+  the width `W` is unchanged, so this is a **per-position map** that the compiler
+  **unrolls** over the compile-time-known `W`: at each position `j`, `str_index`
+  reads the source byte, `cmp_eq` tests it against the search byte, and a branch
+  splices either the replacement (`y`, a 1-char string) or the original character
+  (`str_slice(S, j, j+1)`) onto a `str_concat` accumulator. The `W`-wide result is
+  copied into the source register — the same fixed-width image the oracle's
+  `move_into` produces, byte-for-byte.
+- **`single_delim_str`** — parallel of `single_delim_code`: reduces a
+  single-character operand to a 1-char **string** register (a `str_const` for a
+  1-char literal, or the item register for a `PIC X(1)` item) for the
+  concatenation. The search `x` still reduces to a byte code via the shared
+  `single_delim_code`; both share the single-character validation.
+- **`emit_inspect` dispatch** — the shared source parsing now branches to the
+  `TALLYING` or `REPLACING` lowering; the combined `TALLYING … REPLACING` in one
+  `INSPECT` is rejected up front.
+- **Later rungs** (clean `CompileError::Unsupported`): `REPLACING CHARACTERS BY`,
+  `REPLACING LEADING`/`FIRST`, `BEFORE`/`AFTER` regions, several replace items, the
+  combined `TALLYING … REPLACING`, a multi-character / figurative / numeric /
+  wider-than-one search or replacement, and a numeric/group source.
+- **Tests**: six `jit_e2e.rs` oracle-match cases (a repeated char; an absent char
+  leaving the source unchanged; every character replaced; a `PIC X(1)` search and
+  replacement; the char at both ends; the `END-INSPECT` form) plus compiler-unit
+  tests for the happy-path rebuild and the `CHARACTERS`, `LEADING`,
+  multi-character-search, several-items, and combined-`TALLYING`-`REPLACING`
+  rejects.
+
+### Added — v0.22.0: `INSPECT … TALLYING … FOR ALL` (first rung)
+
+Lowered COBOL's `INSPECT … TALLYING` verb, oracle-first and byte-identical to
+`cobol-runtime` 0.26.0.
+
+- **`emit_inspect`** — `INSPECT source TALLYING counter FOR ALL delim` counts the
+  (non-overlapping, left-to-right) occurrences of the SINGLE-character `delim` in
+  the alphanumeric `source` and **ADDs** that count to the integer `counter`.
+  Like `UNSTRING` the delimiter position is data-dependent, so it emits a genuine
+  **scan loop**: `len = str_len(S)`, a cursor `j` (i64, init 0), and a count
+  accumulator `cnt` (i64, init 0); at each position `S[j]` (read with `str_index`)
+  is compared to the delimiter byte `D` (`cmp_eq`) and `cnt` is bumped on a match,
+  looping while `j < len` (`cmp_ge`). The count is folded into the counter with
+  the SAME numeric-store path `ADD` uses (`store_scaled`), so INSPECT **adds** to
+  the counter (it does not clear it first) and a compiled program matches the
+  oracle's `store_result(counter, counter + cnt)` byte-for-byte. The delimiter
+  reduces to a single byte code via the shared `single_delim_code` (renamed from
+  `unstring_delim_code`).
+- **Later rungs** (clean `CompileError::Unsupported`, accepted by the grammar and
+  rejected here): `FOR LEADING` / `FOR CHARACTERS` tallies, `BEFORE`/`AFTER`
+  regions, several `TALLYING` counters or `FOR` phrases, any `REPLACING`
+  (`INSPECT … REPLACING` and `INSPECT … TALLYING … REPLACING`), a multi-character /
+  figurative / numeric / wider-than-one delimiter, and a numeric source or a
+  non-integer/signed counter.
+- **Tests**: six `jit_e2e.rs` oracle-match cases (count a char; zero occurrences;
+  a non-zero starting counter proving ADD-not-replace; a `PIC X(1)` delimiter
+  item; every character matches; the delimiter at both ends with `END-INSPECT`)
+  plus compiler-unit tests for the happy-path lowering and the `REPLACING`,
+  `TALLYING … REPLACING`, multi-character-delimiter, and `LEADING` rejects.
+
+### Added — v0.21.0: `UNSTRING … DELIMITED BY … INTO` (first rung)
+
+Lowered COBOL's `UNSTRING` verb, oracle-first and byte-identical to
+`cobol-runtime` 0.25.0.
+
+- **`emit_unstring`** — the inverse of `STRING`. Where `STRING`'s field
+  boundaries are all compile-time-known, `UNSTRING`'s delimiter falls wherever the
+  run-time bytes put it, so it emits a genuine **scan loop**. The source register
+  `S`, its length `len = str_len(S)`, and a cursor `p` (i64, init 0) drive the
+  statement; the delimiter reduces to a single byte code `D` (a `const` for a
+  1-char literal, or `str_index(item, 0)` for a `PIC X(1)` item). Each receiver
+  (a compile-time-known `n`) unrolls to a block guarded by `if p <= len`: scan
+  `S[j]` from `p` for the next byte equal to `D` (or end-of-source) with
+  `str_index`/`cmp_eq`/`cmp_ge`, cut the field `piece = str_slice(S, p, q)`, reshape
+  it into the receiver as `str_slice(piece, 0, min(str_len(piece), W)) ++
+  spaces(W - take)` (exactly the oracle's alphanumeric `move_into` — left-justify,
+  space-pad, truncate), and advance `p = q + 1`. Because `p` never moves when a
+  receiver is skipped, an exhausted source (`p > len`) leaves this and every later
+  receiver unchanged; `p == len` (a trailing delimiter) still yields one final
+  empty field.
+- Later rungs (clean `CompileError::Unsupported`): `WITH POINTER`, `ON`/`NOT ON
+  OVERFLOW`, a multi-character delimiter, a numeric/figurative/reference-modified
+  delimiter, a delimiter item wider than one character, and a numeric/group source
+  or receiver.
+
 ### Added — v0.20.0: `STRING … DELIMITED BY SIZE INTO` (first rung)
 
 Lowered COBOL's `STRING` verb, oracle-first and byte-identical to

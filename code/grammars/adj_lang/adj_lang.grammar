@@ -143,13 +143,15 @@ functional_decl  = "functional" term ;
 
 query_decl       = QUESTION ( lookup_expr | term ) ;
 
-# `lookup <table> <keycol> = <n> mode range give <valcol>` — a RANGE / BRACKET
-# lookup (ADJ-TABLES RS-5c). A `?`-prefixed recall over a `table` read as a step
-# function: it selects the breakpoint row whose key column is the greatest key
-# `<=` the query value, and returns that row's value column WITH the row's
-# citation (below the smallest key it abstains — "below the table's domain").
+# `lookup <table> <keycol> = <n> mode <mode> give <valcol>` — a table lookup
+# (ADJ-TABLES RS-5c/RS-5d). A `?`-prefixed recall over a `table` read as a numeric
+# function of its key column. `mode range` reads it as a STEP function: it selects
+# the breakpoint row whose key is the greatest key `<=` the query and returns that
+# row's value column verbatim WITH the row's citation. `mode interpolated` reads it
+# as a PIECEWISE-LINEAR function: it blends the two bracketing rows exactly and
+# carries both citations. Outside the table's domain either abstains honestly.
 # `lookup`/`mode`/`give` are IDENT-matched literals — no new lexer tokens — and
-# `mode <name>` selects the tactic (`range` here; `interpolated` is RS-5d).
+# `mode <name>` selects the tactic (`range` or `interpolated`; both built).
 lookup_expr      = "lookup" IDENT IDENT EQUALS signed_number "mode" IDENT "give" IDENT ;
 signed_number    = [ MINUS ] NUMBER ;
 
@@ -452,12 +454,21 @@ annotation = source_annotation
            | locator_annotation
            | trust_annotation
            | cites_annotation
+           | quote_annotation
            ;
 
 source_annotation  = "source" STRING ;
 locator_annotation = "locator" STRING ;
 trust_annotation   = "trust" trust_tier ;
 cites_annotation   = "cites" STRING "locator" STRING ;
+
+# quote_annotation (RS-4 PR-D4, ADJ-REASON-MATH §E.3.1) — a PINNED verbatim span:
+# the exact bytes at `at <offset>` in the document whose sha256 is `snapshot`.
+# This is what makes `adj-verify` report `fully_verified`, and it is FAIL-CLOSED:
+# the compiler re-checks the span against the bundled snapshot and rejects a pin
+# that does not verify. The `at` offset is SPIDER-emitted at ingest, never hand-
+# or model-authored (feedback_no_byte_arithmetic_for_llm).
+quote_annotation   = "quote" STRING "at" NUMBER "snapshot" STRING ;
 
 trust_tier = "consensus"
            | "authoritative"

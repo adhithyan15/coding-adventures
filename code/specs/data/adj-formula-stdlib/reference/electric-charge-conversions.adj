@@ -1,0 +1,61 @@
+% ============================================================================
+% electric-charge-conversions — electric-charge-unit → coulomb factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of energy-conversions.adj, power-conversions.adj and the other
+% NIST-cited conversion tables: a native tabular relation ingested VERBATIM from a published
+% NIST conversion table. The row states the factor converting the traditional (CGS-EMU) unit
+% of ELECTRIC CHARGE — the quantity of electricity — to the SI coherent derived unit, the
+% coulomb (C):
+%
+%     ? electric_charge_to_coulomb(abcoulomb, $v)   % 10
+%
+% This is a NEW dimension alongside the length/mass/area/volume/time/speed/energy/pressure/
+% force/acceleration/dynamic-viscosity/kinematic-viscosity/magnetic-flux-density/magnetic-flux/
+% illuminance/luminance/radioactivity/absorbed-dose/dose-equivalent/exposure/power tables. Do
+% NOT confuse it with ELECTRIC CURRENT: those are DIFFERENT quantities. ELECTRIC CHARGE (the
+% abcoulomb → the coulomb) is a quantity of electricity; ELECTRIC CURRENT (the abampere → the
+% ampere) is charge PER UNIT TIME. One coulomb is one ampere-second; the abcoulomb and the
+% abampere are their respective traditional (EMU) units and convert to DIFFERENT SI units. The
+% traditional unit here is the abcoulomb (abC); the SI unit is the coulomb. Put a charge given
+% in abcoulombs into SI first, then reason (write-once-use-many). Why a `table` and not a
+% hand-written `relate` clause: this is exactly the shape reference data comes in — a published
+% table, not prose. The citable artifact IS the NIST conversion-factors table at the `locator`
+% below; the factor here is a CELL of NIST Special Publication 811, Appendix B.9 ("Factors for
+% units listed alphabetically"), defended by one provenance envelope. Each `row` lowers to a
+% ground relation `electric_charge_to_coulomb(unit, c)`, so the exact lookup above is the
+% ordinary SLD binding query — the engine returns the factor WITH this table's citation as its
+% proof, on the CPU, with zero model calls.
+%
+% HONESTY NOTE (like the power / magnetic-flux / radioactivity tables, only the EXACT defined
+% factor gets a row): NIST SP 811 B.9 prints the "abcoulomb" charge factor in BOLDFACE, its
+% convention for factors that are EXACT by definition, transcribed here as the plain decimal
+% number of coulombs it names:
+%
+%     abcoulomb (abC)   1.0 E+01  →  10
+%
+% This is exact because the abcoulomb is DEFINED as exactly 10 coulombs (one abcoulomb is the
+% EMU of charge, defined as 10 C). It terminates; nothing here is a rounded measurement. Note
+% the abcoulomb (charge) and the abampere (current) happen to share the numeric factor
+% 1.0 E+01, but they convert to DIFFERENT SI units — the coulomb and the ampere respectively —
+% which is exactly why the dimension guard below matters. This table is SPECIFIC to electric
+% charge: a unit of a DIFFERENT quantity — e.g. the "abampere", which NIST SP 811 B.9 lists
+% separately as an electric-CURRENT unit converting to the ampere, NOT the coulomb — therefore
+% gets no row here, and a `? electric_charge_to_coulomb(abampere, $v)` ABSTAINS rather than
+% mis-converting a current unit as if it were a charge unit (and rather than silently reusing
+% the coincidentally-equal 1.0 E+01 factor for the wrong SI unit). The only claim this table
+% makes is "this is the exact factor NIST SP 811 B.9 prints for the abcoulomb's conversion to
+% the coulomb" — which is exactly what a byte-check against the cited table verifies.
+% `trust authoritative` — a primary, re-fetchable standards reference. (See ADJ-TABLES.md; and
+% feedback_nothing_human_authored — the factor is a verbatim cell of the cited table, nothing
+% asserted from memory.)
+% ============================================================================
+
+table electric_charge_to_coulomb {
+    columns unit, coulomb
+
+    row (abcoulomb, 10)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

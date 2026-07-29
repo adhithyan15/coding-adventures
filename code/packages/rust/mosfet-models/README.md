@@ -1,12 +1,18 @@
 # mosfet-models
 
-SPICE Level-1 (Shockley) MOSFET I-V model with full small-signal parameter extraction, body effect, subthreshold conduction, and PMOS sign conventions.
+SPICE Level-1 (Shockley) MOSFET I-V model with full small-signal parameter extraction, body effect, subthreshold conduction, and PMOS sign conventions. Bulk-junction capacitance supports Berkeley `PB`, `MJ`, `MJSW`, and `FC` depletion shaping.
 
 ## What it does
 
 This crate implements the classical square-law MOSFET model used in introductory SPICE circuit analysis:
 
-- **`Level1Params`** — 16 parameters (VT0, KP, LAMBDA, GAMMA, PHI, W, L, capacitances, temperature) with textbook defaults for a 130 nm NMOS.
+- **`Level1Params`** — Level-1 geometry, DC, capacitance, temperature, and
+  noise parameters, including zero-default `LD` lateral diffusion,
+  Berkeley-default `TOX` gate oxide thickness, drain/source diffusion
+  areas/perimeters `AD` / `AS` / `PD` / `PS`, bottom/sidewall junction
+  capacitance densities `CJ` / `CJSW`,
+  `KF` flicker noise, and a
+  unit-default `AF` exponent.
 - **`evaluate_level1`** — core I-V evaluation returning `MosResult` with `Id`, `gm`, `gds`, `gmb`, gate/body capacitances, and the operating `Region`.
 - **`Region`** — `Cutoff`, `Subthreshold`, `Triode`, `Saturation`.
 - **`MosfetType`** — `Nmos` / `Pmos`.
@@ -21,7 +27,17 @@ This crate implements the classical square-law MOSFET model used in introductory
 | Triode      | 0 < V_DS < V_OV   | β(V_OV V_DS − V_DS²/2)(1 + λV_DS)        |
 | Saturation  | V_DS ≥ V_OV      | (β/2) V_OV² (1 + λV_DS)                   |
 
-where β = KP × W/L and V_OV = V_GS − V_t.
+where β = KP × W/(L − 2LD) and V_OV = V_GS − V_t. `LD` defaults to zero
+and must leave a positive effective channel length. `TOX` defaults to
+`100 nm`, must be positive, and derives intrinsic Meyer gate capacitance from
+`Cox = epsilon_ox / TOX`. `RD`, `RS`, and `RSH` are finite, non-negative
+external drain, source, and sheet-resistance parameters for engine topology and
+default to zero ohms. `NRD` and `NRS` are finite, non-negative drain/source
+diffusion square counts and default to one.
+`AD`, `AS`, `PD`, `PS`, `CJ`, and `CJSW` are finite, non-negative and default
+to zero. They add `CJ * AD + CJSW * PD` to drain-body `CBD` and
+`CJ * AS + CJSW * PS` to source-body `CBS`. `MJ` shapes bottom-junction
+depletion while `MJSW` defaults to `0.33` and shapes the sidewall terms.
 
 ## Usage
 

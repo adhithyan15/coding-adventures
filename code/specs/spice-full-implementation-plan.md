@@ -33,15 +33,14 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT forward Early voltage.
+1. Cross-language Level-1 MOS surface mobility preprocessing.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `VAF` / `VA` forward Early-voltage model-card support in
-     Rust, Python, and TypeScript.
-   - Apply collector-voltage modulation in DC, transient, AC,
-     transfer-function, and noise paths while preserving the full BJT model
-     through hierarchical subcircuit expansion.
-   - Extend the supported-parameter coverage gate from 76 to 78 canonical rows
-     and lock model-specific output-conductance behavior across all three engines.
+   - Accept model-card `U0` and its `UO` alias in Rust, Python, and TypeScript,
+     defaulting to the Berkeley MOS1 value of 600 cm^2/V/s.
+   - When a model card supplies `TOX` but omits `KP`, derive
+     `KP = U0 * Cox * 1e-4`; preserve explicit `KP` precedence.
+   - Keep normalized model-card coverage, validation, changelogs, and Rust
+     Berkeley netlist lowering aligned across the three implementations.
 
 ## Completed Slices
 
@@ -3007,6 +3006,558 @@ the Rust, Python, and TypeScript surfaces together.
      model's energy gap to saturation-current temperature scaling.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 76 canonical rows.
+
+220. Cross-language BJT forward Early voltage.
+   - Status: completed in PR 8734.
+   - Rust, Python, and TypeScript BJT model cards now accept `VAF` / `VA` and
+     apply collector-voltage modulation in DC, transient, AC,
+     transfer-function, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 78 canonical rows.
+
+221. Cross-language BJT forward emission coefficient.
+   - Status: completed in PR 8740.
+   - Rust, Python, and TypeScript BJT model cards now accept `NF` and apply it
+     to forward junction current, transconductance, charge, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 80 canonical rows.
+
+222. Cross-language BJT reverse emission coefficient.
+   - Status: completed in PR 8744.
+   - Rust, Python, and TypeScript BJT model cards now accept `NR` and apply it
+     to reverse base-collector diffusion charge in AC and transient analysis.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 82 canonical rows.
+
+223. Cross-language BJT base-emitter depletion-capacitance shaping.
+   - Status: completed in PR 8752.
+   - Rust, Python, and TypeScript BJT model cards now accept `VJE` / `PE` and
+     `MJE` / `ME` and apply continuous Berkeley depletion shaping to `CJE` in
+     AC and transient analysis.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 86 canonical rows.
+
+224. Cross-language BJT base-collector depletion-capacitance shaping.
+   - Status: completed in PR 8755.
+   - Rust, Python, and TypeScript BJT model cards now accept `VJC` / `PC` and
+     `MJC` / `MC` and apply continuous Berkeley depletion shaping to `CJC` in
+     AC and transient analysis.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 90 canonical rows.
+
+225. Cross-language BJT forward-bias depletion coefficient.
+   - Status: completed in PR 8760.
+   - Rust, Python, and TypeScript BJT model cards now accept `FC` and apply it
+     as the shared continuous Berkeley piecewise-law transition point for both
+     `CJE` and `CJC` in AC and transient analysis.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 92 canonical rows.
+
+226. Cross-language BJT reverse Early voltage.
+   - Status: completed in PR 8762.
+   - Rust, Python, and TypeScript BJT model cards now accept `VAR` / `VB` and
+     apply reverse Early-effect base-charge modulation in DC, transient, AC,
+     transfer-function, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 94 canonical rows.
+
+227. Cross-language BJT forward high-current beta roll-off.
+   - Status: completed in PR 8770.
+   - Rust, Python, and TypeScript BJT model cards now accept `IKF` / `IK` and
+     apply forward high-current base-charge modulation in DC, transient, AC,
+     transfer-function, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 96 canonical rows.
+
+228. Cross-language BJT base-emitter leakage.
+   - Status: completed in PR 8778.
+   - Rust, Python, and TypeScript BJT model cards now accept `ISE` / `NE` and
+     apply the base-emitter leakage branch in DC, transient, AC,
+     transfer-function, temperature, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 100 canonical rows.
+
+229. Cross-language BJT base-collector leakage.
+   - Status: completed in PR 8785.
+   - Rust, Python, and TypeScript BJT model cards now accept `ISC` / `NC` and
+     apply the base-collector leakage branch in DC, transient, AC,
+     transfer-function, temperature, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 104 canonical rows.
+
+230. Cross-language BJT beta temperature exponent.
+   - Status: completed in PR 8792.
+   - Rust, Python, and TypeScript BJT model cards now accept `XTB` and scale
+     forward beta by the analysis-to-nominal absolute temperature ratio.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 106 canonical rows.
+
+231. Cross-language BJT reverse current gain.
+   - Status: completed in PR 8797.
+   - Rust, Python, and TypeScript BJT model cards now accept `BR` / `BETA_R`
+     and apply the reverse base-current branch in DC, transient, AC,
+     transfer-function, temperature, and noise paths.
+   - `XTB` scales both forward and reverse beta, hierarchical subcircuit
+     expansion preserves the complete BJT model, and the supported-parameter
+     release gate now covers 108 canonical rows.
+
+232. Cross-language BJT reverse high-current beta roll-off.
+   - Status: completed in PR 8801.
+   - Rust, Python, and TypeScript BJT model cards now accept `IKR` and apply
+     reverse high-current base-charge modulation in DC, transient, AC,
+     transfer-function, temperature, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 110 canonical rows.
+
+233. Cross-language BJT nominal model temperature.
+   - Status: completed in PR 8807.
+   - Rust, Python, and TypeScript BJT model cards now accept `TNOM` / `T_NOM`,
+     convert Berkeley Celsius card values to an absolute model temperature,
+     and use that model-owned value for temperature scaling when present.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 112 canonical rows.
+
+234. Cross-language BJT flicker-noise coefficient.
+   - Status: completed in PR 8812.
+   - Rust, Python, and TypeScript BJT model cards now accept `KF`, default it
+     to zero, and emit a distinct base-current `flicker` contribution with the
+     Berkeley-default `AF=1` inverse-frequency slope.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 114 canonical rows.
+
+235. Cross-language BJT flicker-noise exponent.
+   - Status: completed in PR 8815.
+   - Rust, Python, and TypeScript BJT model cards now accept `AF`, default it
+     to one, and apply it to base-current flicker noise as
+     `KF * abs(Ib)^AF / frequency`.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 116 canonical rows.
+
+236. Cross-language BJT forward excess phase.
+   - Status: completed in PR 8828.
+   - Rust, Python, and TypeScript BJT model cards now accept `PTF`, default it
+     to zero, and rotate forward AC transconductance by the configured excess
+     phase at `1 / (2*pi*TF)`.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 118 canonical rows.
+
+237. Cross-language BJT forward transit-time bias coefficient.
+   - Status: completed in PR 8836.
+   - Rust, Python, and TypeScript BJT model cards now accept `XTF`, default it
+     to zero, and scale forward diffusion capacitance and transient stored
+     charge by `TF * (1 + XTF)`.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 120 canonical rows.
+
+238. Cross-language BJT forward transit-time current scale.
+   - Status: completed in PR 8844.
+   - Rust, Python, and TypeScript BJT model cards now accept `ITF`, default it
+     to zero, and apply `(If / (If + ITF))^2` to the `XTF` AC and transient
+     storage enhancement.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 122 canonical rows.
+
+239. Cross-language BJT forward transit-time voltage scale.
+   - Status: completed in PR 8851.
+   - Rust, Python, and TypeScript BJT model cards now accept `VTF`, default it
+     to zero, and apply `exp(Vbc / (1.44 * VTF))` to the `XTF` AC and transient
+     storage enhancement.
+   - Hierarchical subcircuit expansion preserves the complete BJT model and
+     transient state tracks the controlling base-collector voltage; the
+     supported-parameter release gate now covers 124 canonical rows.
+
+240. Cross-language BJT emitter resistance.
+   - Status: completed in PR 8856.
+   - Rust, Python, and TypeScript BJT model cards now accept `RE`, default it
+     to zero, and insert an intrinsic emitter node behind the configured
+     external series resistance.
+   - DC, transient, AC, transfer-function, and noise paths share the intrinsic
+     emitter topology, including resistor thermal noise; the
+     supported-parameter release gate now covers 126 canonical rows.
+
+241. Cross-language BJT collector resistance.
+   - Status: completed in PR 8861.
+   - Rust, Python, and TypeScript BJT model cards now accept `RC`, default it
+     to zero, and insert an intrinsic collector node behind the configured
+     external series resistance.
+   - DC, transient, AC, transfer-function, and noise paths share the intrinsic
+     collector topology, including resistor thermal noise; the
+     supported-parameter release gate now covers 128 canonical rows.
+
+242. Cross-language BJT base resistance.
+   - Status: completed in PR 8866.
+   - Rust, Python, and TypeScript BJT model cards now accept `RB`, default it
+     to zero, and insert an intrinsic base node behind the configured external
+     series resistance.
+   - DC, transient, AC, transfer-function, and noise paths share the intrinsic
+     base topology, including resistor thermal noise; the supported-parameter
+     release gate now covers 130 canonical rows.
+
+243. Cross-language BJT bias-dependent base resistance.
+   - Status: completed in PR 8872.
+   - Rust, Python, and TypeScript BJT model cards now accept `RBM` and `IRB`
+     and apply Berkeley base-charge and base-current-dependent resistance
+     reduction.
+   - DC, transient, AC, transfer-function, and noise paths share the
+     bias-dependent intrinsic-base topology; the supported-parameter release
+     gate now covers 134 canonical rows.
+
+244. Cross-language BJT base-collector capacitance partitioning.
+   - Status: completed in PR 8877.
+   - Rust, Python, and TypeScript BJT model cards now accept `XCJC`, default it
+     to one, and partition `CJC` depletion capacitance between intrinsic and
+     external base-collector branches in AC and transient analysis.
+   - Reverse transit-time diffusion capacitance remains intrinsic, hierarchical
+     expansion preserves the model, and the supported-parameter release gate
+     now covers 136 canonical rows.
+
+245. Cross-language legacy BJT leakage ratios.
+   - Status: completed in PR 8881.
+   - Rust, Python, and TypeScript BJT model cards now accept legacy SPICE2
+     `C2` and `C4` leakage ratios.
+   - `ISE` defaults to `C2 * IS` and `ISC` defaults to `C4 * IS`, while
+     explicit `ISE` and `ISC` retain precedence; the supported-parameter
+     release gate now covers 140 canonical rows.
+
+246. Cross-language diode series resistance.
+   - Status: completed in PR 8888.
+   - Rust, Python, and TypeScript diode model cards now accept `RS`, default it
+     to zero, and insert an intrinsic anode behind the configured external
+     series resistance.
+   - DC, transient, AC, transfer-function, hierarchy, temperature, and noise
+     paths share the intrinsic-anode topology, including resistor thermal
+     noise; the supported-parameter release gate now covers 141 canonical rows.
+
+247. Cross-language diode flicker-noise coefficient.
+   - Status: completed in PR 8894.
+   - Rust, Python, and TypeScript diode model cards now accept `KF`, default it
+     to zero, and emit a distinct diode-current flicker-noise contribution.
+   - Hierarchy and cloning paths preserve `KF`, finite non-negative validation
+     is shared across analyses, and the supported-parameter release gate now
+     covers 142 canonical rows.
+
+248. Cross-language diode flicker-noise current exponent.
+   - Status: completed in PR 8902.
+   - Rust, Python, and TypeScript diode model cards now accept `AF`, default it
+     to one, and apply `KF * abs(Id)^AF / frequency` to diode flicker noise.
+   - Hierarchy and cloning paths preserve `AF`, finite non-negative validation
+     is shared across analyses, and the supported-parameter release gate now
+     covers 143 canonical rows.
+
+249. Cross-language JFET flicker-noise coefficient.
+   - Status: completed in PR 8910.
+   - Rust, Python, and TypeScript JFET model cards now accept `KF`, default it
+     to zero, and emit a distinct drain-current flicker-noise contribution.
+   - Hierarchy and cloning paths preserve `KF`, finite non-negative validation
+     is shared across analyses, and the supported-parameter release gate now
+     covers 145 canonical rows.
+
+250. Cross-language JFET flicker-noise current exponent.
+   - Status: completed in PR 8914.
+   - Rust, Python, and TypeScript JFET model cards now accept `AF`, default it
+     to one, and apply `KF * abs(Id)^AF / frequency` to JFET flicker noise.
+   - Hierarchy and cloning paths preserve `AF`, finite non-negative validation
+     is shared across analyses, and the supported-parameter release gate now
+     covers 147 canonical rows.
+
+251. Cross-language JFET gate-junction potential.
+   - Status: completed in PR 8919.
+   - Rust, Python, and TypeScript JFET model cards now accept `PB`, with `VJ`
+     as an alias, default it to one volt, and use it to shape `CGS`/`CGD`
+     depletion capacitance in AC and transient analysis.
+   - Hierarchy and cloning paths preserve `PB`, finite-positive validation is
+     shared across analyses, and the supported-parameter release gate now
+     covers 149 canonical rows.
+
+252. Cross-language JFET forward-bias depletion coefficient.
+   - Status: completed in PR 8926.
+   - Rust, Python, and TypeScript JFET model cards now accept `FC`, default it
+     to `0.5`, and use it as the forward-bias transition point for the existing
+     `CGS` / `CGD` depletion-capacitance continuation in AC and transient
+     analysis.
+   - Hierarchy and cloning paths preserve `FC`, finite `[0, 1)` validation is
+     shared across analyses, and the supported-parameter release gate now
+     covers 151 canonical rows.
+
+253. Cross-language JFET gate-junction saturation current.
+   - Status: completed in PR 8930.
+   - Rust, Python, and TypeScript JFET model cards now accept `IS`, default it
+     to `1e-14` ampere, and stamp gate-source and gate-drain junction leakage
+     in DC, transient, AC, and transfer-function analyses.
+   - Hierarchy and cloning paths preserve `IS`, finite non-negative validation
+     is shared across analyses, distinct `IGS` / `IGD` shot-noise sources are
+     emitted, and the supported-parameter release gate now covers 153
+     canonical rows.
+
+254. Cross-language JFET drain resistance.
+   - Status: completed in PR 8934.
+   - Rust, Python, and TypeScript JFET model cards now accept `RD`, default it
+     to zero ohms, and route channel, gate-drain, charge, AC, transient,
+     transfer-function, and noise behavior through an intrinsic drain node
+     behind the external drain resistor when positive.
+   - Hierarchy and cloning paths preserve `RD`, finite non-negative validation
+     is shared across analyses, a distinct `RD` thermal-noise source is
+     emitted, and the supported-parameter release gate now covers 155
+     canonical rows.
+
+255. Cross-language JFET source resistance.
+   - Status: completed in PR 8938.
+   - Rust, Python, and TypeScript JFET model cards now accept `RS`, default it
+     to zero ohms, and route channel, gate-source, charge, AC, transient,
+     transfer-function, and noise behavior through an intrinsic source node
+     behind the external source resistor when positive.
+   - Hierarchy and cloning paths preserve `RS`, finite non-negative validation
+     is shared across analyses, a distinct `RS` thermal-noise source is
+     emitted, and the supported-parameter release gate now covers 157
+     canonical rows.
+
+256. Cross-language JFET threshold-voltage temperature scaling.
+   - Status: completed in PR 8943.
+   - Rust, Python, and TypeScript JFET model cards now accept `TNOM` / `T_NOM`
+     and `TCV`, convert nominal Celsius values to Kelvin, and apply
+     `VTO(T) = VTO - TCV * (T - TNOM)`.
+   - Hierarchy and cloning paths preserve both parameters, finite coefficients
+     and finite-positive nominal temperatures are validated, the zero default
+     remains temperature-invariant, and the supported-parameter release gate
+     now covers 161 canonical rows.
+
+257. Cross-language JFET beta temperature scaling.
+   - Status: completed in PR 8944.
+   - Rust, Python, and TypeScript JFET model cards now accept `BEX` and apply
+     `BETA(T) = BETA * (T / TNOM)^BEX`, with model `TNOM` overriding the
+     circuit nominal temperature.
+   - Hierarchy and cloning paths preserve the exponent, finite validation is
+     shared across analyses, the zero default remains temperature-invariant,
+     and the supported-parameter release gate now covers 163 canonical rows.
+
+258. Cross-language JFET alternative beta temperature scaling.
+   - Status: completed in PR 8946.
+   - Rust, Python, and TypeScript JFET model cards now accept `BETATCE` and
+     apply `BETA(T) = BETA * 1.01^(BETATCE * (T - TNOM))` when explicitly
+     present, with precedence over `BEX`.
+   - Hierarchy and cloning paths preserve parameter presence, finite validation
+     is shared across analyses, the `BEX` fallback remains intact, and the
+     supported-parameter release gate now covers 165 canonical rows.
+
+259. Cross-language JFET alternative threshold-voltage temperature scaling.
+   - Status: completed in PR 8947.
+   - Rust, Python, and TypeScript JFET model cards now accept `VTOTC` and apply
+     `VTO(T) = VTO + VTOTC * (T - TNOM)` when explicitly present, with
+     precedence over `TCV`.
+   - Hierarchy and cloning paths preserve parameter presence, finite validation
+     is shared across analyses, the `TCV` fallback remains intact, and the
+     supported-parameter release gate now covers 167 canonical rows.
+
+260. Cross-language JFET gate saturation-current temperature exponent.
+   - Status: completed in PR 8963.
+   - Rust, Python, and TypeScript JFET model cards now accept `XTI` and scale
+     gate saturation current from `TNOM` with the standard bandgap law and a
+     default exponent of 3.
+   - Hierarchy and cloning paths preserve the exponent, finite validation is
+     shared across analyses, and the supported-parameter release gate now
+     covers 169 canonical rows.
+
+261. Cross-language JFET gate-junction bandgap voltage.
+   - Status: completed in PR 8972.
+   - Rust, Python, and TypeScript JFET model cards now accept `EG` and use the
+     configured bandgap voltage when scaling gate saturation current from
+     `TNOM`, preserving the Level-1 silicon default of 1.11 eV.
+   - Hierarchy and cloning paths preserve the voltage, finite-positive
+     validation is shared across analyses, and the supported-parameter release
+     gate now covers 171 canonical rows.
+
+262. Cross-language JFET doping-tail shaping.
+   - Status: completed in PR 8978.
+   - Rust, Python, and TypeScript JFET model cards now accept `B` and apply
+     Parker-Skellern doping-tail shaping to linear and saturation channel
+     current while preserving Shichman-Hodges behavior at the default of 1.
+   - Hierarchy and cloning preserve the parameter, finite and denominator
+   validation is shared across analyses, and the supported-parameter release
+   gate now covers 173 canonical rows.
+
+263. Cross-language JFET channel-noise equation selection.
+   - Status: completed in PR 8984.
+   - Rust, Python, and TypeScript JFET model cards now accept `NLEV` and
+     `GDSNOI`, preserving the legacy `2/3 * gm` channel thermal-noise path
+     below level 3 and selecting the Berkeley linear-region equation at level
+     3 and above.
+   - Hierarchy and cloning preserve both parameters, shared validation enforces
+   their domains, and the supported-parameter release gate now covers 177
+   canonical rows.
+
+264. Cross-language Level-1 MOS flicker-noise coefficient.
+   - Status: completed in PR 8985.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `KF`,
+     defaulting to zero, and emit a distinct drain-current-scaled
+     inverse-frequency flicker-noise source alongside channel thermal noise.
+   - Hierarchy and cloning preserve the coefficient, shared validation enforces
+     its finite non-negative domain, and the supported-parameter release gate
+     now covers 179 canonical rows.
+
+265. Cross-language Level-1 MOS flicker-noise current exponent.
+   - Status: completed in PR 8986.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `AF`,
+     defaulting to one, and apply `KF * abs(Id)^AF / frequency` to the MOS
+     flicker-noise source.
+   - Hierarchy and cloning preserve the exponent, shared validation enforces
+     its finite non-negative domain, and the supported-parameter release gate
+     now covers 181 canonical rows.
+
+266. Cross-language Level-1 MOS forward-bias depletion coefficient.
+   - Status: completed in PR 8995.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `FC`,
+     defaulting to `0.5`, and apply the continuous piecewise forward-bias
+     continuation to `CBS` and `CBD` depletion capacitance shaped by `PB` and
+     `MJ`.
+   - Hierarchy and cloning preserve the coefficient, shared validation
+     enforces its finite `[0, 1)` domain, and the supported-parameter release
+     gate now covers 183 canonical rows.
+
+267. Cross-language Level-1 MOS lateral diffusion.
+   - Status: completed in PR 9001.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `LD`,
+     defaulting to zero, and apply `L_eff = L - 2*LD` to channel current and
+     length-scaled intrinsic and `CGBO` capacitance.
+   - Hierarchy and cloning preserve the geometry, shared validation enforces
+     finite non-negative `LD` with positive effective length, and the
+     supported-parameter release gate now covers 185 canonical rows.
+
+268. Cross-language Level-1 MOS oxide thickness.
+   - Status: completed in PR 9007.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `TOX`,
+     defaulting to `1e-7 m`, and derive intrinsic Meyer gate capacitance from
+     `Cox = epsilon_ox / TOX`.
+   - Hierarchy and cloning preserve the oxide thickness, shared validation
+   enforces finite positive `TOX`, and the supported-parameter release gate
+   now covers 187 canonical rows.
+
+269. Cross-language Level-1 MOS drain resistance.
+   - Status: completed in PR 9011.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `RD`,
+     defaulting to zero, and create an intrinsic drain node for positive values
+     across DC, transient, AC, transfer-function, and noise analyses.
+   - Hierarchy and cloning preserve `RD`, finite non-negative validation is
+     shared across analyses, drain-side capacitances terminate at the intrinsic
+     node, and the supported-parameter release gate now covers 189 canonical
+     rows.
+
+270. Cross-language Level-1 MOS source resistance.
+   - Status: completed in PR 9020.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `RS`,
+     defaulting to zero, and create an intrinsic source node for positive values
+     across DC, transient, AC, transfer-function, and noise analyses.
+   - Hierarchy and cloning preserve `RS`, finite non-negative validation is
+     shared across analyses, source-side capacitances terminate at the intrinsic
+     node, and the supported-parameter release gate now covers 191 canonical
+     rows.
+
+271. Cross-language Level-1 MOS sheet resistance.
+   - Status: completed in PR 9026.
+   - Rust, Python, and TypeScript Level-1 MOS model cards now accept `RSH`,
+     defaulting to zero ohms per square and supplying one-square drain/source
+     terminal resistances wherever explicit `RD` / `RS` remains zero.
+   - The shared intrinsic terminal topology covers DC, transient, AC,
+     transfer-function, and noise analyses, hierarchy preserves `RSH`, finite
+     non-negative validation is shared, and the supported-parameter release
+     gate now covers 193 canonical rows.
+
+272. Cross-language Level-1 MOS drain diffusion squares.
+   - Status: completed in PR 9029.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `NRD`,
+     defaulting to one drain diffusion square.
+   - When explicit `RD` remains zero, `RSH * NRD` supplies the drain
+     resistance across DC, TF, AC, transient, and noise analyses; hierarchy and
+     cloning preserve `NRD`, finite non-negative validation is shared, and the
+     model-card coverage gate remains at 193 canonical rows because `NRD` is
+     an instance parameter.
+
+273. Cross-language Level-1 MOS source diffusion squares.
+   - Status: completed in PR 9034.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `NRS`,
+     defaulting to one source diffusion square.
+   - When explicit `RS` remains zero, `RSH * NRS` supplies the source
+     resistance across DC, TF, AC, transient, and noise analyses; hierarchy and
+     cloning preserve `NRS`, finite non-negative validation is shared, and the
+     model-card coverage gate remains at 193 canonical rows because `NRS` is
+     an instance parameter.
+
+274. Cross-language Level-1 MOS drain diffusion area and bottom capacitance.
+   - Status: completed in PR 9038.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `AD`, and
+     model cards accept `CJ`, both defaulting to zero.
+   - `CBD + CJ * AD` supplies the zero-bias drain-body capacitance in AC and
+     transient analysis while preserving `PB`, `MJ`, and `FC` depletion
+     shaping.
+   - Hierarchy and cloning preserve `AD` / `CJ`, finite non-negative
+     validation is shared, the Rust netlist facade parses both, and the
+     model-card coverage gate now covers 195 canonical rows.
+
+275. Cross-language Level-1 MOS source diffusion area.
+   - Status: completed in PR 9043.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `AS`,
+     defaulting to zero.
+   - `CBS + CJ * AS` supplies zero-bias source-body capacitance in AC and
+     transient analysis while preserving `PB`, `MJ`, and `FC` shaping.
+   - Hierarchy and cloning preserve `AS`, finite non-negative validation is
+     shared, and the Rust netlist facade parses it.
+
+276. Cross-language Level-1 MOS drain diffusion perimeter.
+   - Status: completed in PR 9052.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `PD`, and
+     model cards accept `CJSW`, both defaulting to zero.
+   - `CBD + CJ * AD + CJSW * PD` supplies zero-bias drain-body capacitance in
+     AC and transient analysis while preserving depletion shaping.
+   - Hierarchy and cloning preserve `PD` / `CJSW`, finite non-negative
+     validation is shared, and the Rust netlist facade parses both.
+
+277. Cross-language Level-1 MOS source diffusion perimeter.
+   - Status: completed in PR 9064.
+   - Rust, Python, and TypeScript Level-1 MOS instances now accept `PS`,
+     defaulting to zero.
+   - `CBS + CJ * AS + CJSW * PS` supplies zero-bias source-body capacitance in
+     AC and transient analysis while preserving depletion shaping.
+   - Hierarchy and cloning preserve `PS`, finite non-negative validation is
+     shared, and the Rust netlist facade parses it.
+
+278. Cross-language Level-1 MOS sidewall grading coefficient.
+   - Status: completed in PR 9080.
+   - Berkeley Level-1 MOS model cards now accept `MJSW` in Rust, Python, and
+     TypeScript, defaulting to `0.33`.
+   - `CJSW * PD` and `CJSW * PS` are shaped independently from the
+     `MJ`-controlled bottom-junction terms in AC and transient analysis.
+   - Hierarchy, cloning, validation, model-card coverage, and the Rust netlist
+     facade preserve the parameter.
+
+279. Berkeley netlist lowering for Level-1 MOS junction shaping.
+   - Status: completed in PR 9088.
+   - The Rust Berkeley netlist facade now preserves model-card `PB`, `MJ`, and
+     `FC` in the Level-1 engine parameter bundle.
+   - Source-deck integration coverage proves all three values reach the existing
+     cross-language depletion-capacitance behavior.
+
+280. Berkeley netlist lowering for remaining Level-1 MOS model fields.
+   - Status: completed in PR 9094.
+   - The Rust Berkeley netlist facade now preserves canonical `LD`, `TOX`,
+     `RD`, `RS`, `KF`, and `AF` plus aliases `VTH`, `LAM`, `CJS`, and `CJD`.
+   - Source-deck tests prove the values reach their existing engine fields
+     instead of silently falling back to defaults.
+
+281. Cross-language Level-1 MOS bulk-junction saturation current.
+   - Status: completed in PR 9100.
+   - Existing model-card `IS` now drives source-body and drain-body leakage for
+     NMOS and PMOS across DC, transient, transfer-function, and AC analysis.
+   - Junction thermal voltage follows `T_NOM`, forward exponential continuation
+     remains Newton-consistent, and noise emits distinct `IBS` and `IBD` shot
+     sources.
+
+282. Cross-language Level-1 MOS bulk-junction saturation current density.
+   - Status: completed in PR 9108.
+   - Model-card `JS` is preserved independently from scalar `IS` and scales
+     source/drain junction leakage by `AS` / `AD` when both areas are present.
+   - Berkeley fallback retains scalar `IS` when `JS` is zero or either
+     diffusion area is absent.
+   - Rust, Python, and TypeScript apply the effective currents consistently to
+     nonlinear, AC, transfer-function, and shot-noise behavior.
 
 ## Backlog
 

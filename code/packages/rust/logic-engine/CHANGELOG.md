@@ -1,5 +1,241 @@
 # Changelog
 
+## [0.49.0] — 2026-07-23 — NUM-6c: `to_currency` — money rendering (base-10-exact)
+
+Completes the NUM-6c formatter trio (`ADJ-NUMERIC-SUBSTRATE.md` §4.1, §4.3): a **rendering**
+op that renders a money amount to a stated number of base-10-exact decimal places and prefixes
+a currency code. Unlike `to_scientific`/`to_percent` it carries a **string** (the currency
+code), so it is a distinct node shape.
+
+### Added
+
+- `ComputeExpr::ToCurrency { code, places, mode, expr }` and the matching
+  `DerivationNode::ToCurrency { code, places, mode, rendered, operand, result }`. `result` is
+  the rounded amount the string denotes (`"USD 1234.50"` → `1234.5`).
+- `currency(r, places, mode)` — renders an exact amount as a fixed-point decimal (no code; the
+  caller prefixes it) and returns the narrowed amount alongside, both from one rounding. The
+  scaled integer is `C = round(x·10^places)` under `mode`; the string places the point `places`
+  from `C`'s right (`1234.5 → "1234.50"` at 2 places), the narrowed amount is `C / 10^places`.
+  `places = 0` drops the decimal point; zero renders `"CODE 0.00"`. All big-integer/-decimal —
+  base-10-exact money, no `f64` hop. Dimension-preserving.
+- Extracted a shared `fixed_decimal_body` helper (used by both `percent` and `currency`) — the
+  decimal-point placement + leading-zero padding, behaviour-preserving for `to_percent`.
+
+## [0.48.0] — 2026-07-23 — NUM-6c: `to_percent` — percentage rendering (exact)
+
+Adds the second NUM-6c formatter (`ADJ-NUMERIC-SUBSTRATE.md` §4.1, §4.3): a **rendering**
+op that takes a dimensionless ratio, scales it by 100 and rounds to a stated number of
+decimal places on the exact path, and renders the fixed-point `d.dd%` string — with the
+narrowed **fraction** carried beside it so a downstream predicate over the binding still
+sees the ratio and the audit backs the render from the exact source.
+
+### Added
+
+- `ComputeExpr::ToPercent { places, mode, expr }` and the matching
+  `DerivationNode::ToPercent { places, mode, rendered, operand, result }`. `result` is the
+  fraction the percentage denotes (`"33.33%"` → `3333/10000`).
+- `percent(r, places, mode)` — renders an exact ratio as a fixed-point percentage with a
+  `%` suffix and returns the narrowed fraction alongside, both from one rounding. The scaled
+  integer is `C = round(r · 10^(places+2))` under `mode`; the string places the decimal
+  point `places` from `C`'s right (padding to a leading zero for sub-1% values), and the
+  narrowed fraction is `C / 10^(places+2)`. `places = 0` drops the decimal point (`"50%"`);
+  zero renders `"0.00%"`. All big-integer/-decimal — no `f64` hop. Dimension-preserving.
+
+## [0.47.0] — 2026-07-22 — NUM-6c: `to_scientific` — scientific-notation rendering (exact)
+
+Adds the first formatter of the precision/format family (NUM-6c,
+`ADJ-NUMERIC-SUBSTRATE.md` §4.1, §4.3): a **rendering** op that narrows a value to a
+stated number of significant figures on the exact path (reusing the NUM-6a/6b
+`round_sig` machinery) and produces the normalized `d.ddde±E` string alongside the
+narrowed exact value — both derived from one rounding so the string and the audit
+number can never disagree.
+
+### Added
+
+- `ComputeExpr::ToScientific { figures, mode, expr }` and the matching
+  `DerivationNode::ToScientific { figures, mode, rendered, operand, result }`. The
+  node carries the rendered boundary string **and** the narrowed numeric `result`
+  (so a downstream predicate over the binding still sees a number), plus the exact
+  operand subtree — everything `adj-verify` needs to re-render from the exact source.
+- `scientific(r, figures, mode)` — renders an exact rational in normalized scientific
+  notation with exactly `figures` significant figures and returns the narrowed exact
+  value beside it. The significant coefficient is `round(|r|·10^(figures−1−e))` under
+  `mode` (`e = ⌊log₁₀|x|⌋` via the exact `msd_exponent`), with a rounding **carry**
+  (`9.99 → 10.0`) bumping the exponent; zero renders `"0e0"`. All big-integer /
+  -decimal arithmetic — no `f64` log or tie-break. Dimension-preserving.
+
+### Notes
+
+- A non-finite operand (an upstream `exp` overflow) is caught by the same
+  finite-result guard the other ops apply — it returns a clean `NonFinite` error
+  rather than rendering `"inf"` as a scientific number.
+
+## [0.46.0] — 2026-07-22 — NUM-6b: `round_sig` — significant-figures rounding (exact)
+
+Adds the significant-figures half of the precision narrowing (NUM-6b,
+`ADJ-NUMERIC-SUBSTRATE.md` §4.1–§4.4), reusing the NUM-6a `Round` node and exact
+eval path.
+
+### Added
+
+- `RoundSpec::SigFigures(u32)` — round to `n` **significant figures**. Rounding to
+  `n` sig-figs is rounding to `n − 1 − e` decimal *places*, where `e = ⌊log₁₀|x|⌋`
+  is the base-10 exponent of the operand's most-significant digit; the place count
+  (which may be **negative** — `round_sig(31_459, 3) = 31_500`) is derived exactly
+  and fed to the same `BigDecimal::div_round` path as `Places`.
+- `msd_exponent` — computes `⌊log₁₀(num/den)⌋` exactly for positive integers from
+  their decimal digit counts plus one big-integer comparison (no `f64` log, no
+  unbounded loop). `round_sig(0, n) = 0` (zero has no significant figures).
+
+## [0.45.0] — 2026-07-22 — NUM-6a: the `round_to` precision narrowing (exact + audited)
+
+Implements the compute-engine half of NUM-6a (`ADJ-NUMERIC-SUBSTRATE.md` §4.1–§4.4):
+`round_to(x, n)` — round a value to `n` decimal places as an **explicit, checkable**
+step, never a silent lossy coercion.
+
+### Added
+
+- `ComputeExpr::Round { spec: RoundSpec, mode: RoundingMode, expr }` — a precision
+  narrowing distinct from the unary rounding family (`Abs`/`Floor`/`Ceil`/`Round`),
+  because it carries a precision and a mode a bare unary op cannot hold. `RoundSpec`
+  ships the `Places(u32)` variant (NUM-6b adds `SigFigures`).
+- `DerivationNode::Round { spec, mode, operand, result }` — the audit record: the
+  precision, the stated mode, and the operand subtree it narrowed, so `adj-verify`
+  can re-round the operand's **exact** value and confirm the rendering.
+- Re-export of `bignum_core::RoundingMode` so consumers can name a rounding mode
+  without depending on `bignum-core` directly.
+
+### Behaviour
+
+- Rounding runs on the **exact rational** path: `n / d` is divided to `n` places via
+  `bignum-core`'s `BigDecimal::div_round`, uniformly for terminating and repeating
+  operands (`1/3 → 33/100`, `2.54 → 2.54`), with **no `f64` hop** deciding a tie.
+  The default mode is round-half-even (`2.5 → 2`, not `3`). Dimension-preserving,
+  like the unary round family. The `f64` result is derived from the exact value, so
+  the labeled-lossy export and the exact audit value never disagree.
+
+## [0.44.0] — 2026-07-21 — `verify`: re-execute a proof instead of believing it (RS-4 PR-D2)
+
+Implements the checkability invariant of `ADJ-REASON-MATH.md` §E.5.
+
+Every earlier PR in this arc made the audit trail *richer*. None made it
+*checkable*. A richer trail nobody can re-run is still **testimony** — the engine
+asserting what it did, in a format a confidently wrong system produces just as
+fluently. This module turns testimony into **evidence**: it never reads the
+trail's claims as authority, and instead goes back to the knowledge base and
+does the work again.
+
+### Added
+
+- **`logic_engine::verify`** — `verify_proof(&Proof, &KnowledgeBase, &dyn SnapshotStore)`
+  returns a `TraceVerification`: one verdict per step, in the proof's own
+  preorder. Every one of the seven `DerivationOrigin` variants is re-executed:
+  - `FromFact` / `FromRule` — the cited clause still exists and still unifies
+    with the goal the step claims it proved.
+  - `FromNegation` — the subgoal is **re-run** and must still have an empty
+    proof set. A truncated search is a `NegationSearchTruncated` **failure**,
+    not an absence: "I stopped looking" and "there is none" are different
+    claims, and conflating them is the accounting failure this arc exists to
+    prevent.
+  - `FromPrior` / `FromContribution` / `FromJointContribution` — the clause is
+    found by id, its evidence is re-observed, and `log(LR) × confidence` must
+    reproduce the step's inline delta.
+  - `FromPredicateContribution` — the slot is re-read and the comparison
+    re-evaluated on CPU. The trail's own `observed` and `threshold` are the
+    claim under test, never the inputs.
+- **Two independent verdicts per step.** `LogicStatus` (did the inference go
+  through?) and `QuoteStatus` (do the bytes say what it claims?) are reported
+  separately. Collapsing them would lose the most interesting failure in the
+  system: a *valid derivation from an invented fact*.
+- **`QuoteStatus`, the five-valued outcome of §E.5** — `Verified`,
+  `QuoteMissing` (the only status that fails a step), `Unverified`,
+  `SourceDrifted`, `SourceUnreachable`, plus `NotApplicable` for negation steps,
+  which rest on an absence and so have no sentence in any document. Separating
+  drift and unreachability from "the quote is wrong" means a third party's
+  outage — or a deliberate network denial — cannot invalidate a true trail.
+- **Anchored quote checking.** The check requires a recorded byte offset and
+  compares that exact range in the pinned snapshot. A span with no offset is
+  `Unverified`, never verified-by-searching: on a long document a short phrase
+  occurs *somewhere* with near-certainty, so an unanchored search would confirm
+  the words exist, not that they support the clause. `byte_len` is reported
+  alongside every verified span, because §E.3 declines to impose a minimum span
+  length — false precision — so the honest alternative is to surface it.
+- **`SnapshotStore`** (+ `NoSnapshots`, `MemorySnapshots`) — the seam through
+  which the caller supplies snapshot *bytes*, since `Provenance` stores only a
+  hash. A store that has nothing yields `Unverified(SnapshotUnavailable)`:
+  honestly unchecked, never a pass.
+
+### Security
+
+- **The verifier re-checks the blank-span invariant itself** rather than trusting
+  that a `VerbatimSpan` was built through its validating constructor. A blank or
+  zero-width-only span is a substring of *every* document at *every* offset, so
+  accepting one hands out `Verified` for free — and deserialization writes fields
+  directly, running no constructor. The duplication of `is_invisible` between
+  `provenance.rs` and `verify.rs` is deliberate: a check that only exists on the
+  producer's side does not defend the consumer.
+- **Every slice is bounds- and boundary-checked before it is taken.** An offset
+  past the end, or inside a UTF-8 character, yields a verdict
+  (`RangeOutOfBounds` / `NotACharBoundary`) rather than a panic. A verifier that
+  panics on malformed input is a denial-of-service handed to whoever writes the
+  trail.
+- **No network access, by construction.** There is no HTTP client in this
+  module. `locator`s are spider-authored strings from untrusted pages; fetching
+  one would make the verifier an SSRF primitive aimed by anyone who can land a
+  single KB entry. Live re-fetch belongs behind ADJ39's adapter registry.
+- **An empty trace is not fully verified.** `all()` over nothing is `true`, and
+  that vacuous truth would award the system's strongest verdict for having
+  checked nothing.
+
+## [0.43.0] — 2026-07-21 — the verbatim quote and its pinned snapshot (RS-4 PR-D1)
+
+Implements `ADJ-REASON-MATH.md` §E.3 — the two fields that turn the audit trail
+from something ADJ *reports* into something a third party can *check*.
+
+### Added
+
+- **`Provenance.quote: Quote`.** The verbatim span a clause rests on, separate
+  from `source`. Until now the span was *stuffed into* `source` by convention,
+  which conflates the **quotation** (bytes that must appear at the locator) with
+  the **citation label** (how a human names the document). One string cannot be
+  checked as both.
+- **`Provenance.snapshot: Option<ContentHash>`.** A SHA-256 of the source
+  document as captured at ingest. Verification runs against this, not the live
+  web — a verbatim check against a live URL is decided by whoever controls that
+  URL at verification time, so anyone able to publish there could make a
+  fabricated quote verify. Pinning makes later divergence *evidence of drift*
+  rather than a passing grade.
+- `Quote::Verbatim { text, byte_offset }` records WHERE the span sits, so
+  verification is **anchored** rather than an unanchored substring search. A
+  search would confirm the words exist somewhere — in a footnote, a nav menu, or
+  a passage saying the opposite — not that they support this clause.
+
+- `Quote::Verbatim(VerbatimSpan)` — the payload's fields are **private**, with
+  one fallible constructor. The invariant "a span must be able to support a
+  claim" therefore holds on every construction path, not just inside a builder.
+
+### Notes on two deliberate choices
+
+- **`Quote` is an enum, not the `String` the spec literally writes.** A plain
+  `String` cannot hold the `Unmigrated` state safely, and the obvious migration —
+  defaulting `quote` to the `source` label — **fails open**: labels are short
+  ("NIST", "AQI basics") and would trivially appear somewhere on the cited page,
+  so the strongest check in the system would pass while checking nothing and
+  report the step verified. A closed sum moves "never fail open" from a
+  convention someone must remember into a fact the compiler enforces.
+- **SHA-256, not the repo's `hash-functions` crate.** This hash is
+  tamper-evidence, so it needs collision resistance; FNV/DJB2/murmur/SipHash have
+  none and would look like a security control while providing nothing.
+  `coding_adventures_sha256` is the repo's own zero-dependency implementation, so
+  this stays inside the no-third-party rule.
+
+### Compatibility
+
+- Every existing `Provenance` constructor yields `Quote::Unmigrated` and
+  `snapshot: None` — the honest record of "no checkable span was captured",
+  never a guess. `adj-verify` (PR-D2) reports these `Unverified`, never
+  `Verified`. No existing call site changed.
+
 ## [0.42.0] — 2026-07-21 — an empty result set now says WHY it is empty (RS-4 PR-C)
 
 ### Added

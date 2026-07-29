@@ -1,5 +1,136 @@
 # Changelog
 
+## 0.5.68 — `round()` returns positive zero
+
+`round(-0.4)` and `round(-0.0)` now return `0.0`, not `-0.0`, matching SQLite —
+a zero `round()` result is always positive zero. Non-zero results keep their sign
+(`round(-0.5)` = `-1.0`), rounding to N places behaves the same, and a bare
+`-0.0` literal is unaffected. Found by probing real SQLite. Verified against
+bundled real SQLite. Spans sql-vm 0.4.38.
+
+## 0.5.67 — `TOTAL()` aggregate
+
+`SELECT total(v) FROM t` is now supported — SQLite's NULL-free companion to
+`SUM`: it always returns a REAL and yields `0.0` (not NULL) for an empty or
+all-NULL group, and returns REAL even when every input is an integer. Previously
+`total(...)` errored with "unknown built-in function". Verified against bundled
+real SQLite (empty→0.0, all-int→REAL, mixed int/real→REAL, per-group). Spans
+sql-planner 0.2.33, sql-codegen 0.6.13, sql-vm 0.4.37.
+
+## 0.5.66 — DISTINCT applies before ORDER BY (representative selection)
+
+`SELECT DISTINCT x COLLATE NOCASE FROM t ORDER BY x` now keeps SQLite's
+scan-first row of each fold, not the byte-sort-first one — the VM applies DISTINCT
+before ORDER BY (SQL logical order) instead of after. Only WHICH original text
+survives a collation fold was affected; the folding itself was already correct.
+Retires the `distinct_collate_order_by_representative` ledger entry (and restores
+the `ORDER BY` to the `distinct_explicit_collate` case that had been trimmed to
+sidestep this bug). The oracle ledger is now down to a single entry
+(`order_by_ordinal_over_aggregate`). Verified against bundled real SQLite. Spans
+sql-vm 0.4.36.
+
+## 0.5.65 — `*` composes in a SELECT comma list (`SELECT a, *`)
+
+`SELECT a, *`, `SELECT *, a` (and any mix) now parse and expand the `*` in place,
+matching SQLite — `SELECT a, *` yields `a, a, b` (the leading column, then the
+whole row). Previously `*` parsed only as the entire select list, so a mixed list
+was a parse error. The grammar now treats a bare `*` as a `select_item`
+alternative rather than a whole-list alternative; the planner already expanded a
+`*` placeholder in place (from the round-2 star-expansion work), so this only
+needed the parser to produce the mixed shape. Retires the `select_star_in_place`
+ledger entry. Verified against bundled real SQLite. Spans sql-parser 0.1.23 and
+sql-planner 0.2.32.
+
+## 0.5.64 — explicit `COLLATE` on DISTINCT select-items and GROUP BY keys
+
+`SELECT DISTINCT b COLLATE NOCASE FROM t` and `SELECT b, COUNT(*) FROM t GROUP BY
+b COLLATE NOCASE` now parse AND fold: an explicit collation suffix on a DISTINCT
+select-item or a GROUP BY key groups/dedupes case-insensitively (or by whatever
+collation is named), even when the underlying column is declared BINARY. Explicit
+`COLLATE BINARY` overrides a column's declared NOCASE. The output column is named
+after its source text (`b COLLATE NOCASE`), and the emitted value stays the
+original text (collation folds keys, not values). Retires the
+`distinct_explicit_collate` and `group_by_explicit_collate` ledger entries.
+
+Spans sql-parser 0.1.22 (grammar tail), sql-planner 0.2.31 (`__collate` wrapping +
+DISTINCT vector), and sql-codegen 0.6.12 (name + value peel).
+
+One orthogonal divergence is newly ledgered as
+`distinct_collate_order_by_representative`: with `ORDER BY` present the VM applies
+the sort BEFORE the DISTINCT dedup, so a case-fold keeps the sort-first original
+text rather than SQLite's scan-first. The folding itself is correct; fixing WHICH
+representative survives requires applying DISTINCT before ORDER BY (SQL semantics),
+a VM post-op reordering left to its own increment. Verified against bundled real
+SQLite.
+
+## 0.5.63 — `SELECT *` (and `SELECT DISTINCT *`) expand to real columns
+
+`SELECT * FROM t` now returns the table's actual columns instead of a single
+NULL column named `*`. Previously `*` survived planning as a placeholder that no
+downstream stage could resolve (`LoadColumn("*")` → NULL). The planner now
+expands `*` into the base table's columns in declaration order — matching SQLite
+— before DISTINCT-collation and ORDER-BY-ordinal resolution, so:
+
+- `SELECT DISTINCT *` folds each column under its own declared collation (a
+  `COLLATE NOCASE` column dedupes case-insensitively) — retires the
+  `distinct_star_collate` ledger entry.
+- `SELECT * FROM t ORDER BY 1` binds the ordinal to the first expanded column,
+  as SQLite does (new `select_star_order_by_ordinal` oracle case).
+
+Scoped to a single base table with no JOIN; joined `*` keeps the placeholder
+(separate gap). `*` mixed with other items (`SELECT a, *`) is newly ledgered as
+`select_star_in_place` — it does not yet PARSE (the grammar's select_list has no
+bare-`*` alternative in a comma list); the planner already handles that shape
+once the parser produces it. Verified against bundled real SQLite. Spans
+sql-planner 0.2.30.
+
+## 0.5.62 — GROUP BY aggregate columns follow the SELECT list
+
+`SELECT max(x) AS mx, c FROM t GROUP BY c` now returns columns `[mx, c]` — the
+SELECT-list order — where before an aggregate column was always emitted after
+the group keys in a fixed layout (`[c, max(x)]`). This completes the GROUP BY
+projection work: non-aggregate columns already followed the SELECT list, and now
+aggregate columns do too, including `group_concat`.
+
+The enabler is reconciling `group_concat`'s representation: the planner now
+lowers it to `SqlExpr::Aggregate` like COUNT/SUM (it was previously a
+`FunctionCall` in the SELECT list), so codegen can re-compile any aggregate
+column in place. Retires the `group_by_reordered_with_aggregate` ledger entry.
+Verified against bundled real SQLite, including group_concat with a separator,
+count, and key all reordered. Spans sql-planner 0.2.29 and sql-codegen 0.6.11.
+
+## 0.5.61 — GROUP BY bare column takes the group's first-row value
+
+`SELECT c FROM t GROUP BY x`, where `c` is neither a GROUP BY key nor inside an
+aggregate, now returns a value instead of NULL — SQLite reports such a bare
+column from the group's first row, and the VM now retains a representative row
+per group to do the same. Retires the `distinct_over_group_by_single_col` ledger
+entry.
+
+Verified against bundled real SQLite, including a multi-row group where the bare
+columns come from the first row (`v=10, tag='a'`) and a functionally-dependent
+bare column (deterministic regardless of which row is picked). The min/max-
+follows refinement (bare columns tracking a `min()`/`max()` row) stays out of
+scope — it needs an aggregate combined with bare columns, still ledgered.
+
+## 0.5.60 — GROUP BY output follows the SELECT list
+
+`SELECT x, c FROM t GROUP BY c, x` now returns columns in SELECT-list order
+`[x, c]`, and `SELECT c FROM t GROUP BY x` returns a column named `c` — where
+before, GROUP BY output always came back as the group-key columns in GROUP BY
+order followed by the aggregates, so reordering or renaming the SELECT list had
+no effect (and column identity could be flat wrong). This was the root cause of
+the data-loss near-miss the DISTINCT-collation security review caught.
+
+Retires the `distinct_over_group_by_no_misfold` ledger entry. Two narrower gaps
+remain, now ledgered precisely: a bare non-key column (`SELECT c ... GROUP BY x`)
+projects under the right name but as NULL, since the group keeps no
+representative source row (SQLite's bare-column extension); and an aggregate
+column reordered before a group key still uses the fixed layout, pending
+reconciliation of how `group_concat` is represented in the SELECT list. Verified
+against bundled real SQLite, including two new positive cases (a plain reorder
+and an expression over a group key).
+
 ## 0.5.59 — ORDER BY alias no longer borrows a column's COLLATE
 
 `SELECT x AS c FROM t ORDER BY c` sorted case-insensitively when the table

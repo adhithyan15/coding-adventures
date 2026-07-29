@@ -1,5 +1,66 @@
 # Changelog
 
+## [0.6.13] - Unreleased
+
+### Added
+
+- **`TOTAL(x)` aggregate** — new `AggFn::Total`, wired through the `AggFunc→AggFn`
+  mapping and the aggregate name renderer (`TOTAL`). Accumulates like `SUM`; the
+  VM finalizes it as an always-REAL, `0.0`-default value.
+
+## [0.6.12] - Unreleased
+
+### Changed
+
+- **Explicit-COLLATE output columns: name after source text, emit the underlying
+  value.** For a select-item carried as `__collate(inner, 'NAME')`,
+  `output_column_name` now renders `inner COLLATE NAME` (SQLite includes the
+  `COLLATE` in the column name, e.g. `b COLLATE NOCASE`), and every output-column
+  value-emit site peels the wrapper with `strip_collate` before compiling — a
+  collation folds comparison/dedup/group keys, never the emitted value, so the
+  projection reports the original text. Complements the planner's explicit-COLLATE
+  DISTINCT/GROUP BY support.
+
+## [0.6.11] - Unreleased
+
+### Fixed
+
+- **An aggregate column reordered in the SELECT list of a GROUP BY now follows
+  that order.** `emit_group_row`'s projected path is no longer restricted to
+  aggregate-free queries — it runs for every grouped query with a projection,
+  resolving each aggregate SELECT item through `agg_slots` (like HAVING) and each
+  group-key column from the group's fake row. So `SELECT max(x) AS mx, c FROM t
+  GROUP BY c` yields columns `[mx, c]`, not the old fixed `[c, max(x)]`. This
+  relies on the sql-planner 0.2.29 change lowering `group_concat` to
+  `SqlExpr::Aggregate` (so every aggregate is re-compilable) and on
+  `output_column_name` naming a `SqlExpr::Aggregate` via the new shared
+  `render_aggregate_name` (factored out of `aggregate_column_name`, so the
+  re-projected header matches the fixed-layout one). Retires the
+  `group_by_reordered_with_aggregate` oracle ledger entry.
+
+## [0.6.10] - Unreleased
+
+### Fixed
+
+- **GROUP BY output now follows the SELECT list, not the internal group-key
+  order.** The aggregate emitter's Phase-2 projection emitted every GROUP BY key
+  (in GROUP BY order) followed by every aggregate — so reordering or renaming the
+  SELECT list changed nothing: `SELECT x, c FROM t GROUP BY c, x` came back as
+  columns `[c, x]`, and `SELECT c FROM t GROUP BY x` came back as the group key
+  `x` rather than `c`. This was the root cause of a near-miss data-loss
+  regression (a DISTINCT collation vector built from the SELECT list was shifted
+  against the `[c, x]` layout). A new `emit_group_row` helper, threaded the
+  SELECT list (`compile_project` and `compile_inner_with_hidden_sort` now pass it
+  into `compile_aggregate` / `compile_having`), re-projects the row through that
+  list — each item compiled in the group's finalize context, so a group-key
+  column reads its key value (a collated key still reports its original text).
+  Scoped to queries with no aggregate columns for now: an aggregate output column
+  is not reliably re-compilable, because `group_concat(...)` stays a
+  `FunctionCall` in the SELECT list (unlike COUNT/SUM/… which lower to
+  `SqlExpr::Aggregate`); reordering aggregate columns needs that reconciled and
+  is a tracked follow-up. Retires the `distinct_over_group_by_no_misfold` oracle
+  ledger entry.
+
 ## [0.6.9] - Unreleased
 
 ### Changed

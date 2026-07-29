@@ -1,0 +1,34 @@
+% ============================================================================
+% minute-ventilation.query.adj — worked examples over the clinical minute-ventilation
+% library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a minute-ventilation
+% question: it states NO arithmetic and NO definition — it only `import`s the grounded
+% library, `observe`s the respiratory quantities it decomposed from the prompt (each a
+% byte-provenanced span, elided here), and asks the engine to APPLY the cited
+% definition. The native adj-lang engine binds the parameters, computes each value
+% EXACTLY on the CPU, and returns it with the definition's source/locator/trust.
+%
+% The three questions INVERT: breathing 500 mL per breath at 12 breaths/min gives a
+% minute volume of 500·12 = 6000 mL/min (6 L/min); that 6000 mL/min at the same 12
+% breaths/min is exactly what the tidal-volume formula divides to recover the 500 mL,
+% and that 6000 mL/min at the same 500 mL tidal volume is exactly what the
+% respiratory-frequency formula divides to recover the 12 breaths/min.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli minute-ventilation.query.adj
+% ============================================================================
+
+import "minute-ventilation.adj"
+
+% 500 mL/breath at 12 breaths/min: minute volume = 500 * 12.
+observe tidal_volume(500)
+observe respiratory_frequency(12)
+? minute_volume(tidal_volume, respiratory_frequency)   % expect 6000  (definition: MV = TV·Rf)
+
+% That 6000 mL/min for the same 12 breaths/min: tidal volume = 6000 / 12.
+observe minute_volume(6000)
+? tidal_volume(minute_volume, respiratory_frequency)    % expect 500   (same definition, solved for TV = MV/Rf)
+
+% That 6000 mL/min at the same 500 mL tidal volume: respiratory frequency = 6000 / 500.
+? respiratory_frequency(minute_volume, tidal_volume)    % expect 12    (same definition, solved for Rf = MV/TV)

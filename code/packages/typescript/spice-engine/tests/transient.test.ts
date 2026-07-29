@@ -285,6 +285,60 @@ describe("transient", () => {
     expect(chargedFirst!).toBeLessThan(unchargedFirst!);
   });
 
+  it("uses JFET junction potential to shape transient gate charge", () => {
+    function finalGateVoltage(junctionPotential: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithWaveform(
+        "Vstep",
+        "in",
+        "0",
+        0.0,
+        new PwlWaveform([
+          [0.0, 0.0],
+          [2.0e-7, 0.4],
+          [2.0e-6, 0.4],
+        ]),
+      ));
+      circuit.add(resistor("Rin", "in", "gate", 1_000.0));
+      circuit.add(resistor("Rdrain", "drain", "0", 1_000.0));
+      circuit.add({
+        ...jfet("J1", "drain", "gate", "0", "NJF", 1.0e-12, -2.0, 0.0, 1.0e-9),
+        junctionPotential,
+      });
+      const points = transient(circuit, 2.0e-7, 2.0e-6, "euler");
+      return points.at(-1)!.voltage("gate")!;
+    }
+
+    expect(finalGateVoltage(0.5)).toBeLessThan(finalGateVoltage(2.0));
+  });
+
+  it("uses JFET forward-bias depletion coefficient to shape transient gate charge", () => {
+    function finalGateVoltage(coefficient: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithWaveform(
+        "Vstep",
+        "in",
+        "0",
+        0.0,
+        new PwlWaveform([
+          [0.0, 0.0],
+          [2.0e-7, 0.6],
+          [2.0e-6, 0.6],
+        ]),
+      ));
+      circuit.add(resistor("Rin", "in", "gate", 1_000.0));
+      circuit.add(resistor("Rdrain", "drain", "0", 1_000.0));
+      circuit.add({
+        ...jfet("J1", "drain", "gate", "0", "NJF", 1.0e-12, -2.0, 0.0, 1.0e-9),
+        forwardBiasDepletionCoefficient: coefficient,
+      });
+      const points = transient(circuit, 2.0e-7, 2.0e-6, "euler");
+      return points.at(-1)!.voltage("gate")!;
+    }
+
+    expect(finalGateVoltage(0.2)).toBeGreaterThan(finalGateVoltage(0.8));
+  });
+
   it("uses MOSFET overlap capacitance during transient gate steps", () => {
     function run(gateSourceOverlapCapacitance: number): TransientPoint[] {
       const circuit = new Circuit();
@@ -319,8 +373,8 @@ describe("transient", () => {
     expect(chargedFirst!).toBeLessThan(unchargedFirst!);
   });
 
-  it("uses MOSFET bulk junction capacitance during transient drain steps", () => {
-    function run(drainBulkCapacitance: number): TransientPoint[] {
+  it("scales MOSFET bottom junction capacitance by drain area", () => {
+    function run(bottomJunctionCapacitance: number, drainArea: number): TransientPoint[] {
       const circuit = new Circuit();
       circuit.add(voltageSourceWithWaveform(
         "Vstep",
@@ -338,13 +392,116 @@ describe("transient", () => {
         KP: 1.0e-12,
         W: 1.0,
         L: 1.0,
-        CBD: drainBulkCapacitance,
+        CJ: bottomJunctionCapacitance,
+        AD: drainArea,
       }));
       return transient(circuit, 1.0e-9, 5.0e-9, "euler");
     }
 
-    const unchargedFirst = run(0.0)[0].voltage("drain");
-    const chargedFirst = run(1.0e-9)[0].voltage("drain");
+    const unchargedFirst = run(0.0, 0.0)[0].voltage("drain");
+    const chargedFirst = run(0.5, 2.0e-9)[0].voltage("drain");
+    expect(unchargedFirst).not.toBeUndefined();
+    expect(chargedFirst).not.toBeUndefined();
+    expect(unchargedFirst!).toBeGreaterThan(0.5);
+    expect(chargedFirst!).toBeLessThan(0.01);
+    expect(chargedFirst!).toBeLessThan(unchargedFirst!);
+  });
+
+  it("scales MOSFET sidewall junction capacitance by drain perimeter", () => {
+    function run(sidewallCapacitance: number, drainPerimeter: number): TransientPoint[] {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithWaveform(
+        "Vstep",
+        "in",
+        "0",
+        0.0,
+        new PwlWaveform([
+          [0.0, 0.0],
+          [1.0e-9, 1.0],
+          [5.0e-9, 1.0],
+        ]),
+      ));
+      circuit.add(resistor("Rin", "in", "drain", 1_000.0));
+      circuit.add(mosfet("M1", "drain", "0", "0", "0", "NMOS", {
+        KP: 1.0e-12,
+        W: 1.0,
+        L: 1.0,
+        CJSW: sidewallCapacitance,
+        PD: drainPerimeter,
+      }));
+      return transient(circuit, 1.0e-9, 5.0e-9, "euler");
+    }
+
+    const unchargedFirst = run(0.0, 0.0)[0].voltage("drain");
+    const chargedFirst = run(0.5, 2.0e-9)[0].voltage("drain");
+    expect(unchargedFirst).not.toBeUndefined();
+    expect(chargedFirst).not.toBeUndefined();
+    expect(unchargedFirst!).toBeGreaterThan(0.5);
+    expect(chargedFirst!).toBeLessThan(0.01);
+    expect(chargedFirst!).toBeLessThan(unchargedFirst!);
+  });
+
+  it("scales MOSFET bottom junction capacitance by source area", () => {
+    function run(bottomJunctionCapacitance: number, sourceArea: number): TransientPoint[] {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithWaveform(
+        "Vstep",
+        "in",
+        "0",
+        0.0,
+        new PwlWaveform([
+          [0.0, 0.0],
+          [1.0e-9, 1.0],
+          [5.0e-9, 1.0],
+        ]),
+      ));
+      circuit.add(resistor("Rin", "in", "source", 1_000.0));
+      circuit.add(mosfet("M1", "0", "0", "source", "0", "NMOS", {
+        KP: 1.0e-12,
+        W: 1.0,
+        L: 1.0,
+        CJ: bottomJunctionCapacitance,
+        AS: sourceArea,
+      }));
+      return transient(circuit, 1.0e-9, 5.0e-9, "euler");
+    }
+
+    const unchargedFirst = run(0.0, 0.0)[0].voltage("source");
+    const chargedFirst = run(0.5, 2.0e-9)[0].voltage("source");
+    expect(unchargedFirst).not.toBeUndefined();
+    expect(chargedFirst).not.toBeUndefined();
+    expect(unchargedFirst!).toBeGreaterThan(0.5);
+    expect(chargedFirst!).toBeLessThan(0.01);
+    expect(chargedFirst!).toBeLessThan(unchargedFirst!);
+  });
+
+  it("scales MOSFET sidewall junction capacitance by source perimeter", () => {
+    function run(sidewallCapacitance: number, sourcePerimeter: number): TransientPoint[] {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithWaveform(
+        "Vstep",
+        "in",
+        "0",
+        0.0,
+        new PwlWaveform([
+          [0.0, 0.0],
+          [1.0e-9, 1.0],
+          [5.0e-9, 1.0],
+        ]),
+      ));
+      circuit.add(resistor("Rin", "in", "source", 1_000.0));
+      circuit.add(mosfet("M1", "0", "0", "source", "0", "NMOS", {
+        KP: 1.0e-12,
+        W: 1.0,
+        L: 1.0,
+        CJSW: sidewallCapacitance,
+        PS: sourcePerimeter,
+      }));
+      return transient(circuit, 1.0e-9, 5.0e-9, "euler");
+    }
+
+    const unchargedFirst = run(0.0, 0.0)[0].voltage("source");
+    const chargedFirst = run(0.5, 2.0e-9)[0].voltage("source");
     expect(unchargedFirst).not.toBeUndefined();
     expect(chargedFirst).not.toBeUndefined();
     expect(unchargedFirst!).toBeGreaterThan(0.5);
@@ -385,6 +542,68 @@ describe("transient", () => {
     expect(fixedFirst!).toBeCloseTo(1.25, 1);
     expect(shapedFirst!).toBeGreaterThan(fixedFirst! + 0.04);
     expect(shapedFirst!).toBeLessThan(1.4);
+  });
+
+  it("uses MOSFET FC to shape forward-biased bulk junction charge", () => {
+    function firstDrainVoltage(coefficient: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithWaveform(
+        "Vstep",
+        "in",
+        "0",
+        -0.6,
+        new PwlWaveform([
+          [0.0, -0.6],
+          [1.0e-9, -0.8],
+          [5.0e-9, -0.8],
+        ]),
+      ));
+      circuit.add(resistor("Rin", "in", "drain", 1_000.0));
+      circuit.add(mosfet("M1", "drain", "0", "0", "0", "NMOS", {
+        KP: 1.0e-12,
+        W: 1.0,
+        L: 1.0,
+        CBD: 1.0e-12,
+        PB: 1.0,
+        MJ: 0.5,
+        FC: coefficient,
+      }));
+      return transient(circuit, 1.0e-9, 5.0e-9, "euler")[0].voltage("drain")!;
+    }
+
+    expect(firstDrainVoltage(0.2)).toBeLessThan(firstDrainVoltage(0.8));
+  });
+
+  it("uses MOSFET MJSW to shape reverse-biased sidewall charge", () => {
+    function run(gradingCoefficient: number): TransientPoint[] {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithWaveform(
+        "Vstep",
+        "in",
+        "0",
+        1.0,
+        new PwlWaveform([
+          [0.0, 1.0],
+          [1.0e-9, 2.0],
+          [5.0e-9, 2.0],
+        ]),
+      ));
+      circuit.add(resistor("Rin", "in", "drain", 1_000.0));
+      circuit.add(mosfet("M1", "drain", "0", "0", "0", "NMOS", {
+        KP: 1.0e-12,
+        W: 1.0,
+        L: 1.0,
+        PD: 1.0,
+        CJSW: 1.0e-12,
+        PB: 1.0,
+        MJSW: gradingCoefficient,
+      }));
+      return transient(circuit, 1.0e-9, 5.0e-9, "euler");
+    }
+
+    const fixed = run(0.0)[0].voltage("drain")!;
+    const shaped = run(0.5)[0].voltage("drain")!;
+    expect(shaped).toBeGreaterThan(fixed + 0.04);
   });
 
   it("uses diode transit time to hold forward charge on turnoff", () => {
@@ -452,10 +671,101 @@ describe("transient", () => {
     expect(chargedFirst!).toBeLessThan(unchargedFirst!);
   });
 
-  it("uses BJT forward transit time to hold base charge on turnoff", () => {
-    function run(forwardTransitTime: number): TransientPoint[] {
+  it("shapes BJT base-emitter depletion capacitance during reverse-biased transients", () => {
+    function steppedBaseVoltage(baseEmitterGradingCoefficient: number): number {
       const circuit = new Circuit();
-      circuit.add(voltageSource("Vcc", "collector", "0", 5.0));
+      circuit.add(voltageSourceWithWaveform(
+        "Vdrive",
+        "in",
+        "0",
+        -1.0,
+        new PwlWaveform([
+          [0.0, -1.0],
+          [1.0e-9, -1.0],
+          [2.0e-9, 0.0],
+          [5.0e-9, 0.0],
+        ]),
+      ));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add(bjt("Q1", "0", "base", "0", "NPN", 1.0e-14, 100.0, 0.02585, 1.0e-12, 0.0, 0.0, 0.0, 3.0, 1.11, 0.0, 1.0, 1.0, 0.75, baseEmitterGradingCoefficient));
+      return transient(circuit, 1.0e-9, 5.0e-9)[1].voltage("base")!;
+    }
+
+    expect(steppedBaseVoltage(0.5)).toBeGreaterThan(steppedBaseVoltage(0.0));
+  });
+
+  it("shapes BJT base-collector depletion capacitance during reverse-biased transients", () => {
+    function steppedCollectorVoltage(baseCollectorGradingCoefficient: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithWaveform(
+        "Vdrive",
+        "in",
+        "0",
+        1.0,
+        new PwlWaveform([[0.0, 1.0], [1.0e-9, 1.0], [2.0e-9, 0.0], [5.0e-9, 0.0]]),
+      ));
+      circuit.add(resistor("Rin", "in", "collector", 1_000.0));
+      circuit.add(bjt("Q1", "collector", "0", "0", "NPN", 1.0e-14, 100.0, 0.02585, 0.0, 1.0e-12, 0.0, 0.0, 3.0, 1.11, 0.0, 1.0, 1.0, 0.75, 0.33, 0.75, baseCollectorGradingCoefficient));
+      return transient(circuit, 1.0e-9, 5.0e-9)[1].voltage("collector")!;
+    }
+
+    expect(steppedCollectorVoltage(0.5)).toBeLessThan(steppedCollectorVoltage(0.0));
+  });
+
+  it("uses BJT XCJC to partition depletion charge to the external base", () => {
+    function steppedBaseVoltage(baseCollectorCapacitanceFraction: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithWaveform(
+        "Vdrive",
+        "in",
+        "0",
+        0.0,
+        new PwlWaveform([[0.0, 0.0], [1.0e-9, 0.0], [2.0e-9, 1.0], [5.0e-9, 1.0]]),
+      ));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add({
+        ...bjt("Q1", "0", "base", "0"),
+        saturationCurrent: 1.0e-30,
+        baseCollectorCapacitance: 1.0e-12,
+        baseResistance: 10_000.0,
+        baseCollectorCapacitanceFraction,
+      });
+      return transient(circuit, 1.0e-9, 5.0e-9)[1].voltage("base")!;
+    }
+
+    expect(steppedBaseVoltage(1.0)).toBeGreaterThan(steppedBaseVoltage(0.0));
+  });
+
+  it("uses BJT FC to shape both forward-biased transient charge companions", () => {
+    function heldVoltage(coefficient: number, baseEmitter: boolean): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithWaveform(
+        "Vdrive",
+        "in",
+        "0",
+        0.6,
+        new PwlWaveform([[0.0, 0.6], [1.0e-9, 0.6], [2.0e-9, 0.0], [5.0e-9, 0.0]]),
+      ));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add(bjt("Q1", "0", "base", "0", "NPN", 1.0e-30, 100.0, 0.02585, baseEmitter ? 1.0e-12 : 0.0, baseEmitter ? 0.0 : 1.0e-12, 0.0, 0.0, 3.0, 1.11, 0.0, 1.0, 1.0, 0.75, 0.33, 0.75, 0.33, coefficient));
+      return transient(circuit, 1.0e-9, 5.0e-9)[1].voltage("base")!;
+    }
+
+    for (const baseEmitter of [true, false]) {
+      expect(heldVoltage(0.8, baseEmitter)).toBeGreaterThan(heldVoltage(0.2, baseEmitter));
+    }
+  });
+
+  it("uses BJT forward transit time to hold base charge on turnoff", () => {
+    function run(
+      forwardTransitTime: number,
+      forwardTransitTimeBiasCoefficient = 0.0,
+      forwardTransitTimeCurrent = 0.0,
+      forwardTransitTimeVoltage = 0.0,
+      collectorVoltage = 5.0,
+    ): TransientPoint[] {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vcc", "collector", "0", collectorVoltage));
       circuit.add(currentSourceWithWaveform(
         "Istep",
         "0",
@@ -468,27 +778,53 @@ describe("transient", () => {
         ]),
       ));
       circuit.add(resistor("Rshunt", "base", "0", 1.0e12));
-      circuit.add(bjt(
-        "Q1",
-        "collector",
-        "base",
-        "0",
-        "NPN",
-        1.0e-15,
-        100.0,
-        0.02585,
-        0.0,
-        0.0,
-        forwardTransitTime,
-      ));
+      circuit.add({
+        ...bjt(
+          "Q1",
+          "collector",
+          "base",
+          "0",
+          "NPN",
+          1.0e-15,
+          100.0,
+          0.02585,
+          0.0,
+          0.0,
+          forwardTransitTime,
+        ),
+        forwardTransitTimeBiasCoefficient,
+        forwardTransitTimeCurrent,
+        forwardTransitTimeVoltage,
+      });
       return transient(circuit, 1.0e-9, 5.0e-9);
     }
 
     const noStorage = run(0.0);
     const stored = run(1.0e-9);
+    const biasScaled = run(1.0e-9, 9.0);
+    const currentLimited = run(1.0e-9, 9.0, 1.0);
+    const voltageLimited = run(1.0e-9, 9.0, 0.0, 0.5, 10.0);
     expectClose(noStorage[0].voltage("base"), 0.0);
     expect(stored[0].voltage("base")!).toBeGreaterThan(0.6);
     expect(stored[stored.length - 1].voltage("base")!).toBeLessThan(stored[0].voltage("base")!);
+    expect(Math.abs(
+      biasScaled[biasScaled.length - 1].voltage("base")! -
+        stored[stored.length - 1].voltage("base")!,
+    )).toBeGreaterThan(1.0e-12);
+    expect(Math.abs(
+      currentLimited[currentLimited.length - 1].voltage("base")! -
+        stored[stored.length - 1].voltage("base")!,
+    )).toBeLessThan(Math.abs(
+      biasScaled[biasScaled.length - 1].voltage("base")! -
+        stored[stored.length - 1].voltage("base")!,
+    ));
+    expect(Math.abs(
+      voltageLimited[voltageLimited.length - 1].voltage("base")! -
+        stored[stored.length - 1].voltage("base")!,
+    )).toBeLessThan(Math.abs(
+      biasScaled[biasScaled.length - 1].voltage("base")! -
+        stored[stored.length - 1].voltage("base")!,
+    ));
   });
 
   it("reports periods for periodic source waveforms", () => {

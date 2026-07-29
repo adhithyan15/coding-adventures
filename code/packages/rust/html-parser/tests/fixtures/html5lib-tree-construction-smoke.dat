@@ -40383,3 +40383,379 @@ template
 select
 #document
 | <option>
+
+#source plain-text-unsafe.dat:34
+#data
+<math> filler text
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,7): invalid-codepoint
+(1,7): invalid-codepoint-in-foreign-content
+(1,14): invalid-codepoint
+(1,14): invalid-codepoint-in-foreign-content
+(1,18): expected-closing-tag-but-got-eof
+#new-errors
+(1:7) unexpected-null-character
+(1:14) unexpected-null-character
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       "�filler�text"
+
+#source plain-text-unsafe.dat:35
+#data
+<math><![CDATA[ filler text ]]>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,31): invalid-codepoint
+(1,31): invalid-codepoint
+(1,31): invalid-codepoint
+(1,31): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       "�filler�text�"
+
+#source plain-text-unsafe.dat:36
+#data
+<math><annotation-xml> x
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,23): invalid-codepoint
+(1,23): invalid-codepoint-in-foreign-content
+(1,24): expected-closing-tag-but-got-eof
+#new-errors
+(1:23) unexpected-null-character
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math annotation-xml>
+|         "�x"
+
+#source plain-text-unsafe.dat:37
+#data
+<math><annotation-xml encoding="text/html"> x
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,44): invalid-codepoint
+(1,44): invalid-codepoint-in-body
+(1,45): expected-closing-tag-but-got-eof
+#new-errors
+(1:44) unexpected-null-character
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math annotation-xml>
+|         encoding="text/html"
+|         "x"
+
+#source plain-text-unsafe.dat:38
+#data
+ filler text
+#errors
+#new-errors
+(1:1) unexpected-null-character
+(1:8) unexpected-null-character
+#document-fragment
+svg path
+#document
+| "�filler�text"
+
+#source plain-text-unsafe.dat:39
+#data
+ filler text
+#errors
+#new-errors
+(1:1) unexpected-null-character
+(1:8) unexpected-null-character
+#document-fragment
+svg title
+#document
+| "fillertext"
+
+#source plain-text-unsafe.dat:40
+#data
+ filler text
+#errors
+#new-errors
+(1:1) unexpected-null-character
+(1:8) unexpected-null-character
+#document-fragment
+math ms
+#document
+| "fillertext"
+
+#source plain-text-unsafe.dat:41
+#data
+ x
+#errors
+#new-errors
+(1:1) unexpected-null-character
+#document-fragment
+math annotation-xml
+#document
+| "�x"
+
+#source adoption02.dat:3
+#data
+<nobr><table><marquee></table><nobr>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,22): unexpected-start-tag-implies-table-voodoo
+(1,30): end-tag-too-early-named
+(1,36): unexpected-start-tag-implies-end-tag
+(1,36): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <nobr>
+|       <marquee>
+|       <table>
+|     <nobr>
+
+#source void-in-phrasing.dat:1
+#data
+<!DOCTYPE html><body><p><br></p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <br>
+
+#source void-in-phrasing.dat:2
+#data
+<!DOCTYPE html><body><p><br>text</p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <br>
+|       "text"
+
+#source void-in-phrasing.dat:3
+#data
+<!DOCTYPE html><body><p>before<br>after</p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       "before"
+|       <br>
+|       "after"
+
+#source void-in-phrasing.dat:4
+#data
+<!DOCTYPE html><body><p><br><br></p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <br>
+|       <br>
+
+#source void-in-phrasing.dat:5
+#data
+<!DOCTYPE html><body><p>a<br>b<br>c</p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       "a"
+|       <br>
+|       "b"
+|       <br>
+|       "c"
+
+#source void-in-phrasing.dat:6
+#data
+<!DOCTYPE html><body><h1><br></h1>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <h1>
+|       <br>
+
+#source void-in-phrasing.dat:7
+#data
+<!DOCTYPE html><body><p><input></p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <input>
+
+#source void-in-phrasing.dat:8
+#data
+<!DOCTYPE html><body><p><img></p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <img>
+
+#source void-in-phrasing.dat:9
+#data
+<!DOCTYPE html><body><p><wbr></p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <wbr>
+
+#source void-in-phrasing.dat:10
+#data
+<!DOCTYPE html><body><p><embed></p>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <embed>
+
+#source void-in-phrasing.dat:11
+#data
+<!DOCTYPE html><body><h2><input></h2>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <h2>
+|       <input>
+
+#source void-in-phrasing.dat:12
+#data
+<!DOCTYPE html><body><em><br></em>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <em>
+|       <br>
+
+#source void-in-phrasing.dat:13
+#data
+<!DOCTYPE html><body><strong><br>text</strong>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <strong>
+|       <br>
+|       "text"
+
+#source html5test-com.dat:14
+#data
+<svg><title><![CDATA[x]]>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg title>
+|         "x"
+
+#source html5test-com.dat:15
+#data
+<svg><foreignobject><![CDATA[x]]>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg foreignObject>
+|         "x"
+
+#source html5test-com.dat:16
+#data
+<svg><foreignobject><p><![CDATA[x]]>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg foreignObject>
+|         <p>
+|           <!-- [CDATA[x]] -->
+
+#source html5test-com.dat:17
+#data
+<math><![CDATA[x]]>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       "x"
+
+#source html5test-com.dat:18
+#data
+<math><mtext><![CDATA[x]]>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math mtext>
+|         "x"
+
+#source html5test-com.dat:19
+#data
+<math><mtext><i><![CDATA[x]]>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math mtext>
+|         <i>
+|           <!-- [CDATA[x]] -->

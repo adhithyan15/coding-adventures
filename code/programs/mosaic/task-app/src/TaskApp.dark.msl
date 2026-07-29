@@ -1,0 +1,187 @@
+// TaskApp — styling (mosstyle), dark theme. Parts match the [ part-name ] labels
+// in TaskApp.mll, and mirror TaskApp.light.msl part-for-part.
+//
+// The dark half of the "warm & approachable" identity (code/specs/task-app-ui-design.md):
+// a warm near-black ground (#1a1714, not a cold #000), warm-ivory ink, and the same
+// honey accent — lifted to #eaa63f so it stays legible on the dark ground. Both themes
+// are authored, not inverted. Resolved by `mosaic-compile --theme dark`.
+
+style TaskApp {
+  part app-shell {
+    background : "#1a1714" ;
+    color : "#f1ebe1" ;
+    font-family : "-apple-system, Segoe UI, system-ui, sans-serif" ;
+    padding : 28 ;
+    gap : 16 ;
+  }
+  part project-bar {
+    gap : 8 ;
+    align : center-vertical ;
+  }
+  // The project you are looking at: honey fill, so "where am I" is answerable at a
+  // glance. The others stay quiet surfaces.
+  part project-on {
+    background : "#eaa63f" ;
+    color : "#1a1714" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding : 8 ;
+    border-radius : 20 ;
+  }
+  part project-off {
+    background : "#252019" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 20 ;
+    state hover {
+      border-color : "#eaa63f" ;
+      color : "#f1ebe1" ;
+    }
+  }
+  part project-input {
+    background : "#252019" ;
+    color : "#f1ebe1" ;
+    font-size : 13 ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 9 ;
+    state focused {
+      border-color : "#eaa63f" ;
+    }
+  }
+  part project-add {
+    background : "#2d271f" ;
+    color : "#eaa63f" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding : 8 ;
+    border-radius : 9 ;
+    state hover {
+      background : "#3a2c17" ;
+    }
+  }
+  part project-indent {
+    color : "#867c70" ;
+    font-size : 13 ;
+  }
+  part project-sub {
+    background : "#2d271f" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 8 ;
+    border-radius : 9 ;
+    state hover {
+      background : "#3a2c17" ;
+      color : "#eaa63f" ;
+    }
+  }
+  part title {
+    font-size : 22 ;
+    font-weight : bold ;
+    color : "#f1ebe1" ;
+  }
+  part add-row {
+    gap : 8 ;
+    align : center-vertical ;
+  }
+  part name-input {
+    background : "#252019" ;
+    color : "#f1ebe1" ;
+    font-size : 14 ;
+    padding : 10 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 9 ;
+    state focused {
+      border-color : "#eaa63f" ;
+    }
+  }
+  part due-input {
+    background : "#252019" ;
+    color : "#f1ebe1" ;
+    font-size : 14 ;
+    padding : 10 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 9 ;
+    state focused {
+      border-color : "#eaa63f" ;
+    }
+  }
+  part add-btn {
+    background : "#eaa63f" ;
+    color : "#1a1714" ;
+    font-weight : bold ;
+    padding : 10 ;
+    border-radius : 9 ;
+    state hover {
+      background : "#d4922f" ;
+    }
+  }
+  part summary {
+    color : "#b3a99c" ;
+    font-size : 13 ;
+  }
+  part task-list {
+    gap : 8 ;
+  }
+  part task-row {
+    gap : 10 ;
+    align : center-vertical ;
+  }
+  // The completion toggle — a round button whose label is the engine's done glyph.
+  part toggle {
+    background : "#252019" ;
+    color : "#6fb489" ;
+    font-size : 15 ;
+    padding : 6 ;
+    border-width : 2 ;
+    border-color : "#4a4136" ;
+    border-radius : 20 ;
+    state hover {
+      border-color : "#eaa63f" ;
+    }
+  }
+  part task-name {
+    color : "#f1ebe1" ;
+    font-size : 14 ;
+  }
+  // Meta chips. Due is honey (time), schedule is a quiet surface, overdue is the
+  // one place semantic red appears in a row.
+  part chip-due {
+    background : "#3a2c17" ;
+    color : "#eaa63f" ;
+    font-size : 12 ;
+    padding : 5 ;
+    border-radius : 20 ;
+  }
+  part chip-sched {
+    background : "#2d271f" ;
+    color : "#b3a99c" ;
+    font-size : 12 ;
+    padding : 5 ;
+    border-radius : 20 ;
+  }
+  part chip-over {
+    background : "#3a221c" ;
+    color : "#e26a52" ;
+    font-size : 12 ;
+    font-weight : bold ;
+    padding : 5 ;
+    border-radius : 20 ;
+  }
+  part del-btn {
+    background : "#3a221c" ;
+    color : "#e26a52" ;
+    font-weight : bold ;
+    padding : 10 ;
+    border-radius : 9 ;
+    state hover {
+      background : "#4a2a22" ;
+    }
+  }
+}

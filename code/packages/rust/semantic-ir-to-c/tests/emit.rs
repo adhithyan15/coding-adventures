@@ -114,11 +114,14 @@ fn self_contained_no_external_headers() {
 
 #[test]
 fn unaccepted_feature_is_rejected_cleanly() {
-    // An array literal declares Feature::Sequences, which this backend does not
-    // accept (loops and mutation are now accepted, so a `while` no longer
-    // exercises the rejection path — an array still does).
-    let m = lower_ruby("puts [1, 2, 3]");
-    let err = compile(&m).expect_err("backend rejects Sequences");
+    // A `module` declaration declares Feature::Modules, which this backend does
+    // not accept. (Arrays/hashes declare the accepted Sequences/Maps features,
+    // and an empty `class` now declares the accepted Classes feature — the OOP
+    // mirror slice 1 — so none of those exercise the rejection path any longer. A
+    // module is the last OOP feature, still unaccepted, and — being a declaration
+    // — is not folded away like a `true && false` short-circuit.)
+    let m = lower_ruby("module Foo\nend");
+    let err = compile(&m).expect_err("backend rejects Modules");
     assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
 }
 
@@ -138,18 +141,87 @@ fn string_literals_are_trigraph_safe() {
 }
 
 #[test]
-fn method_dispatch_is_rejected_in_v0() {
-    // `"hi".length` lowers to the `__method__` collection-dispatch builtin.
-    // It is not gated by an unaccepted *feature* (its receiver is a String,
-    // which v0 accepts), so the structural builtin gate must reject it rather
-    // than emit a call that fails at runtime.
+fn builtin_method_dispatch_is_rejected() {
+    // `"hi".length` lowers to a `__method__` dispatch to `length` — a BUILT-IN
+    // method the module never registers via `__def_method__`.  OOP slice 2 now
+    // lowers user-defined instance methods, but a built-in method call is the
+    // separate Collections batch, so the allowlist rejects it cleanly (rather
+    // than emitting a call that `NoMethodError`s at runtime).
     let m = lower_ruby("puts \"hi\".length");
-    let err = compile(&m).expect_err("v0 rejects __method__ dispatch");
+    let err = compile(&m).expect_err("rejects a built-in method dispatch");
     assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
     assert!(
-        err.message.contains("__method__"),
-        "names the builtin: {}",
+        err.message.contains("length"),
+        "names the built-in method: {}",
         err.message
+    );
+}
+
+#[test]
+fn instance_vars_route_through_ivar_helpers() {
+    // OOP slice 3: `@v = v` is a `Scope::Instance` Assign → `_sir_ivar_set`, and
+    // `@v` a `Scope::Instance` VarRef → `_sir_ivar_get`.  The `@`-name is a QUOTED
+    // C string literal (no name injection), and the runtime carries the helpers.
+    let m = lower_ruby("class Box\n  def set(v)\n    @v = v\n  end\n  def get\n    @v\n  end\nend");
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_ivar_set(\"@v\","),
+        "an `@v =` write calls the setter with the quoted `@`-name\n{src}"
+    );
+    assert!(
+        src.contains("_sir_ivar_get(\"@v\")"),
+        "an `@v` read calls the getter with the quoted `@`-name\n{src}"
+    );
+    // The runtime defines the helpers + the current-self machinery they read.
+    assert!(src.contains("_sir_ivar_get"), "runtime declares the getter");
+    assert!(src.contains("_sir_ivar_set"), "runtime declares the setter");
+    assert!(
+        src.contains("_sir_current_self"),
+        "dispatch binds the receiver into `_sir_current_self`\n{src}"
+    );
+}
+
+#[test]
+fn explicit_self_renders_as_sir_self() {
+    // A bare `self` (`__self__`) renders as the `_sir_self()` accessor, so a method
+    // can return the receiver for chaining.
+    let m = lower_ruby("class Widget\n  def me\n    self\n  end\nend");
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_self()"),
+        "`self` lowers to the `_sir_self()` accessor\n{src}"
+    );
+}
+
+#[test]
+fn subclass_registers_its_superclass_edge() {
+    // OOP slice 4: `class Dog < Animal` emits a `_sir_register_super` edge (both
+    // names QUOTED C string literals — no injection), and the runtime carries the
+    // ancestry-walking resolver + `super` dispatcher.
+    let m = lower_ruby("class Animal\n  def legs\n    4\n  end\nend\nclass Dog < Animal\nend\nputs Dog.new.legs");
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_register_super(\"Dog\", \"Animal\")"),
+        "a subclass registers its `sub -> super` edge\n{src}"
+    );
+    assert!(
+        src.contains("_sir_resolve_method"),
+        "the runtime resolves methods up the ancestry\n{src}"
+    );
+}
+
+#[test]
+fn super_lowers_to_call_super() {
+    // OOP slice 4: `super` (`__super__`) renders as `_sir_call_super(method,
+    // definingClass, argc, …)` — both names quoted; dispatch is an ancestry walk.
+    let m = lower_ruby(
+        "class Base\n  def val\n    10\n  end\nend\n\
+         class Derived < Base\n  def val\n    super + 5\n  end\nend\nputs Derived.new.val",
+    );
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_call_super(\"val\", \"Derived\""),
+        "`super` resolves from the defining class's superclass\n{src}"
     );
 }
 

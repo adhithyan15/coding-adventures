@@ -83,6 +83,17 @@ reading course.
   - **The same file serves Marathi and Sanskrit**, which share the script. Their
     parallel W-tracks are the obvious follow-on and can mirror this arc directly —
     नमस्ते is identical in all three.
+- **Ch. 6 — Numbers 1–5** (`HI-C06-numbers-1-5`): *ek, do, tīn, chār, pāṁch* —
+  Sanskrit worn down **through the Prakrits**, where the erosion actually
+  happened. Three and four come from the **neuter** forms — *trī́ṇi* → *tiṇṇi* →
+  *tīn*, *catvā́ri* → *cattāri* → *chār* — not the masculine *tráyaḥ*/
+  *catvā́raḥ*; and *tīn*'s chain is a two-step trade (*r* lost, *ṇ* doubles;
+  double simplifies, vowel lengthens). The cross-family payoff is the point: this
+  is **exactly the Latin → Spanish erosion the Romance tracks keep tracing**,
+  running on the other side of the world at the same time — *quattuor* →
+  *cuatro* beside *catvā́ri* → *chār*, the same PIE word twice. And *pañca* →
+  *pāṁch* shows a nasal **migrating into the vowel**,
+  which is what the chandrabindu **ँ** records. **Authored.**
 
 ## Planned
 

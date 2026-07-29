@@ -129,13 +129,403 @@ pub enum Stmt {
     /// runs its statements, with no fall-through. A value-list entry is a single
     /// value or an inclusive `THRU` range.
     Evaluate { subject: Operand, branches: Vec<(Option<Vec<WhenValue>>, Vec<Stmt>)> },
-    /// `STRING s… DELIMITED BY SIZE INTO t` — concatenate each source (taken in
-    /// full, `DELIMITED BY SIZE`) left-to-right and store the result into the
-    /// alphanumeric receiver `t`, LEFT-JUSTIFIED and truncated at `t`'s width,
-    /// **without** space-filling the untouched tail (bytes past what STRING wrote
-    /// keep their prior content — the ANSI-85 STRING rule). A real delimiter,
-    /// `WITH POINTER`, and `ON OVERFLOW` are later rungs (rejected at build time).
-    String { sources: Vec<Operand>, target: String },
+    /// `STRING s… DELIMITED BY {SIZE | delim} INTO t` — concatenate each source
+    /// left-to-right and store the result into the alphanumeric receiver `t`,
+    /// LEFT-JUSTIFIED and truncated at `t`'s width, **without** space-filling the
+    /// untouched tail (bytes past what STRING wrote keep their prior content — the
+    /// ANSI-85 STRING rule).
+    ///
+    /// `delim` selects HOW MUCH of each sending field is taken:
+    ///
+    ///   * `delim = None` (`DELIMITED BY SIZE`) — every field is taken in FULL.
+    ///   * `delim = Some(d)` — each field contributes only its PREFIX up to (but
+    ///     NOT including) the FIRST occurrence of the single character `d` in that
+    ///     field's image; a field with no `d` contributes its whole image, and a
+    ///     field that STARTS with `d` contributes the empty string. ONE delimiter
+    ///     applies to every field. The delimiter is reduced by the SAME
+    ///     `single_delim_char` helper UNSTRING uses (so a multi-char / numeric /
+    ///     figurative / reference-modified / wider-item delimiter rejects
+    ///     identically), and must be ASCII: the compiler's prefix scan is byte-
+    ///     based while this oracle scans by char, so a multi-byte delimiter would
+    ///     diverge (a clean later rung on both engines). For the same byte-vs-char
+    ///     reason a non-ASCII string-LITERAL sending field is a later rung WHEN a
+    ///     delimiter is active (its prefix boundary differs byte-vs-char).
+    ///
+    /// `pointer` is the optional `WITH POINTER p` phrase: `p` is an unsigned
+    /// integer item (`PIC 9(n)`) giving the 1-BASED character position in the
+    /// RECEIVER at which the first transferred character is placed, and it is
+    /// UPDATED after the operation to `p + chars_placed` (one past the last
+    /// character stored). `None` when the phrase is absent (overlay at position 0,
+    /// no write-back).
+    ///
+    /// `ON OVERFLOW` / `NOT ON OVERFLOW` are now MODELLED: `on_overflow` holds the
+    /// imperative statement list run when the STRING overflows (the receiver fills
+    /// before every sending character is transferred, OR the initial `WITH POINTER`
+    /// value is out of range), and `not_on_overflow` holds the list run when it does
+    /// NOT. Either list may be empty (clause absent). A multi-character delimiter and
+    /// per-field different delimiters remain later rungs (rejected at build time).
+    String {
+        sources: Vec<Operand>,
+        target: String,
+        delim: Option<Operand>,
+        pointer: Option<String>,
+        on_overflow: Vec<Stmt>,
+        not_on_overflow: Vec<Stmt>,
+    },
+    /// `UNSTRING source DELIMITED BY delim INTO r1 [r2 …]` — the inverse of
+    /// STRING. Scan the alphanumeric `source` left-to-right, splitting it into
+    /// delimited fields on each occurrence of the SINGLE-character `delim` (a
+    /// 1-char literal or a `PIC X(1)` item), and move successive fields into
+    /// successive receivers `r1..rn` as ordinary alphanumeric MOVEs (left-
+    /// justified, space-padded, truncated). Each receiver — INCLUDING the last —
+    /// takes the field up to the NEXT delimiter; fields beyond the receiver count
+    /// are dropped (that would be `ON OVERFLOW`, a later rung), and once the
+    /// source is exhausted the remaining receivers are left UNCHANGED (not
+    /// space-filled). `WITH POINTER`, `ON OVERFLOW`, a multi-character or `ALL`/
+    /// `OR` delimiter, and a numeric/group source or receiver are later rungs.
+    ///
+    /// The `source` is an [`Operand`] so the field text can come from either of
+    /// two providers with IDENTICAL downstream scanning: an `Operand::Ident`
+    /// reads an alphanumeric item's *storage* (as before), while an
+    /// `Operand::Lit(Lit::Str(_))` scans the string literal's OWN bytes directly
+    /// (`UNSTRING "a,b,c" DELIMITED BY "," INTO w1 w2 w3` → w1="a", w2="b",
+    /// w3="c"). Only the source of the characters differs; the delimiter scan and
+    /// per-receiver reshape are shared. A NUMERIC or FIGURATIVE literal source and
+    /// a reference-modified source remain later rungs (rejected at read time).
+    ///
+    /// `pointer` is the optional `WITH POINTER p` phrase: `p` is an unsigned
+    /// integer item (`PIC 9(n)`) giving the 1-BASED character position in the
+    /// source at which the scan STARTS, and it is UPDATED after the operation to
+    /// the 1-based position of the character immediately following the last
+    /// character examined. `None` when the phrase is absent (start at position 1,
+    /// no write-back).
+    ///
+    /// `ON OVERFLOW` / `NOT ON OVERFLOW` are MODELLED (the DIRECT sibling of the
+    /// STRING clauses): `on_overflow` holds the imperative statement list run when
+    /// the UNSTRING overflows — all receivers are filled but the source is NOT
+    /// exhausted (more delimited fields remain), OR the initial `WITH POINTER` value
+    /// is out of range — and `not_on_overflow` holds the list run when it does NOT.
+    /// Either list may be empty (clause absent).
+    Unstring {
+        source: Operand,
+        delim: Operand,
+        targets: Vec<String>,
+        pointer: Option<String>,
+        on_overflow: Vec<Stmt>,
+        not_on_overflow: Vec<Stmt>,
+    },
+    /// `INSPECT source TALLYING counter FOR ALL delim` (or `FOR LEADING delim`)
+    /// — count occurrences of the SINGLE-character `delim` (a 1-char literal or a
+    /// `PIC X(1)` item) in the alphanumeric `source` and **ADD** that count to the
+    /// unsigned-integer `counter` (`PIC 9(n)`). `FOR ALL` counts EVERY (non-
+    /// overlapping, left-to-right) occurrence; `FOR LEADING` counts only the run of
+    /// CONSECUTIVE occurrences at the START of the source, stopping at the first
+    /// character that is not `delim` (`leading == true` selects this). INSPECT adds
+    /// to the counter; it does NOT clear it first. `CHARACTERS` tallies,
+    /// `BEFORE`/`AFTER` phrases, several counters or `FOR` phrases, and a multi-
+    /// character/figurative/wider delimiter or a numeric/group source or a
+    /// non-integer/non-numeric counter are later rungs. (A `REPLACING` phrase in
+    /// the SAME statement is the combined form below, not this lone `Inspect`.)
+    ///
+    /// An optional `region` restricts the count to a sub-slice of the source — the
+    /// `{BEFORE|AFTER} x` phrase (see [`Region`]). This rung wires the region up for
+    /// `FOR ALL` only, with a SINGLE-character region delimiter `x`; `FOR LEADING`
+    /// with a region, a multi-character region delimiter, and a region on the
+    /// combined/`REPLACING`/`CONVERTING` forms are later rungs.
+    ///
+    /// `FOR CHARACTERS` (`characters == true`) is the "count every position" form:
+    /// instead of matching a delimiter, it tallies the NUMBER OF CHARACTER POSITIONS
+    /// in the region window. With no region that is `length(source)`; with a region
+    /// it is the window length `end - start` (the SAME window `FOR ALL` uses, so it
+    /// inherits the BEFORE→whole / AFTER→empty not-found asymmetry). When
+    /// `characters == true` neither `delim` nor `leading` is ever consumed, so `delim`
+    /// carries a never-read placeholder and `leading` is `false`. Multi-item and
+    /// multi-counter `CHARACTERS` remain later rungs (see the multi variants below).
+    Inspect {
+        source: String,
+        counter: String,
+        /// The delimiter to match for `FOR ALL`/`FOR LEADING`. UNUSED (and set to a
+        /// placeholder) when `characters == true`, because CHARACTERS counts
+        /// positions rather than matching a delimiter.
+        delim: Operand,
+        leading: bool,
+        /// `true` for the `FOR CHARACTERS` form — count every position in the window
+        /// rather than matching `delim`. Mutually exclusive with `leading`.
+        characters: bool,
+        region: Option<Region>,
+    },
+    /// `INSPECT source REPLACING ALL search BY replace` (or `REPLACING LEADING
+    /// search BY replace`) — substitute the SINGLE character `search` in the
+    /// alphanumeric `source` with the SINGLE character `replace`, in place.
+    /// Because both are single characters the source's width is unchanged, so
+    /// this is a per-position map. `ALL` replaces EVERY occurrence
+    /// (`source := source with each search→replace`); `LEADING` (`leading ==
+    /// true`) replaces only the run of CONSECUTIVE `search` characters at the
+    /// START of the source, stopping at the first character that is not `search`
+    /// — positions after that first gap are left unchanged even if they equal
+    /// `search`. Each of `search` and `replace` is a 1-char literal or a `PIC
+    /// X(1)` item. `REPLACING CHARACTERS`/`FIRST`, several replace items, and a
+    /// multi-character/figurative/wider search or replacement or a numeric/group
+    /// source are later rungs. (A `LEADING` replacement inside the combined
+    /// `TALLYING … REPLACING` form is now supported — see the combined statement
+    /// below.)
+    ///
+    /// An optional `region` restricts the `ALL` replacement to a sub-slice of the
+    /// source — the `{BEFORE|AFTER} x` phrase (see [`Region`], shared with the
+    /// TALLYING form). This rung wires the region up for `REPLACING ALL` only, with
+    /// a SINGLE-character region delimiter `x`: positions OUTSIDE the window keep
+    /// their original character; the window is computed over the ORIGINAL source
+    /// with the same leftmost-first-index and BEFORE→whole / AFTER→empty not-found
+    /// asymmetry the count window uses. `REPLACING LEADING` with a region, a multi-
+    /// character region delimiter, and a region on the combined `TALLYING …
+    /// REPLACING` form are later rungs.
+    InspectReplacing {
+        source: String,
+        search: Operand,
+        replace: Operand,
+        leading: bool,
+        region: Option<Region>,
+    },
+    /// `INSPECT source REPLACING CHARACTERS BY x` — overwrite EVERY character
+    /// position of the alphanumeric `source` with the single replacement character
+    /// `x`. With NO region this is the "fill the whole field with `x`" form: a field
+    /// of byte-length N becomes N copies of `x`, its width UNCHANGED.
+    ///
+    /// # Byte-basis (the crux — why this variant carries NO region)
+    ///
+    /// The compiled `cobol-iir-compiler` models storage as a **byte** buffer (COBOL
+    /// `PIC X` positions ARE bytes; its `str_len` is a BYTE length). The oracle
+    /// models storage as a Rust `String`. "Replace EVERY position" must therefore be
+    /// computed on a common basis so both engines agree for ANY source — ASCII and
+    /// non-ASCII alike. We pick the BYTE basis: the exec fills
+    /// `n = storage.len()` (the field's BYTE length) copies of `x`, then stores the
+    /// image through the SAME `move_into` path a `MOVE`/`inspect_replace` uses, which
+    /// re-pads/truncates to the picture's fixed CHAR size. Because `x` is a single
+    /// ASCII byte, the rebuilt image is `n` ASCII bytes (a valid `String`), and after
+    /// `move_into` caps it to the picture's `size` characters the stored image is
+    /// exactly `size` copies of `x` — identical to the compiler's `width`-many fill.
+    ///
+    /// Worked example (non-ASCII source): `PIC X(5) VALUE "café"` stores `"café "`
+    /// (padded to 5 CHARS = 6 BYTES). `REPLACING CHARACTERS BY "Z"` fills
+    /// `n = 6` copies → `"ZZZZZZ"`, which `move_into` caps to the picture's 5 chars →
+    /// `"ZZZZZ"` (5 `Z`s). The compiler builds `width = 5` copies → also `"ZZZZZ"`.
+    /// Both engines land on the SAME image byte-for-byte.
+    ///
+    /// # Deferred: a `{BEFORE|AFTER}` region
+    ///
+    /// A region window is computed as a BYTE span on the compiler but a CHAR span on
+    /// the oracle, and a byte window can split a multi-byte character mid-position —
+    /// a state the oracle's `String` storage cannot represent while the compiler's
+    /// byte buffer can. Including a region would be unsound (the two engines could
+    /// diverge on a non-ASCII source), so `REPLACING CHARACTERS … {BEFORE|AFTER}` is
+    /// rejected at read time on BOTH engines and this variant carries no region.
+    ///
+    /// # Guards (applied IDENTICALLY on both engines — co-total)
+    ///
+    ///   1. `x` must be a SINGLE character (the shared `single_delim_char` check).
+    ///   2. A single-char but NON-ASCII **literal** `x` (e.g. `"é"`, one char / two
+    ///      bytes) is a later rung — mirroring the compiler, whose byte-based
+    ///      single-char validator rejects it. (A `PIC X(1)` *item* replacement is not
+    ///      ASCII-gated: the byte-fill above is co-total for a multi-byte item too.)
+    ///   3. A `{BEFORE|AFTER}` region is deferred (see above).
+    ///   4. A numeric/group/reference-modified/literal source is a later rung, exactly
+    ///      as for every other INSPECT form (`inspect_alnum_source`).
+    ///
+    /// `REPLACING CHARACTERS` inside a MULTI-item REPLACING list, or inside the
+    /// COMBINED `TALLYING … REPLACING` form, remain later rungs — only the SINGLE-item
+    /// lone-REPLACING path produces this variant.
+    InspectReplacingCharacters { source: String, replace: Operand },
+    /// `INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — one
+    /// INSPECT carrying TWO OR MORE replace items in a single REPLACING clause.
+    ///
+    /// Semantics (ISO): ONE left-to-right pass over the source. At each character
+    /// position the items are considered IN WRITTEN ORDER, and the FIRST item whose
+    /// (single-char) search matches the current character is applied — the position
+    /// then ADVANCES. Two consequences make this more than N independent replaces:
+    ///
+    ///   * FIRST-MATCH-WINS: only the earliest-written matching item fires at a
+    ///     position; later items with the same-position match never see it.
+    ///   * NO RE-CHAINING: the character a match produces is NOT re-examined by any
+    ///     later item — the output byte is final. So `ALL a BY b ALL b BY z` over
+    ///     "ab" yields "bz", NOT "zz": position 0's `a`→`b` is done (the produced
+    ///     `b` is not then turned into `z`), and position 1's `b`→`z` fires on the
+    ///     ORIGINAL `b`.
+    ///
+    /// Width is unchanged (each position maps to exactly one output char). This rung
+    /// supports ONLY `ALL` items, each a SINGLE-char search BY single-char
+    /// replacement. Each item MAY now carry its OWN optional `{BEFORE|AFTER} x` region
+    /// (the third tuple slot); `LEADING`/`CHARACTERS`/`FIRST` items in a multi-item
+    /// list, and the combined `TALLYING … REPLACING` form with several items, remain
+    /// later rungs (see `read_statement`). `items` are in written order — the exec
+    /// walks them in that order at every position, which is what realises
+    /// first-match-wins.
+    ///
+    /// PER-ITEM WINDOWS: each item's optional region defines a window over the
+    /// ORIGINAL source (via the SAME `region_window` helper the lone/single-item forms
+    /// use — BEFORE x → `[0, first_index_of_x)`; AFTER x → `(first_index_of_x, len]`;
+    /// not-found asymmetry BEFORE→whole, AFTER→empty). An item with NO region has a
+    /// whole-source window (every position inside). At each position the items are
+    /// tried IN WRITTEN ORDER and the FIRST item that BOTH (i) has the position inside
+    /// its OWN window AND (ii) whose search equals the current ORIGINAL char wins; the
+    /// rest are skipped for that position. This is the exact composition of multi-item
+    /// first-match-wins with the per-item region window — the match at each link is now
+    /// `window_i.contains(pos) AND src[pos] == search_i`, always compared against the
+    /// ORIGINAL char (no re-chaining).
+    InspectReplacingMulti { source: String, items: Vec<(Operand, Operand, Option<Region>)> },
+    /// `INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|
+    /// AFTER} q] …` — one INSPECT whose SINGLE counter carries TWO OR MORE `FOR ALL`
+    /// items, each a single-char delimiter that MAY now carry its OWN optional
+    /// `{BEFORE|AFTER} x` window, all folding into the SAME `counter`.
+    ///
+    /// Semantics (ISO priority-list — the exact count-side analogue of
+    /// `InspectReplacingMulti`): ONE left-to-right pass over the source. At each
+    /// character position the items are tried IN WRITTEN ORDER and the FIRST item that
+    /// BOTH (i) has the position inside its OWN window AND (ii) whose single-char
+    /// delimiter equals the current char increments the shared count by 1, then the
+    /// scan advances past the match. A position matched by NO item advances with no
+    /// increment:
+    ///
+    /// ```text
+    ///   for (i, ch) in source {
+    ///       for (delim, start, end) in items {          // written order
+    ///           if start <= i < end && ch == delim { count += 1; break }  // first wins
+    ///       }
+    ///   }
+    ///   counter := counter + count                       // INSPECT ADDS; never clears
+    /// ```
+    ///
+    /// PER-ITEM WINDOWS: each item's optional region defines a window over the source
+    /// via the SAME `region_window` helper the lone/single-item forms use — BEFORE x →
+    /// `[0, first_index_of_x)`; AFTER x → `(first_index_of_x, len]`; the not-found
+    /// asymmetry BEFORE→whole, AFTER→empty. A region-less item's window = the whole
+    /// source (every position inside). The first-match-per-position `break` is what
+    /// makes DUPLICATE items NOT double-count a position: `FOR ALL "a" ALL "a"` over
+    /// `"aa"` adds 2 (each `a` counted once by the FIRST item), not 4. Net: `count` is
+    /// the number of source positions matched by SOME in-window item, each counted
+    /// exactly once. INSPECT adds to the counter; it does not clear it first.
+    ///
+    /// This rung supports ONLY `ALL` items (a `LEADING` or `CHARACTERS` item in a
+    /// multi-item list stays a later rung); a multi-item list lifting the region reject
+    /// is THIS rung. SEVERAL counters (more than one `FOR` phrase group) and the
+    /// combined `TALLYING … REPLACING` form with several tally items remain later rungs
+    /// (see `read_statement`). `items` are in written order — the exec walks them in
+    /// that order at every position, which is what realises first-match-per-position
+    /// (and thus duplicate-safe) counting.
+    InspectTallyMulti { source: String, counter: String, items: Vec<(Operand, Option<Region>)> },
+    /// `INSPECT source TALLYING c1 FOR ALL a [{BEFORE|AFTER} p] [ALL b …] c2 FOR ALL d
+    /// [{BEFORE|AFTER} q] …` — one INSPECT carrying TWO OR MORE `tally_for` groups, each
+    /// with its OWN counter and one-or-more single-char `FOR ALL` delimiters, and each
+    /// delimiter item now carrying its OWN optional `{BEFORE|AFTER}` region window.
+    /// `groups` holds [`TallyCounterGroup`] pairs `(counter_name, items)` in WRITTEN
+    /// ORDER (group 1 first, then group 2, …), and within each group the items — each a
+    /// `(delim, Option<Region>)` — are also in written order.
+    ///
+    /// Semantics (ISO COMBINED priority list ACROSS counters — the crux of this rung):
+    /// ALL the delimiters of ALL groups form ONE combined ordered priority list, and
+    /// the source is scanned in a SINGLE left-to-right pass. At each character position
+    /// the delimiters are tried in WRITTEN ORDER — group 1's items first, then group
+    /// 2's, and so on — and the FIRST delimiter that is BOTH inside its own item's
+    /// window AND matches the character increments ITS OWN group's counter by 1; the
+    /// scan then advances past the match (single-char ⇒ a normal one-position step). A
+    /// position matching NO in-window delimiter advances with no increment. Each item's
+    /// window is `[start, end)` derived by `region_window` over the source (a region-less
+    /// item = the whole source `(0, len)`), applying the ISO not-found asymmetry
+    /// (BEFORE→whole, AFTER→empty).
+    ///
+    /// The decisive consequence of the SINGLE shared pass with first-match-wins: a
+    /// character CLAIMED by an earlier group's (in-window) delimiter NEVER reaches a
+    /// later group's delimiter. So the groups are NOT independent counts — an earlier
+    /// group can "starve" a later one of positions:
+    ///
+    /// ```text
+    ///   "aa"  TALLYING C1 FOR ALL "a"  C2 FOR ALL "a"          -> C1 += 2, C2 += 0
+    ///   "ab"  TALLYING C1 FOR ALL "a"  C2 FOR ALL "b"          -> C1 += 1, C2 += 1
+    ///   "aba" TALLYING C1 FOR ALL "a" ALL "b"  C2 FOR ALL "a"  -> C1 += 3, C2 += 0
+    /// ```
+    ///
+    /// Each counter ADDS its own share; INSPECT does not clear any counter first. The
+    /// SAME counter name may legitimately appear in two groups — then BOTH groups'
+    /// matches add to that one item (resolve the counter by name at each add, do not
+    /// assume the counters are distinct).
+    ///
+    /// This rung supports ONLY plain `FOR ALL` single-char delimiters, EACH with an
+    /// OPTIONAL `{BEFORE|AFTER}` region (the region reject is LIFTED this rung): NO
+    /// `LEADING`/`CHARACTERS` on ANY item of ANY group. Every counter must be an unsigned
+    /// integer (`PIC 9(n)`). A group carrying a LEADING/CHARACTERS item is a clean
+    /// later-rung `Unsupported`. This variant fires ONLY when there are TWO OR MORE
+    /// `tally_for` groups; exactly one group keeps the single-counter paths (`Inspect` /
+    /// `InspectTallyMulti`) UNCHANGED, and the combined `TALLYING … REPLACING` form with
+    /// several counters stays a later rung.
+    InspectTallyCounters { source: String, groups: Vec<TallyCounterGroup> },
+    /// `INSPECT source TALLYING counter FOR {ALL|LEADING} delim REPLACING
+    /// {ALL|LEADING} search BY replace` — one INSPECT carrying BOTH phrases. Per
+    /// ISO this executes "as though an INSPECT TALLYING were specified, followed by an
+    /// INSPECT REPLACING": FIRST count occurrences of `delim` in the ORIGINAL
+    /// source and **ADD** them to `counter`, THEN replace every `search` with
+    /// `replace` in the source. The tally-first ordering matters when
+    /// `delim == search`: the count must see the pre-replacement bytes. The
+    /// TALLYING half may be `FOR ALL` (count every occurrence) or `FOR LEADING`
+    /// (count only the consecutive run of `delim` at the start of the source),
+    /// selected by `tally_leading`. The REPLACING half is likewise selected by
+    /// `replace_leading`: `ALL` (substitute every `search`) or `LEADING`
+    /// (substitute only the consecutive run of `search` at the start of the
+    /// source, stopping at the first byte that is not `search`). The two flags
+    /// are independent — either, both, or neither half may be LEADING. Each of
+    /// `delim`/`search`/`replace` is a single character; the remaining single-form
+    /// restrictions as the lone phrases apply (CHARACTERS/FIRST, multiple
+    /// counters/FOR/replace items, multi-char/figurative/wider operands, and a
+    /// numeric/group source or non-integer counter are later rungs).
+    ///
+    /// Each half independently carries an optional `{BEFORE|AFTER} x` region (see
+    /// [`Region`], shared with the lone TALLYING/REPLACING forms): `tally_region`
+    /// narrows the count, `replace_region` narrows the substitution. The two
+    /// regions are INDEPENDENT (different kinds, different delimiters, either/both/
+    /// neither present). Because tallying does not mutate the source, BOTH windows
+    /// are computed over the SAME original source — exactly as the lone forms do.
+    /// A single-character region delimiter is supported this rung on `FOR ALL` /
+    /// `REPLACING ALL` only; `FOR LEADING`/`REPLACING LEADING` with a region and a
+    /// multi-character region delimiter remain later rungs (rejected at read/exec
+    /// time by the shared readers, identically to the lone forms).
+    InspectTallyReplace {
+        source: String,
+        counter: String,
+        delim: Operand,
+        /// `true` for `FOR LEADING` (count only the leading run of `delim`),
+        /// `false` for `FOR ALL` (count every occurrence). Applies to the
+        /// TALLYING half only.
+        tally_leading: bool,
+        /// Optional `{BEFORE|AFTER} x` region narrowing the TALLYING half's count,
+        /// computed over the original source (see [`Region`]). `None` = whole source.
+        tally_region: Option<Region>,
+        search: Operand,
+        replace: Operand,
+        /// `true` for `REPLACING LEADING` (substitute only the leading run of
+        /// `search`), `false` for `REPLACING ALL` (substitute every `search`).
+        /// Applies to the REPLACING half only.
+        replace_leading: bool,
+        /// Optional `{BEFORE|AFTER} x` region narrowing the REPLACING half's
+        /// substitution, computed over the same original source (see [`Region`]).
+        /// `None` = whole source. Independent of `tally_region`.
+        replace_region: Option<Region>,
+    },
+    /// `INSPECT source CONVERTING from TO to` — translate each character of the
+    /// alphanumeric `source` through a per-character **translation table** built
+    /// from the two EQUAL-length string literals `from` and `to`: a character equal
+    /// to `from[k]` becomes `to[k]` (the FIRST such `k` wins if `from` repeats a
+    /// character), and a character in no table entry is left unchanged. In place,
+    /// same width. This rung: `from`/`to` are string LITERALS of equal length; a
+    /// `PIC X` item / figurative / reference-modified `from`/`to`, an unequal-length
+    /// pair, and a numeric/group source are later rungs.
+    ///
+    /// An optional `region` restricts the translation to a sub-slice of the source —
+    /// the `{BEFORE|AFTER} x` phrase (see [`Region`], shared with the TALLYING and
+    /// REPLACING forms). A SINGLE-character region delimiter `x` is supported this
+    /// rung: only positions inside the window are translated; positions OUTSIDE keep
+    /// their original character. The window is computed over the ORIGINAL source with
+    /// the same leftmost-first-index and BEFORE→whole / AFTER→empty not-found
+    /// asymmetry the count/replace windows use. A multi-character region delimiter is
+    /// a later rung (rejected at exec time by `single_delim_char`).
+    InspectConverting { source: String, from: String, to: String, region: Option<Region> },
     StopRun,
 }
 
@@ -201,10 +591,59 @@ pub enum Operand {
     Lit(Lit),
     /// `base(start:len)` / `base(start:)` — a reference modification selecting
     /// `len` characters of alphanumeric item `base` from 1-based position
-    /// `start`; an omitted `len` runs to the end of the item. On this rung both
-    /// `start` and `len` are integer NUMBER literals; a computed start/length is
-    /// a later rung, rejected in [`read_operand`].
-    RefMod { base: String, start: usize, len: Option<usize> },
+    /// `start`; an omitted `len` runs to the end of the item. `start` and `len`
+    /// are each a [`RefIndex`]: an integer literal *or* a data-name whose value
+    /// is read at run time (a **computed** reference modification).
+    RefMod { base: String, start: RefIndex, len: Option<RefIndex> },
+}
+
+/// Which side of a delimiter an `INSPECT … BEFORE`/`AFTER` region selects.
+/// `BEFORE x` restricts work to the source text to the LEFT of the first `x`;
+/// `AFTER x` restricts it to the text to the RIGHT of the first `x`.
+#[derive(Debug, Clone)]
+pub enum RegionKind {
+    Before,
+    After,
+}
+
+/// An `INSPECT … {BEFORE|AFTER} x` region: the phrase that narrows a TALLYING /
+/// REPLACING / CONVERTING operation to a sub-slice of the source, bounded by the
+/// FIRST occurrence of the single-character delimiter `delim`. This rung wires it
+/// up for the lone `TALLYING FOR ALL` form only (see [`Stmt::Inspect`]); the
+/// window it implies is computed at exec time over the ORIGINAL source (leftmost
+/// occurrence of `delim`), with the ISO not-found asymmetry:
+///   * `BEFORE x`, `x` absent → the region is the ENTIRE source; and
+///   * `AFTER x`, `x` absent → the region is EMPTY (nothing counted).
+#[derive(Debug, Clone)]
+pub struct Region {
+    pub kind: RegionKind,
+    pub delim: Operand,
+}
+
+/// One `ALL delim [{BEFORE|AFTER} x]` item of a multi-item `TALLYING` list: the
+/// single-char delimiter operand plus its OWN optional `{BEFORE|AFTER}` region window.
+/// The count-side analogue of the `(search, replace, region)` triple a multi-item
+/// `REPLACING` item carries; named so [`read_inspect_tally_multi`]'s return type stays
+/// legible (and below clippy's type-complexity threshold).
+pub type TallyMultiItem = (Operand, Option<Region>);
+
+/// One `counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q] …` group of a
+/// MULTI-counter `TALLYING` list: the counter name plus its written-order items, each a
+/// [`TallyMultiItem`] (single-char delimiter + its OWN optional region window). The
+/// several-counters analogue of a single group's item list; named so
+/// [`read_inspect_tally_counters`]'s return type stays legible (and below clippy's
+/// type-complexity threshold).
+pub type TallyCounterGroup = (String, Vec<TallyMultiItem>);
+
+/// One index (start or length) of a reference modification: a compile-time
+/// integer literal, or a data-name whose integer value is the index at run time.
+#[derive(Debug, Clone)]
+pub enum RefIndex {
+    /// A plain integer NUMBER literal — the `2`/`3` in `WS(2:3)`.
+    Lit(usize),
+    /// A data-name whose unsigned-integer value is the index — the `J`/`K` in
+    /// `WS(J:K)`.
+    Name(String),
 }
 
 /// A condition tested by `IF` (and `PERFORM … UNTIL`). Either a relation between
@@ -393,19 +832,32 @@ fn read_operand(op: &GrammarASTNode) -> Result<Operand, RuntimeError> {
     Err(RuntimeError::Unsupported("unrecognised operand".into()))
 }
 
-/// Read a reference-modification start or length subnode: it must be a plain
-/// integer NUMBER literal on this rung (a data-name or expression there is a
-/// *computed* reference modification — a later rung).
-fn read_refmod_index(op: &GrammarASTNode) -> Result<usize, RuntimeError> {
-    let computed = || {
-        RuntimeError::Unsupported(
-            "reference modification with a computed start/length is a later rung".into(),
-        )
-    };
-    let lit = child_node(op, "literal").ok_or_else(computed)?;
+/// Read a reference-modification start or length subnode into a [`RefIndex`]:
+/// a plain integer NUMBER literal becomes [`RefIndex::Lit`]; a bare data-name
+/// becomes [`RefIndex::Name`] (a *computed* index resolved at run time). Any
+/// other form — a signed/fractional literal, a figurative, or a nested
+/// reference modification as the index — is a later rung.
+fn read_refmod_index(op: &GrammarASTNode) -> Result<RefIndex, RuntimeError> {
+    let unsupported = |m: &str| RuntimeError::Unsupported(m.into());
+    if child_node(op, "literal").is_none() {
+        if child_nodes(op, "operand").is_empty() {
+            if let Some(name) = first_token(op, "NAME") {
+                return Ok(RefIndex::Name(name));
+            }
+        }
+        return Err(unsupported(
+            "a reference-modified reference-modification index is a later rung",
+        ));
+    }
+    let lit = child_node(op, "literal").unwrap();
     match read_literal(lit)? {
-        Lit::Num(s) => s.parse::<usize>().map_err(|_| computed()),
-        _ => Err(computed()),
+        Lit::Num(s) => s
+            .parse::<usize>()
+            .map(RefIndex::Lit)
+            .map_err(|_| unsupported("a signed or fractional reference-modification index is a later rung")),
+        _ => Err(unsupported(
+            "a non-integer reference-modification index is a later rung",
+        )),
     }
 }
 
@@ -650,33 +1102,35 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             Ok(Stmt::If { cond, then_branch, else_branch })
         }
         "string_stmt" => {
-            // STRING s… DELIMITED BY SIZE INTO t. The grammar also *accepts* the
-            // later-rung options (a real delimiter, WITH POINTER, ON OVERFLOW) so
-            // that we can reject them here with a friendly Unsupported instead of a
-            // bare parse error.
+            // STRING s… DELIMITED BY {SIZE | delim} INTO t [WITH POINTER p]
+            //        [ON OVERFLOW imp…] [NOT ON OVERFLOW imp…]. Both `WITH POINTER`
+            // and the two OVERFLOW imperatives are now MODELLED (see the extraction
+            // below), so nothing is rejected here.
             let toks = child_tokens(verb);
-            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "POINTER") {
-                return Err(RuntimeError::Unsupported(
-                    "STRING … WITH POINTER is a later rung".into(),
-                ));
-            }
-            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "OVERFLOW") {
-                return Err(RuntimeError::Unsupported(
-                    "STRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung".into(),
-                ));
-            }
-            // The delimiter is `SIZE` or a general operand; only SIZE this rung.
-            let delim = child_node(verb, "string_delim")
+            // The delimiter is `SIZE` or a general operand. `DELIMITED BY SIZE`
+            // takes each field in full (`delim = None`); a real single-character
+            // delimiter (`delim = Some(op)`) truncates each field at its first
+            // occurrence. The `string_delim` grammar node parses both, so a real
+            // delimiter is NOT rejected here any more — it is read and its ASCII /
+            // single-character legality is enforced at exec time (via the same
+            // `single_delim_char` helper UNSTRING uses), keeping the oracle and the
+            // byte-based compiler co-total.
+            let delim_node = child_node(verb, "string_delim")
                 .ok_or_else(|| RuntimeError::Unsupported("STRING without DELIMITED BY".into()))?;
-            let is_size = child_tokens(delim).iter().any(|(k, v)| k == "KEYWORD" && v == "SIZE");
-            if !is_size {
-                return Err(RuntimeError::Unsupported(
-                    "STRING … DELIMITED BY <identifier/literal> (only DELIMITED BY SIZE) is a later rung"
-                        .into(),
-                ));
-            }
-            // The sending fields are the `operand` children (the delimiter operand
-            // is nested under `string_delim`, so it does not collide).
+            let is_size =
+                child_tokens(delim_node).iter().any(|(k, v)| k == "KEYWORD" && v == "SIZE");
+            let delim = if is_size {
+                None
+            } else {
+                // The delimiter operand is nested UNDER `string_delim` (so it never
+                // collides with the sending-field `operand` children of `verb`).
+                let dop = child_node(delim_node, "operand").ok_or_else(|| {
+                    RuntimeError::Unsupported("STRING DELIMITED BY without a delimiter".into())
+                })?;
+                Some(read_operand(dop)?)
+            };
+            // The sending fields are the DIRECT `operand` children (the delimiter
+            // operand is a grandchild under `string_delim`, so it does not collide).
             let sources = child_nodes(verb, "operand")
                 .into_iter()
                 .map(read_operand)
@@ -684,13 +1138,839 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             if sources.is_empty() {
                 return Err(RuntimeError::Unsupported("STRING without a sending field".into()));
             }
-            // The receiver is the first NAME token (INTO t precedes any WITH POINTER
-            // name, which we have already rejected above).
+            // The receiver is the first NAME token: `INTO t` always precedes a
+            // `WITH POINTER p` phrase, so the first direct NAME is the receiver and
+            // the pointer NAME (if any) is the first NAME AFTER the `POINTER`
+            // keyword. (Sending-field identifiers are nested under `operand` nodes,
+            // not direct NAME tokens, so they never appear in this flat run.)
             let target = first_token(verb, "NAME")
                 .ok_or_else(|| RuntimeError::Unsupported("STRING without an INTO receiver".into()))?;
-            Ok(Stmt::String { sources, target })
+            let ptr_pos = toks.iter().position(|(k, v)| k == "KEYWORD" && v == "POINTER");
+            let pointer: Option<String> = ptr_pos.and_then(|pp| {
+                toks[pp + 1..].iter().find(|(k, _)| k == "NAME").map(|(_, v)| v.clone())
+            });
+            // The optional imperatives are direct `statement` child nodes of the
+            // `string_stmt`, appearing ONLY after the `ON OVERFLOW` / `NOT ON
+            // OVERFLOW` keywords (the grammar emits the keywords as leaf tokens and
+            // the imperatives as `statement` siblings — mirror the `if_stmt` reader
+            // above, which splits its then/else statement children at `ELSE`).
+            //
+            //   STRING … ON OVERFLOW  MOVE 1 TO F   NOT ON OVERFLOW  MOVE 0 TO F
+            //                         └─ on_overflow ┘  ▲NOT flips   └ not_on_overflow ┘
+            //
+            // A nested statement's OWN `NOT` (e.g. `IF A NOT = B …`) is buried inside
+            // that `statement` node, never a direct token child of `string_stmt`, so
+            // the split cannot be fooled. Once `seen_not` flips, every subsequent
+            // `statement` belongs to NOT ON OVERFLOW.
+            let mut on_overflow = Vec::new();
+            let mut not_on_overflow = Vec::new();
+            let mut seen_not = false;
+            for child in &verb.children {
+                match child {
+                    ASTNodeOrToken::Token(t)
+                        if t.value == "NOT" && t.effective_type_name() == "KEYWORD" =>
+                    {
+                        seen_not = true;
+                    }
+                    ASTNodeOrToken::Node(n) if n.rule_name == "statement" => {
+                        let stmt = read_statement(n)?;
+                        if seen_not {
+                            not_on_overflow.push(stmt);
+                        } else {
+                            on_overflow.push(stmt);
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            Ok(Stmt::String { sources, target, delim, pointer, on_overflow, not_on_overflow })
+        }
+        "unstring_stmt" => {
+            // UNSTRING source DELIMITED BY delim INTO r1 [r2 …] [WITH POINTER p]
+            //          [ON OVERFLOW imp…] [NOT ON OVERFLOW imp…]. Both `WITH POINTER`
+            // and the two OVERFLOW imperatives are now MODELLED (see the extraction
+            // below), so nothing is rejected here — the DIRECT sibling of the STRING
+            // arm above.
+            let toks = child_tokens(verb);
+            // The two direct `operand` children are the source and the delimiter,
+            // in order (a reference-modification suffix nests *under* an operand,
+            // so it never appears as a third top-level operand).
+            let ops = child_nodes(verb, "operand");
+            let (source_op, delim_op) = match ops.as_slice() {
+                [s, d] => (s, d),
+                _ => {
+                    return Err(RuntimeError::Unsupported(
+                        "UNSTRING needs a source and a DELIMITED BY delimiter".into(),
+                    ))
+                }
+            };
+            // The source is a plain data-name (a PIC X item, checked at exec
+            // time), an alphanumeric STRING literal (its own bytes supply the field
+            // text), OR a reference-modified item slice `base(start:len)` (its
+            // sliced characters supply the field text — the numeric-base and
+            // out-of-range checks live in the shared `refmod_string` at exec time).
+            // A NUMERIC or FIGURATIVE literal source is still a later rung. We keep
+            // the whole `Operand` so exec time can pick the provider.
+            let source = match read_operand(source_op)? {
+                src @ Operand::Ident(_) => src,
+                // Reference-modified source: accepted here; the slice bounds and
+                // numeric-base reject are enforced by `refmod_string` at exec time,
+                // identically to the compiler's `ref_mod_slice`.
+                src @ Operand::RefMod { .. } => src,
+                // A string-literal source is scanned by CHARACTER here but the
+                // compiler lowers it to BYTE-based IIR string ops; the two agree
+                // only for ASCII (one byte per char). A non-ASCII literal source
+                // is therefore a clean later rung on BOTH engines (kept co-total).
+                Operand::Lit(Lit::Str(s)) if !s.is_ascii() => {
+                    return Err(RuntimeError::Unsupported(
+                        "UNSTRING of a non-ASCII literal source is a later rung".into(),
+                    ))
+                }
+                src @ Operand::Lit(Lit::Str(_)) => src,
+                Operand::Lit(Lit::Num(_)) => {
+                    return Err(RuntimeError::Unsupported(
+                        "UNSTRING of a numeric-literal source is a later rung".into(),
+                    ))
+                }
+                Operand::Lit(Lit::Fig(_)) => {
+                    return Err(RuntimeError::Unsupported(
+                        "UNSTRING of a figurative-constant source is a later rung".into(),
+                    ))
+                }
+            };
+            let delim = read_operand(delim_op)?;
+            // The grammar is flat — `INTO NAME { NAME } [ WITH POINTER NAME ]` —
+            // so the child tokens appear in source order: every receiver NAME,
+            // then (optionally) the `POINTER` keyword, then the pointer NAME. We
+            // therefore split the NAME tokens at the `POINTER` keyword's position:
+            // NAMEs BEFORE it are the INTO receivers; the first NAME AFTER it is
+            // the pointer. (Taking "the last NAME" blindly would misread a
+            // single-receiver `INTO r WITH POINTER p` as two receivers.)
+            let ptr_pos = toks.iter().position(|(k, v)| k == "KEYWORD" && v == "POINTER");
+            let pointer: Option<String> = ptr_pos.and_then(|pp| {
+                toks[pp + 1..].iter().find(|(k, _)| k == "NAME").map(|(_, v)| v.clone())
+            });
+            let targets: Vec<String> = toks
+                .iter()
+                .enumerate()
+                .filter(|(i, (k, _))| k == "NAME" && ptr_pos.is_none_or(|pp| *i < pp))
+                .map(|(_, (_, v))| v.clone())
+                .collect();
+            if targets.is_empty() {
+                return Err(RuntimeError::Unsupported(
+                    "UNSTRING without an INTO receiver".into(),
+                ));
+            }
+            // The optional imperatives are direct `statement` child nodes of the
+            // `unstring_stmt`, appearing ONLY after the `ON OVERFLOW` / `NOT ON
+            // OVERFLOW` keywords (the receiver/pointer NAMEs are direct token
+            // children — never `statement` nodes — so the split below never sees a
+            // receiver). Mirror the `string_stmt` reader above and the `if_stmt`
+            // then/else split at `ELSE`:
+            //
+            //   UNSTRING … ON OVERFLOW  MOVE 1 TO F   NOT ON OVERFLOW  MOVE 0 TO F
+            //                           └ on_overflow ┘  ▲NOT flips    └ not_on_overflow ┘
+            //
+            // A nested statement's OWN `NOT` (e.g. `IF A NOT = B …`) is buried inside
+            // that `statement` node, never a direct token child of `unstring_stmt`,
+            // so the split cannot be fooled. Once `seen_not` flips, every subsequent
+            // `statement` belongs to NOT ON OVERFLOW.
+            let mut on_overflow = Vec::new();
+            let mut not_on_overflow = Vec::new();
+            let mut seen_not = false;
+            for child in &verb.children {
+                match child {
+                    ASTNodeOrToken::Token(t)
+                        if t.value == "NOT" && t.effective_type_name() == "KEYWORD" =>
+                    {
+                        seen_not = true;
+                    }
+                    ASTNodeOrToken::Node(n) if n.rule_name == "statement" => {
+                        let stmt = read_statement(n)?;
+                        if seen_not {
+                            not_on_overflow.push(stmt);
+                        } else {
+                            on_overflow.push(stmt);
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            Ok(Stmt::Unstring { source, delim, targets, pointer, on_overflow, not_on_overflow })
+        }
+        "inspect_stmt" => {
+            // The grammar accepts the full INSPECT surface — a TALLYING clause, a
+            // REPLACING clause, or both together (LEADING/CHARACTERS, BEFORE/AFTER
+            // regions, several counters/replace items, …) — so the forms this rung
+            // does not model reject as a friendly Unsupported here, not a parse
+            // error. This rung supports a LONE `TALLYING … FOR ALL`, a LONE
+            // `REPLACING ALL … BY …`, or the COMBINED `TALLYING … REPLACING` in one
+            // INSPECT (which the standard executes as tally-then-replace).
+            let has_tally = child_node(verb, "inspect_tallying").is_some();
+            let has_repl = child_node(verb, "inspect_replacing").is_some();
+            let has_conv = child_node(verb, "inspect_converting").is_some();
+            // The source is the first (and only top-level) `operand`; a literal or
+            // reference-modified source is a later rung (its category is checked at
+            // exec time). Shared by both the TALLYING and REPLACING forms.
+            let source_node = child_node(verb, "operand")
+                .ok_or_else(|| RuntimeError::Unsupported("INSPECT without a source".into()))?;
+            let source = match read_operand(source_node)? {
+                Operand::Ident(name) => name,
+                Operand::Lit(_) => {
+                    return Err(RuntimeError::Unsupported(
+                        "INSPECT of a literal source is a later rung".into(),
+                    ))
+                }
+                Operand::RefMod { .. } => {
+                    return Err(RuntimeError::Unsupported(
+                        "INSPECT of a reference-modified source is a later rung".into(),
+                    ))
+                }
+            };
+            // CONVERTING is a STANDALONE alternative — the grammar never lets it
+            // appear beside TALLYING/REPLACING — so it is handled on its own before
+            // the tally/replace composition.
+            if has_conv {
+                let (from, to, region) = read_inspect_converting(verb)?;
+                return Ok(Stmt::InspectConverting { source, from, to, region });
+            }
+            match (has_tally, has_repl) {
+                // Combined: tally-then-replace in one statement. Both phrases are
+                // extracted here (each rejecting its own later-rung forms) and the
+                // ordering is enforced at exec time.
+                (true, true) => {
+                    // Each half independently parses its OWN optional `{BEFORE|AFTER}
+                    // x` region from its own phrase child (the TALLYING half's region
+                    // rides on `inspect_tallying`, the REPLACING half's on
+                    // `inspect_replacing`). The shared readers now ACCEPT a LEADING half
+                    // carrying a region (the STANDALONE `FOR LEADING …`/`REPLACING
+                    // LEADING … BEFORE/AFTER` forms are supported this rung), so the
+                    // combined form re-imposes the deferral itself just below: a
+                    // combined LEADING half PLUS a region is still a later rung. (A
+                    // combined `FOR ALL`/`ALL` half WITH a region, and a LEADING half
+                    // WITHOUT one, both remain supported.)
+                    let (counter, delim, leading, tally_characters, tally_region) =
+                        read_inspect_tally_all(verb)?;
+                    // The shared reader now ACCEPTS `FOR CHARACTERS` (standalone), but the
+                    // COMBINED `TALLYING … REPLACING` form does not support a CHARACTERS
+                    // tally this rung. Re-impose the deferral here, mirroring the LEADING+
+                    // region deferral below, so the combined form stays a later rung on
+                    // both engines identically.
+                    if tally_characters {
+                        return Err(RuntimeError::Unsupported(
+                            "INSPECT TALLYING … FOR CHARACTERS in a combined TALLYING/REPLACING is a later rung"
+                                .into(),
+                        ));
+                    }
+                    // The combined form's TALLYING half supports BOTH `FOR ALL`
+                    // and `FOR LEADING`: `leading` selects the count semantics
+                    // (LEADING counts only the consecutive run of `delim` at the
+                    // start of the source). It rides along into the statement.
+                    let (search, replace, repl_leading, replace_region) =
+                        read_inspect_replacing_all(verb)?;
+                    // The combined form's REPLACING half supports BOTH `ALL`
+                    // and `LEADING`: `repl_leading` selects the substitution
+                    // semantics (LEADING rewrites only the consecutive run of
+                    // `search` at the start of the source). It rides along into
+                    // the statement, independent of the TALLYING half's `leading`.
+                    //
+                    // Re-impose the combined-form deferral the shared readers no longer
+                    // enforce: a LEADING half carrying a `{BEFORE|AFTER}` region is a
+                    // later rung ONLY in the combined form. The exact messages match
+                    // the standalone rejects these readers used to raise, so both
+                    // engines and both forms diagnose it identically.
+                    if leading && tally_region.is_some() {
+                        return Err(RuntimeError::Unsupported(
+                            "INSPECT TALLYING … FOR LEADING with a BEFORE/AFTER region is a later rung"
+                                .into(),
+                        ));
+                    }
+                    if repl_leading && replace_region.is_some() {
+                        return Err(RuntimeError::Unsupported(
+                            "INSPECT REPLACING LEADING with a BEFORE/AFTER region is a later rung"
+                                .into(),
+                        ));
+                    }
+                    Ok(Stmt::InspectTallyReplace {
+                        source,
+                        counter,
+                        delim,
+                        tally_leading: leading,
+                        tally_region,
+                        search,
+                        replace,
+                        replace_leading: repl_leading,
+                        replace_region,
+                    })
+                }
+                (false, true) => {
+                    // Dispatch on the number of replace items. Exactly ONE item
+                    // keeps the full single-item path (LEADING, region, …)
+                    // UNCHANGED via `read_inspect_replacing_all`; TWO OR MORE items
+                    // take the new multi-item path (`ALL`-only, single-char, no
+                    // region — enforced by `read_inspect_replacing_multi`). Reading
+                    // the phrase child once here keeps the compiler's CST-side
+                    // dispatch (which counts the same `replace_item` children)
+                    // co-total with this reader.
+                    let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
+                        RuntimeError::Unsupported(
+                            "INSPECT without a REPLACING clause is a later rung".into(),
+                        )
+                    })?;
+                    let items = child_nodes(replacing, "replace_item");
+                    // Detect a lone `REPLACING CHARACTERS BY x` FIRST — a SINGLE
+                    // replace item whose tokens carry the CHARACTERS keyword — before
+                    // the ALL/LEADING operand logic. (A MULTI-item list containing a
+                    // CHARACTERS item stays a later rung, rejected by
+                    // `read_inspect_replacing_multi` below; the CHARACTERS reject in
+                    // `read_inspect_replacing_all` still guards the COMBINED form.)
+                    if let [ri] = items.as_slice() {
+                        let toks = child_tokens(ri);
+                        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+                            // Guard 3 — a `{BEFORE|AFTER}` region on the CHARACTERS item
+                            // is a later rung (a byte window can split a multi-byte char
+                            // mid-position, which the oracle's `String` storage cannot
+                            // represent; the same reject fires on the compiler).
+                            if child_node(ri, "inspect_region").is_some() {
+                                return Err(RuntimeError::Unsupported(
+                                    "INSPECT REPLACING CHARACTERS with a BEFORE/AFTER region is a later rung"
+                                        .into(),
+                                ));
+                            }
+                            // The lone `operand` child is the replacement `x`
+                            // (guards 1/2/4 are applied at exec time / by the caller's
+                            // source-category check, identically to the compiler).
+                            let replace_node = child_node(ri, "operand").ok_or_else(|| {
+                                RuntimeError::Unsupported(
+                                    "INSPECT REPLACING CHARACTERS without a BY replacement".into(),
+                                )
+                            })?;
+                            return Ok(Stmt::InspectReplacingCharacters {
+                                source,
+                                replace: read_operand(replace_node)?,
+                            });
+                        }
+                    }
+                    if items.len() >= 2 {
+                        let items = read_inspect_replacing_multi(verb)?;
+                        Ok(Stmt::InspectReplacingMulti { source, items })
+                    } else {
+                        let (search, replace, leading, region) =
+                            read_inspect_replacing_all(verb)?;
+                        Ok(Stmt::InspectReplacing { source, search, replace, leading, region })
+                    }
+                }
+                // A lone TALLYING (or neither phrase, which `read_inspect_tally_all`
+                // rejects as a missing TALLYING clause). Dispatch on the number of
+                // `FOR` items UNDER THE SOLE counter, mirroring the multi-REPLACING
+                // dispatch above: exactly ONE `tally_item` keeps the full single-item
+                // path (LEADING, region, …) UNCHANGED via `read_inspect_tally_all`; TWO
+                // OR MORE `tally_item`s under one `tally_for` take the new multi-item
+                // path (`ALL`-only, single-char, each with its OWN optional region — one
+                // first-match-per-position pass into the shared counter, enforced by
+                // `read_inspect_tally_multi`).
+                // The multi path fires ONLY when there is EXACTLY ONE `tally_for`: SEVERAL
+                // counters (more than one `tally_for`) stays a later rung, rejected
+                // unchanged by `read_inspect_tally_all`. Counting the same `tally_item`
+                // children the compiler counts keeps the two engines' CST-side dispatch
+                // co-total.
+                _ => {
+                    if let Some(tallying) = child_node(verb, "inspect_tallying") {
+                        let fors = child_nodes(tallying, "tally_for");
+                        // TWO OR MORE `tally_for` groups take the NEW multi-COUNTER path:
+                        // each group has its own counter, and ALL groups' items form ONE
+                        // combined priority list scanned in a single left-to-right pass
+                        // (see `Stmt::InspectTallyCounters`). This dispatch is PURELY on
+                        // `fors.len() >= 2`, so it precedes the single-`tally_for`
+                        // branches below — several counters is no longer rejected by
+                        // `read_inspect_tally_all` (that reject still guards the COMBINED
+                        // `TALLYING … REPLACING` form, which routes through it directly).
+                        if fors.len() >= 2 {
+                            let groups = read_inspect_tally_counters(verb)?;
+                            return Ok(Stmt::InspectTallyCounters { source, groups });
+                        }
+                        if let [tf] = fors.as_slice() {
+                            if child_nodes(tf, "tally_item").len() >= 2 {
+                                let (counter, items) = read_inspect_tally_multi(verb)?;
+                                return Ok(Stmt::InspectTallyMulti { source, counter, items });
+                            }
+                        }
+                    }
+                    let (counter, delim, leading, characters, region) =
+                        read_inspect_tally_all(verb)?;
+                    Ok(Stmt::Inspect { source, counter, delim, leading, characters, region })
+                }
+            }
         }
         other => Err(RuntimeError::Unsupported(format!("the {} verb", verb_name(other)))),
+    }
+}
+
+/// Extract the supported `TALLYING counter FOR ALL delim [{BEFORE|AFTER} x]` /
+/// `FOR LEADING delim` (or `FOR CHARACTERS`) phrase from an `inspect_stmt`,
+/// returning `(counter_name, delim_operand, leading, characters, region)` where
+/// `leading` is `true` for `FOR LEADING` and `false` for `FOR ALL`, `characters` is
+/// `true` for the `FOR CHARACTERS` form (in which case `delim` is a never-read
+/// placeholder and `leading` is `false`), and `region` carries an optional
+/// `{BEFORE|AFTER} x` window (see [`Region`]). Rejects every later-rung form the
+/// grammar also accepts: several counters and several `FOR` phrases. `CHARACTERS`
+/// is now ACCEPTED for the single-item single-counter case (count = window length);
+/// only the multi-item / multi-counter `CHARACTERS` forms remain later rungs, guarded
+/// in `read_inspect_tally_multi` / the several-counters dispatch. A
+/// `FOR LEADING` phrase carrying a region is now ACCEPTED here — the STANDALONE
+/// `FOR LEADING … BEFORE/AFTER` form is supported this rung (the count anchors the
+/// leading run at the window start). The COMBINED `TALLYING … REPLACING` form still
+/// defers a LEADING half with a region; that gate lives in the caller
+/// (`read_statement`), not here. (`REPLACING` (lone or combined, `ALL` or `LEADING`
+/// on either half) and a non-alphanumeric source/counter are handled by the caller
+/// and exec; a multi-character region delimiter is rejected at exec by
+/// `single_delim_char`, exactly like the tally delimiter itself, so both engines
+/// diagnose it identically.)
+fn read_inspect_tally_all(
+    verb: &GrammarASTNode,
+) -> Result<(String, Operand, bool, bool, Option<Region>), RuntimeError> {
+    let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
+        RuntimeError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
+    })?;
+    let fors = child_nodes(tallying, "tally_for");
+    let tf = match fors.as_slice() {
+        [one] => *one,
+        _ => {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT TALLYING with several counters is a later rung".into(),
+            ))
+        }
+    };
+    let counter = first_token(tf, "NAME")
+        .ok_or_else(|| RuntimeError::Unsupported("INSPECT TALLYING without a counter".into()))?;
+    let items = child_nodes(tf, "tally_item");
+    let ti = match items.as_slice() {
+        [one] => *one,
+        _ => {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT TALLYING with several FOR phrases is a later rung".into(),
+            ))
+        }
+    };
+    let toks = child_tokens(ti);
+    // `FOR CHARACTERS` is the "count every position" form — it tallies the NUMBER OF
+    // CHARACTER POSITIONS in the region window rather than matching a delimiter. The
+    // grammar's `tally_item` CHARACTERS branch is `CHARACTERS { inspect_region }`: it
+    // carries NO delimiter operand, so on this path we must NOT read an `operand`
+    // child (there is none). We read the optional region EXACTLY as the ALL/LEADING
+    // path does, set `characters = true`, `leading = false`, and hand back a never-
+    // read placeholder for `delim` (the exec skips `single_delim_char` and every other
+    // delimiter use when `characters == true`). The count then becomes the window
+    // length — `length(source)` with no region, or `end - start` with one — inheriting
+    // the SAME BEFORE→whole / AFTER→empty not-found asymmetry `FOR ALL` uses.
+    let characters = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS");
+    // A `{BEFORE|AFTER} x` region now PARSES into an `Option<Region>` (it used to
+    // be rejected wholesale here) REGARDLESS of `leading`/`characters`: the STANDALONE
+    // `FOR LEADING … BEFORE/AFTER` and `FOR CHARACTERS … BEFORE/AFTER` forms are
+    // supported this rung. The COMBINED `TALLYING … REPLACING` form still rejects a
+    // LEADING half carrying a region (and any CHARACTERS half); those gates live in
+    // the combined caller (`read_statement`), not here, so relaxing this shared reader
+    // does not leak the combination into the combined form.
+    let region = match child_node(ti, "inspect_region") {
+        None => None,
+        Some(region_node) => Some(read_inspect_region(region_node)?),
+    };
+    if characters {
+        // No delimiter to read on the CHARACTERS path. Stash a placeholder in `delim`
+        // that is NEVER consumed (guaranteed by `characters == true` at every use).
+        return Ok((
+            counter,
+            Operand::Lit(Lit::Str(" ".to_string())),
+            false,
+            true,
+            region,
+        ));
+    }
+    // `FOR LEADING` is supported (leading-run count); `FOR ALL` is the default.
+    // The keyword picks the count semantics threaded through to `inspect_tally`.
+    let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
+    let delim_node = child_node(ti, "operand").ok_or_else(|| {
+        RuntimeError::Unsupported("INSPECT TALLYING FOR ALL/LEADING without a delimiter".into())
+    })?;
+    Ok((counter, read_operand(delim_node)?, leading, false, region))
+}
+
+/// Extract the `TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER}
+/// q] …` phrase from an `inspect_stmt` whose SOLE counter carries TWO OR MORE `FOR`
+/// items, returning `(counter_name, items)` where `items` are
+/// `(delimiter_operand, Option<Region>)` pairs in WRITTEN ORDER (the order the exec
+/// walks them at each position to realise first-match-per-position). Only called when
+/// the caller has already confirmed EXACTLY ONE `tally_for` with `>= 2` `tally_item`
+/// children — the single-item case keeps [`read_inspect_tally_all`] and all its
+/// capabilities (LEADING, region), and SEVERAL counters (more than one `tally_for`)
+/// stays a later rung rejected there.
+///
+/// Scope bound for the multi-item path (this rung): EVERY item must be a plain `ALL`
+/// item with NO `LEADING`/`CHARACTERS`. Each item MAY now carry its OWN optional
+/// `{BEFORE|AFTER} x` region (the second tuple slot), read with the SAME
+/// `read_inspect_region` the single-item reader uses — the region reject is LIFTED
+/// this rung. Any item violating the remaining scope is a clean later-rung
+/// `Unsupported`, with the SAME messages the compiler-side reader raises, so both
+/// engines accept exactly the same multi-item statements and reject the same ones
+/// identically. (A multi-character/figurative/wider/numeric/reference-modified
+/// delimiter is NOT rejected here — it falls to the SAME `single_delim_char` check the
+/// single-item exec uses, so that rejection is identical across single and multi.)
+fn read_inspect_tally_multi(
+    verb: &GrammarASTNode,
+) -> Result<(String, Vec<TallyMultiItem>), RuntimeError> {
+    let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
+        RuntimeError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
+    })?;
+    // Exactly one counter (`tally_for`): several counters is a later rung, diagnosed
+    // with the SAME message `read_inspect_tally_all` raises so the reject is uniform.
+    let fors = child_nodes(tallying, "tally_for");
+    let tf = match fors.as_slice() {
+        [one] => *one,
+        _ => {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT TALLYING with several counters is a later rung".into(),
+            ))
+        }
+    };
+    let counter = first_token(tf, "NAME")
+        .ok_or_else(|| RuntimeError::Unsupported("INSPECT TALLYING without a counter".into()))?;
+    let mut items = Vec::new();
+    for ti in child_nodes(tf, "tally_item") {
+        let toks = child_tokens(ti);
+        // `CHARACTERS` is not supported for a multi-item list this rung (it is not
+        // even supported for a single item). Reuse the single-item message.
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT TALLYING … FOR CHARACTERS is a later rung".into(),
+            ));
+        }
+        // A `LEADING` item in a multi-item list is a later rung: the multi path is
+        // `ALL`-only. (A LONE `FOR LEADING` is still supported — it goes through the
+        // single-item path, not here.)
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT TALLYING with several items and a LEADING item is a later rung".into(),
+            ));
+        }
+        // A `{BEFORE|AFTER}` region on an item is now ACCEPTED (this rung): read it
+        // into an `Option<Region>` with the SAME `read_inspect_region` the single-item
+        // reader uses. The region contributes its OWN nested `operand` (the region
+        // delimiter) under the `inspect_region` child, so the item's DIRECT `operand`
+        // child below is still exactly the tally delimiter — the region delimiter is
+        // not among the item's direct operands.
+        let region = match child_node(ti, "inspect_region") {
+            None => None,
+            Some(region_node) => Some(read_inspect_region(region_node)?),
+        };
+        let delim_node = child_node(ti, "operand").ok_or_else(|| {
+            RuntimeError::Unsupported("INSPECT TALLYING FOR ALL without a delimiter".into())
+        })?;
+        items.push((read_operand(delim_node)?, region));
+    }
+    Ok((counter, items))
+}
+
+/// Extract the `TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d …` phrase from an
+/// `inspect_stmt` carrying TWO OR MORE `tally_for` groups, returning the
+/// `(counter_name, delims)` groups in WRITTEN ORDER (and, within each group, the
+/// single-char delimiter operands in written order). Only called when the caller has
+/// already confirmed `>= 2` `tally_for` groups — exactly ONE group keeps the single-
+/// counter readers (`read_inspect_tally_all` / `read_inspect_tally_multi`) UNCHANGED.
+///
+/// Scope bound for the multi-counter path (this rung): EVERY item of EVERY group must
+/// be a plain `FOR ALL` item with NO `LEADING`/`CHARACTERS`; each item MAY now carry its
+/// OWN optional `{BEFORE|AFTER}` region (the region reject is LIFTED this rung), read
+/// with the SAME `read_inspect_region` the single-item reader uses. Any item violating
+/// the remaining scope is a clean later-rung `Unsupported`, with the SAME messages the
+/// compiler-side `inspect_tally_counters` reader raises, so both engines accept exactly
+/// the same multi-counter statements and reject the same ones identically. (A
+/// multi-character/figurative/wider/numeric/reference-modified delimiter is NOT rejected
+/// here — it falls to the SAME `single_delim_char` check the single-item exec uses, so
+/// that rejection is identical across every tally path.) The counters themselves are
+/// validated (unsigned-integer `PIC 9(n)`) at exec time by `exec_inspect_tally_counters`,
+/// exactly as the single-item tally validates its lone counter at exec time.
+fn read_inspect_tally_counters(
+    verb: &GrammarASTNode,
+) -> Result<Vec<TallyCounterGroup>, RuntimeError> {
+    let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
+        RuntimeError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
+    })?;
+    let mut groups = Vec::new();
+    for tf in child_nodes(tallying, "tally_for") {
+        let counter = first_token(tf, "NAME").ok_or_else(|| {
+            RuntimeError::Unsupported("INSPECT TALLYING without a counter".into())
+        })?;
+        let mut items = Vec::new();
+        for ti in child_nodes(tf, "tally_item") {
+            let toks = child_tokens(ti);
+            // `CHARACTERS` is not supported in the multi-counter path (nor anywhere yet).
+            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+                return Err(RuntimeError::Unsupported(
+                    "INSPECT TALLYING … FOR CHARACTERS is a later rung".into(),
+                ));
+            }
+            // A `LEADING` item in the multi-counter path is a later rung: the path is
+            // `ALL`-only. (A LONE `FOR LEADING` is still supported via the single path.)
+            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
+                return Err(RuntimeError::Unsupported(
+                    "INSPECT TALLYING with several counters and a LEADING item is a later rung"
+                        .into(),
+                ));
+            }
+            // A `{BEFORE|AFTER}` region on an item is now ACCEPTED (this rung): read it
+            // into an `Option<Region>` with the SAME `read_inspect_region` the single-item
+            // reader uses. The region contributes its OWN nested `operand` (the region
+            // delimiter) under the `inspect_region` child, so the item's DIRECT `operand`
+            // child below is still exactly the tally delimiter.
+            let region = match child_node(ti, "inspect_region") {
+                None => None,
+                Some(region_node) => Some(read_inspect_region(region_node)?),
+            };
+            let delim_node = child_node(ti, "operand").ok_or_else(|| {
+                RuntimeError::Unsupported("INSPECT TALLYING FOR ALL without a delimiter".into())
+            })?;
+            items.push((read_operand(delim_node)?, region));
+        }
+        groups.push((counter, items));
+    }
+    Ok(groups)
+}
+
+/// Read an `inspect_region` CST node — the `{BEFORE|AFTER} x` phrase — into a
+/// [`Region`]. The grammar's region rule is `(BEFORE | AFTER) operand` (the
+/// `INITIAL` keyword is optional/absent), so the leading keyword picks the side
+/// and the lone `operand` child is the delimiter `x`. The delimiter is NOT
+/// width-checked here: exactly like the tally delimiter, a multi-character region
+/// delimiter is a clean later-rung error raised by `single_delim_char` at exec
+/// time, keeping both engines' rejection identical.
+fn read_inspect_region(region_node: &GrammarASTNode) -> Result<Region, RuntimeError> {
+    let toks = child_tokens(region_node);
+    let kind = if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+        RegionKind::Before
+    } else if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+        RegionKind::After
+    } else {
+        return Err(RuntimeError::Unsupported(
+            "INSPECT region without a BEFORE or AFTER keyword".into(),
+        ));
+    };
+    let delim_node = child_node(region_node, "operand").ok_or_else(|| {
+        RuntimeError::Unsupported("INSPECT BEFORE/AFTER region without a delimiter".into())
+    })?;
+    Ok(Region { kind, delim: read_operand(delim_node)? })
+}
+
+/// Extract the supported `REPLACING ALL search BY replace [{BEFORE|AFTER} x]` /
+/// `REPLACING LEADING search BY replace` phrase from an `inspect_stmt`, returning
+/// `(search_operand, replace_operand, leading, region)` where `leading` is `true`
+/// for `REPLACING LEADING` (replace only the leading run) and `false` for
+/// `REPLACING ALL` (replace every occurrence), and `region` carries an optional
+/// `{BEFORE|AFTER} x` window (see [`Region`], shared with the TALLYING reader).
+/// Rejects every later-rung form the grammar also accepts: several replace items,
+/// and a `CHARACTERS` or `FIRST` replacement. A `REPLACING LEADING` phrase carrying
+/// a region is now ACCEPTED here — the STANDALONE `REPLACING LEADING … BEFORE/AFTER`
+/// form is supported this rung (the substitution anchors the leading run at the
+/// window start), exactly mirroring the TALLYING side. Both `ALL` and `LEADING` are
+/// accepted here, whether the phrase is lone or combined with `TALLYING`; for the
+/// combined form the caller (`read_statement`) separately defers a LEADING half that
+/// carries a region. (A non-alphanumeric source is rejected by the caller; a
+/// multi-character/wider/figurative search, replacement, or region delimiter is
+/// rejected by `single_delim_char` at exec time.)
+fn read_inspect_replacing_all(
+    verb: &GrammarASTNode,
+) -> Result<(Operand, Operand, bool, Option<Region>), RuntimeError> {
+    let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
+        RuntimeError::Unsupported("INSPECT without a REPLACING clause is a later rung".into())
+    })?;
+    let items = child_nodes(replacing, "replace_item");
+    let ri = match items.as_slice() {
+        [one] => *one,
+        _ => {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT REPLACING with several replace items is a later rung".into(),
+            ))
+        }
+    };
+    let toks = child_tokens(ri);
+    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+        return Err(RuntimeError::Unsupported(
+            "INSPECT REPLACING CHARACTERS is a later rung".into(),
+        ));
+    }
+    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "FIRST") {
+        return Err(RuntimeError::Unsupported(
+            "INSPECT REPLACING FIRST is a later rung".into(),
+        ));
+    }
+    // `REPLACING LEADING` is now supported (leading-run replace); `REPLACING ALL`
+    // is the default. The keyword selects the stop-at-first-mismatch behaviour
+    // threaded through to `inspect_replace`.
+    let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
+    // A `{BEFORE|AFTER} x` region now PARSES into an `Option<Region>` (it used to be
+    // rejected wholesale here) REGARDLESS of `leading`, reusing the SAME
+    // `read_inspect_region` the TALLYING reader uses: the STANDALONE
+    // `REPLACING LEADING … BEFORE/AFTER` form is supported this rung (the substitution
+    // anchors the leading run at the window start — see `inspect_replace`), the exact
+    // analogue of the count side. The COMBINED `TALLYING … REPLACING` form still
+    // rejects a LEADING half carrying a region; that gate lives in the combined caller
+    // (`read_statement`), so relaxing this shared reader does not leak the combination
+    // into the combined form.
+    let region = match child_node(ri, "inspect_region") {
+        None => None,
+        Some(region_node) => Some(read_inspect_region(region_node)?),
+    };
+    // `ALL`/`LEADING search BY replace` — the two `operand` children are the
+    // search (first) and the replacement (second), in order. (A `BEFORE`/`AFTER`
+    // region contributes its OWN nested `operand`, so we select the two operands
+    // that belong to the `replace_item` itself — the region's delimiter lives on
+    // the `inspect_region` child, not here.)
+    let repl_ops: Vec<&GrammarASTNode> = child_nodes(ri, "operand");
+    let (search_node, replace_node) = match repl_ops.as_slice() {
+        [s, r] => (*s, *r),
+        _ => {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT REPLACING ALL/LEADING without a search and a BY replacement".into(),
+            ))
+        }
+    };
+    Ok((read_operand(search_node)?, read_operand(replace_node)?, leading, region))
+}
+
+/// Extract the `REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` phrase from an
+/// `inspect_stmt` that carries TWO OR MORE replace items, returning the items as a
+/// `Vec<(search, replace)>` in WRITTEN ORDER (the order the exec walks them at each
+/// position to realise first-match-wins). Only called when the caller has already
+/// counted `>= 2` `replace_item` children — the single-item case keeps
+/// [`read_inspect_replacing_all`] and all its capabilities.
+///
+/// Scope bound for the multi-item path (this rung): EVERY item must be a plain `ALL`
+/// item with NO `LEADING`/`CHARACTERS`/`FIRST`. Each item MAY now carry its OWN
+/// optional `{BEFORE|AFTER} x` region (the third tuple slot), read with the SAME
+/// `read_inspect_region` the single-item reader uses — the region reject is LIFTED
+/// this rung. Any item violating the remaining scope is a clean later-rung
+/// `Unsupported`, with the SAME messages the compiler-side reader raises, so both
+/// engines accept exactly the same multi-item statements and reject the same ones
+/// identically. (A multi-character/figurative/wider/numeric/reference-modified
+/// search, replacement, or region delimiter is not rejected here — it falls to the
+/// SAME `single_delim_char` check the single-item exec uses, so that rejection is
+/// identical across single and multi.)
+fn read_inspect_replacing_multi(
+    verb: &GrammarASTNode,
+) -> Result<Vec<(Operand, Operand, Option<Region>)>, RuntimeError> {
+    let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
+        RuntimeError::Unsupported("INSPECT without a REPLACING clause is a later rung".into())
+    })?;
+    let mut items = Vec::new();
+    for ri in child_nodes(replacing, "replace_item") {
+        let toks = child_tokens(ri);
+        // `CHARACTERS`/`FIRST` are not supported for a multi-item list this rung
+        // (they are not even supported for a single item). Reuse the single-item
+        // messages so the diagnostic is uniform.
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT REPLACING CHARACTERS is a later rung".into(),
+            ));
+        }
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "FIRST") {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT REPLACING FIRST is a later rung".into(),
+            ));
+        }
+        // A `LEADING` item in a multi-item list is a later rung: the multi path is
+        // `ALL`-only. (A LONE `REPLACING LEADING` is still supported — that goes
+        // through the single-item path, not here.)
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT REPLACING with several items and a LEADING item is a later rung".into(),
+            ));
+        }
+        // A `{BEFORE|AFTER}` region on an item is now ACCEPTED (this rung): read it
+        // into an `Option<Region>` with the SAME `read_inspect_region` the single-item
+        // reader uses. The region contributes its OWN nested `operand` (the delimiter)
+        // under the `inspect_region` child, so the item's two DIRECT `operand` children
+        // are still exactly the search/replacement (see below) — the region delimiter
+        // is not among them.
+        let region = match child_node(ri, "inspect_region") {
+            None => None,
+            Some(region_node) => Some(read_inspect_region(region_node)?),
+        };
+        // `ALL search BY replace` — the two DIRECT `operand` children are the search
+        // (first) and the replacement (second), in written order. A region's delimiter
+        // rides on the `inspect_region` child, not as a direct child of `replace_item`,
+        // so exactly two direct operands are expected whether or not a region is present.
+        let ops: Vec<&GrammarASTNode> = child_nodes(ri, "operand");
+        let (search_node, replace_node) = match ops.as_slice() {
+            [s, r] => (*s, *r),
+            _ => {
+                return Err(RuntimeError::Unsupported(
+                    "INSPECT REPLACING ALL without a search and a BY replacement".into(),
+                ))
+            }
+        };
+        items.push((read_operand(search_node)?, read_operand(replace_node)?, region));
+    }
+    Ok(items)
+}
+
+/// Extract the `CONVERTING from TO to [{BEFORE|AFTER} x]` phrase from an
+/// `inspect_stmt`, returning the two string-literal operands and the optional region
+/// window `(from, to, region)`. This rung only supports STRING-LITERAL translation
+/// tables and rejects the later-rung forms the grammar also accepts: a data-name /
+/// figurative / numeric-literal / reference-modified `from`/`to`. A `{BEFORE|AFTER}
+/// x` region now PARSES into an `Option<Region>` (it used to be rejected wholesale
+/// here), reusing the SAME `read_inspect_region` the TALLYING/REPLACING readers use;
+/// a multi-character region delimiter stays a later rung, rejected at exec time by
+/// `single_delim_char`. (The equal-length requirement is checked at exec time so it
+/// can share the same diagnostic as any other CONVERTING error.)
+fn read_inspect_converting(
+    verb: &GrammarASTNode,
+) -> Result<(String, String, Option<Region>), RuntimeError> {
+    let converting = child_node(verb, "inspect_converting").ok_or_else(|| {
+        RuntimeError::Unsupported("INSPECT without a CONVERTING clause is a later rung".into())
+    })?;
+    let region = match child_node(converting, "inspect_region") {
+        None => None,
+        Some(region_node) => Some(read_inspect_region(region_node)?),
+    };
+    // `from TO to` — the two `operand` children are the FROM (first) and the TO
+    // (second), in order. (A `{BEFORE|AFTER}` region contributes its OWN nested
+    // `operand` under the `inspect_region` child, not a direct `operand` here, so
+    // these two direct children are exactly the FROM and TO.)
+    let ops = child_nodes(converting, "operand");
+    let (from_node, to_node) = match ops.as_slice() {
+        [f, t] => (*f, *t),
+        _ => {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT CONVERTING without a FROM and a TO operand".into(),
+            ))
+        }
+    };
+    Ok((
+        read_converting_literal(from_node, "from")?,
+        read_converting_literal(to_node, "to")?,
+        region,
+    ))
+}
+
+/// Read a CONVERTING `from`/`to` operand as a plain string literal. Only string
+/// literals are supported this rung; a data-name (`PIC X` item), figurative
+/// constant, numeric literal, or reference modification is a later rung. `which`
+/// names the position (`"from"`/`"to"`) for the diagnostic.
+fn read_converting_literal(op: &GrammarASTNode, which: &str) -> Result<String, RuntimeError> {
+    match read_operand(op)? {
+        Operand::Lit(Lit::Str(s)) => Ok(s),
+        Operand::Lit(Lit::Num(_)) => Err(RuntimeError::Unsupported(format!(
+            "INSPECT CONVERTING with a numeric-literal {which} operand is a later rung"
+        ))),
+        Operand::Lit(Lit::Fig(_)) => Err(RuntimeError::Unsupported(format!(
+            "INSPECT CONVERTING with a figurative-constant {which} operand is a later rung"
+        ))),
+        Operand::Ident(_) => Err(RuntimeError::Unsupported(format!(
+            "INSPECT CONVERTING with a data-name {which} operand is a later rung"
+        ))),
+        Operand::RefMod { .. } => Err(RuntimeError::Unsupported(format!(
+            "INSPECT CONVERTING with a reference-modified {which} operand is a later rung"
+        ))),
     }
 }
 

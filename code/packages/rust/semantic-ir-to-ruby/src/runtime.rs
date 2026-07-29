@@ -56,6 +56,28 @@ def sir_eq(a, b) = a == b
 # Call a closure value (a Ruby lambda) with the given arguments.
 def sir_apply(target, *args) = target.call(*args)
 
+# OOP slice 6 — the class that owns a `@@class variable` in the CURRENT method.
+# A method body runs in a hoisted top-level function (not a lexical class scope),
+# so `@@x` cannot be written directly ("class variable access from toplevel").
+# Instead the emitter routes `@@x` through `.class_variable_get/set` on the owner
+# resolved here: inside an INSTANCE method `self` is the receiver, so the owner is
+# `self.class`; inside a CLASS method `self` IS the class (a `Module`), so it is
+# the owner itself.  This gives ONE class in both contexts, so an instance method
+# and a class method share the same `@@x` (matching Ruby).
+def sir_cvar_owner(s) = s.is_a?(Module) ? s : s.class
+
+# Indexed write `a[i] = v` with the SIR bounds rule.  The reference
+# (`_sir_seq_set`) treats ONLY `0 <= i < length` as valid and RAISES on a
+# negative or out-of-range index — whereas Ruby's native `a[i] = v` would
+# silently pad with nils (i past the end) or count from the end (negative i).
+# We enforce the reference rule so every backend agrees, and return the value
+# (an indexed assignment evaluates to its right-hand side).
+def sir_seq_set(a, i, v)
+  raise "sequence index out of range: #{i}" if i < 0 || i >= a.length
+  a[i] = v
+  v
+end
+
 # ── SIR26 integer conversions ──
 # Reduce an Integer to a fixed width by two's-complement reinterpretation — the
 # rendering of an Expr::Convert.  Ruby's Integer is arbitrary precision and its
@@ -88,6 +110,14 @@ def sir_i128(v)
   m = v & ((1 << 128) - 1)
   m >= (1 << 127) ? m - (1 << 128) : m
 end
+
+# C truncating division / remainder (SIR27 `tdiv`/`tmod`).  Ruby's Integer#/ and
+# #% FLOOR (toward -inf), but C TRUNCATES toward zero, so `-7 / 2` must be -3 not
+# -4.  Integer#remainder already gives C's remainder (sign of the dividend), and
+# `(a - a.remainder(b))` is an exact multiple of b, so flooring it recovers the
+# truncated quotient.  Division by zero raises (as in C it is undefined).
+def sir_tdiv(a, b) = (a - a.remainder(b)) / b
+def sir_tmod(a, b) = a.remainder(b)
 
 # The key is normalised with to_s so a name that arrives as a Symbol (how the
 # _init function's global_set passes it) and the same name as a String (how a

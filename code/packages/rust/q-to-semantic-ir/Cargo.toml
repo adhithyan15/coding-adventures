@@ -1,0 +1,31 @@
+[package]
+name = "q-to-semantic-ir"
+version = "0.1.2"
+edition = "2021"
+description = "Q (kdb+) CST → narrow-waist Semantic IR (SIR22 array/matrix domain, reusing APL/J's addendum). MA-11e, front2 Wave 5."
+
+[dependencies]
+semantic-ir = { path = "../semantic-ir" }
+coding-adventures-q-parser = { path = "../q-parser" }
+# The parser emits a generic `parser::grammar_parser::GrammarASTNode` whose
+# leaf tokens are `lexer::token::Token`; we walk both directly. Note this
+# crate deliberately does NOT depend on `coding-adventures-q-runtime` --
+# lowering only needs the parse tree shape (`q-parser`), not the tree-
+# walking evaluator, mirroring `j-to-semantic-ir`'s/`apl-to-semantic-ir`'s
+# identical choice.
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+
+[dev-dependencies]
+# Used by tests/test_validator.rs (confirms the JS backend accepts every
+# module this frontend produces) and tests/e2e_node.rs (actually runs the
+# compiled JS through `node`).
+semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
+# tests/oracle.rs's ground truth: the same tree-walking interpreter this
+# frontend's own CST comes from (HML01 §7's oracle/golden testing), mirroring
+# `j-to-semantic-ir`'s/`apl-to-semantic-ir`'s identical use of their own
+# native runtime crate as ground truth. The other, non-dev `[dependencies]`
+# section above still deliberately does NOT depend on it -- lowering itself
+# only ever needs the parse-tree shape (`coding-adventures-q-parser`), never
+# the evaluator; only this test file needs it, for comparison purposes only.
+coding-adventures-q-runtime = { path = "../q-runtime" }

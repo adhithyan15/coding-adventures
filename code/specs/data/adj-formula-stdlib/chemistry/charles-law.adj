@@ -1,0 +1,115 @@
+% ============================================================================
+% charles-law.adj — Charles's law (V₁/T₁ = V₂/T₂) in the ADJ standard library.
+% ============================================================================
+% The Charles's-law entry of the *chemistry* track, a sibling of `boyles-law.adj`,
+% `ideal-gas-law.adj` and `dilution.adj`: the foundational gas relation a first course
+% states as THE VOLUME OF A GAS AT CONSTANT PRESSURE IS DIRECTLY PROPORTIONAL TO ITS
+% ABSOLUTE (KELVIN) TEMPERATURE, as an importable, byte-provenanced, PARAMETERIZED
+% `formula` — together with the FOUR exact readings that one proportionality sanctions
+% (solve for any one of the initial volume, initial temperature, final volume or final
+% temperature from the other three). As with every compute library, a consumer states NO
+% arithmetic: it `import`s this file, binds the measured quantities from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited relation on the
+% CPU. Zero math is performed by the model; the engine computes each value EXACTLY,
+% carrying the relation's citation.
+%
+%     import "charles-law.adj"
+%     observe initial_volume(2)         % "…2 L…"        (span cited by the model)
+%     observe initial_temperature(4)    % "…at 4 K…"     (span cited by the model)
+%     observe final_temperature(6)      % "…heated to 6 K…"
+%     ? final_volume(initial_volume, initial_temperature, final_temperature)
+%                                          % engine → 3, carrying V₁/T₁ = V₂/T₂
+%
+% Charles's law is the constant-pressure companion of `boyles-law.adj` (Boyle's holds
+% temperature fixed and conserves the P·V product; Charles's holds pressure fixed and
+% conserves the V/T ratio), and both are special cases of `ideal-gas-law.adj` (PV = nRT):
+% the ideal gas law DEFINES the full state, and Charles's law says that for a fixed amount
+% of gas at fixed pressure the volume-to-temperature RATIO is constant, so the libraries
+% compose (an ideal-gas state feeds a Charles's-law heating). One grounded artifact
+% building on another (write-once-use-many).
+%
+% NOTE: the temperature here MUST be the ABSOLUTE (kelvin) temperature — the direct
+% proportionality holds only on the kelvin scale, since V → 0 as T → 0 K. A decomposer
+% that reads a Celsius temperature from a prompt must convert to kelvin BEFORE binding it;
+% this library computes the exact ratio over whatever absolute temperatures it is given.
+%
+% All four formulas are EXACT over their parameters — each is a product divided by a
+% measured quantity — so every value the engine returns is exact; there is no
+% *separately grounded* constant here. The four COMPOSE and invert cleanly around the
+% worked case V₁ = 2, T₁ = 4, V₂ = 3, T₂ = 6 (note V₁/T₁ = 2/4 = 3/6 = V₂/T₂, i.e. the
+% cross-product V₁T₂ = 2·6 = 12 = 3·4 = V₂T₁):
+%
+%   final_volume(initial_volume, initial_temperature, final_temperature)
+%       = initial_volume * final_temperature / initial_temperature     % V₂ = V₁T₂/T₁ = 2·6/4 = 3
+%   final_temperature(final_volume, initial_volume, initial_temperature)
+%       = final_volume * initial_temperature / initial_volume          % T₂ = V₂T₁/V₁ = 3·4/2 = 6
+%   initial_volume(final_volume, final_temperature, initial_temperature)
+%       = final_volume * initial_temperature / final_temperature       % V₁ = V₂T₁/T₂ = 3·4/6 = 2
+%   initial_temperature(initial_volume, final_temperature, final_volume)
+%       = initial_volume * final_temperature / final_volume            % T₁ = V₁T₂/V₂ = 2·6/3 = 4
+%
+% All four formulas are defended by the SAME sentence — "Charles's law states that the
+% volume of a given amount of gas is directly proportional to its temperature on the
+% kelvin scale when the pressure is held constant." — because direct proportionality of
+% volume to temperature at constant pressure is exactly V/T = constant, i.e.
+% V₁/T₁ = V₂/T₂, and so sanctions the relation solved for any single variable. The quote
+% is transcribed verbatim from Chemistry LibreTexts (OpenStax Chemistry — the same primary
+% reference `boyles-law.adj`, `molarity.adj`, `dilution.adj` and `ideal-gas-law.adj`
+% cite), so each `formula` carries the provenance envelope every shipped grounded clause
+% carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored —
+% the sentence is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Charles's law ranges over four observable quantities: the volume and
+% absolute temperature of the gas BEFORE the change and the volume and absolute
+% temperature AFTER (pressure and amount held constant). Each appears BOTH as a derived
+% result (of one formula) and as an input (of the others), so each is a single dictionary
+% term used in both roles. The `surface` lists are the everyday names a decomposer maps
+% onto the canonical term; the trailing comment records the intended unit (a volume e.g.
+% in L and a temperature in K — the temperature MUST be absolute/kelvin).
+% ----------------------------------------------------------------------------
+dictionary charles_law_vocab {
+    define initial_volume      : finding  surface "initial volume", "V1"        % before, e.g. L
+    define initial_temperature : finding  surface "initial temperature", "T1"   % before, e.g. K (kelvin)
+    define final_volume        : finding  surface "final volume", "V2"          % after, e.g. L
+    define final_temperature   : finding  surface "final temperature", "T2"     % after, e.g. K (kelvin)
+}
+
+% ----------------------------------------------------------------------------
+% Charles's law, all four ways. Each is a named, importable, reusable `let` over its
+% formal parameters, bound at apply time, and each carries the proportionality sentence
+% from LibreTexts (a quote is required on a shipped formula). Each body is a product
+% divided by a measured quantity, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook charles_law_laws {
+    use charles_law_vocab
+
+    % Final volume — the volume a fixed amount of gas reaches at a new absolute
+    % temperature (V₂ = V₁T₂/T₁). The conserved ratio V₁/T₁ scaled up to the new T.
+    formula final_volume(initial_volume, initial_temperature, final_temperature) = initial_volume * final_temperature / initial_temperature
+        source "Charles's law states that the volume of a given amount of gas is directly proportional to its temperature on the kelvin scale when the pressure is held constant."
+        locator "https://chem.libretexts.org/Bookshelves/General_Chemistry/Chemistry_1e_(OpenSTAX)/09:_Gases/9.2:_Relating_Pressure_Volume_Amount_and_Temperature:_The_Ideal_Gas_Law"
+        trust authoritative
+
+    % Final temperature — the absolute temperature a fixed amount of gas reaches at a new
+    % volume (T₂ = V₂T₁/V₁). Defended by the SAME proportionality sentence, read another way.
+    formula final_temperature(final_volume, initial_volume, initial_temperature) = final_volume * initial_temperature / initial_volume
+        source "Charles's law states that the volume of a given amount of gas is directly proportional to its temperature on the kelvin scale when the pressure is held constant."
+        locator "https://chem.libretexts.org/Bookshelves/General_Chemistry/Chemistry_1e_(OpenSTAX)/09:_Gases/9.2:_Relating_Pressure_Volume_Amount_and_Temperature:_The_Ideal_Gas_Law"
+        trust authoritative
+
+    % Initial volume — the volume a fixed amount of gas started at
+    % (V₁ = V₂T₁/T₂). Again the SAME proportionality sentence, solved for V₁.
+    formula initial_volume(final_volume, final_temperature, initial_temperature) = final_volume * initial_temperature / final_temperature
+        source "Charles's law states that the volume of a given amount of gas is directly proportional to its temperature on the kelvin scale when the pressure is held constant."
+        locator "https://chem.libretexts.org/Bookshelves/General_Chemistry/Chemistry_1e_(OpenSTAX)/09:_Gases/9.2:_Relating_Pressure_Volume_Amount_and_Temperature:_The_Ideal_Gas_Law"
+        trust authoritative
+
+    % Initial temperature — the absolute temperature a fixed amount of gas started at
+    % (T₁ = V₁T₂/V₂). The fourth exact reading of the one proportionality law.
+    formula initial_temperature(initial_volume, final_temperature, final_volume) = initial_volume * final_temperature / final_volume
+        source "Charles's law states that the volume of a given amount of gas is directly proportional to its temperature on the kelvin scale when the pressure is held constant."
+        locator "https://chem.libretexts.org/Bookshelves/General_Chemistry/Chemistry_1e_(OpenSTAX)/09:_Gases/9.2:_Relating_Pressure_Volume_Amount_and_Temperature:_The_Ideal_Gas_Law"
+        trust authoritative
+}

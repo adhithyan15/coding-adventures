@@ -24,7 +24,7 @@ use logic_core::{
     Term as CoreTerm,
 };
 use logic_engine::{
-    compute, BodyLiteral, Citation, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp,
+    compute, BodyLiteral, Citation, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp, ContentHash,
     ContributionClause, Fact, JointContributionClause, KbError, KnowledgeBase,
     PredicateContributionClause, PriorClause, Priority, Provenance, Rule, TrustTier,
     UncertaintyMarker,
@@ -87,6 +87,13 @@ pub enum LowerError {
     },
     DuplicateAnnotation {
         name: &'static str,
+    },
+    /// A `quote … at … snapshot …` pin (RS-4 PR-D4, §E.3.1) was malformed: the
+    /// snapshot was not a 64-char SHA-256 hex, or the quoted text carried no
+    /// visible content to anchor. Fail-closed — a malformed pin is a compile
+    /// error, never a half-built `Verbatim` span the verifier would then reject.
+    MalformedQuotePin {
+        reason: &'static str,
     },
     EngineRejected {
         detail: String,
@@ -276,16 +283,21 @@ pub enum LowerError {
         column: String,
         row: usize,
     },
-    /// A lookup named `mode <name>` for a mode that is spec'd but not yet built
-    /// (ADJ-TABLES RS-5d) — today only `interpolated`. Rejected explicitly (rather
-    /// than silently treated as `range`) so the reserved surface is honest about
-    /// what the engine can do. Carries the requested mode.
-    LookupModeUnsupported {
-        mode: String,
+    /// An `interpolated` lookup's VALUE column holds a non-numeric cell (ADJ-TABLES
+    /// RS-5d). `mode interpolated` computes `v0 + (v1−v0)·(q−k0)/(k1−k0)` between the
+    /// two bracketing rows, so the `give` column must be a number in every row — you
+    /// cannot interpolate a category label. (A `range` lookup returns the cell
+    /// verbatim, so it imposes no such requirement; this check is interpolation-only.)
+    /// Carries the table, the value column, and the offending row index (0-based).
+    LookupNonNumericValueColumn {
+        table: String,
+        column: String,
+        row: usize,
     },
     /// A lookup named a `mode` that is not a recognized tactic at all (ADJ-TABLES
-    /// RS-5c). The valid modes are `range` (built) and `interpolated` (reserved,
-    /// RS-5d). Carries the unrecognized mode.
+    /// RS-5c/RS-5d/RS-5f). The valid modes are `range` (bracket / step function),
+    /// `interpolated` (linear between breakpoints), and `nearest` (closest key /
+    /// nearest-neighbour); all three are built. Carries the unrecognized mode.
     LookupUnknownMode {
         mode: String,
     },
@@ -377,10 +389,7 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
     // reusable `let` (see the `Statement::Query` arm below).
     let mut formulas: HashMap<&str, &FormulaDef> = HashMap::new();
     for stmt in flat.iter().copied() {
-        if let Statement::Formulabook {
-            formulas: defs, ..
-        } = stmt
-        {
+        if let Statement::Formulabook { formulas: defs, .. } = stmt {
             for fd in defs {
                 validate_formula(fd)?;
                 formulas.insert(fd.name.as_str(), fd);
@@ -397,7 +406,10 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
     let mut tables: HashMap<&str, (&[String], &[crate::ast::TableRow])> = HashMap::new();
     for stmt in flat.iter().copied() {
         if let Statement::Table {
-            name, columns, rows, ..
+            name,
+            columns,
+            rows,
+            ..
         } = stmt
         {
             tables.insert(name.as_str(), (columns.as_slice(), rows.as_slice()));
@@ -592,13 +604,12 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     // `compute` path a `let` uses.
                     let (expanded, chain) = expand_applies(&substituted, &formulas, 0)?;
                     let cexpr = lower_expr(&expanded);
-                    let derived =
-                        compute(fd.name.clone(), &cexpr, &kb).map_err(|e| {
-                            LowerError::ComputationFailed {
-                                name: fd.name.clone(),
-                                detail: format!("{e:?}"),
-                            }
-                        })?;
+                    let derived = compute(fd.name.clone(), &cexpr, &kb).map_err(|e| {
+                        LowerError::ComputationFailed {
+                            name: fd.name.clone(),
+                            detail: format!("{e:?}"),
+                        }
+                    })?;
                     // The provenance-required lint already guaranteed a non-empty
                     // source at registration; stamp the resolved envelope onto the
                     // value — and COMPOSE the nested chain, so a value computed via
@@ -626,19 +637,19 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 // ADJ-TABLES RS-5c: validate a `? lookup … mode range …` against the
                 // table registry and resolve the key/value columns to positional
                 // indices, so the runtime tactic never has to re-parse column names.
-                let (columns, rows) = tables.get(table.as_str()).ok_or_else(|| {
-                    LowerError::LookupUnknownTable {
-                        table: table.clone(),
-                    }
-                })?;
-                // Mode: `range` is built; `interpolated` is the reserved RS-5d
-                // tactic (rejected honestly, not silently treated as range); any
+                let (columns, rows) =
+                    tables
+                        .get(table.as_str())
+                        .ok_or_else(|| LowerError::LookupUnknownTable {
+                            table: table.clone(),
+                        })?;
+                // Mode: `range` reads the table as a step function (bracket
+                // lookup); `interpolated` reads it as a piecewise-linear function
+                // between breakpoints (RS-5d); `nearest` snaps the query to the
+                // closest key (nearest-neighbour, RS-5f). All three are built; any
                 // other word is not a tactic at all.
                 match mode.as_str() {
-                    "range" => {}
-                    "interpolated" => {
-                        return Err(LowerError::LookupModeUnsupported { mode: mode.clone() })
-                    }
+                    "range" | "interpolated" | "nearest" => {}
                     _ => return Err(LowerError::LookupUnknownMode { mode: mode.clone() }),
                 }
                 let key_index = columns.iter().position(|c| c == key_col).ok_or_else(|| {
@@ -647,23 +658,42 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                         column: key_col.clone(),
                     }
                 })?;
-                let value_index =
-                    columns.iter().position(|c| c == value_col).ok_or_else(|| {
-                        LowerError::LookupUnknownColumn {
-                            table: table.clone(),
-                            column: value_col.clone(),
-                        }
-                    })?;
+                let value_index = columns.iter().position(|c| c == value_col).ok_or_else(|| {
+                    LowerError::LookupUnknownColumn {
+                        table: table.clone(),
+                        column: value_col.clone(),
+                    }
+                })?;
                 // The key column must be numeric in EVERY row — a `range` lookup
                 // compares the query against it on the exact numeric path, so an
                 // atom/string key cell is a compile error (never a silent skip).
                 for (i, row) in rows.iter().enumerate() {
-                    if !matches!(row.cells.get(key_index), Some(crate::ast::TableCell::Number(_))) {
+                    if !matches!(
+                        row.cells.get(key_index),
+                        Some(crate::ast::TableCell::Number(_))
+                    ) {
                         return Err(LowerError::LookupNonNumericKeyColumn {
                             table: table.clone(),
                             column: key_col.clone(),
                             row: i,
                         });
+                    }
+                }
+                // `interpolated` additionally computes on the VALUE column, so it
+                // too must be numeric in every row (RS-5d). `range` returns the value
+                // cell verbatim (it may be a category label), so it skips this check.
+                if mode == "interpolated" {
+                    for (i, row) in rows.iter().enumerate() {
+                        if !matches!(
+                            row.cells.get(value_index),
+                            Some(crate::ast::TableCell::Number(_))
+                        ) {
+                            return Err(LowerError::LookupNonNumericValueColumn {
+                                table: table.clone(),
+                                column: value_col.clone(),
+                                row: i,
+                            });
+                        }
                     }
                 }
                 range_lookups.push(LoweredRangeLookup {
@@ -775,11 +805,15 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 annotations,
             } => {
                 if columns.is_empty() {
-                    return Err(LowerError::TableNoColumns { table: name.clone() });
+                    return Err(LowerError::TableNoColumns {
+                        table: name.clone(),
+                    });
                 }
                 let prov = annotations_to_provenance(annotations)?;
                 if prov.source.trim().is_empty() {
-                    return Err(LowerError::TableMissingProvenance { table: name.clone() });
+                    return Err(LowerError::TableMissingProvenance {
+                        table: name.clone(),
+                    });
                 }
                 for (i, row) in rows.iter().enumerate() {
                     if row.cells.len() != columns.len() {
@@ -1198,6 +1232,45 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         ExprAst::Trunc(a) => ComputeExpr::Unary(ComputeOp::Trunc, Box::new(lower_expr(a))),
         ExprAst::Sign(a) => ComputeExpr::Unary(ComputeOp::Sign, Box::new(lower_expr(a))),
         ExprAst::Call(f, a) => ComputeExpr::Unary(lower_named_fn(*f), Box::new(lower_expr(a))),
+        // `round_to(x, n)` (NUM-6a): the precision-carrying narrowing. Lowers to the
+        // distinct engine `Round` node (not a unary `ComputeOp`) so the precision `n`
+        // and the default half-even mode ride along and the exact-path audit records
+        // them (ADJ-NUMERIC-SUBSTRATE §4.1–§4.4). `n` was validated a non-negative
+        // integer by the adapter.
+        ExprAst::RoundTo(a, spec) => ComputeExpr::Round {
+            spec: *spec,
+            mode: bignum_core::RoundingMode::HalfEven,
+            expr: Box::new(lower_expr(a)),
+        },
+        // `to_scientific(x, figures)` (NUM-6c): the scientific-notation rendering. Lowers
+        // to the distinct engine `ToScientific` node so the significant-figure count and
+        // the default half-even mode ride along and the exact-path audit records both the
+        // exact source and the rendered string (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3).
+        // `figures` was validated (≥ 1, within the cap; default applied) by the adapter.
+        ExprAst::ToScientific(a, figures) => ComputeExpr::ToScientific {
+            figures: *figures,
+            mode: bignum_core::RoundingMode::HalfEven,
+            expr: Box::new(lower_expr(a)),
+        },
+        // `to_percent(x, places)` (NUM-6c): the percentage rendering. Lowers to the
+        // distinct engine `ToPercent` node so the decimal-place count and the default
+        // half-even mode ride along and the exact-path audit records both the exact
+        // source ratio and the rendered `d.dd%` string (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3).
+        ExprAst::ToPercent(a, places) => ComputeExpr::ToPercent {
+            places: *places,
+            mode: bignum_core::RoundingMode::HalfEven,
+            expr: Box::new(lower_expr(a)),
+        },
+        // `to_currency(x, code, places)` (NUM-6c): the money rendering. Lowers to the
+        // distinct engine `ToCurrency` node so the currency code, the decimal-place count,
+        // and the default half-even mode ride along and the exact-path audit records both
+        // the exact source amount and the rendered `CODE d.dd` string.
+        ExprAst::ToCurrency(a, code, places) => ComputeExpr::ToCurrency {
+            code: code.clone(),
+            places: *places,
+            mode: bignum_core::RoundingMode::HalfEven,
+            expr: Box::new(lower_expr(a)),
+        },
         ExprAst::Call2(f, a, b) => ComputeExpr::Bin(
             lower_bin_fn(*f),
             Box::new(lower_expr(a)),
@@ -1211,7 +1284,9 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         // reference on a poisoned slot name so `compute` fails cleanly with
         // `UnknownSlot` rather than silently miscomputing — never a panic, never a
         // wrong number.
-        ExprAst::Apply(name, _) => ComputeExpr::Ref(format!("<unexpanded formula application: {name}>")),
+        ExprAst::Apply(name, _) => {
+            ComputeExpr::Ref(format!("<unexpanded formula application: {name}>"))
+        }
     }
 }
 
@@ -1340,6 +1415,29 @@ fn row_provenance(
                 prov.corroborations
                     .push(Citation::new(source.clone(), locator.clone()));
             }
+            Annotation::Quote {
+                text,
+                byte_offset,
+                snapshot_hex,
+            } => {
+                // A row may pin its OWN span (RS-4 PR-D4). Same fail-closed
+                // well-formedness checks as the envelope path; a row that does
+                // not pin simply inherits whatever the table envelope pinned.
+                let hash = ContentHash::from_hex(snapshot_hex).ok_or({
+                    LowerError::MalformedQuotePin {
+                        reason: "snapshot must be a 64-character lowercase SHA-256 hex string",
+                    }
+                })?;
+                let with = prov
+                    .clone()
+                    .with_quote(text.clone(), Some(*byte_offset), Some(hash));
+                if with.quote.is_unmigrated() {
+                    return Err(LowerError::MalformedQuotePin {
+                        reason: "quote text has no visible content to anchor",
+                    });
+                }
+                prov = with;
+            }
         }
     }
     Ok(prov)
@@ -1352,6 +1450,9 @@ fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, L
     // ADJ-A9: corroborating citations are REPEATABLE — accumulate in source
     // order rather than rejecting duplicates.
     let mut corroborations: Vec<Citation> = Vec::new();
+    // RS-4 PR-D4: a single optional pinned quote (verbatim text, byte offset,
+    // snapshot hash). Applied after the base provenance is built.
+    let mut quote_pin: Option<(String, usize, String)> = None;
 
     for a in annotations {
         match a {
@@ -1382,6 +1483,16 @@ fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, L
             Annotation::Cites { source, locator } => {
                 corroborations.push(Citation::new(source.clone(), locator.clone()));
             }
+            Annotation::Quote {
+                text,
+                byte_offset,
+                snapshot_hex,
+            } => {
+                if quote_pin.is_some() {
+                    return Err(LowerError::DuplicateAnnotation { name: "quote" });
+                }
+                quote_pin = Some((text.clone(), *byte_offset, snapshot_hex.clone()));
+            }
         }
     }
 
@@ -1400,6 +1511,30 @@ fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, L
     // ADJ-A9: attach any corroborating citations (documentary only — they do
     // not change the LR arithmetic, only what the audit trail can list).
     prov.corroborations = corroborations;
+
+    // RS-4 PR-D4 (§E.3.1): apply a pinned quote, if one was written. The
+    // hex must parse to a 64-char SHA-256, and the text must carry visible
+    // content — both are FAIL-CLOSED here so a malformed pin never reaches the
+    // engine as a half-built `Verbatim` span. The *anchored* check (does the
+    // text really sit at `byte_offset` in the snapshot?) runs later, once the
+    // program's snapshot bundle is resolvable — a hand-authored offset that
+    // doesn't verify is caught there, not silently trusted.
+    if let Some((text, byte_offset, snapshot_hex)) = quote_pin {
+        let hash = ContentHash::from_hex(&snapshot_hex).ok_or(LowerError::MalformedQuotePin {
+            reason: "snapshot must be a 64-character lowercase SHA-256 hex string",
+        })?;
+        let with = prov.clone().with_quote(text, Some(byte_offset), Some(hash));
+        // `with_quote` degrades a blank/invisible span to `Unmigrated`. A pin
+        // that names a snapshot but carries no checkable text is malformed, not
+        // a silent partial — refuse it.
+        if with.quote.is_unmigrated() {
+            return Err(LowerError::MalformedQuotePin {
+                reason: "quote text has no visible content to anchor",
+            });
+        }
+        prov = with;
+    }
+
     Ok(prov)
 }
 
@@ -1419,21 +1554,20 @@ fn validate_formula(fd: &FormulaDef) -> Result<(), LowerError> {
     // parameters plus ALL step names. An identifier that resolves to none of
     // these is a clean free-variable error.
     let mut in_scope: std::collections::HashSet<String> = fd.params.iter().cloned().collect();
-    let check = |expr: &ExprAst,
-                 scope: &std::collections::HashSet<String>|
-     -> Result<(), LowerError> {
-        let mut refs = Vec::new();
-        collect_refs(expr, &mut refs);
-        for r in refs {
-            if !scope.contains(&r) {
-                return Err(LowerError::FormulaFreeVariable {
-                    formula: fd.name.clone(),
-                    variable: r,
-                });
+    let check =
+        |expr: &ExprAst, scope: &std::collections::HashSet<String>| -> Result<(), LowerError> {
+            let mut refs = Vec::new();
+            collect_refs(expr, &mut refs);
+            for r in refs {
+                if !scope.contains(&r) {
+                    return Err(LowerError::FormulaFreeVariable {
+                        formula: fd.name.clone(),
+                        variable: r,
+                    });
+                }
             }
-        }
-        Ok(())
-    };
+            Ok(())
+        };
     for step in &fd.steps {
         check(&step.expr, &in_scope)?;
         in_scope.insert(step.name.clone());
@@ -1466,6 +1600,10 @@ fn collect_refs(expr: &ExprAst, out: &mut Vec<String>) {
         | ExprAst::Floor(a)
         | ExprAst::Ceil(a)
         | ExprAst::Round(a)
+        | ExprAst::RoundTo(a, _)
+        | ExprAst::ToScientific(a, _)
+        | ExprAst::ToPercent(a, _)
+        | ExprAst::ToCurrency(a, _, _)
         | ExprAst::Trunc(a)
         | ExprAst::Sign(a)
         | ExprAst::Call(_, a) => collect_refs(a, out),
@@ -1508,6 +1646,37 @@ const FORMULA_MAX_APPLY_DEPTH: usize = 256;
 /// more than any legitimate composed clinical formula needs (they are a handful of
 /// applications deep) yet a negligible fraction of the exponential blow-up.
 const FORMULA_MAX_EXPANSION_NODES: usize = 10_000;
+
+/// The largest `n` accepted by the `round_to(x, n)` built-in (NUM-6a). A DoS
+/// guard: rounding an exact rational to `n` decimal places materializes up to `n`
+/// digits, so an unbounded `n` (`round_to(x, 1000000000)`) would ask the exact
+/// path for a gigabyte-scale mantissa. 100 places is far beyond the engine's own
+/// default precision (256 bits ≈ 77 significant digits, ADJ-NUMERIC-SUBSTRATE §3)
+/// and any real measurement, so the cap constrains only pathological inputs.
+const MAX_ROUND_PLACES: u32 = 100;
+
+/// The significant-figure count `to_scientific(x)` uses when the surface omits it
+/// (NUM-6c). Six is the conventional default mantissa precision for scientific
+/// notation (`6.02214e23`) and comfortably inside [`MAX_ROUND_PLACES`]; an explicit
+/// `to_scientific(x, n)` overrides it. The default is applied here at lowering, so the
+/// engine node always carries a concrete `figures` count and the audit records what was
+/// used regardless of whether the writer stated it.
+const DEFAULT_SCI_FIGURES: u32 = 6;
+
+/// The decimal-place count `to_percent(x)` uses when the surface omits it (NUM-6c). Two
+/// is the conventional default for a formatted percentage (`"33.33%"`) and matches the
+/// precision-sensitive framing of §4 (the `$100M-per-point` case); an explicit
+/// `to_percent(x, n)` overrides it. Applied at lowering, so the engine node always carries
+/// a concrete `places` count and the audit records what was used. Unlike the significant-
+/// figure ops, `places = 0` is a valid explicit argument (`to_percent(x, 0) = "50%"`).
+const DEFAULT_PERCENT_PLACES: u32 = 2;
+
+/// The decimal-place count `to_currency(x, code)` uses when the surface omits it (NUM-6c).
+/// Two is the common minor-unit precision (cents, pence) and matches the ISO-4217 default
+/// for the major currencies; an explicit `to_currency(x, code, n)` overrides it (e.g. `0`
+/// for JPY, `3` for KWD). Applied at lowering, so the engine node always carries a concrete
+/// `places` count and the audit records what was used. `places = 0` is a valid argument.
+const DEFAULT_CURRENCY_PLACES: u32 = 2;
 
 /// Maximum AST-nesting depth the expansion/substitution/clone walkers may descend
 /// in a single expression (ADJ-RULE-SUBSTRATE RS-1). The node budget bounds total
@@ -1590,6 +1759,14 @@ fn charged_clone(
         ExprAst::Floor(a) => ExprAst::Floor(Box::new(charged_clone(a, budget, d)?)),
         ExprAst::Ceil(a) => ExprAst::Ceil(Box::new(charged_clone(a, budget, d)?)),
         ExprAst::Round(a) => ExprAst::Round(Box::new(charged_clone(a, budget, d)?)),
+        ExprAst::RoundTo(a, n) => ExprAst::RoundTo(Box::new(charged_clone(a, budget, d)?), *n),
+        ExprAst::ToScientific(a, n) => {
+            ExprAst::ToScientific(Box::new(charged_clone(a, budget, d)?), *n)
+        }
+        ExprAst::ToPercent(a, n) => ExprAst::ToPercent(Box::new(charged_clone(a, budget, d)?), *n),
+        ExprAst::ToCurrency(a, code, n) => {
+            ExprAst::ToCurrency(Box::new(charged_clone(a, budget, d)?), code.clone(), *n)
+        }
         ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(charged_clone(a, budget, d)?)),
         ExprAst::Sign(a) => ExprAst::Sign(Box::new(charged_clone(a, budget, d)?)),
         ExprAst::Call(f, a) => ExprAst::Call(*f, Box::new(charged_clone(a, budget, d)?)),
@@ -1663,7 +1840,15 @@ fn expand_applies(
     // positions (`f(x) = g(x) + g(x)`) is popped off the path between the two uses,
     // so reuse is never mistaken for recursion.
     let mut active: Vec<String> = Vec::new();
-    let expanded = expand_rec(expr, formulas, depth, &mut chain, &mut active, &mut budget, 0)?;
+    let expanded = expand_rec(
+        expr,
+        formulas,
+        depth,
+        &mut chain,
+        &mut active,
+        &mut budget,
+        0,
+    )?;
     Ok((expanded, chain))
 }
 
@@ -1698,6 +1883,165 @@ fn expand_rec(
     let d = descend(node_depth)?;
     match expr {
         ExprAst::Apply(name, args) => {
+            // NUM-6a/6b built-ins: `round_to(x, n)` (n decimal PLACES) and
+            // `round_sig(x, n)` (n significant FIGURES) — the precision narrowings.
+            // Recognised by NAME here, BEFORE the user-formula lookup, so they need no
+            // formula definition; they reuse the same comma-list application grammar as
+            // user formulas (`quotient(a, b)`), which is why no new grammar or LaTeX
+            // surface is required (ADJ-NUMERIC-SUBSTRATE §4.1). The value arg `x` is
+            // expanded (it may itself be an application); the precision `n` must be an
+            // INTEGER literal within the DoS cap [`MAX_ROUND_PLACES`] — non-negative for
+            // `round_to`, and ≥ 1 for `round_sig` (zero significant figures is
+            // meaningless). A variable, fraction, out-of-range, or oversized `n` is a
+            // clean compile error, never a silent mis-rounding.
+            if name == "round_to" || name == "round_sig" {
+                if args.len() != 2 {
+                    return Err(LowerError::FormulaArity {
+                        formula: name.clone(),
+                        expected: 2,
+                        got: args.len(),
+                    });
+                }
+                let min = if name == "round_sig" { 1.0 } else { 0.0 };
+                let n = match &args[1] {
+                    ExprAst::Lit(v)
+                        if v.fract() == 0.0 && *v >= min && *v <= MAX_ROUND_PLACES as f64 =>
+                    {
+                        *v as u32
+                    }
+                    _ => {
+                        return Err(LowerError::FormulaBadArgument {
+                            formula: name.clone(),
+                        })
+                    }
+                };
+                let spec = if name == "round_sig" {
+                    logic_engine::RoundSpec::SigFigures(n)
+                } else {
+                    logic_engine::RoundSpec::Places(n)
+                };
+                let value = expand_rec(&args[0], formulas, depth, chain, active, budget, d)?;
+                return Ok(ExprAst::RoundTo(Box::new(value), spec));
+            }
+            // NUM-6c built-in: `to_scientific(x [, figures])` — the scientific-notation
+            // rendering. Recognised by NAME here, before the user-formula lookup, on the
+            // same comma-list application grammar. `figures` is OPTIONAL: `to_scientific(x)`
+            // uses the default mantissa precision [`DEFAULT_SCI_FIGURES`]; a stated
+            // `to_scientific(x, n)` requires `n` a positive integer literal (`≥ 1`, since a
+            // scientific mantissa has at least one significant figure) within the precision
+            // cap [`MAX_ROUND_PLACES`]. A non-integer, zero, negative, oversized, or
+            // non-literal `n`, or the wrong number of arguments, is a clean compile error.
+            if name == "to_scientific" {
+                if args.is_empty() || args.len() > 2 {
+                    return Err(LowerError::FormulaArity {
+                        formula: name.clone(),
+                        expected: 2,
+                        got: args.len(),
+                    });
+                }
+                let figures = if args.len() == 2 {
+                    match &args[1] {
+                        ExprAst::Lit(v)
+                            if v.fract() == 0.0 && *v >= 1.0 && *v <= MAX_ROUND_PLACES as f64 =>
+                        {
+                            *v as u32
+                        }
+                        _ => {
+                            return Err(LowerError::FormulaBadArgument {
+                                formula: name.clone(),
+                            })
+                        }
+                    }
+                } else {
+                    DEFAULT_SCI_FIGURES
+                };
+                let value = expand_rec(&args[0], formulas, depth, chain, active, budget, d)?;
+                return Ok(ExprAst::ToScientific(Box::new(value), figures));
+            }
+            // NUM-6c built-in: `to_percent(x [, places])` — the percentage rendering.
+            // Recognised by NAME here, before the user-formula lookup, on the same
+            // comma-list application grammar. `places` is OPTIONAL: `to_percent(x)` uses
+            // the default [`DEFAULT_PERCENT_PLACES`]; a stated `to_percent(x, n)` requires
+            // `n` a NON-NEGATIVE integer literal (`≥ 0` — zero places is meaningful,
+            // `"50%"`) within the precision cap [`MAX_ROUND_PLACES`]. A non-integer,
+            // negative, oversized, or non-literal `n`, or the wrong argument count, is a
+            // clean compile error.
+            if name == "to_percent" {
+                if args.is_empty() || args.len() > 2 {
+                    return Err(LowerError::FormulaArity {
+                        formula: name.clone(),
+                        expected: 2,
+                        got: args.len(),
+                    });
+                }
+                let places = if args.len() == 2 {
+                    match &args[1] {
+                        ExprAst::Lit(v)
+                            if v.fract() == 0.0 && *v >= 0.0 && *v <= MAX_ROUND_PLACES as f64 =>
+                        {
+                            *v as u32
+                        }
+                        _ => {
+                            return Err(LowerError::FormulaBadArgument {
+                                formula: name.clone(),
+                            })
+                        }
+                    }
+                } else {
+                    DEFAULT_PERCENT_PLACES
+                };
+                let value = expand_rec(&args[0], formulas, depth, chain, active, budget, d)?;
+                return Ok(ExprAst::ToPercent(Box::new(value), places));
+            }
+            // NUM-6c built-in: `to_currency(x, code [, places])` — the money rendering.
+            // Recognised by NAME here, before the user-formula lookup. The SECOND argument
+            // is the currency CODE — a bare identifier (`USD`) taken verbatim: it parses as
+            // an `ExprAst::Ref` and is NOT resolved as a slot (we read its name directly and
+            // never expand it). `places` is OPTIONAL (3rd arg): default [`DEFAULT_CURRENCY_PLACES`];
+            // a stated count must be a NON-NEGATIVE integer literal (`≥ 0` — `to_currency(x,
+            // JPY, 0)`) within the precision cap [`MAX_ROUND_PLACES`]. A missing/non-identifier
+            // code, a non-integer/negative/oversized/non-literal `places`, or the wrong argument
+            // count is a clean compile error.
+            if name == "to_currency" {
+                if args.len() < 2 || args.len() > 3 {
+                    return Err(LowerError::FormulaArity {
+                        formula: name.clone(),
+                        expected: 3,
+                        got: args.len(),
+                    });
+                }
+                // The code is a bare identifier (an un-expanded `Ref`); anything else is a
+                // bad argument (a number, a formula application, an already-substituted value).
+                // Identifiers lex lowercase (`usd`), but currency codes are canonically the
+                // uppercase ISO-4217 form, so we normalize to uppercase for the rendered
+                // `CODE d.dd` string and the audit record — `usd` → `USD 33.33`.
+                let code = match &args[1] {
+                    ExprAst::Ref(c) if !c.is_empty() => c.to_uppercase(),
+                    _ => {
+                        return Err(LowerError::FormulaBadArgument {
+                            formula: name.clone(),
+                        })
+                    }
+                };
+                let places = if args.len() == 3 {
+                    match &args[2] {
+                        ExprAst::Lit(v)
+                            if v.fract() == 0.0 && *v >= 0.0 && *v <= MAX_ROUND_PLACES as f64 =>
+                        {
+                            *v as u32
+                        }
+                        _ => {
+                            return Err(LowerError::FormulaBadArgument {
+                                formula: name.clone(),
+                            })
+                        }
+                    }
+                } else {
+                    DEFAULT_CURRENCY_PLACES
+                };
+                let value = expand_rec(&args[0], formulas, depth, chain, active, budget, d)?;
+                return Ok(ExprAst::ToCurrency(Box::new(value), code, places));
+            }
             // Resolve the callee against the SAME registry the top-level query path
             // uses. An unknown name is a clean, specific error — distinct from an
             // aggregation or built-in call, which never reach here (they are separate
@@ -1773,12 +2117,41 @@ fn expand_rec(
             Box::new(expand_rec(b, formulas, depth, chain, active, budget, d)?),
         )),
         // Unary nodes: expand the single operand.
-        ExprAst::Abs(a) => Ok(ExprAst::Abs(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
-        ExprAst::Floor(a) => Ok(ExprAst::Floor(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
-        ExprAst::Ceil(a) => Ok(ExprAst::Ceil(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
-        ExprAst::Round(a) => Ok(ExprAst::Round(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
-        ExprAst::Trunc(a) => Ok(ExprAst::Trunc(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
-        ExprAst::Sign(a) => Ok(ExprAst::Sign(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
+        ExprAst::Abs(a) => Ok(ExprAst::Abs(Box::new(expand_rec(
+            a, formulas, depth, chain, active, budget, d,
+        )?))),
+        ExprAst::Floor(a) => Ok(ExprAst::Floor(Box::new(expand_rec(
+            a, formulas, depth, chain, active, budget, d,
+        )?))),
+        ExprAst::Ceil(a) => Ok(ExprAst::Ceil(Box::new(expand_rec(
+            a, formulas, depth, chain, active, budget, d,
+        )?))),
+        ExprAst::Round(a) => Ok(ExprAst::Round(Box::new(expand_rec(
+            a, formulas, depth, chain, active, budget, d,
+        )?))),
+        ExprAst::RoundTo(a, n) => Ok(ExprAst::RoundTo(
+            Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?),
+            *n,
+        )),
+        ExprAst::ToScientific(a, n) => Ok(ExprAst::ToScientific(
+            Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?),
+            *n,
+        )),
+        ExprAst::ToPercent(a, n) => Ok(ExprAst::ToPercent(
+            Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?),
+            *n,
+        )),
+        ExprAst::ToCurrency(a, code, n) => Ok(ExprAst::ToCurrency(
+            Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?),
+            code.clone(),
+            *n,
+        )),
+        ExprAst::Trunc(a) => Ok(ExprAst::Trunc(Box::new(expand_rec(
+            a, formulas, depth, chain, active, budget, d,
+        )?))),
+        ExprAst::Sign(a) => Ok(ExprAst::Sign(Box::new(expand_rec(
+            a, formulas, depth, chain, active, budget, d,
+        )?))),
         ExprAst::Call(f, a) => Ok(ExprAst::Call(
             *f,
             Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?),
@@ -1951,6 +2324,20 @@ fn substitute_expr(
         ExprAst::Floor(a) => ExprAst::Floor(Box::new(substitute_expr(a, subst, budget, d)?)),
         ExprAst::Ceil(a) => ExprAst::Ceil(Box::new(substitute_expr(a, subst, budget, d)?)),
         ExprAst::Round(a) => ExprAst::Round(Box::new(substitute_expr(a, subst, budget, d)?)),
+        ExprAst::RoundTo(a, n) => {
+            ExprAst::RoundTo(Box::new(substitute_expr(a, subst, budget, d)?), *n)
+        }
+        ExprAst::ToScientific(a, n) => {
+            ExprAst::ToScientific(Box::new(substitute_expr(a, subst, budget, d)?), *n)
+        }
+        ExprAst::ToPercent(a, n) => {
+            ExprAst::ToPercent(Box::new(substitute_expr(a, subst, budget, d)?), *n)
+        }
+        ExprAst::ToCurrency(a, code, n) => ExprAst::ToCurrency(
+            Box::new(substitute_expr(a, subst, budget, d)?),
+            code.clone(),
+            *n,
+        ),
         ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(substitute_expr(a, subst, budget, d)?)),
         ExprAst::Sign(a) => ExprAst::Sign(Box::new(substitute_expr(a, subst, budget, d)?)),
         ExprAst::Call(f, a) => ExprAst::Call(*f, Box::new(substitute_expr(a, subst, budget, d)?)),
@@ -2008,7 +2395,10 @@ mod tests {
         "#;
         let lowered = compile(src).unwrap();
         // A formula application is a derived value, not a differential query.
-        assert!(lowered.queries.is_empty(), "formula query is not a hypothesis");
+        assert!(
+            lowered.queries.is_empty(),
+            "formula query is not a hypothesis"
+        );
         let d = lowered
             .kb
             .derived_for("bmi")
@@ -2018,7 +2408,10 @@ mod tests {
             "expected ≈22.857, got {}",
             d.value
         );
-        let prov = d.provenance.as_ref().expect("derivation carries provenance");
+        let prov = d
+            .provenance
+            .as_ref()
+            .expect("derivation carries provenance");
         assert!(!prov.source.is_empty(), "the WHO source span is attached");
         assert_eq!(prov.trust_tier, TrustTier::Authoritative);
         assert_eq!(
@@ -2043,7 +2436,11 @@ mod tests {
         "#;
         let lowered = compile(src).unwrap();
         let d = lowered.kb.derived_for("bmi").unwrap();
-        assert!((d.value - 20.0).abs() < 1e-9, "80 / 2² = 20, got {}", d.value);
+        assert!(
+            (d.value - 20.0).abs() < 1e-9,
+            "80 / 2² = 20, got {}",
+            d.value
+        );
     }
 
     #[test]
@@ -2103,7 +2500,11 @@ mod tests {
         "#;
         let lowered = compile(src).unwrap();
         let d = lowered.kb.derived_for("weighted3").unwrap();
-        assert!((d.value - 6.0).abs() < 1e-9, "(3+6+9)/3 = 6, got {}", d.value);
+        assert!(
+            (d.value - 6.0).abs() < 1e-9,
+            "(3+6+9)/3 = 6, got {}",
+            d.value
+        );
     }
 
     #[test]
@@ -2137,7 +2538,10 @@ mod tests {
         assert_eq!(formulas.len(), 1);
         let f = &formulas[0];
         assert_eq!(f.name, "bmi");
-        assert_eq!(f.params, vec!["body_mass".to_string(), "height".to_string()]);
+        assert_eq!(
+            f.params,
+            vec!["body_mass".to_string(), "height".to_string()]
+        );
         // body = body_mass / (height * height)
         assert_eq!(
             f.body,
@@ -2188,9 +2592,7 @@ mod tests {
             }
         }
 
-        let bmi_lib = include_str!(
-            "../../../../specs/data/adj-formula-stdlib/clinical/bmi.adj"
-        );
+        let bmi_lib = include_str!("../../../../specs/data/adj-formula-stdlib/clinical/bmi.adj");
         let consumer = "import \"bmi.adj\"\n\
                         observe body_mass(70)\n\
                         observe height(1.75)\n\
@@ -2202,7 +2604,10 @@ mod tests {
 
         let lowered =
             compile_with_imports("consumer.adj", &provider, ImportLimits::default()).unwrap();
-        let d = lowered.kb.derived_for("bmi").expect("applied imported formula");
+        let d = lowered
+            .kb
+            .derived_for("bmi")
+            .expect("applied imported formula");
         assert!(
             (d.value - 22.857).abs() < 0.01,
             "expected ≈22.857, got {}",
@@ -2330,7 +2735,11 @@ mod tests {
         let query = &lowered.queries[0];
         let v = query_var(query);
         let dag = enumerate_all(query, &lowered.kb);
-        assert_eq!(dag.proofs.len(), 1, "exactly one row matches the key `foot`");
+        assert_eq!(
+            dag.proofs.len(),
+            1,
+            "exactly one row matches the key `foot`"
+        );
         // NX-2: a fractional cell binds as an EXACT decimal, not a lossy `f64` (a distinct
         // `Number` variant). Preserving the exact value is the whole intent — `0.3048` is stored
         // with every digit, and only the *rendering* falls back to the f64 form when it fits.
@@ -2381,7 +2790,10 @@ mod tests {
         let v = query_var(query);
         let dag = enumerate_all(query, &lowered.kb);
         assert_eq!(dag.proofs.len(), 1);
-        assert_eq!(dag.proofs[0].bindings.walk_var(&v), CoreTerm::Str("m".into()));
+        assert_eq!(
+            dag.proofs[0].bindings.walk_var(&v),
+            CoreTerm::Str("m".into())
+        );
     }
 
     #[test]
@@ -3057,6 +3469,60 @@ contributes 1000000 from answer == 3 / 10 to opt_a
     fn a_bare_define_outside_a_block_also_registers() {
         let lowered = compile("define dx : hypothesis\n? dx\n").unwrap();
         assert_eq!(lowered.dictionary.len(), 1);
+    }
+
+    #[test]
+    fn a_valid_pinned_quote_lowers_to_a_verbatim_span_and_snapshot() {
+        // RS-4 PR-D4a: quote/at/snapshot populates Provenance.quote + .snapshot.
+        let hex = "0".repeat(64);
+        let src = format!(
+            "relate inhibits(aspirin, cyclooxygenase)\n    \
+             quote \"Aspirin inhibits cyclooxygenase\" at 7 snapshot \"{hex}\"\n    \
+             source \"ref\"\n? inhibits(aspirin, $X)\n"
+        );
+        let lowered = compile(&src).unwrap();
+        let query = &lowered.queries[0];
+        let dag = enumerate_all(query, &lowered.kb);
+        assert_eq!(dag.proofs.len(), 1, "the relate fact matches the query");
+        let fid = dag.proofs[0].via_facts[0];
+        let prov = &lowered.kb.fact(fid).expect("relate fact exists").provenance;
+        assert_eq!(
+            prov.quote.text(),
+            Some("Aspirin inhibits cyclooxygenase"),
+            "the verbatim span is carried through"
+        );
+        assert!(prov.snapshot.is_some(), "and the snapshot hash is pinned");
+    }
+
+    #[test]
+    fn a_malformed_snapshot_hash_is_a_fail_closed_compile_error() {
+        let src = "relate inhibits(a, b)\n    \
+                   quote \"hi\" at 0 snapshot \"nothex\"\n    source \"ref\"\n? inhibits(a, $X)\n";
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::MalformedQuotePin { .. })
+            ),
+            "a non-SHA-256 snapshot must be a compile error, not a half-built pin: {err:?}"
+        );
+    }
+
+    #[test]
+    fn a_blank_quote_text_is_a_fail_closed_compile_error() {
+        let hex = "0".repeat(64);
+        let src = format!(
+            "relate inhibits(a, b)\n    quote \"   \" at 0 snapshot \"{hex}\"\n    \
+             source \"ref\"\n? inhibits(a, $X)\n"
+        );
+        let err = compile(&src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::MalformedQuotePin { .. })
+            ),
+            "a quote with no visible content cannot anchor anything: {err:?}"
+        );
     }
 
     #[test]
@@ -3904,7 +4370,10 @@ contributes 1000000 from answer == 60 to correct
         // more operands — so it is a clean, explicit error rather than a silent
         // mis-lowering. (Three-or-more args ARE now accepted; see the n-ary test.)
         let src = "observe a(3)\nlet answer = latex \"$\\min(a)$\"\n? answer\n";
-        assert!(compile(src).is_err(), "one-arg min must be rejected: {src:?}");
+        assert!(
+            compile(src).is_err(),
+            "one-arg min must be rejected: {src:?}"
+        );
     }
 
     #[test]
@@ -4049,8 +4518,7 @@ contributes 1000000 from answer == 60 to correct
         // TWO or more operands), so it is a clean, explicit error via the SAME
         // `latex_nary_fold` guard the `\min(a)` spelling hits — never a silent
         // mis-lowering into a bare product.
-        let src =
-            "observe a(3)\nlet answer = latex \"$\\operatorname{min}(a)$\"\n? answer\n";
+        let src = "observe a(3)\nlet answer = latex \"$\\operatorname{min}(a)$\"\n? answer\n";
         assert!(
             compile(src).is_err(),
             "one-arg operatorname min must be rejected: {src:?}"
@@ -4346,7 +4814,10 @@ contributes 1000000 from answer == 60 to correct
              let answer = latex \"$\\sum_{i=1}^{n} i$\"\n\
              ? answer\n",
         );
-        assert!(symbolic.is_err(), "symbolic-bound sum must reject: {symbolic:?}");
+        assert!(
+            symbolic.is_err(),
+            "symbolic-bound sum must reject: {symbolic:?}"
+        );
         // A definite integral is not a finite sum/product — must reject, never approximate.
         let integral = compile(
             "observe x(5)\n\
@@ -4433,7 +4904,10 @@ contributes 1000000 from answer == 60 to correct
              let answer = latex \"$\\binom{n}{k}$\"\n\
              ? answer\n",
         );
-        assert!(symbolic.is_err(), "symbolic binomial must reject: {symbolic:?}");
+        assert!(
+            symbolic.is_err(),
+            "symbolic binomial must reject: {symbolic:?}"
+        );
         // k > n is out of the supported domain (\binom{3}{5}) — reject rather than emit 0.
         let inverted = compile(
             "let answer = latex \"$\\binom{3}{5}$\"\n\
@@ -4446,13 +4920,19 @@ contributes 1000000 from answer == 60 to correct
             "let answer = latex \"$\\binom{60}{30}$\"\n\
              ? answer\n",
         );
-        assert!(too_large.is_err(), "too-large binomial must reject: {too_large:?}");
+        assert!(
+            too_large.is_err(),
+            "too-large binomial must reject: {too_large:?}"
+        );
         // An upper argument beyond BINOM_N_CAP is rejected before looping.
         let oversized = compile(
             "let answer = latex \"$\\binom{2000}{2}$\"\n\
              ? answer\n",
         );
-        assert!(oversized.is_err(), "oversized-n binomial must reject: {oversized:?}");
+        assert!(
+            oversized.is_err(),
+            "oversized-n binomial must reject: {oversized:?}"
+        );
     }
 
     #[test]
@@ -4738,7 +5218,9 @@ rule { head: r(a) when: x(t) }";
         assert_eq!(prov.source, "ratio def", "ratio's cite is primary");
         // quotient's cite composes in as a corroboration — both are auditable.
         assert!(
-            prov.corroborations.iter().any(|c| c.source == "quotient def"),
+            prov.corroborations
+                .iter()
+                .any(|c| c.source == "quotient def"),
             "quotient's cite composed as a corroboration: {:?}",
             prov.corroborations
         );
@@ -4766,7 +5248,11 @@ rule { head: r(a) when: x(t) }";
         "#;
         let lowered = compile(src).unwrap();
         let d = lowered.kb.derived_for("composed").unwrap();
-        assert!((d.value - 1.5).abs() < 1e-9, "(2*3)/4 = 1.5, got {}", d.value);
+        assert!(
+            (d.value - 1.5).abs() < 1e-9,
+            "(2*3)/4 = 1.5, got {}",
+            d.value
+        );
     }
 
     #[test]
@@ -4847,11 +5333,7 @@ rule { head: r(a) when: x(t) }";
         // it returns `FormulaNestingTooDeep` on a 2 MiB stack instead of aborting.
         let mut spine = ExprAst::Ref("x".to_string());
         for _ in 0..400 {
-            spine = ExprAst::Bin(
-                ArithOp::Add,
-                Box::new(spine),
-                Box::new(ExprAst::Lit(0.0)),
-            );
+            spine = ExprAst::Bin(ArithOp::Add, Box::new(spine), Box::new(ExprAst::Lit(0.0)));
         }
         let formulas: HashMap<&str, &FormulaDef> = HashMap::new();
         let result = expand_applies(&spine, &formulas, 0);
@@ -4932,13 +5414,23 @@ rule { head: r(a) when: x(t) }";
         "#;
         let lowered = compile(src).unwrap();
         // The BMI was computed into a derived slot the predicate gates on.
-        let bmi = lowered.kb.derived_for("bmi").expect("bmi computed for the branch");
-        assert!((bmi.value - 34.602).abs() < 0.01, "bmi ≈ 34.6, got {}", bmi.value);
+        let bmi = lowered
+            .kb
+            .derived_for("bmi")
+            .expect("bmi computed for the branch");
+        assert!(
+            (bmi.value - 34.602).abs() < 0.01,
+            "bmi ≈ 34.6, got {}",
+            bmi.value
+        );
         // The query saturates: the branch fired.
         let query = &lowered.queries[0];
         match search(query, &lowered.kb, SearchMode::LRAggregate) {
             SearchResult::LRAggregateResult { posterior, .. } => {
-                assert!(posterior > 0.9999, "obese fires (saturates), got {posterior}");
+                assert!(
+                    posterior > 0.9999,
+                    "obese fires (saturates), got {posterior}"
+                );
             }
             other => panic!("expected LRAggregateResult, got {other:?}"),
         }

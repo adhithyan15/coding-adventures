@@ -170,3 +170,24 @@ regress.
   calls, vectors/matrices, a multi-statement program) through `node`,
   proving the SIR23 codegen path is genuinely executable end-to-end, not
   just statically accepted.
+- `tests/oracle.rs` (HML01 §7) — the same source run through **two**
+  independent implementations (`derive-runtime`, the native ground truth,
+  vs. this crate → `semantic-ir-to-javascript` → `node`) and diffed,
+  38-case corpus. Building it found that comparing *evaluated* values was
+  originally blocked by two gaps in the SHARED `semantic-ir-to-javascript`
+  crate, not in this frontend's own lowering: (1) SIR23's `Expr::SymApply`
+  compiled to a pure, inert `__Sir.Symbolic.apply(...)` term constructor
+  with no arithmetic/comparison/calculus evaluation and no execution of
+  the held `Assign`/`Define`/`If` forms at all, and (2) the SIR23
+  domain's only stringifier had no per-source-language display convention
+  (generic `head(args)` only — no infix, no bracket-list, no case-bridging
+  back to Derive's own UPPERCASE surface spelling). Gap (1) is now
+  partially closed (arithmetic/comparison/logic folding, SIR23 addendum
+  item 1) and gap (2) is now fully closed for Derive (item 4,
+  `SIR_DISPLAY_DERIVE`) — held-form execution and calculus (items 2/3)
+  remain open, not part of this frontend's own lowering either way. Each
+  gap is documented via the affected case's own `known_bug` field (not
+  patched in *this* crate — see `tests/oracle.rs`'s own module doc and
+  this crate's `CHANGELOG.md` for the full write-up); 25 of 38 cases are
+  now `known_bug: None`, and the remaining 13 are blocked purely by the
+  still-open held-form/calculus evaluation gap.

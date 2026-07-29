@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.37.0 — operator-spelling comparisons: `==`, `!=`, `<=`, `>=`
+
+The Ruby frontend lowers a comparison chain to `==`/`!=`/`<=`/`>=` builtins,
+which the Go backend did not lower — so even `puts(1 == 1)` panicked
+`unknown builtin: ==`.
+
+- Runtime gains `_sir_ne` (the exact negation of `_sir_eq`), `_sir_le` and
+  `_sir_ge`. A new shared `_sir_cmp` orders two strings LEXICOGRAPHICALLY and
+  numbers by float64 value (`1 <= 1.0` holds), and `<`/`>`/`<=`/`>=` all route
+  through it.
+- Emitter and the `_sir_call_builtin_by_name` dispatch gain `==`/`!=`/`<=`/`>=`.
+
+This also **fixes a pre-existing panic**: `_sir_lt`/`_sir_gt` coerced their
+operands through `_sir_as_float`, which panics on a string — so `"a" < "b"`
+crashed the program instead of comparing. Both now order strings via
+`_sir_cmp`, so Go agrees with the C, Rust, Ruby and Python backends on string
+ordering (a deep-uncomparable operand — nil/pair vs number — still panics in
+`_sir_as_float`, exactly as before; a total order there is a separate
+refinement).
+
+## 0.36.0 — `Exception#message`
+
+`rescue => e; puts e.message` — everyday Ruby — raised `NoMethodError`: the
+method simply did not exist. `_sir_object_method` gains a `message` arm
+returning the text a `raise Foo, "msg"` carried (`SirError.Msg`), answered by
+an exception receiver only so any other receiver still falls through to its own
+catalog. `_sir_responds_to` reports it on exceptions and NOT on anything else,
+reporting it for an exception receiver while still falling through to the user
+method table — so a class that defines its own `message` is not DENIED by
+`respond_to?` (the same dishonest-`respond_to?` shape this fixes elsewhere).
+
+Also: a bare `raise Foo` carries no message, and `e.message` returned `nil`
+where Ruby (and the Python/Rust/JS backends) return the CLASS NAME. It now
+matches.
+
 ## 0.35.0 — implement `is_a?` / `kind_of?` / `instance_of?`
 
 These were listed in `_sir_responds_to` but **never implemented**, so

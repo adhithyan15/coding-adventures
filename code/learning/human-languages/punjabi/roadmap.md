@@ -28,6 +28,17 @@ vocabularies** (Sanskritic and Perso-Arabic) and the **Gurmukhi** script, taught
 - **Ch. 5 — First Verbs**: bolṇā (to speak) → maiṁ panjābī boldā hāṁ (I speak
   Punjabi; *panj* "five" + *āb* "river") → rahiṇā (to live) → kamm karnā (to work;
   ← √kṛ) → practice. The gendered present habitual.
+- **Ch. 6 — Numbers 1–5** (`PA-C06-numbers-1-5`): *ikk, do, tinn, chār, panj* —
+  in **Gurmukhi**, distinguishing the **ੱ** *addak* (doubles the following
+  consonant, *ikk*) from the **ੰ** *tippi* (marks a nasal, *tinn*, *panj*). The
+  chapter is built as a **payoff to Ch. 5**, which already took *panjābī* apart
+  as Persian *panj* "five" + *āb* "water": here *panj* arrives as **an ordinary
+  number you count with**. The real finding is that **Punjabi's *panj* is not the
+  Persian word** — it is Punjabi's own *pañca*, by the regular north-western
+  voicing of a stop after a nasal (*panjāh* "fifty" against Hindi *pacās*),
+  while Persian voiced its own *č* separately. **Convergence, not borrowing** —
+  which is precisely why the Persian place-name sits so comfortably in Punjabi.
+  The *name* is Persian; the *numeral* is homegrown. **Authored.**
 
 ## Planned
 

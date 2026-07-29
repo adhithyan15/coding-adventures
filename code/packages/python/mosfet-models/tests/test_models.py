@@ -81,6 +81,7 @@ def test_triode_id_formula():
 
 def test_id_increases_with_vgs_in_saturation():
     p = Level1Params()
+    assert p.U0 == 600.0
     r1 = evaluate_level1(p, V_GS=0.8, V_DS=1.8)
     r2 = evaluate_level1(p, V_GS=1.4, V_DS=1.8)
     assert r2.Id > r1.Id
@@ -125,6 +126,163 @@ def test_gds_increases_with_lambda():
     assert r_yes.gds > r_no.gds
 
 
+def test_lateral_diffusion_uses_effective_channel_length():
+    base = Level1Params(
+        L=1e-6, CGBO=2e-6, subthreshold_enable=False
+    )
+    diffused = Level1Params(
+        L=1e-6, LD=0.1e-6, CGBO=2e-6, subthreshold_enable=False
+    )
+
+    nominal = evaluate_level1(base, V_GS=1.8, V_DS=1.8)
+    shortened = evaluate_level1(diffused, V_GS=1.8, V_DS=1.8)
+
+    assert shortened.Id / nominal.Id == pytest.approx(1.25)
+    assert shortened.Cgb / nominal.Cgb == pytest.approx(0.8)
+    assert shortened.Cgs < nominal.Cgs
+
+
+@pytest.mark.parametrize("ld", [-1e-9, float("inf"), 0.5e-6])
+def test_lateral_diffusion_validates_effective_channel_length(ld):
+    with pytest.raises(
+        ValueError,
+        match=r"MOSFET LD must be finite and non-negative with L - 2\*LD > 0",
+    ):
+        evaluate_level1(Level1Params(L=1e-6, LD=ld), V_GS=1.8, V_DS=1.8)
+
+
+def test_oxide_thickness_scales_intrinsic_gate_capacitance():
+    def capacitance(tox):
+        return evaluate_level1(
+            Level1Params(W=2e-6, L=1e-6, TOX=tox),
+            V_GS=1.8,
+            V_DS=1.8,
+        ).Cgs
+
+    assert capacitance(50e-9) / capacitance(100e-9) == pytest.approx(2.0)
+
+
+@pytest.mark.parametrize("tox", [float("nan"), 0.0, -1e-9])
+def test_oxide_thickness_validates_positive_finite_value(tox):
+    with pytest.raises(ValueError, match="MOSFET TOX must be finite and positive"):
+        evaluate_level1(Level1Params(TOX=tox), V_GS=1.8, V_DS=1.8)
+
+
+@pytest.mark.parametrize("surface_mobility", [float("nan"), -1.0])
+def test_surface_mobility_validates_non_negative_finite_value(surface_mobility):
+    with pytest.raises(
+        ValueError,
+        match="MOSFET U0 must be finite and non-negative",
+    ):
+        evaluate_level1(
+            Level1Params(U0=surface_mobility),
+            V_GS=1.8,
+            V_DS=1.8,
+        )
+
+
+def test_drain_resistance_rejects_negative_value():
+    with pytest.raises(
+        ValueError,
+        match="MOSFET RD must be finite and non-negative",
+    ):
+        evaluate_level1(Level1Params(RD=-1.0), V_GS=1.8, V_DS=1.8)
+
+
+def test_source_resistance_rejects_negative_value():
+    with pytest.raises(
+        ValueError,
+        match="MOSFET RS must be finite and non-negative",
+    ):
+        evaluate_level1(Level1Params(RS=-1.0), V_GS=1.8, V_DS=1.8)
+
+
+def test_sheet_resistance_rejects_negative_value():
+    with pytest.raises(
+        ValueError,
+        match="MOSFET RSH must be finite and non-negative",
+    ):
+        evaluate_level1(Level1Params(RSH=-1.0), V_GS=1.8, V_DS=1.8)
+
+
+def test_drain_squares_rejects_negative_value():
+    with pytest.raises(
+        ValueError,
+        match="MOSFET NRD must be finite and non-negative",
+    ):
+        evaluate_level1(Level1Params(NRD=-1.0), V_GS=1.8, V_DS=1.8)
+
+
+def test_source_squares_rejects_negative_value():
+    with pytest.raises(
+        ValueError,
+        match="MOSFET NRS must be finite and non-negative",
+    ):
+        evaluate_level1(Level1Params(NRS=-1.0), V_GS=1.8, V_DS=1.8)
+
+
+def test_drain_area_scales_bottom_junction_capacitance():
+    result = evaluate_level1(
+        Level1Params(CBD=1.0e-12, CJ=2.0e-3, AD=3.0e-9, MJ=0.0),
+        V_GS=1.8,
+        V_DS=0.0,
+    )
+    assert result.Cbd == pytest.approx(7.0e-12)
+
+
+def test_drain_perimeter_scales_sidewall_junction_capacitance():
+    result = evaluate_level1(
+        Level1Params(CBD=1.0e-12, PD=3.0e-6, CJSW=2.0e-6, MJ=0.0),
+        V_GS=1.8,
+        V_DS=0.0,
+    )
+    assert result.Cbd == pytest.approx(7.0e-12)
+
+
+def test_source_area_scales_bottom_junction_capacitance():
+    result = evaluate_level1(
+        Level1Params(CBS=1.0e-12, CJ=2.0e-3, AS=3.0e-9, MJ=0.0),
+        V_GS=1.8,
+        V_DS=0.0,
+    )
+    assert result.Cbs == pytest.approx(7.0e-12)
+
+
+def test_source_perimeter_scales_sidewall_junction_capacitance():
+    result = evaluate_level1(
+        Level1Params(CBS=1.0e-12, PS=3.0e-6, CJSW=2.0e-6, MJ=0.0),
+        V_GS=1.8,
+        V_DS=0.0,
+    )
+    assert result.Cbs == pytest.approx(7.0e-12)
+
+
+def test_sidewall_grading_coefficient_shapes_reverse_bias_capacitance():
+    result = evaluate_level1(
+        Level1Params(PD=1.0e-6, CJSW=4.0e-6, MJ=0.0, MJSW=0.5, PB=1.0),
+        V_GS=0.0,
+        V_DS=1.0,
+    )
+    assert result.Cbd == pytest.approx(4.0e-12 / (2.0 ** 0.5))
+
+
+@pytest.mark.parametrize(
+    ("params", "message"),
+    [
+        (Level1Params(AD=-1.0), "MOSFET AD must be finite and non-negative"),
+        (Level1Params(AS=-1.0), "MOSFET AS must be finite and non-negative"),
+        (Level1Params(PD=-1.0), "MOSFET PD must be finite and non-negative"),
+        (Level1Params(PS=-1.0), "MOSFET PS must be finite and non-negative"),
+        (Level1Params(CJ=-1.0), "MOSFET CJ must be finite and non-negative"),
+        (Level1Params(CJSW=-1.0), "MOSFET CJSW must be finite and non-negative"),
+        (Level1Params(MJSW=-1.0), "MOSFET MJSW must be finite and non-negative"),
+    ],
+)
+def test_drain_geometry_rejects_negative_values(params, message):
+    with pytest.raises(ValueError, match=message):
+        evaluate_level1(params, V_GS=1.8, V_DS=1.8)
+
+
 def test_overlap_and_bulk_capacitances_are_reported():
     p = Level1Params(
         W=2e-6,
@@ -157,6 +315,38 @@ def test_bulk_junction_capacitance_uses_pb_mj_for_reverse_bias():
 
     assert r.Cbs == pytest.approx(4e-12 / (2.0 ** 0.5))
     assert r.Cbd == pytest.approx(8e-12 / (4.0 ** 0.5))
+
+def test_bulk_junction_capacitance_uses_continuous_forward_bias_transition():
+    early = Level1Params(
+        CBS=4e-12, PB=1.0, MJ=0.5, FC=0.4, subthreshold_enable=False
+    )
+    below = evaluate_level1(early, V_GS=0.0, V_DS=0.0, V_BS=0.4 - 1e-9)
+    above = evaluate_level1(early, V_GS=0.0, V_DS=0.0, V_BS=0.4 + 1e-9)
+    later = evaluate_level1(
+        Level1Params(
+            CBS=4e-12, PB=1.0, MJ=0.5, FC=0.8, subthreshold_enable=False
+        ),
+        V_GS=0.0,
+        V_DS=0.0,
+        V_BS=0.7,
+    )
+    transitioned = evaluate_level1(
+        early, V_GS=0.0, V_DS=0.0, V_BS=0.7
+    )
+
+    assert below.Cbs == pytest.approx(above.Cbs, rel=1e-8)
+    assert later.Cbs > transitioned.Cbs
+
+
+@pytest.mark.parametrize("fc", [float("nan"), -0.1, 1.0])
+def test_bulk_junction_capacitance_rejects_invalid_forward_bias_coefficient(fc):
+    with pytest.raises(ValueError, match=r"MOSFET FC must be finite and in \[0, 1\)"):
+        evaluate_level1(
+            Level1Params(CBS=1e-12, FC=fc),
+            V_GS=0.0,
+            V_DS=0.0,
+            V_BS=0.0,
+        )
 
 
 # ---- MOSFET wrapper ----
@@ -210,3 +400,11 @@ def test_default_params_match_spec():
     assert p.KP == 220e-6
     assert p.W == 1e-6
     assert p.L == 130e-9
+    assert p.JS == 0.0
+    assert p.KF == 0.0
+    assert p.AF == 1.0
+
+
+def test_rejects_negative_bulk_junction_saturation_current_density():
+    with pytest.raises(ValueError, match="MOSFET JS must be finite and non-negative"):
+        evaluate_level1(Level1Params(JS=-1.0), V_GS=1.0, V_DS=1.0)

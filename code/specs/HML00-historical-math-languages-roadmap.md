@@ -212,7 +212,26 @@ sequence of one-PR items run through the autonomous loop (§8).
   level rather than reusing `matlab-runtime` as a crate dependency the way
   `octave-runtime` does.)*
 - **Wave 7 — Axiom, Julia (subset).** The research-grade lifts (typed CAS;
-  multiple dispatch) — last, and only if warranted.
+  multiple dispatch) — last, and only if warranted. *(Kickoff: see
+  [`MA13`](MA13-axiom-language.md) for Axiom, Wave 7's first language — verified
+  directly against the original 1992 Jenks & Sutor Axiom book (via its
+  FriCAS-hosted, continuously-regenerated adaptation, since the language
+  itself — categories, domains, packages, type inference — is unchanged
+  across the post-2007 Axiom/OpenAxiom/FriCAS fork, which split over project
+  governance, not language design) rather than assumed from this table's own
+  one-line description. Unlike every prior symbolic-family kickoff
+  (Maxima/Wolfram/Derive/Reduce/Maple), the finding is that `symbolic-vm`'s
+  shared engine is reused unchanged for arithmetic but carries **no**
+  domain/category/type-tag concept at all — a real substrate gap, confined to
+  a new `axiom-runtime`-internal value layer, not a `symbolic-ir`/
+  `symbolic-vm`/`cas-*` change. The load-bearing scoping decision: a first cut
+  implements only the *interactive-language, consumer* view of Axiom's
+  category/domain system (`:` declare, `::` coerce, `has` query) over a
+  small, fixed, non-extensible table of built-in domains/categories, per the
+  book's own Chapters-0/1/2/5/6-vs-Chapters-11-13 structural split — deferring
+  whole the *library-language, producer* view (user-defined categories/
+  domains/packages via `Join` and conditional exports) that is Axiom's actual
+  reason for existing, exactly as MA11 deferred Q's own tables.)*
 
 ### Item breakdown for the first three waves (illustrative)
 

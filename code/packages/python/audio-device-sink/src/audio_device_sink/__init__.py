@@ -45,7 +45,7 @@ def _integer_sample_rate(value: Any) -> int:
         converted = float(value)
         if not isfinite(converted) or converted != round(converted):
             raise ValueError("sample_rate_hz must be an integer-valued rate")
-        rate = int(round(converted))
+        rate = round(converted)
     else:
         raise TypeError("sample_rate_hz must be an integer")
 
@@ -127,7 +127,7 @@ def play_pcm_buffer(buffer: Any) -> PlaybackReport:
 
 __version__ = "0.1.0"
 
-__all__ = [
+__all__ = [  # noqa: RUF022 - preserve the package's stable export order
     "AudioDeviceError",
     "MAX_BLOCKING_DURATION_SECONDS",
     "MAX_SAMPLE_RATE_HZ",

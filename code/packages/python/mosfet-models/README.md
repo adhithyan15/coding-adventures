@@ -22,7 +22,19 @@ print(r.Id, r.gm, r.gds, r.region)
 
 ## v0.1.0 scope
 
-- `Level1Params`: Level-1 DC plus capacitance parameter set with sane defaults for 130 nm-style NMOS, including `PB` / `MJ` bulk-junction depletion shaping for `CBS` / `CBD`.
+- `Level1Params`: Level-1 DC, geometry, capacitance, and noise parameters with
+  sane defaults for 130 nm-style NMOS, including zero-default `LD` lateral
+  diffusion through `L_eff = L - 2*LD`, `PB` / `MJ` / `MJSW` / `FC`
+  bulk-junction depletion shaping, Berkeley-default `TOX` gate oxide thickness
+  for intrinsic
+  Meyer capacitance through `Cox = epsilon_ox / TOX`, zero-default `RD` / `RS`
+  external drain/source resistance, zero-default `RSH` sheet resistance,
+  one-default `NRD` / `NRS` drain/source diffusion square counts, zero-default
+  drain/source diffusion areas `AD` / `AS`, perimeters `PD` / `PS`, and
+  bottom/sidewall junction capacitance densities `CJ` / `CJSW` contributing
+  `CJ * AD + CJSW * PD` to `CBD` and `CJ * AS + CJSW * PS` to `CBS`, and
+  independent bottom/sidewall depletion grading through `MJ` / `MJSW`, plus
+  `KF` / `AF` flicker noise.
 - `evaluate_level1(params, V_GS, V_DS, V_BS, T)`: returns `MosResult` with Id, gm, gds, gmb, Cgs/Cgd/Cgb/Cbs/Cbd, region.
 - Region detection: cutoff (subthreshold-aware), triode, saturation.
 - Body effect via gamma * (sqrt(PHI-V_BS) - sqrt(PHI)) shift.

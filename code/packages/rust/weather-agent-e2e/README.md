@@ -14,7 +14,28 @@ store, and capability boundaries to run as one pipeline.
 The D18D tools are loaded from `orchestrator_profile.json` through
 `chief-of-staff-host-runtime`. Fetch, classification, and file writing belong to
 three isolated host profiles with independent capability sets. The profile must
-be complete and active before the first tool invocation.
+be complete and active before the first tool invocation. The writer host applies
+a centralized policy that requires a call-scoped user approval before filesystem
+output; an absent grant leaves the call pending and the report unwritten.
+The same scheduled job can raise the writer to Tier 2: the pending result
+contains the trusted UI challenge, explicit consent is rejected before the file
+handler, and only a challenge-bound biometric assertion completes the run.
+
+A successful run now emits a validated D18C `JobRunReceipt` plus a compact
+`UmbrellaUserReport`. The receipt points at the stored report artifact, while the
+user report carries the recommendation, completion time, approval state, and
+journal invocation count. It also reports the required tier and accepted
+approval assurance. This makes umbrella-today a reusable Chief job with a
+terminal product rather than only an architecture harness.
+
+Every run also copies the canonical payload-free D18D audit rows into
+`chief-of-staff-tool-audit-store` over the D18A local-folder backend before actor
+errors are returned. The job then reopens that store as a fresh reader and emits
+an `UmbrellaDurableAuditSummary` keyed to the job, run, session, user, and host
+profile. Approved runs and approval-blocked writes are therefore both durable
+without persisting tool arguments, outputs, or credentials. Durable call IDs are
+scoped by scheduler tick, allowing successive runs to share one audit root while
+preserving duplicate-delivery conflicts inside a tick.
 
 The primary tests write a real `umbrella-today.txt` file through the capability
 cage, assert that the supervised agent says to bring an umbrella for the rainy

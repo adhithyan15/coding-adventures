@@ -12,6 +12,8 @@ use spice_engine::{
     TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
+const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
+
 mod syntax;
 
 pub use syntax::{
@@ -1899,26 +1901,64 @@ fn build_mosfet_params(
     for (name, value) in model.params.iter().chain(instance_params.iter()) {
         apply_mosfet_param(&mut params, name, *value);
     }
+    if !model.params.contains_key("KP") && !instance_params.contains_key("KP") {
+        if let Some(oxide_thickness) = model.params.get("TOX").filter(|value| **value > 0.0) {
+            params.kp = params.surface_mobility * 1.0e-4 * OXIDE_PERMITTIVITY / oxide_thickness;
+        }
+    }
+    if let Some(value) = instance_params.get("NRD") {
+        params.drain_squares = *value;
+    }
+    if let Some(value) = instance_params.get("NRS") {
+        params.source_squares = *value;
+    }
+    if let Some(value) = instance_params.get("AD") {
+        params.drain_area = *value;
+    }
+    if let Some(value) = instance_params.get("AS") {
+        params.source_area = *value;
+    }
+    if let Some(value) = instance_params.get("PD") {
+        params.drain_perimeter = *value;
+    }
+    if let Some(value) = instance_params.get("PS") {
+        params.source_perimeter = *value;
+    }
     params
 }
 
 fn apply_mosfet_param(params: &mut MosfetLevel1Params, name: &str, value: f64) {
     match name {
-        "VT0" | "VTO" => params.vt0 = value,
+        "VT0" | "VTO" | "VTH" => params.vt0 = value,
         "KP" => params.kp = value,
-        "LAMBDA" => params.lambda = value,
+        "LAMBDA" | "LAM" => params.lambda = value,
         "GAMMA" => params.gamma = value,
         "PHI" => params.phi = value,
         "W" => params.w = value,
         "L" => params.l = value,
+        "LD" => params.lateral_diffusion_length = value,
+        "TOX" => params.oxide_thickness = value,
+        "U0" | "UO" => params.surface_mobility = value,
+        "RD" => params.drain_resistance = value,
+        "RS" => params.source_resistance = value,
+        "RSH" => params.sheet_resistance = value,
         "IS" => params.saturation_current = value,
+        "JS" => params.saturation_current_density = value,
         "N_SUB" | "NSUB" | "N" => params.n_sub = value,
         "T_NOM" | "TNOM" => params.t_nom = value,
         "CGSO" => params.gate_source_overlap_capacitance = value,
         "CGDO" => params.gate_drain_overlap_capacitance = value,
         "CGBO" => params.gate_bulk_overlap_capacitance = value,
-        "CBS" => params.source_bulk_capacitance = value,
-        "CBD" => params.drain_bulk_capacitance = value,
+        "CBS" | "CJS" => params.source_bulk_capacitance = value,
+        "CBD" | "CJD" => params.drain_bulk_capacitance = value,
+        "CJ" => params.bottom_junction_capacitance = value,
+        "CJSW" => params.sidewall_junction_capacitance = value,
+        "PB" => params.bulk_junction_potential = value,
+        "MJ" => params.bulk_junction_grading_coefficient = value,
+        "MJSW" => params.sidewall_junction_grading_coefficient = value,
+        "FC" => params.forward_bias_depletion_coefficient = value,
+        "KF" => params.flicker_noise_coefficient = value,
+        "AF" => params.flicker_noise_exponent = value,
         _ => {}
     }
 }

@@ -828,6 +828,103 @@ fn ac_bjt_uses_forward_transit_time_as_diffusion_capacitance() {
 }
 
 #[test]
+fn ac_bjt_forward_excess_phase_rotates_transconductance() {
+    fn collector_voltage(forward_excess_phase_degrees: f64) -> Complex {
+        let forward_transit_time = 1.0e-6;
+        let frequency = 1.0 / (2.0 * std::f64::consts::PI * forward_transit_time);
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "base", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new("Rc", "col", "0", 1.0)));
+        let mut transistor = Bjt::with_model(
+            "Q1",
+            "col",
+            "base",
+            "0",
+            BjtPolarity::Npn,
+            25.85e-6,
+            100.0,
+            0.02585,
+            0.0,
+            0.0,
+            forward_transit_time,
+            0.0,
+        );
+        transistor.forward_excess_phase_degrees = forward_excess_phase_degrees;
+        circuit.add(Element::Bjt(transistor));
+
+        ac_sweep(&circuit, frequency, frequency, 1).unwrap()[0]
+            .voltage("col")
+            .unwrap()
+    }
+
+    let without_excess_phase = collector_voltage(0.0);
+    let with_excess_phase = collector_voltage(90.0);
+
+    assert!(without_excess_phase.real < -0.0009);
+    assert!(without_excess_phase.imag.abs() < 1.0e-9);
+    assert!(with_excess_phase.imag > 0.0009);
+    assert!(with_excess_phase.real.abs() < 1.0e-9);
+}
+
+#[test]
+fn ac_bjt_forward_transit_time_bias_coefficient_scales_diffusion_capacitance() {
+    fn base_amplitude(
+        coefficient: f64,
+        transit_time_current: f64,
+        transit_time_voltage: f64,
+        collector_voltage: f64,
+    ) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vcol",
+            "col",
+            "0",
+            collector_voltage,
+        )));
+        let mut transistor = Bjt::with_model(
+            "Q1",
+            "col",
+            "base",
+            "0",
+            BjtPolarity::Npn,
+            25.85e-6,
+            100.0,
+            0.02585,
+            0.0,
+            0.0,
+            1.0e-6,
+            0.0,
+        );
+        transistor.forward_transit_time_bias_coefficient = coefficient;
+        transistor.forward_transit_time_current = transit_time_current;
+        transistor.forward_transit_time_voltage = transit_time_voltage;
+        circuit.add(Element::Bjt(transistor));
+
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("base")
+            .unwrap()
+            .abs()
+    }
+
+    let nominal = base_amplitude(0.0, 0.0, 0.0, 0.0);
+    let bias_scaled = base_amplitude(9.0, 0.0, 0.0, 0.0);
+    let current_limited = base_amplitude(9.0, 1.0, 0.0, 0.0);
+    let voltage_limited = base_amplitude(9.0, 0.0, 0.1, 1.0);
+
+    assert!(bias_scaled < nominal / 5.0);
+    assert!(current_limited > bias_scaled * 5.0);
+    assert!(voltage_limited > bias_scaled * 5.0);
+}
+
+#[test]
 fn ac_bjt_uses_reverse_transit_time_as_base_collector_diffusion_capacitance() {
     fn base_amplitude(reverse_transit_time: f64) -> f64 {
         let mut circuit = Circuit::new();
@@ -864,6 +961,312 @@ fn ac_bjt_uses_reverse_transit_time_as_base_collector_diffusion_capacitance() {
 
     assert!(without_transit_time > 0.9);
     assert!(with_transit_time < without_transit_time / 100.0);
+}
+
+#[test]
+fn ac_bjt_reverse_early_voltage_reduces_gain() {
+    let gain = |reverse_early_voltage: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vin", "base", "0", 0.65, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.reverse_early_voltage = reverse_early_voltage;
+        circuit.add(Element::Bjt(transistor));
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 1).unwrap()[0]
+            .voltage("out")
+            .unwrap()
+            .abs()
+    };
+
+    assert!(gain(1.0) < gain(0.0));
+}
+
+#[test]
+fn ac_bjt_forward_beta_rolloff_reduces_gain() {
+    let gain = |rolloff_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vin", "base", "0", 0.65, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.forward_beta_rolloff_current = rolloff_current;
+        circuit.add(Element::Bjt(transistor));
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 1).unwrap()[0]
+            .voltage("out")
+            .unwrap()
+            .abs()
+    };
+
+    assert!(gain(1.0e-4) < gain(0.0));
+}
+
+#[test]
+fn ac_bjt_base_emitter_leakage_reduces_gain_through_source_resistance() {
+    let gain = |leakage_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vin", "in", "0", 0.65, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.base_emitter_leakage_saturation_current = leakage_current;
+        transistor.base_emitter_leakage_emission_coefficient = 1.5;
+        circuit.add(Element::Bjt(transistor));
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 1).unwrap()[0]
+            .voltage("out")
+            .unwrap()
+            .abs()
+    };
+
+    assert!(gain(1.0e-10) < gain(0.0));
+}
+
+#[test]
+fn ac_bjt_base_collector_leakage_loads_source_resistance() {
+    let amplitude = |leakage_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vin", "in", "0", 0.65, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "0", "base", "base");
+        transistor.base_collector_leakage_saturation_current = leakage_current;
+        transistor.base_collector_leakage_emission_coefficient = 1.5;
+        circuit.add(Element::Bjt(transistor));
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 1).unwrap()[0]
+            .voltage("base")
+            .unwrap()
+            .abs()
+    };
+
+    assert!(amplitude(1.0e-10) < amplitude(0.0));
+}
+
+#[test]
+fn ac_bjt_reverse_emission_coefficient_reduces_base_collector_diffusion_capacitance() {
+    fn base_amplitude(reverse_emission_coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new("Rc", "col", "0", 1.0)));
+        circuit.add(Element::Bjt(Bjt::with_model_and_temperature_parameters(
+            "Q1",
+            "col",
+            "base",
+            "0",
+            BjtPolarity::Npn,
+            25.85e-6,
+            100.0,
+            0.02585,
+            0.0,
+            0.0,
+            0.0,
+            1.0e-2,
+            3.0,
+            1.11,
+            0.0,
+            1.0,
+            reverse_emission_coefficient,
+        )));
+
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("base")
+            .unwrap()
+            .abs()
+    }
+
+    assert!(base_amplitude(2.0) > base_amplitude(1.0));
+}
+
+#[test]
+fn ac_bjt_base_emitter_depletion_capacitance_falls_with_reverse_bias() {
+    fn base_amplitude(grading_coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", -1.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        circuit.add(Element::Bjt(
+            Bjt::with_model_temperature_and_depletion_parameters(
+                "Q1",
+                "0",
+                "base",
+                "0",
+                BjtPolarity::Npn,
+                1.0e-14,
+                100.0,
+                0.02585,
+                1.0e-6,
+                0.0,
+                0.0,
+                0.0,
+                3.0,
+                1.11,
+                0.0,
+                1.0,
+                1.0,
+                0.75,
+                grading_coefficient,
+                0.75,
+                0.33,
+                0.5,
+            ),
+        ));
+
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 1).unwrap()[0]
+            .voltage("base")
+            .unwrap()
+            .abs()
+    }
+
+    assert!(base_amplitude(0.5) > base_amplitude(0.0));
+}
+
+#[test]
+fn ac_bjt_base_collector_depletion_capacitance_falls_with_reverse_bias() {
+    fn collector_amplitude(grading_coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 1.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin",
+            "in",
+            "collector",
+            1_000.0,
+        )));
+        circuit.add(Element::Bjt(
+            Bjt::with_model_temperature_and_depletion_parameters(
+                "Q1",
+                "collector",
+                "0",
+                "0",
+                BjtPolarity::Npn,
+                1.0e-14,
+                100.0,
+                0.02585,
+                0.0,
+                1.0e-6,
+                0.0,
+                0.0,
+                3.0,
+                1.11,
+                0.0,
+                1.0,
+                1.0,
+                0.75,
+                0.33,
+                0.75,
+                grading_coefficient,
+                0.5,
+            ),
+        ));
+
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 1).unwrap()[0]
+            .voltage("collector")
+            .unwrap()
+            .abs()
+    }
+
+    assert!(collector_amplitude(0.5) > collector_amplitude(0.0));
+}
+
+#[test]
+fn ac_bjt_xcjc_partitions_depletion_capacitance_to_external_base() {
+    fn base_amplitude(fraction: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "0", "base", "0");
+        transistor.saturation_current = 1.0e-30;
+        transistor.base_collector_capacitance = 1.0e-9;
+        transistor.base_resistance = 10_000.0;
+        transistor.base_collector_capacitance_fraction = fraction;
+        circuit.add(Element::Bjt(transistor));
+
+        ac_sweep(&circuit, 1.0e6, 1.0e6, 1).unwrap()[0]
+            .voltage("base")
+            .unwrap()
+            .abs()
+    }
+
+    assert!(base_amplitude(1.0) > base_amplitude(0.0));
+}
+
+#[test]
+fn ac_bjt_forward_bias_depletion_coefficient_shapes_both_junctions() {
+    fn junction_amplitude(coefficient: f64, base_emitter: bool) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.6, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "junction", 1_000.0,
+        )));
+        circuit.add(Element::Bjt(
+            Bjt::with_model_temperature_and_depletion_parameters(
+                "Q1",
+                "0",
+                "junction",
+                "0",
+                BjtPolarity::Npn,
+                1.0e-30,
+                100.0,
+                0.02585,
+                if base_emitter { 1.0e-6 } else { 0.0 },
+                if base_emitter { 0.0 } else { 1.0e-6 },
+                0.0,
+                0.0,
+                3.0,
+                1.11,
+                0.0,
+                1.0,
+                1.0,
+                0.75,
+                0.33,
+                0.75,
+                0.33,
+                coefficient,
+            ),
+        ));
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 1).unwrap()[0]
+            .voltage("junction")
+            .unwrap()
+            .abs()
+    }
+
+    for base_emitter in [true, false] {
+        let early_transition = junction_amplitude(0.2, base_emitter);
+        let late_transition = junction_amplitude(0.8, base_emitter);
+        assert!(
+            late_transition < early_transition * 0.9,
+            "base_emitter={base_emitter} early={early_transition} late={late_transition}"
+        );
+    }
 }
 
 #[test]
@@ -933,6 +1336,7 @@ fn ac_mosfet_overlap_capacitance_shunts_high_frequency_gate_drive() {
                 kp: 1.0e-12,
                 w: 1.0,
                 l: 1.0,
+                oxide_thickness: 1.0e9,
                 gate_source_overlap_capacitance: cgso,
                 ..MosfetLevel1Params::default()
             },
@@ -949,6 +1353,242 @@ fn ac_mosfet_overlap_capacitance_shunts_high_frequency_gate_drive() {
 
     assert!(without_capacitance > 0.9);
     assert!(with_capacitance < without_capacitance / 100.0);
+}
+
+#[test]
+fn ac_mosfet_drain_area_scales_bottom_junction_capacitance() {
+    fn drain_amplitude(bottom_junction_capacitance: f64, drain_area: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "drain", 1_000.0,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                kp: 1.0e-12,
+                w: 1.0,
+                l: 1.0,
+                oxide_thickness: 1.0e9,
+                drain_area,
+                bottom_junction_capacitance,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("drain")
+            .unwrap()
+            .abs()
+    }
+
+    let without_area_capacitance = drain_amplitude(0.5, 0.0);
+    let with_area_capacitance = drain_amplitude(0.5, 2.0e-6);
+
+    assert!(without_area_capacitance > 0.9);
+    assert!(with_area_capacitance < without_area_capacitance / 100.0);
+}
+
+#[test]
+fn ac_mosfet_drain_perimeter_scales_sidewall_junction_capacitance() {
+    fn drain_amplitude(sidewall_capacitance: f64, drain_perimeter: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "drain", 1_000.0,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                kp: 1.0e-12,
+                w: 1.0,
+                l: 1.0,
+                oxide_thickness: 1.0e9,
+                drain_perimeter,
+                sidewall_junction_capacitance: sidewall_capacitance,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("drain")
+            .unwrap()
+            .abs()
+    }
+
+    let without_sidewall_capacitance = drain_amplitude(0.5, 0.0);
+    let with_sidewall_capacitance = drain_amplitude(0.5, 2.0e-6);
+
+    assert!(without_sidewall_capacitance > 0.9);
+    assert!(with_sidewall_capacitance < without_sidewall_capacitance / 100.0);
+}
+
+#[test]
+fn ac_mosfet_source_area_scales_bottom_junction_capacitance() {
+    fn source_amplitude(bottom_junction_capacitance: f64, source_area: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "source", 1_000.0,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "0",
+            "0",
+            "source",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                kp: 1.0e-12,
+                w: 1.0,
+                l: 1.0,
+                oxide_thickness: 1.0e9,
+                source_area,
+                bottom_junction_capacitance,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("source")
+            .unwrap()
+            .abs()
+    }
+
+    let without_area_capacitance = source_amplitude(0.5, 0.0);
+    let with_area_capacitance = source_amplitude(0.5, 2.0e-6);
+
+    assert!(without_area_capacitance > 0.9);
+    assert!(with_area_capacitance < without_area_capacitance / 100.0);
+}
+
+#[test]
+fn ac_mosfet_source_perimeter_scales_sidewall_junction_capacitance() {
+    fn source_amplitude(sidewall_capacitance: f64, source_perimeter: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "source", 1_000.0,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "0",
+            "0",
+            "source",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                kp: 1.0e-12,
+                w: 1.0,
+                l: 1.0,
+                oxide_thickness: 1.0e9,
+                source_perimeter,
+                sidewall_junction_capacitance: sidewall_capacitance,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("source")
+            .unwrap()
+            .abs()
+    }
+
+    let without_sidewall_capacitance = source_amplitude(0.5, 0.0);
+    let with_sidewall_capacitance = source_amplitude(0.5, 2.0e-6);
+
+    assert!(without_sidewall_capacitance > 0.9);
+    assert!(with_sidewall_capacitance < without_sidewall_capacitance / 100.0);
+}
+
+#[test]
+fn ac_mosfet_sidewall_grading_coefficient_shapes_reverse_bias_capacitance() {
+    fn source_amplitude(grading_coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 1.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "source", 1_000.0,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "0",
+            "0",
+            "source",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                kp: 1.0e-12,
+                w: 1.0,
+                l: 1.0,
+                oxide_thickness: 1.0e9,
+                source_perimeter: 2.0e-6,
+                sidewall_junction_capacitance: 0.5,
+                sidewall_junction_grading_coefficient: grading_coefficient,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("source")
+            .unwrap()
+            .abs()
+    }
+
+    let fixed = source_amplitude(0.0);
+    let shaped = source_amplitude(0.5);
+    assert!(shaped > fixed * 1.3);
+}
+
+#[test]
+fn ac_mosfet_oxide_thickness_scales_intrinsic_gate_capacitance() {
+    let gate_amplitude = |oxide_thickness| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new("Rin", "in", "gate", 1.0e6)));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "0",
+            "gate",
+            "0",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                w: 10.0e-6,
+                l: 1.0e-6,
+                oxide_thickness,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+
+        ac_sweep(&circuit, 1.0e9, 1.0e9, 1).unwrap()[0]
+            .voltage("gate")
+            .unwrap()
+            .abs()
+    };
+
+    assert!(gate_amplitude(50.0e-9) < gate_amplitude(100.0e-9));
 }
 
 #[test]
@@ -1019,6 +1659,78 @@ fn ac_jfet_gate_source_capacitance_shunts_high_frequency_gate_drive() {
 
     assert!(without_capacitance > 0.9);
     assert!(with_capacitance < without_capacitance / 100.0);
+}
+
+#[test]
+fn ac_jfet_junction_potential_shapes_reverse_biased_gate_capacitance() {
+    fn gate_amplitude(junction_potential: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", -0.5, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "gate", 1_000.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rdrain", "drain", "0", 1_000.0,
+        )));
+        let mut jfet = Jfet::with_model_and_capacitance(
+            "J1",
+            "drain",
+            "gate",
+            "0",
+            JfetPolarity::Njf,
+            1.0e-12,
+            -2.0,
+            0.0,
+            1.0e-9,
+            0.0,
+        );
+        jfet.junction_potential = junction_potential;
+        circuit.add(Element::Jfet(jfet));
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("gate")
+            .unwrap()
+            .abs()
+    }
+
+    assert!(gate_amplitude(0.5) > gate_amplitude(2.0));
+}
+
+#[test]
+fn ac_jfet_forward_bias_depletion_coefficient_shapes_gate_capacitance() {
+    fn gate_amplitude(coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.6, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "gate", 1_000.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rdrain", "drain", "0", 1_000.0,
+        )));
+        let mut jfet = Jfet::with_model_and_capacitance(
+            "J1",
+            "drain",
+            "gate",
+            "0",
+            JfetPolarity::Njf,
+            1.0e-12,
+            -2.0,
+            0.0,
+            1.0e-9,
+            0.0,
+        );
+        jfet.forward_bias_depletion_coefficient = coefficient;
+        circuit.add(Element::Jfet(jfet));
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("gate")
+            .unwrap()
+            .abs()
+    }
+
+    assert!(gate_amplitude(0.2) > gate_amplitude(0.8));
 }
 
 #[test]

@@ -1,0 +1,37 @@
+% ============================================================================
+% gay-lussac-law.query.adj — worked examples over the chemistry gay-lussac-law library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a Gay-Lussac's-law
+% question: it states NO arithmetic and NO relation — it only `import`s the grounded
+% library, `observe`s the measured quantities it decomposed from the prompt (each a
+% byte-provenanced span, elided here), and asks the engine to APPLY the cited relation.
+% The native adj-lang engine binds the parameters, computes each value EXACTLY on the
+% CPU, and returns it with the relation's source/locator/trust.
+%
+% The four questions INVERT around the conserved ratio P₁/T₁ = P₂/T₂ (worked case
+% P₁ = 2, T₁ = 4, P₂ = 3, T₂ = 6; note 2/4 = 3/6, i.e. P₁T₂ = 2·6 = 12 = 3·4 = P₂T₁):
+% a gas at 2 atm and 4 K heated to 6 K (constant volume) reaches 3 atm; that 3 atm at
+% 4 K starting temperature is what the final-temperature reading recovers as 6 K; and the
+% initial pressure / initial temperature readings recover 2 atm and 4 K from the rest.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli gay-lussac-law.query.adj
+% ============================================================================
+
+import "gay-lussac-law.adj"
+
+% 2 atm at 4 K, heated at constant volume to 6 K: final pressure = 2 * 6 / 4.
+observe initial_pressure(2)
+observe initial_temperature(4)
+observe final_temperature(6)
+? final_pressure(initial_pressure, initial_temperature, final_temperature)   % expect 3   (P₂ = P₁T₂/T₁)
+
+% That 3 atm final pressure, from 2 atm at 4 K: final temperature = 3 * 4 / 2.
+observe final_pressure(3)
+? final_temperature(final_pressure, initial_pressure, initial_temperature)    % expect 6   (T₂ = P₂T₁/P₁)
+
+% Recover the initial pressure from the final state: initial pressure = 3 * 4 / 6.
+? initial_pressure(final_pressure, final_temperature, initial_temperature)    % expect 2   (P₁ = P₂T₁/T₂)
+
+% Recover the initial temperature from the rest: initial temperature = 2 * 6 / 3.
+? initial_temperature(initial_pressure, final_temperature, final_pressure)    % expect 4   (T₁ = P₁T₂/P₂)

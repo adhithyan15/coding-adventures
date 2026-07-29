@@ -1,0 +1,33 @@
+% ============================================================================
+% total-lung-capacity.query.adj — worked examples over the clinical total-lung-capacity library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a total-lung-capacity question:
+% it states NO arithmetic and NO relation — it only `import`s the grounded library, `observe`s
+% the quantities it decomposed from the prompt (each a byte-provenanced span, elided here), and
+% asks the engine to APPLY the cited definition. The native adj-lang engine binds the
+% parameters, computes each value EXACTLY on the CPU, and returns it with the definition's
+% source/locator/trust.
+%
+% The three questions INVERT: a vital capacity of 4 L plus a residual volume of 2 L gives a
+% total lung capacity of 4 + 2 = 6 L; that 6 L total lung capacity minus the same 2 L residual
+% volume is exactly what the vital-capacity formula recovers the 4 L from, and that 6 L total
+% lung capacity minus the same 4 L vital capacity is exactly what the residual-volume formula
+% recovers the 2 L from.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli total-lung-capacity.query.adj
+% ============================================================================
+
+import "total-lung-capacity.adj"
+
+% VC 4 L, RV 2 L: total lung capacity = 4 + 2.
+observe vital_capacity(4)
+observe residual_volume(2)
+? total_lung_capacity(vital_capacity, residual_volume)         % expect 6  (TLC = VC + RV)
+
+% That 6 L total lung capacity with the same 2 L residual volume: VC = 6 − 2.
+observe total_lung_capacity(6)
+? vital_capacity(total_lung_capacity, residual_volume)         % expect 4  (same def, solved for VC = TLC − RV)
+
+% That 6 L total lung capacity with the same 4 L vital capacity: RV = 6 − 4.
+? residual_volume(total_lung_capacity, vital_capacity)         % expect 2  (same def, solved for RV = TLC − VC)

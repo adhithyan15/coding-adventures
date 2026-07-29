@@ -1,0 +1,17 @@
+% ============================================================================
+% powers.query.adj — a worked example of the powers formula library.
+% ============================================================================
+% Run against the shipped stdlib:
+%
+%   adj-lang-cli powers.query.adj
+%
+% "The area of a square tile with a 5-cm side" → 5 × 5 = 25, computed on the CPU
+% by composing the cited `product` primitive from arithmetic.adj. The answer
+% carries BOTH the square definition (primary) and the product primitive it built
+% on (corroboration) — the model performs zero arithmetic.
+% ============================================================================
+import "powers.adj"
+
+observe base(5)
+
+? square(base)

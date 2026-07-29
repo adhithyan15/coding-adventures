@@ -2,6 +2,147 @@
 
 All notable changes to this crate are documented here.
 
+## 0.20.0 - 2026-07-29 — twig-compat alias `__twig_gc_register_ref_array_kind` — PR-4 (AOT00-T5)
+
+- **`__twig_gc_register_ref_array_kind(fixed, fixed_count, tail_from)`** (new `twig_compat` alias
+  → `__gc_register_ref_array_kind`, 0.19.0) — the `__twig_gc_*` linker name the native code
+  generators emit for the `gc_register_ref_array_kind` builtin, so a language frontend's **array**
+  type can declare its layout (fixed ref fields + a variable reference tail) and have the
+  collector trace — and under compaction **relocate** — the array and its elements precisely
+  instead of pinning them. A plain forwarding alias (registers a kind; no allocation or stack
+  scan), mirroring `__twig_gc_alloc`.
+- **Test** `twig_register_ref_array_kind_alias_forwards`: an array allocated under the alias's
+  returned kind has its tail traced — an element in a tail slot is retained via the array and
+  reclaimed once the slot is cleared.
+- Completes the AOT00-T5 arc's native seam (PR-4 of 4): the backends' new
+  `gc_register_ref_array_kind` `BuiltinSig` row auto-emits this symbol.
+
+## 0.19.0 - 2026-07-28 — C ABI `__gc_register_ref_array_kind` — PR-3 (AOT00-T5)
+
+- **`__gc_register_ref_array_kind(fixed, fixed_count, tail_from) -> kind_id`** (new `#[no_mangle]`
+  export + `gc_core.h` declaration) — the C-ABI seam for `gc_core::FlatHeap::register_ref_array_kind`
+  (gc-core 0.23.0). Registers a **variable-length reference-array** kind: `fixed_count` fixed
+  ref-field offsets followed by a tail region where every aligned 8-byte word in `[tail_from, size)`
+  of an instance is a reference. One kind describes arrays of every length (the tail follows the
+  instance's alloc size), so a native runtime's JS/Ruby/Python array, vector, or hash backing store
+  is traced — and under the compacting collector **relocated** — precisely instead of conservatively
+  (a conservative array pins itself and every element it references, defeating compaction). Mirrors
+  `__gc_register_kind`: `fixed` null / `fixed_count <= 0` ⇒ tail-only; negative fixed offsets are
+  ignored; a negative `tail_from` is treated as `0`. Layout contract (documented): every word in
+  the tail must be a reference (base/tagged-base or null).
+- **Test:** `c_abi_register_ref_array_kind_traces_tail` — one kind serves a length-2 and a length-3
+  array; an element is retained via a tail slot and reclaimed once that slot is cleared (proving the
+  tail, not another path, kept it alive).
+- PR-3 of 4 (AOT00-T5 §7); PR-4 wires the native backend + an end-to-end relocation differential.
+
+## 0.18.0 - 2026-07-27 — twig-compat aliases `__twig_gc_collect_incremental_*` (frontend incremental GC)
+
+- **`__twig_gc_collect_incremental_{start,step,finish}`** (new `twig_compat` aliases →
+  `__gc_collect_incremental_*`) — the `__twig_gc_*` linker names a native code generator emits
+  for the `gc_collect_incremental_*` builtin trio, so a compiled program can drive the
+  bounded-pause incremental cycle. Mirror `__twig_gc_collect_compacting`. No new `unsafe`
+  beyond the delegated calls.
+
+## 0.17.0 - 2026-07-25 — incremental collector C ABI `__gc_collect_incremental_{start,step,finish}` (AOT00-T4 §6)
+
+- **Three new exports in `stack_scan.rs`** — the bounded-pause incremental collection cycle,
+  driven as `start(); while (!step(BUDGET)) { …mutator… } finish();`:
+  - `__gc_collect_incremental_start()` captures the precise roots **once** via the *same*
+    frame-pointer walk as `__gc_collect_precise` (precise slots + conservative regions + the
+    spilled callee-saved registers) and shades them grey. Reference stores the mutator makes
+    *between* steps are caught by `__gc_write_barrier`'s incremental shading (the Dijkstra
+    insertion barrier landed in gc-core 0.19.0) — no capi change needed there, it already
+    forwards to `FlatHeap::write_barrier`.
+  - `__gc_collect_incremental_step(budget) -> i64` advances marking by up to `budget` objects,
+    returning `1` when complete / `0` otherwise (negative budget → 0).
+  - `__gc_collect_incremental_finish() -> i64` sweeps the unreachable objects and returns the
+    count reclaimed.
+  - **Untrustworthy stack ⇒ safe no-op cycle:** if `start` can't trust the stack it enters no
+    phase; `step` then returns `1` immediately and `finish` returns `0` (guarded by
+    `FlatHeap::incremental_in_progress()`), so nothing is swept — the same bias-to-leak as
+    `__gc_collect_precise`. Declared in `include/gc_core.h`.
+- **Tests (+2):** an end-to-end smoke test drives the real start→step(budget 1)→finish protocol
+  on this thread's stack (a live local is kept, a dead object reclaimed, several slices) + a
+  no-phase-safety test (step/finish without a start free nothing). Real-stack asm path isn't
+  Miri-able (same limitation as the `__gc_collect_precise` tests); the underlying gc-core
+  `incremental_*` logic is Miri-clean.
+
+## 0.16.0 - 2026-07-24 — twig-compat alias `__twig_gc_collect_compacting` (frontend GC.compact)
+
+- **`__twig_gc_collect_compacting()`** (new `twig_compat` alias → [`__gc_collect_compacting`]) —
+  the `__twig_gc_*` linker symbol a native code generator emits for the `gc_collect_compacting`
+  builtin, so a compiled program can trigger a moving/compacting collection. Mirrors
+  `__twig_gc_collect_precise`. No new `unsafe` beyond the delegated call.
+
+## 0.15.0 - 2026-07-24 — moving/compacting collector C ABI `__gc_collect_compacting` (AOT00-T3 §5)
+
+- **`__gc_collect_compacting()`** (new export in `stack_scan.rs`) — the argument-less
+  **relocating** collection rooted precisely at this thread's stack: the relocating analogue
+  of `__gc_collect_precise`. It runs the *same* frame-pointer walk (`build_precise_roots` →
+  precise slots for stack-mapped frames + conservative regions for the rest, plus the spilled
+  callee-saved registers), then drives `gc_core::FlatHeap::collect_compacting` instead of
+  `collect_mixed`. Movable survivors (reachable purely precisely, no conservative in-edge) are
+  evacuated into an arena and every pointer that named them is rewritten — including writing
+  the forwarded address back into its precise root slot, so the mutator's stack points at the
+  relocated objects on return. With no stack maps registered nothing is movable and it
+  degrades to exactly `__gc_collect_precise`, so it is always safe to call. Declared in
+  `include/gc_core.h`.
+- **Tests (+2):** an end-to-end smoke test on a real thread stack (`__gc_collect_compacting`
+  keeps a live local, frees a dead object, never crashes) and a synthetic-stack **relocation
+  differential** (`walk_output_drives_compacting_collection_and_relocates`): a precisely-named
+  registered-kind object with no conservative in-edge is *moved* — its address in the root
+  slot is rewritten to the new arena location — while an unnamed sibling in the same mapped
+  frame is reclaimed; `live_bytes` preserved.
+
+## 0.14.0 - 2026-07-23 — generational tenuring-age C ABI
+
+Exposes gc-core 0.11.0's tunable generational **tenuring age** across the C ABI so native
+consumers can tune how many collections a young object survives before promotion:
+
+- `void __gc_set_tenure_age(int64_t threshold)` → `FlatHeap::set_tenure_age`. The `i64`
+  argument is clamped to `1..=255` (`0`/negatives → `1`, over-large → `255`) before the
+  `u8` cast, so tenuring always terminates.
+- `int64_t __gc_tenure_age(void)` → the current threshold (default `1` = immediate
+  tenuring).
+
+Both are thin `with_heap` wrappers over the process-wide heap, declared in `gc_core.h`.
+One host test (`c_abi_set_and_get_tenure_age_clamps`) covers the round-trip + clamp; the
+aging *behaviour* is covered by gc-core's own tests. Purely additive; no existing symbol
+changes. gc-core-capi 0.13.0 → 0.14.0.
+
+## 0.13.0 - 2026-07-21 — twig-compat precise/observability aliases (AOT00-T1 increment C)
+
+Two `__twig_gc_*` aliases the native code generators emit for the GC-stress
+`live_bytes` differential that makes precise roots observable end to end:
+
+- **`__twig_gc_collect_precise()`** → `__gc_collect_precise` — a full collection
+  rooted **precisely** at the caller's stack via the frame-pointer walk (mapped
+  frames contribute exact reference slots, the rest conservative). Returns the freed
+  count. `#[inline(never)]`, same stack-ownership contract as `__gc_collect_precise`.
+- **`__twig_gc_stackmap_count()`** → `__gc_stackmap_count` — the number of registered
+  functions, a diagnostic that confirms an AOT image's `__gc_init_stackmaps` ran.
+
+Additive (`twig_compat` only); one new test. Enables the twig-aot `gc_collect_precise`
+/ `gc_stackmap_count` builtins.
+
+## [0.12.0] — 2026-07-22
+
+### Added
+
+- **`__gc_register_stackmap_module(entries, n)` + `GcStackmapModuleEntry`** — the
+  batch registration entry a native-AOT image's start-up path invokes to register
+  **every** function's stack map in one call. It is a thin, allocation-free loop over
+  `__gc_register_stackmap`, one call per `#[repr(C)]` `GcStackmapModuleEntry` (each a
+  1:1 mirror of the `__gc_register_stackmap` arguments). This is what lets an image
+  emit its whole stack-map table as one `.rodata` array of entries plus a single
+  start-up `bl` — far cheaper to generate than an unrolled per-function call
+  sequence — so `__gc_collect_precise` can finally resolve real frames instead of
+  falling back to a conservative scan (`AOT00-T1-stackmap-emission.md`, the
+  registration half of the emission rung). Returns the total records registered; a
+  null table or `n <= 0` is a no-op. 2 unit tests (multi-function round-trip through
+  `resolve`, degenerate-input inertness) + a C `gc_core.h` declaration.
+
+
 ## [0.11.0] — 2026-07-18
 
 ### Added

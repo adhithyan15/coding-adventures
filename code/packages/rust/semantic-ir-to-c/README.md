@@ -77,13 +77,67 @@ The emitter is **thin**; the semantics live in an inlined C runtime
 
 ## Capability declaration (v0)
 
-**Accepts** the SIR-v0 feature set: `Closures`, `Pairs`, `Symbols`, `Strings`,
-`DynamicTyping`, `OptionalTypeAnnotations`, `MutualRecursion`, `Globals`.
+**Accepts** `Closures`, `Pairs`, `Symbols`, `Strings`, `DynamicTyping`,
+`OptionalTypeAnnotations`, `MutualRecursion`, `Globals`; the SIR26 integer
+conversions (`Conversions`, `SizedIntegers`, `Unsigned`, `WrappingArithmetic`);
+SIR16 control flow and mutation (`Loops` — `While`, `ForRange`, `ForEach`; and
+`MutableBindings`); SIR16 `Sequences` — a `SIR_SEQ` heap array with
+`SeqLit`/`SeqIndex`/`SeqLen`/`SeqSet` and structural equality; and SIR16 `Maps`
+— a `SIR_MAP` heap assoc-array with `MapLit`/`MapGet`/`MapSet`, structural
+composite keys, positional structural equality, and `{k: v}` display (matching
+the Go/Rust backends); SIR16 `Floats` — a `SIR_FLOAT` `FloatLit` (`7.0`
+stays a Float, not the Integer `7`; `Infinity`/`NaN` via `<math.h>`), with
+native float arithmetic, the division frontier (Float promotes, two Integers
+floor), and IEEE non-finite results; SIR16 `ShortCircuit` — `LogicalAnd`
+(`&&`) and `LogicalOr` (`||`) lowered to an `if (_sir_truthy(...))` overwrite
+that short-circuits the dead operand and yields the deciding operand (not a
+bool); SIR19 `DefaultParams` — a positional default via a `_sir_missing`
+sentinel: a `DirectCall` pads omitted trailing arguments and each function opens
+with an `if (_sir_is_missing(p)) { p = <default>; }` prologue (a later default
+may reference an earlier parameter); and SIR19 `KeywordParams` — a keyword
+argument resolved to its callee's parameter slot **by name** at emit time (KW6),
+producing a plain positional C call (omitted optional keywords filled with
+`_sir_missing()` and substituted by the same default prologue); and SIR17
+`Exceptions` — `begin/rescue/ensure` + `raise` lowered to a `setjmp`/`longjmp`
+handler stack (a `SIR_ERROR` value, a baked-in exception-class ancestry table
+for `rescue`-by-class matching, and a two-handler structure so `ensure` runs
+even when a rescue body raises). Rescue-type names are emitted as quoted string
+literals (no injection); `retry` is deferred, rejected cleanly. And the OOP
+mirror **slice 1** — `Classes` + `Constants`: an empty class
+(`class Foo; end` → a comment), construction (`Foo.new` → `_sir_new_instance`, a
+new `SIR_INSTANCE` box stored inline in the union that prints `#<Foo>`), and
+constants (`PI = 3` / `PI` → a runtime `_sir_const_set` / `_sir_const_get`
+table).  Class/constant names are quoted C string literals (no injection).  And
+**slice 2** — instance methods: `__def_method__` registers a `(class, method) →
+closure` into an explicit table (`_sir_def_method`), and `__method__` dispatches
+via `_sir_call_method` (resolve `(recv's class, method)`, apply the closure; miss
+→ `NoMethodError`).  Dispatch is an explicit data lookup — **never reflection** on
+a source string — so it is anti-RCE by construction; a dispatch to an
+un-registered (built-in) method is rejected cleanly (the Collections batch).  And
+**slice 3** — `InstanceVars`: `@v = x` / `@v` (`Scope::Instance`) →
+`_sir_ivar_set` / `_sir_ivar_get` on the receiver's lazily-allocated `@name →
+value` map (an unset `@v` reads nil), and a bare `self` → `_sir_self()`.  The
+receiver is carried across the hoisted method body in `_sir_current_self` (saved
+and restored by `_sir_call_method`; an enclosing `begin`/`rescue` restores it on
+the unwind path).  The `@`-name is a quoted C string literal (no injection).  And
+**slice 4** — inheritance + `super`: `class Dog < Animal` emits
+`_sir_register_super("Dog", "Animal")` into a mutable user-ancestry table that
+`_sir_class_super` consults **before** the baked-in exception hierarchy (so ONE
+`super_of` drives both `rescue`-matching and method resolution); `_sir_call_method`
+resolves a method up the ancestry (`_sir_resolve_method`), so a subclass inherits
+its parent's methods; and `super` → `_sir_call_super`, resolving the method from
+the superclass of the defining class and applying it to the current `self`.  Every
+ancestry walk is bounded (`SIR_ANCESTRY_MAX`), so a cyclic hand-built hierarchy
+cannot hang.  Class / method / super-class names are all quoted C string literals
+(no injection).
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
-`Intrinsics`, and every later feature until its batch lands.  `Bignum` stays
-rejected until a bignum runtime ships — a module needing arbitrary precision is
-refused, never silently truncated.
+`Intrinsics`, `NDArrays`, the rest of OOP (`@@class vars`, class methods,
+modules — later mirror slices, so `__new__` with constructor args, a
+`class << self` singleton, and the `@@` scope are all refused for now), and
+every other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
+until a bignum runtime ships — a module needing arbitrary precision is refused,
+never silently truncated.
 
 ## Roadmap to parity
 

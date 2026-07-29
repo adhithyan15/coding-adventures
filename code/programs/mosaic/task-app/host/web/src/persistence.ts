@@ -50,6 +50,13 @@ export interface WorkspaceRecord {
   order: string[];
   /** Id sequence high-water mark, so new ids never collide with loaded ones. */
   counter: number;
+  /**
+   * The project the user was last looking at. Host state by design: the engine keeps
+   * this cursor out of its snapshot so two hosts on the same data can sit on different
+   * projects, which makes remembering it the host's job. Optional — records written
+   * before projects existed simply don't have it, and load falls back to the default.
+   */
+  activeProject?: string;
   /** When this record was written (ms epoch) — for debugging / future conflict resolution. */
   savedAt: number;
 }
@@ -95,8 +102,16 @@ export function makeWorkspaceRecord(
   order: readonly string[],
   counter: number,
   now: number,
+  activeProject?: string,
 ): WorkspaceRecord {
-  return { id: WORKSPACE_KEY, snapshot, order: [...order], counter, savedAt: now };
+  return {
+    id: WORKSPACE_KEY,
+    snapshot,
+    order: [...order],
+    counter,
+    savedAt: now,
+    ...(activeProject === undefined ? {} : { activeProject }),
+  };
 }
 
 /**

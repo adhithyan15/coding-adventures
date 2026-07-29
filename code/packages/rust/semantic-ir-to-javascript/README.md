@@ -402,8 +402,83 @@ forward the fix the TypeScript sibling package's own `/security-review`
 found.
 
 `print`/`puts` render a Symbolic term via `Symbolic.toDisplayString`
-(`f(x, 1/3)`-style), reached from `formatSeen` by checking for a plain
-object carrying a `.kind` tag.
+(`f(x, 1/3)`-style — Derive-sourced modules get a different, own-language
+convention instead; see "Derive's own SIR23 display convention" below),
+reached from `formatSeen` by checking for a plain object carrying a
+`.kind` tag.
+
+**`Symbolic.evalTerm` (SIR23 addendum, item 1 of 4 — arithmetic/
+comparison/logic folding only).** Every top-level SIR23 statement
+(`emit.rs`'s `Stmt::ExprStmt` arm, for a bare `SymApply`/`SymSymbol`/
+`SymRational`, or the same shape as `print`'s sole argument) is wrapped
+in `__Sir.Symbolic.unwrap(__Sir.Symbolic.evalTerm(...))` — a direct JS
+port of `symbolic-vm`'s `VM::eval`/`eval_apply` per-head dispatch (see
+`code/specs/SIR23-symbolic-pattern-semantic-ir.md`'s own "Addendum" for
+the full design). `Expr::SymApply`'s own codegen is unchanged (still a
+bare, unevaluated `apply(head, args)`); `evalTerm` recurses into
+`head`/args itself, so wrapping happens exactly once per statement, not
+once per nested `SymApply`.
+
+This item's scope is intentionally narrow:
+
+- **Wired up:** arithmetic (`Add`/`Sub`/`Mul`/`Div`/`Pow`/`Neg`/`Inv`/
+  `Abs`, with exact-rational results — `1/3` stays `1/3`, `10/2` folds
+  to the integer `5`), comparison (`Equal`/`NotEqual`/`Less`/`Greater`/
+  `LessEqual`/`GreaterEqual`, folding to the `True`/`False` **symbol**,
+  never a JS boolean), logic (`And`/`Or`/`Not`, N-ARY).
+- **Declared but inert:** `Assign`/`Define`/`If` (`HELD_HEADS`) have no
+  handler yet, so they stay byte-for-byte the same unevaluated data
+  today's codegen already produces — no environment, no user-function
+  dispatch, no branching. That is item 2's job.
+- **Not wired up at all:** calculus/elementary functions (`Sin`, `D`,
+  `Integrate`, … — item 3; held-form execution — `Assign`/`Define`/`If`
+  dispatch — is item 2, above). `List` needs no handler ever:
+  applicative-order argument evaluation alone folds `List(Add(1,1),
+  Mul(2,3))` into `List(2, 6)` for free.
+- `MAX_EVAL_DEPTH = 2000` is `evalTerm`'s own empirically-measured
+  recursion-depth cap (CWE-674) — deliberately not a reuse of
+  `MAX_TERM_DEPTH` above, which guards a different function
+  (`replaceAll`/`replaceRepeated`'s tree walk) with a different
+  per-frame cost. See `runtime.rs`'s own doc comment on the constant for
+  the full measurement writeup, and `tests/sir23_eval_depth_guard.rs`
+  for the executable proof.
+
+**Derive's own SIR23 display convention (SIR23 addendum, item 4 of 4 —
+display only, scoped to Derive).** `Symbolic.toDisplayString` branches,
+at its own top, on a fourth `SIR_DISPLAY_*` flag — `SIR_DISPLAY_DERIVE`,
+computed from `m.metadata.source_language == "derive"` exactly like the
+existing `SIR_DISPLAY_RUBY`/`SIR_DISPLAY_APL_HIGH_MINUS`/
+`SIR_DISPLAY_J_UNDERSCORE` flags (see the "Array/matrix domain" section
+below for those) — to a separate function family (`deriveRender`/
+`derivePrintAt`/`deriveRenderApply`/`deriveRenderList`) that is a direct,
+byte-for-byte JS port of `derive-runtime::printer::print_derive`'s own
+precedence-based renderer, rather than the generic `head(args, …)` form
+every other source language still gets:
+
+- Infix `Add`/`Sub`/`Mul`/`Div` and comparisons `Equal`/`Less`/`Greater`/
+  `LessEqual`/`GreaterEqual`, n-ary `And`/`Or`, prefix `Neg`/`Not`, and
+  right-associative `Pow` (`a^b^c`), each parenthesised exactly where
+  `printer.rs`'s own 9-level precedence ladder says a looser child needs
+  it.
+- Derive's own `List` bracket convention (D-5): a flat vector prints
+  `[a, b, c]`; a "list of lists" prints as a `;`-row-separated matrix,
+  `[a, b; c, d]`.
+- Case-bridging a fixed table of builtin heads back to Derive's own
+  UPPERCASE surface spelling (`D` → `"DIF"`, `Sin` → `"SIN"`, …); any
+  other head (a user-defined function) renders as-typed.
+- `True`/`False` and `Assign`/`Define` need **no** special-casing: the
+  former already renders identically under both conventions (a bare
+  `Symbol` term's verbatim name); the latter never reach the display path
+  at all once items 2/3 land (their handlers return the bound value, not
+  an `Assign(...)`/`Define(...)` term) — see `runtime.rs`'s own
+  `SIR_DISPLAY_DERIVE` doc comment for the full writeup.
+
+This item has no code dependency on items 2/3 (it touches only
+`toDisplayString`, a different function than `evalTerm`/`evalApply`) and
+is scoped to Derive only — `derive-to-semantic-ir` is the only Stream B
+frontend with an oracle corpus proving it today; Wolfram/Macsyma/Reduce/
+Maple's own conventions are separate future work following the identical
+recipe (one more `SIR_DISPLAY_*` flag + printer port).
 
 ### Array/matrix domain (SIR22 base cut)
 

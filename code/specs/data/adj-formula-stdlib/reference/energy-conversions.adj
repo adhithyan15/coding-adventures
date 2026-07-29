@@ -1,0 +1,61 @@
+% ============================================================================
+% energy-conversions — energy-unit → joule factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of the `*-conversions.adj` references: a native tabular
+% relation ingested VERBATIM from a published NIST conversion table. Each row
+% states the factor converting one energy unit to the SI unit of energy, the joule:
+%
+%     ? energy_to_joules(calorie_th, $J)    % 4.184     (a thermochemical calorie)
+%     ? energy_to_joules(kilowatt_hour, $J) % 3600000   (a kW·h)
+%
+% Why a `table` and not several hand-written `relate` clauses: this is exactly the
+% shape reference data comes in — a published table, not prose. The citable
+% artifact IS the NIST conversion-factors table at the `locator` below; every
+% factor here is a CELL of NIST Special Publication 811, Appendix B.9 ("Factors
+% for units listed alphabetically"), and the whole table is defended by one
+% provenance envelope rather than repeating `source`/`locator`/`trust` on every
+% row. Each `row` lowers to a ground relation `energy_to_joules(unit, joules)`, so
+% the exact lookup above is the ordinary SLD binding query — the engine returns
+% the factor WITH this table's citation as its proof, on the CPU, with zero model
+% calls. A looked-up factor is a number, so it can feed a `let`/`formula`
+% downstream (e.g. multiply an energy quantity by it) through the existing slot path.
+%
+% HONESTY NOTE (like time-conversions, these are EXACT defined factors, not
+% rounded ones): NIST SP 811 B.9 prints these five "Energy" factors in BOLDFACE,
+% its convention for factors that are EXACT by definition, transcribed here as the
+% plain decimal number of joules each unit names:
+%
+%     calorie (thermochemical)      4.184  E+00   →  4.184
+%     calorie (International Table)  4.1868 E+00   →  4.1868
+%     erg                           1.0    E-07   →  0.0000001
+%     watt hour (W·h)               3.6    E+03   →  3600
+%     kilowatt hour (kW·h)          3.6    E+06   →  3600000
+%
+% The calorie is split into its TWO exact definitions — the thermochemical calorie
+% (`calorie_th`, exactly 4.184 J) and the International Table calorie (`calorie_it`,
+% exactly 4.1868 J) — because a bare "calorie" is ambiguous between them and the
+% engine must never guess which; a caller names the one it means. Deliberately
+% OMITTED: the British thermal unit (1.054350 / 1.055056 E+03, a rounded measured
+% factor, not exact), the electronvolt (1.602177 E-19, tied to a measured constant),
+% and the foot pound-force (1.355818 E+00) — none is a single EXACT defined factor,
+% so a `? energy_to_joules(btu, $J)` (etc.) ABSTAINS rather than committing to a
+% rounded value. The only claim this table makes is "these are the exact factors
+% NIST SP 811 B.9 prints" — which is exactly what a byte-check against the cited
+% table verifies. `trust authoritative` — a primary, re-fetchable standards
+% reference. (See ADJ-TABLES.md; and feedback_nothing_human_authored — every factor
+% is a verbatim cell of the cited table, nothing asserted from memory.)
+% ============================================================================
+
+table energy_to_joules {
+    columns unit, joules
+
+    row (calorie_th, 4.184)
+    row (calorie_it, 4.1868)
+    row (erg, 0.0000001)
+    row (watt_hour, 3600)
+    row (kilowatt_hour, 3600000)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

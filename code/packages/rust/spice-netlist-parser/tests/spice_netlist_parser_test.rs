@@ -1359,10 +1359,10 @@ Jpull drain gate source pch
 fn parses_mosfet_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model nch NMOS(VTO=0.45 KP=250u LAMBDA=0.02 GAMMA=0.3 PHI=0.8 W=2u L=180n NSUB=1.5 TNOM=300 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p)
+.model nch NMOS(VTO=0.45 KP=250u UO=500 LAMBDA=0.02 GAMMA=0.3 PHI=0.8 W=2u L=180n LD=10n TOX=20n RD=10 RS=20 RSH=250 IS=4p JS=2m NSUB=1.5 TNOM=300 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p CJ=2m CJSW=5u PB=0.9 MJ=0.45 MJSW=0.25 FC=0.4 KF=1p AF=1.2)
 Vdd vdd 0 DC 5
 Vgate gate 0 DC 2.5
-M1 vdd gate out 0 nch W=4u L=200n
+M1 vdd gate out 0 nch W=4u L=200n NRD=2 NRS=3 AD=3n AS=4n PD=6u PS=7u
 Rload out 0 1k
 .op
 "#,
@@ -1387,11 +1387,33 @@ Rload out 0 1k
     assert_eq!(mosfet.mosfet_type, MosfetType::Nmos);
     assert_close(mosfet.params.vt0, 0.45);
     assert_close(mosfet.params.kp, 250.0e-6);
+    assert_close(mosfet.params.surface_mobility, 500.0);
     assert_close(mosfet.params.lambda, 0.02);
     assert_close(mosfet.params.gamma, 0.3);
     assert_close(mosfet.params.phi, 0.8);
     assert_close(mosfet.params.w, 4.0e-6);
     assert_close(mosfet.params.l, 200.0e-9);
+    assert_close(mosfet.params.lateral_diffusion_length, 10.0e-9);
+    assert_close(mosfet.params.oxide_thickness, 20.0e-9);
+    assert_close(mosfet.params.drain_resistance, 10.0);
+    assert_close(mosfet.params.source_resistance, 20.0);
+    assert_close(mosfet.params.sheet_resistance, 250.0);
+    assert_close(mosfet.params.saturation_current, 4.0e-12);
+    assert_close(mosfet.params.saturation_current_density, 2.0e-3);
+    assert_close(mosfet.params.drain_squares, 2.0);
+    assert_close(mosfet.params.source_squares, 3.0);
+    assert_close(mosfet.params.drain_area, 3.0e-9);
+    assert_close(mosfet.params.source_area, 4.0e-9);
+    assert_close(mosfet.params.drain_perimeter, 6.0e-6);
+    assert_close(mosfet.params.source_perimeter, 7.0e-6);
+    assert_close(mosfet.params.bottom_junction_capacitance, 2.0e-3);
+    assert_close(mosfet.params.sidewall_junction_capacitance, 5.0e-6);
+    assert_close(mosfet.params.bulk_junction_potential, 0.9);
+    assert_close(mosfet.params.bulk_junction_grading_coefficient, 0.45);
+    assert_close(mosfet.params.sidewall_junction_grading_coefficient, 0.25);
+    assert_close(mosfet.params.forward_bias_depletion_coefficient, 0.4);
+    assert_close(mosfet.params.flicker_noise_coefficient, 1.0e-12);
+    assert_close(mosfet.params.flicker_noise_exponent, 1.2);
     assert_close(mosfet.params.n_sub, 1.5);
     assert_close(mosfet.params.t_nom, 300.0);
     assert_close(mosfet.params.gate_source_overlap_capacitance, 3.0e-12);
@@ -1407,10 +1429,21 @@ Rload out 0 1k
 }
 
 #[test]
+fn derives_mosfet_transconductance_from_surface_mobility_and_oxide_thickness() {
+    let parsed = parse_netlist(".model mobile NMOS(TOX=100n UO=500)\nM1 d g s b mobile\n").unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_close(mosfet.params.surface_mobility, 500.0);
+    assert_close(mosfet.params.kp, 500.0 * 1.0e-4 * 3.453_133e-11 / 100.0e-9);
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
-.model pch PMOS(VT0=-0.5 KP=90u W=3u L=180n)
+.model pch PMOS(VTH=-0.5 KP=90u LAM=0.03 W=3u L=180n CJS=2p CJD=3p)
 Mpull out gate vdd vdd pch
 "#,
     )
@@ -1422,7 +1455,10 @@ Mpull out gate vdd vdd pch
     assert_eq!(mosfet.mosfet_type, MosfetType::Pmos);
     assert_close(mosfet.params.vt0, -0.5);
     assert_close(mosfet.params.kp, 90.0e-6);
+    assert_close(mosfet.params.lambda, 0.03);
     assert_close(mosfet.params.w, 3.0e-6);
+    assert_close(mosfet.params.source_bulk_capacitance, 2.0e-12);
+    assert_close(mosfet.params.drain_bulk_capacitance, 3.0e-12);
 }
 
 #[test]
@@ -3410,13 +3446,11 @@ C1 out 0 1p
         shell_dashboard_package.package_capability_id,
         "app-shell-dashboard-package-json"
     );
-    assert!(
-        shell_dashboard_package
-            .package_manifest
-            .artifact_capabilities
-            .iter()
-            .any(|capability| capability == &shell_dashboard_package.package_capability_id)
-    );
+    assert!(shell_dashboard_package
+        .package_manifest
+        .artifact_capabilities
+        .iter()
+        .any(|capability| capability == &shell_dashboard_package.package_capability_id));
     assert_eq!(
         shell_dashboard_package.artifact_capability_count,
         shell_dashboard_package

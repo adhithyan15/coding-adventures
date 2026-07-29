@@ -1,5 +1,149 @@
 # Changelog
 
+## [0.24.0] — 2026-07-24 — RS-5f: nearest / nearest-neighbour table lookup tactic
+
+Adds the fourth member of the `table` lookup family. A `? lookup … mode nearest give <val>`
+snaps the query key to the single row whose key is CLOSEST to it — where `range` floors and
+`interpolated` blends, `nearest` snaps:
+
+```
+? lookup trial_lenses power = 0.6 mode nearest give stocked      % 0.5 (the nearest stocked lens)
+```
+
+- **Exact distance.** `|k − q|` is computed as a `BigRational` (`sub` then `abs`) and candidates
+  are compared on that exact distance — never an `f64` hop.
+- **Deterministic ties.** An exact halfway query breaks to the SMALLER key, so the answer is
+  reproducible and independent of row order.
+- **Verbatim value.** Like `range` (unlike `interpolated`), the value cell is returned as-is, so
+  a category-label value column is allowed; only the key column must be numeric.
+- **Snaps out of domain.** A query beyond the last key snaps to the nearest endpoint — it never
+  abstains for a non-empty table. It abstains only when there is genuinely no nearest key: an
+  empty table (`no_grounded_support`) or a truncated search (`search_limit_exceeded`).
+
+New `nearest_lookup_json` in `main.rs`, dispatched from the lookup map on `mode == "nearest"`.
+Every answer carries the snapped row's citation (the same `via_facts → provenance` flow as the
+other tactics). 0 answer-time model calls — pure exact comparison over the CAS-grounded rows.
+New e2e suite `rs5f_nearest_lookup_e2e.rs` (snap, exact-tie → smaller key, non-numeric value cell,
+out-of-domain snap). Requires adj-lang 0.63.0.
+
+## [0.23.0] — 2026-07-23 — RS-5d: interpolated table lookup tactic
+
+Closes the table-lookup trio (exact / range / **interpolated**). A `? lookup … mode interpolated
+give <val>` reads the `table` as a piecewise-linear function: it finds the two breakpoint rows
+that bracket the query key and returns the exact linear blend
+
+```
+v = v0 + (v1 - v0) * (q - k0) / (k1 - k0)
+```
+
+computed entirely on `ExactRational` (`add`/`sub`/`mul`/`div`) — a terminating blend renders every
+digit, a repeating one renders as the reduced fraction (`10/3`), never a rounded `f64`. **Both**
+bracketing rows' citations ride along, so the answer is traceable to the two measured points it
+sits between (nomograms, calibration curves, growth charts). Honest edges:
+
+- **exact hit** (`q` equals a breakpoint): the `0/0` blend is short-circuited to that row's value
+  with its single citation;
+- **out of domain**: below the lowest / above the highest breakpoint abstains with the typed
+  `below_table_domain` / new `above_table_domain` reason — interpolation never extrapolates;
+- **truncated search**: abstains `search_limit_exceeded` rather than blend against a partial scan.
+
+Adds the `AboveTableDomain` abstention reason and an end-to-end suite (`rs5d_interpolated_lookup_e2e`):
+linear blend with both citations, exact-fraction rendering, exact-breakpoint hit, below/above-domain
+abstention, and correct-segment selection. The RS-5c suite's reserved-mode test becomes a
+non-numeric-value-column guard (interpolating `category` is a compile error).
+
+## [0.22.0] — 2026-07-23 — NUM-6c: render `to_currency` in the audit trail
+
+The derivation-tree renderer gains a `DerivationNode::ToCurrency` arm (NUM-6c): a
+`{"node":"to_currency","code":"USD","places":n,"mode":"half_even","rendered":"USD 33.33","value":…,"operand":{…}}`
+object exposing the currency code, the decimal-place count, the stated mode, the rendered
+`CODE d.dd` string, the narrowed numeric value (the rounded amount), and the operand subtree —
+everything `adj-verify` needs to re-render from the exact source. Adds an end-to-end test driving
+`to_currency(x, code [, places])` through the built CLI: exact rendering, trailing-zero padding,
+`0`-places (JPY), the optional-`places` default, and rejection of a negative place count and a
+non-identifier currency code.
+
+## [0.21.0] — 2026-07-23 — NUM-6c: render `to_percent` in the audit trail
+
+The derivation-tree renderer gains a `DerivationNode::ToPercent` arm (NUM-6c): a
+`{"node":"to_percent","places":n,"mode":"half_even","rendered":"33.33%","value":…,"operand":{…}}`
+object exposing the decimal-place count, the stated mode, the rendered `d.dd%` string, the
+narrowed numeric value (the fraction the percentage denotes), and the operand subtree —
+everything `adj-verify` needs to re-render from the exact source. Adds an end-to-end test
+driving `to_percent(x [, places])` through the built CLI: exact rendering, trailing-zero
+padding, `0`-places (`"50%"`), the optional-`places` default, and rejection of a negative /
+non-integer place count.
+
+## [0.20.0] — 2026-07-22 — NUM-6c: render `to_scientific` in the audit trail
+
+The derivation-tree renderer gains a `DerivationNode::ToScientific` arm (NUM-6c): a
+`{"node":"to_scientific","figures":n,"mode":"half_even","rendered":"6.022e23","value":…,"operand":{…}}`
+object exposing the significant-figure count, the stated mode, the rendered boundary
+string, the narrowed numeric value, and the operand subtree it narrowed — everything
+`adj-verify` needs to re-render from the exact source. Adds an end-to-end test driving
+`to_scientific(x [, figures])` through the built CLI: exact rendering across scales
+(large integer, repeating rational), the optional-`figures` default, and rejection of
+a zero / non-integer figure count.
+
+## [0.19.0] — 2026-07-22 — NUM-6b: render `round_sig` in the audit trail
+
+The derivation-tree renderer now names the KIND of precision narrowing: `"places"`
+for `round_to` (NUM-6a) and `"sig_figures"` for `round_sig` (NUM-6b), e.g.
+`{"node":"round","sig_figures":3,"mode":"half_even","value":31500,"operand":{…}}`.
+Adds an end-to-end test driving `round_sig(x, n)` through the built CLI across
+scales (large integer → power of ten, fraction, sub-1 value) with `n = 0` rejected.
+
+## [0.18.0] — 2026-07-22 — NUM-6a: render the `round_to` narrowing in the audit trail
+
+The derivation-tree JSON now renders the new `DerivationNode::Round` (NUM-6a): a
+`{"node":"round","places":n,"mode":"half_even","value":…,"operand":{…}}` object
+exposing the precision, the stated rounding mode, and the operand subtree it
+narrowed — so a checker can re-round the operand's exact value and confirm the
+rendering (ADJ-NUMERIC-SUBSTRATE §4.3). Adds an end-to-end test driving
+`round_to(x, n)` through the built CLI (exact value, audit fields, and a
+non-integer/negative precision rejected as a compile error).
+
+## [0.17.0] — 2026-07-21 — the `adj-verify` binary (RS-4 PR-D2)
+
+Implements `ADJ-REASON-MATH.md` §E.5/§E.6: a standalone re-checker that reads an
+`.adj` program and **re-executes its reasoning**, reporting per step whether it
+still holds. It is not `adj-replay` (ADJ08) — it never invokes a model and never
+leaves the process; it is the deep re-execution *inside* one engine artifact,
+which ADJ08's linter should call rather than reimplement.
+
+### Added
+
+- **`adj-verify <PROGRAM> [--snapshots DIR]`** — prints a JSON report and exits
+  **1 when anything failed**, so it composes as a CI gate rather than as prose a
+  human has to read. Both reasoning paths are examined and labelled: `sld`
+  (recall, rules, tables, negation) and `lr` (likelihood-ratio aggregation).
+  Verifying only one while printing "verified" would leave half the trail
+  unexamined behind a clean headline.
+- `--snapshots DIR` reads pinned source documents from a content-addressed
+  directory whose filenames are the lowercase SHA-256 hex of their contents. The
+  bytes are **re-hashed after reading** — a store that trusted the filename would
+  let anyone who can write into that directory make an arbitrary document answer
+  to a pinned hash, which is the exact substitution pinning exists to prevent.
+- **`verified` and `fully_verified` are different claims.** The first means every
+  step re-executed; the second additionally requires that every proof had its
+  quotes confirmed against a snapshot, and that there was something to check.
+  Today's stdlib is `unmigrated`, so it is honestly `verified: true`,
+  `fully_verified: false` — the report refuses to let a wholly unchecked corpus
+  read as a clean bill of health.
+- **`src/lib.rs`** — `esc`, `payload`, `query_echo`, `sensitive_input` and
+  `FsProvider` moved out of `main.rs` so both binaries link the *same* copy. A
+  security check that exists twice exists zero times: a second implementation of
+  the sensitive-channel test or the import-sandbox containment check would
+  eventually disagree with the first, silently.
+
+### Security
+
+- Quoted spans and goal terms leave through `payload()` — redacted on a sensitive
+  channel, length-capped, and JSON-escaped. Both are untrusted text: a quote is
+  lifted verbatim from a spidered page, and an unescaped newline in a
+  line-oriented trail lets a span forge its own `"logic":"rechecked"` line.
+- No network access. See the `logic-engine` 0.44.0 entry.
+
 ## [0.16.0] — 2026-07-21 — typed abstention reasons (RS-4 PR-C)
 
 Implements `ADJ-REASON-MATH.md` §E.4. Every abstention used to be one bit —

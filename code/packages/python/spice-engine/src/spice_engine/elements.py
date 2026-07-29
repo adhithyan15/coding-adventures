@@ -493,6 +493,9 @@ class Diode:
     Fc: float = 0.5  # forward-bias depletion coefficient
     Xti: float = 3.0  # saturation-current temperature exponent
     Eg: float = 1.11  # energy gap in electron volts
+    Rs: float = 0.0  # ohmic series resistance
+    Kf: float = 0.0  # flicker-noise coefficient
+    Af: float = 1.0  # flicker-noise current exponent
 
 
 @dataclass(frozen=True, slots=True)
@@ -509,6 +512,23 @@ class JFET:
     lambda_: float = 0.0
     Cgs: float = 0.0
     Cgd: float = 0.0
+    Kf: float = 0.0
+    Af: float = 1.0
+    Pb: float = 1.0
+    Fc: float = 0.5
+    Is: float = 1.0e-14
+    Xti: float = 3.0
+    Eg: float = 1.11
+    B: float = 1.0
+    Nlev: float = 1.0
+    Gdsnoi: float = 1.0
+    Rd: float = 0.0
+    Rs: float = 0.0
+    Tcv: float = 0.0
+    Vtotc: float | None = None
+    Tnom: float | None = None
+    Bex: float = 0.0
+    Betatce: float | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -596,6 +616,45 @@ class BJT:
     Vaf:
         Forward Early voltage in Volts. Zero disables collector-voltage
         modulation, matching an infinite Early voltage (default 0.0).
+    Var:
+        Reverse Early voltage in Volts. Zero matches an infinite reverse Early
+        voltage (default 0.0).
+    Nf:
+        Forward emission coefficient (default 1.0).
+    Nr:
+        Reverse emission coefficient (default 1.0).
+    Xtb:
+        Forward- and reverse-beta temperature exponent (default 0.0).
+    Tnom:
+        Optional model nominal temperature in Kelvin. When omitted, temperature
+        analysis uses its circuit-level nominal temperature.
+    Kf:
+        Flicker-noise coefficient (default 0.0, disabled).
+    Af:
+        Flicker-noise base-current exponent (default 1.0).
+    Ptf:
+        Excess phase at ``1 / (2*pi*Tf)`` in degrees (default 0.0).
+    Xtf:
+        Coefficient for forward transit-time bias dependence (default 0.0).
+    Itf:
+        Forward-current scale for transit-time bias dependence (default 0.0).
+    Vtf:
+        Base-collector voltage scale for transit-time bias dependence (default 0.0).
+    Re:
+        Constant external-to-intrinsic emitter resistance in Ohms (default 0.0).
+    Rc:
+        Constant external-to-intrinsic collector resistance in Ohms (default 0.0).
+    Rb:
+        Zero-bias external-to-intrinsic base resistance in Ohms (default 0.0).
+    Rbm:
+        Optional minimum high-current base resistance in Ohms. When omitted,
+        it defaults to ``Rb``.
+    Irb:
+        Base current where the resistance is halfway between ``Rb`` and
+        ``Rbm`` (default 0.0, disabled).
+    Xcjc:
+        Fraction of ``Cjc`` connected to the intrinsic base (default 1.0).
+        The remainder is connected between the external base and collector.
     """
 
     name: str
@@ -613,6 +672,35 @@ class BJT:
     Xti: float = 3.0        # saturation-current temperature exponent
     Eg: float = 1.11        # semiconductor energy gap (eV)
     Vaf: float = 0.0        # forward Early voltage (V); 0 means infinite
+    Nf: float = 1.0         # forward emission coefficient
+    Nr: float = 1.0         # reverse emission coefficient
+    Vje: float = 0.75       # base-emitter junction potential (V)
+    Mje: float = 0.33       # base-emitter grading coefficient
+    Vjc: float = 0.75       # base-collector junction potential (V)
+    Mjc: float = 0.33       # base-collector grading coefficient
+    Fc: float = 0.5         # forward-bias depletion coefficient
+    Var: float = 0.0        # reverse Early voltage (V); 0 means infinite
+    Ikf: float = 0.0        # forward-beta roll-off current (A); 0 disables
+    Ise: float = 0.0        # base-emitter leakage saturation current (A)
+    Ne: float = 1.0         # base-emitter leakage emission coefficient
+    Isc: float = 0.0        # base-collector leakage saturation current (A)
+    Nc: float = 2.0         # base-collector leakage emission coefficient
+    Xtb: float = 0.0        # forward-beta temperature exponent
+    beta_r: float = float("inf")  # reverse current gain; infinity disables
+    Ikr: float = 0.0        # reverse-beta roll-off current (A); 0 disables
+    Tnom: float | None = None  # model nominal temperature (K); None inherits
+    Kf: float = 0.0            # flicker-noise coefficient; 0 disables
+    Af: float = 1.0            # flicker-noise base-current exponent
+    Ptf: float = 0.0           # excess phase at 1/(2*pi*Tf), degrees
+    Xtf: float = 0.0           # forward transit-time bias coefficient
+    Itf: float = 0.0           # forward transit-time current scale (A)
+    Vtf: float = 0.0           # forward transit-time voltage scale (V)
+    Re: float = 0.0            # emitter resistance (ohms)
+    Rc: float = 0.0            # collector resistance (ohms)
+    Rb: float = 0.0            # base resistance (ohms)
+    Rbm: float | None = None   # minimum base resistance (ohms)
+    Irb: float = 0.0           # base-resistance half-current (A)
+    Xcjc: float = 1.0          # intrinsic-base fraction of Cjc
 
 
 # ---------------------------------------------------------------------------

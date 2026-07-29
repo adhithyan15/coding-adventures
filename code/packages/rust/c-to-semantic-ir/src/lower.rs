@@ -11,14 +11,20 @@
 //! Milestone 1: functions, typed integer `+`/`-`/`*`, casts, declarations,
 //! `printf`, and a trailing `return`.
 //!
-//! Milestone 2 (this revision) adds **comparisons and control flow** —
+//! Milestone 2 adds **comparisons and control flow** —
 //! `< > <= >= == !=`, `if`/`else`, `while`, `for`, and re-assignment — bridging
 //! the C-vs-SIR *truthiness mismatch* (C: `0` is false and a comparison yields
 //! `int` `0`/`1`; SIR: only nil/false are falsy and comparisons yield `bool`).
 //! A C condition lowers to a SIR bool (`!=(e, 0)`, or the comparison builtin
 //! directly), and a comparison used as a value lowers back to an int via
-//! `If(cmp, 1, 0)`.  Early `return` (anywhere but the function's last statement)
-//! stays deferred: SIR functions yield their block value, with no early exit.
+//! `If(cmp, 1, 0)`.
+//!
+//! Milestone 3 (this revision) adds **early `return`**.  SIR functions have no
+//! early-exit statement — they yield their block's value — so a returning `if`
+//! is *lifted* into a value-producing `Expr::If` whose non-returning branch
+//! continues with the rest of the function (see `lower_seq`).  That makes the
+//! guard-clause shape, and hence idiomatic recursion like `fib`, translatable.
+//! A `return` inside a loop still errors: it would need a break-with-value.
 
 use std::collections::HashMap;
 
@@ -102,6 +108,14 @@ fn resolve_type_spec(ts: &GrammarASTNode) -> Result<Option<IntSpec>, CLowerError
     collect_type_kws(ts, &mut kws);
     if kws.iter().any(|k| k == "void") {
         return Ok(None);
+    }
+    // The grammar recognises `float`/`double`, but the lowering is still
+    // integer-only — reject them cleanly rather than mis-typing them as `int`.
+    if kws.iter().any(|k| k == "float" || k == "double") {
+        return err(
+            "floating-point types (`float`/`double`) are not yet supported in lowering",
+            ts,
+        );
     }
     // Fixed-width <stdint.h> names / size_t map directly.
     for k in &kws {
@@ -257,18 +271,84 @@ fn if_int(cond: Expr) -> Expr {
 
 // ── The lowerer ──────────────────────────────────────────────────────────────
 
+/// The deepest tree one function may emit, counting lifted guards *and*
+/// expression nesting together — they add in the output, so they share a budget
+/// (`budget_used`).
+///
+/// Same output-depth argument as [`MAX_LIFTED_GUARDS`]: every consumer of the IR
+/// walks it recursively.  Expression depth comes from CST nesting (`((((x))))`)
+/// *and* from a **flat operator chain**, which the parser does not bound at all:
+/// `x + 1 + 1 + …` is one `additive` node with N operands that folds left into
+/// an N-deep tree.  Both are charged here, and a chain's width is *held* while
+/// its operands are lowered — checking without spending let widths at different
+/// nesting levels multiply rather than add, which reached ~14× this cap and
+/// aborted the process on a 369-byte input.
+///
+/// The value is empirical, calibrated against the most hostile realistic
+/// configuration: a **debug** build on a **1 MiB** stack (the Windows
+/// main-thread default — `cargo test` threads are larger, which is exactly how
+/// earlier versions of this bound looked safe while crashing in the wild).
+/// Ordinary C is far below it: an 8-term chain costs 8, a 3-deep `if` costs 9,
+/// 20 guards with small conditions cost ~23.
+const MAX_EXPR_DEPTH: usize = 48;
+
+/// The most early-return `if`s one function may have lifted.
+///
+/// Each lifted guard adds a level of `Expr::If` nesting to the emitted IR, and
+/// every consumer of that IR walks it **recursively** — the validator, all five
+/// backends, the text printer, even `Drop`.  So the bound that matters is on the
+/// *output* depth, not on the lowering (which is iterative).  Measured: a
+/// 150-guard function lowers, validates and emits fine, while 250 aborts the
+/// process inside the validator.  64 is comfortably clear of that and far beyond
+/// any real C function, and exceeding it is a clean positioned error instead of
+/// a stack-overflow crash on untrusted input.
+/// Kept equal to [`MAX_EXPR_DEPTH`] — guards are charged into that joint budget
+/// too, so this only adds a friendlier message for a pure guard chain.
+const MAX_LIFTED_GUARDS: usize = MAX_EXPR_DEPTH;
+
+/// One binding in a lexical scope: its C type, its SIR `Scope`, and the SIR name
+/// it lowers to.  The SIR name differs from the C name when the C name shadows an
+/// outer one or is re-used by a sibling scope — SIR's namespace is flat, so those
+/// get a unique suffix (see [`Lowerer::declare`]).
+#[derive(Clone)]
+struct Binding {
+    ty: IntSpec,
+    scope: Scope,
+    sir_name: String,
+}
+
 struct Lowerer {
     /// Function signatures for call-site type resolution.
     fns: HashMap<String, (Vec<IntSpec>, Option<IntSpec>)>,
-    /// Current function's in-scope names → (type, SIR scope).  Parameters bind
-    /// as `Scope::Param`, local declarations as `Scope::Local`.
-    vars: HashMap<String, (IntSpec, Scope)>,
+    /// Lexical **scope stack** (innermost last).  A declaration binds in the top
+    /// scope; a reference resolves inner→outer.  Replaces the old flat map, so
+    /// C's block scoping works — shadowing an outer variable, and two sequential
+    /// `for (int i …)` loops re-using `i`, are now accepted instead of rejected.
+    scopes: Vec<HashMap<String, Binding>>,
+    /// Every SIR local name already used in the current function.  Because the
+    /// SIR namespace is flat, a shadowing or re-used C name gets a fresh unique
+    /// SIR name checked against this set.  Monotonic within a function — it is
+    /// **not** rolled back when a scope pops (a sibling that re-uses the name
+    /// must still get a distinct SIR name).  Reset per function.
+    used_sir_names: std::collections::HashSet<String>,
+    /// Early-return `if`s lifted in the function currently being lowered — see
+    /// [`MAX_LIFTED_GUARDS`].  Reset per function.
+    lifted: usize,
+    /// Current expression nesting — see [`MAX_EXPR_DEPTH`].
+    expr_depth: usize,
+    /// Current *statement* nesting (`if`/`while`/`for` bodies and nested
+    /// blocks) — the third dimension of the same budget.
+    stmt_depth: usize,
 }
 
 pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowerError> {
     let mut lo = Lowerer {
         fns: HashMap::new(),
-        vars: HashMap::new(),
+        scopes: Vec::new(),
+        used_sir_names: std::collections::HashSet::new(),
+        lifted: 0,
+        expr_depth: 0,
+        stmt_depth: 0,
     };
 
     // Pre-pass: collect function signatures.
@@ -300,6 +380,9 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowe
         // builtins need no feature of their own (core control flow / intrinsics).
         Feature::Loops,
         Feature::MutableBindings,
+        // Milestone 4: `&&`/`||`/`!` lower to the short-circuiting `and`/`or`/
+        // `not` builtins.
+        Feature::ShortCircuit,
     ]);
 
     let module = Module {
@@ -336,6 +419,71 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowe
 }
 
 impl Lowerer {
+    // ── lexical scope management (milestone 7) ───────────────────────────────
+
+    /// Enter a new innermost lexical scope (a `{ }` block, an `if`/`else`/loop
+    /// body, or a `for`'s init+body region).
+    fn push_scope(&mut self) {
+        self.scopes.push(HashMap::new());
+    }
+
+    /// Leave the innermost scope; its names go out of scope, but the SIR names
+    /// they consumed stay reserved (`used_sir_names` is not rolled back).
+    fn pop_scope(&mut self) {
+        self.scopes.pop();
+    }
+
+    /// Declare `cname` in the innermost scope and return the SIR name it binds
+    /// to.  Re-declaring the same name in the *same* block is a C error;
+    /// shadowing an outer scope (or re-using a name a sibling used) is fine and
+    /// gets a fresh unique SIR name.
+    fn declare(&mut self, cname: &str, ty: IntSpec, scope: Scope) -> Result<String, CLowerError> {
+        if self
+            .scopes
+            .last()
+            .map(|s| s.contains_key(cname))
+            .unwrap_or(false)
+        {
+            return Err(CLowerError {
+                message: format!("redeclaration of `{cname}` in the same block"),
+                line: 0,
+                column: 0,
+            });
+        }
+        let sir_name = self.unique_sir_name(cname);
+        self.used_sir_names.insert(sir_name.clone());
+        self.scopes.last_mut().unwrap().insert(
+            cname.to_string(),
+            Binding {
+                ty,
+                scope,
+                sir_name: sir_name.clone(),
+            },
+        );
+        Ok(sir_name)
+    }
+
+    /// The C name itself if unused in this function, else `name__2`, `name__3`, …
+    /// until one is free.  Guarantees a flat-namespace-unique SIR name.
+    fn unique_sir_name(&self, cname: &str) -> String {
+        if !self.used_sir_names.contains(cname) {
+            return cname.to_string();
+        }
+        let mut k = 2u32;
+        loop {
+            let candidate = format!("{cname}__{k}");
+            if !self.used_sir_names.contains(&candidate) {
+                return candidate;
+            }
+            k += 1;
+        }
+    }
+
+    /// Resolve a C name to its binding, searching innermost scope outward.
+    fn resolve(&self, cname: &str) -> Option<&Binding> {
+        self.scopes.iter().rev().find_map(|s| s.get(cname))
+    }
+
     /// Extract `(name, [(param_name, type)], return_type)` from a function_def.
     // Returns (function name, parameter (name, type) pairs, optional return type)
     // — a one-off internal tuple; a named type alias would not aid readability.
@@ -387,10 +535,14 @@ impl Lowerer {
 
     fn lower_function(&mut self, f: &GrammarASTNode) -> Result<Function, CLowerError> {
         let (name, params, ret) = self.function_header(f)?;
-        self.vars.clear();
+        // Fresh per-function symbol state: one outermost scope holding the
+        // parameters.  Params are declared first, so each keeps its own name.
+        self.scopes = vec![HashMap::new()];
+        self.used_sir_names.clear();
+        self.lifted = 0;
         let mut sir_params = Vec::new();
         for (pname, ty) in &params {
-            self.vars.insert(pname.clone(), (*ty, Scope::Param));
+            self.declare(pname, *ty, Scope::Param)?;
             sir_params.push(Param {
                 name: pname.clone(),
                 sir_type: Some(SirType::Int(*ty)),
@@ -417,49 +569,235 @@ impl Lowerer {
         })
     }
 
-    /// Lower a `compound_stmt` as a function body: statements, then the value of
-    /// a trailing `return` (SIR functions return their block's value).  A
-    /// `return` anywhere but the last position has no SIR representation (no
-    /// early exit) and is a positioned error.
+    /// Lower a `compound_stmt` as a function body.
     fn lower_body(
         &mut self,
         body: &GrammarASTNode,
         ret: Option<IntSpec>,
     ) -> Result<Block, CLowerError> {
-        let items: Vec<&GrammarASTNode> = child_nodes(body)
-            .into_iter()
-            .filter(|x| x.rule_name == "block_item")
-            .collect();
-        let mut stmts = Vec::new();
+        let items = block_items_of(body);
+        self.lower_seq(&items, ret)
+    }
+
+    /// **The early-return transformation (milestone 3).**
+    ///
+    /// SIR functions have no early-exit statement — a function yields its
+    /// block's *value*.  C exits early all the time (guard clauses).  So we
+    /// lower a statement sequence to the block whose value *is* the function's
+    /// result, and when an `if` returns we make the **rest of the sequence the
+    /// continuation of the branch that doesn't return**:
+    ///
+    /// ```text
+    /// if (n < 2) return n;          If( n<2,
+    /// return fib(n-1)+fib(n-2);  →      {n},                    // then: returns
+    ///                                   {fib(n-1)+fib(n-2)} )   // else: the rest
+    /// ```
+    ///
+    /// Because the continuation attaches only to a branch that does *not*
+    /// already return, the common guard-clause shape never duplicates code.
+    /// (When *neither* branch returns on all paths yet one contains a return,
+    /// the tail is lowered into both branches — correct, since exactly one runs,
+    /// just larger.)
+    fn lower_seq(
+        &mut self,
+        items: &[&GrammarASTNode],
+        ret: Option<IntSpec>,
+    ) -> Result<Block, CLowerError> {
+        // This walk is **iterative in two dimensions**, and both matter:
+        //
+        //  * per *statement* — a function body is an unbounded statement list,
+        //    and recursing per statement overflowed the stack at a few hundred;
+        //  * per *sibling guard clause* — `if (a) return 1; if (b) return 2; …`
+        //    is the `sign()` idiom, and it is a flat sequence too.  Recursing
+        //    once per guard (lower_seq → lift_if → lower_branch → lower_seq)
+        //    overflowed at ~200 guards.
+        //
+        // So a returning `if` does not recurse into the continuation.  Instead
+        // its condition and its *returning* branch are pushed on a `frames`
+        // stack, the falling-through branch is spliced onto the work queue, and
+        // the nested `Expr::If` is folded bottom-up after the loop.  The only
+        // recursion left is into a *nested* sub-sequence (a returning branch),
+        // whose depth is bounded only incidentally — the C parser is itself
+        // recursive and dies on deeply nested statements before the lowering
+        // would, so this is not a guarantee to lean on.  Giving the parser a
+        // rule-depth counter (and this walk an explicit cap) is a follow-up.
+        struct Frame {
+            cond: Expr,
+            /// The branch that returns — already lowered.
+            branch: Block,
+            /// Is `branch` the `then` side (else the `else` side)?
+            branch_is_then: bool,
+            /// Statements that preceded this `if` at its own level.
+            before: Vec<Stmt>,
+        }
+
+        // The work queue carries statement nodes plus a `PopScope` marker.  A
+        // nested `{ }` block (and a lifted `if`'s falling-through branch) is
+        // spliced in with its own scope: we `push_scope`, queue the block's
+        // items, then a `PopScope` — so the block's declarations go out of scope
+        // exactly at its `}`, and the continuation that follows is lowered in the
+        // enclosing scope.  That is what makes block scoping correct even though
+        // the lifting merges a branch body and the continuation into one block.
+        enum WorkItem<'a> {
+            Node(&'a GrammarASTNode),
+            PopScope,
+        }
+
+        let mut work: std::collections::VecDeque<WorkItem> =
+            items.iter().map(|n| WorkItem::Node(n)).collect();
+        let mut stmts: Vec<Stmt> = Vec::new();
+        let mut frames: Vec<Frame> = Vec::new();
+        // The value of the innermost block, once the walk finishes.  Falling off
+        // the end of a function yields nil.
         let mut value = Expr::NilLit { span: sp() };
-        let last = items.len().saturating_sub(1);
-        for (i, item) in items.iter().enumerate() {
-            let inner = peel_block_item(item);
-            match inner.rule_name.as_str() {
-                "declaration" => stmts.push(self.lower_declaration(inner)?),
-                "statement" => {
-                    let s = peel(inner);
-                    if s.rule_name == "return_stmt" {
-                        if i != last {
-                            return err(
-                                "early `return` is not supported yet (a `return` may appear \
-                                 only as the function's last statement)",
-                                s,
-                            );
-                        }
-                        value = self.lower_return(s, ret)?;
-                    } else {
-                        self.lower_stmt(s, &mut stmts)?;
+
+        while let Some(item) = work.pop_front() {
+            let head = match item {
+                WorkItem::PopScope => {
+                    self.pop_scope();
+                    continue;
+                }
+                WorkItem::Node(n) => n,
+            };
+            let e = seq_elem(head);
+            match e.rule_name.as_str() {
+                // `return e;` supplies the value — anything after it is dead.
+                "return_stmt" => {
+                    value = self.lower_return(e, ret)?;
+                    break;
+                }
+                // A nested `{ … }` splices into this sequence with its own scope:
+                // its items are queued, then a `PopScope` closes the block.
+                "compound_stmt" => {
+                    self.push_scope();
+                    work.push_front(WorkItem::PopScope);
+                    for it in block_items_of(e).into_iter().rev() {
+                        work.push_front(WorkItem::Node(it));
                     }
                 }
-                other => return err(format!("block item `{other}` unsupported"), inner),
+                // An `if` that returns becomes a value-producing `If`.
+                "if_stmt" if if_returns(e) => {
+                    let cond_node = first_node(e, "expr").ok_or_else(|| CLowerError {
+                        message: "`if` without a condition".into(),
+                        line: e.start_line.unwrap_or(0),
+                        column: e.start_column.unwrap_or(0),
+                    })?;
+                    let cond = self.lower_cond(cond_node)?;
+                    let branches = if_branches(e);
+                    let then_items = branches
+                        .first()
+                        .map(|b| branch_items(b))
+                        .unwrap_or_default();
+                    let else_items = branches.get(1).map(|b| branch_items(b)).unwrap_or_default();
+                    let then_ret = always_returns(&then_items);
+                    let else_ret = always_returns(&else_items);
+
+                    // Bound the *emitted* nesting — see `MAX_LIFTED_GUARDS`.
+                    self.lifted += 1;
+                    if self.lifted > MAX_LIFTED_GUARDS {
+                        return err(
+                            format!(
+                                "too many early returns in one function (limit \
+                                 {MAX_LIFTED_GUARDS}); each one nests the emitted IR one \
+                                 level deeper, and every consumer of that IR walks it \
+                                 recursively"
+                            ),
+                            e,
+                        );
+                    }
+
+                    // Nothing left to thread (or both branches exit): lower both
+                    // branches directly.  Any queued statements are unreachable.
+                    // Each branch is its own scope, isolated from the other.
+                    if work.is_empty() || (then_ret && else_ret) {
+                        self.push_scope();
+                        let tb = self.lower_seq(&then_items, ret)?;
+                        self.pop_scope();
+                        self.push_scope();
+                        let eb = self.lower_seq(&else_items, ret)?;
+                        self.pop_scope();
+                        value = Expr::If {
+                            cond: Box::new(cond),
+                            then_branch: Box::new(tb),
+                            else_branch: Box::new(eb),
+                            span: sp(),
+                        };
+                        break;
+                    }
+
+                    // Neither branch exits on every path, so the continuation
+                    // would have to be copied into *both*.  Correct but the
+                    // duplication compounds through nesting (4^N nodes), so it
+                    // is refused, like the `return`-inside-a-loop rule.
+                    if !then_ret && !else_ret {
+                        return err(
+                            "an `if` where neither branch returns on all paths but one \
+                             contains a `return` is not supported yet (lifting it would \
+                             duplicate the rest of the function into both branches)",
+                            e,
+                        );
+                    }
+
+                    // Exactly one branch exits; the other receives the
+                    // continuation and is spliced onto the work queue.
+                    let (ret_items, fall_items) = if then_ret {
+                        (then_items, else_items)
+                    } else {
+                        (else_items, then_items)
+                    };
+
+                    // Lower the exiting branch now, in its own scope (recursion
+                    // here is per *nesting* level; see the note in `lower_seq`).
+                    self.push_scope();
+                    let branch = self.lower_seq(&ret_items, ret)?;
+                    self.pop_scope();
+
+                    frames.push(Frame {
+                        cond,
+                        branch,
+                        branch_is_then: then_ret,
+                        before: std::mem::take(&mut stmts),
+                    });
+                    // The falling-through branch is a block scope too: push it,
+                    // queue its items, then a `PopScope` — so its declarations do
+                    // not leak into the continuation that follows on the queue.
+                    self.push_scope();
+                    work.push_front(WorkItem::PopScope);
+                    for it in fall_items.into_iter().rev() {
+                        work.push_front(WorkItem::Node(it));
+                    }
+                }
+                // Anything else is an ordinary statement; lower it and continue.
+                "declaration" => stmts.push(self.lower_declaration(e)?),
+                _ => self.lower_stmt(e, &mut stmts)?,
             }
         }
-        Ok(Block {
+
+        // Fold the guards bottom-up: each frame wraps everything accumulated so
+        // far as the continuation of its non-returning side.
+        let mut cur = Block {
             stmts,
             value,
             span: sp(),
-        })
+        };
+        for f in frames.into_iter().rev() {
+            let (then_branch, else_branch) = if f.branch_is_then {
+                (f.branch, cur)
+            } else {
+                (cur, f.branch)
+            };
+            cur = Block {
+                stmts: f.before,
+                value: Expr::If {
+                    cond: Box::new(f.cond),
+                    then_branch: Box::new(then_branch),
+                    else_branch: Box::new(else_branch),
+                    span: sp(),
+                },
+                span: sp(),
+            };
+        }
+        Ok(cur)
     }
 
     /// The value a trailing `return e;` (or bare `return;`) supplies, converted
@@ -488,9 +826,15 @@ impl Lowerer {
     fn lower_stmt(&mut self, s: &GrammarASTNode, out: &mut Vec<Stmt>) -> Result<(), CLowerError> {
         match s.rule_name.as_str() {
             "compound_stmt" => {
-                // A nested `{ … }` block: splice its statements in (v1 shares one
-                // flat symbol table — no per-block scoping).
-                let inner = self.lower_block_items(s)?;
+                // A nested `{ … }` block: its own lexical scope, spliced into the
+                // enclosing statement list.  Charged for depth like any other
+                // nested body (see `charge_stmt_nesting`).
+                let inner = self.charge_stmt_nesting(s, |lo| {
+                    lo.push_scope();
+                    let r = lo.lower_block_items(s);
+                    lo.pop_scope();
+                    r
+                })?;
                 out.extend(inner);
             }
             "expr_stmt" => {
@@ -501,10 +845,15 @@ impl Lowerer {
             "if_stmt" => self.lower_if(s, out)?,
             "while_stmt" => self.lower_while(s, out)?,
             "for_stmt" => self.lower_for(s, out)?,
+            // `return` in a *statement* position that the early-return lifting
+            // could not turn into a value — in practice, inside a loop body.
+            // Exiting a loop early needs a break-with-value, which SIR has no
+            // node for, so this is a clear error rather than a miscompile.
             "return_stmt" => {
                 return err(
-                    "early `return` is not supported yet (a `return` may appear \
-                     only as the function's last statement)",
+                    "`return` inside a loop is not supported yet (early return is lifted \
+                     through `if`/`else`, but leaving a `while`/`for` early needs a \
+                     break-with-value)",
                     s,
                 )
             }
@@ -536,17 +885,46 @@ impl Lowerer {
     /// Lower a loop/branch body (`statement`, possibly a `compound_stmt`) to a
     /// SIR `Block` with a nil value — control-flow bodies are evaluated for
     /// their effects, not a value.
+    /// Run `f` one level deeper in statement nesting, charged against the joint
+    /// depth budget (see [`Self::budget_used`]) and restored on every path.
+    /// Both recursion sites for nested statements — loop/branch bodies via
+    /// [`Self::lower_void_block`] and bare `{ }` blocks via [`Self::lower_stmt`]
+    /// — go through here, so neither can grow the emitted tree without paying.
+    fn charge_stmt_nesting<T>(
+        &mut self,
+        at: &GrammarASTNode,
+        f: impl FnOnce(&mut Self) -> Result<T, CLowerError>,
+    ) -> Result<T, CLowerError> {
+        self.stmt_depth += 1;
+        if self.budget_used() > MAX_EXPR_DEPTH {
+            self.stmt_depth -= 1;
+            return err(
+                format!("statement nesting exceeds the limit of {MAX_EXPR_DEPTH}"),
+                at,
+            );
+        }
+        let result = f(self);
+        self.stmt_depth -= 1;
+        result
+    }
+
     fn lower_void_block(&mut self, stmt: &GrammarASTNode) -> Result<Block, CLowerError> {
+        self.charge_stmt_nesting(stmt, |lo| lo.lower_void_block_inner(stmt))
+    }
+
+    fn lower_void_block_inner(&mut self, stmt: &GrammarASTNode) -> Result<Block, CLowerError> {
+        // A branch/loop body is its own lexical scope.
+        self.push_scope();
         let s = peel(stmt);
-        let stmts = if s.rule_name == "compound_stmt" {
-            self.lower_block_items(s)?
+        let result = if s.rule_name == "compound_stmt" {
+            self.lower_block_items(s)
         } else {
             let mut v = Vec::new();
-            self.lower_stmt(s, &mut v)?;
-            v
+            self.lower_stmt(s, &mut v).map(|_| v)
         };
+        self.pop_scope();
         Ok(Block {
-            stmts,
+            stmts: result?,
             value: Expr::NilLit { span: sp() },
             span: sp(),
         })
@@ -590,11 +968,14 @@ impl Lowerer {
                 line: n.start_line.unwrap_or(0),
                 column: n.start_column.unwrap_or(0),
             })?;
-        let (ty, scope) = self.vars.get(&name).copied().ok_or_else(|| CLowerError {
-            message: format!("assignment to undeclared variable `{name}`"),
-            line: n.start_line.unwrap_or(0),
-            column: n.start_column.unwrap_or(0),
-        })?;
+        let (ty, scope, sir_name) = {
+            let b = self.resolve(&name).ok_or_else(|| CLowerError {
+                message: format!("assignment to undeclared variable `{name}`"),
+                line: n.start_line.unwrap_or(0),
+                column: n.start_column.unwrap_or(0),
+            })?;
+            (b.ty, b.scope, b.sir_name.clone())
+        };
         let rhs = nodes.get(1).copied().ok_or_else(|| CLowerError {
             message: "assignment without a right-hand side".into(),
             line: n.start_line.unwrap_or(0),
@@ -602,7 +983,7 @@ impl Lowerer {
         })?;
         let (e, et) = self.lower_expr(rhs)?;
         Ok(Stmt::Assign {
-            name,
+            name: sir_name,
             scope,
             value: convert_to(e, et, ty),
             span: sp(),
@@ -688,6 +1069,26 @@ impl Lowerer {
             }
         }
 
+        // A `for`'s init declaration scopes to the whole loop (`for (int i …)`
+        // — `i` is not visible after the loop), so the init + desugared while go
+        // in their own scope.  Two sequential `for (int i …)` loops therefore
+        // each get a fresh `i`.
+        self.push_scope();
+        let result = self.lower_for_inner(s, out, init, cond, step, body);
+        self.pop_scope();
+        result
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn lower_for_inner(
+        &mut self,
+        s: &GrammarASTNode,
+        out: &mut Vec<Stmt>,
+        init: Option<&GrammarASTNode>,
+        cond: Option<&GrammarASTNode>,
+        step: Option<&GrammarASTNode>,
+        body: Option<&GrammarASTNode>,
+    ) -> Result<(), CLowerError> {
         // init clause: a declaration (`int i = 0`) or an expression (`i = 0`).
         if let Some(fc) = init {
             let inner = child_nodes(fc)
@@ -740,19 +1141,117 @@ impl Lowerer {
     /// so the explicit compare is required).
     fn lower_cond(&mut self, node: &GrammarASTNode) -> Result<Expr, CLowerError> {
         let n = peel(node);
-        if matches!(n.rule_name.as_str(), "equality" | "relational") && child_nodes(n).len() >= 2 {
-            self.lower_compare_bool(n)
-        } else {
-            let (e, _t) = self.lower_expr(node)?;
-            Ok(builtin("!=", vec![e, int_lit(0)]))
+        match n.rule_name.as_str() {
+            // Short-circuiting `&&` / `||`: fold the operands *as conditions*
+            // with the matching SIR builtin (left-associative, like C).
+            "logical_and" if child_nodes(n).len() >= 2 => self.lower_logical(n, "and"),
+            "logical_or" if child_nodes(n).len() >= 2 => self.lower_logical(n, "or"),
+            // A comparison already yields a SIR bool.
+            "equality" | "relational" if child_nodes(n).len() >= 2 => self.lower_compare_bool(n),
+            // Unary `!c` → `not(cond(c))`.  Charged against the depth budget:
+            // `!!!…c` recurses here per `!`, and nests the emitted tree the same.
+            "unary" if unary_op(n).as_deref() == Some("!") => {
+                let operand = child_nodes(n)
+                    .into_iter()
+                    .next()
+                    .ok_or_else(|| CLowerError {
+                        message: "`!` without an operand".into(),
+                        line: n.start_line.unwrap_or(0),
+                        column: n.start_column.unwrap_or(0),
+                    })?;
+                self.expr_depth += 1;
+                if self.budget_used() > MAX_EXPR_DEPTH {
+                    self.expr_depth -= 1;
+                    return err(
+                        format!("expression nests deeper than the limit of {MAX_EXPR_DEPTH}"),
+                        n,
+                    );
+                }
+                let inner = self.lower_cond(operand);
+                self.expr_depth -= 1;
+                Ok(builtin("not", vec![inner?]))
+            }
+            // Any other integer expression `e` is true iff `e != 0` (C treats 0
+            // as false; SIR treats it as truthy).
+            _ => {
+                let (e, _t) = self.lower_expr(node)?;
+                Ok(builtin("!=", vec![e, int_lit(0)]))
+            }
         }
+    }
+
+    /// Fold a `logical_and`/`logical_or` node into left-associative short-circuit
+    /// builtins, lowering each operand *as a condition*.  Its width is charged
+    /// against the depth budget (the fold nests as deep as the chain is wide).
+    fn lower_logical(&mut self, n: &GrammarASTNode, op: &str) -> Result<Expr, CLowerError> {
+        let width = self.charge_chain(n)?;
+        self.expr_depth += width;
+        let result = self.lower_logical_inner(n, op);
+        self.expr_depth -= width;
+        result
+    }
+
+    fn lower_logical_inner(&mut self, n: &GrammarASTNode, op: &str) -> Result<Expr, CLowerError> {
+        let mut acc: Option<Expr> = None;
+        for c in &n.children {
+            if let ASTNodeOrToken::Node(operand) = c {
+                let cond = self.lower_cond(operand)?;
+                acc = Some(match acc {
+                    None => cond,
+                    Some(a) => builtin(op, vec![a, cond]),
+                });
+            }
+        }
+        acc.ok_or_else(|| CLowerError {
+            message: "empty logical expression".into(),
+            line: n.start_line.unwrap_or(0),
+            column: n.start_column.unwrap_or(0),
+        })
     }
 
     /// Lower an `equality`/`relational` node to a SIR bool.  Left-associative:
     /// an intermediate comparison result feeds the next as an `int` `0`/`1`
     /// (matching C's chained-comparison semantics), and the final step is the
     /// bool we return.
+    /// Charge a flat operator chain's width against the expression-depth
+    /// budget: folding N operands left produces an N-deep tree.  Returns the
+    /// width, which the caller must **hold** (add to `expr_depth`) for as long
+    /// as it lowers the chain's operands — otherwise widths at different
+    /// nesting levels each restart from the same low base and multiply instead
+    /// of adding, which is how `((x+1…) +1…) +1…` reached ~14× the cap.
+    fn charge_chain(&mut self, n: &GrammarASTNode) -> Result<usize, CLowerError> {
+        let operands = child_nodes(n).len();
+        if self.budget_used() + operands > MAX_EXPR_DEPTH {
+            return err(
+                format!(
+                    "operator chain of {operands} operands nests the emitted expression \
+                     deeper than the limit of {MAX_EXPR_DEPTH}"
+                ),
+                n,
+            );
+        }
+        Ok(operands)
+    }
+
+    /// Depth already committed in the emitted tree.  Lifted guards, expression
+    /// nesting and **statement** nesting all add in the same output tree and in
+    /// the same recursive walk, so they share one budget.  Statement nesting is
+    /// weighted 3× because a level of it costs roughly three times the lowering
+    /// stack of one expression level (measured ~23 KB vs ~8 KB in a debug
+    /// build).
+    fn budget_used(&self) -> usize {
+        self.lifted + self.expr_depth + 3 * self.stmt_depth
+    }
+
     fn lower_compare_bool(&mut self, n: &GrammarASTNode) -> Result<Expr, CLowerError> {
+        let width = self.charge_chain(n)?;
+        self.expr_depth += width;
+        let result = self.lower_compare_bool_inner(n);
+        self.expr_depth -= width;
+        result
+    }
+
+    fn lower_compare_bool_inner(&mut self, n: &GrammarASTNode) -> Result<Expr, CLowerError> {
         let mut acc: Option<(Expr, IntSpec)> = None;
         let mut pending_op: Option<String> = None;
         let mut last_bool: Option<Expr> = None;
@@ -838,6 +1337,8 @@ impl Lowerer {
             .find(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
             .unwrap_or_default();
+        // Lower the initializer *before* declaring the new name, so that in a
+        // shadowing block `{ int v = v + 1; }` the RHS reads the outer `v`.
         let value = match first_node(init, "expr") {
             Some(e) => {
                 let (ex, ety) = self.lower_expr(e)?;
@@ -845,9 +1346,17 @@ impl Lowerer {
             }
             None => convert(int_lit(0), ty), // uninitialised → 0 of the type
         };
-        self.vars.insert(name.clone(), (ty, Scope::Local));
+        // Bind in the current scope; `declare` gives a unique SIR name when this
+        // shadows an outer variable or re-uses one a sibling block used.
+        let sir_name = self
+            .declare(&name, ty, Scope::Local)
+            .map_err(|e| CLowerError {
+                message: e.message,
+                line: init.start_line.unwrap_or(0),
+                column: init.start_column.unwrap_or(0),
+            })?;
         Ok(Stmt::LetStarBinding {
-            name,
+            name: sir_name,
             sir_type: Some(SirType::Int(ty)),
             value,
             span: sp(),
@@ -856,29 +1365,62 @@ impl Lowerer {
 
     /// Lower an expression, returning both the SIR node and its C type.
     fn lower_expr(&mut self, node: &GrammarASTNode) -> Result<(Expr, IntSpec), CLowerError> {
+        // Bound the depth of the tree we emit — see `MAX_EXPR_DEPTH`.  The
+        // counter is restored on every path so a rejected sub-expression does
+        // not poison the rest of the function.
+        self.expr_depth += 1;
+        if self.budget_used() > MAX_EXPR_DEPTH {
+            self.expr_depth -= 1;
+            return err(
+                format!("expression nests deeper than the limit of {MAX_EXPR_DEPTH}"),
+                node,
+            );
+        }
+        let result = self.lower_expr_inner(node);
+        self.expr_depth -= 1;
+        result
+    }
+
+    fn lower_expr_inner(&mut self, node: &GrammarASTNode) -> Result<(Expr, IntSpec), CLowerError> {
         let n = peel(node);
         match n.rule_name.as_str() {
             // Binary arithmetic / bitwise / shift — left-associative fold.
             "additive" | "multiplicative" | "shift" | "bit_and" | "bit_or" | "bit_xor" => {
                 self.lower_binary(n)
             }
-            // A comparison used as a *value* has type `int` in C (0 or 1), so it
-            // lowers to `If(cmp, 1, 0)` — restoring the integer from the bool.
+            // A comparison or logical operator used as a *value* has type `int`
+            // in C (0 or 1), so it lowers to `If(bool, 1, 0)` — restoring the
+            // integer from the SIR bool.
             "equality" | "relational" if child_nodes(n).len() >= 2 => {
                 let b = self.lower_compare_bool(n)?;
+                Ok((if_int(b), i32_spec()))
+            }
+            "logical_and" | "logical_or" if child_nodes(n).len() >= 2 => {
+                let b = self.lower_cond(n)?;
                 Ok((if_int(b), i32_spec()))
             }
             "cast" => self.lower_cast(n),
             "unary" => self.lower_unary(n),
             "postfix" => self.lower_postfix(n),
             "primary" => self.lower_primary(n),
-            // Logical `&& ||`, unary `!`, and assignment-as-subexpression remain
-            // deferred (assignment is handled in statement position).
+            // Assignment-as-subexpression remains deferred (assignment is handled
+            // in statement position).
             other => err(format!("expression `{other}` not yet supported"), n),
         }
     }
 
     fn lower_binary(&mut self, n: &GrammarASTNode) -> Result<(Expr, IntSpec), CLowerError> {
+        // A chain is flat in the CST but folds left into a tree as deep as it is
+        // wide, so its width is charged against the same budget as nesting — and
+        // *held* while its operands are lowered.
+        let width = self.charge_chain(n)?;
+        self.expr_depth += width;
+        let result = self.lower_binary_inner(n);
+        self.expr_depth -= width;
+        result
+    }
+
+    fn lower_binary_inner(&mut self, n: &GrammarASTNode) -> Result<(Expr, IntSpec), CLowerError> {
         // children: operand (op operand)+   — fold left.
         let mut acc: Option<(Expr, IntSpec)> = None;
         let mut pending_op: Option<String> = None;
@@ -917,17 +1459,58 @@ impl Lowerer {
         let rp = promote(rt);
         let le = convert_to(le, lt, lp);
         let re = convert_to(re, rt, rp);
+
+        // Shifts are the exception to the usual arithmetic conversions: C does
+        // *not* bring the operands to a common type.  Each is promoted on its
+        // own, the result has the type of the promoted **left** operand, and the
+        // right operand is only a count.  (`>>` on a signed value is arithmetic,
+        // on unsigned logical — the backends get that right because the operand
+        // carries its signedness through `Convert`.)
+        if op == "<<" || op == ">>" {
+            // `>>` is arithmetic on a signed operand and **logical** on an
+            // unsigned one.  The backends store everything in a signed int64, so
+            // a `uint64_t` whose top bit is set is a *negative* int64 and a
+            // native `>>` would sign-extend it.  Route unsigned `>>` to a
+            // distinct `u>>` builtin the backends render as a logical shift.
+            let name = if op == ">>" && !lp.signed { "u>>" } else { op };
+            return Ok((convert(builtin(name, vec![le, re]), lp), lp));
+        }
+
         let c = common_type(lp, rp);
         let le = convert_to(le, lp, c);
         let re = convert_to(re, rp, c);
-        // Milestone 1 supports only the operators both backends render
-        // identically: + - *.  Division needs the floor/trunc split (SIR21 E3),
-        // and %/bitwise/shift need backend builtins — all deferred.
+        // `+ - *` and the bitwise operators `& | ^` all take the usual
+        // arithmetic conversions and are performed at the common type.  Division
+        // and remainder use the *truncating* builtins (see below).
         let sir_op = match op {
-            "+" | "-" | "*" => op,
+            "+" | "-" | "*" | "&" | "|" | "^" => op,
+            // C division/remainder **truncate toward zero** (`-7 / 2 == -3`,
+            // `-7 % 2 == -1`), whereas SIR/Ruby `/`/`%` and the C backend's
+            // `_sir_ifloordiv` **floor** (`-7 / 2 == -4`).  So they lower to
+            // dedicated truncating builtins, distinct from the floor ones.
+            //
+            // Signedness matters for the same reason it does for `>>`: the
+            // backends store values in a signed int64, so an unsigned operand
+            // ≥ 2^63 is a negative int64 and a signed division would be wrong.
+            // Unsigned `/`/`%` therefore route to `utdiv`/`utmod` (which the C
+            // backend does over uint64).
+            "/" => {
+                if c.signed {
+                    "tdiv"
+                } else {
+                    "utdiv"
+                }
+            }
+            "%" => {
+                if c.signed {
+                    "tmod"
+                } else {
+                    "utmod"
+                }
+            }
             other => {
                 return Err(CLowerError {
-                    message: format!("binary operator `{other}` not supported in milestone 1"),
+                    message: format!("binary operator `{other}` not yet supported"),
                     line: 0,
                     column: 0,
                 })
@@ -958,6 +1541,14 @@ impl Lowerer {
         // unary = (PLUS|MINUS|TILDE|BANG) unary
         let op = child_tokens(n).first().map(|t| t.value.clone()).unwrap();
         let operand = child_nodes(n).into_iter().next().unwrap();
+
+        // `!c` used as a *value* has type `int` (0/1), so lower its operand as a
+        // condition and wrap the resulting bool: `If(not(cond(c)), 1, 0)`.
+        if op == "!" {
+            let cond = builtin("not", vec![self.lower_cond(operand)?]);
+            return Ok((if_int(cond), i32_spec()));
+        }
+
         let (e, t) = self.lower_expr(operand)?;
         let tp = promote(t); // unary applies integer promotion
         let e = convert_to(e, t, tp);
@@ -966,8 +1557,9 @@ impl Lowerer {
             // Unary minus as `0 - x` (both backends render binary `-`); the
             // subtract happens at the promoted type and its result is wrapped.
             "-" => Ok((convert(builtin("-", vec![int_lit(0), e]), tp), tp)),
-            // `~` (bitnot) and `!` (logical not / truthiness) are deferred.
-            other => err(format!("unary `{other}` not supported in milestone 1"), n),
+            // Bitwise NOT at the promoted type, wrapped to enforce its width.
+            "~" => Ok((convert(builtin("~", vec![e]), tp), tp)),
+            other => err(format!("unary `{other}` not yet supported"), n),
         }
     }
 
@@ -1069,20 +1661,26 @@ impl Lowerer {
                 let v = parse_char_literal(&tok.value);
                 Ok((int_lit(v), i32_spec())) // a char constant has type int in C
             }
+            // The grammar accepts float literals; lowering them (and the whole
+            // floating-point value track) is the next slice.
+            "FLOAT_LIT" => err(
+                "floating-point literals are not yet supported in lowering",
+                n,
+            ),
             "NAME" => {
                 let name = tok.value.clone();
-                let (ty, scope) = self.vars.get(&name).copied().ok_or_else(|| CLowerError {
+                let b = self.resolve(&name).ok_or_else(|| CLowerError {
                     message: format!("use of undeclared variable `{name}`"),
                     line: n.start_line.unwrap_or(0),
                     column: n.start_column.unwrap_or(0),
                 })?;
                 Ok((
                     Expr::VarRef {
-                        name,
-                        scope,
+                        name: b.sir_name.clone(),
+                        scope: b.scope,
                         span: sp(),
                     },
-                    ty,
+                    b.ty,
                 ))
             }
             other => err(format!("primary token `{other}` unsupported"), n),
@@ -1094,6 +1692,106 @@ impl Lowerer {
 
 fn peel_block_item(item: &GrammarASTNode) -> &GrammarASTNode {
     child_nodes(item).into_iter().next().unwrap_or(item)
+}
+
+/// The leading operator token of a `unary` node (`!`, `~`, `-`, `+`), if any.
+fn unary_op(n: &GrammarASTNode) -> Option<String> {
+    child_tokens(n).first().map(|t| t.value.clone())
+}
+
+// ── sequence / control-flow shape analysis (milestone 3) ────────────────────
+//
+// The early-return transformation reasons about *sequences* of statements that
+// may come from a `compound_stmt` (a list of `block_item`s) or from a single
+// unbraced branch (`if (c) return 1;`).  These helpers normalise both shapes so
+// `lower_seq` can walk them uniformly.
+
+/// Reduce a `block_item` (or a bare `statement`) to the node carrying its kind:
+/// a `declaration`, or the peeled statement kind (`return_stmt`, `if_stmt`, …).
+fn seq_elem(n: &GrammarASTNode) -> &GrammarASTNode {
+    let inner = if n.rule_name == "block_item" {
+        peel_block_item(n)
+    } else {
+        n
+    };
+    if inner.rule_name == "declaration" {
+        inner
+    } else {
+        peel(inner)
+    }
+}
+
+/// The `block_item` children of a `compound_stmt`.
+fn block_items_of(compound: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+    child_nodes(compound)
+        .into_iter()
+        .filter(|x| x.rule_name == "block_item")
+        .collect()
+}
+
+/// The `statement` children of an `if_stmt`: `[then]` or `[then, else]`.
+fn if_branches(s: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+    child_nodes(s)
+        .into_iter()
+        .filter(|x| x.rule_name == "statement")
+        .collect()
+}
+
+/// A branch as a statement sequence: a braced branch contributes its
+/// `block_item`s, an unbraced one contributes itself as a single element.
+fn branch_items(branch: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+    let s = peel(branch);
+    if s.rule_name == "compound_stmt" {
+        block_items_of(s)
+    } else {
+        vec![branch]
+    }
+}
+
+/// Does this sequence return on **every** path?  Used to decide whether a
+/// branch needs the continuation appended.  Conservative: an `if` without an
+/// `else` never qualifies, and loops are not analysed (a `while` may run zero
+/// times, so it can never guarantee a return).
+fn always_returns(items: &[&GrammarASTNode]) -> bool {
+    items.iter().any(|it| {
+        let e = seq_elem(it);
+        match e.rule_name.as_str() {
+            "return_stmt" => true,
+            "compound_stmt" => always_returns(&block_items_of(e)),
+            "if_stmt" => {
+                let br = if_branches(e);
+                match (br.first(), br.get(1)) {
+                    (Some(t), Some(f)) => {
+                        always_returns(&branch_items(t)) && always_returns(&branch_items(f))
+                    }
+                    _ => false, // no `else` — the fall-through path doesn't return
+                }
+            }
+            _ => false,
+        }
+    })
+}
+
+/// Does either branch of this `if` contain a `return` in a *liftable* position?
+/// Deliberately does not descend into loops: a `return` inside a `while`/`for`
+/// cannot be turned into a value (it needs a break-with-value), so it is left
+/// for `lower_stmt` to reject with a clear, positioned error.
+fn if_returns(s: &GrammarASTNode) -> bool {
+    if_branches(s)
+        .iter()
+        .any(|b| contains_return(&branch_items(b)))
+}
+
+fn contains_return(items: &[&GrammarASTNode]) -> bool {
+    items.iter().any(|it| {
+        let e = seq_elem(it);
+        match e.rule_name.as_str() {
+            "return_stmt" => true,
+            "compound_stmt" => contains_return(&block_items_of(e)),
+            "if_stmt" => if_returns(e),
+            _ => false,
+        }
+    })
 }
 
 /// The string-literal value inside a call's arg_list (the printf format), with

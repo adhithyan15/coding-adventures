@@ -224,6 +224,7 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // LANG77 L3b-2c-2 — the ATOM/EQ predicates (return tagged #t/#f) and the
     // COND truthiness normaliser (returns a raw 0/1 for jmp_if_false).
     BuiltinSig { name: "dyn_pair_p",    n_args: 1, returns: true },
+    BuiltinSig { name: "dyn_null_p",    n_args: 1, returns: true },
     BuiltinSig { name: "dyn_not",       n_args: 1, returns: true },
     BuiltinSig { name: "dyn_equal",     n_args: 2, returns: true },
     BuiltinSig { name: "dyn_truthy",    n_args: 1, returns: true },
@@ -246,6 +247,34 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // adaptive threshold.  Used by IIR `safepoint` lowering.
     BuiltinSig { name: "gc_alloc",     n_args: 1, returns: true  },
     BuiltinSig { name: "gc_safepoint", n_args: 0, returns: false },
+    // AOT00-T1 increment C — the GC observability/collection entry points a native
+    // program uses to drive and measure a collection (→ `__twig_gc_*` aliases in
+    // gc-core-capi). `gc_collect` is a forced *conservative* full collect;
+    // `gc_collect_precise` is the precise-roots walk (returns objects freed);
+    // `gc_collect_compacting` is the precise-roots *moving* collect (relocates the movable
+    // survivors, rewriting the caller's root slots — spec AOT00-T3 §5; degrades to
+    // `gc_collect_precise` when nothing is movable); `gc_live_bytes` reports the live
+    // payload. Together they let the GC-stress differential show precise roots reclaiming a
+    // look-alike-pinned object that the conservative scan retains.
+    BuiltinSig { name: "gc_collect",            n_args: 0, returns: false },
+    BuiltinSig { name: "gc_collect_precise",    n_args: 0, returns: true  },
+    BuiltinSig { name: "gc_collect_compacting", n_args: 0, returns: true  },
+    // The incremental (bounded-pause) collection cycle (spec AOT00-T4 §6), driven
+    // start → step(budget)→done? → finish; the mutator's ref stores between steps go through
+    // the write barrier. `step` takes a budget and returns 1 (done) / 0 (more); `finish`
+    // returns objects reclaimed. Auto-emit `__twig_gc_collect_incremental_*` via the generic
+    // `__twig_<name>` dispatch — no per-name lowering.
+    BuiltinSig { name: "gc_collect_incremental_start",  n_args: 0, returns: false },
+    BuiltinSig { name: "gc_collect_incremental_step",   n_args: 1, returns: true  },
+    BuiltinSig { name: "gc_collect_incremental_finish", n_args: 0, returns: true  },
+    BuiltinSig { name: "gc_live_bytes",         n_args: 0, returns: true  },
+    BuiltinSig { name: "gc_stackmap_count",     n_args: 0, returns: true  },
+    // AOT00-T5 — declare a variable-length reference-array layout so the collector traces (and
+    // under compaction relocates) the array + its elements precisely. `(fixed, fixed_count,
+    // tail_from) -> kind_id`: the seam a language frontend's array type calls; auto-emits
+    // `__twig_gc_register_ref_array_kind` via the generic `__twig_<name>` dispatch. Pass
+    // `fixed = 0, fixed_count = 0, tail_from = 0` for a pure reference array (every word a ref).
+    BuiltinSig { name: "gc_register_ref_array_kind", n_args: 3, returns: true },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
@@ -1222,7 +1251,8 @@ fn emit_instr(
                 "call_builtin '{name}': returns void but dest is Some",
             )));
         }
-        // AAPCS64 supplies 8 GPR arg slots — all V1 helpers fit in ≤ 2.
+        // AAPCS64 supplies 8 GPR arg slots — every builtin's arity fits (max is 3, for
+        // `gc_register_ref_array_kind`), so `ARG_REGS[i]` is always in range.
         const ARG_REGS: [Reg; 8] = [
             Reg::X0, Reg::X1, Reg::X2, Reg::X3,
             Reg::X4, Reg::X5, Reg::X6, Reg::X7,
@@ -2312,6 +2342,75 @@ mod tests {
         let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
         assert!(symbols.contains(&"__dyn_cons"), "missing cons call: {symbols:?}");
         assert!(symbols.contains(&"__dyn_car"), "missing car call: {symbols:?}");
+    }
+
+    /// `call_builtin "gc_collect_compacting" -> freed` lowers to a `BL` to the linker
+    /// symbol `__twig_gc_collect_compacting` (the moving-collector C-ABI entry, spec
+    /// AOT00-T3 §5), via the generic `__twig_<name>` builtin dispatch — the same path
+    /// `gc_collect_precise` uses. Proves a native frontend can trigger a compaction.
+    #[test]
+    fn gc_collect_compacting_emits_external_twig_call() {
+        let cir = vec![
+            call_builtin(Some("freed"), "gc_collect_compacting", &[]),
+            ret_u64("freed"),
+        ];
+        let (bytes, ext) = compile_with_relocs(&ctx("gc_compact", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("gc_collect_compacting must lower: {e}"));
+        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+        let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(
+            symbols.contains(&"__twig_gc_collect_compacting"),
+            "missing compacting-collect call: {symbols:?}",
+        );
+    }
+
+    /// The incremental-collector builtin trio (`gc_collect_incremental_{start,step,finish}`,
+    /// spec AOT00-T4 §6) lowers each to a `BL` to its `__twig_gc_collect_incremental_*` linker
+    /// symbol via the generic `__twig_<name>` dispatch — `step` takes a budget arg. Proves a
+    /// native frontend can drive a bounded-pause collection.
+    #[test]
+    fn gc_collect_incremental_emits_external_twig_calls() {
+        let cir = vec![
+            call_builtin(None, "gc_collect_incremental_start", &[]),
+            const_u64("budget", 1_000_000),
+            call_builtin(Some("done"), "gc_collect_incremental_step", &["budget"]),
+            call_builtin(Some("freed"), "gc_collect_incremental_finish", &[]),
+            ret_u64("freed"),
+        ];
+        let (bytes, ext) = compile_with_relocs(&ctx("gc_incr", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("gc_collect_incremental_* must lower: {e}"));
+        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+        let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
+        for want in [
+            "__twig_gc_collect_incremental_start",
+            "__twig_gc_collect_incremental_step",
+            "__twig_gc_collect_incremental_finish",
+        ] {
+            assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
+        }
+    }
+
+    /// `call_builtin "gc_register_ref_array_kind" (fixed, fixed_count, tail_from) -> kind`
+    /// lowers to a `BL` to `__twig_gc_register_ref_array_kind` (the C-ABI seam a language
+    /// frontend's array type calls, spec AOT00-T5) via the generic `__twig_<name>` dispatch —
+    /// three args marshalled into x0/x1/x2. `(0, 0, 0)` declares a pure reference array.
+    #[test]
+    fn gc_register_ref_array_kind_emits_external_twig_call() {
+        let cir = vec![
+            const_u64("fixed", 0), // null fixed-offsets pointer
+            const_u64("fcount", 0), // no fixed ref fields
+            const_u64("tail", 0), // tail region from offset 0 — every word is a reference
+            call_builtin(Some("kind"), "gc_register_ref_array_kind", &["fixed", "fcount", "tail"]),
+            ret_u64("kind"),
+        ];
+        let (bytes, ext) = compile_with_relocs(&ctx("gc_refarray", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("gc_register_ref_array_kind must lower: {e}"));
+        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+        let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(
+            symbols.contains(&"__twig_gc_register_ref_array_kind"),
+            "missing ref-array-kind registration call: {symbols:?}",
+        );
     }
 
     #[test]

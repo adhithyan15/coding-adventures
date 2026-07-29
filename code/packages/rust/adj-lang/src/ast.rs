@@ -254,6 +254,50 @@ pub enum ExprAst {
     /// `latex "…"` adapter from a `MathExpr::Call` whose argument is a
     /// two-element `Sequence`.
     Call2(BinFn, Box<ExprAst>, Box<ExprAst>),
+    /// A **precision narrowing** — `round_to(x, n)` (NUM-6a, decimal places) or
+    /// `round_sig(x, n)` (NUM-6b, significant figures). Unlike [`ExprAst::Round`]
+    /// (round to the nearest *integer*), this carries a precision spec, so it lowers
+    /// to the distinct `logic_engine::ComputeExpr::Round` node (not a unary
+    /// `ComputeOp`), rounding on the exact path under the default half-even mode
+    /// (ADJ-NUMERIC-SUBSTRATE §4.1–§4.4). The [`logic_engine::RoundSpec`] is already
+    /// validated (a non-negative integer within the precision cap; ≥ 1 for
+    /// significant figures). Produced by the **native application** surface
+    /// `round_to(x, n)` / `round_sig(x, n)` — recognised as built-ins in
+    /// [`ExprAst::Apply`] lowering, which reuses the same comma-list argument grammar
+    /// as user formula applications (`quotient(a, b)`), so no new grammar or LaTeX
+    /// change is needed.
+    RoundTo(Box<ExprAst>, logic_engine::RoundSpec),
+    /// A **scientific-notation formatting** — `to_scientific(x [, figures])` (NUM-6c).
+    /// A rendering op: it narrows `x` to `figures` significant figures on the exact
+    /// path (like [`ExprAst::RoundTo`] with `SigFigures`) and produces the `d.ddde±E`
+    /// string alongside the narrowed value, so the audit carries both the exact source
+    /// and the rendered form (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3). Lowers to the distinct
+    /// `logic_engine::ComputeExpr::ToScientific` node under the default half-even mode.
+    /// The `figures` count is validated (`≥ 1`, within the precision cap); when the
+    /// surface omits it, the default is resolved at lowering. Produced by the native
+    /// application surface `to_scientific(x [, figures])`, recognised as a built-in in
+    /// [`ExprAst::Apply`] lowering (same comma-list grammar as `round_to`/`round_sig`).
+    ToScientific(Box<ExprAst>, u32),
+    /// A **percentage formatting** — `to_percent(x [, places])` (NUM-6c). A rendering op:
+    /// it takes `x` as a dimensionless ratio, scales it by 100 and rounds to `places`
+    /// decimal places on the exact path, and produces the `d.dd%` string alongside the
+    /// narrowed fraction (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3). Lowers to the distinct
+    /// `logic_engine::ComputeExpr::ToPercent` node under the default half-even mode. The
+    /// `places` count is validated (`≥ 0`, within the precision cap); when the surface
+    /// omits it, the default is resolved at lowering. Produced by the native application
+    /// surface `to_percent(x [, places])`, recognised as a built-in in [`ExprAst::Apply`]
+    /// lowering (same comma-list grammar as `round_to`/`to_scientific`).
+    ToPercent(Box<ExprAst>, u32),
+    /// A **currency formatting** — `to_currency(x, code [, places])` (NUM-6c). A rendering
+    /// op like [`ExprAst::ToPercent`] but carrying a currency **code** string (the first
+    /// field) alongside the decimal `places` (the second): it renders the money amount `x`
+    /// to `places` base-10-exact decimal places and prefixes the code (ADJ-NUMERIC-SUBSTRATE
+    /// §4.1, §4.3). Lowers to the distinct `logic_engine::ComputeExpr::ToCurrency` node
+    /// under the default half-even mode. `places ≥ 0` (default resolved at lowering); the
+    /// `code` is a bare identifier (`USD`) taken verbatim from the surface. Produced by the
+    /// native application surface `to_currency(x, code [, places])`, recognised as a built-in
+    /// in [`ExprAst::Apply`] lowering (same comma-list grammar as `round_to`/`to_percent`).
+    ToCurrency(Box<ExprAst>, String, u32),
     /// An aggregation over every observation of a slot.
     Agg(AggOp, String),
     /// A **formula application** used as a sub-expression: `name(arg₁, …, argₙ)`
@@ -366,17 +410,25 @@ pub enum Statement {
     /// as the single-hop special case of the differential.
     Query { conclusion: Term },
     /// `? lookup <table> <key_col> = <n> mode <mode> give <value_col>` — a
-    /// RANGE / BRACKET lookup over a [`Statement::Table`] read as a step function
-    /// (ADJ-TABLES RS-5c). Unlike [`Query`] (exact SLD unification on the key), a
-    /// range lookup selects the breakpoint row whose `key_col` is the greatest key
-    /// `<= key_value`, and returns that row's `value_col` **with the row's
-    /// citation** — the tactic for tax brackets, dose bands, and reference-range
-    /// classification. A query below the smallest key abstains ("below the table's
-    /// domain"). `mode` selects the tactic: `range` here; `interpolated` is
-    /// reserved for RS-5d ([`crate::LowerError::LookupModeUnsupported`]).
+    /// RANGE / INTERPOLATED lookup over a [`Statement::Table`] (ADJ-TABLES RS-5c/RS-5d).
+    /// Unlike [`Query`] (exact SLD unification on the key), the `mode` selects a
+    /// numeric tactic over the table's breakpoints:
+    /// - `range` reads the table as a **step function**: it selects the breakpoint
+    ///   row whose `key_col` is the greatest key `<= key_value` and returns that
+    ///   row's `value_col` verbatim — tax brackets, dose bands, reference-range
+    ///   classification. A query below the smallest key abstains ("below the table's
+    ///   domain").
+    /// - `interpolated` reads it as a **piecewise-linear function**: it finds the two
+    ///   bracketing rows `k0 <= key_value <= k1` and returns the exact linear blend
+    ///   `v0 + (v1−v0)·(key_value−k0)/(k1−k0)` — nomograms, growth charts, calibration
+    ///   curves. Both bracketing rows' citations ride along. A query outside `[min,
+    ///   max]` abstains (below- or above-domain); it never extrapolates. The value
+    ///   column must be numeric ([`crate::LowerError::LookupNonNumericValueColumn`]).
+    ///
+    /// An unrecognized mode is [`crate::LowerError::LookupUnknownMode`].
     RangeLookup {
-        /// The `table` to read as a step function (must be a declared table:
-        /// [`crate::LowerError::LookupUnknownTable`]).
+        /// The `table` to read as a step / piecewise-linear function (must be a
+        /// declared table: [`crate::LowerError::LookupUnknownTable`]).
         table: String,
         /// The numeric key column the query value is compared against (must be one
         /// of the table's columns and hold only numbers:
@@ -386,7 +438,7 @@ pub enum Statement {
         /// The concrete query value to classify. Carried as a [`NumLit`] (sign
         /// already folded in) so no digit is lost before the exact comparison.
         key_value: NumLit,
-        /// The lookup tactic named at the call site (`range`; `interpolated` = RS-5d).
+        /// The lookup tactic named at the call site (`range` or `interpolated`).
         mode: String,
         /// The column whose cell is returned for the selected breakpoint row (must
         /// be one of the table's columns: [`crate::LowerError::LookupUnknownColumn`]).
@@ -667,6 +719,18 @@ pub enum Annotation {
     /// corroborating citation to `Provenance::corroborations`. Repeatable;
     /// each carries a required locator so the span is re-fetchable.
     Cites { source: String, locator: String },
+    /// `quote "<text>" at <byte_offset> snapshot "<sha256-hex>"`
+    /// (RS-4 PR-D4, `ADJ-REASON-MATH.md` §E.3.1) — a **pinned verbatim span**:
+    /// the exact bytes `text` must occupy at `byte_offset` in the document whose
+    /// SHA-256 is `snapshot_hex`. Populates `Provenance::quote` +
+    /// `Provenance::snapshot`, and is what lets `adj-verify` report
+    /// `fully_verified`. The `byte_offset` is emitted by the spider at ingest —
+    /// never authored by a human or model (`feedback_no_byte_arithmetic_for_llm`).
+    Quote {
+        text: String,
+        byte_offset: usize,
+        snapshot_hex: String,
+    },
 }
 
 /// Surface name for a trust tier — keywords in the language map

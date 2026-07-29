@@ -1,0 +1,83 @@
+% ============================================================================
+% speed.adj — the distance–speed–time rates library (ADJ-FORMULA-LIBRARIES).
+% ============================================================================
+% The most-taught elementary rate: average speed is distance divided by time,
+% and the two rearrangements that complete the distance–speed–time "triangle".
+% Built ENTIRELY by composing the cited primitives of `arithmetic.adj` — it
+% re-derives no arithmetic. Where `powers.adj` nests the cited `product`, this
+% APPLIES the cited `quotient` and `product`: a speed is a quotient, a distance
+% is a product, a time is a quotient, each cited as such.
+%
+%     import "speed.adj"                       % transitively imports arithmetic.adj
+%     observe distance(150)                    % "…150 km…"   (span cited by the model)
+%     observe time(3)                          % "…in 3 hours…" (span cited by the model)
+%     ? average_speed(distance, time)          % engine → 50, carrying every citation
+%
+% The engine expands `average_speed` → `quotient` (from arithmetic.adj) on the
+% CPU and composes the provenance chain, so the answer cites BOTH the speed
+% definition (primary) and the `quotient` primitive it builds on (corroboration).
+% The model performs zero arithmetic, and the audit trail names every formula
+% that participated.
+%
+% The three formulas are the one relation v = d / t and its algebraic
+% rearrangements d = v · t and t = d / v — the classic triangle. Each rests on
+% the SAME definitional relation among distance, speed and time, so each carries
+% that definition as its `source`; only the primitive it composes differs.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% This library depends on two elementary primitives — `quotient` and `product`.
+% The import is RELATIVE to this file, so a consumer that imports `speed.adj`
+% gets those primitives transitively and the bodies below resolve.
+% ----------------------------------------------------------------------------
+import "arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. The three quantities of the distance–speed–time relation, plus the
+% three results. Rung-0 types an observable slot as `finding`; the `surface`
+% synonyms let a decomposer map everyday phrasing ("how far", "how fast", "how
+% long") onto the canonical terms.
+% ----------------------------------------------------------------------------
+dictionary speed_vocab {
+    define distance : finding  surface "distance", "how far", "length travelled", "displacement"
+    define time     : finding  surface "time", "how long", "elapsed time", "duration"
+    define speed    : finding  surface "speed", "how fast", "average speed", "rate"
+
+    define average_speed     : finding  surface "average speed", "speed", "how fast"
+    define distance_travelled : finding  surface "distance travelled", "distance", "how far"
+    define travel_time       : finding  surface "travel time", "time taken", "how long"
+}
+
+% ----------------------------------------------------------------------------
+% The composed formulas. None writes a bare `/` or `*`: each APPLIES the cited
+% primitive from `arithmetic.adj`, so the rate is what it is BECAUSE of the
+% division (or multiplication) it composes, cited as such.
+%
+%   average_speed(distance, time)     = distance / time        (v = d / t)
+%   distance_travelled(speed, time)   = speed * time           (d = v · t)
+%   travel_time(distance, speed)      = distance / speed        (t = d / v)
+% ----------------------------------------------------------------------------
+formulabook speeds {
+    use speed_vocab
+
+    % Average speed — distance divided by time. Composes `quotient`: 150 km over
+    % 3 hours is 150 / 3 = 50 km/h.
+    formula average_speed(distance, time) = quotient(distance, time)
+        source "Average speed is the rate of change of distance with time."
+        locator "https://physics.info/velocity/"
+        trust authoritative
+
+    % Distance travelled — speed multiplied by time, the rearrangement d = v·t.
+    % Composes `product`: 50 km/h for 3 hours covers 50 * 3 = 150 km.
+    formula distance_travelled(speed, time) = product(speed, time)
+        source "Average speed is the rate of change of distance with time."
+        locator "https://physics.info/velocity/"
+        trust authoritative
+
+    % Travel time — distance divided by speed, the rearrangement t = d/v.
+    % Composes `quotient`: 150 km at 50 km/h takes 150 / 50 = 3 hours.
+    formula travel_time(distance, speed) = quotient(distance, speed)
+        source "Average speed is the rate of change of distance with time."
+        locator "https://physics.info/velocity/"
+        trust authoritative
+}

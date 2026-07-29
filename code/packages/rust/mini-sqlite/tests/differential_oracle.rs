@@ -1620,8 +1620,52 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT DISTINCT c FROM t ORDER BY c",
     },
-    // `SELECT DISTINCT *` folds too, because `*` expands to bare column
-    // references — each contributing its own declared collation.
+    // `SELECT *` expands to the table's columns in declaration order (was a
+    // single NULL column named `*`). Multi-column table.
+    Case {
+        id: "select_star_expands",
+        setup: &[
+            "CREATE TABLE t (a INTEGER, b TEXT)",
+            "INSERT INTO t VALUES (1,'x'),(2,'y')",
+        ],
+        query: "SELECT * FROM t ORDER BY a",
+    },
+    // Because `*` expands before ORDER BY ordinals resolve, `ORDER BY 1` binds
+    // to the first expanded column — matching SQLite (orders by `a` descending).
+    Case {
+        id: "select_star_order_by_ordinal",
+        setup: &[
+            "CREATE TABLE t (a INTEGER, b TEXT)",
+            "INSERT INTO t VALUES (2,'y'),(1,'x'),(3,'z')",
+        ],
+        query: "SELECT * FROM t ORDER BY 1 DESC",
+    },
+    // `*` mixed with another select item: `*` is now a `select_item` alternative,
+    // so it parses in a comma list and expands IN PLACE. `SELECT a, *` yields
+    // `a, a, b` (the leading `a`, then the whole row) — matching SQLite.
+    Case {
+        id: "select_star_in_place",
+        setup: &[
+            "CREATE TABLE t (a INTEGER, b TEXT)",
+            "INSERT INTO t VALUES (1,'x'),(2,'y')",
+        ],
+        query: "SELECT a, * FROM t ORDER BY a",
+    },
+    // `*` as the FIRST item, then another column: expands in place to the whole
+    // row followed by the trailing item — `SELECT *, a` → `a, b, a`.
+    Case {
+        id: "select_star_then_column",
+        setup: &[
+            "CREATE TABLE t (a INTEGER, b TEXT)",
+            "INSERT INTO t VALUES (1,'x'),(2,'y')",
+        ],
+        query: "SELECT *, a FROM t ORDER BY a",
+    },
+    // `SELECT DISTINCT *` now expands AND folds: `*` becomes the bare column
+    // references, each contributing its own declared collation, so a NOCASE
+    // column dedupes case-insensitively. (Previously `*` stayed a single NULL
+    // column and the DISTINCT collation vector was shifted — the reason this was
+    // ledgered.)
     Case {
         id: "distinct_star_collate",
         setup: &[
@@ -1661,13 +1705,14 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT DISTINCT c||'' AS e FROM t ORDER BY e",
     },
-    // REGRESSION GUARD (data loss): with DISTINCT over a GROUP BY, the aggregate
-    // emitter emits group-key columns in GROUP BY order, NOT SELECT-list order,
-    // so a positional collation vector built from the SELECT list is SHIFTED and
-    // would fold the WRONG column — here NOCASE would land on `x`, merging 'p'
-    // and 'P' and losing a row. The planner therefore falls back to BINARY
-    // whenever a GROUP BY is present, and the VM additionally ignores the vector
-    // if its width disagrees with the emitted row. Found by security review.
+    // GROUP BY output now follows the SELECT list, not the internal group-key
+    // order: `SELECT x, c ... GROUP BY c, x` yields columns `[x, c]`. This also
+    // guards the earlier data-loss near-miss — a DISTINCT collation vector built
+    // from the SELECT list was SHIFTED against the old `[c, x]` layout and folded
+    // the WRONG column, merging 'p'/'P' and losing a row (caught by security
+    // review). The collation vector still bails to BINARY over a GROUP BY, so
+    // this case is now doubly safe. Retired from the ledger by the SELECT-list
+    // projection fix.
     Case {
         id: "distinct_over_group_by_no_misfold",
         setup: &[
@@ -1676,6 +1721,29 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT DISTINCT x, c FROM t GROUP BY c, x ORDER BY 1, 2",
     },
+    // Plain (non-DISTINCT) reorder: the SELECT list `[x, c]` wins over the GROUP
+    // BY key order `[c, x]`. Newly correct with the projection fix.
+    Case {
+        id: "group_by_output_follows_select_order",
+        setup: &[
+            "CREATE TABLE t (c TEXT, x TEXT)",
+            "INSERT INTO t VALUES('A','p'),('A','q'),('B','r')",
+        ],
+        query: "SELECT x, c FROM t GROUP BY x, c ORDER BY x, c",
+    },
+    // An expression over a group key, in SELECT-list position, projects correctly
+    // (no aggregates → the SELECT list is re-projected verbatim).
+    Case {
+        id: "group_by_expression_over_key",
+        setup: &[
+            "CREATE TABLE t (c TEXT)",
+            "INSERT INTO t VALUES('A'),('A'),('B')",
+        ],
+        query: "SELECT c || '!' AS d, c FROM t GROUP BY c ORDER BY c",
+    },
+    // A bare non-key column now projects a VALUE, not NULL: SQLite reports such a
+    // column from the group's FIRST row, and the VM now keeps that representative
+    // row. Here each x-group has one row (c='A'), so it's deterministic.
     Case {
         id: "distinct_over_group_by_single_col",
         setup: &[
@@ -1683,6 +1751,59 @@ const CASES: &[Case] = &[
             "INSERT INTO t VALUES('A','p'),('A','P')",
         ],
         query: "SELECT DISTINCT c FROM t GROUP BY x ORDER BY 1",
+    },
+    // Multi-row group: the bare columns `v` and `tag` come from the group's FIRST
+    // row (v=10, tag='a'), matching SQLite. Both engines scan an in-memory table
+    // in insertion/rowid order, so "first row of the group" is deterministic.
+    Case {
+        id: "group_by_bare_column_first_row",
+        setup: &[
+            "CREATE TABLE t (g INTEGER, v INTEGER, tag TEXT)",
+            "INSERT INTO t VALUES (1,10,'a'),(1,20,'b'),(1,30,'c'),(2,40,'d')",
+        ],
+        query: "SELECT g, v, tag FROM t GROUP BY g ORDER BY g",
+    },
+    // Bare column functionally dependent on the key (`c` constant within each
+    // `x`... here within `g`): deterministic regardless of which row is picked.
+    Case {
+        id: "group_by_bare_column_dependent",
+        setup: &[
+            "CREATE TABLE t (g INTEGER, label TEXT)",
+            "INSERT INTO t VALUES (1,'one'),(1,'one'),(2,'two')",
+        ],
+        query: "SELECT g, label FROM t GROUP BY g ORDER BY g",
+    },
+    // An aggregate column reordered before a group key now follows the SELECT
+    // list (`[mx, c]`, not the old `[c, max(x)]`) — every aggregate, including
+    // group_concat, lowers to SqlExpr::Aggregate so the projection can place it.
+    // group_concat reordered before the group key — exercises the reconcile:
+    // group_concat now lowers to SqlExpr::Aggregate, so the projection places it
+    // in SELECT-list order like any other aggregate.
+    Case {
+        id: "group_by_reordered_group_concat",
+        setup: &[
+            "CREATE TABLE t (g TEXT, v TEXT)",
+            "INSERT INTO t VALUES('a','1'),('a','2'),('b','3')",
+        ],
+        query: "SELECT group_concat(v) AS gc, g FROM t GROUP BY g ORDER BY g",
+    },
+    // group_concat (with separator) + count + key, all reordered relative to the
+    // group key, each named/placed per the SELECT list.
+    Case {
+        id: "group_by_reordered_mixed_aggregates",
+        setup: &[
+            "CREATE TABLE t (g TEXT, v TEXT)",
+            "INSERT INTO t VALUES('a','1'),('a','2'),('b','3')",
+        ],
+        query: "SELECT group_concat(v,'|') AS gc, count(*) AS n, g FROM t GROUP BY g ORDER BY g",
+    },
+    Case {
+        id: "group_by_reordered_with_aggregate",
+        setup: &[
+            "CREATE TABLE t (c TEXT, x INTEGER)",
+            "INSERT INTO t VALUES('A',1),('A',9),('B',3)",
+        ],
+        query: "SELECT max(x) AS mx, c FROM t GROUP BY c ORDER BY c",
     },
     // An ORDER BY key that names an OUTPUT ALIAS must use that expression's
     // collation, not the collation of a base-table column that happens to share
@@ -1741,7 +1862,14 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT DISTINCT b FROM t ORDER BY b",
     },
-    // An EXPLICIT `COLLATE` in the DISTINCT operand folds a binary column.
+    // An EXPLICIT `COLLATE` in the DISTINCT operand folds a binary column: `b` is
+    // declared BINARY, so without the suffix 'a'/'A'/'b'/'B' stay four distinct
+    // rows; `COLLATE NOCASE` collapses them to two, keeping each fold's FIRST
+    // (scan-order) original text — 'a','b'. The output column is named after its
+    // source text `b COLLATE NOCASE` (SQLite includes the COLLATE in the name).
+    // Now with an `ORDER BY b`: DISTINCT runs BEFORE the sort (fixed VM post-op
+    // order), so the scan-first 'a'/'b' survive and are then ordered — exactly
+    // SQLite. (Previously the VM sorted first and kept the byte-sort-first 'A'.)
     Case {
         id: "distinct_explicit_collate",
         setup: &[
@@ -1749,6 +1877,28 @@ const CASES: &[Case] = &[
             "INSERT INTO t VALUES (1,'a','a'),(2,'A','A'),(3,'b','b'),(4,'B','B')",
         ],
         query: "SELECT DISTINCT b COLLATE NOCASE FROM t ORDER BY b",
+    },
+    // The specific representative-selection regression, now fixed: a NOCASE fold
+    // of 'a'/'A' under `ORDER BY b` keeps SQLite's scan-first 'a', because the VM
+    // applies DISTINCT before ORDER BY. Guards the post-op ordering directly.
+    Case {
+        id: "distinct_collate_order_by_representative",
+        setup: &[
+            "CREATE TABLE t (b TEXT)",
+            "INSERT INTO t VALUES ('a'),('A'),('b'),('B')",
+        ],
+        query: "SELECT DISTINCT b COLLATE NOCASE FROM t ORDER BY b",
+    },
+    // The mirror direction: an explicit `COLLATE BINARY` on a DISTINCT operand
+    // OVERRIDES the column's declared NOCASE, so 'a' and 'A' stay distinct. Guards
+    // that explicit collation outranks declared (not just "any collation folds").
+    Case {
+        id: "distinct_explicit_binary_overrides_declared",
+        setup: &[
+            "CREATE TABLE t (c TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES ('a'),('A'),('b')",
+        ],
+        query: "SELECT DISTINCT c COLLATE BINARY FROM t ORDER BY c",
     },
     // GROUP BY likewise groups on the collated key: a declared-NOCASE column
     // yields two groups of two, keyed by the first occurrence's original casing.
@@ -1788,7 +1938,9 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT a, b, COUNT(*) AS n FROM t GROUP BY a, b ORDER BY a, b",
     },
-    // An explicit `GROUP BY <col> COLLATE NOCASE` folds a binary column.
+    // An explicit `GROUP BY <col> COLLATE NOCASE` folds a binary column: `b` is
+    // BINARY, so it groups case-insensitively only because of the suffix, keying
+    // each group by the first occurrence's original casing.
     Case {
         id: "group_by_explicit_collate",
         setup: &[
@@ -1796,6 +1948,18 @@ const CASES: &[Case] = &[
             "INSERT INTO t VALUES (1,'a','a'),(2,'A','A'),(3,'b','b'),(4,'B','B')",
         ],
         query: "SELECT b, COUNT(*) AS n FROM t GROUP BY b COLLATE NOCASE ORDER BY b",
+    },
+    // Per-key collation on a multi-column GROUP BY: only the second key carries
+    // `COLLATE NOCASE`, so `g` groups by exact bytes while `b` folds case. Guards
+    // that the planner pairs each COLLATE with the column_ref it follows (not the
+    // first, not all of them).
+    Case {
+        id: "group_by_explicit_collate_second_key",
+        setup: &[
+            "CREATE TABLE t (g TEXT, b TEXT)",
+            "INSERT INTO t VALUES ('x','a'),('x','A'),('x','b'),('y','a')",
+        ],
+        query: "SELECT g, b, COUNT(*) AS n FROM t GROUP BY g, b COLLATE NOCASE ORDER BY g, b",
     },
     // ---- Lane 2: division / modulo by zero → NULL ------------------------
     // SQLite yields NULL (not an error) for any division or modulo by zero,
@@ -2116,6 +2280,49 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT k, sum(v) FROM g GROUP BY k ORDER BY 2",
     },
+    // `TOTAL(x)` is SQLite's NULL-free companion to SUM: always REAL, and 0.0
+    // (not NULL) for an empty or all-NULL group. Here the mixed int/real values
+    // sum to a REAL, and the all-NULL / empty groups return 0.0.
+    Case {
+        id: "total_aggregate",
+        setup: &[
+            "CREATE TABLE t (g TEXT, v)",
+            "INSERT INTO t VALUES ('a',1),('a',2),('b',NULL),('c',2.5)",
+        ],
+        query: "SELECT g, total(v), sum(v) FROM t GROUP BY g ORDER BY g",
+    },
+    // TOTAL over an empty table is 0.0 (a single grouped-less aggregate row),
+    // where SUM would be NULL — the defining difference (Real(0.0) vs Null in the
+    // value comparison).
+    Case {
+        id: "total_empty_is_zero",
+        setup: &["CREATE TABLE e (v INTEGER)"],
+        query: "SELECT total(v), sum(v) FROM e",
+    },
+    // TOTAL of all integers still returns a REAL (unlike SUM, which stays
+    // INTEGER) — `Real(6.0)` vs `Int(6)` in the value comparison proves the type.
+    Case {
+        id: "total_ints_returns_real",
+        setup: &[
+            "CREATE TABLE t (v INTEGER)",
+            "INSERT INTO t VALUES (1),(2),(3)",
+        ],
+        query: "SELECT total(v), sum(v) FROM t",
+    },
+    // `round()` reports a zero result as POSITIVE zero, matching SQLite:
+    // `round(-0.4)` and `round(-0.0)` are `0.0`, not `-0.0` (Rust's `f64::round`
+    // returns `-0.0` for a value rounding to zero from below). A non-zero result
+    // keeps its sign (`round(-0.5)` = `-1.0`), and rounding to N places behaves
+    // the same (`round(-0.004, 2)` = `0.0`). `Real(0.0)` vs `Real(-0.0)` is caught
+    // by the oracle's value comparison — the two are not bit-equal.
+    // (Aliased so the column names match trivially — an un-aliased `round(-0.4)`
+    // is named `?` here because the negative-literal argument has no rendered
+    // label; that naming gap is orthogonal. What we assert is the VALUE.)
+    Case {
+        id: "round_negative_zero_is_positive",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT round(-0.4) AS a, round(-0.0) AS b, round(-0.5) AS c, round(-0.004, 2) AS d FROM t",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
@@ -2152,53 +2359,6 @@ const LEDGER: &[(&str, &str)] = &[
     (
         "order_by_ordinal_over_aggregate",
         "positional ORDER BY over an aggregate output column not yet re-bound to the materialized column",
-    ),
-    // An EXPLICIT `COLLATE` suffix in a DISTINCT select-item or a GROUP BY term
-    // does not parse yet: the grammar only accepts a `COLLATE` tail inside a
-    // comparison (`x COLLATE C = y`), not on a bare select-list expression or a
-    // group-by key. The *semantics* half — a column's DECLARED collation folding
-    // the DISTINCT/GROUP BY key — is implemented (see the `distinct_column_*` /
-    // `group_by_column_*` cases); closing these two needs hand-edits to the
-    // sql-parser grammar (`select_item` and `group_by` gaining an optional
-    // `COLLATE NAME` tail), which is the next increment in this lane.
-    // `SELECT DISTINCT *` does not expand `*` — mini returns a single column
-    // literally named "*" holding NULL, where SQLite returns the table's columns.
-    // Plain `SELECT * FROM t` expands correctly, so this is specific to the
-    // DISTINCT projection path and is UNRELATED to collation: the collation
-    // vector this lane added already expands `*` via the schema's ordered
-    // `column_names`, so it will line up once the projection does. Pre-existing
-    // (this is the first case to exercise `DISTINCT *` at all).
-    (
-        "distinct_star_collate",
-        "SELECT DISTINCT * does not expand the star into the table's columns (projection gap, not a collation gap)",
-    ),
-    // The aggregate emitter emits the GROUP BY key columns, in GROUP BY order,
-    // instead of projecting the SELECT list: `SELECT DISTINCT x, c ... GROUP BY
-    // c, x` comes back as columns `[c, x]`, and `SELECT DISTINCT c ... GROUP BY
-    // x` comes back as the group key `x` rather than `c`. Pre-existing — the
-    // aggregate path never re-projects over its input (`compile_project` compiles
-    // the inner plan directly for an Aggregate/Having input).
-    //
-    // This is what makes a POSITIONAL per-output-column collation vector unsafe
-    // over a GROUP BY, so `distinct_output_collations` bails to BINARY whenever a
-    // GROUP BY is present (and the VM ignores the vector if its width disagrees
-    // with the emitted row). Without those guards the NOCASE of `c` landed on `x`
-    // and merged 'p'/'P', LOSING a row — caught by security review before merge.
-    (
-        "distinct_over_group_by_no_misfold",
-        "aggregate path emits GROUP BY key columns instead of projecting the SELECT list (column order/identity differ)",
-    ),
-    (
-        "distinct_over_group_by_single_col",
-        "aggregate path emits the GROUP BY key column instead of the SELECT-list column",
-    ),
-    (
-        "distinct_explicit_collate",
-        "explicit COLLATE suffix on a DISTINCT select-item does not parse yet (grammar: select_item lacks a COLLATE tail)",
-    ),
-    (
-        "group_by_explicit_collate",
-        "explicit COLLATE suffix on a GROUP BY term does not parse yet (grammar: group_by lacks a COLLATE tail)",
     ),
 ];
 

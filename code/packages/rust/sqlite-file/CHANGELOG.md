@@ -1,5 +1,27 @@
 # Changelog — sqlite-file
 
+## 0.17.0 - Unreleased
+
+**Phase F (writer): page-1 `sqlite_schema` overflow — completes F2.** A schema
+row (a long CREATE statement) too large to sit inline on page 1 now spills onto
+overflow pages instead of being rejected. `write_multi_table_db` routes the
+page-1 schema leaf through the same overflow-split machinery table data rows
+already use (`build_leaf_cells_with_overflow`, extracted from `encode_single_leaf`
+so both share one code path), building the cells with the **reader's**
+page-agnostic threshold `max_local = usable − 35` (not the old `(page_size−100)−35`
+bound — a smaller inline length there would disagree with what the reader
+recomputes for page 1 and corrupt the round-trip). The schema's overflow pages
+are allocated AFTER every table page, so the page-1 cell's 4-byte pointer targets
+them correctly and each table still roots on page 2; `total_pages` counts them.
+
+What remains a later rung: a schema so large that even its *inline heads* exceed
+one page-1 leaf (which would require turning page 1 into an interior schema
+b-tree) — `pack_leaf_cells` rejects that cleanly with `Unsupported`.
+
+Verified by a round-trip unit test and a cross-check that real bundled-C SQLite
+accepts the file (`PRAGMA integrity_check` → "ok") and reassembles the full DDL
+from the schema overflow chain (`SELECT sql FROM sqlite_master`).
+
 ## 0.16.0 - Unreleased
 
 **Phase F (writer): multi-level b-trees.** The tree builder now handles tables

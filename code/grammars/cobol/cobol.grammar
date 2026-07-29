@@ -112,7 +112,7 @@ sentence  = statement { statement } DOT ;
 statement = move_stmt | display_stmt | accept_stmt
           | add_stmt | subtract_stmt | multiply_stmt | divide_stmt | compute_stmt
           | perform_stmt | goto_stmt | if_stmt | set_stmt | evaluate_stmt
-          | string_stmt | stop_stmt ;
+          | string_stmt | unstring_stmt | inspect_stmt | stop_stmt ;
 
 move_stmt     = "MOVE" operand "TO" NAME { NAME } ;
 # SET a level-88 condition-name TRUE: assign its conditional variable the value
@@ -146,6 +146,58 @@ string_stmt   = "STRING" operand { operand } "DELIMITED" "BY" string_delim
                         [ "NOT" "ON" "OVERFLOW" { statement } ]
                         [ "END-STRING" ] ;
 string_delim  = "SIZE" | operand ;
+# UNSTRING: the inverse of STRING — scan one alphanumeric source left-to-right and
+# split it on a single delimiter into successive receivers.  First rung:
+# `UNSTRING source DELIMITED BY delim INTO r1 [r2 …]` — `delim` is a single-
+# character delimiter (a 1-char literal or a PIC X(1) item; the grammar takes a
+# general `operand` and the reader/compiler enforce the 1-char restriction).  Each
+# receiver (INCLUDING the last) gets the field up to the NEXT delimiter; extra
+# fields beyond the receiver count are dropped, and once the source is exhausted
+# the remaining receivers are left UNCHANGED.  `WITH POINTER`, `ON OVERFLOW`, and
+# `NOT ON OVERFLOW` are accepted here but rejected as later rungs by the
+# reader/compiler (a clean Unsupported, not a parse error).  `END-UNSTRING` closes
+# the scope; like the other verbs the statement also ends at a period.
+unstring_stmt = "UNSTRING" operand "DELIMITED" "BY" operand "INTO" NAME { NAME }
+                        [ "WITH" "POINTER" NAME ]
+                        [ "ON" "OVERFLOW" { statement } ]
+                        [ "NOT" "ON" "OVERFLOW" { statement } ]
+                        [ "END-UNSTRING" ] ;
+# INSPECT: scan an alphanumeric item to COUNT occurrences (TALLYING) or SUBSTITUTE
+# characters (REPLACING).  First rung: `INSPECT source TALLYING counter FOR ALL
+# delim` — ADD to `counter` the number of (non-overlapping, left-to-right)
+# occurrences of the single-character `delim` in `source`.
+#   The grammar is deliberately broad — it accepts the fuller INSPECT surface
+# (LEADING/CHARACTERS tallies, BEFORE/AFTER phrases, several counters and FOR
+# phrases, and every REPLACING form) — so the reader/compiler can reject
+# each unimplemented form as a friendly Unsupported instead of a bare parse
+# error, exactly as STRING/UNSTRING do for their later-rung options.  A bare
+# TALLYING form has a following `inspect_replacing` only when REPLACING is also
+# present; a lone REPLACING (no TALLYING) is the second alternative.  `END-INSPECT`
+# closes the scope; like the other verbs the statement also ends at a period.
+inspect_stmt  = "INSPECT" operand
+                        ( inspect_tallying [ inspect_replacing ]
+                        | inspect_replacing
+                        | inspect_converting )
+                        [ "END-INSPECT" ] ;
+inspect_tallying  = "TALLYING" tally_for { tally_for } ;
+tally_for         = NAME "FOR" tally_item { tally_item } ;
+tally_item        = ( "ALL" | "LEADING" ) operand { inspect_region }
+                  | "CHARACTERS" { inspect_region } ;
+inspect_replacing = "REPLACING" replace_item { replace_item } ;
+replace_item      = "CHARACTERS" "BY" operand { inspect_region }
+                  | ( "ALL" | "LEADING" ) operand "BY" operand { inspect_region } ;
+# CONVERTING translates each source character through a from→to translation table:
+# every character equal to the k-th character of `from` becomes the k-th character
+# of `to`.  First rung: `from`/`to` are equal-length string literals and the whole
+# source is converted.  The trailing `{ inspect_region }` accepts an optional
+# BEFORE/AFTER so a region-restricted CONVERTING parses and rejects cleanly as a
+# later rung (rather than a bare parse error).  CONVERTING is a standalone INSPECT
+# alternative — it is never combined with TALLYING/REPLACING in one statement.
+inspect_converting = "CONVERTING" operand "TO" operand { inspect_region } ;
+# A BEFORE/AFTER delimiter restricts the scan to part of the item — a later rung;
+# the grammar accepts it so it rejects cleanly. (COBOL's optional `INITIAL` word
+# after BEFORE/AFTER is itself a later rung, so it is not reserved yet.)
+inspect_region    = ( "BEFORE" | "AFTER" ) operand ;
 display_stmt  = "DISPLAY" operand { operand } ;
 accept_stmt   = "ACCEPT" NAME ;
 # The four arithmetic verbs share two optional trailing clauses with COMPUTE:

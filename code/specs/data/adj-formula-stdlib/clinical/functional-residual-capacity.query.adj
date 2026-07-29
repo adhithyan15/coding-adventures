@@ -1,0 +1,33 @@
+% ============================================================================
+% functional-residual-capacity.query.adj — worked examples over the clinical
+% Functional-Residual-Capacity library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER an FRC question: it
+% states NO arithmetic and NO relation — it only `import`s the grounded library,
+% `observe`s the sub-volumes it decomposed from the prompt (each a byte-provenanced
+% span, elided here), and asks the engine to APPLY the cited definition. The native
+% adj-lang engine binds the parameters, computes each value EXACTLY on the CPU, and
+% returns it with the definition's source/locator/trust.
+%
+% The three questions INVERT: a residual volume of 2 plus an expiratory reserve
+% volume of 4 gives a functional residual capacity of 2 + 4 = 6; and that 6 total
+% minus either sub-volume is exactly what the other sub-volume's formula recovers
+% the missing volume from.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli functional-residual-capacity.query.adj
+% ============================================================================
+
+import "functional-residual-capacity.adj"
+
+% RV 2, ERV 4: total FRC = 2 + 4.
+observe residual_volume(2)
+observe expiratory_reserve_volume(4)
+? functional_residual_capacity(residual_volume, expiratory_reserve_volume)   % expect 6  (FRC = RV + ERV)
+
+% That 6 total with the same ERV 4: RV = 6 − 4.
+observe functional_residual_capacity(6)
+? residual_volume(functional_residual_capacity, expiratory_reserve_volume)   % expect 2  (same def, solved for RV = FRC − ERV)
+
+% That 6 total with the same RV 2: ERV = 6 − 2.
+? expiratory_reserve_volume(functional_residual_capacity, residual_volume)   % expect 4  (same def, solved for ERV = FRC − RV)

@@ -1,5 +1,43 @@
 # Changelog
 
+## 0.10.1 — `is_python_keyword` missing two of Python's four soft keywords (task #116 audit)
+
+Follow-up to task #110/#112 (`semantic-ir-to-javascript`/`-typescript`'s
+`eval`/`arguments` gap): a broader audit of every `semantic-ir-to-*`
+backend's reserved-word check for the same class of bug — a contextual
+keyword, reserved only in some grammar positions, missing from the
+identifier-safety list.
+
+`is_python_keyword` (`emit.rs`) already treated `match` and `case` as
+unsafe defensively, even though neither is a syntactic keyword — both are
+"soft keywords" (`keyword.softkwlist`), reserved only inside a `match`
+statement's own grammar, and otherwise ordinary identifiers. But Python's
+official soft-keyword set has *four* entries, not two: `_`, `case`,
+`match`, `type` (`_` and `match`/`case` since 3.10's structural pattern
+matching, PEP 634-636; `type` since 3.12's type-alias statement, PEP
+695). `_` and `type` were missing, so a SIR identifier named `_` or
+`type` was previously emitted verbatim by `sanitize_ident` instead of
+being suffixed.
+
+Fixed by adding both to the existing soft-keyword group in
+`is_python_keyword`'s `matches!` list (same style as the existing
+`match`/`case` entries; no restructuring). New unit test
+`is_python_keyword_flags_remaining_soft_keywords` pins both as reserved,
+confirms `sanitize_ident` suffixes them (`_` → `__`, `type` → `type_`),
+and confirms ordinary look-alike identifiers (`_x`, `typing`, `types`)
+are untouched.
+
+## 0.10.0 — operator-spelling comparisons: `==`, `!=`, `<=`, `>=`
+
+The Ruby frontend lowers a comparison chain to `==`/`!=`/`<=`/`>=` builtins,
+which the Python backend did not lower — so `puts(1 == 1)` raised
+`NameError: SIR builtin '==' is not implemented`.
+
+The emitter now maps `==`→`_sir_eq` (a synonym for `=`), `!=`→`_sir_ne`,
+`<=`→`_sir_le`, `>=`→`_sir_ge`, and imports the three new helpers from
+`coding-adventures-sir-runtime-core` 0.2.0. The `call_builtin` dispatch table in
+core gains the same names, so a first-class `:==` symbol dispatches too.
+
 ## 0.9.0 — source-language display convention: Ruby booleans (`true`/`false`)
 
 Emits the display-convention selection (SIR display-convention spec) for the

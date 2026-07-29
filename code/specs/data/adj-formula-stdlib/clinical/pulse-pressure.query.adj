@@ -1,0 +1,33 @@
+% ============================================================================
+% pulse-pressure.query.adj — worked examples over the clinical pulse-pressure library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a pulse-pressure
+% question: it states NO arithmetic and NO definition — it only `import`s the grounded
+% library, `observe`s the pressures it decomposed from the prompt (each a
+% byte-provenanced span, elided here), and asks the engine to APPLY the cited
+% definition. The native adj-lang engine binds the parameters, computes each value
+% EXACTLY on the CPU, and returns it with the definition's source/locator/trust.
+%
+% The three questions INVERT: a blood pressure of 120/80 mmHg has a pulse pressure of
+% 120 − 80 = 40 mmHg; that 40 mmHg pulse pressure at the same 80 mmHg diastolic is
+% exactly what the systolic formula adds back to recover the 120 mmHg systolic, and that
+% 40 mmHg at the same 120 mmHg systolic is exactly what the diastolic formula subtracts
+% to recover the 80 mmHg diastolic.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli pulse-pressure.query.adj
+% ============================================================================
+
+import "pulse-pressure.adj"
+
+% 120/80 mmHg: pulse pressure = 120 − 80.
+observe systolic_pressure(120)
+observe diastolic_pressure(80)
+? pulse_pressure(systolic_pressure, diastolic_pressure)   % expect 40   (definition: PP = SBP − DBP)
+
+% That 40 mmHg pulse pressure for the same 80 mmHg diastolic: systolic = 40 + 80.
+observe pulse_pressure(40)
+? systolic_pressure(pulse_pressure, diastolic_pressure)    % expect 120  (same definition, solved for SBP = PP + DBP)
+
+% That 40 mmHg pulse pressure at the same 120 mmHg systolic: diastolic = 120 − 40.
+? diastolic_pressure(systolic_pressure, pulse_pressure)    % expect 80   (same definition, solved for DBP = SBP − PP)

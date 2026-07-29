@@ -220,11 +220,40 @@ keywords:
   # named STRING, produced by the quoted patterns above) is unaffected — keyword
   # promotion only rewrites bare NAME words, never the quoted-literal tokens.
   STRING
+  # UNSTRING splits one alphanumeric source on a delimiter into several receivers
+  # — the inverse of STRING. Like STRING, the bare word promotes to a KEYWORD;
+  # quoted string-literal tokens (also type-named STRING) are untouched.
+  UNSTRING
   DELIMITED
   POINTER
   OVERFLOW
   WITH
   END-STRING
+  END-UNSTRING
+  # INSPECT scans an alphanumeric item to COUNT (TALLYING) or SUBSTITUTE
+  # (REPLACING) characters.  First rung: `INSPECT src TALLYING ctr FOR ALL d`.
+  # The later-rung phrase words (LEADING / CHARACTERS / BEFORE / AFTER) and
+  # REPLACING are reserved too so the grammar can ACCEPT the fuller syntax and
+  # the reader/compiler reject the unimplemented forms as a clean Unsupported
+  # rather than a bare parse error.  FOR is a new preposition here.  (FIRST and
+  # INITIAL are deliberately NOT reserved yet — they are only needed by
+  # REPLACING FIRST / BEFORE INITIAL, both later rungs, and reserving common
+  # words would collide with existing data names.)
+  INSPECT
+  TALLYING
+  REPLACING
+  # CONVERTING translates each source character through a from→to translation
+  # table (`INSPECT src CONVERTING "AB" TO "XY"`).  It is a distinct INSPECT
+  # alternative — never combined with TALLYING/REPLACING in one statement — so it
+  # gets its own keyword.  (TO is already reserved below as an ADD/SET/MOVE
+  # preposition, so CONVERTING's `TO` needs no new token.)
+  CONVERTING
+  LEADING
+  CHARACTERS
+  BEFORE
+  AFTER
+  FOR
+  END-INSPECT
   # -- Prepositions / connectives / operators-in-words --
   TO
   FROM

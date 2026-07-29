@@ -4,6 +4,7 @@
   "font": "_fonts/NotoSansGujarati-Static.ttf",
   "direction": "ltr",
   "system": "abugida",
+  "signature": "Looks like Devanagari with the head-line erased — round tops and no bar running across the top.",
   "complete": false,
   "combination": "A consonant carries an inherent 'a' (ક = ka). A vowel mark (mātrā) replaces that vowel (ક + ી → કી = kī). The virama ્ strips the vowel, and the bare consonant joins the next into a conjunct (ન + ્ + મ → ન્મ). Gujarati is Devanagari's sister, but with one visible difference: it has NO horizontal top line (shirorekhā) — the letters float free, which is why it is sometimes called 'the headless script.'",
   "notes": "Used by Gujarati (the language of Gandhi). The initial inventory below covers the greeting/self-introduction/first-verbs vocabulary; it grows toward a complete set. Letterforms mirror Devanagari without the top bar. Stroke orders are the common handwriting convention, not a standard.",

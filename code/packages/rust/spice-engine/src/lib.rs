@@ -19,6 +19,7 @@ const BOLTZMANN: f64 = 1.380_649e-23;
 const ELECTRON_CHARGE: f64 = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
 const DIGITAL_BRIDGE_TIME_EPSILON: f64 = 1.0e-18;
+const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
 
 fn real_solver_kind(matrix_size: usize) -> &'static str {
     if matrix_size == 0 {
@@ -168,6 +169,7 @@ impl SubcircuitDefinition {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+#[allow(clippy::large_enum_variant)]
 pub enum SubcircuitElement {
     Element(Element),
     XInstance(XInstance),
@@ -389,52 +391,115 @@ fn clone_subckt_element(
             cloned.negative = map_subckt_node(&element.negative, instance_name, node_map);
             Element::CustomModel(cloned)
         }
-        Element::Diode(element) => Element::Diode(Diode::with_model_and_temperature_parameters(
-            format!("{instance_name}.{}", element.name),
-            map_subckt_node(&element.anode, instance_name, node_map),
-            map_subckt_node(&element.cathode, instance_name, node_map),
-            element.saturation_current,
-            element.thermal_voltage,
-            element.emission_coefficient,
-            element.breakdown_voltage,
-            element.breakdown_current,
-            element.junction_capacitance,
-            element.transit_time,
-            element.junction_potential,
-            element.grading_coefficient,
-            element.forward_bias_depletion_coefficient,
-            element.saturation_current_temperature_exponent,
-            element.energy_gap_electron_volts,
-        )),
-        Element::Jfet(element) => Element::Jfet(Jfet::with_model_and_capacitance(
-            format!("{instance_name}.{}", element.name),
-            map_subckt_node(&element.drain, instance_name, node_map),
-            map_subckt_node(&element.gate, instance_name, node_map),
-            map_subckt_node(&element.source, instance_name, node_map),
-            element.polarity,
-            element.beta,
-            element.threshold_voltage,
-            element.channel_length_modulation,
-            element.gate_source_capacitance,
-            element.gate_drain_capacitance,
-        )),
-        Element::Bjt(element) => Element::Bjt(Bjt::with_model_and_temperature_parameters(
-            format!("{instance_name}.{}", element.name),
-            map_subckt_node(&element.collector, instance_name, node_map),
-            map_subckt_node(&element.base, instance_name, node_map),
-            map_subckt_node(&element.emitter, instance_name, node_map),
-            element.polarity,
-            element.saturation_current,
-            element.forward_beta,
-            element.thermal_voltage,
-            element.base_emitter_capacitance,
-            element.base_collector_capacitance,
-            element.forward_transit_time,
-            element.reverse_transit_time,
-            element.saturation_current_temperature_exponent,
-            element.energy_gap_electron_volts,
-            element.forward_early_voltage,
-        )),
+        Element::Diode(element) => {
+            let mut mapped = Diode::with_model_and_temperature_parameters(
+                format!("{instance_name}.{}", element.name),
+                map_subckt_node(&element.anode, instance_name, node_map),
+                map_subckt_node(&element.cathode, instance_name, node_map),
+                element.saturation_current,
+                element.thermal_voltage,
+                element.emission_coefficient,
+                element.breakdown_voltage,
+                element.breakdown_current,
+                element.junction_capacitance,
+                element.transit_time,
+                element.junction_potential,
+                element.grading_coefficient,
+                element.forward_bias_depletion_coefficient,
+                element.saturation_current_temperature_exponent,
+                element.energy_gap_electron_volts,
+            );
+            mapped.series_resistance = element.series_resistance;
+            mapped.flicker_noise_coefficient = element.flicker_noise_coefficient;
+            mapped.flicker_noise_exponent = element.flicker_noise_exponent;
+            Element::Diode(mapped)
+        }
+        Element::Jfet(element) => {
+            let mut mapped = Jfet::with_model_and_capacitance(
+                format!("{instance_name}.{}", element.name),
+                map_subckt_node(&element.drain, instance_name, node_map),
+                map_subckt_node(&element.gate, instance_name, node_map),
+                map_subckt_node(&element.source, instance_name, node_map),
+                element.polarity,
+                element.beta,
+                element.threshold_voltage,
+                element.channel_length_modulation,
+                element.gate_source_capacitance,
+                element.gate_drain_capacitance,
+            );
+            mapped.flicker_noise_coefficient = element.flicker_noise_coefficient;
+            mapped.flicker_noise_exponent = element.flicker_noise_exponent;
+            mapped.junction_potential = element.junction_potential;
+            mapped.forward_bias_depletion_coefficient = element.forward_bias_depletion_coefficient;
+            mapped.gate_saturation_current = element.gate_saturation_current;
+            mapped.gate_saturation_current_temperature_exponent =
+                element.gate_saturation_current_temperature_exponent;
+            mapped.bandgap_voltage = element.bandgap_voltage;
+            mapped.doping_tail_parameter = element.doping_tail_parameter;
+            mapped.noise_equation_level = element.noise_equation_level;
+            mapped.channel_noise_coefficient = element.channel_noise_coefficient;
+            mapped.drain_resistance = element.drain_resistance;
+            mapped.source_resistance = element.source_resistance;
+            mapped.threshold_voltage_temperature_coefficient =
+                element.threshold_voltage_temperature_coefficient;
+            mapped.alternative_threshold_voltage_temperature_coefficient =
+                element.alternative_threshold_voltage_temperature_coefficient;
+            mapped.nominal_temperature_kelvin = element.nominal_temperature_kelvin;
+            mapped.mobility_temperature_exponent = element.mobility_temperature_exponent;
+            mapped.mobility_temperature_coefficient = element.mobility_temperature_coefficient;
+            Element::Jfet(mapped)
+        }
+        Element::Bjt(element) => {
+            let mut expanded = Bjt::with_model_temperature_depletion_early_rolloff_junction_leakage_and_reverse_beta_parameters(
+                format!("{instance_name}.{}", element.name),
+                map_subckt_node(&element.collector, instance_name, node_map),
+                map_subckt_node(&element.base, instance_name, node_map),
+                map_subckt_node(&element.emitter, instance_name, node_map),
+                element.polarity,
+                element.saturation_current,
+                element.forward_beta,
+                element.thermal_voltage,
+                element.base_emitter_capacitance,
+                element.base_collector_capacitance,
+                element.forward_transit_time,
+                element.reverse_transit_time,
+                element.saturation_current_temperature_exponent,
+                element.energy_gap_electron_volts,
+                element.forward_early_voltage,
+                element.forward_emission_coefficient,
+                element.reverse_emission_coefficient,
+                element.base_emitter_junction_potential,
+                element.base_emitter_grading_coefficient,
+                element.base_collector_junction_potential,
+                element.base_collector_grading_coefficient,
+                element.forward_bias_depletion_coefficient,
+                element.reverse_early_voltage,
+                element.forward_beta_rolloff_current,
+                element.base_emitter_leakage_saturation_current,
+                element.base_emitter_leakage_emission_coefficient,
+                element.base_collector_leakage_saturation_current,
+                element.base_collector_leakage_emission_coefficient,
+                element.forward_beta_temperature_exponent,
+                element.reverse_beta,
+            );
+            expanded.reverse_beta_rolloff_current = element.reverse_beta_rolloff_current;
+            expanded.nominal_temperature_kelvin = element.nominal_temperature_kelvin;
+            expanded.flicker_noise_coefficient = element.flicker_noise_coefficient;
+            expanded.flicker_noise_exponent = element.flicker_noise_exponent;
+            expanded.forward_excess_phase_degrees = element.forward_excess_phase_degrees;
+            expanded.forward_transit_time_bias_coefficient =
+                element.forward_transit_time_bias_coefficient;
+            expanded.forward_transit_time_current = element.forward_transit_time_current;
+            expanded.forward_transit_time_voltage = element.forward_transit_time_voltage;
+            expanded.emitter_resistance = element.emitter_resistance;
+            expanded.collector_resistance = element.collector_resistance;
+            expanded.base_resistance = element.base_resistance;
+            expanded.minimum_base_resistance = element.minimum_base_resistance;
+            expanded.base_resistance_half_current = element.base_resistance_half_current;
+            expanded.base_collector_capacitance_fraction =
+                element.base_collector_capacitance_fraction;
+            Element::Bjt(expanded)
+        }
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
             format!("{instance_name}.{}", element.name),
             map_subckt_node(&element.drain, instance_name, node_map),
@@ -2358,6 +2423,9 @@ pub struct Diode {
     pub forward_bias_depletion_coefficient: f64,
     pub saturation_current_temperature_exponent: f64,
     pub energy_gap_electron_volts: f64,
+    pub series_resistance: f64,
+    pub flicker_noise_coefficient: f64,
+    pub flicker_noise_exponent: f64,
 }
 
 impl Diode {
@@ -2572,6 +2640,9 @@ impl Diode {
             forward_bias_depletion_coefficient,
             saturation_current_temperature_exponent,
             energy_gap_electron_volts,
+            series_resistance: 0.0,
+            flicker_noise_coefficient: 0.0,
+            flicker_noise_exponent: 1.0,
         }
     }
 }
@@ -2636,6 +2707,9 @@ pub fn bjt_at_temperature(
             reason: "temperature must be finite and positive".to_string(),
         });
     }
+    let nominal_temperature_kelvin = bjt
+        .nominal_temperature_kelvin
+        .unwrap_or(nominal_temperature_kelvin);
     if !nominal_temperature_kelvin.is_finite() || nominal_temperature_kelvin <= 0.0 {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
@@ -2657,10 +2731,26 @@ pub fn bjt_at_temperature(
             reason: "saturation-current temperature exponent must be finite".to_string(),
         });
     }
+    if !bjt.forward_beta_temperature_exponent.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "beta temperature exponent must be finite".to_string(),
+        });
+    }
+    if bjt.reverse_beta.is_nan() || bjt.reverse_beta <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "reverse beta must be positive".to_string(),
+        });
+    }
     let saturation_scale = ratio.powf(bjt.saturation_current_temperature_exponent)
         * exponent.clamp(-100.0, 100.0).exp();
     let mut adjusted = bjt.clone();
     adjusted.saturation_current *= saturation_scale;
+    adjusted.base_emitter_leakage_saturation_current *= saturation_scale;
+    adjusted.base_collector_leakage_saturation_current *= saturation_scale;
+    adjusted.forward_beta *= ratio.powf(bjt.forward_beta_temperature_exponent);
+    adjusted.reverse_beta *= ratio.powf(bjt.forward_beta_temperature_exponent);
     adjusted.thermal_voltage *= ratio;
     Ok(adjusted)
 }
@@ -2691,6 +2781,122 @@ pub fn mosfet_at_temperature(
     Ok(adjusted)
 }
 
+pub fn jfet_at_temperature(
+    jfet: &Jfet,
+    temperature_kelvin: f64,
+    nominal_temperature_kelvin: f64,
+) -> Result<Jfet, SpiceError> {
+    if !temperature_kelvin.is_finite() || temperature_kelvin <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "temperature must be finite and positive".to_string(),
+        });
+    }
+    let nominal_temperature = jfet
+        .nominal_temperature_kelvin
+        .unwrap_or(nominal_temperature_kelvin);
+    if !nominal_temperature.is_finite() || nominal_temperature <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "nominal temperature must be finite and positive".to_string(),
+        });
+    }
+    if !jfet
+        .gate_saturation_current_temperature_exponent
+        .is_finite()
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "gate saturation-current temperature exponent must be finite".to_string(),
+        });
+    }
+    if !jfet.bandgap_voltage.is_finite() || jfet.bandgap_voltage <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "bandgap voltage must be finite and positive".to_string(),
+        });
+    }
+    if !jfet.doping_tail_parameter.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "doping-tail parameter must be finite".to_string(),
+        });
+    }
+    if !jfet.noise_equation_level.is_finite()
+        || jfet.noise_equation_level < 1.0
+        || jfet.noise_equation_level.fract() != 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "noise equation level must be a finite integer greater than or equal to 1"
+                .to_string(),
+        });
+    }
+    if !jfet.channel_noise_coefficient.is_finite() || jfet.channel_noise_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "channel noise coefficient must be finite and non-negative".to_string(),
+        });
+    }
+    if !jfet.threshold_voltage_temperature_coefficient.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "threshold-voltage temperature coefficient must be finite".to_string(),
+        });
+    }
+    if jfet
+        .alternative_threshold_voltage_temperature_coefficient
+        .is_some_and(|coefficient| !coefficient.is_finite())
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "alternative threshold-voltage temperature coefficient must be finite"
+                .to_string(),
+        });
+    }
+    if !jfet.mobility_temperature_exponent.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "mobility temperature exponent must be finite".to_string(),
+        });
+    }
+    if jfet
+        .mobility_temperature_coefficient
+        .is_some_and(|coefficient| !coefficient.is_finite())
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "mobility temperature coefficient must be finite".to_string(),
+        });
+    }
+    let temperature_ratio = temperature_kelvin / nominal_temperature;
+    let saturation_exponent = jfet.bandgap_voltage * ELECTRON_CHARGE / BOLTZMANN
+        * (1.0 / nominal_temperature - 1.0 / temperature_kelvin);
+    let saturation_scale = temperature_ratio
+        .powf(jfet.gate_saturation_current_temperature_exponent)
+        * saturation_exponent.clamp(-100.0, 100.0).exp();
+    let beta_scale = jfet.mobility_temperature_coefficient.map_or_else(
+        || temperature_ratio.powf(jfet.mobility_temperature_exponent),
+        |coefficient| 1.01_f64.powf(coefficient * (temperature_kelvin - nominal_temperature)),
+    );
+    let mut adjusted = jfet.clone();
+    adjusted.threshold_voltage = jfet
+        .alternative_threshold_voltage_temperature_coefficient
+        .map_or_else(
+            || {
+                jfet.threshold_voltage
+                    - jfet.threshold_voltage_temperature_coefficient
+                        * (temperature_kelvin - nominal_temperature)
+            },
+            |coefficient| {
+                jfet.threshold_voltage + coefficient * (temperature_kelvin - nominal_temperature)
+            },
+        );
+    adjusted.beta *= beta_scale;
+    adjusted.gate_saturation_current *= saturation_scale;
+    Ok(adjusted)
+}
+
 pub fn circuit_at_temperature(
     circuit: &Circuit,
     temperature_kelvin: f64,
@@ -2714,6 +2920,11 @@ pub fn circuit_at_temperature(
                 temperature_kelvin,
                 nominal_temperature_kelvin,
                 bjt.energy_gap_electron_volts,
+            )?),
+            Element::Jfet(jfet) => Element::Jfet(jfet_at_temperature(
+                jfet,
+                temperature_kelvin,
+                nominal_temperature_kelvin,
             )?),
             Element::Mosfet(mosfet) => Element::Mosfet(mosfet_at_temperature(
                 mosfet,
@@ -2744,6 +2955,23 @@ pub struct Jfet {
     pub channel_length_modulation: f64,
     pub gate_source_capacitance: f64,
     pub gate_drain_capacitance: f64,
+    pub flicker_noise_coefficient: f64,
+    pub flicker_noise_exponent: f64,
+    pub junction_potential: f64,
+    pub forward_bias_depletion_coefficient: f64,
+    pub gate_saturation_current: f64,
+    pub gate_saturation_current_temperature_exponent: f64,
+    pub bandgap_voltage: f64,
+    pub doping_tail_parameter: f64,
+    pub noise_equation_level: f64,
+    pub channel_noise_coefficient: f64,
+    pub drain_resistance: f64,
+    pub source_resistance: f64,
+    pub threshold_voltage_temperature_coefficient: f64,
+    pub alternative_threshold_voltage_temperature_coefficient: Option<f64>,
+    pub nominal_temperature_kelvin: Option<f64>,
+    pub mobility_temperature_exponent: f64,
+    pub mobility_temperature_coefficient: Option<f64>,
 }
 
 impl Jfet {
@@ -2812,6 +3040,23 @@ impl Jfet {
             channel_length_modulation,
             gate_source_capacitance,
             gate_drain_capacitance,
+            flicker_noise_coefficient: 0.0,
+            flicker_noise_exponent: 1.0,
+            junction_potential: 1.0,
+            forward_bias_depletion_coefficient: 0.5,
+            gate_saturation_current: 1.0e-14,
+            gate_saturation_current_temperature_exponent: 3.0,
+            bandgap_voltage: 1.11,
+            doping_tail_parameter: 1.0,
+            noise_equation_level: 1.0,
+            channel_noise_coefficient: 1.0,
+            drain_resistance: 0.0,
+            source_resistance: 0.0,
+            threshold_voltage_temperature_coefficient: 0.0,
+            alternative_threshold_voltage_temperature_coefficient: None,
+            nominal_temperature_kelvin: None,
+            mobility_temperature_exponent: 0.0,
+            mobility_temperature_coefficient: None,
         }
     }
 }
@@ -2839,6 +3084,35 @@ pub struct Bjt {
     pub saturation_current_temperature_exponent: f64,
     pub energy_gap_electron_volts: f64,
     pub forward_early_voltage: f64,
+    pub reverse_early_voltage: f64,
+    pub forward_emission_coefficient: f64,
+    pub reverse_emission_coefficient: f64,
+    pub base_emitter_junction_potential: f64,
+    pub base_emitter_grading_coefficient: f64,
+    pub base_collector_junction_potential: f64,
+    pub base_collector_grading_coefficient: f64,
+    pub forward_bias_depletion_coefficient: f64,
+    pub forward_beta_rolloff_current: f64,
+    pub base_emitter_leakage_saturation_current: f64,
+    pub base_emitter_leakage_emission_coefficient: f64,
+    pub base_collector_leakage_saturation_current: f64,
+    pub base_collector_leakage_emission_coefficient: f64,
+    pub forward_beta_temperature_exponent: f64,
+    pub reverse_beta: f64,
+    pub reverse_beta_rolloff_current: f64,
+    pub nominal_temperature_kelvin: Option<f64>,
+    pub flicker_noise_coefficient: f64,
+    pub flicker_noise_exponent: f64,
+    pub forward_excess_phase_degrees: f64,
+    pub forward_transit_time_bias_coefficient: f64,
+    pub forward_transit_time_current: f64,
+    pub forward_transit_time_voltage: f64,
+    pub emitter_resistance: f64,
+    pub collector_resistance: f64,
+    pub base_resistance: f64,
+    pub minimum_base_resistance: Option<f64>,
+    pub base_resistance_half_current: f64,
+    pub base_collector_capacitance_fraction: f64,
 }
 
 impl Bjt {
@@ -2894,6 +3168,8 @@ impl Bjt {
             3.0,
             1.11,
             0.0,
+            1.0,
+            1.0,
         )
     }
 
@@ -2914,6 +3190,358 @@ impl Bjt {
         saturation_current_temperature_exponent: f64,
         energy_gap_electron_volts: f64,
         forward_early_voltage: f64,
+        forward_emission_coefficient: f64,
+        reverse_emission_coefficient: f64,
+    ) -> Self {
+        Self::with_model_temperature_and_depletion_parameters(
+            name,
+            collector,
+            base,
+            emitter,
+            polarity,
+            saturation_current,
+            forward_beta,
+            thermal_voltage,
+            base_emitter_capacitance,
+            base_collector_capacitance,
+            forward_transit_time,
+            reverse_transit_time,
+            saturation_current_temperature_exponent,
+            energy_gap_electron_volts,
+            forward_early_voltage,
+            forward_emission_coefficient,
+            reverse_emission_coefficient,
+            0.75,
+            0.33,
+            0.75,
+            0.33,
+            0.5,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn with_model_temperature_and_depletion_parameters(
+        name: impl Into<String>,
+        collector: impl Into<String>,
+        base: impl Into<String>,
+        emitter: impl Into<String>,
+        polarity: BjtPolarity,
+        saturation_current: f64,
+        forward_beta: f64,
+        thermal_voltage: f64,
+        base_emitter_capacitance: f64,
+        base_collector_capacitance: f64,
+        forward_transit_time: f64,
+        reverse_transit_time: f64,
+        saturation_current_temperature_exponent: f64,
+        energy_gap_electron_volts: f64,
+        forward_early_voltage: f64,
+        forward_emission_coefficient: f64,
+        reverse_emission_coefficient: f64,
+        base_emitter_junction_potential: f64,
+        base_emitter_grading_coefficient: f64,
+        base_collector_junction_potential: f64,
+        base_collector_grading_coefficient: f64,
+        forward_bias_depletion_coefficient: f64,
+    ) -> Self {
+        Self::with_model_temperature_depletion_and_early_parameters(
+            name,
+            collector,
+            base,
+            emitter,
+            polarity,
+            saturation_current,
+            forward_beta,
+            thermal_voltage,
+            base_emitter_capacitance,
+            base_collector_capacitance,
+            forward_transit_time,
+            reverse_transit_time,
+            saturation_current_temperature_exponent,
+            energy_gap_electron_volts,
+            forward_early_voltage,
+            forward_emission_coefficient,
+            reverse_emission_coefficient,
+            base_emitter_junction_potential,
+            base_emitter_grading_coefficient,
+            base_collector_junction_potential,
+            base_collector_grading_coefficient,
+            forward_bias_depletion_coefficient,
+            0.0,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn with_model_temperature_depletion_and_early_parameters(
+        name: impl Into<String>,
+        collector: impl Into<String>,
+        base: impl Into<String>,
+        emitter: impl Into<String>,
+        polarity: BjtPolarity,
+        saturation_current: f64,
+        forward_beta: f64,
+        thermal_voltage: f64,
+        base_emitter_capacitance: f64,
+        base_collector_capacitance: f64,
+        forward_transit_time: f64,
+        reverse_transit_time: f64,
+        saturation_current_temperature_exponent: f64,
+        energy_gap_electron_volts: f64,
+        forward_early_voltage: f64,
+        forward_emission_coefficient: f64,
+        reverse_emission_coefficient: f64,
+        base_emitter_junction_potential: f64,
+        base_emitter_grading_coefficient: f64,
+        base_collector_junction_potential: f64,
+        base_collector_grading_coefficient: f64,
+        forward_bias_depletion_coefficient: f64,
+        reverse_early_voltage: f64,
+    ) -> Self {
+        Self::with_model_temperature_depletion_early_and_rolloff_parameters(
+            name,
+            collector,
+            base,
+            emitter,
+            polarity,
+            saturation_current,
+            forward_beta,
+            thermal_voltage,
+            base_emitter_capacitance,
+            base_collector_capacitance,
+            forward_transit_time,
+            reverse_transit_time,
+            saturation_current_temperature_exponent,
+            energy_gap_electron_volts,
+            forward_early_voltage,
+            forward_emission_coefficient,
+            reverse_emission_coefficient,
+            base_emitter_junction_potential,
+            base_emitter_grading_coefficient,
+            base_collector_junction_potential,
+            base_collector_grading_coefficient,
+            forward_bias_depletion_coefficient,
+            reverse_early_voltage,
+            0.0,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn with_model_temperature_depletion_early_and_rolloff_parameters(
+        name: impl Into<String>,
+        collector: impl Into<String>,
+        base: impl Into<String>,
+        emitter: impl Into<String>,
+        polarity: BjtPolarity,
+        saturation_current: f64,
+        forward_beta: f64,
+        thermal_voltage: f64,
+        base_emitter_capacitance: f64,
+        base_collector_capacitance: f64,
+        forward_transit_time: f64,
+        reverse_transit_time: f64,
+        saturation_current_temperature_exponent: f64,
+        energy_gap_electron_volts: f64,
+        forward_early_voltage: f64,
+        forward_emission_coefficient: f64,
+        reverse_emission_coefficient: f64,
+        base_emitter_junction_potential: f64,
+        base_emitter_grading_coefficient: f64,
+        base_collector_junction_potential: f64,
+        base_collector_grading_coefficient: f64,
+        forward_bias_depletion_coefficient: f64,
+        reverse_early_voltage: f64,
+        forward_beta_rolloff_current: f64,
+    ) -> Self {
+        Self::with_model_temperature_depletion_early_rolloff_and_leakage_parameters(
+            name,
+            collector,
+            base,
+            emitter,
+            polarity,
+            saturation_current,
+            forward_beta,
+            thermal_voltage,
+            base_emitter_capacitance,
+            base_collector_capacitance,
+            forward_transit_time,
+            reverse_transit_time,
+            saturation_current_temperature_exponent,
+            energy_gap_electron_volts,
+            forward_early_voltage,
+            forward_emission_coefficient,
+            reverse_emission_coefficient,
+            base_emitter_junction_potential,
+            base_emitter_grading_coefficient,
+            base_collector_junction_potential,
+            base_collector_grading_coefficient,
+            forward_bias_depletion_coefficient,
+            reverse_early_voltage,
+            forward_beta_rolloff_current,
+            0.0,
+            1.0,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn with_model_temperature_depletion_early_rolloff_and_leakage_parameters(
+        name: impl Into<String>,
+        collector: impl Into<String>,
+        base: impl Into<String>,
+        emitter: impl Into<String>,
+        polarity: BjtPolarity,
+        saturation_current: f64,
+        forward_beta: f64,
+        thermal_voltage: f64,
+        base_emitter_capacitance: f64,
+        base_collector_capacitance: f64,
+        forward_transit_time: f64,
+        reverse_transit_time: f64,
+        saturation_current_temperature_exponent: f64,
+        energy_gap_electron_volts: f64,
+        forward_early_voltage: f64,
+        forward_emission_coefficient: f64,
+        reverse_emission_coefficient: f64,
+        base_emitter_junction_potential: f64,
+        base_emitter_grading_coefficient: f64,
+        base_collector_junction_potential: f64,
+        base_collector_grading_coefficient: f64,
+        forward_bias_depletion_coefficient: f64,
+        reverse_early_voltage: f64,
+        forward_beta_rolloff_current: f64,
+        base_emitter_leakage_saturation_current: f64,
+        base_emitter_leakage_emission_coefficient: f64,
+    ) -> Self {
+        Self::with_model_temperature_depletion_early_rolloff_and_junction_leakage_parameters(
+            name,
+            collector,
+            base,
+            emitter,
+            polarity,
+            saturation_current,
+            forward_beta,
+            thermal_voltage,
+            base_emitter_capacitance,
+            base_collector_capacitance,
+            forward_transit_time,
+            reverse_transit_time,
+            saturation_current_temperature_exponent,
+            energy_gap_electron_volts,
+            forward_early_voltage,
+            forward_emission_coefficient,
+            reverse_emission_coefficient,
+            base_emitter_junction_potential,
+            base_emitter_grading_coefficient,
+            base_collector_junction_potential,
+            base_collector_grading_coefficient,
+            forward_bias_depletion_coefficient,
+            reverse_early_voltage,
+            forward_beta_rolloff_current,
+            base_emitter_leakage_saturation_current,
+            base_emitter_leakage_emission_coefficient,
+            0.0,
+            2.0,
+            0.0,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn with_model_temperature_depletion_early_rolloff_and_junction_leakage_parameters(
+        name: impl Into<String>,
+        collector: impl Into<String>,
+        base: impl Into<String>,
+        emitter: impl Into<String>,
+        polarity: BjtPolarity,
+        saturation_current: f64,
+        forward_beta: f64,
+        thermal_voltage: f64,
+        base_emitter_capacitance: f64,
+        base_collector_capacitance: f64,
+        forward_transit_time: f64,
+        reverse_transit_time: f64,
+        saturation_current_temperature_exponent: f64,
+        energy_gap_electron_volts: f64,
+        forward_early_voltage: f64,
+        forward_emission_coefficient: f64,
+        reverse_emission_coefficient: f64,
+        base_emitter_junction_potential: f64,
+        base_emitter_grading_coefficient: f64,
+        base_collector_junction_potential: f64,
+        base_collector_grading_coefficient: f64,
+        forward_bias_depletion_coefficient: f64,
+        reverse_early_voltage: f64,
+        forward_beta_rolloff_current: f64,
+        base_emitter_leakage_saturation_current: f64,
+        base_emitter_leakage_emission_coefficient: f64,
+        base_collector_leakage_saturation_current: f64,
+        base_collector_leakage_emission_coefficient: f64,
+        forward_beta_temperature_exponent: f64,
+    ) -> Self {
+        Self::with_model_temperature_depletion_early_rolloff_junction_leakage_and_reverse_beta_parameters(
+            name,
+            collector,
+            base,
+            emitter,
+            polarity,
+            saturation_current,
+            forward_beta,
+            thermal_voltage,
+            base_emitter_capacitance,
+            base_collector_capacitance,
+            forward_transit_time,
+            reverse_transit_time,
+            saturation_current_temperature_exponent,
+            energy_gap_electron_volts,
+            forward_early_voltage,
+            forward_emission_coefficient,
+            reverse_emission_coefficient,
+            base_emitter_junction_potential,
+            base_emitter_grading_coefficient,
+            base_collector_junction_potential,
+            base_collector_grading_coefficient,
+            forward_bias_depletion_coefficient,
+            reverse_early_voltage,
+            forward_beta_rolloff_current,
+            base_emitter_leakage_saturation_current,
+            base_emitter_leakage_emission_coefficient,
+            base_collector_leakage_saturation_current,
+            base_collector_leakage_emission_coefficient,
+            forward_beta_temperature_exponent,
+            f64::INFINITY,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn with_model_temperature_depletion_early_rolloff_junction_leakage_and_reverse_beta_parameters(
+        name: impl Into<String>,
+        collector: impl Into<String>,
+        base: impl Into<String>,
+        emitter: impl Into<String>,
+        polarity: BjtPolarity,
+        saturation_current: f64,
+        forward_beta: f64,
+        thermal_voltage: f64,
+        base_emitter_capacitance: f64,
+        base_collector_capacitance: f64,
+        forward_transit_time: f64,
+        reverse_transit_time: f64,
+        saturation_current_temperature_exponent: f64,
+        energy_gap_electron_volts: f64,
+        forward_early_voltage: f64,
+        forward_emission_coefficient: f64,
+        reverse_emission_coefficient: f64,
+        base_emitter_junction_potential: f64,
+        base_emitter_grading_coefficient: f64,
+        base_collector_junction_potential: f64,
+        base_collector_grading_coefficient: f64,
+        forward_bias_depletion_coefficient: f64,
+        reverse_early_voltage: f64,
+        forward_beta_rolloff_current: f64,
+        base_emitter_leakage_saturation_current: f64,
+        base_emitter_leakage_emission_coefficient: f64,
+        base_collector_leakage_saturation_current: f64,
+        base_collector_leakage_emission_coefficient: f64,
+        forward_beta_temperature_exponent: f64,
+        reverse_beta: f64,
     ) -> Self {
         Self {
             name: name.into(),
@@ -2931,6 +3559,35 @@ impl Bjt {
             saturation_current_temperature_exponent,
             energy_gap_electron_volts,
             forward_early_voltage,
+            forward_emission_coefficient,
+            reverse_emission_coefficient,
+            base_emitter_junction_potential,
+            base_emitter_grading_coefficient,
+            base_collector_junction_potential,
+            base_collector_grading_coefficient,
+            forward_bias_depletion_coefficient,
+            reverse_early_voltage,
+            forward_beta_rolloff_current,
+            base_emitter_leakage_saturation_current,
+            base_emitter_leakage_emission_coefficient,
+            base_collector_leakage_saturation_current,
+            base_collector_leakage_emission_coefficient,
+            forward_beta_temperature_exponent,
+            reverse_beta,
+            reverse_beta_rolloff_current: 0.0,
+            nominal_temperature_kelvin: None,
+            flicker_noise_coefficient: 0.0,
+            flicker_noise_exponent: 1.0,
+            forward_excess_phase_degrees: 0.0,
+            forward_transit_time_bias_coefficient: 0.0,
+            forward_transit_time_current: 0.0,
+            forward_transit_time_voltage: 0.0,
+            emitter_resistance: 0.0,
+            collector_resistance: 0.0,
+            base_resistance: 0.0,
+            minimum_base_resistance: None,
+            base_resistance_half_current: 0.0,
+            base_collector_capacitance_fraction: 1.0,
         }
     }
 }
@@ -2950,7 +3607,22 @@ pub struct MosfetLevel1Params {
     pub phi: f64,
     pub w: f64,
     pub l: f64,
+    pub lateral_diffusion_length: f64,
+    pub oxide_thickness: f64,
+    pub surface_mobility: f64,
+    pub drain_resistance: f64,
+    pub source_resistance: f64,
+    pub sheet_resistance: f64,
+    pub drain_squares: f64,
+    pub source_squares: f64,
+    pub drain_area: f64,
+    pub source_area: f64,
+    pub drain_perimeter: f64,
+    pub source_perimeter: f64,
+    pub bottom_junction_capacitance: f64,
+    pub sidewall_junction_capacitance: f64,
     pub saturation_current: f64,
+    pub saturation_current_density: f64,
     pub n_sub: f64,
     pub t_nom: f64,
     pub gate_source_overlap_capacitance: f64,
@@ -2960,6 +3632,10 @@ pub struct MosfetLevel1Params {
     pub drain_bulk_capacitance: f64,
     pub bulk_junction_potential: f64,
     pub bulk_junction_grading_coefficient: f64,
+    pub sidewall_junction_grading_coefficient: f64,
+    pub forward_bias_depletion_coefficient: f64,
+    pub flicker_noise_coefficient: f64,
+    pub flicker_noise_exponent: f64,
 }
 
 impl Default for MosfetLevel1Params {
@@ -2972,7 +3648,22 @@ impl Default for MosfetLevel1Params {
             phi: 0.84,
             w: 1.0e-6,
             l: 130.0e-9,
+            lateral_diffusion_length: 0.0,
+            oxide_thickness: 1.0e-7,
+            surface_mobility: 600.0,
+            drain_resistance: 0.0,
+            source_resistance: 0.0,
+            sheet_resistance: 0.0,
+            drain_squares: 1.0,
+            source_squares: 1.0,
+            drain_area: 0.0,
+            source_area: 0.0,
+            drain_perimeter: 0.0,
+            source_perimeter: 0.0,
+            bottom_junction_capacitance: 0.0,
+            sidewall_junction_capacitance: 0.0,
             saturation_current: 1.0e-15,
+            saturation_current_density: 0.0,
             n_sub: 1.4,
             t_nom: 300.15,
             gate_source_overlap_capacitance: 0.0,
@@ -2982,6 +3673,10 @@ impl Default for MosfetLevel1Params {
             drain_bulk_capacitance: 0.0,
             bulk_junction_potential: 0.8,
             bulk_junction_grading_coefficient: 0.5,
+            sidewall_junction_grading_coefficient: 0.33,
+            forward_bias_depletion_coefficient: 0.5,
+            flicker_noise_coefficient: 0.0,
+            flicker_noise_exponent: 1.0,
         }
     }
 }
@@ -3320,13 +4015,13 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
     usize,
 )] = &[
-    (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 10, 19, 5, 4),
-    (ModelCardKind::Pnp, 10, 19, 5, 4),
-    (ModelCardKind::Njf, 5, 11, 5, 3),
-    (ModelCardKind::Pjf, 5, 11, 5, 3),
-    (ModelCardKind::Nmos, 18, 25, 6, 3),
-    (ModelCardKind::Pmos, 18, 25, 6, 3),
+    (ModelCardKind::Diode, 15, 21, 5, 3),
+    (ModelCardKind::Npn, 41, 58, 13, 4),
+    (ModelCardKind::Pnp, 41, 58, 13, 4),
+    (ModelCardKind::Njf, 22, 30, 7, 3),
+    (ModelCardKind::Pjf, 22, 30, 7, 3),
+    (ModelCardKind::Nmos, 31, 39, 7, 3),
+    (ModelCardKind::Pmos, 31, 39, 7, 3),
 ];
 const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -3347,6 +4042,9 @@ const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("FC", "FC"),
     ("XTI", "XTI"),
     ("EG", "EG"),
+    ("RS", "RS"),
+    ("KF", "KF"),
+    ("AF", "AF"),
 ];
 const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -3368,6 +4066,45 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("EG", "EG"),
     ("VAF", "VAF"),
     ("VA", "VAF"),
+    ("VAR", "VAR"),
+    ("VB", "VAR"),
+    ("IKF", "IKF"),
+    ("IK", "IKF"),
+    ("IKR", "IKR"),
+    ("TNOM", "TNOM"),
+    ("T_NOM", "TNOM"),
+    ("KF", "KF"),
+    ("AF", "AF"),
+    ("PTF", "PTF"),
+    ("XTF", "XTF"),
+    ("ITF", "ITF"),
+    ("VTF", "VTF"),
+    ("RE", "RE"),
+    ("RC", "RC"),
+    ("RB", "RB"),
+    ("RBM", "RBM"),
+    ("IRB", "IRB"),
+    ("XCJC", "XCJC"),
+    ("ISE", "ISE"),
+    ("C2", "C2"),
+    ("NE", "NE"),
+    ("ISC", "ISC"),
+    ("C4", "C4"),
+    ("NC", "NC"),
+    ("XTB", "XTB"),
+    ("BR", "BR"),
+    ("BETA_R", "BR"),
+    ("NF", "NF"),
+    ("NR", "NR"),
+    ("VJE", "VJE"),
+    ("PE", "VJE"),
+    ("MJE", "MJE"),
+    ("ME", "MJE"),
+    ("VJC", "VJC"),
+    ("PC", "VJC"),
+    ("MJC", "MJC"),
+    ("MC", "MJC"),
+    ("FC", "FC"),
 ];
 const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("BETA", "BETA"),
@@ -3381,6 +4118,25 @@ const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("CGS0", "CGS"),
     ("CGD", "CGD"),
     ("CGD0", "CGD"),
+    ("KF", "KF"),
+    ("AF", "AF"),
+    ("PB", "PB"),
+    ("VJ", "PB"),
+    ("FC", "FC"),
+    ("IS", "IS"),
+    ("XTI", "XTI"),
+    ("EG", "EG"),
+    ("B", "B"),
+    ("NLEV", "NLEV"),
+    ("GDSNOI", "GDSNOI"),
+    ("RD", "RD"),
+    ("RS", "RS"),
+    ("TNOM", "TNOM"),
+    ("T_NOM", "TNOM"),
+    ("TCV", "TCV"),
+    ("VTOTC", "VTOTC"),
+    ("BEX", "BEX"),
+    ("BETATCE", "BETATCE"),
 ];
 const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("LEVEL", "LEVEL"),
@@ -3394,7 +4150,15 @@ const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("PHI", "PHI"),
     ("W", "W"),
     ("L", "L"),
+    ("LD", "LD"),
+    ("TOX", "TOX"),
+    ("U0", "U0"),
+    ("UO", "U0"),
+    ("RD", "RD"),
+    ("RS", "RS"),
+    ("RSH", "RSH"),
     ("IS", "IS"),
+    ("JS", "JS"),
     ("NSUB", "N_SUB"),
     ("N_SUB", "N_SUB"),
     ("TNOM", "T_NOM"),
@@ -3406,8 +4170,14 @@ const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("CJS", "CBS"),
     ("CBD", "CBD"),
     ("CJD", "CBD"),
+    ("CJ", "CJ"),
+    ("CJSW", "CJSW"),
     ("PB", "PB"),
     ("MJ", "MJ"),
+    ("MJSW", "MJSW"),
+    ("FC", "FC"),
+    ("KF", "KF"),
+    ("AF", "AF"),
 ];
 
 fn model_type_key(text: &str) -> String {
@@ -3975,7 +4745,7 @@ pub fn diode_from_model_card(
     if model.kind != ModelCardKind::Diode {
         return Err(model_card_kind_error(&name, "diode", model.kind));
     }
-    Ok(Diode::with_model_and_temperature_parameters(
+    let mut diode = Diode::with_model_and_temperature_parameters(
         name,
         anode,
         cathode,
@@ -3991,7 +4761,11 @@ pub fn diode_from_model_card(
         model_card_value(model, "FC", 0.5),
         model_card_value(model, "XTI", 3.0),
         model_card_value(model, "EG", 1.11),
-    ))
+    );
+    diode.series_resistance = model_card_value(model, "RS", 0.0);
+    diode.flicker_noise_coefficient = model_card_value(model, "KF", 0.0);
+    diode.flicker_noise_exponent = model_card_value(model, "AF", 1.0);
+    Ok(diode)
 }
 
 pub fn bjt_from_model_card(
@@ -4007,23 +4781,67 @@ pub fn bjt_from_model_card(
         ModelCardKind::Pnp => BjtPolarity::Pnp,
         _ => return Err(model_card_kind_error(&name, "BJT", model.kind)),
     };
-    Ok(Bjt::with_model_and_temperature_parameters(
-        name,
-        collector,
-        base,
-        emitter,
-        polarity,
-        model_card_value(model, "IS", 1.0e-14),
-        model_card_value(model, "BF", 100.0),
-        model_card_value(model, "VT", 0.02585),
-        model_card_value(model, "CJE", 0.0),
-        model_card_value(model, "CJC", 0.0),
-        model_card_value(model, "TF", 0.0),
-        model_card_value(model, "TR", 0.0),
-        model_card_value(model, "XTI", 3.0),
-        model_card_value(model, "EG", 1.11),
-        model_card_value(model, "VAF", 0.0),
-    ))
+    let saturation_current = model_card_value(model, "IS", 1.0e-14);
+    let base_emitter_leakage_saturation_current = model
+        .parameters
+        .get("ISE")
+        .copied()
+        .unwrap_or_else(|| model_card_value(model, "C2", 0.0) * saturation_current);
+    let base_collector_leakage_saturation_current = model
+        .parameters
+        .get("ISC")
+        .copied()
+        .unwrap_or_else(|| model_card_value(model, "C4", 0.0) * saturation_current);
+    let mut bjt = Bjt::with_model_temperature_depletion_early_rolloff_junction_leakage_and_reverse_beta_parameters(
+            name,
+            collector,
+            base,
+            emitter,
+            polarity,
+            saturation_current,
+            model_card_value(model, "BF", 100.0),
+            model_card_value(model, "VT", 0.02585),
+            model_card_value(model, "CJE", 0.0),
+            model_card_value(model, "CJC", 0.0),
+            model_card_value(model, "TF", 0.0),
+            model_card_value(model, "TR", 0.0),
+            model_card_value(model, "XTI", 3.0),
+            model_card_value(model, "EG", 1.11),
+            model_card_value(model, "VAF", 0.0),
+            model_card_value(model, "NF", 1.0),
+            model_card_value(model, "NR", 1.0),
+            model_card_value(model, "VJE", 0.75),
+            model_card_value(model, "MJE", 0.33),
+            model_card_value(model, "VJC", 0.75),
+            model_card_value(model, "MJC", 0.33),
+            model_card_value(model, "FC", 0.5),
+            model_card_value(model, "VAR", 0.0),
+            model_card_value(model, "IKF", 0.0),
+            base_emitter_leakage_saturation_current,
+            model_card_value(model, "NE", 1.0),
+            base_collector_leakage_saturation_current,
+            model_card_value(model, "NC", 2.0),
+            model_card_value(model, "XTB", 0.0),
+            model_card_value(model, "BR", 1.0),
+        );
+    bjt.reverse_beta_rolloff_current = model_card_value(model, "IKR", 0.0);
+    bjt.nominal_temperature_kelvin = model
+        .parameters
+        .get("TNOM")
+        .map(|temperature_celsius| temperature_celsius + 273.15);
+    bjt.flicker_noise_coefficient = model_card_value(model, "KF", 0.0);
+    bjt.flicker_noise_exponent = model_card_value(model, "AF", 1.0);
+    bjt.forward_excess_phase_degrees = model_card_value(model, "PTF", 0.0);
+    bjt.forward_transit_time_bias_coefficient = model_card_value(model, "XTF", 0.0);
+    bjt.forward_transit_time_current = model_card_value(model, "ITF", 0.0);
+    bjt.forward_transit_time_voltage = model_card_value(model, "VTF", 0.0);
+    bjt.emitter_resistance = model_card_value(model, "RE", 0.0);
+    bjt.collector_resistance = model_card_value(model, "RC", 0.0);
+    bjt.base_resistance = model_card_value(model, "RB", 0.0);
+    bjt.minimum_base_resistance = model.parameters.get("RBM").copied();
+    bjt.base_resistance_half_current = model_card_value(model, "IRB", 0.0);
+    bjt.base_collector_capacitance_fraction = model_card_value(model, "XCJC", 1.0);
+    Ok(bjt)
 }
 
 pub fn jfet_from_model_card(
@@ -4039,7 +4857,7 @@ pub fn jfet_from_model_card(
         ModelCardKind::Pjf => JfetPolarity::Pjf,
         _ => return Err(model_card_kind_error(&name, "JFET", model.kind)),
     };
-    Ok(Jfet::with_model_and_capacitance(
+    let mut jfet = Jfet::with_model_and_capacitance(
         name,
         drain,
         gate,
@@ -4058,7 +4876,29 @@ pub fn jfet_from_model_card(
         model_card_value(model, "LAMBDA", 0.0),
         model_card_value(model, "CGS", 0.0),
         model_card_value(model, "CGD", 0.0),
-    ))
+    );
+    jfet.flicker_noise_coefficient = model_card_value(model, "KF", 0.0);
+    jfet.flicker_noise_exponent = model_card_value(model, "AF", 1.0);
+    jfet.junction_potential = model_card_value(model, "PB", 1.0);
+    jfet.forward_bias_depletion_coefficient = model_card_value(model, "FC", 0.5);
+    jfet.gate_saturation_current = model_card_value(model, "IS", 1.0e-14);
+    jfet.gate_saturation_current_temperature_exponent = model_card_value(model, "XTI", 3.0);
+    jfet.bandgap_voltage = model_card_value(model, "EG", 1.11);
+    jfet.doping_tail_parameter = model_card_value(model, "B", 1.0);
+    jfet.noise_equation_level = model_card_value(model, "NLEV", 1.0);
+    jfet.channel_noise_coefficient = model_card_value(model, "GDSNOI", 1.0);
+    jfet.drain_resistance = model_card_value(model, "RD", 0.0);
+    jfet.source_resistance = model_card_value(model, "RS", 0.0);
+    jfet.threshold_voltage_temperature_coefficient = model_card_value(model, "TCV", 0.0);
+    jfet.alternative_threshold_voltage_temperature_coefficient =
+        model.parameters.get("VTOTC").copied();
+    jfet.nominal_temperature_kelvin = model
+        .parameters
+        .get("TNOM")
+        .map(|temperature| temperature + 273.15);
+    jfet.mobility_temperature_exponent = model_card_value(model, "BEX", 0.0);
+    jfet.mobility_temperature_coefficient = model.parameters.get("BETATCE").copied();
+    Ok(jfet)
 }
 
 pub fn mosfet_from_model_card(
@@ -4079,9 +4919,6 @@ pub fn mosfet_from_model_card(
     if let Some(value) = model.parameters.get("VT0") {
         params.vt0 = *value;
     }
-    if let Some(value) = model.parameters.get("KP") {
-        params.kp = *value;
-    }
     if let Some(value) = model.parameters.get("LAMBDA") {
         params.lambda = *value;
     }
@@ -4097,8 +4934,34 @@ pub fn mosfet_from_model_card(
     if let Some(value) = model.parameters.get("L") {
         params.l = *value;
     }
+    if let Some(value) = model.parameters.get("LD") {
+        params.lateral_diffusion_length = *value;
+    }
+    if let Some(value) = model.parameters.get("TOX") {
+        params.oxide_thickness = *value;
+    }
+    if let Some(value) = model.parameters.get("U0") {
+        params.surface_mobility = *value;
+    }
+    if let Some(value) = model.parameters.get("KP") {
+        params.kp = *value;
+    } else if model.parameters.contains_key("TOX") && params.oxide_thickness > 0.0 {
+        params.kp = params.surface_mobility * 1.0e-4 * OXIDE_PERMITTIVITY / params.oxide_thickness;
+    }
+    if let Some(value) = model.parameters.get("RD") {
+        params.drain_resistance = *value;
+    }
+    if let Some(value) = model.parameters.get("RS") {
+        params.source_resistance = *value;
+    }
+    if let Some(value) = model.parameters.get("RSH") {
+        params.sheet_resistance = *value;
+    }
     if let Some(value) = model.parameters.get("IS") {
         params.saturation_current = *value;
+    }
+    if let Some(value) = model.parameters.get("JS") {
+        params.saturation_current_density = *value;
     }
     if let Some(value) = model.parameters.get("N_SUB") {
         params.n_sub = *value;
@@ -4121,11 +4984,29 @@ pub fn mosfet_from_model_card(
     if let Some(value) = model.parameters.get("CBD") {
         params.drain_bulk_capacitance = *value;
     }
+    if let Some(value) = model.parameters.get("CJ") {
+        params.bottom_junction_capacitance = *value;
+    }
+    if let Some(value) = model.parameters.get("CJSW") {
+        params.sidewall_junction_capacitance = *value;
+    }
     if let Some(value) = model.parameters.get("PB") {
         params.bulk_junction_potential = *value;
     }
     if let Some(value) = model.parameters.get("MJ") {
         params.bulk_junction_grading_coefficient = *value;
+    }
+    if let Some(value) = model.parameters.get("MJSW") {
+        params.sidewall_junction_grading_coefficient = *value;
+    }
+    if let Some(value) = model.parameters.get("FC") {
+        params.forward_bias_depletion_coefficient = *value;
+    }
+    if let Some(value) = model.parameters.get("KF") {
+        params.flicker_noise_coefficient = *value;
+    }
+    if let Some(value) = model.parameters.get("AF") {
+        params.flicker_noise_exponent = *value;
     }
     Ok(Mosfet::with_model(
         name,
@@ -4397,7 +5278,7 @@ fn device_model_temperature_behavior(name: &str) -> Result<String, SpiceError> {
             Ok("BJT saturation current and thermal voltage scale with temperature".to_string())
         }
         "jfet-source-bias" => Ok(
-            "JFET temperature scaling is intentionally invariant until a policy lands".to_string(),
+            "JFET temperature scaling defaults to invariant; VTOTC overrides TCV for threshold-voltage scaling; BETATCE overrides BEX for beta scaling".to_string(),
         ),
         "mos-level1-common-source" => {
             Ok("Level-1 MOS threshold and transconductance scale with temperature".to_string())
@@ -11122,6 +12003,7 @@ pub struct CornerSParameterResult {
 pub enum NoiseType {
     Thermal,
     Shot,
+    Flicker,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -16660,6 +17542,7 @@ fn format_noise_type(noise_type: NoiseType) -> &'static str {
     match noise_type {
         NoiseType::Thermal => "thermal",
         NoiseType::Shot => "shot",
+        NoiseType::Flicker => "flicker",
     }
 }
 
@@ -19103,7 +19986,7 @@ pub fn noise_ac(
                 frequency_hz,
                 output_psd: 0.0,
                 input_referred_psd: 0.0,
-                entries: zero_noise_entries(&noise_sources),
+                entries: zero_noise_entries(&noise_sources, frequency_hz),
             });
             continue;
         }
@@ -19125,7 +20008,7 @@ pub fn noise_ac(
                     frequency_hz,
                     output_psd: 0.0,
                     input_referred_psd: 0.0,
-                    entries: zero_noise_entries(&noise_sources),
+                    entries: zero_noise_entries(&noise_sources, frequency_hz),
                 });
                 continue;
             }
@@ -19142,11 +20025,12 @@ pub fn noise_ac(
                     .negative
                     .map_or(Complex::zero(), |index| adjoint[index]);
                 let transfer = h_positive - h_negative;
+                let source_psd = noise_source_psd(source, frequency_hz);
                 NoiseEntry {
                     element_name: source.element_name.clone(),
                     noise_type: source.noise_type,
-                    source_psd: source.source_psd,
-                    output_psd: transfer.abs().powi(2) * source.source_psd,
+                    source_psd,
+                    output_psd: transfer.abs().powi(2) * source_psd,
                 }
             })
             .collect();
@@ -20559,6 +21443,7 @@ struct NoiseSource {
     positive: Option<usize>,
     negative: Option<usize>,
     source_psd: f64,
+    frequency_exponent: f64,
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -21212,7 +22097,8 @@ fn build_ac_matrix(
             ),
             Element::Diode(diode) => {
                 validate_diode(diode)?;
-                let anode = node_index(node_indices, &diode.anode);
+                let intrinsic_anode = diode_intrinsic_anode_node(diode);
+                let anode = node_index(node_indices, &intrinsic_anode);
                 let cathode = node_index(node_indices, &diode.cathode);
                 let voltage = vector_voltage(operating_point, anode)
                     - vector_voltage(operating_point, cathode);
@@ -21224,6 +22110,14 @@ fn build_ac_matrix(
                     cathode,
                     Complex::new(conductance, omega * capacitance),
                 );
+                if diode.series_resistance > 0.0 {
+                    stamp_complex_conductance(
+                        &mut matrix,
+                        node_index(node_indices, &diode.anode),
+                        anode,
+                        Complex::new(1.0 / diode.series_resistance, 0.0),
+                    );
+                }
             }
             Element::Jfet(jfet) => {
                 stamp_ac_jfet_small_signal(jfet, node_indices, &mut matrix, operating_point, omega)?
@@ -21324,12 +22218,21 @@ fn build_small_signal_matrix(
             ),
             Element::Diode(diode) => {
                 validate_diode(diode)?;
-                let anode = node_index(node_indices, &diode.anode);
+                let intrinsic_anode = diode_intrinsic_anode_node(diode);
+                let anode = node_index(node_indices, &intrinsic_anode);
                 let cathode = node_index(node_indices, &diode.cathode);
                 let voltage = vector_voltage(operating_point, anode)
                     - vector_voltage(operating_point, cathode);
                 let (_, conductance) = diode_current_conductance(diode, voltage);
                 stamp_conductance(&mut matrix, anode, cathode, conductance);
+                if diode.series_resistance > 0.0 {
+                    stamp_conductance(
+                        &mut matrix,
+                        node_index(node_indices, &diode.anode),
+                        anode,
+                        1.0 / diode.series_resistance,
+                    );
+                }
             }
             Element::Jfet(jfet) => {
                 stamp_jfet_small_signal(jfet, node_indices, &mut matrix, operating_point)?
@@ -21446,22 +22349,46 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
             Element::Diode(diode) => {
                 insert_node(&mut names, &diode.anode);
                 insert_node(&mut names, &diode.cathode);
+                if diode.series_resistance > 0.0 {
+                    insert_node(&mut names, &diode_intrinsic_anode_node(diode));
+                }
             }
             Element::Jfet(jfet) => {
                 insert_node(&mut names, &jfet.drain);
                 insert_node(&mut names, &jfet.gate);
                 insert_node(&mut names, &jfet.source);
+                if jfet.drain_resistance > 0.0 {
+                    insert_node(&mut names, &jfet_intrinsic_drain_node(jfet));
+                }
+                if jfet.source_resistance > 0.0 {
+                    insert_node(&mut names, &jfet_intrinsic_source_node(jfet));
+                }
             }
             Element::Bjt(bjt) => {
                 insert_node(&mut names, &bjt.collector);
                 insert_node(&mut names, &bjt.base);
                 insert_node(&mut names, &bjt.emitter);
+                if bjt.emitter_resistance > 0.0 {
+                    insert_node(&mut names, &bjt_intrinsic_emitter_node(bjt));
+                }
+                if bjt.collector_resistance > 0.0 {
+                    insert_node(&mut names, &bjt_intrinsic_collector_node(bjt));
+                }
+                if bjt.base_resistance > 0.0 {
+                    insert_node(&mut names, &bjt_intrinsic_base_node(bjt));
+                }
             }
             Element::Mosfet(mosfet) => {
                 insert_node(&mut names, &mosfet.drain);
                 insert_node(&mut names, &mosfet.gate);
                 insert_node(&mut names, &mosfet.source);
                 insert_node(&mut names, &mosfet.body);
+                if mosfet_drain_resistance(mosfet) > 0.0 {
+                    insert_node(&mut names, &mosfet_intrinsic_drain_node(mosfet));
+                }
+                if mosfet_source_resistance(mosfet) > 0.0 {
+                    insert_node(&mut names, &mosfet_intrinsic_source_node(mosfet));
+                }
             }
             Element::Vccs(source) => {
                 insert_node(&mut names, &source.positive);
@@ -21619,6 +22546,28 @@ fn input_source_type_error(input_source: &str, kind: &str) -> SpiceError {
     }
 }
 
+fn jfet_channel_noise_conductance(jfet: &Jfet, vgs: f64, vds: f64, gm: f64) -> f64 {
+    if jfet.noise_equation_level < 3.0 {
+        return MOSFET_CHANNEL_NOISE_GAMMA * gm.abs();
+    }
+    let (vgs, vds, threshold_voltage) = match jfet.polarity {
+        JfetPolarity::Njf => (vgs, vds, jfet.threshold_voltage),
+        JfetPolarity::Pjf => (-vgs, -vds, -jfet.threshold_voltage),
+    };
+    let overdrive = vgs - threshold_voltage;
+    if overdrive <= 0.0 || vds < 0.0 {
+        return 0.0;
+    }
+    let alpha = if overdrive >= vds {
+        1.0 - vds / overdrive
+    } else {
+        0.0
+    };
+    MOSFET_CHANNEL_NOISE_GAMMA * jfet.beta * overdrive * (1.0 + alpha + alpha * alpha)
+        / (1.0 + alpha)
+        * jfet.channel_noise_coefficient
+}
+
 fn collect_noise_sources(
     circuit: &Circuit,
     node_indices: &HashMap<String, usize>,
@@ -21641,11 +22590,13 @@ fn collect_noise_sources(
                     positive: node_index(node_indices, &resistor.n1),
                     negative: node_index(node_indices, &resistor.n2),
                     source_psd: 4.0 * BOLTZMANN * temperature_kelvin / resistor.resistance_ohms,
+                    frequency_exponent: 0.0,
                 });
             }
             Element::Diode(diode) => {
                 validate_diode(diode)?;
-                let anode = node_index(node_indices, &diode.anode);
+                let intrinsic_anode = diode_intrinsic_anode_node(diode);
+                let anode = node_index(node_indices, &intrinsic_anode);
                 let cathode = node_index(node_indices, &diode.cathode);
                 let anode_voltage = vector_voltage(operating_point, anode);
                 let cathode_voltage = vector_voltage(operating_point, cathode);
@@ -21657,10 +22608,101 @@ fn collect_noise_sources(
                     positive: anode,
                     negative: cathode,
                     source_psd: 2.0 * ELECTRON_CHARGE * current.abs(),
+                    frequency_exponent: 0.0,
                 });
+                if diode.flicker_noise_coefficient > 0.0 {
+                    sources.push(NoiseSource {
+                        element_name: diode.name.clone(),
+                        noise_type: NoiseType::Flicker,
+                        positive: anode,
+                        negative: cathode,
+                        source_psd: diode.flicker_noise_coefficient
+                            * current.abs().powf(diode.flicker_noise_exponent),
+                        frequency_exponent: 1.0,
+                    });
+                }
+                if diode.series_resistance > 0.0 {
+                    sources.push(NoiseSource {
+                        element_name: format!("{}:RS", diode.name),
+                        noise_type: NoiseType::Thermal,
+                        positive: node_index(node_indices, &diode.anode),
+                        negative: anode,
+                        source_psd: 4.0 * BOLTZMANN * temperature_kelvin / diode.series_resistance,
+                        frequency_exponent: 0.0,
+                    });
+                }
             }
             Element::Bjt(bjt) => {
                 validate_bjt(bjt)?;
+                let intrinsic_bjt = if bjt.emitter_resistance > 0.0
+                    || bjt.collector_resistance > 0.0
+                    || bjt.base_resistance > 0.0
+                {
+                    let mut intrinsic = bjt.clone();
+                    if bjt.emitter_resistance > 0.0 {
+                        let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
+                        sources.push(NoiseSource {
+                            element_name: format!("{}:RE", bjt.name),
+                            noise_type: NoiseType::Thermal,
+                            positive: node_index(node_indices, &bjt.emitter),
+                            negative: node_index(node_indices, &intrinsic_emitter),
+                            source_psd: 4.0 * BOLTZMANN * temperature_kelvin
+                                / bjt.emitter_resistance,
+                            frequency_exponent: 0.0,
+                        });
+                        intrinsic.emitter = intrinsic_emitter;
+                        intrinsic.emitter_resistance = 0.0;
+                    }
+                    if bjt.collector_resistance > 0.0 {
+                        let intrinsic_collector = bjt_intrinsic_collector_node(bjt);
+                        sources.push(NoiseSource {
+                            element_name: format!("{}:RC", bjt.name),
+                            noise_type: NoiseType::Thermal,
+                            positive: node_index(node_indices, &bjt.collector),
+                            negative: node_index(node_indices, &intrinsic_collector),
+                            source_psd: 4.0 * BOLTZMANN * temperature_kelvin
+                                / bjt.collector_resistance,
+                            frequency_exponent: 0.0,
+                        });
+                        intrinsic.collector = intrinsic_collector;
+                        intrinsic.collector_resistance = 0.0;
+                    }
+                    if bjt.base_resistance > 0.0 {
+                        let intrinsic_base = bjt_intrinsic_base_node(bjt);
+                        let intrinsic_base_index = node_index(node_indices, &intrinsic_base);
+                        let base_voltage = vector_voltage(operating_point, intrinsic_base_index);
+                        let emitter_voltage = vector_voltage(
+                            operating_point,
+                            node_index(node_indices, &intrinsic.emitter),
+                        );
+                        let collector_voltage = vector_voltage(
+                            operating_point,
+                            node_index(node_indices, &intrinsic.collector),
+                        );
+                        let base_resistance = bjt_effective_base_resistance(
+                            &intrinsic,
+                            base_voltage,
+                            emitter_voltage,
+                            collector_voltage,
+                        );
+                        sources.push(NoiseSource {
+                            element_name: format!("{}:RB", bjt.name),
+                            noise_type: NoiseType::Thermal,
+                            positive: node_index(node_indices, &bjt.base),
+                            negative: intrinsic_base_index,
+                            source_psd: 4.0 * BOLTZMANN * temperature_kelvin / base_resistance,
+                            frequency_exponent: 0.0,
+                        });
+                        intrinsic.base = intrinsic_base;
+                        intrinsic.base_resistance = 0.0;
+                        intrinsic.minimum_base_resistance = None;
+                        intrinsic.base_resistance_half_current = 0.0;
+                    }
+                    Some(intrinsic)
+                } else {
+                    None
+                };
+                let bjt = intrinsic_bjt.as_ref().unwrap_or(bjt);
                 let base = node_index(node_indices, &bjt.base);
                 let emitter = node_index(node_indices, &bjt.emitter);
                 let collector = node_index(node_indices, &bjt.collector);
@@ -21671,18 +22713,28 @@ fn collect_noise_sources(
                     BjtPolarity::Npn => base_voltage - emitter_voltage,
                     BjtPolarity::Pnp => emitter_voltage - base_voltage,
                 };
-                let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
+                let reverse_junction_voltage = match bjt.polarity {
+                    BjtPolarity::Npn => base_voltage - collector_voltage,
+                    BjtPolarity::Pnp => collector_voltage - base_voltage,
+                };
+                let forward_thermal_voltage =
+                    bjt.thermal_voltage * bjt.forward_emission_coefficient;
+                let exponent = (junction_voltage / forward_thermal_voltage).clamp(-40.0, 40.0);
                 let output_voltage = match bjt.polarity {
                     BjtPolarity::Npn => collector_voltage - emitter_voltage,
                     BjtPolarity::Pnp => emitter_voltage - collector_voltage,
                 };
-                let early_factor = if bjt.forward_early_voltage == 0.0 {
-                    1.0
-                } else {
-                    1.0 + output_voltage / bjt.forward_early_voltage
-                };
-                let collector_current =
-                    bjt.saturation_current * (exponent.exp() - 1.0) * early_factor;
+                let early_factor = bjt_early_factor(bjt, junction_voltage, output_voltage);
+                let exp_value = exponent.exp();
+                let base_collector_current = bjt.saturation_current * (exp_value - 1.0);
+                let base_gm = bjt.saturation_current / forward_thermal_voltage * exp_value;
+                let (collector_current, _, _) =
+                    bjt_forward_transport(bjt, base_collector_current, base_gm, early_factor);
+                let (leakage_current, _) = bjt_base_emitter_leakage(bjt, junction_voltage);
+                let (collector_leakage_current, _) =
+                    bjt_base_collector_leakage(bjt, reverse_junction_voltage);
+                let (reverse_base_current, _) =
+                    bjt_reverse_base_current(bjt, reverse_junction_voltage);
                 let (positive, negative) = match bjt.polarity {
                     BjtPolarity::Npn => (base, emitter),
                     BjtPolarity::Pnp => (emitter, base),
@@ -21692,14 +22744,34 @@ fn collect_noise_sources(
                     noise_type: NoiseType::Shot,
                     positive,
                     negative,
-                    source_psd: 2.0 * ELECTRON_CHARGE * collector_current.abs(),
+                    source_psd: 2.0
+                        * ELECTRON_CHARGE
+                        * (collector_current.abs()
+                            + leakage_current.abs()
+                            + collector_leakage_current.abs()
+                            + reverse_base_current.abs()),
+                    frequency_exponent: 0.0,
                 });
+                if bjt.flicker_noise_coefficient > 0.0 {
+                    let base_current = base_collector_current / bjt.forward_beta + leakage_current;
+                    sources.push(NoiseSource {
+                        element_name: bjt.name.clone(),
+                        noise_type: NoiseType::Flicker,
+                        positive,
+                        negative,
+                        source_psd: bjt.flicker_noise_coefficient
+                            * base_current.abs().powf(bjt.flicker_noise_exponent),
+                        frequency_exponent: 1.0,
+                    });
+                }
             }
             Element::Jfet(jfet) => {
                 validate_jfet(jfet)?;
-                let drain = node_index(node_indices, &jfet.drain);
+                let intrinsic_drain = jfet_intrinsic_drain_node(jfet);
+                let intrinsic_source = jfet_intrinsic_source_node(jfet);
+                let drain = node_index(node_indices, &intrinsic_drain);
                 let gate = node_index(node_indices, &jfet.gate);
-                let source = node_index(node_indices, &jfet.source);
+                let source = node_index(node_indices, &intrinsic_source);
                 let drain_voltage = vector_voltage(operating_point, drain);
                 let gate_voltage = vector_voltage(operating_point, gate);
                 let source_voltage = vector_voltage(operating_point, source);
@@ -21709,25 +22781,81 @@ fn collect_noise_sources(
                     drain_voltage - source_voltage,
                 );
                 let gm = result.gm.max(0.0);
-                if gm > 0.0 {
+                let noise_conductance = jfet_channel_noise_conductance(
+                    jfet,
+                    gate_voltage - source_voltage,
+                    drain_voltage - source_voltage,
+                    gm,
+                );
+                if noise_conductance > 0.0 {
                     sources.push(NoiseSource {
                         element_name: jfet.name.clone(),
                         noise_type: NoiseType::Thermal,
                         positive: drain,
                         negative: source,
-                        source_psd: 4.0
-                            * BOLTZMANN
-                            * temperature_kelvin
-                            * MOSFET_CHANNEL_NOISE_GAMMA
-                            * gm,
+                        source_psd: 4.0 * BOLTZMANN * temperature_kelvin * noise_conductance,
+                        frequency_exponent: 0.0,
+                    });
+                }
+                let (gate_source_current, _) =
+                    jfet_gate_junction_current_conductance(jfet, gate_voltage - source_voltage);
+                let (gate_drain_current, _) =
+                    jfet_gate_junction_current_conductance(jfet, gate_voltage - drain_voltage);
+                sources.push(NoiseSource {
+                    element_name: format!("{}:IGS", jfet.name),
+                    noise_type: NoiseType::Shot,
+                    positive: gate,
+                    negative: source,
+                    source_psd: 2.0 * ELECTRON_CHARGE * gate_source_current.abs(),
+                    frequency_exponent: 0.0,
+                });
+                sources.push(NoiseSource {
+                    element_name: format!("{}:IGD", jfet.name),
+                    noise_type: NoiseType::Shot,
+                    positive: gate,
+                    negative: drain,
+                    source_psd: 2.0 * ELECTRON_CHARGE * gate_drain_current.abs(),
+                    frequency_exponent: 0.0,
+                });
+                if jfet.flicker_noise_coefficient > 0.0 {
+                    sources.push(NoiseSource {
+                        element_name: jfet.name.clone(),
+                        noise_type: NoiseType::Flicker,
+                        positive: drain,
+                        negative: source,
+                        source_psd: jfet.flicker_noise_coefficient
+                            * result.drain_current.abs().powf(jfet.flicker_noise_exponent),
+                        frequency_exponent: 1.0,
+                    });
+                }
+                if jfet.drain_resistance > 0.0 {
+                    sources.push(NoiseSource {
+                        element_name: format!("{}:RD", jfet.name),
+                        noise_type: NoiseType::Thermal,
+                        positive: node_index(node_indices, &jfet.drain),
+                        negative: drain,
+                        source_psd: 4.0 * BOLTZMANN * temperature_kelvin / jfet.drain_resistance,
+                        frequency_exponent: 0.0,
+                    });
+                }
+                if jfet.source_resistance > 0.0 {
+                    sources.push(NoiseSource {
+                        element_name: format!("{}:RS", jfet.name),
+                        noise_type: NoiseType::Thermal,
+                        positive: node_index(node_indices, &jfet.source),
+                        negative: source,
+                        source_psd: 4.0 * BOLTZMANN * temperature_kelvin / jfet.source_resistance,
+                        frequency_exponent: 0.0,
                     });
                 }
             }
             Element::Mosfet(mosfet) => {
                 validate_mosfet(mosfet)?;
-                let drain = node_index(node_indices, &mosfet.drain);
+                let intrinsic_drain = mosfet_intrinsic_drain_node(mosfet);
+                let intrinsic_source = mosfet_intrinsic_source_node(mosfet);
+                let drain = node_index(node_indices, &intrinsic_drain);
                 let gate = node_index(node_indices, &mosfet.gate);
-                let source = node_index(node_indices, &mosfet.source);
+                let source = node_index(node_indices, &intrinsic_source);
                 let body = node_index(node_indices, &mosfet.body);
                 let drain_voltage = vector_voltage(operating_point, drain);
                 let gate_voltage = vector_voltage(operating_point, gate);
@@ -21751,6 +22879,79 @@ fn collect_noise_sources(
                             * temperature_kelvin
                             * MOSFET_CHANNEL_NOISE_GAMMA
                             * gm,
+                        frequency_exponent: 0.0,
+                    });
+                }
+                if mosfet.params.flicker_noise_coefficient > 0.0 {
+                    sources.push(NoiseSource {
+                        element_name: mosfet.name.clone(),
+                        noise_type: NoiseType::Flicker,
+                        positive: drain,
+                        negative: source,
+                        source_psd: mosfet.params.flicker_noise_coefficient
+                            * result
+                                .drain_current
+                                .abs()
+                                .powf(mosfet.params.flicker_noise_exponent),
+                        frequency_exponent: 1.0,
+                    });
+                }
+                let (source_bulk_current, _) = mosfet_bulk_junction_current_conductance(
+                    mosfet,
+                    source_voltage,
+                    body_voltage,
+                    mosfet.params.source_area,
+                );
+                let (drain_bulk_current, _) = mosfet_bulk_junction_current_conductance(
+                    mosfet,
+                    drain_voltage,
+                    body_voltage,
+                    mosfet.params.drain_area,
+                );
+                let (source_bulk_positive, source_bulk_negative) = match mosfet.mosfet_type {
+                    MosfetType::Nmos => (body, source),
+                    MosfetType::Pmos => (source, body),
+                };
+                let (drain_bulk_positive, drain_bulk_negative) = match mosfet.mosfet_type {
+                    MosfetType::Nmos => (body, drain),
+                    MosfetType::Pmos => (drain, body),
+                };
+                sources.push(NoiseSource {
+                    element_name: format!("{}:IBS", mosfet.name),
+                    noise_type: NoiseType::Shot,
+                    positive: source_bulk_positive,
+                    negative: source_bulk_negative,
+                    source_psd: 2.0 * ELECTRON_CHARGE * source_bulk_current.abs(),
+                    frequency_exponent: 0.0,
+                });
+                sources.push(NoiseSource {
+                    element_name: format!("{}:IBD", mosfet.name),
+                    noise_type: NoiseType::Shot,
+                    positive: drain_bulk_positive,
+                    negative: drain_bulk_negative,
+                    source_psd: 2.0 * ELECTRON_CHARGE * drain_bulk_current.abs(),
+                    frequency_exponent: 0.0,
+                });
+                let drain_resistance = mosfet_drain_resistance(mosfet);
+                if drain_resistance > 0.0 {
+                    sources.push(NoiseSource {
+                        element_name: format!("{}:RD", mosfet.name),
+                        noise_type: NoiseType::Thermal,
+                        positive: node_index(node_indices, &mosfet.drain),
+                        negative: drain,
+                        source_psd: 4.0 * BOLTZMANN * temperature_kelvin / drain_resistance,
+                        frequency_exponent: 0.0,
+                    });
+                }
+                let source_resistance = mosfet_source_resistance(mosfet);
+                if source_resistance > 0.0 {
+                    sources.push(NoiseSource {
+                        element_name: format!("{}:RS", mosfet.name),
+                        noise_type: NoiseType::Thermal,
+                        positive: node_index(node_indices, &mosfet.source),
+                        negative: source,
+                        source_psd: 4.0 * BOLTZMANN * temperature_kelvin / source_resistance,
+                        frequency_exponent: 0.0,
                     });
                 }
             }
@@ -21760,13 +22961,17 @@ fn collect_noise_sources(
     Ok(sources)
 }
 
-fn zero_noise_entries(sources: &[NoiseSource]) -> Vec<NoiseEntry> {
+fn noise_source_psd(source: &NoiseSource, frequency_hz: f64) -> f64 {
+    source.source_psd / frequency_hz.powf(source.frequency_exponent)
+}
+
+fn zero_noise_entries(sources: &[NoiseSource], frequency_hz: f64) -> Vec<NoiseEntry> {
     sources
         .iter()
         .map(|source| NoiseEntry {
             element_name: source.element_name.clone(),
             noise_type: source.noise_type,
-            source_psd: source.source_psd,
+            source_psd: noise_source_psd(source, frequency_hz),
             output_psd: 0.0,
         })
         .collect()
@@ -22061,7 +23266,8 @@ fn stamp_diode(
     operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_diode(diode)?;
-    let anode = node_index(node_indices, &diode.anode);
+    let intrinsic_anode = diode_intrinsic_anode_node(diode);
+    let anode = node_index(node_indices, &intrinsic_anode);
     let cathode = node_index(node_indices, &diode.cathode);
     let voltage = anode.map_or(0.0, |index| operating_point[index])
         - cathode.map_or(0.0, |index| operating_point[index]);
@@ -22074,6 +23280,14 @@ fn stamp_diode(
     }
     if let Some(index) = cathode {
         rhs[index] += equivalent_current;
+    }
+    if diode.series_resistance > 0.0 {
+        stamp_conductance(
+            matrix,
+            node_index(node_indices, &diode.anode),
+            anode,
+            1.0 / diode.series_resistance,
+        );
     }
     stamp_diode_charge(diode, capacitor_states, node_indices, matrix, rhs)?;
     Ok(())
@@ -22111,7 +23325,8 @@ fn stamp_diode_charge(
         }
         TransientMethod::Euler => conductance * state.previous_voltage,
     };
-    let anode = node_index(node_indices, &diode.anode);
+    let intrinsic_anode = diode_intrinsic_anode_node(diode);
+    let anode = node_index(node_indices, &intrinsic_anode);
     let cathode = node_index(node_indices, &diode.cathode);
     stamp_conductance(matrix, anode, cathode, conductance);
     if let Some(index) = anode {
@@ -22123,6 +23338,154 @@ fn stamp_diode_charge(
     Ok(())
 }
 
+fn bjt_early_factor(bjt: &Bjt, junction_voltage: f64, output_voltage: f64) -> f64 {
+    let forward_term = if bjt.forward_early_voltage == 0.0 {
+        0.0
+    } else {
+        output_voltage / bjt.forward_early_voltage
+    };
+    let reverse_term = if bjt.reverse_early_voltage == 0.0 {
+        0.0
+    } else {
+        junction_voltage / bjt.reverse_early_voltage
+    };
+    1.0 + forward_term - reverse_term
+}
+
+fn bjt_forward_transconductance(
+    bjt: &Bjt,
+    base_collector_current: f64,
+    base_gm: f64,
+    early_factor: f64,
+) -> f64 {
+    let reverse_early_conductance = if bjt.reverse_early_voltage == 0.0 {
+        0.0
+    } else {
+        base_collector_current / bjt.reverse_early_voltage
+    };
+    base_gm * early_factor - reverse_early_conductance
+}
+
+fn bjt_forward_transport(
+    bjt: &Bjt,
+    base_collector_current: f64,
+    base_gm: f64,
+    early_factor: f64,
+) -> (f64, f64, f64) {
+    let low_current_gm =
+        bjt_forward_transconductance(bjt, base_collector_current, base_gm, early_factor);
+    if bjt.forward_beta_rolloff_current == 0.0 || base_collector_current <= 0.0 {
+        return (base_collector_current * early_factor, low_current_gm, 1.0);
+    }
+    let root = (1.0 + 4.0 * base_collector_current / bjt.forward_beta_rolloff_current).sqrt();
+    let charge_factor = 0.5 * (1.0 + root);
+    let charge_derivative = base_gm / (bjt.forward_beta_rolloff_current * root);
+    let collector_current = base_collector_current * early_factor / charge_factor;
+    let gm = low_current_gm / charge_factor
+        - base_collector_current * early_factor * charge_derivative / charge_factor.powi(2);
+    (collector_current, gm, charge_factor)
+}
+
+fn bjt_base_emitter_leakage(bjt: &Bjt, junction_voltage: f64) -> (f64, f64) {
+    if bjt.base_emitter_leakage_saturation_current == 0.0 {
+        return (0.0, 0.0);
+    }
+    let thermal_voltage = bjt.thermal_voltage * bjt.base_emitter_leakage_emission_coefficient;
+    let exponent = (junction_voltage / thermal_voltage).clamp(-40.0, 40.0);
+    let exp_value = exponent.exp();
+    (
+        bjt.base_emitter_leakage_saturation_current * (exp_value - 1.0),
+        bjt.base_emitter_leakage_saturation_current / thermal_voltage * exp_value,
+    )
+}
+
+fn bjt_base_collector_leakage(bjt: &Bjt, junction_voltage: f64) -> (f64, f64) {
+    if bjt.base_collector_leakage_saturation_current == 0.0 {
+        return (0.0, 0.0);
+    }
+    let thermal_voltage = bjt.thermal_voltage * bjt.base_collector_leakage_emission_coefficient;
+    let exponent = (junction_voltage / thermal_voltage).clamp(-40.0, 40.0);
+    let exp_value = exponent.exp();
+    (
+        bjt.base_collector_leakage_saturation_current * (exp_value - 1.0),
+        bjt.base_collector_leakage_saturation_current / thermal_voltage * exp_value,
+    )
+}
+
+fn bjt_reverse_base_current(bjt: &Bjt, junction_voltage: f64) -> (f64, f64) {
+    if bjt.reverse_beta.is_infinite() {
+        return (0.0, 0.0);
+    }
+    let thermal_voltage = bjt.thermal_voltage * bjt.reverse_emission_coefficient;
+    let exponent = (junction_voltage / thermal_voltage).clamp(-40.0, 40.0);
+    let exp_value = exponent.exp();
+    let diffusion_current = bjt.saturation_current * (exp_value - 1.0);
+    let diffusion_conductance = bjt.saturation_current / thermal_voltage * exp_value;
+    if bjt.reverse_beta_rolloff_current == 0.0 || diffusion_current <= 0.0 {
+        return (
+            diffusion_current / bjt.reverse_beta,
+            diffusion_conductance / bjt.reverse_beta,
+        );
+    }
+    let root = (1.0 + 4.0 * diffusion_current / bjt.reverse_beta_rolloff_current).sqrt();
+    let charge_factor = 0.5 * (1.0 + root);
+    let charge_derivative = diffusion_conductance / (bjt.reverse_beta_rolloff_current * root);
+    (
+        diffusion_current * charge_factor / bjt.reverse_beta,
+        (diffusion_conductance * charge_factor + diffusion_current * charge_derivative)
+            / bjt.reverse_beta,
+    )
+}
+
+fn bjt_effective_base_resistance(
+    bjt: &Bjt,
+    base_voltage: f64,
+    emitter_voltage: f64,
+    collector_voltage: f64,
+) -> f64 {
+    let minimum = bjt.minimum_base_resistance.unwrap_or(bjt.base_resistance);
+    if minimum == bjt.base_resistance {
+        return bjt.base_resistance;
+    }
+    let (junction_voltage, reverse_voltage, output_voltage) = match bjt.polarity {
+        BjtPolarity::Npn => (
+            base_voltage - emitter_voltage,
+            base_voltage - collector_voltage,
+            collector_voltage - emitter_voltage,
+        ),
+        BjtPolarity::Pnp => (
+            emitter_voltage - base_voltage,
+            collector_voltage - base_voltage,
+            emitter_voltage - collector_voltage,
+        ),
+    };
+    let forward_thermal_voltage = bjt.thermal_voltage * bjt.forward_emission_coefficient;
+    let exp_value = (junction_voltage / forward_thermal_voltage)
+        .clamp(-40.0, 40.0)
+        .exp();
+    let diffusion_current = bjt.saturation_current * (exp_value - 1.0);
+    let diffusion_conductance = bjt.saturation_current / forward_thermal_voltage * exp_value;
+    let early_factor = bjt_early_factor(bjt, junction_voltage, output_voltage);
+    let (_, _, charge_factor) =
+        bjt_forward_transport(bjt, diffusion_current, diffusion_conductance, early_factor);
+    let (leakage_current, _) = bjt_base_emitter_leakage(bjt, junction_voltage);
+    let (collector_leakage_current, _) = bjt_base_collector_leakage(bjt, reverse_voltage);
+    let (reverse_base_current, _) = bjt_reverse_base_current(bjt, reverse_voltage);
+    let base_current = diffusion_current / bjt.forward_beta
+        + leakage_current
+        + collector_leakage_current
+        + reverse_base_current;
+    let variable_resistance = bjt.base_resistance - minimum;
+    if bjt.base_resistance_half_current == 0.0 {
+        return minimum + variable_resistance / charge_factor;
+    }
+    let ratio = (base_current / bjt.base_resistance_half_current).max(1.0e-9);
+    let angle = (-1.0 + (1.0 + 14.59025 * ratio).sqrt()) / (2.4317 * ratio.sqrt());
+    let tangent = angle.tan();
+    let transition = 3.0 * (tangent - angle) / (angle * tangent * tangent);
+    minimum + variable_resistance * transition
+}
+
 fn stamp_bjt(
     bjt: &Bjt,
     capacitor_states: &[CapacitorState],
@@ -22132,6 +23495,68 @@ fn stamp_bjt(
     operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_bjt(bjt)?;
+    let charge_bjt = bjt.clone();
+    let intrinsic_bjt = if bjt.emitter_resistance > 0.0
+        || bjt.collector_resistance > 0.0
+        || bjt.base_resistance > 0.0
+    {
+        let mut intrinsic = bjt.clone();
+        if bjt.emitter_resistance > 0.0 {
+            let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
+            stamp_conductance(
+                matrix,
+                node_index(node_indices, &bjt.emitter),
+                node_index(node_indices, &intrinsic_emitter),
+                1.0 / bjt.emitter_resistance,
+            );
+            intrinsic.emitter = intrinsic_emitter;
+            intrinsic.emitter_resistance = 0.0;
+        }
+        if bjt.collector_resistance > 0.0 {
+            let intrinsic_collector = bjt_intrinsic_collector_node(bjt);
+            stamp_conductance(
+                matrix,
+                node_index(node_indices, &bjt.collector),
+                node_index(node_indices, &intrinsic_collector),
+                1.0 / bjt.collector_resistance,
+            );
+            intrinsic.collector = intrinsic_collector;
+            intrinsic.collector_resistance = 0.0;
+        }
+        if bjt.base_resistance > 0.0 {
+            let intrinsic_base = bjt_intrinsic_base_node(bjt);
+            let intrinsic_base_index = node_index(node_indices, &intrinsic_base);
+            let base_voltage = vector_voltage(operating_point, intrinsic_base_index);
+            let emitter_voltage = vector_voltage(
+                operating_point,
+                node_index(node_indices, &intrinsic.emitter),
+            );
+            let collector_voltage = vector_voltage(
+                operating_point,
+                node_index(node_indices, &intrinsic.collector),
+            );
+            let base_resistance = bjt_effective_base_resistance(
+                &intrinsic,
+                base_voltage,
+                emitter_voltage,
+                collector_voltage,
+            );
+            stamp_conductance(
+                matrix,
+                node_index(node_indices, &bjt.base),
+                intrinsic_base_index,
+                1.0 / base_resistance,
+            );
+            intrinsic.base = intrinsic_base;
+            intrinsic.base_resistance = 0.0;
+            intrinsic.minimum_base_resistance = None;
+            intrinsic.base_resistance_half_current = 0.0;
+        }
+        Some(intrinsic)
+    } else {
+        None
+    };
+    let bjt = intrinsic_bjt.as_ref().unwrap_or(bjt);
     let collector = node_index(node_indices, &bjt.collector);
     let base = node_index(node_indices, &bjt.base);
     let emitter = node_index(node_indices, &bjt.emitter);
@@ -22142,33 +23567,44 @@ fn stamp_bjt(
         BjtPolarity::Npn => base_voltage - emitter_voltage,
         BjtPolarity::Pnp => emitter_voltage - base_voltage,
     };
-    let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
+    let reverse_junction_voltage = match bjt.polarity {
+        BjtPolarity::Npn => base_voltage - collector_voltage,
+        BjtPolarity::Pnp => collector_voltage - base_voltage,
+    };
+    let forward_thermal_voltage = bjt.thermal_voltage * bjt.forward_emission_coefficient;
+    let exponent = (junction_voltage / forward_thermal_voltage).clamp(-40.0, 40.0);
     let exp_value = exponent.exp();
     let base_collector_current = bjt.saturation_current * (exp_value - 1.0);
-    let base_gm = bjt.saturation_current / bjt.thermal_voltage * exp_value;
+    let base_gm = bjt.saturation_current / forward_thermal_voltage * exp_value;
     let output_voltage = match bjt.polarity {
         BjtPolarity::Npn => collector_voltage - emitter_voltage,
         BjtPolarity::Pnp => emitter_voltage - collector_voltage,
     };
-    let early_factor = if bjt.forward_early_voltage == 0.0 {
-        1.0
-    } else {
-        1.0 + output_voltage / bjt.forward_early_voltage
-    };
+    let early_factor = bjt_early_factor(bjt, junction_voltage, output_voltage);
+    let (collector_current, gm, charge_factor) =
+        bjt_forward_transport(bjt, base_collector_current, base_gm, early_factor);
     let output_conductance = if bjt.forward_early_voltage == 0.0 {
         0.0
     } else {
-        base_collector_current / bjt.forward_early_voltage
+        base_collector_current / bjt.forward_early_voltage / charge_factor
     };
-    let collector_current = base_collector_current * early_factor;
-    let gm = base_gm * early_factor;
-    let gpi = base_gm / bjt.forward_beta;
-    let base_current = base_collector_current / bjt.forward_beta;
+    let (leakage_current, leakage_conductance) = bjt_base_emitter_leakage(bjt, junction_voltage);
+    let gpi = base_gm / bjt.forward_beta + leakage_conductance;
+    let base_current = base_collector_current / bjt.forward_beta + leakage_current;
     let equivalent_collector_current =
         collector_current - gm * junction_voltage - output_conductance * output_voltage;
     let equivalent_base_current = base_current - gpi * junction_voltage;
+    let (collector_leakage_current, collector_leakage_conductance) =
+        bjt_base_collector_leakage(bjt, reverse_junction_voltage);
+    let (reverse_base_current, reverse_base_conductance) =
+        bjt_reverse_base_current(bjt, reverse_junction_voltage);
+    let base_collector_current = collector_leakage_current + reverse_base_current;
+    let base_collector_conductance = collector_leakage_conductance + reverse_base_conductance;
+    let equivalent_collector_leakage_current =
+        base_collector_current - base_collector_conductance * reverse_junction_voltage;
 
     stamp_conductance(matrix, collector, emitter, output_conductance);
+    stamp_conductance(matrix, base, collector, base_collector_conductance);
 
     match bjt.polarity {
         BjtPolarity::Npn => {
@@ -22176,15 +23612,27 @@ fn stamp_bjt(
             stamp_transconductance(matrix, collector, emitter, base, emitter, gm);
             stamp_equivalent_current_source(rhs, base, emitter, equivalent_base_current);
             stamp_equivalent_current_source(rhs, collector, emitter, equivalent_collector_current);
+            stamp_equivalent_current_source(
+                rhs,
+                base,
+                collector,
+                equivalent_collector_leakage_current,
+            );
         }
         BjtPolarity::Pnp => {
             stamp_conductance(matrix, emitter, base, gpi);
             stamp_transconductance(matrix, emitter, collector, emitter, base, gm);
             stamp_equivalent_current_source(rhs, emitter, base, equivalent_base_current);
             stamp_equivalent_current_source(rhs, emitter, collector, equivalent_collector_current);
+            stamp_equivalent_current_source(
+                rhs,
+                collector,
+                base,
+                equivalent_collector_leakage_current,
+            );
         }
     }
-    stamp_bjt_charge(bjt, capacitor_states, node_indices, matrix, rhs)?;
+    stamp_bjt_charge(&charge_bjt, capacitor_states, node_indices, matrix, rhs)?;
     Ok(())
 }
 
@@ -22195,6 +23643,11 @@ fn stamp_bjt_charge(
     matrix: &mut [Vec<f64>],
     rhs: &mut [f64],
 ) -> Result<(), SpiceError> {
+    let reverse_junction_voltage = capacitor_states
+        .iter()
+        .find(|state| state.name == bjt_base_collector_charge_state_name(bjt))
+        .map(|state| state.previous_voltage)
+        .unwrap_or(0.0);
     for spec in bjt_charge_state_specs(bjt) {
         let Some(state) = capacitor_states
             .iter()
@@ -22202,7 +23655,12 @@ fn stamp_bjt_charge(
         else {
             continue;
         };
-        let capacitance = bjt_charge_dynamic_capacitance(bjt, spec.kind, state.previous_voltage);
+        let capacitance = bjt_charge_dynamic_capacitance(
+            bjt,
+            spec.kind,
+            state.previous_voltage,
+            reverse_junction_voltage,
+        );
         if capacitance <= 0.0 {
             continue;
         }
@@ -22219,8 +23677,8 @@ fn stamp_bjt_charge(
             }
             TransientMethod::Euler => conductance * state.previous_voltage,
         };
-        let positive = node_index(node_indices, spec.positive);
-        let negative = node_index(node_indices, spec.negative);
+        let positive = node_index(node_indices, &spec.positive);
+        let negative = node_index(node_indices, &spec.negative);
         stamp_conductance(matrix, positive, negative, conductance);
         if let Some(index) = positive {
             rhs[index] += history_current;
@@ -22253,6 +23711,67 @@ fn stamp_bjt_small_signal(
     operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_bjt(bjt)?;
+    let intrinsic_bjt = if bjt.emitter_resistance > 0.0
+        || bjt.collector_resistance > 0.0
+        || bjt.base_resistance > 0.0
+    {
+        let mut intrinsic = bjt.clone();
+        if bjt.emitter_resistance > 0.0 {
+            let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
+            stamp_conductance(
+                matrix,
+                node_index(node_indices, &bjt.emitter),
+                node_index(node_indices, &intrinsic_emitter),
+                1.0 / bjt.emitter_resistance,
+            );
+            intrinsic.emitter = intrinsic_emitter;
+            intrinsic.emitter_resistance = 0.0;
+        }
+        if bjt.collector_resistance > 0.0 {
+            let intrinsic_collector = bjt_intrinsic_collector_node(bjt);
+            stamp_conductance(
+                matrix,
+                node_index(node_indices, &bjt.collector),
+                node_index(node_indices, &intrinsic_collector),
+                1.0 / bjt.collector_resistance,
+            );
+            intrinsic.collector = intrinsic_collector;
+            intrinsic.collector_resistance = 0.0;
+        }
+        if bjt.base_resistance > 0.0 {
+            let intrinsic_base = bjt_intrinsic_base_node(bjt);
+            let intrinsic_base_index = node_index(node_indices, &intrinsic_base);
+            let base_voltage = vector_voltage(operating_point, intrinsic_base_index);
+            let emitter_voltage = vector_voltage(
+                operating_point,
+                node_index(node_indices, &intrinsic.emitter),
+            );
+            let collector_voltage = vector_voltage(
+                operating_point,
+                node_index(node_indices, &intrinsic.collector),
+            );
+            let base_resistance = bjt_effective_base_resistance(
+                &intrinsic,
+                base_voltage,
+                emitter_voltage,
+                collector_voltage,
+            );
+            stamp_conductance(
+                matrix,
+                node_index(node_indices, &bjt.base),
+                intrinsic_base_index,
+                1.0 / base_resistance,
+            );
+            intrinsic.base = intrinsic_base;
+            intrinsic.base_resistance = 0.0;
+            intrinsic.minimum_base_resistance = None;
+            intrinsic.base_resistance_half_current = 0.0;
+        }
+        Some(intrinsic)
+    } else {
+        None
+    };
+    let bjt = intrinsic_bjt.as_ref().unwrap_or(bjt);
     let collector = node_index(node_indices, &bjt.collector);
     let base = node_index(node_indices, &bjt.base);
     let emitter = node_index(node_indices, &bjt.emitter);
@@ -22263,27 +23782,39 @@ fn stamp_bjt_small_signal(
         BjtPolarity::Npn => base_voltage - emitter_voltage,
         BjtPolarity::Pnp => emitter_voltage - base_voltage,
     };
-    let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
+    let reverse_junction_voltage = match bjt.polarity {
+        BjtPolarity::Npn => base_voltage - collector_voltage,
+        BjtPolarity::Pnp => collector_voltage - base_voltage,
+    };
+    let forward_thermal_voltage = bjt.thermal_voltage * bjt.forward_emission_coefficient;
+    let exponent = (junction_voltage / forward_thermal_voltage).clamp(-40.0, 40.0);
     let exp_value = exponent.exp();
     let base_collector_current = bjt.saturation_current * (exp_value - 1.0);
-    let base_gm = bjt.saturation_current / bjt.thermal_voltage * exp_value;
+    let base_gm = bjt.saturation_current / forward_thermal_voltage * exp_value;
     let output_voltage = match bjt.polarity {
         BjtPolarity::Npn => collector_voltage - emitter_voltage,
         BjtPolarity::Pnp => emitter_voltage - collector_voltage,
     };
-    let early_factor = if bjt.forward_early_voltage == 0.0 {
-        1.0
-    } else {
-        1.0 + output_voltage / bjt.forward_early_voltage
-    };
+    let early_factor = bjt_early_factor(bjt, junction_voltage, output_voltage);
+    let (_, gm, charge_factor) =
+        bjt_forward_transport(bjt, base_collector_current, base_gm, early_factor);
     let output_conductance = if bjt.forward_early_voltage == 0.0 {
         0.0
     } else {
-        base_collector_current / bjt.forward_early_voltage
+        base_collector_current / bjt.forward_early_voltage / charge_factor
     };
-    let gm = base_gm * early_factor;
-    let gpi = base_gm / bjt.forward_beta;
+    let (_, leakage_conductance) = bjt_base_emitter_leakage(bjt, junction_voltage);
+    let gpi = base_gm / bjt.forward_beta + leakage_conductance;
+    let (_, collector_leakage_conductance) =
+        bjt_base_collector_leakage(bjt, reverse_junction_voltage);
+    let (_, reverse_base_conductance) = bjt_reverse_base_current(bjt, reverse_junction_voltage);
     stamp_conductance(matrix, collector, emitter, output_conductance);
+    stamp_conductance(
+        matrix,
+        base,
+        collector,
+        collector_leakage_conductance + reverse_base_conductance,
+    );
     match bjt.polarity {
         BjtPolarity::Npn => {
             stamp_conductance(matrix, base, emitter, gpi);
@@ -22305,6 +23836,68 @@ fn stamp_ac_bjt_small_signal(
     omega: f64,
 ) -> Result<(), SpiceError> {
     validate_bjt(bjt)?;
+    let external_base = node_index(node_indices, &bjt.base);
+    let intrinsic_bjt = if bjt.emitter_resistance > 0.0
+        || bjt.collector_resistance > 0.0
+        || bjt.base_resistance > 0.0
+    {
+        let mut intrinsic = bjt.clone();
+        if bjt.emitter_resistance > 0.0 {
+            let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
+            stamp_complex_conductance(
+                matrix,
+                node_index(node_indices, &bjt.emitter),
+                node_index(node_indices, &intrinsic_emitter),
+                Complex::new(1.0 / bjt.emitter_resistance, 0.0),
+            );
+            intrinsic.emitter = intrinsic_emitter;
+            intrinsic.emitter_resistance = 0.0;
+        }
+        if bjt.collector_resistance > 0.0 {
+            let intrinsic_collector = bjt_intrinsic_collector_node(bjt);
+            stamp_complex_conductance(
+                matrix,
+                node_index(node_indices, &bjt.collector),
+                node_index(node_indices, &intrinsic_collector),
+                Complex::new(1.0 / bjt.collector_resistance, 0.0),
+            );
+            intrinsic.collector = intrinsic_collector;
+            intrinsic.collector_resistance = 0.0;
+        }
+        if bjt.base_resistance > 0.0 {
+            let intrinsic_base = bjt_intrinsic_base_node(bjt);
+            let intrinsic_base_index = node_index(node_indices, &intrinsic_base);
+            let base_voltage = vector_voltage(operating_point, intrinsic_base_index);
+            let emitter_voltage = vector_voltage(
+                operating_point,
+                node_index(node_indices, &intrinsic.emitter),
+            );
+            let collector_voltage = vector_voltage(
+                operating_point,
+                node_index(node_indices, &intrinsic.collector),
+            );
+            let base_resistance = bjt_effective_base_resistance(
+                &intrinsic,
+                base_voltage,
+                emitter_voltage,
+                collector_voltage,
+            );
+            stamp_complex_conductance(
+                matrix,
+                node_index(node_indices, &bjt.base),
+                intrinsic_base_index,
+                Complex::new(1.0 / base_resistance, 0.0),
+            );
+            intrinsic.base = intrinsic_base;
+            intrinsic.base_resistance = 0.0;
+            intrinsic.minimum_base_resistance = None;
+            intrinsic.base_resistance_half_current = 0.0;
+        }
+        Some(intrinsic)
+    } else {
+        None
+    };
+    let bjt = intrinsic_bjt.as_ref().unwrap_or(bjt);
     let collector = node_index(node_indices, &bjt.collector);
     let base = node_index(node_indices, &bjt.base);
     let emitter = node_index(node_indices, &bjt.emitter);
@@ -22319,36 +23912,58 @@ fn stamp_ac_bjt_small_signal(
         BjtPolarity::Npn => base_voltage - collector_voltage,
         BjtPolarity::Pnp => collector_voltage - base_voltage,
     };
-    let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
-    let reverse_exponent = (reverse_junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
+    let forward_thermal_voltage = bjt.thermal_voltage * bjt.forward_emission_coefficient;
+    let exponent = (junction_voltage / forward_thermal_voltage).clamp(-40.0, 40.0);
+    let reverse_thermal_voltage = bjt.thermal_voltage * bjt.reverse_emission_coefficient;
+    let reverse_exponent = (reverse_junction_voltage / reverse_thermal_voltage).clamp(-40.0, 40.0);
     let exp_value = exponent.exp();
     let base_collector_current = bjt.saturation_current * (exp_value - 1.0);
-    let base_gm = bjt.saturation_current / bjt.thermal_voltage * exp_value;
+    let base_gm = bjt.saturation_current / forward_thermal_voltage * exp_value;
     let output_voltage = match bjt.polarity {
         BjtPolarity::Npn => collector_voltage - emitter_voltage,
         BjtPolarity::Pnp => emitter_voltage - collector_voltage,
     };
-    let early_factor = if bjt.forward_early_voltage == 0.0 {
-        1.0
-    } else {
-        1.0 + output_voltage / bjt.forward_early_voltage
-    };
+    let early_factor = bjt_early_factor(bjt, junction_voltage, output_voltage);
+    let (_, forward_gm, charge_factor) =
+        bjt_forward_transport(bjt, base_collector_current, base_gm, early_factor);
     let output_conductance = if bjt.forward_early_voltage == 0.0 {
         0.0
     } else {
-        base_collector_current / bjt.forward_early_voltage
+        base_collector_current / bjt.forward_early_voltage / charge_factor
     };
-    let gm = Complex::new(base_gm * early_factor, 0.0);
-    let reverse_gm = bjt.saturation_current / bjt.thermal_voltage * reverse_exponent.exp();
-    let diffusion_capacitance = bjt.forward_transit_time * gm.real;
-    let reverse_diffusion_capacitance = bjt.reverse_transit_time * reverse_gm;
-    let gpi = Complex::new(
-        gm.real / bjt.forward_beta,
-        omega * (bjt.base_emitter_capacitance + diffusion_capacitance),
+    let excess_phase =
+        omega * bjt.forward_transit_time * bjt.forward_excess_phase_degrees * std::f64::consts::PI
+            / 180.0;
+    let gm = Complex::new(
+        forward_gm * excess_phase.cos(),
+        -forward_gm * excess_phase.sin(),
     );
+    let reverse_gm = bjt.saturation_current / reverse_thermal_voltage * reverse_exponent.exp();
+    let diffusion_capacitance = bjt.forward_transit_time
+        * bjt_forward_transit_time_scale(bjt, junction_voltage, reverse_junction_voltage)
+        * forward_gm;
+    let reverse_diffusion_capacitance = bjt.reverse_transit_time * reverse_gm;
+    let (_, leakage_conductance) = bjt_base_emitter_leakage(bjt, junction_voltage);
+    let (_, collector_leakage_conductance) =
+        bjt_base_collector_leakage(bjt, reverse_junction_voltage);
+    let (_, reverse_base_conductance) = bjt_reverse_base_current(bjt, reverse_junction_voltage);
+    let gpi = Complex::new(
+        base_gm / bjt.forward_beta + leakage_conductance,
+        omega
+            * (bjt_base_emitter_depletion_capacitance(bjt, junction_voltage)
+                + diffusion_capacitance),
+    );
+    let base_collector_depletion =
+        bjt_base_collector_depletion_capacitance(bjt, reverse_junction_voltage);
     let ybc = Complex::new(
+        collector_leakage_conductance + reverse_base_conductance,
+        omega
+            * (bjt.base_collector_capacitance_fraction * base_collector_depletion
+                + reverse_diffusion_capacitance),
+    );
+    let ybx = Complex::new(
         0.0,
-        omega * (bjt.base_collector_capacitance + reverse_diffusion_capacitance),
+        omega * (1.0 - bjt.base_collector_capacitance_fraction) * base_collector_depletion,
     );
     stamp_complex_conductance(
         matrix,
@@ -22356,6 +23971,9 @@ fn stamp_ac_bjt_small_signal(
         emitter,
         Complex::new(output_conductance, 0.0),
     );
+    if ybx != Complex::new(0.0, 0.0) {
+        stamp_complex_conductance(matrix, external_base, collector, ybx);
+    }
     match bjt.polarity {
         BjtPolarity::Npn => {
             stamp_complex_conductance(matrix, base, emitter, gpi);
@@ -22389,6 +24007,7 @@ fn mosfet_bulk_junction_capacitance(
     junction_voltage: f64,
     junction_potential: f64,
     grading_coefficient: f64,
+    forward_bias_coefficient: f64,
 ) -> f64 {
     if zero_bias_capacitance <= 0.0 {
         return zero_bias_capacitance;
@@ -22396,8 +24015,14 @@ fn mosfet_bulk_junction_capacitance(
     if junction_potential <= 0.0 || grading_coefficient == 0.0 {
         return zero_bias_capacitance;
     }
-    let reverse_scale = (-junction_voltage).max(0.0) / junction_potential;
-    zero_bias_capacitance / (1.0 + reverse_scale).powf(grading_coefficient)
+    let normalized_voltage = junction_voltage / junction_potential;
+    if normalized_voltage < forward_bias_coefficient {
+        return zero_bias_capacitance / (1.0 - normalized_voltage).powf(grading_coefficient);
+    }
+    let denominator = (1.0 - forward_bias_coefficient).powf(1.0 + grading_coefficient);
+    let continuation = 1.0 - forward_bias_coefficient * (1.0 + grading_coefficient)
+        + grading_coefficient * normalized_voltage;
+    zero_bias_capacitance * continuation / denominator
 }
 
 struct JfetDcResult {
@@ -22415,9 +24040,11 @@ fn stamp_jfet(
     operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_jfet(jfet)?;
-    let drain = node_index(node_indices, &jfet.drain);
+    let intrinsic_drain = jfet_intrinsic_drain_node(jfet);
+    let intrinsic_source = jfet_intrinsic_source_node(jfet);
+    let drain = node_index(node_indices, &intrinsic_drain);
     let gate = node_index(node_indices, &jfet.gate);
-    let source = node_index(node_indices, &jfet.source);
+    let source = node_index(node_indices, &intrinsic_source);
     let drain_voltage = vector_voltage(operating_point, drain);
     let gate_voltage = vector_voltage(operating_point, gate);
     let source_voltage = vector_voltage(operating_point, source);
@@ -22429,8 +24056,75 @@ fn stamp_jfet(
     stamp_conductance(matrix, drain, source, result.gds);
     stamp_transconductance(matrix, drain, source, gate, source, result.gm);
     stamp_equivalent_current_source(rhs, drain, source, equivalent_current);
+    stamp_jfet_gate_junction(
+        jfet,
+        gate,
+        source,
+        gate_voltage - source_voltage,
+        matrix,
+        rhs,
+    );
+    stamp_jfet_gate_junction(jfet, gate, drain, gate_voltage - drain_voltage, matrix, rhs);
     stamp_jfet_charge(jfet, capacitor_states, node_indices, matrix, rhs)?;
+    if jfet.drain_resistance > 0.0 {
+        stamp_conductance(
+            matrix,
+            node_index(node_indices, &jfet.drain),
+            drain,
+            1.0 / jfet.drain_resistance,
+        );
+    }
+    if jfet.source_resistance > 0.0 {
+        stamp_conductance(
+            matrix,
+            node_index(node_indices, &jfet.source),
+            source,
+            1.0 / jfet.source_resistance,
+        );
+    }
     Ok(())
+}
+
+const JFET_THERMAL_VOLTAGE: f64 = 0.02585;
+
+fn jfet_gate_junction_current_conductance(jfet: &Jfet, gate_voltage: f64) -> (f64, f64) {
+    let junction_voltage = match jfet.polarity {
+        JfetPolarity::Njf => gate_voltage,
+        JfetPolarity::Pjf => -gate_voltage,
+    };
+    let exp_value = (junction_voltage / JFET_THERMAL_VOLTAGE)
+        .clamp(-40.0, 40.0)
+        .exp();
+    (
+        jfet.gate_saturation_current * (exp_value - 1.0),
+        jfet.gate_saturation_current / JFET_THERMAL_VOLTAGE * exp_value,
+    )
+}
+
+fn stamp_jfet_gate_junction(
+    jfet: &Jfet,
+    gate: Option<usize>,
+    terminal: Option<usize>,
+    gate_voltage: f64,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+) {
+    let (current, conductance) = jfet_gate_junction_current_conductance(jfet, gate_voltage);
+    let junction_voltage = match jfet.polarity {
+        JfetPolarity::Njf => gate_voltage,
+        JfetPolarity::Pjf => -gate_voltage,
+    };
+    let equivalent_current = current - conductance * junction_voltage;
+    match jfet.polarity {
+        JfetPolarity::Njf => {
+            stamp_conductance(matrix, gate, terminal, conductance);
+            stamp_equivalent_current_source(rhs, gate, terminal, equivalent_current);
+        }
+        JfetPolarity::Pjf => {
+            stamp_conductance(matrix, terminal, gate, conductance);
+            stamp_equivalent_current_source(rhs, terminal, gate, equivalent_current);
+        }
+    }
 }
 
 fn stamp_jfet_charge(
@@ -22447,7 +24141,8 @@ fn stamp_jfet_charge(
         else {
             continue;
         };
-        let capacitance = spec.capacitance;
+        let capacitance =
+            jfet_charge_dynamic_capacitance(jfet, spec.capacitance, state.previous_voltage);
         if capacitance <= 0.0 {
             continue;
         }
@@ -22464,8 +24159,8 @@ fn stamp_jfet_charge(
             }
             TransientMethod::Euler => conductance * state.previous_voltage,
         };
-        let positive = node_index(node_indices, spec.positive);
-        let negative = node_index(node_indices, spec.negative);
+        let positive = node_index(node_indices, &spec.positive);
+        let negative = node_index(node_indices, &spec.negative);
         stamp_conductance(matrix, positive, negative, conductance);
         if let Some(index) = positive {
             rhs[index] += history_current;
@@ -22486,6 +24181,8 @@ fn evaluate_jfet(jfet: &Jfet, vgs: f64, vds: f64) -> JfetDcResult {
                 -jfet.threshold_voltage,
                 jfet.beta,
                 jfet.channel_length_modulation,
+                jfet.junction_potential,
+                jfet.doping_tail_parameter,
             );
             JfetDcResult {
                 drain_current: -result.drain_current,
@@ -22499,6 +24196,8 @@ fn evaluate_jfet(jfet: &Jfet, vgs: f64, vds: f64) -> JfetDcResult {
             jfet.threshold_voltage,
             jfet.beta,
             jfet.channel_length_modulation,
+            jfet.junction_potential,
+            jfet.doping_tail_parameter,
         ),
     }
 }
@@ -22509,6 +24208,8 @@ fn evaluate_njf(
     threshold_voltage: f64,
     beta: f64,
     channel_length_modulation: f64,
+    junction_potential: f64,
+    doping_tail_parameter: f64,
 ) -> JfetDcResult {
     let overdrive = vgs - threshold_voltage;
     if overdrive <= 0.0 || vds < 0.0 {
@@ -22518,20 +24219,30 @@ fn evaluate_njf(
             gds: 0.0,
         };
     }
+    let tail_factor = if doping_tail_parameter == 1.0 {
+        0.0
+    } else {
+        (1.0 - doping_tail_parameter) / (junction_potential - threshold_voltage)
+    };
+    let modulation = 1.0 + channel_length_modulation * vds;
     if vds < overdrive {
-        let channel = 2.0 * overdrive * vds - vds * vds;
-        let modulation = 1.0 + channel_length_modulation * vds;
+        let slope = 2.0 * doping_tail_parameter + 3.0 * tail_factor * (overdrive - vds);
+        let channel = vds * (vds * (tail_factor * vds - doping_tail_parameter) + overdrive * slope);
         return JfetDcResult {
             drain_current: beta * channel * modulation,
-            gm: 2.0 * beta * vds * modulation,
-            gds: beta * (2.0 * overdrive - 2.0 * vds) * modulation
+            gm: beta * modulation * vds * (slope + 3.0 * tail_factor * overdrive),
+            gds: beta * modulation * (overdrive - vds) * slope
                 + beta * channel * channel_length_modulation,
         };
     }
+    let channel = overdrive * overdrive * (doping_tail_parameter + overdrive * tail_factor);
     JfetDcResult {
-        drain_current: beta * overdrive * overdrive * (1.0 + channel_length_modulation * vds),
-        gm: 2.0 * beta * overdrive * (1.0 + channel_length_modulation * vds),
-        gds: beta * overdrive * overdrive * channel_length_modulation,
+        drain_current: beta * channel * modulation,
+        gm: beta
+            * modulation
+            * overdrive
+            * (2.0 * doping_tail_parameter + 3.0 * overdrive * tail_factor),
+        gds: beta * channel * channel_length_modulation,
     }
 }
 
@@ -22544,9 +24255,11 @@ fn stamp_mosfet(
     operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_mosfet(mosfet)?;
-    let drain = node_index(node_indices, &mosfet.drain);
+    let intrinsic_drain = mosfet_intrinsic_drain_node(mosfet);
+    let intrinsic_source = mosfet_intrinsic_source_node(mosfet);
+    let drain = node_index(node_indices, &intrinsic_drain);
     let gate = node_index(node_indices, &mosfet.gate);
-    let source = node_index(node_indices, &mosfet.source);
+    let source = node_index(node_indices, &intrinsic_source);
     let body = node_index(node_indices, &mosfet.body);
     let drain_voltage = vector_voltage(operating_point, drain);
     let gate_voltage = vector_voltage(operating_point, gate);
@@ -22563,8 +24276,111 @@ fn stamp_mosfet(
     stamp_transconductance(matrix, drain, source, gate, source, result.gm);
     stamp_transconductance(matrix, drain, source, body, source, result.gmb);
     stamp_equivalent_current_source(rhs, drain, source, equivalent_current);
+    stamp_mosfet_bulk_junction(
+        mosfet,
+        source,
+        body,
+        source_voltage,
+        body_voltage,
+        mosfet.params.source_area,
+        matrix,
+        rhs,
+    );
+    stamp_mosfet_bulk_junction(
+        mosfet,
+        drain,
+        body,
+        drain_voltage,
+        body_voltage,
+        mosfet.params.drain_area,
+        matrix,
+        rhs,
+    );
     stamp_mosfet_charge(mosfet, capacitor_states, node_indices, matrix, rhs)?;
+    let drain_resistance = mosfet_drain_resistance(mosfet);
+    if drain_resistance > 0.0 {
+        stamp_conductance(
+            matrix,
+            node_index(node_indices, &mosfet.drain),
+            drain,
+            1.0 / drain_resistance,
+        );
+    }
+    let source_resistance = mosfet_source_resistance(mosfet);
+    if source_resistance > 0.0 {
+        stamp_conductance(
+            matrix,
+            node_index(node_indices, &mosfet.source),
+            source,
+            1.0 / source_resistance,
+        );
+    }
     Ok(())
+}
+
+fn mosfet_bulk_junction_current_conductance(
+    mosfet: &Mosfet,
+    terminal_voltage: f64,
+    body_voltage: f64,
+    terminal_area: f64,
+) -> (f64, f64) {
+    let saturation_current = if mosfet.params.saturation_current_density > 0.0
+        && mosfet.params.drain_area > 0.0
+        && mosfet.params.source_area > 0.0
+    {
+        mosfet.params.saturation_current_density * terminal_area
+    } else {
+        mosfet.params.saturation_current
+    };
+    let junction_voltage = match mosfet.mosfet_type {
+        MosfetType::Nmos => body_voltage - terminal_voltage,
+        MosfetType::Pmos => terminal_voltage - body_voltage,
+    };
+    let thermal_voltage = BOLTZMANN * mosfet.params.t_nom / ELECTRON_CHARGE;
+    let normalized_voltage = junction_voltage / thermal_voltage;
+    let limited_exp = normalized_voltage.clamp(-40.0, 40.0).exp();
+    let (current_factor, conductance_factor) = if normalized_voltage > 40.0 {
+        (limited_exp * (1.0 + normalized_voltage - 40.0), limited_exp)
+    } else {
+        (limited_exp, limited_exp)
+    };
+    (
+        saturation_current * (current_factor - 1.0),
+        saturation_current / thermal_voltage * conductance_factor,
+    )
+}
+
+fn stamp_mosfet_bulk_junction(
+    mosfet: &Mosfet,
+    terminal: Option<usize>,
+    body: Option<usize>,
+    terminal_voltage: f64,
+    body_voltage: f64,
+    terminal_area: f64,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+) {
+    let (current, conductance) = mosfet_bulk_junction_current_conductance(
+        mosfet,
+        terminal_voltage,
+        body_voltage,
+        terminal_area,
+    );
+    let junction_voltage = match mosfet.mosfet_type {
+        MosfetType::Nmos => body_voltage - terminal_voltage,
+        MosfetType::Pmos => terminal_voltage - body_voltage,
+    };
+    let (positive, negative) = match mosfet.mosfet_type {
+        MosfetType::Nmos => (body, terminal),
+        MosfetType::Pmos => (terminal, body),
+    };
+    stamp_conductance(matrix, positive, negative, conductance);
+    stamp_equivalent_current_source(
+        rhs,
+        positive,
+        negative,
+        current - conductance * junction_voltage,
+    );
 }
 
 fn stamp_mosfet_charge(
@@ -22598,8 +24414,8 @@ fn stamp_mosfet_charge(
             }
             TransientMethod::Euler => conductance * state.previous_voltage,
         };
-        let positive = node_index(node_indices, spec.positive);
-        let negative = node_index(node_indices, spec.negative);
+        let positive = node_index(node_indices, &spec.positive);
+        let negative = node_index(node_indices, &spec.negative);
         stamp_conductance(matrix, positive, negative, conductance);
         if let Some(index) = positive {
             rhs[index] += history_current;
@@ -22637,22 +24453,38 @@ fn evaluate_nmos_level1(
     vds: f64,
     vbs: f64,
 ) -> MosfetDcResult {
-    let beta = params.kp * (params.w / params.l);
+    let effective_length = params.l - 2.0 * params.lateral_diffusion_length;
+    let beta = params.kp * (params.w / effective_length);
     let cgs_overlap = params.gate_source_overlap_capacitance * params.w;
     let cgd_overlap = params.gate_drain_overlap_capacitance * params.w;
-    let cgb_overlap = params.gate_bulk_overlap_capacitance * params.l;
-    let cgs_intrinsic = (2.0 / 3.0) * params.w * params.l * params.kp;
+    let cgb_overlap = params.gate_bulk_overlap_capacitance * effective_length;
+    let channel_capacitance =
+        params.w * effective_length * (OXIDE_PERMITTIVITY / params.oxide_thickness);
     let cbs_bulk = mosfet_bulk_junction_capacitance(
-        params.source_bulk_capacitance,
+        params.source_bulk_capacitance + params.bottom_junction_capacitance * params.source_area,
         vbs,
         params.bulk_junction_potential,
         params.bulk_junction_grading_coefficient,
+        params.forward_bias_depletion_coefficient,
+    ) + mosfet_bulk_junction_capacitance(
+        params.sidewall_junction_capacitance * params.source_perimeter,
+        vbs,
+        params.bulk_junction_potential,
+        params.sidewall_junction_grading_coefficient,
+        params.forward_bias_depletion_coefficient,
     );
     let cbd_bulk = mosfet_bulk_junction_capacitance(
-        params.drain_bulk_capacitance,
+        params.drain_bulk_capacitance + params.bottom_junction_capacitance * params.drain_area,
         vbs - vds,
         params.bulk_junction_potential,
         params.bulk_junction_grading_coefficient,
+        params.forward_bias_depletion_coefficient,
+    ) + mosfet_bulk_junction_capacitance(
+        params.sidewall_junction_capacitance * params.drain_perimeter,
+        vbs - vds,
+        params.bulk_junction_potential,
+        params.sidewall_junction_grading_coefficient,
+        params.forward_bias_depletion_coefficient,
     );
     let threshold = if params.phi - vbs >= 0.0 {
         params.vt0 + params.gamma * ((params.phi - vbs).sqrt() - params.phi.sqrt())
@@ -22666,7 +24498,7 @@ fn evaluate_nmos_level1(
             gm: 0.0,
             gds: 0.0,
             gmb: 0.0,
-            cgs: cgs_overlap + cgs_intrinsic,
+            cgs: cgs_overlap + channel_capacitance,
             cgd: cgd_overlap,
             cgb: cgb_overlap,
             cbs: cbs_bulk,
@@ -22688,7 +24520,7 @@ fn evaluate_nmos_level1(
             gm,
             gds: beta * (overdrive - vds) * modulation + beta * channel * params.lambda,
             gmb: gm * body_factor,
-            cgs: cgs_overlap + cgs_intrinsic / 2.0,
+            cgs: cgs_overlap + channel_capacitance / 2.0,
             cgd: cgd_overlap,
             cgb: cgb_overlap,
             cbs: cbs_bulk,
@@ -22703,7 +24535,7 @@ fn evaluate_nmos_level1(
         gm,
         gds: 0.5 * beta * overdrive * overdrive * params.lambda,
         gmb: gm * body_factor,
-        cgs: cgs_overlap + (2.0 / 3.0) * cgs_intrinsic,
+        cgs: cgs_overlap + (2.0 / 3.0) * channel_capacitance,
         cgd: cgd_overlap,
         cgb: cgb_overlap,
         cbs: cbs_bulk,
@@ -22722,9 +24554,11 @@ fn stamp_mosfet_small_signal(
     operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_mosfet(mosfet)?;
-    let drain = node_index(node_indices, &mosfet.drain);
+    let intrinsic_drain = mosfet_intrinsic_drain_node(mosfet);
+    let intrinsic_source = mosfet_intrinsic_source_node(mosfet);
+    let drain = node_index(node_indices, &intrinsic_drain);
     let gate = node_index(node_indices, &mosfet.gate);
-    let source = node_index(node_indices, &mosfet.source);
+    let source = node_index(node_indices, &intrinsic_source);
     let body = node_index(node_indices, &mosfet.body);
     let drain_voltage = vector_voltage(operating_point, drain);
     let gate_voltage = vector_voltage(operating_point, gate);
@@ -22734,9 +24568,41 @@ fn stamp_mosfet_small_signal(
     let vds = drain_voltage - source_voltage;
     let vbs = body_voltage - source_voltage;
     let result = evaluate_mosfet_level1(mosfet, vgs, vds, vbs);
+    let (_, source_bulk_conductance) = mosfet_bulk_junction_current_conductance(
+        mosfet,
+        source_voltage,
+        body_voltage,
+        mosfet.params.source_area,
+    );
+    let (_, drain_bulk_conductance) = mosfet_bulk_junction_current_conductance(
+        mosfet,
+        drain_voltage,
+        body_voltage,
+        mosfet.params.drain_area,
+    );
     stamp_conductance(matrix, drain, source, result.gds);
+    stamp_conductance(matrix, body, source, source_bulk_conductance);
+    stamp_conductance(matrix, body, drain, drain_bulk_conductance);
     stamp_transconductance(matrix, drain, source, gate, source, result.gm);
     stamp_transconductance(matrix, drain, source, body, source, result.gmb);
+    let drain_resistance = mosfet_drain_resistance(mosfet);
+    if drain_resistance > 0.0 {
+        stamp_conductance(
+            matrix,
+            node_index(node_indices, &mosfet.drain),
+            drain,
+            1.0 / drain_resistance,
+        );
+    }
+    let source_resistance = mosfet_source_resistance(mosfet);
+    if source_resistance > 0.0 {
+        stamp_conductance(
+            matrix,
+            node_index(node_indices, &mosfet.source),
+            source,
+            1.0 / source_resistance,
+        );
+    }
     Ok(())
 }
 
@@ -22747,9 +24613,11 @@ fn stamp_jfet_small_signal(
     operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_jfet(jfet)?;
-    let drain = node_index(node_indices, &jfet.drain);
+    let intrinsic_drain = jfet_intrinsic_drain_node(jfet);
+    let intrinsic_source = jfet_intrinsic_source_node(jfet);
+    let drain = node_index(node_indices, &intrinsic_drain);
     let gate = node_index(node_indices, &jfet.gate);
-    let source = node_index(node_indices, &jfet.source);
+    let source = node_index(node_indices, &intrinsic_source);
     let drain_voltage = vector_voltage(operating_point, drain);
     let gate_voltage = vector_voltage(operating_point, gate);
     let source_voltage = vector_voltage(operating_point, source);
@@ -22758,8 +24626,30 @@ fn stamp_jfet_small_signal(
         gate_voltage - source_voltage,
         drain_voltage - source_voltage,
     );
+    let (_, gate_source_conductance) =
+        jfet_gate_junction_current_conductance(jfet, gate_voltage - source_voltage);
+    let (_, gate_drain_conductance) =
+        jfet_gate_junction_current_conductance(jfet, gate_voltage - drain_voltage);
     stamp_conductance(matrix, drain, source, result.gds);
+    stamp_conductance(matrix, gate, source, gate_source_conductance);
+    stamp_conductance(matrix, gate, drain, gate_drain_conductance);
     stamp_transconductance(matrix, drain, source, gate, source, result.gm);
+    if jfet.drain_resistance > 0.0 {
+        stamp_conductance(
+            matrix,
+            node_index(node_indices, &jfet.drain),
+            drain,
+            1.0 / jfet.drain_resistance,
+        );
+    }
+    if jfet.source_resistance > 0.0 {
+        stamp_conductance(
+            matrix,
+            node_index(node_indices, &jfet.source),
+            source,
+            1.0 / jfet.source_resistance,
+        );
+    }
     Ok(())
 }
 
@@ -22771,9 +24661,11 @@ fn stamp_ac_mosfet_small_signal(
     omega: f64,
 ) -> Result<(), SpiceError> {
     validate_mosfet(mosfet)?;
-    let drain = node_index(node_indices, &mosfet.drain);
+    let intrinsic_drain = mosfet_intrinsic_drain_node(mosfet);
+    let intrinsic_source = mosfet_intrinsic_source_node(mosfet);
+    let drain = node_index(node_indices, &intrinsic_drain);
     let gate = node_index(node_indices, &mosfet.gate);
-    let source = node_index(node_indices, &mosfet.source);
+    let source = node_index(node_indices, &intrinsic_source);
     let body = node_index(node_indices, &mosfet.body);
     let drain_voltage = vector_voltage(operating_point, drain);
     let gate_voltage = vector_voltage(operating_point, gate);
@@ -22783,12 +24675,34 @@ fn stamp_ac_mosfet_small_signal(
     let vds = drain_voltage - source_voltage;
     let vbs = body_voltage - source_voltage;
     let result = evaluate_mosfet_level1(mosfet, vgs, vds, vbs);
+    let (_, source_bulk_conductance) = mosfet_bulk_junction_current_conductance(
+        mosfet,
+        source_voltage,
+        body_voltage,
+        mosfet.params.source_area,
+    );
+    let (_, drain_bulk_conductance) = mosfet_bulk_junction_current_conductance(
+        mosfet,
+        drain_voltage,
+        body_voltage,
+        mosfet.params.drain_area,
+    );
     stamp_complex_conductance(matrix, drain, source, Complex::new(result.gds, 0.0));
     stamp_complex_conductance(matrix, gate, source, Complex::new(0.0, omega * result.cgs));
     stamp_complex_conductance(matrix, gate, drain, Complex::new(0.0, omega * result.cgd));
     stamp_complex_conductance(matrix, gate, body, Complex::new(0.0, omega * result.cgb));
-    stamp_complex_conductance(matrix, body, source, Complex::new(0.0, omega * result.cbs));
-    stamp_complex_conductance(matrix, body, drain, Complex::new(0.0, omega * result.cbd));
+    stamp_complex_conductance(
+        matrix,
+        body,
+        source,
+        Complex::new(source_bulk_conductance, omega * result.cbs),
+    );
+    stamp_complex_conductance(
+        matrix,
+        body,
+        drain,
+        Complex::new(drain_bulk_conductance, omega * result.cbd),
+    );
     stamp_complex_transconductance(
         matrix,
         drain,
@@ -22805,6 +24719,24 @@ fn stamp_ac_mosfet_small_signal(
         source,
         Complex::new(result.gmb, 0.0),
     );
+    let drain_resistance = mosfet_drain_resistance(mosfet);
+    if drain_resistance > 0.0 {
+        stamp_complex_conductance(
+            matrix,
+            node_index(node_indices, &mosfet.drain),
+            drain,
+            Complex::new(1.0 / drain_resistance, 0.0),
+        );
+    }
+    let source_resistance = mosfet_source_resistance(mosfet);
+    if source_resistance > 0.0 {
+        stamp_complex_conductance(
+            matrix,
+            node_index(node_indices, &mosfet.source),
+            source,
+            Complex::new(1.0 / source_resistance, 0.0),
+        );
+    }
     Ok(())
 }
 
@@ -22816,9 +24748,11 @@ fn stamp_ac_jfet_small_signal(
     omega: f64,
 ) -> Result<(), SpiceError> {
     validate_jfet(jfet)?;
-    let drain = node_index(node_indices, &jfet.drain);
+    let intrinsic_drain = jfet_intrinsic_drain_node(jfet);
+    let intrinsic_source = jfet_intrinsic_source_node(jfet);
+    let drain = node_index(node_indices, &intrinsic_drain);
     let gate = node_index(node_indices, &jfet.gate);
-    let source = node_index(node_indices, &jfet.source);
+    let source = node_index(node_indices, &intrinsic_source);
     let drain_voltage = vector_voltage(operating_point, drain);
     let gate_voltage = vector_voltage(operating_point, gate);
     let source_voltage = vector_voltage(operating_point, source);
@@ -22827,18 +24761,32 @@ fn stamp_ac_jfet_small_signal(
         gate_voltage - source_voltage,
         drain_voltage - source_voltage,
     );
+    let gate_source_capacitance = jfet_charge_dynamic_capacitance(
+        jfet,
+        jfet.gate_source_capacitance,
+        gate_voltage - source_voltage,
+    );
+    let gate_drain_capacitance = jfet_charge_dynamic_capacitance(
+        jfet,
+        jfet.gate_drain_capacitance,
+        gate_voltage - drain_voltage,
+    );
     stamp_complex_conductance(matrix, drain, source, Complex::new(result.gds, 0.0));
+    let (_, gate_source_conductance) =
+        jfet_gate_junction_current_conductance(jfet, gate_voltage - source_voltage);
+    let (_, gate_drain_conductance) =
+        jfet_gate_junction_current_conductance(jfet, gate_voltage - drain_voltage);
     stamp_complex_conductance(
         matrix,
         gate,
         source,
-        Complex::new(0.0, omega * jfet.gate_source_capacitance),
+        Complex::new(gate_source_conductance, omega * gate_source_capacitance),
     );
     stamp_complex_conductance(
         matrix,
         gate,
         drain,
-        Complex::new(0.0, omega * jfet.gate_drain_capacitance),
+        Complex::new(gate_drain_conductance, omega * gate_drain_capacitance),
     );
     stamp_complex_transconductance(
         matrix,
@@ -22848,6 +24796,22 @@ fn stamp_ac_jfet_small_signal(
         source,
         Complex::new(result.gm, 0.0),
     );
+    if jfet.drain_resistance > 0.0 {
+        stamp_complex_conductance(
+            matrix,
+            node_index(node_indices, &jfet.drain),
+            drain,
+            Complex::new(1.0 / jfet.drain_resistance, 0.0),
+        );
+    }
+    if jfet.source_resistance > 0.0 {
+        stamp_complex_conductance(
+            matrix,
+            node_index(node_indices, &jfet.source),
+            source,
+            Complex::new(1.0 / jfet.source_resistance, 0.0),
+        );
+    }
     Ok(())
 }
 
@@ -22915,19 +24879,29 @@ fn diode_depletion_capacitance(diode: &Diode, voltage: f64) -> f64 {
 }
 
 fn diode_charge_voltage(diode: &Diode, node_voltages: &BTreeMap<String, f64>) -> f64 {
-    voltage_at(node_voltages, &diode.anode) - voltage_at(node_voltages, &diode.cathode)
+    voltage_at(node_voltages, &diode_intrinsic_anode_node(diode))
+        - voltage_at(node_voltages, &diode.cathode)
+}
+
+fn diode_intrinsic_anode_node(diode: &Diode) -> String {
+    if diode.series_resistance == 0.0 {
+        diode.anode.clone()
+    } else {
+        format!("_D_{}_anode", diode.name)
+    }
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 enum BjtChargeStateKind {
     BaseEmitter,
     BaseCollector,
+    ExternalBaseCollector,
 }
 
-struct BjtChargeStateSpec<'a> {
+struct BjtChargeStateSpec {
     name: String,
-    positive: &'a str,
-    negative: &'a str,
+    positive: String,
+    negative: String,
     kind: BjtChargeStateKind,
 }
 
@@ -22939,29 +24913,136 @@ fn bjt_base_collector_charge_state_name(bjt: &Bjt) -> String {
     format!("_Q_{}_bc_charge", bjt.name)
 }
 
-fn bjt_junction_transconductance(bjt: &Bjt, voltage: f64) -> f64 {
-    bjt.saturation_current / bjt.thermal_voltage
-        * (voltage / bjt.thermal_voltage).clamp(-40.0, 40.0).exp()
+fn bjt_external_base_collector_charge_state_name(bjt: &Bjt) -> String {
+    format!("_Q_{}_bx_charge", bjt.name)
 }
 
-fn bjt_charge_dynamic_capacitance(bjt: &Bjt, kind: BjtChargeStateKind, voltage: f64) -> f64 {
-    let conductance = bjt_junction_transconductance(bjt, voltage);
+fn bjt_intrinsic_emitter_node(bjt: &Bjt) -> String {
+    if bjt.emitter_resistance == 0.0 {
+        bjt.emitter.clone()
+    } else {
+        format!("__spice_{}_emitter", bjt.name)
+    }
+}
+
+fn bjt_intrinsic_collector_node(bjt: &Bjt) -> String {
+    if bjt.collector_resistance == 0.0 {
+        bjt.collector.clone()
+    } else {
+        format!("__spice_{}_collector", bjt.name)
+    }
+}
+
+fn bjt_intrinsic_base_node(bjt: &Bjt) -> String {
+    if bjt.base_resistance == 0.0 {
+        bjt.base.clone()
+    } else {
+        format!("__spice_{}_base", bjt.name)
+    }
+}
+
+fn bjt_junction_transconductance(bjt: &Bjt, voltage: f64, emission_coefficient: f64) -> f64 {
+    let effective_thermal_voltage = bjt.thermal_voltage * emission_coefficient;
+    bjt.saturation_current / effective_thermal_voltage
+        * (voltage / effective_thermal_voltage)
+            .clamp(-40.0, 40.0)
+            .exp()
+}
+
+fn bjt_forward_transit_time_scale(bjt: &Bjt, voltage: f64, reverse_junction_voltage: f64) -> f64 {
+    let effective_thermal_voltage = bjt.thermal_voltage * bjt.forward_emission_coefficient;
+    let forward_current = (bjt.saturation_current
+        * ((voltage / effective_thermal_voltage)
+            .clamp(-40.0, 40.0)
+            .exp()
+            - 1.0))
+        .max(0.0);
+    let current_factor = if bjt.forward_transit_time_current == 0.0 {
+        1.0
+    } else {
+        let ratio = forward_current / (forward_current + bjt.forward_transit_time_current);
+        ratio * ratio
+    };
+    let voltage_factor = if bjt.forward_transit_time_voltage == 0.0 {
+        1.0
+    } else {
+        (reverse_junction_voltage / (1.44 * bjt.forward_transit_time_voltage))
+            .clamp(-40.0, 40.0)
+            .exp()
+    };
+    1.0 + bjt.forward_transit_time_bias_coefficient * current_factor * voltage_factor
+}
+
+fn bjt_charge_dynamic_capacitance(
+    bjt: &Bjt,
+    kind: BjtChargeStateKind,
+    voltage: f64,
+    reverse_junction_voltage: f64,
+) -> f64 {
     match kind {
         BjtChargeStateKind::BaseEmitter => {
-            bjt.base_emitter_capacitance + bjt.forward_transit_time * conductance
+            let conductance =
+                bjt_junction_transconductance(bjt, voltage, bjt.forward_emission_coefficient);
+            bjt_base_emitter_depletion_capacitance(bjt, voltage)
+                + bjt.forward_transit_time
+                    * bjt_forward_transit_time_scale(bjt, voltage, reverse_junction_voltage)
+                    * conductance
         }
         BjtChargeStateKind::BaseCollector => {
-            bjt.base_collector_capacitance + bjt.reverse_transit_time * conductance
+            let conductance =
+                bjt_junction_transconductance(bjt, voltage, bjt.reverse_emission_coefficient);
+            bjt.base_collector_capacitance_fraction
+                * bjt_base_collector_depletion_capacitance(bjt, voltage)
+                + bjt.reverse_transit_time * conductance
+        }
+        BjtChargeStateKind::ExternalBaseCollector => {
+            (1.0 - bjt.base_collector_capacitance_fraction)
+                * bjt_base_collector_depletion_capacitance(bjt, voltage)
         }
     }
 }
 
-fn bjt_charge_state_specs(bjt: &Bjt) -> Vec<BjtChargeStateSpec<'_>> {
+fn bjt_base_emitter_depletion_capacitance(bjt: &Bjt, voltage: f64) -> f64 {
+    if bjt.base_emitter_capacitance <= 0.0 || bjt.base_emitter_grading_coefficient == 0.0 {
+        return bjt.base_emitter_capacitance;
+    }
+    let normalized_voltage = voltage / bjt.base_emitter_junction_potential;
+    let coefficient = bjt.forward_bias_depletion_coefficient;
+    if normalized_voltage < coefficient {
+        return bjt.base_emitter_capacitance
+            / (1.0 - normalized_voltage).powf(bjt.base_emitter_grading_coefficient);
+    }
+    let transition_scale = (1.0_f64 - coefficient).powf(1.0 + bjt.base_emitter_grading_coefficient);
+    let continuation = 1.0 - coefficient * (1.0 + bjt.base_emitter_grading_coefficient)
+        + bjt.base_emitter_grading_coefficient * normalized_voltage;
+    bjt.base_emitter_capacitance * continuation / transition_scale
+}
+
+fn bjt_base_collector_depletion_capacitance(bjt: &Bjt, voltage: f64) -> f64 {
+    if bjt.base_collector_capacitance <= 0.0 || bjt.base_collector_grading_coefficient == 0.0 {
+        return bjt.base_collector_capacitance;
+    }
+    let normalized_voltage = voltage / bjt.base_collector_junction_potential;
+    let coefficient = bjt.forward_bias_depletion_coefficient;
+    if normalized_voltage < coefficient {
+        return bjt.base_collector_capacitance
+            / (1.0 - normalized_voltage).powf(bjt.base_collector_grading_coefficient);
+    }
+    let transition_scale =
+        (1.0_f64 - coefficient).powf(1.0 + bjt.base_collector_grading_coefficient);
+    let continuation = 1.0 - coefficient * (1.0 + bjt.base_collector_grading_coefficient)
+        + bjt.base_collector_grading_coefficient * normalized_voltage;
+    bjt.base_collector_capacitance * continuation / transition_scale
+}
+
+fn bjt_charge_state_specs(bjt: &Bjt) -> Vec<BjtChargeStateSpec> {
     let mut specs = Vec::new();
+    let base = bjt_intrinsic_base_node(bjt);
     if bjt.base_emitter_capacitance > 0.0 || bjt.forward_transit_time > 0.0 {
+        let emitter = bjt_intrinsic_emitter_node(bjt);
         let (positive, negative) = match bjt.polarity {
-            BjtPolarity::Npn => (bjt.base.as_str(), bjt.emitter.as_str()),
-            BjtPolarity::Pnp => (bjt.emitter.as_str(), bjt.base.as_str()),
+            BjtPolarity::Npn => (base.clone(), emitter),
+            BjtPolarity::Pnp => (emitter, base.clone()),
         };
         specs.push(BjtChargeStateSpec {
             name: bjt_base_emitter_charge_state_name(bjt),
@@ -22970,10 +25051,16 @@ fn bjt_charge_state_specs(bjt: &Bjt) -> Vec<BjtChargeStateSpec<'_>> {
             kind: BjtChargeStateKind::BaseEmitter,
         });
     }
-    if bjt.base_collector_capacitance > 0.0 || bjt.reverse_transit_time > 0.0 {
+    if bjt.base_collector_capacitance > 0.0
+        || bjt.reverse_transit_time > 0.0
+        || (bjt.forward_transit_time > 0.0
+            && bjt.forward_transit_time_bias_coefficient > 0.0
+            && bjt.forward_transit_time_voltage > 0.0)
+    {
+        let collector = bjt_intrinsic_collector_node(bjt);
         let (positive, negative) = match bjt.polarity {
-            BjtPolarity::Npn => (bjt.base.as_str(), bjt.collector.as_str()),
-            BjtPolarity::Pnp => (bjt.collector.as_str(), bjt.base.as_str()),
+            BjtPolarity::Npn => (base.clone(), collector),
+            BjtPolarity::Pnp => (collector, base),
         };
         specs.push(BjtChargeStateSpec {
             name: bjt_base_collector_charge_state_name(bjt),
@@ -22982,20 +25069,33 @@ fn bjt_charge_state_specs(bjt: &Bjt) -> Vec<BjtChargeStateSpec<'_>> {
             kind: BjtChargeStateKind::BaseCollector,
         });
     }
+    if bjt.base_collector_capacitance > 0.0 && bjt.base_collector_capacitance_fraction < 1.0 {
+        let collector = bjt_intrinsic_collector_node(bjt);
+        let (positive, negative) = match bjt.polarity {
+            BjtPolarity::Npn => (bjt.base.clone(), collector),
+            BjtPolarity::Pnp => (collector, bjt.base.clone()),
+        };
+        specs.push(BjtChargeStateSpec {
+            name: bjt_external_base_collector_charge_state_name(bjt),
+            positive,
+            negative,
+            kind: BjtChargeStateKind::ExternalBaseCollector,
+        });
+    }
     specs
 }
 
 fn bjt_charge_state_voltage(
-    spec: &BjtChargeStateSpec<'_>,
+    spec: &BjtChargeStateSpec,
     node_voltages: &BTreeMap<String, f64>,
 ) -> f64 {
-    voltage_at(node_voltages, spec.positive) - voltage_at(node_voltages, spec.negative)
+    voltage_at(node_voltages, &spec.positive) - voltage_at(node_voltages, &spec.negative)
 }
 
-struct JfetChargeStateSpec<'a> {
+struct JfetChargeStateSpec {
     name: String,
-    positive: &'a str,
-    negative: &'a str,
+    positive: String,
+    negative: String,
     capacitance: f64,
 }
 
@@ -23007,21 +25107,21 @@ fn jfet_gate_drain_charge_state_name(jfet: &Jfet) -> String {
     format!("_J_{}_gd_charge", jfet.name)
 }
 
-fn jfet_charge_state_specs(jfet: &Jfet) -> Vec<JfetChargeStateSpec<'_>> {
+fn jfet_charge_state_specs(jfet: &Jfet) -> Vec<JfetChargeStateSpec> {
     let mut specs = Vec::new();
     if jfet.gate_source_capacitance > 0.0 {
         specs.push(JfetChargeStateSpec {
             name: jfet_gate_source_charge_state_name(jfet),
-            positive: jfet.gate.as_str(),
-            negative: jfet.source.as_str(),
+            positive: jfet.gate.clone(),
+            negative: jfet_intrinsic_source_node(jfet),
             capacitance: jfet.gate_source_capacitance,
         });
     }
     if jfet.gate_drain_capacitance > 0.0 {
         specs.push(JfetChargeStateSpec {
             name: jfet_gate_drain_charge_state_name(jfet),
-            positive: jfet.gate.as_str(),
-            negative: jfet.drain.as_str(),
+            positive: jfet.gate.clone(),
+            negative: jfet_intrinsic_drain_node(jfet),
             capacitance: jfet.gate_drain_capacitance,
         });
     }
@@ -23029,10 +25129,81 @@ fn jfet_charge_state_specs(jfet: &Jfet) -> Vec<JfetChargeStateSpec<'_>> {
 }
 
 fn jfet_charge_state_voltage(
-    spec: &JfetChargeStateSpec<'_>,
+    spec: &JfetChargeStateSpec,
     node_voltages: &BTreeMap<String, f64>,
 ) -> f64 {
-    voltage_at(node_voltages, spec.positive) - voltage_at(node_voltages, spec.negative)
+    voltage_at(node_voltages, &spec.positive) - voltage_at(node_voltages, &spec.negative)
+}
+
+fn jfet_intrinsic_drain_node(jfet: &Jfet) -> String {
+    if jfet.drain_resistance == 0.0 {
+        jfet.drain.clone()
+    } else {
+        format!("__spice_{}_drain", jfet.name)
+    }
+}
+
+fn jfet_intrinsic_source_node(jfet: &Jfet) -> String {
+    if jfet.source_resistance == 0.0 {
+        jfet.source.clone()
+    } else {
+        format!("__spice_{}_source", jfet.name)
+    }
+}
+
+fn mosfet_intrinsic_drain_node(mosfet: &Mosfet) -> String {
+    let drain_resistance = mosfet_drain_resistance(mosfet);
+    if !drain_resistance.is_finite() || drain_resistance <= 0.0 {
+        mosfet.drain.clone()
+    } else {
+        format!("__spice_{}_drain", mosfet.name)
+    }
+}
+
+fn mosfet_intrinsic_source_node(mosfet: &Mosfet) -> String {
+    let source_resistance = mosfet_source_resistance(mosfet);
+    if !source_resistance.is_finite() || source_resistance <= 0.0 {
+        mosfet.source.clone()
+    } else {
+        format!("__spice_{}_source", mosfet.name)
+    }
+}
+
+fn mosfet_drain_resistance(mosfet: &Mosfet) -> f64 {
+    if mosfet.params.drain_resistance > 0.0 {
+        mosfet.params.drain_resistance
+    } else {
+        mosfet.params.sheet_resistance * mosfet.params.drain_squares
+    }
+}
+
+fn mosfet_source_resistance(mosfet: &Mosfet) -> f64 {
+    if mosfet.params.source_resistance > 0.0 {
+        mosfet.params.source_resistance
+    } else {
+        mosfet.params.sheet_resistance * mosfet.params.source_squares
+    }
+}
+
+fn jfet_charge_dynamic_capacitance(
+    jfet: &Jfet,
+    zero_bias_capacitance: f64,
+    junction_voltage: f64,
+) -> f64 {
+    const GRADING_COEFFICIENT: f64 = 0.5;
+    let oriented_voltage = match jfet.polarity {
+        JfetPolarity::Njf => junction_voltage,
+        JfetPolarity::Pjf => -junction_voltage,
+    };
+    let normalized_voltage = oriented_voltage / jfet.junction_potential;
+    if normalized_voltage < jfet.forward_bias_depletion_coefficient {
+        return zero_bias_capacitance / (1.0 - normalized_voltage).powf(GRADING_COEFFICIENT);
+    }
+    let transition_scale =
+        (1.0 - jfet.forward_bias_depletion_coefficient).powf(1.0 + GRADING_COEFFICIENT);
+    let continuation = 1.0 - jfet.forward_bias_depletion_coefficient * (1.0 + GRADING_COEFFICIENT)
+        + GRADING_COEFFICIENT * normalized_voltage;
+    zero_bias_capacitance * continuation / transition_scale
 }
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
@@ -23042,10 +25213,10 @@ enum MosfetChargeStateKind {
     DrainBody,
 }
 
-struct MosfetChargeStateSpec<'a> {
+struct MosfetChargeStateSpec {
     name: String,
-    positive: &'a str,
-    negative: &'a str,
+    positive: String,
+    negative: String,
     capacitance: f64,
     kind: MosfetChargeStateKind,
 }
@@ -23070,19 +25241,23 @@ fn mosfet_drain_body_charge_state_name(mosfet: &Mosfet) -> String {
     format!("_M_{}_db_charge", mosfet.name)
 }
 
-fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec<'_>> {
+fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec> {
     let mut specs = Vec::new();
     let params = mosfet.params;
     let gate_source_capacitance = params.gate_source_overlap_capacitance * params.w;
     let gate_drain_capacitance = params.gate_drain_overlap_capacitance * params.w;
     let gate_body_capacitance = params.gate_bulk_overlap_capacitance * params.l;
-    let source_body_capacitance = params.source_bulk_capacitance;
-    let drain_body_capacitance = params.drain_bulk_capacitance;
+    let source_body_capacitance = params.source_bulk_capacitance
+        + params.bottom_junction_capacitance * params.source_area
+        + params.sidewall_junction_capacitance * params.source_perimeter;
+    let drain_body_capacitance = params.drain_bulk_capacitance
+        + params.bottom_junction_capacitance * params.drain_area
+        + params.sidewall_junction_capacitance * params.drain_perimeter;
     if gate_source_capacitance > 0.0 {
         specs.push(MosfetChargeStateSpec {
             name: mosfet_gate_source_charge_state_name(mosfet),
-            positive: mosfet.gate.as_str(),
-            negative: mosfet.source.as_str(),
+            positive: mosfet.gate.clone(),
+            negative: mosfet_intrinsic_source_node(mosfet),
             capacitance: gate_source_capacitance,
             kind: MosfetChargeStateKind::GateOverlap,
         });
@@ -23090,8 +25265,8 @@ fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec<'_>> 
     if gate_drain_capacitance > 0.0 {
         specs.push(MosfetChargeStateSpec {
             name: mosfet_gate_drain_charge_state_name(mosfet),
-            positive: mosfet.gate.as_str(),
-            negative: mosfet.drain.as_str(),
+            positive: mosfet.gate.clone(),
+            negative: mosfet_intrinsic_drain_node(mosfet),
             capacitance: gate_drain_capacitance,
             kind: MosfetChargeStateKind::GateOverlap,
         });
@@ -23099,8 +25274,8 @@ fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec<'_>> 
     if gate_body_capacitance > 0.0 {
         specs.push(MosfetChargeStateSpec {
             name: mosfet_gate_body_charge_state_name(mosfet),
-            positive: mosfet.gate.as_str(),
-            negative: mosfet.body.as_str(),
+            positive: mosfet.gate.clone(),
+            negative: mosfet.body.clone(),
             capacitance: gate_body_capacitance,
             kind: MosfetChargeStateKind::GateOverlap,
         });
@@ -23108,8 +25283,8 @@ fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec<'_>> 
     if source_body_capacitance > 0.0 {
         specs.push(MosfetChargeStateSpec {
             name: mosfet_source_body_charge_state_name(mosfet),
-            positive: mosfet.source.as_str(),
-            negative: mosfet.body.as_str(),
+            positive: mosfet_intrinsic_source_node(mosfet),
+            negative: mosfet.body.clone(),
             capacitance: source_body_capacitance,
             kind: MosfetChargeStateKind::SourceBody,
         });
@@ -23117,8 +25292,8 @@ fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec<'_>> 
     if drain_body_capacitance > 0.0 {
         specs.push(MosfetChargeStateSpec {
             name: mosfet_drain_body_charge_state_name(mosfet),
-            positive: mosfet.drain.as_str(),
-            negative: mosfet.body.as_str(),
+            positive: mosfet_intrinsic_drain_node(mosfet),
+            negative: mosfet.body.clone(),
             capacitance: drain_body_capacitance,
             kind: MosfetChargeStateKind::DrainBody,
         });
@@ -23127,15 +25302,15 @@ fn mosfet_charge_state_specs(mosfet: &Mosfet) -> Vec<MosfetChargeStateSpec<'_>> 
 }
 
 fn mosfet_charge_state_voltage(
-    spec: &MosfetChargeStateSpec<'_>,
+    spec: &MosfetChargeStateSpec,
     node_voltages: &BTreeMap<String, f64>,
 ) -> f64 {
-    voltage_at(node_voltages, spec.positive) - voltage_at(node_voltages, spec.negative)
+    voltage_at(node_voltages, &spec.positive) - voltage_at(node_voltages, &spec.negative)
 }
 
 fn mosfet_charge_dynamic_capacitance(
     mosfet: &Mosfet,
-    spec: &MosfetChargeStateSpec<'_>,
+    spec: &MosfetChargeStateSpec,
     state_voltage: f64,
 ) -> f64 {
     if !matches!(
@@ -23148,15 +25323,53 @@ fn mosfet_charge_dynamic_capacitance(
         MosfetType::Pmos => state_voltage,
         MosfetType::Nmos => -state_voltage,
     };
+    let (bottom_capacitance, sidewall_capacitance) = match spec.kind {
+        MosfetChargeStateKind::SourceBody => (
+            mosfet.params.source_bulk_capacitance
+                + mosfet.params.bottom_junction_capacitance * mosfet.params.source_area,
+            mosfet.params.sidewall_junction_capacitance * mosfet.params.source_perimeter,
+        ),
+        MosfetChargeStateKind::DrainBody => (
+            mosfet.params.drain_bulk_capacitance
+                + mosfet.params.bottom_junction_capacitance * mosfet.params.drain_area,
+            mosfet.params.sidewall_junction_capacitance * mosfet.params.drain_perimeter,
+        ),
+        _ => unreachable!(),
+    };
     mosfet_bulk_junction_capacitance(
-        spec.capacitance,
+        bottom_capacitance,
         junction_voltage,
         mosfet.params.bulk_junction_potential,
         mosfet.params.bulk_junction_grading_coefficient,
+        mosfet.params.forward_bias_depletion_coefficient,
+    ) + mosfet_bulk_junction_capacitance(
+        sidewall_capacitance,
+        junction_voltage,
+        mosfet.params.bulk_junction_potential,
+        mosfet.params.sidewall_junction_grading_coefficient,
+        mosfet.params.forward_bias_depletion_coefficient,
     )
 }
 
 fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
+    if !diode.flicker_noise_exponent.is_finite() || diode.flicker_noise_exponent < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "flicker-noise exponent must be finite and non-negative".to_string(),
+        });
+    }
+    if !diode.flicker_noise_coefficient.is_finite() || diode.flicker_noise_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "flicker-noise coefficient must be finite and non-negative".to_string(),
+        });
+    }
+    if !diode.series_resistance.is_finite() || diode.series_resistance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "series resistance must be finite and non-negative".to_string(),
+        });
+    }
     if !diode.saturation_current.is_finite() || diode.saturation_current <= 0.0 {
         return Err(SpiceError::InvalidElement {
             name: diode.name.clone(),
@@ -23250,6 +25463,12 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
             reason: "forward beta must be finite and positive".to_string(),
         });
     }
+    if bjt.reverse_beta.is_nan() || bjt.reverse_beta <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "reverse beta must be positive".to_string(),
+        });
+    }
     if !bjt.thermal_voltage.is_finite() || bjt.thermal_voltage <= 0.0 {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
@@ -23286,6 +25505,12 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
             reason: "saturation-current temperature exponent must be finite".to_string(),
         });
     }
+    if !bjt.forward_beta_temperature_exponent.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "beta temperature exponent must be finite".to_string(),
+        });
+    }
     if !bjt.energy_gap_electron_volts.is_finite() || bjt.energy_gap_electron_volts <= 0.0 {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
@@ -23296,6 +25521,200 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "forward Early voltage must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.reverse_early_voltage.is_finite() || bjt.reverse_early_voltage < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "reverse Early voltage must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.forward_beta_rolloff_current.is_finite() || bjt.forward_beta_rolloff_current < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "forward beta roll-off current must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.reverse_beta_rolloff_current.is_finite() || bjt.reverse_beta_rolloff_current < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "reverse beta roll-off current must be finite and non-negative".to_string(),
+        });
+    }
+    if let Some(nominal_temperature_kelvin) = bjt.nominal_temperature_kelvin {
+        if !nominal_temperature_kelvin.is_finite() || nominal_temperature_kelvin <= 0.0 {
+            return Err(SpiceError::InvalidElement {
+                name: bjt.name.clone(),
+                reason: "nominal temperature must be finite and positive".to_string(),
+            });
+        }
+    }
+    if !bjt.flicker_noise_coefficient.is_finite() || bjt.flicker_noise_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "flicker noise coefficient must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.flicker_noise_exponent.is_finite() || bjt.flicker_noise_exponent < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "flicker noise exponent must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.forward_excess_phase_degrees.is_finite() || bjt.forward_excess_phase_degrees < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "forward excess phase must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.forward_transit_time_bias_coefficient.is_finite()
+        || bjt.forward_transit_time_bias_coefficient < 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "forward transit-time bias coefficient must be finite and non-negative"
+                .to_string(),
+        });
+    }
+    if !bjt.forward_transit_time_current.is_finite() || bjt.forward_transit_time_current < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "forward transit-time current must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.forward_transit_time_voltage.is_finite() || bjt.forward_transit_time_voltage < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "forward transit-time voltage must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.emitter_resistance.is_finite() || bjt.emitter_resistance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "emitter resistance must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.collector_resistance.is_finite() || bjt.collector_resistance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "collector resistance must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.base_resistance.is_finite() || bjt.base_resistance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base resistance must be finite and non-negative".to_string(),
+        });
+    }
+    if bjt
+        .minimum_base_resistance
+        .is_some_and(|resistance| !resistance.is_finite() || resistance < 0.0)
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "minimum base resistance must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.base_resistance_half_current.is_finite() || bjt.base_resistance_half_current < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-resistance half-current must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.base_collector_capacitance_fraction.is_finite()
+        || !(0.0..=1.0).contains(&bjt.base_collector_capacitance_fraction)
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-collector capacitance fraction must be between zero and one".to_string(),
+        });
+    }
+    if !bjt.base_emitter_leakage_saturation_current.is_finite()
+        || bjt.base_emitter_leakage_saturation_current < 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-emitter leakage saturation current must be finite and non-negative"
+                .to_string(),
+        });
+    }
+    if !bjt.base_emitter_leakage_emission_coefficient.is_finite()
+        || bjt.base_emitter_leakage_emission_coefficient <= 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-emitter leakage emission coefficient must be finite and positive"
+                .to_string(),
+        });
+    }
+    if !bjt.base_collector_leakage_saturation_current.is_finite()
+        || bjt.base_collector_leakage_saturation_current < 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-collector leakage saturation current must be finite and non-negative"
+                .to_string(),
+        });
+    }
+    if !bjt.base_collector_leakage_emission_coefficient.is_finite()
+        || bjt.base_collector_leakage_emission_coefficient <= 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-collector leakage emission coefficient must be finite and positive"
+                .to_string(),
+        });
+    }
+    if !bjt.forward_emission_coefficient.is_finite() || bjt.forward_emission_coefficient <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "forward emission coefficient must be finite and positive".to_string(),
+        });
+    }
+    if !bjt.reverse_emission_coefficient.is_finite() || bjt.reverse_emission_coefficient <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "reverse emission coefficient must be finite and positive".to_string(),
+        });
+    }
+    if !bjt.base_emitter_junction_potential.is_finite()
+        || bjt.base_emitter_junction_potential <= 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-emitter junction potential must be finite and positive".to_string(),
+        });
+    }
+    if !bjt.base_emitter_grading_coefficient.is_finite()
+        || !(0.0..1.0).contains(&bjt.base_emitter_grading_coefficient)
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-emitter grading coefficient must be finite and in [0, 1)".to_string(),
+        });
+    }
+    if !bjt.base_collector_junction_potential.is_finite()
+        || bjt.base_collector_junction_potential <= 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-collector junction potential must be finite and positive".to_string(),
+        });
+    }
+    if !bjt.base_collector_grading_coefficient.is_finite()
+        || !(0.0..1.0).contains(&bjt.base_collector_grading_coefficient)
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-collector grading coefficient must be finite and in [0, 1)".to_string(),
+        });
+    }
+    if !bjt.forward_bias_depletion_coefficient.is_finite()
+        || !(0.0..1.0).contains(&bjt.forward_bias_depletion_coefficient)
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "forward-bias depletion coefficient must be finite and in [0, 1)".to_string(),
         });
     }
     Ok(())
@@ -23332,6 +25751,138 @@ fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
             reason: "gate-drain capacitance must be finite and non-negative".to_string(),
         });
     }
+    if !jfet.flicker_noise_coefficient.is_finite() || jfet.flicker_noise_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "flicker-noise coefficient must be finite and non-negative".to_string(),
+        });
+    }
+    if !jfet.flicker_noise_exponent.is_finite() || jfet.flicker_noise_exponent < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "flicker-noise exponent must be finite and non-negative".to_string(),
+        });
+    }
+    if !jfet.junction_potential.is_finite() || jfet.junction_potential <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "junction potential must be finite and positive".to_string(),
+        });
+    }
+    if !jfet.forward_bias_depletion_coefficient.is_finite()
+        || jfet.forward_bias_depletion_coefficient < 0.0
+        || jfet.forward_bias_depletion_coefficient >= 1.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "forward-bias depletion coefficient must be finite and in [0, 1)".to_string(),
+        });
+    }
+    if !jfet.gate_saturation_current.is_finite() || jfet.gate_saturation_current < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "gate saturation current must be finite and non-negative".to_string(),
+        });
+    }
+    if !jfet
+        .gate_saturation_current_temperature_exponent
+        .is_finite()
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "gate saturation-current temperature exponent must be finite".to_string(),
+        });
+    }
+    if !jfet.bandgap_voltage.is_finite() || jfet.bandgap_voltage <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "bandgap voltage must be finite and positive".to_string(),
+        });
+    }
+    if !jfet.doping_tail_parameter.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "doping-tail parameter must be finite".to_string(),
+        });
+    }
+    if !jfet.noise_equation_level.is_finite()
+        || jfet.noise_equation_level < 1.0
+        || jfet.noise_equation_level.fract() != 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "noise equation level must be a finite integer greater than or equal to 1"
+                .to_string(),
+        });
+    }
+    if !jfet.channel_noise_coefficient.is_finite() || jfet.channel_noise_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "channel noise coefficient must be finite and non-negative".to_string(),
+        });
+    }
+    let effective_threshold = match jfet.polarity {
+        JfetPolarity::Njf => jfet.threshold_voltage,
+        JfetPolarity::Pjf => -jfet.threshold_voltage,
+    };
+    if jfet.doping_tail_parameter != 1.0 && jfet.junction_potential == effective_threshold {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "junction potential minus effective threshold voltage must be non-zero when doping-tail parameter differs from 1".to_string(),
+        });
+    }
+    if !jfet.drain_resistance.is_finite() || jfet.drain_resistance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "drain resistance must be finite and non-negative".to_string(),
+        });
+    }
+    if !jfet.source_resistance.is_finite() || jfet.source_resistance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "source resistance must be finite and non-negative".to_string(),
+        });
+    }
+    if !jfet.threshold_voltage_temperature_coefficient.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "threshold-voltage temperature coefficient must be finite".to_string(),
+        });
+    }
+    if jfet
+        .nominal_temperature_kelvin
+        .is_some_and(|temperature| !temperature.is_finite() || temperature <= 0.0)
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "nominal temperature must be finite and positive".to_string(),
+        });
+    }
+    if !jfet.mobility_temperature_exponent.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "mobility temperature exponent must be finite".to_string(),
+        });
+    }
+    if jfet
+        .alternative_threshold_voltage_temperature_coefficient
+        .is_some_and(|coefficient| !coefficient.is_finite())
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "alternative threshold-voltage temperature coefficient must be finite"
+                .to_string(),
+        });
+    }
+    if jfet
+        .mobility_temperature_coefficient
+        .is_some_and(|coefficient| !coefficient.is_finite())
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "mobility temperature coefficient must be finite".to_string(),
+        });
+    }
     Ok(())
 }
 
@@ -23345,7 +25896,22 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("PHI", params.phi),
         ("W", params.w),
         ("L", params.l),
+        ("LD", params.lateral_diffusion_length),
+        ("RD", params.drain_resistance),
+        ("RS", params.source_resistance),
+        ("RSH", params.sheet_resistance),
+        ("NRD", params.drain_squares),
+        ("NRS", params.source_squares),
+        ("AD", params.drain_area),
+        ("AS", params.source_area),
+        ("PD", params.drain_perimeter),
+        ("PS", params.source_perimeter),
+        ("CJ", params.bottom_junction_capacitance),
+        ("CJSW", params.sidewall_junction_capacitance),
+        ("TOX", params.oxide_thickness),
+        ("U0", params.surface_mobility),
         ("IS", params.saturation_current),
+        ("JS", params.saturation_current_density),
         ("N_SUB", params.n_sub),
         ("T_NOM", params.t_nom),
         ("CGSO", params.gate_source_overlap_capacitance),
@@ -23355,6 +25921,10 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("CBD", params.drain_bulk_capacitance),
         ("PB", params.bulk_junction_potential),
         ("MJ", params.bulk_junction_grading_coefficient),
+        ("MJSW", params.sidewall_junction_grading_coefficient),
+        ("FC", params.forward_bias_depletion_coefficient),
+        ("KF", params.flicker_noise_coefficient),
+        ("AF", params.flicker_noise_exponent),
     ] {
         if !value.is_finite() {
             return Err(SpiceError::InvalidElement {
@@ -23375,6 +25945,92 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
             reason: "MOSFET W and L must be positive".to_string(),
         });
     }
+    if params.lateral_diffusion_length < 0.0
+        || params.l - 2.0 * params.lateral_diffusion_length <= 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET LD must be non-negative with L - 2*LD > 0".to_string(),
+        });
+    }
+    if params.drain_resistance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET RD must be non-negative".to_string(),
+        });
+    }
+    if params.source_resistance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET RS must be non-negative".to_string(),
+        });
+    }
+    if params.sheet_resistance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET RSH must be non-negative".to_string(),
+        });
+    }
+    if params.drain_squares < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET NRD must be non-negative".to_string(),
+        });
+    }
+    if params.source_squares < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET NRS must be non-negative".to_string(),
+        });
+    }
+    if params.drain_area < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET AD must be non-negative".to_string(),
+        });
+    }
+    if params.source_area < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET AS must be non-negative".to_string(),
+        });
+    }
+    if params.drain_perimeter < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET PD must be non-negative".to_string(),
+        });
+    }
+    if params.source_perimeter < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET PS must be non-negative".to_string(),
+        });
+    }
+    if params.bottom_junction_capacitance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET CJ must be non-negative".to_string(),
+        });
+    }
+    if params.sidewall_junction_capacitance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET CJSW must be non-negative".to_string(),
+        });
+    }
+    if params.oxide_thickness <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET TOX must be positive".to_string(),
+        });
+    }
+    if params.surface_mobility < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET U0 must be non-negative".to_string(),
+        });
+    }
     if params.phi <= 0.0 {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
@@ -23387,10 +26043,40 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
             reason: "MOSFET IS, N_SUB, and T_NOM must be positive".to_string(),
         });
     }
+    if params.saturation_current_density < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET JS must be non-negative".to_string(),
+        });
+    }
     if params.bulk_junction_potential <= 0.0 || params.bulk_junction_grading_coefficient < 0.0 {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "MOSFET PB must be positive and MJ must be non-negative".to_string(),
+        });
+    }
+    if params.sidewall_junction_grading_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET MJSW must be non-negative".to_string(),
+        });
+    }
+    if !(0.0..1.0).contains(&params.forward_bias_depletion_coefficient) {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET FC must be in [0, 1)".to_string(),
+        });
+    }
+    if params.flicker_noise_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET KF must be non-negative".to_string(),
+        });
+    }
+    if params.flicker_noise_exponent < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET AF must be non-negative".to_string(),
         });
     }
     if params.gate_source_overlap_capacitance < 0.0
@@ -23878,7 +26564,11 @@ fn update_capacitor_states(
     node_voltages: &BTreeMap<String, f64>,
     capacitor_states: &mut [CapacitorState],
 ) {
-    for state in capacitor_states {
+    let previous_voltages: HashMap<String, f64> = capacitor_states
+        .iter()
+        .map(|state| (state.name.clone(), state.previous_voltage))
+        .collect();
+    for state in capacitor_states.iter_mut() {
         let update = circuit.elements().iter().find_map(|element| match element {
             Element::Capacitor(capacitor) if capacitor.name == state.name => Some((
                 voltage_at(node_voltages, &capacitor.n1) - voltage_at(node_voltages, &capacitor.n2),
@@ -23892,9 +26582,18 @@ fn update_capacitor_states(
                 .into_iter()
                 .find(|spec| spec.name == state.name)
                 .map(|spec| {
+                    let reverse_junction_voltage = previous_voltages
+                        .get(&bjt_base_collector_charge_state_name(bjt))
+                        .copied()
+                        .unwrap_or(0.0);
                     (
                         bjt_charge_state_voltage(&spec, node_voltages),
-                        bjt_charge_dynamic_capacitance(bjt, spec.kind, state.previous_voltage),
+                        bjt_charge_dynamic_capacitance(
+                            bjt,
+                            spec.kind,
+                            state.previous_voltage,
+                            reverse_junction_voltage,
+                        ),
                     )
                 }),
             Element::Jfet(jfet) => jfet_charge_state_specs(jfet)
@@ -23903,7 +26602,11 @@ fn update_capacitor_states(
                 .map(|spec| {
                     (
                         jfet_charge_state_voltage(&spec, node_voltages),
-                        spec.capacitance,
+                        jfet_charge_dynamic_capacitance(
+                            jfet,
+                            spec.capacitance,
+                            state.previous_voltage,
+                        ),
                     )
                 }),
             Element::Mosfet(mosfet) => mosfet_charge_state_specs(mosfet)

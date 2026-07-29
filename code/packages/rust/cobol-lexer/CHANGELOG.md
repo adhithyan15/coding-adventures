@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.10.0 — `CONVERTING` keyword
+
+- Reserved the `CONVERTING` keyword for `INSPECT … CONVERTING from TO to`, the
+  per-character translation-table form of `INSPECT`. `TO` was already reserved (it
+  is the `ADD`/`SET`/`MOVE`/`SELECT … ASSIGN` preposition), so `CONVERTING`'s `TO`
+  needs no new token.
+- `_grammar.rs` regenerated from `cobol.tokens` via `grammar-tools compile-tokens`
+  (never hand-edited).
+
+## 0.9.0 — `INSPECT` verb keywords
+
+- Added the reserved words the `INSPECT` statement needs: `INSPECT`, `TALLYING`,
+  `REPLACING`, `LEADING`, `CHARACTERS`, `BEFORE`, `AFTER`, the new preposition
+  `FOR`, and the hyphenated `END-INSPECT`. (`ALL` and `BY` were already reserved.)
+  These let the parser accept the fuller `INSPECT` surface — `LEADING`/
+  `CHARACTERS` tallies, `BEFORE`/`AFTER` regions, and every `REPLACING` form — so
+  the reader/compiler reject the unimplemented ones with a friendly "later rung"
+  error rather than a bare parse failure.
+- `FIRST` and `INITIAL` are deliberately **not** reserved: they are only needed by
+  `REPLACING FIRST` / `BEFORE INITIAL` (both later rungs), and reserving such
+  common words would collide with existing data names (`FIRST` is a field name in
+  the runtime's group-item test). `_grammar.rs` regenerated from `cobol.tokens`
+  via `grammar-tools compile-tokens`.
+
+## 0.8.0 — `UNSTRING` verb keywords
+
+- Added the reserved words the `UNSTRING` statement needs: `UNSTRING` and the
+  hyphenated `END-UNSTRING` (`DELIMITED`, `BY`, `INTO`, `WITH`, `POINTER`, `ON`,
+  `OVERFLOW`, `NOT` were already reserved from the `STRING` cut). As with `STRING`,
+  promoting the bare word `UNSTRING` to a KEYWORD does **not** disturb the
+  string-literal token type (keyword promotion only rewrites bare `NAME` words).
+  `END-UNSTRING` works like the other hyphenated keywords (`END-STRING`,
+  `END-EVALUATE`). `_grammar.rs` regenerated from `cobol.tokens` via
+  `grammar-tools compile-tokens`.
+
 ## 0.7.0 — `STRING` verb keywords
 
 - Added the reserved words the `STRING` statement needs: `STRING`, `DELIMITED`,

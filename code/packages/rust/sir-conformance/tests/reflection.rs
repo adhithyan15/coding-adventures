@@ -184,3 +184,73 @@ fn is_a_and_case_when_match_ruby_on_every_backend() {
     }
     assert!(ran > 0, "no backend toolchain available — is_a? proved nothing");
 }
+
+/// `(ruby source, expected output)` — reflection on a RESCUED EXCEPTION.
+const EXCEPTION_CASES: &[(&str, &str)] = &[
+    ("begin\n  raise ArgumentError, \"boom\"\nrescue ArgumentError => e\n  puts(e.class)\nend\n", "ArgumentError"),
+    ("begin\n  raise ArgumentError, \"boom\"\nrescue ArgumentError => e\n  puts(e.is_a?(ArgumentError))\nend\n", "#t"),
+    ("begin\n  raise ArgumentError, \"boom\"\nrescue ArgumentError => e\n  puts(e.is_a?(StandardError))\nend\n", "#t"),
+    ("begin\n  raise ArgumentError, \"boom\"\nrescue ArgumentError => e\n  puts(e.is_a?(TypeError))\nend\n", "#f"),
+    ("begin\n  raise ArgumentError, \"boom\"\nrescue ArgumentError => e\n  puts(e.message)\nend\n", "boom"),
+    // `puts e` renders the MESSAGE (Ruby's `Exception#to_s`), which must stay
+    // true even where the rescued value became a real exception OBJECT.
+    ("begin\n  raise ArgumentError, \"boom\"\nrescue ArgumentError => e\n  puts(e)\nend\n", "boom"),
+    // A BARE `raise` carries no message, and Ruby's default `#message` is then
+    // the class name.  All four backends already agree on this, but each
+    // arrives at it in a different place — Rust bakes it into `SirError.msg`
+    // at construction, JavaScript into the `SirError` constructor, Python into
+    // `args[0]`, and Go decides it at the `message` call site (its `Msg` stays
+    // nil).  Four independent spellings of one rule is precisely what drifts
+    // when one of them is next touched, so pin the agreement.
+    ("begin\n  raise ArgumentError\nrescue ArgumentError => e\n  puts(e.message)\nend\n", "ArgumentError"),
+    // NOT pinned here: `e == e`.  A rescued exception must of course equal
+    // itself, and the Rust runtime's `value_eq_d` now says so (an
+    // `Rc::ptr_eq` arm — without it a wildcard match would have answered
+    // `false`, and a false `e == @last_error` fails open).  But `==` cannot
+    // be exercised from Ruby source on every backend yet: the Ruby frontend
+    // lowers `a == b` to `BuiltinCall("==")`, and only the Go, C and Ruby
+    // backends lower that name — Python, JavaScript and Rust reject it as an
+    // unknown builtin, even for `puts(1 == 1)`.  That is a *general*
+    // operator-coverage gap, not an exception one, so it is fixed on its own
+    // branch; a case here would only re-test it.
+];
+
+/// Reflection on a rescued exception, across the backends. Every one of these
+/// was wrong somewhere before:
+///
+/// - **Rust** bound `e` to the message STRING, not an exception — `e.class`
+///   said `String`, `is_a?` was false, `message` raised NoMethodError.
+/// - **Python** had no `SirError` case in `class_of`, so `e.class` said
+///   `Object` and `is_a?` was false.
+/// - **`e.message` failed on ALL FOUR backends** — everyday Ruby
+///   (`rescue => e; puts e.message`) simply did not work anywhere.
+///
+/// A false `e.is_a?(SomeError)` is the dangerous shape: `rescue => e; handle
+/// if e.is_a?(Recoverable)` silently skips the handler.
+#[test]
+fn exception_reflection_matches_ruby_on_every_backend() {
+    let mut ran = 0usize;
+    for &(src, expected) in EXCEPTION_CASES {
+        for &target in Target::all() {
+            match run_source("exc_reflection", src, target) {
+                RunOutcome::Ran(out) => {
+                    assert_eq!(
+                        out, expected,
+                        "\nEXCEPTION REFLECTION: backend {} gave `{}` = {out}, Ruby says {expected}\n",
+                        target.tag(),
+                        src.lines().nth(3).unwrap_or(src).trim(),
+                    );
+                    ran += 1;
+                }
+                RunOutcome::Failed(msg) => panic!(
+                    "EXCEPTION REFLECTION: backend {} failed on `{}`: {}",
+                    target.tag(),
+                    src.lines().nth(3).unwrap_or(src).trim(),
+                    msg.lines().next().unwrap_or("")
+                ),
+                RunOutcome::Skipped(_) => {}
+            }
+        }
+    }
+    assert!(ran > 0, "no backend toolchain available — exception reflection proved nothing");
+}

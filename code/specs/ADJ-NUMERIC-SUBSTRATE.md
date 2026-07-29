@@ -96,6 +96,100 @@ never a silent middle step. Provide, as engine ops and grounded stdlib formulas:
 - Each is provenanced (its definition) and each records the **exact source value** it was
   narrowed from, so the audit shows both the exact number and its rendered form.
 
+### 4.1 Surface — a recognised built-in over the existing application grammar
+
+`round_to`/`round_sig` are written as **native applications**, reusing the exact comma-list
+call grammar that user formula applications already use (`quotient(a, b)`):
+
+```
+round_to(x, n)      % round x to n decimal PLACES        (NUM-6a)
+round_sig(x, n)     % round x to n significant FIGURES    (NUM-6b)
+```
+
+where `n` is a **non-negative integer literal** no larger than the precision cap (100 places —
+a DoS bound far beyond §3's 256-bit default precision). They are **recognised by name** during
+`Apply` lowering, *before* the user-formula lookup, so they need no formula definition, no new
+grammar production, and no LaTeX change — the application parser already accepts them. A
+non-integer, negative, oversized, or non-literal `n` is a **compile error**, never a silent
+truncation. The existing integer roundings are unchanged: `round_to(x, 0)` is exactly the
+nearest-integer `Round` (also reachable as `⌊x⌉` / `\operatorname{round}(x)` through the
+`latex "…"` frontend).
+
+> **Surface note (divergence from the first §4.1 draft).** The kickoff spec proposed the
+> two-argument *LaTeX* operator-name form `\operatorname{round}(x, n)`. Implementation (NUM-6a)
+> found that the `latex` frontend does **not** keep an operator-name adjacent to a
+> **comma-separated** argument list — a top-level comma splits the expression into a sequence,
+> dropping the `round` — because `round` is not registered as an argument-taking function in the
+> `latex` crate (unlike `\min`/`\max`, which are). Registering it there is a separate cross-crate
+> change. The **native application grammar** already parses `name(a, b)` comma-lists correctly, so
+> `round_to(x, n)` as a recognised `Apply` built-in is the surface that works today with zero new
+> grammar — the same "no second way to write a call" spirit, on the application surface rather
+> than the LaTeX one.
+
+### 4.2 Rounding mode — stated, defaulting to round-half-even
+
+Each narrowing states its **rounding mode**, defaulting to **round-half-even** (banker's
+rounding) to match §3's exactness discipline and `bignum-core::RoundingMode::HalfEven`. This
+is a *deliberate* difference from the legacy integer `Round`/`⌊x⌉`, which rounds ties **away
+from zero** — which is precisely why `round_to` records its mode in the audit rather than
+leaving it implicit: two roundings of the same exact value under different modes are both
+honest and distinguishable from the trail.
+
+### 4.3 Audit record — rounding is a first-class narrowing
+
+Every application records, alongside its own provenance (the op's definition): (a) the
+**exact source value** (the `Rational`/`Decimal` it narrowed, per §3), (b) the **target
+precision** (`n` places or `n` significant figures), (c) the **rounding mode**, and (d) the
+**rendered result**. `adj-verify` re-rounds the exact value under the recorded mode/precision
+and confirms the rendered result — so a rounded number is auditable back to the exact one it
+came from, never asserted. Rounding is thus an explicit, checkable step in the trail, not a
+silent lossy coercion (§3).
+
+### 4.4 Engine shape + sub-staging
+
+`ComputeExpr::Unary(ComputeOp, …)` carries no parameter, so the precision-carrying roundings
+add a new node `ComputeExpr::Round { spec: RoundSpec, mode: RoundingMode, expr }` where
+`RoundSpec = Places(u32) | SigFigures(u32)`. It is **dimension-preserving** (like the unary
+round family) and evaluated on the **exact path**: terminating cases via
+`BigDecimal::round_to_scale`, repeating rationals (e.g. `1/3 → 0.33`) via `BigDecimal::div_round`
+to the target scale — both already in `bignum-core` — then back to an exact `Rational` carrying
+the recorded exact-source sidecar for the audit. NUM-6 lands in focused PRs, each spec-sync →
+tests → impl → security-review → babysit:
+
+- **NUM-6a** — `round_to` (decimal places) ✅ **shipped** (#8806): the
+  `Round`/`RoundSpec::Places` engine node, the native `round_to(x, n)` application surface (see
+  §4.1's surface note), exact eval, the §4.3 audit record, and an end-to-end formula test.
+- **NUM-6b** — `round_sig` (`RoundSpec::SigFigures`) ✅ **shipped**: derives the target place
+  count `n − 1 − ⌊log₁₀|x|⌋` from the value's most-significant-digit exponent (computed exactly
+  from big-integer digit counts) and reuses 6a's exact eval. Native `round_sig(x, n)` surface,
+  `n ≥ 1`.
+- **NUM-6c** — the formatters `to_scientific` / `to_percent` / `to_currency` (rendering, on the
+  6a/6b core) and per-`KnowledgeBase` `BigDouble` precision (the configurable default §3 defers
+  here). Lands incrementally: **`to_scientific(x [, figures])`** ✅ **shipped** — the
+  `ComputeExpr::ToScientific { figures, mode, expr }` engine node (a *rendering* op: it narrows
+  to `figures` significant figures on the 6b exact path, then produces the normalized `d.ddde±E`
+  string beside the narrowed exact value, both from one rounding so they can never disagree), the
+  native `to_scientific(x [, figures])` application surface (optional `figures`, default 6; `≥ 1`,
+  within the precision cap), the §4.3 audit record (`node:to_scientific`, `figures`, `mode`,
+  `rendered`, operand subtree), and an end-to-end formula test. **`to_percent(x [, places])`**
+  ✅ **shipped** — `ComputeExpr::ToPercent { places, mode, expr }`: takes `x` as a dimensionless
+  ratio, scales by 100 and rounds to `places` decimal places on the exact path, renders the
+  fixed-point `d.dd%` string, and carries the narrowed *fraction* as the numeric value
+  (`"33.33%"` → `3333/10000`); native `to_percent(x [, places])` surface (optional `places`,
+  default 2; `≥ 0`, so `to_percent(x, 0) = "50%"`), the §4.3 audit record (`node:to_percent`),
+  and an end-to-end formula test. **`to_currency(x, code [, places])`** ✅ **shipped**, closing
+  the formatter trio — `ComputeExpr::ToCurrency { code, places, mode, expr }`: rounds `x` to
+  `places` decimal places on the exact base-10 path (`C = round(x·10^places)` via `BigDecimal`,
+  no `f64` hop), renders the fixed-point `CODE d.dd` string (leading-zero padded; `places = 0`
+  drops the point, e.g. JPY), and carries the narrowed *fraction* as the numeric value
+  (`to_currency(100/3, USD, 2)` → `"USD 33.33"`, exact `3333/100`); native
+  `to_currency(x, code [, places])` surface — the `code` is a bare identifier (lexed lowercase,
+  normalized to the canonical uppercase ISO-4217 form; a non-identifier code is a compile error),
+  `places` optional (default 2, `≥ 0`) — the §4.3 audit record
+  (`node:to_currency`, `code`, `places`, `mode`, `rendered`, operand subtree), and an
+  end-to-end formula test. Per-`KnowledgeBase` `BigDouble` precision (the configurable default
+  §3 defers here) follows.
+
 ---
 
 ## 5. Engine integration
@@ -149,7 +243,9 @@ Big arithmetic; a constraint solves over exact rationals where the backend allow
   formatted exports); exactness recorded on `Derived`.
 - **NUM-6 — precision/format ops + stdlib formulas** (`round_to`, `round_sig`,
   `to_scientific`, `to_percent`, `to_currency`) + audit exactness + `adj-verify` precision
-  re-check.
+  re-check. Surface, mode, audit record and engine shape pinned in §4.1–§4.4; lands in
+  focused sub-PRs **NUM-6a** (`round_to`) → **NUM-6b** (`round_sig`) → **NUM-6c** (formatters
+  + per-`KnowledgeBase` `BigDouble` precision).
 - **Later — retire `numeric-tower`'s `num-bigint`** onto `bignum-core` (pays down the
   existing third-party debt; out of this spec's critical path).
 

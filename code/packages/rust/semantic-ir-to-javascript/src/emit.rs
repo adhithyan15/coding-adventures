@@ -126,12 +126,60 @@ pub fn emit_module(m: &Module) -> String {
     // writeup, including why this can't be decided from the value's shape
     // alone — a rank-0 SIR22 NDArray is not unique to APL).
     //
-    // SECURITY: both replacement values MUST remain a hardcoded literal
+    // A THIRD, independent placeholder, added alongside J's own oracle tests
+    // (`j-to-semantic-ir/tests/oracle.rs`, "Bug A"): a J-sourced module
+    // renders a bare/boxed negative number with a leading underscore `_`
+    // and a non-finite value as lowercase `inf`/`_inf`, matching
+    // `j_runtime::value::fmt_num` exactly — neither ASCII `-`/`Infinity`
+    // nor APL's high-minus `¯`/`∞` is J's own convention. Mutually exclusive
+    // with `display_apl_high_minus` by construction (both are computed from
+    // the same single `source_language` field), so `runtime.rs`'s
+    // `fmtNum` never needs to arbitrate between them.
+    //
+    // A FOURTH, independent placeholder (SIR23 addendum item 4 of 4 — see
+    // `code/specs/SIR23-symbolic-pattern-semantic-ir.md`'s "Per-language
+    // display convention" section): a Derive-sourced module renders a
+    // compound SIR23 symbolic term through Derive's OWN precedence-aware
+    // infix/prefix/bracket/case-bridged convention (`runtime.rs`'s
+    // `SIR_DISPLAY_DERIVE`, gating `Symbolic.toDisplayString` rather than
+    // `formatSeen`/`fmtNum` — a DIFFERENT stringifier than the first three
+    // flags gate, since this one is about the SIR23 symbolic-expression
+    // domain, not SIR16 booleans or SIR22 arrays), rather than the
+    // generic, source-language-agnostic `head(args, …)` form every other
+    // language (and Derive, before this item) still gets.
+    //
+    // A FIFTH, independent placeholder (task #109, the direct Q sibling of
+    // J's own "A THIRD" entry above, found by `q-to-semantic-ir/tests/
+    // oracle.rs`'s own `DISPLAY_GAP` cases): `true` when the module's
+    // `source_language` is Q, else `false`. Q's own console convention
+    // renders a negative number with a plain ASCII `-` (never APL's
+    // high-minus `¯`, never J's leading underscore `_`) and a non-finite
+    // value as lowercase `-inf`/`inf` — note the ASCII minus prefix on
+    // infinity, DIFFERENT from J's own `_inf` spelling
+    // (`q_runtime::value::fmt_num`, ported 1:1 in `ArrayRt.fmtNum` below).
+    // Q's bare/boxed-scalar path already happens to print ASCII `-` today
+    // (the generic `String(v)`/`floatToRubyString` fallback ends up
+    // matching Q's own convention for a plain negative integer by
+    // coincidence), but NOT for non-finite values or whole-valued floats
+    // (see `runtime.rs`'s `formatSeen` gate for the exact divergence), and
+    // a genuine SIR22 `NDArray` result reaches `ArrayRt.fmtNum`, which
+    // renders APL's own high-minus glyph unconditionally whenever neither
+    // of the other two `fmtNum`-gating flags is set — this flag closes
+    // both gaps in one place. Mutually exclusive with the four flags above
+    // by construction (all five are computed from the same single
+    // `source_language` field in `emit.rs`), so `fmtNum`/`formatSeen`
+    // below never need to arbitrate between them — only one can ever be
+    // `true` for a given module.
+    //
+    // SECURITY: all five replacement values MUST remain a hardcoded literal
     // selected by a boolean — never text derived from `source_language` or
     // any other source-controlled field — so this substitution can never
     // inject into the emitted JavaScript.
     let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
     let display_apl_high_minus = m.metadata.source_language.as_deref() == Some("apl");
+    let display_j_underscore = m.metadata.source_language.as_deref() == Some("j");
+    let display_derive = m.metadata.source_language.as_deref() == Some("derive");
+    let display_q_ascii_minus = m.metadata.source_language.as_deref() == Some("q");
     out.push_str(
         &RUNTIME
             .replace(
@@ -141,6 +189,18 @@ pub fn emit_module(m: &Module) -> String {
             .replace(
                 "__SIR_DISPLAY_APL_HIGH_MINUS__",
                 if display_apl_high_minus { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_J_UNDERSCORE__",
+                if display_j_underscore { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_DERIVE__",
+                if display_derive { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_Q_ASCII_MINUS__",
+                if display_q_ascii_minus { "true" } else { "false" },
             ),
     );
     emit_ancestry_registration(&mut out, m);
@@ -447,6 +507,57 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 let _ = write!(out, "{}{} = ", pad, sanitize_ident(global));
                 emit_expr(out, value, indent);
                 out.push_str(";\n");
+            } else if is_sym23_root_shape(expr) {
+                // SIR23 addendum, item 1: evaluate a top-level symbolic
+                // statement exactly ONCE here, at the statement boundary
+                // — never inside `Expr::SymApply`'s own codegen arm
+                // (which keeps emitting a bare, unevaluated
+                // `__Sir.Symbolic.apply(...)`, unchanged). `SymApply`/
+                // `SymSymbol`/`SymRational` are confirmed exhaustive as
+                // the SIR23 root shapes these frontends' `lower.rs`
+                // modules ever hand back at statement level
+                // (`derive-to-semantic-ir/CHANGELOG.md`'s own disclosed
+                // scope: "this crate therefore only ever constructs
+                // Expr::SymSymbol/Expr::SymApply"). `evalTerm` recurses
+                // into `head`/every arg itself (mirroring
+                // `eval_apply`'s own "evaluate args first" step), so one
+                // top-level call here evaluates an arbitrarily nested
+                // expression bottom-up — wrapping every NESTED
+                // `SymApply` occurrence instead would cause redundant,
+                // potentially-exponential re-evaluation, which the SIR23
+                // addendum calls out explicitly.
+                out.push_str(&pad);
+                out.push_str("__Sir.Symbolic.unwrap(__Sir.Symbolic.evalTerm(");
+                emit_expr(out, expr, indent);
+                out.push_str("));\n");
+            } else if let Some(inner) = pick_print_of_sym23_root(expr) {
+                // `print(<bare SIR23 root shape>)` — the harness-only
+                // observability pattern `derive-to-semantic-ir`'s and
+                // `reduce-to-semantic-ir`'s own `tests/oracle.rs` use
+                // (their frontends' own lowering never wraps a top-level
+                // statement in `print`/`console.log` itself — see each
+                // oracle file's own module doc, "a harness-only 'make it
+                // observable' step" — so this shape never occurs in
+                // production output today, only in a test harness that
+                // needs a value on stdout to diff). Discovered
+                // empirically while verifying this addendum item against
+                // that exact harness: without this arm, the harness's own
+                // `wrap_top_level_in_print` re-shapes the statement's
+                // `expr` from a bare SIR23 root (which the arm above
+                // would evaluate) into `BuiltinCall("print", [bare root])`
+                // — invisible to the check above, so the printed value
+                // stayed unevaluated even with `evalTerm` fully wired.
+                // The fix generalizes the SAME "evaluate the one value
+                // this statement observes" policy to this shape too — the
+                // statement still gets exactly one `evalTerm` call, still
+                // never touches `Expr::SymApply`'s own codegen arm, and
+                // still lives entirely in this `Stmt::ExprStmt` arm,
+                // mirroring the `pick_global_set` special-case immediately
+                // above.
+                out.push_str(&pad);
+                out.push_str("__Sir.print(__Sir.Symbolic.unwrap(__Sir.Symbolic.evalTerm(");
+                emit_expr(out, inner, indent);
+                out.push_str(")));\n");
             } else {
                 out.push_str(&pad);
                 emit_expr(out, expr, indent);
@@ -755,6 +866,33 @@ fn pick_global_set(e: &Expr) -> Option<(&str, &Expr)> {
             {
                 return Some((global_name.as_str(), &args[1]));
             }
+        }
+    }
+    None
+}
+
+/// Is `e` one of the three SIR23 root shapes a symbolic-domain frontend
+/// (Wolfram/Macsyma/Derive/Reduce/Maple) ever hands back at STATEMENT
+/// level? See `emit_stmt`'s `Stmt::ExprStmt` arm for how this gates the
+/// SIR23 addendum's `evalTerm` wrap.
+fn is_sym23_root_shape(e: &Expr) -> bool {
+    matches!(
+        e,
+        Expr::SymApply { .. } | Expr::SymSymbol { .. } | Expr::SymRational { .. }
+    )
+}
+
+/// Detect `BuiltinCall("print", [<bare SIR23 root shape>])` and return
+/// the inner expression. See `emit_stmt`'s `Stmt::ExprStmt` arm for why
+/// this needs the identical `evalTerm` treatment a bare top-level SIR23
+/// statement gets — this shape is the harness-only observability pattern
+/// `derive-to-semantic-ir`'s/`reduce-to-semantic-ir`'s own `tests/
+/// oracle.rs` use (`wrap_top_level_in_print`), not something any
+/// frontend's own lowering emits today.
+fn pick_print_of_sym23_root(e: &Expr) -> Option<&Expr> {
+    if let Expr::BuiltinCall { name, args, .. } = e {
+        if name == "print" && args.len() == 1 && is_sym23_root_shape(&args[0]) {
+            return Some(&args[0]);
         }
     }
     None
@@ -1597,6 +1735,12 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     if args.len() == 2 {
         let cmp = match name {
             "=" => Some("__Sir.eq"),
+            // `==` is the operator spelling the Ruby frontend emits; it is a
+            // synonym for `=` (both structural equality).  The others were
+            // already routed; only `==` was missing, so `puts(1 == 1)` fell
+            // through to `callBuiltin`, which has no `==` and threw
+            // `TypeError: unknown builtin: ==`.
+            "==" => Some("__Sir.eq"),
             "!=" => Some("__Sir.ne"),
             "<" => Some("__Sir.lt"),
             ">" => Some("__Sir.gt"),
@@ -1852,6 +1996,8 @@ fn is_js_reserved(s: &str) -> bool {
             | "private"
             | "protected"
             | "public"
+            | "arguments"
+            | "eval"
     )
 }
 
@@ -1933,6 +2079,25 @@ mod tests {
         assert_eq!(sanitize_ident("class"), "_$class");
         assert!(sanitize_ident("function").starts_with("_$"));
         assert!(sanitize_ident("await").starts_with("_$"));
+    }
+
+    #[test]
+    fn is_js_reserved_flags_strict_mode_contextual_words() {
+        // `eval` and `arguments` are not syntactic keywords, but this
+        // backend always emits strict-mode code (`"use strict";` / ES
+        // modules), and strict mode forbids binding, assigning to, or
+        // otherwise shadowing either name — so they must be treated as
+        // reserved here too, exactly like the syntactic keywords above.
+        assert!(is_js_reserved("eval"));
+        assert!(is_js_reserved("arguments"));
+        assert!(sanitize_ident("eval").starts_with("_$"));
+        assert!(sanitize_ident("arguments").starts_with("_$"));
+
+        // Ordinary identifiers — including close look-alikes — are
+        // unaffected by the addition.
+        assert!(!is_js_reserved("value"));
+        assert!(!is_js_reserved("evaluate"));
+        assert!(!is_js_reserved("argument"));
     }
 
     #[test]
@@ -2162,6 +2327,9 @@ mod tests {
         // plain numbers these are exactly the old `===`/`<`/…, and additionally
         // correct for a boxed Float (`7.0 == 7`, `7.0 < 8`).
         assert_eq!(emit_e(&bc("=", two())), "__Sir.eq(1, 2)");
+        // `==` is the operator spelling the Ruby frontend emits — a synonym
+        // for `=`, and the one arm that was missing (so `puts(1 == 1)` threw).
+        assert_eq!(emit_e(&bc("==", two())), "__Sir.eq(1, 2)");
         assert_eq!(emit_e(&bc("!=", two())), "__Sir.ne(1, 2)");
         assert_eq!(emit_e(&bc("<", two())), "__Sir.lt(1, 2)");
         assert_eq!(emit_e(&bc(">", two())), "__Sir.gt(1, 2)");

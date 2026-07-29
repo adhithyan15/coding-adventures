@@ -1,5 +1,178 @@
 # Changelog
 
+## [0.63.0] — 2026-07-24
+
+### Added — RS-5f: `mode nearest` table lookup (ADJ-TABLES §3.4)
+
+The lowering mode dispatch now accepts `nearest` alongside `range` and `interpolated`
+(all three are built tactics); an unrecognized mode is still `LowerError::LookupUnknownMode`.
+`nearest` snaps the query key to the closest tabulated key (nearest-neighbour). Like `range`
+(and unlike `interpolated`), it returns the value cell verbatim, so it requires only a numeric
+**key** column — the existing shared `LookupNonNumericKeyColumn` check — and does **not** impose
+the `interpolated`-only numeric-value-column requirement. Doc comments on `LookupUnknownMode`
+updated to list all three modes. Purely additive; no existing behaviour changes.
+
+## [0.62.0] — 2026-07-23
+
+### Added — RS-5d: `mode interpolated` table lookup (ADJ-TABLES §3.3)
+
+The `? lookup <table> <key> = <n> mode interpolated give <val>` tactic is now built — the
+piecewise-linear sibling of `mode range`. Lowering changes:
+
+- The mode dispatch accepts `interpolated` alongside `range` (both are built tactics); an
+  unrecognized mode is still `LowerError::LookupUnknownMode`. The reserved-mode error
+  `LookupModeUnsupported` is **retired** (it existed only to reject `interpolated`).
+- `interpolated` additionally validates that the **value** column is numeric in every row —
+  the new `LowerError::LookupNonNumericValueColumn` — because it computes on the value cells
+  (`v0 + (v1−v0)·(q−k0)/(k1−k0)`); you cannot linearly blend a category label. (`range` returns
+  the value cell verbatim and imposes no such check.)
+
+The lowered form is unchanged (`LoweredRangeLookup` carries the mode through); the interpolation
+arithmetic itself lives in the CLI's exact-rational tactic (see `adj-lang-cli` 0.23.0).
+
+## [0.61.0] — 2026-07-23
+
+### Added — NUM-6c: the `to_currency(x, code [, places])` money rendering (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3)
+
+```
+let due  = to_currency(subtotal + tax, usd)      % → "USD 42.50"
+let yen  = to_currency(price, jpy, 0)            % → "JPY 1980"
+```
+
+- `to_currency` joins `round_to`/`round_sig`/`to_scientific`/`to_percent` as a built-in
+  recognised during `Apply` lowering (same native comma-list surface, no new grammar). It lowers
+  to the new `logic_engine::ComputeExpr::ToCurrency` node via a new `ExprAst::ToCurrency(expr,
+  code, places)` AST node, under the default half-even mode.
+- The **currency code** is the second argument, written as a **bare identifier** (`usd`) — it
+  parses as an `ExprAst::Ref` and is read directly at the intercept, never resolved as a slot or
+  expanded. Identifiers lex lowercase, so the code is normalized to the canonical uppercase
+  ISO-4217 form for the rendered string and the audit record (`usd` → `USD 42.50`). A
+  missing/non-identifier code (e.g. a number in the code slot) is a clean compile error.
+- The `places` third argument is **optional**: `to_currency(x, code)` uses the documented default
+  (`DEFAULT_CURRENCY_PLACES = 2`, the common minor-unit precision). A stated count must be a
+  non-negative integer literal (`≥ 0` — `to_currency(x, jpy, 0)`) within the cap
+  (`MAX_ROUND_PLACES = 100`); anything else, or the wrong argument count, is a clean compile error.
+- All four expression walkers carry the new node (cloning the code string), so it composes inside
+  formula bodies, `let`s, and predicate application positions exactly like the other precision ops.
+
+## [0.60.0] — 2026-07-23
+
+### Added — NUM-6c: the `to_percent(x [, places])` percentage rendering (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3)
+
+```
+let share = to_percent(votes / total, 1)   % → "42.7%"
+let round = to_percent(part / whole)        % default 2 decimal places
+```
+
+- `to_percent` joins `round_to`/`round_sig`/`to_scientific` as a built-in recognised
+  during `Apply` lowering (same native comma-list surface, no new grammar). It lowers to
+  the new `logic_engine::ComputeExpr::ToPercent` node via a new `ExprAst::ToPercent(expr,
+  places)` AST node, under the default half-even mode.
+- The `places` argument is **optional**: `to_percent(x)` uses the documented default
+  (`DEFAULT_PERCENT_PLACES = 2`), resolved at lowering so the engine node always carries a
+  concrete count and the audit records what was used. A stated `to_percent(x, n)` requires
+  `n` a **non-negative** integer literal (`≥ 0` — zero places is meaningful, `"50%"`)
+  within the precision cap (`MAX_ROUND_PLACES = 100`). A non-integer, negative, oversized,
+  or non-literal `n`, or the wrong argument count, is a clean compile error.
+- All four expression walkers carry the new node, so it composes inside formula bodies,
+  `let`s, and predicate application positions exactly like the other precision ops.
+
+## [0.59.0] — 2026-07-22
+
+### Added — NUM-6c: the `to_scientific(x [, figures])` scientific-notation rendering (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3)
+
+```
+let reported = to_scientific(avogadro, 4)   % → "6.022e23"
+let quick    = to_scientific(measured)      % default 6 significant figures
+```
+
+- `to_scientific` joins `round_to`/`round_sig` as a built-in recognised during
+  `Apply` lowering (same native comma-list application surface, no new grammar). It
+  lowers to the new `logic_engine::ComputeExpr::ToScientific` node via a new
+  `ExprAst::ToScientific(expr, figures)` AST node, under the default half-even mode.
+- The `figures` argument is **optional**: `to_scientific(x)` uses the documented
+  default mantissa precision (`DEFAULT_SCI_FIGURES = 6`), resolved here at lowering so
+  the engine node always carries a concrete count and the audit records what was used.
+  A stated `to_scientific(x, n)` requires `n` a positive integer literal (`≥ 1`, since
+  a scientific mantissa has at least one significant figure) within the precision cap
+  (`MAX_ROUND_PLACES = 100`). A non-integer, zero, negative, oversized, or non-literal
+  `n`, or the wrong argument count, is a clean compile error — never a silent format.
+- All the expression walkers (`collect_refs`, `charged_clone`, `expand_rec`,
+  `substitute_expr`) carry the new node, so it composes inside formula bodies, `let`s,
+  and predicate application positions exactly like `round_to`/`round_sig`.
+
+## [0.58.0] — 2026-07-22
+
+### Added — NUM-6b: the `round_sig(x, n)` significant-figures narrowing (ADJ-NUMERIC-SUBSTRATE §4.1–§4.4)
+
+```
+let reported = round_sig(measured / trials, 3)   % 3 significant figures
+```
+
+- `round_sig` joins `round_to` as a built-in recognised during `Apply` lowering
+  (same native comma-list application surface, no new grammar). Both now build a
+  `logic_engine::RoundSpec` — `Places` for `round_to`, `SigFigures` for `round_sig`
+  — carried by the shared `ExprAst::RoundTo` node and lowered to the engine's exact
+  `Round` eval.
+- `n` must be an integer literal within the DoS cap; **≥ 1** for `round_sig` (zero
+  significant figures is meaningless), ≥ 0 for `round_to`. Anything else is a clean
+  `FormulaBadArgument` compile error.
+
+## [0.57.0] — 2026-07-22
+
+### Added — NUM-6a: the `round_to(x, n)` precision narrowing (ADJ-NUMERIC-SUBSTRATE §4.1–§4.4)
+
+A formula body (or a `let`) can now round to a stated precision:
+
+```
+let dose_rounded = round_to(total / doses, 2)   % 10/3 → 3.33, exactly 333/100
+```
+
+- New `ExprAst::RoundTo(x, n)`, lowering to the engine's exact-path
+  `ComputeExpr::Round` (default half-even mode). Dimension-preserving.
+- Surface is the **native application** grammar — `round_to` is recognised as a
+  built-in during `Apply` lowering, *before* the user-formula lookup, so it reuses
+  the same comma-list call grammar as `quotient(a, b)` with **no new grammar and no
+  LaTeX change**. (The kickoff spec's LaTeX `\operatorname{round}(x, n)` form does
+  not parse a comma-separated argument list — the frontend splits on the top-level
+  comma — so §4.1 was updated to the native surface; see the spec's surface note.)
+- The precision `n` must be a **non-negative integer literal** ≤ 100 (a DoS cap);
+  a non-integer, negative, oversized, or non-literal `n` is a clean compile error
+  (`FormulaBadArgument`), never a silent mis-rounding.
+
+## [0.56.0] — 2026-07-21
+
+### Added — RS-4 PR-D4a: the `quote`/`at`/`snapshot` surface binding (ADJ-REASON-MATH §E.3.1)
+
+A grounded clause can now write a **pinned verbatim span** — the bytes that make `adj-verify`
+report `fully_verified`:
+
+```
+relate inhibits(aspirin, cyclooxygenase)
+    quote "Aspirin inhibits cyclooxygenase" at 0 snapshot "<64-hex sha256>"
+    source "Pharmacology reference"
+    trust authoritative
+```
+
+- **Grammar**: new `quote_annotation = "quote" STRING "at" NUMBER "snapshot" STRING`, added to the
+  `annotation` alternation (grammars regenerated).
+- **AST**: `Annotation::Quote { text, byte_offset, snapshot_hex }`.
+- **Lower**: the pin populates `Provenance::quote` (a `VerbatimSpan`) + `Provenance::snapshot`
+  (a `ContentHash`) via `with_quote`. It is **fail-closed** on well-formedness — a snapshot that is
+  not a 64-char SHA-256 hex, or a quote whose text has no visible content, is a compile error
+  (`LowerError::MalformedQuotePin`), never a half-built `Verbatim` span the verifier would reject.
+  A `quote` on a table row pins that row's own span. Duplicate `quote` is a `DuplicateAnnotation`.
+
+The `byte_offset` is emitted by the grounding spider at ingest, never hand- or model-authored
+(`feedback_no_byte_arithmetic_for_llm`). Reviewers read the `quote` text and `source` label; the
+machine owns the arithmetic.
+
+**Scoped as D4a** (per feedback_smaller_prs): this is the surface + fail-closed *well-formedness*
+lowering. The *anchored* compile-time check (does the text really sit at `byte_offset` in the named
+snapshot?) and the `adj-verify --snapshots` end-to-end path are D4b — the latter also fixes a latent
+cli-builder flag-parse hang discovered while wiring this up. Until D4b, `adj-verify` still enforces
+the anchored check at verify time, so a bad pin is caught; D4b moves that gate earlier, to compile.
+
 ## [0.55.0] — 2026-07-18
 
 ### Added — RS-5e: per-row provenance on a `table` (ADJ-TABLES)

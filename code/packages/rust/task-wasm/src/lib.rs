@@ -32,8 +32,8 @@ use serde::Deserialize;
 use task_core::ops::OpError;
 use task_core::{
     Assignment, Constraint, Date, Decision, DependencyLink, FieldDef, FieldValue, GenericLink,
-    ProjectId, ProjectState, Resource, ResourceId, TaskId, TaskKind, TaskSchedule, WorkflowId,
-    Workspace, WorkspaceId,
+    ProjectId, ProjectState, Resource, ResourceId, TaskId, TaskKind, TaskSchedule, View,
+    WorkflowId, Workspace, WorkspaceId,
 };
 
 thread_local! {
@@ -47,11 +47,37 @@ fn fresh() -> Workspace {
     )
 }
 
-/// The active project's id — the one the per-project ops/queries act on. It is the
-/// first root, falling back to the first project by id. Returns `None` only if a loaded
-/// workspace somehow has no projects at all (hostile input), in which case per-project
-/// calls answer with an error envelope rather than panicking.
+// The host's *chosen* active project, if it has selected one.
+//
+// This is deliberately ABI-local rather than part of the `Workspace`: which project you
+// are currently looking at is a property of *this view of* the workspace, not of the
+// workspace itself. Two hosts open on the same persisted data should be able to sit on
+// different projects, and a snapshot should not carry one host's cursor to another. It
+// is therefore also **not** serialized by `snapshot`; a host that wants to restore the
+// last-viewed project persists that id itself and calls `set_active_project` after
+// `load` (the same division of labour as the existing host-owned row order).
+thread_local! {
+    static ACTIVE: RefCell<Option<ProjectId>> = const { RefCell::new(None) };
+}
+
+/// The active project's id — the one the per-project ops/queries act on.
+///
+/// Resolution order:
+/// 1. the project the host selected via `set_active_project`, **if it still exists** —
+///    so deleting the selected project degrades to the default rather than wedging
+///    every per-project call behind a dangling id;
+/// 2. otherwise the first root, falling back to the first project by id.
+///
+/// Returns `None` only if a loaded workspace somehow has no projects at all (hostile
+/// input), in which case per-project calls answer with an error envelope rather than
+/// panicking.
 fn active_project_id(ws: &Workspace) -> Option<ProjectId> {
+    let chosen = ACTIVE.with(|a| a.borrow().clone());
+    if let Some(pid) = chosen {
+        if ws.projects.contains_key(&pid) {
+            return Some(pid);
+        }
+    }
     ws.roots
         .first()
         .cloned()
@@ -229,6 +255,55 @@ macro_rules! export_ws_op {
 #[no_mangle]
 pub extern "C" fn reset() {
     STATE.with(|s| *s.borrow_mut() = fresh());
+    // The selection points into the workspace we just threw away.
+    ACTIVE.with(|a| *a.borrow_mut() = None);
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct ProjectIdArgs {
+    id: String,
+}
+
+/// Choose which project the per-project ops and queries act on.
+///
+/// Without this the active project was permanently "the first root", so a project
+/// created through `create_project` was unreachable: you could make it, but nothing
+/// could ever target it. Rejects an unknown id rather than silently selecting nothing,
+/// so a typo surfaces as an error envelope instead of the host quietly operating on the
+/// wrong project.
+///
+/// # Safety
+/// `ptr`/`len` must describe readable bytes, or be null with a zero length.
+#[no_mangle]
+pub unsafe extern "C" fn set_active_project(ptr: *const u8, len: usize) -> *mut u8 {
+    let json = unsafe { read_input(ptr, len) };
+    pack(match serde_json::from_str::<ProjectIdArgs>(&json) {
+        Ok(args) => {
+            let pid = ProjectId::from_raw(args.id);
+            STATE.with(|s| {
+                if s.borrow().projects.contains_key(&pid) {
+                    ACTIVE.with(|a| *a.borrow_mut() = Some(pid));
+                    ok_json()
+                } else {
+                    // Same envelope shape as every other rejected op (`{ok,error,code}`),
+                    // so a host can switch on `code` rather than string-matching.
+                    op_error_json(&OpError::NotFound)
+                }
+            })
+        }
+        Err(e) => error_json(&format!("parse error: {e}")),
+    })
+}
+
+/// The id of the project the per-project surface is currently acting on, so a host can
+/// render which one is selected without duplicating the resolution rules above.
+#[no_mangle]
+pub extern "C" fn active_project() -> *mut u8 {
+    pack(STATE.with(|s| match active_project_id(&s.borrow()) {
+        Some(pid) => ok_data(&pid.as_str()),
+        None => error_json("no active project"),
+    }))
 }
 
 /// Serialize the whole **workspace** (for host-owned persistence).
@@ -252,14 +327,20 @@ pub extern "C" fn snapshot() -> *mut u8 {
 #[no_mangle]
 pub unsafe extern "C" fn load(ptr: *const u8, len: usize) -> *mut u8 {
     let json = unsafe { read_input(ptr, len) };
+    // Either branch replaces the workspace wholesale, so a selection made against the
+    // *previous* one must not survive: its id could name a different project (or none)
+    // in the loaded data. A host restoring a remembered project re-selects it after
+    // `load` returns.
     pack(if let Ok(ws) = serde_json::from_str::<Workspace>(&json) {
         STATE.with(|s| *s.borrow_mut() = ws);
+        ACTIVE.with(|a| *a.borrow_mut() = None);
         ok_json()
     } else {
         match serde_json::from_str::<ProjectState>(&json) {
             Ok(project) => {
                 let ws = Workspace::from_project(WorkspaceId::from_raw("workspace"), project);
                 STATE.with(|s| *s.borrow_mut() = ws);
+                ACTIVE.with(|a| *a.borrow_mut() = None);
                 ok_json()
             }
             Err(e) => error_json(&format!("parse error: {e}")),
@@ -625,12 +706,38 @@ export_ws_op!(
 struct ProjectIdArg {
     id: String,
 }
-export_ws_op!(
-    /// Delete a project (rejected while it still has sub-projects).
-    delete_project,
-    ProjectIdArg,
-    |w, a| w.delete_project(&ProjectId::from_raw(a.id))
-);
+/// Delete a project (rejected while it still has sub-projects).
+///
+/// Hand-rolled rather than `export_ws_op!` because deleting the *selected* project must
+/// also drop the selection. Merely letting it dangle is not enough: resolution would
+/// fall back to the first root (correct), but a later `create_project` that reuses the
+/// same id would make the stale selection resolve *again*, silently re-targeting the
+/// per-project surface at a project the host never selected.
+///
+/// # Safety
+/// `ptr`/`len` must describe readable bytes, or be null with a zero length.
+#[no_mangle]
+pub unsafe extern "C" fn delete_project(ptr: *const u8, len: usize) -> *mut u8 {
+    let json = unsafe { read_input(ptr, len) };
+    pack(match serde_json::from_str::<ProjectIdArg>(&json) {
+        Ok(args) => {
+            let pid = ProjectId::from_raw(args.id);
+            STATE.with(|s| match s.borrow_mut().delete_project(&pid) {
+                Ok(()) => {
+                    ACTIVE.with(|a| {
+                        let mut sel = a.borrow_mut();
+                        if sel.as_ref() == Some(&pid) {
+                            *sel = None;
+                        }
+                    });
+                    ok_json()
+                }
+                Err(e) => op_error_json(&e),
+            })
+        }
+        Err(e) => error_json(&format!("parse error: {e}")),
+    })
+}
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -733,6 +840,171 @@ export_ws_op!(
         Ok(())
     }
 );
+
+// ── labels & priority (active project) ────────────────────────────────────────────
+
+export_op!(
+    /// Create or replace a label definition.
+    upsert_label,
+    task_core::Label,
+    |s, a| {
+        s.upsert_label(a);
+        Ok(())
+    }
+);
+
+#[derive(Deserialize)]
+struct LabelIdArg {
+    id: String,
+}
+export_op!(
+    /// Delete a label and remove it from every task.
+    delete_label,
+    LabelIdArg,
+    |s, a| {
+        s.delete_label(&task_core::LabelId::from_raw(a.id));
+        Ok(())
+    }
+);
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct TaskLabelsArgs {
+    id: String,
+    labels: Vec<String>,
+}
+export_op!(
+    /// Replace a task's labels (unknown ids rejected; duplicates collapsed).
+    set_task_labels,
+    TaskLabelsArgs,
+    |s, a| s.set_task_labels(
+        &TaskId::from_raw(a.id),
+        a.labels.into_iter().map(task_core::LabelId::from_raw).collect()
+    )
+);
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct PriorityArgs {
+    id: String,
+    priority: Option<task_core::Priority>,
+}
+export_op!(
+    /// Set or clear a task's triage priority.
+    set_priority,
+    PriorityArgs,
+    |s, a| s.set_priority(&TaskId::from_raw(a.id), a.priority)
+);
+
+// ── view projections (active project) ─────────────────────────────────────────────
+
+/// The widest day-offset accepted from the host (~±8,200 years around the epoch).
+///
+/// Absurdly generous for any real plan, but bounded well below the point where civil-date
+/// conversion overflows: `Date::to_ymd` shifts by 719,468 days internally, so an
+/// unchecked `i32` near the type's limit would overflow and **panic across the FFI
+/// boundary** — which this module promises never to do. The view projections are the
+/// first exports to reach that formatting path (earlier date exports only echoed the raw
+/// integer), so the bound is enforced here, at the boundary that accepts the value.
+const MAX_DAY_OFFSET: i32 = 3_000_000;
+
+/// Convert a host-supplied day offset into a `Date`, rejecting out-of-range values.
+fn checked_day(days: i32) -> Option<Date> {
+    (-MAX_DAY_OFFSET..=MAX_DAY_OFFSET)
+        .contains(&days)
+        .then_some(Date(days))
+}
+
+/// Arguments shared by the view-driven projections: the view config plus the project
+/// start the schedule is anchored at (days since the Unix epoch).
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct ViewArgs {
+    view: View,
+    project_start: i32,
+}
+
+/// The render-ready table (sheet) for a view: columns + grouped, formatted rows.
+///
+/// # Safety
+/// `ptr`/`len` must describe readable bytes, or be null with a zero length.
+#[no_mangle]
+pub unsafe extern "C" fn table(ptr: *const u8, len: usize) -> *mut u8 {
+    let json = unsafe { read_input(ptr, len) };
+    pack(run_view::<ViewArgs>(&json, |project, a| {
+        let Some(start) = checked_day(a.project_start) else {
+            return error_json("projectStart out of range");
+        };
+        ok_data(&project.table(&a.view, start))
+    }))
+}
+
+/// The ordered, grouped task ids for a view (filter → sort → group).
+///
+/// # Safety
+/// `ptr`/`len` must describe readable bytes, or be null with a zero length.
+#[no_mangle]
+pub unsafe extern "C" fn view_selection(ptr: *const u8, len: usize) -> *mut u8 {
+    let json = unsafe { read_input(ptr, len) };
+    pack(run_view::<ViewArgs>(&json, |project, a| {
+        let Some(start) = checked_day(a.project_start) else {
+            return error_json("projectStart out of range");
+        };
+        ok_data(&project.view_selection(&a.view, start))
+    }))
+}
+
+/// The calendar for a view over an inclusive day range.
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct CalendarArgs {
+    view: View,
+    project_start: i32,
+    start: i32,
+    end: i32,
+}
+
+/// Dated events for a view over `[start, end]`.
+///
+/// # Safety
+/// `ptr`/`len` must describe readable bytes, or be null with a zero length.
+#[no_mangle]
+pub unsafe extern "C" fn calendar(ptr: *const u8, len: usize) -> *mut u8 {
+    let json = unsafe { read_input(ptr, len) };
+    pack(run_view::<CalendarArgs>(&json, |project, a| {
+        let (Some(start), Some(from), Some(to)) = (
+            checked_day(a.project_start),
+            checked_day(a.start),
+            checked_day(a.end),
+        ) else {
+            return error_json("date out of range");
+        };
+        let range = task_core::view::DateRange {
+            start: from,
+            end: to,
+        };
+        ok_data(&project.calendar(&a.view, range, start))
+    }))
+}
+
+/// Deserialize view arguments and run a projection against the **active project**,
+/// mirroring [`run_op`]'s error handling: a parse failure or an empty workspace answers
+/// with an error envelope rather than trapping.
+fn run_view<A>(json: &str, f: impl FnOnce(&ProjectState, A) -> String) -> String
+where
+    A: for<'de> Deserialize<'de>,
+{
+    match serde_json::from_str::<A>(json) {
+        Ok(args) => STATE.with(|s| {
+            let ws = s.borrow();
+            match active_project_id(&ws).and_then(|pid| ws.projects.get(&pid)) {
+                Some(project) => f(project, args),
+                None => error_json("no active project"),
+            }
+        }),
+        Err(e) => error_json(&format!("parse error: {e}")),
+    }
+}
 
 // ── workspace queries ─────────────────────────────────────────────────────────────
 
@@ -863,6 +1135,109 @@ mod tests {
     }
 
     #[test]
+    fn set_active_project_retargets_the_per_project_surface() {
+        // The bug this closes: without a way to switch, `active_project_id` was
+        // permanently "the first root", so a project you created could never be
+        // reached — you could make it, but nothing could ever act on it.
+        reset();
+        assert!(call1(create_project, r#"{"id":"p2","name":"Second"}"#).contains(r#""ok":true"#));
+        // Before switching, a task lands in the default project.
+        assert!(call1(create_task, r#"{"id":"a","name":"In first"}"#).contains(r#""ok":true"#));
+        assert!(take(active_project()).contains("project"));
+
+        // After switching, the *same* per-project export targets the new project.
+        assert!(call1(set_active_project, r#"{"id":"p2"}"#).contains(r#""ok":true"#));
+        assert!(take(active_project()).contains("p2"));
+        assert!(call1(create_task, r#"{"id":"b","name":"In second"}"#).contains(r#""ok":true"#));
+
+        let second = take(checklist());
+        assert!(second.contains(r#""name":"In second""#), "{second}");
+        assert!(
+            !second.contains(r#""name":"In first""#),
+            "second project must not show the first's tasks: {second}"
+        );
+
+        // ...and switching back shows the original project's tasks, unharmed.
+        assert!(call1(set_active_project, r#"{"id":"project"}"#).contains(r#""ok":true"#));
+        let first = take(checklist());
+        assert!(first.contains(r#""name":"In first""#), "{first}");
+        assert!(!first.contains(r#""name":"In second""#), "{first}");
+    }
+
+    #[test]
+    fn set_active_project_rejects_an_unknown_id() {
+        // Silently selecting nothing would leave the host operating on a different
+        // project than the one it thinks it selected — fail loudly instead.
+        reset();
+        let out = call1(set_active_project, r#"{"id":"nope"}"#);
+        assert!(out.contains(r#""ok":false"#), "{out}");
+        // The previous selection still stands.
+        assert!(take(active_project()).contains("project"));
+    }
+
+    #[test]
+    fn selection_degrades_when_its_project_disappears() {
+        // A dangling selection must not wedge every per-project call behind an id
+        // that no longer resolves: deleting the selected project falls back to the
+        // default rather than answering "no active project" forever.
+        reset();
+        assert!(call1(create_project, r#"{"id":"p2","name":"Second"}"#).contains(r#""ok":true"#));
+        assert!(call1(set_active_project, r#"{"id":"p2"}"#).contains(r#""ok":true"#));
+        assert!(call1(delete_project, r#"{"id":"p2"}"#).contains(r#""ok":true"#));
+        // Falls back to the first root, and per-project calls keep working.
+        assert!(take(active_project()).contains("project"));
+        assert!(call1(create_task, r#"{"id":"a","name":"Still fine"}"#).contains(r#""ok":true"#));
+        assert!(take(checklist()).contains(r#""name":"Still fine""#));
+    }
+
+    #[test]
+    fn deleting_the_selected_project_drops_the_selection_for_good() {
+        // Regression: letting the selection merely dangle meant that re-creating a
+        // project with the SAME id resurrected it — the per-project surface would
+        // silently retarget to a project the host never selected. Deleting must clear.
+        reset();
+        assert!(call1(create_project, r#"{"id":"p2","name":"Second"}"#).contains(r#""ok":true"#));
+        assert!(call1(set_active_project, r#"{"id":"p2"}"#).contains(r#""ok":true"#));
+        assert!(call1(delete_project, r#"{"id":"p2"}"#).contains(r#""ok":true"#));
+
+        // Re-create the same id WITHOUT selecting it...
+        assert!(call1(create_project, r#"{"id":"p2","name":"Reused"}"#).contains(r#""ok":true"#));
+        // ...and the active project must still be the default, not the resurrected one.
+        assert!(
+            take(active_project()).contains("project"),
+            "a re-created id must not silently re-activate"
+        );
+        assert!(call1(create_task, r#"{"id":"a","name":"Goes to default"}"#).contains(r#""ok":true"#));
+        assert!(take(checklist()).contains(r#""name":"Goes to default""#));
+    }
+
+    #[test]
+    fn rejected_selection_carries_an_error_code() {
+        // Hosts switch on `code`; a bare {ok,error} envelope would read as `undefined`.
+        reset();
+        let out = call1(set_active_project, r#"{"id":"nope"}"#);
+        assert!(out.contains(r#""ok":false"#), "{out}");
+        assert!(out.contains(r#""code":1"#), "expected NotFound code: {out}");
+    }
+
+    #[test]
+    fn load_and_reset_clear_a_stale_selection() {
+        // The selection points into the workspace being replaced; carrying it across a
+        // load could silently target a *different* project that happens to share an id.
+        reset();
+        assert!(call1(create_project, r#"{"id":"p2","name":"Second"}"#).contains(r#""ok":true"#));
+        assert!(call1(set_active_project, r#"{"id":"p2"}"#).contains(r#""ok":true"#));
+        let snap = take(snapshot());
+        assert!(call1(load, &snap).contains(r#""ok":true"#));
+        // Back to the default, not the pre-load selection.
+        assert!(take(active_project()).contains("project"));
+
+        assert!(call1(set_active_project, r#"{"id":"p2"}"#).contains(r#""ok":true"#));
+        reset();
+        assert!(take(active_project()).contains("project"));
+    }
+
+    #[test]
     fn snapshot_is_a_workspace_and_migrates_a_bare_project_on_load() {
         // A bare pre-workspace ProjectState snapshot (no `projects` field) still loads,
         // wrapped into a one-project workspace, so Phase-1 persisted data keeps working.
@@ -925,6 +1300,87 @@ mod tests {
         let sched = take(workspace_schedule(monday));
         assert!(sched.contains(r#""ok":true"#), "{sched}");
         assert!(sched.contains(r#""perProject""#), "{sched}");
+    }
+
+    #[test]
+    fn view_projections_are_exported_and_render_ready() {
+        reset();
+        call1(create_task, r#"{"id":"a","name":"Alpha"}"#);
+        call1(create_task, r#"{"id":"b","name":"Bravo"}"#);
+        let d = r#"{"id":"ID","duration":{"workingMinutes":480,"elapsed":false}}"#;
+        call1(set_duration, &d.replace("ID", "a"));
+        call1(set_duration, &d.replace("ID", "b"));
+        call1(set_completed, r#"{"id":"b","completed":true}"#);
+
+        let monday = Date::from_ymd(2026, 7, 13).unwrap().0;
+        // A view showing name + done, sorted by name.
+        const VIEW: &str = r#""view":{"id":"v","name":"V","shape":"table","filter":{"statuses":[],"completed":null,"search":null},"groupBy":null,"sort":[{"field":{"builtin":"name"},"ascending":true}],"visibleFields":[{"builtin":"name"},{"builtin":"completed"}]}"#;
+        let view_json = format!(r#"{{{VIEW},"projectStart":{monday}}}"#);
+
+        // table(): columns carry labels, cells carry engine-formatted display strings.
+        let t = call1(table, &view_json);
+        assert!(t.contains(r#""ok":true"#), "{t}");
+        assert!(t.contains(r#""label":"Name""#), "{t}");
+        assert!(t.contains(r#""label":"Done""#), "{t}");
+        assert!(t.contains("Alpha"), "{t}");
+        assert!(t.contains('✓'), "the engine formatted the done glyph: {t}");
+
+        // view_selection(): ordered, grouped ids.
+        let sel = call1(view_selection, &view_json);
+        assert!(sel.contains(r#""ok":true"#), "{sel}");
+        assert!(sel.contains(r#""tasks":["a","b"]"#), "{sel}");
+
+        // calendar(): dated events over a range.
+        let cal_json = format!(
+            r#"{{{VIEW},"projectStart":{monday},"start":{monday},"end":{}}}"#,
+            monday + 7
+        );
+        let c = call1(calendar, &cal_json);
+        assert!(c.contains(r#""ok":true"#), "{c}");
+        assert!(c.contains("Alpha"), "{c}");
+    }
+
+    #[test]
+    fn an_out_of_range_date_is_an_envelope_not_a_trap() {
+        // `table` is the first export to reach civil-date formatting, where an unchecked
+        // i32 near the type's limit would overflow and panic ACROSS the FFI boundary.
+        // The bound turns that into an ordinary error envelope.
+        reset();
+        call1(create_task, r#"{"id":"a","name":"Alpha"}"#);
+        const VIEW: &str = r#""view":{"id":"v","name":"V","shape":"table","filter":{"statuses":[],"completed":null,"search":null},"groupBy":null,"sort":[],"visibleFields":[{"builtin":"start"}]}"#;
+
+        let out = call1(table, &format!(r#"{{{VIEW},"projectStart":2147483647}}"#));
+        assert!(out.contains(r#""ok":false"#), "{out}");
+        assert!(out.contains("out of range"), "{out}");
+
+        // The negative extreme is rejected too (and `i32::MIN` must not be negated).
+        let out = call1(table, &format!(r#"{{{VIEW},"projectStart":-2147483648}}"#));
+        assert!(out.contains(r#""ok":false"#), "{out}");
+
+        // A sane date still works.
+        let monday = Date::from_ymd(2026, 7, 13).unwrap().0;
+        let ok = call1(table, &format!(r#"{{{VIEW},"projectStart":{monday}}}"#));
+        assert!(ok.contains(r#""ok":true"#), "{ok}");
+    }
+
+    #[test]
+    fn label_and_priority_ops_are_exported() {
+        reset();
+        call1(create_task, r#"{"id":"a","name":"Alpha"}"#);
+        assert!(
+            call1(upsert_label, r#"{"id":"l1","name":"Bug","color":"red"}"#)
+                .contains(r#""ok":true"#)
+        );
+        assert!(call1(set_task_labels, r#"{"id":"a","labels":["l1"]}"#).contains(r#""ok":true"#));
+        // An unknown label id is a typed error, not a trap.
+        let bad = call1(set_task_labels, r#"{"id":"a","labels":["ghost"]}"#);
+        assert!(
+            bad.contains(r#""ok":false"#) && bad.contains(r#""code":1"#),
+            "{bad}"
+        );
+        assert!(call1(set_priority, r#"{"id":"a","priority":"high"}"#).contains(r#""ok":true"#));
+        // Deleting the label unlinks it everywhere.
+        assert!(call1(delete_label, r#"{"id":"l1"}"#).contains(r#""ok":true"#));
     }
 
     #[test]

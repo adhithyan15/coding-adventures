@@ -161,13 +161,26 @@ mod tests {
         assert!(has_rule(&ast, "param"));
     }
 
+    #[test]
+    fn double_declaration_with_float_literal_parses() {
+        // `double` is a type keyword and `3.14` a FLOAT_LIT primary — both new
+        // in the float grammar slice.
+        let ast = root("double area(double r) { double pi = 3.14; return pi; }");
+        assert!(has_rule(&ast, "function_def"));
+        assert!(has_rule(&ast, "declaration"));
+    }
+
     // -------------------------------------------------------------------
     // Recursion-depth guard (DoS hardening, interim DEFAULT_MAX_RULE_DEPTH
     // pass -- see MAX_RULE_DEPTH's own doc comment).
     // -------------------------------------------------------------------
 
     fn nested_paren_source(n: usize) -> String {
-        format!("int main(void) {{ return {}1{}; }}", "(".repeat(n), ")".repeat(n))
+        format!(
+            "int main(void) {{ return {}1{}; }}",
+            "(".repeat(n),
+            ")".repeat(n)
+        )
     }
 
     /// Deeply-nested input must not overflow the native stack on a

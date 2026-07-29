@@ -354,11 +354,127 @@ fn tf_bjt_forward_early_voltage_reduces_output_impedance() {
             3.0,
             1.11,
             forward_early_voltage,
+            1.0,
+            1.0,
         )));
         tf(&circuit, "out", "Vin").unwrap().output_impedance_ohms
     };
 
     assert!(output_impedance(10.0) < output_impedance(0.0));
+}
+
+#[test]
+fn tf_bjt_reverse_early_voltage_reduces_gain() {
+    let gain = |reverse_early_voltage: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vin", "base", "0", 0.65,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.reverse_early_voltage = reverse_early_voltage;
+        circuit.add(Element::Bjt(transistor));
+        tf(&circuit, "out", "Vin").unwrap().gain().abs()
+    };
+
+    assert!(gain(1.0) < gain(0.0));
+}
+
+#[test]
+fn tf_bjt_forward_beta_rolloff_reduces_gain() {
+    let gain = |rolloff_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vin", "base", "0", 0.65,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.forward_beta_rolloff_current = rolloff_current;
+        circuit.add(Element::Bjt(transistor));
+        tf(&circuit, "out", "Vin").unwrap().gain().abs()
+    };
+
+    assert!(gain(1.0e-4) < gain(0.0));
+}
+
+#[test]
+fn tf_bjt_base_emitter_leakage_reduces_input_impedance() {
+    let input_impedance = |leakage_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vin", "base", "0", 0.65,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.base_emitter_leakage_saturation_current = leakage_current;
+        transistor.base_emitter_leakage_emission_coefficient = 1.5;
+        circuit.add(Element::Bjt(transistor));
+        tf(&circuit, "out", "Vin").unwrap().input_impedance_ohms
+    };
+
+    assert!(input_impedance(1.0e-10) < input_impedance(0.0));
+}
+
+#[test]
+fn tf_bjt_base_collector_leakage_reduces_input_impedance() {
+    let input_impedance = |leakage_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vin", "base", "0", 0.65,
+        )));
+        let mut transistor = Bjt::new("Q1", "0", "base", "base");
+        transistor.base_collector_leakage_saturation_current = leakage_current;
+        transistor.base_collector_leakage_emission_coefficient = 1.5;
+        circuit.add(Element::Bjt(transistor));
+        tf(&circuit, "base", "Vin").unwrap().input_impedance_ohms
+    };
+
+    assert!(input_impedance(1.0e-10) < input_impedance(0.0));
+}
+
+#[test]
+fn tf_bjt_forward_emission_coefficient_reduces_gain_and_raises_input_impedance() {
+    let transfer = |forward_emission_coefficient: f64| {
+        let mut circuit = Circuit::new();
+        let thermal_voltage = 0.02585;
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vin", "base", "0", 0.65,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        circuit.add(Element::Bjt(Bjt::with_model_and_temperature_parameters(
+            "Q1",
+            "out",
+            "base",
+            "0",
+            BjtPolarity::Npn,
+            1.0e-14,
+            100.0,
+            thermal_voltage,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            3.0,
+            1.11,
+            0.0,
+            forward_emission_coefficient,
+            1.0,
+        )));
+        tf(&circuit, "out", "Vin").unwrap()
+    };
+
+    let ideal = transfer(1.0);
+    let shaped = transfer(2.0);
+    assert!(shaped.gain().abs() < ideal.gain().abs());
+    assert!(shaped.input_impedance_ohms > ideal.input_impedance_ohms);
 }
 
 #[test]

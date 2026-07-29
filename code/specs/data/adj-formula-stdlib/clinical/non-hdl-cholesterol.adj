@@ -1,0 +1,105 @@
+% ============================================================================
+% non-hdl-cholesterol.adj — the definition of non-HDL cholesterol
+% (non-HDL-C = total cholesterol − HDL cholesterol) in the ADJ standard library.
+% ============================================================================
+% The non-HDL-cholesterol entry of the *clinical* track, a lipidology sibling of the
+% hemodynamics libraries (`mean-arterial-pressure.adj`, `pulse-pressure.adj`,
+% `cerebral-perfusion-pressure.adj`) and the respiratory `alveolar-arterial-gradient.adj`.
+% Where `cerebral-perfusion-pressure.adj` grounds a pressure difference and `pulse-pressure.adj`
+% a blood-pressure difference, this grounds NON-HDL CHOLESTEROL as the difference of two
+% cholesterol measurements: NON-HDL CHOLESTEROL IS THE TOTAL CHOLESTEROL MINUS THE HDL
+% CHOLESTEROL — the cholesterol carried by every ATHEROGENIC lipoprotein particle (LDL, VLDL,
+% IDL and lipoprotein(a)) taken together, obtained from a routine lipid panel by simple
+% subtraction. It is a single number a clinician reads straight off two panel values — no
+% fasting sample and no estimating equation required (unlike the Friedewald LDL estimate in
+% `ldl-cholesterol-friedewald.adj`, which needs the triglycerides and a fasting draw). It ships
+% as an importable, byte-provenanced, PARAMETERIZED `formula`, together with its two exact
+% rearrangements (the total cholesterol a non-HDL value implies for a given HDL, and the HDL the
+% other two imply). As with every compute library, a consumer states NO arithmetic: it
+% `import`s this file, binds the measured cholesterols from its own byte-provenance
+% decomposition, and asks the engine to APPLY the cited definition on the CPU. Zero math is
+% performed by the model; the engine computes each value EXACTLY, carrying the definition's
+% citation.
+%
+%     import "non-hdl-cholesterol.adj"
+%     observe total_cholesterol(190)    % "…total cholesterol 190 mg/dL…"  (span cited by the model)
+%     observe hdl_cholesterol(40)       % "…HDL-C 40 mg/dL…"               (span cited by the model)
+%     ? non_hdl_cholesterol(total_cholesterol, hdl_cholesterol)
+%                                          % engine → 150, carrying non-HDL-C = TC − HDL-C
+%
+% All three formulas are EXACT over their parameters (a difference and two of its inverse
+% readings), so every value the engine returns is exact. The three COMPOSE and invert cleanly
+% around the worked case total cholesterol = 190 mg/dL, HDL-C = 40 mg/dL (non-HDL-C = 190 − 40 =
+% 150 mg/dL): the `non_hdl_cholesterol` a consumer computes from the two cholesterols is exactly
+% the `non_hdl_cholesterol` the `total_cholesterol` formula adds the HDL back to, to recover the
+% 190 mg/dL total, and exactly the `non_hdl_cholesterol` the `hdl_cholesterol` formula subtracts
+% from the total to recover the 40 mg/dL HDL.
+%
+%   non_hdl_cholesterol(total_cholesterol, hdl_cholesterol)
+%       = total_cholesterol - hdl_cholesterol   % non-HDL-C = TC − HDL-C   (definition)
+%   total_cholesterol(non_hdl_cholesterol, hdl_cholesterol)
+%       = non_hdl_cholesterol + hdl_cholesterol % TC = non-HDL-C + HDL-C   (same def, solved for TC)
+%   hdl_cholesterol(total_cholesterol, non_hdl_cholesterol)
+%       = total_cholesterol - non_hdl_cholesterol % HDL-C = TC − non-HDL-C (same def, solved for HDL-C)
+%
+% NOTE ON UNITS: the two cholesterols must be in the SAME unit (both milligrams per decilitre,
+% as in the worked case, or both millimoles per litre), and the non-HDL cholesterol comes out in
+% that same unit; this library computes the exact value over whatever consistent unit it is
+% given.
+%
+% All three formulas are defended by the SAME definitional sentence — "Non-HDL-C is calculated
+% by subtracting HDL cholesterol from total cholesterol and includes all atherogenic particles,
+% including LDL-C, VLDL-C and IDL-C, and lipoprotein(a)." — because that one definition (non-HDL
+% cholesterol IS the total minus the HDL) sanctions the relation read every way (the non-HDL-C
+% from the two cholesterols, the total from the non-HDL-C and HDL, or the HDL from the total and
+% non-HDL-C). The quote is transcribed verbatim from the StatPearls "Pediatric Dyslipidemia"
+% article on the NCBI Bookshelf, so each `formula` carries the provenance envelope every shipped
+% grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the definitional sentence is a verbatim span of the cited
+% page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable cholesterol the definition ranges over, and each
+% result is a derived quantity. `non_hdl_cholesterol`, `total_cholesterol` and `hdl_cholesterol`
+% each appear BOTH as a derived result and as an input (of the other formulas), so each is a
+% single dictionary term used in both roles. The `surface` lists are the everyday names a
+% decomposer maps onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary non_hdl_cholesterol_vocab {
+    define total_cholesterol   : finding  surface "total cholesterol", "TC"                    % milligrams per decilitre (mg/dL)
+    define hdl_cholesterol      : finding  surface "HDL cholesterol", "HDL-C", "HDL"           % milligrams per decilitre (mg/dL)
+    define non_hdl_cholesterol : finding  surface "non-HDL cholesterol", "non-HDL-C"           % milligrams per decilitre (mg/dL)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the definitional sentence from StatPearls on
+% the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact
+% difference/sum of measured quantities, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook non_hdl_cholesterol_laws {
+    use non_hdl_cholesterol_vocab
+
+    % Non-HDL cholesterol — the total cholesterol less the HDL cholesterol,
+    % i.e. non-HDL-C = TC − HDL-C.
+    formula non_hdl_cholesterol(total_cholesterol, hdl_cholesterol) = total_cholesterol - hdl_cholesterol
+        source "Non-HDL-C is calculated by subtracting HDL cholesterol from total cholesterol and includes all atherogenic particles, including LDL-C, VLDL-C and IDL-C, and lipoprotein(a)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK585106/"
+        trust authoritative
+
+    % Total cholesterol — the same definition solved for the total cholesterol a non-HDL value
+    % implies for an HDL (TC = non-HDL-C + HDL-C). Defended by the SAME definitional sentence,
+    % read the other way.
+    formula total_cholesterol(non_hdl_cholesterol, hdl_cholesterol) = non_hdl_cholesterol + hdl_cholesterol
+        source "Non-HDL-C is calculated by subtracting HDL cholesterol from total cholesterol and includes all atherogenic particles, including LDL-C, VLDL-C and IDL-C, and lipoprotein(a)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK585106/"
+        trust authoritative
+
+    % HDL cholesterol — the same definition solved for the HDL the other two imply
+    % (HDL-C = TC − non-HDL-C). Again the SAME definitional sentence, read the third way.
+    formula hdl_cholesterol(total_cholesterol, non_hdl_cholesterol) = total_cholesterol - non_hdl_cholesterol
+        source "Non-HDL-C is calculated by subtracting HDL cholesterol from total cholesterol and includes all atherogenic particles, including LDL-C, VLDL-C and IDL-C, and lipoprotein(a)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK585106/"
+        trust authoritative
+}

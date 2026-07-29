@@ -1,5 +1,323 @@
 # Changelog
 
+## [0.1.5] - 2026-07-23
+
+### Fixed (upstream — `semantic-ir-to-javascript` 0.51.3, not this crate's own lowering)
+
+`semantic-ir-to-javascript`'s SIR23 addendum item 3 (calculus /
+elementary-function handlers — `Sin`/`Cos`/`Sqrt`/`D`/`Integrate`, that
+crate's own `CHANGELOG.md` `[0.51.3]` entry) makes the LAST batch of
+previously-inert heads real: `Sin`/`Cos`/`Sqrt` fold an exact numeric
+argument (`Sin(0) -> 0`, `Cos(0) -> 1`, `Sqrt(4) -> 2`, all exact
+integers, never floats); `D` genuinely differentiates a power (constant-
+exponent power rule) or a `Sin` (chain rule, producing `Cos`); `Integrate`
+genuinely integrates a bare symbol to an exact rational term
+(`(1/2)x^2`). This crate's own `src/lower.rs` is completely unchanged —
+every fix here is entirely upstream in the shared backend, confirmed by
+`tests/test_lower.rs`'s ~40 pre-existing shape assertions still passing
+unmodified — and this closes out `tests/oracle.rs`'s 38-case corpus: ALL
+38 cases now genuinely agree end-to-end (run and confirmed via `cargo
+test -p derive-to-semantic-ir --test oracle -- --nocapture`, not
+guessed), so the remaining 7 `known_bug` markers flip to `known_bug:
+None` here — no case needed a new corpus entry, exactly as this file's
+own `Case::known_bug` doc comment anticipated:
+
+- `dif_differentiates_a_power` (`DIF(x^2, x)` → `2*x`) — the constant-
+  exponent power rule, re-evaluated through item 1's already-shipped
+  arithmetic identity folding (`Sub(2,1) -> 1`, `Pow(x,1) -> x`,
+  `Mul(_, 1) -> _`) down to `Mul(2, x)`.
+- `dif_of_sin_gives_cos` (`DIF(SIN(x), x)` → `COS(x)`) — the chain rule,
+  `Mul(Cos(x), 1)` folding (item 1's `a*1 -> a`) to the bare `Cos(x)`
+  term, which stays unevaluated (`x` is free) and prints via item 4's
+  case-bridge as `COS(x)`.
+- `a_worksheet_program_defines_then_differentiates`
+  (`H(y) := DIF(SIN(t), t); H(0)` → `H, COS(t)`) — the LAST case this
+  rollout needed. Item 2 already made `Define`/`H(0)` genuinely dispatch
+  (substituting `y -> 0` into a body that never mentions `y`, a no-op);
+  this item is what makes the substituted body, `D(Sin(t), t)`, actually
+  differentiate — same mechanism as `dif_of_sin_gives_cos` above, free
+  variable `t` instead of `x`.
+- `int_integrates_a_symbol` (`INT(x, x)` → `1/2*x^2`) — the bare-symbol
+  integration case, folding to the exact rational term
+  `Mul(Rational(1,2), Pow(x,2))`, never a float, rendered by item 4's
+  infix/`Pow` convention.
+- `sin_of_zero`, `cos_of_zero`, `sqrt_of_a_perfect_square` — the base
+  elementary-function identity folds, each an exact integer term.
+
+Verified no regression: `cargo test -p derive-to-semantic-ir` (full
+suite, including `tests/oracle.rs`) still passes; a genuine
+revert-and-confirm (temporarily removing `semantic-ir-to-javascript`'s
+5 new `HANDLERS` entries) makes exactly these 7 cases fail again with the
+documented old output (e.g. `"DIF(x^2, x)"` instead of `"2*x"`), confirming
+the fix — not just the flag flip — is what makes them pass. No case
+remains blocked: the SIR23 symbolic-evaluator rollout (4 items) is now
+complete, and this crate's oracle corpus is 38/38 `known_bug: None`.
+
+## [0.1.4] - 2026-07-22
+
+### Fixed (upstream — `semantic-ir-to-javascript` 0.51.2, not this crate's own lowering)
+
+`semantic-ir-to-javascript`'s SIR23 addendum item 2 (held-form execution
+— `Assign`/`Define`/`If` + user-function dispatch, that crate's own
+`CHANGELOG.md` `[0.51.2]` entry) makes the three `HELD_HEADS` real:
+`Assign` now genuinely binds a name in a shared environment and returns
+the bound value; `Define` now genuinely registers a
+`Define(name, params, body)` record and a later call now genuinely
+dispatches to it (substitute params → args, re-evaluate); `If` now
+genuinely evaluates its condition and selects a branch. This crate's own
+`src/lower.rs` is completely unchanged — every fix here is entirely
+upstream in the shared backend, confirmed by `tests/test_lower.rs`'s ~40
+pre-existing shape assertions still passing unmodified — but 6 more of
+`tests/oracle.rs`'s 38 `known_bug` cases now genuinely agree end-to-end
+(run and confirmed via `cargo test -p derive-to-semantic-ir --test oracle
+-- --nocapture`, not guessed), so their markers flip to `known_bug: None`
+here:
+
+- `variable_assignment_and_later_reference` (`x := 5; x + 1` → `5, 6`) —
+  `Assign` binds `x`, the next statement reads it back, item 1's `Add`
+  folding does the rest.
+- `single_param_function_definition_and_call` (`F(x) := x*x; F(5)` →
+  `F, 25`), `multi_param_function_definition_and_call`
+  (`G(a, b) := a + b; G(3, 4)` → `G, 7`) — `Define` registers the
+  function (displaying its bare name, never the stored record); the
+  call zips params to args by position, substitutes, and re-evaluates.
+- `if_true_branch` (`IF(1 > 0, 42, 0)` → `42`), `if_false_branch`
+  (`IF(1 > 2, 42, 99)` → `99`) — `If` evaluates the (already-comparison-
+  folded, item 1) condition and selects the matching branch.
+- `vector_assignment_persists_across_statements`
+  (`v := [1, 2, 3]; v` → `[1, 2, 3], [1, 2, 3]`) — **not** one of the 5
+  cases the SIR23 addendum's own "Rollout" section named for this item
+  in advance; flipped here because it genuinely passes once `Assign`
+  works (confirmed by running the test, not assumed) — this crate's own
+  `[0.1.3]` entry above already predicted exactly this: "once item 2
+  lands and binds `v` to an actual `List(1,2,3)`, it will already print
+  correctly."
+
+One more case, `a_worksheet_program_defines_then_differentiates`
+(`H(y) := DIF(SIN(t), t); H(0)` → `H, COS(t)`), is now genuinely closer —
+`Define` truly registers `H` and `H(0)` truly dispatches — but still
+disagrees: the substituted body, `D(Sin(t), t)`, still needs `DIF`/`SIN`
+folding (item 3, not part of this PR). It stays `known_bug`, with its
+reason text corrected in place to say so (the ORIGINAL reason, "Define
+never registers H," is no longer true).
+
+The remaining 7 `known_bug` cases (`dif_differentiates_a_power`,
+`dif_of_sin_gives_cos`, `a_worksheet_program_defines_then_differentiates`,
+`int_integrates_a_symbol`, `sin_of_zero`, `cos_of_zero`,
+`sqrt_of_a_perfect_square`) stay `known_bug`, all blocked purely by the
+calculus/elementary-function evaluation gap (item 3, not part of any PR
+so far).
+
+Verified no regression: `cargo test -p derive-to-semantic-ir` (full
+suite, including `tests/oracle.rs`) still passes; a genuine
+revert-and-confirm (temporarily restoring `semantic-ir-to-javascript`'s
+pre-item-2 inert behavior) makes exactly these 6 cases fail again with
+the documented old output, confirming the fix — not just the flag flip —
+is what makes them pass.
+
+## [0.1.3] - 2026-07-22
+
+### Fixed (upstream — `semantic-ir-to-javascript` 0.50.0, not this crate's own lowering)
+
+`semantic-ir-to-javascript`'s SIR23 addendum item 4 (Derive's own SIR23
+display convention — `SIR_DISPLAY_DERIVE`, that crate's own `CHANGELOG.md`
+`[0.50.0]` entry) gives `Symbolic.toDisplayString` a Derive-specific,
+precedence-aware infix/prefix/bracket/case-bridging renderer, ported
+directly from `derive-runtime::printer::print_derive`. This crate's own
+`src/lower.rs` is completely unchanged — every fix here is entirely
+upstream in the shared backend, confirmed by `tests/test_lower.rs`'s ~40
+pre-existing shape assertions still passing unmodified — but 7 more of
+`tests/oracle.rs`'s 38 `known_bug` cases now genuinely agree end-to-end
+(run and confirmed via `cargo test -p derive-to-semantic-ir --test oracle
+-- --nocapture`, not guessed), so their markers flip to `known_bug: None`
+here:
+
+- `negation_of_a_free_symbol` (`-x`) — prefix `Neg` rendering. Corrected a
+  mistaken assumption baked into its label ("Evaluation/display gap"):
+  there was never anything to evaluate (`x` is free), so this was always
+  a display-convention-only case.
+- `equation_with_a_free_variable_stays_symbolic` (`x = 4`) — infix
+  `Equal` rendering.
+- `flat_vector_literal` (`[1, 2, 3]`), `singleton_vector_literal`
+  (`[5]`), `vector_of_expressions_evaluates_elementwise` (`[1+1, 2*3,
+  2^3]`, whose elements item 1 already folds to `2, 6, 8`) — Derive's flat
+  `[a, b, c]` bracket convention.
+- `two_by_two_matrix_literal` (`[1, 2; 3, 4]`), `three_row_one_column_
+  matrix_literal` (`[1; 2; 3]`) — Derive's `;`-row-separated matrix
+  bracket convention.
+
+The remaining 13 `known_bug` cases stay `known_bug` — all blocked purely
+by the held-form/calculus evaluation gap (items 2/3, not part of this
+PR). Four of them (`vector_assignment_persists_across_statements`,
+`dif_differentiates_a_power`, `dif_of_sin_gives_cos`,
+`int_integrates_a_symbol`) have their reason strings **corrected in
+place** (stay `Some`, since they still disagree, but now note that only
+the evaluation half remains — the display half these reasons used to
+also blame is fixed by this PR and will render correctly the moment
+items 2/3 land).
+
+## [0.1.2] - 2026-07-21
+
+### Fixed (upstream — `semantic-ir-to-javascript` 0.47.0, not this crate's own lowering)
+
+`semantic-ir-to-javascript`'s SIR23 addendum item 1 (`Symbolic.evalTerm`
+arithmetic/comparison/logic folding, that crate's own `CHANGELOG.md`
+`[0.47.0]` entry) lands a real, scoped evaluator for the symbolic domain.
+This crate's own `src/lower.rs` is completely unchanged — every fix here
+is entirely upstream in the shared backend, confirmed by `tests/
+test_lower.rs`'s ~40 pre-existing shape assertions still passing
+unmodified — but 14 of `tests/oracle.rs`'s 38 `known_bug` cases now
+genuinely agree end-to-end (run and confirmed, not guessed), so their
+markers flip to `known_bug: None` here:
+
+- `multiplication_binds_tighter_than_addition`, `parens_override_
+  precedence`, `power_is_right_associative` — `Add`/`Mul`/`Pow` numeric
+  folding.
+- `unary_minus_binds_looser_than_power`, `negative_integer_literal` —
+  `Neg`'s numeric fold. Both corrected a mistaken assumption baked into
+  their ORIGINAL `known_bug` reason strings, which predicted that even a
+  folded `Neg` would still need display-convention work ("would print
+  `Neg(4)`, not `-4`"). That was wrong: `Neg`'s fold on a numeric literal
+  produces the plain integer term `-4`/`-5` directly (never a compound
+  `Neg(...)` term), so `toDisplayString`'s existing generic "integer"
+  case already renders it correctly — no display work needed for either
+  case, confirmed by running them.
+- `exact_integer_division_folds_to_an_integer`, `inexact_division_folds_
+  to_a_rational` — `Div`'s exact-integer/exact-rational folding.
+- `additive_identity_simplifies_a_free_symbol` — the `x + 0 -> x`
+  identity law.
+- `comparison_true`, `comparison_false`, `less_equal_boundary_is_true` —
+  comparison folding to the `True`/`False` symbol.
+- `and_or_short_circuit_to_true`, `three_term_and_chain_folds_n_ary`,
+  `not_negates_a_true_comparison` — `And`/`Or`/`Not` folding (including
+  the n-ary chain fold).
+
+One case's `known_bug` **reason string is corrected in place** (stays
+`Some`, since it still disagrees, but for a narrower, now-accurate
+reason): `vector_of_expressions_evaluates_elementwise` (`[1+1, 2*3,
+2^3]`) now compiles to and evaluates as `List(2, 6, 8)` — `List` still
+has no handler of its own, but `evalTerm`'s applicative-order argument
+evaluation folds each element for free regardless — so the ORIGINAL
+reason ("each element is itself an unfolded Add/Mul/Pow term... never
+[2, 6, 8]") is no longer true; only Derive's own `[...]` bracket display
+convention (item 4 of the addendum's rollout) is still missing.
+
+The remaining 23 `known_bug` cases are unaffected and still fail for
+their own already-documented reasons (held-form execution — `Assign`/
+`Define`/`If`, item 2 of the rollout; calculus/elementary functions —
+`DIF`/`INT`/`SIN`/`COS`/`SQRT`, item 3; and Derive's own SIR23 display
+convention — infix/prefix/bracket/case-bridging, item 4) — none of
+those are in this upstream fix's scope, so none are force-flipped.
+
+## [0.1.1] - 2026-07-21
+
+### Added
+
+- **`tests/oracle.rs` — HML01 §7 oracle/golden testing, cross-checking
+  `derive-runtime` (ground truth) against `derive_to_semantic_ir::
+  compile_source` → `semantic_ir::Module` → `semantic_ir_to_javascript::
+  compile` → a real `node` process.** The direct Derive sibling of
+  `j-to-semantic-ir/tests/oracle.rs`, completing HML01 §5's "a true oracle
+  diff [for Stream B] remains the one open item" note *for
+  `derive-to-semantic-ir` specifically* (that spec line is updated by this
+  PR; `wolfram-to-semantic-ir`/`macsyma-to-semantic-ir`/`reduce-to-
+  semantic-ir`/`maple-to-semantic-ir` are unaffected and still have no
+  oracle file of their own). 38-case corpus: bare integer/float/symbol
+  atoms; ordinary (non-J/APL) operator precedence and right-associative
+  `^`; unary minus binding looser than `^`; exact-integer vs. genuine-
+  rational division; an additive-identity simplification; assignment and
+  vector-assignment read back by a later statement; single- and
+  multi-parameter user-defined function definition/call; `DIF`/`INT` via
+  the shared calculus handlers (including the differentiate-then-call-at-
+  a-point worksheet idiom `derive-runtime`'s own test suite uses); `IF`'s
+  two branches; every comparison/logic keyword (`= <= < > >= AND OR NOT`,
+  including a 3-term `AND` chain exercising the n-ary logical-chain fold);
+  flat/singleton/elementwise-evaluated vectors and 2×2/3-row-1-column
+  matrices (D-5 structural `List` data).
+- Adds a dev-dependency on `coding-adventures-derive-runtime` (this
+  frontend's own sibling native-runtime crate) for `tests/oracle.rs`'s
+  ground truth only — the non-dev `[dependencies]` section still does not
+  depend on it; lowering itself only ever needs the parse-tree shape.
+
+### Found, NOT fixed here (shared `semantic-ir-to-javascript` crate — follow-up task)
+
+Building this corpus found that comparing *evaluated values* — the entire
+point of an oracle test — is currently blocked for this frontend (and, by
+the same root cause, for `wolfram-to-semantic-ir`/`macsyma-to-semantic-ir`,
+Stream B's other two shipped frontends, which is presumably why neither
+has ever shipped an oracle file either) by two gaps in the SHARED
+`semantic-ir-to-javascript` crate, not in this frontend's own lowering
+(confirmed independently: `tests/test_lower.rs`'s ~40 pre-existing shape
+assertions all still pass unmodified, so `derive_to_semantic_ir` itself
+emits exactly the `SymApply`/`SymSymbol` shapes MA07 §3 calls for).
+Recorded here — mirroring how `j-to-semantic-ir`'s own oracle file
+documented its two shared-crate bugs excluded-not-fixed — rather than
+patched in this PR, per this task's own scope discipline (`tests/
+oracle.rs`'s module doc has the full write-up with confirmed emitted-JS
+examples for each):
+
+- **No SIR23 evaluation or simplification of any kind.** `Expr::SymApply`
+  compiles unconditionally to `__Sir.Symbolic.apply(head, [args])` — a
+  pure, inert term constructor, confirmed by hand-compiling and running
+  representative programs through `node`: `1 + 2*3` stays `Add(1, Mul(2,
+  3))` (never folds to `7`); `x := 5` / `x + 1` compiles to `Assign(x, 5)`
+  then `Add(x, 1)` (the second statement's `x` is never substituted, so it
+  never reads back `6`); `DIF(x^2, x)` stays `D(Pow(x, 2), x)` (never
+  differentiates to `2*x`); `5 > 3` stays `Greater(5, 3)` (never evaluates
+  to the symbol `True`); `F(x) := x*x` / `F(5)` never registers `F` or
+  dispatches the call. The SIR23 domain's `SymReplaceAll`/
+  `SymReplaceRepeated` nodes DO have a real pattern-rewrite implementation
+  (`runtime.rs`'s `Symbolic.replaceAll`/`replaceRepeated`), but Derive's
+  grammar has no rewrite-rule syntax at all (MA07 §4) to ever emit those
+  nodes, so this frontend can never reach that machinery either. 29 of
+  this crate's 38 new oracle cases hit this gap (every case beyond a bare
+  literal/symbol atom and beyond the 5 display-only cases below).
+- **No per-source-language SIR23 display convention.** Even a term that
+  WAS already fully reduced would still print wrong: the sole SIR23
+  stringifier, `Symbolic.toDisplayString`, renders every compound term
+  generically as `head(args, ...)` — `Add(x, 1)`, `List(1, 2, 3)`,
+  `Neg(x)` — with no infix `+`/`*`/`^`, no `[...]`/`[...;...]` bracket
+  convention, no prefix `-`/`NOT`, and no case-bridging back to Derive's
+  own UPPERCASE builtin spelling (`derive-runtime::printer::print_derive`
+  reverses all four). Unlike the SIR22 array domain's `ArrayRt.fmtNum`/
+  `display` (which already has per-language flags —
+  `SIR_DISPLAY_APL_HIGH_MINUS`, `SIR_DISPLAY_J_UNDERSCORE`), the SIR23
+  domain has no such mechanism for any source language yet. 5 of this
+  crate's 38 new oracle cases (`equation_with_a_free_variable_stays_
+  symbolic`, `flat_vector_literal`, `singleton_vector_literal`,
+  `two_by_two_matrix_literal`, `three_row_one_column_matrix_literal`) hit
+  ONLY this gap — the value needs no evaluation at all, but the printed
+  notation still disagrees.
+
+### Known limitations
+
+- **No local lowering bugs were found in this pass** (unlike
+  `j-to-semantic-ir`'s oracle PR, which found and fixed two bugs genuinely
+  local to that frontend's own `src/lower.rs`). This crate's lowering was
+  already independently verified, node-by-node, against
+  `derive-runtime::lower`'s identical dispatch table (see this crate's
+  0.1.0 entry above), and `tests/test_lower.rs`'s ~40 shape-assertion
+  tests already cover every grammar production directly — an oracle test
+  that can only ever compare unevaluated term SHAPES (per the two gaps
+  above) cannot surface a new class of bug beyond what those direct shape
+  assertions already check.
+- `tests/oracle.rs` performs one test-local transformation neither
+  `j-to-semantic-ir`'s nor `apl-to-semantic-ir`'s own oracle file needed:
+  after `compile_source` + `semantic_ir::validate` (so validation still
+  exercises exactly what shipped, unmodified), it wraps each top-level
+  statement's `Expr` in `BuiltinCall("print", [expr])` using only
+  `semantic_ir`'s own public `Module`/`Stmt`/`Expr` types, purely so a
+  value is observable on the compiled side at all. `derive_to_semantic_ir
+  ::compile_source` itself is intentionally unchanged and still emits no
+  `print`/`console.log` of its own for any other caller — `tests/
+  e2e_node.rs`'s own module doc comment's "no `disp`-equivalent stdout"
+  design note is still accurate for the crate's real, shipped behavior.
+- Given the above, only 4 of the 38 corpus cases are `known_bug: None`
+  (bare integer/float/symbol literals) — a much lower "clean" fraction than
+  `j-to-semantic-ir`'s 21-of-36, reflecting the actual, current state of
+  the shared SIR23 JS backend rather than a shortfall in this frontend's
+  own corpus design.
+
 ## [0.1.0] - 2026-07-19
 
 ### Added

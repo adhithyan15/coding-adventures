@@ -4,8 +4,8 @@
 use crate::error::RuntimeError;
 use crate::picture::Picture;
 use crate::program::{
-    ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program, RelOp, Stmt, ValueSpec,
-    WhenValue,
+    ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program, RefIndex, Region,
+    RegionKind, RelOp, Stmt, TallyCounterGroup, ValueSpec, WhenValue,
 };
 use crate::value::{add, div, move_into_char, move_into_numeric, mul, pow, round, sub, Decimal};
 use std::collections::HashMap;
@@ -30,6 +30,13 @@ const MAX_PERFORM_DEPTH: usize = 100;
 /// intermediate scale when it lowers a nested COMPUTE division — keeping compiled
 /// output byte-identical to this oracle.
 pub const COMPUTE_DIV_SCALE: usize = 12;
+
+/// Widest alphanumeric source an alphanumeric → numeric MOVE folds into an `i64`.
+/// An all-digit source of at most this many characters has value `< 10^18`, which
+/// fits an `i64` (`< ~9.22 * 10^18`), so the per-character fold never overflows;
+/// a wider source is a clean later rung. Mirrors the compiler's constant of the
+/// same name so both engines defer the same source widths.
+const NUMERIC_MAX_DIGITS: usize = 18;
 
 /// One field in the data model. Elementary items carry a picture and character
 /// storage; group items (no picture) are the concatenation of their children.
@@ -348,25 +355,163 @@ impl Machine {
             }
             Stmt::SetTrue { cond_name } => self.exec_set_true(cond_name)?,
             Stmt::Evaluate { subject, branches } => return self.exec_evaluate(subject, branches),
-            Stmt::String { sources, target } => self.exec_string(sources, target)?,
+            Stmt::String { sources, target, delim, pointer, on_overflow, not_on_overflow } => {
+                return self.exec_string(
+                    sources,
+                    target,
+                    delim.as_ref(),
+                    pointer.as_deref(),
+                    on_overflow,
+                    not_on_overflow,
+                );
+            }
+            Stmt::Unstring { source, delim, targets, pointer, on_overflow, not_on_overflow } => {
+                return self.exec_unstring(
+                    source,
+                    delim,
+                    targets,
+                    pointer.as_deref(),
+                    on_overflow,
+                    not_on_overflow,
+                );
+            }
+            Stmt::Inspect { source, counter, delim, leading, characters, region } => {
+                return self.exec_inspect(
+                    source,
+                    counter,
+                    delim,
+                    *leading,
+                    *characters,
+                    region.as_ref(),
+                )
+            }
+            Stmt::InspectReplacing { source, search, replace, leading, region } => {
+                self.exec_inspect_replacing(source, search, replace, *leading, region.as_ref())?
+            }
+            Stmt::InspectReplacingMulti { source, items } => {
+                self.exec_inspect_replacing_multi(source, items)?
+            }
+            Stmt::InspectReplacingCharacters { source, replace } => {
+                self.exec_inspect_replacing_characters(source, replace)?
+            }
+            Stmt::InspectTallyMulti { source, counter, items } => {
+                return self.exec_inspect_tally_multi(source, counter, items)
+            }
+            Stmt::InspectTallyCounters { source, groups } => {
+                return self.exec_inspect_tally_counters(source, groups)
+            }
+            Stmt::InspectTallyReplace {
+                source,
+                counter,
+                delim,
+                tally_leading,
+                tally_region,
+                search,
+                replace,
+                replace_leading,
+                replace_region,
+            } => {
+                return self.exec_inspect_tally_replace(
+                    source,
+                    counter,
+                    delim,
+                    *tally_leading,
+                    tally_region.as_ref(),
+                    search,
+                    replace,
+                    *replace_leading,
+                    replace_region.as_ref(),
+                )
+            }
+            Stmt::InspectConverting { source, from, to, region } => {
+                self.exec_inspect_converting(source, from, to, region.as_ref())?
+            }
         }
         Ok(Flow::Normal)
     }
 
-    /// `STRING s… DELIMITED BY SIZE INTO t` — concatenate every sending field,
-    /// each taken in FULL (`DELIMITED BY SIZE`), then overlay the result onto the
-    /// receiver `t` from the left. COBOL's STRING is unusual: it writes only as
-    /// many characters as it produced and **leaves the rest of `t` unchanged** — no
-    /// space-fill (unlike `MOVE`). So a result longer than `t` is truncated at
-    /// `t`'s width, and a shorter one leaves `t`'s trailing bytes exactly as they
-    /// were. This is the ANSI-85 rule, implemented identically in the
-    /// `cobol-iir-compiler` so the compiled program matches this oracle
-    /// byte-for-byte.
-    fn exec_string(&mut self, sources: &[Operand], target: &str) -> Result<(), RuntimeError> {
-        // Concatenate the sending fields left-to-right.
+    /// `STRING s… DELIMITED BY {SIZE | delim} INTO t` — concatenate every sending
+    /// field, then overlay the result onto the receiver `t` from the left. COBOL's
+    /// STRING is unusual: it writes only as many characters as it produced and
+    /// **leaves the rest of `t` unchanged** — no space-fill (unlike `MOVE`). So a
+    /// result longer than `t` is truncated at `t`'s width, and a shorter one leaves
+    /// `t`'s trailing bytes exactly as they were. This is the ANSI-85 rule,
+    /// implemented identically in the `cobol-iir-compiler` so the compiled program
+    /// matches this oracle byte-for-byte.
+    ///
+    /// The `delim` argument selects how much of each field is taken:
+    ///
+    ///   * `None` (`DELIMITED BY SIZE`) — each field is taken in FULL.
+    ///   * `Some(d)` — each field contributes only the run of characters BEFORE the
+    ///     first `d` in that field (`"ab,cd"` with `d=','` → `"ab"`); a field with
+    ///     no `d` contributes its whole image, and a field starting with `d`
+    ///     contributes `""`. ONE delimiter applies to all fields.
+    ///
+    /// **Why the delimiter and any delimited literal field must be ASCII.** The
+    /// prefix boundary is "up to the first delimiter char". The oracle finds it by
+    /// scanning CHARACTERS; the compiler lowers it to byte-based `str_index` /
+    /// `str_slice`. The two agree only when one char == one byte, i.e. ASCII. So a
+    /// non-ASCII delimiter, and a non-ASCII string-LITERAL sending field WHEN a
+    /// delimiter is active, are clean later rungs rejected identically on BOTH
+    /// engines. (Under `DELIMITED BY SIZE` no per-char boundary is computed, so
+    /// sending fields are unrestricted — the guard is delimiter-only.)
+    fn exec_string(
+        &mut self,
+        sources: &[Operand],
+        target: &str,
+        delim: Option<&Operand>,
+        pointer: Option<&str>,
+        on_overflow: &[Stmt],
+        not_on_overflow: &[Stmt],
+    ) -> Result<Flow, RuntimeError> {
+        // Resolve the single delimiter character once (it applies to every field).
+        // A multi-char / numeric / figurative / reference-modified / wider-item
+        // delimiter is rejected by the SAME `single_delim_char` UNSTRING uses.
+        //
+        // The non-ASCII guard is scoped to a LITERAL delimiter. A non-ASCII single
+        // char makes the char-based oracle and the byte-based compiler diverge, so
+        // it must be rejected on BOTH engines to stay co-total — but the compiler
+        // can only SEE the delimiter's bytes at build time when it is a literal (a
+        // multi-byte literal like `"é"` fails its byte-length test). A non-ASCII
+        // PIC X(1) delimiter ITEM has no build-time byte on the compiler (its byte
+        // is a run-time `str_index`), so — exactly as UNSTRING does — we do NOT add
+        // a one-sided reject for it; it stays the shared byte-vs-char chip (both
+        // engines accept, and for ASCII sending fields still agree).
+        let delim_ch = match delim {
+            Some(d) => {
+                let ch = self.single_delim_char(d, "STRING")?;
+                if matches!(d, Operand::Lit(Lit::Str(_))) && !ch.is_ascii() {
+                    return Err(RuntimeError::Unsupported(
+                        "STRING with a non-ASCII delimiter is a later rung".into(),
+                    ));
+                }
+                Some(ch)
+            }
+            None => None,
+        };
+        // Concatenate the sending fields left-to-right. With a delimiter each field
+        // is truncated at its first delimiter char; without one it is taken in full.
         let mut concat = String::new();
         for op in sources {
-            concat.push_str(&self.string_source_chars(op)?);
+            // A non-ASCII string-LITERAL field under an active delimiter is a later
+            // rung (its prefix boundary differs byte-vs-char). A non-ASCII IDENTIFIER
+            // field is the pre-existing byte-vs-char chip and is not guarded here.
+            if delim_ch.is_some() {
+                if let Operand::Lit(Lit::Str(s)) = op {
+                    if !s.is_ascii() {
+                        return Err(RuntimeError::Unsupported(
+                            "STRING with a non-ASCII sending field under DELIMITED BY is a later rung"
+                                .into(),
+                        ));
+                    }
+                }
+            }
+            let image = self.string_source_chars(op)?;
+            match delim_ch {
+                // Prefix up to (not including) the first delimiter char.
+                Some(d) => concat.extend(image.chars().take_while(|c| *c != d)),
+                None => concat.push_str(&image),
+            }
         }
         let idx = *self
             .by_name
@@ -385,20 +530,145 @@ impl Machine {
                 ))
             }
         };
-        // Overlay the leftmost `min(len, size)` characters, preserving the tail.
+        // Overlay the concatenation, preserving the receiver bytes STRING did not
+        // fill. `src` is the built image; `dst` is the receiver's current storage,
+        // normalised to exactly `size` chars (elementary alphanumeric storage is
+        // already `size` wide, but keep the overlay robust against any drift).
         let src: Vec<char> = concat.chars().collect();
         let mut dst: Vec<char> = self.items[idx].storage.chars().collect();
-        // Elementary alphanumeric storage is always exactly `size` chars; keep the
-        // overlay robust against any drift.
         if dst.len() < size {
             dst.resize(size, ' ');
         } else {
             dst.truncate(size);
         }
-        let n = src.len().min(size);
-        dst[..n].copy_from_slice(&src[..n]);
-        self.items[idx].storage = dst.into_iter().collect();
-        Ok(())
+
+        // # `WITH POINTER p`
+        //
+        // `p` is an unsigned-integer item (`PIC 9(n)`) holding the **1-based**
+        // character position in the RECEIVER at which the first transferred
+        // character is placed. Without the phrase (`None`) the overlay starts at
+        // position 0 and nothing is written back — today's behaviour, unchanged.
+        //
+        // With the phrase two things change:
+        //
+        //   * **Overlay offset.** Characters go to receiver positions `p-1, p, …`
+        //     (0-based `start = p-1`). Only what fits from `start` to the end of the
+        //     `size`-wide receiver is placed: `chars_placed = min(concat.len(),
+        //     size - start)`. Positions BEFORE `start` and AFTER `start +
+        //     chars_placed` keep their prior bytes (STRING overwrites only the run
+        //     it fills). `p = 1` (start 0) is byte-identical to the no-pointer
+        //     overlay above — the correctness anchor.
+        //
+        //   * **Write-back.** `p` becomes `p + chars_placed`, the 1-based position
+        //     one past the last character stored. When the content does not all fit
+        //     (`concat.len() > size - start`) the excess is dropped — this IS ISO's
+        //     overflow, and `chars_placed = size - start`, so `p` becomes `size + 1`.
+        //
+        // ## Out-of-range initial pointer
+        //
+        // `p` is `PIC 9(n)` so `p ≥ 0`. When the initial value is OUTSIDE `[1,
+        // size]` — either `p == 0` (a 0-based start of −1) or `p > size` (start past
+        // the receiver end) — this is ISO's overflow condition. We apply the ISO
+        // "overflow ⇒ no data movement" rule DETERMINISTICALLY: NO character is
+        // transferred (receiver UNCHANGED) and `p` is left UNCHANGED. Because `p` is
+        // a run-time value neither engine can range-check it at build time; the
+        // compiler emits the identical guard so the accept/skip decision is
+        // byte-identical.
+        //
+        // # The `overflow` condition (drives ON / NOT ON OVERFLOW)
+        //
+        // ISO: overflow occurs when the receiver fills before every sending character
+        // is transferred (characters dropped), OR the initial pointer is out of
+        // range. Concretely, with `avail` = characters reachable from the start:
+        //
+        //   | case                       | start | avail       | overflow           |
+        //   | -------------------------- | ----- | ----------- | ------------------ |
+        //   | no WITH POINTER            | 0     | size        | concat.len > size  |
+        //   | POINTER p, p∈[1,size]      | p-1   | size-(p-1)  | concat.len > avail |
+        //   | POINTER p, p==0 || p>size  | —     | —           | true (no movement) |
+        //
+        // Both engines MUST compute this identical comparison; a mismatch diverges.
+        // After the (unchanged) data movement we run `on_overflow` when `overflow` is
+        // set, else `not_on_overflow` — either list may be empty (clause absent),
+        // in which case `run_stmts` returns `Flow::Normal`.
+        let overflow: bool;
+        match pointer {
+            None => {
+                overflow = src.len() > size;
+                let n = src.len().min(size);
+                dst[..n].copy_from_slice(&src[..n]);
+                self.items[idx].storage = dst.into_iter().collect();
+            }
+            Some(pname) => {
+                // Validate the pointer item: an UNSIGNED INTEGER `PIC 9(n)`, n ≤ 18
+                // (so the value fits the `i64` the compiler stores it in) — the same
+                // class INSPECT's counter demands. A signed, fractional, non-numeric,
+                // or group `p` is a clean later rung, rejected identically on the
+                // compiler (which checks the picture at build time).
+                let pidx = *self
+                    .by_name
+                    .get(pname)
+                    .ok_or_else(|| RuntimeError::UndefinedName(pname.to_string()))?;
+                match &self.items[pidx].picture {
+                    Some(Picture::Numeric { signed: true, .. }) => {
+                        return Err(RuntimeError::Unsupported(format!(
+                            "STRING … WITH POINTER: a signed pointer {pname} is a later rung"
+                        )))
+                    }
+                    Some(Picture::Numeric { dec_digits, .. }) if *dec_digits != 0 => {
+                        return Err(RuntimeError::Unsupported(format!(
+                            "STRING … WITH POINTER: a non-integer pointer {pname} is a later rung"
+                        )))
+                    }
+                    Some(Picture::Numeric { int_digits, .. }) if *int_digits > 18 => {
+                        return Err(RuntimeError::Unsupported(format!(
+                            "STRING … WITH POINTER: a pointer {pname} wider than 18 digits is a later rung"
+                        )))
+                    }
+                    Some(Picture::Numeric { .. }) => {}
+                    _ => {
+                        return Err(RuntimeError::Unsupported(format!(
+                            "STRING … WITH POINTER: a non-numeric pointer {pname} is a later rung"
+                        )))
+                    }
+                }
+                // The unsigned integer value of `p` (leading zeros stripped; an
+                // all-zero image parses to 0). Comparing at u128 width cannot
+                // overflow for ≤18 digits and keeps a huge `pv` safely greater than
+                // any `size`.
+                let pv_dec = self.named_decimal(pname)?;
+                let pv: u128 = pv_dec.int.trim_start_matches('0').parse().unwrap_or(0);
+                if pv == 0 || pv > size as u128 {
+                    // Out of range IS overflow: no data movement, pointer unchanged,
+                    // but the ON OVERFLOW imperative still runs (a behaviour change
+                    // from the pre-overflow rung, which returned here with no
+                    // imperative). Fall through to the shared imperative dispatch.
+                    overflow = true;
+                } else {
+                    let start = (pv - 1) as usize; // 0-based overlay offset
+                    let avail = size - start; // ≥ 1 here (pv ≤ size)
+                    overflow = src.len() > avail; // some sending chars would be dropped
+                    let chars_placed = src.len().min(avail);
+                    dst[start..start + chars_placed].copy_from_slice(&src[..chars_placed]);
+                    self.items[idx].storage = dst.into_iter().collect();
+                    // Write `p` back to `p + chars_placed`, reshaped into its `PIC
+                    // 9(n)` picture through the same numeric store ADD/INSPECT use.
+                    let resume = pv + chars_placed as u128;
+                    let value =
+                        Decimal { neg: false, int: resume.to_string(), frac: String::new() };
+                    self.store_result(pname, value, false, &[])?;
+                }
+            }
+        }
+        // Run the conditional imperative. An empty list → `run_stmts` = `Flow::Normal`
+        // (mirrors how `store_result` dispatches `ON SIZE ERROR`). A `STOP RUN` / `GO
+        // TO` inside the chosen list propagates its `Flow` up to unwind the enclosing
+        // paragraph, exactly like an IF branch.
+        if overflow {
+            self.run_stmts(on_overflow)
+        } else {
+            self.run_stmts(not_on_overflow)
+        }
     }
 
     /// The character image a sending field contributes to a `STRING` (taken in
@@ -433,6 +703,1200 @@ impl Machine {
                 }
             }
         }
+    }
+
+    /// `UNSTRING source DELIMITED BY delim INTO r1 [r2 …]` — the inverse of
+    /// STRING. Scan the alphanumeric `source` left-to-right and split it into
+    /// delimited fields on each occurrence of the single delimiter character,
+    /// moving successive fields into successive receivers `r1..rn`.
+    ///
+    /// The scan holds a cursor `p` over the source characters. For each receiver
+    /// in turn (while the source is not yet exhausted), it finds the next
+    /// delimiter at or after `p` — call its index `q` (or end-of-source if none
+    /// remains) — takes the field `source[p..q]`, moves it into the receiver as an
+    /// ordinary alphanumeric MOVE (so padding/truncation match `move_into`), and
+    /// advances `p` to `q + 1` (past the delimiter). Worked, with delimiter `,`:
+    ///
+    /// ```text
+    ///   "A,B,C"  INTO R1 R2 R3   →  R1="A  " R2="B  " R3="C  "
+    ///   "A,B,C,D" INTO R1 R2 R3  →  R1="A  " R2="B  " R3="C  "  (D dropped)
+    ///   "A,B"    INTO R1 R2 R3   →  R1="A  " R2="B  " R3 UNCHANGED
+    ///   "A,,C"   INTO R1 R2 R3   →  R1="A  " R2="   " R3="C  "  (empty field)
+    ///   ",X"     INTO R1 R2      →  R1="   " R2="X  "
+    /// ```
+    ///
+    /// The cursor tells "exhausted" (a field ran to end-of-source with no trailing
+    /// delimiter, leaving `p` one past the end → remaining receivers UNCHANGED)
+    /// apart from "a trailing delimiter" (`p` lands exactly at the end → one more
+    /// empty field is still produced). Each receiver INCLUDING the last takes only
+    /// its field up to the next delimiter; fields beyond the receiver count are
+    /// dropped (that would be `ON OVERFLOW`, a later rung). The
+    /// `cobol-iir-compiler` emits a run-time scan loop with these exact semantics,
+    /// so a compiled program matches this oracle byte-for-byte.
+    ///
+    /// # `WITH POINTER p`
+    ///
+    /// `p` is an unsigned-integer item (`PIC 9(n)`) holding a **1-based** character
+    /// position in the source. Two things change; the field extraction and receiver
+    /// reshape are otherwise IDENTICAL:
+    ///
+    ///   * **Start offset.** Scanning begins at 0-based index `p_value - 1` instead
+    ///     of 0. So `p = 1` is exactly today's no-pointer behaviour (start at 0),
+    ///     which is the correctness anchor: `… INTO r… WITH POINTER p` with `p = 1`
+    ///     must fill the SAME receivers as the same statement WITHOUT the phrase.
+    ///
+    ///   * **Write-back.** After the scan, `p` is set to the 1-based position of the
+    ///     character immediately following the last one examined. The existing scan
+    ///     leaves its 0-based cursor at `q + 1` past the terminating delimiter; when
+    ///     the last field instead ran to end-of-source (no delimiter) that step is a
+    ///     phantom one past the end. Clamping to `len` removes the phantom, so the
+    ///     write-back value is `min(final_cursor, len) + 1` (the `+ 1` restores
+    ///     1-basing). Worked: source `"a,b,c"` (len 5), `p = 3` → start at index 2
+    ///     ("b,c"), r1="b", r2="c", final cursor 6 → `min(6,5)+1 = 6`.
+    ///
+    /// # Out-of-range initial pointer
+    ///
+    /// `p` is `PIC 9(n)` so `p ≥ 0`. When the initial value is OUTSIDE the valid
+    /// range `[1, len]` — either `p == 0` (a 0-based start of −1) or `p > len` (past
+    /// the source) — this is ISO's overflow condition. Since `ON OVERFLOW` is still
+    /// deferred, we apply the ISO "overflow ⇒ no data movement" rule DETERMINISTIC-
+    /// ally: NO receiver is modified and `p` is left UNCHANGED. Because `p` is a
+    /// run-time value, neither engine can range-check it at build time; the compiler
+    /// emits the identical guard so the accept/skip decision is byte-identical.
+    fn exec_unstring(
+        &mut self,
+        source: &Operand,
+        delim: &Operand,
+        targets: &[String],
+        pointer: Option<&str>,
+        on_overflow: &[Stmt],
+        not_on_overflow: &[Stmt],
+    ) -> Result<Flow, RuntimeError> {
+        // The field characters come from ONE of THREE providers; everything after
+        // `src` is obtained (the delimiter scan and per-receiver reshape) is
+        // shared, so only this match differs between an item source, a literal
+        // source, and a reference-modified item slice.
+        let src: Vec<char> = match source {
+            // Identifier source: the characters are an alphanumeric item's
+            // STORAGE (a numeric or group item is a later rung).
+            Operand::Ident(name) => {
+                let sidx = *self
+                    .by_name
+                    .get(name)
+                    .ok_or_else(|| RuntimeError::UndefinedName(name.clone()))?;
+                match &self.items[sidx].picture {
+                    Some(p) if p.is_numeric() => {
+                        return Err(RuntimeError::Unsupported(
+                            "UNSTRING of a numeric source is a later rung".into(),
+                        ))
+                    }
+                    Some(_) => {}
+                    None => {
+                        return Err(RuntimeError::Unsupported(
+                            "UNSTRING of a group source is a later rung".into(),
+                        ))
+                    }
+                }
+                self.items[sidx].storage.chars().collect()
+            }
+            // Literal source: the characters are the string literal's OWN bytes.
+            // A string literal is inherently alphanumeric, so there is no item to
+            // look up and no picture to check.
+            Operand::Lit(Lit::Str(s)) => s.chars().collect(),
+            // Reference-modified source: the characters are the ref-mod slice
+            // `base(start:len)` of the base item. `refmod_string` returns EXACTLY
+            // the char range the compiler emits as a `str_slice` (so DISPLAY of the
+            // same slice already agrees byte-for-byte) and already rejects a
+            // numeric base and out-of-range indices. Only obtaining `src` differs;
+            // the delimiter scan and receiver fill below are UNCHANGED.
+            Operand::RefMod { base, start, len } => {
+                self.refmod_string(base, start, len)?.chars().collect()
+            }
+            // The reader rejected every remaining source variant (numeric or
+            // figurative literal), so this is unreachable in practice; guard
+            // defensively rather than panic.
+            Operand::Lit(_) => {
+                return Err(RuntimeError::Unsupported(
+                    "UNSTRING with this source kind is a later rung".into(),
+                ))
+            }
+        };
+
+        // The single delimiter character.
+        let delim_ch = self.single_delim_char(delim, "UNSTRING")?;
+
+        // Every receiver must be an alphanumeric item (validated up front so a
+        // numeric/group receiver is a clean error even if the scan never reaches
+        // it — matching the compiler, which lowers every receiver at build time).
+        let mut tidx: Vec<usize> = Vec::with_capacity(targets.len());
+        for t in targets {
+            let idx = *self
+                .by_name
+                .get(t)
+                .ok_or_else(|| RuntimeError::UndefinedName(t.to_string()))?;
+            match &self.items[idx].picture {
+                Some(p) if p.is_numeric() => {
+                    return Err(RuntimeError::Unsupported(
+                        "UNSTRING into a numeric receiver is a later rung".into(),
+                    ))
+                }
+                Some(_) => {}
+                None => {
+                    return Err(RuntimeError::Unsupported(
+                        "UNSTRING into a group receiver is a later rung".into(),
+                    ))
+                }
+            }
+            tidx.push(idx);
+        }
+
+        // Resolve `WITH POINTER p` (if present) into the scan's initial 0-based
+        // cursor. The pointer item must be an UNSIGNED INTEGER `PIC 9(n)` — the
+        // same class INSPECT's counter demands — so a signed, fractional, non-
+        // numeric, or group `p` is a clean later rung, rejected identically on the
+        // compiler (which checks the picture at build time). We also bound it to 18
+        // digits so the value fits the `i64` the compiler stores it in.
+        //
+        // With a pointer we read its value `pv`, then apply the out-of-range rule:
+        // `pv == 0` (0-based start would underflow to −1) or `pv > len` (start past
+        // the source) is ISO's overflow ⇒ leave every receiver and `p` UNCHANGED.
+        // Otherwise the 0-based start is `pv − 1`. The guard runs BEFORE computing
+        // `pv − 1`, so the `usize` never underflows. Without a pointer the start is 0
+        // and nothing is written back — today's behaviour, unchanged.
+        //
+        // # The `overflow` condition (drives ON / NOT ON OVERFLOW)
+        //
+        // ISO: UNSTRING overflow occurs when all receivers are filled but the source
+        // is NOT exhausted (more delimited fields remain), OR the initial `WITH
+        // POINTER` value is out of range. `overflow` starts `false` and is SET in the
+        // two places the condition can arise, so BOTH engines compute the identical
+        // boolean (a mismatch would diverge):
+        //
+        //   * out-of-range pointer → `overflow = true` (no data movement below);
+        //   * after the scan loop  → `overflow = (p <= src.len())`, where `p` is the
+        //     scan's final 0-based cursor. This SINGLE comparison is correct for every
+        //     case:
+        //       - loop broke early (`p > len`, fewer fields than receivers, source
+        //         exhausted first) → `p > len` → `false`. ✓
+        //       - all receivers filled, last field ended AT a delimiter (`q < len`, so
+        //         `p = q+1 ≤ len`, more source remains) → `true`. ✓
+        //       - all receivers filled, last field ran to end-of-source (`q == len`,
+        //         `p = len+1 > len`, exhausted) → `false`. ✓
+        //       - trailing delimiter as the last consumed char (`p == len`, an empty
+        //         field remains) → `true`. ✓
+        let mut overflow = false;
+        let start: usize = if let Some(pname) = pointer {
+            let pidx = *self
+                .by_name
+                .get(pname)
+                .ok_or_else(|| RuntimeError::UndefinedName(pname.to_string()))?;
+            match &self.items[pidx].picture {
+                Some(Picture::Numeric { signed: true, .. }) => {
+                    return Err(RuntimeError::Unsupported(format!(
+                        "UNSTRING … WITH POINTER: a signed pointer {pname} is a later rung"
+                    )))
+                }
+                Some(Picture::Numeric { dec_digits, .. }) if *dec_digits != 0 => {
+                    return Err(RuntimeError::Unsupported(format!(
+                        "UNSTRING … WITH POINTER: a non-integer pointer {pname} is a later rung"
+                    )))
+                }
+                Some(Picture::Numeric { int_digits, .. }) if *int_digits > 18 => {
+                    return Err(RuntimeError::Unsupported(format!(
+                        "UNSTRING … WITH POINTER: a pointer {pname} wider than 18 digits is a later rung"
+                    )))
+                }
+                Some(Picture::Numeric { .. }) => {}
+                _ => {
+                    return Err(RuntimeError::Unsupported(format!(
+                        "UNSTRING … WITH POINTER: a non-numeric pointer {pname} is a later rung"
+                    )))
+                }
+            }
+            // The unsigned integer value of `p`. A `PIC 9(n)` item is non-negative
+            // with no fraction, so the magnitude is its integer digits (leading
+            // zeros stripped; an all-zero image parses to 0). Comparing at u128
+            // width cannot overflow for ≤18 digits and keeps a huge `pv` safely
+            // greater than any `len`.
+            let pv_dec = self.named_decimal(pname)?;
+            let pv: u128 = pv_dec.int.trim_start_matches('0').parse().unwrap_or(0);
+            if pv == 0 || pv > src.len() as u128 {
+                // Out of range IS overflow: no data movement, pointer unchanged, but
+                // the ON OVERFLOW imperative still runs (a behaviour change from the
+                // pre-overflow rung, which returned here with no imperative). Set the
+                // flag and skip the scan + write-back with the `!overflow` guard
+                // below; `start` is a never-read sentinel on this path.
+                overflow = true;
+                0
+            } else {
+                (pv - 1) as usize
+            }
+        } else {
+            0
+        };
+
+        // The scan and write-back are skipped entirely on the out-of-range-pointer
+        // path (no data movement, pointer unchanged), matching the oracle's former
+        // early return. On every other path this runs and then RE-derives `overflow`
+        // from the final cursor (see the truth table above), replacing its `false`
+        // start.
+        if !overflow {
+            // Scan: cursor `p` over `src`; for each receiver take the field up to the
+            // next delimiter (or end-of-source), then step past the delimiter.
+            let mut p: usize = start;
+            for &idx in &tidx {
+                // `p > len` means the previous field ran off the end WITHOUT a
+                // trailing delimiter — the source is exhausted, so leave this and
+                // every later receiver UNCHANGED. (`p == len` still yields one empty
+                // field, the trailing-delimiter case.)
+                if p > src.len() {
+                    break;
+                }
+                let mut q = p;
+                while q < src.len() && src[q] != delim_ch {
+                    q += 1;
+                }
+                let field: String = src[p..q].iter().collect();
+                self.move_into(idx, Src::Chars(field))?;
+                p = q + 1;
+            }
+
+            // Write the pointer back to the 1-based resume position. `p` is the scan's
+            // final 0-based cursor, which sits one past the terminating delimiter —
+            // but for a field that ran to end-of-source that step is a phantom one
+            // past the end, so clamp to `len` before restoring 1-basing:
+            // `min(p, len) + 1`. This is exactly "one after the last character
+            // examined" (see the doc comment). Stored through the same numeric path
+            // ADD/INSPECT use, so it reshapes into the pointer's `PIC 9(n)` picture
+            // byte-for-byte as the compiler does. The write-back happens BEFORE the
+            // imperative dispatch, unchanged.
+            if let Some(pname) = pointer {
+                let resume = p.min(src.len()) + 1;
+                let value = Decimal { neg: false, int: resume.to_string(), frac: String::new() };
+                self.store_result(pname, value, false, &[])?;
+            }
+
+            // The one comparison the compiler mirrors: source not yet exhausted after
+            // filling every receiver ⇒ overflow. See the worked cases above.
+            overflow = p <= src.len();
+        }
+
+        // Run the conditional imperative. An empty list → `run_stmts` = `Flow::Normal`
+        // (mirrors STRING's `exec_string`). A `STOP RUN` / `GO TO` inside the chosen
+        // list propagates its `Flow` up to unwind the enclosing paragraph, exactly
+        // like an IF branch.
+        if overflow {
+            self.run_stmts(on_overflow)
+        } else {
+            self.run_stmts(not_on_overflow)
+        }
+    }
+
+    /// The single delimiter character of a scan delimiter. It is either a
+    /// 1-character string literal (`","`, `" "`) or a `PIC X(1)` item. A
+    /// multi-character delimiter, `ALL`/`OR` delimiters, a numeric/figurative
+    /// delimiter, and a numeric/group/wider delimiter item are later rungs.
+    ///
+    /// Shared by `UNSTRING … DELIMITED BY delim` and `INSPECT … FOR ALL delim`;
+    /// `verb` names the caller so the later-rung message reads naturally.
+    fn single_delim_char(&self, delim: &Operand, verb: &str) -> Result<char, RuntimeError> {
+        match delim {
+            Operand::Lit(Lit::Str(s)) => {
+                let chars: Vec<char> = s.chars().collect();
+                match chars.as_slice() {
+                    [c] => Ok(*c),
+                    _ => Err(RuntimeError::Unsupported(format!(
+                        "{verb} with a multi-character delimiter is a later rung"
+                    ))),
+                }
+            }
+            Operand::Lit(Lit::Num(_)) => Err(RuntimeError::Unsupported(format!(
+                "{verb} with a numeric-literal delimiter is a later rung"
+            ))),
+            Operand::Lit(Lit::Fig(_)) => Err(RuntimeError::Unsupported(format!(
+                "{verb} with a figurative-constant delimiter is a later rung"
+            ))),
+            Operand::RefMod { .. } => Err(RuntimeError::Unsupported(format!(
+                "{verb} with a reference-modified delimiter is a later rung"
+            ))),
+            Operand::Ident(name) => {
+                let idx = *self
+                    .by_name
+                    .get(name)
+                    .ok_or_else(|| RuntimeError::UndefinedName(name.clone()))?;
+                match &self.items[idx].picture {
+                    Some(p) if p.is_numeric() => Err(RuntimeError::Unsupported(format!(
+                        "{verb} with a numeric delimiter item is a later rung"
+                    ))),
+                    Some(_) => {
+                        let chars: Vec<char> = self.items[idx].storage.chars().collect();
+                        match chars.as_slice() {
+                            [c] => Ok(*c),
+                            _ => Err(RuntimeError::Unsupported(format!(
+                                "{verb} with a delimiter item wider than one character is a later rung"
+                            ))),
+                        }
+                    }
+                    None => Err(RuntimeError::Unsupported(format!(
+                        "{verb} with a group delimiter item is a later rung"
+                    ))),
+                }
+            }
+        }
+    }
+
+    /// `INSPECT source TALLYING counter FOR ALL delim` — count the (non-
+    /// overlapping, left-to-right) occurrences of the SINGLE-character `delim` in
+    /// the alphanumeric `source`, then **ADD** that count to the unsigned-integer
+    /// `counter`. INSPECT adds to the counter; it does NOT clear it first, so the
+    /// effect is `counter := counter + occurrences`.
+    ///
+    /// The count folds into the counter through the SAME `store_result` path the
+    /// arithmetic verbs use (COBOL's silent high-order truncation on overflow), so
+    /// the compiled `cobol-iir-compiler` scan loop matches this reference output
+    /// byte-for-byte. A numeric/group source, or a non-integer/non-numeric/signed
+    /// counter, is a clean later-rung error.
+    fn exec_inspect(
+        &mut self,
+        source: &str,
+        counter: &str,
+        delim: &Operand,
+        leading: bool,
+        characters: bool,
+        region: Option<&Region>,
+    ) -> Result<Flow, RuntimeError> {
+        let sidx = self.inspect_alnum_source(source)?;
+        self.inspect_tally(sidx, counter, delim, leading, characters, region)
+    }
+
+    /// The source of any INSPECT must resolve to an alphanumeric item. Returns its
+    /// item index (a numeric or group source is a clean later-rung error). Shared
+    /// by the lone TALLYING, lone REPLACING, and combined execs so all three
+    /// diagnose an unsupported source identically.
+    fn inspect_alnum_source(&self, source: &str) -> Result<usize, RuntimeError> {
+        let sidx = *self
+            .by_name
+            .get(source)
+            .ok_or_else(|| RuntimeError::UndefinedName(source.to_string()))?;
+        match &self.items[sidx].picture {
+            Some(p) if p.is_numeric() => Err(RuntimeError::Unsupported(
+                "INSPECT of a numeric source is a later rung".into(),
+            )),
+            Some(_) => Ok(sidx),
+            None => Err(RuntimeError::Unsupported(
+                "INSPECT of a group source is a later rung".into(),
+            )),
+        }
+    }
+
+    /// The character window `[start, end)` an `INSPECT … {BEFORE|AFTER} x` region
+    /// selects over `chars` (the source's current storage as a `char` vector). With
+    /// no region the window is the WHOLE source (`(0, len)`); a region narrows it
+    /// around the FIRST (leftmost) occurrence of the single region delimiter `x`,
+    /// applying the ISO not-found asymmetry:
+    ///   * `BEFORE x` → `(0, first_index_of(x))`; if `x` is ABSENT → `(0, len)`
+    ///     (the ENTIRE source); and
+    ///   * `AFTER x`  → `(first_index_of(x)+1, len)`; if `x` is ABSENT → `(len, len)`
+    ///     (an EMPTY window).
+    ///
+    /// This is the ONE place both INSPECT operations derive their window: the count
+    /// ([`Self::inspect_tally`]) and the `ALL` replacement ([`Self::inspect_replace`])
+    /// call it with the SAME `chars`, so they narrow to byte-identical slices and the
+    /// BEFORE→whole / AFTER→empty rule can never drift between them. A multi-character
+    /// region delimiter is rejected here by `single_delim_char`, exactly like the
+    /// scan/search delimiters.
+    fn region_window(
+        &self,
+        chars: &[char],
+        region: Option<&Region>,
+    ) -> Result<(usize, usize), RuntimeError> {
+        let len = chars.len();
+        match region {
+            None => Ok((0, len)),
+            Some(r) => {
+                let region_ch = self.single_delim_char(&r.delim, "INSPECT")?;
+                let first = chars.iter().position(|&c| c == region_ch);
+                Ok(match r.kind {
+                    // BEFORE: everything left of the first `x`; if `x` is absent the
+                    // region is the whole source (`end = len`).
+                    RegionKind::Before => (0, first.unwrap_or(len)),
+                    // AFTER: everything right of the first `x`; if `x` is absent the
+                    // region is EMPTY (`start = end = len`).
+                    RegionKind::After => match first {
+                        Some(i) => (i + 1, len),
+                        None => (len, len),
+                    },
+                })
+            }
+        }
+    }
+
+    /// The TALLYING half: count occurrences of the single-character `delim` in the
+    /// source's CURRENT storage and ADD them to `counter`. When `leading` is false
+    /// (`FOR ALL`) this counts EVERY occurrence; when true (`FOR LEADING`) it counts
+    /// only the run of CONSECUTIVE occurrences at the START of the source, stopping
+    /// at the first non-`delim` character. Factored out of [`Self::exec_inspect`] so
+    /// the combined tally-then-replace exec can run it FIRST (on the pre-replacement
+    /// bytes) and share the counter validation and store path; the combined path
+    /// passes through its own `FOR ALL`/`FOR LEADING` selection here.
+    /// Does not mutate the source.
+    ///
+    /// An optional `region` (`{BEFORE|AFTER} x`) narrows the count to a sub-slice of
+    /// the source, bounded by the FIRST (leftmost) occurrence of the single region
+    /// delimiter `x` — computed over the source's CURRENT storage:
+    ///   * `BEFORE x` → count only within `source[0 .. first_index_of(x)]`; if `x`
+    ///     is absent the region is the ENTIRE source (`end = len`); and
+    ///   * `AFTER x`  → count only within `source[first_index_of(x)+1 .. len]`; if
+    ///     `x` is absent the region is EMPTY (`start = end = len` → count 0).
+    ///
+    /// This not-found asymmetry (BEFORE→whole, AFTER→empty) is the ISO rule and MUST
+    /// match the compiler byte-for-byte. With no region the window is the whole
+    /// source (`start = 0`, `end = len`), so behaviour is unchanged. The combined
+    /// tally-then-replace path never carries a region (rejected at read time), so it
+    /// always passes `None`.
+    fn inspect_tally(
+        &mut self,
+        sidx: usize,
+        counter: &str,
+        delim: &Operand,
+        leading: bool,
+        characters: bool,
+        region: Option<&Region>,
+    ) -> Result<Flow, RuntimeError> {
+        // The counter must be an UNSIGNED INTEGER numeric item (`PIC 9(n)`): a
+        // fractional (`V`) or signed (`S`) counter is a later rung.
+        let cidx = *self
+            .by_name
+            .get(counter)
+            .ok_or_else(|| RuntimeError::UndefinedName(counter.to_string()))?;
+        match &self.items[cidx].picture {
+            Some(Picture::Numeric { dec_digits: 0, signed: false, .. }) => {}
+            Some(Picture::Numeric { .. }) => {
+                return Err(RuntimeError::Unsupported(format!(
+                    "INSPECT TALLYING into a non-integer or signed counter {counter} is a later rung"
+                )))
+            }
+            _ => {
+                return Err(RuntimeError::Unsupported(format!(
+                    "INSPECT TALLYING into a non-numeric counter {counter} is a later rung"
+                )))
+            }
+        }
+
+        // The single delimiter character to count — ONLY the ALL/LEADING forms match a
+        // delimiter, so we resolve it only when `characters == false`. The CHARACTERS
+        // form counts POSITIONS, not delimiter matches, so it never reads `delim` (which
+        // carries a never-read placeholder on that path) and never runs `single_delim_char`.
+        let delim_ch = if characters {
+            None
+        } else {
+            Some(self.single_delim_char(delim, "INSPECT")?)
+        };
+
+        // The character window `[start, end)` the count runs over. With no region
+        // this is the WHOLE source; a `{BEFORE|AFTER} x` region narrows it around the
+        // first occurrence of the single region delimiter `x`, applying the ISO
+        // not-found asymmetry (BEFORE→whole, AFTER→empty). We work on `chars()` (not
+        // bytes) so the window and the count agree on positions. The window is derived
+        // by the SHARED [`Self::region_window`] helper — the SAME code the REPLACING
+        // half uses, so the two INSPECT operations narrow to byte-identical slices.
+        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+        let (start, end) = self.region_window(&chars, region)?;
+        let window = &chars[start..end];
+
+        // The occurrence count over the window. `FOR ALL` counts every match;
+        // `FOR LEADING` counts only the leading run (stop at the first non-match) —
+        // the ONLY difference between the two forms. Crucially the leading run is
+        // anchored at the WINDOW START, not source position 0: because `window` is
+        // already the `[start, end)` slice, `take_while` begins at `start` and stops
+        // at the first non-`delim` character INSIDE the window (or the window end).
+        // So a standalone `FOR LEADING … AFTER x` counts the run beginning at
+        // `first+1`, not at 0 — e.g. "aaXaab" AFTER "X" narrows to "aab" and counts
+        // the two leading a's, ignoring the "aa" before the X entirely. With `AFTER x`
+        // and `x` absent the window is empty, so the count is 0 (the ISO not-found
+        // asymmetry). (The combined `TALLYING … REPLACING` form still rejects a
+        // LEADING half carrying a region at read time, so that combination never
+        // reaches here.)
+        // `FOR CHARACTERS` is the "count every position" form: it adds the NUMBER OF
+        // CHARACTER POSITIONS in the window, regardless of content. With no region that
+        // is the whole source; with a `{BEFORE|AFTER} x` region it is the `[start, end)`
+        // slice ALL/LEADING use, so it inherits the identical BEFORE→whole / AFTER→empty
+        // not-found asymmetry (a `BEFORE x` with `x` absent counts the whole string; an
+        // `AFTER x` with `x` absent counts 0, because the window is empty). No delimiter
+        // is matched.
+        //
+        // COUNT IN BYTES, NOT `char`s. COBOL `PIC X` positions are BYTES, and the
+        // `cobol-iir-compiler` measures the window with `str_len`/byte indices, so the
+        // count MUST be the window's BYTE length to stay byte-identical. For ASCII every
+        // char is one byte, so `sum(len_utf8) == window.len()` and nothing changes; a
+        // non-ASCII source (a degenerate input for single-byte COBOL) would otherwise
+        // diverge — the oracle would count code points while the compiler counts bytes.
+        // Summing `len_utf8()` over the SAME `[start, end)` window equals the compiler's
+        // `end - start` byte span because the two engines' region windows cover the same
+        // substring (a non-ASCII region *delimiter* stays the pre-existing byte-vs-char
+        // chip; here the delimiter, when present, is matched in char space and never
+        // reaches this branch).
+        let count = match delim_ch {
+            None => window.iter().map(|c| c.len_utf8()).sum::<usize>(),
+            Some(dch) if leading => window.iter().take_while(|&&c| c == dch).count(),
+            Some(dch) => window.iter().filter(|&&c| c == dch).count(),
+        };
+
+        // counter := counter_value + count, reshaped into the counter's picture —
+        // the same store path ADD uses (INSPECT adds; it does not clear first).
+        let addend = Decimal { neg: false, int: count.to_string(), frac: String::new() };
+        let acc = checked(add(&self.named_decimal(counter)?, &addend))?;
+        self.store_result(counter, acc, false, &[])
+    }
+
+    /// `INSPECT source REPLACING ALL search BY replace` — replace EVERY
+    /// occurrence of the SINGLE character `search` in the alphanumeric `source`
+    /// with the SINGLE character `replace`, in place. Both are single characters
+    /// so the source's width is unchanged: this is a straight per-position map
+    /// (`c == search ? replace : c`), left to right. The rebuilt string is fed
+    /// back through the SAME alphanumeric char-store path a `MOVE` uses
+    /// (`move_into` with `Src::Chars`), which is a no-op on width here (the map
+    /// preserves length), so the compiled `cobol-iir-compiler` lowering matches
+    /// this reference output byte-for-byte. A numeric/group source is a clean
+    /// later-rung error; a multi-character/figurative/wider search or
+    /// replacement is rejected by `single_delim_char`.
+    ///
+    /// An optional `region` (`{BEFORE|AFTER} x`) narrows the `ALL` replacement to a
+    /// sub-slice of the source, using the SAME window [`Self::inspect_tally`] uses
+    /// for the count (see [`Self::region_window`]): positions OUTSIDE the window keep
+    /// their original character. The window is computed over the ORIGINAL source
+    /// bytes (before any substitution). A region is only reached on the lone
+    /// `REPLACING ALL` path; `REPLACING LEADING` and the combined form always pass
+    /// `None` (rejected at read time).
+    fn exec_inspect_replacing(
+        &mut self,
+        source: &str,
+        search: &Operand,
+        replace: &Operand,
+        leading: bool,
+        region: Option<&Region>,
+    ) -> Result<(), RuntimeError> {
+        let sidx = self.inspect_alnum_source(source)?;
+        self.inspect_replace(sidx, search, replace, leading, region)
+    }
+
+    /// `INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — one
+    /// INSPECT with TWO OR MORE `ALL` replace items, applied in a SINGLE
+    /// left-to-right pass with FIRST-MATCH-WINS and NO RE-CHAINING.
+    ///
+    /// The whole subtlety is that this is NOT the same as running N single-item
+    /// replaces in sequence. At each source position we consult the items IN WRITTEN
+    /// ORDER and stop at the FIRST whose search matches the ORIGINAL character:
+    ///
+    /// ```text
+    ///   for i in 0..width {
+    ///       out[i] = src[i]                       // default: unchanged
+    ///       for (search, replace) in items {      // written order
+    ///           if src[i] == search { out[i] = replace; break }   // first wins
+    ///       }
+    ///   }
+    /// ```
+    ///
+    /// Two properties fall out of that inner `break`, both pinned by tests:
+    ///
+    ///   * FIRST-MATCH-WINS — if two items could match the same position, only the
+    ///     earlier-written one fires (`"a" BY "x"` before `"a" BY "y"` → `x`).
+    ///   * NO RE-CHAINING — the byte a replacement PRODUCES is never fed back to a
+    ///     later item, because the whole scan reads `src` (the original), never the
+    ///     output. So `ALL "a" BY "b" ALL "b" BY "z"` over `"ab"` gives `"bz"`, not
+    ///     `"zz"`: position 0 turns the original `a` into `b` and stops (the produced
+    ///     `b` is not re-inspected), and position 1 turns the ORIGINAL `b` into `z`.
+    ///
+    /// Width is preserved (each position emits exactly one char), so — exactly like
+    /// [`Self::inspect_replace`] — the rebuilt string feeds the SAME alphanumeric
+    /// char-store path a `MOVE` uses, and the compiled per-position lowering in
+    /// `cobol-iir-compiler` matches this reference output byte-for-byte.
+    ///
+    /// Every (search, replace) is validated with the SAME `single_delim_char` check
+    /// the single-item path uses (a multi-character/figurative/wider/numeric operand
+    /// is a later rung); ALL of them — AND every item's region window — are resolved
+    /// BEFORE any mutation so an invalid item leaves the source untouched. A
+    /// numeric/group source is rejected by [`Self::inspect_alnum_source`]. The
+    /// read-time reader (`read_inspect_replacing_multi`) has already ruled out
+    /// LEADING/CHARACTERS/FIRST items, so here every item is a plain `ALL` single-char
+    /// pair with an OPTIONAL `{BEFORE|AFTER} x` region.
+    ///
+    /// # Per-item regions (this rung)
+    ///
+    /// Each item may carry its OWN optional `{BEFORE|AFTER} x` window, computed over
+    /// the ORIGINAL source via the SAME [`Self::region_window`] helper the lone/
+    /// single-item forms use (BEFORE→`[0, first_x)`; AFTER→`(first_x, len]`; not-found
+    /// asymmetry BEFORE→whole, AFTER→empty). An item with NO region has the whole
+    /// source as its window. The single-pass first-match model is otherwise unchanged:
+    /// at each position the items are tried IN WRITTEN ORDER and the FIRST whose window
+    /// CONTAINS the position AND whose search equals the ORIGINAL char wins:
+    ///
+    /// ```text
+    ///   for i in 0..width {
+    ///       out[i] = src[i]                                   // default: unchanged
+    ///       for (search, replace, (start, end)) in items {    // written order
+    ///           if start <= i < end && src[i] == search { out[i] = replace; break }
+    ///       }
+    ///   }
+    /// ```
+    ///
+    /// This is the exact composition of the two already-merged features — multi-item
+    /// first-match-wins and single-item REPLACING-ALL-with-region — with the per-item
+    /// window ANDed into each link's compare. First-match-wins and no-re-chaining are
+    /// unchanged: the scan reads `chars` (the original) and never the output, and each
+    /// window is computed over that same original, so both engines agree byte-for-byte
+    /// (the match-based replacement only fires on a single-char ASCII search, so
+    /// multi-byte source chars pass through untouched and the rebuilt string stays
+    /// valid UTF-8 — the same byte-safety the single-item region form relies on).
+    fn exec_inspect_replacing_multi(
+        &mut self,
+        source: &str,
+        items: &[(Operand, Operand, Option<Region>)],
+    ) -> Result<(), RuntimeError> {
+        let sidx = self.inspect_alnum_source(source)?;
+        // ONE pass over the ORIGINAL characters — resolve them FIRST so the window
+        // (like the single-item path) sees the pre-replacement bytes, and so an
+        // invalid operand aborts with the source untouched.
+        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+        // Resolve every (search char, replace char, [start, end) window) FIRST —
+        // reading all items (and computing their windows over the original `chars`)
+        // before touching storage means an invalid operand aborts cleanly, exactly
+        // like the single-item path reads both chars and the window first.
+        let resolved: Vec<(char, char, usize, usize)> = items
+            .iter()
+            .map(|(search, replace, region)| {
+                let s = self.single_delim_char(search, "INSPECT REPLACING")?;
+                let r = self.single_delim_char(replace, "INSPECT REPLACING")?;
+                let (start, end) = self.region_window(&chars, region.as_ref())?;
+                Ok((s, r, start, end))
+            })
+            .collect::<Result<_, RuntimeError>>()?;
+
+        // At each position the first item in WRITTEN ORDER whose window CONTAINS the
+        // position AND whose search matches wins; on no match the original char is
+        // kept. Because the scan reads `chars` (the original) and never the output,
+        // a produced character is never re-examined — that is the no-re-chaining
+        // property (see the doc comment above), and each window was computed over that
+        // same original, so first-match-per-position within windows is exact.
+        let rebuilt: String = chars
+            .iter()
+            .enumerate()
+            .map(|(i, &c)| {
+                for (search_ch, replace_ch, start, end) in &resolved {
+                    if *start <= i && i < *end && c == *search_ch {
+                        return *replace_ch; // first in-window match wins, stop scanning
+                    }
+                }
+                c // matched no item's window — unchanged
+            })
+            .collect();
+        self.move_into(sidx, Src::Chars(rebuilt))
+    }
+
+    /// `INSPECT source REPLACING CHARACTERS BY x` — overwrite EVERY position of the
+    /// alphanumeric `source` with the single replacement character `x`. With no
+    /// region the WHOLE field becomes `x`s; its width is unchanged.
+    ///
+    /// # Byte-basis fill (co-total with the byte-based compiler)
+    ///
+    /// The compiler fills `str_len(S)` (BYTE-length) positions; to agree with it for
+    /// ANY source we compute the fill on the BYTE basis too: `n = storage.len()` is
+    /// the field's BYTE length, and we build `n` copies of `x`. Because `x` is a
+    /// single ASCII byte (guard 2), the `n`-copy image is `n` ASCII bytes — a valid
+    /// `String`. We then store it through the SAME `move_into` path `inspect_replace`
+    /// uses, which re-pads/truncates the image to the picture's fixed CHAR size. So
+    /// for a non-ASCII source whose byte length exceeds its char size (e.g.
+    /// `PIC X(5) VALUE "café"` stores `"café "` = 5 chars / 6 bytes), the `n = 6`
+    /// copies cap to the picture's 5 chars — exactly the compiler's `width = 5` fill.
+    ///
+    /// # Guards (IDENTICAL to the compiler)
+    ///
+    ///   1. `x` is a SINGLE character — the shared `single_delim_char` check (a
+    ///      multi-character/figurative/wider/numeric operand is a later rung).
+    ///   2. A single-char but NON-ASCII **literal** `x` is a later rung, mirroring the
+    ///      compiler's byte-based single-char validator. Applied to LITERALS only: a
+    ///      `PIC X(1)` *item* replacement is naturally co-total under the byte-fill
+    ///      (both engines emit `width` copies of the item's char), so it is not gated.
+    ///   4. A numeric/group source is rejected by `inspect_alnum_source` (guard 4).
+    ///
+    /// (Guard 3 — a `{BEFORE|AFTER}` region — is rejected earlier, at read time.)
+    fn exec_inspect_replacing_characters(
+        &mut self,
+        source: &str,
+        replace: &Operand,
+    ) -> Result<(), RuntimeError> {
+        let sidx = self.inspect_alnum_source(source)?;
+        // Guard 2 — a single-char but non-ASCII LITERAL replacement is deferred so the
+        // char-based oracle stays co-total with the byte-based compiler (whose
+        // single-char validator rejects a multi-byte literal). Items are not gated.
+        if let Operand::Lit(Lit::Str(s)) = replace {
+            if s.chars().count() == 1 && !s.is_ascii() {
+                return Err(RuntimeError::Unsupported(
+                    "INSPECT REPLACING CHARACTERS with a non-ASCII replacement is a later rung"
+                        .into(),
+                ));
+            }
+        }
+        // Guard 1 — resolve the single replacement char (also validates a PIC X(1)
+        // item), reusing the SAME check REPLACING ALL uses.
+        let ch = self.single_delim_char(replace, "INSPECT REPLACING")?;
+        // Byte-basis fill: n = storage BYTE length copies of `ch`. `move_into`
+        // re-pads/truncates to the picture's char size (see the doc comment).
+        let n = self.items[sidx].storage.len();
+        let rebuilt: String = std::iter::repeat_n(ch, n).collect();
+        self.move_into(sidx, Src::Chars(rebuilt))
+    }
+
+    /// `INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|
+    /// AFTER} q] …` — one INSPECT whose SINGLE counter carries TWO OR MORE `FOR ALL`
+    /// items, each with its OWN optional `{BEFORE|AFTER} x` window, counted in a SINGLE
+    /// left-to-right pass with FIRST-MATCH-PER-POSITION into the shared counter.
+    ///
+    /// This is the count-side analogue of [`Self::exec_inspect_replacing_multi`]. The
+    /// items form an ordered priority list, each carrying its OWN window over the
+    /// source. At each source position they are tried IN WRITTEN ORDER and the FIRST
+    /// item that BOTH (i) has the position inside its window AND (ii) whose delimiter
+    /// equals the current char increments the shared count by 1, then the scan advances
+    /// past the match:
+    ///
+    /// ```text
+    ///   for (i, ch) in source {
+    ///       for (delim, start, end) in items {          // written order
+    ///           if start <= i < end && ch == delim { count += 1; break }  // first wins
+    ///       }
+    ///   }
+    ///   counter := counter + count                       // INSPECT ADDS; never clears
+    /// ```
+    ///
+    /// PER-ITEM WINDOWS: each item's optional region defines a window over the source
+    /// via the SAME [`Self::region_window`] helper the lone/single-item forms use
+    /// (BEFORE→`[0, first_x)`; AFTER→`(first_x, len]`; not-found asymmetry BEFORE→whole,
+    /// AFTER→empty). An item with NO region has the whole source as its window. The
+    /// inner `break` is why DUPLICATE items do NOT double-count a position: `FOR ALL "a"
+    /// ALL "a"` over `"aa"` adds 2 — each `a` position is counted ONCE by the first
+    /// item, the second item never sees it. So the count collapses to "the number of
+    /// source positions matched by SOME in-window item, each counted exactly once".
+    /// INSPECT adds to the counter; it does not clear it first, and the fold uses the
+    /// SAME `store_result` path [`Self::inspect_tally`] uses (COBOL's silent high-order
+    /// truncation on overflow), so the compiled `cobol-iir-compiler` scan loop matches
+    /// this reference output byte-for-byte.
+    ///
+    /// # Non-ASCII-clean (no `str_slice`)
+    ///
+    /// TALLYING only COUNTS — it never reconstructs the source — so there is no
+    /// UTF-8-boundary trap. Match-based counting of ASCII delimiters is byte-robust (a
+    /// multi-byte source char's continuation bytes never equal an ASCII delimiter), and
+    /// each window is content-defined (bounded by the first occurrence of the ASCII
+    /// region delimiter), so this char-based oracle and the byte-based compiler scan the
+    /// SAME substring and count the SAME matches even on a non-ASCII source. (A non-ASCII
+    /// item/region delimiter *operand* stays the pre-existing `single_delim_char`
+    /// vs `single_delim_code` chip, identical across single- and multi-item tallying.)
+    ///
+    /// Every delimiter (and every region delimiter) is validated with the SAME
+    /// `single_delim_char` check the single-item tally uses (a multi-character/figurative/
+    /// wider/numeric operand is a later rung); ALL of them — and every window — are
+    /// resolved BEFORE counting so an invalid operand aborts without touching the
+    /// counter. A numeric/group source is rejected by [`Self::inspect_alnum_source`], and
+    /// a non-integer/signed/non-numeric counter by the validation below. The read-time
+    /// reader (`read_inspect_tally_multi`) has already ruled out LEADING/CHARACTERS items,
+    /// so here every item is a plain `ALL` single-char delimiter with an optional region.
+    fn exec_inspect_tally_multi(
+        &mut self,
+        source: &str,
+        counter: &str,
+        items: &[(Operand, Option<Region>)],
+    ) -> Result<Flow, RuntimeError> {
+        let sidx = self.inspect_alnum_source(source)?;
+
+        // The counter must be an UNSIGNED INTEGER numeric item (`PIC 9(n)`): a
+        // fractional (`V`) or signed (`S`) counter is a later rung — the SAME
+        // validation `inspect_tally` performs for the single-item form.
+        let cidx = *self
+            .by_name
+            .get(counter)
+            .ok_or_else(|| RuntimeError::UndefinedName(counter.to_string()))?;
+        match &self.items[cidx].picture {
+            Some(Picture::Numeric { dec_digits: 0, signed: false, .. }) => {}
+            Some(Picture::Numeric { .. }) => {
+                return Err(RuntimeError::Unsupported(format!(
+                    "INSPECT TALLYING into a non-integer or signed counter {counter} is a later rung"
+                )))
+            }
+            _ => {
+                return Err(RuntimeError::Unsupported(format!(
+                    "INSPECT TALLYING into a non-numeric counter {counter} is a later rung"
+                )))
+            }
+        }
+
+        // ONE pass over the source characters — resolved FIRST so every window (like
+        // the single-item path) is computed over these same chars, and so an invalid
+        // operand aborts with the counter untouched.
+        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+
+        // Resolve every (delimiter char, [start, end) window) FIRST. Reading all items
+        // (and computing their windows over `chars`) before touching the counter means
+        // an invalid operand aborts cleanly, exactly like the single-item path resolves
+        // both its delimiter and its window first. A region-less item's window is the
+        // whole source (`region_window(None) == (0, len)`).
+        let resolved: Vec<(char, usize, usize)> = items
+            .iter()
+            .map(|(delim, region)| {
+                let d = self.single_delim_char(delim, "INSPECT")?;
+                let (start, end) = self.region_window(&chars, region.as_ref())?;
+                Ok((d, start, end))
+            })
+            .collect::<Result<_, RuntimeError>>()?;
+
+        // A position `i` contributes 1 iff SOME item in WRITTEN ORDER has `i` inside its
+        // window AND its delimiter equals `chars[i]`. `any` realises first-match-per-
+        // position for a pure count (a position matched by several/duplicate items is
+        // still counted once).
+        let count = chars
+            .iter()
+            .enumerate()
+            .filter(|(i, &c)| {
+                resolved.iter().any(|(d, start, end)| *start <= *i && *i < *end && c == *d)
+            })
+            .count();
+
+        // counter := counter_value + count, reshaped into the counter's picture — the
+        // same store path ADD (and the single-item tally) uses. INSPECT adds; it does
+        // not clear the counter first.
+        let addend = Decimal { neg: false, int: count.to_string(), frac: String::new() };
+        let acc = checked(add(&self.named_decimal(counter)?, &addend))?;
+        self.store_result(counter, acc, false, &[])
+    }
+
+    /// `INSPECT src TALLYING c1 FOR ALL a [{BEFORE|AFTER} p] [ALL b …] c2 FOR ALL d …` —
+    /// several counters, each with its own delimiter list, and each delimiter item now
+    /// carrying its OWN optional `{BEFORE|AFTER}` region window, folded through ONE
+    /// combined priority list in a SINGLE left-to-right pass. This generalises
+    /// [`Self::exec_inspect_tally_multi`] from one counter to a list of `(counter,
+    /// delimiter, window)` entries where the matched entry's OWN counter is bumped.
+    ///
+    /// ISO COMBINED-PRIORITY-LIST-ACROSS-COUNTERS semantics (the crux): all delimiters
+    /// of all groups, flattened in WRITTEN ORDER (group 1's items first, then group 2's,
+    /// …), form ONE ordered priority list, each entry carrying its item's `[start, end)`
+    /// window. At each source position that list is walked in order and the FIRST entry
+    /// whose window contains the position AND whose delimiter matches bumps ITS OWN
+    /// group's counter, then the scan advances (single-char ⇒ a normal one-position
+    /// step). The `break` means an earlier group's (in-window) delimiter CONSUMES the
+    /// position — a character it claims NEVER reaches a later group's delimiter, so
+    /// `"aa" TALLYING C1 FOR ALL "a" C2 FOR ALL "a"` gives C1 += 2, C2 += 0 (group 1
+    /// wins both positions). A position matching no in-window delimiter advances with no
+    /// increment. Each item's window is derived by the SHARED [`Self::region_window`]
+    /// helper over the source chars (a region-less item = the whole source), applying the
+    /// ISO not-found asymmetry (BEFORE→whole, AFTER→empty). Every delimiter and every
+    /// region delimiter is resolved BEFORE the scan, so an invalid operand aborts with
+    /// every counter untouched.
+    fn exec_inspect_tally_counters(
+        &mut self,
+        source: &str,
+        groups: &[TallyCounterGroup],
+    ) -> Result<Flow, RuntimeError> {
+        let sidx = self.inspect_alnum_source(source)?;
+
+        // Validate EVERY counter FIRST — each must be an UNSIGNED INTEGER (`PIC 9(n)`),
+        // the SAME check the single-item tally applies. Doing all of them (and all the
+        // delimiter resolution below) before touching any counter means an invalid group
+        // aborts with every counter untouched. The same counter name may legally appear
+        // in two groups; validating it twice is harmless.
+        for (counter, _) in groups {
+            let cidx = *self
+                .by_name
+                .get(counter)
+                .ok_or_else(|| RuntimeError::UndefinedName(counter.to_string()))?;
+            match &self.items[cidx].picture {
+                Some(Picture::Numeric { dec_digits: 0, signed: false, .. }) => {}
+                Some(Picture::Numeric { .. }) => {
+                    return Err(RuntimeError::Unsupported(format!(
+                        "INSPECT TALLYING into a non-integer or signed counter {counter} is a later rung"
+                    )))
+                }
+                _ => {
+                    return Err(RuntimeError::Unsupported(format!(
+                        "INSPECT TALLYING into a non-numeric counter {counter} is a later rung"
+                    )))
+                }
+            }
+        }
+
+        // The source characters — resolved FIRST so every item's window is computed over
+        // these same chars (and so an invalid operand aborts with the counters untouched).
+        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+
+        // Flatten every delimiter to `(group_index, char, start, end)` in WRITTEN ORDER,
+        // resolving all delimiters AND all windows (via the SAME `single_delim_char` /
+        // `region_window` the single-item path uses, so an invalid operand rejects
+        // identically) BEFORE the scan. `group_index` remembers which counter a match
+        // belongs to; `[start, end)` is the item's window (a region-less item =
+        // `region_window(None) == (0, len)`, the whole source).
+        let mut flat: Vec<(usize, char, usize, usize)> = Vec::new();
+        for (gi, (_counter, items)) in groups.iter().enumerate() {
+            for (delim, region) in items {
+                let dch = self.single_delim_char(delim, "INSPECT")?;
+                let (start, end) = self.region_window(&chars, region.as_ref())?;
+                flat.push((gi, dch, start, end));
+            }
+        }
+
+        // ONE pass over the source. Per position `i` walk the flattened list in order;
+        // the FIRST entry whose window contains `i` AND whose delimiter matches bumps that
+        // group's accumulator and breaks (first-match-wins across counters). A per-GROUP
+        // accumulator (not per counter NAME) keeps the counts separate even when two
+        // groups share a counter name — they are summed into that one item below.
+        let mut accs = vec![0usize; groups.len()];
+        for (i, ch) in chars.iter().enumerate() {
+            for (gi, dch, start, end) in &flat {
+                if *start <= i && i < *end && *ch == *dch {
+                    accs[*gi] += 1;
+                    break;
+                }
+            }
+        }
+
+        // Add each group's accumulator to its counter, via the SAME store path ADD (and
+        // the single-item tally) uses. `named_decimal` re-reads the counter each time, so
+        // if the SAME counter name appears in two groups both groups' shares accumulate
+        // into that one item correctly. INSPECT adds; it never clears a counter.
+        let mut flow = Flow::Normal;
+        for (gi, (counter, _)) in groups.iter().enumerate() {
+            let addend = Decimal { neg: false, int: accs[gi].to_string(), frac: String::new() };
+            let acc = checked(add(&self.named_decimal(counter)?, &addend))?;
+            flow = self.store_result(counter, acc, false, &[])?;
+        }
+        Ok(flow)
+    }
+
+    /// `INSPECT source TALLYING counter FOR {ALL|LEADING} delim REPLACING
+    /// {ALL|LEADING} search BY replace` — one INSPECT carrying BOTH phrases. Per
+    /// ISO this runs "as though an INSPECT TALLYING were specified, followed by an
+    /// INSPECT REPLACING", so the order is fixed: FIRST [`Self::inspect_tally`]
+    /// counts `delim` in the ORIGINAL (pre-replacement) storage and adds to
+    /// `counter`, THEN [`Self::inspect_replace`] maps `search`→`replace` in the
+    /// source. Running tally before replace is what makes `delim == search`
+    /// correct — the count sees the bytes as they were, and only afterwards are
+    /// they overwritten. The TALLYING half honours `tally_leading` (`FOR LEADING`
+    /// counts only the leading run of `delim`, `FOR ALL` counts every occurrence);
+    /// the REPLACING half independently honours `replace_leading` (`LEADING`
+    /// rewrites only the leading run of `search`, `ALL` rewrites every
+    /// occurrence). The `cobol-iir-compiler` composes the same two lowerings in
+    /// the same order with the same two flags, so the compiled program matches
+    /// this reference byte-for-byte.
+    ///
+    /// Each half independently carries an optional `{BEFORE|AFTER} x` region
+    /// (`tally_region` / `replace_region`). Because the tally does NOT mutate the
+    /// source, BOTH windows are derived (via [`Self::region_window`], the same
+    /// helper the lone forms use) over the SAME original storage — the count's
+    /// window and the replacement's window each see the pre-replacement bytes. The
+    /// two regions are otherwise fully independent (different kind, different
+    /// delimiter, either/both/neither present).
+    // Ten parameters: the source/counter/delim/search/replace operands, the two
+    // INDEPENDENT leading flags (tally half, replace half), and the two INDEPENDENT
+    // optional regions. Grouping them into a struct would only re-spell the same
+    // fields the caller already destructured from `Stmt::InspectTallyReplace`, so the
+    // flat signature is clearer here.
+    #[allow(clippy::too_many_arguments)]
+    fn exec_inspect_tally_replace(
+        &mut self,
+        source: &str,
+        counter: &str,
+        delim: &Operand,
+        tally_leading: bool,
+        tally_region: Option<&Region>,
+        search: &Operand,
+        replace: &Operand,
+        replace_leading: bool,
+        replace_region: Option<&Region>,
+    ) -> Result<Flow, RuntimeError> {
+        let sidx = self.inspect_alnum_source(source)?;
+        // Tally FIRST, on the current (original) storage — it does not mutate the
+        // source, so the subsequent replace still sees the original bytes too. The
+        // TALLYING half may be FOR ALL or FOR LEADING (`tally_leading`) and may carry
+        // its OWN `{BEFORE|AFTER}` region (`tally_region`), whose window is computed
+        // over the original storage.
+        // The combined form never carries a CHARACTERS tally (rejected at read time),
+        // so `characters` is always `false` here.
+        self.inspect_tally(sidx, counter, delim, tally_leading, false, tally_region)?;
+        // THEN replace, overwriting the source in place. The REPLACING half may be
+        // ALL or LEADING (`replace_leading`) — the same leading-run map used by a
+        // lone `INSPECT REPLACING LEADING` — and carries its OWN INDEPENDENT
+        // `{BEFORE|AFTER}` region (`replace_region`). Since the tally left the source
+        // untouched, this half's window is also over the SAME original storage.
+        self.inspect_replace(sidx, search, replace, replace_leading, replace_region)?;
+        Ok(Flow::Normal)
+    }
+
+    /// The REPLACING half: substitute `search` characters with `replace` in the
+    /// source's storage, in place (same width). Factored out of
+    /// [`Self::exec_inspect_replacing`] so the combined exec can run it AFTER the
+    /// tally. When `leading` is false (`REPLACING ALL`) EVERY occurrence of
+    /// `search` becomes `replace`; when true (`REPLACING LEADING`) only the run of
+    /// CONSECUTIVE `search` characters at the START of the source is replaced,
+    /// stopping at the first character that is not `search` — positions after that
+    /// first gap are left unchanged even if they equal `search`. The combined
+    /// tally-then-replace path passes whichever `leading` the statement's REPLACING
+    /// half selected — this map is shared verbatim by the lone `REPLACING LEADING`
+    /// and the combined `TALLYING … REPLACING LEADING`. A numeric/group source is
+    /// rejected by the caller via [`Self::inspect_alnum_source`].
+    ///
+    /// An optional `region` (`{BEFORE|AFTER} x`) narrows BOTH maps to the window
+    /// `[start, end)` [`Self::region_window`] derives over the ORIGINAL source. For
+    /// `ALL` a position is rewritten only when it is BOTH inside the window AND equal
+    /// to `search`; a position outside the window keeps its original character even if
+    /// it equals `search`. For `LEADING` the run is anchored at the WINDOW START, not
+    /// source position 0: characters before `start` are copied through UNCHANGED and
+    /// do NOT begin or break the run, the run begins at `start`, and it stops at the
+    /// first non-`search` character INSIDE the window (or the window end). So a
+    /// standalone `REPLACING LEADING … AFTER x` rewrites the leading run beginning at
+    /// `first+1` — e.g. "aaXaab" AFTER "X" narrows to "aab" and rewrites its leading
+    /// a's, leaving the "aa" before the X untouched. With `AFTER x` and `x` absent the
+    /// window is empty, so nothing is replaced (the ISO not-found asymmetry). With no
+    /// region the window is the whole source, so both maps are unchanged. The combined
+    /// `TALLYING … REPLACING` form still rejects a LEADING half carrying a region at
+    /// read time, so LEADING and a narrowed window only ever combine on the STANDALONE
+    /// `REPLACING LEADING … {BEFORE|AFTER}` path.
+    fn inspect_replace(
+        &mut self,
+        sidx: usize,
+        search: &Operand,
+        replace: &Operand,
+        leading: bool,
+        region: Option<&Region>,
+    ) -> Result<(), RuntimeError> {
+        // The single search and replacement characters (shared validation with
+        // UNSTRING/TALLYING: a multi-character/figurative/wider/numeric operand is
+        // a later rung). Read both BEFORE mutating so an invalid replacement does
+        // not leave the source half-changed.
+        let search_ch = self.single_delim_char(search, "INSPECT REPLACING")?;
+        let replace_ch = self.single_delim_char(replace, "INSPECT REPLACING")?;
+
+        // The ORIGINAL source characters and the region window over them. We compute
+        // the window BEFORE rebuilding so — exactly like the count — it sees the
+        // pre-replacement bytes, and we reuse the SAME helper the tally uses so both
+        // narrow to the identical slice.
+        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+        let (start, end) = self.region_window(&chars, region)?;
+
+        // Rebuild each character in place (same width), then store through the
+        // alphanumeric char path. `REPLACING ALL` maps every in-window match;
+        // `REPLACING LEADING` replaces only while still in the leading run — a
+        // stateful map that flips `in_run` off at the first non-`search` character
+        // and never replaces again, even for a later `search`. The run is anchored at
+        // the WINDOW START: a position OUTSIDE `[start, end)` is copied through
+        // unchanged and leaves `in_run` untouched (characters before `start` neither
+        // begin nor break the run), so the run genuinely starts at `start`. With no
+        // region `start = 0` and `end = len`, so every position is "inside" and the
+        // map reduces to the plain leading-run rewrite. With `AFTER x` and `x` absent
+        // the window is empty (`start = end = len`), so no position is inside and
+        // nothing is replaced.
+        let rebuilt: String = if leading {
+            let mut in_run = true;
+            chars
+                .iter()
+                .enumerate()
+                .map(|(i, &c)| {
+                    if i < start || i >= end {
+                        // Outside the region window: keep the original character and
+                        // leave the run state untouched (anchor the run at `start`).
+                        c
+                    } else if in_run && c == search_ch {
+                        replace_ch
+                    } else {
+                        in_run = false;
+                        c
+                    }
+                })
+                .collect()
+        } else {
+            // ALL: rewrite a matching character only when its position `i` lies inside
+            // the region window `[start, end)`; outside the window the original char
+            // is kept. (No region ⇒ `start = 0`, `end = len` ⇒ every match rewritten.)
+            chars
+                .iter()
+                .enumerate()
+                .map(|(i, &c)| {
+                    if i >= start && i < end && c == search_ch {
+                        replace_ch
+                    } else {
+                        c
+                    }
+                })
+                .collect()
+        };
+        self.move_into(sidx, Src::Chars(rebuilt))
+    }
+
+    /// `INSPECT source CONVERTING from TO to` — translate each character of the
+    /// alphanumeric `source` through a per-character **translation table** built
+    /// from the two EQUAL-length string literals `from` and `to`: a source
+    /// character equal to `from[k]` becomes `to[k]`, where `k` is the FIRST index
+    /// at which it appears in `from` (so if `from` repeats a character, the
+    /// LEFTMOST entry wins); a character in no table entry is left unchanged. The
+    /// source's width is unchanged (each character maps to exactly one), so — like
+    /// [`Self::inspect_replace`] — the rebuilt string feeds the SAME alphanumeric
+    /// char-store path a `MOVE` uses, and the compiled `cobol-iir-compiler`
+    /// per-position lowering matches this reference output byte-for-byte.
+    ///
+    /// This rung: `from`/`to` are string LITERALS of equal length. An unequal-
+    /// length pair is a clean later-rung error; a `PIC X` item / figurative /
+    /// reference-modified `from`/`to` and a numeric/group source are rejected by the
+    /// reader and [`Self::inspect_alnum_source`].
+    ///
+    /// An optional `region` (`{BEFORE|AFTER} x`) narrows the translation to the
+    /// window `[start, end)` [`Self::region_window`] derives over the ORIGINAL
+    /// source — the SAME helper the count and `ALL` replacement use, so all three
+    /// INSPECT operations narrow to byte-identical slices. A position INSIDE the
+    /// window is translated through the table; a position OUTSIDE keeps its original
+    /// character even if it appears in the `from` set. With no region the window is
+    /// the whole source, so every character is translated exactly as before.
+    fn exec_inspect_converting(
+        &mut self,
+        source: &str,
+        from: &str,
+        to: &str,
+        region: Option<&Region>,
+    ) -> Result<(), RuntimeError> {
+        let sidx = self.inspect_alnum_source(source)?;
+
+        // The table pairs `from[k]` with `to[k]`, so the two must be equal length.
+        let from_chars: Vec<char> = from.chars().collect();
+        let to_chars: Vec<char> = to.chars().collect();
+        if from_chars.len() != to_chars.len() {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT CONVERTING with unequal-length FROM/TO operands is a later rung".into(),
+            ));
+        }
+
+        // Build the char→char map, FIRST occurrence wins (so a duplicated `from`
+        // character keeps its leftmost `to` partner — `or_insert` never overwrites).
+        let mut table: HashMap<char, char> = HashMap::new();
+        for (f, t) in from_chars.iter().zip(to_chars.iter()) {
+            table.entry(*f).or_insert(*t);
+        }
+
+        // The ORIGINAL source characters and the region window over them, derived by
+        // the SHARED helper (BEFORE→whole / AFTER→empty when `x` is absent). No
+        // region ⇒ `(0, len)` ⇒ every position translated, exactly as before.
+        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+        let (start, end) = self.region_window(&chars, region)?;
+
+        // Map each source character through the table only when its position lies
+        // inside the window; a position outside the window keeps its original
+        // character (unmapped in-window characters also pass through unchanged).
+        let rebuilt: String = chars
+            .iter()
+            .enumerate()
+            .map(|(i, &c)| {
+                if i >= start && i < end {
+                    *table.get(&c).unwrap_or(&c)
+                } else {
+                    c
+                }
+            })
+            .collect();
+        self.move_into(sidx, Src::Chars(rebuilt))
     }
 
     /// `EVALUATE subject WHEN … END-EVALUATE` — run the first branch whose value
@@ -745,16 +2209,72 @@ impl Machine {
     /// figurative), else an **alphanumeric** comparison — each side's characters
     /// (a numeric's are its digit image), a figurative expanded to the other's
     /// length, then both space-padded to a common length and byte-compared.
+    ///
+    /// A **mixed** numeric ↔ alphanumeric comparison (one side a numeric item, the
+    /// other alphanumeric) falls into that alphanumeric arm: COBOL treats the
+    /// numeric operand as though moved to an alphanumeric field — its digit image,
+    /// which `Decimal::digits()` yields as the item's fixed-width zero-padded
+    /// storage (`PIC 9(3) = 42` → `"042"`; a scaled `PIC 9(2)V9 = 4.2` → `"042"`,
+    /// its `(int + frac)` digits with no point) — and compares by the byte rule. An
+    /// **unsigned** numeric item, integer OR scaled (`PIC 9(i)V9(d)`), has that plain
+    /// magnitude image. A **signed** (`PIC S9…`) numeric item is also supported: its
+    /// comparison image is the same magnitude with the operational sign folded into a
+    /// TRAILING OVERPUNCH on the units (last) digit (`overpunch_trailing`) — exactly
+    /// the bytes the signed numeric→alphanumeric MOVE produces. So `PIC S9(3) = -123`
+    /// compares equal to `"12L"`, `= +123` equal to `"12C"`, and a scaled
+    /// `PIC S9V9 = -4.2` equal to `"4K"`. A value that truncates to a zero magnitude
+    /// stores `neg = false` (COBOL has no negative zero), so its image is `"00{"`.
+    /// A **group** item in a mixed comparison is still a clean later rung — rejected
+    /// here so the oracle matches the compiler, which rejects it at compile time. A
+    /// numeric *literal* vs an alphanumeric operand is a **different pairing** than a
+    /// numeric ITEM vs alphanumeric (outside this rung's scope) and is rejected here
+    /// too, so the oracle matches the compiler rather than silently answering it.
     fn compare_operands(&self, left: &Operand, right: &Operand) -> Result<std::cmp::Ordering, RuntimeError> {
         let l = self.src_from_operand(left)?;
         let r = self.src_from_operand(right)?;
+        // A mixed comparison surfaces as one numeric `Src` and one alphanumeric —
+        // either a character string (`Src::Chars`) or a figurative such as `SPACE`
+        // (`Src::Fig`, but NOT `ZERO`, which is numeric and handled by the value
+        // arms below). A signed numeric operand IS supported (its overpunched image
+        // is used in the byte arm below); only a group item participating in a mixed
+        // comparison is still deferred, so this engine errors precisely where the
+        // compiler does — including for a numeric-vs-figurative pairing.
+        let alnum_fig = |s: &Src| matches!(s, Src::Fig(f) if !matches!(f, Fig::Zero));
+        let mixed = matches!(&l, Src::Num(_)) && (matches!(&r, Src::Chars(_)) || alnum_fig(&r))
+            || matches!(&r, Src::Num(_)) && (matches!(&l, Src::Chars(_)) || alnum_fig(&l));
+        if mixed {
+            for op in [left, right] {
+                // A numeric LITERAL against an alphanumeric operand is a *different*
+                // pairing than a numeric ITEM vs alphanumeric — out of this rung's
+                // scope, and rejected by the compiler (`num_digit_str_operand`), so
+                // the oracle rejects it too rather than silently answering (which
+                // would be a stricter-compiler asymmetry).
+                if matches!(op, Operand::Lit(Lit::Num(_))) {
+                    return Err(RuntimeError::Unsupported(
+                        "a numeric literal compared with an alphanumeric operand is a later rung \
+                         (a different pairing)"
+                            .into(),
+                    ));
+                }
+                if self.operand_is_group(op) {
+                    return Err(RuntimeError::Unsupported(
+                        "a group item compared with a numeric operand is a later rung".into(),
+                    ));
+                }
+            }
+        }
         Ok(match (&l, &r) {
             (Src::Num(a), Src::Num(b)) => a.cmp_value(b),
             (Src::Num(a), Src::Fig(Fig::Zero)) => a.cmp_value(&Decimal::zero()),
             (Src::Fig(Fig::Zero), Src::Num(b)) => Decimal::zero().cmp_value(b),
             _ => {
-                let mut ls = src_chars(&l);
-                let mut rs = src_chars(&r);
+                // A SIGNED numeric operand compares by its overpunched magnitude image
+                // (`overpunch_trailing` — the same bytes the signed→alphanumeric MOVE
+                // produces), not its plain digit string; an unsigned numeric, a
+                // figurative, or a literal keeps its ordinary `src_chars` image, so
+                // this changes the compared string ONLY for a signed numeric operand.
+                let mut ls = self.signed_overpunch_image(left).unwrap_or_else(|| src_chars(&l));
+                let mut rs = self.signed_overpunch_image(right).unwrap_or_else(|| src_chars(&r));
                 if let Src::Fig(f) = &l {
                     ls = fill_fig(f, rs.len().max(1));
                 }
@@ -765,6 +2285,36 @@ impl Machine {
                 format!("{ls:<width$}").cmp(&format!("{rs:<width$}"))
             }
         })
+    }
+
+    /// The overpunched comparison image of a **signed** numeric data-name operand:
+    /// its stored magnitude with the operational sign folded into a trailing
+    /// overpunch on the units digit (`overpunch_trailing`), the exact bytes a signed
+    /// numeric→alphanumeric MOVE of the same item emits — so a mixed comparison
+    /// against an alphanumeric operand byte-matches the compiler's image. Returns
+    /// `None` for any other operand (unsigned numeric, literal, group, ref-mod),
+    /// leaving the caller's ordinary `src_chars` image in place.
+    fn signed_overpunch_image(&self, op: &Operand) -> Option<String> {
+        if let Operand::Ident(name) = op {
+            if let Some(&idx) = self.by_name.get(name) {
+                if let Some(Picture::Numeric { signed: true, .. }) = &self.items[idx].picture {
+                    return Some(overpunch_trailing(&self.items[idx].storage, self.items[idx].neg));
+                }
+            }
+        }
+        None
+    }
+
+    /// Whether `op` is a data-name referring to a **group** item (no picture — its
+    /// value is the concatenation of its children). A group item in a mixed
+    /// numeric↔alphanumeric comparison is a later rung.
+    fn operand_is_group(&self, op: &Operand) -> bool {
+        if let Operand::Ident(name) = op {
+            if let Some(&idx) = self.by_name.get(name) {
+                return self.items[idx].picture.is_none();
+            }
+        }
+        false
     }
 
     fn exec_display(&mut self, ops: &[Operand]) -> Result<(), RuntimeError> {
@@ -787,9 +2337,150 @@ impl Machine {
             ));
         }
         for dst in dsts {
+            let idx = *self.by_name.get(dst).ok_or_else(|| RuntimeError::UndefinedName(dst.clone()))?;
+            // Cross-category numeric → alphanumeric MOVE: COBOL treats a numeric
+            // sending item as though it were an alphanumeric item holding its digit
+            // characters, then moves it by the alphanumeric rules (via
+            // `move_into_char`). The digit image is the full `(int + frac)`-digit
+            // magnitude — integer part then fractional part, NO decimal point —
+            // which `Decimal::digits()` (equivalently the item's `storage`) already
+            // yields (`PIC 9(2)V9 = 4.2` → `"042"`; an integer, `d = 0`, is the
+            // special case). An UNSIGNED source (integer or scaled) flows through the
+            // generic `move_into` path below (`Src::Num(d) => d.digits()`), giving
+            // that plain magnitude image.
+            //
+            // A SIGNED source (`PIC S9…`) is handled HERE: its image additionally
+            // carries the operational sign as a TRAILING OVERPUNCH on the units
+            // (last) digit — the same zoned-decimal encoding `item_image`/`DISPLAY`
+            // produce for a signed field (`overpunch_trailing`):
+            //
+            //   | units u  | 0 1 2 3 4 5 6 7 8 9 |
+            //   | positive | { A B C D E F G H I |
+            //   | negative | } J K L M N O P Q R |
+            //
+            // So `S9(3) = +123` → `"12C"`, `= −123` → `"12L"`, `S9V9 = −4.2` → `"4K"`.
+            // The overpunch is driven by the item being signed, not by the value's
+            // sign: a signed POSITIVE value takes the positive `{…I` row (which is
+            // exactly why an unsigned `"123"` and a signed positive `"12C"` differ).
+            // The overpunched image is then char-moved into the receiver by the same
+            // alphanumeric rule (`Src::Chars` → `move_into_char`), so the oracle and
+            // the compiler (which builds the identical image via the same table) emit
+            // byte-identical bytes. A group source has no `Picture::Numeric`, so it
+            // never reaches this arm.
+            if let Operand::Ident(name) = src {
+                let alpha_recv = matches!(
+                    self.items[idx].picture,
+                    Some(Picture::Alphanumeric { .. }) | Some(Picture::Alphabetic { .. })
+                );
+                if alpha_recv {
+                    if let Some(&sidx) = self.by_name.get(name) {
+                        if let Some(Picture::Numeric { signed: true, .. }) =
+                            &self.items[sidx].picture
+                        {
+                            // Magnitude image (`storage`) with the trailing sign
+                            // overpunch, then the ordinary alphanumeric char-move.
+                            let image =
+                                overpunch_trailing(&self.items[sidx].storage, self.items[sidx].neg);
+                            self.move_into(idx, Src::Chars(image))?;
+                            continue;
+                        }
+                    }
+                }
+            }
+            // Cross-category alphanumeric → numeric MOVE (the reverse direction):
+            // an alphanumeric source item (`PIC X(m)`) moved into an UNSIGNED
+            // numeric receiver `PIC 9(i)V9(d)` (no `S`; `d` may be 0 — an INTEGER —
+            // or > 0 — a SCALED receiver). COBOL reads the source's `m` characters
+            // as an unsigned integer `V` (fold `V = V*10 + (byte - '0')`), and that
+            // folded integer IS the receiver's scaled-slot magnitude directly: it
+            // fills the receiver's `(i + d)` digit positions RIGHT-justified, with
+            // the implied point `d` places from the right, so the slot is
+            // `V mod 10^(i+d)` (left-zero-padded when the source is shorter,
+            // high-order-truncated when longer). This is NOT the arithmetic
+            // decimal-align rule — `V` is not multiplied by `10^d`; the fold already
+            // lands at scale `d`.
+            //
+            //   MOVE "042"   TO 9(2)V9  → V=42    → slot 042 → reads 4.2
+            //   MOVE "12345" TO 9(2)V9  → V=12345 → slot 345 → reads 34.5
+            //
+            // We fold the `m` bytes into an `i64`, then build a `Decimal` that places
+            // the folded magnitude at scale `d` — the point inserted `d` places from
+            // the right: `int` = the magnitude's digits above the last `d`
+            // (empty → "0"), `frac` = its last `d` digits, left-zero-padded to `d`.
+            // `move_into` → `move_into_numeric(int_digits=i, dec_digits=d)` then keeps
+            // the low-order `i` integer digits and the high-order `d` fractional
+            // digits, i.e. exactly `V mod 10^(i+d)` with the point at `d`. This is
+            // byte-identical to the compiler, which folds the identical per-character
+            // arithmetic and hands `store_scaled` the SAME scale `d` (a no-op shift,
+            // then `mag mod 10^(i+d)`). For `d = 0` the split is `int = V_str`,
+            // `frac = ""` — reproducing the old integer-receiver behaviour exactly.
+            // Only an unsigned numeric receiver and a genuine alphanumeric SOURCE
+            // ITEM (not a group, not a literal) are handled here; every other shape
+            // falls through to `move_into` below, which rejects a `Src::Chars` →
+            // numeric MOVE.
+            if let Operand::Ident(name) = src {
+                if let Some(&sidx) = self.by_name.get(name) {
+                    let src_is_char = matches!(
+                        self.items[sidx].picture,
+                        Some(Picture::Alphanumeric { .. }) | Some(Picture::Alphabetic { .. })
+                    );
+                    let recv_unsigned = matches!(
+                        self.items[idx].picture,
+                        Some(Picture::Numeric { signed: false, .. })
+                    );
+                    let recv_dec = match &self.items[idx].picture {
+                        Some(Picture::Numeric { dec_digits, .. }) => *dec_digits,
+                        _ => 0,
+                    };
+                    if src_is_char && recv_unsigned {
+                        let chars = self.items[sidx].storage.clone();
+                        // Guard the `i64` fold: an all-digit source of ≤ 18
+                        // characters stays below `10^18 < i64::MAX`; a wider source
+                        // is a clean later rung (the compiler rejects it identically).
+                        if chars.len() > NUMERIC_MAX_DIGITS {
+                            return Err(RuntimeError::Unsupported(format!(
+                                "alphanumeric → numeric MOVE from {name} into {dst}: a source \
+                                 wider than {NUMERIC_MAX_DIGITS} characters is a later rung"
+                            )));
+                        }
+                        // Fold the bytes as decimal digits. `wrapping_*` matches the
+                        // compiler's i64 arithmetic and never panics; for the
+                        // in-scope all-digit ≤ 18-char source it never wraps.
+                        let mut value: i64 = 0;
+                        for b in chars.bytes() {
+                            value = value.wrapping_mul(10).wrapping_add((b as i64) - (b'0' as i64));
+                        }
+                        // Take the MAGNITUDE, exactly as the compiler's `store_scaled`
+                        // does (it `abs`es the value before `mod 10^(i+d)`). This
+                        // matters for a source byte below `'0'` — most commonly a SPACE
+                        // (an uninitialised `PIC X` is spaces): `(b - '0')` is then
+                        // negative and the fold goes negative, but a `PIC 9` field is
+                        // unsigned, so both engines keep the magnitude (never a stray
+                        // `'-'`). A non-digit source is defined-but-unspecified,
+                        // identical on both engines by construction. (`unsigned_abs`
+                        // is total — no panic on `i64::MIN`, unreachable here anyway.)
+                        let mag = value.unsigned_abs().to_string();
+                        // Split the magnitude at scale `d`: the point sits `d` places
+                        // from the right. Left-pad to at least `d` digits first so the
+                        // fractional slice is always exactly `d` chars and the integer
+                        // slice is whatever remains ("0" when the magnitude has ≤ `d`
+                        // digits). For `d = 0` this is `int = mag`, `frac = ""`.
+                        let padded = if mag.len() < recv_dec {
+                            format!("{mag:0>recv_dec$}")
+                        } else {
+                            mag
+                        };
+                        let split = padded.len() - recv_dec;
+                        let int = if split == 0 { "0".to_string() } else { padded[..split].to_string() };
+                        let frac = padded[split..].to_string();
+                        let decimal = Decimal { neg: false, int, frac };
+                        self.move_into(idx, Src::Num(decimal))?;
+                        continue;
+                    }
+                }
+            }
             // Resolve the source afresh per receiver (its category can differ).
             let value = self.src_from_operand(src)?;
-            let idx = *self.by_name.get(dst).ok_or_else(|| RuntimeError::UndefinedName(dst.clone()))?;
             self.move_into(idx, value)?;
         }
         Ok(())
@@ -1051,10 +2742,16 @@ impl Machine {
                         ))
                     }
                 };
-                // A signed field keeps the sign (except on zero, which is
-                // unsigned); an unsigned field drops it to magnitude.
-                let neg = signed && d.neg && !d.is_zero();
-                (move_into_numeric(&d, int_digits, dec_digits), neg)
+                // A signed field keeps the sign, EXCEPT on zero, which is
+                // unsigned (COBOL has no negative zero); an unsigned field drops
+                // it to magnitude. Test the STORED magnitude, not the source `d`:
+                // a nonzero value can high-order-truncate to an all-zero slot
+                // (e.g. `-1000` into `PIC S9(3)` → `000`), and that stored zero
+                // must be positive — matching the compiler, whose single-i64 slot
+                // collapses such a value to a plain `0`.
+                let stored = move_into_numeric(&d, int_digits, dec_digits);
+                let neg = signed && d.neg && stored.bytes().any(|b| b != b'0');
+                (stored, neg)
             }
             Picture::Alphanumeric { size } | Picture::Alphabetic { size } => {
                 let chars = match src {
@@ -1102,7 +2799,7 @@ impl Machine {
             // alphanumeric value. In a numeric context this `Src::Chars` is
             // rejected downstream (`operand_decimal`), matching the compiler.
             Operand::RefMod { base, start, len } => {
-                Ok(Src::Chars(self.refmod_string(base, *start, *len)?))
+                Ok(Src::Chars(self.refmod_string(base, start, len)?))
             }
         }
     }
@@ -1112,11 +2809,28 @@ impl Machine {
     /// COBOL reference modification is 1-based: `base(start:len)` selects the
     /// characters at 1-based positions `start .. start+len-1`, i.e. the 0-based
     /// half-open range `[start-1, start-1+len)`. An omitted `len` runs to the end
-    /// of the item, so `len = width - (start-1)`. This slices the *same*
-    /// character range the compiler emits as a constant-index `str_slice`, so the
-    /// DISPLAY output and comparisons agree byte-for-byte. The base must be an
-    /// alphanumeric item (a numeric item is a later rung).
-    fn refmod_string(&self, base: &str, start: usize, len: Option<usize>) -> Result<String, RuntimeError> {
+    /// of the item, so `end = width`. `start` and `len` may each be an integer
+    /// literal *or* a data-name read at run time (a **computed** reference
+    /// modification) — [`Self::refmod_index_value`] resolves both to `i64`.
+    ///
+    /// This slices the *same* character range the compiler emits as a `str_slice`
+    /// (constant-index for a literal:literal refmod, register-computed for a
+    /// computed one), so DISPLAY output and comparisons agree byte-for-byte. The
+    /// base must be an alphanumeric item (a numeric item is a later rung).
+    ///
+    /// **Out-of-range rule.** Let `start0 = start - 1` and
+    /// `end = start0 + len` (or `end = width` when the length is omitted). The
+    /// slice traps — [`RuntimeError::RefModOutOfRange`] — exactly when
+    /// `start0 < 0 || end < start0 || end > width`. This is the *identical*
+    /// predicate the compiled `str_slice` enforces in the VM/wasm backends
+    /// (`start < 0 || end < start || end > s.len()`), so an in-range program
+    /// slices identically on both engines and an out-of-range one errors on both.
+    fn refmod_string(
+        &self,
+        base: &str,
+        start: &RefIndex,
+        len: &Option<RefIndex>,
+    ) -> Result<String, RuntimeError> {
         let idx = *self.by_name.get(base).ok_or_else(|| RuntimeError::UndefinedName(base.to_string()))?;
         let item = &self.items[idx];
         let content = match &item.picture {
@@ -1129,25 +2843,59 @@ impl Machine {
             None => self.group_image(idx),
         };
         let chars: Vec<char> = content.chars().collect();
-        let width = chars.len();
-        if start < 1 {
-            return Err(RuntimeError::Unsupported(
-                "reference modification start position must be at least 1 — a later rung".into(),
-            ));
-        }
-        let start0 = start - 1;
-        let actual_len = len.unwrap_or(width.saturating_sub(start0));
-        // Subtractive bounds test — `start0 + actual_len` would overflow `usize`
-        // for a crafted `WS(1e19:1e19)` (both parse as full `usize`), panicking in
-        // debug / wrapping past the guard (then an out-of-bounds slice) in release.
-        // `width - start0` is only reached once `start0 <= width`.
-        if start0 > width || actual_len > width - start0 {
-            return Err(RuntimeError::Unsupported(format!(
-                "reference modification {base}({start}:{}) runs past the {width}-character item — a later rung",
-                len.map(|l| l.to_string()).unwrap_or_default()
+        let width = chars.len() as i128;
+        // Compute the half-open [start0, end) bounds in i128 so an adversarial
+        // index item (e.g. `PIC 9(18)` holding a value near i64::MAX) can never
+        // overflow the `start0 + len` add into a debug-build panic — it is caught
+        // by the bounds check below and reported as a clean RefModOutOfRange. The
+        // predicate `start0 < 0 || end < start0 || end > width` is the identical
+        // rule the emitted run-time `str_slice` enforces on the compiler side.
+        let start_v = self.refmod_index_value(start)?;
+        let start0 = start_v as i128 - 1;
+        let end: i128 = match len {
+            Some(l) => start0 + self.refmod_index_value(l)? as i128,
+            None => width,
+        };
+        if start0 < 0 || end < start0 || end > width {
+            return Err(RuntimeError::RefModOutOfRange(format!(
+                "{base}({start_v}:{}) does not fit the {width}-character item",
+                len.as_ref().map(|_| (end - start0).to_string()).unwrap_or_default()
             )));
         }
-        Ok(chars[start0..start0 + actual_len].iter().collect())
+        // Bounds passed: 0 ≤ start0 ≤ end ≤ width, all within the small char count.
+        Ok(chars[start0 as usize..end as usize].iter().collect())
+    }
+
+    /// Resolve a reference-modification index ([`RefIndex`]) to an `i64`. A
+    /// literal is its own value; a data-name must be an **unsigned integer** item
+    /// (`PIC 9…`, no `S`, no `V`) — its stored digits parsed as an integer. A
+    /// signed, fractional, or non-numeric index item is a later rung.
+    fn refmod_index_value(&self, ix: &RefIndex) -> Result<i64, RuntimeError> {
+        match ix {
+            RefIndex::Lit(v) => Ok(*v as i64),
+            RefIndex::Name(name) => {
+                let idx = *self
+                    .by_name
+                    .get(name)
+                    .ok_or_else(|| RuntimeError::UndefinedName(name.clone()))?;
+                match &self.items[idx].picture {
+                    Some(Picture::Numeric { dec_digits: 0, signed: false, .. }) => {
+                        self.items[idx].storage.parse::<i64>().map_err(|_| {
+                            RuntimeError::RefModOutOfRange(format!(
+                                "index {name} value {} is out of range",
+                                self.items[idx].storage
+                            ))
+                        })
+                    }
+                    Some(Picture::Numeric { .. }) => Err(RuntimeError::Unsupported(format!(
+                        "a signed or fractional reference-modification index ({name}) is a later rung"
+                    ))),
+                    _ => Err(RuntimeError::Unsupported(format!(
+                        "a non-numeric reference-modification index ({name}) is a later rung"
+                    ))),
+                }
+            }
+        }
     }
 
     /// A numeric item's value as a [`Decimal`], split by its implied decimal.
@@ -1174,7 +2922,7 @@ impl Machine {
                 let idx = *self.by_name.get(name).ok_or_else(|| RuntimeError::UndefinedName(name.clone()))?;
                 Ok(self.item_image(idx))
             }
-            Operand::RefMod { base, start, len } => self.refmod_string(base, *start, *len),
+            Operand::RefMod { base, start, len } => self.refmod_string(base, start, len),
         }
     }
 

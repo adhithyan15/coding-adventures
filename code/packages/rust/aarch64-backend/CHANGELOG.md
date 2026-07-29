@@ -1,5 +1,42 @@
 # Changelog — `aarch64-backend`
 
+## 0.33.0 - 2026-07-29 — `gc_register_ref_array_kind` builtin (frontend array GC, AOT00-T5 §7)
+
+- **`gc_register_ref_array_kind` `BuiltinSig` row** (`(fixed, fixed_count, tail_from) -> kind_id`)
+  — a `call_builtin` lowers to a `BL` to `__twig_gc_register_ref_array_kind` via the generic
+  `__twig_<name>` dispatch (three args in x0/x1/x2), the C-ABI seam a language frontend's **array**
+  type calls to declare its layout so the collector traces — and under compaction relocates — the
+  array + its elements precisely instead of pinning them. Adding the row is the whole change (no
+  per-name lowering). Test `gc_register_ref_array_kind_emits_external_twig_call`.
+
+## 0.32.0 - 2026-07-27 — `gc_collect_incremental_*` builtin trio (frontend incremental GC, AOT00-T4 §6)
+
+- Three new `V1_BUILTINS` entries — `gc_collect_incremental_start` (0 args, void),
+  `gc_collect_incremental_step` (1 arg = budget, returns 1 done / 0 more),
+  `gc_collect_incremental_finish` (0 args, returns freed count) — the bounded-pause collection
+  cycle. The generic `__twig_<name>` `call_builtin` dispatch auto-emits `BL
+  __twig_gc_collect_incremental_*` (no per-name lowering). A native program can now drive an
+  incremental collection. New emission unit test asserts the three external reloc symbols.
+
+## 0.31.0 - 2026-07-24 — `gc_collect_compacting` builtin (frontend GC.compact, AOT00-T3 §5)
+
+- New `V1_BUILTINS` entry `gc_collect_compacting` (0 args, returns the freed count) — the
+  moving/compacting collect. The generic `__twig_<name>` `call_builtin` dispatch auto-emits a
+  `BL __twig_gc_collect_compacting`, so no per-name lowering is needed; it sits beside
+  `gc_collect` / `gc_collect_precise`. A native program can now trigger a compaction. New
+  emission unit test asserts the external reloc symbol.
+
+## 0.30.0 - 2026-07-21 — V1_BUILTINS: GC collection + observability (AOT00-T1 increment C)
+
+Four `call_builtin` entries the native GC-stress differential drives, resolving to the
+`__twig_gc_*` aliases in gc-core-capi: `gc_collect` (forced conservative full collect,
+void), `gc_collect_precise` (precise-roots frame walk, returns freed count),
+`gc_live_bytes` (live payload bytes), and `gc_stackmap_count` (registered-function
+count). No new lowering — the generic `call_builtin` marshaller emits the `BL`.
+
+## 0.29.0 - 2026-07-20 — V1_BUILTINS: dyn_null_p (native `null?`)
+
+Part of the fix restoring McCarthy-lisp list programs on the native-AOT / LLVM backends (`lang-aot` `lang_matrix`). See the umbrella commit for the full story: `null?` was never routed to a runtime call on the tagged native/LLVM path (breaking every cons-walk helper), `list-ref`/`assoc` unboxed a raw-int index/key (→ wrong element), a top-level `(null? …)` predicate result was unboxed instead of truthy-coerced, and cons-cell field access failed the JVM verifier. Verified end-to-end: native list-ref/assoc/length/reverse/append/null? all correct.
 ## 0.28.0 - 2026-07-18 (GC stack maps: `compile_with_globals_and_stackmap`)
 
 Second implementation rung of `AOT00-T1-stackmap-emission.md`: the backend now

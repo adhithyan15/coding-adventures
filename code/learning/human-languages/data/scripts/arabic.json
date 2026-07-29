@@ -4,6 +4,7 @@
   "font": "_fonts/NotoNaskhArabic-Static.ttf",
   "direction": "rtl",
   "system": "abjad",
+  "signature": "Right-to-left, joined into one flowing cursive ribbon, with dots placed above and below the line.",
   "complete": false,
   "combination": "Written right-to-left and cursive: most letters JOIN their neighbours and change shape by position — isolated, initial, medial, final. Six letters (ا د ذ ر ز و) never connect to the letter that follows them, so they force a break. Short vowels are usually unwritten; when shown they are harakat (small marks) above or below. Many letters share one skeleton and differ only by the number and position of DOTS — so the dots are a real 'piece' to practise.",
   "notes": "Used by the Arabic track. The initial inventory below covers the greeting/self-introduction vocabulary; it grows toward the full 28-letter set. Stroke orders are the common handwriting convention (right-to-left), not a standard.",

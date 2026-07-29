@@ -4544,6 +4544,9 @@ impl HtmlParser {
                     } => self.append_start_tag(name, attributes, self_closing),
                     Token::EndTag { name } => self.handle_end_tag(&name),
                     Token::Comment(comment) => self.append_comment(comment),
+                    Token::ProcessingInstruction { target, data } => {
+                        self.append_processing_instruction(target, data)
+                    }
                     Token::Doctype {
                         name,
                         public_identifier,
@@ -4641,6 +4644,9 @@ impl HtmlParser {
             Token::EndTag { name } => self.consume_foreign_cdata_text(format!("</{name}>")),
             Token::Comment(comment) => {
                 self.consume_foreign_cdata_text(format!("<!--{comment}-->"));
+            }
+            Token::ProcessingInstruction { target, data } => {
+                self.consume_foreign_cdata_text(format!("<?{target} {data}?>"));
             }
             Token::Doctype { name, .. } => {
                 self.consume_foreign_cdata_text(format!("<!DOCTYPE {}>", name.unwrap_or_default()));
@@ -5295,11 +5301,24 @@ impl HtmlParser {
         if namespace.is_none() && name == "form" {
             self.form_element_pointer_set = true;
         }
-        let child_index = self.append_node(element_node(name.clone(), attributes, namespace));
-        if !acknowledges_self_closing && !html_void_element {
+        let node = element_node(name.clone(), attributes, namespace);
+        let inserted_path = if !in_foreign_content
+            && self.current_element_is_table_structure()
+            && self.has_open_element("table")
+            && !starts_table_context(&name)
+            && !is_head_element(&name)
+        {
+            self.insert_node_before_open_table(node)
+        } else {
+            let child_index = self.append_node(node);
             let mut path = self.current_parent_path().to_vec();
             path.push(child_index);
-            self.open_elements.push(path);
+            Some(path)
+        };
+        if !acknowledges_self_closing && !html_void_element {
+            if let Some(path) = inserted_path {
+                self.open_elements.push(path);
+            }
         }
         if namespace.is_none()
             && name == "div"
@@ -5396,7 +5415,7 @@ impl HtmlParser {
 
         let text = if text.contains('\u{FFFD}')
             && (self.current_node_is_svg_html_integration_point()
-                || self.current_namespace() == Some("math")
+                || self.current_node_is_mathml_integration_point()
                 || (self.replacement_text_is_ignorable_in_current_context(&text)
                     && !self.current_element_is("plaintext")))
         {
@@ -5641,7 +5660,14 @@ impl HtmlParser {
                 return;
             }
         }
-        let node = Node::comment(comment);
+        self.append_comment_or_processing_instruction(Node::comment(comment));
+    }
+
+    fn append_processing_instruction(&mut self, target: String, data: String) {
+        self.append_comment_or_processing_instruction(Node::processing_instruction(target, data));
+    }
+
+    fn append_comment_or_processing_instruction(&mut self, node: Node) {
         if self.explicit_head_end_seen
             && self.current_element_is("head")
             && self.has_document_element()
@@ -7913,7 +7939,7 @@ impl HtmlParser {
         self.document
             .children
             .iter()
-            .any(|node| !matches!(node, Node::Comment(_)))
+            .any(|node| !matches!(node, Node::Comment(_) | Node::ProcessingInstruction(_)))
     }
 
     fn reopen_document_body(&mut self) {
@@ -8302,8 +8328,10 @@ impl HtmlParser {
 
     fn document_has_non_frameset_compatible_body_content(&self) -> bool {
         self.document.children.iter().any(|node| {
-            !matches!(node, Node::DocumentType(_) | Node::Comment(_))
-                && !is_ignorable_before_frameset_node(node)
+            !matches!(
+                node,
+                Node::DocumentType(_) | Node::Comment(_) | Node::ProcessingInstruction(_)
+            ) && !is_ignorable_before_frameset_node(node)
         })
     }
 
@@ -8994,7 +9022,7 @@ fn collect_text_content(nodes: &[Node], text: &mut String) {
         match node {
             Node::Text(data) => text.push_str(&data.data),
             Node::Element(element) => collect_text_content(&element.children, text),
-            Node::Comment(_) | Node::DocumentType(_) => {}
+            Node::Comment(_) | Node::ProcessingInstruction(_) | Node::DocumentType(_) => {}
         }
     }
 }
@@ -9322,7 +9350,9 @@ fn normalize_document_shell(document: Document) -> Document {
     for node in document.children {
         match node {
             Node::DocumentType(_) => normalized.push_child(node),
-            Node::Comment(_) if !builder.seen_document_element => normalized.push_child(node),
+            Node::Comment(_) | Node::ProcessingInstruction(_) if !builder.seen_document_element => {
+                normalized.push_child(node)
+            }
             Node::Element(mut element) if element.name == "html" => {
                 builder.seen_document_element = true;
                 builder.seen_html_element_node = true;
@@ -9331,7 +9361,7 @@ fn normalize_document_shell(document: Document) -> Document {
                     builder.push_html_child(child);
                 }
             }
-            Node::Comment(_) if builder.seen_html_element_node => {
+            Node::Comment(_) | Node::ProcessingInstruction(_) if builder.seen_html_element_node => {
                 builder.trailing_document_children.push(node);
             }
             node => {
@@ -9365,7 +9395,9 @@ fn body_fragment_nodes(mut document: Document) -> Vec<Node> {
     for node in document.children.drain(..) {
         match node {
             Node::DocumentType(_) => {}
-            Node::Comment(_) | Node::Text(_) => fragment.push(node),
+            Node::Comment(_) | Node::ProcessingInstruction(_) | Node::Text(_) => {
+                fragment.push(node)
+            }
             Node::Element(mut element) if element.name == "html" => {
                 for child in element.children.drain(..) {
                     match child {
@@ -9376,7 +9408,9 @@ fn body_fragment_nodes(mut document: Document) -> Vec<Node> {
                                     .filter(|node| !matches!(node, Node::DocumentType(_))),
                             );
                         }
-                        Node::Comment(_) | Node::Text(_) => fragment.push(child),
+                        Node::Comment(_) | Node::ProcessingInstruction(_) | Node::Text(_) => {
+                            fragment.push(child)
+                        }
                         _ => {}
                     }
                 }
@@ -9667,7 +9701,10 @@ fn move_leading_html_fragment_misc_after_body(nodes: &mut Vec<Node>) {
     };
 
     let mut leading_misc = Vec::new();
-    while matches!(nodes.first(), Some(Node::Comment(_) | Node::Text(_))) {
+    while matches!(
+        nodes.first(),
+        Some(Node::Comment(_) | Node::ProcessingInstruction(_) | Node::Text(_))
+    ) {
         leading_misc.push(nodes.remove(0));
     }
     if leading_misc.is_empty() {
@@ -9727,13 +9764,15 @@ impl DocumentShellBuilder {
                 append_missing_attributes(&mut self.body_attributes, element.attributes);
                 self.body_children.append(&mut element.children);
             }
-            Node::Comment(_) if self.seen_body_content && !self.seen_body_element => {
+            Node::Comment(_) | Node::ProcessingInstruction(_)
+                if self.seen_body_content && !self.seen_body_element =>
+            {
                 self.body_children.push(node);
             }
-            Node::Comment(_) if self.seen_body_content => {
+            Node::Comment(_) | Node::ProcessingInstruction(_) if self.seen_body_content => {
                 self.trailing_html_children.push(node);
             }
-            Node::Comment(_) if !self.seen_body_content => {
+            Node::Comment(_) | Node::ProcessingInstruction(_) if !self.seen_body_content => {
                 if !self.seen_head_element && self.head_children.is_empty() {
                     self.pre_head_html_children.push(node);
                 } else if !self.seen_head_element {
@@ -10006,14 +10045,14 @@ fn starts_body_after_head(name: &str) -> bool {
 fn is_ignorable_before_body(node: &Node) -> bool {
     match node {
         Node::Text(text) => text.data.chars().all(char::is_whitespace),
-        Node::Comment(_) => true,
+        Node::Comment(_) | Node::ProcessingInstruction(_) => true,
         _ => false,
     }
 }
 
 fn is_body_content_node(node: &Node) -> bool {
     match node {
-        Node::DocumentType(_) | Node::Comment(_) => false,
+        Node::DocumentType(_) | Node::Comment(_) | Node::ProcessingInstruction(_) => false,
         Node::Text(text) => !text.data.chars().all(char::is_whitespace),
         Node::Element(_) => true,
     }
@@ -13817,7 +13856,7 @@ fn collect_browser_content_nodes_with_mode(
                     output.push(content_node);
                 }
             }
-            Node::DocumentType(_) | Node::Comment(_) => {}
+            Node::DocumentType(_) | Node::Comment(_) | Node::ProcessingInstruction(_) => {}
         }
     }
 }
@@ -24423,7 +24462,7 @@ fn collect_visible_text(nodes: &[Node], text: &mut String) {
                 collect_visible_text(&element.children, text);
                 text.push(' ');
             }
-            Node::DocumentType(_) | Node::Comment(_) => {}
+            Node::DocumentType(_) | Node::Comment(_) | Node::ProcessingInstruction(_) => {}
         }
     }
 }
@@ -24439,7 +24478,7 @@ fn collect_browser_text_content(nodes: &[Node], text: &mut String) {
         match node {
             Node::Text(value) => text.push_str(&value.data),
             Node::Element(element) => collect_browser_text_content(&element.children, text),
-            Node::DocumentType(_) | Node::Comment(_) => {}
+            Node::DocumentType(_) | Node::Comment(_) | Node::ProcessingInstruction(_) => {}
         }
     }
 }
@@ -24817,6 +24856,24 @@ mod tests {
 
     fn body(document: &Document) -> &Element {
         element(&html(document).children[1])
+    }
+
+    #[test]
+    fn parser_preserves_processing_instruction_target_and_data() {
+        let mut parser = HtmlParser::with_options(HtmlParseOptions::default());
+        parser.process_token(Token::ProcessingInstruction {
+            target: "xml-model".to_string(),
+            data: "href=\"schema.rng\"".to_string(),
+        });
+        parser.process_token(Token::Eof);
+
+        let document = parser.finish_document();
+
+        assert!(matches!(
+            &document.children[0],
+            Node::ProcessingInstruction(pi)
+                if pi.target == "xml-model" && pi.data == "href=\"schema.rng\""
+        ));
     }
 
     #[test]

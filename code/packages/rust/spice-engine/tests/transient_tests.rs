@@ -280,6 +280,98 @@ fn transient_jfet_gate_source_capacitance_slows_gate_step() {
 }
 
 #[test]
+fn transient_jfet_junction_potential_shapes_gate_charge() {
+    fn final_gate_voltage(junction_potential: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 0.0),
+                (2.0e-7, 0.4),
+                (2.0e-6, 0.4),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "gate", 1_000.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rdrain", "drain", "0", 1_000.0,
+        )));
+        let mut jfet = Jfet::with_model_and_capacitance(
+            "J1",
+            "drain",
+            "gate",
+            "0",
+            JfetPolarity::Njf,
+            1.0e-12,
+            -2.0,
+            0.0,
+            1.0e-9,
+            0.0,
+        );
+        jfet.junction_potential = junction_potential;
+        circuit.add(Element::Jfet(jfet));
+        transient_with_method(&circuit, 2.0e-7, 2.0e-6, TransientMethod::Euler)
+            .unwrap()
+            .last()
+            .unwrap()
+            .voltage("gate")
+            .unwrap()
+    }
+
+    assert!(final_gate_voltage(0.5) < final_gate_voltage(2.0));
+}
+
+#[test]
+fn transient_jfet_forward_bias_depletion_coefficient_shapes_gate_charge() {
+    fn final_gate_voltage(coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 0.0),
+                (2.0e-7, 0.6),
+                (2.0e-6, 0.6),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "gate", 1_000.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rdrain", "drain", "0", 1_000.0,
+        )));
+        let mut jfet = Jfet::with_model_and_capacitance(
+            "J1",
+            "drain",
+            "gate",
+            "0",
+            JfetPolarity::Njf,
+            1.0e-12,
+            -2.0,
+            0.0,
+            1.0e-9,
+            0.0,
+        );
+        jfet.forward_bias_depletion_coefficient = coefficient;
+        circuit.add(Element::Jfet(jfet));
+        transient_with_method(&circuit, 2.0e-7, 2.0e-6, TransientMethod::Euler)
+            .unwrap()
+            .last()
+            .unwrap()
+            .voltage("gate")
+            .unwrap()
+    }
+
+    assert!(final_gate_voltage(0.2) > final_gate_voltage(0.8));
+}
+
+#[test]
 fn transient_mosfet_overlap_capacitance_slows_gate_step() {
     fn run(gate_source_overlap_capacitance: f64) -> Vec<TransientPoint> {
         let mut circuit = Circuit::new();
@@ -329,8 +421,8 @@ fn transient_mosfet_overlap_capacitance_slows_gate_step() {
 }
 
 #[test]
-fn transient_mosfet_bulk_junction_capacitance_slows_drain_step() {
-    fn run(drain_bulk_capacitance: f64) -> Vec<TransientPoint> {
+fn transient_mosfet_drain_area_scales_bottom_junction_capacitance() {
+    fn run(bottom_junction_capacitance: f64, drain_area: f64) -> Vec<TransientPoint> {
         let mut circuit = Circuit::new();
         circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
             "Vstep",
@@ -357,17 +449,159 @@ fn transient_mosfet_bulk_junction_capacitance_slows_drain_step() {
                 kp: 1.0e-12,
                 w: 1.0,
                 l: 1.0,
-                drain_bulk_capacitance,
+                bottom_junction_capacitance,
+                drain_area,
                 ..MosfetLevel1Params::default()
             },
         )));
         transient_with_method(&circuit, 1.0e-9, 5.0e-9, TransientMethod::Euler).unwrap()
     }
 
-    let uncharged = run(0.0);
-    let charged = run(1.0e-9);
+    let uncharged = run(0.0, 0.0);
+    let charged = run(0.5, 2.0e-9);
     let uncharged_first = uncharged[0].voltage("drain").unwrap();
     let charged_first = charged[0].voltage("drain").unwrap();
+
+    assert!(uncharged_first > 0.5);
+    assert!(charged_first < 0.01);
+    assert!(charged_first < uncharged_first);
+}
+
+#[test]
+fn transient_mosfet_drain_perimeter_scales_sidewall_junction_capacitance() {
+    fn run(sidewall_capacitance: f64, drain_perimeter: f64) -> Vec<TransientPoint> {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 0.0),
+                (1.0e-9, 1.0),
+                (5.0e-9, 1.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "drain", 1_000.0,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                kp: 1.0e-12,
+                w: 1.0,
+                l: 1.0,
+                drain_perimeter,
+                sidewall_junction_capacitance: sidewall_capacitance,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+        transient_with_method(&circuit, 1.0e-9, 5.0e-9, TransientMethod::Euler).unwrap()
+    }
+
+    let uncharged = run(0.0, 0.0);
+    let charged = run(0.5, 2.0e-9);
+    let uncharged_first = uncharged[0].voltage("drain").unwrap();
+    let charged_first = charged[0].voltage("drain").unwrap();
+
+    assert!(uncharged_first > 0.5);
+    assert!(charged_first < 0.01);
+    assert!(charged_first < uncharged_first);
+}
+
+#[test]
+fn transient_mosfet_source_area_scales_bottom_junction_capacitance() {
+    fn run(bottom_junction_capacitance: f64, source_area: f64) -> Vec<TransientPoint> {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 0.0),
+                (1.0e-9, 1.0),
+                (5.0e-9, 1.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "source", 1_000.0,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "0",
+            "0",
+            "source",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                kp: 1.0e-12,
+                w: 1.0,
+                l: 1.0,
+                bottom_junction_capacitance,
+                source_area,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+        transient_with_method(&circuit, 1.0e-9, 5.0e-9, TransientMethod::Euler).unwrap()
+    }
+
+    let uncharged = run(0.0, 0.0);
+    let charged = run(0.5, 2.0e-9);
+    let uncharged_first = uncharged[0].voltage("source").unwrap();
+    let charged_first = charged[0].voltage("source").unwrap();
+
+    assert!(uncharged_first > 0.5);
+    assert!(charged_first < 0.01);
+    assert!(charged_first < uncharged_first);
+}
+
+#[test]
+fn transient_mosfet_source_perimeter_scales_sidewall_junction_capacitance() {
+    fn run(sidewall_capacitance: f64, source_perimeter: f64) -> Vec<TransientPoint> {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 0.0),
+                (1.0e-9, 1.0),
+                (5.0e-9, 1.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "source", 1_000.0,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "0",
+            "0",
+            "source",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                kp: 1.0e-12,
+                w: 1.0,
+                l: 1.0,
+                source_perimeter,
+                sidewall_junction_capacitance: sidewall_capacitance,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+        transient_with_method(&circuit, 1.0e-9, 5.0e-9, TransientMethod::Euler).unwrap()
+    }
+
+    let uncharged = run(0.0, 0.0);
+    let charged = run(0.5, 2.0e-9);
+    let uncharged_first = uncharged[0].voltage("source").unwrap();
+    let charged_first = charged[0].voltage("source").unwrap();
 
     assert!(uncharged_first > 0.5);
     assert!(charged_first < 0.01);
@@ -423,6 +657,101 @@ fn transient_mosfet_bulk_junction_depletion_shaping_reduces_reverse_bias_capacit
     );
     assert!(shaped_first > fixed_first + 0.04);
     assert!(shaped_first < 1.4);
+}
+
+#[test]
+fn transient_mosfet_sidewall_grading_coefficient_shapes_reverse_bias_capacitance() {
+    fn run(grading_coefficient: f64) -> Vec<TransientPoint> {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vstep",
+            "in",
+            "0",
+            1.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 1.0),
+                (1.0e-9, 2.0),
+                (5.0e-9, 2.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "drain", 1_000.0,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                kp: 1.0e-12,
+                w: 1.0,
+                l: 1.0,
+                drain_perimeter: 1.0,
+                sidewall_junction_capacitance: 1.0e-12,
+                bulk_junction_potential: 1.0,
+                sidewall_junction_grading_coefficient: grading_coefficient,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+        transient_with_method(&circuit, 1.0e-9, 5.0e-9, TransientMethod::Euler).unwrap()
+    }
+
+    let fixed = run(0.0);
+    let shaped = run(0.5);
+    let fixed_first = fixed[0].voltage("drain").unwrap();
+    let shaped_first = shaped[0].voltage("drain").unwrap();
+    assert!(shaped_first > fixed_first + 0.04);
+}
+
+#[test]
+fn transient_mosfet_forward_bias_depletion_coefficient_shapes_bulk_charge() {
+    fn first_drain_voltage(coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vstep",
+            "in",
+            "0",
+            -0.6,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, -0.6),
+                (1.0e-9, -0.8),
+                (5.0e-9, -0.8),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "drain", 1_000.0,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MosfetType::Nmos,
+            MosfetLevel1Params {
+                kp: 1.0e-12,
+                w: 1.0,
+                l: 1.0,
+                drain_bulk_capacitance: 1.0e-12,
+                bulk_junction_potential: 1.0,
+                bulk_junction_grading_coefficient: 0.5,
+                forward_bias_depletion_coefficient: coefficient,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+        transient_with_method(&circuit, 1.0e-9, 5.0e-9, TransientMethod::Euler).unwrap()[0]
+            .voltage("drain")
+            .unwrap()
+    }
+
+    let early_transition = first_drain_voltage(0.2);
+    let late_transition = first_drain_voltage(0.8);
+    assert!(
+        early_transition < late_transition,
+        "expected early FC transition to reduce forward capacitance, got early={early_transition} late={late_transition}"
+    );
 }
 
 #[test]
@@ -524,14 +853,223 @@ fn transient_bjt_base_emitter_capacitance_slows_base_current_step() {
 }
 
 #[test]
+fn transient_bjt_base_emitter_depletion_capacitance_falls_with_reverse_bias() {
+    fn stepped_base_voltage(grading_coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vdrive",
+            "in",
+            "0",
+            -1.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, -1.0),
+                (1.0e-9, -1.0),
+                (2.0e-9, 0.0),
+                (5.0e-9, 0.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        circuit.add(Element::Bjt(
+            Bjt::with_model_temperature_and_depletion_parameters(
+                "Q1",
+                "0",
+                "base",
+                "0",
+                BjtPolarity::Npn,
+                1.0e-14,
+                100.0,
+                0.02585,
+                1.0e-12,
+                0.0,
+                0.0,
+                0.0,
+                3.0,
+                1.11,
+                0.0,
+                1.0,
+                1.0,
+                0.75,
+                grading_coefficient,
+                0.75,
+                0.33,
+                0.5,
+            ),
+        ));
+        transient(&circuit, 1.0e-9, 5.0e-9).unwrap()[1]
+            .voltage("base")
+            .unwrap()
+    }
+
+    assert!(stepped_base_voltage(0.5) > stepped_base_voltage(0.0));
+}
+
+#[test]
+fn transient_bjt_base_collector_depletion_capacitance_falls_with_reverse_bias() {
+    fn stepped_collector_voltage(grading_coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vdrive",
+            "in",
+            "0",
+            1.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 1.0),
+                (1.0e-9, 1.0),
+                (2.0e-9, 0.0),
+                (5.0e-9, 0.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin",
+            "in",
+            "collector",
+            1_000.0,
+        )));
+        circuit.add(Element::Bjt(
+            Bjt::with_model_temperature_and_depletion_parameters(
+                "Q1",
+                "collector",
+                "0",
+                "0",
+                BjtPolarity::Npn,
+                1.0e-14,
+                100.0,
+                0.02585,
+                0.0,
+                1.0e-12,
+                0.0,
+                0.0,
+                3.0,
+                1.11,
+                0.0,
+                1.0,
+                1.0,
+                0.75,
+                0.33,
+                0.75,
+                grading_coefficient,
+                0.5,
+            ),
+        ));
+        transient(&circuit, 1.0e-9, 5.0e-9).unwrap()[1]
+            .voltage("collector")
+            .unwrap()
+    }
+
+    assert!(stepped_collector_voltage(0.5) < stepped_collector_voltage(0.0));
+}
+
+#[test]
+fn transient_bjt_xcjc_partitions_depletion_charge_to_external_base() {
+    fn stepped_base_voltage(fraction: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vdrive",
+            "in",
+            "0",
+            0.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 0.0),
+                (1.0e-9, 0.0),
+                (2.0e-9, 1.0),
+                (5.0e-9, 1.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "0", "base", "0");
+        transistor.saturation_current = 1.0e-30;
+        transistor.base_collector_capacitance = 1.0e-12;
+        transistor.base_resistance = 10_000.0;
+        transistor.base_collector_capacitance_fraction = fraction;
+        circuit.add(Element::Bjt(transistor));
+
+        transient(&circuit, 1.0e-9, 5.0e-9).unwrap()[1]
+            .voltage("base")
+            .unwrap()
+    }
+
+    let intrinsic = stepped_base_voltage(1.0);
+    let external = stepped_base_voltage(0.0);
+    assert!(
+        intrinsic > external,
+        "intrinsic={intrinsic}, external={external}"
+    );
+}
+
+#[test]
+fn transient_bjt_forward_bias_depletion_coefficient_shapes_both_junctions() {
+    fn held_voltage(coefficient: f64, base_emitter: bool) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vdrive",
+            "in",
+            "0",
+            0.6,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 0.6),
+                (1.0e-9, 0.6),
+                (2.0e-9, 0.0),
+                (5.0e-9, 0.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        circuit.add(Element::Bjt(
+            Bjt::with_model_temperature_and_depletion_parameters(
+                "Q1",
+                "0",
+                "base",
+                "0",
+                BjtPolarity::Npn,
+                1.0e-30,
+                100.0,
+                0.02585,
+                if base_emitter { 1.0e-12 } else { 0.0 },
+                if base_emitter { 0.0 } else { 1.0e-12 },
+                0.0,
+                0.0,
+                3.0,
+                1.11,
+                0.0,
+                1.0,
+                1.0,
+                0.75,
+                0.33,
+                0.75,
+                0.33,
+                coefficient,
+            ),
+        ));
+        transient(&circuit, 1.0e-9, 5.0e-9).unwrap()[1]
+            .voltage("base")
+            .unwrap()
+    }
+
+    for base_emitter in [true, false] {
+        assert!(held_voltage(0.8, base_emitter) > held_voltage(0.2, base_emitter));
+    }
+}
+
+#[test]
 fn transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() {
-    fn run(forward_transit_time: f64) -> Vec<TransientPoint> {
+    fn run(
+        forward_transit_time: f64,
+        forward_transit_time_bias_coefficient: f64,
+        forward_transit_time_current: f64,
+        forward_transit_time_voltage: f64,
+        collector_voltage: f64,
+    ) -> Vec<TransientPoint> {
         let mut circuit = Circuit::new();
         circuit.add(Element::VoltageSource(VoltageSource::new(
             "Vcc",
             "collector",
             "0",
-            5.0,
+            collector_voltage,
         )));
         circuit.add(Element::CurrentSource(CurrentSource::with_waveform(
             "Istep",
@@ -547,7 +1085,7 @@ fn transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() {
         circuit.add(Element::Resistor(Resistor::new(
             "Rshunt", "base", "0", 1.0e12,
         )));
-        circuit.add(Element::Bjt(Bjt::with_model(
+        let mut transistor = Bjt::with_model(
             "Q1",
             "collector",
             "base",
@@ -560,12 +1098,19 @@ fn transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() {
             0.0,
             forward_transit_time,
             0.0,
-        )));
+        );
+        transistor.forward_transit_time_bias_coefficient = forward_transit_time_bias_coefficient;
+        transistor.forward_transit_time_current = forward_transit_time_current;
+        transistor.forward_transit_time_voltage = forward_transit_time_voltage;
+        circuit.add(Element::Bjt(transistor));
         transient(&circuit, 1.0e-9, 5.0e-9).unwrap()
     }
 
-    let no_storage = run(0.0);
-    let stored = run(1.0e-9);
+    let no_storage = run(0.0, 0.0, 0.0, 0.0, 5.0);
+    let stored = run(1.0e-9, 0.0, 0.0, 0.0, 5.0);
+    let bias_scaled = run(1.0e-9, 9.0, 0.0, 0.0, 5.0);
+    let current_limited = run(1.0e-9, 9.0, 1.0, 0.0, 5.0);
+    let voltage_limited = run(1.0e-9, 9.0, 0.0, 0.5, 10.0);
     let no_storage_first = no_storage[0].voltage("base").unwrap();
     let stored_first = stored[0].voltage("base").unwrap();
 
@@ -578,6 +1123,25 @@ fn transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() {
             .unwrap()
             < stored_first
     );
+    let bias_scaled_last = bias_scaled
+        .last()
+        .and_then(|point| point.voltage("base"))
+        .unwrap();
+    let stored_last = stored
+        .last()
+        .and_then(|point| point.voltage("base"))
+        .unwrap();
+    assert!((bias_scaled_last - stored_last).abs() > 1.0e-12);
+    let current_limited_last = current_limited
+        .last()
+        .and_then(|point| point.voltage("base"))
+        .unwrap();
+    assert!((current_limited_last - stored_last).abs() < (bias_scaled_last - stored_last).abs());
+    let voltage_limited_last = voltage_limited
+        .last()
+        .and_then(|point| point.voltage("base"))
+        .unwrap();
+    assert!((voltage_limited_last - stored_last).abs() < (bias_scaled_last - stored_last).abs());
 }
 
 #[test]

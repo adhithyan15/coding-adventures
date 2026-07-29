@@ -1,5 +1,67 @@
 # Changelog
 
+## The book catches up -- Chapters 3-16 typeset
+
+The lessons had run ahead of the published artifact: 61 authored lessons through
+Chapter 16, but the LaTeX book still stopped at Chapter 2 ("Introducing
+Yourself"). Because the CI book build only compiles what is wired into
+`book.tex`, the missing chapters were invisible to CI and the gap drifted
+silently. This closes it -- **fourteen new book chapters**, written from the
+existing `FR-C03`-`FR-C16` lessons and wired into `book.tex`:
+
+- **Ch3** How Are You (merci, de rien, aller, comment ca va, comme ci comme ca)
+- **Ch4** Farewells (au revoir, a plus tard, a bientot, a demain)
+- **Ch5** The First Verbs (parler, habiter, travailler, je parle francais)
+- **Ch6** Numbers One to Ten * **Ch7** The Days of the Week (the planet-gods)
+- **Ch8** Telling the Time * **Ch9** Months and Seasons
+- **Ch10** Family (parents, freres/soeurs -- with the Grimm's-law table)
+- **Ch11** Bread, Water, Wine * **Ch12** Numbers Eleven to Twenty
+- **Ch13** Colours * **Ch14** To Have, and How Old You Are (avoir, age)
+- **Ch15** The Compound Past (passe compose, passe simple)
+- **Ch16** To Be, and the Past That Takes It (etre, and the verbs that take it)
+
+Each chapter follows the established book conventions: one `\section` per lesson
+with a slug `\label`, the `cousinweb` / `culture` / `grammarlens` / `sounds`
+boxes (the only four this book's preamble defines), `booktabs` tables, and every
+atom traced to its root. Content is faithful to the lessons -- no new etymologies
+introduced. Practice-section labels are chapter-qualified (`lesson:chN-practice`)
+so they stay unique.
+
+The book grows to **79 pages**; compiles clean with XeLaTeX (0 errors, 0 missing
+characters, 0 undefined references, 0 duplicate labels) and was rasterized and
+visually QA'd -- the PIE forms (*ph2ter, *bhreh2ter), the `oe` ligature in
+*soeur*, and the nested Grimm's-law table all render correctly.
+
+Also fixed: `FR-C07-jours-1.md` called Tiw "the Norse war-god". Tiw is the Old
+English form (the Norse cognate is Tyr), so it now reads "the Germanic war-god"
+-- matching how the German track's parallel lesson already phrased it.
+
+## Chapter 17 — The body: a head that was a pot, and a hand inside English
+
+- **Chapter 17 authored** (`FR-C17-tete`, `-main`) — the **body**, which is the
+  theme all four parallel-track roadmaps name next after family and food.
+- **la tête** (`FR-C17-tete`): the headline is that **French threw away the Latin
+  word for "head."** *Tête* is not from *caput* but from ***testa***, an
+  **earthenware pot** — Roman soldiers' slang for the skull, the way English says
+  *noggin*. The joke replaced the real word, so *j'ai mal à la tête* is
+  historically "**my pot hurts**."
+  - *Caput* is shown surviving where it did: French **chef** ("chief" = head) and
+    **chapitre**, and abroad in *cabeza*, *capo*, *captain*, *decapitate*.
+  - The **circumflex is a receipt** — *testa* → Old French *teste* → *tête* — and
+    the payoff is that English, which borrowed *before* the *s* fell, still has
+    **test**, originally the shallow pot an alchemist assayed metals in.
+- **la main** (`FR-C17-main`): flagged as **feminine despite a consonant
+  ending**, because French gender is not predictable from the ending and this
+  course always supplies the article. From ***manus***, presented as the most
+  productive hand in English — *manual*, *manuscript*, *maintain*, *manage*,
+  *manoeuvre* — with two things done deliberately:
+  - **manufacture** ("made by hand") is called out as now naming precisely the
+    thing that isn't.
+  - **maintenir** = Latin *manū tenēre*, "hold in the hand" — so *maintenance* is
+    literally keeping something in hand. (A draft cited "Ch. 14's *tenir*"; the
+    French track has **no *tenir* lesson** — Ch. 14 is *avoir* and *âge*. Caught
+    by grepping. *Ter* ← *tenēre* is the **Portuguese** Ch. 14.)
+
 ## Chapter 16 — *être*, and the half of the past Chapter 15 couldn't reach
 
 - **Chapter 16 authored** (`FR-C16-etre`, `-passe-compose-etre`). Chapter 15

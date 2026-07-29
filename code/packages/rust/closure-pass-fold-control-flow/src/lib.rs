@@ -55,8 +55,8 @@ use coding_adventures_closure_pass_pipeline::{
 };
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
-    statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
-    AssignmentTarget, BinaryExpression, BindingTarget, BlockStatement, CallExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression, ImportExpression,
+    statement::TaggedStatement, ArrayExpression, AssignmentExpression,
+    BinaryExpression, BindingTarget, BlockStatement, CallExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression, ImportExpression,
     ConditionalExpression, Declaration, EmptyStatement, Expression, ExpressionStatement, ForInit,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
     ClassDeclaration, ClassExpression, ClassMember, MethodDefinition, PropertyDefinition,
@@ -324,6 +324,17 @@ fn fold_program(prog: &Program, st: &mut FoldState) -> Program {
                 new_body.extend(body.iter().cloned().map(ProgramItem::Statement));
                 continue;
             }
+            // Split a top-level comma-sequence statement (`a(), b();` → `a(); b();`).
+            if let Some(split) = split_sequence_statement(s) {
+                st.record_fold(
+                    &statement_cv(s),
+                    "split-comma-sequence",
+                    "<a>, <b>;",
+                    "<a>; <b>;",
+                );
+                new_body.extend(split.into_iter().map(ProgramItem::Statement));
+                continue;
+            }
         }
         new_body.push(folded);
     }
@@ -385,11 +396,80 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> Statemen
         // A `do … while(test)` runs its body at least once, so — unlike
         // `while` — it can NEVER be eliminated as a dead loop even when
         // `test` is statically falsy (the single body run is observable).
-        // We therefore only recurse structurally: fold the body and the test.
+        // We therefore recurse structurally (fold the body and the test) and
+        // then apply the same loop-body comma-fusion as `for`/`while`:
+        //
+        //   do { a(); b(); } while(c);   →   do a(), b(); while(c);
+        //
+        // A `BlockStatement` body whose statements are *all* plain expression
+        // statements collapses to one (possibly comma-sequenced) expression
+        // statement, dropping the braces — the comma operator runs them
+        // left-to-right with identical side effects and the loop discards the
+        // value. `stmts_as_sequence_expr` returns `None` (keeping the block) for
+        // any body carrying a declaration (`var`/`let`/`const`), a
+        // `break`/`continue`/`return`, or a nested statement — none of which can
+        // join a comma-sequence. Unlike `while`, a `do`-loop is not rewritten to
+        // a `for`, so the fusion is applied here rather than inherited from
+        // `fold_for_statement`. It runs *after* the body's own inner folds, so an
+        // `if (x) a();` that folded to `x && a()` participates:
+        // `do { if (x) a(); b(); } while(c);` → `do x && a(), b(); while(c);`.
         TaggedStatement::DoWhileStatement(s) => {
+            let body = fold_statement(&s.body, st);
+
+            // Empty-bodied `do … while` ≡ `while`. `do {} while(test)` runs the
+            // (empty) body once and then evaluates `test`; because the body is a
+            // no-op, its test-evaluation sequence is IDENTICAL to `while(test){}`
+            // (the leading empty run changes nothing observable). We rewrite to
+            // the equivalent `while`, which lowers to `for` and — via the empty
+            // loop-body normalization — collapses the braces:
+            //
+            //   do {} while(c);   →  while(c){}  →  for(; c;) {}  →  for(; c;) ;
+            //   do {} while(0);   →  while(0){}  →  dead loop     →  ;  (dce drops)
+            //
+            // A NON-empty body keeps the `do` form (a `do` body runs before its
+            // test, so it can't generally become a `while`); those fall through
+            // to the loop-body comma-fusion below.
+            if statement_is_empty(&body) {
+                st.record_fold(
+                    &s.cv,
+                    "empty-do-while-to-while",
+                    "do {} while(<test>)",
+                    "while(<test>) {}",
+                );
+                return fold_while_statement(
+                    &WhileStatement {
+                        cv: s.cv.clone(),
+                        test: s.test.clone(),
+                        body: Box::new(body),
+                    },
+                    st,
+                );
+            }
+
+            let body = match &body {
+                Statement::Tagged(TaggedStatement::BlockStatement(_)) => {
+                    match stmts_as_sequence_expr(&body) {
+                        Some(expr) => {
+                            let body_cv = statement_cv(&body);
+                            st.record_fold(
+                                &s.cv,
+                                "loop-body-fuse",
+                                "do { s1; s2; … } while(…)",
+                                "do s1, s2, … while(…)",
+                            );
+                            Statement::expression_statement(ExpressionStatement {
+                                cv: body_cv,
+                                expression: expr,
+                            })
+                        }
+                        None => body,
+                    }
+                }
+                _ => body,
+            };
             Statement::Tagged(TaggedStatement::DoWhileStatement(DoWhileStatement {
                 cv: s.cv.clone(),
-                body: Box::new(fold_statement(&s.body, st)),
+                body: Box::new(body),
                 test: fold_expression(&s.test, st),
             }))
         }
@@ -596,6 +676,21 @@ fn fold_block_statement(b: &BlockStatement, st: &mut FoldState) -> BlockStatemen
             if new_body.last().map(is_terminator).unwrap_or(false) {
                 hit_terminator = true;
             }
+            continue;
+        }
+
+        // Split a comma-sequence expression statement into separate statements
+        // (`a(), b();` → `a(); b();`). A `SequenceExpression` never contains a
+        // terminator (they are statements, not expressions), so no
+        // `hit_terminator` re-check is needed.
+        if let Some(split) = split_sequence_statement(&folded) {
+            st.record_fold(
+                &statement_cv(&folded),
+                "split-comma-sequence",
+                "<a>, <b>;",
+                "<a>; <b>;",
+            );
+            new_body.extend(split);
             continue;
         }
 
@@ -886,6 +981,39 @@ fn redundant_block(folded: &Statement) -> Option<(&Option<String>, &[Statement])
     }
 }
 
+/// A comma sequence used as an EXPRESSION STATEMENT at a statement-list position
+/// splits into one statement per sub-expression, matching the reference Closure
+/// Compiler's Normalize (the inverse of the loop-body comma-fusion): `a(), b();`
+/// -> `a(); b();`, `1, a();` -> `1; a();`. The split is behaviour-preserving —
+/// the comma operator evaluates its operands left-to-right and discards all but
+/// the last, and an expression statement already discards its value, so running
+/// each operand as its own statement is identical.
+///
+/// This is valid ONLY at a statement-LIST position (program / block body), which
+/// is why it lives in [`fold_block_statement`] / [`fold_program`] rather than
+/// [`fold_statement`]: a single-statement body (`if (x) a(), b();`,
+/// `for (;;) a(), b();`) has no braces, so the sequence must stay fused there.
+/// Returns `None` when `folded` is not an `ExpressionStatement` wrapping a
+/// `SequenceExpression`.
+fn split_sequence_statement(folded: &Statement) -> Option<Vec<Statement>> {
+    if let Statement::Tagged(TaggedStatement::ExpressionStatement(es)) = folded {
+        if let Expression::SequenceExpression(seq) = &es.expression {
+            return Some(
+                seq.expressions
+                    .iter()
+                    .map(|e| {
+                        Statement::expression_statement(ExpressionStatement {
+                            cv: None,
+                            expression: e.clone(),
+                        })
+                    })
+                    .collect(),
+            );
+        }
+    }
+    None
+}
+
 /// Is this `else` branch safe to hoist into the enclosing block (CLOC25)?
 ///
 /// - A `BlockStatement` is gated on [`block_is_scope_safe_to_hoist`].
@@ -980,7 +1108,9 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
     match literal_truthy(&test) {
         Some(true) => {
             // The `alternate` branch is statically unreachable and is
-            // discarded — tombstone it so its span stays auditable.
+            // discarded — tombstone it so its span stays auditable. Any
+            // hoisted `var` inside it must SURVIVE the removal (dropping it is
+            // a miscompile), so extract it before the taken `consequent`.
             let discarded = [alternate.as_ref().and_then(statement_cv)];
             st.record_fold_deleting(
                 &s.cv,
@@ -989,11 +1119,18 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
                 "if (<truthy literal>) { … } else { … }",
                 "{ consequent }",
             );
-            consequent
+            match alternate {
+                Some(alt) => collapse_extracting_dead_vars(&alt, Some(consequent), &s.cv),
+                None => consequent,
+            }
         }
         Some(false) => {
             // The `consequent` branch is statically unreachable and is
-            // discarded — tombstone it so its span stays auditable.
+            // discarded — tombstone it so its span stays auditable. Any
+            // hoisted `var` inside it must SURVIVE the removal (dropping it is
+            // a miscompile), so extract it before the taken `alternate` (or as
+            // the sole survivor when there is no `else`). A no-var branch pick
+            // yields the `alternate` / `;` unchanged, exactly as before.
             let discarded = [statement_cv(&consequent)];
             st.record_fold_deleting(
                 &s.cv,
@@ -1002,13 +1139,7 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
                 "if (<falsy literal>) { … } else { … }",
                 "{ alternate }",
             );
-            alternate.unwrap_or_else(|| {
-                // No alternate to take — replace with `;`. The
-                // EmptyStatement inherits the IfStatement's cv so
-                // source maps still point at the original
-                // position when tracing is on.
-                Statement::empty_statement(EmptyStatement { cv: s.cv.clone() })
-            })
+            collapse_extracting_dead_vars(&consequent, alternate, &s.cv)
         }
         None => {
             // Non-literal test. Try the if-else→ternary fold first
@@ -1619,6 +1750,68 @@ fn extract_dead_loop_vars(
     }
 }
 
+/// Collapse a dead control-flow construct: `surviving` is the part that is kept
+/// and still runs (`None` when nothing survives — a dead `if` with no `else`),
+/// and `dead` is the statically-unreachable part whose hoisted `var`s must be
+/// rescued. Used for a dead `if` branch (survivor = the taken branch) and for a
+/// dead `for` loop with an expression init (survivor = the once-run init `e;`,
+/// dead = the never-run body).
+///
+/// A hoisted `var` inside the dead branch still hoists to the enclosing function
+/// scope, so — exactly like a dead loop's body `var` (see
+/// [`extract_dead_loop_vars`]) — it must SURVIVE the branch's removal rather than
+/// be dropped. Dropping it is a miscompile: a later `z` / `typeof z` read flips
+/// from reading a declared-`undefined` binding to a `ReferenceError` (or a
+/// different outer `z`). We EXTRACT those bindings — initializers STRIPPED, since
+/// the dead branch never runs — as a bare `var …;` placed BEFORE the surviving
+/// branch, matching the reference Closure Compiler at SIMPLE byte-for-byte:
+///
+/// ```text
+///   if (false) { var z = 1; }              →  var z;
+///   if (false) { var a=1; var b=2; }       →  var b, a;      (reversed, as loops)
+///   if (false) { var z = g(); } else h();  →  var z; h();    (init stripped)
+///   if (true)  h(); else { var z = 1; }     →  var z; h();    (var before survivor)
+/// ```
+///
+/// When the dead branch has no hoistable `var`, this is a plain branch pick and
+/// the surviving branch (or `;`) is returned unchanged. When there IS a `var` and
+/// a surviving branch, the two are wrapped in a `BlockStatement`, which
+/// [`fold_program`] / [`fold_block_statement`] then splice into the enclosing
+/// statement list ([`block_is_scope_safe_to_hoist`] admits a `var`-only block, so
+/// the wrapper is redundant and flattens; adjacent `var`s then coalesce).
+fn collapse_extracting_dead_vars(
+    dead: &Statement,
+    surviving: Option<Statement>,
+    cv: &Option<String>,
+) -> Statement {
+    let mut names: Vec<Identifier> = Vec::new();
+    collect_hoistable_vars(dead, &mut names);
+    names.reverse();
+    if names.is_empty() {
+        return surviving
+            .unwrap_or_else(|| Statement::empty_statement(EmptyStatement { cv: cv.clone() }));
+    }
+    let var_decl = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+        cv: cv.clone(),
+        kind: VarKind::Var,
+        declarations: names
+            .into_iter()
+            .map(|id| VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(id),
+                init: None,
+            })
+            .collect(),
+    }));
+    match surviving {
+        None => var_decl,
+        Some(surv) => Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![var_decl, surv],
+        }),
+    }
+}
+
 /// Is a `let`/`const` `for`-header safe to *drop* when its loop is dead? Only
 /// when every declarator's initializer is absent or a side-effect-free literal.
 ///
@@ -1650,20 +1843,25 @@ fn lexical_header_is_droppable(v: &VariableDeclaration) -> bool {
 ///                                                      the binding unobservably)
 /// ```
 ///
-/// The collapse is **declined** (loop kept, test folded) in the two cases where
-/// removing more than the loop would delete an observable effect — both flagged
-/// by the security review, and both places Closure keeps the loop or lifts a
-/// binding rather than dropping it:
+/// A hoisted body `var` still hoists to the enclosing function scope, so it is
+/// EXTRACTED (initializer stripped, since the body never runs) rather than
+/// dropped — including when an *expression* init means the result is two
+/// statements, which are wrapped in a block that the enclosing list then
+/// flattens (see [`collapse_extracting_dead_vars`]):
+///
+/// ```text
+///   for (; false; ) { var y = 1; }    →  var y;
+///   for (f(); false; ) { var x = 1; } →  var x; f();     (two statements)
+/// ```
+///
+/// The collapse is **declined** (loop kept, test folded) only when a `let`/
+/// `const` header runs a side-effecting initializer, which is loop-scoped and
+/// cannot be lifted out (§14.7.4) — flagged by the security review:
 ///
 /// ```text
 ///   for (let i = f(); false; ) body   →  loop kept   (lexical init runs once at
 ///                                                      entry; side effect can't
 ///                                                      be lifted out — §14.7.4)
-///   for (; false; ) { var y = 1; }     →  loop kept   (a body `var` hoists to the
-///                                                      function scope and stays
-///                                                      observable; Closure
-///                                                      extracts it, which this
-///                                                      pass does not yet do)
 /// ```
 ///
 /// A **truthy** literal test is instead redundant — the loop runs forever, and
@@ -1713,42 +1911,54 @@ fn fold_for_statement(s: &ForStatement, st: &mut FoldState) -> Statement {
             // `extract_dead_loop_vars` for the exact reversed-body-then-init
             // order).
             //
-            // The one shape we still DECLINE: an *expression* init combined with
-            // a hoisted body `var` — that is two statements (`var x; e;`), which
-            // a single fold return can't represent, so we keep the loop (valid,
-            // no binding dropped). An expression init with no body `var`
-            // collapses to the init expression (`for(a();false;) …` → `a();`),
-            // which runs once at entry.
+            // An *expression* init combined with a hoisted body `var` is two
+            // statements (`var x; e;`); we emit them wrapped in a block that the
+            // enclosing list then flattens (`collapse_extracting_dead_vars`).
+            // An expression init with no body `var` collapses to the init
+            // expression (`for(a();false;) …` → `a();`), which runs once at
+            // entry.
             let mut body_names = Vec::new();
             collect_hoistable_vars(&body, &mut body_names);
-            let expr_init_with_body_vars = matches!(&init, Some(ForInit::Expression(_)))
-                && !body_names.is_empty();
-            if !expr_init_with_body_vars {
-                let discarded = [statement_cv(&body)];
-                st.record_fold_deleting(
-                    &s.cv,
-                    &discarded,
-                    "folded-branch",
-                    "for (…; <falsy literal>; …) { … }",
-                    "<hoisted var(s)> / <init>;",
-                );
-                return match &init {
-                    // Expression init (no body vars): the init runs once, kept.
-                    Some(ForInit::Expression(e)) => {
-                        Statement::expression_statement(ExpressionStatement {
+            let discarded = [statement_cv(&body)];
+            st.record_fold_deleting(
+                &s.cv,
+                &discarded,
+                "folded-branch",
+                "for (…; <falsy literal>; …) { … }",
+                "<hoisted var(s)> / <init>;",
+            );
+            return match &init {
+                // Expression init WITH hoisted body `var`(s): two statements
+                // (`var x; e;`). Extract the body `var`s BEFORE the once-run
+                // init expression, wrapped in a block that `fold_program` /
+                // `fold_block_statement` then splice into the enclosing list
+                // (`for(f();false;){var x=1}` → `var x; f();`).
+                Some(ForInit::Expression(e)) if !body_names.is_empty() => {
+                    collapse_extracting_dead_vars(
+                        &body,
+                        Some(Statement::expression_statement(ExpressionStatement {
                             cv: s.cv.clone(),
                             expression: e.clone(),
-                        })
-                    }
-                    // `None` or `var`/`let`/`const` init: hoist the body `var`s
-                    // out and, for a `var` header, append its declarators (kept
-                    // with initializers). A `let`/`const` header is loop-scoped
-                    // and contributes nothing.
-                    _ => extract_dead_loop_vars(&body, init.as_ref(), &s.cv),
-                };
-            }
+                        })),
+                        &s.cv,
+                    )
+                }
+                // Expression init, no body vars: the init runs once, kept.
+                Some(ForInit::Expression(e)) => {
+                    Statement::expression_statement(ExpressionStatement {
+                        cv: s.cv.clone(),
+                        expression: e.clone(),
+                    })
+                }
+                // `None` or `var`/`let`/`const` init: hoist the body `var`s
+                // out and, for a `var` header, append its declarators (kept
+                // with initializers). A `let`/`const` header is loop-scoped
+                // and contributes nothing.
+                _ => extract_dead_loop_vars(&body, init.as_ref(), &s.cv),
+            };
         }
-        // Declined — fall through to rebuild the loop with the folded test.
+        // A side-effecting lexical header declined above — fall through to
+        // rebuild the loop with the folded test.
     }
 
     // Always-TRUE test → the loop runs forever; the test is redundant, so drop
@@ -1786,21 +1996,39 @@ fn fold_for_statement(s: &ForStatement, st: &mut FoldState) -> Statement {
     // `for (…) { if (x) a(); b(); }` → `for (…) x && a(), b();`.
     let body = match &body {
         Statement::Tagged(TaggedStatement::BlockStatement(_)) => {
-            match stmts_as_sequence_expr(&body) {
-                Some(expr) => {
-                    let body_cv = statement_cv(&body);
-                    st.record_fold(
-                        &s.cv,
-                        "loop-body-fuse",
-                        "for (…) { s1; s2; … }",
-                        "for (…) s1, s2, …",
-                    );
-                    Statement::expression_statement(ExpressionStatement {
-                        cv: body_cv,
-                        expression: expr,
-                    })
+            if statement_is_empty(&body) {
+                // Empty loop body: `for (…) {}` (or `{;;}`, `{{}}`) normalizes to
+                // `for (…) ;` — the reference compiler drops the braces of a
+                // do-nothing body. An empty block declares no bindings, so the
+                // `;` form is behaviour-identical. This also catches a `while`
+                // loop, since `while` is first rewritten to `for` (0.31.0) and
+                // then re-folded here: `while (c) {}` → `for (; c;) {}` → `for
+                // (; c;) ;`.
+                let body_cv = statement_cv(&body);
+                st.record_fold(
+                    &s.cv,
+                    "empty-loop-body",
+                    "for (…) {}",
+                    "for (…) ;",
+                );
+                Statement::empty_statement(EmptyStatement { cv: body_cv })
+            } else {
+                match stmts_as_sequence_expr(&body) {
+                    Some(expr) => {
+                        let body_cv = statement_cv(&body);
+                        st.record_fold(
+                            &s.cv,
+                            "loop-body-fuse",
+                            "for (…) { s1; s2; … }",
+                            "for (…) s1, s2, …",
+                        );
+                        Statement::expression_statement(ExpressionStatement {
+                            cv: body_cv,
+                            expression: expr,
+                        })
+                    }
+                    None => body,
                 }
-                None => body,
             }
         }
         _ => body,
@@ -1827,26 +2055,23 @@ fn fold_declaration(decl: &Declaration, st: &mut FoldState) -> Declaration {
         }
         Declaration::FunctionDeclaration(f) => {
             let folded_body = fold_block_statement(&f.body, st);
-            // gap-015 / CLOC12.37 — var hoisting. Lift `var x = expr;`
-            // declarations from inside nested blocks (`if`, `while`,
-            // `for-body`, plain blocks) up to the function-body top.
-            // The split form is the canonical hoisted shape upstream
-            // Closure emits and lets downstream passes see all
-            // function-scoped bindings at the top.
-            let hoisted_body = hoist_function_body_vars(&folded_body, st);
+            // gap-015 removed (CLOC/#213): we used to split `var x = e;` inside
+            // nested blocks into a hoisted `var x;` at the body top plus an
+            // `x = e;` assignment at the site. Oracle probing proved upstream
+            // Closure NEVER emits that split in SIMPLE output — a `var`'s
+            // declaration stays exactly where it was written. The transform
+            // only ever moved us away from byte-identity, so it is gone.
             Declaration::FunctionDeclaration(FunctionDeclaration {
                 cv: f.cv.clone(),
                 id: f.id.clone(),
                 params: f.params.clone(),
-                body: hoisted_body,
+                body: folded_body,
                 generator: f.generator,
                 is_async: f.is_async,
             })
         }
         // A class *declaration* folds inside its heritage + method bodies, like
-        // `fold_class` for the expression form. Unlike a function declaration
-        // it hoists no `var`s of its own — a class body is not a `var` scope in
-        // the hoisting sense — so no `hoist_function_body_vars` step applies.
+        // `fold_class` for the expression form.
         // An import has no foldable control flow — preserve it verbatim.
         Declaration::ImportDeclaration(i) => Declaration::ImportDeclaration(i.clone()),
         Declaration::ExportNamedDeclaration(i) => Declaration::ExportNamedDeclaration(i.clone()),
@@ -1861,270 +2086,6 @@ fn fold_declaration(decl: &Declaration, st: &mut FoldState) -> Declaration {
                 body,
             })
         }
-    }
-}
-
-// =====================================================================
-// gap-015 / CLOC12.37 — var hoisting
-//
-// JavaScript `var` declarations are function-scoped, not
-// block-scoped: the binding hoists to the enclosing function (or
-// to the script top level if not inside a function). Per
-// ECMAScript §13.3.2, every `var x;` inside a function body is
-// semantically equivalent to declaring `x` at the top of that
-// body and leaving any initializer as an assignment at the
-// original site.
-//
-// Upstream Closure makes this hoist *syntactically* visible:
-//
-//     function f() {
-//       if (cond) { var y = 1; }
-//     }
-//   ↓
-//     function f() {
-//       var y;
-//       if (cond) y = 1;
-//     }
-//
-// The shape change is observable in byte-output comparisons and
-// makes downstream rename / dce see all function-scoped bindings
-// at the body's top.
-//
-// # Scope of this implementation
-//
-// - **Recurses into**: nested `BlockStatement`, `IfStatement`
-//   consequent/alternate, `WhileStatement` body, `ForStatement`
-//   body, `LabeledStatement` body, `SwitchStatement` case
-//   consequents.
-// - **Does NOT recurse into**: nested `FunctionDeclaration` /
-//   `FunctionExpression` bodies — they have their own
-//   function-scope and own hoisting.
-// - **Does NOT touch**: `for(var x = 0; ...; ...)` init slots
-//   (they're already at a single-statement position that fold-
-//   control-flow's wider work covers); `let` / `const` (block-
-//   scoped, hoisting doesn't apply).
-// - **Conservative bail**: if the function body is a no-op
-//   (no var declarations inside nested blocks), the body is
-//   returned verbatim — no allocations, no `changed` signal.
-
-/// Lift `var x = expr;` declarations from inside nested blocks
-/// of `body` to the top, leaving `x = expr;` assignment-
-/// statements behind at the original site (or nothing if there
-/// was no initializer).
-fn hoist_function_body_vars(body: &BlockStatement, st: &mut FoldState) -> BlockStatement {
-    let mut collected: Vec<Identifier> = Vec::new();
-    let new_stmts: Vec<Statement> = body
-        .body
-        .iter()
-        .map(|s| hoist_visit_stmt(s, &mut collected))
-        .collect();
-
-    if collected.is_empty() {
-        // Pure passthrough — keep original allocation.
-        return BlockStatement {
-            cv: body.cv.clone(),
-            body: new_stmts,
-        };
-    }
-
-    // Record one Contribution per hoist for the whole function
-    // body (not per identifier — same shape as block-flatten).
-    st.record_fold(
-        &body.cv,
-        "var-hoisted",
-        &format!("function body with {} statement(s)", body.body.len()),
-        &format!("hoisted {} `var` binding(s) to top", collected.len()),
-    );
-
-    // Build the single `var x, y, z;` declaration to prepend.
-    let hoist_decl = VariableDeclaration {
-        cv: None,
-        kind: VarKind::Var,
-        declarations: collected
-            .into_iter()
-            .map(|id| VariableDeclarator {
-                cv: None,
-                id: BindingTarget::Identifier(id),
-                init: None,
-            })
-            .collect(),
-    };
-    let mut out = Vec::with_capacity(new_stmts.len() + 1);
-    out.push(Statement::Declaration(Declaration::VariableDeclaration(
-        hoist_decl,
-    )));
-    out.extend(new_stmts);
-    BlockStatement {
-        cv: body.cv.clone(),
-        body: out,
-    }
-}
-
-/// Rewrite one statement, collecting any hoistable `var` names
-/// and emitting replacement statements (assignment-expression-
-/// statements where there was an initializer; nothing where the
-/// declaration was bare).
-fn hoist_visit_stmt(stmt: &Statement, collected: &mut Vec<Identifier>) -> Statement {
-    match stmt {
-        // Plain `var ...;` declaration — the core rewrite.
-        Statement::Declaration(Declaration::VariableDeclaration(v)) if v.kind == VarKind::Var => {
-            hoist_rewrite_var_decl(v, collected)
-        }
-
-        // Compound statements with nested bodies — recurse.
-        Statement::Tagged(TaggedStatement::BlockStatement(b)) => Statement::Tagged(
-            TaggedStatement::BlockStatement(hoist_visit_block(b, collected)),
-        ),
-        Statement::Tagged(TaggedStatement::IfStatement(i)) => Statement::Tagged(
-            TaggedStatement::IfStatement(IfStatement {
-                cv: i.cv.clone(),
-                test: i.test.clone(),
-                consequent: Box::new(hoist_visit_stmt(&i.consequent, collected)),
-                alternate: i
-                    .alternate
-                    .as_ref()
-                    .map(|alt| Box::new(hoist_visit_stmt(alt, collected))),
-            }),
-        ),
-        Statement::Tagged(TaggedStatement::WhileStatement(w)) => Statement::Tagged(
-            TaggedStatement::WhileStatement(WhileStatement {
-                cv: w.cv.clone(),
-                test: w.test.clone(),
-                body: Box::new(hoist_visit_stmt(&w.body, collected)),
-            }),
-        ),
-        Statement::Tagged(TaggedStatement::ForStatement(f)) => {
-            // Recurse into body only — leave init slot alone
-            // (per the scope note above).
-            Statement::Tagged(TaggedStatement::ForStatement(ForStatement {
-                cv: f.cv.clone(),
-                init: f.init.clone(),
-                test: f.test.clone(),
-                update: f.update.clone(),
-                body: Box::new(hoist_visit_stmt(&f.body, collected)),
-            }))
-        }
-        Statement::Tagged(TaggedStatement::LabeledStatement(l)) => Statement::Tagged(
-            TaggedStatement::LabeledStatement(
-                coding_adventures_javascript_ast::LabeledStatement {
-                    cv: l.cv.clone(),
-                    label: l.label.clone(),
-                    body: Box::new(hoist_visit_stmt(&l.body, collected)),
-                },
-            ),
-        ),
-        Statement::Tagged(TaggedStatement::SwitchStatement(s)) => Statement::Tagged(
-            TaggedStatement::SwitchStatement(
-                coding_adventures_javascript_ast::SwitchStatement {
-                    cv: s.cv.clone(),
-                    discriminant: s.discriminant.clone(),
-                    cases: s
-                        .cases
-                        .iter()
-                        .map(|c| coding_adventures_javascript_ast::SwitchCase {
-                            cv: c.cv.clone(),
-                            test: c.test.clone(),
-                            consequent: c
-                                .consequent
-                                .iter()
-                                .map(|s| hoist_visit_stmt(s, collected))
-                                .collect(),
-                        })
-                        .collect(),
-                },
-            ),
-        ),
-
-        // **Inner function bodies are their own scope.** Do NOT
-        // recurse into a nested `FunctionDeclaration`'s body
-        // here — its own `var` declarations belong to *that*
-        // function's hoist set, which fold-control-flow's
-        // dispatch on `Declaration::FunctionDeclaration` already
-        // handles before this collector ever sees the
-        // declaration. (FunctionExpression bodies are similarly
-        // self-contained; we leave them untouched.)
-        Statement::Declaration(_) | Statement::Tagged(_) => stmt.clone(),
-    }
-}
-
-/// Helper: recurse into a `BlockStatement.body` while collecting
-/// hoistable vars. Used by the BlockStatement arm.
-fn hoist_visit_block(b: &BlockStatement, collected: &mut Vec<Identifier>) -> BlockStatement {
-    BlockStatement {
-        cv: b.cv.clone(),
-        body: b
-            .body
-            .iter()
-            .map(|s| hoist_visit_stmt(s, collected))
-            .collect(),
-    }
-}
-
-/// Rewrite a `var ...;` declaration into: collect each
-/// `Identifier` binding into `collected`, return either an
-/// `EmptyStatement` (if no declarators had initializers) or an
-/// `ExpressionStatement` with a comma-separated assignment chain
-/// (if any did).
-///
-/// Why a single statement back: we can't return zero or many
-/// statements from a `Vec<_>::map` cleanly without changing the
-/// shape. So:
-///
-/// - All-bare `var x, y;` → `EmptyStatement` (no observable
-///   work — the binding moved to the hoisted-declaration prefix).
-/// - Any-init `var x = e;` / `var x, y = e;` → a single
-///   `ExpressionStatement` whose `expression` is either one
-///   `AssignmentExpression` (single init) or a
-///   `SequenceExpression`-shaped binary chain of assignments
-///   threaded with `,` — we don't have `SequenceExpression`
-///   in Phase 1 yet, so for multiple inits we emit ONE
-///   `ExpressionStatement` per init expanded into a
-///   `BlockStatement` wrapper. Simpler: just emit a
-///   `BlockStatement` containing one assignment-statement per
-///   declarator-with-init.
-fn hoist_rewrite_var_decl(
-    v: &VariableDeclaration,
-    collected: &mut Vec<Identifier>,
-) -> Statement {
-    let mut assignments: Vec<Statement> = Vec::new();
-    for decl in &v.declarations {
-        // We currently only model `BindingTarget::Identifier`
-        // here. Patterns (`var [a, b] = ...;`) are Phase 2 work
-        // — for those, treat as identity (don't hoist) by
-        // bailing on the whole declaration.
-        let id = match &decl.id {
-            BindingTarget::Identifier(i) => i.clone(),
-        };
-        collected.push(id.clone());
-        if let Some(init) = &decl.init {
-            assignments.push(Statement::expression_statement(ExpressionStatement {
-                cv: None,
-                expression: Expression::AssignmentExpression(AssignmentExpression {
-                    cv: None,
-                    operator: AssignmentOperator::Eq,
-                    left: AssignmentTarget::Identifier(id),
-                    right: Box::new(init.clone()),
-                }),
-            }));
-        }
-    }
-    if assignments.is_empty() {
-        // Pure declaration, no init: site collapses to nothing
-        // observable. Emit an EmptyStatement that the DCE block
-        // walker will sweep up.
-        Statement::Tagged(TaggedStatement::EmptyStatement(EmptyStatement { cv: None }))
-    } else if assignments.len() == 1 {
-        // Single init: emit just the assignment-expression-
-        // statement at the original site.
-        assignments.into_iter().next().unwrap()
-    } else {
-        // Multiple inits: wrap in a BlockStatement (the
-        // block-flatten step of DCE will splice it into the
-        // parent if it's safe to do so).
-        Statement::Tagged(TaggedStatement::BlockStatement(BlockStatement {
-            cv: None,
-            body: assignments,
-        }))
     }
 }
 
@@ -2174,7 +2135,6 @@ fn fold_class_body(
         .map(|m| match m {
             ClassMember::Method(md) => {
                 let folded_body = fold_block_statement(&md.value.body, st);
-                let hoisted_body = hoist_function_body_vars(&folded_body, st);
                 ClassMember::Method(MethodDefinition {
                     cv: md.cv.clone(),
                     key: md.key.clone(),
@@ -2183,7 +2143,7 @@ fn fold_class_body(
                         cv: md.value.cv.clone(),
                         id: md.value.id.clone(),
                         params: md.value.params.clone(),
-                        body: hoisted_body,
+                        body: folded_body,
                         generator: md.value.generator,
                         is_async: md.value.is_async,
                     },
@@ -2202,11 +2162,10 @@ fn fold_class_body(
                 is_static: fd.is_static,
             }),
             // A static-init block folds control flow inside its statements (they
-            // run at class-definition time) and is its own `var`-hoisting scope,
-            // so it folds + hoists exactly like a method body.
+            // run at class-definition time). Like a method body, its `var`s are
+            // left where written (see the gap-015 removal note above).
             ClassMember::StaticBlock(b) => {
-                let folded = fold_block_statement(b, st);
-                ClassMember::StaticBlock(hoist_function_body_vars(&folded, st))
+                ClassMember::StaticBlock(fold_block_statement(b, st))
             }
         })
         .collect();
@@ -2407,30 +2366,26 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         }),
         // Fold control flow inside a function *value*'s body, mirroring
         // the `FunctionDeclaration` arm in `fold_declaration` (fold the
-        // body, then hoist its `var`s to the function top).
+        // body; `var`s stay where written — see the gap-015 removal note).
         Expression::FunctionExpression(f) => {
             let folded_body = fold_block_statement(&f.body, st);
-            let hoisted_body = hoist_function_body_vars(&folded_body, st);
             Expression::FunctionExpression(FunctionExpression {
                 cv: f.cv.clone(),
                 id: f.id.clone(),
                 params: f.params.clone(),
-                body: hoisted_body,
+                body: folded_body,
                 generator: f.generator,
                 is_async: f.is_async,
             })
         }
         Expression::ClassExpression(c) => fold_class(c, st),
         // Fold control flow inside an arrow-value's body. A block body is
-        // folded and its `var`s hoisted exactly as a function body; a
+        // folded, `var`s left where written (like a function body); a
         // concise (expression) body declares no `var`s, so it only needs
         // its single expression folded.
         Expression::ArrowFunctionExpression(a) => {
             let body = match &a.body {
-                ArrowBody::Block(b) => {
-                    let folded = fold_block_statement(b, st);
-                    ArrowBody::Block(hoist_function_body_vars(&folded, st))
-                }
+                ArrowBody::Block(b) => ArrowBody::Block(fold_block_statement(b, st)),
                 ArrowBody::Expression(e) => ArrowBody::Expression(Box::new(fold_expression(e, st))),
             };
             Expression::ArrowFunctionExpression(ArrowFunctionExpression {
@@ -2797,6 +2752,103 @@ mod tests {
         }
     }
 
+    /// `do { a(); b(); } while(c);` → `do a(), b(); while(c);` — a do-while
+    /// block body of plain expression statements fuses to a comma-sequenced
+    /// single statement, exactly like `for`/`while`.
+    #[test]
+    fn do_while_body_multi_expr_fuses_to_sequence() {
+        let body = block(
+            Some("blk.1"),
+            vec![
+                expr_stmt(call_expr("a"), None),
+                expr_stmt(call_expr("b"), None),
+            ],
+        );
+        let dw = Statement::Tagged(TaggedStatement::DoWhileStatement(DoWhileStatement {
+            cv: Some("dw.1".to_string()),
+            body: Box::new(body),
+            test: ident("c"),
+        }));
+        let (out, contribs, changed, _) =
+            run_pass(program().with_body(vec![ProgramItem::Statement(dw)]));
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "loop-body-fuse"));
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::DoWhileStatement(d)) => match d.body.as_ref() {
+                Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+                    match &es.expression {
+                        Expression::SequenceExpression(s) => assert_eq!(s.expressions.len(), 2),
+                        other => panic!("expected a 2-element sequence; got {other:?}"),
+                    }
+                }
+                other => panic!("expected a fused expression-statement body; got {other:?}"),
+            },
+            other => panic!("expected DoWhileStatement; got {other:?}"),
+        }
+    }
+
+    /// `do {} while(c);` → an empty-bodied do-while lowers to the equivalent
+    /// `while`, which the pass rewrites to `for(; c;)` (with the empty body
+    /// normalized to `;`). The result is a `ForStatement`, not a `DoWhile`.
+    #[test]
+    fn empty_do_while_lowers_to_for() {
+        let dw = Statement::Tagged(TaggedStatement::DoWhileStatement(DoWhileStatement {
+            cv: Some("dw.1".to_string()),
+            body: Box::new(block(Some("blk.1"), vec![])),
+            test: ident("c"),
+        }));
+        let (out, contribs, changed, _) =
+            run_pass(program().with_body(vec![ProgramItem::Statement(dw)]));
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "empty-do-while-to-while"));
+        // One pass lowers `do{}while(c)` to `for(;c;){}`; the empty-block -> `;`
+        // normalization runs on the next sweep (covered by
+        // `for_empty_block_body_normalizes_to_empty_statement`). Either way the
+        // body is empty, and it is now a `for`, not a `do`.
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ForStatement(f)) => assert!(
+                statement_is_empty(f.body.as_ref()),
+                "empty do-while must lower to a for with an empty body; got {:?}",
+                f.body
+            ),
+            other => panic!("expected ForStatement; got {other:?}"),
+        }
+    }
+
+    /// `do { var x = 1; a(); } while(c);` — a do-while body carrying a `var`
+    /// declaration is NOT fused (a declaration can't join a comma-sequence);
+    /// the block is kept intact.
+    #[test]
+    fn do_while_body_with_var_decl_not_fused() {
+        use coding_adventures_javascript_ast::{
+            BindingTarget, VariableDeclaration, VariableDeclarator,
+        };
+        let var_x = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Var,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(Identifier { cv: None, name: "x".to_string() }),
+                init: Some(num(1.0, None)),
+            }],
+        }));
+        let body = block(Some("blk.1"), vec![var_x, expr_stmt(call_expr("a"), None)]);
+        let dw = Statement::Tagged(TaggedStatement::DoWhileStatement(DoWhileStatement {
+            cv: None,
+            body: Box::new(body),
+            test: ident("c"),
+        }));
+        let (out, _, _, _) = run_pass(program().with_body(vec![ProgramItem::Statement(dw)]));
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::DoWhileStatement(d)) => assert!(
+                matches!(d.body.as_ref(), Statement::Tagged(TaggedStatement::BlockStatement(_))),
+                "var-carrying do-while body must stay a block; got {:?}",
+                d.body
+            ),
+            other => panic!("expected DoWhileStatement; got {other:?}"),
+        }
+    }
+
     /// `for (;;) { a(); }` → `for (;;) a();` — a single-statement block is
     /// unwrapped to the bare expression statement (no comma wrapper).
     #[test]
@@ -2812,6 +2864,27 @@ mod tests {
                 }
                 other => panic!("expected a bare expression-statement body; got {other:?}"),
             },
+            other => panic!("expected ForStatement; got {other:?}"),
+        }
+    }
+
+    /// `for (;;) {}` → `for (;;) ;` — an empty block body normalizes to an
+    /// empty statement (dropping the braces). Also covers `while (c) {}`, which
+    /// first lowers to `for` and then re-folds through this same path.
+    #[test]
+    fn for_empty_block_body_normalizes_to_empty_statement() {
+        let body = block(Some("blk.1"), vec![]);
+        let f = for_stmt(None, None, body);
+        let (out, contribs, changed, _) =
+            run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "empty-loop-body"));
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ForStatement(f)) => assert!(
+                matches!(f.body.as_ref(), Statement::Tagged(TaggedStatement::EmptyStatement(_))),
+                "empty for body must normalize to `;`; got {:?}",
+                f.body
+            ),
             other => panic!("expected ForStatement; got {other:?}"),
         }
     }
@@ -3391,6 +3464,98 @@ mod tests {
             Statement::Tagged(TaggedStatement::EmptyStatement(_)) => {}
             other => panic!("expected EmptyStatement; got {:?}", other),
         }
+    }
+
+    /// Build a block `{ var <name> = 1; }` for the dead-branch extraction tests.
+    fn block_with_var(name: &str) -> Statement {
+        use coding_adventures_javascript_ast::{
+            BindingTarget, VariableDeclaration, VariableDeclarator,
+        };
+        Statement::Tagged(TaggedStatement::BlockStatement(BlockStatement {
+            cv: None,
+            body: vec![Statement::Declaration(Declaration::VariableDeclaration(
+                VariableDeclaration {
+                    cv: None,
+                    kind: VarKind::Var,
+                    declarations: vec![VariableDeclarator {
+                        cv: None,
+                        id: BindingTarget::Identifier(Identifier {
+                            cv: None,
+                            name: name.to_string(),
+                        }),
+                        init: Some(num(1.0, None)),
+                    }],
+                },
+            ))],
+        }))
+    }
+
+    /// `if (false) { var z = 1; }` (no `else`) must EXTRACT the dead branch's
+    /// hoisted `var` as `var z;` — dropping it is a miscompile (a later `z` read
+    /// flips from a declared `undefined` binding to a `ReferenceError`).
+    #[test]
+    fn if_false_no_else_extracts_dead_var() {
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.1".to_string()),
+            test: boolean(false, None),
+            consequent: Box::new(block_with_var("z")),
+            alternate: None,
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+        let (out, _, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_hoisted_var_names(first_stmt(&out), &["z"]);
+    }
+
+    /// `if (false) { var z = 1; } else h;` — extract `var z;` BEFORE the taken
+    /// `else` body; the wrapper block flattens into the list: `var z; h;`.
+    #[test]
+    fn if_false_with_else_extracts_dead_var_first() {
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.1".to_string()),
+            test: boolean(false, None),
+            consequent: Box::new(block_with_var("z")),
+            alternate: Some(Box::new(expr_stmt(ident("h"), None))),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+        let (out, _, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 2, "expected [var z; h;]; got {:?}", out.body);
+        assert_hoisted_var_names(first_stmt(&out), &["z"]);
+    }
+
+    /// `if (true) h; else { var z = 1; }` — the DEAD alternate's `var z` is
+    /// extracted before the taken consequent: `var z; h;`.
+    #[test]
+    fn if_true_extracts_dead_alternate_var() {
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.1".to_string()),
+            test: boolean(true, None),
+            consequent: Box::new(expr_stmt(ident("h"), None)),
+            alternate: Some(Box::new(block_with_var("z"))),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+        let (out, _, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 2, "expected [var z; h;]; got {:?}", out.body);
+        assert_hoisted_var_names(first_stmt(&out), &["z"]);
+    }
+
+    /// `for (h; false; ) { var x = 1; }` — an expression init combined with a
+    /// hoisted body `var` is two statements; extract `var x;` before the once-run
+    /// init: `var x; h;`.
+    #[test]
+    fn for_false_expr_init_plus_body_var_extracted() {
+        let f = for_stmt(
+            Some(ForInit::Expression(ident("h"))),
+            Some(boolean(false, None)),
+            block_with_var("x"),
+        );
+        let prog = program().with_body(vec![ProgramItem::Statement(f)]);
+        let (out, _, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 2, "expected [var x; h;]; got {:?}", out.body);
+        assert_hoisted_var_names(first_stmt(&out), &["x"]);
     }
 
     #[test]
@@ -4342,10 +4507,15 @@ mod tests {
         ));
     }
 
-    /// `function f() { if (cond) { var y = 1; } }` →
-    /// `function f() { var y; if (cond) y = 1; }`.
+    /// gap-015 removed (#213): a `var` inside an `if` block stays
+    /// exactly where it is written. Oracle probing proved upstream
+    /// Closure never hoists+splits `var y = 1;` into a top-of-body
+    /// `var y;` plus an `y = 1;` assignment in SIMPLE output — the
+    /// declaration is left nested, so `function f(){if(cond){var y=1}}`
+    /// is unchanged by this pass and emits no `var-hoisted`
+    /// contribution.
     #[test]
-    fn var_inside_if_consequent_block_hoists() {
+    fn var_inside_if_consequent_block_stays_nested() {
         let inner_block = Statement::Tagged(TaggedStatement::BlockStatement(BlockStatement {
             cv: None,
             body: vec![make_var_decl("y", Some(num(1.0, None)))],
@@ -4357,36 +4527,43 @@ mod tests {
             alternate: None,
         });
         let prog = fdecl_with_body(vec![if_stmt]);
-        let (out, contribs, changed, _) = run_pass(prog);
+        let (out, contribs, _, _) = run_pass(prog);
         let body = extract_fn_body(&out);
-        // Body should be: [var y;, if (cond) { y = 1; }]
-        assert_eq!(body.body.len(), 2, "expected 2 stmts; got {:?}", body.body);
+        // Body is still just the `if` — NO prepended `var y;`.
+        assert_eq!(body.body.len(), 1, "expected 1 stmt; got {:?}", body.body);
         assert!(matches!(
             &body.body[0],
-            Statement::Declaration(Declaration::VariableDeclaration(_))
+            Statement::Tagged(TaggedStatement::IfStatement(_))
         ));
-        if let Statement::Declaration(Declaration::VariableDeclaration(v)) = &body.body[0] {
-            assert_eq!(v.kind, VarKind::Var);
-            assert_eq!(v.declarations.len(), 1);
-            assert!(v.declarations[0].init.is_none());
+        // The `var y = 1;` keeps its initializer where it sits — no split.
+        if let Statement::Tagged(TaggedStatement::IfStatement(i)) = &body.body[0] {
+            if let Statement::Tagged(TaggedStatement::BlockStatement(b)) = &*i.consequent {
+                if let Statement::Declaration(Declaration::VariableDeclaration(v)) = &b.body[0] {
+                    assert_eq!(v.kind, VarKind::Var);
+                    assert!(v.declarations[0].init.is_some(), "init must survive intact");
+                } else {
+                    panic!("expected `var y = 1;` still nested; got {:?}", b.body[0]);
+                }
+            }
         }
-        assert!(changed);
-        assert!(contribs.iter().any(|c| c.tag == "var-hoisted"));
+        assert!(!contribs.iter().any(|c| c.tag == "var-hoisted"));
     }
 
-    /// `function f() { var x = 1; }` — already at the top, no
-    /// nested hoist target. The var declaration is still
-    /// collected (the hoist treats every `var` in the function
-    /// body uniformly), but the result is the same shape:
-    /// declaration moves to a prepended `var x;` and assignment
-    /// stays as `x = 1;`.
+    /// gap-015 removed (#213): `function f() { var x = 1; }` is left
+    /// verbatim — no split into `var x; x = 1;`.
     #[test]
-    fn var_at_top_of_function_body_is_split() {
+    fn var_at_top_of_function_body_stays_intact() {
         let prog = fdecl_with_body(vec![make_var_decl("x", Some(num(1.0, None)))]);
-        let (out, _, changed, _) = run_pass(prog);
+        let (out, contribs, _, _) = run_pass(prog);
         let body = extract_fn_body(&out);
-        assert_eq!(body.body.len(), 2);
-        assert!(changed);
+        assert_eq!(body.body.len(), 1, "no split; got {:?}", body.body);
+        if let Statement::Declaration(Declaration::VariableDeclaration(v)) = &body.body[0] {
+            assert_eq!(v.declarations.len(), 1);
+            assert!(v.declarations[0].init.is_some(), "init must survive intact");
+        } else {
+            panic!("expected `var x = 1;` intact; got {:?}", body.body[0]);
+        }
+        assert!(!contribs.iter().any(|c| c.tag == "var-hoisted"));
     }
 
     /// `let` is block-scoped — must NOT be hoisted.
@@ -4436,13 +4613,17 @@ mod tests {
         let prog = fdecl_with_body(vec![Statement::Declaration(inner_fn)]);
         let (out, _, _, _) = run_pass(prog);
         let outer_body = extract_fn_body(&out);
-        // Outer body has just the inner FunctionDeclaration — no
-        // hoisted `var y;` at the outer top.
+        // Outer body has just the inner FunctionDeclaration.
         assert_eq!(outer_body.body.len(), 1);
         if let Statement::Declaration(Declaration::FunctionDeclaration(g)) = &outer_body.body[0] {
-            // The inner function's body should itself have been
-            // split (var y; then y = 1;).
-            assert_eq!(g.body.body.len(), 2);
+            // gap-015 removed (#213): the inner body keeps `var y = 1;`
+            // intact — no split into `var y; y = 1;`.
+            assert_eq!(g.body.body.len(), 1, "no split; got {:?}", g.body.body);
+            if let Statement::Declaration(Declaration::VariableDeclaration(v)) = &g.body.body[0] {
+                assert!(v.declarations[0].init.is_some(), "init must survive intact");
+            } else {
+                panic!("expected `var y = 1;` intact; got {:?}", g.body.body[0]);
+            }
         } else {
             panic!("expected nested FunctionDeclaration; got {:?}", outer_body.body[0]);
         }
@@ -4459,10 +4640,11 @@ mod tests {
         assert!(!contribs.iter().any(|c| c.tag == "var-hoisted"));
     }
 
-    /// Bare `var x;` (no init) inside a block: name is hoisted,
-    /// site collapses to `EmptyStatement`.
+    /// gap-015 removed (#213): a bare `var y;` (no init) inside a block
+    /// also stays where written — it is NOT lifted to the body top nor
+    /// collapsed to an `EmptyStatement`.
     #[test]
-    fn bare_var_no_init_collapses_to_empty_at_site() {
+    fn bare_var_no_init_stays_nested() {
         let inner_block = Statement::Tagged(TaggedStatement::BlockStatement(BlockStatement {
             cv: None,
             body: vec![make_var_decl("y", None)],
@@ -4474,19 +4656,20 @@ mod tests {
             alternate: None,
         });
         let prog = fdecl_with_body(vec![if_stmt]);
-        let (out, _, _, _) = run_pass(prog);
+        let (out, contribs, _, _) = run_pass(prog);
         let body = extract_fn_body(&out);
-        // [var y;, if (cond) { ; }]
-        assert_eq!(body.body.len(), 2);
-        if let Statement::Tagged(TaggedStatement::IfStatement(i)) = &body.body[1] {
+        // Body is still just the `if` — no prepended `var y;`.
+        assert_eq!(body.body.len(), 1, "no hoist; got {:?}", body.body);
+        if let Statement::Tagged(TaggedStatement::IfStatement(i)) = &body.body[0] {
             if let Statement::Tagged(TaggedStatement::BlockStatement(b)) = &*i.consequent {
                 assert_eq!(b.body.len(), 1);
                 assert!(matches!(
                     &b.body[0],
-                    Statement::Tagged(TaggedStatement::EmptyStatement(_))
-                ));
+                    Statement::Declaration(Declaration::VariableDeclaration(_))
+                ), "the bare `var y;` stays nested; got {:?}", b.body[0]);
             }
         }
+        assert!(!contribs.iter().any(|c| c.tag == "var-hoisted"));
     }
 
     // =====================================================================
@@ -4536,6 +4719,46 @@ mod tests {
         let (out, _c, changed, _n) = run_pass(prog);
         assert!(changed);
         assert_eq!(out.body.len(), 2, "both inner statements spliced in");
+    }
+
+    #[test]
+    fn split_comma_sequence_at_program_level() {
+        // `x, y, z;` → `x; y; z;` — a comma-sequence expression STATEMENT at a
+        // statement-list position splits into one statement per sub-expression.
+        let seq = Expression::SequenceExpression(SequenceExpression {
+            cv: None,
+            expressions: vec![ident("x"), ident("y"), ident("z")],
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(expr_stmt(seq, None))]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 3, "expected 3 split statements; got {:?}", out.body);
+        for (i, name) in ["x", "y", "z"].iter().enumerate() {
+            match &out.body[i] {
+                ProgramItem::Statement(Statement::Tagged(
+                    TaggedStatement::ExpressionStatement(es),
+                )) => assert!(
+                    matches!(&es.expression, Expression::Identifier(id) if &id.name == name),
+                    "stmt {i} should be `{name};`; got {:?}",
+                    es.expression
+                ),
+                other => panic!("expected ExpressionStatement for `{name}`; got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn split_comma_sequence_in_block() {
+        // `{ a, b; }` → the block flattens and the sequence splits: `a; b;`.
+        let seq = Expression::SequenceExpression(SequenceExpression {
+            cv: None,
+            expressions: vec![ident("a"), ident("b")],
+        });
+        let prog =
+            program().with_body(vec![ProgramItem::Statement(block(None, vec![expr_stmt(seq, None)]))]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 2, "expected [a; b;]; got {:?}", out.body);
     }
 
     #[test]

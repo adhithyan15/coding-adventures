@@ -298,9 +298,6 @@ from spice_engine import (
     format_model_card_supported_parameter_coverage_summary_json,
     format_model_card_supported_parameter_coverage_summary_table,
     format_model_card_supported_parameter_coverage_table,
-    format_model_card_unsupported_parameter_issue_csv,
-    format_model_card_unsupported_parameter_issue_json,
-    format_model_card_unsupported_parameter_issue_table,
     format_noise_table,
     format_pole_zero_table,
     format_pss_table,
@@ -312,6 +309,7 @@ from spice_engine import (
     fourier,
     fourier_corners,
     fourier_transient_deck,
+    jfet_at_temperature,
     jfet_from_model_card,
     mc_dc,
     mc_dc_corners,
@@ -331,8 +329,6 @@ from spice_engine import (
     model_card_supported_parameter_coverage_records,
     model_card_supported_parameter_coverage_summary,
     model_card_supported_parameter_coverage_summary_records,
-    model_card_unsupported_parameter_issue_records,
-    model_card_unsupported_parameter_issues,
     mosfet_from_model_card,
     noise_ac,
     noise_ac_corners,
@@ -412,22 +408,22 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 78
+    assert len(coverage) == 203
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
     assert coverage[0].alias_count == 2
     assert coverage[-1].kind == "PMOS"
-    assert coverage[-1].canonical_parameter == "MJ"
-    assert coverage[-1].accepted_names == ("MJ",)
+    assert coverage[-1].canonical_parameter == "AF"
+    assert coverage[-1].accepted_names == ("AF",)
 
     table = format_model_card_supported_parameter_coverage_table()
     assert table.splitlines()[0] == "kind\tcanonical_parameter\taccepted_names\talias_count"
     assert table.splitlines()[1] == "D\tIS\tIS|JS\t2"
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
-    assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
+    assert table.splitlines()[-1] == "PMOS\tAF\tAF\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 78
+    assert len(records) == 203
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -444,19 +440,20 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     summary = model_card_supported_parameter_coverage_summary()
     assert len(summary) == 7
     assert summary[0].kind == "D"
-    assert summary[0].canonical_parameter_count == 12
-    assert summary[0].accepted_name_count == 18
+    assert summary[0].canonical_parameter_count == 15
+    assert summary[0].accepted_name_count == 21
     assert summary[0].aliased_parameter_count == 5
     assert summary[0].max_alias_count == 3
     assert summary[0].aliased_parameters == ("IS", "VT", "CJO", "VJ", "M")
     assert summary[5].kind == "NMOS"
-    assert summary[5].canonical_parameter_count == 18
-    assert summary[5].accepted_name_count == 25
-    assert summary[5].aliased_parameter_count == 6
+    assert summary[5].canonical_parameter_count == 31
+    assert summary[5].accepted_name_count == 39
+    assert summary[5].aliased_parameter_count == 7
     assert summary[5].max_alias_count == 3
     assert summary[5].aliased_parameters == (
         "VT0",
         "LAMBDA",
+        "U0",
         "N_SUB",
         "T_NOM",
         "CBS",
@@ -470,17 +467,17 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
         == "kind\tcanonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\taliased_parameters"
     )
-    assert table.splitlines()[1] == "D\t12\t18\t5\t3\tIS|VT|CJO|VJ|M"
+    assert table.splitlines()[1] == "D\t15\t21\t5\t3\tIS|VT|CJO|VJ|M"
     assert (
         table.splitlines()[-1]
-        == "PMOS\t18\t25\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD"
+        == "PMOS\t31\t39\t7\t3\tVT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD"
     )
     records = model_card_supported_parameter_coverage_summary_records()
     assert len(records) == 7
     assert records[0] == {
         "kind": "D",
-        "canonical_parameter_count": "12",
-        "accepted_name_count": "18",
+        "canonical_parameter_count": "15",
+        "accepted_name_count": "21",
         "aliased_parameter_count": "5",
         "max_alias_count": "3",
         "aliased_parameters": "IS|VT|CJO|VJ|M",
@@ -488,7 +485,7 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     assert format_model_card_supported_parameter_coverage_summary_csv().startswith(
         "kind,canonical_parameter_count,accepted_name_count,"
         "aliased_parameter_count,max_alias_count,aliased_parameters\n"
-        "D,12,18,5,3,IS|VT|CJO|VJ|M\n"
+        "D,15,21,5,3,IS|VT|CJO|VJ|M\n"
     )
     assert (
         json.loads(format_model_card_supported_parameter_coverage_summary_json())
@@ -501,17 +498,17 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 78
-    assert report.expected_canonical_parameter_count == 78
-    assert report.accepted_name_count == 128
-    assert report.aliased_parameter_count == 37
+    assert report.canonical_parameter_count == 203
+    assert report.expected_canonical_parameter_count == 203
+    assert report.accepted_name_count == 275
+    assert report.aliased_parameter_count == 59
     assert report.max_alias_count == 4
     assert report.issues == ()
     assert format_model_card_supported_parameter_coverage_gate_report(report) == (
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t78\t78\t128\t37\t4\t0"
+        "true\t7\t7\t203\t203\t275\t59\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -539,15 +536,15 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 77
-    assert report.accepted_name_count == 125
-    assert report.aliased_parameter_count == 36
+    assert report.canonical_parameter_count == 202
+    assert report.accepted_name_count == 272
+    assert report.aliased_parameter_count == 58
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
     assert report.issues[0].kind == "NMOS"
     assert report.issues[0].field == "canonical_parameter_count"
     assert report.issues[0].message == (
-        "expected NMOS to expose 18 canonical supported parameters, found 17"
+        "expected NMOS to expose 31 canonical supported parameters, found 30"
     )
     assert report.issues[-1].field == "max_alias_count"
     assert report.issues[-1].message == "expected NMOS max alias count 3, found 2"
@@ -555,26 +552,26 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t77\t78\t125\t36\t4\t4\n"
+        "false\t7\t7\t202\t203\t272\t58\t4\t4\n"
         "kind\tfield\tmessage\n"
-        "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
-        "supported parameters, found 17\n"
-        "NMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card "
-        "names, found 22\n"
-        "NMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing "
-        "parameters, found 5\n"
+        "NMOS\tcanonical_parameter_count\texpected NMOS to expose 31 canonical "
+        "supported parameters, found 30\n"
+        "NMOS\taccepted_name_count\texpected NMOS to expose 39 accepted model-card "
+        "names, found 36\n"
+        "NMOS\taliased_parameter_count\texpected NMOS to expose 7 alias-bearing "
+        "parameters, found 6\n"
         "NMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
     )
     records = model_card_supported_parameter_coverage_gate_issue_records(report)
     assert records[0] == {
         "kind": "NMOS",
         "field": "canonical_parameter_count",
-        "message": "expected NMOS to expose 18 canonical supported parameters, found 17",
+        "message": "expected NMOS to expose 31 canonical supported parameters, found 30",
     }
     assert format_model_card_supported_parameter_coverage_gate_issue_csv(report).startswith(
         "kind,field,message\n"
-        'NMOS,canonical_parameter_count,"expected NMOS to expose 18 canonical '
-        'supported parameters, found 17"\n'
+        'NMOS,canonical_parameter_count,"expected NMOS to expose 31 canonical '
+        'supported parameters, found 30"\n'
     )
     assert (
         json.loads(format_model_card_supported_parameter_coverage_gate_issue_json(report))
@@ -596,6 +593,8 @@ def test_model_card_aliases_build_device_instances() -> None:
             "XTI": 2.2,
             "EG": 1.05,
             "RS": 10.0,
+            "KF": 1.0e-12,
+            "AF": 1.3,
         },
     )
     diode_model = diode_from_model_card("D1", "a", "k", diode_card)
@@ -608,35 +607,11 @@ def test_model_card_aliases_build_device_instances() -> None:
         "FC": 0.35,
         "XTI": 2.2,
         "EG": 1.05,
+        "RS": 10.0,
+        "KF": 1.0e-12,
+        "AF": 1.3,
     }
-    assert diode_card.unsupported_parameters == ("RS",)
-    diode_issues = model_card_unsupported_parameter_issues(diode_card)
-    assert len(diode_issues) == 1
-    assert diode_issues[0].model_name == "Dfast"
-    assert diode_issues[0].kind == "D"
-    assert diode_issues[0].parameter == "RS"
-    assert diode_issues[0].message == "unsupported D model-card parameter RS"
-    assert format_model_card_unsupported_parameter_issue_table(diode_card) == (
-        "model_name\tkind\tparameter\tmessage\n"
-        "Dfast\tD\tRS\tunsupported D model-card parameter RS"
-    )
-    diode_issue_records = model_card_unsupported_parameter_issue_records(diode_card)
-    assert diode_issue_records == [
-        {
-            "model_name": "Dfast",
-            "kind": "D",
-            "parameter": "RS",
-            "message": "unsupported D model-card parameter RS",
-        }
-    ]
-    assert format_model_card_unsupported_parameter_issue_csv(diode_card) == (
-        "model_name,kind,parameter,message\n"
-        "Dfast,D,RS,unsupported D model-card parameter RS\n"
-    )
-    assert (
-        json.loads(format_model_card_unsupported_parameter_issue_json(diode_card))
-        == diode_issue_records
-    )
+    assert diode_card.unsupported_parameters == ()
     assert diode_model.Is == pytest.approx(2.0e-14)
     assert diode_model.Cjo == pytest.approx(1.5e-12)
     assert diode_model.Tt == pytest.approx(4.0e-9)
@@ -645,26 +620,121 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(0.35) == diode_model.Fc
     assert pytest.approx(2.2) == diode_model.Xti
     assert pytest.approx(1.05) == diode_model.Eg
+    assert pytest.approx(10.0) == diode_model.Rs
+    assert pytest.approx(1.0e-12) == diode_model.Kf
+    assert pytest.approx(1.3) == diode_model.Af
 
     bjt_card = normalize_model_card(
-        "Qsmall", "npn", {"BETA": 125.0, "CBE": 2.0e-12, "XTI": 2.4, "EG": 1.05, "VA": 80.0}
+        "Qsmall", "npn", {"BETA": 125.0, "BETA_R": 0.25, "CBE": 2.0e-12, "XTI": 2.4, "XTB": 1.5, "EG": 1.05, "VA": 80.0, "VB": 120.0, "IK": 2.0e-3, "IKR": 3.0e-3, "T_NOM": 50.0, "KF": 1.0e-12, "AF": 1.3, "PTF": 30.0, "XTF": 2.0, "ITF": 4.0e-3, "VTF": 0.6, "RE": 12.0, "RC": 13.0, "RB": 14.0, "RBM": 2.0, "IRB": 5.0e-6, "XCJC": 0.4, "ISE": 3.0e-13, "NE": 1.7, "ISC": 4.0e-13, "NC": 1.8, "NF": 1.2, "NR": 1.3, "PE": 0.8, "ME": 0.4, "PC": 0.7, "MC": 0.45, "FC": 0.4}
     )
     bjt_model = bjt_from_model_card("Q1", "c", "b", "e", bjt_card)
-    assert bjt_card.parameters == {"BF": 125.0, "CJE": 2.0e-12, "XTI": 2.4, "EG": 1.05, "VAF": 80.0}
+    assert bjt_card.parameters == {"BF": 125.0, "BR": 0.25, "CJE": 2.0e-12, "XTI": 2.4, "XTB": 1.5, "EG": 1.05, "VAF": 80.0, "VAR": 120.0, "IKF": 2.0e-3, "IKR": 3.0e-3, "TNOM": 50.0, "KF": 1.0e-12, "AF": 1.3, "PTF": 30.0, "XTF": 2.0, "ITF": 4.0e-3, "VTF": 0.6, "RE": 12.0, "RC": 13.0, "RB": 14.0, "RBM": 2.0, "IRB": 5.0e-6, "XCJC": 0.4, "ISE": 3.0e-13, "NE": 1.7, "ISC": 4.0e-13, "NC": 1.8, "NF": 1.2, "NR": 1.3, "VJE": 0.8, "MJE": 0.4, "VJC": 0.7, "MJC": 0.45, "FC": 0.4}
     assert bjt_model.polarity == "NPN"
     assert bjt_model.beta_f == pytest.approx(125.0)
+    assert bjt_model.beta_r == pytest.approx(0.25)
     assert bjt_model.Cje == pytest.approx(2.0e-12)
     assert bjt_model.Xti == pytest.approx(2.4)
+    assert bjt_model.Xtb == pytest.approx(1.5)
     assert bjt_model.Eg == pytest.approx(1.05)
     assert bjt_model.Vaf == pytest.approx(80.0)
+    assert bjt_model.Var == pytest.approx(120.0)
+    assert bjt_model.Ikf == pytest.approx(2.0e-3)
+    assert bjt_model.Ikr == pytest.approx(3.0e-3)
+    assert bjt_model.Tnom == pytest.approx(323.15)
+    assert bjt_model.Kf == pytest.approx(1.0e-12)
+    assert bjt_model.Af == pytest.approx(1.3)
+    assert bjt_model.Ptf == pytest.approx(30.0)
+    assert bjt_model.Xtf == pytest.approx(2.0)
+    assert bjt_model.Itf == pytest.approx(4.0e-3)
+    assert bjt_model.Vtf == pytest.approx(0.6)
+    assert bjt_model.Re == pytest.approx(12.0)
+    assert bjt_model.Rc == pytest.approx(13.0)
+    assert bjt_model.Rb == pytest.approx(14.0)
+    assert bjt_model.Rbm == pytest.approx(2.0)
+    assert bjt_model.Irb == pytest.approx(5.0e-6)
+    assert bjt_model.Xcjc == pytest.approx(0.4)
+    assert bjt_model.Ise == pytest.approx(3.0e-13)
+    assert bjt_model.Ne == pytest.approx(1.7)
+    assert bjt_model.Isc == pytest.approx(4.0e-13)
+    assert bjt_model.Nc == pytest.approx(1.8)
+    assert bjt_model.Nf == pytest.approx(1.2)
+    assert bjt_model.Nr == pytest.approx(1.3)
+    assert bjt_model.Vje == pytest.approx(0.8)
+    assert bjt_model.Mje == pytest.approx(0.4)
+    assert bjt_model.Vjc == pytest.approx(0.7)
+    assert bjt_model.Mjc == pytest.approx(0.45)
+    assert bjt_model.Fc == pytest.approx(0.4)
 
-    jfet_card = normalize_model_card("Jn", "njfet", {"BET": 9.0e-4, "VT0": -1.8, "LAM": 0.02})
+    jfet_card = normalize_model_card(
+        "Jn",
+        "njfet",
+        {
+            "BET": 9.0e-4,
+            "VT0": -1.8,
+            "LAM": 0.02,
+            "KF": 1.0e-12,
+            "AF": 1.3,
+            "VJ": 0.8,
+            "FC": 0.35,
+            "IS": 2.0e-13,
+            "XTI": 2.5,
+            "EG": 1.05,
+            "B": 1.1,
+            "NLEV": 3.0,
+            "GDSNOI": 1.25,
+            "RD": 125.0,
+            "RS": 75.0,
+            "T_NOM": 50.0,
+            "TCV": 0.01,
+            "VTOTC": -0.0025,
+            "BEX": 1.5,
+            "BETATCE": -0.5,
+        },
+    )
     jfet_model = jfet_from_model_card("J1", "d", "g", "s", jfet_card)
-    assert jfet_card.parameters == {"BETA": 9.0e-4, "VTO": -1.8, "LAMBDA": 0.02}
+    assert jfet_card.parameters == {
+        "BETA": 9.0e-4,
+        "VTO": -1.8,
+        "LAMBDA": 0.02,
+        "KF": 1.0e-12,
+        "AF": 1.3,
+        "PB": 0.8,
+        "FC": 0.35,
+        "IS": 2.0e-13,
+        "XTI": 2.5,
+        "EG": 1.05,
+        "B": 1.1,
+        "NLEV": 3.0,
+        "GDSNOI": 1.25,
+        "RD": 125.0,
+        "RS": 75.0,
+        "TNOM": 50.0,
+        "TCV": 0.01,
+        "VTOTC": -0.0025,
+        "BEX": 1.5,
+        "BETATCE": -0.5,
+    }
     assert jfet_model.polarity == "NJF"
     assert jfet_model.beta == pytest.approx(9.0e-4)
     assert jfet_model.vto == pytest.approx(-1.8)
     assert jfet_model.lambda_ == pytest.approx(0.02)
+    assert jfet_model.Kf == pytest.approx(1.0e-12)
+    assert jfet_model.Af == pytest.approx(1.3)
+    assert jfet_model.Pb == pytest.approx(0.8)
+    assert jfet_model.Fc == pytest.approx(0.35)
+    assert jfet_model.Is == pytest.approx(2.0e-13)
+    assert jfet_model.Xti == pytest.approx(2.5)
+    assert jfet_model.Eg == pytest.approx(1.05)
+    assert pytest.approx(1.1) == jfet_model.B
+    assert jfet_model.Nlev == pytest.approx(3.0)
+    assert jfet_model.Gdsnoi == pytest.approx(1.25)
+    assert jfet_model.Rd == pytest.approx(125.0)
+    assert jfet_model.Rs == pytest.approx(75.0)
+    assert jfet_model.Tnom == pytest.approx(323.15)
+    assert jfet_model.Tcv == pytest.approx(0.01)
+    assert jfet_model.Vtotc == pytest.approx(-0.0025)
+    assert jfet_model.Bex == pytest.approx(1.5)
+    assert jfet_model.Betatce == pytest.approx(-0.5)
 
     mos_card = normalize_model_card(
         "Mn",
@@ -677,6 +747,19 @@ def test_model_card_aliases_build_device_instances() -> None:
             "CJD": 3.0e-13,
             "PB": 0.9,
             "MJ": 0.45,
+            "MJSW": 0.25,
+            "FC": 0.4,
+            "LD": 50.0e-9,
+            "RD": 125.0,
+            "RS": 75.0,
+            "RSH": 50.0,
+            "CJ": 2.0e-3,
+            "IS": 4.0e-12,
+            "JS": 2.0e-6,
+            "TOX": 25.0e-9,
+            "UO": 500.0,
+            "KF": 2.0e-24,
+            "AF": 1.4,
         },
     )
     mos_model = mosfet_from_model_card("M1", "d", "g", "s", "b", mos_card)
@@ -688,6 +771,19 @@ def test_model_card_aliases_build_device_instances() -> None:
         "CBD": 3.0e-13,
         "PB": 0.9,
         "MJ": 0.45,
+        "MJSW": 0.25,
+        "FC": 0.4,
+        "LD": 50.0e-9,
+        "RD": 125.0,
+        "RS": 75.0,
+        "RSH": 50.0,
+        "CJ": 2.0e-3,
+        "IS": 4.0e-12,
+        "JS": 2.0e-6,
+        "TOX": 25.0e-9,
+        "U0": 500.0,
+        "KF": 2.0e-24,
+        "AF": 1.4,
     }
     assert isinstance(mos_model.model, MOSFET)
     assert mos_model.model.type == MosfetType.NMOS
@@ -698,6 +794,368 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(3.0e-13) == mos_model.model.model.params.CBD
     assert pytest.approx(0.9) == mos_model.model.model.params.PB
     assert pytest.approx(0.45) == mos_model.model.model.params.MJ
+    assert pytest.approx(0.25) == mos_model.model.model.params.MJSW
+    assert pytest.approx(0.4) == mos_model.model.model.params.FC
+    assert pytest.approx(50.0e-9) == mos_model.model.model.params.LD
+    assert pytest.approx(125.0) == mos_model.model.model.params.RD
+    assert pytest.approx(75.0) == mos_model.model.model.params.RS
+    assert pytest.approx(50.0) == mos_model.model.model.params.RSH
+    assert pytest.approx(1.0) == mos_model.model.model.params.NRD
+    assert pytest.approx(1.0) == mos_model.model.model.params.NRS
+    assert pytest.approx(2.0e-3) == mos_model.model.model.params.CJ
+    assert pytest.approx(4.0e-12) == mos_model.model.model.params.IS
+    assert pytest.approx(2.0e-6) == mos_model.model.model.params.JS
+    assert pytest.approx(25.0e-9) == mos_model.model.model.params.TOX
+    assert pytest.approx(500.0) == mos_model.model.model.params.U0
+    assert pytest.approx(500.0 * 1.0e-4 * 3.453133e-11 / 25.0e-9) == (
+        mos_model.model.model.params.KP
+    )
+    assert pytest.approx(2.0e-24) == mos_model.model.model.params.KF
+    assert pytest.approx(1.4) == mos_model.model.model.params.AF
+
+
+def test_mos_model_card_surface_mobility_derives_kp_with_explicit_precedence() -> None:
+    default_mobility = mosfet_from_model_card(
+        "M1",
+        "d",
+        "g",
+        "s",
+        "b",
+        normalize_model_card("Mdefault", "nmos", {"TOX": 100.0e-9}),
+    )
+    assert pytest.approx(600.0) == default_mobility.model.model.params.U0
+    assert pytest.approx(600.0 * 1.0e-4 * 3.453133e-11 / 100.0e-9) == (
+        default_mobility.model.model.params.KP
+    )
+
+    explicit = mosfet_from_model_card(
+        "M2",
+        "d",
+        "g",
+        "s",
+        "b",
+        normalize_model_card(
+            "Mexplicit",
+            "nmos",
+            {"TOX": 100.0e-9, "U0": 500.0, "KP": 250.0e-6},
+        ),
+    )
+    assert pytest.approx(500.0) == explicit.model.model.params.U0
+    assert pytest.approx(250.0e-6) == explicit.model.model.params.KP
+
+
+def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
+    circuit = Circuit()
+    circuit.add(JFET("J1", "drain", "gate", "0", Kf=-1.0))
+
+    with pytest.raises(
+        ValueError,
+        match="flicker-noise coefficient must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_jfet_flicker_noise_exponent() -> None:
+    circuit = Circuit()
+    circuit.add(JFET("J1", "drain", "gate", "0", Af=-1.0))
+
+    with pytest.raises(
+        ValueError,
+        match="flicker-noise exponent must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_jfet_junction_potential() -> None:
+    circuit = Circuit()
+    circuit.add(JFET("J1", "drain", "gate", "0", Pb=0.0))
+
+    with pytest.raises(ValueError, match="PB must be finite and positive"):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_jfet_forward_bias_depletion_coefficient() -> None:
+    circuit = Circuit()
+    circuit.add(JFET("J1", "drain", "gate", "0", Fc=1.0))
+
+    with pytest.raises(ValueError, match=r"FC must be finite and in \[0, 1\)"):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_jfet_gate_saturation_current() -> None:
+    circuit = Circuit()
+    circuit.add(JFET("J1", "drain", "gate", "0", Is=-1.0))
+
+    with pytest.raises(
+        ValueError,
+        match="gate saturation current must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_jfet_drain_resistance() -> None:
+    circuit = Circuit()
+    circuit.add(JFET("J1", "drain", "gate", "0", Rd=-1.0))
+
+    with pytest.raises(
+        ValueError,
+        match="drain resistance must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_jfet_source_resistance() -> None:
+    circuit = Circuit()
+    circuit.add(JFET("J1", "drain", "gate", "0", Rs=-1.0))
+
+    with pytest.raises(
+        ValueError,
+        match="source resistance must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_jfet_doping_tail_parameter() -> None:
+    circuit = Circuit()
+    circuit.add(JFET("J1", "drain", "gate", "0", B=math.nan))
+
+    with pytest.raises(ValueError, match="doping-tail parameter must be finite"):
+        dc_op(circuit)
+
+
+def test_dc_jfet_doping_tail_parameter_shapes_linear_and_saturation_current() -> None:
+    def drain_current(drain_voltage: float, doping_tail_parameter: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vdrain", "drain", "0", drain_voltage))
+        circuit.add(VoltageSource("Vgate", "gate", "0", 0.0))
+        circuit.add(
+            JFET(
+                "J1",
+                "drain",
+                "gate",
+                "0",
+                beta=1.0e-3,
+                vto=-2.0,
+                Pb=1.0,
+                B=doping_tail_parameter,
+            )
+        )
+        return abs(dc_op(circuit).branch_currents["I(Vdrain)"])
+
+    assert drain_current(1.0, 1.1) > drain_current(1.0, 1.0)
+    assert drain_current(3.0, 1.1) > drain_current(3.0, 1.0)
+
+
+def test_dc_jfet_drain_resistance_drops_intrinsic_drain_voltage() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vdrain", "drain", "0", 5.0))
+    circuit.add(VoltageSource("Vgate", "gate", "0", 0.0))
+    circuit.add(JFET("J1", "drain", "gate", "0", beta=1.0e-3, Rd=1_000.0))
+
+    result = dc_op(circuit)
+    assert result.node_voltages["drain"] == pytest.approx(5.0)
+    assert result.node_voltages["__spice_J1_drain"] < 5.0
+
+
+def test_dc_mosfet_drain_resistance_drops_intrinsic_drain_voltage() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vdrain", "drain", "0", 5.0))
+    circuit.add(VoltageSource("Vgate", "gate", "0", 3.0))
+    circuit.add(Mosfet(
+        "M1",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(RD=1_000.0)),
+        ),
+    ))
+
+    result = dc_op(circuit)
+    assert result.node_voltages["drain"] == pytest.approx(5.0)
+    assert result.node_voltages["__spice_M1_drain"] < 5.0
+
+
+def test_dc_mosfet_bulk_junction_saturation_current_sets_reverse_leakage() -> None:
+    def bias_current(
+        mosfet_type: MosfetType,
+        bias_voltage: float,
+        saturation_current: float,
+    ) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbias", "body", "0", bias_voltage))
+        circuit.add(
+            Mosfet(
+                "M1",
+                "0",
+                "0",
+                "0",
+                "body",
+                MOSFET(
+                    mosfet_type,
+                    Level1Model(Level1Params(IS=saturation_current)),
+                ),
+            )
+        )
+        return abs(dc_op(circuit).branch_currents["I(Vbias)"])
+
+    for mosfet_type, bias_voltage in (
+        (MosfetType.NMOS, -0.3),
+        (MosfetType.PMOS, 0.3),
+    ):
+        unloaded = bias_current(mosfet_type, bias_voltage, 1.0e-30)
+        loaded = bias_current(mosfet_type, bias_voltage, 1.0e-12)
+        assert loaded > unloaded
+
+
+def test_dc_mosfet_bulk_junction_current_density_scales_diffusion_areas() -> None:
+    def bias_current(params: Level1Params) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbias", "body", "0", -0.3))
+        circuit.add(
+            Mosfet(
+                "M1",
+                "0",
+                "0",
+                "0",
+                "body",
+                MOSFET(MosfetType.NMOS, Level1Model(params)),
+            )
+        )
+        return abs(dc_op(circuit).branch_currents["I(Vbias)"])
+
+    scalar = bias_current(Level1Params(IS=1.0e-12))
+    density = bias_current(Level1Params(IS=1.0e-30, JS=1.0e-6, AS=0.5e-6, AD=1.5e-6))
+    missing_area = bias_current(Level1Params(IS=1.0e-12, JS=1.0, AS=0.0, AD=1.0))
+
+    assert density == pytest.approx(scalar, rel=1.0e-6)
+    assert missing_area == pytest.approx(scalar, rel=1.0e-6)
+
+
+def test_dc_rejects_negative_mosfet_bulk_junction_current_density() -> None:
+    circuit = Circuit()
+    circuit.add(
+        Mosfet(
+            "M1",
+            "drain",
+            "gate",
+            "0",
+            "0",
+            MOSFET(MosfetType.NMOS, Level1Model(Level1Params(JS=-1.0))),
+        )
+    )
+
+    with pytest.raises(ValueError, match="MOSFET JS must be finite and non-negative"):
+        dc_op(circuit)
+
+
+def test_dc_mosfet_source_resistance_raises_intrinsic_source_voltage() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vdrain", "drain", "0", 5.0))
+    circuit.add(VoltageSource("Vgate", "gate", "0", 3.0))
+    circuit.add(Mosfet(
+        "M1",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(RS=1_000.0)),
+        ),
+    ))
+
+    result = dc_op(circuit)
+    assert result.node_voltages["__spice_M1_source"] > 0.0
+
+
+def test_dc_mosfet_sheet_resistance_biases_both_intrinsic_terminals() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vdrain", "drain", "0", 5.0))
+    circuit.add(VoltageSource("Vgate", "gate", "0", 3.0))
+    circuit.add(Mosfet(
+        "M1",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(RSH=1_000.0, NRD=2.0, NRS=3.0)),
+        ),
+    ))
+
+    result = dc_op(circuit)
+    assert result.node_voltages["__spice_M1_drain"] < 5.0
+    assert result.node_voltages["__spice_M1_source"] > 0.0
+
+
+def test_dc_jfet_source_resistance_raises_intrinsic_source_voltage() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vdrain", "drain", "0", 5.0))
+    circuit.add(VoltageSource("Vgate", "gate", "0", 3.0))
+    circuit.add(JFET("J1", "drain", "gate", "0", beta=1.0e-3, Rs=1_000.0))
+
+    result = dc_op(circuit)
+    assert result.node_voltages["__spice_J1_source"] > 0.0
+
+
+def test_jfet_gate_saturation_current_loads_a_forward_biased_gate() -> None:
+    def gate_voltage(
+        polarity: str, bias_voltage: float, gate_saturation_current: float
+    ) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbias", "bias", "0", bias_voltage))
+        circuit.add(Resistor("Rgate", "bias", "gate", 1.0e6))
+        circuit.add(
+            JFET(
+                "J1",
+                "0",
+                "gate",
+                "0",
+                polarity=polarity,
+                vto=-2.0 if polarity == "NJF" else 2.0,
+                Is=gate_saturation_current,
+            )
+        )
+        return dc_op(circuit).node_voltages["gate"]
+
+    assert gate_voltage("NJF", 0.3, 1.0e-9) < gate_voltage("NJF", 0.3, 1.0e-14)
+    assert gate_voltage("PJF", -0.3, 1.0e-9) > gate_voltage("PJF", -0.3, 1.0e-14)
+
+
+def test_bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() -> None:
+    legacy_card = normalize_model_card(
+        "Qlegacy",
+        "npn",
+        {"IS": 2.0e-14, "C2": 15.0, "C4": 20.0},
+    )
+    legacy = bjt_from_model_card("Q1", "c", "b", "e", legacy_card)
+
+    assert legacy_card.parameters == {
+        "IS": 2.0e-14,
+        "C2": 15.0,
+        "C4": 20.0,
+    }
+    assert legacy.Ise == pytest.approx(3.0e-13)
+    assert legacy.Isc == pytest.approx(4.0e-13)
+
+    explicit_card = normalize_model_card(
+        "Qexplicit",
+        "pnp",
+        {
+            "IS": 2.0e-14,
+            "C2": 15.0,
+            "ISE": 5.0e-13,
+            "C4": 20.0,
+            "ISC": 6.0e-13,
+        },
+    )
+    explicit = bjt_from_model_card("Q2", "c", "b", "e", explicit_card)
+    assert explicit.Ise == pytest.approx(5.0e-13)
+    assert explicit.Isc == pytest.approx(6.0e-13)
 
 
 def test_model_card_audit_fixtures_cover_supported_device_families() -> None:
@@ -754,7 +1212,7 @@ def test_device_model_temperature_audit_fixtures_run_reference_sweeps() -> None:
             assert expected.expected_min <= value <= expected.expected_max
 
     jfet_fixture = next(fixture for fixture in fixtures if fixture.kind == "NJF")
-    assert jfet_fixture.temperature_behavior.startswith("JFET temperature scaling is intentionally")
+    assert jfet_fixture.temperature_behavior.startswith("JFET temperature scaling defaults")
 
 
 def test_device_model_capacitance_audit_fixtures_run_reference_ac_points() -> None:
@@ -1340,6 +1798,78 @@ def test_transient_jfet_gate_source_capacitance_slows_gate_step() -> None:
     assert charged_first < uncharged_first
 
 
+def test_transient_jfet_junction_potential_shapes_gate_charge() -> None:
+    def final_gate_voltage(pb: float) -> float:
+        circuit = Circuit()
+        circuit.add(
+            VoltageSource(
+                "Vstep",
+                "in",
+                "0",
+                0.0,
+                waveform=PwlWaveform(
+                    ((0.0, 0.0), (2.0e-7, 0.4), (2.0e-6, 0.4))
+                ),
+            )
+        )
+        circuit.add(Resistor("Rin", "in", "gate", 1_000.0))
+        circuit.add(Resistor("Rdrain", "drain", "0", 1_000.0))
+        circuit.add(
+            JFET(
+                "J1",
+                "drain",
+                "gate",
+                "0",
+                beta=1.0e-12,
+                vto=-2.0,
+                Cgs=1.0e-9,
+                Pb=pb,
+            )
+        )
+        result = transient(
+            circuit, t_stop=2.0e-6, t_step=2.0e-7, method="euler"
+        )
+        return result.points[-1].node_voltages["gate"]
+
+    assert final_gate_voltage(0.5) < final_gate_voltage(2.0)
+
+
+def test_transient_jfet_forward_bias_depletion_coefficient_shapes_gate_charge() -> None:
+    def final_gate_voltage(fc: float) -> float:
+        circuit = Circuit()
+        circuit.add(
+            VoltageSource(
+                "Vstep",
+                "in",
+                "0",
+                0.0,
+                waveform=PwlWaveform(
+                    ((0.0, 0.0), (2.0e-7, 0.6), (2.0e-6, 0.6))
+                ),
+            )
+        )
+        circuit.add(Resistor("Rin", "in", "gate", 1_000.0))
+        circuit.add(Resistor("Rdrain", "drain", "0", 1_000.0))
+        circuit.add(
+            JFET(
+                "J1",
+                "drain",
+                "gate",
+                "0",
+                beta=1.0e-12,
+                vto=-2.0,
+                Cgs=1.0e-9,
+                Fc=fc,
+            )
+        )
+        result = transient(
+            circuit, t_stop=2.0e-6, t_step=2.0e-7, method="euler"
+        )
+        return result.points[-1].node_voltages["gate"]
+
+    assert final_gate_voltage(0.2) > final_gate_voltage(0.8)
+
+
 def test_transient_mosfet_overlap_capacitance_slows_gate_step() -> None:
     def run(cgso: float) -> TransientResult:
         circuit = Circuit()
@@ -1360,7 +1890,15 @@ def test_transient_mosfet_overlap_capacitance_slows_gate_step() -> None:
             "0",
             MOSFET(
                 MosfetType.NMOS,
-                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CGSO=cgso)),
+                Level1Model(
+                    Level1Params(
+                        KP=1.0e-12,
+                        W=1.0,
+                        L=1.0,
+                        TOX=1.0e9,
+                        CGSO=cgso,
+                    )
+                ),
             ),
         ))
         return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
@@ -1377,8 +1915,8 @@ def test_transient_mosfet_overlap_capacitance_slows_gate_step() -> None:
     assert charged_first < uncharged_first
 
 
-def test_transient_mosfet_bulk_junction_capacitance_slows_drain_step() -> None:
-    def run(cbd: float) -> TransientResult:
+def test_transient_mosfet_drain_area_scales_bottom_junction_capacitance() -> None:
+    def run(cj: float, ad: float) -> TransientResult:
         circuit = Circuit()
         circuit.add(VoltageSource(
             "Vstep",
@@ -1396,18 +1934,142 @@ def test_transient_mosfet_bulk_junction_capacitance_slows_drain_step() -> None:
             "0",
             MOSFET(
                 MosfetType.NMOS,
-                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CBD=cbd)),
+                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CJ=cj, AD=ad)),
             ),
         ))
         return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
 
-    uncharged = run(0.0)
-    charged = run(1.0e-9)
+    uncharged = run(0.0, 0.0)
+    charged = run(0.5, 2.0e-9)
 
     assert uncharged.converged
     assert charged.converged
     uncharged_first = uncharged.points[1].node_voltages["drain"]
     charged_first = charged.points[1].node_voltages["drain"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_mosfet_drain_perimeter_scales_sidewall_capacitance() -> None:
+    def run(cjsw: float, pd: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0), (5.0e-9, 1.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "drain", 1_000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CJSW=cjsw, PD=pd)),
+            ),
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0, 0.0)
+    charged = run(0.5, 2.0e-9)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["drain"]
+    charged_first = charged.points[1].node_voltages["drain"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_mosfet_source_area_scales_bottom_junction_capacitance() -> None:
+    def run(cj: float, source_area: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0), (5.0e-9, 1.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "source", 1_000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "0",
+            "0",
+            "source",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(
+                    Level1Params(
+                        KP=1.0e-12,
+                        W=1.0,
+                        L=1.0,
+                        CJ=cj,
+                        AS=source_area,
+                    )
+                ),
+            ),
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0, 0.0)
+    charged = run(0.5, 2.0e-9)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["source"]
+    charged_first = charged.points[1].node_voltages["source"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_mosfet_source_perimeter_scales_sidewall_capacitance() -> None:
+    def run(cjsw: float, source_perimeter: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0), (5.0e-9, 1.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "source", 1_000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "0",
+            "0",
+            "source",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(
+                    Level1Params(
+                        KP=1.0e-12,
+                        W=1.0,
+                        L=1.0,
+                        CJSW=cjsw,
+                        PS=source_perimeter,
+                    )
+                ),
+            ),
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0, 0.0)
+    charged = run(0.5, 2.0e-9)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["source"]
+    charged_first = charged.points[1].node_voltages["source"]
     assert uncharged_first > 0.5
     assert charged_first < 0.01
     assert charged_first < uncharged_first
@@ -1454,6 +2116,393 @@ def test_transient_mosfet_bulk_junction_depletion_shaping_reduces_reverse_bias_c
     assert fixed_first == pytest.approx(1.5, rel=0.05)
     assert shaped_first > fixed_first + 0.04
     assert shaped_first < 1.7
+
+
+def test_transient_mosfet_sidewall_grading_coefficient_shapes_reverse_bias_capacitance() -> None:
+    def run(grading_coefficient: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            1.0,
+            waveform=PwlWaveform(((0.0, 1.0), (1.0e-9, 2.0), (5.0e-9, 2.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "drain", 1_000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(
+                    KP=1.0e-12,
+                    W=1.0,
+                    L=1.0,
+                    PD=1.0,
+                    CJSW=1.0e-12,
+                    PB=1.0,
+                    MJSW=grading_coefficient,
+                )),
+            ),
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    fixed = run(0.0)
+    shaped = run(0.5)
+    assert fixed.converged
+    assert shaped.converged
+    assert (
+        shaped.points[1].node_voltages["drain"]
+        > fixed.points[1].node_voltages["drain"] + 0.04
+    )
+
+
+def test_transient_mosfet_forward_bias_depletion_coefficient_shapes_bulk_charge() -> None:
+    def first_drain_voltage(fc: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            -0.6,
+            waveform=PwlWaveform(((0.0, -0.6), (1.0e-9, -0.8), (5.0e-9, -0.8))),
+        ))
+        circuit.add(Resistor("Rin", "in", "drain", 1_000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(
+                    KP=1.0e-12,
+                    W=1.0,
+                    L=1.0,
+                    CBD=1.0e-12,
+                    PB=1.0,
+                    MJ=0.5,
+                    FC=fc,
+                )),
+            ),
+        ))
+        result = transient(
+            circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler"
+        )
+        assert result.converged
+        return result.points[1].node_voltages["drain"]
+
+    assert first_drain_voltage(0.2) < first_drain_voltage(0.8)
+
+
+@pytest.mark.parametrize("fc", [float("nan"), -0.1, 1.0])
+def test_mosfet_rejects_invalid_forward_bias_depletion_coefficient(fc: float) -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vin", "in", "0", 0.0))
+    circuit.add(Resistor("Rin", "in", "drain", 1_000.0))
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(MosfetType.NMOS, Level1Model(Level1Params(FC=fc))),
+    ))
+
+    with pytest.raises(ValueError, match=r"MOSFET FC must be finite and in \[0, 1\)"):
+        dc_op(circuit)
+
+
+@pytest.mark.parametrize("mjsw", [float("nan"), -1.0])
+def test_mosfet_rejects_invalid_sidewall_grading_coefficient(mjsw: float) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(MosfetType.NMOS, Level1Model(Level1Params(MJSW=mjsw))),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET MJSW must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+@pytest.mark.parametrize("ld", [float("nan"), -0.1e-6, 0.5e-6])
+def test_mosfet_rejects_invalid_lateral_diffusion_length(ld: float) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(MosfetType.NMOS, Level1Model(Level1Params(L=1.0e-6, LD=ld))),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match=r"MOSFET LD must be finite and non-negative with L - 2\*LD > 0",
+    ):
+        dc_op(circuit)
+
+
+def test_mosfet_lateral_diffusion_uses_effective_channel_length() -> None:
+    def drain_current(ld: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vdrain", "drain", "0", 1.8))
+        circuit.add(VoltageSource("Vgate", "gate", "0", 1.8))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "gate",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(L=1.0e-6, LD=ld)),
+            ),
+        ))
+        return abs(dc_op(circuit).branch_currents["I(Vdrain)"])
+
+    assert drain_current(0.1e-6) / drain_current(0.0) == pytest.approx(1.25)
+
+
+@pytest.mark.parametrize("tox", [float("nan"), 0.0, -1.0e-9])
+def test_mosfet_rejects_invalid_oxide_thickness(tox: float) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(MosfetType.NMOS, Level1Model(Level1Params(TOX=tox))),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET TOX must be finite and positive",
+    ):
+        dc_op(circuit)
+
+
+@pytest.mark.parametrize("drain_resistance", [float("nan"), -1.0])
+def test_mosfet_rejects_invalid_drain_resistance(
+    drain_resistance: float,
+) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(RD=drain_resistance)),
+        ),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET RD must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+@pytest.mark.parametrize("source_resistance", [float("nan"), -1.0])
+def test_mosfet_rejects_invalid_source_resistance(
+    source_resistance: float,
+) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(RS=source_resistance)),
+        ),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET RS must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+@pytest.mark.parametrize("sheet_resistance", [float("nan"), -1.0])
+def test_mosfet_rejects_invalid_sheet_resistance(
+    sheet_resistance: float,
+) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(RSH=sheet_resistance)),
+        ),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET RSH must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+@pytest.mark.parametrize("drain_squares", [float("nan"), -1.0])
+def test_mosfet_rejects_invalid_drain_squares(
+    drain_squares: float,
+) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(NRD=drain_squares)),
+        ),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET NRD must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+@pytest.mark.parametrize("source_squares", [float("nan"), -1.0])
+def test_mosfet_rejects_invalid_source_squares(
+    source_squares: float,
+) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(NRS=source_squares)),
+        ),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET NRS must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+@pytest.mark.parametrize("drain_area", [float("nan"), -1.0])
+def test_mosfet_rejects_invalid_drain_area(drain_area: float) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(AD=drain_area)),
+        ),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET AD must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+@pytest.mark.parametrize("source_area", [float("nan"), -1.0])
+def test_mosfet_rejects_invalid_source_area(source_area: float) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(AS=source_area)),
+        ),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET AS must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+@pytest.mark.parametrize("source_perimeter", [float("nan"), -1.0])
+def test_mosfet_rejects_invalid_source_perimeter(source_perimeter: float) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(PS=source_perimeter)),
+        ),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET PS must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+@pytest.mark.parametrize("bottom_junction_capacitance", [float("nan"), -1.0])
+def test_mosfet_rejects_invalid_bottom_junction_capacitance(
+    bottom_junction_capacitance: float,
+) -> None:
+    circuit = Circuit()
+    circuit.add(Mosfet(
+        "Mbad",
+        "drain",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(CJ=bottom_junction_capacitance)),
+        ),
+    ))
+
+    with pytest.raises(
+        ValueError,
+        match="MOSFET CJ must be finite and non-negative",
+    ):
+        dc_op(circuit)
 
 
 def test_transient_diode_transit_time_holds_forward_charge_on_turnoff() -> None:
@@ -1514,10 +2563,111 @@ def test_transient_bjt_base_emitter_capacitance_slows_base_current_step() -> Non
     assert charged_first < uncharged_first
 
 
-def test_transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() -> None:
-    def run(forward_transit_time: float) -> TransientResult:
+def test_transient_bjt_base_emitter_depletion_capacitance_falls_with_reverse_bias() -> None:
+    def stepped_base_voltage(mje: float) -> float:
         circuit = Circuit()
-        circuit.add(VoltageSource("Vcc", "collector", "0", 5.0))
+        circuit.add(VoltageSource(
+            "Vdrive",
+            "in",
+            "0",
+            -1.0,
+            waveform=PwlWaveform(((0.0, -1.0), (1.0e-9, -1.0), (2.0e-9, 0.0), (5.0e-9, 0.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "base", 1000.0))
+        circuit.add(BJT("Q1", collector="0", base="base", emitter="0", Cje=1.0e-12, Vje=0.75, Mje=mje))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler").points[2].node_voltages["base"]
+
+    assert stepped_base_voltage(0.5) > stepped_base_voltage(0.0)
+
+
+def test_transient_bjt_base_collector_depletion_capacitance_falls_with_reverse_bias() -> None:
+    def stepped_collector_voltage(mjc: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vdrive",
+            "in",
+            "0",
+            1.0,
+            waveform=PwlWaveform(((0.0, 1.0), (1.0e-9, 1.0), (2.0e-9, 0.0), (5.0e-9, 0.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "collector", 1000.0))
+        circuit.add(BJT("Q1", collector="collector", base="0", emitter="0", Cjc=1.0e-12, Vjc=0.75, Mjc=mjc))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler").points[2].node_voltages["collector"]
+
+    assert stepped_collector_voltage(0.5) < stepped_collector_voltage(0.0)
+
+
+def test_transient_bjt_xcjc_partitions_depletion_charge_to_external_base() -> None:
+    def stepped_base_voltage(fraction: float) -> float:
+        circuit = Circuit()
+        circuit.add(
+            VoltageSource(
+                "Vdrive",
+                "in",
+                "0",
+                0.0,
+                waveform=PwlWaveform(
+                    ((0.0, 0.0), (1.0e-9, 0.0), (2.0e-9, 1.0), (5.0e-9, 1.0))
+                ),
+            )
+        )
+        circuit.add(Resistor("Rin", "in", "base", 1_000.0))
+        circuit.add(
+            BJT(
+                "Q1",
+                collector="0",
+                base="base",
+                emitter="0",
+                Is=1.0e-30,
+                Cjc=1.0e-12,
+                Rb=10_000.0,
+                Xcjc=fraction,
+            )
+        )
+        return transient(
+            circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler"
+        ).points[2].node_voltages["base"]
+
+    assert stepped_base_voltage(1.0) > stepped_base_voltage(0.0)
+
+
+def test_transient_bjt_forward_bias_depletion_coefficient_shapes_both_junctions() -> None:
+    def held_voltage(coefficient: float, base_emitter: bool) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vdrive",
+            "in",
+            "0",
+            0.6,
+            waveform=PwlWaveform(((0.0, 0.6), (1.0e-9, 0.6), (2.0e-9, 0.0), (5.0e-9, 0.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "base", 1000.0))
+        circuit.add(BJT(
+            "Q1",
+            collector="0",
+            base="base",
+            emitter="0",
+            Is=1.0e-30,
+            Cje=1.0e-12 if base_emitter else 0.0,
+            Cjc=0.0 if base_emitter else 1.0e-12,
+            Fc=coefficient,
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler").points[2].node_voltages["base"]
+
+    for base_emitter in (True, False):
+        assert held_voltage(0.8, base_emitter) > held_voltage(0.2, base_emitter)
+
+
+def test_transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() -> None:
+    def run(
+        forward_transit_time: float,
+        forward_transit_time_bias_coefficient: float = 0.0,
+        forward_transit_time_current: float = 0.0,
+        forward_transit_time_voltage: float = 0.0,
+        collector_voltage: float = 5.0,
+    ) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vcc", "collector", "0", collector_voltage))
         circuit.add(CurrentSource(
             "Istep",
             "0",
@@ -1533,17 +2683,41 @@ def test_transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() -> No
             emitter="0",
             Is=1.0e-15,
             Tf=forward_transit_time,
+            Xtf=forward_transit_time_bias_coefficient,
+            Itf=forward_transit_time_current,
+            Vtf=forward_transit_time_voltage,
         ))
         return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
 
     no_storage = run(0.0)
     stored = run(1.0e-9)
+    bias_scaled = run(1.0e-9, 9.0)
+    current_limited = run(1.0e-9, 9.0, 1.0)
+    voltage_limited = run(1.0e-9, 9.0, 0.0, 0.5, 10.0)
 
     assert no_storage.converged
     assert stored.converged
     assert no_storage.points[1].node_voltages["base"] == pytest.approx(0.0, abs=1.0e-12)
     assert stored.points[1].node_voltages["base"] > 0.6
     assert stored.points[1].node_voltages["base"] < stored.points[0].node_voltages["base"]
+    assert abs(
+        bias_scaled.points[-1].node_voltages["base"]
+        - stored.points[-1].node_voltages["base"]
+    ) > 1.0e-12
+    assert abs(
+        current_limited.points[-1].node_voltages["base"]
+        - stored.points[-1].node_voltages["base"]
+    ) < abs(
+        bias_scaled.points[-1].node_voltages["base"]
+        - stored.points[-1].node_voltages["base"]
+    )
+    assert abs(
+        voltage_limited.points[-1].node_voltages["base"]
+        - stored.points[-1].node_voltages["base"]
+    ) < abs(
+        bias_scaled.points[-1].node_voltages["base"]
+        - stored.points[-1].node_voltages["base"]
+    )
 
 
 def test_non_level_one_mos_model_cards_are_explicitly_rejected() -> None:
@@ -2208,7 +3382,7 @@ def test_subcircuit_expansion_preserves_complete_diode_model():
     cell = SubcircuitDefinition(
         "diode-cell",
         ("in",),
-        (Diode("Dcell", "in", "0", Vj=0.8, M=0.4, Fc=0.35, Xti=2.2, Eg=1.05),),
+        (Diode("Dcell", "in", "0", Vj=0.8, M=0.4, Fc=0.35, Xti=2.2, Eg=1.05, Rs=10.0, Kf=1.0e-12, Af=1.3),),
     )
     c = Circuit()
     c.define_subcircuit(cell)
@@ -2220,13 +3394,102 @@ def test_subcircuit_expansion_preserves_complete_diode_model():
     assert expanded.Fc == pytest.approx(0.35)
     assert expanded.Xti == pytest.approx(2.2)
     assert expanded.Eg == pytest.approx(1.05)
+    assert expanded.Rs == pytest.approx(10.0)
+    assert expanded.Kf == pytest.approx(1.0e-12)
+    assert expanded.Af == pytest.approx(1.3)
+
+
+def test_subcircuit_expansion_preserves_complete_jfet_model():
+    cell = SubcircuitDefinition(
+        "jfet-cell",
+        ("d", "g", "s"),
+        (JFET("Jcell", "d", "g", "s", Kf=1.0e-12, Af=1.3, Pb=0.8, Fc=0.35, Is=2.0e-13, Xti=2.5, Eg=1.05, B=1.1, Nlev=3.0, Gdsnoi=1.25, Rd=125.0, Rs=75.0, Tcv=0.01, Vtotc=-0.0025, Tnom=323.15, Bex=1.5, Betatce=-0.5),),
+    )
+    circuit = Circuit()
+    circuit.define_subcircuit(cell)
+    circuit.add(XInstance("X1", ("d1", "g1", "0"), "jfet-cell"))
+
+    expanded = next(element for element in circuit.elements if isinstance(element, JFET))
+    assert expanded.Kf == pytest.approx(1.0e-12)
+    assert expanded.Af == pytest.approx(1.3)
+    assert expanded.Pb == pytest.approx(0.8)
+    assert expanded.Fc == pytest.approx(0.35)
+    assert expanded.Is == pytest.approx(2.0e-13)
+    assert expanded.Xti == pytest.approx(2.5)
+    assert expanded.Eg == pytest.approx(1.05)
+    assert pytest.approx(1.1) == expanded.B
+    assert expanded.Nlev == pytest.approx(3.0)
+    assert expanded.Gdsnoi == pytest.approx(1.25)
+    assert expanded.Rd == pytest.approx(125.0)
+    assert expanded.Rs == pytest.approx(75.0)
+    assert expanded.Tcv == pytest.approx(0.01)
+    assert expanded.Vtotc == pytest.approx(-0.0025)
+    assert expanded.Bex == pytest.approx(1.5)
+    assert expanded.Betatce == pytest.approx(-0.5)
+    assert expanded.Tnom == pytest.approx(323.15)
+
+
+def test_subcircuit_expansion_preserves_mos_geometry():
+    cell = SubcircuitDefinition(
+        "mos-cell",
+        ("d", "g", "s", "b"),
+        (
+            Mosfet(
+                "Mcell",
+                "d",
+                "g",
+                "s",
+                "b",
+                MOSFET(
+                    MosfetType.NMOS,
+                    Level1Model(
+                        Level1Params(
+                            L=1.0e-6,
+                            LD=0.1e-6,
+                            RD=125.0,
+                            RS=75.0,
+                            RSH=50.0,
+                            NRD=2.0,
+                            NRS=3.0,
+                            AD=4.0e-12,
+                            AS=5.0e-12,
+                            PS=6.0e-6,
+                            MJSW=0.25,
+                            CJ=2.0e-3,
+                            TOX=25.0e-9,
+                        )
+                    ),
+                ),
+            ),
+        ),
+    )
+    circuit = Circuit()
+    circuit.define_subcircuit(cell)
+    circuit.add(XInstance("X1", ("d1", "g1", "0", "0"), "mos-cell"))
+
+    expanded = next(
+        element for element in circuit.elements if isinstance(element, Mosfet)
+    )
+    assert pytest.approx(1.0e-6) == expanded.model.model.params.L
+    assert pytest.approx(0.1e-6) == expanded.model.model.params.LD
+    assert pytest.approx(125.0) == expanded.model.model.params.RD
+    assert pytest.approx(75.0) == expanded.model.model.params.RS
+    assert pytest.approx(50.0) == expanded.model.model.params.RSH
+    assert pytest.approx(2.0) == expanded.model.model.params.NRD
+    assert pytest.approx(3.0) == expanded.model.model.params.NRS
+    assert pytest.approx(4.0e-12) == expanded.model.model.params.AD
+    assert pytest.approx(5.0e-12) == expanded.model.model.params.AS
+    assert pytest.approx(6.0e-6) == expanded.model.model.params.PS
+    assert pytest.approx(0.25) == expanded.model.model.params.MJSW
+    assert pytest.approx(2.0e-3) == expanded.model.model.params.CJ
+    assert pytest.approx(25.0e-9) == expanded.model.model.params.TOX
 
 
 def test_subcircuit_expansion_preserves_complete_bjt_model():
     cell = SubcircuitDefinition(
         "bjt-cell",
         ("c", "b", "e"),
-        (BJT("Qcell", "c", "b", "e", Xti=2.4, Eg=1.05, Vaf=80.0),),
+        (BJT("Qcell", "c", "b", "e", Xti=2.4, Eg=1.05, Vaf=80.0, Nf=1.2, Nr=1.3, Vje=0.8, Mje=0.4, Vjc=0.7, Mjc=0.45, Fc=0.4, Var=120.0, Ikf=2.0e-3, Ise=3.0e-13, Ne=1.7, Isc=4.0e-13, Nc=1.8, Xtb=1.5, beta_r=0.25, Ikr=3.0e-3, Tnom=323.15, Kf=1.0e-12, Af=1.3, Ptf=30.0, Xtf=2.0, Itf=4.0e-3, Vtf=0.6, Re=12.0, Rc=13.0, Rb=14.0, Rbm=2.0, Irb=5.0e-6, Xcjc=0.4),),
     )
     circuit = Circuit()
     circuit.define_subcircuit(cell)
@@ -2236,6 +3499,35 @@ def test_subcircuit_expansion_preserves_complete_bjt_model():
     assert expanded.Xti == pytest.approx(2.4)
     assert expanded.Eg == pytest.approx(1.05)
     assert expanded.Vaf == pytest.approx(80.0)
+    assert expanded.Var == pytest.approx(120.0)
+    assert expanded.Nf == pytest.approx(1.2)
+    assert expanded.Nr == pytest.approx(1.3)
+    assert expanded.Vje == pytest.approx(0.8)
+    assert expanded.Mje == pytest.approx(0.4)
+    assert expanded.Vjc == pytest.approx(0.7)
+    assert expanded.Mjc == pytest.approx(0.45)
+    assert expanded.Fc == pytest.approx(0.4)
+    assert expanded.Ikf == pytest.approx(2.0e-3)
+    assert expanded.Ise == pytest.approx(3.0e-13)
+    assert expanded.Ne == pytest.approx(1.7)
+    assert expanded.Isc == pytest.approx(4.0e-13)
+    assert expanded.Nc == pytest.approx(1.8)
+    assert expanded.Xtb == pytest.approx(1.5)
+    assert expanded.beta_r == pytest.approx(0.25)
+    assert expanded.Ikr == pytest.approx(3.0e-3)
+    assert expanded.Tnom == pytest.approx(323.15)
+    assert expanded.Kf == pytest.approx(1.0e-12)
+    assert expanded.Af == pytest.approx(1.3)
+    assert expanded.Ptf == pytest.approx(30.0)
+    assert expanded.Xtf == pytest.approx(2.0)
+    assert expanded.Itf == pytest.approx(4.0e-3)
+    assert expanded.Vtf == pytest.approx(0.6)
+    assert expanded.Re == pytest.approx(12.0)
+    assert expanded.Rc == pytest.approx(13.0)
+    assert expanded.Rb == pytest.approx(14.0)
+    assert expanded.Rbm == pytest.approx(2.0)
+    assert expanded.Irb == pytest.approx(5.0e-6)
+    assert expanded.Xcjc == pytest.approx(0.4)
 
 
 def test_branch_current_in_voltage_source():
@@ -2299,6 +3591,21 @@ def test_diode_emission_coefficient_reduces_forward_current():
     assert base_result.converged
     assert high_n_result.converged
     assert abs(high_n_result.branch_currents["I(V1)"]) < abs(base_result.branch_currents["I(V1)"]) * 1e-3
+
+
+def test_diode_series_resistance_limits_fixed_bias_current():
+    ideal = Circuit()
+    ideal.add(VoltageSource("V1", "a", "0", voltage=0.7))
+    ideal.add(Diode("D1", "a", "0"))
+
+    limited = Circuit()
+    limited.add(VoltageSource("V1", "a", "0", voltage=0.7))
+    limited.add(Diode("D1", "a", "0", Rs=100.0))
+
+    ideal_current = abs(dc_op(ideal).branch_currents["I(V1)"])
+    limited_current = abs(dc_op(limited).branch_currents["I(V1)"])
+    assert limited_current < ideal_current
+    assert limited_current <= 0.7 / 100.0
 
 
 def test_diode_breakdown_voltage_increases_reverse_current():
@@ -2455,6 +3762,230 @@ def test_bjt_temperature_scaling_uses_model_temperature_exponent():
     assert high.Is > low.Is
 
 
+def test_jfet_temperature_scaling_uses_vtotc_betatce_and_model_nominal_temperature():
+    transistor = JFET(
+        "J1",
+        "d",
+        "g",
+        "s",
+        beta=1.0e-4,
+        vto=-2.0,
+        Tcv=0.01,
+        Vtotc=-0.0025,
+        Tnom=310.0,
+        Bex=-5.0,
+        Betatce=1.0,
+    )
+    at_model_nominal = jfet_at_temperature(transistor, 310.0)
+    hot = jfet_at_temperature(transistor, 320.0)
+    cold = jfet_at_temperature(transistor, 300.0)
+    invariant = jfet_at_temperature(JFET("Jflat", "d", "g", "s"), 350.0)
+    bex_fallback = jfet_at_temperature(
+        JFET("Jbex", "d", "g", "s", beta=1.0e-4, Tnom=310.0, Bex=1.0),
+        320.0,
+    )
+
+    assert at_model_nominal.vto == pytest.approx(-2.0)
+    assert at_model_nominal.beta == pytest.approx(1.0e-4)
+    assert hot.vto == pytest.approx(-2.025)
+    assert hot.beta == pytest.approx(1.0e-4 * 1.01**10.0)
+    assert hot.Is > at_model_nominal.Is
+    assert cold.vto == pytest.approx(-1.975)
+    assert cold.beta == pytest.approx(1.0e-4 * 1.01**-10.0)
+    assert cold.Is < at_model_nominal.Is
+    lower_gap_hot = jfet_at_temperature(
+        replace(transistor, Eg=1.0),
+        320.0,
+    )
+    assert lower_gap_hot.Is < hot.Is
+    assert invariant.vto == pytest.approx(-2.0)
+    assert invariant.beta == pytest.approx(1.0e-4)
+    assert bex_fallback.beta == pytest.approx(1.0e-4 * 320.0 / 310.0)
+    tcv_fallback = jfet_at_temperature(
+        JFET("Jtcv", "d", "g", "s", vto=-2.0, Tcv=0.01, Tnom=310.0),
+        320.0,
+    )
+    assert tcv_fallback.vto == pytest.approx(-2.1)
+
+
+def test_dc_rejects_invalid_jfet_temperature_parameters():
+    circuit = Circuit()
+    circuit.add(JFET("Jbad", "d", "g", "0", Xti=float("nan")))
+    with pytest.raises(
+        ValueError,
+        match="gate saturation-current temperature exponent must be finite",
+    ):
+        dc_op(circuit)
+
+    circuit = Circuit()
+    circuit.add(JFET("Jbad", "d", "g", "0", Eg=0.0))
+    with pytest.raises(ValueError, match="bandgap voltage must be finite and positive"):
+        dc_op(circuit)
+
+    circuit = Circuit()
+    circuit.add(JFET("Jbad", "d", "g", "0", Tcv=float("nan")))
+    with pytest.raises(ValueError, match="TCV must be finite"):
+        dc_op(circuit)
+
+    circuit = Circuit()
+    circuit.add(JFET("Jbad", "d", "g", "0", Vtotc=float("nan")))
+    with pytest.raises(ValueError, match="VTOTC must be finite"):
+        dc_op(circuit)
+
+    circuit = Circuit()
+    circuit.add(JFET("Jbad", "d", "g", "0", Tnom=0.0))
+    with pytest.raises(ValueError, match="TNOM must be finite and positive"):
+        dc_op(circuit)
+
+    circuit = Circuit()
+    circuit.add(JFET("Jbad", "d", "g", "0", Bex=float("nan")))
+    with pytest.raises(ValueError, match="BEX must be finite"):
+        dc_op(circuit)
+
+    circuit = Circuit()
+    circuit.add(JFET("Jbad", "d", "g", "0", Betatce=float("nan")))
+    with pytest.raises(ValueError, match="BETATCE must be finite"):
+        dc_op(circuit)
+
+
+def test_bjt_temperature_scaling_uses_beta_temperature_exponent():
+    transistor = BJT("Q1", "c", "b", "e", beta_f=100.0, beta_r=2.0, Xtb=2.0)
+    hot = bjt_at_temperature(transistor, 350.0)
+    assert hot.beta_f > transistor.beta_f
+    assert hot.beta_r > transistor.beta_r
+
+
+def test_bjt_temperature_scaling_uses_model_nominal_temperature():
+    transistor = BJT("Q1", "c", "b", "e", Tnom=325.0)
+    at_model_nominal = bjt_at_temperature(transistor, 325.0)
+    assert at_model_nominal.Is == pytest.approx(transistor.Is)
+    assert at_model_nominal.Vt == pytest.approx(transistor.Vt)
+
+
+def test_dc_rejects_invalid_bjt_nominal_temperature():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Tnom=0.0))
+    with pytest.raises(ValueError, match="nominal temperature must be finite and positive"):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_diode_flicker_noise_exponent():
+    circuit = Circuit()
+    circuit.add(Diode("Dbad", "a", "0", Af=-1.0))
+    with pytest.raises(ValueError, match="flicker-noise exponent must be finite and non-negative"):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_bjt_flicker_noise_coefficient():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Kf=-1.0))
+    with pytest.raises(ValueError, match="flicker noise coefficient must be finite and non-negative"):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_bjt_flicker_noise_exponent():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Af=-1.0))
+    with pytest.raises(ValueError, match="flicker noise exponent must be finite and non-negative"):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_bjt_forward_excess_phase():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Ptf=-1.0))
+    with pytest.raises(ValueError, match="forward excess phase must be finite and non-negative"):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_bjt_forward_transit_time_bias_coefficient():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Xtf=-1.0))
+    with pytest.raises(
+        ValueError,
+        match="forward transit-time bias coefficient must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_bjt_forward_transit_time_current():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Itf=-1.0))
+    with pytest.raises(
+        ValueError,
+        match="forward transit-time current must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_bjt_forward_transit_time_voltage():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Vtf=-1.0))
+    with pytest.raises(
+        ValueError,
+        match="forward transit-time voltage must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_bjt_emitter_resistance():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Re=-1.0))
+    with pytest.raises(
+        ValueError,
+        match="emitter resistance must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_bjt_collector_resistance():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Rc=-1.0))
+    with pytest.raises(
+        ValueError,
+        match="collector resistance must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_bjt_base_resistance():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Rb=-1.0))
+    with pytest.raises(
+        ValueError,
+        match="base resistance must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_bjt_base_collector_capacitance_fraction():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Xcjc=1.1))
+    with pytest.raises(
+        ValueError,
+        match="base-collector capacitance fraction must be between zero and one",
+    ):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_bjt_beta_temperature_exponent():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Xtb=math.nan))
+    with pytest.raises(ValueError, match="beta temperature exponent must be finite"):
+        dc_op(circuit)
+
+
+def test_bjt_temperature_scales_base_emitter_leakage_saturation_current():
+    transistor = BJT("Q1", "c", "b", "e", Ise=2.0e-13)
+    hot = bjt_at_temperature(transistor, 350.0)
+    assert hot.Ise > transistor.Ise
+
+
+def test_bjt_temperature_scales_base_collector_leakage_saturation_current():
+    transistor = BJT("Q1", "c", "b", "e", Isc=2.0e-13)
+    hot = bjt_at_temperature(transistor, 350.0)
+    assert hot.Isc > transistor.Isc
+
+
 def test_bjt_temperature_scaling_uses_model_energy_gap():
     silicon = Circuit()
     silicon.add(BJT("Qsilicon", "c", "b", "e", Eg=1.11))
@@ -2490,6 +4021,173 @@ def test_dc_rejects_invalid_bjt_forward_early_voltage():
     circuit = Circuit()
     circuit.add(BJT("Qbad", "c", "b", "0", Vaf=-1.0))
     with pytest.raises(ValueError, match="BJT forward Early voltage must be finite and non-negative"):
+        dc_op(circuit)
+
+
+def test_bjt_reverse_early_voltage_modulates_collector_current():
+    def collector_voltage(var: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vcc", "vcc", "0", 5.0))
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+        circuit.add(Resistor("Rload", "vcc", "out", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "0", Var=var))
+        return dc_op(circuit).node_voltages["out"]
+
+    assert collector_voltage(20.0) > collector_voltage(0.0)
+
+
+def test_dc_rejects_invalid_bjt_reverse_early_voltage():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Var=-1.0))
+    with pytest.raises(
+        ValueError, match="BJT reverse Early voltage must be finite and non-negative"
+    ):
+        dc_op(circuit)
+
+
+def test_bjt_forward_beta_rolloff_reduces_high_current_transport():
+    def collector_voltage(ikf: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vcc", "vcc", "0", 5.0))
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+        circuit.add(Resistor("Rload", "vcc", "out", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "0", Ikf=ikf))
+        return dc_op(circuit).node_voltages["out"]
+
+    assert collector_voltage(1.0e-4) > collector_voltage(0.0)
+
+
+def test_bjt_reverse_beta_controls_base_collector_junction_current():
+    def base_current(beta_r: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+        circuit.add(VoltageSource("Vemitter", "emitter", "0", 0.65))
+        circuit.add(BJT("Q1", "0", "base", "emitter", beta_r=beta_r))
+        return abs(dc_op(circuit).branch_currents["I(Vbase)"])
+
+    assert base_current(0.5) > base_current(5.0)
+
+
+def test_dc_rejects_invalid_bjt_reverse_beta():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", beta_r=0.0))
+    with pytest.raises(ValueError, match="BJT reverse beta must be positive"):
+        dc_op(circuit)
+
+
+def test_bjt_reverse_beta_rolloff_increases_high_current_base_current():
+    def base_current(ikr: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+        circuit.add(VoltageSource("Vemitter", "emitter", "0", 0.65))
+        circuit.add(BJT("Q1", "0", "base", "emitter", beta_r=1.0, Ikr=ikr))
+        return abs(dc_op(circuit).branch_currents["I(Vbase)"])
+
+    assert base_current(1.0e-4) > base_current(0.0)
+
+
+def test_dc_rejects_invalid_bjt_reverse_beta_rolloff_current():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Ikr=-1.0))
+    with pytest.raises(
+        ValueError, match="BJT reverse beta roll-off current must be finite and non-negative"
+    ):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_bjt_forward_beta_rolloff_current():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Ikf=-1.0))
+    with pytest.raises(
+        ValueError, match="BJT forward beta roll-off current must be finite and non-negative"
+    ):
+        dc_op(circuit)
+
+
+def test_bjt_base_emitter_leakage_increases_base_current():
+    def base_current(ise: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+        circuit.add(BJT("Q1", "0", "base", "0", Ise=ise, Ne=1.5))
+        return abs(dc_op(circuit).branch_currents["I(Vbase)"])
+
+    assert base_current(1.0e-10) > base_current(0.0)
+
+
+def test_dc_rejects_invalid_bjt_base_emitter_leakage_parameters():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Ise=-1.0))
+    with pytest.raises(ValueError, match="base-emitter leakage saturation current"):
+        dc_op(circuit)
+
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Ne=0.0))
+    with pytest.raises(ValueError, match="base-emitter leakage emission coefficient"):
+        dc_op(circuit)
+
+
+def test_bjt_base_collector_leakage_increases_base_current():
+    def base_current(isc: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+        circuit.add(BJT("Q1", "0", "base", "base", Isc=isc, Nc=1.5))
+        return abs(dc_op(circuit).branch_currents["I(Vbase)"])
+
+    assert base_current(1.0e-10) > base_current(0.0)
+
+
+def test_dc_rejects_invalid_bjt_base_collector_leakage_parameters():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Isc=-1.0))
+    with pytest.raises(ValueError, match="base-collector leakage saturation current"):
+        dc_op(circuit)
+
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Nc=0.0))
+    with pytest.raises(ValueError, match="base-collector leakage emission coefficient"):
+        dc_op(circuit)
+
+
+def test_bjt_forward_emission_coefficient_reduces_collector_current():
+    def collector_voltage(nf: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vcc", "vcc", "0", 5.0))
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+        circuit.add(Resistor("Rload", "vcc", "out", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "0", Nf=nf))
+        return dc_op(circuit).node_voltages["out"]
+
+    assert collector_voltage(2.0) > collector_voltage(1.0)
+
+
+def test_dc_rejects_invalid_bjt_forward_emission_coefficient():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Nf=0.0))
+    with pytest.raises(ValueError, match="BJT forward emission coefficient must be finite and positive"):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_bjt_reverse_emission_coefficient():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Nr=0.0))
+    with pytest.raises(ValueError, match="BJT reverse emission coefficient must be finite and positive"):
+        dc_op(circuit)
+
+
+@pytest.mark.parametrize(
+    ("kwargs", "message"),
+    [
+        ({"Vje": 0.0}, "BJT base-emitter junction potential must be finite and positive"),
+        ({"Mje": 1.0}, "BJT base-emitter grading coefficient must be finite and in \\[0, 1\\)"),
+        ({"Vjc": 0.0}, "BJT base-collector junction potential must be finite and positive"),
+        ({"Mjc": 1.0}, "BJT base-collector grading coefficient must be finite and in \\[0, 1\\)"),
+        ({"Fc": 1.0}, "BJT forward-bias depletion coefficient must be finite and in \\[0, 1\\)"),
+    ],
+)
+def test_dc_rejects_invalid_bjt_depletion_parameters(kwargs, message):
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", **kwargs))
+    with pytest.raises(ValueError, match=message):
         dc_op(circuit)
 
 
@@ -3055,6 +4753,58 @@ def test_ac_jfet_gate_source_capacitance_shunts_high_frequency_gate_drive() -> N
     assert with_capacitance < without_capacitance / 100.0
 
 
+def test_ac_jfet_junction_potential_shapes_reverse_biased_gate_capacitance() -> None:
+    def gate_amplitude(pb: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vac", "in", "0", -0.5, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "gate", 1_000.0))
+        circuit.add(Resistor("Rdrain", "drain", "0", 1_000.0))
+        circuit.add(
+            JFET(
+                "J1",
+                "drain",
+                "gate",
+                "0",
+                beta=1.0e-12,
+                vto=-2.0,
+                Cgs=1.0e-9,
+                Pb=pb,
+            )
+        )
+        result = ac_sweep(
+            circuit, f_start=100_000.0, f_stop=100_000.0, n_points=1
+        )
+        return abs(result.points[0].node_voltages["gate"])
+
+    assert gate_amplitude(0.5) > gate_amplitude(2.0)
+
+
+def test_ac_jfet_forward_bias_depletion_coefficient_shapes_gate_capacitance() -> None:
+    def gate_amplitude(fc: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vac", "in", "0", 0.6, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "gate", 1_000.0))
+        circuit.add(Resistor("Rdrain", "drain", "0", 1_000.0))
+        circuit.add(
+            JFET(
+                "J1",
+                "drain",
+                "gate",
+                "0",
+                beta=1.0e-12,
+                vto=-2.0,
+                Cgs=1.0e-9,
+                Fc=fc,
+            )
+        )
+        result = ac_sweep(
+            circuit, f_start=100_000.0, f_stop=100_000.0, n_points=1
+        )
+        return abs(result.points[0].node_voltages["gate"])
+
+    assert gate_amplitude(0.2) > gate_amplitude(0.8)
+
+
 def test_jfet_transient_source_follower_charges_output_capacitor() -> None:
     c = Circuit()
     c.add(VoltageSource("Vdd", "vdd", "0", voltage=10.0))
@@ -3156,6 +4906,62 @@ def test_bjt_npn_forward_active():
     assert isclose(Ic_from_vcol, Ic_expected, rel_tol=0.01), (
         f"Ic from voltages ({Ic_from_vcol:.6e} A) != expected ({Ic_expected:.6e} A)"
     )
+
+
+def test_bjt_emitter_resistance_reduces_fixed_base_collector_current():
+    def collector_voltage(emitter_resistance: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vcc", "vcc", "0", voltage=5.0))
+        circuit.add(VoltageSource("Vbase", "base", "0", voltage=0.7))
+        circuit.add(Resistor("Rc", "vcc", "collector", 1_000.0))
+        circuit.add(BJT("Q1", "collector", "base", "0", Re=emitter_resistance))
+        return dc_op(circuit).node_voltages["collector"]
+
+    assert collector_voltage(100.0) > collector_voltage(0.0) + 0.5
+
+
+def test_bjt_collector_resistance_drops_intrinsic_collector_voltage():
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vcollector", "collector", "0", voltage=5.0))
+    circuit.add(VoltageSource("Vbase", "base", "0", voltage=0.65))
+    circuit.add(BJT("Q1", "collector", "base", "0", Rc=100.0))
+
+    intrinsic = dc_op(circuit).node_voltages["__spice_Q1_collector"]
+    assert 0.0 < intrinsic < 5.0
+
+
+def test_bjt_base_resistance_drops_intrinsic_base_voltage():
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vcollector", "collector", "0", voltage=5.0))
+    circuit.add(VoltageSource("Vbase", "base", "0", voltage=0.65))
+    circuit.add(BJT("Q1", "collector", "base", "0", Rb=1_000.0))
+
+    intrinsic = dc_op(circuit).node_voltages["__spice_Q1_base"]
+    assert 0.0 < intrinsic < 0.65
+
+
+def test_bjt_minimum_base_resistance_reduces_high_current_base_drop():
+    def intrinsic_base(Rbm: float | None, Irb: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vcollector", "collector", "0", voltage=5.0))
+        circuit.add(VoltageSource("Vbase", "base", "0", voltage=0.65))
+        circuit.add(
+            BJT(
+                "Q1",
+                "collector",
+                "base",
+                "0",
+                Rb=1_000.0,
+                Rbm=Rbm,
+                Irb=Irb,
+            )
+        )
+        return dc_op(circuit).node_voltages["__spice_Q1_base"]
+
+    fixed = intrinsic_base(None, 0.0)
+    bias_dependent = intrinsic_base(10.0, 1.0e-6)
+    assert bias_dependent > fixed
+    assert bias_dependent < 0.65
 
 
 def test_bjt_npn_beta_ratio():
@@ -4087,6 +5893,67 @@ def test_ac_bjt_transit_time_adds_diffusion_capacitance():
     assert with_transit_time < without_transit_time / 100.0
 
 
+def test_ac_bjt_forward_excess_phase_rotates_transconductance():
+    def collector_voltage(ptf: float) -> complex:
+        tf = 1.0e-6
+        frequency = 1.0 / (2.0 * math.pi * tf)
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vac", "base", "0", 0.0, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rc", "col", "0", 1.0))
+        circuit.add(BJT("Q1", "col", "base", "0", Is=25.85e-6, Tf=tf, Ptf=ptf))
+        return ac_sweep(
+            circuit, f_start=frequency, f_stop=frequency, n_points=1
+        ).points[0].node_voltages["col"]
+
+    without_excess_phase = collector_voltage(0.0)
+    with_excess_phase = collector_voltage(90.0)
+
+    assert without_excess_phase.real < -0.0009
+    assert abs(without_excess_phase.imag) < 1.0e-9
+    assert with_excess_phase.imag > 0.0009
+    assert abs(with_excess_phase.real) < 1.0e-9
+
+
+def test_ac_bjt_forward_transit_time_bias_coefficient_scales_diffusion_capacitance():
+    def base_amplitude(
+        xtf: float,
+        itf: float = 0.0,
+        vtf: float = 0.0,
+        collector_voltage: float = 0.0,
+    ) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "base", 1000.0))
+        circuit.add(VoltageSource("Vcol", "col", "0", collector_voltage))
+        circuit.add(
+            BJT(
+                "Q1",
+                "col",
+                "base",
+                "0",
+                Is=25.85e-6,
+                Tf=1.0e-6,
+                Xtf=xtf,
+                Itf=itf,
+                Vtf=vtf,
+            )
+        )
+        return abs(
+            ac_sweep(
+                circuit, f_start=100000.0, f_stop=100000.0, n_points=1
+            ).points[0].node_voltages["base"]
+        )
+
+    nominal = base_amplitude(0.0)
+    bias_scaled = base_amplitude(9.0)
+    current_limited = base_amplitude(9.0, 1.0)
+    voltage_limited = base_amplitude(9.0, vtf=0.1, collector_voltage=1.0)
+
+    assert bias_scaled < nominal / 5.0
+    assert current_limited > bias_scaled * 5.0
+    assert voltage_limited > bias_scaled * 5.0
+
+
 def test_ac_bjt_reverse_transit_time_adds_collector_diffusion_capacitance():
     """BJT Tr contributes gm-scaled base-collector diffusion capacitance."""
     def base_amplitude(tr: float) -> float:
@@ -4105,6 +5972,154 @@ def test_ac_bjt_reverse_transit_time_adds_collector_diffusion_capacitance():
     assert with_transit_time < without_transit_time / 100.0
 
 
+def test_ac_bjt_reverse_emission_coefficient_reduces_collector_diffusion_capacitance():
+    """BJT Nr scales the reverse base-collector diffusion charge."""
+    def base_amplitude(nr: float) -> float:
+        c = Circuit()
+        c.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        c.add(Resistor("Rin", "in", "base", 1000.0))
+        c.add(Resistor("Rc", "col", "0", 1.0))
+        c.add(BJT("Q1", collector="col", base="base", emitter="0", Is=25.85e-6, Tr=1.0e-2, Nr=nr))
+        result = ac_sweep(c, f_start=100000.0, f_stop=100000.0, n_points=1)
+        return abs(result.points[0].node_voltages["base"])
+
+    assert base_amplitude(2.0) > base_amplitude(1.0)
+
+
+def test_ac_bjt_reverse_early_voltage_reduces_gain():
+    def gain(var: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vin", "base", "0", 0.65, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "0", Var=var))
+        point = ac_sweep(circuit, f_start=1_000.0, f_stop=1_000.0, n_points=1, sweep="lin").points[0]
+        return abs(point.node_voltages["out"])
+
+    assert gain(1.0) < gain(0.0)
+
+
+def test_ac_bjt_forward_beta_rolloff_reduces_gain():
+    def gain(ikf: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vin", "base", "0", 0.65, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "0", Ikf=ikf))
+        point = ac_sweep(
+            circuit, f_start=1_000.0, f_stop=1_000.0, n_points=1, sweep="lin"
+        ).points[0]
+        return abs(point.node_voltages["out"])
+
+    assert gain(1.0e-4) < gain(0.0)
+
+
+def test_ac_bjt_base_emitter_leakage_reduces_gain_through_source_resistance():
+    def gain(ise: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vin", "in", "0", 0.65, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "base", 1_000.0))
+        circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "0", Ise=ise, Ne=1.5))
+        point = ac_sweep(
+            circuit,
+            f_start=1_000.0,
+            f_stop=1_000.0,
+            n_points=1,
+            sweep="lin",
+        ).points[0]
+        return abs(point.node_voltages["out"])
+
+    assert gain(1.0e-10) < gain(0.0)
+
+
+def test_ac_bjt_base_collector_leakage_loads_source_resistance():
+    def amplitude(isc: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vin", "in", "0", 0.65, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "base", 1_000.0))
+        circuit.add(BJT("Q1", "0", "base", "base", Isc=isc, Nc=1.5))
+        point = ac_sweep(
+            circuit, f_start=1_000.0, f_stop=1_000.0, n_points=1, sweep="lin"
+        ).points[0]
+        return abs(point.node_voltages["base"])
+
+    assert amplitude(1.0e-10) < amplitude(0.0)
+
+
+def test_ac_bjt_base_emitter_depletion_capacitance_falls_with_reverse_bias():
+    """BJT Vje/Mje shape Cje under reverse base-emitter bias."""
+    def base_amplitude(mje: float) -> float:
+        c = Circuit()
+        c.add(VoltageSource("Vac", "in", "0", -1.0, ac=AcSource(1.0)))
+        c.add(Resistor("Rin", "in", "base", 1000.0))
+        c.add(BJT("Q1", collector="0", base="base", emitter="0", Cje=1.0e-6, Vje=0.75, Mje=mje))
+        result = ac_sweep(c, f_start=1000.0, f_stop=1000.0, n_points=1)
+        return abs(result.points[0].node_voltages["base"])
+
+    assert base_amplitude(0.5) > base_amplitude(0.0)
+
+
+def test_ac_bjt_base_collector_depletion_capacitance_falls_with_reverse_bias():
+    """BJT Vjc/Mjc shape Cjc under reverse base-collector bias."""
+    def collector_amplitude(mjc: float) -> float:
+        c = Circuit()
+        c.add(VoltageSource("Vac", "in", "0", 1.0, ac=AcSource(1.0)))
+        c.add(Resistor("Rin", "in", "collector", 1000.0))
+        c.add(BJT("Q1", collector="collector", base="0", emitter="0", Cjc=1.0e-6, Vjc=0.75, Mjc=mjc))
+        result = ac_sweep(c, f_start=1000.0, f_stop=1000.0, n_points=1)
+        return abs(result.points[0].node_voltages["collector"])
+
+    assert collector_amplitude(0.5) > collector_amplitude(0.0)
+
+
+def test_ac_bjt_xcjc_partitions_depletion_capacitance_to_external_base():
+    def base_amplitude(fraction: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "base", 1_000.0))
+        circuit.add(
+            BJT(
+                "Q1",
+                collector="0",
+                base="base",
+                emitter="0",
+                Is=1.0e-30,
+                Cjc=1.0e-9,
+                Rb=10_000.0,
+                Xcjc=fraction,
+            )
+        )
+        point = ac_sweep(
+            circuit, f_start=1.0e6, f_stop=1.0e6, n_points=1
+        ).points[0]
+        return abs(point.node_voltages["base"])
+
+    assert base_amplitude(1.0) > base_amplitude(0.0)
+
+
+def test_ac_bjt_forward_bias_depletion_coefficient_shapes_both_junctions():
+    def junction_amplitude(coefficient: float, base_emitter: bool) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vac", "in", "0", 0.6, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "base", 1000.0))
+        circuit.add(BJT(
+            "Q1",
+            collector="0",
+            base="base",
+            emitter="0",
+            Is=1.0e-30,
+            Cje=1.0e-6 if base_emitter else 0.0,
+            Cjc=0.0 if base_emitter else 1.0e-6,
+            Fc=coefficient,
+        ))
+        result = ac_sweep(circuit, f_start=1000.0, f_stop=1000.0, n_points=1)
+        return abs(result.points[0].node_voltages["base"])
+
+    for base_emitter in (True, False):
+        early_transition = junction_amplitude(0.2, base_emitter)
+        late_transition = junction_amplitude(0.8, base_emitter)
+        assert late_transition < early_transition * 0.9
+
+
 def test_ac_mosfet_overlap_capacitance_shunts_high_frequency_gate_drive():
     """MOS Level-1 CGSO contributes gate-source AC susceptance."""
     def gate_amplitude(cgso: float) -> float:
@@ -4120,7 +6135,15 @@ def test_ac_mosfet_overlap_capacitance_shunts_high_frequency_gate_drive():
             "0",
             MOSFET(
                 MosfetType.NMOS,
-                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CGSO=cgso)),
+                Level1Model(
+                    Level1Params(
+                        KP=1.0e-12,
+                        W=1.0,
+                        L=1.0,
+                        TOX=1.0e9,
+                        CGSO=cgso,
+                    )
+                ),
             ),
         ))
         result = ac_sweep(c, f_start=100000.0, f_stop=100000.0, n_points=1)
@@ -4131,6 +6154,200 @@ def test_ac_mosfet_overlap_capacitance_shunts_high_frequency_gate_drive():
 
     assert without_capacitance > 0.9
     assert with_capacitance < without_capacitance / 100.0
+
+
+def test_ac_mosfet_drain_area_scales_bottom_junction_capacitance():
+    def drain_amplitude(cj: float, ad: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "drain", 1000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(
+                    Level1Params(
+                        KP=1.0e-12,
+                        W=1.0,
+                        L=1.0,
+                        TOX=1.0e9,
+                        CJ=cj,
+                        AD=ad,
+                    )
+                ),
+            ),
+        ))
+        result = ac_sweep(circuit, f_start=100000.0, f_stop=100000.0, n_points=1)
+        return abs(result.points[0].node_voltages["drain"])
+
+    without_area_capacitance = drain_amplitude(0.5, 0.0)
+    with_area_capacitance = drain_amplitude(0.5, 2.0e-6)
+
+    assert without_area_capacitance > 0.9
+    assert with_area_capacitance < without_area_capacitance / 100.0
+
+
+def test_ac_mosfet_drain_perimeter_scales_sidewall_capacitance():
+    def drain_amplitude(cjsw: float, pd: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "drain", 1000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(
+                    Level1Params(
+                        KP=1.0e-12,
+                        W=1.0,
+                        L=1.0,
+                        TOX=1.0e9,
+                        CJSW=cjsw,
+                        PD=pd,
+                    )
+                ),
+            ),
+        ))
+        result = ac_sweep(circuit, f_start=100000.0, f_stop=100000.0, n_points=1)
+        return abs(result.points[0].node_voltages["drain"])
+
+    without_sidewall_capacitance = drain_amplitude(0.5, 0.0)
+    with_sidewall_capacitance = drain_amplitude(0.5, 2.0e-6)
+
+    assert without_sidewall_capacitance > 0.9
+    assert with_sidewall_capacitance < without_sidewall_capacitance / 100.0
+
+
+def test_ac_mosfet_source_area_scales_bottom_junction_capacitance():
+    def source_amplitude(cj: float, source_area: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "source", 1000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "0",
+            "0",
+            "source",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(
+                    Level1Params(
+                        KP=1.0e-12,
+                        W=1.0,
+                        L=1.0,
+                        TOX=1.0e9,
+                        CJ=cj,
+                        AS=source_area,
+                    )
+                ),
+            ),
+        ))
+        result = ac_sweep(circuit, f_start=100000.0, f_stop=100000.0, n_points=1)
+        return abs(result.points[0].node_voltages["source"])
+
+    without_area_capacitance = source_amplitude(0.5, 0.0)
+    with_area_capacitance = source_amplitude(0.5, 2.0e-6)
+
+    assert without_area_capacitance > 0.9
+    assert with_area_capacitance < without_area_capacitance / 100.0
+
+
+def test_ac_mosfet_source_perimeter_scales_sidewall_capacitance():
+    def source_amplitude(cjsw: float, source_perimeter: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "source", 1000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "0",
+            "0",
+            "source",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(
+                    Level1Params(
+                        KP=1.0e-12,
+                        W=1.0,
+                        L=1.0,
+                        TOX=1.0e9,
+                        CJSW=cjsw,
+                        PS=source_perimeter,
+                    )
+                ),
+            ),
+        ))
+        result = ac_sweep(circuit, f_start=100000.0, f_stop=100000.0, n_points=1)
+        return abs(result.points[0].node_voltages["source"])
+
+    without_sidewall_capacitance = source_amplitude(0.5, 0.0)
+    with_sidewall_capacitance = source_amplitude(0.5, 2.0e-6)
+
+    assert without_sidewall_capacitance > 0.9
+    assert with_sidewall_capacitance < without_sidewall_capacitance / 100.0
+
+
+def test_ac_mosfet_sidewall_grading_coefficient_shapes_reverse_bias_capacitance():
+    def source_amplitude(grading_coefficient: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vac", "in", "0", 1.0, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "source", 1000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "0",
+            "0",
+            "source",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(
+                    KP=1.0e-12,
+                    W=1.0,
+                    L=1.0,
+                    TOX=1.0e9,
+                    CJSW=0.5,
+                    PS=2.0e-6,
+                    MJSW=grading_coefficient,
+                )),
+            ),
+        ))
+        result = ac_sweep(circuit, f_start=100000.0, f_stop=100000.0, n_points=1)
+        return abs(result.points[0].node_voltages["source"])
+
+    fixed = source_amplitude(0.0)
+    shaped = source_amplitude(0.5)
+    assert shaped > fixed * 1.3
+
+
+def test_ac_mosfet_oxide_thickness_scales_intrinsic_gate_capacitance():
+    def gate_amplitude(tox: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "gate", 1.0e6))
+        circuit.add(Mosfet(
+            "M1",
+            "0",
+            "gate",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(W=10.0e-6, L=1.0e-6, TOX=tox)),
+            ),
+        ))
+        result = ac_sweep(circuit, f_start=1.0e9, f_stop=1.0e9, n_points=1)
+        return abs(result.points[0].node_voltages["gate"])
+
+    assert gate_amplitude(50.0e-9) < gate_amplitude(100.0e-9)
 
 
 # ============================================================================
@@ -4526,6 +6743,63 @@ def test_tf_bjt_forward_early_voltage_reduces_output_impedance():
         return tf(circuit, output_node="out", input_source="Vin").output_impedance
 
     assert output_impedance(10.0) < output_impedance(0.0)
+
+
+def test_tf_bjt_reverse_early_voltage_reduces_gain():
+    def gain(var: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vin", "base", "0", 0.65))
+        circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "0", Var=var))
+        return abs(tf(circuit, output_node="out", input_source="Vin").gain)
+
+    assert gain(1.0) < gain(0.0)
+
+
+def test_tf_bjt_forward_beta_rolloff_reduces_gain():
+    def gain(ikf: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vin", "base", "0", 0.65))
+        circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "0", Ikf=ikf))
+        return abs(tf(circuit, output_node="out", input_source="Vin").gain)
+
+    assert gain(1.0e-4) < gain(0.0)
+
+
+def test_tf_bjt_base_emitter_leakage_reduces_input_impedance():
+    def input_impedance(ise: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vin", "base", "0", 0.65))
+        circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "0", Ise=ise, Ne=1.5))
+        return tf(circuit, output_node="out", input_source="Vin").input_impedance
+
+    assert input_impedance(1.0e-10) < input_impedance(0.0)
+
+
+def test_tf_bjt_base_collector_leakage_reduces_input_impedance():
+    def input_impedance(isc: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vin", "base", "0", 0.65))
+        circuit.add(BJT("Q1", "0", "base", "base", Isc=isc, Nc=1.5))
+        return tf(circuit, output_node="base", input_source="Vin").input_impedance
+
+    assert input_impedance(1.0e-10) < input_impedance(0.0)
+
+
+def test_tf_bjt_forward_emission_coefficient_reduces_gain_and_raises_input_impedance():
+    def transfer(nf: float) -> TfResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vin", "base", "0", 0.65))
+        circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "0", Nf=nf))
+        return tf(circuit, output_node="out", input_source="Vin")
+
+    ideal = transfer(1.0)
+    shaped = transfer(2.0)
+    assert abs(shaped.gain) < abs(ideal.gain)
+    assert shaped.input_impedance > ideal.input_impedance
 
 
 # ============================================================================
@@ -6442,6 +8716,440 @@ def test_noise_bjt_shot_noise_type_string() -> None:
     assert bjt_entry.noise_type == "shot"
 
 
+def test_noise_bjt_emitter_resistance_adds_thermal_noise() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+    circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+    circuit.add(BJT("Q1", "out", "base", "0", Re=100.0))
+
+    result = noise_ac(circuit, "out", "Vbase", freqs=[1_000.0])
+    emitter_resistance = next(
+        entry for entry in result.points[0].entries if entry.element_name == "Q1:RE"
+    )
+
+    assert emitter_resistance.noise_type == "thermal"
+    assert emitter_resistance.source_psd > 0.0
+
+
+def test_noise_diode_series_resistance_adds_thermal_noise() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vbias", "bias", "0", 1.0))
+    circuit.add(Resistor("Rbias", "bias", "out", 1_000.0))
+    circuit.add(Diode("D1", "out", "0", Rs=100.0))
+
+    result = noise_ac(circuit, "out", "Vbias", freqs=[1_000.0])
+    series_resistance = next(
+        entry for entry in result.points[0].entries if entry.element_name == "D1:RS"
+    )
+
+    assert series_resistance.noise_type == "thermal"
+    assert series_resistance.source_psd > 0.0
+
+
+def test_noise_diode_kf_adds_inverse_frequency_flicker_noise() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vbias", "bias", "0", 1.0))
+    circuit.add(Resistor("Rbias", "bias", "out", 1_000.0))
+    circuit.add(Diode("D1", "out", "0", Kf=1.0e-12))
+
+    result = noise_ac(circuit, "out", "Vbias", freqs=[10.0, 1_000.0])
+    flicker_psds = [
+        next(
+            entry.source_psd
+            for entry in point.entries
+            if entry.element_name == "D1" and entry.noise_type == "flicker"
+        )
+        for point in result.points
+    ]
+
+    assert flicker_psds[0] > 0.0
+    assert flicker_psds[0] / flicker_psds[1] == pytest.approx(100.0)
+
+
+def test_noise_jfet_kf_adds_inverse_frequency_flicker_noise() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vdd", "vdd", "0", 5.0))
+    circuit.add(VoltageSource("Vgate", "gate", "0", 0.0))
+    circuit.add(Resistor("Rload", "vdd", "out", 1_000.0))
+    circuit.add(JFET("J1", "out", "gate", "0", beta=1.0e-3, vto=-2.0, Kf=1.0e-12))
+
+    result = noise_ac(circuit, "out", "Vgate", freqs=[10.0, 1_000.0])
+    flicker_psds = [
+        next(
+            entry.source_psd
+            for entry in point.entries
+            if entry.element_name == "J1" and entry.noise_type == "flicker"
+        )
+        for point in result.points
+    ]
+
+    assert flicker_psds[0] > 0.0
+    assert flicker_psds[0] / flicker_psds[1] == pytest.approx(100.0)
+
+
+def test_noise_jfet_nlev_and_gdsnoi_select_and_scale_channel_noise() -> None:
+    def source_psd(noise_level: float, coefficient: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vdrain", "out", "0", 1.0))
+        circuit.add(VoltageSource("Vgate", "gate", "0", 0.0))
+        circuit.add(
+            JFET(
+                "J1",
+                "out",
+                "gate",
+                "0",
+                beta=1.0e-3,
+                vto=-2.0,
+                Nlev=noise_level,
+                Gdsnoi=coefficient,
+            )
+        )
+        entries = noise_ac(
+            circuit, "out", "Vgate", freqs=[1_000.0], temperature=300.0
+        ).points[0].entries
+        return next(
+            entry.source_psd
+            for entry in entries
+            if entry.element_name == "J1" and entry.noise_type == "thermal"
+        )
+
+    expected_conductance = (2.0 / 3.0) * 1.0e-3 * 2.0 * 1.75 / 1.5
+    expected_psd = 4.0 * 1.380_649e-23 * 300.0 * expected_conductance
+    assert source_psd(3.0, 1.0) / expected_psd == pytest.approx(1.0)
+    assert source_psd(2.0, 4.0) / source_psd(1.0, 1.0) == pytest.approx(1.0)
+    assert source_psd(3.0, 2.0) / source_psd(3.0, 1.0) == pytest.approx(2.0)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("Nlev", 2.5, "noise equation level must be a finite integer"),
+        ("Gdsnoi", -1.0, "channel noise coefficient must be finite and non-negative"),
+    ],
+)
+def test_noise_rejects_invalid_jfet_channel_noise_parameters(
+    field: str, value: float, message: str
+) -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vgate", "gate", "0", 0.0))
+    circuit.add(JFET("J1", "out", "gate", "0", **{field: value}))
+
+    with pytest.raises(ValueError, match=message):
+        noise_ac(circuit, "out", "Vgate", freqs=[1_000.0])
+
+
+def test_noise_jfet_rd_adds_thermal_noise() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vdd", "vdd", "0", 5.0))
+    circuit.add(VoltageSource("Vgate", "gate", "0", 0.0))
+    circuit.add(Resistor("Rload", "vdd", "out", 1_000.0))
+    circuit.add(JFET("J1", "out", "gate", "0", Rd=250.0))
+
+    entries = noise_ac(circuit, "out", "Vgate", freqs=[1_000.0]).points[0].entries
+    rd = next(
+        entry
+        for entry in entries
+        if entry.element_name == "J1:RD" and entry.noise_type == "thermal"
+    )
+    assert rd.source_psd == pytest.approx(4.0 * 1.380_649e-23 * 300.0 / 250.0)
+
+
+def test_noise_mosfet_rd_adds_thermal_noise() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vdd", "vdd", "0", 5.0))
+    circuit.add(VoltageSource("Vgate", "gate", "0", 3.0))
+    circuit.add(Resistor("Rload", "vdd", "out", 1_000.0))
+    circuit.add(Mosfet(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(RD=250.0)),
+        ),
+    ))
+
+    entries = noise_ac(circuit, "out", "Vgate", freqs=[1_000.0]).points[0].entries
+    rd = next(
+        entry
+        for entry in entries
+        if entry.element_name == "M1:RD" and entry.noise_type == "thermal"
+    )
+    assert rd.source_psd == pytest.approx(4.0 * 1.380_649e-23 * 300.0 / 250.0)
+
+
+def test_noise_mosfet_rs_adds_thermal_noise() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vdd", "vdd", "0", 5.0))
+    circuit.add(VoltageSource("Vgate", "gate", "0", 3.0))
+    circuit.add(Resistor("Rload", "vdd", "out", 1_000.0))
+    circuit.add(Mosfet(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(RS=250.0, RSH=100.0, NRS=10.0)),
+        ),
+    ))
+
+    entries = noise_ac(circuit, "out", "Vgate", freqs=[1_000.0]).points[0].entries
+    rs = next(
+        entry
+        for entry in entries
+        if entry.element_name == "M1:RS" and entry.noise_type == "thermal"
+    )
+    assert rs.source_psd == pytest.approx(4.0 * 1.380_649e-23 * 300.0 / 250.0)
+
+
+def test_noise_mosfet_rsh_adds_both_terminal_noise_sources() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vdd", "vdd", "0", 5.0))
+    circuit.add(VoltageSource("Vgate", "gate", "0", 3.0))
+    circuit.add(Resistor("Rload", "vdd", "out", 1_000.0))
+    circuit.add(Mosfet(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(RSH=250.0, NRD=2.0, NRS=3.0)),
+        ),
+    ))
+
+    entries = noise_ac(circuit, "out", "Vgate", freqs=[1_000.0]).points[0].entries
+    for name, resistance in (("M1:RD", 500.0), ("M1:RS", 750.0)):
+        entry = next(
+            candidate
+            for candidate in entries
+            if candidate.element_name == name and candidate.noise_type == "thermal"
+        )
+        assert entry.source_psd == pytest.approx(
+            4.0 * 1.380_649e-23 * 300.0 / resistance
+        )
+
+
+def test_noise_jfet_rs_adds_thermal_noise() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vdd", "vdd", "0", 5.0))
+    circuit.add(VoltageSource("Vgate", "gate", "0", 0.0))
+    circuit.add(Resistor("Rload", "vdd", "out", 1_000.0))
+    circuit.add(JFET("J1", "out", "gate", "0", Rs=250.0))
+
+    entries = noise_ac(circuit, "out", "Vgate", freqs=[1_000.0]).points[0].entries
+    rs = next(
+        entry
+        for entry in entries
+        if entry.element_name == "J1:RS" and entry.noise_type == "thermal"
+    )
+    assert rs.source_psd == pytest.approx(4.0 * 1.380_649e-23 * 300.0 / 250.0)
+
+
+def test_noise_jfet_gate_junctions_emit_distinct_shot_sources() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vdd", "out", "0", 1.0))
+    circuit.add(VoltageSource("Vgate", "gate", "0", 0.3))
+    circuit.add(JFET("J1", "out", "gate", "0", Is=1.0e-12))
+
+    entries = noise_ac(
+        circuit, "gate", "Vgate", freqs=[1_000.0], temperature=300.0
+    ).points[0].entries
+    for name in ("J1:IGS", "J1:IGD"):
+        entry = next(
+            entry
+            for entry in entries
+            if entry.element_name == name and entry.noise_type == "shot"
+        )
+        assert entry.source_psd > 0.0
+
+
+def test_noise_jfet_af_is_the_current_exponent() -> None:
+    def source_psd(exponent: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vdd", "vdd", "0", 5.0))
+        circuit.add(VoltageSource("Vgate", "gate", "0", 0.0))
+        circuit.add(Resistor("Rload", "vdd", "out", 1_000.0))
+        circuit.add(
+            JFET(
+                "J1",
+                "out",
+                "gate",
+                "0",
+                beta=1.0e-3,
+                vto=-2.0,
+                Kf=1.0e-12,
+                Af=exponent,
+            )
+        )
+        point = noise_ac(circuit, "out", "Vgate", freqs=[1_000.0]).points[0]
+        return next(
+            entry.source_psd
+            for entry in point.entries
+            if entry.element_name == "J1" and entry.noise_type == "flicker"
+        )
+
+    assert source_psd(2.0) < source_psd(1.0)
+
+
+def test_noise_diode_af_is_the_current_exponent() -> None:
+    def source_psd(exponent: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbias", "bias", "0", 1.0))
+        circuit.add(Resistor("Rbias", "bias", "out", 1_000.0))
+        circuit.add(Diode("D1", "out", "0", Kf=1.0e-12, Af=exponent))
+        point = noise_ac(circuit, "out", "Vbias", freqs=[1_000.0]).points[0]
+        return next(
+            entry.source_psd
+            for entry in point.entries
+            if entry.element_name == "D1" and entry.noise_type == "flicker"
+        )
+
+    assert source_psd(2.0) < source_psd(1.0)
+
+
+def test_noise_bjt_collector_resistance_adds_thermal_noise() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+    circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+    circuit.add(BJT("Q1", "out", "base", "0", Rc=100.0))
+
+    result = noise_ac(circuit, "out", "Vbase", freqs=[1_000.0])
+    collector_resistance = next(
+        entry for entry in result.points[0].entries if entry.element_name == "Q1:RC"
+    )
+
+    assert collector_resistance.noise_type == "thermal"
+    assert collector_resistance.source_psd > 0.0
+
+
+def test_noise_bjt_base_resistance_adds_thermal_noise() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+    circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+    circuit.add(BJT("Q1", "out", "base", "0", Rb=100.0))
+
+    result = noise_ac(circuit, "out", "Vbase", freqs=[1_000.0])
+    base_resistance = next(
+        entry for entry in result.points[0].entries if entry.element_name == "Q1:RB"
+    )
+
+    assert base_resistance.noise_type == "thermal"
+    assert base_resistance.source_psd > 0.0
+
+
+def test_noise_bjt_minimum_base_resistance_increases_high_current_noise() -> None:
+    def source_psd(*, Rbm: float | None = None, Irb: float = 0.0) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+        circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "0", Rb=100.0, Rbm=Rbm, Irb=Irb))
+
+        result = noise_ac(circuit, "out", "Vbase", freqs=[1_000.0])
+        return next(
+            entry.source_psd
+            for entry in result.points[0].entries
+            if entry.element_name == "Q1:RB"
+        )
+
+    fixed = source_psd()
+    bias_dependent = source_psd(Rbm=10.0, Irb=1.0e-9)
+
+    assert bias_dependent > fixed
+
+
+def test_noise_bjt_kf_adds_inverse_frequency_flicker_noise() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vcc", "vcc", "0", 5.0))
+    circuit.add(VoltageSource("Vbase", "base", "0", 0.7))
+    circuit.add(Resistor("Rc", "vcc", "col", 1_000.0))
+    circuit.add(BJT("Q1", "col", "base", "0", Kf=1.0e-12))
+
+    result = noise_ac(circuit, "col", "Vbase", freqs=[10.0, 1_000.0])
+    flicker_psds = [
+        next(
+            entry.source_psd
+            for entry in point.entries
+            if entry.element_name == "Q1" and entry.noise_type == "flicker"
+        )
+        for point in result.points
+    ]
+
+    assert flicker_psds[0] > 0.0
+    assert flicker_psds[0] / flicker_psds[1] == pytest.approx(100.0)
+
+
+def test_noise_bjt_af_controls_base_current_exponent() -> None:
+    def source_psd(exponent: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vcc", "vcc", "0", 5.0))
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.7))
+        circuit.add(Resistor("Rc", "vcc", "col", 1_000.0))
+        circuit.add(BJT("Q1", "col", "base", "0", Kf=1.0e-12, Af=exponent))
+        point = noise_ac(circuit, "col", "Vbase", freqs=[1_000.0]).points[0]
+        return next(
+            entry.source_psd
+            for entry in point.entries
+            if entry.element_name == "Q1" and entry.noise_type == "flicker"
+        )
+
+    assert source_psd(2.0) < source_psd(1.0)
+
+
+def test_noise_bjt_forward_beta_rolloff_reduces_shot_noise() -> None:
+    def source_psd(ikf: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vcc", "vcc", "0", 5.0))
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+        circuit.add(Resistor("Rload", "vcc", "out", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "0", Ikf=ikf))
+        result = noise_ac(circuit, "out", "Vbase", freqs=[1_000.0])
+        return next(
+            entry.source_psd
+            for entry in result.points[0].entries
+            if entry.element_name == "Q1"
+        )
+
+    assert source_psd(1.0e-4) < source_psd(0.0)
+
+
+def test_noise_bjt_base_emitter_leakage_increases_shot_noise() -> None:
+    def source_psd(ise: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+        circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "0", Ise=ise, Ne=1.5))
+        result = noise_ac(circuit, "out", "Vbase", freqs=[1_000.0])
+        return next(
+            entry.source_psd
+            for entry in result.points[0].entries
+            if entry.element_name == "Q1"
+        )
+
+    assert source_psd(1.0e-10) > source_psd(0.0)
+
+
+def test_noise_bjt_base_collector_leakage_increases_shot_noise() -> None:
+    def source_psd(isc: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+        circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "base", Isc=isc, Nc=1.5))
+        result = noise_ac(circuit, "out", "Vbase", freqs=[1_000.0])
+        return next(
+            entry.source_psd
+            for entry in result.points[0].entries
+            if entry.element_name == "Q1"
+        )
+
+    assert source_psd(1.0e-10) > source_psd(0.0)
+
+
 def test_noise_mosfet_channel_thermal_noise() -> None:
     """A biased MOSFET contributes long-channel channel thermal noise."""
     c = Circuit()
@@ -6482,6 +9190,109 @@ def test_noise_mosfet_channel_thermal_noise() -> None:
         expected_source_psd * 1000.0 ** 2,
         rel_tol=1e-6,
     )
+
+
+def test_noise_mosfet_bulk_junctions_emit_distinct_shot_noise_sources() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("Vbody", "body", "0", -0.3))
+    circuit.add(
+        Mosfet(
+            "M1",
+            "0",
+            "0",
+            "0",
+            "body",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(IS=1.0e-12)),
+            ),
+        )
+    )
+
+    entries = noise_ac(
+        circuit, "body", "Vbody", freqs=[1_000.0], temperature=300.0
+    ).points[0].entries
+    for name in ("M1:IBS", "M1:IBD"):
+        entry = next(
+            entry
+            for entry in entries
+            if entry.element_name == name and entry.noise_type == "shot"
+        )
+        assert entry.source_psd > 0.0
+
+
+def test_noise_mosfet_flicker_noise_scales_inversely_with_frequency() -> None:
+    """KF adds drain-current-scaled inverse-frequency MOSFET noise."""
+    c = Circuit()
+    c.add(VoltageSource("Vdd", "vdd", "0", 5.0))
+    c.add(VoltageSource("Vgate", "gate", "0", 3.0))
+    c.add(Resistor("Rload", "vdd", "out", 1000.0))
+    c.add(Mosfet(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(VT0=1.0, KP=1.0e-3, KF=2.0e-18, AF=2.0)),
+        ),
+    ))
+
+    result = noise_ac(c, "out", "Vgate", freqs=[100.0, 1000.0])
+    flicker_psds = [
+        next(
+            entry.source_psd
+            for entry in point.entries
+            if entry.element_name == "M1" and entry.noise_type == "flicker"
+        )
+        for point in result.points
+    ]
+
+    assert flicker_psds[0] > 0.0
+    assert isclose(flicker_psds[0], 10.0 * flicker_psds[1], rel_tol=1e-12)
+    assert any(
+        entry.element_name == "M1" and entry.noise_type == "thermal"
+        for entry in result.points[0].entries
+    )
+
+
+def test_noise_rejects_invalid_mosfet_flicker_noise_coefficient() -> None:
+    """MOSFET KF must remain finite and non-negative."""
+    c = Circuit()
+    c.add(VoltageSource("Vgate", "gate", "0", 3.0))
+    c.add(Resistor("Rload", "out", "0", 1000.0))
+    c.add(Mosfet(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(KF=-1.0)),
+        ),
+    ))
+
+    with pytest.raises(ValueError, match="KF must be finite and non-negative"):
+        noise_ac(c, "out", "Vgate", freqs=[1000.0])
+
+
+def test_noise_rejects_invalid_mosfet_flicker_noise_exponent() -> None:
+    c = Circuit()
+    c.add(VoltageSource("Vgate", "gate", "0", 3.0))
+    c.add(Resistor("Rload", "out", "0", 1000.0))
+    c.add(Mosfet(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MOSFET(MosfetType.NMOS, Level1Model(Level1Params(AF=-1.0))),
+    ))
+
+    with pytest.raises(ValueError, match="AF must be finite and non-negative"):
+        noise_ac(c, "out", "Vgate", freqs=[1000.0])
 
 
 # ---------------------------------------------------------------------------
@@ -9843,7 +12654,7 @@ def test_distortion_text_output_table_is_stable() -> None:
                         harmonic=2,
                         frequency=2000.0,
                         magnitude=0.025,
-                        phase_degrees=-1.5707963267948966,
+                        phase_degrees=-1.5707963269948966,
                     ),
                 ],
                 total_harmonic_distortion=0.025,
@@ -9878,7 +12689,7 @@ def test_corner_distortion_text_output_table_is_stable() -> None:
                                     2,
                                     2000.0,
                                     0.025,
-                                    -1.5707963267948966,
+                                    -1.5707963269948966,
                                 ),
                             ],
                             total_harmonic_distortion=0.025,

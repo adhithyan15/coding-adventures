@@ -6,6 +6,7 @@ import pytest
 
 from coding_adventures_sir_runtime_exceptions import (
     SirError,
+    ancestry_chain,
     class_of_thrown,
     raise_error,
     register_ancestry,
@@ -136,3 +137,43 @@ class TestRegisterAncestry:
         register_ancestry({"Loopy": "Loopy"})
         assert rescue_matches(SirError("Loopy"), ["Loopy"]) is True
         assert rescue_matches(SirError("Loopy"), ["StandardError"]) is False
+
+
+class TestAncestryChain:
+    """`ancestry_chain` exposes the ordered ancestry the OOP runtime's
+    `is_a?` walks to look for an included module on each link (a question
+    `rescue_matches`, a boolean name-walk, cannot answer)."""
+
+    def test_builtin_chain_is_class_then_ancestors_in_order(self) -> None:
+        assert ancestry_chain("ArgumentError") == [
+            "ArgumentError",
+            "StandardError",
+            "Exception",
+        ]
+
+    def test_leaf_root_is_a_singleton_chain(self) -> None:
+        assert ancestry_chain("Exception") == ["Exception"]
+
+    def test_unregistered_class_is_its_own_only_link(self) -> None:
+        assert ancestry_chain("TotallyUnknown") == ["TotallyUnknown"]
+
+    def test_user_edge_extends_the_chain(self) -> None:
+        register_ancestry({"UserErr": "RuntimeError"})
+        assert ancestry_chain("UserErr") == [
+            "UserErr",
+            "RuntimeError",
+            "StandardError",
+            "Exception",
+        ]
+
+    def test_self_referential_edge_does_not_loop(self) -> None:
+        # Cycle guard: a malformed self-edge terminates rather than hanging,
+        # and the class appears at most once.
+        register_ancestry({"Loopy": "Loopy"})
+        assert ancestry_chain("Loopy") == ["Loopy"]
+
+    def test_two_node_cycle_terminates(self) -> None:
+        register_ancestry({"A": "B", "B": "A"})
+        chain = ancestry_chain("A")
+        assert chain[0] == "A"
+        assert chain.count("A") == 1 and chain.count("B") == 1

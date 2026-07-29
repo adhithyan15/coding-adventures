@@ -6,6 +6,11 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- **`overdue` built-in column** (Phase 3 PR-6) — `Bool`: the task has a deadline, its
+  computed finish falls after it, and it isn't done. Derived in the engine rather than in
+  each host, so "show me what's slipping" is a single filter and every UI agrees on the
+  answer. (The web host previously computed this in JavaScript.)
+
 - **Labels and priority — two new first-class view dimensions** (Phase 3 PR-5 of
   `code/specs/task-app-view-layer.md`).
   - `Label { id, name, color }` + `LabelId`, registered per project

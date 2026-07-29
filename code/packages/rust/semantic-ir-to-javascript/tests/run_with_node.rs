@@ -284,6 +284,40 @@ console.log(o.join("|"));
     }
 }
 
+/// `==`/`!=` are Ruby's VALUE equality — structural for composites, not JS
+/// reference identity. A prior review found `==` (once lowered) returned
+/// `false` for two equal arrays because the operator routed to a `numOf`-based
+/// helper. It now routes to `valEq`, so the JS backend agrees with the Python,
+/// Ruby, Go, C and Rust backends. Driven through `callMethod`/`callBuiltin`
+/// (the real dispatch), covering arrays, maps, cross int/float, symbols, and
+/// the exact-negation property of `!=`.
+#[test]
+fn value_equality_is_structural_for_composites() {
+    let snippet = r#"
+const F = __Sir; const o = [];
+const eq = (a, b) => F.builtins["=="](a, b);
+const ne = (a, b) => F.builtins["!="](a, b);
+o.push(String(eq([1, 2], [1, 2])));                 // true  (structural, not ref)
+o.push(String(eq([1, 2], [1, 3])));                 // false
+o.push(String(ne([1, 2], [1, 3])));                 // true  (exact negation)
+o.push(String(ne([1, 2], [1, 2])));                 // false
+o.push(String(eq([1, [2, 3]], [1, [2, 3]])));       // true  (nested / recursive)
+const m1 = new Map([["a", 1]]); const m2 = new Map([["a", 1]]);
+o.push(String(eq(m1, m2)));                          // true  (maps structural)
+o.push(String(eq(F.mkFloat(7), 7)));                // true  (7.0 == 7 by value)
+o.push(String(eq(F.intern("x"), F.intern("x"))));   // true  (symbols by name)
+o.push(String(eq(1, 1)));                            // true  (plain ints)
+o.push(String(eq("a", "a")));                        // true  (strings)
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "structeq") {
+        assert_eq!(
+            stdout,
+            "true|false|true|false|true|true|true|true|true|true",
+        );
+    }
+}
+
 #[test]
 fn numof_unwraps_scalar_ndarray_for_comparison_and_negation() {
     // Regression test for the while-loop-accumulator bug found by
@@ -666,6 +700,9 @@ catch (err) { o.push("raised"); }                              // raised
 const native = new TypeError("internal");
 o.push(F.callMethod(native, "class"));                         // StandardError
 o.push(String(F.callMethod(native, "is_a?", "StandardError"))); // true
+o.push(F.callMethod(native, "message"));                       // internal (NOT NoMethodError)
+o.push(String(F.callMethod(native, "respond_to?", "message"))); // true
+o.push(F.format(native));                                      // internal (message, not "TypeError: internal")
 // (5) a pathological include CHAIN must not exhaust the JS stack — BOTH the
 //     module walk behind `is_a?` and `resolveMethod`'s own module search are
 //     explicit worklists, not recursion.  Driven through `callMethod` (the
@@ -681,7 +718,7 @@ console.log(o.join("|"));
         assert_eq!(
             stdout,
             "ArgumentError|true|true|false|C|true|true|false|undefined|undefined|raised|\
-             StandardError|true|true|false",
+             StandardError|true|internal|true|internal|true|false",
         );
     }
 }

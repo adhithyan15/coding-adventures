@@ -186,6 +186,9 @@ pub enum AggFn {
     CountDistinct,
     /// `SUM(col)` — sum of all non-NULL values
     Sum,
+    /// `TOTAL(col)` — like SUM but always REAL and `0.0` (never NULL) for an
+    /// empty/all-NULL group.
+    Total,
     /// `AVG(col)` — arithmetic mean of non-NULL values
     Avg,
     /// `MIN(col)` — minimum value
@@ -880,7 +883,12 @@ impl Compiler {
                             compiler.emit(Instruction::JumpIfFalse(skip_lbl.clone()));
                             compiler.emit(Instruction::BeginRow);
                             for col in &cols {
-                                compiler.compile_expr(&col.expr);
+                                // Peel any explicit-COLLATE wrapper: a collation
+                                // never changes the emitted value (only how keys
+                                // compare), so the projection emits the underlying
+                                // expression. `output_column_name` still renders the
+                                // `COLLATE` suffix from the unpeeled column.
+                                compiler.compile_expr(strip_collate(&col.expr));
                                 let name = output_column_name(col);
                                 compiler.emit(Instruction::EmitColumn(name));
                             }
@@ -892,16 +900,34 @@ impl Compiler {
                             compiler.emit(Instruction::Label(skip_lbl.clone()));
                         });
                     }
-                    OptimizedPlan::Aggregate { .. } | OptimizedPlan::Having { .. } => {
-                        // Aggregate output already handles its own projection.
-                        self.compile_inner(input);
+                    OptimizedPlan::Aggregate {
+                        input: agg_input,
+                        group_by,
+                        aggregates,
+                    } => {
+                        // Project through the SELECT list. (Hidden sort-key
+                        // columns aren't appended here — an aggregate emits its
+                        // own row; a positional ORDER BY binds to an output
+                        // column, which needs no hidden column.)
+                        self.compile_aggregate(agg_input, group_by, aggregates, Some(&cols));
+                    }
+                    OptimizedPlan::Having {
+                        input: having_input,
+                        predicate,
+                    } => {
+                        self.compile_having(having_input, predicate, Some(&cols));
                     }
                     _ => {
                         let hidden_clone = hidden_cols.clone();
                         self.compile_scan_loop(input, move |compiler, _alias| {
                             compiler.emit(Instruction::BeginRow);
                             for col in &cols {
-                                compiler.compile_expr(&col.expr);
+                                // Peel any explicit-COLLATE wrapper: a collation
+                                // never changes the emitted value (only how keys
+                                // compare), so the projection emits the underlying
+                                // expression. `output_column_name` still renders the
+                                // `COLLATE` suffix from the unpeeled column.
+                                compiler.compile_expr(strip_collate(&col.expr));
                                 let name = output_column_name(col);
                                 compiler.emit(Instruction::EmitColumn(name));
                             }
@@ -977,11 +1003,12 @@ impl Compiler {
                 group_by,
                 aggregates,
             } => {
-                self.compile_aggregate(input, group_by, aggregates);
+                // No enclosing Project here: fall back to the fixed layout.
+                self.compile_aggregate(input, group_by, aggregates, None);
             }
 
             OptimizedPlan::Having { input, predicate } => {
-                self.compile_having(input, predicate);
+                self.compile_having(input, predicate, None);
             }
 
             OptimizedPlan::Join {
@@ -1137,7 +1164,10 @@ impl Compiler {
                     compiler.emit(Instruction::JumpIfFalse(skip_lbl.clone()));
                     compiler.emit(Instruction::BeginRow);
                     for col in &cols {
-                        compiler.compile_expr(&col.expr);
+                        // Peel an explicit-COLLATE wrapper: the value is the
+                        // underlying expression (collation only folds keys); the
+                        // name still renders the `COLLATE` suffix.
+                        compiler.compile_expr(strip_collate(&col.expr));
                         let name = output_column_name(col);
                         compiler.emit(Instruction::EmitColumn(name));
                     }
@@ -1154,12 +1184,22 @@ impl Compiler {
                 self.emit(Instruction::DefineColumns(col_names));
             }
 
-            // ── Aggregate / Having: these already emit rows.  The Project
-            //    wrapper's column aliases are pre-propagated into the
-            //    AggregateItem.alias fields by the planner.  Just compile the
-            //    inner plan directly and skip the extra scan loop. ────────────
-            OptimizedPlan::Aggregate { .. } | OptimizedPlan::Having { .. } => {
-                self.compile_inner(input);
+            // ── Aggregate / Having: these emit one row per group. Pass the
+            //    SELECT list down so the per-group row is projected through it
+            //    (order + identity), instead of the internal group-key-then-
+            //    aggregate layout. ─────────────────────────────────────────────
+            OptimizedPlan::Aggregate {
+                input: agg_input,
+                group_by,
+                aggregates,
+            } => {
+                self.compile_aggregate(agg_input, group_by, aggregates, Some(columns));
+            }
+            OptimizedPlan::Having {
+                input: having_input,
+                predicate,
+            } => {
+                self.compile_having(having_input, predicate, Some(columns));
             }
 
             // ── Join: thread the projection through the join's inner loop so
@@ -1180,7 +1220,10 @@ impl Compiler {
                 self.compile_scan_loop(input, |compiler, _alias| {
                     compiler.emit(Instruction::BeginRow);
                     for col in &cols {
-                        compiler.compile_expr(&col.expr);
+                        // Peel an explicit-COLLATE wrapper: the value is the
+                        // underlying expression (collation only folds keys); the
+                        // name still renders the `COLLATE` suffix.
+                        compiler.compile_expr(strip_collate(&col.expr));
                         let name = output_column_name(col);
                         compiler.emit(Instruction::EmitColumn(name));
                     }
@@ -1247,6 +1290,71 @@ impl Compiler {
     // Aggregate compilation
     // -----------------------------------------------------------------------
 
+    /// Emit the Phase-2 output columns for one group of a grouped aggregate.
+    ///
+    /// This is the projection step — it runs after `FinalizeAgg` values are
+    /// available and inside a `BeginRow`/`EmitRow` pair supplied by the caller.
+    ///
+    /// **Projected path** — used whenever an enclosing `SELECT` list is available.
+    /// The row follows that list exactly — order, count, and identity all come
+    /// from what the user wrote — with each item compiled in the group's finalize
+    /// context: a GROUP BY key column reads its key value from the group's fake
+    /// row (so a collated key still reports its original text), and an aggregate
+    /// column resolves through `agg_slots` to its `FinalizeAgg` slot (the same
+    /// machinery HAVING uses). So `SELECT x, c FROM t GROUP BY c, x` yields
+    /// columns `[x, c]` (not the internal group-key order `[c, x]`), and
+    /// `SELECT max(x) AS mx, c FROM t GROUP BY c` yields `[mx, c]` (not
+    /// `[c, max(x)]`). This works for aggregate columns because the planner lowers
+    /// EVERY aggregate — including `group_concat` — to `SqlExpr::Aggregate`, so
+    /// `compile_expr` can resolve them, and `output_column_name` names them the
+    /// SQLite way.
+    ///
+    /// **Fixed path** — used only with no projection (an aggregate compiled
+    /// outside a `Project`; rare, mostly defensive / subquery paths). It emits
+    /// every GROUP BY key (from its underlying column, so the group's original
+    /// text and name are reported) followed by every aggregate in declaration
+    /// order.
+    fn emit_group_row(
+        &mut self,
+        projection: Option<&[OutputColumn]>,
+        group_by: &[SqlExpr],
+        agg_fns: &[AggFn],
+        aggregates: &[AggregateItem],
+    ) {
+        match projection {
+            Some(cols) => {
+                // Let `compile_expr` resolve an aggregate reference in the SELECT
+                // list to its accumulator slot (matched by func/arg/distinct); a
+                // bare column reference falls through to a `LoadColumn` against the
+                // group's fake row instead.
+                self.agg_slots = aggregates.iter().cloned().enumerate().collect();
+                for col in cols {
+                    // Peel an explicit-COLLATE wrapper before emitting the value
+                    // (collation folds keys, not emitted values); the name still
+                    // renders the `COLLATE` suffix from the unpeeled column.
+                    self.compile_expr(strip_collate(&col.expr));
+                    self.emit(Instruction::EmitColumn(output_column_name(col)));
+                }
+                self.agg_slots.clear();
+            }
+            None => {
+                for e in group_by {
+                    let e = strip_collate(e);
+                    self.compile_expr(e);
+                    let name = match e {
+                        SqlExpr::Column { name, .. } => name.clone(),
+                        _ => "?".to_string(),
+                    };
+                    self.emit(Instruction::EmitColumn(name));
+                }
+                for (i, (fn_tag, item)) in agg_fns.iter().zip(aggregates.iter()).enumerate() {
+                    self.emit(Instruction::FinalizeAgg(i, fn_tag.clone()));
+                    self.emit(Instruction::EmitColumn(aggregate_column_name(item)));
+                }
+            }
+        }
+    }
+
     /// Compile `Aggregate { input, group_by, aggregates }`.
     ///
     /// ## Two-phase structure
@@ -1274,6 +1382,7 @@ impl Compiler {
         input: &OptimizedPlan,
         group_by: &[SqlExpr],
         aggregates: &[AggregateItem],
+        projection: Option<&[OutputColumn]>,
     ) {
         let n = aggregates.len();
         // Allocate accumulator slots: one per aggregate in declaration order.
@@ -1361,31 +1470,11 @@ impl Compiler {
             }
         }
 
-        // Phase 2: emit one output row per group.
-        // FinalizeAgg pushes the final accumulated value for each slot,
-        // then we assemble a row from group key values + aggregate values.
+        // Phase 2: emit one output row per group, projected through the SELECT
+        // list (see `emit_group_row`) so column order/identity match what the
+        // user wrote rather than the internal group-key-then-aggregate layout.
         self.emit(Instruction::BeginRow);
-        // Emit group-by columns first (as LoadColumn for each group key expr).
-        // A collated key is emitted from its UNDERLYING column, not from the
-        // `__collate(...)` wrapper: the collation decides which rows share a
-        // group, but the reported value is the group's original text (SQLite
-        // shows 'A' for a group of {'A','a'} keyed case-insensitively). Compiling
-        // the wrapper instead would emit the folded value and rename the column.
-        for e in group_by {
-            let e = strip_collate(e);
-            self.compile_expr(e);
-            let name = match e {
-                SqlExpr::Column { name, .. } => name.clone(),
-                _ => "?".to_string(),
-            };
-            self.emit(Instruction::EmitColumn(name));
-        }
-        // Emit finalized aggregate values, each named the SQLite way
-        // (`SUM(n)`, `COUNT(*)`, …) unless an explicit alias overrides it.
-        for (i, (fn_tag, item)) in agg_fns.iter().zip(aggregates.iter()).enumerate() {
-            self.emit(Instruction::FinalizeAgg(i, fn_tag.clone()));
-            self.emit(Instruction::EmitColumn(aggregate_column_name(item)));
-        }
+        self.emit_group_row(projection, group_by, &agg_fns, aggregates);
         self.emit(Instruction::EmitRow);
     }
 
@@ -1400,7 +1489,12 @@ impl Compiler {
     /// predicate check before the final row emission.
     ///
     /// If the predicate is false, we skip `EmitRow` for that group.
-    fn compile_having(&mut self, input: &OptimizedPlan, predicate: &SqlExpr) {
+    fn compile_having(
+        &mut self,
+        input: &OptimizedPlan,
+        predicate: &SqlExpr,
+        projection: Option<&[OutputColumn]>,
+    ) {
         match input {
             OptimizedPlan::Aggregate {
                 input: agg_input,
@@ -1487,21 +1581,10 @@ impl Compiler {
                 self.emit(Instruction::JumpIfFalse(skip_lbl.clone()));
 
                 self.emit(Instruction::BeginRow);
-                // As above: emit a collated key from its underlying column so the
-                // group's ORIGINAL text (and column name) is reported.
-                for e in group_by {
-                    let e = strip_collate(e);
-                    self.compile_expr(e);
-                    let name = match e {
-                        SqlExpr::Column { name, .. } => name.clone(),
-                        _ => "?".to_string(),
-                    };
-                    self.emit(Instruction::EmitColumn(name));
-                }
-                for (i, (fn_tag, item)) in agg_fns.iter().zip(aggregates.iter()).enumerate() {
-                    self.emit(Instruction::FinalizeAgg(i, fn_tag.clone()));
-                    self.emit(Instruction::EmitColumn(aggregate_column_name(item)));
-                }
+                // Project through the SELECT list (see `emit_group_row`) so the
+                // surviving group's columns follow what the user wrote, not the
+                // internal group-key-then-aggregate order.
+                self.emit_group_row(projection, group_by, &agg_fns, aggregates);
                 self.emit(Instruction::EmitRow);
                 self.emit(Instruction::Label(skip_lbl));
             }
@@ -1816,7 +1899,9 @@ impl Compiler {
     fn emit_row_projection(&mut self, columns: &[OutputColumn]) {
         self.emit(Instruction::BeginRow);
         for col in columns {
-            self.compile_expr(&col.expr);
+            // Peel any explicit-COLLATE wrapper: collation folds keys, not the
+            // emitted value; the name still renders the `COLLATE` suffix.
+            self.compile_expr(strip_collate(&col.expr));
             let name = output_column_name(col);
             self.emit(Instruction::EmitColumn(name));
         }
@@ -2266,9 +2351,31 @@ fn output_column_name(col: &OutputColumn) -> String {
     if let Some(alias) = &col.alias {
         return alias.clone();
     }
+    // An explicit `COLLATE` on the select-item is carried as `__collate(inner,
+    // 'NAME')`. SQLite names such a column after its SOURCE TEXT — `b COLLATE
+    // NOCASE`, not just `b` and not the internal builtin — so render the suffix
+    // form. The VALUE is still the underlying `inner` (every projection site
+    // peels the wrapper before emitting), and DISTINCT reads the collation from
+    // the wrapper separately.
+    if let SqlExpr::FunctionCall { name, args, .. } = &col.expr {
+        if name == "__collate" && args.len() == 2 {
+            if let SqlExpr::Literal(SqlValue::Text(coll)) = &args[1] {
+                let inner = render_expr_label(&args[0]).unwrap_or_else(|| "?".to_string());
+                return format!("{inner} COLLATE {coll}");
+            }
+        }
+    }
     match &col.expr {
         SqlExpr::Column { name, .. } => name.clone(),
         SqlExpr::FunctionCall { .. } => render_expr_label(&col.expr).unwrap_or_else(|| "?".to_string()),
+        // An un-aliased aggregate column is named after its call text (`SUM(n)`,
+        // `COUNT(*)`, `GROUP_CONCAT(x)`), matching SQLite — the same rule
+        // `aggregate_column_name` applies to the extracted `AggregateItem`. This
+        // is what lets the SELECT-list projection name an aggregate column
+        // correctly when it re-projects (instead of the old fixed layout).
+        SqlExpr::Aggregate { func, arg, distinct } => {
+            render_aggregate_name(func, arg.as_deref(), *distinct)
+        }
         _ => "?".to_string(),
     }
 }
@@ -2325,26 +2432,37 @@ fn aggregate_column_name(item: &AggregateItem) -> String {
     if let Some(alias) = &item.alias {
         return alias.clone();
     }
-    let func = match item.func {
+    render_aggregate_name(&item.func, item.arg.as_ref(), item.distinct)
+}
+
+/// Render an un-aliased aggregate's implicit column name from its parts — the
+/// call text SQLite uses: `COUNT(*)`, `SUM(n)`, `MIN(x)`, `GROUP_CONCAT(x)`,
+/// `COUNT(DISTINCT id)`. Shared by [`aggregate_column_name`] (which names an
+/// extracted `AggregateItem`) and [`output_column_name`] (which names a
+/// `SqlExpr::Aggregate` in the SELECT list); both must agree so a re-projected
+/// aggregate column keeps the same header as the fixed-layout one.
+fn render_aggregate_name(func: &AggFunc, arg: Option<&SqlExpr>, distinct: bool) -> String {
+    let func_name = match func {
         AggFunc::Count => "COUNT",
         AggFunc::Sum => "SUM",
+        AggFunc::Total => "TOTAL",
         AggFunc::Avg => "AVG",
         AggFunc::Min => "MIN",
         AggFunc::Max => "MAX",
         AggFunc::GroupConcat { .. } => "GROUP_CONCAT",
     };
-    let inner = match &item.arg {
+    let inner = match arg {
         None => "*".to_string(),
         Some(expr) => {
             let base = render_expr_label(expr).unwrap_or_else(|| "?".to_string());
-            if item.distinct {
+            if distinct {
                 format!("DISTINCT {base}")
             } else {
                 base
             }
         }
     };
-    format!("{func}({inner})")
+    format!("{func_name}({inner})")
 }
 
 // ===========================================================================
@@ -2506,6 +2624,7 @@ fn plan_agg_to_agg_fn(func: &AggFunc, is_star: bool) -> AggFn {
             }
         }
         AggFunc::Sum => AggFn::Sum,
+        AggFunc::Total => AggFn::Total,
         AggFunc::Avg => AggFn::Avg,
         AggFunc::Min => AggFn::Min,
         AggFunc::Max => AggFn::Max,

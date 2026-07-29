@@ -132,3 +132,30 @@ fn runtime_str_slice_out_of_bounds_traps() {
     // a negative index (huge unsigned) → trap.
     assert!(try_slice_eq("HELLO", -1, 3, "").is_err(), "a negative start must trap");
 }
+
+#[test]
+fn runtime_str_slice_huge_i64_index_traps_not_truncates() {
+    // A huge i64 index whose LOW 32 bits land in [0, len] must TRAP, not alias.
+    // The memory ops wrap i64→i32; without the i64 truncation guard, start = 2^32
+    // wrapped to 0 and end = 2^32+2 wrapped to 2 would silently slice [0,2) = "HE",
+    // diverging from the VM/oracle (which trap on the full i64 bounds).
+    assert!(
+        try_slice_eq("HELLO", 4_294_967_296, 4_294_967_298, "").is_err(),
+        "start = 2^32 (low bits 0) must trap, not slice [0,2)",
+    );
+    // end = 2^32+5 (low bits 5 == len) would wrap to the whole string; must trap.
+    assert!(
+        try_slice_eq("HELLO", 0, 4_294_967_301, "").is_err(),
+        "end = 2^32+len (low bits in range) must trap, not slice [0,5)",
+    );
+    // High-bit-set indices: the guard MUST be UNSIGNED. i64::MIN (0x8000…0000,
+    // low 32 bits 0) and i64::MIN+5 (low 32 bits 5) are hugely POSITIVE as
+    // unsigned but very NEGATIVE as signed. Their low bits (0 and 5) would pass
+    // every downstream wrapped check and slice [0,5) = "HELLO". Only an *unsigned*
+    // `index >u len` guard (i64.gt_u 0x56, not the signed 0x55) traps them — this
+    // case fails if the guard emits a signed compare.
+    assert!(
+        try_slice_eq("HELLO", i64::MIN, i64::MIN + 5, "").is_err(),
+        "high-bit-set indices must trap under the UNSIGNED guard, not slice [0,5)",
+    );
+}

@@ -2,6 +2,40 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.20.0] - Comparison-operator frontier
+
+Adds `comparison_operators_match_ruby_on_every_backend`: `==`, `!=`, `<=`, `>=`
+(plus `<`/`>` regression guards) over integers, a cross int/float pair, string
+equality, AND string ordering, across every backend. Even `puts(1 == 1)` failed
+on Python (`NameError`), JavaScript (`unknown builtin`), Go (`panic`) and Rust
+(missing function) — only C and Ruby lowered the operator spellings. String
+ordering is included because Go's comparisons gained a lexicographic string
+path in this same change (they previously panicked on a string operand), so all
+six backends now agree on `"a" < "b"`. Also covers COMPOSITE equality
+(`[1,2] == [1,2]` structural, not reference) on the four backends that accept
+the `sequences` feature (Python/JavaScript/Go/Rust) — the end-to-end proof that
+the JavaScript `eq`→`valEq` fix agrees cross-backend; C and Ruby skip (no
+`sequences` feature in their v0 backends).
+
+## [0.19.0] - Exception-reflection frontier
+
+Adds `exception_reflection_matches_ruby_on_every_backend`: `e.class`,
+`e.is_a?` (self, ancestor, and a NEGATIVE case), `e.message`, and `puts e`
+on a rescued exception, across every backend.
+
+Each was wrong somewhere: **Rust** bound `e` to the message string (so
+`e.class` was `String` and `is_a?` false), **Python** had no `SirError` case in
+`class_of` (so `e.class` was `Object`), **`e.message` failed on ALL FOUR
+backends**, and **JavaScript** printed `ArgumentError: boom` for `puts e` where
+Ruby prints `boom` — that last one caught by this test as it was written.
+
+Also pins a **bare** `raise ArgumentError` (no message): Ruby's default
+`#message` is then the class name, which all four backends already produce —
+but via four different mechanisms (Rust bakes it into `SirError.msg`,
+JavaScript into the `SirError` constructor, Python into `args[0]`, Go decides
+it at the `message` call site). Four independent spellings of one rule is
+exactly what drifts, so the agreement is now guarded.
+
 ## [0.18.0] - `is_a?` / `case-when` frontier across the backends
 
 Adds `is_a_and_case_when_match_ruby_on_every_backend` — the `is_a?` family and

@@ -19,6 +19,8 @@
 
 use device_physics::thermal_voltage;
 
+const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
+
 // ---------------------------------------------------------------------------
 // Level-1 parameter set
 // ---------------------------------------------------------------------------
@@ -36,9 +38,24 @@ use device_physics::thermal_voltage;
 /// | PHI       | Surface potential 2φ_F (V)         | 0.84     |
 /// | W         | Channel width (m)                  | 1 µm     |
 /// | L         | Channel length (m)                 | 130 nm   |
+/// | LD        | Lateral diffusion length (m)       | 0        |
+/// | TOX       | Gate oxide thickness (m)           | 100 nm   |
+/// | RD        | Drain resistance (ohm)              | 0        |
+/// | RS        | Source resistance (ohm)             | 0        |
+/// | RSH       | Drain/source sheet resistance (ohm) | 0        |
+/// | NRD       | Number of drain squares              | 1        |
+/// | NRS       | Number of source squares             | 1        |
+/// | AD        | Drain diffusion area (m²)             | 0        |
+/// | AS        | Source diffusion area (m²)            | 0        |
+/// | PD        | Drain diffusion perimeter (m)          | 0        |
+/// | PS        | Source diffusion perimeter (m)         | 0        |
+/// | CJ        | Bottom junction capacitance (F/m²)    | 0        |
+/// | CJSW      | Sidewall junction capacitance (F/m)    | 0        |
 /// | IS        | Drain–body saturation current (A)  | 1 fA     |
 /// | N_SUB     | Subthreshold slope factor          | 1.4      |
 /// | T_NOM     | Nominal temperature (K)            | 300.15   |
+/// | KF        | Flicker-noise coefficient           | 0        |
+/// | AF        | Flicker-noise current exponent      | 1        |
 #[derive(Debug, Clone, PartialEq)]
 pub struct Level1Params {
     /// Threshold voltage at zero source-body bias [V].
@@ -55,6 +72,32 @@ pub struct Level1Params {
     pub w: f64,
     /// Channel length [m].
     pub l: f64,
+    /// Source/drain lateral diffusion length [m].
+    pub ld: f64,
+    /// Gate oxide thickness [m].
+    pub tox: f64,
+    /// External drain resistance [ohm].
+    pub rd: f64,
+    /// External source resistance [ohm].
+    pub rs: f64,
+    /// Drain/source sheet resistance [ohm per square].
+    pub rsh: f64,
+    /// Number of squares in the drain diffusion.
+    pub nrd: f64,
+    /// Number of squares in the source diffusion.
+    pub nrs: f64,
+    /// Drain diffusion area [m²].
+    pub ad: f64,
+    /// Source diffusion area [m²].
+    pub as_: f64,
+    /// Drain diffusion perimeter [m].
+    pub pd: f64,
+    /// Source diffusion perimeter [m].
+    pub ps: f64,
+    /// Bottom junction capacitance per unit area [F/m²].
+    pub cj: f64,
+    /// Sidewall junction capacitance per unit perimeter [F/m].
+    pub cjsw: f64,
     /// Drain–body saturation current [A] (used for subthreshold floor).
     pub is: f64,
     /// Subthreshold slope factor n.  Subthreshold current ∝ exp(V_OV / (n V_T)).
@@ -71,6 +114,18 @@ pub struct Level1Params {
     pub cbs: f64,
     /// Drain–bulk zero-bias junction capacitance [F].
     pub cbd: f64,
+    /// Bulk-junction potential [V].
+    pub pb: f64,
+    /// Bulk-junction grading coefficient.
+    pub mj: f64,
+    /// Sidewall-junction grading coefficient.
+    pub mjsw: f64,
+    /// Forward-bias depletion-capacitance transition coefficient.
+    pub fc: f64,
+    /// Flicker-noise coefficient.
+    pub kf: f64,
+    /// Flicker-noise drain-current exponent.
+    pub af: f64,
     /// Enable subthreshold current below V_t.
     pub subthreshold_enable: bool,
 }
@@ -85,6 +140,19 @@ impl Default for Level1Params {
             phi: 0.84,
             w: 1e-6,
             l: 130e-9,
+            ld: 0.0,
+            tox: 1.0e-7,
+            rd: 0.0,
+            rs: 0.0,
+            rsh: 0.0,
+            nrd: 1.0,
+            nrs: 1.0,
+            ad: 0.0,
+            as_: 0.0,
+            pd: 0.0,
+            ps: 0.0,
+            cj: 0.0,
+            cjsw: 0.0,
             is: 1e-15,
             n_sub: 1.4,
             t_nom: 300.15,
@@ -93,9 +161,39 @@ impl Default for Level1Params {
             cgbo: 0.0,
             cbs: 0.0,
             cbd: 0.0,
+            pb: 0.8,
+            mj: 0.5,
+            mjsw: 0.33,
+            fc: 0.5,
+            kf: 0.0,
+            af: 1.0,
             subthreshold_enable: true,
         }
     }
+}
+
+/// Return the Level-1 bulk-junction depletion capacitance.
+pub fn bulk_junction_capacitance(
+    zero_bias_capacitance: f64,
+    junction_voltage: f64,
+    junction_potential: f64,
+    grading_coefficient: f64,
+    forward_bias_coefficient: f64,
+) -> f64 {
+    if zero_bias_capacitance <= 0.0 {
+        return zero_bias_capacitance;
+    }
+    if junction_potential <= 0.0 || grading_coefficient == 0.0 {
+        return zero_bias_capacitance;
+    }
+    let normalized_voltage = junction_voltage / junction_potential;
+    if normalized_voltage < forward_bias_coefficient {
+        return zero_bias_capacitance / (1.0 - normalized_voltage).powf(grading_coefficient);
+    }
+    let denominator = (1.0 - forward_bias_coefficient).powf(1.0 + grading_coefficient);
+    let continuation = 1.0 - forward_bias_coefficient * (1.0 + grading_coefficient)
+        + grading_coefficient * normalized_voltage;
+    zero_bias_capacitance * continuation / denominator
 }
 
 // ---------------------------------------------------------------------------
@@ -184,7 +282,64 @@ pub fn evaluate_level1(
     t: f64,
 ) -> MosResult {
     let p = params;
-    let beta = p.kp * (p.w / p.l);
+    let effective_length = p.l - 2.0 * p.ld;
+    assert!(
+        p.ld.is_finite() && p.ld >= 0.0 && effective_length > 0.0,
+        "MOSFET LD must be finite and non-negative with L - 2*LD > 0"
+    );
+    assert!(
+        p.tox.is_finite() && p.tox > 0.0,
+        "MOSFET TOX must be finite and positive"
+    );
+    assert!(
+        p.rd.is_finite() && p.rd >= 0.0,
+        "MOSFET RD must be finite and non-negative"
+    );
+    assert!(
+        p.rs.is_finite() && p.rs >= 0.0,
+        "MOSFET RS must be finite and non-negative"
+    );
+    assert!(
+        p.rsh.is_finite() && p.rsh >= 0.0,
+        "MOSFET RSH must be finite and non-negative"
+    );
+    assert!(
+        p.nrd.is_finite() && p.nrd >= 0.0,
+        "MOSFET NRD must be finite and non-negative"
+    );
+    assert!(
+        p.nrs.is_finite() && p.nrs >= 0.0,
+        "MOSFET NRS must be finite and non-negative"
+    );
+    assert!(
+        p.ad.is_finite() && p.ad >= 0.0,
+        "MOSFET AD must be finite and non-negative"
+    );
+    assert!(
+        p.as_.is_finite() && p.as_ >= 0.0,
+        "MOSFET AS must be finite and non-negative"
+    );
+    assert!(
+        p.pd.is_finite() && p.pd >= 0.0,
+        "MOSFET PD must be finite and non-negative"
+    );
+    assert!(
+        p.ps.is_finite() && p.ps >= 0.0,
+        "MOSFET PS must be finite and non-negative"
+    );
+    assert!(
+        p.cj.is_finite() && p.cj >= 0.0,
+        "MOSFET CJ must be finite and non-negative"
+    );
+    assert!(
+        p.cjsw.is_finite() && p.cjsw >= 0.0,
+        "MOSFET CJSW must be finite and non-negative"
+    );
+    assert!(
+        p.mjsw.is_finite() && p.mjsw >= 0.0,
+        "MOSFET MJSW must be finite and non-negative"
+    );
+    let beta = p.kp * (p.w / effective_length);
 
     // Threshold with body effect.
     // The formula √(PHI − V_BS) is valid when PHI ≥ V_BS.
@@ -201,12 +356,14 @@ pub fn evaluate_level1(
     // Overlap capacitances scale with W or L.
     let cgs_overlap = p.cgso * p.w;
     let cgd_overlap = p.cgdo * p.w;
-    let cgb_overlap = p.cgbo * p.l;
+    let cgb_overlap = p.cgbo * effective_length;
 
-    // Placeholder intrinsic capacitance (Meyer model, saturation reference).
-    // In saturation: C_gs_intrinsic ≈ (2/3) W L C_ox.
-    // We approximate C_ox as KP (units collapse to F/m² in the placeholder).
-    let cgs_intrinsic = (2.0 / 3.0) * p.w * p.l * p.kp;
+    // Meyer gate-to-channel capacitance, partitioned by operating region below.
+    let channel_capacitance = p.w * effective_length * (OXIDE_PERMITTIVITY / p.tox);
+    let cbs_bulk = bulk_junction_capacitance(p.cbs + p.cj * p.as_, v_bs, p.pb, p.mj, p.fc)
+        + bulk_junction_capacitance(p.cjsw * p.ps, v_bs, p.pb, p.mjsw, p.fc);
+    let cbd_bulk = bulk_junction_capacitance(p.cbd + p.cj * p.ad, v_bs - v_ds, p.pb, p.mj, p.fc)
+        + bulk_junction_capacitance(p.cjsw * p.pd, v_bs - v_ds, p.pb, p.mjsw, p.fc);
 
     // -----------------------------------------------------------------------
     // Cutoff / subthreshold
@@ -216,25 +373,20 @@ pub fn evaluate_level1(
             // Subthreshold: Id = β n V_T² exp(V_OV/(n V_T)) (1 − exp(−V_DS/V_T))
             // This smoothly matches the strong-inversion model at V_OV ≈ 0.
             let n = p.n_sub;
-            let id_sub = beta
-                * n
-                * vth
-                * vth
-                * (v_ov / (n * vth)).exp()
-                * (1.0 - (-v_ds / vth).exp());
+            let id_sub =
+                beta * n * vth * vth * (v_ov / (n * vth)).exp() * (1.0 - (-v_ds / vth).exp());
             let gm_sub = id_sub / (n * vth);
-            let gds_sub =
-                (beta * n * vth) * (v_ov / (n * vth)).exp() * (-v_ds / vth).exp();
+            let gds_sub = (beta * n * vth) * (v_ov / (n * vth)).exp() * (-v_ds / vth).exp();
             return MosResult {
                 id: id_sub,
                 gm: gm_sub,
                 gds: gds_sub,
                 gmb: 0.0,
-                cgs: cgs_overlap + cgs_intrinsic,
+                cgs: cgs_overlap + channel_capacitance,
                 cgd: cgd_overlap,
                 cgb: cgb_overlap,
-                cbs: p.cbs,
-                cbd: p.cbd,
+                cbs: cbs_bulk,
+                cbd: cbd_bulk,
                 region: Region::Subthreshold,
             };
         }
@@ -244,11 +396,11 @@ pub fn evaluate_level1(
             gm: 0.0,
             gds: 0.0,
             gmb: 0.0,
-            cgs: cgs_overlap + cgs_intrinsic,
+            cgs: cgs_overlap + channel_capacitance,
             cgd: cgd_overlap,
             cgb: cgb_overlap,
-            cbs: p.cbs,
-            cbd: p.cbd,
+            cbs: cbs_bulk,
+            cbd: cbd_bulk,
             region: Region::Cutoff,
         };
     }
@@ -265,9 +417,7 @@ pub fn evaluate_level1(
     // Triode (linear) region: 0 < V_DS < V_OV
     // -----------------------------------------------------------------------
     if v_ds < v_ov {
-        let id = beta
-            * (v_ov * v_ds - v_ds * v_ds / 2.0)
-            * (1.0 + p.lambda * v_ds);
+        let id = beta * (v_ov * v_ds - v_ds * v_ds / 2.0) * (1.0 + p.lambda * v_ds);
         let gm = beta * v_ds * (1.0 + p.lambda * v_ds);
         let gds = beta * (v_ov - v_ds) * (1.0 + p.lambda * v_ds)
             + beta * (v_ov * v_ds - v_ds * v_ds / 2.0) * p.lambda;
@@ -277,11 +427,11 @@ pub fn evaluate_level1(
             gm,
             gds,
             gmb,
-            cgs: cgs_overlap + cgs_intrinsic / 2.0,
-            cgd: cgd_overlap + cgs_intrinsic / 2.0,
+            cgs: cgs_overlap + channel_capacitance / 2.0,
+            cgd: cgd_overlap + channel_capacitance / 2.0,
             cgb: cgb_overlap,
-            cbs: p.cbs,
-            cbd: p.cbd,
+            cbs: cbs_bulk,
+            cbd: cbd_bulk,
             region: Region::Triode,
         };
     }
@@ -298,11 +448,11 @@ pub fn evaluate_level1(
         gm,
         gds,
         gmb,
-        cgs: cgs_overlap + (2.0 / 3.0) * cgs_intrinsic,
+        cgs: cgs_overlap + (2.0 / 3.0) * channel_capacitance,
         cgd: cgd_overlap,
         cgb: cgb_overlap,
-        cbs: p.cbs,
-        cbd: p.cbd,
+        cbs: cbs_bulk,
+        cbd: cbd_bulk,
         region: Region::Saturation,
     }
 }

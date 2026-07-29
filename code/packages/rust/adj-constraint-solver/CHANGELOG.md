@@ -1,5 +1,50 @@
 # Changelog
 
+## [0.16.0] - 2026-07-23 — absorb `ComputeExpr::ToCurrency` (NUM-6c)
+
+### Changed
+
+- The solver's `ComputeExpr` walkers gain a `ComputeExpr::ToCurrency` arm (the new NUM-6c
+  `to_currency` rendering, closing the formatter trio): it renders a number to a `CODE d.dd`
+  boundary string, so the LIA/linear/CAS extractors return `None` (out of scope, like the
+  round/to_scientific/to_percent family), the observed-value substitution rebuilds it with its
+  operand substituted (carrying the currency code, place count, and mode), and
+  `is_constant_expr` recurses into its operand. No behaviour change for existing inputs —
+  cross-producer totality for the new engine variant.
+
+## [0.15.0] - 2026-07-23 — absorb `ComputeExpr::ToPercent` (NUM-6c)
+
+### Changed
+
+- The solver's `ComputeExpr` walkers gain a `ComputeExpr::ToPercent` arm (the new NUM-6c
+  `to_percent` rendering): it renders a number to a boundary string, so the LIA/linear/CAS
+  extractors return `None` (out of scope, like the round/to_scientific family), the
+  observed-value substitution rebuilds it with its operand substituted, and
+  `is_constant_expr` recurses into its operand. No behaviour change for existing inputs —
+  cross-producer totality for the new engine variant.
+
+## [0.14.0] - 2026-07-22 — absorb `ComputeExpr::ToScientific` (NUM-6c)
+
+### Changed
+
+- The solver's `ComputeExpr` walkers gain a `ComputeExpr::ToScientific` arm (the new
+  NUM-6c `to_scientific` rendering): it renders a number to a boundary string, so the
+  LIA/linear/CAS extractors return `None` (out of scope, exactly like a round), the
+  observed-value substitution rebuilds it with its operand substituted, and
+  `is_constant_expr` recurses into its operand. No behaviour change for existing
+  inputs — this is cross-producer totality for the new engine variant.
+
+## [0.13.0] - 2026-07-22 — absorb `ComputeExpr::Round` (NUM-6a)
+
+### Changed
+
+- The solver's `ComputeExpr` walkers gain a `ComputeExpr::Round` arm (the new
+  NUM-6a `round_to` narrowing): non-linear/non-polynomial, so the LIA/linear/CAS
+  extractors return `None` (out of scope, like the unary round family), the
+  observed-value substitution rebuilds it with its operand substituted, and
+  `is_constant_expr` recurses into its operand. No behaviour change for existing
+  inputs — this is cross-producer totality for the new engine variant.
+
 ## [0.12.0] - 2026-07-01 — absorb `ComputeExpr::Unary` (`ComputeOp::Abs`)
 
 ### Changed

@@ -338,6 +338,7 @@ def bjt_at_temperature(
 
     if not math.isfinite(temperature_kelvin) or temperature_kelvin <= 0.0:
         raise ValueError("temperature_kelvin must be finite and positive")
+    nominal_temperature_kelvin = bjt.Tnom if bjt.Tnom is not None else nominal_temperature_kelvin
     if not math.isfinite(nominal_temperature_kelvin) or nominal_temperature_kelvin <= 0.0:
         raise ValueError("nominal_temperature_kelvin must be finite and positive")
     if not math.isfinite(energy_gap_ev) or energy_gap_ev <= 0.0:
@@ -353,10 +354,18 @@ def bjt_at_temperature(
         raise ValueError(
             f"{bjt.name}: BJT saturation-current temperature exponent must be finite"
         )
+    if not math.isfinite(bjt.Xtb):
+        raise ValueError(f"{bjt.name}: BJT beta temperature exponent must be finite")
+    if math.isnan(bjt.beta_r) or bjt.beta_r <= 0.0:
+        raise ValueError(f"{bjt.name}: BJT reverse beta must be positive")
     saturation_scale = ratio**bjt.Xti * math.exp(max(-100.0, min(100.0, exponent)))
     return replace(
         bjt,
         Is=bjt.Is * saturation_scale,
+        Ise=bjt.Ise * saturation_scale,
+        Isc=bjt.Isc * saturation_scale,
+        beta_f=bjt.beta_f * ratio**bjt.Xtb,
+        beta_r=bjt.beta_r * ratio**bjt.Xtb,
         Vt=bjt.Vt * ratio,
     )
 
@@ -393,6 +402,64 @@ def mosfet_at_temperature(
     )
 
 
+def jfet_at_temperature(
+    jfet: JFET,
+    temperature_kelvin: float,
+    *,
+    nominal_temperature_kelvin: float = 300.15,
+) -> JFET:
+    """Return a JFET with its temperature-dependent model values adjusted."""
+
+    if not math.isfinite(temperature_kelvin) or temperature_kelvin <= 0.0:
+        raise ValueError("temperature_kelvin must be finite and positive")
+    nominal_temperature = (
+        jfet.Tnom if jfet.Tnom is not None else nominal_temperature_kelvin
+    )
+    if not math.isfinite(nominal_temperature) or nominal_temperature <= 0.0:
+        raise ValueError("nominal_temperature_kelvin must be finite and positive")
+    if not math.isfinite(jfet.Xti):
+        raise ValueError(
+            f"{jfet.name}: JFET gate saturation-current temperature exponent must be finite"
+        )
+    if not math.isfinite(jfet.Eg) or jfet.Eg <= 0.0:
+        raise ValueError(f"{jfet.name}: JFET bandgap voltage must be finite and positive")
+    if not math.isfinite(jfet.B):
+        raise ValueError(f"{jfet.name}: JFET doping-tail parameter must be finite")
+    if not math.isfinite(jfet.Tcv):
+        raise ValueError(f"{jfet.name}: JFET TCV must be finite")
+    if jfet.Vtotc is not None and not math.isfinite(jfet.Vtotc):
+        raise ValueError(f"{jfet.name}: JFET VTOTC must be finite")
+    if not math.isfinite(jfet.Bex):
+        raise ValueError(f"{jfet.name}: JFET BEX must be finite")
+    if jfet.Betatce is not None and not math.isfinite(jfet.Betatce):
+        raise ValueError(f"{jfet.name}: JFET BETATCE must be finite")
+    temperature_ratio = temperature_kelvin / nominal_temperature
+    saturation_exponent = (
+        jfet.Eg
+        * _ELECTRON_CHARGE
+        / _BOLTZMANN
+        * (1.0 / nominal_temperature - 1.0 / temperature_kelvin)
+    )
+    saturation_scale = temperature_ratio**jfet.Xti * math.exp(
+        max(-100.0, min(100.0, saturation_exponent))
+    )
+    beta_scale = (
+        1.01 ** (jfet.Betatce * (temperature_kelvin - nominal_temperature))
+        if jfet.Betatce is not None
+        else temperature_ratio**jfet.Bex
+    )
+    return replace(
+        jfet,
+        vto=(
+            jfet.vto + jfet.Vtotc * (temperature_kelvin - nominal_temperature)
+            if jfet.Vtotc is not None
+            else jfet.vto - jfet.Tcv * (temperature_kelvin - nominal_temperature)
+        ),
+        beta=jfet.beta * beta_scale,
+        Is=jfet.Is * saturation_scale,
+    )
+
+
 def circuit_at_temperature(
     circuit: Circuit,
     temperature_kelvin: float,
@@ -416,6 +483,12 @@ def circuit_at_temperature(
                 temperature_kelvin,
                 nominal_temperature_kelvin=nominal_temperature_kelvin,
                 energy_gap_ev=element.Eg,
+            )
+        if isinstance(element, JFET):
+            return jfet_at_temperature(
+                element,
+                temperature_kelvin,
+                nominal_temperature_kelvin=nominal_temperature_kelvin,
             )
         if isinstance(element, Mosfet):
             return mosfet_at_temperature(
@@ -590,13 +663,16 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.Fc,
             element.Xti,
             element.Eg,
+            element.Rs,
+            element.Kf,
+            element.Af,
         )
     if isinstance(element, JFET):
-        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd)
+        return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd, element.Kf, element.Af, element.Pb, element.Fc, element.Is, element.Xti, element.Eg, element.B, element.Nlev, element.Gdsnoi, element.Rd, element.Rs, element.Tcv, element.Vtotc, element.Tnom, element.Bex, element.Betatce)
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom, element.Kf, element.Af, element.Ptf, element.Xtf, element.Itf, element.Vtf, element.Re, element.Rc, element.Rb, element.Rbm, element.Irb, element.Xcjc)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -7245,13 +7321,33 @@ def _element_nodes(el: Element) -> list[str]:
     if isinstance(el, CustomModel):
         return [el.n_plus, el.n_minus]
     if isinstance(el, Diode):
-        return [el.anode, el.cathode]
+        nodes = [el.anode, el.cathode]
+        if el.Rs > 0.0:
+            nodes.append(_diode_intrinsic_anode_node(el))
+        return nodes
     if isinstance(el, JFET):
-        return [el.drain, el.gate, el.source]
+        nodes = [el.drain, el.gate, el.source]
+        if el.Rd > 0.0:
+            nodes.append(_jfet_intrinsic_drain_node(el))
+        if el.Rs > 0.0:
+            nodes.append(_jfet_intrinsic_source_node(el))
+        return nodes
     if isinstance(el, Mosfet):
-        return [el.drain, el.gate, el.source, el.body]
+        nodes = [el.drain, el.gate, el.source, el.body]
+        if _mosfet_drain_resistance(el) > 0.0:
+            nodes.append(_mosfet_intrinsic_drain_node(el))
+        if _mosfet_source_resistance(el) > 0.0:
+            nodes.append(_mosfet_intrinsic_source_node(el))
+        return nodes
     if isinstance(el, BJT):
-        return [el.collector, el.base, el.emitter]
+        nodes = [el.collector, el.base, el.emitter]
+        if el.Re > 0.0:
+            nodes.append(_bjt_intrinsic_emitter_node(el))
+        if el.Rc > 0.0:
+            nodes.append(_bjt_intrinsic_collector_node(el))
+        if el.Rb > 0.0:
+            nodes.append(_bjt_intrinsic_base_node(el))
+        return nodes
     if isinstance(el, TransmissionLine):
         return [el.n1, el.n2, el.n3, el.n4]
     if isinstance(el, (VCVS, VCCS)):
@@ -8634,22 +8730,35 @@ def _stamp_diode(
 
     Newton: I0 = Is*(exp(Vd0/(N*Vt)) - 1), gd = (Is/(N*Vt))*exp(Vd0/(N*Vt)).
     Stamp gd as conductance + (gd*Vd0 - I0) as current source from cathode."""
-    Va = 0.0 if _is_ground(el.anode) else x[node_to_idx[el.anode]]
+    intrinsic_anode = _diode_intrinsic_anode_node(el)
+    Va = 0.0 if _is_ground(intrinsic_anode) else x[node_to_idx[intrinsic_anode]]
     Vk = 0.0 if _is_ground(el.cathode) else x[node_to_idx[el.cathode]]
     Vd = Va - Vk
     # Clamp to avoid exp overflow
     Vd = min(Vd, 0.7 * el.N)
     I0, gd = _diode_current_conductance(el, Vd)
 
-    _stamp_g(G, node_to_idx, el.anode, el.cathode, gd)
+    _stamp_g(G, node_to_idx, intrinsic_anode, el.cathode, gd)
     Ieq = I0 - gd * Vd
-    if not _is_ground(el.anode):
-        b[node_to_idx[el.anode]] -= Ieq
+    if not _is_ground(intrinsic_anode):
+        b[node_to_idx[intrinsic_anode]] -= Ieq
     if not _is_ground(el.cathode):
         b[node_to_idx[el.cathode]] += Ieq
+    if el.Rs > 0.0:
+        _stamp_g(G, node_to_idx, el.anode, intrinsic_anode, 1.0 / el.Rs)
 
 
 def _diode_effective_vt(el: Diode) -> float:
+    if not math.isfinite(el.Kf) or el.Kf < 0.0:
+        raise ValueError(
+            f"{el.name}: diode flicker-noise coefficient must be finite and non-negative"
+        )
+    if not math.isfinite(el.Af) or el.Af < 0.0:
+        raise ValueError(
+            f"{el.name}: diode flicker-noise exponent must be finite and non-negative"
+        )
+    if not math.isfinite(el.Rs) or el.Rs < 0.0:
+        raise ValueError(f"{el.name}: diode series resistance must be finite and non-negative")
     if not math.isfinite(el.N) or el.N <= 0.0:
         raise ValueError(f"{el.name}: diode emission coefficient must be finite and positive")
     if not math.isfinite(el.Vt) or el.Vt <= 0.0:
@@ -8696,6 +8805,10 @@ def _diode_charge_state_name(el: Diode) -> str:
     return f"_D_{el.name}_charge"
 
 
+def _diode_intrinsic_anode_node(el: Diode) -> str:
+    return el.anode if el.Rs == 0.0 else f"_D_{el.name}_anode"
+
+
 def _diode_has_charge_storage(el: Diode) -> bool:
     return el.Cjo > 0.0 or el.Tt > 0.0
 
@@ -8717,7 +8830,9 @@ def _diode_depletion_capacitance(el: Diode, vd: float) -> float:
 
 
 def _diode_charge_voltage(el: Diode, node_voltages: dict[str, float]) -> float:
-    return _node_voltage(el.anode, node_voltages) - _node_voltage(el.cathode, node_voltages)
+    return _node_voltage(_diode_intrinsic_anode_node(el), node_voltages) - _node_voltage(
+        el.cathode, node_voltages
+    )
 
 
 def _bjt_base_emitter_charge_state_name(el: BJT) -> str:
@@ -8728,30 +8843,128 @@ def _bjt_base_collector_charge_state_name(el: BJT) -> str:
     return f"_Q_{el.name}_bc_charge"
 
 
-def _bjt_junction_transconductance(el: BJT, voltage: float) -> float:
-    exponent = max(-40.0, min(40.0, voltage / el.Vt))
-    return (el.Is / el.Vt) * math.exp(exponent)
+def _bjt_external_base_collector_charge_state_name(el: BJT) -> str:
+    return f"_Q_{el.name}_bx_charge"
 
 
-def _bjt_charge_dynamic_capacitance(el: BJT, state_kind: str, voltage: float) -> float:
-    conductance = _bjt_junction_transconductance(el, voltage)
+def _bjt_intrinsic_emitter_node(el: BJT) -> str:
+    return el.emitter if el.Re == 0.0 else f"__spice_{el.name}_emitter"
+
+
+def _bjt_intrinsic_collector_node(el: BJT) -> str:
+    return el.collector if el.Rc == 0.0 else f"__spice_{el.name}_collector"
+
+
+def _bjt_intrinsic_base_node(el: BJT) -> str:
+    return el.base if el.Rb == 0.0 else f"__spice_{el.name}_base"
+
+
+def _bjt_junction_transconductance(el: BJT, voltage: float, emission_coefficient: float) -> float:
+    effective_thermal_voltage = el.Vt * emission_coefficient
+    exponent = max(-40.0, min(40.0, voltage / effective_thermal_voltage))
+    return (el.Is / effective_thermal_voltage) * math.exp(exponent)
+
+
+def _bjt_forward_transit_time_scale(
+    el: BJT,
+    voltage: float,
+    reverse_junction_voltage: float,
+) -> float:
+    effective_thermal_voltage = el.Vt * el.Nf
+    forward_current = max(
+        el.Is * (math.exp(max(-40.0, min(40.0, voltage / effective_thermal_voltage))) - 1.0),
+        0.0,
+    )
+    current_factor = 1.0
+    if el.Itf > 0.0:
+        ratio = forward_current / (forward_current + el.Itf)
+        current_factor = ratio * ratio
+    voltage_factor = 1.0
+    if el.Vtf > 0.0:
+        voltage_exponent = max(-40.0, min(40.0, reverse_junction_voltage / (1.44 * el.Vtf)))
+        voltage_factor = math.exp(voltage_exponent)
+    return 1.0 + el.Xtf * current_factor * voltage_factor
+
+
+def _bjt_charge_dynamic_capacitance(
+    el: BJT,
+    state_kind: str,
+    voltage: float,
+    reverse_junction_voltage: float,
+) -> float:
     if state_kind == "be":
-        return el.Cje + el.Tf * conductance
-    return el.Cjc + el.Tr * conductance
+        conductance = _bjt_junction_transconductance(el, voltage, el.Nf)
+        return (
+            _bjt_base_emitter_depletion_capacitance(el, voltage)
+            + el.Tf
+            * _bjt_forward_transit_time_scale(el, voltage, reverse_junction_voltage)
+            * conductance
+        )
+    depletion_capacitance = _bjt_base_collector_depletion_capacitance(el, voltage)
+    if state_kind == "bx":
+        return (1.0 - el.Xcjc) * depletion_capacitance
+    conductance = _bjt_junction_transconductance(el, voltage, el.Nr)
+    return el.Xcjc * depletion_capacitance + el.Tr * conductance
+
+
+def _bjt_base_emitter_depletion_capacitance(el: BJT, voltage: float) -> float:
+    if el.Cje <= 0.0 or el.Mje == 0.0:
+        return el.Cje
+    normalized_voltage = voltage / el.Vje
+    coefficient = el.Fc
+    if normalized_voltage < coefficient:
+        return el.Cje / ((1.0 - normalized_voltage) ** el.Mje)
+    transition_scale = (1.0 - coefficient) ** (1.0 + el.Mje)
+    continuation = 1.0 - coefficient * (1.0 + el.Mje) + el.Mje * normalized_voltage
+    return el.Cje * continuation / transition_scale
+
+
+def _bjt_base_collector_depletion_capacitance(el: BJT, voltage: float) -> float:
+    if el.Cjc <= 0.0 or el.Mjc == 0.0:
+        return el.Cjc
+    normalized_voltage = voltage / el.Vjc
+    coefficient = el.Fc
+    if normalized_voltage < coefficient:
+        return el.Cjc / ((1.0 - normalized_voltage) ** el.Mjc)
+    transition_scale = (1.0 - coefficient) ** (1.0 + el.Mjc)
+    continuation = 1.0 - coefficient * (1.0 + el.Mjc) + el.Mjc * normalized_voltage
+    return el.Cjc * continuation / transition_scale
 
 
 def _bjt_charge_state_specs(el: BJT) -> list[tuple[str, str, str, str]]:
     specs: list[tuple[str, str, str, str]] = []
+    emitter = _bjt_intrinsic_emitter_node(el)
+    collector = _bjt_intrinsic_collector_node(el)
+    base = _bjt_intrinsic_base_node(el)
     if el.Cje > 0.0 or el.Tf > 0.0:
         if el.polarity == "NPN":
-            specs.append((_bjt_base_emitter_charge_state_name(el), el.base, el.emitter, "be"))
+            specs.append((_bjt_base_emitter_charge_state_name(el), base, emitter, "be"))
         else:
-            specs.append((_bjt_base_emitter_charge_state_name(el), el.emitter, el.base, "be"))
-    if el.Cjc > 0.0 or el.Tr > 0.0:
+            specs.append((_bjt_base_emitter_charge_state_name(el), emitter, base, "be"))
+    if el.Cjc > 0.0 or el.Tr > 0.0 or (el.Tf > 0.0 and el.Xtf > 0.0 and el.Vtf > 0.0):
         if el.polarity == "NPN":
-            specs.append((_bjt_base_collector_charge_state_name(el), el.base, el.collector, "bc"))
+            specs.append((_bjt_base_collector_charge_state_name(el), base, collector, "bc"))
         else:
-            specs.append((_bjt_base_collector_charge_state_name(el), el.collector, el.base, "bc"))
+            specs.append((_bjt_base_collector_charge_state_name(el), collector, base, "bc"))
+    if el.Cjc > 0.0 and el.Xcjc < 1.0:
+        if el.polarity == "NPN":
+            specs.append(
+                (
+                    _bjt_external_base_collector_charge_state_name(el),
+                    el.base,
+                    collector,
+                    "bx",
+                )
+            )
+        else:
+            specs.append(
+                (
+                    _bjt_external_base_collector_charge_state_name(el),
+                    collector,
+                    el.base,
+                    "bx",
+                )
+            )
     return specs
 
 
@@ -8770,14 +8983,63 @@ def _jfet_gate_drain_charge_state_name(el: JFET) -> str:
 def _jfet_charge_state_specs(el: JFET) -> list[tuple[str, str, str, float]]:
     specs: list[tuple[str, str, str, float]] = []
     if el.Cgs > 0.0:
-        specs.append((_jfet_gate_source_charge_state_name(el), el.gate, el.source, el.Cgs))
+        specs.append(
+            (
+                _jfet_gate_source_charge_state_name(el),
+                el.gate,
+                _jfet_intrinsic_source_node(el),
+                el.Cgs,
+            )
+        )
     if el.Cgd > 0.0:
-        specs.append((_jfet_gate_drain_charge_state_name(el), el.gate, el.drain, el.Cgd))
+        specs.append(
+            (
+                _jfet_gate_drain_charge_state_name(el),
+                el.gate,
+                _jfet_intrinsic_drain_node(el),
+                el.Cgd,
+            )
+        )
     return specs
+
+
+def _jfet_intrinsic_drain_node(el: JFET) -> str:
+    return (
+        el.drain
+        if not math.isfinite(el.Rd) or el.Rd <= 0.0
+        else f"__spice_{el.name}_drain"
+    )
+
+
+def _jfet_intrinsic_source_node(el: JFET) -> str:
+    return (
+        el.source
+        if not math.isfinite(el.Rs) or el.Rs <= 0.0
+        else f"__spice_{el.name}_source"
+    )
 
 
 def _jfet_charge_state_voltage(n_plus: str, n_minus: str, node_voltages: dict[str, float]) -> float:
     return _node_voltage(n_plus, node_voltages) - _node_voltage(n_minus, node_voltages)
+
+
+def _jfet_charge_dynamic_capacitance(
+    el: JFET, zero_bias_capacitance: float, junction_voltage: float
+) -> float:
+    grading_coefficient = 0.5
+    oriented_voltage = -junction_voltage if el.polarity == "PJF" else junction_voltage
+    normalized_voltage = oriented_voltage / el.Pb
+    if normalized_voltage < el.Fc:
+        return zero_bias_capacitance / ((1.0 - normalized_voltage) ** grading_coefficient)
+    transition_scale = (1.0 - el.Fc) ** (
+        1.0 + grading_coefficient
+    )
+    continuation = (
+        1.0
+        - el.Fc * (1.0 + grading_coefficient)
+        + grading_coefficient * normalized_voltage
+    )
+    return zero_bias_capacitance * continuation / transition_scale
 
 
 def _mosfet_gate_source_charge_state_name(el: Mosfet) -> str:
@@ -8800,6 +9062,46 @@ def _mosfet_drain_body_charge_state_name(el: Mosfet) -> str:
     return f"_M_{el.name}_db_charge"
 
 
+def _mosfet_drain_resistance(el: Mosfet) -> float:
+    params = getattr(getattr(el.model, "model", None), "params", None)
+    drain_resistance = float(getattr(params, "RD", 0.0))
+    return (
+        drain_resistance
+        if drain_resistance > 0.0
+        else float(getattr(params, "RSH", 0.0))
+        * float(getattr(params, "NRD", 1.0))
+    )
+
+
+def _mosfet_intrinsic_drain_node(el: Mosfet) -> str:
+    drain_resistance = _mosfet_drain_resistance(el)
+    return (
+        el.drain
+        if not math.isfinite(drain_resistance) or drain_resistance <= 0.0
+        else f"__spice_{el.name}_drain"
+    )
+
+
+def _mosfet_source_resistance(el: Mosfet) -> float:
+    params = getattr(getattr(el.model, "model", None), "params", None)
+    source_resistance = float(getattr(params, "RS", 0.0))
+    return (
+        source_resistance
+        if source_resistance > 0.0
+        else float(getattr(params, "RSH", 0.0))
+        * float(getattr(params, "NRS", 1.0))
+    )
+
+
+def _mosfet_intrinsic_source_node(el: Mosfet) -> str:
+    source_resistance = _mosfet_source_resistance(el)
+    return (
+        el.source
+        if not math.isfinite(source_resistance) or source_resistance <= 0.0
+        else f"__spice_{el.name}_source"
+    )
+
+
 def _mosfet_charge_state_specs(el: Mosfet) -> list[tuple[str, str, str, float]]:
     params = getattr(getattr(el.model, "model", None), "params", None)
     if params is None:
@@ -8810,18 +9112,54 @@ def _mosfet_charge_state_specs(el: Mosfet) -> list[tuple[str, str, str, float]]:
     cgs = getattr(params, "CGSO", 0.0) * width
     cgd = getattr(params, "CGDO", 0.0) * width
     cgb = getattr(params, "CGBO", 0.0) * length
-    cbs = getattr(params, "CBS", 0.0)
-    cbd = getattr(params, "CBD", 0.0)
+    cbs = (
+        getattr(params, "CBS", 0.0)
+        + getattr(params, "CJ", 0.0) * getattr(params, "AS", 0.0)
+        + getattr(params, "CJSW", 0.0) * getattr(params, "PS", 0.0)
+    )
+    cbd = (
+        getattr(params, "CBD", 0.0)
+        + getattr(params, "CJ", 0.0) * getattr(params, "AD", 0.0)
+        + getattr(params, "CJSW", 0.0) * getattr(params, "PD", 0.0)
+    )
     if cgs > 0.0:
-        specs.append((_mosfet_gate_source_charge_state_name(el), el.gate, el.source, cgs))
+        specs.append(
+            (
+                _mosfet_gate_source_charge_state_name(el),
+                el.gate,
+                _mosfet_intrinsic_source_node(el),
+                cgs,
+            )
+        )
     if cgd > 0.0:
-        specs.append((_mosfet_gate_drain_charge_state_name(el), el.gate, el.drain, cgd))
+        specs.append(
+            (
+                _mosfet_gate_drain_charge_state_name(el),
+                el.gate,
+                _mosfet_intrinsic_drain_node(el),
+                cgd,
+            )
+        )
     if cgb > 0.0:
         specs.append((_mosfet_gate_body_charge_state_name(el), el.gate, el.body, cgb))
     if cbs > 0.0:
-        specs.append((_mosfet_source_body_charge_state_name(el), el.source, el.body, cbs))
+        specs.append(
+            (
+                _mosfet_source_body_charge_state_name(el),
+                _mosfet_intrinsic_source_node(el),
+                el.body,
+                cbs,
+            )
+        )
     if cbd > 0.0:
-        specs.append((_mosfet_drain_body_charge_state_name(el), el.drain, el.body, cbd))
+        specs.append(
+            (
+                _mosfet_drain_body_charge_state_name(el),
+                _mosfet_intrinsic_drain_node(el),
+                el.body,
+                cbd,
+            )
+        )
     return specs
 
 
@@ -8845,17 +9183,51 @@ def _mosfet_charge_dynamic_capacitance(
         return zero_bias_capacitance
     junction_potential = getattr(params, "PB", 0.8)
     grading_coefficient = getattr(params, "MJ", 0.5)
+    sidewall_grading_coefficient = getattr(params, "MJSW", 0.33)
+    forward_bias_coefficient = getattr(params, "FC", 0.5)
     if not math.isfinite(junction_potential) or junction_potential <= 0.0:
         raise ValueError(f"{el.name}: MOSFET PB must be finite and positive")
     if not math.isfinite(grading_coefficient) or grading_coefficient < 0.0:
         raise ValueError(f"{el.name}: MOSFET MJ must be finite and non-negative")
+    if (
+        not math.isfinite(sidewall_grading_coefficient)
+        or sidewall_grading_coefficient < 0.0
+    ):
+        raise ValueError(f"{el.name}: MOSFET MJSW must be finite and non-negative")
+    if (
+        not math.isfinite(forward_bias_coefficient)
+        or forward_bias_coefficient < 0.0
+        or forward_bias_coefficient >= 1.0
+    ):
+        raise ValueError(f"{el.name}: MOSFET FC must be finite and in [0, 1)")
     mosfet_type = getattr(el.model, "type", None)
     junction_voltage = state_voltage if mosfet_type == MosfetType.PMOS else -state_voltage
+    if state_name == _mosfet_source_body_charge_state_name(el):
+        bottom_capacitance = getattr(params, "CBS", 0.0) + (
+            getattr(params, "CJ", 0.0) * getattr(params, "AS", 0.0)
+        )
+        sidewall_capacitance = getattr(params, "CJSW", 0.0) * getattr(
+            params, "PS", 0.0
+        )
+    else:
+        bottom_capacitance = getattr(params, "CBD", 0.0) + (
+            getattr(params, "CJ", 0.0) * getattr(params, "AD", 0.0)
+        )
+        sidewall_capacitance = getattr(params, "CJSW", 0.0) * getattr(
+            params, "PD", 0.0
+        )
     return bulk_junction_capacitance(
-        zero_bias_capacitance,
+        bottom_capacitance,
         junction_voltage,
         junction_potential,
         grading_coefficient,
+        forward_bias_coefficient,
+    ) + bulk_junction_capacitance(
+        sidewall_capacitance,
+        junction_voltage,
+        junction_potential,
+        sidewall_grading_coefficient,
+        forward_bias_coefficient,
     )
 
 
@@ -8867,9 +9239,11 @@ def _stamp_mosfet(
     el: Mosfet,
 ) -> None:
     """Linearized MOSFET via mosfet_models.MOSFET.dc()."""
-    Vd = 0.0 if _is_ground(el.drain) else x[node_to_idx[el.drain]]
+    intrinsic_drain = _mosfet_intrinsic_drain_node(el)
+    intrinsic_source = _mosfet_intrinsic_source_node(el)
+    Vd = 0.0 if _is_ground(intrinsic_drain) else x[node_to_idx[intrinsic_drain]]
     Vg = 0.0 if _is_ground(el.gate) else x[node_to_idx[el.gate]]
-    Vs = 0.0 if _is_ground(el.source) else x[node_to_idx[el.source]]
+    Vs = 0.0 if _is_ground(intrinsic_source) else x[node_to_idx[intrinsic_source]]
     Vb = 0.0 if _is_ground(el.body) else x[node_to_idx[el.body]]
 
     V_GS = Vg - Vs
@@ -8883,26 +9257,129 @@ def _stamp_mosfet(
     gds = r.gds
 
     # Stamp gds (drain-source conductance) + Id companion source.
-    _stamp_g(G, node_to_idx, el.drain, el.source, gds)
+    _stamp_g(G, node_to_idx, intrinsic_drain, intrinsic_source, gds)
     # Stamp gm (transconductance: drain-current per V_GS).
-    if not _is_ground(el.drain):
-        d = node_to_idx[el.drain]
+    if not _is_ground(intrinsic_drain):
+        d = node_to_idx[intrinsic_drain]
         if not _is_ground(el.gate):
             G[d][node_to_idx[el.gate]] += gm
-        if not _is_ground(el.source):
-            G[d][node_to_idx[el.source]] -= gm
-    if not _is_ground(el.source):
-        s = node_to_idx[el.source]
+        if not _is_ground(intrinsic_source):
+            G[d][node_to_idx[intrinsic_source]] -= gm
+    if not _is_ground(intrinsic_source):
+        s = node_to_idx[intrinsic_source]
         if not _is_ground(el.gate):
             G[s][node_to_idx[el.gate]] -= gm
-        if not _is_ground(el.source):
-            G[s][node_to_idx[el.source]] += gm
+        if not _is_ground(intrinsic_source):
+            G[s][node_to_idx[intrinsic_source]] += gm
     # Companion current source for Id at this operating point
     Ieq = Id - gm * V_GS - gds * V_DS
-    if not _is_ground(el.drain):
-        b[node_to_idx[el.drain]] -= Ieq
-    if not _is_ground(el.source):
-        b[node_to_idx[el.source]] += Ieq
+    if not _is_ground(intrinsic_drain):
+        b[node_to_idx[intrinsic_drain]] -= Ieq
+    if not _is_ground(intrinsic_source):
+        b[node_to_idx[intrinsic_source]] += Ieq
+    _stamp_mosfet_bulk_junction(
+        G,
+        b,
+        node_to_idx,
+        el,
+        intrinsic_source,
+        Vs,
+        Vb,
+        el.model.model.params.AS,  # type: ignore[attr-defined]
+    )
+    _stamp_mosfet_bulk_junction(
+        G,
+        b,
+        node_to_idx,
+        el,
+        intrinsic_drain,
+        Vd,
+        Vb,
+        el.model.model.params.AD,  # type: ignore[attr-defined]
+    )
+    drain_resistance = _mosfet_drain_resistance(el)
+    if drain_resistance > 0.0:
+        _stamp_g(
+            G,
+            node_to_idx,
+            el.drain,
+            intrinsic_drain,
+            1.0 / drain_resistance,
+        )
+    source_resistance = _mosfet_source_resistance(el)
+    if source_resistance > 0.0:
+        _stamp_g(
+            G,
+            node_to_idx,
+            el.source,
+            intrinsic_source,
+            1.0 / source_resistance,
+        )
+
+
+def _mosfet_bulk_junction_current_conductance(
+    el: Mosfet,
+    terminal_voltage: float,
+    body_voltage: float,
+    terminal_area: float,
+) -> tuple[float, float]:
+    params = el.model.model.params  # type: ignore[attr-defined]
+    saturation_current = (
+        params.JS * terminal_area
+        if params.JS > 0.0 and params.AD > 0.0 and params.AS > 0.0
+        else params.IS
+    )
+    junction_voltage = (
+        body_voltage - terminal_voltage
+        if el.model.type == MosfetType.NMOS  # type: ignore[attr-defined]
+        else terminal_voltage - body_voltage
+    )
+    thermal_voltage = _BOLTZMANN * params.T_NOM / _ELECTRON_CHARGE
+    normalized_voltage = junction_voltage / thermal_voltage
+    limited_exp = math.exp(max(-40.0, min(40.0, normalized_voltage)))
+    if normalized_voltage > 40.0:
+        current_factor = limited_exp * (1.0 + normalized_voltage - 40.0)
+        conductance_factor = limited_exp
+    else:
+        current_factor = limited_exp
+        conductance_factor = limited_exp
+    return (
+        saturation_current * (current_factor - 1.0),
+        saturation_current / thermal_voltage * conductance_factor,
+    )
+
+
+def _stamp_mosfet_bulk_junction(
+    G: list[list[float]],
+    b: list[float],
+    node_to_idx: dict[str, int],
+    el: Mosfet,
+    terminal: str,
+    terminal_voltage: float,
+    body_voltage: float,
+    terminal_area: float,
+) -> None:
+    current, conductance = _mosfet_bulk_junction_current_conductance(
+        el,
+        terminal_voltage,
+        body_voltage,
+        terminal_area,
+    )
+    is_nmos = el.model.type == MosfetType.NMOS  # type: ignore[attr-defined]
+    junction_voltage = (
+        body_voltage - terminal_voltage
+        if is_nmos
+        else terminal_voltage - body_voltage
+    )
+    positive, negative = (
+        (el.body, terminal) if is_nmos else (terminal, el.body)
+    )
+    equivalent_current = current - conductance * junction_voltage
+    _stamp_g(G, node_to_idx, positive, negative, conductance)
+    if not _is_ground(positive):
+        b[node_to_idx[positive]] -= equivalent_current
+    if not _is_ground(negative):
+        b[node_to_idx[negative]] += equivalent_current
 
 
 def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
@@ -8916,30 +9393,168 @@ def _eval_jfet(el: JFET, vgs: float, vds: float) -> tuple[float, float, float]:
         raise ValueError(f"JFET '{el.name}' CGS must be finite and non-negative")
     if not math.isfinite(el.Cgd) or el.Cgd < 0.0:
         raise ValueError(f"JFET '{el.name}' CGD must be finite and non-negative")
+    if not math.isfinite(el.Kf) or el.Kf < 0.0:
+        raise ValueError(f"JFET '{el.name}' flicker-noise coefficient must be finite and non-negative")
+    if not math.isfinite(el.Af) or el.Af < 0.0:
+        raise ValueError(f"JFET '{el.name}' flicker-noise exponent must be finite and non-negative")
+    if not math.isfinite(el.Pb) or el.Pb <= 0.0:
+        raise ValueError(f"JFET '{el.name}' PB must be finite and positive")
+    if not math.isfinite(el.Fc) or el.Fc < 0.0 or el.Fc >= 1.0:
+        raise ValueError(f"JFET '{el.name}' FC must be finite and in [0, 1)")
+    if not math.isfinite(el.Is) or el.Is < 0.0:
+        raise ValueError(
+            f"JFET '{el.name}' gate saturation current must be finite and non-negative"
+        )
+    if not math.isfinite(el.Xti):
+        raise ValueError(
+            f"JFET '{el.name}' gate saturation-current temperature exponent must be finite"
+        )
+    if not math.isfinite(el.Eg) or el.Eg <= 0.0:
+        raise ValueError(
+            f"JFET '{el.name}' bandgap voltage must be finite and positive"
+        )
+    if not math.isfinite(el.B):
+        raise ValueError(f"JFET '{el.name}' doping-tail parameter must be finite")
+    if (
+        not math.isfinite(el.Nlev)
+        or el.Nlev < 1.0
+        or el.Nlev != math.floor(el.Nlev)
+    ):
+        raise ValueError(
+            f"JFET '{el.name}' noise equation level must be a finite integer "
+            "greater than or equal to 1"
+        )
+    if not math.isfinite(el.Gdsnoi) or el.Gdsnoi < 0.0:
+        raise ValueError(
+            f"JFET '{el.name}' channel noise coefficient must be finite and non-negative"
+        )
+    effective_threshold = el.vto if el.polarity == "NJF" else -el.vto
+    if el.B != 1.0 and el.Pb == effective_threshold:
+        raise ValueError(
+            f"JFET '{el.name}' PB - effective VTO must be non-zero when B differs from 1"
+        )
+    if not math.isfinite(el.Rd) or el.Rd < 0.0:
+        raise ValueError(f"JFET '{el.name}' drain resistance must be finite and non-negative")
+    if not math.isfinite(el.Rs) or el.Rs < 0.0:
+        raise ValueError(f"JFET '{el.name}' source resistance must be finite and non-negative")
+    if not math.isfinite(el.Tcv):
+        raise ValueError(f"JFET '{el.name}' TCV must be finite")
+    if el.Vtotc is not None and not math.isfinite(el.Vtotc):
+        raise ValueError(f"JFET '{el.name}' VTOTC must be finite")
+    if el.Tnom is not None and (not math.isfinite(el.Tnom) or el.Tnom <= 0.0):
+        raise ValueError(f"JFET '{el.name}' TNOM must be finite and positive")
+    if not math.isfinite(el.Bex):
+        raise ValueError(f"JFET '{el.name}' BEX must be finite")
+    if el.Betatce is not None and not math.isfinite(el.Betatce):
+        raise ValueError(f"JFET '{el.name}' BETATCE must be finite")
     if el.polarity == "PJF":
-        ids, gm, gds = _eval_njf(-vgs, -vds, -el.vto, el.beta, el.lambda_)
+        ids, gm, gds = _eval_njf(
+            -vgs, -vds, -el.vto, el.beta, el.lambda_, el.Pb, el.B
+        )
         return -ids, gm, gds
     if el.polarity != "NJF":
         raise ValueError(f"JFET '{el.name}' polarity must be 'NJF' or 'PJF'")
-    return _eval_njf(vgs, vds, el.vto, el.beta, el.lambda_)
+    return _eval_njf(vgs, vds, el.vto, el.beta, el.lambda_, el.Pb, el.B)
+
+
+_JFET_THERMAL_VOLTAGE = 0.02585
+
+
+def _jfet_gate_junction_current_conductance(
+    el: JFET, gate_voltage: float
+) -> tuple[float, float]:
+    junction_voltage = gate_voltage if el.polarity == "NJF" else -gate_voltage
+    exp_value = math.exp(
+        max(-40.0, min(40.0, junction_voltage / _JFET_THERMAL_VOLTAGE))
+    )
+    return (
+        el.Is * (exp_value - 1.0),
+        el.Is / _JFET_THERMAL_VOLTAGE * exp_value,
+    )
+
+
+def _jfet_channel_noise_conductance(
+    el: JFET, vgs: float, vds: float, gm: float
+) -> float:
+    if el.Nlev < 3.0:
+        return _MOSFET_CHANNEL_NOISE_GAMMA * abs(gm)
+    if el.polarity == "PJF":
+        vgs, vds, threshold = -vgs, -vds, -el.vto
+    else:
+        threshold = el.vto
+    overdrive = vgs - threshold
+    if overdrive <= 0.0 or vds < 0.0:
+        return 0.0
+    alpha = 1.0 - vds / overdrive if overdrive >= vds else 0.0
+    return (
+        _MOSFET_CHANNEL_NOISE_GAMMA
+        * el.beta
+        * overdrive
+        * (1.0 + alpha + alpha * alpha)
+        / (1.0 + alpha)
+        * el.Gdsnoi
+    )
+
+
+def _stamp_jfet_gate_junction(
+    G: list[list[float]],
+    b: list[float],
+    node_to_idx: dict[str, int],
+    el: JFET,
+    terminal: str,
+    gate_voltage: float,
+) -> None:
+    current, conductance = _jfet_gate_junction_current_conductance(el, gate_voltage)
+    junction_voltage = gate_voltage if el.polarity == "NJF" else -gate_voltage
+    equivalent_current = current - conductance * junction_voltage
+    positive, negative = (
+        (el.gate, terminal) if el.polarity == "NJF" else (terminal, el.gate)
+    )
+    _stamp_g(G, node_to_idx, positive, negative, conductance)
+    if not _is_ground(positive):
+        b[node_to_idx[positive]] -= equivalent_current
+    if not _is_ground(negative):
+        b[node_to_idx[negative]] += equivalent_current
 
 
 def _eval_njf(
-    vgs: float, vds: float, vto: float, beta: float, lambda_: float
+    vgs: float,
+    vds: float,
+    vto: float,
+    beta: float,
+    lambda_: float,
+    junction_potential: float,
+    doping_tail: float,
 ) -> tuple[float, float, float]:
     overdrive = vgs - vto
     if overdrive <= 0.0 or vds < 0.0:
         return (0.0, 0.0, 0.0)
+    tail_factor = (
+        0.0
+        if doping_tail == 1.0
+        else (1.0 - doping_tail) / (junction_potential - vto)
+    )
+    modulation = 1.0 + lambda_ * vds
     if vds < overdrive:
-        channel = 2.0 * overdrive * vds - vds * vds
-        modulation = 1.0 + lambda_ * vds
+        slope = 2.0 * doping_tail + 3.0 * tail_factor * (overdrive - vds)
+        channel = vds * (
+            vds * (tail_factor * vds - doping_tail) + overdrive * slope
+        )
         ids = beta * channel * modulation
-        gm = 2.0 * beta * vds * modulation
-        gds = beta * (2.0 * overdrive - 2.0 * vds) * modulation + beta * channel * lambda_
+        gm = beta * modulation * vds * (slope + 3.0 * tail_factor * overdrive)
+        gds = (
+            beta * modulation * (overdrive - vds) * slope
+            + beta * channel * lambda_
+        )
         return (ids, gm, gds)
-    ids = beta * overdrive * overdrive * (1.0 + lambda_ * vds)
-    gm = 2.0 * beta * overdrive * (1.0 + lambda_ * vds)
-    gds = beta * overdrive * overdrive * lambda_
+    channel = overdrive * overdrive * (
+        doping_tail + overdrive * tail_factor
+    )
+    ids = beta * channel * modulation
+    gm = beta * modulation * overdrive * (
+        2.0 * doping_tail + 3.0 * overdrive * tail_factor
+    )
+    gds = beta * channel * lambda_
     return (ids, gm, gds)
 
 
@@ -8950,31 +9565,172 @@ def _stamp_jfet(
     node_to_idx: dict[str, int],
     el: JFET,
 ) -> None:
-    Vd = 0.0 if _is_ground(el.drain) else x[node_to_idx[el.drain]]
+    intrinsic_drain = _jfet_intrinsic_drain_node(el)
+    intrinsic_source = _jfet_intrinsic_source_node(el)
+    Vd = 0.0 if _is_ground(intrinsic_drain) else x[node_to_idx[intrinsic_drain]]
     Vg = 0.0 if _is_ground(el.gate) else x[node_to_idx[el.gate]]
-    Vs = 0.0 if _is_ground(el.source) else x[node_to_idx[el.source]]
+    Vs = 0.0 if _is_ground(intrinsic_source) else x[node_to_idx[intrinsic_source]]
     vgs = Vg - Vs
     vds = Vd - Vs
     ids, gm, gds = _eval_jfet(el, vgs, vds)
 
-    _stamp_g(G, node_to_idx, el.drain, el.source, gds)
-    if not _is_ground(el.drain):
-        d = node_to_idx[el.drain]
+    _stamp_g(G, node_to_idx, intrinsic_drain, intrinsic_source, gds)
+    if not _is_ground(intrinsic_drain):
+        d = node_to_idx[intrinsic_drain]
         if not _is_ground(el.gate):
             G[d][node_to_idx[el.gate]] += gm
-        if not _is_ground(el.source):
-            G[d][node_to_idx[el.source]] -= gm
-    if not _is_ground(el.source):
-        s = node_to_idx[el.source]
+        if not _is_ground(intrinsic_source):
+            G[d][node_to_idx[intrinsic_source]] -= gm
+    if not _is_ground(intrinsic_source):
+        s = node_to_idx[intrinsic_source]
         if not _is_ground(el.gate):
             G[s][node_to_idx[el.gate]] -= gm
-        if not _is_ground(el.source):
-            G[s][node_to_idx[el.source]] += gm
+        if not _is_ground(intrinsic_source):
+            G[s][node_to_idx[intrinsic_source]] += gm
     Ieq = ids - gm * vgs - gds * vds
-    if not _is_ground(el.drain):
-        b[node_to_idx[el.drain]] -= Ieq
-    if not _is_ground(el.source):
-        b[node_to_idx[el.source]] += Ieq
+    if not _is_ground(intrinsic_drain):
+        b[node_to_idx[intrinsic_drain]] -= Ieq
+    if not _is_ground(intrinsic_source):
+        b[node_to_idx[intrinsic_source]] += Ieq
+    _stamp_jfet_gate_junction(G, b, node_to_idx, el, intrinsic_source, Vg - Vs)
+    _stamp_jfet_gate_junction(G, b, node_to_idx, el, intrinsic_drain, Vg - Vd)
+    if el.Rd > 0.0:
+        _stamp_g(G, node_to_idx, el.drain, intrinsic_drain, 1.0 / el.Rd)
+    if el.Rs > 0.0:
+        _stamp_g(G, node_to_idx, el.source, intrinsic_source, 1.0 / el.Rs)
+
+
+def _bjt_early_factor(el: BJT, junction_voltage: float, output_voltage: float) -> float:
+    forward_term = 0.0 if el.Vaf == 0.0 else output_voltage / el.Vaf
+    reverse_term = 0.0 if el.Var == 0.0 else junction_voltage / el.Var
+    return 1.0 + forward_term - reverse_term
+
+
+def _bjt_forward_transconductance(
+    el: BJT,
+    base_collector_current: float,
+    base_gm: float,
+    early_factor: float,
+) -> float:
+    reverse_early_conductance = 0.0 if el.Var == 0.0 else base_collector_current / el.Var
+    return base_gm * early_factor - reverse_early_conductance
+
+
+def _bjt_forward_transport(
+    el: BJT,
+    base_collector_current: float,
+    base_gm: float,
+    early_factor: float,
+) -> tuple[float, float, float]:
+    low_current_gm = _bjt_forward_transconductance(
+        el, base_collector_current, base_gm, early_factor
+    )
+    if el.Ikf == 0.0 or base_collector_current <= 0.0:
+        return base_collector_current * early_factor, low_current_gm, 1.0
+    root = math.sqrt(1.0 + 4.0 * base_collector_current / el.Ikf)
+    charge_factor = 0.5 * (1.0 + root)
+    charge_derivative = base_gm / (el.Ikf * root)
+    collector_current = base_collector_current * early_factor / charge_factor
+    gm = (
+        low_current_gm / charge_factor
+        - base_collector_current * early_factor * charge_derivative
+        / charge_factor**2
+    )
+    return collector_current, gm, charge_factor
+
+
+def _bjt_base_emitter_leakage(el: BJT, junction_voltage: float) -> tuple[float, float]:
+    if el.Ise == 0.0:
+        return 0.0, 0.0
+    thermal_voltage = el.Vt * el.Ne
+    exponent = max(-40.0, min(40.0, junction_voltage / thermal_voltage))
+    exp_value = math.exp(exponent)
+    return el.Ise * (exp_value - 1.0), el.Ise / thermal_voltage * exp_value
+
+
+def _bjt_base_collector_leakage(el: BJT, junction_voltage: float) -> tuple[float, float]:
+    if el.Isc == 0.0:
+        return 0.0, 0.0
+    thermal_voltage = el.Vt * el.Nc
+    exponent = max(-40.0, min(40.0, junction_voltage / thermal_voltage))
+    exp_value = math.exp(exponent)
+    return el.Isc * (exp_value - 1.0), el.Isc / thermal_voltage * exp_value
+
+
+def _bjt_reverse_base_current(el: BJT, junction_voltage: float) -> tuple[float, float]:
+    if math.isinf(el.beta_r):
+        return 0.0, 0.0
+    thermal_voltage = el.Vt * el.Nr
+    exponent = max(-40.0, min(40.0, junction_voltage / thermal_voltage))
+    exp_value = math.exp(exponent)
+    diffusion_current = el.Is * (exp_value - 1.0)
+    diffusion_conductance = el.Is / thermal_voltage * exp_value
+    if el.Ikr == 0.0 or diffusion_current <= 0.0:
+        return diffusion_current / el.beta_r, diffusion_conductance / el.beta_r
+    root = math.sqrt(1.0 + 4.0 * diffusion_current / el.Ikr)
+    charge_factor = 0.5 * (1.0 + root)
+    charge_derivative = diffusion_conductance / (el.Ikr * root)
+    return (
+        diffusion_current * charge_factor / el.beta_r,
+        (diffusion_conductance * charge_factor + diffusion_current * charge_derivative)
+        / el.beta_r,
+    )
+
+
+def _bjt_effective_base_resistance(
+    el: BJT,
+    base_voltage: float,
+    emitter_voltage: float,
+    collector_voltage: float,
+) -> float:
+    minimum = el.Rb if el.Rbm is None else el.Rbm
+    if minimum == el.Rb:
+        return el.Rb
+    junction_voltage = (
+        base_voltage - emitter_voltage
+        if el.polarity == "NPN"
+        else emitter_voltage - base_voltage
+    )
+    reverse_voltage = (
+        base_voltage - collector_voltage
+        if el.polarity == "NPN"
+        else collector_voltage - base_voltage
+    )
+    forward_thermal_voltage = el.Vt * el.Nf
+    exp_value = math.exp(
+        max(-40.0, min(40.0, junction_voltage / forward_thermal_voltage))
+    )
+    diffusion_current = el.Is * (exp_value - 1.0)
+    diffusion_conductance = el.Is / forward_thermal_voltage * exp_value
+    output_voltage = (
+        collector_voltage - emitter_voltage
+        if el.polarity == "NPN"
+        else emitter_voltage - collector_voltage
+    )
+    early_factor = _bjt_early_factor(el, junction_voltage, output_voltage)
+    _, _, charge_factor = _bjt_forward_transport(
+        el, diffusion_current, diffusion_conductance, early_factor
+    )
+    leakage_current, _ = _bjt_base_emitter_leakage(el, junction_voltage)
+    collector_leakage_current, _ = _bjt_base_collector_leakage(el, reverse_voltage)
+    reverse_base_current, _ = _bjt_reverse_base_current(el, reverse_voltage)
+    base_current = (
+        diffusion_current / el.beta_f
+        + leakage_current
+        + collector_leakage_current
+        + reverse_base_current
+    )
+    variable_resistance = el.Rb - minimum
+    if el.Irb == 0.0:
+        return minimum + variable_resistance / charge_factor
+    ratio = max(base_current / el.Irb, 1.0e-9)
+    angle = (
+        (-1.0 + math.sqrt(1.0 + 14.59025 * ratio))
+        / (2.4317 * math.sqrt(ratio))
+    )
+    tangent = math.tan(angle)
+    transition = 3.0 * (tangent - angle) / (angle * tangent * tangent)
+    return minimum + variable_resistance * transition
 
 
 def _stamp_bjt(
@@ -9044,6 +9800,22 @@ def _stamp_bjt(
     the control voltage (Ve - Vb vs Vb - Ve) yields the correct KCL stamps.
     """
     _validate_bjt(el)
+    if el.Re > 0.0:
+        intrinsic_emitter = _bjt_intrinsic_emitter_node(el)
+        _stamp_g(G, node_to_idx, el.emitter, intrinsic_emitter, 1.0 / el.Re)
+        el = replace(el, emitter=intrinsic_emitter, Re=0.0)
+    if el.Rc > 0.0:
+        intrinsic_collector = _bjt_intrinsic_collector_node(el)
+        _stamp_g(G, node_to_idx, el.collector, intrinsic_collector, 1.0 / el.Rc)
+        el = replace(el, collector=intrinsic_collector, Rc=0.0)
+    if el.Rb > 0.0:
+        intrinsic_base = _bjt_intrinsic_base_node(el)
+        Vb_rb = 0.0 if _is_ground(intrinsic_base) else x[node_to_idx[intrinsic_base]]
+        Ve_rb = 0.0 if _is_ground(el.emitter) else x[node_to_idx[el.emitter]]
+        Vc_rb = 0.0 if _is_ground(el.collector) else x[node_to_idx[el.collector]]
+        base_resistance = _bjt_effective_base_resistance(el, Vb_rb, Ve_rb, Vc_rb)
+        _stamp_g(G, node_to_idx, el.base, intrinsic_base, 1.0 / base_resistance)
+        el = replace(el, base=intrinsic_base, Rb=0.0, Rbm=None, Irb=0.0)
     # --- Resolve node voltages at the current Newton iterate -----------------
     Vb = 0.0 if _is_ground(el.base) else x[node_to_idx[el.base]]
     Ve = 0.0 if _is_ground(el.emitter) else x[node_to_idx[el.emitter]]
@@ -9051,22 +9823,42 @@ def _stamp_bjt(
 
     # --- Controlling junction voltage (clamped to avoid exp overflow) --------
     Vjunc = min(Vb - Ve, 0.7) if el.polarity == "NPN" else min(Ve - Vb, 0.7)
+    Vreverse = Vb - Vc if el.polarity == "NPN" else Vc - Vb
 
-    exp_term = math.exp(Vjunc / el.Vt)
+    forward_thermal_voltage = el.Vt * el.Nf
+    exp_term = math.exp(Vjunc / forward_thermal_voltage)
     base_collector_current = el.Is * (exp_term - 1.0)
-    base_gm = (el.Is / el.Vt) * exp_term
+    base_gm = (el.Is / forward_thermal_voltage) * exp_term
     output_voltage = Vc - Ve if el.polarity == "NPN" else Ve - Vc
-    early_factor = 1.0 if el.Vaf == 0.0 else 1.0 + output_voltage / el.Vaf
-    output_conductance = 0.0 if el.Vaf == 0.0 else base_collector_current / el.Vaf
-    Ic0 = base_collector_current * early_factor
-    gm = base_gm * early_factor
-    g_pi = base_gm / el.beta_f
-    Ib0 = base_collector_current / el.beta_f
+    early_factor = _bjt_early_factor(el, Vjunc, output_voltage)
+    Ic0, gm, charge_factor = _bjt_forward_transport(
+        el, base_collector_current, base_gm, early_factor
+    )
+    output_conductance = (
+        0.0 if el.Vaf == 0.0 else base_collector_current / el.Vaf / charge_factor
+    )
+    leakage_current, leakage_conductance = _bjt_base_emitter_leakage(el, Vjunc)
+    g_pi = base_gm / el.beta_f + leakage_conductance
+    Ib0 = base_collector_current / el.beta_f + leakage_current
 
     Ieq_junc = Ib0 - g_pi * Vjunc      # junction Norton offset
     Ieq_coll = Ic0 - gm * Vjunc - output_conductance * output_voltage
+    collector_leakage_current, collector_leakage_conductance = (
+        _bjt_base_collector_leakage(el, Vreverse)
+    )
+    reverse_base_current, reverse_base_conductance = _bjt_reverse_base_current(
+        el, Vreverse
+    )
+    base_collector_current = collector_leakage_current + reverse_base_current
+    base_collector_conductance = (
+        collector_leakage_conductance + reverse_base_conductance
+    )
+    Ieq_collector_leakage = (
+        base_collector_current - base_collector_conductance * Vreverse
+    )
 
     _stamp_g(G, node_to_idx, el.collector, el.emitter, output_conductance)
+    _stamp_g(G, node_to_idx, el.base, el.collector, base_collector_conductance)
 
     if el.polarity == "NPN":
         # --- Junction stamp: gπ between B and E ------------------------------
@@ -9094,6 +9886,10 @@ def _stamp_bjt(
             b[node_to_idx[el.collector]] -= Ieq_coll
         if not _is_ground(el.emitter):
             b[node_to_idx[el.emitter]] += Ieq_coll
+        if not _is_ground(el.base):
+            b[node_to_idx[el.base]] -= Ieq_collector_leakage
+        if not _is_ground(el.collector):
+            b[node_to_idx[el.collector]] += Ieq_collector_leakage
 
     else:
         # PNP: Vjunc = Ve - Vb; emitter injects, collector collects.
@@ -9122,6 +9918,10 @@ def _stamp_bjt(
             b[node_to_idx[el.emitter]] -= Ieq_coll
         if not _is_ground(el.collector):
             b[node_to_idx[el.collector]] += Ieq_coll
+        if not _is_ground(el.collector):
+            b[node_to_idx[el.collector]] -= Ieq_collector_leakage
+        if not _is_ground(el.base):
+            b[node_to_idx[el.base]] += Ieq_collector_leakage
 
 
 def _validate_bjt(el: BJT) -> None:
@@ -9131,6 +9931,8 @@ def _validate_bjt(el: BJT) -> None:
         raise ValueError(f"{el.name}: BJT saturation current must be finite and positive")
     if not math.isfinite(el.beta_f) or el.beta_f <= 0.0:
         raise ValueError(f"{el.name}: BJT forward beta must be finite and positive")
+    if math.isnan(el.beta_r) or el.beta_r <= 0.0:
+        raise ValueError(f"{el.name}: BJT reverse beta must be positive")
     if not math.isfinite(el.Vt) or el.Vt <= 0.0:
         raise ValueError(f"{el.name}: BJT thermal voltage must be finite and positive")
     if not math.isfinite(el.Cje) or el.Cje < 0.0:
@@ -9145,10 +9947,96 @@ def _validate_bjt(el: BJT) -> None:
         raise ValueError(
             f"{el.name}: BJT saturation-current temperature exponent must be finite"
         )
+    if not math.isfinite(el.Xtb):
+        raise ValueError(f"{el.name}: BJT beta temperature exponent must be finite")
     if not math.isfinite(el.Eg) or el.Eg <= 0.0:
         raise ValueError(f"{el.name}: BJT energy gap must be finite and positive")
     if not math.isfinite(el.Vaf) or el.Vaf < 0.0:
         raise ValueError(f"{el.name}: BJT forward Early voltage must be finite and non-negative")
+    if not math.isfinite(el.Var) or el.Var < 0.0:
+        raise ValueError(f"{el.name}: BJT reverse Early voltage must be finite and non-negative")
+    if not math.isfinite(el.Ikf) or el.Ikf < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT forward beta roll-off current must be finite and non-negative"
+        )
+    if not math.isfinite(el.Ikr) or el.Ikr < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT reverse beta roll-off current must be finite and non-negative"
+        )
+    if el.Tnom is not None and (not math.isfinite(el.Tnom) or el.Tnom <= 0.0):
+        raise ValueError(f"{el.name}: BJT nominal temperature must be finite and positive")
+    if not math.isfinite(el.Kf) or el.Kf < 0.0:
+        raise ValueError(f"{el.name}: BJT flicker noise coefficient must be finite and non-negative")
+    if not math.isfinite(el.Af) or el.Af < 0.0:
+        raise ValueError(f"{el.name}: BJT flicker noise exponent must be finite and non-negative")
+    if not math.isfinite(el.Ptf) or el.Ptf < 0.0:
+        raise ValueError(f"{el.name}: BJT forward excess phase must be finite and non-negative")
+    if not math.isfinite(el.Xtf) or el.Xtf < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT forward transit-time bias coefficient must be finite and non-negative"
+        )
+    if not math.isfinite(el.Itf) or el.Itf < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT forward transit-time current must be finite and non-negative"
+        )
+    if not math.isfinite(el.Vtf) or el.Vtf < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT forward transit-time voltage must be finite and non-negative"
+        )
+    if not math.isfinite(el.Re) or el.Re < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT emitter resistance must be finite and non-negative"
+        )
+    if not math.isfinite(el.Rc) or el.Rc < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT collector resistance must be finite and non-negative"
+        )
+    if not math.isfinite(el.Rb) or el.Rb < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT base resistance must be finite and non-negative"
+        )
+    if el.Rbm is not None and (not math.isfinite(el.Rbm) or el.Rbm < 0.0):
+        raise ValueError(
+            f"{el.name}: BJT minimum base resistance must be finite and non-negative"
+        )
+    if not math.isfinite(el.Irb) or el.Irb < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT base-resistance half-current must be finite and non-negative"
+        )
+    if not math.isfinite(el.Xcjc) or not 0.0 <= el.Xcjc <= 1.0:
+        raise ValueError(
+            f"{el.name}: BJT base-collector capacitance fraction must be between zero and one"
+        )
+    if not math.isfinite(el.Ise) or el.Ise < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT base-emitter leakage saturation current must be finite and non-negative"
+        )
+    if not math.isfinite(el.Ne) or el.Ne <= 0.0:
+        raise ValueError(
+            f"{el.name}: BJT base-emitter leakage emission coefficient must be finite and positive"
+        )
+    if not math.isfinite(el.Isc) or el.Isc < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT base-collector leakage saturation current must be finite and non-negative"
+        )
+    if not math.isfinite(el.Nc) or el.Nc <= 0.0:
+        raise ValueError(
+            f"{el.name}: BJT base-collector leakage emission coefficient must be finite and positive"
+        )
+    if not math.isfinite(el.Nf) or el.Nf <= 0.0:
+        raise ValueError(f"{el.name}: BJT forward emission coefficient must be finite and positive")
+    if not math.isfinite(el.Nr) or el.Nr <= 0.0:
+        raise ValueError(f"{el.name}: BJT reverse emission coefficient must be finite and positive")
+    if not math.isfinite(el.Vje) or el.Vje <= 0.0:
+        raise ValueError(f"{el.name}: BJT base-emitter junction potential must be finite and positive")
+    if not math.isfinite(el.Mje) or not 0.0 <= el.Mje < 1.0:
+        raise ValueError(f"{el.name}: BJT base-emitter grading coefficient must be finite and in [0, 1)")
+    if not math.isfinite(el.Vjc) or el.Vjc <= 0.0:
+        raise ValueError(f"{el.name}: BJT base-collector junction potential must be finite and positive")
+    if not math.isfinite(el.Mjc) or not 0.0 <= el.Mjc < 1.0:
+        raise ValueError(f"{el.name}: BJT base-collector grading coefficient must be finite and in [0, 1)")
+    if not math.isfinite(el.Fc) or not 0.0 <= el.Fc < 1.0:
+        raise ValueError(f"{el.name}: BJT forward-bias depletion coefficient must be finite and in [0, 1)")
 
 
 # ---------------------------------------------------------------------------
@@ -9795,6 +10683,7 @@ def _build_transient_companions(
         elif isinstance(el, JFET):
             for state_name, n_plus, n_minus, capacitance in _jfet_charge_state_specs(el):
                 v_prev = cap_voltages.get(state_name, 0.0)
+                capacitance = _jfet_charge_dynamic_capacitance(el, capacitance, v_prev)
                 if method == "trap":
                     g_eq = 2.0 * capacitance / h
                     I_eq = g_eq * v_prev + cap_currents.get(state_name, 0.0)
@@ -9857,9 +10746,18 @@ def _build_transient_companions(
 
         # ---- BJT model-card charge companions ------------------------------
         elif isinstance(el, BJT):
+            reverse_junction_voltage = cap_voltages.get(
+                _bjt_base_collector_charge_state_name(el),
+                0.0,
+            )
             for state_name, n_plus, n_minus, state_kind in _bjt_charge_state_specs(el):
                 v_prev = cap_voltages.get(state_name, 0.0)
-                capacitance = _bjt_charge_dynamic_capacitance(el, state_kind, v_prev)
+                capacitance = _bjt_charge_dynamic_capacitance(
+                    el,
+                    state_kind,
+                    v_prev,
+                    reverse_junction_voltage,
+                )
                 if capacitance <= 0.0:
                     continue
                 if method == "trap":
@@ -10048,6 +10946,7 @@ def _update_reactive_state(
                 v_new = _jfet_charge_state_voltage(n_plus, n_minus, op.node_voltages)
                 v_prev = cap_voltages.get(state_name, v_new)
                 v_older = cap_voltages_older.get(state_name, v_prev)
+                capacitance = _jfet_charge_dynamic_capacitance(el, capacitance, v_prev)
 
                 if method == "trap":
                     g_eq = 2.0 * capacitance / h
@@ -10099,11 +10998,20 @@ def _update_reactive_state(
                 cap_voltages[state_name] = v_new
 
         elif isinstance(el, BJT):
+            reverse_junction_voltage = cap_voltages.get(
+                _bjt_base_collector_charge_state_name(el),
+                0.0,
+            )
             for state_name, n_plus, n_minus, state_kind in _bjt_charge_state_specs(el):
                 v_new = _bjt_charge_state_voltage(n_plus, n_minus, op.node_voltages)
                 v_prev = cap_voltages.get(state_name, v_new)
                 v_older = cap_voltages_older.get(state_name, v_prev)
-                capacitance = _bjt_charge_dynamic_capacitance(el, state_kind, v_prev)
+                capacitance = _bjt_charge_dynamic_capacitance(
+                    el,
+                    state_kind,
+                    v_prev,
+                    reverse_junction_voltage,
+                )
 
                 if capacitance > 0.0:
                     if method == "trap":
@@ -12285,7 +13193,8 @@ def _stamp_ac(
         # Small-signal model: linearised conductance gd = (Is/(N*Vt))·exp(Vd/(N*Vt)).
         # The dynamic (differential) conductance is the derivative of
         # I = Is*(exp(Vd/(N*Vt)) − 1) with respect to Vd, evaluated at the OP.
-        Va = 0.0 if _is_ground(el.anode) else dc_x[node_to_idx[el.anode]]
+        intrinsic_anode = _diode_intrinsic_anode_node(el)
+        Va = 0.0 if _is_ground(intrinsic_anode) else dc_x[node_to_idx[intrinsic_anode]]
         Vk = 0.0 if _is_ground(el.cathode) else dc_x[node_to_idx[el.cathode]]
         Vd = Va - Vk
         _, gd = _diode_current_conductance(el, Vd)
@@ -12294,68 +13203,173 @@ def _stamp_ac(
         _stamp_g_c(
             G,
             node_to_idx,
-            el.anode,
+            intrinsic_anode,
             el.cathode,
             gd + 1j * omega * (depletion_capacitance + diffusion_capacitance),
         )
+        if el.Rs > 0.0:
+            _stamp_g_c(G, node_to_idx, el.anode, intrinsic_anode, 1.0 / el.Rs)
 
     elif isinstance(el, JFET):
-        Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
+        intrinsic_drain = _jfet_intrinsic_drain_node(el)
+        intrinsic_source = _jfet_intrinsic_source_node(el)
+        Vd = 0.0 if _is_ground(intrinsic_drain) else dc_x[node_to_idx[intrinsic_drain]]
         Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
-        Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+        Vs = 0.0 if _is_ground(intrinsic_source) else dc_x[node_to_idx[intrinsic_source]]
         _, gm_j, gds_j = _eval_jfet(el, Vg - Vs, Vd - Vs)
-        _stamp_g_c(G, node_to_idx, el.drain, el.source, gds_j + 0j)
+        _, ggs = _jfet_gate_junction_current_conductance(el, Vg - Vs)
+        _, ggd = _jfet_gate_junction_current_conductance(el, Vg - Vd)
+        _stamp_g_c(G, node_to_idx, intrinsic_drain, intrinsic_source, gds_j + 0j)
+        _stamp_g_c(G, node_to_idx, el.gate, intrinsic_source, ggs + 0j)
+        _stamp_g_c(G, node_to_idx, el.gate, intrinsic_drain, ggd + 0j)
         if el.Cgs > 0.0:
-            _stamp_g_c(G, node_to_idx, el.gate, el.source, 1j * omega * el.Cgs)
+            cgs = _jfet_charge_dynamic_capacitance(el, el.Cgs, Vg - Vs)
+            _stamp_g_c(G, node_to_idx, el.gate, intrinsic_source, 1j * omega * cgs)
         if el.Cgd > 0.0:
-            _stamp_g_c(G, node_to_idx, el.gate, el.drain, 1j * omega * el.Cgd)
-        if not _is_ground(el.drain):
-            d = node_to_idx[el.drain]
+            cgd = _jfet_charge_dynamic_capacitance(el, el.Cgd, Vg - Vd)
+            _stamp_g_c(G, node_to_idx, el.gate, intrinsic_drain, 1j * omega * cgd)
+        if not _is_ground(intrinsic_drain):
+            d = node_to_idx[intrinsic_drain]
             if not _is_ground(el.gate):
                 G[d][node_to_idx[el.gate]] += gm_j + 0j
-            if not _is_ground(el.source):
-                G[d][node_to_idx[el.source]] -= gm_j + 0j
-        if not _is_ground(el.source):
-            s = node_to_idx[el.source]
+            if not _is_ground(intrinsic_source):
+                G[d][node_to_idx[intrinsic_source]] -= gm_j + 0j
+        if not _is_ground(intrinsic_source):
+            s = node_to_idx[intrinsic_source]
             if not _is_ground(el.gate):
                 G[s][node_to_idx[el.gate]] -= gm_j + 0j
-            if not _is_ground(el.source):
-                G[s][node_to_idx[el.source]] += gm_j + 0j
+            if not _is_ground(intrinsic_source):
+                G[s][node_to_idx[intrinsic_source]] += gm_j + 0j
+        if el.Rd > 0.0:
+            _stamp_g_c(G, node_to_idx, el.drain, intrinsic_drain, 1.0 / el.Rd)
+        if el.Rs > 0.0:
+            _stamp_g_c(G, node_to_idx, el.source, intrinsic_source, 1.0 / el.Rs)
 
     elif isinstance(el, Mosfet):
         # Small-signal model: gds (output conductance) + gm (transconductance).
         # The gm VCCS is stamped as off-diagonal conductance entries.
-        Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
+        intrinsic_drain = _mosfet_intrinsic_drain_node(el)
+        intrinsic_source = _mosfet_intrinsic_source_node(el)
+        Vd = (
+            0.0
+            if _is_ground(intrinsic_drain)
+            else dc_x[node_to_idx[intrinsic_drain]]
+        )
         Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
-        Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+        Vs = (
+            0.0
+            if _is_ground(intrinsic_source)
+            else dc_x[node_to_idx[intrinsic_source]]
+        )
         Vb = 0.0 if _is_ground(el.body) else dc_x[node_to_idx[el.body]]
         r = el.model.dc(Vg - Vs, Vd - Vs, Vb - Vs)  # type: ignore[attr-defined]
         gm_m: float = r.gm
         gds_m: float = r.gds
-        _stamp_g_c(G, node_to_idx, el.drain, el.source, gds_m + 0j)
-        _stamp_g_c(G, node_to_idx, el.gate, el.source, 1j * omega * r.Cgs)
-        _stamp_g_c(G, node_to_idx, el.gate, el.drain, 1j * omega * r.Cgd)
+        _, source_bulk_conductance = _mosfet_bulk_junction_current_conductance(
+            el, Vs, Vb, el.model.model.params.AS  # type: ignore[attr-defined]
+        )
+        _, drain_bulk_conductance = _mosfet_bulk_junction_current_conductance(
+            el, Vd, Vb, el.model.model.params.AD  # type: ignore[attr-defined]
+        )
+        _stamp_g_c(G, node_to_idx, intrinsic_drain, intrinsic_source, gds_m + 0j)
+        _stamp_g_c(G, node_to_idx, el.gate, intrinsic_source, 1j * omega * r.Cgs)
+        _stamp_g_c(G, node_to_idx, el.gate, intrinsic_drain, 1j * omega * r.Cgd)
         _stamp_g_c(G, node_to_idx, el.gate, el.body, 1j * omega * r.Cgb)
-        _stamp_g_c(G, node_to_idx, el.body, el.source, 1j * omega * r.Cbs)
-        _stamp_g_c(G, node_to_idx, el.body, el.drain, 1j * omega * r.Cbd)
-        if not _is_ground(el.drain):
-            d = node_to_idx[el.drain]
+        _stamp_g_c(
+            G,
+            node_to_idx,
+            el.body,
+            intrinsic_source,
+            source_bulk_conductance + 1j * omega * r.Cbs,
+        )
+        _stamp_g_c(
+            G,
+            node_to_idx,
+            el.body,
+            intrinsic_drain,
+            drain_bulk_conductance + 1j * omega * r.Cbd,
+        )
+        if not _is_ground(intrinsic_drain):
+            d = node_to_idx[intrinsic_drain]
             if not _is_ground(el.gate):
                 G[d][node_to_idx[el.gate]] += gm_m + 0j
-            if not _is_ground(el.source):
-                G[d][node_to_idx[el.source]] -= gm_m + 0j
-        if not _is_ground(el.source):
-            s = node_to_idx[el.source]
+            if not _is_ground(intrinsic_source):
+                G[d][node_to_idx[intrinsic_source]] -= gm_m + 0j
+        if not _is_ground(intrinsic_source):
+            s = node_to_idx[intrinsic_source]
             if not _is_ground(el.gate):
                 G[s][node_to_idx[el.gate]] -= gm_m + 0j
-            if not _is_ground(el.source):
-                G[s][node_to_idx[el.source]] += gm_m + 0j
+            if not _is_ground(intrinsic_source):
+                G[s][node_to_idx[intrinsic_source]] += gm_m + 0j
+        drain_resistance = _mosfet_drain_resistance(el)
+        if drain_resistance > 0.0:
+            _stamp_g_c(
+                G,
+                node_to_idx,
+                el.drain,
+                intrinsic_drain,
+                1.0 / drain_resistance,
+            )
+        source_resistance = _mosfet_source_resistance(el)
+        if source_resistance > 0.0:
+            _stamp_g_c(
+                G,
+                node_to_idx,
+                el.source,
+                intrinsic_source,
+                1.0 / source_resistance,
+            )
 
     elif isinstance(el, BJT):
         # Small-signal model: g_π (junction conductance) + gm (transconductance
         # VCCS).  Mirror the DC _stamp_bjt stamps but in the complex domain and
         # without the Norton offsets (which are DC bias terms, zero in AC).
         _validate_bjt(el)
+        external_base = el.base
+        if el.Re > 0.0:
+            intrinsic_emitter = _bjt_intrinsic_emitter_node(el)
+            _stamp_g_c(
+                G,
+                node_to_idx,
+                el.emitter,
+                intrinsic_emitter,
+                complex(1.0 / el.Re),
+            )
+            el = replace(el, emitter=intrinsic_emitter, Re=0.0)
+        if el.Rc > 0.0:
+            intrinsic_collector = _bjt_intrinsic_collector_node(el)
+            _stamp_g_c(
+                G,
+                node_to_idx,
+                el.collector,
+                intrinsic_collector,
+                complex(1.0 / el.Rc),
+            )
+            el = replace(el, collector=intrinsic_collector, Rc=0.0)
+        if el.Rb > 0.0:
+            intrinsic_base = _bjt_intrinsic_base_node(el)
+            Vb_rb = (
+                0.0
+                if _is_ground(intrinsic_base)
+                else dc_x[node_to_idx[intrinsic_base]]
+            )
+            Ve_rb = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
+            Vc_rb = (
+                0.0
+                if _is_ground(el.collector)
+                else dc_x[node_to_idx[el.collector]]
+            )
+            base_resistance = _bjt_effective_base_resistance(
+                el, Vb_rb, Ve_rb, Vc_rb
+            )
+            _stamp_g_c(
+                G,
+                node_to_idx,
+                el.base,
+                intrinsic_base,
+                complex(1.0 / base_resistance),
+            )
+            el = replace(el, base=intrinsic_base, Rb=0.0, Rbm=None, Irb=0.0)
         Vc_dc = 0.0 if _is_ground(el.collector) else dc_x[node_to_idx[el.collector]]
         Vb_dc = 0.0 if _is_ground(el.base) else dc_x[node_to_idx[el.base]]
         Ve_dc = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
@@ -12367,21 +13381,55 @@ def _stamp_ac(
             min(Vb_dc - Vc_dc, 0.7) if el.polarity == "NPN"
             else min(Vc_dc - Vb_dc, 0.7)
         )
-        exp_t = math.exp(Vjunc / el.Vt)
-        exp_reverse = math.exp(Vreverse / el.Vt)
+        Vcollector_leakage = (
+            Vb_dc - Vc_dc if el.polarity == "NPN"
+            else Vc_dc - Vb_dc
+        )
+        forward_thermal_voltage = el.Vt * el.Nf
+        reverse_thermal_voltage = el.Vt * el.Nr
+        exp_t = math.exp(Vjunc / forward_thermal_voltage)
+        exp_reverse = math.exp(Vreverse / reverse_thermal_voltage)
         base_collector_current = el.Is * (exp_t - 1.0)
-        base_gm = (el.Is / el.Vt) * exp_t
+        base_gm = (el.Is / forward_thermal_voltage) * exp_t
         output_voltage = Vc_dc - Ve_dc if el.polarity == "NPN" else Ve_dc - Vc_dc
-        early_factor = 1.0 if el.Vaf == 0.0 else 1.0 + output_voltage / el.Vaf
-        output_conductance = 0.0 if el.Vaf == 0.0 else base_collector_current / el.Vaf
-        gm_b: float = base_gm * early_factor
-        gm_reverse: float = (el.Is / el.Vt) * exp_reverse
-        g_pi: float = base_gm / el.beta_f
-        diffusion_capacitance = el.Tf * gm_b
+        early_factor = _bjt_early_factor(el, Vjunc, output_voltage)
+        _, gm_b, charge_factor = _bjt_forward_transport(
+            el, base_collector_current, base_gm, early_factor
+        )
+        output_conductance = (
+            0.0 if el.Vaf == 0.0 else base_collector_current / el.Vaf / charge_factor
+        )
+        gm_reverse: float = (el.Is / reverse_thermal_voltage) * exp_reverse
+        _, leakage_conductance = _bjt_base_emitter_leakage(el, Vjunc)
+        _, collector_leakage_conductance = _bjt_base_collector_leakage(
+            el, Vcollector_leakage
+        )
+        _, reverse_base_conductance = _bjt_reverse_base_current(
+            el, Vcollector_leakage
+        )
+        g_pi: float = base_gm / el.beta_f + leakage_conductance
+        diffusion_capacitance = (
+            el.Tf * _bjt_forward_transit_time_scale(el, Vjunc, Vreverse) * gm_b
+        )
+        excess_phase = omega * el.Tf * el.Ptf * math.pi / 180.0
+        gm_ac = complex(
+            gm_b * math.cos(excess_phase),
+            -gm_b * math.sin(excess_phase),
+        )
         reverse_diffusion_capacitance = el.Tr * gm_reverse
-        y_be = g_pi + 1j * omega * (el.Cje + diffusion_capacitance)
-        y_bc = 1j * omega * (el.Cjc + reverse_diffusion_capacitance)
+        y_be = g_pi + 1j * omega * (
+            _bjt_base_emitter_depletion_capacitance(el, Vjunc) + diffusion_capacitance
+        )
+        base_collector_depletion = _bjt_base_collector_depletion_capacitance(
+            el, Vreverse
+        )
+        y_bc = collector_leakage_conductance + reverse_base_conductance + 1j * omega * (
+            el.Xcjc * base_collector_depletion + reverse_diffusion_capacitance
+        )
+        y_bx = 1j * omega * (1.0 - el.Xcjc) * base_collector_depletion
         _stamp_g_c(G, node_to_idx, el.collector, el.emitter, output_conductance + 0j)
+        if y_bx != 0j:
+            _stamp_g_c(G, node_to_idx, external_base, el.collector, y_bx)
 
         if el.polarity == "NPN":
             _stamp_g_c(G, node_to_idx, el.base, el.emitter, y_be)
@@ -12389,30 +13437,30 @@ def _stamp_ac(
             if not _is_ground(el.collector):
                 c_i = node_to_idx[el.collector]
                 if not _is_ground(el.base):
-                    G[c_i][node_to_idx[el.base]] += gm_b + 0j
+                    G[c_i][node_to_idx[el.base]] += gm_ac
                 if not _is_ground(el.emitter):
-                    G[c_i][node_to_idx[el.emitter]] -= gm_b + 0j
+                    G[c_i][node_to_idx[el.emitter]] -= gm_ac
             if not _is_ground(el.emitter):
                 e_i = node_to_idx[el.emitter]
                 if not _is_ground(el.base):
-                    G[e_i][node_to_idx[el.base]] -= gm_b + 0j
+                    G[e_i][node_to_idx[el.base]] -= gm_ac
                 if not _is_ground(el.emitter):
-                    G[e_i][node_to_idx[el.emitter]] += gm_b + 0j
+                    G[e_i][node_to_idx[el.emitter]] += gm_ac
         else:  # PNP
             _stamp_g_c(G, node_to_idx, el.emitter, el.base, y_be)
             _stamp_g_c(G, node_to_idx, el.base, el.collector, y_bc)
             if not _is_ground(el.emitter):
                 e_i = node_to_idx[el.emitter]
                 if not _is_ground(el.emitter):
-                    G[e_i][node_to_idx[el.emitter]] += gm_b + 0j
+                    G[e_i][node_to_idx[el.emitter]] += gm_ac
                 if not _is_ground(el.base):
-                    G[e_i][node_to_idx[el.base]] -= gm_b + 0j
+                    G[e_i][node_to_idx[el.base]] -= gm_ac
             if not _is_ground(el.collector):
                 c_i = node_to_idx[el.collector]
                 if not _is_ground(el.emitter):
-                    G[c_i][node_to_idx[el.emitter]] -= gm_b + 0j
+                    G[c_i][node_to_idx[el.emitter]] -= gm_ac
                 if not _is_ground(el.base):
-                    G[c_i][node_to_idx[el.base]] += gm_b + 0j
+                    G[c_i][node_to_idx[el.base]] += gm_ac
 
 
 def ac_sweep(
@@ -12920,58 +13968,178 @@ def _build_ss_matrix(
 
         elif isinstance(el, Diode):
             # Small-signal conductance: gd = dI/dVd = (Is/(N*Vt))·exp(Vd/(N*Vt)).
-            Va = 0.0 if _is_ground(el.anode) else dc_x[node_to_idx[el.anode]]
+            intrinsic_anode = _diode_intrinsic_anode_node(el)
+            Va = (
+                0.0
+                if _is_ground(intrinsic_anode)
+                else dc_x[node_to_idx[intrinsic_anode]]
+            )
             Vk = 0.0 if _is_ground(el.cathode) else dc_x[node_to_idx[el.cathode]]
             Vd = Va - Vk
             _, gd = _diode_current_conductance(el, Vd)
-            _stamp_g(G, node_to_idx, el.anode, el.cathode, gd)
+            _stamp_g(G, node_to_idx, intrinsic_anode, el.cathode, gd)
+            if el.Rs > 0.0:
+                _stamp_g(G, node_to_idx, el.anode, intrinsic_anode, 1.0 / el.Rs)
 
         elif isinstance(el, JFET):
-            Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
+            intrinsic_drain = _jfet_intrinsic_drain_node(el)
+            intrinsic_source = _jfet_intrinsic_source_node(el)
+            Vd = (
+                0.0
+                if _is_ground(intrinsic_drain)
+                else dc_x[node_to_idx[intrinsic_drain]]
+            )
             Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
-            Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+            Vs = (
+                0.0
+                if _is_ground(intrinsic_source)
+                else dc_x[node_to_idx[intrinsic_source]]
+            )
             _, gm_j, gds_j = _eval_jfet(el, Vg - Vs, Vd - Vs)
-            _stamp_g(G, node_to_idx, el.drain, el.source, gds_j)
-            if not _is_ground(el.drain):
-                d = node_to_idx[el.drain]
+            _, ggs = _jfet_gate_junction_current_conductance(el, Vg - Vs)
+            _, ggd = _jfet_gate_junction_current_conductance(el, Vg - Vd)
+            _stamp_g(G, node_to_idx, intrinsic_drain, intrinsic_source, gds_j)
+            _stamp_g(G, node_to_idx, el.gate, intrinsic_source, ggs)
+            _stamp_g(G, node_to_idx, el.gate, intrinsic_drain, ggd)
+            if not _is_ground(intrinsic_drain):
+                d = node_to_idx[intrinsic_drain]
                 if not _is_ground(el.gate):
                     G[d][node_to_idx[el.gate]] += gm_j
-                if not _is_ground(el.source):
-                    G[d][node_to_idx[el.source]] -= gm_j
-            if not _is_ground(el.source):
-                s = node_to_idx[el.source]
+                if not _is_ground(intrinsic_source):
+                    G[d][node_to_idx[intrinsic_source]] -= gm_j
+            if not _is_ground(intrinsic_source):
+                s = node_to_idx[intrinsic_source]
                 if not _is_ground(el.gate):
                     G[s][node_to_idx[el.gate]] -= gm_j
-                if not _is_ground(el.source):
-                    G[s][node_to_idx[el.source]] += gm_j
+                if not _is_ground(intrinsic_source):
+                    G[s][node_to_idx[intrinsic_source]] += gm_j
+            if el.Rd > 0.0:
+                _stamp_g(G, node_to_idx, el.drain, intrinsic_drain, 1.0 / el.Rd)
+            if el.Rs > 0.0:
+                _stamp_g(G, node_to_idx, el.source, intrinsic_source, 1.0 / el.Rs)
 
         elif isinstance(el, Mosfet):
             # Small-signal model: gds (drain–source) + gm VCCS (gate–source
             # controls drain current).  Mirrors the AC _stamp_ac Mosfet block.
-            Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
+            intrinsic_drain = _mosfet_intrinsic_drain_node(el)
+            intrinsic_source = _mosfet_intrinsic_source_node(el)
+            Vd = (
+                0.0
+                if _is_ground(intrinsic_drain)
+                else dc_x[node_to_idx[intrinsic_drain]]
+            )
             Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
-            Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+            Vs = (
+                0.0
+                if _is_ground(intrinsic_source)
+                else dc_x[node_to_idx[intrinsic_source]]
+            )
             Vb = 0.0 if _is_ground(el.body) else dc_x[node_to_idx[el.body]]
             r = el.model.dc(Vg - Vs, Vd - Vs, Vb - Vs)  # type: ignore[attr-defined]
             gm_m: float = r.gm
             gds_m: float = r.gds
-            _stamp_g(G, node_to_idx, el.drain, el.source, gds_m)
-            if not _is_ground(el.drain):
-                d = node_to_idx[el.drain]
+            _, source_bulk_conductance = _mosfet_bulk_junction_current_conductance(
+                el, Vs, Vb, el.model.model.params.AS  # type: ignore[attr-defined]
+            )
+            _, drain_bulk_conductance = _mosfet_bulk_junction_current_conductance(
+                el, Vd, Vb, el.model.model.params.AD  # type: ignore[attr-defined]
+            )
+            _stamp_g(G, node_to_idx, intrinsic_drain, intrinsic_source, gds_m)
+            _stamp_g(
+                G,
+                node_to_idx,
+                el.body,
+                intrinsic_source,
+                source_bulk_conductance,
+            )
+            _stamp_g(
+                G,
+                node_to_idx,
+                el.body,
+                intrinsic_drain,
+                drain_bulk_conductance,
+            )
+            if not _is_ground(intrinsic_drain):
+                d = node_to_idx[intrinsic_drain]
                 if not _is_ground(el.gate):
                     G[d][node_to_idx[el.gate]] += gm_m
-                if not _is_ground(el.source):
-                    G[d][node_to_idx[el.source]] -= gm_m
-            if not _is_ground(el.source):
-                s = node_to_idx[el.source]
+                if not _is_ground(intrinsic_source):
+                    G[d][node_to_idx[intrinsic_source]] -= gm_m
+            if not _is_ground(intrinsic_source):
+                s = node_to_idx[intrinsic_source]
                 if not _is_ground(el.gate):
                     G[s][node_to_idx[el.gate]] -= gm_m
-                if not _is_ground(el.source):
-                    G[s][node_to_idx[el.source]] += gm_m
+                if not _is_ground(intrinsic_source):
+                    G[s][node_to_idx[intrinsic_source]] += gm_m
+            drain_resistance = _mosfet_drain_resistance(el)
+            if drain_resistance > 0.0:
+                _stamp_g(
+                    G,
+                    node_to_idx,
+                    el.drain,
+                    intrinsic_drain,
+                    1.0 / drain_resistance,
+                )
+            source_resistance = _mosfet_source_resistance(el)
+            if source_resistance > 0.0:
+                _stamp_g(
+                    G,
+                    node_to_idx,
+                    el.source,
+                    intrinsic_source,
+                    1.0 / source_resistance,
+                )
 
         elif isinstance(el, BJT):
             # Small-signal model: g_π (junction conductance) + gm VCCS.
             # Mirrors the AC _stamp_ac BJT block in the real domain.
+            _validate_bjt(el)
+            if el.Re > 0.0:
+                intrinsic_emitter = _bjt_intrinsic_emitter_node(el)
+                _stamp_g(
+                    G,
+                    node_to_idx,
+                    el.emitter,
+                    intrinsic_emitter,
+                    1.0 / el.Re,
+                )
+                el = replace(el, emitter=intrinsic_emitter, Re=0.0)
+            if el.Rc > 0.0:
+                intrinsic_collector = _bjt_intrinsic_collector_node(el)
+                _stamp_g(
+                    G,
+                    node_to_idx,
+                    el.collector,
+                    intrinsic_collector,
+                    1.0 / el.Rc,
+                )
+                el = replace(el, collector=intrinsic_collector, Rc=0.0)
+            if el.Rb > 0.0:
+                intrinsic_base = _bjt_intrinsic_base_node(el)
+                Vb_rb = (
+                    0.0
+                    if _is_ground(intrinsic_base)
+                    else dc_x[node_to_idx[intrinsic_base]]
+                )
+                Ve_rb = (
+                    0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
+                )
+                Vc_rb = (
+                    0.0
+                    if _is_ground(el.collector)
+                    else dc_x[node_to_idx[el.collector]]
+                )
+                base_resistance = _bjt_effective_base_resistance(
+                    el, Vb_rb, Ve_rb, Vc_rb
+                )
+                _stamp_g(
+                    G,
+                    node_to_idx,
+                    el.base,
+                    intrinsic_base,
+                    1.0 / base_resistance,
+                )
+                el = replace(el, base=intrinsic_base, Rb=0.0, Rbm=None, Irb=0.0)
             Vc_dc = 0.0 if _is_ground(el.collector) else dc_x[node_to_idx[el.collector]]
             Vb_dc = 0.0 if _is_ground(el.base) else dc_x[node_to_idx[el.base]]
             Ve_dc = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
@@ -12979,15 +14147,32 @@ def _build_ss_matrix(
                 min(Vb_dc - Ve_dc, 0.7) if el.polarity == "NPN"
                 else min(Ve_dc - Vb_dc, 0.7)
             )
-            exp_t = math.exp(Vjunc / el.Vt)
+            Vreverse = Vb_dc - Vc_dc if el.polarity == "NPN" else Vc_dc - Vb_dc
+            forward_thermal_voltage = el.Vt * el.Nf
+            exp_t = math.exp(Vjunc / forward_thermal_voltage)
             base_collector_current = el.Is * (exp_t - 1.0)
-            base_gm = (el.Is / el.Vt) * exp_t
+            base_gm = (el.Is / forward_thermal_voltage) * exp_t
             output_voltage = Vc_dc - Ve_dc if el.polarity == "NPN" else Ve_dc - Vc_dc
-            early_factor = 1.0 if el.Vaf == 0.0 else 1.0 + output_voltage / el.Vaf
-            output_conductance = 0.0 if el.Vaf == 0.0 else base_collector_current / el.Vaf
-            gm_b: float = base_gm * early_factor
-            g_pi: float = base_gm / el.beta_f
+            early_factor = _bjt_early_factor(el, Vjunc, output_voltage)
+            _, gm_b, charge_factor = _bjt_forward_transport(
+                el, base_collector_current, base_gm, early_factor
+            )
+            output_conductance = (
+                0.0 if el.Vaf == 0.0 else base_collector_current / el.Vaf / charge_factor
+            )
+            _, leakage_conductance = _bjt_base_emitter_leakage(el, Vjunc)
+            _, collector_leakage_conductance = _bjt_base_collector_leakage(el, Vreverse)
+            _, reverse_base_conductance = _bjt_reverse_base_current(el, Vreverse)
+            g_pi: float = base_gm / el.beta_f + leakage_conductance
             _stamp_g(G, node_to_idx, el.collector, el.emitter, output_conductance)
+            _stamp_g(
+                G,
+                node_to_idx,
+                el.base,
+                el.collector,
+                collector_leakage_conductance + reverse_base_conductance,
+            )
+            _stamp_g(G, node_to_idx, el.base, el.collector, collector_leakage_conductance)
 
             if el.polarity == "NPN":
                 _stamp_g(G, node_to_idx, el.base, el.emitter, g_pi)
@@ -13841,6 +15026,9 @@ def sens_dc(
                     el.Fc,
                     el.Xti,
                     el.Eg,
+                    el.Rs,
+                    el.Kf,
+                    el.Af,
                 ),
             )
 
@@ -13865,6 +15053,28 @@ def sens_dc(
                     Xti=el.Xti,
                     Eg=el.Eg,
                     Vaf=el.Vaf,
+                    Var=el.Var,
+                    Ikf=el.Ikf,
+                    Ise=el.Ise,
+                    Ne=el.Ne,
+                    Isc=el.Isc,
+                    Nc=el.Nc,
+                    Nf=el.Nf,
+                    Nr=el.Nr,
+                    Vje=el.Vje,
+                    Mje=el.Mje,
+                    Vjc=el.Vjc,
+                    Mjc=el.Mjc,
+                    Fc=el.Fc,
+                    Xtb=el.Xtb,
+                    beta_r=el.beta_r,
+                    Ikr=el.Ikr,
+                    Re=el.Re,
+                    Rc=el.Rc,
+                    Rb=el.Rb,
+                    Rbm=el.Rbm,
+                    Irb=el.Irb,
+                    Xcjc=el.Xcjc,
                 ),
             )
             delta_beta = max(abs(el.beta_f) * perturbation, abs_floor)
@@ -13884,6 +15094,28 @@ def sens_dc(
                     Xti=el.Xti,
                     Eg=el.Eg,
                     Vaf=el.Vaf,
+                    Var=el.Var,
+                    Ikf=el.Ikf,
+                    Ise=el.Ise,
+                    Ne=el.Ne,
+                    Isc=el.Isc,
+                    Nc=el.Nc,
+                    Nf=el.Nf,
+                    Nr=el.Nr,
+                    Vje=el.Vje,
+                    Mje=el.Mje,
+                    Vjc=el.Vjc,
+                    Mjc=el.Mjc,
+                    Fc=el.Fc,
+                    Xtb=el.Xtb,
+                    beta_r=el.beta_r,
+                    Ikr=el.Ikr,
+                    Re=el.Re,
+                    Rc=el.Rc,
+                    Rb=el.Rb,
+                    Rbm=el.Rbm,
+                    Irb=el.Irb,
+                    Xcjc=el.Xcjc,
                 ),
             )
 
@@ -14097,6 +15329,9 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             el.Fc,
             el.Xti,
             el.Eg,
+            el.Rs,
+            el.Kf,
+            el.Af,
         )
 
     if isinstance(el, BJT):
@@ -14113,6 +15348,28 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             Xti=el.Xti,
             Eg=el.Eg,
             Vaf=el.Vaf,
+            Var=el.Var,
+            Ikf=el.Ikf,
+            Ise=el.Ise,
+            Ne=el.Ne,
+            Isc=el.Isc,
+            Nc=el.Nc,
+            Nf=el.Nf,
+            Nr=el.Nr,
+            Vje=el.Vje,
+            Mje=el.Mje,
+            Vjc=el.Vjc,
+            Mjc=el.Mjc,
+            Fc=el.Fc,
+            Xtb=el.Xtb,
+            beta_r=el.beta_r,
+            Ikr=el.Ikr,
+            Re=el.Re,
+            Rc=el.Rc,
+            Rb=el.Rb,
+            Rbm=el.Rbm,
+            Irb=el.Irb,
+            Xcjc=el.Xcjc,
         )
 
     # Capacitor, Inductor, Mosfet — no tunable DC parameter; return unchanged.
@@ -14408,7 +15665,8 @@ class NoiseEntry:
     noise_type : str
         ``"thermal"`` (Johnson-Nyquist noise, for resistors and MOSFET
         channel noise) or
-        ``"shot"`` (Poisson/shot noise, for diodes and BJTs).
+        ``"shot"`` (Poisson/shot noise, for diodes and BJTs), or
+        ``"flicker"`` (BJT base-current flicker noise).
     source_psd : float
         Noise current power spectral density at the source itself, in A²/Hz.
         For resistors: ``4kT/R``.  For MOSFETs: ``4kTγgm``.  For
@@ -14490,7 +15748,7 @@ def _collect_noise_sources(
     node_to_idx: dict[str, int],
     dc_x: list[float],
     temperature: float,
-) -> list[tuple[str, str, int | None, int | None, float]]:
+) -> list[tuple[str, str, int | None, int | None, float, float]]:
     """Enumerate noise current sources for all noisy circuit elements.
 
     Each element that contributes noise is modelled as an ideal Norton
@@ -14509,15 +15767,17 @@ def _collect_noise_sources(
 
     Returns
     -------
-    list of 5-tuples (element_name, noise_type, n_plus_idx, n_minus_idx, psd)
+    list of 6-tuples
+        (element_name, noise_type, n_plus_idx, n_minus_idx, coefficient,
+        frequency_exponent).
         ``n_plus_idx`` and ``n_minus_idx`` are integer matrix indices, or
         ``None`` when the terminal connects to ground.
-        ``psd`` is the current noise PSD in A²/Hz.
+        The current noise PSD is coefficient / frequency**frequency_exponent.
     """
     kT4 = 4.0 * _BOLTZMANN * temperature  # 4kT factor
     q2 = 2.0 * _ELECTRON_CHARGE           # 2q factor
 
-    sources: list[tuple[str, str, int | None, int | None, float]] = []
+    sources: list[tuple[str, str, int | None, int | None, float, float]] = []
 
     for el in circuit.elements:
         if isinstance(el, Resistor):
@@ -14525,7 +15785,7 @@ def _collect_noise_sources(
             psd = kT4 / el.resistance
             n_p = node_to_idx.get(el.n_plus)   # None for ground
             n_m = node_to_idx.get(el.n_minus)  # None for ground
-            sources.append((el.name, "thermal", n_p, n_m, psd))
+            sources.append((el.name, "thermal", n_p, n_m, psd, 0.0))
 
         elif isinstance(el, Diode):
             # Shot noise: S_i = 2q |I_D|
@@ -14533,19 +15793,92 @@ def _collect_noise_sources(
             # because we are evaluating at the operating point, not iterating Newton.
             # (The 0.7 V clamp in the Newton loop prevents divergence during
             # iterations; at convergence, Vd is the physically correct value.)
-            Va = 0.0 if _is_ground(el.anode) else dc_x[node_to_idx[el.anode]]
+            intrinsic_anode = _diode_intrinsic_anode_node(el)
+            Va = (
+                0.0
+                if _is_ground(intrinsic_anode)
+                else dc_x[node_to_idx[intrinsic_anode]]
+            )
             Vk = 0.0 if _is_ground(el.cathode) else dc_x[node_to_idx[el.cathode]]
             Vd = Va - Vk  # actual operating-point junction voltage
             I_D, _ = _diode_current_conductance(el, Vd, clamp_forward=False)
             psd = q2 * abs(I_D)
-            n_a = None if _is_ground(el.anode) else node_to_idx[el.anode]
+            n_a = (
+                None
+                if _is_ground(intrinsic_anode)
+                else node_to_idx[intrinsic_anode]
+            )
             n_k = None if _is_ground(el.cathode) else node_to_idx[el.cathode]
-            sources.append((el.name, "shot", n_a, n_k, psd))
+            sources.append((el.name, "shot", n_a, n_k, psd, 0.0))
+            if el.Kf > 0.0:
+                sources.append(
+                    (el.name, "flicker", n_a, n_k, el.Kf * abs(I_D) ** el.Af, 1.0)
+                )
+            if el.Rs > 0.0:
+                sources.append(
+                    (
+                        f"{el.name}:RS",
+                        "thermal",
+                        node_to_idx.get(el.anode),
+                        node_to_idx.get(intrinsic_anode),
+                        kT4 / el.Rs,
+                        0.0,
+                    )
+                )
 
         elif isinstance(el, BJT):
             # Shot noise on the base-emitter junction: S_i = 2q |I_C|
             # I_C ≈ Is × exp(V_BE / Vt)  (dominates for forward-active BJT)
             # Use actual converged dc_x voltages — no clamp — same reasoning as Diode.
+            if el.Re > 0.0:
+                intrinsic_emitter = _bjt_intrinsic_emitter_node(el)
+                sources.append((
+                    f"{el.name}:RE",
+                    "thermal",
+                    node_to_idx.get(el.emitter),
+                    node_to_idx.get(intrinsic_emitter),
+                    kT4 / el.Re,
+                    0.0,
+                ))
+                el = replace(el, emitter=intrinsic_emitter, Re=0.0)
+            if el.Rc > 0.0:
+                intrinsic_collector = _bjt_intrinsic_collector_node(el)
+                sources.append((
+                    f"{el.name}:RC",
+                    "thermal",
+                    node_to_idx.get(el.collector),
+                    node_to_idx.get(intrinsic_collector),
+                    kT4 / el.Rc,
+                    0.0,
+                ))
+                el = replace(el, collector=intrinsic_collector, Rc=0.0)
+            if el.Rb > 0.0:
+                intrinsic_base = _bjt_intrinsic_base_node(el)
+                Vb_rb = (
+                    0.0
+                    if _is_ground(intrinsic_base)
+                    else dc_x[node_to_idx[intrinsic_base]]
+                )
+                Ve_rb = (
+                    0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
+                )
+                Vc_rb = (
+                    0.0
+                    if _is_ground(el.collector)
+                    else dc_x[node_to_idx[el.collector]]
+                )
+                base_resistance = _bjt_effective_base_resistance(
+                    el, Vb_rb, Ve_rb, Vc_rb
+                )
+                sources.append((
+                    f"{el.name}:RB",
+                    "thermal",
+                    node_to_idx.get(el.base),
+                    node_to_idx.get(intrinsic_base),
+                    kT4 / base_resistance,
+                    0.0,
+                ))
+                el = replace(el, base=intrinsic_base, Rb=0.0, Rbm=None, Irb=0.0)
             Vb = 0.0 if _is_ground(el.base) else dc_x[node_to_idx[el.base]]
             Ve = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
             Vc = 0.0 if _is_ground(el.collector) else dc_x[node_to_idx[el.collector]]
@@ -14553,39 +15886,231 @@ def _collect_noise_sources(
                 Vb - Ve if el.polarity == "NPN"
                 else Ve - Vb
             )
+            Vreverse = Vb - Vc if el.polarity == "NPN" else Vc - Vb
             output_voltage = Vc - Ve if el.polarity == "NPN" else Ve - Vc
-            early_factor = 1.0 if el.Vaf == 0.0 else 1.0 + output_voltage / el.Vaf
-            I_C = el.Is * math.exp(Vjunc / el.Vt) * early_factor
-            psd = q2 * abs(I_C)
+            early_factor = _bjt_early_factor(el, Vjunc, output_voltage)
+            exp_value = math.exp(Vjunc / (el.Vt * el.Nf))
+            base_collector_current = el.Is * (exp_value - 1.0)
+            base_gm = el.Is / (el.Vt * el.Nf) * exp_value
+            I_C, _, _ = _bjt_forward_transport(
+                el, base_collector_current, base_gm, early_factor
+            )
+            leakage_current, _ = _bjt_base_emitter_leakage(el, Vjunc)
+            collector_leakage_current, _ = _bjt_base_collector_leakage(el, Vreverse)
+            reverse_base_current, _ = _bjt_reverse_base_current(el, Vreverse)
+            psd = q2 * (
+                abs(I_C)
+                + abs(leakage_current)
+                + abs(collector_leakage_current)
+                + abs(reverse_base_current)
+            )
             n_b = None if _is_ground(el.base) else node_to_idx[el.base]
             n_e = None if _is_ground(el.emitter) else node_to_idx[el.emitter]
-            sources.append((el.name, "shot", n_b, n_e, psd))
+            sources.append((el.name, "shot", n_b, n_e, psd, 0.0))
+            if el.Kf > 0.0:
+                base_current = base_collector_current / el.beta_f + leakage_current
+                sources.append((el.name, "flicker", n_b, n_e, el.Kf * abs(base_current) ** el.Af, 1.0))
 
         elif isinstance(el, Mosfet):
-            # Long-channel MOSFET channel thermal noise: S_i = 4kTγgm.
-            Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
+            # Long-channel channel thermal noise plus model-card 1/f noise.
+            intrinsic_drain = _mosfet_intrinsic_drain_node(el)
+            intrinsic_source = _mosfet_intrinsic_source_node(el)
+            Vd = (
+                0.0
+                if _is_ground(intrinsic_drain)
+                else dc_x[node_to_idx[intrinsic_drain]]
+            )
             Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
-            Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+            Vs = (
+                0.0
+                if _is_ground(intrinsic_source)
+                else dc_x[node_to_idx[intrinsic_source]]
+            )
             Vb = 0.0 if _is_ground(el.body) else dc_x[node_to_idx[el.body]]
             r = el.model.dc(Vg - Vs, Vd - Vs, Vb - Vs)  # type: ignore[attr-defined]
+            flicker_noise_coefficient = el.model.model.params.KF  # type: ignore[attr-defined]
+            flicker_noise_exponent = el.model.model.params.AF  # type: ignore[attr-defined]
+            if (
+                not math.isfinite(flicker_noise_coefficient)
+                or flicker_noise_coefficient < 0.0
+            ):
+                raise ValueError(
+                    f"{el.name}: MOSFET KF must be finite and non-negative"
+                )
+            if not math.isfinite(flicker_noise_exponent) or flicker_noise_exponent < 0.0:
+                raise ValueError(
+                    f"{el.name}: MOSFET AF must be finite and non-negative"
+                )
             gm = max(0.0, float(r.gm))
+            n_d = (
+                None
+                if _is_ground(intrinsic_drain)
+                else node_to_idx[intrinsic_drain]
+            )
+            n_s = (
+                None
+                if _is_ground(intrinsic_source)
+                else node_to_idx[intrinsic_source]
+            )
             if gm > 0.0:
                 psd = kT4 * _MOSFET_CHANNEL_NOISE_GAMMA * gm
-                n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
-                n_s = None if _is_ground(el.source) else node_to_idx[el.source]
-                sources.append((el.name, "thermal", n_d, n_s, psd))
+                sources.append((el.name, "thermal", n_d, n_s, psd, 0.0))
+            if flicker_noise_coefficient > 0.0:
+                sources.append(
+                    (
+                        el.name,
+                        "flicker",
+                        n_d,
+                        n_s,
+                        flicker_noise_coefficient
+                        * abs(float(r.Id)) ** flicker_noise_exponent,
+                        1.0,
+                    )
+                )
+            source_bulk_current, _ = _mosfet_bulk_junction_current_conductance(
+                el, Vs, Vb, el.model.model.params.AS  # type: ignore[attr-defined]
+            )
+            drain_bulk_current, _ = _mosfet_bulk_junction_current_conductance(
+                el, Vd, Vb, el.model.model.params.AD  # type: ignore[attr-defined]
+            )
+            n_b = None if _is_ground(el.body) else node_to_idx[el.body]
+            is_nmos = el.model.type == MosfetType.NMOS  # type: ignore[attr-defined]
+            sources.append(
+                (
+                    f"{el.name}:IBS",
+                    "shot",
+                    n_b if is_nmos else n_s,
+                    n_s if is_nmos else n_b,
+                    q2 * abs(source_bulk_current),
+                    0.0,
+                )
+            )
+            sources.append(
+                (
+                    f"{el.name}:IBD",
+                    "shot",
+                    n_b if is_nmos else n_d,
+                    n_d if is_nmos else n_b,
+                    q2 * abs(drain_bulk_current),
+                    0.0,
+                )
+            )
+            drain_resistance = _mosfet_drain_resistance(el)
+            if drain_resistance > 0.0:
+                sources.append(
+                    (
+                        f"{el.name}:RD",
+                        "thermal",
+                        None if _is_ground(el.drain) else node_to_idx[el.drain],
+                        n_d,
+                        kT4 / drain_resistance,
+                        0.0,
+                    )
+                )
+            source_resistance = _mosfet_source_resistance(el)
+            if source_resistance > 0.0:
+                sources.append(
+                    (
+                        f"{el.name}:RS",
+                        "thermal",
+                        None if _is_ground(el.source) else node_to_idx[el.source],
+                        n_s,
+                        kT4 / source_resistance,
+                        0.0,
+                    )
+                )
 
         elif isinstance(el, JFET):
-            Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
+            intrinsic_drain = _jfet_intrinsic_drain_node(el)
+            intrinsic_source = _jfet_intrinsic_source_node(el)
+            Vd = (
+                0.0
+                if _is_ground(intrinsic_drain)
+                else dc_x[node_to_idx[intrinsic_drain]]
+            )
             Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
-            Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
-            _, gm, _ = _eval_jfet(el, Vg - Vs, Vd - Vs)
+            Vs = (
+                0.0
+                if _is_ground(intrinsic_source)
+                else dc_x[node_to_idx[intrinsic_source]]
+            )
+            drain_current, gm, _ = _eval_jfet(el, Vg - Vs, Vd - Vs)
             gm = max(0.0, float(gm))
-            if gm > 0.0:
-                psd = kT4 * _MOSFET_CHANNEL_NOISE_GAMMA * gm
-                n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
-                n_s = None if _is_ground(el.source) else node_to_idx[el.source]
-                sources.append((el.name, "thermal", n_d, n_s, psd))
+            noise_conductance = _jfet_channel_noise_conductance(
+                el, Vg - Vs, Vd - Vs, gm
+            )
+            if noise_conductance > 0.0:
+                psd = kT4 * noise_conductance
+                n_d = (
+                    None
+                    if _is_ground(intrinsic_drain)
+                    else node_to_idx[intrinsic_drain]
+                )
+                n_s = (
+                    None
+                    if _is_ground(intrinsic_source)
+                    else node_to_idx[intrinsic_source]
+                )
+                sources.append((el.name, "thermal", n_d, n_s, psd, 0.0))
+            n_g = None if _is_ground(el.gate) else node_to_idx[el.gate]
+            n_s = (
+                None
+                if _is_ground(intrinsic_source)
+                else node_to_idx[intrinsic_source]
+            )
+            n_d = (
+                None
+                if _is_ground(intrinsic_drain)
+                else node_to_idx[intrinsic_drain]
+            )
+            gate_source_current, _ = _jfet_gate_junction_current_conductance(
+                el, Vg - Vs
+            )
+            gate_drain_current, _ = _jfet_gate_junction_current_conductance(
+                el, Vg - Vd
+            )
+            sources.append(
+                (f"{el.name}:IGS", "shot", n_g, n_s, q2 * abs(gate_source_current), 0.0)
+            )
+            sources.append(
+                (f"{el.name}:IGD", "shot", n_g, n_d, q2 * abs(gate_drain_current), 0.0)
+            )
+            if el.Kf > 0.0:
+                n_d = (
+                    None
+                    if _is_ground(intrinsic_drain)
+                    else node_to_idx[intrinsic_drain]
+                )
+                n_s = (
+                    None
+                    if _is_ground(intrinsic_source)
+                    else node_to_idx[intrinsic_source]
+                )
+                sources.append(
+                    (el.name, "flicker", n_d, n_s, el.Kf * abs(drain_current) ** el.Af, 1.0)
+                )
+            if el.Rd > 0.0:
+                sources.append(
+                    (
+                        f"{el.name}:RD",
+                        "thermal",
+                        node_to_idx.get(el.drain),
+                        node_to_idx.get(intrinsic_drain),
+                        kT4 / el.Rd,
+                        0.0,
+                    )
+                )
+            if el.Rs > 0.0:
+                sources.append(
+                    (
+                        f"{el.name}:RS",
+                        "thermal",
+                        node_to_idx.get(el.source),
+                        node_to_idx.get(intrinsic_source),
+                        kT4 / el.Rs,
+                        0.0,
+                    )
+                )
 
         # Capacitors, Inductors, VoltageSources, CurrentSources: noiseless in
         # this first-order model.
@@ -14607,7 +16132,7 @@ def noise_ac(
 
     Computes the voltage noise power spectral density (PSD) at ``output_node``
     due to thermal noise (Johnson-Nyquist) in resistors, MOSFET channel
-    thermal noise, and shot noise in diodes and BJTs, at each frequency in
+    thermal noise, and shot plus flicker noise in diodes and BJTs, at each frequency in
     ``freqs``.  Also reports the noise referred back to ``input_source`` so
     you can compare it directly to your signal level.
 
@@ -14792,7 +16317,8 @@ def noise_ac(
                     source_psd=psd,
                     output_psd=0.0,
                 )
-                for (name, ntype, _, _, psd) in noise_sources
+                for (name, ntype, _, _, coefficient, frequency_exponent) in noise_sources
+                for psd in (coefficient / freq**frequency_exponent,)
             )
             points.append(NoisePoint(
                 freq=freq,
@@ -14809,7 +16335,8 @@ def noise_ac(
         entries_list: list[NoiseEntry] = []
         total_psd = 0.0
 
-        for (elem_name, noise_type, n_p, n_m, src_psd) in noise_sources:
+        for (elem_name, noise_type, n_p, n_m, coefficient, frequency_exponent) in noise_sources:
+            src_psd = coefficient / freq**frequency_exponent
             h_p: complex = v_adj[n_p] if n_p is not None else 0j
             h_m: complex = v_adj[n_m] if n_m is not None else 0j
             H_k = h_p - h_m

@@ -1,5 +1,116 @@
 # Changelog
 
+## 0.39.1 — `is_rust_keyword` missing `crate`/`extern`/`self`/`Self`/`super` (task #116 audit)
+
+Follow-up to task #110/#112 (`semantic-ir-to-javascript`/`-typescript`'s
+`eval`/`arguments` gap): a broader audit of every `semantic-ir-to-*`
+backend's reserved-word check for the same class of bug.
+
+`is_rust_keyword` (`emit.rs`) already carried a comment explaining that
+`crate`/`self`/`super`/`extern` can't be wrapped in `r#` raw-identifier
+syntax and need to fall back to the underscore-encoded form instead —
+but the mechanism it used (having `is_rust_keyword` return `false` for
+these words) didn't work: `sanitize_ident`'s first branch,
+`is_valid_rust_ident(s) && !is_rust_keyword(s)`, was then *true* for all
+of them (they're valid identifier shapes and, per `is_rust_keyword`,
+apparently not keywords), so they were passed straight through
+unmodified — the exact bug class this audit targets. Verified against
+rustc 1.97: a bare `let self = 5;` / `let crate = 5;` / `let super = 5;`
+/ `let extern = 5;` is a compile error in every case, so all four (plus
+`Self`, which was also entirely absent from the list) are genuine
+reserved words.
+
+`Self`/`self`/`super`/`crate` additionally cannot be raw identifiers at
+all — `r#self`, `r#Self`, `r#super`, and `r#crate` are each rejected by
+rustc with "cannot be a raw identifier" (they carry path-resolution
+meaning `r#` can't override), unlike ordinary keywords such as `extern`
+where `r#extern` compiles fine (verified empirically).
+
+Fixed in two parts, keeping `is_rust_keyword`'s shape unchanged:
+- Added `crate`, `extern`, `self`, `Self`, `super` to `is_rust_keyword`'s
+  `matches!` list, so all five are now correctly recognized as keywords.
+- Added a small `is_raw_incompatible_keyword` helper (`self`, `Self`,
+  `super`, `crate`) that `sanitize_ident` checks before choosing between
+  the `r#` path and the underscore-encoded fallback, so those four route
+  to the fallback (`self` → `__self`, etc.) instead of generating
+  invalid `r#self`-style output; `extern` takes the normal `r#extern`
+  path like any other keyword.
+
+New unit test
+`is_rust_keyword_flags_path_keywords_missing_from_the_original_list`
+pins all five as reserved, confirms `extern` raw-encodes while the other
+four fall back to underscore-encoding, and confirms ordinary look-alike
+identifiers (`crate_name`, `myself`, `superclass`) are untouched. The
+existing `compile_and_run_*` integration tests (which shell out to
+`rustc`) continue to pass, confirming the fallback path still produces
+compilable Rust.
+
+## 0.39.0 — operator-spelling comparisons: `==`, `!=`, `<=`, `>=`
+
+The Ruby frontend lowers a comparison chain to operator-spelling builtins
+(`==`/`!=`/`<=`/`>=`), but the emitter only mapped `=`/`<`/`>` — so `a == b`
+emitted a call to a nonexistent function and `puts(1 == 1)` failed to compile.
+
+- Runtime gains `ne`/`le`/`ge`, each defined from the existing `num_lt`/
+  `value_eq` primitives: `a != b ⟺ not (a == b)`, `a <= b ⟺ a < b or a == b`,
+  `a >= b ⟺ b < a or a == b`. `value_eq` equates cross-representation numbers,
+  so `1 <= 1.0` is true; both primitives answer `false` for uncomparable
+  operands, so `le`/`ge` stay panic-free there. Matches the C backend's
+  `_sir_le`/`_sir_ge`/`_sir_ne`.
+- Emitter maps `==`→`eq`, `!=`→`ne`, `<=`→`le`, `>=`→`ge`. The by-name builtin
+  dispatch gains the same four (so a first-class `:==` symbol dispatches).
+
+The `value_eq` `Exception` arm from 0.38.0 means `e == e` for a rescued
+exception is now reachable from Ruby source and true on this backend too.
+
+## 0.38.0 — a rescued exception is now an exception VALUE, not its message string
+
+`rescue Foo => e` bound `e` to the message STRING. The rescued value was
+therefore not an exception at all: `e.class` reported `String`,
+`e.is_a?(StandardError)` was **false**, and `e.message` raised
+`NoMethodError: undefined method 'message' for String`. A guard like
+`rescue => e; handle if e.is_a?(Recoverable)` silently skipped its handler.
+
+`Value` gains an `Exception(Rc<SirError>)` variant, and `exc_value` returns it.
+A dedicated variant (rather than reusing a `SirInstance`) is deliberate:
+
+- the message stays a plain `String`, so the display path **cannot recurse**
+  through it and needs no cycle guard;
+- exceptions stay OUT of the never-freed instance table, so
+  `loop { begin … rescue => e … end }` remains O(1) in memory rather than
+  retaining one instance — and its input-derived message — per iteration.
+
+`class`, `is_a?`/`kind_of?` (via the ancestry walk, which already knows
+`ArgumentError → StandardError → Exception`) and the new `message` method all
+answer correctly. **Display is unchanged**: an exception renders as its
+MESSAGE, matching Ruby's `Exception#to_s`, so `rescue => e; puts e` still
+prints `boom`. `respond_to?(:message)` answers true on an exception and false
+on anything else.
+
+`value_eq` gains an `Exception` arm (`Rc::ptr_eq`). The equality match is
+wildcard-terminated, so introducing the variant would otherwise have made
+`e == e` **false** — and every equality path routes through it (`==`/`!=`,
+`when`, `include?`/`index`/`uniq`, Hash keys), so `retry if e == @last_error`
+would never fire and `seen.include?(e)` would never dedupe. Identity is what
+the Go, JavaScript and Python backends give for free, so the four agree.
+This is not yet pinned by a conformance case, because `==` cannot be reached
+from Ruby source on this backend at all: the frontend lowers `a == b` to
+`BuiltinCall("==")`, which only the Go, C and Ruby backends lower — Python,
+JavaScript and Rust reject it as an unknown builtin even for `puts(1 == 1)`.
+That general operator-coverage gap is fixed separately; the arm is added here
+because the variant is introduced here and would be silently wrong without it.
+
+A security review found one more consequence of `e` becoming a real value:
+`"prefix " + e` used to concatenate (the operand was a `Str`), but now reaches
+`plus`\'s String arm reject path — which `panic!`d. A `panic!` payload is a
+`&str`, not a `SirError`, so `exc_from_payload` `resume_unwind`s it and NO
+`rescue`, not even a bare one, can catch it: the program died with a host
+backtrace where Ruby raises a rescuable `TypeError`. Both the `Str` and `Seq`
+reject paths in `plus` now `raise("TypeError", …)`
+(`"no implicit conversion of X into String"`/`Array`), which a `rescue`
+catches. Pinned by a new exec-proof: an outer `rescue` catches the TypeError
+from `"got: " + e` and the process exits 0.
+
 ## 0.37.0 — Ruby type reflection: `.class`, `is_a?`, `kind_of?`, `instance_of?`
 
 `.class` **crashed the program**. The backend already had the full class-name

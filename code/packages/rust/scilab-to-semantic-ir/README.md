@@ -122,3 +122,20 @@ primary template)
   multiplication, elementwise scalar broadcast, indexed assignment,
   range+transpose, `%pi`, a `for`-loop accumulator, and both branches of a
   desugared `select`/`case`.
+- `tests/oracle.rs` — HML01 §7 oracle/golden testing: the same Scilab
+  source run through **two independent implementations**,
+  `scilab-runtime` (ground truth) and this crate's own
+  `compile_source` → `semantic_ir_to_javascript::compile` → a real
+  `node` process, cross-checked for agreement (gated on `node`
+  availability). 33-case corpus covering arithmetic, comparisons,
+  logicals, `if`/`elseif`/`select`/`case`/`while`/`for`, matrices,
+  user-defined functions (including recursion), strings, and the
+  `%`-constants. Six documented, genuinely-tracked divergences
+  (`known_bug`): three already-open shared-crate display-convention
+  gaps (float-literal trailing `.0`, `Inf`/`eps` number formatting,
+  integer-literal division flooring) and one genuine bug newly found
+  here in `semantic-ir-to-javascript`'s `matmul` (crashes when given a
+  bare scalar variable instead of an array literal — not fixed in this
+  crate, flagged as a follow-up against the shared backend). See
+  `tests/oracle.rs`'s own module doc comment for the full writeup of
+  all six findings.

@@ -1,0 +1,57 @@
+% ============================================================================
+% time-conversions — customary time-unit → second factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `length-conversions.adj` / `mass-conversions.adj`: a native
+% tabular relation ingested VERBATIM from a published NIST conversion table. Each
+% row states the factor converting one everyday time unit to the SI base unit, the
+% second:
+%
+%     ? time_to_seconds(minute, $S)     % 60      (a minute is 60 s)
+%     ? time_to_seconds(hour, $S)       % 3600    (an hour is 3600 s)
+%     ? time_to_seconds(day, $S)        % 86400   (a day is 86400 s)
+%
+% Why a `table` and not three hand-written `relate` clauses: this is exactly the
+% shape reference data comes in — a published table, not prose. The citable
+% artifact IS the NIST conversion-factors table at the `locator` below; every
+% factor here is a CELL of NIST Special Publication 811, Appendix B.9 ("Factors
+% for units listed alphabetically"), and the whole table is defended by one
+% provenance envelope rather than repeating `source`/`locator`/`trust` on every
+% row. Each `row` lowers to a ground relation `time_to_seconds(unit, seconds)`, so
+% the exact lookup above is the ordinary SLD binding query — the engine returns
+% the factor WITH this table's citation as its proof, on the CPU, with zero model
+% calls. A looked-up factor is a number, so it can feed a `let`/`formula`
+% downstream (e.g. multiply a duration by it) through the existing slot path.
+%
+% HONESTY NOTE (like length-conversions, these are EXACT defined factors, not
+% rounded 7-figure ones): NIST SP 811 B.9 prints the "Time" factors in BOLDFACE,
+% its convention for factors that are EXACT by definition, transcribed here as the
+% plain integer number of seconds each unit names:
+%
+%     minute (min)   6.0  E+01   →  60
+%     hour   (h)     3.6  E+03   →  3600
+%     day    (d)     8.64 E+04   →  86400
+%
+% These three are exact: a minute IS exactly 60 seconds, an hour exactly 3600, a
+% day exactly 86400 — definitional, not measured. Deliberately OMITTED: the year,
+% which SP 811 lists only as a non-exact multiple (365 d → 3.1536 E+07 s, plus
+% distinct sidereal/tropical variants), so it is NOT a single exact factor and has
+% no honest row here; a `? time_to_seconds(year, $S)` therefore ABSTAINS rather
+% than committing to one of several inequivalent lengths. The only claim this table
+% makes is "these are the exact factors NIST SP 811 B.9 prints" — which is exactly
+% what a byte-check against the cited table verifies. `trust authoritative` — a
+% primary, re-fetchable standards reference. (See ADJ-TABLES.md; and
+% feedback_nothing_human_authored — nothing here is asserted "from memory": every
+% factor is a verbatim cell of the cited table.)
+% ============================================================================
+
+table time_to_seconds {
+    columns unit, seconds
+
+    row (minute, 60)
+    row (hour, 3600)
+    row (day, 86400)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

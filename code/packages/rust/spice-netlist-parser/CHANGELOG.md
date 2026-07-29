@@ -2,6 +2,30 @@
 
 ## Unreleased
 
+- Preserve Level-1 MOS model-card `U0` / `UO` and derive `KP` from surface
+  mobility and explicit `TOX` when the card omits `KP`.
+- Preserve Level-1 MOS model-card `JS` independently from scalar `IS` so
+  Berkeley netlists can drive diffusion-area-scaled bulk-junction leakage.
+- Preserve the remaining supported Level-1 MOS model-card fields `LD`, `TOX`,
+  `RD`, `RS`, `KF`, and `AF`, plus `VTH`, `LAM`, `CJS`, and `CJD` aliases,
+  when lowering Berkeley netlists into engine parameters.
+- Preserve Level-1 MOS model-card `PB`, `MJ`, and `FC` values when lowering
+  Berkeley netlists into the engine parameter bundle.
+- Accept Level-1 MOS model-card `MJSW=<grading>` through the normalized engine
+  model-card contract for independent sidewall depletion shaping.
+- Parse Level-1 MOS instance `PS=<perimeter>` into the engine parameter bundle
+  for source-body sidewall capacitance.
+- Parse Level-1 MOS instance `PD=<perimeter>` and model-card
+  `CJSW=<capacitance/length>` into the engine parameter bundle for drain-body
+  sidewall capacitance.
+- Parse Level-1 MOS instance `AS=<area>` into the engine parameter bundle for
+  source-body junction capacitance.
+- Parse Level-1 MOS instance `AD=<area>` and model-card `CJ=<capacitance/area>`
+  into the engine parameter bundle for drain-body junction capacitance.
+- Parse Level-1 MOS instance `NRS=<squares>` into the engine parameter bundle
+  so netlist-driven source resistance uses `RSH * NRS`.
+- Parse Level-1 MOS model `RSH` and instance `NRD=<squares>` into the engine
+  parameter bundle so netlist-driven drain resistance uses `RSH * NRD`.
 - Add Berkeley SPICE app-deck shell dashboard dispatch queue lane tab panel
   card action menu group shortcut command palette search invocation receipt
   notification stack summary product handoff delivery package embed runtime

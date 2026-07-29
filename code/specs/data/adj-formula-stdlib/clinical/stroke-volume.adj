@@ -1,0 +1,101 @@
+% ============================================================================
+% stroke-volume.adj — the definition of stroke volume
+% (SV = end-diastolic volume − end-systolic volume) in the ADJ standard library.
+% ============================================================================
+% The stroke-volume entry of the *clinical* track, a hemodynamics sibling of
+% `cardiac-output.adj`, `mean-arterial-pressure.adj`, `pulse-pressure.adj` and
+% `fick-principle.adj`. Where `cardiac-output.adj` grounds cardiac output as the product
+% CO = stroke volume × heart rate, this grounds the PRIOR, independent definition of the
+% stroke volume itself: STROKE VOLUME IS THE END-DIASTOLIC VOLUME MINUS THE END-SYSTOLIC
+% VOLUME — the amount of blood a ventricle ejects in one beat, the volume it held when full
+% (end of diastole) less the volume it retains after contracting (end of systole). It ships
+% as an importable, byte-provenanced, PARAMETERIZED `formula`, together with its two exact
+% rearrangements (the end-diastolic volume a stroke volume implies for a given end-systolic
+% volume, and the end-systolic volume the other two imply). As with every compute library,
+% a consumer states NO arithmetic: it `import`s this file, binds the measured quantities
+% from its own byte-provenance decomposition, and asks the engine to APPLY the cited
+% definition on the CPU. Zero math is performed by the model; the engine computes each value
+% EXACTLY, carrying the definition's citation.
+%
+%     import "stroke-volume.adj"
+%     observe end_diastolic_volume(120)     % "…EDV 120 mL…"  (span cited by the model)
+%     observe end_systolic_volume(50)       % "…ESV 50 mL…"   (span cited by the model)
+%     ? stroke_volume(end_diastolic_volume, end_systolic_volume)
+%                                              % engine → 70, carrying SV = EDV − ESV
+%
+% All three formulas are EXACT over their parameters (a difference and two of its inverse
+% readings), so every value the engine returns is exact. The three COMPOSE and invert
+% cleanly around the worked case EDV = 120 mL, ESV = 50 mL (SV = 120 − 50 = 70 mL, a normal
+% resting stroke volume): the `stroke_volume` a consumer computes from the two volumes is
+% exactly the `stroke_volume` the `end_diastolic_volume` formula adds the end-systolic
+% volume back to, to recover the 120 mL end-diastolic volume, and exactly the `stroke_volume`
+% the `end_systolic_volume` formula subtracts from the end-diastolic volume to recover the
+% 50 mL end-systolic volume.
+%
+%   stroke_volume(end_diastolic_volume, end_systolic_volume)
+%       = end_diastolic_volume - end_systolic_volume     % SV = EDV − ESV   (definition)
+%   end_diastolic_volume(stroke_volume, end_systolic_volume)
+%       = stroke_volume + end_systolic_volume            % EDV = SV + ESV   (same def, solved for EDV)
+%   end_systolic_volume(end_diastolic_volume, stroke_volume)
+%       = end_diastolic_volume - stroke_volume           % ESV = EDV − SV   (same def, solved for ESV)
+%
+% NOTE ON UNITS: the two volumes must be in the SAME unit (both millilitres, as in the
+% worked case), and the stroke volume comes out in that same unit; this library computes the
+% exact value over whatever consistent unit it is given.
+%
+% All three formulas are defended by the SAME definitional sentence — "The difference
+% between end-diastolic volume and end-systolic volume defines stroke volume." — because
+% that one definition (stroke volume IS the end-diastolic minus the end-systolic volume)
+% sanctions the relation read every way (SV from the two volumes, EDV from SV and ESV, or
+% ESV from EDV and SV). The quote is transcribed verbatim from the StatPearls "Physiology,
+% Stroke Volume" article on the NCBI Bookshelf, so each `formula` carries the provenance
+% envelope every shipped grounded clause carries; the linter rejects an unsourced one.
+% (See feedback_nothing_human_authored — the definitional sentence is a verbatim span of the
+% cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable ventricular volume the definition ranges over,
+% and each result is a derived quantity. `stroke_volume`, `end_diastolic_volume` and
+% `end_systolic_volume` each appear BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are
+% the everyday names a decomposer maps onto the canonical term; the trailing comment records
+% the intended unit.
+% ----------------------------------------------------------------------------
+dictionary stroke_volume_vocab {
+    define end_diastolic_volume : finding  surface "end-diastolic volume", "EDV"   % millilitres (mL)
+    define end_systolic_volume  : finding  surface "end-systolic volume", "ESV"    % millilitres (mL)
+    define stroke_volume        : finding  surface "stroke volume", "SV"           % millilitres per beat (mL)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable `let` over its
+% formal parameters, bound at apply time, and each carries the definitional sentence from
+% StatPearls on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an
+% exact difference/sum of measured quantities, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook stroke_volume_laws {
+    use stroke_volume_vocab
+
+    % Stroke volume — the end-diastolic volume less the end-systolic volume, i.e.
+    % SV = EDV − ESV.
+    formula stroke_volume(end_diastolic_volume, end_systolic_volume) = end_diastolic_volume - end_systolic_volume
+        source "The difference between end-diastolic volume and end-systolic volume defines stroke volume."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK547686/"
+        trust authoritative
+
+    % End-diastolic volume — the same definition solved for the end-diastolic volume a
+    % stroke volume implies for an end-systolic volume (EDV = SV + ESV). Defended by the
+    % SAME definitional sentence, read the other way.
+    formula end_diastolic_volume(stroke_volume, end_systolic_volume) = stroke_volume + end_systolic_volume
+        source "The difference between end-diastolic volume and end-systolic volume defines stroke volume."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK547686/"
+        trust authoritative
+
+    % End-systolic volume — the same definition solved for the end-systolic volume the other
+    % two imply (ESV = EDV − SV). Again the SAME definitional sentence, read the third way.
+    formula end_systolic_volume(end_diastolic_volume, stroke_volume) = end_diastolic_volume - stroke_volume
+        source "The difference between end-diastolic volume and end-systolic volume defines stroke volume."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK547686/"
+        trust authoritative
+}

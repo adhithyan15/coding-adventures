@@ -1,0 +1,32 @@
+% ============================================================================
+% glomerular-filtration-rate.query.adj — worked applications of the Starling GFR determination.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a renal-physiology vignette into observed
+% quantities: it `import`s the grounded formulabook, `observe`s the measured pressures (and the
+% filtration coefficient), and asks the engine to APPLY the cited determination. No arithmetic is
+% stated by the consumer; the engine computes each value EXACTLY (over exact rationals) and
+% carries the StatPearls Starling-equation citation as its proof, on the CPU, with zero model
+% calls.
+%
+% Worked case (Kf = 14, P_GC = 60 mmHg, P_BS = 17 mmHg, π_GC = 42 mmHg, π_BS = 12 mmHg): the net
+% filtration pressure is (60 − 17) − (42 − 12) = 43 − 30 = 13 mmHg, so GFR = 14 × 13 = 182. Each
+% query below fixes five of the six quantities and asks the engine to recover the sixth; every
+% answer is exact and the six COMPOSE (each inversion recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli glomerular-filtration-rate.query.adj
+% ============================================================================
+
+import "glomerular-filtration-rate.adj"
+
+% --- Forward: the glomerular filtration rate the five quantities imply (expect 182). ----------
+observe filtration_coefficient(14)
+observe glomerular_capillary_hydrostatic_pressure(60)
+observe bowman_space_hydrostatic_pressure(17)
+observe glomerular_capillary_oncotic_pressure(42)
+observe bowman_space_oncotic_pressure(12)
+? glomerular_filtration_rate(filtration_coefficient, glomerular_capillary_hydrostatic_pressure, bowman_space_hydrostatic_pressure, glomerular_capillary_oncotic_pressure, bowman_space_oncotic_pressure)   % expect 182
+
+% --- Inverse: the filtration coefficient a GFR of 182 implies for that pressure balance (14). --
+observe glomerular_filtration_rate(182)
+? filtration_coefficient(glomerular_filtration_rate, glomerular_capillary_hydrostatic_pressure, bowman_space_hydrostatic_pressure, glomerular_capillary_oncotic_pressure, bowman_space_oncotic_pressure)   % expect 14

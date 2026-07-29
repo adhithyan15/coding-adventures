@@ -1,0 +1,32 @@
+% ============================================================================
+% wave-speed.query.adj — worked examples over the physics wave-speed library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a wave question: it
+% states NO arithmetic and NO relation — it only `import`s the grounded library,
+% `observe`s the measured quantities it decomposed from the prompt (each a
+% byte-provenanced span, elided here), and asks the engine to APPLY the cited wave
+% relation. The native adj-lang engine binds the parameters, computes each value
+% EXACTLY on the CPU, and returns it with the relation's source/locator/trust.
+%
+% The three questions INVERT: a 2 Hz wave with a 3 m wavelength travels at 6 m/s;
+% that 6 m/s speed is exactly what the frequency formula divides by the 3 m to
+% recover the 2 Hz, and exactly what the wavelength formula divides by the 2 Hz to
+% recover the 3 m.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli wave-speed.query.adj
+% ============================================================================
+
+import "wave-speed.adj"
+
+% A 2 Hz wave with a 3 m wavelength: speed = 2 * 3.
+observe frequency(2)
+observe wavelength(3)
+? wave_speed(frequency, wavelength)      % expect 6   (relation: v = f·λ)
+
+% That 6 m/s wave at the same 3 m wavelength: frequency = 6 / 3.
+observe wave_speed(6)
+? frequency(wave_speed, wavelength)       % expect 2   (same relation, solved for f = v/λ)
+
+% That 6 m/s wave at the same 2 Hz frequency: wavelength = 6 / 2.
+? wavelength(wave_speed, frequency)       % expect 3   (same relation, solved for λ = v/f)

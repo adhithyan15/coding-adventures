@@ -4,6 +4,53 @@ All notable changes to `task-wasm` are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - project switching (`set_active_project` / `active_project`)
+
+- **`set_active_project`** — choose which project the per-project ops and queries act
+  on. This closes a real hole: the active project was permanently *"the first root"*,
+  so a project created through `create_project` was **unreachable** — you could make it,
+  but nothing could ever target it. Rejects an unknown id with an error envelope rather
+  than silently selecting nothing, so a typo can't leave the host operating on a
+  different project than it thinks.
+- **`active_project`** — the id currently being acted on, so a host can render which
+  project is selected without duplicating the resolution rules.
+- The selection is **ABI-local, not part of the `Workspace`**: which project you are
+  looking at is a property of *this view of* the workspace, not of the data. Two hosts
+  on the same persisted snapshot can sit on different projects, and `snapshot` does not
+  carry one host's cursor to another. A host that wants to restore the last-viewed
+  project persists that id itself and re-selects after `load` — the same division of
+  labour as the existing host-owned row order.
+- Resolution degrades safely: a selection whose project no longer exists falls back to
+  the first root instead of wedging every per-project call behind a dangling id; `reset`
+  and `load` clear it, since it points into a workspace that has been replaced.
+- **`delete_project` now clears the selection** when it deletes the selected project.
+  Letting it merely dangle was not enough: a later `create_project` reusing the same id
+  made the stale selection resolve *again*, silently retargeting the per-project surface
+  at a project the host never selected. (Found in security review.)
+- A rejected selection returns the standard `{ok,error,code}` envelope (`NotFound`) like
+  every other op, so hosts can switch on `code` instead of string-matching.
+- `task-engine.mjs` gains `setActiveProject` / `activeProject`.
+- 6 new tests (18 total): retargeting the per-project surface, rejecting an unknown id,
+  degrading when the selected project is deleted, and clearing across `load`/`reset`.
+  Also verified end-to-end against a freshly built `wasm32` binary driven through the JS
+  accessor from Node: create → switch → per-project task isolation → switch back, plus
+  the delete/re-create resurrection case and the error code.
+
+### Added
+
+- **View-layer exports** (Phase 3 PR-6 of `code/specs/task-app-view-layer.md`), all acting
+  on the active project and returning **render-ready** data:
+  - `table` — the sheet: columns (label + kind) and grouped rows whose cells carry both
+    the typed value and the engine-formatted display string.
+  - `view_selection` — the ordered, grouped task ids for a view (filter → sort → group).
+  - `calendar` — dated events for a view over an inclusive `[start, end]` day range.
+  - Each takes `{ view, projectStart }` (calendar also `{ start, end }`); a parse failure
+    or an empty workspace answers with an error envelope rather than trapping.
+- **Label and priority ops**: `upsert_label`, `delete_label`, `set_task_labels`,
+  `set_priority`.
+- `task-engine.mjs` gains the matching camelCase methods (`table`, `viewSelection`,
+  `calendar`, `upsertLabel`, `setTaskLabels`, `setPriority`, …).
+
 ### Changed
 
 - **The ABI now holds a whole `Workspace`, not a single `ProjectState`** (Phase 2 PR-4 of

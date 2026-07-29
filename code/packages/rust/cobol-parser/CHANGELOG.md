@@ -1,5 +1,56 @@
 # Changelog
 
+## 0.18.0 — `INSPECT … CONVERTING` alternative
+
+- Added the `inspect_converting` alternative to `inspect_stmt`:
+  `inspect_stmt = "INSPECT" operand ( inspect_tallying [ inspect_replacing ] |
+  inspect_replacing | inspect_converting ) [ "END-INSPECT" ]`, with the new rule
+  `inspect_converting = "CONVERTING" operand "TO" operand { inspect_region }`.
+- `CONVERTING` is a **standalone** alternative — it never appears beside a
+  `TALLYING`/`REPLACING` clause in one statement — so a combined form is a clean
+  parse rejection rather than a silently-accepted node.
+- The trailing `{ inspect_region }` accepts an optional `BEFORE`/`AFTER` so a
+  region-restricted `CONVERTING` parses and rejects cleanly as a later rung (a
+  friendly Unsupported) instead of a bare parse error.
+- `_grammar.rs` regenerated from `cobol.grammar` via `grammar-tools
+  compile-grammar` (never hand-edited).
+
+## 0.17.0 — `INSPECT` statement (first rung)
+
+- Added `inspect_stmt` to the `statement` alternation:
+  `inspect_stmt = "INSPECT" operand ( inspect_tallying [ inspect_replacing ] |
+  inspect_replacing ) [ "END-INSPECT" ]`, with the supporting rules
+  `inspect_tallying = "TALLYING" tally_for { tally_for }`,
+  `tally_for = NAME "FOR" tally_item { tally_item }`,
+  `tally_item = ( "ALL" | "LEADING" ) operand { inspect_region } | "CHARACTERS"
+  { inspect_region }`,
+  `inspect_replacing = "REPLACING" replace_item { replace_item }`,
+  `replace_item = "CHARACTERS" "BY" operand { inspect_region } | ( "ALL" |
+  "LEADING" ) operand "BY" operand { inspect_region }`, and
+  `inspect_region = ( "BEFORE" | "AFTER" ) operand`.
+- The source is the first (and only top-level) `operand`; the counter is the
+  `NAME` before `FOR`; the delimiter is the `operand` under the matched
+  `tally_item`. As with `string_stmt`/`unstring_stmt`, the grammar deliberately
+  *accepts* the fuller surface (`LEADING`/`CHARACTERS` tallies, `BEFORE`/`AFTER`
+  regions, several counters or `FOR` phrases, and every `REPLACING` form) so the
+  reader/compiler reject them with a friendly "later rung" error rather than a
+  bare parse failure. Uses the new `INSPECT` keywords (see `cobol-lexer` 0.9.0).
+  `_grammar.rs` regenerated via `grammar-tools compile-grammar`.
+
+## 0.16.0 — `UNSTRING` statement (first rung)
+
+- Added `unstring_stmt` to the `statement` alternation:
+  `unstring_stmt = "UNSTRING" operand "DELIMITED" "BY" operand "INTO" NAME { NAME }
+  [ "WITH" "POINTER" NAME ] [ "ON" "OVERFLOW" { statement } ]
+  [ "NOT" "ON" "OVERFLOW" { statement } ] [ "END-UNSTRING" ]`. The source and the
+  delimiter are the two `operand` children (in order); the receivers are the `NAME`
+  tokens after `INTO`. As with `string_stmt`, the grammar deliberately *accepts*
+  the later-rung options (`WITH POINTER`, `ON`/`NOT ON OVERFLOW`) so the
+  reader/compiler can reject them with a friendly "later rung" error rather than a
+  bare parse failure. Uses the new `UNSTRING` / `END-UNSTRING` keywords (see
+  `cobol-lexer` 0.8.0). `_grammar.rs` regenerated via
+  `grammar-tools compile-grammar`.
+
 ## 0.15.0 — `STRING` statement (first rung)
 
 - Added `string_stmt` to the `statement` alternation:

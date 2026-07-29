@@ -244,6 +244,487 @@ mod tests {
     }
 
     // ----------------------------------------------------------------------
+    // Cross-category MOVE: unsigned-integer numeric → alphanumeric
+    // ----------------------------------------------------------------------
+
+    /// Run a program with the given WORKING-STORAGE and PROCEDURE bodies.
+    fn run_ws(ws: &[&str], body: &[&str]) -> Result<String, RuntimeError> {
+        let mut lines = vec![
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+        ];
+        lines.extend_from_slice(ws);
+        lines.push("PROCEDURE DIVISION.");
+        lines.push("MAIN.");
+        lines.extend_from_slice(body);
+        run_cobol(&program(&lines))
+    }
+
+    #[test]
+    fn numeric_to_alphanumeric_move_left_justifies_and_space_pads() {
+        // PIC 9(3)=042 → PIC X(5): the digit image "042" left-justified, right-padded.
+        let out = run_ws(
+            &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(5)."],
+            &["    MOVE N TO W.", "    DISPLAY W \"|\".", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "042  |\n");
+    }
+
+    #[test]
+    fn numeric_to_alphanumeric_move_truncates_on_the_right() {
+        // PIC 9(3)=042 → PIC X(2): keeps the leftmost two digits "04".
+        let out = run_ws(
+            &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(2)."],
+            &["    MOVE N TO W.", "    DISPLAY W.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "04\n");
+    }
+
+    #[test]
+    fn numeric_to_alphanumeric_move_exact_fit() {
+        // PIC 9(3)=042 → PIC X(3): the whole digit image "042".
+        let out = run_ws(
+            &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(3)."],
+            &["    MOVE N TO W.", "    DISPLAY W.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "042\n");
+    }
+
+    #[test]
+    fn signed_numeric_to_alphanumeric_move_overpunches_units_digit() {
+        // A SIGNED integer source: its magnitude image carries the sign as a trailing
+        // overpunch on the units digit. +123 → units 3, positive → 'C' → "12C"; the
+        // X(4) receiver left-justifies and space-pads → "12C ".
+        let pos = run_ws(
+            &["01  S  PIC S9(3) VALUE 123.", "01  W  PIC X(4)."],
+            &["    MOVE S TO W.", "    DISPLAY W \"|\".", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(pos, "12C |\n");
+        // −123 → units 3, negative → 'L' → "12L"; exact fit into X(3).
+        let neg = run_ws(
+            &["01  S  PIC S9(3) VALUE -123.", "01  W  PIC X(3)."],
+            &["    MOVE S TO W.", "    DISPLAY W.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(neg, "12L\n");
+    }
+
+    #[test]
+    fn signed_numeric_to_alphanumeric_move_units_zero_and_truncation() {
+        // Units digit 0 selects the '{' (positive) / '}' (negative) overpunch.
+        let neg = run_ws(
+            &["01  S  PIC S9(3) VALUE -120.", "01  W  PIC X(3)."],
+            &["    MOVE S TO W.", "    DISPLAY W.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(neg, "12}\n");
+        // A NARROWER receiver right-truncates the image: S9(3)=-123 → "12L" → X(2) "12".
+        let trunc = run_ws(
+            &["01  S  PIC S9(3) VALUE -123.", "01  W  PIC X(2)."],
+            &["    MOVE S TO W.", "    DISPLAY W.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(trunc, "12\n");
+    }
+
+    #[test]
+    fn signed_scaled_numeric_to_alphanumeric_move_overpunches_last_fraction_digit() {
+        // A SIGNED SCALED source `PIC S9V9 = -4.2` → magnitude image "42", overpunch
+        // the units (last fractional) digit 2, negative → 'K' → "4K" (exact fit X(2)).
+        let out = run_ws(
+            &["01  F  PIC S9V9 VALUE -4.2.", "01  W  PIC X(2)."],
+            &["    MOVE F TO W.", "    DISPLAY W.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "4K\n");
+    }
+
+    #[test]
+    fn signed_value_truncating_to_zero_magnitude_is_positive() {
+        // COBOL has no negative zero: a nonzero negative value that high-order-
+        // truncates to an all-zero slot (`-1000` into `PIC S9(3)` → `000`) stores
+        // POSITIVE. Its alphanumeric image therefore takes the positive units-0
+        // overpunch '{' → "00{", NOT the negative '}'. DISPLAY of the signed field
+        // agrees. This matches the compiler, whose single-i64 slot collapses the
+        // value to a plain 0 (regression for a cross-engine sign-of-zero divergence).
+        let out = run_ws(
+            &["01  A  PIC S9(4) VALUE -1000.", "01  S  PIC S9(3).", "01  W  PIC X(3)."],
+            &[
+                "    MOVE A TO S.",
+                "    MOVE S TO W.",
+                "    DISPLAY W.",
+                "    DISPLAY S.",
+                "    STOP RUN.",
+            ],
+        )
+        .unwrap();
+        assert_eq!(out, "00{\n00{\n");
+    }
+
+    #[test]
+    fn signed_numeric_to_group_receiver_move_is_deferred() {
+        // A GROUP receiver is still a later rung on both engines — the oracle rejects
+        // it as "MOVE into a group item"; the compiler models no group items.
+        let err = run_ws(
+            &[
+                "01  S  PIC S9(3) VALUE -12.",
+                "01  G.",
+                "    05  A  PIC X(2).",
+                "    05  B  PIC X(1).",
+            ],
+            &["    MOVE S TO G.", "    STOP RUN."],
+        )
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn scaled_numeric_to_alphanumeric_move_uses_digit_image() {
+        // An UNSIGNED SCALED source `PIC 9(2)V9 = 4.2` moves its (int + frac) digit
+        // image "042" — no decimal point — into the alphanumeric receiver, left-
+        // justified and space-padded (X(4) → "042 ").
+        let out = run_ws(
+            &["01  F  PIC 9(2)V9 VALUE 4.2.", "01  W  PIC X(4)."],
+            &["    MOVE F TO W.", "    DISPLAY W.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "042 \n");
+    }
+
+    #[test]
+    fn scaled_numeric_to_alphanumeric_move_more_fraction_digits() {
+        // `PIC 9(1)V99 = 3.14` → image "314"; exact fit into X(3).
+        let out = run_ws(
+            &["01  F  PIC 9(1)V99 VALUE 3.14.", "01  W  PIC X(3)."],
+            &["    MOVE F TO W.", "    DISPLAY W.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "314\n");
+    }
+
+    // Cross-category alphanumeric → numeric MOVE (the reverse direction): an
+    // alphanumeric source (`PIC X(m)`) read as an unsigned integer and de-scaled
+    // into an UNSIGNED INTEGER receiver — RIGHT-justified, keeping the low-order
+    // `n` digits (`receiver = (integer from the m source chars) mod 10^n`).
+
+    #[test]
+    fn alphanumeric_to_numeric_move_exact_fit() {
+        // PIC X(3)="042" → PIC 9(3): fold → 42; DISPLAY shows "042".
+        let out = run_ws(
+            &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC 9(3)."],
+            &["    MOVE A TO N.", "    DISPLAY N.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "042\n");
+    }
+
+    #[test]
+    fn alphanumeric_to_numeric_move_shorter_source_zero_pads() {
+        // PIC X(2)="05" → PIC 9(4): fold → 5, right-justified into 4 digits.
+        let out = run_ws(
+            &["01  A  PIC X(2) VALUE \"05\".", "01  N  PIC 9(4)."],
+            &["    MOVE A TO N.", "    DISPLAY N.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "0005\n");
+    }
+
+    #[test]
+    fn alphanumeric_to_numeric_move_longer_source_truncates_high_order() {
+        // PIC X(5)="12345" → PIC 9(3): fold → 12345, keep the low-order 3 → 345.
+        let out = run_ws(
+            &["01  A  PIC X(5) VALUE \"12345\".", "01  N  PIC 9(3)."],
+            &["    MOVE A TO N.", "    DISPLAY N.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "345\n");
+    }
+
+    #[test]
+    fn alphanumeric_to_signed_numeric_move_is_deferred() {
+        // A SIGNED receiver (`PIC S9`) is a later rung.
+        let err = run_ws(
+            &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC S9(3)."],
+            &["    MOVE A TO N.", "    STOP RUN."],
+        )
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    // A SCALED receiver `PIC 9(i)V9(d)` is now supported: the fold IS the scaled
+    // slot magnitude (`V mod 10^(i+d)`), the point sitting `d` places from the
+    // right. DISPLAY shows the raw `(i + d)` digits (no point).
+
+    #[test]
+    fn alphanumeric_to_scaled_numeric_move_exact_fit() {
+        // PIC X(3)="042" → PIC 9(2)V9: fold → 42, slot 042, reads 4.2 → DISPLAY "042".
+        let out = run_ws(
+            &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC 9(2)V9."],
+            &["    MOVE A TO N.", "    DISPLAY N.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "042\n");
+    }
+
+    #[test]
+    fn alphanumeric_to_scaled_numeric_move_shorter_source_zero_pads() {
+        // PIC X(2)="42" → PIC 9(2)V9: fold → 42, slot 042 (left-zero-padded to the
+        // 3 positions), reads 4.2 → DISPLAY "042".
+        let out = run_ws(
+            &["01  A  PIC X(2) VALUE \"42\".", "01  N  PIC 9(2)V9."],
+            &["    MOVE A TO N.", "    DISPLAY N.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "042\n");
+    }
+
+    #[test]
+    fn alphanumeric_to_scaled_numeric_move_longer_source_truncates_high_order() {
+        // PIC X(5)="12345" → PIC 9(2)V9: fold → 12345, keep the low-order (i+d)=3
+        // digits → slot 345, reads 34.5 → DISPLAY "345".
+        let out = run_ws(
+            &["01  A  PIC X(5) VALUE \"12345\".", "01  N  PIC 9(2)V9."],
+            &["    MOVE A TO N.", "    DISPLAY N.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "345\n");
+    }
+
+    #[test]
+    fn alphanumeric_to_scaled_numeric_move_more_fraction_than_source_digits() {
+        // PIC X(1)="5" → PIC 9(1)V99: fold → 5, slot 005 (magnitude has fewer digits
+        // than i+d=3), reads 0.05 → DISPLAY "005".
+        let out = run_ws(
+            &["01  A  PIC X(1) VALUE \"5\".", "01  N  PIC 9(1)V99."],
+            &["    MOVE A TO N.", "    DISPLAY N.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "005\n");
+    }
+
+    #[test]
+    fn alphanumeric_to_signed_scaled_numeric_move_is_deferred() {
+        // A SIGNED SCALED receiver (`PIC S9V9`) is still a later rung.
+        let err = run_ws(
+            &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC S9V9."],
+            &["    MOVE A TO N.", "    STOP RUN."],
+        )
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn group_to_numeric_move_is_deferred() {
+        // A GROUP source into a numeric receiver is a later rung.
+        let err = run_ws(
+            &[
+                "01  G.",
+                "    05  A  PIC X(2) VALUE \"04\".",
+                "    05  B  PIC X(1) VALUE \"2\".",
+                "01  N  PIC 9(3).",
+            ],
+            &["    MOVE G TO N.", "    STOP RUN."],
+        )
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    // ----------------------------------------------------------------------
+    // Mixed numeric ↔ alphanumeric comparison.
+    //
+    // A relation comparing an UNSIGNED numeric operand (integer OR scaled,
+    // `PIC 9(i)V9(d)`) with an ALPHANUMERIC one treats the numeric operand as
+    // though moved to an alphanumeric field — its digit image (`Decimal::digits()`
+    // yields the item's fixed-width `(int + frac)` zero-padded storage, no point) —
+    // then compares by the alphanumeric byte rule (space-pad the shorter side,
+    // byte-by-byte). A SIGNED numeric operand is also supported: its image is that
+    // same magnitude with the operational sign folded into a TRAILING OVERPUNCH on
+    // the units digit (`overpunch_trailing`), so `PIC S9(3) = -123` compares equal
+    // to "12L" and `= +123` equal to "12C". Only a group item in a mixed comparison
+    // is still a clean later rung, rejected to match the compiler.
+    // ----------------------------------------------------------------------
+
+    #[test]
+    fn mixed_numeric_equals_matching_alphanumeric_literal() {
+        // NUM PIC 9(3)=42 → image "042"; "042" = "042" → equal.
+        let out = run_ws(
+            &["01  NUM  PIC 9(3) VALUE 42."],
+            &["    IF NUM = \"042\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "MATCH\n");
+    }
+
+    #[test]
+    fn mixed_numeric_space_pad_mismatch() {
+        // "042" vs "42" (space-padded to "42 ") differ — the byte rule, not a
+        // value comparison.
+        let out = run_ws(
+            &["01  NUM  PIC 9(3) VALUE 42."],
+            &["    IF NUM = \"42\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "NO\n");
+    }
+
+    #[test]
+    fn mixed_numeric_ordering_and_right_operand() {
+        // Ordering ("042" > "040") and the numeric operand on the RIGHT.
+        let out = run_ws(
+            &["01  NUM  PIC 9(3) VALUE 42."],
+            &[
+                "    IF NUM > \"040\" DISPLAY \"GT\" ELSE DISPLAY \"LE\".",
+                "    IF \"042\" = NUM DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".",
+                "    STOP RUN.",
+            ],
+        )
+        .unwrap();
+        assert_eq!(out, "GT\nMATCH\n");
+    }
+
+    #[test]
+    fn mixed_numeric_against_a_pic_x_item() {
+        // The alphanumeric side is a `PIC X` item, not a literal.
+        let out = run_ws(
+            &["01  NUM  PIC 9(3) VALUE 42.", "01  W  PIC X(3) VALUE \"042\"."],
+            &["    IF NUM = W DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "MATCH\n");
+    }
+
+    #[test]
+    fn mixed_signed_numeric_vs_alphanumeric_uses_overpunched_image() {
+        // A SIGNED numeric operand compares by its magnitude image with a trailing
+        // sign overpunch on the units digit (the same bytes the signed→alphanumeric
+        // MOVE builds): `PIC S9(3) = -123` → "12L", `= +123` → "12C". Equality and an
+        // ORDERING relation both follow the byte comparison of those images.
+        let neg = run_ws(
+            &["01  S  PIC S9(3) VALUE -123."],
+            &[
+                "    IF S = \"12L\" DISPLAY \"EQ\" ELSE DISPLAY \"NE\".",
+                "    IF S = \"12C\" DISPLAY \"EQ\" ELSE DISPLAY \"NE\".",
+                "    IF S < \"12M\" DISPLAY \"LT\" ELSE DISPLAY \"GE\".",
+                "    STOP RUN.",
+            ],
+        )
+        .unwrap();
+        assert_eq!(neg, "EQ\nNE\nLT\n");
+        // A signed item with an unsigned VALUE is POSITIVE (neg=false), so its image
+        // takes the positive `{…I` overpunch row: 123 → "12C".
+        let pos = run_ws(
+            &["01  S  PIC S9(3) VALUE 123."],
+            &["    IF S = \"12C\" DISPLAY \"EQ\" ELSE DISPLAY \"NE\".", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(pos, "EQ\n");
+    }
+
+    #[test]
+    fn mixed_signed_units_zero_and_scaled_overpunch() {
+        // Units digit 0 selects '}' (negative) / '{' (positive); a scaled
+        // `PIC S9V9 = -4.2` overpunches the last fraction digit → "4K".
+        let out = run_ws(
+            &["01  S  PIC S9(3) VALUE -120.", "01  P  PIC S9(3) VALUE 120.", "01  F  PIC S9V9 VALUE -4.2."],
+            &[
+                "    IF S = \"12}\" DISPLAY \"EQ\" ELSE DISPLAY \"NE\".",
+                "    IF P = \"12{\" DISPLAY \"EQ\" ELSE DISPLAY \"NE\".",
+                "    IF F = \"4K\" DISPLAY \"EQ\" ELSE DISPLAY \"NE\".",
+                "    STOP RUN.",
+            ],
+        )
+        .unwrap();
+        assert_eq!(out, "EQ\nEQ\nEQ\n");
+    }
+
+    #[test]
+    fn mixed_signed_zero_magnitude_compares_positive() {
+        // COBOL has no negative zero: -1000 truncated into PIC S9(3) stores an
+        // all-zero POSITIVE slot whose overpunched image is "00{" (units 0, positive),
+        // so `IF S = "00{"` is TRUE — no reintroduced sign-of-zero divergence.
+        let out = run_ws(
+            &["01  A  PIC S9(4) VALUE -1000.", "01  S  PIC S9(3)."],
+            &[
+                "    MOVE A TO S.",
+                "    IF S = \"00{\" DISPLAY \"EQ\" ELSE DISPLAY \"NE\".",
+                "    STOP RUN.",
+            ],
+        )
+        .unwrap();
+        assert_eq!(out, "EQ\n");
+    }
+
+    #[test]
+    fn mixed_numeric_literal_vs_alphanumeric_is_deferred() {
+        // A numeric LITERAL against an alphanumeric operand is a different pairing,
+        // still out of scope on both engines.
+        let err = run_ws(
+            &["01  W  PIC X(3) VALUE \"042\"."],
+            &["    IF 42 = W DISPLAY \"Y\".", "    STOP RUN."],
+        )
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn figurative_vs_figurative_comparison() {
+        // Two figurative constants compare by filling each to a single character
+        // (ZERO → "0", SPACE → " "): ZERO = ZERO and SPACE = SPACE are true; ZERO ≠
+        // SPACE and, by byte ('0'=0x30 > ' '=0x20), ZERO > SPACE. Matches the compiler.
+        let out = run_ws(
+            &["01  D  PIC X(1)."],
+            &[
+                "    IF ZERO = ZERO DISPLAY \"ZZ\" ELSE DISPLAY \"zz\".",
+                "    IF SPACE = SPACE DISPLAY \"SS\" ELSE DISPLAY \"ss\".",
+                "    IF ZERO = SPACE DISPLAY \"EQ\" ELSE DISPLAY \"NE\".",
+                "    IF ZERO > SPACE DISPLAY \"GT\" ELSE DISPLAY \"le\".",
+                "    STOP RUN.",
+            ],
+        )
+        .unwrap();
+        assert_eq!(out, "ZZ\nSS\nNE\nGT\n");
+    }
+
+    #[test]
+    fn mixed_scaled_numeric_vs_alphanumeric_uses_digit_image() {
+        // An UNSIGNED SCALED operand `PIC 9(2)V9 = 4.2` compares by its (int + frac)
+        // digit image "042" — no point — so `IF F = "042"` is TRUE and `IF F > "040"`
+        // is TRUE, matching the compiler.
+        let out = run_ws(
+            &["01  F  PIC 9(2)V9 VALUE 4.2."],
+            &[
+                "    IF F = \"042\" DISPLAY \"EQ\" ELSE DISPLAY \"NE\".",
+                "    IF F > \"040\" DISPLAY \"GT\" ELSE DISPLAY \"LE\".",
+                "    STOP RUN.",
+            ],
+        )
+        .unwrap();
+        assert_eq!(out, "EQ\nGT\n");
+    }
+
+    #[test]
+    fn mixed_group_item_vs_numeric_is_deferred() {
+        // A GROUP item in a mixed numeric comparison is a later rung.
+        let err = run_ws(
+            &[
+                "01  G.",
+                "    05  A  PIC X(2) VALUE \"04\".",
+                "    05  B  PIC X(1) VALUE \"2\".",
+                "01  NUM  PIC 9(3) VALUE 42.",
+            ],
+            &["    IF G = NUM DISPLAY \"Y\".", "    STOP RUN."],
+        )
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    // ----------------------------------------------------------------------
     // Fixed-point decimal arithmetic
     // ----------------------------------------------------------------------
 
@@ -701,6 +1182,44 @@ mod tests {
         assert_eq!(run_alpha_evaluate("B", body).unwrap(), "FIRST-HALF\n");
         assert_eq!(run_alpha_evaluate("M", body).unwrap(), "FIRST-HALF\n"); // high boundary
         assert_eq!(run_alpha_evaluate("Z", body).unwrap(), "REST\n"); // above the range
+    }
+
+    #[test]
+    fn evaluate_numeric_subject_vs_alphanumeric_when() {
+        // A numeric subject vs an alphanumeric WHEN value routes through
+        // `compare_operands` exactly like `IF N = "042"`: N PIC 9(3)=42 → digit
+        // image "042" matches WHEN "042"; WHEN "42" space-pads to "42 " ('0' < '4')
+        // → no match. This pins the oracle's mixed EVALUATE that the compiler now
+        // matches byte-for-byte.
+        let run = |v: &str| {
+            let body = [
+                "EVALUATE N".to_string(),
+                format!("WHEN {v} DISPLAY \"HIT\""),
+                "WHEN OTHER DISPLAY \"MISS\"".to_string(),
+                "END-EVALUATE.".to_string(),
+                "STOP RUN.".to_string(),
+            ];
+            let refs: Vec<&str> = body.iter().map(|s| s.as_str()).collect();
+            run_if("42", &refs)
+        };
+        assert_eq!(run("\"042\""), "HIT\n");
+        assert_eq!(run("\"42\""), "MISS\n");
+    }
+
+    #[test]
+    fn evaluate_alpha_subject_vs_numeric_literal_when_is_a_later_rung() {
+        // An alphanumeric subject vs a numeric-LITERAL WHEN value is a *different*
+        // pairing (numeric literal vs alphanumeric) — `compare_operands` rejects it,
+        // exactly as the compiler's `num_digit_str_operand` does. Both engines
+        // defer this identically.
+        let body = &[
+            "EVALUATE GRADE",
+            "WHEN 42 DISPLAY \"HIT\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ];
+        assert!(run_alpha_evaluate("A", body).is_err());
     }
 
     #[test]
@@ -1707,24 +2226,1569 @@ mod tests {
     }
 
     #[test]
+    fn string_delimited_by_a_single_char_delimiter() {
+        // Each field contributes only its prefix up to its first delimiter char:
+        // "ab,cd" → "ab", "ef" (no comma) → "ef", "gh,ij" → "gh"; concat "abefgh".
+        let out = run_cobol(&wrap(
+            &[
+                "01  A  PIC X(5) VALUE \"ab,cd\".",
+                "01  B  PIC X(2) VALUE \"ef\".",
+                "01  C  PIC X(5) VALUE \"gh,ij\".",
+                "01  T  PIC X(20) VALUE SPACES.",
+            ],
+            &[
+                "STRING A B C DELIMITED BY \",\"",
+                "    INTO T.",
+                "DISPLAY T.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "abefgh              \n");
+    }
+
+    #[test]
     fn string_later_rung_options_are_clean_errors() {
-        // A real delimiter needs a scan (later rung) …
+        // A NON-ASCII delimiter is a later rung (byte-vs-char) …
         let delim = run_cobol(&wrap(
             &["01  A  PIC X(3) VALUE \"ABC\".", "01  T  PIC X(6) VALUE SPACES."],
-            &["STRING A DELIMITED BY \"-\" INTO T.", "STOP RUN."],
+            &["STRING A DELIMITED BY \"é\" INTO T.", "STOP RUN."],
         ))
         .unwrap_err();
         assert!(matches!(delim, RuntimeError::Unsupported(_)), "got {delim:?}");
-        // … and so is WITH POINTER.
-        let ptr = run_cobol(&wrap(
+        // … a multi-character delimiter is a later rung …
+        let multi = run_cobol(&wrap(
+            &["01  A  PIC X(3) VALUE \"ABC\".", "01  T  PIC X(6) VALUE SPACES."],
+            &["STRING A DELIMITED BY \"ab\" INTO T.", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(multi, RuntimeError::Unsupported(_)), "got {multi:?}");
+        // (`WITH POINTER` and `ON OVERFLOW` / `NOT ON OVERFLOW` are now modelled — see
+        // the `string_with_pointer_*` and `string_on_overflow_*` tests below.)
+    }
+
+    #[test]
+    fn string_with_pointer_overlays_at_offset_and_writes_resume_back() {
+        // `WITH POINTER p` overlays the concatenation starting at 0-based `p-1` and
+        // writes the pointer back to `p + chars_placed`. "XY" (2 chars) at p = 3 into
+        // a 6-wide receiver lands at positions 2–3, preserving head and tail dots, and
+        // p becomes 3 + 2 = 5.
+        let out = run_cobol(&wrap(
+            &[
+                "01  A  PIC X(2) VALUE \"XY\".",
+                "01  T  PIC X(6) VALUE \"......\".",
+                "01  P  PIC 9(2) VALUE 3.",
+            ],
+            &[
+                "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+                "DISPLAY T.",
+                "DISPLAY P.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "..XY..\n05\n");
+    }
+
+    #[test]
+    fn string_with_pointer_out_of_range_leaves_everything_unchanged() {
+        // An out-of-range initial pointer (p = 0 or p > size) is ISO overflow: no
+        // character is transferred and the pointer is left unchanged. p = 0 here → the
+        // receiver keeps its sentinel and p stays 0.
+        let out = run_cobol(&wrap(
+            &[
+                "01  A  PIC X(3) VALUE \"XYZ\".",
+                "01  T  PIC X(4) VALUE \"....\".",
+                "01  P  PIC 9(2) VALUE 0.",
+            ],
+            &[
+                "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+                "DISPLAY T.",
+                "DISPLAY P.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "....\n00\n");
+    }
+
+    #[test]
+    fn string_with_pointer_bad_picture_is_a_later_rung() {
+        // The pointer must be an unsigned integer `PIC 9(n)`. A signed pointer is a
+        // clean later rung, rejected at exec time (co-total with the compiler).
+        let err = run_cobol(&wrap(
             &[
                 "01  A  PIC X(3) VALUE \"ABC\".",
-                "01  T  PIC X(6) VALUE SPACES.",
-                "01  P  PIC 9(2) VALUE 1.",
+                "01  T  PIC X(6) VALUE \"......\".",
+                "01  P  PIC S9(2) VALUE 1.",
             ],
             &["STRING A DELIMITED BY SIZE INTO T WITH POINTER P.", "STOP RUN."],
         ))
         .unwrap_err();
-        assert!(matches!(ptr, RuntimeError::Unsupported(_)), "got {ptr:?}");
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn string_on_overflow_runs_when_content_is_dropped() {
+        // Overflow: "abcd"+"efgh" (8 chars) into a 5-wide receiver drops 3 chars, so
+        // the ON OVERFLOW imperative runs (sets F = "YES") and the NOT clause does not.
+        let out = run_cobol(&wrap(
+            &[
+                "01  A  PIC X(4) VALUE \"abcd\".",
+                "01  B  PIC X(4) VALUE \"efgh\".",
+                "01  T  PIC X(5) VALUE \".....\".",
+                "01  F  PIC X(3) VALUE \"no \".",
+            ],
+            &[
+                "STRING A B DELIMITED BY SIZE INTO T",
+                "    ON OVERFLOW MOVE \"YES\" TO F",
+                "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+                "DISPLAY T.",
+                "DISPLAY F.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "abcde\nYES\n");
+    }
+
+    #[test]
+    fn string_not_on_overflow_runs_when_content_fits() {
+        // No overflow: "ab"+"cd" (4 chars) fits a 5-wide receiver, so the NOT ON
+        // OVERFLOW imperative runs (F = "NON") and the ON clause does not.
+        let out = run_cobol(&wrap(
+            &[
+                "01  A  PIC X(2) VALUE \"ab\".",
+                "01  B  PIC X(2) VALUE \"cd\".",
+                "01  T  PIC X(5) VALUE \".....\".",
+                "01  F  PIC X(3) VALUE \"no \".",
+            ],
+            &[
+                "STRING A B DELIMITED BY SIZE INTO T",
+                "    ON OVERFLOW MOVE \"YES\" TO F",
+                "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+                "DISPLAY T.",
+                "DISPLAY F.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "abcd.\nNON\n");
+    }
+
+    #[test]
+    fn string_pointer_out_of_range_runs_on_overflow() {
+        // An out-of-range initial pointer (p = 0) is overflow: NO data movement and
+        // the pointer is left unchanged, but the ON OVERFLOW imperative now runs.
+        let out = run_cobol(&wrap(
+            &[
+                "01  A  PIC X(3) VALUE \"abc\".",
+                "01  T  PIC X(6) VALUE \"......\".",
+                "01  P  PIC 9(2) VALUE 0.",
+                "01  F  PIC X(3) VALUE \"no \".",
+            ],
+            &[
+                "STRING A DELIMITED BY SIZE INTO T WITH POINTER P",
+                "    ON OVERFLOW MOVE \"YES\" TO F.",
+                "DISPLAY T.",
+                "DISPLAY P.",
+                "DISPLAY F.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "......\n00\nYES\n");
+    }
+
+    #[test]
+    fn unstring_splits_into_receivers() {
+        // "A,B,C" → three fields into three PIC X(3) receivers, each left-
+        // justified and space-padded.
+        let out = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(5) VALUE \"A,B,C\".",
+                "01  R1 PIC X(3) VALUE SPACES.",
+                "01  R2 PIC X(3) VALUE SPACES.",
+                "01  R3 PIC X(3) VALUE SPACES.",
+            ],
+            &[
+                "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+                "DISPLAY R1.",
+                "DISPLAY R2.",
+                "DISPLAY R3.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "A  \nB  \nC  \n");
+    }
+
+    #[test]
+    fn unstring_empty_fields_and_unchanged_trailing_receiver() {
+        // "A,,C" bounds an empty middle field (R2 → spaces); a shorter source
+        // leaves the trailing receiver's prior VALUE intact.
+        let empties = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(4) VALUE \"A,,C\".",
+                "01  R1 PIC X(3) VALUE \"...\".",
+                "01  R2 PIC X(3) VALUE \"...\".",
+                "01  R3 PIC X(3) VALUE \"...\".",
+            ],
+            &[
+                "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+                "DISPLAY R1.",
+                "DISPLAY R2.",
+                "DISPLAY R3.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(empties, "A  \n   \nC  \n");
+
+        let short = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(3) VALUE \"A,B\".",
+                "01  R1 PIC X(3) VALUE SPACES.",
+                "01  R2 PIC X(3) VALUE SPACES.",
+                "01  R3 PIC X(3) VALUE \"ZZZ\".",
+            ],
+            &[
+                "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+                "DISPLAY R1.",
+                "DISPLAY R2.",
+                "DISPLAY R3.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(short, "A  \nB  \nZZZ\n");
+    }
+
+    #[test]
+    fn unstring_later_rung_options_are_clean_errors() {
+        // ON OVERFLOW is now MODELLED (see `unstring_on_overflow_*`); here "A,B" into
+        // ONE receiver fills R1="A" and leaves the source unexhausted (field "B"
+        // remains), so overflow fires and the imperative runs.
+        let overflow = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"A,B\".", "01  R1 PIC X(3) VALUE SPACES."],
+            &[
+                "UNSTRING S DELIMITED BY \",\" INTO R1",
+                "    ON OVERFLOW DISPLAY \"OVF\".",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(overflow, "OVF\n");
+
+        // … a multi-character delimiter needs a multi-char scan …
+        let multi = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"A::B\".", "01  R1 PIC X(3) VALUE SPACES."],
+            &["UNSTRING S DELIMITED BY \"::\" INTO R1.", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(multi, RuntimeError::Unsupported(_)), "got {multi:?}");
+
+        // … and a numeric receiver needs numeric editing on receipt.
+        let numeric = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"1,2\".", "01  N  PIC 9(3) VALUE 0."],
+            &["UNSTRING S DELIMITED BY \",\" INTO N.", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(numeric, RuntimeError::Unsupported(_)), "got {numeric:?}");
+    }
+
+    #[test]
+    fn unstring_with_pointer_starts_offset_and_writes_resume_back() {
+        // p = 3 over "a,b,c" starts at 0-based index 2 ("b,c"): R1="b", R2="c",
+        // and the pointer is updated to one past the last examined char — final
+        // cursor 6, clamped to len 5, +1 → 6 ("06").
+        let out = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(5) VALUE \"a,b,c\".",
+                "01  R1 PIC X(3) VALUE SPACES.",
+                "01  R2 PIC X(3) VALUE SPACES.",
+                "01  P  PIC 9(2) VALUE 3.",
+            ],
+            &[
+                "UNSTRING S DELIMITED BY \",\" INTO R1 R2 WITH POINTER P.",
+                "DISPLAY R1.",
+                "DISPLAY R2.",
+                "DISPLAY P.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "b  \nc  \n06\n");
+    }
+
+    #[test]
+    fn unstring_with_pointer_one_matches_no_pointer_receivers() {
+        // The anchor: p = 1 fills the SAME receivers as the no-pointer statement.
+        let data: &[&str] = &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE SPACES.",
+        ];
+        let no_ptr = run_cobol(&wrap(
+            data,
+            &[
+                "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+                "DISPLAY R1.",
+                "DISPLAY R2.",
+                "DISPLAY R3.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        let mut data_ptr = data.to_vec();
+        data_ptr.push("01  P  PIC 9(2) VALUE 1.");
+        let with_ptr = run_cobol(&wrap(
+            &data_ptr,
+            &[
+                "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3 WITH POINTER P.",
+                "DISPLAY R1.",
+                "DISPLAY R2.",
+                "DISPLAY R3.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(no_ptr, "a  \nb  \nc  \n");
+        assert_eq!(with_ptr, no_ptr, "p = 1 must fill the same receivers");
+    }
+
+    #[test]
+    fn unstring_with_pointer_out_of_range_leaves_everything_unchanged() {
+        // p = 0 and p > len are ISO overflow: no receiver modified, pointer
+        // unchanged. R1 keeps "ZZZ"; P keeps its initial value.
+        for pval in ["0", "6", "9"] {
+            let out = run_cobol(&wrap(
+                &[
+                    "01  S  PIC X(5) VALUE \"a,b,c\".",
+                    "01  R1 PIC X(3) VALUE \"ZZZ\".",
+                    &format!("01  P  PIC 9(2) VALUE {pval}."),
+                ],
+                &[
+                    "UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.",
+                    "DISPLAY R1.",
+                    "DISPLAY P.",
+                    "STOP RUN.",
+                ],
+            ))
+            .unwrap();
+            // Two-digit zero-padded echo of the UNCHANGED pointer value.
+            let expected = format!("ZZZ\n{:02}\n", pval.parse::<u32>().unwrap());
+            assert_eq!(out, expected, "pval={pval}");
+        }
+    }
+
+    #[test]
+    fn unstring_with_pointer_bad_picture_is_a_later_rung() {
+        // Signed, fractional, and non-numeric pointers are clean later rungs.
+        for pic in ["S9(2)", "9V9", "X(2)"] {
+            let err = run_cobol(&wrap(
+                &[
+                    "01  S  PIC X(5) VALUE \"a,b,c\".",
+                    "01  R1 PIC X(3) VALUE SPACES.",
+                    &format!("01  P  PIC {pic}."),
+                ],
+                &["UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.", "STOP RUN."],
+            ))
+            .unwrap_err();
+            assert!(matches!(err, RuntimeError::Unsupported(_)), "pic={pic}: got {err:?}");
+        }
+    }
+
+    #[test]
+    fn inspect_tallying_counts_and_adds_to_the_counter() {
+        // "BANANA" has three A's, added to C (starting 0) → 3.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"BANANA\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"A\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "003\n");
+    }
+
+    #[test]
+    fn inspect_tallying_adds_to_a_nonzero_counter() {
+        // C starts at 5; four S's in "MISSISSIPPI" → 5 + 4 = 9 (ADD, not replace).
+        // A PIC X(1) delimiter item and a zero-count case are covered too.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(11) VALUE \"MISSISSIPPI\".", "01  C  PIC 9(3) VALUE 5."],
+            &["INSPECT S TALLYING C FOR ALL \"S\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "009\n");
+
+        let none = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"HELLO\".", "01  C  PIC 9(2) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"Z\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(none, "00\n");
+    }
+
+    #[test]
+    fn inspect_tallying_for_leading_counts_only_a_leading_run() {
+        // FOR LEADING counts the run of consecutive delimiters at the START, then
+        // stops at the first non-match. "000123" → three leading "0"s → 3.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"000123\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"0\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "003\n");
+
+        // A non-delimiter first character stops the run immediately: "120003" has
+        // three "0"s but NONE are leading → 0 (whereas FOR ALL would give 3).
+        let gap = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"120003\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"0\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(gap, "000\n");
+
+        // An all-delimiter source counts every character: "0000" → 4.
+        let all = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"0000\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"0\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(all, "004\n");
+
+        // FOR LEADING adds to the counter (does not clear): C starts at 5, two
+        // leading "0"s in "00X", and the delimiter is a PIC X(1) item → 5 + 2 = 7.
+        let adds = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(3) VALUE \"00X\".",
+                "01  D  PIC X(1) VALUE \"0\".",
+                "01  C  PIC 9(3) VALUE 5.",
+            ],
+            &["INSPECT S TALLYING C FOR LEADING D.", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(adds, "007\n");
+    }
+
+    #[test]
+    fn inspect_tallying_for_all_with_a_before_after_region() {
+        // BEFORE "C" restricts the count to "AB0" → one "0"; AFTER "C" restricts it
+        // to "D0" → one "0". Same source, complementary windows.
+        let before = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before, "001\n");
+
+        let after = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"0\" AFTER \"C\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after, "001\n");
+
+        // The not-found ASYMMETRY: BEFORE with the delimiter absent counts the WHOLE
+        // source (both "0"s → 2); AFTER with it absent counts NOTHING (0).
+        let before_absent = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"Z\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before_absent, "002\n");
+
+        let after_absent = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"0\" AFTER \"Z\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after_absent, "000\n");
+
+        // The region delimiter equal to the tally delimiter: AFTER "A" in "ABABA" —
+        // the first "A" (index 0) bounds the region to "BABA", where two "A"s remain.
+        let same = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"A\" AFTER \"A\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(same, "002\n");
+    }
+
+    #[test]
+    fn inspect_tallying_for_leading_with_a_before_after_region() {
+        // The STANDALONE `FOR LEADING … {BEFORE|AFTER}` form is now supported, with the
+        // leading run ANCHORED at the window start. "aaXaab" AFTER "X" narrows to "aab"
+        // — the leading "a" run there is 2, the "aa" before the X ignored.
+        let after = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"aaXaab\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"X\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after, "002\n");
+
+        // The window's first char is a mismatch ⇒ leading run 0, even though a's
+        // precede the X: "aaXbb" AFTER "X" → window "bb" → 0.
+        let mismatch = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aaXbb\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"X\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(mismatch, "000\n");
+
+        // BEFORE counts the prefix run: "aaXaa" BEFORE "X" → window "aa" → 2.
+        let before = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aaXaa\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"a\" BEFORE \"X\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before, "002\n");
+
+        // Not-found asymmetry: AFTER "Z" absent ⇒ EMPTY window ⇒ 0; BEFORE "Z" absent ⇒
+        // WHOLE source ⇒ the leading run from position 0 (2 in "aaXaa").
+        let after_absent = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"aaXaab\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"Z\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after_absent, "000\n");
+
+        let before_absent = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aaXaa\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"a\" BEFORE \"Z\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before_absent, "002\n");
+    }
+
+    #[test]
+    fn inspect_tallying_region_later_rung_forms_are_clean_errors() {
+        // The STANDALONE `FOR LEADING … BEFORE/AFTER` form is now supported (see
+        // `inspect_tallying_for_leading_with_a_before_after_region`). What remains
+        // deferred is a MULTI-character region delimiter — rejected at exec, exactly
+        // like a multi-character tally delimiter. (A LEADING half PLUS a region on the
+        // COMBINED TALLYING … REPLACING form is still deferred — see
+        // `inspect_tally_replace_combined_leading_with_region_is_a_later_rung`.)
+        let multi = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"CD\".", "STOP RUN."],
+        ));
+        assert!(multi.is_err(), "multi-char region delimiter must reject");
+    }
+
+    #[test]
+    fn inspect_replacing_maps_every_occurrence_in_place() {
+        // "ABABA" with A→X → "XBXBX" (same width, per-position map).
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\"."],
+            &["INSPECT S REPLACING ALL \"A\" BY \"X\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "XBXBX\n");
+
+        // A character that never occurs leaves the source unchanged.
+        let miss = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"HELLO\"."],
+            &["INSPECT S REPLACING ALL \"Z\" BY \"Q\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(miss, "HELLO\n");
+
+        // The search and replacement can be PIC X(1) items.
+        let via_items = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(4) VALUE \"MOON\".",
+                "01  X  PIC X(1) VALUE \"O\".",
+                "01  Y  PIC X(1) VALUE \"0\".",
+            ],
+            &["INSPECT S REPLACING ALL X BY Y.", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(via_items, "M00N\n");
+    }
+
+    #[test]
+    fn inspect_replacing_characters_fills_the_whole_field() {
+        // REPLACING CHARACTERS BY overwrites EVERY position unconditionally — even
+        // embedded spaces. "A B C" (5 chars) → "-----".
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"A B C\"."],
+            &["INSPECT S REPLACING CHARACTERS BY \"-\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "-----\n");
+    }
+
+    #[test]
+    fn inspect_replacing_characters_replacement_can_be_a_pic_x1_item() {
+        // The replacement `x` may be a PIC X(1) DATA ITEM, not just a literal.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"hello\".", "01  R  PIC X(1) VALUE \"*\"."],
+            &["INSPECT S REPLACING CHARACTERS BY R.", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "*****\n");
+    }
+
+    #[test]
+    fn inspect_replacing_characters_non_ascii_source_caps_to_picture_width() {
+        // `PIC X(5) VALUE "café"` stores "café " (5 CHARS / 6 BYTES). The byte-basis
+        // fill builds n = 6 copies of "Z", then `move_into` caps to the picture's
+        // 5 chars → "ZZZZZ" (FIVE, not six). This is the co-total answer the
+        // byte-based compiler also produces (width = 5 copies).
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"café\"."],
+            &["INSPECT S REPLACING CHARACTERS BY \"Z\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "ZZZZZ\n");
+    }
+
+    #[test]
+    fn inspect_replacing_multi_items_each_with_a_region() {
+        // Per-item regions on a multi-item REPLACING (this rung). Source "a0b0a":
+        // item 1 `ALL "a" BY "x"` (no region → whole source) turns both "a"s to "x";
+        // item 2 `ALL "0" BY "*" BEFORE "b"` (window [0, index_of_b) = [0,2)) turns
+        // only the "0" at index 1 to "*"; the "0" at index 3 is outside the window and
+        // stays. Result "x*b0x".
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"a0b0a\"."],
+            &[
+                "INSPECT S REPLACING ALL \"a\" BY \"x\" ALL \"0\" BY \"*\" BEFORE \"b\".",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "x*b0x\n");
+    }
+
+    #[test]
+    fn inspect_replacing_multi_before_and_after_windows_first_match_wins() {
+        // Two items with differing windows over "aXaXa" (X at index 1, 3): item 1
+        // `ALL "a" BY "b" BEFORE "X"` (window [0,1)) claims only index 0; item 2
+        // `ALL "a" BY "c" AFTER "X"` (window (1,5]) claims indices 2 and 4. The "a" at
+        // index 0 is claimed by the earlier item (first-match-wins). Result "bXcXc".
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aXaXa\"."],
+            &[
+                "INSPECT S REPLACING ALL \"a\" BY \"b\" BEFORE \"X\"",
+                "    ALL \"a\" BY \"c\" AFTER \"X\".",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "bXcXc\n");
+    }
+
+    #[test]
+    fn inspect_replacing_multi_after_absent_delimiter_is_an_empty_window() {
+        // `AFTER x` with x absent → an EMPTY window: that item NEVER fires; the other
+        // (region-less) item still applies. Source "abab", item 1 `ALL "a" BY "*"
+        // AFTER "Z"` (no "Z" → empty window), item 2 `ALL "b" BY "y"` rewrites both
+        // "b"s. The "a"s stay untouched. Result "ayay".
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"abab\"."],
+            &[
+                "INSPECT S REPLACING ALL \"a\" BY \"*\" AFTER \"Z\" ALL \"b\" BY \"y\".",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "ayay\n");
+    }
+
+    #[test]
+    fn inspect_tally_multi_items_each_with_a_region() {
+        // Per-item regions on a multi-item TALLYING (this rung, the count-side analogue
+        // of the REPLACING form above). Source "0a0a0" into one counter:
+        // item 1 `ALL "0" AFTER "a"` (first "a" at index 1 → window [2,5)) counts the
+        // "0"s at indices 2 and 4; item 2 `ALL "a"` (no region → whole source) counts
+        // both "a"s at indices 1 and 3. The "0" at index 0 is outside item 1's window
+        // and is not an "a", so it is not counted → 4.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"0a0a0\".", "01  C  PIC 9(2) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" AFTER \"a\" ALL \"a\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "04\n");
+    }
+
+    #[test]
+    fn inspect_tally_multi_before_and_after_windows_first_match_per_position() {
+        // Two items with differing windows over "aXaXa" (X at indices 1, 3): item 1
+        // `ALL "a" BEFORE "X"` (window [0,1)) counts only index 0; item 2 `ALL "a"
+        // AFTER "X"` (window [2,5)) counts indices 2 and 4. Each position is counted by
+        // the FIRST item whose window contains it and whose delimiter matches → 3.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aXaXa\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"a\" BEFORE \"X\"",
+                "    ALL \"a\" AFTER \"X\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "003\n");
+    }
+
+    #[test]
+    fn inspect_tally_multi_after_absent_delimiter_is_an_empty_window() {
+        // `AFTER x` with x absent → an EMPTY window: that item contributes 0; the other
+        // (region-less) item still counts. Source "abab": item 1 `ALL "a" AFTER "Z"`
+        // (no "Z" → empty window, contributes 0), item 2 `ALL "b"` counts both "b"s → 2.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"abab\".", "01  C  PIC 9(2) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"a\" AFTER \"Z\" ALL \"b\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "02\n");
+    }
+
+    #[test]
+    fn inspect_tally_multi_duplicate_windows_first_match_counts_once() {
+        // FIRST-MATCH-PER-POSITION with a DUPLICATE delimiter over overlapping windows:
+        // a position matched by BOTH items is counted ONCE. Source "aabaa" (b at index
+        // 2): item 1 `ALL "a" BEFORE "b"` (window [0,2) → indices 0,1) and item 2
+        // `ALL "a"` (whole source → 0,1,3,4). Indices 0,1 are counted once (by item 1),
+        // and item 2 adds indices 3,4 → 4, NOT 6 (a naive per-item sum would double the
+        // shared positions).
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aabaa\".", "01  C  PIC 9(2) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"a\" BEFORE \"b\" ALL \"a\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "04\n");
+    }
+
+    #[test]
+    fn inspect_tally_multi_non_ascii_source_counts_correctly() {
+        // POSITIVE non-ASCII parity: TALLYING only COUNTS (it never reconstructs the
+        // source), so the char-based oracle counts ASCII delimiters correctly even on a
+        // non-ASCII source — the "é" matches no ASCII delimiter. Source "aé0b0":
+        // item 1 `ALL "0" BEFORE "b"` counts the "0" before "b"; item 2 `ALL "0" AFTER
+        // "b"` counts the "0" after "b" → 2. (The compiler's byte-based scan agrees; the
+        // e2e test `inspect_tally_multi_non_ascii_source_positive_parity` pins that.)
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aé0b0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"b\" ALL \"0\" AFTER \"b\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "002\n");
+    }
+
+    #[test]
+    fn inspect_tally_counters_items_each_with_a_region() {
+        // Per-item regions in the SEVERAL-COUNTERS form (this rung). Source "aXaXa"
+        // (X at char indices 1 and 3), two counter groups:
+        //   C1 `ALL "a" BEFORE "X"`: window [0,1) → the "a" at index 0 → C1=1;
+        //   C2 `ALL "a" AFTER "X"`:  window [2,5) → the "a"s at indices 2, 4 → C2=2.
+        // The combined pass counts each position for the first in-window matching entry.
+        let out = run_cobol(&wrap(
+            &[
+                "01  S   PIC X(5) VALUE \"aXaXa\".",
+                "01  C1  PIC 9(3) VALUE 0.",
+                "01  C2  PIC 9(3) VALUE 0.",
+            ],
+            &[
+                "INSPECT S TALLYING C1 FOR ALL \"a\" BEFORE \"X\"",
+                "    C2 FOR ALL \"a\" AFTER \"X\".",
+                "DISPLAY C1.",
+                "DISPLAY C2.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "001\n002\n");
+    }
+
+    #[test]
+    fn inspect_tally_counters_earlier_window_starves_later_group() {
+        // CROSS-COUNTER first-match with a WINDOW: an earlier group's IN-WINDOW delimiter
+        // claims a position, starving a later group of it. Source "aZa" (Z at index 1),
+        // both groups matching "a": C1 `ALL "a" BEFORE "Z"` (window [0,1) → only index 0)
+        // claims index 0; C2 `ALL "a"` (whole source) then only sees index 2 → C1=1, C2=1
+        // (NOT C2=2 — index 0 was starved by C1's in-window delimiter).
+        let out = run_cobol(&wrap(
+            &[
+                "01  S   PIC X(3) VALUE \"aZa\".",
+                "01  C1  PIC 9(3) VALUE 0.",
+                "01  C2  PIC 9(3) VALUE 0.",
+            ],
+            &[
+                "INSPECT S TALLYING C1 FOR ALL \"a\" BEFORE \"Z\"",
+                "    C2 FOR ALL \"a\".",
+                "DISPLAY C1.",
+                "DISPLAY C2.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "001\n001\n");
+    }
+
+    #[test]
+    fn inspect_tally_counters_same_counter_two_groups_with_regions() {
+        // The SAME counter name in two groups, each with its OWN region — both regions'
+        // hits ADD to that one item. Source "0b0" (b at index 1): group0 `C FOR ALL "0"
+        // BEFORE "b"` (window [0,1) → index 0) and group1 `C FOR ALL "0" AFTER "b"`
+        // (window [2,3) → index 2) each contribute 1 → C = 0 + 1 + 1 = 2.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"0b0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"b\"",
+                "    C FOR ALL \"0\" AFTER \"b\".",
+                "DISPLAY C.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "002\n");
+    }
+
+    #[test]
+    fn inspect_tally_counters_leading_item_is_a_later_rung() {
+        // A LEADING item in ANY group of the several-counters path stays a later rung
+        // even now that per-item regions are supported — the multi-counter path is
+        // ALL-only.
+        let err = run_cobol(&wrap(
+            &[
+                "01  S   PIC X(4) VALUE \"aabb\".",
+                "01  C1  PIC 9(3) VALUE 0.",
+                "01  C2  PIC 9(3) VALUE 0.",
+            ],
+            &[
+                "INSPECT S TALLYING C1 FOR ALL \"a\"",
+                "    C2 FOR LEADING \"b\".",
+                "STOP RUN.",
+            ],
+        ));
+        assert!(err.is_err(), "a multi-counter LEADING item must be a later rung");
+    }
+
+    #[test]
+    fn inspect_replacing_multi_leading_item_is_a_later_rung() {
+        // A LEADING item inside a multi-item list stays a later rung even now that
+        // per-item regions are supported — the multi path is ALL-only.
+        let err = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"aabb\"."],
+            &[
+                "INSPECT S REPLACING ALL \"a\" BY \"x\" LEADING \"b\" BY \"y\".",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_replacing_multi_characters_item_is_a_later_rung() {
+        // A CHARACTERS item inside a multi-item list stays a later rung.
+        let err = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"aabb\"."],
+            &[
+                "INSPECT S REPLACING ALL \"a\" BY \"x\" CHARACTERS BY \"y\".",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_replacing_characters_non_ascii_literal_is_a_later_rung() {
+        // A single but NON-ASCII replacement LITERAL ("é") is deferred so the oracle
+        // stays co-total with the byte-based compiler (guard 2).
+        let err = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\"."],
+            &["INSPECT S REPLACING CHARACTERS BY \"é\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_replacing_characters_with_a_region_is_a_later_rung() {
+        // A `{BEFORE|AFTER}` region on the CHARACTERS item is deferred (guard 3).
+        let err = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABQBA\"."],
+            &["INSPECT S REPLACING CHARACTERS BY \"X\" BEFORE \"Q\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_replacing_later_rung_forms_are_clean_errors() {
+        // REPLACING CHARACTERS BY replaces every position unconditionally — now
+        // SUPPORTED (fills the whole field with the replacement char): "ABABA" → "XXXXX".
+        let chars = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\"."],
+            &["INSPECT S REPLACING CHARACTERS BY \"X\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(chars, "XXXXX\n");
+
+        // … a multi-character search needs a multi-char scan …
+        let multi = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AB::B\"."],
+            &["INSPECT S REPLACING ALL \"::\" BY \"XY\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(multi, RuntimeError::Unsupported(_)), "got {multi:?}");
+
+        // … several replace items are now SUPPORTED (the multi-item first-match-wins
+        // path): "ABABA" with A→X, B→Y in one pass → "XYXYX".
+        let many = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\"."],
+            &[
+                "INSPECT S REPLACING ALL \"A\" BY \"X\" ALL \"B\" BY \"Y\".",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(many, "XYXYX\n");
+
+        // … but the combined TALLYING … REPLACING in one INSPECT is now SUPPORTED:
+        // it counts "A" (3 in "ABABA") into C, THEN replaces "B" with "X". The two
+        // phrases touch different characters, so ordering is not yet observable
+        // here (that is exercised by `inspect_tally_replace_*` below).
+        let combined = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"A\" REPLACING ALL \"B\" BY \"X\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(combined, "003\nAXAXA\n");
+
+        // A combined statement whose TALLYING half is FOR LEADING is now SUPPORTED:
+        // it counts only the leading run of "A" (2 in "AABBB") into C, THEN replaces
+        // ALL "B" with "X" → "AAXXX". (The dedicated ordering/edge cases live in
+        // `inspect_tally_replace_for_leading_*`.)
+        let combined_lead = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR LEADING \"A\" REPLACING ALL \"B\" BY \"X\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(combined_lead, "002\nAAXXX\n");
+
+        // … and a combined statement whose REPLACING half is REPLACING LEADING is
+        // now SUPPORTED too: it counts ALL "B" (3 in "AABBB") into C FIRST, THEN
+        // replaces only the LEADING run of "A" → "XXBBB". (The dedicated ordering
+        // and both-halves-leading cases live in `inspect_tally_replace_leading_*`.)
+        let combined_repl_lead = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"B\" REPLACING LEADING \"A\" BY \"X\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(combined_repl_lead, "003\nXXBBB\n");
+    }
+
+    /// A LONE `INSPECT … REPLACING LEADING search BY replace` replaces only the run
+    /// of consecutive `search` characters at the START of the source, stopping at
+    /// the first character that is not `search`. Positions after that first gap are
+    /// left unchanged even if they equal `search` — the key contrast with
+    /// `REPLACING ALL`.
+    #[test]
+    fn inspect_replacing_leading_replaces_only_the_leading_run() {
+        // "000123": the three leading "0"s become "*"; the digits after are kept.
+        let lead = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"000123\"."],
+            &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(lead, "***123\n");
+
+        // "00X00": stops at "X"; the trailing "00" is NOT replaced (the contrast
+        // with REPLACING ALL, which would give "**X**").
+        let stop = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"00X00\"."],
+            &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(stop, "**X00\n");
+
+        // The same source under REPLACING ALL replaces BOTH runs — proving the two
+        // forms diverge exactly where the leading run ends.
+        let all = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"00X00\"."],
+            &["INSPECT S REPLACING ALL \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(all, "**X**\n");
+
+        // No leading run at all (first char is not the search) — unchanged.
+        let none = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"120003\"."],
+            &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(none, "120003\n");
+
+        // Every character is the search — the whole field is replaced.
+        let all_match = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"0000\"."],
+            &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(all_match, "****\n");
+
+        // A blank source has no leading run — unchanged.
+        let blank = run_cobol(&wrap(
+            &["01  S  PIC X(3)."],
+            &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(blank, "   \n");
+
+        // The search and replacement can be PIC X(1) items, not just literals.
+        let via_items = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(6) VALUE \"000123\".",
+                "01  X  PIC X(1) VALUE \"0\".",
+                "01  Y  PIC X(1) VALUE \"*\".",
+            ],
+            &["INSPECT S REPLACING LEADING X BY Y.", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(via_items, "***123\n");
+    }
+
+    /// The STANDALONE `INSPECT … REPLACING LEADING search BY replace {BEFORE|AFTER} x`
+    /// anchors the leading substitution run at the WINDOW START: characters before the
+    /// window are untouched and neither begin nor break the run, the run begins at the
+    /// window start, and it stops at the first non-`search` INSIDE the window.
+    #[test]
+    fn inspect_replacing_leading_with_a_before_after_region() {
+        // AFTER "X" over "aaXaab" narrows to "aab" — only the two leading a's after the
+        // X are rewritten; the "aa" before the X is untouched.
+        let after = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"aaXaab\"."],
+            &["INSPECT S REPLACING LEADING \"a\" BY \"*\" AFTER \"X\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after, "aaX**b\n");
+
+        // The window's first char is not `search` ⇒ nothing replaced: "aaXbb" AFTER
+        // "X" → window "bb" → unchanged.
+        let mismatch = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aaXbb\"."],
+            &["INSPECT S REPLACING LEADING \"a\" BY \"*\" AFTER \"X\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(mismatch, "aaXbb\n");
+
+        // BEFORE rewrites the prefix run: "aaXaa" BEFORE "X" → window "aa" → "**Xaa".
+        let before = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aaXaa\"."],
+            &["INSPECT S REPLACING LEADING \"a\" BY \"*\" BEFORE \"X\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before, "**Xaa\n");
+
+        // Not-found asymmetry: AFTER "Z" absent ⇒ EMPTY window ⇒ nothing replaced;
+        // BEFORE "Z" absent ⇒ WHOLE source ⇒ the leading run from position 0.
+        let after_absent = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"aaXaab\"."],
+            &["INSPECT S REPLACING LEADING \"a\" BY \"*\" AFTER \"Z\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after_absent, "aaXaab\n");
+
+        let before_absent = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aaXaa\"."],
+            &["INSPECT S REPLACING LEADING \"a\" BY \"*\" BEFORE \"Z\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before_absent, "**Xaa\n");
+    }
+
+    /// The COMBINED `INSPECT … TALLYING … REPLACING` runs tally-then-replace: the
+    /// count sees the ORIGINAL bytes, then the replace overwrites the source. When
+    /// the tallied delimiter and the replaced search character are the SAME, the
+    /// tally must still count every original occurrence.
+    #[test]
+    fn inspect_tally_replace_shared_char_counts_before_replacing() {
+        // "MISSISSIPPI": TALLYING counts "S" (4), THEN REPLACING S→Z. If the tally
+        // ran after the replace it would see zero "S" left — the 4 proves ordering.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(11) VALUE \"MISSISSIPPI\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"S\" REPLACING ALL \"S\" BY \"Z\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "004\nMIZZIZZIPPI\n");
+    }
+
+    /// The COMBINED form's TALLYING half may be `FOR LEADING`: count only the run of
+    /// consecutive delimiters at the START (on the ORIGINAL bytes), then run the
+    /// `REPLACING ALL` rebuild. The REPLACING half stays `ALL`, so it still touches
+    /// every occurrence regardless of where the leading run ended.
+    #[test]
+    fn inspect_tally_replace_for_leading_counts_only_the_leading_run() {
+        // "000X0": leading run of "0" = 3 (stops at 'X'), so C := 0 + 3 = 3. THEN
+        // REPLACING ALL "0" BY "*" hits every "0" → "***X*". delim == search proves
+        // the tally saw the original bytes before the replace overwrote them.
+        let shared = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"000X0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR LEADING \"0\" REPLACING ALL \"0\" BY \"*\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(shared, "003\n***X*\n");
+
+        // No leading run: the first character is not the delimiter, so the count
+        // stops immediately at 0 (whereas FOR ALL would count the two later "0"s).
+        // The REPLACING ALL still rewrites every "0" → "X**X".
+        let no_run = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"X00X\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR LEADING \"0\" REPLACING ALL \"0\" BY \"*\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(no_run, "000\nX**X\n");
+
+        // An all-delimiter source: the leading run spans the whole field (4), and
+        // the replace rewrites all of it → "****".
+        let all = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"0000\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR LEADING \"0\" REPLACING ALL \"0\" BY \"*\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(all, "004\n****\n");
+    }
+
+    /// The COMBINED form's REPLACING half may be `LEADING`: after the tally counts
+    /// (on the ORIGINAL bytes), the rebuild rewrites only the consecutive run of
+    /// `search` at the START of the source, stopping at the first non-match. The
+    /// TALLYING half's own leading flag is independent — this test drives both
+    /// `FOR ALL` and `FOR LEADING` tally halves against a `REPLACING LEADING` half.
+    #[test]
+    fn inspect_tally_replace_leading_replaces_only_the_leading_run() {
+        // "00X00" — TALLYING FOR ALL "0" counts every "0" (4 — two leading, two
+        // trailing) into C FIRST, THEN REPLACING LEADING "0" rewrites only the
+        // leading run (2, stops at 'X') → "**X00". delim == search proves the tally
+        // saw the original bytes: the count is 4 (all zeros) even though only the
+        // two leading zeros are ultimately replaced.
+        let all_tally = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"00X00\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" REPLACING LEADING \"0\" BY \"*\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(all_tally, "004\n**X00\n");
+
+        // Both halves LEADING: TALLYING FOR LEADING "0" counts only the leading run
+        // (2) into C, THEN REPLACING LEADING "0" rewrites only that same leading run
+        // → "**X00". The two leading flags are threaded independently.
+        let both_leading = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"00X00\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR LEADING \"0\" REPLACING LEADING \"0\" BY \"*\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(both_leading, "002\n**X00\n");
+
+        // No leading run: the first character is not `search`, so REPLACING LEADING
+        // changes nothing, even though later "0"s exist. The FOR ALL tally still
+        // counts every "0" (2) → source unchanged "X00X".
+        let no_run = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"X00X\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" REPLACING LEADING \"0\" BY \"*\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(no_run, "002\nX00X\n");
+    }
+
+    /// The COMBINED form's TWO halves each carry an INDEPENDENT `{BEFORE|AFTER}`
+    /// region. Because the tally does not mutate the source, BOTH windows are
+    /// computed over the SAME original bytes — the count's window and the
+    /// replacement's window each see the pre-replacement source.
+    #[test]
+    fn inspect_tally_replace_with_before_after_regions() {
+        // Tally region only: BEFORE "C" over "AB0CD0" counts one "0" (region "AB0");
+        // the region-less REPLACING ALL then maps BOTH "0"s → "AB*CD*".
+        let tally_only = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\"",
+                "    REPLACING ALL \"0\" BY \"*\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(tally_only, "001\nAB*CD*\n");
+
+        // Replace region only: the region-less TALLYING counts all three "0"s (3),
+        // then REPLACING ALL "0" BEFORE "B" restricts to "0A0" → "*A*B0".
+        let replace_only = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\"",
+                "    REPLACING ALL \"0\" BY \"*\" BEFORE \"B\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(replace_only, "003\n*A*B0\n");
+
+        // BOTH halves, DIFFERENT kinds and delimiters: tally BEFORE "B" over "0A0B0"
+        // counts "0A0" → 2; replace AFTER "B" restricts to "0" → "0A0B*".
+        let both = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"B\"",
+                "    REPLACING ALL \"0\" BY \"*\" AFTER \"B\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(both, "002\n0A0B*\n");
+
+        // The not-found asymmetry per half: tally AFTER "Z" (absent) counts NOTHING
+        // (empty window) → 0; replace BEFORE "Z" (absent) rewrites the WHOLE source →
+        // both "0"s replaced → "*A*".
+        let not_found = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"0A0\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\" AFTER \"Z\"",
+                "    REPLACING ALL \"0\" BY \"*\" BEFORE \"Z\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(not_found, "000\n*A*\n");
+    }
+
+    #[test]
+    fn inspect_tally_replace_combined_leading_with_region_is_a_later_rung() {
+        // The STANDALONE `FOR LEADING`/`REPLACING LEADING … BEFORE/AFTER` forms are
+        // supported, but a LEADING half carrying a region on the COMBINED form is still
+        // deferred — the combined reader re-imposes the rejection. A LEADING tally half
+        // with a region …
+        let tally_leading = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"00A0B\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR LEADING \"0\" BEFORE \"A\"",
+                "    REPLACING ALL \"0\" BY \"*\".",
+                "STOP RUN.",
+            ],
+        ));
+        assert!(tally_leading.is_err(), "combined FOR LEADING + region must reject");
+
+        // … and a LEADING replace half with a region are BOTH deferred.
+        let replace_leading = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"00A0B\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"0\"",
+                "    REPLACING LEADING \"0\" BY \"*\" BEFORE \"A\".",
+                "STOP RUN.",
+            ],
+        ));
+        assert!(replace_leading.is_err(), "combined REPLACING LEADING + region must reject");
+    }
+
+    #[test]
+    fn inspect_tallying_later_rung_forms_are_clean_errors() {
+        // A multi-character delimiter needs a multi-char scan …
+        let multi = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AB::B\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"::\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(multi, RuntimeError::Unsupported(_)), "got {multi:?}");
+
+        // … and a non-integer (fractional) counter needs numeric editing.
+        let frac = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"A.A\".", "01  C  PIC 9V9 VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"A\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(frac, RuntimeError::Unsupported(_)), "got {frac:?}");
+    }
+
+    #[test]
+    fn inspect_converting_translates_through_the_table() {
+        // A→X, B→Y, C→Z applied to "CAB" → "ZXY".
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"CAB\"."],
+            &["INSPECT S CONVERTING \"ABC\" TO \"XYZ\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "ZXY\n");
+
+        // A multi-character vowel table: "AEIOU"→"12345" on "BEAN" → "B21N"
+        // (B and N are in no entry → unchanged; E→2, A→1).
+        let vowels = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"BEAN\"."],
+            &["INSPECT S CONVERTING \"AEIOU\" TO \"12345\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(vowels, "B21N\n");
+
+        // A duplicated `from` character: the LEFTMOST entry wins — "AAB"→"XYZ" maps
+        // A→X (not the later A→Y), B→Z → "XXZ".
+        let dup = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"AAB\"."],
+            &["INSPECT S CONVERTING \"AAB\" TO \"XYZ\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(dup, "XXZ\n");
+    }
+
+    #[test]
+    fn inspect_converting_with_a_before_after_region() {
+        // BEFORE "Y" restricts the A→0 translate to "AXA" (indices 0..3) → the two
+        // "A"s there become "0"; the trailing "A" (right of "Y") is UNTOUCHED.
+        let before = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE \"Y\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before, "0X0YA\n");
+
+        // AFTER "Y" restricts it to "A" (index 4) → only that trailing "A" → "0".
+        let after = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"Y\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after, "AXAY0\n");
+
+        // The not-found ASYMMETRY: BEFORE with the delimiter absent translates the
+        // WHOLE source (all three "A"s → "0"); AFTER with it absent translates
+        // NOTHING (the source is unchanged).
+        let before_absent = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE \"Z\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before_absent, "0X0Y0\n");
+        let after_absent = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"Z\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after_absent, "AXAYA\n");
+
+        // The region delimiter equal to a `from` character: AFTER "A" in "AXAYA" —
+        // the FIRST "A" (index 0) bounds the region to "XAYA"; the translate runs over
+        // the ORIGINAL bytes, so the "A"s at indices 2 and 4 become "0", while the
+        // delimiter "A" at index 0 (left of the region) is KEPT → "AX0Y0".
+        let delim_in_from = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"A\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(delim_in_from, "AX0Y0\n");
+    }
+
+    #[test]
+    fn inspect_converting_later_rung_forms_are_clean_errors() {
+        // Unequal-length FROM/TO have no well-defined table — a later rung.
+        let unequal = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"ABC\"."],
+            &["INSPECT S CONVERTING \"AB\" TO \"XYZ\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(unequal, RuntimeError::Unsupported(_)), "got {unequal:?}");
+
+        // A PIC X item as the `from` operand (not a string literal) is a later rung.
+        let item = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"ABC\".", "01  F  PIC X(3) VALUE \"ABC\"."],
+            &["INSPECT S CONVERTING F TO \"XYZ\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(item, RuntimeError::Unsupported(_)), "got {item:?}");
+
+        // A MULTI-character region delimiter restricting the conversion is a later
+        // rung (a single-character region delimiter is now supported — see
+        // `inspect_converting_with_a_before_after_region`).
+        let multi_region = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"X\" BEFORE \"BC\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(multi_region, RuntimeError::Unsupported(_)), "got {multi_region:?}");
+
+        // CONVERTING is a STANDALONE alternative — combining it with a REPLACING
+        // clause in one statement does not parse (the two are mutually exclusive
+        // grammar alternatives), so it is a clean parse-time rejection, never a
+        // mis-run.
+        let combined = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"X\" REPLACING ALL \"B\" BY \"Y\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(combined, RuntimeError::Parse(_)), "got {combined:?}");
+    }
+
+    // ----------------------------------------------------------------------
+    // Reference modification — computed (data-name) indices (the oracle side)
+    // ----------------------------------------------------------------------
+
+    #[test]
+    fn refmod_computed_mid_substring() {
+        // WS(J:K) with J=2, K=3 over "ABCDE" → positions 2..4 → "BCD".
+        let out = run_cobol(&wrap(
+            &[
+                "01  WS  PIC X(5) VALUE \"ABCDE\".",
+                "01  J   PIC 9 VALUE 2.",
+                "01  K   PIC 9 VALUE 3.",
+            ],
+            &["DISPLAY WS(J:K).", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "BCD\n");
+    }
+
+    #[test]
+    fn refmod_computed_omitted_length_runs_to_end() {
+        // WS(J:) with J=3 over "ABCDE" runs to the end → "CDE".
+        let out = run_cobol(&wrap(
+            &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J   PIC 9 VALUE 3."],
+            &["DISPLAY WS(J:).", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "CDE\n");
+    }
+
+    #[test]
+    fn refmod_computed_out_of_range_traps() {
+        // WS(J:K) with J=4, K=5 over a 5-char item runs to position 8 > 5 → a
+        // well-defined RefModOutOfRange trap (never a wrong slice or a panic).
+        let err = run_cobol(&wrap(
+            &[
+                "01  WS  PIC X(5) VALUE \"ABCDE\".",
+                "01  J   PIC 9 VALUE 4.",
+                "01  K   PIC 9 VALUE 5.",
+            ],
+            &["DISPLAY WS(J:K).", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::RefModOutOfRange(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn refmod_computed_zero_start_traps() {
+        // A start of 0 makes start0 = -1 < 0 → an out-of-range trap, matching the
+        // compiled str_slice's `start < 0` bounds check.
+        let err = run_cobol(&wrap(
+            &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J   PIC 9 VALUE 0."],
+            &["DISPLAY WS(J:2).", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::RefModOutOfRange(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn refmod_of_numeric_item_is_a_later_rung() {
+        // Reference modification is defined on alphanumeric items; a numeric base
+        // is a later rung — the same reject the compiler makes.
+        let err = run_cobol(&wrap(
+            &["01  N  PIC 9(5) VALUE 12345.", "01  J  PIC 9 VALUE 2."],
+            &["DISPLAY N(J:2).", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn refmod_signed_index_item_is_a_later_rung() {
+        // A signed index item is a later rung (the index model is unsigned integer).
+        let err = run_cobol(&wrap(
+            &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J  PIC S9 VALUE 2."],
+            &["DISPLAY WS(J:2).", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn refmod_computed_as_move_source_is_a_later_rung() {
+        // A computed refmod in a MOVE-source (numeric) context stays a later rung.
+        let err = run_cobol(&wrap(
+            &[
+                "01  WS  PIC X(5) VALUE \"ABCDE\".",
+                "01  J   PIC 9 VALUE 2.",
+                "01  DST PIC X(3).",
+            ],
+            &["MOVE WS(J:2) TO DST.", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
     }
 }

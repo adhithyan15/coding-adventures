@@ -50,7 +50,12 @@ from coding_adventures_sir_runtime_core import Closure, Symbol, apply, eq, inter
 # the matcher only sees as an over-broad ``StandardError``).  ``raise_error`` is
 # the same explicit-string raise the frontend already emits for ``raise Klass`` —
 # no reflection on the source-derived method name (the C3 RCE lesson).
-from coding_adventures_sir_runtime_exceptions import raise_error
+from coding_adventures_sir_runtime_exceptions import (
+    ancestry_chain,
+    class_of_thrown,
+    raise_error,
+    rescue_matches,
+)
 
 # The SIR universal value type at this package's boundary.
 Val = Any
@@ -164,6 +169,20 @@ def class_of(value: Val) -> str:
     """
     if isinstance(value, SirInstance):
         return value.sir_class
+    # A raised/caught exception is an exception object, not a ``SirInstance``,
+    # but it carries its Ruby class tag the same way.  Without this it fell
+    # through to the ``Object`` default, so ``rescue => e; e.class`` said
+    # ``Object`` and ``e.is_a?(StandardError)`` was FALSE for every exception —
+    # silently skipping a handler guarded that way.
+    #
+    # ``BaseException``, not ``SirError``: the emitted ``except Exception as
+    # __exc`` binds the RAW caught value, so ``e`` may be a NATIVE Python error
+    # (a ``RecursionError`` from an emitted recursive call).  ``class_of_thrown``
+    # is the SAME bucketing ``rescue`` matching uses — it reports a ``SirError``'s
+    # own tag and buckets a native error as ``StandardError`` — so reflection and
+    # rescue can never disagree about a value ``rescue`` just caught.
+    if isinstance(value, BaseException):
+        return class_of_thrown(value)
     if value is None:
         return "NilClass"
     if isinstance(value, bool):
@@ -191,6 +210,26 @@ def is_a(value: Val, class_name: str) -> bool:
     """
     if class_name in ("Object", "BasicObject"):
         return True
+    # An exception matches by the SAME ancestry ``rescue`` dispatches on — that
+    # table (``ArgumentError → StandardError → Exception``, plus any registered
+    # user edge) lives in the exceptions package, not in this module's class
+    # registry, so consult it directly rather than walking ``superclass_of``.
+    #
+    # ``BaseException`` so a caught NATIVE Python error answers as the
+    # ``StandardError`` ``rescue`` bucketed it as (see :func:`class_of`).
+    if isinstance(value, BaseException):
+        if rescue_matches(value, [class_name]):
+            return True
+        # ...and a MODULE mixed into the exception's class or any ancestor.
+        # ``rescue_matches`` is a pure ancestry-name walk, so it cannot see an
+        # ``include``.  The Rust, Go and JavaScript backends all consult their
+        # module tables here, and this guard is the one the frontier exists to
+        # protect — ``retry unless e.is_a?(Recoverable)`` takes the OPPOSITE
+        # branch if one backend says false where the others say true.
+        return any(
+            class_name in _module_closure(cls)
+            for cls in ancestry_chain(class_of_thrown(value))
+        )
     actual = class_of(value)
     if class_name == "Numeric":
         return actual in ("Integer", "Float")
@@ -317,6 +356,29 @@ def include_module(owner: str, module_name: str) -> None:
     de-dups by first occurrence, so the earliest position stands).
     """
     _included_modules.setdefault(owner, []).append(module_name)
+
+
+def _module_closure(class_name: str) -> set[str]:
+    """Every module included into ``class_name``, TRANSITIVELY.
+
+    A module may itself ``include`` other modules, so ``include Enumerable``
+    where ``module Enumerable; include Comparable; end`` makes the owner an
+    ``is_a?(Comparable)`` too.  This answers the membership question only, so
+    it returns a set — order is :func:`_owner_mro`'s job, and only method
+    *lookup* cares about order.
+
+    Iterative with a ``seen`` set, so a cyclic registration (``M`` includes
+    ``N`` includes ``M``) terminates instead of recursing forever.
+    """
+    out: set[str] = set()
+    stack = list(_included_modules.get(class_name, []))
+    while stack:
+        mod = stack.pop()
+        if mod in out:
+            continue
+        out.add(mod)
+        stack.extend(_included_modules.get(mod, []))
+    return out
 
 
 def extend_module(owner: str, module_name: str) -> None:
@@ -791,10 +853,28 @@ def _responds_to(recv: Val, name: str) -> bool:
     built-ins, the ``define_method`` table, and the type-specific catalog."""
     if name in ("is_a?", "kind_of?", "instance_of?", "class"):
         return True
+    # ``message`` resolves on an EXCEPTION (``BaseException``, so a caught
+    # native Python error answers too — see :func:`class_of`).  Do NOT return
+    # ``False`` for a non-exception here: a user class may define its OWN
+    # ``message``, which :func:`call_method` dispatches from the per-class
+    # table, and an early ``False`` would DENY a method that actually works —
+    # the same dishonest-``respond_to?`` shape this change fixes elsewhere.
+    if name == "message" and isinstance(recv, BaseException):
+        return True
     if name in _methods:
         return True
     if name in _OBJECT_METHODS:
         return True
+    # A user instance resolves any method its class — or an ancestor, or an
+    # included module — defines, via the SAME MRO walk :func:`call_method`
+    # dispatches with.  Without this a ``SirInstance`` fell through EVERY
+    # branch to the closing ``return False``, so ``respond_to?`` answered false
+    # for a method that then dispatched fine (``class Failure; def message;
+    # "custom"; end; end`` — ``f.respond_to?(:message)`` false, ``f.message``
+    # → ``"custom"``).  Rust, Go and JavaScript all consult their instance
+    # tables here.
+    if isinstance(recv, SirInstance):
+        return _resolve_instance_method(recv.sir_class, name) is not None
     # ``str`` is checked before ``list``/``dict`` (a str is neither).  ``bool`` is
     # a subclass of ``int`` so it is excluded from the numeric check — bools only
     # resolve the universal ``Object`` methods (handled above).
@@ -2069,6 +2149,13 @@ def call_method(recv: Val, name: str, *args: Val) -> Val:
         return class_of(recv) == _class_name_arg(args[0])
     if name == "class":
         return class_of(recv)
+    # ``Exception#message`` — the text a ``raise Foo, "msg"`` carried, which a
+    # ``SirError`` keeps as its standard ``args[0]``.  Answered by an exception
+    # ONLY, so a non-exception still falls through to its own catalog (and the
+    # ``nil`` floor).  Without this, ``rescue => e; puts e.message`` — everyday
+    # Ruby — died with an ``AttributeError``.
+    if name == "message" and isinstance(recv, BaseException):
+        return str(recv)
 
     # ``send``/``__send__``/``public_send`` re-enter dispatch with a *dynamic*
     # method name taken from the first argument (a Symbol or string), forwarding

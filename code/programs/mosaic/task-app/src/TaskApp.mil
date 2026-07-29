@@ -2,9 +2,11 @@
 //
 // A to-do app that *auto-schedules*. The host fills these slots from the pure
 // task-core engine (via task-wasm) and turns the emitted events back into engine
-// operations. Rows are pre-formatted strings (name · due · computed schedule) because
-// moslayout iterates a single `list<text>` and cannot bind parallel per-row arrays —
-// so the host bakes each row's display into one string.
+// operations. Each row is a *list of cells* — [done-glyph, name, due, schedule,
+// overdue] — pre-formatted by the engine's `table` projection, so the layout can
+// place each cell in its own styled element (a real toggle, the name, meta chips)
+// via a `For` over `list<list<text>>` with `( row[n] )` cell access. The cell order
+// here is the contract between the host (main.tsx) and the layout's `row[n]` indices.
 
 component TaskApp {
   // Header + add-row inputs.
@@ -12,15 +14,33 @@ component TaskApp {
   slot new-task-name : text ;
   slot new-task-due  : text ;
 
+  // The workspace's projects, depth-first so a sub-project follows its parent. Each row
+  // is [ name, active-marker, indent ]: the marker is non-empty for exactly the project
+  // being shown (the layout renders that one as selected), and `indent` is a non-empty
+  // glyph for a *nested* project, empty for a top-level one — which is what turns a
+  // flat list into a visible hierarchy. Everything else in this interface (tasks,
+  // summary, schedule) describes the active project.
+  slot project-rows     : list<list<text>> ;
+  slot new-project-name : text ;
+
   // A one-line summary (counts, project finish).
   slot summary : text ;
 
-  // One pre-formatted line per task, in schedule order.
-  slot task-rows : list<text> ;
+  // One row per task, in schedule order; each row is a list of pre-formatted cells
+  // in the order [ done-glyph, name, due, schedule, overdue ]. Empty cells (e.g. no
+  // due date) are the empty string, and the layout hides those chips.
+  slot task-rows : list<list<text>> ;
 
-  // Typing in the two inputs.
+  // Typing in the inputs.
   emit onNewTaskNameChange ( value : text ) ;
   emit onNewTaskDueChange ( value : text ) ;
+  emit onNewProjectNameChange ( value : text ) ;
+
+  // Create a project (top-level, or nested under the one currently shown), and switch
+  // which one is shown (by row index).
+  emit onAddProject ;
+  emit onAddSubproject ;
+  emit onSelectProject ( index : number ) ;
 
   // Add the typed task; toggle/delete a row (the row index is delivered as the number
   // payload of a single-number-param event).

@@ -1,5 +1,5 @@
 {
-  "case_count": 429,
+  "case_count": 431,
   "cases": [
     {
       "axis": "block-formatting-boundary",
@@ -2574,15 +2574,27 @@
       "id": "template-dat-109",
       "reason": "block boundary handling inside html5lib fragment contexts",
       "source": "template.dat:109"
+    },
+    {
+      "axis": "block-heading-boundary",
+      "id": "void-in-phrasing-dat-6",
+      "reason": "heading start/end recovery and nested heading boundaries",
+      "source": "void-in-phrasing.dat:6"
+    },
+    {
+      "axis": "block-form-boundary",
+      "id": "void-in-phrasing-dat-11",
+      "reason": "block boundaries around form controls and button scope recovery",
+      "source": "void-in-phrasing.dat:11"
     }
   ],
   "counts_by_axis": {
     "block-foreign-boundary": 56,
-    "block-form-boundary": 54,
+    "block-form-boundary": 55,
     "block-formatting-boundary": 66,
     "block-fragment-context": 32,
     "block-grouping-boundary": 87,
-    "block-heading-boundary": 12,
+    "block-heading-boundary": 13,
     "block-list-container-boundary": 18,
     "block-ruby-boundary": 10,
     "block-sectioning-boundary": 20,

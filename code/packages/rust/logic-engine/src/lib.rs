@@ -42,13 +42,20 @@ pub mod govern;
 pub mod lr_aggregate;
 pub mod proof_dag;
 pub mod provenance;
+pub mod verify;
 pub mod wmc;
 
 use std::collections::{HashMap, HashSet};
 
 use logic_core::{unify, LogicVar, Number, Substitution, Term};
 
-pub use compute::{compute, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived};
+pub use compute::{
+    compute, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived, RoundSpec,
+};
+/// Re-exported so consumers can name the rounding mode of a
+/// [`ComputeExpr::Round`]/[`DerivationNode::Round`] without depending on
+/// `bignum-core` directly (NUM-6a).
+pub use bignum_core::RoundingMode;
 pub use conversion::{add_or_sub, convert_value, ConvError, Conversion, ConversionTable};
 pub use datetime::{
     after, before, date_add, date_ordinal, days_between, read_date, read_duration_days,
@@ -66,7 +73,12 @@ pub use lr_aggregate::{
     PriorClause, SourceDisagreementReport, SourceLogitDelta, UncertaintyMarker, UncertaintyReport,
 };
 pub use proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
-pub use provenance::{Citation, Provenance, TrustTier};
+pub use provenance::{Citation, ContentHash, Provenance, Quote, TrustTier, VerbatimSpan};
+pub use verify::{
+    verify_proof, verify_quote, verify_step, LogicFailure, LogicStatus, MemorySnapshots,
+    NoSnapshots, QuoteMiss, QuoteStatus, SnapshotStore, StepVerification, TraceVerification,
+    UnverifiedReason,
+};
 pub use wmc::weighted_model_count;
 
 // ---------------------------------------------------------------------------

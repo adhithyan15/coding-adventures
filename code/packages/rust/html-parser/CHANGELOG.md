@@ -6,6 +6,16 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Processing instructions now have first-class tokenizer and DOM plumbing,
+  ready for the declarative HTML tokenizer states to emit target/data nodes.
+- The current WPT void-in-phrasing and foreign-content CDATA cases are now
+  mirrored in the canonical tree-construction corpus and its focused void and
+  foreign-content audits, leaving only processing-instruction signatures in
+  the checked upstream debt.
+- The conformance coverage audit now reads tree-construction cases from WPT and
+  tokenizer cases from html5lib-tests, pins every missing WPT source signature,
+  and accepts only explicit missing-case debt counts so the current 156-case gap
+  can be ratcheted to zero without hiding upstream drift.
 - Fostered `nobr` table-cell continuation nodes are now repaired while
   processing the EOF token, retiring the final `finish_document` post-parse
   shim and the now-obsolete focused post-parse repair audit while preserving
@@ -117,6 +127,12 @@ documented in this file.
   accesskey, autofocus, and related focus metadata.
 
 ### Fixed
+- Residual HTML start tags processed through the table insertion mode now use
+  foster parenting after table-context and head-element exceptions, keeping a
+  `marquee` sibling before its open table in the current adoption-agency WPT.
+- Replacement characters from null input are now stripped only at MathML and
+  SVG HTML integration points, preserving them in ordinary foreign-content
+  text while matching the current WPT fragment and CDATA cases.
 - Test fixture generators: `COMMENT_MARKUP` regex accepts both `-->` and
   `--!>` comment end forms, and tag-axis classifier scans pass `re.I` even
   though their inputs are already lowercased.  Both changes silence codeql

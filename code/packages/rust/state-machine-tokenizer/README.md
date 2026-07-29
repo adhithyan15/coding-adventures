@@ -61,6 +61,7 @@ Comments and doctypes:
 - `append_comment(current_lowercase)`
 - `append_comment(literal)`
 - `append_comment_replacement`
+- `convert_temporary_buffer_to_comment`
 - `create_doctype`
 - `append_doctype_name(current)`
 - `append_doctype_name(current_lowercase)`
@@ -75,6 +76,12 @@ Comments and doctypes:
 - `append_doctype_system_identifier(literal)`
 - `append_doctype_system_identifier_replacement`
 - `mark_force_quirks`
+
+Processing instructions:
+
+- `finalize_processing_instruction_target`
+- `append_processing_instruction_data(current)`
+- `append_processing_instruction_data(literal)`
 
 Temporary buffers and controlled state changes:
 
@@ -128,6 +135,7 @@ The runtime also exposes context-seeding helpers such as
 `Tokenizer::set_initial_state`, `Tokenizer::set_last_start_tag`,
 `Tokenizer::set_current_start_tag` with `StartTagSeed`,
 `Tokenizer::set_current_end_tag`, `Tokenizer::set_current_comment`, and
+`Tokenizer::set_current_processing_instruction`,
 `Tokenizer::set_current_doctype` with `DoctypeSeed`, plus
 `Tokenizer::set_temporary_buffer` and `Tokenizer::set_return_state`, so wrapper
 packages can execute HTML submodes and continuation states like attribute value

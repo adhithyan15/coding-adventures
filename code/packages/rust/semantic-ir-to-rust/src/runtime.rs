@@ -37,6 +37,17 @@ pub const RUNTIME: &str = r##"mod __sir {
     #[derive(Clone)]
     pub enum Value {
         Int(i64),
+        // A raised/caught EXCEPTION, as a first-class value.
+        //
+        // `rescue Foo => e` used to bind the message STRING, so the rescued
+        // value was not an exception at all: `e.class` said `String`,
+        // `e.is_a?(StandardError)` was FALSE, and `e.message` raised
+        // NoMethodError.  A dedicated variant (rather than reusing a
+        // `SirInstance`) keeps the message a plain `String` — so display can
+        // never recurse through it — and keeps exceptions OUT of the
+        // never-freed instance table, so a `loop { begin … rescue => e … end }`
+        // stays O(1) in memory.
+        Exception(Rc<SirError>),
         // SIR16 floats.  Kept distinct from `Int` so the value model
         // never silently coerces — arithmetic promotes to `Float` only
         // when an operand is already a `Float` (see `any_float`).
@@ -230,17 +241,32 @@ pub const RUNTIME: &str = r##"mod __sir {
         match args.first() {
             // ── String concatenation ──────────────────────────────
             // `"a" + "b"` → `"ab"`.  Ruby's `String#+` requires a String
-            // right-hand operand (`"a" + 1` raises `TypeError`); typed
-            // rejection belongs to the sir-typed-runtime-errors cascade, so
-            // here we require every operand be a `Str` and concatenate their
-            // contents — a non-Str operand panics with a clear message rather
-            // than silently coercing to integer garbage.
+            // right-hand operand, so every operand must be a `Str` — never
+            // silently coerce to integer garbage.
+            //
+            // The rejection is a RESCUABLE `TypeError` (via `raise`), not a
+            // bare `panic!`.  A `panic!` payload is a `&str`, not a
+            // `SirError`, so `exc_from_payload` `resume_unwind`s it — NO
+            // `rescue`, not even a bare one, could catch it, and the program
+            // died with a host backtrace.  Ruby raises a plain rescuable
+            // `TypeError` here, and `"prefix " + e` (`e` a rescued exception)
+            // reaches this arm the moment exceptions became real values
+            // rather than message strings.
             Some(Value::Str(_)) => {
                 let mut out = String::new();
                 for a in &args {
                     match a {
                         Value::Str(s) => out.push_str(s),
-                        other => panic!("string + expects strings, got {}", format(other)),
+                        other => raise(
+                            "TypeError",
+                            Value::Str(Rc::from(
+                                format!(
+                                    "no implicit conversion of {} into String",
+                                    ruby_class_name(other)
+                                )
+                                .as_str(),
+                            )),
+                        ),
                     }
                 }
                 Value::Str(Rc::from(out.as_str()))
@@ -255,7 +281,18 @@ pub const RUNTIME: &str = r##"mod __sir {
                 for a in &args {
                     match a {
                         Value::Seq(items) => out.extend(items.borrow().iter().cloned()),
-                        other => panic!("array + expects arrays, got {}", format(other)),
+                        // Rescuable `TypeError`, for the same reason as the
+                        // `Str` arm above — a `panic!` here was uncatchable.
+                        other => raise(
+                            "TypeError",
+                            Value::Str(Rc::from(
+                                format!(
+                                    "no implicit conversion of {} into Array",
+                                    ruby_class_name(other)
+                                )
+                                .as_str(),
+                            )),
+                        ),
                     }
                 }
                 seq_lit(out)
@@ -481,6 +518,28 @@ pub const RUNTIME: &str = r##"mod __sir {
     pub fn gt(a: Value, b: Value) -> Value {
         Value::Bool(num_lt(&b, &a))
     }
+    // `!=`, `<=`, `>=` — the operator spellings the Ruby frontend lowers a
+    // comparison chain to (see `lower_comparison_chain`).  All three are
+    // defined in terms of the two primitives above (`num_lt`, `value_eq`) so
+    // they share one source of truth:
+    //   a != b  ⟺  not (a == b)
+    //   a <= b  ⟺  a < b  or  a == b
+    //   a >= b  ⟺  b < a  or  a == b
+    // `value_eq` equates cross-representation numbers (`1 == 1.0`), so
+    // `1 <= 1.0` is true; and because both `num_lt` and `value_eq` answer
+    // `false` for genuinely uncomparable operands, `le`/`ge` return `false`
+    // there rather than a meaningless order — upholding `num_lt`'s own
+    // never-panic-on-the-OO-surface contract. Matches the C backend's
+    // `_sir_le`/`_sir_ge`/`_sir_ne` on every numeric and string input.
+    pub fn ne(a: Value, b: Value) -> Value {
+        Value::Bool(!value_eq(&a, &b))
+    }
+    pub fn le(a: Value, b: Value) -> Value {
+        Value::Bool(num_lt(&a, &b) || value_eq(&a, &b))
+    }
+    pub fn ge(a: Value, b: Value) -> Value {
+        Value::Bool(num_lt(&b, &a) || value_eq(&a, &b))
+    }
 
     // Ordered numeric comparison.  Both-int compares as i64 (no
     // precision loss for large magnitudes); any float operand lifts the
@@ -676,6 +735,11 @@ pub const RUNTIME: &str = r##"mod __sir {
             Value::Bool(true) => if SIR_DISPLAY_RUBY { "true" } else { "#t" }.to_string(),
             Value::Bool(false) => if SIR_DISPLAY_RUBY { "false" } else { "#f" }.to_string(),
             Value::Nil => "nil".to_string(),
+            // An exception renders as its MESSAGE, matching Ruby's
+            // `Exception#to_s`, so `rescue => e; puts e` prints "boom".  The
+            // message is a plain `String`, so unlike an instance/seq/map this
+            // arm cannot recurse and needs no `visited` guard.
+            Value::Exception(e) => e.msg.clone(),
             // Defensive: a `Missing` sentinel should be consumed by a
             // defaulted param's prologue before any value is printed, so
             // this arm is normally unreachable.  Render a visible
@@ -1099,6 +1163,17 @@ pub const RUNTIME: &str = r##"mod __sir {
             // Ruby's default `==` is object identity, and two distinct
             // `Foo.new` objects are unequal even with identical ivars.
             (Value::Instance(x), Value::Instance(y)) => x == y,
+            // Two exception handles are equal when they are the SAME exception
+            // — the `Rc` a `rescue` binding allocated, shared by `Value::clone`.
+            // WITHOUT this arm the wildcard below made `e == e` FALSE, so
+            // `retry if e == @last_error` never fired and `seen.include?(e)`
+            // never deduped: the very defect shape this change exists to fix.
+            // Identity is also what the Go (interface pointer), JavaScript and
+            // Python backends give for free, so the four agree. (Ruby's own
+            // `Exception#==` additionally equates two DISTINCT exceptions with
+            // the same class and message; no backend does that today, and
+            // matching Ruby here alone would create a fresh divergence.)
+            (Value::Exception(x), Value::Exception(y)) => Rc::ptr_eq(x, y),
             _ => false,
         }
     }
@@ -1127,9 +1202,16 @@ pub const RUNTIME: &str = r##"mod __sir {
                 Value::Float(f) => Value::Float(-f),
                 other => Value::Int(-as_i64(&other)),
             },
-            "=" => {
+            // `==` is a synonym for `=`; both call `eq`.  This covers a
+            // first-class builtin reference (`:==` passed as a symbol) — the
+            // infix form is routed directly by the emitter.
+            "=" | "==" => {
                 let mut it = args.into_iter();
                 eq(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
+            }
+            "!=" => {
+                let mut it = args.into_iter();
+                ne(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
             }
             "case_eq" => {
                 let mut it = args.into_iter();
@@ -1142,6 +1224,14 @@ pub const RUNTIME: &str = r##"mod __sir {
             ">" => {
                 let mut it = args.into_iter();
                 gt(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
+            }
+            "<=" => {
+                let mut it = args.into_iter();
+                le(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
+            }
+            ">=" => {
+                let mut it = args.into_iter();
+                ge(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
             }
             "cons" => {
                 let mut it = args.into_iter();
@@ -1248,6 +1338,8 @@ pub const RUNTIME: &str = r##"mod __sir {
     fn ruby_class_name(v: &Value) -> String {
         match v {
             Value::Nil => "NilClass".to_string(),
+            // An exception reports the class it was raised as.
+            Value::Exception(e) => e.class.clone(),
             Value::Bool(true) => "TrueClass".to_string(),
             Value::Bool(false) => "FalseClass".to_string(),
             Value::Int(_) => "Integer".to_string(),
@@ -1459,6 +1551,13 @@ pub const RUNTIME: &str = r##"mod __sir {
             // (surfacing as an unrescued panic) even though the mapping was
             // sitting right there.
             "class" => Some(Value::Str(Rc::from(ruby_class_name(recv).as_str()))),
+            // `Exception#message` — the message a `raise Foo, "msg"` carried.
+            // Only an exception instance answers; anything else falls through
+            // to its own catalog (and ultimately `NoMethodError`).
+            "message" => match recv {
+                Value::Exception(e) => Some(Value::Str(Rc::from(e.msg.as_str()))),
+                _ => None,
+            },
             // `is_a?`/`kind_of?` honour ancestry; `instance_of?` is an EXACT
             // class match.  The class argument arrives as a NAME — the frontend
             // lowers a class pattern to its name string — so no constant-
@@ -1493,7 +1592,10 @@ pub const RUNTIME: &str = r##"mod __sir {
         if builtin.contains(&target) {
             return true;
         }
-        if matches!(recv, Value::Instance(_)) {
+        // A user instance — or an EXCEPTION, whose class chains through the
+        // built-in hierarchy (`ArgumentError → StandardError → Exception`) —
+        // also matches its ancestors and any module mixed in along the chain.
+        if matches!(recv, Value::Instance(_) | Value::Exception(_)) {
             return is_ancestor_or_self(actual, target)
                 || includes_module_transitively(actual, target);
         }
@@ -1558,8 +1660,13 @@ pub const RUNTIME: &str = r##"mod __sir {
         match recv {
             // A user instance responds to any method its class (or an ancestor
             // / included module) defines — the SAME `resolve_instance_method`
-            // walk `dispatch_user_method` uses.
+            // walk `dispatch_user_method` uses.  An EXCEPTION instance also
+            // responds to `message`; a non-exception must NOT (keeping
+            // `respond_to?` honest in both directions).
             Value::Instance(id) => resolve_instance_method(&instance_class(*id), name).is_some(),
+            // An exception responds to `message`; nothing else does, so
+            // `respond_to?` stays honest in both directions.
+            Value::Exception(_) => name == "message",
             Value::Seq(_) => matches!(
                 name,
                 "length" | "size" | "first" | "last" | "[]" | "reverse" | "sort" | "join"
@@ -3936,13 +4043,36 @@ pub const RUNTIME: &str = r##"mod __sir {
             .any(|name| *name == "Exception" || is_ancestor_or_self(&exc.class, name))
     }
 
-    /// The message value a rescue binding (`rescue … => e`) sees — the
-    /// exception's message, re-wrapped as a `Value::Str`.  Ruby would bind an
-    /// exception *object* here; SIR v0 has no exception-object model, so the
-    /// message string is the honest stand-in (the same choice the TS backend
-    /// makes, where `=> e` binds the thrown value's message).
+    /// The value a rescue binding (`rescue Foo => e`) binds.
+    ///
+    /// This used to be the message STRING, which meant the rescued value was
+    /// not an exception at all: `e.class` reported `String`,
+    /// `e.is_a?(StandardError)` was FALSE, and `e.message` raised
+    /// `NoMethodError: undefined method 'message' for String`.  A
+    /// `rescue => e; retry unless e.is_a?(Recoverable)` guard therefore took
+    /// the wrong branch silently.
+    ///
+    /// It is now a real exception value: a dedicated `Value::Exception`
+    /// carrying an `Rc<SirError>` — the class tag and the message.  Two
+    /// rejected alternatives, recorded because each looked simpler:
+    ///
+    /// - *Reuse `Value::Instance`.*  Instances live in a table that is never
+    ///   freed, so `loop { begin … rescue => e … end }` would leak one entry
+    ///   per iteration — unbounded growth driven by a rescue in a loop.
+    /// - *Store the message as an ivar.*  Ivar values are `Value`s, so
+    ///   `format` would have to recurse into one; the plain `String` here
+    ///   cannot recurse, which is why `format`'s arm needs no `visited` guard.
+    ///
+    /// `class`, `is_a?`/`kind_of?` (the ancestry walk already knows
+    /// `ArgumentError → StandardError → Exception`), `message` and `==` each
+    /// gained an explicit arm — a wildcard match is why `==` would otherwise
+    /// have answered `false` for `e == e`.  Display still renders the MESSAGE
+    /// (see `format`), so `puts e` is unchanged.
     pub fn exc_value(exc: &SirError) -> Value {
-        Value::Str(Rc::from(exc.msg.as_str()))
+        Value::Exception(Rc::new(SirError {
+            class: exc.class.clone(),
+            msg: exc.msg.clone(),
+        }))
     }
 
     /// Raise a SIR exception of `class` with message `msg` by panicking with
@@ -4554,6 +4684,20 @@ mod tests {
     }
 
     #[test]
+    fn runtime_declares_the_comparison_family() {
+        // `!=`/`<=`/`>=` complete the operator-spelling comparison family the
+        // Ruby frontend lowers to; each is defined from `num_lt`/`value_eq`.
+        assert!(RUNTIME.contains("pub fn ne("));
+        assert!(RUNTIME.contains("pub fn le("));
+        assert!(RUNTIME.contains("pub fn ge("));
+        // And wired into the by-name dispatch (for a first-class `:==` symbol).
+        assert!(RUNTIME.contains("\"=\" | \"==\" =>"));
+        assert!(RUNTIME.contains("\"!=\" =>"));
+        assert!(RUNTIME.contains("\"<=\" =>"));
+        assert!(RUNTIME.contains("\">=\" =>"));
+    }
+
+    #[test]
     fn runtime_includes_all_builtins() {
         for op in &[
             "plus", "minus", "times", "divide", "eq", "lt", "gt",
@@ -4571,9 +4715,12 @@ mod tests {
         // sir-polymorphic-operators (PO5): `plus`/`times` dispatch on the
         // first operand's tag via an explicit `match` (String/Seq arms
         // ahead of the numeric fold), never reflection.
-        // `plus` gains the String-concat and Seq-concat arms.
-        assert!(RUNTIME.contains("string + expects strings"));
-        assert!(RUNTIME.contains("array + expects arrays"));
+        // `plus` gains the String-concat and Seq-concat arms.  A non-matching
+        // operand is a RESCUABLE `TypeError` (`raise`, not `panic!`, so a
+        // `rescue` can catch it — a bare panic `resume_unwind`s uncatchably).
+        assert!(RUNTIME.contains("no implicit conversion of "));
+        assert!(RUNTIME.contains("into String"));
+        assert!(RUNTIME.contains("into Array"));
         // `times` gains the binary String/Seq atom with the three arms
         // (string repeat, array repeat, array join).
         assert!(RUNTIME.contains("fn times_binary"));

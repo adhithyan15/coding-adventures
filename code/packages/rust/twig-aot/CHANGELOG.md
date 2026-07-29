@@ -1,5 +1,292 @@
 # Changelog — `twig-aot`
 
+## 0.47.0 - 2026-07-27 — end-to-end native incremental collection (AOT00-T4 §6) — precision ladder COMPLETE
+
+- New macOS smoke test `end_to_end_gc_incremental_keeps_live_ref`: a compiled native program
+  drives the full three-call incremental cycle — `gc_collect_incremental_start` →
+  `gc_collect_incremental_step(1e6)` → `gc_collect_incremental_finish` — around a live cons
+  cell held in an `any` slot, then reads its `car` and returns 42. A single large-budget step
+  completes marking in one call (no IIR loop needed). Returning 42 proves a native program can
+  drive a **bounded-pause** collection end-to-end and its live reference survives.
+- This completes the incremental-collector arc (AOT00-T4) and the **entire precision ladder**:
+  mark-and-sweep → interior-precise → generational → precise-roots → compacting → **incremental**,
+  each now core + C ABI + frontend-triggerable end-to-end.
+
+## 0.46.0 - 2026-07-24 — movable cons cells: the real compaction relocation payoff (AOT00-T3)
+
+The moving/compacting collector now actually **relocates** a live heap object in a compiled
+native program — the end-to-end payoff of the whole moving-collector arc.
+
+- **`dynval_runtime.c` `__dyn_cons` now allocates a *movable* cell.** A cons cell is two
+  reference fields (car at byte 0, cdr at byte 8), so it is registered as a GC **kind**
+  (`__gc_register_kind({0, 8})`, lazily on first cons) and allocated via `__gc_alloc_kind`
+  instead of the kind-0 `__twig_gc_alloc`. A kind-0 cell is traced conservatively and thus
+  **pinned**; a registered-kind cell is **movable**, so the compacting collector may evacuate
+  it and precisely trace/relocate its children. Size (16 bytes) and the car/cdr layout are
+  unchanged — the golden parity test (`dynval` semantics vs the Rust reference) stays green.
+  The lazy `static` kind id is safe in the single-threaded runtime.
+- **New macOS end-to-end differential `end_to_end_gc_compacting_relocates_and_preserves`:** a
+  compiled program conses `box_int(42)`, triggers `gc_collect_compacting`, then reads
+  `car` of the cell and returns 42. Because the cell is movable, the compacting collect
+  **relocates** it and rewrites the `any` root slot in place; returning 42 proves the move
+  happened *and* the reference was fixed up (a missed fixup would deref the freed from-space
+  block → wrong value/fault). The same program under `gc_collect_precise` (non-moving) also
+  returns 42. Validated by real execution on aarch64 macOS (Miri can't run the C runtime /
+  asm path; the UAF-critical `collect_compacting` core is already Miri-clean).
+- The prior `end_to_end_gc_compacting_matches_precise` still holds — the cell is now moved,
+  but `live_bytes` is conserved across a move, so its columns stay equal (comment updated).
+
+## 0.45.0 - 2026-07-24 — end-to-end frontend-triggered compaction (AOT00-T3 §5)
+
+- New macOS smoke test `end_to_end_gc_compacting_matches_precise`: a compiled native program
+  invokes the `gc_collect_compacting` builtin (→ `__twig_gc_collect_compacting`), keeps its
+  live cons-cell reference, reclaims an `i64` look-alike, and yields the **identical**
+  `live_bytes` to `gc_collect_precise` — proving a native frontend can trigger a compaction
+  that runs safely on a real thread stack. Every frontend heap object is currently allocated
+  **kind 0** (`__dyn_cons` → `__twig_gc_alloc` → `__gc_alloc`), traced conservatively and
+  therefore **pinned**, so nothing is movable yet and the compacting collect degrades to
+  exactly the precise one. A true address-relocation differential is gated on frontend
+  kind-registration (`__gc_alloc_kind` + ref-field maps) — a separate follow-up.
+
+## 0.44.0 - 2026-07-23 — MsX64 (Windows) precise-roots registration (AOT00-T1 x86_64 PR-x6)
+
+Brings Windows from safe-conservative GC to **real precise-roots registration**, completing
+precise roots across all three native targets (aarch64 macOS, x86-64 Linux, x86-64 Windows).
+
+Since PR-x3, `__gc_init_stackmaps` was real on System V (Linux) but a no-op on Microsoft x64
+(Windows), so Windows silently degraded to conservative collection. The presumed blocker —
+that the encoder lacked a `mov [rsp+disp], reg` store for the MsX64 stack args — turned out
+to be **already solved**: `x86_64-encoder`'s `mov_mem_r64` emits the required SIB byte for an
+`rsp` base. So no encoder change was needed; the work was purely twig-aot.
+
+- New `build_gc_init_stackmaps_x86_64_msx64` marshals the 8-arg `__gc_register_stackmap`
+  the Microsoft-x64 way: args 1–4 in `rcx/rdx/r8/r9`; args 5–8 stored at `[rsp+32..56]`
+  **above the mandatory 32-byte shadow space** via a single `sub rsp, 64` (kept 16-aligned
+  through the `call`, as MS x64 requires); `add rsp, 64` after. The `func_start` LEA and its
+  pass-2b patch are ABI-independent and reused verbatim.
+- `compile_module_x86_64_to_text` now routes both ABIs to real registration
+  (`match abi { SysV => …, MsX64 => … }`) and registers the entry wrapper on both. The
+  `build_gc_noop_init_x86_64` stub is retired.
+- Windows links the same `gc-core-capi` archive that provides `__gc_register_stackmap`, so
+  the newly-referenced symbol resolves at link time (no unresolved-symbol regression).
+
+Validated by: structural unit tests on the generated MsX64 bytes (shadow reservation +
+`rsp`-relative arg stores + one registration per function-with-records); and — because the
+`windows-latest` CI runner **executes** the AOT pipeline (`windows_x86_64_smoke` links via
+`link.exe`/`lld-link`/`gcc` and runs the `.exe`) — the same executing GC differentials as
+Linux: registration-ran (`count > 0`), `gc_stress` (`live_bytes` 0 precise / 64 conservative),
+and the recursion differential (0 precise / 128 conservative, exercising the self-recursive
+safepoint from PR-x4). twig-aot 0.43.1 → 0.44.0. Needs no encoder bump.
+
+## 0.43.1 - 2026-07-23 — recursion GC differential (AOT00-T1 x86_64 PR-x5, test-only)
+
+Adds an end-to-end differential proving precise roots reach through a **self-recursive**
+frame, not just the entry frame — the case that on x86-64 is precise only because a
+self-recursive `call` is a registered safepoint (PR-x4). A `rec(stop)` function allocates
+a 64-byte `i64` look-alike per frame and recurses once (`main → rec(0) → rec(1)`); the
+collect fires in `rec(1)`, so the collector unwinds through `rec(0)`, an intermediate
+self-recursive frame whose live look-alike is mapped only at the recursive-call return
+address. Conservative pins both look-alikes (`live_bytes == 128`); precise reclaims both
+(`== 0`) — a `precise` of `64` would mean the intermediate frame fell back to a
+conservative scan, the exact regression PR-x4 prevents.
+
+Added identically to `linux_x86_64_smoke` (runs on the native x86-64 `ubuntu-latest`
+runner — the authoritative validator, since the dev host is aarch64 macOS) and to
+`macos_arm64_smoke` (locally-runnable, validates the program shape + GC semantics; aarch64
+has always mapped recursive frames via `BL` post-scan). No production code change.
+
+## 0.43.0 - 2026-07-23 — x86_64 GC stack-map registration, SysV (AOT00-T1 x86_64 PR-x3)
+
+Fills the x86-64 `__gc_init_stackmaps` (a no-op since PR-x2) with **real registration**
+on System V (Linux): `compile_module_x86_64_to_text`'s pass 1 switches to
+`compile_function_with_globals_and_stackmap`, and `build_gc_init_stackmaps_x86_64`
+marshals the eight `__gc_register_stackmap` arguments per function and calls it —
+
+```
+lea  rdi, [rip + F]          ; func_start (patched pass 2b)
+mov  rsi,<F len> ; mov rdx,<records>
+lea  rcx, [rip + F.pc] ; xor r8,r8 ; xor r9,r9
+lea  rax,[rip+F.slots|0]; push rax     ; arg8 slots_flat
+lea  rax,[rip+F.counts]; push rax      ; arg7 slot_counts
+call __gc_register_stackmap ; add rsp,16
+```
+
+so `__gc_collect_precise` resolves an x86-64 return address to its exact roots. Design
+mirrors the merged aarch64 registration:
+
+- **`func_start`** via `LEA rdi, [rip+disp32]` patched in a new pass 2b from link offsets;
+  base-independent (RIP cancels the load base), no relocation — the x86-64 counterpart of
+  the aarch64 `ADR`. Uses the new x86_64-encoder 0.7.0 `lea_rip_placeholder`.
+- **The three arrays** are a data pool after the final `ret`, addressed by
+  `lea_rip_label` (RIP-relative, resolved at `finish()`); registry copies the slots.
+- **Register the wrapper too** (empty ref-slot map) — the increment-C precision fix, so
+  the precise walk never conservatively re-scans the user entry's frame.
+- `rsp` stays 16-aligned at each `call` (2 argument pushes = 16 bytes).
+
+**Windows/MsX64 keeps the no-op init** (its precise walk is a follow-up: the 4-stack-arg
++ shadow-space marshalling needs an `[rsp+disp]` store the encoder lacks, and the
+differential is Linux-only anyway) — so Windows degrades to a **safe conservative**
+collection. Also adds x86_64-backend 0.31.0 GC builtins (`gc_collect` /
+`gc_collect_precise` / `gc_live_bytes` / `gc_stackmap_count`).
+
+Verified: 57 lib tests incl. `x86_64_func_start_lea_resolves_to_target_offset` (decodes
+the patched `LEA`, base-independent) + the structural registration test; clippy clean.
+The registration-ran + `live_bytes` differential (precise reclaims the i64 look-alike
+→ 0, conservative pins it → 64) run on the native x86-64 `ubuntu-latest` CI runner
+(`linux_x86_64_smoke`), the authoritative validator for this arc (the dev host is aarch64
+macOS). Needs x86_64-encoder 0.7.0.
+
+## 0.42.0 - 2026-07-22 — x86_64 GC entry wrapper + no-op init (AOT00-T1 x86_64 PR-x2)
+
+Ports increment A to the native x86-64 object path (`compile_module_x86_64_to_text`):
+inject the GC entry wrapper `__gc_aot_entry` and a no-op `__gc_init_stackmaps`, and
+redirect the image entry to the wrapper. Because the ELF/PE packager exports the global
+`main` symbol at whatever `entry_off` it is given (libc's `_start` calls `main`), this is
+a pure offset redirect — the same mechanism as the aarch64 Mach-O entry, no rename:
+
+```
+__gc_aot_entry (exported as `main`):
+    push rbp ; mov rbp, rsp
+    call __gc_init_stackmaps        ; no-op today; PR-x3 fills in registration
+    call <user entry>              ; rax = program result
+    mov rsp, rbp ; pop rbp ; ret   ; return rax → crt0 → exit(rax)
+```
+
+Both calls are intra-module `CALL rel32`s patched in place by the existing pass 2; `rsp`
+stays 16-aligned at each call. Under MsX64 (Windows) the wrapper reserves the 32-byte
+shadow/home space every caller must provide, matching the rest of the backend; SysV
+needs none. Reserved-symbol guard rejects a user function or entry
+named `__gc_aot_entry`/`__gc_init_stackmaps` (mirrors the aarch64 path). aarch64 and the
+x86-64 object bytes are otherwise unchanged.
+
+The wrapper mechanism is landed and proven transparent first; PR-x3 fills
+`__gc_init_stackmaps` in to register each function's stack map (per spec
+`AOT00-T1-x86_64-precise-roots.md`). Verified: 55 lib tests incl. the wrapper structure,
+entry redirect, and guard; the transparency proof (existing x86-64 programs still produce
+their exact exit code with the wrapper interposed) runs on the native x86-64
+`ubuntu-latest` CI runner (`linux_x86_64_smoke`), the authoritative validator for this
+arc (the dev host is aarch64 macOS). twig-aot 0.41.1 → 0.42.0.
+
+
+## 0.41.1 - 2026-07-22 — test: precise roots keep a real reference AND reclaim a look-alike
+
+Completes the precise-roots correctness statement with an end-to-end test
+(`end_to_end_gc_precise_keeps_ref_reclaims_lookalike`, macOS/aarch64). The increment-C
+differential proved only the *reclaim* half (its program kept no live object, so precise
+`live_bytes` was 0). This program holds **both** a real `any`-typed heap reference (a
+`dyn_cons` cell) and an `i64` look-alike (a `gc_alloc` pointer): the precise collect
+*keeps* the cons cell (`live_bytes > 0`) yet still reclaims the look-alike, so
+`conservative − precise == 64`. This proves the stack map both roots the genuine
+reference and excludes the non-reference slot — a precise result of 0 would be a dropped
+live reference (UAF); an equal result would be a wrongly-pinned look-alike. Test-only.
+
+## 0.41.0 - 2026-07-21 — precise roots load-bearing: register the entry wrapper (AOT00-T1 increment C)
+
+The GC-stress `live_bytes` differential — precise roots reclaiming a look-alike-pinned
+object that a conservative scan retains — now **passes end to end** on native AOT,
+proving the whole precise-roots chain (registration → `func_start` resolution → the map
+excluding non-reference slots) is load-bearing in production, not merely plumbed.
+
+Making it work required one fix: **the synthetic GC entry wrapper `__gc_aot_entry` is
+now itself registered** (with an empty ref-slot map). The wrapper is `main`'s caller
+and is live on the stack during every collection. The precise walk resolves a frame's
+map from the *return address* stored in its callee; when it reached `main` it resolved
+`main` precisely (no roots), but then — finding `main`'s own return address (into the
+*unmapped* wrapper) unmapped — fell back to conservatively re-scanning `main`'s whole
+frame, re-pinning exactly the non-reference look-alikes precise roots exist to reclaim.
+Mapping the wrapper keeps the entire generated call chain precise, so the conservative
+fallback only ever covers genuine runtime/libc frames (which hold no twig heap
+references in named slots). The wrapper's records are derived from its call-return
+offsets (a local `call_return_offsets`, mirroring the backend's own scan).
+
+Verified (`end_to_end_gc_stress_live_bytes_differential`): a program that keeps a
+64-byte allocation's address only in an `i64` slot exits with `live_bytes == 0` after a
+precise collect and `== 64` after a conservative one. Needs aarch64-backend 0.30.0
+(`gc_collect` / `gc_collect_precise` / `gc_live_bytes` / `gc_stackmap_count` builtins)
+and gc-core-capi 0.13.0 (`__twig_gc_collect_precise` / `__twig_gc_stackmap_count`).
+
+## 0.40.0 - 2026-07-21 — GC stack-map registration (AOT00-T1 emission, increment B)
+
+`__gc_init_stackmaps` — the no-op start-up hook increment A landed — now **registers
+every user function's GC stack map** with the runtime, so `__gc_collect_precise` can
+resolve a return address to that frame's exact live-reference slots instead of falling
+back to a conservative scan.
+
+The aarch64 compile path switches to `compile_with_globals_and_stackmap`, collecting a
+`Vec<StackMapRecord>` (one per call-return safepoint) per function. `__gc_init_stackmaps`
+is then generated to marshal, for each function that has records, the eight
+`__gc_register_stackmap` arguments and call it:
+
+```
+__gc_init_stackmaps:
+    stp x29,x30,[sp,#-16]! ; mov x29,sp
+    ; per function F with records:
+    adr  x0, F                   ; func_start   (patched in pass 2)
+    mov  x1, #<F len> ; mov x2, #<record count>
+    adr  x3, <F.pc_offsets> ; mov x4,#0 ; mov x5,#0
+    adr  x6, <F.slot_counts> ; adr x7, <F.slots_flat | #0>
+    bl   __gc_register_stackmap
+    ldp x29,x30,[sp],#16 ; ret
+  <data pool: each function's pc_offsets / slot_counts / slots_flat, as words>
+```
+
+Design (avoids any Mach-O object-file surgery — only the existing `BRANCH26` reloc and
+one intra-`__text` patch are used):
+
+- **`func_start`** (a function's runtime address) is the only runtime-computed argument:
+  an `ADR` patched in a new pass-2b step from the linker's offset map. `ADR` is
+  PC-relative in *bytes*, so its displacement `target_off − adr_off` is correct for any
+  load address (the base cancels) — no load-time relocation. It deliberately does **not**
+  use `ADRP`+`ADD`: an `ADRP` page immediate baked from link offsets would be wrong
+  because `ld` places `__text` after the Mach header inside the first page, so the
+  runtime `__text` base is *not* 4 KiB-aligned and `page(PC)` does not commute with it —
+  a silent, UAF-class defect (the registry only stores `func_start`, so it would not
+  fault until a precise collection). `ADR`'s cost is a ±1 MiB reach, enforced fail-loud.
+- **The three arrays** are compile-time constants, emitted as raw data words in a pool
+  **after the final `ret`** (never executed) and pointed at by `adr` (PC-relative,
+  init-internal → needs no relocation). The registry copies the slots into owned
+  storage, so the transient pool need not outlive the call.
+- Functions with **no** safepoint records (e.g. leaves) are skipped — they degrade to a
+  conservative frame, exactly as before.
+
+Needs aarch64-encoder 0.7.0 (`adr` / `adr_placeholder` / `emit_data_word`). Verified: a
+hand-built module whose `main` calls a helper compiles → links → **runs**, returning the
+correct value with the real registration codegen executing at start-up
+(`end_to_end_gc_init_registers_and_runs`); a unit test decodes the patched `ADR` and
+confirms it resolves to the target's exact `__text` offset — base-independently —
+(`func_start_adr_resolves_to_target_offset`).
+
+## 0.39.0 - 2026-07-21 — GC entry wrapper (AOT00-T1 stack-map emission, increment A)
+
+The aarch64 AOT pipeline now injects two synthetic functions into every module and
+makes the image's `_main` the wrapper `__gc_aot_entry`, which calls
+`__gc_init_stackmaps` and then the user's entry, returning its result verbatim:
+
+```
+__gc_aot_entry:  stp x29,x30,[sp,#-16]! ; mov x29,sp
+                 bl __gc_init_stackmaps ; bl <user entry>
+                 ldp x29,x30,[sp],#16 ; ret
+```
+
+They are ordinary functions in the compile set, so `link()` gives them offsets and
+the two-pass linker patches the wrapper's intra-module `BL`s exactly like any other
+call. This is the pre-`main` hook precise GC needs to register its stack maps.
+
+`__gc_init_stackmaps` is a no-op (single `RET`) in THIS increment — the wrapper
+mechanism is landed and proven transparent first; a follow-up fills the init in to
+actually register each function's stack map (so `__gc_collect_precise` resolves real
+frames). The wrapper preserves the user entry's `x0` result across `ldp`/`ret`, and
+`bl __gc_init` running before the argument-less twig `main` clobbers nothing live.
+
+Verified: the full twig-aot suite — including the 5 real compile→link→**execute**
+tests — passes with the wrapper interposed, i.e. every AOT program still produces
+its exact exit code. In-process execution is unaffected (it calls the user entry
+directly, not `_main`); only the macOS object path redirects the entry symbol. Two
+unit tests pin the generated wrapper/init shape.
+
+## 0.38.0 - 2026-07-20 — runtime: __dyn_null_p tagged predicate for native `null?`
+
+Part of the fix restoring McCarthy-lisp list programs on the native-AOT / LLVM backends (`lang-aot` `lang_matrix`). See the umbrella commit for the full story: `null?` was never routed to a runtime call on the tagged native/LLVM path (breaking every cons-walk helper), `list-ref`/`assoc` unboxed a raw-int index/key (→ wrong element), a top-level `(null? …)` predicate result was unboxed instead of truthy-coerced, and cons-cell field access failed the JVM verifier. Verified end-to-end: native list-ref/assoc/length/reverse/append/null? all correct.
 ## 0.37.0 - 2026-07-17 (#118b-2b: retire twig_gc.c, GC comes from gc-core-capi)
 
 The garbage collector is no longer a hand-written C translation unit in this crate.

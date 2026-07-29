@@ -1,0 +1,55 @@
+% ============================================================================
+% electric-potential-conversions — electric-potential-unit → volt factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of energy-conversions.adj, power-conversions.adj, electric-charge-conversions.adj
+% and the other NIST-cited conversion tables: a native tabular relation ingested VERBATIM from a
+% published NIST conversion table. The row states the factor converting the traditional (CGS-EMU)
+% unit of ELECTRIC POTENTIAL — the electromotive force / potential difference — to the SI coherent
+% derived unit, the volt (V):
+%
+%     ? electric_potential_to_volt(abvolt, $v)   % 0.00000001
+%
+% This is a NEW dimension alongside the length/mass/area/volume/time/speed/energy/pressure/
+% force/acceleration/dynamic-viscosity/kinematic-viscosity/magnetic-flux-density/magnetic-flux/
+% illuminance/luminance/radioactivity/absorbed-dose/dose-equivalent/exposure/power/electric-charge
+% tables. Do NOT confuse ELECTRIC POTENTIAL (the abvolt → the volt) with ELECTRIC CHARGE (the
+% abcoulomb → the coulomb) or ELECTRIC RESISTANCE (the abohm → the ohm): those are DIFFERENT
+% quantities that convert to DIFFERENT SI units. Electric potential (the volt) is energy per unit
+% charge (one volt is one joule per coulomb); the abvolt is its traditional (EMU) unit. Put a
+% potential given in abvolts into SI first, then reason (write-once-use-many). Why a `table` and
+% not a hand-written `relate` clause: this is exactly the shape reference data comes in — a
+% published table, not prose. The citable artifact IS the NIST conversion-factors table at the
+% `locator` below; the factor here is a CELL of NIST Special Publication 811, Appendix B.9
+% ("Factors for units listed alphabetically"), defended by one provenance envelope. Each `row`
+% lowers to a ground relation `electric_potential_to_volt(unit, v)`, so the exact lookup above is
+% the ordinary SLD binding query — the engine returns the factor WITH this table's citation as its
+% proof, on the CPU, with zero model calls.
+%
+% HONESTY NOTE (like the power / electric-charge / magnetic-flux tables, only the EXACT defined
+% factor gets a row): NIST SP 811 B.9 prints the "abvolt" potential factor in BOLDFACE, its
+% convention for factors that are EXACT by definition, transcribed here as the plain decimal
+% number of volts it names:
+%
+%     abvolt (abV)   1.0 E-08  →  0.00000001
+%
+% This is exact because the abvolt is DEFINED as exactly 1.0 E-08 volt (the EMU of potential). It
+% terminates; nothing here is a rounded measurement. This table is SPECIFIC to electric potential:
+% a unit of a DIFFERENT quantity — e.g. the "abohm", which NIST SP 811 B.9 lists separately as an
+% electric-RESISTANCE unit converting to the ohm, NOT the volt — therefore gets no row here, and a
+% `? electric_potential_to_volt(abohm, $v)` ABSTAINS rather than mis-converting a resistance unit
+% as if it were a potential unit. The only claim this table makes is "this is the exact factor
+% NIST SP 811 B.9 prints for the abvolt's conversion to the volt" — which is exactly what a
+% byte-check against the cited table verifies. `trust authoritative` — a primary, re-fetchable
+% standards reference. (See ADJ-TABLES.md; and feedback_nothing_human_authored — the factor is a
+% verbatim cell of the cited table, nothing asserted from memory.)
+% ============================================================================
+
+table electric_potential_to_volt {
+    columns unit, volt
+
+    row (abvolt, 0.00000001)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

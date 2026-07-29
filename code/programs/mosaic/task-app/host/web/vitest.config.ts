@@ -10,9 +10,11 @@ export default defineConfig({
     include: ["__tests__/**/*.test.ts"],
     coverage: {
       provider: "v8",
-      // The persistence seam is the Phase-1 logic under test; main.tsx is DOM
-      // boot glue verified live in a browser, and TaskApp.tsx is generated.
-      include: ["src/persistence.ts"],
+      // The host's own logic seams — persistence and theme selection. main.tsx is DOM
+      // boot glue verified live in a browser, and TaskApp.{light,dark}.tsx are
+      // generated. A module with tests but missing from this list is silently exempt
+      // from the threshold below, so add new seams here as they appear.
+      include: ["src/persistence.ts", "src/theme.ts"],
       thresholds: { lines: 90 },
     },
   },

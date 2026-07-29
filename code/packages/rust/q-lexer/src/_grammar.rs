@@ -1,0 +1,258 @@
+// AUTO-GENERATED FILE — DO NOT EDIT
+// Source: q.tokens
+// Regenerate with: grammar-tools compile-tokens q.tokens
+//
+// This file embeds a TokenGrammar as native Rust data structures.
+// Call `token_grammar()` instead of reading and parsing the .tokens file.
+
+#[allow(unused_imports)]
+use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
+#[allow(unused_imports)]
+use std::collections::HashMap;
+
+pub fn token_grammar() -> TokenGrammar {
+    TokenGrammar {
+        definitions: vec![
+            TokenDefinition {
+                name: r#"LE"#.to_string(),
+                pattern: r#"<="#.to_string(),
+                is_regex: false,
+                line_number: 100,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"GE"#.to_string(),
+                pattern: r#">="#.to_string(),
+                is_regex: false,
+                line_number: 101,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"NE"#.to_string(),
+                pattern: r#"<>"#.to_string(),
+                is_regex: false,
+                line_number: 105,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"PLUS"#.to_string(),
+                pattern: r#"+"#.to_string(),
+                is_regex: false,
+                line_number: 135,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"MINUS"#.to_string(),
+                pattern: r#"-"#.to_string(),
+                is_regex: false,
+                line_number: 136,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"STAR"#.to_string(),
+                pattern: r#"*"#.to_string(),
+                is_regex: false,
+                line_number: 137,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"PERCENT"#.to_string(),
+                pattern: r#"%"#.to_string(),
+                is_regex: false,
+                line_number: 138,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"BANG"#.to_string(),
+                pattern: r#"!"#.to_string(),
+                is_regex: false,
+                line_number: 139,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"COMMA"#.to_string(),
+                pattern: r#","#.to_string(),
+                is_regex: false,
+                line_number: 140,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"HASH"#.to_string(),
+                pattern: r#"#"#.to_string(),
+                is_regex: false,
+                line_number: 141,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"UNDERSCORE"#.to_string(),
+                pattern: r#"_"#.to_string(),
+                is_regex: false,
+                line_number: 142,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"AMP"#.to_string(),
+                pattern: r#"&"#.to_string(),
+                is_regex: false,
+                line_number: 143,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"PIPE"#.to_string(),
+                pattern: r#"|"#.to_string(),
+                is_regex: false,
+                line_number: 144,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"TILDE"#.to_string(),
+                pattern: r#"~"#.to_string(),
+                is_regex: false,
+                line_number: 145,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"EQ"#.to_string(),
+                pattern: r#"="#.to_string(),
+                is_regex: false,
+                line_number: 147,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"LT"#.to_string(),
+                pattern: r#"<"#.to_string(),
+                is_regex: false,
+                line_number: 148,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"GT"#.to_string(),
+                pattern: r#">"#.to_string(),
+                is_regex: false,
+                line_number: 149,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"EACH"#.to_string(),
+                pattern: r#"'"#.to_string(),
+                is_regex: false,
+                line_number: 170,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"REDUCE"#.to_string(),
+                pattern: r#"/"#.to_string(),
+                is_regex: false,
+                line_number: 171,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"SCAN"#.to_string(),
+                pattern: r#"\"#.to_string(),
+                is_regex: false,
+                line_number: 172,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"COLON"#.to_string(),
+                pattern: r#":"#.to_string(),
+                is_regex: false,
+                line_number: 174,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"SEMICOLON"#.to_string(),
+                pattern: r#";"#.to_string(),
+                is_regex: false,
+                line_number: 175,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"LPAREN"#.to_string(),
+                pattern: r#"("#.to_string(),
+                is_regex: false,
+                line_number: 177,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"RPAREN"#.to_string(),
+                pattern: r#")"#.to_string(),
+                is_regex: false,
+                line_number: 178,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"LBRACE"#.to_string(),
+                pattern: r#"{"#.to_string(),
+                is_regex: false,
+                line_number: 196,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"RBRACE"#.to_string(),
+                pattern: r#"}"#.to_string(),
+                is_regex: false,
+                line_number: 197,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"LBRACKET"#.to_string(),
+                pattern: r#"["#.to_string(),
+                is_regex: false,
+                line_number: 198,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"RBRACKET"#.to_string(),
+                pattern: r#"]"#.to_string(),
+                is_regex: false,
+                line_number: 199,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"NUMBER"#.to_string(),
+                pattern: r#"[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?"#.to_string(),
+                is_regex: true,
+                line_number: 237,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"NAME"#.to_string(),
+                pattern: r#"[a-zA-Z][a-zA-Z0-9]*"#.to_string(),
+                is_regex: true,
+                line_number: 238,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"NEWLINE"#.to_string(),
+                pattern: r#"\r?\n"#.to_string(),
+                is_regex: true,
+                line_number: 253,
+                alias: None,
+            },
+        ],
+        keywords: vec![],
+        mode: None,
+        skip_definitions: vec![
+            TokenDefinition {
+                name: r#"WHITESPACE"#.to_string(),
+                pattern: r#"[ \t]+"#.to_string(),
+                is_regex: true,
+                line_number: 256,
+                alias: None,
+            },
+        ],
+        reserved_keywords: vec![],
+        escapes: None,
+        error_definitions: vec![],
+        groups: HashMap::new(),
+        case_sensitive: true,
+        version: 1,
+        case_insensitive: false,
+        context_keywords: vec![],
+        soft_keywords: vec![],
+        layout_keywords: vec![],
+        start_mode: None,
+        transitions: vec![],
+    }
+}

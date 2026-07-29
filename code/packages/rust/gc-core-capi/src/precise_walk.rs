@@ -569,4 +569,58 @@ mod tests {
             assert_eq!(stack[4], live); // keep the stack live to the end
         });
     }
+
+    /// End-to-end through `collect_compacting` (the moving-collector C-ABI path, spec §5):
+    /// the *same* walk output that drives a precise collection now drives a **relocating**
+    /// one. A precisely-named, registered-kind object with no conservative in-edge is
+    /// **evacuated** — its address in the root slot is rewritten in place to the new arena
+    /// location — while an unnamed sibling in the same mapped frame is reclaimed. Proves the
+    /// walk feeds `collect_compacting` correctly and that precise roots make moving safe.
+    #[test]
+    fn walk_output_drives_compacting_collection_and_relocates() {
+        use gc_core::FlatHeap;
+        with_clean_registry(|| {
+            let mut heap = FlatHeap::new();
+            let k = heap.register_kind(&[]); // registered kind (no ref fields) → movable
+            let live = heap.alloc(16, k) as usize; // named by a slot → survives + MOVES
+            let dead = heap.alloc(16, k) as usize; // unnamed local of the mapped frame
+
+            // Same synthetic stack as `walk_output_drives_precise_collection`:
+            //   2: fp0 → [fp0]=fp1; 3: ret0=0x4000 (mapped); 4: `live` (named fp1-16);
+            //   5: `dead` (unnamed fp1-8); 6: fp1 → [fp1]=0 (terminate).
+            let mut stack = [0usize; 8];
+            let sp = addr_of(&stack, 0);
+            let fp0 = addr_of(&stack, 2);
+            let fp1 = addr_of(&stack, 6);
+            let base = addr_of(&stack, 8);
+            stack[2] = fp1;
+            stack[3] = 0x4000;
+            stack[4] = live; // fp1 - 16 : NAMED slot
+            stack[5] = dead; // fp1 - 8  : unnamed local
+            stack[6] = 0;
+            stack[7] = 0;
+
+            unsafe { register(0x4000, 0x80, 0, &[-16]) }; // names only fp1 - 16 (`live`)
+
+            let mut slots = Vec::new();
+            let mut regions = Vec::new();
+            core::hint::black_box(&stack);
+            unsafe { build_precise_roots(fp0, sp, base, &mut slots, &mut regions) };
+            assert_eq!(slots, vec![(fp1 as isize - 16) as usize]);
+
+            let _ = dead;
+            let stats = unsafe { heap.collect_compacting(&slots, &regions) };
+            assert_eq!(stats.freed, 1, "the unnamed local is reclaimed");
+            assert_eq!(heap.object_count(), 1, "exactly one object survives (relocated)");
+            assert_eq!(heap.live_bytes(), 16, "live bytes preserved across the move");
+
+            // The relocation differential: the root slot was rewritten in place to the
+            // survivor's NEW arena address — distinct from both original malloc'd blocks.
+            let relocated = stack[4];
+            assert_ne!(relocated, live, "the survivor moved; its root slot was updated");
+            assert_ne!(relocated, dead, "and it is not the reclaimed sibling's address");
+            assert_ne!(relocated, 0, "the rewritten slot names a real object");
+            core::hint::black_box(&stack);
+        });
+    }
 }

@@ -1,0 +1,24 @@
+% ============================================================================
+% electric-potential-conversions.query.adj — worked lookups over the NIST potential → volt table.
+% ============================================================================
+% The shape a consumer produces to convert a potential given in a traditional CGS-EMU unit into
+% SI: it `import`s the grounded table and asks the engine to bind the factor. No arithmetic and
+% no factor is stated by the consumer; the engine returns the cell WITH the table's NIST citation
+% as its proof, on the CPU.
+%
+%   ? electric_potential_to_volt(abvolt, $v)   % 0.00000001   (abvolt = 1.0 E-08 V, exact)
+%
+% And the dimension guard: a unit of a DIFFERENT quantity has no row, so the lookup ABSTAINS
+% rather than mis-converting across dimensions. The "abohm" is an electric-RESISTANCE unit (it
+% converts to the ohm), NOT a potential unit:
+%
+%   ? electric_potential_to_volt(abohm, $v)    % abstains (abohm is resistance → ohm)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli electric-potential-conversions.query.adj
+% ============================================================================
+
+import "electric-potential-conversions.adj"
+
+? electric_potential_to_volt(abvolt, $v)   % expect 0.00000001  (exact NIST SP 811 B.9 factor)
+? electric_potential_to_volt(abohm, $v)    % expect abstain     (resistance unit, wrong dimension)

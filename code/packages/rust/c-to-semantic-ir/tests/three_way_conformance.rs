@@ -305,6 +305,279 @@ fn corpus() -> Vec<Case> {
                    if (x == 0) { r = 100; } else { r = 200; } return r; }\n\
                    int main(void) { printf(\"%d\\n\", classify(0)); return 0; }",
         },
+        // ── milestone 3: early return ────────────────────────────────────────
+        Case {
+            // The headline: idiomatic recursion with a guard clause — impossible
+            // before early-return lifting.
+            label: "recursive fib(20) with a guard clause → 6765",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int fib(int n) { if (n < 2) { return n; } \
+                   return fib(n - 1) + fib(n - 2); }\n\
+                   int main(void) { printf(\"%d\\n\", fib(20)); return 0; }",
+        },
+        Case {
+            label: "chained guard clauses sign(-5) → -1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int sign(int x) { if (x > 0) { return 1; } \
+                   if (x < 0) { return -1; } return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", sign(-5)); return 0; }",
+        },
+        Case {
+            label: "unbraced guard clause (no block) sign2(0) → 0",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int sign2(int x) { if (x > 0) return 1; if (x < 0) return -1; return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", sign2(0)); return 0; }",
+        },
+        Case {
+            label: "if/else where both branches return, larger(7,3) → 7",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int larger(int a, int b) { if (a > b) { return a; } else { return b; } }\n\
+                   int main(void) { printf(\"%d\\n\", larger(7, 3)); return 0; }",
+        },
+        Case {
+            label: "statements before an early return, f(6) → 12",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int f(int x) { int y = x * 2; if (y > 10) { return y; } return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", f(6)); return 0; }",
+        },
+        Case {
+            label: "nested if inside an else, deep(-5) → 300",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int deep(int x) { if (x == 0) { return 100; } \
+                   else { if (x > 0) { return 200; } return 300; } }\n\
+                   int main(void) { printf(\"%d\\n\", deep(-5)); return 0; }",
+        },
+        Case {
+            // Early return still carries the width semantics through.
+            label: "early return of a wrapped uint8 → 44",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int wrap8(int go) { uint8_t c = 200 + 100; if (go > 0) { return c; } return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", wrap8(1)); return 0; }",
+        },
+        Case {
+            label: "early return combined with a loop result → 5050",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   uint32_t total(int go) { uint32_t s = 0; \
+                   for (int i = 1; i <= 100; i = i + 1) { s = s + i; } \
+                   if (go > 0) { return s; } return 0; }\n\
+                   int main(void) { printf(\"%u\\n\", total(1)); return 0; }",
+        },
+        // ── milestone 4: logical operators (&& || !) ─────────────────────────
+        Case {
+            label: "&& range check in-range in_range(5) → 1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int in_range(int x) { if (x >= 0 && x < 10) { return 1; } return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", in_range(5)); return 0; }",
+        },
+        Case {
+            label: "&& range check out-of-range in_range(15) → 0",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int in_range(int x) { if (x >= 0 && x < 10) { return 1; } return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", in_range(15)); return 0; }",
+        },
+        Case {
+            label: "|| out-of-band far(-3) → 1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int far(int x) { if (x < 0 || x > 100) { return 1; } return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", far(-3)); return 0; }",
+        },
+        Case {
+            label: "&& as a value both(3,0) → 0",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int both(int a, int b) { return a && b; }\n\
+                   int main(void) { printf(\"%d\\n\", both(3, 0)); return 0; }",
+        },
+        Case {
+            label: "! as a value negate(0) → 1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int negate(int x) { return !x; }\n\
+                   int main(void) { printf(\"%d\\n\", negate(0)); return 0; }",
+        },
+        Case {
+            label: "! in a condition not_big(3) → 100",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int not_big(int x) { if (!(x > 5)) { return 100; } return 200; }\n\
+                   int main(void) { printf(\"%d\\n\", not_big(3)); return 0; }",
+        },
+        Case {
+            label: "chained && excludes 50 band(50) → 0",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int band(int x) { if (x > 0 && x < 100 && x != 50) { return 1; } return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", band(50)); return 0; }",
+        },
+        Case {
+            label: "mixed || / && / ! precedence classify(4) → 1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int classify(int x, int y) { if ((x > 0 || y > 0) && !(x == y)) { return 1; } return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", classify(4, 4)); return 0; }",
+        },
+        // ── milestone 5: bitwise & | ^ ~ and shifts << >> ────────────────────
+        Case {
+            label: "bitwise and 0xF0 & 0x3C → 48",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { printf(\"%d\\n\", 0xF0 & 0x3C); return 0; }",
+        },
+        Case {
+            label: "bitwise or | xor combine flags(7) → 5",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int flags(int x) { return (x & 1) | (x & 4); }\n\
+                   int main(void) { printf(\"%d\\n\", flags(7)); return 0; }",
+        },
+        Case {
+            label: "xor 0xFF ^ 0x0F → 240",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { printf(\"%d\\n\", 0xFF ^ 0x0F); return 0; }",
+        },
+        Case {
+            label: "~uint8 promotes to int, ~0 → -1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint8_t x = 0; printf(\"%d\\n\", ~x); return 0; }",
+        },
+        Case {
+            label: "(uint8_t)~0 narrows to 255",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint8_t x = ~0; printf(\"%d\\n\", x); return 0; }",
+        },
+        Case {
+            label: "left shift 1 << 10 → 1024",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { printf(\"%d\\n\", 1 << 10); return 0; }",
+        },
+        Case {
+            label: "left shift into a uint8 wraps 1<<9 → 0",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint8_t x = 1 << 9; printf(\"%d\\n\", x); return 0; }",
+        },
+        Case {
+            label: "unsigned right shift is logical 200u >> 1 → 100",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint32_t x = 200; printf(\"%u\\n\", x >> 1); return 0; }",
+        },
+        Case {
+            label: "signed right shift is arithmetic (int8)-128 >> 1 → -64",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { int8_t x = -128; printf(\"%d\\n\", x >> 1); return 0; }",
+        },
+        Case {
+            label: "mask a value x & 0xFF → 52",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int lo(int x) { return x & 0xFF; }\n\
+                   int main(void) { printf(\"%d\\n\", lo(0x1234)); return 0; }",
+        },
+        Case {
+            // The signedness trap: a uint64 with bit 63 set is stored as a
+            // negative int64, so `>>` must be *logical* — high-word extract.
+            label: "uint64 logical right shift of a high-bit value → 2147483648",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint64_t x = 1; uint64_t y = x << 63; \
+                   printf(\"%llu\\n\", (unsigned long long)(y >> 32)); return 0; }",
+        },
+        // ── milestone 6: division & modulo (truncate toward zero) ────────────
+        // All four sign combinations — the whole point is that `/` truncates
+        // (not floors) and `%` takes the sign of the dividend.
+        Case {
+            label: "div/mod + + : 7/2 → 3",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int d(int a, int b) { return a / b; }\n\
+                   int main(void) { printf(\"%d\\n\", d(7, 2)); return 0; }",
+        },
+        Case {
+            label: "div - + truncates toward zero: -7/2 → -3 (not -4)",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int d(int a, int b) { return a / b; }\n\
+                   int main(void) { printf(\"%d\\n\", d(-7, 2)); return 0; }",
+        },
+        Case {
+            label: "div + - : 7/-2 → -3",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int d(int a, int b) { return a / b; }\n\
+                   int main(void) { printf(\"%d\\n\", d(7, -2)); return 0; }",
+        },
+        Case {
+            label: "div - - : -7/-2 → 3",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int d(int a, int b) { return a / b; }\n\
+                   int main(void) { printf(\"%d\\n\", d(-7, -2)); return 0; }",
+        },
+        Case {
+            label: "mod takes the dividend's sign: -7%2 → -1 (not 1)",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int m(int a, int b) { return a % b; }\n\
+                   int main(void) { printf(\"%d\\n\", m(-7, 2)); return 0; }",
+        },
+        Case {
+            label: "mod + - : 7%-2 → 1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int m(int a, int b) { return a % b; }\n\
+                   int main(void) { printf(\"%d\\n\", m(7, -2)); return 0; }",
+        },
+        // (`INT_MIN / -1` is deliberately NOT a conformance case: it is signed-
+        // overflow UB, and real x86 hardware *traps* (SIGFPE) on it even under
+        // `-fwrapv`, so the reference program crashes rather than producing a
+        // value.  The backends still guard it — see the emitted-C `_sir_itdiv`
+        // INT64_MIN/-1 guard and the `int_min_div_is_guarded` unit test — so our
+        // own output is defined, we just don't claim to match a trapping oracle.)
+        Case {
+            label: "unsigned division 100u / 7u → 14",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint32_t a = 100; uint32_t b = 7; \
+                   printf(\"%u\\n\", a / b); return 0; }",
+        },
+        Case {
+            // A uint64 with bit 63 set is a negative int64 in the backends'
+            // storage, so a *signed* division would be wrong — unsigned `/` must
+            // route to the uint64 path.
+            label: "uint64 division of a high-bit value (2^63)/2 → 4611686018427387904",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint64_t x = 1; uint64_t hi = x << 63; \
+                   printf(\"%llu\\n\", (unsigned long long)(hi / 2)); return 0; }",
+        },
+        Case {
+            label: "uint64 modulo of a high-bit value (2^63 + 5) % 2 → 1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint64_t x = 1; uint64_t hi = (x << 63) + 5; \
+                   printf(\"%llu\\n\", (unsigned long long)(hi % 2)); return 0; }",
+        },
+        Case {
+            label: "gcd via a % b (Euclid) gcd(48,36) → 12",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int gcd(int a, int b) { while (b != 0) { int t = a % b; a = b; b = t; } return a; }\n\
+                   int main(void) { printf(\"%d\\n\", gcd(48, 36)); return 0; }",
+        },
+        // ── milestone 7: per-block scoping (shadowing, re-used names) ────────
+        // These were all *rejected* before; each is valid C whose inner binding
+        // shadows an outer one without clobbering it.
+        Case {
+            label: "nested-block shadow doesn't touch the outer v → 1001",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int f(int x) { int v = 1; { uint8_t v = 250; v = v + 6; } return v + 1000; }\n\
+                   int main(void) { printf(\"%d\\n\", f(0)); return 0; }",
+        },
+        Case {
+            label: "shadow in a lifted else-branch, outer v survives → 1001",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int f(int x) { int v = 1; if (x > 0) { return 5; } \
+                   else { uint8_t v = 250; } return v + 1000; }\n\
+                   int main(void) { printf(\"%d\\n\", f(-1)); return 0; }",
+        },
+        // (A self-referential shadow like `int v = v + 5;` is deliberately not a
+        // case: C scopes the inner `v` from its declarator — before the
+        // initializer — so its RHS reads the *uninitialized* inner `v`, which is
+        // UB.  We only conform on well-defined shadowing.)
+        Case {
+            label: "two sequential for-loops re-use i → 13",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int f(void) { int s = 0; \
+                   for (int i = 0; i < 3; i = i + 1) { s = s + i; } \
+                   for (int i = 0; i < 5; i = i + 1) { s = s + i; } return s; }\n\
+                   int main(void) { printf(\"%d\\n\", f()); return 0; }",
+        },
+        Case {
+            label: "shadowing a parameter in a block → 5",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int f(int v) { { int v = 5; return v; } }\n\
+                   int main(void) { printf(\"%d\\n\", f(99)); return 0; }",
+        },
     ]
 }
 

@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.23] - Unreleased
+
+### Changed
+
+- **A bare `*` is now a `select_item` alternative, so it composes in a comma
+  list.** `select_list` was `STAR | select_item { "," select_item }` — `*` was
+  only accepted as the ENTIRE list, so `SELECT a, *` and `SELECT *, a` failed to
+  parse. `select_list` is now simply `select_item { "," select_item }` and
+  `select_item` is `STAR | ( expr [ COLLATE name ] [ [ "AS" ] NAME ] )` (STAR
+  tried first by ordered choice). Bare `SELECT *` still parses (via the STAR
+  alternative); `SELECT a`, `count(*)`, and `a * b` fall through to the expr form
+  because their first token is not a bare `*`. The planner emits a `*` placeholder
+  per wildcard item, which `expand_star_columns` expands in place.
+
+## [0.1.22] - Unreleased
+
+### Added
+
+- **Optional trailing `COLLATE name` on select-items and GROUP BY keys.** The
+  `select_item` rule now parses `expr COLLATE name [ alias ]` (so `SELECT DISTINCT
+  b COLLATE NOCASE` is accepted) and `group_clause` parses a per-key `COLLATE
+  name` tail (so `GROUP BY b COLLATE NOCASE`, and per-key `GROUP BY g, b COLLATE
+  NOCASE`). Both mirror ORDER BY's existing `COLLATE` tail: `COLLATE` is matched
+  as literal text (it is not a lexer keyword, so it and the collation name arrive
+  as `NAME` tokens) and the collation name is validated in the planner. Previously
+  a `COLLATE` suffix parsed only inside a comparison operand.
+
 ## [0.1.21] - Unreleased
 
 ### Added

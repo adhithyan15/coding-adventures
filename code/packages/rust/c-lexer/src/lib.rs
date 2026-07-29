@@ -42,7 +42,9 @@ pub fn tokenize_c(source: &str) -> Vec<Token> {
 
 /// Tokenize C `source`, returning a human-readable error string on failure.
 pub fn try_tokenize_c(source: &str) -> Result<Vec<Token>, String> {
-    create_c_lexer(source).tokenize().map_err(|e| format!("{e:?}"))
+    create_c_lexer(source)
+        .tokenize()
+        .map_err(|e| format!("{e:?}"))
 }
 
 #[cfg(test)]
@@ -91,7 +93,36 @@ mod tests {
 
     #[test]
     fn integer_literals_with_hex_and_suffix() {
-        assert_eq!(values("0xFF 100u 10LL 42"), vec!["0xFF", "100u", "10LL", "42"]);
+        assert_eq!(
+            values("0xFF 100u 10LL 42"),
+            vec!["0xFF", "100u", "10LL", "42"]
+        );
+    }
+
+    #[test]
+    fn float_literals_are_recognized_and_do_not_shadow_ints() {
+        // Fractions, leading/trailing dots, exponents, and `f` suffix all lex as
+        // FLOAT_LIT; a plain integer still lexes as INT_LIT (FLOAT_LIT requires a
+        // `.` or an exponent).
+        assert_eq!(
+            kinds("3.14 .5 10. 1e10 2.5e-3 1.0f 42"),
+            vec![
+                "FLOAT_LIT",
+                "FLOAT_LIT",
+                "FLOAT_LIT",
+                "FLOAT_LIT",
+                "FLOAT_LIT",
+                "FLOAT_LIT",
+                "INT_LIT"
+            ]
+        );
+    }
+
+    #[test]
+    fn float_and_double_are_keywords() {
+        for kw in ["float", "double"] {
+            assert_eq!(kinds(kw), vec!["KEYWORD"], "for `{kw}`");
+        }
     }
 
     #[test]

@@ -254,6 +254,10 @@ pub enum CastType {
 pub enum AggFunc {
     Count,
     Sum,
+    /// `TOTAL(x)` — like `SUM(x)` but ALWAYS returns a REAL and yields `0.0`
+    /// (never NULL) for an empty group or an all-NULL column. This is SQLite's
+    /// non-standard, NULL-free companion to SUM.
+    Total,
     Avg,
     Min,
     Max,
@@ -825,6 +829,13 @@ fn plan_select(
         }]
     };
 
+    // Expand a `*` output column into the base table's columns, in definition
+    // order. `*` is only a placeholder — the rest of the pipeline cannot resolve
+    // it (`LoadColumn("*")` finds no such column and yields NULL), so without
+    // this a `SELECT *` returns a single NULL column literally named `*`. SQLite
+    // expands it to every column of the FROM clause.
+    let output_columns = expand_star_columns(output_columns, schema, &base_table_ref, stmt);
+
     // Now that the output list is known, build the DISTINCT node with one
     // collation per output column. SQLite folds a DISTINCT column only when the
     // output expression is a BARE COLUMN REFERENCE whose column declares a
@@ -1030,12 +1041,45 @@ fn extract_join_condition(join_clause: &GrammarASTNode) -> Result<Option<SqlExpr
 
 /// Plan the `group_clause` into a list of GROUP BY key expressions.
 ///
-/// Grammar: `group_clause = GROUP BY column_ref { "," column_ref }`
+/// Grammar: `group_clause = GROUP BY column_ref [ COLLATE name ]
+///                          { "," column_ref [ COLLATE name ] }`
+///
+/// Because the grammar's optionals/repetitions FLATTEN into `group_clause`'s
+/// direct children, a `COLLATE name` clause appears as two loose tokens sitting
+/// immediately after the `column_ref` node it qualifies (and before the next
+/// key's comma). We therefore walk the children in order — planning each
+/// `column_ref` node, then reading any `COLLATE` tokens that follow it up to the
+/// next node — rather than harvesting `column_ref` nodes in isolation (which
+/// would drop the per-key collation). An explicit collation wraps the key in
+/// `__collate`; codegen groups on the collated value but emits the original.
 fn plan_group_by_exprs(group_clause: &GrammarASTNode) -> Result<Vec<SqlExpr>, PlanError> {
-    find_nodes(group_clause, "column_ref")
-        .iter()
-        .map(|cr| plan_column_ref(cr))
-        .collect()
+    let children = &group_clause.children;
+    let mut keys = Vec::new();
+    for (i, child) in children.iter().enumerate() {
+        let ASTNodeOrToken::Node(node) = child else {
+            continue;
+        };
+        if node.rule_name != "column_ref" {
+            continue;
+        }
+        let mut key = plan_column_ref(node)?;
+        // Collect the loose tokens between this column_ref and the next node —
+        // that window holds this key's optional `COLLATE name` (plus a trailing
+        // comma, which `tail_collation` ignores).
+        let tail: Vec<String> = children[i + 1..]
+            .iter()
+            .take_while(|c| matches!(c, ASTNodeOrToken::Token(_)))
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Token(t) => Some(t.value.to_ascii_uppercase()),
+                ASTNodeOrToken::Node(_) => None,
+            })
+            .collect();
+        if let Some(name) = tail_collation(&tail)? {
+            key = wrap_collate(key, &name);
+        }
+        keys.push(key);
+    }
+    Ok(keys)
 }
 
 /// Plan the `order_clause` into sort keys.
@@ -1368,6 +1412,62 @@ fn collate_comparisons(expr: SqlExpr, ctx: &OrderCollateCtx) -> SqlExpr {
     }
 }
 
+/// Expand a `*` output column into the base table's columns, in the table's
+/// declaration order (what SQLite uses). `*` is a placeholder that nothing
+/// downstream can resolve — `LoadColumn("*")` reads no column and yields NULL —
+/// so a `SELECT *` (plain OR `DISTINCT`) would otherwise return a single NULL
+/// column named `*`. Replacing it here with the concrete columns fixes both.
+///
+/// Scoped to a single base table with no JOIN: a joined `*` would need every
+/// table's columns in join order (and a qualified `t.*` there would need
+/// per-table resolution), which is a separate gap — a JOIN keeps the `*`
+/// placeholder. On a single base table the qualifier is irrelevant, so `t.*`
+/// expands the same as `*`. An unknown table or a table with no reported
+/// columns also passes through unchanged (the query errors elsewhere). A `*`
+/// mixed with other items (`SELECT a, *`) is expanded in place, preserving
+/// position.
+fn expand_star_columns(
+    cols: Vec<OutputColumn>,
+    schema: &dyn SchemaProvider,
+    base_table_ref: &Option<(String, Option<String>)>,
+    stmt: &GrammarASTNode,
+) -> Vec<OutputColumn> {
+    let has_star = cols
+        .iter()
+        .any(|c| matches!(&c.expr, SqlExpr::Column { name, .. } if name == "*"));
+    if !has_star {
+        return cols;
+    }
+    let Some((table, _alias)) = base_table_ref.as_ref() else {
+        return cols;
+    };
+    if !find_nodes(stmt, "join_clause").is_empty() {
+        return cols;
+    }
+    let names = match schema.column_names(table) {
+        Ok(n) if !n.is_empty() => n,
+        _ => return cols,
+    };
+    let mut out = Vec::with_capacity(cols.len() + names.len());
+    for c in cols {
+        match &c.expr {
+            SqlExpr::Column { name, .. } if name == "*" => {
+                for cn in &names {
+                    out.push(OutputColumn {
+                        expr: SqlExpr::Column {
+                            table: None,
+                            name: cn.clone(),
+                        },
+                        alias: None,
+                    });
+                }
+            }
+            _ => out.push(c),
+        }
+    }
+    out
+}
+
 /// One collation per DISTINCT **output** column, positionally parallel to the
 /// emitted row (`None` = default BINARY, i.e. dedupe on the bytes as-is).
 ///
@@ -1425,15 +1525,48 @@ fn distinct_output_collations(
                     out.push(ctx.collations.get(&cname.to_ascii_lowercase()).cloned());
                 }
             }
-            // A bare column reference inherits its declared collation. An ALIAS
-            // is irrelevant — the collation comes from the expression, so
-            // `c AS y` still folds. (`resolve_column_collation` yields `None` for
-            // any non-column expression, which is exactly the "expressions drop
-            // the collation" rule.)
-            expr => out.push(resolve_column_collation(expr, &ctx)),
+            // An explicit `COLLATE` on the select-item (wrapped as
+            // `__collate(inner, 'NAME')`) OUTRANKS any declared collation, and a
+            // bare column reference inherits its declared collation. An ALIAS is
+            // irrelevant — the collation comes from the expression, so `c AS y`
+            // still folds. (`effective_output_collation` yields `None` for any
+            // other expression, which is exactly the "expressions drop the
+            // collation" rule.)
+            expr => out.push(effective_output_collation(expr, &ctx)),
         }
     }
     out
+}
+
+/// The collating sequence a DISTINCT output column dedupes under: an explicit
+/// `COLLATE` (carried as a `__collate` wrapper) if present — with `BINARY`
+/// meaning "compare bytes as-is", represented as `None` — otherwise the column's
+/// declared collation, otherwise `None`.
+fn effective_output_collation(expr: &SqlExpr, ctx: &OrderCollateCtx) -> Option<String> {
+    if let Some(name) = collate_wrapper_name(expr) {
+        return if name.eq_ignore_ascii_case("BINARY") {
+            None
+        } else {
+            Some(name)
+        };
+    }
+    resolve_column_collation(expr, ctx)
+}
+
+/// The collation name from a `__collate(inner, 'NAME')` wrapper, or `None` for
+/// any other expression. The production counterpart to the WHERE-comparison
+/// pass's `is_collate_call` boolean — here we need the name itself, to feed the
+/// DISTINCT collation vector.
+fn collate_wrapper_name(expr: &SqlExpr) -> Option<String> {
+    match expr {
+        SqlExpr::FunctionCall { name, args, .. } if name == "__collate" && args.len() == 2 => {
+            match &args[1] {
+                SqlExpr::Literal(SqlValue::Text(coll)) => Some(coll.clone()),
+                _ => None,
+            }
+        }
+        _ => None,
+    }
 }
 
 fn resolve_column_collation(expr: &SqlExpr, ctx: &OrderCollateCtx) -> Option<String> {
@@ -1687,50 +1820,95 @@ fn plan_limit(limit_clause: &GrammarASTNode) -> Result<(Option<i64>, Option<i64>
 
 /// Plan the `select_list` into a list of `OutputColumn`s.
 ///
-/// Grammar: `select_list = STAR | select_item { "," select_item }`
-/// Grammar: `select_item = expr [ AS NAME ]`
+/// Grammar: `select_list = select_item { "," select_item }`
+/// Grammar: `select_item = STAR | ( expr [ COLLATE name ] [ [ "AS" ] NAME ] )`
 fn plan_select_list(select_list: &GrammarASTNode) -> Result<Vec<OutputColumn>, PlanError> {
-    // Check for SELECT * (STAR token).
-    if has_token(select_list, "*") {
-        return Ok(vec![OutputColumn {
-            expr: SqlExpr::Column {
-                table: None,
-                name: "*".to_string(),
-            },
-            alias: None,
-        }]);
-    }
-
-    // Plan each select_item.
+    // Every item — including a bare `*` — is a `select_item` now, so `*` can be
+    // one item among others (`SELECT a, *`). `plan_select_item` emits a `*`
+    // placeholder for the wildcard, which `expand_star_columns` expands in place.
     find_nodes(select_list, "select_item")
         .iter()
         .map(|item| plan_select_item(item))
         .collect()
 }
 
+/// The `*` placeholder output column. `expand_star_columns` replaces it with the
+/// base table's columns (in place, so it composes with other select items).
+fn star_output_column() -> OutputColumn {
+    OutputColumn {
+        expr: SqlExpr::Column {
+            table: None,
+            name: "*".to_string(),
+        },
+        alias: None,
+    }
+}
+
 /// Plan a single `select_item` node.
 ///
-/// Grammar: `select_item = expr [ "AS" NAME ]`
+/// Grammar: `select_item = STAR | ( expr [ COLLATE name ] [ [ "AS" ] NAME ] )`
 fn plan_select_item(item: &GrammarASTNode) -> Result<OutputColumn, PlanError> {
-    // The first child node is the expression.
-    let expr_node = item
-        .children
-        .iter()
-        .find_map(|c| {
-            if let ASTNodeOrToken::Node(n) = c {
-                Some(n)
-            } else {
-                None
-            }
-        })
-        .ok_or_else(|| PlanError::UnsupportedStatement("empty select_item".to_string()))?;
+    // The first child node is the expression. A bare `*` item (the STAR
+    // alternative) has NO child expr node — just a `*` token — so it is the
+    // wildcard placeholder.
+    let expr_node = match item.children.iter().find_map(|c| {
+        if let ASTNodeOrToken::Node(n) = c {
+            Some(n)
+        } else {
+            None
+        }
+    }) {
+        Some(n) => n,
+        None if has_token(item, "*") => return Ok(star_output_column()),
+        None => return Err(PlanError::UnsupportedStatement("empty select_item".to_string())),
+    };
 
     let expr = plan_expression(expr_node)?;
+
+    // An explicit trailing `COLLATE name` (grammar: `select_item = expr
+    // [ COLLATE name ] [ alias ]`) wraps the expression in the internal
+    // `__collate` builtin — the same representation explicit COLLATE uses in a
+    // WHERE comparison. `distinct_output_collations` reads that wrapper to fold a
+    // `SELECT DISTINCT b COLLATE NOCASE` key, after which `plan_select` peels the
+    // wrapper back off (collation never changes the emitted value or column name).
+    let expr = match tail_collation(&direct_token_uppers(item)) {
+        Ok(Some(name)) => wrap_collate(expr, &name),
+        Ok(None) => expr,
+        Err(e) => return Err(e),
+    };
 
     // Look for an AS alias.
     let alias = extract_as_alias(item);
 
     Ok(OutputColumn { expr, alias })
+}
+
+/// Uppercased text of every DIRECT token child of `node` (nested nodes skipped),
+/// in order — the raw material for reading a trailing `COLLATE name` clause off a
+/// `select_item` or a `group_clause` key.
+fn direct_token_uppers(node: &GrammarASTNode) -> Vec<String> {
+    node.children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) => Some(t.value.to_ascii_uppercase()),
+            ASTNodeOrToken::Node(_) => None,
+        })
+        .collect()
+}
+
+/// Read an optional trailing `COLLATE name` clause from a token list.
+///
+/// Returns `Ok(Some(NAME))` for a valid `COLLATE NOCASE|RTRIM|BINARY`, an error
+/// for an unknown collation (matching SQLite's "no such collating sequence"), and
+/// `Ok(None)` when there is no `COLLATE` — OR when a bare trailing `collate`
+/// token has nothing after it. That last case is not a collation clause but an
+/// (unusual) identifier named `collate` the grammar left as a select-item alias
+/// or the parser would already have rejected; either way it is not ours to fold.
+fn tail_collation(direct_tok_uppers: &[String]) -> Result<Option<String>, PlanError> {
+    match direct_tok_uppers.iter().position(|t| t == "COLLATE") {
+        Some(p) if p + 1 < direct_tok_uppers.len() => collate_name_after(direct_tok_uppers),
+        _ => Ok(None),
+    }
 }
 
 /// Extract a `select_item` alias.
@@ -1761,9 +1939,24 @@ fn extract_as_alias(node: &GrammarASTNode) -> Option<String> {
     // Implicit `name` (no AS): the first bare identifier token directly under
     // the item. Restricting to Name-type tokens keeps us from mistaking any
     // stray keyword/punctuation for an alias.
+    //
+    // A trailing `COLLATE name` clause (grammar: `expr [ COLLATE name ] [ alias ]`)
+    // arrives as TWO Name-type tokens — `COLLATE` is not a lexer keyword, and the
+    // collation name is a generic NAME — so both must be skipped or the collation
+    // name would be read as an implicit alias (`SELECT b COLLATE NOCASE` would be
+    // named `NOCASE`). Skip the `COLLATE` token and the one immediately after it.
+    let mut skip_next = false;
     for child in children {
+        if skip_next {
+            skip_next = false; // the collation name — never an alias
+            continue;
+        }
         if let ASTNodeOrToken::Token(tok) = child {
             if tok.type_ == lexer::token::TokenType::Name {
+                if tok.value.eq_ignore_ascii_case("COLLATE") {
+                    skip_next = true;
+                    continue;
+                }
                 return Some(tok.value.clone());
             }
         }
@@ -1863,6 +2056,7 @@ fn try_plan_as_aggregate(func_call: &GrammarASTNode) -> Option<AggregateItem> {
     let agg_func = match name.to_uppercase().as_str() {
         "COUNT" => AggFunc::Count,
         "SUM" => AggFunc::Sum,
+        "TOTAL" => AggFunc::Total,
         "AVG" => AggFunc::Avg,
         "MIN" => AggFunc::Min,
         "MAX" => AggFunc::Max,
@@ -3400,9 +3594,20 @@ fn plan_function_call(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
     let agg_func = match name.to_uppercase().as_str() {
         "COUNT" => Some(AggFunc::Count),
         "SUM" => Some(AggFunc::Sum),
+        "TOTAL" => Some(AggFunc::Total),
         "AVG" => Some(AggFunc::Avg),
         "MIN" => Some(AggFunc::Min),
         "MAX" => Some(AggFunc::Max),
+        // `GROUP_CONCAT(x [, sep])` is an aggregate too. Lowering it to
+        // `SqlExpr::Aggregate` here (rather than leaving it a `FunctionCall`, as
+        // it once was) means an aggregate SELECT item has ONE representation, so
+        // `compile_expr` can resolve it to its accumulator slot like COUNT/SUM —
+        // which is what lets a `group_concat` column be re-projected into
+        // SELECT-list order. The separator (the optional 2nd arg, default ",") is
+        // captured onto the func; `arg` below still resolves to the 1st argument.
+        "GROUP_CONCAT" => Some(AggFunc::GroupConcat {
+            sep: group_concat_separator(node),
+        }),
         _ => None,
     };
     // `MIN(a, b, …)` / `MAX(a, b, …)` with two-or-more arguments are the SCALAR
@@ -3766,8 +3971,12 @@ mod tests {
 
     /// The simplest possible plan: project all columns from a single scan.
     ///
+    /// `SELECT *` is expanded at plan time into the base table's columns, in
+    /// schema-definition order (`users` = id, name, age, city, status), so the
+    /// downstream stages see concrete column references — never a `*` placeholder.
+    ///
     /// ```text
-    /// Project { * }
+    /// Project { id, name, age, city, status }
     ///   Scan { users }
     /// ```
     #[test]
@@ -3778,9 +3987,17 @@ mod tests {
             "Root must be Project, got: {plan:?}"
         );
         if let LogicalPlan::Project { input, columns } = &plan {
-            assert!(
-                matches!(columns[0].expr, SqlExpr::Column { name: ref n, .. } if n == "*"),
-                "Expected * projection"
+            let names: Vec<&str> = columns
+                .iter()
+                .map(|c| match &c.expr {
+                    SqlExpr::Column { name, .. } => name.as_str(),
+                    other => panic!("Expected expanded Column, got {other:?}"),
+                })
+                .collect();
+            assert_eq!(
+                names,
+                ["id", "name", "age", "city", "status"],
+                "`*` must expand to the table's columns in definition order"
             );
             assert!(matches!(**input, LogicalPlan::Scan { .. }));
         }
@@ -5048,11 +5265,16 @@ mod tests {
     }
 
     #[test]
-    fn test_order_by_ordinal_over_star_is_unchanged() {
-        // With `SELECT *` the output column count/identity isn't known at plan
-        // time, so a positional key is left as the literal (no guess, no error).
+    fn test_order_by_ordinal_over_expanded_star() {
+        // `SELECT *` is expanded into the base table's columns before ORDER BY
+        // ordinals are resolved, so `ORDER BY 1` now binds to the first expanded
+        // column (`t` = id, x, y, …) exactly as SQLite does, rather than being
+        // left as an unresolved literal.
         let keys = sort_keys_of("SELECT * FROM t ORDER BY 1");
         assert_eq!(keys.len(), 1);
-        assert_eq!(keys[0].expr, SqlExpr::Literal(SqlValue::Int(1)));
+        assert_eq!(
+            keys[0].expr,
+            SqlExpr::Column { table: None, name: "id".to_string() }
+        );
     }
 }

@@ -1,0 +1,21 @@
+% ============================================================================
+% magnetic-flux-density-conversions.query.adj — a worked lookup over the
+% magnetic-flux-density table.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a "how many tesla is
+% one gauss?" question: it states no conversion fact — it only `import`s the grounded
+% table and asks binding queries. The native adj-lang engine resolves each `?` against
+% the table's rows (lowered to `magnetic_flux_density_to_teslas` relations) and returns
+% the binding + the table's source/locator/trust. A unit not in the table abstains
+% honestly — the engine never invents a factor (e.g. a `kilogauss`, which this table
+% does not carry a row for).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli magnetic-flux-density-conversions.query.adj
+% ============================================================================
+
+import "magnetic-flux-density-conversions.adj"
+
+? magnetic_flux_density_to_teslas(gauss, $v)      % expect 0.0001
+? magnetic_flux_density_to_teslas(gamma, $v)      % expect 0.000000001
+? magnetic_flux_density_to_teslas(kilogauss, $v)  % expect abstain — no row

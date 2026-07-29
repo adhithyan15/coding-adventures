@@ -35,7 +35,7 @@ part is a **planet-god**. Read it as "[god]'s day":
 | French | ← Latin | planet-god | English echo |
 |---|---|---|---|
 | **lundi** | *lūnae diēs* | the **Moon** (*lune*) | *Mon*day = Moon-day |
-| **mardi** | *Martis diēs* | **Mars** | *Tues*day (Tiw, the Norse war-god = Mars) |
+| **mardi** | *Martis diēs* | **Mars** | *Tues*day (Tiw, the Germanic war-god = Mars) |
 | **mercredi** | *Mercuriī diēs* | **Mercury** | *Wednes*day (Woden = Mercury) |
 | **jeudi** | *Jovis diēs* | **Jupiter** (*Jove*) | *Thurs*day (**Thor** = Jupiter) |
 | **vendredi** | *Veneris diēs* | **Venus** | *Fri*day (Frigg/Freya = Venus) |

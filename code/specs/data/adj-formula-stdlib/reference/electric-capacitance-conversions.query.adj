@@ -1,0 +1,24 @@
+% ============================================================================
+% electric-capacitance-conversions.query.adj — worked lookups over the NIST capacitance → farad table.
+% ============================================================================
+% The shape a consumer produces to convert a capacitance given in a traditional CGS-EMU unit into
+% SI: it `import`s the grounded table and asks the engine to bind the factor. No arithmetic and
+% no factor is stated by the consumer; the engine returns the cell WITH the table's NIST citation
+% as its proof, on the CPU.
+%
+%   ? electric_capacitance_to_farad(abfarad, $v)   % 1000000000   (abfarad = 1.0 E+09 F, exact)
+%
+% And the dimension guard: a unit of a DIFFERENT quantity has no row, so the lookup ABSTAINS
+% rather than mis-converting across dimensions. The "abhenry" is an INDUCTANCE unit (it converts
+% to the henry), NOT a capacitance unit:
+%
+%   ? electric_capacitance_to_farad(abhenry, $v)   % abstains (abhenry is inductance → henry)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli electric-capacitance-conversions.query.adj
+% ============================================================================
+
+import "electric-capacitance-conversions.adj"
+
+? electric_capacitance_to_farad(abfarad, $v)   % expect 1000000000  (exact NIST SP 811 B.9 factor)
+? electric_capacitance_to_farad(abhenry, $v)   % expect abstain     (inductance unit, wrong dimension)

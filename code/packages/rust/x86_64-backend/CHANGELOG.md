@@ -1,5 +1,91 @@
 # Changelog — `x86_64-backend`
 
+## 0.35.0 - 2026-07-29 — `gc_register_ref_array_kind` builtin (frontend array GC, AOT00-T5 §7)
+
+- **`gc_register_ref_array_kind` `BuiltinSig` row** (`(fixed, fixed_count, tail_from) -> kind_id`)
+  — a `call_builtin` lowers to a `call` to `__twig_gc_register_ref_array_kind` via the generic
+  `__twig_<name>` dispatch (three args in rdi/rsi/rdx), the C-ABI seam a language frontend's
+  **array** type calls to declare its layout so the collector traces — and under compaction
+  relocates — the array + its elements precisely instead of pinning them. Test
+  `gc_register_ref_array_kind_emits_external_twig_call` (SysV).
+
+## 0.34.0 - 2026-07-27 — `gc_collect_incremental_*` builtin trio (frontend incremental GC, AOT00-T4 §6)
+
+- Three new `V1_BUILTINS` entries — `gc_collect_incremental_start` (0 args, void),
+  `gc_collect_incremental_step` (1 arg = budget, returns 1/0), `gc_collect_incremental_finish`
+  (0 args, returns freed count), mirroring the aarch64 backend. The generic `__twig_<name>`
+  `call_builtin` dispatch auto-emits `call __twig_gc_collect_incremental_*` (no per-name
+  lowering). New emission unit test asserts the three external reloc symbols.
+
+## 0.33.0 - 2026-07-24 — `gc_collect_compacting` builtin (frontend GC.compact, AOT00-T3 §5)
+
+- New `V1_BUILTINS` entry `gc_collect_compacting` (0 args, returns the freed count) — the
+  moving/compacting collect, mirroring the aarch64 backend. The generic `__twig_<name>`
+  `call_builtin` dispatch auto-emits a `call __twig_gc_collect_compacting` (no per-name
+  lowering). A native program can now trigger a compaction. New emission unit test asserts
+  the external reloc symbol.
+
+## 0.32.0 - 2026-07-23 — GC safepoints at self-recursive calls (AOT00-T1 x86_64 PR-x4)
+
+Closes the recursive-frame precision gap in `compile_function_with_globals_and_stackmap`.
+
+A cross-function/builtin/libm call is lowered as `call rel32` with a `PltRel32`
+relocation, so `build_stack_map` recovers its return address from the reloc
+(`patch_offset + 4`). A **self-recursive** `call <fn_name>`, however, is lowered with an
+internal label fixup (`call_label`) and carries *no* relocation — so it was invisible to
+`build_stack_map`, and a collection fired inside a recursive frame fell back to a
+conservative scan (safe, but it could pin integer look-alikes that happen to look like
+pointers). This mattered in practice: recursive `dynval`/lisp functions that allocate
+(`cons`) are exactly the shape that recurses with live references held across the call.
+
+Now `compile_one_with_globals` records each self-recursive call's return address
+(`asm.len()` immediately after the 5-byte `call rel32`) and passes them to
+`build_stack_map`, which adds a safepoint at each. `StackMapBuilder::safepoint` dedups and
+keeps PCs ascending, so the two safepoint sources compose without ordering hazards. The
+recursive frame's live references are now mapped precisely, exactly like every other call
+site. Machine code is unchanged — this only augments the derived stack map.
+
+Unlike aarch64 (fixed-width; it post-scans finished code for every `BL`, so it never had
+this gap), x86-64 is variable-width and cannot post-scan, so the recursive return address
+must be captured at emit time. No new lowering, no ABI change. Tests: two new unit tests —
+a purely-recursive function (zero relocs) now yields exactly one safepoint naming its live
+`any` slot, and a mixed recursive+builtin function yields two ascending safepoints.
+
+## 0.31.0 - 2026-07-23 — V1_BUILTINS: GC collection + observability (AOT00-T1 x86_64 PR-x3)
+
+Four `call_builtin` entries the native GC-stress differential drives (→ `__twig_gc_*`
+aliases in gc-core-capi), mirroring the aarch64 backend: `gc_collect` (forced
+conservative full collect, void), `gc_collect_precise` (precise-roots frame walk,
+returns freed count), `gc_live_bytes` (live payload bytes), `gc_stackmap_count`
+(registered-function count). No new lowering — the generic `call_builtin` marshaller
+emits the `CALL`.
+
+## 0.30.0 - 2026-07-22 — GC precise-roots stack-map emission (AOT00-T1)
+
+`compile_function_with_globals_and_stackmap` — the x86-64 analogue of the aarch64
+backend's `compile_with_globals_and_stackmap` — returns a `gc_core::StackMapRecord` per
+call-return safepoint, naming the reference-typed frame slots live there so
+`__gc_collect_precise` can resolve a return address to its exact roots. First step of
+porting precise roots to the native x86-64 path (Linux/Windows).
+
+- **Reference slots** are chosen by the same deny-list as aarch64 (`is_gc_root_ty`:
+  everything except the machine scalars `u4…void` — notably `any` counts). Their
+  `StackMapRecord::slots` values are the RBP-relative *negative* offsets
+  `[rbp − 8 − 8·slot]` the walker reads back as `rbp + offset`.
+- **Safepoints** are read from the emitted `call rel32` relocations: each `PltRel32`
+  reloc's `patch_offset + 4` is the return address after the call. x86-64 is
+  variable-width, so unlike the fixed-width aarch64 backend (which post-scans finished
+  code) this captures return addresses at their true positions. Every cross-function,
+  builtin and libm call — the collection-triggering ones — is covered; a self-recursive
+  `call_label` (no reloc) is not yet a safepoint, which costs precision on recursive
+  frames (conservative fallback) but is never unsafe.
+- The emitted machine code is **byte-for-byte identical** to
+  `compile_function_with_globals` — the map is derived, not injected. New gc-core
+  dependency; 4 unit tests; existing entry points unchanged.
+
+## 0.29.0 - 2026-07-20 — V1_BUILTINS: dyn_null_p (native `null?`)
+
+Part of the fix restoring McCarthy-lisp list programs on the native-AOT / LLVM backends (`lang-aot` `lang_matrix`). See the umbrella commit for the full story: `null?` was never routed to a runtime call on the tagged native/LLVM path (breaking every cons-walk helper), `list-ref`/`assoc` unboxed a raw-int index/key (→ wrong element), a top-level `(null? …)` predicate result was unboxed instead of truthy-coerced, and cons-cell field access failed the JVM verifier. Verified end-to-end: native list-ref/assoc/length/reverse/append/null? all correct.
 ## 0.28.0 - 2026-07-11 (E6d-2b: dyn_box_int runtime builtin)
 
 E6d-2b: register `dyn_box_int` in `V1_BUILTINS` (`call __dyn_box_int`), mirroring aarch64 + the existing `dyn_unbox_int`.

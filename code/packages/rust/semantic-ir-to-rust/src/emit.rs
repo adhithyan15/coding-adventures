@@ -914,7 +914,10 @@ fn emit_try_catch(
                 dpad, kw, types
             );
             let bpad = indent_str(arm + 2);
-            // `rescue Foo => e` binds the caught exception's message value.
+            // `rescue Foo => e` binds the caught exception ITSELF — a
+            // `Value::Exception` carrying the class tag and message, so
+            // `e.class` / `e.is_a?` / `e.message` all answer.  It used to bind
+            // the message STRING (see `exc_value`).
             if let Some(bind) = &r.binding {
                 let _ = writeln!(
                     out,
@@ -1620,6 +1623,15 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "case_eq" => ("__sir::case_eq", false),
         "<" => ("__sir::lt", false),
         ">" => ("__sir::gt", false),
+        // The Ruby frontend lowers `a == b`/`a != b`/`a <= b`/`a >= b` to these
+        // operator-spelling builtins (`lower_comparison_chain`).  `==` is a
+        // synonym for the `=` handled above; the other three route to the new
+        // `ne`/`le`/`ge` runtime helpers.  Without these arms `puts(1 == 1)`
+        // hit the `_` fallback and emitted a call to a nonexistent function.
+        "==" => ("__sir::eq", false),
+        "!=" => ("__sir::ne", false),
+        "<=" => ("__sir::le", false),
+        ">=" => ("__sir::ge", false),
         "cons" => ("__sir::cons", false),
         "car" => ("__sir::car", false),
         "cdr" => ("__sir::cdr", false),
@@ -2322,11 +2334,15 @@ pub fn sanitize_ident(s: &str) -> String {
     if is_valid_rust_ident(s) && !is_rust_keyword(s) {
         return s.to_string();
     }
-    if is_rust_keyword(s) {
+    if is_rust_keyword(s) && !is_raw_incompatible_keyword(s) {
         // Raw-identifier syntax — keeps the original spelling
         // visible in tooling.
         return format!("r#{}", s);
     }
+    // Either not a valid identifier shape, or a keyword that raw-identifier
+    // syntax cannot represent (`self` / `Self` / `super` / `crate` — rustc
+    // rejects `r#self` etc. outright with "cannot be a raw identifier",
+    // verified against rustc 1.97), so hex-encode instead.
     let mut out = String::with_capacity(s.len() + 4);
     out.push('_'); // prefix so the result never starts with a digit
     out.push('_');
@@ -2338,6 +2354,15 @@ pub fn sanitize_ident(s: &str) -> String {
         }
     }
     out
+}
+
+/// The subset of `is_rust_keyword` that raw-identifier syntax cannot
+/// represent. rustc special-cases these because they carry path-resolution
+/// meaning `r#` can't override — `r#self`, `r#Self`, `r#super`, and
+/// `r#crate` are all hard compile errors ("cannot be a raw identifier"),
+/// unlike ordinary keywords (e.g. `r#extern`, `r#fn`) which raw-encode fine.
+fn is_raw_incompatible_keyword(s: &str) -> bool {
+    matches!(s, "self" | "Self" | "super" | "crate")
 }
 
 fn is_valid_rust_ident(s: &str) -> bool {
@@ -2358,19 +2383,21 @@ fn is_valid_rust_ident(s: &str) -> bool {
 }
 
 fn is_rust_keyword(s: &str) -> bool {
-    // 2021-edition keywords + reserved.  `r#` raw-identifier
-    // syntax can wrap most of these; some (`crate`, `self`,
-    // `super`, `extern`) cannot — for those we fall back to the
-    // underscore-encoded form below by ALSO returning `false`
-    // here.  In v0 we accept the `r#` form for all common
-    // keywords; the few un-raw-able ones get encoded.
+    // 2021-edition strict + reserved keywords (The Rust Reference,
+    // "Keywords" chapter). `r#` raw-identifier syntax can wrap most of
+    // these; `self`/`Self`/`super`/`crate` cannot (verified against
+    // rustc 1.97 — see `is_raw_incompatible_keyword`, which routes those
+    // four to the underscore-encoded fallback in `sanitize_ident`
+    // instead of `r#`.
     matches!(
         s,
         "as" | "break"
             | "const"
             | "continue"
+            | "crate"
             | "else"
             | "enum"
+            | "extern"
             | "false"
             | "fn"
             | "for"
@@ -2386,8 +2413,11 @@ fn is_rust_keyword(s: &str) -> bool {
             | "pub"
             | "ref"
             | "return"
+            | "self"
+            | "Self"
             | "static"
             | "struct"
+            | "super"
             | "trait"
             | "true"
             | "type"
@@ -2467,6 +2497,41 @@ mod tests {
     fn sanitize_uses_raw_for_keywords() {
         assert_eq!(sanitize_ident("fn"), "r#fn");
         assert_eq!(sanitize_ident("type"), "r#type");
+    }
+
+    #[test]
+    fn is_rust_keyword_flags_path_keywords_missing_from_the_original_list() {
+        // `crate`, `extern`, `self`, `Self`, and `super` are genuine Rust
+        // keywords (a bare `let self = 5;` etc. is a compile error under
+        // rustc 1.97) but were missing from `is_rust_keyword`, so
+        // `sanitize_ident` passed them through completely unmodified
+        // (`is_valid_rust_ident(s) && !is_rust_keyword(s)` was true for
+        // all five).
+        assert!(is_rust_keyword("crate"));
+        assert!(is_rust_keyword("extern"));
+        assert!(is_rust_keyword("self"));
+        assert!(is_rust_keyword("Self"));
+        assert!(is_rust_keyword("super"));
+
+        // `extern` raw-encodes fine, like the pre-existing entries.
+        assert_eq!(sanitize_ident("extern"), "r#extern");
+
+        // `self`/`Self`/`super`/`crate` cannot be raw identifiers (rustc
+        // rejects `r#self` etc. outright), so they must fall back to the
+        // underscore-encoded form instead of `r#`.
+        assert_eq!(sanitize_ident("self"), "__self");
+        assert_eq!(sanitize_ident("Self"), "__Self");
+        assert_eq!(sanitize_ident("super"), "__super");
+        assert_eq!(sanitize_ident("crate"), "__crate");
+
+        // Ordinary identifiers — including close look-alikes — are
+        // unaffected by the addition.
+        assert!(!is_rust_keyword("crate_name"));
+        assert!(!is_rust_keyword("myself"));
+        assert!(!is_rust_keyword("superclass"));
+        assert_eq!(sanitize_ident("crate_name"), "crate_name");
+        assert_eq!(sanitize_ident("myself"), "myself");
+        assert_eq!(sanitize_ident("superclass"), "superclass");
     }
 
     #[test]

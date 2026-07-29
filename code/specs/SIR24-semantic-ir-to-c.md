@@ -74,10 +74,30 @@ then (4) `emit::emit_module`.
 `Closures`, `Pairs`, `Symbols`, `Strings`, `DynamicTyping`,
 `OptionalTypeAnnotations`, `MutualRecursion`, `Globals`.
 
-**v0 rejects** (clean, source-positioned `UnsupportedFeature`):
+**Landed since v0** (`ACCEPTED_FEATURES` grows one version-bumped batch at a
+time — see the roadmap): the SIR26 integer conversions (`Conversions`,
+`SizedIntegers`, `Unsigned`, `WrappingArithmetic`); and the SIR16 batches
+`Loops` + `MutableBindings` (0.3.0–0.5.0), `Sequences` (0.6.0), `Maps`
+(0.7.0 — the `SIR_MAP` assoc-array with `MapLit`/`MapGet`/`MapSet`), `Floats`
+(0.8.0 — `FloatLit` on the v0 `SIR_FLOAT` tag; emitter-only, the runtime
+already carried the float path), `ShortCircuit` (0.9.0 — `LogicalAnd`/
+`LogicalOr` lowered to a truthiness-branch overwrite, reusing the eager
+`and`/`or` builtin lowering; yields the deciding operand), `DefaultParams`
+(SIR19, 0.10.0 — the `SIR_MISSING` sentinel now exists in the runtime; a
+`DirectCall` pads omitted trailing defaults with `_sir_missing()` and each
+function opens with an `if (_sir_is_missing(p)) { p = <default>; }` prologue),
+`KeywordParams` (SIR19, 0.11.0 — KW6: a `KeywordArg` is resolved to its
+callee's parameter slot BY NAME at emit time, using the thread-local signature
+map's parameter names, producing a plain positional call), and `Exceptions`
+(SIR17, 0.12.0 — the `setjmp`/`longjmp` handler stack of §"Exception model":
+`SIR_ERROR` value, a baked-in class-ancestry table for `rescue`-by-class
+matching, a two-handler structure so `ensure` runs even when a rescue body
+raises; `raise SomeClass` and `retry` deferred).
+
+**Still rejects** (clean, source-positioned `UnsupportedFeature`):
 `TailCalls` (C does not guarantee TCO), `Intrinsics` (empty whitelist), and
-every later feature until its batch lands (`Floats`, `Loops`, `Sequences`,
-`Maps`, `Exceptions`, `Classes`, … — see the roadmap).  `Bignum` stays
+every not-yet-landed feature (`NDArrays`, `Constants`,
+`Classes`, … — see the roadmap).  `Bignum` stays
 rejected until a bignum runtime ships, so a module that *needs* arbitrary
 precision is refused rather than silently truncated.
 
@@ -342,8 +362,23 @@ lockstep:
 4. **Collections** — the `__method__` dispatch catalog
    (String / Array / Hash / Numeric / Symbol / Object, block and non-block).
 5. **Exceptions** — `setjmp`/`longjmp` + typed runtime errors.
-6. **OOP** — `Classes` / `Constants` / `InstanceVars` / `ClassVars`, then
-   `Modules` (mixins / MRO).
+6. **OOP** (mirroring the Ruby backend's landed 7-slice arc) — slice 1
+   (`Classes` + `Constants`: the `SIR_INSTANCE` runtime, an empty class, `Foo.new`
+   → `_sir_new_instance`, and a `_sir_const_set`/`_sir_const_get` table) landed in
+   0.13.0; instance **methods** (an explicit `(class,method)`→closure table —
+   `_sir_def_method`/`_sir_call_method` — a data lookup, never reflection, per
+   §Security #2, so anti-RCE by construction) landed in 0.14.0;
+   `InstanceVars` + `self` (`@v` → `_sir_ivar_get`/`_sir_ivar_set` on the
+   receiver's lazily-allocated `@name → value` map; the receiver is carried in
+   `_sir_current_self`, saved/restored by `_sir_call_method` and re-bound at each
+   `TryCatch` handler since `longjmp` unwinds past the restore) landed in 0.15.0;
+   inheritance + `super` (`class Dog < Animal` → `_sir_register_super` into a
+   mutable user-ancestry table `_sir_class_super` consults BEFORE the baked-in
+   exception ancestry, so ONE `super_of` drives both `rescue`-matching and method
+   resolution; `_sir_call_method` resolves up the chain, `super` → `_sir_call_super`
+   from the superclass of the defining class; every walk bounded by
+   `SIR_ANCESTRY_MAX` against a cyclic hand-built hierarchy) landed in 0.16.0;
+   then class methods, `ClassVars`, and `Modules` (mixins / MRO).
 7. **Optional / later** — `Bignum`; SIR21 sized-integer native lowering
    (`int64_t`/`uint32_t` from `IntSpec`); `Range` / regex / backtick shims.
 

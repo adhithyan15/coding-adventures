@@ -24,7 +24,6 @@
 //! Argument parsing is declarative via `cli-builder`.
 
 use std::fs;
-use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 use cli_builder::types::ParserOutput;
@@ -33,7 +32,8 @@ use cli_builder::{load_spec_from_str, Parser};
 use adj_constraint_solver::{
     check, optimize, solve, FeasibilityOutcome, OptimizeOutcome, SolveOutcome,
 };
-use adj_lang::{compile_with_imports, decide, ImportLimits, ImportProvider, LoweredRangeLookup};
+use adj_lang::{compile_with_imports, decide, ImportLimits, LoweredRangeLookup};
+use adj_lang_cli::{esc, payload, query_echo, sensitive_input, FsProvider};
 use logic_core::{atom, compound, var, LogicVar, Term};
 use logic_engine::govern::Standing;
 use logic_engine::{
@@ -51,23 +51,6 @@ const SPEC: &str = r#"{
     {"id": "program", "name": "PROGRAM", "description": "Path to a .adj program (rulebook + case)", "type": "string", "required": true}
   ]
 }"#;
-
-/// JSON-escape a string body.
-fn esc(s: &str) -> String {
-    let mut o = String::with_capacity(s.len() + 2);
-    for c in s.chars() {
-        match c {
-            '"' => o.push_str("\\\""),
-            '\\' => o.push_str("\\\\"),
-            '\n' => o.push_str("\\n"),
-            '\r' => o.push_str("\\r"),
-            '\t' => o.push_str("\\t"),
-            c if (c as u32) < 0x20 => o.push_str(&format!("\\u{:04x}", c as u32)),
-            c => o.push(c),
-        }
-    }
-    o
-}
 
 /// Emit an f64 as a JSON number, or `null` for non-finite (e.g. an infinite
 /// single-hypothesis margin) — JSON has no Infinity.
@@ -168,6 +151,106 @@ fn derivation_tree_json(
                 kids.join(",")
             )
         }
+        // A `round_to(x, n)` narrowing (NUM-6a): the audit exposes the precision,
+        // the rounding mode, the rounded `value`, and the operand subtree it
+        // narrowed — so a checker can re-round the operand's exact value under the
+        // recorded mode and confirm the rendering (ADJ-NUMERIC-SUBSTRATE §4.3).
+        D::Round {
+            spec,
+            mode,
+            operand,
+            result,
+        } => {
+            // The precision field names the KIND of narrowing: `places` for
+            // `round_to` (decimal places), `sig_figures` for `round_sig`.
+            let precision = match spec {
+                logic_engine::compute::RoundSpec::Places(p) => format!("\"places\":{p}"),
+                logic_engine::compute::RoundSpec::SigFigures(n) => {
+                    format!("\"sig_figures\":{n}")
+                }
+            };
+            format!(
+                "{{\"node\":\"round\",{},\"mode\":\"{}\",\"value\":{},\"operand\":{}}}",
+                precision,
+                rounding_mode_name(*mode),
+                jnum(*result),
+                derivation_tree_json(operand, kb)
+            )
+        }
+        // A `to_scientific(x, figures)` rendering (NUM-6c): the audit exposes the
+        // significant-figure count, the rounding mode, the `rendered` boundary string,
+        // the narrowed numeric `value`, and the operand subtree it narrowed — so a
+        // checker can re-narrow the operand's exact value to `figures` significant
+        // figures and confirm the rendered form (ADJ-NUMERIC-SUBSTRATE §4.3).
+        D::ToScientific {
+            figures,
+            mode,
+            rendered,
+            operand,
+            result,
+        } => format!(
+            "{{\"node\":\"to_scientific\",\"figures\":{},\"mode\":\"{}\",\"rendered\":\"{}\",\"value\":{},\"operand\":{}}}",
+            figures,
+            rounding_mode_name(*mode),
+            esc(rendered),
+            jnum(*result),
+            derivation_tree_json(operand, kb)
+        ),
+        // A `to_percent(x, places)` rendering (NUM-6c): the audit exposes the decimal-place
+        // count, the rounding mode, the `rendered` `d.dd%` string, the narrowed numeric
+        // `value` (the fraction the percentage denotes), and the operand subtree — so a
+        // checker can re-scale and re-round the operand's exact value and confirm the
+        // rendered form (ADJ-NUMERIC-SUBSTRATE §4.3).
+        D::ToPercent {
+            places,
+            mode,
+            rendered,
+            operand,
+            result,
+        } => format!(
+            "{{\"node\":\"to_percent\",\"places\":{},\"mode\":\"{}\",\"rendered\":\"{}\",\"value\":{},\"operand\":{}}}",
+            places,
+            rounding_mode_name(*mode),
+            esc(rendered),
+            jnum(*result),
+            derivation_tree_json(operand, kb)
+        ),
+        // A `to_currency(x, code, places)` rendering (NUM-6c): the audit exposes the currency
+        // code, the decimal-place count, the rounding mode, the `rendered` `CODE d.dd` string,
+        // the narrowed numeric `value` (the rounded amount), and the operand subtree — so a
+        // checker can re-round the operand's exact value and confirm the rendered form
+        // (ADJ-NUMERIC-SUBSTRATE §4.3).
+        D::ToCurrency {
+            code,
+            places,
+            mode,
+            rendered,
+            operand,
+            result,
+        } => format!(
+            "{{\"node\":\"to_currency\",\"code\":\"{}\",\"places\":{},\"mode\":\"{}\",\"rendered\":\"{}\",\"value\":{},\"operand\":{}}}",
+            esc(code),
+            places,
+            rounding_mode_name(*mode),
+            esc(rendered),
+            jnum(*result),
+            derivation_tree_json(operand, kb)
+        ),
+    }
+}
+
+/// The stable JSON spelling of a rounding mode for the audit trail — a checker
+/// keys off these, so they are fixed identifiers, not `Debug`.
+fn rounding_mode_name(mode: logic_engine::RoundingMode) -> &'static str {
+    use logic_engine::RoundingMode as M;
+    match mode {
+        M::Down => "down",
+        M::Up => "up",
+        M::Floor => "floor",
+        M::Ceiling => "ceiling",
+        M::HalfUp => "half_up",
+        M::HalfDown => "half_down",
+        M::HalfEven => "half_even",
     }
 }
 
@@ -339,100 +422,6 @@ const UNRESOLVED_PROV: &str =
 ///
 /// The rendered object is additive — `"abstained": true` is still emitted
 /// beside it, so existing consumers are untouched.
-/// Longest echoed payload the abstention object will carry.
-///
-/// `ADJ-REASON-MATH.md` §E.4 requires echoed payloads to be length-capped. The
-/// reason is not display tidiness: these fields carry the CALLER'S OWN INPUT
-/// back out into an artifact that is designed to be replayed and shared, and an
-/// unbounded echo is both an amplification and a bigger blast radius for
-/// whatever the caller happened to paste in.
-const ABSTENTION_FIELD_CAP: usize = 256;
-
-/// `true` when this run's input is marked sensitive, so echoed payloads must be
-/// withheld (`ADJ_SENSITIVE_INPUT=1`).
-///
-/// §E.4 requires redaction on a sensitive channel, and names the case: in the
-/// medical arm an unresolved surface form can be free text lifted from a chart,
-/// and the trail it lands in travels. The `reason` and `explanation` still tell
-/// you WHAT went wrong — only the echoed values are withheld, so an abstention
-/// stays actionable without carrying PHI along with it.
-fn sensitive_input() -> bool {
-    // Resolved ONCE per process. Two reasons beyond speed: the warning below
-    // should be emitted once rather than once per rendered field (it printed
-    // four times for a single query before this), and a security decision that
-    // is re-read mid-run could in principle disagree with itself.
-    static DECIDED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
-    *DECIDED.get_or_init(decide_sensitive_input)
-}
-
-fn decide_sensitive_input() -> bool {
-    let Ok(raw) = std::env::var("ADJ_SENSITIVE_INPUT") else {
-        return false;
-    };
-    let v = raw.trim();
-    if v.is_empty() {
-        return false;
-    }
-    if matches!(
-        v.to_ascii_lowercase().as_str(),
-        "1" | "true" | "yes" | "on" | "y" | "enabled"
-    ) {
-        return true;
-    }
-    if matches!(
-        v.to_ascii_lowercase().as_str(),
-        "0" | "false" | "no" | "off" | "n" | "disabled"
-    ) {
-        return false;
-    }
-    // FAIL CLOSED, LOUDLY. A security toggle whose misspelling is
-    // indistinguishable from being unset is a footgun for exactly the
-    // deployment it exists to protect: `ADJ_SENSITIVE_INPUT=pls` would have
-    // silently emitted chart text. Anyone who set the variable at all meant
-    // something by it, so an unrecognized value is treated as SENSITIVE and
-    // the operator is told.
-    eprintln!(
-        "warning: ADJ_SENSITIVE_INPUT={raw:?} is not a recognized boolean; \
-         treating this run as SENSITIVE and redacting echoed payloads."
-    );
-    true
-}
-
-/// Render a query string for output, honouring the sensitive channel.
-///
-/// # Why this exists as a helper rather than a call at each site
-///
-/// The first draft redacted the abstention object's fields and left the
-/// surrounding `"query"` / `"queries"` echoes alone. Those echoes contain the
-/// SAME values — for a recall abstention the goal *is* the query, and a lookup
-/// query string spells out the table and the key — so the redacted secret was
-/// reprinted verbatim two lines above an object claiming to have redacted it.
-/// That is worse than no redaction: it advertises a protection that is not
-/// there.
-///
-/// Routing every query echo through one function is the fix that stays fixed —
-/// a new renderer cannot forget a check it never had to make.
-fn query_echo(q: &str) -> String {
-    if sensitive_input() {
-        return "[redacted]".to_string();
-    }
-    esc(q)
-}
-
-/// Prepare one echoed payload: redact it on a sensitive channel, otherwise cap
-/// its length (marking the truncation, so a reader never mistakes a cut string
-/// for the whole value) and JSON-escape it.
-fn payload(v: &str) -> String {
-    if sensitive_input() {
-        return "[redacted]".to_string();
-    }
-    if v.chars().count() > ABSTENTION_FIELD_CAP {
-        let head: String = v.chars().take(ABSTENTION_FIELD_CAP).collect();
-        return esc(&format!("{head}…(truncated)"));
-    }
-    esc(v)
-}
-
 fn abstention_json(reason: &AbstentionReason) -> String {
     match reason {
         AbstentionReason::NoGroundedSupport { goal } => format!(
@@ -448,6 +437,16 @@ fn abstention_json(reason: &AbstentionReason) -> String {
             payload(table),
             payload(key),
             payload(min_key)
+        ),
+        AbstentionReason::AboveTableDomain {
+            table,
+            key,
+            max_key,
+        } => format!(
+            "{{\"reason\":\"above_table_domain\",\"table\":\"{}\",\"key\":\"{}\",\"max_key\":\"{}\",\"explanation\":\"the query falls above the highest breakpoint this source defines; interpolation would extrapolate past what the source measured\"}}",
+            payload(table),
+            payload(key),
+            payload(max_key)
         ),
         AbstentionReason::NonNumericKey { table, column, key } => format!(
             "{{\"reason\":\"non_numeric_key\",\"table\":\"{}\",\"column\":\"{}\",\"key\":\"{}\",\"explanation\":\"a range lookup needs a numeric key; this one could not be read as a number\"}}",
@@ -476,6 +475,16 @@ enum AbstentionReason {
         table: String,
         key: String,
         min_key: String,
+    },
+    /// The key is above the table's highest breakpoint (ADJ-TABLES RS-5d). An
+    /// `interpolated` lookup needs a breakpoint on *both* sides of the query; above
+    /// the last one there is nothing to interpolate toward, so — rather than
+    /// extrapolate past what the source measured — it abstains. (A `range` lookup
+    /// treats the top breakpoint as an open band and never hits this.)
+    AboveTableDomain {
+        table: String,
+        key: String,
+        max_key: String,
     },
     /// A range lookup was handed a key that is not a number.
     NonNumericKey {
@@ -792,49 +801,6 @@ fn status_certificates(
 /// - The resolved real path must stay within `root` (the directory of the
 ///   top-level program). A `../…` escape or a symlink pointing outside `root`
 ///   is refused — `import` cannot read arbitrary files on the host.
-struct FsProvider {
-    /// The sandbox root: canonicalized directory of the top-level program. No
-    /// import may resolve outside this subtree.
-    root: PathBuf,
-}
-
-impl FsProvider {
-    /// Canonicalize `p` and confirm it lies within the sandbox `root`.
-    fn checked_canonical(&self, p: &Path) -> Result<String, String> {
-        let abs = fs::canonicalize(p).map_err(|e| format!("{}: {e}", p.display()))?;
-        if !abs.starts_with(&self.root) {
-            return Err(format!(
-                "{} escapes the import root {}",
-                abs.display(),
-                self.root.display()
-            ));
-        }
-        Ok(abs.to_string_lossy().into_owned())
-    }
-}
-
-impl ImportProvider for FsProvider {
-    fn resolve(&self, importer: &str, literal: &str) -> Result<String, String> {
-        if Path::new(literal).is_absolute() {
-            return Err(format!("import path must be relative, got {literal:?}"));
-        }
-        // Reject NUL and other obviously hostile bytes before touching the FS.
-        if literal.contains('\0') {
-            return Err("import path contains a NUL byte".to_string());
-        }
-        let importer_dir = Path::new(importer)
-            .parent()
-            .ok_or_else(|| format!("importer {importer:?} has no parent directory"))?;
-        self.checked_canonical(&importer_dir.join(literal))
-    }
-
-    fn load(&self, canonical: &str) -> Result<String, String> {
-        // `canonical` came from `resolve`/the root, already inside `root`; read
-        // it. (Re-checking would re-canonicalize an already-canonical path.)
-        fs::read_to_string(canonical).map_err(|e| format!("{canonical}: {e}"))
-    }
-}
-
 fn main() -> ExitCode {
     let spec = load_spec_from_str(SPEC).expect("internal: invalid CLI spec");
     let parser = Parser::new(spec);
@@ -1013,16 +979,21 @@ fn main() -> ExitCode {
         format!(",\"governing\":[{}]", governing.join(","))
     };
 
-    // ADJ-TABLES RS-5c: range / bracket lookups over `table`s read as step
-    // functions. Each resolves to its bracketed value + the matched breakpoint
-    // row's citation (or abstains below the table's domain). 0 answer-time model
-    // calls — exact comparison over the CAS-grounded rows. Omitted when the
-    // program declares no `? lookup … mode range …`, so existing output is
-    // byte-for-byte unchanged.
+    // ADJ-TABLES RS-5c/RS-5d: table lookups. `mode range` reads the table as a step
+    // function (bracketed value + the matched breakpoint row's citation, or abstains
+    // below the domain); `mode interpolated` reads it as a piecewise-linear function
+    // (exact linear blend of the two bracketing rows, both citations, or abstains
+    // outside the domain). Both are 0 answer-time model calls — exact rational
+    // arithmetic over the CAS-grounded rows. Omitted when the program declares no
+    // `? lookup …`, so existing output is byte-for-byte unchanged.
     let lookups: Vec<String> = lowered
         .range_lookups
         .iter()
-        .map(|rl| range_lookup_json(rl, &lowered.kb))
+        .map(|rl| match rl.mode.as_str() {
+            "interpolated" => interpolated_lookup_json(rl, &lowered.kb),
+            "nearest" => nearest_lookup_json(rl, &lowered.kb),
+            _ => range_lookup_json(rl, &lowered.kb),
+        })
         .collect();
     let lookup_section = if lookups.is_empty() {
         String::new()
@@ -1297,6 +1268,348 @@ fn range_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
                 query_echo(&query_str),
                 esc(&rl.mode),
                 abstention_json(&reason)
+            )
+        }
+    }
+}
+
+/// Resolve a NEAREST lookup (ADJ-TABLES RS-5f) against the grounded table and render
+/// it as JSON. Where a `range` lookup returns the greatest key `<= q` (a step / floor)
+/// and `interpolated` blends between the two bracketing rows, `nearest` snaps the query
+/// to the single row whose key is CLOSEST to `q` — nearest-neighbour lookup. It returns
+/// that row's value cell VERBATIM (like `range`, and unlike `interpolated`, so the value
+/// column may hold a category label, not just a number), together with the matched key
+/// and that one row's citation.
+///
+/// This is the tactic for tables where neither flooring nor linear blending is right:
+/// snapping a measurement to the closest tabulated standard, nearest-rank selection, or
+/// a discrete lookup grid where the between-points region has no defined value. The key
+/// column must be numeric (enforced at lowering, shared with `range`/`interpolated`); the
+/// value column is returned as-is.
+///
+/// Distance is exact: `|k - q|` is computed as a `BigRational` (`sub` then `abs`), never
+/// via `f64`, and candidates are compared on that exact distance. **Ties break to the
+/// SMALLER key**, deterministically — if `q` sits exactly halfway between two keys, the
+/// lower key wins, so the answer is reproducible and never depends on row order.
+///
+/// Two honest edges:
+/// - **empty table**: with no rows there is no nearest key, so it abstains
+///   (`no_grounded_support`) rather than inventing one.
+/// - **truncated search**: if enumeration hit a resolution limit we may not have seen the
+///   truly nearest row, so snapping to the closest row we *did* see could be wrong; it
+///   abstains with `search_limit_exceeded` instead of a possibly-non-nearest key.
+///
+/// 0 answer-time model calls — pure exact comparison over the CAS-grounded rows.
+fn nearest_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
+    use logic_engine::compute::ExactRational;
+
+    // Enumerate every row (same all-fresh-vars unification as the other tactics).
+    let cols: Vec<LogicVar> = (0..rl.arity).map(|i| var(&format!("c{i}"))).collect();
+    let goal = compound(
+        rl.table.clone(),
+        cols.iter().map(|v| Term::Var(v.clone())).collect(),
+    );
+    let dag = enumerate_all(&goal, kb);
+
+    let query_str = format!(
+        "lookup {} {} = {} mode {} give {}",
+        rl.table, rl.key_col, rl.key_value, rl.mode, rl.value_col
+    );
+
+    let abstain = |reason: AbstentionReason| -> String {
+        format!(
+            "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true,\"abstention\":{}}}",
+            query_echo(&query_str),
+            esc(&rl.mode),
+            abstention_json(&reason)
+        )
+    };
+
+    // The query value, as an exact rational.
+    let q = match numeric_exact_magnitude(&rl.key_value) {
+        Some(x) => x,
+        None => {
+            // The lowerer guarantees a numeric literal; abstain rather than panic.
+            return abstain(AbstentionReason::NonNumericKey {
+                table: rl.table.clone(),
+                column: rl.key_col.clone(),
+                key: format!("{}", rl.key_value),
+            });
+        }
+    };
+
+    // A truncated scan may have hidden the truly nearest row, so no row we saw can be
+    // claimed nearest — abstain rather than snap to a possibly-non-nearest key.
+    if dag.truncated {
+        return abstain(AbstentionReason::SearchLimitExceeded {
+            goal: query_str.clone(),
+        });
+    }
+
+    // Among ALL rows, keep the one minimizing the exact distance `|k - q|`. Ties break
+    // to the SMALLER key so the choice is deterministic and order-independent.
+    let mut best: Option<(&Proof, Term, Term, ExactRational)> = None;
+    for proof in &dag.proofs {
+        let key_term = proof.bindings.walk_var(&cols[rl.key_index]);
+        let Some(k) = numeric_exact_magnitude(&key_term) else {
+            continue; // a non-numeric key cell is impossible post-lowering; skip defensively.
+        };
+        let value_term = proof.bindings.walk_var(&cols[rl.value_index]);
+        let take = match &best {
+            None => true,
+            Some((_, _, _, best_k)) => {
+                // `d_*` are exact `BigRational` distances; comparison is exact.
+                let d_new = k.as_ratio().sub(q.as_ratio()).abs();
+                let d_best = best_k.as_ratio().sub(q.as_ratio()).abs();
+                d_new < d_best || (d_new == d_best && k.as_ratio() < best_k.as_ratio())
+            }
+        };
+        if take {
+            best = Some((proof, key_term, value_term, k));
+        }
+    }
+
+    match best {
+        Some((proof, key_term, value_term, _)) => {
+            let cites: Vec<String> = proof
+                .via_facts
+                .iter()
+                .filter_map(|fid| kb.fact(*fid))
+                .map(|f| format!("{{{}}}", prov(&f.provenance)))
+                .collect();
+            // The answer names the value column (the binding) AND the matched key, so
+            // the audit shows WHICH row the query snapped to.
+            format!(
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[{{\"bindings\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"citations\":[{}],\"steps\":{}}}],\"abstained\":false}}",
+                query_echo(&query_str),
+                esc(&rl.mode),
+                esc(&rl.value_col),
+                esc(&format!("{value_term}")),
+                esc(&rl.key_col),
+                esc(&format!("{key_term}")),
+                cites.join(","),
+                trace_steps_json(proof, kb)
+            )
+        }
+        // No rows at all — there is no nearest key to snap to.
+        None => abstain(AbstentionReason::NoGroundedSupport {
+            goal: query_str.clone(),
+        }),
+    }
+}
+
+/// Resolve an INTERPOLATED lookup (ADJ-TABLES RS-5d) against the grounded table and
+/// render it as JSON. Where a `range` lookup reads the table as a *step* function,
+/// `interpolated` reads it as a *piecewise-linear* one: it finds the two breakpoint
+/// rows that bracket the query — the greatest key `k0 <= q` and the smallest key
+/// `k1 >= q` — and returns the exact linear blend
+///
+/// ```text
+///     v = v0 + (v1 - v0) * (q - k0) / (k1 - k0)
+/// ```
+///
+/// with BOTH bracketing rows' citations riding along, so the interpolated answer is
+/// traceable to the two measured points it sits between (nomograms, growth charts,
+/// calibration curves). Every step is exact `BigRational` arithmetic — no `f64` hop —
+/// so a terminating blend renders all its digits and a repeating one renders as the
+/// reduced fraction, never a rounded float.
+///
+/// Three honest edges:
+/// - **exact hit** (`q` equals a breakpoint key, so `k0 == k1`): the blend is
+///   degenerate (`0/0`), so it is short-circuited to that row's value with its single
+///   citation — no fabricated division.
+/// - **below / above the domain**: interpolation needs a breakpoint on *both* sides;
+///   outside `[min, max]` it abstains (`below_table_domain` / `above_table_domain`)
+///   rather than extrapolate past what the source measured.
+/// - **truncated search**: if enumeration hit a resolution limit we may not have seen
+///   the true bracketing rows, so any interpolation could be wrong; we abstain with
+///   `search_limit_exceeded` instead of blending against a possibly-incomplete scan.
+///
+/// 0 answer-time model calls — pure exact arithmetic over the CAS-grounded rows.
+fn interpolated_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
+    use logic_engine::compute::ExactRational;
+
+    let cols: Vec<LogicVar> = (0..rl.arity).map(|i| var(&format!("c{i}"))).collect();
+    let goal = compound(
+        rl.table.clone(),
+        cols.iter().map(|v| Term::Var(v.clone())).collect(),
+    );
+    let dag = enumerate_all(&goal, kb);
+
+    let query_str = format!(
+        "lookup {} {} = {} mode {} give {}",
+        rl.table, rl.key_col, rl.key_value, rl.mode, rl.value_col
+    );
+
+    // Render an exact rational for a JSON string binding: prefer a terminating
+    // decimal (all digits), else the reduced fraction (still exact, never a float).
+    let render = |x: &ExactRational| -> String {
+        x.to_exact_decimal_string()
+            .unwrap_or_else(|| format!("{}/{}", x.numerator(), x.denominator()))
+    };
+    let cites_of = |proof: &Proof| -> Vec<String> {
+        proof
+            .via_facts
+            .iter()
+            .filter_map(|fid| kb.fact(*fid))
+            .map(|f| format!("{{{}}}", prov(&f.provenance)))
+            .collect()
+    };
+    let abstain = |reason: AbstentionReason| -> String {
+        format!(
+            "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true,\"abstention\":{}}}",
+            query_echo(&query_str),
+            esc(&rl.mode),
+            abstention_json(&reason)
+        )
+    };
+
+    let q = match numeric_exact_magnitude(&rl.key_value) {
+        Some(x) => x,
+        None => {
+            return abstain(AbstentionReason::NonNumericKey {
+                table: rl.table.clone(),
+                column: rl.key_col.clone(),
+                key: format!("{}", rl.key_value),
+            })
+        }
+    };
+
+    // A truncated scan may have missed the true bracketing rows, which would make
+    // any interpolation wrong — abstain rather than blend against a partial table.
+    if dag.truncated {
+        return abstain(AbstentionReason::SearchLimitExceeded {
+            goal: query_str.clone(),
+        });
+    }
+
+    // Scan every row once, keeping the tightest bracket on each side of `q`:
+    // `lower` = the row with the greatest key `<= q`; `upper` = the row with the
+    // smallest key `>= q`. Comparison and storage are exact.
+    let mut lower: Option<(&Proof, ExactRational, ExactRational)> = None;
+    let mut upper: Option<(&Proof, ExactRational, ExactRational)> = None;
+    for proof in &dag.proofs {
+        let key_term = proof.bindings.walk_var(&cols[rl.key_index]);
+        let Some(k) = numeric_exact_magnitude(&key_term) else {
+            continue; // non-numeric key is impossible post-lowering; skip defensively.
+        };
+        let value_term = proof.bindings.walk_var(&cols[rl.value_index]);
+        let Some(v) = numeric_exact_magnitude(&value_term) else {
+            continue; // non-numeric value is impossible post-lowering (checked); skip.
+        };
+        if k.as_ratio() <= q.as_ratio() {
+            let take = match &lower {
+                None => true,
+                Some((_, lk, _)) => k.as_ratio() > lk.as_ratio(),
+            };
+            if take {
+                lower = Some((proof, k.clone(), v.clone()));
+            }
+        }
+        if k.as_ratio() >= q.as_ratio() {
+            let take = match &upper {
+                None => true,
+                Some((_, uk, _)) => k.as_ratio() < uk.as_ratio(),
+            };
+            if take {
+                upper = Some((proof, k, v));
+            }
+        }
+    }
+
+    // The min/max keys, for an out-of-domain abstention's audit payload.
+    let extremal = |pick_max: bool| -> String {
+        dag.proofs
+            .iter()
+            .filter_map(|pr| numeric_exact_magnitude(&pr.bindings.walk_var(&cols[rl.key_index])))
+            .fold(None, |acc: Option<ExactRational>, k| match acc {
+                None => Some(k),
+                Some(a) => {
+                    let keep = if pick_max {
+                        k.as_ratio() > a.as_ratio()
+                    } else {
+                        k.as_ratio() < a.as_ratio()
+                    };
+                    Some(if keep { k } else { a })
+                }
+            })
+            .map(|k| render(&k))
+            .unwrap_or_else(|| "(empty table)".to_string())
+    };
+
+    match (lower, upper) {
+        // Below the lowest breakpoint — nothing to interpolate down toward.
+        (None, _) => abstain(AbstentionReason::BelowTableDomain {
+            table: rl.table.clone(),
+            key: format!("{}", rl.key_value),
+            min_key: extremal(false),
+        }),
+        // Above the highest breakpoint — nothing to interpolate up toward.
+        (_, None) => abstain(AbstentionReason::AboveTableDomain {
+            table: rl.table.clone(),
+            key: format!("{}", rl.key_value),
+            max_key: extremal(true),
+        }),
+        (Some((lp, k0, v0)), Some((up, k1, v1))) => {
+            // Exact hit on a breakpoint (`k0 == k1 == q`): the blend is `0/0`, so
+            // return that row's value verbatim with its single citation.
+            if k0.as_ratio() == k1.as_ratio() {
+                let cites = cites_of(lp);
+                return format!(
+                    "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[{{\"bindings\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"brackets\":{{\"exact\":{{\"{}\":\"{}\",\"{}\":\"{}\"}}}},\"citations\":[{}],\"steps\":{}}}],\"abstained\":false}}",
+                    query_echo(&query_str),
+                    esc(&rl.mode),
+                    esc(&rl.value_col),
+                    esc(&render(&v0)),
+                    esc(&rl.key_col),
+                    esc(&render(&q)),
+                    esc(&rl.key_col),
+                    esc(&render(&k0)),
+                    esc(&rl.value_col),
+                    esc(&render(&v0)),
+                    cites.join(","),
+                    trace_steps_json(lp, kb)
+                );
+            }
+            // Linear blend, all exact: v = v0 + (v1 - v0) * (q - k0) / (k1 - k0).
+            // The denominator is non-zero (k1 > k0 here), so every step is defined.
+            let blended = (|| {
+                let dv = v1.sub(&v0)?;
+                let dq = q.sub(&k0)?;
+                let dk = k1.sub(&k0)?;
+                let frac = dq.div(&dk)?;
+                let scaled = dv.mul(&frac)?;
+                v0.add(&scaled)
+            })();
+            let v = match blended {
+                Some(v) => v,
+                None => {
+                    // Exact arithmetic only fails on a zero denominator, already
+                    // excluded above; abstain rather than emit a wrong number.
+                    return abstain(AbstentionReason::SearchLimitExceeded {
+                        goal: query_str.clone(),
+                    });
+                }
+            };
+            let mut cites = cites_of(lp);
+            cites.extend(cites_of(up));
+            format!(
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[{{\"bindings\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"brackets\":{{\"lower\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"upper\":{{\"{}\":\"{}\",\"{}\":\"{}\"}}}},\"citations\":[{}]}}],\"abstained\":false}}",
+                query_echo(&query_str),
+                esc(&rl.mode),
+                esc(&rl.value_col),
+                esc(&render(&v)),
+                esc(&rl.key_col),
+                esc(&render(&q)),
+                esc(&rl.key_col),
+                esc(&render(&k0)),
+                esc(&rl.value_col),
+                esc(&render(&v0)),
+                esc(&rl.key_col),
+                esc(&render(&k1)),
+                esc(&rl.value_col),
+                esc(&render(&v1)),
+                cites.join(",")
             )
         }
     }

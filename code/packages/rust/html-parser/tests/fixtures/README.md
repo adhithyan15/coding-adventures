@@ -1,13 +1,12 @@
 # html-parser fixtures
 
 `html5lib-tree-construction-smoke.dat` is the checked-in Venture smoke corpus
-mirrored from the currently audited
-`html5lib/html5lib-tests/tree-construction/*.dat` sources.
+mirrored from the tree-construction sources now maintained under
+`web-platform-tests/wpt/html/syntax/parsing/resources/*.dat`.
 
-The format is the upstream tree-construction test format documented in
-`html5lib/html5lib-tests/tree-construction/README.md`. Keeping the fixture in
-that format lets this crate grow toward WHATWG tree-construction compliance
-without inventing a Rust-only test schema.
+The files retain the html5lib tree-construction data format after their move to
+WPT. Keeping the fixture in that format lets this crate grow toward WHATWG
+tree-construction compliance without inventing a Rust-only test schema.
 
 `html-browser-readiness.json` is a checked parser acceptance corpus for
 browser-facing extraction. It verifies that broad HTML documents produce stable
@@ -178,18 +177,21 @@ python3 code/packages/rust/html-parser/tests/fixtures/check_whatwg_audit_rust_te
   --check
 ```
 
-`audit_html5lib_coverage.py` compares this fixture and the sibling lexer
-html5lib fixtures against an upstream html5lib-tests checkout by source
-signature:
+`audit_html5lib_coverage.py` compares this fixture against WPT tree-construction
+resources and the sibling lexer fixtures against html5lib tokenizer tests by
+source signature:
 
 ```bash
 HTML5LIB_TESTS_ROOT=/path/to/html5lib-tests \
-  python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py
+WPT_ROOT=/path/to/wpt \
+  python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py \
+  --expect-tree-missing 128 \
+  --expect-tokenizer-missing 0
 ```
 
-The command exits nonzero if any upstream tree-construction or tokenizer source
-case is missing, or if the normalized tokenizer fixture still has skipped
-runtime gaps.
+The command exits nonzero for missing upstream cases unless exact
+`--expect-*-missing` debt counts are supplied. The checked report records every
+missing source signature, and normalized tokenizer runtime gaps always fail.
 
 Use the expectation flags when the audit should also pin the exact upstream and
 checked-in corpus sizes used by the current compliance snapshot:
@@ -197,10 +199,13 @@ checked-in corpus sizes used by the current compliance snapshot:
 ```bash
 python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py \
   /path/to/html5lib-tests \
-  --expect-tree-upstream-cases 1778 \
-  --expect-tree-local-cases 2485 \
+  --wpt-root /path/to/wpt \
+  --expect-tree-upstream-cases 1934 \
+  --expect-tree-local-cases 2513 \
+  --expect-tree-missing 128 \
   --expect-tokenizer-upstream-cases 6806 \
   --expect-tokenizer-local-raw-cases 7015 \
+  --expect-tokenizer-missing 0 \
   --expect-normalized-cases 7242 \
   --expect-normalized-skipped 0
 ```
@@ -210,9 +215,11 @@ Regenerate or check it with:
 
 ```bash
 python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py \
-  /path/to/html5lib-tests --write-report
+  /path/to/html5lib-tests --wpt-root /path/to/wpt \
+  --expect-tree-missing 128 --expect-tokenizer-missing 0 --write-report
 python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py \
-  /path/to/html5lib-tests --check-report
+  /path/to/html5lib-tests --wpt-root /path/to/wpt \
+  --expect-tree-missing 128 --expect-tokenizer-missing 0 --check-report
 ```
 
 `whatwg-tree-insertion-audit.json` is a generated index over the high-signal

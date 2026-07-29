@@ -265,8 +265,20 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
     // deterministic (matches the scan order, i.e. the order of first
     // occurrence of each distinct group value in the table).
     let mut group_mode = false;
-    // Canonical string key → (original SqlValue list for the key columns, accumulators)
-    let mut group_data: HashMap<String, (Vec<SqlValue>, Vec<AggAccumulator>)> = HashMap::new();
+    // Canonical string key → (key-column values, accumulators, representative row).
+    //
+    // The representative row is the FIRST source row of the group, captured when
+    // the group is created. It lets a BARE non-key column (one that is neither a
+    // GROUP BY key nor inside an aggregate — e.g. `SELECT c FROM t GROUP BY x`)
+    // report a value instead of NULL, matching SQLite, which reports such a
+    // column from the group's first row. (The min/max-follows refinement — where
+    // bare columns track the row holding a min()/max() — needs an aggregate
+    // present, which the current projection path does not yet combine with bare
+    // columns; that is a separate ledgered gap.)
+    let mut group_data: HashMap<String, (Vec<SqlValue>, Vec<AggAccumulator>, Row)> = HashMap::new();
+    // Cumulative bytes of all stored representative rows, for the memory guard
+    // below (the group-COUNT cap alone doesn't bound bytes on a wide table).
+    let mut repr_bytes_total: usize = 0;
     let mut group_key_order: Vec<String> = Vec::new(); // insertion-order of distinct keys
     let mut current_group_key: String = String::new(); // set by SaveGroupKey each row
     // Names of the group-by columns (set by first SaveGroupKey call).
@@ -550,12 +562,9 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                     group_mode = false; // disable so FinalizeAgg/LoadColumn run normally
                     // Load first group's data.
                     let key_str = group_key_order[0].clone();
-                    if let Some((key_vals, group_accs)) = group_data.get(&key_str) {
+                    if let Some((key_vals, group_accs, repr_row)) = group_data.get(&key_str) {
                         agg_accs = group_accs.clone();
-                        let mut fake_row: Row = Row::default();
-                        for (col_name, val) in group_col_names.iter().zip(key_vals.iter()) {
-                            fake_row.insert(col_name.clone(), val.clone());
-                        }
+                        let fake_row = build_group_fake_row(repr_row, &group_col_names, key_vals);
                         current_row.insert(alias, fake_row);
                     }
                 }
@@ -588,13 +597,11 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                         // Load the next group's data so that LoadColumn /
                         // FinalizeAgg operate on the correct group.
                         let key_str = group_key_order[group_iter_idx].clone();
-                        if let Some((key_vals, group_accs)) = group_data.get(&key_str) {
+                        if let Some((key_vals, group_accs, repr_row)) = group_data.get(&key_str) {
                             agg_accs = group_accs.clone();
-                            // Repopulate current_row[None] with this group's key values.
-                            let mut fake_row: Row = Row::default();
-                            for (col_name, val) in group_col_names.iter().zip(key_vals.iter()) {
-                                fake_row.insert(col_name.clone(), val.clone());
-                            }
+                            // Repopulate current_row[None] with this group's key
+                            // values over its representative row.
+                            let fake_row = build_group_fake_row(repr_row, &group_col_names, key_vals);
                             // Use None as the cursor alias (no-alias scans store under None).
                             current_row.insert(None, fake_row);
                         }
@@ -664,7 +671,7 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
             Instruction::UpdateAgg(idx, fn_tag) => {
                 if group_mode {
                     // GROUP BY mode: update the accumulator for the current group.
-                    let (_, group_accs) = group_data
+                    let (_, group_accs, _) = group_data
                         .get_mut(&current_group_key)
                         .ok_or(VmError::AggIndexOutOfRange(idx))?;
                     if fn_tag == AggFn::CountStar {
@@ -771,7 +778,33 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                     let fresh_accs = (0..num_agg_slots)
                         .map(|_| AggAccumulator { acc: None, count: 0, distinct_vals: None })
                         .collect();
-                    group_data.insert(key_str, (key_vals, fresh_accs));
+                    // Snapshot the group's FIRST row (the un-aliased cursor row)
+                    // as its representative, for bare non-key column projection —
+                    // but ONLY when the query has no aggregate columns. Bare
+                    // columns are projected solely on the no-aggregate GROUP BY
+                    // path; an aggregate query emits only keys + aggregates and
+                    // never reads a bare column from the fake row, so cloning full
+                    // rows there would be pure memory overhead.
+                    let repr_row = if num_agg_slots == 0 {
+                        let r = current_row.get(&None).cloned().unwrap_or_default();
+                        // DoS guard: `MAX_GROUP_KEYS` caps the NUMBER of groups but
+                        // not the BYTES retained. A wide table (many/large TEXT or
+                        // BLOB columns) with a high-cardinality key could hold far
+                        // more than the count implies. Cap cumulative representative
+                        // bytes at SQLite's default `SQLITE_MAX_LENGTH` order (~1 GB).
+                        const MAX_REPR_BYTES: usize = 1_000_000_000;
+                        repr_bytes_total = repr_bytes_total.saturating_add(row_bytes(&r));
+                        if repr_bytes_total > MAX_REPR_BYTES {
+                            return Err(VmError::ResourceLimit(format!(
+                                "GROUP BY representative rows exceeded maximum size ({} bytes)",
+                                MAX_REPR_BYTES
+                            )));
+                        }
+                        r
+                    } else {
+                        Row::default()
+                    };
+                    group_data.insert(key_str, (key_vals, fresh_accs, repr_row));
                 }
             }
 
@@ -822,12 +855,9 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                         if group_iter_idx < group_key_order.len() {
                             // Load the next group's data.
                             let key_str = group_key_order[group_iter_idx].clone();
-                            if let Some((key_vals, group_accs)) = group_data.get(&key_str) {
+                            if let Some((key_vals, group_accs, repr_row)) = group_data.get(&key_str) {
                                 agg_accs = group_accs.clone();
-                                let mut fake_row: Row = Row::default();
-                                for (col_name, val) in group_col_names.iter().zip(key_vals.iter()) {
-                                    fake_row.insert(col_name.clone(), val.clone());
-                                }
+                                let fake_row = build_group_fake_row(repr_row, &group_col_names, key_vals);
                                 current_row.insert(None, fake_row);
                             }
                             // Clear row_buffer so that pre-BeginRow EmitColumn accumulations
@@ -1046,21 +1076,32 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
 
     // ── Phase 3: post-processing ──────────────────────────────────────────────
 
+    // SQL logical order applies DISTINCT to the projected SELECT-list rows BEFORE
+    // ORDER BY: a deduped group keeps its FIRST row in SCAN order (matching
+    // SQLite), and ORDER BY then sorts the survivors. Running the sort first (the
+    // previous order) instead kept whichever row sorted first — observable when a
+    // collation folds rows with different original text
+    // (`SELECT DISTINCT x COLLATE NOCASE … ORDER BY x` kept the byte-sort-first
+    // 'A' rather than SQLite's scan-first 'a').
+    //
+    // Hidden `__sort_N__` columns (appended for an ORDER BY key that is not itself
+    // an output column) must survive until the sort can read them, so DISTINCT
+    // dedups on only the first `visible_cols` = SELECT-list columns, and the
+    // truncation that strips the hidden columns runs AFTER the sort. When there
+    // are no hidden columns `post_truncate` is `None` and every column is visible.
+    let visible_cols = post_truncate.unwrap_or(output_columns.len());
+    if post_distinct {
+        apply_distinct(&mut output_rows, &post_distinct_colls, visible_cols);
+    }
     if let Some(keys) = post_sort {
         apply_sort(&mut output_rows, &keys, &output_columns);
     }
-    // Strip hidden sort-key columns that were appended during compilation so
-    // that SortResult could find them by name.  This truncation must happen
-    // AFTER sorting and BEFORE distinct/limit so that only the SELECT-list
-    // columns remain in the output.
+    // Strip the hidden sort-key columns so only the SELECT-list columns remain.
     if let Some(n) = post_truncate {
         for row in &mut output_rows {
             row.truncate(n);
         }
         output_columns.truncate(n);
-    }
-    if post_distinct {
-        apply_distinct(&mut output_rows, &post_distinct_colls);
     }
     if let Some((count, offset)) = post_limit {
         apply_limit(&mut output_rows, count, offset);
@@ -1589,6 +1630,13 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             // Round half away from zero (SQLite semantics), to `digits` decimal places.
             let factor = 10_f64.powi(digits);
             let rounded = (x * factor).round() / factor;
+            // Normalize negative zero to positive zero: Rust's `f64::round` yields
+            // `-0.0` for a value that rounds to zero from below (`round(-0.4)` →
+            // `-0.0`), but SQLite's `round()` always reports a zero result as
+            // `0.0`. `-0.0 == 0.0` is true, so this maps `-0.0` → `+0.0` and leaves
+            // every non-zero result untouched. (A bare `-0.0` literal elsewhere in
+            // the engine still keeps its sign — this is round()-specific.)
+            let rounded = if rounded == 0.0 { 0.0 } else { rounded };
             Ok(SqlValue::Float(rounded))
         }
 
@@ -3185,6 +3233,41 @@ fn parse_real_prefix(s: &str) -> f64 {
     t[..i].parse::<f64>().unwrap_or(0.0)
 }
 
+/// Approximate retained size of a `SqlValue`, in bytes, for the GROUP BY
+/// representative-row memory guard. Fixed-size scalars are counted at their
+/// storage width; TEXT/BLOB at their payload length (the dominant term).
+fn sql_value_bytes(v: &SqlValue) -> usize {
+    match v {
+        SqlValue::Null | SqlValue::Bool(_) => 1,
+        SqlValue::Int(_) | SqlValue::Float(_) => 8,
+        SqlValue::Text(s) => s.len(),
+        SqlValue::Blob(b) => b.len(),
+    }
+}
+
+/// Approximate retained size of a `Row` (column names + values), in bytes.
+fn row_bytes(row: &Row) -> usize {
+    row.iter().map(|(k, v)| k.len() + sql_value_bytes(v)).sum()
+}
+
+/// Build the "fake row" that Phase-2 GROUP BY emission reads columns from for one
+/// group. It starts from the group's representative (first) row — so a BARE
+/// non-key column (`SELECT c FROM t GROUP BY x`) resolves to a value rather than
+/// NULL, matching SQLite — then overlays the canonical key-column values on top.
+///
+/// The overlay matters for a collated key: the group is keyed case-insensitively
+/// but must REPORT its original text, and `key_vals` already holds the first
+/// row's original text for the key column (the representative row's value for that
+/// same column is identical here, so the overlay is a no-op for a plain key, but
+/// it keeps the two paths consistent and self-documenting).
+fn build_group_fake_row(repr_row: &Row, group_col_names: &[String], key_vals: &[SqlValue]) -> Row {
+    let mut fake_row = repr_row.clone();
+    for (col_name, val) in group_col_names.iter().zip(key_vals.iter()) {
+        fake_row.insert(col_name.clone(), val.clone());
+    }
+    fake_row
+}
+
 // ===========================================================================
 // Helper: aggregate accumulator update / finalize
 // ===========================================================================
@@ -3227,7 +3310,9 @@ fn update_accumulator(acc: &mut AggAccumulator, fn_tag: &AggFn, v: SqlValue) -> 
                 acc.count += 1;
             }
         }
-        AggFn::Sum => {
+        AggFn::Sum | AggFn::Total => {
+            // TOTAL accumulates exactly like SUM (skip NULLs, add the rest); the
+            // only difference is at finalize time (always REAL, `0.0` default).
             if !matches!(v, SqlValue::Null) {
                 acc.acc = Some(match &acc.acc {
                     None => v,
@@ -3365,6 +3450,17 @@ fn finalize_accumulator(acc: &AggAccumulator, fn_tag: &AggFn) -> SqlValue {
         AggFn::CountStar => SqlValue::Int(acc.count),
         AggFn::Count => SqlValue::Int(acc.count),
         AggFn::Sum => acc.acc.clone().unwrap_or(SqlValue::Null),
+        // TOTAL always returns a REAL and yields 0.0 (never NULL) for an empty or
+        // all-NULL group — SQLite's NULL-free companion to SUM. The running sum is
+        // kept in `acc.acc` exactly as SUM does (i64 while all inputs are
+        // integers, saturating at i64::MAX) and converted to f64 here; SQLite
+        // accumulates in a double throughout, so the two agree for every sum
+        // within i64 range and diverge only past i64::MAX (~9.22e18) — an
+        // astronomical edge we accept.
+        AggFn::Total => SqlValue::Float(match &acc.acc {
+            Some(v) => to_f64(v),
+            None => 0.0,
+        }),
         AggFn::Min => acc.acc.clone().unwrap_or(SqlValue::Null),
         AggFn::Max => acc.acc.clone().unwrap_or(SqlValue::Null),
         // The accumulated Text, or NULL when no non-NULL value was seen (an
@@ -3538,15 +3634,26 @@ fn collate_text(s: &str, collation: &str) -> String {
 /// average serialised row width — far better than the previous O(n²) Vec scan.
 /// The Debug output is deterministic for all `SqlValue` variants, so collisions
 /// can only happen between rows that are genuinely equal.
-fn apply_distinct(rows: &mut Vec<Vec<(String, SqlValue)>>, collations: &[Option<String>]) {
-    // The collation slice is indexed by output-column POSITION, so it is only
-    // meaningful when it describes exactly the row being keyed. If the widths
-    // disagree, the planner's view of the output columns and what was actually
-    // emitted have diverged (e.g. an unexpanded `SELECT DISTINCT *`), and
-    // applying it would put a collation on the WRONG column — silently folding
-    // values that must stay distinct, i.e. dropping rows. Fall back to BINARY,
-    // which dedupes strictly and can never merge rows that genuinely differ.
-    let widths_agree = rows.iter().all(|r| r.len() == collations.len());
+fn apply_distinct(
+    rows: &mut Vec<Vec<(String, SqlValue)>>,
+    collations: &[Option<String>],
+    visible_cols: usize,
+) {
+    // Dedup on the first `visible_cols` columns only — the SELECT-list output.
+    // Rows may carry trailing hidden `__sort_N__` columns (appended for an ORDER
+    // BY key that is not itself an output column and stripped after the sort);
+    // SQLite dedups on the visible select-list, NOT those, so they must be
+    // excluded from the key — otherwise two rows equal in the select list but
+    // differing in a hidden sort key would both survive.
+    //
+    // The collation slice is indexed by output-column POSITION and describes
+    // exactly those visible columns. If its width disagrees, the planner's view
+    // of the output columns and what was actually emitted have diverged (e.g. an
+    // unexpanded `SELECT DISTINCT *`), and applying it would put a collation on
+    // the WRONG column — silently folding values that must stay distinct. Fall
+    // back to BINARY, which dedupes strictly and can never merge rows that differ.
+    let widths_agree =
+        collations.len() == visible_cols && rows.iter().all(|r| r.len() >= visible_cols);
     let collations: &[Option<String>] = if widths_agree { collations } else { &[] };
 
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
@@ -3564,6 +3671,7 @@ fn apply_distinct(rows: &mut Vec<Vec<(String, SqlValue)>>, collations: &[Option<
         // BINARY, which is the stricter, fail-safe direction.
         let key: String = row
             .iter()
+            .take(visible_cols)
             .enumerate()
             .map(|(i, (col, val))| match (val, collations.get(i).and_then(|c| c.as_ref())) {
                 (SqlValue::Text(s), Some(coll)) => {

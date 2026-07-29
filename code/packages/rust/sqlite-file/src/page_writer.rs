@@ -345,6 +345,9 @@ pub type TableSpec<'a> = (&'a str, &'a str, &'a [(i64, Vec<crate::record::SqlVal
 ///   followed immediately by that table's overflow pages (for rows too large to
 ///   sit inline), then the next table's leaf, and so on. A table's root page is
 ///   therefore wherever its leaf lands after the previous tables' pages.
+/// - **Schema overflow pages** (for a `sqlite_schema` row — a long CREATE
+///   statement — too large to sit inline on page 1) come LAST, after every table
+///   page, so the page-1 leaf's cell points at the first of them.
 ///
 /// The result reads back through [`crate::schema::read_table`]`(&db, name)` for
 /// each table and is accepted by real SQLite (it passes `PRAGMA
@@ -353,9 +356,10 @@ pub type TableSpec<'a> = (&'a str, &'a str, &'a [(i64, Vec<crate::record::SqlVal
 /// # Errors
 /// [`SqliteError::BadPageSize`] for a `page_size` outside the power-of-two
 /// `512..=65536` range; [`SqliteError::Unsupported`] if a duplicate rowid
-/// appears within a table, if the combined `sqlite_schema` rows do not fit on
-/// page 1's single leaf (page-1 schema overflow is a later rung), or if the
-/// database would exceed the 2³²-page limit.
+/// appears within a table, if the database would exceed the 2³²-page limit, or if
+/// the `sqlite_schema` rows' *inline heads* still do not fit on page 1's single
+/// leaf even after overflow (a schema large enough to need page 1 to become an
+/// interior b-tree is a later rung).
 pub fn write_multi_table_db(page_size: usize, tables: &[TableSpec]) -> Result<Vec<u8>, SqliteError> {
     if !(512..=65536).contains(&page_size) || !page_size.is_power_of_two() {
         return Err(SqliteError::BadPageSize(page_size as u32));
@@ -390,8 +394,25 @@ pub fn write_multi_table_db(page_size: usize, tables: &[TableSpec]) -> Result<Ve
         table_pages.extend(pages);
     }
 
-    // Total pages: page 1 (schema) + every table/overflow page.
-    let total_pages = u32::try_from(1 + table_pages.len())
+    // --- Page-1 sqlite_schema leaf. Build its cells with overflow support, using
+    // the SAME threshold as any leaf (`data_max_local` = usable - 35): the reader
+    // recomputes the overflow split page-agnostically for page 1 too, so a smaller
+    // (page_size - 100) bound would emit an inline length it disagrees with and
+    // corrupt the round-trip. A schema row too large to sit inline spills onto
+    // overflow pages, which are allocated AFTER every table page (so they take the
+    // next free page numbers); the page-1 leaf's cell then points at the first.
+    let ordered_schema = order_cells(&schema_rows)?;
+    let first_schema_overflow = next_page;
+    let (schema_cells, schema_overflow) = build_leaf_cells_with_overflow(
+        page_size,
+        usable,
+        data_max_local,
+        &ordered_schema,
+        first_schema_overflow,
+    );
+
+    // Total pages: page 1 + every table/overflow page + the schema's overflow pages.
+    let total_pages = u32::try_from(1 + table_pages.len() + schema_overflow.len())
         .map_err(|_| SqliteError::Unsupported("database exceeds the 2^32-page limit"))?;
 
     // --- Page 1: DB header (offset 0..100) + sqlite_schema leaf (offset 100). -
@@ -409,16 +430,23 @@ pub fn write_multi_table_db(page_size: usize, tables: &[TableSpec]) -> Result<Ve
     let mut page1 = vec![0u8; page_size];
     page1[0..100].copy_from_slice(&header.encode());
 
-    // The schema b-tree leaf sits at offset 100 (after the DB header). Its inline
-    // limit is the usable area minus that 100-byte prefix and the 35-byte cell
-    // overhead; schema rows that would overflow it are rejected (a later rung).
-    let ordered_schema = order_cells(&schema_rows)?;
-    let schema_max_local = (page_size - 100).saturating_sub(LEAF_PAYLOAD_OVERHEAD);
-    fill_table_leaf_page(&mut page1, 100, page_size, schema_max_local, &ordered_schema)?;
+    // Frame the schema cells onto page 1's leaf at offset 100. `pack_leaf_cells`
+    // enforces that the cells' inline heads physically fit page 1's reduced
+    // content area (`page_size - 100 - 8 - 2·N`). Overflow beyond that has already
+    // been peeled off into `schema_overflow`; what remains unsupported is a schema
+    // whose inline heads alone exceed one page-1 leaf (turning page 1 into an
+    // interior schema b-tree is a later rung), which surfaces here as an error.
+    pack_leaf_cells(&mut page1, 100, page_size, &schema_cells)?;
 
-    // --- Assemble: page 1, then every table's pages in allocation order. ------
+    // --- Assemble: page 1, every table's pages, then the schema's overflow pages.
+    // The schema overflow pages come last, so their page numbers are exactly
+    // `first_schema_overflow …` — matching the pointers baked into the page-1
+    // cells above.
     let mut file = page1;
     for page in &table_pages {
+        file.extend_from_slice(page);
+    }
+    for page in &schema_overflow {
         file.extend_from_slice(page);
     }
     Ok(file)
@@ -620,27 +648,51 @@ fn encode_single_leaf(
     ordered: &[&(i64, Vec<u8>)],
     indices: &[usize],
 ) -> Result<(Vec<u8>, Vec<Vec<u8>>), SqliteError> {
-    let mut next_overflow_page = leaf_page + 1;
+    let selected: Vec<&(i64, Vec<u8>)> = indices.iter().map(|&i| ordered[i]).collect();
+    let (leaf_cells, overflow_pages) =
+        build_leaf_cells_with_overflow(page_size, usable, data_max_local, &selected, leaf_page + 1);
+    let mut leaf = vec![0u8; page_size];
+    pack_leaf_cells(&mut leaf, 0, page_size, &leaf_cells)?;
+    Ok((leaf, overflow_pages))
+}
+
+/// Build the table-leaf **cell bytes** for every `(rowid, record)` in `ordered`,
+/// spilling oversized records into overflow pages. Returns `(cells, overflow)`:
+/// `cells` are the inline cell bytes (still to be framed onto a leaf page by
+/// [`pack_leaf_cells`], at offset 0 for an ordinary page or 100 on page 1), and
+/// `overflow` is the flat list of overflow pages the records produced, numbered
+/// consecutively from `first_overflow_page`.
+///
+/// The split is page-position-agnostic — it uses `max_local` and `usable`
+/// directly — so the SAME routine serves both ordinary data leaves and the
+/// page-1 `sqlite_schema` leaf. In particular the schema leaf must pass
+/// `max_local = usable - 35` (NOT a `usable - 100 - 35` bound), because the
+/// reader recomputes the overflow threshold page-agnostically for page 1 too;
+/// emitting a different inline length would corrupt the round-trip.
+fn build_leaf_cells_with_overflow(
+    page_size: usize,
+    usable: usize,
+    max_local: usize,
+    ordered: &[&(i64, Vec<u8>)],
+    first_overflow_page: u32,
+) -> (Vec<Vec<u8>>, Vec<Vec<u8>>) {
+    let mut next_overflow_page = first_overflow_page;
     let mut overflow_pages: Vec<Vec<u8>> = Vec::new();
-    let mut leaf_cells: Vec<Vec<u8>> = Vec::with_capacity(indices.len());
-    for &i in indices {
-        let (rowid, record) = ordered[i];
+    let mut cells: Vec<Vec<u8>> = Vec::with_capacity(ordered.len());
+    for entry in ordered {
         let (cell, spilled) = build_leaf_cell(
-            *rowid,
-            record,
+            entry.0,
+            &entry.1,
             page_size,
             usable,
-            data_max_local,
+            max_local,
             next_overflow_page,
         );
         next_overflow_page += spilled.len() as u32;
         overflow_pages.extend(spilled);
-        leaf_cells.push(cell);
+        cells.push(cell);
     }
-
-    let mut leaf = vec![0u8; page_size];
-    pack_leaf_cells(&mut leaf, 0, page_size, &leaf_cells)?;
-    Ok((leaf, overflow_pages))
+    (cells, overflow_pages)
 }
 
 /// Pack an **interior table b-tree page** (type `0x05`) from its divider cells
@@ -796,6 +848,45 @@ mod tests {
         // docs' leaf + its overflow pages.
         assert_eq!(schema[1].root_page, Some(3));
         assert!(schema[2].root_page.unwrap() > 3);
+    }
+
+    /// A `sqlite_schema` row (a long CREATE statement) too large to sit inline on
+    /// page 1 spills onto overflow pages — the same overflow path data rows use,
+    /// but for the schema leaf at offset 100. The overflow pages are allocated
+    /// AFTER the table's data pages, so the table still roots on page 2, and the
+    /// reader reassembles the full DDL from the chain.
+    #[test]
+    fn write_page1_schema_row_spills_into_overflow() {
+        // ~580-byte CREATE statement ≫ the 512-byte page's inline limit
+        // (max_local = 512 − 35 = 477), so the schema record must overflow.
+        let cols = (0..80).map(|i| format!("col{i}")).collect::<Vec<_>>().join(", ");
+        let create_sql = format!("CREATE TABLE big({cols})");
+        assert!(create_sql.len() > 477, "test needs an overflowing schema row");
+
+        let rows = vec![
+            (1i64, vec![SqlValue::Int(1), SqlValue::Text("a".into())]),
+            (2, vec![SqlValue::Int(2), SqlValue::Text("b".into())]),
+        ];
+        let db = write_single_table_db(512, "big", &create_sql, &rows).unwrap();
+
+        // Page 1 (schema leaf, spilling) + page 2 (data leaf) + ≥1 schema overflow
+        // page. The header's page count must equal the actual file length.
+        assert_eq!(db.len() % 512, 0);
+        let pages = db.len() / 512;
+        assert!(pages > 2, "schema overflow page must exist, got {pages} pages");
+        let header = crate::header::Header::parse(&db).unwrap();
+        assert_eq!(header.page_count as usize, pages);
+        assert_eq!(&db[0..16], MAGIC);
+
+        // The reader reassembles the full DDL from the schema overflow chain, and
+        // the table (rooted on page 2, before the schema's overflow pages) reads
+        // back by name.
+        let schema = crate::schema::read_schema(&db).unwrap();
+        assert_eq!(schema.len(), 1);
+        assert_eq!(schema[0].name, "big");
+        assert_eq!(schema[0].root_page, Some(2));
+        assert_eq!(schema[0].sql.as_deref(), Some(create_sql.as_str()));
+        assert_eq!(crate::schema::read_table(&db, "big").unwrap(), rows);
     }
 
     /// A table with more rows than fit on one leaf grows a b-tree: several data

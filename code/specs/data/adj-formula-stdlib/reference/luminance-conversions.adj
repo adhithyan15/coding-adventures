@@ -1,0 +1,55 @@
+% ============================================================================
+% luminance-conversions — luminance-unit → candela per square metre factors
+% (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `illuminance-conversions.adj` and the other NIST-cited
+% conversion tables: a native tabular relation ingested VERBATIM from a published NIST
+% conversion table. The row states the factor converting the CGS luminance unit to the SI
+% coherent unit of luminance, the candela per square metre (cd/m²):
+%
+%     ? luminance_to_candela_per_square_metre(stilb, $v)   % 10000
+%
+% This is a NEW dimension alongside the length/mass/area/volume/time/speed/energy/
+% pressure/force/acceleration/dynamic-viscosity/kinematic-viscosity/magnetic-flux-density/
+% illuminance tables: where illuminance normalises luminous flux per unit AREA (the lux),
+% this one normalises LUMINANCE — luminous intensity per unit projected area, the candela
+% per square metre. (The two are the photometric pair: illuminance is light arriving on a
+% surface; luminance is light leaving one.) Put a luminance given in the CGS stilb into SI
+% first, then reason (write-once-use-many). Why a `table` and not a hand-written `relate`
+% clause: this is exactly the shape reference data comes in — a published table, not prose.
+% The citable artifact IS the NIST conversion-factors table at the `locator` below; the
+% factor here is a CELL of NIST Special Publication 811, Appendix B.9 ("Factors for units
+% listed alphabetically"), defended by one provenance envelope. Each `row` lowers to a
+% ground relation `luminance_to_candela_per_square_metre(unit, cd_per_m2)`, so the exact
+% lookup above is the ordinary SLD binding query — the engine returns the factor WITH this
+% table's citation as its proof, on the CPU, with zero model calls.
+%
+% HONESTY NOTE (like illuminance-/force-/viscosity-conversions, only the EXACT defined
+% factor gets a row, not the rounded ones): NIST SP 811 B.9 prints the "stilb" luminance
+% factor in BOLDFACE, its convention for factors that are EXACT by definition, transcribed
+% here as the plain decimal number of candela per square metre it names:
+%
+%     stilb (sb)   1.0 E+04  →  10000
+%
+% This is exact because the stilb is a coherent CGS unit — one stilb is one candela per
+% square centimetre, i.e. exactly 10⁴ candela per square metre. It terminates; nothing
+% here is a rounded measurement. NIST's other luminance rows are customary units whose
+% factors NIST prints in plain (non-boldface) type as ROUNDED values — e.g. the
+% "footlambert" at 3.426 259 E+00 cd/m² — so they are NOT given rows here; a
+% `? luminance_to_candela_per_square_metre(footlambert, $v)` ABSTAINS rather than
+% committing to a rounded factor. The only claim this table makes is "this is the exact
+% factor NIST SP 811 B.9 prints" — which is exactly what a byte-check against the cited
+% table verifies. `trust authoritative` — a primary, re-fetchable standards reference.
+% (See ADJ-TABLES.md; and feedback_nothing_human_authored — the factor is a verbatim cell
+% of the cited table, nothing asserted from memory.)
+% ============================================================================
+
+table luminance_to_candela_per_square_metre {
+    columns unit, candela_per_square_metre
+
+    row (stilb, 10000)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}

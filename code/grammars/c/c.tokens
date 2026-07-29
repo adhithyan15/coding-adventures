@@ -35,6 +35,12 @@ OR_OR   = "||"
 # Value literals
 # ---------------------------------------------------------------------------
 
+# Floating-point literal: a decimal fraction (`3.14`, `.5`, `10.`) or an integer
+# with an exponent (`1e10`), each with an optional `f`/`F`/`l`/`L` suffix.  It
+# MUST precede INT_LIT so `3.14` is not read as `3` then `.14`, and it requires
+# either a `.` or an exponent so a plain `42` still lexes as INT_LIT.
+FLOAT_LIT = /(([0-9]+\.[0-9]*|\.[0-9]+)([eE][+-]?[0-9]+)?|[0-9]+[eE][+-]?[0-9]+)[fFlL]?/
+
 # Integer literal: hexadecimal or decimal, with an optional C integer suffix
 # (any mix of u/U and l/L, e.g. 42, 0xFF, 100u, 10LL, 5UL).  Hex must precede
 # decimal so `0x…` is not read as `0` then a name.
@@ -59,6 +65,8 @@ keywords:
   long
   signed
   unsigned
+  float
+  double
   int8_t
   int16_t
   int32_t

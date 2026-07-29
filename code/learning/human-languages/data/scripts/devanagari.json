@@ -4,6 +4,7 @@
   "font": "_fonts/NotoSansDevanagari-Static.ttf",
   "direction": "ltr",
   "system": "abugida",
+  "signature": "A horizontal head-line (shirorekha) runs across the top; letters hang beneath it like laundry on a line.",
   "complete": false,
   "combination": "A consonant carries an inherent 'a' (क = ka). A vowel mark (mātrā) replaces that vowel (क + ी → की = kī). The virama ् strips the vowel, and the bare consonant joins the next into a conjunct (न + ् + म → न्म). The horizontal top line (shirorekhā) runs across the whole word.",
   "notes": "Used by Hindi, Marathi, and Sanskrit in this curriculum. The initial inventory below covers the greeting/self-introduction vocabulary; it grows toward a complete set. Stroke orders are the common handwriting convention, not a standard.",

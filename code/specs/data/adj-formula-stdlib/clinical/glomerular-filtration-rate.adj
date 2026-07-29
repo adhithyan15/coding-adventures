@@ -1,0 +1,143 @@
+% ============================================================================
+% glomerular-filtration-rate.adj — the Starling determination of the glomerular
+% filtration rate (GFR = Kf × [(P_GC − P_BS) − (π_GC − π_BS)]) in the ADJ standard library.
+% ============================================================================
+% The glomerular-filtration-rate entry of the *clinical* track, a renal-physiology sibling of
+% `starling-net-filtration-pressure.adj` (rung-31) and `cockcroft-gault.adj`. Where the net
+% filtration pressure grounds the driving pressure ALONE (the balance of hydrostatic and oncotic
+% forces across the glomerular capillary wall), this grounds the FLOW that driving pressure
+% produces: THE GLOMERULAR FILTRATION RATE IS THE FILTRATION COEFFICIENT TIMES THE NET
+% FILTRATION PRESSURE — where the net filtration pressure is itself the difference between the
+% two hydrostatic pressures, LESS the difference between the two oncotic pressures. So the whole
+% relation is a product of a difference OF two differences: an outer × (the filtration
+% coefficient Kf, the wall's permeability × area) multiplying an inner subtraction of one
+% pressure-difference from another. This is the first clinical inverter of that
+% PRODUCT-OF-A-DIFFERENCE-OF-TWO-DIFFERENCES shape and the first FIVE-input clinical formula:
+% where alveolar ventilation composes ONE difference inside a product, this composes TWO
+% differences inside the subtraction and then multiplies. It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its five exact rearrangements (the
+% filtration coefficient a GFR implies, and each of the four pressures the relation implies). As
+% with every compute library, a consumer states NO arithmetic: it `import`s this file, binds the
+% measured quantities from its own byte-provenance decomposition, and asks the engine to APPLY
+% the cited definition on the CPU. Zero math is performed by the model; the engine computes each
+% value EXACTLY (over exact rationals), carrying the definition's citation.
+%
+%     import "glomerular-filtration-rate.adj"
+%     observe filtration_coefficient(14)                        % "…filtration coefficient Kf 14…"
+%     observe glomerular_capillary_hydrostatic_pressure(60)     % "…P_GC 60 mmHg…"   (span cited)
+%     observe bowman_space_hydrostatic_pressure(17)             % "…P_BS 17 mmHg…"   (span cited)
+%     observe glomerular_capillary_oncotic_pressure(42)         % "…π_GC 42 mmHg…"   (span cited)
+%     observe bowman_space_oncotic_pressure(12)                 % "…π_BS 12 mmHg…"   (span cited)
+%     ? glomerular_filtration_rate(filtration_coefficient,
+%           glomerular_capillary_hydrostatic_pressure, bowman_space_hydrostatic_pressure,
+%           glomerular_capillary_oncotic_pressure, bowman_space_oncotic_pressure)
+%                    % engine → 182, carrying GFR = Kf × [(P_GC − P_BS) − (π_GC − π_BS)]
+%
+% All six formulas are EXACT over their parameters, so every value the engine returns is exact.
+% They COMPOSE and invert cleanly around the worked case Kf = 14, P_GC = 60 mmHg, P_BS = 17 mmHg,
+% π_GC = 42 mmHg, π_BS = 12 mmHg. The net filtration pressure is (60 − 17) − (42 − 12) = 43 − 30
+% = 13 mmHg, so GFR = 14 × 13 = 182: the `glomerular_filtration_rate` a consumer computes from
+% the five quantities is exactly the value the `filtration_coefficient` formula divides by the
+% net filtration pressure to recover 14, and exactly the value each of the four pressure formulas
+% rearranges to recover its own pressure (60, 17, 42, 12 respectively).
+%
+%   glomerular_filtration_rate(Kf, P_GC, P_BS, π_GC, π_BS)
+%       = Kf * ((P_GC - P_BS) - (π_GC - π_BS))                  % GFR = Kf × [(P_GC−P_BS)−(π_GC−π_BS)]
+%   filtration_coefficient(GFR, P_GC, P_BS, π_GC, π_BS)
+%       = GFR / ((P_GC - P_BS) - (π_GC - π_BS))                 % Kf  = GFR / net filtration pressure
+%   glomerular_capillary_hydrostatic_pressure(GFR, Kf, P_BS, π_GC, π_BS)
+%       = GFR / Kf + P_BS + π_GC - π_BS                         % P_GC solved out of the relation
+%   bowman_space_hydrostatic_pressure(GFR, Kf, P_GC, π_GC, π_BS)
+%       = P_GC - π_GC + π_BS - GFR / Kf                         % P_BS solved out of the relation
+%   glomerular_capillary_oncotic_pressure(GFR, Kf, P_GC, P_BS, π_BS)
+%       = P_GC - P_BS + π_BS - GFR / Kf                         % π_GC solved out of the relation
+%   bowman_space_oncotic_pressure(GFR, Kf, P_GC, P_BS, π_GC)
+%       = GFR / Kf - P_GC + P_BS + π_GC                         % π_BS solved out of the relation
+%
+% NOTE ON UNITS: the four pressures must be in the SAME unit (millimetres of mercury, as in the
+% worked case); the filtration coefficient carries the flow-per-pressure units (e.g. mL/min per
+% mmHg), so the glomerular filtration rate comes out in the corresponding flow unit (e.g.
+% mL/min). This library computes the exact value over whatever consistent units it is given. The
+% inner bracket — (P_GC − P_BS) − (π_GC − π_BS) — is exactly the net filtration pressure grounded
+% on its own in `starling-net-filtration-pressure.adj`; this library grounds the FLOW the
+% filtration coefficient turns that pressure into.
+%
+% All six formulas are defended by the SAME sentence — the StatPearls determination of the GFR by
+% the Starling equation — because that one statement (the GFR IS the filtration coefficient times
+% the oncotic-pressure difference subtracted from the hydrostatic-pressure difference) sanctions
+% the relation read every way. The quote is transcribed verbatim from the StatPearls "Physiology,
+% Renal Blood Flow and Filtration" article on the NCBI Bookshelf, so each `formula` carries the
+% provenance envelope every shipped grounded clause carries; the linter rejects an unsourced one.
+% (See feedback_nothing_human_authored — the sentence is a verbatim span of the cited page, not
+% asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable renal-physiology quantity the determination ranges
+% over, and each result is a derived quantity. Every term appears BOTH as a derived result and as
+% an input (of the other formulas), so each is a single dictionary term used in both roles. The
+% `surface` lists are the everyday names a decomposer maps onto the canonical term; the trailing
+% comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary glomerular_filtration_rate_vocab {
+    define filtration_coefficient                     : finding  surface "filtration coefficient", "Kf"                                        % flow per pressure (e.g. mL/min per mmHg)
+    define glomerular_capillary_hydrostatic_pressure  : finding  surface "glomerular capillary hydrostatic pressure", "P_GC", "PGC"            % millimetres of mercury (mmHg)
+    define bowman_space_hydrostatic_pressure          : finding  surface "Bowman space hydrostatic pressure", "P_BS", "PBS"                    % millimetres of mercury (mmHg)
+    define glomerular_capillary_oncotic_pressure      : finding  surface "glomerular capillary oncotic pressure", "pi_GC", "piGC"              % millimetres of mercury (mmHg)
+    define bowman_space_oncotic_pressure              : finding  surface "Bowman space oncotic pressure", "pi_BS", "piBS"                      % millimetres of mercury (mmHg)
+    define glomerular_filtration_rate                 : finding  surface "glomerular filtration rate", "GFR"                                   % flow (e.g. mL/min)
+}
+
+% ----------------------------------------------------------------------------
+% The determination, all six ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the Starling-equation sentence from StatPearls
+% on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact composition
+% of differences with a product or quotient of measured quantities, so the engine returns each
+% value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook glomerular_filtration_rate_laws {
+    use glomerular_filtration_rate_vocab
+
+    % Glomerular filtration rate — the filtration coefficient times the net filtration pressure,
+    % i.e. GFR = Kf × [(P_GC − P_BS) − (π_GC − π_BS)].
+    formula glomerular_filtration_rate(filtration_coefficient, glomerular_capillary_hydrostatic_pressure, bowman_space_hydrostatic_pressure, glomerular_capillary_oncotic_pressure, bowman_space_oncotic_pressure) = filtration_coefficient * ((glomerular_capillary_hydrostatic_pressure - bowman_space_hydrostatic_pressure) - (glomerular_capillary_oncotic_pressure - bowman_space_oncotic_pressure))
+        source "The GFR can be determined by the Starling equation, which is the filtration coefficient multiplied by the difference between glomerular capillary oncotic pressure and Bowman space oncotic pressure subtracted from the difference between glomerular capillary hydrostatic pressure and Bowman space hydrostatic pressure."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482248/"
+        trust authoritative
+
+    % Filtration coefficient — the same determination solved for Kf: the glomerular filtration
+    % rate divided by the net filtration pressure it produces. Defended by the SAME sentence.
+    formula filtration_coefficient(glomerular_filtration_rate, glomerular_capillary_hydrostatic_pressure, bowman_space_hydrostatic_pressure, glomerular_capillary_oncotic_pressure, bowman_space_oncotic_pressure) = glomerular_filtration_rate / ((glomerular_capillary_hydrostatic_pressure - bowman_space_hydrostatic_pressure) - (glomerular_capillary_oncotic_pressure - bowman_space_oncotic_pressure))
+        source "The GFR can be determined by the Starling equation, which is the filtration coefficient multiplied by the difference between glomerular capillary oncotic pressure and Bowman space oncotic pressure subtracted from the difference between glomerular capillary hydrostatic pressure and Bowman space hydrostatic pressure."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482248/"
+        trust authoritative
+
+    % Glomerular capillary hydrostatic pressure — the same determination solved for P_GC
+    % (P_GC = GFR/Kf + P_BS + π_GC − π_BS): the net filtration pressure the flow implies, with the
+    % other three pressures moved across. The SAME sentence, read the third way.
+    formula glomerular_capillary_hydrostatic_pressure(glomerular_filtration_rate, filtration_coefficient, bowman_space_hydrostatic_pressure, glomerular_capillary_oncotic_pressure, bowman_space_oncotic_pressure) = glomerular_filtration_rate / filtration_coefficient + bowman_space_hydrostatic_pressure + glomerular_capillary_oncotic_pressure - bowman_space_oncotic_pressure
+        source "The GFR can be determined by the Starling equation, which is the filtration coefficient multiplied by the difference between glomerular capillary oncotic pressure and Bowman space oncotic pressure subtracted from the difference between glomerular capillary hydrostatic pressure and Bowman space hydrostatic pressure."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482248/"
+        trust authoritative
+
+    % Bowman space hydrostatic pressure — the same determination solved for P_BS
+    % (P_BS = P_GC − π_GC + π_BS − GFR/Kf). The SAME sentence, read the fourth way.
+    formula bowman_space_hydrostatic_pressure(glomerular_filtration_rate, filtration_coefficient, glomerular_capillary_hydrostatic_pressure, glomerular_capillary_oncotic_pressure, bowman_space_oncotic_pressure) = glomerular_capillary_hydrostatic_pressure - glomerular_capillary_oncotic_pressure + bowman_space_oncotic_pressure - glomerular_filtration_rate / filtration_coefficient
+        source "The GFR can be determined by the Starling equation, which is the filtration coefficient multiplied by the difference between glomerular capillary oncotic pressure and Bowman space oncotic pressure subtracted from the difference between glomerular capillary hydrostatic pressure and Bowman space hydrostatic pressure."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482248/"
+        trust authoritative
+
+    % Glomerular capillary oncotic pressure — the same determination solved for π_GC
+    % (π_GC = P_GC − P_BS + π_BS − GFR/Kf). The SAME sentence, read the fifth way.
+    formula glomerular_capillary_oncotic_pressure(glomerular_filtration_rate, filtration_coefficient, glomerular_capillary_hydrostatic_pressure, bowman_space_hydrostatic_pressure, bowman_space_oncotic_pressure) = glomerular_capillary_hydrostatic_pressure - bowman_space_hydrostatic_pressure + bowman_space_oncotic_pressure - glomerular_filtration_rate / filtration_coefficient
+        source "The GFR can be determined by the Starling equation, which is the filtration coefficient multiplied by the difference between glomerular capillary oncotic pressure and Bowman space oncotic pressure subtracted from the difference between glomerular capillary hydrostatic pressure and Bowman space hydrostatic pressure."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482248/"
+        trust authoritative
+
+    % Bowman space oncotic pressure — the same determination solved for π_BS
+    % (π_BS = GFR/Kf − P_GC + P_BS + π_GC). The SAME sentence, read the sixth way.
+    formula bowman_space_oncotic_pressure(glomerular_filtration_rate, filtration_coefficient, glomerular_capillary_hydrostatic_pressure, bowman_space_hydrostatic_pressure, glomerular_capillary_oncotic_pressure) = glomerular_filtration_rate / filtration_coefficient - glomerular_capillary_hydrostatic_pressure + bowman_space_hydrostatic_pressure + glomerular_capillary_oncotic_pressure
+        source "The GFR can be determined by the Starling equation, which is the filtration coefficient multiplied by the difference between glomerular capillary oncotic pressure and Bowman space oncotic pressure subtracted from the difference between glomerular capillary hydrostatic pressure and Bowman space hydrostatic pressure."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482248/"
+        trust authoritative
+}

@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-axiom-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Tokenizer for Axiom, the strongly-typed CAS with a category/domain type system (MA13 MA-13b)"
+license = "MIT"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

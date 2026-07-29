@@ -18,15 +18,20 @@ Write-Host "[2/3] Emitting the TaskApp component into the web host..."
 # copy just the component file into the host's src (main.tsx imports ./TaskApp).
 New-Item -ItemType Directory -Force -Path (Join-Path $Web "src") | Out-Null
 New-Item -ItemType Directory -Force -Path (Join-Path $Web "public") | Out-Null
+# Both themes are emitted, as TaskApp.light.tsx / TaskApp.dark.tsx. mosstyle bakes
+# colours into each component's *inline* styles, so there is no CSS variable to flip
+# at runtime — the host picks a whole component instead (see src/theme.ts).
 $Emit = Join-Path $Web ".emit"
 if (Test-Path $Emit) { Remove-Item -Recurse -Force $Emit }
-Push-Location $Rust
-try {
-    cargo run -q -p mosaic-compile -- pkg $Here --backend react --output $Emit
-} finally {
-    Pop-Location
+foreach ($Theme in @("light", "dark")) {
+    Push-Location $Rust
+    try {
+        cargo run -q -p mosaic-compile -- pkg $Here --backend react --theme $Theme --output (Join-Path $Emit $Theme)
+    } finally {
+        Pop-Location
+    }
+    Copy-Item -Force (Join-Path $Emit "$Theme/react/TaskApp.tsx") (Join-Path $Web "src/TaskApp.$Theme.tsx")
 }
-Copy-Item -Force (Join-Path $Emit "react/TaskApp.tsx") (Join-Path $Web "src/TaskApp.tsx")
 Remove-Item -Recurse -Force $Emit
 
 Write-Host "[3/3] Copying the wasm runtime..."

@@ -65,9 +65,46 @@ each Newton update per unknown. Diagnostics report the active limit, how many
 steps were clipped, and the minimum damping factor; pass
 `newtonStepLimit: null` to disable the limiter.
 
-`diodeAtTemperature`, `bjtAtTemperature`, `mosfetAtTemperature`, and
-`circuitAtTemperature` provide operating-temperature footholds for diode, BJT,
-and Level-1 MOSFET models before running an analysis.
+`diodeAtTemperature`, `bjtAtTemperature`, `jfetAtTemperature`,
+`mosfetAtTemperature`, and `circuitAtTemperature` provide
+operating-temperature footholds for diode, BJT, JFET, and Level-1 MOSFET
+models before running an analysis.
+JFET model cards use `TCV` for threshold-voltage scaling and `BEX` for
+`BETA(T) = BETA * (T / TNOM)^BEX`. When explicitly present, `VTOTC` overrides
+`TCV` with `VTO(T) = VTO + VTOTC * (T - TNOM)`, while `BETATCE` overrides
+`BEX` with `BETA(T) = BETA * 1.01^(BETATCE * (T - TNOM))`. JFET `XTI`
+and `EG` scale gate saturation current with the standard bandgap law. JFET
+`B` applies Parker-Skellern doping-tail shaping to channel current and defaults
+to `1`, which preserves the Shichman-Hodges equations.
+JFET `NLEV` values below `3` preserve the legacy `2/3 * gm` channel thermal
+noise model. `NLEV >= 3` selects the Berkeley linear-region equation, with
+`GDSNOI` (default `1`) scaling its channel-noise conductance.
+Level-1 MOS model cards accept `KF` (default `0`) and `AF` (default `1`) and add
+`KF * abs(Id)^AF / frequency` flicker noise alongside channel thermal noise.
+Their `IS` value also drives source-body and drain-body junction leakage in
+DC, transient, transfer-function, and AC analysis, with separate `IBS` and
+`IBD` shot-noise contributions.
+`LD` defaults to zero and applies `L_eff = L - 2*LD` to channel current and
+length-scaled intrinsic/`CGBO` capacitance.
+`TOX` defaults to `1e-7 m`, must be finite and positive, and derives intrinsic
+Meyer gate capacitance from `Cox = epsilon_ox / TOX`.
+`RD` defaults to zero ohms. A finite positive value inserts an intrinsic drain
+node, routes the channel and drain-side capacitances through it, and contributes
+`4kT/RD` thermal noise.
+`RS` defaults to zero ohms. A finite positive value inserts an intrinsic source
+node, routes the channel and source-side capacitances through it, and contributes
+`4kT/RS` thermal noise.
+`RSH` defaults to zero ohms per square. `NRD` and `NRS` default to one drain
+and source square, so the fallbacks are `RSH * NRD` and `RSH * NRS`; explicit
+positive `RD` / `RS` values take precedence.
+`AD`, `AS`, `PD`, `PS`, and model-card `CJ` / `CJSW` default to zero and are
+finite and non-negative. They add `CJ * AD + CJSW * PD` to drain-body `CBD`
+and `CJ * AS + CJSW * PS` to source-body `CBS` in AC and transient analysis.
+`MJ` shapes bottom-junction depletion while `MJSW` defaults to `0.33` and
+independently shapes the sidewall terms.
+`FC` (default `0.5`) selects the continuous Berkeley forward-bias continuation
+for `CBS` / `CBD` depletion capacitance shaped by `PB`, `MJ`, and `MJSW`.
+All temperature coefficients honor model-card `TNOM` / `T_NOM`.
 `dcTemperatureSweep` and `dcTemperatureSweepCorners` run `.temp`-style DC
 operating-point snapshots across explicit analysis temperatures, with stable
 nominal and named-corner table helpers for cross-language comparison.
@@ -198,8 +235,46 @@ transition.
 Diode cards also accept `XTI` (default `3`) and `EG` (default `1.11 eV`) to
 control saturation-current temperature scaling.
 BJT cards accept `XTI` (default `3`) and `EG` (default `1.11` eV) for
-model-specific saturation-current temperature scaling, plus `VAF`/`VA`
-(default `0`, meaning infinite) for forward Early-effect modulation.
+model-specific saturation-current temperature scaling, `VAF`/`VA` (default
+`0`, meaning infinite) for forward Early-effect modulation, `VAR`/`VB`
+(default `0`, meaning infinite) for reverse Early-effect base-charge
+modulation, and `NF` (default
+`1`) for forward-junction emission shaping. `NR` (default `1`) shapes reverse
+base-collector diffusion capacitance in AC and transient analysis. `VJE`/`PE`
+(default `0.75 V`) and `MJE`/`ME` (default `0.33`) shape `CJE` base-emitter
+depletion capacitance. `VJC`/`PC` (default `0.75 V`) and `MJC`/`MC` (default
+`0.33`) likewise shape `CJC` base-collector depletion capacitance. `FC`
+(default `0.5`) selects the shared Berkeley forward-bias continuation point for
+both junctions. `IKF`/`IK` (default `0`, disabled) applies Berkeley forward
+high-current base-charge modulation to collector transport and small-signal
+transconductance. `ISE` (default `0`, disabled) and `NE` (default `1`) add the
+Berkeley base-emitter leakage branch to DC/transient base current,
+small-signal input conductance, and shot noise.
+`ISC` (default `0`, disabled) and `NC` (default `2`) add the mirrored Berkeley
+base-collector leakage branch to DC/transient current, small-signal
+base-collector conductance, and shot noise.
+`BR`/`BETA_R` (default `1` on model cards) controls reverse current gain and
+adds the base-collector reverse base-current branch. Direct `bjt` constructors
+default to infinite reverse beta to preserve their legacy behavior.
+`IKR` (default `0`, disabled) applies Berkeley reverse high-current base-charge
+modulation to that branch, increasing base current as reverse beta rolls off.
+`XTB` (default `0`) scales both forward and reverse beta with the
+analysis-to-nominal absolute temperature ratio, preserving nominal beta when
+omitted.
+`TNOM`/`T_NOM` sets the BJT model's nominal temperature in degrees Celsius.
+It overrides the circuit-level nominal temperature for BJT temperature scaling;
+omitting it preserves the inherited default.
+JFET cards accept `TCV` (default `0 V/K`) to shift threshold voltage as
+`VTO(T) = VTO - TCV * (T - TNOM)`. When explicitly present, `VTOTC` takes
+precedence and applies `VTO(T) = VTO + VTOTC * (T - TNOM)`. `TNOM`/`T_NOM`
+sets the JFET model's nominal temperature in degrees Celsius and overrides the
+circuit default; omitting both coefficients preserves temperature-invariant
+JFET threshold voltage and beta. `XTI` defaults to 3 and `EG` defaults to
+1.11 eV; together they scale gate-junction saturation current from the model
+nominal temperature.
+`KF` (default `0`, disabled) adds a distinct BJT base-current flicker-noise
+source to `.NOISE`. `AF` (default `1`) controls the base-current exponent, so
+source PSD is `KF * abs(Ib)^AF / frequency`.
 `modelCardUnsupportedParameterIssues`,
 `formatModelCardUnsupportedParameterIssueTable`,
 `modelCardUnsupportedParameterIssueRecords`,
@@ -225,7 +300,7 @@ model kind for compact release dashboards and Mosaic UI inventories.
 `modelCardSupportedParameterCoverageGateIssueRecords`,
 `formatModelCardSupportedParameterCoverageGateIssueCsv`, and
 `formatModelCardSupportedParameterCoverageGateIssueJson` validate the expected
-seven-kind, 74-row supported-parameter catalog and expose stable issue rows for
+seven-kind, 110-row supported-parameter catalog and expose stable issue rows for
 release automation.
 `modelCardSupportedParameterCoverageDashboard`,
 `formatModelCardSupportedParameterCoverageDashboardTable`,
@@ -254,8 +329,9 @@ Level-1 MOS charge audits. Diode `junctionCapacitance` / `transitTime`, BJT
 `reverseTransitTime`, and JFET `gateSourceCapacitance` /
 `gateDrainCapacitance` plus Level-1 MOS `CGSO` / `CGDO` / `CGBO` model-card
 parameters plus bulk-junction `CBS` / `CBD` model-card parameters also stamp
-transient storage, with MOS `PB` / `MJ` shaping reverse-biased source-body and
-drain-body capacitance to match their small-signal AC semantics.
+transient storage, with MOS `PB` / `MJ` / `FC` shaping source-body and
+drain-body capacitance continuously across reverse and forward bias to match
+their small-signal AC semantics.
 `deviceModelReferenceDeckAuditFixtures` flattens those DC, temperature, AC,
 noise, and transient fixture families into a stable reference-deck coverage
 matrix for each supported diode, BJT, JFET, and Level-1 MOS model family.

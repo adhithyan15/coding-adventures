@@ -51,6 +51,19 @@ int64_t __gc_alloc_kind(int64_t n, uint16_t kind);
  * its object layouts (records, tuples, Ruby/Python/JS objects). */
 int64_t __gc_register_kind(const int64_t *field_offsets, int64_t count);
 
+/* Register a VARIABLE-LENGTH REFERENCE-ARRAY kind: `fixed_count` fixed ref-field
+ * offsets at `fixed` (like __gc_register_kind), followed by a TAIL region — every
+ * aligned 8-byte word in [tail_from, size) of an instance is a reference. One kind
+ * thus describes arrays of every length (the tail follows the instance's own alloc
+ * size), so a JS/Ruby/Python array, a vector, or a hash's backing store is traced —
+ * and under the compacting collector RELOCATED — precisely instead of conservatively
+ * (a conservative array pins itself and every element it references). Every word in
+ * [tail_from, size) MUST hold a reference (base pointer, NaN-box tag ok, or null);
+ * tail_from is rounded up to a multiple of 8; a negative tail_from is treated as 0.
+ * A null `fixed` or fixed_count <= 0 means "no fixed fields, tail only". */
+int64_t __gc_register_ref_array_kind(const int64_t *fixed, int64_t fixed_count,
+                                     int64_t tail_from);
+
 /* Mark from `count` root words at `roots`, then sweep. Returns objects freed.
  * A null `roots` or count <= 0 means "no roots". */
 int64_t __gc_collect_roots(const int64_t *roots, int64_t count);
@@ -100,6 +113,15 @@ int64_t __gc_live_bytes(void);
 /* Collections run since process start (or last __gc_reset). */
 int64_t __gc_collection_count(void);
 
+/* Set the generational tenuring age: a young object is promoted to the old
+ * generation only after surviving `threshold` collections (default 1 = immediate
+ * tenuring). A larger value keeps short-lived objects young longer so a cheap minor
+ * GC reclaims them. Clamped to 1..=255 (0/negative -> 1). Safe at any time. */
+void __gc_set_tenure_age(int64_t threshold);
+
+/* The current generational tenuring age (see __gc_set_tenure_age). */
+int64_t __gc_tenure_age(void);
+
 /* Drop the whole heap (frees everything) and reset counters. */
 void __gc_reset(void);
 
@@ -140,6 +162,65 @@ int64_t __gc_register_stackmap(uint64_t func_start, uint64_t func_len,
  * scan, never a missed root. Returns objects freed. Same threading contract as
  * __gc_collect. (For precision the image must be built with frame pointers.) */
 int64_t __gc_collect_precise(void);
+
+/* Full **moving/compacting** collection rooted PRECISELY at this thread's stack — the
+ * relocating analogue of __gc_collect_precise (spec AOT00-T3-moving-collector.md §5). The
+ * SAME frame-pointer walk yields precise reference slots (for stack-mapped frames) and
+ * conservative regions (unmapped frames + spilled callee-saved registers); those roots then
+ * drive a compacting cycle that EVACUATES the movable survivors into a fresh arena and
+ * rewrites every pointer that named them — including writing each forwarded address back
+ * into its precise root slot, so the mutator's stack points at the relocated objects when
+ * this returns. Only objects reachable purely precisely (named by a stack map, no
+ * conservative in-edge) move; anything a conservative region can reach is pinned and stays
+ * put. With no stack maps registered nothing is movable and this degrades to exactly
+ * __gc_collect_precise, so it is always safe to call. Returns objects reclaimed (genuinely
+ * dead only — a relocated object is a survivor, not a free). For precision + safety the image
+ * must be built with frame pointers. Same threading contract as __gc_collect_precise. */
+int64_t __gc_collect_compacting(void);
+
+/* ── Incremental (bounded-pause) collection ─────────────────────────────────
+ * A three-call cooperative cycle (spec AOT00-T4-incremental-collector.md §6) that
+ * decomposes a full mark into bounded slices so the mutator sees short pauses instead of one
+ * long one. Drive it as:
+ *
+ *     __gc_collect_incremental_start();
+ *     while (!__gc_collect_incremental_step(BUDGET)) { ... mutator runs a slice ... }
+ *     freed = __gc_collect_incremental_finish();
+ *
+ * `start` captures the precise roots ONCE (the same frame-pointer walk as
+ * __gc_collect_precise) and shades them grey. Reference stores the mutator makes BETWEEN steps
+ * must go through __gc_write_barrier, whose incremental half shades the stored child grey
+ * (the Dijkstra insertion barrier) so a live object is never stranded. `step` advances marking
+ * by up to `budget` objects and returns 1 when marking is complete, 0 otherwise (a negative
+ * budget is treated as 0). `finish` sweeps the unreachable objects and returns the count
+ * reclaimed. If `start` could not trust the stack it enters no phase: `step` then returns 1
+ * immediately and `finish` returns 0, so nothing is freed (bias-to-leak, as __gc_collect_precise).
+ * Single-threaded; no other collection may run between start and finish. */
+void    __gc_collect_incremental_start(void);
+int64_t __gc_collect_incremental_step(int64_t budget);
+int64_t __gc_collect_incremental_finish(void);
+
+/* One compiled function's stack-map descriptor in a module table (see
+ * __gc_register_stackmap_module). Mirrors the __gc_register_stackmap arguments;
+ * frame_sizes / callee_masks may be NULL. Emitted into the image's read-only data,
+ * one per function, pointing at the per-function pc/count/slot arrays. */
+typedef struct {
+    uint64_t        func_start;
+    uint64_t        func_len;
+    int64_t         num_records;
+    const uint32_t *pc_offsets;
+    const uint32_t *frame_sizes;   /* nullable */
+    const uint16_t *callee_masks;  /* nullable */
+    const int32_t  *slot_counts;
+    const int32_t  *slots_flat;
+} GcStackmapModuleEntry;
+
+/* Register every function of a compiled module in one call — the entry an
+ * AOT image's start-up path invokes (a thin loop over __gc_register_stackmap).
+ * `entries` points to `n` descriptors; a NULL/`n<=0` call is a no-op. Returns the
+ * total records registered. This is what lets __gc_collect_precise resolve real
+ * frames instead of falling back to a conservative scan. */
+int64_t __gc_register_stackmap_module(const GcStackmapModuleEntry *entries, int64_t n);
 
 /* Number of functions currently registered via __gc_register_stackmap. */
 int64_t __gc_stackmap_count(void);

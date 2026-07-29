@@ -1,0 +1,33 @@
+% ============================================================================
+% molarity.query.adj — worked examples over the chemistry molarity library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a molarity
+% question: it states NO arithmetic and NO definition — it only `import`s the
+% grounded library, `observe`s the measured quantities it decomposed from the
+% prompt (each a byte-provenanced span, elided here), and asks the engine to APPLY
+% the cited definition. The native adj-lang engine binds the parameters, computes
+% each value EXACTLY on the CPU, and returns it with the definition's
+% source/locator/trust.
+%
+% The three questions INVERT: 6 mol of solute in 2 L of solution gives a molarity
+% of 3 mol/L; that 3 mol/L molarity is exactly what the moles formula multiplies by
+% the 2 L to recover the 6 mol, and exactly what the volume formula divides the 6
+% mol by to recover the 2 L.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli molarity.query.adj
+% ============================================================================
+
+import "molarity.adj"
+
+% 6 mol of solute in 2 L of solution: molarity = 6 / 2.
+observe moles(6)
+observe volume(2)
+? molarity(moles, volume)      % expect 3   (definition: M = n/V)
+
+% That 3 mol/L molarity in the same 2 L: moles = 3 * 2.
+observe molarity(3)
+? moles(molarity, volume)       % expect 6   (same definition, solved for n = M·V)
+
+% That 6 mol of solute at the same 3 mol/L: volume = 6 / 3.
+? volume(moles, molarity)       % expect 2   (same definition, solved for V = n/M)

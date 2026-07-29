@@ -1,0 +1,1 @@
+var a=1.5,b=-2.5,c=.25,d=16777216,e=Math.fround(1.1),f=Math.fround(16777217),g=m.fround(1.5);report(a,b,c,d,e,f,g);

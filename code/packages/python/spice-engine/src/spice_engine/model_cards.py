@@ -11,6 +11,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, replace
 
 from mosfet_models import MOSFET, Level1Model, Level1Params, MosfetType
+from mosfet_models.level1 import OXIDE_PERMITTIVITY
 
 from spice_engine.elements import (
     BJT,
@@ -306,13 +307,13 @@ _MODEL_CARD_SUPPORTED_PARAMETER_KINDS = (
     "PMOS",
 )
 _MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES = {
-    "D": (12, 18, 5, 3),
-    "NPN": (10, 19, 5, 4),
-    "PNP": (10, 19, 5, 4),
-    "NJF": (5, 11, 5, 3),
-    "PJF": (5, 11, 5, 3),
-    "NMOS": (18, 25, 6, 3),
-    "PMOS": (18, 25, 6, 3),
+    "D": (15, 21, 5, 3),
+    "NPN": (41, 58, 13, 4),
+    "PNP": (41, 58, 13, 4),
+    "NJF": (22, 30, 7, 3),
+    "PJF": (22, 30, 7, 3),
+    "NMOS": (31, 39, 7, 3),
+    "PMOS": (31, 39, 7, 3),
 }
 
 
@@ -352,6 +353,9 @@ _DIODE_PARAMETER_ALIASES: dict[str, str] = {
     "FC": "FC",
     "XTI": "XTI",
     "EG": "EG",
+    "RS": "RS",
+    "KF": "KF",
+    "AF": "AF",
 }
 
 _BJT_PARAMETER_ALIASES: dict[str, str] = {
@@ -368,12 +372,51 @@ _BJT_PARAMETER_ALIASES: dict[str, str] = {
     "CJC": "CJC",
     "CJC0": "CJC",
     "CBC": "CJC",
+    "XCJC": "XCJC",
     "TF": "TF",
     "TR": "TR",
     "XTI": "XTI",
     "EG": "EG",
     "VAF": "VAF",
     "VA": "VAF",
+    "VAR": "VAR",
+    "VB": "VAR",
+    "IKF": "IKF",
+    "IK": "IKF",
+    "IKR": "IKR",
+    "TNOM": "TNOM",
+    "T_NOM": "TNOM",
+    "KF": "KF",
+    "AF": "AF",
+    "PTF": "PTF",
+    "XTF": "XTF",
+    "ITF": "ITF",
+    "VTF": "VTF",
+    "RE": "RE",
+    "RC": "RC",
+    "RB": "RB",
+    "RBM": "RBM",
+    "IRB": "IRB",
+    "ISE": "ISE",
+    "C2": "C2",
+    "NE": "NE",
+    "ISC": "ISC",
+    "C4": "C4",
+    "NC": "NC",
+    "XTB": "XTB",
+    "BR": "BR",
+    "BETA_R": "BR",
+    "NF": "NF",
+    "NR": "NR",
+    "VJE": "VJE",
+    "PE": "VJE",
+    "MJE": "MJE",
+    "ME": "MJE",
+    "VJC": "VJC",
+    "PC": "VJC",
+    "MJC": "MJC",
+    "MC": "MJC",
+    "FC": "FC",
 }
 
 _JFET_PARAMETER_ALIASES: dict[str, str] = {
@@ -388,6 +431,25 @@ _JFET_PARAMETER_ALIASES: dict[str, str] = {
     "CGS0": "CGS",
     "CGD": "CGD",
     "CGD0": "CGD",
+    "KF": "KF",
+    "AF": "AF",
+    "PB": "PB",
+    "VJ": "PB",
+    "FC": "FC",
+    "IS": "IS",
+    "XTI": "XTI",
+    "EG": "EG",
+    "B": "B",
+    "NLEV": "NLEV",
+    "GDSNOI": "GDSNOI",
+    "RD": "RD",
+    "RS": "RS",
+    "TNOM": "TNOM",
+    "T_NOM": "TNOM",
+    "TCV": "TCV",
+    "VTOTC": "VTOTC",
+    "BEX": "BEX",
+    "BETATCE": "BETATCE",
 }
 
 _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
@@ -402,7 +464,15 @@ _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
     "PHI": "PHI",
     "W": "W",
     "L": "L",
+    "LD": "LD",
+    "TOX": "TOX",
+    "U0": "U0",
+    "UO": "U0",
+    "RD": "RD",
+    "RS": "RS",
+    "RSH": "RSH",
     "IS": "IS",
+    "JS": "JS",
     "NSUB": "N_SUB",
     "N_SUB": "N_SUB",
     "TNOM": "T_NOM",
@@ -414,8 +484,14 @@ _MOS_LEVEL1_PARAMETER_ALIASES: dict[str, str] = {
     "CJS": "CBS",
     "CBD": "CBD",
     "CJD": "CBD",
+    "CJ": "CJ",
+    "CJSW": "CJSW",
     "PB": "PB",
     "MJ": "MJ",
+    "MJSW": "MJSW",
+    "FC": "FC",
+    "KF": "KF",
+    "AF": "AF",
 }
 
 
@@ -870,6 +946,9 @@ def diode_from_model_card(
         Fc=p.get("FC", 0.5),
         Xti=p.get("XTI", 3.0),
         Eg=p.get("EG", 1.11),
+        Rs=p.get("RS", 0.0),
+        Kf=p.get("KF", 0.0),
+        Af=p.get("AF", 1.0),
     )
 
 
@@ -885,13 +964,14 @@ def bjt_from_model_card(
     if model.kind not in {"NPN", "PNP"}:
         raise ValueError(f"{name}: expected BJT model card, got {model.kind}")
     p = model.parameters
+    saturation_current = p.get("IS", 1.0e-14)
     return BJT(
         name,
         collector,
         base,
         emitter,
         polarity=model.kind,
-        Is=p.get("IS", 1.0e-14),
+        Is=saturation_current,
         beta_f=p.get("BF", 100.0),
         Vt=p.get("VT", 0.02585),
         Cje=p.get("CJE", 0.0),
@@ -901,6 +981,35 @@ def bjt_from_model_card(
         Xti=p.get("XTI", 3.0),
         Eg=p.get("EG", 1.11),
         Vaf=p.get("VAF", 0.0),
+        Nf=p.get("NF", 1.0),
+        Nr=p.get("NR", 1.0),
+        Vje=p.get("VJE", 0.75),
+        Mje=p.get("MJE", 0.33),
+        Vjc=p.get("VJC", 0.75),
+        Mjc=p.get("MJC", 0.33),
+        Fc=p.get("FC", 0.5),
+        Var=p.get("VAR", 0.0),
+        Ikf=p.get("IKF", 0.0),
+        Ise=p.get("ISE", p.get("C2", 0.0) * saturation_current),
+        Ne=p.get("NE", 1.0),
+        Isc=p.get("ISC", p.get("C4", 0.0) * saturation_current),
+        Nc=p.get("NC", 2.0),
+        Xtb=p.get("XTB", 0.0),
+        beta_r=p.get("BR", 1.0),
+        Ikr=p.get("IKR", 0.0),
+        Tnom=(p["TNOM"] + 273.15) if "TNOM" in p else None,
+        Kf=p.get("KF", 0.0),
+        Af=p.get("AF", 1.0),
+        Ptf=p.get("PTF", 0.0),
+        Xtf=p.get("XTF", 0.0),
+        Itf=p.get("ITF", 0.0),
+        Vtf=p.get("VTF", 0.0),
+        Re=p.get("RE", 0.0),
+        Rc=p.get("RC", 0.0),
+        Rb=p.get("RB", 0.0),
+        Rbm=p.get("RBM"),
+        Irb=p.get("IRB", 0.0),
+        Xcjc=p.get("XCJC", 1.0),
     )
 
 
@@ -927,6 +1036,23 @@ def jfet_from_model_card(
         lambda_=p.get("LAMBDA", 0.0),
         Cgs=p.get("CGS", 0.0),
         Cgd=p.get("CGD", 0.0),
+        Kf=p.get("KF", 0.0),
+        Af=p.get("AF", 1.0),
+        Pb=p.get("PB", 1.0),
+        Fc=p.get("FC", 0.5),
+        Is=p.get("IS", 1.0e-14),
+        Xti=p.get("XTI", 3.0),
+        Eg=p.get("EG", 1.11),
+        B=p.get("B", 1.0),
+        Nlev=p.get("NLEV", 1.0),
+        Gdsnoi=p.get("GDSNOI", 1.0),
+        Rd=p.get("RD", 0.0),
+        Rs=p.get("RS", 0.0),
+        Tcv=p.get("TCV", 0.0),
+        Vtotc=p.get("VTOTC"),
+        Tnom=p["TNOM"] + 273.15 if "TNOM" in p else None,
+        Bex=p.get("BEX", 0.0),
+        Betatce=p.get("BETATCE"),
     )
 
 
@@ -944,16 +1070,29 @@ def mosfet_from_model_card(
         raise ValueError(f"{name}: expected MOSFET model card, got {model.kind}")
     p = model.parameters
     defaults = Level1Params()
+    surface_mobility = p.get("U0", defaults.U0)
+    transconductance = p.get("KP", defaults.KP)
+    if "KP" not in p and "TOX" in p and p["TOX"] > 0.0:
+        transconductance = (
+            surface_mobility * 1.0e-4 * OXIDE_PERMITTIVITY / p["TOX"]
+        )
     params = replace(
         defaults,
         VT0=p.get("VT0", defaults.VT0),
-        KP=p.get("KP", defaults.KP),
+        KP=transconductance,
         LAMBDA=p.get("LAMBDA", defaults.LAMBDA),
         GAMMA=p.get("GAMMA", defaults.GAMMA),
         PHI=p.get("PHI", defaults.PHI),
         W=p.get("W", defaults.W),
         L=p.get("L", defaults.L),
+        LD=p.get("LD", defaults.LD),
+        TOX=p.get("TOX", defaults.TOX),
+        U0=surface_mobility,
+        RD=p.get("RD", defaults.RD),
+        RS=p.get("RS", defaults.RS),
+        RSH=p.get("RSH", defaults.RSH),
         IS=p.get("IS", defaults.IS),
+        JS=p.get("JS", defaults.JS),
         N_SUB=p.get("N_SUB", defaults.N_SUB),
         T_NOM=p.get("T_NOM", defaults.T_NOM),
         CGSO=p.get("CGSO", defaults.CGSO),
@@ -961,8 +1100,14 @@ def mosfet_from_model_card(
         CGBO=p.get("CGBO", defaults.CGBO),
         CBS=p.get("CBS", defaults.CBS),
         CBD=p.get("CBD", defaults.CBD),
+        CJ=p.get("CJ", defaults.CJ),
+        CJSW=p.get("CJSW", defaults.CJSW),
         PB=p.get("PB", defaults.PB),
         MJ=p.get("MJ", defaults.MJ),
+        MJSW=p.get("MJSW", defaults.MJSW),
+        FC=p.get("FC", defaults.FC),
+        KF=p.get("KF", defaults.KF),
+        AF=p.get("AF", defaults.AF),
     )
     mos_type = MosfetType.NMOS if model.kind == "NMOS" else MosfetType.PMOS
     return Mosfet(name, drain, gate, source, body, MOSFET(mos_type, Level1Model(params)))
@@ -1160,7 +1305,10 @@ def device_model_temperature_audit_fixtures() -> tuple[DeviceModelTemperatureBeh
     behavior_by_name = {
         "diode-forward-bias": "diode saturation current and thermal voltage scale with temperature",
         "bjt-emitter-follower": "BJT saturation current and thermal voltage scale with temperature",
-        "jfet-source-bias": "JFET temperature scaling is intentionally invariant until a policy lands",
+        "jfet-source-bias": (
+            "JFET temperature scaling defaults to invariant; VTOTC overrides "
+            "TCV for threshold-voltage scaling; BETATCE overrides BEX for beta scaling"
+        ),
         "mos-level1-common-source": "Level-1 MOS threshold and transconductance scale with temperature",
     }
     return tuple(

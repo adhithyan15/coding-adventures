@@ -59,6 +59,76 @@ describe("tf", () => {
     expect(outputImpedance(10.0)).toBeLessThan(outputImpedance(0.0));
   });
 
+  it("uses BJT reverse Early voltage to reduce gain", () => {
+    function gain(reverseEarlyVoltage: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vin", "base", "0", 0.65));
+      circuit.add(resistor("Rload", "out", "0", 1_000.0));
+      circuit.add({ ...bjt("Q1", "out", "base", "0"), reverseEarlyVoltage });
+      return Math.abs(tf(circuit, "out", "Vin").gain());
+    }
+
+    expect(gain(1.0)).toBeLessThan(gain(0.0));
+  });
+
+  it("uses BJT forward beta roll-off to reduce gain", () => {
+    function gain(forwardBetaRolloffCurrent: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vin", "base", "0", 0.65));
+      circuit.add(resistor("Rload", "out", "0", 1_000.0));
+      circuit.add({ ...bjt("Q1", "out", "base", "0"), forwardBetaRolloffCurrent });
+      return Math.abs(tf(circuit, "out", "Vin").gain());
+    }
+
+    expect(gain(1.0e-4)).toBeLessThan(gain(0.0));
+  });
+
+  it("uses BJT base-emitter leakage to reduce input impedance", () => {
+    function inputImpedance(baseEmitterLeakageSaturationCurrent: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vin", "base", "0", 0.65));
+      circuit.add(resistor("Rload", "out", "0", 1_000.0));
+      circuit.add({
+        ...bjt("Q1", "out", "base", "0"),
+        baseEmitterLeakageSaturationCurrent,
+        baseEmitterLeakageEmissionCoefficient: 1.5,
+      });
+      return tf(circuit, "out", "Vin").inputImpedanceOhms;
+    }
+
+    expect(inputImpedance(1.0e-10)).toBeLessThan(inputImpedance(0.0));
+  });
+
+  it("uses BJT base-collector leakage to reduce input impedance", () => {
+    function inputImpedance(baseCollectorLeakageSaturationCurrent: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vin", "base", "0", 0.65));
+      circuit.add({
+        ...bjt("Q1", "0", "base", "base"),
+        baseCollectorLeakageSaturationCurrent,
+        baseCollectorLeakageEmissionCoefficient: 1.5,
+      });
+      return tf(circuit, "base", "Vin").inputImpedanceOhms;
+    }
+
+    expect(inputImpedance(1.0e-10)).toBeLessThan(inputImpedance(0.0));
+  });
+
+  it("uses BJT forward emission coefficient to reduce gain and raise input impedance", () => {
+    function transfer(forwardEmissionCoefficient: number) {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vin", "base", "0", 0.65));
+      circuit.add(resistor("Rload", "out", "0", 1_000.0));
+      circuit.add(bjt("Q1", "out", "base", "0", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 3, 1.11, 0, forwardEmissionCoefficient));
+      return tf(circuit, "out", "Vin");
+    }
+
+    const ideal = transfer(1.0);
+    const shaped = transfer(2.0);
+    expect(Math.abs(shaped.gain())).toBeLessThan(Math.abs(ideal.gain()));
+    expect(shaped.inputImpedanceOhms).toBeGreaterThan(ideal.inputImpedanceOhms);
+  });
+
   it("formats stable text output tables for transfer-function results", () => {
     const result = {
       transferRatio: 0.5,

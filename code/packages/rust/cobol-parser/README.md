@@ -30,7 +30,11 @@ sentences built from the core verbs (`MOVE`, `DISPLAY`, `ACCEPT`,
 `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE … GIVING`, `COMPUTE … = <expr>` with a
 precedence-layered arithmetic expression (`+ - * / **`, unary sign, parentheses)
 and optional `ROUNDED` / `ON SIZE ERROR`, `PERFORM`, `GO TO`, `IF … ELSE`,
-`EVALUATE`, `STRING … DELIMITED BY … INTO`, `STOP RUN`), plus a minimal
+`EVALUATE`, `STRING … DELIMITED BY … INTO`, `UNSTRING … DELIMITED BY … INTO`,
+`INSPECT … TALLYING … FOR ALL` and `INSPECT … CONVERTING from TO to` (the grammar
+also accepts the fuller `LEADING`/`CHARACTERS`/`BEFORE`/`AFTER`/`REPLACING` surface,
+and a `BEFORE`/`AFTER` region on `CONVERTING`, so the reader rejects them as clean
+later rungs), `STOP RUN`), plus a minimal
 ENVIRONMENT (CONFIGURATION / INPUT-OUTPUT sections).
 An operand may carry a **reference-modification** suffix —
 `operand = NAME [ LPAREN operand COLON [ operand ] RPAREN ] | literal` — so a

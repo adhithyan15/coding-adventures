@@ -2,6 +2,86 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.58.0] - 2026-07-21
+
+### Fixed - drop the redundant `;` after a block-final `var` declaration
+
+A `var`/`let`/`const` declaration that is the **last statement inside a
+block** (`{ … }`) used to keep its terminator `;` right before the closing
+`}`:
+
+```js
+function f(){ var y = h(); }   // was: function(){var y=h();}
+```
+
+The closing `}` already terminates that statement (ECMAScript ASI), so the
+reference Closure Compiler emits no `;` there — `function(){var y=h()}`. The
+compact-mode "drop the redundant terminator `;` before `}`" rule
+(`last_stmt_uses_terminator_semi`) excluded **all** declarations; it now
+returns `true` for a block-final `VariableDeclaration`, so the `;` is popped.
+
+This gate feeds only `emit_block_statement`; the separate top-level part-B
+`;` that `emit_program` appends after a trailing function/class declaration
+(the fix from the previous "extra `;` after a top-level declaration" work) is
+untouched. Function/class declarations end in `}` (no `;` to pop, so the pop
+no-ops on them), and import/export declarations are illegal inside a block and
+never reach the gate.
+
+This defect was latent until now: the fold-control-flow `var` hoist/split
+(removed in `closure-pass-fold-control-flow` 0.33.0) always moved a `var`'s
+initializer off the last-statement position, so a block-final `var` never
+reached the emitter. Removing that transform surfaced this, and the two
+changes ship together.
+
+## [0.57.0] - 2026-07-20
+
+### Added - output line wrapping at a 500-column budget
+
+The emitter produced the whole program as ONE line regardless of length. The
+reference compiler wraps, so every output longer than the budget diverged.
+
+Oracle-verified against `closure-compiler-v20260712.jar` by emitting N
+uniform-width call statements and measuring each output line:
+
+```text
+  stmt width | line 1 | previous statement ended at
+  -----------+--------+-----------------------------
+       10    |   510  |  500
+       11    |   506  |  495
+       12    |   504  |  492
+```
+
+In every row the line is cut at the FIRST length exceeding 500, and the
+preceding length is <= 500. The rule is therefore: emit the statement, then if
+the line is now over budget, break AFTER it. Lines routinely run slightly over
+500 -- the break lands after the statement that crosses, not before it.
+
+Verified byte-identical to the oracle at all three widths and across five
+consecutive breaks (`510 510 510 510 510 50` on 260 statements).
+
+### Why a `var` run wraps differently, and why it does not apply here
+
+A run of separate `var v00=1;` statements wraps at 500/495/492 instead -- BEFORE
+the crossing statement. That is a different mechanism (upstream notes a preferred
+break point ahead of certain constructs). It does not reach this code path:
+consecutive `var` declarations are COLLAPSED into a single statement at
+SIMPLE/ADVANCED (oracle-confirmed), and WHITESPACE_ONLY does not route through
+this emitter at all -- closurec has a separate `whitespace_only` minifier. The
+levels this emitter governs only ever see the break-after rule.
+
+Getting this backwards is easy and silent: an early draft of this change derived
+the rule from a `var` bisection and wrapped at the wrong column on every large
+file while still passing every test. Only a byte-comparison against the oracle
+caught it, which is why the constant carries the table and the caveat inline.
+
+### Not covered
+
+A single statement whose own minified form exceeds the budget. The reference
+compiler breaks INSIDE such a statement at safe token boundaries (after a binary
+operator, after an argument comma) and those lines may exceed 500. That needs
+line tracking threaded through every emit method plus a notion of which
+boundaries are ASI-safe, and is tracked separately.
+
 ## [0.56.0] - 2026-07-20
 
 ### Fixed - control characters now render exactly as the reference compiler does

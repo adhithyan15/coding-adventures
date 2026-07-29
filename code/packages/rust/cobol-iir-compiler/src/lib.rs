@@ -448,6 +448,8 @@ impl<'a> Compiler<'a> {
             "set_stmt" => self.emit_set(verb),
             "evaluate_stmt" => self.emit_evaluate(verb),
             "string_stmt" => self.emit_string(verb),
+            "unstring_stmt" => self.emit_unstring(verb),
+            "inspect_stmt" => self.emit_inspect(verb),
             other => Err(CompileError::Unsupported(format!(
                 "the {} statement is a later rung",
                 verb_name(other)
@@ -484,7 +486,7 @@ impl<'a> Compiler<'a> {
                     self.emit("print_str", None, vec![Operand::Var(tmp)], "void");
                 }
                 Operandy::RefMod { base, start, len } => {
-                    let (reg, _len) = self.ref_mod_slice(&base, start, len)?;
+                    let (reg, _len) = self.ref_mod_slice(&base, &start, &len)?;
                     self.emit("print_str", None, vec![Operand::Var(reg)], "void");
                 }
             }
@@ -530,10 +532,139 @@ impl<'a> Compiler<'a> {
                         (ItemKind::Char { .. }, ItemKind::Char { .. }) => {
                             self.move_char_item(src_idx, didx);
                         }
+                        // Cross-category **numeric → alphanumeric**: a numeric
+                        // source (`PIC 9(i)V9(d)` or `PIC S9(i)V9(d)`) moved into an
+                        // alphanumeric receiver is treated by COBOL as though it
+                        // were an alphanumeric item holding its digit characters —
+                        // the item's `(i + d)`-digit zero-padded magnitude image,
+                        // the integer part followed by the fractional part with NO
+                        // decimal point (an INTEGER source, `d = 0`, is the special
+                        // case). This is the very image `Decimal::digits()` yields
+                        // (`int + frac`) and, for an unsigned integer, the digits
+                        // `DISPLAY` shows.
+                        //
+                        // For a SIGNED source (`PIC S9…`) the image additionally
+                        // carries the operational sign as a TRAILING OVERPUNCH on the
+                        // units (last) digit — the same zoned-decimal encoding the
+                        // runtime already produces when it `DISPLAY`s a signed field,
+                        // and the same table `__cob_print_signed` uses:
+                        //
+                        //   | units u  | 0 1 2 3 4 5 6 7 8 9 |
+                        //   | positive | { A B C D E F G H I |
+                        //   | negative | } J K L M N O P Q R |
+                        //
+                        // So `S9(3) = +123` → `"12C"`, `= −123` → `"12L"`, and
+                        // `S9V9 = −4.2` → `"4K"`. Note the overpunch is driven by the
+                        // *item* being signed, not by the value's sign: a signed
+                        // POSITIVE value still overpunches (its `{A…I` positive row),
+                        // which is exactly why an unsigned source (`"123"`) and a
+                        // signed positive source (`"12C"`) differ. An unsigned source
+                        // has no sign, so its image is the plain magnitude (unchanged
+                        // from before this rung).
+                        //
+                        // The image is then moved by the alphanumeric rules
+                        // (LEFT-justified, space-padded on the right if wider,
+                        // truncated on the right if narrower). We build that
+                        // `(i + d)`-character image at run time from the scaled
+                        // numeric slot — whose magnitude is already `value * 10^d`, so
+                        // its full `(i + d)` digits ARE the image (no point inserted)
+                        // — then feed it through the same char-store path a
+                        // same-category alphanumeric MOVE uses, so the compiler and
+                        // the oracle emit byte-identical bytes.
+                        (
+                            ItemKind::Numeric { signed, .. },
+                            ItemKind::Char { .. },
+                        ) => {
+                            let signed = *signed;
+                            let (int_d, dec_d) = self.numeric_dims(src_idx);
+                            let n = int_d + dec_d;
+                            let src_reg = self.items[src_idx].reg.clone();
+                            let image = if signed {
+                                self.emit_signed_num_alpha_image(&src_reg, n)
+                            } else {
+                                self.emit_num_digit_string(&src_reg, n)
+                            };
+                            self.move_str_into_char(&image, n, didx);
+                        }
+                        // Cross-category **alphanumeric → numeric** (the reverse
+                        // direction): an alphanumeric source (`PIC X(m)`) moved into
+                        // an UNSIGNED numeric receiver `PIC 9(i)V9(d)` (no `S`; `d`
+                        // may be 0 — an INTEGER — or > 0 — a SCALED receiver).
+                        //
+                        // COBOL reads the source's `m` characters as an unsigned
+                        // integer `V` (fold `V = V*10 + (byte - '0')` left-to-right),
+                        // and that folded integer IS the receiver's scaled-slot
+                        // magnitude directly: it fills the receiver's `(i + d)` digit
+                        // positions RIGHT-justified, with the implied point sitting
+                        // `d` places from the right. So the receiver's slot is
+                        // `V mod 10^(i+d)` — left-zero-padded when the source is
+                        // shorter than `(i + d)`, high-order-truncated when longer.
+                        // This is NOT the arithmetic decimal-align rule: `V` is not
+                        // multiplied by `10^d`; the fold already lands at scale `d`.
+                        //
+                        //   MOVE "042"   TO 9(2)V9  → V=42    → slot 042 → reads 4.2
+                        //   MOVE "42"    TO 9(2)V9  → V=42    → slot 042 → reads 4.2
+                        //   MOVE "12345" TO 9(2)V9  → V=12345 → slot 345 → reads 34.5
+                        //
+                        // We fold the `m` bytes into an `i64` and store it through the
+                        // SAME numeric-store helper a numeric MOVE/COMPUTE uses. The
+                        // key is the source scale we hand `store_scaled`: because the
+                        // fold already IS the slot magnitude at scale `d`, we claim
+                        // the receiver's OWN scale `d` as the value scale. Then
+                        // `store_scaled` rescales `d → d` (a no-op — no shift) and
+                        // keeps the low-order `(i + d)` digits (`mag mod 10^(i+d)`),
+                        // which is exactly `V mod 10^(i+d)`. Passing scale `0` instead
+                        // would up-shift by `10^d` (the wrong, arithmetic rule). For
+                        // `d = 0` this reproduces the old integer-receiver behaviour
+                        // byte-for-byte. `value_max_int = m` only feeds the up-scale
+                        // overflow guard, which never fires here (from-scale equals
+                        // to-scale, so there is no up-shift), so its exact value is
+                        // immaterial; `m` (the source width) is a safe upper bound.
+                        //
+                        // This is byte-identical to the oracle (which folds the
+                        // identical per-character arithmetic and stores via
+                        // `move_into_numeric` with the fold split at scale `d`). This
+                        // rung scopes to an ALL-DIGIT source; a non-digit byte runs
+                        // the same `(byte - '0')` arithmetic on both engines
+                        // (defined-but-unspecified, identical), so no reject is needed
+                        // and no test exercises it.
+                        (
+                            ItemKind::Char { .. },
+                            ItemKind::Numeric { signed: false, dec_digits: d, .. },
+                        ) => {
+                            let d = *d;
+                            let m = self.items[src_idx].width();
+                            // Guard the `i64` fold: an all-digit source of ≤ 18
+                            // characters stays below `10^18 < i64::MAX`, so the fold
+                            // never overflows on either engine; a wider source is a
+                            // clean later rung (both engines reject it identically).
+                            if m > NUMERIC_MAX_DIGITS {
+                                return Err(CompileError::Unsupported(format!(
+                                    "alphanumeric → numeric MOVE from {name} into {dst}: a source \
+                                     wider than {NUMERIC_MAX_DIGITS} characters is a later rung \
+                                     (its {m}-digit fold could overflow the i64 intermediate)"
+                                )));
+                            }
+                            let src_reg = self.items[src_idx].reg.clone();
+                            let value = self.emit_str_to_int(&src_reg, m);
+                            // Claim the receiver's scale `d` for the fold — see the
+                            // note above: the fold already IS the slot magnitude at
+                            // scale `d`, so `store_scaled` does no shift and keeps the
+                            // low-order `(i + d)` digits.
+                            self.store_scaled(&dst, &value, d, m, false)?;
+                        }
+                        // Every other cross-category shape stays a clean later
+                        // rung: a SIGNED (`PIC S9`) numeric item on either side
+                        // (source of a numeric→alphanumeric, or receiver of an
+                        // alphanumeric→numeric MOVE).
                         _ => {
                             return Err(CompileError::Unsupported(format!(
                                 "cross-category MOVE from {name} into {dst} \
-                                 (numeric↔alphanumeric) is a later rung"
+                                 (an unsigned numeric source into an alphanumeric \
+                                 receiver, or an alphanumeric source into an unsigned \
+                                 numeric receiver — integer or scaled `PIC 9(i)V9(d)` — \
+                                 are supported; a signed numeric item on either side is \
+                                 a later rung)"
                             )));
                         }
                     }
@@ -624,13 +755,6 @@ impl<'a> Compiler<'a> {
     fn emit_evaluate(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
         let subject_node = child_node(verb, "operand")
             .ok_or_else(|| CompileError::Malformed("EVALUATE without a subject".into()))?;
-        // Classify the subject: `Some` = a character value (matched with `str_cmp`),
-        // `None` = numeric (matched with the scaled `cmp_*` path).
-        let subject_str = self.str_operand(subject_node)?;
-        let subject_num = match &subject_str {
-            Some(_) => None,
-            None => Some(self.read_arith_term(subject_node)?),
-        };
         let end_lbl = self.fresh("eval_end");
         for wb in child_nodes(verb, "when_branch") {
             let is_other = child_tokens(wb).iter().any(|(k, v)| k == "KEYWORD" && v == "OTHER");
@@ -642,10 +766,7 @@ impl<'a> Compiler<'a> {
                 self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
                 continue;
             }
-            let cond = match &subject_str {
-                Some(s) => self.emit_when_match_str(s.clone(), wb)?,
-                None => self.emit_when_match(subject_num.as_ref().unwrap(), wb)?,
-            };
+            let cond = self.emit_when_match(subject_node, wb)?;
             let next_lbl = self.fresh("when_next");
             self.emit("jmp_if_false", None, vec![Operand::Var(cond), Operand::Var(next_lbl.clone())], "void");
             for s in stmts {
@@ -658,24 +779,24 @@ impl<'a> Compiler<'a> {
         Ok(())
     }
 
-    /// Emit a boolean register that is true when the subject matches any value in a
-    /// `when_branch`'s list: a single value → `cmp_eq(subject, value)`; a `THRU`
-    /// range → `and(cmp_ge(subject, lo), cmp_le(subject, hi))`; the whole list
-    /// `OR`-folds. Comparisons align the subject and each value to a common scale.
-    fn emit_when_match(&mut self, subject: &Term, wb: &GrammarASTNode) -> Result<String, CompileError> {
+    /// Emit a boolean register that is true when the EVALUATE subject matches any
+    /// value in a `when_branch`'s list. Each subject-vs-value comparison is routed
+    /// through [`Self::emit_operand_relation`] — the *same* category dispatch an
+    /// `IF subject <relop> value` relation uses — so EVALUATE inherits IF's full
+    /// category handling (numeric, alphanumeric, and mixed numeric↔alphanumeric
+    /// with unsigned/signed/scaled images, figuratives, and ZERO routing) and its
+    /// deferral set by construction. A single value `[v]` is `cmp_eq(subject, v)`;
+    /// a `THRU` range `[lo, hi]` is `and(cmp_ge(subject, lo), cmp_le(subject, hi))`;
+    /// the whole value-list `OR`-folds.
+    fn emit_when_match(&mut self, subject: &GrammarASTNode, wb: &GrammarASTNode) -> Result<String, CompileError> {
         let mut acc: Option<String> = None;
         for wv in child_nodes(wb, "when_value") {
             let ops = child_nodes(wv, "operand");
             let b = match ops.as_slice() {
-                [one] => {
-                    let value = self.read_arith_term(one)?;
-                    self.emit_scaled_cmp("cmp_eq", subject, &value)
-                }
+                [one] => self.emit_operand_relation(subject, one, "cmp_eq")?,
                 [lo, hi] => {
-                    let lo = self.read_arith_term(lo)?;
-                    let hi = self.read_arith_term(hi)?;
-                    let ge = self.emit_scaled_cmp("cmp_ge", subject, &lo);
-                    let le = self.emit_scaled_cmp("cmp_le", subject, &hi);
+                    let ge = self.emit_operand_relation(subject, lo, "cmp_ge")?;
+                    let le = self.emit_operand_relation(subject, hi, "cmp_le")?;
                     let r = self.fresh("_wrng");
                     self.emit("and", Some(&r), vec![Operand::Var(ge), Operand::Var(le)], "i64");
                     r
@@ -692,64 +813,6 @@ impl<'a> Compiler<'a> {
             });
         }
         acc.ok_or_else(|| CompileError::Malformed("WHEN without a value".into()))
-    }
-
-    /// Emit `op(left, right)` (a `cmp_*`) with both terms taken to a common scale,
-    /// returning the boolean register.
-    fn emit_scaled_cmp(&mut self, op: &str, left: &Term, right: &Term) -> String {
-        let w = self.term_scale(left).max(self.term_scale(right));
-        let a = self.emit_term_at_scale(left, w);
-        let b = self.emit_term_at_scale(right, w);
-        let out = self.fresh("_wcmp");
-        self.emit(op, Some(&out), vec![a, b], "i64");
-        out
-    }
-
-    /// Like [`Self::emit_when_match`], but for an **alphanumeric** subject: each
-    /// value is compared with `str_cmp` (space-padded, [`Self::emit_str_condition`])
-    /// — a single value is `cmp_eq`, a `THRU` range is `and(cmp_ge, cmp_le)` — and
-    /// the value-list `OR`-folds. A numeric `WHEN` value against a character subject
-    /// is a later rung (matching a relation's numeric-vs-alphanumeric deferral).
-    fn emit_when_match_str(&mut self, subject: StrOperand, wb: &GrammarASTNode) -> Result<String, CompileError> {
-        let mut acc: Option<String> = None;
-        for wv in child_nodes(wb, "when_value") {
-            let ops = child_nodes(wv, "operand");
-            let b = match ops.as_slice() {
-                [one] => {
-                    let value = self.str_value(one)?;
-                    self.emit_str_condition(subject.clone(), value, "cmp_eq")?
-                }
-                [lo, hi] => {
-                    let lo = self.str_value(lo)?;
-                    let hi = self.str_value(hi)?;
-                    let ge = self.emit_str_condition(subject.clone(), lo, "cmp_ge")?;
-                    let le = self.emit_str_condition(subject.clone(), hi, "cmp_le")?;
-                    let r = self.fresh("_wrng");
-                    self.emit("and", Some(&r), vec![Operand::Var(ge), Operand::Var(le)], "i64");
-                    r
-                }
-                _ => return Err(CompileError::Malformed("a WHEN value must be `operand` or `operand THRU operand`".into())),
-            };
-            acc = Some(match acc {
-                None => b,
-                Some(prev) => {
-                    let r = self.fresh("_wor");
-                    self.emit("or", Some(&r), vec![Operand::Var(prev), Operand::Var(b)], "i64");
-                    r
-                }
-            });
-        }
-        acc.ok_or_else(|| CompileError::Malformed("WHEN without a value".into()))
-    }
-
-    /// A `WHEN` value as a [`StrOperand`] for an alphanumeric `EVALUATE`. A numeric
-    /// value against a character subject is a later rung.
-    fn str_value(&mut self, op: &GrammarASTNode) -> Result<StrOperand, CompileError> {
-        self.str_operand(op)?.ok_or_else(|| {
-            CompileError::Unsupported(
-                "a numeric WHEN value against an alphanumeric EVALUATE subject is a later rung".into(),
-            )
-        })
     }
 
     /// `MOVE src-item TO recv-item` for two **character** items — reshape the
@@ -786,6 +849,267 @@ impl<'a> Compiler<'a> {
         }
     }
 
+    /// Build, at run time, the `n`-character zero-padded decimal image of an
+    /// **unsigned integer** numeric slot `num_reg` (holding its magnitude as an
+    /// `i64`) and return the fresh `str` register that holds it. This is exactly
+    /// the digit string a `DISPLAY` of the same `PIC 9(n)` item prints — but
+    /// materialised as a *string* rather than putchar'd — so a numeric→alphanumeric
+    /// MOVE and a DISPLAY of the source agree digit-for-digit.
+    ///
+    /// The image is assembled most-significant digit first. For the digit at
+    /// 0-based position `k` (from the left of an `n`-wide field), the place value
+    /// is `p = 10^(n-1-k)`, and the digit itself is
+    ///
+    /// ```text
+    ///   d = (num / p) % 10
+    /// ```
+    ///
+    /// The `/ p` shifts that digit down to the units place and the `% 10` keeps a
+    /// single digit — so a value with **more** than `n` digits silently drops its
+    /// high-order digits (COBOL's high-order overflow, matching the recursive
+    /// `__cob_print_padded` helper). A single digit `d` (0..=9) is turned into its
+    /// 1-character string by slicing the constant lookup table `"0123456789"` at
+    /// `[d, d+1)` — no per-digit branch table needed — and the `n` pieces are
+    /// concatenated left to right onto an initially empty accumulator. Because each
+    /// piece is exactly one character, the result is exactly `n` characters wide,
+    /// the same fixed-width image the oracle's `Decimal::digits()` yields for the
+    /// item.
+    ///
+    /// ```text
+    ///   PIC 9(3) holding 42  (slot = 42)         n = 3
+    ///     k=0: p=100  d=(42/100)%10 = 0  -> "0"
+    ///     k=1: p=10   d=(42/10)%10  = 4  -> "4"
+    ///     k=2: p=1    d=(42/1)%10   = 2  -> "2"
+    ///   result = "042"
+    /// ```
+    fn emit_num_digit_string(&mut self, num_reg: &str, n: usize) -> String {
+        // The shared digit lookup table and the constant 10 divisor/modulus.
+        let table = self.fresh("_ndtbl");
+        self.emit("str_const", Some(&table), vec![Operand::Str("0123456789".into())], "str");
+        let ten = self.fresh("_ndten");
+        self.emit("const", Some(&ten), vec![Operand::Int(10)], "i64");
+        let one = self.fresh("_ndone");
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        // result = "" — the accumulator we build the n digits into.
+        let result = self.fresh("_ndres");
+        self.emit("str_const", Some(&result), vec![Operand::Str(String::new())], "str");
+        for k in 0..n {
+            // q = num / 10^(n-1-k); for the units place (p == 1) that is num itself.
+            let place = 10i64.pow((n - 1 - k) as u32);
+            let q = if place == 1 {
+                num_reg.to_string()
+            } else {
+                let pr = self.fresh("_ndp");
+                self.emit("const", Some(&pr), vec![Operand::Int(place)], "i64");
+                let q = self.fresh("_ndq");
+                self.emit("div", Some(&q), vec![Operand::Var(num_reg.to_string()), Operand::Var(pr)], "i64");
+                q
+            };
+            // d = q % 10 (this position's digit); d1 = d + 1 (slice end).
+            let d = self.fresh("_ndd");
+            self.emit("mod", Some(&d), vec![Operand::Var(q), Operand::Var(ten.clone())], "i64");
+            let d1 = self.fresh("_ndd1");
+            self.emit("add", Some(&d1), vec![Operand::Var(d.clone()), Operand::Var(one.clone())], "i64");
+            // ch = table[d..d+1] — the 1-character string for this digit.
+            let ch = self.fresh("_ndch");
+            self.emit(
+                "str_slice",
+                Some(&ch),
+                vec![Operand::Var(table.clone()), Operand::Var(d), Operand::Var(d1)],
+                "str",
+            );
+            // result = result + ch.
+            self.emit(
+                "str_concat",
+                Some(&result),
+                vec![Operand::Var(result.clone()), Operand::Var(ch)],
+                "str",
+            );
+        }
+        result
+    }
+
+    /// Build the `n`-character alphanumeric image of a **signed** DISPLAY numeric
+    /// slot `slot_reg`: the `n`-digit zero-padded MAGNITUDE with the operational
+    /// sign folded into a TRAILING OVERPUNCH on the units (last) digit. This is the
+    /// same zoned-decimal encoding the runtime's `overpunch_trailing` produces and
+    /// `__cob_print_signed` prints on `DISPLAY`:
+    ///
+    /// | units u  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+    /// |----------|---|---|---|---|---|---|---|---|---|---|
+    /// | positive | { | A | B | C | D | E | F | G | H | I |
+    /// | negative | } | J | K | L | M | N | O | P | Q | R |
+    ///
+    /// The image's leading `n − 1` characters are the magnitude's high digits; only
+    /// the units digit is overpunched. The sign is the *value's* sign (a signed
+    /// POSITIVE value takes the positive row), so `S9(3) = +123` → `"12C"`,
+    /// `= −123` → `"12L"`, and `S9V9 = −4.2` → `"4K"`.
+    ///
+    /// Rather than branch to pick a positive/negative lookup table, both rows are
+    /// laid end to end in ONE 20-character constant — positive `{…I` at indices
+    /// `0..=9`, negative `}…R` at indices `10..=19` — and indexed by
+    ///
+    /// ```text
+    ///   neg   = (slot < 0) ? 1 : 0        (cmp_lt yields 0/1)
+    ///   units = |slot| % 10
+    ///   idx   = units + neg*10            (the 0..19 slot in the combined table)
+    /// ```
+    ///
+    /// so `table[idx..idx+1]` is exactly `overpunch_trailing`'s chosen character:
+    /// `POS[u]` at index `u`, `NEG[u]` at index `10 + u`. Because the units digit is
+    /// `|slot| % 10` and the sign is `slot < 0`, the byte matches the oracle (which
+    /// overpunches the magnitude image's last digit by the identical table). For
+    /// `n == 1` the leading slice `image[0..0]` is empty, so the result is just the
+    /// one overpunch character. The finished `n`-char image feeds the same
+    /// char-store path the unsigned image and same-category alphanumeric MOVE use.
+    fn emit_signed_num_alpha_image(&mut self, slot_reg: &str, n: usize) -> String {
+        // neg = (slot < 0) ? 1 : 0; mag = |slot|.
+        let zero = self.fresh("_soz");
+        self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+        let neg = self.fresh("_soneg");
+        self.emit(
+            "cmp_lt",
+            Some(&neg),
+            vec![Operand::Var(slot_reg.to_string()), Operand::Var(zero)],
+            "i64",
+        );
+        let mag = self.fresh("_somag");
+        self.emit("mov", Some(&mag), vec![Operand::Var(slot_reg.to_string())], "i64");
+        self.emit_abs(&mag);
+        // The n-digit magnitude image (unsigned digits, most-significant first).
+        let image = self.emit_num_digit_string(&mag, n);
+        // idx = (mag % 10) + neg*10 — the position in the combined overpunch table.
+        let ten = self.fresh("_soten");
+        self.emit("const", Some(&ten), vec![Operand::Int(10)], "i64");
+        let units = self.fresh("_sou");
+        self.emit("mod", Some(&units), vec![Operand::Var(mag.clone()), Operand::Var(ten.clone())], "i64");
+        let off = self.fresh("_sooff");
+        self.emit("mul", Some(&off), vec![Operand::Var(neg), Operand::Var(ten)], "i64");
+        let idx = self.fresh("_soidx");
+        self.emit("add", Some(&idx), vec![Operand::Var(units), Operand::Var(off)], "i64");
+        let one = self.fresh("_soone");
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        let idx1 = self.fresh("_soidx1");
+        self.emit("add", Some(&idx1), vec![Operand::Var(idx.clone()), Operand::Var(one)], "i64");
+        // ch = table[idx..idx+1]: positive row {…I at 0..9, negative row }…R at 10..19.
+        let table = self.fresh("_sotbl");
+        self.emit(
+            "str_const",
+            Some(&table),
+            vec![Operand::Str("{ABCDEFGHI}JKLMNOPQR".into())],
+            "str",
+        );
+        let ch = self.fresh("_soch");
+        self.emit(
+            "str_slice",
+            Some(&ch),
+            vec![Operand::Var(table), Operand::Var(idx), Operand::Var(idx1)],
+            "str",
+        );
+        // result = image[0..n-1] ++ ch — replace the units digit with its overpunch.
+        let start = self.fresh("_sos0");
+        self.emit("const", Some(&start), vec![Operand::Int(0)], "i64");
+        let head_end = self.fresh("_sohe");
+        self.emit("const", Some(&head_end), vec![Operand::Int((n - 1) as i64)], "i64");
+        let head = self.fresh("_sohead");
+        self.emit(
+            "str_slice",
+            Some(&head),
+            vec![Operand::Var(image), Operand::Var(start), Operand::Var(head_end)],
+            "str",
+        );
+        let result = self.fresh("_sores");
+        self.emit("str_concat", Some(&result), vec![Operand::Var(head), Operand::Var(ch)], "str");
+        result
+    }
+
+    /// Store a run-time `str` register `src_reg` of compile-time-known length
+    /// `src_len` into an alphanumeric receiver item `didx`, by the **alphanumeric**
+    /// MOVE rule — LEFT-justified, space-padded on the right when the receiver is
+    /// wider, truncated on the right when narrower. This is the string-source twin
+    /// of [`Self::move_char_item`] (which reshapes one item into another); both
+    /// funnel numeric→alphanumeric and alphanumeric→alphanumeric moves through the
+    /// identical `str_slice` / `str_concat` reshape the oracle's `move_into_char`
+    /// performs, so the stored bytes agree.
+    fn move_str_into_char(&mut self, src_reg: &str, src_len: usize, didx: usize) {
+        let recv_w = self.items[didx].width();
+        let recv_reg = self.items[didx].reg.clone();
+        if recv_w <= src_len {
+            // Receiver no wider than the source: keep the leftmost `recv_w`.
+            let start = self.fresh("_ms0");
+            self.emit("const", Some(&start), vec![Operand::Int(0)], "i64");
+            let end = self.fresh("_msn");
+            self.emit("const", Some(&end), vec![Operand::Int(recv_w as i64)], "i64");
+            self.emit(
+                "str_slice",
+                Some(&recv_reg),
+                vec![Operand::Var(src_reg.to_string()), Operand::Var(start), Operand::Var(end)],
+                "str",
+            );
+        } else {
+            // Receiver wider: left-justify and space-pad the tail.
+            let pad = self.spaces_const(recv_w - src_len);
+            self.emit(
+                "str_concat",
+                Some(&recv_reg),
+                vec![Operand::Var(src_reg.to_string()), Operand::Var(pad)],
+                "str",
+            );
+        }
+    }
+
+    /// Fold an alphanumeric source register `src_reg` of compile-time width `m`
+    /// into the unsigned integer it denotes, and return the fresh `i64` register
+    /// holding it. This is the run-time twin of the oracle's per-character fold in
+    /// the reverse (alphanumeric → numeric) MOVE: the `m` bytes are read
+    /// left-to-right as decimal digits, accumulating
+    ///
+    /// ```text
+    ///   value = 0
+    ///   for k in 0..m:  d = src[k] - '0';  value = value*10 + d
+    /// ```
+    ///
+    /// so the source `"042"` folds to `0*10+0 → 0`, `0*10+4 → 4`, `4*10+2 → 42`.
+    /// Reading each byte with the IIR `str_index` op and subtracting the constant
+    /// `'0'` (48) yields that position's digit; the running `value` is the integer
+    /// the whole field denotes — and, per the reverse-MOVE rule, IS the receiver's
+    /// scaled-slot magnitude directly (the fold is *not* re-scaled). The
+    /// receiver-width truncation (keep the low-order `(i + d)` digits,
+    /// `value mod 10^(i+d)`) is applied later by [`Self::store_scaled`] — the same
+    /// numeric-store helper a numeric MOVE/COMPUTE uses, handed the receiver's own
+    /// scale `d` so it does no shift — so the compiled result matches the oracle,
+    /// which runs the identical fold and stores through `move_into_numeric` with the
+    /// fold split at scale `d` (`d = 0` for an integer receiver).
+    ///
+    /// The caller has already bounded `m ≤ 18`, so the `i64` fold of an all-digit
+    /// source (`< 10^18 < i64::MAX`) never overflows.
+    fn emit_str_to_int(&mut self, src_reg: &str, m: usize) -> String {
+        let value = self.fresh("_a2nv");
+        self.emit("const", Some(&value), vec![Operand::Int(0)], "i64");
+        let ten = self.fresh("_a2n10");
+        self.emit("const", Some(&ten), vec![Operand::Int(10)], "i64");
+        let zero_byte = self.fresh("_a2n0");
+        self.emit("const", Some(&zero_byte), vec![Operand::Int(b'0' as i64)], "i64");
+        for k in 0..m {
+            // c = src[k] (a byte, as i64); d = c - '0' (this position's digit).
+            let kreg = self.fresh("_a2nk");
+            self.emit("const", Some(&kreg), vec![Operand::Int(k as i64)], "i64");
+            let c = self.fresh("_a2nc");
+            self.emit(
+                "str_index",
+                Some(&c),
+                vec![Operand::Var(src_reg.to_string()), Operand::Var(kreg)],
+                "i64",
+            );
+            let d = self.fresh("_a2nd");
+            self.emit("sub", Some(&d), vec![Operand::Var(c), Operand::Var(zero_byte.clone())], "i64");
+            // value = value*10 + d.
+            self.emit("mul", Some(&value), vec![Operand::Var(value.clone()), Operand::Var(ten.clone())], "i64");
+            self.emit("add", Some(&value), vec![Operand::Var(value.clone()), Operand::Var(d)], "i64");
+        }
+        value
+    }
+
     /// Emit the constant-index `str_slice` for a reference modification
     /// `base(start:len)` and return `(sliced_reg, actual_len)`.
     ///
@@ -800,18 +1124,31 @@ impl<'a> Compiler<'a> {
     ///   base(3:)   ->  start0 = 2, len 2  ->  slice [2,5)  ->  "CDE"
     /// ```
     ///
-    /// Both indices are compile-time constants, so this mirrors
-    /// [`Self::move_char_item`]'s const-index `str_slice`: two `const` i64
-    /// registers feed a `str_slice` producing a fresh `str`. Bounds are validated
-    /// here (`start >= 1`, `start-1+len <= width`); an out-of-range *constant*
-    /// reference modification is rejected at compile time (a later rung), never
-    /// lowered to a runtime trap. The base must be an alphanumeric item.
+    /// Two paths share one lowering:
+    ///
+    /// * **literal:literal** (or `literal:`) — both indices are compile-time
+    ///   constants, so this mirrors [`Self::move_char_item`]'s const-index
+    ///   `str_slice`: two `const` i64 registers feed a `str_slice` producing a
+    ///   fresh `str`. Bounds are validated at compile time (`start >= 1`,
+    ///   `start-1+len <= width`); an out-of-range *constant* refmod is a
+    ///   compile-time [`CompileError::Unsupported`], never a run-time trap.
+    ///
+    /// * **computed** — the moment either index is a data-name, `start0` and
+    ///   `end` are built with `const`/`sub`/`add` over the index registers and
+    ///   fed to `str_slice`. Bounds are checked **at run time**: the emitted
+    ///   `str_slice` traps (in the VM/wasm backends) exactly when
+    ///   `start0 < 0 || end < start0 || end > width`. The oracle's
+    ///   `refmod_string` applies the identical predicate, so an in-range program
+    ///   slices byte-identically and an out-of-range one errors on both engines.
+    ///
+    /// The base must be an alphanumeric item; a computed index must be an
+    /// unsigned integer item.
     fn ref_mod_slice(
         &mut self,
         base: &str,
-        start: usize,
-        len: Option<usize>,
-    ) -> Result<(String, usize), CompileError> {
+        start: &RefIndex,
+        len: &Option<RefIndex>,
+    ) -> Result<(String, SliceLen), CompileError> {
         let idx = self.item_index(base)?;
         let width = match &self.items[idx].kind {
             ItemKind::Char { .. } => self.items[idx].width(),
@@ -821,36 +1158,93 @@ impl<'a> Compiler<'a> {
                 ));
             }
         };
-        if start < 1 {
-            return Err(CompileError::Malformed(
-                "reference modification start position must be at least 1".into(),
-            ));
+        // Constant-fold the literal:literal (and literal:) case so #8673's output
+        // — and its compile-time out-of-range reject — is preserved exactly.
+        if let (RefIndex::Lit(s), l) = (start, len) {
+            if let Some(actual) = const_refmod_len(*s, l, width)? {
+                let src_reg = self.items[idx].reg.clone();
+                let start0 = *s - 1;
+                let start_reg = self.fresh("_rm0");
+                self.emit("const", Some(&start_reg), vec![Operand::Int(start0 as i64)], "i64");
+                let end_reg = self.fresh("_rmn");
+                self.emit("const", Some(&end_reg), vec![Operand::Int((start0 + actual) as i64)], "i64");
+                let out = self.fresh("_rm");
+                self.emit(
+                    "str_slice",
+                    Some(&out),
+                    vec![Operand::Var(src_reg), Operand::Var(start_reg), Operand::Var(end_reg)],
+                    "str",
+                );
+                return Ok((out, SliceLen::Const(actual)));
+            }
         }
-        let start0 = start - 1;
-        let actual_len = len.unwrap_or(width.saturating_sub(start0));
-        // Subtractive bounds test — `start0 + actual_len` would overflow `usize`
-        // for a crafted `WS(1e19:1e19)` (both parse as full `usize`), panicking in
-        // debug / wrapping past the guard in release. `width - start0` is only
-        // reached once `start0 <= width`, so it never underflows.
-        if start0 > width || actual_len > width - start0 {
-            return Err(CompileError::Unsupported(format!(
-                "reference modification {base}({start}:{}) runs past the {width}-character item — a later rung",
-                len.map(|l| l.to_string()).unwrap_or_default()
-            )));
-        }
+        // Computed path: at least one index is a data-name. Read start/len into
+        // i64 registers and compute the 0-based half-open [start0, end) bounds,
+        // letting the run-time str_slice bounds check enforce the range.
         let src_reg = self.items[idx].reg.clone();
-        let start_reg = self.fresh("_rm0");
-        self.emit("const", Some(&start_reg), vec![Operand::Int(start0 as i64)], "i64");
-        let end_reg = self.fresh("_rmn");
-        self.emit("const", Some(&end_reg), vec![Operand::Int((start0 + actual_len) as i64)], "i64");
+        let start_reg = self.refmod_index_reg(start)?;
+        let one = self.fresh("_rm1");
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        let start0 = self.fresh("_rm0");
+        self.emit("sub", Some(&start0), vec![Operand::Var(start_reg), Operand::Var(one)], "i64");
+        let end = match len {
+            Some(l) => {
+                let len_reg = self.refmod_index_reg(l)?;
+                let e = self.fresh("_rme");
+                self.emit("add", Some(&e), vec![Operand::Var(start0.clone()), Operand::Var(len_reg)], "i64");
+                e
+            }
+            None => {
+                // Omitted length runs to the end of the item.
+                let e = self.fresh("_rmw");
+                self.emit("const", Some(&e), vec![Operand::Int(width as i64)], "i64");
+                e
+            }
+        };
+        // The slice's run-time length = end - start0 (needed to space-pad it to a
+        // common width in a comparison).
+        let len_reg = self.fresh("_rml");
+        self.emit("sub", Some(&len_reg), vec![Operand::Var(end.clone()), Operand::Var(start0.clone())], "i64");
         let out = self.fresh("_rm");
         self.emit(
             "str_slice",
             Some(&out),
-            vec![Operand::Var(src_reg), Operand::Var(start_reg), Operand::Var(end_reg)],
+            vec![Operand::Var(src_reg), Operand::Var(start0), Operand::Var(end)],
             "str",
         );
-        Ok((out, actual_len))
+        Ok((out, SliceLen::Runtime { len_reg, max_len: width }))
+    }
+
+    /// Read a reference-modification index ([`RefIndex`]) into a fresh `i64`
+    /// register. A literal becomes a `const`; a data-name must be an **unsigned
+    /// integer** item (`PIC 9…`, no `S`, no decimals) — its live slot is copied
+    /// so evaluating the index never clobbers it. A signed, fractional, or
+    /// non-numeric index item is a later rung.
+    fn refmod_index_reg(&mut self, ix: &RefIndex) -> Result<String, CompileError> {
+        match ix {
+            RefIndex::Lit(v) => {
+                let reg = self.fresh("_rmi");
+                self.emit("const", Some(&reg), vec![Operand::Int(*v as i64)], "i64");
+                Ok(reg)
+            }
+            RefIndex::Name(name) => {
+                let iidx = self.item_index(name)?;
+                match &self.items[iidx].kind {
+                    ItemKind::Numeric { dec_digits: 0, signed: false, .. } => {
+                        let slot = self.items[iidx].reg.clone();
+                        let reg = self.fresh("_rmi");
+                        self.emit("mov", Some(&reg), vec![Operand::Var(slot)], "i64");
+                        Ok(reg)
+                    }
+                    ItemKind::Numeric { .. } => Err(CompileError::Unsupported(format!(
+                        "a signed or fractional reference-modification index ({name}) is a later rung"
+                    ))),
+                    ItemKind::Char { .. } => Err(CompileError::Unsupported(format!(
+                        "a non-numeric reference-modification index ({name}) is a later rung"
+                    ))),
+                }
+            }
+        }
     }
 
     /// A `str` register holding `k` spaces — the right-padding for a character
@@ -861,66 +1255,71 @@ impl<'a> Compiler<'a> {
         reg
     }
 
-    /// `STRING s… DELIMITED BY SIZE INTO t` — concatenate the sending fields
-    /// (each taken in full) with a `str_concat` chain, then overlay the result
-    /// onto the receiver from the left. COBOL's STRING writes only what it
-    /// produced and leaves the rest of `t` UNCHANGED (no space-fill, unlike
-    /// `MOVE`), truncating at `t`'s width. Every source and the receiver have a
-    /// compile-time-known length, so the overlay is a fixed `str_slice`/`str_concat`
-    /// sequence — and byte-identical to the `cobol-runtime` oracle's `exec_string`:
+    /// `STRING s… DELIMITED BY {SIZE | delim} INTO t` — concatenate the sending
+    /// fields with a `str_concat` chain, then overlay the result onto the receiver
+    /// from the left. COBOL's STRING writes only what it produced and leaves the
+    /// rest of `t` UNCHANGED (no space-fill, unlike `MOVE`), truncating at `t`'s
+    /// width. The overlay is byte-identical to the `cobol-runtime` oracle's
+    /// `exec_string`.
+    ///
+    /// **`DELIMITED BY SIZE` (`delim = None`).** Every field is taken in full, and
+    /// each source and the receiver have a compile-time-known length, so BOTH the
+    /// concatenation and the overlay are fixed `str_slice`/`str_concat` sequences:
     ///
     ///   * result longer than `t`  →  `t = str_slice(concat, 0, width)` (truncate);
     ///   * result shorter than `t` →  `t = str_concat(concat, str_slice(t, len, width))`
     ///     — the head is the whole concatenation, the preserved tail is the
     ///     receiver's old `[len, width)` bytes.
+    ///
+    /// **`DELIMITED BY delim` (`delim = Some`).** Each field contributes only its
+    /// PREFIX up to the first delimiter char — a DATA-dependent boundary — so we
+    /// emit a genuine per-field scan loop (the same shape UNSTRING uses) and the
+    /// running length becomes a RUNTIME value. The overlay therefore also runs at
+    /// run time: `clen = str_len(concat); take = min(clen, W); t = concat[0,take] ++
+    /// t[take,W]` — the preserved tail `t[take,W]` gives STRING's no-space-fill
+    /// rule exactly as the compile-time branch does. The delimiter is reduced by
+    /// the SAME `single_delim_code` UNSTRING uses, and must be ASCII: the scan
+    /// compares BYTES while the oracle scans CHARS, so a non-ASCII delimiter (and a
+    /// non-ASCII string-literal sending field under an active delimiter) is a clean
+    /// later rung on both engines.
     fn emit_string(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
-        // Reject the later-rung options the grammar accepts (so the message is a
-        // clean Unsupported, not a parse error).
+        // `WITH POINTER` and the two OVERFLOW imperatives are now MODELLED (see the
+        // handling below), so nothing is rejected up front.
         let toks = child_tokens(verb);
-        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "POINTER") {
-            return Err(CompileError::Unsupported(
-                "STRING … WITH POINTER is a later rung".into(),
-            ));
-        }
-        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "OVERFLOW") {
-            return Err(CompileError::Unsupported(
-                "STRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung".into(),
-            ));
-        }
-        let delim = child_node(verb, "string_delim")
+        let delim_node = child_node(verb, "string_delim")
             .ok_or_else(|| CompileError::Malformed("STRING without DELIMITED BY".into()))?;
-        let is_size = child_tokens(delim).iter().any(|(k, v)| k == "KEYWORD" && v == "SIZE");
-        if !is_size {
-            return Err(CompileError::Unsupported(
-                "STRING … DELIMITED BY <identifier/literal> (only DELIMITED BY SIZE) is a later rung"
-                    .into(),
-            ));
-        }
-        // Each sending field as a (register, compile-time length) pair. The
-        // delimiter operand is nested under `string_delim`, so it does not appear
-        // among these `operand` children.
+        let is_size = child_tokens(delim_node).iter().any(|(k, v)| k == "KEYWORD" && v == "SIZE");
+        // Reduce a real delimiter to a single byte-code register (or `None` for
+        // `DELIMITED BY SIZE`). The delimiter operand is nested UNDER `string_delim`,
+        // so it never collides with the sending-field `operand` children of `verb`.
+        let delim_code: Option<String> = if is_size {
+            None
+        } else {
+            let dop = child_node(delim_node, "operand")
+                .ok_or_else(|| CompileError::Malformed("STRING DELIMITED BY without a delimiter".into()))?;
+            // A single but NON-ASCII string literal (`","` is ASCII, `"é"` is one
+            // char but two bytes) is a clean later rung with the SAME message the
+            // oracle emits — checked before `single_delim_code`, whose byte-length
+            // test would otherwise mislabel it as "multi-character". A multi-char
+            // literal (ASCII or not) still reaches `single_delim_code` and is
+            // rejected as multi-character, matching the oracle's char-count test.
+            if let Operandy::Literal(Src::Str(s)) = read_operand(dop)? {
+                if s.chars().count() == 1 && !s.is_ascii() {
+                    return Err(CompileError::Unsupported(
+                        "STRING with a non-ASCII delimiter is a later rung".into(),
+                    ));
+                }
+            }
+            Some(self.single_delim_code(dop, "STRING")?)
+        };
+        // The sending fields are the DIRECT `operand` children (the delimiter
+        // operand is a grandchild under `string_delim`, so it does not collide).
         let sources = child_nodes(verb, "operand");
         if sources.is_empty() {
             return Err(CompileError::Malformed("STRING without a sending field".into()));
         }
-        let mut pieces: Vec<(String, usize)> = Vec::with_capacity(sources.len());
-        for op in sources {
-            pieces.push(self.string_source(op)?);
-        }
-        // Concatenate left-to-right; the total length is known at compile time.
-        let (mut concat, mut total) = pieces[0].clone();
-        for (reg, len) in &pieces[1..] {
-            let out = self.fresh("_scat");
-            self.emit(
-                "str_concat",
-                Some(&out),
-                vec![Operand::Var(concat), Operand::Var(reg.clone())],
-                "str",
-            );
-            concat = out;
-            total += len;
-        }
-        // Resolve the receiver — an alphanumeric item this rung.
+
+        // Resolve the receiver — an alphanumeric item this rung — up front (shared).
         let target = first_token(verb, "NAME")
             .ok_or_else(|| CompileError::Malformed("STRING without an INTO receiver".into()))?;
         let didx = self.item_index(&target)?;
@@ -933,37 +1332,473 @@ impl<'a> Compiler<'a> {
             }
         };
         let recv = self.items[didx].reg.clone();
-        if total >= width {
-            // Truncate at the receiver width; the whole receiver is overwritten.
-            let start = self.str_index(0);
-            let end = self.str_index(width as i64);
-            self.emit(
-                "str_slice",
-                Some(&recv),
-                vec![Operand::Var(concat), Operand::Var(start), Operand::Var(end)],
-                "str",
-            );
-        } else {
-            // Preserve the receiver's tail `[total, width)`: the head is the entire
-            // concatenation (its length is exactly `total`), then re-append the old
-            // tail read from the receiver's current register.
-            let start = self.str_index(total as i64);
-            let end = self.str_index(width as i64);
-            let tail = self.fresh("_stail");
-            self.emit(
-                "str_slice",
-                Some(&tail),
-                vec![Operand::Var(recv.clone()), Operand::Var(start), Operand::Var(end)],
-                "str",
-            );
-            self.emit(
-                "str_concat",
-                Some(&recv),
-                vec![Operand::Var(concat), Operand::Var(tail)],
-                "str",
-            );
+
+        // The optional `WITH POINTER p` phrase. `INTO t` always precedes it, so the
+        // receiver is the first direct NAME (resolved above) and the pointer NAME is
+        // the first NAME after the `POINTER` keyword. (Sending-field identifiers are
+        // nested under `operand` nodes, so they are not direct NAME tokens here.)
+        let ptr_pos = toks.iter().position(|(k, v)| k == "KEYWORD" && v == "POINTER");
+        let pointer_name: Option<String> = ptr_pos.and_then(|pp| {
+            toks[pp + 1..].iter().find(|(k, _)| k == "NAME").map(|(_, v)| v.clone())
+        });
+        // Validate the pointer item's picture at BUILD time — it must be an unsigned
+        // integer `PIC 9(n)` (n ≤ 18 so the value fits the `i64` we store it in), the
+        // same class INSPECT's counter demands. A signed, fractional, non-numeric, or
+        // group pointer is a clean later rung, rejected here with the SAME message the
+        // oracle raises at exec time so the accept/reject sets stay co-total. We
+        // capture `(index, int_digits)` for the run-time read/write-back below; the
+        // range check on the pointer's VALUE cannot be done here (it is a run-time
+        // datum), so it is emitted as a guard, exactly like the oracle.
+        let pointer: Option<(usize, usize)> = match &pointer_name {
+            Some(pname) => {
+                let pidx = self.item_index(pname)?;
+                let ptr_int_digits = match &self.items[pidx].kind {
+                    ItemKind::Numeric { signed: true, .. } => {
+                        return Err(CompileError::Unsupported(format!(
+                            "STRING … WITH POINTER: a signed pointer {pname} is a later rung"
+                        )))
+                    }
+                    ItemKind::Numeric { dec_digits, .. } if *dec_digits != 0 => {
+                        return Err(CompileError::Unsupported(format!(
+                            "STRING … WITH POINTER: a non-integer pointer {pname} is a later rung"
+                        )))
+                    }
+                    ItemKind::Numeric { int_digits, .. } if *int_digits > 18 => {
+                        return Err(CompileError::Unsupported(format!(
+                            "STRING … WITH POINTER: a pointer {pname} wider than 18 digits is a later rung"
+                        )))
+                    }
+                    ItemKind::Numeric { int_digits, .. } => *int_digits,
+                    ItemKind::Char { .. } => {
+                        return Err(CompileError::Unsupported(format!(
+                            "STRING … WITH POINTER: a non-numeric pointer {pname} is a later rung"
+                        )))
+                    }
+                };
+                Some((pidx, ptr_int_digits))
+            }
+            None => None,
+        };
+
+        // Each arm yields the `overflow` i64 register (1 / 0) selecting the ON /
+        // NOT ON OVERFLOW imperative below. The comparison MUST be the identical one
+        // the oracle uses so the accept/skip decision is byte-identical.
+        let overflow: String = match &delim_code {
+            // `DELIMITED BY SIZE` — every boundary is compile-time-known.
+            None => {
+                let mut pieces: Vec<(String, usize)> = Vec::with_capacity(sources.len());
+                for op in sources {
+                    pieces.push(self.string_source(op)?);
+                }
+                // Concatenate left-to-right; the total length is known at compile time.
+                let (mut concat, mut total) = pieces[0].clone();
+                for (reg, len) in &pieces[1..] {
+                    let out = self.fresh("_scat");
+                    self.emit(
+                        "str_concat",
+                        Some(&out),
+                        vec![Operand::Var(concat), Operand::Var(reg.clone())],
+                        "str",
+                    );
+                    concat = out;
+                    total += len;
+                }
+                // `WITH POINTER p`: the overlay offset `p-1` is a RUN-TIME value, so
+                // the compile-time slicing below no longer applies — hand off to the
+                // shared run-time overlay. The concat length is compile-time-known
+                // here, materialised as a `const` so the overlay helper is uniform.
+                // The helper returns the overflow flag (out-of-range OR drop).
+                if let Some((pidx, ptr_int_digits)) = pointer {
+                    let clen = self.fresh("_stclen");
+                    self.emit("const", Some(&clen), vec![Operand::Int(total as i64)], "i64");
+                    let pname = pointer_name.as_deref().expect("pointer present");
+                    self.emit_string_pointer_overlay(
+                        &recv, &concat, &clen, width, pname, pidx, ptr_int_digits,
+                    )?
+                } else {
+                    if total >= width {
+                        // Truncate at the receiver width; the whole receiver is
+                        // overwritten.
+                        let start = self.str_index(0);
+                        let end = self.str_index(width as i64);
+                        self.emit(
+                            "str_slice",
+                            Some(&recv),
+                            vec![Operand::Var(concat), Operand::Var(start), Operand::Var(end)],
+                            "str",
+                        );
+                    } else {
+                        // Preserve the receiver's tail `[total, width)`: the head is
+                        // the entire concatenation (length exactly `total`), then
+                        // re-append the old tail read from the receiver's register.
+                        let start = self.str_index(total as i64);
+                        let end = self.str_index(width as i64);
+                        let tail = self.fresh("_stail");
+                        self.emit(
+                            "str_slice",
+                            Some(&tail),
+                            vec![Operand::Var(recv.clone()), Operand::Var(start), Operand::Var(end)],
+                            "str",
+                        );
+                        self.emit(
+                            "str_concat",
+                            Some(&recv),
+                            vec![Operand::Var(concat), Operand::Var(tail)],
+                            "str",
+                        );
+                    }
+                    // No pointer: overflow ⇔ concat longer than the receiver
+                    // (`total > width`), a COMPILE-TIME-known boolean — `total ==
+                    // width` fills exactly, dropping nothing, so it is NOT overflow.
+                    let ov = self.fresh("_stof");
+                    self.emit("const", Some(&ov), vec![Operand::Int((total > width) as i64)], "i64");
+                    ov
+                }
+            }
+            // `DELIMITED BY delim` — each field's prefix is a run-time value.
+            Some(d_reg) => {
+                let mut concat: Option<String> = None;
+                for op in sources {
+                    // A non-ASCII string-LITERAL field under an active delimiter is a
+                    // later rung (its prefix boundary differs byte-vs-char); guard it
+                    // BEFORE lowering. A non-ASCII IDENTIFIER field is the pre-existing
+                    // byte-vs-char chip and is not guarded here.
+                    if let Operandy::Literal(Src::Str(s)) = read_operand(op)? {
+                        if !s.is_ascii() {
+                            return Err(CompileError::Unsupported(
+                                "STRING with a non-ASCII sending field under DELIMITED BY is a later rung"
+                                    .into(),
+                            ));
+                        }
+                    }
+                    // Lower the field to a string register (its compile-time length is
+                    // irrelevant now — the prefix boundary is found at run time).
+                    let (field_reg, _len) = self.string_source(op)?;
+                    let prefix = self.emit_prefix_before_delim(&field_reg, d_reg);
+                    concat = Some(match concat {
+                        None => prefix,
+                        Some(acc) => {
+                            let out = self.fresh("_scat");
+                            self.emit(
+                                "str_concat",
+                                Some(&out),
+                                vec![Operand::Var(acc), Operand::Var(prefix)],
+                                "str",
+                            );
+                            out
+                        }
+                    });
+                }
+                // `sources` is non-empty, so `concat` is always `Some` here.
+                let concat = concat.expect("at least one sending field");
+                // The concatenation's length is a run-time value here.
+                let clen = self.fresh("_sclen");
+                self.emit("str_len", Some(&clen), vec![Operand::Var(concat.clone())], "i64");
+                // `WITH POINTER p`: overlay at the run-time offset `p-1` via the
+                // shared helper (byte-identical to the SIZE-branch pointer path),
+                // which returns the overflow flag. The no-pointer run-time overlay
+                // below (start at 0) is unchanged.
+                if let Some((pidx, ptr_int_digits)) = pointer {
+                    let pname = pointer_name.as_deref().expect("pointer present");
+                    self.emit_string_pointer_overlay(
+                        &recv, &concat, &clen, width, pname, pidx, ptr_int_digits,
+                    )?
+                } else {
+                    // Run-time overlay: take = min(clen, W); the receiver becomes
+                    // concat[0,take] ++ recv[take,W] (the preserved tail). overflow ⇔
+                    // clen > W (some sending chars dropped) — the SAME run-time test.
+                    let wconst = self.fresh("_scw");
+                    self.emit("const", Some(&wconst), vec![Operand::Int(width as i64)], "i64");
+                    let take = self.fresh("_sctk");
+                    self.emit("mov", Some(&take), vec![Operand::Var(clen.clone())], "i64");
+                    let gt = self.fresh("_scgt");
+                    self.emit("cmp_gt", Some(&gt), vec![Operand::Var(clen.clone()), Operand::Var(wconst.clone())], "i64");
+                    let noclip = self.fresh("sc_noclip");
+                    self.emit("jmp_if_false", None, vec![Operand::Var(gt.clone()), Operand::Var(noclip.clone())], "void");
+                    self.emit("mov", Some(&take), vec![Operand::Var(wconst.clone())], "i64");
+                    self.emit("label", None, vec![Operand::Var(noclip)], "void");
+                    // head = concat[0, take].
+                    let z0 = self.str_index(0);
+                    let head = self.fresh("_schd");
+                    self.emit(
+                        "str_slice",
+                        Some(&head),
+                        vec![Operand::Var(concat), Operand::Var(z0), Operand::Var(take.clone())],
+                        "str",
+                    );
+                    // tail = recv[take, W] — the receiver bytes STRING left untouched.
+                    let tail = self.fresh("_sctail");
+                    self.emit(
+                        "str_slice",
+                        Some(&tail),
+                        vec![Operand::Var(recv.clone()), Operand::Var(take), Operand::Var(wconst)],
+                        "str",
+                    );
+                    self.emit(
+                        "str_concat",
+                        Some(&recv),
+                        vec![Operand::Var(head), Operand::Var(tail)],
+                        "str",
+                    );
+                    // `gt` (clen > W) IS the overflow flag; reuse it directly.
+                    gt
+                }
+            }
+        };
+
+        // # ON OVERFLOW / NOT ON OVERFLOW dispatch
+        //
+        // The two imperatives are direct `statement` child nodes of `string_stmt`,
+        // appearing ONLY after the `ON OVERFLOW` / `NOT ON OVERFLOW` keyword tokens.
+        // Split them at the `NOT` keyword exactly as the oracle reader and `emit_if`'s
+        // ELSE split do:
+        //
+        //   STRING … ON OVERFLOW  <A…>   NOT ON OVERFLOW  <B…>
+        //                         └ on ┘    ▲NOT flips     └ not_on ┘
+        //
+        // A nested statement's own `NOT` is buried inside its `statement` node, never
+        // a direct token child here, so the split is unambiguous. We then emit the
+        // usual `jmp_if_false`/branch/`label` skeleton `emit_if` uses, guarding on the
+        // `overflow` register computed above.
+        let mut on_stmts: Vec<&GrammarASTNode> = Vec::new();
+        let mut not_stmts: Vec<&GrammarASTNode> = Vec::new();
+        let mut seen_not = false;
+        for child in &verb.children {
+            match child {
+                ASTNodeOrToken::Token(t) if t.value == "NOT" && t.effective_type_name() == "KEYWORD" => {
+                    seen_not = true;
+                }
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => {
+                    if seen_not {
+                        not_stmts.push(n);
+                    } else {
+                        on_stmts.push(n);
+                    }
+                }
+                _ => {}
+            }
         }
+        // Nothing to run when both clauses are absent — skip the branch skeleton
+        // entirely (a plain STRING lowers exactly as before this rung).
+        if on_stmts.is_empty() && not_stmts.is_empty() {
+            return Ok(());
+        }
+        let not_lbl = self.fresh("st_notov");
+        let end_lbl = self.fresh("st_ovend");
+        self.emit("jmp_if_false", None, vec![Operand::Var(overflow), Operand::Var(not_lbl.clone())], "void");
+        for stmt in on_stmts {
+            self.emit_statement(stmt)?;
+        }
+        self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
+        self.emit("label", None, vec![Operand::Var(not_lbl)], "void");
+        for stmt in not_stmts {
+            self.emit_statement(stmt)?;
+        }
+        self.emit("label", None, vec![Operand::Var(end_lbl)], "void");
         Ok(())
+    }
+
+    /// Emit the `STRING … WITH POINTER p` overlay: place `concat` (its length in
+    /// register `clen`) into the receiver `recv` (a `size`-wide alphanumeric item)
+    /// starting at the 1-based position held by the unsigned-integer pointer item
+    /// `pidx`, then write the pointer back. Byte-identical to the oracle's
+    /// `exec_string` pointer arm.
+    ///
+    /// The pointer's VALUE is a RUN-TIME datum, so the offset and the out-of-range
+    /// decision are emitted as run-time IIR (which is exactly why the range can't be
+    /// checked at compile time — only the pointer's *picture* is):
+    ///
+    /// ```text
+    ///   pv = <pointer register>;  one = 1;  W = size
+    ///   if pv < 1  jmp st_end          # pv == 0 (PIC 9 is unsigned) → overflow
+    ///   if pv > W  jmp st_end          # start past the receiver end → overflow
+    ///   start = pv - 1                 # 0-based overlay offset
+    ///   avail = W - start              # room from start to the receiver end (≥ 1)
+    ///   cp = min(clen, avail)          # chars actually placed (excess is dropped)
+    ///   end = start + cp
+    ///   recv = recv[0,start] ++ concat[0,cp] ++ recv[end,W]   # keep the untouched runs
+    ///   p := pv + cp                   # 1-based position one past the last char
+    /// st_end:                          # out-of-range lands here: recv + p unchanged
+    /// ```
+    ///
+    /// `avail` is `≥ 1` because the guard has already established `1 ≤ pv ≤ W`, so
+    /// `start ≤ W-1`. When the content does not all fit (`clen > avail`) the excess
+    /// is dropped — ISO's overflow — and `cp = avail`, giving `p := W + 1`. `pv = 1`
+    /// (start 0) reproduces the no-pointer overlay exactly, the correctness anchor.
+    /// The out-of-range jump skips BOTH the overlay and the write-back, leaving the
+    /// receiver and pointer with their prior values, matching the oracle's early
+    /// no-movement path.
+    ///
+    /// Returns the `overflow` i64 register (1 / 0) the caller uses to select the
+    /// `ON OVERFLOW` vs `NOT ON OVERFLOW` imperative — `true` when the pointer is out
+    /// of range OR the content was dropped (`clen > avail`), matching the oracle.
+    #[allow(clippy::too_many_arguments)]
+    fn emit_string_pointer_overlay(
+        &mut self,
+        recv: &str,
+        concat: &str,
+        clen: &str,
+        width: usize,
+        pname: &str,
+        pidx: usize,
+        ptr_int_digits: usize,
+    ) -> Result<String, CompileError> {
+        let pv = self.items[pidx].reg.clone();
+        let one = self.fresh("_stpone");
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        let wconst = self.fresh("_stpw");
+        self.emit("const", Some(&wconst), vec![Operand::Int(width as i64)], "i64");
+        let st_end = self.fresh("st_end");
+        // The `overflow` flag drives ON / NOT ON OVERFLOW. We PRE-SEED it to 1 and
+        // let the out-of-range guards fall through to `st_end` with it still set
+        // (out-of-range IS overflow); the in-range path OVERWRITES it with the drop
+        // test `clen > avail` below. This matches the oracle exactly: overflow = true
+        // when pv∉[1,W], else overflow = (src.len() > avail).
+        let overflow = self.fresh("_stpof");
+        self.emit("const", Some(&overflow), vec![Operand::Int(1)], "i64");
+        // Out of range: pv < 1 (i.e. pv == 0, since PIC 9 is unsigned) …
+        let lt1 = self.fresh("_stplt");
+        self.emit(
+            "cmp_lt",
+            Some(&lt1),
+            vec![Operand::Var(pv.clone()), Operand::Var(one.clone())],
+            "i64",
+        );
+        self.emit("jmp_if_true", None, vec![Operand::Var(lt1), Operand::Var(st_end.clone())], "void");
+        // … or pv > W (start past the receiver end).
+        let gt = self.fresh("_stpgt");
+        self.emit(
+            "cmp_gt",
+            Some(&gt),
+            vec![Operand::Var(pv.clone()), Operand::Var(wconst.clone())],
+            "i64",
+        );
+        self.emit("jmp_if_true", None, vec![Operand::Var(gt), Operand::Var(st_end.clone())], "void");
+        // start = pv - 1 (0-based overlay offset).
+        let start = self.fresh("_stps");
+        self.emit(
+            "sub",
+            Some(&start),
+            vec![Operand::Var(pv.clone()), Operand::Var(one)],
+            "i64",
+        );
+        // avail = W - start (room from start to the receiver end; ≥ 1 here).
+        let avail = self.fresh("_stpav");
+        self.emit(
+            "sub",
+            Some(&avail),
+            vec![Operand::Var(wconst.clone()), Operand::Var(start.clone())],
+            "i64",
+        );
+        // cp = min(clen, avail): what actually fits (the rest is dropped).
+        let cp = self.fresh("_stpcp");
+        self.emit("mov", Some(&cp), vec![Operand::Var(clen.to_string())], "i64");
+        let over = self.fresh("_stpov");
+        self.emit(
+            "cmp_gt",
+            Some(&over),
+            vec![Operand::Var(clen.to_string()), Operand::Var(avail.clone())],
+            "i64",
+        );
+        // In range: overflow ⇔ a drop occurred (`clen > avail`). Overwrite the
+        // pre-seeded 1 with this exact boolean — the same test the oracle uses.
+        self.emit("mov", Some(&overflow), vec![Operand::Var(over.clone())], "i64");
+        let keep = self.fresh("st_keep");
+        self.emit("jmp_if_false", None, vec![Operand::Var(over), Operand::Var(keep.clone())], "void");
+        self.emit("mov", Some(&cp), vec![Operand::Var(avail)], "i64");
+        self.emit("label", None, vec![Operand::Var(keep)], "void");
+        // end = start + cp.
+        let end = self.fresh("_stpe");
+        self.emit(
+            "add",
+            Some(&end),
+            vec![Operand::Var(start.clone()), Operand::Var(cp.clone())],
+            "i64",
+        );
+        // recv = recv[0,start] ++ concat[0,cp] ++ recv[end,W]: overwrite only the
+        // filled run, keeping the receiver's head (before start) and tail (from end).
+        let z0 = self.str_index(0);
+        let headpre = self.fresh("_stph");
+        self.emit(
+            "str_slice",
+            Some(&headpre),
+            vec![Operand::Var(recv.to_string()), Operand::Var(z0.clone()), Operand::Var(start)],
+            "str",
+        );
+        let mid = self.fresh("_stpm");
+        self.emit(
+            "str_slice",
+            Some(&mid),
+            vec![Operand::Var(concat.to_string()), Operand::Var(z0), Operand::Var(cp.clone())],
+            "str",
+        );
+        let tail = self.fresh("_stpt");
+        self.emit(
+            "str_slice",
+            Some(&tail),
+            vec![Operand::Var(recv.to_string()), Operand::Var(end), Operand::Var(wconst)],
+            "str",
+        );
+        let hm = self.fresh("_stphm");
+        self.emit("str_concat", Some(&hm), vec![Operand::Var(headpre), Operand::Var(mid)], "str");
+        self.emit("str_concat", Some(recv), vec![Operand::Var(hm), Operand::Var(tail)], "str");
+        // Write the pointer back to `pv + cp` (1-based, one past the last char
+        // stored), reshaped into its `PIC 9(n)` picture through the same numeric path
+        // ADD/UNSTRING use — byte-identical to the oracle's `store_result`.
+        let resume = self.fresh("_stpres");
+        self.emit("add", Some(&resume), vec![Operand::Var(pv), Operand::Var(cp)], "i64");
+        self.store_scaled(pname, &resume, 0, ptr_int_digits + 1, false)?;
+        // The out-of-range guard lands here, skipping the overlay AND the write-back
+        // (with `overflow` still 1 from its pre-seed).
+        self.emit("label", None, vec![Operand::Var(st_end)], "void");
+        Ok(overflow)
+    }
+
+    /// Emit the run-time scan that returns a fresh `str` register holding the
+    /// prefix of `field_reg` up to (but not including) the first byte equal to the
+    /// delimiter code `d_reg` — the per-field contribution of `STRING … DELIMITED
+    /// BY delim`. A field with no delimiter yields its whole image; a field
+    /// starting with the delimiter yields the empty string. The loop is the same
+    /// shape UNSTRING's field scan uses:
+    ///
+    /// ```text
+    ///   flen = str_len(F);  j = 0
+    /// top:  if j >= flen        jmp done      # ran off the end, no delimiter
+    ///       if F[j] == d_reg    jmp done      # delimiter found at j
+    ///       j = j + 1;  jmp top
+    /// done:
+    ///   prefix = str_slice(F, 0, j)
+    /// ```
+    fn emit_prefix_before_delim(&mut self, field_reg: &str, d_reg: &str) -> String {
+        let flen = self.fresh("_spfl");
+        self.emit("str_len", Some(&flen), vec![Operand::Var(field_reg.to_string())], "i64");
+        let j = self.fresh("_spj");
+        self.emit("const", Some(&j), vec![Operand::Int(0)], "i64");
+        let top = self.fresh("sp_top");
+        let done = self.fresh("sp_done");
+        self.emit("label", None, vec![Operand::Var(top.clone())], "void");
+        let ge = self.fresh("_spge");
+        self.emit("cmp_ge", Some(&ge), vec![Operand::Var(j.clone()), Operand::Var(flen)], "i64");
+        self.emit("jmp_if_true", None, vec![Operand::Var(ge), Operand::Var(done.clone())], "void");
+        let c = self.fresh("_spc");
+        self.emit("str_index", Some(&c), vec![Operand::Var(field_reg.to_string()), Operand::Var(j.clone())], "i64");
+        let eq = self.fresh("_speq");
+        self.emit("cmp_eq", Some(&eq), vec![Operand::Var(c), Operand::Var(d_reg.to_string())], "i64");
+        self.emit("jmp_if_true", None, vec![Operand::Var(eq), Operand::Var(done.clone())], "void");
+        let one = self.fresh("_sp1");
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        self.emit("add", Some(&j), vec![Operand::Var(j.clone()), Operand::Var(one)], "i64");
+        self.emit("jmp", None, vec![Operand::Var(top)], "void");
+        self.emit("label", None, vec![Operand::Var(done)], "void");
+        let z0 = self.str_index(0);
+        let prefix = self.fresh("_sppfx");
+        self.emit(
+            "str_slice",
+            Some(&prefix),
+            vec![Operand::Var(field_reg.to_string()), Operand::Var(z0), Operand::Var(j)],
+            "str",
+        );
+        prefix
     }
 
     /// A `STRING` sending field lowered to a `(register, length)` pair. An
@@ -1011,6 +1846,2294 @@ impl<'a> Compiler<'a> {
         let reg = self.fresh("_sidx");
         self.emit("const", Some(&reg), vec![Operand::Int(k)], "i64");
         reg
+    }
+
+    /// `UNSTRING source DELIMITED BY delim INTO r1 [r2 …]` — the inverse of
+    /// STRING: scan the alphanumeric `source` left-to-right and split it on the
+    /// SINGLE-character `delim` into successive receivers.
+    ///
+    /// Where STRING's boundaries are all compile-time-known (a fixed
+    /// `str_slice`/`str_concat`), UNSTRING's are DATA-dependent — the delimiter
+    /// falls wherever the run-time bytes put it — so we emit a genuine scan LOOP.
+    /// The source register `S`, its length `len = str_len(S)`, and a cursor `p`
+    /// (i64, init 0) drive the whole statement; the delimiter is reduced to a
+    /// single byte code `D` (a `const` for a 1-char literal, or `str_index(item,0)`
+    /// for a `PIC X(1)` item). Each receiver `r_i` (there are a compile-time-known
+    /// `n` of them) unrolls to a block:
+    ///
+    /// ```text
+    ///   if p <= len  (else jump to us_skip — leave r_i UNCHANGED):
+    ///     j = p
+    ///   us_top:  if j >= len   jmp us_found          # end of source
+    ///            if S[j] == D   jmp us_found          # delimiter here
+    ///            j = j + 1;  jmp us_top
+    ///   us_found:
+    ///     piece = str_slice(S, p, j)                  # the field [p, j)
+    ///     take  = min(str_len(piece), W)              # W = r_i's width
+    ///     r_i   = str_slice(piece,0,take) ++ spaces(W - take)   # MOVE semantics
+    ///     p = j + 1                                   # step past the delimiter
+    ///   us_skip:
+    /// ```
+    ///
+    /// Because `p` never moves when a receiver is skipped, once the source is
+    /// exhausted (`p > len`, a field having run off the end WITHOUT a trailing
+    /// delimiter) this receiver AND every later one is left unchanged — the
+    /// per-receiver guard alone gives the oracle's "remaining receivers keep their
+    /// prior VALUE" rule. `p == len` (a trailing delimiter) still passes the guard
+    /// and yields one final EMPTY field (all spaces). The
+    /// `str_slice(piece,0,take) ++ spaces(W-take)` reshape is exactly the oracle's
+    /// alphanumeric `move_into` (left-justify, space-pad, truncate), so a compiled
+    /// program matches the `cobol-runtime` oracle byte-for-byte. `WITH POINTER`,
+    /// `ON OVERFLOW`, a multi-character delimiter, and a numeric/group source or
+    /// receiver are later rungs (clean `Unsupported`).
+    fn emit_unstring(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
+        // `WITH POINTER` and the two OVERFLOW imperatives are now MODELLED (see the
+        // handling below), so nothing is rejected up front — the DIRECT sibling of
+        // emit_string's ON OVERFLOW dispatch.
+        let toks = child_tokens(verb);
+        // The two direct `operand` children are the source and the delimiter, in
+        // order (a reference-modification suffix nests under an operand, so it is
+        // never a third top-level operand).
+        let ops = child_nodes(verb, "operand");
+        let (source_node, delim_node) = match ops.as_slice() {
+            [s, d] => (*s, *d),
+            _ => {
+                return Err(CompileError::Malformed(
+                    "UNSTRING needs a source and a DELIMITED BY delimiter".into(),
+                ))
+            }
+        };
+        // The source supplies the field text from ONE of two providers, and the
+        // whole scan below reads it purely as a string register (`str_len` /
+        // `str_index` / `str_slice`) — so only how we obtain `s_reg` differs:
+        //   * an alphanumeric data-name → the item's own char register; or
+        //   * a STRING literal → a fresh `str_const` register holding its bytes
+        //     (a `str_const` register behaves identically to an item's char
+        //     register under str_len/str_index/str_slice, exactly as the
+        //     `spaces_const` register does further down this same routine).
+        // A NUMERIC or FIGURATIVE literal source stays a later rung, matching the
+        // oracle's read-time rejects; a REFERENCE-MODIFIED source `base(start:len)`
+        // is supported by routing the sliced characters through the SHARED
+        // `ref_mod_slice` helper — the identical slice DISPLAY / comparisons emit,
+        // so the source register is byte-for-byte what the oracle's `refmod_string`
+        // produces. Only how we obtain `s_reg` changes; the scan below is untouched.
+        let s_reg = match read_operand(source_node)? {
+            Operandy::Name(source_name) => {
+                let sidx = self.item_index(&source_name)?;
+                match &self.items[sidx].kind {
+                    ItemKind::Char { .. } => {}
+                    ItemKind::Numeric { .. } => {
+                        return Err(CompileError::Unsupported(
+                            "UNSTRING of a numeric source is a later rung".into(),
+                        ))
+                    }
+                }
+                self.items[sidx].reg.clone()
+            }
+            Operandy::Literal(Src::Str(s)) => {
+                // The downstream scan reads `s_reg` with BYTE-based IIR string ops
+                // (str_len/str_index/str_slice), whereas the oracle scans a literal
+                // by CHARACTER — the two agree only for ASCII (one byte per char).
+                // A non-ASCII literal source is a clean later rung on BOTH engines,
+                // keeping the accept/reject sets co-total.
+                if !s.is_ascii() {
+                    return Err(CompileError::Unsupported(
+                        "UNSTRING of a non-ASCII literal source is a later rung".into(),
+                    ));
+                }
+                let reg = self.fresh("_ussrc");
+                self.emit("str_const", Some(&reg), vec![Operand::Str(s)], "str");
+                reg
+            }
+            Operandy::Literal(Src::Num(_)) => {
+                return Err(CompileError::Unsupported(
+                    "UNSTRING of a numeric-literal source is a later rung".into(),
+                ))
+            }
+            Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
+                return Err(CompileError::Unsupported(
+                    "UNSTRING of a figurative-constant source is a later rung".into(),
+                ))
+            }
+            Operandy::RefMod { base, start, len } => {
+                // The source characters are the ref-mod slice `base(start:len)`.
+                // `ref_mod_slice` emits the SAME `str_slice` DISPLAY/comparison
+                // use (constant-folded for literal indices, register-computed for a
+                // data-name index) and enforces the SAME numeric-base and
+                // out-of-range rejects — so the slice register is byte-identical to
+                // the oracle's `refmod_string`, and everything downstream reads it
+                // exactly like a plain item's char register. We only need the
+                // register; the length metadata (used by comparisons) is unused
+                // here because the scan measures the source with `str_len`.
+                let (reg, _len) = self.ref_mod_slice(&base, &start, &len)?;
+                reg
+            }
+        };
+
+        // The delimiter reduced to a single byte code register.
+        let d_reg = self.single_delim_code(delim_node, "UNSTRING")?;
+
+        // Split the NAME tokens at the optional `POINTER` keyword — the grammar is
+        // flat (`INTO NAME { NAME } [ WITH POINTER NAME ]`), so every receiver NAME
+        // precedes `POINTER` and the pointer NAME is the first NAME after it. (This
+        // mirrors the oracle reader; taking "the last NAME" blindly would misread a
+        // single-receiver `INTO r WITH POINTER p` as two receivers.)
+        let ptr_pos = toks.iter().position(|(k, v)| k == "KEYWORD" && v == "POINTER");
+        let pointer_name: Option<String> = ptr_pos.and_then(|pp| {
+            toks[pp + 1..].iter().find(|(k, _)| k == "NAME").map(|(_, v)| v.clone())
+        });
+        let targets: Vec<String> = toks
+            .iter()
+            .enumerate()
+            .filter(|(i, (k, _))| k == "NAME" && ptr_pos.is_none_or(|pp| *i < pp))
+            .map(|(_, (_, v))| v.clone())
+            .collect();
+        if targets.is_empty() {
+            return Err(CompileError::Malformed("UNSTRING without an INTO receiver".into()));
+        }
+
+        // Validate the pointer item's picture at BUILD time — it must be an unsigned
+        // integer `PIC 9(n)` (n ≤ 18 so the value fits the `i64` we store it in),
+        // the same class INSPECT's counter demands. A signed, fractional, non-
+        // numeric, or group pointer is a clean later rung, rejected here with the
+        // SAME message the oracle raises at exec time so the accept/reject sets stay
+        // co-total. We capture `(index, int_digits)` for the run-time read/write-back
+        // below; the range check on the pointer's VALUE cannot be done here (it is a
+        // run-time datum), so it is emitted as a guard, exactly like the oracle.
+        let pointer: Option<(usize, usize)> = match &pointer_name {
+            Some(pname) => {
+                let pidx = self.item_index(pname)?;
+                let ptr_int_digits = match &self.items[pidx].kind {
+                    ItemKind::Numeric { signed: true, .. } => {
+                        return Err(CompileError::Unsupported(format!(
+                            "UNSTRING … WITH POINTER: a signed pointer {pname} is a later rung"
+                        )))
+                    }
+                    ItemKind::Numeric { dec_digits, .. } if *dec_digits != 0 => {
+                        return Err(CompileError::Unsupported(format!(
+                            "UNSTRING … WITH POINTER: a non-integer pointer {pname} is a later rung"
+                        )))
+                    }
+                    ItemKind::Numeric { int_digits, .. } if *int_digits > 18 => {
+                        return Err(CompileError::Unsupported(format!(
+                            "UNSTRING … WITH POINTER: a pointer {pname} wider than 18 digits is a later rung"
+                        )))
+                    }
+                    ItemKind::Numeric { int_digits, .. } => *int_digits,
+                    ItemKind::Char { .. } => {
+                        return Err(CompileError::Unsupported(format!(
+                            "UNSTRING … WITH POINTER: a non-numeric pointer {pname} is a later rung"
+                        )))
+                    }
+                };
+                Some((pidx, ptr_int_digits))
+            }
+            None => None,
+        };
+        let mut recvs: Vec<(usize, usize)> = Vec::with_capacity(targets.len());
+        for t in &targets {
+            let idx = self.item_index(t)?;
+            let width = match &self.items[idx].kind {
+                ItemKind::Char { .. } => self.items[idx].width(),
+                ItemKind::Numeric { .. } => {
+                    return Err(CompileError::Unsupported(
+                        "UNSTRING into a numeric receiver is a later rung".into(),
+                    ))
+                }
+            };
+            recvs.push((idx, width));
+        }
+
+        // # ON OVERFLOW / NOT ON OVERFLOW split
+        //
+        // The two imperatives are direct `statement` child nodes of `unstring_stmt`,
+        // appearing ONLY after the `ON OVERFLOW` / `NOT ON OVERFLOW` keyword tokens.
+        // Split them at the `NOT` keyword exactly as the oracle reader and emit_if's
+        // ELSE split do — a nested statement's own `NOT` is buried inside its
+        // `statement` node, never a direct token child here, so the split is
+        // unambiguous. We collect the node refs NOW (no emission) so we can decide
+        // whether to plumb the `overflow` flag at all: a plain UNSTRING with neither
+        // clause lowers EXACTLY as before this rung.
+        //
+        //   UNSTRING … ON OVERFLOW  <A…>   NOT ON OVERFLOW  <B…>
+        //                           └ on ┘    ▲NOT flips     └ not_on ┘
+        let mut on_stmts: Vec<&GrammarASTNode> = Vec::new();
+        let mut not_stmts: Vec<&GrammarASTNode> = Vec::new();
+        let mut seen_not = false;
+        for child in &verb.children {
+            match child {
+                ASTNodeOrToken::Token(t)
+                    if t.value == "NOT" && t.effective_type_name() == "KEYWORD" =>
+                {
+                    seen_not = true;
+                }
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => {
+                    if seen_not {
+                        not_stmts.push(n);
+                    } else {
+                        on_stmts.push(n);
+                    }
+                }
+                _ => {}
+            }
+        }
+        let has_clauses = !on_stmts.is_empty() || !not_stmts.is_empty();
+
+        // len = str_len(S).
+        let len = self.fresh("_uslen");
+        self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.clone())], "i64");
+
+        // The initial 0-based scan cursor `p`. Without a pointer it is 0 (today's
+        // behaviour). With `WITH POINTER q`, `q` holds a 1-BASED start position, so
+        // `p = q_value − 1`; but first the out-of-range guard: if `q_value == 0` or
+        // `q_value > len` (ISO's overflow) we must leave every receiver AND the
+        // pointer UNCHANGED. We emit a jump to `us_end` — placed AFTER the receiver
+        // loop and the write-back — so the whole operation is skipped, matching the
+        // oracle's early `return Ok(())`. The pointer's VALUE cannot be range-checked
+        // at build time (it is a run-time datum), which is exactly why this is a
+        // run-time guard rather than a compile-time reject.
+        let p = self.fresh("_usp");
+        let us_end = self.fresh("us_end");
+        // The `overflow` flag drives ON / NOT ON OVERFLOW — computed ONLY when a
+        // clause is present so a plain UNSTRING lowers byte-identically to before.
+        // We PRE-SEED it to 1 and let the out-of-range pointer guards fall through to
+        // `us_end` with it still set (out-of-range IS overflow, mirroring the
+        // oracle); the in-range path OVERWRITES it after the scan with `p <= len`
+        // (source not yet exhausted). This is the SAME pre-seed trick STRING's
+        // emit_string_pointer_overlay uses.
+        let overflow = if has_clauses {
+            let ov = self.fresh("_usof");
+            self.emit("const", Some(&ov), vec![Operand::Int(1)], "i64");
+            Some(ov)
+        } else {
+            None
+        };
+        match &pointer {
+            Some((pidx, _)) => {
+                let pv = self.items[*pidx].reg.clone();
+                let one = self.fresh("_uspone");
+                self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+                // out of range if pv < 1 (i.e. pv == 0, since PIC 9 is unsigned) …
+                let lt1 = self.fresh("_usplt");
+                self.emit("cmp_lt", Some(&lt1), vec![Operand::Var(pv.clone()), Operand::Var(one.clone())], "i64");
+                self.emit("jmp_if_true", None, vec![Operand::Var(lt1), Operand::Var(us_end.clone())], "void");
+                // … or pv > len (start past the source).
+                let gtlen = self.fresh("_uspgt");
+                self.emit("cmp_gt", Some(&gtlen), vec![Operand::Var(pv.clone()), Operand::Var(len.clone())], "i64");
+                self.emit("jmp_if_true", None, vec![Operand::Var(gtlen), Operand::Var(us_end.clone())], "void");
+                // In range: p = pv − 1.
+                self.emit("sub", Some(&p), vec![Operand::Var(pv), Operand::Var(one)], "i64");
+            }
+            None => {
+                self.emit("const", Some(&p), vec![Operand::Int(0)], "i64");
+            }
+        }
+
+        for (idx, width) in recvs {
+            let recv_reg = self.items[idx].reg.clone();
+            let skip = self.fresh("us_skip");
+            // Guard: process this receiver only while `p <= len`; otherwise jump
+            // past its block, leaving the receiver register (its prior VALUE)
+            // untouched.
+            let le = self.fresh("_usle");
+            self.emit("cmp_le", Some(&le), vec![Operand::Var(p.clone()), Operand::Var(len.clone())], "i64");
+            self.emit("jmp_if_false", None, vec![Operand::Var(le), Operand::Var(skip.clone())], "void");
+
+            // Scan for the next delimiter (or end-of-source): j runs from p.
+            let j = self.fresh("_usj");
+            self.emit("mov", Some(&j), vec![Operand::Var(p.clone())], "i64");
+            let top = self.fresh("us_top");
+            let found = self.fresh("us_found");
+            self.emit("label", None, vec![Operand::Var(top.clone())], "void");
+            let ge = self.fresh("_usge");
+            self.emit("cmp_ge", Some(&ge), vec![Operand::Var(j.clone()), Operand::Var(len.clone())], "i64");
+            self.emit("jmp_if_true", None, vec![Operand::Var(ge), Operand::Var(found.clone())], "void");
+            let c = self.fresh("_usc");
+            self.emit("str_index", Some(&c), vec![Operand::Var(s_reg.clone()), Operand::Var(j.clone())], "i64");
+            let eq = self.fresh("_useq");
+            self.emit("cmp_eq", Some(&eq), vec![Operand::Var(c), Operand::Var(d_reg.clone())], "i64");
+            self.emit("jmp_if_true", None, vec![Operand::Var(eq), Operand::Var(found.clone())], "void");
+            let one = self.fresh("_us1");
+            self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+            self.emit("add", Some(&j), vec![Operand::Var(j.clone()), Operand::Var(one)], "i64");
+            self.emit("jmp", None, vec![Operand::Var(top)], "void");
+            self.emit("label", None, vec![Operand::Var(found)], "void");
+
+            // piece = S[p, j) — the field up to the delimiter (or end).
+            let piece = self.fresh("_uspc");
+            self.emit(
+                "str_slice",
+                Some(&piece),
+                vec![Operand::Var(s_reg.clone()), Operand::Var(p.clone()), Operand::Var(j.clone())],
+                "str",
+            );
+            // take = min(str_len(piece), W).
+            let plen = self.fresh("_uspl");
+            self.emit("str_len", Some(&plen), vec![Operand::Var(piece.clone())], "i64");
+            let wconst = self.fresh("_usw");
+            self.emit("const", Some(&wconst), vec![Operand::Int(width as i64)], "i64");
+            let take = self.fresh("_ustk");
+            self.emit("mov", Some(&take), vec![Operand::Var(plen.clone())], "i64");
+            let gt = self.fresh("_usgt");
+            self.emit("cmp_gt", Some(&gt), vec![Operand::Var(plen), Operand::Var(wconst.clone())], "i64");
+            let noclip = self.fresh("us_noclip");
+            self.emit("jmp_if_false", None, vec![Operand::Var(gt), Operand::Var(noclip.clone())], "void");
+            self.emit("mov", Some(&take), vec![Operand::Var(wconst.clone())], "i64");
+            self.emit("label", None, vec![Operand::Var(noclip)], "void");
+            // head = piece[0, take)  (left-justified content, truncated at W).
+            let z0 = self.str_index(0);
+            let head = self.fresh("_ushd");
+            self.emit(
+                "str_slice",
+                Some(&head),
+                vec![Operand::Var(piece), Operand::Var(z0), Operand::Var(take.clone())],
+                "str",
+            );
+            // pad = spaces(W)[0, W - take)  — the right-padding to the full width.
+            let padlen = self.fresh("_uspad");
+            self.emit("sub", Some(&padlen), vec![Operand::Var(wconst), Operand::Var(take)], "i64");
+            let spaces = self.spaces_const(width);
+            let z0b = self.str_index(0);
+            let pad = self.fresh("_uspd");
+            self.emit(
+                "str_slice",
+                Some(&pad),
+                vec![Operand::Var(spaces), Operand::Var(z0b), Operand::Var(padlen)],
+                "str",
+            );
+            // r_i = head ++ pad  (exactly the oracle's alphanumeric move_into).
+            self.emit(
+                "str_concat",
+                Some(&recv_reg),
+                vec![Operand::Var(head), Operand::Var(pad)],
+                "str",
+            );
+            // Advance the cursor past the delimiter: p = j + 1.
+            let one2 = self.fresh("_us1b");
+            self.emit("const", Some(&one2), vec![Operand::Int(1)], "i64");
+            self.emit("add", Some(&p), vec![Operand::Var(j), Operand::Var(one2)], "i64");
+            self.emit("label", None, vec![Operand::Var(skip)], "void");
+        }
+
+        // In range (the out-of-range pointer guard skipped straight to `us_end` with
+        // `overflow` still pre-seeded to 1): the source is exhausted iff the final
+        // cursor ran past its end, so overflow ⇔ `p <= len`. This is the IDENTICAL
+        // comparison the oracle applies (`overflow = p <= src.len()`), so the
+        // accept/skip decision is byte-identical. Emitted BEFORE the `us_end` label
+        // so the out-of-range jump bypasses it, keeping overflow = 1 there.
+        if let Some(ov) = &overflow {
+            let le_ov = self.fresh("_usofle");
+            self.emit("cmp_le", Some(&le_ov), vec![Operand::Var(p.clone()), Operand::Var(len.clone())], "i64");
+            self.emit("mov", Some(ov), vec![Operand::Var(le_ov)], "i64");
+        }
+
+        // Write the pointer back to the 1-based resume position: `min(p, len) + 1`.
+        // `p` is the scan's final 0-based cursor, sitting one past the terminating
+        // delimiter; for a field that ran to end-of-source that step is a phantom
+        // one past the end, so clamp to `len` (removing the phantom) before restoring
+        // 1-basing with `+ 1`. This is byte-identical to the oracle's
+        // `min(p, src.len()) + 1`, stored through the same numeric path so it reshapes
+        // into the pointer's `PIC 9(n)` picture the same way.
+        if let Some((_, ptr_int_digits)) = pointer {
+            // clamped = min(p, len).
+            let clamped = self.fresh("_uspc2");
+            self.emit("mov", Some(&clamped), vec![Operand::Var(p.clone())], "i64");
+            let over = self.fresh("_uspov");
+            self.emit("cmp_gt", Some(&over), vec![Operand::Var(p.clone()), Operand::Var(len.clone())], "i64");
+            let keep = self.fresh("us_keep");
+            self.emit("jmp_if_false", None, vec![Operand::Var(over), Operand::Var(keep.clone())], "void");
+            self.emit("mov", Some(&clamped), vec![Operand::Var(len.clone())], "i64");
+            self.emit("label", None, vec![Operand::Var(keep)], "void");
+            // resume = clamped + 1, reshaped into the pointer's picture.
+            let one = self.fresh("_uspr1");
+            self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+            let resume = self.fresh("_uspres");
+            self.emit("add", Some(&resume), vec![Operand::Var(clamped), Operand::Var(one)], "i64");
+            let pname = pointer_name.as_deref().expect("pointer present");
+            self.store_scaled(pname, &resume, 0, ptr_int_digits + 1, false)?;
+        }
+
+        // The out-of-range guard (only emitted WITH a pointer) lands here, skipping
+        // every move and the write-back so the receivers and pointer keep their prior
+        // values — and, with a clause present, arriving with `overflow` still 1.
+        // Emitted only when a pointer exists, so the no-pointer lowering is
+        // byte-identical to before (no dangling label).
+        if pointer_name.is_some() {
+            self.emit("label", None, vec![Operand::Var(us_end)], "void");
+        }
+
+        // # ON OVERFLOW / NOT ON OVERFLOW dispatch
+        //
+        // With the `overflow` register settled (see the split + pre-seed above), emit
+        // the usual `jmp_if_false`/branch/`label` skeleton emit_if uses, guarding on
+        // it. When both clauses are absent there is nothing to run — `overflow` is
+        // `None` and the whole skeleton is skipped, so a plain UNSTRING lowers exactly
+        // as before this rung.
+        if let Some(ov) = overflow {
+            let not_lbl = self.fresh("us_notov");
+            let end_lbl = self.fresh("us_ovend");
+            self.emit("jmp_if_false", None, vec![Operand::Var(ov), Operand::Var(not_lbl.clone())], "void");
+            for stmt in on_stmts {
+                self.emit_statement(stmt)?;
+            }
+            self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
+            self.emit("label", None, vec![Operand::Var(not_lbl)], "void");
+            for stmt in not_stmts {
+                self.emit_statement(stmt)?;
+            }
+            self.emit("label", None, vec![Operand::Var(end_lbl)], "void");
+        }
+        Ok(())
+    }
+
+    /// A single delimiter byte reduced to a fresh i64 register: a `const` of the
+    /// byte for a 1-character string literal, or `str_index(item, 0)` for a `PIC
+    /// X(1)` item. A multi-character delimiter, a numeric/figurative delimiter, a
+    /// reference-modified delimiter, and a numeric/group/wider delimiter item are
+    /// later rungs. (COBOL source is ASCII, so a "1-character" literal is a single
+    /// byte; the scan loop compares the source's bytes against this code.)
+    ///
+    /// Shared by `UNSTRING … DELIMITED BY delim` and `INSPECT … FOR ALL delim`
+    /// (which both scan for a single byte); `verb` names the caller so the
+    /// later-rung message reads naturally.
+    fn single_delim_code(
+        &mut self,
+        op: &GrammarASTNode,
+        verb: &str,
+    ) -> Result<String, CompileError> {
+        match read_operand(op)? {
+            Operandy::Literal(Src::Str(s)) => {
+                let bytes = s.as_bytes();
+                if bytes.len() != 1 {
+                    return Err(CompileError::Unsupported(format!(
+                        "{verb} with a multi-character delimiter is a later rung"
+                    )));
+                }
+                let reg = self.fresh("_usd");
+                self.emit("const", Some(&reg), vec![Operand::Int(bytes[0] as i64)], "i64");
+                Ok(reg)
+            }
+            Operandy::Literal(Src::Num(_)) => Err(CompileError::Unsupported(format!(
+                "{verb} with a numeric-literal delimiter is a later rung"
+            ))),
+            Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
+                Err(CompileError::Unsupported(format!(
+                    "{verb} with a figurative-constant delimiter is a later rung"
+                )))
+            }
+            Operandy::RefMod { .. } => Err(CompileError::Unsupported(format!(
+                "{verb} with a reference-modified delimiter is a later rung"
+            ))),
+            Operandy::Name(name) => {
+                let idx = self.item_index(&name)?;
+                match &self.items[idx].kind {
+                    ItemKind::Char { .. } => {
+                        if self.items[idx].width() != 1 {
+                            return Err(CompileError::Unsupported(format!(
+                                "{verb} with a delimiter item wider than one character is a later rung"
+                            )));
+                        }
+                        let reg = self.items[idx].reg.clone();
+                        let zero = self.str_index(0);
+                        let out = self.fresh("_usdc");
+                        self.emit(
+                            "str_index",
+                            Some(&out),
+                            vec![Operand::Var(reg), Operand::Var(zero)],
+                            "i64",
+                        );
+                        Ok(out)
+                    }
+                    ItemKind::Numeric { .. } => Err(CompileError::Unsupported(format!(
+                        "{verb} with a numeric delimiter item is a later rung"
+                    ))),
+                }
+            }
+        }
+    }
+
+    /// `INSPECT source TALLYING counter FOR ALL delim` — count the (non-
+    /// overlapping, left-to-right) occurrences of the SINGLE-character `delim` in
+    /// the alphanumeric `source` and **ADD** that count to the integer `counter`.
+    /// INSPECT *adds* to the counter; it does NOT zero it first, so the net effect
+    /// is `counter := counter + occurrences`.
+    ///
+    /// Like UNSTRING this is a data-dependent scan, so we emit a genuine LOOP over
+    /// the source: its register `S`, its length `len = str_len(S)`, a cursor `j`
+    /// (i64, init 0), and a count accumulator `cnt` (i64, init 0). At each position
+    /// `S[j]` (read with `str_index`) is compared to the delimiter byte `D`, and
+    /// `cnt` is bumped on a match:
+    ///
+    /// ```text
+    ///   cnt = 0;  j = 0;  len = str_len(S)
+    /// insp_top:  if j >= len   jmp insp_end
+    ///            if S[j] == D   cnt = cnt + 1        # (skip-around when not equal)
+    ///            j = j + 1;  jmp insp_top
+    /// insp_end:
+    ///   counter := (counter_value + cnt) reduced into counter's picture
+    /// ```
+    ///
+    /// `FOR LEADING delim` is also supported — it counts only the run of
+    /// consecutive `delim` characters at the START of the source, breaking out of
+    /// the scan at the first non-match (see [`Self::emit_inspect_tallying`]).
+    ///
+    /// The count is folded into the counter with the SAME numeric-store path `ADD`
+    /// uses (`store_scaled`, which mirrors the oracle's `store_result`/
+    /// `move_into_numeric`), so a compiled program matches `cobol-runtime`'s
+    /// `exec_inspect` byte-for-byte. Every later-rung form — a `CHARACTERS` tally,
+    /// `BEFORE`/`AFTER` phrases, several counters or `FOR` phrases, and a
+    /// multi-character/figurative/wider delimiter or a numeric source or a
+    /// non-integer/non-numeric counter — is a clean `Unsupported`, accepted by the
+    /// grammar and rejected here. (Both combined halves may independently be
+    /// `LEADING`: `TALLYING … FOR LEADING … REPLACING LEADING` is now supported.)
+    fn emit_inspect(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
+        // This rung supports a LONE `TALLYING … FOR ALL`, a LONE `REPLACING ALL …
+        // BY …`, or the COMBINED `TALLYING … REPLACING` in one INSPECT. The
+        // combined form runs the two lowerings in the ISO order — tally FIRST
+        // (counting the ORIGINAL bytes into the counter), replace SECOND (rewriting
+        // the source) — which is what makes a shared delimiter/search char correct.
+        let has_tally = child_node(verb, "inspect_tallying").is_some();
+        let has_repl = child_node(verb, "inspect_replacing").is_some();
+        let has_conv = child_node(verb, "inspect_converting").is_some();
+        // The source is the first (and only top-level) `operand`; shared by both
+        // the TALLYING and REPLACING forms. It must be a plain alphanumeric item.
+        let source_node = child_node(verb, "operand")
+            .ok_or_else(|| CompileError::Malformed("INSPECT without a source".into()))?;
+        let source_name = match read_operand(source_node)? {
+            Operandy::Name(n) => n,
+            Operandy::Literal(_) => {
+                return Err(CompileError::Unsupported(
+                    "INSPECT of a literal source is a later rung".into(),
+                ))
+            }
+            Operandy::RefMod { .. } => {
+                return Err(CompileError::Unsupported(
+                    "INSPECT of a reference-modified source is a later rung".into(),
+                ))
+            }
+        };
+        let sidx = self.item_index(&source_name)?;
+        let source_width = match &self.items[sidx].kind {
+            ItemKind::Char { .. } => self.items[sidx].width(),
+            ItemKind::Numeric { .. } => {
+                return Err(CompileError::Unsupported(
+                    "INSPECT of a numeric source is a later rung".into(),
+                ))
+            }
+        };
+        let s_reg = self.items[sidx].reg.clone();
+
+        // Dispatch on the phrases present. The COMBINED form composes the two
+        // existing lowerings in ISO order on the SAME source register: the tally
+        // loop reads the original bytes into the counter FIRST, then the replace
+        // rebuild overwrites the source — so a shared delimiter/search character is
+        // counted before it is substituted. The two lone forms are the single
+        // branches of that same composition.
+        // CONVERTING is a STANDALONE alternative — the grammar never lets it appear
+        // beside TALLYING/REPLACING — so it dispatches on its own before the
+        // tally/replace composition.
+        if has_conv {
+            return self.emit_inspect_converting(verb, &s_reg, source_width);
+        }
+        match (has_tally, has_repl) {
+            (true, true) => {
+                // The combined form's TALLYING half supports BOTH `FOR ALL` and
+                // `FOR LEADING`: `allow_leading = true` lets a combined
+                // `TALLYING … FOR LEADING … REPLACING` count only the leading run
+                // (`emit_inspect_tallying` already emits the `leading ? end : nobump`
+                // branch that stops at the first non-match). It also now accepts its
+                // OWN optional `{BEFORE|AFTER}` region (`allow_region = true`): the
+                // window rides on the `inspect_tallying` phrase child, is scanned over
+                // the ORIGINAL source (the tally loop only reads), and bounds the
+                // count. A combined `FOR LEADING` half carrying a region is still
+                // deferred: `allow_leading_region = false` makes `emit_inspect_tallying`
+                // reject it (the standalone `FOR LEADING … BEFORE/AFTER` form is
+                // supported, but only standalone).
+                // `allow_characters = false`: a combined `TALLYING … FOR CHARACTERS …
+                // REPLACING` is a later rung, matching the oracle's combined-form reject.
+                self.emit_inspect_tallying(verb, &s_reg, true, true, false, false)?;
+                // The combined REPLACING half supports BOTH `ALL` and `LEADING`:
+                // `allow_leading = true` lets a combined `TALLYING … REPLACING
+                // LEADING` rewrite only the leading run (`emit_inspect_replacing`
+                // already threads the `active`-guarded run unroll that stops at the
+                // first non-match). The two halves' leading flags are independent, so
+                // BOTH may be LEADING at once. It too now accepts its OWN INDEPENDENT
+                // `{BEFORE|AFTER}` region (`allow_region = true`): its window rides on
+                // the `inspect_replacing` phrase child and is scanned over the source
+                // BEFORE the unroll overwrites it — and since the tally left the
+                // source untouched, that is the SAME original bytes the count saw, so
+                // both windows agree with the oracle. A combined `REPLACING LEADING`
+                // half carrying a region is deferred the same way via
+                // `allow_leading_region = false`.
+                self.emit_inspect_replacing(verb, &s_reg, source_width, true, true, false)
+            }
+            // A lone REPLACING. Dispatch on the number of replace items, mirroring the
+            // oracle's `read_statement`: exactly ONE item keeps the full single-item
+            // lowering (both `ALL` and `LEADING`, `REPLACING ALL` may carry a
+            // `{BEFORE|AFTER}` region, and the STANDALONE `REPLACING LEADING …
+            // BEFORE/AFTER` is supported via `allow_leading_region = true`); TWO OR
+            // MORE items take the multi-item lowering (`ALL`-only, single-char, no
+            // region — one left-to-right first-match-wins pass). Counting the same
+            // `replace_item` children the oracle counts keeps the two engines' accept/
+            // reject sets co-total.
+            (false, true) => {
+                let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
+                    CompileError::Unsupported(
+                        "INSPECT without a REPLACING clause is a later rung".into(),
+                    )
+                })?;
+                let items = child_nodes(replacing, "replace_item");
+                // Detect a lone `REPLACING CHARACTERS BY x` FIRST — a SINGLE replace
+                // item whose tokens carry the CHARACTERS keyword — mirroring the
+                // oracle's `read_statement`. (A MULTI-item list containing CHARACTERS
+                // stays a later rung via `inspect_replacing_multi`; the CHARACTERS
+                // reject in `inspect_replacing_all` still guards the combined form.)
+                if let [ri] = items.as_slice() {
+                    let toks = child_tokens(ri);
+                    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+                        return self.emit_inspect_replacing_characters(ri, &s_reg, source_width);
+                    }
+                }
+                if items.len() >= 2 {
+                    self.emit_inspect_replacing_multi(verb, &s_reg, source_width)
+                } else {
+                    self.emit_inspect_replacing(verb, &s_reg, source_width, true, true, true)
+                }
+            }
+            // A lone TALLYING (or neither, which `inspect_tally_all` rejects).
+            // Dispatch on the number of `FOR` items UNDER THE SOLE counter, mirroring
+            // the oracle's `read_statement`: exactly ONE `tally_item` keeps the full
+            // single-item lowering (both `ALL` and `LEADING`, `FOR ALL` may carry a
+            // `{BEFORE|AFTER}` region, and the STANDALONE `FOR LEADING … BEFORE/AFTER`
+            // is supported via `allow_leading_region = true`); TWO OR MORE `tally_item`s
+            // under one `tally_for` take the multi-item lowering (`ALL`-only,
+            // single-char, no region — one first-match-per-position pass into the shared
+            // counter). The multi lowering fires ONLY when there is EXACTLY ONE
+            // `tally_for`: SEVERAL counters stays a later rung, rejected unchanged by
+            // `emit_inspect_tallying`/`inspect_tally_all`. Counting the same `tally_item`
+            // children the oracle counts keeps the two engines' accept/reject sets
+            // co-total.
+            _ => {
+                if let Some(tallying) = child_node(verb, "inspect_tallying") {
+                    let fors = child_nodes(tallying, "tally_for");
+                    // TWO OR MORE `tally_for` groups take the NEW multi-COUNTER lowering:
+                    // each group has its own counter, and ALL groups' delimiters form ONE
+                    // combined priority list scanned in a single left-to-right pass (see
+                    // `emit_inspect_tally_counters`). Dispatching PURELY on `fors.len() >=
+                    // 2` — BEFORE the single-`tally_for` multi-item branch — keeps this
+                    // co-total with the oracle's `read_statement`: several counters is no
+                    // longer rejected here (that reject still guards the COMBINED
+                    // `TALLYING … REPLACING` form via `inspect_tally_all`).
+                    if fors.len() >= 2 {
+                        return self.emit_inspect_tally_counters(verb, &s_reg);
+                    }
+                    if fors.len() == 1 && child_nodes(fors[0], "tally_item").len() >= 2 {
+                        return self.emit_inspect_tally_multi(verb, &s_reg);
+                    }
+                }
+                // `allow_characters = true`: the STANDALONE `FOR CHARACTERS` form is
+                // supported this rung.
+                self.emit_inspect_tallying(verb, &s_reg, true, true, true, true)
+            }
+        }
+    }
+
+    /// `INSPECT source TALLYING counter FOR ALL delim` (or `FOR LEADING delim`) —
+    /// the count loop and counter store, factored out of [`Self::emit_inspect`] so
+    /// the combined tally-then-replace form can emit it FIRST (over the original
+    /// source bytes) and share the exact ADD-into-counter store path. The loop only
+    /// reads `s_reg`; it never writes it, so a following REPLACING still sees the
+    /// original image.
+    ///
+    /// `FOR ALL` counts EVERY match; `FOR LEADING` counts only the run of
+    /// consecutive matches at the START, stopping at the first non-match. The two
+    /// share the identical loop — the ONLY difference is where the "not equal"
+    /// branch jumps: `FOR ALL` skips just the `cnt += 1` and keeps scanning
+    /// (`nobump`), while `FOR LEADING` breaks out of the loop entirely (`end`).
+    ///
+    /// `allow_leading` gates whether `FOR LEADING` is accepted. Both the lone
+    /// TALLYING and the combined tally-then-replace path now pass `true` (a
+    /// combined `TALLYING … FOR LEADING … REPLACING` is supported); the guard is
+    /// retained so any future caller that must forbid `FOR LEADING` can pass
+    /// `false` and get the clean later-rung diagnostic.
+    ///
+    /// `allow_region` gates whether a `{BEFORE|AFTER} x` region is accepted. Both the
+    /// lone TALLYING and the combined path now pass `true` (a `FOR ALL … BEFORE/AFTER`
+    /// region is supported on either). When a region IS present, we first scan the
+    /// source for the FIRST occurrence of the single region delimiter, derive the
+    /// window `[start, end)` with the ISO not-found asymmetry (BEFORE→whole source,
+    /// AFTER→empty), and bound the count loop to that window. With NO region, nothing
+    /// extra is emitted — the lowering is byte-identical to the pre-region code.
+    ///
+    /// `allow_leading_region` gates the STANDALONE-only `FOR LEADING … BEFORE/AFTER`
+    /// form. The lone TALLYING passes `true` (supported this rung); the combined path
+    /// passes `false`, so a combined `TALLYING … FOR LEADING … BEFORE/AFTER` is a clean
+    /// later-rung error, matching the oracle's read-time rejection. When a leading
+    /// count DOES carry a region (standalone), the scan is ANCHORED at the window
+    /// start: the loop counter is initialised to `start` and bounded by the window
+    /// `end` (not `0..len`), so `FOR LEADING` counts the run beginning at the window
+    /// start — e.g. `FOR LEADING "a" AFTER "X"` on "aaXaab" counts the two a's after
+    /// the X, not the leading "aa" before it. (`FOR ALL`'s lowering is untouched: it
+    /// still scans `0..len` and uses the in-window guard, so it stays byte-identical.)
+    fn emit_inspect_tallying(
+        &mut self,
+        verb: &GrammarASTNode,
+        s_reg: &str,
+        allow_leading: bool,
+        allow_region: bool,
+        allow_leading_region: bool,
+        allow_characters: bool,
+    ) -> Result<(), CompileError> {
+        // Extract the single `FOR ALL`/`FOR LEADING delim [{BEFORE|AFTER} x]` (or
+        // `FOR CHARACTERS [{BEFORE|AFTER} x]`) phrase (rejecting the later rungs).
+        let (counter_name, delim_node, leading, characters, region) = inspect_tally_all(verb)?;
+        // `FOR CHARACTERS` is supported standalone (`allow_characters = true`) but not
+        // in the combined `TALLYING … REPLACING` form (`allow_characters = false`),
+        // matching the oracle's combined-form read-time reject exactly.
+        if characters && !allow_characters {
+            return Err(CompileError::Unsupported(
+                "INSPECT TALLYING … FOR CHARACTERS in a combined TALLYING/REPLACING is a later rung"
+                    .into(),
+            ));
+        }
+        if leading && !allow_leading {
+            return Err(CompileError::Unsupported(
+                "INSPECT TALLYING … FOR LEADING combined with REPLACING is a later rung".into(),
+            ));
+        }
+        if region.is_some() && !allow_region {
+            return Err(CompileError::Unsupported(
+                "INSPECT combined TALLYING … REPLACING with a BEFORE/AFTER region is a later rung"
+                    .into(),
+            ));
+        }
+        // The combined form still defers a LEADING half that carries a region (only
+        // the standalone `FOR LEADING … BEFORE/AFTER` is supported this rung). The
+        // message matches the standalone reject the reader used to raise, so both
+        // engines and both forms diagnose it identically.
+        if leading && region.is_some() && !allow_leading_region {
+            return Err(CompileError::Unsupported(
+                "INSPECT TALLYING … FOR LEADING with a BEFORE/AFTER region is a later rung".into(),
+            ));
+        }
+
+        // The counter must be an unsigned integer numeric item (`PIC 9(n)`).
+        let cidx = self.numeric_index(&counter_name)?;
+        let (int_digits, dec_digits) = self.numeric_dims(cidx);
+        if dec_digits != 0 {
+            return Err(CompileError::Unsupported(format!(
+                "INSPECT TALLYING into a non-integer counter {counter_name} is a later rung"
+            )));
+        }
+        if self.item_signed(cidx) {
+            return Err(CompileError::Unsupported(format!(
+                "INSPECT TALLYING into a signed counter {counter_name} is a later rung"
+            )));
+        }
+        let counter_reg = self.items[cidx].reg.clone();
+
+        // `FOR CHARACTERS` is the "count every position" form: instead of scanning for
+        // delimiter matches, the count is simply the NUMBER OF POSITIONS in the region
+        // window. There is NO delimiter to reduce (`delim_node` is `None`), so we skip
+        // `single_delim_code` and the per-position match loop entirely and emit only:
+        //   * `len = str_len(S)`;
+        //   * the optional `{BEFORE|AFTER} x` window `[start, end)` (the SAME window the
+        //     ALL/LEADING count uses, so the not-found asymmetry is inherited verbatim);
+        //   * `cnt = end - start` when a region is present, else `cnt = len`.
+        // This is exactly the oracle's `window.len()` — with no region that is
+        // `len(S)`, with a region it is `end - start` of the identical window — so the
+        // count value is byte-identical across the two engines. A `BEFORE x` with `x`
+        // absent yields the whole source (`end = len`, `start = 0`); an `AFTER x` with
+        // `x` absent yields 0 (`start = end = len`), both by the shared window helper.
+        if characters {
+            let len = self.fresh("_insplen");
+            self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.to_string())], "i64");
+            let region_window = self.emit_inspect_region_window(region, s_reg, &len)?;
+            let cnt = match region_window {
+                Some((start, win_end)) => {
+                    // count = end - start (the window length).
+                    let c = self.fresh("_inspclen");
+                    self.emit(
+                        "sub",
+                        Some(&c),
+                        vec![Operand::Var(win_end), Operand::Var(start)],
+                        "i64",
+                    );
+                    c
+                }
+                // No region → count the WHOLE source: `len(S)`.
+                None => len,
+            };
+            // counter := counter_value + cnt, reduced into the counter's picture — the
+            // SAME numeric-store ADD the ALL/LEADING path uses below, so the reshape
+            // (COBOL's silent high-order truncation) matches the oracle's
+            // `store_result(counter, counter + count)`.
+            let sum = self.fresh("_inspsum");
+            self.emit("add", Some(&sum), vec![Operand::Var(counter_reg), Operand::Var(cnt)], "i64");
+            return self.store_scaled(&counter_name, &sum, 0, int_digits + 1, false);
+        }
+
+        // The delimiter reduced to a single byte code register (ALL/LEADING only —
+        // `delim_node` is `Some` here because `characters` is `false`).
+        let d_reg = self.single_delim_code(
+            delim_node.expect("ALL/LEADING tally carries a delimiter node"),
+            "INSPECT",
+        )?;
+
+        // cnt = 0; j = 0; len = str_len(S).
+        let cnt = self.fresh("_inspc");
+        self.emit("const", Some(&cnt), vec![Operand::Int(0)], "i64");
+        let len = self.fresh("_insplen");
+        self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.to_string())], "i64");
+        let j = self.fresh("_inspj");
+        self.emit("const", Some(&j), vec![Operand::Int(0)], "i64");
+
+        // The optional `{BEFORE|AFTER} x` window `[start, end)`. When present we scan
+        // the source ONCE for the first occurrence of the single region delimiter and
+        // derive the bounds; when absent nothing here is emitted (byte-identical to
+        // the pre-region lowering) and the count runs over the whole source.
+        let region_window = self.emit_inspect_region_window(region, s_reg, &len)?;
+
+        // Anchor the STANDALONE `FOR LEADING … BEFORE/AFTER` scan at the window start:
+        // re-seat the loop counter to `start` and bound the loop by the window `end`
+        // (instead of `0..len`), so `FOR LEADING`'s stop-on-first-mismatch runs from
+        // the window start — the ISO window-anchored rule. The `const j = 0` above is
+        // simply overwritten by this `mov` (a couple of extra IR ops on this path
+        // only). For `FOR ALL`, and for `FOR LEADING` with NO region, `loop_bound`
+        // stays `len` and nothing extra is emitted, so those lowerings are unchanged.
+        let leading_windowed = leading && region_window.is_some();
+        let loop_bound = if leading_windowed {
+            let (start, win_end) = region_window.as_ref().expect("region present");
+            self.emit("mov", Some(&j), vec![Operand::Var(start.clone())], "i64");
+            win_end.clone()
+        } else {
+            len.clone()
+        };
+
+        let top = self.fresh("insp_top");
+        let end = self.fresh("insp_end");
+        self.emit("label", None, vec![Operand::Var(top.clone())], "void");
+        // if j >= loop_bound jmp end. (`loop_bound` is `len` for every case except the
+        // window-anchored leading scan, where it is the window end.)
+        let ge = self.fresh("_inspge");
+        self.emit("cmp_ge", Some(&ge), vec![Operand::Var(j.clone()), Operand::Var(loop_bound.clone())], "i64");
+        self.emit("jmp_if_true", None, vec![Operand::Var(ge), Operand::Var(end.clone())], "void");
+        // On a non-match: FOR ALL skips just the bump and keeps scanning (`nobump`);
+        // FOR LEADING breaks out of the loop entirely (`end`) — that stop-on-first-
+        // mismatch is the whole difference between the two forms.
+        let c = self.fresh("_inspc0");
+        self.emit("str_index", Some(&c), vec![Operand::Var(s_reg.to_string()), Operand::Var(j.clone())], "i64");
+        let eq = self.fresh("_inspeq");
+        self.emit("cmp_eq", Some(&eq), vec![Operand::Var(c), Operand::Var(d_reg.clone())], "i64");
+        let nobump = self.fresh("insp_nobump");
+        let mismatch_target = if leading { end.clone() } else { nobump.clone() };
+        self.emit("jmp_if_false", None, vec![Operand::Var(eq), Operand::Var(mismatch_target)], "void");
+        // Region guard for the `FOR ALL` window (only when a `{BEFORE|AFTER}` window is
+        // present AND we are NOT window-anchored): a matching character OUTSIDE
+        // `[start, end)` is skipped (jump to `nobump`, keep scanning) — `j < start` or
+        // `j >= end` means "not in the region". The window-anchored `FOR LEADING` scan
+        // already starts at `start` and stops at the window `end`, so it needs no
+        // per-position guard; only `FOR ALL` (which scans the whole `0..len`) does.
+        if !leading_windowed {
+            if let Some((start, end_bound)) = &region_window {
+                let lt = self.fresh("_insplt");
+                self.emit("cmp_lt", Some(&lt), vec![Operand::Var(j.clone()), Operand::Var(start.clone())], "i64");
+                self.emit("jmp_if_true", None, vec![Operand::Var(lt), Operand::Var(nobump.clone())], "void");
+                let ge2 = self.fresh("_inspge2");
+                self.emit("cmp_ge", Some(&ge2), vec![Operand::Var(j.clone()), Operand::Var(end_bound.clone())], "i64");
+                self.emit("jmp_if_true", None, vec![Operand::Var(ge2), Operand::Var(nobump.clone())], "void");
+            }
+        }
+        let one = self.fresh("_insp1");
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        self.emit("add", Some(&cnt), vec![Operand::Var(cnt.clone()), Operand::Var(one)], "i64");
+        self.emit("label", None, vec![Operand::Var(nobump)], "void");
+        // j = j + 1; jmp top.
+        let one2 = self.fresh("_insp1b");
+        self.emit("const", Some(&one2), vec![Operand::Int(1)], "i64");
+        self.emit("add", Some(&j), vec![Operand::Var(j.clone()), Operand::Var(one2)], "i64");
+        self.emit("jmp", None, vec![Operand::Var(top)], "void");
+        self.emit("label", None, vec![Operand::Var(end)], "void");
+
+        // counter := counter_value + cnt, reduced into the counter's picture — the
+        // exact numeric-store ADD uses (COBOL's silent high-order truncation), so
+        // this matches the oracle's `store_result(counter, counter + cnt)`.
+        let sum = self.fresh("_inspsum");
+        self.emit("add", Some(&sum), vec![Operand::Var(counter_reg), Operand::Var(cnt)], "i64");
+        self.store_scaled(&counter_name, &sum, 0, int_digits + 1, false)
+    }
+
+    /// Emit the runtime window `[start, end)` for an optional `{BEFORE|AFTER} x`
+    /// INSPECT region, returning `Some((start_reg, end_reg))` (both i64 registers)
+    /// when a region is present, or `None` when it is absent (so the caller emits
+    /// nothing extra and counts the whole source).
+    ///
+    /// A region is bounded by the FIRST (leftmost) occurrence of the single region
+    /// delimiter `x`. We scan the source once, recording a `found` flag and the
+    /// first index `fidx`, then derive the bounds with the ISO not-found asymmetry:
+    ///
+    /// ```text
+    ///   fidx = 0; found = 0; rj = 0
+    /// rtop: if rj >= len jmp rdone          # ran off the end → not found
+    ///       if S[rj] != x   jmp rcont
+    ///       fidx = rj; found = 1; jmp rdone # first match → record and stop
+    /// rcont: rj = rj + 1; jmp rtop
+    /// rdone:
+    ///   BEFORE:  start = 0;   end = found ? fidx     : len   # absent → WHOLE source
+    ///   AFTER:   end   = len; start = found ? fidx+1  : len   # absent → EMPTY window
+    /// ```
+    ///
+    /// The BEFORE→whole / AFTER→empty split is the whole subtlety of the rung, and it
+    /// mirrors the oracle's `inspect_tally` window exactly, so both engines agree
+    /// byte-for-byte. A multi-character region delimiter is rejected by
+    /// `single_delim_code`, exactly like the tally delimiter.
+    fn emit_inspect_region_window(
+        &mut self,
+        region: Option<(RegionKind, &GrammarASTNode)>,
+        s_reg: &str,
+        len: &str,
+    ) -> Result<Option<(String, String)>, CompileError> {
+        let (kind, rdelim_node) = match region {
+            None => return Ok(None),
+            Some(r) => r,
+        };
+        // The region delimiter reduced to a single byte code register.
+        let rd = self.single_delim_code(rdelim_node, "INSPECT")?;
+
+        // found = 0; fidx = 0; rj = 0.
+        let found = self.fresh("_insprf");
+        self.emit("const", Some(&found), vec![Operand::Int(0)], "i64");
+        let fidx = self.fresh("_insprfi");
+        self.emit("const", Some(&fidx), vec![Operand::Int(0)], "i64");
+        let rj = self.fresh("_insprj");
+        self.emit("const", Some(&rj), vec![Operand::Int(0)], "i64");
+
+        let rtop = self.fresh("insp_rtop");
+        let rcont = self.fresh("insp_rcont");
+        let rdone = self.fresh("insp_rdone");
+        self.emit("label", None, vec![Operand::Var(rtop.clone())], "void");
+        // if rj >= len jmp rdone (ran off the end without a match → found stays 0).
+        let rge = self.fresh("_insprge");
+        self.emit("cmp_ge", Some(&rge), vec![Operand::Var(rj.clone()), Operand::Var(len.to_string())], "i64");
+        self.emit("jmp_if_true", None, vec![Operand::Var(rge), Operand::Var(rdone.clone())], "void");
+        // if S[rj] != x jmp rcont.
+        let rc = self.fresh("_insprc");
+        self.emit("str_index", Some(&rc), vec![Operand::Var(s_reg.to_string()), Operand::Var(rj.clone())], "i64");
+        let req = self.fresh("_inspreq");
+        self.emit("cmp_eq", Some(&req), vec![Operand::Var(rc), Operand::Var(rd.clone())], "i64");
+        self.emit("jmp_if_false", None, vec![Operand::Var(req), Operand::Var(rcont.clone())], "void");
+        // Match: record the FIRST index and stop scanning.
+        self.emit("mov", Some(&fidx), vec![Operand::Var(rj.clone())], "i64");
+        self.emit("const", Some(&found), vec![Operand::Int(1)], "i64");
+        self.emit("jmp", None, vec![Operand::Var(rdone.clone())], "void");
+        // rcont: rj = rj + 1; jmp rtop.
+        self.emit("label", None, vec![Operand::Var(rcont)], "void");
+        let rone = self.fresh("_inspr1");
+        self.emit("const", Some(&rone), vec![Operand::Int(1)], "i64");
+        self.emit("add", Some(&rj), vec![Operand::Var(rj.clone()), Operand::Var(rone)], "i64");
+        self.emit("jmp", None, vec![Operand::Var(rtop)], "void");
+        self.emit("label", None, vec![Operand::Var(rdone)], "void");
+
+        // Derive [start, end) from (kind, found, fidx). The `skip` label guards the
+        // "found" adjustment: when `found == 0` the default (whole for BEFORE, empty
+        // for AFTER) stands.
+        let start = self.fresh("_insprs");
+        let end = self.fresh("_inspre");
+        match kind {
+            RegionKind::Before => {
+                // start = 0; end = found ? fidx : len (absent → whole source).
+                self.emit("const", Some(&start), vec![Operand::Int(0)], "i64");
+                self.emit("mov", Some(&end), vec![Operand::Var(len.to_string())], "i64");
+                let skip = self.fresh("insp_bskip");
+                self.emit("jmp_if_false", None, vec![Operand::Var(found.clone()), Operand::Var(skip.clone())], "void");
+                self.emit("mov", Some(&end), vec![Operand::Var(fidx.clone())], "i64");
+                self.emit("label", None, vec![Operand::Var(skip)], "void");
+            }
+            RegionKind::After => {
+                // end = len; start = found ? fidx+1 : len (absent → empty window).
+                self.emit("mov", Some(&end), vec![Operand::Var(len.to_string())], "i64");
+                self.emit("mov", Some(&start), vec![Operand::Var(len.to_string())], "i64");
+                let skip = self.fresh("insp_askip");
+                self.emit("jmp_if_false", None, vec![Operand::Var(found.clone()), Operand::Var(skip.clone())], "void");
+                let rone2 = self.fresh("_inspr1b");
+                self.emit("const", Some(&rone2), vec![Operand::Int(1)], "i64");
+                self.emit("add", Some(&start), vec![Operand::Var(fidx.clone()), Operand::Var(rone2)], "i64");
+                self.emit("label", None, vec![Operand::Var(skip)], "void");
+            }
+        }
+        Ok(Some((start, end)))
+    }
+
+    /// `INSPECT source REPLACING ALL x BY y` (or `REPLACING LEADING x BY y`) —
+    /// rebuild the alphanumeric `source` with the single character `x` replaced by
+    /// the single character `y`, in place. Because both are single characters the
+    /// width `W` is unchanged, so the result is a per-position map that we UNROLL
+    /// over the compile-time-known `W`. For `ALL`, at each position `j` the output
+    /// character is `S[j] == x ? y : S[j]`.
+    ///
+    /// `REPLACING LEADING` replaces only the run of consecutive `x` characters at
+    /// the START of the source, stopping at the first non-`x`. We thread a runtime
+    /// `active` flag (i64, init 1 = still inside the leading run) through the
+    /// unroll: position `j` is replaced iff `active AND (S[j] == x)` — i.e. every
+    /// position `0..=j` equalled `x`. Once a mismatch clears `active`, it stays 0
+    /// for all later positions, so a later `x` is left unchanged. That is the ONLY
+    /// difference from `ALL`; when `leading` is false the extra `and` folds away
+    /// and the emitted unroll is byte-identical to the original `ALL` lowering.
+    ///
+    /// ```text
+    ///   result = ""
+    ///   active = 1                            # LEADING only
+    ///   for j in 0..W:                        # W is known at compile time
+    ///       eq = (S[j] == x)
+    ///       in_win = (start <= j < end)       # region only (else always true)
+    ///       use_repl = LEADING ? (active AND eq AND in_win) : (eq AND in_win)
+    ///       if use_repl    result = result ++ y_str
+    ///       else           result = result ++ S[j, j+1)
+    ///       # LEADING: decay the run ONLY on an in-window mismatch, so positions
+    ///       # before the window leave the run untouched (anchored at `start`):
+    ///       active = active AND (eq OR NOT in_win)
+    ///   source := result                      # exactly W chars, width unchanged
+    /// ```
+    ///
+    /// The search `x` is reduced to a byte code with the shared
+    /// [`Self::single_delim_code`] (so `str_index(S, j)` compares against it); the
+    /// replacement `y` is reduced to a 1-character string with the parallel
+    /// [`Self::single_delim_str`] so it can be concatenated. Both share
+    /// UNSTRING/TALLYING's single-character validation, so a multi-character/
+    /// figurative/wider/numeric `x` or `y` is a clean later-rung `Unsupported`.
+    /// The rebuilt string is copied into the source register — the same W-wide
+    /// alphanumeric image the oracle's `move_into` produces, byte-for-byte.
+    ///
+    /// `allow_leading` is `true` on both the lone REPLACING path and the combined
+    /// tally-then-replace path — a combined `TALLYING … REPLACING LEADING` now
+    /// lowers exactly like a lone `REPLACING LEADING`, independent of the TALLYING
+    /// half's own leading flag.
+    ///
+    /// `allow_region` gates whether a `{BEFORE|AFTER} z` region is accepted. Both the
+    /// lone REPLACING and the combined path now pass `true`. When a region is present
+    /// we reuse [`Self::emit_inspect_region_window`] — the SAME window the TALLYING
+    /// side emits — to derive `[start, end)` over the ORIGINAL source. For `ALL`, each
+    /// unrolled position `j` is replaced iff `start <= j < end AND S[j] == x`. For
+    /// `LEADING` with a region the run is ANCHORED at the window start: a position
+    /// OUTSIDE `[start, end)` keeps its original character AND leaves `active`
+    /// untouched (characters before `start` neither begin nor break the run), so the
+    /// leading substitution genuinely starts at `start`. With NO region the extra
+    /// guard folds away and the emitted unroll is byte-identical to the pre-region
+    /// `ALL`/`LEADING` lowerings.
+    ///
+    /// `allow_leading_region` gates the STANDALONE-only `REPLACING LEADING …
+    /// BEFORE/AFTER` form. The lone REPLACING passes `true` (supported this rung); the
+    /// combined path passes `false`, so a combined `TALLYING … REPLACING LEADING …
+    /// BEFORE/AFTER` is a clean later-rung error, matching the oracle's read-time
+    /// rejection.
+    fn emit_inspect_replacing(
+        &mut self,
+        verb: &GrammarASTNode,
+        s_reg: &str,
+        width: usize,
+        allow_leading: bool,
+        allow_region: bool,
+        allow_leading_region: bool,
+    ) -> Result<(), CompileError> {
+        // The single `ALL`/`LEADING x BY y [{BEFORE|AFTER} z]` phrase (rejecting the
+        // later rungs).
+        let (search_node, replace_node, leading, region) = inspect_replacing_all(verb)?;
+        if leading && !allow_leading {
+            return Err(CompileError::Unsupported(
+                "INSPECT TALLYING … REPLACING LEADING is a later rung".into(),
+            ));
+        }
+        if region.is_some() && !allow_region {
+            return Err(CompileError::Unsupported(
+                "INSPECT combined TALLYING … REPLACING with a BEFORE/AFTER region is a later rung"
+                    .into(),
+            ));
+        }
+        // The combined form still defers a LEADING half that carries a region (only the
+        // standalone `REPLACING LEADING … BEFORE/AFTER` is supported this rung). The
+        // message matches the standalone reject the reader used to raise.
+        if leading && region.is_some() && !allow_leading_region {
+            return Err(CompileError::Unsupported(
+                "INSPECT REPLACING LEADING with a BEFORE/AFTER region is a later rung".into(),
+            ));
+        }
+        // x → a byte code (for the per-position compare); y → a 1-char string
+        // (for the concatenation). Both share the single-character validation.
+        let x_reg = self.single_delim_code(search_node, "INSPECT REPLACING")?;
+        let y_reg = self.single_delim_str(replace_node, "INSPECT REPLACING")?;
+
+        // The optional `{BEFORE|AFTER} z` window `[start, end)`, derived over the
+        // ORIGINAL source (before the unroll overwrites `s_reg`). We reuse the tally
+        // side's `emit_inspect_region_window`, which needs the runtime length; with no
+        // region nothing here is emitted and the guard below folds away.
+        let region_window = match region {
+            None => None,
+            Some(_) => {
+                let len = self.fresh("_irlen");
+                self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.to_string())], "i64");
+                self.emit_inspect_region_window(region, s_reg, &len)?
+            }
+        };
+
+        // result = "" — the accumulator we build W characters into.
+        let result = self.fresh("_irres");
+        self.emit("str_const", Some(&result), vec![Operand::Str(String::new())], "str");
+
+        // active = 1 — still inside the leading run (LEADING only; unused for ALL).
+        let active = self.fresh("_iractive");
+        if leading {
+            self.emit("const", Some(&active), vec![Operand::Int(1)], "i64");
+        }
+
+        for j in 0..width {
+            // c = S[j]  (the source byte at this position).
+            let jc = self.str_index(j as i64);
+            let c = self.fresh("_irc");
+            self.emit(
+                "str_index",
+                Some(&c),
+                vec![Operand::Var(s_reg.to_string()), Operand::Var(jc.clone())],
+                "i64",
+            );
+            // eq = (c == x).
+            let eq = self.fresh("_ireq");
+            self.emit("cmp_eq", Some(&eq), vec![Operand::Var(c), Operand::Var(x_reg.clone())], "i64");
+            // in_region = (j >= start) AND (j < end) when a `{BEFORE|AFTER}` window
+            // applies (both `ALL` and the STANDALONE `LEADING`); `None` with no region.
+            // `j` is the compile-time constant for this unrolled position, materialised
+            // into a register so it can be compared against the runtime window bounds.
+            let in_region = match &region_window {
+                Some((start, end_bound)) => {
+                    let jreg = self.fresh("_irjr");
+                    self.emit("const", Some(&jreg), vec![Operand::Int(j as i64)], "i64");
+                    let ge = self.fresh("_irge");
+                    self.emit(
+                        "cmp_ge",
+                        Some(&ge),
+                        vec![Operand::Var(jreg.clone()), Operand::Var(start.clone())],
+                        "i64",
+                    );
+                    let lt = self.fresh("_irlt");
+                    self.emit(
+                        "cmp_lt",
+                        Some(&lt),
+                        vec![Operand::Var(jreg), Operand::Var(end_bound.clone())],
+                        "i64",
+                    );
+                    let ir = self.fresh("_irin");
+                    self.emit("and", Some(&ir), vec![Operand::Var(ge), Operand::Var(lt)], "i64");
+                    Some(ir)
+                }
+                None => None,
+            };
+            // use_repl — whether to substitute at this position:
+            //   plain ALL        -> eq
+            //   ALL + region     -> in_region AND eq
+            //   LEADING          -> active AND eq
+            //   LEADING + region -> (active AND eq) AND in_region  (run anchored at the
+            //                        window start; positions outside the window never
+            //                        replace and — below — never break the run)
+            let branch = match (leading, &in_region) {
+                (false, None) => eq.clone(),
+                (false, Some(ir)) => {
+                    let use_repl = self.fresh("_iruse");
+                    self.emit(
+                        "and",
+                        Some(&use_repl),
+                        vec![Operand::Var(ir.clone()), Operand::Var(eq.clone())],
+                        "i64",
+                    );
+                    use_repl
+                }
+                (true, None) => {
+                    let use_repl = self.fresh("_iruse");
+                    self.emit(
+                        "and",
+                        Some(&use_repl),
+                        vec![Operand::Var(active.clone()), Operand::Var(eq.clone())],
+                        "i64",
+                    );
+                    use_repl
+                }
+                (true, Some(ir)) => {
+                    let am = self.fresh("_iruse");
+                    self.emit(
+                        "and",
+                        Some(&am),
+                        vec![Operand::Var(active.clone()), Operand::Var(eq.clone())],
+                        "i64",
+                    );
+                    let use_repl = self.fresh("_iruse2");
+                    self.emit(
+                        "and",
+                        Some(&use_repl),
+                        vec![Operand::Var(am), Operand::Var(ir.clone())],
+                        "i64",
+                    );
+                    use_repl
+                }
+            };
+            let use_orig = self.fresh("ir_orig");
+            let done = self.fresh("ir_done");
+            // On a match (within the run, for LEADING), append the replacement `y`;
+            // otherwise the original char.
+            self.emit("jmp_if_false", None, vec![Operand::Var(branch), Operand::Var(use_orig.clone())], "void");
+            self.emit(
+                "str_concat",
+                Some(&result),
+                vec![Operand::Var(result.clone()), Operand::Var(y_reg.clone())],
+                "str",
+            );
+            self.emit("jmp", None, vec![Operand::Var(done.clone())], "void");
+            self.emit("label", None, vec![Operand::Var(use_orig)], "void");
+            // orig = S[j, j+1) — the source character unchanged.
+            let jc1 = self.str_index(j as i64 + 1);
+            let orig = self.fresh("_irorig");
+            self.emit(
+                "str_slice",
+                Some(&orig),
+                vec![Operand::Var(s_reg.to_string()), Operand::Var(jc), Operand::Var(jc1)],
+                "str",
+            );
+            self.emit(
+                "str_concat",
+                Some(&result),
+                vec![Operand::Var(result.clone()), Operand::Var(orig)],
+                "str",
+            );
+            self.emit("label", None, vec![Operand::Var(done)], "void");
+            // Decay the leading run. (LEADING only; ALL never reads `active`.)
+            if leading {
+                match &in_region {
+                    // No region: active := active AND eq — once a non-match clears it,
+                    // it sticks at 0 for every later position, so LEADING never
+                    // replaces past the first gap. Byte-identical to the pre-region
+                    // leading lowering.
+                    None => {
+                        self.emit(
+                            "and",
+                            Some(&active),
+                            vec![Operand::Var(active.clone()), Operand::Var(eq)],
+                            "i64",
+                        );
+                    }
+                    // With a region, decay ONLY on an IN-WINDOW mismatch:
+                    //   active := active AND (eq OR NOT in_region)
+                    // A position OUTSIDE the window has `NOT in_region == 1`, so the OR
+                    // is 1 and `active` is left unchanged — characters before the window
+                    // neither start nor break the run, anchoring it at the window start.
+                    Some(ir) => {
+                        let zero = self.fresh("_irz");
+                        self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+                        let not_in = self.fresh("_irni");
+                        self.emit(
+                            "cmp_eq",
+                            Some(&not_in),
+                            vec![Operand::Var(ir.clone()), Operand::Var(zero)],
+                            "i64",
+                        );
+                        let keep = self.fresh("_irkeep");
+                        self.emit(
+                            "or",
+                            Some(&keep),
+                            vec![Operand::Var(eq), Operand::Var(not_in)],
+                            "i64",
+                        );
+                        self.emit(
+                            "and",
+                            Some(&active),
+                            vec![Operand::Var(active.clone()), Operand::Var(keep)],
+                            "i64",
+                        );
+                    }
+                }
+            }
+        }
+
+        // source := result. `result` is exactly W chars (each of the W pieces is a
+        // single character), so this is the same fixed-width image the oracle
+        // stores. Copy through an empty concat so the source register (read during
+        // the loop) is only overwritten now, after the last read.
+        let empty = self.fresh("_irempty");
+        self.emit("str_const", Some(&empty), vec![Operand::Str(String::new())], "str");
+        self.emit(
+            "str_concat",
+            Some(s_reg),
+            vec![Operand::Var(result), Operand::Var(empty)],
+            "str",
+        );
+        Ok(())
+    }
+
+    /// `INSPECT source REPLACING CHARACTERS BY x` — overwrite EVERY position of the
+    /// alphanumeric `source` with the single replacement character `x`. With no
+    /// region the WHOLE field becomes `x`s; its width is unchanged.
+    ///
+    /// This reuses [`Self::emit_inspect_replacing`]'s rebuild scaffold, but every
+    /// position becomes `x` UNCONDITIONALLY — there is no `S[j]`-vs-search compare, so
+    /// we need not even read the source bytes. We append the 1-character replacement
+    /// string `width` times (the picture's compile-time CHAR width) into a fresh
+    /// accumulator, then copy it back to the source register.
+    ///
+    /// # Byte-basis co-totality (why `width` copies, not `str_len(S)` copies)
+    ///
+    /// The oracle fills `n = storage.len()` (BYTE-length) copies of `x` and then
+    /// stores through `move_into`, which re-pads/truncates to the picture's CHAR size.
+    /// For an ASCII field `str_len == width`, so this is just `width` copies. For a
+    /// non-ASCII source whose byte length exceeds its char width (e.g.
+    /// `PIC X(5) VALUE "café"` = 5 chars / 6 bytes) the oracle's `n = 6` copies cap to
+    /// the picture's 5 chars. Emitting exactly `width` copies here reproduces that
+    /// capped image byte-for-byte on both engines.
+    ///
+    /// # Guards (IDENTICAL to the oracle)
+    ///
+    ///   3. A `{BEFORE|AFTER}` region on the CHARACTERS item is a later rung (a byte
+    ///      window can split a multi-byte char mid-position, which the oracle's
+    ///      `String` storage cannot represent — unsound to include, so deferred).
+    ///   2. A single-char but NON-ASCII **literal** `x` is a later rung, so the
+    ///      byte-based compiler stays co-total with the char-based oracle. Applied to
+    ///      LITERALS only: a `PIC X(1)` *item* replacement is co-total under the fill.
+    ///   1. `x` is a SINGLE character — the shared [`Self::single_delim_str`] check.
+    fn emit_inspect_replacing_characters(
+        &mut self,
+        ri: &GrammarASTNode,
+        s_reg: &str,
+        width: usize,
+    ) -> Result<(), CompileError> {
+        // Guard 3 — a `{BEFORE|AFTER}` region on the CHARACTERS item is a later rung.
+        if child_node(ri, "inspect_region").is_some() {
+            return Err(CompileError::Unsupported(
+                "INSPECT REPLACING CHARACTERS with a BEFORE/AFTER region is a later rung".into(),
+            ));
+        }
+        // The lone `operand` child is the replacement `x` (the `BY` operand).
+        let replace_node = child_node(ri, "operand").ok_or_else(|| {
+            CompileError::Malformed("INSPECT REPLACING CHARACTERS without a BY replacement".into())
+        })?;
+        // Guard 2 — a single-char but non-ASCII LITERAL replacement is deferred so the
+        // messages/gating match the oracle exactly (`single_delim_str`'s byte-based
+        // check would otherwise diagnose `"é"` as "multi-character" rather than as a
+        // non-ASCII replacement). Applied to LITERALS only: an item is not gated.
+        if let Operandy::Literal(Src::Str(s)) = read_operand(replace_node)? {
+            if s.chars().count() == 1 && !s.is_ascii() {
+                return Err(CompileError::Unsupported(
+                    "INSPECT REPLACING CHARACTERS with a non-ASCII replacement is a later rung"
+                        .into(),
+                ));
+            }
+        }
+        // Guard 1 — the single replacement char as a 1-character string register,
+        // reusing REPLACING ALL's validation (multi-character/figurative/wider/numeric
+        // operands are rejected with the shared messages).
+        let y_reg = self.single_delim_str(replace_node, "INSPECT REPLACING")?;
+
+        // result = "" — append `x` for each of the `width` positions.
+        let result = self.fresh("_ircres");
+        self.emit("str_const", Some(&result), vec![Operand::Str(String::new())], "str");
+        for _ in 0..width {
+            self.emit(
+                "str_concat",
+                Some(&result),
+                vec![Operand::Var(result.clone()), Operand::Var(y_reg.clone())],
+                "str",
+            );
+        }
+        // source := result. `result` is exactly `width` characters, the same
+        // fixed-width image the oracle stores after its `move_into` cap. Copy through
+        // an empty concat for symmetry with `emit_inspect_replacing` (the fill never
+        // reads `s_reg`, so no aliasing hazard either way).
+        let empty = self.fresh("_ircempty");
+        self.emit("str_const", Some(&empty), vec![Operand::Str(String::new())], "str");
+        self.emit(
+            "str_concat",
+            Some(s_reg),
+            vec![Operand::Var(result), Operand::Var(empty)],
+            "str",
+        );
+        Ok(())
+    }
+
+    /// `INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — the
+    /// multi-item REPLACING lowering: ONE left-to-right pass with FIRST-MATCH-WINS
+    /// and NO RE-CHAINING, matching `exec_inspect_replacing_multi` byte-for-byte.
+    ///
+    /// The subtlety the ordered chain encodes: at each source position the items are
+    /// considered IN WRITTEN ORDER and the FIRST whose search matches the ORIGINAL
+    /// byte wins; the byte a replacement produces is NEVER re-examined (we always
+    /// read `S[j]` from the original source register, never from `result`). We UNROLL
+    /// over the compile-time width `W`; at each position `j` we emit an ordered
+    /// if-else CHAIN, one link per item:
+    ///
+    /// ```text
+    ///   result = ""
+    ///   # each item's window [start_k, end_k) is computed ONCE, before the unroll,
+    ///   # over the ORIGINAL source (via emit_inspect_region_window); a region-less
+    ///   # item has no window and its `in_win` guard folds away.
+    ///   for j in 0..W:
+    ///     c = S[j]
+    ///     if (start0 <= j < end0) && c == x0: result += y0; goto done_j   # first…
+    ///     if (start1 <= j < end1) && c == x1: result += y1; goto done_j   # …match…
+    ///     …                                            #    …in its window wins
+    ///     result += S[j, j+1)                          # no item matched → original
+    ///   done_j:
+    ///   S = result
+    /// ```
+    ///
+    /// The early `goto done_j` on a match is exactly first-match-wins: once item `k`
+    /// fires, items `k+1…` are skipped for this position. And because every compare
+    /// tests `c` (the ORIGINAL `S[j]`), never the just-appended replacement, a
+    /// produced character is never chained into a second replacement —
+    /// `ALL "a" BY "b" ALL "b" BY "z"` over `"ab"` compiles to `"bz"`, not `"zz"`.
+    ///
+    /// # Per-item regions (this rung)
+    ///
+    /// Each item may carry its OWN optional `{BEFORE|AFTER} x` window. We reuse
+    /// [`Self::emit_inspect_region_window`] — the SAME window the single-item region
+    /// emitter and the TALLYING side emit — to derive each item's `[start, end)` over
+    /// the ORIGINAL source ONCE, before the unroll (the runtime length is materialised
+    /// once, shared across all items that carry a region). At each unrolled position
+    /// `j` a region-carrying item's link tests `start <= j < end AND c == x`; a
+    /// region-less item's link is just `c == x` (its guard folds away). This is the
+    /// exact composition of the pre-existing multi-item first-match chain with the
+    /// single-item region gate, so the emitted output matches
+    /// `exec_inspect_replacing_multi` byte-for-byte.
+    ///
+    /// Each item's search reduces to a byte code (`single_delim_code`, for the
+    /// compare) and its replacement to a 1-char string (`single_delim_str`, for the
+    /// concat), sharing the SAME single-character validation the single-item path
+    /// uses — so a multi-character/figurative/wider/numeric operand is rejected
+    /// identically. The read-side `inspect_replacing_multi` has already rejected
+    /// LEADING/CHARACTERS/FIRST items, so every item here is a plain `ALL` single-char
+    /// pair with an OPTIONAL region. Like the single-item emitter, the width-`W`
+    /// `result` is copied back into `s_reg` through an empty concat AFTER the last
+    /// read, so the source register is not overwritten mid-scan.
+    fn emit_inspect_replacing_multi(
+        &mut self,
+        verb: &GrammarASTNode,
+        s_reg: &str,
+        width: usize,
+    ) -> Result<(), CompileError> {
+        // The written-order list of `(search_node, replace_node, region)` items (the
+        // reader has enforced the `ALL`-only scope bound; each item MAY carry its own
+        // region). If ANY item has a region we materialise the runtime length ONCE,
+        // over the ORIGINAL source, since `emit_inspect_region_window` needs it (and
+        // all region windows are computed over that same original, before the unroll
+        // overwrites `s_reg` at the very end).
+        let item_nodes = inspect_replacing_multi(verb)?;
+        let len = if item_nodes.iter().any(|(_, _, region)| region.is_some()) {
+            let l = self.fresh("_irmlen");
+            self.emit("str_len", Some(&l), vec![Operand::Var(s_reg.to_string())], "i64");
+            Some(l)
+        } else {
+            None
+        };
+        // Reduce each item to a `(search byte code, replacement 1-char string, window)`
+        // triple, IN ORDER, so the per-position chain below can walk them written-first.
+        // The window (when present) is derived by the SAME `emit_inspect_region_window`
+        // the single-item region emitter uses, so both engines narrow to identical
+        // slices. Operands and window are resolved BEFORE the unroll (mirroring the
+        // oracle, which resolves both chars and the window per item up front).
+        #[allow(clippy::type_complexity)]
+        let mut regs: Vec<(String, String, Option<(String, String)>)> =
+            Vec::with_capacity(item_nodes.len());
+        for (search_node, replace_node, region) in item_nodes {
+            let x_reg = self.single_delim_code(search_node, "INSPECT REPLACING")?;
+            let y_reg = self.single_delim_str(replace_node, "INSPECT REPLACING")?;
+            let window = match region {
+                None => None,
+                Some(_) => {
+                    let len = len.as_ref().expect("length materialised when a region is present");
+                    self.emit_inspect_region_window(region, s_reg, len)?
+                }
+            };
+            regs.push((x_reg, y_reg, window));
+        }
+
+        // result = "" — the accumulator we build W characters into.
+        let result = self.fresh("_irmres");
+        self.emit("str_const", Some(&result), vec![Operand::Str(String::new())], "str");
+
+        for j in 0..width {
+            // c = S[j] — read ONCE from the original source and compared against
+            // every item's search (so a replacement is never re-examined).
+            let jc = self.str_index(j as i64);
+            let c = self.fresh("_irmc");
+            self.emit(
+                "str_index",
+                Some(&c),
+                vec![Operand::Var(s_reg.to_string()), Operand::Var(jc.clone())],
+                "i64",
+            );
+            let done = self.fresh("irm_done");
+            // The ordered if-else chain: item 0, then item 1, … On the FIRST match we
+            // append that item's replacement and jump to `done`, skipping the rest —
+            // first-match-wins. A miss jumps to the next link (`next`); after the last
+            // link's `next` we fall through to the no-match branch below.
+            for (x_reg, y_reg, window) in &regs {
+                let eq = self.fresh("_irmeq");
+                self.emit(
+                    "cmp_eq",
+                    Some(&eq),
+                    vec![Operand::Var(c.clone()), Operand::Var(x_reg.clone())],
+                    "i64",
+                );
+                // Gate the compare by this item's window: `matched = (start <= j < end)
+                // AND (c == x)`. `j` is the compile-time position materialised into a
+                // register so it can be compared against the runtime bounds. A
+                // region-less item folds down to `eq` alone (no window emitted).
+                let matched = match window {
+                    None => eq,
+                    Some((start, end_bound)) => {
+                        let jreg = self.fresh("_irmjr");
+                        self.emit("const", Some(&jreg), vec![Operand::Int(j as i64)], "i64");
+                        let ge = self.fresh("_irmge");
+                        self.emit(
+                            "cmp_ge",
+                            Some(&ge),
+                            vec![Operand::Var(jreg.clone()), Operand::Var(start.clone())],
+                            "i64",
+                        );
+                        let lt = self.fresh("_irmlt");
+                        self.emit(
+                            "cmp_lt",
+                            Some(&lt),
+                            vec![Operand::Var(jreg), Operand::Var(end_bound.clone())],
+                            "i64",
+                        );
+                        let inw = self.fresh("_irmin");
+                        self.emit("and", Some(&inw), vec![Operand::Var(ge), Operand::Var(lt)], "i64");
+                        let m = self.fresh("_irmm");
+                        self.emit("and", Some(&m), vec![Operand::Var(inw), Operand::Var(eq)], "i64");
+                        m
+                    }
+                };
+                let next = self.fresh("irm_next");
+                self.emit(
+                    "jmp_if_false",
+                    None,
+                    vec![Operand::Var(matched), Operand::Var(next.clone())],
+                    "void",
+                );
+                self.emit(
+                    "str_concat",
+                    Some(&result),
+                    vec![Operand::Var(result.clone()), Operand::Var(y_reg.clone())],
+                    "str",
+                );
+                self.emit("jmp", None, vec![Operand::Var(done.clone())], "void");
+                self.emit("label", None, vec![Operand::Var(next)], "void");
+            }
+            // No item matched — append the ORIGINAL character `S[j, j+1)` unchanged.
+            let jc1 = self.str_index(j as i64 + 1);
+            let orig = self.fresh("_irmorig");
+            self.emit(
+                "str_slice",
+                Some(&orig),
+                vec![Operand::Var(s_reg.to_string()), Operand::Var(jc), Operand::Var(jc1)],
+                "str",
+            );
+            self.emit(
+                "str_concat",
+                Some(&result),
+                vec![Operand::Var(result.clone()), Operand::Var(orig)],
+                "str",
+            );
+            self.emit("label", None, vec![Operand::Var(done)], "void");
+        }
+
+        // source := result. `result` is exactly W chars (each position emitted one
+        // piece), so this is the same fixed-width image the oracle stores. Copy
+        // through an empty concat so `s_reg` (read all through the loop) is only
+        // overwritten now, after the last read.
+        let empty = self.fresh("_irmempty");
+        self.emit("str_const", Some(&empty), vec![Operand::Str(String::new())], "str");
+        self.emit(
+            "str_concat",
+            Some(s_reg),
+            vec![Operand::Var(result), Operand::Var(empty)],
+            "str",
+        );
+        Ok(())
+    }
+
+    /// `INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|
+    /// AFTER} q] …` — one INSPECT whose SINGLE counter carries TWO OR MORE `FOR ALL`
+    /// items, each with its OWN optional `{BEFORE|AFTER} x` window, counted in a SINGLE
+    /// left-to-right pass with FIRST-MATCH-PER-POSITION into the shared counter. The
+    /// count-side analogue of [`Self::emit_inspect_replacing_multi`], and the
+    /// multi-delimiter analogue of [`Self::emit_inspect_tallying`].
+    ///
+    /// The items form an ordered priority list, each carrying its OWN window. At each
+    /// source position they are tried IN WRITTEN ORDER and the FIRST item whose window
+    /// CONTAINS the position AND whose delimiter matches bumps the shared count by 1,
+    /// then the scan advances (a single-char match is a normal one-position step). The
+    /// per-position `break` is what makes DUPLICATE items NOT double-count a position:
+    /// `FOR ALL "a" ALL "a"` over `"aa"` adds 2 — each `a` is counted once by the first
+    /// item, the second never fires at that position — exactly matching the oracle's
+    /// `exec_inspect_tally_multi`.
+    ///
+    /// PER-ITEM WINDOWS: each item's optional region is derived by the SAME
+    /// [`Self::emit_inspect_region_window`] the single-item region emitter (and the
+    /// merged multi-item REPLACING-region emitter) uses, so both engines narrow to
+    /// identical `[start, end)` slices. The runtime source length is materialised ONCE
+    /// (needed by the window helper), before the loop. A region-less item has NO window
+    /// emitted — its per-position compare folds down to the delimiter equality alone
+    /// (whole-source window).
+    ///
+    /// Unlike the REPLACING emitter (which rebuilds a FIXED-width string and so unrolls
+    /// `0..width` at compile time), the tally does not build a string, so — like
+    /// [`Self::emit_inspect_tallying`] — it emits a genuine RUNTIME loop over
+    /// `len = str_len(S)`, and the per-item window compare gates on the RUNTIME position
+    /// register `j`:
+    ///
+    /// ```text
+    ///   len = str_len(S)
+    ///   [start_k, end_k) = region_window(item_k)      # per item with a region
+    ///   cnt = 0;  j = 0
+    /// top:  if j >= len jmp end
+    ///       c = S[j]
+    ///       if (start_0<=j<end_0) && c == D0 { cnt += 1; jmp cont }  # first match wins…
+    ///       if (start_1<=j<end_1) && c == D1 { cnt += 1; jmp cont }  # …then stop
+    ///       …                                    # after the last: fall through (no match)
+    /// cont: j = j + 1;  jmp top
+    /// end:
+    ///   counter := (counter_value + cnt) reduced into counter's picture
+    /// ```
+    ///
+    /// The count folds into the counter with the SAME numeric-store path (`store_scaled`,
+    /// which mirrors the oracle's `store_result`) the single-item tally uses, so a
+    /// compiled program matches `cobol-runtime`'s `exec_inspect_tally_multi`
+    /// byte-for-byte. Each delimiter reduces to a byte code via the SAME
+    /// `single_delim_code` the single-item path uses, so a multi-character/figurative/
+    /// wider/numeric delimiter is rejected identically.
+    ///
+    /// Non-ASCII-clean: the tally only COUNTS (it never `str_slice`s the source into a
+    /// new string), and each window is content-defined (bounded by the first ASCII
+    /// region delimiter), so this byte-index scan and the oracle's char-index scan
+    /// cover the SAME substring and count the SAME ASCII matches even on a non-ASCII
+    /// source — no UTF-8-boundary trap.
+    ///
+    /// The read-side `inspect_tally_multi` has already rejected LEADING/CHARACTERS items
+    /// and SEVERAL counters, so here every item is a plain `ALL` single-char delimiter
+    /// with an optional region, under one counter.
+    fn emit_inspect_tally_multi(
+        &mut self,
+        verb: &GrammarASTNode,
+        s_reg: &str,
+    ) -> Result<(), CompileError> {
+        // The counter name and the written-order `(delim_node, region)` items (the
+        // reader has enforced the `ALL`-only, one-counter scope bound; each item MAY
+        // carry its own region).
+        let (counter_name, item_nodes) = inspect_tally_multi(verb)?;
+
+        // The counter must be an unsigned integer numeric item (`PIC 9(n)`) — the SAME
+        // validation `emit_inspect_tallying` performs for the single-item form.
+        let cidx = self.numeric_index(&counter_name)?;
+        let (int_digits, dec_digits) = self.numeric_dims(cidx);
+        if dec_digits != 0 {
+            return Err(CompileError::Unsupported(format!(
+                "INSPECT TALLYING into a non-integer counter {counter_name} is a later rung"
+            )));
+        }
+        if self.item_signed(cidx) {
+            return Err(CompileError::Unsupported(format!(
+                "INSPECT TALLYING into a signed counter {counter_name} is a later rung"
+            )));
+        }
+        let counter_reg = self.items[cidx].reg.clone();
+
+        // len = str_len(S). Materialised ONCE up front — the per-item window helper
+        // needs it, and the loop below reuses it for the `j >= len` bound. (The tally
+        // does not build a fixed-width string, so the length is a genuine runtime value.)
+        let len = self.fresh("_itmlen");
+        self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.to_string())], "i64");
+
+        // Reduce each item to a `(delimiter byte code, window)` pair, IN ORDER, so the
+        // per-position chain walks them written-first. The window (when present) is
+        // derived by the SAME `emit_inspect_region_window` the single-item region
+        // emitter uses, so both engines narrow to identical slices. Resolving all of
+        // them BEFORE the loop means an invalid delimiter/region delimiter aborts
+        // without emitting the loop, mirroring the oracle's resolve-first order.
+        let mut regs: Vec<(String, Option<(String, String)>)> =
+            Vec::with_capacity(item_nodes.len());
+        for (dn, region) in item_nodes {
+            let d_reg = self.single_delim_code(dn, "INSPECT")?;
+            let window = self.emit_inspect_region_window(region, s_reg, &len)?;
+            regs.push((d_reg, window));
+        }
+
+        // cnt = 0; j = 0. A genuine runtime loop over the source positions.
+        let cnt = self.fresh("_itmc");
+        self.emit("const", Some(&cnt), vec![Operand::Int(0)], "i64");
+        let j = self.fresh("_itmj");
+        self.emit("const", Some(&j), vec![Operand::Int(0)], "i64");
+
+        let top = self.fresh("itm_top");
+        let end = self.fresh("itm_end");
+        let cont = self.fresh("itm_cont");
+        self.emit("label", None, vec![Operand::Var(top.clone())], "void");
+        // if j >= len jmp end.
+        let ge = self.fresh("_itmge");
+        self.emit(
+            "cmp_ge",
+            Some(&ge),
+            vec![Operand::Var(j.clone()), Operand::Var(len.clone())],
+            "i64",
+        );
+        self.emit("jmp_if_true", None, vec![Operand::Var(ge), Operand::Var(end.clone())], "void");
+        // c = S[j] — read ONCE, then compared against each delimiter in written order.
+        let c = self.fresh("_itmc0");
+        self.emit(
+            "str_index",
+            Some(&c),
+            vec![Operand::Var(s_reg.to_string()), Operand::Var(j.clone())],
+            "i64",
+        );
+        // The ordered chain: item 0, then 1, … On the FIRST match we bump `cnt` and
+        // jump to `cont` (the j-advance), skipping the rest of the chain —
+        // first-match-per-position, so a position is counted at most once even if
+        // several (or duplicate) items would match it. A miss jumps to the next link
+        // (`next`); after the last link's `next` we fall through to `cont` with no bump
+        // (matched no item).
+        for (d_reg, window) in &regs {
+            let eq = self.fresh("_itmeq");
+            self.emit(
+                "cmp_eq",
+                Some(&eq),
+                vec![Operand::Var(c.clone()), Operand::Var(d_reg.clone())],
+                "i64",
+            );
+            // Gate the compare by this item's window: `matched = (start <= j < end) AND
+            // (c == D)`. `j` is the RUNTIME loop position register, compared directly
+            // against the runtime bounds (no compile-time `const` needed, unlike the
+            // REPLACING unroll whose `j` is a compile-time constant). A region-less item
+            // folds down to `eq` alone (no window emitted → whole-source window).
+            let matched = match window {
+                None => eq,
+                Some((start, end_bound)) => {
+                    let ge2 = self.fresh("_itmge2");
+                    self.emit(
+                        "cmp_ge",
+                        Some(&ge2),
+                        vec![Operand::Var(j.clone()), Operand::Var(start.clone())],
+                        "i64",
+                    );
+                    let lt = self.fresh("_itmlt");
+                    self.emit(
+                        "cmp_lt",
+                        Some(&lt),
+                        vec![Operand::Var(j.clone()), Operand::Var(end_bound.clone())],
+                        "i64",
+                    );
+                    let inw = self.fresh("_itmin");
+                    self.emit("and", Some(&inw), vec![Operand::Var(ge2), Operand::Var(lt)], "i64");
+                    let m = self.fresh("_itmm");
+                    self.emit("and", Some(&m), vec![Operand::Var(inw), Operand::Var(eq)], "i64");
+                    m
+                }
+            };
+            let next = self.fresh("itm_next");
+            self.emit(
+                "jmp_if_false",
+                None,
+                vec![Operand::Var(matched), Operand::Var(next.clone())],
+                "void",
+            );
+            let one = self.fresh("_itm1");
+            self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+            self.emit("add", Some(&cnt), vec![Operand::Var(cnt.clone()), Operand::Var(one)], "i64");
+            self.emit("jmp", None, vec![Operand::Var(cont.clone())], "void");
+            self.emit("label", None, vec![Operand::Var(next)], "void");
+        }
+        // cont: j = j + 1; jmp top.
+        self.emit("label", None, vec![Operand::Var(cont)], "void");
+        let one2 = self.fresh("_itm1b");
+        self.emit("const", Some(&one2), vec![Operand::Int(1)], "i64");
+        self.emit("add", Some(&j), vec![Operand::Var(j.clone()), Operand::Var(one2)], "i64");
+        self.emit("jmp", None, vec![Operand::Var(top)], "void");
+        self.emit("label", None, vec![Operand::Var(end)], "void");
+
+        // counter := counter_value + cnt, reduced into the counter's picture — the
+        // exact numeric-store ADD (and the single-item tally) uses, so this matches the
+        // oracle's `store_result(counter, counter + cnt)`.
+        let sum = self.fresh("_itmsum");
+        self.emit("add", Some(&sum), vec![Operand::Var(counter_reg), Operand::Var(cnt)], "i64");
+        self.store_scaled(&counter_name, &sum, 0, int_digits + 1, false)
+    }
+
+    /// `INSPECT src TALLYING c1 FOR ALL a [{BEFORE|AFTER} p] [ALL b …] c2 FOR ALL d …` —
+    /// several counters, each with its OWN delimiter list, and each delimiter item now
+    /// carrying its OWN optional `{BEFORE|AFTER}` region window, folded through ONE combined
+    /// priority list in a SINGLE runtime pass. This generalises
+    /// [`Self::emit_inspect_tally_multi`] from one shared counter to a list of `(counter,
+    /// delimiter, window)` entries where the matched entry's OWN counter is bumped.
+    ///
+    /// ISO COMBINED-PRIORITY-LIST-ACROSS-COUNTERS semantics (the crux): all delimiters of
+    /// all groups, flattened in WRITTEN ORDER (group 1's items first, then group 2's, …),
+    /// form ONE ordered priority list, each entry carrying its item's `[start, end)`
+    /// window. At each source position the flattened list is walked in order and the FIRST
+    /// entry whose window contains the position AND whose delimiter matches bumps ITS OWN
+    /// group's accumulator, then the scan advances (single-char ⇒ a normal one-position
+    /// step). The per-position `break` (a `jmp` to `cont`) means an earlier group's
+    /// (in-window) delimiter CONSUMES the position — a character it claims NEVER reaches a
+    /// later group's delimiter — so `"aa" TALLYING C1 FOR ALL "a" C2 FOR ALL "a"` gives
+    /// C1 += 2, C2 += 0. A position matching no in-window delimiter falls through to `cont`
+    /// with no bump.
+    ///
+    /// ```text
+    ///   acc_0 = 0; acc_1 = 0; …            # one accumulator per GROUP
+    ///   len = str_len(S)                   # windows + the j-bound both need it
+    ///   # per flat entry: [start, end) window (region-less item → whole source)
+    ///   j = 0
+    /// top:  if j >= len jmp end
+    ///       c = S[j]
+    ///       if (s0 <= j < e0) AND c == flat[0].delim { acc[flat[0].group] += 1; jmp cont }
+    ///       if (s1 <= j < e1) AND c == flat[1].delim { acc[flat[1].group] += 1; jmp cont }
+    ///       …                                                 # first in-window match wins
+    /// cont: j = j + 1;  jmp top
+    /// end:
+    ///   for each group g:  counter_g := counter_g + acc_g   # INSPECT ADDS; never clears
+    /// ```
+    ///
+    /// Each item's `[start, end)` window is derived by the SAME `emit_inspect_region_window`
+    /// the single-item region emitter uses (a region-less item folds to `eq` alone — the
+    /// whole-source window), materialised BEFORE the loop, so both engines narrow to
+    /// identical slices. Each group keeps its OWN accumulator (indexed by GROUP, not by
+    /// counter name), so two groups that name the SAME counter stay separate through the
+    /// loop and are BOTH added into that one item afterwards. The final adds run
+    /// sequentially and each reads the counter's storage register FRESH
+    /// (`self.items[idx].reg`, which `store_scaled` mutates via `mov`), so a shared counter
+    /// accumulates both shares correctly — mirroring the oracle's per-add `named_decimal`
+    /// re-read. Each delimiter reduces to a byte code via the SAME `single_delim_code` the
+    /// single-item path uses, and each counter is validated unsigned-integer exactly as
+    /// `emit_inspect_tally_multi` validates its lone counter, so the compiled program
+    /// matches `cobol-runtime`'s `exec_inspect_tally_counters` byte-for-byte and the
+    /// accept/reject sets stay co-total. The read-side `inspect_tally_counters` has already
+    /// rejected LEADING/CHARACTERS items.
+    fn emit_inspect_tally_counters(
+        &mut self,
+        verb: &GrammarASTNode,
+        s_reg: &str,
+    ) -> Result<(), CompileError> {
+        // The counter names and, per group, the written-order delimiter nodes (the reader
+        // has enforced the `ALL`-only, no-region scope bound on every item of every group).
+        let groups = inspect_tally_counters(verb)?;
+
+        // Validate EVERY counter (unsigned integer `PIC 9(n)`) and capture its item index
+        // FIRST — resolving all counters and all delimiters before emitting the loop means
+        // an invalid group aborts with nothing emitted. `int_digits` is remembered per
+        // group for the final store's overflow bound.
+        let mut counter_info: Vec<(String, usize, usize)> = Vec::with_capacity(groups.len());
+        for (counter_name, _) in &groups {
+            let cidx = self.numeric_index(counter_name)?;
+            let (int_digits, dec_digits) = self.numeric_dims(cidx);
+            if dec_digits != 0 {
+                return Err(CompileError::Unsupported(format!(
+                    "INSPECT TALLYING into a non-integer counter {counter_name} is a later rung"
+                )));
+            }
+            if self.item_signed(cidx) {
+                return Err(CompileError::Unsupported(format!(
+                    "INSPECT TALLYING into a signed counter {counter_name} is a later rung"
+                )));
+            }
+            counter_info.push((counter_name.clone(), cidx, int_digits));
+        }
+
+        // One accumulator register per GROUP, all init 0 (kept separate even when two
+        // groups share a counter name — they are summed into that one item at the end).
+        let mut accs: Vec<String> = Vec::with_capacity(groups.len());
+        for _ in &groups {
+            let acc = self.fresh("_itcacc");
+            self.emit("const", Some(&acc), vec![Operand::Int(0)], "i64");
+            accs.push(acc);
+        }
+
+        // len = str_len(S). Materialised ONCE up front — the per-item window helper needs
+        // it, and the loop below reuses it for the `j >= len` bound. (The tally builds no
+        // fixed-width string, so the length is a genuine runtime value.)
+        let len = self.fresh("_itclen");
+        self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.to_string())], "i64");
+
+        // Flatten every delimiter to `(group_index, byte_code_reg, window)` in WRITTEN
+        // ORDER, so the per-position chain walks all groups' items group-1-first. Each
+        // item's window (when present) is derived by the SAME `emit_inspect_region_window`
+        // the single-item region emitter uses, so both engines narrow to identical slices.
+        // Resolving every delimiter AND window up front (via the SAME `single_delim_code`
+        // the single-item path uses, so an invalid delimiter/region delimiter rejects
+        // identically) means a bad operand aborts before the loop, mirroring the oracle.
+        let mut flat: Vec<FlatCounterDelim> = Vec::new();
+        for (gi, (_counter, item_nodes)) in groups.iter().enumerate() {
+            for (dn, region) in item_nodes {
+                let d_reg = self.single_delim_code(dn, "INSPECT")?;
+                let window = self.emit_inspect_region_window(*region, s_reg, &len)?;
+                flat.push((gi, d_reg, window));
+            }
+        }
+
+        // j = 0. A genuine runtime loop (the tally builds no string).
+        let j = self.fresh("_itcj");
+        self.emit("const", Some(&j), vec![Operand::Int(0)], "i64");
+
+        let top = self.fresh("itc_top");
+        let end = self.fresh("itc_end");
+        let cont = self.fresh("itc_cont");
+        self.emit("label", None, vec![Operand::Var(top.clone())], "void");
+        // if j >= len jmp end.
+        let ge = self.fresh("_itcge");
+        self.emit(
+            "cmp_ge",
+            Some(&ge),
+            vec![Operand::Var(j.clone()), Operand::Var(len.clone())],
+            "i64",
+        );
+        self.emit("jmp_if_true", None, vec![Operand::Var(ge), Operand::Var(end.clone())], "void");
+        // c = S[j] — read ONCE, then compared against each flattened delimiter in order.
+        let c = self.fresh("_itcc0");
+        self.emit(
+            "str_index",
+            Some(&c),
+            vec![Operand::Var(s_reg.to_string()), Operand::Var(j.clone())],
+            "i64",
+        );
+        // The ordered chain across ALL groups: on the FIRST match bump THAT group's
+        // accumulator and jump to `cont` (the j-advance), skipping the rest of the chain —
+        // first-match-wins across counters, so an earlier group consumes the position and a
+        // later group never sees it. A miss jumps to the next link; after the last link's
+        // `next` we fall through to `cont` with no bump (matched no delimiter).
+        for (gi, d_reg, window) in &flat {
+            let eq = self.fresh("_itceq");
+            self.emit(
+                "cmp_eq",
+                Some(&eq),
+                vec![Operand::Var(c.clone()), Operand::Var(d_reg.clone())],
+                "i64",
+            );
+            // Gate the compare by this item's window: `matched = (start <= j < end) AND
+            // (c == D)`. `j` is the RUNTIME loop position register, compared directly
+            // against the runtime bounds. A region-less item folds down to `eq` alone (no
+            // window emitted → whole-source window) — byte-identical to the old lowering.
+            let matched = match window {
+                None => eq,
+                Some((start, end_bound)) => {
+                    let ge2 = self.fresh("_itcge2");
+                    self.emit(
+                        "cmp_ge",
+                        Some(&ge2),
+                        vec![Operand::Var(j.clone()), Operand::Var(start.clone())],
+                        "i64",
+                    );
+                    let lt = self.fresh("_itclt");
+                    self.emit(
+                        "cmp_lt",
+                        Some(&lt),
+                        vec![Operand::Var(j.clone()), Operand::Var(end_bound.clone())],
+                        "i64",
+                    );
+                    let inw = self.fresh("_itcin");
+                    self.emit("and", Some(&inw), vec![Operand::Var(ge2), Operand::Var(lt)], "i64");
+                    let m = self.fresh("_itcm");
+                    self.emit("and", Some(&m), vec![Operand::Var(inw), Operand::Var(eq)], "i64");
+                    m
+                }
+            };
+            let next = self.fresh("itc_next");
+            self.emit(
+                "jmp_if_false",
+                None,
+                vec![Operand::Var(matched), Operand::Var(next.clone())],
+                "void",
+            );
+            let one = self.fresh("_itc1");
+            self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+            self.emit(
+                "add",
+                Some(&accs[*gi]),
+                vec![Operand::Var(accs[*gi].clone()), Operand::Var(one)],
+                "i64",
+            );
+            self.emit("jmp", None, vec![Operand::Var(cont.clone())], "void");
+            self.emit("label", None, vec![Operand::Var(next)], "void");
+        }
+        // cont: j = j + 1; jmp top.
+        self.emit("label", None, vec![Operand::Var(cont)], "void");
+        let one2 = self.fresh("_itc1b");
+        self.emit("const", Some(&one2), vec![Operand::Int(1)], "i64");
+        self.emit("add", Some(&j), vec![Operand::Var(j.clone()), Operand::Var(one2)], "i64");
+        self.emit("jmp", None, vec![Operand::Var(top)], "void");
+        self.emit("label", None, vec![Operand::Var(end)], "void");
+
+        // For each group: counter := counter_value + acc, reduced into the counter's
+        // picture. Read the counter's storage register FRESH here (re-fetch by index) so a
+        // shared counter's second group adds on top of the first group's already-stored
+        // value — the same ADD-into-counter store path the single-item tally uses.
+        for ((counter_name, cidx, int_digits), acc) in counter_info.iter().zip(accs.iter()) {
+            let counter_reg = self.items[*cidx].reg.clone();
+            let sum = self.fresh("_itcsum");
+            self.emit(
+                "add",
+                Some(&sum),
+                vec![Operand::Var(counter_reg), Operand::Var(acc.clone())],
+                "i64",
+            );
+            self.store_scaled(counter_name, &sum, 0, int_digits + 1, false)?;
+        }
+        Ok(())
+    }
+
+    /// `INSPECT source CONVERTING from TO to` — translate the alphanumeric `source`
+    /// through a per-character **translation table** built from the two EQUAL-length
+    /// string literals `from` and `to`: at each source position the character is
+    /// replaced by `to[k]` where `k` is the FIRST index at which it equals `from[k]`
+    /// (leftmost wins if `from` repeats a character), and left unchanged if it
+    /// matches no `from` character. Both literals are single-byte (ASCII) this rung,
+    /// so — exactly like [`Self::emit_inspect_replacing`] — the width `W` is
+    /// unchanged and the result is a per-position map that we UNROLL over the
+    /// compile-time-known `W`:
+    ///
+    /// ```text
+    ///   result = ""
+    ///   for j in 0..W:                       # W is known at compile time
+    ///       c = S[j]
+    ///       if      c == from[0]   result ++= to[0]
+    ///       else if c == from[1]   result ++= to[1]
+    ///       …                                # first match wins (leftmost k)
+    ///       else                   result ++= S[j, j+1)   # unchanged
+    ///   source := result                     # exactly W chars, width unchanged
+    /// ```
+    ///
+    /// The `from` bytes are baked as `const` compare targets and the `to` bytes as
+    /// 1-character `str_const`s, both known at compile time. The per-position first-
+    /// match-wins chain mirrors the oracle's char→char map (which also lets the
+    /// earliest `from` occurrence win), so the compiled program is byte-identical to
+    /// `cobol-runtime`'s `exec_inspect` CONVERTING path. Unequal-length or non-ASCII
+    /// literals and a data-name/figurative/reference-modified `from`/`to` are clean
+    /// later-rung `Unsupported`s.
+    ///
+    /// An optional `{BEFORE|AFTER} x` region narrows the translation to a sub-slice
+    /// of the source. When present we reuse [`Self::emit_inspect_region_window`] —
+    /// the SAME window the TALLYING and REPLACING sides emit — to derive `[start,
+    /// end)` over the ORIGINAL source, then at each unrolled position `j` translate
+    /// through the table iff `start <= j < end`; a position outside the window keeps
+    /// its original character. With NO region the extra guard folds away and the
+    /// emitted unroll is byte-identical to the pre-region CONVERTING lowering.
+    fn emit_inspect_converting(
+        &mut self,
+        verb: &GrammarASTNode,
+        s_reg: &str,
+        width: usize,
+    ) -> Result<(), CompileError> {
+        // The `CONVERTING from TO to [{BEFORE|AFTER} x]` phrase.
+        let (from_node, to_node, region) = inspect_converting_pair(verb)?;
+        let from = inspect_converting_literal(from_node, "from")?;
+        let to = inspect_converting_literal(to_node, "to")?;
+        // The table pairs `from[k]` with `to[k]`, so the two must be equal length.
+        if from.chars().count() != to.chars().count() {
+            return Err(CompileError::Unsupported(
+                "INSPECT CONVERTING with unequal-length FROM/TO operands is a later rung".into(),
+            ));
+        }
+        // This rung compares raw bytes (`str_index` yields a byte), so the table
+        // characters must be single-byte ASCII for the byte compare to equal the
+        // char map the oracle builds. A multi-byte (non-ASCII) literal is a later
+        // rung.
+        if !from.is_ascii() || !to.is_ascii() {
+            return Err(CompileError::Unsupported(
+                "INSPECT CONVERTING with a non-ASCII FROM/TO operand is a later rung".into(),
+            ));
+        }
+        let from_bytes = from.as_bytes();
+        let to_bytes = to.as_bytes();
+
+        // The optional `{BEFORE|AFTER} x` window `[start, end)`, derived over the
+        // ORIGINAL source (before the unroll overwrites `s_reg`). We reuse the tally
+        // side's `emit_inspect_region_window`, which needs the runtime length; with no
+        // region nothing here is emitted and the per-position guard below folds away.
+        let region_window = match region {
+            None => None,
+            Some(_) => {
+                let len = self.fresh("_iclen");
+                self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.to_string())], "i64");
+                self.emit_inspect_region_window(region, s_reg, &len)?
+            }
+        };
+
+        // Bake the compile-time table once: a `const` byte for each `from[k]`
+        // (the compare target) and a 1-character `str_const` for each `to[k]`
+        // (the concatenation piece). Shared across all W positions.
+        let from_consts: Vec<String> = from_bytes
+            .iter()
+            .map(|&b| {
+                let reg = self.fresh("_icfrom");
+                self.emit("const", Some(&reg), vec![Operand::Int(b as i64)], "i64");
+                reg
+            })
+            .collect();
+        let to_consts: Vec<String> = to_bytes
+            .iter()
+            .map(|&b| {
+                let reg = self.fresh("_icto");
+                self.emit("str_const", Some(&reg), vec![Operand::Str((b as char).to_string())], "str");
+                reg
+            })
+            .collect();
+
+        // result = "" — the accumulator we build W characters into.
+        let result = self.fresh("_icres");
+        self.emit("str_const", Some(&result), vec![Operand::Str(String::new())], "str");
+
+        for j in 0..width {
+            // c = S[j]  (the source byte at this position), read ONCE and reused by
+            // every table compare.
+            let jc = self.str_index(j as i64);
+            let c = self.fresh("_icc");
+            self.emit(
+                "str_index",
+                Some(&c),
+                vec![Operand::Var(s_reg.to_string()), Operand::Var(jc.clone())],
+                "i64",
+            );
+            let pos_done = self.fresh("ic_done");
+            // When a `{BEFORE|AFTER}` region is active and this position lies OUTSIDE
+            // the window `[start, end)`, skip the whole table chain and keep the
+            // original character — the exact analogue of the REPLACING region guard.
+            // `pos_orig` labels the "append the original source char" fall-through,
+            // which the out-of-window jump targets directly. (No region ⇒ this whole
+            // block is elided and the lowering is byte-identical to the original.)
+            let pos_orig = region_window.as_ref().map(|_| self.fresh("ic_orig"));
+            if let Some((start, end_bound)) = &region_window {
+                // in_region = (j >= start) AND (j < end); j is the compile-time
+                // constant for this unrolled position, materialised into a register.
+                let jreg = self.fresh("_icjr");
+                self.emit("const", Some(&jreg), vec![Operand::Int(j as i64)], "i64");
+                let ge = self.fresh("_icge");
+                self.emit(
+                    "cmp_ge",
+                    Some(&ge),
+                    vec![Operand::Var(jreg.clone()), Operand::Var(start.clone())],
+                    "i64",
+                );
+                let lt = self.fresh("_iclt");
+                self.emit(
+                    "cmp_lt",
+                    Some(&lt),
+                    vec![Operand::Var(jreg), Operand::Var(end_bound.clone())],
+                    "i64",
+                );
+                let in_region = self.fresh("_icin");
+                self.emit("and", Some(&in_region), vec![Operand::Var(ge), Operand::Var(lt)], "i64");
+                // Out of window → jump straight to the original-append fall-through.
+                self.emit(
+                    "jmp_if_false",
+                    None,
+                    vec![Operand::Var(in_region), Operand::Var(pos_orig.clone().unwrap())],
+                    "void",
+                );
+            }
+            // First-match-wins chain over the table: on the earliest `from[k]` that
+            // equals `c`, append `to[k]` and jump past the rest.
+            for (fc, tc) in from_consts.iter().zip(to_consts.iter()) {
+                let eq = self.fresh("_iceq");
+                self.emit("cmp_eq", Some(&eq), vec![Operand::Var(c.clone()), Operand::Var(fc.clone())], "i64");
+                let next_k = self.fresh("ic_next");
+                self.emit("jmp_if_false", None, vec![Operand::Var(eq), Operand::Var(next_k.clone())], "void");
+                self.emit(
+                    "str_concat",
+                    Some(&result),
+                    vec![Operand::Var(result.clone()), Operand::Var(tc.clone())],
+                    "str",
+                );
+                self.emit("jmp", None, vec![Operand::Var(pos_done.clone())], "void");
+                self.emit("label", None, vec![Operand::Var(next_k)], "void");
+            }
+            // No table entry matched (or the position is outside the region window):
+            // append the original source character.
+            if let Some(po) = &pos_orig {
+                self.emit("label", None, vec![Operand::Var(po.clone())], "void");
+            }
+            let jc1 = self.str_index(j as i64 + 1);
+            let orig = self.fresh("_icorig");
+            self.emit(
+                "str_slice",
+                Some(&orig),
+                vec![Operand::Var(s_reg.to_string()), Operand::Var(jc), Operand::Var(jc1)],
+                "str",
+            );
+            self.emit(
+                "str_concat",
+                Some(&result),
+                vec![Operand::Var(result.clone()), Operand::Var(orig)],
+                "str",
+            );
+            self.emit("label", None, vec![Operand::Var(pos_done)], "void");
+        }
+
+        // source := result — exactly W chars (each of the W pieces is one
+        // character), the same fixed-width image the oracle stores. Copy through an
+        // empty concat so the source register (read during the loop) is overwritten
+        // only now, after the last read (no read-after-write hazard).
+        let empty = self.fresh("_icempty");
+        self.emit("str_const", Some(&empty), vec![Operand::Str(String::new())], "str");
+        self.emit(
+            "str_concat",
+            Some(s_reg),
+            vec![Operand::Var(result), Operand::Var(empty)],
+            "str",
+        );
+        Ok(())
+    }
+
+    /// A single replacement character reduced to a fresh **string** register: a
+    /// `str_const` of the 1-character string for a 1-char literal, or the item's
+    /// own register for a `PIC X(1)` item (its storage is already exactly one
+    /// character wide). The parallel of [`Self::single_delim_code`] (which yields
+    /// a byte code for a *scan*); this yields a 1-char string for a *concat*. The
+    /// same later-rung rejections apply: a multi-character literal, a numeric/
+    /// figurative/reference-modified operand, and a numeric/wider item.
+    fn single_delim_str(
+        &mut self,
+        op: &GrammarASTNode,
+        verb: &str,
+    ) -> Result<String, CompileError> {
+        match read_operand(op)? {
+            Operandy::Literal(Src::Str(s)) => {
+                if s.len() != 1 {
+                    return Err(CompileError::Unsupported(format!(
+                        "{verb} with a multi-character delimiter is a later rung"
+                    )));
+                }
+                let reg = self.fresh("_usds");
+                self.emit("str_const", Some(&reg), vec![Operand::Str(s)], "str");
+                Ok(reg)
+            }
+            Operandy::Literal(Src::Num(_)) => Err(CompileError::Unsupported(format!(
+                "{verb} with a numeric-literal delimiter is a later rung"
+            ))),
+            Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
+                Err(CompileError::Unsupported(format!(
+                    "{verb} with a figurative-constant delimiter is a later rung"
+                )))
+            }
+            Operandy::RefMod { .. } => Err(CompileError::Unsupported(format!(
+                "{verb} with a reference-modified delimiter is a later rung"
+            ))),
+            Operandy::Name(name) => {
+                let idx = self.item_index(&name)?;
+                match &self.items[idx].kind {
+                    ItemKind::Char { .. } => {
+                        if self.items[idx].width() != 1 {
+                            return Err(CompileError::Unsupported(format!(
+                                "{verb} with a delimiter item wider than one character is a later rung"
+                            )));
+                        }
+                        Ok(self.items[idx].reg.clone())
+                    }
+                    ItemKind::Numeric { .. } => Err(CompileError::Unsupported(format!(
+                        "{verb} with a numeric delimiter item is a later rung"
+                    ))),
+                }
+            }
+        }
     }
 
     /// `STOP RUN` → `ret 0`.
@@ -1164,33 +4287,176 @@ impl<'a> Compiler<'a> {
     /// A **numeric** comparison aligns the operands to a common scale and applies
     /// `cmp_gt`/`cmp_lt`/`cmp_eq` (`NOT` inverts the relation); an **alphanumeric**
     /// comparison space-pads both sides to a common length and applies `str_cmp`
-    /// (COBOL's rule). A numeric operand compared with an alphanumeric one is a
-    /// later rung.
+    /// (COBOL's rule).
+    ///
+    /// A **mixed** relation — one operand an unsigned-integer numeric item, the
+    /// other alphanumeric (a `PIC X` item or a string literal) — is COBOL's
+    /// "compare a numeric with a non-numeric" case: the numeric operand is treated
+    /// **as though moved to an alphanumeric field**, i.e. by its *n*-digit
+    /// zero-padded decimal image ([`Self::emit_num_digit_string`] — the exact bytes
+    /// a numeric→alphanumeric MOVE or a DISPLAY of the same item yields), and the
+    /// comparison then proceeds by the **alphanumeric byte rule**: the shorter side
+    /// is space-padded on the right to the longer's length and the two are compared
+    /// byte-by-byte (the very same `str_cmp` path an all-alphanumeric relation
+    /// takes, [`Self::emit_str_condition`]). So `IF NUM = "042"` with
+    /// `NUM PIC 9(3) = 42` compares `"042"` = `"042"` → true, while `IF NUM = "42"`
+    /// compares `"042"` vs `"42 "` (space-padded) → false. Because both engines
+    /// build the identical image and run the identical space-padded `str_cmp`, the
+    /// oracle (whose `Decimal::digits()` yields the same image) agrees byte-for-byte.
+    ///
+    /// An unsigned SCALED operand (`PIC 9(i)V9(d)`) uses its `(i + d)`-digit image
+    /// (int part then frac part, no point) — so `IF S = "042"` with `S PIC 9(2)V9 =
+    /// 4.2` is true. A SIGNED (`PIC S9…`) operand, integer or scaled, uses that same
+    /// magnitude image with the operational sign folded into a TRAILING OVERPUNCH on
+    /// the units digit ([`Self::emit_signed_num_alpha_image`] — the same bytes the
+    /// signed numeric→alphanumeric MOVE produces), so `IF S = "12L"` with
+    /// `S PIC S9(3) = -123` is true and `= "12C"` (the positive image) is false;
+    /// ordering follows the byte comparison of those images. A numeric literal (a
+    /// different pairing — kept out of scope) or a group item in a mixed relation is
+    /// still a clean later rung (see [`Self::num_digit_str_operand`]).
     fn emit_relation(&mut self, relation: &GrammarASTNode) -> Result<String, CompileError> {
         let operands = child_nodes(relation, "operand");
         if operands.len() != 2 {
             return Err(CompileError::Malformed("relation must be operand relop operand".into()));
         }
         let op = self.relation_op(relation)?;
+        self.emit_operand_relation(operands[0], operands[1], op)
+    }
 
+    /// The category-dispatching core of a two-operand relation, shared by `IF`
+    /// relations ([`Self::emit_relation`]) and `EVALUATE`'s per-WHEN comparison
+    /// ([`Self::emit_when_match`]). Given the two operand grammar nodes and a
+    /// `cmp_*` op string, classify each side and route the comparison so that an
+    /// `EVALUATE subject WHEN value` comparison is byte-identical to `IF subject
+    /// <relop> value` for every category pair (including mixed
+    /// numeric↔alphanumeric). Returns the boolean `i64` condition register.
+    fn emit_operand_relation(
+        &mut self,
+        left: &GrammarASTNode,
+        right: &GrammarASTNode,
+        op: &str,
+    ) -> Result<String, CompileError> {
         // Classify each operand: `None` = numeric (literal / numeric item / a
         // numeric figurative), `Some` = a character value.
-        let ls = self.str_operand(operands[0])?;
-        let rs = self.str_operand(operands[1])?;
+        let ls = self.str_operand(left)?;
+        let rs = self.str_operand(right)?;
+        // The `ZERO` figurative is NUMERIC when paired with a numeric operand
+        // (matching the oracle, whose mixed-comparison gate excludes `Fig::Zero`
+        // and numeric-compares `Num` vs `Fig::Zero`): `numeric = ZERO` is the
+        // numeric comparison `numeric = 0`, NOT an alphanumeric one — so a SIGNED
+        // item is never sent through the overpunch-string path against ZERO (which
+        // would compare e.g. `"00{"` ≠ `"000"` and silently miscompile the ubiquitous
+        // `IF BALANCE = ZERO`). `str_operand` carries ZERO as `Fig('0')`; resolve the
+        // pairing here. ZERO stays alphanumeric only against a character operand, and
+        // ZERO-vs-ZERO stays a string compare (both `Some`), as the oracle does.
+        let numeric_relation = matches!(
+            (&ls, &rs),
+            (None, None)
+                | (None, Some(StrOperand::Fig('0')))
+                | (Some(StrOperand::Fig('0')), None)
+        );
+        if numeric_relation {
+            let left = self.read_arith_term(left)?;
+            let right = self.read_arith_term(right)?;
+            let w = self.term_scale(&left).max(self.term_scale(&right));
+            let a = self.emit_term_at_scale(&left, w);
+            let b = self.emit_term_at_scale(&right, w);
+            let cond_reg = self.fresh("_cond");
+            self.emit(op, Some(&cond_reg), vec![a, b], "i64");
+            return Ok(cond_reg);
+        }
         match (ls, rs) {
-            (None, None) => {
-                let left = self.read_arith_term(operands[0])?;
-                let right = self.read_arith_term(operands[1])?;
-                let w = self.term_scale(&left).max(self.term_scale(&right));
-                let a = self.emit_term_at_scale(&left, w);
-                let b = self.emit_term_at_scale(&right, w);
-                let cond_reg = self.fresh("_cond");
-                self.emit(op, Some(&cond_reg), vec![a, b], "i64");
-                Ok(cond_reg)
-            }
+            (None, None) => unreachable!("numeric_relation handled the (None, None) pairing"),
             (Some(a), Some(b)) => self.emit_str_condition(a, b, op),
-            _ => Err(CompileError::Unsupported(
-                "comparing a numeric operand with an alphanumeric one is a later rung".into(),
+            // Mixed numeric ↔ alphanumeric: build the numeric side's digit image
+            // and feed both operands through the same alphanumeric `str_cmp` path
+            // (preserving left→right operand order). Only an unsigned-integer
+            // numeric item is modelled; every other numeric shape is a later rung.
+            (None, Some(b)) => {
+                let a = self.num_digit_str_operand(left)?;
+                self.emit_str_condition(a, b, op)
+            }
+            (Some(a), None) => {
+                let b = self.num_digit_str_operand(right)?;
+                self.emit_str_condition(a, b, op)
+            }
+        }
+    }
+
+    /// Build the [`StrOperand`] for the **numeric** side of a mixed
+    /// numeric↔alphanumeric relation: its *n*-digit zero-padded decimal image
+    /// ([`Self::emit_num_digit_string`]), the exact bytes a numeric→alphanumeric
+    /// MOVE (or a DISPLAY) of the same item produces, so the comparison then
+    /// proceeds by the identical alphanumeric byte rule the oracle uses (whose
+    /// `Decimal::digits()` yields the same image).
+    ///
+    /// An **unsigned** numeric ITEM — integer (`PIC 9(n)`) or scaled
+    /// (`PIC 9(i)V9(d)`) — has an unambiguous image (`int + frac`, no point), so it
+    /// is accepted with its plain magnitude image. A **signed** numeric item
+    /// (`PIC S9…`, integer or scaled) is also accepted: its image is the same
+    /// `(i + d)`-digit magnitude with the operational sign folded into a TRAILING
+    /// OVERPUNCH on the units digit ([`Self::emit_signed_num_alpha_image`]), exactly
+    /// the bytes the signed numeric→alphanumeric MOVE produces. Still rejected here:
+    ///
+    /// * a **numeric literal** against an alphanumeric operand is a *different*
+    ///   pairing (kept out of scope) and is rejected here too;
+    /// * a **group** item never reaches this method — its name is unregistered on
+    ///   this rung, so [`Self::str_operand`] → [`Self::item_index`] already errored.
+    fn num_digit_str_operand(&mut self, op: &GrammarASTNode) -> Result<StrOperand, CompileError> {
+        match read_operand(op)? {
+            Operandy::Name(name) => {
+                let idx = self.item_index(&name)?;
+                match &self.items[idx].kind {
+                    ItemKind::Numeric { int_digits, dec_digits, signed: false, .. } => {
+                        // The digit image is the full `(i + d)`-digit magnitude —
+                        // integer part then fractional part, no decimal point — the
+                        // exact bytes `Decimal::digits()` yields (`int + frac`). The
+                        // scaled slot already holds `value * 10^d`, so its `(i + d)`
+                        // digits ARE the image (an INTEGER operand, `d = 0`, is the
+                        // special case).
+                        let n = *int_digits + *dec_digits;
+                        let num_reg = self.items[idx].reg.clone();
+                        let reg = self.emit_num_digit_string(&num_reg, n);
+                        Ok(StrOperand::Fixed { reg, len: n })
+                    }
+                    ItemKind::Numeric { int_digits, dec_digits, signed: true, .. } => {
+                        // A SIGNED numeric item's comparison image is its
+                        // `(i + d)`-digit zero-padded MAGNITUDE with the operational
+                        // sign folded into a TRAILING OVERPUNCH on the units digit —
+                        // the exact bytes a signed numeric→alphanumeric MOVE of the
+                        // same item produces (see `emit_signed_num_alpha_image`). Once
+                        // built, the mixed comparison proceeds by the identical
+                        // alphanumeric byte rule the oracle uses (whose
+                        // `overpunch_trailing(magnitude, neg)` yields the same image).
+                        // For example `PIC S9(3) = -123` compares equal to `"12L"`,
+                        // `= +123` equal to `"12C"`, and a scaled `PIC S9V9 = -4.2`
+                        // equal to `"4K"`. A value that truncates to a zero magnitude
+                        // stores `neg = false` (COBOL has no negative zero), so its
+                        // image is `"00{"` — matching the oracle byte-for-byte.
+                        let n = *int_digits + *dec_digits;
+                        let num_reg = self.items[idx].reg.clone();
+                        let reg = self.emit_signed_num_alpha_image(&num_reg, n);
+                        Ok(StrOperand::Fixed { reg, len: n })
+                    }
+                    // `str_operand` classified this operand as numeric (`None`); a
+                    // character item would have been `Some`. Unreachable in practice,
+                    // but handled honestly rather than with `unreachable!`.
+                    ItemKind::Char { .. } => Err(CompileError::Malformed(format!(
+                        "operand {name} classified as both numeric and alphanumeric"
+                    ))),
+                }
+            }
+            Operandy::Literal(Src::Num(_)) | Operandy::Literal(Src::Zero) => {
+                Err(CompileError::Unsupported(
+                    "a numeric literal compared with an alphanumeric operand is a later rung \
+                     (a different pairing)"
+                        .into(),
+                ))
+            }
+            // Every remaining operand shape is alphanumeric and would have been
+            // `Some` in `str_operand`, so it never reaches the numeric side.
+            _ => Err(CompileError::Malformed(
+                "unexpected operand shape on the numeric side of a mixed comparison".into(),
             )),
         }
     }
@@ -1342,8 +4608,13 @@ impl<'a> Compiler<'a> {
             Operandy::Literal(Src::Zero) => Ok(Some(StrOperand::Fig('0'))),
             Operandy::Literal(Src::Num(_)) => Ok(None),
             Operandy::RefMod { base, start, len } => {
-                let (reg, actual_len) = self.ref_mod_slice(&base, start, len)?;
-                Ok(Some(StrOperand::Fixed { reg, len: actual_len }))
+                let (reg, slice_len) = self.ref_mod_slice(&base, &start, &len)?;
+                Ok(Some(match slice_len {
+                    SliceLen::Const(len) => StrOperand::Fixed { reg, len },
+                    SliceLen::Runtime { len_reg, max_len } => {
+                        StrOperand::Runtime { reg, len_reg, max_len }
+                    }
+                }))
             }
         }
     }
@@ -1352,32 +4623,36 @@ impl<'a> Compiler<'a> {
     /// operand's length, space-pad both sides to their common (max) length, then
     /// `str_cmp` and apply the relation against zero. `str_cmp` returns an `i64`
     /// ordering (−1/0/1), so `cmp_* … 0` is an integer comparison (no `Bool`
-    /// mismatch). Two figuratives with no fixed length to borrow is a later rung.
+    /// mismatch). Two figuratives — neither with a length to borrow — each resolve
+    /// to a single fill character (`ZERO` → `"0"`, `SPACE` → `"  "`… width 1),
+    /// matching the oracle (whose `src_chars` of a figurative is empty, so both
+    /// `fill_fig` to `len().max(1)` = 1); e.g. `IF ZERO = SPACE` is `"0"` vs `" "`.
     fn emit_str_condition(
         &mut self,
         a: StrOperand,
         b: StrOperand,
         op: &str,
     ) -> Result<String, CompileError> {
-        let ((a_reg, a_len), (b_reg, b_len)) = match (a, b) {
-            (StrOperand::Fixed { reg: ar, len: al }, StrOperand::Fixed { reg: br, len: bl }) => {
-                ((ar, al), (br, bl))
-            }
-            (StrOperand::Fixed { reg: ar, len: al }, StrOperand::Fig(c)) => {
-                ((ar, al), (self.fig_const(c, al), al))
-            }
-            (StrOperand::Fig(c), StrOperand::Fixed { reg: br, len: bl }) => {
-                ((self.fig_const(c, bl), bl), (br, bl))
-            }
-            (StrOperand::Fig(_), StrOperand::Fig(_)) => {
-                return Err(CompileError::Unsupported(
-                    "comparing two figurative constants is a later rung".into(),
-                ));
-            }
+        // Each operand contributes a compile-time *upper bound* on its length (a
+        // figurative has none — it borrows the other side's). The common width is
+        // the max of those bounds. Padding **both** operands with trailing spaces
+        // to any common width ≥ their actual lengths yields the same `str_cmp`
+        // result as padding to the exact max-of-actual-lengths COBOL prescribes —
+        // trailing spaces past the first differing position never change the
+        // ordering — so a run-time-length slice compares byte-identically to the
+        // oracle even though its exact length is unknown at compile time.
+        let a_max = str_operand_max_len(&a);
+        let b_max = str_operand_max_len(&b);
+        let width = match (a_max, b_max) {
+            (Some(x), Some(y)) => x.max(y),
+            (Some(x), None) | (None, Some(x)) => x,
+            // Two figuratives: neither has a length to borrow, so each resolves to
+            // a single fill character (width 1) — exactly the oracle's behaviour
+            // (`src_chars` of a figurative is empty → both `fill_fig` to `.max(1)`).
+            (None, None) => 1,
         };
-        let width = a_len.max(b_len);
-        let ap = self.pad_spaces(a_reg, a_len, width);
-        let bp = self.pad_spaces(b_reg, b_len, width);
+        let ap = self.materialize_str_to_width(a, width);
+        let bp = self.materialize_str_to_width(b, width);
         let cmp = self.fresh("_scmp");
         self.emit("str_cmp", Some(&cmp), vec![Operand::Var(ap), Operand::Var(bp)], "i64");
         let zero = self.fresh("_z");
@@ -1405,6 +4680,48 @@ impl<'a> Compiler<'a> {
         let pad = self.spaces_const(width - len);
         let out = self.fresh("_pad");
         self.emit("str_concat", Some(&out), vec![Operand::Var(reg), Operand::Var(pad)], "str");
+        out
+    }
+
+    /// Materialise a comparison operand into a `str` register of **exactly**
+    /// `width` characters, ready for `str_cmp`:
+    ///   * `Fixed` — compile-time space padding ([`Self::pad_spaces`]);
+    ///   * `Fig`   — the figurative character repeated `width` times;
+    ///   * `Runtime` — a computed-refmod slice padded to `width` *at run time*
+    ///     ([`Self::pad_runtime`]), since its length is only known then.
+    fn materialize_str_to_width(&mut self, op: StrOperand, width: usize) -> String {
+        match op {
+            StrOperand::Fixed { reg, len } => self.pad_spaces(reg, len, width),
+            StrOperand::Fig(c) => self.fig_const(c, width),
+            StrOperand::Runtime { reg, len_reg, .. } => self.pad_runtime(reg, len_reg, width),
+        }
+    }
+
+    /// Right-pad a run-time slice `reg` (of run-time length `len_reg`, which is
+    /// `<= width`) with spaces to exactly `width` characters. The padding count
+    /// `needed = width - len` is computed at run time; the spaces come from
+    /// slicing a `width`-space constant to `needed` — the same trick UNSTRING
+    /// uses to size a run-time-length space fill.
+    fn pad_runtime(&mut self, reg: String, len_reg: String, width: usize) -> String {
+        if width == 0 {
+            return reg;
+        }
+        let wconst = self.fresh("_pw");
+        self.emit("const", Some(&wconst), vec![Operand::Int(width as i64)], "i64");
+        let needed = self.fresh("_pn");
+        self.emit("sub", Some(&needed), vec![Operand::Var(wconst), Operand::Var(len_reg)], "i64");
+        let spaces = self.spaces_const(width);
+        let z0 = self.fresh("_pz");
+        self.emit("const", Some(&z0), vec![Operand::Int(0)], "i64");
+        let padslice = self.fresh("_ps");
+        self.emit(
+            "str_slice",
+            Some(&padslice),
+            vec![Operand::Var(spaces), Operand::Var(z0), Operand::Var(needed)],
+            "str",
+        );
+        let out = self.fresh("_pad");
+        self.emit("str_concat", Some(&out), vec![Operand::Var(reg), Operand::Var(padslice)], "str");
         out
     }
 
@@ -2754,10 +6071,26 @@ enum Operandy {
     Name(String),
     /// `base(start:len)` / `base(start:)` — a reference modification selecting
     /// `len` characters of alphanumeric item `base` from 1-based position
-    /// `start`; an omitted `len` runs to the end of the item. On this rung both
-    /// `start` and `len` are integer NUMBER literals (kept here as `usize`);
-    /// a computed start/length is a later rung, rejected in [`read_operand`].
-    RefMod { base: String, start: usize, len: Option<usize> },
+    /// `start`; an omitted `len` runs to the end of the item. `start` and `len`
+    /// are each a [`RefIndex`]: an integer literal *or* a data-name whose value is
+    /// only known at run time (a **computed** reference modification). A
+    /// literal:literal refmod is still folded to a constant slice; the moment
+    /// either index is a data-name the lowering takes the run-time `str_slice`
+    /// path (see [`Emitter::ref_mod_slice`]).
+    RefMod { base: String, start: RefIndex, len: Option<RefIndex> },
+}
+
+/// One index (start or length) of a reference modification. Either a
+/// compile-time integer literal, or a data-name read at run time — the
+/// distinction the lowering uses to choose between the constant-fold slice and
+/// the computed `str_slice`.
+#[derive(Clone)]
+enum RefIndex {
+    /// A plain integer NUMBER literal, e.g. the `2` and `3` in `WS(2:3)`.
+    Lit(usize),
+    /// A data-name whose (integer, unsigned) value is the index at run time,
+    /// e.g. the `J` and `K` in `WS(J:K)`.
+    Name(String),
 }
 
 /// A literal source, mirroring the runtime's `Src` for the values this rung
@@ -2780,9 +6113,9 @@ enum Src {
 /// The grammar is `operand = NAME [ LPAREN operand COLON [ operand ] RPAREN ] |
 /// literal ;`. A bare NAME (no parenthesised suffix) is an [`Operandy::Name`]
 /// exactly as before. When the reference-modification suffix is present the
-/// inner start/length operands appear as nested `operand` child nodes; each must
-/// be a plain integer NUMBER literal on this rung (a data-name or expression
-/// there is a *computed* reference modification — a later rung).
+/// inner start/length operands appear as nested `operand` child nodes; each is
+/// read into a [`RefIndex`] — a plain integer NUMBER literal *or* a data-name (a
+/// **computed** reference modification, lowered to a run-time `str_slice`).
 fn read_operand(op: &GrammarASTNode) -> Result<Operandy, CompileError> {
     if let Some(lit) = child_node(op, "literal") {
         return Ok(Operandy::Literal(read_literal(lit)?));
@@ -2802,20 +6135,632 @@ fn read_operand(op: &GrammarASTNode) -> Result<Operandy, CompileError> {
     Err(CompileError::Malformed("unrecognised operand".into()))
 }
 
-/// Read a reference-modification start or length subnode: it must be a plain
-/// integer NUMBER literal. Anything else (a data-name, a signed/fractional
-/// literal, a nested reference modification) is a *computed* reference
-/// modification, which is a later rung.
-fn read_refmod_index(op: &GrammarASTNode) -> Result<usize, CompileError> {
-    let computed = || {
-        CompileError::Unsupported(
-            "reference modification with a computed start/length is a later rung".into(),
-        )
+/// Validate a **constant** reference modification and return its length, or
+/// signal that it is not fully constant.
+///
+/// * `Ok(Some(actual_len))` — start (and length, if present) are literals and
+///   the slice is in range: the caller folds it to a constant `str_slice`.
+/// * `Ok(None)` — the length is a data-name, so the whole refmod is *computed*:
+///   the caller takes the run-time path.
+/// * `Err(..)` — a literal:literal refmod that is out of range (`start < 1` or
+///   the slice runs past the item), rejected at compile time as in #8673.
+///
+/// The subtractive bounds test (`actual_len > width - start0`, reached only once
+/// `start0 <= width`) avoids the `start0 + actual_len` overflow a crafted
+/// `WS(1e19:1e19)` would otherwise cause.
+fn const_refmod_len(
+    start: usize,
+    len: &Option<RefIndex>,
+    width: usize,
+) -> Result<Option<usize>, CompileError> {
+    let literal_len = match len {
+        None => None,
+        Some(RefIndex::Lit(l)) => Some(*l),
+        // A data-name length is not compile-time constant — take the run path.
+        Some(RefIndex::Name(_)) => return Ok(None),
     };
-    let lit = child_node(op, "literal").ok_or_else(computed)?;
+    if start < 1 {
+        return Err(CompileError::Malformed(
+            "reference modification start position must be at least 1".into(),
+        ));
+    }
+    let start0 = start - 1;
+    let actual_len = literal_len.unwrap_or(width.saturating_sub(start0));
+    if start0 > width || actual_len > width - start0 {
+        return Err(CompileError::Unsupported(format!(
+            "constant reference modification ({start}:{}) runs past the {width}-character item — a later rung",
+            literal_len.map(|l| l.to_string()).unwrap_or_default()
+        )));
+    }
+    Ok(Some(actual_len))
+}
+
+/// Read a reference-modification start or length subnode into a [`RefIndex`]:
+/// a plain integer NUMBER literal becomes [`RefIndex::Lit`]; a bare data-name
+/// becomes [`RefIndex::Name`] (a *computed* index resolved at run time). Any
+/// other form — a signed/fractional literal, a figurative, or a nested
+/// reference modification as the index itself — is a later rung.
+fn read_refmod_index(op: &GrammarASTNode) -> Result<RefIndex, CompileError> {
+    let unsupported = |m: &str| CompileError::Unsupported(m.into());
+    // A bare data-name index (no `literal` child, just a NAME): computed refmod.
+    if child_node(op, "literal").is_none() {
+        // Reject a nested reference modification used *as* an index (`WS(A(1:1):2)`).
+        if child_nodes(op, "operand").is_empty() {
+            if let Some(name) = first_token(op, "NAME") {
+                return Ok(RefIndex::Name(name));
+            }
+        }
+        return Err(unsupported(
+            "a reference-modified reference-modification index is a later rung",
+        ));
+    }
+    let lit = child_node(op, "literal").unwrap();
     match read_literal(lit)? {
-        Src::Num(s) => s.parse::<usize>().map_err(|_| computed()),
-        _ => Err(computed()),
+        Src::Num(s) => s
+            .parse::<usize>()
+            .map(RefIndex::Lit)
+            .map_err(|_| unsupported("a signed or fractional reference-modification index is a later rung")),
+        _ => Err(unsupported(
+            "a non-integer reference-modification index is a later rung",
+        )),
+    }
+}
+
+/// Which side of a delimiter an `INSPECT … BEFORE`/`AFTER` region selects — the
+/// compiler-side mirror of the oracle's `RegionKind`.
+#[derive(Clone, Copy)]
+enum RegionKind {
+    Before,
+    After,
+}
+
+/// The parsed pieces of a `TALLYING counter FOR ALL|LEADING delim [{BEFORE|AFTER}
+/// x]` (or `FOR CHARACTERS [{BEFORE|AFTER} x]`) phrase: `(counter_name, delim_node,
+/// leading, characters, region)`, where `region` is the optional `{BEFORE|AFTER} x`
+/// window as `(kind, region_delim_node)`. `delim_node` is `None` on the `CHARACTERS`
+/// path (that form carries no delimiter operand — it counts positions), and `Some`
+/// otherwise. The node references borrow from the `inspect_stmt` CST the reader was
+/// handed.
+type TallyPhrase<'a> =
+    (String, Option<&'a GrammarASTNode>, bool, bool, Option<(RegionKind, &'a GrammarASTNode)>);
+
+/// Extract the supported `TALLYING counter FOR ALL delim [{BEFORE|AFTER} x]` /
+/// `FOR LEADING delim` / `FOR CHARACTERS [{BEFORE|AFTER} x]` phrase from an
+/// `inspect_stmt`, returning `(counter_name, delim_operand_node, leading,
+/// characters, region)` where `leading` is `true` for `FOR LEADING` (count only the
+/// leading run) and `false` for `FOR ALL` (count every occurrence), `characters` is
+/// `true` for `FOR CHARACTERS` (count every POSITION in the window; `delim_node` is
+/// then `None` and `leading` is `false`), and `region` carries an optional
+/// `{BEFORE|AFTER} x` window as `(kind, region_delim_node)`. Rejects every later-rung
+/// form the grammar also accepts:
+///   * more than one `TALLYING` counter (`{ tally_for }`) — one counter this rung;
+///   * more than one `FOR` phrase on that counter (`{ tally_item }`).
+///
+/// `CHARACTERS` is now ACCEPTED for this single-item single-counter phrase (count =
+/// window length); only the multi-item / multi-counter `CHARACTERS` forms remain
+/// later rungs, rejected in `inspect_tally_multi` / `inspect_tally_counters`.
+///
+/// A `FOR LEADING` phrase carrying a region is now ACCEPTED — the STANDALONE
+/// `FOR LEADING … BEFORE/AFTER` form is supported this rung (the count anchors the
+/// leading run at the window start). The COMBINED form still defers a LEADING half
+/// with a region; `emit_inspect_tallying` re-imposes that via `allow_leading_region`.
+///
+/// (`REPLACING` and a non-alphanumeric source are rejected by the caller. A
+/// multi-character region delimiter is rejected by `single_delim_code` at emit time,
+/// exactly like the tally delimiter, so both engines diagnose it identically.)
+fn inspect_tally_all(verb: &GrammarASTNode) -> Result<TallyPhrase<'_>, CompileError> {
+    let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
+        CompileError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
+    })?;
+    let fors = child_nodes(tallying, "tally_for");
+    let tf = match fors.as_slice() {
+        [one] => *one,
+        _ => {
+            return Err(CompileError::Unsupported(
+                "INSPECT TALLYING with several counters is a later rung".into(),
+            ))
+        }
+    };
+    let counter = first_token(tf, "NAME")
+        .ok_or_else(|| CompileError::Malformed("INSPECT TALLYING without a counter".into()))?;
+    let items = child_nodes(tf, "tally_item");
+    let ti = match items.as_slice() {
+        [one] => *one,
+        _ => {
+            return Err(CompileError::Unsupported(
+                "INSPECT TALLYING with several FOR phrases is a later rung".into(),
+            ))
+        }
+    };
+    let toks = child_tokens(ti);
+    // `FOR CHARACTERS` is the "count every position" form. The grammar's CHARACTERS
+    // branch of `tally_item` is `CHARACTERS { inspect_region }` — it carries NO
+    // delimiter operand — so on this path `delim_node` is `None` and the emitter counts
+    // the window LENGTH rather than scanning for delimiter matches. Detected at the
+    // SAME point the oracle's reader detects it, so the two engines' accept sets match.
+    let characters = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS");
+    // `FOR LEADING` is supported (count only the leading run); `FOR ALL` is the
+    // default. The keyword selects the scan's stop-on-mismatch behaviour. CHARACTERS
+    // never carries LEADING, so this stays `false` on that path.
+    let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
+    // A `{BEFORE|AFTER} x` region now PARSES into `Option<(RegionKind, node)>` (it
+    // used to be rejected wholesale here) REGARDLESS of `leading`/`characters`: the
+    // STANDALONE `FOR LEADING … BEFORE/AFTER` and `FOR CHARACTERS … BEFORE/AFTER` forms
+    // are supported this rung (see `emit_inspect_tallying`). The COMBINED form still
+    // defers a LEADING half with a region; `emit_inspect_tallying` re-imposes that via
+    // its `allow_leading_region` flag, so relaxing this shared reader does not leak the
+    // combination into the combined form.
+    let region = match child_node(ti, "inspect_region") {
+        None => None,
+        Some(region_node) => {
+            let rtoks = child_tokens(region_node);
+            let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+                RegionKind::Before
+            } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+                RegionKind::After
+            } else {
+                return Err(CompileError::Unsupported(
+                    "INSPECT region without a BEFORE or AFTER keyword".into(),
+                ));
+            };
+            let rdelim = child_node(region_node, "operand").ok_or_else(|| {
+                CompileError::Malformed("INSPECT BEFORE/AFTER region without a delimiter".into())
+            })?;
+            Some((kind, rdelim))
+        }
+    };
+    // The CHARACTERS path has no delimiter operand to read (`delim_node = None`); the
+    // ALL/LEADING path reads its single-char delimiter as before.
+    let delim = if characters {
+        None
+    } else {
+        Some(child_node(ti, "operand").ok_or_else(|| {
+            CompileError::Malformed("INSPECT TALLYING FOR ALL/LEADING without a delimiter".into())
+        })?)
+    };
+    Ok((counter, delim, leading, characters, region))
+}
+
+/// One `ALL delim [{BEFORE|AFTER} x]` item of a MULTI-item TALLYING clause:
+/// `(delim_node, region)`, where `region` is the optional `{BEFORE|AFTER} x` window as
+/// `(kind, region_delim_node)` — the SAME shape [`TallyPhrase`]'s region carries, and
+/// the count-side analogue of [`ReplaceItem`]. `ALL`-only by construction (the
+/// multi-item scope bound), so — unlike [`TallyPhrase`] — it carries no
+/// `leading`/`characters` flags, but each item now carries its OWN optional region
+/// window (this rung lifts the region reject).
+type TallyItem<'a> = (&'a GrammarASTNode, Option<(RegionKind, &'a GrammarASTNode)>);
+
+/// One `counter FOR ALL a [{BEFORE|AFTER} p] ALL b … ` group of a MULTI-counter
+/// `TALLYING` list: the counter name plus its written-order [`TallyItem`]s (each a
+/// delimiter node + its OWN optional region window). Named so
+/// [`inspect_tally_counters`]'s return type stays legible (and below clippy's
+/// type-complexity threshold) — the compiler-side analogue of the oracle's
+/// `TallyCounterGroup`.
+type TallyCounterGroup<'a> = (String, Vec<TallyItem<'a>>);
+
+/// One entry of the FLATTENED combined-priority list a multi-counter `TALLYING` scan
+/// walks per position: `(group_index, delimiter_byte_code_reg, window)` where `window` is
+/// the optional `[start, end)` byte-bound register pair for the item's `{BEFORE|AFTER}`
+/// region (`None` = whole-source, region-less). Named so
+/// `emit_inspect_tally_counters`'s flat vector stays below clippy's type-complexity
+/// threshold.
+type FlatCounterDelim = (usize, String, Option<(String, String)>);
+
+/// Extract the `TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q]
+/// …` phrase of a multi-item INSPECT whose SOLE counter carries TWO OR MORE `FOR`
+/// items, returning `(counter_name, items)` with the `(delim_node, region)` items in
+/// WRITTEN ORDER — the compiler-side analogue of the oracle's `read_inspect_tally_multi`,
+/// counting the SAME `tally_item` children so the two engines' accept/reject sets stay
+/// co-total. Only called after the caller has confirmed EXACTLY ONE `tally_for` with
+/// `>= 2` items; a single item keeps [`inspect_tally_all`] and all its capabilities
+/// (LEADING, region), and SEVERAL counters (more than one `tally_for`) stays a later
+/// rung.
+///
+/// Scope bound (this rung, IDENTICAL messages to the oracle reader): every item must
+/// be a plain `ALL` item with NO `LEADING`/`CHARACTERS`. Each item MAY now carry its
+/// OWN optional `{BEFORE|AFTER} x` region (the region reject is LIFTED this rung),
+/// parsed with the SAME keyword/operand extraction `inspect_tally_all` uses on the
+/// single-item side. Any item violating the remaining scope is a clean later-rung
+/// `Unsupported`. A multi-character/figurative/wider/numeric delimiter is NOT rejected
+/// here — it falls to the SAME `single_delim_code` check the single-item emitter uses.
+fn inspect_tally_multi(verb: &GrammarASTNode) -> Result<(String, Vec<TallyItem<'_>>), CompileError> {
+    let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
+        CompileError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
+    })?;
+    // Exactly one counter (`tally_for`): several counters is a later rung, diagnosed
+    // with the SAME message `inspect_tally_all` raises so the reject is uniform.
+    let fors = child_nodes(tallying, "tally_for");
+    let tf = match fors.as_slice() {
+        [one] => *one,
+        _ => {
+            return Err(CompileError::Unsupported(
+                "INSPECT TALLYING with several counters is a later rung".into(),
+            ))
+        }
+    };
+    let counter = first_token(tf, "NAME")
+        .ok_or_else(|| CompileError::Malformed("INSPECT TALLYING without a counter".into()))?;
+    let mut items = Vec::new();
+    for ti in child_nodes(tf, "tally_item") {
+        let toks = child_tokens(ti);
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+            return Err(CompileError::Unsupported(
+                "INSPECT TALLYING … FOR CHARACTERS is a later rung".into(),
+            ));
+        }
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
+            return Err(CompileError::Unsupported(
+                "INSPECT TALLYING with several items and a LEADING item is a later rung".into(),
+            ));
+        }
+        // A `{BEFORE|AFTER} x` region on an item is now ACCEPTED (this rung): parse it
+        // into `Option<(RegionKind, node)>` with the SAME keyword/operand extraction
+        // `inspect_tally_all` uses on the single-item side. The region contributes its
+        // own delimiter operand under the `inspect_region` child, not a direct child of
+        // `tally_item`, so the DIRECT `operand` child below is still exactly the tally
+        // delimiter.
+        let region = match child_node(ti, "inspect_region") {
+            None => None,
+            Some(region_node) => {
+                let rtoks = child_tokens(region_node);
+                let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+                    RegionKind::Before
+                } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+                    RegionKind::After
+                } else {
+                    return Err(CompileError::Unsupported(
+                        "INSPECT region without a BEFORE or AFTER keyword".into(),
+                    ));
+                };
+                let rdelim = child_node(region_node, "operand").ok_or_else(|| {
+                    CompileError::Malformed(
+                        "INSPECT BEFORE/AFTER region without a delimiter".into(),
+                    )
+                })?;
+                Some((kind, rdelim))
+            }
+        };
+        let delim = child_node(ti, "operand").ok_or_else(|| {
+            CompileError::Malformed("INSPECT TALLYING FOR ALL without a delimiter".into())
+        })?;
+        items.push((delim, region));
+    }
+    Ok((counter, items))
+}
+
+/// Extract the `TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d …` phrase of a MULTI-counter
+/// INSPECT (`>= 2` `tally_for` groups), returning the `(counter_name, delim_nodes)` groups
+/// in WRITTEN ORDER (and, within each group, the single-char delimiter nodes in written
+/// order) — the compiler-side analogue of the oracle's `read_inspect_tally_counters`,
+/// walking the SAME `tally_for`/`tally_item` children so the two engines' accept/reject
+/// sets stay co-total. Only called after the caller has confirmed `>= 2` `tally_for`
+/// groups; exactly ONE group keeps the single-counter readers (`inspect_tally_all` /
+/// `inspect_tally_multi`) and all their capabilities UNCHANGED.
+///
+/// Scope bound (this rung, IDENTICAL messages to the oracle reader): every item of every
+/// group must be a plain `FOR ALL` item with NO `LEADING`/`CHARACTERS`; each item MAY now
+/// carry its OWN optional `{BEFORE|AFTER}` region (the region reject is LIFTED this rung),
+/// parsed with the SAME keyword/operand extraction `inspect_tally_all` uses on the
+/// single-item side. Any violating item is a clean later-rung `Unsupported`. A
+/// multi-character/figurative/wider/numeric delimiter is NOT rejected here — it falls to
+/// the SAME `single_delim_code` check the single-item emitter uses. The counters are
+/// validated (unsigned integer) in `emit_inspect_tally_counters`, exactly as the
+/// single-item path validates its counter.
+fn inspect_tally_counters(verb: &GrammarASTNode) -> Result<Vec<TallyCounterGroup<'_>>, CompileError> {
+    let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
+        CompileError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
+    })?;
+    let mut groups = Vec::new();
+    for tf in child_nodes(tallying, "tally_for") {
+        let counter = first_token(tf, "NAME")
+            .ok_or_else(|| CompileError::Malformed("INSPECT TALLYING without a counter".into()))?;
+        let mut items = Vec::new();
+        for ti in child_nodes(tf, "tally_item") {
+            let toks = child_tokens(ti);
+            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+                return Err(CompileError::Unsupported(
+                    "INSPECT TALLYING … FOR CHARACTERS is a later rung".into(),
+                ));
+            }
+            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
+                return Err(CompileError::Unsupported(
+                    "INSPECT TALLYING with several counters and a LEADING item is a later rung"
+                        .into(),
+                ));
+            }
+            // A `{BEFORE|AFTER} x` region on an item is now ACCEPTED (this rung): parse it
+            // into `Option<(RegionKind, node)>` with the SAME keyword/operand extraction
+            // `inspect_tally_all` uses on the single-item side. The region contributes its
+            // own delimiter operand under the `inspect_region` child, not a direct child of
+            // `tally_item`, so the DIRECT `operand` child below is still exactly the tally
+            // delimiter.
+            let region = match child_node(ti, "inspect_region") {
+                None => None,
+                Some(region_node) => {
+                    let rtoks = child_tokens(region_node);
+                    let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+                        RegionKind::Before
+                    } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+                        RegionKind::After
+                    } else {
+                        return Err(CompileError::Unsupported(
+                            "INSPECT region without a BEFORE or AFTER keyword".into(),
+                        ));
+                    };
+                    let rdelim = child_node(region_node, "operand").ok_or_else(|| {
+                        CompileError::Malformed(
+                            "INSPECT BEFORE/AFTER region without a delimiter".into(),
+                        )
+                    })?;
+                    Some((kind, rdelim))
+                }
+            };
+            let delim = child_node(ti, "operand").ok_or_else(|| {
+                CompileError::Malformed("INSPECT TALLYING FOR ALL without a delimiter".into())
+            })?;
+            items.push((delim, region));
+        }
+        groups.push((counter, items));
+    }
+    Ok(groups)
+}
+
+/// The parsed pieces of a `REPLACING ALL|LEADING search BY replace [{BEFORE|AFTER}
+/// x]` phrase: `(search_node, replace_node, leading, region)`, where `region` is the
+/// optional `{BEFORE|AFTER} x` window as `(kind, region_delim_node)` — the exact
+/// analogue of [`TallyPhrase`]'s region on the count side.
+type ReplacePhrase<'a> =
+    (&'a GrammarASTNode, &'a GrammarASTNode, bool, Option<(RegionKind, &'a GrammarASTNode)>);
+
+/// One `ALL search BY replace [{BEFORE|AFTER} x]` item of a MULTI-item REPLACING
+/// clause: `(search_node, replace_node, region)`, where `region` is the optional
+/// `{BEFORE|AFTER} x` window as `(kind, region_delim_node)` — the SAME shape
+/// [`ReplacePhrase`] carries. `ALL`-only by construction (the multi-item scope
+/// bound), so — unlike [`ReplacePhrase`] — it carries no `leading` flag, but each
+/// item now carries its OWN optional region window (this rung lifts the region
+/// reject).
+type ReplaceItem<'a> =
+    (&'a GrammarASTNode, &'a GrammarASTNode, Option<(RegionKind, &'a GrammarASTNode)>);
+
+/// Extract the supported `REPLACING ALL search BY replace [{BEFORE|AFTER} x]` /
+/// `REPLACING LEADING search BY replace` phrase from an `inspect_stmt`, returning
+/// `(search_node, replace_node, leading, region)` where `leading` is `true` for
+/// `REPLACING LEADING` (replace only the leading run) and `false` for `REPLACING
+/// ALL` (replace every occurrence), and `region` carries an optional `{BEFORE|AFTER}
+/// x` window as `(kind, region_delim_node)`. Rejects every later-rung form the
+/// grammar also accepts:
+///   * more than one replace item (`{ replace_item }`) — one `x BY y` this rung;
+///   * a `CHARACTERS` or `FIRST` replacement (only `ALL`/`LEADING` this rung).
+///
+/// A `REPLACING LEADING` phrase carrying a region is now ACCEPTED — the STANDALONE
+/// `REPLACING LEADING … BEFORE/AFTER` form is supported this rung (the substitution
+/// anchors the leading run at the window start), mirroring the `FOR LEADING …
+/// BEFORE/AFTER` support on the count side. Both `ALL` and `LEADING` are accepted
+/// here, whether the phrase is lone or combined with `TALLYING`; for the combined
+/// form `emit_inspect_replacing` re-imposes the deferral of a LEADING half with a
+/// region via `allow_leading_region`. (A non-alphanumeric source is rejected by the
+/// caller; a multi-character/wider/figurative search, replacement, or region
+/// delimiter is rejected by `single_delim_code`/`single_delim_str`.)
+fn inspect_replacing_all(verb: &GrammarASTNode) -> Result<ReplacePhrase<'_>, CompileError> {
+    let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
+        CompileError::Unsupported("INSPECT without a REPLACING clause is a later rung".into())
+    })?;
+    let items = child_nodes(replacing, "replace_item");
+    let ri = match items.as_slice() {
+        [one] => *one,
+        _ => {
+            return Err(CompileError::Unsupported(
+                "INSPECT REPLACING with several replace items is a later rung".into(),
+            ))
+        }
+    };
+    let toks = child_tokens(ri);
+    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+        return Err(CompileError::Unsupported(
+            "INSPECT REPLACING CHARACTERS is a later rung".into(),
+        ));
+    }
+    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "FIRST") {
+        return Err(CompileError::Unsupported(
+            "INSPECT REPLACING FIRST is a later rung".into(),
+        ));
+    }
+    // `REPLACING LEADING` is now supported (replace only the leading run);
+    // `REPLACING ALL` is the default. The keyword selects the stop-at-first-
+    // mismatch behaviour threaded into the unroll.
+    let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
+    // A `{BEFORE|AFTER} x` region now PARSES into `Option<(RegionKind, node)>` (it
+    // used to be rejected wholesale here) REGARDLESS of `leading`, using the SAME
+    // keyword/operand extraction as `inspect_tally_all` on the count side: the
+    // STANDALONE `REPLACING LEADING … BEFORE/AFTER` form is supported this rung (the
+    // substitution anchors the leading run at the window start — see
+    // `emit_inspect_replacing`). The COMBINED form still defers a LEADING half with a
+    // region; `emit_inspect_replacing` re-imposes that via its `allow_leading_region`
+    // flag, so relaxing this shared reader does not leak the combination.
+    let region = match child_node(ri, "inspect_region") {
+        None => None,
+        Some(region_node) => {
+            let rtoks = child_tokens(region_node);
+            let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+                RegionKind::Before
+            } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+                RegionKind::After
+            } else {
+                return Err(CompileError::Unsupported(
+                    "INSPECT region without a BEFORE or AFTER keyword".into(),
+                ));
+            };
+            let rdelim = child_node(region_node, "operand").ok_or_else(|| {
+                CompileError::Malformed("INSPECT BEFORE/AFTER region without a delimiter".into())
+            })?;
+            Some((kind, rdelim))
+        }
+    };
+    // `ALL`/`LEADING search BY replace` — the two `operand` children are the
+    // search (first) and the replacement (second), in order. (A `{BEFORE|AFTER}`
+    // region contributes its own operand nested under `inspect_region`, not a direct
+    // child of `replace_item`, so these two direct `operand` children are exactly the
+    // search and replacement.)
+    let ops = child_nodes(ri, "operand");
+    match ops.as_slice() {
+        [s, r] => Ok((*s, *r, leading, region)),
+        _ => Err(CompileError::Malformed(
+            "INSPECT REPLACING ALL/LEADING without a search and a BY replacement".into(),
+        )),
+    }
+}
+
+/// Extract the `REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` phrase of a
+/// multi-item INSPECT, returning the `(search_node, replace_node)` pairs in WRITTEN
+/// ORDER — the compiler-side analogue of the oracle's `read_inspect_replacing_multi`,
+/// counting the SAME `replace_item` children so the two engines' accept/reject sets
+/// stay co-total. Only called after the caller has confirmed `>= 2` items; a single
+/// item keeps [`inspect_replacing_all`] and all its capabilities.
+///
+/// Scope bound (this rung, IDENTICAL messages to the oracle reader): every item must
+/// be a plain `ALL` item with NO `LEADING`/`CHARACTERS`/`FIRST`. Each item MAY now
+/// carry its OWN optional `{BEFORE|AFTER} x` region — the region reject is LIFTED,
+/// parsed with the SAME keyword/operand extraction [`inspect_replacing_all`] uses on
+/// the single-item side. Any violating item is a clean later-rung `Unsupported`. A
+/// multi-character/figurative/wider/numeric search, replacement, or region delimiter
+/// is NOT rejected here — it falls to the SAME `single_delim_code`/`single_delim_str`
+/// checks the single-item emitter uses.
+fn inspect_replacing_multi(verb: &GrammarASTNode) -> Result<Vec<ReplaceItem<'_>>, CompileError> {
+    let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
+        CompileError::Unsupported("INSPECT without a REPLACING clause is a later rung".into())
+    })?;
+    let mut items = Vec::new();
+    for ri in child_nodes(replacing, "replace_item") {
+        let toks = child_tokens(ri);
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+            return Err(CompileError::Unsupported(
+                "INSPECT REPLACING CHARACTERS is a later rung".into(),
+            ));
+        }
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "FIRST") {
+            return Err(CompileError::Unsupported(
+                "INSPECT REPLACING FIRST is a later rung".into(),
+            ));
+        }
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
+            return Err(CompileError::Unsupported(
+                "INSPECT REPLACING with several items and a LEADING item is a later rung".into(),
+            ));
+        }
+        // A `{BEFORE|AFTER} x` region on an item is now ACCEPTED (this rung): parse it
+        // into `Option<(RegionKind, node)>` with the SAME keyword/operand extraction
+        // `inspect_replacing_all` uses on the single-item side. The region contributes
+        // its own delimiter operand under the `inspect_region` child, not a direct
+        // child of `replace_item`, so the two DIRECT `operand` children below are still
+        // exactly the search and replacement.
+        let region = match child_node(ri, "inspect_region") {
+            None => None,
+            Some(region_node) => {
+                let rtoks = child_tokens(region_node);
+                let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+                    RegionKind::Before
+                } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+                    RegionKind::After
+                } else {
+                    return Err(CompileError::Unsupported(
+                        "INSPECT region without a BEFORE or AFTER keyword".into(),
+                    ));
+                };
+                let rdelim = child_node(region_node, "operand").ok_or_else(|| {
+                    CompileError::Malformed(
+                        "INSPECT BEFORE/AFTER region without a delimiter".into(),
+                    )
+                })?;
+                Some((kind, rdelim))
+            }
+        };
+        // `ALL search BY replace` — the two DIRECT `operand` children are exactly the
+        // search (first) and the replacement (second); a region's delimiter rides on
+        // the `inspect_region` child, not here.
+        let ops = child_nodes(ri, "operand");
+        match ops.as_slice() {
+            [s, r] => items.push((*s, *r, region)),
+            _ => {
+                return Err(CompileError::Malformed(
+                    "INSPECT REPLACING ALL without a search and a BY replacement".into(),
+                ))
+            }
+        }
+    }
+    Ok(items)
+}
+
+/// The parsed pieces of a `CONVERTING from TO to [{BEFORE|AFTER} x]` phrase:
+/// `(from_node, to_node, region)`, where `region` is the optional `{BEFORE|AFTER} x`
+/// window as `(kind, region_delim_node)` — the exact analogue of the region on the
+/// TALLYING ([`TallyPhrase`]) and REPLACING ([`ReplacePhrase`]) sides.
+type ConvertPhrase<'a> =
+    (&'a GrammarASTNode, &'a GrammarASTNode, Option<(RegionKind, &'a GrammarASTNode)>);
+
+/// Extract the `CONVERTING from TO to [{BEFORE|AFTER} x]` phrase from an
+/// `inspect_stmt`, returning `(from_node, to_node, region)`. A `{BEFORE|AFTER} x`
+/// region now PARSES into `Option<(RegionKind, node)>` (it used to be rejected
+/// wholesale here), using the SAME keyword/operand extraction as `inspect_tally_all`
+/// and `inspect_replacing_all` on the count/replace sides; a multi-character region
+/// delimiter stays a later rung, rejected by `single_delim_code` at emit time.
+/// (Unequal-length/non-ASCII/non-literal `from`/`to` are rejected by the caller.)
+fn inspect_converting_pair(verb: &GrammarASTNode) -> Result<ConvertPhrase<'_>, CompileError> {
+    let converting = child_node(verb, "inspect_converting").ok_or_else(|| {
+        CompileError::Unsupported("INSPECT without a CONVERTING clause is a later rung".into())
+    })?;
+    let region = match child_node(converting, "inspect_region") {
+        None => None,
+        Some(region_node) => {
+            let rtoks = child_tokens(region_node);
+            let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+                RegionKind::Before
+            } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+                RegionKind::After
+            } else {
+                return Err(CompileError::Unsupported(
+                    "INSPECT region without a BEFORE or AFTER keyword".into(),
+                ));
+            };
+            let rdelim = child_node(region_node, "operand").ok_or_else(|| {
+                CompileError::Malformed("INSPECT BEFORE/AFTER region without a delimiter".into())
+            })?;
+            Some((kind, rdelim))
+        }
+    };
+    // `from TO to` — the two `operand` children are the FROM (first) and the TO
+    // (second), in order. (A `{BEFORE|AFTER}` region contributes its own operand
+    // nested under `inspect_region`, not a direct child of `inspect_converting`, so
+    // these two direct `operand` children are exactly the FROM and TO.)
+    let ops = child_nodes(converting, "operand");
+    match ops.as_slice() {
+        [f, t] => Ok((*f, *t, region)),
+        _ => Err(CompileError::Malformed(
+            "INSPECT CONVERTING without a FROM and a TO operand".into(),
+        )),
+    }
+}
+
+/// Read a CONVERTING `from`/`to` operand as a plain string literal. This rung only
+/// supports **string-literal** translation tables; a data-name (`PIC X` item),
+/// figurative constant, numeric literal, or reference modification is a later rung.
+/// `which` names the position (`"from"`/`"to"`) for the diagnostic.
+fn inspect_converting_literal(op: &GrammarASTNode, which: &str) -> Result<String, CompileError> {
+    match read_operand(op)? {
+        Operandy::Literal(Src::Str(s)) => Ok(s),
+        Operandy::Literal(Src::Num(_)) => Err(CompileError::Unsupported(format!(
+            "INSPECT CONVERTING with a numeric-literal {which} operand is a later rung"
+        ))),
+        Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
+            Err(CompileError::Unsupported(format!(
+                "INSPECT CONVERTING with a figurative-constant {which} operand is a later rung"
+            )))
+        }
+        Operandy::Name(_) => Err(CompileError::Unsupported(format!(
+            "INSPECT CONVERTING with a data-name {which} operand is a later rung"
+        ))),
+        Operandy::RefMod { .. } => Err(CompileError::Unsupported(format!(
+            "INSPECT CONVERTING with a reference-modified {which} operand is a later rung"
+        ))),
     }
 }
 
@@ -2912,8 +6857,36 @@ enum Term {
 /// constant whose length is resolved from the operand it is compared against.
 #[derive(Clone)]
 enum StrOperand {
+    /// A string whose length is known at compile time (a character item's slot,
+    /// a string literal, or a *constant-index* reference modification).
     Fixed { reg: String, len: usize },
+    /// A **computed** reference-modification slice: its content register plus a
+    /// run-time `i64` register holding its length, and a compile-time upper bound
+    /// (`max_len`, the base item's width) used to size the common comparison
+    /// width. The slice is right-padded with spaces to that width *at run time*.
+    Runtime { reg: String, len_reg: String, max_len: usize },
     Fig(char),
+}
+
+/// The compile-time upper bound on a comparison operand's length, or `None` for
+/// a figurative constant (which has no length of its own and borrows the other
+/// operand's).
+fn str_operand_max_len(op: &StrOperand) -> Option<usize> {
+    match op {
+        StrOperand::Fixed { len, .. } => Some(*len),
+        StrOperand::Runtime { max_len, .. } => Some(*max_len),
+        StrOperand::Fig(_) => None,
+    }
+}
+
+/// The length of a reference-modification slice: known at compile time (a
+/// constant-index refmod) or only at run time (a computed one).
+enum SliceLen {
+    /// A compile-time-constant length — the literal:literal refmod path.
+    Const(usize),
+    /// A run-time length: the `i64` register holding it, plus the compile-time
+    /// upper bound (the base item's width).
+    Runtime { len_reg: String, max_len: usize },
 }
 
 /// A parsed `COMPUTE` arithmetic expression — the grammar's precedence cascade
@@ -3451,18 +7424,150 @@ mod tests {
     }
 
     #[test]
-    fn cross_category_move_is_deferred() {
-        // A numeric→alphanumeric (or reverse) item MOVE needs runtime int↔string
-        // conversion — a clean later rung, never wrong output.
-        let err = compile_source(
+    fn unsigned_integer_numeric_to_alphanumeric_move_lowers() {
+        // `MOVE PIC 9(3) TO PIC X(4)` is now supported: the digit image is built at
+        // run time (str_slice off a digit table) and char-moved (str_concat pad).
+        let m = compile_source(
             &wrap(
                 &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(4)."],
                 &["MOVE N TO W.", "STOP RUN."],
             ),
             "x",
         )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_slice".to_string()), "digit image slices off the table");
+        assert!(os.contains(&"str_concat".to_string()), "char reshape pads via str_concat");
+    }
+
+    #[test]
+    fn signed_numeric_to_alphanumeric_move_lowers() {
+        // A SIGNED numeric source into an alphanumeric receiver is now supported:
+        // its magnitude image is built (str_slice off the digit table) and the units
+        // digit is overpunched by indexing the combined `{…I}…R` sign table
+        // (str_slice) before the char reshape (str_concat).
+        let m = compile_source(
+            &wrap(
+                &["01  S  PIC S9(3) VALUE 42.", "01  W  PIC X(4)."],
+                &["MOVE S TO W.", "STOP RUN."],
+            ),
+            "x",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_slice".to_string()), "overpunch char slices off the sign table");
+        assert!(os.contains(&"str_concat".to_string()), "image reshaped/padded via str_concat");
+    }
+
+    #[test]
+    fn signed_numeric_vs_alphanumeric_comparison_now_compiles() {
+        // A SIGNED numeric operand in a mixed relation is now supported: its
+        // overpunched magnitude image is built (str_slice off the digit table plus the
+        // sign-table overpunch) and the comparison runs the alphanumeric byte rule
+        // (str_cmp). Previously this was a clean `Unsupported`.
+        let m = compile_source(
+            &wrap(
+                &["01  S  PIC S9(3) VALUE -123."],
+                &["IF S = \"12L\" DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+            ),
+            "x",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_slice".to_string()), "overpunch char slices off the sign table");
+        assert!(os.contains(&"str_cmp".to_string()), "mixed relation compares via str_cmp");
+    }
+
+    #[test]
+    fn numeric_literal_vs_alphanumeric_comparison_is_still_a_later_rung() {
+        // A numeric LITERAL against an alphanumeric operand is a different pairing,
+        // still out of scope on both engines.
+        let err = compile_source(
+            &wrap(&["01  W  PIC X(3) VALUE \"042\"."], &["IF 42 = W DISPLAY \"Y\".", "STOP RUN."]),
+            "x",
+        )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn figurative_vs_figurative_comparison_now_compiles() {
+        // `IF ZERO = SPACE` (two figurative constants) now compiles — each resolves to
+        // a single fill character and both flow through the alphanumeric str_cmp path.
+        let m = compile_source(
+            &wrap(
+                &["01  D  PIC X(1)."],
+                &["IF ZERO = SPACE DISPLAY \"E\" ELSE DISPLAY \"N\".", "STOP RUN."],
+            ),
+            "x",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        assert!(ops(&m).contains(&"str_cmp".to_string()), "figuratives compare via str_cmp");
+    }
+
+    #[test]
+    fn signed_numeric_to_group_receiver_is_deferred() {
+        // A GROUP on either side of the move is still a later rung — the compiler
+        // models no group items, so a group RECEIVER is `Unsupported` (the oracle
+        // rejects it too, as "MOVE into a group item").
+        let err = compile_source(
+            &wrap(
+                &[
+                    "01  S  PIC S9(3) VALUE -12.",
+                    "01  G.",
+                    "    05  A  PIC X(2).",
+                    "    05  B  PIC X(1).",
+                ],
+                &["MOVE S TO G.", "STOP RUN."],
+            ),
+            "x",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn scaled_numeric_to_alphanumeric_move_lowers() {
+        // An UNSIGNED SCALED source (`PIC 9(2)V9`) into an alphanumeric receiver is
+        // now supported: its full (int + frac) digit image is built at run time (the
+        // same str_slice-off-a-table loop, over `int + dec` digits — no point) and
+        // char-moved (str_concat pad).
+        let m = compile_source(
+            &wrap(
+                &["01  F  PIC 9(2)V9 VALUE 4.2.", "01  W  PIC X(4)."],
+                &["MOVE F TO W.", "STOP RUN."],
+            ),
+            "x",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_slice".to_string()), "digit image slices off the table");
+        assert!(os.contains(&"str_concat".to_string()), "char reshape pads via str_concat");
+    }
+
+    #[test]
+    fn alphanumeric_to_unsigned_integer_move_lowers() {
+        // The REVERSE direction (alphanumeric source → UNSIGNED INTEGER receiver)
+        // is now supported: the source's bytes are folded left-to-right into the
+        // integer (`str_index` reads each byte, `mul`/`add` accumulate) and stored
+        // with the receiver-width truncation (`mod`).
+        let m = compile_source(
+            &wrap(
+                &["01  W  PIC X(3) VALUE \"042\".", "01  N  PIC 9(3)."],
+                &["MOVE W TO N.", "STOP RUN."],
+            ),
+            "x",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_index".to_string()), "each source byte is read via str_index");
+        assert!(os.contains(&"mod".to_string()), "receiver-width truncation via mod");
     }
 
     #[test]
@@ -3804,15 +7909,67 @@ mod tests {
     }
 
     #[test]
-    fn refmod_computed_start_is_a_later_rung() {
+    fn refmod_computed_start_lowers_to_a_runtime_str_slice() {
         // A data-name start (`WS(J:2)`) is a *computed* reference modification —
-        // rejected cleanly on this rung, never miscompiled.
-        let err = compile_source(
+        // it lowers to a run-time `str_slice` fed by `sub`/`add` over the index
+        // registers, not a compile-time reject.
+        let m = compile_source(
             &wrap(
                 &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J  PIC 9 VALUE 2."],
                 &["DISPLAY WS(J:2).", "STOP RUN."],
             ),
             "rmj",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_slice".to_string()), "computed refmod slices: {os:?}");
+        assert!(os.contains(&"sub".to_string()), "start0 = start - 1 at run time: {os:?}");
+    }
+
+    #[test]
+    fn refmod_signed_index_item_is_a_later_rung() {
+        // A signed index item (`PIC S9`) is a later rung — the run-time slice model
+        // reads an unsigned integer index only.
+        let err = compile_source(
+            &wrap(
+                &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J  PIC S9 VALUE 2."],
+                &["DISPLAY WS(J:2).", "STOP RUN."],
+            ),
+            "rmsj",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn refmod_fractional_index_item_is_a_later_rung() {
+        // A fractional index item (`PIC 9V9`) is a later rung.
+        let err = compile_source(
+            &wrap(
+                &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J  PIC 9V9 VALUE 2.0."],
+                &["DISPLAY WS(J:2).", "STOP RUN."],
+            ),
+            "rmfj",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn refmod_computed_as_move_source_is_a_later_rung() {
+        // A computed refmod in a numeric/MOVE-target context stays a later rung,
+        // exactly as the constant refmod does.
+        let err = compile_source(
+            &wrap(
+                &[
+                    "01  WS  PIC X(5) VALUE \"ABCDE\".",
+                    "01  J  PIC 9 VALUE 2.",
+                    "01  DST PIC X(3).",
+                ],
+                &["MOVE WS(J:2) TO DST.", "STOP RUN."],
+            ),
+            "rmmv",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
@@ -3881,13 +8038,34 @@ mod tests {
     }
 
     #[test]
-    fn string_delimited_by_real_delimiter_is_a_later_rung() {
-        // Only DELIMITED BY SIZE this rung; a real (literal) delimiter needs a
-        // run-time scan — a clean Unsupported, not a parse error.
+    fn string_delimited_by_ascii_delimiter_emits_a_scan_loop() {
+        // A real single-char ASCII delimiter is now supported: each field is
+        // truncated at its first delimiter char by a run-time scan (str_index +
+        // cmp_eq), then the prefixes are concatenated and overlaid.
+        let module = compile_source(
+            &wrap(
+                &["01  A  PIC X(5) VALUE \"AB-CD\".", "01  T  PIC X(6) VALUE SPACES."],
+                &["STRING A DELIMITED BY \"-\" INTO T.", "DISPLAY T.", "STOP RUN."],
+            ),
+            "str_delim",
+        )
+        .unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"str_index".to_string()), "STRING delim scans for the delimiter");
+        assert!(os.contains(&"cmp_eq".to_string()), "STRING delim compares each byte");
+        assert!(os.contains(&"str_slice".to_string()), "STRING delim slices the prefix");
+    }
+
+    #[test]
+    fn string_non_ascii_literal_delimiter_is_a_later_rung() {
+        // A single but NON-ASCII delimiter (`"é"`, one char / two bytes) would make
+        // the byte-based scan diverge from the char-based oracle — a clean
+        // Unsupported on both engines, keeping them co-total.
         let err = compile_source(
             &wrap(
                 &["01  A  PIC X(3) VALUE \"ABC\".", "01  T  PIC X(6) VALUE SPACES."],
-                &["STRING A DELIMITED BY \"-\" INTO T.", "STOP RUN."],
+                &["STRING A DELIMITED BY \"é\" INTO T.", "STOP RUN."],
             ),
             "str_delim",
         )
@@ -3896,9 +8074,12 @@ mod tests {
     }
 
     #[test]
-    fn string_with_pointer_is_a_later_rung() {
-        // WITH POINTER is accepted by the grammar but rejected here as a later rung.
-        let err = compile_source(
+    fn string_with_pointer_emits_a_guarded_overlay() {
+        // WITH POINTER over a `PIC 9(n)` pointer now compiles: the overlay reads the
+        // pointer register to seat the start, guards the out-of-range case (`cmp_lt`
+        // for p < 1, `cmp_gt` for p > size), computes `p - 1` (a `sub`), and writes
+        // the resume position back (`store_scaled` reshape). It passes validation.
+        let module = compile_source(
             &wrap(
                 &[
                     "01  A  PIC X(3) VALUE \"ABC\".",
@@ -3908,6 +8089,426 @@ mod tests {
                 &["STRING A DELIMITED BY SIZE INTO T WITH POINTER P.", "STOP RUN."],
             ),
             "str_ptr",
+        )
+        .unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"cmp_lt".to_string()), "guards p < 1 (out of range low)");
+        assert!(os.contains(&"cmp_gt".to_string()), "guards p > size (out of range high)");
+        assert!(os.contains(&"sub".to_string()), "start offset p - 1");
+    }
+
+    #[test]
+    fn string_with_signed_pointer_is_a_later_rung() {
+        // The pointer must be an UNSIGNED integer. A signed pointer (`PIC S9`) is a
+        // clean later rung, rejected at build time with the same message the oracle
+        // raises at exec time.
+        let err = compile_source(
+            &wrap(
+                &[
+                    "01  A  PIC X(3) VALUE \"ABC\".",
+                    "01  T  PIC X(6) VALUE SPACES.",
+                    "01  P  PIC S9(2) VALUE 1.",
+                ],
+                &["STRING A DELIMITED BY SIZE INTO T WITH POINTER P.", "STOP RUN."],
+            ),
+            "str_ptr_signed",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn unstring_compiles_to_scan_loop_and_validates() {
+        // The happy path lowers to a data-dependent scan LOOP: str_len over the
+        // source, a str_index/cmp scan for each delimiter, and a
+        // str_slice/str_concat reshape into each receiver. It passes IIR
+        // validation.
+        let module = compile_source(
+            &wrap(
+                &[
+                    "01  S  PIC X(5) VALUE \"A,B,C\".",
+                    "01  R1 PIC X(3) VALUE SPACES.",
+                    "01  R2 PIC X(3) VALUE SPACES.",
+                    "01  R3 PIC X(3) VALUE SPACES.",
+                ],
+                &[
+                    "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+                    "STOP RUN.",
+                ],
+            ),
+            "unstr",
+        )
+        .unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"str_len".to_string()), "scans the source length");
+        assert!(os.contains(&"str_index".to_string()), "reads source bytes to find the delimiter");
+        assert!(os.contains(&"str_slice".to_string()), "cuts each field and pads it");
+        assert!(os.contains(&"str_concat".to_string()), "reshapes the field into the receiver");
+    }
+
+    #[test]
+    fn unstring_with_pointer_emits_a_guarded_scan() {
+        // WITH POINTER over a `PIC 9(n)` pointer now compiles: the scan reads the
+        // pointer register to seat the start, guards the out-of-range case, and
+        // writes the resume position back (`store_scaled` reshape). A `sub` (p − 1)
+        // start offset and the extra `cmp_lt`/`cmp_gt` guards are the tell.
+        let module = compile_source(
+            &wrap(
+                &[
+                    "01  S  PIC X(3) VALUE \"A,B\".",
+                    "01  R1 PIC X(3) VALUE SPACES.",
+                    "01  P  PIC 9(2) VALUE 1.",
+                ],
+                &["UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.", "STOP RUN."],
+            ),
+            "unstr_ptr",
+        )
+        .unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"cmp_lt".to_string()), "guards p < 1 (out of range low)");
+        assert!(os.contains(&"cmp_gt".to_string()), "guards p > len (out of range high)");
+        assert!(os.contains(&"sub".to_string()), "start offset p - 1");
+    }
+
+    #[test]
+    fn unstring_with_signed_pointer_is_a_later_rung() {
+        // The pointer must be an UNSIGNED integer. A signed pointer (`PIC S9`) is a
+        // clean later rung, rejected at build time with the same message the oracle
+        // raises at exec time.
+        let err = compile_source(
+            &wrap(
+                &[
+                    "01  S  PIC X(3) VALUE \"A,B\".",
+                    "01  R1 PIC X(3) VALUE SPACES.",
+                    "01  P  PIC S9(2) VALUE 1.",
+                ],
+                &["UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.", "STOP RUN."],
+            ),
+            "unstr_ptr_signed",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn unstring_multi_character_delimiter_is_a_later_rung() {
+        // A single delimiter CHARACTER only this rung; a 2-char literal needs a
+        // multi-char scan — a clean Unsupported.
+        let err = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"A::B\".", "01  R1 PIC X(3) VALUE SPACES."],
+                &["UNSTRING S DELIMITED BY \"::\" INTO R1.", "STOP RUN."],
+            ),
+            "unstr_multi",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn unstring_numeric_receiver_is_a_later_rung() {
+        // A numeric receiver would need numeric editing on receipt — a later rung.
+        let err = compile_source(
+            &wrap(
+                &["01  S  PIC X(3) VALUE \"1,2\".", "01  N  PIC 9(3) VALUE 0."],
+                &["UNSTRING S DELIMITED BY \",\" INTO N.", "STOP RUN."],
+            ),
+            "unstr_num",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_compiles_to_scan_loop_and_validates() {
+        // The happy path lowers to a data-dependent count LOOP (str_len over the
+        // source, a str_index/cmp scan bumping a counter register, then an add into
+        // the counter slot) and passes IIR validation.
+        let module = compile_source(
+            &wrap(
+                &["01  S  PIC X(6) VALUE \"BANANA\".", "01  C  PIC 9(3) VALUE 0."],
+                &["INSPECT S TALLYING C FOR ALL \"A\".", "DISPLAY C.", "STOP RUN."],
+            ),
+            "insp",
+        )
+        .unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"str_len".to_string()), "scans the source length");
+        assert!(os.contains(&"str_index".to_string()), "reads source bytes to match the delimiter");
+        assert!(os.contains(&"cmp_eq".to_string()), "compares each byte to the delimiter");
+        assert!(os.contains(&"add".to_string()), "bumps the count and folds it into the counter");
+    }
+
+    #[test]
+    fn inspect_replacing_compiles_to_source_rebuild_and_validates() {
+        // The happy REPLACING path unrolls a per-position rebuild of the source:
+        // str_index reads each byte, cmp_eq tests it against the search, and
+        // str_slice/str_concat splice either the replacement or the original
+        // character into the accumulator. It passes IIR validation.
+        let module = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"ABABA\"."],
+                &["INSPECT S REPLACING ALL \"A\" BY \"X\".", "DISPLAY S.", "STOP RUN."],
+            ),
+            "insp_repl",
+        )
+        .unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"str_index".to_string()), "reads each source byte");
+        assert!(os.contains(&"cmp_eq".to_string()), "compares each byte to the search");
+        assert!(os.contains(&"str_concat".to_string()), "rebuilds the source string");
+    }
+
+    #[test]
+    fn inspect_replacing_characters_now_compiles() {
+        // REPLACING CHARACTERS BY replaces every position UNCONDITIONALLY — now
+        // supported (fill the whole field with the replacement char). Unlike
+        // REPLACING ALL there is no per-position compare, so the lowering rebuilds the
+        // source purely by concatenating the replacement `width` times: `str_concat`
+        // appears, but NO `cmp_eq` (nothing is compared).
+        let module = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"ABABA\"."],
+                &["INSPECT S REPLACING CHARACTERS BY \"X\".", "STOP RUN."],
+            ),
+            "insp_repl_chars",
+        )
+        .expect("compiles");
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"str_concat".to_string()), "rebuilds the source string");
+        assert!(
+            !os.contains(&"cmp_eq".to_string()),
+            "CHARACTERS replaces unconditionally — no per-position compare"
+        );
+    }
+
+    #[test]
+    fn inspect_replacing_leading_now_compiles() {
+        // A lone REPLACING LEADING replaces only the run of consecutive matches at
+        // the start of the source — now supported. It threads an `active` flag
+        // (an extra `and` per position) through the same per-position unroll and
+        // must compile to a valid module.
+        let module = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"AABBB\"."],
+                &["INSPECT S REPLACING LEADING \"A\" BY \"X\".", "DISPLAY S.", "STOP RUN."],
+            ),
+            "insp_repl_lead",
+        )
+        .expect("lone REPLACING LEADING should compile");
+        assert!(module.validate().is_empty(), "validate: {:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"and".to_string()), "leading run uses an `and` active flag: {os:?}");
+    }
+
+    #[test]
+    fn inspect_combined_tally_replacing_leading_now_compiles() {
+        // A combined `TALLYING … REPLACING LEADING` is now supported — the LEADING
+        // replace half threads the same `active` run flag inside the combined form.
+        // The module must compile, validate, and carry the leading-run `and`.
+        let module = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
+                &[
+                    "INSPECT S TALLYING C FOR ALL \"B\" REPLACING LEADING \"A\" BY \"X\".",
+                    "DISPLAY S.",
+                    "STOP RUN.",
+                ],
+            ),
+            "insp_comb_repl_lead",
+        )
+        .expect("combined TALLYING … REPLACING LEADING should compile");
+        assert!(module.validate().is_empty(), "validate: {:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"and".to_string()), "leading run uses an `and` active flag: {os:?}");
+    }
+
+    #[test]
+    fn inspect_replacing_multi_character_search_is_a_later_rung() {
+        // A 2-char search needs a multi-char scan — a clean Unsupported.
+        let err = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"AB::B\"."],
+                &["INSPECT S REPLACING ALL \"::\" BY \"XY\".", "STOP RUN."],
+            ),
+            "insp_repl_multi",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_replacing_several_items_now_compiles() {
+        // Two `ALL … BY …` replace items in one INSPECT is now supported (the
+        // multi-item first-match-wins path) — it must compile cleanly to a valid
+        // module. (Byte-for-byte agreement with the oracle is pinned by the e2e
+        // `assert_matches_oracle` cases.)
+        let module = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"ABABA\"."],
+                &["INSPECT S REPLACING ALL \"A\" BY \"X\" ALL \"B\" BY \"Y\".", "STOP RUN."],
+            ),
+            "insp_repl_many",
+        )
+        .expect("multi-item INSPECT REPLACING should compile");
+        assert!(module.validate().is_empty(), "module should validate: {:?}", module.validate());
+    }
+
+    #[test]
+    fn inspect_tallying_replacing_now_compiles() {
+        // The combined INSPECT … TALLYING … REPLACING form is now supported — it
+        // composes the two existing lowerings (tally FIRST, then replace), so it
+        // must compile cleanly to a valid module.
+        let module = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
+                &[
+                    "INSPECT S TALLYING C FOR ALL \"A\" REPLACING ALL \"B\" BY \"X\".",
+                    "STOP RUN.",
+                ],
+            ),
+            "insp_tr",
+        )
+        .expect("combined INSPECT should compile");
+        assert!(module.validate().is_empty(), "validate: {:?}", module.validate());
+    }
+
+    #[test]
+    fn inspect_combined_tally_for_leading_now_compiles() {
+        // The combined form's TALLYING half may now be FOR LEADING: it counts only
+        // the leading run of the delimiter, then the REPLACING ALL rebuild runs. It
+        // reuses the lone-TALLYING `leading` lowering, so the module must compile
+        // cleanly and the tally loop's leading-run break emits an `and` active flag.
+        let module = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
+                &[
+                    "INSPECT S TALLYING C FOR LEADING \"A\" REPLACING ALL \"B\" BY \"X\".",
+                    "STOP RUN.",
+                ],
+            ),
+            "insp_tr_lead",
+        )
+        .expect("combined TALLYING FOR LEADING with REPLACING ALL should compile");
+        assert!(module.validate().is_empty(), "validate: {:?}", module.validate());
+    }
+
+    #[test]
+    fn inspect_multi_character_delimiter_is_a_later_rung() {
+        // A single delimiter CHARACTER only this rung; a 2-char literal is rejected.
+        let err = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"AB::B\".", "01  C  PIC 9(3) VALUE 0."],
+                &["INSPECT S TALLYING C FOR ALL \"::\".", "STOP RUN."],
+            ),
+            "insp_multi",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_leading_tally_now_compiles() {
+        // A lone FOR LEADING tally counts only the run of consecutive matches at the
+        // start of the source — now supported; it must compile to a valid module.
+        let module = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
+                &["INSPECT S TALLYING C FOR LEADING \"A\".", "STOP RUN."],
+            ),
+            "insp_lead",
+        )
+        .expect("lone FOR LEADING tally should compile");
+        assert!(module.validate().is_empty(), "validate: {:?}", module.validate());
+    }
+
+    // Alphanumeric → numeric MOVE: the still-deferred receiver/source shapes.
+
+    #[test]
+    fn alphanumeric_to_signed_numeric_move_is_a_later_rung() {
+        // A SIGNED receiver (`PIC S9`) is a later rung — only an UNSIGNED integer
+        // receiver is modelled this cut.
+        let err = compile_source(
+            &wrap(
+                &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC S9(3)."],
+                &["MOVE A TO N.", "STOP RUN."],
+            ),
+            "a2n_signed",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn alphanumeric_to_scaled_numeric_move_lowers() {
+        // A SCALED receiver (`PIC 9(i)V9(d)`, non-zero fractional digits) is now
+        // supported: the source bytes fold into the integer, which IS the scaled
+        // slot magnitude at scale `d`; `store_scaled` keeps the low-order (i+d)
+        // digits via `mod`. No up-scale `mul` is emitted (from-scale == to-scale).
+        let m = compile_source(
+            &wrap(
+                &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC 9(2)V9."],
+                &["MOVE A TO N.", "STOP RUN."],
+            ),
+            "a2n_scaled",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_index".to_string()), "each source byte is read via str_index");
+        assert!(os.contains(&"mod".to_string()), "receiver-width truncation via mod");
+    }
+
+    #[test]
+    fn alphanumeric_to_signed_scaled_numeric_move_is_a_later_rung() {
+        // A SIGNED SCALED receiver (`PIC S9V9`) is still a later rung — only an
+        // UNSIGNED receiver (integer or scaled) is modelled this cut.
+        let err = compile_source(
+            &wrap(
+                &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC S9V9."],
+                &["MOVE A TO N.", "STOP RUN."],
+            ),
+            "a2n_signed_scaled",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn alphanumeric_to_numeric_wide_source_is_a_later_rung() {
+        // A source wider than 18 characters could overflow the i64 fold — a later
+        // rung on both engines.
+        let err = compile_source(
+            &wrap(
+                &["01  A  PIC X(19) VALUE \"0000000000000000042\".", "01  N  PIC 9(3)."],
+                &["MOVE A TO N.", "STOP RUN."],
+            ),
+            "a2n_wide",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn group_to_numeric_move_is_a_later_rung() {
+        // A GROUP source (no picture) into a numeric receiver is a later rung.
+        let err = compile_source(
+            &wrap(
+                &[
+                    "01  G.",
+                    "    05  A  PIC X(2) VALUE \"04\".",
+                    "    05  B  PIC X(1) VALUE \"2\".",
+                    "01  N  PIC 9(3).",
+                ],
+                &["MOVE G TO N.", "STOP RUN."],
+            ),
+            "grp2n",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");

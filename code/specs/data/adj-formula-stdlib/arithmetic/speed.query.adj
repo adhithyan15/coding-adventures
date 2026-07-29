@@ -1,0 +1,18 @@
+% ============================================================================
+% speed.query.adj — a worked example of the distance–speed–time rates library.
+% ============================================================================
+% Run against the shipped stdlib:
+%
+%   adj-lang-cli speed.query.adj
+%
+% "A car covers 150 km in 3 hours" → average speed 150 / 3 = 50 km/h, computed
+% on the CPU by composing the cited `quotient` primitive from arithmetic.adj. The
+% answer carries BOTH the speed definition (primary) and the quotient primitive
+% it built on (corroboration) — the model performs zero arithmetic.
+% ============================================================================
+import "speed.adj"
+
+observe distance(150)
+observe time(3)
+
+? average_speed(distance, time)

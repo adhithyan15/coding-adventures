@@ -3,6 +3,58 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.38] - Unreleased
+
+### Fixed
+
+- **`round()` reports a zero result as positive zero.** Rust's `f64::round`
+  returns `-0.0` for a value that rounds to zero from below (`round(-0.4)`,
+  `round(-0.0)`), but SQLite's `round()` always yields `0.0`. Normalized in the
+  `ROUND` builtin (`-0.0 → +0.0`); non-zero results keep their sign, and a bare
+  `-0.0` literal elsewhere is unaffected (round()-specific).
+
+## [0.4.37] - Unreleased
+
+### Added
+
+- **`TOTAL(x)` aggregate.** Accumulates identically to `SUM` (shared
+  `update_accumulator` arm), but finalizes as `SqlValue::Float(to_f64(sum))` with
+  a `0.0` default — always REAL and never NULL, matching SQLite's `total()`.
+
+## [0.4.36] - Unreleased
+
+### Fixed
+
+- **DISTINCT is now applied before ORDER BY (SQL logical order).** The
+  post-processing phase ran `sort → strip-hidden-sort-columns → distinct → limit`,
+  so a `DISTINCT` group kept whichever row sorted first instead of SQLite's
+  scan-first row — observable when a collation folds rows with different original
+  text (`SELECT DISTINCT x COLLATE NOCASE … ORDER BY x` kept the byte-sort-first
+  `'A'` rather than `'a'`). It now runs `distinct → sort → truncate → limit`.
+- `apply_distinct` gained a `visible_cols` parameter and dedups on ONLY the first
+  `visible_cols` (SELECT-list) columns, so the trailing hidden `__sort_N__`
+  columns — which must survive until the sort reads them — don't pollute the
+  dedup key, and the collation vector still lines up. `visible_cols =
+  post_truncate.unwrap_or(output_columns.len())`, i.e. the visible-column prefix
+  whether or not hidden sort columns were appended. LIMIT still runs last.
+
+## [0.4.35] - Unreleased
+
+### Added
+
+- **A GROUP BY over a bare non-key column reports the group's first-row value,
+  not NULL.** `SELECT c FROM t GROUP BY x` (where `c` is neither a GROUP BY key
+  nor inside an aggregate) returned NULL; SQLite reports such a bare column from
+  the group's FIRST row. The GROUP BY state now keeps a representative row per
+  group — the first source row, snapshotted when the group is created — and the
+  Phase-2 fake row is built from it (via `build_group_fake_row`) with the
+  canonical key-column values overlaid on top, so a bare column resolves to a
+  value while a collated key still reports its original text. Both engines scan
+  an in-memory table in rowid order, so "first row of the group" is
+  deterministic. (The min/max-follows refinement — bare columns tracking the row
+  that holds a `min()`/`max()` — needs an aggregate present, which the projection
+  path does not yet combine with bare columns; a separate ledgered gap.)
+
 ## [0.4.34] - Unreleased
 
 ### Added

@@ -1,0 +1,118 @@
+% ============================================================================
+% ldl-cholesterol-friedewald.adj — the Friedewald estimate of LDL cholesterol
+% (LDL-C = total cholesterol − HDL cholesterol − triglycerides/5) in the ADJ standard library.
+% ============================================================================
+% The Friedewald-LDL entry of the *clinical* track, a lipidology sibling of
+% `non-hdl-cholesterol.adj`. Where `non-hdl-cholesterol.adj` grounds the plain difference
+% non-HDL-C = TC − HDL-C, this grounds the classic FRIEDEWALD estimate of the LDL cholesterol
+% from a fasting lipid panel: LDL CHOLESTEROL IS THE TOTAL CHOLESTEROL, LESS THE HDL
+% CHOLESTEROL, LESS ONE FIFTH OF THE TRIGLYCERIDES — the "/5" standing in for the cholesterol
+% carried by VLDL, whose triglyceride-to-cholesterol ratio is taken as 5:1 in a normal fasting
+% person. It is the first clinical inverter whose definition carries an EMBEDDED NUMERIC
+% CONSTANT (the divide-by-5): the "/5" is part of the cited equation, not a free parameter, so
+% it appears verbatim in every reading of the relation. It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its three exact rearrangements (the
+% total, the HDL, and the triglycerides each recovered from the other three). As with every
+% compute library, a consumer states NO arithmetic: it `import`s this file, binds the measured
+% panel values from its own byte-provenance decomposition, and asks the engine to APPLY the
+% cited equation on the CPU. Zero math is performed by the model; the engine computes each value
+% EXACTLY (the ADJ engine reasons over exact rationals, so the /5 and *5 are exact, not
+% floating-point), carrying the equation's citation.
+%
+%     import "ldl-cholesterol-friedewald.adj"
+%     observe total_cholesterol(200)    % "…total cholesterol 200 mg/dL…"  (span cited by the model)
+%     observe hdl_cholesterol(50)       % "…HDL-C 50 mg/dL…"               (span cited by the model)
+%     observe triglycerides(150)        % "…triglycerides 150 mg/dL…"      (span cited by the model)
+%     ? ldl_cholesterol(total_cholesterol, hdl_cholesterol, triglycerides)
+%                                          % engine → 120, carrying LDL-C = TC − HDL − TG/5
+%
+% All four formulas are EXACT over their parameters, so every value the engine returns is exact.
+% The four COMPOSE and invert cleanly around the worked case total cholesterol = 200 mg/dL,
+% HDL-C = 50 mg/dL, triglycerides = 150 mg/dL (LDL-C = 200 − 50 − 150/5 = 200 − 50 − 30 =
+% 120 mg/dL): the `ldl_cholesterol` a consumer computes from the panel is exactly the
+% `ldl_cholesterol` the `total_cholesterol` formula adds the HDL and the VLDL cholesterol back
+% to (recovering 200), exactly the value the `hdl_cholesterol` formula subtracts from the total
+% along with the VLDL cholesterol (recovering 50), and exactly the value the `triglycerides`
+% formula multiplies the leftover cholesterol back out by 5 to recover (150).
+%
+%   ldl_cholesterol(total_cholesterol, hdl_cholesterol, triglycerides)
+%       = total_cholesterol - hdl_cholesterol - triglycerides / 5       % LDL-C = TC − HDL − TG/5   (definition)
+%   total_cholesterol(ldl_cholesterol, hdl_cholesterol, triglycerides)
+%       = ldl_cholesterol + hdl_cholesterol + triglycerides / 5         % TC = LDL + HDL + TG/5     (solved for TC)
+%   hdl_cholesterol(total_cholesterol, ldl_cholesterol, triglycerides)
+%       = total_cholesterol - ldl_cholesterol - triglycerides / 5       % HDL = TC − LDL − TG/5     (solved for HDL)
+%   triglycerides(total_cholesterol, hdl_cholesterol, ldl_cholesterol)
+%       = (total_cholesterol - hdl_cholesterol - ldl_cholesterol) * 5   % TG = 5·(TC − HDL − LDL)   (solved for TG)
+%
+% NOTE ON UNITS: the three cholesterols and the triglycerides must all be in the SAME unit
+% (milligrams per decilitre, as in the worked case), and the LDL cholesterol comes out in that
+% same unit; the /5 factor is the one that makes the estimate mg/dL-specific — the Friedewald
+% equation as written here uses the mg/dL convention. NOTE ON VALIDITY: the estimate assumes a
+% FASTING sample and is unreliable at high triglycerides (by convention it is not used when the
+% triglyceride level exceeds 400 mg/dL); this library grounds only the arithmetic of the
+% equation, not the eligibility to use it. For a fasting-independent alternative that needs no
+% triglycerides, see the plain non-HDL cholesterol in `non-hdl-cholesterol.adj`.
+%
+% All four formulas are defended by the SAME equation — "LDL-cholesterol = total cholesterol –
+% HDL-C – triglycerides (VLDL)/5" — because that one equation (the LDL is the total minus the
+% HDL minus a fifth of the triglycerides) sanctions the relation read every way. The quote is
+% transcribed verbatim from the StatPearls "Biochemistry, Low Density Lipoprotein" article on
+% the NCBI Bookshelf, so each `formula` carries the provenance envelope every shipped grounded
+% clause carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored —
+% the equation is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable lipid-panel quantity the equation ranges over, and
+% each result is a derived quantity. `ldl_cholesterol`, `total_cholesterol`, `hdl_cholesterol`
+% and `triglycerides` each appear BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are the
+% everyday names a decomposer maps onto the canonical term; the trailing comment records the
+% intended unit.
+% ----------------------------------------------------------------------------
+dictionary ldl_cholesterol_friedewald_vocab {
+    define total_cholesterol : finding  surface "total cholesterol", "TC"                     % milligrams per decilitre (mg/dL)
+    define hdl_cholesterol    : finding  surface "HDL cholesterol", "HDL-C", "HDL"            % milligrams per decilitre (mg/dL)
+    define triglycerides      : finding  surface "triglycerides", "TG"                        % milligrams per decilitre (mg/dL)
+    define ldl_cholesterol    : finding  surface "LDL cholesterol", "LDL-C", "LDL"            % milligrams per decilitre (mg/dL)
+}
+
+% ----------------------------------------------------------------------------
+% The Friedewald equation, all four ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the equation from StatPearls on the
+% NCBI Bookshelf (a quote is required on a shipped formula). The embedded /5 (and its inverse
+% *5) is part of the cited equation; the engine evaluates it exactly over rationals, so every
+% value the engine returns is exact.
+% ----------------------------------------------------------------------------
+formulabook ldl_cholesterol_friedewald_laws {
+    use ldl_cholesterol_friedewald_vocab
+
+    % LDL cholesterol — the total, less the HDL, less a fifth of the triglycerides,
+    % i.e. LDL-C = TC − HDL − TG/5.
+    formula ldl_cholesterol(total_cholesterol, hdl_cholesterol, triglycerides) = total_cholesterol - hdl_cholesterol - triglycerides / 5
+        source "LDL-cholesterol = total cholesterol – HDL-C – triglycerides (VLDL)/5"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500010/"
+        trust authoritative
+
+    % Total cholesterol — the same equation solved for the total (TC = LDL + HDL + TG/5).
+    % Defended by the SAME equation, read the other way.
+    formula total_cholesterol(ldl_cholesterol, hdl_cholesterol, triglycerides) = ldl_cholesterol + hdl_cholesterol + triglycerides / 5
+        source "LDL-cholesterol = total cholesterol – HDL-C – triglycerides (VLDL)/5"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500010/"
+        trust authoritative
+
+    % HDL cholesterol — the same equation solved for the HDL (HDL = TC − LDL − TG/5).
+    % Again the SAME equation, read the third way.
+    formula hdl_cholesterol(total_cholesterol, ldl_cholesterol, triglycerides) = total_cholesterol - ldl_cholesterol - triglycerides / 5
+        source "LDL-cholesterol = total cholesterol – HDL-C – triglycerides (VLDL)/5"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500010/"
+        trust authoritative
+
+    % Triglycerides — the same equation solved for the triglycerides (TG = 5·(TC − HDL − LDL)).
+    % The /5 becomes a ×5 when the equation is inverted for the triglycerides; the SAME equation,
+    % read the fourth way.
+    formula triglycerides(total_cholesterol, hdl_cholesterol, ldl_cholesterol) = (total_cholesterol - hdl_cholesterol - ldl_cholesterol) * 5
+        source "LDL-cholesterol = total cholesterol – HDL-C – triglycerides (VLDL)/5"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500010/"
+        trust authoritative
+}

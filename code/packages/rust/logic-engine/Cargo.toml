@@ -1,9 +1,10 @@
 [package]
 name = "logic-engine"
-version = "0.42.0"
+version = "0.49.0"
 edition = "2021"
 description = "Probability-aware facts, rules, KB, SLD find-first/enumerate + WMC posterior + LP19e likelihood-ratio Bayesian aggregation."
 
 [dependencies]
+coding_adventures_sha256 = { path = "../sha256" }
 logic-core = { path = "../logic-core" }
 bignum-core = { path = "../bignum-core" }

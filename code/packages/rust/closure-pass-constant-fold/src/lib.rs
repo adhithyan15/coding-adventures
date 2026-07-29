@@ -899,14 +899,66 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         Expression::OptionalMemberExpression(m) => fold_optional_member(m, st),
         Expression::OptionalCallExpression(c) => fold_optional_call(c, st),
         Expression::ChainExpression(c) => fold_chain(c, st),
-        Expression::ArrayExpression(a) => Expression::ArrayExpression(ArrayExpression {
-            cv: a.cv.clone(),
-            elements: a
+        Expression::ArrayExpression(a) => {
+            // Fold every element first (so `...[1, 1 + 1]` becomes `...[1, 2]`),
+            // then flatten a spread of an array LITERAL in place:
+            //
+            //   [...[1, 2], 3]     ->  [1, 2, 3]
+            //   [0, ...[1, 2], 3]  ->  [0, 1, 2, 3]
+            //   [...[]]            ->  []
+            //
+            // matching the reference compiler at SIMPLE. A spread over an array
+            // literal produces exactly that array's elements, in order, so
+            // inlining them is behaviour-preserving.
+            //
+            // HOLE GUARD: spread uses the array ITERATOR, which yields
+            // `undefined` for an elision — `[...[1, , 3]]` is `[1, undefined, 3]`,
+            // observably different from `[1, , 3]` (a hole; testable via `in`).
+            // So we only inline when the inner literal is HOLE-FREE (every
+            // element `Some`); a spread whose argument has a hole, or is a string
+            // / identifier / call (`[..."ab"]`, `[...y]`), is left intact. Nested
+            // arrays inside the inner literal are spliced verbatim (only one
+            // spread level flattens per fold; the fixed-point pass handles
+            // `[...[...[1]]]`).
+            let folded: Vec<Option<Expression>> = a
                 .elements
                 .iter()
                 .map(|e| e.as_ref().map(|x| fold_expression(x, st)))
-                .collect(),
-        }),
+                .collect();
+
+            let has_inlinable_spread = folded.iter().any(|el| {
+                matches!(el, Some(Expression::SpreadElement(s))
+                    if matches!(s.argument.as_ref(), Expression::ArrayExpression(inner)
+                        if inner.elements.iter().all(Option::is_some)))
+            });
+
+            if has_inlinable_spread {
+                let mut out: Vec<Option<Expression>> = Vec::with_capacity(folded.len());
+                for el in folded {
+                    match el {
+                        Some(Expression::SpreadElement(s))
+                            if matches!(s.argument.as_ref(), Expression::ArrayExpression(inner)
+                                if inner.elements.iter().all(Option::is_some)) =>
+                        {
+                            if let Expression::ArrayExpression(inner) = *s.argument {
+                                out.extend(inner.elements);
+                            }
+                        }
+                        other => out.push(other),
+                    }
+                }
+                let new_cv = st.fork_cv(&a.cv, "[...[…], …]", "[…, …]");
+                Expression::ArrayExpression(ArrayExpression {
+                    cv: new_cv,
+                    elements: out,
+                })
+            } else {
+                Expression::ArrayExpression(ArrayExpression {
+                    cv: a.cv.clone(),
+                    elements: folded,
+                })
+            }
+        }
         Expression::ObjectExpression(o) => Expression::ObjectExpression(ObjectExpression {
             cv: o.cv.clone(),
             properties: o
@@ -2697,6 +2749,54 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                     }
                 }
 
+                // ---- Math.clz32(n) → numeric literal (0..32) ----
+                //
+                // `Math.clz32` (ECMAScript §21.3.2.11) counts the leading zero
+                // bits of `ToUint32(n)`. The result is always a small
+                // non-negative integer (`0..=32`) with an exact numeric-literal
+                // spelling, computed by pure modular arithmetic (`to_uint32`) —
+                // no libm — so it is bit-identical to the reference compiler:
+                // `clz32(0)` → 32, `clz32(1)` → 31, `clz32(-1)` → 0
+                // (`ToUint32(-1)` = 2³²-1). Only the bare global `Math` with one
+                // numeric-literal argument folds. (Unlike the single-argument
+                // block below, clz32 never yields `-0`, so a negative input that
+                // maps to a `0` result — `clz32(-1)` — must still fold, which is
+                // why it is handled here rather than under the shared `-0` gate.)
+                if obj.name == "Math" && prop.name == "clz32" && arguments.len() == 1 {
+                    if let Expression::NumericLiteral(n) = &arguments[0] {
+                        let result = to_uint32(n.value).leading_zeros() as f64;
+                        let parent = c.cv.clone();
+                        let before = format!("Math.clz32({})", n.value);
+                        let after = format_js_number(result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::Number(result), new_cv);
+                    }
+                }
+
+                // ---- Math.imul(a, b) → numeric literal (32-bit signed product) ----
+                //
+                // `Math.imul` (ECMAScript §21.3.2.19) multiplies
+                // `ToUint32(a) · ToUint32(b)` and keeps the low 32 bits
+                // reinterpreted as a signed int. Pure modular arithmetic — no
+                // libm — so bit-identical: `imul(3, 4)` → 12, `imul(-1, 5)` → -5
+                // (`ToUint32(-1)·5` low-32 = 2³²-5 → -5). Only the bare global
+                // `Math` with exactly two numeric-literal arguments folds. The
+                // result is always a finite 32-bit integer (never `-0`), so no
+                // extra gate is needed.
+                if obj.name == "Math" && prop.name == "imul" && arguments.len() == 2 {
+                    if let (Expression::NumericLiteral(a), Expression::NumericLiteral(b)) =
+                        (&arguments[0], &arguments[1])
+                    {
+                        let result =
+                            (to_uint32(a.value).wrapping_mul(to_uint32(b.value)) as i32) as f64;
+                        let parent = c.cv.clone();
+                        let before = format!("Math.imul({}, {})", a.value, b.value);
+                        let after = format_js_number(result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::Number(result), new_cv);
+                    }
+                }
+
                 // ---- Math.abs/floor/ceil/round(n) → numeric literal ----
                 //
                 // The single-argument numeric `Math` methods (ECMAScript
@@ -2720,7 +2820,10 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                 // finite literal inputs produce finite outputs, so the
                 // `is_finite` check is defense-in-depth.
                 if obj.name == "Math"
-                    && matches!(prop.name.as_str(), "abs" | "floor" | "ceil" | "round")
+                    && matches!(
+                        prop.name.as_str(),
+                        "abs" | "floor" | "ceil" | "round" | "trunc" | "sign"
+                    )
                     && arguments.len() == 1
                 {
                     if let Expression::NumericLiteral(n) = &arguments[0] {
@@ -2730,6 +2833,18 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                             "floor" => x.floor(),
                             "ceil" => x.ceil(),
                             "round" => js_math_round(x),
+                            // `Math.trunc(x)` (ECMAScript 21.3.2.38) removes the
+                            // fractional part, rounding toward zero. Rust's
+                            // `f64::trunc` has the identical rule, including
+                            // `trunc(-0.5) == -0.0` — which the shared negative-
+                            // zero gate below then DECLINES, matching how the
+                            // handler already declines `Math.ceil(-0.5)`.
+                            "trunc" => x.trunc(),
+                            // `Math.sign(x)` (ECMAScript 21.3.2.34) yields -1/-0/+0/+1
+                            // (and NaN for NaN). We can't spell Rust's `signum`
+                            // here because it maps +-0 to +-1; see `js_math_sign`.
+                            // A `-0` result is likewise declined by the gate.
+                            "sign" => js_math_sign(x),
                             _ => unreachable!("matches! guard limits the method set"),
                         };
                         let neg_zero_result = result == 0.0
@@ -2740,6 +2855,58 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                             let after = format_js_number(result);
                             let new_cv = st.fork_cv(&parent, &before, &after);
                             return stamp_literal_cv(FoldedLiteral::Number(result), new_cv);
+                        }
+                    }
+                }
+
+                // ---- Math.fround(n) → n, ONLY at a float32 fixed point ----
+                //
+                // `Math.fround(x)` (ECMAScript §21.3.2.19) rounds `x` to the
+                // nearest IEEE-754 *single-precision* (float32) value, then widens
+                // back to a double. That is EXACTLY Rust's `x as f32 as f64`, so
+                // the round-trip is bit-for-bit reproducible with no `powf`-style
+                // last-ULP hazard.
+                //
+                // The reference compiler folds `Math.fround(x)` ONLY when `x` is
+                // already an exact float32 — i.e. a *fixed point* of the round
+                // trip, where `fround(x) === x` and the fold changes nothing:
+                //
+                //   Math.fround(1.5)      → 1.5     (1.5 is exactly a float32)
+                //   Math.fround(-2.5)     → -2.5
+                //   Math.fround(0)        → 0
+                //   Math.fround(1.1)      → Math.fround(1.1)   (1.1 rounds — DECLINED)
+                //   Math.fround(16777217) → Math.fround(16777217)  (2^24+1 rounds)
+                //
+                // When `fround(x) !== x` the reference LEAVES the call intact (the
+                // rounded constant is no shorter and would change the printed
+                // value), so we mirror that by folding only the fixed point and
+                // declining everything else. The gate `x as f32 as f64 == x`
+                // captures exactly the exact-float32 doubles.
+                //
+                // Scope guards (each keeps us strictly inside the reference's
+                // behaviour and away from unspellable tokens):
+                //   * bare-global `Math.fround` callee, exactly ONE argument, and
+                //     that argument is a NUMERIC LITERAL (no ToNumber side effect);
+                //   * `x.is_finite()` — `NaN`/`Infinity` are identifiers, never
+                //     numeric literals, so they cannot reach here from source; the
+                //     guard is defense-in-depth against a pre-folded infinity;
+                //   * a `-0` fixed point is DECLINED (`-0` has no numeric-literal
+                //     token; declining is always safe), mirroring the negative-zero
+                //     care in the Math.abs/floor block above.
+                if obj.name == "Math"
+                    && prop.name == "fround"
+                    && arguments.len() == 1
+                {
+                    if let Expression::NumericLiteral(n) = &arguments[0] {
+                        let x = n.value;
+                        let is_float32_fixed_point = x.is_finite() && (x as f32 as f64) == x;
+                        let neg_zero = x == 0.0 && x.is_sign_negative();
+                        if is_float32_fixed_point && !neg_zero {
+                            let parent = c.cv.clone();
+                            let before = format!("Math.fround({x})");
+                            let after = format_js_number(x);
+                            let new_cv = st.fork_cv(&parent, &before, &after);
+                            return stamp_literal_cv(FoldedLiteral::Number(x), new_cv);
                         }
                     }
                 }
@@ -6233,6 +6400,34 @@ fn js_math_round(x: f64) -> f64 {
     }
 }
 
+/// Evaluate `Math.sign(x)` per ECMAScript §21.3.2.34. The result preserves the
+/// SIGN of a zero input (`sign(+0) == +0`, `sign(-0) == -0`) and is `NaN` for
+/// `NaN`; otherwise it is `+1` for a positive input and `-1` for a negative one.
+///
+/// Rust's `f64::signum` is deliberately NOT used: it maps `+0.0`→`+1.0` and
+/// `-0.0`→`-1.0`, which would corrupt the zero cases. Our callers only pass
+/// finite numeric literals (never `NaN`), and the caller's shared negative-zero
+/// gate then declines the `sign(-0) == -0` result — matching how the same
+/// handler already declines `Math.ceil(-0.5)` — so this stays a faithful,
+/// standalone model.
+///
+/// | x        | Math.sign(x) |
+/// |----------|--------------|
+/// | NaN      | NaN          |
+/// | +0 / -0  | +0 / -0      |
+/// | x > 0    | +1           |
+/// | x < 0    | -1           |
+fn js_math_sign(x: f64) -> f64 {
+    if x.is_nan() || x == 0.0 {
+        // NaN and both zeroes map to themselves (preserving the signed zero).
+        x
+    } else if x > 0.0 {
+        1.0
+    } else {
+        -1.0
+    }
+}
+
 /// Evaluate `Math.max(values…)` per ECMAScript §21.3.2.24: the largest value,
 /// with `+0` preferred over `-0`, and `NaN` if any input is NaN. (Our callers
 /// only pass numeric literals, which are never NaN, but the NaN guard keeps the
@@ -8200,6 +8395,51 @@ mod tests {
         );
         let (_out, _, changed, _) = run_pass(program_with_expr(m_spread, true));
         assert!(!changed, "[1,2,...x].length must not fold — spread length is unknown");
+    }
+
+    /// `[...[1, 2], 3]` → `[1, 2, 3]` — a spread of a hole-free array literal
+    /// inlines its elements into the enclosing array literal.
+    #[test]
+    fn spread_of_array_literal_flattens() {
+        let inner = array_opt(vec![Some(num(1.0, None)), Some(num(2.0, None))]);
+        let spread = Expression::SpreadElement(SpreadElement { cv: None, argument: Box::new(inner) });
+        let arr = array_opt(vec![Some(spread), Some(num(3.0, None))]);
+        let (out, _, changed, _) = run_pass(program_with_expr(arr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => {
+                let vals: Vec<f64> = a
+                    .elements
+                    .iter()
+                    .map(|e| match e {
+                        Some(Expression::NumericLiteral(n)) => n.value,
+                        other => panic!("expected numeric element; got {other:?}"),
+                    })
+                    .collect();
+                assert_eq!(vals, vec![1.0, 2.0, 3.0]);
+            }
+            other => panic!("expected [1,2,3]; got {other:?}"),
+        }
+    }
+
+    /// `[...[1, , 3]]` — a spread whose inner literal has a HOLE is NOT inlined:
+    /// spread iterates and yields `undefined` for the hole, which is observably
+    /// different from a hole, so the spread is left intact.
+    #[test]
+    fn spread_of_array_literal_with_hole_declines() {
+        let inner = array_opt(vec![Some(num(1.0, None)), None, Some(num(3.0, None))]);
+        let spread = Expression::SpreadElement(SpreadElement { cv: None, argument: Box::new(inner) });
+        let arr = array_opt(vec![Some(spread)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(arr, true));
+        assert!(!changed, "a hole-carrying inner literal must NOT be inlined");
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => assert!(
+                matches!(a.elements.as_slice(), [Some(Expression::SpreadElement(_))]),
+                "the spread must survive intact; got {:?}",
+                a.elements
+            ),
+            other => panic!("expected an array with a surviving spread; got {other:?}"),
+        }
     }
 
     // -----------------------------------------------------------------
@@ -12629,8 +12869,9 @@ mod tests {
 
     #[test]
     fn math_other_methods_do_not_fold() {
-        // pow is not among the modelled methods (max/min/abs/floor/ceil/round);
-        // e.g. Math.pow(2, 3) is left alone.
+        // pow is not among the modelled methods
+        // (max/min/abs/floor/ceil/round/trunc/sign); e.g. Math.pow(2, 3) is
+        // left alone. (Modelling pow is tracked separately.)
         let c = math_call("pow", vec![num(2.0, None), num(3.0, None)]);
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "Math.pow(2, 3) is not modelled and must not fold");
@@ -12664,6 +12905,139 @@ mod tests {
     }
 
     #[test]
+    fn fold_math_trunc_basic() {
+        // Math.trunc removes the fractional part, rounding toward zero.
+        assert_eq!(folded_number(math_call("trunc", vec![num(4.9, None)])), 4.0);
+        assert_eq!(folded_number(math_call("trunc", vec![num(4.1, None)])), 4.0);
+        assert_eq!(folded_number(math_call("trunc", vec![num(-4.9, None)])), -4.0);
+        assert_eq!(folded_number(math_call("trunc", vec![num(-4.1, None)])), -4.0);
+        assert_eq!(folded_number(math_call("trunc", vec![num(7.0, None)])), 7.0);
+        // A positive fraction truncating to +0 is representable and folds.
+        assert_eq!(folded_number(math_call("trunc", vec![num(0.5, None)])), 0.0);
+    }
+
+    #[test]
+    fn fold_math_sign_basic() {
+        // Math.sign yields -1 / +1 for negative / positive, and preserves +0.
+        assert_eq!(folded_number(math_call("sign", vec![num(7.0, None)])), 1.0);
+        assert_eq!(folded_number(math_call("sign", vec![num(0.5, None)])), 1.0);
+        assert_eq!(folded_number(math_call("sign", vec![num(-3.0, None)])), -1.0);
+        assert_eq!(folded_number(math_call("sign", vec![num(-0.001, None)])), -1.0);
+        assert_eq!(folded_number(math_call("sign", vec![num(0.0, None)])), 0.0);
+    }
+
+    #[test]
+    fn math_trunc_sign_negative_zero_declines() {
+        // A -0 result has no faithful numeric-literal spelling, so both decline
+        // (consistent with the ceil/round -0 policy):
+        //   Math.trunc(-0.5) === -0   Math.sign(-0) === -0
+        let cases = [
+            math_call("trunc", vec![num(-0.5, None)]),
+            math_call("sign", vec![num(-0.0, None)]),
+        ];
+        for c in cases {
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "a -0 result must not fold (no -0 literal spelling)");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn fold_math_fround_fixed_point() {
+        // Math.fround folds ONLY at a float32 fixed point (fround(x) === x), and
+        // then leaves the value unchanged. Every dyadic rational with a small
+        // enough denominator and exponent is exactly representable in float32.
+        assert_eq!(folded_number(math_call("fround", vec![num(1.5, None)])), 1.5);
+        assert_eq!(folded_number(math_call("fround", vec![num(-2.5, None)])), -2.5);
+        assert_eq!(folded_number(math_call("fround", vec![num(0.0, None)])), 0.0);
+        assert_eq!(folded_number(math_call("fround", vec![num(0.5, None)])), 0.5);
+        assert_eq!(folded_number(math_call("fround", vec![num(0.25, None)])), 0.25);
+        // Any integer up to 2^24 is exactly a float32.
+        assert_eq!(
+            folded_number(math_call("fround", vec![num(16777216.0, None)])),
+            16777216.0
+        );
+    }
+
+    #[test]
+    fn fold_math_fround_declines_non_float32() {
+        // A double that is NOT already a float32 would be CHANGED by fround, so
+        // the reference (and we) leave the call intact.
+        let cases = [
+            math_call("fround", vec![num(1.1, None)]),        // rounds
+            math_call("fround", vec![num(0.1, None)]),        // rounds
+            math_call("fround", vec![num(16777217.0, None)]), // 2^24+1, rounds
+        ];
+        for c in cases {
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "a non-float32 double must not fold via fround");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn fold_math_fround_declines_negative_zero() {
+        // fround(-0) === -0, but -0 has no numeric-literal spelling, so decline
+        // (matching the Math.abs/floor negative-zero policy). `-0` also cannot
+        // reach here from source — it parses as unary minus on `0` — so this
+        // guards only a hypothetically pre-folded -0 literal.
+        let c = math_call("fround", vec![num(-0.0, None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "a -0 fround fixed point must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn fold_math_clz32_basic() {
+        // clz32 counts leading zero bits of ToUint32(n): 0..32.
+        assert_eq!(folded_number(math_call("clz32", vec![num(0.0, None)])), 32.0);
+        assert_eq!(folded_number(math_call("clz32", vec![num(1.0, None)])), 31.0);
+        assert_eq!(folded_number(math_call("clz32", vec![num(256.0, None)])), 23.0);
+        // ToUint32(-1) == 2^32-1 (top bit set) → 0 leading zeros; must still fold
+        // (a negative input with a 0 result is +0 here, NOT the -0 the unary
+        // fold's gate would decline).
+        assert_eq!(folded_number(math_call("clz32", vec![num(-1.0, None)])), 0.0);
+        // ToUint32 truncates toward zero: clz32(3.9) == clz32(3) == 30.
+        assert_eq!(folded_number(math_call("clz32", vec![num(3.9, None)])), 30.0);
+    }
+
+    #[test]
+    fn fold_math_imul_basic() {
+        // 32-bit signed multiply of ToUint32 operands.
+        assert_eq!(
+            folded_number(math_call("imul", vec![num(3.0, None), num(4.0, None)])),
+            12.0
+        );
+        assert_eq!(
+            folded_number(math_call("imul", vec![num(-1.0, None), num(5.0, None)])),
+            -5.0
+        );
+        // 65536 * 65536 == 2^32, low 32 bits are 0.
+        assert_eq!(
+            folded_number(math_call("imul", vec![num(65536.0, None), num(65536.0, None)])),
+            0.0
+        );
+    }
+
+    #[test]
+    fn math_clz32_imul_non_literal_or_wrong_arity_declines() {
+        // Non-literal arg, and any arity other than clz32/1 and imul/2, decline.
+        let cases = [
+            math_call("clz32", vec![ident("x")]),
+            math_call("clz32", vec![]),
+            math_call("clz32", vec![num(1.0, None), num(2.0, None)]),
+            math_call("imul", vec![num(2.0, None)]),
+            math_call("imul", vec![num(2.0, None), ident("y")]),
+            math_call("imul", vec![num(2.0, None), num(3.0, None), num(4.0, None)]),
+        ];
+        for c in cases {
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "clz32/imul must decline non-literal / wrong arity");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
     fn math_unary_negative_zero_result_does_not_fold() {
         // Results that are (or, from a negative input, would be) -0 have no
         // faithful numeric-literal spelling, so they DECLINE:
@@ -12686,7 +13060,7 @@ mod tests {
 
     #[test]
     fn math_unary_non_literal_or_wrong_arity_does_not_fold() {
-        for method in ["abs", "floor", "ceil", "round"] {
+        for method in ["abs", "floor", "ceil", "round", "trunc", "sign"] {
             // Non-literal argument.
             let c = math_call(method, vec![ident("x")]);
             let (out, _, changed, _) = run_pass(program_with_expr(c, true));

@@ -63,6 +63,50 @@ fn assert_matches_oracle(src: &str) -> String {
     jit
 }
 
+/// Compile and run on the JIT, returning `Err` if either compilation or the run
+/// itself fails (e.g. an out-of-bounds `str_slice` trap) — the compiled-side
+/// mirror of the oracle's `Result`.
+fn run_on_jit_result(src: &str) -> Result<String, String> {
+    let mut module = compile_source(src, "e2e").map_err(|e| format!("compile: {e:?}"))?;
+    if !module.validate().is_empty() {
+        return Err(format!("validate: {:?}", module.validate()));
+    }
+    let mut vm = VMCore::new();
+    let out: Arc<Mutex<Vec<u8>>> = Arc::new(Mutex::new(Vec::new()));
+    {
+        let out = Arc::clone(&out);
+        vm.builtins_mut().register("putchar", move |args| {
+            let b = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+            out.lock().unwrap().push(b as u8);
+            Ok(Value::Null)
+        });
+    }
+    {
+        let out = Arc::clone(&out);
+        vm.builtins_mut().register("print_str", move |args| {
+            let s = args.first().and_then(Value::as_str).unwrap_or("");
+            out.lock().unwrap().extend_from_slice(s.as_bytes());
+            Ok(Value::Null)
+        });
+    }
+    let backend = GenericCirJit::new();
+    let mut jit = JITCore::new(&mut vm, Box::new(backend));
+    jit.execute_with_jit(&mut vm, &mut module, "main", &[])
+        .map_err(|e| format!("run: {e:?}"))?;
+    let bytes = out.lock().unwrap().clone();
+    Ok(String::from_utf8(bytes).unwrap())
+}
+
+/// A computed reference modification that is out of range must **trap on both
+/// engines**: the oracle returns a `RuntimeError` and the compiled `str_slice`
+/// hits its VM/wasm out-of-bounds bounds check. This pins that agreement.
+fn assert_both_trap(src: &str) {
+    let oracle = run_cobol(src);
+    assert!(oracle.is_err(), "oracle must trap, got {oracle:?}");
+    let jit = run_on_jit_result(src);
+    assert!(jit.is_err(), "compiled path must trap, got {jit:?}");
+}
+
 /// Wrap DATA and PROCEDURE lines into a minimal well-formed program.
 fn wrap(data: &[&str], proc: &[&str]) -> String {
     let mut lines = vec!["IDENTIFICATION DIVISION.", "PROGRAM-ID. P."];
@@ -445,6 +489,157 @@ fn evaluate_on_an_alphanumeric_subject() {
     assert_eq!(eval("B", by_range), "FIRST\n");
     assert_eq!(eval("M", by_range), "FIRST\n"); // high boundary
     assert_eq!(eval("Z", by_range), "REST\n"); // above the range
+}
+
+// ---------------------------------------------------------------------------
+// EVALUATE with a MIXED numeric↔alphanumeric subject/WHEN. Each subject-vs-WHEN
+// comparison now reuses `emit_operand_relation` — the same dispatch an
+// `IF subject <relop> value` relation uses — so EVALUATE inherits IF's full
+// category handling (unsigned / signed / scaled digit images, figuratives, ZERO
+// routing) and its deferral set by construction. Every case is byte-identical to
+// the oracle, whose `subject_in_when` already routes through `compare_operands`.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn evaluate_numeric_subject_alphanumeric_when() {
+    // A numeric subject vs an alphanumeric WHEN value: N PIC 9(3)=42 → digit image
+    // "042". WHEN "042" matches; WHEN "42" space-pads to "42 " ('0' < '4') → no
+    // match — the same byte rule `IF N = "042"` uses.
+    let eval = |body: &[&str]| assert_matches_oracle(&wrap(&["01  N  PIC 9(3) VALUE 42."], body));
+    assert_eq!(
+        eval(&[
+            "EVALUATE N",
+            "WHEN \"042\" DISPLAY \"HIT\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ]),
+        "HIT\n"
+    );
+    assert_eq!(
+        eval(&[
+            "EVALUATE N",
+            "WHEN \"42\" DISPLAY \"HIT\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ]),
+        "MISS\n"
+    );
+}
+
+#[test]
+fn evaluate_signed_numeric_subject_alphanumeric_when() {
+    // A SIGNED numeric subject compares by its overpunched image: PIC S9(3) = -123
+    // → magnitude "123" with the negative sign folded into the units digit → "12L".
+    // WHEN "12L" matches; the positive image "12C" does not.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE -123."],
+        &[
+            "EVALUATE S",
+            "WHEN \"12L\" DISPLAY \"NEG\"",
+            "WHEN \"12C\" DISPLAY \"POS\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "NEG\n");
+}
+
+#[test]
+fn evaluate_scaled_numeric_subject_alphanumeric_when() {
+    // A scaled subject uses its (int + frac) digit image — no decimal point:
+    // PIC 9(2)V9 = 4.2 → "042", so `WHEN "042"` matches.
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(2)V9 VALUE 4.2."],
+        &[
+            "EVALUATE F",
+            "WHEN \"042\" DISPLAY \"HIT\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "HIT\n");
+}
+
+#[test]
+fn evaluate_scaled_numeric_subject_numeric_when_stays_numeric() {
+    // Regression: a scaled numeric subject vs a scaled numeric WHEN value stays a
+    // NUMERIC comparison with scale alignment — PIC 9(2)V9 = 4.2 matches WHEN 4.2.
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(2)V9 VALUE 4.2."],
+        &[
+            "EVALUATE F",
+            "WHEN 4.1 DISPLAY \"LO\"",
+            "WHEN 4.2 DISPLAY \"HIT\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "HIT\n");
+}
+
+#[test]
+fn evaluate_mixed_thru_range() {
+    // A THRU range with alphanumeric bounds against a numeric subject: N=42 →
+    // "042"; the byte-lexical range "040" THRU "045" contains it → match. N=50 →
+    // "050" is above "045" → no match.
+    let eval = |val: &str, body: &[&str]| {
+        assert_matches_oracle(&wrap(&[&format!("01  N  PIC 9(3) VALUE {val}.")], body))
+    };
+    let body = &[
+        "EVALUATE N",
+        "WHEN \"040\" THRU \"045\" DISPLAY \"IN\"",
+        "WHEN OTHER DISPLAY \"OUT\"",
+        "END-EVALUATE.",
+        "STOP RUN.",
+    ];
+    assert_eq!(eval("42", body), "IN\n");
+    assert_eq!(eval("50", body), "OUT\n");
+}
+
+#[test]
+fn evaluate_numeric_subject_when_zero_stays_numeric() {
+    // WHEN ZERO against a numeric subject stays a NUMERIC comparison (inherited
+    // ZERO routing) — N=0 matches numerically, not via the mixed digit-image path.
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9(3) VALUE 0."],
+        &[
+            "EVALUATE N",
+            "WHEN ZERO DISPLAY \"Z\"",
+            "WHEN OTHER DISPLAY \"NZ\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "Z\n");
+}
+
+#[test]
+fn evaluate_alpha_subject_numeric_literal_when_is_a_later_rung() {
+    // An alphanumeric subject vs a numeric-LITERAL WHEN value is a *different*
+    // pairing (numeric literal vs alphanumeric) — deferred and rejected IDENTICALLY
+    // by both engines: the oracle's `compare_operands` errors on the numeric literal
+    // and the compiler's `num_digit_str_operand` rejects it, exactly as the IF
+    // relation defers it.
+    let src = wrap(
+        &["01  G  PIC X(3) VALUE \"042\"."],
+        &[
+            "EVALUATE G",
+            "WHEN 42 DISPLAY \"HIT\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a numeric-literal WHEN vs alpha subject");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a numeric-literal WHEN vs alpha subject"
+    );
 }
 
 #[test]
@@ -1422,6 +1617,246 @@ fn alphanumeric_shorter_literal_space_pads_for_compare() {
     assert_eq!(out, "LT\n");
 }
 
+// -------------------------------------------------------------------------
+// Cross-category MOVE: unsigned-integer numeric → alphanumeric — vs the oracle.
+//
+// The numeric sending item is treated as though it held its digit characters
+// (its zero-padded magnitude image, exactly what DISPLAY shows), then moved by
+// the alphanumeric rules: LEFT-justified, space-padded on the right when the
+// receiver is wider, truncated on the right when narrower.
+// -------------------------------------------------------------------------
+
+#[test]
+fn numeric_to_alphanumeric_move_exact_fit() {
+    // PIC 9(3)=042 → PIC X(3): the whole 3-digit image "042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(3)."],
+        &["MOVE N TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+#[test]
+fn numeric_to_alphanumeric_move_space_pads_on_the_right() {
+    // PIC 9(3)=042 → PIC X(5): "042" left-justified, two trailing spaces.
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(5)."],
+        &["MOVE N TO W.", "DISPLAY W \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "042  |\n");
+}
+
+#[test]
+fn numeric_to_alphanumeric_move_truncates_on_the_right() {
+    // PIC 9(3)=042 → PIC X(2): keeps the leftmost two digits "04".
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(2)."],
+        &["MOVE N TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn numeric_to_alphanumeric_move_single_digit() {
+    // PIC 9(1)=7 → PIC X(3): "7" then two spaces.
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9 VALUE 7.", "01  W  PIC X(3)."],
+        &["MOVE N TO W.", "DISPLAY W \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "7  |\n");
+}
+
+#[test]
+fn numeric_to_alphanumeric_move_of_a_computed_value() {
+    // Compute the source at run time first (ADD builds 123), then MOVE its digit
+    // image into the alphanumeric receiver.
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9(3) VALUE 100.", "01  W  PIC X(4)."],
+        &["ADD 23 TO N.", "MOVE N TO W.", "DISPLAY W \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "123 |\n");
+}
+
+#[test]
+fn scaled_numeric_to_alphanumeric_move_exact_fit() {
+    // An UNSIGNED SCALED source `PIC 9(2)V9 = 4.2` moves its full (int + frac)
+    // digit image "042" — no decimal point — exact fit into X(3).
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(2)V9 VALUE 4.2.", "01  W  PIC X(3)."],
+        &["MOVE F TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+#[test]
+fn scaled_numeric_to_alphanumeric_move_more_fraction_digits() {
+    // `PIC 9(1)V99 = 3.14` → image "314" (1 int digit + 2 frac digits), into X(3).
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(1)V99 VALUE 3.14.", "01  W  PIC X(3)."],
+        &["MOVE F TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(out, "314\n");
+}
+
+#[test]
+fn scaled_numeric_to_alphanumeric_move_space_pads() {
+    // Wider receiver: "042" left-justified into X(5), two trailing spaces.
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(2)V9 VALUE 4.2.", "01  W  PIC X(5)."],
+        &["MOVE F TO W.", "DISPLAY W \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "042  |\n");
+}
+
+#[test]
+fn scaled_numeric_to_alphanumeric_move_truncates() {
+    // Narrower receiver: "042" truncated on the right into X(2) → "04".
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(2)V9 VALUE 4.2.", "01  W  PIC X(2)."],
+        &["MOVE F TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn scaled_numeric_to_alphanumeric_move_of_a_computed_value() {
+    // Build the scaled value at run time first (COMPUTE 1.4 * 3 → 4.2), then MOVE
+    // its digit image "042" into the alphanumeric receiver, then compare it.
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(2)V9 VALUE 0.", "01  W  PIC X(3)."],
+        &[
+            "COMPUTE F = 1.4 * 3.",
+            "MOVE F TO W.",
+            "IF W = \"042\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
+// -------------------------------------------------------------------------
+// SIGNED numeric → alphanumeric MOVE: the image is the magnitude with a
+// TRAILING SIGN OVERPUNCH on the units digit (positive `{A…I`, negative
+// `}J…R`), then moved by the alphanumeric rule. Every case is byte-identical
+// to the cobol-runtime oracle.
+// -------------------------------------------------------------------------
+
+#[test]
+fn signed_numeric_to_alphanumeric_move_positive_exact_fit() {
+    // S9(3) = +123 → magnitude "123", units 3 positive → 'C' → "12C" into X(3).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE 123.", "01  W  PIC X(3)."],
+        &["MOVE S TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(out, "12C\n");
+}
+
+#[test]
+fn signed_numeric_to_alphanumeric_move_positive_space_pads() {
+    // Into a WIDER X(5): "12C" left-justified, right space-padded → "12C  ".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE 123.", "01  W  PIC X(5)."],
+        &["MOVE S TO W.", "DISPLAY W \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "12C  |\n");
+}
+
+#[test]
+fn signed_numeric_to_alphanumeric_move_truncates_on_the_right() {
+    // Into a NARROWER X(2): the image "12C" keeps its leftmost two chars → "12".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE 123.", "01  W  PIC X(2)."],
+        &["MOVE S TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(out, "12\n");
+}
+
+#[test]
+fn signed_numeric_to_alphanumeric_move_negative() {
+    // S9(3) = -123 → units 3 negative → 'L' → "12L".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE -123.", "01  W  PIC X(3)."],
+        &["MOVE S TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(out, "12L\n");
+}
+
+#[test]
+fn signed_numeric_to_alphanumeric_move_units_digit_zero() {
+    // Units digit 0 selects '{' (positive) / '}' (negative).
+    let neg = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE -120.", "01  W  PIC X(3)."],
+        &["MOVE S TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(neg, "12}\n");
+    let pos = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE 120.", "01  W  PIC X(3)."],
+        &["MOVE S TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(pos, "12{\n");
+}
+
+#[test]
+fn signed_scaled_numeric_to_alphanumeric_move() {
+    // S9V9 = -4.2 → magnitude "42", overpunch units 2 negative → 'K' → "4K".
+    let neg = assert_matches_oracle(&wrap(
+        &["01  F  PIC S9V9 VALUE -4.2.", "01  W  PIC X(2)."],
+        &["MOVE F TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(neg, "4K\n");
+    // +4.2 → units 2 positive → 'B' → "4B".
+    let pos = assert_matches_oracle(&wrap(
+        &["01  F  PIC S9V9 VALUE 4.2.", "01  W  PIC X(2)."],
+        &["MOVE F TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(pos, "4B\n");
+}
+
+#[test]
+fn signed_numeric_to_alphanumeric_move_of_a_computed_value() {
+    // Build a signed value by arithmetic (COMPUTE 2 - 9 = -7 into S9(2)), then MOVE
+    // its overpunched image "0P" (units 7 negative → 'P') into the receiver.
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC S9(2) VALUE 0.", "01  W  PIC X(2)."],
+        &[
+            "COMPUTE N = 2 - 9.",
+            "MOVE N TO W.",
+            "IF W = \"0P\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
+#[test]
+fn signed_value_truncating_to_zero_magnitude_is_positive() {
+    // COBOL has no negative zero: -1000 high-order-truncated into PIC S9(3) stores
+    // an all-zero slot, which is POSITIVE — its overpunched image is "00{" (units 0,
+    // positive), and DISPLAY of the signed field agrees. Both engines must produce
+    // "00{" (the compiler's single-i64 slot collapses to a plain 0; the oracle drops
+    // the sign of a stored-zero magnitude). Regression for a sign-of-zero divergence.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC S9(4) VALUE -1000.", "01  S  PIC S9(3).", "01  W  PIC X(3)."],
+        &["MOVE A TO S.", "MOVE S TO W.", "DISPLAY W.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "00{\n00{\n");
+}
+
+#[test]
+fn numeric_to_alphanumeric_move_result_compares_alphanumerically() {
+    // The MOVE result is a genuine alphanumeric value: comparing it against a
+    // string literal agrees with the oracle. PIC 9(3)=42 → "042" into X(3).
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(3)."],
+        &[
+            "MOVE N TO W.",
+            "IF W EQUAL \"042\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
 #[test]
 fn alphanumeric_compare_against_spaces_figurative() {
     // A blank field equals SPACES; a non-blank one does not.
@@ -1438,6 +1873,34 @@ fn alphanumeric_compare_against_spaces_figurative() {
 }
 
 #[test]
+fn figurative_vs_figurative_comparison() {
+    // Comparing two figurative constants: each has no length to borrow, so both
+    // resolve to a single fill character (`ZERO` → "0", `SPACE` → " "), matching the
+    // oracle. ZERO = ZERO and SPACE = SPACE are true; ZERO ≠ SPACE and, by byte
+    // ('0'=0x30 > ' '=0x20), ZERO > SPACE / SPACE < ZERO.
+    let zz = assert_matches_oracle(&wrap(
+        &["01  D  PIC X(1)."],
+        &["IF ZERO = ZERO DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(zz, "T\n");
+    let ss = assert_matches_oracle(&wrap(
+        &["01  D  PIC X(1)."],
+        &["IF SPACE = SPACE DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(ss, "T\n");
+    let zs = assert_matches_oracle(&wrap(
+        &["01  D  PIC X(1)."],
+        &[
+            "IF ZERO = SPACE DISPLAY \"E\" ELSE DISPLAY \"N\".",
+            "IF ZERO > SPACE DISPLAY \"G\" ELSE DISPLAY \"L\".",
+            "IF SPACE < ZERO DISPLAY \"S\" ELSE DISPLAY \"B\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(zs, "N\nG\nS\n");
+}
+
+#[test]
 fn char_move_then_compare_round_trips() {
     // Prove the moved value round-trips through the str slot and compares equal.
     let out = assert_matches_oracle(&wrap(
@@ -1445,6 +1908,450 @@ fn char_move_then_compare_round_trips() {
         &["MOVE W TO V.", "IF V EQUAL W DISPLAY \"SAME\".", "STOP RUN."],
     ));
     assert_eq!(out, "SAME\n");
+}
+
+// -------------------------------------------------------------------------
+// Cross-category MOVE: alphanumeric → numeric (the reverse direction) — vs the
+// oracle.
+//
+// An alphanumeric source (`PIC X(m)`) moved into an UNSIGNED INTEGER receiver
+// (`PIC 9(n)`, no `S`, no `V`) is read as an unsigned integer formed from its
+// characters as digits, then de-scaled into the receiver: RIGHT-justified —
+// left-zero-padded when the source has fewer than `n` digits, high-order-
+// truncated when more, i.e. `receiver = (integer from the m source chars) mod
+// 10^n`. Both engines fold the identical per-character arithmetic
+// (`value = value*10 + (byte - '0')`, left to right), so they agree byte-for-byte.
+// -------------------------------------------------------------------------
+
+#[test]
+fn alphanumeric_to_numeric_move_exact_fit() {
+    // PIC X(3)="042" → PIC 9(3): fold 0,4,2 → 42; DISPLAY shows "042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC 9(3)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+#[test]
+fn alphanumeric_to_numeric_move_space_source_agrees_no_stray_sign() {
+    // Regression: a SPACE source byte (0x20) is below '0', so `(b-'0')` is
+    // negative and the fold goes negative. A `PIC 9` field is unsigned, so BOTH
+    // engines must store the MAGNITUDE — never a stray '-' in the numeric field.
+    // (An uninitialised `PIC X` is spaces, so this is a common, non-adversarial
+    // case.) " " → fold -16 → magnitude 16 → PIC 9(3) "016"; the compiler and the
+    // oracle must agree (assert_matches_oracle fails if they don't).
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(1) VALUE \" \".", "01  N  PIC 9(3)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "016\n");
+    // A mixed space+digit source stays consistent too: " 5" → fold -155 →
+    // magnitude 155 → PIC 9(3) "155".
+    let out2 = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \" 5\".", "01  N  PIC 9(3)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out2, "155\n");
+}
+
+#[test]
+fn alphanumeric_to_numeric_move_shorter_source_zero_pads() {
+    // PIC X(2)="05" → PIC 9(4): fold → 5, right-justified into 4 digits "0005".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \"05\".", "01  N  PIC 9(4)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0005\n");
+}
+
+#[test]
+fn alphanumeric_to_numeric_move_longer_source_truncates_high_order() {
+    // PIC X(5)="12345" → PIC 9(3): fold → 12345, keep the low-order 3 → 345.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(5) VALUE \"12345\".", "01  N  PIC 9(3)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "345\n");
+}
+
+#[test]
+fn alphanumeric_to_numeric_move_single_digit() {
+    // PIC X(1)="7" → PIC 9(1): fold → 7.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(1) VALUE \"7\".", "01  N  PIC 9(1)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "7\n");
+}
+
+#[test]
+fn alphanumeric_to_numeric_move_then_arithmetic() {
+    // The moved value is a genuine number: MOVE "40" into 9(3)=040, ADD 2 → 042.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \"40\".", "01  N  PIC 9(3)."],
+        &["MOVE A TO N.", "ADD 2 TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+#[test]
+fn alphanumeric_to_numeric_move_used_in_compute() {
+    // MOVE "06" into 9(3)=006, then COMPUTE R = N * 7 → 42 → "042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \"06\".", "01  N  PIC 9(3).", "01  R  PIC 9(3)."],
+        &["MOVE A TO N.", "COMPUTE R = N * 7.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+#[test]
+fn numeric_alpha_numeric_round_trip() {
+    // numeric → alphanumeric → numeric: 9(3)=42 → X(3)="042" → 9(3)=42.
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(3).", "01  M  PIC 9(3)."],
+        &["MOVE N TO W.", "MOVE W TO M.", "DISPLAY M.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+// -------------------------------------------------------------------------
+// Cross-category alphanumeric → SCALED numeric MOVE — vs the oracle.
+//
+// An alphanumeric source (`PIC X(m)`) moved into an UNSIGNED SCALED receiver
+// `PIC 9(i)V9(d)` (`d > 0`) folds its `m` characters into an unsigned integer
+// `V`; that fold IS the receiver's scaled-slot magnitude directly — it fills the
+// `(i + d)` digit positions RIGHT-justified, the implied point `d` places from
+// the right. So the slot is `V mod 10^(i+d)`. This is NOT the arithmetic
+// decimal-align rule (`V` is not multiplied by `10^d`). DISPLAY shows the raw
+// `(i + d)` digits (no point). Both engines fold the identical arithmetic and
+// keep the low-order `(i + d)` digits, so they agree byte-for-byte.
+// -------------------------------------------------------------------------
+
+#[test]
+fn alphanumeric_to_scaled_numeric_move_exact_fit() {
+    // PIC X(3)="042" → PIC 9(2)V9: fold → 42, slot 042, reads 4.2 → DISPLAY "042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC 9(2)V9."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+#[test]
+fn alphanumeric_to_scaled_numeric_move_shorter_source_zero_pads() {
+    // PIC X(2)="42" → PIC 9(2)V9: fold → 42, slot 042 (left-zero-padded to the 3
+    // positions), reads 4.2 → DISPLAY "042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \"42\".", "01  N  PIC 9(2)V9."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+#[test]
+fn alphanumeric_to_scaled_numeric_move_longer_source_truncates_high_order() {
+    // PIC X(5)="12345" → PIC 9(2)V9: fold → 12345, keep the low-order (i+d)=3
+    // digits → slot 345, reads 34.5 → DISPLAY "345".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(5) VALUE \"12345\".", "01  N  PIC 9(2)V9."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "345\n");
+}
+
+#[test]
+fn alphanumeric_to_scaled_numeric_move_more_fraction_than_source_digits() {
+    // PIC X(1)="5" → PIC 9(1)V99: fold → 5, slot 005 (magnitude shorter than
+    // i+d=3), reads 0.05 → DISPLAY "005".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(1) VALUE \"5\".", "01  N  PIC 9(1)V99."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "005\n");
+}
+
+#[test]
+fn alphanumeric_to_scaled_numeric_move_then_arithmetic() {
+    // The moved slot is a genuine scaled number: MOVE "042" into 9(2)V9 = 4.2, then
+    // ADD 1.3 → 5.5 → slot "055".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC 9(2)V9."],
+        &["MOVE A TO N.", "ADD 1.3 TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "055\n");
+}
+
+#[test]
+fn alphanumeric_to_scaled_numeric_move_space_source_agrees_no_stray_sign() {
+    // A SPACE source byte (0x20) is below '0', so the fold goes negative; an
+    // unsigned scaled `PIC 9V9` field keeps the MAGNITUDE. " " → fold -16 →
+    // magnitude 16 → slot 016 → reads 1.6. Both engines must agree.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(1) VALUE \" \".", "01  N  PIC 9(2)V9."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "016\n");
+}
+
+// -------------------------------------------------------------------------
+// Mixed numeric ↔ alphanumeric comparison — vs the oracle.
+//
+// When a relation compares an UNSIGNED-INTEGER numeric operand with an
+// ALPHANUMERIC one (a `PIC X` item or a string literal), COBOL treats the
+// numeric operand as though moved to an alphanumeric field — its n-digit
+// zero-padded digit image — then compares by the alphanumeric byte rule (the
+// shorter side space-padded on the right, byte-by-byte). Both engines build the
+// identical image and run the identical space-padded `str_cmp`, so the compiled
+// program is byte-identical to the oracle. A signed / scaled numeric operand, a
+// numeric literal, or a group item in a mixed relation is a clean later rung.
+// -------------------------------------------------------------------------
+
+#[test]
+fn mixed_numeric_equals_matching_literal() {
+    // NUM PIC 9(3)=42 → image "042"; "042" = "042" → equal.
+    let out = assert_matches_oracle(&wrap(
+        &["01  NUM  PIC 9(3) VALUE 42."],
+        &["IF NUM = \"042\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
+#[test]
+fn mixed_numeric_space_pad_mismatch() {
+    // "042" vs "42" → the shorter literal space-pads to "42 "; '0' < '4' → not
+    // equal. (A DISPLAY-style value comparison would wrongly call these equal —
+    // this pins the alphanumeric byte rule.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  NUM  PIC 9(3) VALUE 42."],
+        &["IF NUM = \"42\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "NO\n");
+}
+
+#[test]
+fn mixed_numeric_greater_ordering() {
+    // "042" > "040" → '2' > '0' at the last position → greater.
+    let out = assert_matches_oracle(&wrap(
+        &["01  NUM  PIC 9(3) VALUE 42."],
+        &["IF NUM > \"040\" DISPLAY \"GT\" ELSE DISPLAY \"LE\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "GT\n");
+}
+
+#[test]
+fn mixed_numeric_on_the_right_operand() {
+    // The numeric operand on the RIGHT lowers identically: "042" = "042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  NUM  PIC 9(3) VALUE 42."],
+        &["IF \"042\" = NUM DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
+#[test]
+fn mixed_numeric_against_a_pic_x_item() {
+    // The alphanumeric side is a `PIC X` item (not a literal): W = "042" equals
+    // NUM's image "042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  NUM  PIC 9(3) VALUE 42.", "01  W  PIC X(3) VALUE \"042\"."],
+        &["IF NUM = W DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
+#[test]
+fn mixed_numeric_symbolic_operators() {
+    // Symbolic `>=` and `<` operators lower through the same path: "042" >= "042"
+    // (equal) and "042" < "050".
+    let out = assert_matches_oracle(&wrap(
+        &["01  NUM  PIC 9(3) VALUE 42."],
+        &[
+            "IF NUM >= \"042\" DISPLAY \"GE\" ELSE DISPLAY \"LT\".",
+            "IF NUM < \"050\" DISPLAY \"LT\" ELSE DISPLAY \"GE\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "GE\nLT\n");
+}
+
+#[test]
+fn mixed_numeric_wider_field_space_pads_the_literal() {
+    // A wider numeric field, shorter literal: NUM PIC 9(4)=42 → "0042"; the
+    // literal "42" pads to "42  " (width 4) → not equal, and "0042" < "42  ".
+    let out = assert_matches_oracle(&wrap(
+        &["01  NUM  PIC 9(4) VALUE 42."],
+        &["IF NUM < \"42\" DISPLAY \"LT\" ELSE DISPLAY \"GE\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "LT\n");
+}
+
+// A SIGNED numeric operand in a mixed relation compares by its magnitude image
+// with the operational sign folded into a TRAILING OVERPUNCH on the units digit
+// (positive `{A…I`, negative `}J…R`) — the same image the signed→alphanumeric
+// MOVE produces. Every case is byte-identical to the cobol-runtime oracle.
+
+#[test]
+fn mixed_signed_negative_equals_its_overpunched_image() {
+    // `PIC S9(3) = -123` → magnitude "123", units 3 negative → 'L' → "12L", so
+    // `IF S = "12L"` is TRUE and `IF S = "12C"` (the positive image) is FALSE.
+    let eq = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE -123."],
+        &["IF S = \"12L\" DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(eq, "T\n");
+    let ne = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE -123."],
+        &["IF S = \"12C\" DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(ne, "F\n");
+}
+
+#[test]
+fn mixed_signed_positive_equals_its_overpunched_image() {
+    // `PIC S9(3) = +123` → units 3 positive → 'C' → "12C", so `IF S = "12C"` is TRUE.
+    // A signed item with an unsigned VALUE is positive (neg=false).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE 123."],
+        &["IF S = \"12C\" DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "T\n");
+}
+
+#[test]
+fn mixed_signed_units_digit_zero() {
+    // Units digit 0 selects '}' (negative) / '{' (positive).
+    let neg = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE -120."],
+        &["IF S = \"12}\" DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(neg, "T\n");
+    let pos = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE 120."],
+        &["IF S = \"12{\" DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(pos, "T\n");
+}
+
+#[test]
+fn mixed_signed_scaled_equals_its_overpunched_image() {
+    // A scaled `PIC S9V9 = -4.2` → magnitude "42", units 2 negative → 'K' → "4K".
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC S9V9 VALUE -4.2."],
+        &["IF F = \"4K\" DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "T\n");
+}
+
+#[test]
+fn mixed_signed_numeric_ordering() {
+    // Ordering follows the byte comparison of the overpunched images: `-123` → "12L"
+    // and "12L" < "12M" (L=0x4C < M=0x4D), so `IF S < "12M"` is TRUE.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE -123."],
+        &["IF S < \"12M\" DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "T\n");
+}
+
+#[test]
+fn mixed_signed_zero_magnitude_compares_positive() {
+    // COBOL has no negative zero: -1000 high-order-truncated into PIC S9(3) stores an
+    // all-zero POSITIVE slot, whose overpunched image is "00{" (units 0, positive).
+    // Both engines must build "00{", so `IF S = "00{"` is TRUE (no reintroduced
+    // negative-zero divergence).
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC S9(4) VALUE -1000.", "01  S  PIC S9(3)."],
+        &[
+            "MOVE A TO S.",
+            "IF S = \"00{\" DISPLAY \"T\" ELSE DISPLAY \"F\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "T\n");
+}
+
+#[test]
+fn signed_numeric_vs_zero_figurative_is_a_numeric_comparison() {
+    // `IF S = ZERO` on a SIGNED field is a NUMERIC comparison (S vs 0), NOT an
+    // alphanumeric one — so a signed field holding 0 compares EQUAL to ZERO, and a
+    // negative field is LESS THAN ZERO. The ZERO figurative against a numeric operand
+    // must not route the signed item through the overpunch-string path (which would
+    // compare "00{"/"12L" against "000" and answer wrongly). Both engines agree.
+    let zero_eq = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE 0."],
+        &["IF S = ZERO DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(zero_eq, "T\n");
+    // A negative signed field: = ZERO is false, < ZERO is true, > ZERO is false.
+    let neg = assert_matches_oracle(&wrap(
+        &["01  A  PIC S9(3) VALUE 123.", "01  S  PIC S9(3)."],
+        &[
+            "COMPUTE S = 0 - A.",
+            "IF S = ZERO DISPLAY \"E\" ELSE DISPLAY \"N\".",
+            "IF S < ZERO DISPLAY \"L\" ELSE DISPLAY \"G\".",
+            "IF S > ZERO DISPLAY \"P\" ELSE DISPLAY \"M\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(neg, "N\nL\nM\n");
+    // Reversed operand order (ZERO on the left) behaves identically.
+    let rev = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE 0."],
+        &["IF ZERO = S DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(rev, "T\n");
+}
+
+#[test]
+fn mixed_scaled_numeric_equals_its_digit_image() {
+    // An UNSIGNED SCALED operand `PIC 9(2)V9 = 4.2` compares by its (int + frac)
+    // digit image "042" — no decimal point — so `IF F = "042"` is TRUE.
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(2)V9 VALUE 4.2."],
+        &["IF F = \"042\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
+#[test]
+fn mixed_scaled_numeric_ordering() {
+    // The byte rule on the same "042" image: "042" > "040" → true.
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(2)V9 VALUE 4.2."],
+        &["IF F > \"040\" DISPLAY \"GT\" ELSE DISPLAY \"LE\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "GT\n");
+}
+
+#[test]
+fn mixed_scaled_numeric_more_fraction_digits() {
+    // `PIC 9(1)V99 = 3.14` → image "314"; `IF F = "314"` is TRUE.
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(1)V99 VALUE 3.14."],
+        &["IF F = \"314\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
+#[test]
+fn mixed_group_item_vs_numeric_is_a_later_rung() {
+    // A GROUP item on either side of a mixed relation is a later rung — the
+    // compiler does not model group items, so referring to one is `Unsupported`.
+    let err = compile_source(
+        &wrap(
+            &[
+                "01  G.",
+                "    05  A  PIC X(2) VALUE \"04\".",
+                "    05  B  PIC X(1) VALUE \"2\".",
+                "01  NUM  PIC 9(3) VALUE 42.",
+            ],
+            &["IF G = NUM DISPLAY \"Y\".", "STOP RUN."],
+        ),
+        "e2e",
+    )
+    .unwrap_err();
+    assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
 }
 
 // ---------------------------------------------------------------------------
@@ -1557,6 +2464,148 @@ fn refmod_compared_against_another_refmod() {
     assert_eq!(eq, "SAME\n");
 }
 
+// COMPUTED reference modification — `WS(J:K)` where the start and/or length are
+// DATA-NAME (run-time integer) operands, lowered to a run-time `str_slice` over
+// registers computed with `sub`/`add`. Each case runs the compiled JIT output
+// against the oracle byte-for-byte; the out-of-range case pins that BOTH engines
+// trap under the identical `start0 < 0 || end < start0 || end > width` rule.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn refmod_computed_mid_substring() {
+    // WS(J:K) with J=2, K=3 over "ABCDE" → "BCD" — both indices are data items.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  WS  PIC X(5) VALUE \"ABCDE\".",
+            "01  J   PIC 9 VALUE 2.",
+            "01  K   PIC 9 VALUE 3.",
+        ],
+        &["DISPLAY WS(J:K).", "STOP RUN."],
+    ));
+    assert_eq!(out, "BCD\n");
+}
+
+#[test]
+fn refmod_computed_omitted_length_runs_to_end() {
+    // WS(J:) with J=3 has no length → from position 3 to the item end → "CDE".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J   PIC 9 VALUE 3."],
+        &["DISPLAY WS(J:).", "STOP RUN."],
+    ));
+    assert_eq!(out, "CDE\n");
+}
+
+#[test]
+fn refmod_computed_literal_start_data_name_length() {
+    // Mixed indices: a literal start with a computed length (WS(2:K), K=3) still
+    // takes the run-time path because the length is a data-name → "BCD".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  K   PIC 9 VALUE 3."],
+        &["DISPLAY WS(2:K).", "STOP RUN."],
+    ));
+    assert_eq!(out, "BCD\n");
+}
+
+#[test]
+fn refmod_computed_in_if_comparison_against_literal() {
+    // A computed refmod on the left of an IF comparison: WS(J:K) = "ABC" with
+    // J=1, K=3 over "ABCDE" → the THEN branch.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  WS  PIC X(5) VALUE \"ABCDE\".",
+            "01  J   PIC 9 VALUE 1.",
+            "01  K   PIC 9 VALUE 3.",
+        ],
+        &[
+            "IF WS(J:K) = \"ABC\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
+#[test]
+fn refmod_computed_as_evaluate_subject() {
+    // A computed refmod as the EVALUATE subject: WS(J:2) = "BC" with J=2.
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J   PIC 9 VALUE 2."],
+        &[
+            "EVALUATE WS(J:2)",
+            "WHEN \"BC\" DISPLAY \"HIT\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "HIT\n");
+}
+
+#[test]
+fn refmod_computed_index_driven_by_compute() {
+    // The indices come from a COMPUTEd value: J = 1 + 1 = 2, then WS(J:2) = "BC".
+    // Exercises reading a numeric slot that was written at run time, not by VALUE.
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J   PIC 9 VALUE 0."],
+        &["COMPUTE J = 1 + 1.", "DISPLAY WS(J:2).", "STOP RUN."],
+    ));
+    assert_eq!(out, "BC\n");
+}
+
+#[test]
+fn refmod_computed_same_program_in_range_and_comparison() {
+    // The SAME shape (a computed slice compared against another computed slice)
+    // driven with in-range indices: WS(J:2) vs WS(M:2) with J=1, M=4 over
+    // "ABCDE" → "AB" vs "DE" → DIFF; then equal indices → SAME.
+    let diff = assert_matches_oracle(&wrap(
+        &[
+            "01  WS  PIC X(5) VALUE \"ABCDE\".",
+            "01  J   PIC 9 VALUE 1.",
+            "01  M   PIC 9 VALUE 4.",
+        ],
+        &[
+            "IF WS(J:2) = WS(M:2) DISPLAY \"SAME\" ELSE DISPLAY \"DIFF\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(diff, "DIFF\n");
+    let same = assert_matches_oracle(&wrap(
+        &[
+            "01  WS  PIC X(4) VALUE \"ABAB\".",
+            "01  J   PIC 9 VALUE 1.",
+            "01  M   PIC 9 VALUE 3.",
+        ],
+        &[
+            "IF WS(J:2) = WS(M:2) DISPLAY \"SAME\" ELSE DISPLAY \"DIFF\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(same, "SAME\n");
+}
+
+#[test]
+fn refmod_computed_out_of_range_traps_on_both_engines() {
+    // WS(J:K) with J=4, K=5 over a 5-char item runs to position 8 > 5. The oracle
+    // returns a RuntimeError and the compiled str_slice hits its out-of-bounds
+    // bounds check — both engines trap identically.
+    assert_both_trap(&wrap(
+        &[
+            "01  WS  PIC X(5) VALUE \"ABCDE\".",
+            "01  J   PIC 9 VALUE 4.",
+            "01  K   PIC 9 VALUE 5.",
+        ],
+        &["DISPLAY WS(J:K).", "STOP RUN."],
+    ));
+}
+
+#[test]
+fn refmod_computed_zero_start_traps_on_both_engines() {
+    // A start of 0 → start0 = -1 < 0 → out-of-range on both engines.
+    assert_both_trap(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J   PIC 9 VALUE 0."],
+        &["DISPLAY WS(J:2).", "STOP RUN."],
+    ));
+}
+
 // STRING — concatenate sending fields into an alphanumeric receiver
 // (DELIMITED BY SIZE = each source taken in full). The receiver is LEFT-
 // justified, truncated at its width, and — the COBOL surprise — its tail beyond
@@ -1648,3 +2697,4824 @@ fn string_with_numeric_literal_source() {
     ));
     assert_eq!(out, "IT42  \n");
 }
+
+// ---------------------------------------------------------------------------
+// STRING … DELIMITED BY a single-char delimiter — each sending field contributes
+// only its PREFIX up to (not including) the first occurrence of the delimiter in
+// that field; the per-field prefixes are concatenated and overlaid EXACTLY as the
+// DELIMITED BY SIZE path does (leftmost min(len, width), no tail space-fill). The
+// delimiter and any string-literal sending field must be ASCII (the compiler's
+// prefix scan is byte-based; the oracle scans by char). Each case pins the
+// compiled JIT output to the oracle byte-for-byte.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn string_delim_truncates_each_field_at_the_first_delimiter() {
+    // Three fields, each cut at its first comma: "ab,cd"→"ab", "ef"→"ef" (no
+    // comma), "gh,ij"→"gh"; concatenation "abefgh" into a 20-wide receiver.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(5) VALUE \"ab,cd\".",
+            "01  B  PIC X(2) VALUE \"ef\".",
+            "01  C  PIC X(5) VALUE \"gh,ij\".",
+            "01  T  PIC X(20) VALUE SPACES.",
+        ],
+        &[
+            "STRING A B C",
+            "    DELIMITED BY \",\" INTO T.",
+            "DISPLAY T.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "abefgh              \n");
+}
+
+#[test]
+fn string_delim_field_without_the_delimiter_is_taken_whole() {
+    // A field that does not contain the delimiter contributes its ENTIRE image.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \"xy\".", "01  T  PIC X(10) VALUE SPACES."],
+        &["STRING A DELIMITED BY \",\" INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "xy        \n");
+}
+
+#[test]
+fn string_delim_field_starting_with_the_delimiter_contributes_nothing() {
+    // A field whose first char IS the delimiter contributes the empty string, so
+    // only the following field's prefix reaches the receiver.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \",xy\".",
+            "01  B  PIC X(2) VALUE \"AB\".",
+            "01  T  PIC X(6) VALUE SPACES.",
+        ],
+        &[
+            "STRING A B",
+            "    DELIMITED BY \",\" INTO T.",
+            "DISPLAY T.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "AB    \n");
+}
+
+#[test]
+fn string_delim_from_a_pic_x1_identifier() {
+    // The delimiter may be a PIC X(1) item (reduced by the same single_delim_code
+    // UNSTRING uses): DL holds "," so "ab,cd" contributes "ab".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  DL PIC X(1) VALUE \",\".",
+            "01  A  PIC X(5) VALUE \"ab,cd\".",
+            "01  T  PIC X(10) VALUE SPACES.",
+        ],
+        &["STRING A DELIMITED BY DL INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ab        \n");
+}
+
+#[test]
+fn string_delim_result_longer_than_receiver_is_truncated() {
+    // The prefix "abcde" (5 chars) overflows a 4-wide receiver → truncated "abcd".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(7) VALUE \"abcde,f\".", "01  T  PIC X(4) VALUE SPACES."],
+        &["STRING A DELIMITED BY \",\" INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "abcd\n");
+}
+
+#[test]
+fn string_delim_result_shorter_than_receiver_preserves_the_tail() {
+    // The prefix "ab" (2 chars) is overlaid onto a 6-wide receiver holding "ZZZZZZ";
+    // STRING does NOT space-fill, so the untouched tail "ZZZZ" survives.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(5) VALUE \"ab,cd\".", "01  T  PIC X(6) VALUE \"ZZZZZZ\"."],
+        &["STRING A DELIMITED BY \",\" INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "abZZZZ\n");
+}
+
+#[test]
+fn string_delim_mixes_fields_with_and_without_the_delimiter() {
+    // "p,q"→"p", "rs"→"rs" (no comma), "t,u"→"t"; concatenation "prst".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"p,q\".",
+            "01  B  PIC X(2) VALUE \"rs\".",
+            "01  C  PIC X(3) VALUE \"t,u\".",
+            "01  T  PIC X(10) VALUE SPACES.",
+        ],
+        &[
+            "STRING A B C",
+            "    DELIMITED BY \",\" INTO T.",
+            "DISPLAY T.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "prst      \n");
+}
+
+#[test]
+fn string_delimited_by_size_still_takes_each_field_whole() {
+    // Regression: with DELIMITED BY SIZE the delimiter char is NOT special — the
+    // comma inside "ab,cd" stays, and each field is taken in full.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(5) VALUE \"ab,cd\".", "01  T  PIC X(10) VALUE SPACES."],
+        &["STRING A DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ab,cd     \n");
+}
+
+#[test]
+fn string_delim_non_ascii_delimiter_is_a_later_rung() {
+    // A single but NON-ASCII delimiter ("é" is one char / two UTF-8 bytes) would
+    // make the byte-based compiler scan diverge from the char-based oracle, so it
+    // is deferred — rejected on BOTH engines to stay co-total.
+    let src = wrap(
+        &["01  A  PIC X(3) VALUE \"abc\".", "01  T  PIC X(6) VALUE SPACES."],
+        &["STRING A DELIMITED BY \"é\" INTO T.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a non-ASCII delimiter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a non-ASCII delimiter"
+    );
+}
+
+#[test]
+fn string_delim_multi_char_delimiter_is_a_later_rung() {
+    // Only a SINGLE-character delimiter this rung; a 2-char delimiter is deferred.
+    let src = wrap(
+        &["01  A  PIC X(3) VALUE \"abc\".", "01  T  PIC X(6) VALUE SPACES."],
+        &["STRING A DELIMITED BY \"ab\" INTO T.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-char delimiter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-char delimiter"
+    );
+}
+
+#[test]
+fn string_delim_non_ascii_literal_sending_field_is_a_later_rung() {
+    // Under an ACTIVE delimiter a field's prefix boundary is byte-vs-char sensitive,
+    // so a non-ASCII string-LITERAL sending field ("café") is deferred on BOTH
+    // engines. (Under DELIMITED BY SIZE such a literal is fine — no boundary scan.)
+    let src = wrap(
+        &["01  T  PIC X(10) VALUE SPACES."],
+        &["STRING \"café\" DELIMITED BY \",\" INTO T.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a non-ASCII literal field under a delimiter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a non-ASCII literal field under a delimiter"
+    );
+}
+
+#[test]
+fn string_delim_no_overflow_runs_not_clause() {
+    // A delimited STRING whose delimited concatenation FITS ⇒ no overflow, so the
+    // NOT ON OVERFLOW body runs. Each field's prefix (up to ",") is "ab" then "cd" =
+    // "abcd" (4) into a 6-wide receiver — fits, tail preserved. Both engines agree.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(5) VALUE \"ab,zz\".",
+            "01  B  PIC X(5) VALUE \"cd,zz\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A B DELIMITED BY \",\" INTO T",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "abcd..\nNON\n");
+}
+
+// ---------------------------------------------------------------------------
+// STRING … WITH POINTER — overlay the concatenation into the receiver starting
+// at the 1-based position held by an unsigned-integer pointer item, then write
+// the pointer back to `p + chars_placed`. An out-of-range initial pointer (`p ==
+// 0` or `p > size`) is ISO overflow: no transfer, receiver AND pointer left
+// unchanged (ON OVERFLOW is still deferred). Receivers are preloaded with a "."
+// sentinel VALUE so every "unchanged" byte is observable. Every case pins the
+// compiled JIT output to the oracle byte-for-byte (receiver AND pointer).
+// ---------------------------------------------------------------------------
+
+#[test]
+fn string_pointer_one_equals_no_pointer() {
+    // The correctness ANCHOR: `WITH POINTER p` with `p = 1` overlays at position 0,
+    // so the receiver must be IDENTICAL to the same STRING WITHOUT the phrase. The
+    // pointer version then additionally writes the resume position back: 3 chars
+    // placed from position 1 → p := 1 + 3 = 4 ("04").
+    let with_ptr = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"abc\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  P  PIC 9(2) VALUE 1.",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    let no_ptr = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(3) VALUE \"abc\".", "01  T  PIC X(6) VALUE \"......\"."],
+        &["STRING A DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    // No-pointer STRING overlays "abc" over the leftmost 3, preserving the tail.
+    assert_eq!(no_ptr, "abc...\n");
+    // p = 1 fills the SAME receiver, then appends the resume pointer "04".
+    assert_eq!(with_ptr, format!("{no_ptr}04\n"));
+}
+
+#[test]
+fn string_pointer_mid_receiver_preserves_head_and_tail() {
+    // p = 3 overlays at 0-based index 2; "XY" (2 chars) lands at positions 2–3, so
+    // the head (0–1) and tail (4–5) keep their sentinel dots: "..XY..". p := 3 + 2
+    // = 5 ("05"). This pins the overlay-at-offset with BOTH ends preserved.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(2) VALUE \"XY\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  P  PIC 9(2) VALUE 3.",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "..XY..\n05\n");
+}
+
+#[test]
+fn string_pointer_content_exactly_fills_to_the_end() {
+    // p = 3 into a 5-wide receiver leaves room for exactly 3 chars (positions 2–4);
+    // "XYZ" fills them precisely: "..XYZ". chars_placed = 3, p := 3 + 3 = 6 = size +
+    // 1 ("06") — the boundary where the last char sits at the receiver's end.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"XYZ\".",
+            "01  T  PIC X(5) VALUE \".....\".",
+            "01  P  PIC 9(2) VALUE 3.",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "..XYZ\n06\n");
+}
+
+#[test]
+fn string_pointer_overflow_drops_the_excess() {
+    // "WXYZ" (4 chars) into a 5-wide receiver at p = 3 has room for only 3 chars
+    // (positions 2–4): "WXY" is placed, "Z" is DROPPED (ISO overflow; ON OVERFLOW
+    // still deferred, so no imperative runs). chars_placed = size − (p−1) = 3, so
+    // p := size + 1 = 6 ("06"). Receiver "..WXY".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(4) VALUE \"WXYZ\".",
+            "01  T  PIC X(5) VALUE \".....\".",
+            "01  P  PIC 9(2) VALUE 3.",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "..WXY\n06\n");
+}
+
+#[test]
+fn string_pointer_at_size_places_one_char() {
+    // p = size (= 4) is the last in-range value: only one position (index 3) remains,
+    // so just the first char "X" of "XYZ" is placed ("...X") and the rest dropped.
+    // chars_placed = 1, p := 4 + 1 = 5 = size + 1 ("05").
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"XYZ\".",
+            "01  T  PIC X(4) VALUE \"....\".",
+            "01  P  PIC 9(2) VALUE 4.",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "...X\n05\n");
+}
+
+#[test]
+fn string_pointer_past_end_is_overflow_no_transfer() {
+    // p = size + 1 (= 5 > 4) is out of range: ISO overflow ⇒ NO character is
+    // transferred (receiver keeps its sentinel "....") and the pointer is left
+    // UNCHANGED (stays 5 → "05"). Both engines skip the whole operation identically.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"XYZ\".",
+            "01  T  PIC X(4) VALUE \"....\".",
+            "01  P  PIC 9(2) VALUE 5.",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "....\n05\n");
+}
+
+#[test]
+fn string_pointer_zero_is_overflow_no_transfer() {
+    // p = 0 would make the 0-based start −1 (underflow); it is out of range, so ISO
+    // overflow ⇒ no transfer and the pointer is left unchanged (stays 0 → "00").
+    // This is the guard that keeps the start computation from underflowing.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"XYZ\".",
+            "01  T  PIC X(4) VALUE \"....\".",
+            "01  P  PIC 9(2) VALUE 0.",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "....\n00\n");
+}
+
+#[test]
+fn string_pointer_with_delimited_by_delimiter() {
+    // The pointer path over the DELIMITED BY delim branch (a run-time concat). Each
+    // field is cut at its first comma: "ab,cd"→"ab", "ef"→"ef"; concat "abef" (4).
+    // p = 2 overlays at index 1 → ".abef...". p := 2 + 4 = 6 ("06").
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(5) VALUE \"ab,cd\".",
+            "01  B  PIC X(2) VALUE \"ef\".",
+            "01  T  PIC X(8) VALUE \"........\".",
+            "01  P  PIC 9(2) VALUE 2.",
+        ],
+        &[
+            "STRING A B",
+            "    DELIMITED BY \",\" INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, ".abef...\n06\n");
+}
+
+#[test]
+fn string_pointer_fuzz_across_full_range() {
+    // Sweep the initial pointer across the WHOLE range `[0, size + 2]` = `[0, 6]` for
+    // a 4-wide receiver and a 2-char sending field "XY". For every value — the two
+    // out-of-range ends (0, 5, 6) and every in-range start (1..=4) — the compiled
+    // JIT output must be byte-identical to the oracle (receiver AND written-back
+    // pointer). This is the co-totality proof: both engines agree for EVERY value.
+    for pstart in 0..=6u32 {
+        let data = [
+            "01  A  PIC X(2) VALUE \"XY\".".to_string(),
+            "01  T  PIC X(4) VALUE \"....\".".to_string(),
+            format!("01  P  PIC 9(2) VALUE {pstart}."),
+        ];
+        let data_refs: Vec<&str> = data.iter().map(String::as_str).collect();
+        // assert_matches_oracle panics with a clear message on any divergence.
+        assert_matches_oracle(&wrap(
+            &data_refs,
+            &[
+                "STRING A DELIMITED BY SIZE INTO T WITH POINTER P.",
+                "DISPLAY T.",
+                "DISPLAY P.",
+                "STOP RUN.",
+            ],
+        ));
+    }
+}
+
+#[test]
+fn string_pointer_signed_is_a_later_rung() {
+    // The pointer must be an UNSIGNED integer. A signed pointer (`PIC S9`) is a clean
+    // later rung, rejected on BOTH engines (compiler at build time, oracle at exec).
+    let src = wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"abc\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  P  PIC S9(2) VALUE 1.",
+        ],
+        &["STRING A DELIMITED BY SIZE INTO T WITH POINTER P.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a signed pointer");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a signed pointer");
+}
+
+#[test]
+fn string_pointer_fractional_is_a_later_rung() {
+    // A fractional pointer (`PIC 9V9`) is not an integer position — a later rung,
+    // rejected identically on both engines.
+    let src = wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"abc\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  P  PIC 9V9 VALUE 1.",
+        ],
+        &["STRING A DELIMITED BY SIZE INTO T WITH POINTER P.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a fractional pointer");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a fractional pointer");
+}
+
+#[test]
+fn string_pointer_non_numeric_is_a_later_rung() {
+    // A non-numeric pointer (`PIC X`) has no integer position — a later rung,
+    // rejected identically on both engines.
+    let src = wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"abc\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  P  PIC X(2) VALUE \"12\".",
+        ],
+        &["STRING A DELIMITED BY SIZE INTO T WITH POINTER P.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a non-numeric pointer");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a non-numeric pointer");
+}
+
+// ---------------------------------------------------------------------------
+// STRING … ON OVERFLOW / NOT ON OVERFLOW — run a nested imperative depending on
+// whether the STRING overflowed. Overflow = the receiver filled before every
+// sending character was transferred (chars dropped) OR the initial WITH POINTER
+// value was out of range. The overflow BOOLEAN is computed with the identical
+// comparison on both engines; each case pins the compiled JIT output (receiver +
+// a flag item the imperative writes) to the oracle byte-for-byte.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn string_overflow_fires_when_concat_longer_than_receiver() {
+    // (a) "abcd"+"efgh" = 8 chars into a 5-wide receiver: 3 chars dropped ⇒
+    // overflow. The ON OVERFLOW body writes the "YES" sentinel into F; the receiver
+    // holds the truncated head "abcde".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(4) VALUE \"abcd\".",
+            "01  B  PIC X(4) VALUE \"efgh\".",
+            "01  T  PIC X(5) VALUE \".....\".",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A B DELIMITED BY SIZE INTO T",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "abcde\nYES\n");
+}
+
+#[test]
+fn string_no_overflow_runs_not_on_overflow() {
+    // (b) "ab"+"cd" = 4 chars fit in a 5-wide receiver ⇒ NO overflow. The NOT ON
+    // OVERFLOW body runs, writing "NON"; the receiver keeps its untouched tail dot.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(2) VALUE \"ab\".",
+            "01  B  PIC X(2) VALUE \"cd\".",
+            "01  T  PIC X(5) VALUE \".....\".",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A B DELIMITED BY SIZE INTO T",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "abcd.\nNON\n");
+}
+
+#[test]
+fn string_exact_fit_is_not_overflow() {
+    // Boundary: concat length EQUALS the receiver width (nothing dropped) ⇒ NOT
+    // overflow, so the NOT ON OVERFLOW body runs. Pins `total == width` on the
+    // not-overflow side (the `>` vs `>=` boundary both engines must agree on).
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(5) VALUE \"abcde\".",
+            "01  T  PIC X(5) VALUE \".....\".",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "abcde\nNON\n");
+}
+
+#[test]
+fn string_on_overflow_only_present() {
+    // (c) ON OVERFLOW present, NOT ON OVERFLOW absent. Two sub-cases share the flag:
+    // when overflow fires the flag flips; when it does not, the flag is UNCHANGED
+    // (no NOT clause to run).
+    let fires = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(8) VALUE \"abcdefgh\".",
+            "01  T  PIC X(4) VALUE \"....\".",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T ON OVERFLOW MOVE \"YES\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(fires, "abcd\nYES\n");
+    let quiet = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(2) VALUE \"ab\".",
+            "01  T  PIC X(4) VALUE \"....\".",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T ON OVERFLOW MOVE \"YES\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    // No overflow and no NOT clause ⇒ F keeps its initial "no ".
+    assert_eq!(quiet, "ab..\nno \n");
+}
+
+#[test]
+fn string_not_on_overflow_only_present() {
+    // (d) NOT ON OVERFLOW present, ON OVERFLOW absent, content fits ⇒ the NOT body
+    // runs, writing "NON". The overflow-SKIPS-a-lone-NOT-clause path (jmp_if_false
+    // over an empty on-branch) is the SAME skeleton the both-clause tests above
+    // exercise. (Note: a bare trailing imperative is greedy — a following statement
+    // would fold into its `{ statement }` — so the observation stays inside the same
+    // sentence structure the passing both-clause cases use.)
+    let fits = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(2) VALUE \"ab\".",
+            "01  T  PIC X(4) VALUE \"....\".",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(fits, "ab..\nNON\n");
+}
+
+#[test]
+fn string_pointer_drop_fires_on_overflow() {
+    // (e) WITH POINTER where the pointer causes a drop. p = 4 into a 6-wide receiver
+    // leaves 3 chars of room (positions 3–5); "abcde" (5) drops 2 ⇒ overflow. The
+    // receiver becomes "...abc" (head dots preserved), p := 4 + 3 = 7 ("07"), and the
+    // ON OVERFLOW body writes "YES".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(5) VALUE \"abcde\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  P  PIC 9(2) VALUE 4.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "...abc\n07\nYES\n");
+}
+
+#[test]
+fn string_pointer_zero_out_of_range_fires_on_overflow() {
+    // (f) WITH POINTER out of range, p = 0. No data movement, pointer UNCHANGED, but
+    // ON OVERFLOW now runs (the behaviour change this rung introduces). Receiver keeps
+    // all its dots, P stays "00", F becomes "YES".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"abc\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  P  PIC 9(2) VALUE 0.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "......\n00\nYES\n");
+}
+
+#[test]
+fn string_pointer_past_end_out_of_range_fires_on_overflow() {
+    // (f cont.) WITH POINTER out of range, p > size. p = 9 into a 6-wide receiver:
+    // no movement, P unchanged ("09"), ON OVERFLOW runs ⇒ F = "YES".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"abc\".",
+            "01  T  PIC X(6) VALUE \"......\".",
+            "01  P  PIC 9(2) VALUE 9.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "......\n09\nYES\n");
+}
+
+#[test]
+fn string_pointer_anchor_no_overflow_runs_not_clause() {
+    // (g) WITH POINTER p = 1 anchor, content fits ⇒ NO overflow, so the NOT ON
+    // OVERFLOW body runs. "ab" overlays at position 0 of a 5-wide receiver, tail
+    // preserved ("ab..."), p := 1 + 2 = 3 ("03"), F = "NON".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(2) VALUE \"ab\".",
+            "01  T  PIC X(5) VALUE \".....\".",
+            "01  P  PIC 9(2) VALUE 1.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T WITH POINTER P",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ab...\n03\nNON\n");
+}
+
+#[test]
+fn string_on_overflow_body_propagates_control_flow() {
+    // (h) The ON OVERFLOW body contains a GO TO, proving the handler's `Flow` unwinds
+    // out of exec_string / the emitted block. Overflow fires, GO TO jumps to OVF,
+    // which DISPLAYs and stops — the "AFTER" line after STRING is never reached.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(8) VALUE \"abcdefgh\".",
+            "01  T  PIC X(4) VALUE \"....\".",
+        ],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T ON OVERFLOW GO TO OVF.",
+            "DISPLAY \"AFTER\".",
+            "STOP RUN.",
+            "OVF.",
+            "DISPLAY \"JUMPED\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "JUMPED\n");
+}
+
+#[test]
+fn string_not_on_overflow_body_propagates_control_flow() {
+    // (h cont.) A GO TO inside NOT ON OVERFLOW when the STRING fits — the not-overflow
+    // path must ALSO unwind its handler's `Flow`. "ab" fits, so NOT runs, jumps to OK.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \"ab\".", "01  T  PIC X(4) VALUE \"....\"."],
+        &[
+            "STRING A DELIMITED BY SIZE INTO T NOT ON OVERFLOW GO TO OKAY.",
+            "DISPLAY \"AFTER\".",
+            "STOP RUN.",
+            "OKAY.",
+            "DISPLAY \"FITS\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "FITS\n");
+}
+
+#[test]
+fn string_with_no_overflow_clauses_still_works() {
+    // (i) A plain STRING with NEITHER clause lowers exactly as before this rung — no
+    // imperative, no branch skeleton. Regression anchor for the empty-clause path.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(3) VALUE \"abc\".", "01  T  PIC X(5) VALUE \".....\"."],
+        &["STRING A DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "abc..\n");
+}
+
+#[test]
+fn string_delim_overflow_fires_on_run_time_drop() {
+    // A DELIMITED-BY-delimiter STRING whose run-time concatenation overflows the
+    // receiver. Each field's prefix (up to ",") concatenates to "abXY" = 4 chars into
+    // a 3-wide receiver ⇒ overflow via the run-time `clen > W` test. F becomes "YES".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(4) VALUE \"ab,z\".",
+            "01  B  PIC X(4) VALUE \"XY,z\".",
+            "01  T  PIC X(3) VALUE \"...\".",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "STRING A B DELIMITED BY \",\" INTO T",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY T.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "abX\nYES\n");
+}
+
+// ---------------------------------------------------------------------------
+// UNSTRING — split one alphanumeric source on a single delimiter into several
+// receivers (the inverse of STRING). Each receiver — INCLUDING the last — takes
+// only the field up to the NEXT delimiter; extra fields are dropped, an empty
+// field (consecutive/leading delimiter) yields all spaces, and once the source
+// is exhausted the remaining receivers are left UNCHANGED. Each field lands as
+// an ordinary alphanumeric MOVE (left-justified, space-padded, truncated). Every
+// case pins the compiled JIT output to the oracle byte-for-byte.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn unstring_exact_fit() {
+    // "A,B,C" splits into exactly three fields for three receivers; each PIC X(3)
+    // receiver is the field left-justified and space-padded.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nC  \n");
+}
+
+#[test]
+fn unstring_drops_extra_fields() {
+    // "A,B,C,D" has four fields but only three receivers — the last receiver takes
+    // "C" (the field up to the NEXT delimiter, NOT the remainder) and "D" is
+    // dropped (that would be ON OVERFLOW, a later rung).
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(7) VALUE \"A,B,C,D\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nC  \n");
+}
+
+#[test]
+fn unstring_leaves_trailing_receiver_unchanged() {
+    // "A,B" fills two receivers; the source is then exhausted, so R3 keeps its
+    // prior VALUE "ZZZ" — it is NOT space-filled.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"A,B\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE \"ZZZ\".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nZZZ\n");
+}
+
+#[test]
+fn unstring_empty_field_from_consecutive_delimiters() {
+    // "A,,C" — the two adjacent commas bound an EMPTY field, so R2 becomes all
+    // spaces while R1 and R3 get "A" and "C".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(4) VALUE \"A,,C\".",
+            "01  R1 PIC X(3) VALUE \"...\".",
+            "01  R2 PIC X(3) VALUE \"...\".",
+            "01  R3 PIC X(3) VALUE \"...\".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \n   \nC  \n");
+}
+
+#[test]
+fn unstring_delimiter_at_start() {
+    // A LEADING delimiter bounds an empty first field: ",X" → R1 = spaces, R2 = "X".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(2) VALUE \",X\".",
+            "01  R1 PIC X(3) VALUE \"...\".",
+            "01  R2 PIC X(3) VALUE \"...\".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "   \nX  \n");
+}
+
+#[test]
+fn unstring_space_delimiter() {
+    // The delimiter can be a space: "A B C" splits on blanks into three fields.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A B C\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \" \" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nC  \n");
+}
+
+#[test]
+fn unstring_pic_x1_item_delimiter() {
+    // The delimiter may be a PIC X(1) item (its single stored character), not just
+    // a literal — the compiler reads it at run time with str_index.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A;B;C\".",
+            "01  DL PIC X(1) VALUE \";\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY DL INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nC  \n");
+}
+
+#[test]
+fn unstring_truncates_a_long_field() {
+    // A field wider than its receiver is truncated on the right (left-justified
+    // MOVE): "ABCDE" into a PIC X(3) receiver keeps "ABC".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(7) VALUE \"ABCDE,Z\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ABC\nZ  \n");
+}
+
+// ---------------------------------------------------------------------------
+// UNSTRING with a LITERAL source — the field text comes from an alphanumeric
+// STRING literal's OWN bytes instead of an item's storage. Only the source
+// PROVIDER differs; the delimiter scan and per-receiver reshape are the SAME
+// shared machinery exercised by the identifier-source cases above, so every
+// splitting behaviour (exhaustion, empty fields, truncation, reshape) is
+// re-pinned here against the oracle to prove the two providers agree. A
+// NUMERIC-literal, a FIGURATIVE (SPACE), and a reference-modified source remain
+// later rungs — rejected on BOTH engines.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn unstring_literal_source_three_fields() {
+    // The canonical case: the source is the quoted literal "a,b,c" itself (no S
+    // item at all). Three comma-delimited fields fill three PIC X(1) receivers.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  R1 PIC X(1) VALUE SPACE.",
+            "01  R2 PIC X(1) VALUE SPACE.",
+            "01  R3 PIC X(1) VALUE SPACE.",
+        ],
+        &[
+            "UNSTRING \"a,b,c\" DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "a\nb\nc\n");
+}
+
+#[test]
+fn unstring_literal_source_exhausted_leaves_receiver_unchanged() {
+    // The literal "A,B" fills two receivers; the source is then exhausted, so R3
+    // keeps its prior VALUE "ZZZ" — it is NOT space-filled (identical rule to the
+    // identifier-source case, now driven by the literal's bytes).
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE \"ZZZ\".",
+        ],
+        &[
+            "UNSTRING \"A,B\" DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nZZZ\n");
+}
+
+#[test]
+fn unstring_literal_source_leading_trailing_consecutive_empty_fields() {
+    // Leading, consecutive, and trailing delimiters each bound an EMPTY field.
+    // ",A,,B," → f1="" f2="A" f3="" f4="B" f5="" ; the four receivers take the
+    // first four fields (f5 dropped), so R1/R3 become all spaces.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  R1 PIC X(3) VALUE \"...\".",
+            "01  R2 PIC X(3) VALUE \"...\".",
+            "01  R3 PIC X(3) VALUE \"...\".",
+            "01  R4 PIC X(3) VALUE \"...\".",
+        ],
+        &[
+            "UNSTRING \",A,,B,\" DELIMITED BY \",\" INTO R1 R2 R3 R4.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "DISPLAY R4.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "   \nA  \n   \nB  \n");
+}
+
+#[test]
+fn unstring_literal_source_reshapes_to_receiver_width() {
+    // The literal's fields are RESHAPED to each receiver's own width: "ABCDE" is
+    // wider than PIC X(3) (truncated to "ABC"), while "Z" is narrower than
+    // PIC X(4) (space-padded to "Z   ").
+    let out = assert_matches_oracle(&wrap(
+        &["01  R1 PIC X(3) VALUE SPACES.", "01  R2 PIC X(4) VALUE SPACES."],
+        &[
+            "UNSTRING \"ABCDE,Z\" DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ABC\nZ   \n");
+}
+
+#[test]
+fn unstring_literal_source_single_field_no_delimiter() {
+    // With the delimiter ABSENT from the literal, the whole literal is one field
+    // that lands in the sole receiver (reshaped to its width).
+    let out = assert_matches_oracle(&wrap(
+        &["01  R1 PIC X(5) VALUE SPACES."],
+        &[
+            "UNSTRING \"HI\" DELIMITED BY \",\" INTO R1.",
+            "DISPLAY R1.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "HI   \n");
+}
+
+#[test]
+fn unstring_identifier_source_still_works_regression() {
+    // Regression: an ordinary identifier source (an alphanumeric item's storage)
+    // still splits exactly as before the literal-source rung was added.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nC  \n");
+}
+
+#[test]
+fn unstring_numeric_literal_source_is_a_later_rung() {
+    // Only an ALPHANUMERIC string literal is a valid literal source. A NUMERIC
+    // literal source is deferred — rejected on BOTH engines (oracle at read time,
+    // compiler at emit time), mirroring the identifier path's numeric-source
+    // rejection intent.
+    let src = wrap(
+        &["01  R1 PIC X(3) VALUE SPACES.", "01  R2 PIC X(3) VALUE SPACES."],
+        &["UNSTRING 123 DELIMITED BY \",\" INTO R1 R2.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a numeric-literal source");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a numeric-literal source"
+    );
+}
+
+#[test]
+fn unstring_figurative_source_is_a_later_rung() {
+    // A FIGURATIVE constant (SPACE) source is deferred — rejected on BOTH engines.
+    let src = wrap(
+        &["01  R1 PIC X(3) VALUE SPACES.", "01  R2 PIC X(3) VALUE SPACES."],
+        &["UNSTRING SPACE DELIMITED BY \",\" INTO R1 R2.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a figurative source");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a figurative source"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// UNSTRING with a REFERENCE-MODIFIED source `base(start:len)`. This is a direct
+// mirror of the literal-source rung: the ONLY thing that changes is the source
+// character provider — the field text is the ref-mod slice of the base item
+// (obtained through the SAME slice machinery DISPLAY / comparisons already use,
+// so the source register is byte-identical between the oracle's `refmod_string`
+// and the compiler's `ref_mod_slice`). The delimiter scan and receiver reshape
+// are entirely unchanged, so every split/exhaustion rule matches the plain
+// identifier source. A NUMERIC base under ref-mod stays a later rung (rejected
+// by the shared slice helper on both engines).
+// ---------------------------------------------------------------------------
+
+#[test]
+fn unstring_refmod_source_splits_into_receivers() {
+    // The canonical case: source is the slice S(2:3) of "XA,BY" = "A,B", split on
+    // "," into two receivers. The reference modification carves the field text out
+    // of the middle of the base item; the split then proceeds exactly as for a
+    // plain item source.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"XA,BY\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S(2:3) DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \n");
+}
+
+#[test]
+fn unstring_refmod_source_single_field_no_delimiter() {
+    // The delimiter is ABSENT from the slice: S(2:3) of "HELLO" = "ELL" has no
+    // comma, so the whole slice is one field, reshaped to the sole receiver's
+    // width (X(5) → space-padded).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"HELLO\".", "01  R1 PIC X(5) VALUE SPACES."],
+        &[
+            "UNSTRING S(2:3) DELIMITED BY \",\" INTO R1.",
+            "DISPLAY R1.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ELL  \n");
+}
+
+#[test]
+fn unstring_refmod_source_slice_at_start_of_base() {
+    // A slice anchored at the START of the base — S(1:3) of "A,BCD" = "A,B" —
+    // splits into two fields, proving the 1-based start position is honoured at
+    // the very first character.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,BCD\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S(1:3) DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \n");
+}
+
+#[test]
+fn unstring_refmod_source_slice_at_end_of_base() {
+    // A slice anchored at the END of the base — S(3:3) of "XYA,B" spans positions
+    // 3..5 ("A,B"), i.e. start0+len = 2+3 = 5 = the item width exactly — splits
+    // into two fields. This pins the upper slice bound at the item boundary.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"XYA,B\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S(3:3) DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \n");
+}
+
+#[test]
+fn unstring_refmod_source_with_computed_start_index() {
+    // The start index is a DATA-NAME (`J` = 2), exercising the computed ref-mod
+    // path (register-computed bounds) rather than the constant-folded literal
+    // path. S(J:3) of "XA,BY" = "A,B" → two fields, identical to the literal-index
+    // case above, so both slice paths agree with the oracle.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"XA,BY\".",
+            "01  J  PIC 9  VALUE 2.",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S(J:3) DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \n");
+}
+
+#[test]
+fn unstring_refmod_source_exhausted_leaves_receiver_unchanged() {
+    // The slice S(2:3) = "A,B" fills two receivers; the source is then exhausted,
+    // so R3 keeps its prior VALUE "ZZZ" (NOT space-filled) — the same exhaustion
+    // rule as the identifier/literal source, now driven by the slice characters.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"XA,BY\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE \"ZZZ\".",
+        ],
+        &[
+            "UNSTRING S(2:3) DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nZZZ\n");
+}
+
+#[test]
+fn unstring_numeric_base_refmod_source_is_a_later_rung() {
+    // A NUMERIC base item under reference modification is a later rung: the shared
+    // slice helper (oracle `refmod_string`, compiler `ref_mod_slice`) rejects a
+    // numeric base identically, so UNSTRING inherits that reject on BOTH engines.
+    let src = wrap(
+        &[
+            "01  N  PIC 9(5) VALUE 12345.",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &["UNSTRING N(2:3) DELIMITED BY \",\" INTO R1 R2.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a numeric-base ref-mod source");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a numeric-base ref-mod source"
+    );
+}
+
+#[test]
+fn unstring_non_ascii_literal_source_is_a_later_rung() {
+    // The oracle scans a literal source by CHARACTER while the compiler lowers it
+    // to BYTE-based IIR string ops — the two agree only for ASCII (one byte per
+    // char). A NON-ASCII string-literal source (here "café", whose 'é' is a
+    // multi-byte character) is therefore deferred — rejected on BOTH engines so
+    // they stay co-total — even though an ASCII literal source IS supported.
+    let src = wrap(
+        &["01  R1 PIC X(4) VALUE SPACES.", "01  R2 PIC X(4) VALUE SPACES."],
+        &["UNSTRING \"café\" DELIMITED BY \",\" INTO R1 R2.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a non-ASCII literal source");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a non-ASCII literal source"
+    );
+}
+
+#[test]
+fn unstring_ascii_literal_source_still_works() {
+    // The all-ASCII counterpart of the rejected non-ASCII case still splits and
+    // reshapes exactly, byte-identical to the oracle — proving the guard is
+    // scoped to non-ASCII bytes only.
+    let out = assert_matches_oracle(&wrap(
+        &["01  R1 PIC X(4) VALUE SPACES.", "01  R2 PIC X(4) VALUE SPACES."],
+        &[
+            "UNSTRING \"cafe,X\" DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "cafe\nX   \n");
+}
+
+// ---------------------------------------------------------------------------
+// UNSTRING … WITH POINTER p — `p` (a `PIC 9(n)` unsigned integer) holds the
+// 1-BASED character position at which the scan STARTS, and is UPDATED afterwards
+// to one past the last character examined (`min(final_cursor, len) + 1`). An
+// initial `p` outside `[1, len]` (either 0 or > len) is ISO's overflow: NO
+// receiver is modified and `p` is left unchanged. Both engines apply the SAME
+// start offset, the SAME write-back, and the SAME out-of-range rule, so each case
+// pins the compiled JIT output to the tree-walk oracle byte-for-byte.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn unstring_pointer_one_equals_no_pointer() {
+    // The correctness ANCHOR: `WITH POINTER p` with `p = 1` starts at index 0, so
+    // the receivers must be IDENTICAL to the same statement WITHOUT the phrase. We
+    // run both and assert the receiver lines coincide; the pointer version then
+    // additionally writes the resume position back (final cursor 6 clamped to len
+    // 5, +1 → 6 → "06").
+    let with_ptr = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE SPACES.",
+            "01  P  PIC 9(2) VALUE 1.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3 WITH POINTER P.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    let no_ptr = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(no_ptr, "a  \nb  \nc  \n");
+    // p = 1 fills the SAME receivers, then appends the resume pointer "06".
+    assert_eq!(with_ptr, format!("{no_ptr}06\n"));
+}
+
+#[test]
+fn unstring_pointer_mid_string() {
+    // The task's canonical example: source "a,b,c", p = 3 → start at 0-based index
+    // 2 ("b,c"). R1="b", R2="c"; the scan's final cursor is 6, clamped to len 5,
+    // +1 → the resume pointer is 6 ("06").
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  P  PIC 9(2) VALUE 3.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 WITH POINTER P.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "b  \nc  \n06\n");
+}
+
+#[test]
+fn unstring_pointer_at_len_reads_final_char() {
+    // p = len (= 5) is the last in-range value: start at 0-based index 4, the final
+    // character "c". R1="c"; final cursor 6 clamped to 5, +1 → 6 ("06").
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  P  PIC 9(2) VALUE 5.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.",
+            "DISPLAY R1.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "c  \n06\n");
+}
+
+#[test]
+fn unstring_pointer_writeback_after_delimiter_terminated_field() {
+    // A field terminated by a DELIMITER (not end-of-source): "AA/BB" split on "/"
+    // with p = 1 fills F1="AA"; the scan stops at the delimiter (index 2), so the
+    // cursor advances past it to 3 — NOT clamped (3 < len 5) — and the resume
+    // pointer is 3 + 1 = 4 ("04"). This pins the non-clamped write-back path,
+    // distinct from the end-of-source cases above.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"AA/BB\".",
+            "01  F1 PIC X(2) VALUE SPACES.",
+            "01  P  PIC 9(2) VALUE 1.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \"/\" INTO F1 WITH POINTER P.",
+            "DISPLAY F1.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "AA\n04\n");
+}
+
+#[test]
+fn unstring_pointer_source_exhausted_before_receivers_filled() {
+    // With a pointer, the exhaustion rule is unchanged: "A,B" (len 3), p = 1 fills
+    // R1="A" and R2="B", then the source is exhausted so R3 keeps its prior VALUE
+    // "ZZZ" (NOT space-filled). The cursor ends at 4, clamped to len 3, +1 → the
+    // resume pointer is 4 ("04").
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"A,B\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE \"ZZZ\".",
+            "01  P  PIC 9(2) VALUE 1.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3 WITH POINTER P.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nZZZ\n04\n");
+}
+
+#[test]
+fn unstring_pointer_past_end_is_overflow_no_moves() {
+    // p = len + 1 (= 6 > 5) is out of range: ISO overflow ⇒ NO receiver is modified
+    // (R1 keeps "ZZZ") and the pointer is left UNCHANGED (stays 6 → "06"). Both
+    // engines skip the whole operation identically.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE \"ZZZ\".",
+            "01  P  PIC 9(2) VALUE 6.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.",
+            "DISPLAY R1.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ZZZ\n06\n");
+}
+
+#[test]
+fn unstring_pointer_zero_is_overflow_no_moves() {
+    // p = 0 would make the 0-based start −1 (underflow); it is out of range, so ISO
+    // overflow ⇒ no moves and the pointer is left unchanged (stays 0 → "00"). This
+    // is the guard that keeps the `usize`/`i64` start computation from underflowing.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE \"ZZZ\".",
+            "01  P  PIC 9(2) VALUE 0.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.",
+            "DISPLAY R1.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ZZZ\n00\n");
+}
+
+#[test]
+fn unstring_pointer_huge_is_overflow_no_moves() {
+    // A far-out-of-range pointer (9999 ≫ len 5) is still just "> len": no moves, the
+    // pointer unchanged (stays 9999). Proves the guard uses the source length, not a
+    // fixed bound.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE \"ZZZ\".",
+            "01  P  PIC 9(4) VALUE 9999.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.",
+            "DISPLAY R1.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ZZZ\n9999\n");
+}
+
+#[test]
+fn unstring_pointer_fuzz_across_full_range() {
+    // Sweep the initial pointer across the WHOLE range `[0, len + 2]` = `[0, 7]` for
+    // source "a,b,c" (len 5). For every value — the two out-of-range ends (0, 6, 7)
+    // and every in-range start (1..=5) — the compiled JIT output must be byte-
+    // identical to the oracle (receivers AND the written-back pointer). This is the
+    // co-totality proof: both engines agree for EVERY initial pointer value.
+    for pstart in 0..=7u32 {
+        let data = [
+            "01  S  PIC X(5) VALUE \"a,b,c\".".to_string(),
+            "01  R1 PIC X(3) VALUE \"ZZZ\".".to_string(),
+            "01  R2 PIC X(3) VALUE \"ZZZ\".".to_string(),
+            format!("01  P  PIC 9(2) VALUE {pstart}."),
+        ];
+        let data_refs: Vec<&str> = data.iter().map(String::as_str).collect();
+        // assert_matches_oracle panics with a clear message on any divergence.
+        assert_matches_oracle(&wrap(
+            &data_refs,
+            &[
+                "UNSTRING S DELIMITED BY \",\" INTO R1 R2 WITH POINTER P.",
+                "DISPLAY R1.",
+                "DISPLAY R2.",
+                "DISPLAY P.",
+                "STOP RUN.",
+            ],
+        ));
+    }
+}
+
+#[test]
+fn unstring_pointer_signed_is_a_later_rung() {
+    // The pointer must be an UNSIGNED integer. A signed pointer (`PIC S9`) is a
+    // clean later rung, rejected on BOTH engines (the compiler at build time, the
+    // oracle at exec time).
+    let src = wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  P  PIC S9(2) VALUE 1.",
+        ],
+        &["UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a signed pointer");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a signed pointer");
+}
+
+#[test]
+fn unstring_pointer_fractional_is_a_later_rung() {
+    // A fractional pointer (`PIC 9V9`) is not an integer position — a later rung,
+    // rejected identically on both engines.
+    let src = wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  P  PIC 9V9 VALUE 1.",
+        ],
+        &["UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a fractional pointer");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a fractional pointer");
+}
+
+#[test]
+fn unstring_pointer_non_numeric_is_a_later_rung() {
+    // A non-numeric pointer (`PIC X`) has no integer position — a later rung,
+    // rejected identically on both engines.
+    let src = wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  P  PIC X(2) VALUE \"12\".",
+        ],
+        &["UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a non-numeric pointer");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a non-numeric pointer");
+}
+
+// ---------------------------------------------------------------------------
+// UNSTRING … ON OVERFLOW / NOT ON OVERFLOW — the DIRECT sibling of STRING's
+// overflow clauses. Overflow fires when every receiver is filled but the source
+// is NOT exhausted (more delimited fields remain) OR the initial WITH POINTER
+// value is out of range. The overflow BOOLEAN is the identical comparison on both
+// engines (`p <= len` after the scan, or `true` for an out-of-range pointer); each
+// case pins the compiled JIT output to the oracle byte-for-byte via
+// `assert_matches_oracle`, plus the exact expected bytes.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn unstring_overflow_fires_more_fields_than_receivers() {
+    // (a) "A,B,C" (three fields) into TWO receivers: R1="A", R2="B", then the source
+    // is NOT exhausted (final cursor p = 4 ≤ len 5) ⇒ overflow. The ON OVERFLOW body
+    // writes "YES"; "C" is dropped (no third receiver).
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nYES\n");
+}
+
+#[test]
+fn unstring_no_overflow_runs_not_clause() {
+    // (b) "A,B" (exactly two fields) into TWO receivers: R1="A", R2="B", and the
+    // source IS exhausted (the last field ran to end-of-source, p = 4 > len 3) ⇒ NO
+    // overflow, so the NOT ON OVERFLOW body runs, writing "NON".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"A,B\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nNON\n");
+}
+
+#[test]
+fn unstring_trailing_delimiter_fires_overflow() {
+    // (c) Trailing delimiter "A,B," into TWO receivers: R1="A", R2="B", and the
+    // cursor stops AT the trailing delimiter (p = 4 = len 4) — an empty field still
+    // remains ⇒ overflow (`p <= len`). The `p == len` boundary is exactly the
+    // trailing-delimiter case both engines must agree on. ON OVERFLOW ⇒ "YES".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(4) VALUE \"A,B,\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nYES\n");
+}
+
+#[test]
+fn unstring_on_overflow_only_present() {
+    // (d) ON OVERFLOW present, NOT ON OVERFLOW absent. When overflow fires the flag
+    // flips to "YES"; when it does not, the flag is UNCHANGED (no NOT clause to run).
+    let fires = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2",
+            "    ON OVERFLOW MOVE \"YES\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(fires, "A  \nB  \nYES\n");
+    let quiet = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"A,B\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2",
+            "    ON OVERFLOW MOVE \"YES\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    // No overflow and no NOT clause ⇒ F keeps its initial "no ".
+    assert_eq!(quiet, "A  \nB  \nno \n");
+}
+
+#[test]
+fn unstring_not_on_overflow_only_present() {
+    // (e) NOT ON OVERFLOW present, ON OVERFLOW absent, source exhausted ⇒ the NOT
+    // body runs (jmp_if_false over an EMPTY on-branch), writing "NON".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"A,B\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nNON\n");
+}
+
+#[test]
+fn unstring_pointer_zero_out_of_range_fires_on_overflow() {
+    // (f) WITH POINTER out of range, p = 0. No data movement, pointer UNCHANGED, but
+    // ON OVERFLOW now runs (the behaviour change this rung introduces). R1 keeps
+    // "ZZZ", P stays "00", F becomes "YES".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE \"ZZZ\".",
+            "01  P  PIC 9(2) VALUE 0.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY P.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ZZZ\n00\nYES\n");
+}
+
+#[test]
+fn unstring_pointer_past_end_out_of_range_fires_on_overflow() {
+    // (f cont.) WITH POINTER out of range, p > len. p = 6 into a 5-char source: no
+    // movement, P unchanged ("06"), ON OVERFLOW runs ⇒ F = "YES".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE \"ZZZ\".",
+            "01  P  PIC 9(2) VALUE 6.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY P.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ZZZ\n06\nYES\n");
+}
+
+#[test]
+fn unstring_pointer_in_range_fields_remain_fires_overflow_with_writeback() {
+    // (g) WITH POINTER p = 1, ONE receiver, source "a,b,c" has more fields left after
+    // R1="a" ⇒ overflow. The write-back STILL happens before the imperative: the
+    // cursor stops at the delimiter (index 1), advances to 2, so P := 2 + 1 = 3
+    // ("03"). ON OVERFLOW ⇒ F = "YES". Pins overflow + a correct write-back together.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"a,b,c\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  P  PIC 9(2) VALUE 1.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY P.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "a  \n03\nYES\n");
+}
+
+#[test]
+fn unstring_pointer_anchor_no_overflow_runs_not_clause() {
+    // (h) WITH POINTER p = 1 anchor, "a,b" into TWO receivers exhausts the source ⇒
+    // NO overflow, so the NOT ON OVERFLOW body runs. R1="a", R2="b", the cursor ends
+    // at 4 clamped to len 3, P := 3 + 1 = 4 ("04"), F = "NON".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"a,b\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  P  PIC 9(2) VALUE 1.",
+            "01  F  PIC X(3) VALUE \"no \".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 WITH POINTER P",
+            "    ON OVERFLOW MOVE \"YES\" TO F",
+            "    NOT ON OVERFLOW MOVE \"NON\" TO F.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY P.",
+            "DISPLAY F.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "a  \nb  \n04\nNON\n");
+}
+
+#[test]
+fn unstring_on_overflow_body_propagates_control_flow() {
+    // (i) The ON OVERFLOW body contains a GO TO, proving the handler's `Flow` unwinds
+    // out of exec_unstring / the emitted block. Overflow fires (three fields, two
+    // receivers), GO TO jumps to OVF, which DISPLAYs and stops — the "AFTER" line
+    // after UNSTRING is never reached.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 ON OVERFLOW GO TO OVF.",
+            "DISPLAY \"AFTER\".",
+            "STOP RUN.",
+            "OVF.",
+            "DISPLAY \"JUMPED\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "JUMPED\n");
+}
+
+#[test]
+fn unstring_with_no_overflow_clauses_still_works_regression() {
+    // (j) A plain UNSTRING with NEITHER clause lowers exactly as before this rung —
+    // no overflow flag, no branch skeleton. Regression anchor for the empty-clause
+    // path: "A,B,C" into two receivers still fills R1="A", R2="B" and drops "C".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \n");
+}
+
+// ---------------------------------------------------------------------------
+// INSPECT … TALLYING — count the (non-overlapping, left-to-right) occurrences of
+// a single-character delimiter in an alphanumeric source and ADD the count to an
+// integer counter (INSPECT adds; it does not clear the counter first). Each case
+// pins the compiled JIT output to the tree-walk oracle byte-for-byte.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn inspect_counts_all_occurrences_of_a_char() {
+    // "BANANA" has three A's → C = 0 + 3 = 3.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"BANANA\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"A\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "003\n");
+}
+
+#[test]
+fn inspect_zero_occurrences_leaves_the_counter() {
+    // No 'Z' in "HELLO" → C stays 0.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"HELLO\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"Z\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "00\n");
+}
+
+#[test]
+fn inspect_adds_to_a_nonzero_counter_not_replaces_it() {
+    // C starts at 5; "MISSISSIPPI" has four S's → C = 5 + 4 = 9 (proves ADD, not
+    // a fresh assignment).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(11) VALUE \"MISSISSIPPI\".", "01  C  PIC 9(3) VALUE 5."],
+        &["INSPECT S TALLYING C FOR ALL \"S\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "009\n");
+}
+
+#[test]
+fn inspect_delimiter_is_a_pic_x1_item() {
+    // The delimiter may be a PIC X(1) item (its single stored character), read at
+    // run time: three ';' in "A;B;C;D".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(7) VALUE \"A;B;C;D\".",
+            "01  DL PIC X(1) VALUE \";\".",
+            "01  C  PIC 9(2) VALUE 0.",
+        ],
+        &["INSPECT S TALLYING C FOR ALL DL.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "03\n");
+}
+
+#[test]
+fn inspect_every_character_matches() {
+    // Every one of "AAAA" is an 'A' → C = 4.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"AAAA\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"A\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn inspect_delimiter_at_both_ends() {
+    // "*HI*" — the delimiter at both boundaries is still counted (2), and the
+    // optional END-INSPECT terminator parses.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"*HI*\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"*\" END-INSPECT.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "02\n");
+}
+
+// INSPECT … TALLYING … FOR ALL … {BEFORE|AFTER} x — count only within the sub-
+// slice of the source bounded by the FIRST occurrence of the single region
+// delimiter `x`. BEFORE counts left of `x`; AFTER counts right of it. The ISO
+// not-found asymmetry is the crux: BEFORE with `x` absent counts the WHOLE source,
+// AFTER with `x` absent counts NOTHING. Each case pins the compiled window scan to
+// the oracle byte-for-byte.
+
+#[test]
+fn inspect_before_counts_only_left_of_the_delimiter() {
+    // "AB0CD0" — BEFORE "C" restricts to "AB0" (indices 0..3), which holds ONE '0'.
+    // (The trailing '0' after 'C' is outside the region.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "001\n");
+}
+
+#[test]
+fn inspect_after_counts_only_right_of_the_delimiter() {
+    // Same source — AFTER "C" restricts to "D0" (indices 4..6), which holds ONE '0'.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" AFTER \"C\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "001\n");
+}
+
+#[test]
+fn inspect_before_absent_delimiter_counts_the_whole_source() {
+    // BEFORE "Z" with no 'Z' present → the region is the ENTIRE source, so BOTH '0's
+    // are counted (2). This is the BEFORE not-found rule.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"Z\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_after_absent_delimiter_counts_nothing() {
+    // AFTER "Z" with no 'Z' present → the region is EMPTY, so NOTHING is counted (0).
+    // This is the AFTER not-found rule — the asymmetric partner of the case above.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" AFTER \"Z\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000\n");
+}
+
+#[test]
+fn inspect_after_delimiter_at_position_zero() {
+    // The region delimiter is the FIRST character: AFTER "X" in "X00" → region "00"
+    // (indices 1..3) → two '0's. Pins the `start = fidx + 1` edge.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"X00\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" AFTER \"X\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_before_delimiter_at_last_position() {
+    // The region delimiter is the LAST character: BEFORE "X" in "00X" → region "00"
+    // (indices 0..2) → two '0's. Pins the `end = fidx` prefix edge.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"00X\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"X\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_region_delimiter_equals_tally_delimiter() {
+    // The tally delimiter and the region delimiter are the SAME char: AFTER "A" in
+    // "ABABA" → the FIRST 'A' (index 0) bounds the region to "BABA" (indices 1..5),
+    // where two more 'A's remain → 2. (The bounding 'A' itself is excluded.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"A\" AFTER \"A\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_before_delimiter_at_position_zero_is_an_empty_region() {
+    // BEFORE "A" in "A00" → the first 'A' is at index 0, so the region is [0, 0) —
+    // EMPTY — and nothing is counted (0). Pins the empty-prefix edge.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"A00\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"A\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000\n");
+}
+
+#[test]
+fn inspect_region_adds_to_a_nonzero_counter() {
+    // INSPECT ADDs to the counter; a region does not change that. C starts at 5;
+    // BEFORE "C" counts one '0' → C = 5 + 1 = 6.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 5."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "006\n");
+}
+
+#[test]
+fn inspect_region_delimiter_is_a_pic_x1_item() {
+    // The region delimiter may itself be a PIC X(1) item, read at run time: BEFORE
+    // the item DL (";") in "0;0;0" restricts to "0" (index 0..1) → one '0'.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"0;0;0\".",
+            "01  DL PIC X(1) VALUE \";\".",
+            "01  C  PIC 9(3) VALUE 0.",
+        ],
+        &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE DL.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "001\n");
+}
+
+// ---------------------------------------------------------------------------
+// INSPECT … TALLYING … FOR CHARACTERS [{BEFORE|AFTER} x] — the "count every
+// position" form. Instead of matching a delimiter, it ADDs the NUMBER OF CHARACTER
+// POSITIONS in the region window to the counter: with no region that is length(S),
+// with a `{BEFORE|AFTER} x` region it is the window length (`end - start`) of the
+// SAME window `FOR ALL` uses, so it inherits the identical BEFORE→whole /
+// AFTER→empty not-found asymmetry. INSPECT ADDs (does not clear). Each case pins the
+// compiled JIT output to the tree-walk oracle byte-for-byte.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn inspect_characters_no_region_counts_the_full_length() {
+    // No region → C += length("BANANA") = 6.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"BANANA\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR CHARACTERS.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "006\n");
+}
+
+#[test]
+fn inspect_characters_before_present_counts_positions_before_x() {
+    // "AB0CD0" — first "C" is at index 3, so BEFORE "C" is the window [0, 3) = "AB0",
+    // whose length is 3 (every position counts, not just delimiter matches).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR CHARACTERS BEFORE \"C\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "003\n");
+}
+
+#[test]
+fn inspect_characters_after_present_counts_positions_after_x() {
+    // Same source; first "C" is at index 3, so AFTER "C" is the window [4, 6) = "D0",
+    // whose length is 2.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR CHARACTERS AFTER \"C\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_characters_before_absent_delimiter_counts_the_whole_source() {
+    // BEFORE "Z" with no 'Z' in "HELLO" → not-found ⇒ WHOLE source, so C += 5.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"HELLO\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR CHARACTERS BEFORE \"Z\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "05\n");
+}
+
+#[test]
+fn inspect_characters_after_absent_delimiter_counts_nothing() {
+    // AFTER "Z" with no 'Z' in "HELLO" → not-found ⇒ EMPTY window, so C += 0.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"HELLO\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR CHARACTERS AFTER \"Z\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "00\n");
+}
+
+#[test]
+fn inspect_characters_adds_to_a_nonzero_counter_not_replaces_it() {
+    // C starts at 5; "ABCD" has length 4 → C = 5 + 4 = 9 (proves ADD, not assign).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"ABCD\".", "01  C  PIC 9(3) VALUE 5."],
+        &["INSPECT S TALLYING C FOR CHARACTERS.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "009\n");
+}
+
+#[test]
+fn inspect_characters_short_source_counts_one() {
+    // A single-character source → C += 1 (the short/near-empty edge).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(1) VALUE \"Q\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR CHARACTERS.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "01\n");
+}
+
+#[test]
+fn inspect_characters_alongside_for_all_leaves_the_all_path_unaffected() {
+    // One INSPECT counts the A's with the ordinary `FOR ALL` path (CA = 3), a second
+    // counts every position with `FOR CHARACTERS` (CC = 6). Proves the two forms
+    // coexist and the ALL lowering is untouched by the CHARACTERS addition.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(6) VALUE \"BANANA\".",
+            "01  CA PIC 9(3) VALUE 0.",
+            "01  CC PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING CA FOR ALL \"A\".",
+            "INSPECT S TALLYING CC FOR CHARACTERS.",
+            "DISPLAY CA.",
+            "DISPLAY CC.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "003\n006\n");
+}
+
+#[test]
+fn inspect_characters_counts_bytes_not_codepoints_on_non_ascii_source() {
+    // `FOR CHARACTERS` returns a LENGTH, so it is the first tally form that would
+    // surface the oracle's `char` basis vs the compiler's BYTE basis directly. COBOL
+    // `PIC X` positions are BYTES, so both engines must count BYTES. `PIC X(5) VALUE
+    // "café"` right-pads the 4-character value to 5 CHARACTER positions — "café " (a
+    // trailing space) — whose BYTE length is 6 (é is a 2-byte UTF-8 sequence, the other
+    // four positions are one byte each). `assert_matches_oracle` asserts the two engines
+    // AGREE (it panics on any divergence), so this pins the byte-count fix: the oracle
+    // sums `len_utf8()` over the window to match the compiler's `str_len`, and both
+    // report 6 — a char-based count would have wrongly reported 5 on the oracle.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"café\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR CHARACTERS.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "06\n");
+}
+
+// INSPECT … TALLYING … FOR LEADING … {BEFORE|AFTER} x — the STANDALONE leading-run
+// count restricted to a `{BEFORE|AFTER}` sub-region. The crux of this rung: the
+// leading run is anchored at the WINDOW START, not source position 0. `FOR LEADING`
+// counts only the maximal run of the delimiter that begins AT the window's start
+// index and stops at the first non-matching char INSIDE the window (or the window
+// end). With `AFTER x` and `x` absent the window is empty (count 0); with `BEFORE x`
+// and `x` absent the window is the whole source. `assert_matches_oracle` re-checks
+// JIT == oracle for every case.
+
+#[test]
+fn inspect_leading_after_anchors_the_run_at_the_window_start() {
+    // "aaXaab" AFTER "X" narrows to "aab" (indices 3..6). The leading run of 'a'
+    // there is 2 — the two a's right after the X. The "aa" BEFORE the X is outside
+    // the window and must NOT contribute (that is the whole anchoring point).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"aaXaab\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"X\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_leading_after_delimiter_at_position_zero() {
+    // Delimiter is the FIRST char: "Xaab" AFTER "X" → window "aab" (1..4), leading
+    // 'a' run = 2. Pins the `start = first + 1` edge for the leading scan.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"Xaab\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"X\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_leading_after_window_starts_on_a_mismatch() {
+    // "aaXbb" AFTER "X" → window "bb" (3..5). The window's FIRST char is 'b', not the
+    // delimiter 'a', so the leading run is 0 even though a's appear before the X.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXbb\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"X\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000\n");
+}
+
+#[test]
+fn inspect_leading_before_counts_the_prefix_run() {
+    // "aaXaa" BEFORE "X" → window "aa" (0..2), leading 'a' run = 2. The trailing "aa"
+    // after the X is outside the BEFORE window.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXaa\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" BEFORE \"X\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_leading_before_delimiter_at_last_position() {
+    // Delimiter is the LAST char: "aaX" BEFORE "X" → window "aa" (0..2), leading run
+    // = 2. Pins the `end = first` prefix edge for the leading scan.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"aaX\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" BEFORE \"X\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_leading_after_absent_delimiter_is_an_empty_window() {
+    // AFTER "Z" with no 'Z' present → the window is EMPTY, so the leading count is 0
+    // (the ISO not-found asymmetry on the AFTER side).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"aaXaab\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"Z\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000\n");
+}
+
+#[test]
+fn inspect_leading_before_absent_delimiter_is_the_whole_source() {
+    // BEFORE "Z" with no 'Z' present → the window is the WHOLE source "aaXaa", where
+    // the leading 'a' run (from position 0) is 2 (stops at the X). The BEFORE
+    // not-found rule, the asymmetric partner of the AFTER case above.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXaa\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" BEFORE \"Z\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_leading_region_delimiter_equals_tally_delimiter() {
+    // Region delimiter == tally delimiter: "aaXaa" AFTER "a" bounds on the FIRST 'a'
+    // (index 0), window "aXaa" (1..5). The leading 'a' run there is 1 (position 1 is
+    // 'a', position 2 is 'X'). The bounding 'a' itself is excluded.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXaa\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"a\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "001\n");
+}
+
+#[test]
+fn inspect_leading_region_adds_to_a_nonzero_counter() {
+    // INSPECT ADDs to the counter; the window does not change that. C starts at 5;
+    // AFTER "X" on "aaXaab" counts 2 leading a's → C = 5 + 2 = 7.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"aaXaab\".", "01  C  PIC 9(3) VALUE 5."],
+        &["INSPECT S TALLYING C FOR LEADING \"a\" AFTER \"X\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "007\n");
+}
+
+#[test]
+fn inspect_multi_char_region_delimiter_is_a_later_rung() {
+    // A MULTI-character region delimiter is deferred — rejected on both engines, just
+    // like a multi-character tally delimiter (the oracle rejects at exec, the
+    // compiler at emit, both via the single-delimiter check).
+    let src = wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"CD\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-char region delimiter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-char region delimiter"
+    );
+}
+
+// INSPECT … TALLYING … FOR LEADING — count only the run of CONSECUTIVE delimiters
+// at the START of the source, stopping at the first non-match (contrast FOR ALL,
+// which counts every occurrence). Each case pins the compiled leading-run scan to
+// the oracle byte-for-byte.
+
+#[test]
+fn inspect_leading_counts_the_leading_run() {
+    // "000123" — three leading '0's, stop at '1' → C = 3. FOR ALL agrees here
+    // (there are no other '0's), so both forms give 3 on this source.
+    let lead = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"000123\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"0\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(lead, "003\n");
+
+    let all = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"000123\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(all, "003\n");
+}
+
+#[test]
+fn inspect_leading_stops_at_the_first_non_match() {
+    // "120003" — the first character is '1', not '0', so the leading run is empty →
+    // C = 0. (FOR ALL on the same source would count all three '0's = 3; LEADING's 0
+    // is what distinguishes the two forms.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"120003\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"0\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000\n");
+}
+
+#[test]
+fn inspect_leading_all_characters_match() {
+    // "0000" — every character is the delimiter, so the leading run is the whole
+    // source → C = 4.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"0000\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"0\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "004\n");
+}
+
+#[test]
+fn inspect_leading_blank_source_counts_zero() {
+    // A blank PIC X(3) (all spaces) has no leading '0' → C = 0.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3).", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"0\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000\n");
+}
+
+#[test]
+fn inspect_leading_delimiter_is_a_pic_x1_item() {
+    // The LEADING delimiter may be a PIC X(1) item, read at run time: two leading
+    // 'A's in "AAB" → C = 2.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"AAB\".",
+            "01  DL PIC X(1) VALUE \"A\".",
+            "01  C  PIC 9(2) VALUE 0.",
+        ],
+        &["INSPECT S TALLYING C FOR LEADING DL.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "02\n");
+}
+
+#[test]
+fn inspect_leading_adds_to_a_nonzero_counter() {
+    // INSPECT adds; it does not clear. C starts at 5, three leading '0's in "000X"
+    // → C = 5 + 3 = 8.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"000X\".", "01  C  PIC 9(3) VALUE 5."],
+        &["INSPECT S TALLYING C FOR LEADING \"0\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "008\n");
+}
+
+// INSPECT … REPLACING ALL x BY y — replace EVERY occurrence of the single
+// character `x` in the alphanumeric source with the single character `y`, in
+// place (same width). Each case pins the compiled per-position rebuild to the
+// oracle's map, byte-for-byte.
+
+#[test]
+fn inspect_replacing_maps_a_repeated_char() {
+    // "ABABA" with A→X → "XBXBX".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABABA\"."],
+        &["INSPECT S REPLACING ALL \"A\" BY \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XBXBX\n");
+}
+
+#[test]
+fn inspect_replacing_absent_char_leaves_source_unchanged() {
+    // 'Z' never occurs in "HELLO" → the source is untouched.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"HELLO\"."],
+        &["INSPECT S REPLACING ALL \"Z\" BY \"Q\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "HELLO\n");
+}
+
+#[test]
+fn inspect_replacing_every_character() {
+    // Every one of "AAAA" is an 'A' → "XXXX".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"AAAA\"."],
+        &["INSPECT S REPLACING ALL \"A\" BY \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XXXX\n");
+}
+
+#[test]
+fn inspect_replacing_search_and_replacement_are_pic_x1_items() {
+    // Both the search and the replacement come from PIC X(1) items: O→0 in
+    // "MOON" → "M00N".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(4) VALUE \"MOON\".",
+            "01  X  PIC X(1) VALUE \"O\".",
+            "01  Y  PIC X(1) VALUE \"0\".",
+        ],
+        &["INSPECT S REPLACING ALL X BY Y.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "M00N\n");
+}
+
+#[test]
+fn inspect_replacing_char_at_both_ends() {
+    // "*HI*" with *→- → "-HI-" (a match at both boundaries is replaced).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"*HI*\"."],
+        &["INSPECT S REPLACING ALL \"*\" BY \"-\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "-HI-\n");
+}
+
+#[test]
+fn inspect_replacing_end_inspect_terminator_parses() {
+    // The optional END-INSPECT terminator parses; "BANANA" with A→o → "BoNoNo".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"BANANA\"."],
+        &["INSPECT S REPLACING ALL \"A\" BY \"o\" END-INSPECT.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "BoNoNo\n");
+}
+
+// INSPECT … REPLACING LEADING x BY y — replace only the run of CONSECUTIVE `x`
+// characters at the START of the source, stopping at the first non-`x`; positions
+// after that first gap are left unchanged even if they equal `x`. The compiled
+// unroll threads a runtime `active` flag (an extra `and` per position) and must
+// match the oracle's stateful `in_run` map byte-for-byte.
+
+#[test]
+fn inspect_replacing_leading_replaces_the_leading_run() {
+    // "000123" with LEADING 0→* → "***123": the three leading zeros are replaced,
+    // the digits after are kept.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"000123\"."],
+        &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "***123\n");
+}
+
+#[test]
+fn inspect_replacing_leading_stops_at_first_gap() {
+    // "00X00" with LEADING 0→* → "**X00": the run stops at "X", so the trailing
+    // "00" is NOT replaced. Contrast REPLACING ALL below, which replaces both runs.
+    let lead = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"00X00\"."],
+        &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(lead, "**X00\n");
+
+    // Same source, REPLACING ALL → "**X**": every "0" is replaced. The two forms
+    // diverge exactly where the leading run ends.
+    let all = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"00X00\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(all, "**X**\n");
+}
+
+#[test]
+fn inspect_replacing_leading_no_run_leaves_source_unchanged() {
+    // "120003" — the first character is not "0", so there is no leading run and the
+    // source is untouched (even though interior "0"s exist).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"120003\"."],
+        &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "120003\n");
+}
+
+#[test]
+fn inspect_replacing_leading_every_character() {
+    // "0000" is all leading "0"s → the whole field becomes "****".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"0000\"."],
+        &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "****\n");
+}
+
+#[test]
+fn inspect_replacing_leading_blank_source_unchanged() {
+    // A blank PIC X(3) has no leading "0" run — the three spaces are unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3)."],
+        &["INSPECT S REPLACING LEADING \"0\" BY \"*\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "   \n");
+}
+
+#[test]
+fn inspect_replacing_leading_search_and_replacement_are_pic_x1_items() {
+    // The search and replacement can be PIC X(1) items, not just literals:
+    // LEADING 0→* on "000123" → "***123".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(6) VALUE \"000123\".",
+            "01  X  PIC X(1) VALUE \"0\".",
+            "01  Y  PIC X(1) VALUE \"*\".",
+        ],
+        &["INSPECT S REPLACING LEADING X BY Y.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "***123\n");
+}
+
+// INSPECT … REPLACING CHARACTERS BY x — overwrite EVERY position of the source with
+// the single replacement char `x` (no region this rung): the WHOLE field becomes
+// `x`s, its width unchanged. Both engines compute the fill on a BYTE basis so a
+// non-ASCII source stays co-total (the oracle's `move_into` re-pads/truncates to the
+// picture's CHAR size, exactly the compiler's `width`-many fill).
+// ---------------------------------------------------------------------------
+
+#[test]
+fn inspect_replacing_characters_fills_the_whole_field() {
+    // "ABABA" → REPLACING CHARACTERS BY "X" → "XXXXX": every position overwritten.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABABA\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XXXXX\n");
+}
+
+#[test]
+fn inspect_replacing_characters_overwrites_spaces_and_mixed_content() {
+    // A field with embedded spaces and mixed content is FULLY overwritten — even the
+    // blanks become the replacement char. "A B C" (5 chars) → "-----".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"A B C\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"-\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "-----\n");
+}
+
+#[test]
+fn inspect_replacing_characters_replacement_is_a_pic_x1_item() {
+    // The replacement `x` can be a PIC X(1) DATA ITEM, not just a literal:
+    // "hello" filled with the item R = "*" → "*****".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"hello\".", "01  R  PIC X(1) VALUE \"*\"."],
+        &["INSPECT S REPLACING CHARACTERS BY R.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "*****\n");
+}
+
+#[test]
+fn inspect_replacing_characters_non_ascii_source_is_byte_co_total() {
+    // The byte-basis regression. `PIC X(5) VALUE "café"` stores "café " (padded to
+    // 5 CHARS = 6 BYTES). REPLACING CHARACTERS BY "Z" fills the field: the oracle
+    // builds n = 6 (BYTE-length) copies then `move_into` caps to the picture's 5
+    // CHARS → "ZZZZZ"; the compiler builds width = 5 copies → also "ZZZZZ". So both
+    // engines land on FIVE "Z"s ("ZZZZZ\n"), byte-for-byte identical — the whole
+    // point of computing the fill on a common (byte) basis. (Note: NOT six "Z"s —
+    // the picture's fixed 5-char width caps the padded 6-byte image on both sides.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"café\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ZZZZZ\n");
+}
+
+#[test]
+fn inspect_replacing_characters_non_ascii_literal_is_a_later_rung() {
+    // A single but NON-ASCII replacement LITERAL ("é" is one char / two UTF-8 bytes)
+    // is deferred so the byte-based compiler stays co-total with the char-based
+    // oracle — rejected on BOTH engines (guard 2).
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"ABABA\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"é\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a non-ASCII replacement");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a non-ASCII replacement"
+    );
+}
+
+#[test]
+fn inspect_replacing_characters_with_a_region_is_a_later_rung() {
+    // A `{BEFORE|AFTER}` region on the CHARACTERS item is deferred (a byte window can
+    // split a multi-byte char mid-position, which the oracle's String storage cannot
+    // represent) — rejected on BOTH engines (guard 3).
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"ABQBA\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"X\" BEFORE \"Q\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a CHARACTERS region");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a CHARACTERS region"
+    );
+}
+
+// INSPECT … REPLACING ALL x BY y … {BEFORE|AFTER} z — restrict the ALL replacement
+// to the sub-slice of the source bounded by the FIRST occurrence of the single
+// region delimiter `z`. BEFORE replaces left of `z`; AFTER replaces right of it;
+// positions OUTSIDE the region keep their original character. The window is the
+// SAME one the TALLYING region rung computes (shared helper), so the ISO not-found
+// asymmetry — BEFORE with `z` absent replaces the WHOLE source, AFTER with `z`
+// absent replaces NOTHING — must hold byte-for-byte on both engines.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn inspect_replacing_before_replaces_only_left_of_the_delimiter() {
+    // "0A0B0" — BEFORE "B" restricts the replace to "0A0" (indices 0..3): the two
+    // "0"s there become "*", the trailing "0" (index 4, right of "B") is UNTOUCHED.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE \"B\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "*A*B0\n");
+}
+
+#[test]
+fn inspect_replacing_after_replaces_only_right_of_the_delimiter() {
+    // Same source — AFTER "B" restricts the replace to "0" (index 4): only that
+    // trailing "0" becomes "*"; the two "0"s left of "B" are UNTOUCHED.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" AFTER \"B\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0A0B*\n");
+}
+
+#[test]
+fn inspect_replacing_before_absent_delimiter_replaces_the_whole_source() {
+    // BEFORE "Z" with no "Z" present → the region is the ENTIRE source, so EVERY "0"
+    // is replaced (the BEFORE not-found rule — the whole subtlety of the rung).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "*A*B*\n");
+}
+
+#[test]
+fn inspect_replacing_after_absent_delimiter_replaces_nothing() {
+    // AFTER "Z" with no "Z" present → the region is EMPTY, so NOTHING is replaced and
+    // the source is unchanged (the AFTER not-found rule — asymmetric partner above).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" AFTER \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0A0B0\n");
+}
+
+#[test]
+fn inspect_replacing_after_region_delimiter_at_position_zero() {
+    // The region delimiter is the FIRST character: AFTER "B" in "B0A0" → region
+    // [1, 4) = "0A0", so both "0"s become "*" → "B*A*".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"B0A0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" AFTER \"B\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "B*A*\n");
+}
+
+#[test]
+fn inspect_replacing_region_delimiter_equals_search() {
+    // The search char and the region delimiter are the SAME "0": AFTER "0" in "0A0B0"
+    // → the FIRST "0" (index 0) bounds the region [1, 5) = "A0B0". The replace runs
+    // over the ORIGINAL bytes, so the two "0"s at indices 2 and 4 become "*", while
+    // the delimiter "0" at index 0 (left of the region) is KEPT → "0A*B*".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" AFTER \"0\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0A*B*\n");
+}
+
+#[test]
+fn inspect_replacing_region_delimiter_equals_replacement() {
+    // The region delimiter and the replacement char are the SAME "*": BEFORE "*" in
+    // "0*0A0" → the first "*" (index 1) bounds the region [0, 1) = "0", so only the
+    // leading "0" becomes "*" → "**0A0" (the "*" delimiter and later "0"s untouched).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0*0A0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE \"*\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "**0A0\n");
+}
+
+#[test]
+fn inspect_replacing_before_delimiter_at_position_zero_is_an_empty_region() {
+    // BEFORE "B" in "B0A0" → the first "B" is at index 0, so the region is [0, 0) —
+    // EMPTY — and NOTHING is replaced even though "0"s follow → "B0A0" unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"B0A0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE \"B\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "B0A0\n");
+}
+
+#[test]
+fn inspect_replacing_region_delimiter_is_a_pic_x1_item() {
+    // The region delimiter may itself be a PIC X(1) item, read at run time: BEFORE DL
+    // (= "B") in "0A0B0" restricts to "0A0" → "*A*B0", matching the literal case.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  DL PIC X(1) VALUE \"B\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE DL.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "*A*B0\n");
+}
+
+// INSPECT … REPLACING LEADING x BY y … {BEFORE|AFTER} z — the STANDALONE
+// leading-run substitution restricted to a `{BEFORE|AFTER}` sub-region, the exact
+// analogue of `FOR LEADING … {BEFORE|AFTER}` on the count side. The run is anchored
+// at the WINDOW START: characters before the window are copied through unchanged and
+// neither begin nor break the run; the run begins at the window start and stops at
+// the first non-`x` INSIDE the window. `AFTER z` with `z` absent is an empty window
+// (no substitution); `BEFORE z` with `z` absent is the whole source.
+
+#[test]
+fn inspect_replacing_leading_after_anchors_the_run_at_the_window_start() {
+    // "aaXaab" REPLACING LEADING "a" BY "*" AFTER "X" → window "aab" (3..6). Only the
+    // two leading a's AFTER the X are rewritten; the "aa" before the X is untouched.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"aaXaab\"."],
+        &["INSPECT S REPLACING LEADING \"a\" BY \"*\" AFTER \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "aaX**b\n");
+}
+
+#[test]
+fn inspect_replacing_leading_after_window_starts_on_a_mismatch() {
+    // "aaXbb" AFTER "X" → window "bb" (3..5); its first char is not 'a', so nothing is
+    // replaced even though a's precede the X. The source is returned unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXbb\"."],
+        &["INSPECT S REPLACING LEADING \"a\" BY \"*\" AFTER \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "aaXbb\n");
+}
+
+#[test]
+fn inspect_replacing_leading_before_rewrites_the_prefix_run() {
+    // "aaXaa" REPLACING LEADING "a" BY "*" BEFORE "X" → window "aa" (0..2) → the two
+    // leading a's become '*'; the "aa" after the X is outside the BEFORE window.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXaa\"."],
+        &["INSPECT S REPLACING LEADING \"a\" BY \"*\" BEFORE \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "**Xaa\n");
+}
+
+#[test]
+fn inspect_replacing_leading_after_delimiter_at_position_zero() {
+    // Delimiter is the FIRST char: "Xaaab" AFTER "X" → window "aaab" (1..5), the three
+    // leading a's are rewritten → "X***b". Pins the `start = first + 1` edge.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"Xaaab\"."],
+        &["INSPECT S REPLACING LEADING \"a\" BY \"*\" AFTER \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "X***b\n");
+}
+
+#[test]
+fn inspect_replacing_leading_after_absent_delimiter_is_an_empty_window() {
+    // AFTER "Z" with no 'Z' present → the window is EMPTY, so nothing is replaced (the
+    // ISO not-found asymmetry on the AFTER side). The source is unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"aaXaab\"."],
+        &["INSPECT S REPLACING LEADING \"a\" BY \"*\" AFTER \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "aaXaab\n");
+}
+
+#[test]
+fn inspect_replacing_leading_before_absent_delimiter_is_the_whole_source() {
+    // BEFORE "Z" with no 'Z' present → the window is the WHOLE source "aaXaa", where
+    // the leading 'a' run (from position 0) is the two a's before the X → "**Xaa".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXaa\"."],
+        &["INSPECT S REPLACING LEADING \"a\" BY \"*\" BEFORE \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "**Xaa\n");
+}
+
+#[test]
+fn inspect_replacing_leading_region_delimiter_equals_search_char() {
+    // Region delimiter == search char: "aaXaa" AFTER "a" bounds on the FIRST 'a'
+    // (index 0), window "aXaa" (1..5). The leading 'a' run there is 1 (position 1),
+    // stopping at the X → only that one 'a' is rewritten → "a*Xaa".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaXaa\"."],
+        &["INSPECT S REPLACING LEADING \"a\" BY \"*\" AFTER \"a\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "a*Xaa\n");
+}
+
+#[test]
+fn inspect_replacing_multi_char_region_delimiter_is_a_later_rung() {
+    // A MULTI-character region delimiter is deferred — rejected on both engines, just
+    // like a multi-character search/tally delimiter (the oracle rejects at exec, the
+    // compiler at emit, both via the shared single-delimiter check).
+    let src = wrap(
+        &["01  S  PIC X(6) VALUE \"0A0CD0\"."],
+        &["INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE \"CD\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-char region delimiter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-char region delimiter"
+    );
+}
+
+// INSPECT … REPLACING ALL a BY x ALL b BY y [ALL c BY z …] — TWO OR MORE replace
+// items in ONE REPLACING clause. One left-to-right pass, first-match-wins, and (the
+// high-value case) NO re-chaining: a byte a replacement produces is never fed to a
+// later item. Each case pins the exact rebuilt source and `assert_matches_oracle`
+// independently re-checks JIT == tree-walk oracle.
+
+#[test]
+fn inspect_replacing_multi_two_items() {
+    // "abcab" with a→x, b→y → "xycxy": each position takes its own item, c untouched.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"abcab\"."],
+        &["INSPECT S REPLACING ALL \"a\" BY \"x\" ALL \"b\" BY \"y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "xycxy\n");
+}
+
+#[test]
+fn inspect_replacing_multi_three_items() {
+    // Three items over "abcabc": a→x, b→y, c→z → "xyzxyz".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"abcabc\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"x\"",
+            "    ALL \"b\" BY \"y\" ALL \"c\" BY \"z\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "xyzxyz\n");
+}
+
+#[test]
+fn inspect_replacing_multi_no_rechaining() {
+    // THE key correctness case. `ALL "a" BY "b" ALL "b" BY "z"` over "ab" → "bz":
+    // position 0's a→b STOPS (the produced 'b' is NOT then turned into 'z'), and
+    // position 1's original 'b'→z. A naive sequential two-pass replace would give
+    // "zz" — this pins the single-pass no-re-chaining semantics on BOTH engines.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(2) VALUE \"ab\"."],
+        &["INSPECT S REPLACING ALL \"a\" BY \"b\" ALL \"b\" BY \"z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "bz\n");
+}
+
+#[test]
+fn inspect_replacing_multi_first_match_wins() {
+    // Two items whose searches OVERLAP on 'a': `ALL "a" BY "x" ALL "a" BY "y"`. The
+    // FIRST written item wins at every 'a' → "x", never "y".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"aaa\"."],
+        &["INSPECT S REPLACING ALL \"a\" BY \"x\" ALL \"a\" BY \"y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "xxx\n");
+}
+
+#[test]
+fn inspect_replacing_multi_char_matched_by_no_item() {
+    // 'Q' matches neither item → it survives unchanged among replaced neighbours.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aQbQa\"."],
+        &["INSPECT S REPLACING ALL \"a\" BY \"x\" ALL \"b\" BY \"y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "xQyQx\n");
+}
+
+#[test]
+fn inspect_replacing_multi_source_all_one_item() {
+    // Every character of "aaaa" is matched by the FIRST item → "xxxx" (the second
+    // item never fires).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"aaaa\"."],
+        &["INSPECT S REPLACING ALL \"a\" BY \"x\" ALL \"b\" BY \"y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "xxxx\n");
+}
+
+#[test]
+fn inspect_replacing_single_item_still_works() {
+    // Regression: exactly ONE replace item keeps the single-item path unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABABA\"."],
+        &["INSPECT S REPLACING ALL \"A\" BY \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XBXBX\n");
+}
+
+#[test]
+fn inspect_replacing_multi_pic_x1_search_and_replacement() {
+    // A multi-item list whose search/replacement operands are PIC X(1) items: O→0,
+    // N→M over "MOON" → "M00M".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(4) VALUE \"MOON\".",
+            "01  A  PIC X(1) VALUE \"O\".",
+            "01  B  PIC X(1) VALUE \"0\".",
+            "01  C  PIC X(1) VALUE \"N\".",
+            "01  D  PIC X(1) VALUE \"M\".",
+        ],
+        &[
+            "INSPECT S REPLACING ALL A BY B ALL C BY D.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "M00M\n");
+}
+
+#[test]
+fn inspect_replacing_multi_with_leading_item_is_a_later_rung() {
+    // A LEADING item inside a MULTI-item list is deferred — rejected on BOTH engines
+    // with the same message (a LONE `REPLACING LEADING` is still supported).
+    let src = wrap(
+        &["01  S  PIC X(4) VALUE \"aabb\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"x\"",
+            "    LEADING \"b\" BY \"y\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-item LEADING item");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-item LEADING item"
+    );
+}
+
+#[test]
+fn inspect_replacing_multi_each_item_with_a_region() {
+    // Two items, one with BEFORE and one with AFTER, over a source where the windows
+    // differ. Source "a0b0a" (positions 0..5): item 1 `ALL "a" BY "x"` has NO region
+    // (whole source); item 2 `ALL "0" BY "*" BEFORE "b"` fires only left of the first
+    // "b" (index 2 → window [0,2)). Both "a"s become "x"; only the "0" at index 1
+    // (inside [0,2)) becomes "*", the "0" at index 3 (outside) stays "0".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"a0b0a\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"x\"",
+            "    ALL \"0\" BY \"*\" BEFORE \"b\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "x*b0x\n");
+}
+
+#[test]
+fn inspect_replacing_multi_before_and_after_windows() {
+    // One item windowed BEFORE, one AFTER, over "aXaXa" (X at index 1 and 3).
+    // Item 1 `ALL "a" BY "b" BEFORE "X"`: window [0,1) → only index 0's "a" → "b".
+    // Item 2 `ALL "a" BY "c" AFTER "X"`: window (1,5] → indices 2 and 4's "a" → "c".
+    // The "a" at index 0 is claimed by item 1 first (first-match-wins), the rest by
+    // item 2. The "X"s match neither item and pass through.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aXaXa\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"b\" BEFORE \"X\"",
+            "    ALL \"a\" BY \"c\" AFTER \"X\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "bXcXc\n");
+}
+
+#[test]
+fn inspect_replacing_multi_region_plus_regionless_item() {
+    // A region item mixed with a whole-source (region-less) item. Source "0a0a0"
+    // Item 1 `ALL "0" BY "*" AFTER "a"`: first "a" at index 1 → window (1,5] →
+    // the "0"s at indices 2 and 4 become "*"; the "0" at index 0 (outside) stays.
+    // Item 2 `ALL "a" BY "z"` (no region): both "a"s become "z" everywhere.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0a0a0\"."],
+        &[
+            "INSPECT S REPLACING ALL \"0\" BY \"*\" AFTER \"a\"",
+            "    ALL \"a\" BY \"z\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "0z*z*\n");
+}
+
+#[test]
+fn inspect_replacing_multi_after_absent_delimiter_empty_window() {
+    // `AFTER x` where x is ABSENT → an EMPTY window, so that item NEVER fires; the
+    // other (region-less) item still applies everywhere. Source "abab", item 1
+    // `ALL "a" BY "*" AFTER "Z"` (no "Z" present → empty window, never fires),
+    // item 2 `ALL "b" BY "y"` rewrites both "b"s. The "a"s stay untouched.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"abab\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"*\" AFTER \"Z\"",
+            "    ALL \"b\" BY \"y\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ayay\n");
+}
+
+#[test]
+fn inspect_replacing_multi_first_match_wins_overlapping_windows() {
+    // FIRST-MATCH precedence when TWO items' windows both cover a position and both
+    // match — the EARLIER-written item wins. Source "aaaa" with no region on either
+    // (both whole-source windows): `ALL "a" BY "x"` then `ALL "a" BY "y"`. Every "a"
+    // is claimed by item 1 → all "x", none "y".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"aaaa\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"x\"",
+            "    ALL \"a\" BY \"y\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "xxxx\n");
+}
+
+#[test]
+fn inspect_replacing_multi_first_match_wins_within_overlapping_regions() {
+    // Both items carry a region and both windows cover the same position, and both
+    // searches match it — the earlier item still wins. Source "aXaa": item 1
+    // `ALL "a" BY "p" AFTER "X"` (window (1,4] → indices 2,3), item 2
+    // `ALL "a" BY "q" AFTER "X"` (same window). Index 0's "a" is outside BOTH windows
+    // (before the "X") so it stays "a"; indices 2 and 3 are claimed by item 1 → "p".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"aXaa\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"p\" AFTER \"X\"",
+            "    ALL \"a\" BY \"q\" AFTER \"X\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "aXpp\n");
+}
+
+#[test]
+fn inspect_replacing_multi_non_ascii_source_shares_the_reconstruction_chip() {
+    // NON-ASCII SOURCE: this rung's MATCHING is byte-safe — a multi-byte "é" never
+    // equals an ASCII search byte, so it is never falsely matched or replaced, and the
+    // per-item window (computed over the ORIGINAL source, bounded by the first
+    // occurrence of an ASCII region delimiter) selects the SAME ASCII positions on
+    // both engines. BUT the RECONSTRUCTION is the PRE-EXISTING byte-vs-char chip shared
+    // by EVERY REPLACING lowering: the byte-based compiler rebuilds the field with
+    // per-position `str_slice`, which cannot slice a multi-byte char, so it traps —
+    // EXACTLY as the merged single-item `REPLACING ALL` does on the same source. The
+    // multi-item + per-item-region path introduces NO new non-ASCII behavior: it traps
+    // identically. (The oracle iterates `char`s and succeeds char-based; that
+    // divergence is the documented pre-existing chip, NOT introduced here.) We pin that
+    // the MULTI path and the SINGLE-item path share the chip byte-for-byte.
+    let multi = wrap(
+        &["01  S  PIC X(5) VALUE \"aéaba\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"x\" BEFORE \"b\"",
+            "    ALL \"b\" BY \"y\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    );
+    let single = wrap(
+        &["01  S  PIC X(5) VALUE \"aéaba\"."],
+        &["INSPECT S REPLACING ALL \"a\" BY \"x\".", "STOP RUN."],
+    );
+    // The compiled reconstruction traps on the multi-byte char on BOTH the multi path
+    // (per-item regions) and the pre-existing single-item path — the chip is shared,
+    // unchanged by this rung.
+    assert!(
+        run_on_jit_result(&multi).is_err(),
+        "multi + per-item-region path must trap on a non-ASCII source, like single-item"
+    );
+    assert!(
+        run_on_jit_result(&single).is_err(),
+        "single-item REPLACING ALL traps on a non-ASCII source (pre-existing chip)"
+    );
+    // The oracle iterates chars and succeeds on the multi path: item 1
+    // `ALL "a" BY "x" BEFORE "b"` (window [0, index_of_b)=[0,3)) rewrites the two "a"s
+    // left of "b"; item 2 `ALL "b" BY "y"` rewrites the "b" (index 3); the "a" at
+    // index 4 is outside item 1's window and is not a "b", so it stays. The "é" (a
+    // non-ASCII byte) matches no ASCII search and passes through untouched → "xéxya".
+    // This pins the MATCH-side byte-safety and the per-item window agreement.
+    assert_eq!(run_cobol(&multi).expect("oracle succeeds char-based"), "xéxya\n");
+}
+
+#[test]
+fn inspect_replacing_multi_with_characters_is_a_later_rung() {
+    // A `CHARACTERS` item inside a MULTI-item list is deferred on BOTH engines.
+    let src = wrap(
+        &["01  S  PIC X(4) VALUE \"aabb\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"x\"",
+            "    CHARACTERS BY \"y\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-item CHARACTERS item");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-item CHARACTERS item"
+    );
+}
+
+#[test]
+fn inspect_combined_tallying_with_multi_replacing_is_a_later_rung() {
+    // The COMBINED `TALLYING … REPLACING` form with SEVERAL replace items stays
+    // rejected exactly as today — multi-item does not leak into the combined path.
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"abcab\".", "01  K  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING K FOR ALL \"a\"",
+            "    REPLACING ALL \"a\" BY \"x\" ALL \"b\" BY \"y\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject combined + multi-item REPLACING");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject combined + multi-item REPLACING"
+    );
+}
+
+// INSPECT … TALLYING counter FOR ALL a ALL b [ALL d …] — TWO OR MORE `FOR ALL`
+// items under ONE counter. One left-to-right pass with FIRST-MATCH-PER-POSITION into
+// the shared counter, so a position is counted at most once even when several (or
+// duplicate) delimiters would match it — duplicates never double-count. Each case
+// pins the exact counter and `assert_matches_oracle` independently re-checks JIT ==
+// tree-walk oracle.
+
+#[test]
+fn inspect_tally_multi_two_delims() {
+    // "abcab" counting ALL "a" ALL "b" into one counter: a,b,_,a,b → 4 (c ignored).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"abcab\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"a\" ALL \"b\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "004\n");
+}
+
+#[test]
+fn inspect_tally_multi_three_delims() {
+    // Three delimiters over "abcabc": every position matches one of a/b/c → 6.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"abcabc\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\"",
+            "    ALL \"b\" ALL \"c\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "006\n");
+}
+
+#[test]
+fn inspect_tally_multi_duplicate_delim_counts_each_once() {
+    // THE key correctness case. `FOR ALL "a" ALL "a"` over "aa" adds 2, NOT 4: each
+    // 'a' position is counted ONCE by the first item — the per-position break means
+    // the second (duplicate) item never fires there. A naive "sum of independent
+    // per-delimiter counts" would give 4; this pins the single-pass first-match rule.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(2) VALUE \"aa\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"a\" ALL \"a\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "02\n");
+}
+
+#[test]
+fn inspect_tally_multi_disjoint_delims() {
+    // Disjoint delimiters over "a1b2a3": only the a's and b's match → 3, the digits
+    // are ignored, and both delimiters fold into the SAME counter.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"a1b2a3\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"a\" ALL \"b\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "03\n");
+}
+
+#[test]
+fn inspect_tally_multi_char_matched_by_no_delim() {
+    // 'Q' matches neither delimiter → it is skipped among counted neighbours: "aQbQa"
+    // counts a,b,a = 3.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aQbQa\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"a\" ALL \"b\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "03\n");
+}
+
+#[test]
+fn inspect_tally_multi_source_all_matching() {
+    // Every character of "aabb" matches one of the two delimiters → 4.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"aabb\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"a\" ALL \"b\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn inspect_tally_single_item_still_works() {
+    // Regression: exactly ONE `FOR` item keeps the single-item path unchanged (the
+    // multi dispatch fires only at >= 2 items). "ABABA" has three A's → 3.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"A\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "003\n");
+}
+
+#[test]
+fn inspect_tally_multi_pic_x1_delimiters() {
+    // The delimiters in a multi list may be PIC X(1) items (their single stored
+    // character), read at run time: ALL DL1 ALL DL2 over "abcab" counts a,b,_,a,b = 4.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(5) VALUE \"abcab\".",
+            "01  DL1 PIC X(1) VALUE \"a\".",
+            "01  DL2 PIC X(1) VALUE \"b\".",
+            "01  C   PIC 9(2) VALUE 0.",
+        ],
+        &["INSPECT S TALLYING C FOR ALL DL1 ALL DL2.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn inspect_tally_multi_counter_overflow_truncates() {
+    // 12 matches (six a's + six b's) added into a PIC 9(1) counter overflows: COBOL's
+    // silent high-order truncation keeps the low digit → 12 mod 10 = 2.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(12) VALUE \"aaaaaabbbbbb\".", "01  C  PIC 9(1) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"a\" ALL \"b\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "2\n");
+}
+
+#[test]
+fn inspect_tally_multi_adds_to_a_nonzero_counter() {
+    // C starts at 5; "MISSISSIPPI" has four S's and two P's → six matched positions →
+    // C = 5 + 6 = 11 (proves ADD into the shared counter, not a fresh assignment).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(11) VALUE \"MISSISSIPPI\".", "01  C  PIC 9(3) VALUE 5."],
+        &["INSPECT S TALLYING C FOR ALL \"S\" ALL \"P\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "011\n");
+}
+
+#[test]
+fn inspect_tally_multi_with_leading_item_is_a_later_rung() {
+    // A LEADING item inside a MULTI-item tally list is deferred — rejected on BOTH
+    // engines with the same message (a LONE `FOR LEADING` is still supported).
+    let src = wrap(
+        &["01  S  PIC X(4) VALUE \"aabb\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\"",
+            "    LEADING \"b\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-item LEADING item");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-item LEADING item"
+    );
+}
+
+// A `{BEFORE|AFTER}` region on each item of a MULTI-item tally list is now SUPPORTED
+// (this rung): each item carries its OWN window over the source, and one first-match-
+// per-position pass counts a position for the FIRST item whose window contains it AND
+// whose delimiter matches the current char. Each case pins the exact counter and
+// `assert_matches_oracle` independently re-checks JIT == tree-walk oracle.
+
+#[test]
+fn inspect_tally_multi_two_items_before_and_after() {
+    // Two items, one BEFORE one AFTER, over a source where the windows differ.
+    // Source "aXaXa" (X at char indices 1 and 3), length 5.
+    //   item 1 `ALL "a" BEFORE "X"`: first "X" at index 1 → window [0,1) → only the
+    //           "a" at index 0 is inside.
+    //   item 2 `ALL "a" AFTER "X"`:  first "X" at index 1 → window [2,5) → the "a"s at
+    //           indices 2 and 4 are inside.
+    // Position by position: 0→item1, 2→item2, 4→item2 (the two "X"s match neither) → 3.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aXaXa\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\" BEFORE \"X\"",
+            "    ALL \"a\" AFTER \"X\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "003\n");
+}
+
+#[test]
+fn inspect_tally_multi_region_plus_regionless_item() {
+    // A region item mixed with a whole-source (region-less) item. Source "0a0a0".
+    //   item 1 `ALL "0" AFTER "a"`: first "a" at index 1 → window [2,5) → the "0"s at
+    //           indices 2 and 4 (not the "0" at index 0, which is outside).
+    //   item 2 `ALL "a"` (no region): whole source → both "a"s at indices 1 and 3.
+    // Count: index 1 (item2 "a"), 2 (item1 "0"), 3 (item2 "a"), 4 (item1 "0") → 4;
+    // index 0's "0" is outside item 1's window and item 2 does not match it.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0a0a0\".", "01  C  PIC 9(2) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" AFTER \"a\"",
+            "    ALL \"a\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn inspect_tally_multi_after_absent_delimiter_empty_window() {
+    // `AFTER x` where x is ABSENT → an EMPTY window, so that item contributes 0; the
+    // other (region-less) item still counts everywhere. Source "abab":
+    //   item 1 `ALL "a" AFTER "Z"` — no "Z" present → empty window → never fires;
+    //   item 2 `ALL "b"` (no region) → the two "b"s at indices 1 and 3 → 2.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"abab\".", "01  C  PIC 9(2) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\" AFTER \"Z\"",
+            "    ALL \"b\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "02\n");
+}
+
+#[test]
+fn inspect_tally_multi_duplicate_windows_first_match_counts_once() {
+    // FIRST-MATCH-PER-POSITION with DUPLICATE delimiters over DIFFERENT but OVERLAPPING
+    // windows: a position matched by BOTH items is counted ONCE, by the earlier item.
+    // Source "aabaa" (b at index 2), same delimiter "a" on both items:
+    //   item 1 `ALL "a" BEFORE "b"`: window [0,2) → indices 0,1;
+    //   item 2 `ALL "a"` (whole source): indices 0,1,3,4.
+    // Indices 0 and 1 are inside BOTH windows and match BOTH items, but the per-position
+    // break counts each ONCE (item 1). item 2 then claims indices 3 and 4. Total = 4,
+    // NOT 6 — a naive per-item sum (2 + 4) would double-count indices 0 and 1.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aabaa\".", "01  C  PIC 9(2) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\" BEFORE \"b\"",
+            "    ALL \"a\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn inspect_tally_multi_non_ascii_source_positive_parity() {
+    // POSITIVE non-ASCII byte-identity parity (NOT a trap): unlike REPLACING, TALLYING
+    // only COUNTS — it never reconstructs the source via `str_slice` — so there is no
+    // UTF-8-boundary trap. Match-based counting of ASCII delimiters is byte-robust (a
+    // multi-byte "é" = bytes 0xC3 0xA9 never equals an ASCII delimiter byte), and each
+    // window is content-defined (bounded by the first occurrence of the ASCII region
+    // delimiter "b"), so the char-based oracle and the byte-based compiler scan the SAME
+    // substring and count the SAME matches. Source "aé0b0" (chars a,é,0,b,0):
+    //   item 1 `ALL "0" BEFORE "b"`: window left of "b" → the "0" before "b" → 1;
+    //   item 2 `ALL "0" AFTER "b"`:  window right of "b" → the "0" after "b"  → 1.
+    // Total = 2 on BOTH engines; the "é" (and its continuation byte) matches nothing.
+    // `assert_matches_oracle` asserts the DISPLAYed counter is byte-identical.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aé0b0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"b\"",
+            "    ALL \"0\" AFTER \"b\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_tally_multi_with_characters_is_a_later_rung() {
+    // A `CHARACTERS` item inside a MULTI-item tally list is deferred on BOTH engines.
+    let src = wrap(
+        &["01  S  PIC X(4) VALUE \"aabb\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\"",
+            "    CHARACTERS.",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-item CHARACTERS item");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-item CHARACTERS item"
+    );
+}
+
+// INSPECT … TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d … — TWO OR MORE `tally_for`
+// groups, each with its OWN counter. ISO COMBINED-priority-list-ACROSS-COUNTERS
+// semantics: ALL delimiters of ALL groups form ONE ordered list scanned in a SINGLE
+// left-to-right pass; at each position the first matching delimiter (group-1's items
+// first, then group-2's, …) bumps ITS OWN counter and the scan advances — so a position
+// CLAIMED by an earlier group NEVER reaches a later group. Each case pins the exact
+// counters and `assert_matches_oracle` independently re-checks JIT == tree-walk oracle.
+
+#[test]
+fn inspect_tally_counters_two_distinct_delims() {
+    // Two counters, disjoint delimiters over "abcab": C1 counts a,a = 2 and C2 counts
+    // b,b = 2 (c matches neither). Each delimiter bumps its OWN counter.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(5) VALUE \"abcab\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR ALL \"b\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n002\n");
+}
+
+#[test]
+fn inspect_tally_counters_same_delim_first_group_wins() {
+    // THE crux case. Two counters, the SAME delimiter "a" over "aa": the combined
+    // priority list is [g0:a, g1:a]; each 'a' position matches g0 FIRST and the scan
+    // advances, so g1 never fires. C1 += 2, C2 += 0 — NOT 2 and 2. This pins that an
+    // earlier group consumes the position across counters.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(2) VALUE \"aa\".",
+            "01  C1  PIC 9(2) VALUE 0.",
+            "01  C2  PIC 9(2) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR ALL \"a\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "02\n00\n");
+}
+
+#[test]
+fn inspect_tally_counters_group_with_multiple_items() {
+    // A group carrying TWO items (`C1 FOR ALL "a" ALL "b"`) plus a second counter
+    // (`C2 FOR ALL "c"`) over "abcabc": C1 counts a,b,a,b = 4 and C2 counts c,c = 2.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(6) VALUE \"abcabc\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\" ALL \"b\"",
+            "    C2 FOR ALL \"c\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "004\n002\n");
+}
+
+#[test]
+fn inspect_tally_counters_starves_later_group() {
+    // The ISO "aba" example: `C1 FOR ALL "a" ALL "b" C2 FOR ALL "a"` over "aba". Group 1
+    // (items a,b) claims ALL three positions → C1 += 3; C2's "a" never reaches a
+    // position → C2 += 0.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(3) VALUE \"aba\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\" ALL \"b\"",
+            "    C2 FOR ALL \"a\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "003\n000\n");
+}
+
+#[test]
+fn inspect_tally_counters_three_counters() {
+    // Three counters, one delimiter each, over "abcabc": C1=a,a=2, C2=b,b=2, C3=c,c=2.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(6) VALUE \"abcabc\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+            "01  C3  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR ALL \"b\"",
+            "    C3 FOR ALL \"c\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "DISPLAY C3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n002\n002\n");
+}
+
+#[test]
+fn inspect_tally_counters_char_matched_by_no_group() {
+    // 'X' matches no group's delimiter → it advances with no increment: "aXbXa" gives
+    // C1 (a) = 2 and C2 (b) = 1.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(5) VALUE \"aXbXa\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR ALL \"b\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n001\n");
+}
+
+#[test]
+fn inspect_tally_counters_overflow_truncates_per_counter() {
+    // Each counter truncates INDEPENDENTLY via its own store path: 12 a's into a
+    // PIC 9(1) C1 overflows (12 mod 10 = 2); 3 b's into a PIC 9(3) C2 = 003.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(15) VALUE \"aaaaaaaaaaaabbb\".",
+            "01  C1  PIC 9(1) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR ALL \"b\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "2\n003\n");
+}
+
+#[test]
+fn inspect_tally_counters_add_to_nonzero_counters() {
+    // Distinct counters ACCUMULATE independently onto their starting values (INSPECT
+    // adds; it does not clear). C1 starts 5, C2 starts 10; "MISSISSIPPI" has four S's
+    // and two P's → C1 = 5 + 4 = 9, C2 = 10 + 2 = 12.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(11) VALUE \"MISSISSIPPI\".",
+            "01  C1  PIC 9(3) VALUE 5.",
+            "01  C2  PIC 9(3) VALUE 10.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"S\"",
+            "    C2 FOR ALL \"P\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "009\n012\n");
+}
+
+#[test]
+fn inspect_tally_counters_pic_x1_delimiters_across_groups() {
+    // The delimiters may be PIC X(1) items read at run time, one per group: ALL DL1 into
+    // C1, ALL DL2 into C2, over "abcab" → C1 = 2 (a), C2 = 2 (b).
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(5) VALUE \"abcab\".",
+            "01  DL1 PIC X(1) VALUE \"a\".",
+            "01  DL2 PIC X(1) VALUE \"b\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL DL1",
+            "    C2 FOR ALL DL2.",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n002\n");
+}
+
+#[test]
+fn inspect_tally_counters_same_counter_name_in_two_groups() {
+    // The SAME counter name may appear in two groups — a rare but legal form. Both
+    // groups' matches ADD to that ONE item: `C FOR ALL "a" C FOR ALL "b"` over "abab"
+    // gives 2 a's + 2 b's = C = 4 (each group resolves the counter by name at its add).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"abab\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\"",
+            "    C FOR ALL \"b\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "004\n");
+}
+
+#[test]
+fn inspect_tally_counters_single_counter_still_works() {
+    // Regression: exactly ONE `tally_for` keeps the single-counter paths unchanged (the
+    // multi-COUNTER dispatch fires only at >= 2 groups). One item → the `Inspect` path.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"A\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "003\n");
+}
+
+#[test]
+fn inspect_tally_counters_with_leading_item_is_a_later_rung() {
+    // A LEADING item in ANY group of the multi-COUNTER path is deferred — rejected on
+    // BOTH engines (a LONE `FOR LEADING` is still supported via the single path).
+    let src = wrap(
+        &[
+            "01  S   PIC X(4) VALUE \"aabb\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR LEADING \"b\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-counter LEADING item");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-counter LEADING item"
+    );
+}
+
+// INSPECT … TALLYING c1 FOR ALL a [{BEFORE|AFTER} p] [ALL b …] c2 FOR ALL d … — the
+// several-counters form where each item may now carry its OWN `{BEFORE|AFTER}` region
+// window (this rung LIFTS the multi-counter region reject). Each item's window narrows
+// the positions its delimiter is eligible at; the combined priority list still scans in
+// ONE left-to-right pass, first in-window match across counters wins. Each case pins the
+// exact counters and `assert_matches_oracle` independently re-checks JIT == oracle.
+
+#[test]
+fn inspect_tally_counters_two_items_mixed_before_after() {
+    // Two counter groups, one BEFORE one AFTER, over "aXaXa" (X at char indices 1 and 3):
+    //   C1 `ALL "a" BEFORE "X"`: first X at index 1 → window [0,1) → only the "a" at 0.
+    //   C2 `ALL "a" AFTER "X"`:  first X at index 1 → window [2,5) → the "a"s at 2 and 4.
+    // Position by position (combined list [g0, g1]): 0→C1, 2→C2, 4→C2. So C1=1, C2=2.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(5) VALUE \"aXaXa\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\" BEFORE \"X\"",
+            "    C2 FOR ALL \"a\" AFTER \"X\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "001\n002\n");
+}
+
+#[test]
+fn inspect_tally_counters_region_item_plus_regionless_item() {
+    // A region-carrying item in one group + a region-LESS item in another. Source "0a0a0":
+    //   C1 `ALL "0" AFTER "a"`: first "a" at index 1 → window [2,5) → the "0"s at 2 and 4.
+    //   C2 `ALL "a"` (no region): whole source → the "a"s at indices 1 and 3.
+    // Walk: 1→C2, 2→C1, 3→C2, 4→C1; index 0's "0" is outside C1's window and C2 doesn't
+    // match it. So C1=2, C2=2.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(5) VALUE \"0a0a0\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"0\" AFTER \"a\"",
+            "    C2 FOR ALL \"a\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n002\n");
+}
+
+#[test]
+fn inspect_tally_counters_after_absent_delimiter_empty_window() {
+    // `AFTER x` where x is ABSENT → an EMPTY window, so that group's item contributes 0;
+    // the other (region-less) group still counts. Source "abab":
+    //   C1 `ALL "a" AFTER "Z"` — no "Z" → empty window → never fires → C1=0;
+    //   C2 `ALL "b"` (no region) → the two "b"s at 1 and 3 → C2=2.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(4) VALUE \"abab\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\" AFTER \"Z\"",
+            "    C2 FOR ALL \"b\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "000\n002\n");
+}
+
+#[test]
+fn inspect_tally_counters_earlier_window_starves_later_group() {
+    // CROSS-COUNTER first-match with a WINDOW: an earlier group's IN-WINDOW delimiter
+    // claims a position, starving a later group's delimiter of it. Source "aZa" (Z at
+    // index 1), both groups matching "a":
+    //   C1 `ALL "a" BEFORE "Z"`: first Z at index 1 → window [0,1) → only index 0;
+    //   C2 `ALL "a"` (whole source): indices 0 and 2.
+    // Walk: index 0's "a" is inside C1's window → C1 claims it (C2 never sees it); index
+    // 2's "a" is OUTSIDE C1's window → falls to C2. So C1=1, C2=1 — NOT C2=2. The proof
+    // that C1's in-window delimiter starved C2 of index 0.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(3) VALUE \"aZa\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\" BEFORE \"Z\"",
+            "    C2 FOR ALL \"a\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "001\n001\n");
+}
+
+#[test]
+fn inspect_tally_counters_same_counter_two_groups_with_regions() {
+    // The SAME counter name in two groups, EACH with its own region — both regions' hits
+    // ADD to that one item. Source "0b0" (b at index 1):
+    //   group0 `C FOR ALL "0" BEFORE "b"`: window [0,1) → the "0" at index 0;
+    //   group1 `C FOR ALL "0" AFTER "b"`:  window [2,3) → the "0" at index 2.
+    // Each group's accumulator = 1; both add to C → C = 0 + 1 + 1 = 2.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"0b0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"b\"",
+            "    C FOR ALL \"0\" AFTER \"b\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_tally_counters_non_ascii_source_positive_parity() {
+    // POSITIVE non-ASCII byte-identity parity (NOT a trap): TALLYING only COUNTS — it
+    // never reconstructs the source via `str_slice` — so there is no UTF-8-boundary trap.
+    // ASCII delimiters never equal a multi-byte continuation byte, and each item's window
+    // is content-defined (bounded by the first "b"), so the char-based oracle and the
+    // byte-based compiler scan the SAME substring and count the SAME matches. Source
+    // "aé0b0" (chars a, é, 0, b, 0), two counter groups with per-item regions:
+    //   C1 `ALL "0" BEFORE "b"`: window left of "b" → the "0" before "b" → 1;
+    //   C2 `ALL "0" AFTER "b"`:  window right of "b" → the "0" after "b"  → 1.
+    // C1=1, C2=1 on BOTH engines; the "é" (and its continuation byte) matches nothing.
+    // `assert_matches_oracle` asserts the DISPLAYed counters are byte-identical.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(5) VALUE \"aé0b0\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"0\" BEFORE \"b\"",
+            "    C2 FOR ALL \"0\" AFTER \"b\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "001\n001\n");
+}
+
+#[test]
+fn inspect_tally_counters_with_characters_is_a_later_rung() {
+    // A `CHARACTERS` item in any group is deferred on BOTH engines.
+    let src = wrap(
+        &[
+            "01  S   PIC X(4) VALUE \"aabb\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR CHARACTERS.",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-counter CHARACTERS item");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-counter CHARACTERS item"
+    );
+}
+
+#[test]
+fn inspect_tally_counters_signed_counter_is_a_later_rung() {
+    // A signed (`PIC S9`) counter in ANY group is deferred — every counter must be an
+    // unsigned integer, validated identically on BOTH engines.
+    let src = wrap(
+        &[
+            "01  S   PIC X(4) VALUE \"aabb\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC S9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR ALL \"b\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a signed counter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a signed counter"
+    );
+}
+
+#[test]
+fn inspect_tally_counters_fractional_counter_is_a_later_rung() {
+    // A fractional (`PIC 9V9`) counter in any group is deferred on BOTH engines.
+    let src = wrap(
+        &[
+            "01  S   PIC X(4) VALUE \"aabb\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9V9 VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\"",
+            "    C2 FOR ALL \"b\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a fractional counter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a fractional counter"
+    );
+}
+
+#[test]
+fn inspect_combined_several_counters_with_replacing_is_a_later_rung() {
+    // The COMBINED `TALLYING … REPLACING` form with SEVERAL counters stays rejected
+    // exactly as today — the multi-COUNTER relaxation is confined to the LONE TALLYING
+    // form and does not leak into the combined path (which still routes through the
+    // several-counters reject in `read_inspect_tally_all`/`inspect_tally_all`).
+    let src = wrap(
+        &[
+            "01  S   PIC X(5) VALUE \"abcab\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL \"a\" C2 FOR ALL \"b\"",
+            "    REPLACING ALL \"a\" BY \"x\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject combined + several counters");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject combined + several counters"
+    );
+}
+
+#[test]
+fn inspect_combined_multi_tallying_with_replacing_is_a_later_rung() {
+    // The COMBINED `TALLYING … REPLACING` form with SEVERAL tally items stays rejected
+    // exactly as today — the multi-item tally relaxation does not leak into the
+    // combined path.
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"abcab\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\" ALL \"b\"",
+            "    REPLACING ALL \"a\" BY \"x\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject combined + multi-item TALLYING");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject combined + multi-item TALLYING"
+    );
+}
+
+// INSPECT … TALLYING … REPLACING with a per-half `{BEFORE|AFTER}` region — the
+// combined form now accepts an INDEPENDENT single-char region on EACH half. Because
+// the tally does not mutate the source, BOTH windows (the count's and the
+// replacement's) are computed over the SAME original bytes, using the shared window
+// helper — so the JIT output stays byte-identical to the tree-walk oracle. Every
+// case pins the exact counter/source result; `assert_matches_oracle` independently
+// re-checks JIT == oracle.
+
+#[test]
+fn inspect_combined_region_tally_region_only() {
+    // Only the TALLYING half is narrowed: BEFORE "C" over "AB0CD0" counts the single
+    // "0" in "AB0" → C = 001. The REPLACING half has NO region, so it maps BOTH "0"s.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\"",
+            "    REPLACING ALL \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "001\nAB*CD*\n");
+}
+
+#[test]
+fn inspect_combined_region_replace_region_only() {
+    // Only the REPLACING half is narrowed: the region-less TALLYING counts all three
+    // "0"s (3), then REPLACING ALL "0" BEFORE "B" restricts to "0A0" → "*A*B0".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\"",
+            "    REPLACING ALL \"0\" BY \"*\" BEFORE \"B\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "003\n*A*B0\n");
+}
+
+#[test]
+fn inspect_combined_region_both_before_distinct_delimiters() {
+    // BOTH halves BEFORE, DIFFERENT delimiters over "0A0B0C0": tally BEFORE "B"
+    // → region "0A0" → 2; replace BEFORE "C" → region "0A0B0" → the three "0"s at
+    // indices 0/2/4 become "*" → "*A*B*C0".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(7) VALUE \"0A0B0C0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"B\"",
+            "    REPLACING ALL \"0\" BY \"*\" BEFORE \"C\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n*A*B*C0\n");
+}
+
+#[test]
+fn inspect_combined_region_before_and_after_different_kinds() {
+    // DIFFERENT kinds over "0A0B0": tally BEFORE "B" → region "0A0" → 2; replace
+    // AFTER "B" → region "0" (index 4) → only the trailing "0" → "0A0B*".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"B\"",
+            "    REPLACING ALL \"0\" BY \"*\" AFTER \"B\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n0A0B*\n");
+}
+
+#[test]
+fn inspect_combined_region_both_after() {
+    // BOTH halves AFTER over "0A0B0": tally AFTER "A" → region "0B0" → two "0"s (2);
+    // replace AFTER "B" → region "0" → only index 4 → "0A0B*".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" AFTER \"A\"",
+            "    REPLACING ALL \"0\" BY \"*\" AFTER \"B\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n0A0B*\n");
+}
+
+#[test]
+fn inspect_combined_region_tally_after_not_found_replace_before_not_found() {
+    // The per-half not-found asymmetry, BOTH exercised at once over "0A0": tally
+    // AFTER "Z" (absent) → EMPTY window → 0; replace BEFORE "Z" (absent) → WHOLE
+    // source → both "0"s → "*A*".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"0A0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" AFTER \"Z\"",
+            "    REPLACING ALL \"0\" BY \"*\" BEFORE \"Z\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "000\n*A*\n");
+}
+
+#[test]
+fn inspect_combined_region_tally_before_not_found_whole_source() {
+    // Tally BEFORE "Z" (absent) → WHOLE source → both "0"s (2); replace AFTER "A"
+    // → region "0" (index 2) → only the trailing "0" → "0A*".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"0A0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"Z\"",
+            "    REPLACING ALL \"0\" BY \"*\" AFTER \"A\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n0A*\n");
+}
+
+#[test]
+fn inspect_combined_region_replace_after_not_found_empty() {
+    // Replace AFTER "Z" (absent) → EMPTY window → NOTHING replaced, source unchanged;
+    // the region-less tally still counts both "0"s (2).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"0A0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\"",
+            "    REPLACING ALL \"0\" BY \"*\" AFTER \"Z\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n0A0\n");
+}
+
+#[test]
+fn inspect_combined_region_delimiter_at_last_position() {
+    // Region delimiter is the LAST character over "0A0X": tally BEFORE "X" → region
+    // "0A0" → 2; replace BEFORE "X" → region "0A0" → both "0"s → "*A*X".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"0A0X\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"X\"",
+            "    REPLACING ALL \"0\" BY \"*\" BEFORE \"X\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n*A*X\n");
+}
+
+#[test]
+fn inspect_combined_region_delimiter_equals_search_char_each_half() {
+    // Each half's region delimiter EQUALS its own search char over "0A0B": tally
+    // AFTER "0" → first "0" at index 0 bounds region "A0B" → one "0"; replace AFTER
+    // "0" → same region → index 2 → "0A*B". The two halves are independent but land
+    // on the same window here.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"0A0B\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" AFTER \"0\"",
+            "    REPLACING ALL \"0\" BY \"*\" AFTER \"0\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "001\n0A*B\n");
+}
+
+#[test]
+fn inspect_combined_region_pic_x1_delimiter() {
+    // The TALLYING half's region delimiter is a PIC X(1) item read at run time:
+    // BEFORE DL (="C") over "AB0CD0" → region "AB0" → one "0"; the region-less
+    // REPLACING maps both "0"s → "AB*CD*".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(6) VALUE \"AB0CD0\".",
+            "01  C   PIC 9(3) VALUE 0.",
+            "01  DL  PIC X(1) VALUE \"C\".",
+        ],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE DL",
+            "    REPLACING ALL \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "001\nAB*CD*\n");
+}
+
+#[test]
+fn inspect_combined_region_adds_to_a_nonzero_counter() {
+    // The combined region form still ADDs to a preloaded counter: C starts at 5,
+    // tally BEFORE "A" over "0A0" → region "0" → one "0" → C = 5 + 1 = 006; the
+    // region-less REPLACING maps both "0"s → "*A*".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"0A0\".", "01  C  PIC 9(3) VALUE 5."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"A\"",
+            "    REPLACING ALL \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "006\n*A*\n");
+}
+
+#[test]
+fn inspect_combined_region_delimiter_at_position_zero_empty_before() {
+    // BEFORE with the delimiter at index 0 gives an EMPTY window on that half: tally
+    // BEFORE "0" over "0A0B0" → first "0" at index 0 → region [0,0) → 0; replace
+    // BEFORE "B" → region "0A0" → the two "0"s at 0/2 → "*A*B0".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"0\"",
+            "    REPLACING ALL \"0\" BY \"*\" BEFORE \"B\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "000\n*A*B0\n");
+}
+
+#[test]
+fn inspect_combined_for_leading_with_a_region_is_a_later_rung() {
+    // `FOR LEADING` carrying a region on the combined TALLYING half is still deferred
+    // — rejected identically on both engines. The STANDALONE `FOR LEADING …
+    // BEFORE/AFTER` form is now supported, so the shared reader accepts it; the
+    // combined caller re-imposes the deferral, keeping the combination a later rung.
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"00A0B\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"0\" BEFORE \"A\"",
+            "    REPLACING ALL \"0\" BY \"*\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject FOR LEADING + region on the combined form");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject FOR LEADING + region on the combined form"
+    );
+}
+
+#[test]
+fn inspect_combined_replacing_leading_with_a_region_is_a_later_rung() {
+    // `REPLACING LEADING` carrying a region on the combined REPLACING half is still
+    // deferred — the exact analogue on the substitution side. The standalone form is
+    // now supported, so the combined caller re-imposes the deferral; rejected on both
+    // engines.
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"00A0B\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\"",
+            "    REPLACING LEADING \"0\" BY \"*\" BEFORE \"A\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(
+        run_cobol(&src).is_err(),
+        "oracle must reject REPLACING LEADING + region on the combined form"
+    );
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject REPLACING LEADING + region on the combined form"
+    );
+}
+
+#[test]
+fn inspect_combined_multi_char_region_delimiter_is_a_later_rung() {
+    // A MULTI-character region delimiter on a combined half is deferred — rejected on
+    // both engines via the shared single-delimiter check (oracle at exec, compiler at
+    // emit), exactly like the lone forms.
+    let src = wrap(
+        &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"CD\"",
+            "    REPLACING ALL \"0\" BY \"*\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-char region delimiter (combined)");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-char region delimiter (combined)"
+    );
+}
+
+// INSPECT … TALLYING … REPLACING — one INSPECT carrying BOTH phrases. Per ISO the
+// statement runs "as though an INSPECT TALLYING were specified, followed by an
+// INSPECT REPLACING": count FIRST (into the counter, over the ORIGINAL bytes),
+// replace SECOND (rewriting the source). The compiler composes its two existing
+// lowerings in that order and the oracle its two exec halves, so the JIT output
+// stays byte-identical to the reference.
+
+#[test]
+fn inspect_combined_distinct_chars() {
+    // TALLYING counts "L" (two in "HELLO") into C; REPLACING then maps O→0.
+    // The two phrases touch different characters, so this pins the plain
+    // count-and-substitute composition: C = 002, S = "HELL0".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"HELLO\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"L\" REPLACING ALL \"O\" BY \"0\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\nHELL0\n");
+}
+
+#[test]
+fn inspect_combined_shared_char_tallies_before_replacing() {
+    // The tallied delimiter and the replaced search are the SAME char ("S"). The
+    // count must see the ORIGINAL source: "SASSY" has three S's → C = 003, and
+    // only AFTERWARDS are they replaced by "Z" → "ZAZZY". If the tally ran after
+    // the replace it would count zero — so the 3 proves tally-before-replace.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"SASSY\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"S\" REPLACING ALL \"S\" BY \"Z\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "003\nZAZZY\n");
+}
+
+#[test]
+fn inspect_combined_adds_to_a_nonzero_counter() {
+    // C starts at 5; "BANANA" has three A's → C = 5 + 3 = 008 (INSPECT ADDS, it
+    // does not clear first — the combined form preserves that). REPLACING then
+    // maps N→n → "BAnAnA".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"BANANA\".", "01  C  PIC 9(3) VALUE 5."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"A\" REPLACING ALL \"N\" BY \"n\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "008\nBAnAnA\n");
+}
+
+#[test]
+fn inspect_combined_chars_at_both_ends() {
+    // The tallied char sits at BOTH ends of the source and the replaced char in
+    // between: "ABCBA" → TALLYING "A" counts the two end bytes (C = 002),
+    // REPLACING "B" BY "-" rewrites the interior → "A-C-A". Exercises the loop's
+    // first and last positions for both halves.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABCBA\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"A\" REPLACING ALL \"B\" BY \"-\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\nA-C-A\n");
+}
+
+// INSPECT … TALLYING … FOR LEADING … REPLACING ALL — the combined form's TALLYING
+// half may count only the LEADING run of the delimiter (the REPLACING half here is
+// ALL; the mirror REPLACING-LEADING half is exercised in the next section). Tally
+// still runs FIRST over the original bytes, so a shared delimiter/search is counted
+// before it is substituted. The compiler reuses the lone-TALLYING leading lowering
+// and the oracle its leading count path, so the JIT output stays byte-identical.
+
+#[test]
+fn inspect_combined_for_leading_counts_only_the_leading_run() {
+    // "000X0": the LEADING run of "0" is 3 (stops at 'X'), so C = 003 — NOT the 4
+    // that FOR ALL would count. The delimiter and search are the SAME char, and the
+    // tally runs first, so REPLACING ALL "0" BY "*" then rewrites every "0" →
+    // "***X*". The 3 (not 4) is what proves the leading-run count.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"000X0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"0\" REPLACING ALL \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "003\n***X*\n");
+}
+
+#[test]
+fn inspect_combined_for_leading_no_leading_run() {
+    // The first character is not the delimiter, so the LEADING run is empty →
+    // C = 000 (FOR ALL would count the two later "0"s). REPLACING ALL still rewrites
+    // every "0" → "X**X". Pins the "no run" boundary of the combined form.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"X00X\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"0\" REPLACING ALL \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "000\nX**X\n");
+}
+
+#[test]
+fn inspect_combined_for_leading_all_characters_match() {
+    // Every character is the delimiter, so the leading run spans the whole field
+    // (C = 004) and REPLACING ALL rewrites all of it → "****".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"0000\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"0\" REPLACING ALL \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "004\n****\n");
+}
+
+// INSPECT … TALLYING … REPLACING LEADING — the combined form's REPLACING half may
+// now be LEADING too: after the tally counts (over the ORIGINAL bytes), the rebuild
+// rewrites only the consecutive run of `search` at the START, stopping at the first
+// non-match. The two halves' leading flags are INDEPENDENT — either, both, or
+// neither may be LEADING. The compiler reuses the lone-REPLACING-LEADING `active`
+// run unroll and the oracle its leading-run map, so the JIT output stays
+// byte-identical.
+
+#[test]
+fn inspect_combined_replacing_leading_all_tally() {
+    // "00X00": TALLYING FOR ALL "0" counts EVERY "0" (4 — two leading, two trailing)
+    // into C FIRST, THEN REPLACING LEADING "0" rewrites only the leading run (2,
+    // stops at 'X') → "**X00". delim == search: the count is 4 (all zeros) even
+    // though only the two leading zeros are ultimately replaced — proof the tally
+    // saw the original bytes before the leading replace overwrote any of them.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"00X00\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" REPLACING LEADING \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "004\n**X00\n");
+}
+
+#[test]
+fn inspect_combined_both_halves_leading() {
+    // Both halves LEADING: TALLYING FOR LEADING "0" counts only the leading run (2)
+    // into C, THEN REPLACING LEADING "0" rewrites that same leading run → "**X00".
+    // The two leading flags are threaded independently through the combined form.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"00X00\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"0\" REPLACING LEADING \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n**X00\n");
+}
+
+#[test]
+fn inspect_combined_replacing_leading_no_run() {
+    // No leading run: the first character is not `search`, so REPLACING LEADING
+    // changes nothing even though later "0"s exist. TALLYING FOR ALL still counts
+    // every "0" (2) → source unchanged "X00X". Pins the "no run" boundary.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"X00X\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" REPLACING LEADING \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\nX00X\n");
+}
+
+#[test]
+fn inspect_combined_characters_is_still_a_later_rung() {
+    // A still-deferred combined sub-form: `REPLACING CHARACTERS BY` rewrites every
+    // position unconditionally — rejected identically on both engines even now that
+    // combined REPLACING LEADING is supported.
+    let err = compile_source(
+        &wrap(
+            &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"B\" REPLACING CHARACTERS BY \"X\".",
+                "STOP RUN.",
+            ],
+        ),
+        "insp_combined_repl_chars",
+    )
+    .unwrap_err();
+    assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
+}
+
+#[test]
+fn inspect_combined_second_tally_item_is_a_later_rung() {
+    // A combined statement whose TALLYING half has a second FOR-phrase item
+    // (`FOR ALL "A" ALL "B"`) is still a later rung — it parses, but the combined
+    // gate does not admit the deferred sub-forms, so it is a clean Unsupported.
+    let err = compile_source(
+        &wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"A\" ALL \"B\" REPLACING ALL \"B\" BY \"X\".",
+                "STOP RUN.",
+            ],
+        ),
+        "insp_combined_two_items",
+    )
+    .unwrap_err();
+    assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
+}
+
+// INSPECT … CONVERTING from TO to — translate every character of the source
+// through a per-character table built from the two equal-length string literals:
+// a character equal to from[k] becomes to[k] (first k wins if from repeats), and
+// a character in no table entry is left unchanged (in place, same width). Each
+// case pins the compiled per-position rebuild to the oracle's char→char map,
+// byte-for-byte.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn inspect_converting_simple_table() {
+    // A→X, B→Y, C→Z applied to "CAB" → "ZXY".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"CAB\"."],
+        &["INSPECT S CONVERTING \"ABC\" TO \"XYZ\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ZXY\n");
+}
+
+#[test]
+fn inspect_converting_multichar_vowel_table() {
+    // "AEIOU" → "12345": A→1,E→2,I→3,O→4,U→5. "BEAN" → B,2,1,N = "B21N".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"BEAN\"."],
+        &["INSPECT S CONVERTING \"AEIOU\" TO \"12345\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "B21N\n");
+}
+
+#[test]
+fn inspect_converting_char_not_in_from_is_unchanged() {
+    // Only the vowels of "HELLO" map (E→2, O→4); H, L, L are in no table entry and
+    // pass through unchanged → "H2LL4".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"HELLO\"."],
+        &["INSPECT S CONVERTING \"AEIOU\" TO \"12345\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "H2LL4\n");
+}
+
+#[test]
+fn inspect_converting_every_character_is_converted() {
+    // Every character of "ABAB" is in the table (A→X, B→Y) → "XYXY".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"ABAB\"."],
+        &["INSPECT S CONVERTING \"AB\" TO \"XY\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XYXY\n");
+}
+
+#[test]
+fn inspect_converting_single_char_from_and_to() {
+    // A one-entry table O→0 on "MOON" → "M00N" (the CONVERTING form of a single
+    // substitution, and the optional END-INSPECT terminator parses).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"MOON\"."],
+        &["INSPECT S CONVERTING \"O\" TO \"0\" END-INSPECT.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "M00N\n");
+}
+
+#[test]
+fn inspect_converting_duplicate_from_leftmost_wins() {
+    // `from` repeats 'A': "AAB" → "XYZ". The FIRST occurrence wins, so A→X (not the
+    // later A→Y); B→Z. "AAB" → "XXZ" (if the rightmost won it would be "YYZ").
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"AAB\"."],
+        &["INSPECT S CONVERTING \"AAB\" TO \"XYZ\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XXZ\n");
+}
+
+// INSPECT … CONVERTING later-rung forms — these parse (the grammar accepts the
+// broad surface) but the compiler rejects them as a clean Unsupported.
+
+#[test]
+fn inspect_converting_unequal_lengths_is_a_later_rung() {
+    // A from/to pair of different lengths has no well-defined table → later rung.
+    let err = compile_source(
+        &wrap(
+            &["01  S  PIC X(3) VALUE \"ABC\"."],
+            &["INSPECT S CONVERTING \"AB\" TO \"XYZ\".", "STOP RUN."],
+        ),
+        "insp_conv_unequal",
+    )
+    .unwrap_err();
+    assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
+}
+
+#[test]
+fn inspect_converting_item_operand_is_a_later_rung() {
+    // A PIC X item as the `from` operand (rather than a string literal) is a later
+    // rung this slice.
+    let err = compile_source(
+        &wrap(
+            &["01  S  PIC X(3) VALUE \"ABC\".", "01  F  PIC X(3) VALUE \"ABC\"."],
+            &["INSPECT S CONVERTING F TO \"XYZ\".", "STOP RUN."],
+        ),
+        "insp_conv_item",
+    )
+    .unwrap_err();
+    assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
+}
+
+#[test]
+fn inspect_converting_combined_with_replacing_is_rejected() {
+    // CONVERTING is a STANDALONE INSPECT alternative — the grammar does not let it
+    // sit beside a REPLACING clause in one statement — so a combined form is a
+    // clean compile-time rejection (a parse error, since the two are mutually
+    // exclusive alternatives), never a silent mis-compile.
+    let err = compile_source(
+        &wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\"."],
+            &[
+                "INSPECT S CONVERTING \"A\" TO \"X\" REPLACING ALL \"B\" BY \"Y\".",
+                "STOP RUN.",
+            ],
+        ),
+        "insp_conv_combined",
+    )
+    .unwrap_err();
+    assert!(matches!(err, cobol_iir_compiler::CompileError::Parse(_)), "got {err:?}");
+}
+
+// ---------------------------------------------------------------------------
+// INSPECT … CONVERTING from TO to … {BEFORE|AFTER} z — restrict the translation
+// to the sub-slice of the source bounded by the FIRST occurrence of the single
+// region delimiter `z`. BEFORE translates left of `z`; AFTER translates right of
+// it; positions OUTSIDE the region keep their original character. The window is
+// the SAME one the TALLYING/REPLACING region rungs compute (shared helper), so the
+// ISO not-found asymmetry — BEFORE with `z` absent translates the WHOLE source,
+// AFTER with `z` absent translates NOTHING — must hold byte-for-byte on both
+// engines.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn inspect_converting_before_translates_only_left_of_the_delimiter() {
+    // "AXAYA" — table A→0; BEFORE "Y" restricts the translate to "AXA" (indices
+    // 0..3): the two "A"s there become "0", the trailing "A" (index 4, right of "Y")
+    // is UNTOUCHED → "0X0Y A" without the space = "0X0YA".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0X0YA\n");
+}
+
+#[test]
+fn inspect_converting_after_translates_only_right_of_the_delimiter() {
+    // Same source and table — AFTER "Y" restricts the translate to "A" (index 4):
+    // only that trailing "A" becomes "0"; the two "A"s left of "Y" are UNTOUCHED.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "AXAY0\n");
+}
+
+#[test]
+fn inspect_converting_before_absent_delimiter_translates_the_whole_source() {
+    // BEFORE "Z" with no "Z" present → the region is the ENTIRE source, so EVERY "A"
+    // is translated (the BEFORE not-found rule — the whole subtlety of the rung).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0X0Y0\n");
+}
+
+#[test]
+fn inspect_converting_after_absent_delimiter_translates_nothing() {
+    // AFTER "Z" with no "Z" present → the region is EMPTY, so NOTHING is translated
+    // and the source is unchanged (the AFTER not-found rule — asymmetric partner).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "AXAYA\n");
+}
+
+#[test]
+fn inspect_converting_after_region_delimiter_at_position_zero() {
+    // The region delimiter is the FIRST character: AFTER "Y" in "YABA" → region
+    // [1, 4) = "ABA", so both "A"s become "0" (B unmapped) → "Y0B0".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"YABA\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "Y0B0\n");
+}
+
+#[test]
+fn inspect_converting_before_region_delimiter_as_last_char() {
+    // The region delimiter is the LAST character: BEFORE "Y" in "AXAY" → region
+    // [0, 3) = "AXA", so both "A"s become "0"; the trailing "Y" is left → "0X0Y".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"AXAY\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0X0Y\n");
+}
+
+#[test]
+fn inspect_converting_region_delimiter_is_also_in_the_from_set() {
+    // The region delimiter "A" is ALSO a `from` character: AFTER "A" in "AXAYA" → the
+    // FIRST "A" (index 0) bounds the region [1, 5) = "XAYA". The translate runs over
+    // the ORIGINAL bytes, so the "A"s at indices 2 and 4 become "0", while the
+    // delimiter "A" at index 0 (left of the region) is KEPT → "AX0Y0".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AXAYA\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" AFTER \"A\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "AX0Y0\n");
+}
+
+#[test]
+fn inspect_converting_before_delimiter_at_position_zero_is_an_empty_region() {
+    // BEFORE "Y" in "YAXA" → the first "Y" is at index 0, so the region is [0, 0) —
+    // EMPTY — and NOTHING is translated even though "A"s follow → "YAXA" unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"YAXA\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "YAXA\n");
+}
+
+#[test]
+fn inspect_converting_multichar_table_with_a_region() {
+    // A multi-entry table (A→1, E→2) narrowed by a region: "AEYAE" — BEFORE "Y" limits
+    // the translate to "AE" (indices 0..2) → "12"; the trailing "AE" (right of "Y") is
+    // UNTOUCHED → "12YAE".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AEYAE\"."],
+        &["INSPECT S CONVERTING \"AE\" TO \"12\" BEFORE \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "12YAE\n");
+}
+
+#[test]
+fn inspect_converting_region_delimiter_is_a_pic_x1_item() {
+    // The region delimiter may itself be a PIC X(1) item, read at run time: BEFORE DL
+    // (= "Y") in "AXAYA" restricts to "AXA" → "0X0YA", matching the literal case.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AXAYA\".", "01  DL PIC X(1) VALUE \"Y\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE DL.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0X0YA\n");
+}
+
+#[test]
+fn inspect_converting_region_shorter_than_the_from_set() {
+    // The region window is SHORTER than the `from` set: table A→1,E→2,I→3 but the
+    // BEFORE "Y" window is just "A" (index 0). Only that "A" translates → "1YEI"
+    // (the "E","I" right of "Y" keep their originals though they are in `from`).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"AYEI\"."],
+        &["INSPECT S CONVERTING \"AEI\" TO \"123\" BEFORE \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "1YEI\n");
+}
+
+#[test]
+fn inspect_converting_multi_char_region_delimiter_is_a_later_rung() {
+    // A MULTI-character region delimiter is deferred — rejected on both engines, just
+    // like a multi-character search/tally delimiter (the oracle rejects at exec, the
+    // compiler at emit, both via the shared single-delimiter check).
+    let src = wrap(
+        &["01  S  PIC X(6) VALUE \"AXAYAB\"."],
+        &["INSPECT S CONVERTING \"A\" TO \"0\" BEFORE \"YB\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-char region delimiter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a multi-char region delimiter"
+    );
+}
+
+#[test]
+fn mixed_unsigned_numeric_vs_space_figurative_agrees() {
+    // An UNSIGNED numeric vs the SPACE figurative is supported and byte-identical:
+    // NUM=42 → image "042"; SPACE expands to the image width → "   "; '0' (0x30) >
+    // ' ' (0x20), so `= SPACE` is false → "NO". (A SIGNED numeric vs SPACE is a
+    // later rung, rejected identically on both engines — see the oracle-unit test.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  NUM  PIC 9(3) VALUE 42."],
+        &["IF NUM = SPACE DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "NO\n");
+}
+

@@ -94,6 +94,14 @@ export function createTaskEngine(wasmBytes, options = {}) {
     setProjectName: op("set_project_name"),
 
     // ── workspace operations (across projects) ──
+    /**
+     * Choose which project the per-project ops/queries act on. Without this the
+     * active project is always the first root, so a newly created project is
+     * unreachable. Rejects an unknown id.
+     */
+    setActiveProject: op("set_active_project"),
+    /** The id of the project the per-project surface currently acts on. */
+    activeProject: query("active_project"),
     createProject: op("create_project"),
     renameProject: op("rename_project"),
     deleteProject: op("delete_project"),
@@ -106,6 +114,22 @@ export function createTaskEngine(wasmBytes, options = {}) {
     unlinkCrossProjectDependency: op("unlink_cross_project_dependency"),
     upsertSharedResource: op("upsert_shared_resource"),
     deleteSharedResource: op("delete_shared_resource"),
+
+    // ── labels & priority (active project) ──
+    upsertLabel: op("upsert_label"),
+    deleteLabel: op("delete_label"),
+    setTaskLabels: op("set_task_labels"),
+    setPriority: op("set_priority"),
+
+    // ── view projections (active project) ──
+    // Each takes { view, projectStart } (calendar also { start, end }) and returns
+    // RENDER-READY data: cells already resolved and formatted by the engine.
+    /** Render-ready sheet: { columns, groups: [{ keyLabel, rows: [{ task, cells }] }] }. */
+    table: op("table"),
+    /** Ordered, grouped task ids for a view (filter → sort → group). */
+    viewSelection: op("view_selection"),
+    /** Dated events for a view over an inclusive [start, end] day range. */
+    calendar: op("calendar"),
 
     // ── queries / projections (each returns { ok:true, data }) ──
     checklist: query("checklist"),

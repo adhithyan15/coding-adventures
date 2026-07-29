@@ -474,6 +474,75 @@ fn our_writer_output_reads_in_real_sqlite_with_overflow() {
     );
 }
 
+/// Page-1 `sqlite_schema` overflow cross-check: a database whose CREATE
+/// statement is too long to sit inline on page 1 spills onto overflow pages, and
+/// real bundled-C SQLite both validates it (`PRAGMA integrity_check` → "ok") and
+/// reassembles the full DDL from the schema overflow chain (`SELECT sql FROM
+/// sqlite_master`). This is the strongest gate that the writer's page-1 overflow
+/// framing — offset-100 leaf, overflow pointer, and chained pages — is
+/// byte-correct.
+#[test]
+fn our_writer_page1_schema_overflow_reads_in_real_sqlite() {
+    use sqlite_file::page_writer::write_single_table_db;
+    use sqlite_file::SqlValue;
+
+    // A CREATE with hundreds of columns → several KiB of DDL, well past the
+    // 4096-byte page's inline limit (max_local = 4096 − 35 = 4061), so the
+    // sqlite_schema row must overflow off page 1.
+    let cols = (0..600)
+        .map(|i| format!("column_{i}"))
+        .collect::<Vec<_>>()
+        .join(", ");
+    let create_sql = format!("CREATE TABLE big({cols})");
+    assert!(
+        create_sql.len() > 4061,
+        "test needs a schema row that overflows page 1"
+    );
+    let rows = vec![
+        (1i64, vec![SqlValue::Int(10), SqlValue::Int(11)]),
+        (2, vec![SqlValue::Int(20), SqlValue::Int(21)]),
+    ];
+    let db = write_single_table_db(4096, "big", &create_sql, &rows).unwrap();
+    assert!(
+        db.len() / 4096 > 2,
+        "the schema row must have spilled into overflow pages"
+    );
+
+    static COUNTER_S: AtomicU64 = AtomicU64::new(9_500_000);
+    let unique = COUNTER_S.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!("sqlite_file_schemaovf_{}_{}", std::process::id(), unique));
+    std::fs::create_dir(&dir).expect("create fresh fixture dir");
+    let path = dir.join("ours.db");
+    std::fs::write(&path, &db).unwrap();
+
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let integrity: String = conn
+        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(
+        integrity, "ok",
+        "real SQLite's integrity_check must pass on a page-1 schema-overflow file"
+    );
+    // Real SQLite reassembles the full DDL from the overflow chain.
+    let sql: String = conn
+        .query_row(
+            "SELECT sql FROM sqlite_master WHERE name = 'big'",
+            [],
+            |r| r.get(0),
+        )
+        .unwrap();
+    assert_eq!(sql, create_sql, "the overflowed DDL must round-trip in full");
+    // And the table itself is queryable (its root page precedes the schema
+    // overflow pages, so nothing shifted).
+    let count: i64 = conn
+        .query_row("SELECT count(*) FROM big", [], |r| r.get(0))
+        .unwrap();
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+    assert_eq!(count, 2, "real SQLite must read the table's rows");
+}
+
 /// Multi-table write-path cross-check: a database our writer assembles with
 /// several tables — one carrying an overflow row — is accepted by real
 /// bundled-C SQLite (`PRAGMA integrity_check` → "ok") and every table reads

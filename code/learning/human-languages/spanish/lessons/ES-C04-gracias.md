@@ -42,8 +42,9 @@ get a fistful of words for free:
 - **grateful**, **gratitude** — being *full of* grātia.
 - **gratis**, **gratuity** — something given as a *favour* (for free, or a tip).
 - **congratulate** — literally "to wish grace *together with* someone."
-- Italian **grazie**, French **grâce/merci-less** *grâces*, Portuguese
-  **obrigado**'s cousin *graças* — the whole Romance family keeps grātia.
+- Italian **grazie**, French *grâces*, Portuguese *graças* — the whole Romance
+  family kept grātia, even where everyday thanks went elsewhere (French says
+  *merci*, Portuguese *obrigado*).
 
 So *gracias* is not a word to memorize cold: it is **grace**, made plural and
 handed to another person.

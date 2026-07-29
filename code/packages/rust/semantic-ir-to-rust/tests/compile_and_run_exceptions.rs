@@ -315,3 +315,63 @@ fn user_ancestry_matches_superclass() {
     assert!(ok, "process should exit 0 (user-ancestry match caught)");
     assert_eq!(stdout.lines().collect::<Vec<_>>(), vec!["5"], "got {stdout:?}");
 }
+
+/// Regression (security review, F5): a rescued exception used where a String
+/// is expected — `"prefix " + e` — must raise a RESCUABLE `TypeError`, not an
+/// uncatchable host panic.
+///
+/// When `rescue => e` still bound the message STRING, `"got: " + e`
+/// concatenated fine.  Making `e` a real `Value::Exception` sends it to
+/// `plus`'s String arm's reject path; that path used to `panic!`, whose
+/// payload is a `&str` (not a `SirError`), so `exc_from_payload`
+/// `resume_unwind`s it and NO `rescue` — not even a bare one — can catch it.
+/// The program died with a host backtrace instead of a Ruby `TypeError`.
+///
+/// This pins the fix: an OUTER bare `rescue` around `"got: " + e` catches the
+/// TypeError and prints "caught", so the process exits 0.  A regression to
+/// `panic!` makes the outer rescue miss and the process exit non-zero.
+#[test]
+fn string_plus_rescued_exception_raises_rescuable_type_error() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+    // begin
+    //   begin
+    //     raise ArgumentError, "boom"
+    //   rescue => e
+    //     puts("got: " + e)        # e is an Exception, not a String -> TypeError
+    //   end
+    // rescue => _
+    //   puts "caught"
+    // end
+    let inner_concat = print_stmt(call(
+        "+",
+        vec![
+            slit("got: "),
+            Expr::VarRef { name: "e".into(), scope: Scope::Local, span: s() },
+        ],
+        EffectSet::PURE,
+    ));
+    let inner = Stmt::TryCatch {
+        body: vec![raise_stmt("ArgumentError", "boom")],
+        rescues: vec![rescue(&[], Some("e"), vec![inner_concat])],
+        ensure_body: None,
+        span: s(),
+    };
+    let outer = Stmt::TryCatch {
+        body: vec![inner],
+        rescues: vec![rescue(&[], None, vec![print_stmt(slit("caught"))])],
+        ensure_body: None,
+        span: s(),
+    };
+    let src = compile(&module_from_main(
+        vec![outer],
+        &[Feature::Constants, Feature::Strings],
+    ))
+    .expect("compile")
+    .source;
+    let Some((stdout, ok)) = compile_and_run(&src, "str_plus_exc") else { return };
+    assert!(ok, "TypeError must be rescuable (exit 0), not an uncatchable panic");
+    assert_eq!(stdout.lines().collect::<Vec<_>>(), vec!["caught"], "got {stdout:?}");
+}

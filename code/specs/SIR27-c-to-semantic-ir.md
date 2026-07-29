@@ -166,12 +166,204 @@ end of the loop body, and an absent condition becomes `true`.  A nested `{ … }
 block is spliced into the enclosing statement list (v1 does not model per-block
 scopes; the flat symbol table is shared).
 
-**Early `return` is still out of scope.**  SIR functions yield their block's
-*value* — there is no early-return statement — so `return` is accepted **only as
-the function's last statement** (where it supplies that value).  A `return`
-inside an `if`/`while`/`for` body is a clear, positioned error rather than a
-silent miscompile; lifting it into nested `If` values is a later milestone.
-Logical `&& ||`, unary `!`, bitwise, and `/`/`%` also remain deferred.
+Logical `&& ||`, unary `!`, bitwise, and `/`/`%` remain deferred.
+
+## Early `return` — return lifting (milestone 3)
+
+SIR functions yield their block's **value**; there is no early-exit statement.
+C exits early constantly (guard clauses), so milestone 3 **lifts** a returning
+`if` into a value-producing `Expr::If`, making **the rest of the function the
+continuation of the branch that does not return**:
+
+```text
+int fib(int n) {                     (function fib (n)
+  if (n < 2) return n;                 (block
+  return fib(n-1) + fib(n-2);            (if (< n 2)
+}                                            (block n)
+                                             (block (+ (fib (- n 1)) (fib (- n 2)))))))
+```
+
+The lowering walks a statement sequence (`lower_seq`) and, for each head:
+
+| head | result |
+|---|---|
+| `return e;` | the block's value is `Convert{ret}(e)`; the rest is unreachable |
+| `{ … }` | its items are spliced into this sequence (v1 has flat scoping) |
+| `if` containing a `return` | `If(cond, then′, else′)` — see below |
+| anything else | lower it as a statement, then continue with the tail |
+
+For a lifted `if`, each branch is lowered with the continuation appended **only
+if that branch can fall through** (`always_returns` is false).  So the
+guard-clause shape — where the `then` always returns — attaches the tail to the
+`else` alone and **never duplicates code**.
+
+`always_returns` is deliberately conservative: an `if` without an `else` never
+qualifies, and loops are not analysed (a `while` may iterate zero times).
+
+The sequence walk is **iterative in two dimensions**, and both matter because
+both are *flat* sequences the parser does not bound:
+
+- per **statement** — a function body is an unbounded statement list;
+- per **sibling guard clause** — `if (a) return 1; if (b) return 2; …` (the
+  `sign()` idiom) is equally flat.
+
+So a lifted `if` does not recurse into its continuation.  Its condition and its
+*returning* branch are pushed on a stack, the falling-through branch is spliced
+onto the work queue, and the nested `If` is folded bottom-up once the walk ends.
+Recursion remains only for a *nested* sub-sequence, which the parser's rule-depth
+guard bounds.
+
+### Four shapes that are refused (rather than mis-handled)
+
+1. **`return` inside a loop.**  Leaving a `while`/`for` early needs a
+   break-with-value, which SIR has no node for.
+2. **An `if` where neither branch returns on all paths but one contains a
+   `return`.**  Lifting it would place the continuation in *both* branches.
+   That is semantically fine (exactly one runs) but the duplication compounds
+   through nesting — N chained guards of this shape produce **4^N** IR nodes, so
+   well under 1 KB of C can emit hundreds of megabytes.  A future version can
+   hoist the continuation into a synthesized function called from both branches,
+   making the transform linear; until then it is a positioned error.
+   (Shadowing / name re-use *used* to be refused here; milestone 7 makes it work
+   — see below.  Only re-declaring a name in the **same** block is still an
+   error.)
+3. **An emitted tree deeper than the budget.**  Every consumer of the IR walks
+   it recursively, so the frontend caps how deep a tree it will build.  Depth
+   accumulates from **three** independent sources that all add in the same tree
+   and the same recursion, so they share **one** budget:
+   - **flat operator chains** — `x + 1 + 1 + …` is one node with N operands that
+     folds left into an N-deep tree, and nothing else bounds N;
+   - **expression nesting** — `((((x))))`;
+   - **statement nesting** — nested `if`/`while`/`for` bodies and blocks
+     (weighted 3×, matching its measured ~3× lowering-stack cost per level).
+
+   Two subtleties, both found the hard way: a chain's width must be **held**
+   while its operands are lowered, not merely checked on entry (otherwise widths
+   at different nesting levels each restart from the same base and *multiply* —
+   ~14× the cap, aborting on a 369-byte input); and the sources must be budgeted
+   *jointly* (64 guards each returning a 50-term chain passed two independent
+   caps and still overflowed).
+
+   The cap is calibrated empirically against the most hostile realistic
+   configuration — a **debug** build on a **1 MiB** stack.  Calibrating against
+   a test-harness thread instead is exactly how earlier versions looked safe
+   while crashing in the wild.
+4. **More than that many lifted early returns in one function.**  Each lifted guard
+   nests the emitted IR one level deeper, and every consumer of that IR walks it
+   *recursively* — the validator, all five backends, the text printer, even
+   `Drop`.  Measured: 150 chained guards lower, validate and emit fine while 250
+   abort the process inside the validator.  The bound that matters is therefore
+   on the **output** depth, not the lowering, so the frontend caps it and reports
+   a positioned error.  Lifting the cap means making those consumers iterative —
+   a cross-cutting change well beyond this frontend.
+
+## Logical operators (milestone 4)
+
+`&&`, `||`, and unary `!` — the short-circuiting logical operators — reuse the
+same C-vs-SIR truthiness bridge as milestone 2.  In C each operand is tested for
+truthiness (`!= 0`) and the result is an `int` `0`/`1`; SIR has short-circuiting
+`and`/`or` builtins (and `not`) whose operands are evaluated under SIR
+truthiness.  So the two directions mirror the comparison handling:
+
+- **As a condition** (`if (a && b)`), each operand is lowered *as a condition*
+  (`lower_cond`, which already yields the right SIR bool for a comparison or an
+  `!= 0`), and the operator becomes the matching short-circuiting builtin:
+  `a && b → and(cond(a), cond(b))`, `a || b → or(cond(a), cond(b))`,
+  `!a → not(cond(a))`.  Left-associative, so `a && b && c` is `and(and(a,b),c)` —
+  exactly C's evaluation order, and the SIR builtins short-circuit just as C
+  does (the backends render `and`/`or` as `&&`/`||` in Ruby and as a
+  short-circuiting `if` chain in C).
+- **As a value** (`int r = a && b;`), the bool is wrapped back to C's `int`
+  `0`/`1` with `If(bool, 1, 0)` — the same `if_int` used for a bare comparison.
+
+A logical operator chain folds into a tree as deep as it is wide, so — like an
+arithmetic chain — its width is charged against the shared depth budget.
+
+`Feature::ShortCircuit` is added to the module manifest (both backends already
+accept it and render `and`/`or`; the C backend gains a `_sir_not` for `!`).
+
+Bitwise and division/modulo remain deferred (see below).
+
+## Bitwise & shifts (milestone 5)
+
+`& | ^` and unary `~` follow the ordinary path: promote, take the usual
+arithmetic conversions to a common type, apply the operator there, and wrap the
+result in a `Convert` to enforce the width — identical in shape to `+ - *`.
+
+**Shifts (`<< >>`) are the one exception to the usual arithmetic conversions.**
+C does *not* bring the two operands to a common type: each is promoted on its
+own, the result has the type of the promoted **left** operand, and the right
+operand is only a count.  So `uint8_t x; x << c` is performed at `int` (x's
+promoted type) and stays `int` until it is used — narrowed to `uint8_t` only at
+the assignment, exactly as C does.  `>>` is arithmetic on a signed operand and
+logical on an unsigned one.  This *almost* falls out for free — but the backends
+store every value in a signed `int64`, and a `uint64_t`/`size_t` with its top
+bit set is a *negative* int64, on which a native `>>` would sign-extend.  So the
+frontend picks the shift builtin by the promoted left operand's signedness:
+signed `>>` → `>>` (arithmetic); unsigned `>>` → **`u>>`**, which the C backend
+renders as a `uint64_t` shift (logical for every width) and Ruby renders as a
+plain `>>` (its unsigned value is already a non-negative Integer).
+
+The six operators lower to the builtins `&`, `|`, `^`, `~`, `<<`, `>>`.  Both
+backends gain them: Ruby renders the native `Integer` operators; the C backend
+gains `_sir_band`/`_sir_bor`/`_sir_bxor`/`_sir_bnot`/`_sir_shl`/`_sir_shr` runtime
+helpers over `int64_t` (`<<` through `uint64_t` so a shift into the sign bit is
+not UB; both mask the count `& 63` defensively — a count ≥ width is UB in C
+anyway).
+
+Division/modulo (`/ %`) are handled in milestone 6 (below).
+
+## Division & modulo (milestone 6)
+
+`/` and `%` are the one place C and SIR **disagree on rounding**: C division
+*truncates toward zero* and `%` takes the sign of the dividend (`-7 / 2 == -3`,
+`-7 % 2 == -1`), whereas SIR/Ruby `/`/`%` and the C backend's existing
+`_sir_ifloordiv` *floor* toward −∞ (`-7 / 2 == -4`, `-7 % 2 == 1`).  So they
+lower to **dedicated `tdiv`/`tmod` builtins**, never the flooring `/`/`%`.
+
+- **C backend** — C's native `int64_t /` and `%` already truncate, so
+  `_sir_itdiv`/`_sir_itmod` are thin wrappers with two guards: division by zero
+  (UB in C; fail loudly) and `INT64_MIN / -1` (signed-overflow UB, and x86
+  hardware traps on it — return the two's-complement wrap `-fwrapv` would give,
+  which the width `Convert` then narrows).
+- **Ruby backend** — `Integer#/` floors, so `sir_tdiv`/`sir_tmod` recover
+  truncation exactly: `Integer#remainder` is already C's `%` (dividend sign), and
+  `(a - a.remainder(b)) / b` is an exact multiple of `b`, so flooring it yields
+  the truncated quotient.
+
+Both agree with `clang -fwrapv` across all four sign combinations.  `INT_MIN /
+-1` is deliberately *not* a conformance case — it is UB and the reference program
+traps — but the backends stay defined so they never crash on it.
+
+## Per-block scoping (milestone 7)
+
+Earlier milestones kept a **flat** symbol table and *refused* any declaration
+that re-used a live name — so shadowing, and even two sequential
+`for (int i = …)` loops, were errors.  Milestone 7 replaces it with a **scope
+stack**: a scope is pushed on entering a `{ }` block, an `if`/`else`/loop body,
+or a `for`'s init+body region, and popped on leaving it.  A declaration binds in
+the innermost scope; a reference resolves innermost-outward.
+
+Because SIR's namespace is flat while C's is not, every declaration is given a
+**unique SIR name** — the C name itself, or `name__2`, `name__3`, … if it
+shadows an outer binding or re-uses one a sibling block used.  References
+resolve to the binding's SIR name, so two distinct C variables that share a
+spelling never collide, and the emitted C/Ruby is correct.  This *removes* the
+milestone-3 shadowing miscompile hazard by construction: distinct variables have
+distinct names, so one can never clobber another.
+
+The subtlety is the interaction with early-return lifting, which merges a branch
+body and the continuation into one SIR block.  The lifting trampoline carries a
+**`PopScope` marker** on its work queue: a spliced block pushes a scope, queues
+its items, then a `PopScope`, so the block's declarations go out of scope exactly
+at its `}` and the following continuation is lowered in the enclosing scope —
+correct lifetime even though the two are concatenated.
+
+Still enforced: re-declaring a name in the **same** block is a C error; a
+variable is undeclared once its block has closed.  (A self-referential
+initializer like `int v = v + 1;` in a shadowing block reads the *uninitialized*
+inner `v` per C's scope rule — that is UB, and not something the translator
+conforms to.)
 
 ## Pipeline
 
@@ -219,7 +411,11 @@ pub struct CLowerError { pub message: String, pub line: usize, pub column: usize
 
 ## Out of scope (v1)
 
-- Pointers, arrays, structs, unions, enums, `typedef`, floats.
+- Pointers, arrays, structs, unions, enums, `typedef`.
+- Floating point is being added incrementally: milestone 9a wires the **grammar**
+  to recognise `float`/`double` and float literals (`3.14`, `.5`, `1e10`); the
+  lowering still rejects them with a clear "not yet supported" error until the
+  floating-point value track (a following slice) lands.
 - The full preprocessor (`#define`, macros, conditional compilation).
 - Multiple translation units / real headers (only `#include <stdint.h|stdio.h>`
   is recognised and ignored).

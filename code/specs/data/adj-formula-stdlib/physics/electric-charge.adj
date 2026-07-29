@@ -1,0 +1,97 @@
+% ============================================================================
+% electric-charge.adj — electric current as rate of charge flow (I = Q/t) in the
+% ADJ standard library.
+% ============================================================================
+% The charge/current/time entry of the *physics* track, a sibling of `power.adj`,
+% `electricity.adj` and `wave-speed.adj`: the foundational definition a first course
+% states as ELECTRIC CURRENT IS THE RATE AT WHICH CHARGE FLOWS — i.e. the relation
+% I = Q/t (the charge passing a point divided by the time taken) — as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its two exact
+% rearrangements (the charge delivered by a current in a time, and the time a current
+% takes to deliver a charge). This is distinct from Ohm's law V = I·R and the electric
+% power P = V·I in `electricity.adj`; it is the definition that RELATES the current to
+% the charge and the time. As with every compute library, a consumer states NO
+% arithmetic: it `import`s this file, binds the electrical quantities from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited definition on
+% the CPU. Zero math is performed by the model; the engine computes each value EXACTLY,
+% carrying the definition's citation.
+%
+%     import "electric-charge.adj"
+%     observe charge(6)               % "…6 C of charge…"  (span cited by the model)
+%     observe time(2)                 % "…in 2 s…"         (span cited by the model)
+%     ? current(charge, time)         % engine → 3, carrying I = Q/t
+%
+% NOTE: this is the AVERAGE current over the interval, I = Q/t — the plain
+% charge-over-time rate. (The instantaneous current is the same rate in the limit of a
+% vanishing interval, I = dQ/dt; the exact numeric relation the engine applies over a
+% measured charge Q and time t is I = Q/t.)
+%
+% All three formulas are EXACT over their parameters — one a quotient, one a product,
+% one a quotient of measured quantities. There is no *separately grounded* physical
+% constant here, so every value the engine returns is exact. The three COMPOSE and
+% invert cleanly: the `current` a consumer computes from a charge delivered in a time
+% is exactly the `current` the `charge` formula multiplies by that time to recover the
+% charge, and exactly the `current` the `time` formula divides that charge by to
+% recover the time.
+%
+%   current(charge, time) = charge / time   %  I = Q/t   (definition: current is the
+%                                           %             rate at which charge flows)
+%   charge(current, time) = current * time    %  Q = I·t   (same definition, solved for Q)
+%   time(charge, current) = charge / current   %  t = Q/I   (same definition, solved for t)
+%
+% All three formulas are defended by the SAME definitional sentence — "Electric current
+% is defined to be the rate at which charge flows." — because that definition (current
+% IS the rate at which charge flows, i.e. charge per unit time) sanctions the relation
+% read every way (I from Q and t, Q from I and t, or t from Q and I). The quote is
+% transcribed verbatim from Physics LibreTexts (OpenStax College Physics — a primary
+% educational reference, the same publisher `power.adj`, `wave-speed.adj`,
+% `hookes-law.adj` and `molarity.adj` cite), so each `formula` carries the provenance
+% envelope every shipped grounded clause carries; the linter rejects an unsourced one.
+% (See feedback_nothing_human_authored — the sentence is a verbatim span of the cited
+% page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable electrical quantity the definition ranges
+% over, and each result is the derived quantity. `current`, `charge` and `time` each
+% appear BOTH as a derived result and as an input (of the other formulas), so each is a
+% single dictionary term used in both roles. The `surface` lists are the everyday names
+% a decomposer maps onto the canonical term; the trailing comment records the intended
+% SI unit.
+% ----------------------------------------------------------------------------
+dictionary electric_charge_vocab {
+    define charge  : finding  surface "charge", "Q"               % electric charge, e.g. C (coulomb)
+    define time    : finding  surface "time", "duration", "t"     % time, e.g. s
+    define current : finding  surface "current", "I"             % electric current, e.g. A (ampere)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable `let` over its
+% formal parameters, bound at apply time, and each carries the definitional quote from
+% LibreTexts (a quote is required on a shipped formula). One is a quotient, one a
+% product, one a quotient, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook electric_charge_laws {
+    use electric_charge_vocab
+
+    % Current — the charge that flows divided by the time it takes. LibreTexts defines
+    % current as the rate at which charge flows, i.e. I = Q/t.
+    formula current(charge, time) = charge / time
+        source "Electric current is defined to be the rate at which charge flows."
+        locator "https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/20:_Electric_Current_Resistance_and_Ohm's_Law/20.01:_Current"
+        trust authoritative
+
+    % Charge — the same definition solved for the charge a current delivers in a time
+    % (Q = I·t). Defended by the SAME definitional sentence, read the other way.
+    formula charge(current, time) = current * time
+        source "Electric current is defined to be the rate at which charge flows."
+        locator "https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/20:_Electric_Current_Resistance_and_Ohm's_Law/20.01:_Current"
+        trust authoritative
+
+    % Time — the same definition solved for the time a current takes to deliver a charge
+    % (t = Q/I). Again the SAME definitional sentence, read the third way.
+    formula time(charge, current) = charge / current
+        source "Electric current is defined to be the rate at which charge flows."
+        locator "https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/20:_Electric_Current_Resistance_and_Ohm's_Law/20.01:_Current"
+        trust authoritative
+}

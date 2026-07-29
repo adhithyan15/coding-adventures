@@ -1,0 +1,13 @@
+[package]
+name = "coding-adventures-q-repl"
+version = "0.1.0"
+edition = "2021"
+description = "Interactive REPL and `q` binary for the Q (kdb+) language"
+
+[dependencies]
+coding-adventures-q-runtime = { path = "../q-runtime" }
+coding-adventures-q-lexer = { path = "../q-lexer" }
+
+[[bin]]
+name = "q"
+path = "src/main.rs"

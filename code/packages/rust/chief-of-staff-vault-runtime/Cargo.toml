@@ -1,0 +1,10 @@
+[package]
+name = "chief-of-staff-vault-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Opaque VaultRef lease broker for Chief of Staff host tools"
+license = "MIT"
+
+[dependencies]
+coding_adventures_vault_leases = { path = "../vault-leases" }
+smart-home-core = { path = "../smart-home-core" }

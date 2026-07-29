@@ -485,6 +485,13 @@ const RUNTIME_RENAMES: &[(&str, &str)] = &[
     // `dyn_repr` — only when its argument is a `dyn_*` result.
     ("pair?", "dyn_pair_p"),
     ("equal?", "dyn_equal"),
+    // `null?` — the empty-list test. The structural path lowers this to the
+    // `is_null` opcode, but that emits a compare-against-**zero**, and in the
+    // tagged runtime representation nil is the whole-word constant 1. So the
+    // native path needs a real runtime call that knows the encoding; without
+    // this entry `null?` reached the backend un-renamed and every cons-walk
+    // helper (`length`, `append`, `reverse`, `assoc`, …) failed to compile.
+    ("null?", "dyn_null_p"),
 ];
 
 /// Rename the cons/car/cdr `call_builtin`s in `fn_` to their `dyn_*`
@@ -971,9 +978,10 @@ mod tests {
 
     #[test]
     fn runtime_leaves_symbol_and_nil_builtins_unchanged() {
-        // null?/make_nil/make_symbol are NOT renamed yet — make_symbol needs
-        // string-literal emission (L3b-2c-3).
-        for name in ["null?", "make_nil", "make_symbol"] {
+        // make_nil/make_symbol are NOT renamed yet — make_symbol needs
+        // string-literal emission (L3b-2c-3). (`null?` IS now renamed to the
+        // runtime call `dyn_null_p`; see `null_p_is_renamed_to_runtime_call`.)
+        for name in ["make_nil", "make_symbol"] {
             let instr = IIRInstr::new(
                 "call_builtin",
                 Some("%r".into()),
@@ -987,6 +995,24 @@ mod tests {
                 "{name} must be left for L3b-2c-3, not renamed",
             );
         }
+    }
+
+    /// `null?` routes to the runtime `dyn_null_p` on the native path — it must, or the
+    /// cons-walk helpers (`length`/`append`/`reverse`/`assoc`) fail to compile and the
+    /// backend V1 table has no lisp `null?`. (Native `is_null` is a compare-against-0,
+    /// but the tagged nil is the whole-word constant 1, so a dedicated primitive that
+    /// knows the encoding is required.)
+    #[test]
+    fn null_p_is_renamed_to_runtime_call() {
+        let instr = IIRInstr::new(
+            "call_builtin",
+            Some("%r".into()),
+            vec![Operand::Var("null?".into()), Operand::Var("%x".into())],
+            "bool",
+        );
+        let mut m = make_module(vec![instr]);
+        lower_heap_builtins_runtime(&mut m);
+        assert_eq!(builtin_name(&m.functions[0].instructions[0]), "dyn_null_p");
     }
 
     // ── E6d-3a: `list` desugaring ─────────────────────────────────────────

@@ -1,7 +1,177 @@
 # Changelog
 
+- Add Level-1 MOS model-card `U0` / `UO` surface mobility with the Berkeley
+  default of 600 cm^2/V/s. When `TOX` is explicit and `KP` is omitted, derive
+  `KP = U0 * Cox * 1e-4`; explicit `KP` retains precedence.
+- Add Level-1 MOS model-card `JS` as bulk-junction saturation-current density,
+  scaling source/drain leakage and shot noise by `AS` / `AD` when both areas
+  are present and otherwise retaining Berkeley-compatible `IS` fallback.
+- Apply Level-1 MOS model-card `IS` to the source-body and drain-body junctions
+  in DC, transient, transfer-function, and AC analysis, and emit distinct
+  `IBS` / `IBD` shot-noise sources.
+- Add Level-1 MOS model-card `MJSW`, defaulting to `0.33`, to shape `CJSW`
+  sidewall depletion independently from `MJ` bottom-junction capacitance.
+- Add the Level-1 MOS `PS` instance parameter. With model-card `CJSW`, its
+  product augments `CBS` in AC and transient source-body capacitance.
+- Add the Level-1 MOS `PD` instance parameter and model-card `CJSW` density.
+  Their product augments `CBD` in AC and transient drain-body capacitance.
+- Add the Level-1 MOS `AS` instance parameter. With model-card `CJ`, its
+  product augments `CBS` in AC and transient source-body capacitance.
+- Add the Level-1 MOS `AD` instance parameter and model-card `CJ` density.
+  Their product augments `CBD` in AC and transient drain-body capacitance.
+- Add the Level-1 MOS `NRS` instance parameter. It defaults to one and scales
+  the `RSH` source fallback while preserving explicit positive `RS` precedence,
+  intrinsic-node stamping, and `:RS` Johnson noise.
+- Add the Level-1 MOS `NRD` instance parameter. It defaults to one and scales
+  the `RSH` drain fallback while preserving explicit positive `RD` precedence,
+  intrinsic-node stamping, and `:RD` Johnson noise.
+- Add Level-1 MOS model-card `RSH` support. A positive sheet resistance supplies
+  the default one-square drain/source terminal resistances when `RD` / `RS`
+  remain zero, reusing intrinsic-node stamping and terminal Johnson noise.
+- Add Level-1 MOS model-card `RS` support. Nonzero values create an intrinsic
+  source node, stamp the external resistor in DC, TF, AC, and transient
+  analyses, route source-side capacitances through it, and emit `:RS` Johnson
+  noise.
+- Add Level-1 MOS model-card `RD` support. Nonzero values create an intrinsic
+  drain node, stamp the external resistor in DC, TF, AC, and transient
+  analyses, route drain-side capacitances through it, and emit `:RD` Johnson
+  noise.
+- Add Level-1 MOS model-card `TOX` support, defaulting to `100 nm` and deriving
+  intrinsic Meyer gate capacitance from silicon-dioxide permittivity and oxide
+  thickness.
+- Add Level-1 MOS model-card `LD` support, using `L - 2*LD` for channel
+  current and length-scaled intrinsic/`CGBO` capacitance.
+- Add Level-1 MOS model-card `FC` support, applying the continuous Berkeley
+  forward-bias continuation to `CBS` / `CBD` in AC and transient analysis.
+- Add Level-1 MOS model-card `AF` support and apply the configurable
+  drain-current exponent to MOS flicker-noise power spectral density.
+- Add Level-1 MOS model-card `KF` support and emit drain-current-scaled
+  inverse-frequency flicker noise alongside channel thermal noise.
+- Add JFET model-card `NLEV` and `GDSNOI` support, preserving the legacy
+  channel thermal-noise path below level 3 and adding the Berkeley
+  linear-region equation at level 3 and above.
+- Add JFET model-card `B` support with Parker-Skellern doping-tail shaping in
+  linear and saturation operation, preserving Shichman-Hodges behavior at the
+  Berkeley default of 1.
+- Add JFET model-card `EG` support, replacing the fixed 1.11 eV silicon
+  bandgap in gate saturation-current temperature scaling while preserving that
+  value as the default.
+- Add JFET model-card `XTI` support, scaling gate saturation current from
+  `TNOM` with the standard silicon bandgap temperature law and a default
+  exponent of 3.
+- Add JFET model-card `VTOTC` support, applying the alternative
+  `VTO(T) = VTO + VTOTC * (T - TNOM)` rule with precedence over `TCV` when
+  explicitly present.
+- Add JFET model-card `BETATCE` support, applying the alternative
+  `BETA(T) = BETA * 1.01^(BETATCE * (T - TNOM))` rule with precedence over
+  `BEX` when explicitly present.
+- Add JFET model-card `BEX` support, applying
+  `BETA(T) = BETA * (T / TNOM)^BEX` with a temperature-invariant zero default.
+- Add JFET model-card `TNOM` / `T_NOM` and `TCV` support, converting nominal
+  Celsius values to Kelvin and applying Berkeley threshold-voltage temperature
+  scaling while preserving invariant behavior when `TCV` is omitted.
+- Add JFET model-card `RS` source-resistance support with an intrinsic source
+  node across DC, transient, AC, transfer-function, and noise analysis, plus
+  hierarchy preservation, validation, and a distinct thermal-noise source.
+- Add JFET model-card `RD` drain-resistance support with an intrinsic drain
+  node across DC, transient, AC, transfer-function, and noise analysis, plus
+  hierarchy preservation, validation, and a distinct thermal-noise source.
+- Add JFET model-card `IS` gate-junction saturation-current support,
+  defaulting to `1e-14`, stamping `IGS`/`IGD` leakage in DC, transient, AC,
+  and transfer-function analyses, and emitting distinct shot-noise sources.
+- Add JFET model-card `FC` forward-bias depletion coefficient support,
+  defaulting to `0.5` and shaping `CGS`/`CGD` depletion capacitance in AC and
+  transient analysis with hierarchy preservation and range validation.
+- Add JFET model-card `PB` gate-junction-potential support with `VJ` as an
+  alias, bias-dependent `CGS`/`CGD` depletion capacitance in AC and transient
+  analysis, hierarchy preservation, and finite-positive validation.
+- Add JFET model-card `AF` flicker-noise current-exponent support, defaulting
+  to `1` and applying `KF * abs(Id)^AF / frequency` across noise analysis.
+- Add JFET model-card `KF` flicker-noise support with a distinct drain-current
+  `flicker` contribution and Berkeley-default inverse-frequency scaling.
+- Add diode model-card `AF` flicker-noise current-exponent support, defaulting
+  to `1` and applying `KF * abs(Id)^AF / frequency` across noise analysis.
+- Add diode model-card `KF` flicker-noise support with a distinct diode-current
+  `flicker` contribution and Berkeley-default inverse-frequency scaling.
+- Add legacy SPICE2 BJT model-card `C2` and `C4` leakage-ratio support,
+  deriving `ISE` and `ISC` from `IS` when explicit leakage currents are absent.
+- Add BJT model-card `XCJC` support to partition base-collector depletion
+  capacitance between intrinsic and external base nodes in AC and transient
+  analysis.
+- Add BJT model-card `RBM` and `IRB` support for Berkeley bias-dependent base
+  resistance across DC, AC, transient, transfer-function, and noise analysis.
+- Add BJT model-card `RB` base-resistance support with an intrinsic base node
+  in DC, AC, and transient analysis plus thermal noise in noise analysis.
+- Add BJT model-card `RC` collector-resistance support with an intrinsic
+  collector node in DC, AC, and transient analysis plus thermal noise in noise
+  analysis.
+- Add BJT model-card `RE` emitter-resistance support with an intrinsic emitter
+  node in DC, AC, and transient analysis plus thermal noise in noise analysis.
+- Add BJT model-card `VTF` forward transit-time voltage-scale support, applying
+  `exp(Vbc / (1.44 * VTF))` to the `XTF` AC and transient storage enhancement.
+
+- Add BJT model-card `ITF` forward transit-time current-scale support, applying
+  `(If / (If + ITF))^2` to the `XTF` AC and transient storage enhancement.
+- Add BJT model-card `XTF` forward transit-time bias-coefficient support,
+  scaling forward diffusion capacitance and transient stored charge by
+  `TF * (1 + XTF)` with the Berkeley default of zero.
+- Add BJT model-card `PTF` forward excess-phase support, rotating AC forward
+  transconductance by the configured phase at `1 / (2*pi*TF)`.
+- Add BJT model-card `AF` flicker-noise exponent support, defaulting to `1`
+  and applying `KF * abs(Ib)^AF / frequency` across noise analysis.
+- Add BJT model-card `KF` flicker-noise support with a distinct `flicker`
+  contribution and Berkeley-default inverse-frequency scaling.
+- Add BJT model-card `TNOM` / `T_NOM` nominal-temperature support, with
+  Berkeley Celsius card values converted to Kelvin for model-owned temperature
+  scaling and inherited circuit defaults when absent.
+
 ## Unreleased
 
+- Add BJT model-card `IKR` reverse high-current beta roll-off support in DC,
+  transient, AC, transfer-function, temperature, and noise paths, matching
+  Python and TypeScript. The supported-parameter catalog now contains 110
+  canonical rows.
+- Add BJT model-card `BR`/`BETA_R` reverse-current-gain support in DC,
+  transient, AC, transfer-function, temperature, and noise paths, matching
+  Python and TypeScript. `XTB` now scales both forward and reverse beta. The
+  supported-parameter catalog now contains 108 canonical rows.
+- Add BJT model-card `XTB` forward-beta temperature-exponent support, scaling
+  forward beta by the analysis-to-nominal absolute temperature ratio, matching
+  Python and TypeScript. The supported-parameter catalog now contains 106
+  canonical rows.
+- Add BJT model-card `ISC`/`NC` base-collector leakage support in DC,
+  transient, AC, transfer-function, temperature, and noise paths, matching
+  Python and TypeScript. The supported-parameter catalog now contains 104
+  canonical rows.
+- Add BJT model-card `ISE`/`NE` base-emitter leakage support in DC, transient,
+  AC, transfer-function, temperature, and noise paths, matching Python and
+  TypeScript. The supported-parameter catalog now contains 100 canonical rows.
+- Add BJT model-card `IKF`/`IK` forward high-current beta roll-off support with
+  shared base-charge modulation in DC, transient, AC, transfer-function, and
+  noise paths, matching Python and TypeScript. The supported-parameter catalog
+  now contains 96 canonical rows.
+- Add BJT model-card `VAR`/`VB` reverse Early-voltage support with base-charge
+  modulation in DC, transient, AC, transfer-function, and noise paths, matching
+  Python and TypeScript. The supported-parameter catalog now contains 94
+  canonical rows.
+- Add BJT model-card `FC` forward-bias depletion-coefficient support for the
+  shared `CJE` and `CJC` Berkeley continuation law in AC and transient analysis,
+  matching Python and TypeScript. The supported-parameter catalog now contains
+  92 canonical rows.
+- Add BJT model-card `VJC`/`PC` base-collector junction-potential and `MJC`/`MC`
+  grading-coefficient support with bias-shaped `CJC` depletion capacitance in
+  AC and transient analysis, matching Python and TypeScript. The supported-
+  parameter catalog now contains 90 canonical rows.
+- Add BJT model-card `VJE`/`PE` base-emitter junction-potential and `MJE`/`ME`
+  grading-coefficient support with bias-shaped `CJE` depletion capacitance in
+  AC and transient analysis, matching Python and TypeScript. The supported-
+  parameter catalog now contains 86 canonical rows.
+- Add BJT model-card `NR` reverse emission-coefficient support to reverse
+  base-collector diffusion charge in AC and transient analysis, matching Python
+  and TypeScript. The supported-parameter catalog now contains 82 canonical rows.
+- Add BJT model-card `NF` forward emission-coefficient support across DC,
+  transient charge, AC, transfer-function, and noise paths, matching Python and
+  TypeScript. The supported-parameter catalog now contains 80 canonical rows.
 - Add BJT model-card `VAF`/`VA` forward Early-voltage support with
   collector-voltage modulation in DC, transient, AC, transfer-function, and
   noise paths, matching Python and TypeScript. The supported-parameter catalog

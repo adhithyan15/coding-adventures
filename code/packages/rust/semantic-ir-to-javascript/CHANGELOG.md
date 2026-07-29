@@ -1,5 +1,785 @@
 # Changelog
 
+## 0.51.5 — `is_js_reserved` was missing `eval`/`arguments` (task #110)
+
+**Not a syntactic-keyword gap — a strict-mode contextual-reserved-word
+gap.** `is_js_reserved` (`emit.rs`) is the shared identifier-safety check
+every frontend that lowers to this backend (MATLAB, Octave, Wolfram,
+Macsyma, Maxima, APL, J, Derive, Reduce, Maple, Scilab, Q, Python, Ruby,
+JS, Twig, and more) goes through via `sanitize_ident`/`is_valid_js_ident`
+before emitting a user-level identifier as a JS binding. It already listed
+every syntactic keyword (`if`, `for`, `class`, …) plus a handful of
+contextual ones unsafe as bindings (`let`, `static`, `await`, `async`,
+and the "future reserved in strict mode" set) — but not `eval` or
+`arguments`.
+
+Neither is a syntactic keyword; both are ordinary identifiers lexically.
+But every module this backend emits runs under strict-mode semantics
+(`"use strict";` / ES-module code), and strict mode specifically forbids
+binding, assigning to, or otherwise declaring a variable, parameter,
+function, or class named `eval` or `arguments` — a `SyntaxError` at
+parse time. Even in the (non-existent, for this backend) sloppy-mode
+case, shadowing either name silently breaks the special semantics it
+normally carries (`arguments` inside a non-arrow function). A SIR module
+with a user-level name `eval` or `arguments` would previously have been
+emitted verbatim by `sanitize_ident` (since `is_js_reserved` returned
+`false`), producing invalid/miscompiled JavaScript.
+
+Fixed by adding both to the existing contextual-reserved-word group in
+`is_js_reserved`'s `matches!` list (same style as the existing entries;
+no restructuring). New unit test
+`is_js_reserved_flags_strict_mode_contextual_words` pins both as reserved
+and confirms ordinary look-alike identifiers (`value`, `evaluate`,
+`argument`) are untouched.
+
+## 0.51.4 — Q's own display convention (task #109, the direct Q sibling of J's `SIR_DISPLAY_J_UNDERSCORE` fix)
+
+`q-to-semantic-ir/tests/oracle.rs` (built alongside the runtime in the same
+wave as 0.51.0's five new Q primitives) confirmed the exact same shared-crate
+display-glyph gap `j-to-semantic-ir/tests/oracle.rs`'s own "Bug A" already
+found for J now affected Q too: no per-source-language ASCII-minus flag
+existed for a non-APL/non-J language's genuine-`NDArray` results, so a
+Q-sourced module's negative array values rendered with APL's high-minus
+glyph `¯` instead of Q's own plain ASCII `-`. Fixed here, mirroring
+`SIR_DISPLAY_J_UNDERSCORE`'s own 0.46.0 fix file-for-file.
+
+### Added
+
+- **`emit.rs`/`runtime.rs`: a fifth `SIR_DISPLAY_*` flag,
+  `SIR_DISPLAY_Q_ASCII_MINUS`** — extends the existing, already-proven
+  `SIR_DISPLAY_RUBY`/`SIR_DISPLAY_APL_HIGH_MINUS`/`SIR_DISPLAY_J_UNDERSCORE`/
+  `SIR_DISPLAY_DERIVE` mechanism exactly (a mutually-exclusive boolean
+  computed from `m.metadata.source_language`, substituted into the inlined
+  `RUNTIME` blob as a hardcoded literal — never source-derived text,
+  preserving the existing SECURITY invariant), rather than inventing a new
+  one. `true` when `source_language` is `"q"`, else `false`.
+- **`runtime.rs`: `fmtNum`** gains a third glyph branch, gated on
+  `SIR_DISPLAY_Q_ASCII_MINUS`, ported 1:1 from `q_runtime::value::fmt_num`:
+  a negative finite number prefixes with plain ASCII `-` (never `¯`, never
+  `_`); a non-finite value spells `"-inf"`/`"inf"` — lowercase, and with an
+  ASCII minus PREFIX on negative infinity, deliberately DIFFERENT from J's
+  own `"_inf"` spelling (a leading underscore, not a prefix minus). `x < 0`
+  (a numeric comparison) already excludes `-0` from the negative branch on
+  its own, matching the existing APL/J branches' identical reasoning — no
+  separate `-0` guard needed, even though `q_runtime::value::fmt_num`'s own
+  Rust source needs one (`is_sign_negative()` is a bit-level check that
+  says `true` for `-0`, unlike JS's `x < 0`).
+- **`runtime.rs`: `formatSeen`'s two `SirFloat`/bare-number branches** now
+  also check `SIR_DISPLAY_Q_ASCII_MINUS` in their `ArrayRt.fmtNum`-vs-
+  fallback OR-condition (alongside the existing `SIR_DISPLAY_APL_HIGH_MINUS`/
+  `SIR_DISPLAY_J_UNDERSCORE` checks). A Q-sourced module's bare/boxed scalar
+  negative INTEGER already happened to print correctly through the generic
+  `String(v)` fallback (Q's own convention IS plain ASCII `-`), but a
+  non-finite bare scalar printed JS's native `"Infinity"`/`"-Infinity"`
+  instead of Q's own `"inf"`/`"-inf"`, and a boxed whole-valued `SirFloat`
+  fell through to `floatToRubyString`'s Ruby-style trailing `.0` (`"5.0"`,
+  not Q's own `"5"`) — both now route through the now-Q-aware `fmtNum`
+  instead.
+- Two new `runtime.rs` regression tests,
+  `fmtnum_gates_the_negative_glyph_and_infinity_spelling_on_the_q_ascii_minus_flag`
+  and an update to the pre-existing
+  `formatseen_gates_bare_number_and_boxed_float_glyph_on_apl_high_minus_flag`
+  (its two exact-string OR-condition assertions now include the third
+  flag), mirroring the J-underscore flag's own test-shape exactly.
+
+### Verification
+
+Reverted `display_q_ascii_minus` to a hardcoded `false` in `emit.rs` and
+re-ran `q-to-semantic-ir/tests/oracle.rs`: all 5 previously-`known_bug`
+cases failed exactly as before (`¯1` instead of `-1`, etc.) — confirming
+the fix, not a coincidence, is what makes them pass. Restored and
+re-confirmed green. Full suite of every SIR22-array-domain consumer crate
+(`q-to-semantic-ir`, `matlab-to-semantic-ir`, `octave-to-semantic-ir`,
+`apl-to-semantic-ir`, `j-to-semantic-ir`, `scilab-to-semantic-ir`) passes
+unchanged.
+
+### Flips 5 of `q-to-semantic-ir`'s `known_bug` oracle cases to `known_bug: None`
+
+See that crate's own `CHANGELOG.md` for the full per-case accounting.
+
+## 0.51.3 — calculus / elementary-function handlers: `Sin`/`Cos`/`Sqrt`/`D`/`Integrate` (SIR23 addendum, item 3 of 4)
+
+Item 3 of the 4-item rollout described by `SIR23-symbolic-pattern-
+semantic-ir.md`'s own "Addendum — SIR23 symbolic evaluator + per-language
+display convention" section — the LAST item this rollout needed;
+`derive-to-semantic-ir/tests/oracle.rs`'s 38-case corpus is now fully
+`known_bug: None`. Items 1 (`[0.49.0]`) and 2 (`[0.51.2]`) wired up
+arithmetic/comparison/logic folding and held-form execution but left
+`Sin`/`Cos`/`Sqrt`/`D`/`Integrate` as inert term constructors — `SIN(0)`
+stayed `Sin(0)`, `DIF(x^2, x)` stayed `D(Pow(x, 2), x)`, never folding or
+differentiating. This item makes them real, scoped exactly to what the
+SIR23 addendum's own canonical head→evaluator table and
+`derive-to-semantic-ir`'s remaining `known_bug` cases need — deliberately
+NOT the full `symbolic-vm` calculus/elementary-function surface (see
+"Scope" below).
+
+### Added
+
+- **`runtime.rs`: `sinHandler`/`cosHandler`/`sqrtHandler`**, registered in
+  the existing `HANDLERS` map (ordinary arg-evaluated heads, not held
+  forms). Direct ports of `handlers.rs::{sin_handler, cos_handler,
+  sqrt_handler}`'s numeric-argument branch ONLY: `to_numeric(arg)`
+  succeeds → compute, special-casing an exact zero/perfect-square result
+  so it stays an exact integer term (`Sqrt(4) -> 2`, not `2.0`) — mirrors
+  `handlers.rs`'s own exact-`Numeric::Int` variant checks, not a generic
+  "numerically zero" test. Deliberately does NOT port the π-multiple
+  exact-value tables, odd/even symmetry rewrites (`sin(-x) = -sin(x)`),
+  arc-cancellation rewrites (`sin(asin(x)) = x`), `Sqrt`'s `x^{2k}`
+  even-power split, or the `simplify == false` `panic!` branch — confirmed
+  by reading `derive-runtime`/`reduce-runtime`/`maple-runtime`'s own
+  `src/lib.rs` that all three construct `SymbolicBackend::new()`
+  unchanged, which always builds its handler table with `simplify: true`,
+  so a non-numeric argument (a free symbol) is never a panic for any of
+  these five frontends — it passes through unevaluated, the same
+  arg-evaluated pass-through every other unrecognised shape in this
+  dispatcher already uses.
+- **`runtime.rs`: `derivativeHandler`/`integrateHandler`** (`D`/
+  `Integrate`), also registered in `HANDLERS` — confirmed these are NOT
+  held heads (`HELD_HEADS` stays `{"Assign", "Define", "If"}`, unchanged),
+  since their arguments are ordinary values to differentiate/integrate,
+  not held syntax. Both need `depth` — the ONE thing distinguishing them
+  from every other `HANDLERS` entry — to re-`evalTerm` their
+  differentiated/integrated result through the same depth-checked path
+  everything else in this dispatcher uses (mirroring
+  `differentiate`/`integrate_expr`'s own "return as-is if unchanged,
+  otherwise hand back to the VM's evaluator" policy exactly, via
+  `termEquals`). `evalApply`'s handler-dispatch call site now passes
+  `depth` to every `HANDLERS` entry (additive — every other handler
+  ignores the extra argument).
+- **`runtime.rs`: `diffTerm`/`diffPowTerm`/`chainRuleTerm`/`dependsOnVar`**
+  — a narrow, deliberately-partial port of `handlers.rs::{diff, diff_pow,
+  chain, depends_on}`, restricted to EXACTLY the match arms
+  `derive-to-semantic-ir/tests/oracle.rs`'s 4 currently-`known_bug` DIF/INT
+  cases exercise (confirmed by reading each case's own `source`/`expected`
+  directly, not assumed from the spec's own prose summary): base-case
+  symbol/constant checks, `Pow`'s constant-exponent power rule, and `Sin`'s
+  chain rule (producing `Cos`). Neither currently-failing case
+  differentiates a sum, so `Add`/`Sub` are NOT ported here, contrary to
+  what the spec addendum's own prose ("sum, power, and chain rules")
+  might suggest — verified directly, not guessed. Every other
+  differentiation rule the Rust reference implements (`Mul`/`Div`
+  product/quotient rule, `Tan`/`Exp`/`Log`/`Sqrt`/`Asin`/`Acos`/`Sinh`/
+  `Cosh`/`Tanh`/`Asinh`/`Acosh`/`Atanh`/`Coth`/`Sech`/`Csch`
+  differentiation, `diff_pow`'s other two branches) is likewise NOT
+  ported: an unhandled shape falls through to the exact same "leave it as
+  an unevaluated `D(f, x)` term" default the Rust reference's own final
+  match arm already uses — a strict subset, never a divergence, for any
+  input this port doesn't implement. Like `substituteSymbols` (item 2),
+  these are pure SOURCE-tree walks bounded by the compiled program's own
+  static nesting, not runtime data, so they need no `MAX_EVAL_DEPTH`/
+  `MAX_TERM_DEPTH` guard of their own — only the final re-evaluation of
+  the differentiated result goes through the depth-checked path.
+- **`runtime.rs`: `integrateTerm`** — likewise a narrow port of
+  `handlers.rs::integrate`, restricted to the bare-symbol case (`∫x dx =
+  (1/2)x^2`, an exact `Rational(1, 2)` term, never a float) — the ONLY
+  shape `int_integrates_a_symbol` (the one currently-failing `Integrate`
+  case) exercises, and exactly what the SIR23 addendum's own canonical
+  head→evaluator table scopes `Integrate` to ("a bare symbol"). The Rust
+  reference's `!depends_on(f, x)` constant-integral branch (`∫c dx =
+  c*x`) is deliberately NOT ported either, for the same reason.
+- **`tests/sir23_symbolic.rs`: 6 new integration tests**
+  (`elementary_function_identity_folds_are_exact_integers`,
+  `sin_of_a_free_symbol_stays_unevaluated`,
+  `differentiate_a_power_via_the_power_rule`,
+  `differentiate_sin_via_the_chain_rule`, `integrate_a_bare_symbol`,
+  `differentiate_of_a_runtime_built_deep_term_stays_bounded_instead_of_
+  crashing_node` — see "Security review" below), hand-building the SIR23
+  nodes directly and running the result through an actual `node` process,
+  mirroring this file's own established convention.
+- Every change here is **additive only**: the existing `HANDLERS` map's
+  item-1/item-2 entries, `HELD_HEADS`/`HELD_HANDLERS`, `MAX_EVAL_DEPTH`,
+  and the pattern-matching engine are all unchanged. Confirmed no
+  regression: this crate's own full test suite (271 tests) and every
+  downstream Stream B frontend's (`derive-to-semantic-ir`,
+  `reduce-to-semantic-ir`, `maple-to-semantic-ir`, `wolfram-to-semantic-ir`,
+  `macsyma-to-semantic-ir`, `maxima-to-semantic-ir`) still pass unchanged.
+  Also confirmed via a genuine revert-and-confirm: temporarily removing
+  the 5 new `HANDLERS` entries (`Sin`/`Cos`/`Sqrt`/`D`/`Integrate`) makes
+  exactly the 7 newly-passing `derive-to-semantic-ir` oracle cases (and
+  the 5 matching new unit tests above) fail again, with the OLD inert
+  output (`"DIF(x^2, x)"`, `"SIN(0)"`, etc.) — restoring the change makes
+  them pass again.
+- **`derive-to-semantic-ir/tests/oracle.rs`**: the remaining 7 cases flip
+  from `known_bug: Some(...)` to `known_bug: None` —
+  `dif_differentiates_a_power`, `dif_of_sin_gives_cos`,
+  `a_worksheet_program_defines_then_differentiates`,
+  `int_integrates_a_symbol`, `sin_of_zero`, `cos_of_zero`,
+  `sqrt_of_a_perfect_square` — closing the corpus at 38/38
+  `known_bug: None`. See that crate's own `CHANGELOG.md`.
+
+### Fixed
+
+- **A `/security-review`-relevant regression this PR's own first draft
+  introduced and caught before landing**: `oop_dispatch_is_map_keyed_not_
+  reflection`'s `!RUNTIME.contains("eval(")` guard (asserting no dynamic-
+  code-execution gadget appears anywhere in the embedded runtime source,
+  comments included) false-positived on a doc comment quoting the Rust
+  reference's own `vm.eval(result)` call. Reworded the comment to
+  describe the policy in prose instead of quoting Rust syntax containing
+  the literal substring `eval(` — no functional change, no actual
+  dynamic-code-execution gadget was ever added.
+
+### Security review
+
+`/security-review` flagged (LOW severity) that `diffTerm`/`integrateTerm`
+recurse over `D`/`Integrate`'s first argument with no `depth` cap of their
+own, unlike `termEquals`/`toDisplayString` — and, unlike `substituteSymbols`
+(item 2), that argument is an ordinary EVALUATED value, not always a
+source-literal `Define` body, so in principle it could resolve to an
+arbitrarily deep RUNTIME-constructed term (the same "shallow compiled
+program, deep runtime value" concern already documented for
+`toDisplayString`). Investigated rather than dismissed OR reflexively
+patched: confirmed this is NOT actually reachable, because every value
+`evalApply` ever hands to a `HANDLERS` entry has already survived
+`evalTerm`'s own applicative-order argument evaluation — which costs one
+recursive frame per `Apply` level regardless of head, so it already hits
+the existing `MAX_EVAL_DEPTH` cap (a HEAVIER per-frame cost than
+`diffTerm`'s own walk) before `f` can ever reach a handler at all. Verified
+empirically, not just argued: a new test,
+`differentiate_of_a_runtime_built_deep_term_stays_bounded_instead_of_
+crashing_node` (`tests/sir23_symbolic.rs`), builds a term 1,000
+`Symbolic.apply` levels deep via a real runtime loop and confirms it
+differentiates correctly with `node` exiting cleanly, with no additional
+cap in `diffTerm`/`integrateTerm` at all — adding one would be unreachable
+defensive complexity given this call graph. See `diffTerm`'s own SECURITY
+doc comment in `runtime.rs` for the full reasoning and the caveat that a
+future change routing an unevaluated term into these functions from
+somewhere else would need to re-verify it.
+
+## 0.51.2 — held-form execution: `Assign`/`Define`/`If` + user-function dispatch (SIR23 addendum, item 2 of 4)
+
+Item 2 of the 4-item rollout described by `SIR23-symbolic-pattern-
+semantic-ir.md`'s own "Addendum — SIR23 symbolic evaluator + per-language
+display convention" section. Item 1 (`Symbolic.evalTerm`'s arithmetic/
+comparison/logic folding, `[0.49.0]` below) declared the three
+`HELD_HEADS` (`Assign`/`Define`/`If`) but wired no handler for any of
+them, so they stayed inert data — `x := 5` never bound `x`, `F(x) :=
+x*x` never registered `F`, `IF(cond, a, b)` never selected a branch.
+This item makes them real.
+
+### Added
+
+- **`runtime.rs`: a `symEnv` `Map`**, declared once inside the `Symbolic`
+  IIFE's closure (one compiled program's `node` process = one flat
+  top-level session), porting `symbolic-vm::BaseBackend.env` — see the
+  spec addendum's "Environment / held-form execution model".
+- **`Symbolic.evalTerm`'s `Symbol` leaf case**: looks the name up in
+  `symEnv`; unbound stays unchanged (`SymbolicBackend::on_unresolved`'s
+  pass-through policy); bound checks a self-loop guard (`termEquals`
+  against the original symbol — `x := x` would recurse forever without
+  it, mirroring `eval_symbol`'s own comment) before recursively
+  evaluating the binding.
+- **`assignHandler`/`defineHandler`/`ifHandler`**, registered in a new
+  `HELD_HANDLERS` map consulted by `evalApply` before the generic
+  arg-evaluated `HANDLERS` path (held forms need the RAW args plus
+  `depth`/`evalTerm` access — a different shape than the item-1
+  handlers). Direct ports of `handlers.rs::assign_handler`/
+  `define_handler`/`if_handler`: `Assign` evaluates the RHS, binds, and
+  returns the value; `Define` stores the whole `Define(name, params,
+  body)` record and returns the bare `Symbol(name)` (never the record —
+  why `F(x) := x*x` displays as `"F"`, not `"Define(...)"`); `If`
+  evaluates the condition and branches on the `True`/`False` symbol
+  (2- or 3-arg form), rebuilding the unevaluated term if the condition
+  doesn't resolve to a boolean.
+- **User-function dispatch** in `evalApply`'s "no handler matched"
+  fallthrough: if the evaluated head is a `Symbol` bound in `symEnv` to a
+  stored `Define` record, zips `params` against the (already
+  applicative-order-evaluated) call args by position — a non-`Symbol`
+  param entry is silently dropped from the zip, and an arity mismatch
+  (post-drop) leaves the call unevaluated, both mirroring
+  `apply_user_function`'s exact `filter_map`/`None`-return quirks, not
+  an "improved" version of them — then substitutes and re-`evalTerm`s
+  the result. A direct port of `vm.rs::VM::eval_apply`'s step 4 /
+  `apply_user_function`.
+- **`substituteSymbols`**: a new, from-scratch port of
+  `symbolic-vm::vm::substitute` (a bare-`Symbol`-matching substitution),
+  used for the user-function-body substitution above. **Deliberately NOT
+  a reuse of the existing `substituteTerm`**, despite the spec addendum's
+  own "Genuine, one-place reuse" note suggesting exactly that reuse:
+  `substituteTerm` only substitutes at `Pattern(name, inner)`-wrapped
+  template nodes (the shape a `SymRule`'s RHS uses to reference a bound
+  pattern variable — confirmed by this crate's own `tests/
+  sir23_symbolic.rs`), while a `Define`'s body references its parameters
+  as ORDINARY bare `Symbol` nodes (confirmed directly in
+  `derive-to-semantic-ir::lower`'s own module doc: "never constructs
+  `SymPatternBlank`/`SymPatternNamed`/..."). Calling `substituteTerm` on
+  such a body would silently substitute nothing at all. See that
+  function's own doc comment in `runtime.rs` for the full explanation —
+  this is a corrected finding relative to the spec addendum's own
+  assumption, not an oversight.
+- **`tests/sir23_symbolic.rs`: 6 new integration tests**
+  (`assign_binds_and_reads_back_in_a_later_statement`,
+  `single_param_define_then_call_dispatches_by_substitution`,
+  `multi_param_define_then_call_dispatches_by_position`,
+  `arity_mismatch_leaves_the_user_function_call_unevaluated`,
+  `if_true_and_false_branches_select_the_right_arm`,
+  `self_referential_assign_does_not_infinite_loop`), hand-building the
+  SIR23 nodes directly and running the result through an actual `node`
+  process, mirroring this file's own established convention.
+- Every change here is **additive only**: the existing `HANDLERS` map,
+  every item-1 arithmetic/comparison/logic handler, `MAX_EVAL_DEPTH`'s
+  threading, and the pattern-matching engine (`matchPattern`/
+  `substituteTerm`/`replaceAllTerm`/`replaceRepeatedTerm`) are all
+  unchanged. Confirmed no regression: this crate's own full test suite
+  (265 tests) and every downstream Stream B frontend's
+  (`derive-to-semantic-ir`, `reduce-to-semantic-ir`, `maple-to-
+  semantic-ir`, `wolfram-to-semantic-ir`, `macsyma-to-semantic-ir`,
+  `maxima-to-semantic-ir`) still pass unchanged. Also confirmed via a
+  genuine revert-and-confirm: temporarily emptying `HELD_HANDLERS` and
+  restoring `evalTerm`'s `Symbol` case to its pre-item-2 unconditional
+  pass-through makes exactly the 6 newly-passing `derive-to-semantic-ir`
+  oracle cases (and the 6 matching new unit tests above) fail again, with
+  the OLD inert output (`"Assign(x, 5)\nAdd(x, 1)"`, etc.) — restoring
+  the change makes them pass again.
+- **`derive-to-semantic-ir/tests/oracle.rs`**: 6 cases flip from
+  `known_bug: Some(...)` to `known_bug: None` —
+  `variable_assignment_and_later_reference`,
+  `single_param_function_definition_and_call`,
+  `multi_param_function_definition_and_call`, `if_true_branch`,
+  `if_false_branch` (the 5 the SIR23 addendum's own "Rollout" section
+  named), plus `vector_assignment_persists_across_statements` (confirmed
+  by actually running the oracle test, not assumed — that crate's own
+  `[0.1.3]` `CHANGELOG.md` entry already predicted this one would flip
+  once this item landed). See that crate's own `CHANGELOG.md`.
+
+## 0.51.1 — `matmul` normalizes its operands through `toArrayValue` (task #111)
+
+Found by `scilab-to-semantic-ir/tests/oracle.rs`'s oracle/golden test suite
+(front3, HML01 §7) — its "finding six" (see that file's own module doc
+comment) — while cross-checking `scilab-to-semantic-ir` against native
+`scilab-runtime`. Confirmed reachable through `matlab-to-semantic-ir` too in
+principle (identical scalar/array disambiguation heuristic, identical
+`matmul` codegen path), just never previously exercised there because that
+crate's own oracle corpus only ever multiplies array literals, never a bare
+scalar variable.
+
+### Fixed
+
+- **`runtime.rs`: `matmul(a, b)` read `a.shape`/`b.shape` (via its own
+  `nrows`/`ncols` helpers) UNCONDITIONALLY, with no `toArrayValue`
+  normalization step first** — unlike its sibling `elementwise(op, a, b)`,
+  which explicitly calls `a = toArrayValue(a); b = toArrayValue(b);` before
+  touching either operand. Every frontend crate's scalar/array
+  disambiguation heuristic (`expr_is_known_scalar` or equivalent) runs at
+  LOWERING time and can never see through a plain variable reference — a
+  bare `Expr::VarRef` is never "known scalar," even when the variable
+  provably holds a plain number — so `x * y` between two non-literal
+  operands always lowers to `Expr::MatMul`/`__Sir.Array.matmul(x, y)`
+  regardless of what `x`/`y` actually hold at runtime. When they turned out
+  to be plain scalars (not array literals) — e.g. `x = 5; y = x * x;`, or a
+  function computing `x * x` for its own scalar parameter — the emitted JS
+  crashed: `TypeError: Cannot read properties of undefined (reading
+  'length')` at `nrows`, called from `matmul`. Fixed by adding the same
+  `a = toArrayValue(a); b = toArrayValue(b);` normalization `elementwise`
+  already had, as `matmul`'s first two statements — additive only, the
+  existing `checkedShapeSize` DoS guard before allocating `out` is
+  unchanged.
+- **`tests/sir22_array.rs`: two new regression tests** —
+  `scalar_variable_self_multiplication_computes_the_square` (`x = 5; y = x *
+  x;` → `25`) and `function_parameter_self_multiplication_computes_the_square`
+  (a function squaring its own scalar parameter) — both hand-build the exact
+  `Expr::MatMul`-over-bare-`VarRef` shape the bug needed, compile to JS, and
+  run the result through an actual `node` process (mirroring this file's own
+  `elementwise_mul_with_a_bare_scalar_operand_broadcasts` convention).
+  Confirmed both crash with the exact `TypeError` above when run against the
+  pre-fix `matmul`, and pass cleanly against the fix.
+- **`scilab-to-semantic-ir/tests/oracle.rs`**: the two cases this bug was
+  found through — `scalar_variable_self_multiplication_crashes_the_compiled_
+  path` and `function_parameter_self_multiplication_crashes_the_compiled_
+  path` — flipped from `known_bug: Some(...)` to `known_bug: None`, so their
+  compiled-side assertion now actually runs (not just ground truth) and
+  passes. See that crate's own `CHANGELOG.md`.
+- Every change here is **additive only** — no existing function or
+  dispatch-table entry other than `matmul`'s own body was modified.
+  Confirmed no regression: this crate's own full test suite and every other
+  downstream consumer's (`matlab-to-semantic-ir`, `octave-to-semantic-ir`,
+  `apl-to-semantic-ir`, `j-to-semantic-ir`, `q-to-semantic-ir`,
+  `scilab-to-semantic-ir`) still pass unchanged.
+
+## 0.51.0 — Q's five genuinely new SIR22-domain primitives (MA-11e)
+
+`q-to-semantic-ir` (new frontend crate, MA-11e) needed runtime support for
+five of Q's primitive verbs with no APL/J precedent and no existing
+`BuiltinCall` dispatch-table entry — the exact same shape of gap J's own
+`tally`/`replicate`/`monadicExp` addition (see this file's earlier history)
+filled for J's own two new primitives.
+
+### Added
+
+- **`runtime.rs`: `ArrayRt.qFirst`/`qWhere`/`qReverse`/`qNot`/`qTake`/
+  `qDrop`/`qMatch`**, plus matching `"q_first"`/`"q_where"`/`"q_reverse"`/
+  `"q_not"`/`"q_take"`/`"q_drop"`/`"q_match"` entries in the `builtins`
+  dispatch table `__Sir.callBuiltin`'s generic fallback already routes any
+  unrecognised `BuiltinCall` name through. Ported 1:1 from
+  `q_runtime::builtins::{first, where_indices, reverse, not_, take, drop_,
+  match_}` (`code/packages/rust/q-runtime/src/builtins.rs`). The `q_`
+  prefix is deliberately distinct from any existing entry (e.g. the
+  generic boolean `"not"`, which returns a native JS `boolean` for
+  short-circuit logic and is not elementwise) to avoid any semantic
+  collision with another producer's identically-spelled but
+  differently-behaved builtin.
+- Every change here is **additive only** — no existing function or
+  dispatch-table entry was modified. Confirmed no regression: this crate's
+  own full test suite (257 tests) and every other downstream consumer's
+  (`apl-to-semantic-ir`, `derive-to-semantic-ir`, `j-to-semantic-ir`,
+  `javascript-to-semantic-ir`, `macsyma-to-semantic-ir`,
+  `maple-to-semantic-ir`, `matlab-to-semantic-ir`, `octave-to-semantic-ir`,
+  `reduce-to-semantic-ir`, `scilab-to-semantic-ir`, `sir-conformance`,
+  `wolfram-to-semantic-ir`) still pass unchanged.
+
+### Found, NOT fixed here
+
+`q-to-semantic-ir/tests/oracle.rs` confirms the exact same display-glyph
+gap `j-to-semantic-ir/tests/oracle.rs`'s own "Bug A" already found for J
+(no per-source-language ASCII-minus flag for a non-APL/non-J language's
+genuine-NDArray results) now affects Q too, for the identical reason — see
+that crate's own `CHANGELOG.md` for the full writeup. Not fixed here,
+consistent with this repo's "found, NOT fixed here" discipline for a bug in
+a crate consumed by many frontends.
+
+## 0.50.0 — Derive's own SIR23 display convention (SIR23 addendum, item 4 of 4)
+
+Item 4 of the 4-item rollout described by `SIR23-symbolic-pattern-
+semantic-ir.md`'s own "Addendum — SIR23 symbolic evaluator + per-language
+display convention" section, and the last of the four (items 2 and 3 —
+held-form execution and calculus/elementary-function handlers — remain
+separate, not-yet-landed work; this item has no code dependency on either,
+since it touches only `toDisplayString`, a different function than
+`evalTerm`/`evalApply`). Found by `derive-to-semantic-ir/tests/oracle.rs`:
+even a fully-reduced SIR23 term printed wrong for Derive, because
+`Symbolic.toDisplayString` had no per-source-language display convention
+at all — every compound term rendered generically as `head(args, …)`
+regardless of `source_language`, unlike the SIR22 array domain's
+`ArrayRt.fmtNum`/`display` (already gated by `SIR_DISPLAY_APL_HIGH_MINUS`/
+`SIR_DISPLAY_J_UNDERSCORE`).
+
+### Added
+
+- **`emit.rs`/`runtime.rs`: a fourth `SIR_DISPLAY_*` flag,
+  `SIR_DISPLAY_DERIVE`** — extends the existing, already-proven
+  `SIR_DISPLAY_RUBY`/`SIR_DISPLAY_APL_HIGH_MINUS`/`SIR_DISPLAY_J_UNDERSCORE`
+  mechanism exactly (a mutually-exclusive boolean computed from
+  `m.metadata.source_language`, substituted into the inlined `RUNTIME`
+  blob as a hardcoded literal — never source-derived text, preserving the
+  existing SECURITY invariant), rather than inventing a new one. Unlike
+  the first three flags (which all gate `formatSeen`'s bare-number/
+  `SirFloat` branches), this one gates `Symbolic.toDisplayString` — the
+  SIR23 domain's own stringifier, a different function entirely.
+- **`runtime.rs`: `Symbolic`'s `deriveRender`/`derivePrintAt`/
+  `deriveRenderApply`/`deriveRenderList`/`deriveIsListNode`** — a direct,
+  byte-for-byte JS port of `derive-runtime::printer::print_derive`'s own
+  precedence-based renderer (`render`/`print_at`/`render_apply`/
+  `render_list`/`infix_binary`/`nary_logic`/`ir_head_to_surface`), kept as
+  its own separate function family rather than folded into the generic
+  `toDisplayString` (the two conventions disagree on almost every compound
+  shape). Reproduces, gated behind `SIR_DISPLAY_DERIVE`:
+  - Infix `Add`/`Sub`/`Mul`/`Div` and comparisons `Equal`/`Less`/`Greater`/
+    `LessEqual`/`GreaterEqual`, plus n-ary `And`/`Or`, each with the exact
+    9-level precedence ladder `printer.rs` documents (`Or` < `And` <
+    `Not`/comparisons < `Add`/`Sub` < `Mul`/`Div` < unary `Neg` < `Pow` <
+    atoms), so a looser child gets parenthesised exactly when re-parsing
+    would otherwise disagree with the built tree.
+  - Prefix `Neg` (`-x`) and `Not` (`NOT a`).
+  - Right-associative `Pow` (`a^b^c`, never `(a^b)^c`).
+  - Derive's own `List` bracket convention (D-5): a flat vector prints
+    `[a, b, c]`; a "list of lists" (every element itself a `List`) prints
+    as a `;`-row-separated matrix, `[a, b; c, d]` — the exact reverse of
+    `derive-runtime::lower::lower_vector`.
+  - Case-bridging a fixed table of builtin heads back to Derive's own
+    UPPERCASE surface spelling (`D` → `"DIF"`, `Sin` → `"SIN"`, …, the
+    exact same table as `printer.rs::ir_head_to_surface`); any other head
+    (a user-defined function, or one this subset's printer never bridges
+    either, e.g. `Abs`/`Inv`/`NotEqual`) renders as-typed.
+  - `True`/`False` need **no** special-casing at all: both the generic and
+    Derive-specific conventions already render a bare `Symbol` term as its
+    verbatim name, and `symbolic-ir`'s canonical boolean symbols are
+    already spelled `"True"`/`"False"` — Derive's own printer never
+    intercepts them either (confirmed by reading `printer.rs`: it falls
+    through to the generic `IRNode::Symbol(s) => s.clone()` arm), so there
+    was nothing to fix here.
+  - `Assign`/`Define` need no special-casing either (a finding that
+    shrinks this item's real scope, per the spec's own addendum): once
+    items 2/3 land, those heads' handlers return the bound *value* (or
+    `Symbol(name)`), never an `Assign(...)`/`Define(...)` term, so
+    `toDisplayString` never has to render either head at all — matching
+    every native `<lang>-runtime` printer's own documented invariant.
+  - Depth-capped with the same `MAX_TERM_DEPTH` guard the generic path
+    already uses (CWE-674) — this walk's per-frame cost is no heavier.
+
+### Changed
+
+- **`derive-to-semantic-ir/tests/oracle.rs`**: flips 7 `known_bug` cases
+  to `known_bug: None` — every case whose *only* remaining disagreement
+  was this display-convention gap (verified by actually running the
+  oracle test, not just inferred from source reading):
+  `negation_of_a_free_symbol` (prefix `Neg`), `equation_with_a_free_
+  variable_stays_symbolic` (infix `Equal`), `flat_vector_literal`/
+  `singleton_vector_literal`/`vector_of_expressions_evaluates_
+  elementwise` (flat `List` brackets), `two_by_two_matrix_literal`/
+  `three_row_one_column_matrix_literal` (`;`-row-separated matrix
+  brackets). Every other still-`known_bug` case (the ones also blocked by
+  the held-form/calculus evaluation gaps, items 2/3) has its reason text
+  updated to note the display half is now resolved and only the
+  evaluation half remains.
+
+## 0.49.0 — `Symbolic.evalTerm`: arithmetic/comparison/logic folding (SIR23 addendum, item 1 of 4)
+
+### Security fix (found by this item's own `/security-review` pass)
+
+`comparisonHandler`'s `Equal`/`NotEqual` structural-equality fallback
+calls the pre-existing `termEquals` (`runtime.rs`) — a plain recursive
+tree-equality check that, unlike every other whole-tree-walking function
+in this file (`toDisplayString`/`walkOnce`/`replaceRepeatedTerm`), had
+**no depth cap of its own** (CWE-674). Every pre-existing call site
+(the pattern matcher, the rewrite engine's fixed-point check) only ever
+compares terms already implicitly bounded by a `MAX_TERM_DEPTH`-capped
+traversal elsewhere, so this was never reachable before — but
+`comparisonHandler`'s operands (added by this same item) can be an
+arbitrarily deep symbolic tree built at runtime with no fold available
+(an unrecognized head has no `HANDLERS` entry, so `evalApply`'s
+fallthrough rebuilds the arg-evaluated term at essentially its original
+depth, never folding it away). Comparing two such deep trees with
+`=`/`Equal` could recurse `termEquals` itself past the native stack
+limit — a DIFFERENT recursion path than `evalTerm`/`evalApply`'s own,
+already-capped one, so `MAX_EVAL_DEPTH` never got a chance to intervene.
+Fixed by giving `termEquals` its own `depth` parameter, reusing the
+existing `MAX_TERM_DEPTH` cap (its per-frame cost is no heavier than
+`toDisplayString`'s own, already-proven-safe-at-that-cap frame) and
+returning `false` (the same "give up cleanly" contract `matchPattern`
+already uses for a failed match) past the limit, rather than recursing
+unbounded. Regression test:
+`tests/sir23_eval_depth_guard.rs::comparison_of_two_deep_unfoldable_
+trees_does_not_crash_term_equals`.
+
+Item 1 of the 4-item rollout described by `SIR23-symbolic-pattern-
+semantic-ir.md`'s own "Addendum — SIR23 symbolic evaluator + per-language
+display convention" section. Found by `derive-to-semantic-ir/tests/
+oracle.rs` (PR #8754) and `reduce-to-semantic-ir/tests/oracle.rs` (PR
+#8771): `Expr::SymApply` compiled unconditionally to a bare, inert
+`__Sir.Symbolic.apply(head, [args])` term constructor — no arithmetic
+folding, no comparison evaluation, no logic folding at all. This item
+adds a real (scoped) evaluator; held-form execution (`Assign`/`Define`/
+`If` + user functions, item 2), calculus/elementary-function handlers
+(item 3), and Derive's own SIR23 display convention (item 4) are
+explicitly **not** part of this change — see the addendum for their own
+scope.
+
+### Added
+
+- **`runtime.rs`: `Symbolic.evalTerm(term, depth)`** — a direct JS port
+  of `symbolic-vm`'s `VM::eval`/`eval_apply` head-dispatch architecture
+  (a per-head `Map`, not `SymRule`s through the existing `matchPattern`/
+  `applyRuleTerm` machinery — see the addendum's own "Architecture
+  decision" section for the four-point rationale). Scope: arithmetic
+  (`Add`/`Sub`/`Mul`/`Div`/`Pow`/`Neg`/`Inv`/`Abs`, with a small
+  `Numeric` tower ported from `handlers.rs` — `Number.isSafeInteger`
+  overflow-to-float in place of `checked_add`/`i128`-widened
+  `checked_pow`, exact-rational results via the existing `gcdAbs`/
+  `rationalTerm`), comparison (`Equal`/`NotEqual`/`Less`/`Greater`/
+  `LessEqual`/`GreaterEqual`, folding to the `True`/`False` **symbol**,
+  never a JS boolean), and logic (`And`/`Or`/`Not`, N-ARY, matching each
+  frontend's own flat chain-fold lowering). Identity-law fallbacks
+  (`x+0->x`, `1*x->x`, `x^0->1`, …) are ported alongside the numeric
+  folds — cheap, and needed to flip `additive_identity_simplifies_a_
+  free_symbol` in both oracle corpora.
+  - `HELD_HEADS = {"Assign", "Define", "If"}` is declared now (item 2's
+    scaffold) but wired to NO handler in this item: a held head's args
+    are never evaluated, and with no handler present it falls through
+    to the same "rebuild from evaluated head + ORIGINAL args" path
+    every other unmatched head takes — byte-for-byte today's inert
+    shape, so e.g. `Assign(x, 5+1)` does NOT fold `5+1` to `6` yet.
+  - `List` gets, and per the addendum's own handler table always will
+    get, no handler at all — applicative-order argument evaluation
+    alone folds `List(Add(1,1), Mul(2,3))` into `List(2, 6)` for free.
+  - `MAX_EVAL_DEPTH = 2000` — its own empirically-measured recursion-
+    depth cap (CWE-674), deliberately NOT a reuse of the existing
+    `MAX_TERM_DEPTH = 512` (a different function, `walkOnce`/
+    `replaceRepeatedTerm`'s tree walk, with a different, lighter
+    per-frame cost). Measured directly on a bare default `node` v25
+    stack (no `--stack-size` override) calling this exact `evalTerm`/
+    `evalApply` pair on a runtime-built, right-nested `Add` chain: safe
+    through ~2800 levels, crashes by ~2805 (a few levels of run-to-run
+    ASLR jitter at the exact boundary, confirmed via repeated trials).
+    `MAX_EVAL_DEPTH` is set to 2000 — about 29% below the measured
+    floor, matching this repo's established margin convention
+    (`apl-parser` ~26.5%, `j-parser` ~30%, `q-parser` ~29%,
+    `derive-parser::MAX_RULE_DEPTH` ~33%). See `tests/
+    sir23_eval_depth_guard.rs` for the executable proof (safe at the
+    cap, sentinel — not a crash — one level past it and far past it).
+- **`emit.rs`: `Stmt::ExprStmt` now wraps a top-level SIR23 statement in
+  `evalTerm`.** `Expr::SymApply`'s own codegen arm is UNCHANGED — it
+  still emits a bare, unevaluated `__Sir.Symbolic.apply(...)` — the wrap
+  happens exactly once, at the statement boundary, when the statement's
+  `expr` is one of the three SIR23 root shapes these five frontends ever
+  produce at statement level (`SymApply`/`SymSymbol`/`SymRational`,
+  confirmed exhaustive by `derive-to-semantic-ir/CHANGELOG.md`'s own
+  disclosed scope). `evalTerm` recurses into `head`/every arg itself, so
+  one top-level call evaluates an arbitrarily nested expression
+  bottom-up — wrapping every nested `SymApply` occurrence instead would
+  cause redundant, potentially-exponential re-evaluation.
+  - A refinement found empirically while verifying this item against
+    the two existing oracle harnesses: `derive-to-semantic-ir/tests/
+    oracle.rs`'s and `reduce-to-semantic-ir/tests/oracle.rs`'s own
+    `wrap_top_level_in_print` test helper (needed because neither
+    frontend's lowering auto-prints a statement's value — a separate,
+    already-disclosed gap) re-shapes a bare top-level SIR23 statement
+    into `BuiltinCall("print", [bare SIR23 root])` *before* calling
+    `compile()` — invisible to the check above, so without a further
+    adjustment the printed value stayed unevaluated even with
+    `evalTerm` fully wired (confirmed by temporarily flipping a
+    `known_bug` to `None` and watching it fail). `emit_stmt` therefore
+    also recognizes `print(<bare SIR23 root>)` specifically (via a new
+    `pick_print_of_sym23_root` helper, mirroring the existing
+    `pick_global_set` special-case in the very same arm) and evaluates
+    the inner expression before printing it. Still entirely inside this
+    one `Stmt::ExprStmt` arm, still never touches `Expr::SymApply`'s own
+    codegen, still one `evalTerm` call per statement — this is a
+    refinement of the wrap's trigger condition, not a scope change.
+- `tests/sir23_eval_depth_guard.rs` — the `MAX_EVAL_DEPTH` regression
+  suite described above.
+
+### Security fix (found by this item's own `/security-review` pass)
+
+`comparisonHandler`'s `Equal`/`NotEqual` structural-equality fallback
+calls the pre-existing `termEquals` (`runtime.rs`) — a plain recursive
+tree-equality check that, unlike every other whole-tree-walking function
+in this file (`toDisplayString`/`walkOnce`/`replaceRepeatedTerm`), had
+**no depth cap of its own** (CWE-674). Every pre-existing call site
+(the pattern matcher, the rewrite engine's fixed-point check) only ever
+compares terms already implicitly bounded by a `MAX_TERM_DEPTH`-capped
+traversal elsewhere, so this was never reachable before — but
+`comparisonHandler`'s operands (added by this same item) can be an
+arbitrarily deep symbolic tree built at runtime with no fold available
+(an unrecognized head has no `HANDLERS` entry, so `evalApply`'s
+fallthrough rebuilds the arg-evaluated term at essentially its original
+depth, never folding it away). Comparing two such deep trees with
+`=`/`Equal` could recurse `termEquals` itself past the native stack
+limit — a DIFFERENT recursion path than `evalTerm`/`evalApply`'s own,
+already-capped one, so `MAX_EVAL_DEPTH` never got a chance to intervene.
+Fixed by giving `termEquals` its own `depth` parameter, reusing the
+existing `MAX_TERM_DEPTH` cap (its per-frame cost is no heavier than
+`toDisplayString`'s own, already-proven-safe-at-that-cap frame) and
+returning `false` (the same "give up cleanly" contract `matchPattern`
+already uses for a failed match) past the limit, rather than recursing
+unbounded. Regression test:
+`tests/sir23_eval_depth_guard.rs::comparison_of_two_deep_identical_
+trees_stays_unevaluated_past_the_term_equals_cap` — asserts a behavioral
+effect (whether `Equal(...)` folds to `True`) rather than a crash
+boundary, since crash-boundary timing is not portable across Node
+versions/CI stack sizes.
+
+### Flips 14 of `derive-to-semantic-ir`'s and 17 of `reduce-to-semantic-
+### ir`'s `known_bug` oracle cases to `known_bug: None`
+
+See each crate's own `CHANGELOG.md` entry for the full per-case
+accounting. In short: every case whose ground-truth value is reached by
+pure arithmetic/comparison/logic folding (operator precedence,
+right-associative `^`, unary-minus-then-fold, exact-integer vs. exact-
+rational division, an additive-identity simplification, every
+comparison operator, `and`/`or`/`not` including an n-ary chain) now
+agrees end-to-end. Two additional cases (`vector_of_expressions_
+evaluates_elementwise` in Derive's corpus, `list_of_expressions_
+evaluates_elementwise` in Reduce's) now evaluate correctly element-by-
+element but still disagree on `List`'s bracket notation — their
+`known_bug` reason strings are corrected in place (not flipped) to
+reflect that the remaining gap is display-convention-only (item 4),
+not evaluation.
+
+### Explicitly NOT in this item (see the addendum for the full rollout)
+
+- **Item 2** (held-form execution: environment, `Assign`/`Define`/`If`
+  handlers, self-loop guard, user-function dispatch via `substituteTerm`)
+  — `HELD_HEADS`'s three members still have no handler and stay inert.
+- **Item 3** (calculus/elementary-function handlers: `Sin`/`Cos`/`Sqrt`/
+  `D`/`Integrate`/…, scoped to what the oracle corpora need).
+- **Item 4** (Derive's own SIR23 display convention: infix/prefix/
+  bracket/case-bridging).
+- Everything the addendum itself scopes out of the whole rollout:
+  `Factor`/`Apart`, `Assume`/`Forget`/`ForgetAll`, the reserved
+  special-function heads, and each frontend's own decorator-layer
+  extension builtins (Wolfram's `Map`/`Table`/…, Macsyma's `Solve`/
+  `Expand`/…).
+
+## 0.48.0 — the last unmapped comparison operator: `==`, now structural
+
+`!=`, `<=`, `>=` already routed to `__Sir.ne`/`le`/`ge`, but `==` (the operator
+spelling the Ruby frontend emits) was never mapped — so `puts(1 == 1)` threw
+`TypeError: unknown builtin: ==`. The emitter now maps `==`→`__Sir.eq`, and the
+`builtins` dispatch table gains `==`/`!=` (for a first-class `:==`/`:!=` symbol
+reference), matching the `<=`/`>=` already there.
+
+`eq`/`ne` also now route to `valEq` — the STRUCTURAL equality `include?`/
+`index`/`case`-`when` already use — instead of the old `numOf(a) === numOf(b)`.
+That old form was reference equality for arrays/maps, so `[1,2] == [1,2]` was
+false; harmless while `==` threw `unknown builtin`, but wrong once lowered. Now
+`[1,2] == [1,2]` is true, matching the Python, Ruby, Go, C and Rust backends
+(numbers still compare by value across Integer/Float; symbols by name; nested
+composites recurse, cycle-safe). `ne` is the exact negation. Ordering
+(`<`/`>`/`<=`/`>=`) stays a `numOf` unwrap — order is numeric.
+
+## 0.47.0 — `Exception#message`, and an exception displays as its message
+
+Two exception-faithfulness fixes:
+
+- **`e.message` raised `NoMethodError`** — everyday Ruby
+  (`rescue => e; puts e.message`) did not work. `objectMetaMethod` gains a
+  `message` arm returning the `SirError`\'s native `.message`, answered by an
+  exception only; `respondsTo` reports it on exceptions and not on anything
+  else.
+- **`puts e` printed `ArgumentError: boom`** instead of Ruby\'s plain `boom`.
+  A `SirError` extends `Error`, whose `toString` prefixes the class, and the
+  display path fell through to the generic `String(v)`. `formatSeen` now
+  renders an exception as its MESSAGE, matching `Exception#to_s`.
+
+A security review then found these three arms gated on `instanceof SirError`
+while the sibling reflection functions (`rubyClassName` → `classOfThrown`,
+`isA`) gate on `instanceof Error`. Because the emitter\'s `catch` binds the
+RAW thrown value, `e` can be a NATIVE JS error (a V8 `RangeError` from deep
+recursion), which `classOfThrown`/`rescueMatches` bucket as `StandardError`.
+So `e.class` reported `StandardError` while `e.message` raised `NoMethodError`
+on the very same value, and `puts e` on a native error took a different path.
+All three arms now gate on `instanceof Error`, so every reflection answer
+about a caught value agrees.
+## 0.46.0 — J's own display convention, and its two missing builtins
+
+Both found by `j-to-semantic-ir/tests/oracle.rs` (that crate's new
+oracle/golden test harness, cross-checking `j-runtime` against this
+backend's compiled-then-`node` path) and reported there as follow-up work,
+per that PR's own scope discipline — fixed here.
+
+**Bug A — no J-specific display convention at all.** `emit.rs`'s
+`SIR_DISPLAY_APL_HIGH_MINUS` flag only ever checked `source_language ==
+"apl"`; there was no equivalent for J. A J-sourced module's bare/boxed
+negative number or non-finite value fell through to plain ASCII (`"-5"`,
+`"Infinity"`) or, for a genuine `NDArray`, APL's own high-minus glyph
+unconditionally (`"¯5"`) — neither is J's own convention (a leading
+underscore, `"_5"`, and lowercase `"inf"`/`"_inf"`, matching
+`j_runtime::value::fmt_num` exactly). Fixed with a third, independent
+per-module display flag, `SIR_DISPLAY_J_UNDERSCORE`, mirroring
+`SIR_DISPLAY_APL_HIGH_MINUS`'s existing pattern in both `emit.rs` (the
+substitution) and `runtime.rs` (`fmtNum`'s glyph choice, and
+`formatSeen`'s bare-scalar gate, now `(SIR_DISPLAY_APL_HIGH_MINUS ||
+SIR_DISPLAY_J_UNDERSCORE)`). Mutually exclusive with the APL flag by
+construction — both are computed from the same `source_language` field —
+so no arbitration between the two is ever needed.
+
+**Bug B — `tally`/`replicate`/`exp` never registered as builtins.**
+`j-to-semantic-ir` has documented `#`'s monadic form as
+`BuiltinCall("tally", ..)`, `#`'s dyadic form as `BuiltinCall("replicate",
+..)`, and `^`'s monadic form as `BuiltinCall("exp", ..)` since its own
+0.1.0/0.1.1 — but this crate's `builtins` dispatch table never gained
+entries for any of the three, so every use crashed with `TypeError:
+unknown builtin: <name>` for every operand. The exact same bug *class* as
+APL's own historical `sign`/`recip`/`ceil`/`floor` omission (fixed in
+0.43.0). Fixed by porting `j_runtime::builtins::{tally, replicate,
+monadic_exp}` 1:1 into a new section of `ArrayRt` (alongside the existing
+SIR22-addendum APL primitives) and registering all three in `builtins`.
+`replicate`'s total output size is validated and capped via
+`checkedShapeSize` *before* allocating — the same bounded-allocation
+discipline every other array-domain factory in this file already follows
+— so a script that replicates its own output repeatedly cannot grow
+unbounded.
+
 ## 0.45.0 — fix stack-overflow DoS in method dispatch (`resolveMethod`)
 
 **Any method call on an instance whose class has a deep `include` chain killed

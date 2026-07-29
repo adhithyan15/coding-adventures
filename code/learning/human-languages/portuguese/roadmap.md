@@ -136,6 +136,20 @@ French.
   roots coming down **directly** from PIE rather than via Latin (though
   \**h₁es-* is the root Latin's *esse* came from too: cousins, not descent). Both lessons strike through ***vós***, teaching *vocês são / vocês
   estão* as the living 2pl. **Authored.**
+- **Ch. 17 — The body: the head that stayed a head, and the *n* that dissolved**:
+  ***a cabeça*** (`PT-C17-cabeca`) — the one that **kept** the Latin word, ←
+  Late Latin *capitia* ← ***caput***, where French and Italian replaced it with a
+  **pot** (*tête*, *testa*) and German with a **cup** (*Kopf*), independently.
+  The five-way table is the point: *cabeça*/*cabeza* still call the head a head;
+  the other three swapped in a **vessel**. Also shows the inherited-vs-reborrowed
+  **doubling** — *cabeça* worn down by everyday use, *capital*/*capítulo*/
+  *capitão* re-imported intact from written Latin: the same root entering the
+  language twice → ***a mão*** (`PT-C17-mao`): ← *manus*, with the intervocalic
+  ***-n-* dissolved** and the vowel left nasal, which is exactly what the **til**
+  records. Systematic, not a one-off — *lua* ← *lūna*, *boa* ← *bona*, *pão*
+  (Ch. 11) — and **Spanish kept them all** (*mano, luna, pan*), which is much of
+  why written Portuguese and Spanish look alike and sound unalike. Feminine for
+  the same reason as Italian's *la mano*. **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 
