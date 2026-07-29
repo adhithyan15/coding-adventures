@@ -250,6 +250,37 @@ int64_t _sir_as_int(SirValue v) {
 SirValue _sir_to_f(SirValue v) { return _sir_float(_sir_as_num(v)); }
 SirValue _sir_to_i(SirValue v) { return _sir_int(_sir_as_int(v)); }
 
+/* SIR27 milestone 10 — faithful printf float formatting (the `fmt_float`
+ * builtin).  Render `v` as C's printf would for conversion `kind`
+ * ('f'/'F'/'e'/'E'/'g'/'G') and `prec` digits of precision.  The format string
+ * is chosen by a switch over the fixed `kind` character — it is NEVER built
+ * from source text — so there is no format-string vulnerability.  The output
+ * is measured first (snprintf with a NULL buffer), then arena-allocated to the
+ * exact size, so any precision fits without truncation. */
+SirValue _sir_fmt_float_c(SirValue v, SirValue prec, SirValue kind) {
+    double  x = _sir_as_num(v);
+    int     p = (int)_sir_as_int(prec);
+    char    k = (kind.tag == SIR_STR && kind.as.s[0]) ? kind.as.s[0] : 'f';
+    const char *fmt;
+    int need;
+    char *buf;
+    if (p < 0) p = 0;
+    switch (k) {
+        case 'F': fmt = "%.*F"; break;
+        case 'e': fmt = "%.*e"; break;
+        case 'E': fmt = "%.*E"; break;
+        case 'g': fmt = "%.*g"; break;
+        case 'G': fmt = "%.*G"; break;
+        case 'f':
+        default:  fmt = "%.*f"; break;
+    }
+    need = snprintf(NULL, 0, fmt, p, x);
+    if (need < 0) return _sir_str("");
+    buf = (char *)_sir_alloc((size_t)need + 1);
+    snprintf(buf, (size_t)need + 1, fmt, p, x);
+    return _sir_str(buf);
+}
+
 const char *_sir_str_of(SirValue v) {
     return (v.tag == SIR_STR || v.tag == SIR_SYM) ? v.as.s : "";
 }

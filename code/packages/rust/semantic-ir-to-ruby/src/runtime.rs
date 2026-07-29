@@ -188,6 +188,26 @@ def sir_fmt_float(f)
   f.to_s
 end
 
+# C-printf-faithful float formatting for the `fmt_float` builtin (SIR27
+# milestone 10): render `value` as C's `printf` would for the given conversion
+# `kind` ('f'/'F'/'e'/'E'/'g'/'G') and `precision`.  Ruby's `sprintf` is
+# C-compatible, and we switch on the fixed kind character (never interpolating
+# a source-derived format string), so `printf("%.2f", 3.14159)` and the emitted
+# C produce byte-identical "3.14".
+def sir_fmt_float_c(value, precision, kind)
+  v = value.to_f
+  p = precision.to_i
+  case kind
+  when "f" then sprintf("%.*f", p, v)
+  when "F" then sprintf("%.*F", p, v)
+  when "e" then sprintf("%.*e", p, v)
+  when "E" then sprintf("%.*E", p, v)
+  when "g" then sprintf("%.*g", p, v)
+  when "G" then sprintf("%.*G", p, v)
+  else sprintf("%.*f", p, v)
+  end
+end
+
 def sir_puts(*xs)
   if xs.empty?
     STDOUT.write("\n")

@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.18.0 — `fmt_float`: C-printf-faithful float formatting
+
+One builtin, mirroring the Ruby backend, for the C frontend's faithful `printf`
+(SIR27 milestone 10).
+
+- `fmt_float(value, precision, kind)` → `_sir_fmt_float_c`, which renders a
+  `double` with `snprintf` for the conversion `kind` (`'f'`/`'F'`/`'e'`/`'E'`/
+  `'g'`/`'G'`) and precision. The format string is chosen by a `switch` over the
+  fixed `kind` character — never built from source text, so there is no
+  format-string vulnerability. The output is measured first (`snprintf(NULL, 0,
+  …)`) then arena-allocated to the exact size, so any precision fits.
+
+Compiles clean on clang + gcc + MSVC; matches reference C and emitted Ruby
+byte-for-byte on the faithful-`printf` corpus.
+
 ## 0.17.1 — fix: `raise ClassName, "msg"` constructs the exception
 
 Fixes a cross-backend conformance failure (`exception_reflection` / `puts(e)`): a

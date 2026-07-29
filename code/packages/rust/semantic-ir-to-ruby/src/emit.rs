@@ -53,6 +53,10 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     // (the frontend then masks it to the target width with a `Convert`).
     "to_f",
     "to_i",
+    // Faithful `printf` float formatting (SIR27 milestone 10): `fmt_float(value,
+    // precision, kind)` renders a `double` exactly as C's `printf` `%f`/`%e`/`%g`
+    // (and their uppercase forms) would.
+    "fmt_float",
     "=",
     "==",
     "!=",
@@ -1466,6 +1470,15 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // `Float#to_i` (truncates toward zero, matching C's `(int)double` cast).
         "to_f" => format!("({}).to_f", arg(&a, 0)),
         "to_i" => format!("({}).to_i", arg(&a, 0)),
+        // `fmt_float(value, precision, kind)` → the runtime C-printf-faithful
+        // formatter (Ruby's `sprintf` is C-compatible; the runtime switches on
+        // the fixed `kind` character so no format string is source-derived).
+        "fmt_float" => format!(
+            "sir_fmt_float_c({}, {}, {})",
+            arg(&a, 0),
+            arg(&a, 1),
+            arg(&a, 2)
+        ),
         "not" => format!("(!sir_truthy({}))", arg(&a, 0)),
         "<" => format!("({} < {})", arg(&a, 0), arg(&a, 1)),
         ">" => format!("({} > {})", arg(&a, 0), arg(&a, 1)),

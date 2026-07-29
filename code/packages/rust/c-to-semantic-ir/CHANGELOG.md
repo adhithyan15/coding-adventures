@@ -2,6 +2,37 @@
 
 ## Unreleased
 
+### Milestone 10 — faithful `printf`
+
+`printf` now reproduces C's formatting exactly, so a program can print a
+`double` with `%f` and get byte-identical output across reference C, emitted
+Ruby, and emitted C (milestone 9's corpus had to cast to `(int)` to dodge float
+display — that dodge is gone).
+
+- The frontend parses the format string (`parse_printf_format`) into literal
+  chunks and typed conversions; a backend never receives a source-derived format
+  string (no format-string vulnerability). `printf("<fmt>", args…)` lowers to a
+  single `print(seg₀, seg₁, …)`.
+- **Literal chunks** → `StrLit` (C escapes decoded; `%%` → `%`), re-escaped by
+  each backend's string emitter. **`%d`/`%i`/`%u`** → the integer value passed
+  straight through (`print` renders it as decimal). **`%f`/`%F`/`%e`/`%E`/`%g`/
+  `%G`** (optional `.precision`, default 6) → a new `fmt_float(value, precision,
+  kind)` builtin both backends implement with C-compatible `sprintf`/`snprintf`.
+- `print` concatenates with no separator and no auto-newline, so a `\n` in the
+  format is emitted as literal text (the old lowering auto-added a newline and
+  discarded the format's literal content). A literal-only `printf("hi\n")` now
+  works (was an error).
+- **Refused** (positioned error, not mis-formatted): field width (`%5d`), flags
+  (`%-`/`%+`/`%0`/`%#`), and `%c`/`%s`/`%x`/`%p`/`%n`. Precision is capped
+  (`MAX_PRINTF_PRECISION = 512`) as a DoS guard.
+- `Feature::Strings` is declared only when a `printf` actually emits literal
+  text / `fmt_float`, so a program that never prints stays string-free.
+- Verified: 49 frontend unit tests (6 new printf) + three-way conformance (8 new
+  float-display cases, fixed `%f`/`%.Nf` notation) byte-identical across all
+  three legs; emitted C compiles clean on clang + gcc + MSVC. Exponent forms
+  `%e`/`%g` are supported but kept out of the byte-identical corpus (their
+  exponent digit count varies by platform: Windows libc `e+004` vs Ruby `e+04`).
+
 ### Milestone 9b — floating-point value track
 
 The lowering gains a **second value track** for floating point.  Each expression
