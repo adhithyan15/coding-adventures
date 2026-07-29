@@ -658,7 +658,7 @@
           "maxItems": 4096,
           "uniqueItems": true,
           "items": {
-            "$ref": "#/$defs/safe_path"
+            "$ref": "#/$defs/portable_glob"
           }
         },
         "deps": {
@@ -1419,7 +1419,7 @@
               ]
             },
             "requires_execution": {
-              "type": "boolean"
+              "const": false
             }
           }
         }

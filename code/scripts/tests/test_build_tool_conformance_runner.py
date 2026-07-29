@@ -128,7 +128,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 7)
+        self.assertEqual(summary["case_count"], 26)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -138,7 +138,19 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(summary["conformance_status"], "not-run")
         self.assertEqual(
             summary["domains"],
-            ["discovery", "graph", "plan", "resolution"],
+            [
+                "cli",
+                "diff_selection",
+                "discovery",
+                "graph",
+                "hashing_cache",
+                "plan",
+                "resolution",
+                "sharding",
+                "starlark",
+                "toolchain_detection",
+                "validation",
+            ],
         )
 
     def test_manifest_classifies_every_established_front_door(self) -> None:
@@ -193,33 +205,11 @@ class CorpusTests(unittest.TestCase):
                 case_path.name,
             )
 
-    def test_unmodeled_domains_cannot_claim_bootstrap_success(self) -> None:
-        case = load_case("discovery-simple.json")
-        case["id"] = "diff-selection/unmodeled"
-        case["domain"] = "diff_selection"
-        case["capabilities"] = ["diff_selection"]
-        case["input"]["operation"] = "diff_selection"
-        case["expected"] = {
-            "schema_version": 1,
-            "case_id": "diff-selection/unmodeled",
-            "domain": "diff_selection",
-            "outcome": "ok",
-            "result": {"affected_packges": []},
-            "diagnostics": [],
-        }
-        with self.assertRaises(runner.ConformanceError) as raised:
-            runner.validate_case_document(
-                case,
-                case_schema=runner.load_document(FIXTURE_ROOT / "schema.json"),
-                result_schema=runner.load_document(
-                    FIXTURE_ROOT / "result.schema.json"
-                ),
-                plan_schema=runner.load_document(
-                    runner.REPO_ROOT
-                    / "code/specs/schemas/build-plan-v1.schema.json"
-                ),
-            )
-        self.assertEqual(raised.exception.code, "CASE_DOMAIN_UNMODELED")
+    def test_every_process_free_domain_is_bootstrap_modeled(self) -> None:
+        self.assertEqual(
+            runner.BOOTSTRAP_DOMAINS,
+            set(runner.DOMAIN_CAPABILITIES) - {"execution"},
+        )
 
     def test_malformed_capabilities_fail_schema_validation_not_routing(self) -> None:
         case = load_case("discovery-simple.json")
@@ -425,6 +415,16 @@ class ResultValidationTests(unittest.TestCase):
             runner.assert_result_matches(discovery, typo)
         self.assertEqual(raised.exception.code, "RESULT_SCHEMA_INVALID")
 
+        toolchains = load_case("toolchain-detection-shared.json")
+        incomplete = copy.deepcopy(toolchains["expected"])
+        del incomplete["result"]["toolchains"]["ocaml"]
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.assert_result_matches(toolchains, incomplete)
+        self.assertEqual(
+            raised.exception.code,
+            "RESULT_PURE_SCHEMA_INVALID",
+        )
+
         graph = load_case("graph-diamond.json")
         extra = copy.deepcopy(graph["expected"])
         extra["result"]["unexpected"] = []
@@ -520,6 +520,138 @@ class ResultValidationTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, "JSON_INPUT_TOO_LARGE")
 
 
+class PureDomainValidationTests(unittest.TestCase):
+    def test_semantics_reject_unknown_references_and_bad_oracles(self) -> None:
+        pure_schema = runner.load_document(
+            FIXTURE_ROOT / "pure-domains.schema.json"
+        )
+        schema_args = {
+            "case_schema": runner.load_document(FIXTURE_ROOT / "schema.json"),
+            "result_schema": runner.load_document(
+                FIXTURE_ROOT / "result.schema.json"
+            ),
+            "plan_schema": runner.load_document(
+                runner.REPO_ROOT
+                / "code/specs/schemas/build-plan-v1.schema.json"
+            ),
+            "pure_domain_schema": pure_schema,
+        }
+
+        unknown_edge = load_case("diff-selection-transitive.json")
+        unknown_edge["input"]["options"]["edges"][0][0] = "python/missing"
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(unknown_edge, **schema_args)
+        self.assertEqual(raised.exception.code, "CASE_EDGE_UNKNOWN")
+
+        hashing = load_case("hashing-cache-corrupt.json")
+        hashing["expected"]["result"]["package_digest"] = "0" * 64
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(hashing, **schema_args)
+        self.assertEqual(raised.exception.code, "EXPECTED_HASH_MISMATCH")
+
+        mutations = (
+            (
+                "starlark-structured-context.json",
+                lambda result: result["result"]["targets"][0][
+                    "rendered_commands"
+                ].__setitem__(0, "wrong"),
+                "RESULT_STARLARK_RENDER_MISMATCH",
+            ),
+            (
+                "sharding-prerequisite-closed.json",
+                lambda result: result["result"]["shards"][0].__setitem__(
+                    "estimated_cost", 10
+                ),
+                "RESULT_SHARD_MISMATCH",
+            ),
+            (
+                "validation-missing-build.json",
+                lambda result: result["result"].__setitem__(
+                    "diagnostic_codes", []
+                ),
+                "RESULT_VALIDATION_INCONSISTENT",
+            ),
+            (
+                "toolchain-detection-shared.json",
+                lambda result: result["result"]["toolchains"].__setitem__(
+                    "ocaml", True
+                ),
+                "RESULT_TOOLCHAIN_MISMATCH",
+            ),
+            (
+                "cli-dry-run-success.json",
+                lambda result: result["result"].__setitem__("exit_code", 2),
+                "RESULT_CLI_EXIT_MISMATCH",
+            ),
+        )
+        for filename, mutate, code in mutations:
+            with self.subTest(filename=filename):
+                case = load_case(filename)
+                actual = copy.deepcopy(case["expected"])
+                mutate(actual)
+                with self.assertRaises(runner.ConformanceError) as raised:
+                    runner.assert_result_matches(
+                        case,
+                        actual,
+                        pure_domain_schema=pure_schema,
+                    )
+                self.assertEqual(raised.exception.code, code)
+
+    def test_pure_domain_set_order_is_canonicalized(self) -> None:
+        diff = load_case("diff-selection-transitive.json")
+        actual = copy.deepcopy(diff["expected"])
+        actual["result"]["affected_packages"].reverse()
+        self.assertEqual(runner.assert_result_matches(diff, actual), diff["expected"])
+
+        shard = load_case("sharding-prerequisite-closed.json")
+        actual = copy.deepcopy(shard["expected"])
+        actual["result"]["shards"].reverse()
+        actual["result"]["shards"][0]["package_names"].reverse()
+        actual["result"]["shards"][0]["toolchains"].reverse()
+        self.assertEqual(
+            runner.assert_result_matches(shard, actual),
+            shard["expected"],
+        )
+
+    def test_pure_domain_validation_has_no_host_side_effects(self) -> None:
+        pure_schema = runner.load_document(
+            FIXTURE_ROOT / "pure-domains.schema.json"
+        )
+        pure_domains = set(pure_schema["$defs"]["pure_domain"]["enum"])
+        schema_args = {
+            "case_schema": runner.load_document(FIXTURE_ROOT / "schema.json"),
+            "result_schema": runner.load_document(
+                FIXTURE_ROOT / "result.schema.json"
+            ),
+            "plan_schema": runner.load_document(
+                runner.REPO_ROOT
+                / "code/specs/schemas/build-plan-v1.schema.json"
+            ),
+            "pure_domain_schema": pure_schema,
+        }
+        cases = [
+            runner.load_document(path)
+            for path in sorted(CASES_ROOT.glob("*.json"))
+            if runner.load_document(path)["domain"] in pure_domains
+        ]
+
+        with (
+            mock.patch.object(tempfile, "TemporaryDirectory") as temporary,
+            mock.patch.object(subprocess, "run") as process,
+            mock.patch.object(subprocess, "Popen") as popen,
+            mock.patch.object(os, "system") as system,
+            mock.patch.object(os, "chmod") as chmod,
+        ):
+            for case in cases:
+                runner.validate_case_document(case, **schema_args)
+
+        temporary.assert_not_called()
+        process.assert_not_called()
+        popen.assert_not_called()
+        system.assert_not_called()
+        chmod.assert_not_called()
+
+
 class CommandLineTests(unittest.TestCase):
     def test_validate_corpus_prints_a_machine_readable_summary(self) -> None:
         stdout = io.StringIO()
@@ -530,7 +662,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 7)
+        self.assertEqual(summary["case_count"], 26)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

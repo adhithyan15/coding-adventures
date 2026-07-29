@@ -542,10 +542,10 @@ The process-free CLI record is a decision table only:
 | `package_failure`, `validation_failure` | `1` |
 | `invalid_usage`, `unsafe_input` | `2` |
 
-An action marked `requires_execution: true` remains inert fixture data in this
-tranche. Native argument parsing and machine-output compatibility become
-conformance claims only when a later sandbox executes each language front
-door.
+Every process-free CLI case requires `requires_execution: false`; a true value
+is rejected before workspace decoding. Native argument parsing and
+machine-output compatibility become conformance claims only when a later
+sandbox executes each language front door.
 
 ## Security and trust boundary
 
