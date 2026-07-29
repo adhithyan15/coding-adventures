@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Added `TcpConnection::read_chunk` and `read_until_limit` for bounded
+  streaming and delimiter-framed reads.
+
 ## [0.1.0] - 2026-04-12
 
 ### Added

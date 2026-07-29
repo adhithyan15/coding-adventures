@@ -56,7 +56,9 @@ through shared layout into a backend-neutral `PaintScene`, extracts clickable
 link regions, resolves host-fetched GIF/JPEG image bytes into shared pixels,
 and proves text and inline-image scenes rasterize to RGBA pixels with Cairo.
 Fetch/decode failures now render clipped bordered HTML `alt` text. The concrete
-network transport and platform host must still wire navigation through pixels.
+`http1-client` now composes URL parsing, bounded TCP I/O, HTTP response framing,
+and relative redirects into a synchronous HTTP/1.0 GET transport. The platform
+host must still wire fetched page and image bytes through navigation to pixels.
 
 ## Where It Fits
 
@@ -443,10 +445,9 @@ system window color and felt "native."
 [dependencies]
 url-parser             = { path = "../../../packages/rust/url-parser" }
 tcp-client             = { path = "../../../packages/rust/tcp-client" }
-frame-extractor        = { path = "../../../packages/rust/frame-extractor" }
-http1_0_lexer          = { path = "../../../packages/rust/http1.0-lexer" }
-http1_0_parser         = { path = "../../../packages/rust/http1.0-parser" }
-http1_0_client         = { path = "../../../packages/rust/http1.0-client" }
+http-core              = { path = "../../../packages/rust/http-core" }
+http1                  = { path = "../../../packages/rust/http1" }
+http1-client           = { path = "../../../packages/rust/http1-client" }
 coding-adventures-html-parser = { path = "../../../packages/rust/html-parser" }
 html-to-layout         = { path = "../../../packages/rust/html-to-layout" }
 layout_ir              = { path = "../../../packages/rust/layout-ir" }
