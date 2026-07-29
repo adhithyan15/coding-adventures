@@ -10,6 +10,11 @@ layout TaskApp {
     // by row index, matching how task rows report which row was acted on.
     Row [ project-bar ] {
       For ( each: slot: project-rows , as: p , index: pi ) {
+        // A nested project gets a leading glyph; a top-level one has an empty indent
+        // cell and so renders nothing, keeping the row flush left.
+        If ( when: ( p[2] ) ) {
+          Text [ project-indent ] ( content : ( p[2] ) )
+        }
         If ( when: ( p[1] ) ) {
           HostButton [ project-on ] ( label : ( p[0] ) , onClick : emit: onSelectProject )
         }
@@ -23,6 +28,7 @@ layout TaskApp {
         onChange : emit: onNewProjectNameChange
       )
       HostButton [ project-add ] ( label : "+ Project" , onClick : emit: onAddProject )
+      HostButton [ project-sub ] ( label : "+ Sub" , onClick : emit: onAddSubproject )
     }
 
     Text [ title ] ( content : slot: app-title , a11y-role : heading )

@@ -64,6 +64,21 @@ style TaskApp {
       background : "#faedd6" ;
     }
   }
+  part project-indent {
+    color : "#9b9289" ;
+    font-size : 13 ;
+  }
+  part project-sub {
+    background : "#f7f2ea" ;
+    color : "#6a625a" ;
+    font-size : 13 ;
+    padding : 8 ;
+    border-radius : 9 ;
+    state hover {
+      background : "#faedd6" ;
+      color : "#b6741a" ;
+    }
+  }
   part title {
     font-size : 22 ;
     font-weight : bold ;

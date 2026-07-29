@@ -75,18 +75,65 @@ function makeController(engine: any, init: ControllerInit = {}) {
   let counter = initialCounter;
   const today = Math.floor(Date.now() / DAY_MS);
 
-  // The workspace's top-level projects, in the engine's own display order, plus which
-  // one is active. Nested projects are a later increment — the engine supports them,
-  // this bar doesn't render the hierarchy yet.
-  const projects = (): { ids: string[]; names: string[]; activeId: string } => {
+  // Every project, flattened depth-first so a sub-project immediately follows its
+  // parent, carrying the depth so the bar can show the hierarchy. The engine stores
+  // nesting by `parent` on a flat map (children aren't listed on the parent), so the
+  // child lists are derived here.
+  //
+  // A malformed snapshot could in principle contain a parent cycle; the `seen` guard
+  // means we'd render such projects once rather than recursing forever.
+  const projects = (): {
+    ids: string[];
+    names: string[];
+    depths: number[];
+    activeId: string;
+  } => {
     const ws = engine.workspace().data;
     const activeId = engine.activeProject().data as string;
-    const ids: string[] = ws.roots ?? [];
-    return {
-      ids,
-      names: ids.map((id) => ws.projects?.[id]?.name || id),
-      activeId,
+    const all: Record<string, any> = ws.projects ?? {};
+    // Bucket every project under its parent ONCE. Filtering the whole map per node
+    // instead would make the walk O(n^2) — fine for a dozen projects, needlessly
+    // quadratic for a big workspace.
+    // Siblings read in name order — sorting by raw id would put `p10` before `p2`.
+    const byParent = new Map<string | null, string[]>();
+    for (const id of Object.keys(all)) {
+      const parent = (all[id]?.parent ?? null) as string | null;
+      const bucket = byParent.get(parent);
+      if (bucket) bucket.push(id);
+      else byParent.set(parent, [id]);
+    }
+    for (const bucket of byParent.values()) {
+      bucket.sort((a, b) => String(all[a]?.name ?? a).localeCompare(String(all[b]?.name ?? b)));
+    }
+    const childrenOf = (parent: string | null): string[] => byParent.get(parent) ?? [];
+
+    const ids: string[] = [];
+    const depths: number[] = [];
+    const seen = new Set<string>();
+    // An explicit stack rather than recursion: a deeply nested chain (or a tampered
+    // snapshot) would otherwise blow the JS call stack inside getProps and take the
+    // whole render down. `seen` also makes a parent cycle terminate.
+    const walk = (rootId: string) => {
+      const stack: Array<[string, number]> = [[rootId, 0]];
+      while (stack.length > 0) {
+        const [id, depth] = stack.pop()!;
+        if (seen.has(id)) continue;
+        seen.add(id);
+        ids.push(id);
+        depths.push(depth);
+        // Reversed, so popping yields the children in name order.
+        const kids = childrenOf(id);
+        for (let i = kids.length - 1; i >= 0; i -= 1) stack.push([kids[i], depth + 1]);
+      }
     };
+    // Roots first, in the engine's explicit display order...
+    for (const root of (ws.roots ?? []) as string[]) walk(root);
+    // ...then anything the roots list somehow missed, so no project is unreachable
+    // (an orphan whose `parent` names a project that no longer exists, say).
+    for (const id of childrenOf(null)) walk(id);
+    for (const id of Object.keys(all)) walk(id);
+
+    return { ids, names: ids.map((id) => all[id]?.name || id), depths, activeId };
   };
 
   // Snapshot the engine + host state and hand it to the persistence sink. Called
@@ -142,6 +189,9 @@ function makeController(engine: any, init: ControllerInit = {}) {
       const projectRows: string[][] = p.ids.map((id, i) => [
         p.names[i],
         id === p.activeId ? "active" : "",
+        // Non-empty only for a nested project; the layout hides an empty cell, so a
+        // top-level row stays flush left.
+        p.depths[i] > 0 ? `${" ".repeat((p.depths[i] - 1) * 2)}↳` : "",
       ]);
       return {
         appTitle: "Tasks — auto-scheduled",
@@ -167,9 +217,13 @@ function makeController(engine: any, init: ControllerInit = {}) {
         case "newProjectNameChange":
           newProject = event.value;
           break;
-        case "addProject": {
+        case "addProject":
+        case "addSubproject": {
           const name = newProject.trim();
           if (!name) break;
+          // "+ Sub" nests under whatever is currently shown; "+ Project" stays top-level.
+          const parent =
+            event.type === "addSubproject" ? engine.activeProject()?.data ?? null : null;
           // Project ids must be unique across the WHOLE workspace, so probe every
           // project — not just the top-level ones. A nested project is in `projects`
           // but not in `roots`; probing `roots` alone would keep proposing an id the
@@ -178,7 +232,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
           let n = taken.size + 1;
           while (taken.has(`p${n}`)) n += 1;
           const id = `p${n}`;
-          const res = engine.createProject({ id, name, parent: null });
+          const res = engine.createProject({ id, name, parent });
           if (res?.ok === false) {
             // Don't fail silently — the user pressed a button and nothing happened.
             console.error("Could not create the project:", res.error ?? res);

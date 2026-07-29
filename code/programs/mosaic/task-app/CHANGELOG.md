@@ -37,8 +37,27 @@ All notable changes to the `task-app` web program are documented here.
   nested project present it would have proposed an id the engine rejects, and "+ Project"
   would have become a permanent silent no-op. It now probes every project, and surfaces
   a failed create instead of swallowing it.
-- Follow-on: rendering *nested* projects as a hierarchy (the engine supports nesting; the
-  bar lists top-level projects only).
+- **Nested projects render as a hierarchy.** The bar now lists *every* project, walked
+  depth-first so a sub-project immediately follows its parent, with an indent glyph
+  marking the nesting. `project-rows` gains a third cell (`indent`, empty for top-level,
+  so the layout's `If` hides it and the row stays flush left), and a **"+ Sub"** button
+  creates a project nested under whichever one is shown — making the engine's hierarchy
+  reachable from the UI for the first time.
+  - The engine stores nesting as a `parent` on a flat project map (a parent doesn't list
+    its children), so the host derives the child lists — bucketing every project under
+    its parent once, which keeps the walk O(n) instead of re-filtering the whole map per
+    node. Siblings are ordered by name (sorting by raw id would put `p10` before `p2`).
+  - The walk uses an **explicit stack, not recursion**, and carries a `seen` guard: a
+    deeply nested chain can't blow the JS call stack inside `getProps` and take the whole
+    render down, and a malformed snapshot containing a parent cycle terminates with each
+    project listed once. It also sweeps up any project the `roots` list missed — an
+    orphan whose `parent` names a project that no longer exists — so nothing is
+    unreachable. (Both hardened in security review; verified with a 50 000-deep chain, a
+    parent cycle, and a dangling-parent orphan.)
+  - Verified against a real `wasm32` build driven from Node: depth-first ordering, depths
+    (0/1/2), a nested project being selectable and owning its own tasks, its tasks *not*
+    leaking into the parent, and the engine's refusal to delete a project that still has
+    children.
 
 ### Changed - structured task rows (UI design, step 2)
 
