@@ -1104,6 +1104,12 @@ static SirValue _sir_current_self = { SIR_NIL, { 0 } };
  * Lazily allocated, matching Ruby's `main`-object ivars. */
 static SirMap *_sir_toplevel_ivars = NULL;
 
+/* OOP slice 6: the CLASS whose method is currently executing — how a method body
+ * resolves `@@x` (a class variable belongs to a class, not an instance).  Set by
+ * `_sir_call_method` (to the receiver's class) and `_sir_call_class_method` (to
+ * the dispatched class), restored after.  NULL at top level. */
+static const char *_sir_current_class = NULL;
+
 SirValue _sir_self(void) { return _sir_current_self; }
 
 /* The `@name -> value` map owner for the current `self`: the instance's own
@@ -1217,9 +1223,12 @@ SirValue _sir_call_method(SirValue recv, const char *method, int argc, ...) {
      * an enclosing `TryCatch` restores `_sir_current_self` on the unwind path. */
     {
         SirValue saved_self = _sir_current_self;
+        const char *saved_class = _sir_current_class;
         _sir_current_self = recv;
+        _sir_current_class = recv.as.inst->sir_class;  /* slice 6: `@@x` owner */
         r = fn.as.clo->fn(fn.as.clo->caps, args, argc);
         _sir_current_self = saved_self;
+        _sir_current_class = saved_class;
     }
     if (args) free(args);
     return r;
@@ -1319,12 +1328,93 @@ SirValue _sir_call_class_method(const char *cls, const char *method, int argc, .
     va_end(ap);
     {
         SirValue saved_self = _sir_current_self;
+        const char *saved_class = _sir_current_class;
         _sir_current_self = _sir_nil();
+        _sir_current_class = _sir_intern(cls);  /* slice 6: `@@x` owner is the class */
         r = fn.as.clo->fn(fn.as.clo->caps, args, argc);
         _sir_current_self = saved_self;
+        _sir_current_class = saved_class;
     }
     if (args) free(args);
     return r;
+}
+
+/* ---- OOP slice 6: class variables (@@x) ------------------------------------
+ *
+ * A class variable belongs to a CLASS and is shared down its hierarchy: `@@x`
+ * defined in a parent is the SAME storage in every subclass.  Storage is a flat
+ * `(class, @@name) -> value` table.  A method body resolves its class from
+ * `_sir_current_class` (set by dispatch); a class-body initializer (`@@x = 0`
+ * inside `class C`) names its class explicitly via `_sir_cvar_set_in`. */
+#define SIR_CVAR_MAX 4096
+static struct { const char *cls; const char *var; SirValue val; } _sir_cvar_tab[SIR_CVAR_MAX];
+static int _sir_cvar_n = 0;
+
+/* The class that OWNS `@@var` for `start_class`: the nearest ancestor (incl.
+ * `start_class`) that already stores it — so a subclass shares a parent's `@@x`.
+ * If none does, `start_class` itself (a fresh write creates it there).  Bounded
+ * by SIR_ANCESTRY_MAX (a cyclic hand-built hierarchy cannot hang). */
+static const char *_sir_cvar_owner(const char *start_class, const char *var) {
+    const char *v = _sir_intern(var);
+    const char *cur = start_class;
+    int steps = 0;
+    while (cur && steps++ < SIR_ANCESTRY_MAX) {
+        const char *c = _sir_intern(cur);
+        int i;
+        for (i = 0; i < _sir_cvar_n; i++) {
+            if (_sir_cvar_tab[i].cls == c && _sir_cvar_tab[i].var == v) return cur;
+        }
+        cur = _sir_class_super(cur);
+    }
+    return start_class;
+}
+
+/* Store `@@var = val` at class `cls` (update-in-place, else bounded append). */
+static void _sir_cvar_store(const char *cls, const char *var, SirValue val) {
+    const char *c = _sir_intern(cls), *v = _sir_intern(var);
+    int i;
+    for (i = 0; i < _sir_cvar_n; i++) {
+        if (_sir_cvar_tab[i].cls == c && _sir_cvar_tab[i].var == v) {
+            _sir_cvar_tab[i].val = val;
+            return;
+        }
+    }
+    if (_sir_cvar_n < SIR_CVAR_MAX) {
+        _sir_cvar_tab[_sir_cvar_n].cls = c;
+        _sir_cvar_tab[_sir_cvar_n].var = v;
+        _sir_cvar_tab[_sir_cvar_n].val = val;
+        _sir_cvar_n++;
+    }
+}
+
+/* A class-body initializer `@@x = v` (in `class Cls`), where the class is known
+ * statically — so it seeds the storage the class's methods later resolve to. */
+SirValue _sir_cvar_set_in(const char *cls, const char *var, SirValue val) {
+    _sir_cvar_store(cls, var, val);
+    return val;
+}
+
+/* `@@x` read from a method body: resolve the owning class from
+ * `_sir_current_class` (nil when there is no current class — e.g. a stray
+ * top-level `@@x`, which Ruby forbids anyway). */
+SirValue _sir_cvar_get(const char *var) {
+    const char *v = _sir_intern(var);
+    const char *owner;
+    int i;
+    if (!_sir_current_class) return _sir_nil();
+    owner = _sir_intern(_sir_cvar_owner(_sir_current_class, var));
+    for (i = 0; i < _sir_cvar_n; i++) {
+        if (_sir_cvar_tab[i].cls == owner && _sir_cvar_tab[i].var == v) return _sir_cvar_tab[i].val;
+    }
+    return _sir_nil();
+}
+
+/* `@@x = v` write from a method body: store at the shared owner (so a subclass
+ * write updates the parent's variable, matching Ruby). */
+SirValue _sir_cvar_set(const char *var, SirValue val) {
+    const char *owner = _sir_current_class ? _sir_cvar_owner(_sir_current_class, var) : "";
+    _sir_cvar_store(owner, var, val);
+    return val;
 }
 
 SirValue _sir_print_v(SirValue *xs, int n) {

@@ -438,6 +438,26 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                         quote_c_string(name)
                     );
                 }
+            } else if matches!(scope, Scope::ClassVar) {
+                // OOP slice 6: `@@x = …` in a METHOD body writes the current
+                // class's class-variable storage (resolved via
+                // `_sir_current_class`).  The `@@`-name is a QUOTED C string
+                // literal (no injection).  (A class-BODY `@@x = 0` initializer is
+                // emitted by the `ClassDef` arm with the class named explicitly.)
+                if is_simple(value) {
+                    let _ = write!(out, "{pad}(void)_sir_cvar_set({}, ", quote_c_string(name));
+                    emit_expr(out, value, indent);
+                    out.push_str(");\n");
+                } else {
+                    let tmp = format!("_sir_t{}", fresh_id());
+                    let _ = writeln!(out, "{pad}SirValue {tmp};");
+                    emit_assign(out, &tmp, value, indent);
+                    let _ = writeln!(
+                        out,
+                        "{pad}(void)_sir_cvar_set({}, {tmp});",
+                        quote_c_string(name)
+                    );
+                }
             } else {
                 let n = sanitize_ident(name);
                 emit_assign(out, &n, value, indent);
@@ -636,6 +656,14 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             // restore, so the rescue/ensure paths below re-bind `self` to what it
             // was when this `begin` started (else `@x` would read the raiser's).
             let _ = writeln!(out, "{p1}SirValue _sir_selfsave{id} = _sir_current_self;");
+            // OOP slice 6: snapshot the current class too — a method that `raise`s
+            // `longjmp`s past the dispatcher's own restore, so `@@x` in the
+            // rescue/ensure bodies must resolve against the class active when this
+            // `begin` started, not the raiser's.
+            let _ = writeln!(
+                out,
+                "{p1}const char *_sir_classsave{id} = _sir_current_class;"
+            );
             let _ = writeln!(out, "{p1}int _sir_eh{id} = _sir_push_handler();");
             let _ = writeln!(out, "{p1}volatile int _sir_esc{id} = 0;");
             let _ = writeln!(
@@ -659,6 +687,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             // Restore `self` before a rescue body runs (the body raised & was
             // caught, so `_sir_current_self` may be the raiser's).
             let _ = writeln!(out, "{p3}_sir_current_self = _sir_selfsave{id};");
+            let _ = writeln!(out, "{p3}_sir_current_class = _sir_classsave{id};");
             let _ = writeln!(out, "{p3}SirValue _sir_ex{id} = _sir_current_error;");
             for (k, rc) in rescues.iter().enumerate() {
                 let kw = if k == 0 { "if" } else { "} else if" };
@@ -711,6 +740,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             // completed normally or an exception unwound to here) before `ensure`
             // runs and before control leaves the `begin`.
             let _ = writeln!(out, "{p1}_sir_current_self = _sir_selfsave{id};");
+            let _ = writeln!(out, "{p1}_sir_current_class = _sir_classsave{id};");
             let _ = writeln!(out, "{p1}_sir_pop_handler();");
             if let Some(ens) = ensure_body {
                 for st in ens {
@@ -723,15 +753,21 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             );
             let _ = writeln!(out, "{pad}}}");
         }
-        // OOP slice 1/4: a class is just a NAME in the C runtime (an instance
-        // carries its class string; there is no class object).  A base class
-        // (no superclass) emits only a comment.  OOP slice 4: a subclass
-        // (`class Dog < Animal`) registers its `sub -> super` edge so method
-        // resolution and `rescue`-matching walk the user hierarchy — both names
-        // are QUOTED C string literals (no injection).  A non-empty body is still
-        // rejected by the scan (class-level code / `@@x` is a later slice).
+        // OOP slice 1/4/6: a class is just a NAME in the C runtime (an instance
+        // carries its class string; there is no class object).  A subclass
+        // (`class Dog < Animal`) registers its `sub -> super` edge (slice 4) so
+        // method resolution and `rescue`-matching walk the user hierarchy.  A
+        // class-BODY `@@x = v` initializer (slice 6) seeds the class's
+        // class-variable storage with the class named EXPLICITLY (a method body
+        // would resolve `@@x` via `_sir_current_class`, but here `self` is the
+        // top-level `main`, so the class must be spelled out).  All names are
+        // QUOTED C string literals (no injection).  The scan admits ONLY a
+        // ClassVar-assign body; any other class-level code is still rejected.
         Stmt::ClassDef {
-            name, superclass, ..
+            name,
+            superclass,
+            body,
+            ..
         } => {
             if let Some(sup) = superclass {
                 let _ = writeln!(
@@ -740,8 +776,40 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                     quote_c_string(name),
                     quote_c_string(sup)
                 );
-            } else {
+            } else if body.is_empty() {
                 let _ = writeln!(out, "{pad}/* class declaration (no class object) */");
+            }
+            for st in body {
+                if let Stmt::Assign {
+                    name: var,
+                    scope: Scope::ClassVar,
+                    value,
+                    ..
+                } = st
+                {
+                    // `@@x = <value>` at class `name` → `_sir_cvar_set_in`.  A
+                    // compound value is hoisted into a temp first.
+                    if is_simple(value) {
+                        let _ = write!(
+                            out,
+                            "{pad}(void)_sir_cvar_set_in({}, {}, ",
+                            quote_c_string(name),
+                            quote_c_string(var)
+                        );
+                        emit_expr(out, value, indent);
+                        out.push_str(");\n");
+                    } else {
+                        let tmp = format!("_sir_t{}", fresh_id());
+                        let _ = writeln!(out, "{pad}SirValue {tmp};");
+                        emit_assign(out, &tmp, value, indent);
+                        let _ = writeln!(
+                            out,
+                            "{pad}(void)_sir_cvar_set_in({}, {}, {tmp});",
+                            quote_c_string(name),
+                            quote_c_string(var)
+                        );
+                    }
+                }
             }
         }
         other => unreachable!("C backend reached unsupported statement: {other:?}"),
@@ -1380,9 +1448,15 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
         Scope::Instance => {
             let _ = write!(out, "_sir_ivar_get({})", quote_c_string(name));
         }
-        // `ClassVar` belongs to `Feature::ClassVars` (a later slice), not yet
-        // accepted, so the capability check rejects such modules before emit.
-        other => unreachable!("C backend reached unsupported var scope: {other:?}"),
+        // OOP slice 6: a `Scope::ClassVar` reference (`@@x`) reads the current
+        // class's class-variable storage (resolved via `_sir_current_class`; nil
+        // when unset).  The `@@`-name is a QUOTED C string literal (no injection).
+        // This is the LAST variable scope — the match is now exhaustive over
+        // `Scope`, so an exhaustive match (no catch-all) is the compile-time
+        // signal that every scope has a real emit path.
+        Scope::ClassVar => {
+            let _ = write!(out, "_sir_cvar_get({})", quote_c_string(name));
+        }
     }
 }
 
@@ -1922,15 +1996,35 @@ fn scan_stmt_for_builtin(s: &Stmt) -> Option<(String, Span)> {
         Stmt::SingletonClassDef { span, .. } => {
             Some(("class << self (singleton class)".to_string(), span.clone()))
         }
-        // OOP slice 4: a `Stmt::ClassDef` emits a `_sir_register_super` (subclass)
-        // or a comment (base class) — neither carries the body, so REJECT a
-        // non-empty body (class-level code / `@@x` initializers, a later slice)
-        // that the emit would silently drop.  A superclass is now SUPPORTED
-        // (registered), so it no longer triggers rejection.
-        Stmt::ClassDef { body, span, .. } if !body.is_empty() => Some((
-            "a class with a non-empty body (class-level code is a later OOP slice)".to_string(),
-            span.clone(),
-        )),
+        // OOP slice 6: a `Stmt::ClassDef` body may contain ONLY `@@x = …`
+        // class-variable initializers (emitted as `_sir_cvar_set_in`).  Any other
+        // class-level statement would be silently dropped by the emit, so reject
+        // it cleanly; each accepted initializer's VALUE is scanned so a deferred
+        // builtin nested in it is still reported.
+        Stmt::ClassDef { body, span, .. } => {
+            for st in body {
+                match st {
+                    Stmt::Assign {
+                        scope: Scope::ClassVar,
+                        value,
+                        ..
+                    } => {
+                        if let Some(hit) = scan_expr_for_builtin(value) {
+                            return Some(hit);
+                        }
+                    }
+                    _ => {
+                        return Some((
+                            "class-level code other than a `@@x` initializer \
+                             (a later OOP slice)"
+                                .to_string(),
+                            span.clone(),
+                        ));
+                    }
+                }
+            }
+            None
+        }
         _ => None,
     }
 }

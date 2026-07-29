@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.20.0 — OOP mirror slice 6: class variables (`@@x`)
+
+Class variables — the sixth slice of the C OOP mirror. Accepts
+`Feature::ClassVars`.
+
+- A class variable belongs to a **class** and is shared **down its hierarchy**
+  (a `@@x` defined in a parent is the same storage in every subclass). Storage
+  is a flat `(class, @@name) → value` table with an ancestry-resolved owner
+  (`_sir_cvar_owner` walks `_sir_class_super`, bounded by `SIR_ANCESTRY_MAX`), so
+  a subclass method shares its parent's `@@x`.
+- A **method body**'s `@@x` read/write → `_sir_cvar_get` / `_sir_cvar_set`, which
+  resolve the owning class from a new `_sir_current_class` — bound by dispatch to
+  the receiver's class (`_sir_call_method`) or the dispatched class
+  (`_sir_call_class_method`), and restored after (so it composes with `super`
+  and nested calls).
+- A **class-body** initializer (`@@x = 0` inside `class C`) runs where `self` is
+  the top-level `main`, so it names its class **explicitly**:
+  `_sir_cvar_set_in("C", "@@x", …)`. The `ClassDef` emit now admits a body of
+  **only** such `@@x` initializers; any other class-level statement is still
+  rejected cleanly (it would otherwise be silently dropped).
+- `emit_var_ref` is now exhaustive over `Scope` (all eight variants have a real
+  emit path), so its catch-all `unreachable!` is removed — the exhaustive match
+  is the compile-time totality signal.
+
+**Anti-RCE.** The `@@`-name and class name emit as **quoted C string literals**
+used only as table keys (no injection). Modules (mixins) are the final slice
+(still rejected cleanly).
+
 ## 0.19.0 — OOP mirror slice 5: class methods
 
 Class (singleton) methods — the fifth slice of the C OOP mirror. No new
