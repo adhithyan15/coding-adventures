@@ -21,11 +21,16 @@ echo "[2/3] Emitting the TaskApp component into the web host..."
 # `mosaic-compile pkg` emits into <output>/react/, so emit to a scratch dir and
 # copy just the component file into the host's src (main.tsx imports ./TaskApp).
 mkdir -p "$WEB/src" "$WEB/public"
+# Both themes are emitted, as TaskApp.light.tsx / TaskApp.dark.tsx. mosstyle bakes
+# colours into each component's *inline* styles, so there is no CSS variable to flip
+# at runtime — the host picks a whole component instead (see src/theme.ts).
 EMIT="$WEB/.emit"
 rm -rf "$EMIT"
-( cd "$RUST" && cargo run -q -p mosaic-compile -- pkg "$HERE" \
-    --backend react --output "$EMIT" )
-cp "$EMIT/react/TaskApp.tsx" "$WEB/src/TaskApp.tsx"
+for THEME in light dark; do
+  ( cd "$RUST" && cargo run -q -p mosaic-compile -- pkg "$HERE" \
+      --backend react --theme "$THEME" --output "$EMIT/$THEME" )
+  cp "$EMIT/$THEME/react/TaskApp.tsx" "$WEB/src/TaskApp.$THEME.tsx"
+done
 rm -rf "$EMIT"
 
 echo "[3/3] Copying the wasm runtime..."
