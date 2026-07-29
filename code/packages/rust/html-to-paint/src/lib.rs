@@ -9,7 +9,7 @@ use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
 use paint_instructions::PaintScene;
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.2.1";
 
 /// Viewport and device scale used by the composed HTML paint pipeline.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -444,6 +444,36 @@ mod tests {
             hit_test_link(std::slice::from_ref(&region), f64::NAN, 20.0, 60.0),
             None
         );
+    }
+
+    #[test]
+    fn canned_html_rasterizes_to_rgba_pixels_with_cairo() {
+        let render = parse_browser_render_tree(
+            "<h1>Mosaic</h1><p>Hello <a href='https://example.test/'>world</a>.</p>",
+        )
+        .unwrap();
+        let output = html_render_tree_to_paint(
+            &render,
+            &mosaic_html_theme(),
+            HtmlPaintViewport::new(200.0, 96.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+
+        let pixels = paint_vm_cairo::render(&output.scene)
+            .expect("canned HTML paint scene should rasterize");
+        assert_eq!(pixels.width, 200);
+        assert_eq!(pixels.height, output.scene.height.ceil() as u32);
+        assert_eq!(
+            pixels.data.len(),
+            pixels.width as usize * pixels.height as usize * 4
+        );
+        assert!(pixels
+            .data
+            .chunks_exact(4)
+            .any(|pixel| pixel != [192, 192, 192, 255]));
     }
 
     fn color_css(color: Color) -> String {
