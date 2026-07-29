@@ -26,6 +26,8 @@ At that layer, the application needs the same concepts:
 - `BodyKind`
 - `RequestHead`
 - `ResponseHead`
+- `RequestTarget`
+- `RoutePattern`
 
 That is the job of `http-core`.
 
@@ -119,6 +121,34 @@ into:
 
 This is a semantic helper, not a wire parser.
 
+### Raw Request Targets
+
+Routing and API clients need the path and query portions of a request target,
+but `http-core` must not choose an application-level decoding policy. The raw
+target helper therefore splits:
+
+```text
+/devices/light%201?limit=10&verbose#client
+```
+
+into a path, optional query, and optional fragment while preserving
+percent-encoded text. Query pairs split only on the first equals sign, flag
+parameters receive an empty value, empty ampersand-delimited pieces are
+ignored, and duplicate keys stay ordered.
+
+### Path-Only Route Matching
+
+Small HTTP servers repeatedly need the same deterministic operation: match a
+pattern such as `/devices/:kind/:id` against a request target and return named
+captures. `RoutePattern` provides that operation without becoming a server
+framework. Matching:
+
+- ignores query strings and fragments
+- treats `:name` segments as ordered captures
+- compares literal segments exactly
+- ignores empty path pieces introduced by repeated or trailing slashes
+- requires the pattern and path to have the same number of segments
+
 ## Public API
 
 ```rust
@@ -153,12 +183,39 @@ pub struct ResponseHead {
     pub headers: Vec<Header>,
 }
 
+pub struct RequestTarget<'a> {
+    pub path: &'a str,
+    pub query: Option<&'a str>,
+    pub fragment: Option<&'a str>,
+}
+
+pub enum RouteSegment {
+    Literal(String),
+    Param(String),
+}
+
+pub struct RoutePattern {
+    pub segments: Vec<RouteSegment>,
+}
+
 pub fn find_header<'a>(headers: &'a [Header], name: &str) -> Option<&'a str>;
 pub fn parse_content_length(headers: &[Header]) -> Option<usize>;
 pub fn parse_content_type(headers: &[Header]) -> Option<(String, Option<String>)>;
+pub fn parse_request_target(target: &str) -> RequestTarget<'_>;
+pub fn split_path_segments(path: &str) -> Vec<&str>;
 ```
 
-Equivalent APIs should exist in all supported languages.
+`RequestTarget` must expose ordered raw query pairs and first-value lookup.
+`RequestHead` and `ResponseHead` should delegate to the header helpers, and
+`RequestHead` should also delegate to the target/path/query helpers.
+`RoutePattern` must parse patterns, match paths, and match full request targets
+using only their path portion.
+
+Equivalent APIs should exist in all supported languages, using native naming
+and sum/product types. The expanded request-target and routing surface is
+normative for new ports. Rolling it through established implementations that
+currently expose only the original basic surface is tracked as follow-up
+conformance work.
 
 ## Design Decisions
 
@@ -179,6 +236,18 @@ every language.
 It is useful for logging and debugging, even though applications should make
 decisions primarily on the numeric status code.
 
+**Why preserve raw query text instead of percent-decoding it?**
+
+Decoding is an application policy. Keeping the core helper raw avoids double
+decoding and lets callers decide how to handle invalid escapes, plus signs,
+duplicate fields, and character encodings.
+
+**Why place simple route matching in the core?**
+
+The operation depends only on the semantic request target, is useful across
+HTTP versions, and gives small clients and servers one shared deterministic
+contract without importing a framework.
+
 ## Testing Strategy
 
 1. Header lookup is ASCII case-insensitive.
@@ -189,6 +258,14 @@ decisions primarily on the numeric status code.
 6. `Content-Type` parsing tolerates extra parameters beyond charset.
 7. `HttpVersion` string rendering stays stable.
 8. `BodyKind` constructors or tagged values compare correctly.
+9. Request-target splitting preserves raw query and fragment text.
+10. Empty paths normalize to `/`.
+11. Query pairs preserve order, duplicate names, flags, and equals signs in
+    values.
+12. Path splitting handles root, leading, trailing, and repeated slashes.
+13. Route patterns return ordered captures and reject literal or arity
+    mismatches.
+14. Full-target matching ignores query strings and fragments.
 
 ## Scope
 
@@ -199,6 +276,8 @@ decisions primarily on the numeric status code.
 - content length helper
 - content type helper
 - body framing kind representation
+- raw request-target splitting and query lookup
+- path segmentation and small path-only route patterns
 
 **Out of scope:**
 
@@ -208,17 +287,25 @@ decisions primarily on the numeric status code.
 - HTTP/2 frame parsing
 - body decoding
 - HTML parsing
+- percent decoding
+- middleware, handler dispatch, or server lifecycle management
 
 ## Implementation Languages
 
-This package will be implemented in:
-
-- Python
-- Go
-- Ruby
-- TypeScript
-- Rust
+- C#
 - Elixir
-- Perl
+- F#
+- Go
+- Haskell
 - Lua
+- Perl
+- Python
+- Ruby
+- Rust
 - Swift
+- TypeScript
+
+C and C++ also have emerging native implementations, but those lanes are
+classified separately from the 15 established implementation languages in the
+parity reporter. Directory presence does not by itself prove conformance; the
+expanded target/routing surface still needs shared fixtures across older ports.

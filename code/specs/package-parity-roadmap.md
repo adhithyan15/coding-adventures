@@ -104,34 +104,19 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 
 ## Work Inventory
 
-The missing matrix is heavily concentrated in singleton packages. Regenerated
-on July 20, 2026 after the paired Lua/Perl `fenwick-tree`, `binary-tree`,
-`binary-search-tree`, `in-memory-data-store-protocol`, `avl-tree`, `tree-set`,
-`skip-list`, `hyperloglog`, `trie`, `radix-tree`, and `resp-protocol` ports,
-the paired `hash-functions` prerequisite, the paired `bloom-filter`, `hash-map`,
-and `hash-set` ports, the paired `in-memory-data-store-engine` and
-`in-memory-data-store` ports, and the paired C#/F# `wasm-module-encoder`,
-`x25519`, `brainfuck-wasm-compiler`, `argon2i`, `argon2d`, and `argon2id`
-ports, and the paired C#/F# `chacha20-poly1305`, `xml-lexer`, `block-ram`,
-`nib-wasm-compiler`, `dartmouth-basic-lexer`, and `dartmouth-basic-parser`
-ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
-`fpga` ports, the paired C#/F# `zstd` ports, and the Haskell `atbash-cipher`,
-`scytale-cipher`, `feature-normalization`, `loss-functions`, `trig`, `wave`,
-`matrix`, `vigenere-cipher`, `uuid`, `document-ast`, `lz78`, `deflate`,
-`point2d`, `affine2d`, `bezier2d`, and `arc2d`
-ports, followed by the Haskell `gradient-descent`, `perceptron`, and
-`type-checker-protocol` ports, and the Haskell `paint-vm-ascii`,
-`barcode-layout-1d`, `itf`, `code39`, `codabar`, `code128`, `upc-a`, `ean-13`,
-`sql-csv-source`, and `zstd` ports:
+The missing matrix is heavily concentrated in singleton packages. The current
+inventory was regenerated on July 29, 2026 after the Haskell `barcode-1d` and
+`http-core` ports, the Go/Rust `multi-directed-graph` slice, and a new wave of
+Rust-only package families:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 280 |
+| Present in 10-15 languages | 172 | 278 |
 | Present in 5-9 languages | 121 | 911 |
-| Present in 2-4 languages | 157 | 1,972 |
-| Present in one language | 715 | 10,010 |
+| Present in 2-4 languages | 157 | 1,970 |
+| Present in one language | 733 | 10,262 |
 
-The loop must not start by attempting 10,010 singleton ports. It should finish
+The loop must not start by attempting 10,262 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 ## Priority 0: Inventory And Identity Integrity
@@ -172,7 +157,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 280
+The 172 packages present in at least ten implementation languages need 278
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -183,7 +168,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 4 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 3 | Finish `http1`, then the generic `event-loop` and pure `brotli` gaps |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -717,6 +702,19 @@ guards, typed failures, and ASCII backend errors. The package now spans 12
 implementation lanes, reduces the high-consensus backlog to 279 slots, and
 leaves 4 gaps in the Haskell lane.
 
+The thirty-first Haskell high-consensus slice is complete: `http-core` now
+provides the dependency-free NET03 semantic model with ordered duplicate
+headers, bounded versions and status codes, body-framing hints, request and
+response heads, content helpers, raw request-target/query handling, and
+path-only route patterns. Its package-native suite exercises 19 examples across
+valid and malformed versions, ASCII-only header matching, length overflow,
+content parameters, message delegates, raw queries, repeated slashes, captures,
+and route mismatches. The port also repairs Haskell scaffold naming/test
+conventions and build-graph dependency discovery so the follow-on `http1` edge
+is visible to incremental CI. The package now spans 12 established lanes,
+reduces the high-consensus backlog to 278 slots, and leaves 3 gaps in the
+Haskell lane.
+
 Recommended family order:
 
 1. Leaf algorithms and data structures.
@@ -752,7 +750,7 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 520 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 538 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
 ### Likely portable Rust-led families
@@ -765,6 +763,14 @@ packages. Classify families before opening implementation PRs.
 - language runtimes and frontends such as `r-*` and `twig-*`, when their
   dependency stacks are ready
 - deterministic portions of `vault-*`, `adjudication-*`, and `smart-home-*`
+- the new Axiom, IDL, and Q frontend/runtime stacks in dependency order
+- deterministic SIR lowerings such as `idl-to-semantic-ir`,
+  `q-to-semantic-ir`, and `scilab-to-semantic-ir`
+- `html-to-layout`, after its document and layout dependencies are classified
+
+`sir-bench` remains a likely tool/harness exception, while
+`chief-of-staff-vault-runtime` needs an explicit domain/native applicability
+review before any port is selected.
 
 ### Likely native, wrapper, or target-specific Rust-led families
 
@@ -799,6 +805,9 @@ the first port PR.
 1. Give each portable family a language-neutral fixture corpus or oracle.
 2. Add package-level conformance runners where directory presence currently
    masks API or semantic drift.
+   Start with NET03 `http-core`: align raw request-target, query, and route
+   behavior across the established ports that currently expose only the basic
+   header/head surface.
 3. Extend the parity reporter with explicit applicability data rather than
    hard-coding exceptions in reporting logic.
 4. Fail CI on unclassified new package buckets.
