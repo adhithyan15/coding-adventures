@@ -5396,7 +5396,7 @@ impl HtmlParser {
 
         let text = if text.contains('\u{FFFD}')
             && (self.current_node_is_svg_html_integration_point()
-                || self.current_namespace() == Some("math")
+                || self.current_node_is_mathml_integration_point()
                 || (self.replacement_text_is_ignorable_in_current_context(&text)
                     && !self.current_element_is("plaintext")))
         {
