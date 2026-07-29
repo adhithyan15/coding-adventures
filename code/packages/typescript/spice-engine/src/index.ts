@@ -7724,6 +7724,7 @@ export function mosfetAtTemperature(
   element: Mosfet,
   temperatureKelvin: number,
   nominalTemperatureKelvin = 300.15,
+  energyGapElectronVolts = 1.11,
 ): Mosfet {
   if (!Number.isFinite(temperatureKelvin) || temperatureKelvin <= 0.0) {
     throw invalidElement(element.name, "temperature must be finite and positive");
@@ -7731,8 +7732,17 @@ export function mosfetAtTemperature(
   if (!Number.isFinite(nominalTemperatureKelvin) || nominalTemperatureKelvin <= 0.0) {
     throw invalidElement(element.name, "nominal temperature must be finite and positive");
   }
+  if (!Number.isFinite(energyGapElectronVolts) || energyGapElectronVolts <= 0.0) {
+    throw invalidElement(element.name, "energy gap must be finite and positive");
+  }
   const ratio = temperatureKelvin / nominalTemperatureKelvin;
   const thresholdShift = -2.0e-3 * (temperatureKelvin - nominalTemperatureKelvin);
+  const saturationExponent =
+    (energyGapElectronVolts * ELECTRON_CHARGE) /
+    BOLTZMANN *
+    (1.0 / nominalTemperatureKelvin - 1.0 / temperatureKelvin);
+  const saturationScale =
+    ratio ** 3 * Math.exp(Math.max(-100.0, Math.min(100.0, saturationExponent)));
   return {
     ...element,
     params: {
@@ -7740,6 +7750,8 @@ export function mosfetAtTemperature(
       VT0: element.params.VT0 + thresholdShift,
       KP: element.params.KP * ratio ** -1.5,
       U0: element.params.U0 * ratio ** -1.5,
+      IS: element.params.IS * saturationScale,
+      JS: element.params.JS * saturationScale,
       T_NOM: temperatureKelvin,
     },
   };
@@ -7874,7 +7886,14 @@ export function circuitAtTemperature(
     } else if (element.kind === "jfet") {
       adjusted.add(jfetAtTemperature(element, temperatureKelvin, nominalTemperatureKelvin));
     } else if (element.kind === "mosfet") {
-      adjusted.add(mosfetAtTemperature(element, temperatureKelvin, nominalTemperatureKelvin));
+      adjusted.add(
+        mosfetAtTemperature(
+          element,
+          temperatureKelvin,
+          nominalTemperatureKelvin,
+          energyGapElectronVolts,
+        ),
+      );
     } else {
       adjusted.add(element);
     }

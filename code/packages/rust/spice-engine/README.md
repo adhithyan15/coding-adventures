@@ -133,6 +133,8 @@ Level-1 MOS model cards accept `KF` (default `0`) and `AF` (default `1`) and add
 Their `IS` value also drives source-body and drain-body junction leakage in
 DC, transient, transfer-function, and AC analysis, with separate `IBS` and
 `IBD` shot-noise contributions.
+MOS temperature helpers scale both scalar `IS` and area-density `JS` with the
+configured silicon energy-gap law before evaluating those bulk junctions.
 `LD` defaults to zero and applies `L_eff = L - 2*LD` to channel current and
 length-scaled intrinsic/`CGBO` capacitance.
 `TOX` defaults to `1e-7 m`, must be finite and positive, and derives intrinsic

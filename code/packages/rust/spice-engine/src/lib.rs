@@ -2759,6 +2759,7 @@ pub fn mosfet_at_temperature(
     mosfet: &Mosfet,
     temperature_kelvin: f64,
     nominal_temperature_kelvin: f64,
+    energy_gap_electron_volts: f64,
 ) -> Result<Mosfet, SpiceError> {
     if !temperature_kelvin.is_finite() || temperature_kelvin <= 0.0 {
         return Err(SpiceError::InvalidElement {
@@ -2772,12 +2773,23 @@ pub fn mosfet_at_temperature(
             reason: "nominal temperature must be finite and positive".to_string(),
         });
     }
+    if !energy_gap_electron_volts.is_finite() || energy_gap_electron_volts <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "energy gap must be finite and positive".to_string(),
+        });
+    }
     let ratio = temperature_kelvin / nominal_temperature_kelvin;
     let threshold_shift = -2.0e-3 * (temperature_kelvin - nominal_temperature_kelvin);
+    let saturation_exponent = energy_gap_electron_volts * ELECTRON_CHARGE / BOLTZMANN
+        * (1.0 / nominal_temperature_kelvin - 1.0 / temperature_kelvin);
+    let saturation_scale = ratio.powi(3) * saturation_exponent.clamp(-100.0, 100.0).exp();
     let mut adjusted = mosfet.clone();
     adjusted.params.vt0 += threshold_shift;
     adjusted.params.kp *= ratio.powf(-1.5);
     adjusted.params.surface_mobility *= ratio.powf(-1.5);
+    adjusted.params.saturation_current *= saturation_scale;
+    adjusted.params.saturation_current_density *= saturation_scale;
     adjusted.params.t_nom = temperature_kelvin;
     Ok(adjusted)
 }
@@ -2902,7 +2914,7 @@ pub fn circuit_at_temperature(
     circuit: &Circuit,
     temperature_kelvin: f64,
     nominal_temperature_kelvin: f64,
-    _energy_gap_electron_volts: f64,
+    energy_gap_electron_volts: f64,
 ) -> Result<Circuit, SpiceError> {
     let mut adjusted = Circuit {
         elements: Vec::new(),
@@ -2931,6 +2943,7 @@ pub fn circuit_at_temperature(
                 mosfet,
                 temperature_kelvin,
                 nominal_temperature_kelvin,
+                energy_gap_electron_volts,
             )?),
             _ => element.clone(),
         });

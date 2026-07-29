@@ -1,5 +1,7 @@
 # Changelog
 
+- Scale Level-1 MOS bulk-junction `IS` and `JS` with temperature using the
+  silicon energy-gap law already shared by semiconductor junction models.
 - Scale Level-1 MOS `U0` alongside `KP` by `(T / T_NOM)^-3/2` so temperature
   helpers preserve Berkeley surface-mobility state and their nominal ratio.
 - Add Level-1 MOS model-card `U0` / `UO` surface mobility with the Berkeley

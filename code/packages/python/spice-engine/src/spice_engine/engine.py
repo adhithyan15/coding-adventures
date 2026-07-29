@@ -375,6 +375,7 @@ def mosfet_at_temperature(
     temperature_kelvin: float,
     *,
     nominal_temperature_kelvin: float = 300.15,
+    energy_gap_ev: float = 1.11,
 ) -> Mosfet:
     """Return a Level-1 MOSFET adjusted from its nominal model temperature."""
 
@@ -382,6 +383,8 @@ def mosfet_at_temperature(
         raise ValueError("temperature_kelvin must be finite and positive")
     if not math.isfinite(nominal_temperature_kelvin) or nominal_temperature_kelvin <= 0.0:
         raise ValueError("nominal_temperature_kelvin must be finite and positive")
+    if not math.isfinite(energy_gap_ev) or energy_gap_ev <= 0.0:
+        raise ValueError("energy_gap_ev must be finite and positive")
     model = mosfet.model
     if not isinstance(model, MOSFET) or not isinstance(model.model, Level1Model):
         raise ValueError(f"{mosfet.name}: only Level-1 MOSFET temperature scaling is supported")
@@ -390,11 +393,22 @@ def mosfet_at_temperature(
         raise ValueError(f"{mosfet.name}: only Level-1 MOSFET parameters are supported")
     ratio = temperature_kelvin / nominal_temperature_kelvin
     threshold_shift = -2.0e-3 * (temperature_kelvin - nominal_temperature_kelvin)
+    saturation_exponent = (
+        energy_gap_ev
+        * _ELECTRON_CHARGE
+        / _BOLTZMANN
+        * (1.0 / nominal_temperature_kelvin - 1.0 / temperature_kelvin)
+    )
+    saturation_scale = ratio**3 * math.exp(
+        max(-100.0, min(100.0, saturation_exponent))
+    )
     adjusted_params = replace(
         params,
         VT0=params.VT0 + threshold_shift,
         KP=params.KP * ratio**-1.5,
         U0=params.U0 * ratio**-1.5,
+        IS=params.IS * saturation_scale,
+        JS=params.JS * saturation_scale,
         T_NOM=temperature_kelvin,
     )
     return replace(
@@ -496,6 +510,7 @@ def circuit_at_temperature(
                 element,
                 temperature_kelvin,
                 nominal_temperature_kelvin=nominal_temperature_kelvin,
+                energy_gap_ev=energy_gap_ev,
             )
         return element
 

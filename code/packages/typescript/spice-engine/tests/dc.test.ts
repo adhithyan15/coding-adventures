@@ -2342,6 +2342,36 @@ describe("dcOp", () => {
     );
   });
 
+  it("scales MOSFET bulk-junction saturation currents with temperature", () => {
+    const nominal = mosfet("M1", "d", "g", "s", "b", "NMOS", {
+      IS: 2.0e-15,
+      JS: 3.0e-12,
+    });
+    const hot = mosfetAtTemperature(nominal, 350.0);
+    const ratio = 350.0 / 300.15;
+    const exponent =
+      (1.11 * 1.602_176_634e-19) /
+      1.380_649e-23 *
+      (1.0 / 300.15 - 1.0 / 350.0);
+    const scale = ratio ** 3 * Math.exp(exponent);
+
+    expectClose(hot.params.IS, 2.0e-15 * scale);
+    expectClose(hot.params.JS, 3.0e-12 * scale);
+    expectClose(hot.params.JS / hot.params.IS, 1_500.0);
+
+    const circuit = new Circuit();
+    circuit.add(nominal);
+    const silicon = circuitAtTemperature(circuit, 350.0, 300.15, 1.11);
+    const lowerGap = circuitAtTemperature(circuit, 350.0, 300.15, 0.8);
+    const siliconMosfet = silicon.elements().find(
+      (element): element is Mosfet => element.kind === "mosfet",
+    );
+    const lowerGapMosfet = lowerGap.elements().find(
+      (element): element is Mosfet => element.kind === "mosfet",
+    );
+    expect(siliconMosfet!.params.IS).toBeGreaterThan(lowerGapMosfet!.params.IS);
+  });
+
   it("preserves subcircuits when applying temperature helpers", () => {
     const nominal = new Circuit();
     nominal.defineSubcircuit(
