@@ -899,14 +899,66 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         Expression::OptionalMemberExpression(m) => fold_optional_member(m, st),
         Expression::OptionalCallExpression(c) => fold_optional_call(c, st),
         Expression::ChainExpression(c) => fold_chain(c, st),
-        Expression::ArrayExpression(a) => Expression::ArrayExpression(ArrayExpression {
-            cv: a.cv.clone(),
-            elements: a
+        Expression::ArrayExpression(a) => {
+            // Fold every element first (so `...[1, 1 + 1]` becomes `...[1, 2]`),
+            // then flatten a spread of an array LITERAL in place:
+            //
+            //   [...[1, 2], 3]     ->  [1, 2, 3]
+            //   [0, ...[1, 2], 3]  ->  [0, 1, 2, 3]
+            //   [...[]]            ->  []
+            //
+            // matching the reference compiler at SIMPLE. A spread over an array
+            // literal produces exactly that array's elements, in order, so
+            // inlining them is behaviour-preserving.
+            //
+            // HOLE GUARD: spread uses the array ITERATOR, which yields
+            // `undefined` for an elision — `[...[1, , 3]]` is `[1, undefined, 3]`,
+            // observably different from `[1, , 3]` (a hole; testable via `in`).
+            // So we only inline when the inner literal is HOLE-FREE (every
+            // element `Some`); a spread whose argument has a hole, or is a string
+            // / identifier / call (`[..."ab"]`, `[...y]`), is left intact. Nested
+            // arrays inside the inner literal are spliced verbatim (only one
+            // spread level flattens per fold; the fixed-point pass handles
+            // `[...[...[1]]]`).
+            let folded: Vec<Option<Expression>> = a
                 .elements
                 .iter()
                 .map(|e| e.as_ref().map(|x| fold_expression(x, st)))
-                .collect(),
-        }),
+                .collect();
+
+            let has_inlinable_spread = folded.iter().any(|el| {
+                matches!(el, Some(Expression::SpreadElement(s))
+                    if matches!(s.argument.as_ref(), Expression::ArrayExpression(inner)
+                        if inner.elements.iter().all(Option::is_some)))
+            });
+
+            if has_inlinable_spread {
+                let mut out: Vec<Option<Expression>> = Vec::with_capacity(folded.len());
+                for el in folded {
+                    match el {
+                        Some(Expression::SpreadElement(s))
+                            if matches!(s.argument.as_ref(), Expression::ArrayExpression(inner)
+                                if inner.elements.iter().all(Option::is_some)) =>
+                        {
+                            if let Expression::ArrayExpression(inner) = *s.argument {
+                                out.extend(inner.elements);
+                            }
+                        }
+                        other => out.push(other),
+                    }
+                }
+                let new_cv = st.fork_cv(&a.cv, "[...[…], …]", "[…, …]");
+                Expression::ArrayExpression(ArrayExpression {
+                    cv: new_cv,
+                    elements: out,
+                })
+            } else {
+                Expression::ArrayExpression(ArrayExpression {
+                    cv: a.cv.clone(),
+                    elements: folded,
+                })
+            }
+        }
         Expression::ObjectExpression(o) => Expression::ObjectExpression(ObjectExpression {
             cv: o.cv.clone(),
             properties: o
@@ -8343,6 +8395,51 @@ mod tests {
         );
         let (_out, _, changed, _) = run_pass(program_with_expr(m_spread, true));
         assert!(!changed, "[1,2,...x].length must not fold — spread length is unknown");
+    }
+
+    /// `[...[1, 2], 3]` → `[1, 2, 3]` — a spread of a hole-free array literal
+    /// inlines its elements into the enclosing array literal.
+    #[test]
+    fn spread_of_array_literal_flattens() {
+        let inner = array_opt(vec![Some(num(1.0, None)), Some(num(2.0, None))]);
+        let spread = Expression::SpreadElement(SpreadElement { cv: None, argument: Box::new(inner) });
+        let arr = array_opt(vec![Some(spread), Some(num(3.0, None))]);
+        let (out, _, changed, _) = run_pass(program_with_expr(arr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => {
+                let vals: Vec<f64> = a
+                    .elements
+                    .iter()
+                    .map(|e| match e {
+                        Some(Expression::NumericLiteral(n)) => n.value,
+                        other => panic!("expected numeric element; got {other:?}"),
+                    })
+                    .collect();
+                assert_eq!(vals, vec![1.0, 2.0, 3.0]);
+            }
+            other => panic!("expected [1,2,3]; got {other:?}"),
+        }
+    }
+
+    /// `[...[1, , 3]]` — a spread whose inner literal has a HOLE is NOT inlined:
+    /// spread iterates and yields `undefined` for the hole, which is observably
+    /// different from a hole, so the spread is left intact.
+    #[test]
+    fn spread_of_array_literal_with_hole_declines() {
+        let inner = array_opt(vec![Some(num(1.0, None)), None, Some(num(3.0, None))]);
+        let spread = Expression::SpreadElement(SpreadElement { cv: None, argument: Box::new(inner) });
+        let arr = array_opt(vec![Some(spread)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(arr, true));
+        assert!(!changed, "a hole-carrying inner literal must NOT be inlined");
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => assert!(
+                matches!(a.elements.as_slice(), [Some(Expression::SpreadElement(_))]),
+                "the spread must survive intact; got {:?}",
+                a.elements
+            ),
+            other => panic!("expected an array with a surviving spread; got {other:?}"),
+        }
     }
 
     // -----------------------------------------------------------------

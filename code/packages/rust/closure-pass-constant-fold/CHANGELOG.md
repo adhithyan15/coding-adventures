@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.111.0] - 2026-07-28
+
+### Added - flatten a spread of an array literal inside an array literal
+
+A `...[…]` whose argument is an array LITERAL is inlined into the enclosing
+array literal, matching the reference Closure Compiler at SIMPLE:
+
+```text
+  [...[1, 2], 3]     ->  [1, 2, 3]
+  [0, ...[1, 2], 3]  ->  [0, 1, 2, 3]
+  [...[]]            ->  []
+```
+
+A spread over an array literal produces exactly that array's elements, in
+order, so inlining them is behaviour-preserving. Nesting is handled by the
+fixed-point pass (`[...[...[1]]]` -> `[1]`).
+
+HOLE GUARD: a spread uses the array ITERATOR, which yields `undefined` for an
+elision, so `[...[1, , 3]]` is `[1, undefined, 3]` -- observably different from
+`[1, , 3]` (a hole, testable via `in`). We therefore inline ONLY a hole-free
+inner literal; a spread whose argument has a hole, or is a string / identifier /
+call (`[..."ab"]`, `[...y]`), is left intact.
+
+Object spread (`{...{a: 1}}`) and call-argument spread (`f(...[1, 2])`) are
+separate transforms, not handled here.
+
 ## [0.110.0] - 2026-07-24
 
 ### Added - Math.fround(n) at a float32 fixed point
