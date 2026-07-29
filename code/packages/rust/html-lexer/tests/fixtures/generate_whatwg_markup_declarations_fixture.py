@@ -127,8 +127,8 @@ def comment_cases() -> list[dict[str, object]]:
 def bogus_comment_cases() -> list[dict[str, object]]:
     return [
         {
-            "id": "processing-instruction-bogus-comment",
-            "description": "question-mark tag open recovers as a bogus comment",
+            "id": "disallowed-processing-instruction-target-comment",
+            "description": "the reserved xml processing-instruction target recovers as a bogus comment",
             "input": "a<?xml version='1.0'?>b",
             "tokens": [
                 "Text(data=a)",
@@ -136,7 +136,7 @@ def bogus_comment_cases() -> list[dict[str, object]]:
                 "Text(data=b)",
                 "EOF",
             ],
-            "diagnostics": ["unexpected-question-mark-instead-of-tag-name"],
+            "diagnostics": ["disallowed-processing-instruction-target"],
         },
         {
             "id": "malformed-declaration-bogus-comment",

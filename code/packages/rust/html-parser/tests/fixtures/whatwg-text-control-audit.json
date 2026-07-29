@@ -1,5 +1,5 @@
 {
-  "case_count": 699,
+  "case_count": 704,
   "cases": [
     {
       "axis": "rawtext-elements",
@@ -4194,16 +4194,46 @@
       "id": "html5test-com-dat-14",
       "reason": "title and textarea RCDATA handoff and character-reference recovery",
       "source": "html5test-com.dat:14"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "processing-instructions-dat-112",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "processing-instructions.dat:112"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "processing-instructions-dat-113",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "processing-instructions.dat:113"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "processing-instructions-dat-121",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "processing-instructions.dat:121"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "processing-instructions-dat-122",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "processing-instructions.dat:122"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "processing-instructions-dat-123",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "processing-instructions.dat:123"
     }
   ],
   "counts_by_axis": {
     "fragment-context": 6,
-    "noscript-scripting": 48,
+    "noscript-scripting": 49,
     "plaintext-recovery": 56,
     "pre-listing-newline": 29,
-    "rawtext-elements": 99,
-    "rcdata-controls": 87,
-    "script-rawtext": 367,
+    "rawtext-elements": 100,
+    "rcdata-controls": 89,
+    "script-rawtext": 368,
     "stray-text-control-end-tags": 7
   },
   "description": "Focused parser audit over selected html5lib tree-construction cases that stress RCDATA, RAWTEXT, PLAINTEXT, and pre/listing recovery.",

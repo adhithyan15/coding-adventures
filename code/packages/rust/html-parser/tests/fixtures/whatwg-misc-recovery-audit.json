@@ -33,9 +33,9 @@
     },
     {
       "axis": "xml-pi-looking-markup",
-      "id": "html5test-com-dat-282",
+      "id": "html5test-com-dat-12",
       "reason": "XML declaration and processing-instruction-looking input recovery",
-      "source": "html5test-com.dat:282"
+      "source": "html5test-com.dat:12"
     },
     {
       "axis": "bogus-comment-and-cdata",

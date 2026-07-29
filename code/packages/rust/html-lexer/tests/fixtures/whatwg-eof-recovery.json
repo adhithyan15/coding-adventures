@@ -231,14 +231,13 @@
       ]
     },
     {
-      "description": "EOF in bogus comment emits the comment without eof-in-comment",
+      "description": "EOF in a processing-instruction target discards the incomplete token",
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "eof-in-processing-instruction"
       ],
-      "id": "bogus-comment",
+      "id": "processing-instruction-target",
       "input": "<?xml",
       "tokens": [
-        "Comment(data=?xml)",
         "EOF"
       ]
     },

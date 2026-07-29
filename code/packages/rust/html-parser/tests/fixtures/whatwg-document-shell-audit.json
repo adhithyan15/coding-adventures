@@ -1,5 +1,5 @@
 {
-  "case_count": 744,
+  "case_count": 859,
   "cases": [
     {
       "axis": "comment-whitespace-shell",
@@ -4464,14 +4464,704 @@
       "id": "void-in-phrasing-dat-13",
       "reason": "body, frameset, and frame transitions around the document shell",
       "source": "void-in-phrasing.dat:13"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-1",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:1"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-2",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:2"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-3",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:3"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-4",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:4"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-5",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:5"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-6",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:6"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-7",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:7"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-8",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:8"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-9",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:9"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-10",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:10"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-11",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:11"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-12",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:12"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-13",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:13"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-14",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:14"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-15",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:15"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-16",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:16"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-17",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:17"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-18",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:18"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-19",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:19"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-20",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:20"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-21",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:21"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-22",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:22"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-23",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:23"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-24",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:24"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-25",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:25"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-26",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:26"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-27",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:27"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-28",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:28"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-29",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:29"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-30",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:30"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-31",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:31"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-32",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:32"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-33",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:33"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-34",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:34"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-35",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:35"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-36",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:36"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-37",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:37"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-38",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:38"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-39",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:39"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-40",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:40"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-41",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:41"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-42",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:42"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-43",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:43"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-44",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:44"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-45",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:45"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-46",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:46"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-47",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:47"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-48",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:48"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-49",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:49"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-50",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:50"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-51",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:51"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-52",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:52"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-53",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:53"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-54",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:54"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-55",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:55"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-56",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:56"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-57",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:57"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-58",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:58"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-59",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:59"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-60",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:60"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-61",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:61"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-62",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:62"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-63",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:63"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-64",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:64"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-65",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:65"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-66",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:66"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-67",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:67"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-68",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:68"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-69",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:69"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-70",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:70"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-71",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:71"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-72",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:72"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-73",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:73"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-74",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:74"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-75",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:75"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-76",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:76"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-77",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:77"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-78",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:78"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-79",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:79"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-80",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:80"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-81",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:81"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-82",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:82"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-83",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:83"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-84",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:84"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-85",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:85"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-86",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:86"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-87",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:87"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-88",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:88"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-89",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:89"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-90",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:90"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-91",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:91"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-92",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:92"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-93",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:93"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-94",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:94"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-95",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:95"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-96",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:96"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-97",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:97"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-98",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:98"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-99",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:99"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-100",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:100"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-101",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:101"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-102",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:102"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-103",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:103"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-104",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:104"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-105",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:105"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-106",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:106"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-107",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:107"
+    },
+    {
+      "axis": "head-element-boundary",
+      "id": "processing-instructions-dat-115",
+      "reason": "head insertion, head content, and noscript-in-head recovery",
+      "source": "processing-instructions.dat:115"
+    },
+    {
+      "axis": "html-element-boundary",
+      "id": "processing-instructions-dat-116",
+      "reason": "explicit html start/end tags and late html-tag recovery",
+      "source": "processing-instructions.dat:116"
+    },
+    {
+      "axis": "html-element-boundary",
+      "id": "processing-instructions-dat-117",
+      "reason": "explicit html start/end tags and late html-tag recovery",
+      "source": "processing-instructions.dat:117"
+    },
+    {
+      "axis": "html-element-boundary",
+      "id": "processing-instructions-dat-118",
+      "reason": "explicit html start/end tags and late html-tag recovery",
+      "source": "processing-instructions.dat:118"
+    },
+    {
+      "axis": "html-element-boundary",
+      "id": "processing-instructions-dat-119",
+      "reason": "explicit html start/end tags and late html-tag recovery",
+      "source": "processing-instructions.dat:119"
+    },
+    {
+      "axis": "head-element-boundary",
+      "id": "processing-instructions-dat-120",
+      "reason": "head insertion, head content, and noscript-in-head recovery",
+      "source": "processing-instructions.dat:120"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-121",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:121"
+    },
+    {
+      "axis": "body-frameset-boundary",
+      "id": "processing-instructions-dat-122",
+      "reason": "body, frameset, and frame transitions around the document shell",
+      "source": "processing-instructions.dat:122"
     }
   ],
   "counts_by_axis": {
-    "body-frameset-boundary": 323,
+    "body-frameset-boundary": 432,
     "comment-whitespace-shell": 15,
     "doctype-and-quirks": 37,
-    "head-element-boundary": 132,
-    "html-element-boundary": 206,
+    "head-element-boundary": 134,
+    "html-element-boundary": 210,
     "implicit-document-shell": 18,
     "shell-fragment-context": 13
   },

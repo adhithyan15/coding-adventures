@@ -27,7 +27,7 @@ CASE_GROUPS = (
             "comments01.dat:79",
             "comments01.dat:80",
             "comments01.dat:81",
-            "html5test-com.dat:282",
+            "html5test-com.dat:12",
             "tests1.dat:40",
             "tests1.dat:41",
             "tests1.dat:44",

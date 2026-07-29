@@ -31,6 +31,29 @@ fn default_html_lexer_still_lexes_basic_text_tags_and_eof() {
 }
 
 #[test]
+fn default_html_lexer_emits_and_recovers_processing_instructions() {
+    let tokens = lex_html("<?xml-model href=\"schema.rng\"?><?target><?xml data><?1bad>")
+        .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::ProcessingInstruction {
+                target: "xml-model".to_string(),
+                data: "href=\"schema.rng\"".to_string(),
+            },
+            Token::ProcessingInstruction {
+                target: "target".to_string(),
+                data: String::new(),
+            },
+            Token::Comment("?xml data".to_string()),
+            Token::Comment("?1bad".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_drops_partial_start_tag_at_eof() {
     let mut lexer = create_html_lexer().unwrap();
 
@@ -1376,7 +1399,7 @@ fn default_html_lexer_ignores_nulls_inside_bogus_doctype_recovery() {
 }
 
 #[test]
-fn default_html_lexer_recovers_question_mark_tag_open_as_bogus_comment() {
+fn default_html_lexer_recovers_disallowed_processing_instruction_as_comment() {
     let mut lexer = create_html_lexer().unwrap();
 
     lexer.push("Before<?xml version=\"1.0\"?>After").unwrap();
@@ -1394,11 +1417,11 @@ fn default_html_lexer_recovers_question_mark_tag_open_as_bogus_comment() {
     assert!(lexer
         .diagnostics()
         .iter()
-        .any(|diagnostic| diagnostic.code == "unexpected-question-mark-instead-of-tag-name"));
+        .any(|diagnostic| diagnostic.code == "disallowed-processing-instruction-target"));
 }
 
 #[test]
-fn default_html_lexer_does_not_report_eof_in_bogus_comment_state() {
+fn default_html_lexer_discards_processing_instruction_target_at_eof() {
     let mut lexer = create_html_lexer().unwrap();
 
     lexer.push("Before<?xml").unwrap();
@@ -1406,16 +1429,12 @@ fn default_html_lexer_does_not_report_eof_in_bogus_comment_state() {
 
     assert_eq!(
         lexer.drain_tokens(),
-        vec![
-            Token::Text("Before".to_string()),
-            Token::Comment("?xml".to_string()),
-            Token::Eof,
-        ]
+        vec![Token::Text("Before".to_string()), Token::Eof]
     );
     assert!(lexer
         .diagnostics()
         .iter()
-        .any(|diagnostic| diagnostic.code == "unexpected-question-mark-instead-of-tag-name"));
+        .any(|diagnostic| diagnostic.code == "eof-in-processing-instruction"));
     assert!(!lexer
         .diagnostics()
         .iter()
@@ -4770,7 +4789,7 @@ fn html1_generated_definition_preserves_lexer_profile_metadata() {
         Some("state-machine-tokenizer/0.1")
     );
     assert_eq!(definition.done.as_deref(), Some("done"));
-    assert_eq!(definition.tokens.len(), 6);
+    assert_eq!(definition.tokens.len(), 7);
     assert!(definition
         .registers
         .iter()

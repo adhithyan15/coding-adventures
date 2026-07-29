@@ -1,5 +1,5 @@
 {
-  "case_count": 654,
+  "case_count": 655,
   "cases": [
     {
       "axis": "interactive-formatting-boundary",
@@ -3924,11 +3924,17 @@
       "id": "html5test-com-dat-19",
       "reason": "standalone active formatting element reconstruction and stack cleanup",
       "source": "html5test-com.dat:19"
+    },
+    {
+      "axis": "formatting-reconstruction",
+      "id": "processing-instructions-dat-92",
+      "reason": "standalone active formatting element reconstruction and stack cleanup",
+      "source": "processing-instructions.dat:92"
     }
   ],
   "counts_by_axis": {
     "adoption-agency-formatting": 114,
-    "formatting-reconstruction": 33,
+    "formatting-reconstruction": 34,
     "heading-boundary": 28,
     "interactive-formatting-boundary": 151,
     "list-definition-boundary": 57,
