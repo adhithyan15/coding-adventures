@@ -531,9 +531,56 @@ impl FlatHeap {
             "flat-heap kind registry overflow: more than 65534 kinds registered"
         );
         // A pure record: fixed reference offsets, no variable-length tail. The tail case
-        // (`tail_from == Some`) arrives with `register_ref_array_kind` in a later rung; this
-        // keeps the tracer behaviour byte-for-byte identical to the pre-`KindLayout` field map.
+        // (`tail_from == Some`) is `register_ref_array_kind`; a `None` tail keeps the tracer
+        // behaviour byte-for-byte identical to the pre-`KindLayout` field map.
         self.field_maps.push(KindLayout { fixed: field_offsets.into(), tail_from: None });
+        id as u16
+    }
+
+    /// Register a **variable-length reference-array** kind and return the `kind` id to allocate
+    /// it with. An object of this kind is traced precisely as `fixed` reference fields (at
+    /// statically-known offsets, exactly like [`Self::register_kind`]) **followed by a tail
+    /// region**: every aligned 8-byte word in `[tail_from, size)` of the *instance's* payload is
+    /// a reference. Because the tail's extent follows the instance's own `size`, one kind
+    /// describes arrays of *every* length — the thing a fixed offset list cannot express.
+    ///
+    /// This is what makes the flat collector trace (and, crucially, **relocate**) the dominant
+    /// heap object of a real language runtime — a JS `Array`, a Ruby `Array`, a Python `list`, a
+    /// Scheme vector, a hash's backing store — *precisely* instead of conservatively. A
+    /// conservatively-traced array pins itself and every element it references, so under the
+    /// compacting collector nothing moves; a precise array and its elements are movable. See
+    /// `code/specs/AOT00-T5-variable-length-ref-arrays.md`.
+    ///
+    /// **Layout contract (the frontend's responsibility).** Every word in `[tail_from, size)`
+    /// must hold a *reference* — a base pointer (payload start, low-3 NaN-box tag permitted) or
+    /// null — never an inline non-pointer datum. A packed array of unboxed values must either box
+    /// them, choose a `tail_from` that excludes the non-reference region, or stay `kind 0`
+    /// (conservative), which is always safe. This mirrors the record-field contract of
+    /// [`Self::register_kind`]; a violation is caught in debug builds by the interior-pointer
+    /// assertion in the compaction fixup.
+    ///
+    /// `tail_from` is **rounded up to a multiple of 8** so the tail scan stays 8-aligned (an
+    /// element straddling the boundary would otherwise be split). A `tail_from >= size` yields an
+    /// empty tail — a well-formed "no elements yet" array — and is safe. `fixed` offsets should
+    /// lie before `tail_from`; they are traced regardless (each under the same bounds guard).
+    ///
+    /// # Panics
+    ///
+    /// Panics only if more than `u16::MAX - 1` kinds are registered — far beyond any real
+    /// program.
+    pub fn register_ref_array_kind(&mut self, fixed: &[usize], tail_from: usize) -> u16 {
+        let id = self.field_maps.len() + 1;
+        assert!(
+            id <= u16::MAX as usize,
+            "flat-heap kind registry overflow: more than 65534 kinds registered"
+        );
+        // Round the tail start up to the next 8-byte boundary so every tail word is aligned.
+        // `checked_add` guards the (absurd) near-`usize::MAX` argument: on overflow the tail is
+        // unreachable anyway (`>= size` for any real object), so an empty `Some(usize::MAX)` (via
+        // saturation) is the safe, still-precise choice — never a wrapped small offset that would
+        // trace non-reference words.
+        let tail = tail_from.checked_add(7).map_or(usize::MAX, |n| n & !7usize);
+        self.field_maps.push(KindLayout { fixed: fixed.into(), tail_from: Some(tail) });
         id as u16
     }
 
@@ -2736,6 +2783,181 @@ mod tests {
         // Must not read out of bounds; container is rooted so it survives cleanly.
         let _ = heap.collect(&[container]);
         assert!(!heap.find_header(container).is_null());
+    }
+
+    // ── Variable-length reference arrays (AOT00-T5 PR-2) ──────────────────────
+    //
+    // A `register_ref_array_kind` kind traces a tail region `[tail_from, size)` as references,
+    // so ONE kind describes arrays of every length. These prove the tail is traced precisely
+    // (survivors = exactly the referenced elements), is movable under compaction (vs a pinned
+    // conservative twin), composes with a fixed header, feeds the generational barrier, and is
+    // bounds-safe at the edges.
+
+    /// **Precise array trace.** A length-3 reference array holds A, B, C plus a look-alike
+    /// integer in a fourth slot. Precise tracing follows the three real references and the
+    /// phantom integer's pointee is reclaimed — the whole point of a precise array.
+    #[test]
+    fn ref_array_traces_elements_precisely() {
+        let mut heap = FlatHeap::new();
+        let arr_kind = heap.register_ref_array_kind(&[], 0); // every word is a reference
+        let a = heap.alloc(16, 0) as usize;
+        let b = heap.alloc(16, 0) as usize;
+        let c = heap.alloc(16, 0) as usize;
+        let phantom = heap.alloc(16, 0) as usize;
+        // A 4-slot array: [A, B, C, <look-alike int to phantom>].
+        let arr = heap.alloc(32, arr_kind) as usize;
+        unsafe {
+            *(arr as *mut usize) = a;
+            *((arr + 8) as *mut usize) = b;
+            *((arr + 16) as *mut usize) = c;
+            *((arr + 24) as *mut usize) = phantom; // stored as an element → IS a reference here
+        }
+        // Root only the array. With every slot a declared reference, all four pointees are
+        // reachable — so nothing is freed. (Contrast: `phantom` is only reachable *through* the
+        // array, proving the tail is scanned.)
+        let stats = heap.collect(&[arr]);
+        assert_eq!(stats.freed, 0, "all four elements reachable via the array's tail");
+        for p in [a, b, c, phantom] {
+            assert!(!heap.find_header(p).is_null(), "element retained via the ref tail");
+        }
+        // Now drop one element (null slot 1) and collect again: B becomes unreachable.
+        unsafe { *((arr + 8) as *mut usize) = 0 };
+        let stats2 = heap.collect(&[arr]);
+        assert_eq!(stats2.freed, 1, "the dropped element is now reclaimed");
+        assert!(heap.find_header(b).is_null(), "B freed after its only ref (the slot) was cleared");
+    }
+
+    /// **A ref array is movable; its conservative twin is pinned.** Under `collect_compacting` a
+    /// precise array and every element it references relocate into the arena; the identical heap
+    /// built with `kind 0` (conservative) pins them in place. This is the array-shaped analogue
+    /// of the cons-cell relocation proof, and the whole reason precise arrays matter.
+    #[test]
+    fn ref_array_relocates_under_compaction_vs_pinned_conservative_twin() {
+        // Precise: a 2-element array of two leaf objects.
+        let mut heap = FlatHeap::new();
+        let arr_kind = heap.register_ref_array_kind(&[], 0);
+        let leaf = heap.register_kind(&[]); // a movable leaf (no ref fields)
+        let e0 = heap.alloc(16, leaf) as usize;
+        let e1 = heap.alloc(16, leaf) as usize;
+        let arr = heap.alloc(16, arr_kind) as usize;
+        unsafe {
+            *(arr as *mut usize) = e0;
+            *((arr + 8) as *mut usize) = e1;
+            *((e1 + 8) as *mut usize) = 0xCAFE_usize; // sentinel in a non-ref word of e1
+        }
+        let root = arr;
+        let slots = [&root as *const usize as usize];
+        let stats = unsafe { heap.collect_compacting(&slots, &[]) };
+        assert_eq!(stats.survived, 3, "the array + both elements survive");
+        assert_eq!(stats.freed, 0);
+        let narr = root; // root slot rewritten to the array's new address
+        assert_ne!(narr, arr, "the array itself relocated");
+        let ne0 = unsafe { *(narr as *const usize) };
+        let ne1 = unsafe { *((narr + 8) as *const usize) };
+        assert_ne!(ne0, e0, "element 0 relocated; the array's tail slot was fixed up");
+        assert_ne!(ne1, e1, "element 1 relocated");
+        assert_eq!(
+            unsafe { *((ne1 + 8) as *const usize) },
+            0xCAFE,
+            "moved element's payload byte-preserved (a missed tail fixup would dangle)",
+        );
+
+        // Conservative twin: same shape, kind 0 everywhere → pinned, nothing moves.
+        let mut twin = FlatHeap::new();
+        let t0 = twin.alloc(16, 0) as usize;
+        let t1 = twin.alloc(16, 0) as usize;
+        let tarr = twin.alloc(16, 0) as usize;
+        unsafe {
+            *(tarr as *mut usize) = t0;
+            *((tarr + 8) as *mut usize) = t1;
+        }
+        let troot = tarr;
+        let tslots = [&troot as *const usize as usize];
+        let tstats = unsafe { twin.collect_compacting(&tslots, &[]) };
+        assert_eq!(tstats.survived, 3, "twin survivors match");
+        assert_eq!(troot, tarr, "conservative array is PINNED — no relocation");
+        drop(heap);
+        drop(twin);
+    }
+
+    /// **Header + tail compose.** A `{header_ref, len, elems…}` object: a fixed reference field
+    /// at offset 0, a non-reference length word at offset 8, then a reference tail from offset
+    /// 16. The header and the elements are traced; the `len` word between them is not treated as
+    /// a pointer.
+    #[test]
+    fn ref_array_fixed_header_and_tail_compose() {
+        let mut heap = FlatHeap::new();
+        // fixed ref at 0; tail from 16 (skips the len word at 8).
+        let kind = heap.register_ref_array_kind(&[0], 16);
+        let hdr = heap.alloc(16, 0) as usize;
+        let e0 = heap.alloc(16, 0) as usize;
+        let phantom = heap.alloc(16, 0) as usize;
+        let obj = heap.alloc(24, kind) as usize;
+        unsafe {
+            *(obj as *mut usize) = hdr; // fixed ref field
+            *((obj + 8) as *mut usize) = phantom; // the `len` word — a look-alike int, NOT a ref
+            *((obj + 16) as *mut usize) = e0; // tail element (ref)
+        }
+        let stats = heap.collect(&[obj]);
+        assert!(!heap.find_header(hdr).is_null(), "fixed header ref retained");
+        assert!(!heap.find_header(e0).is_null(), "tail element retained");
+        assert!(heap.find_header(phantom).is_null(), "the non-ref len word did not pin its look-alike");
+        assert_eq!(stats.freed, 1, "exactly the phantom is reclaimed");
+    }
+
+    /// **The tail feeds the generational barrier.** An old array whose tail holds a young element
+    /// is recorded as an old→young source, so a minor GC keeps the young element.
+    #[test]
+    fn ref_array_tail_records_old_to_young_edge() {
+        let mut heap = FlatHeap::new();
+        let arr_kind = heap.register_ref_array_kind(&[], 0);
+        let arr = heap.alloc(16, arr_kind) as usize;
+        // Age the array to old: survive a full collection rooted at itself.
+        let _ = heap.collect(&[arr]);
+        assert_eq!(heap.object_count_by_generation(), (0, 1), "array tenured to old");
+        // Now store a fresh YOUNG element into the array's tail and fire the write barrier.
+        let young = heap.alloc(16, 0) as usize;
+        unsafe {
+            *(arr as *mut usize) = young;
+            heap.write_barrier(arr, young);
+        }
+        assert_eq!(heap.remembered_len(), 1, "old array with a young tail element is remembered");
+        // A minor GC rooted only at the array keeps the young element (found via the tail).
+        let stats = heap.collect_minor(&[arr]);
+        assert_eq!(stats.freed, 0, "the young tail element survives the minor GC");
+        assert!(!heap.find_header(young).is_null());
+    }
+
+    /// **Bounds edges are safe.** An empty array (`tail_from == size`) traces nothing; a
+    /// `tail_from` past the payload is an empty tail; an unaligned `tail_from` is rounded up so
+    /// the scan stays 8-aligned. None read out of bounds.
+    #[test]
+    fn ref_array_bound_edges_are_safe() {
+        let mut heap = FlatHeap::new();
+        // Empty array: 16-byte object, tail starts at 16 → no elements.
+        let empty_kind = heap.register_ref_array_kind(&[], 16);
+        let target = heap.alloc(16, 0) as usize;
+        let empty = heap.alloc(16, empty_kind) as usize;
+        unsafe { *(empty as *mut usize) = target }; // a word BEFORE the tail → not a reference
+        let stats = heap.collect(&[empty]);
+        assert!(heap.find_header(target).is_null(), "word before an empty tail is not a ref");
+        assert!(!heap.find_header(empty).is_null());
+        assert_eq!(stats.freed, 1);
+
+        // Unaligned tail_from (7) is rounded up to 8; tail_from past size is empty. Neither reads
+        // out of bounds (the collection completes and the rooted object survives).
+        let mut heap2 = FlatHeap::new();
+        let unaligned = heap2.register_ref_array_kind(&[], 7); // → rounds to 8
+        let huge = heap2.register_ref_array_kind(&[], 4096); // past any small payload → empty
+        let o1 = heap2.alloc(16, unaligned) as usize;
+        let o2 = heap2.alloc(16, huge) as usize;
+        unsafe {
+            *(o1 as *mut usize) = 0;
+            *((o1 + 8) as *mut usize) = 0;
+        }
+        let _ = heap2.collect(&[o1, o2]);
+        assert!(!heap2.find_header(o1).is_null());
+        assert!(!heap2.find_header(o2).is_null());
     }
 
     // ── Generational split: young/old + promotion ─────────────────────────────

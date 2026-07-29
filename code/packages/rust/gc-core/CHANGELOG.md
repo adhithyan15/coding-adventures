@@ -1,5 +1,38 @@
 # Changelog — gc-core
 
+## 0.23.0 — 2026-07-28 — variable-length **reference arrays** — PR-2 (AOT00-T5)
+
+Makes the collector trace **and relocate** the dominant heap object of a real language runtime
+— a JS `Array`, a Ruby `Array`, a Python `list`, a vector, a hash's backing store — *precisely*
+instead of conservatively. Builds directly on the `KindLayout::tail_from` slot and the
+`for_each_ref_slot` tail walk landed (dormant) in 0.22.0.
+
+- **New `FlatHeap::register_ref_array_kind(fixed, tail_from) -> u16`** — a kind traced as `fixed`
+  reference fields (statically-known offsets, exactly like `register_kind`) **followed by a tail
+  region**: every aligned 8-byte word in `[tail_from, size)` of the *instance's* payload is a
+  reference. Because the tail's extent follows the instance's own `size`, **one kind describes
+  arrays of every length** — the thing a fixed offset list cannot express. `tail_from` is rounded
+  up to a multiple of 8 (so the tail scan stays 8-aligned); a near-`usize::MAX` argument saturates
+  to an empty tail rather than wrapping to a small offset that would trace non-reference words.
+- **Why it matters:** a conservatively-traced array (`kind 0`) pins itself *and every element it
+  references*, so under the compacting collector nothing moves — arrays being the most common
+  heap object, compaction was effectively inert on real workloads. A precise array and its
+  elements are movable. This is the array-shaped analogue of the cons-cell relocation unlocked
+  earlier.
+- **Layout contract** (documented on the API): every word in `[tail_from, size)` must hold a
+  reference (base/tagged-base pointer or null), never an inline non-pointer datum; a packed array
+  of unboxed values must box them, exclude the non-ref region via `tail_from`, or stay `kind 0`
+  (always safe). Mirrors the record-field contract; a violation is caught in debug builds by the
+  compaction fixup's interior-pointer assertion.
+- **Tests (+5), Miri-clean:** precise element trace (survivors = exactly the referenced elements;
+  a dropped element is reclaimed), **array relocates under compaction vs. a pinned conservative
+  twin** (the headline — the array and its elements move and the tail slots are fixed up; a
+  missed fixup would dangle), fixed-header + tail compose (the `len` word between them is not a
+  pointer), the tail feeds the generational old→young barrier, and bound edges (empty tail,
+  `tail_from` past `size`, unaligned `tail_from`) are safe. 99 gc-core tests pass; clippy clean.
+- This is PR-2 of 4 (spec §7); PR-3 adds the C ABI (`__gc_register_ref_array_kind`), PR-4 the
+  native relocation differential.
+
 ## 0.22.0 — 2026-07-28 — `KindLayout` + `for_each_ref_slot` refactor — PR-1 (AOT00-T5)
 
 Structural, **zero-behaviour-change** prep for variable-length reference arrays (spec
