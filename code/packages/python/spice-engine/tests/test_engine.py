@@ -1000,6 +1000,17 @@ def test_mos_model_card_gate_material_shifts_process_derived_threshold() -> None
             normalize_model_card("Minvalid", "nmos", {"NSS": invalid_nss})
 
 
+def test_mos_model_card_rejects_invalid_nominal_temperature() -> None:
+    valid = normalize_model_card("Mvalid", "nmos", {"TNOM": 325.0})
+    assert valid.parameters["T_NOM"] == pytest.approx(325.0)
+
+    for invalid_temperature in (0.0, -1.0, math.inf, math.nan):
+        with pytest.raises(
+            ValueError, match="MOSFET TNOM must be finite and positive"
+        ):
+            normalize_model_card("Minvalid", "nmos", {"TNOM": invalid_temperature})
+
+
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
     circuit = Circuit()
     circuit.add(JFET("J1", "drain", "gate", "0", Kf=-1.0))

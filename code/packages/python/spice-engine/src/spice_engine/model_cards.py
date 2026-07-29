@@ -570,6 +570,8 @@ def normalize_model_card(
             raise ValueError(f"{name}: MOSFET TPG must be -1, 0, or 1")
         elif canonical == "NSS" and (not math.isfinite(value) or value < 0.0):
             raise ValueError(f"{name}: MOSFET NSS must be finite and non-negative")
+        elif canonical == "T_NOM" and (not math.isfinite(value) or value <= 0.0):
+            raise ValueError(f"{name}: MOSFET TNOM must be finite and positive")
         else:
             normalized[canonical] = value
     return NormalizedModelCard(
