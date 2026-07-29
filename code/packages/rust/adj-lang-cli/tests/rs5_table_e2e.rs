@@ -1260,6 +1260,48 @@ fn shipped_electric_inductance_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b28) The shipped NIST SP 811 B.9 electric-conductance → siemens table resolves the exact abmho
+//       factor with its citation, and ABSTAINS on a wrong-dimension unit. This EXTENDS the
+//       electromagnetic-EMU family (charge/potential/resistance/capacitance/inductance) with
+//       conductance. The abmho (conductance) and the abohm (resistance) are RECIPROCAL quantities
+//       that convert to DIFFERENT, reciprocal SI units (siemens vs ohm) with reciprocal factors
+//       (1.0 E+09 vs 1.0 E-09), so the abstain proves dimension safety even against the reciprocal
+//       quantity, not mere absence of a value: the siemens is one reciprocal ohm (an ampere per volt).
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_electric_conductance_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_conductance");
+    let src = stdlib().join("reference/electric-conductance-conversions.adj");
+    std::fs::copy(&src, dir.join("electric-conductance-conversions.adj"))
+        .expect("copy shipped electric-conductance-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"electric-conductance-conversions.adj\"\n\
+         ? electric_conductance_to_siemens(abmho, $v)\n\
+         ? electric_conductance_to_siemens(abohm, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table
+    // (boldface = exact; the abmho is defined as exactly 1.0 E+09 siemens).
+    assert!(out.contains("\"v\":\"1000000000\""), "abmho = 1.0 E+09 S: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `abohm` is a RESISTANCE unit (it converts to the ohm, the reciprocal quantity), so this
+    // conductance table has no row for it — the engine abstains rather than mis-converting a
+    // resistance unit as if it were a conductance unit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
