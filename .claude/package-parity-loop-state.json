@@ -8,15 +8,20 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 9144,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9144",
+    "branch": "codex/haskell-http-core-parity",
+    "status": "open"
+  },
   "items": [
     {
       "id": "haskell-http-core",
       "title": "Haskell http-core plus Haskell scaffold and resolver integrity",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/haskell-http-core-parity",
-      "pr_number": null,
+      "pr_number": 9144,
       "notes": "Current slice. Locally validated with GHC 9.4.8, 19 Hspec examples, 96% expression coverage, and 95% alternative coverage."
     },
     {
