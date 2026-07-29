@@ -14,7 +14,7 @@ export default defineConfig({
       // boot glue verified live in a browser, and TaskApp.{light,dark}.tsx are
       // generated. A module with tests but missing from this list is silently exempt
       // from the threshold below, so add new seams here as they appear.
-      include: ["src/persistence.ts", "src/theme.ts"],
+      include: ["src/persistence.ts", "src/theme.ts", "src/timeline.ts"],
       thresholds: { lines: 90 },
     },
   },

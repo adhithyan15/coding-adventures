@@ -47,7 +47,41 @@ layout TaskApp {
       HostButton [ add-btn ] ( label : "Add" , onClick : emit: onAddTask )
     }
 
-    Text [ summary ] ( content : slot: summary )
+    Row [ summary-row ] {
+      Text [ summary ] ( content : slot: summary )
+      HostButton [ view-toggle ] (
+        label : slot: view-toggle-label ,
+        onClick : emit: onToggleView
+      )
+    }
+
+    // The timeline and the task list are the two views of the same project; exactly one
+    // shows at a time, chosen by the non-empty `timeline-mode` marker.
+    If ( when: slot: timeline-mode ) {
+      Column [ timeline ] {
+        Text [ tl-scale ] ( content : slot: timeline-scale )
+        For ( each: slot: timeline-rows , as: t , index: ti ) {
+          Row [ timeline-row ] {
+            Text [ tl-name ] ( content : ( t[0] ) )
+            // A real proportional bar: the leading pad and the bar itself take their
+            // widths from the row's data (UI36 data-driven sizing), both as percentages
+            // of the shared track, so every bar lines up on one date scale. A critical
+            // bar differs from a normal one only in colour — the geometry is identical.
+            Row [ tl-track ] {
+              Box [ tl-pad ] ( width : ( t[1] ) )
+              If ( when: ( t[4] ) ) {
+                Box [ tl-bar-crit ] ( width : ( t[2] ) )
+              }
+              Else {
+                Box [ tl-bar ] ( width : ( t[2] ) )
+              }
+            }
+            Text [ tl-window ] ( content : ( t[3] ) )
+          }
+        }
+      }
+    }
+    Else {
 
     Column [ task-list ] {
       // Each row is a list of cells. The toggle and Delete buttons sit directly in
@@ -70,6 +104,7 @@ layout TaskApp {
           HostButton [ del-btn ] ( label : "Delete" , onClick : emit: onDeleteTask )
         }
       }
+    }
     }
   }
 }

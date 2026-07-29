@@ -26,6 +26,19 @@ component TaskApp {
   // A one-line summary (counts, project finish).
   slot summary : text ;
 
+  // Timeline (Gantt). `timeline-mode` is non-empty when the timeline is showing instead
+  // of the task list, and `view-toggle-label` names the view you'd switch TO.
+  //
+  // Each timeline row is [ name, pad-width, bar-width, window, critical-marker ].
+  // `pad-width` and `bar-width` are CSS percentages of the shared track (e.g. "18%"),
+  // so every bar sits on one date scale — they reach the layout through UI36
+  // data-driven sizing (`width: ( t[n] )`). `timeline-scale` is the matching date
+  // ruler, and a non-empty `critical-marker` means the row is on the critical path.
+  slot timeline-mode     : text ;
+  slot timeline-scale    : text ;
+  slot timeline-rows     : list<list<text>> ;
+  slot view-toggle-label : text ;
+
   // One row per task, in schedule order; each row is a list of pre-formatted cells
   // in the order [ done-glyph, name, due, schedule, overdue ]. Empty cells (e.g. no
   // due date) are the empty string, and the layout hides those chips.
@@ -41,6 +54,9 @@ component TaskApp {
   emit onAddProject ;
   emit onAddSubproject ;
   emit onSelectProject ( index : number ) ;
+
+  // Switch between the task list and the timeline.
+  emit onToggleView ;
 
   // Add the typed task; toggle/delete a row (the row index is delivered as the number
   // payload of a single-number-param event).

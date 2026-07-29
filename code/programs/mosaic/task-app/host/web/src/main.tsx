@@ -12,6 +12,7 @@ import { createRoot } from "react-dom/client";
 import { TaskApp as TaskAppLight, type TaskAppEvent } from "./TaskApp.light";
 import { TaskApp as TaskAppDark } from "./TaskApp.dark";
 import { resolveTheme, storeTheme, watchSystemTheme, type Theme } from "./theme";
+import { buildTimeline, type GanttBar } from "./timeline";
 import { createTaskEngine } from "./task-engine.mjs";
 import {
   loadWorkspace,
@@ -73,6 +74,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
   let newName = "";
   let newDue = "";
   let newProject = "";
+  let showTimeline = false;
   // Task ids are workspace-global, so this stays one list across every project. The
   // per-project view falls out for free: `rows()` keeps only the ids the ACTIVE
   // project's table() knows about.
@@ -141,6 +143,14 @@ function makeController(engine: any, init: ControllerInit = {}) {
     return { ids, names: ids.map((id) => all[id]?.name || id), depths, activeId };
   };
 
+  // The timeline: hand the engine's own gantt bars to the geometry module. Every
+  // date here was computed by the ENGINE; the host only asks how far across the track
+  // that falls. See timeline.ts for the inclusive-date rule that governs the maths.
+  const timeline = () => {
+    const bars = (engine.gantt(today).data?.bars ?? []) as GanttBar[];
+    return buildTimeline(bars);
+  };
+
   // Snapshot the engine + host state and hand it to the persistence sink. Called
   // only after structural mutations (add/toggle/delete/project switch) — never on
   // keystrokes. The active project rides along because the engine deliberately keeps
@@ -198,8 +208,13 @@ function makeController(engine: any, init: ControllerInit = {}) {
         // top-level row stays flush left.
         p.depths[i] > 0 ? `${" ".repeat((p.depths[i] - 1) * 2)}↳` : "",
       ]);
+      const tl = showTimeline ? timeline() : { scale: "", rows: [] };
       return {
         appTitle: "Tasks — auto-scheduled",
+        timelineMode: showTimeline ? "timeline" : "",
+        timelineScale: tl.scale,
+        timelineRows: tl.rows,
+        viewToggleLabel: showTimeline ? "List" : "Timeline",
         newTaskName: newName,
         newTaskDue: newDue,
         newProjectName: newProject,
@@ -218,6 +233,9 @@ function makeController(engine: any, init: ControllerInit = {}) {
           break;
         case "newTaskDueChange":
           newDue = event.value;
+          break;
+        case "toggleView":
+          showTimeline = !showTimeline;
           break;
         case "newProjectNameChange":
           newProject = event.value;

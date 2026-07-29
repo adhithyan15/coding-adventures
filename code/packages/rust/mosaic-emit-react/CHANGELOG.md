@@ -4,6 +4,47 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - UI36 data-driven sizing (`width` / `height` from a slot or expression)
+
+The size props `width`, `height`, `min-width`, `max-width`, `min-height` and
+`max-height` now accept a **slot binding or an expression**, not just a literal number,
+and lower into the emitted component's style object. See
+`code/specs/UI36-data-driven-sizing.md`.
+
+This closes a hole in the layout/style split. mosstyle deliberately bakes its values at
+compile time, which is right for almost everything — but some sizes are only knowable
+at run time: the length of a Gantt bar, a progress fill, a proportional column. No
+authored CSS can say *"as wide as this row's data"*.
+
+Worse, the obvious attempt **failed silently**: `width: slot: bar-width` parsed fine and
+was then discarded, because the only reader was `find_number_prop`, which matches a
+literal number and nothing else. An author had no way to distinguish a working binding
+from an ignored one. A binding the grammar accepts must now either take effect or be
+reported — never be dropped on the floor.
+
+| author writes | emitted |
+|---|---|
+| `width: 120` | `width: 120` (CSS px) |
+| `width: "50%"` | `width: "50%"` |
+| `width: auto` | `width: "auto"` |
+| `width: slot: bar-width` | `width: barWidth` |
+| `width: ( row[2] )` | `width: row[2]` |
+
+- **A bound size is emitted last** — after the base part style *and* after any state
+  spreads — because data outranks decoration. Otherwise a `state hover { width: … }`
+  would silently clobber the host's value, reintroducing the original complaint in a
+  subtler form.
+- **Additive only:** a layout that binds no size emits byte-identical output, pinned by
+  a test, so no existing Mosaic app is affected.
+- Escaping is unchanged per shape: a slot goes through `validate_slot_or_field_name`, a
+  string and a keyword through `js_string_literal`, and an expression is verbatim — the
+  same trust model already applied to `content:`, `label:`, `If`, and `For`.
+- Rejected loudly: a non-size value (an emit ref), and a non-finite numeric literal that
+  would otherwise emit a bare `inf` identifier.
+- 11 new tests (192 total).
+
+## [Unreleased]
+
 ### Added - UI35 drag-and-drop lowering (`HostDraggable` / `HostDropTarget`)
 
 The React backend now lowers the kernel's two new drag primitives (see

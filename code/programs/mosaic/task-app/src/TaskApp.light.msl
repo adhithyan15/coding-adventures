@@ -126,6 +126,64 @@ style TaskApp {
     color : "#6a625a" ;
     font-size : 13 ;
   }
+  part summary-row {
+    gap : 10 ;
+    align : center-vertical ;
+  }
+  part view-toggle {
+    background : "#fffdfa" ;
+    color : "#6a625a" ;
+    font-size : 12 ;
+    padding : 6 ;
+    border-width : 1 ;
+    border-color : "#e6ded3" ;
+    border-radius : 20 ;
+    state hover {
+      border-color : "#e0942a" ;
+      color : "#b6741a" ;
+    }
+  }
+  // ── Timeline (Gantt) ──────────────────────────────────────────────────
+  part timeline {
+    gap : 6 ;
+  }
+  part tl-scale {
+    color : "#9b9289" ;
+    font-size : 11 ;
+  }
+  part timeline-row {
+    gap : 10 ;
+    align : center-vertical ;
+  }
+  part tl-name {
+    color : "#2b2723" ;
+    font-size : 13 ;
+    width : 150 ;
+  }
+  // The shared track every bar is measured against. Bars are positioned by a
+  // percentage pad, so the track must be a fixed, common width.
+  part tl-track {
+    width : 420 ;
+    background : "#f7f2ea" ;
+    border-radius : 6 ;
+  }
+  part tl-pad {
+    height : 16 ;
+  }
+  part tl-bar {
+    background : "#e0942a" ;
+    height : 16 ;
+    border-radius : 6 ;
+  }
+  part tl-bar-crit {
+    background : "#cf4b34" ;
+    height : 16 ;
+    border-radius : 6 ;
+  }
+  part tl-window {
+    color : "#6a625a" ;
+    font-size : 11 ;
+  }
   part task-list {
     gap : 8 ;
   }

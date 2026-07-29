@@ -4,6 +4,34 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - timeline (Gantt) view
+
+- **A real proportional Gantt**, switchable from the task list via a toggle beside the
+  summary. Each row shows the task name, a bar positioned and sized on one shared date
+  scale, and its date window; bars on the **critical path** are red, the rest honey.
+  Both themes.
+- This is the first consumer of **UI36 data-driven sizing**
+  (`code/specs/UI36-data-driven-sizing.md`). The bar's offset and length are CSS
+  percentages the host computes from the engine's own gantt output and binds with
+  `width: ( t[n] )` — previously impossible, since mosstyle bakes static values and a
+  slot-bound width was silently dropped. The chart is genuinely to-scale, not an
+  approximation.
+- Geometry lives in `src/timeline.ts` as pure functions, tested without a wasm engine or
+  a DOM (12 tests; 28 total, coverage 97%).
+
+  The rule those tests exist to protect: **task-core dates are day-granular with an
+  inclusive finish**, so a task occupying one day reports `finish === start`. An earlier
+  draft used the bare difference, which made every one-day task zero-width — each fell
+  through to the milestone floor and the whole chart rendered as a row of slivers. A
+  length is `finish - start + 1`. (Caught in security review.)
+- Degrades rather than throwing on malformed engine output: bars with non-finite dates
+  are skipped, an inverted bar can't produce a negative width, a date outside
+  JavaScript's range renders as `—` instead of throwing from `toISOString`, and the
+  min/max use `reduce` rather than spreading a large array into an argument list.
+- A zero-duration milestone is floored at a sliver so it stays visible.
+
+## [0.1.0] - Unreleased
+
 ### Added - light/dark theme switching in the web host
 
 - **The app follows your OS theme, and you can override it.** A toggle sits top-right;
