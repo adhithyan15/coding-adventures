@@ -1,0 +1,97 @@
+% ============================================================================
+% rate-pressure-product.adj — the definition of the rate pressure product (RPP = heart
+% rate × systolic blood pressure) in the ADJ standard library.
+% ============================================================================
+% The rate-pressure-product entry of the *clinical* track, a cardiology bedside sibling of
+% `shock-index.adj`. Where the shock index DIVIDES the heart rate by the systolic pressure (a
+% perfusion-collapse signature), the rate pressure product MULTIPLIES the same two vitals: THE
+% RATE PRESSURE PRODUCT IS THE HEART RATE TIMES THE SYSTOLIC BLOOD PRESSURE — a non-invasive
+% surrogate for myocardial oxygen demand / cardiac work, because ventricular wall tension tracks
+% systolic pressure and the number of tension cycles per minute tracks heart rate, so their
+% product scales with how hard the heart is working. It rises with exertion, tachycardia, or
+% hypertension and is used in exercise testing and ischaemia risk. It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its two exact rearrangements (the
+% heart rate a rate pressure product implies for a given pressure, and the systolic pressure it
+% implies for a given rate). As with every compute library, a consumer states NO arithmetic: it
+% `import`s this file, binds the measured vitals from its own byte-provenance decomposition, and
+% asks the engine to APPLY the cited definition on the CPU. Zero math is performed by the model;
+% the engine computes each value EXACTLY (over exact rationals), carrying the definition's
+% citation.
+%
+%     import "rate-pressure-product.adj"
+%     observe heart_rate(80)                % "…heart rate 80 /min…"        (span cited by the model)
+%     observe systolic_blood_pressure(120)  % "…systolic BP 120 mmHg…"      (span cited by the model)
+%     ? rate_pressure_product(heart_rate, systolic_blood_pressure)
+%                                           % engine → 9600, carrying RPP = HR × SBP
+%
+% All three formulas are EXACT over their parameters, so every value the engine returns is exact.
+% They COMPOSE and invert cleanly around the worked case heart rate = 80 /min, systolic blood
+% pressure = 120 mmHg (RPP = 80 × 120 = 9600): the `rate_pressure_product` a consumer computes
+% from the two vitals is exactly the value the `heart_rate` formula divides by the systolic
+% pressure to recover 80, and exactly the value the `systolic_blood_pressure` formula divides by
+% the heart rate to recover 120.
+%
+%   rate_pressure_product(heart_rate, systolic_blood_pressure)
+%       = heart_rate * systolic_blood_pressure       % RPP = HR × SBP   (definition)
+%   heart_rate(rate_pressure_product, systolic_blood_pressure)
+%       = rate_pressure_product / systolic_blood_pressure  % HR = RPP ÷ SBP  (solved for HR)
+%   systolic_blood_pressure(rate_pressure_product, heart_rate)
+%       = rate_pressure_product / heart_rate          % SBP = RPP ÷ HR   (solved for SBP)
+%
+% NOTE ON UNITS: the heart rate is per minute and the systolic blood pressure is in millimetres
+% of mercury; the rate pressure product comes out in mmHg/min (the units are conventionally
+% dropped, and it is often reported ×10⁻³), and this library computes the exact product over
+% whatever consistent inputs it is given.
+%
+% All three formulas are defended by the SAME clause — "the rate-pressure product (RPP)
+% calculated by multiplying heart rate by systolic blood pressure" — because that one definition
+% (the rate pressure product IS the heart-rate-times-systolic-pressure product) sanctions the
+% relation read every way. The quote is transcribed verbatim from a peer-reviewed article
+% archived on the NCBI PMC repository, so each `formula` carries the provenance envelope every
+% shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the clause is a verbatim span of the cited page, not asserted
+% from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable vital sign the definition ranges over, and each
+% result is a derived quantity. `heart_rate`, `systolic_blood_pressure` and `rate_pressure_product`
+% each appear BOTH as a derived result and as an input (of the other formulas), so each is a
+% single dictionary term used in both roles. The `surface` lists are the everyday names a
+% decomposer maps onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary rate_pressure_product_vocab {
+    define heart_rate               : finding  surface "heart rate", "HR", "pulse"                          % beats per minute (/min)
+    define systolic_blood_pressure  : finding  surface "systolic blood pressure", "SBP", "systolic BP"      % millimetres of mercury (mmHg)
+    define rate_pressure_product    : finding  surface "rate pressure product", "RPP", "double product"     % mmHg per minute (mmHg/min)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the definitional clause from the cited article
+% on the NCBI PMC repository (a quote is required on a shipped formula). Each is an exact product
+% or ratio of measured vitals, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook rate_pressure_product_laws {
+    use rate_pressure_product_vocab
+
+    % Rate pressure product — the heart rate times the systolic blood pressure, i.e. RPP = HR × SBP.
+    formula rate_pressure_product(heart_rate, systolic_blood_pressure) = heart_rate * systolic_blood_pressure
+        source "the rate-pressure product (RPP) calculated by multiplying heart rate by systolic blood pressure"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC10968938/"
+        trust authoritative
+
+    % Heart rate — the same definition solved for the rate a rate pressure product implies for a
+    % given systolic pressure (HR = RPP ÷ SBP). Defended by the SAME clause.
+    formula heart_rate(rate_pressure_product, systolic_blood_pressure) = rate_pressure_product / systolic_blood_pressure
+        source "the rate-pressure product (RPP) calculated by multiplying heart rate by systolic blood pressure"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC10968938/"
+        trust authoritative
+
+    % Systolic blood pressure — the same definition solved for the pressure (SBP = RPP ÷ HR): the
+    % rate pressure product divided by the heart rate. The SAME clause, read the third way.
+    formula systolic_blood_pressure(rate_pressure_product, heart_rate) = rate_pressure_product / heart_rate
+        source "the rate-pressure product (RPP) calculated by multiplying heart rate by systolic blood pressure"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC10968938/"
+        trust authoritative
+}
