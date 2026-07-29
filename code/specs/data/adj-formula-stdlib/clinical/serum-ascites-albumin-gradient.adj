@@ -1,0 +1,97 @@
+% ============================================================================
+% serum-ascites-albumin-gradient.adj — the definition of the serum–ascites albumin gradient
+% (SAAG = serum albumin − ascitic albumin) in the ADJ standard library.
+% ============================================================================
+% The serum–ascites albumin gradient (SAAG) entry of the *clinical* track — a hepatology/GI bedside
+% index, the ascitic-fluid sibling of the shipped osmolar-gap.adj and anion-gap.adj. Where the osmol
+% gap is a difference between two osmolalities and the anion gap a difference among serum electrolytes,
+% the SAAG is a difference between two albumin concentrations: THE SAAG IS THE SERUM ALBUMIN LEVEL
+% MINUS THE ASCITIC (ASCITES-FLUID) ALBUMIN LEVEL — the single most useful test for classifying the
+% cause of ascites. A high gradient (≥ 1.1 g/dL) predicts portal hypertension (cirrhosis, alcoholic
+% hepatitis, heart failure, Budd–Chiari, etc.) with high accuracy; a low gradient (< 1.1 g/dL) points
+% away from portal hypertension (peritoneal carcinomatosis, tuberculous peritonitis, pancreatitis,
+% nephrotic syndrome, serositis). It ships as an importable, byte-provenanced, PARAMETERIZED
+% `formula`, together with its two exact rearrangements (the serum albumin a gradient implies for a
+% given ascitic value, and the ascitic albumin it implies for a given serum value). As with every
+% compute library, a consumer states NO arithmetic: it `import`s this file, binds the two albumin
+% concentrations from its own byte-provenance decomposition, and asks the engine to APPLY the cited
+% definition on the CPU. Zero math is performed by the model; the engine computes each value EXACTLY
+% (over exact rationals), carrying the definition's citation.
+%
+%     import "serum-ascites-albumin-gradient.adj"
+%     observe serum_albumin(4)      % "…serum albumin 4.0 g/dL…"     (span cited by the model)
+%     observe ascites_albumin(1)    % "…ascitic albumin 1.0 g/dL…"   (span cited by the model)
+%     ? saag(serum_albumin, ascites_albumin)
+%                                    % engine → 3, carrying the SAAG difference
+%
+% All three formulas are EXACT over their parameters (a sum or a difference of two albumin
+% concentrations), so every value the engine returns is exact. They COMPOSE and invert cleanly around
+% the worked case serum albumin = 4 g/dL, ascitic albumin = 1 g/dL (SAAG = 4 − 1 = 3 g/dL, a HIGH
+% gradient): the `saag` a consumer computes is exactly the value the `serum_albumin` formula adds back
+% to the ascitic value to recover 4, and exactly the value the `ascites_albumin` formula subtracts
+% from the serum value to recover 1.
+%
+%   saag(serum_albumin, ascites_albumin)
+%       = serum_albumin - ascites_albumin      % SAAG = serum − ascitic   (definition)
+%   serum_albumin(saag, ascites_albumin)
+%       = saag + ascites_albumin               % serum = SAAG + ascitic   (solved for serum)
+%   ascites_albumin(serum_albumin, saag)
+%       = serum_albumin - saag                 % ascitic = serum − SAAG   (solved for ascitic)
+%
+% NOTE ON UNITS: both albumin concentrations are in grams per decilitre, so the gradient is in g/dL
+% (the same unit the cited clause names). The two samples must be obtained on the same day for the
+% gradient to be valid, but that is a collection caveat, not an arithmetic one; the engine computes
+% the exact difference over whatever consistent inputs it is given.
+%
+% All three formulas are defended by the SAME definitional clause — "SAAG equals the serum albumin
+% level minus the ascitic albumin level (g/dL)" — because that one definition (the SAAG IS the
+% serum-minus-ascitic albumin difference) sanctions the relation read every way (the gradient from the
+% two albumins, the serum albumin from the gradient and the ascitic value, or the ascitic albumin from
+% the serum value and the gradient). The quote is transcribed verbatim from the StatPearls "Ascites"
+% article on the NCBI Bookshelf, so each `formula` carries the provenance envelope every shipped
+% grounded clause carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored —
+% the definitional clause is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable albumin concentration the definition ranges over, and
+% each result is a derived quantity. `serum_albumin`, `ascites_albumin` and `saag` each appear BOTH as
+% a derived result and as an input (of the other formulas), so each is a single dictionary term used
+% in both roles. The `surface` lists are the everyday names a decomposer maps onto the canonical term;
+% the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary serum_ascites_albumin_gradient_vocab {
+    define serum_albumin   : finding  surface "serum albumin", "serum albumin level"                      % grams per decilitre (g/dL)
+    define ascites_albumin : finding  surface "ascites albumin", "ascitic albumin", "ascitic albumin level"  % grams per decilitre (g/dL)
+    define saag            : finding  surface "SAAG", "serum-ascites albumin gradient", "serum ascites albumin gradient"  % grams per decilitre (g/dL)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the definitional clause from the StatPearls
+% "Ascites" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact
+% sum or difference of two albumin concentrations, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook serum_ascites_albumin_gradient_laws {
+    use serum_ascites_albumin_gradient_vocab
+
+    % SAAG — the serum albumin minus the ascitic albumin, i.e. gradient = serum − ascitic.
+    formula saag(serum_albumin, ascites_albumin) = serum_albumin - ascites_albumin
+        source "SAAG equals the serum albumin level minus the ascitic albumin level (g/dL)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470482/"
+        trust authoritative
+
+    % Serum albumin — the same definition solved for the serum value a gradient implies for a given
+    % ascitic value (serum = SAAG + ascitic). Defended by the SAME clause.
+    formula serum_albumin(saag, ascites_albumin) = saag + ascites_albumin
+        source "SAAG equals the serum albumin level minus the ascitic albumin level (g/dL)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470482/"
+        trust authoritative
+
+    % Ascitic albumin — the same definition solved for the ascitic value (ascitic = serum − SAAG): the
+    % serum albumin minus the gradient. The SAME clause, read the third way.
+    formula ascites_albumin(serum_albumin, saag) = serum_albumin - saag
+        source "SAAG equals the serum albumin level minus the ascitic albumin level (g/dL)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470482/"
+        trust authoritative
+}
