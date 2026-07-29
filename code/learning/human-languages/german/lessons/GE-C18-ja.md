@@ -1,0 +1,64 @@
+---
+id: GE-C18-ja
+chapter: 18
+type: word
+headword: ja
+gloss: yes
+concept_tag: RESPONSE-YES
+prerequisites: [GE-C01-hallo]
+sounds: [vowel-a-long, j-as-y]
+roots: [ja-germanic]
+etymology_hook: "German ja is the old Germanic yes — the same word English keeps in the archaic yea (and, perhaps, the sailor's aye)"
+est_minutes: 3
+reviews_of: [GE-C01-hallo]
+---
+
+# ja — yes
+
+## Warm-up
+
+[PAUSE 2s] The easiest German word to say, and one English almost shares.
+
+## The word
+
+**ja** = **yes**. Said *yah* — remember German **j** is pronounced like English
+**y**, never the English "j."
+
+It's an ancient **Germanic** word, and English kept the very same root in the
+one word that still clearly shows it:
+
+- **yea** — the old, formal "yes" (*the yeas and the nays* in a vote) — this is
+  *ja*'s direct cousin, same Proto-Germanic root.
+- **aye** — the sailor's and parliament's "yes" (*Aye, aye, captain*) — *sounds*
+  like a cousin, but its origin is actually **uncertain**; it may come from a
+  different word entirely, so don't bank on it.
+
+So German *ja* and English *yea* are the same little word, split between two
+cousin languages. (English's everyday *yes* is a compound of that same *yea* with
+an old "be it so.")
+
+## A German habit to file away
+
+German also has a **third** answer-word, **doch**, for one special job:
+contradicting a **negative** — exactly like French *si*. If someone says
+something *isn't* so and you insist it *is*, you say **doch**, not *ja*:
+
+> *Du kommst nicht?* ("You're not coming?") — ***Doch!*** ("Yes I am!")
+
+You'll drill *doch* on its own later; for now, keep *ja* for a plain yes and know
+*doch* is waiting for the contradictions.
+
+## Guided Practice
+
+[PAUSE 1s]
+- [YOU SAY: "ja" — *yah*, the j like English y]
+- [YOU SAY: the English cousin — "yea… ja" (and maybe *aye*)]
+- [YOU SAY: the contradiction preview — "Du kommst nicht? — Doch!"]
+
+## Wrap-up Recall
+
+[PAUSE 3s] How do you say yes in German? (**ja**, *yah*.) How is the **j**
+pronounced? (Like English **y**.) Which English word is *ja*'s firm direct
+cousin? (**yea** — *aye* only looks like one; its origin is uncertain.) What
+German word answers *yes* specifically to
+contradict a **negative**? (**doch**.)
