@@ -23,9 +23,13 @@ All notable changes to this program will be documented in this file.
   naming, `CodingAdventures.*` module layout, Hspec wiring, `-Wall`, explicit
   Windows skip, empty capability metadata, and plain `cabal test` convention.
 - Haskell dependency discovery now reads the transitive sibling paths from
-  `cabal.project` and retains a Cabal-manifest fallback for older packages.
+  the `packages` field in `cabal.project`, ignores comments and unrelated
+  fields, validates sibling directories, and retains a Cabal-manifest fallback
+  for older packages.
 - Cabal manifests now distinguish the short synopsis from a publishable
   description and include a category, README, and changelog metadata.
+- Cabal generation now treats descriptions containing percent signs as plain
+  text instead of accidentally reusing generated content as a format string.
 
 ## [1.1.0] - 2026-03-25
 

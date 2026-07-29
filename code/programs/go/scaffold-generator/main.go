@@ -444,12 +444,35 @@ func readHaskellDeps(pkgDir string) ([]string, error) {
 		re := regexp.MustCompile(`\.\.[/\\]([a-zA-Z0-9-]+)`)
 		seen := make(map[string]bool)
 		var deps []string
-		for _, match := range re.FindAllStringSubmatch(string(data), -1) {
-			if len(match) != 2 || seen[match[1]] {
+		inPackages := false
+		for _, rawLine := range strings.Split(string(data), "\n") {
+			line := strings.TrimSpace(strings.SplitN(rawLine, "--", 2)[0])
+			lowerLine := strings.ToLower(line)
+			if strings.HasPrefix(lowerLine, "packages:") {
+				inPackages = true
+				line = strings.TrimSpace(line[len("packages:"):])
+			} else if inPackages &&
+				line != "" &&
+				len(rawLine) > 0 &&
+				rawLine[0] != ' ' &&
+				rawLine[0] != '\t' {
+				inPackages = false
+			}
+			if !inPackages {
 				continue
 			}
-			seen[match[1]] = true
-			deps = append(deps, match[1])
+
+			for _, match := range re.FindAllStringSubmatch(line, -1) {
+				if len(match) != 2 || seen[match[1]] {
+					continue
+				}
+				siblingPath := filepath.Join(filepath.Dir(pkgDir), match[1])
+				if info, statErr := os.Stat(siblingPath); statErr != nil || !info.IsDir() {
+					continue
+				}
+				seen[match[1]] = true
+				deps = append(deps, match[1])
+			}
 		}
 		return deps, nil
 	}
@@ -1779,7 +1802,7 @@ library
 	for _, dep := range directDeps {
 		cabal += fmt.Sprintf("                    , %s >=0.1 && <0.2\n", dep)
 	}
-	cabal += `    hs-source-dirs:   src
+	cabal += fmt.Sprintf(`    hs-source-dirs:   src
     ghc-options:      -Wall
     default-language: Haskell2010
 
@@ -1793,8 +1816,7 @@ test-suite spec
                     , hspec ==2.*
     ghc-options:      -Wall
     default-language: Haskell2010
-`
-	cabal = fmt.Sprintf(cabal, moduleName, pkgName)
+`, moduleName, pkgName)
 
 	libHs := fmt.Sprintf(`-- | %s
 --

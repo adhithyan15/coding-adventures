@@ -46,7 +46,6 @@ module CodingAdventures.HttpCore
 import Data.Char (isSpace)
 import Data.List (dropWhileEnd, find)
 import Data.Word (Word16)
-import Text.Read (readMaybe)
 
 -- | Package version shared across implementation languages.
 version :: String
@@ -69,8 +68,9 @@ data HttpVersion = HttpVersion
 
 -- | Parse the exact textual form @HTTP/x.y@.
 --
--- Parsing through 'Integer' first makes overflow explicit instead of letting a
--- bounded numeric conversion wrap. Only ASCII decimal digits are accepted.
+-- Parsing uses a bounded decimal fold so oversized network input is rejected
+-- before it can allocate an attacker-sized arbitrary-precision integer. Only
+-- ASCII decimal digits are accepted.
 parseHttpVersion :: String -> Either String HttpVersion
 parseHttpVersion input =
   case stripPrefix "HTTP/" input of
@@ -136,13 +136,7 @@ findHeader headers name =
 parseContentLength :: [Header] -> Maybe Int
 parseContentLength headers = do
   value <- findHeader headers "Content-Length"
-  if null value || not (all isAsciiDigit value)
-    then Nothing
-    else do
-      parsed <- readMaybe value :: Maybe Integer
-      if parsed > toInteger (maxBound :: Int)
-        then Nothing
-        else Just (fromInteger parsed)
+  parseBoundedDecimal maxBound value
 
 -- | Split Content-Type into media type and optional charset.
 --
@@ -276,13 +270,20 @@ matchTarget patternValue =
 -- Private helpers -----------------------------------------------------------
 
 parseWord16 :: String -> Maybe Word16
-parseWord16 text
-  | null text || not (all isAsciiDigit text) = Nothing
-  | otherwise = do
-      parsed <- readMaybe text :: Maybe Integer
-      if parsed > toInteger (maxBound :: Word16)
-        then Nothing
-        else Just (fromInteger parsed)
+parseWord16 = parseBoundedDecimal maxBound
+
+parseBoundedDecimal :: Integral value => value -> String -> Maybe value
+parseBoundedDecimal limit text
+  | null text = Nothing
+  | otherwise = go 0 text
+  where
+    go accumulator [] = Just accumulator
+    go accumulator (character : rest)
+      | not (isAsciiDigit character) = Nothing
+      | accumulator > (limit - digit) `div` 10 = Nothing
+      | otherwise = go (accumulator * 10 + digit) rest
+      where
+        digit = fromIntegral (fromEnum character - fromEnum '0')
 
 isAsciiDigit :: Char -> Bool
 isAsciiDigit character = character >= '0' && character <= '9'

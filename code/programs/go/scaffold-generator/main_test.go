@@ -785,7 +785,7 @@ func TestGenerateHaskellUsesRepositoryConventions(t *testing.T) {
 	if err := generateHaskell(
 		tmpDir,
 		"my-pkg",
-		"My package",
+		"100% compatible package",
 		"Layer context",
 		[]string{"graph"},
 		[]string{"bitset", "graph"},
@@ -801,6 +801,8 @@ func TestGenerateHaskellUsesRepositoryConventions(t *testing.T) {
 	cabalText := string(cabal)
 	for _, want := range []string{
 		"name:          my-pkg",
+		"synopsis:      100% compatible package",
+		"description:   100% compatible package.",
 		"category:      Development",
 		"exposed-modules:  CodingAdventures.MyPkg",
 		", graph >=0.1 && <0.2",
@@ -856,7 +858,17 @@ func TestReadHaskellDepsUsesCabalProjectSiblingPaths(t *testing.T) {
 	if err := os.MkdirAll(pkgDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	project := "packages: . ../http-core ../parser\n"
+	for _, sibling := range []string{"http-core", "parser"} {
+		if err := os.MkdirAll(filepath.Join(root, sibling), 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	project := `packages: . ../http-core
+          ../parser
+          ../missing
+          -- ../commented-out
+repository: ../not-a-package
+`
 	if err := os.WriteFile(
 		filepath.Join(pkgDir, "cabal.project"),
 		[]byte(project),

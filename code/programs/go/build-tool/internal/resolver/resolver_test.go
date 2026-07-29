@@ -422,6 +422,17 @@ test-suite spec
 	}
 }
 
+func TestFindCabalFileRejectsMultipleManifests(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/first.cabal":  "name: first\n",
+		"pkg/second.cabal": "name: second\n",
+	})
+
+	if got := findCabalFile(filepath.Join(root, "pkg")); got != "" {
+		t.Fatalf("findCabalFile() = %q, want ambiguous manifests rejected", got)
+	}
+}
+
 func TestDependencyScopeMapsSharedToolchainFamilies(t *testing.T) {
 	tests := map[string]string{
 		"python": "python",

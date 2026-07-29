@@ -28,6 +28,8 @@ All notable changes to the Go build tool will be documented in this file.
   registers directory and manifest aliases, parses every `build-depends`
   stanza, removes duplicates and self-references, and therefore exposes local
   dependency edges to diff-based affected-package analysis.
+- Haskell package discovery now rejects directories with multiple ambiguous
+  Cabal manifests instead of selecting one based on enumeration order.
 
 ## [0.3.1] - 2026-03-30
 

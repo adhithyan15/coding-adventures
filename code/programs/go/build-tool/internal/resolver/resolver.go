@@ -1120,20 +1120,24 @@ func readCargoPackageName(pkgPath string) string {
 	return strings.ToLower(strings.TrimSpace(string(match[1])))
 }
 
-// findCabalFile returns the first Cabal manifest in a package directory.
-// Package directories contain at most one manifest, while the filename itself
-// may use either the modern plain name or the legacy prefixed name.
+// findCabalFile returns the sole Cabal manifest in a package directory.
+// Multiple manifests are ambiguous, so reject them instead of allowing
+// directory enumeration order to change package identity or dependencies.
 func findCabalFile(pkgPath string) string {
 	entries, err := os.ReadDir(pkgPath)
 	if err != nil {
 		return ""
 	}
+	var cabalFile string
 	for _, entry := range entries {
 		if !entry.IsDir() && strings.HasSuffix(strings.ToLower(entry.Name()), ".cabal") {
-			return filepath.Join(pkgPath, entry.Name())
+			if cabalFile != "" {
+				return ""
+			}
+			cabalFile = filepath.Join(pkgPath, entry.Name())
 		}
 	}
-	return ""
+	return cabalFile
 }
 
 func readCabalPackageName(pkgPath string) string {

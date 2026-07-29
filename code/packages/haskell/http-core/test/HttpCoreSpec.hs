@@ -25,6 +25,7 @@ spec = do
         , "HTTP/a.1"
         , "HTTP/1.2.3"
         , "HTTP/65536.1"
+        , "HTTP/" ++ replicate 100000 '9' ++ ".0"
         ]
 
   describe "ordered HTTP headers" $ do
@@ -55,7 +56,15 @@ spec = do
         (\value ->
           parseContentLength [Header "Content-Length" value]
             `shouldBe` Nothing)
-        ["", "-1", "+1", " 1", "1 ", "forty-two", overflow]
+        [ ""
+        , "-1"
+        , "+1"
+        , " 1"
+        , "1 "
+        , "forty-two"
+        , overflow
+        , replicate 100000 '9'
+        ]
 
     it "parses media types with and without charsets" $ do
       parseContentType [Header "Content-Type" "application/json"]
