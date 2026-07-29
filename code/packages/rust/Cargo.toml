@@ -168,6 +168,7 @@ members = [
     "html-lexer",
     "html-parser",
     "html-to-layout",
+    "html-to-paint",
     "html-renderer",
     "intel4004-gatelevel",
     "mos6502-gatelevel",

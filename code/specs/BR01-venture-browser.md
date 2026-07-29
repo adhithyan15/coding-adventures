@@ -51,8 +51,10 @@ executable browser seam from `BrowserRenderTree` to the shared Layout IR and
 
 That does not make Venture complete. The current layout path places atomic
 inline boxes on shared lines; text-run fragmentation and baseline alignment
-remain. Paint-scene acceptance, resource loading, link hit-testing, and a
-platform host must still wire navigation through pixels.
+remain. The `html-to-paint` composition package now carries canned HTML
+through shared layout into a backend-neutral `PaintScene`. Resource loading,
+link hit-testing, raster acceptance, and a platform host must still wire
+navigation through pixels.
 
 ## Where It Fits
 
