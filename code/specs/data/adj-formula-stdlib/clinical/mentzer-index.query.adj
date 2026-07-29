@@ -1,0 +1,28 @@
+% ============================================================================
+% mentzer-index.query.adj — worked applications of the Mentzer-index definition.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a microcytic-anaemia vignette into observed
+% red-cell indices: it `import`s the grounded formulabook, `observe`s the mean corpuscular volume and
+% the red cell count, and asks the engine to APPLY the cited definition. No arithmetic is stated by
+% the consumer; the engine computes each value EXACTLY (over exact rationals) and carries the
+% article's citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (MCV = 80 fL, red cell count = 4 million/µL): Mentzer index = 80 ÷ 4 = 20 — a HIGH index
+% (> 13), pointing to iron-deficiency anaemia. Each query below fixes two of the three quantities and
+% asks the engine to recover the third; every answer is exact and the three COMPOSE (each inversion
+% recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli mentzer-index.query.adj
+% ============================================================================
+
+import "mentzer-index.adj"
+
+% --- Definition: the Mentzer index the two red-cell indices imply (expect 20). ----------------
+observe mean_corpuscular_volume(80)
+observe red_cell_count(4)
+? mentzer_index(mean_corpuscular_volume, red_cell_count)   % expect 20
+
+% --- Inverse: the MCV a Mentzer index of 20 implies at that red cell count (expect 80). --------
+observe mentzer_index(20)
+? mean_corpuscular_volume(mentzer_index, red_cell_count)   % expect 80
