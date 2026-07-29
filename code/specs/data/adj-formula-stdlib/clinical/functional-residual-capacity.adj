@@ -1,0 +1,106 @@
+% ============================================================================
+% functional-residual-capacity.adj — the definition of the functional residual
+% capacity (functional residual capacity = residual volume + expiratory reserve
+% volume) in the ADJ standard library.
+% ============================================================================
+% The functional-residual-capacity entry of the *clinical* track, a
+% pulmonary-physiology library. Where total-lung-capacity.adj grounds the whole-lung
+% sum (TLC = VC + RV) and inspiratory-capacity.adj grounds the top-of-tidal sum
+% (TLC = FRC + IC), this grounds the RESTING end-expiratory sum: THE FUNCTIONAL
+% RESIDUAL CAPACITY — the gas left in the lungs after a normal quiet exhalation —
+% IS THE SUM OF THE RESIDUAL VOLUME (RV, the gas that cannot be exhaled) AND THE
+% EXPIRATORY RESERVE VOLUME (ERV, the gas a maximal effort can still push out past
+% the resting point). It ships as an importable, byte-provenanced, PARAMETERIZED
+% `formula`, together with its two exact rearrangements (each component the total
+% leaves once the other is removed). As with every compute library, a consumer
+% states NO arithmetic: it `import`s this file, binds the measured sub-volumes from
+% its own byte-provenance decomposition, and asks the engine to APPLY the cited
+% definition on the CPU. Zero math is performed by the model; the engine computes
+% each value EXACTLY, carrying the definition's citation.
+%
+%     import "functional-residual-capacity.adj"
+%     observe residual_volume(2)            % "…RV 2 L…"    (span cited by the model)
+%     observe expiratory_reserve_volume(4)  % "…ERV 4 L…"   (span cited by the model)
+%     ? functional_residual_capacity(residual_volume, expiratory_reserve_volume)
+%                                             % engine → 6, carrying FRC = RV + ERV
+%
+% All three formulas are EXACT over their parameters (a two-term sum and its two
+% inverse readings), so every value the engine returns is exact. The three COMPOSE
+% and invert cleanly around the worked case RV = 2, ERV = 4 (FRC = 2 + 4 = 6): the
+% `functional_residual_capacity` a consumer computes from the two sub-volumes is
+% exactly the total the `residual_volume` formula subtracts the expiratory reserve
+% volume from to recover the 2, and that the `expiratory_reserve_volume` formula
+% subtracts the residual volume from to recover the 4.
+%
+%   functional_residual_capacity(residual_volume, expiratory_reserve_volume)
+%       = residual_volume + expiratory_reserve_volume   % FRC = RV + ERV   (definition)
+%   residual_volume(functional_residual_capacity, expiratory_reserve_volume)
+%       = functional_residual_capacity - expiratory_reserve_volume % RV = FRC − ERV (solved for RV)
+%   expiratory_reserve_volume(functional_residual_capacity, residual_volume)
+%       = functional_residual_capacity - residual_volume  % ERV = FRC − RV  (solved for ERV)
+%
+% NOTE ON UNITS: RV, ERV, and FRC are all lung gas volumes and must be observed in
+% the SAME unit (e.g. litres, or millilitres) for the sum to be meaningful; this
+% library performs no unit conversion. It computes the exact sum (or the exact
+% complementary difference) over whatever same-unit volumes it is given. A consumer
+% that mixes units converts them upstream.
+%
+% All three formulas are defended by the SAME defining span — "the FRC can be
+% represented by the equation FRC = RV + ERV" — because that one definition (the
+% functional residual capacity IS the sum of the residual volume and the expiratory
+% reserve volume) sanctions the relation read every way (the total from the two
+% sub-volumes, or either sub-volume from the total and the other). The span is
+% transcribed verbatim from the StatPearls "Physiology, Functional Residual
+% Capacity" article on the NCBI Bookshelf, so each `formula` carries the provenance
+% envelope every shipped grounded clause carries; the linter rejects an unsourced
+% one. (See feedback_nothing_human_authored — the defining span is a verbatim quote
+% of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each sub-volume is an observable finding the definition ranges over,
+% and the capacity is the derived total. `functional_residual_capacity`,
+% `residual_volume` and `expiratory_reserve_volume` each appear BOTH as a derived
+% result and as an input (of the other formulas), so each is a single dictionary
+% term used in both roles. The `surface` lists are the everyday names a decomposer
+% maps onto the canonical term.
+% ----------------------------------------------------------------------------
+dictionary functional_residual_capacity_vocab {
+    define residual_volume               : finding  surface "residual volume", "RV"
+    define expiratory_reserve_volume     : finding  surface "expiratory reserve volume", "ERV"
+    define functional_residual_capacity  : finding  surface "functional residual capacity", "FRC"
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula
+% over its formal parameters, bound at apply time, and each carries the defining
+% span from StatPearls on the NCBI Bookshelf (a quote is required on a shipped
+% formula). Each is an exact sum/difference of measured sub-volumes, so the engine
+% returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook functional_residual_capacity_laws {
+    use functional_residual_capacity_vocab
+
+    % FRC — the sum of the residual volume and the expiratory reserve volume,
+    % i.e. FRC = RV + ERV.
+    formula functional_residual_capacity(residual_volume, expiratory_reserve_volume) = residual_volume + expiratory_reserve_volume
+        source "the FRC can be represented by the equation FRC = RV + ERV"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500007/"
+        trust authoritative
+
+    % Residual volume — the same definition solved for the residual gas an FRC
+    % leaves once the expiratory reserve volume is removed (RV = FRC − ERV).
+    % Defended by the SAME defining span.
+    formula residual_volume(functional_residual_capacity, expiratory_reserve_volume) = functional_residual_capacity - expiratory_reserve_volume
+        source "the FRC can be represented by the equation FRC = RV + ERV"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500007/"
+        trust authoritative
+
+    % Expiratory reserve volume — the same definition solved for the reserve an FRC
+    % leaves once the residual volume is removed (ERV = FRC − RV). The third reading
+    % of the one definition.
+    formula expiratory_reserve_volume(functional_residual_capacity, residual_volume) = functional_residual_capacity - residual_volume
+        source "the FRC can be represented by the equation FRC = RV + ERV"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500007/"
+        trust authoritative
+}
