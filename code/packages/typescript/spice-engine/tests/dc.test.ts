@@ -94,6 +94,7 @@ import {
   modelCardSupportedParameterCoverageSummary,
   modelCardSupportedParameterCoverageSummaryRecords,
   mosfet,
+  mosfetAtTemperature,
   mosfetFromModelCard,
   normalizeModelCard,
   normalizeModelCardType,
@@ -2323,6 +2324,22 @@ describe("dcOp", () => {
 
     expect(coldResult.voltage("out")).toBeGreaterThan(nominalResult.voltage("out")!);
     expect(hotResult.voltage("out")).toBeLessThan(nominalResult.voltage("out")!);
+  });
+
+  it("keeps MOSFET surface mobility and KP aligned across temperature", () => {
+    const nominal = mosfet("M1", "d", "g", "s", "b", "NMOS", {
+      KP: 200.0e-6,
+      U0: 500.0,
+    });
+    const hot = mosfetAtTemperature(nominal, 600.3, 300.15);
+    const scale = 2.0 ** -1.5;
+
+    expectClose(hot.params.KP, nominal.params.KP * scale);
+    expectClose(hot.params.U0, nominal.params.U0 * scale);
+    expectClose(
+      hot.params.KP / hot.params.U0,
+      nominal.params.KP / nominal.params.U0,
+    );
   });
 
   it("preserves subcircuits when applying temperature helpers", () => {

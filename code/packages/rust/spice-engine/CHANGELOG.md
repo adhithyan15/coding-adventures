@@ -1,5 +1,7 @@
 # Changelog
 
+- Scale Level-1 MOS `U0` alongside `KP` by `(T / T_NOM)^-3/2` so temperature
+  helpers preserve Berkeley surface-mobility state and their nominal ratio.
 - Add Level-1 MOS model-card `U0` / `UO` surface mobility with the Berkeley
   default of 600 cm^2/V/s. When `TOX` is explicit and `KP` is omitted, derive
   `KP = U0 * Cox * 1e-4`; explicit `KP` retains precedence.
