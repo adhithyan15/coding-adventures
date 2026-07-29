@@ -1,0 +1,62 @@
+% ============================================================================
+% electric-conductance-conversions — electric-conductance-unit → siemens factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of electric-charge-conversions.adj, electric-potential-conversions.adj,
+% electric-resistance-conversions.adj, electric-capacitance-conversions.adj,
+% electric-inductance-conversions.adj and the other NIST-cited conversion tables: a native tabular
+% relation ingested VERBATIM from a published NIST conversion table. The row states the factor
+% converting the traditional (CGS-EMU) unit of ELECTRIC CONDUCTANCE to the SI coherent derived
+% unit, the siemens (S):
+%
+%     ? electric_conductance_to_siemens(abmho, $v)   % 1000000000
+%
+% This EXTENDS the electromagnetic-EMU family alongside electric-charge (the abcoulomb → the
+% coulomb), electric-potential (the abvolt → the volt), electric-resistance (the abohm → the ohm),
+% electric-capacitance (the abfarad → the farad) and electric-inductance (the abhenry → the
+% henry), and is a NEW dimension alongside the length/mass/area/volume/time/speed/energy/pressure/
+% force/acceleration/dynamic-viscosity/kinematic-viscosity/magnetic-flux-density/magnetic-flux/
+% illuminance/luminance/radioactivity/absorbed-dose/dose-equivalent/exposure/power tables.
+% Conductance is the RECIPROCAL of resistance: the siemens is one reciprocal ohm (one ampere per
+% volt), and the abmho is its traditional (EMU) unit — "mho" is "ohm" spelled backwards precisely
+% because a conductance is an inverse resistance. Do NOT confuse ELECTRIC CONDUCTANCE (the abmho →
+% the siemens) with ELECTRIC RESISTANCE (the abohm → the ohm): those are RECIPROCAL quantities that
+% convert to DIFFERENT, reciprocal SI units, and their EMU factors are reciprocals too — the abmho
+% is 1.0 E+09 siemens while the abohm is 1.0 E-09 ohm. Put a conductance given in abmhos into SI
+% first, then reason (write-once-use-many). Why a `table` and not a hand-written `relate` clause:
+% this is exactly the shape reference data comes in — a published table, not prose. The citable
+% artifact IS the NIST conversion-factors table at the `locator` below; the factor here is a CELL
+% of NIST Special Publication 811, Appendix B.9, defended by one provenance envelope. Each `row`
+% lowers to a ground relation `electric_conductance_to_siemens(unit, v)`, so the exact lookup above
+% is the ordinary SLD binding query — the engine returns the factor WITH this table's citation as
+% its proof, on the CPU, with zero model calls.
+%
+% HONESTY NOTE (like the electric-charge / electric-potential / electric-resistance /
+% electric-capacitance / electric-inductance / power tables, only the EXACT defined factor gets a
+% row): NIST SP 811 B.9 prints the "abmho" conductance factor in BOLDFACE, its convention for
+% factors that are EXACT by definition, transcribed here as the plain decimal number of siemens it
+% names:
+%
+%     abmho   1.0 E+09  →  1000000000
+%
+% This is exact because the abmho is DEFINED as exactly 1.0 E+09 siemens (the EMU of conductance).
+% It terminates; nothing here is a rounded measurement. This table is SPECIFIC to electric
+% conductance: a unit of a DIFFERENT quantity — e.g. the "abohm", which NIST SP 811 B.9 lists
+% separately as an electric-RESISTANCE unit converting to the ohm, NOT the siemens — therefore
+% gets no row here, and a `? electric_conductance_to_siemens(abohm, $v)` ABSTAINS rather than
+% mis-converting a resistance unit as if it were a conductance unit (even though resistance is
+% conductance's reciprocal). The only claim this table makes is "this is the exact factor NIST SP
+% 811 B.9 prints for the abmho's conversion to the siemens" — which is exactly what a byte-check
+% against the cited table verifies. `trust authoritative` — a primary, re-fetchable standards
+% reference. (See ADJ-TABLES.md; and feedback_nothing_human_authored — the factor is a verbatim
+% cell of the cited table, nothing asserted from memory.)
+% ============================================================================
+
+table electric_conductance_to_siemens {
+    columns unit, siemens
+
+    row (abmho, 1000000000)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}
