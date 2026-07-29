@@ -997,6 +997,46 @@ fn emit_compound_call(out: &mut String, dst: &str, e: &Expr, indent: usize) {
             return;
         }
     }
+    // SIR17 `raise Foo, <msg>` whose MESSAGE is a COMPOUND expression (so the
+    // whole call is non-simple and lands here rather than in `emit_builtin_simple`).
+    // The `Const` class name must become a raw C string — NOT a hoisted
+    // `_sir_const_get`, which the C runtime has no builtin exception-class constant
+    // for (see the simple-path arm) — so intercept it here, hoist ONLY the message,
+    // and construct the exception directly.  Without this a computed-message
+    // `raise ArgumentError, cond ? "a" : "b"` would regress to the same
+    // `uninitialized constant` failure.  Mirrors the Go/Rust backends.
+    if let Expr::BuiltinCall { name, args, .. } = e {
+        if name == "raise" {
+            if let Some(Expr::VarRef { name: cn, scope: Scope::Const, .. }) = args.first() {
+                let _ = writeln!(out, "{pad}{{");
+                let inner = indent + 1;
+                let ipad = indent_str(inner);
+                let msg = match args.get(1) {
+                    Some(m) => {
+                        let t = format!("_sir_a{}", fresh_id());
+                        if is_simple(m) {
+                            let _ = write!(out, "{ipad}SirValue {t} = ");
+                            emit_expr(out, m, inner);
+                            out.push_str(";\n");
+                        } else {
+                            let _ = writeln!(out, "{ipad}SirValue {t};");
+                            emit_assign(out, &t, m, inner);
+                        }
+                        t
+                    }
+                    None => "_sir_nil()".to_string(),
+                };
+                let _ = writeln!(
+                    out,
+                    "{ipad}{dst} = _sir_raise(_sir_error({}, {}));",
+                    quote_c_string(cn),
+                    msg
+                );
+                let _ = writeln!(out, "{pad}}}");
+                return;
+            }
+        }
+    }
     let _ = writeln!(out, "{pad}{{");
     let inner = indent + 1;
     let ipad = indent_str(inner);
@@ -1348,16 +1388,38 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
 
 /// A builtin call whose arguments are all simple.
 fn emit_builtin_simple(out: &mut String, name: &str, args: &[Expr], indent: usize) {
-    // SIR17 `raise`: no argument re-raises the exception being handled; one
-    // argument raises it (an exception object as-is, any other value — a message
-    // string — wrapped in a `RuntimeError`).  Never returns (longjmp/exit).
+    // SIR17 `raise`.  The FIRST argument decides the shape (mirroring the
+    // Go/Rust/JS/Python backends for cross-backend parity):
+    //   • no argument — re-raise the exception currently being handled.
+    //   • a `Const` first argument (`raise Foo` / `raise Foo, "msg"`) — the
+    //     `Const` is a CLASS NAME, not a runtime value, so construct an exception
+    //     of that class carrying the message (nil for a bare `raise Foo`, whose
+    //     `#message` then defaults to the class name).  The class name is a
+    //     QUOTED C string literal, so this Const is intercepted HERE and never
+    //     reaches `emit_var_ref`'s `_sir_const_get` — the C runtime registers no
+    //     builtin exception-class CONSTANTS, so `const_get("ArgumentError")` would
+    //     (wrongly) raise `NameError: uninitialized constant ArgumentError`, the
+    //     `puts(e)` conformance failure this fixes.
+    //   • any other first argument (`raise "boom"`, `raise some_exc`) — a VALUE:
+    //     an exception object is re-raised as-is, else wrapped in a `RuntimeError`
+    //     carrying it as the message.
+    // Never returns (longjmp/exit).
     if name == "raise" {
-        if args.is_empty() {
-            out.push_str("_sir_raise(_sir_current_error)");
-        } else {
-            out.push_str("_sir_raise_value(");
-            emit_expr(out, &args[0], indent);
-            out.push(')');
+        match args.first() {
+            None => out.push_str("_sir_raise(_sir_current_error)"),
+            Some(Expr::VarRef { name: cn, scope: Scope::Const, .. }) => {
+                let _ = write!(out, "_sir_raise(_sir_error({}, ", quote_c_string(cn));
+                match args.get(1) {
+                    Some(msg) => emit_expr(out, msg, indent),
+                    None => out.push_str("_sir_nil()"),
+                }
+                out.push_str("))");
+            }
+            Some(_) => {
+                out.push_str("_sir_raise_value(");
+                emit_expr(out, &args[0], indent);
+                out.push(')');
+            }
         }
         return;
     }

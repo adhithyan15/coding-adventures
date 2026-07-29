@@ -1505,14 +1505,26 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // holding the class name, emitted VERBATIM as the constant receiver
         // (the scan validated it as a constant path at this position, so no
         // source can inject); `args[1..]` (already in `a`) are the constructor
-        // arguments.  Native Ruby construction — no runtime helper.
+        // arguments.
+        //
+        // Route through the `sir_new` runtime helper, NOT a native `Class.new`.
+        // A `def initialize` is registered (like every method, OOP slice 2)
+        // under the reserved `sir_um_` prefix as `sir_um_initialize` — a name
+        // Ruby's own `new`/`initialize` never calls — so a native `.new` would
+        // allocate an instance whose constructor body (its `@ivar` initialisers)
+        // NEVER runs, leaving every `@ivar` nil (the `counter_state` conformance
+        // failure: `@n + 1` on a nil `@n`).  `sir_new` mirrors the Go/C/Rust
+        // runtimes: allocate, then explicitly invoke the registered constructor
+        // with these args (see the runtime preamble).
         "__new__" => {
             let class = match args.first() {
                 Some(Expr::StrLit { value, .. }) => value.clone(),
                 // The scan rejects a malformed `__new__` before emit.
                 _ => unreachable!("__new__ requires a string class-name first argument"),
             };
-            format!("{class}.new({})", a[1..].join(", "))
+            let mut parts = vec![class];
+            parts.extend_from_slice(&a[1..]);
+            format!("sir_new({})", parts.join(", "))
         }
         // OOP classes slice 2 — register a hoisted instance method on the class.
         // `args[0]` = class name (`StrLit`, a bare validated constant receiver),

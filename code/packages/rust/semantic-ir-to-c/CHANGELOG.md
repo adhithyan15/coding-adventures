@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.17.1 — fix: `raise ClassName, "msg"` constructs the exception
+
+Fixes a cross-backend conformance failure (`exception_reflection` / `puts(e)`): a
+`raise ArgumentError, "boom"` lowers to `BuiltinCall("raise", [VarRef(Const
+"ArgumentError"), StrLit("boom")])`, but the C `raise` emitter used only the first
+argument and let the `Const` fall through to `emit_var_ref` as
+`_sir_const_get("ArgumentError")` — and the C runtime registers no builtin
+exception-class CONSTANTS, so that raised `NameError: uninitialized constant
+ArgumentError` (crashing the program) while dropping the `"boom"` message.
+
+- The `raise` emitter now intercepts a `Const` first argument as a CLASS NAME and
+  constructs the exception directly: `_sir_raise(_sir_error("ArgumentError",
+  <msg or nil>))` (nil message for a bare `raise Foo`, whose `#message` then
+  defaults to the class name). Mirrors the Go/Rust/JS/Python backends. Any other
+  first argument (`raise "boom"`, `raise some_exc`) keeps the value path
+  (`_sir_raise_value`).
+- Handled on BOTH emit paths: the simple inline path and the compound path
+  (`emit_compound_call`) taken when the message is a non-simple expression — so a
+  computed message (`raise ArgumentError, cond && "x"`) does not regress to the
+  same `uninitialized constant` failure.
+- The class name stays a QUOTED C string literal (no injection); rescue matching
+  and `puts(e)` display are unchanged (they already read the exception's class /
+  message). Existing `raise "string"` behaviour is untouched.
+- Regression tests: `raise_named_class_with_message_is_caught_and_prints_the_message`,
+  `raise_bare_named_class_defaults_its_message_to_the_class_name`, and
+  `raise_named_class_with_a_compound_message_still_constructs_the_exception` (the
+  prior exception tests only raised bare string messages, so the class-name path
+  was never exercised).
+
 ## 0.17.0 — numeric conversions: `to_f` / `to_i`
 
 Two numeric-conversion builtins mirroring the Ruby backend, for the C frontend's

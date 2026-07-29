@@ -1491,14 +1491,16 @@ fn e2e_empty_class_declaration_and_construction() {
 #[test]
 fn empty_class_emits_reflective_const_set() {
     // The empty class becomes `Object.const_set(:Foo, Class.new)` and the
-    // construction a native `Foo.new(...)` — NOT a native `class Foo` block
-    // (illegal inside the `main` method the frontend wraps top-level code in).
+    // construction a `sir_new(Foo)` call — NOT a native `class Foo` block
+    // (illegal inside the `main` method the frontend wraps top-level code in),
+    // and NOT a native `Foo.new` (which would skip the reserved-prefix
+    // `sir_um_initialize` constructor — see `sir_new` in the runtime).
     let rb = ruby_to_ruby("class Foo\nend\nx = Foo.new\n");
     assert!(
         rb.contains("Object.const_set(:Foo, Class.new)"),
         "empty class → reflective const_set:\n{rb}"
     );
-    assert!(rb.contains("Foo.new"), "construction → native .new:\n{rb}");
+    assert!(rb.contains("sir_new(Foo)"), "construction → sir_new helper:\n{rb}");
     assert!(!rb.contains("class Foo\n"), "must NOT emit a native class block:\n{rb}");
 }
 
@@ -1902,6 +1904,40 @@ fn e2e_instance_variable_mutation_across_calls() {
     );
     match run_ruby(&rb) {
         Some(out) => assert_eq!(out, "2"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_initialize_runs_on_construction() {
+    // Regression (the `counter_state` conformance failure): a `def initialize`
+    // must run when the object is CONSTRUCTED — `Counter.new` alone never calls
+    // the reserved-prefix `sir_um_initialize`, so a native `.new` would leave
+    // `@n` nil and `@n + 1` would raise `undefined method '+' for nil`.  With the
+    // `sir_new` helper the constructor runs, `@n` starts at 0, and the count is 2.
+    let rb = ruby_to_ruby(
+        "class Counter\n  def initialize\n    @n = 0\n  end\n  def inc\n    @n = @n + 1\n  end\n  \
+         def value\n    @n\n  end\nend\n\
+         c = Counter.new\nc.inc\nc.inc\nputs c.value\n",
+    );
+    assert!(rb.contains("sir_new(Counter)"), "construction → sir_new helper:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "2"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_initialize_with_constructor_argument() {
+    // `def initialize(v); @v = v; end` — a constructor ARGUMENT must be forwarded
+    // through `sir_new` to `sir_um_initialize`, so `Box.new(7)` stores 7.
+    let rb = ruby_to_ruby(
+        "class Box\n  def initialize(v)\n    @v = v\n  end\n  def get\n    @v\n  end\nend\n\
+         b = Box.new(7)\nputs b.get\n",
+    );
+    assert!(rb.contains("sir_new(Box, "), "construction forwards the arg:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "7"),
         None => eprintln!("skip: no ruby on PATH"),
     }
 }

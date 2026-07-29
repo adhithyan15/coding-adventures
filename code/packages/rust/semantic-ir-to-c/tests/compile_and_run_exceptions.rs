@@ -96,6 +96,17 @@ fn puts(arg: Expr) -> Stmt {
 fn raise_(arg: Option<Expr>) -> Stmt {
     Stmt::ExprStmt { expr: bc("raise", arg.into_iter().collect()), span: s() }
 }
+fn const_ref(name: &str) -> Expr {
+    Expr::VarRef { name: name.into(), scope: semantic_ir::Scope::Const, span: s() }
+}
+/// `raise Class, msg` (or a bare `raise Class` when `msg` is `None`): the first
+/// argument is a `Const` CLASS NAME — the SIR shape the frontend emits for
+/// `raise ArgumentError, "boom"`.
+fn raise_class(class: &str, msg: Option<Expr>) -> Stmt {
+    let mut args = vec![const_ref(class)];
+    args.extend(msg);
+    Stmt::ExprStmt { expr: bc("raise", args), span: s() }
+}
 fn local(name: &str) -> Expr {
     Expr::VarRef { name: name.into(), scope: semantic_ir::Scope::Local, span: s() }
 }
@@ -130,6 +141,89 @@ fn exc_module(stmts: Vec<Stmt>) -> Module {
         globals: vec![],
         metadata: Metadata::new().with_sir_version(CURRENT_SIR_VERSION),
         span: s(),
+    }
+}
+
+/// A `main` module running `stmts`, declaring Exceptions + Strings + Classes +
+/// Constants + ShortCircuit — the extra features a `raise Class` (a `Const`
+/// class reference, observing `Feature::Constants`/`Classes`) and a compound
+/// `and`-message need beyond the base [`exc_module`].
+fn exc_class_module(stmts: Vec<Stmt>) -> Module {
+    Module {
+        name: "excprog".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Exceptions,
+            Feature::Strings,
+            Feature::Classes,
+            Feature::Constants,
+            Feature::ShortCircuit,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new().with_sir_version(CURRENT_SIR_VERSION),
+        span: s(),
+    }
+}
+
+#[test]
+fn raise_named_class_with_message_is_caught_and_prints_the_message() {
+    // Regression (the `puts(e)` conformance failure): `begin; raise ArgumentError,
+    // "boom"; rescue ArgumentError => e; puts(e); end` must construct an
+    // ArgumentError — NOT `_sir_const_get("ArgumentError")`, which the C runtime
+    // has no builtin exception-class constant for (it raised `NameError:
+    // uninitialized constant ArgumentError`).  The rescue matches via the
+    // ancestry and `puts(e)` prints the message.
+    match run(&exc_class_module(vec![trycatch(
+        vec![raise_class("ArgumentError", Some(strlit("boom")))],
+        vec![rescue_clause(vec!["ArgumentError"], Some("e"), vec![puts(local("e"))])],
+        None,
+    )])) {
+        Some(out) => assert_eq!(out, "boom\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn raise_bare_named_class_defaults_its_message_to_the_class_name() {
+    // A bare `raise TypeError` carries no message, so `#message` (and `puts e`)
+    // defaults to the class name.  `rescue TypeError => e; puts(e)` → "TypeError".
+    match run(&exc_class_module(vec![trycatch(
+        vec![raise_class("TypeError", None)],
+        vec![rescue_clause(vec!["TypeError"], Some("e"), vec![puts(local("e"))])],
+        None,
+    )])) {
+        Some(out) => assert_eq!(out, "TypeError\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn raise_named_class_with_a_compound_message_still_constructs_the_exception() {
+    // The message is a short-circuit `and` (non-simple), so the raise takes the
+    // COMPOUND emit path.  The `Const` class must STILL build an exception there,
+    // not a `_sir_const_get`: `raise ArgumentError, ("a" && "b")` raises with the
+    // deciding operand "b" as its message, caught and printed.
+    match run(&exc_class_module(vec![trycatch(
+        vec![raise_class(
+            "ArgumentError",
+            Some(bc("and", vec![strlit("a"), strlit("b")])),
+        )],
+        vec![rescue_clause(vec!["ArgumentError"], Some("e"), vec![puts(local("e"))])],
+        None,
+    )])) {
+        Some(out) => assert_eq!(out, "b\n"),
+        None => eprintln!("skip: no cc"),
     }
 }
 
