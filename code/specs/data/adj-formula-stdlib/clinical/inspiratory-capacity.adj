@@ -1,0 +1,113 @@
+% ============================================================================
+% inspiratory-capacity.adj — the FRC/IC partition of the total lung capacity
+% (total lung capacity = functional residual capacity + inspiratory capacity)
+% in the ADJ standard library.
+% ============================================================================
+% The inspiratory-capacity entry of the *clinical* track, a respiratory-physiology
+% library. Where total-lung-capacity.adj grounds the VC/RV partition (TLC = VC + RV),
+% this grounds the OTHER standard partition of the same total: THE TOTAL LUNG CAPACITY
+% IS THE FUNCTIONAL RESIDUAL CAPACITY PLUS THE INSPIRATORY CAPACITY — the greatest
+% volume the lungs hold at the end of a maximal inspiration (TLC) is the volume left
+% in the lungs at the end of a NORMAL (quiet) expiration (the functional residual
+% capacity, FRC) plus the volume that can still be inspired from that quiet-expiration
+% resting point on a maximal inspiration (the inspiratory capacity, IC). It ships as an
+% importable, byte-provenanced, PARAMETERIZED `formula`, together with its two exact
+% rearrangements (the inspiratory capacity a total capacity leaves once the functional
+% residual capacity is taken out, and the functional residual capacity a total capacity
+% leaves once the inspiratory capacity is taken out). As with every compute library, a
+% consumer states NO arithmetic: it `import`s this file, binds the measured quantities
+% from its own byte-provenance decomposition, and asks the engine to APPLY the cited
+% definition on the CPU. Zero math is performed by the model; the engine computes each
+% value EXACTLY, carrying the definition's citation.
+%
+%     import "inspiratory-capacity.adj"
+%     observe functional_residual_capacity(2)   % "…FRC 2 L…"   (span cited by the model)
+%     observe inspiratory_capacity(4)            % "…IC 4 L…"    (span cited by the model)
+%     ? total_lung_capacity(functional_residual_capacity, inspiratory_capacity)
+%                                                 % engine → 6, carrying TLC = FRC + IC
+%
+% All three formulas are EXACT over their parameters (a sum and two of its inverse
+% readings), so every value the engine returns is exact. The three COMPOSE and invert
+% cleanly around the worked case FRC = 2 L, IC = 4 L (TLC = 2 + 4 = 6 L): the
+% `total_lung_capacity` a consumer computes from the two volumes is exactly the
+% `total_lung_capacity` the `inspiratory_capacity` formula subtracts the functional
+% residual capacity from, to recover the 4 L inspiratory capacity, and exactly the
+% `total_lung_capacity` the `functional_residual_capacity` formula subtracts the
+% inspiratory capacity from to recover the 2 L functional residual capacity.
+%
+%   total_lung_capacity(functional_residual_capacity, inspiratory_capacity)
+%       = functional_residual_capacity + inspiratory_capacity   % TLC = FRC + IC   (definition)
+%   inspiratory_capacity(total_lung_capacity, functional_residual_capacity)
+%       = total_lung_capacity - functional_residual_capacity     % IC = TLC − FRC   (same def, solved for IC)
+%   functional_residual_capacity(total_lung_capacity, inspiratory_capacity)
+%       = total_lung_capacity - inspiratory_capacity             % FRC = TLC − IC   (same def, solved for FRC)
+%
+% NOTE ON UNITS: the three volumes must be in the SAME unit (all litres, as in the worked
+% case), and the derived volume comes out in that same unit (here 6 L). This library
+% computes the exact value over whatever consistent volume unit it is given.
+%
+% NOTE ON PARTITIONS: this is a DIFFERENT partition of the same total from
+% total-lung-capacity.adj. That library splits the total into what a person can move
+% (VC) and what always remains (RV): TLC = VC + RV. This library splits the SAME total
+% at the quiet-breathing resting point into what sits below it (FRC) and what can still
+% be drawn in above it (IC): TLC = FRC + IC. Both are exact; a consumer imports whichever
+% partition its measured quantities populate.
+%
+% All three formulas are defended by the SAME defining span — "TLC = FRC + IC" — because
+% that one printed equation (the total lung capacity IS the functional residual capacity
+% plus the inspiratory capacity) sanctions the relation read every way (the total from the
+% two volumes, the inspiratory capacity from the total and the functional residual
+% capacity, or the functional residual capacity from the total and the inspiratory
+% capacity). The span is transcribed verbatim from the StatPearls "Physiology, Lung
+% Capacity" article on the NCBI Bookshelf, so each `formula` carries the provenance
+% envelope every shipped grounded clause carries; the linter rejects an unsourced one.
+% (See feedback_nothing_human_authored — the defining span is a verbatim quote of the
+% cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable respiratory volume/capacity the definition
+% ranges over, and each result is a derived volume/capacity. `total_lung_capacity`,
+% `functional_residual_capacity` and `inspiratory_capacity` each appear BOTH as a derived
+% result and as an input (of the other formulas), so each is a single dictionary term used
+% in both roles. The `surface` lists are the everyday names a decomposer maps onto the
+% canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary inspiratory_capacity_vocab {
+    define functional_residual_capacity : finding  surface "functional residual capacity", "FRC"  % litres (L)
+    define inspiratory_capacity          : finding  surface "inspiratory capacity", "IC"            % litres (L)
+    define total_lung_capacity           : finding  surface "total lung capacity", "TLC"            % litres (L)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the defining span from StatPearls
+% on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact
+% sum/difference of measured quantities, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook inspiratory_capacity_laws {
+    use inspiratory_capacity_vocab
+
+    % Total lung capacity — the functional residual capacity plus the inspiratory capacity,
+    % i.e. TLC = FRC + IC.
+    formula total_lung_capacity(functional_residual_capacity, inspiratory_capacity) = functional_residual_capacity + inspiratory_capacity
+        source "TLC = FRC + IC"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541029/"
+        trust authoritative
+
+    % Inspiratory capacity — the same definition solved for the inspiratory capacity a total
+    % capacity leaves once the functional residual capacity is removed (IC = TLC − FRC).
+    % Defended by the SAME defining span, read the other way.
+    formula inspiratory_capacity(total_lung_capacity, functional_residual_capacity) = total_lung_capacity - functional_residual_capacity
+        source "TLC = FRC + IC"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541029/"
+        trust authoritative
+
+    % Functional residual capacity — the same definition solved for the functional residual
+    % capacity a total capacity leaves once the inspiratory capacity is removed
+    % (FRC = TLC − IC). Again the SAME defining span, read the third way.
+    formula functional_residual_capacity(total_lung_capacity, inspiratory_capacity) = total_lung_capacity - inspiratory_capacity
+        source "TLC = FRC + IC"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541029/"
+        trust authoritative
+}
