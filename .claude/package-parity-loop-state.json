@@ -8,18 +8,13 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": {
-    "number": 9151,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9151",
-    "branch": "codex/build-tool-conformance-contract",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "326de7c72c24605cc935006d11b24d50dfbd9c65",
+    "revision": "edddc9b46af7662ce08799c1b5d9cd4d373025aa",
     "schema_version": 2,
     "established_languages": 15,
-    "implementation_identities": 1183,
-    "implementation_package_slots": 4324,
+    "implementation_identities": 1184,
+    "implementation_package_slots": 4325,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 278,
     "canonical_collisions": 0,
@@ -38,7 +33,7 @@
     {
       "id": "build-tool-contract",
       "title": "Language-neutral build-tool contract and shared fixture schema",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["haskell-http-core"],
       "branch": "codex/build-tool-conformance-contract",
       "pr_number": 9151,
@@ -47,11 +42,20 @@
     {
       "id": "build-tool-fixtures",
       "title": "Cross-implementation build-tool fixture runner and inventory gate",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-contract"],
+      "branch": "codex/build-tool-conformance-runner",
+      "pr_number": null,
+      "notes": "Selected after PR #9151 merged because one safe non-execution runner, adapter manifest, domain result schemas, and representative corpus unlock the Go oracle, every existing front-door remediation, Java/Kotlin/Dart implementations, and OCaml promotion."
+    },
+    {
+      "id": "build-tool-execution-sandbox",
+      "title": "Add the trusted execution sandbox and adversarial execution corpus",
+      "status": "pending",
+      "depends_on": ["build-tool-fixtures"],
       "branch": null,
       "pr_number": null,
-      "notes": "Cover discovery, resolution, graph order, diff, hashing, Starlark, plan interchange, sharding, execution, validation, and toolchain detection."
+      "notes": "Newly separated after the contract security review. Require fail-closed filesystem and network isolation, no-follow materialization/output, direct argv, sanitized environments, and process-tree wall/CPU/memory/output/workspace/process-count limits before any execution fixture can run."
     },
     {
       "id": "build-tool-go-oracle",
@@ -105,7 +109,7 @@
       "depends_on": ["ocaml-lane-contract", "build-tool-go-oracle"],
       "branch": null,
       "pr_number": null,
-      "notes": "Use OCaml 5.2.1, opam 2.5.x, Dune 3.16.x, Alcotest, bisect_ppx, and ocamlformat."
+      "notes": "Use OCaml 5.2.1, opam 2.5.x, Dune 3.17.2 (the nearest available compatible release; 3.16.1 is absent from opam), Alcotest, bisect_ppx, and ocamlformat."
     },
     {
       "id": "ocaml-representative-core",

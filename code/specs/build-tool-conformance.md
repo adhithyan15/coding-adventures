@@ -108,6 +108,43 @@ before untrusted implementation code starts. The runner compares the adapter
 result with the fixture's `expected` object. Human-readable stdout and stderr
 are diagnostic only and are not conformance inputs.
 
+### Bootstrap runner modes
+
+The first runner tranche is deliberately non-executing. It provides two
+language-neutral validation modes:
+
+```text
+python code/scripts/build_tool_conformance.py validate-corpus
+python code/scripts/build_tool_conformance.py validate-result \
+  --case CASE.json --result RESULT.json
+```
+
+`validate-corpus` strictly parses and validates the implementation manifest,
+every case, every expected result, path semantics, corpus-wide identity
+uniqueness, canonical ordering, and bounded materialization of non-execution
+workspaces into runner-owned temporary directories.
+
+`validate-result` strictly parses one case and one externally produced result,
+validates both against their schemas, verifies the echoed case identity and
+domain, applies domain-aware canonicalization, and compares the result with the
+fixture oracle. This lets each language wire its adapter in its own package
+tests before sandboxed process orchestration is enabled.
+
+Neither mode launches an adapter, invokes a shell, reads an executable command
+from a manifest, or runs fixture content. The bootstrap runner MUST reject any
+case whose domain, operation, or capabilities request execution before it
+creates a temporary directory, decodes file content, changes permissions, or
+uses a process API. There is no command-line flag that can weaken this rule.
+Trusted execution becomes a separate delivery gate only after the runner can
+enforce the complete filesystem, network, environment, and process-tree
+boundary in this contract.
+
+The bootstrap implementation manifest is metadata, not an executable registry.
+It records every established language, emerging lanes under active review,
+front-door presence, shared-engine relationships, advertised capabilities, and
+reviewed expected failures. It MUST NOT contain adapter commands, environment
+assignments, or arbitrary argument vectors.
+
 ## Fixture manifest
 
 Each fixture is a single JSON document. Inline files make a case atomic and
