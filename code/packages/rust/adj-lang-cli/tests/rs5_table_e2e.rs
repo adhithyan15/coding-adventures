@@ -1137,6 +1137,47 @@ fn shipped_electric_potential_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b25) The shipped NIST SP 811 B.9 electric-resistance → ohm table resolves the exact abohm
+//       factor with its citation, and ABSTAINS on a wrong-dimension unit. This completes the
+//       electromagnetic-EMU trio (charge/potential/resistance). The abohm (resistance) and the
+//       abvolt (potential) are DIFFERENT quantities that convert to DIFFERENT SI units (ohm vs
+//       volt), so the abstain proves dimension safety, not mere absence of a value: the ohm is
+//       potential per unit current.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_electric_resistance_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_resistance");
+    let src = stdlib().join("reference/electric-resistance-conversions.adj");
+    std::fs::copy(&src, dir.join("electric-resistance-conversions.adj"))
+        .expect("copy shipped electric-resistance-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"electric-resistance-conversions.adj\"\n\
+         ? electric_resistance_to_ohm(abohm, $v)\n\
+         ? electric_resistance_to_ohm(abvolt, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table
+    // (boldface = exact; the abohm is defined as exactly 1.0 E-09 ohm).
+    assert!(out.contains("\"v\":\"0.000000001\""), "abohm = 1.0 E-09 ohm: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `abvolt` is an electric-POTENTIAL unit (it converts to the volt, a DIFFERENT quantity), so
+    // this resistance table has no row for it — the engine abstains rather than mis-converting a
+    // potential unit as if it were a resistance unit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
