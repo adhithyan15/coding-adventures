@@ -14,10 +14,12 @@ component TaskApp {
   slot new-task-name : text ;
   slot new-task-due  : text ;
 
-  // The workspace's projects, in workspace order. Each row is [ name, active-marker ],
-  // where the marker is non-empty for exactly the project currently being shown — the
-  // layout uses it to render that one as selected. Everything else in this interface
-  // (tasks, summary, schedule) describes the active project.
+  // The workspace's projects, depth-first so a sub-project follows its parent. Each row
+  // is [ name, active-marker, indent ]: the marker is non-empty for exactly the project
+  // being shown (the layout renders that one as selected), and `indent` is a non-empty
+  // glyph for a *nested* project, empty for a top-level one — which is what turns a
+  // flat list into a visible hierarchy. Everything else in this interface (tasks,
+  // summary, schedule) describes the active project.
   slot project-rows     : list<list<text>> ;
   slot new-project-name : text ;
 
@@ -34,8 +36,10 @@ component TaskApp {
   emit onNewTaskDueChange ( value : text ) ;
   emit onNewProjectNameChange ( value : text ) ;
 
-  // Create a project, and switch which one is shown (by row index).
+  // Create a project (top-level, or nested under the one currently shown), and switch
+  // which one is shown (by row index).
   emit onAddProject ;
+  emit onAddSubproject ;
   emit onSelectProject ( index : number ) ;
 
   // Add the typed task; toggle/delete a row (the row index is delivered as the number
