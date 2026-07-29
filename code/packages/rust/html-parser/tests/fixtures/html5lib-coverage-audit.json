@@ -9,8 +9,8 @@
     "upstream_source": "html5lib-tests/tokenizer"
   },
   "tree_construction": {
-    "local_cases": 2485,
-    "missing": 156,
+    "local_cases": 2493,
+    "missing": 148,
     "missing_sources": [
       "adoption02.dat:3",
       "html5test-com.dat:12",
@@ -20,14 +20,6 @@
       "html5test-com.dat:17",
       "html5test-com.dat:18",
       "html5test-com.dat:19",
-      "plain-text-unsafe.dat:34",
-      "plain-text-unsafe.dat:35",
-      "plain-text-unsafe.dat:36",
-      "plain-text-unsafe.dat:37",
-      "plain-text-unsafe.dat:38",
-      "plain-text-unsafe.dat:39",
-      "plain-text-unsafe.dat:40",
-      "plain-text-unsafe.dat:41",
       "processing-instructions.dat:1",
       "processing-instructions.dat:2",
       "processing-instructions.dat:3",
