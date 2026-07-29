@@ -394,8 +394,8 @@ impl Machine {
             Stmt::InspectReplacingCharacters { source, replace } => {
                 self.exec_inspect_replacing_characters(source, replace)?
             }
-            Stmt::InspectTallyMulti { source, counter, delims } => {
-                return self.exec_inspect_tally_multi(source, counter, delims)
+            Stmt::InspectTallyMulti { source, counter, items } => {
+                return self.exec_inspect_tally_multi(source, counter, items)
             }
             Stmt::InspectTallyCounters { source, groups } => {
                 return self.exec_inspect_tally_counters(source, groups)
@@ -1447,48 +1447,64 @@ impl Machine {
         self.move_into(sidx, Src::Chars(rebuilt))
     }
 
-    /// `INSPECT source TALLYING counter FOR ALL a ALL b [ALL d …]` — one INSPECT
-    /// whose SINGLE counter carries TWO OR MORE `FOR ALL` items, counted in a SINGLE
+    /// `INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|
+    /// AFTER} q] …` — one INSPECT whose SINGLE counter carries TWO OR MORE `FOR ALL`
+    /// items, each with its OWN optional `{BEFORE|AFTER} x` window, counted in a SINGLE
     /// left-to-right pass with FIRST-MATCH-PER-POSITION into the shared counter.
     ///
     /// This is the count-side analogue of [`Self::exec_inspect_replacing_multi`]. The
-    /// delimiters form an ordered priority list. At each source position they are
-    /// tried IN WRITTEN ORDER and the FIRST that matches increments the shared count
-    /// by 1, then the scan advances past the match (a single-char match is a normal
-    /// one-position step, so nothing special is skipped):
+    /// items form an ordered priority list, each carrying its OWN window over the
+    /// source. At each source position they are tried IN WRITTEN ORDER and the FIRST
+    /// item that BOTH (i) has the position inside its window AND (ii) whose delimiter
+    /// equals the current char increments the shared count by 1, then the scan advances
+    /// past the match:
     ///
     /// ```text
-    ///   for ch in source {
-    ///       for delim in delims {            // written order
-    ///           if ch == delim { count += 1; break }   // first match wins, stop
+    ///   for (i, ch) in source {
+    ///       for (delim, start, end) in items {          // written order
+    ///           if start <= i < end && ch == delim { count += 1; break }  // first wins
     ///       }
     ///   }
-    ///   counter := counter + count           // INSPECT ADDS; it does not clear
+    ///   counter := counter + count                       // INSPECT ADDS; never clears
     /// ```
     ///
-    /// The inner `break` is why DUPLICATE delimiters do NOT double-count: `FOR ALL "a"
+    /// PER-ITEM WINDOWS: each item's optional region defines a window over the source
+    /// via the SAME [`Self::region_window`] helper the lone/single-item forms use
+    /// (BEFORE→`[0, first_x)`; AFTER→`(first_x, len]`; not-found asymmetry BEFORE→whole,
+    /// AFTER→empty). An item with NO region has the whole source as its window. The
+    /// inner `break` is why DUPLICATE items do NOT double-count a position: `FOR ALL "a"
     /// ALL "a"` over `"aa"` adds 2 — each `a` position is counted ONCE by the first
     /// item, the second item never sees it. So the count collapses to "the number of
-    /// source positions whose character equals SOME delimiter, each counted exactly
-    /// once", which is exactly `chars.filter(|c| any delim equals c).count()`. INSPECT
-    /// adds to the counter; it does not clear it first, and the fold uses the SAME
-    /// `store_result` path [`Self::inspect_tally`] uses (COBOL's silent high-order
+    /// source positions matched by SOME in-window item, each counted exactly once".
+    /// INSPECT adds to the counter; it does not clear it first, and the fold uses the
+    /// SAME `store_result` path [`Self::inspect_tally`] uses (COBOL's silent high-order
     /// truncation on overflow), so the compiled `cobol-iir-compiler` scan loop matches
     /// this reference output byte-for-byte.
     ///
-    /// Every delimiter is validated with the SAME `single_delim_char` check the
-    /// single-item tally uses (a multi-character/figurative/wider/numeric operand is a
-    /// later rung); ALL of them are resolved BEFORE counting so an invalid delimiter
-    /// aborts without touching the counter. A numeric/group source is rejected by
-    /// [`Self::inspect_alnum_source`], and a non-integer/signed/non-numeric counter by
-    /// the validation below. The read-time reader (`read_inspect_tally_multi`) has
-    /// already ruled out LEADING/CHARACTERS/region items, so here every item is a plain
-    /// `ALL` single-char delimiter.
+    /// # Non-ASCII-clean (no `str_slice`)
+    ///
+    /// TALLYING only COUNTS — it never reconstructs the source — so there is no
+    /// UTF-8-boundary trap. Match-based counting of ASCII delimiters is byte-robust (a
+    /// multi-byte source char's continuation bytes never equal an ASCII delimiter), and
+    /// each window is content-defined (bounded by the first occurrence of the ASCII
+    /// region delimiter), so this char-based oracle and the byte-based compiler scan the
+    /// SAME substring and count the SAME matches even on a non-ASCII source. (A non-ASCII
+    /// item/region delimiter *operand* stays the pre-existing `single_delim_char`
+    /// vs `single_delim_code` chip, identical across single- and multi-item tallying.)
+    ///
+    /// Every delimiter (and every region delimiter) is validated with the SAME
+    /// `single_delim_char` check the single-item tally uses (a multi-character/figurative/
+    /// wider/numeric operand is a later rung); ALL of them — and every window — are
+    /// resolved BEFORE counting so an invalid operand aborts without touching the
+    /// counter. A numeric/group source is rejected by [`Self::inspect_alnum_source`], and
+    /// a non-integer/signed/non-numeric counter by the validation below. The read-time
+    /// reader (`read_inspect_tally_multi`) has already ruled out LEADING/CHARACTERS items,
+    /// so here every item is a plain `ALL` single-char delimiter with an optional region.
     fn exec_inspect_tally_multi(
         &mut self,
         source: &str,
         counter: &str,
-        delims: &[Operand],
+        items: &[(Operand, Option<Region>)],
     ) -> Result<Flow, RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
 
@@ -1513,19 +1529,36 @@ impl Machine {
             }
         }
 
-        // Resolve every delimiter to a char FIRST — reading all of them before
-        // touching the counter means an invalid operand aborts with the counter
-        // untouched, exactly like the single-item path resolves its delimiter first.
-        let delim_chars: Vec<char> = delims
+        // ONE pass over the source characters — resolved FIRST so every window (like
+        // the single-item path) is computed over these same chars, and so an invalid
+        // operand aborts with the counter untouched.
+        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+
+        // Resolve every (delimiter char, [start, end) window) FIRST. Reading all items
+        // (and computing their windows over `chars`) before touching the counter means
+        // an invalid operand aborts cleanly, exactly like the single-item path resolves
+        // both its delimiter and its window first. A region-less item's window is the
+        // whole source (`region_window(None) == (0, len)`).
+        let resolved: Vec<(char, usize, usize)> = items
             .iter()
-            .map(|d| self.single_delim_char(d, "INSPECT"))
+            .map(|(delim, region)| {
+                let d = self.single_delim_char(delim, "INSPECT")?;
+                let (start, end) = self.region_window(&chars, region.as_ref())?;
+                Ok((d, start, end))
+            })
             .collect::<Result<_, RuntimeError>>()?;
 
-        // ONE pass over the source. A position contributes 1 iff its character equals
-        // SOME delimiter — the first-match-per-position `break` above collapses to
-        // "matched some delimiter" for a pure count, so duplicates never double-count.
-        let chars: Vec<char> = self.items[sidx].storage.chars().collect();
-        let count = chars.iter().filter(|c| delim_chars.contains(c)).count();
+        // A position `i` contributes 1 iff SOME item in WRITTEN ORDER has `i` inside its
+        // window AND its delimiter equals `chars[i]`. `any` realises first-match-per-
+        // position for a pure count (a position matched by several/duplicate items is
+        // still counted once).
+        let count = chars
+            .iter()
+            .enumerate()
+            .filter(|(i, &c)| {
+                resolved.iter().any(|(d, start, end)| *start <= *i && *i < *end && c == *d)
+            })
+            .count();
 
         // counter := counter_value + count, reshaped into the counter's picture — the
         // same store path ADD (and the single-item tally) uses. INSPECT adds; it does

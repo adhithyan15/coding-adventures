@@ -6040,23 +6040,116 @@ fn inspect_tally_multi_with_leading_item_is_a_later_rung() {
     );
 }
 
+// A `{BEFORE|AFTER}` region on each item of a MULTI-item tally list is now SUPPORTED
+// (this rung): each item carries its OWN window over the source, and one first-match-
+// per-position pass counts a position for the FIRST item whose window contains it AND
+// whose delimiter matches the current char. Each case pins the exact counter and
+// `assert_matches_oracle` independently re-checks JIT == tree-walk oracle.
+
 #[test]
-fn inspect_tally_multi_with_region_is_a_later_rung() {
-    // A `{BEFORE|AFTER}` region on any item of a MULTI-item tally list is deferred —
-    // both engines reject (a region on a LONE `FOR ALL` is supported).
-    let src = wrap(
-        &["01  S  PIC X(5) VALUE \"a0b0a\".", "01  C  PIC 9(3) VALUE 0."],
+fn inspect_tally_multi_two_items_before_and_after() {
+    // Two items, one BEFORE one AFTER, over a source where the windows differ.
+    // Source "aXaXa" (X at char indices 1 and 3), length 5.
+    //   item 1 `ALL "a" BEFORE "X"`: first "X" at index 1 → window [0,1) → only the
+    //           "a" at index 0 is inside.
+    //   item 2 `ALL "a" AFTER "X"`:  first "X" at index 1 → window [2,5) → the "a"s at
+    //           indices 2 and 4 are inside.
+    // Position by position: 0→item1, 2→item2, 4→item2 (the two "X"s match neither) → 3.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aXaXa\".", "01  C  PIC 9(3) VALUE 0."],
         &[
-            "INSPECT S TALLYING C FOR ALL \"a\"",
-            "    ALL \"0\" BEFORE \"b\".",
+            "INSPECT S TALLYING C FOR ALL \"a\" BEFORE \"X\"",
+            "    ALL \"a\" AFTER \"X\".",
+            "DISPLAY C.",
             "STOP RUN.",
         ],
-    );
-    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-item region");
-    assert!(
-        compile_source(&src, "e2e").is_err(),
-        "compiler must reject a multi-item region"
-    );
+    ));
+    assert_eq!(out, "003\n");
+}
+
+#[test]
+fn inspect_tally_multi_region_plus_regionless_item() {
+    // A region item mixed with a whole-source (region-less) item. Source "0a0a0".
+    //   item 1 `ALL "0" AFTER "a"`: first "a" at index 1 → window [2,5) → the "0"s at
+    //           indices 2 and 4 (not the "0" at index 0, which is outside).
+    //   item 2 `ALL "a"` (no region): whole source → both "a"s at indices 1 and 3.
+    // Count: index 1 (item2 "a"), 2 (item1 "0"), 3 (item2 "a"), 4 (item1 "0") → 4;
+    // index 0's "0" is outside item 1's window and item 2 does not match it.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0a0a0\".", "01  C  PIC 9(2) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" AFTER \"a\"",
+            "    ALL \"a\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn inspect_tally_multi_after_absent_delimiter_empty_window() {
+    // `AFTER x` where x is ABSENT → an EMPTY window, so that item contributes 0; the
+    // other (region-less) item still counts everywhere. Source "abab":
+    //   item 1 `ALL "a" AFTER "Z"` — no "Z" present → empty window → never fires;
+    //   item 2 `ALL "b"` (no region) → the two "b"s at indices 1 and 3 → 2.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"abab\".", "01  C  PIC 9(2) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\" AFTER \"Z\"",
+            "    ALL \"b\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "02\n");
+}
+
+#[test]
+fn inspect_tally_multi_duplicate_windows_first_match_counts_once() {
+    // FIRST-MATCH-PER-POSITION with DUPLICATE delimiters over DIFFERENT but OVERLAPPING
+    // windows: a position matched by BOTH items is counted ONCE, by the earlier item.
+    // Source "aabaa" (b at index 2), same delimiter "a" on both items:
+    //   item 1 `ALL "a" BEFORE "b"`: window [0,2) → indices 0,1;
+    //   item 2 `ALL "a"` (whole source): indices 0,1,3,4.
+    // Indices 0 and 1 are inside BOTH windows and match BOTH items, but the per-position
+    // break counts each ONCE (item 1). item 2 then claims indices 3 and 4. Total = 4,
+    // NOT 6 — a naive per-item sum (2 + 4) would double-count indices 0 and 1.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aabaa\".", "01  C  PIC 9(2) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"a\" BEFORE \"b\"",
+            "    ALL \"a\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn inspect_tally_multi_non_ascii_source_positive_parity() {
+    // POSITIVE non-ASCII byte-identity parity (NOT a trap): unlike REPLACING, TALLYING
+    // only COUNTS — it never reconstructs the source via `str_slice` — so there is no
+    // UTF-8-boundary trap. Match-based counting of ASCII delimiters is byte-robust (a
+    // multi-byte "é" = bytes 0xC3 0xA9 never equals an ASCII delimiter byte), and each
+    // window is content-defined (bounded by the first occurrence of the ASCII region
+    // delimiter "b"), so the char-based oracle and the byte-based compiler scan the SAME
+    // substring and count the SAME matches. Source "aé0b0" (chars a,é,0,b,0):
+    //   item 1 `ALL "0" BEFORE "b"`: window left of "b" → the "0" before "b" → 1;
+    //   item 2 `ALL "0" AFTER "b"`:  window right of "b" → the "0" after "b"  → 1.
+    // Total = 2 on BOTH engines; the "é" (and its continuation byte) matches nothing.
+    // `assert_matches_oracle` asserts the DISPLAYed counter is byte-identical.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aé0b0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"b\"",
+            "    ALL \"0\" AFTER \"b\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n");
 }
 
 #[test]

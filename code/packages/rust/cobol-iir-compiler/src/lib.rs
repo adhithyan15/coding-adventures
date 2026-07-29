@@ -3456,31 +3456,44 @@ impl<'a> Compiler<'a> {
         Ok(())
     }
 
-    /// `INSPECT source TALLYING counter FOR ALL a ALL b [ALL d …]` — one INSPECT
-    /// whose SINGLE counter carries TWO OR MORE `FOR ALL` items, counted in a SINGLE
-    /// left-to-right pass with FIRST-MATCH-PER-POSITION into the shared counter.
-    /// The count-side analogue of [`Self::emit_inspect_replacing_multi`], and the
+    /// `INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|
+    /// AFTER} q] …` — one INSPECT whose SINGLE counter carries TWO OR MORE `FOR ALL`
+    /// items, each with its OWN optional `{BEFORE|AFTER} x` window, counted in a SINGLE
+    /// left-to-right pass with FIRST-MATCH-PER-POSITION into the shared counter. The
+    /// count-side analogue of [`Self::emit_inspect_replacing_multi`], and the
     /// multi-delimiter analogue of [`Self::emit_inspect_tallying`].
     ///
-    /// The delimiters form an ordered priority list. At each source position they are
-    /// tried IN WRITTEN ORDER and the FIRST that matches bumps the shared count by 1,
+    /// The items form an ordered priority list, each carrying its OWN window. At each
+    /// source position they are tried IN WRITTEN ORDER and the FIRST item whose window
+    /// CONTAINS the position AND whose delimiter matches bumps the shared count by 1,
     /// then the scan advances (a single-char match is a normal one-position step). The
-    /// per-position `break` is what makes DUPLICATE delimiters NOT double-count:
+    /// per-position `break` is what makes DUPLICATE items NOT double-count a position:
     /// `FOR ALL "a" ALL "a"` over `"aa"` adds 2 — each `a` is counted once by the first
     /// item, the second never fires at that position — exactly matching the oracle's
     /// `exec_inspect_tally_multi`.
     ///
+    /// PER-ITEM WINDOWS: each item's optional region is derived by the SAME
+    /// [`Self::emit_inspect_region_window`] the single-item region emitter (and the
+    /// merged multi-item REPLACING-region emitter) uses, so both engines narrow to
+    /// identical `[start, end)` slices. The runtime source length is materialised ONCE
+    /// (needed by the window helper), before the loop. A region-less item has NO window
+    /// emitted — its per-position compare folds down to the delimiter equality alone
+    /// (whole-source window).
+    ///
     /// Unlike the REPLACING emitter (which rebuilds a FIXED-width string and so unrolls
     /// `0..width` at compile time), the tally does not build a string, so — like
     /// [`Self::emit_inspect_tallying`] — it emits a genuine RUNTIME loop over
-    /// `len = str_len(S)`:
+    /// `len = str_len(S)`, and the per-item window compare gates on the RUNTIME position
+    /// register `j`:
     ///
     /// ```text
-    ///   cnt = 0;  j = 0;  len = str_len(S)
+    ///   len = str_len(S)
+    ///   [start_k, end_k) = region_window(item_k)      # per item with a region
+    ///   cnt = 0;  j = 0
     /// top:  if j >= len jmp end
     ///       c = S[j]
-    ///       if c == D0 { cnt += 1; jmp cont }    # ordered chain, first match wins…
-    ///       if c == D1 { cnt += 1; jmp cont }    # …then stop (jump past the rest)
+    ///       if (start_0<=j<end_0) && c == D0 { cnt += 1; jmp cont }  # first match wins…
+    ///       if (start_1<=j<end_1) && c == D1 { cnt += 1; jmp cont }  # …then stop
     ///       …                                    # after the last: fall through (no match)
     /// cont: j = j + 1;  jmp top
     /// end:
@@ -3492,18 +3505,26 @@ impl<'a> Compiler<'a> {
     /// compiled program matches `cobol-runtime`'s `exec_inspect_tally_multi`
     /// byte-for-byte. Each delimiter reduces to a byte code via the SAME
     /// `single_delim_code` the single-item path uses, so a multi-character/figurative/
-    /// wider/numeric delimiter is rejected identically. The read-side
-    /// `inspect_tally_multi` has already rejected LEADING/CHARACTERS/region items and
-    /// SEVERAL counters, so here every item is a plain `ALL` single-char delimiter under
-    /// one counter.
+    /// wider/numeric delimiter is rejected identically.
+    ///
+    /// Non-ASCII-clean: the tally only COUNTS (it never `str_slice`s the source into a
+    /// new string), and each window is content-defined (bounded by the first ASCII
+    /// region delimiter), so this byte-index scan and the oracle's char-index scan
+    /// cover the SAME substring and count the SAME ASCII matches even on a non-ASCII
+    /// source — no UTF-8-boundary trap.
+    ///
+    /// The read-side `inspect_tally_multi` has already rejected LEADING/CHARACTERS items
+    /// and SEVERAL counters, so here every item is a plain `ALL` single-char delimiter
+    /// with an optional region, under one counter.
     fn emit_inspect_tally_multi(
         &mut self,
         verb: &GrammarASTNode,
         s_reg: &str,
     ) -> Result<(), CompileError> {
-        // The counter name and the written-order delimiter nodes (the reader has
-        // enforced the `ALL`-only, no-region, one-counter scope bound).
-        let (counter_name, delim_nodes) = inspect_tally_multi(verb)?;
+        // The counter name and the written-order `(delim_node, region)` items (the
+        // reader has enforced the `ALL`-only, one-counter scope bound; each item MAY
+        // carry its own region).
+        let (counter_name, item_nodes) = inspect_tally_multi(verb)?;
 
         // The counter must be an unsigned integer numeric item (`PIC 9(n)`) — the SAME
         // validation `emit_inspect_tallying` performs for the single-item form.
@@ -3521,20 +3542,29 @@ impl<'a> Compiler<'a> {
         }
         let counter_reg = self.items[cidx].reg.clone();
 
-        // Reduce each delimiter to a single byte code register, IN ORDER, so the
-        // per-position chain walks them written-first. Resolving all of them BEFORE the
-        // loop means an invalid delimiter aborts without emitting the loop.
-        let mut d_regs: Vec<String> = Vec::with_capacity(delim_nodes.len());
-        for dn in delim_nodes {
-            d_regs.push(self.single_delim_code(dn, "INSPECT")?);
-        }
-
-        // cnt = 0; j = 0; len = str_len(S). A genuine runtime loop — the source length
-        // is a runtime value (the tally does not build a fixed-width string).
-        let cnt = self.fresh("_itmc");
-        self.emit("const", Some(&cnt), vec![Operand::Int(0)], "i64");
+        // len = str_len(S). Materialised ONCE up front — the per-item window helper
+        // needs it, and the loop below reuses it for the `j >= len` bound. (The tally
+        // does not build a fixed-width string, so the length is a genuine runtime value.)
         let len = self.fresh("_itmlen");
         self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.to_string())], "i64");
+
+        // Reduce each item to a `(delimiter byte code, window)` pair, IN ORDER, so the
+        // per-position chain walks them written-first. The window (when present) is
+        // derived by the SAME `emit_inspect_region_window` the single-item region
+        // emitter uses, so both engines narrow to identical slices. Resolving all of
+        // them BEFORE the loop means an invalid delimiter/region delimiter aborts
+        // without emitting the loop, mirroring the oracle's resolve-first order.
+        let mut regs: Vec<(String, Option<(String, String)>)> =
+            Vec::with_capacity(item_nodes.len());
+        for (dn, region) in item_nodes {
+            let d_reg = self.single_delim_code(dn, "INSPECT")?;
+            let window = self.emit_inspect_region_window(region, s_reg, &len)?;
+            regs.push((d_reg, window));
+        }
+
+        // cnt = 0; j = 0. A genuine runtime loop over the source positions.
+        let cnt = self.fresh("_itmc");
+        self.emit("const", Some(&cnt), vec![Operand::Int(0)], "i64");
         let j = self.fresh("_itmj");
         self.emit("const", Some(&j), vec![Operand::Int(0)], "i64");
 
@@ -3559,13 +3589,13 @@ impl<'a> Compiler<'a> {
             vec![Operand::Var(s_reg.to_string()), Operand::Var(j.clone())],
             "i64",
         );
-        // The ordered chain: delimiter 0, then 1, … On the FIRST match we bump `cnt`
-        // and jump to `cont` (the j-advance), skipping the rest of the chain —
+        // The ordered chain: item 0, then 1, … On the FIRST match we bump `cnt` and
+        // jump to `cont` (the j-advance), skipping the rest of the chain —
         // first-match-per-position, so a position is counted at most once even if
-        // several (or duplicate) delimiters would match it. A miss jumps to the next
-        // link (`next`); after the last link's `next` we fall through to `cont` with no
-        // bump (matched no delimiter).
-        for d_reg in &d_regs {
+        // several (or duplicate) items would match it. A miss jumps to the next link
+        // (`next`); after the last link's `next` we fall through to `cont` with no bump
+        // (matched no item).
+        for (d_reg, window) in &regs {
             let eq = self.fresh("_itmeq");
             self.emit(
                 "cmp_eq",
@@ -3573,11 +3603,40 @@ impl<'a> Compiler<'a> {
                 vec![Operand::Var(c.clone()), Operand::Var(d_reg.clone())],
                 "i64",
             );
+            // Gate the compare by this item's window: `matched = (start <= j < end) AND
+            // (c == D)`. `j` is the RUNTIME loop position register, compared directly
+            // against the runtime bounds (no compile-time `const` needed, unlike the
+            // REPLACING unroll whose `j` is a compile-time constant). A region-less item
+            // folds down to `eq` alone (no window emitted → whole-source window).
+            let matched = match window {
+                None => eq,
+                Some((start, end_bound)) => {
+                    let ge2 = self.fresh("_itmge2");
+                    self.emit(
+                        "cmp_ge",
+                        Some(&ge2),
+                        vec![Operand::Var(j.clone()), Operand::Var(start.clone())],
+                        "i64",
+                    );
+                    let lt = self.fresh("_itmlt");
+                    self.emit(
+                        "cmp_lt",
+                        Some(&lt),
+                        vec![Operand::Var(j.clone()), Operand::Var(end_bound.clone())],
+                        "i64",
+                    );
+                    let inw = self.fresh("_itmin");
+                    self.emit("and", Some(&inw), vec![Operand::Var(ge2), Operand::Var(lt)], "i64");
+                    let m = self.fresh("_itmm");
+                    self.emit("and", Some(&m), vec![Operand::Var(inw), Operand::Var(eq)], "i64");
+                    m
+                }
+            };
             let next = self.fresh("itm_next");
             self.emit(
                 "jmp_if_false",
                 None,
-                vec![Operand::Var(eq), Operand::Var(next.clone())],
+                vec![Operand::Var(matched), Operand::Var(next.clone())],
                 "void",
             );
             let one = self.fresh("_itm1");
@@ -6216,21 +6275,33 @@ fn inspect_tally_all(verb: &GrammarASTNode) -> Result<TallyPhrase<'_>, CompileEr
     Ok((counter, delim, leading, characters, region))
 }
 
-/// Extract the `TALLYING counter FOR ALL a ALL b [ALL d …]` phrase of a multi-item
-/// INSPECT whose SOLE counter carries TWO OR MORE `FOR` items, returning
-/// `(counter_name, delim_nodes)` with the single-char delimiter nodes in WRITTEN ORDER
-/// — the compiler-side analogue of the oracle's `read_inspect_tally_multi`, counting
-/// the SAME `tally_item` children so the two engines' accept/reject sets stay co-total.
-/// Only called after the caller has confirmed EXACTLY ONE `tally_for` with `>= 2`
-/// items; a single item keeps [`inspect_tally_all`] and all its capabilities (LEADING,
-/// region), and SEVERAL counters (more than one `tally_for`) stays a later rung.
+/// One `ALL delim [{BEFORE|AFTER} x]` item of a MULTI-item TALLYING clause:
+/// `(delim_node, region)`, where `region` is the optional `{BEFORE|AFTER} x` window as
+/// `(kind, region_delim_node)` — the SAME shape [`TallyPhrase`]'s region carries, and
+/// the count-side analogue of [`ReplaceItem`]. `ALL`-only by construction (the
+/// multi-item scope bound), so — unlike [`TallyPhrase`] — it carries no
+/// `leading`/`characters` flags, but each item now carries its OWN optional region
+/// window (this rung lifts the region reject).
+type TallyItem<'a> = (&'a GrammarASTNode, Option<(RegionKind, &'a GrammarASTNode)>);
+
+/// Extract the `TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q]
+/// …` phrase of a multi-item INSPECT whose SOLE counter carries TWO OR MORE `FOR`
+/// items, returning `(counter_name, items)` with the `(delim_node, region)` items in
+/// WRITTEN ORDER — the compiler-side analogue of the oracle's `read_inspect_tally_multi`,
+/// counting the SAME `tally_item` children so the two engines' accept/reject sets stay
+/// co-total. Only called after the caller has confirmed EXACTLY ONE `tally_for` with
+/// `>= 2` items; a single item keeps [`inspect_tally_all`] and all its capabilities
+/// (LEADING, region), and SEVERAL counters (more than one `tally_for`) stays a later
+/// rung.
 ///
 /// Scope bound (this rung, IDENTICAL messages to the oracle reader): every item must
-/// be a plain `ALL` item with NO region and NO `LEADING`/`CHARACTERS`. Any violating
-/// item is a clean later-rung `Unsupported`. A multi-character/figurative/wider/numeric
-/// delimiter is NOT rejected here — it falls to the SAME `single_delim_code` check the
-/// single-item emitter uses.
-fn inspect_tally_multi(verb: &GrammarASTNode) -> Result<(String, Vec<&GrammarASTNode>), CompileError> {
+/// be a plain `ALL` item with NO `LEADING`/`CHARACTERS`. Each item MAY now carry its
+/// OWN optional `{BEFORE|AFTER} x` region (the region reject is LIFTED this rung),
+/// parsed with the SAME keyword/operand extraction `inspect_tally_all` uses on the
+/// single-item side. Any item violating the remaining scope is a clean later-rung
+/// `Unsupported`. A multi-character/figurative/wider/numeric delimiter is NOT rejected
+/// here — it falls to the SAME `single_delim_code` check the single-item emitter uses.
+fn inspect_tally_multi(verb: &GrammarASTNode) -> Result<(String, Vec<TallyItem<'_>>), CompileError> {
     let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
         CompileError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
     })?;
@@ -6247,7 +6318,7 @@ fn inspect_tally_multi(verb: &GrammarASTNode) -> Result<(String, Vec<&GrammarAST
     };
     let counter = first_token(tf, "NAME")
         .ok_or_else(|| CompileError::Malformed("INSPECT TALLYING without a counter".into()))?;
-    let mut delims = Vec::new();
+    let mut items = Vec::new();
     for ti in child_nodes(tf, "tally_item") {
         let toks = child_tokens(ti);
         if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
@@ -6260,18 +6331,39 @@ fn inspect_tally_multi(verb: &GrammarASTNode) -> Result<(String, Vec<&GrammarAST
                 "INSPECT TALLYING with several items and a LEADING item is a later rung".into(),
             ));
         }
-        if child_node(ti, "inspect_region").is_some() {
-            return Err(CompileError::Unsupported(
-                "INSPECT TALLYING with several items and a BEFORE/AFTER region is a later rung"
-                    .into(),
-            ));
-        }
+        // A `{BEFORE|AFTER} x` region on an item is now ACCEPTED (this rung): parse it
+        // into `Option<(RegionKind, node)>` with the SAME keyword/operand extraction
+        // `inspect_tally_all` uses on the single-item side. The region contributes its
+        // own delimiter operand under the `inspect_region` child, not a direct child of
+        // `tally_item`, so the DIRECT `operand` child below is still exactly the tally
+        // delimiter.
+        let region = match child_node(ti, "inspect_region") {
+            None => None,
+            Some(region_node) => {
+                let rtoks = child_tokens(region_node);
+                let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+                    RegionKind::Before
+                } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+                    RegionKind::After
+                } else {
+                    return Err(CompileError::Unsupported(
+                        "INSPECT region without a BEFORE or AFTER keyword".into(),
+                    ));
+                };
+                let rdelim = child_node(region_node, "operand").ok_or_else(|| {
+                    CompileError::Malformed(
+                        "INSPECT BEFORE/AFTER region without a delimiter".into(),
+                    )
+                })?;
+                Some((kind, rdelim))
+            }
+        };
         let delim = child_node(ti, "operand").ok_or_else(|| {
             CompileError::Malformed("INSPECT TALLYING FOR ALL without a delimiter".into())
         })?;
-        delims.push(delim);
+        items.push((delim, region));
     }
-    Ok((counter, delims))
+    Ok((counter, items))
 }
 
 /// Extract the `TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d …` phrase of a MULTI-counter

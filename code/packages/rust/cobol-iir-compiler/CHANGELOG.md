@@ -8,6 +8,40 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.58.0: INSPECT TALLYING several items each with a BEFORE/AFTER region
+
+`INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q] …` — each
+`ALL` delimiter item of a single-counter MULTI-item TALLYING may now carry its OWN optional
+`{BEFORE|AFTER}` window, compiled byte-identical to the `coding-adventures-cobol-runtime` 0.62.0
+oracle. Previously any region on a multi-item tally list was rejected at emit time ("INSPECT
+TALLYING with several items and a BEFORE/AFTER region is a later rung"); that reject is now LIFTED.
+No grammar change was needed. This is the count-side analogue of the v0.57.0 multi-item
+REPLACING-region rung.
+
+- A new `TallyItem` type carries `(&GrammarASTNode, Option<(RegionKind, &GrammarASTNode)>)` (the
+  delimiter node plus its own region node); `inspect_tally_multi` parses each item's region with the
+  same keyword/operand extraction the single-item `inspect_tally_all` uses. The LEADING/CHARACTERS
+  rejects for a multi-item list are UNCHANGED (the multi path stays `ALL`-only), as is the
+  several-counters reject.
+- `emit_inspect_tally_multi` materialises `str_len(S)` ONCE up front (the per-item window helper
+  needs it, and the loop reuses it for the `j >= len` bound), then reuses `emit_inspect_region_window`
+  — the SAME window the single-item region emitter and the REPLACING side emit — to derive each
+  item's `[start, end)` before the loop. In its runtime `str_len`-bounded scan loop each
+  region-carrying item's `cmp_eq` link now gates on `start <= j < end AND c == D` against the RUNTIME
+  position register `j`; a region-less item's link stays `c == D` (the window guard folds away). This
+  composes the pre-existing multi-item first-match-per-position count chain with the single-item
+  region gate.
+- Non-ASCII-clean (a POSITIVE parity, NOT a trap): the tally only COUNTS — it never `str_slice`s the
+  source into a new string — and each window is content-defined (bounded by the first ASCII region
+  delimiter), so this byte-index scan and the oracle's char-index scan count the SAME ASCII matches
+  even on a non-ASCII source. Added a POSITIVE non-ASCII e2e parity test (`assert_matches_oracle`):
+  `"aé0b0"` with `ALL "0" BEFORE "b" ALL "0" AFTER "b"` DISPLAYs `002` on both engines. A non-ASCII
+  item/region delimiter *operand* stays the pre-existing `single_delim_code` chip.
+- Scope kept for a later rung (unchanged, identical messages to the oracle): a `LEADING` or
+  `CHARACTERS` item in a multi-item list; SEVERAL counters (more than one `tally_for`); and the
+  combined `TALLYING … REPLACING` form with several tally items. The single-item
+  `TALLYING FOR ALL … {BEFORE|AFTER}` path is untouched.
+
 ### Added — v0.57.0: INSPECT REPLACING several items each with a BEFORE/AFTER region
 
 `INSPECT source REPLACING ALL a BY x [{BEFORE|AFTER} p] ALL b BY y [{BEFORE|AFTER} q] …` — each

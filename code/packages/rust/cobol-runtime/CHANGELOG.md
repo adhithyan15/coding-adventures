@@ -1,5 +1,43 @@
 # Changelog
 
+## 0.62.0 — INSPECT TALLYING several items each with a BEFORE/AFTER region — 2026-07-28
+
+- `INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q] …` —
+  each `ALL` delimiter item of a single-counter MULTI-item TALLYING may now carry its OWN optional
+  `{BEFORE|AFTER}` window. Previously any region on a multi-item tally list was rejected at read
+  time ("INSPECT TALLYING with several items and a BEFORE/AFTER region is a later rung"); that
+  reject is now LIFTED. No grammar change was needed — `tally_item = (ALL|LEADING) operand
+  inspect_region*` already parses per-item regions. This is the count-side analogue of the
+  v0.61.0 multi-item REPLACING-region rung.
+- Semantics (ISO, exact composition of two already-shipped features): ONE left-to-right pass over
+  the source, one counter (exactly one `tally_for` with ≥ 2 items). Each item's window is computed
+  over the source via the SAME `region_window` helper the lone/single-item forms use (BEFORE p →
+  `[0, first_index_of_p)`; AFTER p → `(first_index_of_p, len]`; not-found asymmetry BEFORE→whole,
+  AFTER→empty; a region-less item has the whole source as its window). A position contributes 1 iff
+  SOME item in WRITTEN ORDER BOTH (i) contains the position in its window AND (ii) whose delimiter
+  equals the current char — and the FIRST such item's match is enough (first-match-per-position, so
+  duplicate/overlapping items never double-count). INSPECT ADDS to the counter; it does not clear.
+- `Stmt::InspectTallyMulti` field `delims: Vec<Operand>` is now `items: Vec<(Operand,
+  Option<Region>)>` (the second slot is the per-item region). `read_inspect_tally_multi` reads each
+  item's region with the same `read_inspect_region` the single-item reader uses; the
+  LEADING/CHARACTERS rejects for a multi-item list are UNCHANGED (the multi path stays `ALL`-only),
+  as is the several-counters reject. `exec_inspect_tally_multi` resolves every (delimiter char,
+  `[start, end)` window) over the source chars BEFORE touching the counter, so an invalid operand
+  aborts clean, then counts positions matched by SOME in-window item and folds through the same
+  numeric `store_result` path the single-item tally uses.
+- Non-ASCII-clean (a POSITIVE parity, NOT a trap): TALLYING only COUNTS — it never reconstructs the
+  source via `str_slice` — so there is no UTF-8-boundary trap. Match-based counting of ASCII
+  delimiters is byte-robust (a multi-byte char's continuation bytes never equal an ASCII delimiter),
+  and each window is content-defined (bounded by the first occurrence of the ASCII region
+  delimiter), so this char-based oracle and the byte-based compiler count the SAME matches even on a
+  non-ASCII source. Added a POSITIVE non-ASCII parity test: `"aé0b0"` with `ALL "0" BEFORE "b"
+  ALL "0" AFTER "b"` counts 2 on both engines. A non-ASCII item/region delimiter *operand* stays the
+  pre-existing `single_delim_char` vs `single_delim_code` chip, identical across single/multi.
+- Scope kept for a later rung (unchanged, identical messages on both engines): a LEADING or
+  CHARACTERS item in a multi-item list; SEVERAL counters (more than one `tally_for`); and the
+  combined `TALLYING … REPLACING` form with several tally items. The single-item
+  `TALLYING FOR ALL … {BEFORE|AFTER}` path is untouched.
+
 ## 0.61.0 — INSPECT REPLACING several items each with a BEFORE/AFTER region — 2026-07-28
 
 - `INSPECT source REPLACING ALL a BY x [{BEFORE|AFTER} p] ALL b BY y [{BEFORE|AFTER} q] …` —

@@ -1074,6 +1074,71 @@ divergence is not introduced here). This rung adds no new non-ASCII behavior.
 `CHARACTERS`/`FIRST` item in a multi-item list, and the combined `TALLYING … REPLACING` form with
 several items. The single-item `REPLACING ALL … {BEFORE|AFTER}` path is untouched.
 
+### Multi-item `TALLYING` with a per-item `{BEFORE|AFTER}` region (follow-up rung, v0.62.0 / v0.58.0)
+
+The count-side analogue of the multi-item `REPLACING`-region rung above. A single-counter
+multi-item `TALLYING` (`TALLYING C FOR ALL a ALL b …`) and the single-item
+`TALLYING FOR ALL … {BEFORE|AFTER}` region rung now **compose**: each `ALL` delimiter item of a
+multi-item `TALLYING` list may carry its OWN optional `{BEFORE|AFTER}` window. Previously any region
+on a multi-item tally list was a later rung (rejected on both engines with "INSPECT TALLYING with
+several items and a BEFORE/AFTER region is a later rung"); that reject is now **lifted**. No grammar
+change is needed — `tally_item = (ALL|LEADING) operand inspect_region*` already parses per-item
+regions.
+
+**Semantics (ISO, exact composition of two shipped features).** ONE left-to-right pass over the
+source. There is ONE counter (this variant is exactly one `tally_for` with ≥ 2 items; several
+counters stays a later rung). Each item's window is computed over the source via the SAME
+`region_window` helper the lone/single-item forms use: `BEFORE p`→`[0, first_index_of_p)`,
+`AFTER p`→`(first_index_of_p, len]`, with the not-found asymmetry BEFORE→whole / AFTER→empty; a
+region-less item has the whole source as its window. A position contributes 1 to the counter iff
+SOME item in WRITTEN ORDER BOTH (i) contains the position in its window AND (ii) whose single-char
+delimiter equals the current char — and the FIRST such item's match is enough (first-match-per-
+position `break`, so duplicate/overlapping items never double-count). `INSPECT` **adds** to the
+counter; it does not clear it.
+
+Worked:
+- `"aXaXa"` (`PIC X(5)`, `X` at 1,3) with `ALL "a" BEFORE "X" ALL "a" AFTER "X"` → `counter += 3`
+  (index 0 by the `BEFORE` item's window `[0,1)`; indices 2,4 by the `AFTER` item's window `[2,5)`).
+- `"0a0a0"` with `ALL "0" AFTER "a" ALL "a"` → `counter += 4` (the region-less `"a"` item counts the
+  two `a`s; the `AFTER "a"` item's window `[2,5)` counts the `0`s at 2,4; the `0` at index 0 is
+  outside its window and matches no item).
+- `"abab"` with `ALL "a" AFTER "Z" ALL "b"` → `counter += 2` (`AFTER "Z"` with `Z` absent is an
+  EMPTY window, so that item contributes 0; the region-less `"b"` item still counts the two `b`s).
+- `"aabaa"` with `ALL "a" BEFORE "b" ALL "a"` → `counter += 4` (indices 0,1 counted ONCE by the
+  earlier `BEFORE` item; indices 3,4 by the region-less item — a naive per-item sum 2+4=6 would
+  wrongly double the shared positions 0,1).
+
+**Implementation.** The oracle's `Stmt::InspectTallyMulti` field `delims: Vec<Operand>` becomes
+`items: Vec<(Operand, Option<Region>)>` (the second slot is the per-item region);
+`read_inspect_tally_multi` reads each item's region with the same `read_inspect_region` the
+single-item reader uses, keeping the LEADING/CHARACTERS rejects. `exec_inspect_tally_multi` resolves
+every `(delimiter char, [start, end) window)` over the source chars BEFORE touching the counter, then
+counts positions matched by SOME in-window item (`any` realises first-match-per-position for a pure
+count), and folds the count through the same numeric `store_result` path the single-item tally uses.
+The compiler mirrors this: `TallyItem` carries the region node, `inspect_tally_multi` parses it with
+the same extraction the single-item `inspect_tally_all` uses, and `emit_inspect_tally_multi`
+materialises `str_len` ONCE, derives each item's `[start, end)` with the SAME
+`emit_inspect_region_window` the single-item region emitter uses, then — in its runtime
+`str_len`-bounded loop — gates each delimiter's `cmp_eq` link by `start ≤ j < end` against the
+RUNTIME position register `j`. The two engines' CST readers count the same `tally_item` children, so
+their accept/reject sets stay co-total.
+
+**Non-ASCII-clean (a POSITIVE parity, NOT a trap).** Unlike `REPLACING`, `TALLYING` only **counts** —
+it never reconstructs the source via `str_slice` — so there is NO UTF-8-boundary trap. Match-based
+counting of ASCII delimiters is byte-robust (a multi-byte source char's continuation bytes never
+equal an ASCII delimiter byte), and each window is content-defined (bounded by the first occurrence
+of the ASCII region delimiter), so the char-based oracle and the byte-based compiler scan the SAME
+substring and count the SAME matches EVEN ON A NON-ASCII SOURCE. Worked positive parity:
+`"aé0b0"` with `ALL "0" BEFORE "b" ALL "0" AFTER "b"` → `counter += 2` on BOTH engines (the `é` and
+its continuation byte match no ASCII delimiter; the two `0`s are counted, one per window). A
+non-ASCII item/region delimiter *operand* stays the pre-existing `single_delim_char` vs
+`single_delim_code` chip, identical across single- and multi-item tallying — no new one-sided guard.
+
+**Scope kept for a later rung** (unchanged, identical messages on both engines): a `LEADING` or
+`CHARACTERS` item in a multi-item list; SEVERAL counters (more than one `tally_for`); and the
+combined `TALLYING … REPLACING` form with several tally items. The single-item
+`TALLYING FOR ALL … {BEFORE|AFTER}` path is untouched.
+
 ### Combined `INSPECT … TALLYING … REPLACING` (one statement)
 
 A single `INSPECT` may carry **both** phrases:
