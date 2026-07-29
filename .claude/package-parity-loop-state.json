@@ -8,7 +8,12 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": {
+    "item_id": "build-tool-execution-sandbox",
+    "pr_number": 9178,
+    "branch": "codex/build-tool-execution-sandbox",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9178"
+  },
   "last_inventory": {
     "revision": "40eff9c4432049d7bd704141136662014467e167",
     "schema_version": 2,
@@ -51,11 +56,11 @@
     {
       "id": "build-tool-execution-sandbox",
       "title": "Define the trusted-execution policy, closed schema, and fail-closed backend contract",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-fixtures"],
       "branch": "codex/build-tool-execution-sandbox",
-      "pr_number": null,
-      "notes": "Refined after the contract and security audits: land the process-free policy core first, with closed execution records, immutable corpus and adapter identities, explicit operator authorization, and a backend interface that cannot fall back to host execution. This item must not execute fixture code."
+      "pr_number": 9178,
+      "notes": "Ready-for-review PR #9178. Refined after the contract and security audits: land the process-free policy core first, with closed execution records, immutable corpus and adapter identities, explicit operator authorization, and a backend interface that cannot fall back to host execution. This item does not execute fixture code."
     },
     {
       "id": "build-tool-linux-oci-sandbox",
