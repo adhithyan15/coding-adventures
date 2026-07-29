@@ -3621,6 +3621,7 @@ pub struct MosfetLevel1Params {
     pub bottom_junction_capacitance: f64,
     pub sidewall_junction_capacitance: f64,
     pub saturation_current: f64,
+    pub saturation_current_density: f64,
     pub n_sub: f64,
     pub t_nom: f64,
     pub gate_source_overlap_capacitance: f64,
@@ -3660,6 +3661,7 @@ impl Default for MosfetLevel1Params {
             bottom_junction_capacitance: 0.0,
             sidewall_junction_capacitance: 0.0,
             saturation_current: 1.0e-15,
+            saturation_current_density: 0.0,
             n_sub: 1.4,
             t_nom: 300.15,
             gate_source_overlap_capacitance: 0.0,
@@ -4016,8 +4018,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Pnp, 41, 58, 13, 4),
     (ModelCardKind::Njf, 22, 30, 7, 3),
     (ModelCardKind::Pjf, 22, 30, 7, 3),
-    (ModelCardKind::Nmos, 29, 36, 6, 3),
-    (ModelCardKind::Pmos, 29, 36, 6, 3),
+    (ModelCardKind::Nmos, 30, 37, 6, 3),
+    (ModelCardKind::Pmos, 30, 37, 6, 3),
 ];
 const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -4152,6 +4154,7 @@ const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("RS", "RS"),
     ("RSH", "RSH"),
     ("IS", "IS"),
+    ("JS", "JS"),
     ("NSUB", "N_SUB"),
     ("N_SUB", "N_SUB"),
     ("TNOM", "T_NOM"),
@@ -4947,6 +4950,9 @@ pub fn mosfet_from_model_card(
     }
     if let Some(value) = model.parameters.get("IS") {
         params.saturation_current = *value;
+    }
+    if let Some(value) = model.parameters.get("JS") {
+        params.saturation_current_density = *value;
     }
     if let Some(value) = model.parameters.get("N_SUB") {
         params.n_sub = *value;
@@ -22881,10 +22887,18 @@ fn collect_noise_sources(
                         frequency_exponent: 1.0,
                     });
                 }
-                let (source_bulk_current, _) =
-                    mosfet_bulk_junction_current_conductance(mosfet, source_voltage, body_voltage);
-                let (drain_bulk_current, _) =
-                    mosfet_bulk_junction_current_conductance(mosfet, drain_voltage, body_voltage);
+                let (source_bulk_current, _) = mosfet_bulk_junction_current_conductance(
+                    mosfet,
+                    source_voltage,
+                    body_voltage,
+                    mosfet.params.source_area,
+                );
+                let (drain_bulk_current, _) = mosfet_bulk_junction_current_conductance(
+                    mosfet,
+                    drain_voltage,
+                    body_voltage,
+                    mosfet.params.drain_area,
+                );
                 let (source_bulk_positive, source_bulk_negative) = match mosfet.mosfet_type {
                     MosfetType::Nmos => (body, source),
                     MosfetType::Pmos => (source, body),
@@ -24259,6 +24273,7 @@ fn stamp_mosfet(
         body,
         source_voltage,
         body_voltage,
+        mosfet.params.source_area,
         matrix,
         rhs,
     );
@@ -24268,6 +24283,7 @@ fn stamp_mosfet(
         body,
         drain_voltage,
         body_voltage,
+        mosfet.params.drain_area,
         matrix,
         rhs,
     );
@@ -24297,7 +24313,16 @@ fn mosfet_bulk_junction_current_conductance(
     mosfet: &Mosfet,
     terminal_voltage: f64,
     body_voltage: f64,
+    terminal_area: f64,
 ) -> (f64, f64) {
+    let saturation_current = if mosfet.params.saturation_current_density > 0.0
+        && mosfet.params.drain_area > 0.0
+        && mosfet.params.source_area > 0.0
+    {
+        mosfet.params.saturation_current_density * terminal_area
+    } else {
+        mosfet.params.saturation_current
+    };
     let junction_voltage = match mosfet.mosfet_type {
         MosfetType::Nmos => body_voltage - terminal_voltage,
         MosfetType::Pmos => terminal_voltage - body_voltage,
@@ -24311,8 +24336,8 @@ fn mosfet_bulk_junction_current_conductance(
         (limited_exp, limited_exp)
     };
     (
-        mosfet.params.saturation_current * (current_factor - 1.0),
-        mosfet.params.saturation_current / thermal_voltage * conductance_factor,
+        saturation_current * (current_factor - 1.0),
+        saturation_current / thermal_voltage * conductance_factor,
     )
 }
 
@@ -24322,11 +24347,16 @@ fn stamp_mosfet_bulk_junction(
     body: Option<usize>,
     terminal_voltage: f64,
     body_voltage: f64,
+    terminal_area: f64,
     matrix: &mut [Vec<f64>],
     rhs: &mut [f64],
 ) {
-    let (current, conductance) =
-        mosfet_bulk_junction_current_conductance(mosfet, terminal_voltage, body_voltage);
+    let (current, conductance) = mosfet_bulk_junction_current_conductance(
+        mosfet,
+        terminal_voltage,
+        body_voltage,
+        terminal_area,
+    );
     let junction_voltage = match mosfet.mosfet_type {
         MosfetType::Nmos => body_voltage - terminal_voltage,
         MosfetType::Pmos => terminal_voltage - body_voltage,
@@ -24529,10 +24559,18 @@ fn stamp_mosfet_small_signal(
     let vds = drain_voltage - source_voltage;
     let vbs = body_voltage - source_voltage;
     let result = evaluate_mosfet_level1(mosfet, vgs, vds, vbs);
-    let (_, source_bulk_conductance) =
-        mosfet_bulk_junction_current_conductance(mosfet, source_voltage, body_voltage);
-    let (_, drain_bulk_conductance) =
-        mosfet_bulk_junction_current_conductance(mosfet, drain_voltage, body_voltage);
+    let (_, source_bulk_conductance) = mosfet_bulk_junction_current_conductance(
+        mosfet,
+        source_voltage,
+        body_voltage,
+        mosfet.params.source_area,
+    );
+    let (_, drain_bulk_conductance) = mosfet_bulk_junction_current_conductance(
+        mosfet,
+        drain_voltage,
+        body_voltage,
+        mosfet.params.drain_area,
+    );
     stamp_conductance(matrix, drain, source, result.gds);
     stamp_conductance(matrix, body, source, source_bulk_conductance);
     stamp_conductance(matrix, body, drain, drain_bulk_conductance);
@@ -24628,10 +24666,18 @@ fn stamp_ac_mosfet_small_signal(
     let vds = drain_voltage - source_voltage;
     let vbs = body_voltage - source_voltage;
     let result = evaluate_mosfet_level1(mosfet, vgs, vds, vbs);
-    let (_, source_bulk_conductance) =
-        mosfet_bulk_junction_current_conductance(mosfet, source_voltage, body_voltage);
-    let (_, drain_bulk_conductance) =
-        mosfet_bulk_junction_current_conductance(mosfet, drain_voltage, body_voltage);
+    let (_, source_bulk_conductance) = mosfet_bulk_junction_current_conductance(
+        mosfet,
+        source_voltage,
+        body_voltage,
+        mosfet.params.source_area,
+    );
+    let (_, drain_bulk_conductance) = mosfet_bulk_junction_current_conductance(
+        mosfet,
+        drain_voltage,
+        body_voltage,
+        mosfet.params.drain_area,
+    );
     stamp_complex_conductance(matrix, drain, source, Complex::new(result.gds, 0.0));
     stamp_complex_conductance(matrix, gate, source, Complex::new(0.0, omega * result.cgs));
     stamp_complex_conductance(matrix, gate, drain, Complex::new(0.0, omega * result.cgd));
@@ -25855,6 +25901,7 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         ("CJSW", params.sidewall_junction_capacitance),
         ("TOX", params.oxide_thickness),
         ("IS", params.saturation_current),
+        ("JS", params.saturation_current_density),
         ("N_SUB", params.n_sub),
         ("T_NOM", params.t_nom),
         ("CGSO", params.gate_source_overlap_capacitance),
@@ -25978,6 +26025,12 @@ fn validate_mosfet(mosfet: &Mosfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: mosfet.name.clone(),
             reason: "MOSFET IS, N_SUB, and T_NOM must be positive".to_string(),
+        });
+    }
+    if params.saturation_current_density < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: mosfet.name.clone(),
+            reason: "MOSFET JS must be non-negative".to_string(),
         });
     }
     if params.bulk_junction_potential <= 0.0 || params.bulk_junction_grading_coefficient < 0.0 {

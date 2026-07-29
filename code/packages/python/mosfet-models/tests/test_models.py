@@ -386,5 +386,11 @@ def test_default_params_match_spec():
     assert p.KP == 220e-6
     assert p.W == 1e-6
     assert p.L == 130e-9
+    assert p.JS == 0.0
     assert p.KF == 0.0
     assert p.AF == 1.0
+
+
+def test_rejects_negative_bulk_junction_saturation_current_density():
+    with pytest.raises(ValueError, match="MOSFET JS must be finite and non-negative"):
+        evaluate_level1(Level1Params(JS=-1.0), V_GS=1.0, V_DS=1.0)

@@ -3,6 +3,8 @@
 ## [0.1.0] — Unreleased
 
 ### Added
+- `Level1Params.JS` adds zero-default Berkeley bulk-junction saturation-current
+  density for source/drain area scaling while preserving scalar `IS`.
 - `Level1Params.MJSW` adds Berkeley sidewall-junction depletion grading,
   defaulting to `0.33` independently from bottom-junction `MJ`.
 - `Level1Params.PS` adds zero-default Berkeley source diffusion perimeter,

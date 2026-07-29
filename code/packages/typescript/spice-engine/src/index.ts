@@ -1789,6 +1789,7 @@ export interface MosfetLevel1Params {
   readonly CJ: number;
   readonly CJSW: number;
   readonly IS: number;
+  readonly JS: number;
   readonly N_SUB: number;
   readonly T_NOM: number;
   readonly CGSO: number;
@@ -2061,8 +2062,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   PNP: [41, 58, 13, 4],
   NJF: [22, 30, 7, 3],
   PJF: [22, 30, 7, 3],
-  NMOS: [29, 36, 6, 3],
-  PMOS: [29, 36, 6, 3],
+  NMOS: [30, 37, 6, 3],
+  PMOS: [30, 37, 6, 3],
 };
 
 export interface Vccs {
@@ -8058,6 +8059,7 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     CJ: 0.0,
     CJSW: 0.0,
     IS: 1.0e-15,
+    JS: 0.0,
     N_SUB: 1.4,
     T_NOM: 300.15,
     CGSO: 0.0,
@@ -8249,6 +8251,7 @@ const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   RS: "RS",
   RSH: "RSH",
   IS: "IS",
+  JS: "JS",
   NSUB: "N_SUB",
   N_SUB: "N_SUB",
   TNOM: "T_NOM",
@@ -8829,6 +8832,7 @@ export function mosfetFromModelCard(
     ...(p.RS !== undefined ? { RS: p.RS } : {}),
     ...(p.RSH !== undefined ? { RSH: p.RSH } : {}),
     ...(p.IS !== undefined ? { IS: p.IS } : {}),
+    ...(p.JS !== undefined ? { JS: p.JS } : {}),
     ...(p.N_SUB !== undefined ? { N_SUB: p.N_SUB } : {}),
     ...(p.T_NOM !== undefined ? { T_NOM: p.T_NOM } : {}),
     ...(p.CGSO !== undefined ? { CGSO: p.CGSO } : {}),
@@ -19040,11 +19044,13 @@ function collectNoiseSources(
         element,
         sourceVoltage,
         bodyVoltage,
+        element.params.AS,
       );
       const [drainBulkCurrent] = mosfetBulkJunctionCurrentConductance(
         element,
         drainVoltage,
         bodyVoltage,
+        element.params.AD,
       );
       const isNmos = element.type === "NMOS";
       sources.push({
@@ -20279,6 +20285,7 @@ function stampMosfet(
     body,
     sourceVoltage,
     bodyVoltage,
+    element.params.AS,
     matrix,
     rhs,
   );
@@ -20288,6 +20295,7 @@ function stampMosfet(
     body,
     drainVoltage,
     bodyVoltage,
+    element.params.AD,
     matrix,
     rhs,
   );
@@ -20316,7 +20324,12 @@ function mosfetBulkJunctionCurrentConductance(
   element: Mosfet,
   terminalVoltage: number,
   bodyVoltage: number,
+  terminalArea: number,
 ): readonly [number, number] {
+  const saturationCurrent =
+    element.params.JS > 0.0 && element.params.AD > 0.0 && element.params.AS > 0.0
+      ? element.params.JS * terminalArea
+      : element.params.IS;
   const junctionVoltage =
     element.type === "NMOS"
       ? bodyVoltage - terminalVoltage
@@ -20330,24 +20343,26 @@ function mosfetBulkJunctionCurrentConductance(
       : limitedExp;
   const conductanceFactor = limitedExp;
   return [
-    element.params.IS * (currentFactor - 1.0),
-    (element.params.IS / thermalVoltage) * conductanceFactor,
+    saturationCurrent * (currentFactor - 1.0),
+    (saturationCurrent / thermalVoltage) * conductanceFactor,
   ];
 }
 
 function stampMosfetBulkJunction(
-  element: Mosfet,
-  terminal: number | undefined,
-  body: number | undefined,
-  terminalVoltage: number,
-  bodyVoltage: number,
-  matrix: number[][],
-  rhs: number[],
+    element: Mosfet,
+    terminal: number | undefined,
+    body: number | undefined,
+    terminalVoltage: number,
+    bodyVoltage: number,
+    terminalArea: number,
+    matrix: number[][],
+    rhs: number[],
 ): void {
   const [current, conductance] = mosfetBulkJunctionCurrentConductance(
     element,
     terminalVoltage,
     bodyVoltage,
+    terminalArea,
   );
   const isNmos = element.type === "NMOS";
   const junctionVoltage = isNmos
@@ -21307,6 +21322,9 @@ function validateMosfet(element: Mosfet): void {
   }
   if (params.IS <= 0.0 || params.N_SUB <= 0.0 || params.T_NOM <= 0.0) {
     throw invalidElement(element.name, "MOSFET IS, N_SUB, and T_NOM must be positive");
+  }
+  if (params.JS < 0.0) {
+    throw invalidElement(element.name, "MOSFET JS must be non-negative");
   }
   if (params.PB <= 0.0 || params.MJ < 0.0) {
     throw invalidElement(element.name, "MOSFET PB must be positive and MJ must be non-negative");
@@ -22737,11 +22755,13 @@ function stampMosfetSmallSignal(
     element,
     sourceVoltage,
     bodyVoltage,
+    element.params.AS,
   );
   const [, drainBulkConductance] = mosfetBulkJunctionCurrentConductance(
     element,
     drainVoltage,
     bodyVoltage,
+    element.params.AD,
   );
   stampConductance(matrix, drain, source, result.gds);
   stampConductance(matrix, body, source, sourceBulkConductance);
@@ -23507,11 +23527,13 @@ function stampAcMosfetSmallSignal(
     element,
     sourceVoltage,
     bodyVoltage,
+    element.params.AS,
   );
   const [, drainBulkConductance] = mosfetBulkJunctionCurrentConductance(
     element,
     drainVoltage,
     bodyVoltage,
+    element.params.AD,
   );
   stampComplexConductance(matrix, drain, source, complex(result.gds, 0.0));
   stampComplexTransconductance(
