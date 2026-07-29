@@ -3,6 +3,16 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.39] - Unreleased
+
+### Fixed
+
+- **`replace(X, '', Y)` returns X unchanged.** With an empty search string SQLite
+  returns the subject as-is; Rust's `str::replace` would splice `Y` between every
+  character (`replace('abc','','X')` → `'XaXbXcX'`). The `REPLACE` builtin now
+  short-circuits an empty search. Non-empty searches are unchanged, including
+  replacing with the empty string (`replace('aaa','a','')` = `''`).
+
 ## [0.4.38] - Unreleased
 
 ### Fixed
