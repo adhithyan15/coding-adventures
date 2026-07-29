@@ -915,6 +915,51 @@ fn shipped_dose_equivalent_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b20) Shipped table — reference/exposure-conversions.adj resolves via import (a
+//       NEW dimension: exposure → coulomb per kilogram, the EXACT SP 811 B.9 boldface factor
+//       roentgen = 2.58 E-04 = 0.000258, the roentgen DEFINED as exactly 2.58×10⁻⁴ C/kg), and
+//       a unit of a DIFFERENT quantity (`rad`, an absorbed-dose unit → gray, not C/kg) — no
+//       row — abstains rather than mis-converting across dimensions. Completes the radiological
+//       quartet: radioactivity (curie→becquerel), absorbed dose (rad→gray), dose equivalent
+//       (rem→sievert), exposure (roentgen→coulomb per kilogram).
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_exposure_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_exposure");
+    let src = stdlib().join("reference/exposure-conversions.adj");
+    std::fs::copy(&src, dir.join("exposure-conversions.adj"))
+        .expect("copy shipped exposure-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"exposure-conversions.adj\"\n\
+         ? exposure_to_coulomb_per_kilogram(roentgen, $v)\n\
+         ? exposure_to_coulomb_per_kilogram(rad, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 "Radiology" exact factor resolves, character-for-character from
+    // the table (boldface = exact; the roentgen is defined as exactly 2.58×10⁻⁴ C/kg).
+    assert!(
+        out.contains("\"v\":\"0.000258\""),
+        "roentgen = 0.000258 C/kg: {out}"
+    );
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `rad` is an ABSORBED-DOSE unit (it converts to the gray, a DIFFERENT quantity), so this
+    // exposure table has no row for it — the engine abstains rather than mis-converting an
+    // absorbed-dose unit as if it were an exposure unit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
