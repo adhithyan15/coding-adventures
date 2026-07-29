@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.39.0] - 2026-07-28
+
+### Added - remove a redundant trailing `continue` from a loop body
+
+A bare (unlabeled) `continue` at the tail of a `for`/`while`/`do-while` body is
+removed, matching the reference Closure Compiler at SIMPLE:
+
+```text
+  for (; c;) { a(); continue; }   ->  for(;c;)a();
+  for (; c;) { continue; }        ->  for(;c;);
+  do { a(); continue; } while(c); ->  do a();while(c);
+```
+
+A trailing bare `continue` is a no-op -- it jumps to the next iteration, which
+is exactly what falling off the end of the body already does. After the strip,
+the shortened body unwraps its single statement, comma-fuses, or (when now
+empty) normalizes to `;`, all via the existing machinery. Because `while` is
+rewritten to `for` (0.31.0) and re-folded, the `for` hook covers `while` too;
+the `do-while` arm has its own hook.
+
+Scoped to a bare, unlabeled `continue` that is the LITERAL last statement:
+  * `continue L` (labeled) may target an OUTER loop, so it is kept.
+  * a `continue` with dead code after it (`{a(); continue; b()}`) is left
+    alone -- removing the unreachable `b()` is a separate dead-code-after-jump
+    transform.
+
 ## [0.38.0] - 2026-07-28
 
 ### Added - empty-bodied `do … while` becomes the equivalent `while`/`for`
