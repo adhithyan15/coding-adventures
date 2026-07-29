@@ -55,8 +55,8 @@ remain. The `html-to-paint` composition package now carries canned HTML
 through shared layout into a backend-neutral `PaintScene`, extracts clickable
 link regions, resolves host-fetched GIF/JPEG image bytes into shared pixels,
 and proves text and inline-image scenes rasterize to RGBA pixels with Cairo.
-The concrete network transport, broken-image fallback policy, and platform host
-must still wire navigation through pixels.
+Fetch/decode failures now render clipped bordered HTML `alt` text. The concrete
+network transport and platform host must still wire navigation through pixels.
 
 ## Where It Fits
 

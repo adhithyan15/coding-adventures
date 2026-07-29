@@ -6,12 +6,17 @@ use html_to_layout::{html_render_tree_to_layout, HtmlTheme};
 use image_codec_gif::decode_gif;
 use image_codec_jpeg::decode_jpeg;
 use layout_block::layout_block;
-use layout_ir::{Constraints, ExtValue, PositionedNode, TextMeasurer};
+use layout_ir::{Constraints, Content, ExtValue, PositionedNode, TextMeasurer};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
-use paint_instructions::{ImageSrc, PaintInstruction, PaintScene};
+use paint_instructions::{
+    ImageSrc, PaintBase, PaintClip, PaintImage, PaintInstruction, PaintRect, PaintScene, PaintText,
+    TextAlign,
+};
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
+
+const HTML_IMAGE_ALT_METADATA: &str = "html.alt";
 
 /// Bytes fetched by a browser host for one resolved image URI.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -147,6 +152,13 @@ pub struct HtmlPaintOutput {
     pub scene: PaintScene,
 }
 
+/// A scene resolved as far as possible plus recoverable image failures.
+#[derive(Clone, Debug, PartialEq)]
+pub struct HtmlImageResolution {
+    pub scene: PaintScene,
+    pub failures: Vec<HtmlImageResourceError>,
+}
+
 /// Fetch and decode every URI-backed image in a paint scene.
 ///
 /// The input scene is never mutated. Resolution happens in a clone and the
@@ -163,6 +175,33 @@ where
     let mut resolved = scene.clone();
     resolve_instruction_images(&mut resolved.instructions, fetcher)?;
     Ok(resolved)
+}
+
+/// Resolve URI-backed images and replace failures with Mosaic-style fallbacks.
+///
+/// Unlike [`resolve_scene_image_resources`], this tolerant browser path keeps
+/// processing after fetch, format, or decode failures. Each failed image is
+/// replaced by a clipped one-pixel black border and its HTML `alt` text, while
+/// successful images still become decoded pixels. All failures are returned
+/// for status-bar or diagnostic reporting by the host.
+pub fn resolve_scene_image_resources_with_mosaic_fallback<F>(
+    scene: &PaintScene,
+    fetcher: &F,
+) -> HtmlImageResolution
+where
+    F: HtmlImageFetcher,
+{
+    let mut resolved = scene.clone();
+    let mut failures = Vec::new();
+    resolve_instruction_images_with_mosaic_fallback(
+        &mut resolved.instructions,
+        fetcher,
+        &mut failures,
+    );
+    HtmlImageResolution {
+        scene: resolved,
+        failures,
+    }
 }
 
 /// Convert a browser render tree into positioned geometry and a paint scene.
@@ -208,7 +247,8 @@ where
         metrics,
         resolver,
     };
-    let scene = layout_to_paint(&positioned, &options);
+    let mut scene = layout_to_paint(&positioned, &options);
+    annotate_html_image_metadata(&positioned, &mut scene);
     let links = extract_link_regions(&positioned);
 
     HtmlPaintOutput {
@@ -306,45 +346,10 @@ where
     for instruction in instructions {
         match instruction {
             PaintInstruction::Image(image) => {
-                let ImageSrc::Uri(uri) = &image.src else {
+                if !matches!(image.src, ImageSrc::Uri(_)) {
                     continue;
-                };
-                let uri = uri.clone();
-                let fetched =
-                    fetcher
-                        .fetch(&uri)
-                        .map_err(|message| HtmlImageResourceError::Fetch {
-                            uri: uri.clone(),
-                            message,
-                        })?;
-                let format = detect_image_format(&uri, &fetched);
-                let pixels = match format {
-                    Some(SupportedImageFormat::Gif) => {
-                        decode_gif(&fetched.bytes).map_err(|message| {
-                            HtmlImageResourceError::Decode {
-                                uri: uri.clone(),
-                                format: "GIF",
-                                message,
-                            }
-                        })?
-                    }
-                    Some(SupportedImageFormat::Jpeg) => {
-                        decode_jpeg(&fetched.bytes).map_err(|message| {
-                            HtmlImageResourceError::Decode {
-                                uri: uri.clone(),
-                                format: "JPEG",
-                                message,
-                            }
-                        })?
-                    }
-                    None => {
-                        return Err(HtmlImageResourceError::UnsupportedFormat {
-                            uri,
-                            media_type: fetched.media_type,
-                        });
-                    }
-                };
-                image.src = ImageSrc::Pixels(pixels);
+                }
+                image.src = ImageSrc::Pixels(fetch_and_decode_image(image, fetcher)?);
             }
             PaintInstruction::Group(group) => {
                 resolve_instruction_images(&mut group.children, fetcher)?;
@@ -359,6 +364,172 @@ where
         }
     }
     Ok(())
+}
+
+fn resolve_instruction_images_with_mosaic_fallback<F>(
+    instructions: &mut [PaintInstruction],
+    fetcher: &F,
+    failures: &mut Vec<HtmlImageResourceError>,
+) where
+    F: HtmlImageFetcher,
+{
+    for instruction in instructions {
+        let replacement = match instruction {
+            PaintInstruction::Image(image) if matches!(image.src, ImageSrc::Uri(_)) => {
+                match fetch_and_decode_image(image, fetcher) {
+                    Ok(pixels) => {
+                        image.src = ImageSrc::Pixels(pixels);
+                        None
+                    }
+                    Err(error) => {
+                        let fallback = mosaic_broken_image_fallback(image);
+                        failures.push(error);
+                        Some(fallback)
+                    }
+                }
+            }
+            PaintInstruction::Group(group) => {
+                resolve_instruction_images_with_mosaic_fallback(
+                    &mut group.children,
+                    fetcher,
+                    failures,
+                );
+                None
+            }
+            PaintInstruction::Layer(layer) => {
+                resolve_instruction_images_with_mosaic_fallback(
+                    &mut layer.children,
+                    fetcher,
+                    failures,
+                );
+                None
+            }
+            PaintInstruction::Clip(clip) => {
+                resolve_instruction_images_with_mosaic_fallback(
+                    &mut clip.children,
+                    fetcher,
+                    failures,
+                );
+                None
+            }
+            _ => None,
+        };
+        if let Some(replacement) = replacement {
+            *instruction = replacement;
+        }
+    }
+}
+
+fn fetch_and_decode_image<F>(
+    image: &PaintImage,
+    fetcher: &F,
+) -> Result<paint_instructions::PixelContainer, HtmlImageResourceError>
+where
+    F: HtmlImageFetcher,
+{
+    let ImageSrc::Uri(uri) = &image.src else {
+        unreachable!("pixel-backed images are filtered before resource resolution");
+    };
+    let fetched = fetcher
+        .fetch(uri)
+        .map_err(|message| HtmlImageResourceError::Fetch {
+            uri: uri.clone(),
+            message,
+        })?;
+    match detect_image_format(uri, &fetched) {
+        Some(SupportedImageFormat::Gif) => {
+            decode_gif(&fetched.bytes).map_err(|message| HtmlImageResourceError::Decode {
+                uri: uri.clone(),
+                format: "GIF",
+                message,
+            })
+        }
+        Some(SupportedImageFormat::Jpeg) => {
+            decode_jpeg(&fetched.bytes).map_err(|message| HtmlImageResourceError::Decode {
+                uri: uri.clone(),
+                format: "JPEG",
+                message,
+            })
+        }
+        None => Err(HtmlImageResourceError::UnsupportedFormat {
+            uri: uri.clone(),
+            media_type: fetched.media_type,
+        }),
+    }
+}
+
+fn mosaic_broken_image_fallback(image: &PaintImage) -> PaintInstruction {
+    let width = image.width.max(0.0);
+    let height = image.height.max(0.0);
+    let mut children = vec![PaintInstruction::Rect(PaintRect {
+        base: PaintBase::default(),
+        x: image.x + 0.5,
+        y: image.y + 0.5,
+        width: (width - 1.0).max(0.0),
+        height: (height - 1.0).max(0.0),
+        fill: None,
+        stroke: Some("#000000".into()),
+        stroke_width: Some(1.0),
+        corner_radius: None,
+        stroke_dash: None,
+        stroke_dash_offset: None,
+    })];
+
+    let alt = image
+        .base
+        .metadata
+        .as_ref()
+        .and_then(|metadata| metadata.get(HTML_IMAGE_ALT_METADATA));
+    if let Some(alt) = alt.filter(|alt| !alt.is_empty()) {
+        let font_size = 12.0_f64.min((height - 4.0).max(1.0));
+        children.push(PaintInstruction::Text(PaintText {
+            base: PaintBase::default(),
+            x: image.x + 3.0,
+            y: image.y + 2.0 + font_size,
+            text: alt.clone(),
+            font_ref: Some("serif".into()),
+            font_size,
+            fill: Some("#000000".into()),
+            text_align: Some(TextAlign::Left),
+        }));
+    }
+
+    PaintInstruction::Clip(PaintClip {
+        base: image.base.clone(),
+        x: image.x,
+        y: image.y,
+        width,
+        height,
+        children,
+    })
+}
+
+fn annotate_html_image_metadata(positioned: &PositionedNode, scene: &mut PaintScene) {
+    let mut image_alts = Vec::new();
+    let mut stack = vec![positioned];
+    while let Some(node) = stack.pop() {
+        if matches!(node.content, Some(Content::Image(_))) {
+            image_alts.push(positioned_html_string(node, "alt").map(ToOwned::to_owned));
+        }
+        for child in node.children.iter().rev() {
+            stack.push(child);
+        }
+    }
+
+    let mut image_alts = image_alts.into_iter();
+    for instruction in &mut scene.instructions {
+        let PaintInstruction::Image(image) = instruction else {
+            continue;
+        };
+        let Some(alt) = image_alts.next().flatten() else {
+            continue;
+        };
+        image
+            .base
+            .metadata
+            .get_or_insert_with(Default::default)
+            .insert(HTML_IMAGE_ALT_METADATA.into(), alt);
+    }
 }
 
 fn detect_image_format(uri: &str, fetched: &FetchedImage) -> Option<SupportedImageFormat> {
@@ -401,8 +572,8 @@ mod tests {
     use super::*;
     use coding_adventures_html_parser::parse_browser_render_tree;
     use html_to_layout::mosaic_html_theme;
-    use layout_ir::{Color, Content, FontSpec, MeasureResult};
-    use paint_instructions::{PaintBase, PaintImage, PixelContainer};
+    use layout_ir::{Color, FontSpec, MeasureResult};
+    use paint_instructions::PixelContainer;
     use text_interfaces::{
         Direction, FontQuery, FontResolutionError, Glyph, ShapeOptions, ShapedRun, ShapedText,
         ShapingError,
@@ -762,6 +933,56 @@ mod tests {
         assert_eq!(scene, original);
     }
 
+    #[test]
+    fn failed_html_image_rasterizes_mosaic_alt_text_fallback() {
+        let render = parse_browser_render_tree(
+            "<base href='https://example.test/assets/'>\
+             <p>Image follows:</p><img src='missing.gif' alt='Mosaic logo' width='80' height='24'>",
+        )
+        .unwrap();
+        let output = html_render_tree_to_paint(
+            &render,
+            &mosaic_html_theme(),
+            HtmlPaintViewport::new(180.0, 96.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+
+        let image = first_image(&output.scene.instructions).expect("HTML image instruction");
+        assert_eq!(
+            image
+                .base
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get(HTML_IMAGE_ALT_METADATA))
+                .map(String::as_str),
+            Some("Mosaic logo")
+        );
+        let fallback_x = image.x.floor() as u32;
+        let fallback_y = image.y.floor() as u32;
+
+        let resolution =
+            resolve_scene_image_resources_with_mosaic_fallback(&output.scene, &|_: &str| {
+                Err("offline".into())
+            });
+        assert_eq!(
+            resolution.failures,
+            vec![HtmlImageResourceError::Fetch {
+                uri: "https://example.test/assets/missing.gif".into(),
+                message: "offline".into(),
+            }]
+        );
+        assert!(!contains_uri_image(&resolution.scene.instructions));
+        assert!(contains_text(&resolution.scene.instructions, "Mosaic logo"));
+
+        let pixels = paint_vm_cairo::render(&resolution.scene)
+            .expect("broken-image fallback should rasterize");
+        let (red, green, blue, alpha) = pixels.pixel_at(fallback_x, fallback_y);
+        assert!(red < 192 && green < 192 && blue < 192 && alpha == 255);
+    }
+
     fn color_css(color: Color) -> String {
         format!("rgb({}, {}, {})", color.r, color.g, color.b)
     }
@@ -849,5 +1070,25 @@ mod tests {
             }
         }
         None
+    }
+
+    fn contains_uri_image(instructions: &[PaintInstruction]) -> bool {
+        instructions.iter().any(|instruction| match instruction {
+            PaintInstruction::Image(image) => matches!(image.src, ImageSrc::Uri(_)),
+            PaintInstruction::Group(group) => contains_uri_image(&group.children),
+            PaintInstruction::Layer(layer) => contains_uri_image(&layer.children),
+            PaintInstruction::Clip(clip) => contains_uri_image(&clip.children),
+            _ => false,
+        })
+    }
+
+    fn contains_text(instructions: &[PaintInstruction], expected: &str) -> bool {
+        instructions.iter().any(|instruction| match instruction {
+            PaintInstruction::Text(text) => text.text == expected,
+            PaintInstruction::Group(group) => contains_text(&group.children, expected),
+            PaintInstruction::Layer(layer) => contains_text(&layer.children, expected),
+            PaintInstruction::Clip(clip) => contains_text(&clip.children, expected),
+            _ => false,
+        })
     }
 }
