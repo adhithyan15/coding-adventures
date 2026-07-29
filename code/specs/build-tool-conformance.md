@@ -527,6 +527,13 @@ Validation input is the sole normalized repository-data snapshot for this
 domain. It does not carry a second inline BUILD-file source of truth, and the
 adapter MUST NOT consult the workspace or host checkout.
 
+The closed process-free v1 record currently exposes only
+`build_file_presence`, whose result is derived exactly from each package's
+normalized `build_file_state`. The other diagnostic families above remain the
+target contract, but they are not valid pure-domain check values until their
+inputs and deterministic semantic oracles are added. A self-consistent result
+is never sufficient evidence for an unmodeled validation check.
+
 Canonical result ordering is domain-aware:
 
 - every package, path, toolchain, diagnostic-code, and invalidation set is

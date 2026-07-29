@@ -106,6 +106,9 @@ class StrictJsonTests(unittest.TestCase):
         self.assertIsNotNone(runner.portable_path_error("fixtures/COM¹.txt"))
         self.assertIsNotNone(runner.portable_path_error("fixtures/LPT².txt"))
         self.assertIsNone(runner.portable_path_error("fixtures/.hidden"))
+        self.assertIsNone(runner.portable_glob_error("src/foo.*"))
+        self.assertIsNone(runner.portable_glob_error("src/*.*"))
+        self.assertIsNotNone(runner.portable_glob_error("src/foo."))
 
     def test_schema_validation_never_retrieves_external_references(self) -> None:
         for keyword in ("$ref", "$dynamicRef"):
@@ -536,6 +539,140 @@ class ResultValidationTests(unittest.TestCase):
 
 
 class PureDomainValidationTests(unittest.TestCase):
+    def _schema_args(self) -> dict[str, object]:
+        return {
+            "case_schema": runner.load_document(FIXTURE_ROOT / "schema.json"),
+            "result_schema": runner.load_document(FIXTURE_ROOT / "result.schema.json"),
+            "plan_schema": runner.load_document(
+                runner.REPO_ROOT / "code/specs/schemas/build-plan-v1.schema.json"
+            ),
+            "pure_domain_schema": runner.load_document(
+                FIXTURE_ROOT / "pure-domains.schema.json"
+            ),
+        }
+
+    def test_validation_allows_repeated_envelope_diagnostic_codes(self) -> None:
+        case = load_case("validation-missing-build.json")
+        case["input"]["options"]["packages"].append(
+            {
+                "name": "python/other",
+                "rel_path": "code/packages/python/other",
+                "language": "python",
+                "build_file_state": "missing",
+                "build_references": [],
+                "is_starlark": False,
+                "declared_srcs": [],
+                "declared_deps": [],
+            }
+        )
+        case["expected"]["diagnostics"].append(
+            {
+                "code": "BUILD_FILE_MISSING",
+                "severity": "error",
+                "path": "code/packages/python/other",
+            }
+        )
+
+        runner.validate_case_document(case, **self._schema_args())
+        runner.assert_result_matches(
+            case,
+            copy.deepcopy(case["expected"]),
+            pure_domain_schema=self._schema_args()["pure_domain_schema"],
+        )
+
+    def test_starlark_load_scanner_handles_lexical_literal_forms(self) -> None:
+        commented = load_case("starlark-structured-context.json")
+        commented["workspace"]["files"][0]["content_utf8"] = (
+            '# load("../../../../../outside.star", "x")\n'
+            + commented["workspace"]["files"][0]["content_utf8"]
+        )
+        runner.validate_case_document(commented, **self._schema_args())
+
+        escaping_literals = (
+            '"../../../../../outside.star"',
+            'r"../../../../../outside.star"',
+            'b"../../../../../outside.star"',
+            '"""../../../../../outside.star"""',
+        )
+        for literal in escaping_literals:
+            with self.subTest(literal=literal):
+                escaping = load_case("starlark-structured-context.json")
+                escaping["workspace"]["files"][0]["content_utf8"] = escaping[
+                    "workspace"
+                ]["files"][0]["content_utf8"].replace(
+                    '"code/build/defs.star"',
+                    literal,
+                )
+                with self.assertRaises(runner.ConformanceError) as raised:
+                    runner.validate_case_document(escaping, **self._schema_args())
+                self.assertEqual(
+                    raised.exception.code,
+                    "EXPECTED_STARLARK_MODULE_ERROR_INVALID",
+                )
+
+        spaced = load_case("starlark-structured-context.json")
+        spaced["workspace"]["files"][0]["content_utf8"] = spaced["workspace"]["files"][
+            0
+        ]["content_utf8"].replace("load(", "load (", 1)
+        runner.validate_case_document(spaced, **self._schema_args())
+
+        member = load_case("starlark-structured-context.json")
+        member["workspace"]["files"][0]["content_utf8"] = (
+            'rules.load("../../../../../outside.star")\n'
+            + member["workspace"]["files"][0]["content_utf8"]
+        )
+        runner.validate_case_document(member, **self._schema_args())
+
+        split = load_case("starlark-structured-context.json")
+        split["workspace"]["files"][0]["content_utf8"] = split["workspace"]["files"][0][
+            "content_utf8"
+        ].replace("load(", "load\n(", 1)
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(split, **self._schema_args())
+        self.assertEqual(
+            raised.exception.code,
+            "EXPECTED_STARLARK_MODULE_ERROR_INVALID",
+        )
+
+    def test_toolchain_detection_ignores_unscheduled_unsupported_packages(
+        self,
+    ) -> None:
+        case = load_case("toolchain-detection-empty.json")
+        case["input"]["options"]["packages"].append(
+            {"name": "zig/unused", "language": "zig"}
+        )
+
+        runner.validate_case_document(case, **self._schema_args())
+
+    def test_sharding_ignores_unscheduled_unreferenced_toolchains(self) -> None:
+        case = load_case("sharding-prerequisite-closed.json")
+        case["input"]["options"]["packages"].append(
+            {
+                "name": "zig/unused",
+                "language": "zig",
+                "build_command_count": 0,
+            }
+        )
+
+        runner.validate_case_document(case, **self._schema_args())
+
+    def test_dependency_cycles_are_rejected_without_recursion(self) -> None:
+        cyclic = load_case("diff-selection-transitive.json")
+        cyclic["input"]["options"]["edges"].append(["python/app", "python/base"])
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(cyclic, **self._schema_args())
+        self.assertEqual(raised.exception.code, "CASE_EDGE_CYCLE")
+
+        names = {f"python/package-{index}" for index in range(2000)}
+        edges = [
+            [f"python/package-{index}", f"python/package-{index + 1}"]
+            for index in range(1999)
+        ]
+        edges.append(["python/package-1999", "python/package-0"])
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner._validate_known_edges(edges, names)
+        self.assertEqual(raised.exception.code, "CASE_EDGE_CYCLE")
+
     def test_semantics_reject_unknown_references_and_bad_oracles(self) -> None:
         pure_schema = runner.load_document(FIXTURE_ROOT / "pure-domains.schema.json")
         schema_args = {
@@ -770,6 +907,31 @@ class CommandLineTests(unittest.TestCase):
                 )
         self.assertEqual(exit_code, 1)
         self.assertEqual(json.loads(stderr.getvalue())["code"], "RESULT_MISMATCH")
+
+    def test_pure_semantic_mismatch_is_a_conformance_exit(self) -> None:
+        case_path = CASES_ROOT / "hashing-cache-hit.json"
+        case = load_case(case_path.name)
+        mismatch = copy.deepcopy(case["expected"])
+        mismatch["result"]["package_digest"] = "0" * 64
+        with tempfile.TemporaryDirectory() as directory:
+            result_path = Path(directory) / "result.json"
+            result_path.write_text(json.dumps(mismatch), encoding="utf-8")
+            stderr = io.StringIO()
+            with redirect_stderr(stderr):
+                exit_code = runner.main(
+                    [
+                        "validate-result",
+                        "--case",
+                        str(case_path),
+                        "--result",
+                        str(result_path),
+                    ]
+                )
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(
+            json.loads(stderr.getvalue())["code"],
+            "RESULT_HASH_MISMATCH",
+        )
 
     def test_matching_unsupported_result_is_never_reported_as_passing(self) -> None:
         case = load_case("discovery-simple.json")

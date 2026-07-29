@@ -34,7 +34,7 @@ The 30-case bootstrap corpus covers every process-free v1 domain:
 - inline-only Starlark module resolution, bounded evaluation requests,
   structured command extraction, and stable missing/outside errors;
 - deterministic prerequisite-closed sharding and invalid input handling;
-- normalized validation snapshots and the complete toolchain registry,
+- normalized BUILD-file validation snapshots and the complete toolchain registry,
   including OCaml; and
 - process-free CLI exit-decision classification.
 
@@ -67,7 +67,8 @@ bounded in-memory decoding of pure fixture workspaces so invalid base64, path
 aliases, collisions, prefix conflicts, and aggregate size violations fail
 without creating a filesystem root. Domain checks verify reference integrity,
 framed hashes, cache state, inline Starlark loads, shard closure/cost,
-validation diagnostics, complete toolchain maps, and CLI exit decisions.
+BUILD-file validation diagnostics, complete toolchain maps, and CLI exit
+decisions.
 
 ## Security boundary
 
@@ -99,7 +100,7 @@ The corpus now closes all process-free v1 domains:
 - diff selection and hashing/cache;
 - Starlark evaluation and structured-command extraction;
 - prerequisite-closed sharding;
-- validation and toolchain detection; and
+- BUILD-file validation and toolchain detection; and
 - CLI exit-decision semantics.
 
 Execution remains the only intentionally unmodeled domain.

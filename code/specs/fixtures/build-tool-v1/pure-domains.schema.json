@@ -1004,13 +1004,7 @@
     },
     "validation_check": {
       "enum": [
-        "build_file_presence",
-        "declared_dependencies",
-        "standalone_prerequisites",
-        "starlark_declarations",
-        "identity",
-        "toolchain_support",
-        "path_safety"
+        "build_file_presence"
       ]
     },
     "validation_diagnostic_code": {

@@ -64,7 +64,7 @@
       "depends_on": ["build-tool-fixtures"],
       "branch": "codex/build-tool-pure-domain-corpus",
       "pr_number": null,
-      "notes": "Selected after PR #9157 merged because this pure, process-free corpus expansion unlocks the Go oracle, Java/Kotlin, Dart, every existing front door, and OCaml promotion. The branch now validates 30 cases across all 11 process-free domains with closed pure records, semantic oracles, conservative diff behavior, typed cache states, inline-only Starlark loads, sharding verification, normalized validation, and the OCaml-aware toolchain registry."
+      "notes": "Selected after PR #9157 merged because this pure, process-free corpus expansion unlocks the Go oracle, Java/Kotlin, Dart, every existing front door, and OCaml promotion. The branch now validates 30 cases across all 11 process-free domains with closed pure records, semantic oracles, conservative diff behavior, typed cache states, inline-only Starlark loads, sharding verification, normalized BUILD-file validation, and the OCaml-aware toolchain registry."
     },
     {
       "id": "build-tool-cli-parser-corpus",
@@ -83,6 +83,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered during the pure-domain security review. Cover fuel, recursion, aggregate allocations, range/value sizes, load depth/count/cycles, and print/trace limits before any native evaluator claims final Starlark conformance."
+    },
+    {
+      "id": "build-tool-validation-oracle-corpus",
+      "title": "Close the remaining build-tool validation checks with semantic oracles",
+      "status": "pending",
+      "depends_on": ["build-tool-pure-domain-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the pure-domain security review. Add deterministic inline inputs, positive and adversarial fixtures, and input-to-diagnostic oracles for declared dependencies, standalone prerequisites, Starlark declarations, identity, toolchain support, and path safety before those checks enter the closed schema."
     },
     {
       "id": "build-file-standalone-integrity",

@@ -917,7 +917,7 @@ Delivery order:
    tranche now provides a 30-case, 11-domain process-free corpus, including
    conservative unknown-path handling, typed cache states, inline-only
    Starlark loads, prerequisite-closed shard verification, the OCaml-aware
-   toolchain registry, and fail-closed semantic validation.
+   toolchain registry, and fail-closed BUILD-file validation.
 4. Add the trusted-execution sandbox and adversarial execution corpus. No
    repository command may run until filesystem and network isolation,
    no-follow path handling, sanitized environments, direct argv, and hard
@@ -935,7 +935,7 @@ Delivery order:
 10. Gate completion in CI: every supported implementation runs the same
    conformance corpus on its applicable operating systems.
 
-The pure-domain security review also discovered two follow-on gates that must
+The pure-domain security review also discovered three follow-on gates that must
 land before final adapter parity:
 
 - define a common inert CLI argv grammar and typed parse-result corpus; the
@@ -943,6 +943,9 @@ land before final adapter parity:
 - add adversarial Starlark metering fixtures for fuel, recursion, allocation,
   load depth/count/cycles, and diagnostic output before any native evaluator
   can claim final Starlark conformance.
+- model deterministic inline inputs and semantic oracles for dependency,
+  standalone-prerequisite, Starlark-declaration, identity, toolchain, and path
+  validation checks before admitting them to the closed v1 schema.
 
 ## Cross-Cutting Stream B: Introduce OCaml Safely
 

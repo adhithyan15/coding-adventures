@@ -10,6 +10,7 @@ later trusted-sandbox tranche.
 from __future__ import annotations
 
 import argparse
+import ast
 import base64
 import binascii
 import fnmatch
@@ -464,8 +465,7 @@ def portable_glob_error(value: Any) -> str | None:
     for segment in value.split("/"):
         if segment in {"", ".", ".."}:
             return "glob contains an empty or dot segment"
-        literal = segment.replace("*", "")
-        if literal.endswith((" ", ".")):
+        if segment.endswith((" ", ".")):
             return "glob segment has a trailing dot or space"
         if not any(character in segment for character in "*[]{}"):
             basename = segment.split(".", 1)[0].upper()
@@ -816,6 +816,8 @@ def _validate_known_edges(
     edges: list[list[str]],
     package_names: set[str],
 ) -> None:
+    adjacency = {name: [] for name in package_names}
+    indegree = dict.fromkeys(package_names, 0)
     for edge in edges:
         if edge[0] == edge[1]:
             raise ConformanceError(
@@ -827,6 +829,23 @@ def _validate_known_edges(
                 "CASE_EDGE_UNKNOWN",
                 f"dependency edge references an unknown package: {edge}",
             )
+        adjacency[edge[0]].append(edge[1])
+        indegree[edge[1]] += 1
+
+    ready = [name for name, degree in indegree.items() if degree == 0]
+    visited = 0
+    while ready:
+        name = ready.pop()
+        visited += 1
+        for dependent in adjacency[name]:
+            indegree[dependent] -= 1
+            if indegree[dependent] == 0:
+                ready.append(dependent)
+    if visited != len(package_names):
+        raise ConformanceError(
+            "CASE_EDGE_CYCLE",
+            "dependency edges contain a cycle",
+        )
 
 
 def _validate_unique_paths(
@@ -938,8 +957,19 @@ def _validate_pure_case_semantics(
                     "CASE_PACKAGE_REFERENCE_UNKNOWN",
                     f"scheduled package is not declared: {name}",
                 )
-        for package in by_name.values():
-            _toolchain_for_language(package["language"])
+        selected = set(options["scheduled_packages"])
+        pending = list(selected)
+        prerequisites = {name: set() for name in by_name}
+        for prerequisite, dependent in options["edges"]:
+            prerequisites[dependent].add(prerequisite)
+        while pending:
+            name = pending.pop()
+            for prerequisite in prerequisites[name]:
+                if prerequisite not in selected:
+                    selected.add(prerequisite)
+                    pending.append(prerequisite)
+        for name in selected:
+            _toolchain_for_language(by_name[name]["language"])
     elif domain == "validation":
         by_name = _package_index(options["packages"])
         _validate_unique_paths(
@@ -1108,7 +1138,6 @@ def _starlark_module_error(
     pending = [(options["entrypoint"], 0)]
     visited: set[str] = set()
     limits = options["evaluation_limits"]
-    load_pattern = re.compile(r"""load\(\s*(?P<quote>["'])(?P<label>.+?)(?P=quote)""")
     while pending:
         module, depth = pending.pop()
         if module in visited:
@@ -1122,8 +1151,48 @@ def _starlark_module_error(
             source = sources[module].decode("utf-8", errors="strict")
         except UnicodeDecodeError:
             return "STARLARK_SOURCE_INVALID", module
-        for match in load_pattern.finditer(source):
-            label = match.group("label")
+        try:
+            syntax = ast.parse(source, mode="exec")
+        except SyntaxError:
+            return "STARLARK_SOURCE_INVALID", module
+        parents = {
+            child: parent
+            for parent in ast.walk(syntax)
+            for child in ast.iter_child_nodes(parent)
+        }
+        top_level_loads: list[ast.Call] = []
+        for statement in syntax.body:
+            if not (
+                isinstance(statement, ast.Expr)
+                and isinstance(statement.value, ast.Call)
+                and isinstance(statement.value.func, ast.Name)
+                and statement.value.func.id == "load"
+            ):
+                continue
+            top_level_loads.append(statement.value)
+        top_level_load_ids = {id(call) for call in top_level_loads}
+        for name in (
+            node
+            for node in ast.walk(syntax)
+            if isinstance(node, ast.Name) and node.id == "load"
+        ):
+            parent = parents.get(name)
+            if not (
+                isinstance(parent, ast.Call)
+                and parent.func is name
+                and id(parent) in top_level_load_ids
+            ):
+                return "STARLARK_SOURCE_INVALID", module
+        for call in top_level_loads:
+            if not call.args:
+                return "STARLARK_SOURCE_INVALID", module
+            label_node = call.args[0]
+            if not (
+                isinstance(label_node, ast.Constant)
+                and isinstance(label_node.value, str)
+            ):
+                return "STARLARK_SOURCE_INVALID", module
+            label = label_node.value
             if label.startswith("//"):
                 resolved = label[2:]
             elif label.startswith(("./", "../")):
@@ -1401,7 +1470,7 @@ def _validate_pure_result_semantics(
             outcome == "error"
             and valid is False
             and bool(codes)
-            and sorted(codes) == sorted(diagnostic_codes)
+            and set(codes) == set(diagnostic_codes)
         )
         if not consistent:
             raise ConformanceError(
@@ -1409,9 +1478,12 @@ def _validate_pure_result_semantics(
                 "validation outcome, valid flag, and diagnostics disagree",
             )
     elif domain == "toolchain_detection":
+        packages = {package["name"]: package for package in options["packages"]}
+        selected = options["scheduled_packages"]
+        selected_names = packages if selected is None else selected
         unsupported = any(
-            package["language"] not in LANGUAGE_TOOLCHAINS
-            for package in options["packages"]
+            packages[name]["language"] not in LANGUAGE_TOOLCHAINS
+            for name in selected_names
         ) or any(
             toolchain not in TOOLCHAINS for toolchain in options["forced_toolchains"]
         )
@@ -1933,7 +2005,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             ),
             file=sys.stderr,
         )
-        return 1 if error.code == "RESULT_MISMATCH" else 2
+        return 1 if error.code.startswith("RESULT_") else 2
 
     print(json.dumps(output, sort_keys=True))
     return exit_code
