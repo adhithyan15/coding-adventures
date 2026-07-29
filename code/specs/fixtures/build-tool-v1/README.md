@@ -9,17 +9,12 @@ defined by `code/specs/build-tool-conformance.md`.
 build-tool-v1/
   schema.json
   result.schema.json
+  pure-domains.schema.json
   implementations.schema.json
   implementations.json
   CHANGELOG.md
   cases/
-    discovery-simple.json
-    discovery-windows-override.json
-    graph-diamond.json
-    plan-affected-empty.json
-    plan-affected-null.json
-    plan-future-version.json
-    resolution-python-diamond.json
+    *.json
 ```
 
 `implementations.json` inventories all 15 established language lanes plus the
@@ -27,16 +22,27 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The bootstrap corpus covers:
+The 30-case bootstrap corpus covers every process-free v1 domain:
 
-- canonical and Windows-override discovery;
+- canonical membership plus Windows, macOS, and Linux BUILD precedence;
 - the shared Python dependency diamond;
 - deterministic diamond graph levels;
 - the build-plan distinction between `affected_packages: null` and `[]`; and
-- fail-closed rejection of a future plan version.
+- fail-closed rejection of a future plan version;
+- conservative diff selection and prerequisite closure;
+- framed SHA-256 hashing plus hit, miss, and corrupt-cache recovery;
+- inline-only Starlark module resolution, bounded evaluation requests,
+  structured command extraction, and stable missing/outside errors;
+- deterministic prerequisite-closed sharding and invalid input handling;
+- normalized BUILD-file validation snapshots and the complete toolchain registry,
+  including OCaml; and
+- process-free CLI exit-decision classification.
 
-The build-plan payload is validated against
-`code/specs/schemas/build-plan-v1.schema.json`.
+The outer envelope and build-plan payload use `schema.json`,
+`result.schema.json`, and `code/specs/schemas/build-plan-v1.schema.json`.
+The seven added decision domains additionally validate a closed
+`{domain,outcome,input,result}` projection against
+`pure-domains.schema.json`; generic JSON is never a fallback.
 
 ## Runner
 
@@ -59,7 +65,10 @@ semantic path and identity checks, domain-aware result canonicalization, and
 stable error codes. `validate-corpus` also performs two-phase validation and
 bounded in-memory decoding of pure fixture workspaces so invalid base64, path
 aliases, collisions, prefix conflicts, and aggregate size violations fail
-without creating a filesystem root.
+without creating a filesystem root. Domain checks verify reference integrity,
+framed hashes, cache state, inline Starlark loads, shard closure/cost,
+BUILD-file validation diagnostics, complete toolchain maps, and CLI exit
+decisions.
 
 ## Security boundary
 
@@ -77,6 +86,24 @@ orchestration and execution fixtures remain blocked until the separate
 trusted-sandbox item implements atomic no-follow filesystem access, network
 isolation, a sanitized environment, direct argument vectors, and complete
 process-tree resource limits.
+
+The pure-domain expansion keeps that boundary intact. Diff selection consumes
+declared changed paths instead of Git, hashing consumes inline bytes instead of
+filesystem metadata, Starlark returns structured commands without running
+them, validation reads only fixture data, toolchain detection never probes the
+host, and CLI cases classify exit decisions without parsing native argv or
+invoking a build.
+
+The corpus now closes all process-free v1 domains:
+
+- discovery, resolution, graph, and plan;
+- diff selection and hashing/cache;
+- Starlark evaluation and structured-command extraction;
+- prerequisite-closed sharding;
+- BUILD-file validation and toolchain detection; and
+- CLI exit-decision semantics.
+
+Execution remains the only intentionally unmodeled domain.
 
 ## Validation
 

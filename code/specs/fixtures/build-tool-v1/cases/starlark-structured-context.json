@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "id": "starlark/structured-context",
+  "domain": "starlark",
+  "summary": "Nested repository loads receive v1 context and return structured commands without execution.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "starlark"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/python/demo/BUILD",
+        "content_utf8": "load(\"code/build/defs.star\", \"demo_target\")\n_targets = [demo_target(name = \"demo\")]\n"
+      },
+      {
+        "path": "code/build/defs.star",
+        "content_utf8": "load(\"code/build/cmd.star\", \"test_command\")\ndef demo_target(name):\n    return {\"rule\": \"python_library\", \"name\": name, \"srcs\": [\"src/demo.py\"], \"deps\": [], \"commands\": [test_command()]}\n"
+      },
+      {
+        "path": "code/build/cmd.star",
+        "content_utf8": "def test_command():\n    if _ctx[\"os\"] != \"linux\":\n        return None\n    return {\"type\": \"cmd\", \"program\": \"python\", \"args\": [\"-m\", \"pytest\"]}\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "starlark",
+    "options": {
+      "entrypoint": "code/packages/python/demo/BUILD",
+      "context": {
+        "version": 1,
+        "os": "linux",
+        "arch": "amd64",
+        "cpu_count": 4,
+        "ci": true
+      },
+      "legacy_fallback": "generate_commands",
+      "evaluation_limits": {
+        "step_count": 100000,
+        "recursion_depth": 64,
+        "load_depth": 32,
+        "module_count": 128,
+        "value_items": 100000,
+        "output_bytes": 65536
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "starlark/structured-context",
+    "domain": "starlark",
+    "outcome": "ok",
+    "result": {
+      "targets": [
+        {
+          "rule": "python_library",
+          "name": "demo",
+          "srcs": [
+            "src/demo.py"
+          ],
+          "deps": [],
+          "commands": [
+            {
+              "type": "cmd",
+              "program": "python",
+              "args": [
+                "-m",
+                "pytest"
+              ]
+            }
+          ],
+          "rendered_commands": [
+            "python -m pytest"
+          ],
+          "command_source": "structured"
+        }
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

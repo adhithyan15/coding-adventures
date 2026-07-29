@@ -9,13 +9,13 @@
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
   "active_pr": {
-    "number": 9157,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9157",
-    "branch": "codex/build-tool-conformance-runner",
-    "status": "open"
+    "item_id": "build-tool-pure-domain-corpus",
+    "pr_number": 9167,
+    "branch": "codex/build-tool-pure-domain-corpus",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9167"
   },
   "last_inventory": {
-    "revision": "edddc9b46af7662ce08799c1b5d9cd4d373025aa",
+    "revision": "3201fb42078f40ef27f11aefb5e3b4b1bcf8551e",
     "schema_version": 2,
     "established_languages": 15,
     "implementation_identities": 1184,
@@ -47,7 +47,7 @@
     {
       "id": "build-tool-fixtures",
       "title": "Cross-implementation build-tool fixture runner and inventory gate",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-contract"],
       "branch": "codex/build-tool-conformance-runner",
       "pr_number": 9157,
@@ -65,11 +65,38 @@
     {
       "id": "build-tool-pure-domain-corpus",
       "title": "Close the remaining non-execution build-tool domain schemas and fixtures",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-fixtures"],
+      "branch": "codex/build-tool-pure-domain-corpus",
+      "pr_number": 9167,
+      "notes": "Ready-for-review PR #9167. Selected after PR #9157 merged because this pure, process-free corpus expansion unlocks the Go oracle, Java/Kotlin, Dart, every existing front door, and OCaml promotion. The branch validates 30 cases across all 11 process-free domains with closed pure records, semantic oracles, conservative diff behavior, typed cache states, inline-only Starlark loads, sharding verification, normalized BUILD-file validation, and the OCaml-aware toolchain registry."
+    },
+    {
+      "id": "build-tool-cli-parser-corpus",
+      "title": "Define the inert cross-language CLI argv grammar and parser corpus",
+      "status": "pending",
+      "depends_on": ["build-tool-pure-domain-corpus"],
       "branch": null,
       "pr_number": null,
-      "notes": "Newly explicit after the bootstrap schema audit. Add closed inputs/results and positive plus adversarial cases for diff selection, hashing/cache, Starlark, sharding, validation, toolchain detection, and CLI before those domains can report success."
+      "notes": "Discovered during the pure-domain security review. Replace exit-decision-only coverage with bounded argv parsing, typed parse results, reserved-flag/path rejection, and adversarial shell/env/@file tokens without dispatch or host reads."
+    },
+    {
+      "id": "build-tool-starlark-metering-corpus",
+      "title": "Add adversarial Starlark evaluator metering fixtures",
+      "status": "pending",
+      "depends_on": ["build-tool-pure-domain-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the pure-domain security review. Cover fuel, recursion, aggregate allocations, range/value sizes, load depth/count/cycles, and print/trace limits before any native evaluator claims final Starlark conformance."
+    },
+    {
+      "id": "build-tool-validation-oracle-corpus",
+      "title": "Close the remaining build-tool validation checks with semantic oracles",
+      "status": "pending",
+      "depends_on": ["build-tool-pure-domain-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the pure-domain security review. Add deterministic inline inputs, positive and adversarial fixtures, and input-to-diagnostic oracles for declared dependencies, standalone prerequisites, Starlark declarations, identity, toolchain support, and path safety before those checks enter the closed schema."
     },
     {
       "id": "build-file-standalone-integrity",
