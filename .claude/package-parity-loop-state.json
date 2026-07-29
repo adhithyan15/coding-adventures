@@ -58,10 +58,19 @@
       "notes": "Newly separated after the contract security review. Require fail-closed filesystem and network isolation, no-follow materialization/output, direct argv, sanitized environments, and process-tree wall/CPU/memory/output/workspace/process-count limits before any execution fixture can run."
     },
     {
+      "id": "build-tool-pure-domain-corpus",
+      "title": "Close the remaining non-execution build-tool domain schemas and fixtures",
+      "status": "pending",
+      "depends_on": ["build-tool-fixtures"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Newly explicit after the bootstrap schema audit. Add closed inputs/results and positive plus adversarial cases for diff selection, hashing/cache, Starlark, sharding, validation, toolchain detection, and CLI before those domains can report success."
+    },
+    {
       "id": "build-tool-go-oracle",
       "title": "Bring the Go build tool to the canonical contract",
       "status": "pending",
-      "depends_on": ["build-tool-fixtures"],
+      "depends_on": ["build-tool-pure-domain-corpus", "build-tool-execution-sandbox"],
       "branch": null,
       "pr_number": null,
       "notes": "Wire structured Starlark context/commands and complete the B05 Windows executor contract."
@@ -79,7 +88,7 @@
       "id": "build-tool-jvm",
       "title": "Add language-native Java and Kotlin build tools",
       "status": "pending",
-      "depends_on": ["build-tool-fixtures"],
+      "depends_on": ["build-tool-pure-domain-corpus", "build-tool-execution-sandbox"],
       "branch": null,
       "pr_number": null,
       "notes": "Use shared JVM fixture infrastructure but separate idiomatic engines."
@@ -88,7 +97,7 @@
       "id": "build-tool-dart",
       "title": "Add the Dart build tool",
       "status": "pending",
-      "depends_on": ["build-tool-fixtures"],
+      "depends_on": ["build-tool-pure-domain-corpus", "build-tool-execution-sandbox"],
       "branch": null,
       "pr_number": null,
       "notes": "Must pass the same plan, resolver, execution, and platform fixtures as the reference."
@@ -124,7 +133,7 @@
       "id": "ocaml-build-tool-and-promotion",
       "title": "Implement the OCaml build tool and review 16-lane promotion",
       "status": "pending",
-      "depends_on": ["ocaml-representative-core", "build-tool-fixtures"],
+      "depends_on": ["ocaml-representative-core", "build-tool-pure-domain-corpus", "build-tool-execution-sandbox"],
       "branch": null,
       "pr_number": null,
       "notes": "Require conformance, two-way Go plan interchange, three-OS CI, capability enforcement, and explicit backlog acceptance."
@@ -196,7 +205,7 @@
       "id": "c-cpp-graduation",
       "title": "Review C/C++ graduation and native build-tool requirements",
       "status": "pending",
-      "depends_on": ["build-tool-fixtures"],
+      "depends_on": ["build-tool-pure-domain-corpus", "build-tool-execution-sandbox"],
       "branch": null,
       "pr_number": null,
       "notes": "Keep both emerging until package/scaffold/build-tool maturity and applicability are explicit."

@@ -908,21 +908,25 @@ Delivery order:
 2. Add a cross-implementation runner. The runner may orchestrate processes in
    Python, but the fixtures and canonical JSON are the behavior oracle. Start
    with non-execution domains and fail closed on every execution case.
-3. Add the trusted-execution sandbox and adversarial execution corpus. No
+3. Expand the bootstrap's closed input/result schemas and positive plus
+   adversarial corpus from discovery, resolution, graph, and plan into the
+   remaining non-execution domains: diff selection, hashing/cache, Starlark,
+   sharding, validation, toolchain detection, and CLI.
+4. Add the trusted-execution sandbox and adversarial execution corpus. No
    repository command may run until filesystem and network isolation,
    no-follow path handling, sanitized environments, direct argv, and hard
    process-tree limits are enforced.
-4. Make the Go reference pass the contract, including structured Starlark
+5. Make the Go reference pass the contract, including structured Starlark
    context/commands and the B05 Windows executor contract.
-5. Remediate existing ports in fixture-failure order: C#/F#, Python, Ruby,
+6. Remediate existing ports in fixture-failure order: C#/F#, Python, Ruby,
    Swift, TypeScript, Elixir, Rust, Perl, Haskell, and Lua. Each independent
    engine is its own PR; a reviewed shared-engine exception must be explicit.
-6. Add language-native Java and Kotlin implementations using shared JVM fixture
+7. Add language-native Java and Kotlin implementations using shared JVM fixture
    infrastructure but separate engines, then add Dart.
-7. Add the OCaml implementation after the lane foundation is stable.
-8. Decide and document whether C and C++ require native build tools before
+8. Add the OCaml implementation after the lane foundation is stable.
+9. Decide and document whether C and C++ require native build tools before
    either emerging lane graduates.
-9. Gate completion in CI: every supported implementation runs the same
+10. Gate completion in CI: every supported implementation runs the same
    conformance corpus on its applicable operating systems.
 
 ## Cross-Cutting Stream B: Introduce OCaml Safely
