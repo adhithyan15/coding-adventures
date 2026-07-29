@@ -96,7 +96,7 @@ fn model_card_type_aliases_are_normalized() {
 #[test]
 fn model_card_supported_parameter_coverage_exports_are_stable() {
     let coverage = model_card_supported_parameter_coverage();
-    assert_eq!(coverage.len(), 203);
+    assert_eq!(coverage.len(), 205);
     assert_eq!(coverage[0].kind, ModelCardKind::Diode);
     assert_eq!(coverage[0].canonical_parameter, "IS");
     assert_eq!(coverage[0].accepted_names, vec!["IS", "JS"]);
@@ -115,7 +115,7 @@ fn model_card_supported_parameter_coverage_exports_are_stable() {
     assert!(table.contains("NMOS\tVT0\tVT0|VTO|VTH\t3"));
     assert_eq!(lines.last().unwrap(), &"PMOS\tAF\tAF\t1");
     let records = model_card_supported_parameter_coverage_records();
-    assert_eq!(records.len(), 203);
+    assert_eq!(records.len(), 205);
     assert_eq!(records[0]["kind"], "D");
     assert_eq!(records[0]["canonical_parameter"], "IS");
     assert_eq!(records[0]["accepted_names"], "IS|JS");
@@ -148,8 +148,8 @@ fn model_card_supported_parameter_coverage_summary_exports_are_stable() {
         vec!["IS", "VT", "CJO", "VJ", "M"]
     );
     assert_eq!(summary[5].kind, ModelCardKind::Nmos);
-    assert_eq!(summary[5].canonical_parameter_count, 31);
-    assert_eq!(summary[5].accepted_name_count, 39);
+    assert_eq!(summary[5].canonical_parameter_count, 32);
+    assert_eq!(summary[5].accepted_name_count, 40);
     assert_eq!(summary[5].aliased_parameter_count, 7);
     assert_eq!(summary[5].max_alias_count, 3);
     assert_eq!(
@@ -167,7 +167,7 @@ fn model_card_supported_parameter_coverage_summary_exports_are_stable() {
     assert_eq!(lines[1], "D\t15\t21\t5\t3\tIS|VT|CJO|VJ|M");
     assert_eq!(
         lines.last().unwrap(),
-        &"PMOS\t31\t39\t7\t3\tVT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD"
+        &"PMOS\t32\t40\t7\t3\tVT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD"
     );
     let records = model_card_supported_parameter_coverage_summary_records();
     assert_eq!(records.len(), 7);
@@ -185,7 +185,7 @@ fn model_card_supported_parameter_coverage_summary_exports_are_stable() {
         "[{\"kind\":\"D\",\"canonical_parameter_count\":\"15\",\"accepted_name_count\":\"21\",\"aliased_parameter_count\":\"5\",\"max_alias_count\":\"3\",\"aliased_parameters\":\"IS|VT|CJO|VJ|M\"}"
     ));
     assert!(json.ends_with(
-        "{\"kind\":\"PMOS\",\"canonical_parameter_count\":\"31\",\"accepted_name_count\":\"39\",\"aliased_parameter_count\":\"7\",\"max_alias_count\":\"3\",\"aliased_parameters\":\"VT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD\"}]\n"
+        "{\"kind\":\"PMOS\",\"canonical_parameter_count\":\"32\",\"accepted_name_count\":\"40\",\"aliased_parameter_count\":\"7\",\"max_alias_count\":\"3\",\"aliased_parameters\":\"VT0|LAMBDA|U0|N_SUB|T_NOM|CBS|CBD\"}]\n"
     ));
 }
 
@@ -196,15 +196,15 @@ fn model_card_supported_parameter_coverage_gate_passes_current_catalog() {
     assert!(report.passed);
     assert_eq!(report.kind_count, 7);
     assert_eq!(report.expected_kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 203);
-    assert_eq!(report.expected_canonical_parameter_count, 203);
-    assert_eq!(report.accepted_name_count, 275);
+    assert_eq!(report.canonical_parameter_count, 205);
+    assert_eq!(report.expected_canonical_parameter_count, 205);
+    assert_eq!(report.accepted_name_count, 277);
     assert_eq!(report.aliased_parameter_count, 59);
     assert_eq!(report.max_alias_count, 4);
     assert!(report.issues.is_empty());
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t203\t203\t275\t59\t4\t0"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t205\t205\t277\t59\t4\t0"
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_issue_table(&report),
@@ -231,8 +231,8 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
 
     assert!(!report.passed);
     assert_eq!(report.kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 202);
-    assert_eq!(report.accepted_name_count, 272);
+    assert_eq!(report.canonical_parameter_count, 204);
+    assert_eq!(report.accepted_name_count, 274);
     assert_eq!(report.aliased_parameter_count, 58);
     assert_eq!(report.max_alias_count, 4);
     assert_eq!(report.issues.len(), 4);
@@ -240,7 +240,7 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
     assert_eq!(report.issues[0].field, "canonical_parameter_count");
     assert_eq!(
         report.issues[0].message,
-        "expected NMOS to expose 31 canonical supported parameters, found 30"
+        "expected NMOS to expose 32 canonical supported parameters, found 31"
     );
     assert_eq!(report.issues.last().unwrap().field, "max_alias_count");
     assert_eq!(
@@ -249,20 +249,20 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t202\t203\t272\t58\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 31 canonical supported parameters, found 30\nNMOS\taccepted_name_count\texpected NMOS to expose 39 accepted model-card names, found 36\nNMOS\taliased_parameter_count\texpected NMOS to expose 7 alias-bearing parameters, found 6\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t204\t205\t274\t58\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 32 canonical supported parameters, found 31\nNMOS\taccepted_name_count\texpected NMOS to expose 40 accepted model-card names, found 37\nNMOS\taliased_parameter_count\texpected NMOS to expose 7 alias-bearing parameters, found 6\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
     );
     let records = model_card_supported_parameter_coverage_gate_issue_records(&report);
     assert_eq!(records[0]["kind"], "NMOS");
     assert_eq!(records[0]["field"], "canonical_parameter_count");
     assert_eq!(
         records[0]["message"],
-        "expected NMOS to expose 31 canonical supported parameters, found 30"
+        "expected NMOS to expose 32 canonical supported parameters, found 31"
     );
     assert!(format_model_card_supported_parameter_coverage_gate_issue_csv(&report).starts_with(
-        "kind,field,message\nNMOS,canonical_parameter_count,\"expected NMOS to expose 31 canonical supported parameters, found 30\"\n"
+        "kind,field,message\nNMOS,canonical_parameter_count,\"expected NMOS to expose 32 canonical supported parameters, found 31\"\n"
     ));
     assert!(format_model_card_supported_parameter_coverage_gate_issue_json(&report).starts_with(
-        "[{\"kind\":\"NMOS\",\"field\":\"canonical_parameter_count\",\"message\":\"expected NMOS to expose 31 canonical supported parameters, found 30\"}"
+        "[{\"kind\":\"NMOS\",\"field\":\"canonical_parameter_count\",\"message\":\"expected NMOS to expose 32 canonical supported parameters, found 31\"}"
     ));
 }
 
@@ -284,8 +284,8 @@ fn model_card_supported_parameter_coverage_dashboard_exports_are_stable() {
     assert_eq!(dashboard[0].issue_count, 0);
     assert!(dashboard[0].issue_fields.is_empty());
     assert_eq!(dashboard[5].kind, ModelCardKind::Nmos);
-    assert_eq!(dashboard[5].canonical_parameter_count, 31);
-    assert_eq!(dashboard[5].accepted_name_count, 39);
+    assert_eq!(dashboard[5].canonical_parameter_count, 32);
+    assert_eq!(dashboard[5].accepted_name_count, 40);
     assert_eq!(dashboard[5].issue_count, 0);
 
     let table = format_model_card_supported_parameter_coverage_dashboard_table(&coverage);
@@ -297,7 +297,7 @@ fn model_card_supported_parameter_coverage_dashboard_exports_are_stable() {
     assert_eq!(lines[1], "D\ttrue\t15\t15\t21\t21\t5\t5\t3\t3\t0\t");
     assert_eq!(
         lines.last().unwrap(),
-        &"PMOS\ttrue\t31\t31\t39\t39\t7\t7\t3\t3\t0\t"
+        &"PMOS\ttrue\t32\t32\t40\t40\t7\t7\t3\t3\t0\t"
     );
     let records = model_card_supported_parameter_coverage_dashboard_records(&coverage);
     assert_eq!(records.len(), 7);
@@ -329,10 +329,10 @@ fn model_card_supported_parameter_coverage_dashboard_reports_missing_alias_famil
         .unwrap();
 
     assert!(!nmos.passed);
-    assert_eq!(nmos.canonical_parameter_count, 30);
-    assert_eq!(nmos.expected_canonical_parameter_count, 31);
-    assert_eq!(nmos.accepted_name_count, 36);
-    assert_eq!(nmos.expected_accepted_name_count, 39);
+    assert_eq!(nmos.canonical_parameter_count, 31);
+    assert_eq!(nmos.expected_canonical_parameter_count, 32);
+    assert_eq!(nmos.accepted_name_count, 37);
+    assert_eq!(nmos.expected_accepted_name_count, 40);
     assert_eq!(nmos.aliased_parameter_count, 6);
     assert_eq!(nmos.expected_aliased_parameter_count, 7);
     assert_eq!(nmos.max_alias_count, 2);
@@ -348,7 +348,7 @@ fn model_card_supported_parameter_coverage_dashboard_reports_missing_alias_famil
         ]
     );
     assert!(format_model_card_supported_parameter_coverage_dashboard_table(&coverage).contains(
-        "NMOS\tfalse\t30\t31\t36\t39\t6\t7\t2\t3\t4\tcanonical_parameter_count|accepted_name_count|aliased_parameter_count|max_alias_count"
+        "NMOS\tfalse\t31\t32\t37\t40\t6\t7\t2\t3\t4\tcanonical_parameter_count|accepted_name_count|aliased_parameter_count|max_alias_count"
     ));
 }
 
@@ -677,8 +677,12 @@ fn mos_model_card_surface_mobility_derives_kp_with_explicit_precedence() {
 
 #[test]
 fn mos_model_card_substrate_doping_derives_electrostatics_with_explicit_precedence() {
-    let derived_card =
-        normalize_model_card("Mderived", "nmos", &[("NSUB", 4.0e15), ("TOX", 100.0e-9)]).unwrap();
+    let derived_card = normalize_model_card(
+        "Mderived",
+        "nmos",
+        &[("NSUB", 4.0e15), ("TOX", 100.0e-9), ("NSS", 1.0e10)],
+    )
+    .unwrap();
     let derived = mosfet_from_model_card("M1", "d", "g", "s", "b", &derived_card).unwrap();
     let thermal_voltage = 1.380_649e-23 * 300.15 / 1.602_176_634e-19;
     let expected_phi = (2.0 * thermal_voltage * (4.0e21_f64 / 1.45e16).ln()).max(0.1);
@@ -686,16 +690,22 @@ fn mos_model_card_substrate_doping_derives_electrostatics_with_explicit_preceden
         .sqrt()
         / (3.453_133e-11 / 100.0e-9);
     let expected_band_gap = 1.16 - 7.02e-4 * 300.15 * 300.15 / (300.15 + 1108.0);
-    let expected_vt0 =
+    let process_vt0 =
         expected_gamma * expected_phi.sqrt() + 0.5 * (expected_phi - expected_band_gap);
+    let surface_state_shift = 1.0e10 * 1.0e4 * 1.602_176_634e-19 / (3.453_133e-11 / 100.0e-9);
+    let expected_vt0 = process_vt0 - surface_state_shift;
     assert_close(derived.params.phi, expected_phi);
     assert_close(derived.params.gamma, expected_gamma);
     assert_close(derived.params.vt0, expected_vt0);
 
-    let pmos_card =
-        normalize_model_card("Mp", "pmos", &[("NSUB", 4.0e15), ("TOX", 100.0e-9)]).unwrap();
+    let pmos_card = normalize_model_card(
+        "Mp",
+        "pmos",
+        &[("NSUB", 4.0e15), ("TOX", 100.0e-9), ("NSS", 1.0e10)],
+    )
+    .unwrap();
     let pmos = mosfet_from_model_card("M2", "d", "g", "s", "b", &pmos_card).unwrap();
-    assert_close(pmos.params.vt0, -expected_vt0);
+    assert_close(pmos.params.vt0, -process_vt0 - surface_state_shift);
 
     let explicit_card = normalize_model_card(
         "Mexplicit",
@@ -705,6 +715,7 @@ fn mos_model_card_substrate_doping_derives_electrostatics_with_explicit_preceden
             ("TOX", 100.0e-9),
             ("PHI", 0.72),
             ("GAMMA", 0.41),
+            ("NSS", 1.0e10),
             ("VTO", 0.63),
         ],
     )

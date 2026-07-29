@@ -2071,8 +2071,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   PNP: [41, 58, 13, 4],
   NJF: [22, 30, 7, 3],
   PJF: [22, 30, 7, 3],
-  NMOS: [31, 39, 7, 3],
-  PMOS: [31, 39, 7, 3],
+  NMOS: [32, 40, 7, 3],
+  PMOS: [32, 40, 7, 3],
 };
 
 export interface Vccs {
@@ -8354,6 +8354,7 @@ const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   JS: "JS",
   NSUB: "N_SUB",
   N_SUB: "N_SUB",
+  NSS: "NSS",
   TNOM: "T_NOM",
   T_NOM: "T_NOM",
   CGSO: "CGSO",
@@ -8960,6 +8961,11 @@ export function mosfetFromModelCard(
   }
   const nominalTemperature = p.T_NOM ?? 300.15;
   const polarity = model.kind === "NMOS" ? 1.0 : -1.0;
+  const surfaceStateShift =
+    p.TOX !== undefined && p.TOX > 0.0
+      ? ((p.NSS ?? 0.0) * 1.0e4 * ELECTRON_CHARGE) /
+        (OXIDE_PERMITTIVITY / p.TOX)
+      : 0.0;
   const thresholdVoltage =
     p.VT0 ??
     (p.N_SUB !== undefined && p.TOX !== undefined && p.TOX > 0.0
@@ -8967,7 +8973,8 @@ export function mosfetFromModelCard(
         ((bodyEffectCoefficient ?? 0.0) * Math.sqrt(surfacePotential ?? 0.0) +
           0.5 *
             ((surfacePotential ?? 0.0) -
-              siliconBandGapElectronVolts(nominalTemperature)))
+              siliconBandGapElectronVolts(nominalTemperature))) -
+        surfaceStateShift
       : undefined);
   const params: Partial<MosfetLevel1Params> = {
     ...(thresholdVoltage !== undefined ? { VT0: thresholdVoltage } : {}),

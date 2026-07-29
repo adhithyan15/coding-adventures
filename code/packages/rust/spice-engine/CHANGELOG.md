@@ -1,5 +1,8 @@
 # Changelog
 
+- Accept Level-1 MOS model-card `NSS` surface-state density and include its
+  oxide-charge flat-band shift when deriving `VT0` from process parameters,
+  while preserving explicit threshold-voltage precedence.
 - Derive Level-1 MOS `VT0` from explicit model-card `NSUB` plus `TOX` using
   Berkeley MOS1 default gate-work-function and surface-state assumptions,
   preserving explicit `VTO` / `VT0` precedence for NMOS and PMOS.

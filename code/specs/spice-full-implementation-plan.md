@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS process-derived threshold voltage.
+1. Cross-language Level-1 MOS surface-state density.
    - Status: current PR completion candidate.
-   - Derive polarity-aware `VT0` from model-card `NSUB` plus `TOX` using the
-     Berkeley MOS1 default gate-work-function and surface-state assumptions.
-   - Preserve explicit `VTO` / `VT0` precedence for NMOS and PMOS.
+   - Accept model-card `NSS` and include its oxide-charge flat-band shift when
+     deriving `VT0` from `NSUB` plus `TOX`.
+   - Preserve explicit `VTO` / `VT0` precedence and stable parameter coverage.
    - Keep Rust, Python, and TypeScript model lowering, tests, and docs aligned.
 
 ## Completed Slices
@@ -3615,6 +3615,13 @@ the Rust, Python, and TypeScript surfaces together.
      MOS1 process-parameter equations.
    - Explicit `PHI` / `GAMMA` takes precedence, and substrate doping at or below
      the intrinsic carrier density is rejected in Rust, Python, and TypeScript.
+
+291. Cross-language Level-1 MOS process-derived threshold voltage.
+   - Status: completed in PR 9160.
+   - Model-card `NSUB` plus `TOX` derives polarity-aware `VT0` using Berkeley
+     MOS1 default gate-work-function and surface-state assumptions.
+   - Explicit `VTO` / `VT0` takes precedence for NMOS and PMOS across Rust,
+     Python, and TypeScript.
 
 ## Backlog
 
