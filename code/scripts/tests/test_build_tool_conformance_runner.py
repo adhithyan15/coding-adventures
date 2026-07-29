@@ -152,6 +152,34 @@ class CorpusTests(unittest.TestCase):
                 case_path.name,
             )
 
+    def test_unmodeled_domains_cannot_claim_bootstrap_success(self) -> None:
+        case = load_case("discovery-simple.json")
+        case["id"] = "diff-selection/unmodeled"
+        case["domain"] = "diff_selection"
+        case["capabilities"] = ["diff_selection"]
+        case["input"]["operation"] = "diff_selection"
+        case["expected"] = {
+            "schema_version": 1,
+            "case_id": "diff-selection/unmodeled",
+            "domain": "diff_selection",
+            "outcome": "ok",
+            "result": {"affected_packges": []},
+            "diagnostics": [],
+        }
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(
+                case,
+                case_schema=runner.load_document(FIXTURE_ROOT / "schema.json"),
+                result_schema=runner.load_document(
+                    FIXTURE_ROOT / "result.schema.json"
+                ),
+                plan_schema=runner.load_document(
+                    runner.REPO_ROOT
+                    / "code/specs/schemas/build-plan-v1.schema.json"
+                ),
+            )
+        self.assertEqual(raised.exception.code, "CASE_DOMAIN_UNMODELED")
+
 
 class ExecutionDenialTests(unittest.TestCase):
     def assert_denied_before_side_effects(self, case: dict[str, object]) -> None:

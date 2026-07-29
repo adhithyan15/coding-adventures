@@ -37,6 +37,7 @@ MAX_WORKSPACE_FILES = 4096
 MAX_WORKSPACE_BYTES = 268_435_456
 RESERVED_ADAPTER_FLAGS = ("--conformance", "--workspace-root", "--output")
 EXECUTION_CAPABILITIES = {"execution", "trusted_execution"}
+BOOTSTRAP_DOMAINS = {"discovery", "graph", "plan", "resolution"}
 ESTABLISHED_LANGUAGES = (
     "csharp",
     "dart",
@@ -309,6 +310,15 @@ def reject_execution_intent(case: dict[str, Any]) -> None:
         raise ConformanceError(
             "EXECUTION_DISABLED",
             "the bootstrap runner never accepts execution intent",
+        )
+
+
+def reject_unmodeled_domain(case: dict[str, Any]) -> None:
+    domain = case.get("domain")
+    if domain not in BOOTSTRAP_DOMAINS:
+        raise ConformanceError(
+            "CASE_DOMAIN_UNMODELED",
+            f"bootstrap runner has no closed schema for domain: {domain}",
         )
 
 
@@ -715,6 +725,7 @@ def assert_result_matches(
     plan_schema: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     reject_execution_intent(case)
+    reject_unmodeled_domain(case)
     result_schema = result_schema or load_document(
         DEFAULT_FIXTURE_ROOT / "result.schema.json"
     )
@@ -747,6 +758,7 @@ def validate_case_document(
 ) -> list[WorkspaceFile]:
     reject_execution_intent(case)
     _validate_schema(case, case_schema, "CASE_SCHEMA_INVALID")
+    reject_unmodeled_domain(case)
     _validate_case_identity(case)
     _validate_input_paths(case)
     staged_files = preflight_workspace(case)

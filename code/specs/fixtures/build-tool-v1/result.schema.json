@@ -153,18 +153,6 @@
         "properties": {
           "result": {
             "$ref": "#/$defs/empty_result"
-          },
-          "diagnostics": {
-            "contains": {
-              "properties": {
-                "code": {
-                  "const": "PLAN_UNSUPPORTED_SCHEMA_VERSION"
-                }
-              },
-              "required": [
-                "code"
-              ]
-            }
           }
         }
       }
