@@ -1,5 +1,25 @@
 # Changelog — gc-core
 
+## 0.23.1 — 2026-07-29 — object-model stress differential (AOT00-T5, tests only)
+
+Test-only. Adds a combined stress differential exercising **every** object-model feature in one
+heap graph — records (fixed ref fields), a reference array (tail region), a header+tail object
+(fixed ref + non-reference length word + ref tail), a cycle, opaque leaves, and
+look-alike-integer non-reference fields — driven through **both** the non-moving collector and
+the compacting collector and checked against a hand-computed oracle.
+
+- `stress_graph_mark_sweep_matches_oracle`: rooting one object, exactly the 8 reachable objects
+  survive and the 3 garbage objects (including a phantom named only by a non-ref look-alike
+  integer) are reclaimed — precise tracing across mixed layouts and a cycle in one pass.
+- `stress_graph_compaction_relocates_whole_graph`: all 8 survivors are movable, so the whole
+  graph evacuates; every edge (record field, array-tail slot, header+tail element, and the
+  back-edge that closes the cycle) is fixed up to new addresses, and the non-ref sentinels are
+  byte-preserved. Walking from the rewritten root reaches every object at its new location — a
+  missed fixup anywhere would dereference a freed from-space block. Miri-clean.
+
+No production-code change; validates the T5 object model holds together under real-language-style
+graphs (mixed layouts + cycles + integers that merely look like pointers).
+
 ## 0.23.0 — 2026-07-28 — variable-length **reference arrays** — PR-2 (AOT00-T5)
 
 Makes the collector trace **and relocate** the dominant heap object of a real language runtime

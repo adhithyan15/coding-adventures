@@ -2960,6 +2960,150 @@ mod tests {
         assert!(!heap2.find_header(o2).is_null());
     }
 
+    // ── Object-model stress differential (AOT00-T5) ───────────────────────────
+    //
+    // One heap graph exercising EVERY object-model feature at once — records (fixed ref
+    // fields), reference arrays (a tail region), a header+tail object (fixed ref + non-ref
+    // length word + ref tail), a cycle, opaque leaves, and look-alike-integer non-ref fields
+    // — driven through both the non-moving collector and the compacting collector and checked
+    // against a hand-computed oracle. This is the "does the whole thing hold together" test a
+    // real language runtime (JS/Ruby/Python) needs: mixed layouts, cyclic references, and
+    // integers that merely *look* like pointers, all in the same collection.
+
+    /// Sentinels stored in non-reference words, checked byte-for-byte after relocation.
+    const SENT_A: usize = 0xA0A0_A0A0;
+    const SENT_D: usize = 0xD0D0_D0D0;
+    const SENT_CYCLE: usize = 0xC1C1_C1C1;
+
+    /// The graph's key object addresses (valid until a collection moves them).
+    struct Graph {
+        root: usize,
+        arr: usize,
+        rec2: usize,
+        cycle: usize,
+        leaf_a: usize,
+        leaf_d: usize,
+        phantom: usize,
+    }
+
+    /// Build the stress graph on `heap` and return the pre-collection addresses. Reachable from
+    /// `root` (8 objects): root → {arr, rec2}; arr → [leaf_a, leaf_b, cycle]; rec2 → leaf_c
+    /// (fixed), <look-alike int → phantom> (non-ref len word), leaf_d (tail); cycle → root
+    /// (back-edge). Garbage (3 objects): `phantom` (named only by a non-ref look-alike int),
+    /// an unreachable record, and an unreachable array.
+    unsafe fn build_stress_graph(heap: &mut FlatHeap) -> Graph {
+        let rec = heap.register_kind(&[0, 8]); // record: refs at 0 and 8
+        let arr_kind = heap.register_ref_array_kind(&[], 0); // pure ref array
+        let hdrarr = heap.register_ref_array_kind(&[0], 16); // fixed ref @0, len @8, tail @16
+        let cyc = heap.register_kind(&[0]); // record with one ref
+        let leaf = heap.register_kind(&[]); // opaque, no ref fields (movable)
+
+        let leaf_a = heap.alloc(16, leaf) as usize;
+        let leaf_b = heap.alloc(16, leaf) as usize;
+        let leaf_c = heap.alloc(16, leaf) as usize;
+        let leaf_d = heap.alloc(16, leaf) as usize;
+        let phantom = heap.alloc(16, leaf) as usize; // garbage: only a look-alike int names it
+        let cycle = heap.alloc(16, cyc) as usize;
+        let arr = heap.alloc(24, arr_kind) as usize; // 3-slot ref array
+        let rec2 = heap.alloc(24, hdrarr) as usize; // header + 1-slot tail
+        let root = heap.alloc(16, rec) as usize;
+        let _garbage_rec = heap.alloc(16, rec) as usize; // unreachable
+        let _garbage_arr = heap.alloc(24, arr_kind) as usize; // unreachable
+
+        // Wire the graph.
+        *(root as *mut usize) = arr; // root.0 -> arr
+        *((root + 8) as *mut usize) = rec2; // root.8 -> rec2
+        *(arr as *mut usize) = leaf_a; // arr[0]
+        *((arr + 8) as *mut usize) = leaf_b; // arr[1]
+        *((arr + 16) as *mut usize) = cycle; // arr[2]
+        *(rec2 as *mut usize) = leaf_c; // rec2.0 (fixed ref)
+        *((rec2 + 8) as *mut usize) = phantom; // rec2.8 (NON-ref len word: a look-alike int)
+        *((rec2 + 16) as *mut usize) = leaf_d; // rec2.16 (tail element)
+        *(cycle as *mut usize) = root; // cycle.0 -> root (back-edge → a cycle)
+        *((cycle + 8) as *mut usize) = SENT_CYCLE; // sentinel in cycle's non-ref word
+        *((leaf_a + 8) as *mut usize) = SENT_A; // sentinel in a leaf non-ref word
+        *((leaf_d + 8) as *mut usize) = SENT_D;
+
+        Graph { root, arr, rec2, cycle, leaf_a, leaf_d, phantom }
+    }
+
+    /// **Non-moving collection over the mixed graph.** Rooting only `root`, exactly the 8
+    /// reachable objects survive and the 3 garbage objects (including the look-alike-int
+    /// `phantom`) are reclaimed — proving precise tracing across records, arrays, a header+tail,
+    /// and a cycle in one pass, with a non-ref integer field pinning nothing.
+    #[test]
+    fn stress_graph_mark_sweep_matches_oracle() {
+        let mut heap = FlatHeap::new();
+        let g = unsafe { build_stress_graph(&mut heap) };
+        assert_eq!(heap.object_count(), 11, "8 reachable + 3 garbage allocated");
+
+        let stats = heap.collect(&[g.root]);
+
+        assert_eq!(stats.freed, 3, "phantom + unreachable record + unreachable array reclaimed");
+        assert_eq!(heap.object_count(), 8, "exactly the reachable set survives");
+        // The phantom (named only by a non-ref look-alike integer) must be gone.
+        assert!(heap.find_header(g.phantom).is_null(), "look-alike int did not pin the phantom");
+        // Every reachable object is still present (the cycle did not cause over- or under-marking).
+        for p in [g.root, g.arr, g.rec2, g.cycle, g.leaf_a, g.leaf_d] {
+            assert!(!heap.find_header(p).is_null(), "reachable object retained");
+        }
+        // Sentinels intact (non-moving: addresses unchanged).
+        assert_eq!(unsafe { *((g.leaf_a + 8) as *const usize) }, SENT_A);
+        assert_eq!(unsafe { *((g.cycle + 8) as *const usize) }, SENT_CYCLE);
+    }
+
+    /// **Compacting collection over the mixed graph — the relocation stress test.** Every object
+    /// is a registered kind reached only precisely, so all 8 survivors are movable: the whole
+    /// graph evacuates into the arena, every edge (record field, array-tail slot, header+tail
+    /// element, and the back-edge that closes the cycle) is fixed up to the new addresses, and
+    /// the non-ref sentinels are byte-preserved. Walking the graph from the rewritten root after
+    /// the move must reach every object at its *new* location — a missed fixup anywhere would
+    /// dereference a freed from-space block (caught here and under Miri).
+    #[test]
+    fn stress_graph_compaction_relocates_whole_graph() {
+        let mut heap = FlatHeap::new();
+        let g = unsafe { build_stress_graph(&mut heap) };
+
+        // Root through a slot so compaction can rewrite it in place.
+        let root_holder = g.root;
+        let slots = [&root_holder as *const usize as usize];
+        let stats = unsafe { heap.collect_compacting(&slots, &[]) };
+
+        assert_eq!(stats.freed, 3, "the 3 garbage objects reclaimed");
+        assert_eq!(stats.survived, 8, "the 8 reachable objects survive (moved)");
+        assert_eq!(heap.object_count(), 8);
+
+        // Walk the graph from the REWRITTEN root; every hop must land on a moved object.
+        let new_root = root_holder;
+        assert_ne!(new_root, g.root, "root relocated");
+        unsafe {
+            let new_arr = *(new_root as *const usize);
+            let new_rec2 = *((new_root + 8) as *const usize);
+            assert_ne!(new_arr, g.arr, "arr relocated + root's ref fixed up");
+            assert_ne!(new_rec2, g.rec2, "rec2 relocated + root's ref fixed up");
+
+            // arr's tail: [leaf_a, leaf_b, cycle] all fixed up to new addresses.
+            let new_leaf_a = *(new_arr as *const usize);
+            let new_cycle = *((new_arr + 16) as *const usize);
+            assert_ne!(new_leaf_a, g.leaf_a, "array element relocated + tail slot fixed up");
+            assert_eq!(*((new_leaf_a + 8) as *const usize), SENT_A, "leaf sentinel preserved");
+
+            // rec2: fixed ref (leaf_c) + tail element (leaf_d); the len word is a non-ref int.
+            let new_leaf_d = *((new_rec2 + 16) as *const usize);
+            assert_ne!(new_leaf_d, g.leaf_d, "header+tail element relocated + fixed up");
+            assert_eq!(*((new_leaf_d + 8) as *const usize), SENT_D, "tail-element sentinel preserved");
+
+            // The cycle: cycle.0 must point back at the NEW root address (back-edge fixed up).
+            assert_ne!(new_cycle, g.cycle, "cycle node relocated");
+            assert_eq!(*(new_cycle as *const usize), new_root, "cycle back-edge fixed up to new root");
+            assert_eq!(*((new_cycle + 8) as *const usize), SENT_CYCLE, "cycle sentinel preserved");
+        }
+
+        // The phantom stays reclaimed — a non-ref look-alike int neither retained nor relocated it.
+        assert!(heap.find_header(g.phantom).is_null());
+        drop(heap); // frees the retained arena + any malloc survivors exactly once
+    }
+
     // ── Generational split: young/old + promotion ─────────────────────────────
 
     /// Fresh allocations are born into the young generation.
