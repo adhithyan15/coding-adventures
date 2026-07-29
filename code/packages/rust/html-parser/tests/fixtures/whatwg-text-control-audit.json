@@ -1,5 +1,5 @@
 {
-  "case_count": 698,
+  "case_count": 699,
   "cases": [
     {
       "axis": "rawtext-elements",
@@ -4188,6 +4188,12 @@
       "id": "webkit02-dat-22",
       "reason": "plaintext insertion and consume-through-EOF recovery",
       "source": "webkit02.dat:22"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "html5test-com-dat-14",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "html5test-com.dat:14"
     }
   ],
   "counts_by_axis": {
@@ -4196,7 +4202,7 @@
     "plaintext-recovery": 56,
     "pre-listing-newline": 29,
     "rawtext-elements": 99,
-    "rcdata-controls": 86,
+    "rcdata-controls": 87,
     "script-rawtext": 367,
     "stray-text-control-end-tags": 7
   },

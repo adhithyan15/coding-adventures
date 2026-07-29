@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- The current WPT void-in-phrasing and foreign-content CDATA cases are now
+  mirrored in the canonical tree-construction corpus and its focused void and
+  foreign-content audits, leaving only processing-instruction signatures in
+  the checked upstream debt.
 - The conformance coverage audit now reads tree-construction cases from WPT and
   tokenizer cases from html5lib-tests, pins every missing WPT source signature,
   and accepts only explicit missing-case debt counts so the current 156-case gap

@@ -1,5 +1,5 @@
 {
-  "case_count": 1086,
+  "case_count": 1100,
   "cases": [
     {
       "axis": "head-text-mode",
@@ -6516,14 +6516,98 @@
       "id": "webkit02-dat-21",
       "reason": "title, style, and script handoff around document shell boundaries",
       "source": "webkit02.dat:21"
+    },
+    {
+      "axis": "body-boundary",
+      "id": "void-in-phrasing-dat-1",
+      "reason": "explicit body start/end tags and late body handling",
+      "source": "void-in-phrasing.dat:1"
+    },
+    {
+      "axis": "body-boundary",
+      "id": "void-in-phrasing-dat-2",
+      "reason": "explicit body start/end tags and late body handling",
+      "source": "void-in-phrasing.dat:2"
+    },
+    {
+      "axis": "body-boundary",
+      "id": "void-in-phrasing-dat-3",
+      "reason": "explicit body start/end tags and late body handling",
+      "source": "void-in-phrasing.dat:3"
+    },
+    {
+      "axis": "body-boundary",
+      "id": "void-in-phrasing-dat-4",
+      "reason": "explicit body start/end tags and late body handling",
+      "source": "void-in-phrasing.dat:4"
+    },
+    {
+      "axis": "body-boundary",
+      "id": "void-in-phrasing-dat-5",
+      "reason": "explicit body start/end tags and late body handling",
+      "source": "void-in-phrasing.dat:5"
+    },
+    {
+      "axis": "body-boundary",
+      "id": "void-in-phrasing-dat-6",
+      "reason": "explicit body start/end tags and late body handling",
+      "source": "void-in-phrasing.dat:6"
+    },
+    {
+      "axis": "body-boundary",
+      "id": "void-in-phrasing-dat-7",
+      "reason": "explicit body start/end tags and late body handling",
+      "source": "void-in-phrasing.dat:7"
+    },
+    {
+      "axis": "body-boundary",
+      "id": "void-in-phrasing-dat-8",
+      "reason": "explicit body start/end tags and late body handling",
+      "source": "void-in-phrasing.dat:8"
+    },
+    {
+      "axis": "body-boundary",
+      "id": "void-in-phrasing-dat-9",
+      "reason": "explicit body start/end tags and late body handling",
+      "source": "void-in-phrasing.dat:9"
+    },
+    {
+      "axis": "body-boundary",
+      "id": "void-in-phrasing-dat-10",
+      "reason": "explicit body start/end tags and late body handling",
+      "source": "void-in-phrasing.dat:10"
+    },
+    {
+      "axis": "body-boundary",
+      "id": "void-in-phrasing-dat-11",
+      "reason": "explicit body start/end tags and late body handling",
+      "source": "void-in-phrasing.dat:11"
+    },
+    {
+      "axis": "body-boundary",
+      "id": "void-in-phrasing-dat-12",
+      "reason": "explicit body start/end tags and late body handling",
+      "source": "void-in-phrasing.dat:12"
+    },
+    {
+      "axis": "body-boundary",
+      "id": "void-in-phrasing-dat-13",
+      "reason": "explicit body start/end tags and late body handling",
+      "source": "void-in-phrasing.dat:13"
+    },
+    {
+      "axis": "head-text-mode",
+      "id": "html5test-com-dat-14",
+      "reason": "title, style, and script handoff around document shell boundaries",
+      "source": "html5test-com.dat:14"
     }
   ],
   "counts_by_axis": {
-    "body-boundary": 280,
+    "body-boundary": 293,
     "body-frameset-transition": 153,
     "head-boundary": 49,
     "head-metadata-boundary": 50,
-    "head-text-mode": 481,
+    "head-text-mode": 482,
     "html-boundary": 73
   },
   "description": "Focused parser audit over selected html5lib tree-construction cases that stress html/head/body shell transitions, metadata relocation, head text-mode handoff, frameset/body compatibility, and late shell tags.",

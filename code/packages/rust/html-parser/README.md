@@ -134,8 +134,8 @@ focused regression test in `tests/browser_readiness_test.rs`. The
 executable source of truth for that boundary and should fail if a future field
 is added without coverage evidence.
 
-The checked-in tree-construction smoke corpus contains 2,494 passing DOM cases.
-Current WPT contains 1,934 upstream tree-construction cases, with 147 source
+The checked-in tree-construction smoke corpus contains 2,513 passing DOM cases.
+Current WPT contains 1,934 upstream tree-construction cases, with 128 source
 signatures not yet mirrored locally. The checked audit report makes that debt
 explicit so follow-up conformance slices can ratchet it to zero. A separate
 adapter can project DOM into `document-ast` for existing native document
@@ -152,7 +152,7 @@ tests moved from html5lib-tests to WPT, so a current audit uses both checkouts:
 HTML5LIB_TESTS_ROOT=/path/to/html5lib-tests \
 WPT_ROOT=/path/to/wpt \
   python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py \
-  --expect-tree-missing 147 \
+  --expect-tree-missing 128 \
   --expect-tokenizer-missing 0
 ```
 
@@ -170,8 +170,8 @@ python3 code/packages/rust/html-parser/tests/fixtures/audit_html5lib_coverage.py
   /path/to/html5lib-tests \
   --wpt-root /path/to/wpt \
   --expect-tree-upstream-cases 1934 \
-  --expect-tree-local-cases 2494 \
-  --expect-tree-missing 147 \
+  --expect-tree-local-cases 2513 \
+  --expect-tree-missing 128 \
   --expect-tokenizer-upstream-cases 6806 \
   --expect-tokenizer-local-raw-cases 7015 \
   --expect-tokenizer-missing 0 \
