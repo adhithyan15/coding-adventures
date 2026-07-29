@@ -1,0 +1,95 @@
+% ============================================================================
+% shock-index.adj — the definition of the shock index (SI = heart rate ÷ systolic
+% blood pressure) in the ADJ standard library.
+% ============================================================================
+% The shock-index entry of the *clinical* track, a hemodynamic bedside sibling of
+% `mean-arterial-pressure.adj` and `pulse-pressure.adj`. Where those combine the two cuff
+% pressures, this pairs the heart rate against the systolic pressure: THE SHOCK INDEX IS THE
+% HEART RATE DIVIDED BY THE SYSTOLIC BLOOD PRESSURE — a single dimensionless ratio that rises
+% as the heart rate climbs and the pressure falls, the classic early-shock signature (a normal
+% SI sits below ~0.8; higher values flag occult hypoperfusion before frank hypotension). It is
+% computed at the bedside with no equipment beyond the vitals already in hand, which is exactly
+% why it is a first-line triage number. It ships as an importable, byte-provenanced,
+% PARAMETERIZED `formula`, together with its two exact rearrangements (the heart rate a shock
+% index implies for a given pressure, and the systolic pressure it implies for a given rate). As
+% with every compute library, a consumer states NO arithmetic: it `import`s this file, binds the
+% measured vitals from its own byte-provenance decomposition, and asks the engine to APPLY the
+% cited definition on the CPU. Zero math is performed by the model; the engine computes each
+% value EXACTLY (over exact rationals), carrying the definition's citation.
+%
+%     import "shock-index.adj"
+%     observe heart_rate(140)              % "…heart rate 140 /min…"       (span cited by the model)
+%     observe systolic_blood_pressure(70)  % "…systolic BP 70 mmHg…"       (span cited by the model)
+%     ? shock_index(heart_rate, systolic_blood_pressure)
+%                                          % engine → 2, carrying SI = HR ÷ SBP
+%
+% All three formulas are EXACT over their parameters, so every value the engine returns is exact.
+% They COMPOSE and invert cleanly around the worked case heart rate = 140 /min, systolic blood
+% pressure = 70 mmHg (SI = 140 ÷ 70 = 2): the `shock_index` a consumer computes from the two
+% vitals is exactly the value the `heart_rate` formula multiplies back by the systolic pressure
+% to recover 140, and exactly the value the `systolic_blood_pressure` formula divides the heart
+% rate by to recover 70.
+%
+%   shock_index(heart_rate, systolic_blood_pressure)
+%       = heart_rate / systolic_blood_pressure      % SI  = HR ÷ SBP   (definition)
+%   heart_rate(shock_index, systolic_blood_pressure)
+%       = shock_index * systolic_blood_pressure     % HR  = SI × SBP   (solved for HR)
+%   systolic_blood_pressure(heart_rate, shock_index)
+%       = heart_rate / shock_index                  % SBP = HR ÷ SI    (solved for SBP)
+%
+% NOTE ON UNITS: the heart rate is per minute and the systolic blood pressure is in millimetres
+% of mercury; the shock index is DIMENSIONLESS (the units are conventionally dropped), and this
+% library computes the exact ratio over whatever consistent inputs it is given.
+%
+% All three formulas are defended by the SAME sentence — "Shock index (SI) is defined as the
+% heart rate (HR) divided by systolic blood pressure (SBP)" — because that one definition
+% (the shock index IS the heart-rate-over-systolic-pressure ratio) sanctions the relation read
+% every way. The quote is transcribed verbatim from a peer-reviewed review article archived on
+% the NCBI PMC repository, so each `formula` carries the provenance envelope every shipped
+% grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the sentence is a verbatim span of the cited page, not
+% asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable vital sign the definition ranges over, and each
+% result is a derived quantity. `heart_rate`, `systolic_blood_pressure` and `shock_index` each
+% appear BOTH as a derived result and as an input (of the other formulas), so each is a single
+% dictionary term used in both roles. The `surface` lists are the everyday names a decomposer
+% maps onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary shock_index_vocab {
+    define heart_rate               : finding  surface "heart rate", "HR", "pulse"                          % beats per minute (/min)
+    define systolic_blood_pressure  : finding  surface "systolic blood pressure", "SBP", "systolic BP"      % millimetres of mercury (mmHg)
+    define shock_index              : finding  surface "shock index", "SI"                                  % dimensionless ratio
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the definitional sentence from the cited
+% review on the NCBI PMC repository (a quote is required on a shipped formula). Each is an exact
+% ratio or product of measured vitals, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook shock_index_laws {
+    use shock_index_vocab
+
+    % Shock index — the heart rate divided by the systolic blood pressure, i.e. SI = HR ÷ SBP.
+    formula shock_index(heart_rate, systolic_blood_pressure) = heart_rate / systolic_blood_pressure
+        source "Shock index (SI) is defined as the heart rate (HR) divided by systolic blood pressure (SBP)."
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC6698590/"
+        trust authoritative
+
+    % Heart rate — the same definition solved for the rate a shock index implies for a given
+    % systolic pressure (HR = SI × SBP). Defended by the SAME sentence.
+    formula heart_rate(shock_index, systolic_blood_pressure) = shock_index * systolic_blood_pressure
+        source "Shock index (SI) is defined as the heart rate (HR) divided by systolic blood pressure (SBP)."
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC6698590/"
+        trust authoritative
+
+    % Systolic blood pressure — the same definition solved for the pressure (SBP = HR ÷ SI): the
+    % heart rate divided by the shock index. The SAME sentence, read the third way.
+    formula systolic_blood_pressure(heart_rate, shock_index) = heart_rate / shock_index
+        source "Shock index (SI) is defined as the heart rate (HR) divided by systolic blood pressure (SBP)."
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC6698590/"
+        trust authoritative
+}

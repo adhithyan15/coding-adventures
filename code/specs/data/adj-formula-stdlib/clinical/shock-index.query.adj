@@ -1,0 +1,27 @@
+% ============================================================================
+% shock-index.query.adj — worked applications of the shock-index definition.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a triage vignette into observed vitals:
+% it `import`s the grounded formulabook, `observe`s the measured heart rate and systolic
+% pressure, and asks the engine to APPLY the cited definition. No arithmetic is stated by the
+% consumer; the engine computes each value EXACTLY (over exact rationals) and carries the review
+% article's citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (heart rate = 140 /min, systolic blood pressure = 70 mmHg): SI = 140 ÷ 70 = 2.
+% Each query below fixes two of the three quantities and asks the engine to recover the third;
+% every answer is exact and the three COMPOSE (each inversion recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli shock-index.query.adj
+% ============================================================================
+
+import "shock-index.adj"
+
+% --- Forward: the shock index the two vitals imply (expect 2). --------------------------------
+observe heart_rate(140)
+observe systolic_blood_pressure(70)
+? shock_index(heart_rate, systolic_blood_pressure)   % expect 2
+
+% --- Inverse: the heart rate a shock index of 2 implies at that pressure (expect 140). ---------
+observe shock_index(2)
+? heart_rate(shock_index, systolic_blood_pressure)   % expect 140
