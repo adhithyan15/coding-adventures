@@ -4109,8 +4109,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Pnp, 41, 58, 13, 4),
     (ModelCardKind::Njf, 22, 30, 7, 3),
     (ModelCardKind::Pjf, 22, 30, 7, 3),
-    (ModelCardKind::Nmos, 32, 40, 7, 3),
-    (ModelCardKind::Pmos, 32, 40, 7, 3),
+    (ModelCardKind::Nmos, 33, 41, 7, 3),
+    (ModelCardKind::Pmos, 33, 41, 7, 3),
 ];
 const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -4251,6 +4251,7 @@ const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("NSUB", "N_SUB"),
     ("N_SUB", "N_SUB"),
     ("NSS", "NSS"),
+    ("TPG", "TPG"),
     ("TNOM", "T_NOM"),
     ("T_NOM", "T_NOM"),
     ("CGSO", "CGSO"),
@@ -4344,6 +4345,11 @@ pub fn normalize_model_card(
                     });
                 }
                 normalized.insert(canonical.to_string(), 1.0);
+            } else if canonical == "TPG" && !matches!(*raw_value, -1.0 | 0.0 | 1.0) {
+                return Err(SpiceError::InvalidElement {
+                    name: name.clone(),
+                    reason: "MOSFET TPG must be -1, 0, or 1".to_string(),
+                });
             } else {
                 normalized.insert(canonical.to_string(), *raw_value);
             }
@@ -5093,13 +5099,22 @@ pub fn mosfet_from_model_card(
                     MosfetType::Nmos => 1.0,
                     MosfetType::Pmos => -1.0,
                 };
+                let band_gap = silicon_band_gap_electron_volts(params.t_nom);
+                let gate_type = model_card_value(model, "TPG", 1.0);
+                let substrate_fermi_potential = polarity * 0.5 * params.phi;
+                let gate_work_function = if gate_type == 0.0 {
+                    3.2
+                } else {
+                    let gate_fermi_potential = polarity * gate_type * 0.5 * band_gap;
+                    3.25 + 0.5 * band_gap - gate_fermi_potential
+                };
+                let gate_substrate_work_function =
+                    gate_work_function - (3.25 + 0.5 * band_gap + substrate_fermi_potential);
                 let surface_state_shift =
                     model_card_value(model, "NSS", 0.0) * 1.0e4 * ELECTRON_CHARGE
                         / oxide_capacitance;
-                params.vt0 = polarity
-                    * (params.gamma * params.phi.sqrt()
-                        + 0.5 * (params.phi - silicon_band_gap_electron_volts(params.t_nom)))
-                    - surface_state_shift;
+                params.vt0 = gate_substrate_work_function - surface_state_shift
+                    + polarity * (params.gamma * params.phi.sqrt() + params.phi);
             }
         }
     }

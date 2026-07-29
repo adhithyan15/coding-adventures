@@ -2071,8 +2071,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   PNP: [41, 58, 13, 4],
   NJF: [22, 30, 7, 3],
   PJF: [22, 30, 7, 3],
-  NMOS: [32, 40, 7, 3],
-  PMOS: [32, 40, 7, 3],
+  NMOS: [33, 41, 7, 3],
+  PMOS: [33, 41, 7, 3],
 };
 
 export interface Vccs {
@@ -8355,6 +8355,7 @@ const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   NSUB: "N_SUB",
   N_SUB: "N_SUB",
   NSS: "NSS",
+  TPG: "TPG",
   TNOM: "T_NOM",
   T_NOM: "T_NOM",
   CGSO: "CGSO",
@@ -8427,6 +8428,8 @@ export function normalizeModelCard(
         throw invalidElement(name, "only MOS LEVEL=1 model cards are supported");
       }
       normalized[canonical] = 1.0;
+    } else if (canonical === "TPG" && value !== -1.0 && value !== 0.0 && value !== 1.0) {
+      throw invalidElement(name, "MOSFET TPG must be -1, 0, or 1");
     } else {
       normalized[canonical] = value;
     }
@@ -8961,6 +8964,15 @@ export function mosfetFromModelCard(
   }
   const nominalTemperature = p.T_NOM ?? 300.15;
   const polarity = model.kind === "NMOS" ? 1.0 : -1.0;
+  const bandGap = siliconBandGapElectronVolts(nominalTemperature);
+  const gateType = p.TPG ?? 1.0;
+  const substrateFermiPotential = polarity * 0.5 * (surfacePotential ?? 0.0);
+  const gateWorkFunction =
+    gateType === 0.0
+      ? 3.2
+      : 3.25 + 0.5 * bandGap - polarity * gateType * 0.5 * bandGap;
+  const gateSubstrateWorkFunction =
+    gateWorkFunction - (3.25 + 0.5 * bandGap + substrateFermiPotential);
   const surfaceStateShift =
     p.TOX !== undefined && p.TOX > 0.0
       ? ((p.NSS ?? 0.0) * 1.0e4 * ELECTRON_CHARGE) /
@@ -8969,12 +8981,11 @@ export function mosfetFromModelCard(
   const thresholdVoltage =
     p.VT0 ??
     (p.N_SUB !== undefined && p.TOX !== undefined && p.TOX > 0.0
-      ? polarity *
-        ((bodyEffectCoefficient ?? 0.0) * Math.sqrt(surfacePotential ?? 0.0) +
-          0.5 *
-            ((surfacePotential ?? 0.0) -
-              siliconBandGapElectronVolts(nominalTemperature))) -
-        surfaceStateShift
+      ? gateSubstrateWorkFunction -
+        surfaceStateShift +
+        polarity *
+          ((bodyEffectCoefficient ?? 0.0) * Math.sqrt(surfacePotential ?? 0.0) +
+            (surfacePotential ?? 0.0))
       : undefined);
   const params: Partial<MosfetLevel1Params> = {
     ...(thresholdVoltage !== undefined ? { VT0: thresholdVoltage } : {}),
