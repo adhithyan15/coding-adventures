@@ -1960,6 +1960,10 @@ fn fixed_helper(name: &str) -> Option<(&'static str, usize)> {
         "tmod" => ("_sir_itmod", 2),
         "utdiv" => ("_sir_utdiv", 2),
         "utmod" => ("_sir_utmod", 2),
+        // Milestone 9 numeric conversions: `to_f` (int → double) and `to_i`
+        // (double → int, truncating toward zero, matching C's `(int)double`).
+        "to_f" => ("_sir_to_f", 1),
+        "to_i" => ("_sir_to_i", 1),
         "cons" => ("_sir_cons", 2),
         "car" => ("_sir_car", 1),
         "cdr" => ("_sir_cdr", 1),

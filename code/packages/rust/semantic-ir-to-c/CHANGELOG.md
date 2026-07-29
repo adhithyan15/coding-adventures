@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.17.0 — numeric conversions: `to_f` / `to_i`
+
+Two numeric-conversion builtins mirroring the Ruby backend, for the C frontend's
+floating-point value track (SIR27 milestone 9b).
+
+- `to_f` → `_sir_to_f` = `_sir_float(_sir_as_num(v))` (numeric → double).
+- `to_i` → `_sir_to_i` = `_sir_int(_sir_as_int(v))` (double → int, **truncating
+  toward zero** like C's `(int)double`; the frontend then narrows to the target
+  width with a `Convert`, i.e. `_sir_iN`/`_sir_uN`).
+
+Float arithmetic itself needs no new code: `_sir_plus/minus/times/divide_v` and
+the comparison helpers already promote to `double` when any operand is a
+`SIR_FLOAT` (so `_sir_divide_v` does true division), and `Feature::Floats` /
+`Expr::FloatLit` were already supported.  The emitted C compiles clean on
+clang + gcc + MSVC and matches the reference / emitted-Ruby legs byte-for-byte.
+
 ## 0.16.0 — OOP mirror slice 4: inheritance + `super`
 
 Class inheritance and `super` — the fourth slice of the C OOP mirror. No new

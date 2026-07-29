@@ -365,6 +365,60 @@ initializer like `int v = v + 1;` in a shadowing block reads the *uninitialized*
 inner `v` per C's scope rule — that is UB, and not something the translator
 conforms to.)
 
+## Floating point (milestone 9)
+
+Every earlier milestone tracked one thing per expression — an `IntSpec`.  Floats
+add a **second value track**.  The lowering now carries a `CType` for each
+expression:
+
+```
+enum CType { Int(IntSpec), Double }
+```
+
+`float`, `double` (and, conceptually, `long double`) all map to the one
+`CType::Double`, which lowers to `SirType::Float` — SIR has a single 64-bit IEEE
+float, so `float`'s narrower 32-bit rounding is *not* modelled (a `float` is
+treated as a `double`).  A floating-point literal (`3.14`, `.5`, `1e10`, `1.0f`)
+lowers to `Expr::FloatLit`; the `f`/`l` storage suffix is dropped.
+
+**The usual arithmetic conversions, extended.**  When an operator mixes an
+integer and a `double`, C converts the integer operand to `double` and does the
+operation in floating point.  The frontend inserts that conversion explicitly as
+a `to_f` builtin, so `1 + 2.5` lowers to `+(to_f(1), 2.5)` — a *float* add whose
+result is a `double`.  Crucially:
+
+- **No width `Convert`.**  Integer results are wrapped to their width after every
+  op (that is the whole point of the integer track); a `double` has no width to
+  wrap to, so a float op emits the bare `+`/`-`/`*`/`/` builtin.
+- **`/` is true division.**  On integers `/` lowers to the truncating `tdiv`
+  (C truncates toward zero); on `double` it is real division, the plain `/`
+  builtin.  The backends already promote to float when either operand is a float
+  (`_sir_divide_v` in C, native `/` in Ruby), so `7.0 / 2.0 == 3.5`.
+- **`%`, `&`, `|`, `^`, `<<`, `>>`, `~` are rejected on `double`** — they are not
+  defined on floating point in C, so lowering errors with a clear message rather
+  than mis-emitting.
+
+**Casts and conversions** flow through two builtins: `to_f` (int → double, C's
+implicit widening) and `to_i` (double → int, *truncating toward zero*, exactly
+like C's `(int)double`).  A `double`→integer cast is `Convert(to_i(e), spec)` —
+truncate, then narrow to the destination width — so a float→int cast reproduces C
+bit-for-bit for values that fit the destination.  Both backends render these
+natively: Ruby `.to_f`/`.to_i`, C `_sir_to_f`/`_sir_to_i`.
+
+**Conditional feature flag.**  `Feature::Floats` is declared **only** when the
+program actually used a float type or literal.  An integer-only program stays
+float-free, so its SIR — and every backend's output — is byte-for-byte what it
+was before this milestone.
+
+**Conformance and the display convention.**  Reference C's `printf("%f", …)`
+prints `3.140000`; the backends' float display prints `3.14`.  That divergence is
+a *display* question, orthogonal to the arithmetic, so the conformance corpus
+sidesteps it: every float program casts its result to `(int)` **inside the C
+source** before `printf("%d", …)`.  All three legs then format the same integer,
+and what is actually proven is the floating-point *computation* — mixed
+promotion, true division, loop accumulation, and float→int truncation — is
+identical across reference C, emitted Ruby, and emitted C.
+
 ## Pipeline
 
 ```text
@@ -412,10 +466,9 @@ pub struct CLowerError { pub message: String, pub line: usize, pub column: usize
 ## Out of scope (v1)
 
 - Pointers, arrays, structs, unions, enums, `typedef`.
-- Floating point is being added incrementally: milestone 9a wires the **grammar**
-  to recognise `float`/`double` and float literals (`3.14`, `.5`, `1e10`); the
-  lowering still rejects them with a clear "not yet supported" error until the
-  floating-point value track (a following slice) lands.
+- `long double` (SIR has a single 64-bit `Float`; `float`/`double`/`long double`
+  all map to it — see the floating-point section).  Precise `float` (32-bit)
+  rounding is therefore not modelled: `float` is treated as `double`.
 - The full preprocessor (`#define`, macros, conditional compilation).
 - Multiple translation units / real headers (only `#include <stdint.h|stdio.h>`
   is recognised and ignored).
