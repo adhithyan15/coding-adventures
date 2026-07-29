@@ -1696,6 +1696,58 @@ byte value (`'0'` = 0x30 > `' '` = 0x20) `ZERO > SPACE` / `SPACE < ZERO` — byt
 identical on both engines. (This closed a reject-vs-answer gate divergence: the oracle
 already answered these while the compiler rejected them.)
 
+### Level-88 condition-name on an alphanumeric item (read + `SET … TO TRUE`, v0.67.0 / v0.63.0)
+
+A `88` condition-name registers a boolean over the immediately preceding item — its
+**conditional variable** — that holds when the variable equals any listed `VALUE`
+or falls within any inclusive `THRU` range. The earlier rung implemented this for a
+**numeric** conditional variable in both directions: reading it (`IF IS-DONE`) and
+setting it (`SET IS-DONE TO TRUE`, which assigns the first value / a range's low
+bound). This rung lifts both directions for an **alphanumeric** (`PIC X`) conditional
+variable, for the **discrete-string VALUE** case:
+
+```
+01  FLAG  PIC X VALUE "N".
+    88  IS-YES  VALUE "Y".
+    88  IS-NO   VALUE "N".
+```
+
+`IF IS-NO` is true (`FLAG` = `"N"`), `SET IS-YES TO TRUE` stores `"Y"`, and `IF IS-YES`
+is then true. Multiple discrete values OR-fold: `88 VOWEL VALUE "A" "E" "I"` holds when
+`FLAG` is any of them, and `SET VOWEL TO TRUE` assigns the first (`"A"`).
+
+- **Read.** When every VALUE item is a discrete string literal, the name holds when
+  the variable equals ANY of them under COBOL's **alphanumeric (byte) comparison** —
+  the *same* space-padded byte compare an `IF var = "…"` relation runs — OR-folded over
+  the values. A VALUE shorter than the field is space-padded to the field width, so
+  `88 IS-Y VALUE "Y"` matches `FLAG PIC X(3)` holding `"Y  "`. The oracle routes the
+  variable and each value through `compare_operands` (its alphanumeric arm); the
+  compiler emits a `cmp_eq` over the same `str_cmp` / space-pad path
+  (`emit_str_condition`) an alphanumeric `IF` uses, OR-folded with `or`. Reusing that
+  shared machinery is what makes the read byte-identical between the engines.
+- **Set.** `SET cond-name TO TRUE` stores the FIRST value into the slot exactly as
+  `MOVE "…" TO item`: the oracle's `move_into` (via `src_from_lit` → `Src::Chars`) and
+  the compiler's `format_into_picture` → slot `str_const`, both fitting the string to
+  the receiver width by the ordinary alphanumeric rule.
+- **Accept predicate (co-total).** Accepted **iff** the conditional variable is
+  alphanumeric AND every VALUE item is a discrete string (`Single(Str)`) — the same
+  `all_single_str` check on both engines, so they accept and reject the very same
+  programs.
+
+Deferred as clean later rungs (rejected identically on both engines): an alphanumeric
+**THRU range** (`88 X VALUE "A" THRU "Z"`) and a **numeric or figurative** VALUE on an
+alphanumeric 88 (`88 X VALUE 5`, `88 X VALUE SPACES`), plus a `88` over a **group**
+conditional variable. A `88` over an **unnamed** (`FILLER`) conditional variable
+(`01 FILLER PIC X. 88 IS-B VALUE "B".`) is likewise a later rung, rejected at
+build/collect time on both engines: the compiler does not model FILLERs in its item
+table (so the 88 would bind to the wrong, last-named item), while the oracle does, so
+this reject closes the divergence for both the alphanumeric and the (pre-existing
+latent) numeric FILLER-88 case. A `88` that follows a FILLER *and then a named item*
+binds to the named item and is accepted. The numeric level-88 paths are unchanged. The comparison and
+store are ASCII-clean (byte = char); a non-ASCII string VALUE or runtime value is the
+pre-existing alphanumeric byte-vs-char behavior inherited from the IF-alphanumeric
+path, not introduced here.
+
 ## Scope
 
 This spec's implementation stops at the **frontend** (lex + parse to a CST). No

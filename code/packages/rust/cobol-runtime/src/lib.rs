@@ -1332,10 +1332,10 @@ mod tests {
     }
 
     #[test]
-    fn level_88_on_a_non_numeric_item_is_a_later_rung() {
-        // A condition-name whose conditional variable is alphanumeric is deferred
-        // — a clean error, never a wrong answer.
-        let err = run_cobol(&program(&[
+    fn level_88_on_an_alphanumeric_item_with_a_discrete_string_value_holds() {
+        // A condition-name over an alphanumeric variable with a discrete string
+        // VALUE now reads: FLAG holds "Y", so IS-YES (VALUE "Y") is true.
+        let out = run_cobol(&program(&[
             "IDENTIFICATION DIVISION.",
             "PROGRAM-ID. P.",
             "DATA DIVISION.",
@@ -1345,6 +1345,45 @@ mod tests {
             "PROCEDURE DIVISION.",
             "MAIN.",
             "    IF IS-YES DISPLAY \"YES\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "YES\n");
+    }
+
+    #[test]
+    fn level_88_alphanumeric_thru_range_is_still_a_later_rung() {
+        // A `THRU` range on an alphanumeric conditional variable stays deferred —
+        // a clean error, never a wrong answer.
+        let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  FLAG  PIC X VALUE \"M\".",
+            "88  IN-RANGE  VALUE \"A\" THRU \"Z\".",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    IF IN-RANGE DISPLAY \"YES\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn level_88_alphanumeric_numeric_value_is_still_a_later_rung() {
+        // A numeric VALUE on an alphanumeric conditional variable stays deferred.
+        let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  FLAG  PIC X VALUE \"5\".",
+            "88  IS-FIVE  VALUE 5.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    IF IS-FIVE DISPLAY \"YES\".",
             "    STOP RUN.",
         ]))
         .unwrap_err();
