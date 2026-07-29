@@ -1,0 +1,28 @@
+% ============================================================================
+% pack-year.query.adj — worked applications of the pack-year definition.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a smoking-history vignette into an observed
+% daily rate and duration: it `import`s the grounded formulabook, `observe`s the packs per day and the
+% years smoked, and asks the engine to APPLY the cited definition. No arithmetic is stated by the
+% consumer; the engine computes each value EXACTLY (over exact rationals) and carries the article's
+% citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (packs per day = 2, years smoked = 15): pack-years = 2 × 15 = 30 — a heavy cumulative
+% exposure well past the common 20-pack-year lung-cancer-screening threshold. Each query below fixes
+% two of the three quantities and asks the engine to recover the third; every answer is exact and the
+% three COMPOSE (each inversion recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli pack-year.query.adj
+% ============================================================================
+
+import "pack-year.adj"
+
+% --- Definition: the pack-years the daily rate and duration imply (expect 30). ----------------
+observe packs_per_day(2)
+observe years_smoked(15)
+? pack_years(packs_per_day, years_smoked)   % expect 30
+
+% --- Inverse: the packs per day a 30 pack-year history implies over 15 years (expect 2). -------
+observe pack_years(30)
+? packs_per_day(pack_years, years_smoked)   % expect 2
