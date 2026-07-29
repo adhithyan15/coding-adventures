@@ -145,7 +145,8 @@ The `expected` object and adapter output share this shape:
 {
   "schema_version": 1,
   "case_id": "discovery/platform-precedence",
-  "status": "pass",
+  "domain": "discovery",
+  "outcome": "ok",
   "result": {},
   "diagnostics": []
 }
@@ -153,20 +154,32 @@ The `expected` object and adapter output share this shape:
 
 Rules:
 
-- object keys are serialized in lexicographic order;
-- package names, paths, dependency edges, levels, diagnostics, commands, and
-  language lists use deterministic ordering defined by the domain;
+- adapters may emit ordinary valid JSON; the runner parses, schema-validates,
+  normalizes, and serializes object keys lexicographically before comparison;
+- package names, paths, dependency edges, diagnostics, language lists, and
+  other set-like arrays are sorted as defined by the domain;
+- command order, dependency-level order, and other sequence-semantic arrays are
+  preserved; packages inside a dependency level are sorted;
 - repository-relative paths use `/` on every platform;
 - no path may escape the materialized repository root;
 - absent optional values are omitted unless the domain assigns meaning to
   `null`;
 - `null` and `[]` remain distinct;
+- numeric values are signed integers in the interoperable
+  `[-9007199254740991, 9007199254740991]` range; floating-point values,
+  non-finite values, and negative zero are forbidden, and domain decimals use
+  canonical strings;
 - diagnostics use stable codes and severities; prose may be present but is not
   used as the sole assertion;
 - duplicate set-like values are invalid rather than silently deduplicated;
-- status is one of `pass`, `error`, `unsupported`, or `skipped`;
+- outcome is one of `ok`, `error`, `unsupported`, or `skipped`;
 - `unsupported` and `skipped` require a stable diagnostic code and never count
   as conformance success.
+
+The adapter reports the operation outcome. Only the outer runner decides
+whether a case passes after comparing the normalized output with `expected`.
+The result envelope echoes both `case_id` and `domain`; semantic validation
+requires them to equal the fixture's `id` and `domain`, respectively.
 
 ## Domain registry
 
@@ -175,22 +188,24 @@ Rules:
 Required behavior:
 
 - walk the configured code root recursively;
-- match BUILD filenames exactly and stop recursion at a package root;
+- require a canonical `BUILD` file to establish package membership, match
+  filenames exactly, and stop recursion at a package root;
 - skip the canonical generated/dependency directories;
 - infer language only from exact path components;
 - distinguish packages and programs with the same basename;
 - return packages sorted by qualified name;
 - reject duplicate qualified names; and
 - select platform files in this order:
-  - Windows: `BUILD_windows`, then Starlark, then `BUILD`;
-  - macOS: `BUILD_mac`, then `BUILD_mac_and_linux`, then Starlark, then `BUILD`;
-  - Linux: `BUILD_linux`, then `BUILD_mac_and_linux`, then Starlark, then
-    `BUILD`.
+  - Windows: `BUILD_windows`, then canonical `BUILD`;
+  - macOS: `BUILD_mac`, then `BUILD_mac_and_linux`, then canonical `BUILD`;
+  - Linux: `BUILD_linux`, then `BUILD_mac_and_linux`, then canonical `BUILD`.
 
-During the Starlark migration, fixtures declare whether the Starlark source is
-`BUILD.lark` or a Starlark-formatted `BUILD`. Implementations must not infer the
-format from arbitrary executable text after a platform-specific shell override
-has already won precedence.
+The selected canonical `BUILD` may contain legacy shell lines or Starlark.
+Conformance v1 does not recognize `BUILD.lark` as a package marker; that name in
+older migration documents is aspirational. Implementations must not infer
+Starlark from arbitrary executable text after a platform-specific shell
+override has already won precedence. Platform variants override recipes; they
+do not create a host-specific package universe.
 
 ### 2. Dependency resolution
 
@@ -279,6 +294,19 @@ network resources, clocks, random sources, or process APIs.
 - validation that every edge and affected name references a declared package;
 - rejection of paths outside the repository root; and
 - no execution of `build_commands` during plan parsing.
+
+Only Go, Python, Ruby, and Swift currently expose an end-to-end v1 plan
+consumption path. Other front doors emit divergent plans, expose library-only
+readers, parse and discard the plan, or have no plan support. Those are tracked
+gaps, not alternate valid formats.
+
+The logical package set, dependency graph, and change selection are
+platform-independent. A v1 plan's concrete `build_commands` are a
+producer-platform recipe. Before execution, a consumer on another platform
+MUST re-resolve the selected platform override or re-evaluate the canonical
+Starlark BUILD with the target context. It MUST NOT execute producer commands
+blindly. A future plan version should separate the portable logical plan from
+platform recipes explicitly.
 
 Cross-language compatibility is proven only when one implementation's emitted
 plan is consumed by another implementation under the fixture matrix.
@@ -376,16 +404,23 @@ A fixture is data supplied to a program that can execute commands. Therefore:
 2. Every adapter run, including a pure domain, MUST be enclosed by the outer
    runner sandbox. Pure domains MUST NOT execute fixture commands, spawn child
    processes, use the network, or consult the host checkout.
-3. Execution fixtures MUST run with a minimal allowlisted environment, no
-   inherited secrets, filesystem containment, and network disabled. If the
+3. Every adapter receives a fixed runner-owned sanitized environment. Fixture
+   environment values remain inert JSON input and are never applied to the
+   adapter process. A trusted execution adapter may pass only explicitly
+   allowlisted `CONFORMANCE_*` keys to its sandboxed children. Execution
+   fixtures MUST run with no inherited secrets, filesystem containment, and
+   network disabled. If the
    runner cannot enforce both filesystem and network containment on the current
    platform, it MUST fail closed or report a non-passing `skipped` result; it
    MUST NOT execute the adapter or commands.
 4. Materialization MUST reject absolute, parent, drive-relative, UNC, device,
    alternate-data-stream, NUL-containing, reserved-name, case-folding, Unicode
    normalization, symlink, and reparse-point escapes.
-5. The runner MUST create files without following links and re-check canonical
-   containment immediately before every read, write, copy, and execution.
+5. The runner MUST reject non-regular files and use handle-relative, no-follow
+   operations (or an equivalent atomic "beneath root" primitive) for every
+   materialization, read, write, copy, and output operation. A separate
+   check-then-use containment check is insufficient because a link or reparse
+   point can be swapped between the check and operation.
 6. Fixture-controlled output paths MUST remain below a runner-owned temporary
    directory and use atomic replacement.
 7. Plan `rel_path`, declared sources, load paths, and build commands are
@@ -393,19 +428,39 @@ A fixture is data supplied to a program that can execute commands. Therefore:
 8. Fixture limits are requests, not authority. The effective limit is the
    smaller of the fixture request and a runner-controlled hard ceiling. Hard
    ceilings cover input JSON bytes/depth, decoded file bytes/count, process
-   count, CPU, memory, wall time, output bytes, and workspace size for the
-   adapter and its entire process tree. Limit exhaustion produces a stable
-   diagnostic.
+   count, CPU time, memory, wall time, combined stdout/stderr/result bytes, and
+   workspace size for the adapter and its entire process tree. Output limits are
+   enforced while streaming, not after capture. Limit exhaustion produces a
+   stable diagnostic.
 9. Results MUST redact the temporary root and MUST NOT contain environment
    values, credentials, usernames, or host-specific absolute paths.
 10. Schema validation is necessary but not sufficient; semantic safety checks
     are mandatory in the runner and every adapter.
-11. The runner resolves each trusted adapter executable before applying the
-    fixture environment and invokes it directly with an argument vector, never
-    through a fixture-controlled shell command.
+11. The runner resolves each trusted adapter executable and launches it with
+    the fixed sanitized runner environment and a direct argument vector, never
+    through a fixture-controlled shell command. The executable, case,
+    workspace-root, and result paths are separate arguments even when they
+    contain shell metacharacters.
 12. Domain/capability consistency is semantic: only execution-domain cases may
     request `trusted_execution`, every execution case must request it, and the
-    capability request never confers trust by itself.
+    capability request never confers trust by itself. The runner also requires
+    exact equality between top-level `domain` and `input.operation`.
+13. Security invariants are runner-enforced and non-oracular. Fixture-controlled
+    `expected`, `platforms`, `capabilities`, and `limits` values can never
+    authorize host or network access, weaken hard ceilings, or turn a sandbox
+    escape into a passing result.
+14. The runner requires exact equality between fixture `id` and
+    `expected.case_id`, and between fixture `domain` and `expected.domain`.
+15. `input.arguments` remains inert JSON data. It MUST NOT be appended to the
+    adapter invocation or alter the runner-owned case, workspace-root, or output
+    arguments. Per-domain adapters interpret only registered options, and every
+    path-valued option receives the same atomic beneath-root validation.
+16. Before schema validation, the runner performs bounded strict UTF-8 RFC 8259
+    parsing. It rejects a BOM, duplicate object keys at any depth, non-finite
+    numbers, floating-point values, integers outside the interoperable range,
+    invalid or unpaired Unicode, excessive nesting, and oversized raw input.
+    Different language runtimes MUST NOT apply first-key/last-key or permissive
+    numeric behavior to security decisions.
 
 ## Capability registry
 
@@ -425,6 +480,7 @@ V1 capabilities are:
 | `execution` | required |
 | `validation` | required |
 | `toolchain_detection` | required |
+| `cli` | required |
 | `trusted_execution` | required, platform-gated |
 
 An implementation manifest added by the fixture-runner work records supported

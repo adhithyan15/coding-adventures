@@ -101,8 +101,8 @@ the build job skips straight to step 6 (hashing), saving time on each of the
         },
         "language": {
           "type": "string",
-          "enum": ["c", "cpp", "csharp", "dart", "dotnet", "elixir", "fsharp", "go", "haskell", "java", "kotlin", "lua", "ocaml", "perl", "python", "ruby", "rust", "starlark", "swift", "typescript", "wasm", "unknown"],
-          "description": "The package's programming language, inferred from its path."
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Open language identifier inferred from the package path. The registry is maintained by the conformance contract; additive language identifiers do not require a plan schema bump."
         },
         "build_commands": {
           "type": "array",
