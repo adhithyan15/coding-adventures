@@ -33,15 +33,13 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS sidewall grading coefficient.
+1. Berkeley netlist lowering for Level-1 MOS junction shaping.
    - Status: current PR completion candidate.
-   - Add Berkeley Level-1 MOS model-card `MJSW` in Rust, Python, and TypeScript,
-     defaulting to `0.33`.
-   - Shape `CJSW * PD` and `CJSW * PS` independently from the `MJ`-controlled
-     bottom-junction terms in AC and transient analysis.
-   - Preserve `MJSW` through hierarchy and cloning, enforce finite non-negative
-     validation, parse it through the Rust netlist facade, and extend the
-     supported-parameter release gate.
+   - Preserve model-card `PB`, `MJ`, and `FC` when the Rust Berkeley netlist
+     facade lowers Level-1 MOS devices into the engine parameter bundle.
+   - Prove source-deck values reach the existing cross-language AC and transient
+     depletion-capacitance behavior instead of silently falling back to
+     defaults.
 
 ## Completed Slices
 
@@ -3519,6 +3517,15 @@ the Rust, Python, and TypeScript surfaces together.
      AC and transient analysis while preserving depletion shaping.
    - Hierarchy and cloning preserve `PS`, finite non-negative validation is
      shared, and the Rust netlist facade parses it.
+
+278. Cross-language Level-1 MOS sidewall grading coefficient.
+   - Status: completed in PR 9080.
+   - Berkeley Level-1 MOS model cards now accept `MJSW` in Rust, Python, and
+     TypeScript, defaulting to `0.33`.
+   - `CJSW * PD` and `CJSW * PS` are shaped independently from the
+     `MJ`-controlled bottom-junction terms in AC and transient analysis.
+   - Hierarchy, cloning, validation, model-card coverage, and the Rust netlist
+     facade preserve the parameter.
 
 ## Backlog
 

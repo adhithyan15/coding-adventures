@@ -1940,7 +1940,10 @@ fn apply_mosfet_param(params: &mut MosfetLevel1Params, name: &str, value: f64) {
         "CBD" => params.drain_bulk_capacitance = value,
         "CJ" => params.bottom_junction_capacitance = value,
         "CJSW" => params.sidewall_junction_capacitance = value,
+        "PB" => params.bulk_junction_potential = value,
+        "MJ" => params.bulk_junction_grading_coefficient = value,
         "MJSW" => params.sidewall_junction_grading_coefficient = value,
+        "FC" => params.forward_bias_depletion_coefficient = value,
         _ => {}
     }
 }

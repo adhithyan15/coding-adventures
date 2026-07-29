@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Preserve Level-1 MOS model-card `PB`, `MJ`, and `FC` values when lowering
+  Berkeley netlists into the engine parameter bundle.
 - Accept Level-1 MOS model-card `MJSW=<grading>` through the normalized engine
   model-card contract for independent sidewall depletion shaping.
 - Parse Level-1 MOS instance `PS=<perimeter>` into the engine parameter bundle
