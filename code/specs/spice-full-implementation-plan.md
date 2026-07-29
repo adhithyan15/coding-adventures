@@ -33,12 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS substrate-doping electrostatic derivation.
+1. Cross-language Level-1 MOS process-derived threshold voltage.
    - Status: current PR completion candidate.
-   - Derive `PHI` and `GAMMA` from model-card `NSUB` plus `TOX` using the
-     Berkeley MOS1 process-parameter equations.
-   - Preserve explicit `PHI` / `GAMMA` precedence and reject substrate doping
-     at or below the intrinsic carrier density.
+   - Derive polarity-aware `VT0` from model-card `NSUB` plus `TOX` using the
+     Berkeley MOS1 default gate-work-function and surface-state assumptions.
+   - Preserve explicit `VTO` / `VT0` precedence for NMOS and PMOS.
    - Keep Rust, Python, and TypeScript model lowering, tests, and docs aligned.
 
 ## Completed Slices
@@ -3609,6 +3608,13 @@ the Rust, Python, and TypeScript surfaces together.
      circuit nominal temperature as the fallback.
    - Direct MOS helpers and circuit-level temperature transforms preserve
      matching behavior in Rust, Python, and TypeScript.
+
+290. Cross-language Level-1 MOS substrate-doping electrostatic derivation.
+   - Status: completed in PR 9156.
+   - Model-card `NSUB` plus `TOX` derives `PHI` and `GAMMA` using the Berkeley
+     MOS1 process-parameter equations.
+   - Explicit `PHI` / `GAMMA` takes precedence, and substrate doping at or below
+     the intrinsic carrier density is rejected in Rust, Python, and TypeScript.
 
 ## Backlog
 

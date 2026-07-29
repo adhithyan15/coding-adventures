@@ -24,6 +24,10 @@ const SILICON_PERMITTIVITY: f64 = 11.70 * 8.854_214_871e-12;
 const INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER: f64 = 1.45e16;
 const CUBIC_CENTIMETERS_PER_CUBIC_METER: f64 = 1.0e6;
 
+fn silicon_band_gap_electron_volts(temperature_kelvin: f64) -> f64 {
+    1.16 - 7.02e-4 * temperature_kelvin * temperature_kelvin / (temperature_kelvin + 1108.0)
+}
+
 fn real_solver_kind(matrix_size: usize) -> &'static str {
     if matrix_size == 0 {
         "none"
@@ -2795,11 +2799,9 @@ pub fn mosfet_at_temperature(
         });
     }
     let ratio = temperature_kelvin / nominal_temperature;
-    let silicon_band_gap =
-        |temperature: f64| 1.16 - 7.02e-4 * temperature * temperature / (temperature + 1108.0);
     let potential_correction = |temperature: f64| {
         let thermal_voltage = BOLTZMANN * temperature / ELECTRON_CHARGE;
-        let argument = -silicon_band_gap(temperature) * ELECTRON_CHARGE
+        let argument = -silicon_band_gap_electron_volts(temperature) * ELECTRON_CHARGE
             / (2.0 * BOLTZMANN * temperature)
             + 1.115_087_7 * ELECTRON_CHARGE / (2.0 * BOLTZMANN * reference_temperature_kelvin);
         -2.0 * thermal_voltage
@@ -2843,7 +2845,9 @@ pub fn mosfet_at_temperature(
     };
     let temperature_vbi = mosfet.params.vt0
         - polarity * mosfet.params.gamma * mosfet.params.phi.sqrt()
-        + 0.5 * (silicon_band_gap(nominal_temperature) - silicon_band_gap(temperature_kelvin))
+        + 0.5
+            * (silicon_band_gap_electron_volts(nominal_temperature)
+                - silicon_band_gap_electron_volts(temperature_kelvin))
         + polarity * 0.5 * (temperature_phi - mosfet.params.phi);
     let temperature_vt0 = temperature_vbi + polarity * mosfet.params.gamma * temperature_phi.sqrt();
     let saturation_exponent = energy_gap_electron_volts * ELECTRON_CHARGE / BOLTZMANN
@@ -5082,6 +5086,15 @@ pub fn mosfet_from_model_card(
                     * substrate_doping_per_cubic_meter)
                     .sqrt()
                     / oxide_capacitance;
+            }
+            if !model.parameters.contains_key("VT0") {
+                let polarity = match mosfet_type {
+                    MosfetType::Nmos => 1.0,
+                    MosfetType::Pmos => -1.0,
+                };
+                params.vt0 = polarity
+                    * (params.gamma * params.phi.sqrt()
+                        + 0.5 * (params.phi - silicon_band_gap_electron_volts(params.t_nom)));
             }
         }
     }

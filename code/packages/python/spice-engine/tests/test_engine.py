@@ -863,11 +863,28 @@ def test_mos_model_card_substrate_doping_derives_electrostatics_with_precedence(
     expected_gamma = math.sqrt(
         2.0 * (11.70 * 8.854_214_871e-12) * 1.602_176_634e-19 * 4.0e21
     ) / (3.453133e-11 / 100.0e-9)
+    expected_band_gap = 1.16 - 7.02e-4 * 300.15**2 / (300.15 + 1108.0)
+    expected_vt0 = expected_gamma * math.sqrt(expected_phi) + 0.5 * (
+        expected_phi - expected_band_gap
+    )
     assert pytest.approx(expected_phi) == derived.model.model.params.PHI
     assert pytest.approx(expected_gamma) == derived.model.model.params.GAMMA
+    assert pytest.approx(expected_vt0) == derived.model.model.params.VT0
+
+    pmos = mosfet_from_model_card(
+        "M2",
+        "d",
+        "g",
+        "s",
+        "b",
+        normalize_model_card(
+            "Mp", "pmos", {"NSUB": 4.0e15, "TOX": 100.0e-9}
+        ),
+    )
+    assert pytest.approx(-expected_vt0) == pmos.model.model.params.VT0
 
     explicit = mosfet_from_model_card(
-        "M2",
+        "M3",
         "d",
         "g",
         "s",
@@ -880,18 +897,20 @@ def test_mos_model_card_substrate_doping_derives_electrostatics_with_precedence(
                 "TOX": 100.0e-9,
                 "PHI": 0.72,
                 "GAMMA": 0.41,
+                "VTO": 0.63,
             },
         ),
     )
     assert pytest.approx(0.72) == explicit.model.model.params.PHI
     assert pytest.approx(0.41) == explicit.model.model.params.GAMMA
+    assert pytest.approx(0.63) == explicit.model.model.params.VT0
 
     with pytest.raises(
         ValueError,
         match="MOSFET NSUB must exceed the intrinsic carrier density",
     ):
         mosfet_from_model_card(
-            "M3",
+            "M4",
             "d",
             "g",
             "s",

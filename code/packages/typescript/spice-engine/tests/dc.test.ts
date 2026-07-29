@@ -530,11 +530,30 @@ describe("dcOp", () => {
         2.0 * (11.70 * 8.854_214_871e-12) * 1.602_176_634e-19 * 4.0e21,
       ) /
       (3.453133e-11 / 100.0e-9);
+    const expectedBandGap =
+      1.16 - (7.02e-4 * 300.15 * 300.15) / (300.15 + 1108.0);
+    const expectedVt0 =
+      expectedGamma * Math.sqrt(expectedPhi) +
+      0.5 * (expectedPhi - expectedBandGap);
     expectClose(derived.params.PHI, expectedPhi);
     expectClose(derived.params.GAMMA, expectedGamma);
+    expectClose(derived.params.VT0, expectedVt0);
+
+    const pmos = mosfetFromModelCard(
+      "M2",
+      "d",
+      "g",
+      "s",
+      "b",
+      normalizeModelCard("Mp", "pmos", {
+        NSUB: 4.0e15,
+        TOX: 100.0e-9,
+      }),
+    );
+    expectClose(pmos.params.VT0, -expectedVt0);
 
     const explicit = mosfetFromModelCard(
-      "M2",
+      "M3",
       "d",
       "g",
       "s",
@@ -544,14 +563,16 @@ describe("dcOp", () => {
         TOX: 100.0e-9,
         PHI: 0.72,
         GAMMA: 0.41,
+        VTO: 0.63,
       }),
     );
     expectClose(explicit.params.PHI, 0.72);
     expectClose(explicit.params.GAMMA, 0.41);
+    expectClose(explicit.params.VT0, 0.63);
 
     expect(() =>
       mosfetFromModelCard(
-        "M3",
+        "M4",
         "d",
         "g",
         "s",

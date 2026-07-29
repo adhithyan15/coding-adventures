@@ -685,8 +685,17 @@ fn mos_model_card_substrate_doping_derives_electrostatics_with_explicit_preceden
     let expected_gamma = (2.0_f64 * (11.70 * 8.854_214_871e-12) * 1.602_176_634e-19 * 4.0e21)
         .sqrt()
         / (3.453_133e-11 / 100.0e-9);
+    let expected_band_gap = 1.16 - 7.02e-4 * 300.15 * 300.15 / (300.15 + 1108.0);
+    let expected_vt0 =
+        expected_gamma * expected_phi.sqrt() + 0.5 * (expected_phi - expected_band_gap);
     assert_close(derived.params.phi, expected_phi);
     assert_close(derived.params.gamma, expected_gamma);
+    assert_close(derived.params.vt0, expected_vt0);
+
+    let pmos_card =
+        normalize_model_card("Mp", "pmos", &[("NSUB", 4.0e15), ("TOX", 100.0e-9)]).unwrap();
+    let pmos = mosfet_from_model_card("M2", "d", "g", "s", "b", &pmos_card).unwrap();
+    assert_close(pmos.params.vt0, -expected_vt0);
 
     let explicit_card = normalize_model_card(
         "Mexplicit",
@@ -696,17 +705,19 @@ fn mos_model_card_substrate_doping_derives_electrostatics_with_explicit_preceden
             ("TOX", 100.0e-9),
             ("PHI", 0.72),
             ("GAMMA", 0.41),
+            ("VTO", 0.63),
         ],
     )
     .unwrap();
-    let explicit = mosfet_from_model_card("M2", "d", "g", "s", "b", &explicit_card).unwrap();
+    let explicit = mosfet_from_model_card("M3", "d", "g", "s", "b", &explicit_card).unwrap();
     assert_close(explicit.params.phi, 0.72);
     assert_close(explicit.params.gamma, 0.41);
+    assert_close(explicit.params.vt0, 0.63);
 
     let invalid_card =
         normalize_model_card("Minvalid", "nmos", &[("NSUB", 1.0e10), ("TOX", 1.0e-7)]).unwrap();
     assert!(matches!(
-        mosfet_from_model_card("M3", "d", "g", "s", "b", &invalid_card),
+        mosfet_from_model_card("M4", "d", "g", "s", "b", &invalid_card),
         Err(SpiceError::InvalidElement { reason, .. })
             if reason == "MOSFET NSUB must exceed the intrinsic carrier density"
     ));
