@@ -148,8 +148,15 @@ counted once, ADDED to the counter; each item's window is computed via the SAME
 `AFTER p` ⇒ `(first_p, len]`, not-found asymmetry `BEFORE`→whole / `AFTER`→empty, a
 region-less item ⇒ whole source; non-ASCII-clean since TALLYING only COUNTS — it never
 reconstructs the source — so a multi-byte char matches no ASCII delimiter and both engines
-count the same, e.g. `"aé0b0"` with `ALL "0" BEFORE "b" ALL "0" AFTER "b"` counts 2; this
-rung's multi path is `ALL`-only, single-char, with no `LEADING`/`CHARACTERS`, under EXACTLY
+count the same, e.g. `"aé0b0"` with `ALL "0" BEFORE "b" ALL "0" AFTER "b"` counts 2; each
+item may now be `ALL` **or** `LEADING` (this rung lifts the multi-item `LEADING` reject) —
+a `LEADING` item counts only its CONSECUTIVE run anchored at its window start, tracked by a
+per-item `active` run flag consulted only for `LEADING` items: a `LEADING` item is eligible
+only while its run is alive, and AFTER the tally decision at each position EVERY `LEADING`
+run is updated INDEPENDENTLY of which item tallied (a run breaks at the FIRST in-window
+mismatch, so a matching char claimed by a higher-priority item keeps the run alive), e.g.
+`"aabab"` `FOR LEADING "a" ALL "b"` = 4 and `"aaébb"` `FOR LEADING "a" ALL "b"` = 4 on both
+engines; this rung's multi path is single-char with no `CHARACTERS`, under EXACTLY
 ONE counter — a single tally item's full capabilities are unchanged); the **multi-counter**
 `INSPECT source TALLYING c1 FOR ALL a [{BEFORE|AFTER} p] [ALL b …] c2 FOR ALL d [{BEFORE|AFTER} q] …`
 (TWO OR MORE `tally_for` groups, each with its OWN counter and one-or-more single-char
@@ -250,11 +257,12 @@ MULTI-character region delimiter, a `REPLACING CHARACTERS` item carrying a
 `REPLACING CHARACTERS BY x` is now supported), a MULTI-item
 `REPLACING` list carrying a `LEADING`/`CHARACTERS`/`FIRST` item or a `{BEFORE|AFTER}`
 region (the multi-item list itself is now supported for plain single-char `ALL` items),
-a MULTI-item `TALLYING` list carrying a `LEADING`/`CHARACTERS` item
-(the multi-item tally list itself is now supported for plain single-char `ALL`
-items under ONE counter, and each such item may now carry its OWN `{BEFORE|AFTER}`
-region; several `tally_for` groups each with their own counter are also supported,
-and each item of any group may now carry its OWN `{BEFORE|AFTER}` region too), several replace or tally items — or several counters — in the COMBINED `TALLYING … REPLACING` form, or a combined
+a MULTI-item `TALLYING` list carrying a `CHARACTERS` item
+(the multi-item tally list itself is now supported for single-char `ALL` **and**
+`LEADING` items under ONE counter, and each such item may now carry its OWN
+`{BEFORE|AFTER}` region; several `tally_for` groups each with their own counter are
+also supported — that path stays `ALL`-only — and each item of any group may now
+carry its OWN `{BEFORE|AFTER}` region too), several replace or tally items — or several counters — in the COMBINED `TALLYING … REPLACING` form, or a combined
 statement whose `TALLYING`/`REPLACING` half is a
 deferred sub-form (a combined `TALLYING … FOR LEADING` and a combined `REPLACING
 LEADING`, in any combination, are now supported), `CONVERTING` with
