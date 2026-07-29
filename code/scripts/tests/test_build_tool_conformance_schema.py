@@ -13,7 +13,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[3]
 FIXTURE_ROOT = ROOT / "code" / "specs" / "fixtures" / "build-tool-v1"
 SCHEMA_PATH = FIXTURE_ROOT / "schema.json"
-EXAMPLE_ROOT = FIXTURE_ROOT / "examples"
+EXAMPLE_ROOT = FIXTURE_ROOT / "cases"
 MAX_SAFE_INTEGER = 9_007_199_254_740_991
 RESERVED_ADAPTER_FLAGS = ("--conformance", "--workspace-root", "--output")
 DOMAIN_CAPABILITIES = {

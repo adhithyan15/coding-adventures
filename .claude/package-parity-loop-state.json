@@ -9,17 +9,17 @@
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
   "active_pr": {
-    "number": 9151,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9151",
-    "branch": "codex/build-tool-conformance-contract",
+    "number": 9157,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9157",
+    "branch": "codex/build-tool-conformance-runner",
     "status": "open"
   },
   "last_inventory": {
-    "revision": "326de7c72c24605cc935006d11b24d50dfbd9c65",
+    "revision": "edddc9b46af7662ce08799c1b5d9cd4d373025aa",
     "schema_version": 2,
     "established_languages": 15,
-    "implementation_identities": 1183,
-    "implementation_package_slots": 4324,
+    "implementation_identities": 1184,
+    "implementation_package_slots": 4325,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 278,
     "canonical_collisions": 0,
@@ -38,7 +38,7 @@
     {
       "id": "build-tool-contract",
       "title": "Language-neutral build-tool contract and shared fixture schema",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["haskell-http-core"],
       "branch": "codex/build-tool-conformance-contract",
       "pr_number": 9151,
@@ -47,17 +47,44 @@
     {
       "id": "build-tool-fixtures",
       "title": "Cross-implementation build-tool fixture runner and inventory gate",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-contract"],
+      "branch": "codex/build-tool-conformance-runner",
+      "pr_number": 9157,
+      "notes": "Selected after PR #9151 merged because one safe non-execution runner, adapter manifest, domain result schemas, and representative corpus unlock the Go oracle, every existing front-door remediation, Java/Kotlin/Dart implementations, and OCaml promotion."
+    },
+    {
+      "id": "build-tool-execution-sandbox",
+      "title": "Add the trusted execution sandbox and adversarial execution corpus",
+      "status": "pending",
+      "depends_on": ["build-tool-fixtures"],
       "branch": null,
       "pr_number": null,
-      "notes": "Cover discovery, resolution, graph order, diff, hashing, Starlark, plan interchange, sharding, execution, validation, and toolchain detection."
+      "notes": "Newly separated after the contract security review. Require fail-closed filesystem and network isolation, no-follow materialization/output, direct argv, sanitized environments, and process-tree wall/CPU/memory/output/workspace/process-count limits before any execution fixture can run."
+    },
+    {
+      "id": "build-tool-pure-domain-corpus",
+      "title": "Close the remaining non-execution build-tool domain schemas and fixtures",
+      "status": "pending",
+      "depends_on": ["build-tool-fixtures"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Newly explicit after the bootstrap schema audit. Add closed inputs/results and positive plus adversarial cases for diff selection, hashing/cache, Starlark, sharding, validation, toolchain detection, and CLI before those domains can report success."
+    },
+    {
+      "id": "build-file-standalone-integrity",
+      "title": "Repair stale BUILD_windows standalone prerequisite declarations",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The rebased Go oracle full dry-run currently reports 73 pre-existing validation gaps: 12 Python, 3 Swift, and 58 TypeScript. Deliver dependency-shaped waves and preserve the broader July 29 audit queue for Perl, Dart, Kotlin, and related packages."
     },
     {
       "id": "build-tool-go-oracle",
       "title": "Bring the Go build tool to the canonical contract",
       "status": "pending",
-      "depends_on": ["build-tool-fixtures"],
+      "depends_on": ["build-tool-pure-domain-corpus", "build-tool-execution-sandbox"],
       "branch": null,
       "pr_number": null,
       "notes": "Wire structured Starlark context/commands and complete the B05 Windows executor contract."
@@ -75,7 +102,7 @@
       "id": "build-tool-jvm",
       "title": "Add language-native Java and Kotlin build tools",
       "status": "pending",
-      "depends_on": ["build-tool-fixtures"],
+      "depends_on": ["build-tool-pure-domain-corpus", "build-tool-execution-sandbox"],
       "branch": null,
       "pr_number": null,
       "notes": "Use shared JVM fixture infrastructure but separate idiomatic engines."
@@ -84,7 +111,7 @@
       "id": "build-tool-dart",
       "title": "Add the Dart build tool",
       "status": "pending",
-      "depends_on": ["build-tool-fixtures"],
+      "depends_on": ["build-tool-pure-domain-corpus", "build-tool-execution-sandbox"],
       "branch": null,
       "pr_number": null,
       "notes": "Must pass the same plan, resolver, execution, and platform fixtures as the reference."
@@ -120,7 +147,7 @@
       "id": "ocaml-build-tool-and-promotion",
       "title": "Implement the OCaml build tool and review 16-lane promotion",
       "status": "pending",
-      "depends_on": ["ocaml-representative-core", "build-tool-fixtures"],
+      "depends_on": ["ocaml-representative-core", "build-tool-pure-domain-corpus", "build-tool-execution-sandbox"],
       "branch": null,
       "pr_number": null,
       "notes": "Require conformance, two-way Go plan interchange, three-OS CI, capability enforcement, and explicit backlog acceptance."
@@ -192,7 +219,7 @@
       "id": "c-cpp-graduation",
       "title": "Review C/C++ graduation and native build-tool requirements",
       "status": "pending",
-      "depends_on": ["build-tool-fixtures"],
+      "depends_on": ["build-tool-pure-domain-corpus", "build-tool-execution-sandbox"],
       "branch": null,
       "pr_number": null,
       "notes": "Keep both emerging until package/scaffold/build-tool maturity and applicability are explicit."

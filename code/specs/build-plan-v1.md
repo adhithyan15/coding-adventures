@@ -27,6 +27,11 @@ the build job skips straight to step 6 (hashing), saving time on each of the
 
 ## JSON Schema
 
+The machine-readable schema is checked in at
+[`schemas/build-plan-v1.schema.json`](schemas/build-plan-v1.schema.json). The
+embedded copy below remains explanatory; conformance runners validate against
+the checked-in schema.
+
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
