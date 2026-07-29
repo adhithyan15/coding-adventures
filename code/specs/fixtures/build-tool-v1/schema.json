@@ -333,6 +333,32 @@
               }
             }
           }
+        },
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "execution"
+              }
+            },
+            "required": [
+              "operation"
+            ]
+          },
+          "then": {
+            "required": [
+              "options"
+            ],
+            "properties": {
+              "options": {
+                "$ref": "#/$defs/execution_options"
+              },
+              "changed_paths": {
+                "type": "array",
+                "maxItems": 0
+              }
+            }
+          }
         }
       ]
     },
@@ -437,6 +463,148 @@
           "maxProperties": 1024,
           "additionalProperties": {
             "$ref": "#/$defs/json_value"
+          }
+        }
+      }
+    },
+    "lock_name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._/-]*$",
+      "maxLength": 160
+    },
+    "execution_legacy_command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "line"
+      ],
+      "properties": {
+        "kind": {
+          "const": "legacy"
+        },
+        "line": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "^[^\\u0000]+$"
+        }
+      }
+    },
+    "execution_structured_command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "program",
+        "args"
+      ],
+      "properties": {
+        "kind": {
+          "const": "structured"
+        },
+        "program": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "args": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "type": "string",
+            "maxLength": 4096,
+            "pattern": "^[^\\u0000]*$"
+          }
+        }
+      }
+    },
+    "execution_command": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/execution_legacy_command"
+        },
+        {
+          "$ref": "#/$defs/execution_structured_command"
+        }
+      ]
+    },
+    "execution_package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "rel_path",
+        "language",
+        "commands",
+        "resource_locks"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/package_name"
+        },
+        "rel_path": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "maxLength": 64
+        },
+        "commands": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/execution_command"
+          }
+        },
+        "resource_locks": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/lock_name"
+          }
+        }
+      }
+    },
+    "execution_options": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "platform",
+        "jobs",
+        "dry_run",
+        "packages",
+        "dependency_edges"
+      ],
+      "properties": {
+        "platform": {
+          "enum": [
+            "darwin",
+            "linux",
+            "windows"
+          ]
+        },
+        "jobs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "packages": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "$ref": "#/$defs/execution_package"
+          }
+        },
+        "dependency_edges": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 16384,
+          "items": {
+            "$ref": "#/$defs/edge"
           }
         }
       }
