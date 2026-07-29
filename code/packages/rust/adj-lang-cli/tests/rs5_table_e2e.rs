@@ -1386,6 +1386,49 @@ fn shipped_wave_number_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b31) The shipped NIST SP 811 B.9 linear-mass-density → kilogram-per-metre table resolves the exact
+//       tex factor with its citation, and ABSTAINS on a wrong-dimension unit. This opens a NEW
+//       dimension — LINEAR MASS DENSITY (mass per unit length, the titre of a fibre/yarn) — beyond
+//       the length/mass/…/wave-number and electric families. The tex (linear mass density → kg/m) and
+//       the pound (plain mass → kg) are DIFFERENT quantities that convert to DIFFERENT SI units
+//       (kg/m vs kg), so the abstain guards the mass-versus-mass-per-length confusion (dropping the
+//       "per metre") directly, not mere absence of a value: the tex is one gram per kilometre =
+//       exactly 1 E-06 kilogram per metre.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_linear_mass_density_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_lineardensity");
+    let src = stdlib().join("reference/linear-mass-density-conversions.adj");
+    std::fs::copy(&src, dir.join("linear-mass-density-conversions.adj"))
+        .expect("copy shipped linear-mass-density-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"linear-mass-density-conversions.adj\"\n\
+         ? linear_mass_density_to_kilogram_per_metre(tex, $v)\n\
+         ? linear_mass_density_to_kilogram_per_metre(pound, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table
+    // (boldface = exact; the tex is one gram per kilometre = exactly 1 E-06 kilogram per metre).
+    assert!(out.contains("\"v\":\"0.000001\""), "tex = 1 E-06 kg/m: {out}");
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `pound` is a MASS unit (it converts to the kilogram, a DIFFERENT quantity), so this
+    // linear-mass-density table has no row for it — the engine abstains rather than mis-converting a
+    // mass unit as if it were a mass-per-length unit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
