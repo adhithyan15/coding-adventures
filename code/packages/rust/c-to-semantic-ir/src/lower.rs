@@ -109,6 +109,14 @@ fn resolve_type_spec(ts: &GrammarASTNode) -> Result<Option<IntSpec>, CLowerError
     if kws.iter().any(|k| k == "void") {
         return Ok(None);
     }
+    // The grammar recognises `float`/`double`, but the lowering is still
+    // integer-only — reject them cleanly rather than mis-typing them as `int`.
+    if kws.iter().any(|k| k == "float" || k == "double") {
+        return err(
+            "floating-point types (`float`/`double`) are not yet supported in lowering",
+            ts,
+        );
+    }
     // Fixed-width <stdint.h> names / size_t map directly.
     for k in &kws {
         let direct = match k.as_str() {
@@ -1653,6 +1661,12 @@ impl Lowerer {
                 let v = parse_char_literal(&tok.value);
                 Ok((int_lit(v), i32_spec())) // a char constant has type int in C
             }
+            // The grammar accepts float literals; lowering them (and the whole
+            // floating-point value track) is the next slice.
+            "FLOAT_LIT" => err(
+                "floating-point literals are not yet supported in lowering",
+                n,
+            ),
             "NAME" => {
                 let name = tok.value.clone();
                 let b = self.resolve(&name).ok_or_else(|| CLowerError {

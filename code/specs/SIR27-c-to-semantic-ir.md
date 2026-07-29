@@ -411,7 +411,11 @@ pub struct CLowerError { pub message: String, pub line: usize, pub column: usize
 
 ## Out of scope (v1)
 
-- Pointers, arrays, structs, unions, enums, `typedef`, floats.
+- Pointers, arrays, structs, unions, enums, `typedef`.
+- Floating point is being added incrementally: milestone 9a wires the **grammar**
+  to recognise `float`/`double` and float literals (`3.14`, `.5`, `1e10`); the
+  lowering still rejects them with a clear "not yet supported" error until the
+  floating-point value track (a following slice) lands.
 - The full preprocessor (`#define`, macros, conditional compilation).
 - Multiple translation units / real headers (only `#include <stdint.h|stdio.h>`
   is recognised and ignored).

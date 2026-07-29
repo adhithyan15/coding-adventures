@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+### Milestone 9a — floating-point grammar (foundation)
+
+- The C grammar now recognises **`float`/`double`** type keywords and
+  floating-point **literals** (`3.14`, `.5`, `10.`, `1e10`, `2.5e-3`, `1.0f`).
+  `FLOAT_LIT` precedes `INT_LIT` and requires a `.` or an exponent, so a plain
+  `42` still lexes as an integer.
+- The `c.tokens`/`c.grammar` sources were extended and the embedded
+  `c-lexer`/`c-parser` `_grammar.rs` regenerated via `grammar-tools`.
+- Lowering is still **integer-only**: `float`/`double` types and float literals
+  are rejected with a clear "not yet supported" error rather than being
+  mis-typed as `int` — the honest boundary until the floating-point value track
+  (arithmetic, int↔float conversions) lands in a following slice.
+
 ### Milestone 7 — per-block scoping
 
 - The flat symbol table is replaced with a **scope stack** (pushed at a `{ }`
