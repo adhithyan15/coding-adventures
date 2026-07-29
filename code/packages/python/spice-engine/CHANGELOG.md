@@ -1,5 +1,8 @@
 # Changelog
 
+- Derive Level-1 MOS `VT0` from explicit model-card `NSUB` plus `TOX` using
+  Berkeley MOS1 default gate-work-function and surface-state assumptions,
+  preserving explicit `VTO` / `VT0` precedence for NMOS and PMOS.
 - Derive Level-1 MOS `PHI` and `GAMMA` from explicit model-card `NSUB` plus
   `TOX`, preserving explicit electrostatic parameters and rejecting substrate
   doping at or below the intrinsic carrier density.

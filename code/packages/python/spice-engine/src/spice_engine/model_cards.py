@@ -38,6 +38,10 @@ _INTRINSIC_CARRIER_DENSITY_PER_CUBIC_METER = 1.45e16
 _CUBIC_CENTIMETERS_PER_CUBIC_METER = 1.0e6
 
 
+def _silicon_band_gap_electron_volts(temperature_kelvin: float) -> float:
+    return 1.16 - 7.02e-4 * temperature_kelvin**2 / (temperature_kelvin + 1108.0)
+
+
 @dataclass(frozen=True, slots=True)
 class NormalizedModelCard:
     """A normalized SPICE `.model` card with stable cross-language keys."""
@@ -1118,9 +1122,21 @@ def mosfet_from_model_card(
                     * _ELECTRON_CHARGE
                     * substrate_doping_per_cubic_meter
                 ) / oxide_capacitance
+    threshold_voltage = p.get("VT0", defaults.VT0)
+    if "VT0" not in p and "N_SUB" in p and "TOX" in p and p["TOX"] > 0.0:
+        polarity = 1.0 if model.kind == "NMOS" else -1.0
+        nominal_temperature = p.get("T_NOM", defaults.T_NOM)
+        threshold_voltage = polarity * (
+            body_effect_coefficient * math.sqrt(surface_potential)
+            + 0.5
+            * (
+                surface_potential
+                - _silicon_band_gap_electron_volts(nominal_temperature)
+            )
+        )
     params = replace(
         defaults,
-        VT0=p.get("VT0", defaults.VT0),
+        VT0=threshold_voltage,
         KP=transconductance,
         LAMBDA=p.get("LAMBDA", defaults.LAMBDA),
         GAMMA=body_effect_coefficient,
