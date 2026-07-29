@@ -1,0 +1,109 @@
+% ============================================================================
+% ejection-fraction.adj — the definition of the (left-ventricular) ejection fraction
+% (ejection fraction = stroke volume / end-diastolic volume) in the ADJ standard library.
+% ============================================================================
+% The ejection-fraction entry of the *clinical* track, a cardiac-physiology library. Where
+% the lung-volume libraries ground respiratory SUMS and the hemodynamics libraries ground
+% pressure differences, this grounds a cardiac RATIO: THE EJECTION FRACTION IS THE STROKE
+% VOLUME DIVIDED BY THE END-DIASTOLIC VOLUME — the fraction of the blood present in the
+% ventricle at the end of filling (the end-diastolic volume, EDV) that is actually ejected
+% on the next beat (the stroke volume, SV, the volume the ventricle expels in one
+% contraction). It ships as an importable, byte-provenanced, PARAMETERIZED `formula`,
+% together with its two exact rearrangements (the stroke volume an ejection fraction implies
+% for a given filling volume, and the end-diastolic volume implied by a stroke volume at a
+% given ejection fraction). As with every compute library, a consumer states NO arithmetic:
+% it `import`s this file, binds the measured quantities from its own byte-provenance
+% decomposition, and asks the engine to APPLY the cited definition on the CPU. Zero math is
+% performed by the model; the engine computes each value EXACTLY, carrying the definition's
+% citation.
+%
+%     import "ejection-fraction.adj"
+%     observe stroke_volume(3)              % "…stroke volume 3…"         (span cited by the model)
+%     observe end_diastolic_volume(6)       % "…end-diastolic volume 6…"  (span cited by the model)
+%     ? ejection_fraction(stroke_volume, end_diastolic_volume)
+%                                            % engine → 0.5, carrying EF = SV / EDV
+%
+% NOTE ON THE PERCENTAGE: the ejection fraction is a pure fraction of a volume by a volume
+% (dimensionless); clinically it is usually REPORTED as that fraction times 100, i.e. a
+% percentage (an EF of 0.5 is reported as "50%"). This library computes the underlying
+% dimensionless FRACTION exactly (0.5 here); a consumer that wants the percentage multiplies
+% by 100 downstream. Grounding the bare fraction keeps the relation an exact ratio with no
+% embedded scale constant, so it inverts cleanly.
+%
+% All three formulas are EXACT over their parameters (a ratio and its two algebraic
+% rearrangements), so every value the engine returns is exact. The three COMPOSE and invert
+% cleanly around the worked case SV = 3, EDV = 6 (EF = 3 / 6 = 0.5): the `ejection_fraction`
+% a consumer computes from the two volumes is exactly the `ejection_fraction` the
+% `stroke_volume` formula multiplies the end-diastolic volume by, to recover the 3 stroke
+% volume, and exactly the `ejection_fraction` the `end_diastolic_volume` formula divides the
+% stroke volume by to recover the 6 end-diastolic volume.
+%
+%   ejection_fraction(stroke_volume, end_diastolic_volume)
+%       = stroke_volume / end_diastolic_volume      % EF = SV / EDV   (definition)
+%   stroke_volume(ejection_fraction, end_diastolic_volume)
+%       = ejection_fraction * end_diastolic_volume   % SV = EF × EDV   (same def, solved for SV)
+%   end_diastolic_volume(stroke_volume, ejection_fraction)
+%       = stroke_volume / ejection_fraction          % EDV = SV / EF   (same def, solved for EDV)
+%
+% NOTE ON UNITS: the two volumes must be in the SAME unit (both millilitres, say); the
+% ejection fraction that comes out is DIMENSIONLESS (a volume divided by a volume). The two
+% rearrangements return a volume in whatever unit the volume input carried.
+%
+% All three formulas are defended by the SAME defining span — "LVEF is the fraction of blood
+% ejected from the left ventricle during systole (stroke volume [SV]) relative to the volume
+% of blood present at the end of diastole (end-diastolic volume [EDV])" — because that one
+% definition (the ejection fraction IS the stroke volume as a fraction of the end-diastolic
+% volume) sanctions the relation read every way (the fraction from the two volumes, the
+% stroke volume from the fraction and the filling volume, or the filling volume from the
+% stroke volume and the fraction). The span is transcribed verbatim from the StatPearls
+% "Left Ventricular Ejection Fraction" article on the NCBI Bookshelf, so each `formula`
+% carries the provenance envelope every shipped grounded clause carries; the linter rejects
+% an unsourced one. (See feedback_nothing_human_authored — the defining span is a verbatim
+% quote of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `stroke_volume` and `end_diastolic_volume` are observable cardiac volumes the
+% definition ranges over; `ejection_fraction` is the derived dimensionless ratio. Each term
+% appears BOTH as a derived result and as an input (of the other formulas), so each is a
+% single dictionary term used in both roles. The `surface` lists are the everyday names a
+% decomposer maps onto the canonical term.
+% ----------------------------------------------------------------------------
+dictionary ejection_fraction_vocab {
+    define stroke_volume        : finding  surface "stroke volume", "SV"                    % millilitres (mL)
+    define end_diastolic_volume : finding  surface "end-diastolic volume", "EDV"            % millilitres (mL)
+    define ejection_fraction    : finding  surface "ejection fraction", "EF", "LVEF"        % dimensionless fraction
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the defining span from StatPearls
+% on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact
+% ratio/product of measured quantities, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook ejection_fraction_laws {
+    use ejection_fraction_vocab
+
+    % Ejection fraction — the stroke volume as a fraction of the end-diastolic volume,
+    % i.e. EF = SV / EDV.
+    formula ejection_fraction(stroke_volume, end_diastolic_volume) = stroke_volume / end_diastolic_volume
+        source "LVEF is the fraction of blood ejected from the left ventricle during systole (stroke volume [SV]) relative to the volume of blood present at the end of diastole (end-diastolic volume [EDV])"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459131/"
+        trust authoritative
+
+    % Stroke volume — the same definition solved for the stroke volume an ejection fraction
+    % implies at a given end-diastolic volume (SV = EF × EDV). Defended by the SAME defining
+    % span, read the other way.
+    formula stroke_volume(ejection_fraction, end_diastolic_volume) = ejection_fraction * end_diastolic_volume
+        source "LVEF is the fraction of blood ejected from the left ventricle during systole (stroke volume [SV]) relative to the volume of blood present at the end of diastole (end-diastolic volume [EDV])"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459131/"
+        trust authoritative
+
+    % End-diastolic volume — the same definition solved for the filling volume a stroke volume
+    % implies at a given ejection fraction (EDV = SV / EF). Again the SAME defining span, read
+    % the third way.
+    formula end_diastolic_volume(stroke_volume, ejection_fraction) = stroke_volume / ejection_fraction
+        source "LVEF is the fraction of blood ejected from the left ventricle during systole (stroke volume [SV]) relative to the volume of blood present at the end of diastole (end-diastolic volume [EDV])"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459131/"
+        trust authoritative
+}

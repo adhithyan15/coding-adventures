@@ -1,0 +1,33 @@
+% ============================================================================
+% ejection-fraction.query.adj — worked examples over the clinical ejection-fraction library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER an ejection-fraction
+% question: it states NO arithmetic and NO relation — it only `import`s the grounded library,
+% `observe`s the quantities it decomposed from the prompt (each a byte-provenanced span,
+% elided here), and asks the engine to APPLY the cited definition. The native adj-lang engine
+% binds the parameters, computes each value EXACTLY on the CPU, and returns it with the
+% definition's source/locator/trust.
+%
+% The three questions INVERT: a stroke volume of 3 mL out of an end-diastolic volume of 6 mL
+% gives an ejection fraction of 3 / 6 = 0.5; that 0.5 ejection fraction times the same 6 mL
+% end-diastolic volume is exactly what the stroke-volume formula recovers the 3 mL from, and
+% that 3 mL stroke volume divided by the same 0.5 ejection fraction is exactly what the
+% end-diastolic-volume formula recovers the 6 mL from.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli ejection-fraction.query.adj
+% ============================================================================
+
+import "ejection-fraction.adj"
+
+% SV 3 mL, EDV 6 mL: ejection fraction = 3 / 6.
+observe stroke_volume(3)
+observe end_diastolic_volume(6)
+? ejection_fraction(stroke_volume, end_diastolic_volume)   % expect 0.5  (EF = SV / EDV)
+
+% That 0.5 ejection fraction with the same 6 mL end-diastolic volume: SV = 0.5 × 6.
+observe ejection_fraction(0.5)
+? stroke_volume(ejection_fraction, end_diastolic_volume)   % expect 3  (same def, solved for SV = EF × EDV)
+
+% That 3 mL stroke volume with the same 0.5 ejection fraction: EDV = 3 / 0.5.
+? end_diastolic_volume(stroke_volume, ejection_fraction)   % expect 6  (same def, solved for EDV = SV / EF)
