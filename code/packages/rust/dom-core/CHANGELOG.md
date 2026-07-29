@@ -2,6 +2,11 @@
 
 All notable changes to the `dom-core` crate will be documented in this file.
 
+## Unreleased
+
+### Added
+- Added first-class processing-instruction nodes with target and data fields.
+
 ## [0.1.0] - 2026-05-02
 
 ### Added

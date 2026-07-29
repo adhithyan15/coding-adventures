@@ -117,6 +117,9 @@ fn dump_node(node: &Node, depth: usize, lines: &mut Vec<String>) {
         Node::Element(element) => dump_element(element, depth, lines),
         Node::Text(text) => dump_text(&text.data, depth, lines),
         Node::Comment(comment) => dump_comment(&comment.data, depth, lines),
+        Node::ProcessingInstruction(pi) => {
+            lines.push(format!("{}<?{} {}?>", prefix(depth), pi.target, pi.data));
+        }
     }
 }
 
