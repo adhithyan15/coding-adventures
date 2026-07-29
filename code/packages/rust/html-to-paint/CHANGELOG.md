@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0
+
+- Added the host-supplied `HtmlImageFetcher` resource boundary.
+- Added atomic URI image resolution from fetched GIF or baseline JPEG bytes
+  into backend-neutral `ImageSrc::Pixels`.
+- Added canned inline-image HTML acceptance through parsing, layout, paint,
+  resource resolution, decoding, and Cairo RGBA rasterization.
+
 ## 0.2.1
 
 - Added a cross-platform Cairo acceptance test proving canned text-only HTML

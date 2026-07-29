@@ -3,13 +3,98 @@
 
 use coding_adventures_html_parser::BrowserRenderTree;
 use html_to_layout::{html_render_tree_to_layout, HtmlTheme};
+use image_codec_gif::decode_gif;
+use image_codec_jpeg::decode_jpeg;
 use layout_block::layout_block;
 use layout_ir::{Constraints, ExtValue, PositionedNode, TextMeasurer};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
-use paint_instructions::PaintScene;
+use paint_instructions::{ImageSrc, PaintInstruction, PaintScene};
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 
-pub const VERSION: &str = "0.2.1";
+pub const VERSION: &str = "0.3.0";
+
+/// Bytes fetched by a browser host for one resolved image URI.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct FetchedImage {
+    pub bytes: Vec<u8>,
+    pub media_type: Option<String>,
+}
+
+impl FetchedImage {
+    pub fn new(bytes: Vec<u8>, media_type: Option<String>) -> Self {
+        Self { bytes, media_type }
+    }
+}
+
+/// Host boundary for synchronously fetching an image resource.
+///
+/// HTTP, file, cache, and security policy stay outside this package. The
+/// returned bytes are decoded here into the shared `PixelContainer` contract.
+pub trait HtmlImageFetcher {
+    fn fetch(&self, uri: &str) -> Result<FetchedImage, String>;
+}
+
+impl<F> HtmlImageFetcher for F
+where
+    F: Fn(&str) -> Result<FetchedImage, String>,
+{
+    fn fetch(&self, uri: &str) -> Result<FetchedImage, String> {
+        self(uri)
+    }
+}
+
+/// Failure while fetching or decoding a URI-backed paint image.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum HtmlImageResourceError {
+    Fetch {
+        uri: String,
+        message: String,
+    },
+    UnsupportedFormat {
+        uri: String,
+        media_type: Option<String>,
+    },
+    Decode {
+        uri: String,
+        format: &'static str,
+        message: String,
+    },
+}
+
+impl std::fmt::Display for HtmlImageResourceError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Fetch { uri, message } => {
+                write!(formatter, "failed to fetch image {uri}: {message}")
+            }
+            Self::UnsupportedFormat { uri, media_type } => match media_type {
+                Some(media_type) => {
+                    write!(
+                        formatter,
+                        "unsupported image format for {uri} ({media_type})"
+                    )
+                }
+                None => write!(formatter, "unsupported image format for {uri}"),
+            },
+            Self::Decode {
+                uri,
+                format,
+                message,
+            } => write!(
+                formatter,
+                "failed to decode {format} image {uri}: {message}"
+            ),
+        }
+    }
+}
+
+impl std::error::Error for HtmlImageResourceError {}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum SupportedImageFormat {
+    Gif,
+    Jpeg,
+}
 
 /// Viewport and device scale used by the composed HTML paint pipeline.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -60,6 +145,24 @@ pub struct HtmlPaintOutput {
     pub positioned: PositionedNode,
     pub links: Vec<LinkRegion>,
     pub scene: PaintScene,
+}
+
+/// Fetch and decode every URI-backed image in a paint scene.
+///
+/// The input scene is never mutated. Resolution happens in a clone and the
+/// fully decoded scene is returned only after every image succeeds, so a
+/// failed resource cannot leave the caller with a partially resolved scene.
+/// Existing `ImageSrc::Pixels` values pass through unchanged.
+pub fn resolve_scene_image_resources<F>(
+    scene: &PaintScene,
+    fetcher: &F,
+) -> Result<PaintScene, HtmlImageResourceError>
+where
+    F: HtmlImageFetcher,
+{
+    let mut resolved = scene.clone();
+    resolve_instruction_images(&mut resolved.instructions, fetcher)?;
+    Ok(resolved)
 }
 
 /// Convert a browser render tree into positioned geometry and a paint scene.
@@ -193,13 +296,113 @@ fn positioned_html_string<'a>(node: &'a PositionedNode, key: &str) -> Option<&'a
     Some(value)
 }
 
+fn resolve_instruction_images<F>(
+    instructions: &mut [PaintInstruction],
+    fetcher: &F,
+) -> Result<(), HtmlImageResourceError>
+where
+    F: HtmlImageFetcher,
+{
+    for instruction in instructions {
+        match instruction {
+            PaintInstruction::Image(image) => {
+                let ImageSrc::Uri(uri) = &image.src else {
+                    continue;
+                };
+                let uri = uri.clone();
+                let fetched =
+                    fetcher
+                        .fetch(&uri)
+                        .map_err(|message| HtmlImageResourceError::Fetch {
+                            uri: uri.clone(),
+                            message,
+                        })?;
+                let format = detect_image_format(&uri, &fetched);
+                let pixels = match format {
+                    Some(SupportedImageFormat::Gif) => {
+                        decode_gif(&fetched.bytes).map_err(|message| {
+                            HtmlImageResourceError::Decode {
+                                uri: uri.clone(),
+                                format: "GIF",
+                                message,
+                            }
+                        })?
+                    }
+                    Some(SupportedImageFormat::Jpeg) => {
+                        decode_jpeg(&fetched.bytes).map_err(|message| {
+                            HtmlImageResourceError::Decode {
+                                uri: uri.clone(),
+                                format: "JPEG",
+                                message,
+                            }
+                        })?
+                    }
+                    None => {
+                        return Err(HtmlImageResourceError::UnsupportedFormat {
+                            uri,
+                            media_type: fetched.media_type,
+                        });
+                    }
+                };
+                image.src = ImageSrc::Pixels(pixels);
+            }
+            PaintInstruction::Group(group) => {
+                resolve_instruction_images(&mut group.children, fetcher)?;
+            }
+            PaintInstruction::Layer(layer) => {
+                resolve_instruction_images(&mut layer.children, fetcher)?;
+            }
+            PaintInstruction::Clip(clip) => {
+                resolve_instruction_images(&mut clip.children, fetcher)?;
+            }
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
+fn detect_image_format(uri: &str, fetched: &FetchedImage) -> Option<SupportedImageFormat> {
+    if fetched.bytes.starts_with(b"GIF87a") || fetched.bytes.starts_with(b"GIF89a") {
+        return Some(SupportedImageFormat::Gif);
+    }
+    if fetched.bytes.starts_with(&[0xff, 0xd8, 0xff]) {
+        return Some(SupportedImageFormat::Jpeg);
+    }
+
+    if let Some(media_type) = fetched.media_type.as_deref() {
+        let media_type = media_type.split(';').next().unwrap_or("").trim();
+        if media_type.eq_ignore_ascii_case("image/gif") {
+            return Some(SupportedImageFormat::Gif);
+        }
+        if media_type.eq_ignore_ascii_case("image/jpeg")
+            || media_type.eq_ignore_ascii_case("image/jpg")
+            || media_type.eq_ignore_ascii_case("image/pjpeg")
+        {
+            return Some(SupportedImageFormat::Jpeg);
+        }
+    }
+
+    let path = uri
+        .split(['?', '#'])
+        .next()
+        .unwrap_or(uri)
+        .to_ascii_lowercase();
+    if path.ends_with(".gif") {
+        Some(SupportedImageFormat::Gif)
+    } else if path.ends_with(".jpg") || path.ends_with(".jpeg") {
+        Some(SupportedImageFormat::Jpeg)
+    } else {
+        None
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use coding_adventures_html_parser::parse_browser_render_tree;
     use html_to_layout::mosaic_html_theme;
     use layout_ir::{Color, Content, FontSpec, MeasureResult};
-    use paint_instructions::{ImageSrc, PaintInstruction};
+    use paint_instructions::{PaintBase, PaintImage, PixelContainer};
     use text_interfaces::{
         Direction, FontQuery, FontResolutionError, Glyph, ShapeOptions, ShapedRun, ShapedText,
         ShapingError,
@@ -476,6 +679,89 @@ mod tests {
             .any(|pixel| pixel != [192, 192, 192, 255]));
     }
 
+    #[test]
+    fn canned_html_image_fetches_decodes_and_rasterizes_with_cairo() {
+        let render = parse_browser_render_tree(
+            "<base href='https://example.test/assets/'><p>Inline image:</p>\
+             <img src='logo.gif' width='32' height='24'>",
+        )
+        .unwrap();
+        let output = html_render_tree_to_paint(
+            &render,
+            &mosaic_html_theme(),
+            HtmlPaintViewport::new(160.0, 96.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+
+        let mut source = PixelContainer::new(2, 2);
+        source.fill(255, 0, 255, 255);
+        let gif = image_codec_gif::encode_gif(&source);
+        let resolved = resolve_scene_image_resources(&output.scene, &|uri: &str| {
+            assert_eq!(uri, "https://example.test/assets/logo.gif");
+            Ok(FetchedImage::new(gif.clone(), Some("image/gif".into())))
+        })
+        .expect("canned image should resolve");
+
+        let image = first_image(&resolved.instructions).expect("resolved image instruction");
+        assert!(matches!(
+            &image.src,
+            ImageSrc::Pixels(pixels)
+                if pixels.width == 2
+                    && pixels.height == 2
+                    && pixels.pixel_at(0, 0) == (255, 0, 255, 255)
+        ));
+
+        let pixels =
+            paint_vm_cairo::render(&resolved).expect("resolved canned HTML image should rasterize");
+        let sample_x = (image.x + image.width / 2.0).floor() as u32;
+        let sample_y = (image.y + image.height / 2.0).floor() as u32;
+        let (red, green, blue, alpha) = pixels.pixel_at(sample_x, sample_y);
+        assert!(red > 200 && green < 50 && blue > 200 && alpha == 255);
+    }
+
+    #[test]
+    fn jpeg_resources_are_detected_from_bytes_and_decoded() {
+        let mut source = PixelContainer::new(2, 2);
+        source.fill(20, 100, 180, 255);
+        let jpeg = image_codec_jpeg::encode_jpeg(&source);
+        let scene = scene_with_uri_image("https://example.test/photo.bin");
+
+        let resolved = resolve_scene_image_resources(&scene, &|_: &str| {
+            Ok(FetchedImage::new(
+                jpeg.clone(),
+                Some("application/octet-stream".into()),
+            ))
+        })
+        .expect("JPEG signature should select the JPEG decoder");
+
+        let image = first_image(&resolved.instructions).unwrap();
+        assert!(matches!(
+            &image.src,
+            ImageSrc::Pixels(pixels) if pixels.width == 2 && pixels.height == 2
+        ));
+    }
+
+    #[test]
+    fn image_resolution_failure_leaves_the_input_scene_unchanged() {
+        let scene = scene_with_uri_image("https://example.test/missing.gif");
+        let original = scene.clone();
+
+        let error = resolve_scene_image_resources(&scene, &|_: &str| Err("offline".to_string()))
+            .unwrap_err();
+
+        assert_eq!(
+            error,
+            HtmlImageResourceError::Fetch {
+                uri: "https://example.test/missing.gif".into(),
+                message: "offline".into(),
+            }
+        );
+        assert_eq!(scene, original);
+    }
+
     fn color_css(color: Color) -> String {
         format!("rgb({}, {}, {})", color.r, color.g, color.b)
     }
@@ -524,5 +810,44 @@ mod tests {
                 ])),
             )]),
         }
+    }
+
+    fn scene_with_uri_image(uri: &str) -> PaintScene {
+        let mut scene = PaintScene::new(8.0, 8.0);
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 8.0,
+            height: 8.0,
+            src: ImageSrc::Uri(uri.into()),
+            opacity: None,
+        }));
+        scene
+    }
+
+    fn first_image(instructions: &[PaintInstruction]) -> Option<&PaintImage> {
+        for instruction in instructions {
+            match instruction {
+                PaintInstruction::Image(image) => return Some(image),
+                PaintInstruction::Group(group) => {
+                    if let Some(image) = first_image(&group.children) {
+                        return Some(image);
+                    }
+                }
+                PaintInstruction::Layer(layer) => {
+                    if let Some(image) = first_image(&layer.children) {
+                        return Some(image);
+                    }
+                }
+                PaintInstruction::Clip(clip) => {
+                    if let Some(image) = first_image(&clip.children) {
+                        return Some(image);
+                    }
+                }
+                _ => {}
+            }
+        }
+        None
     }
 }
