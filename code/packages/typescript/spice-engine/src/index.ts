@@ -19036,6 +19036,33 @@ function collectNoiseSources(
           frequencyExponent: 1.0,
         });
       }
+      const [sourceBulkCurrent] = mosfetBulkJunctionCurrentConductance(
+        element,
+        sourceVoltage,
+        bodyVoltage,
+      );
+      const [drainBulkCurrent] = mosfetBulkJunctionCurrentConductance(
+        element,
+        drainVoltage,
+        bodyVoltage,
+      );
+      const isNmos = element.type === "NMOS";
+      sources.push({
+        elementName: `${element.name}:IBS`,
+        noiseType: "shot",
+        positive: isNmos ? body : source,
+        negative: isNmos ? source : body,
+        sourcePsd: 2.0 * ELECTRON_CHARGE * Math.abs(sourceBulkCurrent),
+        frequencyExponent: 0.0,
+      });
+      sources.push({
+        elementName: `${element.name}:IBD`,
+        noiseType: "shot",
+        positive: isNmos ? body : drain,
+        negative: isNmos ? drain : body,
+        sourcePsd: 2.0 * ELECTRON_CHARGE * Math.abs(drainBulkCurrent),
+        frequencyExponent: 0.0,
+      });
       const drainResistance = mosfetDrainResistance(element);
       if (drainResistance > 0.0) {
         sources.push({
@@ -20246,6 +20273,24 @@ function stampMosfet(
   stampTransconductance(matrix, drain, source, gate, source, result.gm);
   stampTransconductance(matrix, drain, source, body, source, result.gmb);
   stampCurrentSourceEquivalent(rhs, drain, source, equivalentCurrent);
+  stampMosfetBulkJunction(
+    element,
+    source,
+    body,
+    sourceVoltage,
+    bodyVoltage,
+    matrix,
+    rhs,
+  );
+  stampMosfetBulkJunction(
+    element,
+    drain,
+    body,
+    drainVoltage,
+    bodyVoltage,
+    matrix,
+    rhs,
+  );
   stampMosfetCharge(element, capacitorStates, nodeIndices, matrix, rhs);
   const drainResistance = mosfetDrainResistance(element);
   if (drainResistance > 0.0) {
@@ -20265,6 +20310,58 @@ function stampMosfet(
       1.0 / sourceResistance,
     );
   }
+}
+
+function mosfetBulkJunctionCurrentConductance(
+  element: Mosfet,
+  terminalVoltage: number,
+  bodyVoltage: number,
+): readonly [number, number] {
+  const junctionVoltage =
+    element.type === "NMOS"
+      ? bodyVoltage - terminalVoltage
+      : terminalVoltage - bodyVoltage;
+  const thermalVoltage = BOLTZMANN * element.params.T_NOM / ELECTRON_CHARGE;
+  const normalizedVoltage = junctionVoltage / thermalVoltage;
+  const limitedExp = Math.exp(Math.max(-40.0, Math.min(40.0, normalizedVoltage)));
+  const currentFactor =
+    normalizedVoltage > 40.0
+      ? limitedExp * (1.0 + normalizedVoltage - 40.0)
+      : limitedExp;
+  const conductanceFactor = limitedExp;
+  return [
+    element.params.IS * (currentFactor - 1.0),
+    (element.params.IS / thermalVoltage) * conductanceFactor,
+  ];
+}
+
+function stampMosfetBulkJunction(
+  element: Mosfet,
+  terminal: number | undefined,
+  body: number | undefined,
+  terminalVoltage: number,
+  bodyVoltage: number,
+  matrix: number[][],
+  rhs: number[],
+): void {
+  const [current, conductance] = mosfetBulkJunctionCurrentConductance(
+    element,
+    terminalVoltage,
+    bodyVoltage,
+  );
+  const isNmos = element.type === "NMOS";
+  const junctionVoltage = isNmos
+    ? bodyVoltage - terminalVoltage
+    : terminalVoltage - bodyVoltage;
+  const positive = isNmos ? body : terminal;
+  const negative = isNmos ? terminal : body;
+  stampConductance(matrix, positive, negative, conductance);
+  stampCurrentSourceEquivalent(
+    rhs,
+    positive,
+    negative,
+    current - conductance * junctionVoltage,
+  );
 }
 
 function stampMosfetCharge(
@@ -22636,7 +22733,19 @@ function stampMosfetSmallSignal(
     drainVoltage - sourceVoltage,
     bodyVoltage - sourceVoltage,
   );
+  const [, sourceBulkConductance] = mosfetBulkJunctionCurrentConductance(
+    element,
+    sourceVoltage,
+    bodyVoltage,
+  );
+  const [, drainBulkConductance] = mosfetBulkJunctionCurrentConductance(
+    element,
+    drainVoltage,
+    bodyVoltage,
+  );
   stampConductance(matrix, drain, source, result.gds);
+  stampConductance(matrix, body, source, sourceBulkConductance);
+  stampConductance(matrix, body, drain, drainBulkConductance);
   stampTransconductance(matrix, drain, source, gate, source, result.gm);
   stampTransconductance(matrix, drain, source, body, source, result.gmb);
   const drainResistance = mosfetDrainResistance(element);
@@ -23394,6 +23503,16 @@ function stampAcMosfetSmallSignal(
     drainVoltage - sourceVoltage,
     bodyVoltage - sourceVoltage,
   );
+  const [, sourceBulkConductance] = mosfetBulkJunctionCurrentConductance(
+    element,
+    sourceVoltage,
+    bodyVoltage,
+  );
+  const [, drainBulkConductance] = mosfetBulkJunctionCurrentConductance(
+    element,
+    drainVoltage,
+    bodyVoltage,
+  );
   stampComplexConductance(matrix, drain, source, complex(result.gds, 0.0));
   stampComplexTransconductance(
     matrix,
@@ -23406,8 +23525,18 @@ function stampAcMosfetSmallSignal(
   stampComplexConductance(matrix, gate, source, complex(0.0, omega * result.cgs));
   stampComplexConductance(matrix, gate, drain, complex(0.0, omega * result.cgd));
   stampComplexConductance(matrix, gate, body, complex(0.0, omega * result.cgb));
-  stampComplexConductance(matrix, body, source, complex(0.0, omega * result.cbs));
-  stampComplexConductance(matrix, body, drain, complex(0.0, omega * result.cbd));
+  stampComplexConductance(
+    matrix,
+    body,
+    source,
+    complex(sourceBulkConductance, omega * result.cbs),
+  );
+  stampComplexConductance(
+    matrix,
+    body,
+    drain,
+    complex(drainBulkConductance, omega * result.cbd),
+  );
   stampComplexTransconductance(
     matrix,
     drain,

@@ -1,5 +1,8 @@
 # Changelog
 
+- Apply Level-1 MOS model-card `IS` to the source-body and drain-body junctions
+  in DC, transient, transfer-function, and AC analysis, and emit distinct
+  `IBS` / `IBD` shot-noise sources.
 - Add Level-1 MOS model-card `MJSW`, defaulting to `0.33`, to shape `CJSW`
   sidewall depletion independently from `MJ` bottom-junction capacitance.
 - Add the Level-1 MOS `PS` instance parameter. With model-card `CJSW`, its

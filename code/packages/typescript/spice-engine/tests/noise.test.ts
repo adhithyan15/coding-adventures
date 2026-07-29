@@ -262,6 +262,22 @@ describe("noiseAc", () => {
     }
   });
 
+  it("emits distinct MOSFET bulk-junction shot-noise sources", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vbody", "body", "0", -0.3));
+    circuit.add(mosfet("M1", "0", "0", "0", "body", "NMOS", {
+      IS: 1.0e-12,
+    }));
+
+    const entries = noiseAc(circuit, "body", "Vbody", [1_000.0], 300.0).points[0]!.entries;
+    for (const name of ["M1:IBS", "M1:IBD"]) {
+      const entry = entries.find(
+        (candidate) => candidate.elementName === name && candidate.noiseType === "shot",
+      );
+      expect(entry?.sourcePsd).toBeGreaterThan(0.0);
+    }
+  });
+
   it("uses JFET AF as the current exponent", () => {
     function sourcePsd(exponent: number): number {
       const circuit = new Circuit();

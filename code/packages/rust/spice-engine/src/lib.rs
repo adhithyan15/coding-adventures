@@ -22881,6 +22881,34 @@ fn collect_noise_sources(
                         frequency_exponent: 1.0,
                     });
                 }
+                let (source_bulk_current, _) =
+                    mosfet_bulk_junction_current_conductance(mosfet, source_voltage, body_voltage);
+                let (drain_bulk_current, _) =
+                    mosfet_bulk_junction_current_conductance(mosfet, drain_voltage, body_voltage);
+                let (source_bulk_positive, source_bulk_negative) = match mosfet.mosfet_type {
+                    MosfetType::Nmos => (body, source),
+                    MosfetType::Pmos => (source, body),
+                };
+                let (drain_bulk_positive, drain_bulk_negative) = match mosfet.mosfet_type {
+                    MosfetType::Nmos => (body, drain),
+                    MosfetType::Pmos => (drain, body),
+                };
+                sources.push(NoiseSource {
+                    element_name: format!("{}:IBS", mosfet.name),
+                    noise_type: NoiseType::Shot,
+                    positive: source_bulk_positive,
+                    negative: source_bulk_negative,
+                    source_psd: 2.0 * ELECTRON_CHARGE * source_bulk_current.abs(),
+                    frequency_exponent: 0.0,
+                });
+                sources.push(NoiseSource {
+                    element_name: format!("{}:IBD", mosfet.name),
+                    noise_type: NoiseType::Shot,
+                    positive: drain_bulk_positive,
+                    negative: drain_bulk_negative,
+                    source_psd: 2.0 * ELECTRON_CHARGE * drain_bulk_current.abs(),
+                    frequency_exponent: 0.0,
+                });
                 let drain_resistance = mosfet_drain_resistance(mosfet);
                 if drain_resistance > 0.0 {
                     sources.push(NoiseSource {
@@ -24225,6 +24253,24 @@ fn stamp_mosfet(
     stamp_transconductance(matrix, drain, source, gate, source, result.gm);
     stamp_transconductance(matrix, drain, source, body, source, result.gmb);
     stamp_equivalent_current_source(rhs, drain, source, equivalent_current);
+    stamp_mosfet_bulk_junction(
+        mosfet,
+        source,
+        body,
+        source_voltage,
+        body_voltage,
+        matrix,
+        rhs,
+    );
+    stamp_mosfet_bulk_junction(
+        mosfet,
+        drain,
+        body,
+        drain_voltage,
+        body_voltage,
+        matrix,
+        rhs,
+    );
     stamp_mosfet_charge(mosfet, capacitor_states, node_indices, matrix, rhs)?;
     let drain_resistance = mosfet_drain_resistance(mosfet);
     if drain_resistance > 0.0 {
@@ -24245,6 +24291,57 @@ fn stamp_mosfet(
         );
     }
     Ok(())
+}
+
+fn mosfet_bulk_junction_current_conductance(
+    mosfet: &Mosfet,
+    terminal_voltage: f64,
+    body_voltage: f64,
+) -> (f64, f64) {
+    let junction_voltage = match mosfet.mosfet_type {
+        MosfetType::Nmos => body_voltage - terminal_voltage,
+        MosfetType::Pmos => terminal_voltage - body_voltage,
+    };
+    let thermal_voltage = BOLTZMANN * mosfet.params.t_nom / ELECTRON_CHARGE;
+    let normalized_voltage = junction_voltage / thermal_voltage;
+    let limited_exp = normalized_voltage.clamp(-40.0, 40.0).exp();
+    let (current_factor, conductance_factor) = if normalized_voltage > 40.0 {
+        (limited_exp * (1.0 + normalized_voltage - 40.0), limited_exp)
+    } else {
+        (limited_exp, limited_exp)
+    };
+    (
+        mosfet.params.saturation_current * (current_factor - 1.0),
+        mosfet.params.saturation_current / thermal_voltage * conductance_factor,
+    )
+}
+
+fn stamp_mosfet_bulk_junction(
+    mosfet: &Mosfet,
+    terminal: Option<usize>,
+    body: Option<usize>,
+    terminal_voltage: f64,
+    body_voltage: f64,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+) {
+    let (current, conductance) =
+        mosfet_bulk_junction_current_conductance(mosfet, terminal_voltage, body_voltage);
+    let junction_voltage = match mosfet.mosfet_type {
+        MosfetType::Nmos => body_voltage - terminal_voltage,
+        MosfetType::Pmos => terminal_voltage - body_voltage,
+    };
+    let (positive, negative) = match mosfet.mosfet_type {
+        MosfetType::Nmos => (body, terminal),
+        MosfetType::Pmos => (terminal, body),
+    };
+    stamp_conductance(matrix, positive, negative, conductance);
+    stamp_equivalent_current_source(
+        rhs,
+        positive,
+        negative,
+        current - conductance * junction_voltage,
+    );
 }
 
 fn stamp_mosfet_charge(
@@ -24432,7 +24529,13 @@ fn stamp_mosfet_small_signal(
     let vds = drain_voltage - source_voltage;
     let vbs = body_voltage - source_voltage;
     let result = evaluate_mosfet_level1(mosfet, vgs, vds, vbs);
+    let (_, source_bulk_conductance) =
+        mosfet_bulk_junction_current_conductance(mosfet, source_voltage, body_voltage);
+    let (_, drain_bulk_conductance) =
+        mosfet_bulk_junction_current_conductance(mosfet, drain_voltage, body_voltage);
     stamp_conductance(matrix, drain, source, result.gds);
+    stamp_conductance(matrix, body, source, source_bulk_conductance);
+    stamp_conductance(matrix, body, drain, drain_bulk_conductance);
     stamp_transconductance(matrix, drain, source, gate, source, result.gm);
     stamp_transconductance(matrix, drain, source, body, source, result.gmb);
     let drain_resistance = mosfet_drain_resistance(mosfet);
@@ -24525,12 +24628,26 @@ fn stamp_ac_mosfet_small_signal(
     let vds = drain_voltage - source_voltage;
     let vbs = body_voltage - source_voltage;
     let result = evaluate_mosfet_level1(mosfet, vgs, vds, vbs);
+    let (_, source_bulk_conductance) =
+        mosfet_bulk_junction_current_conductance(mosfet, source_voltage, body_voltage);
+    let (_, drain_bulk_conductance) =
+        mosfet_bulk_junction_current_conductance(mosfet, drain_voltage, body_voltage);
     stamp_complex_conductance(matrix, drain, source, Complex::new(result.gds, 0.0));
     stamp_complex_conductance(matrix, gate, source, Complex::new(0.0, omega * result.cgs));
     stamp_complex_conductance(matrix, gate, drain, Complex::new(0.0, omega * result.cgd));
     stamp_complex_conductance(matrix, gate, body, Complex::new(0.0, omega * result.cgb));
-    stamp_complex_conductance(matrix, body, source, Complex::new(0.0, omega * result.cbs));
-    stamp_complex_conductance(matrix, body, drain, Complex::new(0.0, omega * result.cbd));
+    stamp_complex_conductance(
+        matrix,
+        body,
+        source,
+        Complex::new(source_bulk_conductance, omega * result.cbs),
+    );
+    stamp_complex_conductance(
+        matrix,
+        body,
+        drain,
+        Complex::new(drain_bulk_conductance, omega * result.cbd),
+    );
     stamp_complex_transconductance(
         matrix,
         drain,

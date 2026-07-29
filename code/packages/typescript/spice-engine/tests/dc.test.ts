@@ -1171,6 +1171,30 @@ describe("dcOp", () => {
     expect(result.nodeVoltages.get("__spice_M1_drain")!).toBeLessThan(5.0);
   });
 
+  it("sets reverse-biased MOSFET bulk-junction leakage from IS", () => {
+    const biasCurrent = (
+      type: "NMOS" | "PMOS",
+      biasVoltage: number,
+      saturationCurrent: number,
+    ): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vbias", "body", "0", biasVoltage));
+      circuit.add(mosfet("M1", "0", "0", "0", "body", type, {
+        IS: saturationCurrent,
+      }));
+      return Math.abs(dcOp(circuit).branchCurrent("Vbias")!);
+    };
+
+    for (const [type, biasVoltage] of [
+      ["NMOS", -0.3],
+      ["PMOS", 0.3],
+    ] as const) {
+      const unloaded = biasCurrent(type, biasVoltage, 1.0e-30);
+      const loaded = biasCurrent(type, biasVoltage, 1.0e-12);
+      expect(loaded).toBeGreaterThan(unloaded);
+    }
+  });
+
   it("raises the intrinsic MOSFET source voltage across RS", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vdrain", "drain", "0", 5.0));

@@ -130,6 +130,9 @@ noise model. `NLEV >= 3` selects the Berkeley linear-region equation, with
 `GDSNOI` (default `1`) scaling its channel-noise conductance.
 Level-1 MOS model cards accept `KF` (default `0`) and `AF` (default `1`) and add
 `KF * abs(Id)^AF / frequency` flicker noise alongside channel thermal noise.
+Their `IS` value also drives source-body and drain-body junction leakage in
+DC, transient, transfer-function, and AC analysis, with separate `IBS` and
+`IBD` shot-noise contributions.
 `LD` defaults to zero and applies `L_eff = L - 2*LD` to channel current and
 length-scaled intrinsic/`CGBO` capacitance.
 `TOX` defaults to `1e-7 m`, must be finite and positive, and derives intrinsic

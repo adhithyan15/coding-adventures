@@ -1644,6 +1644,42 @@ fn dc_mosfet_drain_resistance_drops_intrinsic_drain_voltage() {
 }
 
 #[test]
+fn dc_mosfet_bulk_junction_saturation_current_sets_reverse_leakage() {
+    let bias_current = |mosfet_type: MosfetType, bias_voltage: f64, saturation_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vbias",
+            "body",
+            "0",
+            bias_voltage,
+        )));
+        circuit.add(Element::Mosfet(Mosfet::with_model(
+            "M1",
+            "0",
+            "0",
+            "0",
+            "body",
+            mosfet_type,
+            MosfetLevel1Params {
+                saturation_current,
+                ..MosfetLevel1Params::default()
+            },
+        )));
+        dc_op(&circuit)
+            .unwrap()
+            .branch_current("Vbias")
+            .unwrap()
+            .abs()
+    };
+
+    for (mosfet_type, bias_voltage) in [(MosfetType::Nmos, -0.3), (MosfetType::Pmos, 0.3)] {
+        let unloaded = bias_current(mosfet_type, bias_voltage, 1.0e-30);
+        let loaded = bias_current(mosfet_type, bias_voltage, 1.0e-12);
+        assert!(loaded > unloaded);
+    }
+}
+
+#[test]
 fn dc_mosfet_source_resistance_raises_intrinsic_source_voltage() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(
