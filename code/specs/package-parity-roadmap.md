@@ -119,6 +119,30 @@ Rust-only package families:
 The loop must not start by attempting 10,262 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
+The July 29 lane audit is:
+
+| Established lane | Packages present | High-consensus gaps | Rust/Python-core coverage |
+|---|---:|---:|---:|
+| C# | 196 | 0 | 47.5% |
+| Dart | 73 | 107 | 17.1% |
+| Elixir | 276 | 0 | 69.3% |
+| F# | 195 | 0 | 47.5% |
+| Go | 292 | 0 | 72.4% |
+| Haskell | 202 | 3 | 48.6% |
+| Java | 126 | 58 | 31.0% |
+| Kotlin | 125 | 58 | 31.0% |
+| Lua | 251 | 0 | 63.3% |
+| Perl | 251 | 0 | 63.3% |
+| Python | 496 | 1 | 100% |
+| Ruby | 294 | 0 | 70.3% |
+| Rust | 948 | 0 | 100% |
+| Swift | 160 | 51 | 37.8% |
+| TypeScript | 439 | 0 | 82.2% |
+
+These are structural counts, not conformance claims. The full review queue must
+cover all 15 rows even when a lane has zero gaps in the current
+high-consensus subset.
+
 ## Priority 0: Inventory And Identity Integrity
 
 Completed. The reporter now inventories Git-visible files, emits Markdown,
@@ -127,6 +151,16 @@ covered by CI unit tests. The conflicting `ruby/b_tree` and
 `ruby/b_plus_tree` shadow packages were removed in favor of the authoritative
 DT11/DT12 `ruby/b-tree` and `ruby/b-plus-tree` implementations. CI now rejects
 new canonical identity collisions with `--fail-on-collisions`.
+
+Remaining inventory/build-integrity work discovered in the July 29 audit:
+
+- reconcile stale `BUILD_windows` prerequisite declarations reported by the
+  build-tool validator across Python, Perl, TypeScript, Swift, Dart, Kotlin, and
+  related packages in dependency-shaped waves;
+- remove environment-specific Starlark grammar lookup so build discovery works
+  from arbitrary clean worktrees;
+- add explicit applicability and maturity data before either C/C++ or OCaml
+  enters the all-language completion denominator.
 
 ## Priority 1: Complete The 14-Of-15 Set
 
@@ -151,6 +185,22 @@ Completed in the Haskell lane: `activation-functions`, `caesar-cipher`,
 Completed in the Swift lane: `wasm-simulator`, `cli-builder`,
 `sql-execution-engine`.
 
+### Current 14-of-15 frontier: reopened
+
+The historical Priority 1 cohort is complete, but later Haskell work promoted
+13 packages into a new 14-of-15 frontier. Every current gap is Dart-only:
+
+- dependency-shaped ML: `matrix`, then `loss-functions` and
+  `feature-normalization`;
+- numeric family: `trig`, then `wave`;
+- deterministic data structures: `binary-search-tree`, `fenwick-tree`, and
+  `trie`;
+- leaf ciphers: `atbash-cipher`, `scytale-cipher`, and `vigenere-cipher`;
+- shared model and utility leaves: `document-ast` and `uuid`.
+
+Close these as small coherent PRs after the cross-language build-tool contract
+foundation is stable.
+
 Port dependency families together when doing so avoids temporary broken package
 graphs. Grammar-generated lexer/parser pairs should be generated from the shared
 grammar sources rather than independently handwritten.
@@ -162,20 +212,24 @@ ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
 |---|---:|---|
-| Python | 1 | Classify the remaining self-hosted `python-parser` carefully |
-| Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
-| Lua | 0 | Complete; paired data-structure/storage wave |
-| Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
+| Dart | 107 | Close the reopened 14-of-15 set, then dependencies before consumers |
+| Elixir | 0 | Complete; retain as a reference lane and run conformance fixtures |
 | F# | 0 | Complete; paired native package wave |
+| Go | 0 | Complete; primary build-tool and portable-core reference lane |
 | Haskell | 3 | Finish `http1`, then the generic `event-loop` and pure `brotli` gaps |
-| Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
-| Dart | 107 | Algorithms, data structures, codecs, grammar frontends, documents, and paint transforms first |
+| Lua | 0 | Complete; retain as a reference lane and remediate build-tool drift |
+| Perl | 0 | Complete; retain as a reference lane and remediate build-tool drift |
+| Python | 1 | Classify the remaining self-hosted `python-parser` carefully |
+| Ruby | 0 | Complete; retain as a reference lane and run conformance fixtures |
+| Rust | 0 | Complete; reference lane for broad and singleton families |
+| Swift | 51 | Data structures and generated frontends before native app surfaces |
+| TypeScript | 0 | Complete; reference lane for web-capable portable contracts |
 
-Go, Ruby, Rust, and TypeScript currently have no gaps within the 10-language
-consensus set. They remain reference/template lanes for these waves.
+Zero-gap lanes remain active reference and conformance lanes; they are not
+exempt from semantic review or build-tool parity.
 
 The first seventeen paired Lua/Perl slices are complete: `fenwick-tree`,
 `binary-tree`, `binary-search-tree`, `in-memory-data-store-protocol`,
@@ -706,14 +760,14 @@ The thirty-first Haskell high-consensus slice is complete: `http-core` now
 provides the dependency-free NET03 semantic model with ordered duplicate
 headers, bounded versions and status codes, body-framing hints, request and
 response heads, content helpers, raw request-target/query handling, and
-path-only route patterns. Its package-native suite exercises 19 examples across
-valid and malformed versions, ASCII-only header matching, length overflow,
-content parameters, message delegates, raw queries, repeated slashes, captures,
-and route mismatches. The port also repairs Haskell scaffold naming/test
-conventions and build-graph dependency discovery so the follow-on `http1` edge
-is visible to incremental CI. The package now spans 12 established lanes,
-reduces the high-consensus backlog to 278 slots, and leaves 3 gaps in the
-Haskell lane.
+path-only route patterns. Its package-native suite exercises 19 examples with
+96% expression and 95% alternative coverage across valid and malformed
+versions, ASCII-only header matching, length overflow, content parameters,
+message delegates, raw queries, repeated slashes, captures, and route
+mismatches. The port also repairs Haskell scaffold naming/test conventions and
+build-graph dependency discovery so the follow-on `http1` edge is visible to
+incremental CI. The package now spans 12 established lanes, reduces the
+high-consensus backlog to 278 slots, and leaves 3 gaps in the Haskell lane.
 
 Recommended family order:
 
@@ -817,6 +871,89 @@ the first port PR.
 7. Track package maturity separately from structural presence: manifest,
    source, tests, BUILD, README, CHANGELOG, conformance status, and last verified
    revision.
+
+## Cross-Cutting Stream A: Build-Tool Parity
+
+The build tool is itself a cross-language program and must follow the same
+rules as portable packages: directory presence is not behavioral parity.
+
+Executable front doors currently exist in 12 of the 15 established lanes:
+
+- C# and F# under `code/programs/dotnet/`
+- Elixir, Go, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript
+  under their respective `code/programs/<language>/build-tool` directories
+
+Dart, Java, and Kotlin have no implementation. The F# entry point is currently
+a thin facade over the C# engine rather than an independent native engine.
+C and C++ are emerging lanes without build tools; OCaml must receive one before
+it can graduate from emerging status. WASM is an execution target, Mosaic and
+Twig are domain languages, and Starlark is a build language, so none enters this
+program-level requirement without a separate applicability decision.
+
+The existing implementations have materially drifted. The Go program is the
+broadest reference, but even it has unfinished OS-aware structured command and
+Windows execution work. Other ports differ on package discovery, ecosystem
+resolvers, diff selection, hashing, Starlark, plan read/write, sharding,
+toolchain detection, parallelism, and failure propagation. Specifications 12,
+`build-plan-v1`, `build-plan-sharding`, 15, and B05 must be reconciled with
+current code before more directory-only ports are added.
+
+Delivery order:
+
+1. Define `build-tool-conformance.md`, a versioned fixture schema, and stable
+   machine-readable results for discovery, resolution, graph order, diff
+   selection, hashing/cache, Starlark, plan interchange, sharding, execution,
+   validation, platform BUILD selection, and toolchain detection.
+2. Add a cross-implementation runner. The runner may orchestrate processes in
+   Python, but the fixtures and canonical JSON are the behavior oracle.
+3. Make the Go reference pass the contract, including structured Starlark
+   context/commands and the B05 Windows executor contract.
+4. Remediate existing ports in fixture-failure order: C#/F#, Python, Ruby,
+   Swift, TypeScript, Elixir, Rust, Perl, Haskell, and Lua. Each independent
+   engine is its own PR; a reviewed shared-engine exception must be explicit.
+5. Add language-native Java and Kotlin implementations using shared JVM fixture
+   infrastructure but separate engines, then add Dart.
+6. Add the OCaml implementation after the lane foundation is stable.
+7. Decide and document whether C and C++ require native build tools before
+   either emerging lane graduates.
+8. Gate completion in CI: every supported implementation runs the same
+   conformance corpus on its applicable operating systems.
+
+## Cross-Cutting Stream B: Introduce OCaml Safely
+
+OCaml begins as an `emerging_implementation` lane. It must not silently change
+the current 15-language denominator until its package, build, security, and CI
+substrate is real. Use OCaml 5.2.1, opam 2.5.x, Dune 3.16.x, Alcotest,
+`bisect_ppx`, and `ocamlformat`.
+
+Bootstrap order:
+
+1. Add an OCaml lane contract. Make the reporter's hard-coded `10-15`
+   completion band denominator-safe, classify OCaml as emerging, and test that
+   OCaml packages create neither unknown buckets nor 15-lane missing slots.
+2. Add complete Go and TypeScript scaffold templates plus golden tests,
+   repository ignores, capability metadata/schema support, and the
+   `code/packages/ocaml/` lane README.
+3. Add OCaml discovery, opam/Dune dependency resolution, source hashing,
+   opam-switch serialization, language detection, validator support, shard
+   cost, and CI workflow markers to the canonical Go build tool.
+4. Exercise the full path with a real dependency chain:
+   `logic-gates`, then `graph -> directed-graph -> state-machine`. Every package
+   needs native tests, formatting, measured coverage, README, changelog,
+   capability metadata, opam/Dune manifests, and BUILD/BUILD_windows.
+5. Add an OCaml capability analyzer over compiler-libs ASTs, covering process
+   execution, dynamic loading, unsafe marshaling, and `Obj.magic` under the
+   repository's explicit capability/exception policy.
+6. Implement the OCaml build tool on `directed-graph` and require two-way
+   build-plan interchange plus the shared conformance corpus.
+7. Promote OCaml into the implementation denominator only when Ubuntu, macOS,
+   and Windows run real tests without a skip path, the representative chain and
+   build tool are green, capability enforcement is active, and the generated
+   16-lane backlog has been explicitly reviewed.
+
+After promotion, start the OCaml portable-core queue with `http-core -> http1`,
+then recompute dependency-shaped high-consensus work alongside the existing
+Dart, Java/Kotlin, Swift, and Haskell lanes.
 
 ## Autonomous Loop Protocol
 
