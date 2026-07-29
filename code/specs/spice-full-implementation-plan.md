@@ -33,14 +33,13 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS model nominal-temperature precedence.
+1. Cross-language Level-1 MOS substrate-doping electrostatic derivation.
    - Status: current PR completion candidate.
-   - Make a non-default model-card `TNOM` authoritative for Berkeley MOS1
-     temperature preprocessing while preserving the circuit nominal
-     temperature as the default-model fallback.
-   - Preserve direct MOS helper and circuit-level temperature-transform parity.
-   - Keep Rust, Python, and TypeScript helper behavior, tests, docs, and
-     changelogs aligned.
+   - Derive `PHI` and `GAMMA` from model-card `NSUB` plus `TOX` using the
+     Berkeley MOS1 process-parameter equations.
+   - Preserve explicit `PHI` / `GAMMA` precedence and reject substrate doping
+     at or below the intrinsic carrier density.
+   - Keep Rust, Python, and TypeScript model lowering, tests, and docs aligned.
 
 ## Completed Slices
 
@@ -3602,6 +3601,14 @@ the Rust, Python, and TypeScript surfaces together.
      bottom-junction grading path.
    - Zero-bias `CJSW` scales independently through `MJSW`, reusing the
      temperature-adjusted bulk-junction potential in all three languages.
+
+289. Cross-language Level-1 MOS model nominal-temperature precedence.
+   - Status: completed in PR 9153.
+   - Non-default model-card `TNOM` is authoritative for Berkeley MOS1
+     temperature preprocessing while the default model value preserves the
+     circuit nominal temperature as the fallback.
+   - Direct MOS helpers and circuit-level temperature transforms preserve
+     matching behavior in Rust, Python, and TypeScript.
 
 ## Backlog
 

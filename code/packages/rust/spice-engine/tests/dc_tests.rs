@@ -589,7 +589,7 @@ fn model_card_aliases_build_device_instances() {
             ("LEVEL", 1.0),
             ("VTO", 0.55),
             ("LAM", 0.04),
-            ("NSUB", 1.6),
+            ("NSUB", 1.6e16),
             ("CJD", 3.0e-13),
             ("PB", 0.9),
             ("MJ", 0.45),
@@ -612,7 +612,7 @@ fn model_card_aliases_build_device_instances() {
     let mos_model = mosfet_from_model_card("M1", "d", "g", "s", "b", &mos_card).unwrap();
     assert_close(*mos_card.parameters.get("VT0").unwrap(), 0.55);
     assert_close(*mos_card.parameters.get("LAMBDA").unwrap(), 0.04);
-    assert_close(*mos_card.parameters.get("N_SUB").unwrap(), 1.6);
+    assert_close(*mos_card.parameters.get("N_SUB").unwrap(), 1.6e16);
     assert_close(*mos_card.parameters.get("CBD").unwrap(), 3.0e-13);
     assert_close(*mos_card.parameters.get("PB").unwrap(), 0.9);
     assert_close(*mos_card.parameters.get("MJ").unwrap(), 0.45);
@@ -632,7 +632,7 @@ fn model_card_aliases_build_device_instances() {
     assert_eq!(mos_model.mosfet_type, MosfetType::Nmos);
     assert_close(mos_model.params.vt0, 0.55);
     assert_close(mos_model.params.lambda, 0.04);
-    assert_close(mos_model.params.n_sub, 1.6);
+    assert_close(mos_model.params.n_sub, 1.6e16);
     assert_close(mos_model.params.drain_bulk_capacitance, 3.0e-13);
     assert_close(mos_model.params.bulk_junction_potential, 0.9);
     assert_close(mos_model.params.bulk_junction_grading_coefficient, 0.45);
@@ -673,6 +673,43 @@ fn mos_model_card_surface_mobility_derives_kp_with_explicit_precedence() {
     let explicit = mosfet_from_model_card("M2", "d", "g", "s", "b", &explicit).unwrap();
     assert_close(explicit.params.surface_mobility, 500.0);
     assert_close(explicit.params.kp, 250.0e-6);
+}
+
+#[test]
+fn mos_model_card_substrate_doping_derives_electrostatics_with_explicit_precedence() {
+    let derived_card =
+        normalize_model_card("Mderived", "nmos", &[("NSUB", 4.0e15), ("TOX", 100.0e-9)]).unwrap();
+    let derived = mosfet_from_model_card("M1", "d", "g", "s", "b", &derived_card).unwrap();
+    let thermal_voltage = 1.380_649e-23 * 300.15 / 1.602_176_634e-19;
+    let expected_phi = (2.0 * thermal_voltage * (4.0e21_f64 / 1.45e16).ln()).max(0.1);
+    let expected_gamma = (2.0_f64 * (11.70 * 8.854_214_871e-12) * 1.602_176_634e-19 * 4.0e21)
+        .sqrt()
+        / (3.453_133e-11 / 100.0e-9);
+    assert_close(derived.params.phi, expected_phi);
+    assert_close(derived.params.gamma, expected_gamma);
+
+    let explicit_card = normalize_model_card(
+        "Mexplicit",
+        "nmos",
+        &[
+            ("NSUB", 4.0e15),
+            ("TOX", 100.0e-9),
+            ("PHI", 0.72),
+            ("GAMMA", 0.41),
+        ],
+    )
+    .unwrap();
+    let explicit = mosfet_from_model_card("M2", "d", "g", "s", "b", &explicit_card).unwrap();
+    assert_close(explicit.params.phi, 0.72);
+    assert_close(explicit.params.gamma, 0.41);
+
+    let invalid_card =
+        normalize_model_card("Minvalid", "nmos", &[("NSUB", 1.0e10), ("TOX", 1.0e-7)]).unwrap();
+    assert!(matches!(
+        mosfet_from_model_card("M3", "d", "g", "s", "b", &invalid_card),
+        Err(SpiceError::InvalidElement { reason, .. })
+            if reason == "MOSFET NSUB must exceed the intrinsic carrier density"
+    ));
 }
 
 #[test]
