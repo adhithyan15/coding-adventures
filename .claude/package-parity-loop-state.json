@@ -8,14 +8,9 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": {
-    "item_id": "build-tool-pure-domain-corpus",
-    "pr_number": 9167,
-    "branch": "codex/build-tool-pure-domain-corpus",
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9167"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "3201fb42078f40ef27f11aefb5e3b4b1bcf8551e",
+    "revision": "e09002be681716c3dc0cfbbda25a69f93b97ae4b",
     "schema_version": 2,
     "established_languages": 15,
     "implementation_identities": 1184,
@@ -56,16 +51,16 @@
     {
       "id": "build-tool-execution-sandbox",
       "title": "Add the trusted execution sandbox and adversarial execution corpus",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-fixtures"],
-      "branch": null,
+      "branch": "codex/build-tool-execution-sandbox",
       "pr_number": null,
-      "notes": "Newly separated after the contract security review. Require fail-closed filesystem and network isolation, no-follow materialization/output, direct argv, sanitized environments, and process-tree wall/CPU/memory/output/workspace/process-count limits before any execution fixture can run."
+      "notes": "Selected after PR #9167 merged because this is the highest-leverage pending dependency: it directly gates the Go oracle, all existing build-tool remediation, Java/Kotlin, Dart, OCaml promotion, and C/C++ graduation. Require fail-closed filesystem and network isolation, no-follow materialization/output, direct argv, sanitized environments, and process-tree wall/CPU/memory/output/workspace/process-count limits before any execution fixture can run."
     },
     {
       "id": "build-tool-pure-domain-corpus",
       "title": "Close the remaining non-execution build-tool domain schemas and fixtures",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-fixtures"],
       "branch": "codex/build-tool-pure-domain-corpus",
       "pr_number": 9167,
