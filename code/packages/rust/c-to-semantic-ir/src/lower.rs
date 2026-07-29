@@ -101,21 +101,17 @@ fn i32_spec() -> IntSpec {
     IntSpec::sized(IntWidth::W32, true, Overflow::Undefined)
 }
 
-/// Resolve a `type_spec` node (a sequence of type-keyword tokens) to an
-/// `IntSpec`, or `None` for `void`.
-fn resolve_type_spec(ts: &GrammarASTNode) -> Result<Option<IntSpec>, CLowerError> {
+/// Resolve a `type_spec` node (a sequence of type-keyword tokens) to a
+/// [`CType`], or `None` for `void`.
+fn resolve_type_spec(ts: &GrammarASTNode) -> Result<Option<CType>, CLowerError> {
     let mut kws: Vec<String> = Vec::new();
     collect_type_kws(ts, &mut kws);
     if kws.iter().any(|k| k == "void") {
         return Ok(None);
     }
-    // The grammar recognises `float`/`double`, but the lowering is still
-    // integer-only — reject them cleanly rather than mis-typing them as `int`.
+    // `float`/`double` (and `long double`) all map to SIR's single 64-bit float.
     if kws.iter().any(|k| k == "float" || k == "double") {
-        return err(
-            "floating-point types (`float`/`double`) are not yet supported in lowering",
-            ts,
-        );
+        return Ok(Some(CType::Double));
     }
     // Fixed-width <stdint.h> names / size_t map directly.
     for k in &kws {
@@ -132,7 +128,7 @@ fn resolve_type_spec(ts: &GrammarASTNode) -> Result<Option<IntSpec>, CLowerError
             _ => None,
         };
         if let Some((w, signed)) = direct {
-            return Ok(Some(spec_of(w, signed)));
+            return Ok(Some(CType::Int(spec_of(w, signed))));
         }
     }
     // Native specifier combination.  Signed unless `unsigned` appears (plain
@@ -147,7 +143,7 @@ fn resolve_type_spec(ts: &GrammarASTNode) -> Result<Option<IntSpec>, CLowerError
     } else {
         IntWidth::W32 // int (or a lone `unsigned`/`signed`)
     };
-    Ok(Some(spec_of(width, !unsigned)))
+    Ok(Some(CType::Int(spec_of(width, !unsigned))))
 }
 
 fn spec_of(width: IntWidth, signed: bool) -> IntSpec {
@@ -208,10 +204,85 @@ fn common_type(a: IntSpec, b: IntSpec) -> IntSpec {
     spec_of(wider.width, !unsigned)
 }
 
+// ── C expression type: integer or double ────────────────────────────────────
+
+/// The C type of an expression.  An integer carries its full `IntSpec` (width,
+/// signedness, overflow); `Double` is the floating-point type.  SIR has a single
+/// 64-bit `Float`, so C `float` and `double` both map to `Double` — a documented
+/// precision approximation (conformance is on `double`).
+#[derive(Clone, Copy, PartialEq)]
+enum CType {
+    Int(IntSpec),
+    Double,
+}
+
+impl CType {
+    fn is_double(self) -> bool {
+        matches!(self, CType::Double)
+    }
+    /// The SIR type this C type lowers to.
+    fn sir(self) -> SirType {
+        match self {
+            CType::Int(s) => SirType::Int(s),
+            CType::Double => SirType::Float,
+        }
+    }
+}
+
+/// The C type `int` (the default for a promoted narrow integer / a comparison).
+fn i32_ct() -> CType {
+    CType::Int(i32_spec())
+}
+
+/// `int → double` conversion (C's implicit widening / `(double)e`).
+fn to_f(e: Expr) -> Expr {
+    builtin("to_f", vec![e])
+}
+
+/// `double → int` conversion, truncating toward zero (C's `(int)e`).
+fn to_i(e: Expr) -> Expr {
+    builtin("to_i", vec![e])
+}
+
+/// Convert `e` from C type `from` to `to`, inserting exactly the right node: an
+/// integer width `Convert`, `to_f` (int→double), or `to_i` then a width
+/// `Convert` (double→int, truncating).
+fn convert_ct(e: Expr, from: CType, to: CType) -> Expr {
+    match (from, to) {
+        (CType::Int(a), CType::Int(b)) => convert_to(e, a, b),
+        (CType::Int(_), CType::Double) => to_f(e),
+        (CType::Double, CType::Int(b)) => convert(to_i(e), b),
+        (CType::Double, CType::Double) => e,
+    }
+}
+
+/// Integer promotion lifted to `CType` — a `double` is unaffected.
+fn promote_ct(t: CType) -> CType {
+    match t {
+        CType::Int(s) => CType::Int(promote(s)),
+        CType::Double => CType::Double,
+    }
+}
+
+/// The usual-arithmetic-conversions common type: `double` wins over any integer.
+fn common_ct(a: CType, b: CType) -> CType {
+    match (a, b) {
+        (CType::Double, _) | (_, CType::Double) => CType::Double,
+        (CType::Int(x), CType::Int(y)) => CType::Int(common_type(x, y)),
+    }
+}
+
 // ── SIR node constructors ────────────────────────────────────────────────────
 
 fn sp() -> Span {
     Span::synthetic()
+}
+
+fn float_lit(v: f64) -> Expr {
+    Expr::FloatLit {
+        value: v,
+        span: sp(),
+    }
 }
 
 fn int_lit(v: i64) -> Expr {
@@ -312,14 +383,14 @@ const MAX_LIFTED_GUARDS: usize = MAX_EXPR_DEPTH;
 /// get a unique suffix (see [`Lowerer::declare`]).
 #[derive(Clone)]
 struct Binding {
-    ty: IntSpec,
+    ty: CType,
     scope: Scope,
     sir_name: String,
 }
 
 struct Lowerer {
     /// Function signatures for call-site type resolution.
-    fns: HashMap<String, (Vec<IntSpec>, Option<IntSpec>)>,
+    fns: HashMap<String, (Vec<CType>, Option<CType>)>,
     /// Lexical **scope stack** (innermost last).  A declaration binds in the top
     /// scope; a reference resolves inner→outer.  Replaces the old flat map, so
     /// C's block scoping works — shadowing an outer variable, and two sequential
@@ -339,6 +410,11 @@ struct Lowerer {
     /// Current *statement* nesting (`if`/`while`/`for` bodies and nested
     /// blocks) — the third dimension of the same budget.
     stmt_depth: usize,
+    /// Set once any `double`/`float` type or floating-point literal is lowered,
+    /// so the module declares [`Feature::Floats`] only when it actually uses
+    /// floating point (an integer-only program stays float-free, and backends
+    /// that gate on the feature are not forced to support it needlessly).
+    uses_floats: bool,
 }
 
 pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowerError> {
@@ -349,6 +425,7 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowe
         lifted: 0,
         expr_depth: 0,
         stmt_depth: 0,
+        uses_floats: false,
     };
 
     // Pre-pass: collect function signatures.
@@ -368,7 +445,7 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowe
         }
     }
 
-    let manifest = FeatureManifest::from_features(&[
+    let mut features = vec![
         Feature::OptionalTypeAnnotations,
         Feature::MutualRecursion,
         Feature::Conversions,
@@ -383,7 +460,14 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowe
         // Milestone 4: `&&`/`||`/`!` lower to the short-circuiting `and`/`or`/
         // `not` builtins.
         Feature::ShortCircuit,
-    ]);
+    ];
+    // Milestone 9 (floating point): only declared when the program actually
+    // used a `double`/`float` type or a floating-point literal, so integer-only
+    // modules stay float-free.
+    if lo.uses_floats {
+        features.push(Feature::Floats);
+    }
+    let manifest = FeatureManifest::from_features(&features);
 
     let module = Module {
         name: module_name.to_string(),
@@ -437,7 +521,7 @@ impl Lowerer {
     /// to.  Re-declaring the same name in the *same* block is a C error;
     /// shadowing an outer scope (or re-using a name a sibling used) is fine and
     /// gets a fresh unique SIR name.
-    fn declare(&mut self, cname: &str, ty: IntSpec, scope: Scope) -> Result<String, CLowerError> {
+    fn declare(&mut self, cname: &str, ty: CType, scope: Scope) -> Result<String, CLowerError> {
         if self
             .scopes
             .last()
@@ -491,7 +575,7 @@ impl Lowerer {
     fn function_header(
         &self,
         f: &GrammarASTNode,
-    ) -> Result<(String, Vec<(String, IntSpec)>, Option<IntSpec>), CLowerError> {
+    ) -> Result<(String, Vec<(String, CType)>, Option<CType>), CLowerError> {
         let toks = child_tokens(f);
         let name = toks
             .iter()
@@ -540,12 +624,14 @@ impl Lowerer {
         self.scopes = vec![HashMap::new()];
         self.used_sir_names.clear();
         self.lifted = 0;
+        self.uses_floats |= ret.map(|t| t.is_double()).unwrap_or(false);
         let mut sir_params = Vec::new();
         for (pname, ty) in &params {
+            self.uses_floats |= ty.is_double();
             self.declare(pname, *ty, Scope::Param)?;
             sir_params.push(Param {
                 name: pname.clone(),
-                sir_type: Some(SirType::Int(*ty)),
+                sir_type: Some(ty.sir()),
                 kind: ParamKind::Required,
                 default: None,
                 span: sp(),
@@ -560,7 +646,7 @@ impl Lowerer {
         Ok(Function {
             name,
             params: sir_params,
-            return_type: ret.map(SirType::Int),
+            return_type: ret.map(|t| t.sir()),
             captures: vec![],
             body,
             effects: EffectSet::PURE,
@@ -573,7 +659,7 @@ impl Lowerer {
     fn lower_body(
         &mut self,
         body: &GrammarASTNode,
-        ret: Option<IntSpec>,
+        ret: Option<CType>,
     ) -> Result<Block, CLowerError> {
         let items = block_items_of(body);
         self.lower_seq(&items, ret)
@@ -601,7 +687,7 @@ impl Lowerer {
     fn lower_seq(
         &mut self,
         items: &[&GrammarASTNode],
-        ret: Option<IntSpec>,
+        ret: Option<CType>,
     ) -> Result<Block, CLowerError> {
         // This walk is **iterative in two dimensions**, and both matter:
         //
@@ -805,13 +891,13 @@ impl Lowerer {
     fn lower_return(
         &mut self,
         s: &GrammarASTNode,
-        ret: Option<IntSpec>,
+        ret: Option<CType>,
     ) -> Result<Expr, CLowerError> {
         Ok(match first_node(s, "expr") {
             Some(e) => {
                 let (ex, ty) = self.lower_expr(e)?;
                 match ret {
-                    Some(rt) => convert_to(ex, ty, rt),
+                    Some(rt) => convert_ct(ex, ty, rt),
                     None => ex,
                 }
             }
@@ -985,7 +1071,7 @@ impl Lowerer {
         Ok(Stmt::Assign {
             name: sir_name,
             scope,
-            value: convert_to(e, et, ty),
+            value: convert_ct(e, et, ty),
             span: sp(),
         })
     }
@@ -1252,7 +1338,7 @@ impl Lowerer {
     }
 
     fn lower_compare_bool_inner(&mut self, n: &GrammarASTNode) -> Result<Expr, CLowerError> {
-        let mut acc: Option<(Expr, IntSpec)> = None;
+        let mut acc: Option<(Expr, CType)> = None;
         let mut pending_op: Option<String> = None;
         let mut last_bool: Option<Expr> = None;
         for c in &n.children {
@@ -1269,7 +1355,7 @@ impl Lowerer {
                             })?;
                             let b = self.compare(&op, le, lt, e, t)?;
                             last_bool = Some(b.clone());
-                            acc = Some((if_int(b), i32_spec()));
+                            acc = Some((if_int(b), i32_ct()));
                         }
                     }
                 }
@@ -1289,17 +1375,21 @@ impl Lowerer {
         &self,
         op: &str,
         le: Expr,
-        lt: IntSpec,
+        lt: CType,
         re: Expr,
-        rt: IntSpec,
+        rt: CType,
     ) -> Result<Expr, CLowerError> {
-        let lp = promote(lt);
-        let rp = promote(rt);
-        let le = convert_to(le, lt, lp);
-        let re = convert_to(re, rt, rp);
-        let c = common_type(lp, rp);
-        let le = convert_to(le, lp, c);
-        let re = convert_to(re, rp, c);
+        let lp = promote_ct(lt);
+        let rp = promote_ct(rt);
+        let le = convert_ct(le, lt, lp);
+        let re = convert_ct(re, rt, rp);
+        // Bring both operands to their common type (`double` if either is), then
+        // compare.  All six relational/equality operators are defined on both
+        // integers and `double`; the builtin is the same, only the operand type
+        // differs.
+        let c = common_ct(lp, rp);
+        let le = convert_ct(le, lp, c);
+        let re = convert_ct(re, rp, c);
         match op {
             "<" | ">" | "<=" | ">=" | "==" | "!=" => Ok(builtin(op, vec![le, re])),
             other => Err(CLowerError {
@@ -1332,6 +1422,7 @@ impl Lowerer {
             line: init.start_line.unwrap_or(0),
             column: init.start_column.unwrap_or(0),
         })?;
+        self.uses_floats |= ty.is_double();
         let name = child_tokens(init)
             .iter()
             .find(|t| t.effective_type_name() == "NAME")
@@ -1342,9 +1433,14 @@ impl Lowerer {
         let value = match first_node(init, "expr") {
             Some(e) => {
                 let (ex, ety) = self.lower_expr(e)?;
-                convert_to(ex, ety, ty) // assignment conversion to the declared type
+                convert_ct(ex, ety, ty) // assignment conversion to the declared type
             }
-            None => convert(int_lit(0), ty), // uninitialised → 0 of the type
+            // Uninitialised → the type's zero: `0.0` for `double`, `0` (wrapped
+            // to the width) for an integer type.
+            None => match ty {
+                CType::Double => float_lit(0.0),
+                CType::Int(s) => convert(int_lit(0), s),
+            },
         };
         // Bind in the current scope; `declare` gives a unique SIR name when this
         // shadows an outer variable or re-uses one a sibling block used.
@@ -1357,14 +1453,14 @@ impl Lowerer {
             })?;
         Ok(Stmt::LetStarBinding {
             name: sir_name,
-            sir_type: Some(SirType::Int(ty)),
+            sir_type: Some(ty.sir()),
             value,
             span: sp(),
         })
     }
 
     /// Lower an expression, returning both the SIR node and its C type.
-    fn lower_expr(&mut self, node: &GrammarASTNode) -> Result<(Expr, IntSpec), CLowerError> {
+    fn lower_expr(&mut self, node: &GrammarASTNode) -> Result<(Expr, CType), CLowerError> {
         // Bound the depth of the tree we emit — see `MAX_EXPR_DEPTH`.  The
         // counter is restored on every path so a rejected sub-expression does
         // not poison the rest of the function.
@@ -1381,7 +1477,7 @@ impl Lowerer {
         result
     }
 
-    fn lower_expr_inner(&mut self, node: &GrammarASTNode) -> Result<(Expr, IntSpec), CLowerError> {
+    fn lower_expr_inner(&mut self, node: &GrammarASTNode) -> Result<(Expr, CType), CLowerError> {
         let n = peel(node);
         match n.rule_name.as_str() {
             // Binary arithmetic / bitwise / shift — left-associative fold.
@@ -1393,11 +1489,11 @@ impl Lowerer {
             // integer from the SIR bool.
             "equality" | "relational" if child_nodes(n).len() >= 2 => {
                 let b = self.lower_compare_bool(n)?;
-                Ok((if_int(b), i32_spec()))
+                Ok((if_int(b), i32_ct()))
             }
             "logical_and" | "logical_or" if child_nodes(n).len() >= 2 => {
                 let b = self.lower_cond(n)?;
-                Ok((if_int(b), i32_spec()))
+                Ok((if_int(b), i32_ct()))
             }
             "cast" => self.lower_cast(n),
             "unary" => self.lower_unary(n),
@@ -1409,7 +1505,7 @@ impl Lowerer {
         }
     }
 
-    fn lower_binary(&mut self, n: &GrammarASTNode) -> Result<(Expr, IntSpec), CLowerError> {
+    fn lower_binary(&mut self, n: &GrammarASTNode) -> Result<(Expr, CType), CLowerError> {
         // A chain is flat in the CST but folds left into a tree as deep as it is
         // wide, so its width is charged against the same budget as nesting — and
         // *held* while its operands are lowered.
@@ -1420,9 +1516,9 @@ impl Lowerer {
         result
     }
 
-    fn lower_binary_inner(&mut self, n: &GrammarASTNode) -> Result<(Expr, IntSpec), CLowerError> {
+    fn lower_binary_inner(&mut self, n: &GrammarASTNode) -> Result<(Expr, CType), CLowerError> {
         // children: operand (op operand)+   — fold left.
-        let mut acc: Option<(Expr, IntSpec)> = None;
+        let mut acc: Option<(Expr, CType)> = None;
         let mut pending_op: Option<String> = None;
         for c in &n.children {
             match c {
@@ -1451,14 +1547,40 @@ impl Lowerer {
         &self,
         op: &str,
         le: Expr,
-        lt: IntSpec,
+        lt: CType,
         re: Expr,
-        rt: IntSpec,
-    ) -> Result<(Expr, IntSpec), CLowerError> {
-        let lp = promote(lt);
-        let rp = promote(rt);
-        let le = convert_to(le, lt, lp);
-        let re = convert_to(re, rt, rp);
+        rt: CType,
+    ) -> Result<(Expr, CType), CLowerError> {
+        let lp = promote_ct(lt);
+        let rp = promote_ct(rt);
+        let le = convert_ct(le, lt, lp);
+        let re = convert_ct(re, rt, rp);
+
+        // Floating point: if *either* promoted operand is `double`, the whole
+        // operation is done in floating point (the usual arithmetic conversions
+        // promote the integer operand to `double`).  There is no width to wrap
+        // to and no truncating/logical distinction — `/` is real division, and
+        // the bit/shift/`%` operators are not defined on `double`.
+        if lp.is_double() || rp.is_double() {
+            let le = convert_ct(le, lp, CType::Double);
+            let re = convert_ct(re, rp, CType::Double);
+            let sir_op = match op {
+                "+" | "-" | "*" | "/" => op,
+                other => {
+                    return Err(CLowerError {
+                        message: format!("operator `{other}` is not defined on `double`"),
+                        line: 0,
+                        column: 0,
+                    })
+                }
+            };
+            return Ok((builtin(sir_op, vec![le, re]), CType::Double));
+        }
+        // From here on both operands are integers; `le`/`re` are already at
+        // their promoted types, so recover the `IntSpec`s for the width logic.
+        let (CType::Int(lp), CType::Int(rp)) = (lp, rp) else {
+            unreachable!("non-double operands are Int by construction")
+        };
 
         // Shifts are the exception to the usual arithmetic conversions: C does
         // *not* bring the operands to a common type.  Each is promoted on its
@@ -1473,7 +1595,7 @@ impl Lowerer {
             // native `>>` would sign-extend it.  Route unsigned `>>` to a
             // distinct `u>>` builtin the backends render as a logical shift.
             let name = if op == ">>" && !lp.signed { "u>>" } else { op };
-            return Ok((convert(builtin(name, vec![le, re]), lp), lp));
+            return Ok((convert(builtin(name, vec![le, re]), lp), CType::Int(lp)));
         }
 
         let c = common_type(lp, rp);
@@ -1518,10 +1640,10 @@ impl Lowerer {
         };
         // The operation is performed at width `c`; its result is a value of
         // type `c`, so wrap it to enforce C's fixed-width overflow.
-        Ok((convert(builtin(sir_op, vec![le, re]), c), c))
+        Ok((convert(builtin(sir_op, vec![le, re]), c), CType::Int(c)))
     }
 
-    fn lower_cast(&mut self, n: &GrammarASTNode) -> Result<(Expr, IntSpec), CLowerError> {
+    fn lower_cast(&mut self, n: &GrammarASTNode) -> Result<(Expr, CType), CLowerError> {
         // cast = LPAREN type_spec RPAREN cast
         let ts = first_node(n, "type_spec").unwrap();
         let to = resolve_type_spec(ts)?.ok_or_else(|| CLowerError {
@@ -1529,15 +1651,16 @@ impl Lowerer {
             line: n.start_line.unwrap_or(0),
             column: n.start_column.unwrap_or(0),
         })?;
+        self.uses_floats |= to.is_double();
         let inner = child_nodes(n)
             .into_iter()
             .find(|x| x.rule_name == "cast")
             .unwrap();
         let (e, from) = self.lower_expr(inner)?;
-        Ok((convert_to(e, from, to), to))
+        Ok((convert_ct(e, from, to), to))
     }
 
-    fn lower_unary(&mut self, n: &GrammarASTNode) -> Result<(Expr, IntSpec), CLowerError> {
+    fn lower_unary(&mut self, n: &GrammarASTNode) -> Result<(Expr, CType), CLowerError> {
         // unary = (PLUS|MINUS|TILDE|BANG) unary
         let op = child_tokens(n).first().map(|t| t.value.clone()).unwrap();
         let operand = child_nodes(n).into_iter().next().unwrap();
@@ -1546,24 +1669,34 @@ impl Lowerer {
         // condition and wrap the resulting bool: `If(not(cond(c)), 1, 0)`.
         if op == "!" {
             let cond = builtin("not", vec![self.lower_cond(operand)?]);
-            return Ok((if_int(cond), i32_spec()));
+            return Ok((if_int(cond), i32_ct()));
         }
 
         let (e, t) = self.lower_expr(operand)?;
-        let tp = promote(t); // unary applies integer promotion
-        let e = convert_to(e, t, tp);
+        // Floating-point unary: no integer promotion, no width-wrapping Convert.
+        if t.is_double() {
+            return match op.as_str() {
+                "+" => Ok((e, CType::Double)),
+                // Unary minus as `0.0 - x` (both backends render binary `-`).
+                "-" => Ok((builtin("-", vec![float_lit(0.0), e]), CType::Double)),
+                "~" => err("unary `~` requires an integer operand", n),
+                other => err(format!("unary `{other}` not yet supported"), n),
+            };
+        }
+        let tp = promote_ct(t); // unary applies integer promotion
+        let e = convert_ct(e, t, tp);
         match op.as_str() {
             "+" => Ok((e, tp)),
             // Unary minus as `0 - x` (both backends render binary `-`); the
             // subtract happens at the promoted type and its result is wrapped.
-            "-" => Ok((convert(builtin("-", vec![int_lit(0), e]), tp), tp)),
+            "-" => Ok((convert_ct(builtin("-", vec![int_lit(0), e]), tp, tp), tp)),
             // Bitwise NOT at the promoted type, wrapped to enforce its width.
-            "~" => Ok((convert(builtin("~", vec![e]), tp), tp)),
+            "~" => Ok((convert_ct(builtin("~", vec![e]), tp, tp), tp)),
             other => err(format!("unary `{other}` not yet supported"), n),
         }
     }
 
-    fn lower_postfix(&mut self, n: &GrammarASTNode) -> Result<(Expr, IntSpec), CLowerError> {
+    fn lower_postfix(&mut self, n: &GrammarASTNode) -> Result<(Expr, CType), CLowerError> {
         // postfix = primary { call_suffix }
         let nodes = child_nodes(n);
         let callee = nodes.first().copied().unwrap();
@@ -1597,7 +1730,7 @@ impl Lowerer {
         name: &str,
         args: &[&GrammarASTNode],
         call: &GrammarASTNode,
-    ) -> Result<(Expr, IntSpec), CLowerError> {
+    ) -> Result<(Expr, CType), CLowerError> {
         // printf("<fmt>", e) → puts(e) when <fmt> ends in \n, else print(e).
         if name == "printf" {
             let fmt = call_string_literal(call);
@@ -1610,7 +1743,7 @@ impl Lowerer {
             })?;
             let (e, _t) = self.lower_expr(val)?;
             let helper = if newline { "puts" } else { "print" };
-            return Ok((builtin(helper, vec![e]), i32_spec()));
+            return Ok((builtin(helper, vec![e]), i32_ct()));
         }
         // Ordinary function call: convert each argument to its parameter type.
         let (ptypes, ret) = self.fns.get(name).cloned().ok_or_else(|| CLowerError {
@@ -1622,12 +1755,12 @@ impl Lowerer {
         for (i, a) in args.iter().enumerate() {
             let (e, t) = self.lower_expr(a)?;
             let e = match ptypes.get(i) {
-                Some(pt) => convert_to(e, t, *pt),
+                Some(pt) => convert_ct(e, t, *pt),
                 None => e,
             };
             sir_args.push(e);
         }
-        let rt = ret.unwrap_or_else(i32_spec);
+        let rt = ret.unwrap_or_else(i32_ct);
         Ok((
             Expr::DirectCall {
                 fn_name: name.to_string(),
@@ -1639,7 +1772,7 @@ impl Lowerer {
         ))
     }
 
-    fn lower_primary(&mut self, n: &GrammarASTNode) -> Result<(Expr, IntSpec), CLowerError> {
+    fn lower_primary(&mut self, n: &GrammarASTNode) -> Result<(Expr, CType), CLowerError> {
         // primary = INT_LIT | CHAR_LIT | STR_LIT | NAME | LPAREN expr RPAREN
         if let Some(inner) = first_node(n, "expr") {
             return self.lower_expr(inner); // parenthesised
@@ -1655,18 +1788,19 @@ impl Lowerer {
         match tok.effective_type_name() {
             "INT_LIT" => {
                 let (v, ty) = parse_int_literal(&tok.value);
-                Ok((int_lit(v), ty))
+                Ok((int_lit(v), CType::Int(ty)))
             }
             "CHAR_LIT" => {
                 let v = parse_char_literal(&tok.value);
-                Ok((int_lit(v), i32_spec())) // a char constant has type int in C
+                Ok((int_lit(v), i32_ct())) // a char constant has type int in C
             }
-            // The grammar accepts float literals; lowering them (and the whole
-            // floating-point value track) is the next slice.
-            "FLOAT_LIT" => err(
-                "floating-point literals are not yet supported in lowering",
-                n,
-            ),
+            // A floating-point literal lowers to a `FloatLit` of C type `double`
+            // (the `f`/`l` suffix only affects storage width, which SIR's single
+            // 64-bit float does not distinguish).
+            "FLOAT_LIT" => {
+                self.uses_floats = true;
+                Ok((float_lit(parse_float_literal(&tok.value)), CType::Double))
+            }
             "NAME" => {
                 let name = tok.value.clone();
                 let b = self.resolve(&name).ok_or_else(|| CLowerError {
@@ -1829,6 +1963,17 @@ fn parse_int_literal(raw: &str) -> (i64, IntSpec) {
     };
     let width = if long { IntWidth::W64 } else { IntWidth::W32 };
     (value, spec_of(width, !unsigned))
+}
+
+/// Parse a C floating-point literal → its `f64` value.  The `f`/`F`/`l`/`L`
+/// storage suffix (if any) is stripped first; SIR's single 64-bit float does
+/// not distinguish `float` from `double`, so all three parse to the same
+/// `f64`.  A malformed literal (the lexer guarantees this cannot happen) folds
+/// to `0.0` rather than panicking.
+fn parse_float_literal(raw: &str) -> f64 {
+    raw.trim_end_matches(['f', 'F', 'l', 'L'])
+        .parse::<f64>()
+        .unwrap_or(0.0)
 }
 
 /// Parse a C char constant like `'A'` or `'\n'` → its code point.

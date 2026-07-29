@@ -240,6 +240,16 @@ int64_t _sir_as_int(SirValue v) {
     return 0;
 }
 
+/* SIR27 milestone 9 numeric conversions (the `to_f`/`to_i` builtins the C
+ * frontend inserts at int<->double boundaries).  `_sir_to_f` widens any numeric
+ * value to a `double` (C's implicit int->double promotion).  `_sir_to_i`
+ * truncates a `double` toward zero, exactly like C's `(int)double` cast — the
+ * frontend then narrows the int64 to the target width with a `Convert`
+ * (`_sir_iN`/`_sir_uN`), so the two together reproduce a C float->integer cast
+ * bit-for-bit for values that fit the destination. */
+SirValue _sir_to_f(SirValue v) { return _sir_float(_sir_as_num(v)); }
+SirValue _sir_to_i(SirValue v) { return _sir_int(_sir_as_int(v)); }
+
 const char *_sir_str_of(SirValue v) {
     return (v.tag == SIR_STR || v.tag == SIR_SYM) ? v.as.s : "";
 }

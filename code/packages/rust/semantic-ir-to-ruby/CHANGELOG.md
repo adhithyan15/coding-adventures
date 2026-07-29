@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.18.0 — numeric conversions: `to_f` / `to_i`
+
+Two numeric-conversion builtins, for the C frontend's floating-point value track
+(SIR27 milestone 9b) — the int↔double boundaries a C program creates.
+
+- `to_f` → Ruby's native `(x).to_f` (Integer → Float / usual widening).
+- `to_i` → `(x).to_i` (Float → Integer, **truncating toward zero**, matching C's
+  `(int)double` cast; the frontend then masks to the target width with a
+  `Convert`).
+
+Float arithmetic itself needs no new code: `+`/`-`/`*`/`/` and the comparison
+builtins are already native Ruby operators that do the right thing on `Float`
+(so `7.0 / 2.0 == 3.5`), and `Feature::Floats` / `Expr::FloatLit` were already
+supported.  Verified via the C→SIR→Ruby three-way conformance corpus.
+
 ## 0.17.0 — classes slice 7: modules / mixins (OOP arc complete)
 
 Accepts `Feature::Modules` — module definitions and `include`/`extend` mixins.

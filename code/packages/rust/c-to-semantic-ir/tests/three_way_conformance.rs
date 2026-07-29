@@ -578,6 +578,57 @@ fn corpus() -> Vec<Case> {
                    int f(int v) { { int v = 5; return v; } }\n\
                    int main(void) { printf(\"%d\\n\", f(99)); return 0; }",
         },
+        // ── milestone 9: floating point ──────────────────────────────────────
+        // Every result is cast to `(int)` *inside the C source* before `printf`,
+        // so the reference `printf("%d", …)`, the emitted C, and the emitted
+        // Ruby all format the same integer — the float display convention (which
+        // diverges: C `%f` == "3.140000" vs Ruby "3.14") never enters the
+        // comparison.  What is tested is the *floating-point arithmetic*: mixed
+        // int/double promotion, true division, and float→int truncation.
+        Case {
+            label: "double literal + int promotion (int)(1 + 2.5) → 3",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { double r = 1 + 2.5; printf(\"%d\\n\", (int)r); return 0; }",
+        },
+        Case {
+            label: "true division (int)((7.0 / 2.0) * 10) → 35",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { double q = 7.0 / 2.0; printf(\"%d\\n\", (int)(q * 10.0)); return 0; }",
+        },
+        Case {
+            label: "integer / is still truncating, not floated (7 / 2) → 3",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { int q = 7 / 2; printf(\"%d\\n\", q); return 0; }",
+        },
+        Case {
+            label: "float→int cast truncates toward zero (int)(-3.9) → -3",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { double x = -3.9; printf(\"%d\\n\", (int)x); return 0; }",
+        },
+        Case {
+            label: "double parameter and return, scaled area (int)area(3.0) → 12",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   double area(double r) { return r * r + r; }\n\
+                   int main(void) { printf(\"%d\\n\", (int)area(3.0)); return 0; }",
+        },
+        Case {
+            label: "double comparison as an int value (2.5 > 2.4) → 1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { int c = 2.5 > 2.4; printf(\"%d\\n\", c); return 0; }",
+        },
+        Case {
+            label: "accumulate doubles in a loop, (int)sum(0.5 x 10) → 5",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { double s = 0.0; \
+                   for (int i = 0; i < 10; i = i + 1) { s = s + 0.5; } \
+                   printf(\"%d\\n\", (int)s); return 0; }",
+        },
+        Case {
+            label: "int widened to double mid-expression (int)(x / 2.0 * 4) → 10",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { int x = 5; double r = x / 2.0 * 4.0; \
+                   printf(\"%d\\n\", (int)r); return 0; }",
+        },
     ]
 }
 
