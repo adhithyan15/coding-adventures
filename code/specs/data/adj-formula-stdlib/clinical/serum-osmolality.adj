@@ -1,0 +1,107 @@
+% ============================================================================
+% serum-osmolality.adj — the calculated (estimated) serum osmolality
+% (Serum Osmolality = 1.86 × sodium + glucose/18 + BUN/2.8 + 9, the Dorwart and Chalmers formula) in
+% the ADJ standard library.
+% ============================================================================
+% The serum-osmolality entry of the *clinical* track — the ESTIMATE of the number of osmotically active
+% particles per kilogram of serum computed from the routine basic metabolic panel, without an osmometer.
+% Sodium (with its accompanying anions) is the dominant contributor, and glucose and urea add the rest;
+% dividing glucose and blood-urea-nitrogen (both in mg/dL) by their molar factors 18 and 2.8 converts
+% them to the same milliosmole scale. THE CALCULATED SERUM OSMOLALITY IS 1.86 TIMES THE SODIUM, PLUS THE
+% GLUCOSE OVER 18, PLUS THE BLOOD UREA NITROGEN OVER 2.8, PLUS 9 — i.e. 1.86 × sodium + glucose/18 +
+% BUN/2.8 + 9 (the Dorwart and Chalmers formula). It ships as an importable, byte-provenanced,
+% PARAMETERIZED `formula`, together with its three exact rearrangements (each of the three measured
+% inputs solved for from the other two and the osmolality). This is the very quantity the separate
+% osmolar-gap library consumes as its `calculated_osmolality` input: compute it here, then the osmol gap
+% is the measured value minus this estimate (write-once-use-many). As with every compute library, a
+% consumer states NO arithmetic: it `import`s this file, binds sodium, glucose and BUN from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is
+% performed by the model; the engine computes each value EXACTLY (over exact rationals), carrying the
+% formula's citation.
+%
+%     import "serum-osmolality.adj"
+%     observe sodium(145)     % "…sodium 145 mmol/L…"    (span cited by the model)
+%     observe glucose(90)     % "…glucose 90 mg/dL…"     (span cited by the model)
+%     observe bun(28)         % "…BUN 28 mg/dL…"         (span cited by the model)
+%     ? serum_osmolality(sodium, glucose, bun)
+%                             % engine → 293.7 mOsm/kg, the calculated serum osmolality
+%
+% The 1.86, 18, 2.8 and 9 are the EXACT defined constants of the cited formula (not measurements); the
+% formulas are otherwise exact expressions over the three parameters, so every value the engine returns
+% is exact — 1.86 is exactly 93/50 and 2.8 is exactly 14/5, so the division and multiplication stay in
+% the exact rationals. They COMPOSE and invert cleanly around the worked case sodium = 145, glucose = 90,
+% BUN = 28 (osmolality = 1.86 × 145 + 90/18 + 28/2.8 + 9 = 269.7 + 5 + 10 + 9 = 293.7): the
+% `serum_osmolality` a consumer computes is exactly the value each of the three inverse formulas
+% back-solves to recover its own measured input (145, 90, 28).
+%
+%   serum_osmolality(sodium, glucose, bun) = 1.86 * sodium + glucose / 18 + bun / 2.8 + 9            % (osmolality, mOsm/kg)
+%   sodium(serum_osmolality, glucose, bun) = (serum_osmolality - glucose / 18 - bun / 2.8 - 9) / 1.86% (solved for sodium)
+%   glucose(serum_osmolality, sodium, bun) = (serum_osmolality - 1.86 * sodium - bun / 2.8 - 9) * 18 % (solved for glucose)
+%   bun(serum_osmolality, sodium, glucose) = (serum_osmolality - 1.86 * sodium - glucose / 18 - 9) * 2.8 % (solved for BUN)
+%
+% NOTE ON UNITS AND MODELLING: this is the Dorwart and Chalmers form the cited page prints — sodium in
+% mmol/L (mEq/L), glucose and BUN in mg/dL, the 18 and 2.8 being the mg/dL→mmol/L molar conversions for
+% glucose and urea-nitrogen. Several simpler variants exist (e.g. 2 × Na + glucose/18 + BUN/2.8, which
+% the page notes is "equally effective"), but the single equation grounded here is the one transcribed
+% VERBATIM from the cited page, and that is what this library computes. This is the CALCULATED estimate;
+% the osmolar GAP (measured minus calculated) — the quantity that flags unmeasured osmoles such as toxic
+% alcohols — is the separate osmolar-gap library, which takes this value as its calculated input. This
+% library only COMPUTES the estimate; it does not itself diagnose.
+%
+% All four formulas are defended by the SAME clause — the quoted Dorwart and Chalmers equation — because
+% that one statement (serum osmolality IS 1.86 times sodium plus glucose over 18 plus BUN over 2.8 plus
+% 9) sanctions the relation read every way. The quote is transcribed verbatim from the StatPearls
+% "Physiology, Plasma Osmolality and Oncotic Pressure" article on the NCBI Bookshelf (a current,
+% non-archived article), so each `formula` carries the provenance envelope every shipped grounded clause
+% carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored — the formula,
+% including its 1.86, 18, 2.8 and 9 constants, is a verbatim span of the cited page, not asserted from
+% memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `sodium`, `glucose`, `bun` and `serum_osmolality` each appear BOTH as a derived result and
+% as an input (of the other formulas), so each is a single dictionary term used in both roles. The
+% `surface` lists are the everyday names a decomposer maps onto the canonical term; the trailing comment
+% records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary serum_osmolality_vocab {
+    define sodium            : finding  surface "sodium", "serum sodium", "Na"                                        % mmol/L (mEq/L)
+    define glucose           : finding  surface "glucose", "serum glucose", "blood glucose"                           % mg/dL
+    define bun               : finding  surface "BUN", "blood urea nitrogen", "urea nitrogen"                         % mg/dL
+    define serum_osmolality  : finding  surface "serum osmolality", "calculated serum osmolality", "estimated osmolality"  % mOsm/kg
+}
+
+% ----------------------------------------------------------------------------
+% The calculated serum osmolality, all four ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the Dorwart and Chalmers equation from the
+% StatPearls "Physiology, Plasma Osmolality and Oncotic Pressure" article on the NCBI Bookshelf (a quote
+% is required on a shipped formula). Each is an exact expression in the measured quantities and the
+% cited 1.86 / 18 / 2.8 / 9 constants, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook serum_osmolality_laws {
+    use serum_osmolality_vocab
+
+    % Calculated serum osmolality — 1.86 times sodium, plus glucose over 18, plus BUN over 2.8, plus 9.
+    formula serum_osmolality(sodium, glucose, bun) = 1.86 * sodium + glucose / 18 + bun / 2.8 + 9
+        source "Serum Osmolality=1.86 (Na)+(Glucose)/18 +(BUN)/2.8+9"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544365/"
+        trust authoritative
+
+    % Sodium — the same equation solved for the sodium. Defended by the SAME sentence.
+    formula sodium(serum_osmolality, glucose, bun) = (serum_osmolality - glucose / 18 - bun / 2.8 - 9) / 1.86
+        source "Serum Osmolality=1.86 (Na)+(Glucose)/18 +(BUN)/2.8+9"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544365/"
+        trust authoritative
+
+    % Glucose — the same equation solved for the glucose. The SAME sentence.
+    formula glucose(serum_osmolality, sodium, bun) = (serum_osmolality - 1.86 * sodium - bun / 2.8 - 9) * 18
+        source "Serum Osmolality=1.86 (Na)+(Glucose)/18 +(BUN)/2.8+9"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544365/"
+        trust authoritative
+
+    % Blood urea nitrogen — the same equation solved for the BUN. The SAME sentence, the fourth reading.
+    formula bun(serum_osmolality, sodium, glucose) = (serum_osmolality - 1.86 * sodium - glucose / 18 - 9) * 2.8
+        source "Serum Osmolality=1.86 (Na)+(Glucose)/18 +(BUN)/2.8+9"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544365/"
+        trust authoritative
+}
