@@ -33,12 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS nominal-temperature validation.
+1. Cross-language Level-1 MOS substrate-doping validation.
    - Status: current PR completion candidate.
-   - Reject non-positive or non-finite model-card `TNOM` values before
-     temperature and electrostatic preprocessing.
-   - Preserve positive nominal temperatures and stable parameter coverage
-     across Rust, Python, and TypeScript.
+   - Reject non-positive or non-finite model-card `NSUB` values before
+     process-parameter preprocessing, including when `TOX` is absent.
+   - Preserve positive substrate doping and the stricter intrinsic-density
+     requirement when `NSUB` plus `TOX` derives process parameters.
 
 ## Completed Slices
 
@@ -3643,6 +3643,13 @@ the Rust, Python, and TypeScript surfaces together.
      process-parameter preprocessing.
    - Zero and positive surface-state densities, parameter coverage, and stable
      diagnostics remain aligned across Rust, Python, and TypeScript.
+
+295. Cross-language Level-1 MOS nominal-temperature validation.
+   - Status: completed in PR 9173.
+   - Non-positive and non-finite model-card `TNOM` values are rejected before
+     temperature and electrostatic preprocessing.
+   - Positive nominal temperatures, parameter coverage, and stable diagnostics
+     remain aligned across Rust, Python, and TypeScript.
 
 ## Backlog
 
