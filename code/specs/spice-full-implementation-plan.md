@@ -33,12 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS bottom-junction-capacitance validation.
+1. Cross-language Level-1 MOS sidewall-junction-capacitance validation.
    - Status: current PR completion candidate.
-   - Reject negative or non-finite model-card `CJ` values before bottom-junction
+   - Reject negative or non-finite model-card `CJSW` values before sidewall
      depletion-capacitance shaping.
-   - Preserve zero and positive bottom-junction capacitances across Rust, Python,
-     and TypeScript.
+   - Preserve zero and positive sidewall-junction capacitances across Rust,
+     Python, and TypeScript.
 
 ## Completed Slices
 
@@ -3733,6 +3733,13 @@ the Rust, Python, and TypeScript surfaces together.
    - Negative and non-finite model-card `MJSW` values are rejected before
      sidewall depletion-capacitance shaping.
    - Zero and positive sidewall-grading coefficients remain aligned across Rust,
+     Python, and TypeScript.
+
+308. Cross-language Level-1 MOS bottom-junction-capacitance validation.
+   - Status: completed in PR 9305.
+   - Negative and non-finite model-card `CJ` values are rejected before
+     bottom-junction depletion-capacitance shaping.
+   - Zero and positive bottom-junction capacitances remain aligned across Rust,
      Python, and TypeScript.
 
 ## Backlog
