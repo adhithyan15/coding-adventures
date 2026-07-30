@@ -8461,6 +8461,11 @@ export function normalizeModelCard(
       (!Number.isFinite(value) || value <= 0.0)
     ) {
       throw invalidElement(name, "MOSFET PB must be finite and positive");
+    } else if (
+      canonical === "MJ" &&
+      (!Number.isFinite(value) || value < 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET MJ must be finite and non-negative");
     } else {
       normalized[canonical] = value;
     }

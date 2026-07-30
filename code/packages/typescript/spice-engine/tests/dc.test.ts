@@ -826,6 +826,24 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects negative or non-finite MOS junction grading coefficient", () => {
+    for (const value of [0.0, 0.5, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { MJ: value });
+      expect(valid.parameters.MJ).toBe(value);
+    }
+
+    for (const invalidCoefficient of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { MJ: invalidCoefficient }),
+      ).toThrow("MOSFET MJ must be finite and non-negative");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,
