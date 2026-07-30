@@ -24,6 +24,11 @@ and the final paint backend also remain caller-owned.
 `NavigationHistory` implements the BR01 in-memory navigation model: navigate,
 Back, Forward, Home, Reload, and redirect replacement.
 
+`ScrollState` clamps vertical offsets against content and viewport geometry,
+performs scroll-aware link hit-testing, and feeds `scrolled_viewport_scene`.
+That function preserves the document scene beneath a group translated by the
+negative scroll offset and sizes the returned scene to the visible viewport.
+
 ## Development
 
 ```bash
