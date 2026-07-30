@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.64.0] — 2026-07-30
+
+### Added — RS-3b: `statemachine` grammar + AST + adapter + lowering (ADJ-STATEMACHINE §2, §5)
+
+The native `statemachine` construct now parses, adapts, and lowers its STRUCTURE — the
+control-flow sibling of `table`/`formulabook` for long-horizon procedural reasoning
+(ADJ-STATEMACHINE RS-3b). **No driver / no execution yet** — that is RS-3c.
+
+- **Grammar** (already regenerated): `statemachine_decl` with `initial`, `state`/`transition`,
+  `exit when … yield …`, and `budget N steps`; guards are `( apply | IDENT ) [ relop expr ]`
+  and actions `assert term` (the RS-3b minimal subset). Keywords are IDENT-matched literals —
+  `.tokens` untouched.
+- **AST**: `Statement::StateMachine { name, uses, initial, states, exits, budget, annotations }`
+  plus `StateDef` / `TransitionDef` / `ExitDef` / `SmGuard` / `SmAction`. A guard's subject is
+  carried as an `ast::Term` (atom for a bare IDENT, compound for an `apply`).
+- **Adapter**: `adapt_statemachine` (+ `adapt_sm_state` / `_transition` / `_exit` / `_guard` /
+  `_action`), modelled on `adapt_table`, reusing `first_name_not` / `first_named_child` /
+  `collect_annotations` / `adapt_use` / `adapt_term` / `adapt_expr` and the same relop mapping
+  as `adapt_predicate`.
+- **Lowering**: each machine lowers to a validated, provenance-stamped `LoweredStateMachine`
+  (`LoweredState` / `LoweredTransition` / `LoweredExit` / `LoweredGuard` / `LoweredAction`),
+  exposed on `LoweredProgram::state_machines`. Guards/actions lower through the SAME
+  term/compute forms the rest of the language uses (`lower_term` / `lower_expr` /
+  `lower_cmp_op`) — no parallel evaluator. Five typed well-formedness errors: `SmMissingInitial`
+  (defensive — the grammar already requires `initial`, so an omitted clause is a parse error),
+  `SmMissingExit`, `SmBudgetNotPositive`, `SmUnknownState`, `SmMissingProvenance` (the shared
+  write gate — a shipped machine must be sourced).
+
+Purely additive; no existing behaviour changes. Covered end-to-end by
+`adj-lang-cli/tests/rs3b_statemachine_lower_e2e.rs` (a well-formed machine compiles clean; each
+malformed one yields its specific diagnostic).
+
 ## [0.63.0] — 2026-07-24
 
 ### Added — RS-5f: `mode nearest` table lookup (ADJ-TABLES §3.4)

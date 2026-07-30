@@ -32,8 +32,9 @@ use math_frontend::{BigOp, BinOp, Func, MathExpr, Number, RelOp as MathRelOp, Un
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::ast::{
-    AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExprAst, FormulaDef,
-    NamedFn, NumLit, OptDir, Program, RelOp, RuleLiteral, Statement, Term, TrustTierName,
+    AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExitDef, ExprAst,
+    FormulaDef, NamedFn, NumLit, OptDir, Program, RelOp, RuleLiteral, SmAction, SmGuard, StateDef,
+    Statement, Term, TransitionDef, TrustTierName,
 };
 use bignum_core::BigDecimal;
 use std::str::FromStr;
@@ -159,6 +160,7 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "rulebook_decl" => adapt_rulebook(child),
         "formulabook_decl" => adapt_formulabook(child),
         "table_decl" => adapt_table(child),
+        "statemachine_decl" => adapt_statemachine(child),
         "use_decl" => adapt_use(child),
         "import_decl" => adapt_import(child),
         other => Err(AdapterError::UnexpectedRule {
@@ -1103,6 +1105,312 @@ fn adapt_row_item(node: &GrammarASTNode) -> Result<crate::ast::TableCell, Adapte
         rule: "row_item".into(),
         position: "cell token (NUMBER | IDENT | STRING)",
     })
+}
+
+// ---------------------------------------------------------------------------
+// State machine (ADJ-STATEMACHINE RS-3b). A `statemachine` is a sibling top-level
+// declaration modelled on `table`: its keywords are IDENT-matched literals, so
+// they surface as `Name` tokens (value `"statemachine"`/`"initial"`/`"state"`/…)
+// and its structural pieces (states, transitions, exits) are nested nodes. The
+// adapter faithfully carries the STRUCTURE; every well-formedness check (initial
+// present, ≥ 1 exit, budget ≥ 1, declared targets, non-empty source) is the
+// lowerer's job.
+// ---------------------------------------------------------------------------
+
+fn adapt_statemachine(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // statemachine_decl = "statemachine" IDENT LBRACE { use_decl } "initial" IDENT
+    //                     { sm_state } { sm_exit } "budget" NUMBER "steps" { annotation } RBRACE
+    //
+    // The machine name is the first `Name` token that isn't the `statemachine`
+    // keyword — every other identifier (the initial-state name, the `budget`/
+    // `steps` literals) is preceded by its own keyword or lives inside a nested
+    // node, so it cannot be mistaken for the name here.
+    let name = first_name_not(node, "statemachine")
+        .ok_or(AdapterError::MissingChild {
+            rule: "statemachine_decl".into(),
+            position: "machine name",
+        })?
+        .to_string();
+    // `{ use_decl }` — the vocabulary bindings appear as direct `use_decl` children
+    // (identical to a `table`'s `use` handling).
+    let mut uses = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(item) = c {
+            if item.rule_name == "use_decl" {
+                if let Statement::Use(u) = adapt_use(item)? {
+                    uses.push(u);
+                }
+            }
+        }
+    }
+    // `initial IDENT` — the state name is the `Name` token immediately following
+    // the `initial` literal token (the only place a bare state IDENT sits directly
+    // under `statemachine_decl` before the states themselves nest).
+    let initial = name_after_keyword(node, "initial").ok_or(AdapterError::MissingChild {
+        rule: "statemachine_decl".into(),
+        position: "initial state name (after `initial`)",
+    })?;
+    // `budget NUMBER steps` — the single direct NUMBER token (guard/exit numbers
+    // live inside nested `sm_*` nodes, so it is unambiguous). Parsed to `u64`; a
+    // non-positive budget is a `LowerError::SmBudgetNotPositive`, checked later.
+    let budget_raw = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Number => Some(t.value.clone()),
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "statemachine_decl".into(),
+            position: "budget NUMBER",
+        })?;
+    let budget = parse_budget_u64(&budget_raw);
+    // `{ sm_state }` and `{ sm_exit }` — each a nested node, in source order.
+    let mut states = Vec::new();
+    let mut exits = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            match n.rule_name.as_str() {
+                "sm_state" => states.push(adapt_sm_state(n)?),
+                "sm_exit" => exits.push(adapt_sm_exit(n)?),
+                _ => {}
+            }
+        }
+    }
+    // Same provenance envelope as every grounded clause (`{ annotation }`).
+    let annotations = collect_annotations(node)?;
+    Ok(Statement::StateMachine {
+        name,
+        uses,
+        initial,
+        states,
+        exits,
+        budget,
+        annotations,
+    })
+}
+
+/// A `budget N steps` count → `u64`. A plain integer parses directly; a
+/// fractional or negative literal (a modeller error the grammar's `NUMBER` still
+/// admits) folds to `0`, which the lowerer rejects as
+/// [`crate::LowerError::SmBudgetNotPositive`] — never a silent default budget.
+fn parse_budget_u64(raw: &str) -> u64 {
+    raw.parse::<u64>().unwrap_or_else(|_| {
+        raw.parse::<f64>()
+            .ok()
+            .filter(|v| v.is_finite() && *v >= 0.0)
+            .map(|v| v as u64)
+            .unwrap_or(0)
+    })
+}
+
+fn adapt_sm_state(node: &GrammarASTNode) -> Result<StateDef, AdapterError> {
+    // sm_state = "state" IDENT LBRACE { sm_transition } RBRACE
+    let name = first_name_not(node, "state")
+        .ok_or(AdapterError::MissingChild {
+            rule: "sm_state".into(),
+            position: "state name",
+        })?
+        .to_string();
+    let mut transitions = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            if n.rule_name == "sm_transition" {
+                transitions.push(adapt_sm_transition(n)?);
+            }
+        }
+    }
+    Ok(StateDef { name, transitions })
+}
+
+fn adapt_sm_transition(node: &GrammarASTNode) -> Result<TransitionDef, AdapterError> {
+    // sm_transition = "transition" "on" sm_guard "to" IDENT [ "do" sm_action { COMMA sm_action } ]
+    let guard_node = first_named_child(node, "sm_guard").ok_or(AdapterError::MissingChild {
+        rule: "sm_transition".into(),
+        position: "guard",
+    })?;
+    let guard = adapt_sm_guard(guard_node)?;
+    // The target is the `Name` token after the `to` literal (the guard's own IDENT
+    // is nested inside the `sm_guard` node, so it is not a direct child here).
+    let target = name_after_keyword(node, "to").ok_or(AdapterError::MissingChild {
+        rule: "sm_transition".into(),
+        position: "target state (after `to`)",
+    })?;
+    let mut actions = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            if n.rule_name == "sm_action" {
+                actions.push(adapt_sm_action(n)?);
+            }
+        }
+    }
+    Ok(TransitionDef {
+        guard,
+        target,
+        actions,
+    })
+}
+
+fn adapt_sm_exit(node: &GrammarASTNode) -> Result<ExitDef, AdapterError> {
+    // sm_exit = "exit" "when" sm_guard "yield" expr
+    let guard_node = first_named_child(node, "sm_guard").ok_or(AdapterError::MissingChild {
+        rule: "sm_exit".into(),
+        position: "guard",
+    })?;
+    let guard = adapt_sm_guard(guard_node)?;
+    let expr_node = first_named_child(node, "expr").ok_or(AdapterError::MissingChild {
+        rule: "sm_exit".into(),
+        position: "yield expression",
+    })?;
+    let yield_expr = adapt_expr(expr_node)?;
+    Ok(ExitDef { guard, yield_expr })
+}
+
+fn adapt_sm_guard(node: &GrammarASTNode) -> Result<SmGuard, AdapterError> {
+    // sm_guard = ( apply | IDENT ) [ ( GE | LE | GT | LT | EQEQ ) expr ]
+    //
+    // The subject is a formula APPLICATION if an `apply` child node is present,
+    // else the bare slot/finding IDENT (the first `Name` token that is not a
+    // comparison operator). The optional comparison mirrors `adapt_predicate`'s
+    // operator mapping exactly.
+    let subject = if let Some(app) = first_named_child(node, "apply") {
+        apply_node_to_term(app)?
+    } else {
+        let name = node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t)
+                    if t.type_ == TokenType::Name && sm_relop_from_value(&t.value).is_none() =>
+                {
+                    Some(t.value.clone())
+                }
+                _ => None,
+            })
+            .ok_or(AdapterError::MissingChild {
+                rule: "sm_guard".into(),
+                position: "subject identifier or application",
+            })?;
+        Term::Atom(name)
+    };
+    // The optional comparison: a relop token + an `expr` child. Absent ⇒ a bare
+    // presence guard (`None`).
+    let op = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) => sm_relop_from_value(&t.value),
+            _ => None,
+        });
+    let comparison = match op {
+        Some(op) => {
+            let expr_node = first_named_child(node, "expr").ok_or(AdapterError::MissingChild {
+                rule: "sm_guard".into(),
+                position: "comparison right-hand expression",
+            })?;
+            Some((op, adapt_expr(expr_node)?))
+        }
+        None => None,
+    };
+    Ok(SmGuard {
+        subject,
+        comparison,
+    })
+}
+
+/// Map a guard's comparison operator token value to a [`CmpOp`] — the same five
+/// operators `adapt_predicate` recognises (`>=`, `<=`, `>`, `<`, `==`). Returns
+/// `None` for any non-operator token (so a bare subject IDENT is never mistaken
+/// for an operator).
+fn sm_relop_from_value(v: &str) -> Option<CmpOp> {
+    match v {
+        ">=" => Some(CmpOp::Ge),
+        "<=" => Some(CmpOp::Le),
+        ">" => Some(CmpOp::Gt),
+        "<" => Some(CmpOp::Lt),
+        "==" => Some(CmpOp::Eq),
+        _ => None,
+    }
+}
+
+fn adapt_sm_action(node: &GrammarASTNode) -> Result<SmAction, AdapterError> {
+    // sm_action = "assert" term — the single `term` child is the fact to assert.
+    let term_node = first_named_child(node, "term").ok_or(AdapterError::MissingChild {
+        rule: "sm_action".into(),
+        position: "asserted term",
+    })?;
+    Ok(SmAction::Assert(adapt_term(term_node)?))
+}
+
+/// Convert an `apply` grammar node (`IDENT LPAREN [ expr { COMMA expr } ] RPAREN`)
+/// into a [`Term`] for use as a guard subject — a [`Term::Atom`] when it has no
+/// arguments, a [`Term::Compound`] otherwise. Its argument `expr`s are lowered to
+/// terms via [`expr_ast_to_term`]. (This is the deferred *formula-valued guard*
+/// shape; the RS-3b minimal subset uses a bare IDENT subject.)
+fn apply_node_to_term(node: &GrammarASTNode) -> Result<Term, AdapterError> {
+    let functor = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "apply".into(),
+            position: "formula name",
+        })?;
+    let mut args = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            if n.rule_name == "expr" {
+                args.push(expr_ast_to_term(&adapt_expr(n)?));
+            }
+        }
+    }
+    if args.is_empty() {
+        Ok(Term::Atom(functor))
+    } else {
+        Ok(Term::Compound { functor, args })
+    }
+}
+
+/// Best-effort conversion of a (guard-application argument) [`ExprAst`] to a
+/// [`Term`]. A slot reference becomes an atom, a nested application a compound,
+/// and a numeric literal a `Num` (integral part; a fractional literal argument is
+/// outside the RS-3b minimal subset). Any richer arithmetic argument — which the
+/// minimal subset does not use — degrades to an atom of its debug form rather
+/// than failing, so no shape is ever silently discarded.
+fn expr_ast_to_term(e: &ExprAst) -> Term {
+    match e {
+        ExprAst::Ref(s) => Term::Atom(s.clone()),
+        ExprAst::Apply(f, args) => Term::Compound {
+            functor: f.clone(),
+            args: args.iter().map(expr_ast_to_term).collect(),
+        },
+        ExprAst::Lit(x) => Term::Num(NumLit::Int(*x as i64)),
+        other => Term::Atom(format!("{other:?}")),
+    }
+}
+
+/// Return the first `Name` token that appears *after* the first `Name` token
+/// whose value equals `keyword`. Used to read the IDENT that follows an
+/// IDENT-matched literal keyword (`initial <state>`, `to <target>`) — robust to
+/// the keyword literals surfacing as ordinary `Name` tokens.
+fn name_after_keyword(node: &GrammarASTNode, keyword: &str) -> Option<String> {
+    let mut seen_keyword = false;
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            if t.type_ == TokenType::Name {
+                if seen_keyword {
+                    return Some(t.value.clone());
+                }
+                if t.value == keyword {
+                    seen_keyword = true;
+                }
+            }
+        }
+    }
+    None
 }
 
 fn adapt_use(node: &GrammarASTNode) -> Result<Statement, AdapterError> {

@@ -42,6 +42,7 @@ statement   = prior_decl
             | rulebook_decl
             | formulabook_decl
             | table_decl
+            | statemachine_decl
             | use_decl
             | import_decl
             ;
@@ -423,6 +424,41 @@ columns_decl = "columns" IDENT { COMMA IDENT } ;
 table_row    = "row" LPAREN row_item { COMMA row_item } RPAREN [ LBRACE { annotation } RBRACE ] ;
 
 row_item     = NUMBER | IDENT | STRING ;
+
+# ----------------------------------------------------------------
+# State machine (ADJ-STATEMACHINE.md — RS-3). A `statemachine` is the control-flow
+# construct for long-horizon procedural reasoning (triage→work-up→decision;
+# titrate-until-target). Like `table`/`formulabook` it is a sibling top-level
+# declaration lowering onto the existing engine; `statemachine`/`initial`/`state`/
+# `transition`/`on`/`to`/`do`/`exit`/`when`/`yield`/`budget`/`steps`/`assert` are
+# IDENT-matched literals — no lexer keywords. The declared order is: vocabulary,
+# the initial state, the states, the exit criteria, then the required step budget.
+# RS-3b (this slice) parses + lowers the STRUCTURE; the driver is RS-3c.
+# ----------------------------------------------------------------
+
+statemachine_decl = "statemachine" IDENT LBRACE
+                        { use_decl }
+                        "initial" IDENT
+                        { sm_state }
+                        { sm_exit }
+                        "budget" NUMBER "steps"
+                        { annotation }
+                    RBRACE ;
+
+sm_state      = "state" IDENT LBRACE { sm_transition } RBRACE ;
+
+# A transition fires when its guard holds, moving to the target state and
+# running its (optional) actions. Guard/action reuse the existing expression and
+# term grammar; the RS-3b minimal subset is `guard = (apply|IDENT) [ relop expr ]`
+# and `action = "assert" term` (formula-valued guards and `let`-actions are a
+# follow-up, rejected as a typed LowerError — never silently dropped).
+sm_transition = "transition" "on" sm_guard "to" IDENT [ "do" sm_action { COMMA sm_action } ] ;
+
+sm_exit       = "exit" "when" sm_guard "yield" expr ;
+
+sm_guard      = ( apply | IDENT ) [ ( GE | LE | GT | LT | EQEQ ) expr ] ;
+
+sm_action     = "assert" term ;
 
 # ----------------------------------------------------------------
 # Import (MYCIN-2026 M3 — composition across files). `import "<path>"`
