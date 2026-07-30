@@ -93,6 +93,12 @@
       "core": false,
       "notes": "Requesting-a-favour formula: Russian пожалуйста, French s'il vous plaît, Spanish por favor, German bitte. Several languages (Russian, German) use the same word to reply to thanks."
     },
+    "COURTESY-SORRY": {
+      "family": "COURTESY",
+      "gloss": "sorry / excuse me (apology or attention-getting formula)",
+      "core": false,
+      "notes": "Apology/attention formula: Spanish lo siento (regret) vs. perdón (fault/attention), German Entschuldigung vs. es tut mir leid, Arabic āsif, Hindi māf kījiye. Many languages split this into two words — one for regret/sympathy, one for fault/forgiveness or getting someone's attention — track both where a language has the split."
+    },
 
     "RESPONSE-YES": {
       "family": "RESPONSE",
