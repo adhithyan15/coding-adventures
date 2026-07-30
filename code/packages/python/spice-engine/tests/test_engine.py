@@ -1068,6 +1068,16 @@ def test_mos_model_card_rejects_non_finite_threshold_voltage() -> None:
             normalize_model_card("Minvalid", "nmos", {"VTO": invalid_threshold})
 
 
+def test_mos_model_card_rejects_non_finite_channel_modulation() -> None:
+    for name, value in (("LAMBDA", -0.01), ("LAM", 0.0), ("LAMBDA", 0.01)):
+        valid = normalize_model_card("Mvalid", "nmos", {name: value})
+        assert valid.parameters["LAMBDA"] == pytest.approx(value)
+
+    for invalid_modulation in (-math.inf, math.inf, math.nan):
+        with pytest.raises(ValueError, match="MOSFET LAMBDA must be finite"):
+            normalize_model_card("Minvalid", "nmos", {"LAM": invalid_modulation})
+
+
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
     circuit = Circuit()
     circuit.add(JFET("J1", "drain", "gate", "0", Kf=-1.0))

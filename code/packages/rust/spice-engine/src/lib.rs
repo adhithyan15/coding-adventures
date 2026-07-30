@@ -4385,6 +4385,11 @@ pub fn normalize_model_card(
                     name: name.clone(),
                     reason: "MOSFET VT0 must be finite".to_string(),
                 });
+            } else if canonical == "LAMBDA" && !raw_value.is_finite() {
+                return Err(SpiceError::InvalidElement {
+                    name: name.clone(),
+                    reason: "MOSFET LAMBDA must be finite".to_string(),
+                });
             } else {
                 normalized.insert(canonical.to_string(), *raw_value);
             }
