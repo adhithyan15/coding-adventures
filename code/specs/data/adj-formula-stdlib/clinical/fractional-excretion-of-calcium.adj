@@ -1,0 +1,118 @@
+% ============================================================================
+% fractional-excretion-of-calcium.adj — the fractional excretion of calcium
+% (FeCa = (UCa × PCr) / (PCa × UCr)) in the ADJ standard library.
+% ============================================================================
+% The fractional-excretion-of-calcium entry of the *clinical* track — the fraction of the calcium filtered by
+% the glomerulus that is excreted in the urine. It is central to the work-up of hypercalcemia: a LOW FeCa
+% (< 0.01) in a hypercalcemic patient points to FAMILIAL HYPOCALCIURIC HYPERCALCEMIA (FHH, an inactivating
+% calcium-sensing-receptor defect that makes the kidney reabsorb calcium avidly), whereas primary
+% hyperparathyroidism runs a higher FeCa — the single test that most often separates the two before parathyroid
+% surgery. It joins the fractional-excretion family alongside the shipped FE-sodium, FE-potassium,
+% FE-phosphate, FE-urea and FE-magnesium, normalising the urine-to-plasma calcium ratio by the urine-to-plasma
+% creatinine ratio so a spot sample stands in for a timed collection. THE FRACTIONAL EXCRETION OF CALCIUM IS
+% THE URINE-CALCIUM TIMES PLASMA-CREATININE, DIVIDED BY (PLASMA-CALCIUM TIMES URINE-CREATININE) — i.e.
+% FeCa = (UCa × PCr) / (PCa × UCr).
+%
+% It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with the four exact
+% rearrangements (each of the four measured inputs recovered from the other three plus the FeCa). As with every
+% compute library, a consumer states NO arithmetic: it `import`s this file, binds the four values from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is
+% performed by the model; the engine computes each value EXACTLY (over exact rationals), carrying the formula's
+% citation.
+%
+%     import "fractional-excretion-of-calcium.adj"
+%     observe urinary_calcium(1)       % "…urine Ca 1 mg/dL…"     (span cited by the model)
+%     observe serum_creatinine(1)      % "…serum Cr 1 mg/dL…"     (span cited by the model)
+%     observe serum_calcium(8)         % "…serum Ca 8 mg/dL…"     (span cited by the model)
+%     observe urinary_creatinine(8)    % "…urine Cr 8 mg/dL…"     (span cited by the model)
+%     ? fractional_excretion_calcium(urinary_calcium, serum_creatinine, serum_calcium, urinary_creatinine)
+%       % engine → 0.015625 (a fraction ≈ 1.6% — a low FeCa)
+%
+% Structurally this is a PRODUCT-OVER-PRODUCT — the FE family shape — but UNLIKE the other fractional
+% excretions this source types it as the bare FRACTION, with NO "× 100" percent-scaling and no extra constant
+% (magnesium's version alone carries a 0.7 free-fraction factor). There are therefore NO embedded constants at
+% all; the four measured quantities are the formal parameters bound at apply time, so every value the engine
+% returns is exact.
+%
+%   fractional_excretion_calcium(UCa, PCr, PCa, UCr) = UCa * PCr / (PCa * UCr)   % (dimensionless fraction)
+%   urinary_calcium(FeCa, PCr, PCa, UCr)             = FeCa * PCa * UCr / PCr     % (solved for UCa)
+%   serum_creatinine(FeCa, UCa, PCa, UCr)            = FeCa * PCa * UCr / UCa     % (solved for PCr)
+%   serum_calcium(FeCa, UCa, PCr, UCr)               = UCa * PCr / (FeCa * UCr)   % (solved for PCa)
+%   urinary_creatinine(FeCa, UCa, PCr, PCa)          = UCa * PCr / (FeCa * PCa)   % (solved for UCr)
+%
+% The five formulas COMPOSE and invert cleanly around the worked case UCa = 1, PCr = 1, PCa = 8, UCr = 8
+% (FeCa = (1 × 1) / (8 × 8) = 1/64 = 0.015625): the `fractional_excretion_calcium` a consumer computes is
+% exactly the value each inverse formula back-solves to recover its own measured input (1, 1, 8, 8). The worked
+% FeCa is the DYADIC value 1/64 (a fraction with a power-of-2 denominator, exactly representable), so every
+% rendered value is exact.
+%
+% NOTE ON UNITS AND MODELLING: UCa/PCa and UCr/PCr must each be in the SAME units (the concentration ratios are
+% dimensionless), so FeCa is a pure fraction; multiply by 100 to read it as a percent (this source states the
+% fraction directly). This library only COMPUTES FeCa; interpreting it (the < 0.01 FHH threshold, in the
+% context of the serum calcium and PTH) is the clinician's task, stated by the cited source but applied by the
+% reader.
+%
+% All five formulas are defended by the SAME clause — the quoted FeCa expression — because that one expression
+% sanctions the relation read every way. The quote is transcribed verbatim from the StatPearls article
+% "Calcium", where it is printed as the typed, operand-complete, correctly-bracketed expression
+% "FeCa = (UCa x Serum creatinine) / (Serum calcium × Urinary creatinine)" (the source mixes an ASCII 'x' in
+% the numerator with a Unicode '×' in the denominator; both are transcribed faithfully). Each `formula`
+% therefore carries the provenance envelope every shipped grounded clause carries; the linter rejects an
+% unsourced one. (See feedback_nothing_human_authored — the formula is a verbatim span of the cited page, not
+% asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each of the five quantities appears BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are the everyday names
+% a decomposer maps onto the canonical term; the trailing comment records the intended unit. (serum_creatinine
+% and urinary_creatinine share their names with the other fractional-excretion libraries — each FE file is
+% standalone and defines its own dictionary.)
+% ----------------------------------------------------------------------------
+dictionary fractional_excretion_calcium_vocab {
+    define urinary_calcium               : finding  surface "urine calcium", "urinary calcium", "UCa", "urine Ca"           % mg/dL
+    define serum_creatinine              : finding  surface "serum creatinine", "plasma creatinine", "PCr", "serum Cr"      % mg/dL
+    define serum_calcium                 : finding  surface "serum calcium", "plasma calcium", "PCa", "serum Ca"            % mg/dL
+    define urinary_creatinine            : finding  surface "urine creatinine", "urinary creatinine", "UCr", "urine Cr"     % mg/dL
+    define fractional_excretion_calcium  : finding  surface "fractional excretion of calcium", "FeCa", "FE calcium", "fractional excretion calcium" % fraction
+}
+
+% ----------------------------------------------------------------------------
+% The fractional excretion of calcium, all five ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the FeCa expression from the StatPearls article (a
+% quote is required on a shipped formula). Each is an exact expression in the measured values (no constants at
+% all), so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook fractional_excretion_calcium_laws {
+    use fractional_excretion_calcium_vocab
+
+    % FeCa — urine-Ca × plasma-Cr over (plasma-Ca × urine-Cr), the bare fraction (no × 100).
+    formula fractional_excretion_calcium(urinary_calcium, serum_creatinine, serum_calcium, urinary_creatinine) = urinary_calcium * serum_creatinine / (serum_calcium * urinary_creatinine)
+        source "FeCa = (UCa x Serum creatinine) / (Serum calcium × Urinary creatinine)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557683/"
+        trust authoritative
+
+    % Urine calcium — the same expression solved for UCa. Defended by the SAME clause.
+    formula urinary_calcium(fractional_excretion_calcium, serum_creatinine, serum_calcium, urinary_creatinine) = fractional_excretion_calcium * serum_calcium * urinary_creatinine / serum_creatinine
+        source "FeCa = (UCa x Serum creatinine) / (Serum calcium × Urinary creatinine)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557683/"
+        trust authoritative
+
+    % Serum creatinine — the same expression solved for PCr. Defended by the SAME clause.
+    formula serum_creatinine(fractional_excretion_calcium, urinary_calcium, serum_calcium, urinary_creatinine) = fractional_excretion_calcium * serum_calcium * urinary_creatinine / urinary_calcium
+        source "FeCa = (UCa x Serum creatinine) / (Serum calcium × Urinary creatinine)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557683/"
+        trust authoritative
+
+    % Serum calcium — the same expression solved for PCa. Defended by the SAME clause.
+    formula serum_calcium(fractional_excretion_calcium, urinary_calcium, serum_creatinine, urinary_creatinine) = urinary_calcium * serum_creatinine / (fractional_excretion_calcium * urinary_creatinine)
+        source "FeCa = (UCa x Serum creatinine) / (Serum calcium × Urinary creatinine)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557683/"
+        trust authoritative
+
+    % Urine creatinine — the same expression solved for UCr, the fifth reading of the one law.
+    formula urinary_creatinine(fractional_excretion_calcium, urinary_calcium, serum_creatinine, serum_calcium) = urinary_calcium * serum_creatinine / (fractional_excretion_calcium * serum_calcium)
+        source "FeCa = (UCa x Serum creatinine) / (Serum calcium × Urinary creatinine)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557683/"
+        trust authoritative
+}
