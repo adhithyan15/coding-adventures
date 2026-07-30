@@ -8,7 +8,12 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": {
+    "item_id": "ocaml-lane-contract",
+    "pr_number": 9323,
+    "branch": "codex/ocaml-lane-contract",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9323"
+  },
   "last_inventory": {
     "revision": "0f8bb3b2519ed73fc932a5291b510433e8a71480",
     "schema_version": 3,
@@ -326,11 +331,11 @@
     {
       "id": "ocaml-lane-contract",
       "title": "Define OCaml emerging-lane and denominator-safe reporter contracts",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-contract"],
       "branch": "codex/ocaml-lane-contract",
-      "pr_number": null,
-      "notes": "Selected after merged PR #9308 and refreshed against the collision-checked 0f8bb3b25 inventory because this focused contract makes the reporter denominator-safe, classifies OCaml without changing the established 15-language denominator, and unlocks every later OCaml scaffold, resolver, representative-package, capability, build-tool, and promotion tranche."
+      "pr_number": 9323,
+      "notes": "Selected after merged PR #9308 and refreshed against the collision-checked 0f8bb3b25 inventory because this focused contract makes the reporter denominator-safe, classifies OCaml without changing the established 15-language denominator, and unlocks every later OCaml scaffold, resolver, representative-package, capability, build-tool, and promotion tranche. Ready-for-review PR #9323 opened after the 177-test scripts suite, 10 focused reporter tests, 5 dependent learning-report tests, 86% reporter branch coverage, Ruff, Go test/vet/build-tool build, all-format collision checks, diff checks, baseline-comparison BUILD validation, secret scan, and independent final security review."
     },
     {
       "id": "ocaml-infrastructure",
