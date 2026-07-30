@@ -103,7 +103,9 @@ Otherwise                         → BodyKind::None
 
 A request with both `Transfer-Encoding` and `Content-Length` is rejected.
 Transfer coding is rejected on HTTP/1.0, `chunked` must occur exactly once as
-the final coding, and empty or malformed coding lists are rejected.
+the final coding, and empty or malformed coding lists are rejected. This
+package does not interpret transfer-coding parameters, so any parameterized
+coding is rejected rather than normalized.
 
 All `Content-Length` field values are parsed. Duplicate fields and
 comma-coalesced values are accepted only when every bounded decimal value is
@@ -124,11 +126,13 @@ Content-Length: 0                        → BodyKind::None
 Otherwise                                → BodyKind::UntilEof
 ```
 
-Response parsing requires the corresponding request method so HEAD and CONNECT
-semantics cannot be guessed. A successful CONNECT response reports the tunnel
-transition separately from `BodyKind`. Outside the bodyless/tunnel cases,
-`Transfer-Encoding` plus `Content-Length` is rejected. `chunked` must not be
-repeated or followed by another transfer coding.
+Response parsing requires the corresponding case-sensitive request method and
+request HTTP version so HEAD, CONNECT, and transfer-coding semantics cannot be
+guessed. A successful CONNECT response reports the tunnel transition separately
+from `BodyKind`. Outside the bodyless/tunnel cases, `Transfer-Encoding` plus
+`Content-Length` is rejected. Transfer coding is rejected when either the
+request or response uses HTTP/1.0; `chunked` must not be repeated or followed by
+another transfer coding; parameterized codings are rejected.
 
 This is the core distinction between “header parsing” and “body parsing” in
 HTTP/1: the parser usually does not consume the body, but it **does** decide
@@ -166,6 +170,11 @@ pub struct ParsedResponseHead {
     pub switches_protocol: bool,
 }
 
+pub struct ResponseContext {
+    pub request_method: String,
+    pub request_version: HttpVersion,
+}
+
 pub enum Http1ParseError {
     IncompleteHead,
     HeadTooLarge,
@@ -183,7 +192,7 @@ pub enum Http1ParseError {
 
 pub fn parse_request_head(input: &[u8]) -> Result<ParsedRequestHead, Http1ParseError>;
 pub fn parse_response_head(
-    request_method: &str,
+    context: &ResponseContext,
     input: &[u8],
 ) -> Result<ParsedResponseHead, Http1ParseError>;
 ```
