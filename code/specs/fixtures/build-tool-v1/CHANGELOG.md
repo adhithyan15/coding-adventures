@@ -30,3 +30,7 @@
 - Split Linux OCI, Windows AppContainer, macOS isolation, and the later
   execution-semantics/security-probe corpus into explicit dependent backlog
   items. The bootstrap runner remains execution-disabled.
+- Added the closed Linux OCI backend identity schema and specified the
+  fail-closed rootless-Podman capability/preflight tranche. It binds exact
+  runtime, image, seccomp, shim, and invariant-probe identities while keeping
+  the checked-in policy disabled and the execution corpus empty.

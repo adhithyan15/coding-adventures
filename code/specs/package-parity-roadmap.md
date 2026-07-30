@@ -105,18 +105,18 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 29, 2026 after the Haskell `barcode-1d` and
-`http-core` ports, the Go/Rust `multi-directed-graph` slice, and a new wave of
-Rust-only package families:
+inventory was regenerated on July 30, 2026 at `bee64b477` after the Haskell
+`barcode-1d` and `http-core` ports, the Go/Rust `multi-directed-graph` slice,
+and a new wave of Rust-only package families:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
 | Present in 10-15 languages | 172 | 278 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 733 | 10,262 |
+| Present in one language | 737 | 10,318 |
 
-The loop must not start by attempting 10,262 singleton ports. It should finish
+The loop must not start by attempting 10,318 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The July 29 lane audit is:
@@ -135,7 +135,7 @@ The July 29 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 948 | 0 | 100% |
+| Rust | 952 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -804,8 +804,14 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 538 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 542 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
+
+The July 30 inventory added three Rust singleton identities that now have
+explicit classification work in the loop state: `axiom-to-semantic-ir` is a
+likely portable deterministic lowering; `http1-client` needs its portable
+protocol core separated from native transport behavior; and
+`smart-home-discovery-service` is a likely native/service applicability case.
 
 ### Likely portable Rust-led families
 
@@ -922,33 +928,43 @@ Delivery order:
    input/result records, reviewed corpus and adapter digests, explicit operator
    authorization, stable backend-unavailable results, and a backend interface
    with no host-execution fallback. This tranche validates authority but never
-   executes fixture code.
-5. Implement the Linux OCI backend first. Require a pinned pre-existing image
-   identity, private mount/user/PID/network namespaces, a read-only root,
-   dropped capabilities, `no_new_privileges`, non-root execution, bounded
-   writable tmpfs, streaming output accounting, cgroup limits, and
-   whole-container termination.
-6. Implement the native Windows boundary with AppContainer or LPAC plus Job
+   executes fixture code. Completed by PR #9178.
+5. Implement the Linux OCI backend first. The selected first tranche defines a
+   closed identity for exact rootless Podman, `crun`, OCI manifest/config,
+   seccomp, shim, and invariant-probe artifacts; proves local non-remote
+   rootless operation, cgroup v2 delegation, seccomp, exact binaries, and the
+   already-present image; and constructs the exact no-pull, private-namespace,
+   read-only, capability-free probe container. It does not decode or launch a
+   fixture, and Linux remains unavailable.
+6. Before trusted Linux execution, bind operator approval to the complete
+   reviewed authority bundle, bind case selection to the exact hashed
+   root-handle/no-follow snapshot, and normalize dependency-skip/result-state
+   semantics. Then execute the runner-owned Linux invariant probe with
+   aggregate cgroup CPU metering, combined streaming output/result accounting,
+   hard writable-workspace semantics, cancellation, and verified
+   whole-container kill/reap/removal. Only protected evidence can mark Linux
+   ready.
+7. Implement the native Windows boundary with AppContainer or LPAC plus Job
    Objects and root-handle reparse-safe filesystem operations. Keep macOS
    non-passing until a signed helper or isolated VM can prove the same
    filesystem, network, resource, and tree-termination guarantees;
    `sandbox-exec` alone is not sufficient evidence.
-7. Add closed execution-semantics cases for command ordering, failure
+8. Add closed execution-semantics cases for command ordering, failure
    propagation, dependency skips, dry-run, jobs, resource locks, legacy shell
    behavior, and direct argv. Keep escape, network, environment, link-race,
    cancellation, and resource-exhaustion checks as runner-owned non-oracular
    probes.
-8. Make the Go reference pass the contract, including structured Starlark
+9. Make the Go reference pass the contract, including structured Starlark
    context/commands and the B05 Windows executor contract.
-9. Remediate existing ports in fixture-failure order: C#/F#, Python, Ruby,
+10. Remediate existing ports in fixture-failure order: C#/F#, Python, Ruby,
    Swift, TypeScript, Elixir, Rust, Perl, Haskell, and Lua. Each independent
    engine is its own PR; a reviewed shared-engine exception must be explicit.
-10. Add language-native Java and Kotlin implementations using shared JVM fixture
+11. Add language-native Java and Kotlin implementations using shared JVM fixture
    infrastructure but separate engines, then add Dart.
-11. Add the OCaml implementation after the lane foundation is stable.
-12. Decide and document whether C and C++ require native build tools before
+12. Add the OCaml implementation after the lane foundation is stable.
+13. Decide and document whether C and C++ require native build tools before
    either emerging lane graduates.
-13. Gate completion in CI: every supported implementation runs the same
+14. Gate completion in CI: every supported implementation runs the same
    conformance corpus on its applicable operating systems.
 
 Pull-request CI may validate the policy, schemas, digests, and fake-backend
@@ -970,6 +986,19 @@ land before final adapter parity:
 - model deterministic inline inputs and semantic oracles for dependency,
   standalone-prerequisite, Starlark-declaration, identity, toolchain, and path
   validation checks before admitting them to the closed v1 schema.
+
+The Linux OCI review discovered four additional dependency gates:
+
+- replace corpus-only approval with a domain-separated authority digest over
+  the exact source, policy, schemas, runner, launcher, seccomp, image, shim,
+  and adapter identities;
+- execute only the exact direct corpus member bytes from the approved
+  root-handle/no-follow snapshot, never a reopened caller path;
+- normalize `dep-skipped` terminology and enforce result-state/return-code
+  invariants before execution fixtures land;
+- separate identity/preflight and exact command construction from actual
+  containment enforcement, aggregate resource accounting, lifecycle cleanup,
+  and protected runner-owned probe evidence.
 
 ## Cross-Cutting Stream B: Introduce OCaml Safely
 

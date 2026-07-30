@@ -433,6 +433,7 @@ class ExecutionSchemaTests(unittest.TestCase):
                 "result.schema.json",
                 "execution.schema.json",
                 "execution-policy.schema.json",
+                "linux-oci-backend.schema.json",
             ):
                 shutil.copyfile(FIXTURE_ROOT / name, root / name)
             case_root = root / "execution-cases"

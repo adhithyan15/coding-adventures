@@ -29,6 +29,7 @@ def write_policy_fixture(root: Path, policy: dict[str, object]) -> Path:
         "result.schema.json",
         "execution.schema.json",
         "execution-policy.schema.json",
+        "linux-oci-backend.schema.json",
     ):
         shutil.copyfile(FIXTURE_ROOT / name, fixture_root / name)
     (fixture_root / "execution-cases").mkdir()

@@ -13,6 +13,7 @@ build-tool-v1/
   execution.schema.json
   execution-policy.schema.json
   execution-policy.json
+  linux-oci-backend.schema.json
   implementations.schema.json
   implementations.json
   CHANGELOG.md
@@ -64,12 +65,27 @@ unavailable. The empty `execution-cases/*.json` set therefore has the standard
 empty SHA-256 digest. Execution cases are added only after an enforcing backend
 is reviewed.
 
+`linux-oci-backend.schema.json` closes the separate immutable identity document
+for the first Linux backend tranche. It binds exact rootless Podman, `crun`,
+OCI manifest/config, seccomp, shim, and invariant-probe identities. The
+process-owning `build_tool_conformance_linux_oci.py` preflight validates those
+identities and host capabilities without decoding a fixture or creating a
+container. No identity document is checked in while Linux remains unavailable.
+
 ## Runner
 
 Validate the complete corpus and inventory:
 
 ```text
 python code/scripts/build_tool_conformance.py validate-corpus
+```
+
+Validate a reviewed Linux OCI identity and the local non-executing capability
+preflight:
+
+```text
+python code/scripts/build_tool_conformance_linux_oci.py \
+  --identity path/to/reviewed-linux-oci-identity.json
 ```
 
 Compare one externally produced adapter result with its fixture:

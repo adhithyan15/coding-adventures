@@ -658,6 +658,11 @@ schema layer MUST NOT be treated as an execution sandbox:
    capabilities; no host devices; a non-root identity; only explicit
    read-only inputs; a size-bounded writable tmpfs; cgroup-backed aggregate
    limits; streaming output accounting; and whole-container termination.
+   The supported v1 runtime is local, rootless Podman at the fixed absolute
+   path `/usr/bin/podman`, using local `crun`, cgroup v2, delegated `cpu`,
+   `memory`, and `pids` controllers, and seccomp. Remote Podman, rootful
+   Podman, Docker, mutable image references, PATH lookup, and best-effort
+   fallback are not conforming backends.
 3. The Windows layer requires a capability-less AppContainer or LPAC and
    private filesystem ACLs. The child is created suspended, assigned to a Job
    Object with kill-on-close, no-breakaway, process, CPU, and memory limits,
@@ -681,6 +686,46 @@ hard ceilings, backend identities, and adapter executable digests. A backend
 or adapter marked ready requires an immutable SHA-256 identity. The policy does
 not contain operator authorization: `run-case` additionally requires an
 explicit `--allow-trusted-execution` invocation flag.
+
+For `linux_oci`, `identity_sha256` is the SHA-256 of the exact raw bytes of a
+closed Linux OCI backend identity document validated by
+`linux-oci-backend.schema.json`. That document binds the Podman and `crun`
+binaries, their fixed absolute paths, the exact OCI manifest and local config
+image identities, the reviewed seccomp profile, and the in-image shim and
+runner-owned invariant probe. The image `reference` contains the manifest
+digest and MUST agree with `manifest_sha256`; a run addresses only the already
+present `sha256:<config_sha256>` image with pull disabled. The runner verifies
+both image identities, operating system, architecture, and absence of
+image-declared volumes before it creates a container.
+
+Linux capability preflight runs in a separate process-owning module. It uses
+only fixed direct argument vectors and a runner-owned sanitized environment.
+It MUST prove local non-remote rootless operation, `crun`, cgroup v2 with
+delegated `cpu`, `memory`, and `pids` controllers, seccomp, exact runtime
+binary hashes, and the exact local image. Missing or mismatched capabilities
+produce a stable non-passing result before any fixture is decoded or
+materialized.
+
+The first Linux delivery tranche contains only this identity validation,
+capability preflight, and construction of the runner-owned invariant-probe
+container. It MUST NOT decode or execute fixture commands. Its container is
+created with an exact config image identity and `--pull=never`, a private
+unmapped rootless user namespace, private PID/IPC/UTS/cgroup namespaces,
+network disabled, a read-only root with implicit writable tmpfs mounts
+disabled, all capabilities dropped, `no_new_privileges`, no devices or bind
+mounts, a fixed non-root identity and environment, and one bounded
+runner-owned tmpfs. A zero-byte workspace is rejected rather than expressed
+as `tmpfs size=0`, which can mean unlimited. Swap is disabled with the cgroup
+v2 `memory.swap.max=0` control; `--memory-swap=<memory>` is not used. CPU
+quota limits rate only, so later execution MUST also meter aggregate
+`cpu.stat usage_usec` and kill the entire container cgroup at the effective
+CPU-time ceiling.
+
+The checked-in execution policy remains disabled and Linux remains
+`unavailable` until the exact identity document and image have passed every
+runner-owned filesystem, network, environment, namespace, resource, output,
+cancellation, and descendant-termination probe in a protected Linux
+workflow. Preflight success alone never marks the backend ready.
 
 The execution-corpus digest is SHA-256 over all `*.json` cases sorted by their
 portable path relative to `execution-cases/`. For each case, append the

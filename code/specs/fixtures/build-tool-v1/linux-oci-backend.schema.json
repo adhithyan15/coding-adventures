@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/build-tool-conformance-linux-oci-backend-v1.json",
+  "title": "Build-tool Linux OCI backend identity v1",
+  "description": "Immutable identities for the reviewed rootless-Podman backend. This record is policy data, not operator authorization.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "backend_kind",
+    "platform",
+    "architecture",
+    "runtime",
+    "oci_runtime",
+    "image",
+    "seccomp_profile_sha256",
+    "shim",
+    "probe"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "backend_kind": {
+      "const": "linux_oci"
+    },
+    "platform": {
+      "const": "linux"
+    },
+    "architecture": {
+      "const": "amd64"
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementation",
+        "path",
+        "version",
+        "sha256"
+      ],
+      "properties": {
+        "implementation": {
+          "const": "podman"
+        },
+        "path": {
+          "const": "/usr/bin/podman"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+          "maxLength": 32
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "oci_runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementation",
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "implementation": {
+          "const": "crun"
+        },
+        "path": {
+          "const": "/usr/bin/crun"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference",
+        "manifest_sha256",
+        "config_sha256",
+        "os",
+        "architecture"
+      ],
+      "properties": {
+        "reference": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._/-]*@sha256:[0-9a-f]{64}$",
+          "maxLength": 512
+        },
+        "manifest_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "config_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "os": {
+          "const": "linux"
+        },
+        "architecture": {
+          "const": "amd64"
+        }
+      }
+    },
+    "seccomp_profile_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "shim": {
+      "$ref": "#/$defs/image_artifact"
+    },
+    "probe": {
+      "$ref": "#/$defs/image_artifact"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "image_path": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 256,
+      "pattern": "^/(?:[A-Za-z0-9._-]+/)*[A-Za-z0-9._-]+$"
+    },
+    "image_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/image_path"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    }
+  }
+}
