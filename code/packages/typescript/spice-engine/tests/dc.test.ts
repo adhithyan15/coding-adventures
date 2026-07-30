@@ -714,6 +714,22 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects invalid MOS transconductance", () => {
+    const valid = normalizeModelCard("Mvalid", "nmos", { KP: 200.0e-6 });
+    expect(valid.parameters.KP).toBe(200.0e-6);
+
+    for (const invalidTransconductance of [
+      0.0,
+      -1.0,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { KP: invalidTransconductance }),
+      ).toThrow("MOSFET KP must be finite and positive");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,
