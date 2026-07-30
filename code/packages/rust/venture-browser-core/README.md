@@ -34,6 +34,12 @@ content-area hosts can resize or scroll it, hit-test links in viewport
 coordinates, and request the exact viewport scene for each paint event. Page
 replacement resets scroll while preserving the current viewport height.
 
+`BrowserSession` is the reducer a native shell keeps for browser behavior. It
+dispatches Navigate, Back, Forward, Home, and Reload through the page pipeline,
+replaces redirect history with the final URL, and updates the viewport only
+after a successful load. Pointer activation uses viewport coordinates and
+follows the resolved link through the same transactional path.
+
 ## Development
 
 ```bash

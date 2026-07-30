@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0
+
+- Add transactional `BrowserSession` navigation across page loading, redirect
+  history replacement, and viewport updates.
+- Add viewport-coordinate link activation and native-control commands for
+  Navigate, Back, Forward, Home, and Reload.
+
 ## 0.3.0
 
 - Add `BrowserViewport`, binding the current page to clamped scrolling,
