@@ -1,0 +1,27 @@
+% ============================================================================
+% corrected-calcium.query.adj — worked applications of the albumin-corrected-calcium correction.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a chemistry vignette into a measured total
+% calcium and a serum albumin: it `import`s the grounded formulabook, `observe`s the two values, and
+% asks the engine to APPLY the cited correction. No arithmetic is stated by the consumer; the engine
+% computes each value EXACTLY (over exact rationals) and carries the article's citation as its proof,
+% on the CPU, with zero model calls.
+%
+% Worked case (measured calcium = 8 mg/dL, albumin = 2 g/dL): corrected = 8 + 0.8 × (4 − 2) = 9.6 mg/dL.
+% Each query fixes two of the three quantities and asks the engine to recover the third; every answer
+% is exact and the three COMPOSE (each inversion recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli corrected-calcium.query.adj
+% ============================================================================
+
+import "corrected-calcium.adj"
+
+% --- Correction: the corrected calcium the measured value and albumin imply (expect 9.6). ----------
+observe measured_calcium(8)
+observe albumin(2)
+? corrected_calcium(measured_calcium, albumin)   % expect 9.6
+
+% --- Inverse: the measured calcium a corrected 9.6 implies at albumin 2 (expect 8). ----------------
+observe corrected_calcium(9.6)
+? measured_calcium(corrected_calcium, albumin)   % expect 8
