@@ -4547,14 +4547,48 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // `List(T)` is `{ tag: "List", inner: <AxiomDomain> }`. `AxiomCategory`
     // is simply the string `"Ring"` or `"OrderedSet"`.
 
+    // SECURITY (CWE-674): every one of the six Axiom domain/category
+    // functions below (`axiomParseTypeSpec`, `axiomResolveDomain`,
+    // `axiomIsPolynomialOverIntegers`, `axiomCoerceValue`,
+    // `axiomDomainDisplayName`) is plain recursion with no cap of its own
+    // -- a security-review finding, since `axiomCoerceHandler` hands
+    // `axiomCoerceValue`/`axiomIsPolynomialOverIntegers` an already-
+    // EVALUATED value that only went through `evalTerm`'s OWN depth cap
+    // (`MAX_EVAL_DEPTH`, checked on `evalTerm`'s own recursive descent),
+    // not a cap on the SIZE of the resulting term -- `evalTerm`'s own doc
+    // comment already establishes "a shallow compiled program can still
+    // build an arbitrarily deep runtime VALUE" (the same concern
+    // `toDisplayString`'s own guard, just below in this file, exists to
+    // close for the display path). Every function here now threads an
+    // explicit `depth` parameter and reuses the SAME `MAX_TERM_DEPTH`
+    // (512) cap `toDisplayString`/`termEquals` already use -- a
+    // deliberate REUSE, not a fresh measurement, justified the same way
+    // `termEquals`'s own comment justifies reusing it: each of these six
+    // functions' per-call-frame footprint (a `kind`/`tag` check, a string
+    // comparison or two, at most one more recursive call per level) is no
+    // heavier than `toDisplayString`'s own already-proven-safe-at-
+    // `MAX_TERM_DEPTH` frame. Past the cap, each function returns its own
+    // existing "this failed" value (`false` for the boolean predicate,
+    // `null` for the coerce-or-fail function, `"..."` for the display
+    // function, matching `toDisplayString`'s own truncation convention)
+    // or throws a clean `Error`/`RangeError` (for the two functions whose
+    // contract is already "return a value or throw", where a silent
+    // truncated answer would be worse than a clean, catchable failure) --
+    // never an uncaught native `RangeError: Maximum call stack size
+    // exceeded` that would crash the whole `node` process.
+
     // `axiom-runtime::builtins::parse_type_spec`'s port: read a `typeExpr`
     // TERM (never `evalTerm`'d -- see the three handlers below, all of
     // which pass this a RAW, unevaluated argument) into a `{ name, args }`
     // spec.
-    function axiomParseTypeSpec(term) {
+    function axiomParseTypeSpec(term, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_TERM_DEPTH) {
+        throw new RangeError("Symbolic.evalTerm: Axiom type expression nesting too deep");
+      }
       if (term.kind === "symbol") { return { name: term.name, args: [] }; }
       if (term.kind === "apply" && term.head.kind === "symbol") {
-        return { name: term.head.name, args: term.args.map(axiomParseTypeSpec) };
+        return { name: term.head.name, args: term.args.map((a) => axiomParseTypeSpec(a, depth + 1)) };
       }
       throw new TypeError("Symbolic.evalTerm: malformed Axiom type expression");
     }
@@ -4562,7 +4596,11 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // `axiom-runtime::domains::resolve_domain`'s port -- every error
     // message is copied VERBATIM from that function so a rejection reads
     // identically on both the native and compiled paths.
-    function axiomResolveDomain(spec) {
+    function axiomResolveDomain(spec, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_TERM_DEPTH) {
+        throw new RangeError("Symbolic.evalTerm: Axiom domain nesting too deep");
+      }
       const n = spec.args.length;
       switch (spec.name) {
         case "Boolean": if (n === 0) { return "Boolean"; } break;
@@ -4573,7 +4611,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         case "String": if (n === 0) { return "String"; } break;
         case "Fraction":
           if (n === 1) {
-            const inner = axiomResolveDomain(spec.args[0]);
+            const inner = axiomResolveDomain(spec.args[0], depth + 1);
             if (inner === "Integer") { return "FractionInteger"; }
             throw new Error(
               "Fraction(" + axiomDomainDisplayName(inner) + ") is not a valid type -- this cut's "
@@ -4583,7 +4621,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
           break;
         case "Polynomial":
           if (n === 1) {
-            const inner = axiomResolveDomain(spec.args[0]);
+            const inner = axiomResolveDomain(spec.args[0], depth + 1);
             if (inner === "Integer") { return "PolynomialInteger"; }
             throw new Error(
               "Polynomial(" + axiomDomainDisplayName(inner) + ") is not a valid type -- this cut's "
@@ -4593,7 +4631,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
           break;
         case "List":
           if (n === 1) {
-            const inner = axiomResolveDomain(spec.args[0]);
+            const inner = axiomResolveDomain(spec.args[0], depth + 1);
             if (typeof inner === "object" && inner.tag === "List") {
               throw new Error(
                 "List(" + axiomDomainDisplayName(inner) + ") is not a valid type -- `List`'s element "
@@ -4651,18 +4689,20 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // symbol (including `True`/`False`) counts as "polynomial", matching
     // `IRNode::Integer(_) | IRNode::Symbol(_) => true` exactly -- a
     // faithful port, not a hardening.
-    function axiomIsPolynomialOverIntegers(term) {
+    function axiomIsPolynomialOverIntegers(term, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_TERM_DEPTH) { return false; } // safe, conservative "not polynomial" answer
       if (term.kind === "integer" || term.kind === "symbol") { return true; }
       if (term.kind !== "apply" || term.head.kind !== "symbol") { return false; }
       const h = term.head.name;
       if (h === "Add" || h === "Sub" || h === "Mul") {
-        return term.args.every(axiomIsPolynomialOverIntegers);
+        return term.args.every((a) => axiomIsPolynomialOverIntegers(a, depth + 1));
       }
       if (h === "Neg") {
-        return term.args.length === 1 && axiomIsPolynomialOverIntegers(term.args[0]);
+        return term.args.length === 1 && axiomIsPolynomialOverIntegers(term.args[0], depth + 1);
       }
       if (h === "Pow") {
-        return term.args.length === 2 && axiomIsPolynomialOverIntegers(term.args[0])
+        return term.args.length === 2 && axiomIsPolynomialOverIntegers(term.args[0], depth + 1)
           && term.args[1].kind === "integer" && term.args[1].value >= 0;
       }
       return false;
@@ -4675,7 +4715,9 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // (`Integer`/`Rational` -> `Float`, matching real Axiom's own
     // `3 :: Float` producing `3.0`); every other domain is a pure
     // membership check that returns the value unchanged.
-    function axiomCoerceValue(term, domain) {
+    function axiomCoerceValue(term, domain, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_TERM_DEPTH) { return null; } // safe, conservative "coercion failed" answer
       if (domain === "Boolean") {
         return (term.kind === "symbol" && (term.name === "True" || term.name === "False")) ? term : null;
       }
@@ -4697,7 +4739,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         return (term.kind === "rational" || term.kind === "integer") ? term : null;
       }
       if (domain === "PolynomialInteger") {
-        return axiomIsPolynomialOverIntegers(term) ? term : null;
+        return axiomIsPolynomialOverIntegers(term, depth + 1) ? term : null;
       }
       if (typeof domain === "object" && domain.tag === "List") {
         if (!(term.kind === "apply" && term.head.kind === "symbol" && term.head.name === "List")) {
@@ -4705,7 +4747,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         }
         const coercedArgs = [];
         for (const elem of term.args) {
-          const c = axiomCoerceValue(elem, domain.inner);
+          const c = axiomCoerceValue(elem, domain.inner, depth + 1);
           if (c === null) { return null; }
           coercedArgs.push(c);
         }
@@ -4718,9 +4760,11 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // book's own spelling (`Integer`, `Fraction(Integer)`, `List(Float)`,
     // …), used only in error-message text (never the enum/string tag
     // above, which is `"FractionInteger"`/`"PolynomialInteger"`).
-    function axiomDomainDisplayName(domain) {
+    function axiomDomainDisplayName(domain, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_TERM_DEPTH) { return "..."; } // matches toDisplayString's own truncation marker
       if (typeof domain === "object" && domain.tag === "List") {
-        return "List(" + axiomDomainDisplayName(domain.inner) + ")";
+        return "List(" + axiomDomainDisplayName(domain.inner, depth + 1) + ")";
       }
       if (domain === "FractionInteger") { return "Fraction(Integer)"; }
       if (domain === "PolynomialInteger") { return "Polynomial(Integer)"; }

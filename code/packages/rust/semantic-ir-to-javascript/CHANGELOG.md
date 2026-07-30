@@ -84,6 +84,26 @@ the task's own suggestion of extending the separate, evaluator-less
   new flag and the three heads' wiring into `HELD_HEADS`/`HANDLERS`/
   `HELD_HANDLERS`.
 
+### Security (caught by `/security-review` before push)
+
+- **MEDIUM — missing recursion-depth guard.** The six new Axiom
+  domain/category functions (`axiomParseTypeSpec`, `axiomResolveDomain`,
+  `axiomIsPolynomialOverIntegers`, `axiomCoerceValue`,
+  `axiomDomainDisplayName`) were plain recursion with no cap — a real
+  inconsistency with this file's own `MAX_TERM_DEPTH`/`MAX_EVAL_DEPTH`
+  discipline. `axiomCoerceHandler` hands `axiomCoerceValue`/
+  `axiomIsPolynomialOverIntegers` an already-*evaluated* value that only
+  went through `evalTerm`'s own depth cap on the EVALUATION recursion,
+  not a cap on the resulting term's SIZE — `evalTerm`'s own doc comment
+  already establishes "a shallow compiled program can still build an
+  arbitrarily deep runtime value." Fixed: every one of the five functions
+  now threads an explicit `depth` parameter and reuses the existing
+  `MAX_TERM_DEPTH` (512) cap `toDisplayString`/`termEquals` already use
+  (the same justified reuse those two functions' own comments already
+  established, not a fresh measurement) — returning a safe default
+  (`false`/`null`/`"..."`) or throwing a clean, catchable error past the
+  cap, never an uncaught native stack overflow.
+
 ### Verification
 
 - `cargo test` (this crate): 284 tests, 0 failed (147 lib + 94

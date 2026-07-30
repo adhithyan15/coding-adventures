@@ -24,6 +24,8 @@
 //! Node is optional at test time; when unavailable every test degrades to
 //! a no-op rather than failing (mirroring `sir23_symbolic.rs`).
 
+use std::fs::OpenOptions;
+use std::io::Write as _;
 use std::path::PathBuf;
 use std::process::Command;
 
@@ -165,7 +167,20 @@ fn run_module(module: &Module, tag: &str) -> Option<(bool, String, String)> {
     }
     let mut path: PathBuf = std::env::temp_dir();
     path.push(format!("sir_js_axiom_{}_{}.js", tag, std::process::id()));
-    std::fs::write(&path, &artifact.source).expect("write temp js");
+    // `create_new` (not `std::fs::write`) fails loudly on an existing path
+    // (including a symlink) instead of silently following/truncating
+    // through it -- matches `axiom-to-semantic-ir/tests/oracle.rs`'s/
+    // `tests/e2e_node.rs`'s own identical helper (security-review finding).
+    // Each test uses a unique tag+PID, so this should never legitimately
+    // collide.
+    let mut file = OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(&path)
+        .expect("create temp js (create_new, not following an existing symlink)");
+    file.write_all(artifact.source.as_bytes())
+        .expect("write temp js");
+    drop(file);
     let output = Command::new("node")
         .arg(&path)
         .output()
