@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.65.0] — 2026-07-30
+
+### Added — RS-3c: `statemachine` driver + typed outcomes (ADJ-STATEMACHINE §3–§4)
+
+A new `statemachine` module hosts the **driver** that runs the machines RS-3b lowered —
+the deterministic, total loop of ADJ-STATEMACHINE §3, its four typed terminal outcomes
+(§4), and the §3.1 cycle key. The types (`run_state_machine`, `StateMachineRun`,
+`StateMachineOutcome`, `RunStep`, `YieldValue`) are re-exported for the CLI to render.
+
+- **No new evaluator** (the §3 claim, made literal): a comparison guard reuses
+  `KnowledgeBase::observed_numeric` + `compute` + `CmpOp::eval_values` (the exact-first path
+  the predicate-gated contribution uses); a presence guard reuses `enumerate_all` ("has any
+  proof?"), with the bare atom `true` as the always-holds special case; an `assert` action
+  adds a `Fact::certain` to a **working clone** of the KB, so a machine's asserts never leak.
+- **Total by construction / cannot hang**: the loop is exit-check → `steps >= budget` →
+  cycle-check → first-guard-wins transition → apply asserts. The budget caps it at
+  `budget + 1` iterations even if cycle detection never fires; `seen` never grows past
+  `budget` keys. The cycle key is `(state, the sorted set of terms asserted so far)` — a
+  sound, deterministic fingerprint because asserts are monotone and the base KB is fixed.
+- A **yield** expression is evaluated with the ordinary `compute` evaluator: a numeric yield
+  carries its full derivation tree; a bare symbolic atom (`at_target`) whose slot has no
+  numeric binding is reported as a symbol (the engine's `UnknownSlot` is the signal).
+
 ## [0.64.0] — 2026-07-30
 
 ### Added — RS-3b: `statemachine` grammar + AST + adapter + lowering (ADJ-STATEMACHINE §2, §5)

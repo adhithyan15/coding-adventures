@@ -36,6 +36,7 @@
 //!   indented one level deeper, so a line in the prose maps back to exactly one
 //!   node in the derivation tree.
 
+use adj_lang::{LoweredStateMachine, StateMachineOutcome, StateMachineRun};
 use logic_engine::compute::{DerivationNode, RoundSpec};
 use logic_engine::differential::{Differential, DifferentialDecision};
 use logic_engine::proof_dag::DerivationOrigin;
@@ -56,7 +57,11 @@ use logic_engine::{KnowledgeBase, Provenance, RoundingMode, TrustTier};
 /// differential evidence) renders only its derivations; a pure differential
 /// renders only its inference + adjudication. Determinism (P4) rides on the
 /// stable walk order of both.
-pub fn explain(kb: &KnowledgeBase, diff: &Differential) -> String {
+pub fn explain(
+    kb: &KnowledgeBase,
+    diff: &Differential,
+    state_machine_runs: &[(&LoweredStateMachine, StateMachineRun)],
+) -> String {
     let mut sections: Vec<String> = Vec::new();
     let derivations = render_derivations(kb);
     if !derivations.is_empty() {
@@ -77,7 +82,62 @@ pub fn explain(kb: &KnowledgeBase, diff: &Differential) -> String {
         }
         sections.push(render_adjudication(kb, diff));
     }
+    // ADJ-STATEMACHINE RS-3c: the run narrative — each machine's ordered,
+    // provenance-cited steps ending in its typed terminal outcome. Projection-only
+    // (P1): the runs were computed once in `main`; this only reads them. Omitted
+    // when the program declared no `statemachine`, so a program without one renders
+    // exactly as before.
+    let runs = render_state_machines(state_machine_runs);
+    if !runs.is_empty() {
+        sections.push(runs);
+    }
     sections.join("\n\n")
+}
+
+/// Render the state-machine run surface (ADJ-STATEMACHINE §3–§4, RS-3c) — for each
+/// machine, the ordered transitions it fired (each citing the machine's
+/// provenance and naming any facts it asserted), ending in the typed terminal
+/// outcome line. Projection-only and deterministic (P1/P4): a machine renders
+/// byte-identical text on every run. Returns "" when there are no machines.
+fn render_state_machines(runs: &[(&LoweredStateMachine, StateMachineRun)]) -> String {
+    if runs.is_empty() {
+        return String::new();
+    }
+    let mut out: Vec<String> = Vec::new();
+    for (sm, run) in runs {
+        out.push(format!("Run of {}:", sm.name));
+        for st in &run.steps {
+            // The asserted facts, when the transition carried `do assert …`.
+            let asserted = if st.asserted.is_empty() {
+                String::new()
+            } else {
+                format!("  (asserted {})", st.asserted.join(", "))
+            };
+            out.push(format!(
+                "  state {}: transition on {} to {} [{}]{}",
+                st.from_state,
+                st.guard,
+                st.target,
+                fmt_prov(&st.provenance),
+                asserted
+            ));
+        }
+        // The typed terminal outcome — the "abstain with a reason" line (§4).
+        let outcome = match &run.outcome {
+            StateMachineOutcome::Halted { state, result } => {
+                format!("  => Halted at {}, yields {}", state, result.render())
+            }
+            StateMachineOutcome::StepBudgetExceeded { steps, budget, .. } => {
+                format!("  => StepBudgetExceeded after {steps} steps (budget {budget})")
+            }
+            StateMachineOutcome::NonTerminating { state } => {
+                format!("  => NonTerminating (cycle at {state})")
+            }
+            StateMachineOutcome::Stuck { state } => format!("  => Stuck in {state}"),
+        };
+        out.push(outcome);
+    }
+    out.join("\n")
 }
 
 /// Render the derivations surface — the arithmetic behind each `let`/formula

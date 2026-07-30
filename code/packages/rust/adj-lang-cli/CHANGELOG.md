@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.27.0] — 2026-07-30 — RS-3c: `statemachine` driver + typed outcomes + `--explain` of the run
+
+Runs the provenance-stamped `statemachine`s RS-3b lowered (ADJ-STATEMACHINE §3–§4),
+surfacing each run's typed outcome in a new `state_machines` JSON section and in the
+`--explain` narrative. The driver introduces **no new evaluator**: a comparison guard
+reuses the engine's exact-first predicate comparison (`observed_numeric` + `compute` +
+`CmpOp::eval_values`), a presence guard reuses the SLD resolver (`enumerate_all`,
+"has any proof?"), and an `assert` action adds a `Fact::certain` to a **working clone**
+of the KB (asserts never leak into the rest of the program).
+
+- **Driver** (`adj-lang::statemachine::run_state_machine`): the §3 loop — exit-check →
+  budget-check → cycle-check → first-guard-wins transition → apply asserts. Total by
+  construction; it returns exactly one typed [`StateMachineOutcome`] and **cannot hang**
+  (the declared `budget` caps the loop at `budget + 1` iterations even if cycle detection
+  never fires).
+- **Four typed outcomes** (§4): `Halted { state, result }` (numeric yield with its
+  derivation tree, or a bare symbol like `at_target`), `StepBudgetExceeded { steps,
+  budget, state }`, `NonTerminating { state }` (a `(state, asserted-set)` livelock, §3.1),
+  `Stuck { state }` (dead end — no transition and no exit).
+- **CLI JSON**: a `"state_machines":[…]` section — each machine's name, typed outcome,
+  ordered provenanced steps (guard tested, target, asserted facts, cited source), and the
+  machine's own citation. **Omitted when the program declares no `statemachine`**, so all
+  existing output is byte-for-byte unchanged (the `cli_golden` shape is preserved).
+- **`--explain`**: a `Run of <name>:` block per machine — the ordered transition lines
+  (`state s: transition on <guard> to s' [<cited provenance>]  (asserted …)`) ending in
+  the typed outcome line (`=> Halted at …, yields …` / `=> StepBudgetExceeded after N
+  steps (budget M)` / `=> NonTerminating (cycle at …)` / `=> Stuck in …`). Projection-only
+  and deterministic (P1/P4). `explain()` gained a `state_machine_runs` parameter.
+- **Tests**: `tests/rs3c_statemachine_run_e2e.rs` — the §6.1 terminating titrate (Halted +
+  yield), the §6.2 spin (NonTerminating/budget, proven to RETURN — no hang), a Stuck dead
+  end, `--explain` determinism, the omit-when-empty invariant, and provenanced steps.
+
 ## [0.26.0] — 2026-07-30 — RS-4 PR-E2: `--explain` inference + adjudication surfaces
 
 Extends the `--explain` renderer (ADJ-REASON-MATH §E.8) from the derivations
