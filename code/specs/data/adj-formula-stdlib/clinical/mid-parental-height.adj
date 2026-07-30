@@ -1,0 +1,98 @@
+% ============================================================================
+% mid-parental-height.adj — the mid-parental (target) height for BOYS
+% (MPH = (father's height + mother's height + 13) / 2) in the ADJ standard library.
+% ============================================================================
+% The mid-parental-height entry of the *clinical* track — the estimate of a child's GENETIC-POTENTIAL adult
+% height from the parents' heights, used in paediatric growth assessment to decide whether a short (or tall)
+% child is simply tracking their family's stature or is genuinely off-target and warrants work-up. Averaging
+% the two parents' heights gives a mid-point; because adult men are on average about 13 cm taller than adult
+% women, a BOY's expected height is that average shifted UP (and a girl's shifted down) by half that
+% sex-difference. The cited formula folds the shift into the numerator: for a boy, add 13 cm to the sum of the
+% two parental heights before halving — equivalently, the parents' average plus 6.5 cm. THE MID-PARENTAL
+% HEIGHT FOR A BOY IS THE FATHER'S HEIGHT PLUS THE MOTHER'S HEIGHT PLUS 13, ALL DIVIDED BY 2 — i.e.
+% MPH = (father + mother + 13) / 2. It ships as an importable, byte-provenanced, PARAMETERIZED `formula`,
+% together with two exact rearrangements (the father's height and the mother's height a given target implies).
+% As with every compute library, a consumer states NO arithmetic: it `import`s this file, binds the two
+% parental heights from its own byte-provenance decomposition, and asks the engine to APPLY the cited formula
+% on the CPU. Zero math is performed by the model; the engine computes each value EXACTLY (over exact
+% rationals), carrying the formula's citation.
+%
+%     import "mid-parental-height.adj"
+%     observe father_height(180)   % "…father 180 cm…"   (span cited by the model)
+%     observe mother_height(165)    % "…mother 165 cm…"   (span cited by the model)
+%     ? mid_parental_height(father_height, mother_height)   % engine → 179 (cm, boy)
+%
+% Structurally this is a SUM-WITH-A-CONSTANT OVER A CONSTANT — the two heights plus 13, halved — a shape
+% distinct from the ratio, ratio-of-ratios, percentage-sum, product-over-constant, chained-division,
+% constant-scaled-difference, product-times-constant, three-way-product-over-divisor,
+% product-of-a-ratio-and-a-value, quotient-over-a-difference, constant-times-a-difference-over-a-divisor,
+% two-variables-and-a-constant-over-a-divisor, product-of-a-value-and-a-difference-over-a-shared-value,
+% ratio-scaled-by-a-constant, constant-minus-a-scaled-sum, and quotient-minus-a-sum-with-a-constant forms of
+% the other clinical libraries. Two embedded constants — the average sex height difference 13 (cm) and the
+% divisor 2 — both exact integers as the cited expression prints them; the two parental heights are formal
+% parameters bound at apply time, so every value the engine returns is exact. The three formulas COMPOSE and
+% invert cleanly around the worked case father's height = 180 cm, mother's height = 165 cm (MPH =
+% (180 + 165 + 13) / 2 = 358 / 2 = 179 cm): the `mid_parental_height` a consumer computes is exactly the value
+% each inverse formula back-solves to recover its own measured input (180, 165).
+%
+%   mid_parental_height(father_height, mother_height) = (father_height + mother_height + 13) / 2   % (cm, boy)
+%   father_height(mid_parental_height, mother_height) = mid_parental_height * 2 - mother_height - 13 % (solved for father)
+%   mother_height(mid_parental_height, father_height) = mid_parental_height * 2 - father_height - 13 % (solved for mother)
+%
+% NOTE ON UNITS AND MODELLING: the heights are in centimetres and the target height comes out in centimetres.
+% This library grounds the BOY (male-child) form, in which 13 cm is ADDED; the corresponding girl form
+% SUBTRACTS 13 (a different clause not grounded here). The expected adult height of the child falls roughly
+% within ±8–10 cm of this target. This library only COMPUTES the target; interpreting a child's measured
+% height against it (and the growth curve) is the clinician's task, stated by the cited source but applied by
+% the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted mid-parental-height expression — because
+% that one expression ((father + mother + 13) / 2) sanctions the relation read every way. The quote is
+% transcribed verbatim from the PubMed Central article "Electronic Health Record Mid-Parental Height
+% Auto-Calculator for Growth Assessment in Primary Care", where the boy form is printed as the typed,
+% operand-complete, correctly-bracketed expression "(father's height + mother's height + 13)/2" (the whole
+% numerator is parenthesized before the /2, so strict precedence reads it correctly). Each `formula` therefore
+% carries the provenance envelope every shipped grounded clause carries; the linter rejects an unsourced one.
+% (See feedback_nothing_human_authored — the formula is a verbatim span of the cited page, not asserted from
+% memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `father_height`, `mother_height` and `mid_parental_height` each appear BOTH as a derived result
+% and as an input (of the other formulas), so each is a single dictionary term used in both roles. The
+% `surface` lists are the everyday names a decomposer maps onto the canonical term; the trailing comment
+% records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary mid_parental_height_vocab {
+    define father_height        : finding  surface "father's height", "father height", "paternal height", "dad's height" % cm
+    define mother_height        : finding  surface "mother's height", "mother height", "maternal height", "mom's height" % cm
+    define mid_parental_height  : finding  surface "mid-parental height", "midparental height", "target height", "MPH"    % cm
+}
+
+% ----------------------------------------------------------------------------
+% The mid-parental height (boy form), three ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the mid-parental-height expression from the PMC
+% article (a quote is required on a shipped formula). Each is an exact expression in the measured values and
+% the exact integers 13 and 2, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook mid_parental_height_laws {
+    use mid_parental_height_vocab
+
+    % Mid-parental height (boy) — the two parental heights plus the 13 cm sex-difference, halved.
+    formula mid_parental_height(father_height, mother_height) = (father_height + mother_height + 13) / 2
+        source "(father's height + mother's height + 13)/2"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC5576174/"
+        trust authoritative
+
+    % Father's height — the same expression solved for the father's height. Defended by the SAME clause.
+    formula father_height(mid_parental_height, mother_height) = mid_parental_height * 2 - mother_height - 13
+        source "(father's height + mother's height + 13)/2"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC5576174/"
+        trust authoritative
+
+    % Mother's height — the same expression solved for the mother's height, the third reading of the one law.
+    formula mother_height(mid_parental_height, father_height) = mid_parental_height * 2 - father_height - 13
+        source "(father's height + mother's height + 13)/2"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC5576174/"
+        trust authoritative
+}
