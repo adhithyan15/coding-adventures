@@ -1,0 +1,97 @@
+% ============================================================================
+% corrected-sodium.adj — the hyperglycemia-corrected serum sodium
+% (corrected sodium = measured sodium + 1.6 × (glucose − 100) / 100) in the ADJ standard library.
+% ============================================================================
+% The corrected-sodium entry of the *clinical* track — the correction that undoes the FALSELY LOW
+% serum sodium caused by hyperglycemia. A high plasma glucose draws water into the vascular space and
+% dilutes the measured sodium (a translocational / dilutional pseudohyponatremia); the correction adds
+% the sodium back so the value reflects the true sodium the patient would show at a normal glucose.
+% THE LABORATORY SODIUM IS CORRECTED BY ADDING 1.6 mEq FOR EACH 100 mg/dL OF GLUCOSE ABOVE 100 mg/dL —
+% i.e. measured sodium + 1.6 × (glucose − 100) / 100. It ships as an importable, byte-provenanced,
+% PARAMETERIZED `formula`, together with its two exact rearrangements (the measured sodium a corrected
+% value implies at a given glucose, and the glucose a corrected/measured pair implies). As with every
+% compute library, a consumer states NO arithmetic: it `import`s this file, binds the measured sodium
+% and glucose from its own byte-provenance decomposition, and asks the engine to APPLY the cited
+% correction on the CPU. Zero math is performed by the model; the engine computes each value EXACTLY
+% (over exact rationals — 1.6 = 8/5), carrying the correction's citation.
+%
+%     import "corrected-sodium.adj"
+%     observe measured_sodium(126)   % "…serum sodium 126 mEq/L…"    (span cited by the model)
+%     observe glucose(600)            % "…glucose 600 mg/dL…"         (span cited by the model)
+%     ? corrected_sodium(measured_sodium, glucose)
+%                                      % engine → 134, the corrected sodium (mEq/L)
+%
+% The 1.6 mEq-per-100 mg/dL coefficient and the 100 mg/dL glucose reference are the EXACT constants of
+% the cited correction (not measurements); the formulas are otherwise exact linear expressions over the
+% parameters, so every value the engine returns is exact. They COMPOSE and invert cleanly around the
+% worked case measured sodium = 126 mEq/L, glucose = 600 mg/dL (corrected = 126 + 1.6 × (600 − 100) /
+% 100 = 126 + 1.6 × 5 = 126 + 8 = 134 mEq/L): the `corrected_sodium` a consumer computes is exactly the
+% value the `measured_sodium` formula subtracts the same 1.6 × (glucose − 100) / 100 offset from to
+% recover 126, and exactly the value the `glucose` formula back-solves to recover 600.
+%
+%   corrected_sodium(measured_sodium, glucose) = measured_sodium + 1.6 * (glucose - 100) / 100  % (correction)
+%   measured_sodium(corrected_sodium, glucose) = corrected_sodium - 1.6 * (glucose - 100) / 100  % (solved for measured)
+%   glucose(corrected_sodium, measured_sodium) = 100 + (corrected_sodium - measured_sodium) * 100 / 1.6  % (solved for glucose)
+%
+% NOTE ON UNITS AND MODELLING: this is the conventional correction used in hyperglycemic crises (DKA /
+% hyperosmolar state) — sodium in mEq/L, glucose in mg/dL, reference glucose 100 mg/dL, coefficient
+% 1.6 mEq/L per 100 mg/dL. The correction only ADJUSTS the interpretation of a measured sodium for the
+% dilutional effect of hyperglycemia; it does not itself diagnose the sodium disorder, and (as the
+% cited article and later work note) the 1.6 factor is the standard approximation, best below very high
+% glucose. The cited article states the correction as prose — "The laboratory serum sodium finding is
+% often falsely low in DKA cases and can be corrected by adding 1.6 mEq to the measured serum sodium
+% for each 100 mg/dL of glucose above 100 mg/dL." — which is exactly the correction read forward; the
+% two rearrangements are the same relation solved for each input.
+%
+% All three formulas are defended by the SAME clause — the quoted correction sentence — because that
+% one statement (the corrected sodium IS the measured value plus 1.6 per 100 mg/dL of glucose above
+% 100) sanctions the relation read every way. The quote is transcribed verbatim from the StatPearls
+% "Adult Diabetic Ketoacidosis" article on the NCBI Bookshelf (a current, non-archived article), so
+% each `formula` carries the provenance envelope every shipped grounded clause carries; the linter
+% rejects an unsourced one. (See feedback_nothing_human_authored — the correction, including its 1.6
+% and 100 constants, is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `measured_sodium`, `glucose` and `corrected_sodium` each appear BOTH as a derived result
+% and as an input (of the other formulas), so each is a single dictionary term used in both roles. The
+% `surface` lists are the everyday names a decomposer maps onto the canonical term; the trailing
+% comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary corrected_sodium_vocab {
+    define measured_sodium  : finding  surface "measured sodium", "serum sodium", "sodium"   % mEq/L
+    define glucose          : finding  surface "glucose", "serum glucose", "blood glucose"    % mg/dL
+    define corrected_sodium : finding  surface "corrected sodium", "hyperglycemia-corrected sodium"  % mEq/L
+}
+
+% ----------------------------------------------------------------------------
+% The correction, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the correction sentence from the StatPearls "Adult
+% Diabetic Ketoacidosis" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each
+% is an exact linear expression in the measured quantities and the cited 1.6/100 constants, so the
+% engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook corrected_sodium_laws {
+    use corrected_sodium_vocab
+
+    % Corrected sodium — the measured sodium plus 1.6 mEq/L per 100 mg/dL of glucose above the 100 mg/dL
+    % reference.
+    formula corrected_sodium(measured_sodium, glucose) = measured_sodium + 1.6 * (glucose - 100) / 100
+        source "The laboratory serum sodium finding is often falsely low in DKA cases and can be corrected by adding 1.6 mEq to the measured serum sodium for each 100 mg/dL of glucose above 100 mg/dL."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560723/"
+        trust authoritative
+
+    % Measured sodium — the same correction solved for the measured sodium (subtract the offset).
+    % Defended by the SAME sentence.
+    formula measured_sodium(corrected_sodium, glucose) = corrected_sodium - 1.6 * (glucose - 100) / 100
+        source "The laboratory serum sodium finding is often falsely low in DKA cases and can be corrected by adding 1.6 mEq to the measured serum sodium for each 100 mg/dL of glucose above 100 mg/dL."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560723/"
+        trust authoritative
+
+    % Glucose — the same correction solved for the glucose (back out the offset). The SAME sentence,
+    % read the third way.
+    formula glucose(corrected_sodium, measured_sodium) = 100 + (corrected_sodium - measured_sodium) * 100 / 1.6
+        source "The laboratory serum sodium finding is often falsely low in DKA cases and can be corrected by adding 1.6 mEq to the measured serum sodium for each 100 mg/dL of glucose above 100 mg/dL."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560723/"
+        trust authoritative
+}
