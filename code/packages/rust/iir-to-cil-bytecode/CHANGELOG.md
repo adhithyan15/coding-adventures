@@ -1,5 +1,13 @@
 # Changelog — iir-to-cil-bytecode
 
+## 0.42.0 - 2026-07-30 - ALGOL captured-array globals
+
+The textual CIL emitter now gives module globals their concrete storage type.
+Existing scalar fields remain `int64`; `array<i64>`, `array<f64>`, and
+`array<str>` globals become `int32[]`, `float64[]`, and `string[]` fields and
+flow through reference `ldsfld`/`stsfld` operations. Captured ALGOL arrays can
+therefore survive a procedure call on real CoreCLR.
+
 ## 0.41.0 - 2026-07-14 (E6d-6c — union `match` runs on CLR: name quoting + box-of-reference passthrough)
 
 Two CLR-only fixes complete the CLR column for Twig union `match` — so union

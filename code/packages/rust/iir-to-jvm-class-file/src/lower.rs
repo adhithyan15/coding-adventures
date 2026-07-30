@@ -811,6 +811,12 @@ fn type_to_jvm_descriptor(hint: &str) -> &str {
         "ref<any>" => "Ljava/lang/Object;",
         // LANG-FULL E4: string literals flow as java.lang.String.
         "str" => "Ljava/lang/String;",
+        t if is_array_type(t) => match array_elem_type(t).as_deref() {
+            Some("i64") | Some("u64") => "[J",
+            Some("f64") => "[D",
+            Some("str") => "[Ljava/lang/String;",
+            _ => "[I",
+        },
         // LANG36: A closure is a `long[]` — descriptor is "[J".
         "closure" => "[J",
         _ => "I", // default for unknown — validator should have caught this
@@ -1911,7 +1917,7 @@ fn lower_function(
     module: &IIRModule,
     cp: &mut ConstantPoolBuilder,
     closure_dispatch: &HashMap<String, ClosureDispatchEntry>,
-    globals: &HashMap<String, String>,
+    globals: &HashMap<String, (String, String)>,
 ) -> Result<JvmMethodInfo, IIRJvmError> {
     let fname = &func.name;
 
@@ -4310,11 +4316,10 @@ fn lower_function(
                 emit_istore(&mut code, dest_slot);
             }
 
-            // ── global_load → getstatic <this>.G_N:J ; lstore (LANG-FULL E6) ─
+            // ── global_load → getstatic <this>.G_N:<descriptor> (LANG-FULL E6) ─
             //
-            // A module global is a `public static long G_N` field of this class
-            // (collected in `globals`). `getstatic` pushes its value, `lstore`
-            // writes it into the dest's long slot.
+            // Scalar globals retain their `long` field; array globals retain a
+            // concrete reference descriptor. `getstatic` pushes the typed value.
             "global_load" => {
                 let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),
@@ -4327,25 +4332,28 @@ fn lower_function(
                         detail: "global_load expects a string global name at srcs[0]".to_string(),
                     }),
                 };
-                let field_name = globals.get(gname).ok_or_else(|| IIRJvmError::InvalidOperand {
+                let (field_name, descriptor) = globals.get(gname).ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),
                     detail: format!("global_load: global {gname:?} was not collected (internal error)"),
                 })?;
                 let (dest_slot, dest_type) = lookup_var(dest_name)?;
-                let fref = cp.add_fieldref(class_name, field_name, "J");
+                let fref = cp.add_fieldref(class_name, field_name, descriptor);
                 code.push(GETSTATIC);
                 code.extend_from_slice(&fref.to_be_bytes());
-                // `getstatic J` pushes a long.  The field is always 64-bit, but the
-                // dest local may be a narrower `int` (an `integer` program
-                // concretised to i32) — narrow the long with `l2i` before `istore`,
-                // the mirror of the `i2l` widen on `global_store`.
-                if dest_type != JvmType::Long {
+                if descriptor == "J" && dest_type != JvmType::Long {
                     code.push(L2I);
+                } else if descriptor != "J" && dest_type != JvmType::Ref {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: format!(
+                            "global_load of reference field {gname:?} requires a Ref destination"
+                        ),
+                    });
                 }
                 emit_typed_store(&mut code, dest_slot, dest_type);
             }
 
-            // ── global_store → lload ; putstatic <this>.G_N:J (LANG-FULL E6) ──
+            // ── global_store → typed load ; putstatic <this>.G_N:<descriptor> ──
             "global_store" => {
                 let gname = match instr.srcs.first() {
                     Some(Operand::Str(s)) => s,
@@ -4361,17 +4369,23 @@ fn lower_function(
                         detail: "global_store expects a Var value at srcs[1]".to_string(),
                     }),
                 };
-                let field_name = globals.get(gname).ok_or_else(|| IIRJvmError::InvalidOperand {
+                let (field_name, descriptor) = globals.get(gname).ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),
                     detail: format!("global_store: global {gname:?} was not collected (internal error)"),
                 })?;
                 let (val_slot, val_type) = lookup_var(&val_src)?;
                 emit_typed_load(&mut code, val_slot, val_type);
-                // The field is `J` (long); widen an i32 value to long first.
-                if val_type != JvmType::Long {
+                if descriptor == "J" && val_type != JvmType::Long {
                     code.push(I2L);
+                } else if descriptor != "J" && val_type != JvmType::Ref {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: format!(
+                            "global_store of reference field {gname:?} requires a Ref value"
+                        ),
+                    });
                 }
-                let fref = cp.add_fieldref(class_name, field_name, "J");
+                let fref = cp.add_fieldref(class_name, field_name, descriptor);
                 code.push(PUTSTATIC);
                 code.extend_from_slice(&fref.to_be_bytes());
             }
@@ -5189,23 +5203,46 @@ pub fn lower_iir_to_jvm(
 
 /// Collect every distinct module-global name (read or written) into
 /// `(name → "G_N", [JvmFieldInfo])`, numbered in first-seen order across all
-/// functions (LANG-FULL E6 layer 1). Each global is a `public static long`
-/// field; the field name is index-based so an arbitrary source identifier can
-/// never form an invalid or colliding JVM field name.
-fn collect_global_fields(module: &IIRModule) -> (HashMap<String, String>, Vec<JvmFieldInfo>) {
-    let mut map: HashMap<String, String> = HashMap::new();
+/// functions (LANG-FULL E6 layer 1). Scalar globals remain `long`; array
+/// globals retain their concrete reference descriptor. Field names are
+/// index-based so an arbitrary source identifier can never collide.
+fn collect_global_fields(module: &IIRModule) -> (HashMap<String, (String, String)>, Vec<JvmFieldInfo>) {
+    let mut map: HashMap<String, (String, String)> = HashMap::new();
     let mut fields: Vec<JvmFieldInfo> = Vec::new();
     for f in &module.functions {
+        let mut types: HashMap<&str, &str> = f
+            .params
+            .iter()
+            .map(|(name, ty)| (name.as_str(), ty.as_str()))
+            .collect();
         for i in &f.instructions {
+            if let Some(dest) = &i.dest {
+                types.insert(dest, &i.type_hint);
+            }
             if i.op == "global_load" || i.op == "global_store" {
                 if let Some(Operand::Str(name)) = i.srcs.first() {
                     if !map.contains_key(name) {
                         let field_name = format!("G_{}", fields.len());
-                        map.insert(name.clone(), field_name.clone());
+                        let type_hint = if i.op == "global_load" {
+                            i.type_hint.as_str()
+                        } else {
+                            match i.srcs.get(1) {
+                                Some(Operand::Var(value)) => {
+                                    types.get(value.as_str()).copied().unwrap_or("i64")
+                                }
+                                _ => "i64",
+                            }
+                        };
+                        let descriptor = if is_array_type(type_hint) {
+                            type_to_jvm_descriptor(type_hint).to_string()
+                        } else {
+                            "J".to_string()
+                        };
+                        map.insert(name.clone(), (field_name.clone(), descriptor.clone()));
                         fields.push(JvmFieldInfo {
                             access_flags: ACC_PUBLIC | ACC_STATIC,
                             name: field_name,
-                            descriptor: "J".to_string(), // long
+                            descriptor,
                         });
                     }
                 }

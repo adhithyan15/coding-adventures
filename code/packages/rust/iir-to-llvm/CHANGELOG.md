@@ -1,5 +1,13 @@
 # Changelog — iir-to-llvm
 
+## 0.45.0 - 2026-07-30 - ALGOL captured-array globals
+
+`global_load` and `global_store` now infer a module-global storage type instead
+of assuming every global is an `i64`. Scalar globals retain their historical
+word slot; `array<T>` globals use `ptr`, preserving the array handle when an
+ALGOL procedure captures an enclosing array. The generated LLVM emits
+`internal global ptr null`, `load ptr`, and `store ptr` for those globals.
+
 ## 0.44.0 - 2026-07-30 - LANG-FULL E4-dyn runtime string ordering
 
 `str_cmp` now mirrors the established runtime `str_eq` path. Literal pairs still

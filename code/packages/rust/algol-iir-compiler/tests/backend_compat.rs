@@ -28,6 +28,8 @@ const ALGOL_RUNTIME_STRING_ORDERING: &str = "begin string s; integer result; str
 
 const ALGOL_STRING_ARRAY: &str = "begin string array words[1:2]; integer result; words[1] := 'HI'; words[2] := 'LO'; if words[1] < words[2] then result := 42 else result := 0; print(words[1]) end";
 
+const ALGOL_CAPTURED_ARRAY: &str = "begin integer array values[4:5]; integer result; procedure seed; begin values[4] := 40; values[5] := 2 end; seed; result := values[4] + values[5] end";
+
 fn compile_case(source: &str, module_name: &str) -> interpreter_ir::IIRModule {
     compile_source(source, module_name).expect("ALGOL source should compile")
 }
@@ -255,6 +257,40 @@ fn algol_string_array_lowers_to_every_standard_backend() {
     .expect("string array should lower to LLVM");
     assert!(llvm.contains("store i64"));
     assert!(llvm.contains("@__twig_str_cmp"));
+}
+
+#[test]
+fn algol_captured_array_lowers_to_every_standard_backend() {
+    let module = compile_case(ALGOL_CAPTURED_ARRAY, "algol_captured_array_backend_compat");
+
+    let wasm = iir_to_wasm::lower_iir_to_wasm(
+        &module,
+        &iir_to_wasm::IIRWasmConfig::new("AlgolCapturedArray"),
+    )
+    .expect("captured array should lower to WASM");
+    assert!(iir_to_wasm::encode_module(&wasm).expect("WASM should encode").starts_with(b"\0asm"));
+
+    let jvm = iir_to_jvm_class_file::lower_iir_to_jvm(
+        &module,
+        &iir_to_jvm_class_file::IIRJvmConfig::new("AlgolCapturedArray"),
+    )
+    .expect("captured array should lower to JVM");
+    assert!(jvm.fields.iter().any(|field| field.descriptor == "[J"));
+
+    let clr = iir_to_cil_bytecode::emit_il(
+        &module,
+        &iir_to_cil_bytecode::IIRClrConfig::new("AlgolCapturedArray"),
+    )
+    .expect("captured array should emit CLR IL");
+    assert!(clr.contains(".field public static int32[]"));
+
+    let llvm = iir_to_llvm::lower_iir_to_llvm(
+        &module,
+        &iir_to_llvm::IIRLlvmConfig::new("algol_captured_array"),
+    )
+    .expect("captured array should lower to LLVM");
+    assert!(llvm.contains("internal global ptr null"));
+    assert!(llvm.contains("load ptr, ptr @__twig_global"));
 }
 
 #[test]

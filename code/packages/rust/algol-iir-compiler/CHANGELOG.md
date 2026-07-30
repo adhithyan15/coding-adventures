@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.32.0 — 2026-07-30 — ALGOL captured arrays
+
+Procedures can now read and write arrays declared by their enclosing ALGOL
+block. The frontend globalizes the array handle together with each declared
+lower bound and row-major stride, so a procedure uses the declaration's real
+subscript space rather than assuming a zero-based one. This covers integer,
+real, and string arrays; array value parameters remain a separate call-ABI
+follow-up.
+
+The regression declares `integer array values[4:5]`, has a proper procedure
+write both elements, and reads them in the enclosing block. It executes to 42
+across Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
 ## 0.31.0 — 2026-07-30 — E4d-AL: string arrays
 
 ALGOL `string array` declarations now reuse the shared E5 `array<str>`
