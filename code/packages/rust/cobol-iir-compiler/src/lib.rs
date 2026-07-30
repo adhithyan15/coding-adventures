@@ -4616,8 +4616,10 @@ impl<'a> Compiler<'a> {
     /// length — a `ConvOperand::Item` in every downstream respect, since the slice
     /// register IS an alphanumeric string register of a static width (the const `len`,
     /// or `base_width - start + 1` when omitted). A numeric/group item (`item_index`
-    /// rejects a group/undeclared name; the `Numeric` arm rejects a numeric item), a
-    /// figurative constant, a numeric literal, and a *computed* reference modification
+    /// rejects a group/undeclared name; the `Numeric` arm rejects a numeric item). A
+    /// figurative constant SPACE / ZERO is accepted, mapped to the single-character
+    /// literal `" "` / `"0"` — reducing to the `ConvOperand::Literal` path in every
+    /// downstream respect. A numeric literal and a *computed* reference modification
     /// are clean later rungs — rejected with the SAME messages the oracle's
     /// `read_converting_operand`/`converting_operand_str` use, so both engines accept
     /// and reject the very same programs. `which` names the position
@@ -4669,11 +4671,13 @@ impl<'a> Compiler<'a> {
             Operandy::Literal(Src::Num(_)) => Err(CompileError::Unsupported(format!(
                 "INSPECT CONVERTING with a numeric-literal {which} operand is a later rung"
             ))),
-            Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
-                Err(CompileError::Unsupported(format!(
-                    "INSPECT CONVERTING with a figurative-constant {which} operand is a later rung"
-                )))
-            }
+            // A figurative constant SPACE / ZERO reduces to a single-character
+            // literal — SPACE→" " (0x20), ZERO→"0" (0x30), both ASCII — so it takes
+            // the exact `ConvOperand::Literal` path a string literal does: the
+            // equal-length check and the ASCII-literal guard below then apply
+            // unchanged. Mirrors the oracle's `read_converting_operand`.
+            Operandy::Literal(Src::Space) => Ok(ConvOperand::Literal(" ".into())),
+            Operandy::Literal(Src::Zero) => Ok(ConvOperand::Literal("0".into())),
         }
     }
 

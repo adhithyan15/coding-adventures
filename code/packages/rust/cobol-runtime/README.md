@@ -247,9 +247,10 @@ each leading run at its window start); and
 `INSPECT source CONVERTING from TO to` (translate each character
 of the alphanumeric source through a per-character table built from the two
 equal-length operands `from`/`to`, each a string LITERAL, a data-name
-(`PIC X` item) whose CURRENT storage supplies the set, **or** a CONSTANT
+(`PIC X` item) whose CURRENT storage supplies the set, a CONSTANT
 reference modification `base(start:len)` / `base(start:)` (both indices literal)
-whose slice supplies the set — any mix across the two sides — a character equal to
+whose slice supplies the set, **or** a figurative constant SPACE/ZERO (mapped to the
+single-character literal `" "`/`"0"`) — any mix across the two sides — a character equal to
 `from[k]` becomes `to[k]`, the **first (leftmost) occurrence winning** if `from`
 repeats a character, others left unchanged — **in place**, same width; a
 `from`/`to` that aliases the source is read before the rewrite so it sees the
@@ -298,9 +299,10 @@ deferred sub-form (a combined `TALLYING … FOR LEADING` and a combined `REPLACI
 LEADING`, in any combination, are now supported), `CONVERTING` with
 unequal-length
 `FROM`/`TO` (now including item widths and const-slice lengths), a numeric/group
-item as `from`/`to`, a figurative `from`/`to`, or a COMPUTED (data-name index)
-reference-modified `from`/`to` (a data-name `PIC X` item `from`/`to` and a CONSTANT
-reference-modified `from`/`to` `S(2:3)`/`S(2:)` are now supported), tables,
+item as `from`/`to`, or a COMPUTED (data-name index)
+reference-modified `from`/`to` (a data-name `PIC X` item `from`/`to`, a CONSTANT
+reference-modified `from`/`to` `S(2:3)`/`S(2:)`, and a figurative `from`/`to` SPACE/ZERO
+are now supported), tables,
 files,
 and every other verb) returns a descriptive `RuntimeError` — never wrong output.
 See PL08 for the roadmap toward full COBOL and later standards.

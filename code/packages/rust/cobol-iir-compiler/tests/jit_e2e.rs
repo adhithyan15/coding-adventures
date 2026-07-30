@@ -8791,6 +8791,117 @@ fn inspect_converting_non_ascii_char_outside_const_refmod_window() {
     assert_eq!(out, "ZXY\n");
 }
 
+// ---------------------------------------------------------------------------
+// INSPECT … CONVERTING with a FIGURATIVE-CONSTANT `from`/`to` operand — SPACE and
+// ZERO (the only figuratives in the model) are accepted, each mapped to the
+// single-character literal `" "` (0x20) / `"0"` (0x30). Both are ASCII, so the
+// mapping reduces to the EXISTING single-char Literal path in every downstream
+// respect: the equal-length check, the ASCII-literal guard, the convert loop, and
+// the BEFORE/AFTER region all apply unchanged. Pinned against the oracle here.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn inspect_converting_figurative_space_from() {
+    // `from` is the figurative SPACE (→ " "), `to` the literal "_": every space of
+    // "A B C" becomes "_" → "A_B_C". A figurative FROM reduces to the single-char
+    // literal path.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"A B C\"."],
+        &["INSPECT S CONVERTING SPACE TO \"_\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "A_B_C\n");
+}
+
+#[test]
+fn inspect_converting_figurative_zero_to() {
+    // `from` the literal "O", `to` the figurative ZERO (→ "0"): O→0 applied to "MOON"
+    // → "M00N". A figurative TO reduces to the single-char literal path.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"MOON\"."],
+        &["INSPECT S CONVERTING \"O\" TO ZERO.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "M00N\n");
+}
+
+#[test]
+fn inspect_converting_figurative_space_to() {
+    // `to` is the figurative SPACE (→ " "): X→space applied to "XAXA" → " A A" (a
+    // space wherever an X sat). Confirms a figurative TO maps to the blank correctly.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"XAXA\"."],
+        &["INSPECT S CONVERTING \"X\" TO SPACE.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, " A A\n");
+}
+
+#[test]
+fn inspect_converting_figurative_plural_spellings() {
+    // The reader folds every spelling of a figurative to the same `Fig`: SPACES == SPACE,
+    // ZEROS == ZEROES == ZERO. `SPACES TO ZEROS` and `SPACES TO ZEROES` therefore build
+    // the identical " "→"0" table: each space of "A B C" → "0" → "A0B0C".
+    let out_s = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"A B C\"."],
+        &["INSPECT S CONVERTING SPACES TO ZEROS.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out_s, "A0B0C\n");
+    let out_es = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"A B C\"."],
+        &["INSPECT S CONVERTING SPACES TO ZEROES.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out_es, "A0B0C\n");
+}
+
+#[test]
+fn inspect_converting_figurative_with_a_region() {
+    // A figurative operand narrowed by a `{BEFORE|AFTER}` region: SPACE→"_" but only
+    // BEFORE "Z". "A B Z" — the two spaces left of "Z" (indices 1 and 3) convert; the
+    // "Z" and anything right of it are untouched → "A_B_Z". The region guard composes
+    // with the figurative-as-literal table exactly as with a plain literal.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"A B Z\"."],
+        &["INSPECT S CONVERTING SPACE TO \"_\" BEFORE \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "A_B_Z\n");
+}
+
+#[test]
+fn inspect_converting_figurative_unequal_length_is_a_later_rung() {
+    // A figurative (length 1) paired with a length-2 literal has no well-defined table —
+    // the EXISTING equal-length check rejects it as a later rung on BOTH engines. "AB"
+    // (len 2) vs ZERO (→ "0", len 1).
+    let src = wrap(
+        &["01  S  PIC X(3) VALUE \"ABC\"."],
+        &["INSPECT S CONVERTING \"AB\" TO ZERO.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a figurative paired with an unequal-length literal");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a figurative paired with an unequal-length literal"
+    );
+}
+
+#[test]
+fn inspect_converting_figurative_all_ascii_characterization() {
+    // NON-ASCII PARITY note. SPACE and ZERO are the ONLY figuratives in the model, and
+    // both map to an inherently ASCII single-character literal (" " = 0x20, "0" = 0x30),
+    // so there is NO non-ASCII figurative OPERAND to exercise — the figurative operand
+    // this rung adds is always ASCII. A non-ASCII byte can still enter only through the
+    // SOURCE, and that is the PRE-EXISTING byte-vs-char SOURCE chip (task_396ba6f6): the
+    // compiler reconstructs each pass-through position with `str_slice(s, j, j+1)` on
+    // BYTE offsets, which traps on a multibyte char, while the char-based oracle
+    // succeeds — a disagreement OWNED by the shared source-reconstruction chip and
+    // UNCHANGED by this rung (it predates and is orthogonal to the figurative operand).
+    // The figurative rung's parity surface is therefore all-ASCII; this test pins the
+    // representative all-ASCII figurative-on-both-sides case through assert_matches_oracle
+    // — an all-space source "     " CONVERTING SPACE TO ZERO → "00000" (both `from` and
+    // `to` are figuratives, both mapped to single-char ASCII literals).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE SPACES."],
+        &["INSPECT S CONVERTING SPACE TO ZERO.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "00000\n");
+}
+
 #[test]
 fn inspect_converting_combined_with_replacing_is_rejected() {
     // CONVERTING is a STANDALONE INSPECT alternative — the grammar does not let it

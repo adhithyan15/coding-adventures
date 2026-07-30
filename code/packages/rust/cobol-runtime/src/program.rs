@@ -2049,9 +2049,11 @@ fn read_inspect_converting(
 /// becomes [`ConvertOperand::Item`] (its set is the item's CURRENT storage, read at
 /// exec time). A **constant** reference modification `base(start:len)` becomes
 /// [`ConvertOperand::RefMod`] — this rung LIFTS the old refmod reject for the const
-/// case. A figurative constant or numeric literal stays a later rung; a *computed*
-/// refmod (any data-name index) also stays a later rung. `which` names the position
-/// (`"from"`/`"to"`) for the diagnostic.
+/// case. A figurative constant SPACE / ZERO is now accepted, mapped to the
+/// single-character literal `" "` / `"0"` — it reduces to the [`ConvertOperand::Literal`]
+/// path in every downstream respect (equal-length check, ASCII guard, convert loop).
+/// A numeric literal stays a later rung; a *computed* refmod (any data-name index) also
+/// stays a later rung. `which` names the position (`"from"`/`"to"`) for the diagnostic.
 fn read_converting_operand(op: &GrammarASTNode, which: &str) -> Result<ConvertOperand, RuntimeError> {
     match read_operand(op)? {
         Operand::Lit(Lit::Str(s)) => Ok(ConvertOperand::Literal(s)),
@@ -2075,9 +2077,13 @@ fn read_converting_operand(op: &GrammarASTNode, which: &str) -> Result<ConvertOp
         Operand::Lit(Lit::Num(_)) => Err(RuntimeError::Unsupported(format!(
             "INSPECT CONVERTING with a numeric-literal {which} operand is a later rung"
         ))),
-        Operand::Lit(Lit::Fig(_)) => Err(RuntimeError::Unsupported(format!(
-            "INSPECT CONVERTING with a figurative-constant {which} operand is a later rung"
-        ))),
+        // A figurative constant SPACE / ZERO reduces to a single-character literal
+        // (`" "` = 0x20 / `"0"` = 0x30 — both ASCII), reusing the ENTIRE Literal path:
+        // the equal-length check and the ASCII-literal guard below both already handle a
+        // 1-char ASCII literal. `Fig` has exactly Space and Zero, so this is exhaustive
+        // for the figurative case. Mirrors the compiler's `converting_operand`.
+        Operand::Lit(Lit::Fig(Fig::Space)) => Ok(ConvertOperand::Literal(" ".into())),
+        Operand::Lit(Lit::Fig(Fig::Zero)) => Ok(ConvertOperand::Literal("0".into())),
     }
 }
 
