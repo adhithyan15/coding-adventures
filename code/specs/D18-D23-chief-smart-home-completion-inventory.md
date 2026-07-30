@@ -250,6 +250,26 @@ network I/O into the Chief bridge:
   HTTP response, simulated Vault handoff, runtime session completion, and an
   assertion that raw Hue credentials are absent from audit metadata.
 
+## Current Hue Pairing Service Slice
+
+This slice runs the physical-presence registration exchange through production
+host boundaries and durable secret storage:
+
+- `smart-home-hue-pairing-service` owns the D23 runtime, an injectable Hue
+  registration transport, and the repository's sealed Vault store inside one
+  actor state.
+- The production transport executes bounded HTTP/1 over LAN TCP or the shared
+  TLS platform. HTTPS remains certificate-verifying and accepts caller-supplied
+  Hue trust roots instead of silently disabling verification.
+- A pending D23 session drives the canonical `/api` registration request,
+  successful application and client keys are encrypted at rest, and D23
+  receives only a random `VaultRef`.
+- If runtime completion fails after the Vault write, the service attempts a
+  revision-bound rollback so an unusable credential is not left behind.
+- Real loopback-network and local-folder restart tests prove the request reaches
+  LAN I/O, credentials survive a Vault restart, and raw secrets never enter
+  runtime state, event metadata, actor snapshots, or pairing reports.
+
 ## Chief Of Staff Remaining Work
 
 The Chief host-profile slice now provides JSON orchestrator profiles, isolated
@@ -329,10 +349,6 @@ These items are Chief of Staff architecture, not smart-home platform work:
 
 These items move toward retiring an existing Home Assistant install:
 
-- Finish production Hue pairing by connecting the local HTTP registration plan
-  to the worker that presses through real LAN I/O and durable Vault writes. The
-  typed request/response/VaultRef handoff and runtime no-secret audit trail now
-  exist.
 - Add real Hue local HTTP command/read workers and Hue event-stream workers
   behind the existing runtime surfaces.
 - Persist registry, state cache, event history, command history, pairing

@@ -7,6 +7,7 @@
 
 #![forbid(unsafe_code)]
 
+use coding_adventures_zeroize::Zeroize;
 use smart_home_core::{
     Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, Device, DeviceId, Entity,
     EntityId, EntityKind, Health, IntegrationDescriptor, IntegrationId, Metadata, ProtocolFamily,
@@ -1284,6 +1285,15 @@ impl HueApplicationCredentials {
                 ),
                 Metadata::new("hue.pairing.stored_at_ms", stored_at_ms.to_string()),
             ],
+        }
+    }
+}
+
+impl Drop for HueApplicationCredentials {
+    fn drop(&mut self) {
+        self.application_key.zeroize();
+        if let Some(client_key) = &mut self.client_key {
+            client_key.zeroize();
         }
     }
 }

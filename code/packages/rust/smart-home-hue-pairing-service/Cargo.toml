@@ -1,0 +1,25 @@
+[package]
+name = "smart-home-hue-pairing-service"
+version = "0.1.0"
+edition = "2021"
+description = "Actor-owned Hue LAN pairing with durable sealed Vault credentials"
+license = "MIT"
+
+[dependencies]
+actor = { path = "../actor" }
+coding_adventures_csprng = { path = "../csprng" }
+coding_adventures_vault_sealed_store = { path = "../vault-sealed-store" }
+coding_adventures_zeroize = { path = "../zeroize" }
+http-core = { path = "../http-core" }
+http1 = { path = "../http1" }
+hue-core = { path = "../hue-core" }
+serde_json = "1"
+smart-home-core = { path = "../smart-home-core" }
+smart-home-local-http = { path = "../smart-home-local-http" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+tls-platform = { path = "../tls-platform" }
+url-parser = { path = "../url-parser" }
+
+[dev-dependencies]
+storage-core = { path = "../storage-core" }
+storage-local-folder = { path = "../storage-local-folder" }
