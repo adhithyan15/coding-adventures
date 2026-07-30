@@ -1,5 +1,124 @@
 # Changelog
 
+## 0.51.6 — Axiom's three reserved SIR23 heads gain a real JS evaluator (MA13/Wave 7 close-out)
+
+**Wires `__axiom_declare`/`__axiom_coerce`/`__axiom_has`** — the three
+reserved head names `axiom-to-semantic-ir::lower` defines locally (never
+added to shared `semantic-ir`/`symbolic-ir`) for Axiom's `:`/`::`/`has`
+constructs (MA13 §2/§3/§4) — into `Symbolic.evalTerm`'s existing dispatch
+tables, following the exact same "narrow, additive dispatch-table entry"
+pattern every prior CAS-family addition here used (Derive's own
+`SIR_DISPLAY_DERIVE` display convention, J's `tally`/`replicate`/`exp`
+builtins, Q's `SIR_DISPLAY_Q_ASCII_MINUS` convention). Confirmed by direct
+inspection of `axiom-to-semantic-ir`'s own `src/lower.rs` (not assumed from
+the task's own suggestion of extending the separate, evaluator-less
+`sir-runtime-symbolic` npm package) that this crate's inline `RUNTIME` blob
+— not that package — is the actual JS-backend SIR23 evaluator.
+
+### Added
+
+- `HELD_HEADS` gains `__axiom_declare`/`__axiom_coerce`/`__axiom_has`
+  (alongside `Assign`/`Define`/`If`) — each has at least one argument
+  position that must not be evaluated as an ordinary variable reference
+  before dispatch (a declared name, a domain/category type expression).
+- A JS-side port of `axiom-runtime::domains`'s fixed, non-extensible
+  `AxiomDomain`/`AxiomCategory` table (`axiomParseTypeSpec`,
+  `axiomResolveDomain`, `axiomResolveCategory`, `axiomDomainHasCategory`,
+  `axiomIsPolynomialOverIntegers`, `axiomCoerceValue`,
+  `axiomDomainDisplayName`) — every error message copied VERBATIM from its
+  Rust counterpart, so a coercion/declaration/has-query rejection reads
+  identically on both the native and compiled path for any ATOMIC operand
+  (confirmed by `axiom-to-semantic-ir/tests/oracle.rs`'s own failing-case
+  entries).
+- `axiomDeclareHandler` (`__axiom_declare(List(name, ...), typeExpr)`):
+  resolves `typeExpr` against the fixed domain table and records `name ->
+  domain` in a new `axiomDeclaredDomains` map (both arguments held — a
+  declared name is never a variable read, mirroring
+  `axiom-runtime::eval_declaration`'s identical treatment); returns the
+  `True` symbol, matching that function's own disclosed presentation
+  convention.
+- `axiomCoerceHandler` (`__axiom_coerce(value, typeExpr)`): evaluates
+  `value` (real Axiom's own `(a + b) :: Float` coerces a COMPUTED value),
+  leaves `typeExpr` held, and throws the book's own confirmed
+  coercion-failure phrasing on a rejected coercion.
+- `axiomHasHandler` (`__axiom_has(domainTypeExpr, categoryTypeExpr)`):
+  both arguments held; returns the `True`/`False` symbol from the fixed
+  membership table. Confirmed against the book's own two worked examples:
+  `Polynomial(Integer) has Ring` → `true`, `List(Integer) has Ring` →
+  `false`.
+- **`assignHandler`'s own small, disclosed cross-head addition**: consults
+  the new `axiomDeclaredDomains` map (populated only by
+  `axiomDeclareHandler`) and, when a declared-domain constraint exists for
+  the assignment's left-hand name, coerces the right-hand value against it
+  — throwing the book's own confirmed assignment-mismatch error text on
+  failure. A faithful port of `axiom-runtime::eval_assignment`'s own
+  identical design (that function ALSO consults a private `declared`
+  table when handling what is otherwise the shared `:=` construct) — not
+  a new mechanism. Gated entirely on the new map staying empty for every
+  OTHER source language and for any Axiom program with no prior `a : T`
+  declaration for that name, so this is a no-op everywhere else (confirmed:
+  no other frontend in this repo emits `__axiom_declare`).
+- A SIXTH, independent display-convention flag, `SIR_DISPLAY_AXIOM_BOOLEAN`
+  (`emit.rs`/`runtime.rs`) — `true` only when the module's
+  `source_language` is Axiom. Gates a single, narrow spot inside
+  `Symbolic.toDisplayString`'s generic `"symbol"` case so the shared
+  comparison/logic/`has`-query handlers' `True`/`False` symbols render
+  real Axiom's own lowercase `true`/`false` convention
+  (`axiom-runtime::value::print_axiom`'s own render()). Deliberately
+  narrower than `SIR_DISPLAY_DERIVE` (which gates the WHOLE stringifier):
+  Axiom still has no infix/bracket display convention of its own for a
+  COMPOUND term — a disclosed, pre-existing "finding five"-class gap,
+  same as every other CAS-family language without a full
+  `SIR_DISPLAY_<LANG>` printer (see `axiom-to-semantic-ir/tests/
+  oracle.rs`'s own module doc for the one corpus case this affects).
+- `tests/sir23_axiom.rs` (new file, 9 tests): hand-built-SIR-then-run-
+  under-`node` unit tests for the three new handlers in isolation, with
+  no dependency on `axiom-to-semantic-ir` — mirrors `tests/
+  sir23_symbolic.rs`'s own pattern exactly. Covers: declare
+  success/failure, coerce success/failure, both book-confirmed `has`
+  examples, declare-then-matching-assign, declare-then-mismatched-assign,
+  and a regression guard that an undeclared name's assignment stays
+  completely unrestricted (confirming the `assignHandler` addition's
+  narrowness).
+- Two new `#[cfg(test)]` regression tests in `src/runtime.rs` pinning the
+  new flag and the three heads' wiring into `HELD_HEADS`/`HANDLERS`/
+  `HELD_HANDLERS`.
+
+### Security (caught by `/security-review` before push)
+
+- **MEDIUM — missing recursion-depth guard.** The six new Axiom
+  domain/category functions (`axiomParseTypeSpec`, `axiomResolveDomain`,
+  `axiomIsPolynomialOverIntegers`, `axiomCoerceValue`,
+  `axiomDomainDisplayName`) were plain recursion with no cap — a real
+  inconsistency with this file's own `MAX_TERM_DEPTH`/`MAX_EVAL_DEPTH`
+  discipline. `axiomCoerceHandler` hands `axiomCoerceValue`/
+  `axiomIsPolynomialOverIntegers` an already-*evaluated* value that only
+  went through `evalTerm`'s own depth cap on the EVALUATION recursion,
+  not a cap on the resulting term's SIZE — `evalTerm`'s own doc comment
+  already establishes "a shallow compiled program can still build an
+  arbitrarily deep runtime value." Fixed: every one of the five functions
+  now threads an explicit `depth` parameter and reuses the existing
+  `MAX_TERM_DEPTH` (512) cap `toDisplayString`/`termEquals` already use
+  (the same justified reuse those two functions' own comments already
+  established, not a fresh measurement) — returning a safe default
+  (`false`/`null`/`"..."`) or throwing a clean, catchable error past the
+  cap, never an uncaught native stack overflow.
+
+### Verification
+
+- `cargo test` (this crate): 284 tests, 0 failed (147 lib + 94
+  `run_with_node` + 12 `sir22_array` + 9 new `sir23_axiom` + 4
+  `sir23_eval_depth_guard` + 17 `sir23_symbolic` + 1 `compile_and_run_case_eq`).
+- Downstream consumers re-run after this change (this file is shared by
+  every SIR23/SIR22 frontend): `derive-to-semantic-ir`,
+  `reduce-to-semantic-ir`, `macsyma-to-semantic-ir`,
+  `wolfram-to-semantic-ir`, `maple-to-semantic-ir`, `apl-to-semantic-ir`,
+  `j-to-semantic-ir`, `q-to-semantic-ir`, `idl-to-semantic-ir`,
+  `sir-conformance` — all green, 0 failed. The change is additive (new
+  consts, new dispatch-table entries, one new conditional branch in
+  `assignHandler` gated on a map that stays empty for every one of these
+  languages), so this is confirmatory, not merely hopeful.
+
 ## 0.51.5 — `is_js_reserved` was missing `eval`/`arguments` (task #110)
 
 **Not a syntactic-keyword gap — a strict-mode contextual-reserved-word

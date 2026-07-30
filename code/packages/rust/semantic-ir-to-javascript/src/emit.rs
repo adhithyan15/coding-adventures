@@ -171,7 +171,16 @@ pub fn emit_module(m: &Module) -> String {
     // below never need to arbitrate between them — only one can ever be
     // `true` for a given module.
     //
-    // SECURITY: all five replacement values MUST remain a hardcoded literal
+    // A SIXTH, independent placeholder (MA13/Wave 7 close-out): `true` when
+    // the module's `source_language` is Axiom, else `false`. Gates
+    // `Symbolic.toDisplayString`'s `"symbol"` case (see `runtime.rs`'s
+    // `SIR_DISPLAY_AXIOM_BOOLEAN` for the full writeup) so the shared
+    // comparison/logic/`has`-query handlers' `True`/`False` symbols render
+    // real Axiom's own lowercase `true`/`false` convention. Mutually
+    // exclusive with the five flags above by construction (all six are
+    // computed from the same single `source_language` field).
+    //
+    // SECURITY: all six replacement values MUST remain a hardcoded literal
     // selected by a boolean — never text derived from `source_language` or
     // any other source-controlled field — so this substitution can never
     // inject into the emitted JavaScript.
@@ -180,6 +189,7 @@ pub fn emit_module(m: &Module) -> String {
     let display_j_underscore = m.metadata.source_language.as_deref() == Some("j");
     let display_derive = m.metadata.source_language.as_deref() == Some("derive");
     let display_q_ascii_minus = m.metadata.source_language.as_deref() == Some("q");
+    let display_axiom_boolean = m.metadata.source_language.as_deref() == Some("axiom");
     out.push_str(
         &RUNTIME
             .replace(
@@ -201,6 +211,10 @@ pub fn emit_module(m: &Module) -> String {
             .replace(
                 "__SIR_DISPLAY_Q_ASCII_MINUS__",
                 if display_q_ascii_minus { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_AXIOM_BOOLEAN__",
+                if display_axiom_boolean { "true" } else { "false" },
             ),
     );
     emit_ancestry_registration(&mut out, m);

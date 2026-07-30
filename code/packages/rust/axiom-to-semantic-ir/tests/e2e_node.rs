@@ -16,24 +16,27 @@
 //! instead that every one of these programs compiles to JavaScript that
 //! `node` actually executes without throwing.
 //!
-//! # `__axiom_declare`/`__axiom_coerce`/`__axiom_has` are proven RUNNABLE,
-//! not (yet) evaluable
+//! # `__axiom_declare`/`__axiom_coerce`/`__axiom_has` are now REALLY
+//! evaluated, not just proven runnable
 //!
-//! Per `src/lower.rs`'s own disclosed design decision, this repo's shared JS
-//! backend has no evaluation handler for these three reserved heads today
-//! (deferred to the follow-on oracle-testing task) — but that only means the
-//! compiled program constructs inert `__Sir.Symbolic.apply("__axiom_declare",
-//! …)`-shaped data rather than performing a real domain check; it does not
-//! mean the compiled program fails to run. The tests below include
-//! `:`/`::`/`has` programs for exactly that reason, mirroring
-//! `maple-to-semantic-ir`'s own `Set` construct (also no shared evaluator,
-//! also proven to run cleanly as pure data construction).
+//! UPDATE (Wave 7 close-out): `semantic-ir-to-javascript`'s shared JS
+//! backend now has a real evaluation handler for all three reserved heads
+//! (`axiomDeclareHandler`/`axiomCoerceHandler`/`axiomHasHandler`, a JS-side
+//! port of `axiom-runtime::domains`'s fixed `AxiomDomain`/`AxiomCategory`
+//! table — see that crate's `src/runtime.rs` for the full design). The
+//! three tests below therefore now assert on the printed VALUE, not just
+//! "node exited zero" — the genuine end-to-end oracle diff against
+//! `axiom-runtime` itself lives in `tests/oracle.rs`, which additionally
+//! covers the FAILING half of `:`/`::` (an invalid domain name, a
+//! subdomain-predicate mismatch) that this file's own "runs cleanly, no
+//! crash" framing does not attempt.
 
 use std::fs::OpenOptions;
 use std::io::Write as _;
 use std::process::Command;
 
 use coding_adventures_axiom_to_semantic_ir::compile_source;
+use semantic_ir::{EffectSet, Expr, Module, Stmt};
 
 fn node_available() -> bool {
     Command::new("node")
@@ -43,6 +46,8 @@ fn node_available() -> bool {
         .unwrap_or(false)
 }
 
+/// Compile `src`, validate, emit JS, write to a temp file, and run it under
+/// `node`, asserting a clean exit.
 fn run_via_node(name: &str, src: &str) {
     let module = compile_source(src, "prog").expect("lowering should succeed");
     let report = semantic_ir::validate(&module);
@@ -76,6 +81,66 @@ fn run_via_node(name: &str, src: &str) {
         "node failed for {name}: stderr=\n{}",
         String::from_utf8_lossy(&output.stderr)
     );
+}
+
+/// Wrap `src`'s ONE top-level expression in `print(...)` before compiling —
+/// the harness-only observability pattern every sibling SIR23 oracle file
+/// uses (`wrap_top_level_in_print`), needed here ONLY for the three tests
+/// below that now assert on a printed VALUE rather than merely "ran
+/// cleanly". Simpler than `tests/oracle.rs`'s own
+/// `wrap_axiom_top_level_for_observation` (which additionally unrolls a
+/// top-level `CompoundExpression` block) because none of these three
+/// sources is a `;`-block.
+fn run_via_node_expecting(name: &str, src: &str, expected_stdout: &str) {
+    let mut module = compile_source(src, "prog").expect("lowering should succeed");
+    let report = semantic_ir::validate(&module);
+    assert!(
+        report.is_ok(),
+        "SIR validation failed for {name}: {:?}",
+        report.issues
+    );
+    wrap_whole_statement_in_print(&mut module);
+    let artifact = semantic_ir_to_javascript::compile(&module).expect("backend emit should succeed");
+
+    let mut path = std::env::temp_dir();
+    path.push(format!("axiom_sir_e2e_{name}_{}.js", std::process::id()));
+    let mut file = OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(&path)
+        .expect("create temp js (create_new, not following an existing symlink)");
+    file.write_all(artifact.source.as_bytes()).expect("write temp js");
+    drop(file);
+
+    let output = Command::new("node").arg(&path).output().expect("spawn node");
+    let _ = std::fs::remove_file(&path);
+
+    assert!(
+        output.status.success(),
+        "node failed for {name}: stderr=\n{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert_eq!(stdout.trim_end_matches(['\n', '\r']), expected_stdout, "for {name}");
+}
+
+fn wrap_whole_statement_in_print(module: &mut Module) {
+    for f in &mut module.functions {
+        if f.name != "main" {
+            continue;
+        }
+        for stmt in &mut f.body.stmts {
+            if let Stmt::ExprStmt { expr, span } = stmt {
+                let inner = std::mem::replace(expr, Expr::NilLit { span: span.clone() });
+                *expr = Expr::BuiltinCall {
+                    name: "print".to_string(),
+                    args: vec![inner],
+                    effects: EffectSet::PURE,
+                    span: span.clone(),
+                };
+            }
+        }
+    }
 }
 
 #[test]
@@ -145,30 +210,30 @@ fn a_multi_statement_block_runs_in_node() {
 }
 
 #[test]
-fn a_declaration_runs_in_node_as_inert_data() {
+fn a_declaration_evaluates_to_lowercase_true() {
     if !node_available() {
-        eprintln!("skipping a_declaration_runs_in_node_as_inert_data: `node` not available");
+        eprintln!("skipping a_declaration_evaluates_to_lowercase_true: `node` not available");
         return;
     }
-    run_via_node("declaration", "a : PositiveInteger");
+    run_via_node_expecting("declaration", "a : PositiveInteger", "true");
 }
 
 #[test]
-fn a_coercion_runs_in_node_as_inert_data() {
+fn a_coercion_evaluates_and_prints_the_coerced_value() {
     if !node_available() {
-        eprintln!("skipping a_coercion_runs_in_node_as_inert_data: `node` not available");
+        eprintln!("skipping a_coercion_evaluates_and_prints_the_coerced_value: `node` not available");
         return;
     }
-    run_via_node("coercion", "3 :: Fraction(Integer)");
+    run_via_node_expecting("coercion", "3 :: Fraction(Integer)", "3");
 }
 
 #[test]
-fn a_has_query_runs_in_node_as_inert_data() {
+fn a_has_query_evaluates_to_the_books_own_confirmed_answer() {
     if !node_available() {
-        eprintln!("skipping a_has_query_runs_in_node_as_inert_data: `node` not available");
+        eprintln!("skipping a_has_query_evaluates_to_the_books_own_confirmed_answer: `node` not available");
         return;
     }
-    run_via_node("has_query", "Polynomial(Integer) has Ring");
+    run_via_node_expecting("has_query", "Polynomial(Integer) has Ring", "true");
 }
 
 #[test]
