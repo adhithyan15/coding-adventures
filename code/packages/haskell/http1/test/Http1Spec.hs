@@ -184,6 +184,10 @@ spec = do
         `shouldBe` Left InvalidStartLine
       parseResponse "HTTP/1.1\r\n\r\n"
         `shouldBe` Left InvalidStartLine
+      parseResponse "HTTP/1.1 200 \r\n\r\n"
+        `shouldBe` Left InvalidStartLine
+      parseResponse "HTTP/1.1 200  OK\r\n\r\n"
+        `shouldBe` Left InvalidStartLine
 
     it "distinguishes invalid request and response versions" $ do
       parseRequest "GET / HTTP/1\r\n\r\n"
@@ -304,6 +308,8 @@ spec = do
       parseRequest manyHeaders `shouldBe` Left TooManyHeaders
       parseRequest manyCodings `shouldBe` Left TooManyTransferCodings
       parseRequest oversizedIncomplete `shouldBe` Left HeadTooLarge
+      parseRequest (replicate 8193 'x') `shouldBe` Left LineTooLong
+      parseRequest (replicate 8192 'x' ++ "\r") `shouldBe` Left IncompleteHead
 
     it "never retains raw request targets or field values in errors" $ do
       let targetSecret =
