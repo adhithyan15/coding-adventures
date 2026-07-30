@@ -1,6 +1,6 @@
 [package]
 name = "twig-aot"
-version = "0.48.0"
+version = "0.48.1"
 edition = "2021"
 description = "Twig AOT compiler — produces native Mach-O / ELF executables from Twig source. v0.28.0 (E4d-4 fix): strip_dead_aot_string_allocs now keeps EVERY buffer bound to a live string alias — a branch-selected (multi-block) str var aliases several buffers, and the old alias-keyed map dropped all but the last, so a not-last branch read a freed/empty buffer at run time. v0.27.0 (E4-dyn E4d-4): runtime (branch-selected) strings on the native aarch64 + x86_64 columns — a str var assigned by str_const in >1 basic block is kept out of the compile-time literal map so print_str/str_len read the length from the [i64 len][bytes] buffer header at run time (field_load) instead of folding one branch's static length; the var's stack slot already carries the buffer address. v0.26.0 (E4-dyn E4d-1): runtime string helpers __twig_str_concat/_slice/_index/_len/_cmp in twig_runtime.c on the E5 length-prefixed heap block; bounds-trap on slice/index; C-driver unit tests."
 

@@ -74,7 +74,17 @@ fn closures_run_on_native() {
         Some(c) => assert_eq!(c, 42, "capture-free closure on native"),
         None => { eprintln!("native AOT unsupported on host — skipping"); return; }
     }
+    // One capture: the curried adder captures `x` in the inner lambda.
     assert_eq!(run_native("(((lambda (x) (lambda (y) (+ x y))) 40) 2)", "e6d7a_n2"), Some(42));
+    // Two captures: the inner lambda captures both `a` and `b`, so the synthesized
+    // dispatcher must `car`/`cdr`-walk two entries of the captured-env cons chain
+    // before the call-time arg — the multi-capture path the one-capture case can't
+    // reach. (10 + 20) + 12 = 42.
+    assert_eq!(
+        run_native("(((lambda (a b) (lambda (c) (+ (+ a b) c))) 10 20) 12)", "e6d7a_n3"),
+        Some(42),
+        "two-capture closure on native (dispatcher walks a 2-entry captured env)",
+    );
 }
 
 

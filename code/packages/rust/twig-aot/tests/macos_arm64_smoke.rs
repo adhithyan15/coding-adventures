@@ -1089,3 +1089,164 @@ fn backend_pipeline_produces_bytes_for_simple_function() {
     assert!(!bytes.is_empty());
     assert_eq!(bytes.len() % 4, 0, "ARM64 instructions are 4-byte aligned");
 }
+
+/// AOT00 closures-under-the-GC capstone — a **native closure's captured
+/// environment survives a garbage collection and the closure remains callable**.
+///
+/// This ties the two halves of the Twig-native-GC directive together. Native
+/// closures already compile via `iir-builtin-lowering::lower_closures_to_heap`
+/// (E6d-7a): `alloc_closure(fn, cap0, …)` lowers to a cons chain
+/// `(box(idx) . (cap0 . … . nil))` built with `__dyn_cons` — the *same*
+/// GC-managed, kind-`{0,8}`, precise-and-movable cons cell every list uses — and
+/// `call_closure` lowers to a `call` into a synthesized `__dyn_call_closure`
+/// dispatcher that `car`/`cdr`-walks the captured environment and directly calls
+/// the statically-known body. So a closure's captured values already live *in the
+/// GC heap*. What this test proves end to end on real hardware is that a collection
+/// occurring **while a closure is live** neither frees nor corrupts that captured
+/// environment: the closure is still invocable afterwards and returns the value it
+/// captured *before* the collect.
+///
+/// ```text
+///   __cap_id(x, y) -> any: ret x        ; captures x, ignores its arg, returns x
+///
+///   main() -> i64:
+///       cap = dyn_box_int(41)           ; the captured value, boxed → `any`
+///       clo = alloc_closure(__cap_id, cap)   ; a closure capturing 41
+///       a   = gc_alloc(64)              ; an unrooted i64 look-alike (reclaimable)
+///       <collect>                       ; runs while `clo` is a live precise root
+///       arg = dyn_box_int(0)            ; the (ignored) call argument
+///       r   = call_closure(clo, arg)    ; __cap_id(41, 0) = 41 — reads the CAPTURE
+///       ret dyn_to_exit_code(r)         ; 41
+/// ```
+///
+/// After `lower_closures_to_heap`, `clo` is a `ref<any>` cons chain held live
+/// across the collect call, so the precise stack map names it as a root and the
+/// whole `(idx . (cap . nil))` structure — including the captured `41` — must
+/// survive. Returning **41** proves it did *and* that the dispatcher still resolves
+/// the captured value at its (possibly relocated) address. A wrong value or a crash
+/// would mean the collect dropped or mangled the live captured environment — a
+/// closure-specific use-after-free that the bare-cons-cell survival tests above do
+/// not exercise (they never build or *call* a closure). Run under both the
+/// non-moving precise collect and the moving compacting collect; a no-collect
+/// baseline pins the expected value independently of the GC.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_closure_captured_env_survives_collect() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    // The lambda body: two params in lambda-lifting order (capture first, then the
+    // call arg); returns the captured param, ignoring the argument. Kept
+    // arithmetic-free so the test isolates *capture survival*, not dynamic `+`.
+    fn cap_id() -> IIRFunction {
+        IIRFunction::new(
+            "__cap_id",
+            vec![("x".into(), "any".into()), ("y".into(), "any".into())],
+            "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "any")],
+        )
+    }
+
+    // `collect`: Some(builtin) inserts that collection while the closure is live;
+    // None is the no-collect baseline.
+    fn build(collect: Option<&str>) -> IIRModule {
+        let mut body = vec![
+            // The captured value 41, boxed into an `any`.
+            IIRInstr::new("const", Some("k41".into()), vec![Operand::Int(41)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("cap".into()),
+                vec![Operand::Var("dyn_box_int".into()), Operand::Var("k41".into())],
+                "any",
+            ),
+            // A closure capturing 41. `lower_closures_to_heap` turns this into a
+            // cons chain `(box(idx) . (cap . nil))` built with `__dyn_cons`.
+            IIRInstr::new(
+                "alloc_closure",
+                Some("clo".into()),
+                vec![Operand::Str("__cap_id".into()), Operand::Var("cap".into())],
+                "closure",
+            ),
+            // An unrooted i64 look-alike: garbage a precise/compacting collect frees.
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(64)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("garbage".into()),
+                vec![Operand::Var("gc_alloc".into()), Operand::Var("n".into())],
+                "i64",
+            ),
+        ];
+        // Collect while `clo` (and, through it, the captured 41) is live.
+        if let Some(c) = collect {
+            body.push(IIRInstr::new(
+                "call_builtin",
+                Some("freed".into()),
+                vec![Operand::Var(c.into())],
+                "i64",
+            ));
+        }
+        body.extend([
+            // Call the closure. The (ignored) argument is a boxed 0.
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("arg".into()),
+                vec![Operand::Var("dyn_box_int".into()), Operand::Var("z".into())],
+                "any",
+            ),
+            IIRInstr::new(
+                "call_closure",
+                Some("r".into()),
+                vec![Operand::Var("clo".into()), Operand::Var("arg".into())],
+                "any",
+            ),
+            // Coerce the polymorphic closure result to the process exit code.
+            IIRInstr::new(
+                "call_builtin",
+                Some("e".into()),
+                vec![Operand::Var("dyn_to_exit_code".into()), Operand::Var("r".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("e".into())], "i64"),
+        ]);
+
+        let mut m = IIRModule::new("gc_closure_capture", "twig");
+        m.add_or_replace(cap_id());
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: Option<&str>| -> i32 {
+        let m = build(collect);
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&m, &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    // Baseline: no collection — the closure round-trips its captured 41.
+    let baseline = run("gc_clo_base", None);
+    assert_eq!(baseline, 41, "baseline: a native closure must return its captured value (got {baseline})");
+
+    // Precise (non-moving) collect while the closure is live: the captured
+    // environment must survive and the closure must still return 41.
+    let precise = run("gc_clo_prec", Some("gc_collect_precise"));
+    assert_eq!(
+        precise, 41,
+        "a precise collect while the closure is live must KEEP its captured environment \
+         — the closure still returns 41 (got {precise}); a wrong value/crash is a \
+         closure-capture use-after-free",
+    );
+
+    // Compacting (moving) collect: the closure's cons cells may relocate; every
+    // reference — including the dispatcher's walk of the captured env — must be
+    // fixed up, so the closure still returns 41.
+    let compacting = run("gc_clo_comp", Some("gc_collect_compacting"));
+    assert_eq!(
+        compacting, 41,
+        "a compacting collect must relocate the closure's captured environment and fix up \
+         every reference — the closure still returns 41 (got {compacting})",
+    );
+}
