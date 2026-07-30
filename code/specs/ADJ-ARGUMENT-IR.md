@@ -263,9 +263,15 @@ grounding payload the §3 gate checks. Final syntax fixed in ADR-2.
   argument IS facts + rules, so the existing machinery re-checks it. **Follow-ups:** the *adversarial*
   warrant re-refutation (§3.2, which is model-in-the-loop) and rendering the argument chain in
   `--explain` (an SLD proof chain — distinct from the differential/compute trace `--explain` renders).
-- **ADR-5 — worked research-paper decomposition end-to-end:** a real (open-access) paragraph →
-  argument graph → engine derives the thesis → `--explain` → `adj-verify --snapshots`, one
-  cross-domain example (deliberately non-medical), proving the whole pipeline on unseen prose.
+- **ADR-5 — worked paragraph decomposition end-to-end** ✅ **shipped** (the **closing rung** —
+  the arc is now spec → surface → grounding gate → verify → worked example, complete): a technical
+  paragraph (`code/specs/data/adj-argument-ir/axle-fatigue.source.txt`, illustrative, non-medical)
+  → an `argument` (`axle-fatigue.adj`, 4 premises + 2 inferences, each citing a *verbatim slice* of
+  the paragraph via `quote "…" at <offset> snapshot "<hex>"`) → `adj-lang-cli` **derives** the
+  thesis `failed_by(axle, fatigue)` → `adj-verify --snapshots` **byte-anchors all six citations**
+  (`quotes_verified: 6`) and re-derives the thesis. Driven by `argument_worked_example_e2e.rs`;
+  see the directory `README.md`. The argument a paragraph makes is a program the engine runs, every
+  step auditable back to the paragraph's own bytes.
 - **Later:** the trained decomposer that *emits* this adj-lang from prose (reuses the F3 training
   harness, retargeted from closed-vocab findings to the open-vocab argument surface); multi-
   paragraph / whole-paper composition (a paper is a DAG of paragraph arguments sharing conclusions).
