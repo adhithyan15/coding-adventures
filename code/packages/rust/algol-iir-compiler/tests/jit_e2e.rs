@@ -213,3 +213,29 @@ fn algol_runtime_string_local_program_runs_through_generic_jit() {
     }
     assert_eq!(result.as_i64(), Some(42));
 }
+
+#[test]
+fn algol_runtime_string_ordering_program_runs_through_generic_jit() {
+    let source = "begin string s; integer result; \
+                  string procedure pick(n); value n; integer n; \
+                    if n > 0 then pick := 'HI' else pick := 'LO'; \
+                  s := pick(1); \
+                  if s < 'LO' then result := 42 else result := 0; \
+                  print(s) end";
+    let mut module = compile_source(source, "algol_runtime_string_ordering_jit")
+        .expect("ALGOL runtime string ordering should compile");
+
+    let mut vm = VMCore::new();
+    let backend = GenericCirJit::new();
+    let error_handle = backend.error_handle();
+    let mut jit = JITCore::new(&mut vm, Box::new(backend));
+    let result = jit
+        .execute_with_jit(&mut vm, &mut module, "main", &[])
+        .expect("JIT execution should succeed")
+        .unwrap_or(Value::Null);
+
+    if let Some(err) = error_handle.lock().unwrap().clone() {
+        panic!("GenericCirJit reported an error: {err}");
+    }
+    assert_eq!(result.as_i64(), Some(42));
+}

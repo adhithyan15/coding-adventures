@@ -309,6 +309,28 @@ fn algol_runtime_string_local_emits_and_runs_on_wasm() {
     assert_eq!(&*output.lock().expect("wasm print capture poisoned"), b"HI");
 }
 
+#[test]
+fn algol_runtime_string_ordering_emits_and_runs_on_wasm() {
+    let source = "begin string s; integer result; \
+                  string procedure pick(n); value n; integer n; \
+                    if n > 0 then pick := 'HI' else pick := 'LO'; \
+                  s := pick(1); \
+                  if s < 'LO' then result := 42 else result := 0; \
+                  print(s) end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_runtime_string_ordering")
+        .expect("ALGOL runtime string ordering should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL runtime string ordering)");
+
+    let output = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
+    let result = WasmRuntime::with_host(Box::new(PrintStrHost {
+        bytes: std::sync::Arc::clone(&output),
+    }))
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL runtime string ordering wasm must run");
+    assert_eq!(result, vec![42]);
+    assert_eq!(&*output.lock().expect("wasm print capture poisoned"), b"HI");
+}
+
 /// The L3b-3a-3c capstone: a **cons** program compiles to WasmGC and runs
 /// end-to-end on the in-repo runtime. The uniform-anyref value model boxes the
 /// integer atoms as `i31ref`, allocates a `$LispyPair`, and unboxes the result

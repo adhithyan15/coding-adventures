@@ -1,5 +1,11 @@
 # Changelog — `aarch64-backend`
 
+## 0.35.0 - 2026-07-30 - runtime string ordering builtin
+
+Register `str_cmp` as a two-argument, i64-returning `V1_BUILTINS` helper. The
+generic AArch64 call path now resolves it to `__twig_str_cmp`, whose runtime ABI
+returns the shared lexical `-1`/`0`/`1` result.
+
 ## 0.34.0 - 2026-07-30 — records are movable: `alloc` → `__twig_gc_alloc_pair`
 
 - The default (2-word pair) **`alloc`** op — the record/union constructor cell — now lowers to

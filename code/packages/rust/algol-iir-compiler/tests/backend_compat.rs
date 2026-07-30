@@ -24,6 +24,8 @@ const ALGOL_PROPER_PROC: &str = "begin integer result; procedure bump(d); value 
 
 const ALGOL_RUNTIME_STRING_LOCAL: &str = "begin string s; integer result; string procedure pick(n); value n; integer n; if n > 0 then pick := 'HI' else pick := 'LO'; s := pick(1); if s = 'HI' then result := 42 else result := 0; print(s) end";
 
+const ALGOL_RUNTIME_STRING_ORDERING: &str = "begin string s; integer result; string procedure pick(n); value n; integer n; if n > 0 then pick := 'HI' else pick := 'LO'; s := pick(1); if s < 'LO' then result := 42 else result := 0; print(s) end";
+
 fn compile_case(source: &str, module_name: &str) -> interpreter_ir::IIRModule {
     compile_source(source, module_name).expect("ALGOL source should compile")
 }
@@ -64,6 +66,13 @@ fn algol_iir_validates_for_every_direct_backend() {
         (
             "runtime_string_local",
             compile_case(ALGOL_RUNTIME_STRING_LOCAL, "algol_runtime_string_backend_compat"),
+        ),
+        (
+            "runtime_string_ordering",
+            compile_case(
+                ALGOL_RUNTIME_STRING_ORDERING,
+                "algol_runtime_string_ordering_backend_compat",
+            ),
         ),
     ] {
         let checks = [
@@ -166,6 +175,50 @@ fn algol_runtime_string_local_lowers_to_wasm_jvm_clr_beam_and_llvm() {
     .expect("runtime string local should lower to LLVM");
     assert!(llvm.contains("@__twig_str_concat"));
     assert!(llvm.contains("@__twig_str_eq"));
+}
+
+#[test]
+fn algol_runtime_string_ordering_lowers_to_wasm_jvm_clr_beam_and_llvm() {
+    let module = compile_case(
+        ALGOL_RUNTIME_STRING_ORDERING,
+        "algol_runtime_string_ordering_backend_compat",
+    );
+
+    let wasm = iir_to_wasm::lower_iir_to_wasm(
+        &module,
+        &iir_to_wasm::IIRWasmConfig::new("AlgolRuntimeStringOrdering"),
+    )
+    .expect("runtime string ordering should lower to WASM");
+    assert!(iir_to_wasm::encode_module(&wasm).expect("WASM should encode").starts_with(b"\0asm"));
+
+    let jvm = iir_to_jvm_class_file::lower_iir_to_jvm(
+        &module,
+        &iir_to_jvm_class_file::IIRJvmConfig::new("AlgolRuntimeStringOrdering"),
+    )
+    .expect("runtime string ordering should lower to JVM");
+    assert!(!jvm.methods.is_empty());
+
+    let clr = iir_to_cil_bytecode::emit_il(
+        &module,
+        &iir_to_cil_bytecode::IIRClrConfig::new("AlgolRuntimeStringOrdering"),
+    )
+    .expect("runtime string ordering should emit CLR IL");
+    assert!(clr.contains("System.String::CompareOrdinal(string, string)"));
+    assert!(clr.contains("System.Math::Sign(int32)"));
+
+    let beam = iir_to_beam::lower_iir_to_beam(
+        &module,
+        &iir_to_beam::IIRBeamConfig::new("algol_runtime_string_ordering"),
+    )
+    .expect("runtime string ordering should lower to BEAM");
+    assert!(iir_to_beam::encode_beam(&beam).starts_with(b"FOR1"));
+
+    let llvm = iir_to_llvm::lower_iir_to_llvm(
+        &module,
+        &iir_to_llvm::IIRLlvmConfig::new("algol_runtime_string_ordering"),
+    )
+    .expect("runtime string ordering should lower to LLVM");
+    assert!(llvm.contains("@__twig_str_cmp"));
 }
 
 #[test]

@@ -1,5 +1,13 @@
 # Changelog — iir-to-beam
 
+## [0.7.0] — 2026-07-30 — ASCII runtime string ordering
+
+Add `str_cmp` for validated printable-ASCII character lists. The lowering uses
+native `is_eq_exact` and `is_lt` term tests to materialize `-1`, `0`, or `1`,
+which preserves lexical order and the shorter-prefix rule without an imported
+runtime helper. A real `erl` test now executes an ALGOL procedure result copied
+to a local, lexically compares it, prints it, and returns 42.
+
 ## [0.6.0] — 2026-07-30 — ASCII runtime strings
 
 Add a deliberately narrow, executable string subset using proper Erlang

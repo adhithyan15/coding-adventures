@@ -72,3 +72,20 @@ fn algol_runtime_string_local_emits_and_runs_on_beam() {
         "HI42",
     );
 }
+
+#[test]
+fn algol_runtime_string_ordering_emits_and_runs_on_beam() {
+    if !erl_available() {
+        return;
+    }
+    let source = "begin string s; integer result; \
+                  string procedure pick(n); value n; integer n; \
+                    if n > 0 then pick := 'HI' else pick := 'LO'; \
+                  s := pick(1); \
+                  if s < 'LO' then result := 42 else result := 0; \
+                  print(s) end";
+    assert_eq!(
+        compile_and_run(Language::Algol60, source, "algol_runtime_string_ordering_beam").unwrap(),
+        "HI42",
+    );
+}

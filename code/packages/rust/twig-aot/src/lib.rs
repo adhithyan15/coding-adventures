@@ -2746,26 +2746,35 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                 lowered.push(instr);
                 continue;
             };
-            let Some((_, _, left_literal)) = strings.get(left).cloned() else {
-                lowered.push(instr);
-                continue;
-            };
-            let Some((_, _, right_literal)) = strings.get(right).cloned() else {
-                lowered.push(instr);
-                continue;
-            };
-            let value = match left_literal.as_bytes().cmp(right_literal.as_bytes()) {
-                Ordering::Less => -1,
-                Ordering::Equal => 0,
-                Ordering::Greater => 1,
-            };
-            ints.insert(dest.clone(), value);
-            lowered.push(IIRInstr::new(
-                "const",
-                Some(dest),
-                vec![Operand::Int(value)],
-                &instr.type_hint,
-            ));
+            let left_literal = strings.get(left).map(|(_, _, value)| value.clone());
+            let right_literal = strings.get(right).map(|(_, _, value)| value.clone());
+            if let (Some(left_literal), Some(right_literal)) = (left_literal, right_literal) {
+                let value = match left_literal.as_bytes().cmp(right_literal.as_bytes()) {
+                    Ordering::Less => -1,
+                    Ordering::Equal => 0,
+                    Ordering::Greater => 1,
+                };
+                ints.insert(dest.clone(), value);
+                lowered.push(IIRInstr::new(
+                    "const",
+                    Some(dest),
+                    vec![Operand::Int(value)],
+                    &instr.type_hint,
+                ));
+            } else {
+                // At least one operand is a runtime string handle. Delegate to
+                // __twig_str_cmp, which preserves the shared -1/0/1 ordering ABI.
+                lowered.push(IIRInstr::new(
+                    "call_builtin",
+                    Some(dest),
+                    vec![
+                        Operand::Var("str_cmp".into()),
+                        Operand::Var(left.clone()),
+                        Operand::Var(right.clone()),
+                    ],
+                    &instr.type_hint,
+                ));
+            }
             continue;
         }
 
@@ -4557,6 +4566,49 @@ mod tests {
                     && matches!(i.srcs.get(2), Some(Operand::Var(v)) if v == "b")
             ),
             "runtime str_eq should lower to call_builtin str_eq: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_param_cmp_lowers_to_call_builtin_str_cmp() {
+        // Runtime ordering must not retain a raw `str_cmp` for the native
+        // backends, which only receive runtime helpers through `call_builtin`.
+        let mut f = IIRFunction::new(
+            "compare",
+            vec![("a".into(), "str".into()), ("b".into(), "str".into())],
+            "i64",
+            vec![
+                IIRInstr::new(
+                    "str_cmp",
+                    Some("ord".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                    "i64",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("ord".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        assert!(
+            f.instructions.iter().all(|instr| instr.op != "str_cmp"),
+            "str_cmp on parameters should be removed by lowering: {:?}",
+            f.instructions
+        );
+        let call = f
+            .instructions
+            .iter()
+            .find(|instr| instr.dest.as_deref() == Some("ord"));
+        assert!(
+            matches!(
+                call,
+                Some(instr) if instr.op == "call_builtin"
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "str_cmp")
+                    && matches!(instr.srcs.get(1), Some(Operand::Var(value)) if value == "a")
+                    && matches!(instr.srcs.get(2), Some(Operand::Var(value)) if value == "b")
+            ),
+            "runtime str_cmp should lower to call_builtin str_cmp: {:?}",
             f.instructions
         );
     }

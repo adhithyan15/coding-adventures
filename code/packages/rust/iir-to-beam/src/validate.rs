@@ -412,6 +412,16 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
                         func.name
                     ));
                 }
+                "str_cmp"
+                    if instr.dest.is_none()
+                        || !matches!(instr.srcs.as_slice(), [Operand::Var(_), Operand::Var(_)])
+                        || !matches!(instr.type_hint.as_str(), "i32" | "i64") =>
+                {
+                    errors.push(format!(
+                        "InvalidString: function {:?}, str_cmp requires dest, two string variables, and an integer result",
+                        func.name
+                    ));
+                }
                 "print_str"
                     if !matches!(instr.srcs.as_slice(), [Operand::Var(_)])
                         || instr.type_hint != "void" =>
@@ -593,6 +603,12 @@ mod tests {
                 "str_eq",
                 Some("same".into()),
                 vec![Operand::Var("word".into()), Operand::Var("word".into())],
+                "i64",
+            ),
+            IIRInstr::new(
+                "str_cmp",
+                Some("ordering".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())],
                 "i64",
             ),
             IIRInstr::new("print_str", None, vec![Operand::Var("word".into())], "void"),

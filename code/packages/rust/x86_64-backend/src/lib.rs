@@ -326,6 +326,7 @@ impl RegAlloc {
 // | `input_str`   | `int64_t __twig_input_str(void)` (E4-dyn str handle) | yes |
 // | `exit`        | `void __twig_exit(int32_t)` (noreturn)        | no      |
 // | `str_eq`      | `int64_t __twig_str_eq(int64_t, int64_t)`    | yes     |
+// | `str_cmp`     | `int64_t __twig_str_cmp(int64_t, int64_t)`   | yes     |
 
 #[derive(Debug, Clone, Copy)]
 struct BuiltinSig {
@@ -387,6 +388,8 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // LANG-STR-RT — runtime string ops on LANG-STR-RT length-prefixed buffers.
     // Both operands are i64 pointers to `[int64_t len][char bytes...]` buffers.
     BuiltinSig { name: "str_eq", n_args: 2, returns: true },
+    // Lexicographic byte comparison normalized to -1/0/1 by `__twig_str_cmp`.
+    BuiltinSig { name: "str_cmp", n_args: 2, returns: true },
     // E4-dyn runtime string concatenation.  `int64_t __twig_str_concat(int64_t a,
     // int64_t b)` reads both `[i64 len][bytes]` headers and returns a handle to a
     // fresh joined block.  Same 2-arg / returns-i64 shape as `str_eq` (operand handles
@@ -2231,6 +2234,25 @@ mod tests {
         let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
         assert!(symbols.contains(&"__dyn_cons"), "missing cons call: {symbols:?}");
         assert!(symbols.contains(&"__dyn_car"), "missing car call: {symbols:?}");
+    }
+
+    #[test]
+    fn str_cmp_emits_external_twig_call() {
+        let ir = vec![
+            instr("const_u64", Some("left"), vec![Op::Int(1)]),
+            instr("const_u64", Some("right"), vec![Op::Int(2)]),
+            call_builtin(Some("ord"), "str_cmp", &["left", "right"]),
+            instr("ret_u64", None, vec![Op::Var("ord".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("str_cmp", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("str_cmp must lower through the native runtime");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|reloc| reloc.symbol.as_str()).collect();
+        assert!(
+            symbols.contains(&"__twig_str_cmp"),
+            "missing runtime ordering call: {symbols:?}"
+        );
     }
 
     /// `call_builtin "gc_collect_compacting" -> freed` lowers to a `call` to the linker

@@ -3,13 +3,15 @@
 IIR → textual LLVM IR backend.  Emits a `.ll` source string for an LLVM
 target triple, without depending on `llvm-sys` or a native LLVM install.
 
-**Status: v0.24.0 — LANG-FULL E4 literal string comparison.**  The backend now
+**Status: v0.44.0 — LANG-FULL E4 runtime string ordering.**  The backend now
 lowers scalar control/data ops, Brainfuck byte-tape I/O, arrays, globals,
 numeric conversions, and the `str_const` + `print_str` literal-output slice.
 It also materialises `str_len`, `str_index`, `str_eq`, `str_cmp`, and literal
 `str_concat` for direct literals from compile-time metadata, including derived concat
 constants that feed `print_str` and `str_len`-computed indexes that feed
-`str_index`. Dynamic byte-string ops remain outside this release.
+`str_index`. A non-literal `str_cmp` calls the shared length-prefixed runtime helper,
+so procedure results and branch-selected locals can drive lexical branches. Other
+dynamic byte-string ops remain outside this release.
 
 ## Where it fits
 

@@ -143,7 +143,7 @@ Both `erlang:'++'`/2 and `erlang:apply/3` are registered as BIF imports.
 `box`, `unbox`, `field_load`, `field_store`, `is_null`, `safepoint`, and any
 instruction with `type_hint` of `"any"`, `"polymorphic"`, or unsupported
 `"str"`/`"ref<…>"` shapes. The supported string subset is printable-ASCII
-`str_const`, `str_concat`, `str_eq`, `print_str`, and ordinary call/return/move
+`str_const`, `str_concat`, `str_eq`, `str_cmp`, `print_str`, and ordinary call/return/move
 transport, represented as proper Erlang character lists. Float constants are
 also rejected — BEAM integer arithmetic cannot hold IEEE-754 doubles without
 boxing.

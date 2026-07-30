@@ -1,5 +1,11 @@
 # Changelog — `x86_64-backend`
 
+## 0.37.0 - 2026-07-30 - runtime string ordering builtin
+
+Register `str_cmp` as a two-argument, i64-returning `V1_BUILTINS` helper. The
+generic native call path now resolves it to `__twig_str_cmp`, whose runtime ABI
+returns the shared lexical `-1`/`0`/`1` result.
+
 ## 0.36.0 - 2026-07-30 — records are movable + a latent record-child UAF fixed
 
 - The default (2-word pair) **`alloc`** op — the record/union constructor cell — now lowers to
