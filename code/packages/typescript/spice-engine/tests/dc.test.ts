@@ -844,6 +844,25 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects out-of-range or non-finite MOS depletion coefficient", () => {
+    for (const value of [0.0, 0.5, 0.999]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { FC: value });
+      expect(valid.parameters.FC).toBe(value);
+    }
+
+    for (const invalidCoefficient of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      1.0,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { FC: invalidCoefficient }),
+      ).toThrow("MOSFET FC must be finite and in [0, 1)");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,

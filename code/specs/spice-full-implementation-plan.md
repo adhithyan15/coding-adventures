@@ -33,12 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS junction-grading validation.
+1. Cross-language Level-1 MOS depletion-coefficient validation.
    - Status: current PR completion candidate.
-   - Reject negative or non-finite model-card `MJ` values before
+   - Reject model-card `FC` values outside `[0, 1)` or non-finite values before
      depletion-capacitance shaping.
-   - Preserve zero and positive junction-grading coefficients across Rust,
-     Python, and TypeScript.
+   - Preserve finite forward-bias depletion coefficients in `[0, 1)` across
+     Rust, Python, and TypeScript.
 
 ## Completed Slices
 
@@ -3713,6 +3713,13 @@ the Rust, Python, and TypeScript surfaces together.
      depletion and temperature preprocessing.
    - Positive explicit bulk-junction potentials remain aligned across Rust,
      Python, and TypeScript.
+
+305. Cross-language Level-1 MOS junction-grading validation.
+   - Status: completed in PR 9281.
+   - Negative and non-finite model-card `MJ` values are rejected before
+     depletion-capacitance shaping.
+   - Zero and positive junction-grading coefficients remain aligned across
+     Rust, Python, and TypeScript.
 
 ## Backlog
 

@@ -959,6 +959,22 @@ fn mos_model_card_rejects_negative_or_non_finite_junction_grading_coefficient() 
 }
 
 #[test]
+fn mos_model_card_rejects_out_of_range_or_non_finite_depletion_coefficient() {
+    for value in [0.0, 0.5, 0.999] {
+        let valid = normalize_model_card("Mvalid", "nmos", &[("FC", value)]).unwrap();
+        assert_close(*valid.parameters.get("FC").unwrap(), value);
+    }
+
+    for invalid_coefficient in [f64::NEG_INFINITY, -0.1, 1.0, f64::INFINITY, f64::NAN] {
+        assert!(matches!(
+            normalize_model_card("Minvalid", "nmos", &[("FC", invalid_coefficient)]),
+            Err(SpiceError::InvalidElement { reason, .. })
+                if reason == "MOSFET FC must be finite and in [0, 1)"
+        ));
+    }
+}
+
+#[test]
 fn bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() {
     let legacy_card = normalize_model_card(
         "Qlegacy",
