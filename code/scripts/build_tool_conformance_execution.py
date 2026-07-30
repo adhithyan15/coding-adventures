@@ -3,7 +3,9 @@
 
 This module is the process-free policy layer. It deliberately imports no
 process API, creates no workspace, and has no host-execution fallback. Platform
-backends land separately; until then ``run-case`` can only return a stable
+backends land separately. The Linux OCI identity schema is checked here, but
+its process-owning capability preflight is never imported. Until later
+authority and execution tranches land, ``run-case`` can only return a stable
 non-passing result after authority checks succeed.
 """
 
@@ -374,7 +376,16 @@ def validate_contract(
         policy_schema,
         policy,
     ) = _load_contract_documents(fixture_root)
-    for schema in (case_schema, result_schema, execution_schema, policy_schema):
+    linux_oci_schema = bootstrap.load_document(
+        fixture_root / "linux-oci-backend.schema.json"
+    )
+    for schema in (
+        case_schema,
+        result_schema,
+        execution_schema,
+        policy_schema,
+        linux_oci_schema,
+    ):
         bootstrap._schema_errors({}, schema)
     bootstrap._validate_schema(
         policy,

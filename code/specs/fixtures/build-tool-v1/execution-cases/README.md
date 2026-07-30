@@ -7,3 +7,7 @@ directory only after an enforcing platform backend is reviewed.
 
 The bootstrap `cases/` directory remains process-free. Never move an execution
 case there or add an execution-enabling flag to the bootstrap validator.
+
+The Linux OCI backend identity schema and process-owning capability preflight
+do not change this gate. They validate and probe runner-owned containment
+inputs only; they never decode or execute a case from this directory.

@@ -8,18 +8,13 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": {
-    "item_id": "build-tool-execution-sandbox",
-    "pr_number": 9178,
-    "branch": "codex/build-tool-execution-sandbox",
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9178"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "40eff9c4432049d7bd704141136662014467e167",
+    "revision": "bee64b4774b87cd43bea6c9e413e647742334f96",
     "schema_version": 2,
     "established_languages": 15,
-    "implementation_identities": 1184,
-    "implementation_package_slots": 4325,
+    "implementation_identities": 1187,
+    "implementation_package_slots": 4328,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 278,
     "canonical_collisions": 0,
@@ -56,20 +51,61 @@
     {
       "id": "build-tool-execution-sandbox",
       "title": "Define the trusted-execution policy, closed schema, and fail-closed backend contract",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-fixtures"],
       "branch": "codex/build-tool-execution-sandbox",
       "pr_number": 9178,
-      "notes": "Ready-for-review PR #9178. Refined after the contract and security audits: land the process-free policy core first, with closed execution records, immutable corpus and adapter identities, explicit operator authorization, and a backend interface that cannot fall back to host execution. This item does not execute fixture code."
+      "notes": "Merged PR #9178. The process-free policy core provides closed execution records, immutable corpus and adapter identities, explicit operator authorization, and a backend interface that cannot fall back to host execution. This item does not execute fixture code."
     },
     {
       "id": "build-tool-linux-oci-sandbox",
-      "title": "Implement the Linux OCI trusted-execution sandbox",
+      "title": "Define the Linux OCI identity, capability preflight, and invariant-probe container",
+      "status": "in-progress",
+      "depends_on": ["build-tool-execution-sandbox"],
+      "branch": "codex/build-tool-linux-oci-sandbox",
+      "pr_number": null,
+      "notes": "Selected after PR #9178 merged. Security review split the backend into a safe first tranche: a closed identity binding rootless Podman, crun, exact OCI manifest/config, seccomp, shim, and probe; fail-closed host/image preflight; and exact probe-container argv with no fixture decode or launch. The checked-in policy remains disabled and Linux unavailable until protected enforcement evidence exists."
+    },
+    {
+      "id": "build-tool-trusted-authority-bundle",
+      "title": "Bind trusted execution to the complete reviewed authority bundle",
       "status": "pending",
       "depends_on": ["build-tool-execution-sandbox"],
       "branch": null,
       "pr_number": null,
-      "notes": "Use a pinned pre-existing image identity, private mount/user/PID/network namespaces, read-only rootfs, no-new-privileges, dropped capabilities, non-root execution, bounded tmpfs, cgroup limits, streaming output accounting, and whole-container termination. Never pull or fall back to the host."
+      "notes": "Discovered during the Linux OCI security review. Replace corpus-only operator approval with one domain-separated digest binding exact source revision, policy, schemas, runner, launcher, seccomp, shim, OCI manifest/config, and adapter identity before any executable payload decode."
+    },
+    {
+      "id": "build-tool-execution-case-snapshot",
+      "title": "Bind execution to the exact approved in-memory case snapshot",
+      "status": "pending",
+      "depends_on": ["build-tool-trusted-authority-bundle"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the Linux OCI security review. Select the requested direct corpus member from one root-handle/no-follow bounded snapshot and execute the same hashed bytes; reject outside paths, renames, symlinks, hardlinks, case/Unicode aliases, and post-digest mutation."
+    },
+    {
+      "id": "build-tool-execution-status-normalization",
+      "title": "Normalize dependency-skip terminology and result-state invariants",
+      "status": "pending",
+      "depends_on": ["build-tool-execution-sandbox"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the fixture audit. Replace the duplicated schema term dependency-skipped with normative dep-skipped and enforce built, failed, dep-skipped, would-build, return-code, command-state, and outcome consistency before execution cases enter the corpus."
+    },
+    {
+      "id": "build-tool-linux-oci-enforcement",
+      "title": "Run and police the Linux OCI invariant probe and trusted cases",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-linux-oci-sandbox",
+        "build-tool-trusted-authority-bundle",
+        "build-tool-execution-case-snapshot",
+        "build-tool-execution-status-normalization"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Execute only after the first preflight tranche. Add aggregate cgroup CPU metering, combined streaming output/result accounting, hard workspace semantics, cancellation, whole-container kill/reap/removal, image-contained adapters, adversarial runner-owned probes, and protected Linux workflow evidence before marking Linux ready."
     },
     {
       "id": "build-tool-windows-appcontainer-sandbox",
@@ -94,7 +130,7 @@
       "title": "Add execution semantics cases and adversarial sandbox probes",
       "status": "pending",
       "depends_on": [
-        "build-tool-linux-oci-sandbox",
+        "build-tool-linux-oci-enforcement",
         "build-tool-windows-appcontainer-sandbox",
         "build-tool-macos-isolated-sandbox"
       ],
@@ -293,7 +329,16 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Current singleton leaders are Rust 538, Python 86, and TypeScript 84; do not port blindly."
+      "notes": "Current singleton leaders are Rust 542, Python 86, and TypeScript 84; do not port blindly."
+    },
+    {
+      "id": "rust-singletons-20260730-classification",
+      "title": "Classify the July 30 Rust singleton additions",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The bee64b477 inventory added axiom-to-semantic-ir, http1-client, and smart-home-discovery-service. Review axiom-to-semantic-ir as a likely portable deterministic lowering, http1-client for portable-core versus native transport boundaries, and smart-home-discovery-service as a likely native/service applicability case before opening any port PR."
     },
     {
       "id": "c-cpp-graduation",
