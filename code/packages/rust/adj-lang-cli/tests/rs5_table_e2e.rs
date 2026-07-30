@@ -1516,6 +1516,54 @@ fn shipped_mass_density_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// Shipped moment-of-force (torque) table — two EXACT NIST SP 811 B.9 factors resolve, and a
+// wrong-dimension unit (a mass unit) abstains. Guards the SLICE of a NEW dimension (moment of force,
+// the newton metre) and the honest cross-dimension abstention: `pound` is a mass unit, so a torque
+// lookup for it must abstain, catching the torque/mass confusion directly, not mere absence of a
+// value. (Torque shares ENERGY's dimensions but is a distinct quantity keeping its own N·m unit.)
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_moment_of_force_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_momentofforce");
+    let src = stdlib().join("reference/moment-of-force-conversions.adj");
+    std::fs::copy(&src, dir.join("moment-of-force-conversions.adj"))
+        .expect("copy shipped moment-of-force-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"moment-of-force-conversions.adj\"\n\
+         ? moment_of_force_to_newton_metre(dyne_centimetre, $v)\n\
+         ? moment_of_force_to_newton_metre(kilogram_force_metre, $v)\n\
+         ? moment_of_force_to_newton_metre(pound, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factors resolve, character-for-character from the table (boldface =
+    // exact; one dyne centimetre is exactly 1 E-07 N·m, one kilogram-force metre is exactly 9.806 65 N·m).
+    assert!(
+        out.contains("\"v\":\"0.0000001\""),
+        "dyne centimetre = 1 E-07 N*m: {out}"
+    );
+    assert!(
+        out.contains("\"v\":\"9.80665\""),
+        "kilogram-force metre = 9.806 65 E+00 N*m: {out}"
+    );
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `pound` is a MASS unit (it converts to the kilogram, a DIFFERENT quantity), so this
+    // moment-of-force table has no row for it — the engine abstains rather than mis-converting a mass
+    // unit as if it were a torque unit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
