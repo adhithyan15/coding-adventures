@@ -905,6 +905,7 @@ members = [
     "zwave-serial-api",
     "thread-mle",
     "smart-home-runtime",
+    "smart-home-runtime-store",
     "zigbee-zcl",
     "hue-client",
     "hue-integration",
