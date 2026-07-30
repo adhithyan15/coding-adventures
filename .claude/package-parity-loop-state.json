@@ -8,7 +8,12 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": {
+    "item_id": "build-tool-authority-exact-backend-loader",
+    "number": 9208,
+    "branch": "codex/build-tool-authority-exact-backend-loader",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9208"
+  },
   "last_inventory": {
     "revision": "a06ed28b7096c178d84a36a1c1929bf69f056c92",
     "schema_version": 2,
@@ -81,14 +86,14 @@
     {
       "id": "build-tool-authority-exact-backend-loader",
       "title": "Load the exact approved preflight backend through an atomic runner boundary",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-trusted-authority-bundle",
         "build-tool-linux-oci-sandbox"
       ],
       "branch": "codex/build-tool-authority-exact-backend-loader",
-      "pr_number": null,
-      "notes": "Selected after PR #9196 merged because it is the smallest dependency-shaped gate for every later Linux enforcement tranche. Add a separately domain-bound profile, atomic beneath-root component snapshot, sealed exact bytes, stdlib-only backend closure, and one-shot isolated loadability worker. This tranche runs no Podman capability command, container, case, adapter, or invariant probe."
+      "pr_number": 9208,
+      "notes": "Ready-for-review PR #9208. The domain-separated ten-role loader authority binds exact approved verifier, loader, backend, manifest, identity, policy, and schema bytes; retained no-follow directory handles and sealed memfds close component races. The isolated worker validates an exact stdlib import closure and closed interfaces by AST plus compilation without importing the backend or running Podman. Validation covered 125 conformance tests, 67% combined branch-aware coverage, Ruff, Bandit, corpus/contract validators, Go tests/build, parity collision checks, and the unchanged 73-gap build-file audit. Linux-only filesystem, sealed-worker, process-group, and streaming-cap paths run in Ubuntu CI."
     },
     {
       "id": "build-tool-linux-capability-preflight-broker",
