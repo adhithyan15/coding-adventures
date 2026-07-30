@@ -60,8 +60,13 @@ Fetch/decode failures now render clipped bordered HTML `alt` text. The concrete
 and relative redirects into a synchronous HTTP/1.0 GET transport. Browser
 render-tree extraction can now use the final fetched document URL as its
 fallback base, so relative links and inline images remain fetchable even when
-the page omits `<base>`. The platform host must still compose those stages
-through navigation to pixels.
+the page omits `<base>`. `venture-browser-core` now owns the in-memory
+Back/Forward/Home/Reload model and composes an injectable page fetch through
+document-URL-aware parsing, layout, paint, and synchronous image resolution.
+Its acceptance path carries a redirected canned page and GIF resource through
+Cairo to RGBA pixels. The remaining browser gate is the concrete platform shell
+that binds those core results to native window events, controls, scrolling, and
+the selected production paint backend.
 
 ## Where It Fits
 
@@ -325,7 +330,8 @@ User action (Enter key / link click)
   │     - "image/*"   → display standalone image
   │     - other       → show raw text in monospace
   │
-  ├─ 6. html_parser::parse_browser_render_tree(response.body)
+  ├─ 6. html_parser::parse_browser_render_tree_with_document_url(
+  │         response.body, response.final_url)
   │       → BrowserRenderTree
   │
   ├─ 7. html_render_tree_to_layout(tree, mosaic_theme) → LayoutNode tree
@@ -461,6 +467,7 @@ paint_vm_direct2d      = { path = "../../../packages/rust/paint-vm-direct2d" }
 text_measure_directwrite = { path = "../../../packages/rust/text-measure-directwrite" }
 windows                = { version = "0.58", features = ["..."] }
 html-to-paint          = { path = "../../../packages/rust/html-to-paint" }
+venture-browser-core   = { path = "../../../packages/rust/venture-browser-core" }
 image-codec-gif        = { path = "../../../packages/rust/image-codec-gif" }
 image-codec-jpeg       = { path = "../../../packages/rust/image-codec-jpeg" }
 ```
