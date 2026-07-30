@@ -1,0 +1,30 @@
+% ============================================================================
+% fractional-excretion-of-magnesium.query.adj — worked applications of the fractional excretion of magnesium.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a hypomagnesemia work-up into a urine magnesium, a serum
+% creatinine, a serum magnesium and a urine creatinine: it `import`s the grounded formulabook, `observe`s the
+% four values, and asks the engine to APPLY the cited FEMg formula. No arithmetic is stated by the consumer;
+% the engine computes each value EXACTLY (over exact rationals) and carries the article's citation as its
+% proof, on the CPU, with zero model calls.
+%
+% Worked case (UMg = 7, PCr = 1, PMg = 1, UCr = 100 mg/dL): FEMg = [(7 × 1) / (1 × 100 × 0.7)] × 100 =
+% [7 / 70] × 100 = 10 percent (above the ~2% threshold → renal magnesium wasting). Each query fixes one input
+% and asks the engine to recover another quantity; every answer is exact and the inversions COMPOSE (each
+% recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli fractional-excretion-of-magnesium.query.adj
+% ============================================================================
+
+import "fractional-excretion-of-magnesium.adj"
+
+% --- FEMg: the value the four inputs imply (expect 10). ----------------------------------------------
+observe urinary_magnesium(7)
+observe serum_creatinine(1)
+observe serum_magnesium(1)
+observe urinary_creatinine(100)
+? fractional_excretion_magnesium(urinary_magnesium, serum_creatinine, serum_magnesium, urinary_creatinine)   % expect 10
+
+% --- Inverse: the urine magnesium a FEMg of 10 implies at the same other three inputs (expect 7). ----
+observe fractional_excretion_magnesium(10)
+? urinary_magnesium(fractional_excretion_magnesium, serum_creatinine, serum_magnesium, urinary_creatinine)   % expect 7

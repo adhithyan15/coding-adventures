@@ -1,0 +1,121 @@
+% ============================================================================
+% fractional-excretion-of-magnesium.adj — the fractional excretion of magnesium
+% (FEMg = [(UMg × PCr) / (PMg × UCr × 0.7)] × 100) in the ADJ standard library.
+% ============================================================================
+% The fractional-excretion-of-magnesium entry of the *clinical* track — the percentage of the magnesium
+% filtered by the glomerulus that ends up in the urine, the key test for distinguishing RENAL from EXTRA-renal
+% causes of hypomagnesemia. When the body is magnesium-depleted, healthy kidneys reabsorb avidly and FEMg is
+% low (< 2%); a FEMg above ~2% in the face of hypomagnesemia points to renal magnesium wasting (diuretics,
+% aminoglycosides, cisplatin, tubular disorders). It is the magnesium member of the fractional-excretion
+% family alongside the shipped FE-sodium, FE-potassium, FE-phosphate and FE-urea. Like every fractional
+% excretion it normalises the urine-to-plasma magnesium ratio by the urine-to-plasma creatinine ratio (so a
+% spot sample stands in for a timed collection); UNIQUELY, magnesium's version divides by 0.7 because only
+% about 70% of plasma magnesium is free (ultrafilterable) — the 0.7 converts total plasma magnesium to the
+% filtered fraction. THE FRACTIONAL EXCRETION OF MAGNESIUM IS THE URINE-MAGNESIUM TIMES PLASMA-CREATININE,
+% DIVIDED BY (PLASMA-MAGNESIUM TIMES URINE-CREATININE TIMES 0.7), ALL TIMES 100 — i.e.
+% FEMg = [(UMg × PCr) / (PMg × UCr × 0.7)] × 100.
+%
+% It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with the four exact
+% rearrangements (each of the four measured inputs recovered from the other three plus the FEMg). As with every
+% compute library, a consumer states NO arithmetic: it `import`s this file, binds the four values from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is
+% performed by the model; the engine computes each value EXACTLY (over exact rationals), carrying the formula's
+% citation.
+%
+%     import "fractional-excretion-of-magnesium.adj"
+%     observe urinary_magnesium(7)     % "…urine Mg 7 mg/dL…"      (span cited by the model)
+%     observe serum_creatinine(1)      % "…serum Cr 1 mg/dL…"      (span cited by the model)
+%     observe serum_magnesium(1)       % "…serum Mg 1 mg/dL…"      (span cited by the model)
+%     observe urinary_creatinine(100)   % "…urine Cr 100 mg/dL…"   (span cited by the model)
+%     ? fractional_excretion_magnesium(urinary_magnesium, serum_creatinine, serum_magnesium, urinary_creatinine)
+%       % engine → 10 (percent — renal wasting)
+%
+% Structurally this is a PRODUCT-OVER-PRODUCT, SCALED — the FE family shape — with one extra denominator
+% constant (the 0.7 free-fraction factor) that the shipped FE-sodium/potassium/phosphate/urea do NOT carry.
+%
+% NOTE on the form of the constants: the cited expression multiplies the WHOLE fraction by 100 and divides the
+% denominator by 0.7. Because 0.7 is EXACTLY 7/10, dividing by 0.7 is identically multiplying by 10/7, so the
+% "× 100 ÷ 0.7" collapses to "× 1000 ÷ 7" — written that way (× 1000 in the numerator, × 7 in the denominator)
+% so the engine keeps the WHOLE computation in exact integer arithmetic; the value is identical to the cited
+% "[(UMg × PCr)/(PMg × UCr × 0.7)] × 100". The embedded constants — the percent-scaling 100 and the
+% free-fraction factor 0.7 (as 1000/7) — are EXACT as the cited expression prints them; the four measured
+% quantities are the formal parameters bound at apply time, so every value the engine returns is exact.
+%
+%   fractional_excretion_magnesium(UMg, PCr, PMg, UCr) = 1000 * UMg * PCr / (PMg * UCr * 7)   % (percent)
+%   urinary_magnesium(FEMg, PCr, PMg, UCr)             = FEMg * PMg * UCr * 7 / (1000 * PCr)   % (solved for UMg)
+%   serum_creatinine(FEMg, UMg, PMg, UCr)              = FEMg * PMg * UCr * 7 / (1000 * UMg)   % (solved for PCr)
+%   serum_magnesium(FEMg, UMg, PCr, UCr)               = 1000 * UMg * PCr / (FEMg * UCr * 7)   % (solved for PMg)
+%   urinary_creatinine(FEMg, UMg, PCr, PMg)            = 1000 * UMg * PCr / (FEMg * PMg * 7)   % (solved for UCr)
+%
+% The five formulas COMPOSE and invert cleanly around the worked case UMg = 7, PCr = 1, PMg = 1, UCr = 100
+% (FEMg = [(7 × 1)/(1 × 100 × 0.7)] × 100 = [7/70] × 100 = 10): the `fractional_excretion_magnesium` a consumer
+% computes is exactly the value each inverse formula back-solves to recover its own measured input (7, 1, 1, 100).
+%
+% NOTE ON UNITS AND MODELLING: UMg/PMg and UCr/PCr must each be in the SAME units (concentration ratios are
+% dimensionless), so FEMg is a pure percentage. This library only COMPUTES FEMg; interpreting it (the ~2%
+% renal-wasting threshold, in the context of the serum magnesium and the clinical picture) is the clinician's
+% task, stated by the cited source but applied by the reader.
+%
+% All five formulas are defended by the SAME clause — the quoted FEMg expression — because that one expression
+% sanctions the relation read every way. The quote is transcribed verbatim from the StatPearls article
+% "Hypomagnesemia", where it is printed as the typed, all-ASCII, operand-complete, correctly-bracketed
+% expression "FEMg = [(UMg x PCr) / (PMg x UCr x 0.7)] x 100". Each `formula` therefore carries the provenance
+% envelope every shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the formula is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each of the five quantities appears BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are the everyday names
+% a decomposer maps onto the canonical term; the trailing comment records the intended unit. (serum_creatinine
+% and urinary_creatinine share their names with the other fractional-excretion libraries — each FE file is
+% standalone and defines its own dictionary.)
+% ----------------------------------------------------------------------------
+dictionary fractional_excretion_magnesium_vocab {
+    define urinary_magnesium               : finding  surface "urine magnesium", "urinary magnesium", "UMg", "urine Mg"          % mg/dL
+    define serum_creatinine                : finding  surface "serum creatinine", "plasma creatinine", "PCr", "serum Cr"         % mg/dL
+    define serum_magnesium                 : finding  surface "serum magnesium", "plasma magnesium", "PMg", "serum Mg"           % mg/dL
+    define urinary_creatinine              : finding  surface "urine creatinine", "urinary creatinine", "UCr", "urine Cr"        % mg/dL
+    define fractional_excretion_magnesium  : finding  surface "fractional excretion of magnesium", "FEMg", "FE magnesium", "fractional excretion magnesium" % percent
+}
+
+% ----------------------------------------------------------------------------
+% The fractional excretion of magnesium, all five ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the FEMg expression from the StatPearls article (a
+% quote is required on a shipped formula). Each is an exact expression in the measured values and the exact
+% constants 1000 and 7 (the cited "× 100 ÷ 0.7" in integer form), so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook fractional_excretion_magnesium_laws {
+    use fractional_excretion_magnesium_vocab
+
+    % FEMg — urine-Mg × plasma-Cr over (plasma-Mg × urine-Cr × 0.7), times 100, in exact integer form
+    % (× 100 ÷ 0.7 = × 1000 ÷ 7, since 0.7 = 7/10).
+    formula fractional_excretion_magnesium(urinary_magnesium, serum_creatinine, serum_magnesium, urinary_creatinine) = 1000 * urinary_magnesium * serum_creatinine / (serum_magnesium * urinary_creatinine * 7)
+        source "FEMg = [(UMg x PCr) / (PMg x UCr x 0.7)] x 100"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500003/"
+        trust authoritative
+
+    % Urine magnesium — the same expression solved for UMg. Defended by the SAME clause.
+    formula urinary_magnesium(fractional_excretion_magnesium, serum_creatinine, serum_magnesium, urinary_creatinine) = fractional_excretion_magnesium * serum_magnesium * urinary_creatinine * 7 / (1000 * serum_creatinine)
+        source "FEMg = [(UMg x PCr) / (PMg x UCr x 0.7)] x 100"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500003/"
+        trust authoritative
+
+    % Serum creatinine — the same expression solved for PCr. Defended by the SAME clause.
+    formula serum_creatinine(fractional_excretion_magnesium, urinary_magnesium, serum_magnesium, urinary_creatinine) = fractional_excretion_magnesium * serum_magnesium * urinary_creatinine * 7 / (1000 * urinary_magnesium)
+        source "FEMg = [(UMg x PCr) / (PMg x UCr x 0.7)] x 100"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500003/"
+        trust authoritative
+
+    % Serum magnesium — the same expression solved for PMg. Defended by the SAME clause.
+    formula serum_magnesium(fractional_excretion_magnesium, urinary_magnesium, serum_creatinine, urinary_creatinine) = 1000 * urinary_magnesium * serum_creatinine / (fractional_excretion_magnesium * urinary_creatinine * 7)
+        source "FEMg = [(UMg x PCr) / (PMg x UCr x 0.7)] x 100"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500003/"
+        trust authoritative
+
+    % Urine creatinine — the same expression solved for UCr, the fifth reading of the one law.
+    formula urinary_creatinine(fractional_excretion_magnesium, urinary_magnesium, serum_creatinine, serum_magnesium) = 1000 * urinary_magnesium * serum_creatinine / (fractional_excretion_magnesium * serum_magnesium * 7)
+        source "FEMg = [(UMg x PCr) / (PMg x UCr x 0.7)] x 100"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500003/"
+        trust authoritative
+}
