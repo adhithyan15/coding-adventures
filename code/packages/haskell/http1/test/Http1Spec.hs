@@ -1,10 +1,9 @@
 module Http1Spec (spec) where
 
 import CodingAdventures.Http1
-import CodingAdventures.HttpCore
+import CodingAdventures.HttpCore hiding (version)
 import qualified Data.ByteString.Char8 as Bytes
 import Data.Either (isLeft)
-import GHC.Stack (HasCallStack)
 import Test.Hspec
 
 spec :: Spec
@@ -157,6 +156,8 @@ spec = do
         `shouldBe` Left (InvalidStartLine "GET /")
       parseRequest "GET / HTTP/1.1 extra\r\n\r\n"
         `shouldBe` Left (InvalidStartLine "GET / HTTP/1.1 extra")
+      parseResponse "HTTP/1.1\r\n\r\n"
+        `shouldBe` Left (InvalidStartLine "HTTP/1.1")
 
     it "distinguishes invalid request and response versions" $ do
       parseRequest "GET / HTTP/1\r\n\r\n"
@@ -183,7 +184,7 @@ spec = do
       parseRequest "GET / HTTP/1.1\r\n : value\r\n\r\n"
         `shouldBe` Left (InvalidHeaderLine " : value")
 
-    it "rejects malformed, signed, padded, and overflowing lengths" $ do
+    it "rejects malformed, signed, and overflowing lengths" $ do
       let overflow = show (toInteger (maxBound :: Int) + 1)
       mapM_
         (\lengthText ->
@@ -220,5 +221,7 @@ parseResponse = parseResponseHead . Bytes.pack
 expectRight :: (HasCallStack, Show error) => Either error value -> IO value
 expectRight result =
   case result of
-    Left error -> expectationFailure ("unexpected parse error: " ++ show error)
+    Left parseError -> do
+      expectationFailure ("unexpected parse error: " ++ show parseError)
+      fail "expectRight received Left"
     Right value -> pure value
