@@ -169,6 +169,7 @@ members = [
     "html-parser",
     "html-to-layout",
     "html-to-paint",
+    "venture-browser-core",
     "html-renderer",
     "intel4004-gatelevel",
     "mos6502-gatelevel",
