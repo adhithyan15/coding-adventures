@@ -105,7 +105,7 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 30, 2026 at `9d086d458` after the Haskell
+inventory was regenerated on July 30, 2026 at `ad8bbd75a` after the Haskell
 `barcode-1d` and `http-core` ports, the Go/Rust `multi-directed-graph` slice,
 the Linux OCI preflight and external-authority contracts, and a new wave of
 Rust-only package families. The latest refresh added the Rust-only
