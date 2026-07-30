@@ -64,6 +64,19 @@ int64_t __twig_str_index(int64_t, int64_t);
 int64_t __twig_str_cmp(int64_t, int64_t);
 int64_t __twig_str_eq(int64_t, int64_t);
 
+/* `__twig_alloc_bytes` now allocates string blocks through gc-core
+ * (`__gc_register_kind` + `__gc_alloc_kind`).  This unit test compiles
+ * `twig_runtime.c` standalone to exercise string *logic*, not the collector, so
+ * we back those two symbols with a trivial `calloc` stub — the `[len][bytes]`
+ * behaviour is identical.  (End-to-end GC reclamation is proven by the
+ * `*_smoke.rs` tests, which link the real `libgc_core_capi.a`.) */
+int64_t __gc_register_kind(const int64_t *offsets, int64_t count) {
+    (void)offsets; (void)count; return 1;
+}
+int64_t __gc_alloc_kind(int64_t n, uint16_t kind) {
+    (void)kind; return (int64_t)(intptr_t)calloc(1, (size_t)n);
+}
+
 /* Build a [i64 len][bytes] heap block, the E5/E4-dyn string layout. */
 static int64_t mk(const char *s, int64_t n) {
     char *p = (char *)malloc(8 + (size_t)n);
