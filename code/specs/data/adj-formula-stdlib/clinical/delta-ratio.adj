@@ -1,0 +1,91 @@
+% ============================================================================
+% delta-ratio.adj — the delta ratio (delta-delta / delta gap ratio)
+% (delta ratio = (anion gap − 12) / (24 − bicarbonate)) in the ADJ standard library.
+% ============================================================================
+% The delta-ratio entry of the *clinical* track — the bedside test for a MIXED metabolic acid-base
+% disorder hiding behind a high-anion-gap metabolic acidosis. In a pure anion-gap acidosis every
+% milliequivalent added to the anion gap should have consumed one milliequivalent of bicarbonate, so the
+% RISE in the anion gap (above the normal 12) should equal the FALL in bicarbonate (below the normal
+% 24) — a ratio near 1. A ratio well BELOW 1 means bicarbonate fell more than the gap rose (a
+% co-existing normal-gap acidosis); a ratio well ABOVE 1 (roughly >2) means bicarbonate fell less than
+% expected (a co-existing metabolic alkalosis). THE DELTA RATIO IS THE ANION GAP MINUS 12, DIVIDED BY 24
+% MINUS THE BICARBONATE — i.e. (anion gap − 12) / (24 − bicarbonate). It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its two exact rearrangements (the anion gap a
+% ratio implies at a given bicarbonate, and the bicarbonate a ratio implies at a given anion gap). As
+% with every compute library, a consumer states NO arithmetic: it `import`s this file, binds the anion
+% gap and bicarbonate from its own byte-provenance decomposition, and asks the engine to APPLY the cited
+% formula on the CPU. Zero math is performed by the model; the engine computes each value EXACTLY (over
+% exact rationals), carrying the formula's citation.
+%
+%     import "delta-ratio.adj"
+%     observe anion_gap(30)     % "…anion gap 30…"        (span cited by the model)
+%     observe bicarbonate(14)    % "…bicarbonate 14…"      (span cited by the model)
+%     ? delta_ratio(anion_gap, bicarbonate)   % engine → 1.8, the delta ratio
+%
+% The 12 (upper-limit-of-normal anion gap) and 24 (normal bicarbonate) are the EXACT reference constants
+% of the cited formula (not measurements); the formulas are otherwise exact expressions over the
+% parameters, so every value the engine returns is exact. They COMPOSE and invert cleanly around the
+% worked case anion gap = 30, bicarbonate = 14 (delta ratio = (30 − 12) / (24 − 14) = 18 / 10 = 1.8, a
+% ratio between 1 and 2, i.e. a pure high-anion-gap acidosis): the `delta_ratio` a consumer computes is
+% exactly the value each inverse formula back-solves to recover its own measured input (30, 14).
+%
+%   delta_ratio(anion_gap, bicarbonate) = (anion_gap - 12) / (24 - bicarbonate)          % (delta ratio)
+%   anion_gap(delta_ratio, bicarbonate) = delta_ratio * (24 - bicarbonate) + 12          % (solved for anion gap)
+%   bicarbonate(delta_ratio, anion_gap) = 24 - (anion_gap - 12) / delta_ratio            % (solved for bicarbonate)
+%
+% NOTE ON UNITS AND MODELLING: anion gap and bicarbonate in the same unit (mEq/L or mmol/L); the ratio
+% is dimensionless. The 12 and 24 are this page's stated normal references (some sources use an anion-gap
+% normal of 10-12); the single equation grounded here is the one transcribed VERBATIM from the cited
+% page. Interpretation bands (< 1 concurrent normal-gap acidosis, 1-2 pure anion-gap acidosis, > 2
+% concurrent metabolic alkalosis) are stated by the same page but are separate from this ratio
+% computation. This library only COMPUTES the ratio; it does not itself name the mixed disorder.
+%
+% All three formulas are defended by the SAME clause — the quoted delta-ratio equation — because that
+% one statement (the delta ratio IS anion-gap-minus-12 over 24-minus-bicarbonate) sanctions the relation
+% read every way. The quote is transcribed verbatim from the StatPearls "Anion Gap and Non-Anion Gap
+% Metabolic Acidosis" article on the NCBI Bookshelf (a current, non-archived article), so each `formula`
+% carries the provenance envelope every shipped grounded clause carries; the linter rejects an unsourced
+% one. (See feedback_nothing_human_authored — the formula, including its 12 and 24 constants, is a
+% verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `anion_gap`, `bicarbonate` and `delta_ratio` each appear BOTH as a derived result and as
+% an input (of the other formulas), so each is a single dictionary term used in both roles. The
+% `surface` lists are the everyday names a decomposer maps onto the canonical term; the trailing comment
+% records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary delta_ratio_vocab {
+    define anion_gap     : finding  surface "anion gap", "corrected anion gap", "AG"           % mEq/L
+    define bicarbonate   : finding  surface "bicarbonate", "HCO3", "serum bicarbonate", "measured HCO3"  % mEq/L
+    define delta_ratio   : finding  surface "delta ratio", "delta-delta", "delta gap ratio"    % dimensionless
+}
+
+% ----------------------------------------------------------------------------
+% The delta ratio, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the delta-ratio equation from the StatPearls "Anion
+% Gap and Non-Anion Gap Metabolic Acidosis" article on the NCBI Bookshelf (a quote is required on a
+% shipped formula). Each is an exact expression in the measured quantities and the cited 12 / 24
+% constants, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook delta_ratio_laws {
+    use delta_ratio_vocab
+
+    % Delta ratio — the anion gap minus 12, over 24 minus the bicarbonate.
+    formula delta_ratio(anion_gap, bicarbonate) = (anion_gap - 12) / (24 - bicarbonate)
+        source "Δanion gap / ΔHCO3 = (corrected anion gap − 12) / (24 − measured HCO3)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448090/"
+        trust authoritative
+
+    % Anion gap — the same equation solved for the anion gap. Defended by the SAME sentence.
+    formula anion_gap(delta_ratio, bicarbonate) = delta_ratio * (24 - bicarbonate) + 12
+        source "Δanion gap / ΔHCO3 = (corrected anion gap − 12) / (24 − measured HCO3)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448090/"
+        trust authoritative
+
+    % Bicarbonate — the same equation solved for the bicarbonate. The SAME sentence, read the third way.
+    formula bicarbonate(delta_ratio, anion_gap) = 24 - (anion_gap - 12) / delta_ratio
+        source "Δanion gap / ΔHCO3 = (corrected anion gap − 12) / (24 − measured HCO3)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448090/"
+        trust authoritative
+}
