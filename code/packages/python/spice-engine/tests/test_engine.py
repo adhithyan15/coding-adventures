@@ -1102,6 +1102,16 @@ def test_mos_model_card_rejects_negative_or_non_finite_body_effect_coefficient()
             normalize_model_card("Minvalid", "nmos", {"GAMMA": invalid_coefficient})
 
 
+def test_mos_model_card_rejects_non_positive_or_non_finite_bulk_junction_potential() -> None:
+    for value in (0.1, 0.8, 2.0):
+        valid = normalize_model_card("Mvalid", "nmos", {"PB": value})
+        assert valid.parameters["PB"] == pytest.approx(value)
+
+    for invalid_potential in (-math.inf, -0.1, 0.0, math.inf, math.nan):
+        with pytest.raises(ValueError, match="MOSFET PB must be finite and positive"):
+            normalize_model_card("Minvalid", "nmos", {"PB": invalid_potential})
+
+
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
     circuit = Circuit()
     circuit.add(JFET("J1", "drain", "gate", "0", Kf=-1.0))

@@ -807,6 +807,25 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects non-positive or non-finite MOS bulk-junction potential", () => {
+    for (const value of [0.1, 0.8, 2.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { PB: value });
+      expect(valid.parameters.PB).toBe(value);
+    }
+
+    for (const invalidPotential of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      0.0,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { PB: invalidPotential }),
+      ).toThrow("MOSFET PB must be finite and positive");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,
