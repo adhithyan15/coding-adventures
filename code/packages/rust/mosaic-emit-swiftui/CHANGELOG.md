@@ -4,6 +4,16 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - Native SwiftUI lowering for MSL transitions
+
+Part-level and state-local transitions from `mosstyle-compiler` now lower to
+property-scoped SwiftUI `.animation(_:value:)` modifiers. Resolved millisecond
+and second durations, standard ease curves, and cubic Bézier timing curves map
+to native `Animation` values. State-local transitions apply while entering the
+matching `state-when-*` condition and fall back to the part transition, or no
+exit animation when no part transition exists. The emitter also now lowers the
+MSL `opacity` property so common fade transitions work natively.
+
 ### Added - Mosaic event envelopes for SwiftUI hosts
 
 Generated non-empty `{Component}Event` enums now include `mosaicName`,
