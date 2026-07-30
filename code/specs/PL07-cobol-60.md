@@ -1154,17 +1154,17 @@ too (both engines emit `width` copies of the item's char). (3) The optional regi
 delimiter `z` is validated single-char by the shared helpers (a multi-char/numeric/
 reference-modified region delimiter stays a later rung, co-total). (4) The
 source-category guard is unchanged (a numeric/group/reference-modified/literal source
-stays a later rung). `REPLACING CHARACTERS` inside a MULTI-item list, and inside the
-COMBINED `TALLYING … REPLACING` form, remain later rungs — only the SINGLE-item
-lone-REPLACING path gains support.
+stays a later rung). `REPLACING CHARACTERS` inside a MULTI-item list is now supported (see
+"Multi-item `REPLACING` list with a `CHARACTERS` item" below); inside the COMBINED
+`TALLYING … REPLACING` form it remains a later rung.
 
 Deferred as clean later rungs (accepted by the grammar, rejected at read/compile
 time): `REPLACING CHARACTERS BY x` with a non-ASCII
 literal replacement (see above), `REPLACING FIRST` (`FIRST` does not parse as a
 replace keyword — it is deferred at parse time),
 a multi-character region delimiter, a multi-item `REPLACING` list carrying a
-`LEADING`/`CHARACTERS`/`FIRST` item (a `{BEFORE|AFTER}` region on each item of a
-multi-item list is now supported — see the per-item-region section just below),
+`FIRST` item (a `{BEFORE|AFTER}` region on each item of a multi-item list, a `LEADING`
+item, and a `CHARACTERS BY x` item are all now supported — see the sections below),
 **several** replace items in the **combined** `TALLYING … REPLACING` form, a multi-character /
 wider / numeric search or replacement, and a numeric/group source (a **figurative
 constant** SPACE/ZERO search or replacement is now accepted, reduced to its single
@@ -1226,9 +1226,10 @@ per-position `str_slice`, which cannot slice a multi-byte char and traps — EXA
 single-item `REPLACING ALL` does on the same source (the oracle iterates `char`s and succeeds; this
 divergence is not introduced here). This rung adds no new non-ASCII behavior.
 
-**Scope kept for a later rung** (unchanged, identical messages on both engines): a `LEADING` or
-`CHARACTERS`/`FIRST` item in a multi-item list, and the combined `TALLYING … REPLACING` form with
-several items. The single-item `REPLACING ALL … {BEFORE|AFTER}` path is untouched.
+**Scope kept for a later rung** (at the time of this rung): a `LEADING`, `CHARACTERS`, or `FIRST`
+item in a multi-item list, and the combined `TALLYING … REPLACING` form with several items (the
+`LEADING` and `CHARACTERS` items were lifted in later rungs — see below). The single-item
+`REPLACING ALL … {BEFORE|AFTER}` path is untouched.
 
 ### Multi-item `TALLYING` with a per-item `{BEFORE|AFTER}` region (follow-up rung, v0.62.0 / v0.58.0)
 
@@ -1515,10 +1516,49 @@ lowering: the byte-based compiler rebuilds with per-position `str_slice` and tra
 oracle succeeds. This rung adds NO new non-ASCII divergence (its non-ASCII test is a characterization
 test pinning both engines, not `assert_matches_oracle`).
 
-**Scope kept for a later rung** (unchanged, identical messages on both engines): a `CHARACTERS`/`FIRST`
+**Scope kept for a later rung** (unchanged, identical messages on both engines): a `FIRST`
 item in a multi-item list, and the combined `TALLYING … REPLACING` form with several items. The
 single-item path (which already supports a lone `REPLACING LEADING`, a region, and `CHARACTERS`) is
 untouched.
+
+### Multi-item `REPLACING` list with a `CHARACTERS` item (follow-up rung, v0.81.0 / v0.77.0)
+
+The REPLACE twin of "A `CHARACTERS` item in a multi-item list" on the tally side. A
+`CHARACTERS BY x` item may now appear ALONGSIDE other items in a multi-item `REPLACING`
+list — e.g. `REPLACING ALL "A" BY "B" CHARACTERS BY "*"`,
+`REPLACING CHARACTERS BY "*" ALL "A" BY "B"`,
+`REPLACING ALL "A" BY "B" CHARACTERS BY "*" BEFORE "X"`. The former reject in
+`read_inspect_replacing_multi` / `inspect_replacing_multi` ("INSPECT REPLACING CHARACTERS is
+a later rung") is lifted for THIS path only. In the same ordered first-match-per-position
+rebuild (the one #71 extended to mix `ALL` and `LEADING`), a `CHARACTERS` item is the
+**always-eligible catch-all**: at each position it is eligible iff the position is in its
+window (`in_win`) — NO search compare, NO active-run tracking, and it carries NO search
+operand. So it EMITS its replacement char at every in-window position not already claimed by
+an EARLIER item in written order. Written order is honoured: a region-less `CHARACTERS` item
+shadows every item written after it (`REPLACING CHARACTERS BY "*" ALL "A" BY "B"` over
+`"AABB"` → `"****"`, the ALL never fires), while `REPLACING ALL "A" BY "B" CHARACTERS BY "*"`
+over `"AXAY"` → `"B*B*"` (ALL "A" claims its positions, CHARACTERS the rest). An optional
+`{BEFORE|AFTER} z` region narrows the catch-all's window exactly like any other item, via the
+SAME `region_window` / `emit_inspect_region_window` machinery — and a char PAST that window is
+still claimed by a trailing `ALL` item.
+
+The item type gains an explicit kind so the illegal "LEADING and also CHARACTERS" state is
+unrepresentable: the oracle's `ReplaceMultiLeadingItem` becomes
+`(Option<Operand>, Operand, ReplaceMultiKind, Option<Region>)` (`ReplaceMultiKind` =
+`All`/`Leading`/`Characters`; the SEARCH operand is `None` for `Characters`, the REPLACE
+operand always present), and the compiler mirrors it with a local `ReplaceKind`.
+`exec_inspect_replacing_multi` / `emit_inspect_replacing_multi` resolve a `CHARACTERS` item's
+replacement + window only (no `single_delim_char` / `single_delim_code` for a search), gate
+its eligibility on `in_win` alone — a region-less `CHARACTERS` item emits an unconditional
+"append replacement + jump to the position's done label" with no predicate, shadowing later
+links — and skip it in the leading active-run update. The combined `TALLYING … REPLACING`
+form KEEPS rejecting a `CHARACTERS` REPLACING half (that gate lives in the single-item
+`read_inspect_replacing_all`, reached via the combined caller). **Byte-vs-char reconstruct
+chip (task_396ba6f6, unchanged):** a `CHARACTERS` item rebuilds POSITIONS, and — like EVERY
+`REPLACING` lowering — the byte-based compiler rebuilds with per-position `str_slice` while
+the char-based oracle iterates CHARs, so a non-ASCII source that keeps a multi-byte char
+diverges (compiler traps, oracle succeeds), deliberately NOT fixed here (positive tests are
+ASCII; one characterization test pins the shared-chip divergence).
 
 ### Combined `INSPECT … TALLYING … REPLACING` (one statement)
 

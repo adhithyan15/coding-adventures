@@ -3306,17 +3306,37 @@ mod tests {
     }
 
     #[test]
-    fn inspect_replacing_multi_characters_item_is_a_later_rung() {
-        // A CHARACTERS item inside a multi-item list stays a later rung.
-        let err = run_cobol(&wrap(
-            &["01  S  PIC X(4) VALUE \"aabb\"."],
+    fn inspect_replacing_multi_characters_item_is_now_supported() {
+        // A CHARACTERS item inside a multi-item list is now ACCEPTED (the always-eligible
+        // catch-all). `REPLACING ALL "a" BY "x" CHARACTERS BY "*"` over "aYaZ": ALL "a"
+        // claims positions 0,2 → "x"; the CHARACTERS catch-all claims the rest (1,3) → "*".
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"aYaZ\"."],
             &[
-                "INSPECT S REPLACING ALL \"a\" BY \"x\" CHARACTERS BY \"y\".",
+                "INSPECT S REPLACING ALL \"a\" BY \"x\" CHARACTERS BY \"*\".",
+                "DISPLAY S.",
                 "STOP RUN.",
             ],
         ))
-        .unwrap_err();
-        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+        .unwrap();
+        assert_eq!(out, "x*x*\n");
+    }
+
+    #[test]
+    fn inspect_replacing_multi_characters_first_shadows_later_items() {
+        // A region-less CHARACTERS item written FIRST is unconditionally eligible, so it
+        // claims every position and the following ALL item never fires. Over "aabb":
+        // `REPLACING CHARACTERS BY "*" ALL "a" BY "x"` → "****".
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"aabb\"."],
+            &[
+                "INSPECT S REPLACING CHARACTERS BY \"*\" ALL \"a\" BY \"x\".",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "****\n");
     }
 
     #[test]

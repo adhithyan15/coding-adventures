@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.81.0 — INSPECT REPLACING with a CHARACTERS item in a multi-item list — 2026-07-30
+
+- **`INSPECT source REPLACING … CHARACTERS BY x …`** — a `CHARACTERS BY x` item ALONGSIDE
+  other items in a multi-item REPLACING list — is now accepted. The former
+  `read_inspect_replacing_multi` reject ("INSPECT REPLACING CHARACTERS is a later rung") is
+  lifted for this path only. A lone `REPLACING CHARACTERS BY x` was already supported
+  (#61/#80); this admits it as ONE item among two or more. The REPLACE twin of the 0.80.0
+  tally rung (a `CHARACTERS` item in a multi-item TALLYING list).
+- **Semantics — the always-eligible catch-all.** In the existing ordered
+  first-match-per-position pass (which #71 extended to mix `ALL` and `LEADING`), a
+  `CHARACTERS` item is eligible at EVERY in-window position — no search compare, no
+  leading-run tracking. So at each in-window position not already claimed by an EARLIER item
+  in written order it EMITS its replacement char. Written order is honoured: a region-less
+  `CHARACTERS` item shadows every item written after it. An optional `{BEFORE|AFTER} z` region
+  narrows its window exactly like any other item; a char past that window is still claimed by a
+  trailing `ALL` item.
+- **Type change (co-total classification).** `ReplaceMultiLeadingItem` now carries an
+  `Option<Operand>` search (`None` for `CHARACTERS`) plus a new `ReplaceMultiKind`
+  (`All`/`Leading`/`Characters`) enum, mirroring the tally side's `TallyMultiKind`. The replace
+  operand is always present.
+- **Still deferred (co-total).** The COMBINED `TALLYING … REPLACING` form keeps rejecting a
+  `CHARACTERS` REPLACING half (read by the single-item `read_inspect_replacing_all`); `FIRST`
+  stays deferred; the `ALL`/`LEADING` search/replacement single-char validation via
+  `single_delim_char` is unchanged.
+- **Byte-vs-char reconstruct chip (unchanged, task_396ba6f6).** A `CHARACTERS` item rebuilds
+  POSITIONS; the char-based oracle iterates `char`s while the byte-based compiler reads
+  `str_slice` per byte position, so a non-ASCII source that keeps a multi-byte char diverges
+  (oracle succeeds, compiler traps) EXACTLY as every other REPLACING form does — NOT fixed
+  here. Positive tests keep any multi-byte char outside every window.
+
 ## 0.80.0 — INSPECT TALLYING with a CHARACTERS item in a multi-item list — 2026-07-30
 
 - **`INSPECT source TALLYING counter FOR … CHARACTERS …`** — a `CHARACTERS` item ALONGSIDE

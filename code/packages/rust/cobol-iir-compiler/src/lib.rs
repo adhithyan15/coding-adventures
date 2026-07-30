@@ -2794,14 +2794,16 @@ impl<'a> Compiler<'a> {
                 self.emit_inspect_replacing(verb, &s_reg, source_width, true, true, true)
             }
             // A lone REPLACING. Dispatch on the number of replace items, mirroring the
-            // oracle's `read_statement`: exactly ONE item keeps the full single-item
-            // lowering (both `ALL` and `LEADING`, `REPLACING ALL` may carry a
-            // `{BEFORE|AFTER}` region, and the STANDALONE `REPLACING LEADING …
-            // BEFORE/AFTER` is supported via `allow_leading_region = true`); TWO OR
-            // MORE items take the multi-item lowering (`ALL`-only, single-char, no
-            // region — one left-to-right first-match-wins pass). Counting the same
-            // `replace_item` children the oracle counts keeps the two engines' accept/
-            // reject sets co-total.
+            // oracle's `read_statement`: a lone `REPLACING CHARACTERS BY x` routes to
+            // `emit_inspect_replacing_characters` (below); exactly ONE `ALL`/`LEADING` item
+            // keeps the full single-item lowering (both `ALL` and `LEADING`, `REPLACING
+            // ALL` may carry a `{BEFORE|AFTER}` region, and the STANDALONE `REPLACING
+            // LEADING … BEFORE/AFTER` is supported via `allow_leading_region = true`); TWO
+            // OR MORE items take the multi-item lowering (a MIX of `ALL`/`LEADING`/
+            // `CHARACTERS`, single-char, each with its OWN optional region — one
+            // left-to-right first-match-wins pass). Counting the same `replace_item`
+            // children the oracle counts keeps the two engines' accept/reject sets
+            // co-total.
             (false, true) => {
                 let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
                     CompileError::Unsupported(
@@ -3773,12 +3775,12 @@ impl<'a> Compiler<'a> {
         s_reg: &str,
         width: usize,
     ) -> Result<(), CompileError> {
-        // The written-order list of `(search_node, replace_node, leading, region)` items
-        // (the reader accepts a MIX of `ALL`/`LEADING`; each item MAY carry its own
-        // region). If ANY item has a region we materialise the runtime length ONCE,
-        // over the ORIGINAL source, since `emit_inspect_region_window` needs it (and
-        // all region windows are computed over that same original, before the unroll
-        // overwrites `s_reg` at the very end).
+        // The written-order list of `(search_node, replace_node, kind, region)` items (the
+        // reader accepts a MIX of `ALL`/`LEADING`/`CHARACTERS`; each item MAY carry its own
+        // region — a `CHARACTERS` item's `search_node` is `None`). If ANY item has a region
+        // we materialise the runtime length ONCE, over the ORIGINAL source, since
+        // `emit_inspect_region_window` needs it (and all region windows are computed over
+        // that same original, before the unroll overwrites `s_reg` at the very end).
         let item_nodes = inspect_replacing_multi(verb)?;
         let len = if item_nodes.iter().any(|(_, _, _, region)| region.is_some()) {
             let l = self.fresh("_irmlen");
@@ -3787,19 +3789,24 @@ impl<'a> Compiler<'a> {
         } else {
             None
         };
-        // Reduce each item to a `(search byte code, replacement 1-char string, leading,
+        // Reduce each item to a `(search byte code, replacement 1-char string, kind,
         // active, window)` tuple, IN ORDER, so the per-position chain below can walk them
         // written-first. The window (when present) is derived by the SAME
         // `emit_inspect_region_window` the single-item region emitter uses, so both
-        // engines narrow to identical slices. A `LEADING` item ALSO allocates a runtime
-        // `active` register (i64, init `1` = its run is still alive), materialised HERE —
-        // before the unroll — exactly like the single-item `emit_inspect_replacing`
+        // engines narrow to identical slices. A `CHARACTERS` item has NO search (`None`) —
+        // it is the always-eligible catch-all, so we skip `single_delim_code` (nothing to
+        // validate/compare) and allocate no `active`. A `LEADING` item ALSO allocates a
+        // runtime `active` register (i64, init `1` = its run is still alive), materialised
+        // HERE — before the unroll — exactly like the single-item `emit_inspect_replacing`
         // LEADING flag and the tally side's `emit_inspect_tally_multi`. Operands, window,
         // and active flag are resolved BEFORE the unroll (mirroring the oracle, which
         // resolves chars/window per item up front, then inits `active`).
         let mut regs: Vec<ResolvedReplaceLeadingItem> = Vec::with_capacity(item_nodes.len());
-        for (search_node, replace_node, leading, region) in item_nodes {
-            let x_reg = self.single_delim_code(search_node, "INSPECT REPLACING")?;
+        for (search_node, replace_node, kind, region) in item_nodes {
+            let x_reg = match kind {
+                ReplaceKind::Characters => None,
+                _ => Some(self.single_delim_code(search_node.unwrap(), "INSPECT REPLACING")?),
+            };
             let y_reg = self.single_delim_str(replace_node, "INSPECT REPLACING")?;
             let window = match region {
                 None => None,
@@ -3808,14 +3815,14 @@ impl<'a> Compiler<'a> {
                     self.emit_inspect_region_window(region, s_reg, len)?
                 }
             };
-            let active = if leading {
+            let active = if matches!(kind, ReplaceKind::Leading) {
                 let a = self.fresh("_irmact");
                 self.emit("const", Some(&a), vec![Operand::Int(1)], "i64");
                 Some(a)
             } else {
                 None
             };
-            regs.push((x_reg, y_reg, leading, active, window));
+            regs.push((x_reg, y_reg, kind, active, window));
         }
 
         // result = "" — the accumulator we build W characters into.
@@ -3837,23 +3844,21 @@ impl<'a> Compiler<'a> {
             // The ordered DECISION chain: item 0, then item 1, … On the FIRST ELIGIBLE
             // item we append that item's replacement and jump to `done`, skipping the
             // rest — first-match-wins. A miss jumps to the next link (`next`); after the
-            // last link's `next` we fall through to the no-match branch below. An `ALL`
-            // item is eligible iff `(start <= j < end) AND c == x`; a `LEADING` item ALSO
-            // requires its `active` run flag still `1`.
-            for (x_reg, y_reg, leading, active, window) in &regs {
-                let eq = self.fresh("_irmeq");
-                self.emit(
-                    "cmp_eq",
-                    Some(&eq),
-                    vec![Operand::Var(c.clone()), Operand::Var(x_reg.clone())],
-                    "i64",
-                );
-                // Gate the compare by this item's window: `base = (start <= j < end)
-                // AND (c == x)`. `j` is the compile-time position materialised into a
-                // register so it can be compared against the runtime bounds. A
-                // region-less item folds down to `eq` alone (no window emitted).
-                let base = match window {
-                    None => eq,
+            // last link's `next` we fall through to the no-match branch below. Eligibility
+            // by kind:
+            //   * `ALL`        — `(start <= j < end) AND c == x`;
+            //   * `LEADING`    — as `ALL`, ALSO requiring its `active` run flag still `1`;
+            //   * `CHARACTERS` — `(start <= j < end)` ALONE (the always-eligible catch-all:
+            //                    NO search compare). A region-less `CHARACTERS` item is
+            //                    UNCONDITIONALLY eligible — it claims every position — so we
+            //                    append its replacement and `jmp done` with no predicate.
+            for (x_reg, y_reg, kind, active, window) in &regs {
+                // The item's window predicate: `Some(in_win_reg)` for a regioned item,
+                // `None` for a region-less item (whole source ⇒ always in window). `j` is
+                // the compile-time position materialised into a register so it can be
+                // compared against the runtime bounds.
+                let in_win = match window {
+                    None => None,
                     Some((start, end_bound)) => {
                         let jreg = self.fresh("_irmjr");
                         self.emit("const", Some(&jreg), vec![Operand::Int(j as i64)], "i64");
@@ -3873,33 +3878,75 @@ impl<'a> Compiler<'a> {
                         );
                         let inw = self.fresh("_irmin");
                         self.emit("and", Some(&inw), vec![Operand::Var(ge), Operand::Var(lt)], "i64");
-                        let m = self.fresh("_irmm");
-                        self.emit("and", Some(&m), vec![Operand::Var(inw), Operand::Var(eq)], "i64");
-                        m
+                        Some(inw)
                     }
                 };
-                // A `LEADING` item ALSO AND-gates on its `active` run flag; an `ALL` item's
-                // eligibility is `base` alone (it never reads `active`).
-                let matched = match (leading, active) {
-                    (true, Some(a)) => {
+                // `base` = eligibility BEFORE the LEADING active-gate. For `ALL`/`LEADING`
+                // it AND-folds the search compare `c == x` under the window; for
+                // `CHARACTERS` it is the window predicate ALONE (`None` = unconditionally
+                // eligible).
+                let base: Option<String> = match kind {
+                    ReplaceKind::Characters => in_win,
+                    _ => {
+                        let eq = self.fresh("_irmeq");
+                        self.emit(
+                            "cmp_eq",
+                            Some(&eq),
+                            vec![
+                                Operand::Var(c.clone()),
+                                Operand::Var(x_reg.as_ref().unwrap().clone()),
+                            ],
+                            "i64",
+                        );
+                        match in_win {
+                            None => Some(eq),
+                            Some(inw) => {
+                                let m = self.fresh("_irmm");
+                                self.emit(
+                                    "and",
+                                    Some(&m),
+                                    vec![Operand::Var(inw), Operand::Var(eq)],
+                                    "i64",
+                                );
+                                Some(m)
+                            }
+                        }
+                    }
+                };
+                // A `LEADING` item ALSO AND-gates on its `active` run flag; `ALL`/
+                // `CHARACTERS` never read `active`, so their eligibility is `base` alone.
+                let matched: Option<String> = match (kind, active) {
+                    (ReplaceKind::Leading, Some(a)) => {
                         let m = self.fresh("_irmel");
                         self.emit(
                             "and",
                             Some(&m),
-                            vec![Operand::Var(base), Operand::Var(a.clone())],
+                            vec![Operand::Var(base.unwrap()), Operand::Var(a.clone())],
                             "i64",
                         );
-                        m
+                        Some(m)
                     }
                     _ => base,
                 };
-                let next = self.fresh("irm_next");
-                self.emit(
-                    "jmp_if_false",
-                    None,
-                    vec![Operand::Var(matched), Operand::Var(next.clone())],
-                    "void",
-                );
+                // Emit the guarded append. When `matched` is `None` (an unconditional
+                // `CHARACTERS` catch-all), the position is always claimed: append the
+                // replacement and `jmp done` with no test and no `next` label (any later
+                // chain link is then unreachable — a region-less `CHARACTERS` item shadows
+                // everything after it in written order, exactly the oracle's
+                // first-eligible-item semantics).
+                let next = match matched {
+                    Some(m) => {
+                        let n = self.fresh("irm_next");
+                        self.emit(
+                            "jmp_if_false",
+                            None,
+                            vec![Operand::Var(m), Operand::Var(n.clone())],
+                            "void",
+                        );
+                        Some(n)
+                    }
+                    None => None,
+                };
                 self.emit(
                     "str_concat",
                     Some(&result),
@@ -3907,7 +3954,9 @@ impl<'a> Compiler<'a> {
                     "str",
                 );
                 self.emit("jmp", None, vec![Operand::Var(done.clone())], "void");
-                self.emit("label", None, vec![Operand::Var(next)], "void");
+                if let Some(n) = next {
+                    self.emit("label", None, vec![Operand::Var(n)], "void");
+                }
             }
             // No item matched — append the ORIGINAL character `S[j, j+1)` unchanged.
             let jc1 = self.str_index(j as i64 + 1);
@@ -3931,14 +3980,17 @@ impl<'a> Compiler<'a> {
             // registers may not have been reached on an early `jmp done`), mirroring the
             // oracle's separate active-update pass and the tally side's `cont` section.
             self.emit("label", None, vec![Operand::Var(done)], "void");
-            for (x_reg, _, leading, active, window) in &regs {
-                let (true, Some(a)) = (leading, active) else { continue };
+            for (x_reg, _, kind, active, window) in &regs {
+                // Only `LEADING` items carry a run flag; `ALL` and `CHARACTERS` are skipped
+                // (a `CHARACTERS` item has NO search and no run — it never decays anything),
+                // exactly mirroring the oracle's active-update pass.
+                let (ReplaceKind::Leading, Some(a)) = (*kind, active) else { continue };
                 // eq2 = (c == x).
                 let eq2 = self.fresh("_irmeq2");
                 self.emit(
                     "cmp_eq",
                     Some(&eq2),
-                    vec![Operand::Var(c.clone()), Operand::Var(x_reg.clone())],
+                    vec![Operand::Var(c.clone()), Operand::Var(x_reg.as_ref().unwrap().clone())],
                     "i64",
                 );
                 match window {
@@ -7396,18 +7448,18 @@ type TallyCounterGroup<'a> = (String, Vec<TallyItem<'a>>);
 type ResolvedTallyLeadingItem =
     (Option<String>, TallyKind, Option<String>, Option<(String, String)>);
 
-/// One resolved item of a multi-item `REPLACING` unroll (with a possible `LEADING`
-/// item): `(search_byte_code_reg, replacement_1char_str_reg, leading, active_reg,
-/// window)`. The replace-side twin of [`ResolvedTallyLeadingItem`]: it adds the
-/// replacement-string register (the tally has nothing to emit, only to count) but
-/// carries the SAME `leading`/`active_reg`/`window` fields. `active_reg` is the
-/// per-`LEADING`-item runtime run flag register (i64, init 1; `None` for an `ALL` item)
-/// and `window` is the optional `[start, end)` byte-bound register pair for the item's
-/// `{BEFORE|AFTER}` region (`None` = whole-source). Named so
-/// `emit_inspect_replacing_multi`'s resolved vector stays below clippy's type-complexity
-/// threshold.
+/// One resolved item of a multi-item `REPLACING` unroll (with possible
+/// `LEADING`/`CHARACTERS` items): `(search_byte_code_reg, replacement_1char_str_reg, kind,
+/// active_reg, window)`. The replace-side twin of [`ResolvedTallyLeadingItem`]: it adds
+/// the replacement-string register (the tally has nothing to emit, only to count) but
+/// carries the SAME `kind`/`active_reg`/`window` fields. `search_byte_code_reg` is `None`
+/// for a `CHARACTERS` item (no search to compare), `active_reg` is the per-`LEADING`-item
+/// runtime run flag register (i64, init 1; `None` for `ALL`/`CHARACTERS`), and `window` is
+/// the optional `[start, end)` byte-bound register pair for the item's `{BEFORE|AFTER}`
+/// region (`None` = whole-source). Named so `emit_inspect_replacing_multi`'s resolved
+/// vector stays below clippy's type-complexity threshold.
 type ResolvedReplaceLeadingItem =
-    (String, String, bool, Option<String>, Option<(String, String)>);
+    (Option<String>, String, ReplaceKind, Option<String>, Option<(String, String)>);
 
 /// One entry of the FLATTENED combined-priority list a multi-counter `TALLYING` scan
 /// walks per position: `(group_index, delimiter_byte_code_reg, window)` where `window` is
@@ -7600,16 +7652,39 @@ fn inspect_tally_counters(verb: &GrammarASTNode) -> Result<Vec<TallyCounterGroup
 type ReplacePhrase<'a> =
     (&'a GrammarASTNode, &'a GrammarASTNode, bool, Option<(RegionKind, &'a GrammarASTNode)>);
 
-/// One `{ALL|LEADING} search BY replace [{BEFORE|AFTER} x]` item of a MULTI-item
-/// REPLACING clause: `(search_node, replace_node, leading, region)`, where `leading`
-/// is `true` for a `LEADING` item (replace only its run anchored at the window start)
-/// and `region` is the optional `{BEFORE|AFTER} x` window as `(kind, region_delim_node)`
-/// — the SAME shape [`ReplacePhrase`] carries. THIS rung lifts the multi-item `LEADING`
-/// reject, so — like [`ReplacePhrase`], and mirroring the tally side's multi-item
-/// leading flag — each item now carries a `leading` flag AND its OWN optional region
-/// window.
-type ReplaceItem<'a> =
-    (&'a GrammarASTNode, &'a GrammarASTNode, bool, Option<(RegionKind, &'a GrammarASTNode)>);
+/// Which flavour of replace item a MULTI-item REPLACING clause holds — the compiler-side
+/// mirror of the oracle's `ReplaceMultiKind` and the replace-side twin of [`TallyKind`].
+/// Picking an explicit enum (over a bare `leading: bool`) makes the illegal "LEADING and
+/// ALSO CHARACTERS" state UNREPRESENTABLE and keeps the CST-side dispatch co-total with
+/// the oracle reader: `ALL a BY x` → [`ReplaceKind::All`], `LEADING a BY x` →
+/// [`ReplaceKind::Leading`], `CHARACTERS BY x` → [`ReplaceKind::Characters`] (no search
+/// operand, always-eligible catch-all).
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum ReplaceKind {
+    /// `ALL a BY x` — eligible at an in-window position whose char equals the search.
+    All,
+    /// `LEADING a BY x` — like `All`, but only while this item's leading run is unbroken.
+    Leading,
+    /// `CHARACTERS BY x` — eligible at EVERY in-window position; carries no search operand.
+    Characters,
+}
+
+/// One `{ALL|LEADING} search BY replace [{BEFORE|AFTER} x]` — or bare
+/// `CHARACTERS BY replace [{BEFORE|AFTER} x]` — item of a MULTI-item REPLACING clause:
+/// `(search_node, replace_node, kind, region)`, where `search_node` is `None` on the
+/// `CHARACTERS` path (that form carries no search operand — it overwrites positions) and
+/// `Some` otherwise, `kind` is the [`ReplaceKind`] tag, and `region` is the optional
+/// `{BEFORE|AFTER} x` window as `(kind, region_delim_node)` — the SAME shape
+/// [`ReplacePhrase`] carries. THIS rung lifts the multi-item `CHARACTERS` reject, so —
+/// mirroring the tally side's multi-item kind tag (#81) — each item now carries a
+/// [`ReplaceKind`] AND its OWN optional region window. The replacement node is ALWAYS
+/// present (every variant carries a `BY x`).
+type ReplaceItem<'a> = (
+    Option<&'a GrammarASTNode>,
+    &'a GrammarASTNode,
+    ReplaceKind,
+    Option<(RegionKind, &'a GrammarASTNode)>,
+);
 
 /// Extract the supported `REPLACING ALL search BY replace [{BEFORE|AFTER} x]` /
 /// `REPLACING LEADING search BY replace` phrase from an `inspect_stmt`, returning
@@ -7706,15 +7781,20 @@ fn inspect_replacing_all(verb: &GrammarASTNode) -> Result<ReplacePhrase<'_>, Com
 /// stay co-total. Only called after the caller has confirmed `>= 2` items; a single
 /// item keeps [`inspect_replacing_all`] and all its capabilities.
 ///
-/// Scope bound (this rung, IDENTICAL messages to the oracle reader): every item must
-/// be a single-char `{ALL|LEADING} search BY replace` pair with NO `CHARACTERS`/`FIRST`.
-/// Each item MAY be `ALL` OR `LEADING` (THIS rung lifts the multi-item `LEADING` reject,
-/// mirroring the tally side's `inspect_tally_multi` per-item leading flag) and MAY carry
-/// its OWN optional `{BEFORE|AFTER} x` region, parsed with the SAME keyword/operand
-/// extraction [`inspect_replacing_all`] uses on the single-item side. Any violating item
-/// is a clean later-rung `Unsupported`. A multi-character/figurative/wider/numeric
-/// search, replacement, or region delimiter is NOT rejected here — it falls to the SAME
-/// `single_delim_code`/`single_delim_str` checks the single-item emitter uses.
+/// Scope (this rung, IDENTICAL messages to the oracle reader): each item is `ALL`,
+/// `LEADING`, OR `CHARACTERS` — the multi-item `CHARACTERS` reject is LIFTED this rung
+/// (LEADING and the per-item region were lifted earlier), mirroring the tally side's
+/// `inspect_tally_multi` (#81). Each item carries a [`ReplaceKind`] tag, an OPTIONAL
+/// search node (`Some` for `ALL`/`LEADING`, `None` for `CHARACTERS`), the ALWAYS-present
+/// `BY` replacement node, AND its OWN optional `{BEFORE|AFTER} x` region, parsed with the
+/// SAME keyword/operand extraction [`inspect_replacing_all`] uses on the single-item side.
+/// A `CHARACTERS` item is the always-eligible catch-all (no search, no run). `FIRST` is
+/// still deferred. Any violating item is a clean later-rung `Unsupported`. A
+/// multi-character/figurative/wider/numeric search on an `ALL`/`LEADING` item, replacement,
+/// or region delimiter is NOT rejected here — it falls to the SAME
+/// `single_delim_code`/`single_delim_str` checks the single-item emitter uses. (The
+/// COMBINED `TALLYING … REPLACING` form keeps rejecting `CHARACTERS` in its REPLACING half
+/// via `inspect_replacing_all`, reached through the combined caller, not here.)
 fn inspect_replacing_multi(verb: &GrammarASTNode) -> Result<Vec<ReplaceItem<'_>>, CompileError> {
     let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
         CompileError::Unsupported("INSPECT without a REPLACING clause is a later rung".into())
@@ -7722,35 +7802,36 @@ fn inspect_replacing_multi(verb: &GrammarASTNode) -> Result<Vec<ReplaceItem<'_>>
     let mut items = Vec::new();
     for ri in child_nodes(replacing, "replace_item") {
         let toks = child_tokens(ri);
-        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
-            return Err(CompileError::Unsupported(
-                "INSPECT REPLACING CHARACTERS is a later rung".into(),
-            ));
-        }
         if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "FIRST") {
             return Err(CompileError::Unsupported(
                 "INSPECT REPLACING FIRST is a later rung".into(),
             ));
         }
-        // A `LEADING` item in a multi-item list is now ACCEPTED (THIS rung): the multi
-        // path supports a MIX of `ALL` and `LEADING` items — the replace-side twin of
-        // the tally side's `inspect_tally_multi`, which already threads a per-item leading
-        // flag. The keyword picks per-item substitution semantics threaded to
-        // `emit_inspect_replacing_multi` (a `LEADING` item replaces only its run anchored
-        // at the window start). (A LONE `REPLACING LEADING` is still supported via the
+        // Classify the item into exactly one [`ReplaceKind`] variant, matching the oracle
+        // reader. `CHARACTERS` in a multi-item list is now ACCEPTED (THIS rung) — the
+        // always-eligible catch-all, no search operand. `LEADING` (also lifted, #71)
+        // replaces only its run; `ALL` is the default. The keyword picks per-item
+        // substitution semantics threaded to `emit_inspect_replacing_multi`. (A LONE
+        // `REPLACING CHARACTERS BY x` or `REPLACING LEADING` is still supported via the
         // single-item path, not here.)
-        let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
-        // A `{BEFORE|AFTER} x` region on an item is ACCEPTED: parse it into
+        let kind = if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+            ReplaceKind::Characters
+        } else if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
+            ReplaceKind::Leading
+        } else {
+            ReplaceKind::All
+        };
+        // A `{BEFORE|AFTER} x` region on an item is ACCEPTED for EVERY kind: parse it into
         // `Option<(RegionKind, node)>` with the SAME keyword/operand extraction
-        // `inspect_replacing_all` uses on the single-item side. The region contributes
-        // its own delimiter operand under the `inspect_region` child, not a direct
-        // child of `replace_item`, so the two DIRECT `operand` children below are still
-        // exactly the search and replacement.
+        // `inspect_replacing_all` uses on the single-item side. The region contributes its
+        // own delimiter operand under the `inspect_region` child, not a direct child of
+        // `replace_item`, so an `ALL`/`LEADING` item's two DIRECT `operand` children (and a
+        // `CHARACTERS` item's one) below are still exactly the search/replacement.
         let region = match child_node(ri, "inspect_region") {
             None => None,
             Some(region_node) => {
                 let rtoks = child_tokens(region_node);
-                let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+                let rkind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
                     RegionKind::Before
                 } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
                     RegionKind::After
@@ -7764,20 +7845,33 @@ fn inspect_replacing_multi(verb: &GrammarASTNode) -> Result<Vec<ReplaceItem<'_>>
                         "INSPECT BEFORE/AFTER region without a delimiter".into(),
                     )
                 })?;
-                Some((kind, rdelim))
+                Some((rkind, rdelim))
             }
         };
-        // `{ALL|LEADING} search BY replace` — the two DIRECT `operand` children are
-        // exactly the search (first) and the replacement (second); a region's delimiter
-        // rides on the `inspect_region` child, not here.
+        // A `CHARACTERS` item carries NO search operand (grammar branch
+        // `CHARACTERS "BY" operand { inspect_region }`), so its SOLE direct `operand` child
+        // is the replacement — the search node is `None`. `ALL`/`LEADING` read their two
+        // direct operands: the search (first) and the replacement (second). A region's
+        // delimiter rides on the `inspect_region` child, not here.
         let ops = child_nodes(ri, "operand");
-        match ops.as_slice() {
-            [s, r] => items.push((*s, *r, leading, region)),
-            _ => {
-                return Err(CompileError::Malformed(
-                    "INSPECT REPLACING ALL/LEADING without a search and a BY replacement".into(),
-                ))
-            }
+        match kind {
+            ReplaceKind::Characters => match ops.as_slice() {
+                [r] => items.push((None, *r, kind, region)),
+                _ => {
+                    return Err(CompileError::Malformed(
+                        "INSPECT REPLACING CHARACTERS without a BY replacement".into(),
+                    ))
+                }
+            },
+            _ => match ops.as_slice() {
+                [s, r] => items.push((Some(*s), *r, kind, region)),
+                _ => {
+                    return Err(CompileError::Malformed(
+                        "INSPECT REPLACING ALL/LEADING without a search and a BY replacement"
+                            .into(),
+                    ))
+                }
+            },
         }
     }
     Ok(items)

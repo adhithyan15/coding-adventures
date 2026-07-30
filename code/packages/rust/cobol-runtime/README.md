@@ -246,8 +246,16 @@ flag (consulted only for `LEADING` items) that is updated INDEPENDENTLY of which
 each position — a run breaks at the FIRST in-window mismatch, a matching char keeps it
 alive even if a higher-priority item claimed the position, and positions outside the window
 neither begin nor break it. So `REPLACING LEADING "a" BY "X" ALL "b" BY "Y"` over `"aabaa"`
-→ `"XXYaa"`. The multi path stays single-char; a `CHARACTERS`/`FIRST` item in the list is a
-later rung — a single replace item keeps all its capabilities);
+→ `"XXYaa"`. A `CHARACTERS BY x` item in a multi-item list is now supported (this rung), the
+exact replace-side twin of the multi-item TALLYING-with-CHARACTERS form: it is the
+always-eligible catch-all — no search compare, no run — so at each in-window position not
+already claimed by an EARLIER item in written order it emits its replacement char. Written
+order is honoured: a region-less `CHARACTERS` item shadows every item after it, and an optional
+`{BEFORE|AFTER}` region narrows its window like any item (a char past that window is still
+claimed by a trailing `ALL`). So `REPLACING ALL "A" BY "B" CHARACTERS BY "*"` over `"AXAY"` →
+`"B*B*"`, and `REPLACING CHARACTERS BY "*" ALL "A" BY "B"` over `"AABB"` → `"****"`. The multi
+path stays single-char; a `FIRST` item in the list is a later rung — a single replace item
+keeps all its capabilities);
 the **replace-every-position** `INSPECT source REPLACING
 CHARACTERS BY x [{BEFORE|AFTER} z]` (no search character — with no region EVERY position
 of the alphanumeric source is overwritten with the single replacement char `x`, so the
@@ -319,9 +327,9 @@ half of the combined form), a `REPLACING CHARACTERS` item carrying a
 non-ASCII literal replacement / `REPLACING FIRST` (a lone
 `REPLACING CHARACTERS BY x` is now supported, with an optional `{BEFORE|AFTER}` region),
 a MULTI-item
-`REPLACING` list carrying a `CHARACTERS`/`FIRST` item (the multi-item list itself is now
-supported for single-char `ALL` **and** `LEADING` items, and each such item may carry its
-OWN `{BEFORE|AFTER}` region),
+`REPLACING` list carrying a `FIRST` item (the multi-item list itself is now
+supported for single-char `ALL`, `LEADING`, **and** `CHARACTERS BY x` items, and each such
+item may carry its OWN `{BEFORE|AFTER}` region),
 a MULTI-item `TALLYING` list carrying a `CHARACTERS` item
 (the multi-item tally list itself is now supported for single-char `ALL` **and**
 `LEADING` items under ONE counter, and each such item may now carry its OWN
