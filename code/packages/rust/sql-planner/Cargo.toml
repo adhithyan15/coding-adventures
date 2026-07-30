@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-sql-planner"
-version = "0.2.33"
+version = "0.2.34"
 edition = "2021"
 description = "Rust logical query planner for the mini-sqlite Level 1 pipeline"
 license = "MIT"

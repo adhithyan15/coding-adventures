@@ -219,6 +219,12 @@ pub struct CompiledSortKey {
     /// comparison. `None` = default byte order (BINARY). `Some("NOCASE")` =
     /// ASCII case-insensitive; `Some("RTRIM")` = ignore trailing spaces.
     pub collation: Option<String>,
+    /// Set when a positional `ORDER BY <n>` binds to output column `n-1` by INDEX
+    /// (a `ORDER BY <n>` over an aggregate, whose emitted value must be sorted
+    /// directly). During compilation this index is resolved to `column` (the
+    /// output column's emitted name) once the Project's columns are known; the VM
+    /// only ever reads `column`, so this is `None` by the time it runs.
+    pub output_index: Option<usize>,
 }
 
 /// The complete bytecode instruction set for the Mini-SQLite VM.
@@ -770,6 +776,27 @@ impl Compiler {
         // appending a `TruncateOutputColumns(n)` post-op after `SortResult` to
         // strip them.  This keeps `SortResult` as a simple name-based lookup.
         let (inner, mut post_ops) = peel_post_ops_through_project(plan);
+
+        // Resolve any positional `ORDER BY <n>` key that binds to an output column
+        // BY INDEX — a `ORDER BY <n>` over an AGGREGATE, which must sort the
+        // already-materialized value. The planner records the output index but
+        // cannot name the column (the emitted name is computed here); so bind the
+        // key to `output_column_name(columns[i])`. This runs BEFORE the hidden-sort
+        // analysis below so the resolved key is recognized as an OUTPUT column
+        // (not spuriously treated as a hidden sort column and re-evaluated).
+        if let OptimizedPlan::Project { columns, .. } = inner.as_ref() {
+            for op in &mut post_ops {
+                if let Instruction::SortResult(keys) = op {
+                    for key in keys.iter_mut() {
+                        if let Some(i) = key.output_index {
+                            if let Some(col) = columns.get(i) {
+                                key.column = output_column_name(col);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         // Extract the sort keys (if any) so we can pass hidden sort columns
         // to compile_project.
@@ -2301,6 +2328,7 @@ fn peel_post_ops(plan: &OptimizedPlan) -> (&OptimizedPlan, Vec<Instruction>) {
                         ascending: k.ascending,
                         nulls_first: k.nulls_first,
                         collation: k.collation.clone(),
+                        output_index: k.output_index,
                     })
                     .collect();
                 post_ops.push(Instruction::SortResult(compiled_keys));
@@ -2971,6 +2999,7 @@ mod tests {
                 ascending: true,
                 nulls_first: None,
                 collation: None,
+                output_index: None,
             }],
         });
         let v = instrs(&plan);
@@ -2991,6 +3020,7 @@ mod tests {
                 ascending: true,
                 nulls_first: None,
                 collation: None,
+                output_index: None,
             }],
         });
         let v = instrs(&plan);
@@ -3012,6 +3042,7 @@ mod tests {
                 ascending: false,
                 nulls_first: None,
                 collation: None,
+                output_index: None,
             }],
         });
         let v = instrs(&plan);
@@ -3034,12 +3065,14 @@ mod tests {
                     ascending: true,
                     nulls_first: None,
                     collation: None,
+                    output_index: None,
                 },
                 SortKey {
                     expr: col("b"),
                     ascending: false,
                     nulls_first: None,
                     collation: None,
+                    output_index: None,
                 },
             ],
         });
@@ -3817,6 +3850,7 @@ mod tests {
                 ascending: true,
                 nulls_first: None,
                 collation: None,
+                output_index: None,
             }],
         });
         let v = instrs(&plan);

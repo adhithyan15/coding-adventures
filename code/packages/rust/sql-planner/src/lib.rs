@@ -451,6 +451,14 @@ pub struct SortKey {
     /// case-insensitively; `Some("RTRIM")` ignores trailing spaces. Non-text
     /// values are unaffected by collation. Stored uppercased.
     pub collation: Option<String>,
+    /// A positional `ORDER BY <n>` that points at an AGGREGATE output column
+    /// (e.g. `SELECT k, sum(v) … ORDER BY 2`) binds to output column `n-1` by
+    /// INDEX rather than by re-substituting the aggregate expression: the sort
+    /// must read the already-materialized value, which an aggregate has no
+    /// per-row form for. Codegen resolves this index to that column's emitted
+    /// name (the planner cannot — the name is computed in codegen). `None` for
+    /// every ordinary key, whose `expr` drives the sort as before.
+    pub output_index: Option<usize>,
 }
 
 /// An aggregate item inside an `Aggregate` plan node.
@@ -1155,21 +1163,23 @@ fn plan_order_by(
 /// | `1+0`         | constant `1` (no reorder)   |
 /// | `name`        | column/alias `name`         |
 ///
-/// Returns:
-/// - `Ok(Some(expr))` — the key was a positional reference; `expr` is the
-///   substituted n-th output expression.
-/// - `Ok(None)` — the key is not positional (leave it as written). Also the
-///   escape hatch for `SELECT *`, whose column count/identity isn't known at
-///   plan time; we leave such a key unchanged rather than guess.
+/// Returns a [`PositionalKey`]:
+/// - `Expr(e)` — a positional reference; `e` is the substituted n-th output
+///   expression (routed through the ordinary per-row sort path).
+/// - `Index(i)` — a positional reference whose target output column is (or
+///   contains) an AGGREGATE; the sort must bind to the MATERIALIZED value at
+///   output index `i`, not re-evaluate the aggregate per row.
+/// - `NotPositional` — the key is not positional (leave it as written), also the
+///   escape hatch for `SELECT *`, whose column identity isn't known at plan time.
 /// - `Err(..)` — a positional reference out of range, matching SQLite's
 ///   "ORDER BY term out of range" (only diagnosed for a fully-explicit list).
 fn resolve_positional_key(
     expr: &SqlExpr,
     outputs: &[OutputColumn],
-) -> Result<Option<SqlExpr>, PlanError> {
+) -> Result<PositionalKey, PlanError> {
     // Only a bare integer literal is a positional reference.
     let SqlExpr::Literal(SqlValue::Int(n)) = expr else {
-        return Ok(None);
+        return Ok(PositionalKey::NotPositional);
     };
     let n = *n;
 
@@ -1180,7 +1190,7 @@ fn resolve_positional_key(
         matches!(&c.expr, SqlExpr::Column { name, .. } if name == "*")
     });
     if has_star {
-        return Ok(None);
+        return Ok(PositionalKey::NotPositional);
     }
 
     // Fully explicit list: range-check exactly like SQLite (1..=ncols). Compare
@@ -1196,22 +1206,34 @@ fn resolve_positional_key(
 
     // Safe: `1 <= n <= outputs.len()`, so `n - 1` is a valid 0-based index that
     // fits `usize` on every platform.
-    let target = &outputs[(n - 1) as usize].expr;
+    let idx = (n - 1) as usize;
+    let target = &outputs[idx].expr;
 
     // If the target is (or contains) an aggregate, we cannot substitute its
     // expression: aggregates are computed once per group, not re-evaluated per
     // row in the sort path, so routing `SUM(v)` back through the sort would
-    // ignore it. Sorting by a positional aggregate is left unchanged here (a
-    // known-divergence ledger entry) rather than silently mis-sorting. The
-    // non-aggregate case — the overwhelming majority — resolves below.
+    // ignore it. Instead bind by INDEX — codegen sorts the already-materialized
+    // output column at this position (see `SortKey::output_index`).
     if expr_contains_aggregate(target) {
-        return Ok(None);
+        return Ok(PositionalKey::Index(idx));
     }
 
     // Substitute the n-th output expression. Routing the real expression through
     // the ordinary sort path means positional keys inherit all the existing
     // machinery (hidden sort-key columns, collation, NULL placement) for free.
-    Ok(Some(target.clone()))
+    Ok(PositionalKey::Expr(target.clone()))
+}
+
+/// The three outcomes of resolving a positional `ORDER BY <n>` key — see
+/// [`resolve_positional_key`].
+enum PositionalKey {
+    /// Not a positional reference (or an unresolvable `SELECT *`): leave as-is.
+    NotPositional,
+    /// A positional non-aggregate reference; sort by the substituted expression.
+    Expr(SqlExpr),
+    /// A positional reference to an aggregate output column; sort by the
+    /// materialized value at this 0-based output index.
+    Index(usize),
 }
 
 /// Does this expression tree contain an aggregate function anywhere?
@@ -1639,9 +1661,15 @@ fn plan_order_item(
     // real output expression BEFORE collation inheritance below, so a positional
     // key over a `COLLATE NOCASE` column still picks up that collation. Non-
     // positional keys (and `SELECT *`) pass through unchanged.
-    let expr = match resolve_positional_key(&raw_expr, output_columns)? {
-        Some(resolved) => resolved,
-        None => raw_expr,
+    let (expr, output_index) = match resolve_positional_key(&raw_expr, output_columns)? {
+        PositionalKey::Expr(resolved) => (resolved, None),
+        // A positional aggregate key: sort by the materialized output column at
+        // this index. The `expr` is kept as the aggregate for reference (codegen
+        // uses `output_index`, not the expr, to name the sort column); it also
+        // makes the collation-inheritance below a no-op (an aggregate is not a
+        // base-table column, so it inherits nothing).
+        PositionalKey::Index(i) => (output_columns[i].expr.clone(), Some(i)),
+        PositionalKey::NotPositional => (raw_expr, None),
     };
 
     // ASC is the default; DESC reverses.
@@ -1748,6 +1776,7 @@ fn plan_order_item(
         ascending,
         nulls_first,
         collation,
+        output_index,
     })
 }
 

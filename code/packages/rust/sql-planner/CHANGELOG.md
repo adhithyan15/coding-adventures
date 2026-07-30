@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.34] - Unreleased
+
+### Added
+
+- **Positional `ORDER BY <n>` over an aggregate binds by output index.** A key
+  like `ORDER BY 2` in `SELECT k, sum(v) … GROUP BY k ORDER BY 2` previously fell
+  through unchanged (it could not re-substitute the aggregate — an aggregate has
+  no per-row value for the sort path). `SortKey` now carries an
+  `output_index: Option<usize>`, and `resolve_positional_key` returns a new
+  three-way `PositionalKey` (`NotPositional` / `Expr` / `Index`): an aggregate
+  ordinal resolves to `Index(n-1)`, recording the target output column so codegen
+  can sort the already-materialized value by its emitted name. Non-aggregate
+  positional keys and `SELECT *` are unchanged (`output_index` is `None`).
+
 ## [0.2.33] - Unreleased
 
 ### Added
