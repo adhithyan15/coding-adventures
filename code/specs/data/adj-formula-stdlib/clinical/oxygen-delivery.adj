@@ -1,0 +1,94 @@
+% ============================================================================
+% oxygen-delivery.adj — global oxygen delivery
+% (DO2 = cardiac output × arterial oxygen content × 10) in the ADJ standard library.
+% ============================================================================
+% The oxygen-delivery entry of the *clinical* track — the amount of oxygen the circulation carries to the
+% tissues each minute, the central quantity of goal-directed resuscitation in critically ill and high-risk
+% surgical patients. It is the product of how much blood the heart pumps per minute (the cardiac output)
+% and how much oxygen each unit of that blood carries (the arterial oxygen content), with a factor of 10
+% that reconciles the units (arterial oxygen content is quoted per 100 mL of blood, cardiac output per
+% litre). Because it couples circulation and oxygenation in one number, DO2 is the therapeutic target that
+% falls in shock and that resuscitation aims to restore. THE OXYGEN DELIVERY IS THE CARDIAC OUTPUT TIMES
+% THE ARTERIAL OXYGEN CONTENT TIMES 10 — i.e. DO2 = CO × CaO2 × 10. It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its two exact rearrangements (the cardiac output
+% a given DO2 implies at a known oxygen content, and the arterial oxygen content a given DO2 implies at a
+% known cardiac output). As with every compute library, a consumer states NO arithmetic: it `import`s this
+% file, binds the cardiac output and the arterial oxygen content from its own byte-provenance decomposition,
+% and asks the engine to APPLY the cited formula on the CPU. Zero math is performed by the model; the engine
+% computes each value EXACTLY (over exact rationals), carrying the formula's citation.
+%
+%     import "oxygen-delivery.adj"
+%     observe cardiac_output(5)             % "…CO 5 L/min…"       (span cited by the model)
+%     observe arterial_oxygen_content(20)   % "…CaO2 20 mL/dL…"    (span cited by the model)
+%     ? do2(cardiac_output, arterial_oxygen_content)   % engine → 1000 (mL/min)
+%
+% Structurally this is a PRODUCT OF TWO MEASURED QUANTITIES SCALED BY A CONSTANT — the cardiac output times
+% the arterial oxygen content times the fixed unit factor of 10 — a shape distinct from the ratio,
+% ratio-of-ratios, percentage-sum, product-over-constant, chained-division, and constant-scaled-difference
+% forms of the other clinical libraries. The arterial oxygen content is taken here as a single measured
+% input (a consumer that needs to compute it in turn from haemoglobin, saturation, and PaO2 would use a
+% separate content formula); the 10 is the EXACT unit-reconciling constant of the cited formula, so every
+% value the engine returns is exact. The three formulas COMPOSE and invert cleanly around the worked case
+% cardiac output = 5 L/min, arterial oxygen content = 20 mL/dL (DO2 = 5 × 20 × 10 = 1000 mL/min, a normal
+% value): the `do2` a consumer computes is exactly the value each inverse formula back-solves to recover
+% its own measured input (5, 20).
+%
+%   do2(cardiac_output, arterial_oxygen_content) = cardiac_output * arterial_oxygen_content * 10   % (mL/min)
+%   cardiac_output(do2, arterial_oxygen_content) = do2 / (arterial_oxygen_content * 10)             % (solved for CO)
+%   arterial_oxygen_content(do2, cardiac_output) = do2 / (cardiac_output * 10)                      % (solved for CaO2)
+%
+% NOTE ON UNITS AND MODELLING: the cardiac output is in litres per minute (L/min), the arterial oxygen
+% content in millilitres of O2 per decilitre of blood (mL/dL), and the resulting oxygen delivery in
+% millilitres of O2 per minute (mL/min); the factor of 10 converts the per-decilitre content to a
+% per-litre basis so the product matches the cardiac output's per-litre volume. DO2 is a rate of oxygen
+% delivery. This library only COMPUTES the delivery; the interpretation (a target that falls in shock and
+% guides resuscitation) is stated by the cited source but is applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted oxygen-delivery equation — because that
+% one equation (CO × CaO2 × 10) sanctions the relation read every way. The quote is transcribed verbatim
+% from the article "Non-invasive monitoring of oxygen delivery in acutely ill patients: new frontiers" on
+% PubMed Central (a current, freely available NCBI-hosted article), so each `formula` carries the provenance
+% envelope every shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the formula, including its 10 constant, is a verbatim span of the cited
+% page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `cardiac_output`, `arterial_oxygen_content` and `do2` each appear BOTH as a derived result
+% and as an input (of the other formulas), so each is a single dictionary term used in both roles. The
+% `surface` lists are the everyday names a decomposer maps onto the canonical term; the trailing comment
+% records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary oxygen_delivery_vocab {
+    define cardiac_output           : finding  surface "cardiac output", "CO"                                    % L/min
+    define arterial_oxygen_content  : finding  surface "arterial oxygen content", "CaO2", "arterial O2 content"  % mL/dL
+    define do2                      : finding  surface "oxygen delivery", "DO2", "global oxygen delivery"        % mL/min
+}
+
+% ----------------------------------------------------------------------------
+% Oxygen delivery, three ways. Each is a named, importable, reusable formula over its formal parameters,
+% bound at apply time, and each carries the oxygen-delivery equation from the cited PubMed Central article
+% (a quote is required on a shipped formula). Each is an exact expression in the measured values and the
+% cited 10 constant, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook oxygen_delivery_laws {
+    use oxygen_delivery_vocab
+
+    % Oxygen delivery — the cardiac output times the arterial oxygen content times 10.
+    formula do2(cardiac_output, arterial_oxygen_content) = cardiac_output * arterial_oxygen_content * 10
+        source "DO2 = CO × CaO2 × 10"
+        locator "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4573965/"
+        trust authoritative
+
+    % Cardiac output — the same equation solved for the CO. Defended by the SAME equation.
+    formula cardiac_output(do2, arterial_oxygen_content) = do2 / (arterial_oxygen_content * 10)
+        source "DO2 = CO × CaO2 × 10"
+        locator "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4573965/"
+        trust authoritative
+
+    % Arterial oxygen content — the same equation solved for the CaO2, the third reading of the one delivery.
+    formula arterial_oxygen_content(do2, cardiac_output) = do2 / (cardiac_output * 10)
+        source "DO2 = CO × CaO2 × 10"
+        locator "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4573965/"
+        trust authoritative
+}
