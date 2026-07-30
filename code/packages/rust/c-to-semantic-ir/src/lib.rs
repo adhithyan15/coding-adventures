@@ -66,6 +66,91 @@ mod tests {
         compile_source(src, "test").expect("C lowering succeeded")
     }
 
+    // ── milestone 11: fixed-size arrays ─────────────────────────────────────
+
+    #[test]
+    fn array_declaration_lowers_to_a_seq_literal_and_declares_the_feature() {
+        let m = lower("int main(void) { int a[3] = {1, 2, 3}; return a[0]; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(text.contains("(seq"), "no seq literal:\n{text}");
+        assert!(text.contains("(seq-index"), "no seq index:\n{text}");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Sequences),
+            "Sequences feature not declared"
+        );
+    }
+
+    #[test]
+    fn partial_and_uninitialized_arrays_zero_fill() {
+        // `int a[3] = {7};` → [7, 0, 0]; `int b[2];` → [0, 0].
+        let m = lower("int main(void) { int a[3] = {7}; int b[2]; return a[0] + b[0]; }");
+        let text = semantic_ir::print_module(&m);
+        // Three literal ints in the first seq (7, 0, 0) — the zero-fill.
+        assert!(text.contains("(seq"), "no seq:\n{text}");
+    }
+
+    #[test]
+    fn array_sized_from_initializer_when_no_dimension() {
+        let m = lower("int main(void) { int a[] = {4, 5}; return a[1]; }");
+        assert!(semantic_ir::validate(&m).is_ok());
+    }
+
+    #[test]
+    fn indexed_write_lowers_to_seq_set() {
+        let m = lower("int main(void) { int a[2] = {0, 0}; a[1] = 9; return a[1]; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(text.contains("(seq-set"), "no seq-set:\n{text}");
+    }
+
+    #[test]
+    fn integer_only_program_stays_sequence_free() {
+        let m = lower("int main(void) { int x = 1 + 2; return x; }");
+        assert!(
+            !m.manifest.contains(semantic_ir::Feature::Sequences),
+            "Sequences wrongly declared for a scalar-only program"
+        );
+    }
+
+    #[test]
+    fn bare_array_name_as_a_value_is_rejected() {
+        // No pointer decay yet — `return a;` (array as a value) must be refused.
+        let err = compile_source(
+            "int main(void) { int a[3] = {1, 2, 3}; return a; }",
+            "test",
+        )
+        .unwrap_err();
+        assert!(
+            err.message.contains("cannot be used as a value"),
+            "wrong error: {}",
+            err.message
+        );
+    }
+
+    #[test]
+    fn too_many_initializers_is_rejected() {
+        let err = compile_source(
+            "int main(void) { int a[2] = {1, 2, 3}; return a[0]; }",
+            "test",
+        )
+        .unwrap_err();
+        assert!(
+            err.message.contains("too many initializers"),
+            "wrong error: {}",
+            err.message
+        );
+    }
+
+    #[test]
+    fn indexing_a_scalar_is_rejected() {
+        let err =
+            compile_source("int main(void) { int x = 5; return x[0]; }", "test").unwrap_err();
+        assert!(
+            err.message.contains("is not an array"),
+            "wrong error: {}",
+            err.message
+        );
+    }
+
     // ── milestone 9: floating point ─────────────────────────────────────────
 
     #[test]
