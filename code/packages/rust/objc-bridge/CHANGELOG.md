@@ -6,8 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
-- Typed `msg_bool!` and architecture-correct `msg_f64!` Objective-C message
-  dispatch helpers for native event translation.
+- Typed `msg_bool!`, including one-argument calls, and architecture-correct
+  `msg_f64!` Objective-C message dispatch helpers for native event translation.
 
 ## [0.1.0] - 2026-04-01
 

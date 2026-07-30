@@ -75,8 +75,9 @@ an HTTP page with native CoreText services, creates an AppKit `CAMetalLayer`,
 and presents the viewport through `paint-metal`. Native AppKit wheel events
 drive the shared clamped viewport and Metal repaint path. Primary-button events
 now use top-left viewport coordinates to activate links through transactional
-page loads, update the title, and repaint across repeated navigation. Keyboard
-translation, controls, and richer pointer behavior remain before the shell is
+page loads, update the title, and repaint across repeated navigation. Named
+AppKit navigation keys now drive clamped viewport scrolling and Metal repaint.
+Text input, controls, and richer pointer behavior remain before the shell is
 interactive.
 
 ## Where It Fits

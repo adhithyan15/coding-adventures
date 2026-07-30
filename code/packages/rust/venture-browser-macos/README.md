@@ -30,4 +30,6 @@ Mouse-wheel and trackpad input drive the shared clamped viewport and repaint the
 translated scene through Metal. Primary-button input now hit-tests links in
 viewport coordinates, loads the resolved destination through the transactional
 browser session, updates the title, and repaints repeatedly. Native controls,
-keyboard input, and richer pointer behavior remain the next integration layer.
+text input, and richer pointer behavior remain the next integration layer.
+Arrow, Page Up/Down, Home/End, and Space key events now drive the same shared
+clamped viewport and Metal repaint path.
