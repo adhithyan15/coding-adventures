@@ -345,6 +345,28 @@ pub enum LowerError {
     SmMissingProvenance {
         machine: String,
     },
+    /// An `argument` premise declared a `kind` outside the closed set
+    /// `extracted | imported | inferred` (ADJ-ARGUMENT-IR §2.1). Carries the argument
+    /// name and the offending kind — never silently accepted.
+    ArgUnknownPremiseKind {
+        argument: String,
+        kind: String,
+    },
+    /// An `argument` inference's `from` list named a premise/inference that no earlier
+    /// element in the same argument binds (ADJ-ARGUMENT-IR §2.3). A reference must
+    /// resolve to a prior `name`, or the inference's body would cite nothing. Carries
+    /// the argument name and the dangling reference.
+    ArgUnknownReference {
+        argument: String,
+        reference: String,
+    },
+    /// Two elements of the same `argument` share a `name` (ADJ-ARGUMENT-IR §2.1). Names
+    /// are the handles `from` references resolve against, so they must be unique within
+    /// the argument. Carries the argument name and the duplicated name.
+    ArgDuplicateName {
+        argument: String,
+        name: String,
+    },
 }
 
 /// One lowered RANGE / BRACKET lookup (ADJ-TABLES RS-5c) — the validated,
@@ -1047,6 +1069,68 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     budget: *budget,
                     provenance: prov,
                 });
+            }
+            // ---- argument graph (ADJ-ARGUMENT-IR ADR-2) ----
+            // The argument DESUGARS AWAY into the existing substrate (§2.3): each
+            // premise → a provenanced ground `Fact`; each inference → a `Rule` whose
+            // body is the terms it cites `from`. After this arm there is no argument
+            // object left in the KB — the engine derives the thesis from the facts +
+            // rules, `--explain` renders that proof DAG as the argument, and `adj-verify`
+            // re-checks it, all via the machinery `relate`/`rule` already feed. We
+            // validate three things the surface cannot: known premise kinds, unique
+            // element names, and that every `from` reference resolves to a prior name.
+            Statement::Argument {
+                name,
+                premises,
+                inferences,
+            } => {
+                // name → the AST term this element binds (a premise's claim or an
+                // inference's conclusion), so a later `from` resolves to its term.
+                let mut bound: HashMap<&str, &AstTerm> = HashMap::new();
+                for p in premises {
+                    if !matches!(p.kind.as_str(), "extracted" | "imported" | "inferred") {
+                        return Err(LowerError::ArgUnknownPremiseKind {
+                            argument: name.clone(),
+                            kind: p.kind.clone(),
+                        });
+                    }
+                    if bound.contains_key(p.name.as_str()) {
+                        return Err(LowerError::ArgDuplicateName {
+                            argument: name.clone(),
+                            name: p.name.clone(),
+                        });
+                    }
+                    let prov = annotations_to_provenance(&p.annotations)?;
+                    kb.add_fact(Fact::certain(lower_term(&p.claim)).with_provenance(prov));
+                    bound.insert(p.name.as_str(), &p.claim);
+                }
+                for inf in inferences {
+                    if bound.contains_key(inf.name.as_str()) {
+                        return Err(LowerError::ArgDuplicateName {
+                            argument: name.clone(),
+                            name: inf.name.clone(),
+                        });
+                    }
+                    // Head and the (resolved) body share ONE variable scope, exactly
+                    // like a `rule { head when: … }`, so a `$Var` in the conclusion
+                    // unifies with the same `$Var` in a referenced premise term.
+                    let mut vars = HashMap::new();
+                    let head_term = lower_term_scoped(&inf.conclusion, &mut vars);
+                    let mut body_lits: Vec<BodyLiteral> = Vec::with_capacity(inf.from.len());
+                    for r in &inf.from {
+                        let ref_term: &AstTerm =
+                            bound.get(r.as_str()).copied().ok_or_else(|| {
+                                LowerError::ArgUnknownReference {
+                                    argument: name.clone(),
+                                    reference: r.clone(),
+                                }
+                            })?;
+                        body_lits.push(BodyLiteral::Pos(lower_term_scoped(ref_term, &mut vars)));
+                    }
+                    let prov = annotations_to_provenance(&inf.annotations)?;
+                    kb.add_rule(Rule::certain(head_term, body_lits).with_provenance(prov));
+                    bound.insert(inf.name.as_str(), &inf.conclusion);
+                }
             }
             // ---- import (MYCIN-2026 M3) ----
             // Imports are resolved away by `crate::resolve` before lowering; one

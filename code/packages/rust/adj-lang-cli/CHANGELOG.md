@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.29.0] — 2026-07-30 — ADR-2: `argument` derives + cites its thesis end-to-end
+
+Picks up the new `argument` surface (adj-lang 0.66): a multi-step argument now compiles, and the
+engine **derives** its thesis by chaining the inference rules through the premise facts, with the
+proof carrying every premise's byte citation — the argument is auditable to its sources.
+
+- New e2e (`argument_surface_e2e.rs`, 4): the ADJ-ARGUMENT-IR §8 axle-fatigue argument derives
+  `mechanism(axle, fatigue)` cited to its premises; a dangling `from` reference, an unknown premise
+  kind, and a duplicated element name are each named compile errors with no answer produced.
+- No CLI code change: because `argument` desugars to facts + rules, recall/`--json` render it
+  through the existing path; `--json`/golden output is byte-for-byte unchanged (golden 38 hold).
+- Note: rendering the argument chain in `--explain` (SLD proof chains, distinct from the
+  differential/compute trace it renders today) lands with the `adj-verify` argument pass in ADR-4.
+
 ## [0.28.0] — 2026-07-30 — NUM-6v: `adj-verify` re-checks the precision/format narrowings
 
 `adj-verify` now re-executes the *arithmetic* of a trail, not only its logic

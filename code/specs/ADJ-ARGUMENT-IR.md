@@ -213,10 +213,18 @@ grounding payload the §3 gate checks. Final syntax fixed in ADR-2.
 - **ADR-1 (this PR, spec-first):** this document — the model, the desugaring table, the gate, the
   verification story, the native-vs-IR decision, the worked example (§8). Cross-links ADJ01/25/40/
   41/42/61-64, ADJ-RULE-SUBSTRATE, ADJ-REASON-MATH §E.8, ADJ-NUMERIC-SUBSTRATE. No code.
-- **ADR-2 — argument surface:** the `argument { premise/infer/conclude/rebut }` grammar + AST +
-  lowering to `relate`/`rule`/`? goal`, with an end-to-end test: a 3-premise argument derives its
-  thesis and `--explain` renders it as premises → connective → conclusion. (Grammar via
-  `regen_grammars`; mirrors the `statemachine` wiring.)
+- **ADR-2 — argument surface** ✅ **shipped** (adj-lang 0.66, adj-lang-cli 0.29): the
+  `argument { premise/infer }` grammar + AST + adapter + lowering to `Fact`/`Rule`, so the engine
+  **derives** the thesis by chaining the inference rules through the premise facts, and the proof
+  carries every premise's byte citation (verified e2e on the §8 axle example). Three typed
+  `LowerError`s guard the surface's invariants (unknown premise kind, dangling `from` reference,
+  duplicate element name). **Two refinements settled here vs. §6's sketch:** (a) premises/inferences
+  carry the standard `{ source/locator/trust }` annotation envelope as their cite/warrant, rather
+  than dedicated `cite`/`warrant` keywords — one provenance surface, consistent with `relate`/`rule`;
+  (b) the `rebut`/attack edge is **deferred to a later sub-rung** (it needs the ADJ73 defeasible-
+  precedence wiring, §2.2) to keep ADR-2 to the support spine. Rendering the argument chain in
+  `--explain` (an *SLD* proof chain, distinct from the differential/compute trace `--explain` renders
+  today) lands with ADR-4's `adj-verify` argument pass.
 - **ADR-3 — the open-vocab grounding gate over the argument:** per-premise byte-anchor +
   combined-justification, adversarial reader, decision-sensitivity, applied to a lowered argument
   program; the gate's verdict (grounded / determined / underdetermined) emitted in the JSON.

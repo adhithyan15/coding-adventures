@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.66.0] — 2026-07-30 — ADR-2: the `argument` surface (ADJ-ARGUMENT-IR)
+
+Adds the `argument { premise… infer… }` construct — a byte-grounded argument graph that
+**desugars away** into the existing substrate (`ADJ-ARGUMENT-IR.md` §2/§6): a premise → a
+provenanced ground `Fact`; an inference → a `Rule` whose body is the terms it cites `from`;
+the thesis is the derived head a trailing `? thesis(…)` queries. Because it lowers to facts +
+rules, the engine derives the thesis and (later) `--explain`/`adj-verify` operate for free — no
+argument-specific evaluator.
+
+- Grammar: `argument_decl`/`arg_premise`/`arg_infer`/`arg_ref` (IDENT-matched literals, like
+  `statemachine`/`table`); regenerated `_parser_grammar.rs`/`_lexer_grammar.rs`.
+- AST: `Statement::Argument` + `ArgPremise` + `ArgInference`.
+- Adapter: `adapt_argument` (+ `adapt_arg_premise`/`adapt_arg_inference`) faithfully carry the
+  structure; the `from` references are `arg_ref` nodes, cleanly separable from the name/connective
+  tokens.
+- Lower: the `Statement::Argument` arm desugars each premise to a `Fact` and each inference to a
+  `Rule`, resolving `from` references against earlier element names. Three new typed `LowerError`s
+  — `ArgUnknownPremiseKind` (kind ∉ {extracted, imported, inferred}), `ArgUnknownReference` (a
+  dangling `from`), `ArgDuplicateName` (a reused element name) — so the surface's invariants fail
+  cleanly, never a panic or a silently-dropped step.
+- Surface refinement (settled here, spec-sync'd): premises/inferences carry the standard
+  `{ source/locator/trust }` annotation envelope as their cite/warrant, rather than dedicated
+  `cite`/`warrant` keywords — one provenance surface, consistent with `relate`/`rule`.
+
 ## [0.65.0] — 2026-07-30
 
 ### Added — RS-3c: `statemachine` driver + typed outcomes (ADJ-STATEMACHINE §3–§4)
