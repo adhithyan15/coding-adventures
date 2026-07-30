@@ -927,6 +927,22 @@ fn mos_model_card_rejects_negative_or_non_finite_body_effect_coefficient() {
 }
 
 #[test]
+fn mos_model_card_rejects_non_positive_or_non_finite_bulk_junction_potential() {
+    for value in [0.1, 0.8, 2.0] {
+        let valid = normalize_model_card("Mvalid", "nmos", &[("PB", value)]).unwrap();
+        assert_close(*valid.parameters.get("PB").unwrap(), value);
+    }
+
+    for invalid_potential in [f64::NEG_INFINITY, -0.1, 0.0, f64::INFINITY, f64::NAN] {
+        assert!(matches!(
+            normalize_model_card("Minvalid", "nmos", &[("PB", invalid_potential)]),
+            Err(SpiceError::InvalidElement { reason, .. })
+                if reason == "MOSFET PB must be finite and positive"
+        ));
+    }
+}
+
+#[test]
 fn bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() {
     let legacy_card = normalize_model_card(
         "Qlegacy",
