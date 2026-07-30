@@ -1,5 +1,25 @@
 # Changelog — `twig-aot`
 
+## 0.48.2 - 2026-07-30 — Records are precise + movable: the Twig-native-GC arc is complete
+
+Records were the last Twig heap type not precise+movable (cons/lists/closures already were; strings
+are a GC-managed leaf; symbols/ints/nil/bools are immediates). The native backends now allocate a
+record/union cell under the movable `{0,8}` pair kind (`__twig_gc_alloc_pair`, gc-core-capi 0.22.0),
+so **every Twig heap object the native-AOT path allocates is now under the collector — traced,
+reclaimed, and (where it has a known layout) relocated under compaction.**
+
+- **New smoke test** `end_to_end_gc_record_field_traced_and_relocated` (macOS/aarch64): a record
+  holds a heap child in field 0; a **compacting** collect relocates the record *and* the child and
+  fixes up field 0 (a **raw**, untagged pointer — a different root-fixup path than the tagged
+  cons-cell tests exercise); reading the child back through the record returns 42. Also run under
+  the precise collect and a no-collect baseline. Proves the record's field is traced (not a
+  no-reference blob), relocated, and fixed up.
+- **Runtime/ABI:** the record `alloc` op now links `__twig_gc_alloc_pair` (aarch64 0.34.0 /
+  x86_64 0.36.0). On x86_64 this also fixes a latent use-after-free (records had been allocated via
+  the no-reference-blob `__twig_alloc_bytes` since 0.48.0, leaving their fields untraced).
+- **Coverage capstone:** see `code/specs/AOT00-twig-native-gc-coverage.md` for the full per-heap-type
+  matrix.
+
 ## 0.48.1 - 2026-07-30 — Native closures under the GC: capstone proof
 
 Test + spec only; no production-source or ABI change. Establishes on real hardware that Twig's

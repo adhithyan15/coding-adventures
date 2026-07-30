@@ -31,13 +31,67 @@ use crate::stack_scan::{
     __gc_collect_incremental_start, __gc_collect_incremental_step, __gc_collect_precise,
     __gc_safepoint,
 };
-use crate::{__gc_alloc, __gc_collection_count, __gc_live_bytes, __gc_register_ref_array_kind};
+use crate::{
+    __gc_alloc, __gc_alloc_kind, __gc_collection_count, __gc_live_bytes, __gc_register_kind,
+    __gc_register_ref_array_kind,
+};
+use core::sync::atomic::{AtomicI64, Ordering};
 
 /// `__twig_gc_alloc(n)` → [`__gc_alloc`]. Called by the emitted code and by
-/// `dynval_runtime.c` for every heap allocation.
+/// `dynval_runtime.c` for every heap allocation. Allocates `n` bytes under
+/// **kind 0** — the collector traces those bytes *conservatively* (any word that
+/// looks like a heap pointer pins its target) and therefore never relocates the
+/// block. Correct and safe, but not movable. For the fixed 2-word record/pair
+/// cell whose layout the frontend knows precisely, prefer
+/// [`__twig_gc_alloc_pair`].
 #[no_mangle]
 pub extern "C" fn __twig_gc_alloc(n: i64) -> i64 {
     __gc_alloc(n)
+}
+
+/// `__twig_gc_alloc_pair()` → a 16-byte, 2-word heap cell registered under the
+/// **movable `{0,8}` pair kind** (both words are reference slots), the same
+/// layout `dynval_runtime.c`'s `__dyn_cons` uses for a cons cell.
+///
+/// The native code generators emit this — instead of the kind-0 `__twig_gc_alloc`
+/// — for the record/union constructor `alloc` op, whose cell is always a
+/// two-field pair of **boxed `any` values** (the constructor's parameters are
+/// typed `any`, so its stored fields are tagged: an immediate int/nil/bool or a
+/// heap reference — never a raw look-alike integer). That makes the precise
+/// `{0,8}` layout *sound*: the collector traces exactly the two reference slots
+/// and, under compaction, **relocates** the cell and fixes up every reference to
+/// it, instead of pinning it as kind 0 would. A record is thereby a first-class
+/// movable heap object, on par with cons cells, closures, and arrays.
+///
+/// Unlike `__dyn_cons`, this only *allocates* (returns a **raw**, untagged,
+/// 16-aligned pointer); the caller's `field_store`s write the two fields. The
+/// payload arrives zeroed, so a collection between the alloc and the stores
+/// traces two null slots — safe.
+///
+/// A **union** constructor cell uses the same op with a synthesized integer
+/// *discriminant* in word 0 — not a boxed `any`. That is still sound: gc-core is
+/// **provenance-filtered**, tracing/relocating a `{0,8}` slot only when its value
+/// resolves to a real live block (`find_header`) / is a key in the compaction
+/// forwarding map. A small discriminant never is, so it is never followed or
+/// rewritten regardless of its low bits (proven by the twig-aot smoke test
+/// `end_to_end_gc_raw_discriminant_word_not_relocated`, which relocates a cell whose
+/// word 0 is the heap-tag-looking `0b10111`).
+///
+/// The pair kind is registered once and memoized in `PAIR_KIND`. The AOT runtime
+/// is single-threaded, so the relaxed load/store carries no ordering hazard; a
+/// (theoretical) racing double-init would only register the identical `{0,8}`
+/// layout twice, and either id is a correct movable pair kind.
+#[no_mangle]
+pub extern "C" fn __twig_gc_alloc_pair() -> i64 {
+    static PAIR_KIND: AtomicI64 = AtomicI64::new(0); // 0 = not yet registered
+    let mut kind = PAIR_KIND.load(Ordering::Relaxed);
+    if kind == 0 {
+        let offsets: [i64; 2] = [0, 8];
+        // SAFETY: `offsets` points to exactly `2` readable `i64` words.
+        kind = unsafe { __gc_register_kind(offsets.as_ptr(), 2) };
+        PAIR_KIND.store(kind, Ordering::Relaxed);
+    }
+    __gc_alloc_kind(2 * core::mem::size_of::<i64>() as i64, kind as u16)
 }
 
 /// `__twig_gc_register_ref_array_kind(fixed, fixed_count, tail_from)` →
@@ -215,6 +269,40 @@ mod tests {
         assert_eq!(__twig_gc_collection_count(), 1);
         assert_eq!(unsafe { *(p as *const i64) }, 0x7161);
         core::hint::black_box(p);
+
+        __gc_reset();
+    }
+
+    /// `__twig_gc_alloc_pair` returns a movable 2-word pair cell: an object it
+    /// references via a `{0,8}` slot is retained through it and reclaimed once the
+    /// slot is cleared — proving the two fields are traced precisely (a kind-0
+    /// block would pin conservatively, not trace).
+    #[test]
+    fn twig_alloc_pair_is_a_traced_movable_pair() {
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+
+        // A pair cell, plus a child object referenced only from the pair's field 0.
+        let pair = __twig_gc_alloc_pair();
+        let child = __twig_gc_alloc(16);
+        assert!(pair != 0 && child != 0);
+        // The allocator returns a raw (untagged) 16-aligned pointer.
+        assert_eq!(pair & 0b1111, 0, "pair payload must be 16-aligned (low bits clear)");
+        unsafe {
+            *(pair as *mut i64) = child; // field 0 = child (a reference)
+            *((pair as usize + 8) as *mut i64) = 0; // field 1 = null
+        }
+
+        // Root only the pair: the child survives via field 0 → 32 live bytes.
+        let roots = [pair];
+        let freed = unsafe { crate::__gc_collect_roots(roots.as_ptr(), 1) };
+        assert_eq!(freed, 0, "child retained via the pair's traced field 0");
+        assert_eq!(__twig_gc_live_bytes(), 32);
+
+        // Clear field 0 → the child is reclaimed, proving the slot was traced.
+        unsafe { *(pair as *mut i64) = 0 };
+        let freed2 = unsafe { crate::__gc_collect_roots(roots.as_ptr(), 1) };
+        assert_eq!(freed2, 1, "clearing field 0 reclaims the child (the slot is traced, not pinned)");
 
         __gc_reset();
     }

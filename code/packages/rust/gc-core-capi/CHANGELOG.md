@@ -2,6 +2,19 @@
 
 All notable changes to this crate are documented here.
 
+## 0.22.0 - 2026-07-30 — `__twig_gc_alloc_pair` — movable {0,8} pair allocator for records
+
+- **`__twig_gc_alloc_pair() -> ptr`** (new `#[no_mangle]` export in `twig_compat.rs`) — allocates a
+  16-byte, 2-word cell under the **movable `{0,8}` pair kind** (both words are reference slots),
+  the same layout `dynval_runtime.c`'s `__dyn_cons` uses. The native code generators emit this for
+  the record/union constructor `alloc` op — whose cell is always a pair of boxed `any` fields — so
+  a Twig **record** is traced precisely and **relocated** under compaction, instead of pinned
+  (kind-0, aarch64) or left untraced (a no-reference blob via `__twig_alloc_bytes`, x86_64 since
+  0.48.0 — a latent use-after-free for a child held only through a record field, now fixed).
+  Returns a **raw** (untagged) pointer; the caller's `field_store`s write the fields. The pair kind
+  is registered once and memoized. Unit test `twig_alloc_pair_is_a_traced_movable_pair` proves the
+  fields are traced (a child in field 0 is retained via the pair, reclaimed when the slot clears).
+
 ## 0.21.0 - 2026-07-29 — C ABI `__gc_kind_of` — object-class accessor (AOT00-T6)
 
 - **`__gc_kind_of(ptr) -> kind_id`** (new `#[no_mangle]` export + `gc_core.h` decl) — the C-ABI

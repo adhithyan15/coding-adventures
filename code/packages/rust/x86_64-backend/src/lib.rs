@@ -1311,11 +1311,35 @@ fn emit_instr(
     // byte displacement `idx*8`.  Values are raw 64-bit words — no NaN-boxing
     // — so `(CAR (CONS 7 9))` round-trips to a raw `7`.  (V1 leaks; no GC.)
 
-    // `alloc -> <dest>` — a fresh 2-word LispyPair cell.
+    // `alloc -> <dest>` — a fresh 2-word LispyPair cell (the record/union
+    // constructor cell), always a pair of **boxed `any` fields** (§ emit_record_def
+    // types its params `any`). Allocate it under the MOVABLE `{0,8}` pair kind via
+    // `__twig_gc_alloc_pair` so the compacting collector traces both reference
+    // fields precisely and relocates the record.
+    //
+    // This also **fixes a latent x86_64 soundness bug**: the cell used to be
+    // allocated via `__twig_alloc_bytes`, which (since twig-aot 0.48.0 routed it
+    // through gc-core as a *no-reference* blob kind for strings) scans **none** of
+    // its bytes — so a child object referenced only through a record field was
+    // untraced and could be reclaimed out from under a live record. A precise
+    // `{0,8}` kind traces exactly the two fields, matching aarch64's behaviour.
+    // An explicit non-pair size (currently unused on this path) falls back to the
+    // conservative kind-0 `__twig_gc_alloc`, which traces its bytes as maybe-refs.
     if op == "alloc" {
         let dest = require_dest(instr)?;
-        asm.mov_r64_imm32(abi.arg_regs()[0], 16); // 2 fields × 8 bytes
-        asm.call_rel32("__twig_alloc_bytes", ExternalRelocKind::PltRel32);
+        let explicit_size: Option<i64> = match instr.srcs.first() {
+            Some(CIROperand::Int(n)) if *n > 0 => Some(*n),
+            _ => None,
+        };
+        match explicit_size {
+            None | Some(16) => {
+                asm.call_rel32("__twig_gc_alloc_pair", ExternalRelocKind::PltRel32);
+            }
+            Some(size_bytes) => {
+                asm.mov_r64_imm32(abi.arg_regs()[0], size_bytes as i32);
+                asm.call_rel32("__twig_gc_alloc", ExternalRelocKind::PltRel32);
+            }
+        }
         let slot = alloc.slot_of(dest);
         asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
         return Ok(());
@@ -2311,6 +2335,28 @@ mod tests {
         for want in ["__dyn_cons", "__dyn_car", "__dyn_unbox_int"] {
             assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
         }
+    }
+
+    /// A default (2-word pair) `alloc` — the record/union constructor cell — lowers
+    /// to a `CALL __twig_gc_alloc_pair` (the MOVABLE `{0,8}` allocator), NOT the old
+    /// `__twig_alloc_bytes` (a no-reference blob kind since twig-aot 0.48.0, which
+    /// would leave the record's reference fields untraced — a use-after-free for a
+    /// child held only via a record field).
+    #[test]
+    fn pair_alloc_uses_movable_pair_allocator() {
+        let ir = vec![
+            instr("alloc", Some("cell"), vec![]),
+            instr("field_store", None, vec![Op::Var("cell".into()), Op::Int(0), Op::Int(0)]),
+            instr("ret_u64", None, vec![Op::Var("cell".into())]),
+        ];
+        let (_bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("rec", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("record alloc must lower");
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(symbols.contains(&"__twig_gc_alloc_pair"),
+                "default-pair alloc must use the movable pair allocator, got {symbols:?}");
+        assert!(!symbols.contains(&"__twig_alloc_bytes"),
+                "must NOT use the no-ref blob allocator for a record pair: {symbols:?}");
     }
 
     #[test]
