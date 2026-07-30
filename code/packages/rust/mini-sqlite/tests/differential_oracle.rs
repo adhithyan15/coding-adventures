@@ -2268,10 +2268,12 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT a FROM u ORDER BY 5",
     },
-    // Positional reference to an AGGREGATE output column. SQLite sorts by the
-    // computed aggregate (`SUM(v)`); mini-sqlite cannot re-evaluate an aggregate
-    // in the per-row sort path, so it leaves the rows in group order. Documented
-    // in LEDGER until the sort can bind to an already-materialized output column.
+    // Positional `ORDER BY <n>` over an AGGREGATE output column: SQLite sorts by
+    // the computed aggregate (`SUM(v)`). The planner binds such a key to the
+    // output column BY INDEX and codegen resolves it to the materialized column's
+    // emitted name, so the sort reads the already-computed value rather than
+    // re-evaluating the aggregate per row. Here group 'a' sums to 4 and 'b' to 2,
+    // so `ORDER BY 2` yields (b,2) then (a,4). Two variants — bare and DESC.
     Case {
         id: "order_by_ordinal_over_aggregate",
         setup: &[
@@ -2279,6 +2281,14 @@ const CASES: &[Case] = &[
             "INSERT INTO g VALUES ('a',1),('b',2),('a',3)",
         ],
         query: "SELECT k, sum(v) FROM g GROUP BY k ORDER BY 2",
+    },
+    Case {
+        id: "order_by_ordinal_over_aggregate_desc",
+        setup: &[
+            "CREATE TABLE g (k TEXT, v INTEGER)",
+            "INSERT INTO g VALUES ('a',1),('b',2),('a',3),('c',10)",
+        ],
+        query: "SELECT k, sum(v) AS s FROM g GROUP BY k ORDER BY 2 DESC",
     },
     // `TOTAL(x)` is SQLite's NULL-free companion to SUM: always REAL, and 0.0
     // (not NULL) for an empty or all-NULL group. Here the mixed int/real values
@@ -2357,19 +2367,13 @@ const CASES: &[Case] = &[
 ///
 /// A newly discovered divergence is added back here with a reason rather than
 /// silently skipped, so the list stays an honest measure.
-const LEDGER: &[(&str, &str)] = &[
-    // Positional `ORDER BY <n>` that points at an AGGREGATE output column.
-    // Non-aggregate positional keys are fully supported (see the
-    // `order_by_ordinal_*` gated cases); the aggregate case remains open because
-    // the sort path re-evaluates its key per row, and an aggregate has no per-row
-    // value. Closing it means teaching the sort to bind a positional key to an
-    // already-materialized output column by index instead of substituting its
-    // expression. Until then this is a documented divergence, not a silent skip.
-    (
-        "order_by_ordinal_over_aggregate",
-        "positional ORDER BY over an aggregate output column not yet re-bound to the materialized column",
-    ),
-];
+// The ledger is EMPTY — every seed case above matches real SQLite exactly. It
+// opened at ten reproduced divergences and was driven to zero one oracle-gated
+// increment at a time; the final entry (`order_by_ordinal_over_aggregate`) closed
+// when the sort learned to bind a positional key to the materialized output
+// column by index. Keep it empty: any new divergence is a regression to fix, not
+// a line to add here.
+const LEDGER: &[(&str, &str)] = &[];
 
 #[test]
 fn mini_sqlite_matches_real_sqlite() {

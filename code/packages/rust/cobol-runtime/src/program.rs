@@ -586,6 +586,21 @@ pub enum ConvertOperand {
     Literal(String),
     /// A data-name (`PIC X` item) whose CURRENT storage is the set.
     Item(String),
+    /// A **constant** reference modification `base(start:len)` / `base(start:)`
+    /// used as the translation set — the slice of alphanumeric item `base`. We
+    /// carry the refmod UNRESOLVED (like `Item`), resolving it to its slice string
+    /// at exec time via the shared [`crate::interp`] `refmod_string` evaluator.
+    ///
+    /// The reader admits this variant ONLY when both indices are literals (a
+    /// *constant* refmod), so the slice LENGTH — the const `len`, or
+    /// `base_width - start + 1` when `len` is omitted — is known statically. That
+    /// static length is exactly what the equal-length check needs, so a const
+    /// refmod reduces to the data-name (`Item`) case: a fixed-width string whose
+    /// per-position access is the same `refmod_string`/char indexing the item path
+    /// uses. A *computed* refmod (any data-name index) has a run-time length and
+    /// stays a later rung, rejected in the reader with the same const-index
+    /// predicate the MOVE/STRING refmod rungs use.
+    RefMod { base: String, start: RefIndex, len: Option<RefIndex> },
 }
 
 /// One item of a `WHEN` value-list: a single value or an inclusive `lo THRU hi`
@@ -2032,22 +2047,43 @@ fn read_inspect_converting(
 /// Read a CONVERTING `from`/`to` operand into a [`ConvertOperand`]. A string
 /// literal becomes [`ConvertOperand::Literal`] (its set is fixed now); a data-name
 /// becomes [`ConvertOperand::Item`] (its set is the item's CURRENT storage, read at
-/// exec time — this rung LIFTS the old data-name reject). A figurative constant,
-/// numeric literal, or reference modification stays a later rung. `which` names the
-/// position (`"from"`/`"to"`) for the diagnostic.
+/// exec time). A **constant** reference modification `base(start:len)` becomes
+/// [`ConvertOperand::RefMod`] — this rung LIFTS the old refmod reject for the const
+/// case. A figurative constant SPACE / ZERO is now accepted, mapped to the
+/// single-character literal `" "` / `"0"` — it reduces to the [`ConvertOperand::Literal`]
+/// path in every downstream respect (equal-length check, ASCII guard, convert loop).
+/// A numeric literal stays a later rung; a *computed* refmod (any data-name index) also
+/// stays a later rung. `which` names the position (`"from"`/`"to"`) for the diagnostic.
 fn read_converting_operand(op: &GrammarASTNode, which: &str) -> Result<ConvertOperand, RuntimeError> {
     match read_operand(op)? {
         Operand::Lit(Lit::Str(s)) => Ok(ConvertOperand::Literal(s)),
         Operand::Ident(name) => Ok(ConvertOperand::Item(name)),
+        Operand::RefMod { base, start, len } => {
+            // Accept ONLY a CONSTANT refmod — both indices literal (or `len`
+            // omitted). This is the identical predicate the STRING/MOVE refmod
+            // rungs use (`string_source_chars`, #67): a const refmod's slice length
+            // is compile-time-known, so it reduces to the data-name `Item` case (a
+            // fixed-width string). A COMPUTED refmod has a run-time length and stays
+            // a later rung — rejected here so both engines refuse the same programs.
+            let const_ix = matches!(start, RefIndex::Lit(_))
+                && len.as_ref().is_none_or(|l| matches!(l, RefIndex::Lit(_)));
+            if !const_ix {
+                return Err(RuntimeError::Unsupported(format!(
+                    "INSPECT CONVERTING with a computed reference-modified {which} operand is a later rung"
+                )));
+            }
+            Ok(ConvertOperand::RefMod { base, start, len })
+        }
         Operand::Lit(Lit::Num(_)) => Err(RuntimeError::Unsupported(format!(
             "INSPECT CONVERTING with a numeric-literal {which} operand is a later rung"
         ))),
-        Operand::Lit(Lit::Fig(_)) => Err(RuntimeError::Unsupported(format!(
-            "INSPECT CONVERTING with a figurative-constant {which} operand is a later rung"
-        ))),
-        Operand::RefMod { .. } => Err(RuntimeError::Unsupported(format!(
-            "INSPECT CONVERTING with a reference-modified {which} operand is a later rung"
-        ))),
+        // A figurative constant SPACE / ZERO reduces to a single-character literal
+        // (`" "` = 0x20 / `"0"` = 0x30 — both ASCII), reusing the ENTIRE Literal path:
+        // the equal-length check and the ASCII-literal guard below both already handle a
+        // 1-char ASCII literal. `Fig` has exactly Space and Zero, so this is exhaustive
+        // for the figurative case. Mirrors the compiler's `converting_operand`.
+        Operand::Lit(Lit::Fig(Fig::Space)) => Ok(ConvertOperand::Literal(" ".into())),
+        Operand::Lit(Lit::Fig(Fig::Zero)) => Ok(ConvertOperand::Literal("0".into())),
     }
 }
 

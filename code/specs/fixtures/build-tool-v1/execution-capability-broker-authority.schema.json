@@ -1,0 +1,383 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/build-tool-conformance-capability-broker-authority-v1.json",
+  "title": "Build-tool exact Linux capability-preflight broker authority bundle v1",
+  "description": "External post-review authority for two exact retained-FD Podman capability commands. This scope cannot create a container, decode a fixture, load an adapter, run the invariant probe, or report Linux readiness.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "purpose",
+    "authorization_scope",
+    "repository",
+    "conformance_revision",
+    "platform",
+    "architecture",
+    "source",
+    "components"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "purpose": {
+      "const": "build-tool-trusted-authority"
+    },
+    "authorization_scope": {
+      "const": "linux_capability_preflight_broker_v1"
+    },
+    "repository": {
+      "const": "github.com/adhithyan15/coding-adventures"
+    },
+    "conformance_revision": {
+      "const": "v1"
+    },
+    "platform": {
+      "const": "linux"
+    },
+    "architecture": {
+      "const": "amd64"
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "components": {
+      "$ref": "#/$defs/components"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "git_oid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "safe_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//)[^<>:\"|?*\\u0000-\\u001F/]+(?:/[^<>:\"|?*\\u0000-\\u001F/]+)*$"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "git_object_format",
+        "commit_oid",
+        "tree_oid"
+      ],
+      "properties": {
+        "git_object_format": {
+          "const": "sha1"
+        },
+        "commit_oid": {
+          "$ref": "#/$defs/git_oid"
+        },
+        "tree_oid": {
+          "$ref": "#/$defs/git_oid"
+        }
+      }
+    },
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provenance",
+        "path",
+        "byte_length",
+        "sha256"
+      ],
+      "properties": {
+        "provenance": {
+          "enum": [
+            "repository",
+            "bundle"
+          ]
+        },
+        "path": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16777216
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "repository_component": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/component"
+        },
+        {
+          "properties": {
+            "provenance": {
+              "const": "repository"
+            }
+          }
+        }
+      ]
+    },
+    "bundle_component": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/component"
+        },
+        {
+          "properties": {
+            "provenance": {
+              "const": "bundle"
+            }
+          }
+        }
+      ]
+    },
+    "components": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authority_bundle_schema",
+        "execution_policy_schema",
+        "execution_policy",
+        "linux_backend_identity_schema",
+        "bootstrap_runner",
+        "authority_verifier",
+        "preflight_loader",
+        "linux_preflight_backend",
+        "preflight_import_manifest",
+        "capability_broker",
+        "capability_broker_schema",
+        "capability_broker_manifest",
+        "linux_backend_identity"
+      ],
+      "properties": {
+        "authority_bundle_schema": {
+          "$ref": "#/$defs/authority_bundle_schema_component"
+        },
+        "execution_policy_schema": {
+          "$ref": "#/$defs/execution_policy_schema_component"
+        },
+        "execution_policy": {
+          "$ref": "#/$defs/execution_policy_component"
+        },
+        "linux_backend_identity_schema": {
+          "$ref": "#/$defs/linux_backend_identity_schema_component"
+        },
+        "bootstrap_runner": {
+          "$ref": "#/$defs/bootstrap_runner_component"
+        },
+        "authority_verifier": {
+          "$ref": "#/$defs/authority_verifier_component"
+        },
+        "preflight_loader": {
+          "$ref": "#/$defs/preflight_loader_component"
+        },
+        "linux_preflight_backend": {
+          "$ref": "#/$defs/linux_preflight_backend_component"
+        },
+        "preflight_import_manifest": {
+          "$ref": "#/$defs/preflight_import_manifest_component"
+        },
+        "capability_broker": {
+          "$ref": "#/$defs/capability_broker_component"
+        },
+        "capability_broker_schema": {
+          "$ref": "#/$defs/capability_broker_schema_component"
+        },
+        "capability_broker_manifest": {
+          "$ref": "#/$defs/capability_broker_manifest_component"
+        },
+        "linux_backend_identity": {
+          "$ref": "#/$defs/linux_backend_identity_component"
+        }
+      }
+    },
+    "authority_bundle_schema_component": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/repository_component"
+        },
+        {
+          "properties": {
+            "path": {
+              "const": "code/specs/fixtures/build-tool-v1/execution-capability-broker-authority.schema.json"
+            }
+          }
+        }
+      ]
+    },
+    "execution_policy_schema_component": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/repository_component"
+        },
+        {
+          "properties": {
+            "path": {
+              "const": "code/specs/fixtures/build-tool-v1/execution-policy.schema.json"
+            }
+          }
+        }
+      ]
+    },
+    "execution_policy_component": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/repository_component"
+        },
+        {
+          "properties": {
+            "path": {
+              "const": "code/specs/fixtures/build-tool-v1/execution-policy.json"
+            }
+          }
+        }
+      ]
+    },
+    "linux_backend_identity_schema_component": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/repository_component"
+        },
+        {
+          "properties": {
+            "path": {
+              "const": "code/specs/fixtures/build-tool-v1/linux-oci-backend.schema.json"
+            }
+          }
+        }
+      ]
+    },
+    "bootstrap_runner_component": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/repository_component"
+        },
+        {
+          "properties": {
+            "path": {
+              "const": "code/scripts/build_tool_conformance.py"
+            }
+          }
+        }
+      ]
+    },
+    "authority_verifier_component": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/repository_component"
+        },
+        {
+          "properties": {
+            "path": {
+              "const": "code/scripts/build_tool_conformance_authority.py"
+            }
+          }
+        }
+      ]
+    },
+    "preflight_loader_component": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/repository_component"
+        },
+        {
+          "properties": {
+            "path": {
+              "const": "code/scripts/build_tool_conformance_backend_loader.py"
+            }
+          }
+        }
+      ]
+    },
+    "linux_preflight_backend_component": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/repository_component"
+        },
+        {
+          "properties": {
+            "path": {
+              "const": "code/scripts/build_tool_conformance_linux_oci.py"
+            }
+          }
+        }
+      ]
+    },
+    "preflight_import_manifest_component": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/repository_component"
+        },
+        {
+          "properties": {
+            "path": {
+              "const": "code/specs/fixtures/build-tool-v1/preflight-broker-backend-imports.json"
+            }
+          }
+        }
+      ]
+    },
+    "capability_broker_component": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/repository_component"
+        },
+        {
+          "properties": {
+            "path": {
+              "const": "code/scripts/build_tool_conformance_capability_broker.py"
+            }
+          }
+        }
+      ]
+    },
+    "capability_broker_schema_component": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/repository_component"
+        },
+        {
+          "properties": {
+            "path": {
+              "const": "code/specs/fixtures/build-tool-v1/linux-capability-preflight-broker.schema.json"
+            }
+          }
+        }
+      ]
+    },
+    "capability_broker_manifest_component": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/repository_component"
+        },
+        {
+          "properties": {
+            "path": {
+              "const": "code/specs/fixtures/build-tool-v1/linux-capability-preflight-broker.json"
+            }
+          }
+        }
+      ]
+    },
+    "linux_backend_identity_component": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/bundle_component"
+        },
+        {
+          "properties": {
+            "path": {
+              "const": "linux-oci-backend.json"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -2,6 +2,15 @@
 
 All notable changes to this crate will be documented here.
 
+## [0.1.7] - Unreleased
+
+### Changed
+
+- Constant folding (`fold_plan`) now threads the `SortKey::output_index` field
+  (added in sql-planner 0.2.34) through the `Sort` node it rebuilds, so a
+  positional `ORDER BY <n>` over an aggregate keeps its output-index binding
+  across optimization for codegen to resolve.
+
 ## [0.1.6] - Unreleased
 
 ### Changed

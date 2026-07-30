@@ -4956,7 +4956,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None, collation: None }]),
+            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None, collation: None, output_index: None }]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(1)], vec![int(2)], vec![int(3)]]);
     }
@@ -4979,7 +4979,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: false, nulls_first: None, collation: None }]),
+            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: false, nulls_first: None, collation: None, output_index: None }]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(3)], vec![int(2)], vec![int(1)]]);
     }
@@ -5010,8 +5010,8 @@ mod tests {
             Instruction::CloseScan(None),
             Instruction::Halt,
             Instruction::SortResult(vec![
-                CompiledSortKey { column: "a".to_string(), ascending: true, nulls_first: None, collation: None },
-                CompiledSortKey { column: "b".to_string(), ascending: true, nulls_first: None, collation: None },
+                CompiledSortKey { column: "a".to_string(), ascending: true, nulls_first: None, collation: None, output_index: None },
+                CompiledSortKey { column: "b".to_string(), ascending: true, nulls_first: None, collation: None, output_index: None },
             ]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows[0], vec![int(1), int(1)]);
@@ -5542,7 +5542,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None, collation: None }]),
+            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None, collation: None, output_index: None }]),
             Instruction::LimitResult(Some(3), None),
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(1)], vec![int(2)], vec![int(3)]]);
@@ -5569,7 +5569,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None, collation: None }]),
+            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None, collation: None, output_index: None }]),
             Instruction::DistinctResult(vec![]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(1)], vec![int(2)], vec![int(3)]]);

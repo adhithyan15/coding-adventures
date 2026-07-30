@@ -704,12 +704,13 @@ profile's closed record binds:
 - the checked-in execution policy;
 - the process-free bootstrap runner;
 - the process-free authority verifier;
-- the process-owning Linux OCI backend implementation;
+- the process-free Linux OCI result validator and the separately authorized
+  process-owning capability broker;
 - the exact raw Linux backend identity document stored beside the external
   bundle.
 
-The Linux backend identity document transitively binds the reviewed Podman and
-`crun` binaries, exact OCI manifest/config identities, seccomp profile,
+The Linux backend identity document transitively binds the reviewed Podman,
+`crun`, and Conmon binaries, exact OCI manifest/config identities, seccomp profile,
 in-image shim, and invariant probe. The bundle binds the exact raw identity
 document; the verifier validates its typed fields and cross-field identities.
 A future seccomp artifact or host execution launcher becomes authority only
@@ -761,25 +762,38 @@ an untrusted pull request does not approve it.
 
 For `linux_oci`, `identity_sha256` is the SHA-256 of the exact raw bytes of a
 closed Linux OCI backend identity document validated by
-`linux-oci-backend.schema.json`. That document binds the Podman and `crun`
-binaries, their fixed absolute paths, the exact OCI manifest and local config
-image identities, the reviewed seccomp profile, and the in-image shim and
-runner-owned invariant probe. The image `reference` contains the manifest
+`linux-oci-backend.schema.json`. That document binds the statically linked
+Podman runtime, `crun`, and Conmon binaries, their fixed absolute paths, the
+exact OCI manifest and local config image identities, the reviewed seccomp
+profile, and the in-image shim and runner-owned invariant probe. The runtime
+identity MUST declare `linkage` as `static`. The image `reference` contains the manifest
 digest and MUST agree with `manifest_sha256`; a run addresses only the already
 present `sha256:<config_sha256>` image with pull disabled. The runner verifies
 both image identities, operating system, architecture, and absence of
 image-declared volumes before it creates a container.
 
-Linux capability preflight is implemented in a separate process-owning module.
-Its direct CLI is authority-disabled, and the process-free authority verifier
-MUST NOT import it. A later loader must establish that the exact retained
-backend bytes and approved import closure are the code being invoked before it
-may use the module's fixed direct argument vectors and runner-owned sanitized
-environment. Capability inspection then MUST prove local non-remote rootless
-operation, `crun`, cgroup v2 with delegated `cpu`, `memory`, and `pids`
-controllers, seccomp, exact runtime binary hashes, and the exact local image.
-Missing or mismatched capabilities produce a stable non-passing result before
-any fixture is decoded or materialized.
+Linux capability validation is implemented in a separate backend module. Its
+direct CLI is authority-disabled, and the process-free authority verifier MUST
+NOT import it. The backend is a pure consumer of brokered command results: it
+has no process import, pathname binary reopen, state-root construction, or
+default command/digest implementation. The authority-gated broker proves a
+non-root Linux amd64 process, a real cgroup-v2 delegated root with enabled
+`cpu`, `memory`, and `pids` controllers, required kernel seccomp actions, exact
+runtime binary hashes, and the exact prepopulated local image. It forces local
+Podman mode and rejects a malformed, non-amd64, or dynamically linked Podman
+ELF before command rendering. Before Podman starts, the broker installs a Landlock ABI-v1
+execute ruleset whose sole allow-rule is the already-retained Podman inode.
+Podman re-execution remains possible, while pre-exec hooks, `catatonit`, and
+every other pathname-backed helper execution in the reviewed Podman flow is
+denied by the kernel regardless of `PATH`. Landlock ABI v1 does not govern
+anonymous executable memfds or executable mappings, so closing those paths is
+a separate prerequisite before invariant-probe evidence can be authoritative.
+The broker uses the closed `version --format json` request instead of
+`podman info`, whose host inspection executes configured helpers and package
+managers outside this authority. The process-free backend validates only the
+bounded local version and image results. Missing or mismatched capabilities
+produce a stable non-passing result before any fixture is decoded or
+materialized.
 
 The exact loader is a separate loadability-only prerequisite, not yet the
 capability-command handoff. Its authority record is described by
@@ -824,8 +838,9 @@ The loader profile and implementation have these requirements:
    Every declared import root must be reviewed standard library. The backend
    has no repository or third-party dependency.
 5. The worker verifies the exact loader/backend/manifest/identity digests and
-   the backend's structural `preflight_prevalidated`, unavailable-error, and
-   command-result declarations. It does not execute backend module code, invoke
+   the backend's structural `preflight_brokered`, `preflight_prevalidated`,
+   unavailable-error, and command-result declarations. It does not execute
+   backend module code, invoke
    preflight, inspect Podman, open an execution case, construct a container
    argv, or retain a reusable worker.
 6. The parent bounds the worker protocol, timeout, output, descriptor set, and
@@ -833,13 +848,104 @@ The loader profile and implementation have these requirements:
    digest, protected source IDs, and exact component digests. It is not
    capability, containment, or readiness evidence.
 
-A later protected capability-command broker must retain an atomic private state
-root, execute already-open verified runtime binaries or rely on an attested
-immutable runner image, allow only Podman `info` and exact-config `image
-inspect`, stream a combined output cap, enforce time and complete-descendant
-cleanup, and return stable non-passing capability diagnostics. Until that
-broker and its own authority profile land, the bare Linux CLI remains disabled
-and no real preflight runs. This loader cannot mark Linux ready.
+The protected capability-command broker has a third, non-reusable authority
+record described by
+`execution-capability-broker-authority.schema.json`. It uses authorization
+scope `linux_capability_preflight_broker_v1` and this distinct exact-byte
+framing:
+
+1. append the ASCII domain separator
+   `coding-adventures/build-tool-authority/linux-capability-preflight-broker/v1`
+   followed by one NUL;
+2. append the unsigned 64-bit big-endian exact raw-bundle byte length; and
+3. append the exact bounded raw UTF-8 JSON bytes.
+
+The broker profile binds exactly thirteen roles: its authority schema; the
+execution policy and schema; the Linux identity schema; the process-free
+bootstrap and authority verifier; the exact loader; the process-free Linux
+preflight backend; the broker-specific closed backend import manifest; the
+capability broker; the language-neutral broker behavior manifest and its exact
+schema; and the external Linux identity. The protected source commit/tree
+remains mandatory. The eight-role preflight and ten-role loader authorities
+cannot be upgraded or reused.
+
+The broker behavior is closed by
+`linux-capability-preflight-broker.schema.json` and
+`linux-capability-preflight-broker.json`:
+
+1. The protected parent verifies the bundle first, retains the repository and
+   bundle roots, and passes only sealed approved source/configuration
+   descriptors to a fresh isolated worker. The protected interpreter, standard
+   library, native extensions, libc, and dynamic loader remain the immutable
+   runner-image TCB.
+2. The worker opens `/usr/bin/podman`, `/usr/bin/crun`, and `/usr/bin/conmon`
+   once with no-follow
+   and close-on-exec controls, then requires each to be a root-owned,
+   group/world-non-writable, executable, regular file without set-user-ID or
+   set-group-ID bits. It hashes retained bytes and compares stable pre/post
+   `fstat` identities including ctime. It also parses Podman's bounded ELF64
+   program-header table and rejects any `PT_INTERP`, malformed layout, or
+   architecture other than amd64. This static-linkage requirement keeps the
+   dynamic loader from becoming an allowed execution trampoline. Podman is
+   executed from the retained descriptor. The exact command supplies the reviewed absolute
+   `/usr/bin/crun` and `/usr/bin/conmon` paths, whose bytes are independently
+   retained and verified. This preflight does not claim that Podman reports
+   those paths or executes either binary. Later container execution still
+   requires the immutable runner-image TCB receipt to bind their absolute
+   pathnames and all remaining ambient dependencies.
+3. The protected orchestrator supplies an already-open private state-root
+   descriptor containing only a private `storage` child prepopulated with the
+   reviewed image. The broker retains that child and creates exactly `config`,
+   `home`, `runtime`, and `runroot` relative to the root, with mode `0700`,
+   no-follow semantics, same-owner checks, and no path-based reopen. Command
+   arguments and environment locate retained state children only through
+   `/proc/self/fd/<fd>`. The broker never pulls or imports an image.
+4. The broker renders exactly two direct Podman requests in order:
+   `--remote=false version --format json` and `--remote=false image inspect
+   --format json sha256:<approved-config>`. Only the image request carries the
+   exact retained root, runroot, reviewed `crun` and Conmon paths, and `vfs`
+   global options from the manifest. `PATH=/nonexistent` makes unexpected
+   ambient lookup fail closed, and a Landlock execute-only filesystem ruleset
+   permits pathname-backed execution only of the retained static Podman inode. The
+   restriction is inherited by every fork, namespace transition, and re-exec;
+   the broker refuses to run on a kernel without Landlock ABI v1. It does not
+   claim to constrain executable memfds, `dlopen`, or executable mappings. No fixture,
+   caller argument, shell, host environment, network request, image pull,
+   container operation, adapter, or invariant probe can alter this grammar.
+5. Each command has null stdin, a retained `home` cwd, an exact scrubbed
+   environment, and the manifest's closed descriptor set. Standard output and
+   standard error are read concurrently in nonblocking mode under one
+   262144-byte aggregate streaming ceiling. The command deadline is 15000
+   milliseconds. Partial output after a limit, timeout, or cleanup failure is
+   rejected.
+6. Before releasing the child to execute, the broker puts it in a fresh
+   delegated cgroup-v2 child, creates a private session, installs parent-death
+   termination, and acts as a subreaper. Absence of delegation or `cgroup.kill`
+   fails before spawn. On every failure and after normal exit, the broker uses
+   `cgroup.kill`, verifies `cgroup.events` reports `populated 0`, supplements
+   with process-group termination, reaps adopted descendants, and completes
+   cleanup within 5000 milliseconds.
+7. The internal worker protocol contains only the two bounded command results
+   or one closed error. It accepts no loader/backend source and carries no
+   authority digest, source identity, conformance status, or readiness claim.
+   The authority-gated parent alone loads the exact approved process-free
+   backend, strictly validates the internal protocol, and adds authority/source
+   bindings to both passing and non-passing receipts.
+8. Successful command results are handed to the process-free backend's
+   `preflight_brokered` interface. JSON depth exhaustion and every malformed
+   runtime response produce the stable
+   `LINUX_OCI_RUNTIME_RESPONSE_INVALID` diagnostic. A successful result proves
+   only capability preflight; it creates no execution case and does not mark
+   Linux containment or trusted execution ready.
+
+The broker parent CLI is authority-gated. Worker mode is an internal,
+non-authoritative process boundary intrinsically unable to accept executable
+Python components or emit an authority/readiness receipt. The bare Linux backend
+CLI remains disabled. Pull-request CI exercises schemas and fake retained-FD,
+stream, limit, timeout, and descendant-cleanup helpers only. Real Podman
+inspection belongs to a protected no-secrets, read-only reviewed-revision
+workflow supplied with the approved broker-authority digest and immutable
+runner-image TCB.
 
 The first Linux delivery tranche contains identity validation, capability
 preflight logic, and construction of the runner-owned invariant-probe

@@ -2,6 +2,16 @@
 
 All notable changes to this crate are documented here.
 
+## 0.21.0 - 2026-07-29 — C ABI `__gc_kind_of` — object-class accessor (AOT00-T6)
+
+- **`__gc_kind_of(ptr) -> kind_id`** (new `#[no_mangle]` export + `gc_core.h` decl) — the C-ABI
+  seam for `gc_core::FlatHeap::kind_of` (gc-core 0.24.0). Returns the kind id of the live heap
+  object at payload address `ptr`, or `0` for null / non-heap / stale addresses (validated before
+  any header read — no OOB). Lets a native runtime discriminate object classes that share the heap
+  tag — e.g. a closure kind from a cons kind for `procedure?` / `pair?` — from a tag-stripped
+  value. Foundation for the native-closures arc (AOT00-T6). Test
+  `c_abi_kind_of_discriminates_classes`.
+
 ## 0.20.0 - 2026-07-29 — twig-compat alias `__twig_gc_register_ref_array_kind` — PR-4 (AOT00-T5)
 
 - **`__twig_gc_register_ref_array_kind(fixed, fixed_count, tail_from)`** (new `twig_compat` alias

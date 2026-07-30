@@ -8588,6 +8588,320 @@ fn inspect_converting_non_ascii_to_data_name_traps_the_compiler_reconstruction_c
     );
 }
 
+// ---------------------------------------------------------------------------
+// INSPECT … CONVERTING with a CONSTANT reference-modified `from`/`to` operand —
+// the translation set may be a slice `base(start:len)` (or `base(start:)`) of an
+// alphanumeric item, provided both indices are LITERALS. A const refmod's slice
+// length is compile-time-known, so it reduces to the data-name (`Item`) case: the
+// compiler materialises the slice register up front via the shared `ref_mod_slice`
+// and treats it as a fixed-width item; the oracle resolves it up front via the
+// shared `refmod_string`. A COMPUTED refmod (any data-name index) has a run-time
+// length and stays a later rung, rejected on BOTH engines by the same const-index
+// predicate the MOVE/STRING refmod rungs use (#67). Pinned against the oracle here
+// on ASCII operands.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn inspect_converting_const_refmod_from_literal_to() {
+    // `from` is the const slice F(2:3) = "ABC" (F = "ZABCZ"); `to` the literal "XYZ".
+    // A→X, B→Y, C→Z applied to "CAB" → "ZXY" — identical to the both-literal table.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"CAB\".", "01  F  PIC X(5) VALUE \"ZABCZ\"."],
+        &["INSPECT S CONVERTING F(2:3) TO \"XYZ\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ZXY\n");
+}
+
+#[test]
+fn inspect_converting_literal_from_const_refmod_to() {
+    // Reverse mix: `from` the literal "ABC", `to` the const slice T(2:3) = "XYZ"
+    // (T = "ZXYZZ"). Same table, same "CAB" → "ZXY".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"CAB\".", "01  T  PIC X(5) VALUE \"ZXYZZ\"."],
+        &["INSPECT S CONVERTING \"ABC\" TO T(2:3).", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ZXY\n");
+}
+
+#[test]
+fn inspect_converting_both_const_refmods() {
+    // BOTH sides are const slices: F(2:5) = "AEIOU" (F = "ZAEIOU"), T(2:5) = "12345"
+    // (T = "Z12345"). "BEAN" → "B21N" (B, N pass through). The full table is built
+    // from two compile-time-length slice registers.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(4) VALUE \"BEAN\".",
+            "01  F  PIC X(6) VALUE \"ZAEIOU\".",
+            "01  T  PIC X(6) VALUE \"Z12345\".",
+        ],
+        &["INSPECT S CONVERTING F(2:5) TO T(2:5).", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "B21N\n");
+}
+
+#[test]
+fn inspect_converting_const_refmod_omitted_len() {
+    // The `base(start:)` form (omitted length runs to the end of the item): F(2:) on
+    // F = "ZABC" (PIC X(4)) is the 3-char slice "ABC" — its static length is
+    // `width - start + 1 = 4 - 2 + 1 = 3`, so it drops into the equal-length check
+    // against the 3-char "XYZ" just like a data-name's declared width. "CAB" → "ZXY".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"CAB\".", "01  F  PIC X(4) VALUE \"ZABC\"."],
+        &["INSPECT S CONVERTING F(2:) TO \"XYZ\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ZXY\n");
+}
+
+#[test]
+fn inspect_converting_const_refmod_with_a_region() {
+    // A const-slice table narrowed by a `{BEFORE|AFTER}` region: table F(2:1)="A"→"0";
+    // BEFORE "Y" in "AXAYA" restricts the translate to "AXA" → "0X0YA" (the trailing
+    // "A" right of "Y" is untouched) — the region guard composes with the slice
+    // register exactly as with a data-name or literal table.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AXAYA\".", "01  F  PIC X(3) VALUE \"ZAZ\"."],
+        &["INSPECT S CONVERTING F(2:1) TO \"0\" BEFORE \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0X0YA\n");
+}
+
+#[test]
+fn inspect_converting_const_refmod_first_occurrence_wins() {
+    // The `from` const slice repeats a char: F(2:3) = "AAB" (F = "ZAAB"). First
+    // occurrence wins, so A→X (not the later A→Y); B→Z. "AAB" → "XXZ" — the
+    // leftmost-wins rule holds for a slice-register table just as for the others.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"AAB\".", "01  F  PIC X(4) VALUE \"ZAAB\"."],
+        &["INSPECT S CONVERTING F(2:3) TO \"XYZ\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XXZ\n");
+}
+
+#[test]
+fn inspect_converting_const_refmod_aliases_the_source() {
+    // The `from` refmod BASE is the source S itself: INSPECT S CONVERTING S(2:2) TO T.
+    // The slice must be built from the ORIGINAL bytes of S — `ref_mod_slice`
+    // materialises the slice register up front, before the loop overwrites S. S =
+    // "ABAB", S(2:2) = "BA" (original bytes), T = "XY": table B→X, A→Y. "ABAB" →
+    // "YXYX". If the slice were read AFTER a partial rewrite the result would diverge;
+    // parity here pins the up-front slice.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"ABAB\".", "01  T  PIC X(2) VALUE \"XY\"."],
+        &["INSPECT S CONVERTING S(2:2) TO T.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "YXYX\n");
+}
+
+#[test]
+fn inspect_converting_const_refmod_filler_between_binds_by_name() {
+    // A FILLER sits BETWEEN the named source S and the named refmod base F. The
+    // compiler DROPS the FILLER while the oracle PUSHES it, so item layouts differ —
+    // but both bind the source and refmod base by NAME, so the slice F(1:2)="AB"
+    // resolves identically. "ABAB" → "XYXY".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S       PIC X(4) VALUE \"ABAB\".",
+            "01  FILLER  PIC X(2) VALUE \"##\".",
+            "01  F       PIC X(2) VALUE \"AB\".",
+        ],
+        &["INSPECT S CONVERTING F(1:2) TO \"XY\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XYXY\n");
+}
+
+#[test]
+fn inspect_converting_unequal_length_const_refmod_is_a_later_rung() {
+    // A const-slice `from`/`to` whose STATIC lengths differ has no well-defined table —
+    // the equal-length check (now over slice lengths) rejects it as a later rung on
+    // BOTH engines (the compiler at build time, the oracle at exec time). F(1:2) = "AB"
+    // (len 2) vs "XYZ" (len 3).
+    let src = wrap(
+        &["01  S  PIC X(3) VALUE \"ABC\".", "01  F  PIC X(2) VALUE \"AB\"."],
+        &["INSPECT S CONVERTING F(1:2) TO \"XYZ\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject unequal-length const-refmod from/to");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject unequal-length const-refmod from/to"
+    );
+}
+
+#[test]
+fn inspect_converting_computed_refmod_from_is_a_later_rung() {
+    // A COMPUTED refmod `from` — the start index is a data-name J, so the slice length
+    // is only known at run time. The compile-time table contract cannot carry it, so
+    // it stays a later rung, rejected on BOTH engines (the same const-index predicate
+    // #67 uses for STRING/MOVE refmod sending fields).
+    let src = wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"CAB\".",
+            "01  F  PIC X(5) VALUE \"ZABCZ\".",
+            "01  J  PIC 9   VALUE 2.",
+        ],
+        &["INSPECT S CONVERTING F(J:3) TO \"XYZ\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a computed refmod from");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a computed refmod from");
+}
+
+#[test]
+fn inspect_converting_computed_refmod_to_is_a_later_rung() {
+    // The TO side of the same rule: a computed refmod `to` (length index is a
+    // data-name K) is a run-time length the table contract cannot carry — a later
+    // rung on BOTH engines.
+    let src = wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"CAB\".",
+            "01  T  PIC X(5) VALUE \"ZXYZZ\".",
+            "01  K  PIC 9   VALUE 3.",
+        ],
+        &["INSPECT S CONVERTING \"ABC\" TO T(2:K).", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a computed refmod to");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a computed refmod to");
+}
+
+#[test]
+fn inspect_converting_numeric_base_const_refmod_is_a_later_rung() {
+    // A refmod whose BASE is a NUMERIC item is a later rung on BOTH engines — the
+    // slice evaluator rejects a numeric base identically (`ref_mod_slice` at build
+    // time, `refmod_string` at exec time), so CONVERTING inherits that gate unchanged.
+    let src = wrap(
+        &["01  S  PIC X(3) VALUE \"CAB\".", "01  N  PIC 9(3) VALUE 123."],
+        &["INSPECT S CONVERTING N(1:2) TO \"XY\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a numeric refmod base");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a numeric refmod base");
+}
+
+#[test]
+fn inspect_converting_non_ascii_char_outside_const_refmod_window() {
+    // POSITIVE non-ASCII case: the multibyte char is STRICTLY OUTSIDE the slice window
+    // (and the source stays ASCII), so byte offsets (compiler `str_slice`) and char
+    // offsets (oracle `refmod_string`) coincide within `[0, end)`. F = "ABCé": the
+    // slice F(1:3) = "ABC" cuts BEFORE the 2-byte "é" (char index 3, byte offset 3),
+    // so both engines see the ASCII "ABC" table. "CAB" → "ZXY". The byte-vs-char chip
+    // (task_396ba6f6) only bites when the slice — or the source reconstruction —
+    // straddles a multibyte char, which this case avoids; that hazard is documented on
+    // the data-name non-ASCII characterization tests above.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"CAB\".", "01  F  PIC X(4) VALUE \"ABCé\"."],
+        &["INSPECT S CONVERTING F(1:3) TO \"XYZ\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ZXY\n");
+}
+
+// ---------------------------------------------------------------------------
+// INSPECT … CONVERTING with a FIGURATIVE-CONSTANT `from`/`to` operand — SPACE and
+// ZERO (the only figuratives in the model) are accepted, each mapped to the
+// single-character literal `" "` (0x20) / `"0"` (0x30). Both are ASCII, so the
+// mapping reduces to the EXISTING single-char Literal path in every downstream
+// respect: the equal-length check, the ASCII-literal guard, the convert loop, and
+// the BEFORE/AFTER region all apply unchanged. Pinned against the oracle here.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn inspect_converting_figurative_space_from() {
+    // `from` is the figurative SPACE (→ " "), `to` the literal "_": every space of
+    // "A B C" becomes "_" → "A_B_C". A figurative FROM reduces to the single-char
+    // literal path.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"A B C\"."],
+        &["INSPECT S CONVERTING SPACE TO \"_\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "A_B_C\n");
+}
+
+#[test]
+fn inspect_converting_figurative_zero_to() {
+    // `from` the literal "O", `to` the figurative ZERO (→ "0"): O→0 applied to "MOON"
+    // → "M00N". A figurative TO reduces to the single-char literal path.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"MOON\"."],
+        &["INSPECT S CONVERTING \"O\" TO ZERO.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "M00N\n");
+}
+
+#[test]
+fn inspect_converting_figurative_space_to() {
+    // `to` is the figurative SPACE (→ " "): X→space applied to "XAXA" → " A A" (a
+    // space wherever an X sat). Confirms a figurative TO maps to the blank correctly.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"XAXA\"."],
+        &["INSPECT S CONVERTING \"X\" TO SPACE.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, " A A\n");
+}
+
+#[test]
+fn inspect_converting_figurative_plural_spellings() {
+    // The reader folds every spelling of a figurative to the same `Fig`: SPACES == SPACE,
+    // ZEROS == ZEROES == ZERO. `SPACES TO ZEROS` and `SPACES TO ZEROES` therefore build
+    // the identical " "→"0" table: each space of "A B C" → "0" → "A0B0C".
+    let out_s = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"A B C\"."],
+        &["INSPECT S CONVERTING SPACES TO ZEROS.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out_s, "A0B0C\n");
+    let out_es = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"A B C\"."],
+        &["INSPECT S CONVERTING SPACES TO ZEROES.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out_es, "A0B0C\n");
+}
+
+#[test]
+fn inspect_converting_figurative_with_a_region() {
+    // A figurative operand narrowed by a `{BEFORE|AFTER}` region: SPACE→"_" but only
+    // BEFORE "Z". "A B Z" — the two spaces left of "Z" (indices 1 and 3) convert; the
+    // "Z" and anything right of it are untouched → "A_B_Z". The region guard composes
+    // with the figurative-as-literal table exactly as with a plain literal.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"A B Z\"."],
+        &["INSPECT S CONVERTING SPACE TO \"_\" BEFORE \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "A_B_Z\n");
+}
+
+#[test]
+fn inspect_converting_figurative_unequal_length_is_a_later_rung() {
+    // A figurative (length 1) paired with a length-2 literal has no well-defined table —
+    // the EXISTING equal-length check rejects it as a later rung on BOTH engines. "AB"
+    // (len 2) vs ZERO (→ "0", len 1).
+    let src = wrap(
+        &["01  S  PIC X(3) VALUE \"ABC\"."],
+        &["INSPECT S CONVERTING \"AB\" TO ZERO.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a figurative paired with an unequal-length literal");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a figurative paired with an unequal-length literal"
+    );
+}
+
+#[test]
+fn inspect_converting_figurative_all_ascii_characterization() {
+    // NON-ASCII PARITY note. SPACE and ZERO are the ONLY figuratives in the model, and
+    // both map to an inherently ASCII single-character literal (" " = 0x20, "0" = 0x30),
+    // so there is NO non-ASCII figurative OPERAND to exercise — the figurative operand
+    // this rung adds is always ASCII. A non-ASCII byte can still enter only through the
+    // SOURCE, and that is the PRE-EXISTING byte-vs-char SOURCE chip (task_396ba6f6): the
+    // compiler reconstructs each pass-through position with `str_slice(s, j, j+1)` on
+    // BYTE offsets, which traps on a multibyte char, while the char-based oracle
+    // succeeds — a disagreement OWNED by the shared source-reconstruction chip and
+    // UNCHANGED by this rung (it predates and is orthogonal to the figurative operand).
+    // The figurative rung's parity surface is therefore all-ASCII; this test pins the
+    // representative all-ASCII figurative-on-both-sides case through assert_matches_oracle
+    // — an all-space source "     " CONVERTING SPACE TO ZERO → "00000" (both `from` and
+    // `to` are figuratives, both mapped to single-char ASCII literals).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE SPACES."],
+        &["INSPECT S CONVERTING SPACE TO ZERO.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "00000\n");
+}
+
 #[test]
 fn inspect_converting_combined_with_replacing_is_rejected() {
     // CONVERTING is a STANDALONE INSPECT alternative — the grammar does not let it

@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.70 — `ORDER BY <n>` over an aggregate sorts by the materialized value (ledger now empty)
+
+`SELECT k, sum(v) FROM g GROUP BY k ORDER BY 2` now sorts by the aggregated
+`sum(v)` column, matching SQLite. Previously a positional key pointing at an
+aggregate output could not be honored — the sort path re-evaluates its key per
+row, and an aggregate has no per-row value — so it was a documented differential
+divergence. The planner now records the target output index on the sort key and
+codegen binds it to the already-materialized column by name (see sql-planner
+0.2.34, sql-optimizer 0.1.7, sql-codegen 0.6.14, sql-vm 0.4.40).
+
+This was the **last** entry in the differential-oracle ledger: every seed case
+now matches bundled real SQLite exactly, so `LEDGER` is empty (zero known
+divergences). The oracle also gains a `DESC` variant of the aggregate-ordinal
+case with distinct sums, pinning the sort order. Verified against bundled real
+SQLite.
+
 ## 0.5.69 — `replace()` with an empty search returns the subject unchanged
 
 `replace('abc', '', 'X')` now returns `'abc'`, matching SQLite — an empty search

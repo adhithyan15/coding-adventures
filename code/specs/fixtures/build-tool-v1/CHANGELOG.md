@@ -2,6 +2,29 @@
 
 ## 2026-07-30
 
+- Added the separately domain-bound thirteen-role capability-broker authority
+  schema, broker-specific process-free backend import manifest, and exact
+  language-neutral behavior manifest/schema.
+- Added retained verified Podman, `crun`, and Conmon descriptors, a
+  handle-relative prepopulated image store plus private transient state, a
+  fixed two-command grammar and environment, combined nonblocking output
+  accounting, hard timeouts, and delegated cgroup-v2 descendant cleanup.
+- Added mandatory Landlock ABI-v1 execute confinement whose sole allow-rule is
+  the retained Podman inode, plus a closed `linkage: static` identity field and
+  bounded ELF64 program-header validation that rejects `PT_INTERP`. Podman may
+  re-exec itself without admitting a dynamic-loader execution trampoline, while constructor
+  hooks, `catatonit`, and every other pathname-backed helper in the reviewed
+  flow fail closed. Anonymous executable memfds and executable mappings remain
+  a separately tracked prerequisite before invariant-probe authority.
+- Kept the isolated worker protocol non-authoritative: it accepts no loader or
+  backend source and returns only bounded command results or one closed error;
+  the authority-gated parent alone loads the approved backend and binds source
+  and authority identities to passing and non-passing receipts.
+- Removed process and pathname-reopen authority from the Linux preflight
+  backend. Its brokered interface now consumes only bounded command results and
+  treats recursive/depth-exhausting runtime JSON as a stable invalid response.
+- Kept the broker scope capability-only: no fixture, adapter, container,
+  invariant probe, or Linux trusted-execution readiness is authorized.
 - Added a separately domain-bound exact-loader authority schema with ten fixed
   component roles and a closed standard-library import manifest.
 - Added retained-directory-handle component reads, sealed anonymous component

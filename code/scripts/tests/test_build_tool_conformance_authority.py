@@ -52,12 +52,18 @@ def backend_identity() -> dict[str, object]:
             "implementation": "podman",
             "path": "/usr/bin/podman",
             "version": "5.8.3",
+            "linkage": "static",
             "sha256": "1" * 64,
         },
         "oci_runtime": {
             "implementation": "crun",
             "path": "/usr/bin/crun",
             "sha256": "2" * 64,
+        },
+        "conmon": {
+            "implementation": "conmon",
+            "path": "/usr/bin/conmon",
+            "sha256": "8" * 64,
         },
         "image": {
             "reference": f"localhost/build-tool@sha256:{manifest}",

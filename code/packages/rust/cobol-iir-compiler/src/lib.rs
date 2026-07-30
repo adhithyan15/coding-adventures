@@ -4611,14 +4611,26 @@ impl<'a> Compiler<'a> {
     /// Resolve a CONVERTING `from`/`to` operand node into a [`ConvOperand`]. A string
     /// literal is carried by value (its bytes are baked later); a data-name resolves
     /// to its backing register and declared width via the shared item-index helper.
-    /// A numeric/group item (`item_index` rejects a group/undeclared name; the
-    /// `Numeric` arm rejects a numeric item), a figurative constant, a numeric
-    /// literal, and a reference modification are clean later rungs — rejected with the
-    /// SAME messages the oracle's `read_converting_operand`/`converting_operand_str`
-    /// use, so both engines accept and reject the very same programs. `which` names
-    /// the position (`"from"`/`"to"`) for the diagnostic.
+    /// A **constant** reference modification `base(start:len)` resolves to the slice
+    /// register [`Self::ref_mod_slice`] materialises plus its compile-time-known
+    /// length — a `ConvOperand::Item` in every downstream respect, since the slice
+    /// register IS an alphanumeric string register of a static width (the const `len`,
+    /// or `base_width - start + 1` when omitted). A numeric/group item (`item_index`
+    /// rejects a group/undeclared name; the `Numeric` arm rejects a numeric item). A
+    /// figurative constant SPACE / ZERO is accepted, mapped to the single-character
+    /// literal `" "` / `"0"` — reducing to the `ConvOperand::Literal` path in every
+    /// downstream respect. A numeric literal and a *computed* reference modification
+    /// are clean later rungs — rejected with the SAME messages the oracle's
+    /// `read_converting_operand`/`converting_operand_str` use, so both engines accept
+    /// and reject the very same programs. `which` names the position
+    /// (`"from"`/`"to"`) for the diagnostic.
+    ///
+    /// Takes `&mut self` because the const-refmod path emits the slice's `str_slice`
+    /// (via `ref_mod_slice`) here, BEFORE the per-position loop — so a refmod whose
+    /// base aliases the source is sliced from the original bytes, matching the
+    /// oracle's up-front `converting_operand_str`.
     fn converting_operand(
-        &self,
+        &mut self,
         op: &GrammarASTNode,
         which: &str,
     ) -> Result<ConvOperand, CompileError> {
@@ -4636,17 +4648,36 @@ impl<'a> Compiler<'a> {
                     ))),
                 }
             }
+            Operandy::RefMod { base, start, len } => {
+                // `ref_mod_slice` materialises the slice into `reg` and reports its
+                // length: `SliceLen::Const(n)` for a literal:literal (or literal:)
+                // refmod — the CONSTANT case this rung supports. Its Const/Runtime
+                // split is co-total with the oracle's `const_ix` predicate (#67), so a
+                // form one engine treats as constant the other does too. A Const slice
+                // register + width `n` behave EXACTLY like a data-name's `(reg, width)`
+                // in `converting_from_consts`/`converting_to_consts`, so we hand it back
+                // as a `ConvOperand::Item`. A `SliceLen::Runtime` (any data-name index)
+                // is a COMPUTED refmod — a run-time length the compile-time table
+                // contract cannot carry — rejected here with the same message class the
+                // oracle uses.
+                let (reg, slice_len) = self.ref_mod_slice(&base, &start, &len)?;
+                match slice_len {
+                    SliceLen::Const(n) => Ok(ConvOperand::Item { reg, width: n }),
+                    SliceLen::Runtime { .. } => Err(CompileError::Unsupported(format!(
+                        "INSPECT CONVERTING with a computed reference-modified {which} operand is a later rung"
+                    ))),
+                }
+            }
             Operandy::Literal(Src::Num(_)) => Err(CompileError::Unsupported(format!(
                 "INSPECT CONVERTING with a numeric-literal {which} operand is a later rung"
             ))),
-            Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
-                Err(CompileError::Unsupported(format!(
-                    "INSPECT CONVERTING with a figurative-constant {which} operand is a later rung"
-                )))
-            }
-            Operandy::RefMod { .. } => Err(CompileError::Unsupported(format!(
-                "INSPECT CONVERTING with a reference-modified {which} operand is a later rung"
-            ))),
+            // A figurative constant SPACE / ZERO reduces to a single-character
+            // literal — SPACE→" " (0x20), ZERO→"0" (0x30), both ASCII — so it takes
+            // the exact `ConvOperand::Literal` path a string literal does: the
+            // equal-length check and the ASCII-literal guard below then apply
+            // unchanged. Mirrors the oracle's `read_converting_operand`.
+            Operandy::Literal(Src::Space) => Ok(ConvOperand::Literal(" ".into())),
+            Operandy::Literal(Src::Zero) => Ok(ConvOperand::Literal("0".into())),
         }
     }
 

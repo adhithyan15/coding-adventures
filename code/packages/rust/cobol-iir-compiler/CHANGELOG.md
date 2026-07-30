@@ -8,6 +8,58 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.70.0: INSPECT CONVERTING with a figurative-constant SPACE/ZERO FROM/TO operand
+
+`INSPECT src CONVERTING from TO to [{BEFORE|AFTER} x]` now lowers when the `from` and/or `to` table is
+a **figurative constant** SPACE or ZERO. Either or both sides may be a figurative, mixing freely with a
+string literal, a data-name, or a const reference modification on the other. Every spelling folds
+identically — SPACE/SPACES, ZERO/ZEROS/ZEROES. Compiled byte-identical to the
+`coding-adventures-cobol-runtime` 0.74.0 oracle.
+
+- **A figurative reduces to the #30 single-char literal path.** The `converting_operand` resolver maps
+  `Src::Space` → `ConvOperand::Literal(" ")` (0x20) and `Src::Zero` → `ConvOperand::Literal("0")`
+  (0x30), then reuses the EXISTING Literal lowering in every downstream respect — the equal-length
+  check, the ASCII-literal guard, `converting_from_consts`/`converting_to_consts`, the convert loop, and
+  the BEFORE/AFTER region all apply unchanged. Both mapped characters are ASCII, so the ASCII-literal
+  guard passes.
+- **Unequal-length deferred co-totally.** A figurative (length 1) paired with a length-1 operand
+  converts; paired with a length-not-1 operand, the EXISTING equal-length reject fires — matching the
+  oracle's `read_converting_operand`. SPACE and ZERO are the only figuratives in the model (no
+  QUOTE/LOW-VALUE/HIGH-VALUE), so the figurative case has nothing further to defer. A numeric literal
+  and a *computed* reference modification remain later rungs, unchanged.
+
+### Added — v0.69.0: INSPECT CONVERTING with a CONSTANT reference-modified FROM/TO operand
+
+`INSPECT src CONVERTING from TO to [{BEFORE|AFTER} x]` now lowers when the `from` and/or `to` table is
+a **constant reference modification** `base(start:len)` / `base(start:)` — a slice of an alphanumeric
+item where both indices are LITERALS. Either or both sides may be a const slice, mixing freely with a
+literal or a data-name on the other. Compiled byte-identical to the `coding-adventures-cobol-runtime`
+0.73.0 oracle on ASCII operands.
+
+- **A const refmod reduces to the #72 data-name (`Item`) path.** The `converting_operand` resolver
+  gains a `RefMod` arm that calls the shared `ref_mod_slice(base, start, len)` — the SAME helper the
+  MOVE-source (#66) and STRING-sending-field (#67) rungs use. For a `SliceLen::Const(n)` result the
+  slice register IS an alphanumeric string register of a compile-time-known width `n` (the const `len`,
+  or `base_width - start + 1` when omitted), so it is handed back as a `ConvOperand::Item { reg, width:
+  n }`. Everything downstream — `converting_from_consts`/`converting_to_consts`, the equal-length check,
+  the per-position first-match-wins chain — is UNCHANGED; only WHERE the register comes from differs.
+- **Up-front slice materialisation — aliasing-safe.** `ref_mod_slice` emits the slice's `str_slice`
+  when `converting_operand` runs, BEFORE the per-position loop and the source write-back, so a refmod
+  whose base ALIASES the source is sliced from the ORIGINAL bytes (mirroring the oracle's up-front
+  `converting_operand_str`). `converting_operand` therefore takes `&mut self`.
+- **Computed refmod deferred co-totally.** A `SliceLen::Runtime` result (any data-name index) has a
+  run-time length the compile-time table contract cannot carry — a later rung, rejected with a
+  `"computed reference-modified {which} operand is a later rung"` message. `ref_mod_slice`'s Const/Runtime
+  split is co-total with the oracle's `const_ix` predicate (`matches!(start, Lit) && len.is_none_or(|l|
+  matches!(l, Lit))`, #67), so a form one engine treats as constant the other does too. A numeric refmod
+  base is rejected identically by `ref_mod_slice`/`refmod_string`.
+- **Byte-vs-char chip unchanged.** The slice compare is byte-based in the compiler (`str_index`/
+  `str_slice`) and char-based in the oracle (`refmod_string`); they coincide on an ASCII base. A
+  non-ASCII base whose slice window — or the source reconstruction — straddles a multibyte char is the
+  PRE-EXISTING refmod byte-vs-char chip (task_396ba6f6), shared with the MOVE/STRING refmod rungs and
+  the CONVERTING data-name TO-item; no NEW divergence is introduced. A positive test pins the ASCII
+  surface where the multibyte char sits strictly outside the slice window.
+
 ### Added — v0.68.0: combined INSPECT TALLYING/REPLACING — a LEADING half may carry a region
 
 `INSPECT src TALLYING c FOR {ALL|LEADING} d [{BEFORE|AFTER} p] REPLACING {ALL|LEADING} s BY r

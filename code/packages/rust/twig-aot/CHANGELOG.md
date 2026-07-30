@@ -1,5 +1,29 @@
 # Changelog — `twig-aot`
 
+## 0.48.0 - 2026-07-29 — Twig strings under the collector (stop the calloc leak)
+
+Brings the Twig native-AOT **string** heap type under gc-core, so string-heavy programs no
+longer grow without bound. Part of "every Twig heap feature has a native GC in the AOT path"
+(cons cells already were; strings were the one leaking type).
+
+- **`__twig_alloc_bytes` (runtime/twig_runtime.c)** — the allocator behind every runtime string
+  (`str_const`, `str_concat`, `str_slice`, `input_str`) — now allocates through gc-core
+  (`__gc_register_kind` + `__gc_alloc_kind`) instead of `calloc` + intentional leak. A string is
+  a `[int64 len][bytes]` opaque blob with no interior GC references, so it is registered under a
+  **no-reference "blob" kind** (empty field map): the collector scans none of its bytes (precise
+  — no look-alike-pointer false pinning) and treats it as a movable leaf. Safe under compaction
+  by pin-when-unsure (a string reached only via a raw handle in a non-reference slot is pinned;
+  one reached via a tagged heap-ref slot is moved + fixed up). Kind registered lazily on first
+  use, mirroring `__dyn_cons`.
+- **New smoke test** `end_to_end_gc_manages_runtime_strings` (macOS/aarch64): a compiled native
+  program builds three string blocks (`live_bytes == 34`, proving they are gc-core allocations —
+  a `calloc` block would report `0`), then a precise collect **reclaims the two now-dead literals**
+  (34 → 13, freeing 21 B) while keeping the live concatenation — a Twig string is reclaimed when
+  it dies, not leaked.
+- `e4d_str_helpers` (which compiles `twig_runtime.c` standalone to test string *logic*) gains
+  trivial `calloc`-backed `__gc_*` stubs so it still links without the collector archive.
+- No behaviour change for existing string semantics; `twig-aot` 0.47.0 → 0.48.0.
+
 ## 0.47.0 - 2026-07-27 — end-to-end native incremental collection (AOT00-T4 §6) — precision ladder COMPLETE
 
 - New macOS smoke test `end_to_end_gc_incremental_keeps_live_ref`: a compiled native program

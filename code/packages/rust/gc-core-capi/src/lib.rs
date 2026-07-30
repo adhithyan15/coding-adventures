@@ -193,6 +193,24 @@ pub unsafe extern "C" fn __gc_register_ref_array_kind(
     with_heap(|h| h.register_ref_array_kind(&offsets, tail) as i64)
 }
 
+/// Return the **kind id** of the live heap object at payload address `ptr`, or `0` if `ptr` is
+/// not inside any live GC block (null, a non-heap value, or a stale/foreign pointer). A frontend
+/// uses this to discriminate object *classes* that share the heap tag — e.g. telling a closure
+/// kind from a cons kind for `procedure?` / `pair?` — from a value it has already stripped of its
+/// low-bit tag. Read-only; performs no allocation or collection.
+///
+/// # Safety
+///
+/// `ptr` is validated against the live-block list before any header read, so a bogus or foreign
+/// value yields `0` rather than an out-of-bounds read. Standard C-ABI integer argument.
+#[no_mangle]
+pub unsafe extern "C" fn __gc_kind_of(ptr: i64) -> i64 {
+    if ptr <= 0 {
+        return 0;
+    }
+    with_heap(|h| h.kind_of(ptr as usize) as i64)
+}
+
 /// **Generational write barrier.** The native runtime calls this whenever it
 /// stores a heap reference `child` into a field of heap object `parent` (both
 /// payload addresses). If `parent` is **old**, it is recorded so a later
@@ -682,6 +700,34 @@ mod tests {
         let freed2 = unsafe { __gc_collect_roots(roots.as_ptr(), 2) };
         assert_eq!(freed2, 1, "clearing the tail slot reclaims the element");
         assert_eq!(__gc_live_bytes(), 40, "only the two arrays remain (16 + 24)");
+
+        __gc_reset();
+    }
+
+    /// `__gc_kind_of` reports an object's kind id through the C ABI, so a frontend can tell a
+    /// closure kind from a cons kind (e.g. for `procedure?` / `pair?`), and returns `0` for
+    /// kind-0 / null / non-heap addresses without an out-of-bounds read.
+    #[test]
+    fn c_abi_kind_of_discriminates_classes() {
+        let _guard = TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+
+        let cons_offsets = [0i64, 8];
+        let cons_kind = unsafe { __gc_register_kind(cons_offsets.as_ptr(), 2) };
+        // A closure kind: code_ptr @0 (non-ref), captured refs tail from offset 8.
+        let closure_kind = unsafe { __gc_register_ref_array_kind(std::ptr::null(), 0, 8) };
+        assert!(cons_kind >= 1 && closure_kind >= 1 && cons_kind != closure_kind);
+
+        let pair = __gc_alloc_kind(16, cons_kind as u16);
+        let closure = __gc_alloc_kind(24, closure_kind as u16);
+        let opaque = __gc_alloc(16); // kind 0
+        assert!(pair != 0 && closure != 0 && opaque != 0);
+
+        assert_eq!(unsafe { __gc_kind_of(pair) }, cons_kind, "pair → cons kind");
+        assert_eq!(unsafe { __gc_kind_of(closure) }, closure_kind, "closure → closure kind");
+        assert_eq!(unsafe { __gc_kind_of(opaque) }, 0, "kind-0 object → 0");
+        assert_eq!(unsafe { __gc_kind_of(0) }, 0, "null → 0");
+        assert_eq!(unsafe { __gc_kind_of(0x1234) }, 0, "non-heap address → 0 (no OOB read)");
 
         __gc_reset();
     }

@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """Fail-closed Linux OCI capability preflight for trusted conformance.
 
-This is deliberately separate from ``build_tool_conformance_execution``:
-this module owns process APIs, while the authority and contract validator
-remain process-free. The first Linux tranche validates immutable backend
-identities, proves required rootless-Podman host capabilities, and constructs
-the runner-owned invariant-probe container. It never decodes or executes a
-fixture case.
+This is deliberately separate from ``build_tool_conformance_execution``.
+It validates immutable backend identities, consumes only bounded results from
+the separately authorized capability broker, and constructs the runner-owned
+invariant-probe container request without invoking it. It never owns a process,
+decodes a fixture case, or executes a container.
 """
 
 from __future__ import annotations
@@ -16,24 +15,18 @@ import hashlib
 import json
 import os
 import stat
-
-# This is the deliberately isolated process-owning backend.
-import subprocess  # nosec B404
 import sys
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 DEFAULT_IDENTITY_SCHEMA = Path("linux-oci-backend.schema.json")
 MAX_DOCUMENT_BYTES = 2_000_000
-PODMAN_PATH = Path("/usr/bin/podman")
-CRUN_PATH = Path("/usr/bin/crun")
 PODMAN_COMMAND = "/usr/bin/podman"
 CRUN_COMMAND = "/usr/bin/crun"
 MAX_RUNTIME_OUTPUT_BYTES = 262_144
-RUNTIME_TIMEOUT_SECONDS = 15.0
-REQUIRED_CGROUP_CONTROLLERS = frozenset({"cpu", "memory", "pids"})
+MAX_RUNTIME_JSON_DEPTH = 64
 
 
 class LinuxOciUnavailable(RuntimeError):
@@ -52,10 +45,6 @@ class CommandResult:
     returncode: int
     stdout: bytes
     stderr: bytes
-
-
-CommandRunner = Callable[[list[str], dict[str, str], float], CommandResult]
-DigestReader = Callable[[Path], str]
 
 
 def identity_sha256(raw: bytes) -> str:
@@ -127,6 +116,7 @@ def validate_identity(
         "architecture",
         "runtime",
         "oci_runtime",
+        "conmon",
         "image",
         "seccomp_profile_sha256",
         "shim",
@@ -140,9 +130,11 @@ def validate_identity(
         and identity.get("platform") == "linux"
         and identity.get("architecture") == "amd64"
         and isinstance(identity.get("runtime"), dict)
-        and set(identity["runtime"]) == {"implementation", "path", "version", "sha256"}
+        and set(identity["runtime"])
+        == {"implementation", "path", "version", "linkage", "sha256"}
         and identity["runtime"].get("implementation") == "podman"
         and identity["runtime"].get("path") == "/usr/bin/podman"
+        and identity["runtime"].get("linkage") == "static"
         and _is_version(identity["runtime"].get("version"))
         and _is_sha256(identity["runtime"].get("sha256"))
         and isinstance(identity.get("oci_runtime"), dict)
@@ -150,6 +142,11 @@ def validate_identity(
         and identity["oci_runtime"].get("implementation") == "crun"
         and identity["oci_runtime"].get("path") == "/usr/bin/crun"
         and _is_sha256(identity["oci_runtime"].get("sha256"))
+        and isinstance(identity.get("conmon"), dict)
+        and set(identity["conmon"]) == {"implementation", "path", "sha256"}
+        and identity["conmon"].get("implementation") == "conmon"
+        and identity["conmon"].get("path") == "/usr/bin/conmon"
+        and _is_sha256(identity["conmon"].get("sha256"))
         and isinstance(identity.get("image"), dict)
         and set(identity["image"])
         == {
@@ -294,138 +291,6 @@ def load_identity(
     return value, identity_sha256(raw)
 
 
-def runtime_environment(state_root: Path) -> dict[str, str]:
-    """Build the entire fixed environment for local Podman commands."""
-
-    return {
-        "HOME": str(state_root / "home"),
-        "LANG": "C.UTF-8",
-        "LC_ALL": "C.UTF-8",
-        "PATH": "/usr/sbin:/usr/bin:/sbin:/bin",
-        "TZ": "UTC",
-        "XDG_CONFIG_HOME": str(state_root / "config"),
-        "XDG_RUNTIME_DIR": str(state_root / "runtime"),
-    }
-
-
-def _prepare_state_root(state_root: Path) -> None:
-    if not state_root.is_absolute():
-        raise LinuxOciUnavailable(
-            "LINUX_OCI_STATE_ROOT_INVALID",
-            "runner-owned state root must be absolute",
-        )
-    try:
-        root_status = state_root.lstat()
-    except OSError as error:
-        raise LinuxOciUnavailable(
-            "LINUX_OCI_STATE_ROOT_INVALID",
-            "runner-owned state root is unavailable",
-        ) from error
-    is_reparse = bool(
-        getattr(root_status, "st_file_attributes", 0)
-        & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0)
-    )
-    if (
-        not stat.S_ISDIR(root_status.st_mode)
-        or stat.S_ISLNK(root_status.st_mode)
-        or is_reparse
-    ):
-        raise LinuxOciUnavailable(
-            "LINUX_OCI_STATE_ROOT_INVALID",
-            "runner-owned state root is not a regular directory",
-        )
-    if os.name == "posix" and (
-        root_status.st_uid != os.geteuid() or stat.S_IMODE(root_status.st_mode) & 0o077
-    ):
-        raise LinuxOciUnavailable(
-            "LINUX_OCI_STATE_ROOT_INVALID",
-            "runner-owned state root must be private to the invoking user",
-        )
-    for name in ("config", "home", "runtime", "runroot", "storage"):
-        child = state_root / name
-        try:
-            child.mkdir(mode=0o700)
-        except FileExistsError:
-            child_status = child.lstat()
-            child_reparse = bool(
-                getattr(child_status, "st_file_attributes", 0)
-                & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0)
-            )
-            child_not_private = os.name == "posix" and (
-                child_status.st_uid != os.geteuid()
-                or stat.S_IMODE(child_status.st_mode) & 0o077
-            )
-            if (
-                not stat.S_ISDIR(child_status.st_mode)
-                or stat.S_ISLNK(child_status.st_mode)
-                or child_reparse
-                or child_not_private
-            ):
-                raise LinuxOciUnavailable(
-                    "LINUX_OCI_STATE_ROOT_INVALID",
-                    "runner-owned state directory is invalid",
-                )
-        except OSError as error:
-            raise LinuxOciUnavailable(
-                "LINUX_OCI_STATE_ROOT_INVALID",
-                "runner-owned state directory could not be created",
-            ) from error
-
-
-def _binary_digest(path: Path) -> str:
-    """Hash one root-owned, non-privileged regular binary without link following."""
-
-    flags = os.O_RDONLY | getattr(os, "O_CLOEXEC", 0) | getattr(os, "O_NOFOLLOW", 0)
-    try:
-        descriptor = os.open(path, flags)
-    except OSError as error:
-        raise LinuxOciUnavailable(
-            "LINUX_OCI_BINARY_UNAVAILABLE",
-            "required Linux OCI backend binary is unavailable",
-        ) from error
-    digest = hashlib.sha256()
-    try:
-        before = os.fstat(descriptor)
-        if not stat.S_ISREG(before.st_mode):
-            raise LinuxOciUnavailable(
-                "LINUX_OCI_BINARY_INVALID",
-                "required Linux OCI backend binary is not regular",
-            )
-        if before.st_mode & (stat.S_ISUID | stat.S_ISGID):
-            raise LinuxOciUnavailable(
-                "LINUX_OCI_BINARY_INVALID",
-                "privileged Linux OCI backend binaries are forbidden",
-            )
-        if hasattr(before, "st_uid") and before.st_uid != 0:
-            raise LinuxOciUnavailable(
-                "LINUX_OCI_BINARY_INVALID",
-                "Linux OCI backend binaries must be root-owned",
-            )
-        while chunk := os.read(descriptor, 1024 * 1024):
-            digest.update(chunk)
-        after = os.fstat(descriptor)
-        before_identity = (
-            before.st_dev,
-            before.st_ino,
-            before.st_size,
-            before.st_mtime_ns,
-        )
-        after_identity = (
-            after.st_dev,
-            after.st_ino,
-            after.st_size,
-            after.st_mtime_ns,
-        )
-        if before_identity != after_identity:
-            raise LinuxOciUnavailable(
-                "LINUX_OCI_BINARY_CHANGED",
-                "Linux OCI backend binary changed while it was hashed",
-            )
-    finally:
-        os.close(descriptor)
-    return digest.hexdigest()
-
-
 def _runtime_prefix(state_root: Path) -> list[str]:
     return [
         PODMAN_COMMAND,
@@ -440,40 +305,28 @@ def _runtime_prefix(state_root: Path) -> list[str]:
     ]
 
 
-def _run_command(
-    argv: list[str],
-    environment: dict[str, str],
-    timeout_seconds: float,
-) -> CommandResult:
-    """Run one fixed direct command and bound all captured runtime output."""
-
-    try:
-        completed = subprocess.run(
-            argv,
-            check=False,
-            cwd=environment["HOME"],
-            env=environment,
-            input=b"",
-            capture_output=True,
-            timeout=timeout_seconds,
-            # The direct argv is constructed only by this module.
-            shell=False,  # nosec B603
-        )
-    except (OSError, subprocess.SubprocessError) as error:
-        raise LinuxOciUnavailable(
-            "LINUX_OCI_RUNTIME_UNAVAILABLE",
-            "local Linux OCI runtime capability probe failed",
-        ) from error
-    if len(completed.stdout) + len(completed.stderr) > MAX_RUNTIME_OUTPUT_BYTES:
-        raise LinuxOciUnavailable(
-            "LINUX_OCI_RUNTIME_OUTPUT_LIMIT",
-            "local Linux OCI runtime exceeded the preflight output ceiling",
-        )
-    return CommandResult(
-        returncode=completed.returncode,
-        stdout=completed.stdout,
-        stderr=completed.stderr,
-    )
+def _reject_excessive_json_nesting(value: str) -> None:
+    depth = 0
+    in_string = False
+    escaped = False
+    for character in value:
+        if in_string:
+            if escaped:
+                escaped = False
+            elif character == "\\":
+                escaped = True
+            elif character == '"':
+                in_string = False
+        elif character == '"':
+            in_string = True
+        elif character in "[{":
+            depth += 1
+            if depth > MAX_RUNTIME_JSON_DEPTH:
+                raise ValueError("runtime response nesting exceeds the ceiling")
+        elif character in "]}":
+            depth -= 1
+            if depth < 0:
+                raise ValueError("runtime response has unbalanced nesting")
 
 
 def _runtime_json(result: CommandResult) -> object:
@@ -489,6 +342,7 @@ def _runtime_json(result: CommandResult) -> object:
         )
     try:
         decoded = result.stdout.decode("utf-8", errors="strict")
+        _reject_excessive_json_nesting(decoded)
 
         def reject_duplicates(
             pairs: list[tuple[str, object]],
@@ -501,84 +355,45 @@ def _runtime_json(result: CommandResult) -> object:
             return value
 
         return json.loads(decoded, object_pairs_hook=reject_duplicates)
-    except (UnicodeDecodeError, ValueError) as error:
+    except (RecursionError, UnicodeDecodeError, ValueError) as error:
         raise LinuxOciUnavailable(
             "LINUX_OCI_RUNTIME_RESPONSE_INVALID",
             "local Linux OCI runtime returned invalid capability data",
         ) from error
 
 
-def validate_host_info(info_value: object, identity: Mapping[str, Any]) -> None:
-    """Prove the required local rootless-Podman host capabilities."""
+def validate_runtime_version(
+    version_value: object,
+    identity: Mapping[str, Any],
+) -> None:
+    """Validate the closed local-only Podman version response."""
 
-    info = _mapping(info_value, code="LINUX_OCI_RUNTIME_RESPONSE_INVALID")
-    host = _mapping(info.get("host"), code="LINUX_OCI_RUNTIME_RESPONSE_INVALID")
-    version = _mapping(info.get("version"), code="LINUX_OCI_RUNTIME_RESPONSE_INVALID")
-    runtime = _mapping(
-        identity.get("runtime"), code="LINUX_OCI_IDENTITY_SCHEMA_INVALID"
+    version = _mapping(
+        version_value,
+        code="LINUX_OCI_RUNTIME_RESPONSE_INVALID",
     )
-    oci_runtime = _mapping(
-        identity.get("oci_runtime"),
+    client = _mapping(
+        version.get("Client"),
+        code="LINUX_OCI_RUNTIME_RESPONSE_INVALID",
+    )
+    runtime = _mapping(
+        identity.get("runtime"),
         code="LINUX_OCI_IDENTITY_SCHEMA_INVALID",
     )
-
-    if host.get("serviceIsRemote") is not False:
+    if "Server" in version and version.get("Server") is not None:
         raise LinuxOciUnavailable(
             "LINUX_OCI_REMOTE_RUNTIME",
             "remote Podman is not a conforming Linux OCI backend",
         )
-    security = _mapping(
-        host.get("security"),
-        code="LINUX_OCI_RUNTIME_RESPONSE_INVALID",
-    )
-    if security.get("rootless") is not True:
-        raise LinuxOciUnavailable(
-            "LINUX_OCI_ROOTFUL_RUNTIME",
-            "rootful Podman is not a conforming Linux OCI backend",
-        )
-    if security.get("seccompEnabled") is not True:
-        raise LinuxOciUnavailable(
-            "LINUX_OCI_SECCOMP_REQUIRED",
-            "seccomp is required for the Linux OCI backend",
-        )
-    if host.get("cgroupVersion") != "v2":
-        raise LinuxOciUnavailable(
-            "LINUX_OCI_CGROUP_V2_REQUIRED",
-            "cgroup v2 is required for the Linux OCI backend",
-        )
-    controllers = host.get("cgroupControllers")
-    if not isinstance(controllers, list) or not REQUIRED_CGROUP_CONTROLLERS.issubset(
-        item for item in controllers if isinstance(item, str)
-    ):
-        raise LinuxOciUnavailable(
-            "LINUX_OCI_CGROUP_CONTROLLERS_MISSING",
-            "delegated cpu, memory, and pids controllers are required",
-        )
-    if host.get("cgroupManager") != "systemd":
-        raise LinuxOciUnavailable(
-            "LINUX_OCI_CGROUP_MANAGER_UNSUPPORTED",
-            "rootless systemd cgroup delegation is required",
-        )
-    detected_oci_runtime = _mapping(
-        host.get("ociRuntime"),
-        code="LINUX_OCI_RUNTIME_RESPONSE_INVALID",
-    )
-    if detected_oci_runtime.get("name") != oci_runtime.get(
-        "implementation"
-    ) or detected_oci_runtime.get("path") != oci_runtime.get("path"):
-        raise LinuxOciUnavailable(
-            "LINUX_OCI_CRUN_REQUIRED",
-            "the reviewed local crun runtime is required",
-        )
-    if host.get("os") != "linux" or host.get("arch") != "amd64":
-        raise LinuxOciUnavailable(
-            "LINUX_OCI_HOST_PLATFORM_MISMATCH",
-            "Linux amd64 is required for this OCI backend identity",
-        )
-    if version.get("Version") != runtime.get("version"):
+    if client.get("Version") != runtime.get("version"):
         raise LinuxOciUnavailable(
             "LINUX_OCI_RUNTIME_VERSION_MISMATCH",
             "local Podman version does not match the reviewed identity",
+        )
+    if client.get("Os") != "linux" or client.get("OsArch") != "linux/amd64":
+        raise LinuxOciUnavailable(
+            "LINUX_OCI_HOST_PLATFORM_MISMATCH",
+            "Linux amd64 is required for this OCI backend identity",
         )
 
 
@@ -754,20 +569,15 @@ def build_probe_create_argv(
     ]
 
 
-def preflight_prevalidated(
+def preflight_brokered(
     identity: dict[str, Any],
     *,
-    state_root: Path,
-    command_runner: CommandRunner = _run_command,
-    binary_digest: DigestReader = _binary_digest,
+    runtime_info: CommandResult,
+    image_inspect: CommandResult,
     platform_name: str | None = None,
     effective_uid: int | None = None,
 ) -> dict[str, Any]:
-    """Inspect host capabilities for an already formally validated identity.
-
-    This process-owning interface is intentionally not called by the exact
-    loadability worker. A later protected broker must own its two commands.
-    """
+    """Validate capability data returned by the exact protected broker."""
 
     selected_platform = platform_name or sys.platform
     if not selected_platform.startswith("linux"):
@@ -781,43 +591,9 @@ def preflight_prevalidated(
             "LINUX_OCI_ROOT_USER_FORBIDDEN",
             "Linux OCI backend preflight must run as a non-root user",
         )
-    runtime = _mapping(identity["runtime"], code="LINUX_OCI_IDENTITY_SCHEMA_INVALID")
-    oci_runtime = _mapping(
-        identity["oci_runtime"],
-        code="LINUX_OCI_IDENTITY_SCHEMA_INVALID",
-    )
-    if binary_digest(PODMAN_PATH) != runtime.get("sha256"):
-        raise LinuxOciUnavailable(
-            "LINUX_OCI_RUNTIME_IDENTITY_MISMATCH",
-            "local Podman binary does not match the reviewed identity",
-        )
-    if binary_digest(CRUN_PATH) != oci_runtime.get("sha256"):
-        raise LinuxOciUnavailable(
-            "LINUX_OCI_CRUN_IDENTITY_MISMATCH",
-            "local crun binary does not match the reviewed identity",
-        )
-
-    _prepare_state_root(state_root)
-    environment = runtime_environment(state_root)
-    prefix = _runtime_prefix(state_root)
-    info = _runtime_json(
-        command_runner(
-            [*prefix, "info", "--format", "json"],
-            environment,
-            RUNTIME_TIMEOUT_SECONDS,
-        )
-    )
-    validate_host_info(info, identity)
-
-    image = _mapping(identity["image"], code="LINUX_OCI_IDENTITY_SCHEMA_INVALID")
-    image_id = f"sha256:{image.get('config_sha256')}"
-    image_details = _runtime_json(
-        command_runner(
-            [*prefix, "image", "inspect", "--format", "json", image_id],
-            environment,
-            RUNTIME_TIMEOUT_SECONDS,
-        )
-    )
+    version = _runtime_json(runtime_info)
+    validate_runtime_version(version, identity)
+    image_details = _runtime_json(image_inspect)
     validate_image_info(image_details, identity)
     return {
         "schema_version": 1,
@@ -830,24 +606,41 @@ def preflight_prevalidated(
     }
 
 
-def preflight(
+def preflight_prevalidated(
     identity: dict[str, Any],
     *,
-    state_root: Path,
-    identity_schema: dict[str, Any] | None = None,
-    command_runner: CommandRunner = _run_command,
-    binary_digest: DigestReader = _binary_digest,
+    runtime_info: CommandResult,
+    image_inspect: CommandResult,
     platform_name: str | None = None,
     effective_uid: int | None = None,
 ) -> dict[str, Any]:
-    """Validate an identity, then use the legacy unbrokered preflight path."""
+    """Consume mandatory broker results for an already validated identity."""
+
+    return preflight_brokered(
+        identity,
+        runtime_info=runtime_info,
+        image_inspect=image_inspect,
+        platform_name=platform_name,
+        effective_uid=effective_uid,
+    )
+
+
+def preflight(
+    identity: dict[str, Any],
+    *,
+    runtime_info: CommandResult,
+    image_inspect: CommandResult,
+    identity_schema: dict[str, Any] | None = None,
+    platform_name: str | None = None,
+    effective_uid: int | None = None,
+) -> dict[str, Any]:
+    """Validate an identity, then consume mandatory broker results."""
 
     validate_identity(identity, identity_schema)
     return preflight_prevalidated(
         identity,
-        state_root=state_root,
-        command_runner=command_runner,
-        binary_digest=binary_digest,
+        runtime_info=runtime_info,
+        image_inspect=image_inspect,
         platform_name=platform_name,
         effective_uid=effective_uid,
     )
