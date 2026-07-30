@@ -10,7 +10,7 @@ mention provides a complete lesson.
 
 | Concepts | Documents | Dedicated | Related | Index only | Missing |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1155 | 39 | 57 | 48 | 6 | 1044 |
+| 1227 | 1080 | 98 | 58 | 6 | 1065 |
 
 ## Method
 
@@ -24,10 +24,10 @@ mention provides a complete lesson.
 
 | Priority | Dedicated | Related | Index only | Missing |
 | --- | ---: | ---: | ---: | ---: |
-| P0 | 46 | 21 | 5 | 99 |
-| P1 | 8 | 19 | 0 | 95 |
+| P0 | 86 | 25 | 5 | 56 |
+| P1 | 9 | 22 | 0 | 90 |
 | P2 | 1 | 3 | 1 | 152 |
-| P3 | 2 | 5 | 0 | 698 |
+| P3 | 2 | 8 | 0 | 767 |
 
 ## P0 Backlog
 
@@ -36,54 +36,38 @@ mention provides a complete lesson.
 | Concept | Languages | Status |
 | --- | ---: | --- |
 | `neural-graph-vm` | 15 | missing |
-| `hash-set` | 11 | missing |
+| `hash-set` | 13 | missing |
 
 ### documents-media
 
 | Concept | Languages | Status |
 | --- | ---: | --- |
-| `barcode-2d` | 15 | missing |
+| `image-geometric-transforms` | 15 | missing |
 | `image-point-ops` | 15 | missing |
-| `pdf417` | 15 | missing |
-| `image-geometric-transforms` | 14 | missing |
-| `barcode-1d` | 11 | missing |
-| `barcode-layout-1d` | 11 | missing |
 
 ### graphics-ui
 
 | Concept | Languages | Status |
 | --- | ---: | --- |
-| `paint-instructions` | 15 | missing |
-| `paint-vm-ascii` | 10 | missing |
+| `paint-vm-ascii` | 11 | missing |
 
 ### hardware-architecture
 
 | Concept | Languages | Status |
 | --- | ---: | --- |
-| `fpga` | 10 | missing |
+| `fpga` | 12 | missing |
 
 ### language-tooling
 
 | Concept | Languages | Status |
 | --- | ---: | --- |
-| `csv-parser` | 15 | missing |
-| `json-lexer` | 15 | missing |
-| `json-parser` | 15 | missing |
-| `wasm-execution` | 15 | missing |
-| `wasm-leb128` | 15 | missing |
-| `wasm-module-parser` | 15 | missing |
-| `wasm-opcodes` | 15 | missing |
-| `wasm-runtime` | 15 | missing |
-| `wasm-types` | 15 | missing |
-| `wasm-validator` | 15 | missing |
-| `algol-lexer` | 14 | missing |
-| `algol-parser` | 14 | missing |
-| `mosaic-lexer` | 14 | missing |
-| `mosaic-parser` | 14 | missing |
-| `toml-lexer` | 14 | missing |
+| `algol-lexer` | 15 | missing |
+| `algol-parser` | 15 | missing |
+| `mosaic-lexer` | 15 | missing |
+| `mosaic-parser` | 15 | missing |
+| `document-ast` | 14 | missing |
 | `csharp-lexer` | 13 | missing |
 | `csharp-parser` | 13 | missing |
-| `document-ast` | 13 | missing |
 | `excel-lexer` | 13 | missing |
 | `excel-parser` | 13 | missing |
 | `java-lexer` | 13 | missing |
@@ -95,90 +79,53 @@ mention provides a complete lesson.
 | `ruby-parser` | 13 | index-only |
 | `starlark-lexer` | 13 | missing |
 | `starlark-parser` | 13 | missing |
-| `toml-parser` | 13 | missing |
 | `typescript-parser` | 13 | index-only |
 | `verilog-lexer` | 13 | missing |
 | `verilog-parser` | 13 | missing |
 | `vhdl-lexer` | 13 | missing |
 | `vhdl-parser` | 13 | missing |
+| `asciidoc-parser` | 12 | missing |
 | `commonmark-parser` | 12 | missing |
-| `brainfuck-wasm-compiler` | 11 | missing |
+| `dartmouth-basic-lexer` | 12 | missing |
+| `dartmouth-basic-parser` | 12 | missing |
+| `font-parser` | 12 | missing |
+| `python-parser` | 12 | index-only |
 | `compiler-source-map` | 11 | missing |
 | `gfm-parser` | 11 | missing |
-| `nib-wasm-compiler` | 11 | missing |
-| `python-parser` | 11 | index-only |
-| `asciidoc-parser` | 10 | missing |
-| `dartmouth-basic-lexer` | 10 | missing |
-| `dartmouth-basic-parser` | 10 | missing |
-| `font-parser` | 10 | missing |
-| `wasm-module-encoder` | 10 | missing |
-| `xml-lexer` | 10 | missing |
-
-### math-ml-logic
-
-| Concept | Languages | Status |
-| --- | ---: | --- |
-| `data-matrix` | 15 | missing |
 
 ### networking-systems
 
 | Concept | Languages | Status |
 | --- | ---: | --- |
 | `two-layer-network` | 15 | missing |
+| `in-memory-data-store-protocol` | 13 | missing |
+| `resp-protocol` | 13 | missing |
+| `http-core` | 12 | missing |
 | `url-parser` | 12 | missing |
-| `http-core` | 11 | missing |
 | `http1` | 11 | missing |
-| `in-memory-data-store-protocol` | 11 | missing |
-| `resp-protocol` | 11 | missing |
-| `type-checker-protocol` | 10 | missing |
+| `type-checker-protocol` | 11 | missing |
 
 ### other
 
 | Concept | Languages | Status |
 | --- | ---: | --- |
-| `aztec-code` | 15 | missing |
+| `cli-builder` | 15 | missing |
 | `conduit` | 15 | missing |
-| `gf256` | 15 | missing |
-| `micro-qr` | 15 | missing |
 | `note-frequency` | 15 | missing |
 | `pixel-container` | 15 | missing |
-| `polynomial` | 15 | missing |
-| `qr-code` | 15 | missing |
 | `rng` | 15 | missing |
-| `cli-builder` | 14 | missing |
-| `feature-normalization` | 13 | missing |
-| `state-machine` | 13 | missing |
-| `trig` | 13 | missing |
-| `uuid` | 13 | missing |
+| `feature-normalization` | 14 | missing |
+| `trig` | 14 | missing |
+| `uuid` | 14 | missing |
+| `in-memory-data-store` | 13 | missing |
+| `in-memory-data-store-engine` | 13 | missing |
+| `affine2d` | 12 | missing |
+| `arc2d` | 12 | missing |
+| `bezier2d` | 12 | missing |
+| `block-ram` | 12 | missing |
 | `json-rpc` | 12 | missing |
-| `json-serializer` | 12 | missing |
-| `json-value` | 12 | missing |
-| `affine2d` | 11 | missing |
-| `arc2d` | 11 | missing |
-| `bezier2d` | 11 | missing |
-| `brainfuck` | 11 | missing |
-| `codabar` | 11 | missing |
-| `code128` | 11 | missing |
-| `code39` | 11 | missing |
-| `ean-13` | 11 | missing |
-| `itf` | 11 | missing |
-| `point2d` | 11 | missing |
-| `upc-a` | 11 | missing |
-| `block-ram` | 10 | missing |
+| `point2d` | 12 | missing |
 | `event-loop` | 10 | missing |
-| `in-memory-data-store` | 10 | missing |
-| `in-memory-data-store-engine` | 10 | missing |
-
-### sql-storage
-
-| Concept | Languages | Status |
-| --- | ---: | --- |
-| `mini-sqlite` | 15 | missing |
-| `sql-backend` | 15 | missing |
-| `sql-execution-engine` | 14 | missing |
-| `sql-lexer` | 13 | missing |
-| `sql-parser` | 13 | missing |
-| `sql-csv-source` | 12 | missing |
 
 
 ## P1 Backlog
@@ -232,7 +179,6 @@ mention provides a complete lesson.
 | `css-lexer` | 9 | missing |
 | `css-parser` | 9 | missing |
 | `document-ast-to-html` | 9 | missing |
-| `ir-to-wasm-compiler` | 9 | missing |
 | `ir-to-wasm-validator` | 9 | missing |
 | `lisp-lexer` | 9 | missing |
 | `lisp-parser` | 9 | missing |
@@ -266,11 +212,8 @@ mention provides a complete lesson.
 
 | Concept | Languages | Status |
 | --- | ---: | --- |
-| `asciidoc` | 9 | missing |
-| `commonmark` | 9 | missing |
 | `correlation-vector` | 9 | missing |
 | `ct-compare` | 9 | missing |
-| `des` | 9 | missing |
 | `ls00` | 9 | missing |
 | `markov-chain` | 9 | missing |
 | `mosaic-analyzer` | 9 | missing |
@@ -284,7 +227,6 @@ mention provides a complete lesson.
 | `rpc` | 9 | missing |
 | `actor` | 8 | missing |
 | `device-driver-framework` | 8 | missing |
-| `gfm` | 8 | missing |
 | `intel4004-gatelevel` | 8 | missing |
 | `interrupt-handler` | 8 | missing |
 | `process-manager` | 8 | missing |
@@ -349,6 +291,7 @@ mention provides a complete lesson.
 
 | Concept | Languages | Status |
 | --- | ---: | --- |
+| `multi-directed-graph` | 4 | missing |
 | `cas-list-operations` | 3 | missing |
 | `directed-graph-native` | 3 | missing |
 | `graph-native` | 3 | missing |
@@ -356,7 +299,6 @@ mention provides a complete lesson.
 | `tree-set-native` | 3 | missing |
 | `diagram-layout-graph` | 2 | missing |
 | `heap-native` | 2 | missing |
-| `multi-directed-graph` | 2 | missing |
 
 ### documents-media
 
@@ -549,6 +491,8 @@ mention provides a complete lesson.
 | `browser-extension-toolkit` | 1 | missing |
 | `forme-doc-page-shell` | 1 | missing |
 | `forme-style-to-terminal` | 1 | missing |
+| `venture-browser-core` | 1 | missing |
+| `venture-browser-macos` | 1 | missing |
 | `mosaic-pkg-card-browser` | 0 | missing |
 | `mosaic-pkg-note-editor` | 0 | missing |
 | `mosaic-pkg-note-type-editor` | 0 | missing |
@@ -595,6 +539,7 @@ mention provides a complete lesson.
 | `fenwick-tree-native` | 1 | missing |
 | `forme-doc-search-client-js` | 1 | missing |
 | `radix-tree-native` | 1 | missing |
+| `sir-runtime-array` | 1 | missing |
 | `trie-native` | 1 | missing |
 | `vault-search` | 1 | missing |
 
@@ -631,6 +576,8 @@ mention provides a complete lesson.
 | `forme-aot-html-doc-emitter` | 1 | missing |
 | `forme-render-static` | 1 | missing |
 | `forme-style-to-css` | 1 | missing |
+| `html-to-layout` | 1 | missing |
+| `html-to-paint` | 1 | missing |
 | `layout-flexbox` | 1 | missing |
 | `layout-grid` | 1 | missing |
 | `layout-text-measure-canvas` | 1 | missing |
@@ -720,6 +667,10 @@ mention provides a complete lesson.
 | `algol-wasm-compiler` | 1 | missing |
 | `apl-lexer` | 1 | missing |
 | `apl-parser` | 1 | missing |
+| `apl-to-semantic-ir` | 1 | missing |
+| `axiom-lexer` | 1 | missing |
+| `axiom-parser` | 1 | missing |
+| `axiom-to-semantic-ir` | 1 | missing |
 | `basic-semantic-tokens` | 1 | missing |
 | `beam-bytecode-disassembler` | 1 | missing |
 | `beam-bytecode-encoder` | 1 | missing |
@@ -728,11 +679,15 @@ mention provides a complete lesson.
 | `c-to-semantic-ir` | 1 | missing |
 | `cil-bytecode-builder` | 1 | missing |
 | `clr-bytecode-disassembler` | 1 | missing |
+| `cobol-iir-compiler` | 1 | missing |
 | `cobol-lexer` | 1 | missing |
 | `cobol-parser` | 1 | missing |
 | `dartmouth-basic-iir-compiler` | 1 | missing |
 | `dartmouth-basic-jvm-compiler` | 1 | missing |
 | `dartmouth-basic-wasm-compiler` | 1 | missing |
+| `derive-lexer` | 1 | missing |
+| `derive-parser` | 1 | missing |
+| `derive-to-semantic-ir` | 1 | missing |
 | `document-ast-to-docx` | 1 | missing |
 | `dot-lexer` | 1 | missing |
 | `engram-core-wasm` | 1 | missing |
@@ -749,11 +704,17 @@ mention provides a complete lesson.
 | `grammar-wasm-support` | 1 | missing |
 | `html-lexer` | 1 | missing |
 | `html-parser` | 1 | missing |
+| `idl-lexer` | 1 | missing |
+| `idl-parser` | 1 | missing |
+| `idl-to-semantic-ir` | 1 | missing |
 | `iir-to-cil-bytecode` | 1 | missing |
 | `iir-to-wasm` | 1 | missing |
 | `ir-to-wasm-assembly` | 1 | missing |
 | `iso-prolog-lexer` | 1 | missing |
 | `iso-prolog-parser` | 1 | missing |
+| `j-lexer` | 1 | missing |
+| `j-parser` | 1 | missing |
+| `j-to-semantic-ir` | 1 | missing |
 | `javascript-ast` | 1 | missing |
 | `javascript-to-semantic-ir` | 1 | missing |
 | `jsdoc-lexer` | 1 | missing |
@@ -761,11 +722,16 @@ mention provides a complete lesson.
 | `jvm-bytecode-disassembler` | 1 | missing |
 | `logic-bytecode` | 1 | missing |
 | `logic-bytecode-vm` | 1 | missing |
+| `macsyma-to-semantic-ir` | 1 | missing |
 | `macsyma-wasm` | 1 | missing |
 | `macsyma-wasm-runtime` | 1 | missing |
+| `maple-lexer` | 1 | missing |
+| `maple-parser` | 1 | missing |
+| `maple-to-semantic-ir` | 1 | missing |
 | `matlab-lexer` | 1 | missing |
 | `matlab-parser` | 1 | missing |
 | `matlab-to-semantic-ir` | 1 | missing |
+| `maxima-to-semantic-ir` | 1 | missing |
 | `mccarthy-lisp-iir-compiler` | 1 | missing |
 | `mccarthy-lisp-lexer` | 1 | missing |
 | `mccarthy-lisp-parser` | 1 | missing |
@@ -786,12 +752,21 @@ mention provides a complete lesson.
 | `prolog-operator-parser` | 1 | missing |
 | `prolog-vm-compiler` | 1 | missing |
 | `python-to-semantic-ir` | 1 | missing |
+| `q-lexer` | 1 | missing |
+| `q-parser` | 1 | missing |
+| `q-to-semantic-ir` | 1 | missing |
 | `r-lexer` | 1 | missing |
 | `r-parser` | 1 | missing |
+| `reduce-lexer` | 1 | missing |
+| `reduce-parser` | 1 | missing |
+| `reduce-to-semantic-ir` | 1 | missing |
 | `required-capabilities-compiler` | 1 | missing |
 | `ruby-to-semantic-ir` | 1 | missing |
 | `s-lexer` | 1 | missing |
 | `s-parser` | 1 | missing |
+| `scilab-lexer` | 1 | missing |
+| `scilab-parser` | 1 | missing |
+| `scilab-to-semantic-ir` | 1 | missing |
 | `semantic-ir-to-c` | 1 | missing |
 | `semantic-ir-to-go` | 1 | missing |
 | `semantic-ir-to-javascript` | 1 | missing |
@@ -805,6 +780,7 @@ mention provides a complete lesson.
 | `state-machine-tokenizer` | 1 | missing |
 | `swi-prolog-lexer` | 1 | missing |
 | `swi-prolog-parser` | 1 | missing |
+| `task-wasm` | 1 | missing |
 | `tetrad-compiler` | 1 | missing |
 | `tetrad-lexer` | 1 | missing |
 | `tetrad-parser` | 1 | missing |
@@ -854,6 +830,7 @@ mention provides a complete lesson.
 | `embeddable-tcp-server` | 1 | missing |
 | `executor-protocol` | 1 | missing |
 | `generic-job-protocol` | 1 | missing |
+| `http1-client` | 1 | missing |
 | `irc-net-reactor` | 1 | missing |
 | `irc-net-selectors` | 1 | missing |
 | `irc-server-capi` | 1 | missing |
@@ -865,6 +842,8 @@ mention provides a complete lesson.
 | `tcp-runtime` | 1 | missing |
 | `tls-platform` | 1 | missing |
 | `udp-client` | 1 | missing |
+| `http-server` | 0 | missing |
+| `resp-server` | 0 | missing |
 
 ### other
 
@@ -897,6 +876,8 @@ mention provides a complete lesson.
 | `apl-runtime` | 1 | missing |
 | `artifact-store` | 1 | missing |
 | `asciimath` | 1 | missing |
+| `axiom-repl` | 1 | missing |
+| `axiom-runtime` | 1 | missing |
 | `basic-dap` | 1 | missing |
 | `basic-formatter` | 1 | missing |
 | `basic-lsp-bridge` | 1 | missing |
@@ -937,9 +918,11 @@ mention provides a complete lesson.
 | `capability-os-sandbox` | 1 | missing |
 | `cfb` | 1 | missing |
 | `cfb-writer` | 1 | missing |
+| `chief-of-staff-host-runtime` | 1 | missing |
 | `chief-of-staff-smart-home-tools` | 1 | missing |
 | `chief-of-staff-tool-api` | 1 | missing |
 | `chief-of-staff-tool-audit-store` | 1 | missing |
+| `chief-of-staff-vault-runtime` | 1 | missing |
 | `cli-assembly-writer` | 1 | missing |
 | `cli-runtime-model` | 1 | missing |
 | `closure-emitter` | 1 | missing |
@@ -975,6 +958,8 @@ mention provides a complete lesson.
 | `dap-adapter-core` | 1 | missing |
 | `data-frame` | 1 | missing |
 | `datetime-core` | 1 | missing |
+| `derive-repl` | 1 | missing |
+| `derive-runtime` | 1 | missing |
 | `doc` | 1 | missing |
 | `doc-writer` | 1 | missing |
 | `dom-core` | 1 | missing |
@@ -1043,6 +1028,7 @@ mention provides a complete lesson.
 | `forme-types` | 1 | missing |
 | `fsrs` | 1 | missing |
 | `gc-core` | 1 | missing |
+| `gc-core-capi` | 1 | missing |
 | `ge225-backend` | 1 | missing |
 | `ge225-encoder` | 1 | missing |
 | `generic-job-runtime` | 1 | missing |
@@ -1051,8 +1037,11 @@ mention provides a complete lesson.
 | `host-vm-lowering` | 1 | missing |
 | `hue-client` | 1 | missing |
 | `hue-core` | 1 | missing |
+| `hue-integration` | 1 | missing |
 | `ibm704-backend` | 1 | missing |
 | `ibm704-encoder` | 1 | missing |
+| `idl-repl` | 1 | missing |
+| `idl-runtime` | 1 | missing |
 | `ieee802154-core` | 1 | missing |
 | `ieee802154-security` | 1 | missing |
 | `iir-builtin-lowering` | 1 | missing |
@@ -1073,6 +1062,8 @@ mention provides a complete lesson.
 | `intel8008-backend` | 1 | missing |
 | `intel8008-encoder` | 1 | missing |
 | `iocp` | 1 | missing |
+| `j-repl` | 1 | missing |
+| `j-runtime` | 1 | missing |
 | `jit-loader-macos` | 1 | missing |
 | `jni-bridge` | 1 | missing |
 | `jsdoc-comment-extractor` | 1 | missing |
@@ -1086,7 +1077,6 @@ mention provides a complete lesson.
 | `lang-refinement-checker` | 1 | missing |
 | `lang-runtime-core` | 1 | missing |
 | `language-core` | 1 | missing |
-| `latex` | 1 | missing |
 | `ldp-format` | 1 | missing |
 | `linux-job-backend-systemd-files` | 1 | missing |
 | `llm-cache` | 1 | missing |
@@ -1096,6 +1086,8 @@ mention provides a complete lesson.
 | `lookup-core` | 1 | missing |
 | `lua-bridge` | 1 | missing |
 | `macos-job-backend-launchd-files` | 1 | missing |
+| `maple-repl` | 1 | missing |
+| `maple-runtime` | 1 | missing |
 | `math-core` | 1 | missing |
 | `math-frontend` | 1 | missing |
 | `mathml` | 1 | missing |
@@ -1155,14 +1147,20 @@ mention provides a complete lesson.
 | `prolog-core` | 1 | missing |
 | `protobuf` | 1 | missing |
 | `python-bridge` | 1 | missing |
+| `q-repl` | 1 | missing |
+| `q-runtime` | 1 | missing |
 | `r-repl` | 1 | missing |
 | `r-runtime` | 1 | missing |
 | `r-vector` | 1 | missing |
 | `read-write-separation` | 1 | missing |
+| `reduce-repl` | 1 | missing |
+| `reduce-runtime` | 1 | missing |
 | `regex-engine` | 1 | missing |
 | `ruby-bridge` | 1 | missing |
 | `s-repl` | 1 | missing |
 | `s-runtime` | 1 | missing |
+| `scilab-repl` | 1 | missing |
+| `scilab-runtime` | 1 | missing |
 | `sealed-sender` | 1 | missing |
 | `silicon-rust-cgo` | 1 | missing |
 | `silicon-rust-go` | 1 | missing |
@@ -1172,17 +1170,24 @@ mention provides a complete lesson.
 | `silicon-rust-python` | 1 | missing |
 | `silicon-rust-ruby` | 1 | missing |
 | `silicon-rust-ruby-native` | 1 | missing |
+| `sir-bench` | 1 | missing |
 | `sir-conformance` | 1 | missing |
+| `sir-runtime-symbolic` | 1 | missing |
 | `sixlowpan` | 1 | missing |
 | `skill-store` | 1 | missing |
+| `smart-home-automation-runtime` | 1 | missing |
 | `smart-home-capability-cage` | 1 | missing |
 | `smart-home-core` | 1 | missing |
 | `smart-home-discovery` | 1 | missing |
+| `smart-home-discovery-service` | 1 | missing |
 | `smart-home-event-streams` | 1 | missing |
+| `smart-home-hue-pairing-service` | 1 | missing |
 | `smart-home-integration-catalog` | 1 | missing |
 | `smart-home-registry` | 1 | missing |
 | `smart-home-runtime` | 1 | missing |
+| `smart-home-runtime-store` | 1 | missing |
 | `smart-home-testkit` | 1 | missing |
+| `smart-home-zwave-integration` | 1 | missing |
 | `smt-lib-format` | 1 | missing |
 | `sparc-v8-gatelevel` | 1 | missing |
 | `state-machine-markup-deserializer` | 1 | missing |
@@ -1265,6 +1270,7 @@ mention provides a complete lesson.
 | `zwave-core` | 1 | missing |
 | `zwave-serial-api` | 1 | missing |
 | `builtins` | 0 | missing |
+| `float-math` | 0 | missing |
 | `iso-harness` | 0 | missing |
 | `library-rules` | 0 | missing |
 | `mini-redis` | 0 | missing |
@@ -1281,9 +1287,14 @@ mention provides a complete lesson.
 | `mosaic-pkg-review-history` | 0 | missing |
 | `mosaic-pkg-session-progress` | 0 | missing |
 | `mosaic-pkg-toolkit` | 0 | missing |
+| `os-platform` | 0 | missing |
+| `platform-harness` | 0 | missing |
+| `plugin-host` | 0 | missing |
 | `program-rules` | 0 | missing |
+| `reactor` | 0 | missing |
 | `ringbuf` | 0 | missing |
 | `static-vector` | 0 | missing |
+| `wide-int` | 0 | missing |
 
 ### sql-storage
 

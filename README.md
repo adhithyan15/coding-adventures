@@ -129,8 +129,10 @@ symbolic domains to the same semantic hub. See
 ### Dynamic values, exact numerics, and symbolic systems
 
 The runtime stack includes a language-neutral tagged dynamic-value substrate,
-boxing/unboxing, heap values, truthiness, dynamic arithmetic, and a path toward
-garbage-collected dynamic-language execution.
+boxing/unboxing, heap values, truthiness, and dynamic arithmetic. The native
+AOT path now includes precise roots, generational collection, compaction,
+incremental collection, variable-length reference arrays, and GC-managed Twig
+lists, closures, records, unions, and strings.
 
 The numeric and symbolic side includes arbitrary-precision integers, rationals,
 decimals and binary floats; computer algebra packages; rewrite systems;
@@ -139,7 +141,25 @@ language. Exactness and explicit lossy conversions are treated as design
 properties rather than incidental implementation details.
 
 See the [dynamic-value substrate](./code/specs/DVAL01-generic-dynamic-value-substrate.md)
-and [symbolic computation overview](./code/specs/symbolic-computation.md).
+and [Twig native-AOT GC coverage](./code/specs/AOT00-twig-native-gc-coverage.md).
+
+### Rules, formulas, and auditable reasoning
+
+ADJ is a typed rule, fact, table, and formula system for reasoning that can be
+inspected and replayed. Its packages cover exact quantities, bidirectional
+formulas, rule adjudication, provenance, uncertainty, explanation rendering,
+and state-machine composition. Formula and fact libraries exercise the same
+engine across physics, chemistry, biology, medicine, and other domains.
+
+The broader adjudication framework separates source decomposition, structural
+coverage, polarity and modality checks, adversarial verification,
+clarification, execution, and audit trails. This makes a conclusion more than
+an opaque answer: the system can show which facts and rules fired, what evidence
+was missing, and how the result was derived.
+
+See the [ADJ overview](./code/specs/ADJ-OVERVIEW.md),
+[rule substrate](./code/specs/ADJ-RULE-SUBSTRATE.md), and
+[formula libraries](./code/specs/ADJ-FORMULA-LIBRARIES.md).
 
 ### SQL, databases, and storage
 
@@ -197,15 +217,25 @@ Programs are integration surfaces, not just toy examples:
 - **Engram** combines a shared Rust core, native/WASM bridges, Mosaic UI work,
   Electron/browser hosts, and Anki compatibility.
 - **task-app** is applying the same architecture to a general task/project
-  engine. Its pure `task-core` model and operations/formula API have begun
-  landing; the roadmap projects one model as checklist, todo, kanban, Gantt,
-  flowchart, and table views with scheduling.
+  engine. Its pure `task-core` model, operations/formula API, project switching,
+  and structured task UI are landing toward one model exposed as checklist,
+  todo, kanban, Gantt, flowchart, and table views with scheduling.
+- **Venture** composes the repository's URL, HTTP, HTML, layout, paint, image,
+  windowing, and platform bridges into a native educational web browser. The
+  macOS host now supports navigation, links, and keyboard and wheel scrolling.
+- **smart-home** provides a local-first supervised runtime for normalized device
+  state, commands, automations, policy, and audit. Hue, Zigbee, and Z-Wave work
+  exercise the adapter boundary without making one vendor protocol the core.
+- **language-ladder** turns the human-language curriculum into an interactive
+  browser for concepts, scripts, syllabaries, lessons, and review progress.
 - **VisiCalc** exercises spreadsheet, UI, and multi-host compilation paths.
 - Journal, checklist, browser-extension, language-tooling, IRC, ML, document,
   and hardware visualizer programs test other package families end to end.
 
 See [Engram](./code/specs/engram-app.md) and the
-[task-app overview](./code/specs/task-app-overview.md).
+[task-app overview](./code/specs/task-app-overview.md),
+[Venture](./code/specs/BR01-venture-browser.md), and the
+[smart-home runtime](./code/specs/D23-smart-home-runtime.md).
 
 ## Repository Layout
 
@@ -371,9 +401,14 @@ Choose a path based on what you want to understand:
 | Shared execution IR | [Interpreter IR](./code/specs/LANG01-interpreter-ir.md) |
 | Source-level semantic IR | [Semantic IR](./code/specs/SIR00-semantic-ir.md) |
 | Building a new language | [Generic language pipeline](./code/specs/LANG00-generic-language-pipeline.md) |
+| WebAssembly internals | [WebAssembly from bytes to execution](./code/learning/language-tooling/webassembly-from-bytes-to-execution.md) |
+| Rules, formulas, and auditable reasoning | [ADJ overview](./code/specs/ADJ-OVERVIEW.md) |
 | SQL and SQLite | [Mini-SQLite conformance roadmap](./code/specs/mini-sqlite-full-conformance.md) |
 | UI compilation | [Mosaic](./code/specs/UI00-mosaic.md) |
 | Task/project engine | [task-app overview](./code/specs/task-app-overview.md) |
+| Native browser pipeline | [Venture browser](./code/specs/BR01-venture-browser.md) |
+| Smart-home runtime | [Smart-home runtime](./code/specs/D23-smart-home-runtime.md) |
+| Learning-content backlog | [Learning coverage roadmap](./code/learning/ROADMAP.md) |
 | Vault/security architecture | [Vault master spec](./code/specs/VLT00-vault-master.md) |
 | Dependency planning | [Kahn's algorithm](./code/learning/algorithms/kahns-algorithm.md) and [build-tool README](./code/programs/go/build-tool/README.md) |
 | Current engineering pitfalls | [Lessons learned](./lessons.md) |

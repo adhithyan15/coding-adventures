@@ -17,6 +17,8 @@ Relevant packages include:
 ## Topics
 
 - [Intermediate representations](./intermediate-representations.md)
+- [WebAssembly from bytes to execution](./webassembly-from-bytes-to-execution.md)
+- [Structured text from bytes to values](./structured-text-from-bytes-to-values.md)
 
 ## Why This Track Matters
 
