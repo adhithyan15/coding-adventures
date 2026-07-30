@@ -791,6 +791,20 @@ fn mos_model_card_gate_material_shifts_process_derived_threshold() {
 }
 
 #[test]
+fn mos_model_card_rejects_invalid_nominal_temperature() {
+    let valid = normalize_model_card("Mvalid", "nmos", &[("TNOM", 325.0)]).unwrap();
+    assert_close(*valid.parameters.get("T_NOM").unwrap(), 325.0);
+
+    for invalid_temperature in [0.0, -1.0, f64::INFINITY, f64::NAN] {
+        assert!(matches!(
+            normalize_model_card("Minvalid", "nmos", &[("TNOM", invalid_temperature)]),
+            Err(SpiceError::InvalidElement { reason, .. })
+                if reason == "MOSFET TNOM must be finite and positive"
+        ));
+    }
+}
+
+#[test]
 fn bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() {
     let legacy_card = normalize_model_card(
         "Qlegacy",

@@ -33,12 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS surface-state density validation.
+1. Cross-language Level-1 MOS nominal-temperature validation.
    - Status: current PR completion candidate.
-   - Reject negative or non-finite model-card `NSS` values before process
-     parameter preprocessing, including when explicit `VTO` / `VT0` is present.
-   - Preserve zero and positive surface-state densities and stable parameter
-     coverage across Rust, Python, and TypeScript.
+   - Reject non-positive or non-finite model-card `TNOM` values before
+     temperature and electrostatic preprocessing.
+   - Preserve positive nominal temperatures and stable parameter coverage
+     across Rust, Python, and TypeScript.
 
 ## Completed Slices
 
@@ -3636,6 +3636,13 @@ the Rust, Python, and TypeScript surfaces together.
      work-function branch used to derive `VT0` from `NSUB` plus `TOX`.
    - Explicit threshold precedence, `NSS` composition, parameter coverage, and
      NMOS/PMOS parity are preserved across Rust, Python, and TypeScript.
+
+294. Cross-language Level-1 MOS surface-state density validation.
+   - Status: completed in PR 9168.
+   - Negative and non-finite model-card `NSS` values are rejected before
+     process-parameter preprocessing.
+   - Zero and positive surface-state densities, parameter coverage, and stable
+     diagnostics remain aligned across Rust, Python, and TypeScript.
 
 ## Backlog
 

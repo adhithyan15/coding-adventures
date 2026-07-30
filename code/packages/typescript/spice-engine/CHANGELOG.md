@@ -1,5 +1,7 @@
 # Changelog
 
+- Reject non-positive or non-finite Level-1 MOS model-card `TNOM` values with a
+  stable diagnostic before temperature and electrostatic preprocessing.
 - Reject negative or non-finite Level-1 MOS model-card `NSS` surface-state
   densities with a stable diagnostic before threshold preprocessing.
 - Accept Berkeley Level-1 MOS model-card `TPG` gate-material selectors and use
