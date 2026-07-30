@@ -28,3 +28,21 @@ fn algol_proper_procedure_program_compiles_to_aot_snapshot() {
     let snapshot = read(&bytes).expect("AOT snapshot should parse");
     assert!(!snapshot.native_code.is_empty());
 }
+
+#[test]
+fn algol_runtime_string_local_program_compiles_to_aot_snapshot() {
+    let source = "begin string s; integer result; \
+                  string procedure pick(n); value n; integer n; \
+                    if n > 0 then pick := 'HI' else pick := 'LO'; \
+                  s := pick(1); \
+                  if s = 'HI' then result := 42 else result := 0; \
+                  print(s) end";
+    let module = compile_source(source, "algol_runtime_string_aot")
+        .expect("ALGOL runtime string local should compile");
+
+    let mut aot = AOTCore::new(Box::new(NullBackend), None, 2);
+    let bytes = aot.compile(&module).expect("AOT compile should succeed");
+    assert!(bytes.starts_with(b"AOT\0"));
+    let snapshot = read(&bytes).expect("AOT snapshot should parse");
+    assert!(!snapshot.native_code.is_empty());
+}

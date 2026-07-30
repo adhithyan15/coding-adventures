@@ -503,11 +503,14 @@ pub fn lower_iir_to_beam(
     let atom_display = atoms.intern("display");
     let atom_put     = atoms.intern("put");
     let atom_get     = atoms.intern("get");
+    let io_atom = atoms.intern("io");
+    let atom_put_chars = atoms.intern("put_chars");
 
     // Pre-register these imports so their indices are stable.
     let import_display = imports.intern(erlang_atom, atom_display, 1); // erlang:display/1
     let import_put     = imports.intern(erlang_atom, atom_put,     2); // erlang:put/2
     let import_get     = imports.intern(erlang_atom, atom_get,     1); // erlang:get/1
+    let import_put_chars = imports.intern(io_atom, atom_put_chars, 1); // io:put_chars/1
 
     // ── Closure dispatch atoms and imports (LANG35) ───────────────────────
     //
@@ -728,7 +731,7 @@ pub fn lower_iir_to_beam(
         let mut live_across: HashMap<usize, Vec<String>> = HashMap::new();
 
         for (call_idx, instr) in func.instructions.iter().enumerate() {
-            if instr.op != "call" && instr.op != "call_ext" {
+            if !matches!(instr.op.as_str(), "call" | "call_ext" | "str_concat" | "print_str") {
                 continue;
             }
 
@@ -941,6 +944,52 @@ pub fn lower_iir_to_beam(
             }};
         }
 
+        // Imported calls follow the same calling convention as local BEAM
+        // calls: x-registers are clobbered. Runtime string concatenate and
+        // output use imports, so preserve the computed liveness set around
+        // those operations just as the `call` arm does below.
+        macro_rules! save_live_across_imported_call {
+            ($idx:expr) => {{
+                if let Some(live_vars) = live_across.get(&$idx) {
+                    for var in live_vars {
+                        let x_reg = var_reg!(var);
+                        let y_slot = match y_reg_map.get(var) {
+                            Some(&slot) => slot,
+                            None => return Err(IIRBeamError::UnsupportedOp {
+                                function: fn_name.clone(),
+                                op: format!("missing Y register for live variable {var:?}"),
+                            }),
+                        };
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(x_reg),
+                            BEAMOperand::y(y_slot),
+                        ]));
+                    }
+                }
+            }};
+        }
+
+        macro_rules! restore_live_across_imported_call {
+            ($idx:expr) => {{
+                if let Some(live_vars) = live_across.get(&$idx) {
+                    for var in live_vars {
+                        let x_reg = var_reg!(var);
+                        let y_slot = match y_reg_map.get(var) {
+                            Some(&slot) => slot,
+                            None => return Err(IIRBeamError::UnsupportedOp {
+                                function: fn_name.clone(),
+                                op: format!("missing Y register for live variable {var:?}"),
+                            }),
+                        };
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::y(y_slot),
+                            BEAMOperand::x(x_reg),
+                        ]));
+                    }
+                }
+            }};
+        }
+
         // ── Instruction loop (index-based for alloc+field_store look-ahead) ─
         //
         // The alloc+field_store+field_store → put_list fusion requires us to
@@ -1007,6 +1056,151 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::i(value),   // {i,val} — integer immediate
                         BEAMOperand::x(rd),      // {x,rd}  — destination register
                     ]));
+                }
+
+                // ── str_const → ASCII Erlang character list ───────────────
+                //
+                // BEAM's compact encoder exposes list construction, not an
+                // arbitrary binary literal term. Lower the validated ASCII
+                // text to `[byte, ...]` with `put_list`, building right to
+                // left from BEAM nil (`{a,0}`). This is the representation
+                // consumed by `erlang:'++'/2` and `io:put_chars/1` below.
+                "str_const" => {
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "str_const must have a destination".into(),
+                        }),
+                    };
+                    let text = match instr.srcs.as_slice() {
+                        [Operand::Str(text)] => text,
+                        _ => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "str_const must have one string literal source".into(),
+                        }),
+                    };
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(0),
+                        BEAMOperand::x(rd),
+                    ]));
+                    for byte in text.bytes().rev() {
+                        instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
+                            BEAMOperand::i(byte as u64),
+                            BEAMOperand::x(rd),
+                            BEAMOperand::x(rd),
+                        ]));
+                    }
+                }
+
+                // ── str_concat → erlang:'++'/2 ─────────────────────────────
+                "str_concat" => {
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "str_concat must have a destination".into(),
+                        }),
+                    };
+                    let (left, right) = match instr.srcs.as_slice() {
+                        [Operand::Var(left), Operand::Var(right)] => {
+                            (var_reg!(left), var_reg!(right))
+                        }
+                        _ => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "str_concat requires two variable sources".into(),
+                        }),
+                    };
+                    let cur_idx = instr_idx - 1;
+                    save_live_across_imported_call!(cur_idx);
+
+                    // Move the two values into x0/x1 without destroying an
+                    // operand needed for the other position.
+                    if left == 1 && right == 0 {
+                        let scratch = meta.next_reg;
+                        if scratch == u8::MAX {
+                            return Err(IIRBeamError::UnsupportedOp {
+                                function: fn_name.clone(),
+                                op: "str_concat has no scratch register".into(),
+                            });
+                        }
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0), BEAMOperand::x(scratch),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(1), BEAMOperand::x(0),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(scratch), BEAMOperand::x(1),
+                        ]));
+                    } else if right == 0 && left != 0 {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0), BEAMOperand::x(1),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(left), BEAMOperand::x(0),
+                        ]));
+                    } else {
+                        if left != 0 {
+                            instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                                BEAMOperand::x(left), BEAMOperand::x(0),
+                            ]));
+                        }
+                        if right != 1 {
+                            instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                                BEAMOperand::x(right), BEAMOperand::x(1),
+                            ]));
+                        }
+                    }
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(2),
+                        BEAMOperand::u(import_append as u64),
+                    ]));
+                    if rd != 0 {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0), BEAMOperand::x(rd),
+                        ]));
+                    }
+                    restore_live_across_imported_call!(cur_idx);
+                }
+
+                // ── str_eq → exact list equality with a 0/1 result ─────────
+                "str_eq" => {
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "str_eq must have a destination".into(),
+                        }),
+                    };
+                    let (left, right) = match instr.srcs.as_slice() {
+                        [Operand::Var(left), Operand::Var(right)] => {
+                            (var_reg!(left), var_reg!(right))
+                        }
+                        _ => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "str_eq requires two variable sources".into(),
+                        }),
+                    };
+                    label_counter = label_counter.checked_add(1).ok_or_else(|| {
+                        IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "label counter overflow — too many string comparisons".into(),
+                        }
+                    })?;
+                    let synth = label_counter;
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(0), BEAMOperand::x(rd),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_IS_EQ_EXACT, vec![
+                        BEAMOperand::f(synth), BEAMOperand::x(left), BEAMOperand::x(right),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(1), BEAMOperand::x(rd),
+                    ]));
+                    instrs.push(BEAMInstruction::new(
+                        OP_LABEL, vec![BEAMOperand::u(synth as u64)],
+                    ));
                 }
 
                 // ── mov dest = src ───────────────────────────────────────────
@@ -2071,6 +2265,27 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::x(rx),
                         BEAMOperand::x(dummy),
                     ]));
+                }
+
+                // ── print_str → io:put_chars/1 ─────────────────────────────
+                //
+                // Runtime ALGOL strings are validated printable-ASCII Erlang
+                // character lists. `put_chars/1` prints the list without the
+                // quotes and newline that `erlang:display/1` would add.
+                "print_str" => {
+                    let source = operand_reg!(get_src!(instr, 0));
+                    let cur_idx = instr_idx - 1;
+                    save_live_across_imported_call!(cur_idx);
+                    if source != 0 {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(source), BEAMOperand::x(0),
+                        ]));
+                    }
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(1),
+                        BEAMOperand::u(import_put_chars as u64),
+                    ]));
+                    restore_live_across_imported_call!(cur_idx);
                 }
 
                 // ── alloc_closure → BEAM cons-cell (LANG35) ──────────────────

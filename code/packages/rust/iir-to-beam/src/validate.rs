@@ -219,6 +219,9 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
             ));
         }
         for instr in &func.instructions {
+            if instr.op == "str_const" {
+                continue;
+            }
             if let Some(Operand::Str(s)) = instr.srcs.first() {
                 if s.len() > BEAM_ATOM_MAX {
                     errors.push(format!(
@@ -310,10 +313,12 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
             //   - `is_null` with `"bool"` → is_nil synthesis
             //
             // Any other ref<…> type on any other op is rejected as before.
-            if instr.type_hint == "str" {
+            if instr.type_hint == "str"
+                && !matches!(instr.op.as_str(), "str_const" | "str_concat" | "call" | "ret" | "mov")
+            {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     string operations are not supported in this BEAM backend",
+                     only the ASCII string subset is supported in this BEAM backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<") {
@@ -371,6 +376,52 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
                         func.name
                     ));
                 }
+            }
+
+            // ALGOL runtime strings are Erlang character lists. Restrict the
+            // source literal to printable ASCII plus familiar whitespace so
+            // lowering never needs an unvalidated binary or Unicode codec.
+            match instr.op.as_str() {
+                "str_const" => match (instr.dest.as_ref(), instr.srcs.as_slice()) {
+                    (Some(_), [Operand::Str(text)])
+                        if text.bytes().all(|byte| {
+                            matches!(byte, b'\n' | b'\r' | b'\t' | b' '..=b'~')
+                        }) => {}
+                    _ => errors.push(format!(
+                        "InvalidString: function {:?}, str_const requires a destination and printable ASCII text",
+                        func.name
+                    )),
+                },
+                "str_concat"
+                    if instr.dest.is_none()
+                        || !matches!(instr.srcs.as_slice(), [Operand::Var(_), Operand::Var(_)])
+                        || instr.type_hint != "str" =>
+                {
+                    errors.push(format!(
+                        "InvalidString: function {:?}, str_concat requires dest and two string variables",
+                        func.name
+                    ));
+                }
+                "str_eq"
+                    if instr.dest.is_none()
+                        || !matches!(instr.srcs.as_slice(), [Operand::Var(_), Operand::Var(_)])
+                        || !matches!(instr.type_hint.as_str(), "i32" | "i64") =>
+                {
+                    errors.push(format!(
+                        "InvalidString: function {:?}, str_eq requires dest, two string variables, and an integer result",
+                        func.name
+                    ));
+                }
+                "print_str"
+                    if !matches!(instr.srcs.as_slice(), [Operand::Var(_)])
+                        || instr.type_hint != "void" =>
+                {
+                    errors.push(format!(
+                        "InvalidString: function {:?}, print_str requires one string variable and void type",
+                        func.name
+                    ));
+                }
+                _ => {}
             }
 
             // ── Check 6: UnsupportedOp ───────────────────────────────────────
@@ -525,5 +576,28 @@ mod tests {
             "global_load should pass BEAM validation (LANG32); got: {:?}",
             errs
         );
+    }
+
+    #[test]
+    fn ascii_string_subset_passes_validation() {
+        let errs = validate_for_beam(&single_fn_module(vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("HE".into())], "str"),
+            IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("LLO".into())], "str"),
+            IIRInstr::new(
+                "str_concat",
+                Some("word".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_eq",
+                Some("same".into()),
+                vec![Operand::Var("word".into()), Operand::Var("word".into())],
+                "i64",
+            ),
+            IIRInstr::new("print_str", None, vec![Operand::Var("word".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(errs.is_empty(), "unexpected errors: {errs:?}");
     }
 }

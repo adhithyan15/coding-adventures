@@ -1,5 +1,14 @@
 # Changelog — iir-to-wasm
 
+## [0.43.0] — 2026-07-30 (runtime `str_concat` allocation discovery)
+
+The feature-discovery pass now marks linear memory and `__array_bump` as
+required for a non-foldable `str_concat`, even when the module contains no array
+operations. Previously the runtime concat lowering emitted allocation code
+without reserving its global, causing a missing-global lowering error. The new
+regression concatenates runtime string parameters in an array-free module and
+executes the result on WASM.
+
 ## [0.42.0] — 2026-07-23 (runtime `str_slice` i64 index truncation guard)
 
 Fix a correctness divergence in the runtime `str_slice` lowering exposed by

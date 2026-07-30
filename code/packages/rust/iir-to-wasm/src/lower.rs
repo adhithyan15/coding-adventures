@@ -4331,6 +4331,49 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                                 ))
                             })
                         else {
+                            // A non-foldable concatenation allocates a runtime
+                            // `[len][bytes]` block in linear memory. It may be
+                            // the only dynamic-memory user in the module, so
+                            // reserve the bump global here rather than relying
+                            // on an unrelated array or slice instruction.
+                            uses_memory = true;
+                            if global_names_seen.insert(ARRAY_BUMP_GLOBAL.to_string()) {
+                                global_names.push(ARRAY_BUMP_GLOBAL.to_string());
+                            }
+                            // Runtime concatenation reads both operands through
+                            // length headers. Promote any folded literal before
+                            // continuing, such as the empty suffix generated
+                            // for `s := pick(1)`.
+                            if let Some(lit) = string_literals
+                                .get(&fn_.name)
+                                .and_then(|fn_strings| fn_strings.get(left))
+                                .cloned()
+                            {
+                                lay_runtime_str_block(
+                                    &mut runtime_str_blocks,
+                                    &mut runtime_str_vars,
+                                    &mut string_data,
+                                    &fn_.name,
+                                    left,
+                                    &lit.bytes,
+                                    lit.len,
+                                );
+                            }
+                            if let Some(lit) = string_literals
+                                .get(&fn_.name)
+                                .and_then(|fn_strings| fn_strings.get(right))
+                                .cloned()
+                            {
+                                lay_runtime_str_block(
+                                    &mut runtime_str_blocks,
+                                    &mut runtime_str_vars,
+                                    &mut string_data,
+                                    &fn_.name,
+                                    right,
+                                    &lit.bytes,
+                                    lit.len,
+                                );
+                            }
                             continue;
                         };
                         let mut bytes = left_lit.bytes;

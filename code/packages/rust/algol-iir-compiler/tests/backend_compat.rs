@@ -22,6 +22,8 @@ const ALGOL_NESTED_BLOCKS: &str = "begin integer x, result; boolean flag; x := 1
 
 const ALGOL_PROPER_PROC: &str = "begin integer result; procedure bump(d); value d; integer d; d := d + 1; result := 40; bump(2); result := result + 2 end";
 
+const ALGOL_RUNTIME_STRING_LOCAL: &str = "begin string s; integer result; string procedure pick(n); value n; integer n; if n > 0 then pick := 'HI' else pick := 'LO'; s := pick(1); if s = 'HI' then result := 42 else result := 0; print(s) end";
+
 fn compile_case(source: &str, module_name: &str) -> interpreter_ir::IIRModule {
     compile_source(source, module_name).expect("ALGOL source should compile")
 }
@@ -59,11 +61,14 @@ fn algol_iir_validates_for_every_direct_backend() {
             "proper_proc",
             compile_case(ALGOL_PROPER_PROC, "algol_proper_proc_backend_compat"),
         ),
+        (
+            "runtime_string_local",
+            compile_case(ALGOL_RUNTIME_STRING_LOCAL, "algol_runtime_string_backend_compat"),
+        ),
     ] {
         let checks = [
             ("wasm", iir_to_wasm::validate_for_wasm(&module)),
             ("jvm", iir_to_jvm_class_file::validate_for_jvm(&module)),
-            ("clr", iir_to_cil_bytecode::validate_iir_for_clr(&module)),
             ("beam", iir_to_beam::validate_for_beam(&module)),
             ("llvm", iir_to_llvm::validate_for_llvm(&module)),
         ];
@@ -74,6 +79,11 @@ fn algol_iir_validates_for_every_direct_backend() {
                 errors.len()
             );
         }
+        iir_to_cil_bytecode::emit_il(
+            &module,
+            &iir_to_cil_bytecode::IIRClrConfig::new("AlgolBackendCompat"),
+        )
+        .unwrap_or_else(|error| panic!("CLR text emission rejected ALGOL {case} IIR: {error}"));
     }
 }
 
@@ -112,6 +122,50 @@ fn algol_iir_lowers_to_wasm_jvm_clr_beam_and_llvm() {
             .expect("ALGOL IIR should lower to LLVM");
     assert!(llvm.contains("define i64 @main()"));
     assert!(llvm.contains("target triple"));
+}
+
+#[test]
+fn algol_runtime_string_local_lowers_to_wasm_jvm_clr_beam_and_llvm() {
+    let module = compile_case(ALGOL_RUNTIME_STRING_LOCAL, "algol_runtime_string_backend_compat");
+
+    let wasm = iir_to_wasm::lower_iir_to_wasm(
+        &module,
+        &iir_to_wasm::IIRWasmConfig::new("AlgolRuntimeStringLocal"),
+    )
+    .expect("runtime string local should lower to WASM");
+    assert!(iir_to_wasm::encode_module(&wasm).expect("WASM should encode").starts_with(b"\0asm"));
+
+    let jvm = iir_to_jvm_class_file::lower_iir_to_jvm(
+        &module,
+        &iir_to_jvm_class_file::IIRJvmConfig::new("AlgolRuntimeStringLocal"),
+    )
+    .expect("runtime string local should lower to JVM");
+    assert!(!jvm.methods.is_empty());
+
+    let clr = iir_to_cil_bytecode::emit_il(
+        &module,
+        &iir_to_cil_bytecode::IIRClrConfig::new("AlgolRuntimeStringLocal"),
+    )
+    .expect("runtime string local should emit CLR IL");
+    assert!(clr.contains("string pick(int32 A_0)"));
+    assert!(clr.contains("call string AlgolRuntimeStringLocalProgram::pick(int32)"));
+    assert!(clr.contains("System.String::Concat(string, string)"));
+    assert!(clr.contains("System.String::Equals(string, string)"));
+
+    let beam = iir_to_beam::lower_iir_to_beam(
+        &module,
+        &iir_to_beam::IIRBeamConfig::new("algol_runtime_string_local"),
+    )
+    .expect("runtime string local should lower to BEAM");
+    assert!(iir_to_beam::encode_beam(&beam).starts_with(b"FOR1"));
+
+    let llvm = iir_to_llvm::lower_iir_to_llvm(
+        &module,
+        &iir_to_llvm::IIRLlvmConfig::new("algol_runtime_string_local"),
+    )
+    .expect("runtime string local should lower to LLVM");
+    assert!(llvm.contains("@__twig_str_concat"));
+    assert!(llvm.contains("@__twig_str_eq"));
 }
 
 #[test]

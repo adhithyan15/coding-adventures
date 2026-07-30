@@ -14,7 +14,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and equality/inequality/lexical-ordering string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); string arrays/input and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays incl. multi-dimensional `DIM A(m,n)` (BA3/BA7/BA-DIM-2D), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures (including `real procedure` returning f64) ✅ (AL13, all 7 backends), switches, 1-D arrays ✅, N-dimensional integer & real arrays ✅ (AL-multidim / AL-multidim-real, all 7 backends), `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), `↑` exponentiation ✅ (AL-pow, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables, scalar copy snapshots, multi-argument string `output`, literal-backed string equality/ordering predicates ✅ (AL4 foothold), string-typed value parameters in typed procedures ✅ (AL4-str-params, all 7 backends); no call-by-name, dynamic string variables/arrays |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures (including `real procedure` returning f64) ✅ (AL13, all 7 backends), switches, 1-D arrays ✅, N-dimensional integer & real arrays ✅ (AL-multidim / AL-multidim-real, all 7 backends), `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O and initialized scalar locals carrying string-procedure results ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); no call-by-name, captured/`own` strings, string arrays, or runtime ordering |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -269,13 +269,12 @@ multiple languages; close an enabler before the features that depend on it.
   multi-item string `PRINT` (`PRINT A$; B$` and `PRINT A$, B$`), and copied-slot equality
   (`LET A$ = "OK"; LET B$ = A$; IF B$ = A$ THEN ...`) through `str_eq`, plus
   lexical string ordering branches through `str_cmp`.
-  Captured, reassigned, and unobserved/conflicting or closure-derived string
-  parameter values plus broader dynamic string values remain — the **runtime
-  (non-literal) string** representation on the static backends is designed in
-  **[`lang-full-e4-dyn-strings.md`](lang-full-e4-dyn-strings.md)** (E4-dyn:
-  reuse the E5 length-prefixed heap block; adds `__twig_str_concat`/`_slice`/
-  `_index` runtime helpers; unblocks ALGOL string procedures + BASIC string
-  `INPUT`/arrays). Pending sign-off.
+  The runtime (non-literal) representation now carries ALGOL string-procedure
+  results through initialized scalar locals (`str_concat` copy, `str_eq`, and
+  `print_str`) across the seven standard backends and the BEAM ASCII
+  character-list subset. Captured/`own` strings, string arrays, runtime lexical
+  ordering, and Unicode-aware BEAM strings remain outside this slice. The fuller
+  plan remains in **[`lang-full-e4-dyn-strings.md`](lang-full-e4-dyn-strings.md)**.
   Unlocks BASIC strings + string `PRINT` (BA4), ALGOL strings/I-O (AL4), Twig strings (TW4).
 - **E5 — Arrays / linear aggregates.** ✅ **COMPLETE** *(PR-1..4c — runs on all 7 backends:
   VM, JIT, JVM, CLR, LLVM, WASM, native x86_64+aarch64).* An IIR
@@ -718,8 +717,11 @@ backend immediately) come before the enabler-dependent items.
   procedures are now proven** (`algol-iir-compiler` 0.18.0): `integer procedure
   echo(s); value s; string s; print(s)` passes a literal or named-variable
   string to the body's `print_str` on all 7 backends (`lang-aot` 0.154.0, AL4-str-params).
-  `own`/captured strings, string arrays, and broader dynamic string expressions
-  remain.
+  Runtime string procedure results can now be copied into initialized scalar
+  locals, compared for equality, and printed across the standard seven backends;
+  the same program is executed on BEAM using printable-ASCII character lists.
+  `own`/captured strings, string arrays, runtime lexical ordering, and
+  Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
   `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across
   native/LLVM/WASM/JVM/CLR/VM/JIT (`lang_matrix.rs`). `goto s[i]` lowers to a 1-based

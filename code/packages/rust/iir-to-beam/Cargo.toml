@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-beam"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
-description = "IIR → BEAM bytecode backend — lowers IIRModule to BEAM without compiler-ir"
+description = "IIR → BEAM bytecode backend — lowers IIRModule to BEAM, including an ASCII character-list string subset"
 
 [lib]
 name = "iir_to_beam"

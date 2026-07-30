@@ -1,5 +1,18 @@
 # Changelog — iir-to-beam
 
+## [0.6.0] — 2026-07-30 — ASCII runtime strings
+
+Add a deliberately narrow, executable string subset using proper Erlang
+character lists: `str_const`, `str_concat` via `erlang:'++'/2`, `str_eq` via
+exact term equality, and `print_str` via `io:put_chars/1`. String values can
+therefore cross ordinary calls and returns. Imported concat/output calls now
+participate in the existing Y-register liveness preservation.
+
+`str_const` accepts printable ASCII plus tab/newline/carriage return only;
+Unicode-aware strings and richer operations remain rejected. A real `erl` test
+executes an ALGOL procedure result copied to a local, compared, printed, and
+returned.
+
 ## [0.5.0] — 2026-06-10 — McCarthy predicates: ATOM / EQ / COND (W10, F3–F5)
 
 Lower the McCarthy predicate `call_builtin`s to native Erlang type/equality
