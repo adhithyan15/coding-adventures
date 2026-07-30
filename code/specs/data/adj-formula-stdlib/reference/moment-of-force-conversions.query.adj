@@ -1,0 +1,26 @@
+% ============================================================================
+% moment-of-force-conversions.query.adj — worked lookups over the NIST moment-of-force → newton-metre
+% table.
+% ============================================================================
+% The shape a consumer produces to convert a torque given in a non-SI unit into SI: it `import`s the
+% grounded table and asks the engine to bind the factor. No arithmetic and no factor is stated by the
+% consumer; the engine returns the cell WITH the table's NIST citation as its proof, on the CPU.
+%
+%   ? moment_of_force_to_newton_metre(dyne_centimetre, $v)        % 0.0000001
+%   ? moment_of_force_to_newton_metre(kilogram_force_metre, $v)   % 9.80665
+%
+% And the dimension guard: a unit of a DIFFERENT quantity has no row, so the lookup ABSTAINS rather
+% than mis-converting across dimensions. The "pound" is a MASS unit (it converts to the kilogram), NOT
+% a moment-of-force unit — so it is caught rather than silently mis-converted as if it were a torque:
+%
+%   ? moment_of_force_to_newton_metre(pound, $v)   % abstains (pound is mass → kilogram)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli moment-of-force-conversions.query.adj
+% ============================================================================
+
+import "moment-of-force-conversions.adj"
+
+? moment_of_force_to_newton_metre(dyne_centimetre, $v)        % expect 0.0000001  (exact NIST SP 811 B.9 factor)
+? moment_of_force_to_newton_metre(kilogram_force_metre, $v)   % expect 9.80665    (exact NIST SP 811 B.9 factor)
+? moment_of_force_to_newton_metre(pound, $v)                  % expect abstain    (mass unit, wrong dimension)
