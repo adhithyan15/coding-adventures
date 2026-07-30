@@ -1,1 +1,68 @@
-["rust", "haskell", "cargo", "cabal"]
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "haskell/conduit-hello",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "conduit_capi",
+      "justification": "Uses the Haskell Conduit wrapper to call the reviewed Rust Conduit C ABI."
+    },
+    {
+      "category": "ffi",
+      "action": "load",
+      "target": "conduit_capi",
+      "justification": "Loads the conduit_capi dynamic library required by the Haskell Conduit wrapper."
+    },
+    {
+      "category": "net",
+      "action": "listen",
+      "target": "0.0.0.0:*",
+      "justification": "The demo binds a caller-selected TCP port on all interfaces for HTTP requests."
+    },
+    {
+      "category": "net",
+      "action": "listen",
+      "target": "127.0.0.1:*",
+      "justification": "Smoke tests bind an ephemeral TCP listener on the loopback interface."
+    },
+    {
+      "category": "net",
+      "action": "connect",
+      "target": "127.0.0.1:*",
+      "justification": "Smoke tests connect to the loopback listener with raw HTTP sockets."
+    },
+    {
+      "category": "net",
+      "action": "dns",
+      "target": "127.0.0.1",
+      "justification": "Smoke tests resolve the numeric loopback host before connecting to the listener."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "PORT",
+      "justification": "Reads PORT to select the TCP listening port, defaulting to 8080."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "APP_ENV",
+      "justification": "Reads APP_ENV to populate the demonstrated application environment setting."
+    },
+    {
+      "category": "time",
+      "action": "sleep",
+      "target": "*",
+      "justification": "Smoke tests use bounded thread delays while starting and stopping the server."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Writes the selected listening port to the standard error output stream when the demo starts."
+    }
+  ],
+  "justification": "Demo server calls conduit_capi, listens for HTTP traffic, reads PORT and APP_ENV, logs startup to standard error, and runs loopback smoke tests."
+}

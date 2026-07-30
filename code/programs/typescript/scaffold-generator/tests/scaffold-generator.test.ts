@@ -970,6 +970,78 @@ describe("generateHaskell", () => {
     expect(content).toMatch(/name:\s+coding-adventures-my-pkg/);
     expect(content).toContain("test-suite spec");
   });
+
+  it("creates the schema-v1 Haskell capability golden document", () => {
+    generateHaskell(tmpDir, "my-pkg", "A test package", "", [], []);
+    const content = fs.readFileSync(
+      path.join(tmpDir, "required_capabilities.json"),
+      "utf-8",
+    );
+    const spec = fs.readFileSync(path.join(tmpDir, "test", "Spec.hs"), "utf-8");
+    expect(spec).toContain("main = pure ()");
+    expect(spec).not.toContain("putStrLn");
+    const golden = fs.readFileSync(
+      path.resolve(
+        process.cwd(),
+        "../../../specs/fixtures/scaffold-generator/haskell_library_required_capabilities.json",
+      ),
+      "utf-8",
+    );
+    expect(content).toBe(golden);
+    expect(JSON.parse(content)).toEqual({
+      $schema:
+        "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+      version: 1,
+      package: "haskell/my-pkg",
+      capabilities: [],
+      justification:
+        "Pure computation. No filesystem, network, process, or environment access needed.",
+    });
+  });
+
+  it("rejects control characters before writing Haskell metadata", () => {
+    expect(() =>
+      generateHaskell(
+        tmpDir,
+        "my-pkg",
+        "safe\nbuild-type: Custom",
+        "",
+        [],
+        [],
+      ),
+    ).toThrow(/description.*control/i);
+    expect(() =>
+      generateHaskell(
+        tmpDir,
+        "my-pkg",
+        "safe\u0085next-field",
+        "",
+        [],
+        [],
+      ),
+    ).toThrow(/description.*control/i);
+    expect(() =>
+      generateHaskell(
+        tmpDir,
+        "my-pkg",
+        "safe\u2028next-line",
+        "",
+        [],
+        [],
+      ),
+    ).toThrow(/description.*control/i);
+    expect(() =>
+      generateHaskell(
+        tmpDir,
+        "my-pkg",
+        "safe */ injected",
+        "",
+        [],
+        [],
+      ),
+    ).toThrow(/description.*structural/i);
+    expect(fs.readdirSync(tmpDir)).toEqual([]);
+  });
 });
 
 describe("generatePerl", () => {
@@ -1374,6 +1446,26 @@ describe("scaffoldOne", () => {
 
   afterEach(() => {
     removeDir(tmpDir);
+  });
+
+  it("rejects control characters before creating a target directory", () => {
+    expect(() =>
+      scaffoldOne(
+        "test-pkg",
+        "library",
+        "haskell",
+        [],
+        0,
+        "safe\nbuild-type: Custom",
+        false,
+        repoRoot,
+      ),
+    ).toThrow(/description.*control/i);
+    expect(
+      fs.existsSync(
+        path.join(repoRoot, "code", "packages", "haskell", "test-pkg"),
+      ),
+    ).toBe(false);
   });
 
   it("creates a complete Python package", () => {

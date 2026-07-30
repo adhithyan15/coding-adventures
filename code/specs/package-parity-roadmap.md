@@ -105,26 +105,26 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 30, 2026 at `ad8bbd75a` after the Haskell
+inventory was regenerated on July 30, 2026 at `8517e41b1` after the Haskell
 `barcode-1d` and `http-core` ports, the Go/Rust `multi-directed-graph` slice,
 the Linux OCI preflight and external-authority contracts, and a new wave of
-Rust-only package families. The latest refresh added the Rust-only
-`smart-home-automation-runtime` identity after `venture-browser-macos`, an
-Apple-native AppKit/CoreText/Metal host, and the earlier
-`smart-home-runtime-store`, `hue-integration`, and `venture-browser-core`
-additions. It found zero canonical collisions or unknown language buckets:
+Rust-only package families. The latest refresh includes the merged Haskell
+`http1` port and adds the Rust-only `smart-home-zwave-integration` and
+`smart-home-zwave-host` identities after `smart-home-automation-runtime`,
+`venture-browser-macos`, and the earlier smart-home additions. It found zero
+canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 278 |
+| Present in 10-15 languages | 172 | 277 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 743 | 10,402 |
+| Present in one language | 745 | 10,430 |
 
-The loop must not start by attempting 10,402 singleton ports. It should finish
+The loop must not start by attempting 10,430 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
-The July 29 lane audit is:
+The July 30 lane audit is:
 
 | Established lane | Packages present | High-consensus gaps | Rust/Python-core coverage |
 |---|---:|---:|---:|
@@ -133,14 +133,14 @@ The July 29 lane audit is:
 | Elixir | 276 | 0 | 69.3% |
 | F# | 195 | 0 | 47.5% |
 | Go | 292 | 0 | 72.4% |
-| Haskell | 202 | 3 | 48.6% |
+| Haskell | 203 | 2 | 48.8% |
 | Java | 126 | 58 | 31.0% |
 | Kotlin | 125 | 58 | 31.0% |
 | Lua | 251 | 0 | 63.3% |
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 957 | 0 | 100% |
+| Rust | 960 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -212,7 +212,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 278
+The 172 packages present in at least ten implementation languages need 277
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -222,7 +222,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Elixir | 0 | Complete; retain as a reference lane and run conformance fixtures |
 | F# | 0 | Complete; paired native package wave |
 | Go | 0 | Complete; primary build-tool and portable-core reference lane |
-| Haskell | 3 | Finish `http1`, then the generic `event-loop` and pure `brotli` gaps |
+| Haskell | 2 | Finish the generic `event-loop` and pure `brotli` gaps |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
 | Lua | 0 | Complete; retain as a reference lane and remediate build-tool drift |
@@ -774,7 +774,7 @@ build-graph dependency discovery so the follow-on `http1` edge is visible to
 incremental CI. The package now spans 12 established lanes, reduces the
 high-consensus backlog to 278 slots, and leaves 3 gaps in the Haskell lane.
 
-The selected thirty-second Haskell slice is `http1`, the direct NET04 consumer
+The merged thirty-second Haskell slice is `http1`, the direct NET04 consumer
 of that merged `http-core` foundation. It closes one ready protocol edge,
 validates the repaired Cabal dependency graph, and unlocks the remaining
 Haskell high-consensus tail. Its security review also exposed a shared NET04
@@ -790,6 +790,26 @@ object, and the merged `http-core` package retains that shape. The current
 `http1` package carries a schema-valid v1 pure-computation manifest;
 `haskell-scaffold-capability-schema` tracks generator golden/schema coverage
 and the existing-package backfill.
+
+The selected thirty-third Haskell slice is that scaffold capability-schema
+repair. It is a generator-level prerequisite for the remaining `event-loop`
+and `brotli` ports: the Go, TypeScript, and native Haskell scaffold paths must
+emit schema-valid v1 manifests instead of propagating the legacy one-field
+shape or omitting explicit scaffold metadata. The backfill covers all ten
+existing invalid Haskell manifests. Eight are explicit pure-computation
+profiles; `conduit` and `conduit-hello` carry proposed FFI, network, time,
+environment, and standard-output declarations under the canonical taxonomy,
+pending the Layer 5 review required for nonempty profiles.
+
+That audit also discovered four independently owned follow-ups:
+`haskell-capability-policy-audit` classifies the effective profiles of every
+Haskell package and program that currently relies on an absent legacy
+manifest; `haskell-scaffold-convention-reconciliation` brings the older
+TypeScript Haskell Cabal/Hspec templates to full canonical parity; and
+`scaffold-description-injection-hardening` closes structural delimiter
+injection across all generated metadata and source-comment contexts.
+`capability-schema-category-action-constraints` encodes the taxonomy's valid
+category-action pairs in both schemas and every enforcement backend.
 
 Recommended family order:
 
@@ -826,17 +846,18 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 548 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 550 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30 inventories added eight Rust singleton identities that now have
+The July 30 inventories added ten Rust singleton identities that now have
 explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
 `venture-browser-core` needs a portable-core versus native-boundary review.
 `smart-home-discovery-service`, `hue-integration`, and
-`smart-home-runtime-store`, plus the newly merged
-`smart-home-automation-runtime`, are likely native/service/storage
+`smart-home-runtime-store`, `smart-home-automation-runtime`,
+`smart-home-zwave-integration`, and the newly merged
+`smart-home-zwave-host` serial host are likely native/service/storage
 applicability cases. `venture-browser-macos` is an Apple-native
 AppKit/CoreText/Metal host whose expected classification is `native-source`,
 not a blind 14-lane port.

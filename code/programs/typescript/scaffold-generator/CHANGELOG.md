@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- Haskell scaffolds now emit the complete shared schema-v1 capability manifest
+  and keep their starter library and test source pure.
+- Haskell generation rejects control characters before descriptions are
+  interpolated into Cabal metadata, and the CLI rejects structural
+  block-comment delimiters before any template is written.
+- Refreshed the lockfile to use patched PostCSS and its aligned Nano ID
+  resolution.
+
 ## [1.0.0] - 2026-03-21
 
 ### Added

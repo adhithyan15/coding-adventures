@@ -1,7 +1,9 @@
 # Scaffold Generator — Package Scaffolding with a Dart Bootstrap Lane
 
-A CLI tool, powered by CLI Builder, that generates correct-by-construction,
-CI-ready package scaffolding across the monorepo's implementation languages.
+A CLI tool, powered by CLI Builder, whose contract defines
+correct-by-construction, CI-ready package scaffolding across the monorepo's
+implementation languages. Existing generators adopt that contract
+incrementally, with remaining exceptions tracked in the parity backlog.
 The first published versions covered Python, Go, Ruby, Rust, TypeScript, and
 Elixir; this spec now also defines a Dart bootstrap implementation focused on
 generating Dart packages and programs correctly.
@@ -236,6 +238,17 @@ Before generating any files, the tool validates:
 
 4. **Target directory does not exist** — refuse to overwrite. If the directory
    already exists, print an error and exit with code 1.
+
+5. **Description safety** — descriptions must be a single line and must not
+   contain control characters. Implementations must additionally escape or
+   reject any language-specific metadata or comment delimiter that could make
+   the description change the generated file's structure.
+
+   This rule is being adopted incrementally by the existing implementations.
+   The Go, TypeScript, and native Haskell paths enforce it for this Haskell
+   scaffold tranche; the remaining generators and template contexts are
+   tracked by `scaffold-description-injection-hardening` and do not claim this
+   clause until migrated.
 
 ### 2.6 Exit Status
 
@@ -1025,7 +1038,57 @@ mix deps.get --quiet && mix test --cover
 
 ---
 
-### 5.7 Common Files (All Languages)
+### 5.7 Haskell Capability Manifests
+
+#### `required_capabilities.json`
+
+Every scaffold implementation that emits Haskell packages MUST generate a
+complete schema-v1 document that validates against
+`code/specs/schemas/required_capabilities.schema.json`. The manifest for a new
+Haskell library has this shape:
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "{language}/{directory-name}",
+  "capabilities": [],
+  "justification": "Pure computation. No filesystem, network, process, or environment access needed."
+}
+```
+
+`{directory-name}` is the package's generated on-disk directory name, including
+language-specific normalization. Generators MUST ensure interpolated values
+remain valid JSON. Values that can contain arbitrary text MUST be JSON-encoded;
+identifiers may be interpolated only after strict validation makes every
+accepted character JSON-safe.
+
+The empty capability list is an explicit scaffold-time pure-computation
+declaration. It does not change the default-deny rule in
+`13-capability-security.md`: an older package with no manifest is still treated
+as requiring zero OS capabilities.
+
+Language-neutral Haskell library and program goldens live under
+`code/specs/fixtures/scaffold-generator/`. Every Haskell-emitting generator
+test compares its actual JSON with the applicable shared fixture, and the
+checked-in Python contract test validates both fixtures against the shared
+Draft 2020-12 schema.
+
+Both the Go and native Haskell scaffold generators MUST follow this contract
+for Haskell output. The native Haskell program template writes its starter
+description to standard output, so a generated program MUST replace the empty
+array with this truthful capability:
+
+```json
+{
+  "category": "stdout",
+  "action": "write",
+  "target": "*",
+  "justification": "Writes the generated program description to standard output."
+}
+```
+
+### 5.8 Common Files (All Languages)
 
 #### `README.md`
 
@@ -1283,6 +1346,7 @@ Each implementation must have unit tests covering:
 | Transitive closure | Given a graph, verify complete transitive set | 95% |
 | Topological sort | Verify leaf-first ordering, cycle detection | 95% |
 | Template rendering | For each language, verify generated file content matches expected output | 90% |
+| Capability manifest | Compare generated JSON with a golden document and validate it against the shared Draft 2020-12 schema | 100% |
 | BUILD file generation | Verify transitive deps appear in correct topological order | 100% |
 | Dry-run mode | Verify no files are written, output shows what would be created | 90% |
 

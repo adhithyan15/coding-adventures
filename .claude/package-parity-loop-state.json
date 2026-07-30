@@ -9,19 +9,19 @@
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
   "active_pr": {
-    "item_id": "haskell-http1",
-    "pr_number": 9290,
-    "branch": "codex/haskell-http1-parity",
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9290"
+    "item_id": "haskell-scaffold-capability-schema",
+    "pr_number": 9308,
+    "branch": "codex/haskell-scaffold-capability-schema",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9308"
   },
   "last_inventory": {
-    "revision": "ad8bbd75a007085635455786498ab8caf1430df5",
+    "revision": "8517e41b1c06fbb453c66b62c87c8b08135838f3",
     "schema_version": 2,
     "established_languages": 15,
-    "implementation_identities": 1193,
-    "implementation_package_slots": 4334,
+    "implementation_identities": 1195,
+    "implementation_package_slots": 4337,
     "high_consensus_packages": 172,
-    "high_consensus_missing_slots": 278,
+    "high_consensus_missing_slots": 277,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -412,7 +412,7 @@
     {
       "id": "haskell-http1",
       "title": "Port http1 to Haskell on the new http-core",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["haskell-http-core"],
       "branch": "codex/haskell-http1-parity",
       "pr_number": 9290,
@@ -430,17 +430,53 @@
     {
       "id": "haskell-scaffold-capability-schema",
       "title": "Repair Haskell scaffold capability manifests and legacy package metadata",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["haskell-http1"],
+      "branch": "codex/haskell-scaffold-capability-schema",
+      "pr_number": 9308,
+      "notes": "PR #9308 repairs the Go, TypeScript, and native Haskell scaffold paths; adds two language-neutral golden fixtures and a Draft 2020-12 CI contract test; backfills all ten invalid Haskell manifests; and records follow-up policy, convention, schema, hardening, and singleton-classification work. Local validation: Go tests/vet/build with 66.7% coverage; native Haskell 9/9 Hspec examples with coverage and -Wall plus real generated library/program builds; TypeScript build and 121/121 tests with 83.97% statement coverage and zero npm-audit findings; 8/8 pure backfill package tests; 16 manifests and 2 fixtures schema-valid with Ruff/Bandit clean; affected build-tool dry-run for 42 packages; parity report 1,195 identities / 4,337 slots / 277 high-consensus gaps / zero collisions or unknown buckets; clean diff; and independent final audits. The nonempty Conduit profiles remain proposed metadata and require Layer 5 review before merge or publish."
+    },
+    {
+      "id": "haskell-capability-policy-audit",
+      "title": "Audit effective capability profiles across every Haskell package and program",
+      "status": "pending",
+      "depends_on": ["haskell-scaffold-capability-schema"],
       "branch": null,
       "pr_number": null,
-      "notes": "Newly discovered by the Haskell http1 fixture audit. The Go scaffold generator still emits the legacy {capabilities: []} shape for Haskell, and merged http-core retains it. Generate full schema-v1 package/version/justification metadata, add golden/schema tests, and backfill affected Haskell packages in a dependency-shaped wave."
+      "notes": "Discovered during the Haskell manifest backfill. Absence remains an effective zero-capability legacy profile, but several Haskell directories without explicit manifests perform filesystem, process, environment, console, FFI, or network operations. Inventory all 203 packages and three programs, add truthful nonempty manifests where required, and obtain the capability-approval evidence required by the security contract."
+    },
+    {
+      "id": "haskell-scaffold-convention-reconciliation",
+      "title": "Reconcile TypeScript Haskell scaffolds with canonical Cabal and Hspec conventions",
+      "status": "pending",
+      "depends_on": ["haskell-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the capability-schema audit. The TypeScript generator now emits valid Haskell capability metadata, but its older Haskell template still uses prefixed Cabal library names and a placeholder non-Hspec test layout. Bring it to exact parity with the reviewed Go/native Haskell conventions in a separate focused tranche."
+    },
+    {
+      "id": "scaffold-description-injection-hardening",
+      "title": "Harden scaffold descriptions across generated metadata and source comments",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the Haskell scaffold security review. This tranche hardens the Go, TypeScript, and native Haskell generators against unsafe description controls, including */ comment termination where relevant, but the Dart, Elixir, Lua, Python, Ruby, and Rust generators plus every remaining template context still need a complete audit before repository-wide correct-by-construction conformance can be claimed."
+    },
+    {
+      "id": "capability-schema-category-action-constraints",
+      "title": "Encode valid category-action pairs in capability schemas",
+      "status": "pending",
+      "depends_on": ["haskell-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during final Haskell capability review. The taxonomy defines category-specific actions, but required_capabilities.schema.json and agent_manifest.schema.json currently use independent global enums and therefore accept nonsensical pairs such as env:listen or stdin:delete. Add conditional or oneOf constraints, shared conformance fixtures, and matching loader/analyzer tests across every enforcement backend."
     },
     {
       "id": "haskell-high-consensus-tail",
       "title": "Close Haskell event-loop and brotli",
       "status": "pending",
-      "depends_on": ["haskell-http1"],
+      "depends_on": ["haskell-http1", "haskell-scaffold-capability-schema"],
       "branch": null,
       "pr_number": null,
       "notes": "Keep the event loop generic and portable; use byte-exact Brotli conformance vectors."
@@ -479,7 +515,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Current singleton leaders are Rust 548, Python 86, and TypeScript 84; do not port blindly."
+      "notes": "Current singleton leaders are Rust 550, Python 86, and TypeScript 84; do not port blindly."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -488,7 +524,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The July 30 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, and smart-home-automation-runtime. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, and automation-runtime packages as likely native/service/storage applicability cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port."
+      "notes": "The July 30 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, and smart-home-zwave-host. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, and Z-Wave serial-host packages as likely native/service/storage applicability cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port."
     },
     {
       "id": "c-cpp-graduation",

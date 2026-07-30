@@ -10,6 +10,8 @@ This program creates starter Haskell package or program directories with:
 - a `cabal.project` that links local sibling dependencies
 - starter source and test modules
 - repo-standard `BUILD` files
+- a schema-v1 `required_capabilities.json` with an empty library profile or the
+  generated program's standard-output capability
 - `README.md` and `CHANGELOG.md`
 
 ## Usage
