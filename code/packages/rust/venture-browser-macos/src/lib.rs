@@ -16,9 +16,7 @@ use venture_browser_core::{
     BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
     BrowserSession,
 };
-use window_core::{
-    ElementState, Key, NamedKey, PointerButton, WindowError, WindowEvent,
-};
+use window_core::{ElementState, Key, NamedKey, PointerButton, WindowError, WindowEvent};
 
 #[cfg(target_vendor = "apple")]
 use venture_browser_core::HttpBrowserFetcher;
@@ -207,6 +205,33 @@ fn run_with_termination(
             let mut session = session.borrow_mut();
             let mut should_repaint = scroll_session(&mut session, &event)
                 || keyboard_scroll_session(&mut session, &event);
+            if let Some(navigation) = navigation_shortcut(&event) {
+                match navigate_session(
+                    &mut session,
+                    navigation,
+                    DEFAULT_WINDOW_WIDTH,
+                    DEFAULT_WINDOW_HEIGHT,
+                    &HttpBrowserFetcher::default(),
+                ) {
+                    Ok(true) => {
+                        should_repaint = true;
+                        if let Some(viewport) = session.viewport() {
+                            let page = viewport.page();
+                            let title =
+                                window_title(page.document.title.as_deref(), &page.final_url);
+                            if let Err(error) = window.set_title(&title) {
+                                eprintln!(
+                                    "venture-browser-macos: window title update failed: {error}"
+                                );
+                            }
+                        }
+                    }
+                    Ok(false) => {}
+                    Err(error) => {
+                        eprintln!("venture-browser-macos: history navigation failed: {error}");
+                    }
+                }
+            }
             if let Some((x, y)) = pointer_link_activation(&mut pointer_position, &event) {
                 match activate_link_at(
                     &mut session,
@@ -321,6 +346,56 @@ pub fn keyboard_scroll_session(session: &mut BrowserSession, event: &WindowEvent
     viewport.scroll_state().offset_y() != previous_offset
 }
 
+/// Map macOS browser-history shortcuts into host-neutral navigation commands.
+pub fn navigation_shortcut(event: &WindowEvent) -> Option<BrowserNavigation> {
+    let WindowEvent::Key {
+        key: Key::Named(key),
+        state: ElementState::Pressed,
+        modifiers,
+        ..
+    } = event
+    else {
+        return None;
+    };
+    if !modifiers.meta || modifiers.shift || modifiers.control || modifiers.alt {
+        return None;
+    }
+    match key {
+        NamedKey::ArrowLeft => Some(BrowserNavigation::Back),
+        NamedKey::ArrowRight => Some(BrowserNavigation::Forward),
+        _ => None,
+    }
+}
+
+/// Execute one native navigation command through the shared page pipeline.
+///
+/// Returns `true` only when the command selected and loaded a history entry.
+pub fn navigate_session<F>(
+    session: &mut BrowserSession,
+    navigation: BrowserNavigation,
+    width: f64,
+    height: f64,
+    fetcher: &F,
+) -> Result<bool, BrowserLoadError>
+where
+    F: BrowserResourceFetcher,
+{
+    let theme = mosaic_html_theme();
+    let measurer = NativeMeasurer::new();
+    let shaper = NativeShaper::new();
+    let metrics = NativeMetrics::new();
+    let resolver = NativeResolver::new();
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(width, height, 1.0),
+        &measurer,
+        &shaper,
+        &metrics,
+        &resolver,
+    );
+    Ok(session.execute(navigation, &pipeline, fetcher)?.is_some())
+}
+
 /// Track pointer movement and identify a primary-button link activation.
 ///
 /// Activation happens on release so dragging away from a link can update the
@@ -357,7 +432,6 @@ pub fn run_for_smoke(_start_url: &str, _seconds: f64) -> Result<(), MacBrowserEr
 mod tests {
     use super::*;
 
-    #[cfg(target_vendor = "apple")]
     use window_core::ModifiersState;
 
     #[cfg(target_vendor = "apple")]
@@ -470,6 +544,58 @@ mod tests {
         assert_eq!(
             pointer_link_activation(&mut pointer_position, &released),
             Some((12.5, 48.0))
+        );
+    }
+
+    #[test]
+    fn command_arrows_map_to_history_navigation_only_on_press() {
+        let key_event = |key, state, modifiers| WindowEvent::Key {
+            window_id: WindowId(1),
+            key: Key::Named(key),
+            state,
+            modifiers,
+            text: None,
+        };
+        let command = ModifiersState {
+            meta: true,
+            ..ModifiersState::default()
+        };
+
+        assert_eq!(
+            navigation_shortcut(&key_event(
+                NamedKey::ArrowLeft,
+                ElementState::Pressed,
+                command
+            )),
+            Some(BrowserNavigation::Back)
+        );
+        assert_eq!(
+            navigation_shortcut(&key_event(
+                NamedKey::ArrowRight,
+                ElementState::Pressed,
+                command
+            )),
+            Some(BrowserNavigation::Forward)
+        );
+        assert_eq!(
+            navigation_shortcut(&key_event(
+                NamedKey::ArrowLeft,
+                ElementState::Released,
+                command
+            )),
+            None
+        );
+        assert_eq!(
+            navigation_shortcut(&key_event(
+                NamedKey::ArrowLeft,
+                ElementState::Pressed,
+                ModifiersState {
+                    meta: true,
+                    shift: true,
+                    ..ModifiersState::default()
+                }
+            )),
+            None
         );
     }
 
@@ -599,6 +725,69 @@ mod tests {
                 .viewport()
                 .and_then(|viewport| viewport.page().document.title.as_deref()),
             Some("Final")
+        );
+    }
+
+    #[cfg(target_vendor = "apple")]
+    #[test]
+    fn command_arrows_reload_back_and_forward_history_entries() {
+        let fetcher = |url: &str| {
+            let html = match url {
+                "http://example.test/" => "<title>Start</title><p><a href='next.html'>Next</a></p>",
+                "http://example.test/next.html" => "<title>Next</title><p>Done</p>",
+                other => return Err(format!("unexpected URL: {other}")),
+            };
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html; charset=utf-8".into()),
+                html.as_bytes().to_vec(),
+            ))
+        };
+        let mut session = load_initial_session("http://example.test/", 320.0, 180.0, &fetcher)
+            .expect("initial native page should load");
+        let link = session
+            .viewport()
+            .and_then(|viewport| viewport.page().paint.links.first())
+            .cloned()
+            .expect("initial page should expose a link");
+        assert!(activate_link_at(
+            &mut session,
+            link.x + link.width / 2.0,
+            link.y + link.height / 2.0,
+            320.0,
+            180.0,
+            &fetcher,
+        )
+        .expect("link activation should load"));
+
+        assert!(navigate_session(
+            &mut session,
+            BrowserNavigation::Back,
+            320.0,
+            180.0,
+            &fetcher,
+        )
+        .expect("back should load"));
+        assert_eq!(
+            session
+                .viewport()
+                .and_then(|viewport| viewport.page().document.title.as_deref()),
+            Some("Start")
+        );
+        assert!(navigate_session(
+            &mut session,
+            BrowserNavigation::Forward,
+            320.0,
+            180.0,
+            &fetcher,
+        )
+        .expect("forward should load"));
+        assert_eq!(
+            session
+                .viewport()
+                .and_then(|viewport| viewport.page().document.title.as_deref()),
+            Some("Next")
         );
     }
 

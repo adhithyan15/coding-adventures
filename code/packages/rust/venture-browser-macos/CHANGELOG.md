@@ -7,6 +7,8 @@
 - Activate viewport links from primary-button input, update the native title,
   and repaint across repeated transactional navigation.
 - Drive the clamped viewport and Metal repaint path from named navigation keys.
+- Reload Back/Forward history entries from Command-Left/Right shortcuts, then
+  update the native title and Metal viewport.
 
 ## 0.1.0
 
