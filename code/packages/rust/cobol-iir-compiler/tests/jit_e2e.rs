@@ -6773,22 +6773,178 @@ fn inspect_replacing_multi_non_ascii_source_shares_the_reconstruction_chip() {
     assert_eq!(run_cobol(&multi).expect("oracle succeeds char-based"), "xéxya\n");
 }
 
+// A MULTI-item REPLACING list may now include a `CHARACTERS` item (THIS rung lifts the
+// multi-item CHARACTERS reject — the REPLACE twin of the tally side #81). `CHARACTERS` is
+// the always-eligible catch-all: at each in-window position not already claimed by an
+// EARLIER item in written order it EMITS its replacement char — NO search compare, NO
+// leading-run tracking. An optional `{BEFORE|AFTER}` region narrows its window exactly
+// like any other item. Each case pins the exact rebuilt field and `assert_matches_oracle`
+// independently re-checks JIT == tree-walk oracle. (Only the COMBINED `TALLYING …
+// REPLACING` form still defers CHARACTERS in its REPLACING half — see
+// `inspect_replacing_multi_combined_with_characters_is_a_later_rung`.)
+
 #[test]
-fn inspect_replacing_multi_with_characters_is_a_later_rung() {
-    // A `CHARACTERS` item inside a MULTI-item list is deferred on BOTH engines.
-    let src = wrap(
-        &["01  S  PIC X(4) VALUE \"aabb\"."],
+fn inspect_replacing_multi_all_then_characters_covers_the_rest() {
+    // `REPLACING ALL "A" BY "B" CHARACTERS BY "*"` over "AXAY" (X,Y not "A"). ALL "A"
+    // (item 0, higher priority) claims the two "A"s at positions 0,2 → "B"; the CHARACTERS
+    // catch-all (item 1) claims every OTHER position (1,3) → "*". Every position is claimed
+    // by exactly one item — pins that CHARACTERS emits at exactly the positions an earlier
+    // item did not.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"AXAY\"."],
         &[
-            "INSPECT S REPLACING ALL \"a\" BY \"x\"",
-            "    CHARACTERS BY \"y\".",
+            "INSPECT S REPLACING ALL \"A\" BY \"B\" CHARACTERS BY \"*\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "B*B*\n");
+}
+
+#[test]
+fn inspect_replacing_multi_characters_first_shadows_the_all_item() {
+    // WRITTEN-ORDER priority: `REPLACING CHARACTERS BY "*" ALL "A" BY "B"` (CHARACTERS
+    // FIRST) over "AABB". The region-less CHARACTERS catch-all is eligible at EVERY
+    // position, so it claims all 4 → "*", and the following ALL "A" NEVER fires
+    // (first-match-per-position). Result "****", exactly as if the ALL item were absent —
+    // proving CHARACTERS' position in the list is honoured (a lower-priority ALL of a
+    // matching search is shadowed).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"AABB\"."],
+        &[
+            "INSPECT S REPLACING CHARACTERS BY \"*\" ALL \"A\" BY \"B\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "****\n");
+}
+
+#[test]
+fn inspect_replacing_multi_all_then_characters_with_before_region() {
+    // A CHARACTERS item WITH a `{BEFORE|AFTER}` region narrows its window; a char AFTER the
+    // CHARACTERS window still gets the ALL replacement. `REPLACING ALL "A" BY "B"
+    // CHARACTERS BY "*" BEFORE "X"` over "AZXA" (X at index 2):
+    //   pos 0 'A' → ALL "A" → "B"
+    //   pos 1 'Z' → ALL no; CHARACTERS window [0,2) contains 1 → "*"
+    //   pos 2 'X' → ALL no; CHARACTERS window [0,2) excludes 2 → kept "X"
+    //   pos 3 'A' → ALL "A" → "B"  (past the CHARACTERS window, still claimed by ALL)
+    // Result "B*XB" — the region genuinely bounds the catch-all, and the trailing ALL item
+    // is NOT shadowed outside that window.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"AZXA\"."],
+        &[
+            "INSPECT S REPLACING ALL \"A\" BY \"B\" CHARACTERS BY \"*\" BEFORE \"X\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "B*XB\n");
+}
+
+#[test]
+fn inspect_replacing_multi_leading_then_characters_run_tracking_unaffected() {
+    // A CHARACTERS item alongside a LEADING item — the LEADING run tracking is UNAFFECTED
+    // by the (search-less, run-less) CHARACTERS item. `REPLACING LEADING "A" BY "L"
+    // CHARACTERS BY "*" BEFORE "X"` over "AABAX" (X at index 4):
+    //   pos 0 'A' → LEADING run alive → "L"
+    //   pos 1 'A' → LEADING run alive → "L"
+    //   pos 2 'B' → LEADING no (mismatch, run breaks here); CHARACTERS window [0,4)
+    //               contains 2 → "*"
+    //   pos 3 'A' → LEADING run now DEAD → no; CHARACTERS window contains 3 → "*"
+    //   pos 4 'X' → LEADING dead; CHARACTERS window [0,4) excludes 4 → kept "X"
+    // Result "LL**X". The LEADING run rewrites exactly its anchored run (2 chars) and
+    // breaks at the first in-window mismatch, INDEPENDENTLY of the CHARACTERS item claiming
+    // that same position — the active-run update never consults or is consulted by
+    // CHARACTERS.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AABAX\"."],
+        &[
+            "INSPECT S REPLACING LEADING \"A\" BY \"L\"",
+            "    CHARACTERS BY \"*\" BEFORE \"X\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "LL**X\n");
+}
+
+#[test]
+fn inspect_replacing_multi_characters_in_the_middle_shadows_multiple_trailing_items() {
+    // WRITTEN-ORDER priority with a region-less CHARACTERS in the MIDDLE of THREE items:
+    // `REPLACING ALL "A" BY "B" CHARACTERS BY "*" ALL "C" BY "D"` over "ACAC". Item 0
+    // (ALL "A") claims the two 'A's → "B"; the region-less CHARACTERS catch-all then claims
+    // EVERY remaining position → "*", so item 2 (ALL "C") is UNREACHABLE and never fires.
+    // Result "B*B*". This exercises the compiler's unreachable-block emission for MORE THAN
+    // ONE trailing chain link after an unconditional catch-all — each dead link is a
+    // self-contained block ending in its own `jmp done`, so the shadowing matches the
+    // oracle's first-eligible rule byte-for-byte.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"ACAC\"."],
+        &[
+            "INSPECT S REPLACING ALL \"A\" BY \"B\"",
+            "    CHARACTERS BY \"*\" ALL \"C\" BY \"D\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "B*B*\n");
+}
+
+#[test]
+fn inspect_replacing_multi_combined_with_characters_is_a_later_rung() {
+    // The COMBINED `TALLYING … REPLACING` form still DEFERS a CHARACTERS item in its
+    // REPLACING half — rejected identically on both engines. (A combined REPLACING is read
+    // by the single-item reader, which rejects both CHARACTERS and a multi-item list
+    // outright; the multi-item CHARACTERS lift does NOT leak into the combined path.)
+    let src = wrap(
+        &["01  S  PIC X(4) VALUE \"AABB\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"A\"",
+            "    REPLACING CHARACTERS BY \"*\" ALL \"B\" BY \"C\".",
             "STOP RUN.",
         ],
     );
-    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-item CHARACTERS item");
+    assert!(run_cobol(&src).is_err(), "oracle must reject combined + multi-item CHARACTERS");
     assert!(
         compile_source(&src, "e2e").is_err(),
-        "compiler must reject a multi-item CHARACTERS item"
+        "compiler must reject combined + multi-item CHARACTERS"
     );
+}
+
+#[test]
+fn inspect_replacing_multi_characters_non_ascii_shares_the_reconstruction_chip() {
+    // NON-ASCII SOURCE + a CHARACTERS item: the RECONSTRUCTION is the PRE-EXISTING
+    // byte-vs-char chip (task_396ba6f6) shared by EVERY REPLACING lowering — identical to
+    // the sibling `inspect_replacing_multi_non_ascii_source_shares_the_reconstruction_chip`
+    // and the single-item `REPLACING CHARACTERS` (#80). The byte-based compiler rebuilds
+    // the field with per-position `str_slice`, which cannot slice a KEPT multi-byte char,
+    // so it traps; the char-based oracle iterates `char`s and succeeds. The multi-item
+    // CHARACTERS path introduces NO new non-ASCII behavior: it traps identically, so this
+    // is a DOCUMENTED divergence characterization, NOT fixed here.
+    //
+    // `REPLACING ALL "a" BY "x" BEFORE "b" CHARACTERS BY "*" AFTER "b"` over "aéaba"
+    // (chars a,é,a,b,a; "b" at char index 3):
+    //   pos 0 'a' → ALL "a" window [0,3) → "x"
+    //   pos 1 'é' → ALL no; CHARACTERS window (3,5] excludes 1 → KEPT "é"  (the trap site)
+    //   pos 2 'a' → ALL "a" window [0,3) → "x"
+    //   pos 3 'b' → ALL no; CHARACTERS window (3,5] excludes 3 → KEPT "b"
+    //   pos 4 'a' → ALL "a" window [0,3) excludes 4; CHARACTERS window (3,5] contains 4 → "*"
+    // Oracle char-based → "xéxb*".
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"aéaba\"."],
+        &[
+            "INSPECT S REPLACING ALL \"a\" BY \"x\" BEFORE \"b\"",
+            "    CHARACTERS BY \"*\" AFTER \"b\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    );
+    assert!(
+        run_on_jit_result(&src).is_err(),
+        "multi-item CHARACTERS path traps on a non-ASCII kept char, like every REPLACING lowering"
+    );
+    assert_eq!(run_cobol(&src).expect("oracle succeeds char-based"), "xéxb*\n");
 }
 
 // INSPECT … REPLACING {ALL|LEADING} … {ALL|LEADING} … — a MULTI-item REPLACING list

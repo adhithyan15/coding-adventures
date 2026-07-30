@@ -8,6 +8,40 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.77.0: INSPECT REPLACING with a CHARACTERS item in a multi-item list
+
+**`INSPECT source REPLACING … CHARACTERS BY x …`** — a `CHARACTERS BY x` item alongside other
+items in a multi-item REPLACING list — is now compiled. The former reject in
+`inspect_replacing_multi` ("INSPECT REPLACING CHARACTERS is a later rung") is lifted for this
+path only, compiled byte-identical to the `coding-adventures-cobol-runtime` 0.81.0 oracle on an
+ASCII source. This is the REPLACE twin of the v0.76.0 tally rung (a `CHARACTERS` item in a
+multi-item TALLYING list).
+
+- **The always-eligible catch-all.** In `emit_inspect_replacing_multi`'s ordered per-position
+  decision chain, a `CHARACTERS` item's eligibility is its window membership ALONE — no `cmp_eq`
+  against a search byte. A region-less `CHARACTERS` item is UNCONDITIONALLY eligible, so it emits
+  an unconditional "append replacement + `jmp done`" with no predicate and no `next` label (any
+  later chain link becomes unreachable — it shadows everything after it in written order, exactly
+  the oracle's first-eligible-item rule). It allocates no `active` register and is skipped in the
+  leading active-run update pass. Where an `ALL`/`LEADING` item bumps nothing and appends its
+  replacement string, a `CHARACTERS` item appends the SAME way — it emits, it does not count.
+- **Optional region reused.** A `CHARACTERS` item's `{BEFORE|AFTER} z` window is derived by the
+  SAME `emit_inspect_region_window` every other item uses, so both engines narrow to identical
+  slices; a char PAST that window is still claimed by a trailing `ALL` item.
+- **Type change (co-total classification).** `ReplaceItem`/`ResolvedReplaceLeadingItem` carry an
+  `Option<&node>`/`Option<String>` search (`None` for `CHARACTERS`) plus a new compiler-local
+  `ReplaceKind` (`All`/`Leading`/`Characters`) enum, mirroring the oracle's `ReplaceMultiKind` so
+  the CST-side dispatch stays co-total. The replacement node/register is always present.
+- **Still deferred (co-total).** The COMBINED `TALLYING … REPLACING` form keeps rejecting
+  `CHARACTERS` in its REPLACING half (read by the single-item `inspect_replacing_all`); `FIRST`
+  stays deferred; `ALL`/`LEADING` search/replacement validation via `single_delim_code`/
+  `single_delim_str` is unchanged.
+- **Byte-vs-char reconstruct chip (unchanged, task_396ba6f6).** A `CHARACTERS` item rebuilds
+  POSITIONS; the byte-based unroll reads `str_slice` for kept chars, so a non-ASCII source that
+  keeps a multi-byte char traps EXACTLY as every other REPLACING lowering (and the single-item
+  `REPLACING CHARACTERS`, #80) does — NOT fixed here. Positive tests keep any multi-byte char
+  outside every window; one characterization pins the shared-chip divergence.
+
 ### Added — v0.76.0: INSPECT TALLYING with a CHARACTERS item in a multi-item list
 
 **`INSPECT source TALLYING counter FOR … CHARACTERS …`** — a `CHARACTERS` item alongside other

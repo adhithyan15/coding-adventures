@@ -5,8 +5,8 @@ use crate::error::RuntimeError;
 use crate::picture::Picture;
 use crate::program::{
     ArithOp, Cond, ConvertOperand, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program,
-    RefIndex, Region, RegionKind, RelOp, ReplaceMultiLeadingItem, Stmt, TallyCounterGroup,
-    TallyMultiKind, TallyMultiLeadingItem, ValueSpec, WhenValue,
+    RefIndex, Region, RegionKind, RelOp, ReplaceMultiKind, ReplaceMultiLeadingItem, Stmt,
+    TallyCounterGroup, TallyMultiKind, TallyMultiLeadingItem, ValueSpec, WhenValue,
 };
 use crate::value::{add, div, move_into_char, move_into_numeric, mul, pow, round, sub, Decimal};
 use std::collections::HashMap;
@@ -1475,29 +1475,38 @@ impl Machine {
     ///   for i in 0..width {
     ///       c = chars[i]
     ///       out[i] = c                                   // default: unchanged
-    ///       for (search, replace, leading, start, end) in items {   // written order
+    ///       for (search, replace, kind, start, end) in items {   // written order
     ///           in_win = start <= i < end
-    ///           if in_win && c == search && (!leading || active[k]) {
-    ///               out[i] = replace; break              // first eligible item wins
+    ///           eligible = match kind {
+    ///               All        => in_win && c == search,
+    ///               Leading    => in_win && c == search && active[k],
+    ///               Characters => in_win,                // always-eligible catch-all
     ///           }
+    ///           if eligible { out[i] = replace; break }  // first eligible item wins
     ///       }
-    ///       for (search, _, leading, start, end) in items {   // then update EVERY run
-    ///           if leading && start <= i < end && c != search { active[k] = false }
+    ///       for (search, _, kind, start, end) in items {   // then update EVERY run
+    ///           if kind == Leading && start <= i < end && c != search { active[k] = false }
     ///       }
     ///   }
     /// ```
     ///
     /// So a `LEADING` item replaces only its CONSECUTIVE run of `search` anchored at its
-    /// window start; a `search` after a break is NOT replaced. The run-update loop runs
-    /// INDEPENDENTLY of which item won the decision — a run breaks at the FIRST in-window
-    /// position whose char is NOT its search (a matching char keeps the run alive even if
-    /// a higher-priority item claimed that position; positions outside the window neither
-    /// begin nor break the run). First-match-wins and no-re-chaining are unchanged: the
-    /// scan reads `chars` (the original) and never the output, and each window is computed
-    /// over that same original, so both engines agree byte-for-byte (the match-based
-    /// replacement only fires on a single-char ASCII search, so multi-byte source chars
-    /// pass through untouched and the rebuilt string stays valid UTF-8 — the same
-    /// byte-safety the single-item region form relies on).
+    /// window start; a `search` after a break is NOT replaced. A `CHARACTERS` item is the
+    /// always-eligible catch-all: it EMITS its replacement at EVERY in-window position not
+    /// already claimed by an earlier item in written order (no search compare, no run —
+    /// so a region-less `CHARACTERS` item shadows every later chain link). The run-update
+    /// loop runs INDEPENDENTLY of which item won the decision, and skips `ALL`/`CHARACTERS`
+    /// items — a `LEADING` run breaks at the FIRST in-window position whose char is NOT its
+    /// search (a matching char keeps the run alive even if a higher-priority item claimed
+    /// that position; positions outside the window neither begin nor break the run).
+    /// First-match-wins and no-re-chaining are unchanged: the scan reads `chars` (the
+    /// original) and never the output, and each window is computed over that same original,
+    /// so both engines agree byte-for-byte (the match-based replacement only fires on a
+    /// single-char ASCII search, and a `CHARACTERS` item's replacement is a single ASCII
+    /// char too, so multi-byte source chars kept outside every window pass through
+    /// untouched and the rebuilt string stays valid UTF-8 — the same byte-safety the
+    /// single-item region form relies on; a multi-byte char INSIDE a window is the
+    /// pre-existing byte-vs-char reconstruct chip).
     fn exec_inspect_replacing_multi(
         &mut self,
         source: &str,
@@ -1508,17 +1517,23 @@ impl Machine {
         // (like the single-item path) sees the pre-replacement bytes, and so an
         // invalid operand aborts with the source untouched.
         let chars: Vec<char> = self.items[sidx].storage.chars().collect();
-        // Resolve every (search char, replace char, leading flag, [start, end) window)
+        // Resolve every (optional search char, replace char, kind, [start, end) window)
         // FIRST — reading all items (and computing their windows over the original
         // `chars`) before touching storage means an invalid operand aborts cleanly,
-        // exactly like the single-item path reads both chars and the window first.
-        let resolved: Vec<(char, char, bool, usize, usize)> = items
+        // exactly like the single-item path reads both chars and the window first. A
+        // `CHARACTERS` item has NO search operand — its search char is `None`, so we skip
+        // `single_delim_char` for it (there is nothing to validate) and resolve only its
+        // replacement and window; it never participates in the run-flag update below.
+        let resolved: Vec<(Option<char>, char, ReplaceMultiKind, usize, usize)> = items
             .iter()
-            .map(|(search, replace, leading, region)| {
-                let s = self.single_delim_char(search, "INSPECT REPLACING")?;
+            .map(|(search, replace, kind, region)| {
+                let s = match search {
+                    Some(op) => Some(self.single_delim_char(op, "INSPECT REPLACING")?),
+                    None => None,
+                };
                 let r = self.single_delim_char(replace, "INSPECT REPLACING")?;
                 let (start, end) = self.region_window(&chars, region.as_ref())?;
-                Ok((s, r, *leading, start, end))
+                Ok((s, r, *kind, start, end))
             })
             .collect::<Result<_, RuntimeError>>()?;
 
@@ -1533,14 +1548,23 @@ impl Machine {
         let mut active = vec![true; resolved.len()];
         let mut rebuilt = String::with_capacity(self.items[sidx].storage.len());
         for (i, &c) in chars.iter().enumerate() {
-            // Decision: first eligible item wins. An `ALL` item is eligible iff its
-            // window contains the position AND its search matches; a `LEADING` item ALSO
-            // requires its run still active (every prior in-window position equalled its
-            // search).
+            // Decision: first eligible item wins.
+            //   * `ALL`        — eligible iff its window contains the position AND its
+            //                    search matches the char;
+            //   * `LEADING`    — as `ALL`, and ALSO requires its run still active (every
+            //                    prior in-window position equalled its search);
+            //   * `CHARACTERS` — the always-eligible catch-all: eligible iff its window
+            //                    contains the position (NO search compare). It claims every
+            //                    in-window position not already taken by an earlier item.
             let mut out = c; // default: unchanged
-            for (k, &(search_ch, replace_ch, leading, start, end)) in resolved.iter().enumerate() {
+            for (k, &(search_ch, replace_ch, kind, start, end)) in resolved.iter().enumerate() {
                 let in_win = start <= i && i < end;
-                if in_win && c == search_ch && (!leading || active[k]) {
+                let eligible = match kind {
+                    ReplaceMultiKind::All => in_win && search_ch == Some(c),
+                    ReplaceMultiKind::Leading => in_win && search_ch == Some(c) && active[k],
+                    ReplaceMultiKind::Characters => in_win,
+                };
+                if eligible {
                     out = replace_ch;
                     break;
                 }
@@ -1550,9 +1574,16 @@ impl Machine {
             // won: a run breaks at the FIRST in-window position whose char is NOT its
             // search (a matching char keeps the run alive even if a higher-priority item
             // claimed the position; positions outside the window neither begin nor break
-            // the run — anchoring the run at the window start).
-            for (k, &(search_ch, _, leading, start, end)) in resolved.iter().enumerate() {
-                if leading && start <= i && i < end && c != search_ch {
+            // the run — anchoring the run at the window start). `ALL`/`CHARACTERS` items
+            // have no run and are skipped (a `CHARACTERS` item's search is `None`, so
+            // `search_ch == Some(c)` would never hold anyway, but the kind guard makes that
+            // explicit and byte-mirrors the compiler's active-update pass).
+            for (k, &(search_ch, _, kind, start, end)) in resolved.iter().enumerate() {
+                if matches!(kind, ReplaceMultiKind::Leading)
+                    && start <= i
+                    && i < end
+                    && search_ch != Some(c)
+                {
                     active[k] = false;
                 }
             }

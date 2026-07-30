@@ -361,27 +361,29 @@ pub enum Stmt {
     ///     `b` is not then turned into `z`), and position 1's `b`→`z` fires on the
     ///     ORIGINAL `b`.
     ///
-    /// Width is unchanged (each position maps to exactly one output char). Each item
-    /// is a SINGLE-char search BY single-char replacement and may be `ALL` OR `LEADING`
-    /// (THIS rung lifts the multi-item `LEADING` reject — the count-side twin, a
-    /// multi-item TALLYING list with a LEADING item, was lifted in the sibling rung),
-    /// each with its OWN optional `{BEFORE|AFTER} x` region. `CHARACTERS`/`FIRST` items
-    /// in a multi-item list, and the combined `TALLYING … REPLACING` form with several
-    /// items, remain later rungs (see `read_statement`). `items` are in written order —
-    /// the exec walks them in that order at every position, which is what realises
-    /// first-match-wins.
+    /// Width is unchanged (each position maps to exactly one output char). Each item is
+    /// `ALL`/`LEADING` (a SINGLE-char search BY single-char replacement) OR `CHARACTERS`
+    /// (bare `CHARACTERS BY x`, the always-eligible catch-all — THIS rung lifts the
+    /// multi-item `CHARACTERS` reject; the count-side twin, a multi-item TALLYING list
+    /// with a CHARACTERS item, was lifted in the sibling rung #81; `LEADING` was lifted in
+    /// #71), each with its OWN optional `{BEFORE|AFTER} x` region. `FIRST` items in a
+    /// multi-item list, and the combined `TALLYING … REPLACING` form (both halves), remain
+    /// later rungs (see `read_statement`). `items` are in written order — the exec walks
+    /// them in that order at every position, which is what realises first-match-wins, so a
+    /// region-less `CHARACTERS` item shadows every item written after it.
     ///
     /// PER-ITEM WINDOWS: each item's optional region defines a window over the
     /// ORIGINAL source (via the SAME `region_window` helper the lone/single-item forms
     /// use — BEFORE x → `[0, first_index_of_x)`; AFTER x → `(first_index_of_x, len]`;
     /// not-found asymmetry BEFORE→whole, AFTER→empty). An item with NO region has a
     /// whole-source window (every position inside). At each position the items are
-    /// tried IN WRITTEN ORDER and the FIRST item that BOTH (i) has the position inside
-    /// its OWN window AND (ii) whose search equals the current ORIGINAL char AND (iii)
-    /// — for a `LEADING` item — whose run is still `active` wins; the rest are skipped
-    /// for that position. This is the exact composition of multi-item first-match-wins
-    /// with the per-item region window and the `LEADING` run machine, always compared
-    /// against the ORIGINAL char (no re-chaining).
+    /// tried IN WRITTEN ORDER and the FIRST eligible item wins (the rest are skipped for
+    /// that position): an `ALL` item is eligible where the position is inside its OWN
+    /// window AND its search equals the current ORIGINAL char; a `LEADING` item ALSO
+    /// requires its run still `active`; a `CHARACTERS` item is eligible at EVERY in-window
+    /// position (no search compare — the always-eligible catch-all). This is the exact
+    /// composition of multi-item first-match-wins with the per-item region window and the
+    /// `LEADING` run machine, always compared against the ORIGINAL char (no re-chaining).
     ///
     /// LEADING RUN FLAG: the single left-to-right pass carries a per-item `active` flag
     /// (only consulted for `LEADING` items, all init `true`) — IDENTICAL to the tally
@@ -748,16 +750,46 @@ pub enum TallyMultiKind {
 /// type-complexity threshold).
 pub type TallyMultiLeadingItem = (Option<Operand>, TallyMultiKind, Option<Region>);
 
-/// One `{ALL|LEADING} search BY replace [{BEFORE|AFTER} x]` item of a multi-item
-/// `REPLACING` list: the single-char search operand, the single-char replacement
-/// operand, a `leading` flag (`true` for a `LEADING` item — replace only its run
-/// anchored at the window start; `false` for `ALL`), and its OWN optional
-/// `{BEFORE|AFTER} x` region window. The replace-side twin of
-/// [`TallyMultiLeadingItem`]: it extends the older `(search, replace, region)` triple
-/// with the `leading` flag THIS rung lifts into the multi-item list, mirroring how the
-/// tally side gained its flag. Named so [`read_inspect_replacing_multi`]'s return type
-/// stays legible (and below clippy's type-complexity threshold).
-pub type ReplaceMultiLeadingItem = (Operand, Operand, bool, Option<Region>);
+/// Which flavour of replace item a multi-item `REPLACING` list holds — the replace-side
+/// twin of [`TallyMultiKind`], the three-way classification THIS rung lifts into that
+/// list (the earlier rung carried only a `leading: bool`, which could not represent a
+/// `CHARACTERS` item). An explicit enum makes the illegal combination "a `LEADING` item
+/// that is ALSO `CHARACTERS`" UNREPRESENTABLE — the classifier picks exactly one variant
+/// per written item:
+///
+/// | keyword written        | variant      | search operand | active-run flag |
+/// |------------------------|--------------|----------------|-----------------|
+/// | `ALL a BY x`           | `All`        | `Some(a)`      | never           |
+/// | `LEADING a BY x`       | `Leading`    | `Some(a)`      | per-item run    |
+/// | `CHARACTERS BY x`      | `Characters` | `None`         | never           |
+///
+/// A `Characters` item is the always-eligible catch-all: at each in-window position not
+/// already claimed by an earlier item in written order, it EMITS its replacement char —
+/// no search compare, no run tracking. The replacement operand is ALWAYS present (every
+/// variant carries a `BY x`). See [`ReplaceMultiLeadingItem`] and
+/// [`crate::interp::Machine::exec_inspect_replacing_multi`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ReplaceMultiKind {
+    /// `ALL a BY x` — eligible at an in-window position whose char equals the search.
+    All,
+    /// `LEADING a BY x` — like `All`, but only while this item's leading run (anchored at
+    /// its window start) is still unbroken.
+    Leading,
+    /// `CHARACTERS BY x` — eligible at EVERY in-window position; carries no search operand.
+    Characters,
+}
+
+/// One `{ALL|LEADING} search BY replace [{BEFORE|AFTER} x]` — or bare
+/// `CHARACTERS BY replace [{BEFORE|AFTER} x]` — item of a multi-item `REPLACING` list: an
+/// OPTIONAL single-char search operand (`Some(search)` for `ALL`/`LEADING`; `None` for
+/// `CHARACTERS`, which has none), the ALWAYS-present single-char replacement operand, a
+/// [`ReplaceMultiKind`] tag, and its OWN optional `{BEFORE|AFTER} x` region window. The
+/// replace-side twin of [`TallyMultiLeadingItem`]: it extends the older
+/// `(search, replace, leading, region)` tuple with the kind tag THIS rung lifts into the
+/// multi-item list (a `CHARACTERS` item alongside other items is now admitted), mirroring
+/// how the tally side gained its kind. Named so [`read_inspect_replacing_multi`]'s return
+/// type stays legible (and below clippy's type-complexity threshold).
+pub type ReplaceMultiLeadingItem = (Option<Operand>, Operand, ReplaceMultiKind, Option<Region>);
 
 /// One `counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q] …` group of a
 /// MULTI-counter `TALLYING` list: the counter name plus its written-order items, each a
@@ -1991,18 +2023,23 @@ fn read_inspect_replacing_all(
 /// counted `>= 2` `replace_item` children — the single-item case keeps
 /// [`read_inspect_replacing_all`] and all its capabilities.
 ///
-/// Scope bound for the multi-item path (this rung): EVERY item must be a single-char
-/// `{ALL|LEADING} search BY replace` pair with NO `CHARACTERS`/`FIRST`. Each item MAY
-/// be `ALL` OR `LEADING` (THIS rung lifts the multi-item `LEADING` reject, mirroring
-/// how the tally side's `read_inspect_tally_multi` reads a per-item leading flag), and
-/// MAY carry its OWN optional `{BEFORE|AFTER} x` region, read with the SAME
-/// `read_inspect_region` the single-item reader uses. Any item violating the remaining
-/// scope is a clean later-rung `Unsupported`, with the SAME messages the compiler-side
-/// reader raises, so both engines accept exactly the same multi-item statements and
-/// reject the same ones identically. (A multi-character/figurative/wider/numeric/
-/// reference-modified search, replacement, or region delimiter is not rejected here —
-/// it falls to the SAME `single_delim_char` check the single-item exec uses, so that
-/// rejection is identical across single and multi.)
+/// Scope for the multi-item path (this rung): each item is `ALL`, `LEADING`, OR
+/// `CHARACTERS` — the multi-item `CHARACTERS` reject is LIFTED this rung (LEADING and the
+/// per-item region were lifted earlier, in #71 / #62), mirroring how the tally side's
+/// `read_inspect_tally_multi` gained a `CHARACTERS` item. Each item carries a
+/// [`ReplaceMultiKind`] tag, an OPTIONAL search operand (`Some` for `ALL`/`LEADING`,
+/// `None` for `CHARACTERS`), the ALWAYS-present `BY` replacement operand, AND its OWN
+/// optional `{BEFORE|AFTER} x` region, read with the SAME `read_inspect_region` the
+/// single-item reader uses. A `CHARACTERS` item is the always-eligible catch-all (no
+/// search, no run). `FIRST` is still deferred. Any item violating the remaining scope is
+/// a clean later-rung `Unsupported`, with the SAME messages the compiler-side reader
+/// raises, so both engines accept exactly the same multi-item statements and reject the
+/// same ones identically. (A multi-character/figurative/wider/numeric/reference-modified
+/// search on an `ALL`/`LEADING` item, replacement, or region delimiter is not rejected
+/// here — it falls to the SAME `single_delim_char` check the single-item exec uses, so
+/// that rejection is identical across single and multi. The COMBINED `TALLYING …
+/// REPLACING` form keeps rejecting `CHARACTERS` in its REPLACING half — that gate lives in
+/// `read_inspect_replacing_all`, reached via the combined caller, not here.)
 fn read_inspect_replacing_multi(
     verb: &GrammarASTNode,
 ) -> Result<Vec<ReplaceMultiLeadingItem>, RuntimeError> {
@@ -2012,52 +2049,68 @@ fn read_inspect_replacing_multi(
     let mut items = Vec::new();
     for ri in child_nodes(replacing, "replace_item") {
         let toks = child_tokens(ri);
-        // `CHARACTERS`/`FIRST` are not supported for a multi-item list this rung
-        // (they are not even supported for a single item). Reuse the single-item
-        // messages so the diagnostic is uniform.
-        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
-            return Err(RuntimeError::Unsupported(
-                "INSPECT REPLACING CHARACTERS is a later rung".into(),
-            ));
-        }
+        // `FIRST` is not supported for a multi-item list this rung (it is not even
+        // supported for a single item). Reuse the single-item message so the diagnostic
+        // is uniform.
         if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "FIRST") {
             return Err(RuntimeError::Unsupported(
                 "INSPECT REPLACING FIRST is a later rung".into(),
             ));
         }
-        // A `LEADING` item in a multi-item list is now ACCEPTED (THIS rung): the multi
-        // path supports a MIX of `ALL` and `LEADING` items — the replace-side twin of
-        // the tally side's `read_inspect_tally_multi`, which already reads a per-item
-        // leading flag. The keyword picks per-item substitution semantics threaded to
-        // `exec_inspect_replacing_multi` (a `LEADING` item replaces only its run anchored
-        // at the window start). (A LONE `REPLACING LEADING` is still supported via the
-        // single-item path, not here.)
-        let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
-        // A `{BEFORE|AFTER}` region on an item is ACCEPTED: read it into an
+        // Classify the item into exactly one of the three [`ReplaceMultiKind`] variants.
+        // `CHARACTERS` in a multi-item list is now ACCEPTED (THIS rung): it is the
+        // always-eligible catch-all — no search operand, no run tracking. `LEADING` (also
+        // lifted, in #71) replaces only its run; `ALL` is the default. The keyword picks
+        // per-item substitution semantics threaded to `exec_inspect_replacing_multi`. (A
+        // LONE `REPLACING CHARACTERS BY x` or `REPLACING LEADING` is still supported via
+        // the single-item path, not here — only an ITEM ALONGSIDE another routes into this
+        // multi path.)
+        let kind = if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+            ReplaceMultiKind::Characters
+        } else if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
+            ReplaceMultiKind::Leading
+        } else {
+            ReplaceMultiKind::All
+        };
+        // A `{BEFORE|AFTER}` region on an item is ACCEPTED for EVERY kind: read it into an
         // `Option<Region>` with the SAME `read_inspect_region` the single-item reader
         // uses. The region contributes its OWN nested `operand` (the delimiter) under the
-        // `inspect_region` child, so the item's two DIRECT `operand` children are still
-        // exactly the search/replacement (see below) — the region delimiter is not among
-        // them.
+        // `inspect_region` child, so an `ALL`/`LEADING` item's two DIRECT `operand`
+        // children are still exactly the search/replacement (see below), and a
+        // `CHARACTERS` item's one DIRECT `operand` child is still exactly the replacement —
+        // the region delimiter is not among them.
         let region = match child_node(ri, "inspect_region") {
             None => None,
             Some(region_node) => Some(read_inspect_region(region_node)?),
         };
-        // `{ALL|LEADING} search BY replace` — the two DIRECT `operand` children are the
-        // search (first) and the replacement (second), in written order. A region's
-        // delimiter rides on the `inspect_region` child, not as a direct child of
-        // `replace_item`, so exactly two direct operands are expected whether or not a
-        // region is present.
         let ops: Vec<&GrammarASTNode> = child_nodes(ri, "operand");
-        let (search_node, replace_node) = match ops.as_slice() {
-            [s, r] => (*s, *r),
-            _ => {
-                return Err(RuntimeError::Unsupported(
-                    "INSPECT REPLACING ALL/LEADING without a search and a BY replacement".into(),
-                ))
-            }
+        // A `CHARACTERS` item carries NO search operand (the grammar's CHARACTERS branch is
+        // `CHARACTERS "BY" operand { inspect_region }`), so its SOLE direct `operand` child
+        // is the replacement `x` — the search is `None`. `ALL`/`LEADING` read their two
+        // direct operands: the search (first) and the replacement (second), in written
+        // order. A region's delimiter rides on the `inspect_region` child, not as a direct
+        // child of `replace_item`, so exactly one (CHARACTERS) or two (ALL/LEADING) direct
+        // operands are expected whether or not a region is present.
+        let (search, replace_node) = match kind {
+            ReplaceMultiKind::Characters => match ops.as_slice() {
+                [r] => (None, *r),
+                _ => {
+                    return Err(RuntimeError::Unsupported(
+                        "INSPECT REPLACING CHARACTERS without a BY replacement".into(),
+                    ))
+                }
+            },
+            _ => match ops.as_slice() {
+                [s, r] => (Some(read_operand(s)?), *r),
+                _ => {
+                    return Err(RuntimeError::Unsupported(
+                        "INSPECT REPLACING ALL/LEADING without a search and a BY replacement"
+                            .into(),
+                    ))
+                }
+            },
         };
-        items.push((read_operand(search_node)?, read_operand(replace_node)?, leading, region));
+        items.push((search, read_operand(replace_node)?, kind, region));
     }
     Ok(items)
 }
