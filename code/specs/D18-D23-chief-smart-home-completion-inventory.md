@@ -426,12 +426,33 @@ executable, restart-safe rules runtime:
   idempotency across snapshot restore, durable state validation, and the full
   create-preview-execute-audit HTTP lifecycle.
 
+## Current Z-Wave Runtime Integration Slice
+
+This slice connects the repository's Z-Wave protocol stack to the normalized
+D23 runtime instead of adding another protocol-only layer:
+
+- `smart-home-zwave-integration` installs a Serial API controller and
+  interviewed nodes as normalized bridges, devices, entities, capabilities,
+  and Z-Wave protocol identifiers.
+- Application Command Handler reports flow through `zwave-command-classes`
+  into normalized device events and runtime state; report-specific sensor
+  capabilities such as temperature are added when first observed.
+- Outbound light and lock commands must pass D23 authorization before the
+  adapter builds reliable Serial API SendData frames.
+- SendData response, callback, failure, and timeout states stay correlated to
+  the accepted D23 command.
+- Executable tests cover switches, dimmers, locks, battery and multilevel
+  sensor reports, rejected commands, successful callbacks, and timeouts.
+- Serial port ownership, inclusion, and S2 security remain production host
+  concerns above the completed typed runtime adapter boundary.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
 
-- Add platform integrations beyond Hue: MQTT, Matter/Thread, Zigbee, Z-Wave,
-  cameras, locks, thermostats, and sensors.
+- Continue platform integrations beyond Hue and the Z-Wave runtime adapter:
+  MQTT, Matter/Thread, Zigbee, cameras, thermostats, broader sensors, and a
+  production Z-Wave host for serial ownership, inclusion, and S2.
 - Build Home Assistant migration tools for devices, rooms, scenes,
   automations, dashboards, and historical state export where feasible.
 - Provide a dashboard that can inspect devices, rooms, state, health,
