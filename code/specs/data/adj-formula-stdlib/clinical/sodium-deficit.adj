@@ -1,0 +1,105 @@
+% ============================================================================
+% sodium-deficit.adj — the sodium deficit in hyponatraemia
+% (sodium deficit = total body water × (desired sodium − current sodium)) in the ADJ standard library.
+% ============================================================================
+% The sodium-deficit entry of the *clinical* track — the total amount of sodium that must be replaced to
+% raise a hyponatraemic patient's serum sodium to a chosen target, the quantity that sets the rate of a
+% hypertonic (3%) saline infusion. Sodium is distributed through the whole body water, so the millimoles
+% needed to move the concentration is the total body water times the concentration change desired. THE
+% SODIUM DEFICIT IS THE TOTAL BODY WATER TIMES THE DIFFERENCE BETWEEN THE DESIRED AND THE CURRENT SODIUM
+% — i.e. total body water × (desired sodium − current sodium). It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its three exact rearrangements (each of the
+% other three quantities solved for from the deficit and the remaining two). As with every compute
+% library, a consumer states NO arithmetic: it `import`s this file, binds the total body water and the
+% desired and current sodium from its own byte-provenance decomposition, and asks the engine to APPLY
+% the cited formula on the CPU. Zero math is performed by the model; the engine computes each value
+% EXACTLY (over exact rationals), carrying the formula's citation.
+%
+%     import "sodium-deficit.adj"
+%     observe total_body_water(42)    % "…70 kg man, TBW 0.6 × 70 = 42 L…"   (span cited by the model)
+%     observe desired_sodium(140)      % "…target sodium 140 mmol/L…"          (span cited by the model)
+%     observe current_sodium(120)      % "…sodium 120 mmol/L…"                 (span cited by the model)
+%     ? sodium_deficit(total_body_water, desired_sodium, current_sodium)
+%                                       % engine → 840 (mmol), the sodium deficit
+%
+% There is no reference constant to taint — the deficit is a pure product of the total body water and a
+% difference — so every value the engine returns is exact when the inputs are exact. They COMPOSE and
+% invert cleanly around the worked case total body water = 42 L, desired sodium = 140 mmol/L, current
+% sodium = 120 mmol/L (sodium deficit = 42 × (140 − 120) = 42 × 20 = 840 mmol): the `sodium_deficit` a
+% consumer computes is exactly the value each of the three inverse formulas back-solves to recover its
+% own measured input (42, 140, 120).
+%
+%   sodium_deficit(total_body_water, desired_sodium, current_sodium)
+%       = total_body_water * (desired_sodium - current_sodium)                       % (deficit, mmol)
+%   total_body_water(sodium_deficit, desired_sodium, current_sodium)
+%       = sodium_deficit / (desired_sodium - current_sodium)                         % (solved for TBW)
+%   desired_sodium(sodium_deficit, total_body_water, current_sodium)
+%       = sodium_deficit / total_body_water + current_sodium                         % (solved for desired sodium)
+%   current_sodium(sodium_deficit, total_body_water, desired_sodium)
+%       = desired_sodium - sodium_deficit / total_body_water                         % (solved for current sodium)
+%
+% NOTE ON UNITS AND MODELLING: total body water in litres, sodium concentrations in mmol/L (mEq/L),
+% deficit in millimoles. The cited page writes the total body water as "weight (kg) × 0.6 for men and
+% children or 0.5 for women and older adults"; this library takes the total body water as its bound
+% input (a consumer computes it from weight and sex and binds it), and grounds the deficit relation
+% itself — total body water × (desired sodium − current sodium) — exactly as the page prints it. The
+% deficit only says how much sodium is missing; the correction RATE must be slow (the same page warns
+% against overcorrection, which risks osmotic demyelination).
+%
+% All four formulas are defended by the SAME clause — the quoted sodium-deficit equation — because that
+% one statement (the deficit IS the total body water times desired-minus-current sodium) sanctions the
+% relation read every way. The quote is transcribed verbatim from the StatPearls "Hyponatremia" article
+% on the NCBI Bookshelf (a current, non-archived article), so each `formula` carries the provenance
+% envelope every shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the formula is a verbatim span of the cited page, not asserted from
+% memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each of the four quantities appears BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are the
+% everyday names a decomposer maps onto the canonical term; the trailing comment records the intended
+% unit.
+% ----------------------------------------------------------------------------
+dictionary sodium_deficit_vocab {
+    define total_body_water   : finding  surface "total body water", "TBW"                                        % litres
+    define desired_sodium     : finding  surface "desired sodium", "target sodium", "goal sodium"                 % mmol/L
+    define current_sodium     : finding  surface "current sodium", "serum sodium", "measured sodium", "sodium"    % mmol/L
+    define sodium_deficit     : finding  surface "sodium deficit", "sodium requirement"                           % millimoles
+}
+
+% ----------------------------------------------------------------------------
+% The sodium deficit, all four ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the deficit equation from the StatPearls
+% "Hyponatremia" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an
+% exact expression in the measured quantities (the deficit carries NO constant), so the engine returns
+% each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook sodium_deficit_laws {
+    use sodium_deficit_vocab
+
+    % Sodium deficit — the total body water times desired-minus-current sodium.
+    formula sodium_deficit(total_body_water, desired_sodium, current_sodium) = total_body_water * (desired_sodium - current_sodium)
+        source "Sodium Deficit (mEq/L) = Total Body Water × (Desired Sodium Level − Current Sodium Level)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470386/"
+        trust authoritative
+
+    % Total body water — the same equation solved for the total body water. Defended by the SAME sentence.
+    formula total_body_water(sodium_deficit, desired_sodium, current_sodium) = sodium_deficit / (desired_sodium - current_sodium)
+        source "Sodium Deficit (mEq/L) = Total Body Water × (Desired Sodium Level − Current Sodium Level)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470386/"
+        trust authoritative
+
+    % Desired sodium — the same equation solved for the desired sodium. The SAME sentence.
+    formula desired_sodium(sodium_deficit, total_body_water, current_sodium) = sodium_deficit / total_body_water + current_sodium
+        source "Sodium Deficit (mEq/L) = Total Body Water × (Desired Sodium Level − Current Sodium Level)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470386/"
+        trust authoritative
+
+    % Current sodium — the same equation solved for the current sodium. The SAME sentence, the fourth
+    % reading of the one deficit.
+    formula current_sodium(sodium_deficit, total_body_water, desired_sodium) = desired_sodium - sodium_deficit / total_body_water
+        source "Sodium Deficit (mEq/L) = Total Body Water × (Desired Sodium Level − Current Sodium Level)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470386/"
+        trust authoritative
+}
