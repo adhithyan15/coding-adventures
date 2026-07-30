@@ -14,15 +14,20 @@
   bounded ELF64 program-header validation that rejects `PT_INTERP`. Podman may
   re-exec itself without admitting a dynamic-loader execution trampoline, while constructor
   hooks, `catatonit`, and every other pathname-backed helper in the reviewed
-  flow fail closed. Anonymous executable memfds and executable mappings remain
-  a separately tracked prerequisite before invariant-probe authority.
+  flow fail closed.
+- Closed post-transition anonymous and FD-backed execution by moving the
+  retained Podman handoff to pathname `execve`, closing unlisted descriptors,
+  and installing an inherited amd64 classic-seccomp filter that rejects
+  `execveat`, `memfd_create`, executable mappings, `SHM_EXEC`, `uselib`,
+  `io_uring_*`, x32 syscalls, and architecture mismatch.
 - Kept the isolated worker protocol non-authoritative: it accepts no loader or
   backend source and returns only bounded command results or one closed error;
   the authority-gated parent alone loads the approved backend and binds source
   and authority identities to passing and non-passing receipts.
 - Removed process and pathname-reopen authority from the Linux preflight
-  backend. Its brokered interface now consumes only bounded command results and
-  treats recursive/depth-exhausting runtime JSON as a stable invalid response.
+  backend. Its sole brokered interface now consumes only bounded command
+  results and treats recursive/depth-exhausting runtime JSON as a stable
+  invalid response.
 - Kept the broker scope capability-only: no fixture, adapter, container,
   invariant probe, or Linux trusted-execution readiness is authorized.
 - Added a separately domain-bound exact-loader authority schema with ten fixed

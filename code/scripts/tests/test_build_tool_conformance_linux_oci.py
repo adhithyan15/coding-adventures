@@ -220,6 +220,7 @@ class LinuxOciBackendTests(unittest.TestCase):
             "_prepare_state_root",
             "_binary_digest",
             "_run_command",
+            "preflight_prevalidated",
         ):
             self.assertFalse(hasattr(linux_oci, forbidden))
         signature = inspect.signature(linux_oci.preflight_brokered)

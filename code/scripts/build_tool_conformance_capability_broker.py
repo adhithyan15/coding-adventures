@@ -52,6 +52,33 @@ REQUIRED_CGROUP_CONTROLLERS = frozenset({"cpu", "memory", "pids"})
 PR_SET_PDEATHSIG = 1
 PR_SET_CHILD_SUBREAPER = 36
 PR_SET_NO_NEW_PRIVS = 38
+SECCOMP_SET_MODE_FILTER = 1
+SECCOMP_RET_KILL_PROCESS = 0x80000000
+SECCOMP_RET_ERRNO = 0x00050000
+SECCOMP_RET_ALLOW = 0x7FFF0000
+SECCOMP_DATA_NR_OFFSET = 0
+SECCOMP_DATA_ARCH_OFFSET = 4
+SECCOMP_DATA_ARGS_OFFSET = 16
+AUDIT_ARCH_X86_64 = 0xC000003E
+X32_SYSCALL_BIT = 0x40000000
+BPF_LD_W_ABS = 0x20
+BPF_JMP_JEQ_K = 0x15
+BPF_JMP_JGE_K = 0x35
+BPF_JMP_JSET_K = 0x45
+BPF_RET_K = 0x06
+PROT_EXEC = 0x4
+SHM_EXEC = 0o100000
+SYS_MMAP = 9
+SYS_MPROTECT = 10
+SYS_SHMAT = 30
+SYS_USELIB = 134
+SYS_SECCOMP = 317
+SYS_MEMFD_CREATE = 319
+SYS_EXECVEAT = 322
+SYS_PKEY_MPROTECT = 329
+SYS_IO_URING_SETUP = 425
+SYS_IO_URING_ENTER = 426
+SYS_IO_URING_REGISTER = 427
 CGROUP2_SUPER_MAGIC = 0x63677270
 LANDLOCK_ACCESS_FS_EXECUTE = 1 << 0
 LANDLOCK_CREATE_RULESET_VERSION = 1 << 0
@@ -139,6 +166,22 @@ class _LandlockPathBeneathAttr(ctypes.Structure):
     _fields_ = [
         ("allowed_access", ctypes.c_uint64),
         ("parent_fd", ctypes.c_int32),
+    ]
+
+
+class _SockFilter(ctypes.Structure):
+    _fields_ = [
+        ("code", ctypes.c_uint16),
+        ("jt", ctypes.c_uint8),
+        ("jf", ctypes.c_uint8),
+        ("k", ctypes.c_uint32),
+    ]
+
+
+class _SockFprog(ctypes.Structure):
+    _fields_ = [
+        ("length", ctypes.c_uint16),
+        ("filter", ctypes.POINTER(_SockFilter)),
     ]
 
 
@@ -256,6 +299,34 @@ def _validate_behavior_shape(value: Mapping[str, Any]) -> None:
             "coverage": "pathname_backed_executables",
             "allowed_role": "runtime",
             "default": "deny",
+        }
+        and execution.get("in_memory_exec")
+        == {
+            "kind": "seccomp_bpf",
+            "architecture": "x86_64",
+            "arch_mismatch": "kill_process",
+            "x32_syscalls": "kill_process",
+            "default": "allow",
+            "deny_errno": "EPERM",
+            "close_unlisted_descriptors_before_sandbox": True,
+            "deny_syscalls": [
+                "execveat",
+                "io_uring_enter",
+                "io_uring_register",
+                "io_uring_setup",
+                "memfd_create",
+                "uselib",
+            ],
+            "deny_flagged_syscalls": [
+                {"syscall": "mmap", "argument": 2, "mask": "PROT_EXEC"},
+                {"syscall": "mprotect", "argument": 2, "mask": "PROT_EXEC"},
+                {
+                    "syscall": "pkey_mprotect",
+                    "argument": 2,
+                    "mask": "PROT_EXEC",
+                },
+                {"syscall": "shmat", "argument": 2, "mask": "SHM_EXEC"},
+            ],
         }
         and isinstance(cleanup, Mapping)
         and cleanup.get("kind") == "delegated_cgroup_v2"
@@ -1101,6 +1172,100 @@ def install_execute_landlock(executable_fd: int) -> None:
             os.close(ruleset_fd)
 
 
+def _anonymous_exec_seccomp_instructions() -> tuple[_SockFilter, ...]:
+    """Return the closed amd64 classic-BPF executable-creation policy."""
+
+    deny = SECCOMP_RET_ERRNO | errno.EPERM
+    instructions = [
+        _SockFilter(BPF_LD_W_ABS, 0, 0, SECCOMP_DATA_ARCH_OFFSET),
+        _SockFilter(BPF_JMP_JEQ_K, 1, 0, AUDIT_ARCH_X86_64),
+        _SockFilter(BPF_RET_K, 0, 0, SECCOMP_RET_KILL_PROCESS),
+        _SockFilter(BPF_LD_W_ABS, 0, 0, SECCOMP_DATA_NR_OFFSET),
+        _SockFilter(BPF_JMP_JGE_K, 0, 1, X32_SYSCALL_BIT),
+        _SockFilter(BPF_RET_K, 0, 0, SECCOMP_RET_KILL_PROCESS),
+    ]
+    for number in (
+        SYS_EXECVEAT,
+        SYS_IO_URING_ENTER,
+        SYS_IO_URING_REGISTER,
+        SYS_IO_URING_SETUP,
+        SYS_MEMFD_CREATE,
+        SYS_USELIB,
+    ):
+        instructions.extend(
+            (
+                _SockFilter(BPF_JMP_JEQ_K, 0, 1, number),
+                _SockFilter(BPF_RET_K, 0, 0, deny),
+            )
+        )
+    for number, argument, mask in (
+        (SYS_MMAP, 2, PROT_EXEC),
+        (SYS_MPROTECT, 2, PROT_EXEC),
+        (SYS_PKEY_MPROTECT, 2, PROT_EXEC),
+        (SYS_SHMAT, 2, SHM_EXEC),
+    ):
+        instructions.extend(
+            (
+                _SockFilter(BPF_JMP_JEQ_K, 0, 4, number),
+                _SockFilter(
+                    BPF_LD_W_ABS,
+                    0,
+                    0,
+                    SECCOMP_DATA_ARGS_OFFSET + argument * 8,
+                ),
+                _SockFilter(BPF_JMP_JSET_K, 0, 1, mask),
+                _SockFilter(BPF_RET_K, 0, 0, deny),
+                _SockFilter(BPF_RET_K, 0, 0, SECCOMP_RET_ALLOW),
+            )
+        )
+    instructions.append(_SockFilter(BPF_RET_K, 0, 0, SECCOMP_RET_ALLOW))
+    return tuple(instructions)
+
+
+def _install_seccomp_program(instructions: Sequence[_SockFilter]) -> None:
+    if not instructions or len(instructions) > 65_535:
+        raise OSError(errno.EINVAL, "invalid classic seccomp program")
+    filter_array = (_SockFilter * len(instructions))(*instructions)
+    program = _SockFprog(
+        length=len(instructions),
+        filter=ctypes.cast(filter_array, ctypes.POINTER(_SockFilter)),
+    )
+    _linux_syscall(
+        SYS_SECCOMP,
+        ctypes.c_uint(SECCOMP_SET_MODE_FILTER),
+        ctypes.c_uint(0),
+        ctypes.byref(program),
+    )
+
+
+def install_in_memory_exec_seccomp() -> None:
+    """Deny post-transition anonymous execution and executable mappings."""
+
+    if (
+        not sys.platform.startswith("linux")
+        or os.uname().machine not in {"x86_64", "amd64"}
+    ):
+        raise BrokerUnavailable(
+            "BROKER_EXEC_SANDBOX_UNAVAILABLE",
+            "anonymous execution confinement requires Linux amd64",
+        )
+    try:
+        _prctl(PR_SET_NO_NEW_PRIVS, 1)
+        _install_seccomp_program(_anonymous_exec_seccomp_instructions())
+    except OSError as error:
+        raise BrokerUnavailable(
+            "BROKER_EXEC_SANDBOX_UNAVAILABLE",
+            "seccomp could not deny anonymous executable creation",
+        ) from error
+
+
+def install_command_exec_sandbox(executable_fd: int) -> None:
+    """Install the complete pathname and in-memory execution transition."""
+
+    install_execute_landlock(executable_fd)
+    install_in_memory_exec_seccomp()
+
+
 def _close_unlisted_descriptors(keep: set[int]) -> None:
     if resource is None:
         os._exit(126)
@@ -1140,7 +1305,6 @@ def _child_exec(
             os.close(null_fd)
         for descriptor in command.inherited_fds:
             os.set_inheritable(descriptor, True)
-        install_execute_landlock(command.executable_fd)
         keep = {
             0,
             1,
@@ -1149,10 +1313,9 @@ def _child_exec(
             *command.inherited_fds,
         }
         _close_unlisted_descriptors(keep)
-        if os.execve not in os.supports_fd:
-            os._exit(126)
+        install_command_exec_sandbox(command.executable_fd)
         os.execve(  # nosec B606
-            command.executable_fd,
+            _proc_fd(command.executable_fd),
             command.argv,
             command.environment,
         )
@@ -1323,11 +1486,6 @@ def run_retained_command(
             "BROKER_PLATFORM_UNSUPPORTED",
             "retained-FD capability execution requires Linux",
         )
-    if os.execve not in os.supports_fd:
-        raise BrokerUnavailable(
-            "BROKER_FD_EXEC_UNAVAILABLE",
-            "protected Python must support executable-descriptor execve",
-        )
     _enable_subreaper()
     cgroup = create_command_cgroup(
         cgroup_root_fd,
@@ -1426,7 +1584,7 @@ def run_retained_command(
     ):
         raise BrokerUnavailable(
             "BROKER_EXEC_SANDBOX_UNAVAILABLE",
-            "Landlock could not deny pathname-backed helper execution",
+            "kernel execution sandbox could not be installed",
         )
     return result
 

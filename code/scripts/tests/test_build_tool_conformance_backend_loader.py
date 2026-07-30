@@ -87,16 +87,6 @@ def source_bytes(body: str = "") -> bytes:
         "    effective_uid=None,\n"
         "):\n"
         "    raise AssertionError('loadability validation must not call preflight')\n"
-        "\n"
-        "def preflight_prevalidated(\n"
-        "    identity,\n"
-        "    *,\n"
-        "    runtime_info,\n"
-        "    image_inspect,\n"
-        "    platform_name=None,\n"
-        "    effective_uid=None,\n"
-        "):\n"
-        "    raise AssertionError('loadability validation must not call preflight')\n"
         f"{body}"
     ).encode()
 
@@ -110,7 +100,6 @@ def manifest_bytes(imports: list[str]) -> bytes:
             "CommandResult",
             "LinuxOciUnavailable",
             "preflight_brokered",
-            "preflight_prevalidated",
         ],
     }
     return json.dumps(value, sort_keys=True, separators=(",", ":")).encode() + b"\n"
@@ -258,7 +247,7 @@ class ImportManifestTests(unittest.TestCase):
             b"    pass\n"
             b"class CommandResult:\n"
             b"    pass\n"
-            b"def preflight_prevalidated(identity, *, state_root):\n"
+            b"def preflight_brokered(identity, *, state_root):\n"
             b"    return None\n"
         )
         with self.assertRaises(loader.LoaderUnavailable) as raised:
@@ -309,6 +298,28 @@ class ImportManifestTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, "LOADER_BACKEND_INTERFACE_INVALID")
 
         stable_source = source_bytes()
+        legacy_alias = source_bytes(
+            "\ndef preflight_prevalidated(\n"
+            "    identity, *, runtime_info, image_inspect,\n"
+            "    platform_name=None, effective_uid=None,\n"
+            "):\n"
+            "    return preflight_brokered(\n"
+            "        identity,\n"
+            "        runtime_info=runtime_info,\n"
+            "        image_inspect=image_inspect,\n"
+            "        platform_name=platform_name,\n"
+            "        effective_uid=effective_uid,\n"
+            "    )\n"
+        )
+        with self.assertRaises(loader.LoaderUnavailable) as raised:
+            loader._validate_backend_structure(
+                legacy_alias,
+                loader.parse_import_manifest(
+                    manifest_bytes(["__future__", "dataclasses"])
+                ),
+            )
+        self.assertEqual(raised.exception.code, "LOADER_BACKEND_INTERFACE_INVALID")
+
         for name, malformed in (
             (
                 "error-fields",
@@ -351,7 +362,7 @@ class ImportManifestTests(unittest.TestCase):
             b"    returncode: int\n"
             b"    stdout: bytes\n"
             b"    stderr: bytes\n"
-            b"def preflight_prevalidated(\n"
+            b"def preflight_brokered(\n"
             b"    identity, *, state_root, command_runner, binary_digest,\n"
             b"    platform_name, effective_uid\n"
             b"):\n"
@@ -382,7 +393,7 @@ class ImportManifestTests(unittest.TestCase):
             b"    pass\n"
             b"class CommandResult:\n"
             b"    pass\n"
-            b"def preflight_prevalidated(identity, required_extra, *, state_root):\n"
+            b"def preflight_brokered(identity, required_extra, *, state_root):\n"
             b"    pass\n"
         )
         with self.assertRaises(loader.LoaderUnavailable) as raised:
@@ -591,7 +602,7 @@ class IsolatedLoaderTests(unittest.TestCase):
             b"    pass\n"
             b"class CommandResult:\n"
             b"    pass\n"
-            b"def preflight_prevalidated(identity, *, state_root):\n"
+            b"def preflight_brokered(identity, *, state_root):\n"
             b"    return None\n"
         )
         with self.assertRaises(loader.LoaderUnavailable) as raised:

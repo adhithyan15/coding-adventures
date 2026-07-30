@@ -606,25 +606,6 @@ def preflight_brokered(
     }
 
 
-def preflight_prevalidated(
-    identity: dict[str, Any],
-    *,
-    runtime_info: CommandResult,
-    image_inspect: CommandResult,
-    platform_name: str | None = None,
-    effective_uid: int | None = None,
-) -> dict[str, Any]:
-    """Consume mandatory broker results for an already validated identity."""
-
-    return preflight_brokered(
-        identity,
-        runtime_info=runtime_info,
-        image_inspect=image_inspect,
-        platform_name=platform_name,
-        effective_uid=effective_uid,
-    )
-
-
 def preflight(
     identity: dict[str, Any],
     *,
@@ -637,7 +618,7 @@ def preflight(
     """Validate an identity, then consume mandatory broker results."""
 
     validate_identity(identity, identity_schema)
-    return preflight_prevalidated(
+    return preflight_brokered(
         identity,
         runtime_info=runtime_info,
         image_inspect=image_inspect,

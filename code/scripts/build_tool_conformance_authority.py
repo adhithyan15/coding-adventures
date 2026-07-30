@@ -912,7 +912,6 @@ def authorize_backend_loader(
                 "CommandResult",
                 "LinuxOciUnavailable",
                 "preflight_brokered",
-                "preflight_prevalidated",
             ]
         ):
             raise bootstrap.ConformanceError(
@@ -1123,7 +1122,6 @@ def authorize_capability_broker(
                 "CommandResult",
                 "LinuxOciUnavailable",
                 "preflight_brokered",
-                "preflight_prevalidated",
             ],
         }:
             raise bootstrap.ConformanceError(
