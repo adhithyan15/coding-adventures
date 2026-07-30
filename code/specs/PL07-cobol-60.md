@@ -792,17 +792,20 @@ CHARACTERS phrase is enabled this rung; a MULTI-item or MULTI-counter `CHARACTER
 and a `CHARACTERS` half inside a combined `TALLYING … REPLACING`, stay later rungs
 rejected identically on both engines.
 
-Still deferred (identically on both engines): a **combined** `TALLYING … REPLACING`
-whose LEADING half carries a region (the standalone forms are supported, but the
-combined caller re-imposes the deferral), and a multi-character / non-ASCII region
-delimiter.
+Now supported (identically on both engines): a **combined** `TALLYING … REPLACING`
+whose LEADING half (tally and/or replace) carries a region — the combined exec/emit
+compose the SAME standalone LEADING+region routines in ISO tally-then-replace order,
+so the combination is byte-identical to the oracle. Still deferred: a
+multi-character / non-ASCII region delimiter and a `CHARACTERS` half in the combined
+form.
 
 The grammar deliberately accepts the fuller `INSPECT` surface — a MULTI-item or
 MULTI-counter `CHARACTERS` tally (the single-item single-counter `CHARACTERS` form is
-now supported — see "`FOR CHARACTERS`" above), a region on the LEADING half of
-the **combined** form (the STANDALONE `FOR LEADING`/`REPLACING LEADING` regions, the
-lone `REPLACING ALL` and `CONVERTING` regions, and a region on each `ALL` half of the
-combined form, ARE supported — see those sections below), and a
+now supported — see "`FOR CHARACTERS`" above; a region on the LEADING half of the
+**combined** form is now supported too, alongside the STANDALONE
+`FOR LEADING`/`REPLACING LEADING` regions, the lone `REPLACING ALL` and `CONVERTING`
+regions, and a region on each `ALL` half of the combined form — see those sections
+below), and a
 multi-character region
 delimiter — so the reader/compiler reject each as a clean "later rung" error
 rather than a parse failure. A multi-character / figurative / numeric /
@@ -1051,18 +1054,17 @@ form, remain later rungs — only the SINGLE-item lone-REPLACING path gains supp
 Deferred as clean later rungs (accepted by the grammar, rejected at read/compile
 time): `REPLACING CHARACTERS BY x` with a `{BEFORE|AFTER}` region or a non-ASCII
 literal replacement (see just above), `REPLACING FIRST` (`FIRST` does not parse as a
-replace keyword — it is deferred at parse time), a `{BEFORE|AFTER}` region on the
-LEADING half of the **combined** form, a
-multi-character region delimiter, a multi-item `REPLACING` list carrying a
+replace keyword — it is deferred at parse time),
+a multi-character region delimiter, a multi-item `REPLACING` list carrying a
 `LEADING`/`CHARACTERS`/`FIRST` item (a `{BEFORE|AFTER}` region on each item of a
 multi-item list is now supported — see the per-item-region section just below),
 **several** replace items in the **combined** `TALLYING … REPLACING` form, a multi-character /
 figurative / wider / numeric search or replacement, and a numeric/group source.
 (A single-clause multi-item `REPLACING ALL` list is now supported — see just above.
 A `REPLACING LEADING` inside the combined `TALLYING … REPLACING` form, and a
-`{BEFORE|AFTER}` region on each `ALL` half of the combined form, are supported — see
-the combined section below; the STANDALONE `REPLACING LEADING … {BEFORE|AFTER}` is
-supported as described just above.)
+`{BEFORE|AFTER}` region on each half — `ALL` **or** `LEADING` — of the combined form,
+are supported — see the combined section below; the STANDALONE
+`REPLACING LEADING … {BEFORE|AFTER}` is supported as described just above.)
 
 ### Multi-item `REPLACING` with a per-item `{BEFORE|AFTER}` region (follow-up rung, v0.61.0 / v0.57.0)
 
@@ -1473,18 +1475,29 @@ before it is substituted. Worked (tally region only): `"AB0CD0"` TALLYING
 `"0A0B0"` TALLYING `FOR ALL "0" BEFORE "B"` → region `"0A0"` → `2`, then
 `REPLACING ALL "0" BY "*" AFTER "B"` → region `"0"` (trailing) → `"0A0B*"`. Worked
 (both not-found): `"0A0"` TALLYING `FOR ALL "0" AFTER "Z"` → empty → `0`, then
-`REPLACING ALL "0" BY "*" BEFORE "Z"` → whole source → `"*A*"`. This rung is scoped
-SMALL: `FOR ALL` / `REPLACING ALL` only, and a **single-character** region delimiter
-per half. A region on a combined `FOR LEADING` / `REPLACING LEADING` half, and a
-multi-character region delimiter, remain clean later rungs rejected identically on
-both engines. The STANDALONE `FOR LEADING`/`REPLACING LEADING … {BEFORE|AFTER}` forms
-are now supported (see their sections above), so the shared readers/parsers no longer
-reject a `LEADING` half carrying a region; instead the COMBINED caller re-imposes the
-deferral (the oracle's combined `read_statement` arm and the compiler's
-`allow_leading_region = false` on both emitters), with the same messages the readers
-used to raise. The shared single-delimiter check still rejects a wider-than-one region
-delimiter. No grammar change was needed — the grammar already accepts a region on each
-phrase.
+`REPLACING ALL "0" BY "*" BEFORE "Z"` → whole source → `"*A*"`. That rung was scoped
+SMALL: `FOR ALL` / `REPLACING ALL` only.
+
+**`BEFORE`/`AFTER` region on a combined LEADING half (this rung).** The last
+combined-form deferral is now LIFTED: a **LEADING** half (tally and/or replace) may
+ALSO carry its own `{BEFORE|AFTER}` region. This is a pure reject-lift — BOTH engines
+already own the full LEADING+region machinery per half (the standalone
+`FOR LEADING`/`REPLACING LEADING … {BEFORE|AFTER}` routines), and the combined
+exec/emit already COMPOSE those same routines in ISO order (tally FIRST over the
+ORIGINAL bytes, THEN replace). Only the combined caller's re-imposed guards deferred
+the combination: the oracle's combined `read_statement` arm dropped its two
+`leading && *_region.is_some()` rejects, and the compiler now passes
+`allow_leading_region = true` to both `emit_inspect_tallying` and
+`emit_inspect_replacing` (previously `false`). A LEADING half with a region anchors
+its run at the window start, exactly as the standalone form does. Worked (LEADING
+tally + region): `"00A0B"` TALLYING `FOR LEADING "0" BEFORE "A"` → window `"00"` →
+`counter += 2`, then region-less `REPLACING ALL "0" BY "*"` → `"**A*B"`. Worked
+(LEADING replace + region): `"00A0B"` TALLYING `FOR ALL "0"` → `3`, then
+`REPLACING LEADING "0" BY "*" BEFORE "A"` → window `"00"` → `"**A0B"`. A
+multi-character region delimiter and a `CHARACTERS` half remain clean later rungs
+rejected identically on both engines. The shared single-delimiter check still rejects
+a wider-than-one region delimiter. No grammar change was needed — the grammar already
+accepts a region on each phrase.
 
 ### `INSPECT … CONVERTING` (first rung)
 

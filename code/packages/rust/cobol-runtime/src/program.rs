@@ -276,9 +276,11 @@ pub enum Stmt {
     /// a SINGLE-character region delimiter `x`: positions OUTSIDE the window keep
     /// their original character; the window is computed over the ORIGINAL source
     /// with the same leftmost-first-index and BEFORE→whole / AFTER→empty not-found
-    /// asymmetry the count window uses. `REPLACING LEADING` with a region, a multi-
-    /// character region delimiter, and a region on the combined `TALLYING …
-    /// REPLACING` form are later rungs.
+    /// asymmetry the count window uses. A multi-character region delimiter is a later
+    /// rung. A `LEADING` half carrying a region inside the combined `TALLYING …
+    /// REPLACING` form is now SUPPORTED (the combined exec composes the standalone
+    /// LEADING+region routines in ISO tally-then-replace order — see the combined
+    /// statement below).
     InspectReplacing {
         source: String,
         search: Operand,
@@ -506,10 +508,13 @@ pub enum Stmt {
     /// regions are INDEPENDENT (different kinds, different delimiters, either/both/
     /// neither present). Because tallying does not mutate the source, BOTH windows
     /// are computed over the SAME original source — exactly as the lone forms do.
-    /// A single-character region delimiter is supported this rung on `FOR ALL` /
-    /// `REPLACING ALL` only; `FOR LEADING`/`REPLACING LEADING` with a region and a
-    /// multi-character region delimiter remain later rungs (rejected at read/exec
-    /// time by the shared readers, identically to the lone forms).
+    /// A single-character region delimiter is supported on BOTH `FOR ALL` /
+    /// `REPLACING ALL` AND (as of this rung) `FOR LEADING`/`REPLACING LEADING`: a
+    /// LEADING half carrying a region anchors its run at the window start, composing
+    /// the SAME standalone LEADING+region routines the lone forms use — byte-identical
+    /// to the oracle. Only a multi-character region delimiter (and combined `FOR
+    /// CHARACTERS`) remain later rungs, rejected at read/exec time by the shared
+    /// readers, identically to the lone forms.
     InspectTallyReplace {
         source: String,
         counter: String,
@@ -1418,13 +1423,14 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     // Each half independently parses its OWN optional `{BEFORE|AFTER}
                     // x` region from its own phrase child (the TALLYING half's region
                     // rides on `inspect_tallying`, the REPLACING half's on
-                    // `inspect_replacing`). The shared readers now ACCEPT a LEADING half
+                    // `inspect_replacing`). The shared readers ACCEPT a LEADING half
                     // carrying a region (the STANDALONE `FOR LEADING …`/`REPLACING
-                    // LEADING … BEFORE/AFTER` forms are supported this rung), so the
-                    // combined form re-imposes the deferral itself just below: a
-                    // combined LEADING half PLUS a region is still a later rung. (A
-                    // combined `FOR ALL`/`ALL` half WITH a region, and a LEADING half
-                    // WITHOUT one, both remain supported.)
+                    // LEADING … BEFORE/AFTER` forms are supported), and this rung lifts
+                    // the last combined-form deferral: a combined LEADING half PLUS a
+                    // region is now supported too, since the exec composes the same
+                    // standalone LEADING+region routines in ISO tally-then-replace
+                    // order. (A combined `FOR ALL`/`ALL` half WITH a region, and a
+                    // LEADING half WITHOUT one, were already supported.)
                     let (counter, delim, leading, tally_characters, tally_region) =
                         read_inspect_tally_all(verb)?;
                     // The shared reader now ACCEPTS `FOR CHARACTERS` (standalone), but the
@@ -1450,23 +1456,16 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     // `search` at the start of the source). It rides along into
                     // the statement, independent of the TALLYING half's `leading`.
                     //
-                    // Re-impose the combined-form deferral the shared readers no longer
-                    // enforce: a LEADING half carrying a `{BEFORE|AFTER}` region is a
-                    // later rung ONLY in the combined form. The exact messages match
-                    // the standalone rejects these readers used to raise, so both
-                    // engines and both forms diagnose it identically.
-                    if leading && tally_region.is_some() {
-                        return Err(RuntimeError::Unsupported(
-                            "INSPECT TALLYING … FOR LEADING with a BEFORE/AFTER region is a later rung"
-                                .into(),
-                        ));
-                    }
-                    if repl_leading && replace_region.is_some() {
-                        return Err(RuntimeError::Unsupported(
-                            "INSPECT REPLACING LEADING with a BEFORE/AFTER region is a later rung"
-                                .into(),
-                        ));
-                    }
+                    // A LEADING half carrying a `{BEFORE|AFTER}` region is now
+                    // SUPPORTED in the combined form (this rung lifts the old
+                    // deferral). No re-imposition is needed: `exec_inspect_tally_replace`
+                    // composes the SAME standalone routines the lone TALLYING /
+                    // REPLACING statements use — `inspect_tally(…, tally_leading, false,
+                    // tally_region)` first (over the untouched original bytes), then
+                    // `inspect_replace(…, replace_leading, replace_region)`. Those
+                    // routines already anchor a LEADING run at its window start, so the
+                    // combined form is byte-identical to the oracle with no exec change.
+                    // (Only combined `FOR CHARACTERS` stays a later rung, rejected above.)
                     Ok(Stmt::InspectTallyReplace {
                         source,
                         counter,

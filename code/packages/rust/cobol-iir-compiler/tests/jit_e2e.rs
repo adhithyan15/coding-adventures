@@ -7785,48 +7785,46 @@ fn inspect_combined_region_delimiter_at_position_zero_empty_before() {
 }
 
 #[test]
-fn inspect_combined_for_leading_with_a_region_is_a_later_rung() {
-    // `FOR LEADING` carrying a region on the combined TALLYING half is still deferred
-    // — rejected identically on both engines. The STANDALONE `FOR LEADING …
-    // BEFORE/AFTER` form is now supported, so the shared reader accepts it; the
-    // combined caller re-imposes the deferral, keeping the combination a later rung.
-    let src = wrap(
+fn inspect_combined_for_leading_before_region_is_now_supported() {
+    // (Case 1) `FOR LEADING` carrying a region on the combined TALLYING half is NOW
+    // SUPPORTED (this rung lifts the old deferral). It composes the SAME standalone
+    // `FOR LEADING … BEFORE/AFTER` routine the lone form uses. Over "00A0B", the
+    // TALLYING window BEFORE "A" is "00" and the LEADING run anchored at the window
+    // start is 2 → C = 002. The region-less REPLACING ALL "0" then rewrites EVERY "0"
+    // (all three) → "**A*B". The tally's window-limited 2 vs. the replace's all-three
+    // is the proof the LEADING half's region genuinely bounds only the count.
+    let out = assert_matches_oracle(&wrap(
         &["01  S  PIC X(5) VALUE \"00A0B\".", "01  C  PIC 9(3) VALUE 0."],
         &[
             "INSPECT S TALLYING C FOR LEADING \"0\" BEFORE \"A\"",
             "    REPLACING ALL \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
             "STOP RUN.",
         ],
-    );
-    assert!(run_cobol(&src).is_err(), "oracle must reject FOR LEADING + region on the combined form");
-    assert!(
-        compile_source(&src, "e2e").is_err(),
-        "compiler must reject FOR LEADING + region on the combined form"
-    );
+    ));
+    assert_eq!(out, "002\n**A*B\n");
 }
 
 #[test]
-fn inspect_combined_replacing_leading_with_a_region_is_a_later_rung() {
-    // `REPLACING LEADING` carrying a region on the combined REPLACING half is still
-    // deferred — the exact analogue on the substitution side. The standalone form is
-    // now supported, so the combined caller re-imposes the deferral; rejected on both
-    // engines.
-    let src = wrap(
+fn inspect_combined_replacing_leading_before_region_is_now_supported() {
+    // (Case 3, BEFORE twin) `REPLACING LEADING` carrying a region on the combined
+    // REPLACING half is NOW SUPPORTED — the substitution-side analogue. Over "00A0B",
+    // the region-less TALLYING FOR ALL "0" counts all three "0"s → C = 003; the
+    // REPLACING LEADING "0" BEFORE "A" then rewrites only the LEADING run inside the
+    // window "00" → "**A0B" (the "0" at index 3 is outside the window and no longer
+    // part of a leading run). Both halves reuse the standalone LEADING+region routines.
+    let out = assert_matches_oracle(&wrap(
         &["01  S  PIC X(5) VALUE \"00A0B\".", "01  C  PIC 9(3) VALUE 0."],
         &[
             "INSPECT S TALLYING C FOR ALL \"0\"",
             "    REPLACING LEADING \"0\" BY \"*\" BEFORE \"A\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
             "STOP RUN.",
         ],
-    );
-    assert!(
-        run_cobol(&src).is_err(),
-        "oracle must reject REPLACING LEADING + region on the combined form"
-    );
-    assert!(
-        compile_source(&src, "e2e").is_err(),
-        "compiler must reject REPLACING LEADING + region on the combined form"
-    );
+    ));
+    assert_eq!(out, "003\n**A0B\n");
 }
 
 #[test]
@@ -8043,6 +8041,209 @@ fn inspect_combined_replacing_leading_no_run() {
         ],
     ));
     assert_eq!(out, "002\nX00X\n");
+}
+
+// INSPECT … TALLYING/REPLACING where a LEADING half ALSO carries a BEFORE/AFTER
+// region — the rung this file targets. Both engines already own the full
+// LEADING+region machinery per half (the STANDALONE `FOR LEADING …`/`REPLACING
+// LEADING … BEFORE/AFTER` routines); the combined exec/emit already COMPOSE those
+// routines in ISO order (tally FIRST over the ORIGINAL bytes, THEN replace). This
+// rung merely lifted the combined-form deferral guard, so the combination is now
+// byte-identical to the oracle. The count anchors at its window start; the replace
+// anchors at ITS (independent) window start.
+
+#[test]
+fn inspect_combined_for_leading_after_region_anchors_the_count() {
+    // (Case 2) AFTER-window anchoring on the TALLYING LEADING half. Over "0X00A",
+    // the TALLYING window AFTER "X" is "00A" (indices 2..5); the LEADING run of "0"
+    // anchored at THAT window start is 2 → C = 002. The leading "0" at index 0 is
+    // BEFORE the window and must NOT contribute — the anchoring point. REPLACING ALL
+    // "0" (no region) then rewrites every "0" (indices 0, 2, 3) → "*X**A".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0X00A\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"0\" AFTER \"X\"",
+            "    REPLACING ALL \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n*X**A\n");
+}
+
+#[test]
+fn inspect_combined_replacing_leading_after_region_anchors_the_run() {
+    // (Case 3) AFTER-window anchoring on the REPLACING LEADING half. Over "0X00A",
+    // the region-less TALLYING FOR ALL "0" counts all three "0"s → C = 003. The
+    // REPLACING LEADING "0" AFTER "X" then rewrites only the LEADING run inside the
+    // window "00A" (indices 2..5) → "0X**A"; the leading "0" at index 0 is outside
+    // the window and is left untouched.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0X00A\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\"",
+            "    REPLACING LEADING \"0\" BY \"*\" AFTER \"X\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "003\n0X**A\n");
+}
+
+#[test]
+fn inspect_combined_both_halves_leading_independent_regions() {
+    // (Case 4) BOTH halves LEADING, each with its OWN independent region. Over
+    // "00A00B00": the TALLYING FOR LEADING "0" BEFORE "A" counts the prefix run in
+    // window "00" (indices 0..2) → C = 002; the REPLACING LEADING "0" AFTER "B"
+    // rewrites the leading run in window "00" (indices 6..8) → "00A00B**". The two
+    // windows are disjoint and the two leading flags are threaded independently, yet
+    // both compose the same standalone LEADING+region routines.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(8) VALUE \"00A00B00\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"0\" BEFORE \"A\"",
+            "    REPLACING LEADING \"0\" BY \"*\" AFTER \"B\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n00A00B**\n");
+}
+
+#[test]
+fn inspect_combined_leading_region_tally_sees_original_bytes_before_replace() {
+    // (Case 5) tally-then-replace ORDERING under LEADING+region with delim == search.
+    // Over "0000A", the TALLYING FOR LEADING "0" BEFORE "A" counts the run in window
+    // "0000" → C = 004, and the REPLACING LEADING "0" BEFORE "A" rewrites that same
+    // run → "****A". If the replace had run FIRST, the source would be "****A" and the
+    // subsequent tally would count 0 — so C = 004 (not 0) is the proof the tally saw
+    // the ORIGINAL bytes before the replace overwrote them, exactly the ISO order.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0000A\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"0\" BEFORE \"A\"",
+            "    REPLACING LEADING \"0\" BY \"*\" BEFORE \"A\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "004\n****A\n");
+}
+
+#[test]
+fn inspect_combined_leading_region_filler_between_source_and_counter() {
+    // (Case 7) CROSS-PRODUCER binding: source `S`, an intervening `FILLER`, and the
+    // counter `C` bind by NAME, not by storage adjacency. A FILLER sits between them
+    // in WORKING-STORAGE; the combined LEADING+region statement still resolves S and C
+    // correctly and produces the Case-1 result (C = 002, S = "**A*B").
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"00A0B\".",
+            "01  FILLER PIC X(3) VALUE \"ZZZ\".",
+            "01  C  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"0\" BEFORE \"A\"",
+            "    REPLACING ALL \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n**A*B\n");
+}
+
+#[test]
+fn inspect_combined_leading_region_all_both_halves_still_supported() {
+    // (Case 6, regression) An ALREADY-supported combined form — ALL+region on BOTH
+    // halves, no LEADING — is untouched by this rung. Over "0A0B0" with DISTINCT
+    // window delimiters: tally FOR ALL "0" BEFORE "B" → window "0A0" → 2; replace ALL
+    // "0" AFTER "B" → window "0" (index 4) → only the trailing "0" → "0A0B*".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"B\"",
+            "    REPLACING ALL \"0\" BY \"*\" AFTER \"B\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n0A0B*\n");
+}
+
+#[test]
+fn inspect_combined_leading_no_region_still_supported() {
+    // (Case 6, regression) A combined LEADING half WITHOUT a region — already
+    // supported before this rung — stays byte-identical. Over "000X0": FOR LEADING
+    // "0" counts the leading run 3 (stops at 'X') → C = 003; REPLACING ALL "0"
+    // rewrites every "0" → "***X*".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"000X0\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"0\" REPLACING ALL \"0\" BY \"*\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "003\n***X*\n");
+}
+
+#[test]
+fn inspect_combined_leading_region_with_characters_is_still_a_later_rung() {
+    // (Case 6, regression) A combined `FOR CHARACTERS` tally stays a later rung even
+    // now that combined LEADING+region is supported — rejected identically on both
+    // engines. (The LEADING lift did NOT relax the CHARACTERS deferral.)
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"00A0B\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR CHARACTERS BEFORE \"A\"",
+            "    REPLACING LEADING \"0\" BY \"*\" AFTER \"A\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must still reject combined FOR CHARACTERS");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must still reject combined FOR CHARACTERS"
+    );
+}
+
+#[test]
+fn inspect_combined_leading_region_non_ascii_shares_the_reconstruction_chip() {
+    // (Case 8) NON-ASCII: the LEADING+region MATCHING and COUNTING are byte-safe — a
+    // multi-byte "é" never equals an ASCII delimiter/search byte, so the tally and the
+    // window selection agree on both engines. BUT the REPLACING half RECONSTRUCTS the
+    // whole field with per-position `str_slice`, which cannot slice a multi-byte char,
+    // so the compiler traps — EXACTLY the PRE-EXISTING reconstruction chip every
+    // REPLACING lowering shares (task_396ba6f6). This rung introduces NO new
+    // divergence: the combined LEADING+region path traps identically. The oracle
+    // iterates `char`s and succeeds char-based; that gap is the documented chip, not
+    // anything new here. `PIC X(5) VALUE "00Xé"` stores "00Xé " (5 chars / 6 bytes),
+    // with "é" strictly OUTSIDE every window.
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"00Xé\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"0\" BEFORE \"X\"",
+            "    REPLACING LEADING \"0\" BY \"*\" BEFORE \"X\".",
+            "STOP RUN.",
+        ],
+    );
+    // Compiler traps in the reconstruction (pre-existing byte-vs-char chip)…
+    assert!(
+        run_on_jit_result(&src).is_err(),
+        "compiled combined LEADING+region reconstruction must trap on a non-ASCII source (shared chip)"
+    );
+    // …while the oracle iterates chars and succeeds — the documented, pre-existing gap.
+    assert!(
+        run_cobol(&src).is_ok(),
+        "oracle succeeds char-based on the non-ASCII source (the pre-existing chip, unchanged)"
+    );
 }
 
 #[test]
