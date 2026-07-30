@@ -1,0 +1,91 @@
+% ============================================================================
+% ideal-body-weight.adj — the ideal body weight (Devine formula)
+% (IBW = base + 2.3 × (height in inches − 60), base 50 male / 45.5 female) in the ADJ standard library.
+% ============================================================================
+% The ideal-body-weight entry of the *clinical* track — the reference weight for a given height, the
+% starting point for weight-based drug dosing, ventilator tidal-volume setting, and nutrition. The
+% Devine formula takes a base weight at 5 feet (60 inches) and adds a fixed 2.3 kg for every inch of
+% height above 60. THE IDEAL BODY WEIGHT IS THE BASE (50 kg FOR MALES, 45.5 kg FOR FEMALES) PLUS 2.3
+% TIMES THE NUMBER OF INCHES THE HEIGHT EXCEEDS 60 — i.e. base + 2.3 × (height in inches − 60). It ships
+% as an importable, byte-provenanced, PARAMETERIZED `formula` for each sex, plus the height a male ideal
+% weight implies. As with every compute library, a consumer states NO arithmetic: it `import`s this
+% file, binds the height (and sex) from its own byte-provenance decomposition, and asks the engine to
+% APPLY the cited formula on the CPU. Zero math is performed by the model; the engine computes each
+% value EXACTLY (over exact rationals), carrying the formula's citation.
+%
+%     import "ideal-body-weight.adj"
+%     observe height(70)   % "…height 70 inches…"   (span cited by the model)
+%     ? ideal_body_weight_male(height)     % engine → 73    (kg), the male ideal body weight
+%     ? ideal_body_weight_female(height)   % engine → 68.5  (kg), the female ideal body weight
+%
+% This library is the natural COMPANION of adjusted-body-weight (write-once-use-many): a consumer
+% computes the ideal body weight HERE from height and sex, then feeds it as the `ideal_body_weight`
+% input of the adjusted-body-weight formula to obtain the obese-dosing weight. The SAME cited source
+% states both equations, so the two libraries share one provenance origin.
+%
+% The 50 / 45.5 bases, the 2.3 per-inch factor and the 60-inch reference are the EXACT defined constants
+% of the cited formula (not measurements); the formulas are otherwise exact expressions over the height,
+% so every value the engine returns is exact — 2.3 is exactly 23/10 and 45.5 is exactly 91/2. They
+% COMPOSE and invert cleanly around the worked case height = 70 inches (male IBW = 50 + 2.3 × (70 − 60) =
+% 50 + 2.3 × 10 = 50 + 23 = 73 kg; female IBW = 45.5 + 23 = 68.5 kg): the height the `height` formula
+% back-solves from a male ideal weight of 73 is exactly the 70 the forward formula started from.
+%
+%   ideal_body_weight_male(height) = 50 + 2.3 * (height - 60)                     % (male IBW, kg)
+%   ideal_body_weight_female(height) = 45.5 + 2.3 * (height - 60)                 % (female IBW, kg)
+%   height(ideal_body_weight_male) = (ideal_body_weight_male - 50) / 2.3 + 60     % (solved for height from the male IBW)
+%
+% NOTE ON UNITS AND MODELLING: height in inches, ideal body weight in kilograms. The formula applies for
+% heights at or above 60 inches (5 feet); the base weight IS the ideal weight at exactly 60 inches. The
+% female inverse is the exact mirror of the male inverse — (female IBW − 45.5) / 2.3 + 60 — and is
+% omitted here only to keep one canonical `height` result; a consumer needing it rearranges the female
+% forward the same way. This library computes the reference weight; it does not itself choose a dose.
+%
+% All three formulas are defended by the SAME clause — the quoted Devine equation, stating both sex
+% bases — because that one statement (IBW IS 50-or-45.5 plus 2.3 per inch over 60) sanctions the
+% relation read every way. The quote is transcribed verbatim from the same peer-reviewed obese-dosing
+% study on PubMed Central (NCBI) that grounds the adjusted-body-weight library, a primary, re-fetchable
+% source, so each `formula` carries the provenance envelope every shipped grounded clause carries; the
+% linter rejects an unsourced one. (See feedback_nothing_human_authored — the formula, including its
+% 50 / 45.5 / 2.3 / 60 constants, is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `height` is the shared input; `ideal_body_weight_male` and `ideal_body_weight_female` are
+% the two sex-specific results, and the male result is also the input of the height inverse. The
+% `surface` lists are the everyday names a decomposer maps onto the canonical term; the trailing comment
+% records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary ideal_body_weight_vocab {
+    define height                     : finding  surface "height", "height in inches", "stature"                          % inches
+    define ideal_body_weight_male     : finding  surface "ideal body weight male", "male ideal body weight", "IBW male"   % kilograms
+    define ideal_body_weight_female   : finding  surface "ideal body weight female", "female ideal body weight", "IBW female"  % kilograms
+}
+
+% ----------------------------------------------------------------------------
+% The Devine ideal body weight, both sexes plus the male inverse. Each is a named, importable, reusable
+% formula over its formal parameters, bound at apply time, and each carries the Devine equation from the
+% cited obese-dosing study on PubMed Central (a quote is required on a shipped formula). Each is an
+% exact expression in the height and the cited 50 / 45.5 / 2.3 / 60 constants, so the engine returns
+% each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook ideal_body_weight_laws {
+    use ideal_body_weight_vocab
+
+    % Male ideal body weight — 50 kg plus 2.3 kg per inch of height over 60.
+    formula ideal_body_weight_male(height) = 50 + 2.3 * (height - 60)
+        source "45.5 + (height in inches >60 × 2.3) for females and 50 + (height in inches >60 × 2.3) for males"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC6354309/"
+        trust authoritative
+
+    % Female ideal body weight — 45.5 kg plus 2.3 kg per inch of height over 60. Same clause, female base.
+    formula ideal_body_weight_female(height) = 45.5 + 2.3 * (height - 60)
+        source "45.5 + (height in inches >60 × 2.3) for females and 50 + (height in inches >60 × 2.3) for males"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC6354309/"
+        trust authoritative
+
+    % Height — the male equation solved for the height. The SAME clause, read backwards.
+    formula height(ideal_body_weight_male) = (ideal_body_weight_male - 50) / 2.3 + 60
+        source "45.5 + (height in inches >60 × 2.3) for females and 50 + (height in inches >60 × 2.3) for males"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC6354309/"
+        trust authoritative
+}
