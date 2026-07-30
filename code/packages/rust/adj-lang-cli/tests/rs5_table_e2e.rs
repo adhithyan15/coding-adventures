@@ -1757,6 +1757,53 @@ fn shipped_thermal_conductivity_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// Shipped table — reference/heat-flux-density-conversions.adj resolves the exact NIST SP 811 B.9
+// density-of-heat-flow-rate factor and abstains on a wrong-dimension unit. Heat flux density is power
+// per area (W/m²): the exact boldface factor is calorieth per square centimetre second → 4.184 E+04 =
+// 41840 (the thermochemical calorie is exactly 4.184 J and cm²→m² is an exact ×10⁴). The `pound` is a
+// MASS unit (it converts to the kilogram, a DIFFERENT quantity), so the heat-flux-density lookup for it
+// must abstain, catching the heat-flux/mass confusion directly, not mere absence of a value. (Heat flux
+// density is power per area — distinct from DENSITY OF HEAT, J/m² (energy per area), from THERMAL
+// CONDUCTIVITY, W/(m·K), and from plain POWER, W.)
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_heat_flux_density_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_heatfluxdensity");
+    let src = stdlib().join("reference/heat-flux-density-conversions.adj");
+    std::fs::copy(&src, dir.join("heat-flux-density-conversions.adj"))
+        .expect("copy shipped heat-flux-density-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"heat-flux-density-conversions.adj\"\n\
+         ? heat_flux_density_to_watt_per_square_metre(calorie_th_per_square_centimetre_second, $v)\n\
+         ? heat_flux_density_to_watt_per_square_metre(pound, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table (boldface =
+    // exact; the thermochemical calorie is exactly 4.184 J and cm²→m² is an exact ×10⁴, so
+    // calth/(cm²·s) = 41840 W/m², exactly).
+    assert!(
+        out.contains("\"v\":\"41840\""),
+        "calorieth per square centimetre second = 4.184 E+04 W/m^2: {out}"
+    );
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `pound` is a MASS unit (it converts to the kilogram, a DIFFERENT quantity), so this
+    // heat-flux-density table has no row for it — the engine abstains rather than mis-converting a mass
+    // unit as if it were a heat-flux-density unit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 

@@ -1,0 +1,25 @@
+% ============================================================================
+% heat-flux-density-conversions.query.adj — worked lookups over the NIST heat-flux-density →
+% watt-per-square-metre table.
+% ============================================================================
+% The shape a consumer produces to convert a heat flux density given in a non-SI unit into SI: it
+% `import`s the grounded table and asks the engine to bind the factor. No arithmetic and no factor is
+% stated by the consumer; the engine returns the cell WITH the table's NIST citation as its proof, on
+% the CPU.
+%
+%   ? heat_flux_density_to_watt_per_square_metre(calorie_th_per_square_centimetre_second, $v)   % 41840
+%
+% And the dimension guard: a unit of a DIFFERENT quantity has no row, so the lookup ABSTAINS rather
+% than mis-converting across dimensions. The "pound" is a MASS unit (it converts to the kilogram), NOT
+% a heat-flux-density unit — so it is caught rather than silently mis-converted:
+%
+%   ? heat_flux_density_to_watt_per_square_metre(pound, $v)   % abstains (pound is mass → kilogram)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli heat-flux-density-conversions.query.adj
+% ============================================================================
+
+import "heat-flux-density-conversions.adj"
+
+? heat_flux_density_to_watt_per_square_metre(calorie_th_per_square_centimetre_second, $v)   % expect 41840 (exact NIST SP 811 B.9 factor)
+? heat_flux_density_to_watt_per_square_metre(pound, $v)                                     % expect abstain (mass unit, wrong dimension)
