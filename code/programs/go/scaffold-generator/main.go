@@ -44,6 +44,7 @@ import (
 	"sort"
 	"strings"
 	"time"
+	"unicode"
 
 	clibuilder "github.com/adhithyan15/coding-adventures/code/packages/go/cli-builder"
 )
@@ -55,9 +56,53 @@ import (
 // validLanguages lists all supported target languages.
 var validLanguages = []string{"python", "go", "ruby", "typescript", "rust", "elixir", "perl", "lua", "swift", "haskell", "java", "kotlin", "c", "cpp"}
 
+const requiredCapabilitiesSchemaURL = "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json"
+
 // kebabCaseRe validates that a package name is kebab-case:
 // lowercase letters and digits, segments separated by single hyphens.
 var kebabCaseRe = regexp.MustCompile(`^[a-z][a-z0-9]*(-[a-z0-9]+)*$`)
+
+func isSafeDescription(description string) bool {
+	if strings.Contains(description, "*/") {
+		return false
+	}
+	for _, char := range description {
+		if unicode.IsControl(char) || char == '\u2028' || char == '\u2029' {
+			return false
+		}
+	}
+	return true
+}
+
+type requiredCapabilitiesManifest struct {
+	Schema        string               `json:"$schema"`
+	Version       int                  `json:"version"`
+	Package       string               `json:"package"`
+	Capabilities  []requiredCapability `json:"capabilities"`
+	Justification string               `json:"justification"`
+}
+
+type requiredCapability struct {
+	Category      string `json:"category"`
+	Action        string `json:"action"`
+	Target        string `json:"target"`
+	Justification string `json:"justification"`
+}
+
+func requiredCapabilitiesJSON(language, packageName string) (string, error) {
+	manifest := requiredCapabilitiesManifest{
+		Schema:        requiredCapabilitiesSchemaURL,
+		Version:       1,
+		Package:       language + "/" + packageName,
+		Capabilities:  []requiredCapability{},
+		Justification: "Pure computation. No filesystem, network, process, or environment access needed.",
+	}
+	encoded, err := json.MarshalIndent(manifest, "", "  ")
+	if err != nil {
+		return "", fmt.Errorf("encoding required capabilities manifest: %w", err)
+	}
+	return string(encoded) + "\n", nil
+}
 
 func intFromFloatFlag(value float64) (int, error) {
 	if math.IsNaN(value) || math.IsInf(value, 0) {
@@ -1779,6 +1824,10 @@ final class %sTests: XCTestCase {
 func generateHaskell(targetDir, pkgName, description, layerCtx string, directDeps, orderedDeps []string) error {
 	moduleName := toCamelCase(pkgName)
 	qualifiedModuleName := "CodingAdventures." + moduleName
+	capabilityManifest, err := requiredCapabilitiesJSON("haskell", pkgName)
+	if err != nil {
+		return err
+	}
 
 	cabal := fmt.Sprintf(`cabal-version: 3.0
 name:          %s
@@ -1863,7 +1912,7 @@ spec =
 		"test/" + moduleName + "Spec.hs":             packageSpecHs,
 		"BUILD":                                      "cabal test\n",
 		"BUILD_windows":                              "echo \"haskell support not enabled in windows CI yet -- skipping\"\n",
-		"required_capabilities.json":                 "{\"capabilities\": []}\n",
+		"required_capabilities.json":                 capabilityManifest,
 	}
 
 	for path, content := range files {
@@ -2622,8 +2671,8 @@ func run(specPath string, argv []string, stdout, stderr io.Writer) int {
 		// Validate description: no newlines or control characters that could
 		// corrupt generated source files (e.g. Swift block-comment terminators
 		// or JSON escape sequences).
-		if strings.ContainsAny(description, "\n\r") {
-			fmt.Fprintf(stderr, "scaffold-generator: description must not contain newline characters\n")
+		if !isSafeDescription(description) {
+			fmt.Fprintf(stderr, "scaffold-generator: description must be one printable line without control characters or structural comment delimiters\n")
 			return 1
 		}
 

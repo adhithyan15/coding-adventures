@@ -1,1 +1,7 @@
-{"capabilities": []}
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "haskell/http-core",
+  "capabilities": [],
+  "justification": "Pure bounded in-memory HTTP value parsing and formatting with no operating-system access."
+}

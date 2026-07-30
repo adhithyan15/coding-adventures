@@ -429,13 +429,49 @@
       "depends_on": ["haskell-http1"],
       "branch": "codex/haskell-scaffold-capability-schema",
       "pr_number": null,
-      "notes": "Selected after PR #9290 merged because this generator-level prerequisite prevents the remaining Haskell event-loop and brotli ports from reproducing invalid capability metadata. The Go scaffold generator still emits the legacy {capabilities: []} shape for Haskell, and existing Haskell packages retain it. Generate full schema-v1 package/version/justification metadata, add golden/schema tests, and backfill affected Haskell packages in one metadata wave."
+      "notes": "Selected after PR #9290 merged because this generator-level prerequisite prevents the remaining Haskell event-loop and brotli ports from reproducing invalid capability metadata. Repair the Go, TypeScript, and native Haskell scaffold paths; add golden and shared-schema tests; reconcile optional legacy manifests with explicit scaffold-time profiles; and backfill all ten existing invalid Haskell manifests, including truthful nonempty Conduit profiles that require Layer 5 review."
+    },
+    {
+      "id": "haskell-capability-policy-audit",
+      "title": "Audit effective capability profiles across every Haskell package and program",
+      "status": "pending",
+      "depends_on": ["haskell-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the Haskell manifest backfill. Absence remains an effective zero-capability legacy profile, but several Haskell directories without explicit manifests perform filesystem, process, environment, console, FFI, or network operations. Inventory all 203 packages and three programs, add truthful nonempty manifests where required, and obtain the capability-approval evidence required by the security contract."
+    },
+    {
+      "id": "haskell-scaffold-convention-reconciliation",
+      "title": "Reconcile TypeScript Haskell scaffolds with canonical Cabal and Hspec conventions",
+      "status": "pending",
+      "depends_on": ["haskell-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the capability-schema audit. The TypeScript generator now emits valid Haskell capability metadata, but its older Haskell template still uses prefixed Cabal library names and a placeholder non-Hspec test layout. Bring it to exact parity with the reviewed Go/native Haskell conventions in a separate focused tranche."
+    },
+    {
+      "id": "scaffold-description-injection-hardening",
+      "title": "Harden scaffold descriptions across generated metadata and source comments",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the Haskell scaffold security review. This tranche hardens the Go, TypeScript, and native Haskell generators against unsafe description controls, including */ comment termination where relevant, but the Dart, Elixir, Lua, Python, Ruby, and Rust generators plus every remaining template context still need a complete audit before repository-wide correct-by-construction conformance can be claimed."
+    },
+    {
+      "id": "capability-schema-category-action-constraints",
+      "title": "Encode valid category-action pairs in capability schemas",
+      "status": "pending",
+      "depends_on": ["haskell-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during final Haskell capability review. The taxonomy defines category-specific actions, but required_capabilities.schema.json and agent_manifest.schema.json currently use independent global enums and therefore accept nonsensical pairs such as env:listen or stdin:delete. Add conditional or oneOf constraints, shared conformance fixtures, and matching loader/analyzer tests across every enforcement backend."
     },
     {
       "id": "haskell-high-consensus-tail",
       "title": "Close Haskell event-loop and brotli",
       "status": "pending",
-      "depends_on": ["haskell-http1"],
+      "depends_on": ["haskell-http1", "haskell-scaffold-capability-schema"],
       "branch": null,
       "pr_number": null,
       "notes": "Keep the event loop generic and portable; use byte-exact Brotli conformance vectors."

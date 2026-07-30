@@ -1755,6 +1755,12 @@ export function generateHaskell(
   directDeps: string[],
   orderedDeps: string[],
 ): void {
+  if (/[\p{Cc}\p{Zl}\p{Zp}]/u.test(description) || description.includes("*/")) {
+    throw new Error(
+      "description must be a single printable line without control characters or structural comment delimiters",
+    );
+  }
+
   const pkgNameHaskell = `coding-adventures-${pkgName}`;
   const moduleName = toCamelCase(pkgName);
 
@@ -1794,15 +1800,14 @@ test-suite spec
 
 -- | ${description}
 -- ${layerCtx}
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+version :: String
+version = "0.1.0"
 `;
 
-  const specHs = `import ${moduleName}
+const specHs = `import ${moduleName}
 
 main :: IO ()
-main = do
-    putStrLn "Test suite not yet implemented."
+main = pure ()
 `;
 
   let cabalProject = `packages: .\n`;
@@ -1817,6 +1822,22 @@ main = do
   writeFile(path.join(targetDir, "src", `${moduleName}.hs`), libHs);
   writeFile(path.join(targetDir, "test", "Spec.hs"), specHs);
   writeFile(path.join(targetDir, "BUILD"), build);
+  writeFile(
+    path.join(targetDir, "required_capabilities.json"),
+    JSON.stringify(
+      {
+        $schema:
+          "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+        version: 1,
+        package: `haskell/${pkgName}`,
+        capabilities: [],
+        justification:
+          "Pure computation. No filesystem, network, process, or environment access needed.",
+      },
+      null,
+      2,
+    ) + "\n",
+  );
 }
 
 // -------------------------------------------------------------------------
@@ -2174,6 +2195,12 @@ export function scaffoldOne(
   output: (msg: string) => void = (msg) => process.stdout.write(msg + "\n"),
   errOutput: (msg: string) => void = (msg) => process.stderr.write(msg + "\n"),
 ): void {
+  if (/[\p{Cc}\p{Zl}\p{Zp}]/u.test(description) || description.includes("*/")) {
+    throw new Error(
+      "description must be a single printable line without control characters or structural comment delimiters",
+    );
+  }
+
   const baseCategory = pkgType === "library" ? "packages" : "programs";
   const baseDir = path.join(repoRoot, "code", baseCategory, lang);
   const dName = dirName(pkgName, lang);

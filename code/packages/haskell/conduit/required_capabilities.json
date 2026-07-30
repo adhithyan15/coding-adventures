@@ -1,1 +1,50 @@
-["rust", "haskell", "cargo", "cabal"]
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "haskell/conduit",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "conduit_capi",
+      "justification": "Calls the reviewed Rust Conduit C ABI through GHC foreign import ccall bindings."
+    },
+    {
+      "category": "ffi",
+      "action": "load",
+      "target": "conduit_capi",
+      "justification": "Loads the conduit_capi dynamic library through the operating-system loader at process startup."
+    },
+    {
+      "category": "net",
+      "action": "listen",
+      "target": "*:*",
+      "justification": "The public bind API opens caller-selected TCP listeners through conduit_capi."
+    },
+    {
+      "category": "net",
+      "action": "connect",
+      "target": "127.0.0.1:*",
+      "justification": "End-to-end tests connect to the loopback listener with raw HTTP sockets."
+    },
+    {
+      "category": "net",
+      "action": "dns",
+      "target": "127.0.0.1",
+      "justification": "End-to-end tests resolve the numeric loopback host before connecting to the listener."
+    },
+    {
+      "category": "time",
+      "action": "sleep",
+      "target": "*",
+      "justification": "End-to-end tests use bounded thread delays while starting and stopping the server."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Error callbacks write caught handler exceptions to the standard error output stream."
+    }
+  ],
+  "justification": "Haskell FFI wrapper over conduit_capi that can bind TCP listeners; its end-to-end tests connect on loopback and wait for server transitions, and error handling writes caught exceptions to standard error."
+}

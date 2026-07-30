@@ -19,6 +19,11 @@ All notable changes to this program will be documented in this file.
 
 ### Fixed
 
+- Haskell capability metadata now uses the complete shared schema-v1 document,
+  with golden output and shared-schema regression coverage instead of the
+  legacy one-field JSON object.
+- Description validation now rejects Unicode controls, line separators, and
+  block-comment termination before any generated source is written.
 - Haskell scaffolds now follow the repository's current plain Cabal package
   naming, `CodingAdventures.*` module layout, Hspec wiring, `-Wall`, explicit
   Windows skip, empty capability metadata, and plain `cabal test` convention.
@@ -35,9 +40,12 @@ All notable changes to this program will be documented in this file.
 
 ### Added
 
-- `generateCommonFiles` now generates `required_capabilities.json` alongside README.md and CHANGELOG.md
-- New packages scaffold with empty capabilities and a "pure computation" default justification
-- `TestGenerateCommonFiles` now verifies the generated `required_capabilities.json` is valid JSON with all required fields
+- Language templates generate `required_capabilities.json` alongside their
+  package-specific metadata.
+- New schema-supported packages scaffold with empty capabilities and a "pure
+  computation" default justification.
+- Template tests verify generated capability JSON includes the required
+  package identity and fields.
 
 ## [1.0.0] - 2026-03-21
 

@@ -12,6 +12,10 @@ It is powered by [cli-builder](../../../packages/typescript/cli-builder/) --
 the entire command-line interface is defined in a JSON spec file, and this
 program contains only the business logic.
 
+Generated Haskell libraries include a schema-v1
+`required_capabilities.json` with an explicit pure-computation profile and a
+package identity derived from the on-disk directory.
+
 ## Why It Exists
 
 The lessons.md file documents 12+ recurring categories of CI failures caused
@@ -23,8 +27,9 @@ by agents hand-crafting packages inconsistently:
 - Ruby require ordering (deps before own modules)
 - Rust workspace Cargo.toml not updated
 
-This tool eliminates those failures. Run it, get a package that compiles,
-lints, and passes tests. Then fill in the business logic.
+This tool incrementally eliminates those failures as each language template
+completes the scaffold contract. Remaining cross-template exceptions are
+tracked in the parity backlog.
 
 ## Usage
 

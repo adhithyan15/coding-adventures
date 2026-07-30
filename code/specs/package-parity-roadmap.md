@@ -124,7 +124,7 @@ buckets:
 The loop must not start by attempting 10,416 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
-The July 29 lane audit is:
+The July 30 lane audit is:
 
 | Established lane | Packages present | High-consensus gaps | Rust/Python-core coverage |
 |---|---:|---:|---:|
@@ -133,14 +133,14 @@ The July 29 lane audit is:
 | Elixir | 276 | 0 | 69.3% |
 | F# | 195 | 0 | 47.5% |
 | Go | 292 | 0 | 72.4% |
-| Haskell | 202 | 3 | 48.6% |
+| Haskell | 203 | 2 | 48.8% |
 | Java | 126 | 58 | 31.0% |
 | Kotlin | 125 | 58 | 31.0% |
 | Lua | 251 | 0 | 63.3% |
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 957 | 0 | 100% |
+| Rust | 959 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -793,8 +793,23 @@ and the existing-package backfill.
 
 The selected thirty-third Haskell slice is that scaffold capability-schema
 repair. It is a generator-level prerequisite for the remaining `event-loop`
-and `brotli` ports: new Haskell packages must receive schema-valid v1 manifests
-instead of propagating the legacy one-field shape.
+and `brotli` ports: the Go, TypeScript, and native Haskell scaffold paths must
+emit schema-valid v1 manifests instead of propagating the legacy one-field
+shape or omitting explicit scaffold metadata. The backfill covers all ten
+existing invalid Haskell manifests. Eight are explicit pure-computation
+profiles; `conduit` and `conduit-hello` carry proposed FFI, network, time,
+environment, and standard-output declarations under the canonical taxonomy,
+pending the Layer 5 review required for nonempty profiles.
+
+That audit also discovered four independently owned follow-ups:
+`haskell-capability-policy-audit` classifies the effective profiles of every
+Haskell package and program that currently relies on an absent legacy
+manifest; `haskell-scaffold-convention-reconciliation` brings the older
+TypeScript Haskell Cabal/Hspec templates to full canonical parity; and
+`scaffold-description-injection-hardening` closes structural delimiter
+injection across all generated metadata and source-comment contexts.
+`capability-schema-category-action-constraints` encodes the taxonomy's valid
+category-action pairs in both schemas and every enforcement backend.
 
 Recommended family order:
 

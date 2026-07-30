@@ -4,11 +4,16 @@ A CLI tool that generates CI-ready package scaffolding for the coding-adventures
 monorepo across 14 languages: Python, Go, Ruby, TypeScript, Rust, Elixir, Perl,
 Lua, Swift, Haskell, Java, Kotlin, C, and C++.
 
+Haskell scaffolds include a schema-v1 `required_capabilities.json` whose package
+identity matches the generated directory. The manifest starts with an explicit
+empty capability profile for the pure library template.
+
 ## Why
 
 The lessons.md documents 12+ recurring CI failure categories caused by agents
-hand-crafting packages inconsistently. This tool eliminates those failures by
-producing correct-by-construction packages.
+hand-crafting packages inconsistently. This tool aims to eliminate those
+failures as each language template completes the scaffold contract; remaining
+cross-template exceptions are tracked in the parity backlog.
 
 ## Usage
 

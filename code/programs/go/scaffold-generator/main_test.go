@@ -850,6 +850,43 @@ func TestGenerateHaskellUsesRepositoryConventions(t *testing.T) {
 	if string(build) != "cabal test\n" {
 		t.Errorf("BUILD = %q, want plain cabal test", build)
 	}
+
+	capabilityPath := filepath.Join(tmpDir, "required_capabilities.json")
+	capabilities, err := os.ReadFile(capabilityPath)
+	if err != nil {
+		t.Fatalf("cannot read required_capabilities.json: %v", err)
+	}
+	golden, err := os.ReadFile(
+		filepath.Join("..", "..", "..", "specs", "fixtures", "scaffold-generator", "haskell_library_required_capabilities.json"),
+	)
+	if err != nil {
+		t.Fatalf("cannot read Haskell capability golden file: %v", err)
+	}
+	if string(capabilities) != string(golden) {
+		t.Errorf(
+			"required_capabilities.json did not match golden output\n--- got ---\n%s--- want ---\n%s",
+			capabilities,
+			golden,
+		)
+	}
+}
+
+func TestDescriptionSafety(t *testing.T) {
+	for _, description := range []string{
+		"safe\nnext-field",
+		"safe\ttab",
+		"safe\x00nul",
+		"safe\u0085next-field",
+		"safe\u2028next-line",
+		"safe */ injected",
+	} {
+		if isSafeDescription(description) {
+			t.Errorf("isSafeDescription(%q) = true, want false", description)
+		}
+	}
+	if !isSafeDescription("A printable single-line description.") {
+		t.Error("isSafeDescription rejected a printable single-line description")
+	}
 }
 
 func TestReadHaskellDepsUsesCabalProjectSiblingPaths(t *testing.T) {
