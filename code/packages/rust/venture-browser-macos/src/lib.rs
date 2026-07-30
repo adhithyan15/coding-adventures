@@ -356,6 +356,8 @@ pub fn run_for_smoke(_start_url: &str, _seconds: f64) -> Result<(), MacBrowserEr
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[cfg(target_vendor = "apple")]
     use window_core::ModifiersState;
 
     #[cfg(target_vendor = "apple")]
