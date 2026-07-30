@@ -1,0 +1,28 @@
+% ============================================================================
+% homa-ir.query.adj — worked applications of the HOMA-IR insulin resistance index.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a metabolic workup into a fasting insulin and a
+% fasting glucose: it `import`s the grounded formulabook, `observe`s the two values, and asks the engine to
+% APPLY the cited HOMA-IR formula. No arithmetic is stated by the consumer; the engine computes each value
+% EXACTLY (over exact rationals) and carries the article's citation as its proof, on the CPU, with zero
+% model calls.
+%
+% Worked case (fasting insulin = 9 μU/ml, fasting glucose = 5 mmol/l): HOMA-IR = 9 × 5 / 22.5 = 45 / 22.5 =
+% 2 — at the upper limit of normal (insulin resistance is roughly HOMA-IR ≥ 2). Each query fixes two of
+% the three quantities and asks the engine to recover the third; every answer is exact and the inversions
+% COMPOSE (each recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli homa-ir.query.adj
+% ============================================================================
+
+import "homa-ir.adj"
+
+% --- HOMA-IR: the index the fasting insulin and glucose imply (expect 2). ---------------------------
+observe fasting_insulin(9)
+observe fasting_glucose(5)
+? homa_ir(fasting_insulin, fasting_glucose)   % expect 2
+
+% --- Inverse: the fasting insulin a HOMA-IR of 2 implies at the same glucose (expect 9). ------------
+observe homa_ir(2)
+? fasting_insulin(homa_ir, fasting_glucose)   % expect 9
