@@ -4,7 +4,7 @@ chapter: 25
 type: word
 headword: يوم
 gloss: "day" — a true pan-Semitic word, cognate with Hebrew yom (as in Yom Kippur), and possibly tracing all the way back to an ancient word for "sun"
-concept_tag: AR-TIME-DAY
+concept_tag: TIME-DAY
 prerequisites: [AR-C08-al-ahad-al-khamis]
 sounds: [waw-glide, meem]
 roots: [y-w-m]
