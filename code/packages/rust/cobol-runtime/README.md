@@ -160,8 +160,10 @@ over `"aaXaab"` counts the run in the window `"aab"` — 2 — not the `"aa"` be
 NUMBER OF CHARACTER POSITIONS in the region window, ADDed to the counter: with no region
 that is `length(source)`, with a region it is the window length of the SAME window
 `FOR ALL` uses, inheriting the identical not-found asymmetry — `BEFORE x` absent ⇒ whole
-source, `AFTER x` absent ⇒ empty ⇒ 0; a MULTI-item / MULTI-counter `CHARACTERS` and a
-`CHARACTERS` half in a combined `TALLYING … REPLACING` stay later rungs); the **multi-item** `INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q] …`
+source, `AFTER x` absent ⇒ empty ⇒ 0; a MULTI-item `CHARACTERS` — one CHARACTERS item
+ALONGSIDE other items under ONE counter — is now supported, see the multi-item form below;
+a MULTI-counter `CHARACTERS` and a `CHARACTERS` half in a combined `TALLYING … REPLACING`
+stay later rungs); the **multi-item** `INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q] …`
 (TWO OR MORE `FOR ALL` items sharing ONE counter, **each item with its OWN optional
 `{BEFORE|AFTER}` window** — ONE left-to-right pass in which, at each position, the items
 are tried in WRITTEN ORDER and the FIRST item that BOTH contains the position in its window
@@ -181,8 +183,18 @@ only while its run is alive, and AFTER the tally decision at each position EVERY
 run is updated INDEPENDENTLY of which item tallied (a run breaks at the FIRST in-window
 mismatch, so a matching char claimed by a higher-priority item keeps the run alive), e.g.
 `"aabab"` `FOR LEADING "a" ALL "b"` = 4 and `"aaébb"` `FOR LEADING "a" ALL "b"` = 4 on both
-engines; this rung's multi path is single-char with no `CHARACTERS`, under EXACTLY
-ONE counter — a single tally item's full capabilities are unchanged); the **multi-counter**
+engines; a list item may also be `CHARACTERS` (this rung lifts the multi-item `CHARACTERS`
+reject) — the always-eligible catch-all that carries NO delimiter and never tracks a run,
+contributing 1 at every in-window position not already claimed by an EARLIER item in
+written order, so `FOR ALL "A" CHARACTERS` over a mixed ASCII string totals the source
+length and `FOR CHARACTERS ALL "A"` shadows the ALL item (a `{BEFORE|AFTER}` region narrows
+the catch-all like any item); a `CHARACTERS` item counts POSITIONS, so a non-ASCII source
+INSIDE a CHARACTERS window is the pre-existing byte-vs-char count chip (this char-based
+oracle vs the byte-based compiler), the SAME chip as the single `FOR CHARACTERS` form,
+kept co-total in tests by placing the multi-byte char outside every window; this rung's
+multi path is single-char, under EXACTLY ONE counter — a single tally item's full
+capabilities are unchanged, and the MULTI-counter/combined forms still reject
+`CHARACTERS`); the **multi-counter**
 `INSPECT source TALLYING c1 FOR ALL a [{BEFORE|AFTER} p] [ALL b …] c2 FOR ALL d [{BEFORE|AFTER} q] …`
 (TWO OR MORE `tally_for` groups, each with its OWN counter and one-or-more single-char
 `FOR ALL` delimiters, and **each delimiter item may carry its OWN optional `{BEFORE|AFTER}`

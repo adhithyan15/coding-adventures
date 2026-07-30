@@ -829,10 +829,12 @@ The count is byte-identical on both engines because both derive the window from 
 SAME shared helper: the oracle's `inspect_tally` sets `count = window.len()` (skipping
 `single_delim_char` entirely — there is no delimiter), and the compiler emits
 `cnt = end - start` (a `sub`) when a region is present or `cnt = str_len(S)` when it
-is not, skipping the per-character match loop. Only the **single-item single-counter**
-CHARACTERS phrase is enabled this rung; a MULTI-item or MULTI-counter `CHARACTERS`,
-and a `CHARACTERS` half inside a combined `TALLYING … REPLACING`, stay later rungs
-rejected identically on both engines.
+is not, skipping the per-character match loop. This rung enables the **single-item
+single-counter** CHARACTERS phrase; a MULTI-item `CHARACTERS` (one CHARACTERS item
+ALONGSIDE other items under ONE counter) is enabled by a LATER rung — see "A
+`CHARACTERS` item in a multi-item list" below. A MULTI-counter `CHARACTERS` and a
+`CHARACTERS` half inside a combined `TALLYING … REPLACING` stay later rungs rejected
+identically on both engines.
 
 Now supported (identically on both engines): a **combined** `TALLYING … REPLACING`
 whose LEADING half (tally and/or replace) carries a region — the combined exec/emit
@@ -973,12 +975,46 @@ fixed-width string — with an ordered `cmp_eq` chain per position that bumps an
 the rest on the first match) and an `inspect_tally_multi` CST reader counting the SAME
 `tally_item` children, so the two engines' accept/reject sets are co-total.
 
-This multi-item path is scoped SMALL: only `ALL` items, each a single-char delimiter, with
-**no** `{BEFORE|AFTER}` region and **no** `LEADING`/`CHARACTERS`, under EXACTLY ONE counter.
-A multi-item list carrying any of those, and the combined `TALLYING … REPLACING` form with
-several tally items, remain later rungs (rejected identically on both engines). A single
-tally item keeps the full single-item path (LEADING, region) unchanged. **Several counters**
-(more than one `tally_for`) is now supported — see the next rung.
+This multi-item path started scoped SMALL (only `ALL` items, single-char delimiters, no
+region, no `LEADING`/`CHARACTERS`, under ONE counter), but follow-up rungs have since lifted
+that scope IN PLACE: a per-item `{BEFORE|AFTER}` region, a `LEADING` item, and — this rung —
+a `CHARACTERS` item are all now admitted (see "A `CHARACTERS` item in a multi-item list"
+below). What REMAINS deferred: the combined `TALLYING … REPLACING` form with several tally
+items stays a later rung (rejected identically on both engines). A single tally item keeps
+the full single-item path unchanged. **Several counters** (more than one `tally_for`) is
+supported by the next rung — that MULTI-counter path stays `ALL`-only and keeps rejecting
+`LEADING`/`CHARACTERS`.
+
+**A `CHARACTERS` item in a multi-item list (follow-up rung).** A `CHARACTERS` item may now
+appear ALONGSIDE other items in a single-counter multi-item `TALLYING` list — e.g.
+`TALLYING C FOR ALL "A" CHARACTERS`, `TALLYING C FOR CHARACTERS ALL "," BEFORE "X"`. The
+former reject in `read_inspect_tally_multi` / `inspect_tally_multi` ("INSPECT TALLYING …
+FOR CHARACTERS is a later rung") is lifted for THIS path only. In the same ordered
+first-match-per-position pass (the one #65 extended to mix `ALL` and `LEADING`), a
+`CHARACTERS` item is the **always-eligible catch-all**: at each source position it is
+eligible iff the position is in its window (`in_win`) — NO delimiter compare, NO
+active-run tracking, and it carries NO delimiter operand. So it contributes 1 for every
+in-window position not already claimed by an EARLIER item in written order. Written order
+is honoured: `FOR ALL "A" CHARACTERS` over a mixed ASCII string totals the source length
+(ALL "A" claims its positions, CHARACTERS the rest), while `FOR CHARACTERS ALL "A"`
+(CHARACTERS first) claims every position so the ALL item never fires. An optional
+`{BEFORE|AFTER} z` region narrows the catch-all's window exactly like any other item, via
+the SAME `region_window` / `emit_inspect_region_window` machinery.
+
+The item type gains an explicit kind so the illegal "LEADING and also CHARACTERS" state is
+unrepresentable: the oracle's `TallyMultiLeadingItem` becomes
+`(Option<Operand>, TallyMultiKind, Option<Region>)` (`TallyMultiKind` = `All`/`Leading`/
+`Characters`; the delimiter is `None` for `Characters`), and the compiler mirrors it with a
+local `TallyKind`. `exec_inspect_tally_multi` / `emit_inspect_tally_multi` resolve a
+`CHARACTERS` item's window only (no `single_delim_char` / `single_delim_code`), gate its
+eligibility on `in_win` alone, and skip it in the leading active-run update. The
+MULTI-counter path and the combined `TALLYING … REPLACING` form KEEP rejecting `CHARACTERS`
+(those gates live in `read_inspect_tally_counters` / the combined caller). **Byte-vs-char
+count chip (task_396ba6f6, unchanged):** a `CHARACTERS` item counts POSITIONS, and the
+oracle iterates CHAR positions while the compiler iterates BYTE positions, so a non-ASCII
+source INSIDE a CHARACTERS window diverges — the SAME chip as the single `FOR CHARACTERS`
+form, deliberately NOT fixed here (positive tests are ASCII; a non-ASCII test is kept
+co-total by placing the multi-byte char outside every window).
 
 **Multiple `TALLYING` counters (follow-up rung).**
 `INSPECT source TALLYING c1 FOR ALL a [ALL b …] c2 FOR ALL d [ALL e …] …` — TWO OR MORE

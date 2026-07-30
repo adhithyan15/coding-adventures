@@ -6,7 +6,7 @@ use crate::picture::Picture;
 use crate::program::{
     ArithOp, Cond, ConvertOperand, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program,
     RefIndex, Region, RegionKind, RelOp, ReplaceMultiLeadingItem, Stmt, TallyCounterGroup,
-    TallyMultiLeadingItem, ValueSpec, WhenValue,
+    TallyMultiKind, TallyMultiLeadingItem, ValueSpec, WhenValue,
 };
 use crate::value::{add, div, move_into_char, move_into_numeric, mul, pow, round, sub, Decimal};
 use std::collections::HashMap;
@@ -1714,14 +1714,17 @@ impl Machine {
     /// item/region delimiter *operand* stays the pre-existing `single_delim_char`
     /// vs `single_delim_code` chip, identical across single- and multi-item tallying.)
     ///
-    /// Every delimiter (and every region delimiter) is validated with the SAME
-    /// `single_delim_char` check the single-item tally uses (a multi-character/figurative/
-    /// wider/numeric operand is a later rung); ALL of them — and every window — are
-    /// resolved BEFORE counting so an invalid operand aborts without touching the
+    /// Every `ALL`/`LEADING` delimiter (and every region delimiter) is validated with the
+    /// SAME `single_delim_char` check the single-item tally uses (a multi-character/
+    /// figurative/wider/numeric operand is a later rung); ALL of them — and every window —
+    /// are resolved BEFORE counting so an invalid operand aborts without touching the
     /// counter. A numeric/group source is rejected by [`Self::inspect_alnum_source`], and
-    /// a non-integer/signed/non-numeric counter by the validation below. The read-time
-    /// reader (`read_inspect_tally_multi`) has already ruled out CHARACTERS items, so here
-    /// every item is a single-char `ALL` OR `LEADING` delimiter with an optional region.
+    /// a non-integer/signed/non-numeric counter by the validation below. A `CHARACTERS`
+    /// item (now admitted in a multi-item list) carries NO delimiter — it is the
+    /// always-eligible catch-all, eligible at every in-window position — so it skips
+    /// `single_delim_char` and never touches the run-flag update. (The MULTI-COUNTER and
+    /// COMBINED `TALLYING … REPLACING` forms still reject `CHARACTERS`; those gates live
+    /// elsewhere.)
     fn exec_inspect_tally_multi(
         &mut self,
         source: &str,
@@ -1756,34 +1759,50 @@ impl Machine {
         // operand aborts with the counter untouched.
         let chars: Vec<char> = self.items[sidx].storage.chars().collect();
 
-        // Resolve every (delimiter char, leading flag, [start, end) window) FIRST. Reading
-        // all items (and computing their windows over `chars`) before touching the counter
-        // means an invalid operand aborts cleanly, exactly like the single-item path
-        // resolves both its delimiter and its window first. A region-less item's window is
-        // the whole source (`region_window(None) == (0, len)`).
-        let resolved: Vec<(char, bool, usize, usize)> = items
+        // Resolve every (optional delimiter char, kind, [start, end) window) FIRST.
+        // Reading all items (and computing their windows over `chars`) before touching the
+        // counter means an invalid operand aborts cleanly, exactly like the single-item
+        // path resolves both its delimiter and its window first. A region-less item's
+        // window is the whole source (`region_window(None) == (0, len)`). A `CHARACTERS`
+        // item has NO delimiter — its delimiter char is `None`, so we skip
+        // `single_delim_char` for it (there is nothing to validate) and resolve only its
+        // window; it never participates in the run-flag update below.
+        let resolved: Vec<(Option<char>, TallyMultiKind, usize, usize)> = items
             .iter()
-            .map(|(delim, leading, region)| {
-                let d = self.single_delim_char(delim, "INSPECT")?;
+            .map(|(delim, kind, region)| {
+                let d = match delim {
+                    Some(op) => Some(self.single_delim_char(op, "INSPECT")?),
+                    None => None,
+                };
                 let (start, end) = self.region_window(&chars, region.as_ref())?;
-                Ok((d, *leading, start, end))
+                Ok((d, *kind, start, end))
             })
             .collect::<Result<_, RuntimeError>>()?;
 
         // ONE left-to-right pass with a per-item `active` run flag (only consulted for
         // `LEADING` items, all init `true`). At each position the FIRST ELIGIBLE item in
-        // WRITTEN ORDER contributes 1: an `ALL` item is eligible iff its window contains
-        // the position AND its delimiter matches; a `LEADING` item ALSO requires its run
-        // still active (every prior IN-WINDOW position equalled its delimiter). This
-        // realises first-match-per-position for a pure count (a position matched by
+        // WRITTEN ORDER contributes 1:
+        //   * `ALL`        — eligible iff its window contains the position AND its
+        //                    delimiter matches the char;
+        //   * `LEADING`    — as `ALL`, and ALSO requires its run still active (every prior
+        //                    IN-WINDOW position equalled its delimiter);
+        //   * `CHARACTERS` — the always-eligible catch-all: eligible iff its window
+        //                    contains the position (NO delimiter compare). It counts every
+        //                    in-window position not already claimed by an earlier item.
+        // This realises first-match-per-position for a pure count (a position matched by
         // several/duplicate items is still counted once).
         let mut active = vec![true; resolved.len()];
         let mut count: usize = 0;
         for (i, &c) in chars.iter().enumerate() {
             // Tally decision: first eligible item wins, count once, stop.
-            for (k, &(d, leading, start, end)) in resolved.iter().enumerate() {
+            for (k, &(d, kind, start, end)) in resolved.iter().enumerate() {
                 let in_win = start <= i && i < end;
-                if in_win && c == d && (!leading || active[k]) {
+                let eligible = match kind {
+                    TallyMultiKind::All => in_win && d == Some(c),
+                    TallyMultiKind::Leading => in_win && d == Some(c) && active[k],
+                    TallyMultiKind::Characters => in_win,
+                };
+                if eligible {
                     count += 1;
                     break;
                 }
@@ -1792,9 +1811,16 @@ impl Machine {
             // tallied: a run breaks at the FIRST in-window position whose char is NOT its
             // delimiter (a matching char keeps the run alive even if a higher-priority item
             // claimed the position; positions outside the window neither begin nor break
-            // the run — anchoring the run at the window start).
-            for (k, &(d, leading, start, end)) in resolved.iter().enumerate() {
-                if leading && start <= i && i < end && c != d {
+            // the run — anchoring the run at the window start). `ALL`/`CHARACTERS` items
+            // have no run and are skipped (a `CHARACTERS` item's delimiter is `None`, so
+            // `d == Some(c)` would never hold anyway, but the kind guard makes that
+            // explicit and byte-mirrors the compiler's active-update pass).
+            for (k, &(d, kind, start, end)) in resolved.iter().enumerate() {
+                if matches!(kind, TallyMultiKind::Leading)
+                    && start <= i
+                    && i < end
+                    && d != Some(c)
+                {
                     active[k] = false;
                 }
             }

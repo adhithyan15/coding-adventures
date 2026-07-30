@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.80.0 — INSPECT TALLYING with a CHARACTERS item in a multi-item list — 2026-07-30
+
+- **`INSPECT source TALLYING counter FOR … CHARACTERS …`** — a `CHARACTERS` item ALONGSIDE
+  other items in a SINGLE-counter multi-item TALLYING list — is now accepted. The former
+  `read_inspect_tally_multi` reject ("INSPECT TALLYING … FOR CHARACTERS is a later rung")
+  is lifted for this path only. A lone `FOR CHARACTERS` was already supported (#60); this
+  admits it as ONE item among two or more.
+- **Semantics — the always-eligible catch-all.** In the existing ordered
+  first-match-per-position pass (which #65 extended to mix `ALL` and `LEADING`), a
+  `CHARACTERS` item is eligible at EVERY in-window position — no delimiter compare, no
+  leading-run tracking. So it contributes 1 for each in-window position not already claimed
+  by an EARLIER item in written order. Written order is honoured: a region-less
+  `CHARACTERS` item written first shadows every later item; `FOR ALL "A" CHARACTERS` over a
+  mixed ASCII string totals the source length.
+- **Optional region.** A `CHARACTERS` item may carry its OWN `{BEFORE|AFTER} z` window,
+  narrowing it exactly like any other item via the SAME `region_window` machinery.
+- **Type change (illegal states unrepresentable).** `TallyMultiLeadingItem` becomes
+  `(Option<Operand>, TallyMultiKind, Option<Region>)`: an OPTIONAL delimiter (`None` for
+  `CHARACTERS`, which has no delimiter operand) plus an explicit `TallyMultiKind`
+  (`All`/`Leading`/`Characters`) enum — so "a `LEADING` item that is ALSO `CHARACTERS`"
+  cannot be represented. `exec_inspect_tally_multi` resolves a `CHARACTERS` item's window
+  only (skipping `single_delim_char`), treats it as eligible on `in_win` alone, and never
+  touches it in the leading active-run update.
+- **Still deferred (co-total).** The MULTI-COUNTER path (`read_inspect_tally_counters`) and
+  the COMBINED `TALLYING … REPLACING` form keep rejecting a `CHARACTERS` item, with the
+  same messages the compiler raises. `ALL`/`LEADING` delimiter validation is unchanged
+  (multi-char/numeric/refmod/wider still rejected via `single_delim_char`).
+- **Byte-vs-char count chip (unchanged, task_396ba6f6).** A `CHARACTERS` item counts
+  POSITIONS; this oracle iterates CHAR positions while the compiler iterates BYTE positions,
+  so a non-ASCII source INSIDE a CHARACTERS window diverges — identical to the single
+  `FOR CHARACTERS` form (#60), NOT fixed here. Positive tests are ASCII; a non-ASCII case
+  is kept co-total by placing the multi-byte char outside every window.
+
 ## 0.79.0 — INSPECT REPLACING CHARACTERS BY x with a BEFORE/AFTER region — 2026-07-30
 
 - **`INSPECT source REPLACING CHARACTERS BY x {BEFORE|AFTER} z`** is now accepted. The former Guard-3

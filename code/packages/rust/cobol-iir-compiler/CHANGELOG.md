@@ -8,6 +8,34 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.76.0: INSPECT TALLYING with a CHARACTERS item in a multi-item list
+
+**`INSPECT source TALLYING counter FOR … CHARACTERS …`** — a `CHARACTERS` item alongside other
+items in a SINGLE-counter multi-item TALLYING list — is now compiled. The former reject in
+`inspect_tally_multi` is lifted for this path only, compiled byte-identical to the
+`coding-adventures-cobol-runtime` 0.80.0 oracle on an ASCII source.
+
+- **The always-eligible catch-all.** In `emit_inspect_tally_multi`'s ordered per-position decision
+  chain, a `CHARACTERS` item's `matched` predicate is its window membership ALONE — no `cmp_eq`
+  against a delimiter byte. A region-less `CHARACTERS` item is UNCONDITIONALLY eligible, so it emits
+  an unconditional bump + `jmp cont` (any later chain link becomes unreachable — it shadows
+  everything after it in written order, exactly the oracle's first-eligible-item rule). It allocates
+  no `active` register and is skipped in the leading active-run update pass.
+- **Optional region reused.** A `CHARACTERS` item's `{BEFORE|AFTER} z` window is derived by the SAME
+  `emit_inspect_region_window` every other item uses, so both engines narrow to identical slices.
+- **Type change (co-total classification).** `TallyLeadingItem`/`ResolvedTallyLeadingItem` carry an
+  `Option<&node>` delimiter (`None` for `CHARACTERS`) plus a new compiler-local `TallyKind`
+  (`All`/`Leading`/`Characters`) enum, mirroring the oracle's `TallyMultiKind` so the CST-side
+  dispatch stays co-total.
+- **Still deferred (co-total).** `inspect_tally_counters` (multi-COUNTER) and the COMBINED
+  `TALLYING … REPLACING` form keep rejecting `CHARACTERS`; `ALL`/`LEADING` delimiter validation via
+  `single_delim_code` is unchanged.
+- **Byte-vs-char count chip (unchanged, task_396ba6f6).** A `CHARACTERS` item counts POSITIONS; the
+  compiler iterates BYTE positions (`str_len`) while the oracle iterates CHAR positions, so a
+  non-ASCII source inside a CHARACTERS window diverges — identical to the single `FOR CHARACTERS`
+  form (#60), NOT fixed here. Positive tests are ASCII; a non-ASCII case is kept co-total by placing
+  the multi-byte char outside every window.
+
 ### Added — v0.75.0: INSPECT REPLACING CHARACTERS BY x with a BEFORE/AFTER region
 
 **`INSPECT source REPLACING CHARACTERS BY x {BEFORE|AFTER} z`** is now compiled. The former Guard-3
