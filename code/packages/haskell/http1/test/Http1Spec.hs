@@ -134,7 +134,7 @@ spec = do
       responseSwitchesProtocol lowerConnect `shouldBe` False
 
     it "accepts an empty reason phrase" $ do
-      parsed <- expectRight (parseResponse "HTTP/1.1 200\r\n\r\n")
+      parsed <- expectRight (parseResponse "HTTP/1.1 200 \r\n\r\n")
       responseReason (parsedResponse parsed) `shouldBe` ""
 
   describe "line and header preservation" $ do
@@ -184,7 +184,7 @@ spec = do
         `shouldBe` Left InvalidStartLine
       parseResponse "HTTP/1.1\r\n\r\n"
         `shouldBe` Left InvalidStartLine
-      parseResponse "HTTP/1.1 200 \r\n\r\n"
+      parseResponse "HTTP/1.1 200\r\n\r\n"
         `shouldBe` Left InvalidStartLine
       parseResponse "HTTP/1.1 200  OK\r\n\r\n"
         `shouldBe` Left InvalidStartLine
@@ -283,6 +283,32 @@ spec = do
         (HttpVersion 1 0)
         "HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n"
         `shouldBe` Left InvalidTransferEncoding
+      mapM_
+        (\(method, contextVersion, wire) ->
+          parseResponseForVersion method contextVersion wire
+            `shouldBe` Left InvalidTransferEncoding
+        )
+        [ ( "HEAD"
+          , HttpVersion 1 0
+          , "HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n"
+          )
+        , ( "CONNECT"
+          , HttpVersion 1 0
+          , "HTTP/1.1 200 Established\r\nTransfer-Encoding: chunked\r\n\r\n"
+          )
+        , ( "GET"
+          , HttpVersion 1 1
+          , "HTTP/1.0 101 Switching\r\nTransfer-Encoding: chunked\r\n\r\n"
+          )
+        , ( "GET"
+          , HttpVersion 1 1
+          , "HTTP/1.0 204 No Content\r\nTransfer-Encoding: chunked\r\n\r\n"
+          )
+        , ( "GET"
+          , HttpVersion 1 1
+          , "HTTP/1.0 304 Not Modified\r\nTransfer-Encoding: chunked\r\n\r\n"
+          )
+        ]
       parseResponse
         "HTTP/1.1 200 OK\r\nTransfer-Encoding: gzip;\r\n\r\n"
         `shouldBe` Left InvalidTransferEncoding
