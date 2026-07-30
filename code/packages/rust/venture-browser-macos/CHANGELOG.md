@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Wire normalized AppKit wheel events into the shared `BrowserSession` scroll
+  model and repaint the translated viewport through Metal.
+
 ## 0.1.0
 
 - Add a runnable macOS Venture host using AppKit, CoreText, and Metal.

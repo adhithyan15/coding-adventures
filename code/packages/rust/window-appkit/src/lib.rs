@@ -19,13 +19,18 @@
 use std::ffi::{c_int, c_ulong};
 
 #[cfg(target_vendor = "apple")]
-use std::ffi::{c_void, CString};
+use std::{
+    cell::RefCell,
+    collections::HashMap,
+    ffi::{c_void, CString},
+};
 
 #[cfg(target_vendor = "apple")]
 use objc_bridge::{
-    class, msg, msg_send_class, nsstring, object_getInstanceVariable, object_setInstanceVariable,
-    objc_allocateClassPair, objc_registerClassPair, release, sel, ClassPtr, CGPoint, CGRect, Id,
-    Sel, CGSize, NS_BACKING_STORE_BUFFERED, NS_WINDOW_STYLE_MASK_CLOSABLE,
+    class, msg, msg_bool, msg_f64, msg_send_class, nsstring, object_getInstanceVariable,
+    object_setInstanceVariable, objc_allocateClassPair, objc_registerClassPair, release, sel,
+    ClassPtr, CGPoint, CGRect, Id, Sel, CGSize, NS_BACKING_STORE_BUFFERED,
+    NS_WINDOW_STYLE_MASK_CLOSABLE,
     NS_WINDOW_STYLE_MASK_MINIATURIZABLE, NS_WINDOW_STYLE_MASK_RESIZABLE,
     NS_WINDOW_STYLE_MASK_TITLED, NIL, class_addIvar, class_addMethod,
 };
@@ -36,6 +41,21 @@ use window_core::{
 
 /// Crate version, kept explicit for examples and integration tests.
 pub const VERSION: &str = "0.1.0";
+
+#[cfg(target_vendor = "apple")]
+type AppKitEventHandler = Box<dyn FnMut(WindowEvent)>;
+
+#[cfg(target_vendor = "apple")]
+struct EventHandlerEntry {
+    window_id: WindowId,
+    callback: AppKitEventHandler,
+}
+
+#[cfg(target_vendor = "apple")]
+thread_local! {
+    static EVENT_HANDLERS: RefCell<HashMap<usize, EventHandlerEntry>> =
+        RefCell::new(HashMap::new());
+}
 
 /// Which AppKit-side surface family the renderer should expect.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -69,6 +89,38 @@ impl AppKitWindow {
             ns_window: self.ns_window,
             ns_view: self.ns_view,
             metal_layer: self.metal_layer,
+        }
+    }
+
+    /// Install the main-thread handler for normalized events from this view.
+    ///
+    /// AppKit invokes the handler synchronously from its normal application
+    /// run loop. The handler is replaced when this method is called again and
+    /// removed when the window closes.
+    pub fn set_event_handler<F>(&self, handler: F) -> Result<(), WindowError>
+    where
+        F: FnMut(WindowEvent) + 'static,
+    {
+        #[cfg(target_vendor = "apple")]
+        {
+            EVENT_HANDLERS.with(|handlers| {
+                handlers.borrow_mut().insert(
+                    self.ns_view,
+                    EventHandlerEntry {
+                        window_id: self.id,
+                        callback: Box::new(handler),
+                    },
+                );
+            });
+            Ok(())
+        }
+
+        #[cfg(not(target_vendor = "apple"))]
+        {
+            let _ = handler;
+            Err(WindowError::UnsupportedPlatform(
+                "AppKit windows are only available on Apple platforms",
+            ))
         }
     }
 }
@@ -319,11 +371,13 @@ impl AppKitBackend {
         msg!(window, "setTitle:", title_ns);
         objc_bridge::CFRelease(title_ns);
 
-        let view: Id = msg!(window, "contentView");
-        if view.is_null() {
+        let default_view: Id = msg!(window, "contentView");
+        if default_view.is_null() {
             release(window);
             return Err(WindowError::backend("NSWindow contentView returned nil"));
         }
+        let view = create_event_view(msg_send_bounds(default_view))?;
+        msg!(window, "setContentView:", view);
 
         setup_window_delegate(window, app)?;
 
@@ -370,6 +424,91 @@ impl AppKitBackend {
             ns_view: view as usize,
             metal_layer,
         })
+    }
+}
+
+#[cfg(target_vendor = "apple")]
+unsafe fn create_event_view(frame: CGRect) -> Result<Id, WindowError> {
+    let view_class = ensure_event_view_class()?;
+    let view: Id = msg!(view_class as Id, "alloc");
+    let view = msg!(view, "initWithFrame:", frame);
+    if view.is_null() {
+        return Err(WindowError::backend(
+            "WindowAppKitEventView allocation failed",
+        ));
+    }
+    Ok(view)
+}
+
+#[cfg(target_vendor = "apple")]
+unsafe fn ensure_event_view_class() -> Result<ClassPtr, WindowError> {
+    let class_name = CString::new("WindowAppKitEventView").expect("static class name");
+    let existing = objc_bridge::objc_getClass(class_name.as_ptr());
+    if !existing.is_null() {
+        return Ok(existing);
+    }
+
+    let view_class = objc_allocateClassPair(class("NSView"), class_name.as_ptr(), 0);
+    if view_class.is_null() {
+        return Err(WindowError::backend(
+            "objc_allocateClassPair failed for WindowAppKitEventView",
+        ));
+    }
+
+    let event_method_types = CString::new("v@:@").expect("static method type");
+    class_addMethod(
+        view_class,
+        sel("scrollWheel:"),
+        scroll_wheel as *const _,
+        event_method_types.as_ptr(),
+    );
+    objc_registerClassPair(view_class);
+    Ok(view_class)
+}
+
+#[cfg(target_vendor = "apple")]
+extern "C" fn scroll_wheel(view: Id, _sel: Sel, event: Id) {
+    unsafe {
+        let precise = msg_bool!(event, "hasPreciseScrollingDeltas");
+        let line_scale = if precise { 1.0 } else { 40.0 };
+        let native_delta_x = msg_f64!(event, "scrollingDeltaX") * line_scale;
+        let native_delta_y = msg_f64!(event, "scrollingDeltaY") * line_scale;
+        dispatch_scroll_event(view, native_delta_x, native_delta_y);
+    }
+}
+
+#[cfg(target_vendor = "apple")]
+fn dispatch_scroll_event(view: Id, native_delta_x: f64, native_delta_y: f64) {
+    EVENT_HANDLERS.with(|handlers| {
+        let mut handlers = handlers.borrow_mut();
+        if let Some(entry) = handlers.get_mut(&(view as usize)) {
+            (entry.callback)(normalized_scroll_event(
+                entry.window_id,
+                native_delta_x,
+                native_delta_y,
+            ));
+        }
+    });
+}
+
+/// Translate AppKit's content-motion deltas into viewport scroll direction.
+pub fn normalized_scroll_event(
+    window_id: WindowId,
+    native_delta_x: f64,
+    native_delta_y: f64,
+) -> WindowEvent {
+    WindowEvent::Scroll {
+        window_id,
+        delta_x: invert_finite(native_delta_x),
+        delta_y: invert_finite(native_delta_y),
+    }
+}
+
+fn invert_finite(value: f64) -> f64 {
+    if value.is_finite() {
+        -value
+    } else {
+        0.0
     }
 }
 
@@ -522,6 +661,14 @@ unsafe fn ensure_delegate_class() -> Result<ClassPtr, WindowError> {
 #[cfg(target_vendor = "apple")]
 extern "C" fn window_will_close(this: Id, _sel: Sel, _notification: Id) {
     unsafe {
+        let window: Id = msg!(_notification, "object");
+        if !window.is_null() {
+            let view: Id = msg!(window, "contentView");
+            EVENT_HANDLERS.with(|handlers| {
+                handlers.borrow_mut().remove(&(view as usize));
+            });
+        }
+
         let ivar_name = CString::new("_app").expect("static ivar name");
         let mut app_ptr: *mut c_void = std::ptr::null_mut();
         object_getInstanceVariable(this, ivar_name.as_ptr(), &mut app_ptr);
@@ -608,6 +755,26 @@ mod tests {
                 ns_window: 10,
                 ns_view: 20,
                 metal_layer: None
+            }
+        );
+    }
+
+    #[test]
+    fn appkit_scroll_deltas_follow_viewport_direction_and_sanitize_non_finite_values() {
+        assert_eq!(
+            normalized_scroll_event(WindowId(7), 2.5, -8.0),
+            WindowEvent::Scroll {
+                window_id: WindowId(7),
+                delta_x: -2.5,
+                delta_y: 8.0,
+            }
+        );
+        assert_eq!(
+            normalized_scroll_event(WindowId(7), f64::NAN, f64::INFINITY),
+            WindowEvent::Scroll {
+                window_id: WindowId(7),
+                delta_x: 0.0,
+                delta_y: 0.0,
             }
         );
     }
