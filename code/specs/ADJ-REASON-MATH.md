@@ -656,6 +656,114 @@ The honest gaps are narrower than they look: order preservation (E.2), the
 winning term — not the winning rule, its provenance, or whether it won on context or
 on tier).
 
+#### E.8 The explanation renderer — **make the trace legible without letting it lie**
+
+Everything above §E.8 produces a *machine* trail: JSON `proof`/`derivation`/`steps`
+arrays, each byte-cited, each re-checkable by `adj-verify`. That is necessary and it is
+not sufficient. The stated north star is a language that can reason **and can explain
+its reasoning** — and a JSON proof DAG is not an explanation a person reads. §E.8
+specifies the missing surface: a deterministic, human-readable rendering of a query's
+reasoning, addressed here as `explain`.
+
+The temptation this section exists to forbid: an "explanation" that is a *fresh*
+paraphrase — a second pass (templated or, worse, model-generated) that restates the
+answer in fluent prose. That is precisely the failure the whole project rejects: it can
+sound right while saying more than the proof supports, and it cannot be verified against
+anything. The explanation must therefore be a **pure projection of the already-computed,
+already-checkable trace** — it may re-format what the engine derived, and it may add
+**nothing**.
+
+##### E.8.1 What `explain` renders
+
+`explain` linearizes the query result into an ordered sequence of **rendered steps**,
+one per underlying trace step, in a single canonical document order:
+
+1. **Premises** — the observed facts and imported clauses the query actually used
+   (`via_facts`/`via_rules`), each with its citation.
+2. **Derivations** — every `derived` value, rendered operand-by-operand from its
+   `derivation` tree (§E.7) down to cited leaves: the *how* of each computed number.
+3. **Inference** — the ordered `ReasoningTrace` steps (`FromRule`, `FromContribution`
+   with any nested `evidence_proof`, `FromNegation`, table `lookup`, solver certificate),
+   each naming the clause that fired and what it concluded.
+4. **Adjudication** — the ranked hypotheses, the leader, and the decision (`determinate`
+   / `kickback` / `empty`) with its margin; for a governed answer, what defeated what and
+   on what ground (context vs tier).
+5. **Abstention**, when it occurred — the typed `AbstentionReason` (§E.4) and its
+   explanation, rendered as a first-class step, never a silent gap.
+
+The renderer is a **total walk over the same `StepKind`/`DerivationOrigin` enums** the
+JSON walker already covers (§E.1); adding a step kind that `explain` does not handle
+MUST fail to compile, exactly as for the JSON walker.
+
+##### E.8.2 Normative invariants
+
+- **P1 — Projection only (no new claims).** `explain` MUST NOT compute a value, unify a
+  goal, or assert a relation that is not already present as a trace step. It reads the
+  trace; it does not re-run the engine. A rendered line that has no backing step is a
+  defect. This is the anti-hallucination invariant: *the explanation can never say more
+  than the proof.*
+- **P2 — Every line carries its provenance.** Each factual line renders its
+  `source` / `locator` / `trust`. A step whose clause is unattributed renders an
+  explicit `[unattributed]` marker — never a blank. There is no such thing as an
+  uncited claim in the output.
+- **P3 — Trust is propagated and shown.** A rendered conclusion's trust tier is the
+  `min` over the tiers of the steps that support it (the engine's existing rule); the
+  weakest link is displayed, not hidden.
+- **P4 — Determinism.** The same `(KnowledgeBase, ReasoningTrace)` renders **byte-identical**
+  text on every run and platform. No timestamps, no map iteration order, no locale. This
+  is what makes an explanation itself testable and diffable.
+- **P5 — Faithful to the verifier.** Every factual line corresponds one-to-one to a step
+  that `adj-verify` re-checks. Rendering a trace whose `verified` is `false` MUST mark
+  the failing step inline (e.g. `✗ NOT RE-DERIVED`) rather than presenting it as sound.
+  `explain` and `adj-verify` walk the same object; they cannot disagree about which steps
+  exist.
+- **P6 — Structure is addressed, not flattened.** Nested evidence sub-proofs and
+  arithmetic sub-trees render as depth-indented children keyed by the same
+  `index`/`depth` addresses the JSON uses, so a line in the prose maps back to exactly
+  one node in the machine trail.
+
+##### E.8.3 What `explain` is NOT
+
+- Not natural-language *generation*: no model is invoked, no free text is synthesized.
+  The output is a deterministic template over trace fields. (A separate, clearly-labeled
+  model-paraphrase layer could sit *above* `explain` later, but it is out of scope here
+  and would consume `explain`'s output, never replace it.)
+- Not a second reasoning path: it shares the engine's one trace. There is no "explain
+  mode" inference that could diverge from "answer mode."
+- Not a replacement for the JSON: the machine trail remains the primary, complete,
+  re-checkable artifact. `explain` is the human view onto it.
+
+##### E.8.4 Worked shape (illustrative)
+
+For `let dose = 5 * 60 / 100 ; ? dose`, the JSON `derived[0].derivation` is the op-tree
+`(5 * 60) / 100 = 3`. `explain` renders it as:
+
+```
+dose = 3
+  = (5 × 60) ÷ 100
+    5 × 60 = 300
+      5        [observed, source "…"]
+      60       [observed, source "…"]
+    300 ÷ 100 = 3
+      100      [observed, source "…"]
+```
+
+— every leaf cited, the arithmetic shown, nothing asserted that the derivation tree did
+not already contain. A multi-hop diagnostic (§Worked example 3) renders premises →
+`csf_suggestive` (by rule, IDSA 2024 §3.2) → `contributes` (LR 12, Tunkel 2004) →
+posterior → leader, trust tier = `min` across the chain, each line addressed back to its
+JSON step.
+
+##### E.8.5 Staging
+
+`explain` is added to the RS-4 staging table as **PR-E**, after D2 (the re-checker) on
+purpose: an explanation renderer is only trustworthy once the trace it renders is
+independently re-checkable, so P5 has something to be faithful *to*. PR-E delivers the
+deterministic renderer + the `--explain` surface + e2e tests pinning P1/P4 (projection
+and determinism) and the abstention/`[unattributed]`/`✗ NOT RE-DERIVED` renderings. This
+subsection is the normative contract; it also **discharges the "explanation renderer"
+clause of FL-7**, which now defers to §E.8.
+
 ### F. The decomposition contract — **enforced by the existing faithfulness/coverage gate**
 
 The LLM is allowed to emit **problem structure only**:
@@ -714,6 +822,7 @@ built on citations that point at the wrong row would produce a confident, well-f
 | PR-D2 | `logic_engine::verify` + the `adj-verify` binary — step-level re-checker, offline (§E.5, §E.6) | **shipped** |
 | PR-D3 | Opt-in live re-fetch through the ADJ39 `CitationVerifier` registry → `SourceDrifted` / `SourceUnreachable` | follows D2 |
 | PR-D4 | `quote`/`at`/`snapshot` surface binding (§E.3.1): spider-emitted, fail-closed lowering, stdlib backfill → `fully_verified` | follows D2 |
+| **PR-E** | `explain` — deterministic human-readable renderer over the trace, projection-only (P1–P6), `--explain` surface (§E.8); discharges FL-7's explanation-renderer clause | follows D2 |
 
 **What D2 shipped, and what it deliberately did not.** `verify_proof` re-executes all
 seven `DerivationOrigin` variants and checks quotes *anchored* against the pinned
