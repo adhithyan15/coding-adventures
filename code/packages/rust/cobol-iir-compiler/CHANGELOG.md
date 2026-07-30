@@ -8,6 +8,26 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.70.0: INSPECT CONVERTING with a figurative-constant SPACE/ZERO FROM/TO operand
+
+`INSPECT src CONVERTING from TO to [{BEFORE|AFTER} x]` now lowers when the `from` and/or `to` table is
+a **figurative constant** SPACE or ZERO. Either or both sides may be a figurative, mixing freely with a
+string literal, a data-name, or a const reference modification on the other. Every spelling folds
+identically — SPACE/SPACES, ZERO/ZEROS/ZEROES. Compiled byte-identical to the
+`coding-adventures-cobol-runtime` 0.74.0 oracle.
+
+- **A figurative reduces to the #30 single-char literal path.** The `converting_operand` resolver maps
+  `Src::Space` → `ConvOperand::Literal(" ")` (0x20) and `Src::Zero` → `ConvOperand::Literal("0")`
+  (0x30), then reuses the EXISTING Literal lowering in every downstream respect — the equal-length
+  check, the ASCII-literal guard, `converting_from_consts`/`converting_to_consts`, the convert loop, and
+  the BEFORE/AFTER region all apply unchanged. Both mapped characters are ASCII, so the ASCII-literal
+  guard passes.
+- **Unequal-length deferred co-totally.** A figurative (length 1) paired with a length-1 operand
+  converts; paired with a length-not-1 operand, the EXISTING equal-length reject fires — matching the
+  oracle's `read_converting_operand`. SPACE and ZERO are the only figuratives in the model (no
+  QUOTE/LOW-VALUE/HIGH-VALUE), so the figurative case has nothing further to defer. A numeric literal
+  and a *computed* reference modification remain later rungs, unchanged.
+
 ### Added — v0.69.0: INSPECT CONVERTING with a CONSTANT reference-modified FROM/TO operand
 
 `INSPECT src CONVERTING from TO to [{BEFORE|AFTER} x]` now lowers when the `from` and/or `to` table is

@@ -1506,13 +1506,19 @@ replace, but **translates** each character through a table:
 `INSPECT source CONVERTING from TO to`.
 
 - `source` is the alphanumeric (`PIC X`) item, **modified in place**.
-- `from` and `to` are each a **string literal**, a **data-name** (`PIC X` item), or
-  a **CONSTANT reference modification** `base(start:len)` / `base(start:)` (both
-  indices LITERALS) — a *variable* table — of **EQUAL length**. A data-name's set is
+- `from` and `to` are each a **string literal**, a **data-name** (`PIC X` item), a
+  **CONSTANT reference modification** `base(start:len)` / `base(start:)` (both
+  indices LITERALS) — a *variable* table — or a **figurative constant** SPACE / ZERO,
+  of **EQUAL length**. A figurative reduces to the single-character literal `" "`
+  (0x20, for SPACE / SPACES) or `"0"` (0x30, for ZERO / ZEROS / ZEROES) — a length-1
+  ASCII literal — so it takes the **entire** string-literal path unchanged (the
+  equal-length check and the ASCII-literal guard both already handle it), converting
+  when paired with a length-1 operand and deferring via the existing equal-length
+  reject otherwise. A data-name's set is
   its CURRENT storage (its declared width in characters); a const refmod's set is its
   slice, whose length is static (the const `len`, or `base_width - start + 1` when
   omitted), so the equal-length requirement is checked at compile time whichever mix
-  of literal / item / const-slice the two sides are. Any side may alias the source; a
+  of literal / item / const-slice / figurative the two sides are. Any side may alias the source; a
   `from`/`to` that ALIASES the source is read BEFORE the rewrite, so it sees the
   source's ORIGINAL bytes (the oracle resolves the operand — reading item storage or
   slicing the refmod via the shared `refmod_string` — into the table up front; the
@@ -1520,7 +1526,7 @@ replace, but **translates** each character through a table:
   refmod materialises the slice via the shared `ref_mod_slice`, out of the
   per-position loop). A CONST refmod reduces EXACTLY to the data-name case — its slice
   register is a fixed-width alphanumeric string register. A numeric/group item as
-  `from`/`to`, a figurative `from`/`to`, and a **COMPUTED** (data-name index)
+  `from`/`to`, a **numeric literal** `from`/`to`, and a **COMPUTED** (data-name index)
   reference-modified `from`/`to` remain later rungs — the computed refmod deferred
   co-totally on both engines by the same const-index predicate the MOVE/STRING refmod
   rungs use (`matches!(start, Lit) && len.is_none_or(|l| matches!(l, Lit))`); a
@@ -1580,12 +1586,15 @@ region delimiter. With no region the lowering is unchanged.
 `TALLYING`/`REPLACING` in one statement (a combined form does not parse). Later
 rungs (clean `Unsupported`): an **unequal-length** `from`/`to` pair (now including
 item widths and const-slice lengths), a non-ASCII **literal** `from`/`to`, a
-**numeric/group item** as `from`/`to`, a figurative `from`/`to`, a **COMPUTED**
+**numeric/group item** as `from`/`to`, a **numeric-literal** `from`/`to`, a **COMPUTED**
 (data-name index) reference-modified `from`/`to`, a **multi-character** region
-delimiter, and a numeric/group source. A `PIC X` **item** `from`/`to` and a
-**CONSTANT** reference-modified `from`/`to` (`S(2:3)` / `S(2:)`) are now supported; a
+delimiter, and a numeric/group source. A `PIC X` **item** `from`/`to`, a
+**CONSTANT** reference-modified `from`/`to` (`S(2:3)` / `S(2:)`), and a **figurative
+constant** `from`/`to` (SPACE / ZERO, mapped to `" "` / `"0"`) are now supported; a
 non-ASCII byte in an item's or slice's runtime storage is the pre-existing
 byte-vs-char operand chip (the ASCII case is byte-identical on both engines).
+SPACE and ZERO are the only figuratives in the model — there is no
+QUOTE/LOW-VALUE/HIGH-VALUE — so the figurative case has nothing further to defer.
 
 Grammar scope tracks the lexer scope below.
 

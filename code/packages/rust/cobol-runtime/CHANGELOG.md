@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.74.0 — INSPECT CONVERTING with a figurative-constant SPACE/ZERO FROM/TO operand — 2026-07-30
+
+- `INSPECT src CONVERTING from TO to [{BEFORE|AFTER} x]` now accepts a **figurative constant** SPACE or
+  ZERO as the `from` and/or `to` translation set. Either or both sides may be a figurative, mixing
+  freely with a string literal, a data-name, or a const reference modification on the other. Every
+  spelling folds identically — SPACE/SPACES, ZERO/ZEROS/ZEROES. Byte-identical to the compiler (0.70.0).
+- **A figurative reduces to the single-character literal path.** `read_converting_operand` maps
+  `Fig::Space` → `ConvertOperand::Literal(" ")` (0x20) and `Fig::Zero` → `ConvertOperand::Literal("0")`
+  (0x30), then reuses the ENTIRE existing Literal path unchanged — the equal-length check, the
+  ASCII-literal guard, the convert loop, and the BEFORE/AFTER region all apply as-is. Both mapped
+  characters are ASCII, so the non-ASCII-literal guard passes.
+- **Unequal-length still deferred identically.** A figurative (length 1) paired with a length-1 operand
+  converts; paired with a length-not-1 operand, the EXISTING equal-length reject fires on both engines
+  with the same message class. SPACE and ZERO are the only figuratives in the model, so nothing else in
+  the figurative case needs deferring (no QUOTE/LOW-VALUE/HIGH-VALUE exists here). A numeric literal and
+  a *computed* reference modification remain later rungs, unchanged.
+
 ## 0.73.0 — INSPECT CONVERTING with a CONSTANT reference-modified FROM/TO operand — 2026-07-29
 
 - `INSPECT src CONVERTING from TO to [{BEFORE|AFTER} x]` now accepts a **constant reference
