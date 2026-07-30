@@ -896,6 +896,7 @@ members = [
     "smart-home-platform-http",
     "smart-home-automation-runtime",
     "smart-home-zwave-integration",
+    "smart-home-zwave-host",
     "smart-home-integration-catalog",
     "smart-home-testkit",
     "hue-core",

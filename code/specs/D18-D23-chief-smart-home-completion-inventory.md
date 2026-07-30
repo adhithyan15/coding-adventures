@@ -446,13 +446,36 @@ D23 runtime instead of adding another protocol-only layer:
 - Serial port ownership, inclusion, and S2 security remain production host
   concerns above the completed typed runtime adapter boundary.
 
+## Current Z-Wave Serial Host Slice
+
+This slice moves the completed adapter across a real serial byte-stream
+boundary:
+
+- `smart-home-zwave-host` opens an OS serial port with bounded timeouts and
+  owns Serial API SOF framing, ACK/NAK/CAN handling, retries, checksum
+  rejection, and a bounded unsolicited-message queue.
+- The host runs the typed version, memory-id, controller-capability, and
+  init-data bootstrap, rejects end-device APIs, and installs the discovered
+  controller identity into D23.
+- Authorized commands cross the real wire boundary, synchronous SendData
+  responses and asynchronous callbacks remain correlated, and terminal
+  success, failure, and timeout results are published through the runtime.
+- Application Command Handler frames can be pumped through the same session
+  into normalized runtime state without dropping frames received while another
+  request is awaiting its response.
+- A runnable one-shot host binary bootstraps a configured serial controller,
+  while scripted byte-stream tests prove retries, ACK/NAK behavior, malformed
+  frame rejection, queued unsolicited frames, bootstrap, command completion,
+  and timeout publication.
+- Node inclusion and S2 remain explicit follow-on host state machines.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
 
 - Continue platform integrations beyond Hue and the Z-Wave runtime adapter:
   MQTT, Matter/Thread, Zigbee, cameras, thermostats, broader sensors, and a
-  production Z-Wave host for serial ownership, inclusion, and S2.
+  production Z-Wave inclusion and S2 flow.
 - Build Home Assistant migration tools for devices, rooms, scenes,
   automations, dashboards, and historical state export where feasible.
 - Provide a dashboard that can inspect devices, rooms, state, health,
