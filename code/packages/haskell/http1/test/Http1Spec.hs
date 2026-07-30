@@ -336,11 +336,11 @@ parseResponseForVersion
   -> HttpVersion
   -> String
   -> Either Http1ParseError ParsedResponseHead
-parseResponseForVersion method requestVersion =
+parseResponseForVersion method contextVersion =
   parseResponseHead
     ResponseContext
       { contextRequestMethod = method
-      , contextRequestVersion = requestVersion
+      , contextRequestVersion = contextVersion
       }
     . Bytes.pack
 

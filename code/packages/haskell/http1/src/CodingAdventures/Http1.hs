@@ -7,6 +7,7 @@
 module CodingAdventures.Http1
   ( ParsedRequestHead (..)
   , ParsedResponseHead (..)
+  , ResponseContext (..)
   , Http1ParseError (..)
   , version
   , parseRequestHead
@@ -48,6 +49,12 @@ data ParsedResponseHead = ParsedResponseHead
   , responseBodyOffset :: Int
   , responseBodyKind :: BodyKind
   , responseSwitchesProtocol :: Bool
+  } deriving (Eq, Show)
+
+-- | Request facts required to frame the corresponding response safely.
+data ResponseContext = ResponseContext
+  { contextRequestMethod :: String
+  , contextRequestVersion :: HttpVersion
   } deriving (Eq, Show)
 
 -- | Stable, redacted failure classes from the NET04 contract.
@@ -97,10 +104,10 @@ parseRequestHead input = do
 -- Response body rules depend on request semantics: HEAD responses never have a
 -- message body, and successful CONNECT responses transition to a tunnel.
 parseResponseHead
-  :: String
+  :: ResponseContext
   -> ByteString
   -> Either Http1ParseError ParsedResponseHead
-parseResponseHead requestMethodText input = do
+parseResponseHead context input = do
   (linesInHead, bodyOffset) <- splitHeadLines input
   (statusLine, headerLines) <- firstLine linesInHead
   (versionText, statusCodeText, reason) <- parseStatusLine statusLine
@@ -116,7 +123,7 @@ parseResponseHead requestMethodText input = do
           _ -> Left InvalidStatusCode
   headers <- parseHeaders headerLines
   (bodyKind, switchesProtocol) <-
-    determineResponseBodyKind requestMethodText statusCode headers
+    determineResponseBodyKind context httpVersion statusCode headers
   Right
     ParsedResponseHead
       { parsedResponse =
@@ -359,13 +366,14 @@ determineRequestBodyKind httpVersion headers
     hasContentLength = hasHeader headers "Content-Length"
 
 determineResponseBodyKind
-  :: String
+  :: ResponseContext
+  -> HttpVersion
   -> Word16
   -> [Header]
   -> Either Http1ParseError (BodyKind, Bool)
-determineResponseBodyKind requestMethodText statusCode headers
-  | asciiEqual requestMethodText "HEAD" = Right (NoBody, False)
-  | asciiEqual requestMethodText "CONNECT"
+determineResponseBodyKind context parsedResponseVersion statusCode headers
+  | contextRequestMethod context == "HEAD" = Right (NoBody, False)
+  | contextRequestMethod context == "CONNECT"
       && statusCode >= 200
       && statusCode < 300 =
       Right (NoBody, True)
@@ -374,7 +382,9 @@ determineResponseBodyKind requestMethodText statusCode headers
   | hasTransferEncoding && hasContentLength = Left AmbiguousFraming
   | hasTransferEncoding = do
       codings <- transferCodings headers
-      if containsNonFinalOrRepeatedChunked codings
+      if not (supportsTransferEncoding (contextRequestVersion context))
+          || not (supportsTransferEncoding parsedResponseVersion)
+          || containsNonFinalOrRepeatedChunked codings
         then Left InvalidTransferEncoding
         else
           Right
@@ -431,9 +441,10 @@ transferCodings headers =
       else traverse parseCoding pieces
   where
     parseCoding rawCoding =
-      let codingWithParameters = trimOws rawCoding
-          codingName = trimOws (takeWhile (/= ';') codingWithParameters)
-      in if null codingName || not (all isTokenCharacter codingName)
+      let codingName = trimOws rawCoding
+      in if null codingName
+          || ';' `elem` codingName
+          || not (all isTokenCharacter codingName)
           then Left InvalidTransferEncoding
           else Right codingName
 
