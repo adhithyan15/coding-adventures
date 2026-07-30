@@ -26,7 +26,8 @@ Exercise the real AppKit + Metal presentation path and close automatically:
 cargo run -p venture-browser-macos -- --smoke-seconds 1 http://info.cern.ch/
 ```
 
-This host loads and presents one page. Mouse-wheel and trackpad input drive the
-shared clamped viewport and repaint the translated scene through Metal. Native
-controls, input-event translation beyond wheel events, and link activation are
-the next integration layer.
+Mouse-wheel and trackpad input drive the shared clamped viewport and repaint the
+translated scene through Metal. Primary-button input now hit-tests links in
+viewport coordinates, loads the resolved destination through the transactional
+browser session, updates the title, and repaints repeatedly. Native controls,
+keyboard input, and richer pointer behavior remain the next integration layer.

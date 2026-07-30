@@ -15,11 +15,12 @@ This package supports a real macOS host path while staying small:
 - exposes AppKit render-target handles on the returned `Window`
 - runs the AppKit event loop for native launch testing
 - translates AppKit wheel input into shared `WindowEvent::Scroll` values
+- translates primary-button input into top-left logical pointer events
 - lets a main-thread host install a normalized event handler on its window
 - rejects renderer preferences that belong to other platforms
 
-Metal-layer attachment is available for renderer hosts. Pointer-button,
-keyboard, resize, and close translation remain future event slices.
+Metal-layer attachment is available for renderer hosts. Keyboard, resize, and
+close translation remain future event slices.
 
 ## Dependencies
 

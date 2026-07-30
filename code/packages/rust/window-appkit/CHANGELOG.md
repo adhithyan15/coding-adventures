@@ -8,6 +8,7 @@ All notable changes to this package will be documented in this file.
 
 - An AppKit event view that translates wheel input to normalized
   `WindowEvent::Scroll` callbacks.
+- Primary-button translation with top-left logical pointer coordinates.
 - Main-thread event-handler registration on `AppKitWindow`.
 
 ## [0.1.0] - 2026-04-18
