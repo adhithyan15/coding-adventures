@@ -8198,3 +8198,149 @@ fn mixed_unsigned_numeric_vs_space_figurative_agrees() {
     assert_eq!(out, "NO\n");
 }
 
+
+// -------------------------------------------------------------------------
+// Cross-category MOVE: alphanumeric → SIGNED numeric — completes the
+// Char↔Numeric × signed/unsigned MOVE matrix. vs the cobol-runtime oracle.
+//
+// An alphanumeric source (`PIC X(m)`) carries NO operational sign — COBOL does
+// not read an overpunch from a plain `PIC X` source — so a MOVE into a SIGNED
+// receiver (`PIC S9(i)V9(d)`) stores the folded MAGNITUDE and its sign is ALWAYS
+// POSITIVE. The fold and scale placement are IDENTICAL to the unsigned-receiver
+// path (fold `V = V*10 + (byte - '0')` left→right; slot `V mod 10^(i+d)`); the
+// only difference is that DISPLAY of a signed field overpunches the units digit
+// on its POSITIVE row (`{A…I` for units 0-9), so the visible output differs from
+// the unsigned case even though the magnitude is identical. Both engines reuse
+// their existing signed-aware store path (compiler `store_scaled`/`reapply_sign`;
+// oracle `move_into` with `Decimal { neg: false }`), so they agree byte-for-byte.
+// -------------------------------------------------------------------------
+
+#[test]
+fn alphanumeric_to_signed_numeric_move_exact_fit_positive() {
+    // PIC X(3)="123" → PIC S9(3): fold 123, positive; units 3 → '{A…I' row → 'C'.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(3) VALUE \"123\".", "01  N  PIC S9(3)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "12C\n");
+}
+
+#[test]
+fn alphanumeric_to_signed_numeric_move_units_digit_zero_overpunch() {
+    // PIC X(3)="120" → PIC S9(3): magnitude 120, units 0 → positive-row '{' → "12{".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(3) VALUE \"120\".", "01  N  PIC S9(3)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "12{\n");
+}
+
+#[test]
+fn alphanumeric_to_signed_numeric_move_shorter_source_zero_pads() {
+    // PIC X(2)="05" → PIC S9(4): fold 5, magnitude 0005; units 5 → positive 'E'.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \"05\".", "01  N  PIC S9(4)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000E\n");
+}
+
+#[test]
+fn alphanumeric_to_signed_numeric_move_longer_source_truncates_high_order() {
+    // PIC X(5)="12345" → PIC S9(3): keep low-order 3 → 345; units 5 → positive 'E'.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(5) VALUE \"12345\".", "01  N  PIC S9(3)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "34E\n");
+}
+
+#[test]
+fn alphanumeric_to_signed_scaled_numeric_move() {
+    // PIC X(3)="042" → PIC S9(2)V9: fold 42, slot 042 (scale d=1); DISPLAY shows
+    // the raw 3 digits with the units overpunched, positive → units 2 → 'B'.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC S9(2)V9."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "04B\n");
+}
+
+#[test]
+fn alphanumeric_to_signed_numeric_move_space_source_no_stray_sign() {
+    // A SPACE source (0x20) is below '0', so `(b-'0')` goes negative and the fold
+    // goes negative — but an alphanumeric source has NO operational sign, so BOTH
+    // engines take the MAGNITUDE and store it POSITIVE (never a stray '-'), even
+    // into a SIGNED receiver. " " → fold -16 → magnitude 016; units 6 → positive
+    // 'F'. assert_matches_oracle fails if the two engines disagree.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(1) VALUE \" \".", "01  N  PIC S9(3)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "01F\n");
+}
+
+#[test]
+fn alphanumeric_to_signed_numeric_move_is_a_genuine_number() {
+    // The moved value is a real (positive) number, not just bytes: MOVE "40" into
+    // S9(3) → 040, then ADD 2 → 42; DISPLAY shows units 2 overpunched positive 'B'.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \"40\".", "01  N  PIC S9(3)."],
+        &["MOVE A TO N.", "ADD 2 TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "04B\n");
+}
+
+#[test]
+fn alphanumeric_to_signed_numeric_move_with_filler_between_agrees() {
+    // Cross-producer binding guard: an unnamed FILLER PIC X(2) sits BETWEEN the
+    // named source and the named signed receiver in WORKING-STORAGE. The compiler
+    // DROPS FILLER items from its data model while the oracle PUSHES them, so the
+    // two engines assign different physical slots; this pins that NAMED binding
+    // (A → N) stays byte-identical across the two data-division models.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"123\".",
+            "01  FILLER  PIC X(2).",
+            "01  N  PIC S9(3).",
+        ],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "12C\n");
+}
+
+#[test]
+fn alphanumeric_to_signed_numeric_move_non_ascii_is_the_preexisting_byte_char_chip() {
+    // Non-ASCII documentation + regression guard. A multi-byte source char exposes
+    // the PRE-EXISTING byte-vs-char chip that this rung does NOT touch: the oracle
+    // folds the FULL byte storage (`chars.bytes()` over the char-padded value),
+    // while the compiler's `emit_str_to_int` folds only the item's `width()` =
+    // CHAR-COUNT leading bytes. When the source holds a multi-byte char these two
+    // read a DIFFERENT number of bytes, so the two engines already disagree — and
+    // they disagree IDENTICALLY on the UNSIGNED path, proving the divergence is not
+    // introduced by the signed-receiver relaxation.
+    //
+    // `PIC X(2) VALUE "é"`: "é" is 1 char / 2 UTF-8 bytes, char-padded to 2 chars →
+    // "é " → bytes `C3 A9 20`. The oracle folds all three; the compiler folds the
+    // first two (`width()` == 2). Hence the magnitudes differ (oracle 894, compiler
+    // 591) on BOTH receiver signednesses. This is deferred to the non-ASCII chip; we
+    // do NOT use `assert_matches_oracle` here because a clean parity assertion is
+    // impossible for a multi-byte fold. Instead we pin all four outputs so a future
+    // regression in EITHER the fold or the sign relaxation is caught, and we assert
+    // the sign relaxation is orthogonal: signed == unsigned with the units digit
+    // overpunched on the POSITIVE row (4→'D', 1→'A'), and nothing else changed.
+    let unsigned_src = wrap(
+        &["01  A  PIC X(2) VALUE \"é\".", "01  N  PIC 9(3)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    );
+    let signed_src = wrap(
+        &["01  A  PIC X(2) VALUE \"é\".", "01  N  PIC S9(3)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    );
+    // Oracle: full-byte fold. Unsigned 894; signed adds the positive overpunch (4→'D').
+    assert_eq!(run_cobol(&unsigned_src).expect("oracle unsigned"), "894\n");
+    assert_eq!(run_cobol(&signed_src).expect("oracle signed"), "89D\n");
+    // Compiler: char-count-byte fold. Unsigned 591; signed adds the overpunch (1→'A').
+    assert_eq!(run_on_jit(&unsigned_src), "591\n");
+    assert_eq!(run_on_jit(&signed_src), "59A\n");
+}

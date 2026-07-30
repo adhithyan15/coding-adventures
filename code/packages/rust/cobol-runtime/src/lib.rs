@@ -447,14 +447,17 @@ mod tests {
     }
 
     #[test]
-    fn alphanumeric_to_signed_numeric_move_is_deferred() {
-        // A SIGNED receiver (`PIC S9`) is a later rung.
-        let err = run_ws(
+    fn alphanumeric_to_signed_numeric_move_is_supported_and_positive() {
+        // A SIGNED receiver (`PIC S9`) is now supported: an alphanumeric source has
+        // NO operational sign, so the fold's MAGNITUDE is stored POSITIVE. PIC
+        // X(3)="042" → PIC S9(3): magnitude 042; DISPLAY overpunches the units digit
+        // on the POSITIVE row (2 → 'B') → "04B".
+        let out = run_ws(
             &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC S9(3)."],
-            &["    MOVE A TO N.", "    STOP RUN."],
+            &["    MOVE A TO N.", "    DISPLAY N.", "    STOP RUN."],
         )
-        .unwrap_err();
-        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+        .unwrap();
+        assert_eq!(out, "04B\n");
     }
 
     // A SCALED receiver `PIC 9(i)V9(d)` is now supported: the fold IS the scaled
@@ -509,14 +512,17 @@ mod tests {
     }
 
     #[test]
-    fn alphanumeric_to_signed_scaled_numeric_move_is_deferred() {
-        // A SIGNED SCALED receiver (`PIC S9V9`) is still a later rung.
-        let err = run_ws(
+    fn alphanumeric_to_signed_scaled_numeric_move_is_supported_and_positive() {
+        // A SIGNED SCALED receiver (`PIC S9V9`) is now supported too: the fold's
+        // magnitude IS the scaled slot at scale `d`, stored POSITIVE (source has no
+        // sign). PIC X(3)="042" → PIC S9V9 (i=1,d=1): fold 42, slot 42; DISPLAY shows
+        // the raw 2 digits with the units overpunched positive (2 → 'B') → "4B".
+        let out = run_ws(
             &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC S9V9."],
-            &["    MOVE A TO N.", "    STOP RUN."],
+            &["    MOVE A TO N.", "    DISPLAY N.", "    STOP RUN."],
         )
-        .unwrap_err();
-        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+        .unwrap();
+        assert_eq!(out, "4B\n");
     }
 
     #[test]

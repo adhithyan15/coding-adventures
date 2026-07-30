@@ -1538,12 +1538,14 @@ receiver, a `SIGN` clause with `SEPARATE`/`LEADING`, an alphanumeric → **signe
 numeric MOVE (the reverse direction), and a **group** item on either side (a group
 receiver is rejected as "MOVE into a group item").
 
-### `MOVE` (cross-category: alphanumeric → unsigned numeric — integer or scaled)
+### `MOVE` (cross-category: alphanumeric → numeric — signed or unsigned, integer or scaled)
 
 The **reverse** cross-category rung is `MOVE alphanumeric-item TO numeric-item`,
-for an alphanumeric source (`PIC X(m)`) into an **unsigned** numeric receiver
-`PIC 9(i)V9(d)` — no `S`; `d` may be `0` (an integer receiver) or `> 0` (a
-**scaled** receiver).
+for an alphanumeric source (`PIC X(m)`) into a numeric receiver
+`PIC [S]9(i)V9(d)` — **signed or unsigned**; `d` may be `0` (an integer receiver)
+or `> 0` (a **scaled** receiver). With the signed receiver handled (v0.65.0 /
+v0.69.0), the **Char↔Numeric MOVE matrix is now complete** — both directions and
+both signednesses.
 
 COBOL's rule: the alphanumeric source is treated as an **unsigned integer** `V`
 formed from its characters read as digits (`V = V*10 + (char - '0')`,
@@ -1595,14 +1597,39 @@ construction**), and every test uses an all-digit source. This choice — over a
 runtime reject — keeps the oracle and compiler provably identical, because the
 compiled path has no clean way to raise a runtime error for a non-digit that the
 oracle could mirror byte-for-byte. A SPACE source byte (below `'0'`) makes the fold
-go negative, but an unsigned `PIC 9` field keeps the **magnitude** on both engines
-(the compiler `abs`es before `mod`; the oracle uses `unsigned_abs`) — no stray
-`'-'`.
+go negative, but the source has **no operational sign**, so both engines keep the
+**magnitude** (the compiler `abs`es before `mod`; the oracle uses `unsigned_abs`) —
+no stray `'-'` — for a signed *or* unsigned receiver alike.
 
-Deferred as clean later rungs (rejected identically on both engines): a **signed**
-(`PIC S9`) or **edited** numeric receiver, a **group** item on either side, and a
-**source wider than 18 characters** (whose `i64` fold could overflow — an all-digit
-source of ≤ 18 chars stays below `10^18 < i64::MAX`).
+**Signed receiver (positive magnitude; DISPLAY overpunch).** A signed receiver
+(`PIC S9(i)V9(d)`) is handled by the **same** fold and store path — the guard is
+merely relaxed to accept any numeric receiver. Because an alphanumeric source has
+no operational sign, the stored value is **always positive**: the compiler
+`emit_abs`es the fold *before* `store_scaled` (so `reapply_sign`, which would
+otherwise re-apply the negative sign of a SPACE-driven fold, becomes a genuine
+no-op), and the oracle builds `Decimal { neg: false }`. `DISPLAY` of the signed
+field then overpunches the units digit on its **positive** row (`{A…I` for units
+0-9), via the same `overpunch_trailing`/`item_image` path signed `DISPLAY` and the
+signed→alphanumeric `MOVE` already use. Worked:
+
+- `PIC X(3)="123"` → `PIC S9(3)` → magnitude `123`, `DISPLAY` **`12C`** (units 3 → `C`).
+- `PIC X(3)="120"` → `PIC S9(3)` → `DISPLAY` **`12{`** (units 0 → `{`).
+- `PIC X(1)=" "` (SPACE) → `PIC S9(3)` → magnitude `016`, positive, `DISPLAY` **`01F`** (no stray sign).
+- `PIC X(3)="042"` → `PIC S9(2)V9` → slot `042`, `DISPLAY` **`04B`** (units 2 → `B`).
+
+**Non-ASCII byte-vs-char.** The fold is byte-based on both engines
+(`chars.bytes()` in the oracle, `emit_str_to_int` over bytes in the compiler), but
+the compiler folds the item's `width()` = **char-count** leading bytes while the
+oracle folds the **full byte storage** of the char-padded value. For a source with
+a multi-byte character these read a different number of bytes, so the two engines
+already disagree — **identically on the unsigned and signed paths** (the signed
+relaxation does not touch this). This is the pre-existing byte-vs-char chip,
+deferred; a dedicated `jit_e2e` test pins both engines' outputs to document it.
+
+Deferred as clean later rungs (rejected identically on both engines): an **edited**
+numeric receiver, a **group** item on either side, and a **source wider than 18
+characters** (whose `i64` fold could overflow — an all-digit source of ≤ 18 chars
+stays below `10^18 < i64::MAX`).
 
 ### Comparison (numeric ↔ alphanumeric)
 

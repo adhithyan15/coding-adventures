@@ -34,13 +34,18 @@ overpunch** on the units digit — the same zoned-decimal encoding `DISPLAY` of 
 "12C"`, `= -123 → "12L"`, `S9V9=-4.2 → "4K"`; the overpunch is driven by the item
 being signed, so a signed *positive* source (`"12C"`) differs from an unsigned one
 (`"123"`). And the reverse — an
-alphanumeric source into an unsigned numeric receiver, **integer or scaled
-`PIC 9(i)V9(d)`**: its `m` chars fold into an unsigned integer `V`, and that fold
+alphanumeric source into a numeric receiver — now **signed or unsigned**,
+**integer or scaled `PIC [S]9(i)V9(d)`** (this **completes the Char↔Numeric MOVE
+matrix**): its `m` chars fold into an integer `V`, and that fold
 **is the receiver's scaled slot magnitude directly** — the `(i+d)` digit positions
 right-justified with the implied point `d` places from the right, so
 `slot = V mod 10^(i+d)` (`MOVE "042" TO 9(2)V9` → `042` reads `4.2`,
 `MOVE "12345" TO 9(2)V9` → `345` reads `34.5`; NOT the arithmetic decimal-align
-rule — `V` is not multiplied by `10^d`); an alphanumeric→**signed** numeric MOVE, a
+rule — `V` is not multiplied by `10^d`). An alphanumeric source has **no
+operational sign**, so a **signed** receiver stores the fold's MAGNITUDE
+**POSITIVE** (via `unsigned_abs`, so a SPACE or any sub-`'0'` byte never yields a
+stray sign), and `DISPLAY` overpunches the units digit on its **positive** row
+(`{A…I`): `MOVE "123" TO S9(3)` → `12C`, `MOVE "120"` → `12{`. A
 `SIGN` clause with `SEPARATE`/`LEADING`, a group on either side, and a
 source wider than 18 chars are later rungs; `DISPLAY`; `STOP RUN`;
 fixed-point

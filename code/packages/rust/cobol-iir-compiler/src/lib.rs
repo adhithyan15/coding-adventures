@@ -649,8 +649,23 @@ impl<'a> Compiler<'a> {
                         }
                         // Cross-category **alphanumeric → numeric** (the reverse
                         // direction): an alphanumeric source (`PIC X(m)`) moved into
-                        // an UNSIGNED numeric receiver `PIC 9(i)V9(d)` (no `S`; `d`
-                        // may be 0 — an INTEGER — or > 0 — a SCALED receiver).
+                        // a numeric receiver `PIC [S]9(i)V9(d)` — SIGNED or unsigned;
+                        // `d` may be 0 (an INTEGER) or > 0 (a SCALED receiver).
+                        //
+                        // A SIGNED receiver is handled here too (guard relaxed to drop
+                        // the `signed: false` constraint). The WHY: an alphanumeric
+                        // source carries NO operational sign — COBOL does not read an
+                        // overpunch from a plain `PIC X` source — so the receiver
+                        // stores the folded MAGNITUDE and its sign is ALWAYS POSITIVE.
+                        // `store_scaled` already respects the receiver's signedness: it
+                        // reads `self.item_signed(idx)` and re-applies the sign of the
+                        // (already-positive) folded value via `reapply_sign`, a no-op
+                        // for a positive value → a positive value is stored, byte-
+                        // identical to the oracle. DISPLAY of the signed field then
+                        // overpunches the units digit on its POSITIVE row (`{A…I`),
+                        // via the same `overpunch_trailing` path signed DISPLAY already
+                        // uses — untouched here. The fold/scale rule is IDENTICAL to
+                        // the unsigned path below.
                         //
                         // COBOL reads the source's `m` characters as an unsigned
                         // integer `V` (fold `V = V*10 + (byte - '0')` left-to-right),
@@ -691,7 +706,7 @@ impl<'a> Compiler<'a> {
                         // and no test exercises it.
                         (
                             ItemKind::Char { .. },
-                            ItemKind::Numeric { signed: false, dec_digits: d, .. },
+                            ItemKind::Numeric { dec_digits: d, .. },
                         ) => {
                             let d = *d;
                             let m = self.items[src_idx].width();
@@ -708,26 +723,42 @@ impl<'a> Compiler<'a> {
                             }
                             let src_reg = self.items[src_idx].reg.clone();
                             let value = self.emit_str_to_int(&src_reg, m);
+                            // Take the MAGNITUDE of the fold BEFORE storing, exactly
+                            // as the oracle does (`value.unsigned_abs()`). This is the
+                            // crux of the SIGNED-receiver relaxation: a source byte
+                            // below `'0'` — most commonly a SPACE (an uninitialised
+                            // `PIC X` is spaces) — makes `(byte - '0')` negative, so
+                            // the raw fold goes NEGATIVE. For an UNSIGNED receiver
+                            // `store_scaled` abs-es internally and ignores the sign, so
+                            // this was invisible; but for a SIGNED receiver
+                            // `store_scaled` re-applies the sign of the value it is
+                            // handed (`reapply_sign`), which would wrongly store a
+                            // NEGATIVE value and overpunch DISPLAY on the negative row.
+                            // Absing here makes the handed value non-negative →
+                            // `reapply_sign` is a genuine no-op → a POSITIVE value is
+                            // stored, byte-identical to the oracle (which builds
+                            // `Decimal { neg: false }`). For an all-digit source the
+                            // fold is already non-negative, so this is a no-op and the
+                            // unsigned path's output is unchanged.
+                            self.emit_abs(&value);
                             // Claim the receiver's scale `d` for the fold — see the
                             // note above: the fold already IS the slot magnitude at
                             // scale `d`, so `store_scaled` does no shift and keeps the
                             // low-order `(i + d)` digits.
                             self.store_scaled(&dst, &value, d, m, false)?;
                         }
-                        // Every other cross-category shape stays a clean later
-                        // rung: a SIGNED (`PIC S9`) numeric item on either side
-                        // (source of a numeric→alphanumeric, or receiver of an
-                        // alphanumeric→numeric MOVE).
-                        _ => {
-                            return Err(CompileError::Unsupported(format!(
-                                "cross-category MOVE from {name} into {dst} \
-                                 (an unsigned numeric source into an alphanumeric \
-                                 receiver, or an alphanumeric source into an unsigned \
-                                 numeric receiver — integer or scaled `PIC 9(i)V9(d)` — \
-                                 are supported; a signed numeric item on either side is \
-                                 a later rung)"
-                            )));
-                        }
+                        // The Char↔Numeric MOVE matrix is now COMPLETE. `ItemKind`
+                        // has exactly two variants (Char, Numeric), so the four arms
+                        // above — (Numeric,Numeric), (Char,Char), (Numeric,Char) and
+                        // (Char,Numeric), covering both directions and both
+                        // signednesses — are EXHAUSTIVE over `(kind, kind)`. A
+                        // catch-all `_` reject arm would now be unreachable, which the
+                        // compiler flags as an `unreachable_patterns` warning (CI
+                        // denies warnings), so we omit it rather than let a dead arm
+                        // lie about what is unsupported. Should a THIRD item kind ever
+                        // be added, the non-exhaustive match will fail to compile and
+                        // force this cross-category logic to be revisited deliberately
+                        // — a stronger guarantee than a silent catch-all.
                     }
                 }
                 // Reference-modification SOURCE `base(start:len)` moved into an
@@ -8925,21 +8956,28 @@ mod tests {
         assert!(module.validate().is_empty(), "validate: {:?}", module.validate());
     }
 
-    // Alphanumeric → numeric MOVE: the still-deferred receiver/source shapes.
+    // Alphanumeric → numeric MOVE lowering shapes.
 
     #[test]
-    fn alphanumeric_to_signed_numeric_move_is_a_later_rung() {
-        // A SIGNED receiver (`PIC S9`) is a later rung — only an UNSIGNED integer
-        // receiver is modelled this cut.
-        let err = compile_source(
+    fn alphanumeric_to_signed_numeric_move_lowers() {
+        // A SIGNED receiver (`PIC S9`) is now supported (guard relaxed to any numeric
+        // receiver). The alphanumeric source has NO operational sign, so the fold's
+        // MAGNITUDE is stored POSITIVE: we `emit_abs` the fold before `store_scaled`
+        // so `reapply_sign` is a no-op. The lowering still reads each byte via
+        // `str_index` and truncates to receiver width via `mod`, exactly like the
+        // unsigned path.
+        let m = compile_source(
             &wrap(
                 &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC S9(3)."],
                 &["MOVE A TO N.", "STOP RUN."],
             ),
             "a2n_signed",
         )
-        .unwrap_err();
-        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_index".to_string()), "each source byte is read via str_index");
+        assert!(os.contains(&"mod".to_string()), "receiver-width truncation via mod");
     }
 
     #[test]
@@ -8963,18 +9001,22 @@ mod tests {
     }
 
     #[test]
-    fn alphanumeric_to_signed_scaled_numeric_move_is_a_later_rung() {
-        // A SIGNED SCALED receiver (`PIC S9V9`) is still a later rung — only an
-        // UNSIGNED receiver (integer or scaled) is modelled this cut.
-        let err = compile_source(
+    fn alphanumeric_to_signed_scaled_numeric_move_lowers() {
+        // A SIGNED SCALED receiver (`PIC S9V9`) is now supported too — the signed
+        // guard relaxation composes with the scaled path: the fold's magnitude is
+        // the scaled-slot value at scale `d`, stored POSITIVE (source has no sign).
+        let m = compile_source(
             &wrap(
                 &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC S9V9."],
                 &["MOVE A TO N.", "STOP RUN."],
             ),
             "a2n_signed_scaled",
         )
-        .unwrap_err();
-        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_index".to_string()), "each source byte is read via str_index");
+        assert!(os.contains(&"mod".to_string()), "receiver-width truncation via mod");
     }
 
     #[test]
