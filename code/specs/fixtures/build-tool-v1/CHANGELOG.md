@@ -18,8 +18,9 @@
 - Closed post-transition anonymous and FD-backed execution by moving the
   retained Podman handoff to pathname `execve`, closing unlisted descriptors,
   and installing an inherited amd64 classic-seccomp filter that rejects
-  `execveat`, `memfd_create`, executable mappings, `SHM_EXEC`, `uselib`,
-  `io_uring_*`, x32 syscalls, and architecture mismatch.
+  `execveat`, `memfd_create`, `memfd_secret`, descriptor receipt or
+  acquisition, executable mappings, `SHM_EXEC`, `uselib`, `io_uring_*`, x32
+  syscalls, and architecture mismatch.
 - Kept the isolated worker protocol non-authoritative: it accepts no loader or
   backend source and returns only bounded command results or one closed error;
   the authority-gated parent alone loads the approved backend and binds source

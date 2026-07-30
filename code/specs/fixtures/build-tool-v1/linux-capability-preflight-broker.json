@@ -205,6 +205,11 @@
         "io_uring_register",
         "io_uring_setup",
         "memfd_create",
+        "memfd_secret",
+        "open_by_handle_at",
+        "pidfd_getfd",
+        "recvmmsg",
+        "recvmsg",
         "uselib"
       ],
       "deny_flagged_syscalls": [

@@ -71,7 +71,10 @@ SHM_EXEC = 0o100000
 SYS_MMAP = 9
 SYS_MPROTECT = 10
 SYS_SHMAT = 30
+SYS_RECVMSG = 47
 SYS_USELIB = 134
+SYS_RECVMMSG = 299
+SYS_OPEN_BY_HANDLE_AT = 304
 SYS_SECCOMP = 317
 SYS_MEMFD_CREATE = 319
 SYS_EXECVEAT = 322
@@ -79,6 +82,8 @@ SYS_PKEY_MPROTECT = 329
 SYS_IO_URING_SETUP = 425
 SYS_IO_URING_ENTER = 426
 SYS_IO_URING_REGISTER = 427
+SYS_PIDFD_GETFD = 438
+SYS_MEMFD_SECRET = 447
 CGROUP2_SUPER_MAGIC = 0x63677270
 LANDLOCK_ACCESS_FS_EXECUTE = 1 << 0
 LANDLOCK_CREATE_RULESET_VERSION = 1 << 0
@@ -315,6 +320,11 @@ def _validate_behavior_shape(value: Mapping[str, Any]) -> None:
                 "io_uring_register",
                 "io_uring_setup",
                 "memfd_create",
+                "memfd_secret",
+                "open_by_handle_at",
+                "pidfd_getfd",
+                "recvmmsg",
+                "recvmsg",
                 "uselib",
             ],
             "deny_flagged_syscalls": [
@@ -1190,6 +1200,11 @@ def _anonymous_exec_seccomp_instructions() -> tuple[_SockFilter, ...]:
         SYS_IO_URING_REGISTER,
         SYS_IO_URING_SETUP,
         SYS_MEMFD_CREATE,
+        SYS_MEMFD_SECRET,
+        SYS_OPEN_BY_HANDLE_AT,
+        SYS_PIDFD_GETFD,
+        SYS_RECVMMSG,
+        SYS_RECVMSG,
         SYS_USELIB,
     ):
         instructions.extend(

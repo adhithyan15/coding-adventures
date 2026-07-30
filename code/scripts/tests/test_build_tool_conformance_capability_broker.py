@@ -7,6 +7,7 @@ import importlib.util
 import inspect
 import json
 import os
+import shutil
 import signal
 import stat
 import struct
@@ -352,6 +353,11 @@ class CapabilityBrokerManifestTests(unittest.TestCase):
                     "io_uring_register",
                     "io_uring_setup",
                     "memfd_create",
+                    "memfd_secret",
+                    "open_by_handle_at",
+                    "pidfd_getfd",
+                    "recvmmsg",
+                    "recvmsg",
                     "uselib",
                 ],
                 "deny_flagged_syscalls": [
@@ -754,6 +760,9 @@ class CapabilityBrokerHelperTests(unittest.TestCase):
                     anonymous_pid = os.fork()
                     if anonymous_pid == 0:
                         try:
+                            broker._close_unlisted_descriptors(
+                                {0, 1, 2, allowed_fd, denied_fd}
+                            )
                             broker.install_command_exec_sandbox(allowed_fd)
                             os.execve(
                                 broker._proc_fd(anonymous_fd),
@@ -761,7 +770,11 @@ class CapabilityBrokerHelperTests(unittest.TestCase):
                                 {"PATH": "/nonexistent"},
                             )
                         except OSError as error:
-                            os._exit(44 if error.errno == errno.EACCES else 43)
+                            os._exit(
+                                44
+                                if error.errno in {errno.EBADF, errno.ENOENT}
+                                else 43
+                            )
                         except BaseException:  # noqa: BLE001 - child test process
                             os._exit(42)
                         os._exit(41)
@@ -858,6 +871,11 @@ class CapabilityBrokerHelperTests(unittest.TestCase):
             broker.SYS_IO_URING_REGISTER,
             broker.SYS_IO_URING_SETUP,
             broker.SYS_MEMFD_CREATE,
+            broker.SYS_MEMFD_SECRET,
+            broker.SYS_OPEN_BY_HANDLE_AT,
+            broker.SYS_PIDFD_GETFD,
+            broker.SYS_RECVMMSG,
+            broker.SYS_RECVMSG,
             broker.SYS_USELIB,
         ):
             self.assertEqual(evaluate(number), denied)
@@ -883,13 +901,17 @@ class CapabilityBrokerHelperTests(unittest.TestCase):
         if not (sys.platform.startswith("linux") and hasattr(os, "fork")):
             self.skipTest("classic seccomp integration requires Linux")
         extension = importlib.util.find_spec("_decimal")
-        dlopen_candidate = (
-            extension.origin
-            if extension is not None
+        dlopen_candidate = None
+        if (
+            extension is not None
             and isinstance(extension.origin, str)
             and extension.origin.endswith(".so")
-            else None
-        )
+        ):
+            dlopen_directory = tempfile.TemporaryDirectory()
+            self.addCleanup(dlopen_directory.cleanup)
+            candidate = Path(dlopen_directory.name) / "unloaded-extension.so"
+            shutil.copyfile(extension.origin, candidate)
+            dlopen_candidate = str(candidate)
         pid = os.fork()
         if pid == 0:
             try:
@@ -995,6 +1017,11 @@ class CapabilityBrokerHelperTests(unittest.TestCase):
                         broker.SYS_IO_URING_SETUP,
                         broker.SYS_IO_URING_ENTER,
                         broker.SYS_IO_URING_REGISTER,
+                        broker.SYS_MEMFD_SECRET,
+                        broker.SYS_OPEN_BY_HANDLE_AT,
+                        broker.SYS_PIDFD_GETFD,
+                        broker.SYS_RECVMMSG,
+                        broker.SYS_RECVMSG,
                     ),
                     start=20,
                 ):

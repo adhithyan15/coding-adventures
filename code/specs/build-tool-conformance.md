@@ -787,9 +787,11 @@ execute ruleset whose sole allow-rule is the already-retained Podman inode, and
 installs an amd64 classic-seccomp filter. Podman starts through
 `/proc/self/fd/<retained-fd>` pathname `execve`, while pre-exec hooks,
 `catatonit`, every other pathname-backed helper, `execveat`, anonymous
-executable memfds, and new executable mappings are denied by the inherited
-kernel policy regardless of `PATH`. This closes post-transition executable
-creation in broker-command descendants; it does not remove the already-loaded
+executable memfds, executable mappings, and descriptor receipt or acquisition
+through `recvmsg`, `recvmmsg`, `pidfd_getfd`, or `open_by_handle_at` are denied
+by the inherited kernel policy regardless of `PATH`. This closes
+post-transition executable creation and descriptor replenishment in
+broker-command descendants; it does not remove the already-loaded
 protected Python, standard-library, native-extension, libc, or loader
 runner-image TCB.
 The broker uses the closed `version --format json` request instead of
@@ -915,7 +917,8 @@ The broker behavior is closed by
    the retained static Podman inode, and Podman starts via pathname `execve` of
    `/proc/self/fd/<retained-fd>`. An amd64 classic-seccomp filter kills
    architecture mismatch and the x32 syscall space; denies `execveat`,
-   `memfd_create`, `uselib`, and `io_uring_*`; and returns `EPERM` for
+   `memfd_create`, `memfd_secret`, `recvmsg`, `recvmmsg`, `pidfd_getfd`,
+   `open_by_handle_at`, `uselib`, and `io_uring_*`; and returns `EPERM` for
    `mmap(PROT_EXEC)`, `mprotect(PROT_EXEC)`, `pkey_mprotect(PROT_EXEC)`, and
    `shmat(SHM_EXEC)`. Both restrictions are inherited by every fork, namespace
    transition, and re-exec. The broker refuses to run if either transition

@@ -85,8 +85,9 @@ the retained Podman inode, so constructor hooks, `catatonit`, and other
 pathname-backed helpers in the reviewed flow cannot execute. After closing
 unlisted descriptors, the broker also installs an amd64 classic-seccomp filter
 that denies `execveat`, anonymous executable memfds, executable mappings,
-`SHM_EXEC`, `uselib`, and `io_uring_*`. Podman begins through pathname
-`execve` of its retained `/proc/self/fd` inode. This closes new executable code
+`SHM_EXEC`, descriptor receipt or acquisition syscalls, `uselib`, and
+`io_uring_*`. Podman begins through pathname `execve` of its retained
+`/proc/self/fd` inode. This closes new executable code
 paths after the transition without removing the protected runner-image TCB. The
 process-free `build_tool_conformance_linux_oci.py` backend validates only the
 bounded local version and image results without decoding a fixture or creating
