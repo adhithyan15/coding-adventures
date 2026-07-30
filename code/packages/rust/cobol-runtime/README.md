@@ -92,7 +92,9 @@ paragraphs, so back-edge loops work); and `STRING s… DELIMITED BY {SIZE | deli
 INTO t` (concatenate the sending fields into the alphanumeric receiver, left-
 justified, truncated at its width, and, per ANSI-85, **without** space-filling the
 untouched tail; `DELIMITED BY SIZE` takes each field in full, while `DELIMITED BY`
-a single-character delimiter takes only each field's prefix up to its first
+a single-character delimiter — a 1-char literal, a `PIC X(1)` item, or a figurative
+constant SPACE/ZERO taken as its single ASCII character (SPACE→`" "`, ZERO→`"0"`) —
+takes only each field's prefix up to its first
 occurrence of the delimiter — `STRING "ab,cd" "ef" DELIMITED BY "," INTO t` →
 `"abef"`; a sending field may be a figurative constant SPACE or ZERO, taken as its
 single-character image — SPACE→`" "`, ZERO→`"0"` — reducing to the string-literal
@@ -139,7 +141,8 @@ initial `WITH POINTER` value is out of range; the out-of-range case runs `ON
 OVERFLOW` with no data movement); and `INSPECT source TALLYING
 counter FOR ALL delim` / `FOR LEADING delim`
 (count the occurrences of a single-character delimiter — a 1-char literal or a
-`PIC X(1)` item — in the alphanumeric source and **ADD** them to the
+`PIC X(1)` item, **or** a figurative constant SPACE/ZERO taken as its single ASCII
+character (SPACE→`" "`, ZERO→`"0"`) — in the alphanumeric source and **ADD** them to the
 unsigned-integer counter; `FOR ALL` counts EVERY occurrence, `FOR LEADING` counts
 only the run of consecutive delimiters at the START, stopping at the first
 non-match; INSPECT adds, it does not clear the counter first) — and, on the
@@ -194,8 +197,9 @@ since TALLYING only COUNTS, e.g. `"aé0b0"` with `C1 FOR ALL "0" BEFORE "b" C2 F
 AFTER "b"` gives `C1 = 1, C2 = 1` on both engines; this rung's multi-counter path is
 `ALL`-only, single-char, every counter an unsigned integer `PIC 9(n)`, with no `LEADING`/
 `CHARACTERS` and the combined form with several counters still a later rung); and `INSPECT source REPLACING ALL x BY y` / `REPLACING LEADING x BY y`
-(substitute a single character `x` — a 1-char literal or a `PIC X(1)` item — with a
-single character `y` in the alphanumeric source, **in place**, a per-position map
+(substitute a single character `x` with a single character `y` — each a 1-char
+literal, a `PIC X(1)` item, or a figurative constant SPACE/ZERO taken as its single
+ASCII character (SPACE→`" "`, ZERO→`"0"`) — in the alphanumeric source, **in place**, a per-position map
 that leaves the width unchanged; `ALL` replaces EVERY occurrence, `LEADING` replaces
 only the run of consecutive `x` at the START, stopping at the first character that is
 not `x` — positions after that first gap are left unchanged even if they equal `x`)

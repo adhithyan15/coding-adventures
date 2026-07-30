@@ -1075,9 +1075,11 @@ impl Machine {
     }
 
     /// The single delimiter character of a scan delimiter. It is either a
-    /// 1-character string literal (`","`, `" "`) or a `PIC X(1)` item. A
-    /// multi-character delimiter, `ALL`/`OR` delimiters, a numeric/figurative
-    /// delimiter, and a numeric/group/wider delimiter item are later rungs.
+    /// 1-character string literal (`","`, `" "`), a figurative constant
+    /// SPACE/ZERO (which resolve to their single ASCII character — SPACE→`' '`,
+    /// ZERO→`'0'`), or a `PIC X(1)` item. A multi-character delimiter, `ALL`/`OR`
+    /// delimiters, a numeric/reference-modified/group/wider delimiter (item)
+    /// are later rungs.
     ///
     /// Shared by `UNSTRING … DELIMITED BY delim` and `INSPECT … FOR ALL delim`;
     /// `verb` names the caller so the later-rung message reads naturally.
@@ -1095,9 +1097,10 @@ impl Machine {
             Operand::Lit(Lit::Num(_)) => Err(RuntimeError::Unsupported(format!(
                 "{verb} with a numeric-literal delimiter is a later rung"
             ))),
-            Operand::Lit(Lit::Fig(_)) => Err(RuntimeError::Unsupported(format!(
-                "{verb} with a figurative-constant delimiter is a later rung"
-            ))),
+            // SPACE→" " (0x20), ZERO→"0" (0x30): a figurative constant reduces to
+            // its single ASCII character, joining the single-char-literal path.
+            Operand::Lit(Lit::Fig(Fig::Space)) => Ok(' '),
+            Operand::Lit(Lit::Fig(Fig::Zero)) => Ok('0'),
             Operand::RefMod { .. } => Err(RuntimeError::Unsupported(format!(
                 "{verb} with a reference-modified delimiter is a later rung"
             ))),

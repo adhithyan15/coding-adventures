@@ -428,8 +428,10 @@ space-fill** the untouched tail of `t` (unlike `MOVE`) — the receiver's traili
 bytes keep their prior content.
 
 **Delimiter rung (now implemented).** `STRING s… DELIMITED BY delim INTO t`, where
-`delim` is a **single-character ASCII** delimiter (a 1-char literal or a `PIC X(1)`
-item, reduced by the same `single_delim_char`/`single_delim_code` helper `UNSTRING`
+`delim` is a **single-character ASCII** delimiter (a 1-char literal, a `PIC X(1)`
+item, or a **figurative constant** SPACE/ZERO taken as its single ASCII character —
+SPACE→`" "` (0x20), ZERO→`"0"` (0x30), reducing to the single-char literal path — all
+reduced by the same `single_delim_char`/`single_delim_code` helper `UNSTRING`
 uses), is now supported. Each sending field contributes only its PREFIX up to (but
 not including) the FIRST occurrence of the delimiter char in that field; a field
 with no delimiter contributes its whole image, and a field starting with the
@@ -564,8 +566,10 @@ can reject them cleanly rather than as a parse failure).
 `UNSTRING` is the inverse of `STRING`: it takes one alphanumeric source apart on a
 delimiter into several receivers. The **first rung** implements `UNSTRING source
 DELIMITED BY delim INTO r1 [r2 …]`, where `delim` is a **single-character**
-delimiter — either a 1-character string literal (`","`, `" "`) or a `PIC X(1)`
-item. The source is scanned left-to-right and split into delimited fields; each
+delimiter — a 1-character string literal (`","`, `" "`), a `PIC X(1)`
+item, or a **figurative constant** SPACE/ZERO taken as its single ASCII character
+(SPACE→`" "`, ZERO→`"0"`, reducing to the single-char literal path). The source is
+scanned left-to-right and split into delimited fields; each
 field is moved into the next receiver as an ordinary alphanumeric `MOVE`
 (left-justified, space-padded, truncated). The exact semantics (oracle = source of
 truth, compiler byte-identical):
@@ -740,7 +744,9 @@ form `INSPECT source TALLYING counter FOR ALL delim`:
   `counter := counter + occurrences`. (This is the standard's rule and the common
   source of the "why is my count too high?" bug.)
 - `delim` is a **single-character** delimiter — a 1-character string literal
-  (`"A"`) or a `PIC X(1)` item. `ALL` means every (non-overlapping, left-to-right)
+  (`"A"`), a `PIC X(1)` item, or a **figurative constant** SPACE/ZERO taken as its
+  single ASCII character (SPACE→`" "`, ZERO→`"0"`, reducing to the single-char
+  literal path). `ALL` means every (non-overlapping, left-to-right)
   occurrence is counted; **`LEADING`** counts only the run of **consecutive**
   delimiters at the START of the source, stopping at the first non-`delim`
   character.
@@ -842,7 +848,9 @@ regions, and a region on each `ALL` half of the combined form — see those sect
 below), and a
 multi-character region
 delimiter — so the reader/compiler reject each as a clean "later rung" error
-rather than a parse failure. A multi-character / figurative / numeric /
+rather than a parse failure. A **figurative constant** SPACE/ZERO delimiter (tally
+OR region) is now accepted, reduced to its single ASCII character through the shared
+`single_delim_char`/`single_delim_code` helper. A multi-character / numeric /
 wider-than-one delimiter (tally OR region), and a numeric/group source or a
 non-integer/signed/non-numeric counter, are likewise clean later rungs. (`FIRST`
 and `INITIAL`, needed only by `REPLACING FIRST` / `BEFORE INITIAL`, are left
@@ -858,8 +866,11 @@ The **substitution** form implements a LONE
   both `x` and `y` are single characters, the result has the **same width** as
   the source — this is a straight **per-position map**.
 - `x` (the search) and `y` (the replacement) are each a **single character** — a
-  1-character string literal (`"A"`) or a `PIC X(1)` item — reusing the same
-  single-character helpers as `TALLYING`/`UNSTRING`.
+  1-character string literal (`"A"`), a `PIC X(1)` item, or a **figurative constant**
+  SPACE/ZERO taken as its single ASCII character (SPACE→`" "`, ZERO→`"0"`, reducing
+  to the single-char literal path) — reusing the same single-character helpers as
+  `TALLYING`/`UNSTRING` (`single_delim_code` for the search byte scan,
+  `single_delim_str` for the 1-char replacement string).
 - `ALL` semantics: `source := source with each x → y`, left to right. Every
   position `j` where `source[j] == x` becomes `y`; all others are unchanged.
 - `LEADING` semantics: replace only the run of **consecutive** `x` characters at
@@ -1093,7 +1104,9 @@ a multi-character region delimiter, a multi-item `REPLACING` list carrying a
 `LEADING`/`CHARACTERS`/`FIRST` item (a `{BEFORE|AFTER}` region on each item of a
 multi-item list is now supported — see the per-item-region section just below),
 **several** replace items in the **combined** `TALLYING … REPLACING` form, a multi-character /
-figurative / wider / numeric search or replacement, and a numeric/group source.
+wider / numeric search or replacement, and a numeric/group source (a **figurative
+constant** SPACE/ZERO search or replacement is now accepted, reduced to its single
+ASCII character through the shared `single_delim_code` / `single_delim_str` helpers).
 (A single-clause multi-item `REPLACING ALL` list is now supported — see just above.
 A `REPLACING LEADING` inside the combined `TALLYING … REPLACING` form, and a
 `{BEFORE|AFTER}` region on each half — `ALL` **or** `LEADING` — of the combined form,
@@ -1484,7 +1497,9 @@ accepted `inspect_tallying [ inspect_replacing ]`. The `TALLYING` half accepts
 `REPLACING` half independently accepts `ALL`/`LEADING` (reusing the lone-REPLACING
 `active` run flag): a combined statement whose either half is a deferred sub-form
 (`CHARACTERS`, several counters/FOR/replace items, multi-char/
-figurative/wider/numeric operands, a numeric/group source, or a non-integer
+wider/numeric operands — a **figurative constant** SPACE/ZERO operand is now
+accepted through the shared single-character helpers, reduced to its single ASCII
+character — a numeric/group source, or a non-integer
 counter) remains a clean later rung. (A lone `FOR LEADING` tally, a lone
 `REPLACING LEADING`, and every combination of leading/`ALL` on the two combined
 halves are each supported.)
