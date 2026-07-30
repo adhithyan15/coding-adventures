@@ -105,23 +105,23 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 30, 2026 at `e4a2b1b06` after the Haskell
+inventory was regenerated on July 30, 2026 at `9d086d458` after the Haskell
 `barcode-1d` and `http-core` ports, the Go/Rust `multi-directed-graph` slice,
 the Linux OCI preflight and external-authority contracts, and a new wave of
 Rust-only package families. The latest refresh added the Rust-only
-`venture-browser-macos` identity, an Apple-native AppKit/CoreText/Metal host,
-after the earlier `smart-home-runtime-store`, `hue-integration`, and
-`venture-browser-core` additions and found zero canonical collisions or unknown
-language buckets:
+`smart-home-automation-runtime` identity after `venture-browser-macos`, an
+Apple-native AppKit/CoreText/Metal host, and the earlier
+`smart-home-runtime-store`, `hue-integration`, and `venture-browser-core`
+additions. It found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
 | Present in 10-15 languages | 172 | 278 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 742 | 10,388 |
+| Present in one language | 743 | 10,402 |
 
-The loop must not start by attempting 10,388 singleton ports. It should finish
+The loop must not start by attempting 10,402 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The July 29 lane audit is:
@@ -826,18 +826,20 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 547 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 548 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30 inventories added seven Rust singleton identities that now have
+The July 30 inventories added eight Rust singleton identities that now have
 explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
 `venture-browser-core` needs a portable-core versus native-boundary review.
 `smart-home-discovery-service`, `hue-integration`, and
-`smart-home-runtime-store` are likely native/service/storage applicability
-cases. `venture-browser-macos` is an Apple-native AppKit/CoreText/Metal host
-whose expected classification is `native-source`, not a blind 14-lane port.
+`smart-home-runtime-store`, plus the newly merged
+`smart-home-automation-runtime`, are likely native/service/storage
+applicability cases. `venture-browser-macos` is an Apple-native
+AppKit/CoreText/Metal host whose expected classification is `native-source`,
+not a blind 14-lane port.
 
 ### Likely portable Rust-led families
 
