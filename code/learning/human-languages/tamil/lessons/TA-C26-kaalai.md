@@ -3,7 +3,7 @@ id: TA-C26-kaalai
 chapter: 26
 type: word
 headword: காலை
-gloss: "morning" (kālai) — Wiktionary itself HEDGES the etymology ("possibly from Sanskrit काल्य/kālya"), not a confirmed Dravidian root; genuinely uncertain, unlike Kannada's confidently-native or Telugu's confidently-Sanskrit morning-words; பகல் (already met, TA-C17, "daytime") is Wiktionary's own listed coordinate term; அதிகாலை ("early dawn") is a transparent ati-+kālai compound
+gloss: morning (kālai) — Wiktionary itself HEDGES the etymology ("possibly from Sanskrit काल्य/kālya"), not a confirmed Dravidian root; genuinely uncertain, unlike Kannada's confidently-native or Telugu's confidently-Sanskrit morning-words; பகல் (already met, TA-C17, "daytime") is Wiktionary's own listed coordinate term; அதிகாலை ("early dawn") is a transparent ati-+kālai compound
 concept_tag: TIME-MORNING
 prerequisites: [TA-C17-nanpakal-nalliravu, TA-C24-iravu]
 sounds: [tamil-vowel-sign-ai, tamil-long-aa]
