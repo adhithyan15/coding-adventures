@@ -3,6 +3,22 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.44] - Unreleased
+
+### Added
+
+- **`strftime(FORMAT, X, …)` (phase 3).** SQLite's general date/time formatter:
+  the first argument is a `printf`-style format of `%` codes; the rest are the
+  usual time value + modifiers (absent = `'now'`). Supported codes: `%Y %m %d %e
+  %H %k %I %l %M %S %f %j %w %u %s %J %p %P %F %T %R %%`, matching SQLite
+  (including `%J`'s 16-significant-digit Julian day and `%f`'s `SS.SSS`). An
+  unrecognized `%` code makes the WHOLE result NULL, exactly as SQLite does, as do
+  a NULL format or an invalid time value. New helpers `format_strftime` /
+  `strftime_func` / `ijd_dow_sunday0` / `ijd_day_of_year`; the format is walked by
+  `char` (no byte slicing) and every field derives from the bounded post-modifier
+  `iJD`. `%W`/`%G`/`%g`/`%c`/`%V` and the week/ISO-year fields remain a later phase
+  (those codes fall through to NULL, matching SQLite's treatment of unknown codes).
+
 ## [0.4.43] - Unreleased
 
 ### Added

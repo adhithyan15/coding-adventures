@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.5.74 — strftime (phase 3)
+
+`strftime(FORMAT, X, …)` renders a time value through a `printf`-style format of
+`%` codes, matching real SQLite. Supported codes: `%Y %m %d %e %H %k %I %l %M %S
+%f %j %w %u %s %J %p %P %F %T %R %%` — e.g. `strftime('%Y-%m-%d %H:%M:%S', …)`,
+`strftime('%j', …)` (day of year), `strftime('%s', …)` (Unix seconds),
+`strftime('%J', …)` (Julian day), `strftime('%f', …)` (`SS.SSS`), the 12-hour
+`%I`/`%p`/`%P`, and the space-padded `%e`/`%k`/`%l`. Like SQLite, an unrecognized
+`%` code — or a NULL format or invalid time value — makes the whole result NULL;
+the usual modifier arguments after the time value are honored.
+
+This completes the date/time trio's core (functions → modifiers → strftime); the
+`%W`/`%G`/`%g` week/ISO-year codes and the interpretation modifiers
+(`unixepoch`/`localtime`/`utc`) remain later phases. Twelve new
+differential-oracle cases pin this against bundled real SQLite; the ledger stays
+empty. Spans sql-vm 0.4.44.
+
 ## 0.5.73 — date/time modifiers (phase 2)
 
 The date/time functions now take trailing modifier arguments, applied
