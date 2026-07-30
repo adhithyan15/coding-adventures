@@ -881,6 +881,24 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects negative or non-finite MOS bottom-junction capacitance", () => {
+    for (const value of [0.0, 2.0e-3, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { CJ: value });
+      expect(valid.parameters.CJ).toBe(value);
+    }
+
+    for (const invalidCapacitance of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { CJ: invalidCapacitance }),
+      ).toThrow("MOSFET CJ must be finite and non-negative");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,

@@ -1,5 +1,8 @@
 # Changelog
 
+- Reject negative and non-finite Level-1 MOS model-card `CJ` values before
+  bottom-junction capacitance shaping.
+
 - Reject negative or non-finite Level-1 MOS model-card `MJSW` values with a
   stable diagnostic before sidewall depletion-capacitance shaping.
 - Reject Level-1 MOS model-card `FC` values outside `[0, 1)` or non-finite
