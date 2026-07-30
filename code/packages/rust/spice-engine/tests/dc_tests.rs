@@ -879,6 +879,22 @@ fn mos_model_card_rejects_non_finite_threshold_voltage() {
 }
 
 #[test]
+fn mos_model_card_rejects_non_finite_channel_modulation() {
+    for (name, value) in [("LAMBDA", -0.01), ("LAM", 0.0), ("LAMBDA", 0.01)] {
+        let valid = normalize_model_card("Mvalid", "nmos", &[(name, value)]).unwrap();
+        assert_close(*valid.parameters.get("LAMBDA").unwrap(), value);
+    }
+
+    for invalid_modulation in [f64::NEG_INFINITY, f64::INFINITY, f64::NAN] {
+        assert!(matches!(
+            normalize_model_card("Minvalid", "nmos", &[("LAM", invalid_modulation)]),
+            Err(SpiceError::InvalidElement { reason, .. })
+                if reason == "MOSFET LAMBDA must be finite"
+        ));
+    }
+}
+
+#[test]
 fn bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() {
     let legacy_card = normalize_model_card(
         "Qlegacy",

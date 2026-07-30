@@ -747,6 +747,27 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects non-finite MOS channel modulation", () => {
+    for (const [name, value] of [
+      ["LAMBDA", -0.01],
+      ["LAM", 0.0],
+      ["LAMBDA", 0.01],
+    ] as const) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { [name]: value });
+      expect(valid.parameters.LAMBDA).toBe(value);
+    }
+
+    for (const invalidModulation of [
+      Number.NEGATIVE_INFINITY,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { LAM: invalidModulation }),
+      ).toThrow("MOSFET LAMBDA must be finite");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,
