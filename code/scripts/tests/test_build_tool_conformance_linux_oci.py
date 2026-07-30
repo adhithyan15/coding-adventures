@@ -579,40 +579,11 @@ class LinuxOciBackendTests(unittest.TestCase):
             )
         self.assertEqual(raised.exception.code, "LINUX_OCI_CRUN_IDENTITY_MISMATCH")
 
-    def test_cli_reports_stable_available_and_unavailable_results(self) -> None:
-        identity = backend_identity()
-        available = {
-            "schema_version": 1,
-            "backend_kind": "linux_oci",
-            "status": "available",
-            "conformance_status": "not-run",
-        }
+    def test_direct_cli_requires_external_authority_before_identity_read(self) -> None:
         stdout = io.StringIO()
         with (
-            mock.patch.object(
-                linux_oci,
-                "load_identity",
-                return_value=(identity, "a" * 64),
-            ),
-            mock.patch.object(linux_oci, "preflight", return_value=available),
-            redirect_stdout(stdout),
-        ):
-            exit_code = linux_oci.main(["--identity", "identity.json"])
-        self.assertEqual(exit_code, 0)
-        output = json.loads(stdout.getvalue())
-        self.assertEqual(output["identity_sha256"], "a" * 64)
-
-        stdout = io.StringIO()
-        unavailable = linux_oci.LinuxOciUnavailable(
-            "LINUX_OCI_PLATFORM_UNSUPPORTED",
-            "Linux OCI backend preflight requires Linux",
-        )
-        with (
-            mock.patch.object(
-                linux_oci,
-                "load_identity",
-                side_effect=unavailable,
-            ),
+            mock.patch.object(linux_oci, "load_identity") as identity_reader,
+            mock.patch.object(linux_oci, "preflight") as preflight,
             redirect_stdout(stdout),
         ):
             exit_code = linux_oci.main(["--identity", "identity.json"])
@@ -620,8 +591,10 @@ class LinuxOciBackendTests(unittest.TestCase):
         output = json.loads(stdout.getvalue())
         self.assertEqual(
             output["diagnostics"][0]["code"],
-            "LINUX_OCI_PLATFORM_UNSUPPORTED",
+            "LINUX_OCI_AUTHORITY_REQUIRED",
         )
+        identity_reader.assert_not_called()
+        preflight.assert_not_called()
 
     def test_identity_digest_is_raw_byte_stable(self) -> None:
         raw = json.dumps(

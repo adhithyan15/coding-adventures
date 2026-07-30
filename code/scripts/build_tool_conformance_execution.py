@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Any
 
 import build_tool_conformance as bootstrap
+import build_tool_conformance_authority as authority
 
 DEFAULT_FIXTURE_ROOT = bootstrap.DEFAULT_FIXTURE_ROOT
 DEFAULT_EXECUTION_CASE_ROOT = DEFAULT_FIXTURE_ROOT / "execution-cases"
@@ -353,6 +354,7 @@ def _load_contract_documents(
     dict[str, Any],
     dict[str, Any],
     dict[str, Any],
+    dict[str, Any],
 ]:
     return (
         bootstrap.load_document(fixture_root / "schema.json"),
@@ -360,6 +362,7 @@ def _load_contract_documents(
         bootstrap.load_document(fixture_root / "execution.schema.json"),
         bootstrap.load_document(fixture_root / "execution-policy.schema.json"),
         bootstrap.load_document(fixture_root / "execution-policy.json"),
+        bootstrap.load_document(fixture_root / "execution-authority.schema.json"),
     )
 
 
@@ -375,6 +378,7 @@ def validate_contract(
         execution_schema,
         policy_schema,
         policy,
+        authority_schema,
     ) = _load_contract_documents(fixture_root)
     linux_oci_schema = bootstrap.load_document(
         fixture_root / "linux-oci-backend.schema.json"
@@ -385,6 +389,7 @@ def validate_contract(
         execution_schema,
         policy_schema,
         linux_oci_schema,
+        authority_schema,
     ):
         bootstrap._schema_errors({}, schema)
     bootstrap._validate_schema(
@@ -481,72 +486,36 @@ def run_case(
     case_path: Path,
     *,
     language: str,
-    approved_digest: str,
+    authority_bundle: Path,
+    approved_authority_digest: str,
+    expected_commit_oid: str,
+    expected_tree_oid: str,
     allow_trusted_execution: bool,
-    fixture_root: Path = DEFAULT_FIXTURE_ROOT,
-    platform_name: str | None = None,
+    repository_root: Path = bootstrap.REPO_ROOT,
 ) -> dict[str, Any]:
-    """Check execution authority and fail closed before any process operation."""
+    """Reject preflight-only authority before decoding an execution case."""
 
-    del case_path  # The policy-only tranche never decodes executable case data.
+    del case_path, language  # This tranche never decodes executable case data.
     if not allow_trusted_execution:
         raise bootstrap.ConformanceError(
             "EXECUTION_AUTHORIZATION_REQUIRED",
             "trusted execution requires --allow-trusted-execution",
         )
-
-    fixture_root = fixture_root.resolve()
-    _, _, _, policy_schema, policy = _load_contract_documents(fixture_root)
-    bootstrap._validate_schema(
-        policy,
-        policy_schema,
-        "EXECUTION_POLICY_SCHEMA_INVALID",
-    )
-    validate_policy_semantics(policy)
-    actual_digest = execution_corpus_digest(fixture_root / "execution-cases")
-    if (
-        not _is_sha256(approved_digest)
-        or approved_digest != actual_digest
-        or approved_digest != policy["execution_corpus_sha256"]
-    ):
+    if not _is_sha256(approved_authority_digest):
         raise bootstrap.ConformanceError(
-            "EXECUTION_DIGEST_MISMATCH",
-            "approved digest, policy digest, and corpus digest must match exactly",
+            "AUTHORITY_DIGEST_INVALID",
+            "approved authority SHA-256 must be 64 lowercase hexadecimal digits",
         )
-
-    if not policy["enabled"]:
-        return _nonpassing_skip(
-            "EXECUTION_POLICY_DISABLED",
-            "trusted execution policy is disabled",
-        )
-
-    selected_platform = platform_name or _platform_name()
-    backend = next(
-        (item for item in policy["backends"] if item["platform"] == selected_platform),
-        None,
+    authority.authorize_preflight(
+        authority_bundle,
+        approved_digest=approved_authority_digest,
+        expected_commit_oid=expected_commit_oid,
+        expected_tree_oid=expected_tree_oid,
+        repository_root=repository_root,
     )
-    if backend is None or backend["status"] != "ready":
-        return _nonpassing_skip(
-            "EXECUTION_BACKEND_UNAVAILABLE",
-            f"no enforcing trusted-execution backend for {selected_platform}",
-        )
-
-    adapter = next(
-        (
-            item
-            for item in policy["adapters"]
-            if item["language"] == language and item["platform"] == selected_platform
-        ),
-        None,
-    )
-    if adapter is None:
-        return _nonpassing_skip(
-            "EXECUTION_ADAPTER_UNAVAILABLE",
-            f"no reviewed adapter for {language}/{selected_platform}",
-        )
     return _nonpassing_skip(
-        "EXECUTION_BACKEND_UNIMPLEMENTED",
-        "policy authority is valid, but this tranche contains no process backend",
+        "EXECUTION_AUTHORITY_SCOPE_UNAVAILABLE",
+        "capability-preflight authority cannot authorize an execution case",
     )
 
 
@@ -572,12 +541,15 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     run_parser.add_argument("--case", type=Path, required=True)
     run_parser.add_argument("--language", required=True)
-    run_parser.add_argument("--approved-corpus-sha256", required=True)
+    run_parser.add_argument("--authority-bundle", type=Path, required=True)
+    run_parser.add_argument("--approved-authority-sha256", required=True)
+    run_parser.add_argument("--source-commit", required=True)
+    run_parser.add_argument("--source-tree", required=True)
     run_parser.add_argument("--allow-trusted-execution", action="store_true")
     run_parser.add_argument(
-        "--fixture-root",
+        "--repository-root",
         type=Path,
-        default=DEFAULT_FIXTURE_ROOT,
+        default=bootstrap.REPO_ROOT,
     )
     return parser
 
@@ -596,9 +568,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             output = run_case(
                 arguments.case,
                 language=arguments.language,
-                approved_digest=arguments.approved_corpus_sha256,
+                authority_bundle=arguments.authority_bundle,
+                approved_authority_digest=arguments.approved_authority_sha256,
+                expected_commit_oid=arguments.source_commit,
+                expected_tree_oid=arguments.source_tree,
                 allow_trusted_execution=arguments.allow_trusted_execution,
-                fixture_root=arguments.fixture_root,
+                repository_root=arguments.repository_root,
             )
             exit_code = 1
     except bootstrap.ConformanceError as error:

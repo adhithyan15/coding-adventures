@@ -11,6 +11,7 @@ build-tool-v1/
   result.schema.json
   pure-domains.schema.json
   execution.schema.json
+  execution-authority.schema.json
   execution-policy.schema.json
   execution-policy.json
   linux-oci-backend.schema.json
@@ -72,6 +73,15 @@ process-owning `build_tool_conformance_linux_oci.py` preflight validates those
 identities and host capabilities without decoding a fixture or creating a
 container. No identity document is checked in while Linux remains unavailable.
 
+`execution-authority.schema.json` closes the external, post-review authority
+bundle for the first safe authorization profile. Its exact raw bytes are
+approved out of band with a domain- and length-separated SHA-256. The bundle
+binds the reviewed source commit/tree, policy and schemas, process-free
+bootstrap and verifier, Linux preflight backend, and one external Linux
+identity document. Scope `linux_capability_preflight_v1` binds no corpus,
+adapter, launcher, or executable case and cannot authorize container creation
+or trusted execution.
+
 ## Runner
 
 Validate the complete corpus and inventory:
@@ -80,13 +90,21 @@ Validate the complete corpus and inventory:
 python code/scripts/build_tool_conformance.py validate-corpus
 ```
 
-Validate a reviewed Linux OCI identity and the local non-executing capability
-preflight:
+Validate an approved external bundle without importing a process API:
 
 ```text
-python code/scripts/build_tool_conformance_linux_oci.py \
-  --identity path/to/reviewed-linux-oci-identity.json
+python code/scripts/build_tool_conformance_authority.py validate-authority \
+  --authority-bundle path/to/external-authority.json \
+  --approved-authority-sha256 <out-of-band-sha256> \
+  --source-commit <full-reviewed-commit> \
+  --source-tree <full-reviewed-tree>
 ```
+
+This tranche exposes no process-owning `preflight` subcommand. The bare
+`build_tool_conformance_linux_oci.py --identity ...` entry point fails closed
+with `LINUX_OCI_AUTHORITY_REQUIRED`. A follow-on exact-byte loader must execute
+the retained approved backend and its bound import closure without a
+name-based Python import before protected capability inspection can run.
 
 Compare one externally produced adapter result with its fixture:
 
@@ -102,11 +120,13 @@ Validate the process-free trusted-execution contract:
 python code/scripts/build_tool_conformance_execution.py validate-contract
 ```
 
-The separate `run-case` command requires both
-`--allow-trusted-execution` and an exact
-`--approved-corpus-sha256`. In this policy-only tranche it can only return a
-stable non-passing skip. It never imports a process API, decodes executable
-workspace payloads, materializes files, or launches an adapter.
+The separate `run-case` command requires `--allow-trusted-execution`, the
+external bundle and approved authority SHA-256, and the protected full source
+commit/tree identities. Corpus-only approval is no longer accepted. Because
+schema v1 is preflight-only, `run-case` returns the stable non-passing
+`EXECUTION_AUTHORITY_SCOPE_UNAVAILABLE` result after validation. It never
+imports a process API, decodes executable workspace payloads, materializes
+files, or launches an adapter.
 
 Both commands use bounded strict JSON parsing, formal Draft 2020-12 validation,
 semantic path and identity checks, domain-aware result canonicalization, and
@@ -120,14 +140,20 @@ decisions.
 
 ## Security boundary
 
-This tranche is intentionally process-free:
+Authority validation and pull-request CI are intentionally process-free:
 
 - it never launches an adapter or shell;
 - it never applies fixture environment data;
 - it never interprets manifest content as a command;
 - it rejects `execution` or `trusted_execution` intent before decoding files,
   changing permissions, or using a process API; and
-- it has no flag that can enable execution.
+- the preflight authority profile has no flag that can enable execution.
+
+There is intentionally no process handoff in this tranche. Ordinary
+name-based importing after validation would not prove that the approved
+backend bytes are the code being executed. A later loader must consume the
+exact retained artifact and its bound import closure through an atomic
+runner-owned boundary before capability inspection can run.
 
 The bootstrap runner performs no workspace materialization. Adapter
 orchestration and execution fixtures remain blocked until the separate
@@ -167,10 +193,11 @@ The platform delivery order is explicit:
 4. Closed execution-semantics fixtures and runner-owned adversarial boundary
    probes after all required platform boundaries exist.
 
-Pull-request CI validates only the process-free schemas, policy, digest, and
-unit tests. Real execution belongs to a protected reviewed revision with
-read-only repository permissions, no repository secrets, and the approved
-digest supplied out of band.
+Pull-request CI validates only the process-free schemas, policy, candidate
+digest algorithm, and fake unit tests. Real capability inspection and future
+execution belong to a protected reviewed revision with read-only repository
+permissions, no repository secrets, and the approved authority-bundle digest
+supplied out of band.
 
 ## Validation
 
@@ -187,6 +214,12 @@ python -m unittest discover \
 python -m unittest discover \
   -s code/scripts/tests \
   -p "test_build_tool_conformance_execution_runner.py"
+python -m unittest discover \
+  -s code/scripts/tests \
+  -p "test_build_tool_conformance_authority.py"
+python -m unittest discover \
+  -s code/scripts/tests \
+  -p "test_build_tool_conformance_linux_oci.py"
 python code/scripts/build_tool_conformance_execution.py validate-contract
 ```
 

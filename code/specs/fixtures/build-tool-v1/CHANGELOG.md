@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-07-30
+
+- Added the closed external authority-bundle schema and exact
+  domain/length/raw-byte approval digest for Linux capability preflight.
+- Added a process-free authority verifier that binds the protected source
+  commit/tree, eight fixed component roles, disabled empty execution policy,
+  and external Linux backend identity before any capability command.
+- Replaced corpus-only `run-case` approval with fail-closed external-authority
+  inputs. The preflight-only scope remains structurally unable to authorize a
+  case, adapter, invariant-probe container, or trusted execution.
+- Disabled the bare identity-only Linux CLI entry point. This tranche exposes
+  no process handoff; an exact-byte backend loader remains a required
+  dependency before protected capability inspection.
+
 ## 2026-07-29
 
 - Added the process-free bootstrap conformance runner.

@@ -8,14 +8,9 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": {
-    "item_id": "build-tool-linux-oci-sandbox",
-    "pr_number": 9189,
-    "branch": "codex/build-tool-linux-oci-sandbox",
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9189"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "bee64b4774b87cd43bea6c9e413e647742334f96",
+    "revision": "d0b9c442f03520fdff75c12b4f236c50de7f152c",
     "schema_version": 2,
     "established_languages": 15,
     "implementation_identities": 1187,
@@ -65,20 +60,35 @@
     {
       "id": "build-tool-linux-oci-sandbox",
       "title": "Define the Linux OCI identity, capability preflight, and invariant-probe container",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-execution-sandbox"],
       "branch": "codex/build-tool-linux-oci-sandbox",
       "pr_number": 9189,
-      "notes": "Ready-for-review PR #9189. Security review split the backend into a safe first tranche: a closed identity binding rootless Podman, crun, exact OCI manifest/config, seccomp, shim, and probe; fail-closed host/image preflight; and exact probe-container argv with no fixture decode or launch. Local validation covers 100 focused tests, 83% branch-aware module coverage, Ruff, Bandit, Go build-tool tests/build, parity collision checks, and build-file auditing. The checked-in policy remains disabled and Linux unavailable until protected enforcement evidence exists."
+      "notes": "Merged PR #9189. The closed identity binds rootless Podman, crun, exact OCI manifest/config, seccomp, shim, and probe; the process-owning module adds fail-closed host/image preflight and exact probe-container argv without fixture decode or launch. The checked-in policy remains disabled and Linux unavailable until protected enforcement evidence exists."
     },
     {
       "id": "build-tool-trusted-authority-bundle",
-      "title": "Bind trusted execution to the complete reviewed authority bundle",
+      "title": "Define the external authority bundle and Linux preflight profile",
+      "status": "in-progress",
+      "depends_on": [
+        "build-tool-execution-sandbox",
+        "build-tool-linux-oci-sandbox"
+      ],
+      "branch": "codex/build-tool-trusted-authority-bundle",
+      "pr_number": null,
+      "notes": "Selected after PR #9189 merged because it is the highest-leverage ready security prerequisite. Security review split out a safe first profile: a post-merge external bundle whose raw-byte approval binds the exact source commit/tree, policy, schemas, authority verifier, Linux preflight backend, and external backend identity. Schema v1 approves exact bytes for capability inspection only, with no corpus, adapter, container, executable payload, or process handoff."
+    },
+    {
+      "id": "build-tool-authority-exact-backend-loader",
+      "title": "Load the exact approved preflight backend through an atomic runner boundary",
       "status": "pending",
-      "depends_on": ["build-tool-execution-sandbox"],
+      "depends_on": [
+        "build-tool-trusted-authority-bundle",
+        "build-tool-linux-oci-sandbox"
+      ],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered during the Linux OCI security review. Replace corpus-only operator approval with one domain-separated digest binding exact source revision, policy, schemas, runner, launcher, seccomp, shim, OCI manifest/config, and adapter identity before any executable payload decode."
+      "notes": "Discovered during final authority security review. Replace name-based Python import and check-then-open traversal with an atomic beneath-root loader over the exact retained backend bytes and a closed approved import closure. Until this lands, the authority verifier remains process-free and the bare Linux preflight CLI stays disabled."
     },
     {
       "id": "build-tool-execution-case-snapshot",
@@ -99,18 +109,60 @@
       "notes": "Discovered during the fixture audit. Replace the duplicated schema term dependency-skipped with normative dep-skipped and enforce built, failed, dep-skipped, would-build, return-code, command-state, and outcome consistency before execution cases enter the corpus."
     },
     {
+      "id": "build-tool-invariant-probe-authority-profile",
+      "title": "Promote preflight approval to an invariant-probe authority profile",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-trusted-authority-bundle",
+        "build-tool-authority-exact-backend-loader"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during final dependency reconciliation. Add a distinct domain-separated profile that binds the verified seccomp artifact, enforcement launcher, exact invariant-probe identity, and lifecycle/accounting implementation before the runner may create the probe container. It binds no execution case or adapter."
+    },
+    {
       "id": "build-tool-linux-oci-enforcement",
-      "title": "Run and police the Linux OCI invariant probe and trusted cases",
+      "title": "Run and police the Linux OCI invariant probe",
       "status": "pending",
       "depends_on": [
         "build-tool-linux-oci-sandbox",
         "build-tool-trusted-authority-bundle",
+        "build-tool-authority-exact-backend-loader",
+        "build-tool-invariant-probe-authority-profile"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Execute only after exact-byte loading and invariant-probe authority. Add aggregate cgroup CPU metering, combined streaming output/result accounting, hard workspace semantics, cancellation, whole-container kill/reap/removal, adversarial runner-owned probes, and protected Linux workflow evidence before marking Linux ready. This item runs no fixture case."
+    },
+    {
+      "id": "build-tool-trusted-execution-authority-profile",
+      "title": "Promote verified Linux containment to a trusted-execution authority profile",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-trusted-authority-bundle",
+        "build-tool-authority-exact-backend-loader",
+        "build-tool-invariant-probe-authority-profile",
+        "build-tool-linux-oci-enforcement",
         "build-tool-execution-case-snapshot",
         "build-tool-execution-status-normalization"
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Execute only after the first preflight tranche. Add aggregate cgroup CPU metering, combined streaming output/result accounting, hard workspace semantics, cancellation, whole-container kill/reap/removal, image-contained adapters, adversarial runner-owned probes, and protected Linux workflow evidence before marking Linux ready."
+      "notes": "Discovered during final dependency reconciliation. After protected invariant-probe evidence exists, add a distinct domain-separated profile that binds that evidence, the exact held corpus snapshot, one selected in-image adapter, and the trusted-case enforcement implementation. Preflight and invariant-probe approvals remain structurally unusable for a fixture case."
+    },
+    {
+      "id": "build-tool-linux-trusted-execution-enforcement",
+      "title": "Execute and police trusted build-tool cases on Linux",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-linux-oci-enforcement",
+        "build-tool-trusted-execution-authority-profile",
+        "build-tool-execution-case-snapshot",
+        "build-tool-execution-status-normalization"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during final dependency reconciliation. Execute only the exact retained case snapshot with one authority-bound in-image adapter under the already-proved Linux containment boundary; preserve aggregate resource accounting, streaming output limits, cancellation, and whole-container cleanup."
     },
     {
       "id": "build-tool-windows-appcontainer-sandbox",
@@ -135,7 +187,8 @@
       "title": "Add execution semantics cases and adversarial sandbox probes",
       "status": "pending",
       "depends_on": [
-        "build-tool-linux-oci-enforcement",
+        "build-tool-trusted-execution-authority-profile",
+        "build-tool-linux-trusted-execution-enforcement",
         "build-tool-windows-appcontainer-sandbox",
         "build-tool-macos-isolated-sandbox"
       ],
