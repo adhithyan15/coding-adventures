@@ -367,6 +367,16 @@ pub enum LowerError {
         argument: String,
         name: String,
     },
+    /// An `argument` element (a premise or an inference) carried no `source` — the
+    /// structural grounding gate (ADJ-ARGUMENT-IR §3, ADR-3). A shipped argument must be
+    /// *sourced*: every premise cites the bytes it is read from, and every inference cites
+    /// its warrant. This mirrors the "must be sourced" lint `table`/`statemachine`/
+    /// `formula` enforce, and is the precondition for the ADR-4 byte-anchor re-check.
+    /// Carries the argument name and the un-sourced element's name.
+    ArgMissingProvenance {
+        argument: String,
+        element: String,
+    },
 }
 
 /// One lowered RANGE / BRACKET lookup (ADJ-TABLES RS-5c) — the validated,
@@ -1101,6 +1111,19 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                         });
                     }
                     let prov = annotations_to_provenance(&p.annotations)?;
+                    // Structural grounding gate (ADJ-ARGUMENT-IR §3, ADR-3): a shipped
+                    // argument must be *sourced* — every premise cites the bytes it is
+                    // read from, the same "must be sourced" lint `table`/`statemachine`/
+                    // `formula` enforce. The deterministic byte-ANCHOR (is that cite a
+                    // verbatim slice of the pinned source?) is delivered by the ADR-4
+                    // `adj-verify` argument pass, which reuses `verify_quote`; this lint is
+                    // its precondition — an un-cited premise cannot even be anchored.
+                    if prov.source.trim().is_empty() {
+                        return Err(LowerError::ArgMissingProvenance {
+                            argument: name.clone(),
+                            element: p.name.clone(),
+                        });
+                    }
                     kb.add_fact(Fact::certain(lower_term(&p.claim)).with_provenance(prov));
                     bound.insert(p.name.as_str(), &p.claim);
                 }
@@ -1128,6 +1151,16 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                         body_lits.push(BodyLiteral::Pos(lower_term_scoped(ref_term, &mut vars)));
                     }
                     let prov = annotations_to_provenance(&inf.annotations)?;
+                    // Same structural grounding gate for the inference's WARRANT (§3): an
+                    // inference step must cite why its antecedents entail its conclusion —
+                    // an un-warranted step is exactly the un-grounded reasoning move this
+                    // gate exists to reject.
+                    if prov.source.trim().is_empty() {
+                        return Err(LowerError::ArgMissingProvenance {
+                            argument: name.clone(),
+                            element: inf.name.clone(),
+                        });
+                    }
                     kb.add_rule(Rule::certain(head_term, body_lits).with_provenance(prov));
                     bound.insert(inf.name.as_str(), &inf.conclusion);
                 }
