@@ -6206,6 +6206,49 @@ fn inspect_replacing_characters_region_delimiter_is_a_pic_x1_item() {
 }
 
 #[test]
+fn inspect_replacing_characters_before_delimiter_at_index_0_is_an_empty_window() {
+    // Boundary: the delimiter sits at position 0, so BEFORE's window is [0,0) — EMPTY.
+    // Nothing is overwritten; the source is unchanged. Verifies the compiler's byte
+    // `[start,end)` and the oracle's char window agree at the left edge (start==end).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \",ABCD\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"*\" BEFORE \",\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, ",ABCD\n");
+}
+
+#[test]
+fn inspect_replacing_characters_after_delimiter_at_last_index_is_an_empty_window() {
+    // Boundary: the delimiter sits at the LAST position, so AFTER's window is
+    // [len,len) — EMPTY. Nothing is overwritten. Verifies both engines agree at the
+    // right edge (start==end==len), the AFTER partner of the index-0 case above.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABCD,\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"*\" AFTER \",\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ABCD,\n");
+}
+
+#[test]
+fn inspect_replacing_characters_region_short_moved_value_width_invariant() {
+    // Width-vs-storage invariant: a value SHORTER than the picture is space-padded to
+    // the full width (MOVE "AB" TO PIC X(5) → "AB   "), so the compiler's window scan
+    // over str_len(S)==width and its str_slice(S,j,j+1) up to width-1 stay in bounds and
+    // agree with the oracle's char rebuild. BEFORE " " restricts the overwrite to the
+    // pre-space region "AB" → "**   " (the padded spaces are the AFTER-region).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE SPACES.", "01  T  PIC X(2) VALUE \"AB\"."],
+        &[
+            "MOVE T TO S.",
+            "INSPECT S REPLACING CHARACTERS BY \"*\" BEFORE \" \".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "**   \n");
+}
+
+#[test]
 fn inspect_replacing_characters_region_non_ascii_source_shares_the_reconstruction_chip() {
     // NON-ASCII SOURCE + region — the PRE-EXISTING byte-vs-char reconstruction chip
     // (task_396ba6f6), shared by every REPLACING-with-region lowering. The compiler
