@@ -7,7 +7,12 @@
 
 #![forbid(unsafe_code)]
 
+use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
+use smart_home_automation_runtime::{
+    AutomationDefinition, AutomationEvaluationReport, AutomationTriggerInput,
+    SmartHomeAutomationRuntime,
+};
 use smart_home_core::{
     AgentId, AuthorizationDecision, AuthorizationOutcome, AuthorizationSubject, Bridge, BridgeId,
     BridgeTransport, Capability, CapabilityGrant, CapabilityGrantId,
@@ -38,6 +43,9 @@ const CONTROLLER_HANDOFF_PATH: &str = "/api/smart_home/controller_handoff";
 type RuntimeClock = Arc<dyn Fn() -> u64 + Send + Sync>;
 type RuntimeMutationPersistence =
     Arc<dyn Fn(&SmartHomeRuntime, u64) -> Result<(), String> + Send + Sync>;
+type AutomationMutationPersistence = Arc<
+    dyn Fn(&SmartHomeRuntime, &SmartHomeAutomationRuntime, u64) -> Result<(), String> + Send + Sync,
+>;
 
 const DASHBOARD_HTML: &str = r##"<!doctype html>
 <html lang="en">
@@ -1950,11 +1958,13 @@ pub struct SmartHomePlatformService {
 #[derive(Clone)]
 pub struct SmartHomePlatformHttpRuntime {
     runtime: Arc<Mutex<SmartHomeRuntime>>,
+    automation_runtime: Option<Arc<Mutex<SmartHomeAutomationRuntime>>>,
     config: SmartHomePlatformHttpConfig,
     event_types: Vec<String>,
     principal_id: AgentId,
     clock: RuntimeClock,
     mutation_persistence: Option<RuntimeMutationPersistence>,
+    automation_persistence: Option<AutomationMutationPersistence>,
 }
 
 impl SmartHomePlatformHttpRuntime {
@@ -1968,11 +1978,13 @@ impl SmartHomePlatformHttpRuntime {
     ) -> Self {
         Self {
             runtime,
+            automation_runtime: None,
             config,
             event_types: default_event_types(),
             principal_id: AgentId::trusted("agent:home-assistant-local-api"),
             clock: Arc::new(|| 0),
             mutation_persistence: None,
+            automation_persistence: None,
         }
     }
 
@@ -2010,6 +2022,94 @@ impl SmartHomePlatformHttpRuntime {
     ) -> Self {
         self.mutation_persistence = Some(Arc::new(persistence));
         self
+    }
+
+    pub fn with_automation_runtime(
+        mut self,
+        automation_runtime: Arc<Mutex<SmartHomeAutomationRuntime>>,
+    ) -> Self {
+        self.automation_runtime = Some(automation_runtime);
+        self
+    }
+
+    pub fn with_automation_persistence(
+        mut self,
+        persistence: impl Fn(&SmartHomeRuntime, &SmartHomeAutomationRuntime, u64) -> Result<(), String>
+            + Send
+            + Sync
+            + 'static,
+    ) -> Self {
+        self.automation_persistence = Some(Arc::new(persistence));
+        self
+    }
+
+    pub fn automation_runtime(&self) -> Option<Arc<Mutex<SmartHomeAutomationRuntime>>> {
+        self.automation_runtime.clone()
+    }
+
+    pub fn evaluate_automations(
+        &self,
+        input: AutomationTriggerInput,
+        dry_run: bool,
+    ) -> Result<AutomationEvaluationReport, String> {
+        let automation_runtime = self
+            .automation_runtime
+            .as_ref()
+            .ok_or_else(|| "automation runtime is not configured".to_string())?;
+        let mut runtime = self
+            .runtime
+            .lock()
+            .map_err(|_| "smart-home runtime mutex was poisoned".to_string())?;
+        let mut automations = automation_runtime
+            .lock()
+            .map_err(|_| "automation runtime mutex was poisoned".to_string())?;
+        let previous_runtime = runtime.clone();
+        let previous_automations = automations.clone();
+        let now_ms = self.now_ms();
+        let report = automations
+            .evaluate(
+                &mut runtime,
+                self.principal_id.clone(),
+                input,
+                dry_run,
+                now_ms,
+            )
+            .map_err(|error| error.to_string())?;
+        if !dry_run && !report.records.is_empty() {
+            if let Err(error) = self.persist_automation_mutation(&runtime, &automations, now_ms) {
+                *runtime = previous_runtime;
+                *automations = previous_automations;
+                return Err(error);
+            }
+        }
+        Ok(report)
+    }
+
+    pub fn upsert_automation_definition(
+        &self,
+        definition: AutomationDefinition,
+    ) -> Result<Option<AutomationDefinition>, String> {
+        let automation_runtime = self
+            .automation_runtime
+            .as_ref()
+            .ok_or_else(|| "automation runtime is not configured".to_string())?;
+        let runtime = self
+            .runtime
+            .lock()
+            .map_err(|_| "smart-home runtime mutex was poisoned".to_string())?;
+        let mut automations = automation_runtime
+            .lock()
+            .map_err(|_| "automation runtime mutex was poisoned".to_string())?;
+        let previous = automations.clone();
+        let replaced = automations
+            .upsert_definition(definition)
+            .map_err(|error| error.to_string())?;
+        if let Err(error) = self.persist_automation_mutation(&runtime, &automations, self.now_ms())
+        {
+            *automations = previous;
+            return Err(error);
+        }
+        Ok(replaced)
     }
 
     pub fn grant_local_full_access(
@@ -2069,6 +2169,18 @@ impl SmartHomePlatformHttpRuntime {
             ));
         }
         Ok(())
+    }
+
+    fn persist_automation_mutation(
+        &self,
+        runtime: &SmartHomeRuntime,
+        automations: &SmartHomeAutomationRuntime,
+        saved_at_ms: u64,
+    ) -> Result<(), String> {
+        let Some(persistence) = &self.automation_persistence else {
+            return Ok(());
+        };
+        persistence(runtime, automations, saved_at_ms)
     }
 }
 
@@ -2508,12 +2620,143 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/automations", move |_| {
+            automation_definitions_response(&runtime)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.post("/api/smart_home/automations", move |request| {
+            upsert_automation_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/automation_audit", move |_| {
+            automation_audit_response(&runtime)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.post("/api/smart_home/automations/evaluate", move |request| {
+            evaluate_automations_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.post("/api/services/:domain/:service", move |request| {
             service_call_response(&runtime, request)
         });
     }
 
     app
+}
+
+#[derive(Debug, Deserialize)]
+struct AutomationEvaluationRequest {
+    #[serde(default)]
+    dry_run: bool,
+    #[serde(default)]
+    event: Option<DeviceEvent>,
+}
+
+fn automation_definitions_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
+    let Some(automations) = runtime.automation_runtime.as_ref() else {
+        return json_error(503, "automation runtime is not configured");
+    };
+    let automations = match automations.lock() {
+        Ok(automations) => automations,
+        Err(_) => return json_error(503, "automation runtime mutex was poisoned"),
+    };
+    let definitions = automations.definitions().collect::<Vec<_>>();
+    serialized_json_response(&serde_json::json!({
+        "summary": {
+            "definition_count": definitions.len(),
+            "enabled_count": definitions.iter().filter(|definition| definition.enabled).count(),
+            "audit_record_count": automations.audit_records().len(),
+        },
+        "definitions": definitions,
+    }))
+}
+
+fn automation_audit_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
+    let Some(automations) = runtime.automation_runtime.as_ref() else {
+        return json_error(503, "automation runtime is not configured");
+    };
+    let automations = match automations.lock() {
+        Ok(automations) => automations,
+        Err(_) => return json_error(503, "automation runtime mutex was poisoned"),
+    };
+    serialized_json_response(&serde_json::json!({
+        "summary": {
+            "record_count": automations.audit_records().len(),
+        },
+        "records": automations.audit_records(),
+    }))
+}
+
+fn upsert_automation_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let definition: AutomationDefinition = match serde_json::from_slice(request.body()) {
+        Ok(definition) => definition,
+        Err(error) => return json_error(400, format!("invalid automation JSON: {error}")),
+    };
+    let automation_id = definition.automation_id.clone();
+    match runtime.upsert_automation_definition(definition) {
+        Ok(replaced) => serialized_json_response(&serde_json::json!({
+            "automation_id": automation_id,
+            "replaced": replaced.is_some(),
+            "definitions": runtime
+                .automation_runtime
+                .as_ref()
+                .and_then(|automations| automations.lock().ok())
+                .map(|automations| automations.definitions().cloned().collect::<Vec<_>>())
+                .unwrap_or_default(),
+        })),
+        Err(error) if error.starts_with("invalid automation:") => json_error(400, error),
+        Err(error) => json_error(503, error),
+    }
+}
+
+fn evaluate_automations_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let request = if request.body().is_empty() {
+        AutomationEvaluationRequest {
+            dry_run: false,
+            event: None,
+        }
+    } else {
+        match serde_json::from_slice(request.body()) {
+            Ok(request) => request,
+            Err(error) => {
+                return json_error(400, format!("invalid automation evaluation JSON: {error}"));
+            }
+        }
+    };
+    let input = request
+        .event
+        .map(Box::new)
+        .map(AutomationTriggerInput::Event)
+        .unwrap_or(AutomationTriggerInput::Schedule);
+    match runtime.evaluate_automations(input, request.dry_run) {
+        Ok(report) => serialized_json_response(&report),
+        Err(error) => json_error(503, error),
+    }
+}
+
+fn serialized_json_response(value: &impl Serialize) -> WebResponse {
+    match serde_json::to_vec(value) {
+        Ok(body) => WebResponse::json(body),
+        Err(error) => json_error(500, format!("could not encode JSON response: {error}")),
+    }
 }
 
 pub fn platform_services(state: &SmartHomePlatformHttpState) -> Vec<SmartHomePlatformService> {
@@ -3409,6 +3652,42 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
         surface: "smart_home",
         mutates_runtime: false,
         runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/automations",
+        category: "automations",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "POST",
+        path: "/api/smart_home/automations",
+        category: "automations",
+        surface: "smart_home",
+        mutates_runtime: true,
+        runtime_authorized: true,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/automation_audit",
+        category: "automations",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "POST",
+        path: "/api/smart_home/automations/evaluate",
+        category: "automations",
+        surface: "smart_home",
+        mutates_runtime: true,
+        runtime_authorized: true,
         query_params: &[],
     },
 ];
@@ -9997,6 +10276,7 @@ mod tests {
     use super::*;
     use embeddable_http_server::{HttpRequest, HttpServerOptions};
     use http_core::{Header, HttpVersion, RequestHead};
+    use smart_home_automation_runtime::{AutomationAction, AutomationTrigger};
     use smart_home_core::{BridgeId, DeviceId, EventId};
     use smart_home_runtime_store::SmartHomeRuntimeStore;
     use smart_home_testkit::hue_lighting_runtime;
@@ -11236,7 +11516,7 @@ mod tests {
                 >= 30
         );
         assert_eq!(handoff_json["summary"]["browser_routes"], 3);
-        assert_eq!(handoff_json["summary"]["runtime_authorized_routes"], 4);
+        assert_eq!(handoff_json["summary"]["runtime_authorized_routes"], 6);
         assert_eq!(handoff_json["summary"]["readiness_checks"], 8);
         assert_eq!(handoff_json["summary"]["smoke_checks"], 15);
     }
@@ -11513,7 +11793,7 @@ mod tests {
         );
         let mutating_json: JsonValue =
             serde_json::from_str(&mutating).expect("mutating API catalog response is JSON");
-        assert_eq!(mutating_json["route_count"], 4);
+        assert_eq!(mutating_json["route_count"], 6);
         for route in mutating_json["routes"]
             .as_array()
             .expect("mutating route list is an array")
@@ -11537,6 +11817,112 @@ mod tests {
             .handle(request("GET", "/api/smart_home/api?surface=unknown"))
             .into();
         assert_eq!(invalid_surface.status, 400);
+    }
+
+    #[test]
+    fn runtime_web_app_creates_previews_executes_and_audits_automation() {
+        let automations = Arc::new(Mutex::new(SmartHomeAutomationRuntime::new()));
+        let runtime = fixture_runtime(true).with_automation_runtime(Arc::clone(&automations));
+        let app = home_assistant_runtime_web_app(runtime);
+        let definition = serde_json::to_string(&schedule_automation_definition()).unwrap();
+
+        let created: WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/smart_home/automations",
+                &definition,
+            ))
+            .into();
+        assert_eq!(created.status, 200);
+        assert!(response_body(created).contains(r#""automation_id":"nightly-off""#));
+
+        let preview: WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/smart_home/automations/evaluate",
+                r#"{"dry_run":true}"#,
+            ))
+            .into();
+        assert_eq!(preview.status, 200);
+        let preview = response_body(preview);
+        assert!(preview.contains(r#""outcome":"planned""#));
+        assert!(
+            preview.contains(r#""idempotency_key":"automation:nightly-off:schedule:5:action:0""#)
+        );
+        assert_eq!(automations.lock().unwrap().audit_records().len(), 0);
+
+        let executed: WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/smart_home/automations/evaluate",
+                "{}",
+            ))
+            .into();
+        assert_eq!(executed.status, 200);
+        assert!(response_body(executed).contains(r#""outcome":"executed""#));
+
+        let repeated: WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/smart_home/automations/evaluate",
+                "{}",
+            ))
+            .into();
+        assert_eq!(repeated.status, 200);
+        assert!(response_body(repeated).contains(r#""records":[]"#));
+
+        let audit = response_body(
+            app.handle(request("GET", "/api/smart_home/automation_audit"))
+                .into(),
+        );
+        assert!(audit.contains(r#""record_count":1"#));
+        assert!(audit.contains(r#""automation_id":"nightly-off""#));
+        assert!(audit.contains(r#""outcome":"executed""#));
+    }
+
+    #[test]
+    fn runtime_web_app_rolls_back_automation_when_persistence_fails() {
+        let mut automation_runtime = SmartHomeAutomationRuntime::new();
+        automation_runtime
+            .upsert_definition(schedule_automation_definition())
+            .unwrap();
+        let automations = Arc::new(Mutex::new(automation_runtime));
+        let runtime = fixture_runtime(true)
+            .with_automation_runtime(Arc::clone(&automations))
+            .with_automation_persistence(|_, _, _| Err("disk full".to_string()));
+        let before = runtime.snapshot();
+        let app = home_assistant_runtime_web_app(runtime.clone());
+
+        let response: WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/smart_home/automations/evaluate",
+                "{}",
+            ))
+            .into();
+
+        assert_eq!(response.status, 503);
+        assert!(response_body(response).contains("disk full"));
+        assert_eq!(runtime.snapshot(), before);
+        assert!(automations.lock().unwrap().audit_records().is_empty());
+    }
+
+    fn schedule_automation_definition() -> AutomationDefinition {
+        AutomationDefinition {
+            automation_id: "nightly-off".to_string(),
+            enabled: true,
+            trigger: AutomationTrigger::Schedule {
+                every_ms: 1_000,
+                offset_ms: 0,
+            },
+            conditions: Vec::new(),
+            actions: vec![AutomationAction::Command {
+                entity_id: EntityId::trusted("entity-light-1"),
+                command_type: CommandType::TurnOff,
+                arguments: Value::Null,
+                timeout_ms: None,
+            }],
+        }
     }
 
     #[test]

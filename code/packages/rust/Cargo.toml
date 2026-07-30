@@ -894,6 +894,7 @@ members = [
     "smart-home-hue-pairing-service",
     "smart-home-local-http",
     "smart-home-platform-http",
+    "smart-home-automation-runtime",
     "smart-home-integration-catalog",
     "smart-home-testkit",
     "hue-core",

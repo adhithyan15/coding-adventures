@@ -56,6 +56,7 @@ impl DurableAutomationDefinition {
 pub struct RestoredSmartHomeRuntime {
     pub runtime: SmartHomeRuntime,
     pub automation_definitions: Vec<DurableAutomationDefinition>,
+    pub automation_state: Option<serde_json::Value>,
     pub saved_at_ms: u64,
     pub revision: Revision,
 }
@@ -66,6 +67,8 @@ struct RuntimeStoreEnvelope {
     saved_at_ms: u64,
     runtime: RuntimeDurableSnapshot,
     automation_definitions: Vec<DurableAutomationDefinition>,
+    #[serde(default)]
+    automation_state: Option<serde_json::Value>,
 }
 
 /// Errors surfaced by durable runtime persistence.
@@ -143,7 +146,26 @@ impl<B: StorageBackend> SmartHomeRuntimeStore<B> {
         automation_definitions: &[DurableAutomationDefinition],
         saved_at_ms: u64,
     ) -> Result<Revision, RuntimeStoreError> {
+        self.save_with_automation_state(runtime, automation_definitions, None, saved_at_ms)
+    }
+
+    pub fn save_with_automation_state(
+        &self,
+        runtime: &SmartHomeRuntime,
+        automation_definitions: &[DurableAutomationDefinition],
+        automation_state: Option<serde_json::Value>,
+        saved_at_ms: u64,
+    ) -> Result<Revision, RuntimeStoreError> {
         validate_automation_definitions(automation_definitions)?;
+        if automation_state
+            .as_ref()
+            .is_some_and(|state| !state.is_object())
+        {
+            return Err(RuntimeStoreError::Validation {
+                field: "automation_state",
+                message: "must be a JSON object".to_string(),
+            });
+        }
         self.backend.initialize()?;
         let previous = self.backend.get(&self.namespace, &self.key)?;
         let envelope = RuntimeStoreEnvelope {
@@ -151,6 +173,7 @@ impl<B: StorageBackend> SmartHomeRuntimeStore<B> {
             saved_at_ms,
             runtime: runtime.durable_snapshot(),
             automation_definitions: automation_definitions.to_vec(),
+            automation_state,
         };
         let body = serde_json::to_vec(&envelope)
             .map_err(|error| RuntimeStoreError::Encode(error.to_string()))?;
@@ -181,6 +204,7 @@ impl<B: StorageBackend> SmartHomeRuntimeStore<B> {
         Ok(Some(RestoredSmartHomeRuntime {
             runtime: SmartHomeRuntime::restore_durable_snapshot(envelope.runtime)?,
             automation_definitions: envelope.automation_definitions,
+            automation_state: envelope.automation_state,
             saved_at_ms: envelope.saved_at_ms,
             revision: record.revision,
         }))
@@ -343,8 +367,18 @@ mod tests {
         .unwrap();
         let runtime = runtime_fixture();
         let store = SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(root.clone()));
+        let automation_state = serde_json::json!({
+            "schema_version": 1,
+            "completed_trigger_keys": ["automation-kitchen-off:schedule:1"],
+            "audit_records": [{"outcome": "executed"}]
+        });
         let saved_revision = store
-            .save(&runtime, std::slice::from_ref(&automation), 500)
+            .save_with_automation_state(
+                &runtime,
+                std::slice::from_ref(&automation),
+                Some(automation_state.clone()),
+                500,
+            )
             .unwrap();
         drop(store);
 
@@ -357,6 +391,7 @@ mod tests {
         assert_eq!(restored.saved_at_ms, 500);
         assert_eq!(restored.revision, saved_revision);
         assert_eq!(restored.automation_definitions, vec![automation]);
+        assert_eq!(restored.automation_state, Some(automation_state));
         assert_eq!(restored.runtime.registry().counts().bridges, 1);
         assert_eq!(restored.runtime.registry().counts().devices, 1);
         assert_eq!(restored.runtime.registry().counts().entities, 1);
@@ -406,6 +441,30 @@ mod tests {
             error,
             RuntimeStoreError::Validation {
                 field: "automation_id",
+                ..
+            }
+        ));
+        assert!(!root.exists());
+    }
+
+    #[test]
+    fn rejects_non_object_automation_state_before_writing() {
+        let root = temp_root("invalid-automation-state");
+        let store = SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(root.clone()));
+
+        let error = store
+            .save_with_automation_state(
+                &SmartHomeRuntime::new(),
+                &[],
+                Some(serde_json::json!(["not", "an", "object"])),
+                1,
+            )
+            .unwrap_err();
+
+        assert!(matches!(
+            error,
+            RuntimeStoreError::Validation {
+                field: "automation_state",
                 ..
             }
         ));

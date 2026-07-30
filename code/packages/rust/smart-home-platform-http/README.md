@@ -203,17 +203,30 @@ cargo run -p smart-home-platform-http --bin smart-home-local-controller -- \
 
 `SMART_HOME_DATA_DIR` supplies the data folder when `--data-dir` is omitted.
 The controller loads the latest `smart-home-runtime-store` snapshot before it
-binds, restores the opaque automation definitions kept beside runtime state,
-uses wall-clock request timestamps, and saves the local API capability grant.
-Accepted desired-state and service mutations are persisted synchronously before
-the API returns success. A failed write restores the exact pre-request runtime
-and returns HTTP 503, so clients never observe a successful mutation that only
-exists in memory.
+binds, restores automation definitions, consumed trigger occurrences, and
+automation audit, uses wall-clock request timestamps, and saves the local API
+capability grant. A local worker evaluates schedule triggers every 500 ms.
+Accepted desired-state, service, automation-definition, and automation-execution
+mutations are persisted synchronously before the API returns success. A failed
+write restores the exact pre-request runtime and automation engine and returns
+HTTP 503, so clients never observe a successful mutation that only exists in
+memory.
+
+The native automation surface is:
+
+- `GET /api/smart_home/automations`
+- `POST /api/smart_home/automations`
+- `POST /api/smart_home/automations/evaluate`
+- `GET /api/smart_home/automation_audit`
+
+The evaluation endpoint accepts `{"dry_run":true}` for a schedule preview or
+`{"dry_run":false,"event":{...}}` for a normalized device-event trigger.
 
 The controller can start with an empty folder. Discovery, pairing, and
 integration owners can populate the same durable runtime store before launch;
 on later launches the API serves the restored topology, state, event, command,
-pairing, desired-state, authorization, and automation records.
+pairing, desired-state, authorization, automation definitions, idempotency
+state, and automation audit.
 
 ## Fixture Controller
 

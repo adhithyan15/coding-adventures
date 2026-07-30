@@ -1,4 +1,5 @@
 use embeddable_http_server::HttpServerOptions;
+use smart_home_automation_runtime::{AutomationTriggerInput, SmartHomeAutomationRuntime};
 use smart_home_platform_http::{
     home_assistant_runtime_web_app, SmartHomePlatformHttpConfig, SmartHomePlatformHttpRuntime,
 };
@@ -10,7 +11,8 @@ use std::io;
 use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::thread;
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use storage_local_folder::LocalFolderStorageBackend;
 use web_core::WebServer;
 
@@ -40,27 +42,54 @@ fn main() -> Result<(), Box<dyn Error>> {
         &config.data_dir,
     )));
     let restored = store.load()?;
-    let (runtime, automation_definitions, restored_at_ms) = match restored {
+    let (runtime, automation_definitions, automation_state, restored_at_ms) = match restored {
         Some(restored) => (
             restored.runtime,
             restored.automation_definitions,
+            restored.automation_state,
             Some(restored.saved_at_ms),
         ),
-        None => (SmartHomeRuntime::new(), Vec::new(), None),
+        None => (SmartHomeRuntime::new(), Vec::new(), None, None),
     };
-    let automation_definitions = Arc::new(automation_definitions);
+    let automation_runtime = Arc::new(Mutex::new(SmartHomeAutomationRuntime::restore(
+        &automation_definitions,
+        automation_state.as_ref(),
+    )?));
     let shared_runtime = Arc::new(Mutex::new(runtime));
 
     let persistence_store = Arc::clone(&store);
-    let persistence_automations = Arc::clone(&automation_definitions);
+    let persistence_automations = Arc::clone(&automation_runtime);
+    let automation_persistence_store = Arc::clone(&store);
     let runtime = SmartHomePlatformHttpRuntime::from_shared_runtime(
         Arc::clone(&shared_runtime),
         SmartHomePlatformHttpConfig::new("Codex Home"),
     )
     .with_clock(unix_time_ms)
+    .with_automation_runtime(Arc::clone(&automation_runtime))
     .with_mutation_persistence(move |runtime, saved_at_ms| {
+        let automations = persistence_automations
+            .lock()
+            .map_err(|_| "automation runtime mutex was poisoned".to_string())?;
+        let definitions = automations
+            .durable_definitions()
+            .map_err(|error| error.to_string())?;
+        let state = automations
+            .snapshot_json()
+            .map_err(|error| error.to_string())?;
         persistence_store
-            .save(runtime, persistence_automations.as_slice(), saved_at_ms)
+            .save_with_automation_state(runtime, &definitions, Some(state), saved_at_ms)
+            .map(|_| ())
+            .map_err(|error| error.to_string())
+    })
+    .with_automation_persistence(move |runtime, automations, saved_at_ms| {
+        let definitions = automations
+            .durable_definitions()
+            .map_err(|error| error.to_string())?;
+        let state = automations
+            .snapshot_json()
+            .map_err(|error| error.to_string())?;
+        automation_persistence_store
+            .save_with_automation_state(runtime, &definitions, Some(state), saved_at_ms)
             .map(|_| ())
             .map_err(|error| error.to_string())
     })
@@ -70,9 +99,23 @@ fn main() -> Result<(), Box<dyn Error>> {
         let runtime = shared_runtime.lock().map_err(|_| {
             io::Error::other("smart-home runtime mutex was poisoned during startup")
         })?;
-        store.save(&runtime, automation_definitions.as_slice(), unix_time_ms())?;
+        let automations = automation_runtime.lock().map_err(|_| {
+            io::Error::other("automation runtime mutex was poisoned during startup")
+        })?;
+        store.save_with_automation_state(
+            &runtime,
+            &automations.durable_definitions()?,
+            Some(automations.snapshot_json()?),
+            unix_time_ms(),
+        )?;
     }
 
+    let automation_count = automation_runtime
+        .lock()
+        .map_err(|_| io::Error::other("automation runtime mutex was poisoned during startup"))?
+        .definitions()
+        .count();
+    spawn_schedule_worker(runtime.clone());
     let app = Arc::new(home_assistant_runtime_web_app(runtime));
     let options = dashboard_server_options();
 
@@ -97,11 +140,20 @@ fn main() -> Result<(), Box<dyn Error>> {
             server.local_addr(),
             &config.data_dir,
             restored_at_ms,
-            automation_definitions.len(),
+            automation_count,
         )
     );
     server.serve()?;
     Ok(())
+}
+
+fn spawn_schedule_worker(runtime: SmartHomePlatformHttpRuntime) {
+    thread::spawn(move || loop {
+        thread::sleep(Duration::from_millis(500));
+        if let Err(error) = runtime.evaluate_automations(AutomationTriggerInput::Schedule, false) {
+            eprintln!("smart-home automation schedule evaluation failed: {error}");
+        }
+    });
 }
 
 fn default_data_dir() -> PathBuf {

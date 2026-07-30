@@ -4,6 +4,9 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added a restart-safe automation runtime to the production controller, a local
+  schedule worker, and native definition, evaluation, dry-run, and audit API
+  routes with atomic persistence rollback.
 - Added a production `smart-home-local-controller` binary that restores the
   durable runtime store, uses a live clock, and atomically persists authorized
   desired-state and service mutations before returning success.
