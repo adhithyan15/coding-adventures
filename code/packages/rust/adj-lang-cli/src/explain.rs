@@ -39,7 +39,7 @@
 use adj_lang::{LoweredStateMachine, StateMachineOutcome, StateMachineRun};
 use logic_engine::compute::{DerivationNode, RoundSpec};
 use logic_engine::differential::{Differential, DifferentialDecision};
-use logic_engine::proof_dag::DerivationOrigin;
+use logic_engine::proof_dag::{DerivationOrigin, ProofDAG, ProofStep};
 use logic_engine::{KnowledgeBase, Provenance, RoundingMode, TrustTier};
 
 /// Render the human-readable explanation of a decided query.
@@ -61,6 +61,7 @@ pub fn explain(
     kb: &KnowledgeBase,
     diff: &Differential,
     state_machine_runs: &[(&LoweredStateMachine, StateMachineRun)],
+    arguments: &[(logic_core::Term, ProofDAG)],
 ) -> String {
     let mut sections: Vec<String> = Vec::new();
     let derivations = render_derivations(kb);
@@ -81,6 +82,17 @@ pub fn explain(
             sections.push(inference);
         }
         sections.push(render_adjudication(kb, diff));
+    }
+    // ADJ-ARGUMENT-IR ADR-6: the argument surface — for each binding query, the
+    // SLD proof chain read as an argument (premises → connective → conclusion).
+    // A binding query is resolved by `enumerate_all`, not the differential, so
+    // its proof does not flow through the inference/adjudication surface above;
+    // this renders it directly off the proof DAG the CLI already built for the
+    // query's `recall` section (P1 projection-only). Empty for a program with no
+    // binding query, so a differential/computation program renders unchanged.
+    let args = render_arguments(kb, arguments);
+    if !args.is_empty() {
+        sections.push(args);
     }
     // ADJ-STATEMACHINE RS-3c: the run narrative — each machine's ordered,
     // provenance-cited steps ending in its typed terminal outcome. Projection-only
@@ -361,6 +373,130 @@ fn render_adjudication(kb: &KnowledgeBase, diff: &Differential) -> String {
         }
     }
     out.join("\n")
+}
+
+/// Render the **argument surface** (ADJ-ARGUMENT-IR §E.8 / ADR-6) — the SLD
+/// proof chain behind each binding query, read as the argument it is: grounded
+/// **premises** (leaf facts) → the **connective** that licensed each step (an
+/// inference rule, its warrant bytes cited) → the derived **conclusion** (the
+/// rule head). This is the "explain" half of "reason AND explain" for the
+/// `argument` construct: an `argument` desugars to facts + rules (ADR-2), the
+/// engine derives its thesis by SLD, and this projects that derivation back into
+/// prose a person reads.
+///
+/// Invariants (the §E.8 contract, same as every other surface here):
+/// - **P1 projection-only** — walks the `enumerate_all` proof DAG the CLI already
+///   built for the query's `recall` section; re-runs nothing, asserts nothing not
+///   already in the proof.
+/// - **P2 provenance per line** — a premise carries its fact's `source`/`trust`
+///   (or an explicit `[unattributed]`); a connective carries the inference rule's
+///   cited warrant (the `infer … source "…"` bytes).
+/// - **P4 determinism** — the walk order is `enumerate_all`'s deterministic
+///   fact/rule order and each proof's preorder `steps`; no timestamp or map order.
+/// - **P6 addressed structure** — each step renders at `depth+1` indentation, so a
+///   line maps back to exactly one node of the proof tree (a rule's premises sit
+///   one level under the conclusion they support).
+///
+/// Honest abstention: a query with no proof renders an explicit line, and a
+/// **budget-truncated** search is never laundered into "no proof exists" — the
+/// two are reported distinctly (§proof_dag `truncated`). Returns "" when the
+/// program declared no binding query.
+fn render_arguments(kb: &KnowledgeBase, arguments: &[(logic_core::Term, ProofDAG)]) -> String {
+    if arguments.is_empty() {
+        return String::new();
+    }
+    let mut out: Vec<String> = Vec::new();
+    for (query, dag) in arguments {
+        out.push(format!("Argument for {}:", query));
+        if !dag.has_proof() {
+            // Distinguish "the search ran and found nothing" (evidence of
+            // absence) from "the search gave up" (a statement about budget, not
+            // the world) — never collapse the two into a false claim.
+            if dag.truncated {
+                out.push(
+                    "  (search truncated before a complete chain was found)".to_string(),
+                );
+            } else {
+                out.push("  abstained: no grounded chain derives this".to_string());
+            }
+            continue;
+        }
+        // Each proof is one complete chain deriving one answer. An `argument` has
+        // exactly one; a recall query may have several (one per bound answer),
+        // each a degenerate one-premise argument. Render every step in preorder,
+        // resolving each goal under the proof's answer substitution so the
+        // conclusion shows the DERIVED value (e.g. `failed_by(axle, fatigue)`),
+        // not the query's still-open variable (`failed_by(axle, Mechanism)`).
+        for proof in &dag.proofs {
+            for st in &proof.steps {
+                out.push(render_arg_step(kb, st, &proof.bindings));
+            }
+        }
+    }
+    out.join("\n")
+}
+
+/// Deep-resolve a term under a substitution. The engine's `Substitution::walk`
+/// resolves only the top level; a proof's answer bindings live inside the
+/// conclusion's compound arguments (the query variable is nested), so we recurse
+/// into every argument to show the fully-bound goal.
+fn resolve_deep(term: &logic_core::Term, subst: &logic_core::Substitution) -> logic_core::Term {
+    match subst.walk(term) {
+        logic_core::Term::Compound { functor, args } => logic_core::Term::Compound {
+            functor,
+            args: args.iter().map(|a| resolve_deep(a, subst)).collect(),
+        },
+        other => other,
+    }
+}
+
+/// One line of an argument's SLD proof, addressed by its depth (P6) and carrying
+/// its own citation (P2). A **rule** step is the CONNECTIVE that licensed a
+/// conclusion — rendered `conclusion <= inference [warrant]`; a **fact** step is
+/// a PREMISE (the grounds) — rendered `premise term [source]`; a **negation**
+/// step cites the *absence* of any proof for the negated goal. The match is
+/// TOTAL over `DerivationOrigin` — a new origin kind must be handled here or the
+/// crate fails to compile (the same discipline `render_inference` enforces).
+fn render_arg_step(
+    kb: &KnowledgeBase,
+    st: &ProofStep,
+    bindings: &logic_core::Substitution,
+) -> String {
+    let ind = "  ".repeat(st.depth + 1);
+    // Show the goal fully bound under the proof's answer substitution.
+    let goal = resolve_deep(&st.goal, bindings);
+    match &st.origin {
+        // A fact is a premise: the grounds, carrying its own source/trust.
+        DerivationOrigin::FromFact(id) => {
+            format!("{ind}premise {}  {}", goal, cite_fact(kb, *id))
+        }
+        // A rule is the inference step: the conclusion (its head) licensed by the
+        // rule's warrant. For a desugared `argument`, that warrant is the
+        // connective bytes the `infer … source "…"` cited.
+        DerivationOrigin::FromRule(id) => {
+            let warrant = kb
+                .find_rule_by_id(*id)
+                .map(|rule| fmt_leaf_prov(&rule.provenance))
+                .unwrap_or_else(|| "[unattributed]".to_string());
+            format!("{ind}{}  <= inference {warrant}", goal)
+        }
+        // Negation-as-failure quotes nothing: what licensed the step is the
+        // absence of any proof for the negated goal (§E.5).
+        DerivationOrigin::FromNegation { goal: neg } => {
+            format!("{ind}{}  [negation: no proof exists for {}]", goal, neg)
+        }
+        // Likelihood-ratio aggregation steps (prior / contribution / interaction /
+        // predicate) are produced by `lr_aggregate`, never by the SLD
+        // `enumerate_all` that drives a binding query — so they do not arise on
+        // this path. Handled for match totality and rendered honestly (the goal,
+        // no fabricated citation) in case that invariant ever changes.
+        DerivationOrigin::FromPrior { .. }
+        | DerivationOrigin::FromContribution { .. }
+        | DerivationOrigin::FromJointContribution { .. }
+        | DerivationOrigin::FromPredicateContribution { .. } => {
+            format!("{ind}{}  [inference step]", goal)
+        }
+    }
 }
 
 /// The weakest (`min`) trust tier over the cited clauses of `hyp`'s proof — P3's

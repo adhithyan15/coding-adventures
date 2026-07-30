@@ -41,8 +41,8 @@ use logic_core::{atom, compound, var, LogicVar, Term};
 use logic_engine::govern::Standing;
 use logic_engine::{
     enumerate_all, enumerate_governing, numeric_exact_magnitude, DerivationOrigin,
-    DifferentialDecision, Fact, GovernStatus, KnowledgeBase, LRAggregateResult, Proof, Provenance,
-    TrustTier,
+    DifferentialDecision, Fact, GovernStatus, KnowledgeBase, LRAggregateResult, Proof, ProofDAG,
+    Provenance, TrustTier,
 };
 
 mod explain;
@@ -1079,9 +1079,19 @@ fn main() -> ExitCode {
     // remains the primary, complete artifact (default output); `--explain` is the
     // opt-in human view onto it.
     if explain {
+        // ADJ-ARGUMENT-IR ADR-6: the SLD proof chain behind each binding query —
+        // the argument's premises → connective → conclusion. Re-resolve each
+        // binding query to the same proof DAG the `recall` section was built from
+        // (projection-only: `enumerate_all` is deterministic and side-effect
+        // free), so `--explain` can render the derivation as an argument. Empty
+        // for a program with no binding query, leaving all other output unchanged.
+        let argument_chains: Vec<(Term, ProofDAG)> = binding_queries
+            .iter()
+            .map(|q| (q.clone(), enumerate_all(q, &lowered.kb)))
+            .collect();
         println!(
             "{}",
-            explain::explain(&lowered.kb, &diff, &state_machine_runs)
+            explain::explain(&lowered.kb, &diff, &state_machine_runs, &argument_chains)
         );
         return ExitCode::SUCCESS;
     }
