@@ -4482,18 +4482,126 @@ fn unstring_numeric_literal_source_is_a_later_rung() {
     );
 }
 
+// ---------------------------------------------------------------------------
+// UNSTRING with a FIGURATIVE-CONSTANT source (SPACE / ZERO). Both engines map
+// the figurative to its single-character ASCII image — SPACE -> " " (0x20),
+// ZERO -> "0" (0x30) — reducing to the EXISTING string-literal source scan.
+// Both images are ASCII, so the non-ASCII-literal-source guard is never tripped.
+// `Fig` = {Space, Zero} is closed, so no non-ASCII figurative can reach the
+// path; a numeric literal and a computed ref-mod remain later rungs. Symmetric
+// to the STRING sending-field and CONVERTING figurative rungs.
+// ---------------------------------------------------------------------------
+
 #[test]
-fn unstring_figurative_source_is_a_later_rung() {
-    // A FIGURATIVE constant (SPACE) source is deferred — rejected on BOTH engines.
-    let src = wrap(
-        &["01  R1 PIC X(3) VALUE SPACES.", "01  R2 PIC X(3) VALUE SPACES."],
-        &["UNSTRING SPACE DELIMITED BY \",\" INTO R1 R2.", "STOP RUN."],
-    );
-    assert!(run_cobol(&src).is_err(), "oracle must reject a figurative source");
-    assert!(
-        compile_source(&src, "e2e").is_err(),
-        "compiler must reject a figurative source"
-    );
+fn unstring_figurative_space_source() {
+    // SPACE is the single character " " with no comma, so the whole 1-char source
+    // is one field that lands in A (space-padded to its X(3) width → three
+    // spaces); the source is then exhausted, so B keeps its prior VALUE "ZZZ".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A PIC X(3) VALUE \"ZZZ\".", "01  B PIC X(3) VALUE \"ZZZ\"."],
+        &[
+            "UNSTRING SPACE DELIMITED BY \",\" INTO A B.",
+            "DISPLAY A.",
+            "DISPLAY B.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "   \nZZZ\n");
+}
+
+#[test]
+fn unstring_figurative_zero_source() {
+    // ZERO is the single character "0" with no space delimiter, so the whole
+    // 1-char source is one field → A gets "0" reshaped to its X(3) width → "0  ".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A PIC X(3) VALUE SPACES."],
+        &["UNSTRING ZERO DELIMITED BY \" \" INTO A.", "DISPLAY A.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0  \n");
+}
+
+#[test]
+fn unstring_figurative_plural_spellings() {
+    // Every figurative spelling folds to the SAME single-character source: SPACE
+    // and SPACES both map to " ", and ZERO / ZEROS / ZEROES all map to "0". Each
+    // spelling therefore produces the identical byte-for-byte output as its
+    // canonical form above.
+    let space_plural = assert_matches_oracle(&wrap(
+        &["01  A PIC X(3) VALUE \"ZZZ\".", "01  B PIC X(3) VALUE \"ZZZ\"."],
+        &[
+            "UNSTRING SPACES DELIMITED BY \",\" INTO A B.",
+            "DISPLAY A.",
+            "DISPLAY B.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(space_plural, "   \nZZZ\n");
+
+    let zeros = assert_matches_oracle(&wrap(
+        &["01  A PIC X(3) VALUE SPACES."],
+        &["UNSTRING ZEROS DELIMITED BY \" \" INTO A.", "DISPLAY A.", "STOP RUN."],
+    ));
+    assert_eq!(zeros, "0  \n");
+
+    let zeroes = assert_matches_oracle(&wrap(
+        &["01  A PIC X(3) VALUE SPACES."],
+        &["UNSTRING ZEROES DELIMITED BY \" \" INTO A.", "DISPLAY A.", "STOP RUN."],
+    ));
+    assert_eq!(zeroes, "0  \n");
+}
+
+#[test]
+fn unstring_figurative_with_pointer() {
+    // A figurative source under WITH POINTER p (p = 1) starts at index 0 over the
+    // 1-char source " ". With no comma the whole char fills A (→ "   "), and the
+    // resume pointer advances to one past the end: final cursor 2, clamped to len
+    // 1 → 1, +1 → 2 ("02"). Both engines apply the same start offset and
+    // write-back, so the compiled output pins to the oracle byte-for-byte.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A PIC X(3) VALUE SPACES.", "01  P PIC 9(2) VALUE 1."],
+        &[
+            "UNSTRING SPACE DELIMITED BY \",\" INTO A WITH POINTER P.",
+            "DISPLAY A.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "   \n02\n");
+}
+
+#[test]
+fn unstring_figurative_delimiter_equals_source() {
+    // The delimiter EQUALS the single source character: source " " with DELIMITED
+    // BY " " splits at index 0 → the empty prefix fills A (→ spaces), the pointer
+    // steps past the delimiter to the end, and the empty remainder fills B (→
+    // spaces). Both receivers become all spaces; the two engines agree byte-for-
+    // byte via assert_matches_oracle.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A PIC X(3) VALUE \"ZZZ\".", "01  B PIC X(3) VALUE \"ZZZ\"."],
+        &[
+            "UNSTRING SPACE DELIMITED BY \" \" INTO A B.",
+            "DISPLAY A.",
+            "DISPLAY B.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "   \n   \n");
+}
+
+#[test]
+fn unstring_figurative_all_ascii_characterization() {
+    // SPACE (0x20) and ZERO (0x30) are inherently ASCII, and `Fig` = {Space, Zero}
+    // is a CLOSED enum, so no non-ASCII figurative constant can ever reach the
+    // source path — there is no diverging byte-vs-char case to construct here. The
+    // separate pre-existing byte-vs-char chip is the non-ASCII string-LITERAL
+    // source (see `unstring_non_ascii_literal_source_is_a_later_rung`). This case
+    // simply pins an all-ASCII figurative source to byte-identity: ZERO → "0" with
+    // no comma fills A reshaped to its X(4) width → "0   ".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A PIC X(4) VALUE SPACES."],
+        &["UNSTRING ZERO DELIMITED BY \",\" INTO A.", "DISPLAY A.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0   \n");
 }
 
 // ---------------------------------------------------------------------------

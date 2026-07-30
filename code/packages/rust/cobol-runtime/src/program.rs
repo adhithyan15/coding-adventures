@@ -1305,8 +1305,11 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             // text), OR a reference-modified item slice `base(start:len)` (its
             // sliced characters supply the field text — the numeric-base and
             // out-of-range checks live in the shared `refmod_string` at exec time).
-            // A NUMERIC or FIGURATIVE literal source is still a later rung. We keep
-            // the whole `Operand` so exec time can pick the provider.
+            // A figurative SPACE/ZERO source is now accepted as its single-character
+            // literal image (SPACE->" " 0x20, ZERO->"0" 0x30), reducing to the
+            // string-literal source scan below; a NUMERIC literal source is still a
+            // later rung. We keep the whole `Operand` so exec time can pick the
+            // provider.
             let source = match read_operand(source_op)? {
                 src @ Operand::Ident(_) => src,
                 // Reference-modified source: accepted here; the slice bounds and
@@ -1328,11 +1331,13 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                         "UNSTRING of a numeric-literal source is a later rung".into(),
                     ))
                 }
-                Operand::Lit(Lit::Fig(_)) => {
-                    return Err(RuntimeError::Unsupported(
-                        "UNSTRING of a figurative-constant source is a later rung".into(),
-                    ))
-                }
+                // A figurative SPACE/ZERO source maps to its single-character ASCII
+                // image, reducing to the accepted string-literal source above. Both
+                // " " and "0" are ASCII, so the non-ASCII-literal reject cannot
+                // trip. `Fig` = {Space, Zero} is closed, so these two arms exhaust
+                // the figurative case.
+                Operand::Lit(Lit::Fig(Fig::Space)) => Operand::Lit(Lit::Str(" ".into())),
+                Operand::Lit(Lit::Fig(Fig::Zero)) => Operand::Lit(Lit::Str("0".into())),
             };
             let delim = read_operand(delim_op)?;
             // The grammar is flat — `INTO NAME { NAME } [ WITH POINTER NAME ]` —

@@ -630,6 +630,23 @@ both engines, so `UNSTRING N(2:3) …` errors identically; a GROUP base,
 out-of-range indices, and a signed/fractional index behave exactly as the existing
 reference-modification machinery does (this rung only routes the source through it).
 
+**Figurative-constant source (later rung, now implemented).** The source may also
+be a **figurative constant** SPACE or ZERO, mapped to its **single-character**
+image — SPACE→`" "` (0x20), ZERO→`"0"` (0x30) — `UNSTRING SPACE DELIMITED BY ","
+INTO w1 w2` → the 1-character source `" "` has no comma, so the whole source is one
+field landing in `w1` (space-padded to its width) and `w2` keeps its prior value.
+This reduces to the **single-char literal-source scan** already implemented above:
+the oracle maps `Fig::Space`/`Fig::Zero` to `Lit::Str(" ")`/`Lit::Str("0")` at read
+time; the compiler emits the same 1-char `str_const` source register the string
+literal uses. No grammar change was needed. Both images are ASCII, so the non-ASCII
+literal-source guard is never tripped, and `Fig` = {Space, Zero} is closed, so no
+non-ASCII figurative can reach the path. Every spelling folds identically
+(SPACE/SPACES, ZERO/ZEROS/ZEROES). The delimiter scan, WITH POINTER write-back,
+multi-receiver reshape, and ON OVERFLOW paths are entirely unchanged. A **numeric**
+literal source and a **computed** reference-modified source remain later rungs. This
+is symmetric to the `STRING` figurative sending-field and `INSPECT CONVERTING`
+figurative rungs.
+
 **`WITH POINTER p` (later rung, now implemented).** `UNSTRING source DELIMITED BY
 delim INTO r1 [r2 …] WITH POINTER p` — `p` is an **unsigned-integer** item (`PIC
 9(n)`, `n ≤ 18`) holding a **1-based** character position. No grammar change was
@@ -668,10 +685,11 @@ validates the picture at build time, the oracle at exec time — with matching
 messages).
 
 Still deferred on both engines: a
-**NUMERIC**-literal source (`UNSTRING 123 …`), a **FIGURATIVE** source (`UNSTRING
-SPACE …`), a **non-ASCII** string-literal source — only an ASCII alphanumeric
-string literal is supported — and a **NUMERIC-base** reference-modified source
-(an alphanumeric-base reference-modified source is now supported). A
+**NUMERIC**-literal source (`UNSTRING 123 …`), a **non-ASCII** string-literal
+source — only an ASCII alphanumeric string literal is supported — and a
+**NUMERIC-base** reference-modified source (an alphanumeric-base
+reference-modified source is now supported, and a **FIGURATIVE** source SPACE/ZERO
+is now accepted as its single-character literal image — see above). A
 signed/fractional/non-numeric `WITH POINTER` item is also deferred, but the `WITH
 POINTER` phrase itself over a `PIC 9(n)` pointer and the `ON OVERFLOW` / `NOT ON
 OVERFLOW` handlers (see the rung below) are now supported.
@@ -1992,7 +2010,7 @@ list, `COPY`) is documented as future work.
 | Complete reserved-word list | The full ~300 COBOL-60 reserved words |
 | `COPY` library text | A pre-tokenize include-style hook |
 | `STRING` real delimiters / `WITH POINTER` / `ON OVERFLOW` | Later rungs beyond the first `DELIMITED BY SIZE` cut (need a run-time scan and a receiver pointer) |
-| `UNSTRING` multi-char / `ALL` / `OR` delimiters, a signed/fractional/non-numeric/over-wide `WITH POINTER` item, multiple `DELIMITED` fields, `COUNT`/`DELIMITER IN`/`TALLYING`, a NUMERIC-literal / FIGURATIVE / NON-ASCII source, a NUMERIC-base reference-modified source | Later rungs beyond the single-character `DELIMITED BY delim INTO r1 [r2 …]` cut (an ASCII alphanumeric string-literal source, an alphanumeric-base reference-modified source `S(2:3)`, literal or computed index, a `WITH POINTER p` phrase over a `PIC 9(n)` unsigned-integer pointer, AND `ON OVERFLOW` / `NOT ON OVERFLOW` handlers ARE now supported) |
+| `UNSTRING` multi-char / `ALL` / `OR` delimiters, a signed/fractional/non-numeric/over-wide `WITH POINTER` item, multiple `DELIMITED` fields, `COUNT`/`DELIMITER IN`/`TALLYING`, a NUMERIC-literal / NON-ASCII source, a NUMERIC-base reference-modified source | Later rungs beyond the single-character `DELIMITED BY delim INTO r1 [r2 …]` cut (an ASCII alphanumeric string-literal source, a FIGURATIVE SPACE/ZERO source mapped to its single-character image, an alphanumeric-base reference-modified source `S(2:3)`, literal or computed index, a `WITH POINTER p` phrase over a `PIC 9(n)` unsigned-integer pointer, AND `ON OVERFLOW` / `NOT ON OVERFLOW` handlers ARE now supported) |
 | `INSPECT`, other string verbs | The rest of the string-handling verb family |
 | IR / interpreter | Run a COBOL program; out of scope for the frontend |
 

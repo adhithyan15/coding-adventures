@@ -2184,8 +2184,10 @@ impl<'a> Compiler<'a> {
         //     (a `str_const` register behaves identically to an item's char
         //     register under str_len/str_index/str_slice, exactly as the
         //     `spaces_const` register does further down this same routine).
-        // A NUMERIC or FIGURATIVE literal source stays a later rung, matching the
-        // oracle's read-time rejects; a REFERENCE-MODIFIED source `base(start:len)`
+        // A figurative SPACE/ZERO literal source is now accepted as its single-char
+        // ASCII image (SPACE->" ", ZERO->"0"), reducing to the string-literal source
+        // scan; a NUMERIC literal source stays a later rung, matching the oracle's
+        // read-time rejects. A REFERENCE-MODIFIED source `base(start:len)`
         // is supported by routing the sliced characters through the SHARED
         // `ref_mod_slice` helper — the identical slice DISPLAY / comparisons emit,
         // so the source register is byte-for-byte what the oracle's `refmod_string`
@@ -2223,10 +2225,18 @@ impl<'a> Compiler<'a> {
                     "UNSTRING of a numeric-literal source is a later rung".into(),
                 ))
             }
-            Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
-                return Err(CompileError::Unsupported(
-                    "UNSTRING of a figurative-constant source is a later rung".into(),
-                ))
+            // A figurative SPACE/ZERO source: SPACE->" ", ZERO->"0" reduce to the
+            // single-char ASCII literal-source scan (mirrors the oracle's read-time
+            // map). Both images are known-ASCII, so no ASCII check is needed.
+            Operandy::Literal(Src::Space) => {
+                let reg = self.fresh("_ussrc");
+                self.emit("str_const", Some(&reg), vec![Operand::Str(" ".into())], "str");
+                reg
+            }
+            Operandy::Literal(Src::Zero) => {
+                let reg = self.fresh("_ussrc");
+                self.emit("str_const", Some(&reg), vec![Operand::Str("0".into())], "str");
+                reg
             }
             Operandy::RefMod { base, start, len } => {
                 // The source characters are the ref-mod slice `base(start:len)`.

@@ -117,11 +117,14 @@ delimiter into successive receivers; each receiver including the last takes the
 field up to the next delimiter, extra fields are dropped, empty fields become
 spaces, and once the source is exhausted the remaining receivers keep their prior
 value; the source may be an alphanumeric item, an alphanumeric string
-literal — `UNSTRING "a,b,c" DELIMITED BY "," INTO w1 w2 w3` — **or** a
-reference-modified item slice `base(start:len)` — `UNSTRING S(2:3) DELIMITED BY
+literal — `UNSTRING "a,b,c" DELIMITED BY "," INTO w1 w2 w3` — a **figurative
+constant** SPACE or ZERO mapped to its single-character image
+(SPACE→`" "`, ZERO→`"0"`) — `UNSTRING SPACE DELIMITED BY "," INTO w1 w2` —
+**or** a reference-modified item slice `base(start:len)` — `UNSTRING S(2:3) DELIMITED BY
 "," INTO w1 w2 w3` (the sliced characters supply the field text via the shared
 reference-modification machinery, so it stays byte-identical to `DISPLAY
-S(2:3)`) — with identical splitting, only the character provider differing;
+S(2:3)`) — with identical splitting, only the character provider differing (a
+numeric literal source and a computed reference-modified source stay later rungs);
 optionally with a `WITH POINTER p` phrase — `UNSTRING S DELIMITED BY "," INTO w1
 w2 WITH POINTER P` — where `p` (a `PIC 9(n)` unsigned integer) gives the 1-based
 character position at which scanning STARTS and is UPDATED afterwards to one past
