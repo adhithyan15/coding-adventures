@@ -1,5 +1,7 @@
 # Changelog
 
+- Reject negative or non-finite Level-1 MOS model-card `MJ` values with a
+  stable diagnostic before depletion-capacitance shaping.
 - Reject non-positive or non-finite Level-1 MOS model-card `PB` values with a
   stable diagnostic before depletion and temperature preprocessing.
 - Reject negative or non-finite Level-1 MOS model-card `GAMMA` values with a

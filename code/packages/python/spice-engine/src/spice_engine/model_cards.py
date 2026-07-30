@@ -590,6 +590,8 @@ def normalize_model_card(
             raise ValueError(f"{name}: MOSFET GAMMA must be finite and non-negative")
         elif canonical == "PB" and (not math.isfinite(value) or value <= 0.0):
             raise ValueError(f"{name}: MOSFET PB must be finite and positive")
+        elif canonical == "MJ" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET MJ must be finite and non-negative")
         else:
             normalized[canonical] = value
     return NormalizedModelCard(
