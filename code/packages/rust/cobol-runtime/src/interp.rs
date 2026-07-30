@@ -1291,9 +1291,9 @@ impl Machine {
         // `first+1`, not at 0 — e.g. "aaXaab" AFTER "X" narrows to "aab" and counts
         // the two leading a's, ignoring the "aa" before the X entirely. With `AFTER x`
         // and `x` absent the window is empty, so the count is 0 (the ISO not-found
-        // asymmetry). (The combined `TALLYING … REPLACING` form still rejects a
-        // LEADING half carrying a region at read time, so that combination never
-        // reaches here.)
+        // asymmetry). (The combined `TALLYING … REPLACING` form now composes this SAME
+        // routine for its LEADING tally half carrying a region — it reaches here with
+        // `leading = true` and a `region`, byte-identical to the standalone form.)
         // `FOR CHARACTERS` is the "count every position" form: it adds the NUMBER OF
         // CHARACTER POSITIONS in the window, regardless of content. With no region that
         // is the whole source; with a `{BEFORE|AFTER} x` region it is the `[start, end)`
@@ -1898,9 +1898,10 @@ impl Machine {
     /// a's, leaving the "aa" before the X untouched. With `AFTER x` and `x` absent the
     /// window is empty, so nothing is replaced (the ISO not-found asymmetry). With no
     /// region the window is the whole source, so both maps are unchanged. The combined
-    /// `TALLYING … REPLACING` form still rejects a LEADING half carrying a region at
-    /// read time, so LEADING and a narrowed window only ever combine on the STANDALONE
-    /// `REPLACING LEADING … {BEFORE|AFTER}` path.
+    /// `TALLYING … REPLACING` form now composes this SAME routine for its LEADING
+    /// replace half carrying a region — so LEADING and a narrowed window combine on the
+    /// COMBINED path too, byte-identical to the standalone `REPLACING LEADING …
+    /// {BEFORE|AFTER}` form.
     fn inspect_replace(
         &mut self,
         sidx: usize,
