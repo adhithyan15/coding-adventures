@@ -1662,6 +1662,56 @@ fn shipped_density_of_heat_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// Shipped specific-energy table — two EXACT NIST SP 811 B.9 factors resolve, and a wrong-dimension
+// unit (a mass unit) abstains. Guards the SLICE of a NEW dimension (specific energy / available
+// energy, the joule per kilogram) and the honest cross-dimension abstention: `pound` is a mass unit,
+// so a specific-energy lookup for it must abstain, catching the specific-energy/mass confusion
+// directly, not mere absence of a value. (Specific energy is energy per mass — distinct from plain
+// energy, J, and from specific heat capacity, J/(kg·K).)
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_specific_energy_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_specificenergy");
+    let src = stdlib().join("reference/specific-energy-conversions.adj");
+    std::fs::copy(&src, dir.join("specific-energy-conversions.adj"))
+        .expect("copy shipped specific-energy-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"specific-energy-conversions.adj\"\n\
+         ? specific_energy_to_joule_per_kilogram(calorie_it_per_gram, $v)\n\
+         ? specific_energy_to_joule_per_kilogram(calorie_th_per_gram, $v)\n\
+         ? specific_energy_to_joule_per_kilogram(pound, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factors resolve, character-for-character from the table (boldface =
+    // exact; the International-Table calorie is exactly 4.1868 J and the thermochemical calorie is
+    // exactly 4.184 J, so calIT/g = 4186.8 and calth/g = 4184 J/kg, exactly).
+    assert!(
+        out.contains("\"v\":\"4186.8\""),
+        "calorieIT per gram = 4.1868 E+03 J/kg: {out}"
+    );
+    assert!(
+        out.contains("\"v\":\"4184\""),
+        "calorieth per gram = 4.184 E+03 J/kg: {out}"
+    );
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `pound` is a MASS unit (it converts to the kilogram, a DIFFERENT quantity), so this
+    // specific-energy table has no row for it — the engine abstains rather than mis-converting a mass
+    // unit as if it were an energy-per-mass unit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
