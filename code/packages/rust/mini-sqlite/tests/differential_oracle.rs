@@ -2450,6 +2450,49 @@ const CASES: &[Case] = &[
         setup: &[],
         query: "SELECT typeof(unixepoch('2026-07-30')) AS a, typeof(julianday('2026-07-30')) AS b, typeof(date('now')) AS c",
     },
+    // Date/time MODIFIERS (phase 2), applied left-to-right after the time value.
+    // Offset modifiers: ±N[.f] days/hours/minutes/seconds are exact-millisecond
+    // shifts (fractional OK); ±N months/years are calendar shifts that preserve
+    // the day (re-normalized, so Jan 31 +1 month → Mar 3) and the time of day.
+    Case {
+        id: "datetime_offset_units",
+        setup: &[],
+        query: "SELECT datetime('2026-07-30 12:00:00','+1 day') AS a, datetime('2026-07-30 12:00:00','-2 hours') AS b, datetime('2026-07-30 12:00:00','+90 minutes') AS c, datetime('2026-07-30 12:00:00','+1.5 seconds') AS d, datetime('2026-07-30 00:00:00','+0.5 days') AS e",
+    },
+    Case {
+        id: "datetime_month_year",
+        setup: &[],
+        query: "SELECT date('2026-07-30','+1 month') AS a, date('2026-01-31','+1 month') AS b, date('2024-02-29','+1 year') AS c, date('2026-01-15','-3 months') AS d, date('2026-03-15','-14 months') AS e",
+    },
+    // start-of and weekday (0=Sunday; advances to the next such day, staying put
+    // if already there; whole days added, so the time of day is preserved).
+    Case {
+        id: "datetime_start_of_weekday",
+        setup: &[],
+        query: "SELECT datetime('2026-07-30 14:30:00','start of month') AS a, datetime('2026-07-30 14:30:00','start of year') AS b, date('2026-07-30','weekday 0') AS c, date('2026-07-30','weekday 4') AS d, datetime('2026-07-30 14:30:00','weekday 0') AS e",
+    },
+    // Chaining, plural/singular units, uppercase, and multi-space between number
+    // and unit — all accepted and applied in order.
+    Case {
+        id: "datetime_modifier_forms",
+        setup: &[],
+        query: "SELECT datetime('2026-07-30 14:30:00','start of month','+1 month','-1 day') AS a, date('2026-07-30','+2 day') AS b, date('2026-07-30','+1 DAY') AS c, date('2026-07-30','+1  day') AS d, date('2026-07-30','1 day') AS e",
+    },
+    // Invalid modifiers → NULL: strict spacing (leading/trailing/no space),
+    // weekday out of 0–6, an unknown keyword, an out-of-range result, or a
+    // non-text modifier argument.
+    Case {
+        id: "datetime_modifier_invalid",
+        setup: &[],
+        query: "SELECT date('2026-07-30',' +1 day') AS a, date('2026-07-30','+1 day ') AS b, date('2026-07-30','+1day') AS c, date('2026-07-30','weekday 7') AS d, date('2026-07-30','bogus') AS e, date('2026-07-30','+100000000 days') AS f, date('2026-07-30', NULL) AS g",
+    },
+    // Extreme offset amounts must yield NULL (not overflow-panic) on both engines
+    // — regression guard for the checked-arithmetic in the year and weekday paths.
+    Case {
+        id: "datetime_modifier_overflow",
+        setup: &[],
+        query: "SELECT date('2026-07-30','+1000000000000000000 years') AS a, date('2026-07-30','+106749529914.55 days','weekday 0') AS b, date('2026-07-30','+9999999999999999999 days') AS c",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
