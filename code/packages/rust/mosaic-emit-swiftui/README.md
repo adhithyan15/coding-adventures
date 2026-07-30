@@ -56,6 +56,30 @@ struct ProfileCardView: View {
 }
 ```
 
+## Native style transitions
+
+MSL transitions remain backend-neutral through `StyleDef` and lower to native
+SwiftUI animations:
+
+```msl
+part card {
+  opacity: 1 ;
+  transition opacity $duration-normal $easing-out ;
+
+  state disabled {
+    opacity: $opacity-disabled ;
+    transition opacity $duration-slow linear ;
+  }
+}
+```
+
+When the matching layout node declares `state-when-disabled`, the generated
+view observes the final opacity value with `.animation(_:value:)`. The local
+linear curve is selected while entering `disabled`; leaving uses the part-level
+ease-out curve. Standard ease curves and `cubic-bezier(...)` lower to native
+`Animation` constructors. Transitions for style properties that the SwiftUI
+backend does not yet lower are intentionally omitted.
+
 ## Primitive lowering
 
 | Mosaic primitive | SwiftUI                                       |

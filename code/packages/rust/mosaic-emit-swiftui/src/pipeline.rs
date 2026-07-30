@@ -101,7 +101,7 @@ use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
 };
-use mosstyle_compiler::{StyleDef, StyleProp};
+use mosstyle_compiler::{StyleDef, StyleProp, StyleTransition};
 
 // =====================================================================
 // Public API
@@ -549,7 +549,13 @@ fn build_swiftui_readme(component_name: &str) -> String {
 ///
 /// Empty when the `.msl` declares no parts — every lookup returns
 /// `None` and emission proceeds unchanged.
-type PartStyleMap = HashMap<String, Vec<StyleProp>>;
+#[derive(Debug)]
+struct PartStyleEntry {
+    props: Vec<StyleProp>,
+    transitions: Vec<StyleTransition>,
+}
+
+type PartStyleMap = HashMap<String, PartStyleEntry>;
 
 // =====================================================================
 // HostTable column-widths threading — TableContext
@@ -646,28 +652,30 @@ fn extract_table_context(host_table: &LayoutNode) -> TableContext {
     }
 }
 
-/// Build a `part_name → props` map from a [`StyleDef`].
+/// Build a `part_name → style entry` map from a [`StyleDef`].
 ///
 /// Mirrors `mosaic_emit_react::pipeline::build_part_style_map` in shape
-/// but keeps the props as `Vec<StyleProp>` (not a pre-rendered string)
-/// because SwiftUI modifier chains are indent-sensitive — we render
-/// per-call-site with the right `pad`, the React backend can splice a
-/// flat `style={{ ... }}` fragment at any indent.
+/// but keeps props and structured transitions rather than a pre-rendered
+/// string. SwiftUI modifier chains are indent-sensitive, and transitions
+/// need the matching state predicate at each call site.
 ///
 /// Two key shapes populate the map:
-///   * Bare part name (`cell`) → that part's `base` props.
+///   * Bare part name (`cell`) → that part's base props and transitions.
 ///   * Composite `{part}:{state}` (`cell:selected`) → that state
-///     block's overriding props.  Looked up by [`collect_state_layers`]
-///     when a node carries a matching `state-when-<state>` prop.
+///     block's overriding props and entry transitions.
 ///
-/// Empty `base` / `state` blocks are skipped so callers can rely on
-/// `map.get(key).is_some()` as "the author wrote SOMETHING under this
-/// key".
+/// Entries with neither props nor transitions are skipped.
 fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
     let mut out = PartStyleMap::with_capacity(style.parts.len());
     for part in &style.parts {
-        if !part.base.is_empty() {
-            out.insert(part.name.clone(), part.base.clone());
+        if !part.base.is_empty() || !part.transitions.is_empty() {
+            out.insert(
+                part.name.clone(),
+                PartStyleEntry {
+                    props: part.base.clone(),
+                    transitions: part.transitions.clone(),
+                },
+            );
         }
         // State blocks (`state selected { ... }`) are surfaced under a
         // composite key `{part}:{state}` so [`collect_state_layers`]
@@ -675,9 +683,15 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
         // walk `style.parts` again.  Matches the React emitter's
         // shape (`build_part_style_map` in `mosaic-emit-react`).
         for state in &part.states {
-            if !state.props.is_empty() {
+            if !state.props.is_empty() || !state.transitions.is_empty() {
                 let key = format!("{}:{}", part.name, state.state);
-                out.insert(key, state.props.clone());
+                out.insert(
+                    key,
+                    PartStyleEntry {
+                        props: state.props.clone(),
+                        transitions: state.transitions.clone(),
+                    },
+                );
             }
         }
     }
@@ -701,6 +715,8 @@ struct StateLayer<'a> {
     cond_expr: String,
     /// The state block's overriding properties.
     props: &'a [StyleProp],
+    /// Transitions used while entering this state.
+    transitions: &'a [StyleTransition],
 }
 
 /// Walk a layout node's props for `state-when-<X>: ( expr )` entries
@@ -738,14 +754,11 @@ fn collect_state_layers<'a>(
             continue;
         };
         let state_key = format!("{part_name}:{state_name}");
-        let Some(state_props) = part_styles.get(&state_key) else {
+        let Some(state_style) = part_styles.get(&state_key) else {
             // `state-when-X` declared without a matching `state X { }`
             // block — silently skip (matches React's posture).
             continue;
         };
-        if state_props.is_empty() {
-            continue;
-        }
         let cond_expr = match &prop.value {
             LayoutPropValue::Expr(t) => t.clone(),
             LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
@@ -757,7 +770,8 @@ fn collect_state_layers<'a>(
         };
         layers.push(StateLayer {
             cond_expr,
-            props: state_props.as_slice(),
+            props: state_style.props.as_slice(),
+            transitions: state_style.transitions.as_slice(),
         });
     }
     layers
@@ -849,6 +863,120 @@ fn round3(x: f64) -> f64 {
     (x * 1000.0).round() / 1000.0
 }
 
+/// Convert a resolved MSL duration to deterministic Swift seconds.
+fn swiftui_duration_seconds(duration: &str) -> Option<String> {
+    let duration = duration.trim();
+    let seconds = if let Some(milliseconds) = duration.strip_suffix("ms") {
+        milliseconds.trim().parse::<f64>().ok()? / 1000.0
+    } else {
+        let seconds = duration.strip_suffix('s')?;
+        seconds.trim().parse::<f64>().ok()?
+    };
+    if !seconds.is_finite() || seconds < 0.0 {
+        return None;
+    }
+    let mut rendered = format!("{seconds:.6}");
+    while rendered.contains('.') && rendered.ends_with('0') {
+        rendered.pop();
+    }
+    if rendered.ends_with('.') {
+        rendered.push('0');
+    }
+    Some(rendered)
+}
+
+/// Lower one resolved MSL easing curve to a SwiftUI `Animation`.
+fn swiftui_animation(transition: &StyleTransition) -> Option<String> {
+    let duration = swiftui_duration_seconds(&transition.duration)?;
+    let easing = transition.easing.trim();
+    let constructor = match easing {
+        "linear" => format!("Animation.linear(duration: {duration})"),
+        "ease" | "ease-in-out" => {
+            format!("Animation.easeInOut(duration: {duration})")
+        }
+        "ease-in" => format!("Animation.easeIn(duration: {duration})"),
+        "ease-out" => format!("Animation.easeOut(duration: {duration})"),
+        _ => {
+            let values = easing
+                .strip_prefix("cubic-bezier(")?
+                .strip_suffix(')')?
+                .split(',')
+                .map(str::trim)
+                .map(str::parse::<f64>)
+                .collect::<Result<Vec<_>, _>>()
+                .ok()?;
+            if values.len() != 4 || values.iter().any(|value| !value.is_finite()) {
+                return None;
+            }
+            format!(
+                "Animation.timingCurve({}, {}, {}, {}, duration: {duration})",
+                values[0], values[1], values[2], values[3]
+            )
+        }
+    };
+    Some(constructor)
+}
+
+/// Resolve the effective animation for one style property.
+///
+/// Base transitions are the fallback for every state change. A transition
+/// declared inside a state replaces that fallback only while entering that
+/// state. Leaving the state therefore uses the base transition, or no
+/// animation when the part has no base transition.
+fn swiftui_animation_for_property(
+    property: &str,
+    base_transitions: &[StyleTransition],
+    state_layers: &[StateLayer],
+) -> Option<String> {
+    let mut animation = base_transitions
+        .iter()
+        .rev()
+        .find(|transition| transition.property == property)
+        .and_then(swiftui_animation);
+
+    for layer in state_layers {
+        let Some(state_animation) = layer
+            .transitions
+            .iter()
+            .rev()
+            .find(|transition| transition.property == property)
+            .and_then(swiftui_animation)
+        else {
+            continue;
+        };
+        animation = Some(match animation {
+            Some(fallback) => format!(
+                "(({}) ? {} : {})",
+                layer.cond_expr, state_animation, fallback
+            ),
+            None => format!("(({}) ? {} : nil)", layer.cond_expr, state_animation),
+        });
+    }
+    animation
+}
+
+/// Attach property-scoped implicit animation to the current modifier.
+///
+/// Observing the final lowered property expression instead of the raw state
+/// predicate means SwiftUI only starts the animation when that property's
+/// value actually changes.
+fn push_swiftui_animation(
+    out: &mut String,
+    pad: &str,
+    property: &str,
+    value_expr: &str,
+    base_transitions: &[StyleTransition],
+    state_layers: &[StateLayer],
+) {
+    if let Some(animation) =
+        swiftui_animation_for_property(property, base_transitions, state_layers)
+    {
+        out.push_str(&format!(
+            "\n{pad}.animation({animation}, value: {value_expr})"
+        ));
+    }
+}
+
 /// Build a SwiftUI view-modifier chain from a slice of [`StyleProp`].
 ///
 /// Each modifier renders on its own line, prefixed by `\n` + an indent of
@@ -874,6 +1002,7 @@ fn round3(x: f64) -> f64 {
 /// | `font-weight: semibold` / `SemiBold` / `600`   | `.fontWeight(.semibold)`                                         |
 /// | `font-weight: medium` / `500`                  | `.fontWeight(.medium)`                                           |
 /// | `border-width: Npx` (+ optional `border-color`)| `.border(<color or Color.gray>, width: N)`                       |
+/// | `opacity: N`                                   | `.opacity(N)`                                                    |
 /// | `text-align: left`/`center`/`right` (base only)| `alignment:` arg of `.frame(...)` (`.leading`/`.center`/`.trailing`) |
 /// | anything else                                  | silently skipped (React emitter does the same for v1)            |
 ///
@@ -885,9 +1014,9 @@ fn round3(x: f64) -> f64 {
 ///
 /// Emitted top-to-bottom: `.foregroundColor` → `.font` → `.fontWeight`
 /// → `.padding` → `.frame(width:,height:,alignment:)` → `.background`
-/// → `.border`.  Content styling and sizing come BEFORE paint so the
-/// background fills, and the border strokes, the full frame rather than
-/// a text-sized box.  See the inline comment in the emission body.
+/// → `.border` → `.opacity`. Content styling and sizing come BEFORE paint
+/// so the background fills, and the border strokes, the full frame rather
+/// than a text-sized box. See the inline comment in the emission body.
 ///
 /// ## `injected_width`
 ///
@@ -897,8 +1026,19 @@ fn round3(x: f64) -> f64 {
 /// is how the HostTable column-width thread injects the cell width INTO
 /// the chain at the correct position (before background/border) instead
 /// of appending a trailing `.frame(width:)` that paints too late.
+#[cfg(test)]
 fn swiftui_modifier_chain(
     base_props: &[StyleProp],
+    state_layers: &[StateLayer],
+    indent: usize,
+    injected_width: Option<&str>,
+) -> String {
+    swiftui_modifier_chain_with_transitions(base_props, &[], state_layers, indent, injected_width)
+}
+
+fn swiftui_modifier_chain_with_transitions(
+    base_props: &[StyleProp],
+    base_transitions: &[StyleTransition],
     state_layers: &[StateLayer],
     indent: usize,
     injected_width: Option<&str>,
@@ -961,6 +1101,7 @@ fn swiftui_modifier_chain(
     let mut font_weight = PropBucket::new(layer_count);
     let mut border_width = PropBucket::new(layer_count);
     let mut border_color = PropBucket::new(layer_count);
+    let mut opacity = PropBucket::new(layer_count);
 
     // `text-align` is a static layout concern — we deliberately do NOT
     // layer it per state (a per-state alignment flip is never needed for
@@ -1024,6 +1165,11 @@ fn swiftui_modifier_chain(
                 }
             }
             "border-color" => set(&mut border_color, swiftui_color_value(&p.value)),
+            "opacity" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut opacity, v);
+                }
+            }
             "text-align"
                 // Base-only by design (see the `text_align` binding's
                 // doc comment).  A state layer that sets `text-align` is
@@ -1076,6 +1222,14 @@ fn swiftui_modifier_chain(
     if !foreground.empty() {
         let expr = layer_value(&foreground, state_layers, "Color.primary");
         out.push_str(&format!("\n{pad}.foregroundColor({expr})"));
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "color",
+            &expr,
+            base_transitions,
+            state_layers,
+        );
     }
 
     // 2. + 3. .font — combine size + monospaced family into one call
@@ -1089,10 +1243,26 @@ fn swiftui_modifier_chain(
             out.push_str(&format!(
                 "\n{pad}.font(.system(size: {sz}, design: .monospaced))"
             ));
+            push_swiftui_animation(
+                &mut out,
+                &pad,
+                "font-size",
+                &sz,
+                base_transitions,
+                state_layers,
+            );
         }
         (true, false) => {
             let sz = layer_value(&font_size, state_layers, "0");
             out.push_str(&format!("\n{pad}.font(.system(size: {sz}))"));
+            push_swiftui_animation(
+                &mut out,
+                &pad,
+                "font-size",
+                &sz,
+                base_transitions,
+                state_layers,
+            );
         }
         (false, true) => out.push_str(&format!(
             "\n{pad}.font(.system(.body, design: .monospaced))"
@@ -1110,6 +1280,14 @@ fn swiftui_modifier_chain(
     if !padding.empty() {
         let expr = layer_value(&padding, state_layers, "0");
         out.push_str(&format!("\n{pad}.padding({expr})"));
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "padding",
+            &expr,
+            base_transitions,
+            state_layers,
+        );
     }
 
     // 5. .frame(width:, height:, alignment:) — the cell's box.
@@ -1136,6 +1314,8 @@ fn swiftui_modifier_chain(
     } else {
         None
     };
+    let animated_width = frame_width.clone();
+    let animated_height = frame_height.clone();
     match (frame_width, frame_height) {
         (Some(w), Some(h)) => {
             let a = align_arg.as_deref().unwrap_or("");
@@ -1165,6 +1345,26 @@ fn swiftui_modifier_chain(
             }
         }
     }
+    if let Some(value) = animated_width {
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "width",
+            &value,
+            base_transitions,
+            state_layers,
+        );
+    }
+    if let Some(value) = animated_height {
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "height",
+            &value,
+            base_transitions,
+            state_layers,
+        );
+    }
 
     // 6. .background — fills the frame (now full cell size).  A state
     // that overrides background where there's NO base value gets
@@ -1173,6 +1373,22 @@ fn swiftui_modifier_chain(
     if !background.empty() {
         let expr = layer_value(&background, state_layers, "Color.clear");
         out.push_str(&format!("\n{pad}.background({expr})"));
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "background",
+            &expr,
+            base_transitions,
+            state_layers,
+        );
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "background-color",
+            &expr,
+            base_transitions,
+            state_layers,
+        );
     }
 
     // 7. .border — strokes the frame edge.  Needs at least the width.
@@ -1187,6 +1403,36 @@ fn swiftui_modifier_chain(
             layer_value(&border_color, state_layers, "Color.gray")
         };
         out.push_str(&format!("\n{pad}.border({c_expr}, width: {w_expr})"));
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "border-color",
+            &c_expr,
+            base_transitions,
+            state_layers,
+        );
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "border-width",
+            &w_expr,
+            base_transitions,
+            state_layers,
+        );
+    }
+
+    // 8. .opacity — compositing applies to the fully styled part.
+    if !opacity.empty() {
+        let expr = layer_value(&opacity, state_layers, "1");
+        out.push_str(&format!("\n{pad}.opacity({expr})"));
+        push_swiftui_animation(
+            &mut out,
+            &pad,
+            "opacity",
+            &expr,
+            base_transitions,
+            state_layers,
+        );
     }
 
     out
@@ -1812,13 +2058,24 @@ fn emit_view_tree(
     // rather than being appended as a trailing `.frame(width:)`.
     let mut consumed_injected = false;
     if let Some(part) = &node.part_name {
-        let base_props = part_styles.get(part).map(|v| v.as_slice()).unwrap_or(&[]);
+        let base_style = part_styles.get(part);
+        let base_props = base_style
+            .map(|style| style.props.as_slice())
+            .unwrap_or(&[]);
+        let base_transitions = base_style
+            .map(|style| style.transitions.as_slice())
+            .unwrap_or(&[]);
         let state_layers = collect_state_layers(node, part, part_styles);
         // When a width is injected we MUST run the chain even if the part
         // carries no styles, so the frame still emits.
         if !base_props.is_empty() || !state_layers.is_empty() || injected_width.is_some() {
-            let chain =
-                swiftui_modifier_chain(base_props, &state_layers, indent + 4, injected_width);
+            let chain = swiftui_modifier_chain_with_transitions(
+                base_props,
+                base_transitions,
+                &state_layers,
+                indent + 4,
+                injected_width,
+            );
             if injected_width.is_some() {
                 consumed_injected = true;
             }
@@ -3872,7 +4129,7 @@ mod tests {
     use super::*;
     use moslayout_compiler::{LayoutNode, LayoutProp};
     use mosmodel_compiler::EmitParam;
-    use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp};
+    use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp, StyleTransition};
 
     // ---------------------------------------------------------------------
     // Test helpers — keep tests short by hiding the construction noise.
@@ -7106,6 +7363,14 @@ mod tests {
         }
     }
 
+    fn transition(property: &str, duration: &str, easing: &str) -> StyleTransition {
+        StyleTransition {
+            property: property.to_string(),
+            duration: duration.to_string(),
+            easing: easing.to_string(),
+        }
+    }
+
     /// Build a `StyleDef` with a single `part name { base props }`.
     fn style_with_part(component: &str, part_name: &str, props: Vec<StyleProp>) -> StyleDef {
         StyleDef {
@@ -7724,7 +7989,10 @@ mod tests {
                 "( r == selectedRow && c == selectedCol )",
             )],
         );
-        let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
+        let base_props = map
+            .get("cell")
+            .map(|style| style.props.as_slice())
+            .unwrap_or(&[]);
         let layers = collect_state_layers(&node, "cell", &map);
         let chain = swiftui_modifier_chain(base_props, &layers, 0, None);
         // Modifier wraps the bucket value in `(...)`; the bucket value
@@ -7788,7 +8056,10 @@ mod tests {
                 prop_expr("state-when-editing", "( edit )"),
             ],
         );
-        let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
+        let base_props = map
+            .get("cell")
+            .map(|style| style.props.as_slice())
+            .unwrap_or(&[]);
         let layers = collect_state_layers(&node, "cell", &map);
         let chain = swiftui_modifier_chain(base_props, &layers, 0, None);
         // editing wraps selected; selected wraps base.  The modifier
@@ -7875,7 +8146,10 @@ mod tests {
         let map = build_part_style_map(&s);
         let node =
             box_node_with_part_and_props("cell", vec![prop_expr("state-when-selected", "( sel )")]);
-        let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
+        let base_props = map
+            .get("cell")
+            .map(|style| style.props.as_slice())
+            .unwrap_or(&[]);
         let layers = collect_state_layers(&node, "cell", &map);
         let chain = swiftui_modifier_chain(base_props, &layers, 0, None);
         // .background stays at the base value — no ternary.
@@ -7911,7 +8185,10 @@ mod tests {
         let map = build_part_style_map(&s);
         let node =
             box_node_with_part_and_props("cell", vec![prop_expr("state-when-selected", "( sel )")]);
-        let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
+        let base_props = map
+            .get("cell")
+            .map(|style| style.props.as_slice())
+            .unwrap_or(&[]);
         let layers = collect_state_layers(&node, "cell", &map);
         let chain = swiftui_modifier_chain(base_props, &layers, 0, None);
         // Only `.padding(4)` — no ternary, no `( sel )`, no extra parens.
@@ -7937,7 +8214,10 @@ mod tests {
             box_node_with_part_and_props("cell", vec![prop_expr("state-when-selected", "( sel )")]);
         let layers = collect_state_layers(&node, "cell", &map);
         assert!(layers.is_empty());
-        let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
+        let base_props = map
+            .get("cell")
+            .map(|style| style.props.as_slice())
+            .unwrap_or(&[]);
         let chain = swiftui_modifier_chain(base_props, &layers, 0, None);
         // No ternary, just the base background.
         assert!(
@@ -8005,6 +8285,197 @@ mod tests {
         assert!(
             out.contains(
                 ".foregroundColor(((( r == selectedRow && c == selectedCol )) ? Color(red: 1, green: 1, blue: 1) : Color(red: 0.8, green: 0.8, blue: 0.8)))"
+            ),
+            "out = {out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T24 — MSL transition durations and easing curves lower to native
+    //       SwiftUI Animation constructors.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn transition_values_lower_to_swiftui_animations() {
+        assert_eq!(swiftui_duration_seconds("80ms").as_deref(), Some("0.08"));
+        assert_eq!(swiftui_duration_seconds("1s").as_deref(), Some("1.0"));
+        assert_eq!(
+            swiftui_animation(&transition("opacity", "150ms", "ease-out")).as_deref(),
+            Some("Animation.easeOut(duration: 0.15)")
+        );
+        assert_eq!(
+            swiftui_animation(&transition(
+                "opacity",
+                "300ms",
+                "cubic-bezier(0.34, 1.56, 0.64, 1)"
+            ))
+            .as_deref(),
+            Some("Animation.timingCurve(0.34, 1.56, 0.64, 1, duration: 0.3)")
+        );
+        assert!(swiftui_duration_seconds("fast").is_none());
+    }
+
+    // ---------------------------------------------------------------------
+    // T25 — A part-level transition watches the final lowered property
+    //       expression, so unrelated state changes do not start it.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn base_transition_emits_property_scoped_animation() {
+        let s = StyleDef {
+            component_name: "Demo".to_string(),
+            parts: vec![PartStyle {
+                name: "cell".to_string(),
+                base: vec![sp("background", "#1e1e1e")],
+                transitions: vec![transition("background", "80ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "selected".to_string(),
+                    props: vec![sp("background", "#264f78")],
+                    transitions: vec![],
+                }],
+            }],
+        };
+        let map = build_part_style_map(&s);
+        let node =
+            box_node_with_part_and_props("cell", vec![prop_expr("state-when-selected", "( sel )")]);
+        let base = map.get("cell").expect("base style");
+        let layers = collect_state_layers(&node, "cell", &map);
+        let chain = swiftui_modifier_chain_with_transitions(
+            &base.props,
+            &base.transitions,
+            &layers,
+            0,
+            None,
+        );
+        let property_value = "((( sel )) ? Color(red: 0.149, green: 0.31, blue: 0.471) : Color(red: 0.118, green: 0.118, blue: 0.118))";
+        assert!(
+            chain.contains(&format!(
+                ".animation(Animation.easeOut(duration: 0.08), value: {property_value})"
+            )),
+            "chain = {chain}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T26 — State-local transitions replace the base curve while entering
+    //       that state; leaving falls back to the part-level curve.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn state_local_transition_overrides_only_while_entering_state() {
+        let s = StyleDef {
+            component_name: "Demo".to_string(),
+            parts: vec![PartStyle {
+                name: "root".to_string(),
+                base: vec![sp("opacity", "1")],
+                transitions: vec![transition("opacity", "150ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "disabled".to_string(),
+                    props: vec![sp("opacity", "0.4")],
+                    transitions: vec![transition("opacity", "300ms", "linear")],
+                }],
+            }],
+        };
+        let map = build_part_style_map(&s);
+        let node = box_node_with_part_and_props(
+            "root",
+            vec![prop_expr("state-when-disabled", "( disabled )")],
+        );
+        let base = map.get("root").expect("base style");
+        let layers = collect_state_layers(&node, "root", &map);
+        let chain = swiftui_modifier_chain_with_transitions(
+            &base.props,
+            &base.transitions,
+            &layers,
+            0,
+            None,
+        );
+        assert!(
+            chain.contains(".opacity(((( disabled )) ? 0.4 : 1))"),
+            "chain = {chain}"
+        );
+        assert!(
+            chain.contains(
+                ".animation(((( disabled )) ? Animation.linear(duration: 0.3) : Animation.easeOut(duration: 0.15)), value: ((( disabled )) ? 0.4 : 1))"
+            ),
+            "chain = {chain}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T27 — A transition-only state remains addressable and disables
+    //       animation on exit when no base transition exists.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn transition_only_state_is_collected_with_nil_exit_animation() {
+        let s = StyleDef {
+            component_name: "Demo".to_string(),
+            parts: vec![PartStyle {
+                name: "root".to_string(),
+                base: vec![sp("opacity", "1")],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    state: "disabled".to_string(),
+                    props: vec![sp("opacity", "0.4")],
+                    transitions: vec![transition("opacity", "300ms", "ease-in")],
+                }],
+            }],
+        };
+        let map = build_part_style_map(&s);
+        let node = box_node_with_part_and_props(
+            "root",
+            vec![prop_expr("state-when-disabled", "( disabled )")],
+        );
+        let base = map.get("root").expect("base style");
+        let layers = collect_state_layers(&node, "root", &map);
+        assert_eq!(layers.len(), 1);
+        let chain = swiftui_modifier_chain_with_transitions(
+            &base.props,
+            &base.transitions,
+            &layers,
+            0,
+            None,
+        );
+        assert!(
+            chain.contains(
+                ".animation(((( disabled )) ? Animation.easeIn(duration: 0.3) : nil), value: ((( disabled )) ? 0.4 : 1))"
+            ),
+            "chain = {chain}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T28 — End-to-end pipeline output consumes transitions from StyleDef.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn transition_end_to_end_from_pipeline_emits_swiftui_animation() {
+        let m = component("Fade", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "Fade".to_string(),
+            root: box_node_with_part_and_props(
+                "root",
+                vec![prop_expr("state-when-disabled", "( disabled )")],
+            ),
+        };
+        let s = StyleDef {
+            component_name: "Fade".to_string(),
+            parts: vec![PartStyle {
+                name: "root".to_string(),
+                base: vec![sp("opacity", "1")],
+                transitions: vec![transition("opacity", "150ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "disabled".to_string(),
+                    props: vec![sp("opacity", "0.4")],
+                    transitions: vec![],
+                }],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            out.contains(
+                ".animation(Animation.easeOut(duration: 0.15), value: ((( disabled )) ? 0.4 : 1))"
             ),
             "out = {out}"
         );
