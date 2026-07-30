@@ -8,7 +8,12 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": {
+    "item_id": "build-tool-linux-oci-sandbox",
+    "pr_number": 9189,
+    "branch": "codex/build-tool-linux-oci-sandbox",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9189"
+  },
   "last_inventory": {
     "revision": "bee64b4774b87cd43bea6c9e413e647742334f96",
     "schema_version": 2,
@@ -60,11 +65,11 @@
     {
       "id": "build-tool-linux-oci-sandbox",
       "title": "Define the Linux OCI identity, capability preflight, and invariant-probe container",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-execution-sandbox"],
       "branch": "codex/build-tool-linux-oci-sandbox",
-      "pr_number": null,
-      "notes": "Selected after PR #9178 merged. Security review split the backend into a safe first tranche: a closed identity binding rootless Podman, crun, exact OCI manifest/config, seccomp, shim, and probe; fail-closed host/image preflight; and exact probe-container argv with no fixture decode or launch. The checked-in policy remains disabled and Linux unavailable until protected enforcement evidence exists."
+      "pr_number": 9189,
+      "notes": "Ready-for-review PR #9189. Security review split the backend into a safe first tranche: a closed identity binding rootless Podman, crun, exact OCI manifest/config, seccomp, shim, and probe; fail-closed host/image preflight; and exact probe-container argv with no fixture decode or launch. Local validation covers 100 focused tests, 83% branch-aware module coverage, Ruff, Bandit, Go build-tool tests/build, parity collision checks, and build-file auditing. The checked-in policy remains disabled and Linux unavailable until protected enforcement evidence exists."
     },
     {
       "id": "build-tool-trusted-authority-bundle",
