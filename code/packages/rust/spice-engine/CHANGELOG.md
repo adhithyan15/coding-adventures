@@ -1,5 +1,7 @@
 # Changelog
 
+- Reject non-positive or non-finite Level-1 MOS model-card `TOX` values with a
+  stable diagnostic before mobility and electrostatic preprocessing.
 - Reject non-positive or non-finite Level-1 MOS model-card `NSUB` values with a
   stable diagnostic before process-parameter preprocessing.
 - Reject non-positive or non-finite Level-1 MOS model-card `TNOM` values with a

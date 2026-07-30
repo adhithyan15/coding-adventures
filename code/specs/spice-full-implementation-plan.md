@@ -33,12 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS substrate-doping validation.
+1. Cross-language Level-1 MOS oxide-thickness validation.
    - Status: current PR completion candidate.
-   - Reject non-positive or non-finite model-card `NSUB` values before
-     process-parameter preprocessing, including when `TOX` is absent.
-   - Preserve positive substrate doping and the stricter intrinsic-density
-     requirement when `NSUB` plus `TOX` derives process parameters.
+   - Reject non-positive or non-finite model-card `TOX` values before mobility
+     and electrostatic process-parameter preprocessing.
+   - Preserve positive oxide thickness and stable diagnostics across Rust,
+     Python, and TypeScript.
 
 ## Completed Slices
 
@@ -3650,6 +3650,13 @@ the Rust, Python, and TypeScript surfaces together.
      temperature and electrostatic preprocessing.
    - Positive nominal temperatures, parameter coverage, and stable diagnostics
      remain aligned across Rust, Python, and TypeScript.
+
+296. Cross-language Level-1 MOS substrate-doping validation.
+   - Status: completed in PR 9183.
+   - Non-positive and non-finite model-card `NSUB` values are rejected before
+     process-parameter preprocessing, including when `TOX` is absent.
+   - Positive substrate doping and the stricter intrinsic-density requirement
+     for `NSUB` plus `TOX` remain aligned across Rust, Python, and TypeScript.
 
 ## Backlog
 
