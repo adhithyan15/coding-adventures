@@ -47,9 +47,12 @@ noun's actual gender.
 ## el vino (wine) — Latin vīnum, kept whole
 
 **vino** ("wine") ← Latin **vīnum** — held its shape, the way French *vin*
-did too. English shares the very same root: **wine** itself is *vīnum*
-borrowed into old Germanic, plus **vine, vinegar, vintage, vineyard,
-vinyl**.
+did too. English shares the very same root, by more than one road: **wine**
+itself is *vīnum* borrowed directly into old Germanic; **vine** and
+**vinegar** arrived centuries later, secondhand, via **French** (*vin +
+aigre*, "sour wine," for vinegar); and **vineyard** isn't a borrowing at
+all — English built it at home, from the already-borrowed "wine" plus
+native "yard."
 
 ## Guided Practice
 
