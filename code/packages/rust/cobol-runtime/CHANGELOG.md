@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.78.0 — constant reference-modified single-character delimiter/search/replace operand — 2026-07-30
+
+- A **constant reference modification** `BASE(start:len)` with **literal** indices and slice-length
+  exactly 1 is now accepted wherever a **single-character** operand is taken through the shared delimiter
+  helper `single_delim_char`: the length-1 slice reduces to the same single ASCII character the
+  single-char-literal / figurative path already handles. This covers a **DELIMITED BY** delimiter
+  (STRING, UNSTRING), an **INSPECT TALLYING FOR ALL** delimiter, and an **INSPECT REPLACING ALL/LEADING
+  x BY y** search char *and* replace char. Byte-identical to the compiler (0.74.0).
+- **One shared helper, lifted once.** The oracle uses `single_delim_char` at every one of these call
+  sites, so lifting its `Operand::RefMod` arm covers all of them at once. The arm reconstructs the slice
+  through the shared `refmod_string` — inheriting its numeric-base reject and its `RefModOutOfRange`
+  bounds trap (#67/#74) unchanged — and matches the resulting `[c]` single char; the scan/replace/concat
+  logic is otherwise unchanged.
+- **Only CONSTANT (literal) indices are accepted**, mirroring `string_source_chars`: the `const_ix`
+  predicate (`start` literal, `len` literal-or-omitted) gates acceptance. A **computed** (data-name
+  index) refmod has a run-time length the compiler's compile-time contract cannot carry, so it stays a
+  later rung — rejected with "a computed reference-modified delimiter is a later rung", co-total with the
+  compiler's `SliceLen::Runtime` reject exactly as #74's CONVERTING refmod split did. A length != 1
+  constant refmod is a multi-character delimiter (later rung); a numeric base takes the pre-existing
+  `refmod_string` numeric reject.
+- **Reconstruction is char-based here and byte-based in the compiler**; they coincide on ASCII bases. A
+  non-ASCII base is the pre-existing byte-vs-char refmod chip (task_396ba6f6), not newly guarded — the
+  positive tests use ASCII and a characterization test keeps the multi-byte char strictly outside the
+  length-1 window so both engines pick the same ASCII char. Completes the delimiter/search/replace
+  operand-class arc (literal, item, figurative 0.77.0, refmod).
+
 ## 0.77.0 — figurative-constant SPACE/ZERO as a single-character delimiter/search/replace/region operand — 2026-07-30
 
 - A **figurative constant** SPACE or ZERO is now accepted wherever a **single-character** operand is

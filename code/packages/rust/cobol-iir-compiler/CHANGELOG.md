@@ -8,6 +8,34 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.74.0: constant reference-modified single-character delimiter/search/replace operand
+
+A **constant reference modification** `BASE(start:len)` with **literal** indices and slice-length exactly
+1 is now accepted wherever a **single-character** operand is taken through the shared delimiter helpers,
+reducing to the same single ASCII character the single-char-literal / figurative path already handles.
+This covers a **DELIMITED BY** delimiter (STRING, UNSTRING), an **INSPECT TALLYING FOR ALL** delimiter,
+and an **INSPECT REPLACING ALL/LEADING x BY y** search char *and* replace char. Compiled byte-identical
+to the `coding-adventures-cobol-runtime` 0.78.0 oracle.
+
+- **Co-total across both compiler helpers.** The oracle uses ONE shared helper (`single_delim_char`),
+  while the compiler splits by use: `single_delim_code` yields an i64 byte code for a scan,
+  `single_delim_str` yields a 1-char string for a replace/concat. The `RefMod` arm was lifted in BOTH by
+  reusing the established `ref_mod_slice` (as `converting_operand` does): it materialises the slice reg
+  and reports its `SliceLen`. In `single_delim_code`, `SliceLen::Const(1)` takes `str_index(reg, 0)` for
+  the scan byte exactly like a `PIC X(1)` item; in `single_delim_str`, `SliceLen::Const(1)` hands back
+  the slice reg directly (it IS already the 1-char string). Its `Const`/`Runtime` split is co-total with
+  the oracle's `const_ix` predicate (#67/#74), so no call site is accepted by one engine and rejected by
+  the other.
+- **Later rungs, rejected co-total.** A `SliceLen::Const(_ != 1)` is a multi-character delimiter; a
+  `SliceLen::Runtime` (any data-name index) is a **computed** refmod — a run-time length the
+  compile-time contract cannot carry — rejected with "a computed reference-modified delimiter is a later
+  rung", matching the oracle. A numeric base takes the pre-existing `ref_mod_slice` numeric reject.
+- **Slice reconstruction is byte-based here and char-based in the oracle**; they coincide on ASCII bases.
+  A non-ASCII base is the pre-existing byte-vs-char refmod chip (task_396ba6f6), not newly guarded — the
+  positive tests use ASCII, and a characterization test keeps the multi-byte char strictly outside the
+  length-1 window so both engines pick the same ASCII byte/char. Completes the delimiter/search/replace
+  operand-class arc (literal, item, figurative v0.73.0, refmod).
+
 ### Added — v0.73.0: figurative-constant SPACE/ZERO as a single-character delimiter/search/replace/region operand
 
 A **figurative constant** SPACE or ZERO is now accepted wherever a **single-character** operand is taken
