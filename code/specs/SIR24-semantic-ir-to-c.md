@@ -361,6 +361,11 @@ lockstep:
    + call-time prologue).
 4. **Collections** — the `__method__` dispatch catalog
    (String / Array / Hash / Numeric / Symbol / Object, block and non-block).
+   Slice 1 (0.22.0) landed the common 0-arity String methods via a
+   `_sir_builtin_method` runtime dispatcher (`length`/`size`, `upcase`,
+   `downcase`, `reverse`, `empty?`, `to_s`; `length`/`size`/`empty?` polymorphic
+   over String/Array/Hash) — a built-in name the module did not define routes
+   there instead of the user method table; the rest of the catalog follows.
 5. **Exceptions** — `setjmp`/`longjmp` + typed runtime errors.
 6. **OOP** (mirroring the Ruby backend's landed 7-slice arc) — slice 1
    (`Classes` + `Constants`: the `SIR_INSTANCE` runtime, an empty class, `Foo.new`

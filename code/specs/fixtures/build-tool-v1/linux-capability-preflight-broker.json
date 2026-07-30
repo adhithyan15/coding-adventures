@@ -191,6 +191,50 @@
       "allowed_role": "runtime",
       "default": "deny"
     },
+    "in_memory_exec": {
+      "kind": "seccomp_bpf",
+      "architecture": "x86_64",
+      "arch_mismatch": "kill_process",
+      "x32_syscalls": "kill_process",
+      "default": "allow",
+      "deny_errno": "EPERM",
+      "close_unlisted_descriptors_before_sandbox": true,
+      "deny_syscalls": [
+        "execveat",
+        "io_uring_enter",
+        "io_uring_register",
+        "io_uring_setup",
+        "memfd_create",
+        "memfd_secret",
+        "open_by_handle_at",
+        "pidfd_getfd",
+        "recvmmsg",
+        "recvmsg",
+        "uselib"
+      ],
+      "deny_flagged_syscalls": [
+        {
+          "syscall": "mmap",
+          "argument": 2,
+          "mask": "PROT_EXEC"
+        },
+        {
+          "syscall": "mprotect",
+          "argument": 2,
+          "mask": "PROT_EXEC"
+        },
+        {
+          "syscall": "pkey_mprotect",
+          "argument": 2,
+          "mask": "PROT_EXEC"
+        },
+        {
+          "syscall": "shmat",
+          "argument": 2,
+          "mask": "SHM_EXEC"
+        }
+      ]
+    },
     "cleanup": {
       "kind": "delegated_cgroup_v2",
       "membership": "cgroup.procs",

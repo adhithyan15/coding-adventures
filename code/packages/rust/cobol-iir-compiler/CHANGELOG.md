@@ -8,6 +8,23 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.71.0: STRING with a figurative-constant SPACE/ZERO sending field
+
+`STRING … INTO …` now lowers when a sending field is a **figurative constant** SPACE or ZERO, mapped to
+its single-character image — SPACE→`" "` (0x20), ZERO→`"0"` (0x30). Every spelling folds identically
+(SPACE/SPACES, ZERO/ZEROS/ZEROES). Compiled byte-identical to the
+`coding-adventures-cobol-runtime` 0.75.0 oracle.
+
+- **A figurative reduces to the 1-char `str_const` string-literal path.** `string_source` maps
+  `Src::Space`/`Src::Zero` to a fresh `_slit` register emitting `str_const " "` / `str_const "0"` with
+  length 1 — exactly the existing `Src::Str` arm's shape — so the DELIMITED BY, non-ASCII-guard,
+  WITH POINTER, and ON OVERFLOW lowering apply unchanged. Both images are ASCII, so the non-ASCII
+  sending-field guard passes.
+- **`Src` figurative case is exactly {Space, Zero}, both ASCII**, so no non-ASCII figurative can reach
+  the path. A numeric item and a computed reference modification as a STRING sending field remain later
+  rungs, unchanged. Symmetric to the CONVERTING figurative rung (v0.70.0), mirroring the oracle's
+  `string_source_chars`.
+
 ### Added — v0.70.0: INSPECT CONVERTING with a figurative-constant SPACE/ZERO FROM/TO operand
 
 `INSPECT src CONVERTING from TO to [{BEFORE|AFTER} x]` now lowers when the `from` and/or `to` table is

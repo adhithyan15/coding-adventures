@@ -399,20 +399,37 @@ controller instead of another fixture wrapper:
   Every accepted service or desired-state mutation is saved synchronously; a
   failed save restores the exact pre-request runtime and returns HTTP 503.
 - The `smart-home-local-controller` binary restores
-  `smart-home-runtime-store` from a D18A local folder, retains the opaque
-  automation definitions stored beside runtime state, installs and persists
+  `smart-home-runtime-store` from a D18A local folder, installs and persists
   its local API capability grant, and serves the existing browser/API surface
   through the repository HTTP stack.
 - Executable tests prove an HTTP desired-state mutation is queryable after a
   fresh store instance and prove failed persistence leaves no in-memory
   mutation behind.
 
+## Current Automation Runtime Slice
+
+This slice turns the previously opaque automation storage boundary into an
+executable, restart-safe rules runtime:
+
+- `smart-home-automation-runtime` owns typed schedule and normalized device
+  event triggers, state-equality conditions, direct commands, scene expansion,
+  stable per-occurrence idempotency keys, dry-run plans, and bounded audit.
+- Every automation mutation delegates to the existing authorized D23 command
+  tool. Definitions, consumed trigger occurrences, and automation audit records
+  persist atomically beside the normalized runtime snapshot.
+- The native local API can create and inspect definitions, preview or execute
+  schedule and event evaluations, and read automation audit records.
+- The production local controller restores the engine, runs schedule
+  evaluation on a local worker, and synchronously persists definition and
+  execution mutations with rollback when storage fails.
+- Executable tests cover scene planning, conditions, event matching,
+  idempotency across snapshot restore, durable state validation, and the full
+  create-preview-execute-audit HTTP lifecycle.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
 
-- Add an automation/rules engine with schedules, triggers, conditions, scenes,
-  idempotency, dry-run planning, and audit.
 - Add platform integrations beyond Hue: MQTT, Matter/Thread, Zigbee, Z-Wave,
   cameras, locks, thermostats, and sensors.
 - Build Home Assistant migration tools for devices, rooms, scenes,

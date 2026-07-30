@@ -72,9 +72,10 @@ navigation commands and content-link activation through transactional page
 loads, preserving the prior history and viewport on failure. The remaining
 browser gate is now being closed on macOS first: `venture-browser-macos` loads
 an HTTP page with native CoreText services, creates an AppKit `CAMetalLayer`,
-and presents the viewport through `paint-metal`. Native event translation,
-controls, scrolling, and repeated navigation remain before the shell is
-interactive.
+and presents the viewport through `paint-metal`. Native AppKit wheel events now
+drive the shared clamped viewport and Metal repaint path. Pointer-button and
+keyboard translation, controls, link activation, and repeated navigation
+remain before the shell is interactive.
 
 ## Where It Fits
 

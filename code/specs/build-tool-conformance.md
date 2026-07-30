@@ -781,13 +781,19 @@ non-root Linux amd64 process, a real cgroup-v2 delegated root with enabled
 `cpu`, `memory`, and `pids` controllers, required kernel seccomp actions, exact
 runtime binary hashes, and the exact prepopulated local image. It forces local
 Podman mode and rejects a malformed, non-amd64, or dynamically linked Podman
-ELF before command rendering. Before Podman starts, the broker installs a Landlock ABI-v1
-execute ruleset whose sole allow-rule is the already-retained Podman inode.
-Podman re-execution remains possible, while pre-exec hooks, `catatonit`, and
-every other pathname-backed helper execution in the reviewed Podman flow is
-denied by the kernel regardless of `PATH`. Landlock ABI v1 does not govern
-anonymous executable memfds or executable mappings, so closing those paths is
-a separate prerequisite before invariant-probe evidence can be authoritative.
+ELF before command rendering. Before Podman starts, the broker closes every
+descriptor outside its exact command allowlist, installs a Landlock ABI-v1
+execute ruleset whose sole allow-rule is the already-retained Podman inode, and
+installs an amd64 classic-seccomp filter. Podman starts through
+`/proc/self/fd/<retained-fd>` pathname `execve`, while pre-exec hooks,
+`catatonit`, every other pathname-backed helper, `execveat`, anonymous
+executable memfds, executable mappings, and descriptor receipt or acquisition
+through `recvmsg`, `recvmmsg`, `pidfd_getfd`, or `open_by_handle_at` are denied
+by the inherited kernel policy regardless of `PATH`. This closes
+post-transition executable creation and descriptor replenishment in
+broker-command descendants; it does not remove the already-loaded
+protected Python, standard-library, native-extension, libc, or loader
+runner-image TCB.
 The broker uses the closed `version --format json` request instead of
 `podman info`, whose host inspection executes configured helpers and package
 managers outside this authority. The process-free backend validates only the
@@ -838,8 +844,8 @@ The loader profile and implementation have these requirements:
    Every declared import root must be reviewed standard library. The backend
    has no repository or third-party dependency.
 5. The worker verifies the exact loader/backend/manifest/identity digests and
-   the backend's structural `preflight_brokered`, `preflight_prevalidated`,
-   unavailable-error, and command-result declarations. It does not execute
+   the backend's structural `preflight_brokered`, unavailable-error, and
+   command-result declarations. It does not execute
    backend module code, invoke
    preflight, inspect Podman, open an execution case, construct a container
    argv, or retain a reusable worker.
@@ -905,13 +911,24 @@ The broker behavior is closed by
    --format json sha256:<approved-config>`. Only the image request carries the
    exact retained root, runroot, reviewed `crun` and Conmon paths, and `vfs`
    global options from the manifest. `PATH=/nonexistent` makes unexpected
-   ambient lookup fail closed, and a Landlock execute-only filesystem ruleset
-   permits pathname-backed execution only of the retained static Podman inode. The
-   restriction is inherited by every fork, namespace transition, and re-exec;
-   the broker refuses to run on a kernel without Landlock ABI v1. It does not
-   claim to constrain executable memfds, `dlopen`, or executable mappings. No fixture,
-   caller argument, shell, host environment, network request, image pull,
-   container operation, adapter, or invariant probe can alter this grammar.
+   ambient lookup fail closed. Before the final sandbox transition, the child
+   closes every descriptor outside the manifest's allowlist. A Landlock
+   execute-only filesystem ruleset permits pathname-backed execution only of
+   the retained static Podman inode, and Podman starts via pathname `execve` of
+   `/proc/self/fd/<retained-fd>`. An amd64 classic-seccomp filter kills
+   architecture mismatch and the x32 syscall space; denies `execveat`,
+   `memfd_create`, `memfd_secret`, `recvmsg`, `recvmmsg`, `pidfd_getfd`,
+   `open_by_handle_at`, `uselib`, and `io_uring_*`; and returns `EPERM` for
+   `mmap(PROT_EXEC)`, `mprotect(PROT_EXEC)`, `pkey_mprotect(PROT_EXEC)`, and
+   `shmat(SHM_EXEC)`. Both restrictions are inherited by every fork, namespace
+   transition, and re-exec. The broker refuses to run if either transition
+   cannot be installed. This prevents broker-command descendants from creating
+   new anonymous executable mappings or executing unapproved pathname- or
+   FD-backed code after the transition; it does not claim total host-code
+   provenance or remove the protected interpreter/stdlib/libc/loader from the
+   runner-image TCB. No fixture, caller argument, shell, host environment,
+   network request, image pull, container operation, adapter, or invariant
+   probe can alter this grammar.
 5. Each command has null stdin, a retained `home` cwd, an exact scrubbed
    environment, and the manifest's closed descriptor set. Standard output and
    standard error are read concurrently in nonblocking mode under one
@@ -941,8 +958,9 @@ The broker behavior is closed by
 The broker parent CLI is authority-gated. Worker mode is an internal,
 non-authoritative process boundary intrinsically unable to accept executable
 Python components or emit an authority/readiness receipt. The bare Linux backend
-CLI remains disabled. Pull-request CI exercises schemas and fake retained-FD,
-stream, limit, timeout, and descendant-cleanup helpers only. Real Podman
+CLI remains disabled. Pull-request CI exercises schemas plus Linux retained-FD,
+pathname/FD-exec, executable-mapping, stream, limit, timeout, and
+descendant-cleanup helpers. Real Podman
 inspection belongs to a protected no-secrets, read-only reviewed-revision
 workflow supplied with the approved broker-authority digest and immutable
 runner-image TCB.

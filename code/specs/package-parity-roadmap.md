@@ -105,22 +105,23 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 30, 2026 at `a30477c4c` after the Haskell
+inventory was regenerated on July 30, 2026 at `4ef440685` after the Haskell
 `barcode-1d` and `http-core` ports, the Go/Rust `multi-directed-graph` slice,
 the Linux OCI preflight and external-authority contracts, and a new wave of
 Rust-only package families. The latest refresh added the Rust-only
-`smart-home-runtime-store` identity after the earlier `hue-integration` and
-`venture-browser-core` additions and found zero canonical collisions or
-unknown language buckets:
+`venture-browser-macos` identity, an Apple-native AppKit/CoreText/Metal host,
+after the earlier `smart-home-runtime-store`, `hue-integration`, and
+`venture-browser-core` additions and found zero canonical collisions or unknown
+language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
 | Present in 10-15 languages | 172 | 278 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 741 | 10,374 |
+| Present in one language | 742 | 10,388 |
 
-The loop must not start by attempting 10,374 singleton ports. It should finish
+The loop must not start by attempting 10,388 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The July 29 lane audit is:
@@ -139,7 +140,7 @@ The July 29 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 956 | 0 | 100% |
+| Rust | 957 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -808,17 +809,18 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 546 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 547 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30 inventories added six Rust singleton identities that now have
+The July 30 inventories added seven Rust singleton identities that now have
 explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
 `venture-browser-core` needs a portable-core versus native-boundary review.
 `smart-home-discovery-service`, `hue-integration`, and
 `smart-home-runtime-store` are likely native/service/storage applicability
-cases.
+cases. `venture-browser-macos` is an Apple-native AppKit/CoreText/Metal host
+whose expected classification is `native-source`, not a blind 14-lane port.
 
 ### Likely portable Rust-led families
 
@@ -957,18 +959,19 @@ Delivery order:
    adapter and approves bytes for capability inspection only; it exposes no
    process handoff. PR #9208 added a separately domain-bound atomic exact-byte
    backend/import-closure loader and a one-shot isolated loadability worker; it
-   runs no capability command. The current selected tranche is the separately
-   authorized protected command broker: it retains verified statically linked
-   Podman, `crun`,
-   Conmon, and state descriptors, renders only the two closed preflight
-   operations, streams one
-   combined output ceiling, and owns delegated-cgroup descendant cleanup. The
-   security review also requires a verifiable immutable runner-image TCB
-   attestation before protected evidence may authorize a probe; this covers the
-   protected interpreter, standard library/native extensions, libc, loader,
-   container configuration defaults, and other immutable host dependencies
-   outside the three explicitly bound runtime executables. A separate
-   invariant-probe authority profile follows. Run
+   runs no capability command. PR #9231 completed the separately authorized
+   protected command broker: it retains verified statically linked Podman,
+   `crun`, Conmon, and state descriptors; permits only the two closed preflight
+   operations; confines pathname-backed execution to retained Podman with
+   Landlock; streams one combined output ceiling; and owns delegated-cgroup
+   descendant cleanup. The current selected tranche closes anonymous
+   executable memfds, `dlopen`, and executable mappings with separately
+   reviewed kernel enforcement and Linux integration probes. A verifiable
+   immutable runner-image TCB attestation is also required before the
+   subsequent invariant-probe authority profile; this covers the protected
+   interpreter, standard library/native extensions, libc, loader, container
+   configuration defaults, and other immutable host dependencies outside the
+   three explicitly bound runtime executables. Run
    protected probe enforcement to produce containment evidence, then add a
    distinct trusted-execution profile binding that evidence, the exact case
    snapshot, and one adapter before trusted-case enforcement. Only protected
@@ -1018,7 +1021,7 @@ land before final adapter parity:
   standalone-prerequisite, Starlark-declaration, identity, toolchain, and path
   validation checks before admitting them to the closed v1 schema.
 
-The Linux OCI review discovered four additional dependency gates:
+The Linux OCI review discovered eight additional dependency gates:
 
 - replace corpus-only approval with a domain-separated external authority
   profile. The first profile binds the exact source, policy, schemas, verifier,

@@ -94,7 +94,10 @@ justified, truncated at its width, and, per ANSI-85, **without** space-filling t
 untouched tail; `DELIMITED BY SIZE` takes each field in full, while `DELIMITED BY`
 a single-character delimiter takes only each field's prefix up to its first
 occurrence of the delimiter — `STRING "ab,cd" "ef" DELIMITED BY "," INTO t` →
-`"abef"`; a sending field may itself be a reference-modified item slice with
+`"abef"`; a sending field may be a figurative constant SPACE or ZERO, taken as its
+single-character image — SPACE→`" "`, ZERO→`"0"` — reducing to the string-literal
+path (`STRING SPACE "X" DELIMITED BY SIZE INTO t` → `" X"`); a sending field may
+itself be a reference-modified item slice with
 CONSTANT (literal) indices — `STRING WS(2:3) DELIMITED BY SIZE INTO T` contributes
 the substring via the shared reference-modification machinery, so it stays byte-
 identical to `DISPLAY WS(2:3)`, while a computed (data-name) index sending field —

@@ -1,29 +1,56 @@
 # AOT00-T6 — native closures (codegen + GC) (design)
 
-> Status: **design, pre-implementation.** Committed for sign-off before any code, exactly as the
-> AOT00-T1/T3/T4/T5 specs were. Closes the last major Twig *language-feature* gap in the
-> native-AOT path: closures currently do not compile to native code at all.
+> ## ⚠️ CORRECTION (2026-07-30): the premise below was already false — native closures work.
+> This spec was written on the belief that "closures do not compile to native code at all." A
+> **grounded re-audit of `origin/main`** disproved it. Native closures **already compile and
+> already run under the native GC**, by a *different and simpler* mechanism than the
+> environment-pointer convention this spec proposes:
+>
+> - `iir-builtin-lowering::lower_closures_to_heap` (E6d-7a, `closure_heap.rs`) runs in the native
+>   `prepare_module_for_aot` pipeline (`twig-aot/src/lib.rs:2918`) and **rewrites `alloc_closure`/
+>   `call_closure` away *before* the backend ever sees them.** `alloc_closure(fn, cap0..capN)`
+>   becomes a cons chain `(box(idx) . (cap0 . … . nil))` built with `__dyn_cons`; `call_closure`
+>   becomes a `call` into a synthesized `__dyn_call_closure` dispatcher (a `cmp_eq` chain over the
+>   statically-known lambda bodies → direct `call`, `car`/`cdr`-walking the captured env). Every op
+>   it emits is one the native backend already lowers, so **no `alloc_closure`/`call_closure`
+>   backend handler is needed** — the §1 grep that "finds these op names only in comments/tests" was
+>   reading *post-lowering* reality without realising the pass had already erased them.
+> - Because the closure object and its captured environment are ordinary `__dyn_cons` cells, they
+>   are allocated through `__gc_alloc_kind({0,8})` — the **same precise, movable, GC-managed** cell
+>   every Twig list uses. Closures were therefore **already under `FlatHeap`**, never on a separate
+>   VM heap, in the native path.
+>
+> **Empirical proof (all green on aarch64 macOS):**
+> - `lang-aot` `closures_run_on_native` — capture-free, one-capture (curried adder), and
+>   two-capture closures compile to a real native binary and return the right value.
+> - `twig-aot` `end_to_end_closure_captured_env_survives_collect` — a native closure held live
+>   across a **precise** *and* a **compacting** collection still returns its captured value (41),
+>   proving the captured environment survives (and relocates through) a GC and the closure stays
+>   callable. This is the capstone that ties "native codegen" and "under the GC" together.
+>
+> **Consequence:** the environment-pointer codegen described from §2 onward is **not a correctness
+> requirement** — it is retained below only as a *possible future optimization* (O(1) indexed
+> capture access + a single indirect call, vs. the cons-chain's `car`/`cdr` walk and linear
+> `cmp_eq` dispatch). It is **not scheduled**; the cons-chain lowering is the shipping design.
+> Do not implement §2+ as a "gap fix." See `memory/project_twig_native_gc_coverage.md`.
 
 ---
 
-## 1. The problem — closures are interpreted, not compiled
+## 1. The (already-closed) problem — how closures reach native code
 
-The Twig native-AOT pipeline (`twig-ir-compiler` → IIR → `aot-core` → `aarch64-backend` /
-`x86_64-backend` → native binary) compiles most functions to machine code. But **any function
-that allocates or calls a closure falls back to the embedded VM interpreter.**
+The Twig native-AOT pipeline (`twig-ir-compiler` → IIR → *lowering passes* → `aot-core` →
+`aarch64-backend` / `x86_64-backend` → native binary) compiles functions to machine code. Closures
+reach that machine code **not** by a dedicated backend handler but by an **IIR→IIR lowering pass
+that runs first**: `lower_closures_to_heap` erases `alloc_closure`/`call_closure` into cons-cell
+construction + a direct-`call` dispatcher (§ correction banner above). By the time `aot-core::compile`
+(`core.rs:136-148`) hands a function to the backend, it contains only `cons`/`car`/`cdr`/`call`/
+`box`/`cmp_eq`/branch ops — all natively supported — so it compiles, `functions_untyped == 0`, and
+nothing falls back to the embedded `VmRuntime`.
 
-`aot-core::compile` (`core.rs:136-148`) tries each function through the backend; a function the
-backend **cannot compile** returns `None` and is routed to `untyped_fns`, serialised into an IIR
-table, and executed at run time by a `VmRuntime` (`twig-vm`) embedded in the image. Neither
-native backend has an `alloc_closure` / `call_closure` handler (grep of both `lib.rs` finds these
-op names only in comments/tests), so **every closure-bearing function is interpreted.** That is
-correct but slow, and — the reason this matters for the GC arc — closure objects live on the
-**VM's managed `MarkAndSweepGC` heap**, entirely separate from the native `FlatHeap` (gc-core).
-So "every Twig heap object is under the native GC" cannot be true until closures compile natively.
-
-This rung makes `alloc_closure` / `call_closure` / `make_builtin_closure` **compile to native
-machine code**, allocate the closure object through **gc-core** (precise + movable), and thereby
-(a) run closures at native speed and (b) bring the last Twig heap type under `FlatHeap`.
+> **Historical note.** The prose that followed here originally claimed closure-bearing functions
+> "fall back to the embedded VM interpreter" and "live on the VM's managed `MarkAndSweepGC` heap."
+> That was wrong for `origin/main`: it predated / overlooked the E6d-7a lowering pass. The claim is
+> preserved only in git history; the reality is the two bullet points in the correction banner.
 
 ### 1.1 Current closure model (what we must preserve semantically)
 
