@@ -105,7 +105,7 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 30, 2026 at `4ef440685` after the Haskell
+inventory was regenerated on July 30, 2026 at `e4a2b1b06` after the Haskell
 `barcode-1d` and `http-core` ports, the Go/Rust `multi-directed-graph` slice,
 the Linux OCI preflight and external-authority contracts, and a new wave of
 Rust-only package families. The latest refresh added the Rust-only
@@ -774,6 +774,11 @@ build-graph dependency discovery so the follow-on `http1` edge is visible to
 incremental CI. The package now spans 12 established lanes, reduces the
 high-consensus backlog to 278 slots, and leaves 3 gaps in the Haskell lane.
 
+The selected thirty-second Haskell slice is `http1`, the direct NET04 consumer
+of that merged `http-core` foundation. It closes one ready protocol edge,
+validates the repaired Cabal dependency graph, and unlocks the remaining
+Haskell high-consensus tail.
+
 Recommended family order:
 
 1. Leaf algorithms and data structures.
@@ -964,8 +969,8 @@ Delivery order:
    `crun`, Conmon, and state descriptors; permits only the two closed preflight
    operations; confines pathname-backed execution to retained Podman with
    Landlock; streams one combined output ceiling; and owns delegated-cgroup
-   descendant cleanup. The current selected tranche closes anonymous
-   executable memfds, `dlopen`, and executable mappings with separately
+   descendant cleanup. PR #9270 closed anonymous executable memfds, `dlopen`,
+   executable mappings, and descriptor-replenishment paths with separately
    reviewed kernel enforcement and Linux integration probes. A verifiable
    immutable runner-image TCB attestation is also required before the
    subsequent invariant-probe authority profile; this covers the protected
@@ -977,6 +982,11 @@ Delivery order:
    snapshot, and one adapter before trusted-case enforcement. Only protected
    evidence can mark Linux
    ready.
+
+   The attestation item is not implementable on the repository's mutable
+   GitHub-hosted `ubuntu-latest` runner without circular self-attestation. It
+   remains pending until an immutable/measured runner subject and out-of-band
+   attester are selected; unrelated deliverable parity edges continue meanwhile.
 7. Implement the native Windows boundary with AppContainer or LPAC plus Job
    Objects and root-handle reparse-safe filesystem operations. Keep macOS
    non-passing until a signed helper or isolated VM can prove the same

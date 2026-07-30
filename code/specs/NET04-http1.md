@@ -208,6 +208,7 @@ This package will be implemented in:
 
 - Python
 - Go
+- Haskell
 - Ruby
 - TypeScript
 - Rust

@@ -8,14 +8,9 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": {
-    "item_id": "build-tool-anonymous-exec-closure",
-    "pr_number": 9270,
-    "branch": "codex/build-tool-anonymous-exec-closure",
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9270"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "4ef440685d641c5b5089ca73ff408100e46bee11",
+    "revision": "e4a2b1b06670f983bc66c5e8c62a15d11672c24b",
     "schema_version": 2,
     "established_languages": 15,
     "implementation_identities": 1192,
@@ -130,13 +125,13 @@
     {
       "id": "build-tool-anonymous-exec-closure",
       "title": "Close anonymous executable and executable-mapping paths",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-linux-capability-preflight-broker"
       ],
       "branch": "codex/build-tool-anonymous-exec-closure",
       "pr_number": 9270,
-      "notes": "PR #9270 closes the remaining direct execution-authority gap before invariant-probe approval. The exact broker behavior now closes unlisted descriptors before its final sandbox transition, starts retained Podman through pathname execve under the exact-inode Landlock rule, and installs inherited amd64 classic-seccomp enforcement that kills architecture/x32 bypasses and denies execveat, new anonymous executable files, executable mappings, descriptor receipt or acquisition, SHM_EXEC, uselib, and io_uring surfaces. Linux integration probes cover the real close-before-sandbox sequence, retained-inode execution, foreign and anonymous FD denial, executable mmap/mprotect/pkey_mprotect, fresh-inode dlopen, descendant inheritance, and stable install failure. It creates no container, fixture, adapter, invariant probe, or readiness receipt."
+      "notes": "Merged PR #9270. The exact broker behavior closes unlisted descriptors before its final sandbox transition, starts retained Podman through pathname execve under the exact-inode Landlock rule, and installs inherited amd64 classic-seccomp enforcement that kills architecture/x32 bypasses and denies execveat, new anonymous executable files, executable mappings, descriptor receipt or acquisition, SHM_EXEC, uselib, and io_uring surfaces. Linux integration probes cover the real close-before-sandbox sequence, retained-inode execution, foreign and anonymous FD denial, executable mmap/mprotect/pkey_mprotect, fresh-inode dlopen, descendant inheritance, and stable install failure. It creates no container, fixture, adapter, invariant probe, or readiness receipt."
     },
     {
       "id": "build-tool-execution-status-normalization",
@@ -339,34 +334,66 @@
     },
     {
       "id": "ocaml-infrastructure",
-      "title": "Add OCaml scaffolding, build integration, CI, capabilities, and logic-gates",
+      "title": "Add OCaml scaffolding, lane README, and package metadata support",
       "status": "pending",
-      "depends_on": ["ocaml-lane-contract", "build-tool-go-oracle"],
+      "depends_on": ["ocaml-lane-contract"],
       "branch": null,
       "pr_number": null,
-      "notes": "Use OCaml 5.2.1, opam 2.5.x, Dune 3.16.x, Alcotest, bisect_ppx, and ocamlformat."
+      "notes": "Add complete Go and TypeScript scaffold templates plus golden tests, repository ignores, capability metadata/schema support, and the lane README. Use OCaml 5.2.1, opam 2.5.x, Dune 3.16.x, Alcotest, bisect_ppx, and ocamlformat."
+    },
+    {
+      "id": "ocaml-build-substrate",
+      "title": "Integrate OCaml into the canonical Go build substrate",
+      "status": "pending",
+      "depends_on": ["ocaml-infrastructure", "build-tool-go-oracle"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add discovery, opam/Dune dependency resolution, source hashing, opam-switch serialization, language detection, validator support, shard cost, affected-node behavior, and CI workflow markers."
     },
     {
       "id": "ocaml-representative-core",
-      "title": "Port graph, directed-graph, and state-machine to OCaml",
+      "title": "Port logic-gates, graph, directed-graph, and state-machine to OCaml",
       "status": "pending",
-      "depends_on": ["ocaml-infrastructure"],
+      "depends_on": ["ocaml-build-substrate"],
       "branch": null,
       "pr_number": null,
       "notes": "This dependency chain validates opam metadata, resolver edges, BUILD order, and affected-node expansion."
     },
     {
+      "id": "ocaml-capability-analyzer",
+      "title": "Enforce OCaml capability declarations with compiler-libs ASTs",
+      "status": "pending",
+      "depends_on": ["ocaml-representative-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Cover process execution, dynamic loading, unsafe marshaling, and Obj.magic under the repository's explicit capability and reviewed-exception policy."
+    },
+    {
       "id": "ocaml-build-tool-and-promotion",
-      "title": "Implement the OCaml build tool and review 16-lane promotion",
+      "title": "Implement the native OCaml build tool",
       "status": "pending",
       "depends_on": [
         "ocaml-representative-core",
+        "ocaml-capability-analyzer",
         "build-tool-pure-domain-corpus",
         "build-tool-execution-semantics-corpus"
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Require conformance, two-way Go plan interchange, three-OS CI, capability enforcement, and explicit backlog acceptance."
+      "notes": "Implement on directed-graph and require shared conformance plus two-way Go build-plan interchange. This item does not promote the lane."
+    },
+    {
+      "id": "ocaml-lane-promotion",
+      "title": "Review and promote OCaml into the implementation denominator",
+      "status": "pending",
+      "depends_on": [
+        "ocaml-build-tool-and-promotion",
+        "ocaml-capability-analyzer",
+        "ocaml-representative-core"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Require real Ubuntu, macOS, and Windows tests without skips, a green representative chain and build tool, active capability enforcement, measured coverage, complete docs, and explicit review of the generated 16-lane backlog."
     },
     {
       "id": "dart-current-14-of-15",
@@ -380,11 +407,11 @@
     {
       "id": "haskell-http1",
       "title": "Port http1 to Haskell on the new http-core",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["haskell-http-core"],
-      "branch": null,
+      "branch": "codex/haskell-http1-parity",
       "pr_number": null,
-      "notes": "Next protocol dependency node; validate the repaired Cabal dependency graph."
+      "notes": "Selected after PR #9270 merged because the Linux runner-image TCB gate needs an externally chosen immutable/measured runner rather than self-attestation on mutable ubuntu-latest. This immediately deliverable protocol edge builds on merged Haskell http-core, closes one of Haskell's three high-consensus gaps, unlocks the remaining Haskell tail, and validates the repaired Cabal dependency graph."
     },
     {
       "id": "haskell-high-consensus-tail",
