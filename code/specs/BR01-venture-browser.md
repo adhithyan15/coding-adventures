@@ -77,7 +77,9 @@ drive the shared clamped viewport and Metal repaint path. Primary-button events
 now use top-left viewport coordinates to activate links through transactional
 page loads, update the title, and repaint across repeated navigation. Named
 AppKit navigation keys now drive clamped viewport scrolling and Metal repaint.
-Text input, controls, and richer pointer behavior remain before the shell is
+Command-Left/Right now reload Back/Forward history entries through the shared
+transactional session, update the native title, and repaint. Text input,
+controls, resize/reflow, and richer pointer behavior remain before the shell is
 interactive.
 
 ## Where It Fits
