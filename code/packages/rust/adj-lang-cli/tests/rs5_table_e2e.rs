@@ -1712,6 +1712,51 @@ fn shipped_specific_energy_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// Shipped thermal-conductivity table — the EXACT NIST SP 811 B.9 factor resolves, and a wrong-dimension
+// unit (a mass unit) abstains. Guards the SLICE of a NEW dimension (thermal conductivity, the watt per
+// metre kelvin) and the honest cross-dimension abstention: `pound` is a mass unit, so a
+// thermal-conductivity lookup for it must abstain, catching the thermal-conductivity/mass confusion
+// directly, not mere absence of a value. (Thermal conductivity is power per length per temperature —
+// distinct from plain power, W, and from specific heat capacity, J/(kg·K).)
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_thermal_conductivity_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_thermalconductivity");
+    let src = stdlib().join("reference/thermal-conductivity-conversions.adj");
+    std::fs::copy(&src, dir.join("thermal-conductivity-conversions.adj"))
+        .expect("copy shipped thermal-conductivity-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"thermal-conductivity-conversions.adj\"\n\
+         ? thermal_conductivity_to_watt_per_metre_kelvin(calorie_th_per_centimetre_second_celsius, $v)\n\
+         ? thermal_conductivity_to_watt_per_metre_kelvin(pound, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table (boldface =
+    // exact; the thermochemical calorie is exactly 4.184 J and cm→m is an exact ×10², so
+    // calth/(cm·s·°C) = 418.4 W/(m·K), exactly).
+    assert!(
+        out.contains("\"v\":\"418.4\""),
+        "calorieth per centimetre second degree Celsius = 4.184 E+02 W/(m*K): {out}"
+    );
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `pound` is a MASS unit (it converts to the kilogram, a DIFFERENT quantity), so this
+    // thermal-conductivity table has no row for it — the engine abstains rather than mis-converting a
+    // mass unit as if it were a thermal-conductivity unit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 

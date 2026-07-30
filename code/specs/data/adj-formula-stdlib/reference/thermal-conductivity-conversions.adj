@@ -1,0 +1,64 @@
+% ============================================================================
+% thermal-conductivity-conversions — thermal-conductivity unit → watt-per-metre-kelvin factors
+% (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of the NIST-cited conversion tables (length, mass, area, volume, energy, force,
+% power, pressure, the electric-EMU family, the two viscosities, wave number, linear mass density,
+% temperature interval, mass density, moment of force, specific heat capacity, density of heat, specific
+% energy, and the rest): a native tabular relation ingested VERBATIM from a published NIST conversion
+% table. Each row states the factor converting a common non-SI unit of THERMAL CONDUCTIVITY (a
+% material's intrinsic ability to conduct heat — the heat FLUX per unit temperature GRADIENT) to the SI
+% coherent derived unit, the watt per metre kelvin, W/(m·K):
+%
+%     ? thermal_conductivity_to_watt_per_metre_kelvin(calorie_th_per_centimetre_second_celsius, $v)   % 418.4
+%
+% This opens a NEW dimension — THERMAL CONDUCTIVITY (power / (length × temperature), W/(m·K)) —
+% alongside the already-tabulated length/mass/area/volume/time/speed/energy/pressure/force/power/
+% acceleration/dynamic-viscosity/kinematic-viscosity/magnetic-flux-density/magnetic-flux/illuminance/
+% luminance/radioactivity/absorbed-dose/dose-equivalent/exposure/wave-number/linear-mass-density/
+% temperature-interval/mass-density/moment-of-force/specific-heat-capacity/density-of-heat/
+% specific-energy tables and the electric charge/potential/resistance/capacitance/inductance/
+% conductance/current tables. Thermal conductivity is power per (length × temperature) — distinct from
+% plain POWER, the watt, and from SPECIFIC HEAT CAPACITY, J/(kg·K): do NOT confuse them. A value given
+% in cal/(cm·s·°C) must be put into SI first, then reasoned over (write-once-use-many). Why a `table`
+% and not hand-written `relate` clauses: this is exactly the shape reference data comes in — a published
+% table, not prose. The citable artifact IS the NIST conversion-factors table at the `locator` below;
+% each factor here is a CELL of NIST Special Publication 811, Appendix B.9, defended by one provenance
+% envelope. Each `row` lowers to a ground relation
+% `thermal_conductivity_to_watt_per_metre_kelvin(unit, v)`, so the exact lookup above is the ordinary
+% SLD binding query — the engine returns the factor WITH this table's citation as its proof, on the CPU,
+% with zero model calls.
+%
+% HONESTY NOTE (like every other NIST table, only the EXACT defined factors get rows): NIST SP 811 B.9
+% prints the thermal-conductivity factor below in BOLDFACE, its convention for factors that are EXACT by
+% definition, transcribed here as the plain decimal number of watts per metre kelvin it names:
+%
+%     calorieth per centimeter second degree Celsius [calth/(cm·s·°C)]   4.184 E+02  →  418.4
+%
+% It is EXACT and terminates; nothing here is a rounded measurement. It is exact because the
+% thermochemical calorie is DEFINED as exactly 4.184 J, the centimetre→metre scaling is an exact ×10²,
+% and a Celsius-degree interval EQUALS a kelvin interval: calth/(cm·s·°C) = 4.184 J / (10⁻² m · s · K) =
+% 4.184 / 10⁻² = 4.184 × 10² = 418.4 W/(m·K), exactly. (NIST SP 811 B.9 also lists British-thermal-unit
+% thermal-conductivity units — e.g. Btu·in/(h·ft²·°F) — but their W/(m·K) factors are NON-terminating,
+% carrying the inch/foot's 2.54-based length and the °F 5/9 interval through, so, per the exact-only
+% rule, they get no row here; only the thermochemical-calorie unit is exact.) This table is SPECIFIC to
+% thermal conductivity: a unit of a DIFFERENT quantity — e.g. the "pound", which NIST SP 811 B.9 lists
+% separately as a MASS unit converting to the kilogram, NOT to W/(m·K) — therefore gets no row here, and
+% a `? thermal_conductivity_to_watt_per_metre_kelvin(pound, $v)` ABSTAINS rather than mis-converting a
+% mass unit as if it were a thermal-conductivity unit. The only claim this table makes is "this is the
+% exact factor NIST SP 811 B.9 prints for the calorieth per centimetre second degree Celsius's
+% conversion to the watt per metre kelvin" — which is exactly what a byte-check against the cited table
+% verifies. `trust authoritative` — a primary, re-fetchable standards reference. (See ADJ-TABLES.md; and
+% feedback_nothing_human_authored — the factor is a verbatim cell of the cited table, nothing asserted
+% from memory.)
+% ============================================================================
+
+table thermal_conductivity_to_watt_per_metre_kelvin {
+    columns unit, watt_per_metre_kelvin
+
+    row (calorie_th_per_centimetre_second_celsius, 418.4)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}
