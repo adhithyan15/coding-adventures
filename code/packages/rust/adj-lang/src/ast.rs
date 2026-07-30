@@ -528,6 +528,31 @@ pub enum Statement {
         rows: Vec<TableRow>,
         annotations: Vec<Annotation>,
     },
+    /// `statemachine <name> { use… initial <s> state… exit… budget N steps … }` —
+    /// a first-class, importable, provenance-carrying **control-flow** declaration
+    /// for long-horizon procedural reasoning (triage → work-up → decision;
+    /// titrate-until-target). ADJ-STATEMACHINE RS-3, `code/specs/ADJ-STATEMACHINE.md`
+    /// §2 (grammar) + §5 (lowering).
+    ///
+    /// A sibling of [`Statement::Table`]/[`Statement::Formulabook`]: like them it is
+    /// a named top-level declaration that **lowers onto the existing engine** (a
+    /// guard is an ordinary predicate/compute evaluation, an action an assertion
+    /// into the KB). RS-3b (this slice) parses + lowers the STRUCTURE to provenanced
+    /// records; the *driver* that sequences transitions and guarantees termination
+    /// is RS-3c (§3–§4). Field order mirrors the declared surface order: the
+    /// imported vocabulary (`uses`), the required `initial` state, the `states`, the
+    /// (required, ≥ 1) `exits`, the step `budget`, then the shared provenance
+    /// envelope (`annotations`; a shipped machine must be sourced, exactly like a
+    /// `table`).
+    StateMachine {
+        name: String,
+        uses: Vec<String>,
+        initial: String,
+        states: Vec<StateDef>,
+        exits: Vec<ExitDef>,
+        budget: u64,
+        annotations: Vec<Annotation>,
+    },
     /// `use <dictionary>` — bind a `dictionary` (by name) as the controlled
     /// vocabulary the enclosing scope's clauses are checked against (MYCIN-2026
     /// M2). Legal at top level or inside a `rulebook`.
@@ -647,6 +672,84 @@ pub enum TableCell {
     /// A quoted string (`"mg/dL"`) — lowers to `logic_core::Term::Str`. For label
     /// cells that are not identifiers.
     Text(String),
+}
+
+/// One `state <name> { transition… }` of a [`Statement::StateMachine`]
+/// (ADJ-STATEMACHINE §2). A state is a labelled node in the control-flow graph;
+/// its `transitions` are the outgoing edges, tried in **source order** by the
+/// driver (first-guard-wins, §3). A state with no transition is a legal dead end
+/// (the driver reports `Stuck` there unless an exit criterion holds).
+#[derive(Debug, Clone, PartialEq)]
+pub struct StateDef {
+    /// The state's name — the label a `transition … to <name>` and the machine's
+    /// `initial <name>` refer to. Every such reference must name a declared state
+    /// (a [`crate::LowerError::SmUnknownState`] otherwise).
+    pub name: String,
+    /// The outgoing transitions, in source order (the driver's selection order).
+    pub transitions: Vec<TransitionDef>,
+}
+
+/// One `transition on <guard> to <target> [ do <action> { , <action> } ]` of a
+/// [`StateDef`] (ADJ-STATEMACHINE §2). When its [`guard`](Self::guard) holds the
+/// driver moves to [`target`](Self::target), first applying each of its
+/// [`actions`](Self::actions) (each a provenanced trace step, §3).
+#[derive(Debug, Clone, PartialEq)]
+pub struct TransitionDef {
+    /// The firing condition — a presence guard (a bare finding atom) or a numeric
+    /// comparison over a slot (see [`SmGuard`]).
+    pub guard: SmGuard,
+    /// The state to move to when the guard fires (must be a declared state).
+    pub target: String,
+    /// The actions run on firing, in source order — the RS-3b minimal subset is
+    /// `assert <term>` (see [`SmAction`]); `let`-binding actions are a follow-up.
+    pub actions: Vec<SmAction>,
+}
+
+/// One `exit when <guard> yield <expr>` of a [`Statement::StateMachine`]
+/// (ADJ-STATEMACHINE §2). When any exit's [`guard`](Self::guard) holds the run
+/// halts, yielding [`yield_expr`](Self::yield_expr)'s value (with its derivation
+/// trace, §4 `Halted`). A machine must declare at least one exit
+/// ([`crate::LowerError::SmMissingExit`] otherwise) so the run can terminate on a
+/// criterion rather than only on the step budget.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ExitDef {
+    /// The exit criterion (checked before any transition each step, §3).
+    pub guard: SmGuard,
+    /// The value yielded on halt — an ordinary [`ExprAst`], lowered through the
+    /// same compute path as a `let`/`formula` body.
+    pub yield_expr: ExprAst,
+}
+
+/// A state-machine **guard** — `( apply | IDENT ) [ relop expr ]`
+/// (ADJ-STATEMACHINE §2, the RS-3b minimal subset). Two shapes share one type:
+///
+/// - **Presence guard** (`comparison == None`): a bare finding atom (or, in the
+///   full target, a formula application). It holds iff that fact is present in the
+///   KB — e.g. `transition on dose_changed to check`.
+/// - **Comparison guard** (`comparison == Some((op, rhs))`): a numeric comparison
+///   of the [`subject`](Self::subject)'s valued slot against `rhs` — e.g.
+///   `transition on inr < 2 to increase_dose`.
+///
+/// [`subject`](Self::subject) is carried as an [`Term`] (an [`Term::Atom`] for a
+/// bare IDENT, a [`Term::Compound`] for an `apply`) so a guard lowers through the
+/// same term/compute forms the rest of the language uses — no parallel evaluator.
+#[derive(Debug, Clone, PartialEq)]
+pub struct SmGuard {
+    /// The thing being tested: a bare slot/finding atom, or a formula application.
+    pub subject: Term,
+    /// The optional numeric comparison. `None` is a presence guard; `Some((op,
+    /// rhs))` compares the subject's value against `rhs` with `op`.
+    pub comparison: Option<(CmpOp, ExprAst)>,
+}
+
+/// One transition **action** (ADJ-STATEMACHINE §2). The RS-3b minimal subset is
+/// `assert <term>` — emit a fact into the `KnowledgeBase`; `let <name> = <expr>`
+/// binding actions are a follow-up (deferred, never silently dropped). Kept an
+/// `enum` so that follow-up adds a variant rather than reshaping this type.
+#[derive(Debug, Clone, PartialEq)]
+pub enum SmAction {
+    /// `assert <term>` — assert a ground fact into the KB when the transition fires.
+    Assert(Term),
 }
 
 /// A single dictionary entry (MYCIN-2026).

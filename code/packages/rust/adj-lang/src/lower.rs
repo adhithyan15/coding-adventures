@@ -34,7 +34,8 @@ use std::collections::HashMap;
 
 use crate::ast::{
     AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExprAst, FormulaDef,
-    NamedFn, NumLit, OptDir, Program, RelOp, Statement, Term as AstTerm, TrustTierName,
+    NamedFn, NumLit, OptDir, Program, RelOp, SmAction, SmGuard, Statement, Term as AstTerm,
+    TrustTierName,
 };
 
 /// One lowered constraint: `lhs <op> rhs`, with both sides kept as
@@ -309,6 +310,41 @@ pub enum LowerError {
     UnresolvedImport {
         path: String,
     },
+    /// A `statemachine` had no `initial <state>` clause, or its initial-state name
+    /// was empty (ADJ-STATEMACHINE §2 `SmMissingInitial`). The grammar requires the
+    /// clause syntactically; this catches a degenerate/empty name defensively so a
+    /// machine can never lower without a well-formed entry state. Carries the name.
+    SmMissingInitial {
+        machine: String,
+    },
+    /// A `statemachine` declared no `exit when … yield …` (ADJ-STATEMACHINE §2
+    /// `SmMissingExit`). A machine must be able to terminate on a *criterion*, not
+    /// only on the step budget, so at least one exit is required. Carries the name.
+    SmMissingExit {
+        machine: String,
+    },
+    /// A `statemachine`'s `budget N steps` had `N < 1` (ADJ-STATEMACHINE §2
+    /// `SmBudgetNotPositive`). The step budget is the termination guarantee — a
+    /// zero (or non-integer, folded to zero at adapt time) budget could never make
+    /// progress — so it must be strictly positive. Carries the name.
+    SmBudgetNotPositive {
+        machine: String,
+    },
+    /// A `statemachine`'s `initial <s>` or a `transition … to <s'>` named a state
+    /// that is not declared (ADJ-STATEMACHINE §2 `SmUnknownState`). Every control-
+    /// flow target must resolve to a `state`, else the driver would jump to a
+    /// non-existent node. Carries the machine name and the offending state name.
+    SmUnknownState {
+        machine: String,
+        state: String,
+    },
+    /// A shipped `statemachine` carried no `source` (ADJ-STATEMACHINE §2
+    /// `SmMissingProvenance`) — the same provenance-required lint `formula` /
+    /// `relate` / `table` enforce. A machine encodes a procedure asserted about the
+    /// world, so it may not enter a library unsourced. Carries the machine name.
+    SmMissingProvenance {
+        machine: String,
+    },
 }
 
 /// One lowered RANGE / BRACKET lookup (ADJ-TABLES RS-5c) — the validated,
@@ -341,6 +377,74 @@ pub struct LoweredRangeLookup {
     pub mode: String,
 }
 
+/// One lowered `statemachine` (ADJ-STATEMACHINE RS-3b) — the validated,
+/// provenance-stamped STRUCTURE the RS-3c driver will read. Every guard/action has
+/// already been lowered to the *same* engine forms the rest of the language uses
+/// (a term, a `ComputeExpr`, an [`EngineCmpOp`]); no parallel evaluator is
+/// introduced here, and no execution happens at lowering — the driver (§3) is a
+/// later slice. The lowerer has already checked: the `initial` name and every
+/// transition `target` name a declared state, there is ≥ 1 exit, the budget is
+/// ≥ 1, and the `source` is non-empty.
+#[derive(Debug, Clone)]
+pub struct LoweredStateMachine {
+    /// The machine's name (its import/addressing handle).
+    pub name: String,
+    /// The entry state (a declared state name).
+    pub initial: String,
+    /// The states, in source order.
+    pub states: Vec<LoweredState>,
+    /// The exit criteria, in source order (checked before transitions each step).
+    pub exits: Vec<LoweredExit>,
+    /// The step budget (≥ 1) — the driver's termination guarantee.
+    pub budget: u64,
+    /// The machine's provenance envelope (`source`/`locator`/`trust`), lowered
+    /// through the shared `annotations_to_provenance`; each transition inherits it.
+    pub provenance: Provenance,
+}
+
+/// One lowered state — a labelled node with its outgoing [`LoweredTransition`]s,
+/// in source order (the driver's first-guard-wins selection order).
+#[derive(Debug, Clone)]
+pub struct LoweredState {
+    pub name: String,
+    pub transitions: Vec<LoweredTransition>,
+}
+
+/// One lowered transition — a guard, the target state name, and the ordered
+/// actions to apply on firing.
+#[derive(Debug, Clone)]
+pub struct LoweredTransition {
+    pub guard: LoweredGuard,
+    pub target: String,
+    pub actions: Vec<LoweredAction>,
+}
+
+/// One lowered exit — a guard and the (unevaluated) yield expression, lowered to a
+/// [`ComputeExpr`] the driver evaluates against the KB on halt.
+#[derive(Debug, Clone)]
+pub struct LoweredExit {
+    pub guard: LoweredGuard,
+    pub yield_expr: ComputeExpr,
+}
+
+/// A lowered guard: the subject as a ground engine [`CoreTerm`], plus an optional
+/// numeric comparison `(op, rhs)` with `op` an engine [`EngineCmpOp`] and `rhs` a
+/// [`ComputeExpr`]. `None` is a presence guard (the subject fact must be present);
+/// `Some(..)` compares the subject's value against `rhs`.
+#[derive(Debug, Clone)]
+pub struct LoweredGuard {
+    pub subject: CoreTerm,
+    pub comparison: Option<(EngineCmpOp, ComputeExpr)>,
+}
+
+/// One lowered transition action (ADJ-STATEMACHINE §2). The RS-3b minimal subset
+/// is `assert <term>` — lowered to the ground [`CoreTerm`] the driver adds to the
+/// KB when the transition fires.
+#[derive(Debug, Clone)]
+pub enum LoweredAction {
+    Assert(CoreTerm),
+}
+
 /// The result of lowering — a populated KB, any queries to run, and the
 /// (possibly empty) constraint system the program declared.
 #[derive(Debug)]
@@ -351,6 +455,11 @@ pub struct LoweredProgram {
     /// resolved to relation + column indices + exact query value. Empty for a
     /// program with no `? lookup … mode range …`. Run by the CLI's range tactic.
     pub range_lookups: Vec<LoweredRangeLookup>,
+    /// The `statemachine`s the program declared (ADJ-STATEMACHINE RS-3b), lowered
+    /// to validated, provenance-stamped structures the RS-3c driver will run. Empty
+    /// for a program with no `statemachine`. RS-3b lowers the structure only — no
+    /// driver, no execution.
+    pub state_machines: Vec<LoweredStateMachine>,
     pub constraints: ConstraintSystem,
     /// The controlled vocabulary the program declared (MYCIN-2026): the
     /// `define`d findings + hypotheses, with their surface forms. Empty for a
@@ -365,6 +474,9 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
     let mut queries = Vec::new();
     let mut constraints = ConstraintSystem::default();
     let mut dictionary: Vec<Define> = Vec::new();
+    // ADJ-STATEMACHINE RS-3b: each `statemachine` lowers to a validated,
+    // provenance-stamped structure here (no driver yet — that is RS-3c).
+    let mut state_machines: Vec<LoweredStateMachine> = Vec::new();
     // ADJ-RULE-SUBSTRATE RS-1: `contributes … from <formula-app> <op> <thr>` clauses
     // whose gated LHS is a FORMULA APPLICATION are collected here and lowered in a
     // second pass, after every statement (and therefore every `observe`) has been
@@ -836,6 +948,106 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     kb.add_fact(Fact::certain(compound(name, args)).with_provenance(row_prov));
                 }
             }
+            // ---- statemachine (ADJ-STATEMACHINE RS-3b) ----
+            // Lower the STRUCTURE to a provenanced record the driver (RS-3c) will
+            // read. No driver, no execution here. Five static well-formedness
+            // checks — the typed `Sm*` errors — keep a machine honest before it can
+            // enter a library:
+            //   (1) SmMissingProvenance — a shipped machine must be sourced (the
+            //       same write gate `formula`/`relate`/`table` enforce).
+            //   (2) SmBudgetNotPositive — the step budget is the termination
+            //       guarantee, so it must be ≥ 1.
+            //   (3) SmMissingInitial — a non-empty entry-state name is present.
+            //   (4) SmUnknownState — the initial name and every transition target
+            //       resolve to a declared `state`.
+            //   (5) SmMissingExit — at least one `exit when … yield …`, so a run
+            //       can halt on a criterion, not only on the budget.
+            // Guards and actions lower to the SAME term/compute forms the rest of
+            // the language uses (no parallel evaluator).
+            Statement::StateMachine {
+                name,
+                uses: _,
+                initial,
+                states,
+                exits,
+                budget,
+                annotations,
+            } => {
+                let prov = annotations_to_provenance(annotations)?;
+                if prov.source.trim().is_empty() {
+                    return Err(LowerError::SmMissingProvenance {
+                        machine: name.clone(),
+                    });
+                }
+                if *budget < 1 {
+                    return Err(LowerError::SmBudgetNotPositive {
+                        machine: name.clone(),
+                    });
+                }
+                if initial.trim().is_empty() {
+                    return Err(LowerError::SmMissingInitial {
+                        machine: name.clone(),
+                    });
+                }
+                // The declared state names — the universe every control-flow target
+                // (the initial state + every transition target) must resolve into.
+                let declared: std::collections::HashSet<&str> =
+                    states.iter().map(|s| s.name.as_str()).collect();
+                if !declared.contains(initial.as_str()) {
+                    return Err(LowerError::SmUnknownState {
+                        machine: name.clone(),
+                        state: initial.clone(),
+                    });
+                }
+                if exits.is_empty() {
+                    return Err(LowerError::SmMissingExit {
+                        machine: name.clone(),
+                    });
+                }
+                let mut lowered_states = Vec::with_capacity(states.len());
+                for st in states {
+                    let mut lowered_trs = Vec::with_capacity(st.transitions.len());
+                    for tr in &st.transitions {
+                        if !declared.contains(tr.target.as_str()) {
+                            return Err(LowerError::SmUnknownState {
+                                machine: name.clone(),
+                                state: tr.target.clone(),
+                            });
+                        }
+                        let actions = tr
+                            .actions
+                            .iter()
+                            .map(|a| match a {
+                                SmAction::Assert(t) => LoweredAction::Assert(lower_term(t)),
+                            })
+                            .collect();
+                        lowered_trs.push(LoweredTransition {
+                            guard: lower_sm_guard(&tr.guard),
+                            target: tr.target.clone(),
+                            actions,
+                        });
+                    }
+                    lowered_states.push(LoweredState {
+                        name: st.name.clone(),
+                        transitions: lowered_trs,
+                    });
+                }
+                let lowered_exits = exits
+                    .iter()
+                    .map(|ex| LoweredExit {
+                        guard: lower_sm_guard(&ex.guard),
+                        yield_expr: lower_expr(&ex.yield_expr),
+                    })
+                    .collect();
+                state_machines.push(LoweredStateMachine {
+                    name: name.clone(),
+                    initial: initial.clone(),
+                    states: lowered_states,
+                    exits: lowered_exits,
+                    budget: *budget,
+                    provenance: prov,
+                });
+            }
             // ---- import (MYCIN-2026 M3) ----
             // Imports are resolved away by `crate::resolve` before lowering; one
             // reaching here means `compile` was called on an unresolved program.
@@ -949,9 +1161,24 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
         kb,
         queries,
         range_lookups,
+        state_machines,
         constraints,
         dictionary,
     })
+}
+
+/// Lower a surface [`SmGuard`] (ADJ-STATEMACHINE §2) to a [`LoweredGuard`]: the
+/// subject through the shared [`lower_term`], and the optional comparison through
+/// the shared [`lower_cmp_op`] + [`lower_expr`] — the SAME forms every predicate /
+/// compute lowers to, so a guard introduces no new evaluator.
+fn lower_sm_guard(g: &SmGuard) -> LoweredGuard {
+    LoweredGuard {
+        subject: lower_term(&g.subject),
+        comparison: g
+            .comparison
+            .as_ref()
+            .map(|(op, e)| (lower_cmp_op(*op), lower_expr(e))),
+    }
 }
 
 /// Expand `rulebook` blocks into their constituent clause statements, in source
