@@ -6892,6 +6892,44 @@ fn inspect_replacing_multi_characters_in_the_middle_shadows_multiple_trailing_it
 }
 
 #[test]
+fn inspect_replacing_multi_region_less_characters_shadows_a_trailing_leading() {
+    // A region-less CHARACTERS catch-all shadows a trailing LEADING item exactly as it
+    // shadows a trailing ALL: `REPLACING CHARACTERS BY "*" LEADING "A" BY "L"` over "AAB"
+    // → every position is claimed by CHARACTERS → "***"; the LEADING item never fires and
+    // its run machinery (which the CHARACTERS item never touches) is irrelevant. Verifies
+    // the unconditional-append shadow is co-total when the shadowed link carries a run.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"AAB\"."],
+        &[
+            "INSPECT S REPLACING CHARACTERS BY \"*\"",
+            "    LEADING \"A\" BY \"L\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "***\n");
+}
+
+#[test]
+fn inspect_replacing_multi_characters_empty_window_lets_a_trailing_all_fire() {
+    // A CHARACTERS item with an ABSENT AFTER delimiter has an EMPTY window (start==end==len),
+    // so it replaces nothing and a trailing ALL item still fires at every position:
+    // `REPLACING CHARACTERS BY "*" AFTER "Q" ALL "A" BY "B"` over "AA" (no "Q") → "BB".
+    // Confirms the empty-window CHARACTERS is guarded (not the region-less unconditional
+    // path) and does not shadow the trailing item — co-total on both engines.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(2) VALUE \"AA\"."],
+        &[
+            "INSPECT S REPLACING CHARACTERS BY \"*\" AFTER \"Q\"",
+            "    ALL \"A\" BY \"B\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "BB\n");
+}
+
+#[test]
 fn inspect_replacing_multi_combined_with_characters_is_a_later_rung() {
     // The COMBINED `TALLYING … REPLACING` form still DEFERS a CHARACTERS item in its
     // REPLACING half — rejected identically on both engines. (A combined REPLACING is read
