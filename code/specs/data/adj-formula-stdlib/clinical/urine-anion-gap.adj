@@ -1,0 +1,103 @@
+% ============================================================================
+% urine-anion-gap.adj — the URINE anion gap (urine Na + urine K − urine Cl) in
+% the ADJ standard library.
+% ============================================================================
+% The urine-anion-gap entry of the *clinical* track — the bedside estimate of urinary ammonium (NH4+)
+% excretion used to work up a NORMAL-anion-gap (hyperchloraemic) metabolic acidosis. Ammonium is not
+% measured directly on a routine urine electrolyte panel, so its excretion is inferred from the charge
+% balance of the ions that ARE measured: a strongly NEGATIVE urine anion gap says the kidney is excreting
+% plenty of NH4+ (an appropriate response — the acidosis is from a gastrointestinal bicarbonate loss such
+% as diarrhoea), whereas a POSITIVE urine anion gap says NH4+ excretion is impaired (a renal cause, such
+% as a distal renal tubular acidosis). THE URINE ANION GAP IS THE URINE SODIUM PLUS THE URINE POTASSIUM
+% MINUS THE URINE CHLORIDE — i.e. urine Na + urine K − urine Cl. It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its three exact rearrangements (each of the
+% three measured urine electrolytes recovered from the gap and the other two). As with every compute
+% library, a consumer states NO arithmetic: it `import`s this file, binds the three urine electrolytes
+% from its own byte-provenance decomposition, and asks the engine to APPLY the cited formula on the CPU.
+% Zero math is performed by the model; the engine computes each value EXACTLY (over exact rationals),
+% carrying the formula's citation.
+%
+%     import "urine-anion-gap.adj"
+%     observe urine_sodium(40)     % "…urine Na 40…"   (span cited by the model)
+%     observe urine_potassium(30)  % "…urine K 30…"    (span cited by the model)
+%     observe urine_chloride(60)   % "…urine Cl 60…"   (span cited by the model)
+%     ? urine_anion_gap(urine_sodium, urine_potassium, urine_chloride)   % engine → 10 (mEq/L)
+%
+% This is the URINE anion gap, a distinct entity from the serum anion gap (anion-gap.adj): the serum gap
+% subtracts BOTH chloride and bicarbonate from the measured cations to flag an unmeasured-anion acidosis,
+% while the urine gap subtracts chloride ALONE (in the acid-urine, pH < 6.5 case the cited page gives) to
+% estimate ammonium. The formula is an exact linear expression in the three measured electrolytes — no
+% constant at all — so every value the engine returns is exact. The four formulas COMPOSE and invert
+% cleanly around the worked case urine Na = 40, urine K = 30, urine Cl = 60 (urine anion gap =
+% 40 + 30 − 60 = 10 mEq/L, a POSITIVE gap pointing to impaired renal NH4+ excretion): the
+% `urine_anion_gap` a consumer computes is exactly the value each inverse formula back-solves to recover
+% its own measured input (40, 30, 60).
+%
+%   urine_anion_gap(urine_sodium, urine_potassium, urine_chloride) = urine_sodium + urine_potassium - urine_chloride
+%   urine_sodium(urine_anion_gap, urine_potassium, urine_chloride) = urine_anion_gap + urine_chloride - urine_potassium
+%   urine_potassium(urine_anion_gap, urine_sodium, urine_chloride) = urine_anion_gap + urine_chloride - urine_sodium
+%   urine_chloride(urine_sodium, urine_potassium, urine_anion_gap) = urine_sodium + urine_potassium - urine_anion_gap
+%
+% NOTE ON UNITS AND MODELLING: all four quantities are in milliequivalents per litre (mEq/L). The cited
+% page states the plain form (urine Na + urine K − urine Cl) for the usual acid-urine case (urine pH
+% < 6.5); when the urine pH is > 6.5 the same page adds a urine-bicarbonate correction, which is a
+% separate expression not modelled here. This library only COMPUTES the gap from the three electrolytes;
+% the interpretation (negative → GI/appropriate, positive → renal/impaired) is stated by the same page but
+% is applied by the reader.
+%
+% All four formulas are defended by the SAME clause — the quoted urine-anion-gap statement — because that
+% one sentence (urine anion gap = urine Na + urine K − urine Cl) sanctions the relation read every way.
+% The quote is transcribed verbatim from the StatPearls "Anion Gap and Non-Anion Gap Metabolic Acidosis"
+% article on the NCBI Bookshelf (a current, non-archived article — the same page that defends delta-ratio.adj),
+% so each `formula` carries the provenance envelope every shipped grounded clause carries; the linter
+% rejects an unsourced one. (See feedback_nothing_human_authored — the formula is a verbatim span of the
+% cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `urine_sodium`, `urine_potassium`, `urine_chloride` and `urine_anion_gap` each appear BOTH
+% as a derived result and as an input (of the other formulas), so each is a single dictionary term used in
+% both roles. The `surface` lists are the everyday names a decomposer maps onto the canonical term; the
+% trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary urine_anion_gap_vocab {
+    define urine_sodium     : finding  surface "urine sodium", "urine Na", "urinary sodium"        % mEq/L
+    define urine_potassium  : finding  surface "urine potassium", "urine K", "urinary potassium"   % mEq/L
+    define urine_chloride   : finding  surface "urine chloride", "urine Cl", "urinary chloride"     % mEq/L
+    define urine_anion_gap  : finding  surface "urine anion gap", "urinary anion gap", "UAG"        % mEq/L
+}
+
+% ----------------------------------------------------------------------------
+% The urine anion gap, all four ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the urine-anion-gap statement from the StatPearls
+% "Anion Gap and Non-Anion Gap Metabolic Acidosis" article on the NCBI Bookshelf (a quote is required on a
+% shipped formula). Each is an exact linear expression in the measured electrolytes — no constant — so the
+% engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook urine_anion_gap_laws {
+    use urine_anion_gap_vocab
+
+    % The urine anion gap — urine sodium plus urine potassium minus urine chloride.
+    formula urine_anion_gap(urine_sodium, urine_potassium, urine_chloride) = urine_sodium + urine_potassium - urine_chloride
+        source "Urine anion gap = Urine Na + Urine K – Urine Cl, if urine pH is <6.5"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448090/"
+        trust authoritative
+
+    % Urine sodium — the same equation solved for the urine sodium. Defended by the SAME sentence.
+    formula urine_sodium(urine_anion_gap, urine_potassium, urine_chloride) = urine_anion_gap + urine_chloride - urine_potassium
+        source "Urine anion gap = Urine Na + Urine K – Urine Cl, if urine pH is <6.5"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448090/"
+        trust authoritative
+
+    % Urine potassium — the same equation solved for the urine potassium. The SAME sentence.
+    formula urine_potassium(urine_anion_gap, urine_sodium, urine_chloride) = urine_anion_gap + urine_chloride - urine_sodium
+        source "Urine anion gap = Urine Na + Urine K – Urine Cl, if urine pH is <6.5"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448090/"
+        trust authoritative
+
+    % Urine chloride — the same equation solved for the urine chloride, the fourth reading of the one gap.
+    formula urine_chloride(urine_sodium, urine_potassium, urine_anion_gap) = urine_sodium + urine_potassium - urine_anion_gap
+        source "Urine anion gap = Urine Na + Urine K – Urine Cl, if urine pH is <6.5"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448090/"
+        trust authoritative
+}
