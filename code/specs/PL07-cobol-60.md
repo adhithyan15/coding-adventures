@@ -429,10 +429,12 @@ bytes keep their prior content.
 
 **Delimiter rung (now implemented).** `STRING s… DELIMITED BY delim INTO t`, where
 `delim` is a **single-character ASCII** delimiter (a 1-char literal, a `PIC X(1)`
-item, or a **figurative constant** SPACE/ZERO taken as its single ASCII character —
-SPACE→`" "` (0x20), ZERO→`"0"` (0x30), reducing to the single-char literal path — all
-reduced by the same `single_delim_char`/`single_delim_code` helper `UNSTRING`
-uses), is now supported. Each sending field contributes only its PREFIX up to (but
+item, a **figurative constant** SPACE/ZERO taken as its single ASCII character —
+SPACE→`" "` (0x20), ZERO→`"0"` (0x30), reducing to the single-char literal path — or
+a **CONSTANT reference-modified** slice `base(start:len)` of length 1 (see the
+constant-refmod delimiter/search/replace rung below; a computed `base(J:K)` index
+stays a later rung) — all reduced by the same `single_delim_char`/`single_delim_code`
+helper `UNSTRING` uses), is now supported. Each sending field contributes only its PREFIX up to (but
 not including) the FIRST occurrence of the delimiter char in that field; a field
 with no delimiter contributes its whole image, and a field starting with the
 delimiter contributes the empty string. The prefixes are concatenated and overlaid
@@ -1646,6 +1648,53 @@ SPACE and ZERO are the only figuratives in the model — there is no
 QUOTE/LOW-VALUE/HIGH-VALUE — so the figurative case has nothing further to defer.
 
 Grammar scope tracks the lexer scope below.
+
+### Constant reference-modified single-character delimiter / search / replace operand (follow-up rung, v0.78.0 / v0.74.0)
+
+Wherever a **single-character** operand is taken through the shared delimiter
+helpers — a `DELIMITED BY` delimiter (STRING, UNSTRING), an `INSPECT TALLYING
+FOR ALL` delimiter, and an `INSPECT REPLACING ALL/LEADING x BY y` search char
+*and* replace char — the operand may now be a **CONSTANT reference modification**
+`base(start:len)` whose **literal** indices carve a slice of length exactly 1.
+That length-1 slice IS a single ASCII character, so it reduces to the same
+single-char path the 1-char literal, `PIC X(1)` item, and figurative-constant
+(SPACE/ZERO, the prior v0.77.0 / v0.73.0 rung) operands already take. This
+completes the delimiter/search/replace **operand-class arc** (literal, item,
+figurative, refmod). No grammar change is needed — `operand` already carries an
+optional `(start:len)` suffix.
+
+**One helper family, lifted co-total.** The oracle uses ONE shared helper
+(`single_delim_char`); the compiler splits by use (`single_delim_code` yields the
+i64 scan byte, `single_delim_str` yields the 1-char replace string). All three had
+their `RefMod` arm lifted by reusing the SAME machinery every other refmod context
+uses: the oracle's `refmod_string`, the compiler's `ref_mod_slice`. The oracle
+reconstructs the slice through `refmod_string` and matches its single char (`[c]`);
+`single_delim_code` takes `str_index(slice, 0)` of the length-1 `SliceLen::Const(1)`
+slice; `single_delim_str` hands back the length-1 slice register directly (it IS the
+1-char string). The `Const`/`Runtime` split of `ref_mod_slice` is co-total with the
+oracle's `const_ix` predicate (`start` literal, `len` literal-or-omitted) — the same
+split #74's CONVERTING refmod established — so both engines accept and reject the
+identical set of programs.
+
+**Deferred as clean later rungs (co-total on both engines):** a **computed**
+(data-name index) reference modification `base(J:K)` — a run-time slice length the
+compile-time contract cannot carry (`SliceLen::Runtime` in the compiler; the
+`const_ix` predicate is false in the oracle) → "a computed reference-modified
+delimiter is a later rung"; a constant refmod of slice-length **≠ 1** → a
+multi-character delimiter; a **numeric base** under refmod → the pre-existing
+`refmod_string` / `ref_mod_slice` numeric-base reject; a **group base** under refmod
+→ rejected on both engines (the compiler rejects it via `item_index`; the oracle's
+`single_delim_char` rejects a group base up front rather than slicing `group_image`,
+so the site stays co-total — an UNDECLARED name still falls through to the shared
+`UndefinedName`); the `RefModOutOfRange` bounds trap for an out-of-range constant
+slice is inherited unchanged.
+
+**Byte-vs-char.** The compiler reconstructs the slice from BYTES, the oracle from
+CHARACTERS; they coincide on an **ASCII** base. A **non-ASCII** base is the
+PRE-EXISTING refmod byte-vs-char chip (shared with `DISPLAY` / comparison / MOVE
+source), not new to this rung — the positive parity tests use ASCII bases, and a
+characterization test keeps the multi-byte char strictly OUTSIDE the length-1 window
+so both engines pick the same ASCII byte/char.
 
 ### `MOVE` (cross-category: numeric → alphanumeric — unsigned or signed)
 

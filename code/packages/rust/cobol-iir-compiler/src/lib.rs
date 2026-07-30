@@ -2571,11 +2571,18 @@ impl<'a> Compiler<'a> {
 
     /// A single delimiter byte reduced to a fresh i64 register: a `const` of the
     /// byte for a 1-character string literal, a `const` of the single ASCII byte
-    /// for a figurative constant SPACE (0x20) / ZERO (0x30), or `str_index(item,
-    /// 0)` for a `PIC X(1)` item. A multi-character delimiter, a numeric delimiter,
-    /// a reference-modified delimiter, and a numeric/group/wider delimiter item are
-    /// later rungs. (COBOL source is ASCII, so a "1-character" literal is a single
-    /// byte; the scan loop compares the source's bytes against this code.)
+    /// for a figurative constant SPACE (0x20) / ZERO (0x30), the single byte of a
+    /// **constant reference-modified** slice of length 1 (`D(2:1)` → `str_index` of
+    /// its one byte, joining the literal path), or `str_index(item, 0)` for a `PIC
+    /// X(1)` item. A multi-character delimiter, a numeric delimiter, a **computed**
+    /// (data-name index) reference-modified delimiter, and a numeric/wider delimiter
+    /// item are later rungs. (COBOL source is ASCII, so a "1-character" literal is a
+    /// single byte; the scan loop compares the source's bytes against this code.)
+    ///
+    /// The constant-refmod slice is materialised by the shared [`Self::ref_mod_slice`]
+    /// (carrying its numeric-base reject and its compile-time out-of-range trap); its
+    /// `SliceLen::Const`/`Runtime` split is co-total with the oracle's `const_ix`
+    /// predicate, so a form one engine calls constant the other does too.
     ///
     /// Shared by `UNSTRING … DELIMITED BY delim` and `INSPECT … FOR ALL delim`
     /// (which both scan for a single byte); `verb` names the caller so the
@@ -2612,9 +2619,35 @@ impl<'a> Compiler<'a> {
                 self.emit("const", Some(&reg), vec![Operand::Int(b'0' as i64)], "i64");
                 Ok(reg)
             }
-            Operandy::RefMod { .. } => Err(CompileError::Unsupported(format!(
-                "{verb} with a reference-modified delimiter is a later rung"
-            ))),
+            Operandy::RefMod { base, start, len } => {
+                // `ref_mod_slice` materialises the slice into `reg` and reports its
+                // length. `SliceLen::Const(1)` is the CONSTANT single-char refmod this
+                // rung supports: its slice reg is a 1-char `str`, so `str_index(reg, 0)`
+                // yields the same scan byte a `PIC X(1)` item does. A `Const(_ != 1)` is
+                // a multi-character delimiter; a `SliceLen::Runtime` (any data-name index)
+                // is a computed refmod — a run-time length the compile-time contract
+                // cannot carry. Both are later rungs, rejected co-total with the oracle.
+                let (reg, slice_len) = self.ref_mod_slice(&base, &start, &len)?;
+                match slice_len {
+                    SliceLen::Const(1) => {
+                        let zero = self.str_index(0);
+                        let out = self.fresh("_usdc");
+                        self.emit(
+                            "str_index",
+                            Some(&out),
+                            vec![Operand::Var(reg), Operand::Var(zero)],
+                            "i64",
+                        );
+                        Ok(out)
+                    }
+                    SliceLen::Const(_) => Err(CompileError::Unsupported(format!(
+                        "{verb} with a multi-character delimiter is a later rung"
+                    ))),
+                    SliceLen::Runtime { .. } => Err(CompileError::Unsupported(format!(
+                        "{verb} with a computed reference-modified delimiter is a later rung"
+                    ))),
+                }
+            }
             Operandy::Name(name) => {
                 let idx = self.item_index(&name)?;
                 match &self.items[idx].kind {
@@ -4790,11 +4823,18 @@ impl<'a> Compiler<'a> {
     /// A single replacement character reduced to a fresh **string** register: a
     /// `str_const` of the 1-character string for a 1-char literal, a `str_const`
     /// of the single ASCII character for a figurative constant SPACE→" " / ZERO→"0",
-    /// or the item's own register for a `PIC X(1)` item (its storage is already
-    /// exactly one character wide). The parallel of [`Self::single_delim_code`]
-    /// (which yields a byte code for a *scan*); this yields a 1-char string for a
-    /// *concat*. The same later-rung rejections apply: a multi-character literal, a
-    /// numeric/reference-modified operand, and a numeric/wider item.
+    /// the 1-char slice register of a **constant reference-modified** operand of
+    /// length 1 (`E(1:1)` → that slice reg, already a 1-char string), or the item's
+    /// own register for a `PIC X(1)` item (its storage is already exactly one
+    /// character wide). The parallel of [`Self::single_delim_code`] (which yields a
+    /// byte code for a *scan*); this yields a 1-char string for a *concat*. The same
+    /// later-rung rejections apply: a multi-character literal, a numeric operand, a
+    /// **computed** reference-modified operand, and a numeric/wider item.
+    ///
+    /// The constant-refmod slice is materialised by the shared [`Self::ref_mod_slice`]
+    /// exactly as in [`Self::single_delim_code`]; here the `SliceLen::Const(1)` slice
+    /// register IS already the 1-char string this helper wants, so it is handed back
+    /// directly (no `str_index` — that is the byte-code twin's job).
     fn single_delim_str(
         &mut self,
         op: &GrammarASTNode,
@@ -4826,9 +4866,23 @@ impl<'a> Compiler<'a> {
                 self.emit("str_const", Some(&reg), vec![Operand::Str("0".into())], "str");
                 Ok(reg)
             }
-            Operandy::RefMod { .. } => Err(CompileError::Unsupported(format!(
-                "{verb} with a reference-modified delimiter is a later rung"
-            ))),
+            Operandy::RefMod { base, start, len } => {
+                // Same Const/Runtime split as `single_delim_code`, but a `Const(1)`
+                // slice register IS already the 1-char string this concat helper wants
+                // (no `str_index` needed). A `Const(_ != 1)` is a multi-character
+                // operand; a `Runtime` is a computed refmod — both later rungs,
+                // rejected co-total with the oracle.
+                let (reg, slice_len) = self.ref_mod_slice(&base, &start, &len)?;
+                match slice_len {
+                    SliceLen::Const(1) => Ok(reg),
+                    SliceLen::Const(_) => Err(CompileError::Unsupported(format!(
+                        "{verb} with a multi-character delimiter is a later rung"
+                    ))),
+                    SliceLen::Runtime { .. } => Err(CompileError::Unsupported(format!(
+                        "{verb} with a computed reference-modified delimiter is a later rung"
+                    ))),
+                }
+            }
             Operandy::Name(name) => {
                 let idx = self.item_index(&name)?;
                 match &self.items[idx].kind {

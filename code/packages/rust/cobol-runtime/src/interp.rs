@@ -1077,9 +1077,19 @@ impl Machine {
     /// The single delimiter character of a scan delimiter. It is either a
     /// 1-character string literal (`","`, `" "`), a figurative constant
     /// SPACE/ZERO (which resolve to their single ASCII character — SPACE→`' '`,
-    /// ZERO→`'0'`), or a `PIC X(1)` item. A multi-character delimiter, `ALL`/`OR`
-    /// delimiters, a numeric/reference-modified/group/wider delimiter (item)
-    /// are later rungs.
+    /// ZERO→`'0'`), a **constant reference modification** `base(start:len)` whose
+    /// literal indices slice out exactly one character (`D(2:1)` → that one char,
+    /// joining the single-char-literal path), or a `PIC X(1)` item. A
+    /// multi-character delimiter, `ALL`/`OR` delimiters, a **computed** (data-name
+    /// index) reference modification, a numeric/group/wider delimiter (item) are
+    /// later rungs.
+    ///
+    /// The constant-refmod acceptance mirrors `string_source_chars`: only literal
+    /// indices are taken (a computed data-name index gives a run-time length the
+    /// compiler's compile-time contract cannot carry, so it stays a later rung,
+    /// rejected on BOTH engines). The slice is reconstructed through the shared
+    /// [`Self::refmod_string`], which inherits the co-total `RefModOutOfRange`
+    /// bounds trap and the numeric-base reject unchanged.
     ///
     /// Shared by `UNSTRING … DELIMITED BY delim` and `INSPECT … FOR ALL delim`;
     /// `verb` names the caller so the later-rung message reads naturally.
@@ -1101,9 +1111,45 @@ impl Machine {
             // its single ASCII character, joining the single-char-literal path.
             Operand::Lit(Lit::Fig(Fig::Space)) => Ok(' '),
             Operand::Lit(Lit::Fig(Fig::Zero)) => Ok('0'),
-            Operand::RefMod { .. } => Err(RuntimeError::Unsupported(format!(
-                "{verb} with a reference-modified delimiter is a later rung"
-            ))),
+            Operand::RefMod { base, start, len } => {
+                // Constant (literal) indices only: a computed data-name index gives a
+                // run-time length the compiler's compile-time contract cannot carry,
+                // so it stays a later rung, rejected on BOTH engines.
+                let const_ix = matches!(start, RefIndex::Lit(_))
+                    && len.as_ref().is_none_or(|l| matches!(l, RefIndex::Lit(_)));
+                if !const_ix {
+                    return Err(RuntimeError::Unsupported(format!(
+                        "{verb} with a computed reference-modified delimiter is a later rung"
+                    )));
+                }
+                // A GROUP base is a later rung on BOTH engines. The compiler's
+                // `ref_mod_slice` rejects a group (or undeclared) base up front via
+                // `item_index`, so the oracle must reject a group here too rather than
+                // slicing its `group_image` — otherwise a `DELIMITED BY G(2:1)` (G a
+                // group) would be accepted by the oracle yet rejected by the compiler,
+                // a divergence at this new refmod-delimiter site. (An UNDECLARED name
+                // is not caught here; it falls through to `refmod_string`'s own
+                // `UndefinedName`, which both engines raise identically.) A group base
+                // is `picture == None`; `is_numeric()` groups do not exist.
+                if let Some(&gidx) = self.by_name.get(base) {
+                    if self.items[gidx].picture.is_none() {
+                        return Err(RuntimeError::Unsupported(format!(
+                            "{verb} with a group-item reference-modified delimiter is a later rung"
+                        )));
+                    }
+                }
+                // Reconstruct the slice through the shared helper (which carries the
+                // numeric-base reject and the RefModOutOfRange bounds trap). A
+                // length-1 slice IS a single character, joining the literal path.
+                let slice = self.refmod_string(base, start, len)?;
+                let chars: Vec<char> = slice.chars().collect();
+                match chars.as_slice() {
+                    [c] => Ok(*c),
+                    _ => Err(RuntimeError::Unsupported(format!(
+                        "{verb} with a multi-character delimiter is a later rung"
+                    ))),
+                }
+            }
             Operand::Ident(name) => {
                 let idx = *self
                     .by_name
