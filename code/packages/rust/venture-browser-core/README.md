@@ -29,6 +29,11 @@ performs scroll-aware link hit-testing, and feeds `scrolled_viewport_scene`.
 That function preserves the document scene beneath a group translated by the
 negative scroll offset and sizes the returned scene to the visible viewport.
 
+`BrowserViewport` binds a loaded `BrowserPage` to that scroll policy. Native
+content-area hosts can resize or scroll it, hit-test links in viewport
+coordinates, and request the exact viewport scene for each paint event. Page
+replacement resets scroll while preserving the current viewport height.
+
 ## Development
 
 ```bash

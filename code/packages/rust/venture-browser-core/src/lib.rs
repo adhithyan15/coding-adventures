@@ -16,7 +16,7 @@ use paint_instructions::{PaintBase, PaintGroup, PaintInstruction, PaintScene};
 use std::fmt;
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 /// In-memory browser navigation state.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -265,6 +265,63 @@ pub struct BrowserPage {
     pub render_tree: BrowserRenderTree,
     pub paint: HtmlPaintOutput,
     pub image_failures: Vec<HtmlImageResourceError>,
+}
+
+/// The current loaded page and its viewport interaction state.
+///
+/// This is the value a native content-area host keeps between input and paint
+/// events. Replacing the page preserves viewport height while resetting scroll
+/// to the top of the new document.
+#[derive(Clone, Debug, PartialEq)]
+pub struct BrowserViewport {
+    page: BrowserPage,
+    scroll: ScrollState,
+}
+
+impl BrowserViewport {
+    pub fn new(page: BrowserPage, viewport_height: f64) -> Self {
+        let scroll = ScrollState::new(viewport_height, page.paint.scene.height);
+        Self { page, scroll }
+    }
+
+    pub fn page(&self) -> &BrowserPage {
+        &self.page
+    }
+
+    pub fn scroll_state(&self) -> &ScrollState {
+        &self.scroll
+    }
+
+    pub fn set_scroll_offset_y(&mut self, offset_y: f64) -> f64 {
+        self.scroll.set_offset_y(offset_y)
+    }
+
+    pub fn scroll_by(&mut self, delta_y: f64) -> f64 {
+        self.scroll.scroll_by(delta_y)
+    }
+
+    pub fn resize(&mut self, viewport_height: f64) -> f64 {
+        self.scroll
+            .set_dimensions(viewport_height, self.page.paint.scene.height)
+    }
+
+    pub fn replace_page(&mut self, page: BrowserPage) {
+        self.scroll = ScrollState::new(self.scroll.viewport_height, page.paint.scene.height);
+        self.page = page;
+    }
+
+    pub fn hit_test_link(&self, viewport_x: f64, viewport_y: f64) -> Option<&LinkRegion> {
+        self.scroll
+            .hit_test(&self.page.paint.links, viewport_x, viewport_y)
+    }
+
+    pub fn viewport_scene(&self) -> PaintScene {
+        scrolled_viewport_scene(&self.page.paint.scene, &self.scroll)
+    }
+
+    pub fn into_page(self) -> BrowserPage {
+        self.page
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -589,6 +646,31 @@ mod tests {
             .data
             .chunks_exact(4)
             .any(|pixel| pixel != [192, 192, 192, 255]));
+
+        let link = page.paint.links[0].clone();
+        let mut viewport = BrowserViewport::new(page, 40.0);
+        let offset = viewport.set_scroll_offset_y(link.y);
+        let viewport_y = link.y - offset + link.height / 2.0;
+        assert_eq!(
+            viewport.hit_test_link(link.x + link.width / 2.0, viewport_y),
+            Some(&link)
+        );
+        let scene = viewport.viewport_scene();
+        assert_eq!(scene.height, 40.0);
+        let [PaintInstruction::Group(group)] = scene.instructions.as_slice() else {
+            panic!("browser viewport should project one translated group");
+        };
+        assert_eq!(group.transform, Some([1.0, 0.0, 0.0, 1.0, 0.0, -offset]));
+
+        viewport.scroll_by(100.0);
+        let mut replacement = viewport.page().clone();
+        replacement.final_url = "http://example.test/replacement".into();
+        replacement.paint.scene.height = 20.0;
+        viewport.replace_page(replacement);
+        assert_eq!(viewport.page().final_url, "http://example.test/replacement");
+        assert_eq!(viewport.scroll_state().offset_y(), 0.0);
+        assert_eq!(viewport.scroll_state().content_height(), 20.0);
+        assert_eq!(viewport.scroll_state().viewport_height(), 40.0);
     }
 
     #[test]

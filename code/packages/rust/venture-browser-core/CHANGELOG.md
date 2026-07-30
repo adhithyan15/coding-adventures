@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+- Add `BrowserViewport`, binding the current page to clamped scrolling,
+  viewport-space link hit-testing, and translated render-scene projection.
+- Preserve viewport height and reset scroll when replacing the loaded page.
+
 ## 0.2.0
 
 - Add finite, clamped `ScrollState` geometry with resize re-clamping.

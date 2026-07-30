@@ -65,10 +65,11 @@ Back/Forward/Home/Reload model and composes an injectable page fetch through
 document-URL-aware parsing, layout, paint, and synchronous image resolution.
 Its acceptance path carries a redirected canned page and GIF resource through
 Cairo to RGBA pixels. The core also owns clamped vertical scroll geometry,
-scroll-aware link hit-testing, and viewport scene translation. The remaining
-browser gate is the concrete platform shell that binds those core results to
-native window events, controls, scrollbars, and the selected production paint
-backend.
+scroll-aware link hit-testing, and viewport scene translation.
+`BrowserViewport` binds those policies to the current loaded page and resets
+scroll coherently when the page changes. The remaining browser gate is the
+concrete platform shell that binds those core results to native window events,
+controls, scrollbars, and the selected production paint backend.
 
 ## Where It Fits
 
