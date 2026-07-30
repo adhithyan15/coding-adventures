@@ -270,6 +270,28 @@ host boundaries and durable secret storage:
   LAN I/O, credentials survive a Vault restart, and raw secrets never enter
   runtime state, event metadata, actor snapshots, or pairing reports.
 
+## Current Hue LAN Integration Slice
+
+This slice turns the transport-neutral Hue client into the production D23
+bridge worker path:
+
+- `hue-integration` executes bounded CLIP v2 HTTP/1 over LAN TCP or the shared
+  TLS platform, preserving certificate verification and caller-supplied trust
+  roots.
+- Full resource snapshots project Hue devices, lights, motion sensors, buttons,
+  scenes, and bridge health into the existing D23 runtime.
+- Authorized D23 light commands route through the native Hue resource endpoint;
+  rejected commands cannot reach Vault reads or LAN I/O, and accepted commands
+  always publish a final bridge result.
+- Bounded Hue Server-Sent Event reads use the incremental parser and project
+  native light updates into normalized D23 device events and state.
+- Paired application/client keys are decrypted only inside the worker. Actor
+  messages, reports, errors, runtime state, and debug output contain no raw
+  credentials.
+- A real loopback bridge test proves snapshot refresh, authorized command
+  dispatch, event-stream ingestion, and normalized state update through the
+  production socket transport.
+
 ## Chief Of Staff Remaining Work
 
 The Chief host-profile slice now provides JSON orchestrator profiles, isolated
@@ -349,8 +371,6 @@ These items are Chief of Staff architecture, not smart-home platform work:
 
 These items move toward retiring an existing Home Assistant install:
 
-- Add real Hue local HTTP command/read workers and Hue event-stream workers
-  behind the existing runtime surfaces.
 - Persist registry, state cache, event history, command history, pairing
   sessions, desired state, and automation definitions.
 - Add a local API surface for dashboard, mobile, CLI, and Chief of Staff jobs.

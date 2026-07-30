@@ -1214,10 +1214,23 @@ impl HueBridgePairingPlanSummary {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct HueApplicationCredentials {
     pub application_key: String,
     pub client_key: Option<String>,
+}
+
+impl fmt::Debug for HueApplicationCredentials {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("HueApplicationCredentials")
+            .field("application_key", &"[REDACTED]")
+            .field(
+                "client_key",
+                &self.client_key.as_ref().map(|_| "[REDACTED]"),
+            )
+            .finish()
+    }
 }
 
 impl HueApplicationCredentials {
@@ -1238,6 +1251,24 @@ impl HueApplicationCredentials {
 
     pub fn has_client_key(&self) -> bool {
         self.client_key.is_some()
+    }
+
+    pub fn from_vault_secret_json(secret: &[u8]) -> Result<Self, HueError> {
+        let value: serde_json::Value =
+            serde_json::from_slice(secret).map_err(|error| HueError::InvalidPairingResponse {
+                reason: error.to_string(),
+            })?;
+        let application_key = value
+            .get("application_key")
+            .and_then(serde_json::Value::as_str)
+            .ok_or(HueError::MissingPairingCredential {
+                field: "application_key",
+            })?;
+        let client_key = value
+            .get("client_key")
+            .and_then(serde_json::Value::as_str)
+            .map(str::to_string);
+        Self::new(application_key, client_key)
     }
 
     pub fn vault_secret_json(&self) -> Vec<u8> {
@@ -12506,7 +12537,7 @@ fn scene_scope_for_group(group: &HueResourceRef) -> SceneScope {
     }
 }
 
-fn hue_entity_id_for_resource_ref(bridge_id: &BridgeId, resource: &HueResourceRef) -> EntityId {
+pub fn hue_entity_id_for_resource_ref(bridge_id: &BridgeId, resource: &HueResourceRef) -> EntityId {
     EntityId::trusted(format!(
         "hue.{}.{}.{}",
         resource.resource_type.as_hue_type(),
@@ -13410,6 +13441,12 @@ mod tests {
             "raw-hue-application-key"
         );
         assert_eq!(vault_payload_json["client_key"], "client-key-1");
+        let decoded = HueApplicationCredentials::from_vault_secret_json(&vault_payload).unwrap();
+        assert_eq!(decoded.application_key, "raw-hue-application-key");
+        assert_eq!(decoded.client_key.as_deref(), Some("client-key-1"));
+        let debug = format!("{decoded:?}");
+        assert!(!debug.contains("raw-hue-application-key"));
+        assert!(!debug.contains("client-key-1"));
 
         let handoff = credentials.vault_handoff(
             &plan,

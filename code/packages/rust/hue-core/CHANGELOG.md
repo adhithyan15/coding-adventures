@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Vault-secret decoding for paired Hue credentials, with redacted debug output
+  and the existing drop-time application/client-key zeroization.
+- Public canonical Hue resource-to-D23 entity identity projection for runtime
+  adapters consuming snapshots and event-stream updates.
 - Zeroize parsed Hue application and client keys when pairing credentials drop.
 - Hue command-plan projection summaries for generated-command and ignored-delta
   reconciliation telemetry.
