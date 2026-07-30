@@ -48,6 +48,7 @@ pub mod adapter;
 pub mod ast;
 pub mod lower;
 pub mod resolve;
+pub mod statemachine;
 
 mod _lexer_grammar;
 mod _parser_grammar;
@@ -59,9 +60,13 @@ use parser::grammar_parser::{GrammarParseError, GrammarParser};
 pub use adapter::{adapt_program, AdapterError};
 pub use ast::{Annotation, Define, DefineKind, OptDir, Program, RelOp, Statement, Term as AstTerm};
 pub use lower::{
-    lower, ConstraintSystem, LowerError, LoweredConstraint, LoweredProgram, LoweredRangeLookup,
+    lower, ConstraintSystem, LowerError, LoweredConstraint, LoweredExit, LoweredGuard,
+    LoweredProgram, LoweredRangeLookup, LoweredState, LoweredStateMachine, LoweredTransition,
 };
 pub use resolve::{resolve_imports, ImportError, ImportLimits, ImportProvider};
+pub use statemachine::{
+    run_state_machine, RunStep, StateMachineOutcome, StateMachineRun, YieldValue,
+};
 
 /// Result of compilation. Either the typed program produced by the
 /// adapter, or an error from the lexer, parser, adapter, or

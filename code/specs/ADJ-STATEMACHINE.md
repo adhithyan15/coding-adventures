@@ -214,12 +214,38 @@ typed, grounded abstentions.
 
 ## 8. Staging (each: spec-sync → tests → impl → provenance-gate → security-review → babysit)
 
-- **RS-3a (this document):** the normative contract. Spec-only.
+**RS-3 is COMPLETE** — the contract (RS-3a), the grammar/AST/lowering (RS-3b), and the
+driver (RS-3c) are all shipped.
+
+- **RS-3a (this document):** the normative contract. Spec-only. **DONE.**
 - **RS-3b:** grammar (`statemachine_decl` + `state`/`transition`/`exit`/`budget`),
   AST (`Statement::StateMachine`), adapter, lowering to provenanced structures +
   the `SmMissing*`/`SmUnknownState`/`SmBudgetNotPositive`/`SmMissingProvenance`
   errors, and a parse+lower e2e (a well-formed machine compiles; each malformed
-  one yields its typed error). No driver yet.
-- **RS-3c:** the driver (§3), the typed outcomes (§4), cycle detection, the
-  `? run <machine>` surface, the CLI result section, `--explain` rendering of the
-  run, and a worked-example e2e including a `NonTerminating`/budget-exceeded test.
+  one yields its typed error). No driver yet. **DONE.**
+- **RS-3c:** the driver (§3), the typed outcomes (§4), cycle detection, the CLI
+  `state_machines` result section, `--explain` rendering of the run, and a
+  worked-example e2e including a `NonTerminating`/budget-exceeded test. **DONE.**
+
+  Implementation notes / deviations:
+  - The driver lives in `adj-lang::statemachine::run_state_machine` (where both the
+    lowered types and the engine are reachable) and runs **every** declared machine
+    unconditionally, rather than gating on a `? run <machine>` surface — the §5 `? run`
+    surface is not required for RS-3c and was not added (a machine's declaration is its
+    invocation for now). The CLI collects the runs after `decide` and reasons over
+    `lowered.kb`.
+  - **Guard evaluation reuses the engine, no parallel evaluator** (§3): a *comparison*
+    guard reads the subject's valued slot with `KnowledgeBase::observed_numeric`,
+    evaluates the rhs with `compute`, and compares exact-first with `CmpOp::eval_values`
+    — the identical three calls a predicate-gated contribution makes. A *presence* guard
+    holds iff `enumerate_all(subject, kb)` yields any proof; the bare atom `true` is the
+    always-holds special case.
+  - **Yield evaluation**: a yield expression is run through `compute`; a numeric result
+    carries its derivation tree, and a bare symbolic atom (`at_target`) — for which
+    `compute` returns `UnknownSlot` — is reported as that symbol.
+  - **The cycle key** (§3.1) is `(state, the sorted set of terms asserted so far)`. Because
+    `assert` actions are monotone (they only add to a working KB clone) and the base KB is
+    fixed for the whole run, this set is a sound, deterministic fingerprint of the
+    machine-relevant configuration; a repeat is the genuine livelock. The `steps >= budget`
+    guard bounds the loop independently, so a run always terminates in `≤ budget + 1`
+    iterations even if a key never repeats.

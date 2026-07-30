@@ -32,7 +32,10 @@ use cli_builder::{load_spec_from_str, Parser};
 use adj_constraint_solver::{
     check, optimize, solve, FeasibilityOutcome, OptimizeOutcome, SolveOutcome,
 };
-use adj_lang::{compile_with_imports, decide, ImportLimits, LoweredRangeLookup};
+use adj_lang::{
+    compile_with_imports, decide, run_state_machine, ImportLimits, LoweredRangeLookup,
+    LoweredStateMachine, StateMachineOutcome, StateMachineRun, YieldValue,
+};
 use adj_lang_cli::{esc, payload, query_echo, sensitive_input, FsProvider};
 use logic_core::{atom, compound, var, LogicVar, Term};
 use logic_engine::govern::Standing;
@@ -915,6 +918,19 @@ fn main() -> ExitCode {
 
     let diff = decide(&lowered);
 
+    // ADJ-STATEMACHINE RS-3c: run every `statemachine` the program declared. Each
+    // run is deterministic and TOTAL — it returns one typed outcome (Halted /
+    // StepBudgetExceeded / NonTerminating / Stuck) and never hangs (the declared
+    // step budget caps the loop). The driver reasons over a working CLONE of the
+    // KB, so a machine's `assert`s never leak into the rest of the program. Empty
+    // for a program with no `statemachine`, so all existing output stays
+    // byte-identical (the section is omitted below).
+    let state_machine_runs: Vec<(&LoweredStateMachine, StateMachineRun)> = lowered
+        .state_machines
+        .iter()
+        .map(|sm| (sm, run_state_machine(sm, &lowered.kb)))
+        .collect();
+
     let mut ranked: Vec<String> = Vec::new();
     for r in &diff.ranked {
         let proof = proof_json(&r.hypothesis, &lowered.kb, &r.result, &certs);
@@ -1039,18 +1055,35 @@ fn main() -> ExitCode {
         format!(",\"derived\":{}", derived)
     };
 
+    // ADJ-STATEMACHINE RS-3c: the state-machine run section — each machine's typed
+    // outcome, its ordered provenanced steps, and the machine's own citation.
+    // Omitted (empty string) when the program declared no `statemachine`, so every
+    // existing program's output is byte-for-byte unchanged.
+    let state_machines_section = if state_machine_runs.is_empty() {
+        String::new()
+    } else {
+        let items: Vec<String> = state_machine_runs
+            .iter()
+            .map(|(sm, run)| state_machine_json(sm, run, &lowered.kb))
+            .collect();
+        format!(",\"state_machines\":[{}]", items.join(","))
+    };
+
     // `--explain` (ADJ-REASON-MATH §E.8): render the human-readable view of the
     // reasoning instead of the JSON trail. Projection-only — it reads the same
     // `lowered.kb` the JSON above was built from and re-runs nothing. The JSON
     // remains the primary, complete artifact (default output); `--explain` is the
     // opt-in human view onto it.
     if explain {
-        println!("{}", explain::explain(&lowered.kb, &diff));
+        println!(
+            "{}",
+            explain::explain(&lowered.kb, &diff, &state_machine_runs)
+        );
         return ExitCode::SUCCESS;
     }
 
     println!(
-        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}{}{}{}{}{}}}",
+        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}{}{}{}{}{}{}}}",
         queries.join(","),
         ranked.join(","),
         decision,
@@ -1060,9 +1093,91 @@ fn main() -> ExitCode {
         recall_section,
         governing_section,
         lookup_section,
-        derived_section
+        derived_section,
+        state_machines_section
     );
     ExitCode::SUCCESS
+}
+
+/// Render one state-machine run (ADJ-STATEMACHINE RS-3c) as JSON: the machine's
+/// name, its typed outcome, the ordered provenanced steps, and the machine's own
+/// cited `source`/`locator`/`trust` envelope (which every transition inherits).
+fn state_machine_json(
+    sm: &LoweredStateMachine,
+    run: &StateMachineRun,
+    kb: &KnowledgeBase,
+) -> String {
+    let steps: Vec<String> = run
+        .steps
+        .iter()
+        .map(|st| {
+            let asserted: Vec<String> = st
+                .asserted
+                .iter()
+                .map(|a| format!("\"{}\"", esc(a)))
+                .collect();
+            format!(
+                "{{\"from_state\":\"{}\",\"guard\":\"{}\",\"target\":\"{}\",\"asserted\":[{}],{}}}",
+                esc(&st.from_state),
+                esc(&st.guard),
+                esc(&st.target),
+                asserted.join(","),
+                prov(&st.provenance)
+            )
+        })
+        .collect();
+    format!(
+        "{{\"name\":\"{}\",\"outcome\":{},\"steps\":[{}],{}}}",
+        esc(&sm.name),
+        state_machine_outcome_json(&run.outcome, kb),
+        steps.join(","),
+        prov(&sm.provenance)
+    )
+}
+
+/// Render a state-machine's typed terminal outcome (ADJ-STATEMACHINE §4) as JSON.
+/// The `type` field is the stable discriminant a checker keys off.
+fn state_machine_outcome_json(outcome: &StateMachineOutcome, kb: &KnowledgeBase) -> String {
+    match outcome {
+        StateMachineOutcome::Halted { state, result } => format!(
+            "{{\"type\":\"halted\",\"state\":\"{}\",\"result\":{}}}",
+            esc(state),
+            yield_json(result, kb)
+        ),
+        StateMachineOutcome::StepBudgetExceeded {
+            steps,
+            budget,
+            state,
+        } => format!(
+            "{{\"type\":\"step_budget_exceeded\",\"steps\":{},\"budget\":{},\"state\":\"{}\"}}",
+            steps,
+            budget,
+            esc(state)
+        ),
+        StateMachineOutcome::NonTerminating { state } => format!(
+            "{{\"type\":\"non_terminating\",\"state\":\"{}\"}}",
+            esc(state)
+        ),
+        StateMachineOutcome::Stuck { state } => {
+            format!("{{\"type\":\"stuck\",\"state\":\"{}\"}}", esc(state))
+        }
+    }
+}
+
+/// Render a halt's yielded value (ADJ-STATEMACHINE §3). A numeric yield carries its
+/// exact-first value AND its derivation tree (byte-traceable exactly like a `let`);
+/// a symbolic yield (`at_target`) is the bare finding name.
+fn yield_json(y: &YieldValue, kb: &KnowledgeBase) -> String {
+    match y {
+        YieldValue::Numeric(d) => format!(
+            "{{\"kind\":\"numeric\",\"value\":{},\"derivation\":{}}}",
+            value_json(d),
+            derivation_tree_json(&d.tree, kb)
+        ),
+        YieldValue::Symbol(s) => {
+            format!("{{\"kind\":\"symbol\",\"symbol\":\"{}\"}}", esc(s))
+        }
+    }
 }
 
 /// True if a query goal contains a logic variable — i.e. it is a relational
