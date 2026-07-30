@@ -1,0 +1,78 @@
+% ============================================================================
+% specific-heat-capacity-conversions — specific-heat-capacity / specific-entropy unit →
+% joule-per-kilogram-kelvin factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of the NIST-cited conversion tables (length, mass, area, volume, energy, force,
+% power, pressure, the electric-EMU family, the two viscosities, wave number, linear mass density,
+% temperature interval, mass density, moment of force, and the rest): a native tabular relation
+% ingested VERBATIM from a published NIST conversion table. Each row states the factor converting a
+% common non-SI unit of SPECIFIC HEAT CAPACITY (the heat needed to raise a UNIT MASS of a substance by
+% a unit of temperature — heat capacity PER KILOGRAM) to the SI coherent derived unit, the joule per
+% kilogram kelvin, J/(kg·K):
+%
+%     ? specific_heat_capacity_to_joule_per_kilogram_kelvin(calorie_it_per_gram_celsius, $v)   % 4186.8
+%     ? specific_heat_capacity_to_joule_per_kilogram_kelvin(calorie_th_per_gram_celsius, $v)   % 4184
+%
+% This opens a NEW dimension — SPECIFIC HEAT CAPACITY (equivalently SPECIFIC ENTROPY: NIST SP 811 B.9
+% tabulates the two together, since J/(kg·K) is their shared SI unit) — alongside the already-tabulated
+% length/mass/area/volume/time/speed/energy/pressure/force/power/acceleration/dynamic-viscosity/
+% kinematic-viscosity/magnetic-flux-density/magnetic-flux/illuminance/luminance/radioactivity/
+% absorbed-dose/dose-equivalent/exposure/wave-number/linear-mass-density/temperature-interval/
+% mass-density/moment-of-force tables and the electric charge/potential/resistance/capacitance/
+% inductance/conductance/current tables. Specific heat capacity is an INTENSIVE, per-unit-mass quantity
+% [energy / (mass × temperature)] — distinct from plain HEAT CAPACITY, J/K (no mass in the denominator),
+% and from SPECIFIC ENERGY, J/kg (no temperature): do NOT confuse them. A value given in
+% cal/(g·°C) or Btu/(lb·°F) must be put into SI first, then reasoned over (write-once-use-many).
+% Why a `table` and not hand-written `relate` clauses: this is exactly the shape reference data comes in
+% — a published table, not prose. The citable artifact IS the NIST conversion-factors table at the
+% `locator` below; each factor here is a CELL of NIST Special Publication 811, Appendix B.9, defended by
+% one provenance envelope. Each `row` lowers to a ground relation
+% `specific_heat_capacity_to_joule_per_kilogram_kelvin(unit, v)`, so the exact lookups above are the
+% ordinary SLD binding query — the engine returns the factor WITH this table's citation as its proof,
+% on the CPU, with zero model calls.
+%
+% HONESTY NOTE (like every other NIST table, only the EXACT defined factors get rows): NIST SP 811 B.9
+% prints all four specific-heat-capacity factors below in BOLDFACE, its convention for factors that are
+% EXACT by definition, transcribed here as the plain decimal number of joules per kilogram kelvin each
+% names:
+%
+%     calorieIT per gram degree Celsius [calIT/(g·°C)]      4.1868 E+03  →  4186.8
+%     calorieth per gram degree Celsius [calth/(g·°C)]      4.184  E+03  →  4184
+%     British thermal unitIT per pound degree Fahrenheit    4.1868 E+03  →  4186.8
+%     British thermal unitth per pound degree Fahrenheit    4.184  E+03  →  4184
+%
+% All four are EXACT and terminate; nothing here is a rounded measurement. They are exact because each
+% underlying thermal unit is DEFINED exactly — the International-Table calorie is exactly 4.1868 J and
+% the thermochemical calorie is exactly 4.184 J — and the per-mass, per-temperature scaling is by exact
+% factors: gram→kilogram is ×1000, and a Celsius-degree interval EQUALS a kelvin interval, so
+% calIT/(g·°C) = 4.1868 × 1000 = 4186.8 J/(kg·K) and calth/(g·°C) = 4.184 × 1000 = 4184 J/(kg·K),
+% exactly. The two British-thermal-unit rows land on the SAME two values because the BtuIT and Btuth are
+% defined FROM the corresponding calories, and the pound (0.453 592 37 kg, exact) and Fahrenheit-degree
+% (exactly 5/9 of a kelvin interval) combine to leave an exactly terminating result that NIST likewise
+% prints boldface — so, unlike the pure temperature-interval °F→K factor (5/9, non-terminating) or the
+% pound-force torque units (a factor of 127 in the denominator), these compound specific-heat factors
+% ARE exact and DO get rows. (Two distinct units sharing one exact value — calIT and BtuIT both giving
+% 4186.8 — is a real feature of the definitions, not a coincidence to hide.) This table is SPECIFIC to
+% specific heat capacity: a unit of a DIFFERENT quantity — e.g. the "pound", which NIST SP 811 B.9 lists
+% separately as a MASS unit converting to the kilogram, NOT to J/(kg·K) — therefore gets no row here,
+% and a `? specific_heat_capacity_to_joule_per_kilogram_kelvin(pound, $v)` ABSTAINS rather than
+% mis-converting a mass unit as if it were a specific-heat unit. The only claim this table makes is
+% "these are the exact factors NIST SP 811 B.9 prints for these four specific-heat-capacity units'
+% conversions to the joule per kilogram kelvin" — which is exactly what a byte-check against the cited
+% table verifies. `trust authoritative` — a primary, re-fetchable standards reference. (See
+% ADJ-TABLES.md; and feedback_nothing_human_authored — each factor is a verbatim cell of the cited
+% table, nothing asserted from memory.)
+% ============================================================================
+
+table specific_heat_capacity_to_joule_per_kilogram_kelvin {
+    columns unit, joule_per_kilogram_kelvin
+
+    row (calorie_it_per_gram_celsius, 4186.8)
+    row (calorie_th_per_gram_celsius, 4184)
+    row (btu_it_per_pound_fahrenheit, 4186.8)
+    row (btu_th_per_pound_fahrenheit, 4184)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}
