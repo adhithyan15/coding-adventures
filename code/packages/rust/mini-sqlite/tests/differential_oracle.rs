@@ -2493,6 +2493,32 @@ const CASES: &[Case] = &[
         setup: &[],
         query: "SELECT date('2026-07-30','+1000000000000000000 years') AS a, date('2026-07-30','+106749529914.55 days','weekday 0') AS b, date('2026-07-30','+9999999999999999999 days') AS c",
     },
+    // strftime (phase 3) — render a time value through a printf-style format of
+    // `%` codes. Core date/time fields and the composite/12-hour/day-of-year/
+    // day-of-week/unix/Julian/fractional-second codes, all matching SQLite.
+    Case {
+        id: "strftime_core_fields",
+        setup: &[],
+        query: "SELECT strftime('%Y-%m-%d %H:%M:%S','2026-07-30 14:05:09') AS a, strftime('%F %T','2026-07-30 14:05:09') AS b, strftime('%R','2026-07-30 14:05:09') AS c, strftime('100%% [%Y]','2026-07-30') AS d",
+    },
+    Case {
+        id: "strftime_derived_fields",
+        setup: &[],
+        query: "SELECT strftime('%j','2026-07-30') AS a, strftime('%w','2026-07-30') AS b, strftime('%u','2026-07-30') AS c, strftime('%s','2026-07-30 14:05:09') AS d, strftime('%f','2026-07-30 14:05:09.250') AS e",
+    },
+    // 12-hour clock, space-padded fields, AM/PM, and the Julian-day code.
+    Case {
+        id: "strftime_clock_forms",
+        setup: &[],
+        query: "SELECT strftime('%I %p','2026-07-30 14:05:09') AS a, strftime('%I','2026-07-30 00:30:00') AS b, strftime('[%e][%k][%l]','2026-07-05 04:09:00') AS c, strftime('%J','2026-07-30 14:05:09') AS d",
+    },
+    // NULL/invalid handling: an unknown code, a NULL format, an invalid time
+    // value all yield NULL; a modifier after the time value is honored.
+    Case {
+        id: "strftime_null_and_mods",
+        setup: &[],
+        query: "SELECT strftime('%Z','2026-07-30') AS a, strftime(NULL,'2026-07-30') AS b, strftime('%Y','bad') AS c, strftime('%Y-%m-%d','2026-07-30','+1 month') AS d, typeof(strftime('%Y','now')) AS e",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

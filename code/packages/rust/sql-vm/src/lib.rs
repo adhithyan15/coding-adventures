@@ -1423,6 +1423,7 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
         "DATETIME" => Ok(datetime_render(DateFmt::DateTime, &args)),
         "JULIANDAY" => Ok(julianday_func(&args)),
         "UNIXEPOCH" => Ok(unixepoch_func(&args)),
+        "STRFTIME" => Ok(strftime_func(&args)),
 
         "UPPER" => {
             if args.len() != 1 {
@@ -3422,6 +3423,106 @@ fn julianday_func(args: &[SqlValue]) -> SqlValue {
 fn unixepoch_func(args: &[SqlValue]) -> SqlValue {
     match datetime_base_ijd(args) {
         Some(ijd) => SqlValue::Int((ijd - UNIX_EPOCH_IJD_MS).div_euclid(1000)),
+        None => SqlValue::Null,
+    }
+}
+
+/// Day of week for `iJD`, 0 = Sunday … 6 = Saturday (as SQLite's `%w`). The
+/// `+129_600_000` (1.5 day) offset aligns the modulo so 0 lands on Sunday.
+fn ijd_dow_sunday0(ijd: i64) -> i64 {
+    (ijd + 129_600_000).rem_euclid(604_800_000) / 86_400_000
+}
+
+/// Day of the year for `iJD`, 1 = Jan 1 … 365/366 = Dec 31.
+fn ijd_day_of_year(ijd: i64, year: i64) -> i64 {
+    let (_, mo, d) = ijd_to_ymd(ijd);
+    let this = ymd_hms_to_ijd(year, mo, d, 0, 0, 0.0);
+    let jan1 = ymd_hms_to_ijd(year, 1, 1, 0, 0, 0.0);
+    (this - jan1) / 86_400_000 + 1
+}
+
+/// `strftime(FORMAT, X, …)` — render the (modified) time value through a
+/// `printf`-style format of `%` codes, matching SQLite. An unrecognized `%`
+/// code makes the WHOLE result NULL (as in SQLite), so `format_strftime` returns
+/// `Option`. Supported codes:
+///
+/// | code | meaning                              | code | meaning                     |
+/// |------|--------------------------------------|------|-----------------------------|
+/// | `%Y` | year, ≥4 digits                      | `%M` | minute, `00`–`59`           |
+/// | `%m` | month, `01`–`12`                     | `%S` | second, `00`–`59`           |
+/// | `%d` | day of month, `01`–`31`              | `%f` | seconds with millis, `SS.SSS` |
+/// | `%e` | day of month, space-padded ` 1`–`31` | `%j` | day of year, `001`–`366`    |
+/// | `%H` | hour, `00`–`23`                      | `%w` | day of week, `0`–`6` (Sun=0)|
+/// | `%k` | hour, space-padded ` 0`–`23`         | `%u` | day of week, `1`–`7` (Mon=1)|
+/// | `%I` | hour, `01`–`12`                      | `%s` | Unix seconds                |
+/// | `%l` | hour, space-padded ` 1`–`12`         | `%J` | Julian day (REAL rendered)  |
+/// | `%p` | `AM`/`PM`                            | `%F` | `%Y-%m-%d`                  |
+/// | `%P` | `am`/`pm`                            | `%T` | `%H:%M:%S`                  |
+/// | `%R` | `%H:%M`                              | `%%` | a literal `%`               |
+///
+/// (`%W`/`%G`/`%g`/`%c`/`%V` and the interpretation of week/ISO-year fields are a
+/// later phase — those codes fall through to NULL, matching SQLite's treatment
+/// of any code it does not know.)
+fn format_strftime(fmt: &str, ijd: i64) -> Option<String> {
+    let (y, mo, d) = ijd_to_ymd(ijd);
+    let (h, mi, s) = ijd_to_hms(ijd);
+    let mut out = String::new();
+    let mut it = fmt.chars();
+    while let Some(c) = it.next() {
+        if c != '%' {
+            out.push(c);
+            continue;
+        }
+        match it.next()? {
+            '%' => out.push('%'),
+            'Y' => out.push_str(&format!("{y:04}")),
+            'm' => out.push_str(&format!("{mo:02}")),
+            'd' => out.push_str(&format!("{d:02}")),
+            'e' => out.push_str(&format!("{d:2}")),
+            'H' => out.push_str(&format!("{h:02}")),
+            'k' => out.push_str(&format!("{h:2}")),
+            'I' => out.push_str(&format!("{:02}", (h + 11) % 12 + 1)),
+            'l' => out.push_str(&format!("{:2}", (h + 11) % 12 + 1)),
+            'p' => out.push_str(if h < 12 { "AM" } else { "PM" }),
+            'P' => out.push_str(if h < 12 { "am" } else { "pm" }),
+            'M' => out.push_str(&format!("{mi:02}")),
+            'S' => out.push_str(&format!("{s:02}")),
+            'f' => {
+                // Seconds with millisecond precision: "SS.SSS".
+                let frac = (ijd + 43_200_000).rem_euclid(60_000) as f64 / 1000.0;
+                out.push_str(&format!("{frac:06.3}"));
+            }
+            'j' => out.push_str(&format!("{:03}", ijd_day_of_year(ijd, y))),
+            'w' => out.push_str(&ijd_dow_sunday0(ijd).to_string()),
+            'u' => {
+                let dow = ijd_dow_sunday0(ijd);
+                out.push_str(&(if dow == 0 { 7 } else { dow }).to_string());
+            }
+            's' => out.push_str(&(ijd - UNIX_EPOCH_IJD_MS).div_euclid(1000).to_string()),
+            // SQLite renders the Julian day with `%.16g` (16 significant digits).
+            'J' => out.push_str(&printf_float_body('g', ijd as f64 / 86_400_000.0, Some(16))),
+            'F' => out.push_str(&format!("{y:04}-{mo:02}-{d:02}")),
+            'T' => out.push_str(&format!("{h:02}:{mi:02}:{s:02}")),
+            'R' => out.push_str(&format!("{h:02}:{mi:02}")),
+            _ => return None, // unknown code → NULL (matches SQLite)
+        }
+    }
+    Some(out)
+}
+
+/// `strftime(FORMAT, X, …)` — SQLite's general date/time formatter. The first
+/// argument is the format; the rest are the usual time value + modifiers (absent
+/// = `'now'`). A NULL format, an invalid time value/modifier, or an unrecognized
+/// `%` code yields NULL.
+fn strftime_func(args: &[SqlValue]) -> SqlValue {
+    let fmt = match args.first() {
+        Some(SqlValue::Text(s)) => s.clone(),
+        Some(SqlValue::Int(i)) => i.to_string(),
+        Some(SqlValue::Bool(b)) => (*b as i64).to_string(),
+        _ => return SqlValue::Null, // NULL/REAL/BLOB format, or no args
+    };
+    match datetime_base_ijd(&args[1..]).and_then(|ijd| format_strftime(&fmt, ijd)) {
+        Some(s) => SqlValue::Text(s),
         None => SqlValue::Null,
     }
 }
@@ -6614,6 +6715,42 @@ mod tests {
         assert_eq!(m("2026-07-30", &["+1000000000000000000 years"]), SqlValue::Null);
         assert_eq!(m("2026-07-30", &["+9999999999999999999 days"]), SqlValue::Null);
         assert_eq!(m("2026-07-30", &["+106749529914.55 days", "weekday 0"]), SqlValue::Null);
+    }
+
+    #[test]
+    fn builtin_strftime_formats_match_sqlite() {
+        let txt = |s: &str| SqlValue::Text(s.into());
+        let sf = |fmt: &str, v: &str| call_builtin("STRFTIME", vec![txt(fmt), txt(v)]).unwrap();
+
+        // Core fields and composites.
+        assert_eq!(sf("%Y-%m-%d %H:%M:%S", "2026-07-30 14:05:09"), txt("2026-07-30 14:05:09"));
+        assert_eq!(sf("%F %T", "2026-07-30 14:05:09"), txt("2026-07-30 14:05:09"));
+        assert_eq!(sf("%R", "2026-07-30 14:05:09"), txt("14:05"));
+        assert_eq!(sf("100%% [%Y]", "2026-07-30"), txt("100% [2026]"));
+        // Derived fields.
+        assert_eq!(sf("%j", "2026-07-30"), txt("211")); // day of year
+        assert_eq!(sf("%w", "2026-07-30"), txt("4")); // Thursday, Sunday=0
+        assert_eq!(sf("%u", "2026-07-30"), txt("4")); // Thursday, Monday=1
+        assert_eq!(sf("%s", "2026-07-30 14:05:09"), txt("1785420309")); // unix seconds
+        assert_eq!(sf("%f", "2026-07-30 14:05:09.250"), txt("09.250")); // SS.SSS
+        assert_eq!(sf("%J", "2026-07-30"), txt("2461251.5")); // Julian day
+        // 12-hour clock and space-padded fields.
+        assert_eq!(sf("%I %p", "2026-07-30 14:05:09"), txt("02 PM"));
+        assert_eq!(sf("%I", "2026-07-30 00:30:00"), txt("12")); // midnight → 12 AM
+        assert_eq!(sf("%p", "2026-07-30 09:00:00"), txt("AM"));
+        assert_eq!(sf("[%e][%k][%l]", "2026-07-05 04:09:00"), txt("[ 5][ 4][ 4]"));
+        // NULL/invalid: unknown code, NULL format, invalid time → NULL. A modifier
+        // after the time value is honored.
+        assert_eq!(sf("%Z", "2026-07-30"), SqlValue::Null); // unknown code
+        assert_eq!(sf("%Y", "not-a-date"), SqlValue::Null); // invalid time
+        assert_eq!(
+            call_builtin("STRFTIME", vec![SqlValue::Null, txt("2026-07-30")]).unwrap(),
+            SqlValue::Null
+        );
+        assert_eq!(
+            call_builtin("STRFTIME", vec![txt("%Y-%m-%d"), txt("2026-07-30"), txt("+1 month")]).unwrap(),
+            txt("2026-08-30")
+        );
     }
 
     #[test]
