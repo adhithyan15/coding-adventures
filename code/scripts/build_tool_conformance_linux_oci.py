@@ -25,10 +25,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-import build_tool_conformance as bootstrap
-
-DEFAULT_FIXTURE_ROOT = bootstrap.DEFAULT_FIXTURE_ROOT
-DEFAULT_IDENTITY_SCHEMA = DEFAULT_FIXTURE_ROOT / "linux-oci-backend.schema.json"
+DEFAULT_IDENTITY_SCHEMA = Path("linux-oci-backend.schema.json")
+MAX_DOCUMENT_BYTES = 2_000_000
 PODMAN_PATH = Path("/usr/bin/podman")
 CRUN_PATH = Path("/usr/bin/crun")
 PODMAN_COMMAND = "/usr/bin/podman"
@@ -72,15 +70,111 @@ def _mapping(value: object, *, code: str) -> Mapping[str, Any]:
     return value
 
 
+def _is_sha256(value: object) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
+def _is_version(value: object) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) <= 32
+        and len(value.split(".")) == 3
+        and all(part and part.isascii() and part.isdigit() for part in value.split("."))
+    )
+
+
+def _is_image_path(value: object) -> bool:
+    allowed = frozenset(
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-"
+    )
+    return (
+        isinstance(value, str)
+        and 2 <= len(value) <= 256
+        and value.startswith("/")
+        and all(segment and set(segment) <= allowed for segment in value[1:].split("/"))
+    )
+
+
+def _is_image_reference(value: object) -> bool:
+    if not isinstance(value, str) or len(value) > 512:
+        return False
+    prefix, separator, digest = value.rpartition("@sha256:")
+    allowed = frozenset("abcdefghijklmnopqrstuvwxyz0123456789._/-")
+    return (
+        separator == "@sha256:"
+        and bool(prefix)
+        and prefix[0] in frozenset("abcdefghijklmnopqrstuvwxyz0123456789")
+        and set(prefix) <= allowed
+        and _is_sha256(digest)
+    )
+
+
 def validate_identity(
     identity: dict[str, Any],
     schema: dict[str, Any] | None = None,
 ) -> None:
     """Validate the closed identity and cross-field digest bindings."""
 
-    selected_schema = schema or bootstrap.load_document(DEFAULT_IDENTITY_SCHEMA)
-    errors = bootstrap._schema_errors(identity, selected_schema)
-    if errors:
+    del schema
+    exact_keys = {
+        "schema_version",
+        "backend_kind",
+        "platform",
+        "architecture",
+        "runtime",
+        "oci_runtime",
+        "image",
+        "seccomp_profile_sha256",
+        "shim",
+        "probe",
+    }
+    valid = (
+        set(identity) == exact_keys
+        and type(identity.get("schema_version")) is int
+        and identity.get("schema_version") == 1
+        and identity.get("backend_kind") == "linux_oci"
+        and identity.get("platform") == "linux"
+        and identity.get("architecture") == "amd64"
+        and isinstance(identity.get("runtime"), dict)
+        and set(identity["runtime"]) == {"implementation", "path", "version", "sha256"}
+        and identity["runtime"].get("implementation") == "podman"
+        and identity["runtime"].get("path") == "/usr/bin/podman"
+        and _is_version(identity["runtime"].get("version"))
+        and _is_sha256(identity["runtime"].get("sha256"))
+        and isinstance(identity.get("oci_runtime"), dict)
+        and set(identity["oci_runtime"]) == {"implementation", "path", "sha256"}
+        and identity["oci_runtime"].get("implementation") == "crun"
+        and identity["oci_runtime"].get("path") == "/usr/bin/crun"
+        and _is_sha256(identity["oci_runtime"].get("sha256"))
+        and isinstance(identity.get("image"), dict)
+        and set(identity["image"])
+        == {
+            "reference",
+            "manifest_sha256",
+            "config_sha256",
+            "os",
+            "architecture",
+        }
+        and identity["image"].get("os") == "linux"
+        and identity["image"].get("architecture") == "amd64"
+        and _is_image_reference(identity["image"].get("reference"))
+        and _is_sha256(identity["image"].get("manifest_sha256"))
+        and _is_sha256(identity["image"].get("config_sha256"))
+        and isinstance(identity.get("shim"), dict)
+        and set(identity["shim"]) == {"path", "sha256"}
+        and _is_image_path(identity["shim"].get("path"))
+        and _is_sha256(identity["shim"].get("sha256"))
+        and isinstance(identity.get("probe"), dict)
+        and set(identity["probe"]) == {"path", "sha256"}
+        and _is_image_path(identity["probe"].get("path"))
+        and _is_sha256(identity["probe"].get("sha256"))
+        and _is_sha256(identity.get("seccomp_profile_sha256"))
+    )
+    if not valid:
         raise LinuxOciUnavailable(
             "LINUX_OCI_IDENTITY_SCHEMA_INVALID",
             "Linux OCI backend identity does not match its closed schema",
@@ -88,14 +182,19 @@ def validate_identity(
     image = _mapping(identity.get("image"), code="LINUX_OCI_IDENTITY_SCHEMA_INVALID")
     manifest = image.get("manifest_sha256")
     reference = image.get("reference")
-    if not isinstance(reference, str) or reference.rsplit("@sha256:", 1)[-1] != manifest:
+    if (
+        not isinstance(reference, str)
+        or reference.rsplit("@sha256:", 1)[-1] != manifest
+    ):
         raise LinuxOciUnavailable(
             "LINUX_OCI_IMAGE_IDENTITY_MISMATCH",
             "image reference and manifest identity must match exactly",
         )
     shim = _mapping(identity.get("shim"), code="LINUX_OCI_IDENTITY_SCHEMA_INVALID")
     probe = _mapping(identity.get("probe"), code="LINUX_OCI_IDENTITY_SCHEMA_INVALID")
-    if shim.get("path") == probe.get("path"):
+    if shim.get("path") == probe.get("path") or shim.get("sha256") == probe.get(
+        "sha256"
+    ):
         raise LinuxOciUnavailable(
             "LINUX_OCI_IMAGE_ARTIFACT_COLLISION",
             "shim and invariant probe must be distinct image artifacts",
@@ -109,33 +208,89 @@ def load_identity(
 ) -> tuple[dict[str, Any], str]:
     """Load a bounded strict identity and return it with its raw digest."""
 
+    del schema_path
+    flags = (
+        os.O_RDONLY
+        | getattr(os, "O_CLOEXEC", 0)
+        | getattr(
+            os,
+            "O_NOFOLLOW",
+            0,
+        )
+    )
     try:
-        with bootstrap._open_regular_no_follow(path) as source:
-            raw = source.read(bootstrap.MAX_DOCUMENT_BYTES + 1)
+        descriptor = os.open(path, flags)
+        try:
+            status = os.fstat(descriptor)
+            if not stat.S_ISREG(status.st_mode):
+                raise OSError("identity is not regular")
+            chunks: list[bytes] = []
+            total = 0
+            while chunk := os.read(
+                descriptor,
+                min(1_048_576, MAX_DOCUMENT_BYTES + 1 - total),
+            ):
+                chunks.append(chunk)
+                total += len(chunk)
+                if total > MAX_DOCUMENT_BYTES:
+                    break
+            after = os.fstat(descriptor)
+            before_identity = (
+                status.st_dev,
+                status.st_ino,
+                status.st_size,
+                status.st_mtime_ns,
+            )
+            after_identity = (
+                after.st_dev,
+                after.st_ino,
+                after.st_size,
+                after.st_mtime_ns,
+            )
+            if before_identity != after_identity:
+                raise OSError("identity changed while it was read")
+            raw = b"".join(chunks)
+            if total <= MAX_DOCUMENT_BYTES and before_identity[2] != len(raw):
+                raise OSError("identity length changed while it was read")
+        finally:
+            os.close(descriptor)
     except (OSError, ValueError) as error:
         raise LinuxOciUnavailable(
             "LINUX_OCI_IDENTITY_READ_FAILED",
             "Linux OCI backend identity could not be read",
         ) from error
-    if len(raw) > bootstrap.MAX_DOCUMENT_BYTES:
+    if len(raw) > MAX_DOCUMENT_BYTES:
         raise LinuxOciUnavailable(
             "LINUX_OCI_IDENTITY_TOO_LARGE",
             "Linux OCI backend identity exceeds the document ceiling",
         )
     try:
-        value = bootstrap.strict_load_bytes(raw)
-    except bootstrap.ConformanceError as error:
+
+        def reject_duplicates(
+            pairs: list[tuple[str, object]],
+        ) -> dict[str, object]:
+            value: dict[str, object] = {}
+            for key, item in pairs:
+                if key in value:
+                    raise ValueError("duplicate identity key")
+                value[key] = item
+            return value
+
+        value = json.loads(
+            raw.decode("utf-8", errors="strict"),
+            object_pairs_hook=reject_duplicates,
+        )
+    except (UnicodeDecodeError, ValueError) as error:
         raise LinuxOciUnavailable(
             "LINUX_OCI_IDENTITY_PARSE_FAILED",
             "Linux OCI backend identity is not strict JSON",
         ) from error
     if not isinstance(value, dict):
         raise LinuxOciUnavailable(
-            "LINUX_OCI_IDENTITY_SCHEMA_INVALID",
-            "Linux OCI backend identity must be an object",
+            "LINUX_OCI_IDENTITY_PARSE_FAILED",
+            "Linux OCI backend identity is not a strict JSON object",
         )
-    schema = bootstrap.load_document(schema_path)
-    validate_identity(value, schema)
+    validate_identity(value)
     return value, identity_sha256(raw)
 
 
@@ -359,7 +514,9 @@ def validate_host_info(info_value: object, identity: Mapping[str, Any]) -> None:
     info = _mapping(info_value, code="LINUX_OCI_RUNTIME_RESPONSE_INVALID")
     host = _mapping(info.get("host"), code="LINUX_OCI_RUNTIME_RESPONSE_INVALID")
     version = _mapping(info.get("version"), code="LINUX_OCI_RUNTIME_RESPONSE_INVALID")
-    runtime = _mapping(identity.get("runtime"), code="LINUX_OCI_IDENTITY_SCHEMA_INVALID")
+    runtime = _mapping(
+        identity.get("runtime"), code="LINUX_OCI_IDENTITY_SCHEMA_INVALID"
+    )
     oci_runtime = _mapping(
         identity.get("oci_runtime"),
         code="LINUX_OCI_IDENTITY_SCHEMA_INVALID",
@@ -390,11 +547,8 @@ def validate_host_info(info_value: object, identity: Mapping[str, Any]) -> None:
             "cgroup v2 is required for the Linux OCI backend",
         )
     controllers = host.get("cgroupControllers")
-    if (
-        not isinstance(controllers, list)
-        or not REQUIRED_CGROUP_CONTROLLERS.issubset(
-            item for item in controllers if isinstance(item, str)
-        )
+    if not isinstance(controllers, list) or not REQUIRED_CGROUP_CONTROLLERS.issubset(
+        item for item in controllers if isinstance(item, str)
     ):
         raise LinuxOciUnavailable(
             "LINUX_OCI_CGROUP_CONTROLLERS_MISSING",
@@ -409,10 +563,9 @@ def validate_host_info(info_value: object, identity: Mapping[str, Any]) -> None:
         host.get("ociRuntime"),
         code="LINUX_OCI_RUNTIME_RESPONSE_INVALID",
     )
-    if (
-        detected_oci_runtime.get("name") != oci_runtime.get("implementation")
-        or detected_oci_runtime.get("path") != oci_runtime.get("path")
-    ):
+    if detected_oci_runtime.get("name") != oci_runtime.get(
+        "implementation"
+    ) or detected_oci_runtime.get("path") != oci_runtime.get("path"):
         raise LinuxOciUnavailable(
             "LINUX_OCI_CRUN_REQUIRED",
             "the reviewed local crun runtime is required",
@@ -471,10 +624,9 @@ def validate_image_info(
             "LINUX_OCI_IMAGE_REFERENCE_MISMATCH",
             "local OCI image does not retain the reviewed manifest reference",
         )
-    if (
-        image_info.get("Os") != image_identity.get("os")
-        or image_info.get("Architecture") != image_identity.get("architecture")
-    ):
+    if image_info.get("Os") != image_identity.get("os") or image_info.get(
+        "Architecture"
+    ) != image_identity.get("architecture"):
         raise LinuxOciUnavailable(
             "LINUX_OCI_IMAGE_PLATFORM_MISMATCH",
             "local OCI image platform does not match policy",
@@ -602,19 +754,21 @@ def build_probe_create_argv(
     ]
 
 
-def preflight(
+def preflight_prevalidated(
     identity: dict[str, Any],
     *,
     state_root: Path,
-    identity_schema: dict[str, Any] | None = None,
     command_runner: CommandRunner = _run_command,
     binary_digest: DigestReader = _binary_digest,
     platform_name: str | None = None,
     effective_uid: int | None = None,
 ) -> dict[str, Any]:
-    """Prove host and image capabilities without creating a container."""
+    """Inspect host capabilities for an already formally validated identity.
 
-    validate_identity(identity, identity_schema)
+    This process-owning interface is intentionally not called by the exact
+    loadability worker. A later protected broker must own its two commands.
+    """
+
     selected_platform = platform_name or sys.platform
     if not selected_platform.startswith("linux"):
         raise LinuxOciUnavailable(
@@ -674,6 +828,29 @@ def preflight(
         "status": "available",
         "conformance_status": "not-run",
     }
+
+
+def preflight(
+    identity: dict[str, Any],
+    *,
+    state_root: Path,
+    identity_schema: dict[str, Any] | None = None,
+    command_runner: CommandRunner = _run_command,
+    binary_digest: DigestReader = _binary_digest,
+    platform_name: str | None = None,
+    effective_uid: int | None = None,
+) -> dict[str, Any]:
+    """Validate an identity, then use the legacy unbrokered preflight path."""
+
+    validate_identity(identity, identity_schema)
+    return preflight_prevalidated(
+        identity,
+        state_root=state_root,
+        command_runner=command_runner,
+        binary_digest=binary_digest,
+        platform_name=platform_name,
+        effective_uid=effective_uid,
+    )
 
 
 def _unavailable_result(error: LinuxOciUnavailable) -> dict[str, Any]:

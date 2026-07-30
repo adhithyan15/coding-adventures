@@ -8,18 +8,13 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": {
-    "item_id": "build-tool-trusted-authority-bundle",
-    "pr_number": 9196,
-    "branch": "codex/build-tool-trusted-authority-bundle",
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9196"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "d0b9c442f03520fdff75c12b4f236c50de7f152c",
+    "revision": "a06ed28b7096c178d84a36a1c1929bf69f056c92",
     "schema_version": 2,
     "established_languages": 15,
-    "implementation_identities": 1187,
-    "implementation_package_slots": 4328,
+    "implementation_identities": 1190,
+    "implementation_package_slots": 4331,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 278,
     "canonical_collisions": 0,
@@ -74,26 +69,37 @@
     {
       "id": "build-tool-trusted-authority-bundle",
       "title": "Define the external authority bundle and Linux preflight profile",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-execution-sandbox",
         "build-tool-linux-oci-sandbox"
       ],
       "branch": "codex/build-tool-trusted-authority-bundle",
       "pr_number": 9196,
-      "notes": "Ready-for-review PR #9196. Security review split out a safe first profile: a post-merge external bundle whose raw-byte approval binds the exact source commit/tree, policy, schemas, authority verifier, Linux preflight backend, and external backend identity. Schema v1 approves exact bytes for capability inspection only, with no corpus, adapter, container, executable payload, or process handoff. Local validation covers 108 focused tests, 86% branch-aware authority-module coverage, Ruff, Bandit, corpus/contract validators, Go tests/build, parity collision checks, and the unchanged 73-gap build-file audit."
+      "notes": "Merged PR #9196. Security review split out a safe first profile: a post-merge external bundle whose raw-byte approval binds the exact source commit/tree, policy, schemas, authority verifier, Linux preflight backend, and external backend identity. Schema v1 approves exact bytes for capability inspection only, with no corpus, adapter, container, executable payload, or process handoff. Validation covered 108 focused tests, 86% branch-aware authority-module coverage, Ruff, Bandit, corpus/contract validators, Go tests/build, parity collision checks, and the unchanged 73-gap build-file audit."
     },
     {
       "id": "build-tool-authority-exact-backend-loader",
       "title": "Load the exact approved preflight backend through an atomic runner boundary",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "build-tool-trusted-authority-bundle",
         "build-tool-linux-oci-sandbox"
       ],
+      "branch": "codex/build-tool-authority-exact-backend-loader",
+      "pr_number": null,
+      "notes": "Selected after PR #9196 merged because it is the smallest dependency-shaped gate for every later Linux enforcement tranche. Add a separately domain-bound profile, atomic beneath-root component snapshot, sealed exact bytes, stdlib-only backend closure, and one-shot isolated loadability worker. This tranche runs no Podman capability command, container, case, adapter, or invariant probe."
+    },
+    {
+      "id": "build-tool-linux-capability-preflight-broker",
+      "title": "Broker the two approved Linux OCI capability commands",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-authority-exact-backend-loader"
+      ],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered during final authority security review. Replace name-based Python import and check-then-open traversal with an atomic beneath-root loader over the exact retained backend bytes and a closed approved import closure. Until this lands, the authority verifier remains process-free and the bare Linux preflight CLI stays disabled."
+      "notes": "Discovered during exact-loader security review. Add a separately authorized protected broker over already-open verified Podman/crun and a retained private state root; permit only info and exact-config image inspect, stream combined output limits, scrub the environment and descriptors, enforce timeout and full descendant cleanup, and eliminate binary hash-to-exec and state-root path races. No container is created."
     },
     {
       "id": "build-tool-execution-case-snapshot",
@@ -119,7 +125,8 @@
       "status": "pending",
       "depends_on": [
         "build-tool-trusted-authority-bundle",
-        "build-tool-authority-exact-backend-loader"
+        "build-tool-authority-exact-backend-loader",
+        "build-tool-linux-capability-preflight-broker"
       ],
       "branch": null,
       "pr_number": null,
@@ -401,7 +408,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The bee64b477 inventory added axiom-to-semantic-ir, http1-client, and smart-home-discovery-service. Review axiom-to-semantic-ir as a likely portable deterministic lowering, http1-client for portable-core versus native transport boundaries, and smart-home-discovery-service as a likely native/service applicability case before opening any port PR."
+      "notes": "The July 30 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, and venture-browser-core. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; and both smart-home packages as likely native/service applicability cases before opening any port PR."
     },
     {
       "id": "c-cpp-graduation",

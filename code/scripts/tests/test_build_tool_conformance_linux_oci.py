@@ -114,6 +114,45 @@ class LinuxOciBackendTests(unittest.TestCase):
         unknown = copy.deepcopy(identity)
         unknown["runtime"]["arguments"] = ["--fixture-controlled"]  # type: ignore[index]
         self.assertTrue(bootstrap._schema_errors(unknown, self.schema))
+        with self.assertRaises(linux_oci.LinuxOciUnavailable) as raised:
+            linux_oci.validate_identity(unknown, self.schema)
+        self.assertEqual(
+            raised.exception.code,
+            "LINUX_OCI_IDENTITY_SCHEMA_INVALID",
+        )
+
+        for field, mutate in (
+            (
+                "boolean-schema-version",
+                lambda value: value.__setitem__("schema_version", True),
+            ),
+            (
+                "version",
+                lambda value: value["runtime"].__setitem__("version", "latest"),
+            ),
+            (
+                "reference",
+                lambda value: value["image"].__setitem__(
+                    "reference",
+                    f"UPPER/build@sha256:{'3' * 64}",
+                ),
+            ),
+            (
+                "artifact-path",
+                lambda value: value["probe"].__setitem__("path", "/bad//probe"),
+            ),
+        ):
+            invalid = copy.deepcopy(identity)
+            mutate(invalid)  # type: ignore[arg-type]
+            with (
+                self.subTest(field=field),
+                self.assertRaises(linux_oci.LinuxOciUnavailable) as raised,
+            ):
+                linux_oci.validate_identity(invalid, self.schema)
+            self.assertEqual(
+                raised.exception.code,
+                "LINUX_OCI_IDENTITY_SCHEMA_INVALID",
+            )
 
         mismatch = copy.deepcopy(identity)
         mismatch["image"]["manifest_sha256"] = "8" * 64  # type: ignore[index]
@@ -330,7 +369,9 @@ class LinuxOciBackendTests(unittest.TestCase):
 
     def test_direct_runtime_wrapper_bounds_output_and_redacts_failures(self) -> None:
         completed = SimpleNamespace(returncode=0, stdout=b"{}", stderr=b"")
-        with mock.patch.object(linux_oci.subprocess, "run", return_value=completed) as run:
+        with mock.patch.object(
+            linux_oci.subprocess, "run", return_value=completed
+        ) as run:
             result = linux_oci._run_command(
                 ["/usr/bin/podman", "info"],
                 {"HOME": "/private"},
@@ -407,7 +448,9 @@ class LinuxOciBackendTests(unittest.TestCase):
         self.assertIn("--cap-drop=ALL", command)
         self.assertIn("--security-opt=no-new-privileges=true", command)
         self.assertIn("--cgroup-conf=memory.swap.max=0", command)
-        self.assertIn("--tmpfs=/sandbox:rw,nosuid,nodev,noexec,size=8192,mode=0700", command)
+        self.assertIn(
+            "--tmpfs=/sandbox:rw,nosuid,nodev,noexec,size=8192,mode=0700", command
+        )
         self.assertIn("--log-driver=none", command)
         self.assertIn("--unsetenv-all", command)
         self.assertEqual(command[-1], expected_image)
@@ -521,7 +564,9 @@ class LinuxOciBackendTests(unittest.TestCase):
             calls[1][0][-5:],
             ["image", "inspect", "--format", "json", f"sha256:{'4' * 64}"],
         )
-        self.assertTrue(all("--pull" not in argument for call in calls for argument in call[0]))
+        self.assertTrue(
+            all("--pull" not in argument for call in calls for argument in call[0])
+        )
         self.assertTrue(all("create" not in call[0] for call in calls))
 
     def test_preflight_rejects_platform_root_and_binary_mismatch_before_spawn(

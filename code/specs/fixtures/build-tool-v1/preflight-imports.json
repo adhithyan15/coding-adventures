@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "module": "build_tool_conformance_linux_oci",
+  "imports": [
+    "__future__",
+    "argparse",
+    "collections.abc",
+    "dataclasses",
+    "hashlib",
+    "json",
+    "os",
+    "pathlib",
+    "stat",
+    "subprocess",
+    "sys",
+    "typing"
+  ],
+  "required_exports": [
+    "CommandResult",
+    "LinuxOciUnavailable",
+    "preflight_prevalidated"
+  ]
+}

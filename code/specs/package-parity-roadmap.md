@@ -105,19 +105,21 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 30, 2026 at `d0b9c442f` after the Haskell
+inventory was regenerated on July 30, 2026 at `a06ed28b7` after the Haskell
 `barcode-1d` and `http-core` ports, the Go/Rust `multi-directed-graph` slice,
-the Linux OCI preflight contract, and a new wave of Rust-only package
-families. The OCI tranche did not change package counts:
+the Linux OCI preflight and external-authority contracts, and a new wave of
+Rust-only package families. The latest refresh added the Rust-only
+`hue-integration` and `venture-browser-core` identities and found zero
+canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
 | Present in 10-15 languages | 172 | 278 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 737 | 10,318 |
+| Present in one language | 740 | 10,360 |
 
-The loop must not start by attempting 10,318 singleton ports. It should finish
+The loop must not start by attempting 10,360 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The July 29 lane audit is:
@@ -805,14 +807,16 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 542 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 545 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30 inventory added three Rust singleton identities that now have
+The July 30 inventories added five Rust singleton identities that now have
 explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
-`smart-home-discovery-service` is a likely native/service applicability case.
+`venture-browser-core` needs a portable-core versus native-boundary review.
+`smart-home-discovery-service` and `hue-integration` are likely native/service
+applicability cases.
 
 ### Likely portable Rust-led families
 
@@ -943,17 +947,20 @@ Delivery order:
    semantics. Then execute the runner-owned Linux invariant probe with
    aggregate cgroup CPU metering, combined streaming output/result accounting,
    hard writable-workspace semantics, cancellation, and verified
-   whole-container kill/reap/removal. The current selected tranche is the
-   first prerequisite: replace corpus-only approval with a process-free,
-   domain-separated external bundle over the reviewed source revision, policy,
-   schemas, authority verifier, Linux preflight backend, and external backend
-   identity. This first closed profile binds no corpus or adapter and
-   approves bytes for capability inspection only; it exposes no process
-   handoff. Next add an atomic exact-byte backend/import-closure loader and a
-   separate invariant-probe authority profile. Run protected probe enforcement
-   to produce containment evidence, then add a distinct trusted-execution
-   profile binding that evidence, the exact case snapshot, and one adapter
-   before trusted-case enforcement. Only protected evidence can mark Linux
+   whole-container kill/reap/removal. The completed first prerequisite
+   replaced corpus-only approval with a
+   process-free, domain-separated external bundle over the reviewed source
+   revision, policy, schemas, authority verifier, Linux preflight backend, and
+   external backend identity. This first closed profile binds no corpus or
+   adapter and approves bytes for capability inspection only; it exposes no
+   process handoff. The current selected tranche adds a separately domain-bound
+   atomic exact-byte backend/import-closure loader and a one-shot isolated
+   loadability worker; it runs no capability command. A protected command
+   broker follows, then a separate invariant-probe authority profile. Run
+   protected probe enforcement to produce containment evidence, then add a
+   distinct trusted-execution profile binding that evidence, the exact case
+   snapshot, and one adapter before trusted-case enforcement. Only protected
+   evidence can mark Linux
    ready.
 7. Implement the native Windows boundary with AppContainer or LPAC plus Job
    Objects and root-handle reparse-safe filesystem operations. Keep macOS
