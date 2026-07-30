@@ -143,16 +143,17 @@ fn string_literals_are_trigraph_safe() {
 
 #[test]
 fn builtin_method_dispatch_is_rejected() {
-    // `"hi".length` lowers to a `__method__` dispatch to `length` — a BUILT-IN
-    // method the module never registers via `__def_method__`.  OOP slice 2 now
-    // lowers user-defined instance methods, but a built-in method call is the
-    // separate Collections batch, so the allowlist rejects it cleanly (rather
-    // than emitting a call that `NoMethodError`s at runtime).
-    let m = lower_ruby("puts \"hi\".length");
-    let err = compile(&m).expect_err("rejects a built-in method dispatch");
+    // A built-in method NOT in the Collections slice yet (`strip`) lowers to a
+    // `__method__` dispatch the module never registers via `__def_method__`, so
+    // the allowlist rejects it cleanly (rather than emitting a call that
+    // `NoMethodError`s at runtime).  (`length`/`upcase`/… ARE lowered now — see
+    // `collection_string_methods_route_to_the_builtin_dispatcher` and the
+    // `compile_and_run_string_methods` execution proof.)
+    let m = lower_ruby("puts \"hi\".strip");
+    let err = compile(&m).expect_err("rejects a not-yet-lowered built-in method dispatch");
     assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
     assert!(
-        err.message.contains("length"),
+        err.message.contains("strip"),
         "names the built-in method: {}",
         err.message
     );
@@ -291,6 +292,23 @@ fn modules_register_include_and_extend() {
     assert!(
         src.contains("_sir_def_method(\"Greet\", \"hi\""),
         "a module method is registered like a class method, keyed on the module\n{src}"
+    );
+}
+
+#[test]
+fn collection_string_methods_route_to_the_builtin_dispatcher() {
+    // Collections slice 1: a `__method__` dispatch to a built-in method name
+    // (`upcase`) that is NOT a user-defined method routes to
+    // `_sir_builtin_method` (the runtime dispatcher), not the user method table.
+    let m = lower_ruby("puts \"hi\".upcase");
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_builtin_method("),
+        "a built-in method dispatches through the runtime dispatcher\n{src}"
+    );
+    assert!(
+        src.contains("\"upcase\""),
+        "the method name is a quoted C string literal\n{src}"
     );
 }
 

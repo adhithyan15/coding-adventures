@@ -1539,7 +1539,18 @@ fn emit_builtin_simple(out: &mut String, name: &str, args: &[Expr], indent: usiz
     if name == "__method__" {
         if let (Some(recv), Some(Expr::StrLit { value: m, .. })) = (args.first(), args.get(1)) {
             let call_args = &args[2..];
-            out.push_str("_sir_call_method(");
+            // A user-registered method (OOP) dispatches through the class method
+            // table; otherwise a KNOWN built-in name (Collections) routes to the
+            // runtime dispatcher.  Both take the same `(recv, "m", argc, args…)`
+            // shape, so only the helper name differs.  (The scan guarantees the
+            // name is one or the other; a truly unknown name is rejected there.)
+            let user = DEFINED_METHODS.with(|d| d.borrow().contains(m));
+            let helper = if !user && is_builtin_method(m) {
+                "_sir_builtin_method"
+            } else {
+                "_sir_call_method"
+            };
+            let _ = write!(out, "{helper}(");
             emit_expr(out, recv, indent);
             let _ = write!(out, ", {}, {}", quote_c_string(m), call_args.len());
             for a in call_args {
@@ -1738,6 +1749,21 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
         "puts" => "_sir_puts",
         _ => return None,
     })
+}
+
+/// Collections slice 1: the built-in *method* names the C runtime's
+/// `_sir_builtin_method` dispatches (all 0-arity in this slice).  A `__method__`
+/// call to one of these — when the module has NOT defined a user method of the
+/// same name — routes to the runtime dispatcher instead of the user method
+/// table, and the structural scan accepts it (rather than deferring it to a
+/// later Collections batch).  `length`/`size`/`empty?` are polymorphic over
+/// String/Array/Hash; the rest are String-only (the dispatcher raises
+/// `NoMethodError` on an unsupported receiver type, matching Ruby).
+fn is_builtin_method(name: &str) -> bool {
+    matches!(
+        name,
+        "length" | "size" | "upcase" | "downcase" | "reverse" | "empty?" | "to_s"
+    )
 }
 
 /// The builtins the v0 emitter can lower directly.  Anything else — the
@@ -2164,18 +2190,21 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
                     span.clone(),
                 ));
             }
-            // `__method__(recv, "m", …)` dispatch to a method the module never
-            // registers via `__def_method__` is a BUILT-IN method call (the
-            // Collections batch) — rejected cleanly (dispatch is already anti-RCE
-            // by construction; this preserves clean compile-time rejection).
+            // `__method__(recv, "m", …)` dispatch: accepted if `m` is a
+            // user-registered method (OOP, via the class table) OR a built-in
+            // method the Collections runtime dispatches (`is_builtin_method`).  A
+            // name that is NEITHER is a built-in method not in this slice yet —
+            // rejected cleanly (dispatch is anti-RCE by construction; this keeps
+            // the clean compile-time rejection for the not-yet-lowered names).
             if name == "__method__" {
                 if let Some(Expr::StrLit { value, .. }) = args.get(1) {
-                    let known = DEFINED_METHODS.with(|d| d.borrow().contains(value));
+                    let known = DEFINED_METHODS.with(|d| d.borrow().contains(value))
+                        || is_builtin_method(value);
                     if !known {
                         return Some((
                             format!(
-                                "a call to the built-in method `{value}` (only \
-                                 user-defined methods dispatch this slice)"
+                                "a call to the built-in method `{value}` \
+                                 (not lowered by the C backend yet)"
                             ),
                             span.clone(),
                         ));

@@ -112,8 +112,9 @@ table).  Class/constant names are quoted C string literals (no injection).  And
 closure` into an explicit table (`_sir_def_method`), and `__method__` dispatches
 via `_sir_call_method` (resolve `(recv's class, method)`, apply the closure; miss
 → `NoMethodError`).  Dispatch is an explicit data lookup — **never reflection** on
-a source string — so it is anti-RCE by construction; a dispatch to an
-un-registered (built-in) method is rejected cleanly (the Collections batch).  And
+a source string — so it is anti-RCE by construction; a dispatch to a built-in
+method the module never defined routes to the Collections runtime (below) or, if
+not lowered yet, is rejected cleanly.  And
 **slice 3** — `InstanceVars`: `@v = x` / `@v` (`Scope::Instance`) →
 `_sir_ivar_set` / `_sir_ivar_get` on the receiver's lazily-allocated `@name →
 value` map (an unset `@v` reads nil), and a bare `self` → `_sir_self()`.  The
@@ -143,6 +144,14 @@ methods register like a class's, `include M` (`_sir_register_include`) folds M's
 methods into a class's instance-method resolution and `extend M`
 (`_sir_register_extend`) into its class-method resolution — completing the C
 OOP surface (**6-backend OOP parity**).
+
+And the **Collections** batch has begun (**slice 1** — String methods): a
+`__method__` dispatch to a built-in name the module never defined routes to the
+runtime dispatcher `_sir_builtin_method`, which type-checks the receiver and
+applies the implementation.  Covered so far: `length`/`size`, `upcase`,
+`downcase`, `reverse`, `empty?`, `to_s` (`length`/`size`/`empty?` polymorphic
+over String/Array/Hash).  A wrong-type receiver raises `NoMethodError`; a
+built-in method not lowered yet is still rejected cleanly.
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
 `Intrinsics`, a `class << self` singleton, and
