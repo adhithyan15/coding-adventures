@@ -105,23 +105,23 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 30, 2026 at `4ef440685` after the Haskell
+inventory was regenerated on July 30, 2026 at `ad8bbd75a` after the Haskell
 `barcode-1d` and `http-core` ports, the Go/Rust `multi-directed-graph` slice,
 the Linux OCI preflight and external-authority contracts, and a new wave of
 Rust-only package families. The latest refresh added the Rust-only
-`venture-browser-macos` identity, an Apple-native AppKit/CoreText/Metal host,
-after the earlier `smart-home-runtime-store`, `hue-integration`, and
-`venture-browser-core` additions and found zero canonical collisions or unknown
-language buckets:
+`smart-home-automation-runtime` identity after `venture-browser-macos`, an
+Apple-native AppKit/CoreText/Metal host, and the earlier
+`smart-home-runtime-store`, `hue-integration`, and `venture-browser-core`
+additions. It found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
 | Present in 10-15 languages | 172 | 278 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 742 | 10,388 |
+| Present in one language | 743 | 10,402 |
 
-The loop must not start by attempting 10,388 singleton ports. It should finish
+The loop must not start by attempting 10,402 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The July 29 lane audit is:
@@ -774,6 +774,23 @@ build-graph dependency discovery so the follow-on `http1` edge is visible to
 incremental CI. The package now spans 12 established lanes, reduces the
 high-consensus backlog to 278 slots, and leaves 3 gaps in the Haskell lane.
 
+The selected thirty-second Haskell slice is `http1`, the direct NET04 consumer
+of that merged `http-core` foundation. It closes one ready protocol edge,
+validates the repaired Cabal dependency graph, and unlocks the remaining
+Haskell high-consensus tail. Its security review also exposed a shared NET04
+contract gap: established implementations need fail-closed framing for
+transfer-encoding/content-length ambiguity, strict wire grammar, bounded head
+resources, response-method context, and redacted typed errors. The Haskell
+slice establishes that contract; `http1-safe-framing-backfill` tracks the
+remaining established lanes as a separate dependency-shaped tranche.
+
+The same slice exposed legacy Haskell scaffold capability metadata:
+`required_capabilities.json` is still emitted as an incomplete one-field
+object, and the merged `http-core` package retains that shape. The current
+`http1` package carries a schema-valid v1 pure-computation manifest;
+`haskell-scaffold-capability-schema` tracks generator golden/schema coverage
+and the existing-package backfill.
+
 Recommended family order:
 
 1. Leaf algorithms and data structures.
@@ -809,18 +826,20 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 547 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 548 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30 inventories added seven Rust singleton identities that now have
+The July 30 inventories added eight Rust singleton identities that now have
 explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
 `venture-browser-core` needs a portable-core versus native-boundary review.
 `smart-home-discovery-service`, `hue-integration`, and
-`smart-home-runtime-store` are likely native/service/storage applicability
-cases. `venture-browser-macos` is an Apple-native AppKit/CoreText/Metal host
-whose expected classification is `native-source`, not a blind 14-lane port.
+`smart-home-runtime-store`, plus the newly merged
+`smart-home-automation-runtime`, are likely native/service/storage
+applicability cases. `venture-browser-macos` is an Apple-native
+AppKit/CoreText/Metal host whose expected classification is `native-source`,
+not a blind 14-lane port.
 
 ### Likely portable Rust-led families
 
@@ -964,8 +983,8 @@ Delivery order:
    `crun`, Conmon, and state descriptors; permits only the two closed preflight
    operations; confines pathname-backed execution to retained Podman with
    Landlock; streams one combined output ceiling; and owns delegated-cgroup
-   descendant cleanup. The current selected tranche closes anonymous
-   executable memfds, `dlopen`, and executable mappings with separately
+   descendant cleanup. PR #9270 closed anonymous executable memfds, `dlopen`,
+   executable mappings, and descriptor-replenishment paths with separately
    reviewed kernel enforcement and Linux integration probes. A verifiable
    immutable runner-image TCB attestation is also required before the
    subsequent invariant-probe authority profile; this covers the protected
@@ -977,6 +996,11 @@ Delivery order:
    snapshot, and one adapter before trusted-case enforcement. Only protected
    evidence can mark Linux
    ready.
+
+   The attestation item is not implementable on the repository's mutable
+   GitHub-hosted `ubuntu-latest` runner without circular self-attestation. It
+   remains pending until an immutable/measured runner subject and out-of-band
+   attester are selected; unrelated deliverable parity edges continue meanwhile.
 7. Implement the native Windows boundary with AppContainer or LPAC plus Job
    Objects and root-handle reparse-safe filesystem operations. Keep macOS
    non-passing until a signed helper or isolated VM can prove the same

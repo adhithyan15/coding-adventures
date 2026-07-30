@@ -9,17 +9,17 @@
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
   "active_pr": {
-    "item_id": "build-tool-anonymous-exec-closure",
-    "pr_number": 9270,
-    "branch": "codex/build-tool-anonymous-exec-closure",
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9270"
+    "item_id": "haskell-http1",
+    "pr_number": 9290,
+    "branch": "codex/haskell-http1-parity",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9290"
   },
   "last_inventory": {
-    "revision": "4ef440685d641c5b5089ca73ff408100e46bee11",
+    "revision": "ad8bbd75a007085635455786498ab8caf1430df5",
     "schema_version": 2,
     "established_languages": 15,
-    "implementation_identities": 1192,
-    "implementation_package_slots": 4333,
+    "implementation_identities": 1193,
+    "implementation_package_slots": 4334,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 278,
     "canonical_collisions": 0,
@@ -130,13 +130,13 @@
     {
       "id": "build-tool-anonymous-exec-closure",
       "title": "Close anonymous executable and executable-mapping paths",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-linux-capability-preflight-broker"
       ],
       "branch": "codex/build-tool-anonymous-exec-closure",
       "pr_number": 9270,
-      "notes": "PR #9270 closes the remaining direct execution-authority gap before invariant-probe approval. The exact broker behavior now closes unlisted descriptors before its final sandbox transition, starts retained Podman through pathname execve under the exact-inode Landlock rule, and installs inherited amd64 classic-seccomp enforcement that kills architecture/x32 bypasses and denies execveat, new anonymous executable files, executable mappings, descriptor receipt or acquisition, SHM_EXEC, uselib, and io_uring surfaces. Linux integration probes cover the real close-before-sandbox sequence, retained-inode execution, foreign and anonymous FD denial, executable mmap/mprotect/pkey_mprotect, fresh-inode dlopen, descendant inheritance, and stable install failure. It creates no container, fixture, adapter, invariant probe, or readiness receipt."
+      "notes": "Merged PR #9270. The exact broker behavior closes unlisted descriptors before its final sandbox transition, starts retained Podman through pathname execve under the exact-inode Landlock rule, and installs inherited amd64 classic-seccomp enforcement that kills architecture/x32 bypasses and denies execveat, new anonymous executable files, executable mappings, descriptor receipt or acquisition, SHM_EXEC, uselib, and io_uring surfaces. Linux integration probes cover the real close-before-sandbox sequence, retained-inode execution, foreign and anonymous FD denial, executable mmap/mprotect/pkey_mprotect, fresh-inode dlopen, descendant inheritance, and stable install failure. It creates no container, fixture, adapter, invariant probe, or readiness receipt."
     },
     {
       "id": "build-tool-execution-status-normalization",
@@ -339,34 +339,66 @@
     },
     {
       "id": "ocaml-infrastructure",
-      "title": "Add OCaml scaffolding, build integration, CI, capabilities, and logic-gates",
+      "title": "Add OCaml scaffolding, lane README, and package metadata support",
       "status": "pending",
-      "depends_on": ["ocaml-lane-contract", "build-tool-go-oracle"],
+      "depends_on": ["ocaml-lane-contract"],
       "branch": null,
       "pr_number": null,
-      "notes": "Use OCaml 5.2.1, opam 2.5.x, Dune 3.16.x, Alcotest, bisect_ppx, and ocamlformat."
+      "notes": "Add complete Go and TypeScript scaffold templates plus golden tests, repository ignores, capability metadata/schema support, and the lane README. Use OCaml 5.2.1, opam 2.5.x, Dune 3.16.x, Alcotest, bisect_ppx, and ocamlformat."
+    },
+    {
+      "id": "ocaml-build-substrate",
+      "title": "Integrate OCaml into the canonical Go build substrate",
+      "status": "pending",
+      "depends_on": ["ocaml-infrastructure", "build-tool-go-oracle"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add discovery, opam/Dune dependency resolution, source hashing, opam-switch serialization, language detection, validator support, shard cost, affected-node behavior, and CI workflow markers."
     },
     {
       "id": "ocaml-representative-core",
-      "title": "Port graph, directed-graph, and state-machine to OCaml",
+      "title": "Port logic-gates, graph, directed-graph, and state-machine to OCaml",
       "status": "pending",
-      "depends_on": ["ocaml-infrastructure"],
+      "depends_on": ["ocaml-build-substrate"],
       "branch": null,
       "pr_number": null,
       "notes": "This dependency chain validates opam metadata, resolver edges, BUILD order, and affected-node expansion."
     },
     {
+      "id": "ocaml-capability-analyzer",
+      "title": "Enforce OCaml capability declarations with compiler-libs ASTs",
+      "status": "pending",
+      "depends_on": ["ocaml-representative-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Cover process execution, dynamic loading, unsafe marshaling, and Obj.magic under the repository's explicit capability and reviewed-exception policy."
+    },
+    {
       "id": "ocaml-build-tool-and-promotion",
-      "title": "Implement the OCaml build tool and review 16-lane promotion",
+      "title": "Implement the native OCaml build tool",
       "status": "pending",
       "depends_on": [
         "ocaml-representative-core",
+        "ocaml-capability-analyzer",
         "build-tool-pure-domain-corpus",
         "build-tool-execution-semantics-corpus"
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Require conformance, two-way Go plan interchange, three-OS CI, capability enforcement, and explicit backlog acceptance."
+      "notes": "Implement on directed-graph and require shared conformance plus two-way Go build-plan interchange. This item does not promote the lane."
+    },
+    {
+      "id": "ocaml-lane-promotion",
+      "title": "Review and promote OCaml into the implementation denominator",
+      "status": "pending",
+      "depends_on": [
+        "ocaml-build-tool-and-promotion",
+        "ocaml-capability-analyzer",
+        "ocaml-representative-core"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Require real Ubuntu, macOS, and Windows tests without skips, a green representative chain and build tool, active capability enforcement, measured coverage, complete docs, and explicit review of the generated 16-lane backlog."
     },
     {
       "id": "dart-current-14-of-15",
@@ -380,11 +412,29 @@
     {
       "id": "haskell-http1",
       "title": "Port http1 to Haskell on the new http-core",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["haskell-http-core"],
+      "branch": "codex/haskell-http1-parity",
+      "pr_number": 9290,
+      "notes": "PR #9290 builds on merged Haskell http-core, closes one of Haskell's three high-consensus gaps, and establishes the fail-closed NET04 framing contract discovered during security review. The Linux runner-image TCB gate remains externally blocked because mutable ubuntu-latest cannot self-attest an immutable/measured runner identity. Local validation: GHC 9.4.8, 28 Hspec examples, 97% expression and 90% alternative coverage, schema-valid empty capability manifest, real Windows BUILD, http-core downstream test, Go resolver test/vet, affected plan http-core -> http1, collision report 4,335 slots / 277 gaps / zero collisions or unknown buckets, clean diff, and two independent final audits with no findings."
+    },
+    {
+      "id": "http1-safe-framing-backfill",
+      "title": "Backfill the fail-closed NET04 framing contract across every existing http1 lane",
+      "status": "pending",
+      "depends_on": ["haskell-http1"],
       "branch": null,
       "pr_number": null,
-      "notes": "Next protocol dependency node; validate the repaired Cabal dependency graph."
+      "notes": "Newly discovered during the Haskell http1 security review. Audit C, C#, Elixir, F#, Go, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript for TE/CL ambiguity, strict field/start-line grammar, duplicate Content-Length agreement, HEAD/CONNECT response context, bounded head resources, and redacted typed errors. C remains emerging but already has a permissive implementation that must be reconciled."
+    },
+    {
+      "id": "haskell-scaffold-capability-schema",
+      "title": "Repair Haskell scaffold capability manifests and legacy package metadata",
+      "status": "pending",
+      "depends_on": ["haskell-http1"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Newly discovered by the Haskell http1 fixture audit. The Go scaffold generator still emits the legacy {capabilities: []} shape for Haskell, and merged http-core retains it. Generate full schema-v1 package/version/justification metadata, add golden/schema tests, and backfill affected Haskell packages in a dependency-shaped wave."
     },
     {
       "id": "haskell-high-consensus-tail",
@@ -429,7 +479,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Current singleton leaders are Rust 547, Python 86, and TypeScript 84; do not port blindly."
+      "notes": "Current singleton leaders are Rust 548, Python 86, and TypeScript 84; do not port blindly."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -438,7 +488,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The July 30 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, and venture-browser-macos. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the three smart-home packages as likely native/service/storage applicability cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port."
+      "notes": "The July 30 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, and smart-home-automation-runtime. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, and automation-runtime packages as likely native/service/storage applicability cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port."
     },
     {
       "id": "c-cpp-graduation",
