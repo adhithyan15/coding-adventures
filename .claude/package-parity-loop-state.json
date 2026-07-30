@@ -8,18 +8,13 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": {
-    "item_id": "haskell-scaffold-capability-schema",
-    "pr_number": 9308,
-    "branch": "codex/haskell-scaffold-capability-schema",
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9308"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "8517e41b1c06fbb453c66b62c87c8b08135838f3",
+    "revision": "3b025282ee7000cda3478de51abac9b01ec7a5ff",
     "schema_version": 2,
     "established_languages": 15,
-    "implementation_identities": 1195,
-    "implementation_package_slots": 4337,
+    "implementation_identities": 1196,
+    "implementation_package_slots": 4338,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 277,
     "canonical_collisions": 0,
@@ -331,11 +326,11 @@
     {
       "id": "ocaml-lane-contract",
       "title": "Define OCaml emerging-lane and denominator-safe reporter contracts",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-contract"],
-      "branch": null,
+      "branch": "codex/ocaml-lane-contract",
       "pr_number": null,
-      "notes": "OCaml remains outside the established denominator until all promotion gates pass."
+      "notes": "Selected after merged PR #9308 and the collision-checked 3b025282e inventory because this focused contract makes the reporter denominator-safe, classifies OCaml without changing the established 15-language denominator, and unlocks every later OCaml scaffold, resolver, representative-package, capability, build-tool, and promotion tranche."
     },
     {
       "id": "ocaml-infrastructure",
@@ -430,11 +425,11 @@
     {
       "id": "haskell-scaffold-capability-schema",
       "title": "Repair Haskell scaffold capability manifests and legacy package metadata",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["haskell-http1"],
       "branch": "codex/haskell-scaffold-capability-schema",
       "pr_number": 9308,
-      "notes": "PR #9308 repairs the Go, TypeScript, and native Haskell scaffold paths; adds two language-neutral golden fixtures and a Draft 2020-12 CI contract test; backfills all ten invalid Haskell manifests; and records follow-up policy, convention, schema, hardening, and singleton-classification work. Local validation: Go tests/vet/build with 66.7% coverage; native Haskell 9/9 Hspec examples with coverage and -Wall plus real generated library/program builds; TypeScript build and 121/121 tests with 83.97% statement coverage and zero npm-audit findings; 8/8 pure backfill package tests; 16 manifests and 2 fixtures schema-valid with Ruff/Bandit clean; affected build-tool dry-run for 42 packages; parity report 1,195 identities / 4,337 slots / 277 high-consensus gaps / zero collisions or unknown buckets; clean diff; and independent final audits. The nonempty Conduit profiles remain proposed metadata and require Layer 5 review before merge or publish."
+      "notes": "Merged PR #9308 repairs the Go, TypeScript, and native Haskell scaffold paths; adds two language-neutral golden fixtures and a Draft 2020-12 CI contract test; backfills all ten invalid Haskell manifests; and records follow-up policy, convention, schema, hardening, and singleton-classification work. Local validation: Go tests/vet/build with 66.7% coverage; native Haskell 9/9 Hspec examples with coverage and -Wall plus real generated library/program builds; TypeScript build and 121/121 tests with 83.97% statement coverage and zero npm-audit findings; 8/8 pure backfill package tests; 16 manifests and 2 fixtures schema-valid with Ruff/Bandit clean; affected build-tool dry-run for 42 packages; parity report 1,195 identities / 4,337 slots / 277 high-consensus gaps / zero collisions or unknown buckets; clean diff; and independent final audits. GitHub recorded no review decision before merge; Layer 5 approval evidence for the nonempty Conduit profiles remains tracked by haskell-capability-policy-audit before publish or consumer use."
     },
     {
       "id": "haskell-capability-policy-audit",
@@ -524,7 +519,16 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The July 30 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, and smart-home-zwave-host. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, and Z-Wave serial-host packages as likely native/service/storage applicability cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port."
+      "notes": "The July 30 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, and smart-home-mqtt-integration. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, and MQTT integration packages as native/service/storage applicability cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core."
+    },
+    {
+      "id": "smart-home-mqtt-integration-security-hardening",
+      "title": "Declare MQTT host capabilities and replace ambient credentials with Vault leases",
+      "status": "pending",
+      "depends_on": ["rust-singletons-20260730-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the 3b025282e post-merge singleton audit. The Rust MQTT integration owns live network, environment, clock, console, credential, and runtime-mutation behavior but has no required_capabilities.json, and its CLI reads MQTT username/password directly from ambient environment variables despite D23's Vault-lease rule. Add truthful reviewed capability metadata, Vault-mediated credential delivery, redacted error paths, and focused integration tests before treating the native-source classification as complete."
     },
     {
       "id": "c-cpp-graduation",
