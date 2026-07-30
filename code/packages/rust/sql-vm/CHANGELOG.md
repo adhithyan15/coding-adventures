@@ -3,6 +3,16 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.40] - Unreleased
+
+### Changed
+
+- `CompiledSortKey` (re-exported from sql-codegen) gains an `output_index` field
+  used only during compilation to bind a positional `ORDER BY <n>` over an
+  aggregate to its output column. The VM is unaffected — `SortResult` still sorts
+  purely by the resolved `column` name; only test constructions of the struct
+  were updated to supply the new field.
+
 ## [0.4.39] - Unreleased
 
 ### Fixed

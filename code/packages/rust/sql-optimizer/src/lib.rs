@@ -538,6 +538,9 @@ fn fold_plan(plan: OptimizedPlan) -> OptimizedPlan {
                     ascending: k.ascending,
                     nulls_first: k.nulls_first,
                     collation: k.collation,
+                    // Preserve the positional-aggregate output-index binding across
+                    // constant folding (codegen resolves it to a column name).
+                    output_index: k.output_index,
                 })
                 .collect(),
         },
@@ -1825,6 +1828,7 @@ mod tests {
                 ascending: true,
                 nulls_first: None,
                 collation: None,
+                output_index: None,
             }],
         }
     }
@@ -2462,6 +2466,7 @@ mod tests {
                 ascending: true,
                 nulls_first: None,
                 collation: None,
+                output_index: None,
             }],
         };
         let opt = optimize_with_passes(plan, &[&DeadCodeEliminationPass]);
@@ -2641,6 +2646,7 @@ mod tests {
                     ascending: true,
                     nulls_first: None,
                     collation: None,
+                    output_index: None,
                 }],
             }),
             count: Some(10),

@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.14] - Unreleased
+
+### Added
+
+- **Positional `ORDER BY <n>` over an aggregate resolves to the output column.**
+  `CompiledSortKey` gains `output_index: Option<usize>`. When a sort key carries
+  one (set by the planner for an aggregate ordinal), the compiler resolves it to
+  the emitted name of the Project's column at that index via `output_column_name`
+  — running BEFORE the hidden-sort analysis so the key is treated as an existing
+  output column, not spuriously re-materialized. The VM then sorts by name as it
+  always has; `output_index` is `None` by the time bytecode runs.
+
 ## [0.6.13] - Unreleased
 
 ### Added
