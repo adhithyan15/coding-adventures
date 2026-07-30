@@ -1,0 +1,28 @@
+% ============================================================================
+% nitrogen-balance.query.adj — worked applications of the nitrogen balance.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a nutrition-support assessment into a protein intake
+% and a 24-hour urine urea nitrogen: it `import`s the grounded formulabook, `observe`s the two values, and
+% asks the engine to APPLY the cited nitrogen-balance formula. No arithmetic is stated by the consumer; the
+% engine computes each value EXACTLY (over exact rationals) and carries the article's citation as its proof,
+% on the CPU, with zero model calls.
+%
+% Worked case (protein intake = 125 g/day, urine urea nitrogen = 12 g): nitrogen balance =
+% 125 / 6.25 − (12 + 4) = 20 − 16 = 4 g/day (a positive, anabolic balance). Each query fixes one input and
+% asks the engine to recover another quantity; every answer is exact and the inversions COMPOSE (each
+% recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli nitrogen-balance.query.adj
+% ============================================================================
+
+import "nitrogen-balance.adj"
+
+% --- Nitrogen balance: the balance the protein and UUN imply (expect 4). -----------------------------
+observe protein_intake(125)
+observe urine_urea_nitrogen(12)
+? nitrogen_balance(protein_intake, urine_urea_nitrogen)   % expect 4
+
+% --- Inverse: the protein intake a balance of 4 implies at the same UUN (expect 125). ----------------
+observe nitrogen_balance(4)
+? protein_intake(nitrogen_balance, urine_urea_nitrogen)   % expect 125
