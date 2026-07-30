@@ -3,6 +3,25 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.42] - Unreleased
+
+### Added
+
+- **Date/time functions `date` / `time` / `datetime` / `julianday` / `unixepoch`
+  (phase 1).** Ported from SQLite's integer-millisecond Julian Day (`iJD`)
+  representation, so results match bit-for-bit, including field normalization
+  (`date('2026-02-30')` → `2026-03-02`) and the numeric-Julian-day path. Each
+  function takes an optional time value — an ISO-8601 string (`YYYY-MM-DD`, with
+  a space or `T` separator, optional `HH:MM[:SS[.fff]]` and trailing `Z`; or a
+  bare time anchored to 2000-01-01), a numeric Julian day (int/real/numeric
+  string, range `[0, 5373484.5)`), or `'now'`; absent means `'now'`. Invalid
+  fields (month ∉ 1–12, day ∉ 1–31, partial/garbage text) yield NULL. New
+  helpers: `ymd_hms_to_ijd`/`ijd_to_ymd`/`ijd_to_hms` (calendar↔`iJD`),
+  `parse_iso_datetime`/`parse_time_field`/`parse_seconds_field`,
+  `julian_number_to_ijd`, `now_ijd`, and the `date`/`time`/`datetime`/`julianday`/
+  `unixepoch` front-ends. Trailing date/time MODIFIERS are deferred to phase 2 —
+  declined with an error rather than silently ignored. No new dependencies.
+
 ## [0.4.41] - Unreleased
 
 ### Added
