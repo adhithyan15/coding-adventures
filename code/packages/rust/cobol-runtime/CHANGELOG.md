@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.75.0 — STRING with a figurative-constant SPACE/ZERO sending field — 2026-07-30
+
+- `STRING … INTO …` now accepts a **figurative constant** SPACE or ZERO as a sending field, mapped to
+  its single-character image — SPACE→`" "` (0x20), ZERO→`"0"` (0x30) — dropping into the concatenation
+  exactly like a 1-char string literal. Every spelling folds identically (SPACE/SPACES,
+  ZERO/ZEROS/ZEROES). Byte-identical to the compiler (0.71.0).
+- **A figurative reduces to the string-literal sending-field path.** `string_source_chars` maps
+  `Fig::Space` → `" "` and `Fig::Zero` → `"0"`, then the existing DELIMITED BY, non-ASCII-guard,
+  WITH POINTER, and ON OVERFLOW machinery apply unchanged. Both images are ASCII, so the non-ASCII
+  sending-field-under-DELIMITED-BY guard passes.
+- **Fig is closed at {Space, Zero}, so no non-ASCII figurative can reach the path.** A numeric item, a
+  group item, and a computed reference modification as a STRING sending field remain later rungs,
+  unchanged. Symmetric to the CONVERTING figurative rung (0.74.0).
+
 ## 0.74.0 — INSPECT CONVERTING with a figurative-constant SPACE/ZERO FROM/TO operand — 2026-07-30
 
 - `INSPECT src CONVERTING from TO to [{BEFORE|AFTER} x]` now accepts a **figurative constant** SPACE or

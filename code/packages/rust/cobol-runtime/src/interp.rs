@@ -731,8 +731,9 @@ impl Machine {
     /// full — `DELIMITED BY SIZE`). An alphanumeric item gives its whole storage
     /// (trailing spaces and all); a string literal gives its text; a numeric
     /// literal gives its source digits verbatim (matching the compiler, which
-    /// concatenates the literal's lexed text). A numeric item, a group item, and a
-    /// figurative constant as a source are later rungs.
+    /// concatenates the literal's lexed text). A figurative constant SPACE/ZERO is
+    /// accepted as its single-character image — SPACE→`" "`, ZERO→`"0"` — reducing
+    /// to the string-literal path. A numeric item and a group item stay later rungs.
     ///
     /// A reference-modification sending field — `WS(start:len)` — contributes the
     /// sliced substring, produced by the shared [`Self::refmod_string`] evaluator
@@ -747,9 +748,13 @@ impl Machine {
         match op {
             Operand::Lit(Lit::Str(s)) => Ok(s.clone()),
             Operand::Lit(Lit::Num(s)) => Ok(s.clone()),
-            Operand::Lit(Lit::Fig(_)) => Err(RuntimeError::Unsupported(
-                "a figurative constant as a STRING sending field is a later rung".into(),
-            )),
+            // A figurative constant SPACE/ZERO reduces to its single-character
+            // image, dropping into the concat like a 1-char string literal. Both
+            // are ASCII, so the non-ASCII sending-field guard passes unchanged.
+            // `Fig` is exactly {Space, Zero}, so these two arms are exhaustive for
+            // the figurative case; a numeric/group item stays a later rung below.
+            Operand::Lit(Lit::Fig(Fig::Space)) => Ok(" ".into()),
+            Operand::Lit(Lit::Fig(Fig::Zero)) => Ok("0".into()),
             Operand::RefMod { base, start, len } => {
                 // Constant (literal) indices only: a computed data-name index gives a
                 // run-time length the compiler's compile-time STRING image contract

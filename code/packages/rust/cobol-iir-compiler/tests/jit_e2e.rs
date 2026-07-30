@@ -3242,6 +3242,139 @@ fn string_with_numeric_literal_source() {
 }
 
 // ---------------------------------------------------------------------------
+// STRING with a FIGURATIVE-CONSTANT sending field — SPACE/ZERO reduce to a
+// single-character image (SPACE→" ", ZERO→"0"), dropping into the concat exactly
+// like a 1-char string literal on BOTH engines (oracle string_source_chars,
+// compiler string_source). `Fig` is closed at {Space, Zero}, both ASCII, so the
+// non-ASCII-sending-field guard passes unchanged and no non-ASCII figurative can
+// reach the path. Every case pins the compiled JIT output to the oracle.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn string_figurative_space_sending_field_delimited_by_size() {
+    // SPACE contributes its single-char image " ": " " ++ "X" = " X" into a
+    // PIC X(2) receiver.
+    let out = assert_matches_oracle(&wrap(
+        &["01  D  PIC X(2) VALUE SPACES."],
+        &["STRING SPACE \"X\" DELIMITED BY SIZE INTO D.", "DISPLAY D.", "STOP RUN."],
+    ));
+    assert_eq!(out, " X\n");
+}
+
+#[test]
+fn string_figurative_zero_sending_field() {
+    // ZERO contributes its single-char image "0": "A" ++ "0" ++ "B" = "A0B" into
+    // a PIC X(3) receiver.
+    let out = assert_matches_oracle(&wrap(
+        &["01  D  PIC X(3) VALUE SPACES."],
+        &["STRING \"A\" ZERO \"B\" DELIMITED BY SIZE INTO D.", "DISPLAY D.", "STOP RUN."],
+    ));
+    assert_eq!(out, "A0B\n");
+}
+
+#[test]
+fn string_figurative_plural_spellings() {
+    // SPACE/SPACES and ZERO/ZEROS/ZEROES are the SAME figurative constant, so every
+    // spelling folds to the identical single-char image — all four programs below
+    // produce byte-identical output (" X" for the space spellings, "0X" for zero).
+    let space_singular = assert_matches_oracle(&wrap(
+        &["01  D  PIC X(2) VALUE SPACES."],
+        &["STRING SPACE \"X\" DELIMITED BY SIZE INTO D.", "DISPLAY D.", "STOP RUN."],
+    ));
+    let space_plural = assert_matches_oracle(&wrap(
+        &["01  D  PIC X(2) VALUE SPACES."],
+        &["STRING SPACES \"X\" DELIMITED BY SIZE INTO D.", "DISPLAY D.", "STOP RUN."],
+    ));
+    assert_eq!(space_singular, " X\n");
+    assert_eq!(space_plural, space_singular);
+
+    let zero_singular = assert_matches_oracle(&wrap(
+        &["01  D  PIC X(2) VALUE SPACES."],
+        &["STRING ZERO \"X\" DELIMITED BY SIZE INTO D.", "DISPLAY D.", "STOP RUN."],
+    ));
+    let zeros = assert_matches_oracle(&wrap(
+        &["01  D  PIC X(2) VALUE SPACES."],
+        &["STRING ZEROS \"X\" DELIMITED BY SIZE INTO D.", "DISPLAY D.", "STOP RUN."],
+    ));
+    let zeroes = assert_matches_oracle(&wrap(
+        &["01  D  PIC X(2) VALUE SPACES."],
+        &["STRING ZEROES \"X\" DELIMITED BY SIZE INTO D.", "DISPLAY D.", "STOP RUN."],
+    ));
+    assert_eq!(zero_singular, "0X\n");
+    assert_eq!(zeros, zero_singular);
+    assert_eq!(zeroes, zero_singular);
+}
+
+#[test]
+fn string_figurative_mixed_with_literal_and_item() {
+    // A figurative alongside a data-name item and a string literal in one STRING
+    // list: item "AB" ++ SPACE " " ++ literal "-" ++ ZERO "0" ++ item "CD" =
+    // "AB -0CD" into a wide-enough PIC X(8) receiver.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(2) VALUE \"AB\".",
+            "01  B  PIC X(2) VALUE \"CD\".",
+            "01  T  PIC X(8) VALUE SPACES.",
+        ],
+        &[
+            "STRING A SPACE \"-\" ZERO B DELIMITED BY SIZE INTO T.",
+            "DISPLAY T.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "AB -0CD \n");
+}
+
+#[test]
+fn string_figurative_with_pointer() {
+    // A figurative sending field composes with WITH POINTER: SPACE places its single
+    // char " " at pointer 1 (0-based 0) into a "....." receiver → " ...." with the
+    // pointer advanced by 1 to 1 + 1 = 2 ("02").
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  T  PIC X(5) VALUE \".....\".",
+            "01  P  PIC 9(2) VALUE 1.",
+        ],
+        &[
+            "STRING SPACE DELIMITED BY SIZE INTO T WITH POINTER P.",
+            "DISPLAY T.",
+            "DISPLAY P.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, " ....\n02\n");
+}
+
+#[test]
+fn string_figurative_delimited_by_delimiter() {
+    // Under DELIMITED BY a delimiter equal to the figurative char, the 1-char image
+    // is truncated at its OWN first char: SPACE's image " " scanned for the delimiter
+    // " " yields the empty prefix, so the field contributes nothing and the receiver
+    // keeps its VALUE. Both engines agree via assert_matches_oracle.
+    let out = assert_matches_oracle(&wrap(
+        &["01  D  PIC X(3) VALUE \"ZZZ\"."],
+        &["STRING SPACE DELIMITED BY \" \" INTO D.", "DISPLAY D.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ZZZ\n");
+}
+
+#[test]
+fn string_figurative_all_ascii_characterization() {
+    // NON-ASCII PARITY: `Fig` is closed at {Space, Zero}, both inherently ASCII, so
+    // NO non-ASCII figurative operand exists to reach this path — the single-char
+    // image is always ASCII and the compiler's byte scan and the oracle's char scan
+    // coincide. (A non-ASCII DATA-NAME sending field is the separate, pre-existing
+    // byte-vs-char chip, deliberately not exercised here.) This all-ASCII case pins
+    // the figurative image byte-identical: SPACE " " ++ ZERO "0" ++ literal "z" =
+    // " 0z" into a PIC X(4) receiver.
+    let out = assert_matches_oracle(&wrap(
+        &["01  T  PIC X(4) VALUE SPACES."],
+        &["STRING SPACE ZERO \"z\" DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, " 0z \n");
+}
+
+// ---------------------------------------------------------------------------
 // STRING … DELIMITED BY a single-char delimiter — each sending field contributes
 // only its PREFIX up to (not including) the first occurrence of the delimiter in
 // that field; the per-field prefixes are concatenated and overlaid EXACTLY as the
