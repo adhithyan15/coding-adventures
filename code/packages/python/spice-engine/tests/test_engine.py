@@ -1078,6 +1078,18 @@ def test_mos_model_card_rejects_non_finite_channel_modulation() -> None:
             normalize_model_card("Minvalid", "nmos", {"LAM": invalid_modulation})
 
 
+def test_mos_model_card_rejects_non_positive_or_non_finite_surface_potential() -> None:
+    for value in (0.1, 0.84, 2.0):
+        valid = normalize_model_card("Mvalid", "nmos", {"PHI": value})
+        assert valid.parameters["PHI"] == pytest.approx(value)
+
+    for invalid_potential in (-math.inf, -0.1, 0.0, math.inf, math.nan):
+        with pytest.raises(
+            ValueError, match="MOSFET PHI must be finite and positive"
+        ):
+            normalize_model_card("Minvalid", "nmos", {"PHI": invalid_potential})
+
+
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
     circuit = Circuit()
     circuit.add(JFET("J1", "drain", "gate", "0", Kf=-1.0))
