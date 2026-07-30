@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.30.1] — 2026-07-30 — ADR-4: adj-verify byte-anchors an argument (proven end-to-end)
+
+Because an `argument` desugars to facts + rules (ADR-2), `adj-verify` already delivers the
+ADJ-ARGUMENT-IR §4 argument pass with **no new verifier code**: a premise's pinned citation is
+byte-anchored by the existing `verify_quote`/snapshot re-check, and the thesis is re-derived by
+the SLD re-check. New e2e (`argument_verify_e2e.rs`, 2) proves it: a snapshot-pinned argument
+confirms its premise cite (`quotes_verified:1`, `status:verified`) and re-derives its thesis,
+while a **drifted** citation (a quote absent from the pinned source) fails the run
+(`verified:false`, `quote_missing`). Test + spec only; no shipped-code change. The adversarial
+warrant re-refutation and `--explain` argument-chain rendering are follow-ups (spec §4/§7).
+
 ## [0.30.0] — 2026-07-30 — ADR-3: argument grounding gate — an un-sourced argument won't compile
 
 Picks up adj-lang 0.67's structural grounding gate. New e2e (`argument_surface_e2e.rs`, now 6):

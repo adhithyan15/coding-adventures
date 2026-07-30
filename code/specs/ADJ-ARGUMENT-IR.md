@@ -173,6 +173,18 @@ in the lowered program, re-confirm —
 A failure at any point is a hard `verified: false`, exactly as a narrowing mismatch is — so a
 shared or cached argument that has since drifted from its sources is caught, not asserted.
 
+> **Shipped (ADR-4), delivered by the desugaring.** Because an `argument` lowers to facts +
+> rules (§2.3), `adj-verify` already re-checks it with **no new verifier code**: a premise's
+> pinned citation (`quote "…" at <offset> snapshot "<hex>"`, the same pin a `relate` carries) is
+> byte-anchored by the existing `logic_engine::verify_quote` the fact rides on, and the thesis is
+> re-derived by the SLD re-check that re-runs every rule (`kind: FromRule`, `logic: rechecked`).
+> Verified end-to-end: a snapshot-pinned argument confirms its premise cite (`quotes_verified ≥ 1`,
+> `status: verified`) and re-derives its thesis; a **drifted** citation — a quote that is not a
+> verbatim slice of the pinned source — fails the run (`verified: false`, `quote_missing`). The
+> warrant re-refutation of §3.2 (an *adversarial* re-read) and rendering the argument chain in
+> `--explain` (an SLD proof chain, which `--explain` does not render today) are the remaining
+> follow-ups; the byte-anchor + re-derivation of §4 are done.
+
 ---
 
 ## 5. Relationship to the existing IR (`adjudication-ir`)
@@ -244,8 +256,13 @@ grounding payload the §3 gate checks. Final syntax fixed in ADR-2.
   combined-bytes justification (ADJ61/62), decision-sensitivity, and underdetermination (ADJ64) are
   **model-in-the-loop** layers (the `justify_gate.py` / `underdetermination.py` path) that sit
   *above* the deterministic CLI — not re-implemented inside it.
-- **ADR-4 — `adj-verify` argument pass:** the §4 re-checks (warrant re-refutation + re-derivation
-  + attack-set stability) folded into `adj-verify`, with a tampered-warrant e2e that fails hard.
+- **ADR-4 — `adj-verify` argument pass** ✅ **shipped (byte-anchor + re-derivation)**: proven,
+  by e2e, to be delivered by the desugaring — `adj-verify` byte-anchors a snapshot-pinned argument's
+  premise citations (`verify_quote`, `quotes_verified ≥ 1`) and re-derives its thesis (SLD re-check),
+  failing hard on a drifted citation (`verified: false`, `quote_missing`). No new verifier code — the
+  argument IS facts + rules, so the existing machinery re-checks it. **Follow-ups:** the *adversarial*
+  warrant re-refutation (§3.2, which is model-in-the-loop) and rendering the argument chain in
+  `--explain` (an SLD proof chain — distinct from the differential/compute trace `--explain` renders).
 - **ADR-5 — worked research-paper decomposition end-to-end:** a real (open-access) paragraph →
   argument graph → engine derives the thesis → `--explain` → `adj-verify --snapshots`, one
   cross-domain example (deliberately non-medical), proving the whole pipeline on unseen prose.
