@@ -1,5 +1,7 @@
 # Changelog
 
+- Reject negative or non-finite Level-1 MOS model-card `GAMMA` values with a
+  stable diagnostic before body-effect and temperature preprocessing.
 - Reject non-positive or non-finite Level-1 MOS model-card `PHI` values with a
   stable diagnostic before electrostatic and temperature preprocessing.
 - Reject non-finite Level-1 MOS model-card `LAMBDA` / `LAM` values with a

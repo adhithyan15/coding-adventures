@@ -787,6 +787,26 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects negative or non-finite MOS body-effect coefficient", () => {
+    for (const value of [0.0, 0.27, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { GAMMA: value });
+      expect(valid.parameters.GAMMA).toBe(value);
+    }
+
+    for (const invalidCoefficient of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", {
+          GAMMA: invalidCoefficient,
+        }),
+      ).toThrow("MOSFET GAMMA must be finite and non-negative");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,
