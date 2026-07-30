@@ -1,5 +1,27 @@
 # Changelog — `twig-aot`
 
+## 0.48.1 - 2026-07-30 — Native closures under the GC: capstone proof
+
+Test + spec only; no production-source or ABI change. Establishes on real hardware that Twig's
+**native closures already run and are already GC-managed**, closing the last "every Twig heap
+feature has a native GC in the AOT path" claim — and correcting a stale audit that believed
+closures fell back to the embedded VM.
+
+- **New smoke test** `end_to_end_closure_captured_env_survives_collect` (macOS/aarch64): a native
+  program builds a closure that captures the value 41, triggers a garbage collection **while the
+  closure is live**, then **calls** the closure and asserts it returns 41. Run under a no-collect
+  baseline, a **precise** (non-moving) collect, and a **compacting** (moving) collect — all return
+  41. This proves the captured environment survives (and relocates through) a GC and the closure
+  stays callable; a dropped or mangled capture would be a closure-specific use-after-free that the
+  bare-cons-cell survival tests do not exercise (they never build or *call* a closure).
+- **Why this already worked.** `iir-builtin-lowering::lower_closures_to_heap` (E6d-7a) rewrites
+  `alloc_closure`/`call_closure` into a `__dyn_cons` cons chain `(box(idx) . caps…)` + a synthesized
+  `__dyn_call_closure` direct-dispatch function *before* the backend runs, so closures compile with
+  the ops the native backend already lowers, and their cells are the same precise/movable
+  `__gc_alloc_kind({0,8})` cons cells every list uses. No `alloc_closure`/`call_closure` backend
+  handler — or the env-pointer codegen sketched in `AOT00-T6` — is needed; that spec is corrected
+  in place and its env-pointer design demoted to an unscheduled future optimization.
+
 ## 0.48.0 - 2026-07-29 — Twig strings under the collector (stop the calloc leak)
 
 Brings the Twig native-AOT **string** heap type under gc-core, so string-heavy programs no
