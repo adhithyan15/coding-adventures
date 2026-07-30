@@ -116,9 +116,9 @@ enum ScalarType {
     /// the VM/JIT execute as doubles.
     Real,
     Boolean,
-    /// LANG-FULL AL4 literal-backed string scalar. This is not a full dynamic
-    /// ALGOL string model yet: a variable is printable only after a literal
-    /// assignment emits a direct E4 `str_const` to its slot.
+    /// LANG-FULL E4 scalar string. Local slots can hold literal values or
+    /// runtime string-procedure results; captured string globals remain outside
+    /// the current slice.
     String,
 }
 
@@ -269,9 +269,13 @@ struct Compiler {
     /// share it.  Saved/restored around nested blocks.
     block_captured: HashSet<String>,
     /// String slots known to be backed by a direct E4 `str_const` in the
-    /// current function. Static backends such as WASM use that producer table
-    /// for `print_str`, so AL4 only lets `print(s)` through after `s := '...'`.
+    /// current function. This preserves the static fast path and restricts
+    /// ordering comparisons to values with compile-time string contents.
     literal_string_slots: HashSet<String>,
+    /// String slots that hold a defined value in source order. Unlike
+    /// `literal_string_slots`, this also covers runtime results such as a
+    /// string procedure call copied into a scalar local.
+    initialized_string_slots: HashSet<String>,
 }
 
 impl Default for Compiler {
@@ -292,6 +296,7 @@ impl Default for Compiler {
             switches: HashMap::new(),
             block_captured: HashSet::new(),
             literal_string_slots: HashSet::new(),
+            initialized_string_slots: HashSet::new(),
         }
     }
 }
@@ -993,6 +998,8 @@ impl Compiler {
         let saved_referenced = std::mem::take(&mut self.referenced_labels);
         let saved_switches = std::mem::take(&mut self.switches);
         let saved_literal_string_slots = std::mem::take(&mut self.literal_string_slots);
+        let saved_initialized_string_slots =
+            std::mem::take(&mut self.initialized_string_slots);
         let saved_scopes = std::mem::replace(&mut self.scopes, vec![HashMap::new()]);
 
         // E6: a procedure body addresses an enclosing block scalar that was
@@ -1016,13 +1023,11 @@ impl Compiler {
         for (pname, pty) in &params {
             // Parameters and the result slot are real registers, never `own`.
             let slot = self.declare_var(pname, *pty, false)?;
-            // A string parameter is pre-initialized by the caller (the call
-            // site already emitted a str_const or passed a known-literal slot).
-            // Mark it as literal-backed so `print(s)` can emit `print_str`
-            // directly inside the body — the same invariant a variable holds
-            // after `s := 'HI'`.
+            // A string parameter is initialized by the caller, but can carry
+            // a runtime handle. It is deliberately not literal-backed: only
+            // direct `str_const` producers support ordering comparisons.
             if *pty == ScalarType::String {
-                self.literal_string_slots.insert(slot.clone());
+                self.initialized_string_slots.insert(slot.clone());
             }
             param_pairs.push((slot, pty.iir().to_string()));
         }
@@ -1042,6 +1047,7 @@ impl Compiler {
                     vec![Operand::Str(String::new())],
                     "str",
                 ));
+                self.initialized_string_slots.insert(result_slot.clone());
                 self.literal_string_slots.insert(result_slot.clone());
             } else {
                 self.emit(IIRInstr::new(
@@ -1116,6 +1122,7 @@ impl Compiler {
         self.referenced_labels = saved_referenced;
         self.switches = saved_switches;
         self.literal_string_slots = saved_literal_string_slots;
+        self.initialized_string_slots = saved_initialized_string_slots;
         self.scopes = saved_scopes;
 
         Ok(func)
@@ -1194,15 +1201,16 @@ impl Compiler {
                         binding.ty.name()
                     )));
                 }
-                if !self.literal_string_slots.contains(&binding.slot) {
+                if !self.initialized_string_slots.contains(&binding.slot) {
                     return Err(CompileError::Unsupported(format!(
-                        "standard output procedure {name:?} requires literal-backed string variable {var_name:?}"
+                        "standard output procedure {name:?} requires initialized string variable {var_name:?}"
                     )));
                 }
+                let value = self.read_scalar(binding);
                 self.emit(IIRInstr::new(
                     "print_str",
                     None,
-                    vec![Operand::Var(binding.slot)],
+                    vec![Operand::Var(value.slot)],
                     "void",
                 ));
                 continue;
@@ -1814,6 +1822,7 @@ impl Compiler {
                     vec![Operand::Str(literal.clone())],
                     "str",
                 ));
+                self.initialized_string_slots.insert(binding.slot.clone());
                 self.literal_string_slots.insert(binding.slot);
             }
             if saw_string_target {
@@ -1822,12 +1831,13 @@ impl Compiler {
         } else if let Some(src_name) = expr_variable_name(expr) {
             let src_binding = self.require_var(&src_name)?;
             if src_binding.ty == ScalarType::String {
-                if !self.literal_string_slots.contains(&src_binding.slot) {
+                if !self.initialized_string_slots.contains(&src_binding.slot) {
                     return Err(CompileError::Unsupported(format!(
-                        "string assignment requires literal-backed string variable {src_name:?}"
+                        "string assignment requires initialized string variable {src_name:?}"
                     )));
                 }
                 let src_slot = src_binding.slot.clone();
+                let source_is_literal = self.literal_string_slots.contains(&src_slot);
                 let mut saw_string_target = false;
                 for left in &left_parts {
                     let var_node = first_direct_node(left, "variable").ok_or_else(|| {
@@ -1870,23 +1880,15 @@ impl Compiler {
                             "str",
                         ));
                     }
-                    self.literal_string_slots.insert(target_slot);
+                    self.initialized_string_slots.insert(target_slot.clone());
+                    if source_is_literal {
+                        self.literal_string_slots.insert(target_slot);
+                    } else {
+                        self.literal_string_slots.remove(&target_slot);
+                    }
                 }
                 if saw_string_target {
                     return Ok(());
-                }
-            }
-        }
-
-        for left in &left_parts {
-            let var_node = first_direct_node(left, "variable")
-                .ok_or_else(|| CompileError::Malformed("left_part has no variable".into()))?;
-            if array_subscripts(var_node).is_none() {
-                let name = self.simple_variable_name(var_node)?;
-                if self.require_var(&name)?.ty == ScalarType::String {
-                    return Err(CompileError::Unsupported(
-                        "string assignment currently supports literal or literal-backed variable RHS only".into(),
-                    ));
                 }
             }
         }
@@ -1928,6 +1930,31 @@ impl Compiler {
                     rhs.ty.name(),
                     binding.ty.name()
                 )));
+            }
+            if binding.ty == ScalarType::String {
+                if binding.is_global {
+                    return Err(CompileError::Unsupported(
+                        "captured string assignments".into(),
+                    ));
+                }
+                if binding.slot != rhs.slot {
+                    let empty = self.fresh_temp();
+                    self.emit(IIRInstr::new(
+                        "str_const",
+                        Some(empty.clone()),
+                        vec![Operand::Str(String::new())],
+                        "str",
+                    ));
+                    self.emit(IIRInstr::new(
+                        "str_concat",
+                        Some(binding.slot.clone()),
+                        vec![Operand::Var(rhs.slot.clone()), Operand::Var(empty)],
+                        "str",
+                    ));
+                }
+                self.initialized_string_slots.insert(binding.slot.clone());
+                self.literal_string_slots.remove(&binding.slot);
+                continue;
             }
             if binding.is_global {
                 // E6: a captured block scalar is a module global.
@@ -2505,6 +2532,13 @@ impl Compiler {
                 }
                 let name = self.simple_variable_name(node)?;
                 let binding = self.require_var(&name)?;
+                if binding.ty == ScalarType::String
+                    && !self.initialized_string_slots.contains(&binding.slot)
+                {
+                    return Err(CompileError::Unsupported(format!(
+                        "string variable {name:?} is read before it is initialized"
+                    )));
+                }
                 Ok(self.read_scalar(binding))
             }
             "proc_call" => self.emit_proc_call(node),
@@ -3057,11 +3091,12 @@ impl Compiler {
                     )));
                 }
                 if lhs.ty == ScalarType::String {
-                    if !self.literal_string_slots.contains(&lhs.slot)
-                        || !self.literal_string_slots.contains(&rhs.slot)
+                    if matches!(op, "<" | "<=" | ">" | ">=")
+                        && (!self.literal_string_slots.contains(&lhs.slot)
+                            || !self.literal_string_slots.contains(&rhs.slot))
                     {
                         return Err(CompileError::Unsupported(
-                            "string comparisons require literal-backed string operands".into(),
+                            "string ordering comparisons require literal-backed operands".into(),
                         ));
                     }
                     let dest = self.fresh_temp();
@@ -4049,8 +4084,8 @@ mod tests {
     #[test]
     fn al4_unassigned_string_variable_print_rejects() {
         let err = compile_source("begin string s; print(s) end", "test")
-            .expect_err("unassigned string variables are not literal-backed");
-        assert!(format!("{err:?}").contains("literal-backed string variable"));
+            .expect_err("unassigned string variables are not initialized");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
     }
 
     // ── E4-dyn payoff (E4d-AL): string procedures ────────────────────────────
@@ -4064,6 +4099,14 @@ mod tests {
         "begin string procedure pick(n); value n; integer n; \
              if n > 0 then pick := 'HI' else pick := 'LO'; \
          print(pick(1)) end";
+
+    const RUNTIME_STRING_LOCAL_PROG: &str =
+        "begin string s; integer result; \
+             string procedure pick(n); value n; integer n; \
+               if n > 0 then pick := 'HI' else pick := 'LO'; \
+             s := pick(1); \
+             if s = 'HI' then result := 42 else result := 0; \
+             print(s) end";
 
     #[test]
     fn string_procedure_returns_runtime_string_and_prints() {
@@ -4122,6 +4165,51 @@ mod tests {
                     && matches!(i.srcs.first(), Some(Operand::Var(v)) if *v == call_dest)
             }),
             "print(pick(1)) must print the call's runtime-string result: {:?}",
+            main.instructions
+        );
+    }
+
+    #[test]
+    fn runtime_string_procedure_result_can_fill_a_scalar_variable() {
+        let module = compile_source(RUNTIME_STRING_LOCAL_PROG, "test")
+            .expect("runtime string local compiles");
+        let main = module
+            .functions
+            .iter()
+            .find(|f| f.name == "main")
+            .expect("has main");
+        let call_result = main
+            .instructions
+            .iter()
+            .find(|i| {
+                i.op == "call"
+                    && matches!(i.srcs.first(), Some(Operand::Var(name)) if name == "pick")
+            })
+            .and_then(|i| i.dest.as_deref())
+            .expect("main calls pick into a result slot");
+        assert!(
+            main.instructions.iter().any(|i| {
+                i.op == "str_concat"
+                    && i.dest.as_deref() == Some("s")
+                    && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == call_result)
+            }),
+            "s := pick(1) must copy the runtime result into s: {:?}",
+            main.instructions
+        );
+        assert!(
+            main.instructions.iter().any(|i| {
+                i.op == "str_eq"
+                    && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == "s")
+            }),
+            "s = 'HI' must compare the scalar string slot: {:?}",
+            main.instructions
+        );
+        assert!(
+            main.instructions.iter().any(|i| {
+                i.op == "print_str"
+                    && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == "s")
+            }),
+            "print(s) must consume the initialized scalar string: {:?}",
             main.instructions
         );
     }
@@ -4201,8 +4289,8 @@ mod tests {
     #[test]
     fn al4_unassigned_string_variable_copy_rejects() {
         let err = compile_source("begin string s, t; t := s; print(t) end", "test")
-            .expect_err("unassigned string variable copies are not literal-backed");
-        assert!(format!("{err:?}").contains("literal-backed string variable"));
+            .expect_err("unassigned string variable copies are not initialized");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
     }
 
     #[test]

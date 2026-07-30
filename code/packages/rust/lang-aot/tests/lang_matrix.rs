@@ -1279,12 +1279,25 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // ALGOL 60 — scalar string variables in the current AL4 foothold. A
-    // `string` scalar may be assigned from a literal, which emits `str_const`
-    // directly to the variable slot; `print(s)` is accepted only because that
-    // slot is literal-backed. This deliberately avoids dynamic string copies or
-    // captured string globals while still proving source-level string variables
-    // through the same E4 `print_str` path on all seven backends.
+    // ALGOL 60 — a runtime string procedure result can be copied into a
+    // scalar local, compared for equality, and printed. This drives a dynamic
+    // `str_concat` copy and `str_eq`, rather than only printing a call result.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string s; integer result; \
+                  string procedure pick(n); value n; integer n; \
+                    if n > 0 then pick := 'HI' else pick := 'LO'; \
+                  s := pick(1); \
+                  if s = 'HI' then result := 42 else result := 0; \
+                  print(s) end",
+        expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — scalar string variables on the direct literal fast path. A
+    // `string` scalar assigned from a literal emits `str_const` directly to its
+    // slot; the preceding row covers a runtime procedure-result copy, while
+    // captured string globals remain outside this slice.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -1293,9 +1306,8 @@ const PROGRAMS: &[Prog] = &[
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — the implementation-defined `output` spelling follows the same
-    // AL4 path as `print`: a literal-backed string slot consumed by E4
-    // `print_str`. This row proves the alias rather than only the `print`
-    // spelling, without widening into dynamic strings.
+    // E4 path as `print`: a direct-literal string slot consumed by `print_str`.
+    // This row proves the alias rather than only the `print` spelling.
     Prog {
         lang: Language::Algol60,
         ext: "alg",

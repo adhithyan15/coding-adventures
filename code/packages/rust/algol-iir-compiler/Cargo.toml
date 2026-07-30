@@ -1,8 +1,8 @@
 [package]
 name = "algol-iir-compiler"
-version = "0.28.0"
+version = "0.29.0"
 edition = "2021"
-description = "ALGOL 60 scalar frontend for the LANG VM Rust chain, lowering parsed ALGOL into interpreter_ir::IIRModule. v0.28.0 (E4d-AL, E4-dyn payoff): `string procedure`s — a typed procedure may return a runtime string; its result (the procedure name) is a str slot, and `print` gained a general string-expression path so `print(pick(1))` prints a string-procedure call result; v0.27.0 (AL-pow): the `↑` exponentiation operator (spelled `^`) — a nonnegative integer-literal exponent unrolls to repeated multiply (base type preserved), `real↑real` uses the f64_pow op; v0.26.0 (AL-multidim-bounds): multidim arrays with arbitrary/negative per-dimension lower bounds; v0.25.0 (AL-multidim-3D): 3-D integer arrays; v0.24.0 (AL-multidim-real): f64 multidim array elements."
+description = "ALGOL 60 scalar frontend for the LANG VM Rust chain, lowering parsed ALGOL into interpreter_ir::IIRModule. v0.29.0 (E4d-AL runtime locals): initialized scalar strings can receive a string-procedure result and then be copied, compared, and printed across the LANG VM/AOT/JIT chain; v0.28.0 (E4d-AL): `string procedure`s return runtime strings; v0.27.0 (AL-pow): `↑` exponentiation; v0.26.0 (AL-multidim-bounds): multidim arrays with arbitrary/negative per-dimension lower bounds."
 
 [dependencies]
 coding-adventures-algol-parser = { path = "../algol-parser" }

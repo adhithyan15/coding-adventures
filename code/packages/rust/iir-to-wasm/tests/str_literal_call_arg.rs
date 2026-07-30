@@ -146,3 +146,50 @@ fn str_slice_result_passed_to_strlen_returns_length() {
     };
     assert_eq!(run(module), 5, "strlen of a folded slice passed across a call must be its length");
 }
+
+/// A concatenation whose operands are function parameters cannot fold, so it
+/// must allocate a runtime string block even when the module has no array or
+/// slice instruction to request memory separately.
+#[test]
+fn runtime_str_concat_allocates_without_array_ops() {
+    let join = IIRFunction::new(
+        "join",
+        vec![("a".into(), "str".into()), ("b".into(), "str".into())],
+        "str",
+        vec![
+            IIRInstr::new(
+                "str_concat",
+                Some("joined".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                "str",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("joined".into())], "str"),
+        ],
+    );
+    let main = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("str_const", Some("he".into()), vec![Operand::Str("HE".into())], "str"),
+            IIRInstr::new("str_const", Some("llo".into()), vec![Operand::Str("LLO".into())], "str"),
+            IIRInstr::new(
+                "call",
+                Some("word".into()),
+                vec![Operand::Var("join".into()), Operand::Var("he".into()), Operand::Var("llo".into())],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("len".into()), vec![Operand::Var("word".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("len".into())], "i64"),
+        ],
+    );
+    let module = IIRModule {
+        name: "runtime_str_concat".into(),
+        functions: vec![join, main],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    assert_eq!(run(module), 5);
+}

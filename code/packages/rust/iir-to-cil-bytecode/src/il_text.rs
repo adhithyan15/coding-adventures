@@ -2880,4 +2880,52 @@ mod tests {
         assert!(il.contains("ldc.r8 (00 00 00 00 00 00 00 40)"),
             "2.0 should be the exact IEEE-754 LE bytes; got:\n{il}");
     }
+
+    #[test]
+    fn string_procedure_return_and_call_use_string_signatures() {
+        let pick = IIRFunction::new(
+            "pick",
+            vec![("n".into(), "i32".into())],
+            "str",
+            vec![
+                IIRInstr::new("str_const", Some("answer".into()), vec![Operand::Str("HI".into())], "str"),
+                IIRInstr::new("ret", None, vec![Operand::Var("answer".into())], "str"),
+            ],
+        );
+        let main = IIRFunction::new(
+            "main",
+            vec![],
+            "i32",
+            vec![
+                IIRInstr::new("const", Some("n".into()), vec![Operand::Int(1)], "i32"),
+                IIRInstr::new(
+                    "call",
+                    Some("returned".into()),
+                    vec![Operand::Var("pick".into()), Operand::Var("n".into())],
+                    "str",
+                ),
+                IIRInstr::new("str_const", Some("expected".into()), vec![Operand::Str("HI".into())], "str"),
+                IIRInstr::new(
+                    "str_eq",
+                    Some("matches".into()),
+                    vec![Operand::Var("returned".into()), Operand::Var("expected".into())],
+                    "i64",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("matches".into())], "i32"),
+            ],
+        );
+        let mut module = IIRModule::new("StringProcedure", "test");
+        module.functions.extend([pick, main]);
+        module.entry_point = Some("main".into());
+        let il = emit_il(&module, &IIRClrConfig::new("StringProcedure")).unwrap();
+        assert!(il.contains("string pick(int32 A_0)"), "missing string procedure signature:\n{il}");
+        assert!(
+            il.contains("call string StringProcedureProgram::pick(int32)"),
+            "missing string call signature:\n{il}"
+        );
+        assert!(
+            il.contains("System.String::Equals(string, string)"),
+            "string equality must use System.String::Equals:\n{il}"
+        );
+    }
 }

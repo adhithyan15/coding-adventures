@@ -22,6 +22,101 @@ fn assert_wellformed(bytes: &[u8], what: &str) {
     assert_eq!(&bytes[..8], &WASM_HEADER, "{what}: missing wasm magic/version header");
 }
 
+struct CapturePrintStr {
+    bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
+}
+
+impl wasm_execution::HostFunction for CapturePrintStr {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::I32, wasm_types::ValueType::I32],
+                results: vec![],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let ptr = args
+            .first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__print_str: missing ptr"))?
+            .as_i32()
+            .map_err(|error| wasm_execution::TrapError::new(error.message))?;
+        let len = args
+            .get(1)
+            .ok_or_else(|| wasm_execution::TrapError::new("__print_str: missing len"))?
+            .as_i32()
+            .map_err(|error| wasm_execution::TrapError::new(error.message))?;
+        if ptr < 0 || len < 0 {
+            return Err(wasm_execution::TrapError::new("__print_str: negative ptr/len"));
+        }
+
+        let start = usize::try_from(ptr)
+            .map_err(|_| wasm_execution::TrapError::new("__print_str: ptr overflow"))?;
+        let len = usize::try_from(len)
+            .map_err(|_| wasm_execution::TrapError::new("__print_str: len overflow"))?;
+        let end = start
+            .checked_add(len)
+            .ok_or_else(|| wasm_execution::TrapError::new("__print_str: range overflow"))?;
+        let memory = memory
+            .ok_or_else(|| wasm_execution::TrapError::new("__print_str: no linear memory"))?;
+        let bytes = (start..end)
+            .map(|offset| memory.load_i32_8u(offset).map(|byte| byte as u8))
+            .collect::<Result<Vec<_>, _>>()?;
+        self.bytes
+            .lock()
+            .expect("wasm print capture poisoned")
+            .extend_from_slice(&bytes);
+        Ok(vec![])
+    }
+}
+
+struct PrintStrHost {
+    bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
+}
+
+impl wasm_execution::HostInterface for PrintStrHost {
+    fn resolve_function(
+        &self,
+        module_name: &str,
+        name: &str,
+    ) -> Option<Box<dyn wasm_execution::HostFunction>> {
+        (module_name == "env" && name == "__print_str").then(|| {
+            Box::new(CapturePrintStr {
+                bytes: std::sync::Arc::clone(&self.bytes),
+            }) as Box<dyn wasm_execution::HostFunction>
+        })
+    }
+
+    fn resolve_global(
+        &self,
+        _module_name: &str,
+        _name: &str,
+    ) -> Option<(wasm_types::GlobalType, wasm_execution::WasmValue)> {
+        None
+    }
+
+    fn resolve_memory(
+        &self,
+        _module_name: &str,
+        _name: &str,
+    ) -> Option<wasm_execution::LinearMemory> {
+        None
+    }
+
+    fn resolve_table(
+        &self,
+        _module_name: &str,
+        _name: &str,
+    ) -> Option<wasm_execution::Table> {
+        None
+    }
+}
+
 /// A scalar McCarthy program emits a valid wasm module **and runs** to the
 /// right value on the in-repo runtime — the end-to-end proof of the
 /// McCarthy → wasm pipeline.
@@ -190,6 +285,28 @@ fn algol_nested_blocks_emit_and_run_on_wasm() {
         .load_and_run(&bytes, "main", &[])
         .expect("ALGOL nested-block wasm must run");
     assert_eq!(result, vec![42], "ALGOL nested blocks should return 42");
+}
+
+#[test]
+fn algol_runtime_string_local_emits_and_runs_on_wasm() {
+    let source = "begin string s; integer result; \
+                  string procedure pick(n); value n; integer n; \
+                    if n > 0 then pick := 'HI' else pick := 'LO'; \
+                  s := pick(1); \
+                  if s = 'HI' then result := 42 else result := 0; \
+                  print(s) end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_runtime_string")
+        .expect("ALGOL runtime string local should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL runtime string local)");
+
+    let output = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
+    let result = WasmRuntime::with_host(Box::new(PrintStrHost {
+        bytes: std::sync::Arc::clone(&output),
+    }))
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL runtime string wasm must run");
+    assert_eq!(result, vec![42]);
+    assert_eq!(&*output.lock().expect("wasm print capture poisoned"), b"HI");
 }
 
 /// The L3b-3a-3c capstone: a **cons** program compiles to WasmGC and runs
