@@ -6995,6 +6995,7 @@ mod tests {
                     name: "background".to_string(),
                     value: "#1e1e1e".to_string(),
                 }],
+                transitions: vec![],
                 states: Vec::new(),
             }],
         };
@@ -8705,6 +8706,7 @@ mod tests {
                         value: "8".to_string(),
                     },
                 ],
+                transitions: vec![],
                 states: Vec::new(),
             }],
         };
@@ -9898,6 +9900,7 @@ mod tests {
                         value: v.to_string(),
                     })
                     .collect(),
+                transitions: vec![],
                 states: Vec::new(),
             }],
         }
@@ -10894,6 +10897,7 @@ mod tests {
                         value: "right".to_string(),
                     },
                 ],
+                transitions: vec![],
                 states: Vec::new(),
             }],
         };

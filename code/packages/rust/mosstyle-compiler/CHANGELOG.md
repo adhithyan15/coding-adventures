@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Added - MSL transition declarations
+
+- Added part-level and state-local `transition` declarations with optional
+  easing values.
+- Duration and easing token references are resolved into a typed
+  `StyleTransition` IR and preserved in the backend-neutral style map JSON.
+- Generated Lattice emits deterministic comma-separated `transition`
+  declarations in authored order.
+- Validation now reports `TransitionPropertyNotDeclared` when a transition
+  references a property without a base declaration in the same part.
+
 ### Added - `unmatched_parts()` to catch style parts that match no layout part
 
 New public `unmatched_parts(&StyleDef, part_map_json) -> Vec<UnmatchedPart>`.

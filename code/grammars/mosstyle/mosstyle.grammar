@@ -68,22 +68,37 @@ part_path = NAME { SLASH NAME } ;
 # ============================================================================
 # Part items
 # ============================================================================
-# Each item is either a property declaration or a state block.
+# Each item is a property declaration, transition declaration, or state block.
 # LL(1) disambiguation:
 #   - First token KEYWORD ("state") → state_block
+#   - First token KEYWORD ("transition") → transition_decl
 #   - First token NAME               → property_decl
 
 part_item = state_block
+          | transition_decl
           | property_decl ;
 
 # ============================================================================
 # State blocks
 # ============================================================================
-# state state-name { property_decl* }
+# state state-name { state_item* }
 # State names (hover, pressed, focused, …) are NAME tokens in the token
 # grammar (not reserved keywords), validated semantically.
 
-state_block = KEYWORD NAME LBRACE { property_decl } RBRACE ;
+state_block = KEYWORD NAME LBRACE { state_item } RBRACE ;
+state_item = transition_decl
+           | property_decl ;
+
+# ============================================================================
+# Transition declarations
+# ============================================================================
+# transition <property-name> <duration> [ <easing> ] ;
+#
+# Durations and easing values may be design-token references or resolved
+# literals. The semantic compiler resolves tokens and supplies `ease-out` when
+# the easing value is omitted.
+
+transition_decl = KEYWORD NAME style_value [ style_value ] SEMICOLON ;
 
 # ============================================================================
 # Property declarations

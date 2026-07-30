@@ -5542,6 +5542,7 @@ mod tests {
                         value: v.to_string(),
                     })
                     .collect(),
+                transitions: vec![],
                 states: Vec::new(),
             }],
         }
@@ -5712,8 +5713,10 @@ mod tests {
                     name: "background".to_string(),
                     value: "#222".to_string(),
                 }],
+                transitions: vec![],
                 states: vec![StateStyle {
                     state: "hover".to_string(),
+                    transitions: vec![],
                     props: vec![StyleProp {
                         name: "background".to_string(),
                         value: "#444".to_string(),
@@ -6171,6 +6174,7 @@ mod tests {
         if !even.is_empty() {
             states.push(StateStyle {
                 state: "even".to_string(),
+                transitions: vec![],
                 props: even
                     .iter()
                     .map(|(k, v)| StyleProp {
@@ -6183,6 +6187,7 @@ mod tests {
         if !odd.is_empty() {
             states.push(StateStyle {
                 state: "odd".to_string(),
+                transitions: vec![],
                 props: odd
                     .iter()
                     .map(|(k, v)| StyleProp {
@@ -6197,6 +6202,7 @@ mod tests {
             parts: vec![PartStyle {
                 name: "sheet/data-row".to_string(),
                 base: Vec::new(),
+                transitions: vec![],
                 states,
             }],
         }
@@ -7636,6 +7642,7 @@ mod tests {
                     name: "align".to_string(),
                     value: value.to_string(),
                 }],
+                transitions: vec![],
                 states: vec![],
             }],
         };
@@ -7786,6 +7793,7 @@ mod tests {
                     name: "width".to_string(),
                     value: "10".to_string(),
                 }],
+                transitions: vec![],
                 states: vec![],
             }],
         };
@@ -7861,8 +7869,10 @@ mod tests {
             parts: vec![PartStyle {
                 name: "bar".to_string(),
                 base: vec![],
+                transitions: vec![],
                 states: vec![StateStyle {
                     state: "hover".to_string(),
+                    transitions: vec![],
                     props: vec![StyleProp {
                         name: "width".to_string(),
                         value: "99".to_string(),
@@ -8969,6 +8979,7 @@ mod tests {
                     name: "background".to_string(),
                     value: "blue".to_string(),
                 }],
+                transitions: vec![],
                 states: Vec::new(),
             }],
         };

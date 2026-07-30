@@ -2593,6 +2593,7 @@ mod tests {
         PartStyle {
             name: name.to_string(),
             base,
+            transitions: vec![],
             states,
         }
     }
@@ -2600,6 +2601,7 @@ mod tests {
     fn state(name: &str, props: Vec<StyleProp>) -> StateStyle {
         StateStyle {
             state: name.to_string(),
+            transitions: vec![],
             props,
         }
     }

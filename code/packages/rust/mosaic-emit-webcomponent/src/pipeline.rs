@@ -3214,6 +3214,7 @@ mod tests {
         PartStyle {
             name: name.to_string(),
             base,
+            transitions: vec![],
             states,
         }
     }
@@ -6204,10 +6205,12 @@ mod tests {
                 vec![
                     StateStyle {
                         state: "selected".to_string(),
+                        transitions: vec![],
                         props: vec![prop("background", "#264f78"), prop("color", "#ffffff")],
                     },
                     StateStyle {
                         state: "editing".to_string(),
+                        transitions: vec![],
                         props: vec![prop("background", "#1f4f3f")],
                     },
                 ],
@@ -6283,6 +6286,7 @@ mod tests {
                 vec![prop("padding", "2px")],
                 vec![StateStyle {
                     state: "selected".to_string(),
+                    transitions: vec![],
                     props: vec![prop("background", "blue")],
                 }],
             )],
@@ -6312,6 +6316,7 @@ mod tests {
                 ],
                 vec![StateStyle {
                     state: "selected".to_string(),
+                    transitions: vec![],
                     props: vec![prop("border-width", "1")],
                 }],
             )],

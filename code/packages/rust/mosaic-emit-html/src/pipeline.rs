@@ -3676,6 +3676,7 @@ mod tests {
                         value: "#eee".to_string(),
                     },
                 ],
+                transitions: vec![],
                 states: Vec::new(),
             }],
         };
@@ -3730,6 +3731,7 @@ mod tests {
                         value: "0".to_string(),
                     },
                 ],
+                transitions: vec![],
                 states: Vec::new(),
             }],
         };
@@ -3780,6 +3782,7 @@ mod tests {
                         value: "blue".to_string(),
                     },
                 ],
+                transitions: vec![],
                 states: Vec::new(),
             }],
         };
