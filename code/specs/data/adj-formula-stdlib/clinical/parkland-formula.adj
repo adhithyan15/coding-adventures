@@ -1,0 +1,91 @@
+% ============================================================================
+% parkland-formula.adj — the Parkland burn resuscitation formula
+% (total 24-hour fluid = 4 × weight × %TBSA burned) in the ADJ standard library.
+% ============================================================================
+% The parkland-formula entry of the *clinical* track — the most-used estimate of the crystalloid volume
+% a burn patient needs in the first 24 hours. A large burn leaks plasma into the tissues; the Parkland
+% formula sizes the replacement to the patient's mass and the fraction of the body surface burned, then
+% gives half in the first 8 hours and the rest over the next 16. THE TOTAL 24-HOUR FLUID IS 4 mL TIMES
+% THE BODY WEIGHT IN KILOGRAMS TIMES THE PERCENTAGE OF TOTAL BODY SURFACE AREA BURNED — i.e.
+% 4 × weight × %TBSA. It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together
+% with its two exact rearrangements (the weight a total volume implies at a given burn size, and the
+% burn size a total volume implies at a given weight). As with every compute library, a consumer states
+% NO arithmetic: it `import`s this file, binds the weight and the burned surface area from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is
+% performed by the model; the engine computes each value EXACTLY (over exact rationals), carrying the
+% formula's citation.
+%
+%     import "parkland-formula.adj"
+%     observe weight(80)   % "…80 kg…"          (span cited by the model)
+%     observe tbsa(30)      % "…30% TBSA burn…"  (span cited by the model)
+%     ? total_fluid(weight, tbsa)   % engine → 9600 (mL), the 24-hour Parkland volume
+%
+% The 4 mL/kg/%TBSA factor is the EXACT constant of the cited (adult) formula (not a measurement); the
+% formulas are otherwise exact expressions over the parameters, so every value the engine returns is
+% exact. They COMPOSE and invert cleanly around the worked case weight = 80 kg, TBSA = 30% (total fluid =
+% 4 × 80 × 30 = 9600 mL, of which half — 4800 mL — is given in the first 8 hours): the `total_fluid` a
+% consumer computes is exactly the value each inverse formula back-solves to recover its own measured
+% input (80, 30).
+%
+%   total_fluid(weight, tbsa) = 4 * weight * tbsa       % (24-hour fluid, mL)
+%   weight(total_fluid, tbsa) = total_fluid / (4 * tbsa) % (solved for weight)
+%   tbsa(total_fluid, weight) = total_fluid / (4 * weight)% (solved for %TBSA)
+%
+% NOTE ON UNITS AND MODELLING: weight in kilograms, TBSA as a plain percentage number (e.g. 30 for a 30%
+% burn, NOT 0.30), total fluid in millilitres over the first 24 hours. The cited page gives the ADULT
+% factor of 4 mL/kg/%TBSA; a paediatric variant uses 3 mL/kg/%TBSA and would be a sibling library
+% grounded the same way. The formula sizes the total 24-hour crystalloid; the "half in the first 8
+% hours" split and the choice of lactated Ringer's are stated by the same page but are separate from
+% this total-volume computation. This library only COMPUTES the volume; it does not itself titrate to
+% urine output (which ultimately guides real resuscitation).
+%
+% All three formulas are defended by the SAME clause — the quoted Parkland statement — because that one
+% sentence (the Parkland formula uses 4 mL per kg per %TBSA) sanctions the relation read every way. The
+% quote is transcribed verbatim from the StatPearls "Parkland Formula" article on the NCBI Bookshelf (a
+% current, non-archived article), so each `formula` carries the provenance envelope every shipped
+% grounded clause carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored —
+% the formula, including its 4 mL/kg/%TBSA constant, is a verbatim span of the cited page, not asserted
+% from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `weight`, `tbsa` and `total_fluid` each appear BOTH as a derived result and as an input
+% (of the other formulas), so each is a single dictionary term used in both roles. The `surface` lists
+% are the everyday names a decomposer maps onto the canonical term; the trailing comment records the
+% intended unit.
+% ----------------------------------------------------------------------------
+dictionary parkland_formula_vocab {
+    define weight        : finding  surface "weight", "body weight", "total body weight"                          % kilograms
+    define tbsa          : finding  surface "TBSA", "total body surface area", "percent TBSA", "burn surface area"  % percent
+    define total_fluid   : finding  surface "total fluid", "resuscitation fluid", "24-hour fluid", "parkland fluid"  % millilitres (first 24 h)
+}
+
+% ----------------------------------------------------------------------------
+% The Parkland formula, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the Parkland statement from the StatPearls "Parkland
+% Formula" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact
+% expression in the measured quantities and the cited 4 mL/kg/%TBSA constant, so the engine returns each
+% value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook parkland_formula_laws {
+    use parkland_formula_vocab
+
+    % Total 24-hour fluid — 4 mL times the weight times the percentage of TBSA burned.
+    formula total_fluid(weight, tbsa) = 4 * weight * tbsa
+        source "The Parkland formula uses 4 mL per patient weight in kilograms per percentage of TBSA burned"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537190/"
+        trust authoritative
+
+    % Weight — the same equation solved for the weight. Defended by the SAME sentence.
+    formula weight(total_fluid, tbsa) = total_fluid / (4 * tbsa)
+        source "The Parkland formula uses 4 mL per patient weight in kilograms per percentage of TBSA burned"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537190/"
+        trust authoritative
+
+    % Percentage of TBSA burned — the same equation solved for the burn size. The SAME sentence, read
+    % the third way.
+    formula tbsa(total_fluid, weight) = total_fluid / (4 * weight)
+        source "The Parkland formula uses 4 mL per patient weight in kilograms per percentage of TBSA burned"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537190/"
+        trust authoritative
+}
