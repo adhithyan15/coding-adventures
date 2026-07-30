@@ -1,0 +1,97 @@
+% ============================================================================
+% fractional-excretion-of-potassium.adj — the fractional excretion of potassium
+% (FEK = [(urine K / serum K) / (urine Cr / serum Cr)] × 100) in the ADJ standard library.
+% ============================================================================
+% The fractional-excretion-of-potassium entry of the *clinical* track — the fraction of the potassium
+% filtered by the glomerulus that ends up excreted in the urine, read off a single paired spot urine and
+% serum sample. Creatinine (freely filtered and essentially not reabsorbed) stands in for the glomerular
+% filtration, so the urine-to-serum creatinine ratio corrects the urine-to-serum potassium ratio for how
+% concentrated the urine is. FEK is the potassium companion of the fractional excretion of sodium
+% (fractional-excretion-of-sodium.adj): in a hypokalaemic patient a LOW FEK says the kidney is
+% appropriately conserving potassium (the loss is extrarenal, e.g. gastrointestinal), whereas a HIGH FEK
+% says the kidney is wasting potassium (a renal cause). THE FRACTIONAL EXCRETION OF POTASSIUM IS THE
+% URINE-TO-SERUM POTASSIUM RATIO DIVIDED BY THE URINE-TO-SERUM CREATININE RATIO, TIMES 100 — i.e.
+% [(urine K / serum K) / (urine Cr / serum Cr)] × 100. It ships as an importable, byte-provenanced,
+% PARAMETERIZED `formula`, together with two exact rearrangements (the urine potassium a given FEK implies,
+% and the serum potassium a given FEK implies). As with every compute library, a consumer states NO
+% arithmetic: it `import`s this file, binds the four laboratory values from its own byte-provenance
+% decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is performed by the
+% model; the engine computes each value EXACTLY (over exact rationals), carrying the formula's citation.
+%
+%     import "fractional-excretion-of-potassium.adj"
+%     observe urine_k(60)            % "…urine K 60…"           (span cited by the model)
+%     observe serum_k(5)             % "…serum K 5…"            (span cited by the model)
+%     observe urine_creatinine(120)  % "…urine creatinine 120…" (span cited by the model)
+%     observe serum_creatinine(1)    % "…serum creatinine 1…"   (span cited by the model)
+%     ? fek(urine_k, serum_k, urine_creatinine, serum_creatinine)   % engine → 10 (%)
+%
+% This is the potassium analogue of the fractional excretion of sodium: same ratio-of-ratios structure,
+% different measured analyte (potassium), answering a different clinical question (renal vs extrarenal
+% hypokalaemia rather than pre-renal vs intrinsic acute kidney injury). The × 100 turns the dimensionless
+% ratio into a percentage; the formula is otherwise an exact expression over the four measured values, so
+% every value the engine returns is exact. The three formulas COMPOSE and invert cleanly around the worked
+% case urine K = 60, serum K = 5, urine Cr = 120, serum Cr = 1 (FEK = (60/5)/(120/1) × 100 = 12/120 × 100 =
+% 10%): the `fek` a consumer computes is exactly the value each inverse formula back-solves to recover its
+% own measured input (60, 5).
+%
+%   fek(urine_k, serum_k, urine_creatinine, serum_creatinine) = (urine_k / serum_k) / (urine_creatinine / serum_creatinine) * 100
+%   urine_k(fek, serum_k, urine_creatinine, serum_creatinine) = fek * serum_k * (urine_creatinine / serum_creatinine) / 100
+%   serum_k(fek, urine_k, urine_creatinine, serum_creatinine) = urine_k / (urine_creatinine / serum_creatinine) / fek * 100
+%
+% NOTE ON UNITS AND MODELLING: the potassium concentrations are in milliequivalents per litre (mEq/L) and
+% the creatinines in milligrams per decilitre (mg/dL), but because FEK is a ratio of ratios every unit
+% cancels, so only the numeric magnitudes matter as long as the two potassiums share a unit and the two
+% creatinines share a unit. FEK is a plain percentage number (e.g. 10 for 10%, NOT 0.10). This library
+% only COMPUTES the percentage; the interpretation (a low value pointing to appropriate renal conservation,
+% a high value to renal wasting) is stated by the cited source but is applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted FEK equation — because that one equation
+% ([(urine K / serum K) / (urine Cr / serum Cr)] × 100) sanctions the relation read every way. The quote
+% is transcribed verbatim from the article "Fractional excretion of potassium in the course of acute kidney
+% injury in critically ill patients" on PubMed Central (a current, freely available NCBI-hosted article),
+% so each `formula` carries the provenance envelope every shipped grounded clause carries; the linter
+% rejects an unsourced one. (See feedback_nothing_human_authored — the formula is a verbatim span of the
+% cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `urine_k`, `serum_k`, `urine_creatinine`, `serum_creatinine` and `fek` each appear BOTH as a
+% derived result and as an input (of the other formulas), so each is a single dictionary term used in both
+% roles. The `surface` lists are the everyday names a decomposer maps onto the canonical term; the
+% trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary fractional_excretion_of_potassium_vocab {
+    define urine_k           : finding  surface "urine potassium", "urine K", "urinary potassium", "KU"        % mEq/L
+    define serum_k           : finding  surface "serum potassium", "serum K", "plasma potassium", "K+"         % mEq/L
+    define urine_creatinine  : finding  surface "urine creatinine", "urinary creatinine", "CrU"                % mg/dL
+    define serum_creatinine  : finding  surface "serum creatinine", "plasma creatinine", "SCr"                 % mg/dL
+    define fek               : finding  surface "fractional excretion of potassium", "FEK", "FE potassium"     % percent
+}
+
+% ----------------------------------------------------------------------------
+% The fractional excretion of potassium, three ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the FEK equation from the cited article on
+% PubMed Central (a quote is required on a shipped formula). Each is an exact expression in the measured
+% laboratory values, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook fractional_excretion_of_potassium_laws {
+    use fractional_excretion_of_potassium_vocab
+
+    % FEK — the urine-to-serum potassium ratio over the urine-to-serum creatinine ratio, times 100.
+    formula fek(urine_k, serum_k, urine_creatinine, serum_creatinine) = (urine_k / serum_k) / (urine_creatinine / serum_creatinine) * 100
+        source "FEK (%)=[(KU (mEq/L)/K+ (mEq/L))/(CrU (mg/dL)/SCr (mg/dL))]x100"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC4103940/"
+        trust authoritative
+
+    % Urine potassium — the same equation solved for the urine potassium. Defended by the SAME equation.
+    formula urine_k(fek, serum_k, urine_creatinine, serum_creatinine) = fek * serum_k * (urine_creatinine / serum_creatinine) / 100
+        source "FEK (%)=[(KU (mEq/L)/K+ (mEq/L))/(CrU (mg/dL)/SCr (mg/dL))]x100"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC4103940/"
+        trust authoritative
+
+    % Serum potassium — the same equation solved for the serum potassium, the third reading of the one ratio.
+    formula serum_k(fek, urine_k, urine_creatinine, serum_creatinine) = urine_k / (urine_creatinine / serum_creatinine) / fek * 100
+        source "FEK (%)=[(KU (mEq/L)/K+ (mEq/L))/(CrU (mg/dL)/SCr (mg/dL))]x100"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC4103940/"
+        trust authoritative
+}
