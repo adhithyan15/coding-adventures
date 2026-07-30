@@ -385,8 +385,11 @@ lockstep:
    landed in 0.19.0; `ClassVars` (`@@x` → a `(class, @@name)` table shared down
    the hierarchy — `_sir_cvar_get`/`_sir_cvar_set` resolve the owning class from
    `_sir_current_class`, bound by dispatch; a class-body `@@x = 0` seeds it via
-   `_sir_cvar_set_in` with the class named explicitly) landed in 0.20.0; then
-   `Modules` (mixins / MRO) — the final slice.
+   `_sir_cvar_set_in` with the class named explicitly) landed in 0.20.0; and
+   `Modules` (a module's methods register like a class's; `include`/`extend`
+   record `(class, module)` mixins that `_sir_resolve_method` /
+   `_sir_resolve_class_method` consult) landed in 0.21.0 — the FINAL OOP slice,
+   giving full 6-backend OOP parity.
 7. **Optional / later** — `Bignum`; SIR21 sized-integer native lowering
    (`int64_t`/`uint32_t` from `IntSpec`); `Range` / regex / backtick shims.
 

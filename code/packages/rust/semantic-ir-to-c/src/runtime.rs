@@ -1187,12 +1187,51 @@ static SirValue _sir_lookup_method(const char *cls, const char *method) {
  * dispatches to the closure the superclass registered.  Returns the closure or
  * `SIR_NIL`.  Bounded by `SIR_ANCESTRY_MAX` steps (a cyclic hand-built hierarchy
  * cannot hang). */
+/* OOP slice 7: module mixins.  A module's methods are registered exactly like a
+ * class's (via `__def_method__`, keyed on the module NAME), so a mixin needs no
+ * new method storage — only a record of WHICH modules a class mixes in:
+ *   - `include M` → M's INSTANCE methods join the class's instance-method lookup;
+ *   - `extend  M` → M's instance methods become the class's CLASS methods.
+ * Two `(class, module)` tables capture that; the resolvers consult them. */
+#define SIR_MIXIN_MAX 4096
+static struct { const char *cls; const char *module; } _sir_include_tab[SIR_MIXIN_MAX];
+static int _sir_include_n = 0;
+static struct { const char *cls; const char *module; } _sir_extend_tab[SIR_MIXIN_MAX];
+static int _sir_extend_n = 0;
+
+void _sir_register_include(const char *cls, const char *module) {
+    if (_sir_include_n < SIR_MIXIN_MAX) {
+        _sir_include_tab[_sir_include_n].cls = _sir_intern(cls);
+        _sir_include_tab[_sir_include_n].module = _sir_intern(module);
+        _sir_include_n++;
+    }
+}
+
+void _sir_register_extend(const char *cls, const char *module) {
+    if (_sir_extend_n < SIR_MIXIN_MAX) {
+        _sir_extend_tab[_sir_extend_n].cls = _sir_intern(cls);
+        _sir_extend_tab[_sir_extend_n].module = _sir_intern(module);
+        _sir_extend_n++;
+    }
+}
+
+/* Resolve `method` for an INSTANCE of `cls`: walk the ancestry, and at each class
+ * check the class's own methods THEN its included modules' methods (most-recently
+ * included first, matching Ruby's precedence).  Bounded by SIR_ANCESTRY_MAX. */
 static SirValue _sir_resolve_method(const char *cls, const char *method) {
     const char *cur = cls;
     int steps = 0;
     while (cur && steps++ < SIR_ANCESTRY_MAX) {
+        const char *c = _sir_intern(cur);
+        int i;
         SirValue fn = _sir_lookup_method(cur, method);
         if (fn.tag == SIR_CLOSURE) return fn;
+        for (i = _sir_include_n - 1; i >= 0; i--) {
+            if (_sir_include_tab[i].cls == c) {
+                fn = _sir_lookup_method(_sir_include_tab[i].module, method);
+                if (fn.tag == SIR_CLOSURE) return fn;
+            }
+        }
         cur = _sir_class_super(cur);
     }
     return _sir_nil();
@@ -1304,8 +1343,19 @@ static SirValue _sir_resolve_class_method(const char *cls, const char *method) {
     const char *cur = cls;
     int steps = 0;
     while (cur && steps++ < SIR_ANCESTRY_MAX) {
+        const char *c = _sir_intern(cur);
+        int i;
         SirValue fn = _sir_lookup_class_method(cur, method);
         if (fn.tag == SIR_CLOSURE) return fn;
+        /* OOP slice 7: `extend M` makes M's INSTANCE methods (keyed on the module
+         * name in the instance-method table) callable as this class's class
+         * methods — so consult the extended modules, most-recent first. */
+        for (i = _sir_extend_n - 1; i >= 0; i--) {
+            if (_sir_extend_tab[i].cls == c) {
+                fn = _sir_lookup_method(_sir_extend_tab[i].module, method);
+                if (fn.tag == SIR_CLOSURE) return fn;
+            }
+        }
         cur = _sir_class_super(cur);
     }
     return _sir_nil();
