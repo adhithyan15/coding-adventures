@@ -3,6 +3,29 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.41] - Unreleased
+
+### Added
+
+- **`printf`/`format` float conversions `%e`/`%E`, `%f`/`%F`, `%g`/`%G`.**
+  Previously declined; now formatted per the C standard, matching SQLite: `%f`
+  fixed (default 6 fractional digits), `%e` scientific with a C-form exponent
+  (always a sign, ≥2 digits — `1.5` → `1.500000e+00`), `%g` the shorter of the
+  two at N significant digits (default 6, min 1) with trailing zeros trimmed
+  (`100.0` → `100`, `1234567.0` → `1.23457e+06`). Arguments take numeric affinity
+  via the new `printf_float` (text contributes its leading real, NULL → 0.0). The
+  `0`/width/`+`/space/`-` flags compose as for `%d`. Precision shares the existing
+  field-size cap, so a giant `.N` cannot drive an unbounded expansion.
+
+### Fixed
+
+- **`printf`/`format` SQL-quoting family now handles NULL like SQLite and adds
+  `%Q`/`%w`.** `%q` of a NULL argument now yields the sentinel `(NULL)` (was the
+  empty string). Added `%Q` (escape single quotes AND wrap in `'...'`; NULL →
+  bare `NULL`) and `%w` (double double-quotes for a `"..."` identifier; NULL →
+  `(NULL)`). REAL/BLOB arguments to `%q`/`%Q`/`%w` remain declined (the same dtoa
+  subtlety `HEX`/`QUOTE` avoid).
+
 ## [0.4.40] - Unreleased
 
 ### Changed

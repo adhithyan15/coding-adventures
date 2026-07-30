@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.5.71 — `printf`/`format` float conversions and the full SQL-quoting family
+
+`printf`/`format` now support the C float conversions `%e`/`%E`, `%f`/`%F`,
+`%g`/`%G` (previously declined) and the complete SQL-quoting family `%q`, `%Q`,
+`%w`, all matching real SQLite:
+
+- `printf('%.2f', 3.14159)` → `3.14`; `printf('%e', 1.5)` → `1.500000e+00`;
+  `printf('%g', 1234567.0)` → `1.23457e+06`, `printf('%g', 100.0)` → `100`.
+- `printf('%Q', 'a''b')` → `'a''b'` (quote-and-wrap for a SQL literal);
+  `printf('%w', 'a"b')` → `a""b` (for a `"..."` identifier).
+- NULL handling now matches SQLite exactly: `%q`/`%w` of NULL → `(NULL)` (a
+  pre-existing bug — `%q` of NULL used to return `""`), `%Q` of NULL → `NULL`.
+
+Float/precision use the existing field-size cap, so a hostile `.N` cannot drive
+an unbounded expansion. REAL/BLOB arguments to `%q`/`%Q`/`%w` are declined (the
+same dtoa subtlety `HEX`/`QUOTE` avoid). Nine new differential-oracle cases pin
+this against bundled real SQLite; the ledger stays empty. Spans sql-vm 0.4.41.
+
 ## 0.5.70 — `ORDER BY <n>` over an aggregate sorts by the materialized value (ledger now empty)
 
 `SELECT k, sum(v) FROM g GROUP BY k ORDER BY 2` now sorts by the aggregated
