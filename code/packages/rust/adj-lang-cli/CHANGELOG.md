@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.28.0] — 2026-07-30 — NUM-6v: `adj-verify` re-checks the precision/format narrowings
+
+`adj-verify` now re-executes the *arithmetic* of a trail, not only its logic
+(`ADJ-NUMERIC-SUBSTRATE.md` §4.3, §6, §7). For every `let`-bound derived value it walks the
+derivation tree and, for each `round_to`/`round_sig`/`to_scientific`/`to_percent`/`to_currency`
+narrowing, re-rounds the recorded **exact** source under the recorded mode and confirms the
+recorded result and rendered string reproduce (`logic_engine::recheck_narrowings`).
+
+- New report fields: `totals.narrowings_rechecked` / `narrowings_unverifiable` /
+  `narrowings_mismatched`, and a `narrowings` array (one entry per derived value carrying a
+  narrowing, each check tagged `rechecked` / `unverifiable` / `mismatch`).
+- A `mismatch` is a hard failure: it flips `verified` to `false`, exits non-zero, and is named
+  in `first_failure` (`pass: "narrowing"`, with the binding name, depth, and the disagreeing
+  recorded/recomputed forms) — the same standard the negation and logit re-checks already meet.
+- The four derivation-tree JSON emitters gained the new node field via `..` patterns, so the
+  CLI's `--json` / `derivation` output is byte-for-byte unchanged.
+- 3 e2e tests (built binary): all five narrowing kinds re-check green; a plain formula reports
+  zero narrowings and still verifies; a nested `round_to(to_percent(...))` re-checks both levels.
+
 ## [0.27.0] — 2026-07-30 — RS-3c: `statemachine` driver + typed outcomes + `--explain` of the run
 
 Runs the provenance-stamped `statemachine`s RS-3b lowered (ADJ-STATEMACHINE §3–§4),

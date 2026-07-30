@@ -520,10 +520,19 @@ pub enum DerivationNode {
     /// operand's exact value and confirm the rendered `result`
     /// (ADJ-NUMERIC-SUBSTRATE §4.3: rounding is a first-class, checkable step,
     /// never a silent lossy coercion).
+    ///
+    /// `operand_exact` is the operand's **exact** source rational (the
+    /// [`ExactRational`] the narrowing consumed), captured so an independent checker
+    /// can re-round it under the recorded `spec`/`mode` without re-running the whole
+    /// formula — the value [`recheck_narrowing`] re-rounds. `None` when the operand
+    /// was genuinely inexact (a transcendental with no exact sidecar): the narrowing
+    /// then rounded an already-approximate `f64`, so there is no exact source to
+    /// re-round and the re-check is honestly [`NarrowingCheck::Unverifiable`].
     Round {
         spec: RoundSpec,
         mode: RoundingMode,
         operand: Box<DerivationNode>,
+        operand_exact: Option<ExactRational>,
         result: f64,
     },
     /// A **scientific-notation rendering** node (NUM-6c) — the audit record for a
@@ -538,6 +547,10 @@ pub enum DerivationNode {
         mode: RoundingMode,
         rendered: String,
         operand: Box<DerivationNode>,
+        /// The operand's exact source rational (see [`DerivationNode::Round`]'s
+        /// `operand_exact`), re-narrowed by [`recheck_narrowing`] to confirm both
+        /// `rendered` and `result`. `None` for a genuinely-inexact operand.
+        operand_exact: Option<ExactRational>,
         result: f64,
     },
     /// A **percentage rendering** node (NUM-6c) — the audit record for a
@@ -551,6 +564,10 @@ pub enum DerivationNode {
         mode: RoundingMode,
         rendered: String,
         operand: Box<DerivationNode>,
+        /// The operand's exact source ratio (see [`DerivationNode::Round`]'s
+        /// `operand_exact`), re-scaled and re-rounded by [`recheck_narrowing`] to
+        /// confirm both `rendered` and `result`. `None` for an inexact operand.
+        operand_exact: Option<ExactRational>,
         result: f64,
     },
     /// A **currency rendering** node (NUM-6c) — the audit record for a
@@ -565,6 +582,10 @@ pub enum DerivationNode {
         mode: RoundingMode,
         rendered: String,
         operand: Box<DerivationNode>,
+        /// The operand's exact source amount (see [`DerivationNode::Round`]'s
+        /// `operand_exact`), re-rounded by [`recheck_narrowing`] to confirm both
+        /// `rendered` and `result`. `None` for an inexact operand.
+        operand_exact: Option<ExactRational>,
         result: f64,
     },
 }
@@ -1278,6 +1299,9 @@ fn eval_round(
             spec,
             mode,
             operand: Box::new(operand),
+            // The operand's exact source — the value `round_rational` above narrowed —
+            // captured so `adj-verify` can re-round it independently (§4.3).
+            operand_exact: exact,
             result,
         },
         dim,
@@ -1385,6 +1409,9 @@ fn eval_to_scientific(
             mode,
             rendered,
             operand: Box::new(operand),
+            // The operand's exact source — re-narrowed by `adj-verify` to reproduce
+            // both the rendered string and the numeric result (§4.3).
+            operand_exact: exact,
             result,
         },
         dim,
@@ -1510,6 +1537,9 @@ fn eval_to_percent(
             mode,
             rendered,
             operand: Box::new(operand),
+            // The operand's exact source ratio — re-scaled and re-rounded by
+            // `adj-verify` to reproduce the percentage string and result (§4.3).
+            operand_exact: exact,
             result,
         },
         dim,
@@ -1604,6 +1634,9 @@ fn eval_to_currency(
             mode,
             rendered,
             operand: Box::new(operand),
+            // The operand's exact source amount — re-rounded by `adj-verify` to
+            // reproduce the money string and result (§4.3).
+            operand_exact: exact,
             result,
         },
         dim,
@@ -1635,6 +1668,219 @@ fn currency(r: &ExactRational, places: u32, mode: RoundingMode) -> (String, Exac
     // Narrowed amount = C / 10^places.
     let narrowed = ExactRational::from_ratio(BigRational::new(c, ten_to(places)));
     (amount, narrowed)
+}
+
+// ---------------------------------------------------------------------------
+// NUM-6 audit re-check — rounding/formatting is a first-class, checkable step
+// ---------------------------------------------------------------------------
+
+/// The verdict of independently re-checking one NUM-6 narrowing node
+/// (`round_to` / `round_sig` / `to_scientific` / `to_percent` / `to_currency`)
+/// against the exact source it recorded (ADJ-NUMERIC-SUBSTRATE §4.3).
+///
+/// A trail is **testimony**: the engine describing its own rounding. The audit
+/// records the exact source, the target precision, the rounding mode, and the
+/// rendered result — but a confidently-wrong (or since-tampered) artifact prints
+/// a plausible rounded number just as fluently. [`recheck_narrowing`] turns that
+/// testimony into **evidence**: it re-runs the *same* exact narrowing on the
+/// recorded exact source under the recorded spec/mode and confirms the recorded
+/// result (and rendered string, for the formatters) reproduces.
+#[derive(Debug, Clone, PartialEq)]
+pub enum NarrowingCheck {
+    /// The node is not a narrowing (`Leaf`/`Lit`/`Op`/…): nothing to re-round.
+    NotANarrowing,
+    /// Re-narrowing the recorded exact source reproduced the recorded result and
+    /// rendered form exactly — the narrowing is sound.
+    ReChecked,
+    /// The recorded result/rendering did **not** reproduce from the exact source
+    /// under the recorded spec/mode: a drifted or tampered narrowing. Carries a
+    /// stable machine-readable reason and both the `recorded` and `recomputed`
+    /// forms so a reviewer can see the disagreement.
+    Mismatch {
+        why: &'static str,
+        recorded: String,
+        recomputed: String,
+    },
+    /// No exact source was carried (`operand_exact == None`): the operand was
+    /// genuinely inexact (a transcendental with no exact sidecar), so the engine
+    /// rounded an already-approximate `f64` and there is nothing exact to re-round.
+    /// Honest — never counted as a pass, never a hard failure (§4.3 can only make
+    /// the promise it can keep: an exact source is re-checkable, an approximate one
+    /// is labeled unverifiable).
+    Unverifiable,
+}
+
+impl NarrowingCheck {
+    /// Whether this node's narrowing was affirmatively re-derived. `false` for a
+    /// non-narrowing node, an unverifiable (inexact-source) narrowing, or a
+    /// mismatch — so a caller counting "how many narrowings did I confirm" only
+    /// counts the ones actually re-rounded.
+    pub fn is_rechecked(&self) -> bool {
+        matches!(self, NarrowingCheck::ReChecked)
+    }
+
+    /// Whether this is a hard failure — a narrowing whose recorded output does not
+    /// reproduce from its exact source. A non-narrowing / unverifiable / rechecked
+    /// verdict is not a failure.
+    pub fn is_mismatch(&self) -> bool {
+        matches!(self, NarrowingCheck::Mismatch { .. })
+    }
+}
+
+/// Re-check a **single** [`DerivationNode`] if it is a NUM-6 narrowing: re-round /
+/// re-format its recorded exact source ([`operand_exact`](DerivationNode::Round))
+/// under the recorded `spec`/`mode` and confirm the recorded `result` (and
+/// `rendered` string, for the formatters) reproduces (ADJ-NUMERIC-SUBSTRATE §4.3).
+///
+/// This calls the *same* exact narrowing primitives the engine used to produce the
+/// node ([`round_rational`], [`scientific`], [`percent`], [`currency`]) — the point
+/// is a second, independent evaluation from the recorded exact source, not a second
+/// copy of the arithmetic. Because those primitives are total and deterministic, a
+/// [`NarrowingCheck::Mismatch`] can only mean the recorded output did not come from
+/// the recorded source under the recorded mode — exactly the "valid-looking number
+/// from an invented rounding" this re-check exists to catch.
+///
+/// Does **not** recurse — see [`recheck_narrowings`] for the whole-tree walk.
+pub fn recheck_narrowing(node: &DerivationNode) -> NarrowingCheck {
+    match node {
+        DerivationNode::Round {
+            spec,
+            mode,
+            operand_exact,
+            result,
+            ..
+        } => match operand_exact {
+            None => NarrowingCheck::Unverifiable,
+            Some(src) => {
+                let recomputed = round_rational(src, *spec, *mode).to_f64();
+                // The recorded `result` is `round_rational(src, …).to_f64()` from the
+                // emit path; re-running the same exact rounding reproduces the same
+                // `f64` bit-for-bit, so equality (not tolerance) is the honest test.
+                if recomputed == *result {
+                    NarrowingCheck::ReChecked
+                } else {
+                    NarrowingCheck::Mismatch {
+                        why: "result_differs",
+                        recorded: format!("{result}"),
+                        recomputed: format!("{recomputed}"),
+                    }
+                }
+            }
+        },
+        DerivationNode::ToScientific {
+            figures,
+            mode,
+            rendered,
+            operand_exact,
+            result,
+            ..
+        } => match operand_exact {
+            None => NarrowingCheck::Unverifiable,
+            Some(src) => {
+                let (s, narrowed) = scientific(src, *figures, *mode);
+                check_rendered(&s, narrowed.to_f64(), rendered, *result)
+            }
+        },
+        DerivationNode::ToPercent {
+            places,
+            mode,
+            rendered,
+            operand_exact,
+            result,
+            ..
+        } => match operand_exact {
+            None => NarrowingCheck::Unverifiable,
+            Some(src) => {
+                let (s, narrowed) = percent(src, *places, *mode);
+                check_rendered(&s, narrowed.to_f64(), rendered, *result)
+            }
+        },
+        DerivationNode::ToCurrency {
+            code,
+            places,
+            mode,
+            rendered,
+            operand_exact,
+            result,
+            ..
+        } => match operand_exact {
+            None => NarrowingCheck::Unverifiable,
+            Some(src) => {
+                let (amount, narrowed) = currency(src, *places, *mode);
+                // The node's `rendered` is the code-prefixed form; reconstruct it the
+                // same way the emit path did (`"{code} {amount}"`).
+                check_rendered(&format!("{code} {amount}"), narrowed.to_f64(), rendered, *result)
+            }
+        },
+        _ => NarrowingCheck::NotANarrowing,
+    }
+}
+
+/// Shared verdict for the three **formatter** narrowings: confirm both the
+/// re-derived rendered string and the re-derived numeric result reproduce what the
+/// node recorded. The rendered string is checked first because it is the boundary
+/// artifact a consumer reads; a value that reproduces under a *different* string
+/// (or vice versa) is still a mismatch, so both must hold for `ReChecked`.
+fn check_rendered(
+    recomputed_rendered: &str,
+    recomputed_result: f64,
+    recorded_rendered: &str,
+    recorded_result: f64,
+) -> NarrowingCheck {
+    if recomputed_rendered != recorded_rendered {
+        NarrowingCheck::Mismatch {
+            why: "rendered_differs",
+            recorded: recorded_rendered.to_string(),
+            recomputed: recomputed_rendered.to_string(),
+        }
+    } else if recomputed_result != recorded_result {
+        NarrowingCheck::Mismatch {
+            why: "result_differs",
+            recorded: format!("{recorded_result}"),
+            recomputed: format!("{recomputed_result}"),
+        }
+    } else {
+        NarrowingCheck::ReChecked
+    }
+}
+
+/// Walk a derivation `tree` in pre-order and re-check **every** NUM-6 narrowing node
+/// it contains, returning one `(depth, verdict)` per narrowing found (a narrowing can
+/// be nested inside another node's operand — `round_to(to_percent(x))` — so the walk
+/// recurses through operands). Non-narrowing nodes contribute nothing. The `depth` is
+/// the node's nesting level under `tree` (root = 0), so a caller can point a reviewer
+/// at *which* narrowing in a multi-step formula failed.
+pub fn recheck_narrowings(tree: &DerivationNode) -> Vec<(usize, NarrowingCheck)> {
+    let mut out = Vec::new();
+    collect_narrowings(tree, 0, &mut out);
+    out
+}
+
+/// Pre-order helper for [`recheck_narrowings`]: re-check `node` if it is a narrowing,
+/// then recurse into its children. Depth-bounded implicitly by the tree the engine
+/// built (a compute expression is capped at [`MAX_EVAL_DEPTH`] when produced), so this
+/// cannot recurse deeper than a value the engine already accepted.
+fn collect_narrowings(node: &DerivationNode, depth: usize, out: &mut Vec<(usize, NarrowingCheck)>) {
+    let verdict = recheck_narrowing(node);
+    if !matches!(verdict, NarrowingCheck::NotANarrowing) {
+        out.push((depth, verdict));
+    }
+    match node {
+        DerivationNode::Op { operands, .. } => {
+            for child in operands {
+                collect_narrowings(child, depth + 1, out);
+            }
+        }
+        DerivationNode::Round { operand, .. }
+        | DerivationNode::ToScientific { operand, .. }
+        | DerivationNode::ToPercent { operand, .. }
+        | DerivationNode::ToCurrency { operand, .. } => {
+            collect_narrowings(operand, depth + 1, out);
+        }
+        DerivationNode::Leaf { .. }
+        | DerivationNode::DerivedRef { .. }
+        | DerivationNode::Lit { .. } => {}
+    }
 }
 
 /// Round an `f64` to `spec`'s precision — the fallback for an operand that carried
@@ -3108,6 +3354,7 @@ mod tests {
                 mode,
                 result,
                 operand,
+                operand_exact,
             } => {
                 assert_eq!(*spec, RoundSpec::Places(2));
                 assert_eq!(*mode, RoundingMode::HalfEven);
@@ -3115,6 +3362,9 @@ mod tests {
                 // The operand subtree is the exact source the narrowing rounded —
                 // 10/3 usd, a division node — so a checker can re-round it.
                 assert!(matches!(operand.as_ref(), DerivationNode::Op { .. }));
+                // And the exact source is captured on the node itself (NUM-6v), so
+                // `adj-verify` can re-round 10/3 without re-walking the subtree.
+                assert_eq!(*operand_exact, ExactRational::new(10, 3));
             }
             other => panic!("expected Round node, got {other:?}"),
         }
@@ -3342,5 +3592,105 @@ mod tests {
         assert_eq!(cur_rendered_of(&d), "USD 33.33");
         assert_eq!(d.exact, ExactRational::new(3333, 100)); // 33.33 exactly
         assert_eq!(d.dim, Dimension::Money("usd".into()));
+    }
+
+    // ---- NUM-6v: adj-verify re-check of the narrowing nodes (ADJ-NUMERIC §4.3) ----
+
+    #[test]
+    fn recheck_confirms_a_genuine_rounding() {
+        let kb = KnowledgeBase::new();
+        // 10/3 → 2 places = 3.33; re-rounding the recorded exact source reproduces it.
+        let d = compute("r", &round_places(2, frac(10, 3)), &kb).unwrap();
+        assert_eq!(recheck_narrowing(&d.tree), NarrowingCheck::ReChecked);
+    }
+
+    #[test]
+    fn recheck_confirms_every_formatter() {
+        let kb = KnowledgeBase::new();
+        // to_scientific, to_percent, to_currency all re-derive their rendered string
+        // AND their numeric result from the recorded exact source.
+        let sci = compute("r", &to_sci(4, frac(1, 3)), &kb).unwrap();
+        assert_eq!(recheck_narrowing(&sci.tree), NarrowingCheck::ReChecked);
+        let pct = compute("r", &to_pct(2, frac(1, 3)), &kb).unwrap();
+        assert_eq!(recheck_narrowing(&pct.tree), NarrowingCheck::ReChecked);
+        let cur = compute("r", &to_cur("usd", 2, frac(100, 3)), &kb).unwrap();
+        assert_eq!(recheck_narrowing(&cur.tree), NarrowingCheck::ReChecked);
+    }
+
+    #[test]
+    fn recheck_catches_a_tampered_result() {
+        let kb = KnowledgeBase::new();
+        // Compute a genuine rounding, then tamper the recorded `result` (the kind of
+        // drift a since-edited or fabricated artifact carries): the re-check must
+        // catch it, because re-rounding the still-honest exact source disagrees.
+        let mut d = compute("r", &round_places(2, frac(10, 3)), &kb).unwrap();
+        if let DerivationNode::Round { result, .. } = &mut d.tree {
+            *result = 9.99; // was 3.33
+        }
+        assert!(recheck_narrowing(&d.tree).is_mismatch());
+    }
+
+    #[test]
+    fn recheck_catches_a_tampered_rendered_string() {
+        let kb = KnowledgeBase::new();
+        // Tamper only the boundary STRING of a currency rendering, leaving the exact
+        // source and numeric result intact: still a mismatch, because the string a
+        // consumer reads no longer matches what the exact source renders to.
+        let mut d = compute("r", &to_cur("usd", 2, frac(100, 3)), &kb).unwrap();
+        if let DerivationNode::ToCurrency { rendered, .. } = &mut d.tree {
+            *rendered = "USD 99.99".to_string(); // was "USD 33.33"
+        }
+        match recheck_narrowing(&d.tree) {
+            NarrowingCheck::Mismatch { why, .. } => assert_eq!(why, "rendered_differs"),
+            other => panic!("expected a rendered_differs mismatch, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn recheck_is_unverifiable_without_an_exact_source() {
+        // A narrowing node whose operand carried no exact value (a transcendental
+        // result) cannot be re-rounded exactly — honestly reported, never a pass.
+        let node = DerivationNode::Round {
+            spec: RoundSpec::Places(2),
+            mode: RoundingMode::HalfEven,
+            operand: Box::new(DerivationNode::Lit { value: 3.333 }),
+            operand_exact: None,
+            result: 3.33,
+        };
+        assert_eq!(recheck_narrowing(&node), NarrowingCheck::Unverifiable);
+    }
+
+    #[test]
+    fn recheck_a_non_narrowing_node_is_inert() {
+        let node = DerivationNode::Lit { value: 1.0 };
+        assert_eq!(recheck_narrowing(&node), NarrowingCheck::NotANarrowing);
+    }
+
+    #[test]
+    fn recheck_narrowings_walks_a_nested_tree() {
+        let kb = KnowledgeBase::new();
+        // round_to(to_percent(1/3, 2), 2): a narrowing whose operand is itself a
+        // narrowing — the walk must find and re-check BOTH, at depths 0 and 1.
+        let inner = to_pct(2, frac(1, 3));
+        let expr = round_places(2, inner);
+        let d = compute("r", &expr, &kb).unwrap();
+        let checks = recheck_narrowings(&d.tree);
+        assert_eq!(checks.len(), 2, "expected the outer round and inner to_percent");
+        assert_eq!(checks[0].0, 0); // outer round at the root
+        assert_eq!(checks[1].0, 1); // inner to_percent one level down
+        assert!(checks.iter().all(|(_, c)| c.is_rechecked()));
+    }
+
+    #[test]
+    fn recheck_narrowings_is_empty_for_a_plain_formula() {
+        let kb = kb_with(vec![money("a", 10, "usd"), money("b", 3, "usd")]);
+        // A plain division carries no narrowing node, so there is nothing to re-check.
+        let expr = ComputeExpr::Bin(
+            ComputeOp::Div,
+            Box::new(refexpr("a")),
+            Box::new(refexpr("b")),
+        );
+        let d = compute("r", &expr, &kb).unwrap();
+        assert!(recheck_narrowings(&d.tree).is_empty());
     }
 }

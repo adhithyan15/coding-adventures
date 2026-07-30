@@ -50,7 +50,8 @@ use std::collections::{HashMap, HashSet};
 use logic_core::{unify, LogicVar, Number, Substitution, Term};
 
 pub use compute::{
-    compute, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived, RoundSpec,
+    compute, recheck_narrowing, recheck_narrowings, ComputeError, ComputeExpr, ComputeOp,
+    DerivationNode, Derived, NarrowingCheck, RoundSpec,
 };
 /// Re-exported so consumers can name the rounding mode of a
 /// [`ComputeExpr::Round`]/[`DerivationNode::Round`] without depending on

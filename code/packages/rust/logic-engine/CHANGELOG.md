@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.50.0] — 2026-07-30 — NUM-6v: audit re-check of the precision/format narrowings
+
+Closes the NUM-6 audit-exactness promise (`ADJ-NUMERIC-SUBSTRATE.md` §4.3, §6, §7): the
+compute narrowing nodes now **carry their operand's exact source**, and a new re-check turns
+their recorded rounding from testimony into evidence.
+
+- Each narrowing `DerivationNode` (`Round`/`ToScientific`/`ToPercent`/`ToCurrency`) gains an
+  `operand_exact: Option<ExactRational>` field, populated at eval time with the exact rational
+  the narrowing consumed (`None` only for a genuinely-inexact operand, e.g. a transcendental
+  with no exact sidecar). This is byte-neutral to the CLI JSON — the emitters match with `..`.
+- `recheck_narrowing(&DerivationNode) -> NarrowingCheck` re-runs the *same* exact narrowing
+  (`round_rational`/`scientific`/`percent`/`currency`) on the recorded exact source under the
+  recorded `spec`/`mode` and confirms the recorded `result` (and `rendered` string, for the
+  formatters) reproduces: `ReChecked` / `Mismatch { why, recorded, recomputed }` /
+  `Unverifiable` (no exact source) / `NotANarrowing`.
+- `recheck_narrowings(&DerivationNode) -> Vec<(usize, NarrowingCheck)>` walks a derivation
+  tree pre-order and re-checks every narrowing it contains (nested narrowings included),
+  reporting each with its depth.
+- New API re-exported from the crate root: `recheck_narrowing`, `recheck_narrowings`,
+  `NarrowingCheck`.
+- 8 unit tests: each kind re-checks; a tampered `result` and a tampered `rendered` string are
+  both caught; an inexact operand is `Unverifiable`; the walk finds nested narrowings and is
+  empty for a plain formula.
+
 ## [0.49.0] — 2026-07-23 — NUM-6c: `to_currency` — money rendering (base-10-exact)
 
 Completes the NUM-6c formatter trio (`ADJ-NUMERIC-SUBSTRATE.md` §4.1, §4.3): a **rendering**

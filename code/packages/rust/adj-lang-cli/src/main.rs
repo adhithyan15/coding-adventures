@@ -167,6 +167,7 @@ fn derivation_tree_json(
             spec,
             mode,
             operand,
+            operand_exact: _,
             result,
         } => {
             // The precision field names the KIND of narrowing: `places` for
@@ -195,6 +196,7 @@ fn derivation_tree_json(
             mode,
             rendered,
             operand,
+            operand_exact: _,
             result,
         } => format!(
             "{{\"node\":\"to_scientific\",\"figures\":{},\"mode\":\"{}\",\"rendered\":\"{}\",\"value\":{},\"operand\":{}}}",
@@ -214,6 +216,7 @@ fn derivation_tree_json(
             mode,
             rendered,
             operand,
+            operand_exact: _,
             result,
         } => format!(
             "{{\"node\":\"to_percent\",\"places\":{},\"mode\":\"{}\",\"rendered\":\"{}\",\"value\":{},\"operand\":{}}}",
@@ -234,6 +237,7 @@ fn derivation_tree_json(
             mode,
             rendered,
             operand,
+            operand_exact: _,
             result,
         } => format!(
             "{{\"node\":\"to_currency\",\"code\":\"{}\",\"places\":{},\"mode\":\"{}\",\"rendered\":\"{}\",\"value\":{},\"operand\":{}}}",
