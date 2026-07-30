@@ -387,11 +387,30 @@ process-local worker or subscription ownership into storage:
 - Live discovery workers and event subscriptions remain process-local and are
   rebuilt by their owners instead of restoring stale network work or consumers.
 
+## Current Durable Local API Slice
+
+This slice closes the local API boundary with a runnable restart-safe
+controller instead of another fixture wrapper:
+
+- `smart-home-platform-http` already exposes Home Assistant-compatible and
+  native routes for dashboard, mobile, CLI, and Chief clients over the
+  normalized runtime, including authorized service and desired-state writes.
+- Its runtime adapter now accepts a live clock and a durable mutation callback.
+  Every accepted service or desired-state mutation is saved synchronously; a
+  failed save restores the exact pre-request runtime and returns HTTP 503.
+- The `smart-home-local-controller` binary restores
+  `smart-home-runtime-store` from a D18A local folder, retains the opaque
+  automation definitions stored beside runtime state, installs and persists
+  its local API capability grant, and serves the existing browser/API surface
+  through the repository HTTP stack.
+- Executable tests prove an HTTP desired-state mutation is queryable after a
+  fresh store instance and prove failed persistence leaves no in-memory
+  mutation behind.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
 
-- Add a local API surface for dashboard, mobile, CLI, and Chief of Staff jobs.
 - Add an automation/rules engine with schedules, triggers, conditions, scenes,
   idempotency, dry-run planning, and audit.
 - Add platform integrations beyond Hue: MQTT, Matter/Thread, Zigbee, Z-Wave,

@@ -177,8 +177,12 @@ reopen bounded replay slices without fetching the full audit tail.
 
 ## Dependencies
 
+- embeddable-http-server
 - smart-home-core
 - smart-home-runtime
+- smart-home-runtime-store
+- storage-local-folder
+- tcp-runtime
 - web-core
 
 ## Development
@@ -186,6 +190,30 @@ reopen bounded replay slices without fetching the full audit tail.
 ```bash
 bash BUILD
 ```
+
+## Durable Local Controller
+
+Run the production local controller against a durable runtime folder:
+
+```bash
+cargo run -p smart-home-platform-http --bin smart-home-local-controller -- \
+  --data-dir "$HOME/.coding-adventures/smart-home" \
+  --bind 127.0.0.1:8123
+```
+
+`SMART_HOME_DATA_DIR` supplies the data folder when `--data-dir` is omitted.
+The controller loads the latest `smart-home-runtime-store` snapshot before it
+binds, restores the opaque automation definitions kept beside runtime state,
+uses wall-clock request timestamps, and saves the local API capability grant.
+Accepted desired-state and service mutations are persisted synchronously before
+the API returns success. A failed write restores the exact pre-request runtime
+and returns HTTP 503, so clients never observe a successful mutation that only
+exists in memory.
+
+The controller can start with an empty folder. Discovery, pairing, and
+integration owners can populate the same durable runtime store before launch;
+on later launches the API serves the restored topology, state, event, command,
+pairing, desired-state, authorization, and automation records.
 
 ## Fixture Controller
 
