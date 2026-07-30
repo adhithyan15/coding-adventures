@@ -1,0 +1,99 @@
+% ============================================================================
+% stool-osmotic-gap.adj — the stool (fecal) osmotic gap
+% (gap = 290 − 2 × (stool sodium + stool potassium)) in the ADJ standard library.
+% ============================================================================
+% The stool-osmotic-gap entry of the *clinical* track — the bedside test that separates OSMOTIC diarrhoea
+% (an unabsorbed solute dragging water into the lumen) from SECRETORY diarrhoea (the gut actively pumping
+% electrolytes and water out). Stool osmolality in vivo is assumed to equal plasma osmolality (≈ 290
+% mOsm/kg); the electrolytes the gut secretes are sodium and potassium, each osmotically accompanied by an
+% anion, so twice their summed concentration estimates the electrolyte-driven osmoles. Whatever osmolality
+% is LEFT OVER after subtracting that electrolyte contribution is the "gap" — the part of the stool
+% osmolality carried by SOMETHING ELSE (an unabsorbed osmotic agent). A WIDE gap therefore means osmotic
+% diarrhoea; a NARROW gap means the osmoles are all electrolytes, i.e. secretory. THE STOOL OSMOTIC GAP IS
+% 290 MINUS TWICE THE SUM OF STOOL SODIUM AND STOOL POTASSIUM — i.e. gap = 290 − 2 × (stool Na + stool K).
+% It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with two exact
+% rearrangements (the stool sodium and the stool potassium a given gap implies). As with every compute
+% library, a consumer states NO arithmetic: it `import`s this file, binds the stool sodium and potassium
+% from its own byte-provenance decomposition, and asks the engine to APPLY the cited formula on the CPU.
+% Zero math is performed by the model; the engine computes each value EXACTLY (over exact rationals),
+% carrying the formula's citation.
+%
+%     import "stool-osmotic-gap.adj"
+%     observe stool_sodium(30)      % "…stool Na 30…"   (span cited by the model)
+%     observe stool_potassium(20)    % "…stool K 20…"    (span cited by the model)
+%     ? stool_osmotic_gap(stool_sodium, stool_potassium)   % engine → 190 (mOsm/kg)
+%
+% Structurally this is a CONSTANT MINUS A SCALED SUM — the assumed stool osmolality (290) less twice the
+% electrolyte sum — a shape distinct from the ratio, ratio-of-ratios, percentage-sum, product-over-constant,
+% chained-division, constant-scaled-difference, product-times-constant, three-way-product-over-divisor,
+% product-of-a-ratio-and-a-value, quotient-over-a-difference, constant-times-a-difference-over-a-divisor,
+% two-variables-and-a-constant-over-a-divisor, product-of-a-value-and-a-difference-over-a-shared-value, and
+% ratio-scaled-by-a-constant forms of the other clinical libraries. There are two embedded constants — the
+% assumed stool osmolality 290 (mOsm/kg) and the factor 2 (each electrolyte's accompanying anion), both
+% exact integers as the cited expression prints them; the two electrolyte concentrations are formal
+% parameters bound at apply time, so every value the engine returns is exact. The three formulas COMPOSE and
+% invert cleanly around the worked case stool sodium = 30, stool potassium = 20 (gap = 290 − 2 × (30 + 20) =
+% 290 − 100 = 190 mOsm/kg): the `stool_osmotic_gap` a consumer computes is exactly the value each inverse
+% formula back-solves to recover its own measured input (30, 20).
+%
+%   stool_osmotic_gap(stool_sodium, stool_potassium) = 290 - 2 * (stool_sodium + stool_potassium)   % (mOsm/kg)
+%   stool_sodium(stool_osmotic_gap, stool_potassium) = (290 - stool_osmotic_gap) / 2 - stool_potassium % (solved for stool Na)
+%   stool_potassium(stool_osmotic_gap, stool_sodium) = (290 - stool_osmotic_gap) / 2 - stool_sodium     % (solved for stool K)
+%
+% NOTE ON UNITS AND MODELLING: the stool electrolytes are in mmol/L and the gap in mOsm/kg; the 290 is the
+% ASSUMED stool osmolality (some laboratories substitute a directly MEASURED stool osmolality in its place —
+% that variant is a different formula and is not what this library grounds). Interpretation bands
+% (a gap > ~125 mOsm/kg → osmotic, < ~50 → secretory) are the clinician's to apply. This library only
+% COMPUTES the gap; obtaining reliable stool electrolytes and reading the result is the clinician's task,
+% stated by the cited source but applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted osmotic-gap expression — because that one
+% expression (290 − 2 × (Na + K)) sanctions the relation read every way. The quote is transcribed verbatim
+% from the StatPearls "Chronic Diarrhea" article on the NCBI Bookshelf, where the gap is printed as the typed,
+% operand-complete, correctly-bracketed expression "290 mOsm/kg - 2(Na[feces]+K[feces])" (the 2( … ) is an
+% implicit multiplication and the (Na + K) sum is parenthesized, so strict precedence reads it correctly).
+% Each `formula` therefore carries the provenance envelope every shipped grounded clause carries; the linter
+% rejects an unsourced one. (See feedback_nothing_human_authored — the formula is a verbatim span of the
+% cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `stool_sodium`, `stool_potassium` and `stool_osmotic_gap` each appear BOTH as a derived result
+% and as an input (of the other formulas), so each is a single dictionary term used in both roles. The
+% `surface` lists are the everyday names a decomposer maps onto the canonical term; the trailing comment
+% records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary stool_osmotic_gap_vocab {
+    define stool_sodium        : finding  surface "stool sodium", "stool Na", "fecal sodium", "Na[feces]"      % mmol/L
+    define stool_potassium     : finding  surface "stool potassium", "stool K", "fecal potassium", "K[feces]" % mmol/L
+    define stool_osmotic_gap   : finding  surface "stool osmotic gap", "fecal osmotic gap", "osmotic gap"      % mOsm/kg
+}
+
+% ----------------------------------------------------------------------------
+% The stool osmotic gap, three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the osmotic-gap expression from the StatPearls "Chronic
+% Diarrhea" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact
+% expression in the measured values and the exact integers 290 and 2, so the engine returns each value
+% EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook stool_osmotic_gap_laws {
+    use stool_osmotic_gap_vocab
+
+    % Osmotic gap — the assumed stool osmolality 290, less twice the electrolyte sum.
+    formula stool_osmotic_gap(stool_sodium, stool_potassium) = 290 - 2 * (stool_sodium + stool_potassium)
+        source "290 mOsm/kg - 2(Na[feces]+K[feces])"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544337/"
+        trust authoritative
+
+    % Stool sodium — the same expression solved for the stool sodium. Defended by the SAME clause.
+    formula stool_sodium(stool_osmotic_gap, stool_potassium) = (290 - stool_osmotic_gap) / 2 - stool_potassium
+        source "290 mOsm/kg - 2(Na[feces]+K[feces])"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544337/"
+        trust authoritative
+
+    % Stool potassium — the same expression solved for the stool potassium, the third reading of the one law.
+    formula stool_potassium(stool_osmotic_gap, stool_sodium) = (290 - stool_osmotic_gap) / 2 - stool_sodium
+        source "290 mOsm/kg - 2(Na[feces]+K[feces])"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544337/"
+        trust authoritative
+}
