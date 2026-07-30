@@ -2395,6 +2395,61 @@ const CASES: &[Case] = &[
         setup: &[],
         query: "SELECT printf('%g', 0.00001) AS a, printf('%.3g', 1234.5) AS b, printf('%G', 1e20) AS c, printf('%g', 123456789.0) AS d",
     },
+    // Date/time functions — date/time/datetime/julianday/unixepoch. Each accepts
+    // an ISO-8601 string, a numeric Julian day, or the string 'now' (absent =
+    // 'now'); mini-sqlite converts through an integer-millisecond Julian Day
+    // exactly as SQLite does. NB: invalid dates (`date('2026-13-01')`) return SQL
+    // NULL on both engines; those NULL rows are intentionally NOT wrapped in a
+    // string sentinel — a quoted `'NULL'` literal is separately mis-lowered to
+    // NULL by the lexer (a pre-existing bug, flagged for its own fix), which
+    // would confound these cases.
+    Case {
+        id: "datetime_render_iso",
+        setup: &[],
+        query: "SELECT date('2026-07-30') AS a, date('2026-07-30T14:30:15') AS b, time('2026-07-30 14:30:15') AS c, datetime('2026-07-30 14:30:15') AS d",
+    },
+    Case {
+        id: "datetime_render_edge",
+        setup: &[],
+        query: "SELECT datetime('2026-07-30 14:30') AS a, datetime('2026-07-30 14:30:15.500') AS b, time('14:30:15') AS c, datetime('2026-07-30T14:30:00Z') AS d",
+    },
+    // Field-range normalization/rejection: Feb 30 → Mar 2 and non-leap Feb 29 →
+    // Mar 1 (arithmetic normalization); bad month/day/partial/garbage → NULL.
+    Case {
+        id: "datetime_normalize_reject",
+        setup: &[],
+        query: "SELECT date('2026-02-30') AS a, date('2023-02-29') AS b, date('2026-13-01') AS c, date('2026-07-32') AS d, date('2026-07') AS e, date('hello') AS f",
+    },
+    // julianday (REAL) — noon = whole number, midnight = .5; fractional time adds
+    // the day fraction. unixepoch (INTEGER seconds since 1970-01-01).
+    Case {
+        id: "julianday_values",
+        setup: &[],
+        query: "SELECT julianday('2000-01-01 12:00:00') AS a, julianday('2026-07-30') AS b, julianday('2026-07-30 14:30:15') AS c",
+    },
+    Case {
+        id: "unixepoch_values",
+        setup: &[],
+        query: "SELECT unixepoch('1970-01-01 00:00:00') AS a, unixepoch('2026-07-30') AS b, unixepoch('2026-07-30 14:30:15') AS c",
+    },
+    // Numeric argument = Julian day (int, real, or numeric string); range checked
+    // (0 ≤ jd < 5373484.5). date('0.0') is JD 0 → a pre-Gregorian negative year.
+    Case {
+        id: "datetime_from_julian",
+        setup: &[],
+        query: "SELECT date(2451545.0) AS a, datetime(2451545.5) AS b, time(2451545.75) AS c, date(2451545) AS d, date('2451545.0') AS e, datetime('0.0') AS f",
+    },
+    Case {
+        id: "datetime_julian_out_of_range",
+        setup: &[],
+        query: "SELECT date(-1000000.0) AS a, date(1e18) AS b",
+    },
+    // Result storage classes, incl. the non-deterministic 'now' (type only).
+    Case {
+        id: "datetime_result_types",
+        setup: &[],
+        query: "SELECT typeof(unixepoch('2026-07-30')) AS a, typeof(julianday('2026-07-30')) AS b, typeof(date('now')) AS c",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

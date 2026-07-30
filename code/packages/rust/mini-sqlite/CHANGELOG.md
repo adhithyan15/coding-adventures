@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.5.72 — date/time functions (phase 1): date/time/datetime/julianday/unixepoch
+
+mini-sqlite now understands time. Five new functions, matching real SQLite:
+
+- `date(X)` / `time(X)` / `datetime(X)` render a time value as an ISO string;
+  `julianday(X)` returns the Julian day (REAL); `unixepoch(X)` returns whole
+  seconds since 1970-01-01 (INTEGER).
+- The time value is an ISO-8601 string (`YYYY-MM-DD`, space or `T` separator,
+  optional `HH:MM[:SS[.fff]]` and trailing `Z`; or a bare time → 2000-01-01), a
+  numeric Julian day (int/real/numeric string in `[0, 5373484.5)`), or `'now'`;
+  no argument means `'now'`.
+- Like SQLite, out-of-range days NORMALIZE rather than reject
+  (`date('2026-02-30')` → `2026-03-02`, `date('2023-02-29')` → `2023-03-01`),
+  while a bad month, out-of-range day, partial, or garbage string is NULL.
+
+Implemented by porting SQLite's integer-millisecond Julian Day (`iJD`)
+arithmetic, so values (including `julianday` REALs) match bit-for-bit. Date/time
+MODIFIERS (`'+1 day'`, `'start of month'`, …) and `strftime` are deferred to
+later phases — a modifier argument is declined, not silently ignored. Twelve new
+differential-oracle cases pin this against bundled real SQLite; the ledger stays
+empty. Spans sql-vm 0.4.42.
+
 ## 0.5.71 — `printf`/`format` float conversions and the full SQL-quoting family
 
 `printf`/`format` now support the C float conversions `%e`/`%E`, `%f`/`%F`,

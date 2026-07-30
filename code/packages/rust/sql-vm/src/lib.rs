@@ -1413,6 +1413,17 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             Ok(SqlValue::Text(sql_printf(name, &format, &args[1..])?))
         }
 
+        // Date/time functions. Each takes an optional time-value argument (a
+        // Julian-day number, an ISO-8601 string, or `'now'`; absent = `'now'`)
+        // and converts through an integer-millisecond Julian Day. See the
+        // date/time subsystem section for the conversion. Modifier arguments are
+        // deferred to a later phase (declined, not ignored).
+        "DATE" => datetime_render(name, DateFmt::Date, &args),
+        "TIME" => datetime_render(name, DateFmt::Time, &args),
+        "DATETIME" => datetime_render(name, DateFmt::DateTime, &args),
+        "JULIANDAY" => julianday_func(&args),
+        "UNIXEPOCH" => unixepoch_func(&args),
+
         "UPPER" => {
             if args.len() != 1 {
                 return Err(VmError::TypeMismatch(format!("UPPER expects 1 arg, got {}", args.len())));
@@ -2999,6 +3010,283 @@ fn glob_match(text: &str, pattern: &str) -> bool {
         pi += 1;
     }
     pi == p.len()
+}
+
+// ===========================================================================
+// Date/time subsystem — `date` / `time` / `datetime` / `julianday` / `unixepoch`
+// ===========================================================================
+//
+// SQLite has no dedicated date type: a moment in time is a REAL/INT Julian day,
+// or an ISO-8601 string, and every date function converts to a canonical
+// **integer count of milliseconds of Julian Day** (`iJD`) and back. We port that
+// exactly — the arithmetic below mirrors SQLite's `computeJD`, `computeYMD` and
+// `computeHMS` — so results (including quirks like normalization) match bit-for-
+// bit.
+//
+// ## Julian Day, briefly
+//
+// The Julian Day (JD) is a continuous day count with its zero at noon on 24 Nov
+// 4714 BC (proleptic Gregorian). Noon — not midnight — so a whole JD lands at
+// noon and midnight falls on the `.5`. `iJD = JD × 86_400_000` (whole
+// milliseconds) lets all arithmetic stay in exact integers:
+//
+// ```text
+//   iJD (ms)  ──/86_400_000──▶  JD (real)     julianday(X)
+//   iJD (ms)  ──(−epoch)/1000─▶ unix seconds  unixepoch(X)
+//   iJD (ms)  ◀─calendar mathֶ─▶ Y-M-D H:M:S   date/time/datetime(X)
+// ```
+//
+// The Unix epoch 1970-01-01 00:00 is JD 2440587.5, i.e. `iJD = 210_866_760_000_000`.
+//
+// ## Why the calendar formula normalizes
+//
+// `computeJD` turns Y-M-D into a day number with an *arithmetic* formula that
+// never consults the length of a month, so an out-of-range day simply lands on
+// the following month: `date('2026-02-30')` → `2026-03-02`, exactly as SQLite
+// does. Only the coarse field ranges are checked up front (month 1–12, day 1–31,
+// hour 0–24, minute/second < 60); everything else the round-trip normalizes.
+
+/// The Unix epoch (1970-01-01 00:00:00 UTC) expressed as `iJD` milliseconds.
+/// `julianday` of this instant is 2440587.5, and 2440587.5 × 86_400_000 =
+/// 210_866_760_000_000.
+const UNIX_EPOCH_IJD_MS: i64 = 210_866_760_000_000;
+
+/// Upper bound (exclusive) on a numeric Julian-day argument, matching SQLite:
+/// `date(5373484.5)` and above is out of range (year > 9999) and yields NULL.
+const MAX_JULIAN_DAY: f64 = 5_373_484.5;
+
+/// Convert a validated `(Y, M, D, h, m, s)` to `iJD` milliseconds — a direct
+/// port of SQLite's `computeJD`. The month/day need not be in-range for their
+/// month; the Gregorian formula normalizes (`Feb 30` → `Mar 2`). Integer `/`
+/// truncates toward zero here exactly as C does.
+fn ymd_hms_to_ijd(y: i64, m: i64, d: i64, h: i64, min: i64, sec: f64) -> i64 {
+    let (mut yy, mut mm) = (y, m);
+    if mm <= 2 {
+        yy -= 1;
+        mm += 12;
+    }
+    let a = yy / 100;
+    let b = 2 - a + a / 4;
+    let x1 = (36525 * (yy + 4716)) / 100;
+    let x2 = (306001 * (mm + 1)) / 10000;
+    // (X1 + X2 + D + B − 1524.5) is exact and half-integral, so ×86_400_000 is a
+    // whole number that `as i64` represents exactly (magnitude ≪ 2^52).
+    let date_ms = ((x1 + x2 + d + b) as f64 - 1524.5) * 86_400_000.0;
+    let mut ijd = date_ms as i64;
+    ijd += h * 3_600_000 + min * 60_000 + (sec * 1000.0 + 0.5) as i64;
+    ijd
+}
+
+/// Recover the calendar date `(Y, M, D)` from `iJD` — a port of SQLite's
+/// `computeYMD`. Valid for every `iJD ≥ 0` this module produces.
+fn ijd_to_ymd(ijd: i64) -> (i64, i64, i64) {
+    let z = (ijd + 43_200_000) / 86_400_000;
+    let mut a = ((z as f64 - 1_867_216.25) / 36_524.25) as i64;
+    a = z + 1 + a - (a / 4);
+    let b = a + 1524;
+    let c = ((b as f64 - 122.1) / 365.25) as i64;
+    let d = (365.25 * c as f64) as i64;
+    let e = ((b - d) as f64 / 30.6001) as i64;
+    let x1 = (30.6001 * e as f64) as i64;
+    let day = b - d - x1;
+    let month = if e < 14 { e - 1 } else { e - 13 };
+    let year = if month > 2 { c - 4716 } else { c - 4715 };
+    (year, month, day)
+}
+
+/// Recover the clock time `(h, m, s)` (whole seconds; the fractional part is
+/// dropped, matching the default `time`/`datetime` output) from `iJD` — a port
+/// of SQLite's `computeHMS`.
+fn ijd_to_hms(ijd: i64) -> (i64, i64, i64) {
+    let mut s = (ijd + 43_200_000).rem_euclid(86_400_000) / 1000; // whole seconds in day
+    let h = s / 3600;
+    s -= h * 3600;
+    let m = s / 60;
+    let sec = s - m * 60;
+    (h, m, sec)
+}
+
+/// Parse the `SS` or `SS.fff` seconds field. SQLite requires two leading digits;
+/// a fractional part is optional but, if the `.` is present, must have digits.
+fn parse_seconds_field(s: &str) -> Option<f64> {
+    let b = s.as_bytes();
+    if b.len() < 2 || !b[0].is_ascii_digit() || !b[1].is_ascii_digit() {
+        return None;
+    }
+    if b.len() == 2 {
+        return s.parse::<f64>().ok();
+    }
+    if b[2] != b'.' || b.len() == 3 || !b[3..].iter().all(u8::is_ascii_digit) {
+        return None;
+    }
+    s.parse::<f64>().ok()
+}
+
+/// Parse an `HH:MM`, `HH:MM:SS`, or `HH:MM:SS.fff` clock time, with an optional
+/// trailing `Z` (UTC designator, accepted and ignored). Enforces SQLite's field
+/// ranges: hour 0–24, minute < 60, second < 60.
+fn parse_time_field(s: &str) -> Option<(i64, i64, f64)> {
+    let s = s.strip_suffix('Z').unwrap_or(s);
+    let b = s.as_bytes();
+    if s.len() < 5
+        || b[2] != b':'
+        || !b[0..2].iter().all(u8::is_ascii_digit)
+        || !b[3..5].iter().all(u8::is_ascii_digit)
+    {
+        return None;
+    }
+    let h: i64 = s[0..2].parse().ok()?;
+    let min: i64 = s[3..5].parse().ok()?;
+    let sec = if s.len() == 5 {
+        0.0
+    } else if b[5] == b':' {
+        parse_seconds_field(&s[6..])?
+    } else {
+        return None;
+    };
+    if h > 24 || min >= 60 || sec >= 60.0 {
+        return None;
+    }
+    Some((h, min, sec))
+}
+
+/// Parse an ISO-8601 date/datetime/time string to `iJD` milliseconds. Accepts
+/// `YYYY-MM-DD`, optionally followed by a `' '` or `'T'` separator and a clock
+/// time; or a bare `HH:MM[:SS[.fff]]` (which defaults the date to 2000-01-01, as
+/// SQLite does). No surrounding whitespace is tolerated. Returns `None` if the
+/// text is not a well-formed date/time in range.
+fn parse_iso_datetime(s: &str) -> Option<i64> {
+    let b = s.as_bytes();
+    let looks_like_date = s.len() >= 10
+        && b[4] == b'-'
+        && b[7] == b'-'
+        && b[0..4].iter().all(u8::is_ascii_digit)
+        && b[5..7].iter().all(u8::is_ascii_digit)
+        && b[8..10].iter().all(u8::is_ascii_digit);
+    if looks_like_date {
+        let y: i64 = s[0..4].parse().ok()?;
+        let m: i64 = s[5..7].parse().ok()?;
+        let d: i64 = s[8..10].parse().ok()?;
+        if !(1..=12).contains(&m) || !(1..=31).contains(&d) {
+            return None;
+        }
+        let (h, min, sec) = if s.len() == 10 {
+            (0, 0, 0.0)
+        } else {
+            let sep = b[10];
+            if sep != b' ' && sep != b'T' {
+                return None;
+            }
+            parse_time_field(&s[11..])?
+        };
+        return Some(ymd_hms_to_ijd(y, m, d, h, min, sec));
+    }
+    // Time-only: SQLite anchors it to 2000-01-01.
+    let (h, min, sec) = parse_time_field(s)?;
+    Some(ymd_hms_to_ijd(2000, 1, 1, h, min, sec))
+}
+
+/// Validate and convert a numeric Julian-day argument to `iJD` milliseconds.
+/// Out-of-range values (negative, or ≥ year 10000) are rejected as SQLite does.
+fn julian_number_to_ijd(r: f64) -> Option<i64> {
+    if (0.0..MAX_JULIAN_DAY).contains(&r) {
+        Some((r * 86_400_000.0 + 0.5) as i64)
+    } else {
+        None
+    }
+}
+
+/// The current instant as `iJD` milliseconds, for the `'now'` time value and the
+/// zero-argument forms (`date()` etc.). Non-deterministic by nature, so the
+/// differential oracle checks only the RESULT TYPE of `'now'`, never its value.
+fn now_ijd() -> Option<i64> {
+    use std::time::{SystemTime, UNIX_EPOCH};
+    let ms = SystemTime::now().duration_since(UNIX_EPOCH).ok()?.as_millis() as i64;
+    Some(UNIX_EPOCH_IJD_MS + ms)
+}
+
+/// Resolve a date-function time-value argument to `iJD` milliseconds. Numeric
+/// arguments are Julian days; text is an ISO string, `'now'`, or (failing those)
+/// a numeric Julian-day string. `None` means "produce SQL NULL" (a NULL/blob
+/// argument, or unparsable text).
+fn time_value_to_ijd(v: &SqlValue) -> Option<i64> {
+    match v {
+        SqlValue::Int(i) => julian_number_to_ijd(*i as f64),
+        SqlValue::Bool(b) => julian_number_to_ijd(*b as i64 as f64),
+        SqlValue::Float(f) => julian_number_to_ijd(*f),
+        SqlValue::Text(s) => {
+            if s.eq_ignore_ascii_case("now") {
+                return now_ijd();
+            }
+            parse_iso_datetime(s).or_else(|| s.parse::<f64>().ok().and_then(julian_number_to_ijd))
+        }
+        _ => None,
+    }
+}
+
+/// Which text rendering a date function emits.
+enum DateFmt {
+    Date,
+    Time,
+    DateTime,
+}
+
+/// Format `iJD` milliseconds per `fmt`. Years are `%04d` (so year 1 → `0001`;
+/// pre-epoch Julian days can yield a negative year such as `-4713`).
+fn format_ijd(ijd: i64, fmt: &DateFmt) -> String {
+    let date = || {
+        let (y, m, d) = ijd_to_ymd(ijd);
+        format!("{y:04}-{m:02}-{d:02}")
+    };
+    let time = || {
+        let (h, m, s) = ijd_to_hms(ijd);
+        format!("{h:02}:{m:02}:{s:02}")
+    };
+    match fmt {
+        DateFmt::Date => date(),
+        DateFmt::Time => time(),
+        DateFmt::DateTime => format!("{} {}", date(), time()),
+    }
+}
+
+/// Shared front-end for `date`/`time`/`datetime`/`julianday`/`unixepoch`: resolve
+/// the (optional) time-value argument to `iJD`, or short-circuit to NULL. The
+/// zero-argument form means `'now'`. Trailing modifier arguments are not yet
+/// supported (phase 2) and are declined rather than silently ignored.
+fn datetime_base_ijd(name: &str, args: &[SqlValue]) -> Result<Option<i64>, VmError> {
+    if args.len() > 1 {
+        return Err(VmError::TypeMismatch(format!(
+            "{name}: date/time modifiers are not yet supported"
+        )));
+    }
+    match args.first() {
+        None => Ok(now_ijd()), // date() == date('now')
+        Some(v) => Ok(time_value_to_ijd(v)),
+    }
+}
+
+/// `date(X)` / `time(X)` / `datetime(X)` — render the time value as text, or NULL.
+fn datetime_render(name: &str, fmt: DateFmt, args: &[SqlValue]) -> Result<SqlValue, VmError> {
+    Ok(match datetime_base_ijd(name, args)? {
+        Some(ijd) => SqlValue::Text(format_ijd(ijd, &fmt)),
+        None => SqlValue::Null,
+    })
+}
+
+/// `julianday(X)` — the Julian day as a REAL, or NULL.
+fn julianday_func(args: &[SqlValue]) -> Result<SqlValue, VmError> {
+    Ok(match datetime_base_ijd("JULIANDAY", args)? {
+        Some(ijd) => SqlValue::Float(ijd as f64 / 86_400_000.0),
+        None => SqlValue::Null,
+    })
+}
+
+/// `unixepoch(X)` — whole seconds since the Unix epoch as an INTEGER, or NULL.
+fn unixepoch_func(args: &[SqlValue]) -> Result<SqlValue, VmError> {
+    Ok(match datetime_base_ijd("UNIXEPOCH", args)? {
+        Some(ijd) => SqlValue::Int((ijd - UNIX_EPOCH_IJD_MS).div_euclid(1000)),
+        None => SqlValue::Null,
+    })
 }
 
 // ===========================================================================
@@ -6095,6 +6383,56 @@ mod tests {
         // unbounded fractional expansion.
         assert!(call_builtin("PRINTF", vec![txt("%9999999999d"), SqlValue::Int(1)]).is_err());
         assert!(call_builtin("PRINTF", vec![txt("%.9999999999f"), SqlValue::Float(1.5)]).is_err());
+    }
+
+    #[test]
+    fn builtin_datetime_functions_match_sqlite() {
+        let txt = |s: &str| SqlValue::Text(s.into());
+        let call = |name: &str, args: Vec<SqlValue>| call_builtin(name, args).unwrap();
+
+        // date/time/datetime render an ISO string; a `T` or space separator and a
+        // trailing `Z` are accepted; missing seconds default to `:00`.
+        assert_eq!(call("DATE", vec![txt("2026-07-30")]), txt("2026-07-30"));
+        assert_eq!(call("DATE", vec![txt("2026-07-30T14:30:15")]), txt("2026-07-30"));
+        assert_eq!(call("TIME", vec![txt("2026-07-30 14:30:15")]), txt("14:30:15"));
+        assert_eq!(call("DATETIME", vec![txt("2026-07-30 14:30")]), txt("2026-07-30 14:30:00"));
+        assert_eq!(call("DATETIME", vec![txt("2026-07-30T14:30:00Z")]), txt("2026-07-30 14:30:00"));
+        assert_eq!(call("TIME", vec![txt("14:30:15")]), txt("14:30:15")); // time-only
+
+        // The Gregorian formula normalizes out-of-range days; bad month/day/
+        // partial/garbage strings are NULL.
+        assert_eq!(call("DATE", vec![txt("2026-02-30")]), txt("2026-03-02"));
+        assert_eq!(call("DATE", vec![txt("2023-02-29")]), txt("2023-03-01")); // non-leap
+        assert_eq!(call("DATE", vec![txt("2024-02-29")]), txt("2024-02-29")); // leap OK
+        for bad in ["2026-13-01", "2026-07-32", "2026-07-00", "2026-07", "hello", ""] {
+            assert_eq!(call("DATE", vec![txt(bad)]), SqlValue::Null, "date({bad:?})");
+        }
+
+        // julianday: noon is a whole number, midnight is `.5`.
+        assert_eq!(call("JULIANDAY", vec![txt("2000-01-01 12:00:00")]), SqlValue::Float(2451545.0));
+        assert_eq!(call("JULIANDAY", vec![txt("2026-07-30")]), SqlValue::Float(2461251.5));
+        // unixepoch: whole seconds since 1970-01-01 (an INTEGER).
+        assert_eq!(call("UNIXEPOCH", vec![txt("1970-01-01 00:00:00")]), SqlValue::Int(0));
+        assert_eq!(call("UNIXEPOCH", vec![txt("2026-07-30")]), SqlValue::Int(1785369600));
+
+        // A numeric argument (int, real, or numeric string) is a Julian day.
+        assert_eq!(call("DATE", vec![SqlValue::Float(2451545.0)]), txt("2000-01-01"));
+        assert_eq!(call("DATE", vec![SqlValue::Int(2451545)]), txt("2000-01-01"));
+        assert_eq!(call("DATE", vec![txt("2451545.0")]), txt("2000-01-01"));
+        assert_eq!(call("TIME", vec![SqlValue::Float(2451545.75)]), txt("06:00:00"));
+        assert_eq!(call("DATETIME", vec![txt("0.0")]), txt("-4713-11-24 12:00:00")); // JD 0
+        // Julian day out of range [0, 5373484.5) → NULL.
+        assert_eq!(call("DATE", vec![SqlValue::Float(-1_000_000.0)]), SqlValue::Null);
+        assert_eq!(call("DATE", vec![SqlValue::Float(1e18)]), SqlValue::Null);
+
+        // A NULL argument propagates to NULL; 'now' yields a text date.
+        assert_eq!(call("DATE", vec![SqlValue::Null]), SqlValue::Null);
+        assert!(matches!(call("DATE", vec![]), SqlValue::Text(_))); // date() == date('now')
+        assert!(matches!(call("DATE", vec![txt("now")]), SqlValue::Text(_)));
+
+        // Modifiers are not yet supported (phase 2) — declined, not silently
+        // ignored (which would give a wrong answer).
+        assert!(call_builtin("DATE", vec![txt("2026-07-30"), txt("+1 day")]).is_err());
     }
 
     #[test]
