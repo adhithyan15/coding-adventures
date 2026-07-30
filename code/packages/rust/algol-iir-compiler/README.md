@@ -111,10 +111,13 @@ out-of-range subscript traps at run time. The five code-gen backends don't lower
 the array ops yet; see the `E5-*` follow-ups in
 `code/specs/LANG-FULL-IMPLEMENTATION.md`.
 
-Unsupported ALGOL 60 features — **multidimensional** and non-numeric arrays,
-arrays as procedure parameters, dynamic string variables/arrays, proper (void)
-procedures, by-name (non-`value`) parameters, parameterless-procedure calls (a
-bare name parses as a variable), enclosing-block **array** capture (only scalars
-are globalised so far), and conditional/nested switch-list elements — return
-explicit compiler
-errors.
+Proper procedures now lower as side-effecting IIR `void` functions when called
+in statement position. They can write enclosing scalar globals and use the same
+literal-backed output path as typed procedures; using a proper procedure in
+value position is a clean type error because it has no return value.
+
+Unsupported ALGOL 60 features — non-numeric arrays, arrays as procedure
+parameters, dynamic string variables/arrays, by-name (non-`value`) parameters,
+parameterless-procedure calls (a bare name parses as a variable),
+enclosing-block **array** capture (only scalars are globalised so far), and
+conditional/nested switch-list elements — return explicit compiler errors.
