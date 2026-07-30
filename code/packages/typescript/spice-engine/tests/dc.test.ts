@@ -863,6 +863,24 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects negative or non-finite MOS sidewall grading coefficient", () => {
+    for (const value of [0.0, 0.33, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { MJSW: value });
+      expect(valid.parameters.MJSW).toBe(value);
+    }
+
+    for (const invalidCoefficient of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { MJSW: invalidCoefficient }),
+      ).toThrow("MOSFET MJSW must be finite and non-negative");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,
