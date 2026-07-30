@@ -1,0 +1,68 @@
+% ============================================================================
+% density-of-heat-conversions — density-of-heat (energy per area) unit → joule-per-square-metre
+% factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of the NIST-cited conversion tables (length, mass, area, volume, energy, force,
+% power, pressure, the electric-EMU family, the two viscosities, wave number, linear mass density,
+% temperature interval, mass density, moment of force, specific heat capacity, and the rest): a native
+% tabular relation ingested VERBATIM from a published NIST conversion table. Each row states the factor
+% converting a common non-SI unit of DENSITY OF HEAT (a quantity of heat energy DELIVERED PER UNIT
+% AREA — the time-integrated energy dose a surface receives, as in a radiant-exposure or insolation
+% measurement) to the SI coherent derived unit, the joule per square metre, J/m²:
+%
+%     ? density_of_heat_to_joule_per_square_metre(calorie_th_per_square_centimetre, $v)   % 41840
+%     ? density_of_heat_to_joule_per_square_metre(langley, $v)                            % 41840
+%
+% This opens a NEW dimension — DENSITY OF HEAT (energy per area, J/m²) — alongside the already-tabulated
+% length/mass/area/volume/time/speed/energy/pressure/force/power/acceleration/dynamic-viscosity/
+% kinematic-viscosity/magnetic-flux-density/magnetic-flux/illuminance/luminance/radioactivity/
+% absorbed-dose/dose-equivalent/exposure/wave-number/linear-mass-density/temperature-interval/
+% mass-density/moment-of-force/specific-heat-capacity tables and the electric charge/potential/
+% resistance/capacitance/inductance/conductance/current tables. Density of heat is energy PER AREA
+% [energy / area] — distinct from plain ENERGY, the joule (no area), from DENSITY OF HEAT FLOW RATE /
+% irradiance, W/m² (energy per area PER TIME), and from PRESSURE, also N/m² = J/m³ dimensionally-close
+% but a force per area, NOT an energy per area: do NOT confuse them. A value given in cal/cm² or
+% langleys must be put into SI first, then reasoned over (write-once-use-many). Why a `table` and not
+% hand-written `relate` clauses: this is exactly the shape reference data comes in — a published table,
+% not prose. The citable artifact IS the NIST conversion-factors table at the `locator` below; each
+% factor here is a CELL of NIST Special Publication 811, Appendix B.9, defended by one provenance
+% envelope. Each `row` lowers to a ground relation
+% `density_of_heat_to_joule_per_square_metre(unit, v)`, so the exact lookups above are the ordinary SLD
+% binding query — the engine returns the factor WITH this table's citation as its proof, on the CPU,
+% with zero model calls.
+%
+% HONESTY NOTE (like every other NIST table, only the EXACT defined factors get rows): NIST SP 811 B.9
+% prints both density-of-heat factors below in BOLDFACE, its convention for factors that are EXACT by
+% definition, transcribed here as the plain decimal number of joules per square metre each names:
+%
+%     calorieth per square centimeter (calth/cm2)   4.184 E+04  →  41840
+%     langley (calth/cm2)                           4.184 E+04  →  41840
+%
+% Both are EXACT and terminate; nothing here is a rounded measurement. They land on the SAME value
+% because the LANGLEY is DEFINED as one thermochemical calorie per square centimetre — the two names
+% denote the identical unit — and that unit is exact because the thermochemical calorie is exactly
+% 4.184 J and cm²→m² is an exact power of ten: 1 calth/cm² = 4.184 J / (10⁻² m)² = 4.184 / 10⁻⁴ =
+% 4.184 × 10⁴ = 41840 J/m², exactly. (Two names for one exact unit — langley and calth/cm² — is a real
+% feature of the definitions, the langley being the customary name in solar-radiation / insolation
+% work, not a coincidence to hide.) This table is SPECIFIC to density of heat: a unit of a DIFFERENT
+% quantity — e.g. the "pound", which NIST SP 811 B.9 lists separately as a MASS unit converting to the
+% kilogram, NOT to J/m² — therefore gets no row here, and a
+% `? density_of_heat_to_joule_per_square_metre(pound, $v)` ABSTAINS rather than mis-converting a mass
+% unit as if it were an energy-per-area unit. The only claim this table makes is "these are the exact
+% factors NIST SP 811 B.9 prints for the calorieth per square centimetre's and langley's conversions to
+% the joule per square metre" — which is exactly what a byte-check against the cited table verifies.
+% `trust authoritative` — a primary, re-fetchable standards reference. (See ADJ-TABLES.md; and
+% feedback_nothing_human_authored — each factor is a verbatim cell of the cited table, nothing asserted
+% from memory.)
+% ============================================================================
+
+table density_of_heat_to_joule_per_square_metre {
+    columns unit, joule_per_square_metre
+
+    row (calorie_th_per_square_centimetre, 41840)
+    row (langley, 41840)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}
