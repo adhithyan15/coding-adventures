@@ -1,5 +1,7 @@
 # Changelog
 
+- Reject non-positive or non-finite Level-1 MOS model-card `PHI` values with a
+  stable diagnostic before electrostatic and temperature preprocessing.
 - Reject non-finite Level-1 MOS model-card `LAMBDA` / `LAM` values with a
   stable diagnostic before current evaluation.
 - Reject non-finite Level-1 MOS model-card `VT0` / `VTO` / `VTH` values with a

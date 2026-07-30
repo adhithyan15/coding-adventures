@@ -768,6 +768,25 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects non-positive or non-finite MOS surface potential", () => {
+    for (const value of [0.1, 0.84, 2.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { PHI: value });
+      expect(valid.parameters.PHI).toBe(value);
+    }
+
+    for (const invalidPotential of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      0.0,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { PHI: invalidPotential }),
+      ).toThrow("MOSFET PHI must be finite and positive");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,
