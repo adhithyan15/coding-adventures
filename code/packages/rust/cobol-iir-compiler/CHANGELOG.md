@@ -8,6 +8,34 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.64.0: alphanumeric level-88 with a THRU range
+
+A level-88 condition-name on an **alphanumeric** (`PIC X`) conditional variable now also lowers for an
+inclusive `THRU` **range whose bounds are string literals** (`88 PASSING VALUE "A" THRU "D"`), in BOTH
+directions, compiled byte-identical to the `coding-adventures-cobol-runtime` 0.68.0 oracle. This is
+the deferred half of v0.63.0 (#68), which lowered only discrete-string VALUEs; the range case
+(`88 X VALUE "A" THRU "Z"`) was rejected up front and is lifted here. No grammar change — the same
+rules the numeric level-88 range uses already parse this.
+
+- Generalized predicate (`all_single_str` → `all_str_values`): the accept predicate now holds when
+  every VALUE item is a string `Single(Src::Str)` OR a `Range(Src::Str, Src::Str)` (BOTH bounds string
+  literals) — logically IDENTICAL to the oracle's, so both engines accept and reject the very same
+  programs.
+- Read (`emit_condition_name`): a string range `lo THRU hi` lowers to
+  `and(cmp_ge(var, lo), cmp_le(var, hi))` over the SAME alphanumeric `str_cmp` path
+  (`emit_str_condition`) an `IF var >= "…"` / `IF var <= "…"` relation runs — reusing the exact
+  `str_const` + fixed `StrOperand` subject the discrete-string equality builds, and the same `and` the
+  numeric range's `emit_value_test` emits. Range and discrete results OR-fold with `or`, mirroring the
+  numeric fold exactly.
+- Set (`emit_set`): when the first VALUE item is a range `lo THRU _`, stores its LOW bound `lo` — the
+  string fit to the receiver width by `format_into_picture` and emitted as the slot's `str_const`,
+  mirroring the numeric SET.
+- Scope / boundary (co-total with the oracle): a range with a NON-string bound (`88 X VALUE "A" THRU
+  5`), a numeric/figurative VALUE, or a mixed list on an alphanumeric 88 stays a later rung — rejected
+  UP FRONT (before any dead instructions) IDENTICALLY to the oracle. The FILLER-88 reject from v0.63.0
+  still holds for a range 88, and the numeric level-88 paths (single + range) are unchanged. Byte-vs-
+  char is ASCII-clean; a non-ASCII bound is the pre-existing alphanumeric byte-vs-char behavior.
+
 ### Added — v0.63.0: level-88 condition-name on an alphanumeric item (read + SET TO TRUE)
 
 A level-88 condition-name declared on an **alphanumeric** (`PIC X`) conditional variable now lowers in

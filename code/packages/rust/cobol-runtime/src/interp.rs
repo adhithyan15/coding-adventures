@@ -99,15 +99,27 @@ fn num_value(lit: &Lit) -> Result<Decimal, RuntimeError> {
     }
 }
 
-/// Whether every level-88 `VALUE` item is a discrete string literal
-/// (`Single(Lit::Str)`). This is the accept predicate for a condition-name on an
-/// ALPHANUMERIC (`PIC X`) conditional variable: a discrete string VALUE reads and
-/// SETs exactly like `MOVE "…" TO item`. A `THRU` range or a numeric/figurative
-/// VALUE on an alphanumeric item stays a later rung, so this returns `false` and
-/// the caller rejects — the identical predicate the compiler applies, so both
-/// engines accept and reject the very same programs.
-fn all_single_str(values: &[ValueSpec]) -> bool {
-    values.iter().all(|v| matches!(v, ValueSpec::Single(Lit::Str(_))))
+/// Whether every level-88 `VALUE` item is a STRING value: a discrete string
+/// literal (`Single(Lit::Str)`) OR an inclusive `THRU` range BOTH of whose bounds
+/// are string literals (`Range(Lit::Str, Lit::Str)`). This is the accept predicate
+/// for a condition-name on an ALPHANUMERIC (`PIC X`) conditional variable:
+///
+///   * a discrete string VALUE reads (equality) and SETs (store) exactly like
+///     `MOVE "…" TO item`;
+///   * a string `THRU` range reads as an inclusive `lo ≤ var ≤ hi` alphanumeric
+///     comparison and SETs to its low bound `lo` — both through the SAME
+///     space-padded byte compare / store an `IF`/`MOVE` uses.
+///
+/// A range with a NON-string bound (`"A" THRU 5`), a numeric/figurative VALUE, or
+/// a mixed string/numeric list still fails → still a later rung, so this returns
+/// `false` and the caller rejects. The predicate is logically IDENTICAL to the
+/// compiler's (`Src::Str` there, `Lit::Str` here), so both engines accept and
+/// reject the very same programs.
+fn all_str_values(values: &[ValueSpec]) -> bool {
+    values.iter().all(|v| match v {
+        ValueSpec::Single(lit) => matches!(lit, Lit::Str(_)),
+        ValueSpec::Range(lo, hi) => matches!(lo, Lit::Str(_)) && matches!(hi, Lit::Str(_)),
+    })
 }
 
 /// The character form of a source value for an alphanumeric comparison (a
@@ -2047,14 +2059,16 @@ impl Machine {
     /// its slot (`src_from_lit` → `move_into`) — the same store `MOVE 9 TO N` does.
     /// A leading `THRU` range contributes its low bound.
     ///
-    /// An **alphanumeric** (`PIC X`) variable is now supported for the
-    /// discrete-string case: when every VALUE item is a discrete string literal
-    /// ([`all_single_str`]), SET stores the FIRST value into the slot exactly as
-    /// `MOVE "…" TO item` (`src_from_lit` yields `Src::Chars`, which `move_into`
-    /// fits to the receiver width). A `THRU` range with string bounds, or a
-    /// numeric/figurative VALUE, on an alphanumeric variable stays a later rung —
-    /// rejected identically to the compiler. A group conditional variable (no
-    /// picture) likewise stays a later rung.
+    /// An **alphanumeric** (`PIC X`) variable is supported for STRING values: when
+    /// every VALUE item is a discrete string literal or a string `THRU` range
+    /// ([`all_str_values`]), SET stores the FIRST value's string into the slot
+    /// exactly as `MOVE "…" TO item` (`src_from_lit` yields `Src::Chars`, which
+    /// `move_into` fits to the receiver width) — a leading discrete string `s`
+    /// stores `s`; a leading range `lo THRU _` stores its LOW bound `lo`, mirroring
+    /// the numeric arm. A range with a NON-string bound, a numeric/figurative VALUE,
+    /// or a mixed list on an alphanumeric variable stays a later rung — rejected
+    /// identically to the compiler. A group conditional variable (no picture)
+    /// likewise stays a later rung.
     fn exec_set_true(&mut self, cond_name: &str) -> Result<(), RuntimeError> {
         let cn = self
             .conditions
@@ -2076,19 +2090,25 @@ impl Machine {
             let src = self.src_from_lit(&lit)?;
             return self.move_into(var, src);
         }
-        // Alphanumeric (`PIC X`) slot: accept only when every VALUE is a discrete
-        // string; store the first into the slot exactly as `MOVE "…" TO item`.
-        if self.items[var].picture.is_some() && all_single_str(&cn.values) {
-            if let Some(ValueSpec::Single(lit)) = cn.values.first() {
-                let lit = lit.clone();
-                let src = self.src_from_lit(&lit)?;
-                return self.move_into(var, src);
-            }
+        // Alphanumeric (`PIC X`) slot: accept when every VALUE is a string
+        // (discrete or a string range); store the FIRST value's string into the slot
+        // exactly as `MOVE "…" TO item` — a discrete string, or a range's LOW bound.
+        if self.items[var].picture.is_some() && all_str_values(&cn.values) {
+            let lit = match cn.values.first() {
+                Some(ValueSpec::Single(lit)) | Some(ValueSpec::Range(lit, _)) => lit.clone(),
+                None => {
+                    return Err(RuntimeError::Unsupported(format!(
+                        "condition-name {cond_name} has no VALUE"
+                    )))
+                }
+            };
+            let src = self.src_from_lit(&lit)?;
+            return self.move_into(var, src);
         }
         Err(RuntimeError::Unsupported(
             "SET … TO TRUE needs a numeric condition-name, or an alphanumeric one with \
-             discrete-string VALUEs (a THRU range, a numeric/figurative VALUE, or a group \
-             conditional variable is a later rung)"
+             string VALUEs (a discrete string or a string THRU range; a range with a non-string \
+             bound, a numeric/figurative VALUE, or a group conditional variable is a later rung)"
                 .into(),
         ))
     }
@@ -2290,16 +2310,23 @@ impl Machine {
     /// A **numeric** variable compares its decimal value against each numeric VALUE
     /// / `THRU` range (unchanged).
     ///
-    /// An **alphanumeric** (`PIC X`) variable is now supported for the
-    /// discrete-string case: when every VALUE item is a discrete string literal
-    /// ([`all_single_str`]), the name holds when the variable equals ANY of them
-    /// under COBOL's alphanumeric comparison — the SAME space-padded byte compare
-    /// an `IF var = "…"` relation runs, routed through [`Self::compare_operands`]
-    /// (which pads both sides to a common width and byte-compares), OR-folded over
-    /// the values. Reusing that machinery is what makes the read byte-identical to
-    /// the compiler's `str_cmp`. A `THRU` range with string bounds, or a
-    /// numeric/figurative VALUE, on an alphanumeric variable stays a later rung; a
-    /// group conditional variable (no picture) likewise.
+    /// An **alphanumeric** (`PIC X`) variable is supported for STRING values: when
+    /// every VALUE item is a discrete string literal or a string `THRU` range
+    /// ([`all_str_values`]), the name holds when the variable matches ANY of them
+    /// under COBOL's alphanumeric comparison. Every comparison is the SAME
+    /// space-padded byte compare an `IF var = "…"` / `IF var >= "…"` relation runs,
+    /// routed through [`Self::compare_operands`] (which pads both sides to a common
+    /// width and byte-compares):
+    ///
+    ///   * a discrete string `s` holds when `var == s` (ordering `Equal`);
+    ///   * an inclusive range `lo THRU hi` holds when `var >= lo` (ordering not
+    ///     `Less`) AND `var <= hi` (ordering not `Greater`).
+    ///
+    /// The per-value results OR-fold (any hit → true), exactly like the numeric arm.
+    /// Reusing `compare_operands` is what makes the read byte-identical to the
+    /// compiler's `str_cmp`. A `THRU` range with a NON-string bound, a
+    /// numeric/figurative VALUE, or a mixed list on an alphanumeric variable stays a
+    /// later rung; a group conditional variable (no picture) likewise.
     fn eval_condition_name(&self, name: &str) -> Result<bool, RuntimeError> {
         let cn = self
             .conditions
@@ -2325,25 +2352,36 @@ impl Machine {
             }
             return Ok(false);
         }
-        // Alphanumeric (`PIC X`) variable: accept only discrete-string VALUEs, then
-        // hold when the variable equals ANY of them under the alphanumeric byte
-        // compare — the identical `compare_operands` path an `IF var = "…"` uses.
-        if item.picture.is_some() && all_single_str(&cn.values) {
+        // Alphanumeric (`PIC X`) variable: accept string VALUEs (discrete or a
+        // string `THRU` range), then hold when the variable matches ANY of them
+        // under the alphanumeric byte compare — the identical `compare_operands`
+        // path an `IF var = "…"` / `IF var >= "…"` relation uses.
+        if item.picture.is_some() && all_str_values(&cn.values) {
+            use std::cmp::Ordering;
             let var_op = Operand::Ident(cn.var_name.clone());
             for spec in &cn.values {
-                if let ValueSpec::Single(lit @ Lit::Str(_)) = spec {
-                    let ord = self.compare_operands(&var_op, &Operand::Lit(lit.clone()))?;
-                    if ord == std::cmp::Ordering::Equal {
-                        return Ok(true);
+                let hit = match spec {
+                    // Discrete string: var == s.
+                    ValueSpec::Single(lit) => {
+                        self.compare_operands(&var_op, &Operand::Lit(lit.clone()))? == Ordering::Equal
                     }
+                    // Inclusive range: var >= lo (not Less) AND var <= hi (not Greater).
+                    ValueSpec::Range(lo, hi) => {
+                        self.compare_operands(&var_op, &Operand::Lit(lo.clone()))? != Ordering::Less
+                            && self.compare_operands(&var_op, &Operand::Lit(hi.clone()))?
+                                != Ordering::Greater
+                    }
+                };
+                if hit {
+                    return Ok(true);
                 }
             }
             return Ok(false);
         }
         Err(RuntimeError::Unsupported(
             "a level-88 condition-name needs a numeric variable, or an alphanumeric one with \
-             discrete-string VALUEs (a THRU range, a numeric/figurative VALUE, or a group \
-             conditional variable is a later rung)"
+             string VALUEs (a discrete string or a string THRU range; a range with a non-string \
+             bound, a numeric/figurative VALUE, or a group conditional variable is a later rung)"
                 .into(),
         ))
     }

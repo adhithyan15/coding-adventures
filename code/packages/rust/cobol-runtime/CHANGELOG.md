@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.68.0 — alphanumeric level-88 with a THRU range — 2026-07-29
+
+- A level-88 condition-name on an **alphanumeric** (`PIC X`) conditional variable now also accepts an
+  inclusive `THRU` **range whose bounds are string literals** (`88 PASSING VALUE "A" THRU "D"`), in
+  BOTH directions, byte-identical on both engines. This is the deferred half of 0.67.0 (#68), which
+  shipped only discrete-string VALUEs; the range case (`88 X VALUE "A" THRU "Z"`) was left a later rung
+  and is lifted here. No grammar change — the grammar already parses `THRU` ranges (the numeric
+  level-88 uses them).
+- Generalized predicate (`all_single_str` → `all_str_values`): the accept predicate now holds when
+  every VALUE item is a string `Single(Lit::Str)` OR a `Range(Lit::Str, Lit::Str)` (BOTH bounds string
+  literals). The predicate is logically IDENTICAL to the compiler's, so both engines accept and reject
+  the very same programs.
+- Read (`eval_condition_name`): a string range `lo THRU hi` holds when the variable is `>= lo` (order
+  not `Less`) AND `<= hi` (order not `Greater`) under the SAME space-padded `compare_operands` byte
+  compare an `IF var >= "…"` relation runs; its result OR-folds with any discrete-string equalities
+  (any hit → true), exactly like the numeric arm. `88 PASSING VALUE "A" THRU "D"` on `GRADE PIC X` is
+  true for `"A".."D"` inclusive, false below/above; a range OR-folded with a discrete single
+  (`VALUE "A" THRU "C" "Z"`) holds for either.
+- Set (`SET … TO TRUE`): when the first VALUE item is a range `lo THRU _`, stores its LOW bound `lo`
+  into the slot — mirroring the numeric SET — via the SAME `src_from_lit` → `move_into` string-MOVE
+  path a discrete-string SET uses. `SET PASSING TO TRUE` stores `"A"`.
+- Still-rejected (co-total with the compiler): a range with a NON-string bound (`88 X VALUE "A" THRU
+  5`), a numeric/figurative VALUE, or a mixed string/numeric list on an alphanumeric 88 stays a later
+  rung. The FILLER-88 reject from 0.67.0 still holds for a range 88, and the numeric level-88 paths
+  (single + range) are unchanged.
+- Byte-vs-char: `compare_operands`/`str_cmp` ordering is ASCII-clean (byte order == char order for
+  ASCII); a non-ASCII bound or runtime value is the PRE-EXISTING alphanumeric byte-vs-char behavior
+  inherited from the IF-alphanumeric path, not introduced here.
+
 ## 0.67.0 — level-88 condition-name on an alphanumeric item (read + SET TO TRUE) — 2026-07-29
 
 - A level-88 condition-name declared on an **alphanumeric** (`PIC X`) conditional variable is now
