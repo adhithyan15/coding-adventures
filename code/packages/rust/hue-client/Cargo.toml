@@ -10,3 +10,4 @@ hue-core = { path = "../hue-core" }
 http-core = { path = "../http-core" }
 coding-adventures-json-value = { path = "../json-value" }
 coding-adventures-json-serializer = { path = "../json-serializer" }
+coding_adventures_zeroize = { path = "../zeroize" }

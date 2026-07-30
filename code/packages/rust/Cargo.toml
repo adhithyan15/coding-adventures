@@ -906,6 +906,7 @@ members = [
     "smart-home-runtime",
     "zigbee-zcl",
     "hue-client",
+    "hue-integration",
     "zigbee-zdo",
     "zwave-command-classes",
     "capability-cage",
