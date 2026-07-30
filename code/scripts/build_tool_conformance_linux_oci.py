@@ -20,7 +20,6 @@ import stat
 # This is the deliberately isolated process-owning backend.
 import subprocess  # nosec B404
 import sys
-import tempfile
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -607,6 +606,7 @@ def preflight(
     identity: dict[str, Any],
     *,
     state_root: Path,
+    identity_schema: dict[str, Any] | None = None,
     command_runner: CommandRunner = _run_command,
     binary_digest: DigestReader = _binary_digest,
     platform_name: str | None = None,
@@ -614,7 +614,7 @@ def preflight(
 ) -> dict[str, Any]:
     """Prove host and image capabilities without creating a container."""
 
-    validate_identity(identity)
+    validate_identity(identity, identity_schema)
     selected_platform = platform_name or sys.platform
     if not selected_platform.startswith("linux"):
         raise LinuxOciUnavailable(
@@ -703,14 +703,11 @@ def _build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _build_parser()
     try:
-        arguments = parser.parse_args(argv)
-        identity, digest = load_identity(arguments.identity)
-        with tempfile.TemporaryDirectory(prefix="btconf-linux-oci-") as directory:
-            result = preflight(identity, state_root=Path(directory))
-        result["identity_sha256"] = digest
-        print(json.dumps(result, sort_keys=True, separators=(",", ":")))
-        return 0
-    except LinuxOciUnavailable as error:
+        parser.parse_args(argv)
+        error = LinuxOciUnavailable(
+            "LINUX_OCI_AUTHORITY_REQUIRED",
+            "use build_tool_conformance_authority.py with out-of-band approval",
+        )
         print(
             json.dumps(
                 _unavailable_result(error),

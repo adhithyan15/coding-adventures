@@ -577,9 +577,12 @@ A fixture is data supplied to a program that can execute commands. Therefore:
 1. The runner MUST treat every fixture and adapter binary as untrusted by
    default. A fixture cannot
    grant itself trust with `trusted_execution`. Execution trust comes only from
-   out-of-band runner policy: an explicit operator/CI flag plus a reviewed,
-   immutable corpus digest. Pull-request changes are untrusted until reviewed
-   and merged into that policy.
+   out-of-band runner policy: an explicit operator/CI flag plus one reviewed,
+   domain-separated authority-bundle digest. Each closed authorization profile
+   binds only the exact source revision and components it actually consumes.
+   The initial capability-preflight profile binds no corpus, adapter, launcher,
+   or executable case. A corpus digest alone is not authorization.
+   Pull-request changes are untrusted until reviewed and approved out of band.
 2. Every adapter run, including a pure domain, MUST be enclosed by the outer
    runner sandbox. Pure domains MUST NOT execute fixture commands, spawn child
    processes, use the network, or consult the host checkout.
@@ -685,7 +688,76 @@ exact conformance revision, exact execution-corpus SHA-256, runner-controlled
 hard ceilings, backend identities, and adapter executable digests. A backend
 or adapter marked ready requires an immutable SHA-256 identity. The policy does
 not contain operator authorization: `run-case` additionally requires an
-explicit `--allow-trusted-execution` invocation flag.
+explicit `--allow-trusted-execution` invocation flag, an exact reviewed source
+revision, and the corresponding out-of-band approved authority-bundle SHA-256.
+The old corpus-only approval is deliberately insufficient.
+
+The process-free authority bundle is an external, post-review artifact
+described by `execution-authority.schema.json`. It is generated only after the
+reviewed commit and required backend artifacts exist; a production bundle is
+not checked into the commit whose identity it carries. The v1 preflight
+profile's closed record binds:
+
+- one exact authorization scope, repository, Linux platform/architecture, and
+  full Git commit and tree object identities;
+- the policy, authority, and Linux OCI identity schemas;
+- the checked-in execution policy;
+- the process-free bootstrap runner;
+- the process-free authority verifier;
+- the process-owning Linux OCI backend implementation;
+- the exact raw Linux backend identity document stored beside the external
+  bundle.
+
+The Linux backend identity document transitively binds the reviewed Podman and
+`crun` binaries, exact OCI manifest/config identities, seccomp profile,
+in-image shim, and invariant probe. The bundle binds the exact raw identity
+document; the verifier validates its typed fields and cross-field identities.
+A future seccomp artifact or host execution launcher becomes authority only
+after its exact raw bytes are a separate role. The current preflight
+implementation MUST NOT be mislabeled as an enforcing execution launcher.
+
+Bundle components are a closed object with eight fixed roles. Seven paths are
+fixed repository-relative constants; the Linux identity is the sole
+bundle-relative artifact and has a fixed filename. Missing, unknown, extra, or
+role-swapped components fail schema validation. The verifier rejects a linked,
+reparse, non-regular, or multiply linked final file, unsafe paths, exact
+byte-length/digest mismatches, and source-identity mismatches. Component
+identity is the retained approved bytes, not pathname topology. The protected
+orchestrator proves the checkout tree; the later process handoff additionally
+requires atomic beneath-root traversal and an exact-byte loader. These reads
+remain process-free and never enumerate or decode an execution case.
+
+Authorization scopes are cryptographically and semantically distinct. Schema
+v1 admits only `linux_capability_preflight_v1`: it approves the exact
+components intended for a future host/image capability inspection, binds an
+empty execution corpus and no adapters, and cannot import a process backend,
+create a container, or decode a case. The future exact-byte preflight loader,
+invariant-probe profile, and trusted-execution profile require additional
+closed contracts after their corresponding components exist and before those
+enforcement paths may run; a preflight digest is therefore structurally
+unusable for either future execution scope.
+
+The authority SHA-256 uses this exact framing:
+
+1. append the ASCII domain separator
+   `coding-adventures/build-tool-authority/linux-capability-preflight/v1`
+   followed by one NUL;
+2. append the unsigned 64-bit big-endian exact raw-bundle byte length; and
+3. append the exact bounded raw UTF-8 JSON bytes.
+
+The bundle MUST NOT contain its own digest. Exact-byte identity is deliberate:
+whitespace, key order, or a trailing newline changes the approval. The runner
+checks the syntactically valid out-of-band digest with a constant-time
+comparison before following any component path named by the bundle. It then
+strictly parses the already-approved bytes, rejects duplicate keys and invalid
+Unicode, validates the closed schema, and proves every component and semantic
+cross-equality.
+
+The protected orchestrator supplies the expected full commit and tree
+identities from immutable runner metadata and proves the checkout is exactly
+that revision before invoking repository code. The approved authority digest
+is the sole out-of-band content approval. Recomputing a candidate digest inside
+an untrusted pull request does not approve it.
 
 For `linux_oci`, `identity_sha256` is the SHA-256 of the exact raw bytes of a
 closed Linux OCI backend identity document validated by
@@ -698,28 +770,31 @@ present `sha256:<config_sha256>` image with pull disabled. The runner verifies
 both image identities, operating system, architecture, and absence of
 image-declared volumes before it creates a container.
 
-Linux capability preflight runs in a separate process-owning module. It uses
-only fixed direct argument vectors and a runner-owned sanitized environment.
-It MUST prove local non-remote rootless operation, `crun`, cgroup v2 with
-delegated `cpu`, `memory`, and `pids` controllers, seccomp, exact runtime
-binary hashes, and the exact local image. Missing or mismatched capabilities
-produce a stable non-passing result before any fixture is decoded or
-materialized.
+Linux capability preflight is implemented in a separate process-owning module.
+Its direct CLI is authority-disabled, and the process-free authority verifier
+MUST NOT import it. A later loader must establish that the exact retained
+backend bytes and approved import closure are the code being invoked before it
+may use the module's fixed direct argument vectors and runner-owned sanitized
+environment. Capability inspection then MUST prove local non-remote rootless
+operation, `crun`, cgroup v2 with delegated `cpu`, `memory`, and `pids`
+controllers, seccomp, exact runtime binary hashes, and the exact local image.
+Missing or mismatched capabilities produce a stable non-passing result before
+any fixture is decoded or materialized.
 
-The first Linux delivery tranche contains only this identity validation,
-capability preflight, and construction of the runner-owned invariant-probe
-container. It MUST NOT decode or execute fixture commands. Its container is
-created with an exact config image identity and `--pull=never`, a private
-unmapped rootless user namespace, private PID/IPC/UTS/cgroup namespaces,
-network disabled, a read-only root with implicit writable tmpfs mounts
-disabled, all capabilities dropped, `no_new_privileges`, no devices or bind
-mounts, a fixed non-root identity and environment, and one bounded
-runner-owned tmpfs. A zero-byte workspace is rejected rather than expressed
-as `tmpfs size=0`, which can mean unlimited. Swap is disabled with the cgroup
-v2 `memory.swap.max=0` control; `--memory-swap=<memory>` is not used. CPU
-quota limits rate only, so later execution MUST also meter aggregate
-`cpu.stat usage_usec` and kill the entire container cgroup at the effective
-CPU-time ceiling.
+The first Linux delivery tranche contains identity validation, capability
+preflight logic, and construction of the runner-owned invariant-probe
+container argv. It does not invoke that argv and MUST NOT decode or execute
+fixture commands. The candidate argv specifies an exact config image identity
+and `--pull=never`, a private unmapped rootless user namespace, private
+PID/IPC/UTS/cgroup namespaces, network disabled, a read-only root with
+implicit writable tmpfs mounts disabled, all capabilities dropped,
+`no_new_privileges`, no devices or bind mounts, a fixed non-root identity and
+environment, and one bounded runner-owned tmpfs. A zero-byte workspace is
+rejected rather than expressed as `tmpfs size=0`, which can mean unlimited.
+Swap is disabled with the cgroup v2 `memory.swap.max=0` control;
+`--memory-swap=<memory>` is not used. CPU quota limits rate only, so later
+execution MUST also meter aggregate `cpu.stat usage_usec` and kill the entire
+container cgroup at the effective CPU-time ceiling.
 
 The checked-in execution policy remains disabled and Linux remains
 `unavailable` until the exact identity document and image have passed every
@@ -732,7 +807,7 @@ portable path relative to `execution-cases/`. For each case, append the
 unsigned 64-bit big-endian path-byte length, UTF-8 path bytes, unsigned 64-bit
 big-endian raw-content length, and exact raw bytes. The empty corpus therefore
 has the standard SHA-256 empty digest. Any byte, filename, addition, or removal
-changes the authority.
+changes the internal corpus identity; it does not grant authority.
 
 The process-free `validate-corpus` and `validate-result` bootstrap commands
 remain unchanged and MUST reject execution intent. A separate execution
@@ -742,8 +817,9 @@ creating a workspace, probing a toolchain, importing a process API, or
 launching anything.
 
 Pull-request workflows may run only these process-free checks and fake-backend
-unit tests. Real execution requires a protected reviewed revision, read-only
-repository permissions, no repository secrets, and the approved digest
+unit tests. They MAY print an unapproved candidate bundle for review. Real
+execution requires a protected reviewed revision, read-only repository
+permissions, no repository secrets, and the approved authority-bundle digest
 supplied out of band. `pull_request_target` MUST NOT execute changed fixtures
 or runner code.
 

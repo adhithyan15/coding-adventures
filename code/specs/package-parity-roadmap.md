@@ -105,9 +105,10 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 30, 2026 at `bee64b477` after the Haskell
+inventory was regenerated on July 30, 2026 at `d0b9c442f` after the Haskell
 `barcode-1d` and `http-core` ports, the Go/Rust `multi-directed-graph` slice,
-and a new wave of Rust-only package families:
+the Linux OCI preflight contract, and a new wave of Rust-only package
+families. The OCI tranche did not change package counts:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
@@ -929,20 +930,30 @@ Delivery order:
    authorization, stable backend-unavailable results, and a backend interface
    with no host-execution fallback. This tranche validates authority but never
    executes fixture code. Completed by PR #9178.
-5. Implement the Linux OCI backend first. The selected first tranche defines a
+5. Implement the Linux OCI backend first. The completed first tranche defines a
    closed identity for exact rootless Podman, `crun`, OCI manifest/config,
    seccomp, shim, and invariant-probe artifacts; proves local non-remote
    rootless operation, cgroup v2 delegation, seccomp, exact binaries, and the
    already-present image; and constructs the exact no-pull, private-namespace,
-   read-only, capability-free probe container. It does not decode or launch a
-   fixture, and Linux remains unavailable.
+   read-only, capability-free probe-container argv. It invokes neither that
+   argv nor a fixture, and Linux remains unavailable. Completed by PR #9189.
 6. Before trusted Linux execution, bind operator approval to the complete
    reviewed authority bundle, bind case selection to the exact hashed
    root-handle/no-follow snapshot, and normalize dependency-skip/result-state
    semantics. Then execute the runner-owned Linux invariant probe with
    aggregate cgroup CPU metering, combined streaming output/result accounting,
    hard writable-workspace semantics, cancellation, and verified
-   whole-container kill/reap/removal. Only protected evidence can mark Linux
+   whole-container kill/reap/removal. The current selected tranche is the
+   first prerequisite: replace corpus-only approval with a process-free,
+   domain-separated external bundle over the reviewed source revision, policy,
+   schemas, authority verifier, Linux preflight backend, and external backend
+   identity. This first closed profile binds no corpus or adapter and
+   approves bytes for capability inspection only; it exposes no process
+   handoff. Next add an atomic exact-byte backend/import-closure loader and a
+   separate invariant-probe authority profile. Run protected probe enforcement
+   to produce containment evidence, then add a distinct trusted-execution
+   profile binding that evidence, the exact case snapshot, and one adapter
+   before trusted-case enforcement. Only protected evidence can mark Linux
    ready.
 7. Implement the native Windows boundary with AppContainer or LPAC plus Job
    Objects and root-handle reparse-safe filesystem operations. Keep macOS
@@ -971,9 +982,10 @@ Pull-request CI may validate the policy, schemas, digests, and fake-backend
 tests, but it must not authorize execution from branch-modifiable code or
 fixtures. Real sandbox probes run only from reviewed immutable revisions in a
 protected `push`/manual workflow with read-only repository permissions, no
-repository secrets, and an out-of-band approved corpus digest. The trusted
-runner never pulls a container image and never falls back to unsandboxed host
-execution.
+repository secrets, and an out-of-band approved authority-bundle digest. The
+corpus digest remains an internal consistency identity and cannot authorize
+execution. The trusted runner never pulls a container image and never falls
+back to unsandboxed host execution.
 
 The pure-domain security review also discovered three follow-on gates that must
 land before final adapter parity:
@@ -989,9 +1001,14 @@ land before final adapter parity:
 
 The Linux OCI review discovered four additional dependency gates:
 
-- replace corpus-only approval with a domain-separated authority digest over
-  the exact source, policy, schemas, runner, launcher, seccomp, image, shim,
-  and adapter identities;
+- replace corpus-only approval with a domain-separated external authority
+  profile. The first profile binds the exact source, policy, schemas, verifier,
+  Linux preflight backend, and external identity for capability inspection
+  only; later profiles add launcher, seccomp, image, shim, corpus, and adapter
+  bytes only after those components are enforced;
+- load process-owning code only from the exact retained approved backend and
+  its bound import closure, using atomic beneath-root handles rather than a
+  name-based Python import or check-then-open path traversal;
 - execute only the exact direct corpus member bytes from the approved
   root-handle/no-follow snapshot, never a reopened caller path;
 - normalize `dep-skipped` terminology and enforce result-state/return-code
