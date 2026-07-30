@@ -101,6 +101,11 @@ recursion and looping, with proper exit criteria. This makes a multi-step clinic
 (triage → work-up → decision; titrate-until-target; iterate-until-converged) a first-class,
 auditable object rather than an implicit resolution order.
 
+> **Normative contract:** the precise surface grammar, driver algorithm, typed
+> termination outcomes, and lowering are settled in [`ADJ-STATEMACHINE.md`](ADJ-STATEMACHINE.md)
+> (RS-3). The sketch below is the design rationale; that document is what RS-3b/RS-3c
+> implement against.
+
 ```adj
 statemachine <name> {
     use <dict>…
@@ -208,6 +213,8 @@ Built as small, layered PRs; each keeps the whole test suite green and the shipp
   explicit exit criteria, the step budget, cycle detection, deterministic first-guard-wins with
   priority tiebreak. A worked multi-step clinical process (e.g. a titrate-to-target or a
   triage→work-up→decision machine) + e2e incl. a `NonTerminating`/budget-exceeded test.
+  **Normative contract + staging (RS-3a spec / RS-3b grammar+lower / RS-3c driver):
+  [`ADJ-STATEMACHINE.md`](ADJ-STATEMACHINE.md).**
 - **RS-4 — execution-trace audit renderer + `adj-verify` (with FL-7).** The full-explanation
   renderer over the unified trace + the offline re-verifier + abstention-in-trace.
 
