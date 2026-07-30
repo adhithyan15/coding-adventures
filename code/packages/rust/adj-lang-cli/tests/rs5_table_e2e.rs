@@ -1564,6 +1564,57 @@ fn shipped_moment_of_force_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// Shipped specific-heat-capacity table — two EXACT NIST SP 811 B.9 factors resolve, and a
+// wrong-dimension unit (a mass unit) abstains. Guards the SLICE of a NEW dimension (specific heat
+// capacity / specific entropy, the joule per kilogram kelvin) and the honest cross-dimension
+// abstention: `pound` is a mass unit, so a specific-heat lookup for it must abstain, catching the
+// specific-heat/mass confusion directly, not mere absence of a value. (Specific heat capacity is an
+// intensive per-unit-mass quantity — energy/(mass·temperature) — distinct from plain heat capacity,
+// J/K, and from specific energy, J/kg.)
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_specific_heat_capacity_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_specificheatcapacity");
+    let src = stdlib().join("reference/specific-heat-capacity-conversions.adj");
+    std::fs::copy(&src, dir.join("specific-heat-capacity-conversions.adj"))
+        .expect("copy shipped specific-heat-capacity-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"specific-heat-capacity-conversions.adj\"\n\
+         ? specific_heat_capacity_to_joule_per_kilogram_kelvin(calorie_it_per_gram_celsius, $v)\n\
+         ? specific_heat_capacity_to_joule_per_kilogram_kelvin(calorie_th_per_gram_celsius, $v)\n\
+         ? specific_heat_capacity_to_joule_per_kilogram_kelvin(pound, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factors resolve, character-for-character from the table (boldface =
+    // exact; the International-Table calorie is exactly 4.1868 J and the thermochemical calorie is
+    // exactly 4.184 J, so calIT/(g*degC) = 4186.8 and calth/(g*degC) = 4184 J/(kg*K), exactly).
+    assert!(
+        out.contains("\"v\":\"4186.8\""),
+        "calorieIT per gram degree Celsius = 4.1868 E+03 J/(kg*K): {out}"
+    );
+    assert!(
+        out.contains("\"v\":\"4184\""),
+        "calorieth per gram degree Celsius = 4.184 E+03 J/(kg*K): {out}"
+    );
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `pound` is a MASS unit (it converts to the kilogram, a DIFFERENT quantity), so this
+    // specific-heat-capacity table has no row for it — the engine abstains rather than mis-converting a
+    // mass unit as if it were a specific-heat unit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
