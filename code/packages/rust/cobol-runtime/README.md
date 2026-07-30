@@ -239,10 +239,11 @@ then replace `x` with `y`, so a shared `delim == x` is counted before it is
 substituted; the `TALLYING` half may be `FOR ALL` or `FOR LEADING` and the
 `REPLACING` half may independently be `ALL` or `LEADING`, so either, both, or
 neither half may be leading — and each half independently accepts its OWN
-`{BEFORE|AFTER} x` **region** when that half is `FOR ALL` / `REPLACING ALL`, both
-windows computed over the SAME original source since the tally does not mutate it; a
-LEADING half carrying a region is still a later rung in the combined form even though
-the STANDALONE `FOR LEADING`/`REPLACING LEADING` + region forms are supported); and
+`{BEFORE|AFTER} x` **region** for BOTH `FOR ALL`/`REPLACING ALL` **and**
+`FOR LEADING`/`REPLACING LEADING`, both windows computed over the SAME original source
+since the tally does not mutate it; a LEADING half carrying a region is now supported in
+the combined form — it composes the SAME standalone LEADING+region routines, anchoring
+each leading run at its window start); and
 `INSPECT source CONVERTING from TO to` (translate each character
 of the alphanumeric source through a per-character table built from the two
 equal-length operands `from`/`to`, each a string LITERAL **or** a data-name
@@ -276,10 +277,10 @@ reference-modified source `S(2:3)` — literal or computed index — a `WITH
 POINTER p` phrase over a `PIC 9(n)` pointer, and `ON OVERFLOW` / `NOT ON OVERFLOW`
 handlers ARE supported),
 `INSPECT` with a `CHARACTERS`
-tally, a `{BEFORE|AFTER}` region on a `FOR LEADING`/`REPLACING LEADING` phrase
-(the region ships for `FOR ALL`/`REPLACING ALL` only — on the lone forms, on
-`CONVERTING`, and now on each half of the combined form) or a
-MULTI-character region delimiter, a `REPLACING CHARACTERS` item carrying a
+tally, or a MULTI-character region delimiter
+(the `{BEFORE|AFTER}` region ships for `FOR ALL`/`REPLACING ALL` **and**
+`FOR LEADING`/`REPLACING LEADING` — on the lone forms, on `CONVERTING`, and on each
+half of the combined form), a `REPLACING CHARACTERS` item carrying a
 `{BEFORE|AFTER}` region or a non-ASCII literal replacement / `REPLACING FIRST` (a lone
 `REPLACING CHARACTERS BY x` is now supported), a MULTI-item
 `REPLACING` list carrying a `CHARACTERS`/`FIRST` item (the multi-item list itself is now

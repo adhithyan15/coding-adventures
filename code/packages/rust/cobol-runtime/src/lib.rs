@@ -2834,8 +2834,8 @@ mod tests {
         // `inspect_tallying_for_leading_with_a_before_after_region`). What remains
         // deferred is a MULTI-character region delimiter — rejected at exec, exactly
         // like a multi-character tally delimiter. (A LEADING half PLUS a region on the
-        // COMBINED TALLYING … REPLACING form is still deferred — see
-        // `inspect_tally_replace_combined_leading_with_region_is_a_later_rung`.)
+        // COMBINED TALLYING … REPLACING form is now SUPPORTED too — see
+        // `inspect_tally_replace_combined_leading_with_region_is_now_supported`.)
         let multi = run_cobol(&wrap(
             &["01  S  PIC X(6) VALUE \"AB0CD0\".", "01  C  PIC 9(3) VALUE 0."],
             &["INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"CD\".", "STOP RUN."],
@@ -3738,31 +3738,41 @@ mod tests {
     }
 
     #[test]
-    fn inspect_tally_replace_combined_leading_with_region_is_a_later_rung() {
-        // The STANDALONE `FOR LEADING`/`REPLACING LEADING … BEFORE/AFTER` forms are
-        // supported, but a LEADING half carrying a region on the COMBINED form is still
-        // deferred — the combined reader re-imposes the rejection. A LEADING tally half
-        // with a region …
+    fn inspect_tally_replace_combined_leading_with_region_is_now_supported() {
+        // This rung LIFTS the old combined-form deferral: a LEADING half carrying a
+        // BEFORE/AFTER region is now SUPPORTED in the combined statement, composing the
+        // SAME standalone LEADING+region routines the lone forms use, in ISO
+        // tally-then-replace order. A LEADING tally half with a region: over "00A0B",
+        // FOR LEADING "0" BEFORE "A" counts the run in window "00" → C = 002; the
+        // region-less REPLACING ALL "0" then rewrites all three "0"s → "**A*B".
         let tally_leading = run_cobol(&wrap(
             &["01  S  PIC X(5) VALUE \"00A0B\".", "01  C  PIC 9(3) VALUE 0."],
             &[
                 "INSPECT S TALLYING C FOR LEADING \"0\" BEFORE \"A\"",
                 "    REPLACING ALL \"0\" BY \"*\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
                 "STOP RUN.",
             ],
-        ));
-        assert!(tally_leading.is_err(), "combined FOR LEADING + region must reject");
+        ))
+        .unwrap();
+        assert_eq!(tally_leading, "002\n**A*B\n");
 
-        // … and a LEADING replace half with a region are BOTH deferred.
+        // A LEADING replace half with a region: over "00A0B", the region-less TALLYING
+        // FOR ALL "0" counts all three → C = 003; REPLACING LEADING "0" BEFORE "A"
+        // rewrites only the leading run inside window "00" → "**A0B".
         let replace_leading = run_cobol(&wrap(
             &["01  S  PIC X(5) VALUE \"00A0B\".", "01  C  PIC 9(3) VALUE 0."],
             &[
                 "INSPECT S TALLYING C FOR ALL \"0\"",
                 "    REPLACING LEADING \"0\" BY \"*\" BEFORE \"A\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
                 "STOP RUN.",
             ],
-        ));
-        assert!(replace_leading.is_err(), "combined REPLACING LEADING + region must reject");
+        ))
+        .unwrap();
+        assert_eq!(replace_leading, "003\n**A0B\n");
     }
 
     #[test]

@@ -2708,13 +2708,13 @@ impl<'a> Compiler<'a> {
                 // OWN optional `{BEFORE|AFTER}` region (`allow_region = true`): the
                 // window rides on the `inspect_tallying` phrase child, is scanned over
                 // the ORIGINAL source (the tally loop only reads), and bounds the
-                // count. A combined `FOR LEADING` half carrying a region is still
-                // deferred: `allow_leading_region = false` makes `emit_inspect_tallying`
-                // reject it (the standalone `FOR LEADING … BEFORE/AFTER` form is
-                // supported, but only standalone).
+                // count. A combined `FOR LEADING` half carrying a region is now
+                // SUPPORTED (this rung): `allow_leading_region = true` lets
+                // `emit_inspect_tallying` emit the SAME window-anchored LEADING lowering
+                // the standalone `FOR LEADING … BEFORE/AFTER` path uses — byte-identical.
                 // `allow_characters = false`: a combined `TALLYING … FOR CHARACTERS …
                 // REPLACING` is a later rung, matching the oracle's combined-form reject.
-                self.emit_inspect_tallying(verb, &s_reg, true, true, false, false)?;
+                self.emit_inspect_tallying(verb, &s_reg, true, true, true, false)?;
                 // The combined REPLACING half supports BOTH `ALL` and `LEADING`:
                 // `allow_leading = true` lets a combined `TALLYING … REPLACING
                 // LEADING` rewrite only the leading run (`emit_inspect_replacing`
@@ -2726,9 +2726,11 @@ impl<'a> Compiler<'a> {
                 // BEFORE the unroll overwrites it — and since the tally left the
                 // source untouched, that is the SAME original bytes the count saw, so
                 // both windows agree with the oracle. A combined `REPLACING LEADING`
-                // half carrying a region is deferred the same way via
-                // `allow_leading_region = false`.
-                self.emit_inspect_replacing(verb, &s_reg, source_width, true, true, false)
+                // half carrying a region is now SUPPORTED (this rung) via
+                // `allow_leading_region = true`: it emits the SAME window-anchored
+                // LEADING-run unroll the standalone `REPLACING LEADING … BEFORE/AFTER`
+                // path uses — byte-identical to the oracle.
+                self.emit_inspect_replacing(verb, &s_reg, source_width, true, true, true)
             }
             // A lone REPLACING. Dispatch on the number of replace items, mirroring the
             // oracle's `read_statement`: exactly ONE item keeps the full single-item
@@ -2828,11 +2830,13 @@ impl<'a> Compiler<'a> {
     /// AFTER→empty), and bound the count loop to that window. With NO region, nothing
     /// extra is emitted — the lowering is byte-identical to the pre-region code.
     ///
-    /// `allow_leading_region` gates the STANDALONE-only `FOR LEADING … BEFORE/AFTER`
-    /// form. The lone TALLYING passes `true` (supported this rung); the combined path
-    /// passes `false`, so a combined `TALLYING … FOR LEADING … BEFORE/AFTER` is a clean
-    /// later-rung error, matching the oracle's read-time rejection. When a leading
-    /// count DOES carry a region (standalone), the scan is ANCHORED at the window
+    /// `allow_leading_region` gates the `FOR LEADING … BEFORE/AFTER` form. BOTH the
+    /// lone TALLYING and (as of this rung) the combined `TALLYING … REPLACING` path
+    /// pass `true`, so a combined `TALLYING … FOR LEADING … BEFORE/AFTER` emits the
+    /// same window-anchored lowering the standalone form does — byte-identical to the
+    /// oracle. (The `!allow_leading_region` guard below is retained honestly so the
+    /// gate reads uniformly with the other later-rung guards.) When a leading
+    /// count DOES carry a region, the scan is ANCHORED at the window
     /// start: the loop counter is initialised to `start` and bounded by the window
     /// `end` (not `0..len`), so `FOR LEADING` counts the run beginning at the window
     /// start — e.g. `FOR LEADING "a" AFTER "X"` on "aaXaab" counts the two a's after
@@ -3184,11 +3188,12 @@ impl<'a> Compiler<'a> {
     /// guard folds away and the emitted unroll is byte-identical to the pre-region
     /// `ALL`/`LEADING` lowerings.
     ///
-    /// `allow_leading_region` gates the STANDALONE-only `REPLACING LEADING …
-    /// BEFORE/AFTER` form. The lone REPLACING passes `true` (supported this rung); the
-    /// combined path passes `false`, so a combined `TALLYING … REPLACING LEADING …
-    /// BEFORE/AFTER` is a clean later-rung error, matching the oracle's read-time
-    /// rejection.
+    /// `allow_leading_region` gates the `REPLACING LEADING … BEFORE/AFTER` form. BOTH
+    /// the lone REPLACING and (as of this rung) the combined `TALLYING … REPLACING`
+    /// path pass `true`, so a combined `TALLYING … REPLACING LEADING … BEFORE/AFTER`
+    /// emits the same window-anchored LEADING-run unroll the standalone form does —
+    /// byte-identical to the oracle. (The `!allow_leading_region` guard below is
+    /// retained honestly so the gate reads uniformly with the other later-rung guards.)
     fn emit_inspect_replacing(
         &mut self,
         verb: &GrammarASTNode,

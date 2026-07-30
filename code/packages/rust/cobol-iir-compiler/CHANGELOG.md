@@ -8,6 +8,28 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.68.0: combined INSPECT TALLYING/REPLACING — a LEADING half may carry a region
+
+`INSPECT src TALLYING c FOR {ALL|LEADING} d [{BEFORE|AFTER} p] REPLACING {ALL|LEADING} s BY r
+[{BEFORE|AFTER} q]` now lowers when a **LEADING** half (tally and/or replace) ALSO carries a
+`{BEFORE|AFTER}` region. Compiled byte-identical to the `coding-adventures-cobol-runtime` 0.72.0 oracle.
+
+- **A reject-lift, not new machinery.** Both `emit_inspect_tallying` and `emit_inspect_replacing`
+  ALREADY implement the LEADING+region lowering (the leading run ANCHORED at the window start), used by
+  the standalone paths. The combined `(true, true)` dispatch arm previously passed
+  `allow_leading_region = false` to both, deferring the combination; it now passes `true`, enabling the
+  exact same byte-identical lowering. The tally still emits FIRST over the original bytes, the replace
+  SECOND over the same original bytes (its window is derived before the unroll overwrites the source),
+  so ISO tally-then-replace ordering holds.
+- **Guards retained honestly.** Every caller of `emit_inspect_tallying`/`emit_inspect_replacing` now
+  passes `allow_leading_region = true`, so the `!allow_leading_region` later-rung guards no longer
+  fire; they are kept so the gate reads uniformly with the sibling later-rung guards (an always-true
+  bool param read in a guard is not a clippy error, and the param stays meaningful documentation).
+- **Co-totality.** Combined `FOR CHARACTERS` and a multi-character region delimiter remain later rungs,
+  rejected identically to the oracle. The non-ASCII disposition is unchanged: TALLYING counts are
+  byte-clean, and the REPLACING half's per-position reconstruction still traps on a multi-byte source —
+  the pre-existing byte-vs-char chip shared by every REPLACING lowering, not a new divergence.
+
 ### Added — v0.67.0: INSPECT CONVERTING with a data-name FROM/TO operand
 
 `INSPECT src CONVERTING from TO to [{BEFORE|AFTER} x]` now lowers when the `from` and/or `to` table is

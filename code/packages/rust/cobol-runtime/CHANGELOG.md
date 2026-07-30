@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.72.0 — combined INSPECT TALLYING/REPLACING: a LEADING half may carry a region — 2026-07-29
+
+- `INSPECT src TALLYING c FOR {ALL|LEADING} d [{BEFORE|AFTER} p] REPLACING {ALL|LEADING} s BY r
+  [{BEFORE|AFTER} q]` now accepts a **LEADING** half (tally and/or replace) that ALSO carries a
+  `{BEFORE|AFTER}` region. This lifts the last combined-form deferral: the standalone
+  `FOR LEADING … BEFORE/AFTER` and `REPLACING LEADING … BEFORE/AFTER` forms already worked (0.65.x),
+  and the combined statement already composes those SAME routines — only the combined reader's two
+  re-imposed rejects (`FOR LEADING … BEFORE/AFTER` and `REPLACING LEADING … BEFORE/AFTER` in the
+  `(true, true)` arm) blocked the combination. Both rejects are removed.
+- **No exec change.** `exec_inspect_tally_replace` already calls `inspect_tally(…, tally_leading,
+  false, tally_region)` FIRST (over the untouched original bytes) then `inspect_replace(…,
+  replace_leading, replace_region)` — the standalone routines that fully handle LEADING+region
+  (anchoring each leading run at ITS window start). The ISO tally-then-replace ordering is preserved,
+  so a `delim == search` combined statement still counts the pre-replacement bytes. Byte-identical to
+  the compiler (0.68.0).
+- **Co-totality.** Accept/reject stays identical on both engines: the combined LEADING+region is now
+  accepted on both; combined `FOR CHARACTERS` and a multi-character region delimiter remain later
+  rungs, rejected identically. The non-ASCII disposition is unchanged — TALLYING is byte-clean count,
+  and the REPLACING half's reconstruction remains the pre-existing byte-vs-char chip.
+
 ## 0.71.0 — INSPECT CONVERTING with a data-name FROM/TO operand — 2026-07-29
 
 - `INSPECT src CONVERTING from TO to [{BEFORE|AFTER} x]` now accepts a **data-name** (`PIC X` item)
