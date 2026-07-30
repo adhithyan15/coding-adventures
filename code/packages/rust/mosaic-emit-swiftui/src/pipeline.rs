@@ -7113,6 +7113,7 @@ mod tests {
             parts: vec![PartStyle {
                 name: part_name.to_string(),
                 base: props,
+                transitions: vec![],
                 states: Vec::new(),
             }],
         }
@@ -7143,11 +7144,13 @@ mod tests {
                 PartStyle {
                     name: "cell".to_string(),
                     base: vec![sp("padding", "2px")],
+                    transitions: vec![],
                     states: Vec::new(),
                 },
                 PartStyle {
                     name: "header".to_string(),
                     base: vec![sp("font-weight", "bold")],
+                    transitions: vec![],
                     states: Vec::new(),
                 },
             ],
@@ -7613,10 +7616,12 @@ mod tests {
             parts: vec![PartStyle {
                 name: part_name.to_string(),
                 base,
+                transitions: vec![],
                 states: states
                     .into_iter()
                     .map(|(name, props)| StateStyle {
                         state: name.to_string(),
+                        transitions: vec![],
                         props,
                     })
                     .collect(),

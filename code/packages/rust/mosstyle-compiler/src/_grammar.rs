@@ -132,6 +132,7 @@ pub fn token_grammar() -> TokenGrammar {
             r#"style"#.to_string(),
             r#"part"#.to_string(),
             r#"state"#.to_string(),
+            r#"transition"#.to_string(),
         ],
         mode: None,
         skip_definitions: vec![
@@ -275,6 +276,9 @@ pub fn parser_grammar() -> ParserGrammar {
                             name: r#"state_block"#.to_string(),
                         },
                         GrammarElement::RuleReference {
+                            name: r#"transition_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
                             name: r#"property_decl"#.to_string(),
                         },
                     ],
@@ -296,7 +300,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         },
                         GrammarElement::Repetition {
                             element: Box::new(GrammarElement::RuleReference {
-                                name: r#"property_decl"#.to_string(),
+                                name: r#"state_item"#.to_string(),
                             }),
                         },
                         GrammarElement::TokenReference {
@@ -304,7 +308,46 @@ pub fn parser_grammar() -> ParserGrammar {
                         },
                     ],
                 },
-                line_number: 76,
+                line_number: 88,
+            },
+            GrammarRule {
+                name: r#"state_item"#.to_string(),
+                body: GrammarElement::Alternation {
+                    choices: vec![
+                        GrammarElement::RuleReference {
+                            name: r#"transition_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"property_decl"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 89,
+            },
+            GrammarRule {
+                name: r#"transition_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::TokenReference {
+                            name: r#"KEYWORD"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"NAME"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"style_value"#.to_string(),
+                        },
+                        GrammarElement::Optional {
+                            element: Box::new(GrammarElement::RuleReference {
+                                name: r#"style_value"#.to_string(),
+                            }),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"SEMICOLON"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 101,
             },
             // property_decl = NAME COLON style_value { style_value } SEMICOLON ;
             //
@@ -336,7 +379,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         },
                     ],
                 },
-                line_number: 83,
+                line_number: 118,
             },
             GrammarRule {
                 name: r#"style_value"#.to_string(),
@@ -362,7 +405,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         },
                     ],
                 },
-                line_number: 96,
+                line_number: 131,
             },
         ],
         version: 1,

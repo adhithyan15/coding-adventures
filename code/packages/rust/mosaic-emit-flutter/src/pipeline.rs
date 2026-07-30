@@ -3786,6 +3786,7 @@ mod tests {
                         value: "7px".into(),
                     },
                 ],
+                transitions: vec![],
                 states: Vec::new(),
             }],
         };
@@ -4539,6 +4540,7 @@ mod tests {
                     name: "padding".into(),
                     value: "8".into(),
                 }],
+                transitions: vec![],
                 states: Vec::new(),
             }],
         };
@@ -5660,9 +5662,11 @@ mod tests {
                             value: "right".into(),
                         },
                     ],
+                    transitions: vec![],
                     states: vec![
                         mosstyle_compiler::StateStyle {
                             state: "selected".into(),
+                            transitions: vec![],
                             props: vec![
                                 StyleProp {
                                     name: "background".into(),
@@ -5676,6 +5680,7 @@ mod tests {
                         },
                         mosstyle_compiler::StateStyle {
                             state: "editing".into(),
+                            transitions: vec![],
                             props: vec![StyleProp {
                                 name: "background".into(),
                                 value: "#1f4f3f".into(),
@@ -5707,6 +5712,7 @@ mod tests {
                             value: "#3f3f46".into(),
                         },
                     ],
+                    transitions: vec![],
                     states: vec![],
                 },
             ],

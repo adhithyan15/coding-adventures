@@ -86,6 +86,9 @@ pub struct PartStyle {
     pub name: String,
     /// Base-state properties (always applied).
     pub base: Vec<StyleProp>,
+    /// Transitions that apply to every state change for this part.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub transitions: Vec<StyleTransition>,
     /// Per-interaction-state overrides.
     pub states: Vec<StateStyle>,
 }
@@ -99,6 +102,17 @@ pub struct StyleProp {
     pub value: String,
 }
 
+/// A transition applied when a style property changes.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct StyleTransition {
+    /// Property whose changes should be animated.
+    pub property: String,
+    /// Resolved duration, such as `80ms`.
+    pub duration: String,
+    /// Resolved easing curve, such as `ease-out`.
+    pub easing: String,
+}
+
 /// Style overrides for one interaction state.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct StateStyle {
@@ -106,6 +120,9 @@ pub struct StateStyle {
     pub state: String,
     /// Properties that override the base in this state.
     pub props: Vec<StyleProp>,
+    /// Transitions used when entering this state.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub transitions: Vec<StyleTransition>,
 }
 
 // ===========================================================================
@@ -149,6 +166,8 @@ pub enum ErrorKind {
     UnknownState,
     /// A `$token-ref` has no definition in the token map.
     UnresolvedToken,
+    /// A transition names a property that is not declared in the part's base style.
+    TransitionPropertyNotDeclared,
     /// The AST has an unexpected shape (internal error).
     InternalError,
 }
@@ -352,6 +371,7 @@ fn analyze_part(part_def: &GrammarASTNode) -> Result<PartStyle, CompileError> {
     //   becomes the PartStyle.name and gets matched at emit time.
     let mut name: Option<String> = None;
     let mut base: Vec<StyleProp> = Vec::new();
+    let mut transitions: Vec<StyleTransition> = Vec::new();
     let mut states: Vec<StateStyle> = Vec::new();
 
     for child in &part_def.children {
@@ -373,6 +393,9 @@ fn analyze_part(part_def: &GrammarASTNode) -> Result<PartStyle, CompileError> {
                                 "property_decl" => {
                                     base.push(analyze_property(inner)?);
                                 }
+                                "transition_decl" => {
+                                    transitions.push(analyze_transition(inner)?);
+                                }
                                 "state_block" => {
                                     states.push(analyze_state(inner)?);
                                 }
@@ -392,6 +415,7 @@ fn analyze_part(part_def: &GrammarASTNode) -> Result<PartStyle, CompileError> {
             message: "part_def missing name".to_string(),
         })?,
         base,
+        transitions,
         states,
     })
 }
@@ -412,10 +436,11 @@ fn analyze_part_path(part_path: &GrammarASTNode) -> String {
 }
 
 fn analyze_state(state_block: &GrammarASTNode) -> Result<StateStyle, CompileError> {
-    // state_block = KEYWORD("state") NAME LBRACE { property_decl } RBRACE
+    // state_block = KEYWORD("state") NAME LBRACE { state_item } RBRACE
     let mut saw_keyword = false;
     let mut state_name: Option<String> = None;
     let mut props: Vec<StyleProp> = Vec::new();
+    let mut transitions: Vec<StyleTransition> = Vec::new();
 
     for child in &state_block.children {
         match child {
@@ -426,8 +451,18 @@ fn analyze_state(state_block: &GrammarASTNode) -> Result<StateStyle, CompileErro
                     state_name = Some(t.value.clone());
                 }
             }
-            ASTNodeOrToken::Node(n) if n.rule_name == "property_decl" => {
-                props.push(analyze_property(n)?);
+            ASTNodeOrToken::Node(n) if n.rule_name == "state_item" => {
+                for item_child in &n.children {
+                    if let ASTNodeOrToken::Node(inner) = item_child {
+                        match inner.rule_name.as_str() {
+                            "property_decl" => props.push(analyze_property(inner)?),
+                            "transition_decl" => {
+                                transitions.push(analyze_transition(inner)?);
+                            }
+                            _ => {}
+                        }
+                    }
+                }
             }
             _ => {}
         }
@@ -439,6 +474,47 @@ fn analyze_state(state_block: &GrammarASTNode) -> Result<StateStyle, CompileErro
             message: "state_block missing state name".to_string(),
         })?,
         props,
+        transitions,
+    })
+}
+
+fn analyze_transition(transition_decl: &GrammarASTNode) -> Result<StyleTransition, CompileError> {
+    // transition_decl = KEYWORD("transition") NAME style_value [ style_value ] SEMICOLON
+    let mut saw_keyword = false;
+    let mut property: Option<String> = None;
+    let mut values: Vec<String> = Vec::new();
+
+    for child in &transition_decl.children {
+        match child {
+            ASTNodeOrToken::Token(t) => {
+                if t.type_ == TokenType::Keyword && t.value == "transition" {
+                    saw_keyword = true;
+                } else if saw_keyword && t.type_ == TokenType::Name && property.is_none() {
+                    property = Some(t.value.clone());
+                }
+            }
+            ASTNodeOrToken::Node(n) if n.rule_name == "style_value" => {
+                values.push(extract_style_value(n)?);
+            }
+            _ => {}
+        }
+    }
+
+    let duration = values.first().cloned().ok_or_else(|| CompileError {
+        kind: ErrorKind::InternalError,
+        message: "transition_decl missing duration".to_string(),
+    })?;
+    let easing = values.get(1).cloned().unwrap_or_else(|| {
+        resolve_token("easing-out", &HashMap::new()).unwrap_or_else(|| "ease-out".to_string())
+    });
+
+    Ok(StyleTransition {
+        property: property.ok_or_else(|| CompileError {
+            kind: ErrorKind::InternalError,
+            message: "transition_decl missing property".to_string(),
+        })?,
+        duration,
+        easing,
     })
 }
 
@@ -576,6 +652,27 @@ pub fn validate(def: &StyleDef, part_map_json: Option<&str>) -> Result<(), Vec<C
                         state.state,
                         part.name,
                         VALID_STATES.join(", ")
+                    ),
+                });
+            }
+        }
+
+        // A transition can only animate a property with a stable base value.
+        // This keeps every backend's lowering deterministic and catches typos
+        // before a platform silently drops the animation.
+        let base_properties: HashSet<&str> =
+            part.base.iter().map(|prop| prop.name.as_str()).collect();
+        for transition in part.transitions.iter().chain(
+            part.states
+                .iter()
+                .flat_map(|state| state.transitions.iter()),
+        ) {
+            if !base_properties.contains(transition.property.as_str()) {
+                errors.push(CompileError {
+                    kind: ErrorKind::TransitionPropertyNotDeclared,
+                    message: format!(
+                        "Transition on '{}' in part '{}' references a property not declared in the part's base style",
+                        transition.property, part.name
                     ),
                 });
             }
@@ -724,18 +821,21 @@ fn emit_scoped_rule_blocks(def: &StyleDef) -> Vec<String> {
         let class = format!(".mos-{}-{}", comp, part.name);
 
         // Base styles.
-        if !part.base.is_empty() {
-            let props: Vec<String> = part
+        if !part.base.is_empty() || !part.transitions.is_empty() {
+            let mut props: Vec<String> = part
                 .base
                 .iter()
                 .map(|p| format!("  {}: {};", p.name, p.value))
                 .collect();
+            if let Some(transition) = format_transitions(&part.transitions) {
+                props.push(format!("  transition: {transition};"));
+            }
             blocks.push(format!("{} {{\n{}\n}}", class, props.join("\n")));
         }
 
         // State overrides.
         for state in &part.states {
-            if state.props.is_empty() {
+            if state.props.is_empty() && state.transitions.is_empty() {
                 continue;
             }
             let selector = match state.state.as_str() {
@@ -748,16 +848,37 @@ fn emit_scoped_rule_blocks(def: &StyleDef) -> Vec<String> {
                 "error" => format!("{}.error", class),
                 other => format!("{}.{}", class, other),
             };
-            let props: Vec<String> = state
+            let mut props: Vec<String> = state
                 .props
                 .iter()
                 .map(|p| format!("  {}: {};", p.name, p.value))
                 .collect();
+            if let Some(transition) = format_transitions(&state.transitions) {
+                props.push(format!("  transition: {transition};"));
+            }
             blocks.push(format!("{} {{\n{}\n}}", selector, props.join("\n")));
         }
     }
 
     blocks
+}
+
+fn format_transitions(transitions: &[StyleTransition]) -> Option<String> {
+    if transitions.is_empty() {
+        return None;
+    }
+    Some(
+        transitions
+            .iter()
+            .map(|transition| {
+                format!(
+                    "{} {} {}",
+                    transition.property, transition.duration, transition.easing
+                )
+            })
+            .collect::<Vec<_>>()
+            .join(", "),
+    )
 }
 
 /// Emit the backend-agnostic style map as JSON.
@@ -928,6 +1049,66 @@ mod tests {
     }
 
     #[test]
+    fn test_transition_resolves_tokens() {
+        let src = r#"
+          style Button {
+            part root {
+              background: #1e1e1e ;
+              transition background $duration-fast $easing-out ;
+            }
+          }
+        "#;
+        let def = parse_and_analyze(src);
+        assert_eq!(
+            def.parts[0].transitions,
+            vec![StyleTransition {
+                property: "background".to_string(),
+                duration: "80ms".to_string(),
+                easing: "ease-out".to_string(),
+            }]
+        );
+    }
+
+    #[test]
+    fn test_transition_defaults_to_ease_out() {
+        let src = r#"
+          style Button {
+            part root {
+              opacity: 1 ;
+              transition opacity $duration-normal ;
+            }
+          }
+        "#;
+        let def = parse_and_analyze(src);
+        assert_eq!(def.parts[0].transitions[0].duration, "150ms");
+        assert_eq!(def.parts[0].transitions[0].easing, "ease-out");
+    }
+
+    #[test]
+    fn test_state_local_transition() {
+        let src = r#"
+          style Button {
+            part root {
+              background: #1e1e1e ;
+              state hover {
+                background: #2e2e2e ;
+                transition background 150ms linear ;
+              }
+            }
+          }
+        "#;
+        let def = parse_and_analyze(src);
+        assert_eq!(
+            def.parts[0].states[0].transitions,
+            vec![StyleTransition {
+                property: "background".to_string(),
+                duration: "150ms".to_string(),
+                easing: "linear".to_string(),
+            }]
+        );
+    }
+
+    #[test]
     fn test_dimension_value() {
         let src = r#"
           style Grid {
@@ -969,6 +1150,46 @@ mod tests {
         let result = compile(src, None).unwrap();
         assert!(result.lattice.contains(".mos-Button-root:hover"));
         assert!(result.lattice.contains("background: #2e2e2e"));
+    }
+
+    #[test]
+    fn test_lattice_emits_transitions_in_authored_order() {
+        let src = r#"
+          style Button {
+            part root {
+              background: #1e1e1e ;
+              border-color: #333333 ;
+              transition background $duration-fast $easing-out ;
+              transition border-color $duration-normal linear ;
+            }
+          }
+        "#;
+        let result = compile(src, None).unwrap();
+        assert!(result
+            .lattice
+            .contains("transition: background 80ms ease-out, border-color 150ms linear;"));
+    }
+
+    #[test]
+    fn test_state_local_transition_emits_in_state_rule() {
+        let src = r#"
+          style Button {
+            part root {
+              opacity: 1 ;
+              state disabled {
+                opacity: 0.4 ;
+                transition opacity 300ms ease-in ;
+              }
+            }
+          }
+        "#;
+        let result = compile(src, None).unwrap();
+        let disabled_rule = result
+            .lattice
+            .split(".mos-Button-root.disabled")
+            .nth(1)
+            .expect("disabled rule");
+        assert!(disabled_rule.contains("transition: opacity 300ms ease-in;"));
     }
 
     #[test]
@@ -1144,6 +1365,79 @@ mod tests {
         assert!(result.is_err());
         let errs = result.unwrap_err();
         assert!(errs.iter().any(|e| e.kind == ErrorKind::UnknownPart));
+    }
+
+    #[test]
+    fn test_transition_property_must_exist_in_base_style() {
+        let src = r#"
+          style Button {
+            part root {
+              color: #ffffff ;
+              transition background $duration-fast ;
+            }
+          }
+        "#;
+        let errs = compile(src, None).unwrap_err();
+        assert!(errs
+            .iter()
+            .any(|e| e.kind == ErrorKind::TransitionPropertyNotDeclared));
+    }
+
+    #[test]
+    fn test_state_transition_property_must_exist_in_base_style() {
+        let src = r#"
+          style Button {
+            part root {
+              color: #ffffff ;
+              state hover {
+                background: #1e1e1e ;
+                transition background $duration-fast ;
+              }
+            }
+          }
+        "#;
+        let errs = compile(src, None).unwrap_err();
+        assert!(errs
+            .iter()
+            .any(|e| e.kind == ErrorKind::TransitionPropertyNotDeclared));
+    }
+
+    #[test]
+    fn test_transition_unresolved_token_is_an_error() {
+        let src = r#"
+          style Button {
+            part root {
+              opacity: 1 ;
+              transition opacity $duration-instant ;
+            }
+          }
+        "#;
+        let ast = parse_style(src).expect("parse failed");
+        let error = analyze(&ast).expect_err("unknown transition token should fail");
+        assert_eq!(error.kind, ErrorKind::UnresolvedToken);
+    }
+
+    #[test]
+    fn test_style_map_json_contains_structured_transition() {
+        let src = r#"
+          style Button {
+            part root {
+              opacity: 1 ;
+              transition opacity $duration-fast ;
+            }
+          }
+        "#;
+        let result = compile(src, None).unwrap();
+        let value: serde_json::Value =
+            serde_json::from_str(&result.style_map_json).expect("valid style JSON");
+        assert_eq!(
+            value["parts"][0]["transitions"][0],
+            serde_json::json!({
+                "property": "opacity",
+                "duration": "80ms",
+                "easing": "ease-out"
+            })
+        );
     }
 
     // ── Sub-parts (UI27 §3) ──────────────────────────────────────────────────

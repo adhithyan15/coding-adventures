@@ -5038,6 +5038,7 @@ mod tests {
                         value: "7px".to_string(),
                     },
                 ],
+                transitions: vec![],
                 states: vec![],
             }],
         };
@@ -7743,6 +7744,7 @@ mod tests {
                         sp("font-family", "monospace"),
                         sp("font-size", "12px"),
                     ],
+                    transitions: vec![],
                     states: vec![],
                 },
                 PartStyle {
@@ -7754,13 +7756,16 @@ mod tests {
                         sp("height", "22px"),
                         sp("text-align", "right"),
                     ],
+                    transitions: vec![],
                     states: vec![
                         StateStyle {
                             state: "selected".to_string(),
+                            transitions: vec![],
                             props: vec![sp("background", "#264f78"), sp("color", "#ffffff")],
                         },
                         StateStyle {
                             state: "editing".to_string(),
+                            transitions: vec![],
                             props: vec![sp("background", "#1f4f3f")],
                         },
                     ],
@@ -8018,6 +8023,7 @@ mod tests {
                     sp("border-width", "1px"),
                     sp("border-color", "#3f3f46"),
                 ],
+                transitions: vec![],
                 states: vec![],
             }],
         };
@@ -8063,6 +8069,7 @@ mod tests {
             parts: vec![PartStyle {
                 name: "screen".to_string(),
                 base: vec![sp("gap", "14"), sp("max-width", "980px")],
+                transitions: vec![],
                 states: vec![],
             }],
         };
@@ -8116,6 +8123,7 @@ mod tests {
                     sp("gap", "16"),
                     sp("padding", "12"),
                 ],
+                transitions: vec![],
                 states: vec![],
             }],
         };
@@ -8178,6 +8186,7 @@ mod tests {
                     sp("font-weight", "700"),
                     sp("text-align", "center"),
                 ],
+                transitions: vec![],
                 states: vec![],
             }],
         };
