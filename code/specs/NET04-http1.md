@@ -83,8 +83,8 @@ lines that a caller might later write to a log.
 
 Request lines use exactly two single-space delimiters. Status lines use a
 single space between version and the exactly three-digit status code, followed
-by either no delimiter or one space and a non-empty reason phrase whose first
-byte is not structural whitespace. Tabs, trailing empty delimiters, and
+by one required space and an optional reason phrase whose first byte, when
+present, is not structural whitespace. Tabs, a missing reason delimiter, and
 variable whitespace are not accepted as structural delimiters.
 
 Field names must be non-empty RFC token bytes with no whitespace before the
@@ -131,9 +131,10 @@ Response parsing requires the corresponding case-sensitive request method and
 request HTTP version so HEAD, CONNECT, and transfer-coding semantics cannot be
 guessed. A successful CONNECT response reports the tunnel transition separately
 from `BodyKind`. Outside the bodyless/tunnel cases, `Transfer-Encoding` plus
-`Content-Length` is rejected. Transfer coding is rejected when either the
-request or response uses HTTP/1.0; `chunked` must not be repeated or followed by
-another transfer coding; parameterized codings are rejected.
+`Content-Length` is rejected. Transfer coding is rejected before bodyless or
+tunnel semantics when either the request or response uses HTTP/1.0; `chunked`
+must not be repeated or followed by another transfer coding; parameterized
+codings are rejected.
 
 This is the core distinction between “header parsing” and “body parsing” in
 HTTP/1: the parser usually does not consume the body, but it **does** decide
