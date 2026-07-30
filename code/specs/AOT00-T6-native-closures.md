@@ -146,13 +146,26 @@ declared arg count) is static per function, so the register assignment is fully 
   *Recommendation:* give each such closure a `code_ptr` to a generated per-builtin adapter
   `fn(env, args…) → __twig_<builtin>(args…)`, so `call_closure` is uniform (no builtin/non-builtin
   branch). Adapters are tiny and generated alongside `__gc_init_stackmaps`.
-- **D3 — VM compatibility.** The VM (`twig-vm`) must keep working for the *non-native* engines and
-  as the fallback. Two options: (a) teach the VM the env-pointer convention too (uniform), or
-  (b) have `twig-ir-compiler` emit the env-pointer lambda shape for **all** engines and update the
-  VM's `exec_call_closure` to pass env + load captures. *Recommendation:* (b) — one closure model
-  everywhere; the VM change is small (build the env vector, pass it, load captures) and avoids a
-  native/VM divergence. Confirm no other engine (JVM/CIL/WASM/BEAM) relies on the old shape, or
-  gate the shape change behind the target.
+- **D3 — where the env-pointer transform lives → NATIVE-LOCAL (decided).** A **blast-radius audit**
+  (2026-07-29) found the current captures-as-params closure IIR is consumed by **~48 crates and
+  ~130 closure tests**, including seven other language backends (JVM, CIL, WASM, BEAM, and
+  `semantic-ir-to-{c,go,javascript,python,rust,typescript}`) plus the Ruby/Python frontends.
+  Changing the closure calling convention in `twig-ir-compiler` (a global shape change) would
+  destabilise **all** of them. Therefore the env-pointer transform is **native-path-only**: an
+  **`aot-core` IIR→IIR pass** rewrites *only* the functions that are closure targets, and *only*
+  when compiling for a native backend — every other engine keeps consuming the unchanged
+  captures-as-params IIR. Concretely:
+  - Collect the set of closure-target function names = every `name` appearing in an
+    `alloc_closure(Str(name), …)` across the module.
+  - For each such function, rewrite its signature from `(cap0..capN, arg0..argM)` to
+    `(env, arg0..argM)` and prepend `field_load env, (i+1) -> cap_i` for each capture (env[0] is the
+    code_ptr, captures start at word 1), so the body — which already references captures by those
+    names — is unchanged below the prologue.
+  - Non-closure functions and every non-native engine are untouched. `twig-vm` keeps its current
+    `exec_call_closure` (captures-as-params) for the interpreter fallback and other engines.
+  This contains the change to `aot-core` + the two native backends + the twig-aot runtime, with
+  **zero risk** to the other seven engines' closure support — the decisive reason to prefer it over
+  a global shape change.
 
 ---
 
@@ -160,12 +173,14 @@ declared arg count) is static per function, so the register assignment is fully 
 differential on aarch64)
 
 1. **This spec.**
-2. **Frontend + VM: env-pointer closure model.** `twig-ir-compiler` compiles each lifted lambda
-   with a leading `env` param and a prologue that loads captures from `env`; `alloc_closure` /
-   `call_closure` unchanged in shape (still `Str(fn_name)` + captures / handle + args) but the
-   *contract* is env-pointer. Update `twig-vm` `exec_alloc_closure` / `exec_call_closure` to build
-   an env object, pass it, and load captures. All existing closure tests (VM + JVM/CIL/WASM if
-   affected) stay green. No native codegen yet.
+2. **aot-core native-only closure-env transform (D3).** A new `aot-core` IIR→IIR pass, run *only*
+   before native codegen, that rewrites each closure-target function `(cap0..capN, arg0..argM)` →
+   `(env, arg0..argM)` + a `field_load env,(i+1)` capture prologue. Closure targets = the `name`s in
+   `alloc_closure(Str(name),…)`. Non-closure functions and all non-native engines untouched;
+   `twig-vm` and the other six backends keep the captures-as-params model. Unit tests: a closure
+   function is transformed (params → env-loads), a non-closure function is not, capture order is
+   preserved. No backend lowering yet — the transformed functions still won't compile until PR-4/5,
+   so they continue to route to the VM (behaviour unchanged) until then.
 3. **gc-core-capi: `closure_kind` + `__gc_kind_of`.** A thin capi helper the runtime uses to
    register the closure kind (`register_ref_array_kind([], 8)`) and read an object's kind (for
    `procedure?`). Unit-tested.
