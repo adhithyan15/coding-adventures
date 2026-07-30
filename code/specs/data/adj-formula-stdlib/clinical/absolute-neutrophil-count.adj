@@ -1,0 +1,91 @@
+% ============================================================================
+% absolute-neutrophil-count.adj — the absolute neutrophil count
+% (ANC = WBC × (percent PMNs + percent bands) / 100) in the ADJ standard library.
+% ============================================================================
+% The absolute-neutrophil-count entry of the *clinical* track — the number of infection-fighting
+% neutrophils circulating per microlitre of blood, recovered from a complete blood count with differential.
+% The automated count reports a total white cell count and a DIFFERENTIAL in percentages; the neutrophil
+% line is split into mature segmented cells (the polymorphonuclear cells, PMNs or "segs") and immature band
+% forms, so the ANC is the total white count scaled by the COMBINED neutrophil fraction. It is the number
+% that stratifies infection risk: an ANC below 1500 is neutropenia and below 500 is severe neutropenia
+% (the threshold at which febrile neutropenia becomes an emergency). THE ABSOLUTE NEUTROPHIL COUNT IS THE
+% WHITE BLOOD CELL COUNT TIMES THE SUM OF THE SEGMENTED-NEUTROPHIL AND BAND PERCENTAGES, DIVIDED BY 100 —
+% i.e. WBC × (percent PMNs + percent bands) / 100. It ships as an importable, byte-provenanced,
+% PARAMETERIZED `formula`, together with two exact rearrangements (the white count a given ANC implies, and
+% the segmented-neutrophil percentage a given ANC implies). As with every compute library, a consumer
+% states NO arithmetic: it `import`s this file, binds the count and the two percentages from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is
+% performed by the model; the engine computes each value EXACTLY (over exact rationals), carrying the
+% formula's citation.
+%
+%     import "absolute-neutrophil-count.adj"
+%     observe wbc(5000)   % "…WBC 5000…"        (span cited by the model)
+%     observe pmns(40)     % "…40% segs…"        (span cited by the model)
+%     observe bands(10)    % "…10% bands…"       (span cited by the model)
+%     ? anc(wbc, pmns, bands)   % engine → 2500 (cells/microL)
+%
+% Structurally this is a total scaled by a SUM of two percentages over 100 — distinct from the ratio and
+% ratio-of-ratios shapes of the other haematology and renal libraries. The two neutrophil percentages are
+% added FIRST, then the product with the white count is taken and divided by 100; the only constant is the
+% 100 that converts the summed percentage to a fraction, so every value the engine returns is exact. The
+% three formulas COMPOSE and invert cleanly around the worked case WBC = 5000, PMNs = 40%, bands = 10%
+% (ANC = 5000 × (40 + 10) / 100 = 5000 × 50 / 100 = 2500 cells/microL — a normal count): the `anc` a
+% consumer computes is exactly the value each inverse formula back-solves to recover its own measured input
+% (5000, 40).
+%
+%   anc(wbc, pmns, bands) = wbc * (pmns + bands) / 100      % (cells/microL)
+%   wbc(anc, pmns, bands) = anc * 100 / (pmns + bands)      % (solved for the white count)
+%   pmns(anc, wbc, bands) = anc * 100 / wbc - bands         % (solved for the segmented-neutrophil percentage)
+%
+% NOTE ON UNITS AND MODELLING: the white blood cell count and the ANC are in cells per microlitre
+% (cells/microL), and the two neutrophil figures are plain percentage numbers (e.g. 40 for 40%, NOT 0.40).
+% This library only COMPUTES the count; the interpretation (normal, neutropenic below 1500, severely
+% neutropenic below 500) is stated by the cited source but is applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted ANC equation — because that one equation
+% (WBC × (percent PMNs + percent bands) / 100) sanctions the relation read every way. The quote is
+% transcribed verbatim from the StatPearls "Febrile Neutropenia" article on the NCBI Bookshelf (a current,
+% non-archived article), so each `formula` carries the provenance envelope every shipped grounded clause
+% carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored — the formula is a
+% verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `wbc`, `pmns`, `bands` and `anc` each appear BOTH as a derived result and as an input (of the
+% other formulas), so each is a single dictionary term used in both roles. The `surface` lists are the
+% everyday names a decomposer maps onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary absolute_neutrophil_count_vocab {
+    define wbc    : finding  surface "WBC", "white blood cell count", "total WBC", "white count"           % cells/microL
+    define pmns   : finding  surface "PMNs", "segmented neutrophils", "segs", "polymorphonuclear cells"    % percent
+    define bands  : finding  surface "bands", "band neutrophils", "band forms"                             % percent
+    define anc    : finding  surface "ANC", "absolute neutrophil count"                                    % cells/microL
+}
+
+% ----------------------------------------------------------------------------
+% The absolute neutrophil count, three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the ANC equation from the StatPearls "Febrile
+% Neutropenia" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact
+% expression in the measured count and percentages, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook absolute_neutrophil_count_laws {
+    use absolute_neutrophil_count_vocab
+
+    % ANC — the white count times the summed neutrophil percentages, over 100.
+    formula anc(wbc, pmns, bands) = wbc * (pmns + bands) / 100
+        source "ANC = WBC (cells/microL) x percent (PMNs + bands) / 100"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541102/"
+        trust authoritative
+
+    % White count — the same equation solved for the WBC. Defended by the SAME equation.
+    formula wbc(anc, pmns, bands) = anc * 100 / (pmns + bands)
+        source "ANC = WBC (cells/microL) x percent (PMNs + bands) / 100"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541102/"
+        trust authoritative
+
+    % Segmented-neutrophil percentage — the same equation solved for PMNs, the third reading of the one count.
+    formula pmns(anc, wbc, bands) = anc * 100 / wbc - bands
+        source "ANC = WBC (cells/microL) x percent (PMNs + bands) / 100"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541102/"
+        trust authoritative
+}
