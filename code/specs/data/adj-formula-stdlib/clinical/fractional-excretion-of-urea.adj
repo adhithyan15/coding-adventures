@@ -1,0 +1,104 @@
+% ============================================================================
+% fractional-excretion-of-urea.adj — the fractional excretion of urea
+% (FEUrea = [urine urea / serum urea] / [urine creatinine / serum creatinine] × 100) in the ADJ stdlib.
+% ============================================================================
+% The fractional-excretion-of-urea entry of the *clinical* track — the percentage of the urea filtered by
+% the glomerulus that is finally excreted in the urine, used to tell PRERENAL acute kidney injury (avid
+% tubular reabsorption, low FEUrea) from INTRINSIC/acute tubular injury (impaired reabsorption, high
+% FEUrea). It is the urea analogue of the fractional excretion of sodium, and its particular value is that
+% urea handling is driven by passive forces rather than by the transporters that diuretics act on, so FEUrea
+% stays informative in a patient who has already received a loop diuretic — exactly the situation where the
+% fractional excretion of sodium becomes unreliable. Like every fractional-excretion index it is a
+% clearance RATIO scaled to a percentage: the urine-to-serum urea ratio divided by the urine-to-serum
+% creatinine ratio (creatinine standing in for the filtered volume), times 100. THE FRACTIONAL EXCRETION OF
+% UREA IS THE URINE/SERUM UREA RATIO OVER THE URINE/SERUM CREATININE RATIO, TIMES 100 — i.e.
+% FEUrea = ([Uurea/Surea] / [Ucr/Scr]) × 100. It ships as an importable, byte-provenanced, PARAMETERIZED
+% `formula`, together with two exact rearrangements (the urine urea and the serum urea a given FEUrea
+% implies). As with every compute library, a consumer states NO arithmetic: it `import`s this file, binds the
+% four measured concentrations from its own byte-provenance decomposition, and asks the engine to APPLY the
+% cited formula on the CPU. Zero math is performed by the model; the engine computes each value EXACTLY (over
+% exact rationals), carrying the formula's citation.
+%
+%     import "fractional-excretion-of-urea.adj"
+%     observe urine_urea(300)        % "…urine urea 300…"   (span cited by the model)
+%     observe serum_urea(30)          % "…serum urea 30…"    (span cited by the model)
+%     observe urine_creatinine(100)   % "…urine Cr 100…"     (span cited by the model)
+%     observe serum_creatinine(2)     % "…serum Cr 2…"       (span cited by the model)
+%     ? fractional_excretion_of_urea(urine_urea, serum_creatinine, serum_urea, urine_creatinine)   % engine → 20
+%
+% Structurally this is a RATIO OF TWO RATIOS, SCALED BY 100 — the same clearance-fraction shape as the
+% fractional excretions of sodium, potassium, and phosphate — which is why this library reuses that proven
+% shape rather than inventing a new one; the novelty here is the ANALYTE (urea) and its diuretic-robust
+% clinical role, not the arithmetic. Written as a single fraction it is (Uurea × Scr × 100) / (Surea × Ucr).
+% The ONLY constant is the exact integer 100 (the percentage scale named in the cited equation); the four
+% concentrations are all formal parameters bound at apply time, so every value the engine returns is exact.
+% The three formulas COMPOSE and invert cleanly around the worked case urine urea = 300, serum urea = 30,
+% urine creatinine = 100, serum creatinine = 2 (FEUrea = 300 × 2 × 100 / (30 × 100) = 60000 / 3000 = 20 %):
+% the `fractional_excretion_of_urea` a consumer computes is exactly the value each inverse formula
+% back-solves to recover its own measured input (300, 30).
+%
+%   fractional_excretion_of_urea(urine_urea, serum_creatinine, serum_urea, urine_creatinine) = urine_urea * serum_creatinine * 100 / (serum_urea * urine_creatinine)   % (%)
+%   urine_urea(fractional_excretion_of_urea, serum_urea, urine_creatinine, serum_creatinine) = fractional_excretion_of_urea * serum_urea * urine_creatinine / (serum_creatinine * 100)  % (solved for urine urea)
+%   serum_urea(fractional_excretion_of_urea, urine_urea, serum_creatinine, urine_creatinine) = urine_urea * serum_creatinine * 100 / (fractional_excretion_of_urea * urine_creatinine)  % (solved for serum urea)
+%
+% NOTE ON UNITS AND MODELLING: urea and creatinine each appear as a URINE and a SERUM concentration, and
+% because the formula is a ratio of ratios the answer is unit-independent as long as each analyte uses the
+% SAME unit in numerator and denominator (urine urea and serum urea in the same unit; urine and serum
+% creatinine in the same unit). The result is a percentage. A FEUrea below roughly 35 % suggests a prerenal
+% state and above ~50 % suggests intrinsic injury; interpreting the number is the clinician's task, stated by
+% the cited source but applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted FEUrea equation — because that one equation
+% ([Uurea/Surea]/[Ucr/Scr] × 100) sanctions the relation read every way. The quote is transcribed verbatim
+% from the PubMed Central article "Diagnostic performance of fractional excretion of urea in the evaluation
+% of critically ill patients with acute kidney injury: a multicenter cohort study", where the definition is
+% printed as "The FeUrea percentage was calculated as ([urinary urea/serum urea]/[urinary creatinine/serum
+% creatinine]) ×100" — a fully-bracketed, operand-complete formula. (That correctly-bracketed form was
+% chosen over an unbracketed "FEUN = … " restatement elsewhere whose strict operator precedence would place
+% urine creatinine in the numerator, i.e. would encode the wrong relation — grounding it would ground a
+% mistake.) Each `formula` therefore carries the provenance envelope every shipped grounded clause carries;
+% the linter rejects an unsourced one. (See feedback_nothing_human_authored — the formula is a verbatim span
+% of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `urine_urea`, `serum_urea`, `urine_creatinine`, `serum_creatinine` and
+% `fractional_excretion_of_urea` each appear BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are the everyday
+% names a decomposer maps onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary fractional_excretion_of_urea_vocab {
+    define urine_urea                    : finding  surface "urine urea", "urinary urea", "Uurea", "urine urea nitrogen" % conc
+    define serum_urea                    : finding  surface "serum urea", "plasma urea", "Surea", "serum urea nitrogen"  % conc
+    define urine_creatinine              : finding  surface "urine creatinine", "urinary creatinine", "UCr"              % conc
+    define serum_creatinine              : finding  surface "serum creatinine", "plasma creatinine", "SCr"               % conc
+    define fractional_excretion_of_urea  : finding  surface "fractional excretion of urea", "FEUrea", "FeUrea", "FEUN"   % %
+}
+
+% ----------------------------------------------------------------------------
+% The fractional excretion of urea, three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the FEUrea equation from the PMC article (a quote is
+% required on a shipped formula). Each is an exact expression in the measured values and the exact integer
+% 100, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook fractional_excretion_of_urea_laws {
+    use fractional_excretion_of_urea_vocab
+
+    % FEUrea — the urine/serum urea ratio over the urine/serum creatinine ratio, as a percentage.
+    formula fractional_excretion_of_urea(urine_urea, serum_creatinine, serum_urea, urine_creatinine) = urine_urea * serum_creatinine * 100 / (serum_urea * urine_creatinine)
+        source "([urinary urea/serum urea]/[urinary creatinine/serum creatinine]) ×100"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC3387621/"
+        trust authoritative
+
+    % Urine urea — the same equation solved for the urine urea. Defended by the SAME equation.
+    formula urine_urea(fractional_excretion_of_urea, serum_urea, urine_creatinine, serum_creatinine) = fractional_excretion_of_urea * serum_urea * urine_creatinine / (serum_creatinine * 100)
+        source "([urinary urea/serum urea]/[urinary creatinine/serum creatinine]) ×100"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC3387621/"
+        trust authoritative
+
+    % Serum urea — the same equation solved for the serum urea, the third reading of the one law.
+    formula serum_urea(fractional_excretion_of_urea, urine_urea, serum_creatinine, urine_creatinine) = urine_urea * serum_creatinine * 100 / (fractional_excretion_of_urea * urine_creatinine)
+        source "([urinary urea/serum urea]/[urinary creatinine/serum creatinine]) ×100"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC3387621/"
+        trust authoritative
+}
