@@ -1294,6 +1294,23 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a branch-selected string procedure result can feed lexical
+    // ordering after being copied to a scalar local. This takes the runtime
+    // `str_concat` handle through `str_cmp`, then compares that signed result
+    // against zero for the usual conditional branch. `HI < LO` returns 42 and
+    // prints HI on every standard backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string s; integer result; \
+                  string procedure pick(n); value n; integer n; \
+                    if n > 0 then pick := 'HI' else pick := 'LO'; \
+                  s := pick(1); \
+                  if s < 'LO' then result := 42 else result := 0; \
+                  print(s) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — scalar string variables on the direct literal fast path. A
     // `string` scalar assigned from a literal emits `str_const` directly to its
     // slot; the preceding row covers a runtime procedure-result copy, while
@@ -3508,7 +3525,13 @@ return (int64_t)(intptr_t)h;}\n\
 int64_t __twig_str_eq(int64_t a,int64_t b){\
 int64_t la=a?*(int64_t*)(intptr_t)a:0;int64_t lb=b?*(int64_t*)(intptr_t)b:0;\
 if(la!=lb)return 0;if(la<=0)return 1;\
-return memcmp((const char*)(intptr_t)a+8,(const char*)(intptr_t)b+8,(size_t)la)==0?1:0;}\n";
+return memcmp((const char*)(intptr_t)a+8,(const char*)(intptr_t)b+8,(size_t)la)==0?1:0;}\n\
+int64_t __twig_str_cmp(int64_t a,int64_t b){\
+int64_t la=a?*(int64_t*)(intptr_t)a:0;int64_t lb=b?*(int64_t*)(intptr_t)b:0;\
+if(la<0)la=0;if(lb<0)lb=0;int64_t n=la<lb?la:lb;\
+if(n>0){int c=memcmp((const char*)(intptr_t)a+8,(const char*)(intptr_t)b+8,(size_t)n);\
+if(c<0)return -1;if(c>0)return 1;}\
+return la<lb?-1:la>lb?1:0;}\n";
 
 /// LLVM runner: source → textual `.ll` (`iir-to-llvm`) → real `clang` → run, the
 /// exact CLR-real/McCarthy strategy of handing symbolic code to the real toolchain.
@@ -3542,7 +3565,8 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
     // Link the generic I/O runtime iff the program actually uses print or input.
     if ll.contains("@__print_i64") || ll.contains("@__print_str")
         || ll.contains("@__twig_input_i64") || ll.contains("@__twig_input_str")
-        || ll.contains("@__twig_str_concat") || ll.contains("@__twig_str_eq") {
+        || ll.contains("@__twig_str_concat") || ll.contains("@__twig_str_eq")
+        || ll.contains("@__twig_str_cmp") {
         let rt_path = dir.path().join("rt.c");
         std::fs::write(&rt_path, PRINT_RUNTIME_C).ok()?;
         cmd.arg("-x").arg("c").arg(&rt_path);
@@ -4217,10 +4241,10 @@ public static int getchar(){ try { int b = System.in.read(); return b < 0 ? 0 : 
 /// read the entry's real return descriptor and inject one of two launcher methods,
 /// keyed on the program's result kind:
 ///
-/// * **Expression language** (`Expect::Exit`) — print the entry method's result so
-///   the harness can read it back:
+/// * **Expression language** (`Expect::Exit`) — print the entry method's result to
+///   stderr so the harness can read it without consuming program-owned stdout:
 ///   ```text
-///     getstatic  System.out         // : PrintStream
+///     getstatic  System.err         // : PrintStream
 ///     invokestatic Main.main()<R>   // : the program's result
 ///     invokevirtual println(<R>)V   // print it  (<R> = I or J)
 ///     return
@@ -4269,7 +4293,7 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
     let ret = entry_desc.rsplit(')').next()?.to_string();
 
     // Build the constant-pool entries the launcher references. Always a self-ref to
-    // `Main.main<entry_desc>`; for the print path also `System.out` and the matching
+    // `Main.main<entry_desc>`; for the value path also `System.err` and the matching
     // `println(<R>)V`.
     let (entry_ref, print_refs) = {
         let cp = &mut class.constant_pool;
@@ -4278,15 +4302,15 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
         } else {
             let sys_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("java/lang/System".into()));
             let sys_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: sys_utf8 });
-            let out_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("out".into()));
+            let err_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("err".into()));
             let ps_desc = cp_append(cp, JvmConstantPoolEntry::Utf8("Ljava/io/PrintStream;".into()));
-            let out_nat = cp_append(
+            let err_nat = cp_append(
                 cp,
-                JvmConstantPoolEntry::NameAndType { name_index: out_utf8, descriptor_index: ps_desc },
+                JvmConstantPoolEntry::NameAndType { name_index: err_utf8, descriptor_index: ps_desc },
             );
-            let out_fieldref = cp_append(
+            let err_fieldref = cp_append(
                 cp,
-                JvmConstantPoolEntry::Fieldref { class_index: sys_class, name_and_type_index: out_nat },
+                JvmConstantPoolEntry::Fieldref { class_index: sys_class, name_and_type_index: err_nat },
             );
             let ps_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("java/io/PrintStream".into()));
             let ps_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: ps_utf8 });
@@ -4300,7 +4324,7 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
                 cp,
                 JvmConstantPoolEntry::Methodref { class_index: ps_class, name_and_type_index: pln_nat },
             );
-            Some((out_fieldref, println_ref))
+            Some((err_fieldref, println_ref))
         };
         let main_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("Main".into()));
         let main_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: main_utf8 });
@@ -4319,11 +4343,11 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
     };
     let [ent_hi, ent_lo] = entry_ref.to_be_bytes();
     let main_code = match print_refs {
-        Some((out_fieldref, println_ref)) => {
-            let [out_hi, out_lo] = out_fieldref.to_be_bytes();
+        Some((err_fieldref, println_ref)) => {
+            let [err_hi, err_lo] = err_fieldref.to_be_bytes();
             let [pln_hi, pln_lo] = println_ref.to_be_bytes();
             vec![
-                0xB2, out_hi, out_lo, // getstatic System.out
+                0xB2, err_hi, err_lo, // getstatic System.err
                 0xB8, ent_hi, ent_lo, // invokestatic Main.main()<R>
                 0xB6, pln_hi, pln_lo, // invokevirtual println(<R>)V
                 0xB1, // return
@@ -4399,6 +4423,7 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
     java.arg("-cp").arg(dir.path()).arg("Main");
     let out = output_with_stdin(java, program_stdin(p))?;
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    let stderr = String::from_utf8_lossy(&out.stderr).trim().to_string();
     if matches!(&p.expect, Expect::Trap) && !out.status.success() {
         return Some(RunResult::Trapped);
     }
@@ -4406,9 +4431,9 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
         // The program wrote its result to stdout via `env.BasicRuntime.println`.
         Some(RunResult::Completed { code: out.status.code(), stdout })
     } else {
-        // The launcher printed the entry method's result; parse it as the program's
-        // value (matching the exit-code convention of the other columns).
-        Some(RunResult::Completed { code: stdout.parse::<i32>().ok(), stdout: String::new() })
+        // The launcher printed the entry method's result to stderr; parse it as the
+        // program value while retaining the program's own stdout.
+        Some(RunResult::Completed { code: stderr.parse::<i32>().ok(), stdout })
     }
 }
 
@@ -4823,6 +4848,52 @@ fn matrix_every_proven_cell_agrees() {
         }
     }
     eprintln!("lang-matrix: {ran} proven cells exercised");
+}
+
+/// Focused regression for the cross-backend runtime-string ordering path. The
+/// full matrix currently has an unrelated JVM/Twig failure before it reaches this
+/// late ALGOL row, so keep every standard backend independently visible here.
+/// Native AOT and real LLVM/clang must preserve the printed procedure result as
+/// well as the lexical branch's exit code.
+#[test]
+fn algol_runtime_string_ordering_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("s < 'LO'")
+                && program.src.contains("string procedure pick")
+        })
+        .expect("the ALGOL runtime string ordering program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(RunResult::Completed { code, stdout }) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but runtime string ordering did not complete"
+            );
+            continue;
+        };
+        assert_eq!(
+            code,
+            Some(42),
+            "{backend:?} must take the runtime lexical-ordering branch"
+        );
+        if matches!(backend, NativeAot | Llvm) {
+            assert_eq!(
+                stdout,
+                "HI",
+                "{backend:?} must preserve the procedure-result string for output"
+            );
+        }
+    }
 }
 
 /// Per-column floor: when a backend's toolchain IS present, every program tagged

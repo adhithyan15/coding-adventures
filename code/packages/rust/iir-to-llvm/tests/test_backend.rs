@@ -2358,6 +2358,48 @@ fn runtime_str_concat_lowers_to_twig_str_concat_call() {
         "the @__twig_str_concat extern must be declared; got:\n{ll}");
 }
 
+/// A runtime string copy is represented as a concat with the empty literal suffix.
+/// The literal global must be converted to an i64 handle before the helper call.
+#[test]
+fn runtime_str_concat_ptrtoints_a_mixed_literal_operand() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "call_builtin",
+                Some("runtime".into()),
+                vec![Operand::Var("input_str".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("empty".into()),
+                vec![Operand::Str(String::new())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_concat",
+                Some("copy".into()),
+                vec![Operand::Var("runtime".into()), Operand::Var("empty".into())],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("copy".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(
+        ll.contains("ptrtoint ptr @__twig_str_0 to i64"),
+        "a mixed literal concat operand must become an i64 handle; got:\n{ll}"
+    );
+    assert!(
+        ll.contains("call i64 @__twig_str_concat(i64 %runtime, i64 %__scch"),
+        "the runtime concat must receive the converted literal handle; got:\n{ll}"
+    );
+}
+
 /// LANG-FULL tail — a string LITERAL passed across a function boundary must be
 /// converted from its global-pointer form to an i64 handle with `ptrtoint` before
 /// the call. Otherwise `call i64 @strlen(i64 @__twig_str_0)` puts a `ptr` constant
@@ -2423,6 +2465,35 @@ fn str_eq_over_params_calls_twig_str_eq() {
         "str_eq over params must call the runtime helper; got:\n{ll}");
     assert!(ll.contains("declare i64 @__twig_str_eq(i64, i64)"),
         "the @__twig_str_eq extern must be declared; got:\n{ll}");
+}
+
+/// LANG-FULL tail — runtime lexical string ordering has the same handle path as
+/// equality, but preserves the shared -1/0/1 contract for a downstream numeric branch.
+#[test]
+fn str_cmp_over_params_calls_twig_str_cmp() {
+    let compare = IIRFunction::new(
+        "compare",
+        vec![("a".into(), "str".into()), ("b".into(), "str".into())],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "str_cmp",
+                Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(compare));
+    assert!(
+        ll.contains("call i64 @__twig_str_cmp(i64 %a, i64 %b)"),
+        "str_cmp over params must call the runtime helper; got:\n{ll}"
+    );
+    assert!(
+        ll.contains("declare i64 @__twig_str_cmp(i64, i64)"),
+        "the @__twig_str_cmp extern must be declared; got:\n{ll}"
+    );
 }
 
 // ===========================================================================

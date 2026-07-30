@@ -1,5 +1,14 @@
 # Changelog — `twig-aot`
 
+## 0.49.0 - 2026-07-30 - LANG-FULL E4-dyn runtime string ordering
+
+Native AOT now lowers a nonliteral `str_cmp` to `call_builtin "str_cmp"`,
+routing the two length-prefixed handles to the existing, guarded
+`__twig_str_cmp` helper. Both-literal comparisons continue to fold to the
+shared `-1`/`0`/`1` convention. This lets a runtime procedure result or
+branch-selected local feed an ALGOL lexical conditional on the hand-written
+native backends. Regression test: `string_param_cmp_lowers_to_call_builtin_str_cmp`.
+
 ## 0.48.2 - 2026-07-30 — Records are precise + movable: the Twig-native-GC arc is complete
 
 Records were the last Twig heap type not precise+movable (cons/lists/closures already were; strings

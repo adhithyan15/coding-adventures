@@ -72,6 +72,11 @@ preparation pass. Folded `str_len` metadata can also flow through typed integer
 arithmetic, so `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))`
 folds to byte `69` before native lowering.
 
+When either operand is a runtime string handle, `str_eq` and `str_cmp` instead
+lower to the matching `__twig_str_*` helper. This preserves equality and signed
+lexical ordering for procedure results and branch-selected locals without
+discarding the literal folding fast path.
+
 As of 0.10.0, `prepare_module_for_aot` lowers a lisp frontend's `cons`/`car`/
 `cdr` to **calls into this runtime** (via
 `iir_builtin_lowering::lower_heap_builtins_runtime`), so a McCarthy program

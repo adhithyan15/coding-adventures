@@ -91,10 +91,9 @@ the shared E4 comparison ops too: `s = 'OK'` / `s != 'NO'` use `str_eq` plus a
 typed zero comparison, while `s < 'BETA'` / `'BETA' > s` use `str_cmp` plus the
 corresponding typed zero comparison before the normal ALGOL conditional branch.
 Initialized scalar locals now also carry runtime string procedure results:
-`string s; s := pick(1); if s = 'HI' then ...; print(s)` uses the shared
-runtime `str_concat`/`str_eq`/`print_str` path. Reads before assignment still
-fail closed. Captured/`own` strings, string arrays, and runtime ordering
-comparisons remain unsupported.
+`string s; s := pick(1); if s < 'LO' then ...; print(s)` uses the shared
+runtime `str_concat`/`str_cmp`/`print_str` path. Reads before assignment still
+fail closed. Captured/`own` strings and string arrays remain unsupported.
 
 `real` values lower to the IIR `f64` type and **run on the VM and JIT today**
 (LANG-FULL AL1 / enabler E3 phase 1); `2.5 * 2.0`, `7.0 / 2.0`, and real

@@ -298,9 +298,9 @@ const SUPPORTED_OPS: &[&str] = &[
     "f64_pow",
     // LANG-FULL E4 — string literal foothold for the static LLVM column.
     // `str_const` materialises a length-prefixed private constant. `str_index`,
-    // `str_concat`, `str_slice`, `str_len`, `str_eq`, and `str_cmp` read literal metadata,
-    // and `print_str` calls the generic C runtime. Richer dynamic byte-string
-    // ops remain unsupported.
+    // `str_concat`, `str_slice`, `str_len`, and `str_eq` use literal metadata where
+    // possible; `str_cmp` also calls the generic C runtime for non-literal handles.
+    // Richer dynamic byte-string ops remain unsupported.
     "str_const", "str_index", "str_concat", "str_slice", "str_len", "str_eq", "str_cmp",
     "print_str",
 ];
@@ -755,6 +755,9 @@ pub fn lower_iir_to_llvm(
     // `@__twig_str_eq`. Set whenever any `str_eq` op appears; an unused declare is
     // legal LLVM (same rationale as `used_str_concat`).
     let mut used_str_eq = false;
+    // E4-dyn runtime lexical ordering over non-literal operands calls
+    // `@__twig_str_cmp`. The literal fast path still folds to -1/0/1.
+    let mut used_str_cmp = false;
     // LANG-FULL E8: the `real_to_int_*` conversions need `@llvm.trap` (the
     // out-of-range trap) plus the `@llvm.floor.f64`/`@llvm.trunc.f64` rounding
     // intrinsics. `is_conversion` covers int_to_real / real_to_int_{trunc,floor}.
@@ -796,6 +799,9 @@ pub fn lower_iir_to_llvm(
             }
             if i.op == "str_eq" {
                 used_str_eq = true;
+            }
+            if i.op == "str_cmp" {
+                used_str_cmp = true;
             }
             if interpreter_ir::opcodes::is_conversion(&i.op) {
                 used_conversions = true;
@@ -866,7 +872,7 @@ pub fn lower_iir_to_llvm(
         out.push_str("declare double @pow(double, double)\n");
     }
     if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar
-        || used_input_i64 || used_input_str || used_str_concat || used_str_eq || used_gc_alloc {
+        || used_input_i64 || used_input_str || used_str_concat || used_str_eq || used_str_cmp || used_gc_alloc {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
             out.push_str("declare ptr @calloc(i64, i64)\n");
@@ -919,6 +925,11 @@ pub fn lower_iir_to_llvm(
             // operands' `[i64 len][bytes]` headers then `memcmp`s the bytes, returning
             // 1/0. Used when `str_eq` has a non-literal (runtime) operand.
             out.push_str("declare i64 @__twig_str_eq(i64, i64)\n");
+        }
+        if used_str_cmp {
+            // `@__twig_str_cmp` (E4-dyn) is provided by `twig_runtime.c`: it compares
+            // length-prefixed byte strings and normalizes the result to -1/0/1.
+            out.push_str("declare i64 @__twig_str_cmp(i64, i64)\n");
         }
     }
     if !used_lispy.is_empty() {
@@ -1758,7 +1769,7 @@ fn lower_instr(
         "str_index" => lower_str_index(instr, state, out),
         "str_len" => lower_str_len(instr, state, out),
         "str_eq" => lower_str_eq(instr, state, out),
-        "str_cmp" => lower_str_cmp(instr, state),
+        "str_cmp" => lower_str_cmp(instr, state, out),
         "print_str" => lower_print_str(instr, state, out),
 
         other => Err(IIRLlvmError::UnsupportedOp {
@@ -1957,18 +1968,32 @@ fn lower_str_concat(
     // to a fresh joined block. The result is a runtime string — stored ONLY in `env`,
     // with no `str_lens`/`str_values` entry — so `str_len`/`print_str` on it read the
     // length header at run time rather than folding a length that isn't known.
-    let left_handle = state.env.get(&left).cloned().ok_or_else(|| {
+    let left_operand = state.env.get(&left).cloned().ok_or_else(|| {
         IIRLlvmError::UndefinedVariable {
             function: state.fn_name.into(),
             name: left.clone(),
         }
     })?;
-    let right_handle = state.env.get(&right).cloned().ok_or_else(|| {
+    let left_handle = if left_operand.starts_with('@') {
+        let handle = state.fresh("scch");
+        out.push_str(&format!("  {handle} = ptrtoint ptr {left_operand} to i64\n"));
+        handle
+    } else {
+        left_operand
+    };
+    let right_operand = state.env.get(&right).cloned().ok_or_else(|| {
         IIRLlvmError::UndefinedVariable {
             function: state.fn_name.into(),
             name: right.clone(),
         }
     })?;
+    let right_handle = if right_operand.starts_with('@') {
+        let handle = state.fresh("scch");
+        out.push_str(&format!("  {handle} = ptrtoint ptr {right_operand} to i64\n"));
+        handle
+    } else {
+        right_operand
+    };
     let res = state.fresh("scc");
     out.push_str(&format!(
         "  {res} = call i64 @__twig_str_concat(i64 {left_handle}, i64 {right_handle})\n"
@@ -2177,7 +2202,11 @@ fn lower_str_eq(
     Ok(())
 }
 
-fn lower_str_cmp(instr: &IIRInstr, state: &mut FnState) -> Result<(), IIRLlvmError> {
+fn lower_str_cmp(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
     let dest = require_dest(instr, "str_cmp", state.fn_name)?.to_string();
     let left = match instr.srcs.first() {
         Some(Operand::Var(s)) => s,
@@ -2197,24 +2226,58 @@ fn lower_str_cmp(instr: &IIRInstr, state: &mut FnState) -> Result<(), IIRLlvmErr
             });
         }
     };
-    let left_value = state.str_values.get(left).ok_or_else(|| {
-        IIRLlvmError::InvalidOperand {
+    // Literal fast path: both operands are known byte strings, so fold to the
+    // shared signed ordering convention without a runtime call.
+    if let (Some(left_value), Some(right_value)) =
+        (state.str_values.get(left), state.str_values.get(right))
+    {
+        let value = match left_value.as_bytes().cmp(right_value.as_bytes()) {
+            Ordering::Less => "-1",
+            Ordering::Equal => "0",
+            Ordering::Greater => "1",
+        };
+        state.env.insert(dest, value.into());
+        return Ok(());
+    }
+
+    // Runtime path: params, call results, and branch-selected string locals are
+    // all i64 handles. A literal mixed with one of those values is represented by
+    // its global address and must be converted to the same handle form first.
+    let left_operand = state
+        .env
+        .get(left)
+        .cloned()
+        .ok_or_else(|| IIRLlvmError::UndefinedVariable {
             function: state.fn_name.into(),
-            detail: format!("str_cmp left source {left:?} is not a string literal value"),
-        }
-    })?;
-    let right_value = state.str_values.get(right).ok_or_else(|| {
-        IIRLlvmError::InvalidOperand {
-            function: state.fn_name.into(),
-            detail: format!("str_cmp right source {right:?} is not a string literal value"),
-        }
-    })?;
-    let value = match left_value.as_bytes().cmp(right_value.as_bytes()) {
-        Ordering::Less => "-1",
-        Ordering::Equal => "0",
-        Ordering::Greater => "1",
+            name: left.clone(),
+        })?;
+    let left_handle = if left_operand.starts_with('@') {
+        let handle = state.fresh("scmph");
+        out.push_str(&format!("  {handle} = ptrtoint ptr {left_operand} to i64\n"));
+        handle
+    } else {
+        left_operand
     };
-    state.env.insert(dest, value.into());
+    let right_operand = state
+        .env
+        .get(right)
+        .cloned()
+        .ok_or_else(|| IIRLlvmError::UndefinedVariable {
+            function: state.fn_name.into(),
+            name: right.clone(),
+        })?;
+    let right_handle = if right_operand.starts_with('@') {
+        let handle = state.fresh("scmph");
+        out.push_str(&format!("  {handle} = ptrtoint ptr {right_operand} to i64\n"));
+        handle
+    } else {
+        right_operand
+    };
+    let result = state.fresh("scmp");
+    out.push_str(&format!(
+        "  {result} = call i64 @__twig_str_cmp(i64 {left_handle}, i64 {right_handle})\n"
+    ));
+    state.env.insert(dest, result);
     Ok(())
 }
 

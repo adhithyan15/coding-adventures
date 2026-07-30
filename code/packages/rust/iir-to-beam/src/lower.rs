@@ -1203,6 +1203,87 @@ pub fn lower_iir_to_beam(
                     ));
                 }
 
+                // ── str_cmp → lexical character-list ordering ──────────────
+                //
+                // Validated ALGOL strings are proper printable-ASCII Erlang
+                // character lists. Erlang list term order is lexicographic for
+                // these homogeneous lists, including the shorter-prefix rule,
+                // so native `is_eq_exact` and `is_lt` yield the E4 ordering.
+                // Materialize its conventional -1 / 0 / 1 result without a
+                // runtime helper: equality stays 0; otherwise list order picks
+                // -1 for left < right and 1 for left > right.
+                "str_cmp" => {
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "str_cmp must have a destination".into(),
+                        }),
+                    };
+                    let (left, right) = match instr.srcs.as_slice() {
+                        [Operand::Var(left), Operand::Var(right)] => {
+                            (var_reg!(left), var_reg!(right))
+                        }
+                        _ => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "str_cmp requires two variable sources".into(),
+                        }),
+                    };
+
+                    label_counter = label_counter.checked_add(1).ok_or_else(|| {
+                        IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "label counter overflow — too many string comparisons".into(),
+                        }
+                    })?;
+                    let not_equal = label_counter;
+                    label_counter = label_counter.checked_add(1).ok_or_else(|| {
+                        IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "label counter overflow — too many string comparisons".into(),
+                        }
+                    })?;
+                    let greater = label_counter;
+                    label_counter = label_counter.checked_add(1).ok_or_else(|| {
+                        IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "label counter overflow — too many string comparisons".into(),
+                        }
+                    })?;
+                    let done = label_counter;
+
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(0), BEAMOperand::x(rd),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_IS_EQ_EXACT, vec![
+                        BEAMOperand::f(not_equal), BEAMOperand::x(left), BEAMOperand::x(right),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_JUMP, vec![
+                        BEAMOperand::f(done),
+                    ]));
+                    instrs.push(BEAMInstruction::new(
+                        OP_LABEL, vec![BEAMOperand::u(not_equal as u64)],
+                    ));
+                    instrs.push(BEAMInstruction::new(OP_IS_LT, vec![
+                        BEAMOperand::f(greater), BEAMOperand::x(left), BEAMOperand::x(right),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i((-1_i64) as u64), BEAMOperand::x(rd),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_JUMP, vec![
+                        BEAMOperand::f(done),
+                    ]));
+                    instrs.push(BEAMInstruction::new(
+                        OP_LABEL, vec![BEAMOperand::u(greater as u64)],
+                    ));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(1), BEAMOperand::x(rd),
+                    ]));
+                    instrs.push(BEAMInstruction::new(
+                        OP_LABEL, vec![BEAMOperand::u(done as u64)],
+                    ));
+                }
+
                 // ── mov dest = src ───────────────────────────────────────────
                 //
                 // Universal IIR primitive emitted by `dartmouth-basic-iir-compiler`,

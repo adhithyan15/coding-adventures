@@ -1,5 +1,16 @@
 # Changelog — iir-to-llvm
 
+## 0.44.0 - 2026-07-30 - LANG-FULL E4-dyn runtime string ordering
+
+`str_cmp` now mirrors the established runtime `str_eq` path. Literal pairs still
+fold to `-1`/`0`/`1`, but a parameter, procedure result, or branch-selected local
+now lowers to `@__twig_str_cmp(i64, i64)`. Literal operands mixed with a runtime
+handle are converted with `ptrtoint`, so both arguments follow the same
+length-prefixed-string ABI. The same mixed-handle conversion now covers runtime
+`str_concat`, which ALGOL's snapshot-copy lowering uses with an empty literal
+suffix; without it LLVM emitted invalid `i64 @__twig_str_N` call arguments.
+Focused backend tests lock in both runtime calls and their on-demand declarations.
+
 ## 0.43.0 - 2026-07-20 — builtin whitelist: dyn_null_p (native `null?`)
 
 Part of the fix restoring McCarthy-lisp list programs on the native-AOT / LLVM backends (`lang-aot` `lang_matrix`). See the umbrella commit for the full story: `null?` was never routed to a runtime call on the tagged native/LLVM path (breaking every cons-walk helper), `list-ref`/`assoc` unboxed a raw-int index/key (→ wrong element), a top-level `(null? …)` predicate result was unboxed instead of truthy-coerced, and cons-cell field access failed the JVM verifier. Verified end-to-end: native list-ref/assoc/length/reverse/append/null? all correct.

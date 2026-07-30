@@ -268,13 +268,9 @@ struct Compiler {
     /// a module global (`is_global`) so the procedure and the enclosing block
     /// share it.  Saved/restored around nested blocks.
     block_captured: HashSet<String>,
-    /// String slots known to be backed by a direct E4 `str_const` in the
-    /// current function. This preserves the static fast path and restricts
-    /// ordering comparisons to values with compile-time string contents.
-    literal_string_slots: HashSet<String>,
     /// String slots that hold a defined value in source order. Unlike
-    /// `literal_string_slots`, this also covers runtime results such as a
-    /// string procedure call copied into a scalar local.
+    /// a literal-only model, this also covers runtime results such as a string
+    /// procedure call copied into a scalar local.
     initialized_string_slots: HashSet<String>,
 }
 
@@ -295,7 +291,6 @@ impl Default for Compiler {
             proc_sigs: HashMap::new(),
             switches: HashMap::new(),
             block_captured: HashSet::new(),
-            literal_string_slots: HashSet::new(),
             initialized_string_slots: HashSet::new(),
         }
     }
@@ -997,7 +992,6 @@ impl Compiler {
         let saved_defined = std::mem::take(&mut self.defined_labels);
         let saved_referenced = std::mem::take(&mut self.referenced_labels);
         let saved_switches = std::mem::take(&mut self.switches);
-        let saved_literal_string_slots = std::mem::take(&mut self.literal_string_slots);
         let saved_initialized_string_slots =
             std::mem::take(&mut self.initialized_string_slots);
         let saved_scopes = std::mem::replace(&mut self.scopes, vec![HashMap::new()]);
@@ -1048,7 +1042,6 @@ impl Compiler {
                     "str",
                 ));
                 self.initialized_string_slots.insert(result_slot.clone());
-                self.literal_string_slots.insert(result_slot.clone());
             } else {
                 self.emit(IIRInstr::new(
                     "const",
@@ -1121,7 +1114,6 @@ impl Compiler {
         self.defined_labels = saved_defined;
         self.referenced_labels = saved_referenced;
         self.switches = saved_switches;
-        self.literal_string_slots = saved_literal_string_slots;
         self.initialized_string_slots = saved_initialized_string_slots;
         self.scopes = saved_scopes;
 
@@ -1823,7 +1815,6 @@ impl Compiler {
                     "str",
                 ));
                 self.initialized_string_slots.insert(binding.slot.clone());
-                self.literal_string_slots.insert(binding.slot);
             }
             if saw_string_target {
                 return Ok(());
@@ -1837,7 +1828,6 @@ impl Compiler {
                     )));
                 }
                 let src_slot = src_binding.slot.clone();
-                let source_is_literal = self.literal_string_slots.contains(&src_slot);
                 let mut saw_string_target = false;
                 for left in &left_parts {
                     let var_node = first_direct_node(left, "variable").ok_or_else(|| {
@@ -1881,11 +1871,6 @@ impl Compiler {
                         ));
                     }
                     self.initialized_string_slots.insert(target_slot.clone());
-                    if source_is_literal {
-                        self.literal_string_slots.insert(target_slot);
-                    } else {
-                        self.literal_string_slots.remove(&target_slot);
-                    }
                 }
                 if saw_string_target {
                     return Ok(());
@@ -1953,7 +1938,6 @@ impl Compiler {
                     ));
                 }
                 self.initialized_string_slots.insert(binding.slot.clone());
-                self.literal_string_slots.remove(&binding.slot);
                 continue;
             }
             if binding.is_global {
@@ -2751,7 +2735,6 @@ impl Compiler {
                     vec![Operand::Str(unquote_algol_string(&token.value))],
                     "str",
                 ));
-                self.literal_string_slots.insert(slot.clone());
                 Ok(ExprValue {
                     slot,
                     ty: ScalarType::String,
@@ -3091,14 +3074,6 @@ impl Compiler {
                     )));
                 }
                 if lhs.ty == ScalarType::String {
-                    if matches!(op, "<" | "<=" | ">" | ">=")
-                        && (!self.literal_string_slots.contains(&lhs.slot)
-                            || !self.literal_string_slots.contains(&rhs.slot))
-                    {
-                        return Err(CompileError::Unsupported(
-                            "string ordering comparisons require literal-backed operands".into(),
-                        ));
-                    }
                     let dest = self.fresh_temp();
                     match op {
                         "=" | "!=" | "<>" => {
@@ -4108,6 +4083,14 @@ mod tests {
              if s = 'HI' then result := 42 else result := 0; \
              print(s) end";
 
+    const RUNTIME_STRING_ORDERING_PROG: &str =
+        "begin string s; integer result; \
+             string procedure pick(n); value n; integer n; \
+               if n > 0 then pick := 'HI' else pick := 'LO'; \
+             s := pick(1); \
+             if s < 'LO' then result := 42 else result := 0; \
+             print(s) end";
+
     #[test]
     fn string_procedure_returns_runtime_string_and_prints() {
         let module = compile_source(STRING_PROC_PROG, "test")
@@ -4210,6 +4193,30 @@ mod tests {
                     && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == "s")
             }),
             "print(s) must consume the initialized scalar string: {:?}",
+            main.instructions
+        );
+    }
+
+    #[test]
+    fn runtime_string_procedure_result_can_be_lexically_ordered() {
+        let module = compile_source(RUNTIME_STRING_ORDERING_PROG, "test")
+            .expect("runtime string ordering compiles");
+        let main = module
+            .functions
+            .iter()
+            .find(|f| f.name == "main")
+            .expect("has main");
+        assert!(
+            main.instructions.iter().any(|i| {
+                i.op == "str_cmp"
+                    && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == "s")
+            }),
+            "s < 'LO' must compare the runtime scalar string with str_cmp: {:?}",
+            main.instructions
+        );
+        assert!(
+            main.instructions.iter().any(|i| i.op == "cmp_lt" && i.type_hint == "i64"),
+            "runtime ordering must compare str_cmp's integer result against zero: {:?}",
             main.instructions
         );
     }
@@ -5226,7 +5233,7 @@ mod tests {
     }
 
     /// The procedure body emits a `print_str` on the parameter slot, not on an
-    /// intermediate copy — the parameter is in `literal_string_slots` on entry.
+    /// intermediate copy — the parameter is initialized at procedure entry.
     #[test]
     fn al4_string_parameter_body_emits_print_str() {
         let src = "begin \
