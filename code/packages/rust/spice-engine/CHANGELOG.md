@@ -1,5 +1,7 @@
 # Changelog
 
+- Reject Level-1 MOS model-card `FC` values outside `[0, 1)` or non-finite
+  values with a stable diagnostic before depletion-capacitance shaping.
 - Reject negative or non-finite Level-1 MOS model-card `MJ` values with a
   stable diagnostic before depletion-capacitance shaping.
 - Reject non-positive or non-finite Level-1 MOS model-card `PB` values with a

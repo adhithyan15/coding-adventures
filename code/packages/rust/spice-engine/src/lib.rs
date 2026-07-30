@@ -4410,6 +4410,13 @@ pub fn normalize_model_card(
                     name: name.clone(),
                     reason: "MOSFET MJ must be finite and non-negative".to_string(),
                 });
+            } else if canonical == "FC"
+                && (!raw_value.is_finite() || !(0.0..1.0).contains(raw_value))
+            {
+                return Err(SpiceError::InvalidElement {
+                    name: name.clone(),
+                    reason: "MOSFET FC must be finite and in [0, 1)".to_string(),
+                });
             } else {
                 normalized.insert(canonical.to_string(), *raw_value);
             }

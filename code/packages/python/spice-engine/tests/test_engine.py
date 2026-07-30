@@ -1122,6 +1122,18 @@ def test_mos_model_card_rejects_negative_or_non_finite_junction_grading_coeffici
             normalize_model_card("Minvalid", "nmos", {"MJ": invalid_coefficient})
 
 
+def test_mos_model_card_rejects_out_of_range_or_non_finite_depletion_coefficient() -> None:
+    for value in (0.0, 0.5, 0.999):
+        valid = normalize_model_card("Mvalid", "nmos", {"FC": value})
+        assert valid.parameters["FC"] == pytest.approx(value)
+
+    for invalid_coefficient in (-math.inf, -0.1, 1.0, math.inf, math.nan):
+        with pytest.raises(
+            ValueError, match=r"MOSFET FC must be finite and in \[0, 1\)"
+        ):
+            normalize_model_card("Minvalid", "nmos", {"FC": invalid_coefficient})
+
+
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
     circuit = Circuit()
     circuit.add(JFET("J1", "drain", "gate", "0", Kf=-1.0))
