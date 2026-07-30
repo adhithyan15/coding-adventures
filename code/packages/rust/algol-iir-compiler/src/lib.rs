@@ -209,8 +209,9 @@ struct ArrayInfo {
 }
 
 /// A procedure heading read off the AST: `(name, value-params, return-type)`,
-/// where each value parameter is `(name, type)` in declaration order.
-type ProcedureParts = (String, Vec<(String, ScalarType)>, ScalarType);
+/// where each value parameter is `(name, type)` in declaration order. A missing
+/// return type is an ALGOL proper procedure.
+type ProcedureParts = (String, Vec<(String, ScalarType)>, Option<ScalarType>);
 
 /// The compile-time signature of a procedure: the ordered types of its
 /// value parameters plus its return type.
@@ -222,18 +223,15 @@ type ProcedureParts = (String, Vec<(String, ScalarType)>, ScalarType);
 /// looks the name up here to know (a) how many arguments to evaluate,
 /// (b) what type each argument must be, and (c) what type the call yields.
 ///
-/// We deliberately only model **typed** procedures (ALGOL "function
-/// procedures") with **value** parameters.  A proper (void) procedure has
-/// no observable effect on the current executable slice — there is no
-/// output statement and no by-reference / enclosing-scope mutation yet —
-/// so admitting one would be lowering code no test could ever witness.
-/// Those are rejected with a clear message and tracked as follow-up work.
+/// We model typed procedures (ALGOL "function procedures") as value-producing
+/// calls and proper procedures as void functions usable only in statement
+/// position. Parameters are still restricted to `value` parameters.
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct ProcSig {
     /// Parameter types in declaration order (matches `IIRFunction::params`).
     params: Vec<ScalarType>,
-    /// The procedure's return type (always `Some` on the supported slice).
-    ret: ScalarType,
+    /// The procedure's return type, or `None` for a proper procedure.
+    ret: Option<ScalarType>,
 }
 
 #[derive(Debug, Clone)]
@@ -318,6 +316,16 @@ impl Compiler {
                 return Err(CompileError::Unsupported(
                     "string result variables as main return values".into(),
                 ));
+            }
+            Some(binding) if binding.is_global => {
+                let dest = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "global_load",
+                    Some(dest.clone()),
+                    vec![Operand::Str(binding.slot)],
+                    binding.ty.iir(),
+                ));
+                (binding.ty.iir(), Operand::Var(dest))
             }
             Some(binding) => (binding.ty.iir(), Operand::Var(binding.slot)),
             None => {
@@ -860,9 +868,9 @@ impl Compiler {
     /// * each `spec_part` declares the *type* of one or more parameters.
     ///
     /// On the supported slice every parameter must be a `value` parameter
-    /// (call-by-name / Jensen's device is not modelled), the procedure must
-    /// have a return type (proper/void procedures are inert here), and every
-    /// parameter must be specified exactly once.
+    /// (call-by-name / Jensen's device is not modelled), and every parameter
+    /// must be specified exactly once. A missing heading type is a proper
+    /// procedure and lowers to an IIR `void` function.
     fn procedure_parts(
         &self,
         proc_decl: &GrammarASTNode,
@@ -873,15 +881,9 @@ impl Compiler {
             .map(|t| t.value.clone())
             .ok_or_else(|| CompileError::Malformed("procedure_decl missing name".into()))?;
 
-        let ret = match first_direct_node(proc_decl, "type") {
-            Some(type_node) => self.scalar_type(type_node)?,
-            None => {
-                return Err(CompileError::Unsupported(format!(
-                    "proper (void) procedure {name:?}: only typed procedures with a return \
-                     value are observable on the current ALGOL slice"
-                )))
-            }
-        };
+        let ret = first_direct_node(proc_decl, "type")
+            .map(|type_node| self.scalar_type(type_node))
+            .transpose()?;
         // E4-dyn payoff (E4d-AL): `string procedure`s are now supported. The
         // result variable (the procedure name) holds a runtime string handle,
         // which every backend can carry and `print` since the E4-dyn foothold
@@ -1008,7 +1010,8 @@ impl Compiler {
             }
         }
 
-        // Bind value parameters and the result variable (the procedure name).
+        // Bind value parameters and, for typed procedures, the result variable
+        // (the procedure name).
         let mut param_pairs: Vec<(String, String)> = Vec::with_capacity(params.len());
         for (pname, pty) in &params {
             // Parameters and the result slot are real registers, never `own`.
@@ -1023,30 +1026,35 @@ impl Compiler {
             }
             param_pairs.push((slot, pty.iir().to_string()));
         }
-        // The procedure's name is an in-scope variable holding the return
-        // value; seed it with a default so a path that never assigns it still
-        // returns a defined value.
-        let result_slot = self.declare_var(&name, ret, false)?;
-        if ret == ScalarType::String {
-            // A string result is a runtime handle, so its default must be a real
-            // (empty) string buffer, not a `const 0`. Seed it with `str_const ""`
-            // — the same shape a literal assignment produces — and mark it
-            // literal-backed so an unassigned path still yields a printable value.
-            self.emit(IIRInstr::new(
-                "str_const",
-                Some(result_slot.clone()),
-                vec![Operand::Str(String::new())],
-                "str",
-            ));
-            self.literal_string_slots.insert(result_slot.clone());
+        let result_slot = if let Some(ret) = ret {
+            // The procedure's name is an in-scope variable holding the return
+            // value; seed it with a default so a path that never assigns it
+            // still returns a defined value.
+            let result_slot = self.declare_var(&name, ret, false)?;
+            if ret == ScalarType::String {
+                // A string result is a runtime handle, so its default must be a real
+                // (empty) string buffer, not a `const 0`. Seed it with `str_const ""`
+                // — the same shape a literal assignment produces — and mark it
+                // literal-backed so an unassigned path still yields a printable value.
+                self.emit(IIRInstr::new(
+                    "str_const",
+                    Some(result_slot.clone()),
+                    vec![Operand::Str(String::new())],
+                    "str",
+                ));
+                self.literal_string_slots.insert(result_slot.clone());
+            } else {
+                self.emit(IIRInstr::new(
+                    "const",
+                    Some(result_slot.clone()),
+                    vec![ret.default_operand()],
+                    ret.iir(),
+                ));
+            }
+            Some(result_slot)
         } else {
-            self.emit(IIRInstr::new(
-                "const",
-                Some(result_slot.clone()),
-                vec![ret.default_operand()],
-                ret.iir(),
-            ));
-        }
+            None
+        };
 
         // ── lower the body ───────────────────────────────────────────────
         let body = first_direct_node(proc_decl, "proc_body")
@@ -1075,17 +1083,23 @@ impl Compiler {
             }
         }
 
-        self.emit(IIRInstr::new(
-            "ret",
-            None,
-            vec![Operand::Var(result_slot)],
-            ret.iir(),
-        ));
+        let return_type = if let (Some(ret), Some(result_slot)) = (ret, result_slot) {
+            self.emit(IIRInstr::new(
+                "ret",
+                None,
+                vec![Operand::Var(result_slot)],
+                ret.iir(),
+            ));
+            ret.iir()
+        } else {
+            self.emit(IIRInstr::new("ret_void", None, vec![], "void"));
+            "void"
+        };
 
         // ── assemble the function and restore the caller's context ───────
         let body_instrs = std::mem::take(&mut self.instrs);
         let body_len = body_instrs.len();
-        let mut func = IIRFunction::new(name, param_pairs, ret.iir(), body_instrs);
+        let mut func = IIRFunction::new(name, param_pairs, return_type, body_instrs);
         func.type_status = FunctionTypeStatus::FullyTyped;
         func.register_count = self.register_names.len().saturating_add(8).max(8);
         let mut sm = std::mem::take(&mut self.source_map);
@@ -1111,12 +1125,14 @@ impl Compiler {
     /// slot that holds the result.  Used from `emit_expr`.
     fn emit_proc_call(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
         self.set_loc(node);
-        let dest = self.emit_call_common(node)?;
-        Ok(dest)
+        self.emit_call_common(node, true)?.ok_or_else(|| {
+            CompileError::Type("proper procedure call has no return value".into())
+        })
     }
 
-    /// Lower a procedure *call* in statement position (`bump(3)`).  The
-    /// returned value is computed but discarded.
+    /// Lower a procedure *call* in statement position (`bump(3)`).  A typed
+    /// procedure's returned value is computed but discarded; a proper procedure
+    /// emits a void call with no destination.
     fn emit_proc_stmt(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
         let name = direct_tokens(node)
@@ -1127,7 +1143,7 @@ impl Compiler {
         if self.try_emit_standard_output_stmt(&name, node)? {
             return Ok(());
         }
-        self.emit_call_common(node)?;
+        self.emit_call_common(node, false)?;
         Ok(())
     }
 
@@ -1222,7 +1238,11 @@ impl Compiler {
     /// whose `srcs[0]` names the callee and whose remaining `srcs` are the
     /// argument slots, matching the IIR calling convention every backend
     /// understands.
-    fn emit_call_common(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
+    fn emit_call_common(
+        &mut self,
+        node: &GrammarASTNode,
+        require_value: bool,
+    ) -> Result<Option<ExprValue>, CompileError> {
         let name = direct_tokens(node)
             .into_iter()
             .find(|t| t.effective_type_name() == "NAME")
@@ -1239,7 +1259,7 @@ impl Compiler {
             Some(sig) => sig,
             None => {
                 if let Some(result) = self.try_emit_standard_function(&name, node)? {
-                    return Ok(result);
+                    return Ok(Some(result));
                 }
                 return Err(CompileError::Type(format!(
                     "call to undeclared procedure {name:?}"
@@ -1275,19 +1295,23 @@ impl Compiler {
             arg_slots.push(value.slot);
         }
 
-        let dest = self.fresh_temp();
+        if require_value && sig.ret.is_none() {
+            return Err(CompileError::Type(format!(
+                "proper procedure {name:?} has no return value"
+            )));
+        }
+
+        let (dest, type_hint) = match sig.ret {
+            Some(ret) => (Some(self.fresh_temp()), ret.iir()),
+            None => (None, "void"),
+        };
         let mut srcs = Vec::with_capacity(arg_slots.len() + 1);
         srcs.push(Operand::Var(name));
         srcs.extend(arg_slots.into_iter().map(Operand::Var));
-        self.emit(IIRInstr::new(
-            "call",
-            Some(dest.clone()),
-            srcs,
-            sig.ret.iir(),
-        ));
-        Ok(ExprValue {
-            slot: dest,
-            ty: sig.ret,
+        self.emit(IIRInstr::new("call", dest.clone(), srcs, type_hint));
+        Ok(match (dest, sig.ret) {
+            (Some(slot), Some(ty)) => Some(ExprValue { slot, ty }),
+            _ => None,
         })
     }
 
@@ -4501,7 +4525,7 @@ mod tests {
         assert_eq!(main.type_status, FunctionTypeStatus::FullyTyped);
     }
 
-    // ---- AL3: typed procedures with value parameters ----
+    // ---- AL3: procedures with value parameters ----
 
     #[test]
     fn compiles_and_runs_value_procedure() {
@@ -4567,13 +4591,47 @@ mod tests {
     }
 
     #[test]
-    fn rejects_void_procedure_cleanly() {
+    fn proper_procedure_statement_mutates_enclosing_scalar() {
+        let src = "begin integer result; procedure bump(d); value d; integer d; \
+                   result := result + d; result := 40; bump(2) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn proper_procedure_emits_void_function_and_no_dest_call() {
+        let module = compile_source(
+            "begin integer result; procedure bump(d); value d; integer d; \
+             result := result + d; result := 40; bump(2) end",
+            "proper_proc",
+        )
+        .expect("proper procedure should compile");
+        let bump = module
+            .get_function("bump")
+            .expect("bump is a sibling function");
+        assert_eq!(bump.params, vec![("d".to_string(), "i64".to_string())]);
+        assert_eq!(bump.return_type, "void");
+        assert!(bump.instructions.iter().any(|i| i.op == "ret_void"));
+
+        let main = module.get_function("main").expect("main exists");
+        let call = main
+            .instructions
+            .iter()
+            .find(|i| i.op == "call")
+            .expect("main calls bump");
+        assert!(call.dest.is_none(), "proper procedure calls have no dest");
+        assert_eq!(call.type_hint, "void");
+        assert!(matches!(call.srcs.first(), Some(Operand::Var(s)) if s == "bump"));
+    }
+
+    #[test]
+    fn rejects_proper_procedure_in_value_position() {
         let err = compile_source(
-            "begin integer result; procedure noop; result := 1; result := 42 end",
+            "begin integer result; procedure bump(d); value d; integer d; \
+             result := result + d; result := bump(2) end",
             "bad",
         )
-        .expect_err("proper (void) procedures are outside this slice");
-        assert!(err.to_string().contains("void"));
+        .expect_err("proper procedure does not yield a value");
+        assert!(err.to_string().contains("no return value"));
     }
 
     #[test]

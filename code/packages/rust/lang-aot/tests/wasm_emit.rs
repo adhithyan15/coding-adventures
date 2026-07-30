@@ -151,6 +151,20 @@ fn algol_dynamic_step_emits_and_runs_on_wasm() {
 }
 
 #[test]
+fn algol_proper_procedure_emits_and_runs_on_wasm() {
+    let source = "begin integer result; procedure bump(d); value d; integer d; result := result + d; result := 40; bump(2) end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_proper_proc")
+        .expect("ALGOL proper procedure should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL proper procedure)");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL proper-procedure wasm must run");
+    assert_eq!(result, vec![42], "ALGOL proper procedure should return 42");
+}
+
+#[test]
 fn algol_conditional_expressions_emit_and_run_on_wasm() {
     let source = "begin boolean flag; integer i, result; flag := true; result := 0; for i := if flag then 1 else 4 step 1 until if flag then 3 else 4 do result := result + i; if if result = 6 then flag else false then result := 42 else result := result end";
     let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_cond_expr")

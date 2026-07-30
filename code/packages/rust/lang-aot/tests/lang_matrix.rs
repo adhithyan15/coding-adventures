@@ -1498,6 +1498,18 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(49),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a *proper procedure* (`procedure bump`) has no return value,
+    // so the frontend emits an IIR `void` sibling function and a no-destination
+    // `call` in statement position. This matrix cell keeps the body local so it
+    // isolates void call/return lowering across all backend columns.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; procedure bump(d); value d; integer d; \
+               d := d + 1; result := 40; bump(2); result := result + 2 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a procedure that *reads and writes a variable from the enclosing
     // block* (LANG-FULL enabler **E6**, layer 1 — typed module globals).
     // `counter` is declared in the outer block and accessed by both `incr` and the

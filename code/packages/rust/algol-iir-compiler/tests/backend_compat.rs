@@ -20,6 +20,8 @@ const ALGOL_COND_EXPR: &str = "begin boolean flag; integer i, result; flag := tr
 
 const ALGOL_NESTED_BLOCKS: &str = "begin integer x, result; boolean flag; x := 1; flag := true; result := 0; begin integer x; boolean flag; x := 10; flag := false; begin integer x; x := 31; if not flag then result := x else result := 1 end; result := result + x end; if flag then result := result + x else result := 0 end";
 
+const ALGOL_PROPER_PROC: &str = "begin integer result; procedure bump(d); value d; integer d; d := d + 1; result := 40; bump(2); result := result + 2 end";
+
 fn compile_case(source: &str, module_name: &str) -> interpreter_ir::IIRModule {
     compile_source(source, module_name).expect("ALGOL source should compile")
 }
@@ -52,6 +54,10 @@ fn algol_iir_validates_for_every_direct_backend() {
         (
             "nested_blocks",
             compile_case(ALGOL_NESTED_BLOCKS, "algol_nested_blocks_backend_compat"),
+        ),
+        (
+            "proper_proc",
+            compile_case(ALGOL_PROPER_PROC, "algol_proper_proc_backend_compat"),
         ),
     ] {
         let checks = [
@@ -389,4 +395,65 @@ fn algol_nested_blocks_lower_to_wasm_jvm_clr_beam_and_llvm() {
     )
     .expect("ALGOL nested-block IIR should lower to LLVM");
     assert!(llvm.contains("define i64 @main()"));
+}
+
+#[test]
+fn algol_proper_procedure_lowers_to_wasm_jvm_clr_beam_and_llvm() {
+    let module = compile_case(ALGOL_PROPER_PROC, "algol_proper_proc_backend_compat");
+    let bump = module.get_function("bump").expect("bump exists");
+    assert_eq!(bump.return_type, "void");
+    assert!(bump.instructions.iter().any(|instr| instr.op == "ret_void"));
+    let main = module.get_function("main").expect("main exists");
+    assert!(
+        main.instructions
+            .iter()
+            .any(|instr| instr.op == "call" && instr.dest.is_none() && instr.type_hint == "void"),
+        "proper procedure should lower to a no-destination void call"
+    );
+
+    let wasm = iir_to_wasm::lower_iir_to_wasm(
+        &module,
+        &iir_to_wasm::IIRWasmConfig::new("AlgolProperProc"),
+    )
+    .expect("ALGOL proper-procedure IIR should lower to WASM");
+    let wasm_bytes = iir_to_wasm::encode_module(&wasm).expect("WASM module should encode");
+    assert!(wasm_bytes.starts_with(b"\0asm"));
+
+    let jvm = iir_to_jvm_class_file::lower_iir_to_jvm(
+        &module,
+        &iir_to_jvm_class_file::IIRJvmConfig::new("AlgolProperProc"),
+    )
+    .expect("ALGOL proper-procedure IIR should lower to JVM");
+    assert!(!jvm.methods.is_empty());
+
+    let clr = iir_to_cil_bytecode::lower_iir_to_cil(
+        &module,
+        &iir_to_cil_bytecode::IIRClrConfig::default(),
+    )
+    .expect("ALGOL proper-procedure IIR should lower to CLR");
+    assert!(!clr.methods.is_empty());
+    let clr_main = clr
+        .methods
+        .iter()
+        .find(|method| method.name == "main")
+        .expect("CLR main method exists");
+    assert!(
+        !clr_main.body.contains(&0x26),
+        "void proper-procedure call must not emit CIL pop"
+    );
+
+    let beam = iir_to_beam::lower_iir_to_beam(
+        &module,
+        &iir_to_beam::IIRBeamConfig::new("algol_proper_proc"),
+    )
+    .expect("ALGOL proper-procedure IIR should lower to BEAM");
+    let beam_bytes = iir_to_beam::encode_beam(&beam);
+    assert!(beam_bytes.starts_with(b"FOR1"));
+
+    let llvm = iir_to_llvm::lower_iir_to_llvm(
+        &module,
+        &iir_to_llvm::IIRLlvmConfig::new("algol_proper_proc"),
+    )
+    .expect("ALGOL proper-procedure IIR should lower to LLVM");
+    assert!(llvm.contains("define void @bump"));
 }

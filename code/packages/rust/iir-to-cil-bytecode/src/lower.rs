@@ -1236,8 +1236,8 @@ pub fn lower_iir_to_cil(
                     if let Some(dest_name) = &instr.dest {
                         let dest = reg_info!(dest_name).clone();
                         emit_store(&mut builder, &dest, fn_name)?;
-                    } else {
-                        // No destination: discard the return value with `pop`.
+                    } else if module.functions[callee_idx].return_type != "void" {
+                        // No destination for a value-returning call: discard it.
                         builder.emit_pop();
                     }
                 }
