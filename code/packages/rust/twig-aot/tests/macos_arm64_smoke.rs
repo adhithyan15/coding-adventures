@@ -444,6 +444,99 @@ fn end_to_end_gc_stress_live_bytes_differential() {
     );
 }
 
+/// **Twig strings are now managed by the collector** (gc-core convergence): a runtime string
+/// block, previously `calloc`'d and leaked, is allocated through `__gc_alloc_kind` (a
+/// no-reference "blob" kind) by `__twig_alloc_bytes`. A leaking `calloc` block was invisible to
+/// the collector and never freed; a gc-core block is **counted in `live_bytes`** and reclaimed
+/// when unreachable.
+///
+/// ```text
+///   main() -> i64:
+///       a = str_const "AB"
+///       b = str_const "CDE"
+///       c = str_concat(a, b)     ; a FRESH gc-managed [len][bytes] block
+///       [gc_collect_precise]     ; optional
+///       lb = gc_live_bytes()
+///       ret lb
+/// ```
+///
+/// Every runtime string block goes through `__twig_alloc_bytes` → gc-core: the two literals
+/// ("AB" = 8+2 = 10 B, "CDE" = 8+3 = 11 B) and the concatenation ("ABCDE" = 8+5 = 13 B), so
+/// `live_bytes == 34`.
+///
+/// - **No collect:** `live_bytes == 34` — all three string blocks are counted by the collector,
+///   proving strings go through gc-core at all (leaking `calloc` blocks would report `0`).
+/// - **Precise collect:** `live_bytes == 13` — the two literals `a`/`b`, **dead** after the
+///   concatenation, are reclaimed (34 → 13, freeing "AB" + "CDE" = 21 B), while the still-live
+///   concatenation `c` is kept (its `str` handle is a reference the precise walk roots). So a
+///   Twig string is genuinely **reclaimed when it dies**, not leaked — the headline of the
+///   gc-core convergence, proven end-to-end through the native path.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_manages_runtime_strings() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    fn build(collect: Option<&str>) -> IIRModule {
+        let mut body = vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
+            IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("CDE".into())], "str"),
+            // A fresh runtime string → __twig_str_concat → __twig_alloc_bytes → __gc_alloc_kind.
+            IIRInstr::new(
+                "call_builtin",
+                Some("c".into()),
+                vec![Operand::Var("str_concat".into()), Operand::Var("a".into()), Operand::Var("b".into())],
+                "str",
+            ),
+        ];
+        if let Some(collect) = collect {
+            body.push(IIRInstr::new(
+                "call_builtin",
+                Some("freed".into()),
+                vec![Operand::Var(collect.into())],
+                "i64",
+            ));
+        }
+        body.push(IIRInstr::new(
+            "call_builtin",
+            Some("lb".into()),
+            vec![Operand::Var("gc_live_bytes".into())],
+            "i64",
+        ));
+        body.push(IIRInstr::new("ret", None, vec![Operand::Var("lb".into())], "i64"));
+
+        let mut m = IIRModule::new("gc_strings", "twig");
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: Option<&str>| -> i32 {
+        let m = build(collect);
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&m, &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    let tracked = run("gc_str_tracked", None);
+    let after_precise = run("gc_str_kept", Some("gc_collect_precise"));
+
+    assert_eq!(
+        tracked, 34,
+        "every runtime string block must be a gc-core allocation counted in live_bytes: \
+         \"AB\"(10) + \"CDE\"(11) + \"ABCDE\"(13) = 34; leaking calloc blocks would report 0 \
+         (invisible to the collector). got {tracked}",
+    );
+    assert_eq!(
+        after_precise, 13,
+        "a precise collect must reclaim the two literals dead after the concat (freeing 21 B) and \
+         keep the live concatenation \"ABCDE\"(13); a Twig string is reclaimed when it dies, not \
+         leaked. got live_bytes={after_precise}",
+    );
+}
+
 /// AOT00-T1 — the **complete** precise-roots correctness statement: precise roots must
 /// *keep* a genuine heap reference AND *reclaim* a non-reference look-alike, in one run.
 ///
