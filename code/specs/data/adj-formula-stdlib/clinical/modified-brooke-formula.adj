@@ -1,0 +1,92 @@
+% ============================================================================
+% modified-brooke-formula.adj — the modified Brooke burn resuscitation formula
+% (total 24-hour fluid = 2 × weight × %TBSA burned) in the ADJ standard library.
+% ============================================================================
+% The modified-Brooke-formula entry of the *clinical* track — the SIBLING of the Parkland formula and
+% the other standard estimate of the crystalloid volume a burn patient needs in the first 24 hours. It
+% is structurally identical to Parkland but uses a HALF-size 2 mL/kg/%TBSA factor instead of 4, on the
+% view that the larger Parkland volume tends to over-resuscitate; both then give half in the first 8
+% hours and titrate to urine output. THE TOTAL 24-HOUR FLUID IS 2 mL TIMES THE BODY WEIGHT IN KILOGRAMS
+% TIMES THE PERCENTAGE OF TOTAL BODY SURFACE AREA BURNED — i.e. 2 × weight × %TBSA. It ships as an
+% importable, byte-provenanced, PARAMETERIZED `formula`, together with its two exact rearrangements (the
+% weight a total volume implies at a given burn size, and the burn size a total volume implies at a
+% given weight). As with every compute library, a consumer states NO arithmetic: it `import`s this file,
+% binds the weight and the burned surface area from its own byte-provenance decomposition, and asks the
+% engine to APPLY the cited formula on the CPU. Zero math is performed by the model; the engine computes
+% each value EXACTLY (over exact rationals), carrying the formula's citation.
+%
+%     import "modified-brooke-formula.adj"
+%     observe weight(80)   % "…80 kg…"          (span cited by the model)
+%     observe tbsa(30)      % "…30% TBSA burn…"  (span cited by the model)
+%     ? total_fluid(weight, tbsa)   % engine → 4800 (mL), the 24-hour modified-Brooke volume
+%
+% This library and the parkland-formula library are the two standard burn-resuscitation estimates,
+% differing ONLY in the constant (2 vs 4 mL/kg/%TBSA): on the same worked patient modified Brooke gives
+% exactly HALF the Parkland volume. The 2 mL/kg/%TBSA factor is the EXACT constant of the cited (adult)
+% formula (not a measurement); the formulas are otherwise exact expressions over the parameters, so
+% every value the engine returns is exact. They COMPOSE and invert cleanly around the worked case
+% weight = 80 kg, TBSA = 30% (total fluid = 2 × 80 × 30 = 4800 mL, of which half — 2400 mL — is given in
+% the first 8 hours): the `total_fluid` a consumer computes is exactly the value each inverse formula
+% back-solves to recover its own measured input (80, 30).
+%
+%   total_fluid(weight, tbsa) = 2 * weight * tbsa       % (24-hour fluid, mL)
+%   weight(total_fluid, tbsa) = total_fluid / (2 * tbsa) % (solved for weight)
+%   tbsa(total_fluid, weight) = total_fluid / (2 * weight)% (solved for %TBSA)
+%
+% NOTE ON UNITS AND MODELLING: weight in kilograms, TBSA as a plain percentage number (e.g. 30 for a 30%
+% burn, NOT 0.30), total fluid in millilitres over the first 24 hours. The cited page gives the ADULT
+% factor of 2 mL/kg/%TBSA; the formula sizes the total 24-hour crystalloid, and the "half in the first 8
+% hours" split is stated by the same page but is separate from this total-volume computation. This
+% library only COMPUTES the volume; it does not itself titrate to urine output (which ultimately guides
+% real resuscitation).
+%
+% All three formulas are defended by the SAME clause — the quoted modified-Brooke statement — because
+% that one sentence (the modified Brooke formula recommends 2 mL/kg/%TBSA) sanctions the relation read
+% every way. The quote is transcribed verbatim from the StatPearls "Burn Fluid Resuscitation" article on
+% the NCBI Bookshelf (a current, non-archived article), so each `formula` carries the provenance
+% envelope every shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the formula, including its 2 mL/kg/%TBSA constant, is a verbatim
+% span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `weight`, `tbsa` and `total_fluid` each appear BOTH as a derived result and as an input
+% (of the other formulas), so each is a single dictionary term used in both roles. The `surface` lists
+% are the everyday names a decomposer maps onto the canonical term; the trailing comment records the
+% intended unit.
+% ----------------------------------------------------------------------------
+dictionary modified_brooke_formula_vocab {
+    define weight        : finding  surface "weight", "body weight", "total body weight"                          % kilograms
+    define tbsa          : finding  surface "TBSA", "total body surface area", "percent TBSA", "burn surface area"  % percent
+    define total_fluid   : finding  surface "total fluid", "resuscitation fluid", "24-hour fluid", "modified brooke fluid"  % millilitres (first 24 h)
+}
+
+% ----------------------------------------------------------------------------
+% The modified Brooke formula, all three ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the modified-Brooke statement from the
+% StatPearls "Burn Fluid Resuscitation" article on the NCBI Bookshelf (a quote is required on a shipped
+% formula). Each is an exact expression in the measured quantities and the cited 2 mL/kg/%TBSA constant,
+% so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook modified_brooke_formula_laws {
+    use modified_brooke_formula_vocab
+
+    % Total 24-hour fluid — 2 mL times the weight times the percentage of TBSA burned.
+    formula total_fluid(weight, tbsa) = 2 * weight * tbsa
+        source "The modified Brooke formula, similar to the Parkland formula, recommends 2 mL/kg/%TBSA for adults"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534227/"
+        trust authoritative
+
+    % Weight — the same equation solved for the weight. Defended by the SAME sentence.
+    formula weight(total_fluid, tbsa) = total_fluid / (2 * tbsa)
+        source "The modified Brooke formula, similar to the Parkland formula, recommends 2 mL/kg/%TBSA for adults"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534227/"
+        trust authoritative
+
+    % Percentage of TBSA burned — the same equation solved for the burn size. The SAME sentence, read
+    % the third way.
+    formula tbsa(total_fluid, weight) = total_fluid / (2 * weight)
+        source "The modified Brooke formula, similar to the Parkland formula, recommends 2 mL/kg/%TBSA for adults"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534227/"
+        trust authoritative
+}
