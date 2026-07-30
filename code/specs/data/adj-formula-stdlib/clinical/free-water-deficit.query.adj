@@ -1,0 +1,28 @@
+% ============================================================================
+% free-water-deficit.query.adj — worked applications of the free water deficit.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a hypernatraemia vignette into a total body
+% water and a plasma sodium: it `import`s the grounded formulabook, `observe`s the two values, and asks
+% the engine to APPLY the cited deficit formula. No arithmetic is stated by the consumer; the engine
+% computes each value EXACTLY (over exact rationals) and carries the article's citation as its proof, on
+% the CPU, with zero model calls.
+%
+% Worked case (total body water = 42 L, i.e. a 70 kg man at 0.6 × weight; plasma sodium = 154 mmol/L):
+% deficit = 42 × (154 / 140 − 1) = 42 × (1.1 − 1) = 42 × 0.1 = 4.2 L. Each query fixes two of the three
+% quantities and asks the engine to recover the third; every answer is exact and the three COMPOSE (each
+% inversion recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli free-water-deficit.query.adj
+% ============================================================================
+
+import "free-water-deficit.adj"
+
+% --- Deficit: the free water deficit the TBW and plasma sodium imply (expect 4.2). ------------------
+observe total_body_water(42)
+observe plasma_sodium(154)
+? free_water_deficit(total_body_water, plasma_sodium)   % expect 4.2
+
+% --- Inverse: the total body water a deficit of 4.2 implies at plasma sodium 154 (expect 42). -------
+observe free_water_deficit(4.2)
+? total_body_water(free_water_deficit, plasma_sodium)   % expect 42
