@@ -129,12 +129,16 @@ its parent's methods; and `super` → `_sir_call_super`, resolving the method fr
 the superclass of the defining class and applying it to the current `self`.  Every
 ancestry walk is bounded (`SIR_ANCESTRY_MAX`), so a cyclic hand-built hierarchy
 cannot hang.  Class / method / super-class names are all quoted C string literals
-(no injection).
+(no injection).  And **slice 5** — class methods: `def self.m` →
+`_sir_def_class_method` into a SEPARATE class-method (singleton) table (so a class
+method and an instance method of the same name never collide), and `Class.m(args)`
+→ `_sir_call_class_method`, an ancestry-walking table lookup (class methods
+inherit) that binds `self` to nil (no instance receiver).
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
-`Intrinsics`, `NDArrays`, the rest of OOP (`@@class vars`, class methods,
-modules — later mirror slices, so `__new__` with constructor args, a
-`class << self` singleton, and the `@@` scope are all refused for now), and
+`Intrinsics`, `NDArrays`, the rest of OOP (`@@class vars`, modules — later mirror
+slices, so `__new__` with constructor args, a `class << self` singleton, and the
+`@@` scope are all refused for now), and
 every other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
 until a bignum runtime ships — a module needing arbitrary precision is refused,
 never silently truncated.
