@@ -1311,6 +1311,19 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — string arrays reuse the shared E5 `array<str>` substrate.
+    // The element reads feed runtime lexical ordering before output, proving
+    // arrays carry real string values rather than a literal-only frontend path.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string array words[1:2]; integer result; \
+                  words[1] := 'HI'; words[2] := 'LO'; \
+                  if words[1] < words[2] then result := 42 else result := 0; \
+                  print(words[1]) end",
+        expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — scalar string variables on the direct literal fast path. A
     // `string` scalar assigned from a literal emits `str_const` directly to its
     // slot; the preceding row covers a runtime procedure-result copy, while
@@ -4893,6 +4906,36 @@ fn algol_runtime_string_ordering_runs_on_every_available_standard_backend() {
                 "{backend:?} must preserve the procedure-result string for output"
             );
         }
+    }
+}
+
+#[test]
+fn algol_string_array_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("string array words")
+                && program.src.contains("words[1] < words[2]")
+        })
+        .expect("the ALGOL string array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but string array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
     }
 }
 

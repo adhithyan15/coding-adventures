@@ -93,7 +93,10 @@ corresponding typed zero comparison before the normal ALGOL conditional branch.
 Initialized scalar locals now also carry runtime string procedure results:
 `string s; s := pick(1); if s < 'LO' then ...; print(s)` uses the shared
 runtime `str_concat`/`str_cmp`/`print_str` path. Reads before assignment still
-fail closed. Captured/`own` strings and string arrays remain unsupported.
+fail closed. `string array A[1:2]` uses the same `array<str>` substrate as
+other LANG frontends; its elements can be written from literals or initialized
+scalar strings, then read for lexical comparison or output. Captured/`own`
+strings remain unsupported.
 
 `real` values lower to the IIR `f64` type and **run on the VM and JIT today**
 (LANG-FULL AL1 / enabler E3 phase 1); `2.5 * 2.0`, `7.0 / 2.0`, and real
@@ -117,8 +120,8 @@ in statement position. They can write enclosing scalar globals and use the same
 literal-backed output path as typed procedures; using a proper procedure in
 value position is a clean type error because it has no return value.
 
-Unsupported ALGOL 60 features — non-numeric arrays, arrays as procedure
-parameters, dynamic string variables/arrays, by-name (non-`value`) parameters,
+Unsupported ALGOL 60 features — non-numeric/non-string arrays, arrays as procedure
+parameters, dynamic string variables, by-name (non-`value`) parameters,
 parameterless-procedure calls (a bare name parses as a variable),
 enclosing-block **array** capture (only scalars are globalised so far), and
 conditional/nested switch-list elements — return explicit compiler errors.

@@ -26,6 +26,8 @@ const ALGOL_RUNTIME_STRING_LOCAL: &str = "begin string s; integer result; string
 
 const ALGOL_RUNTIME_STRING_ORDERING: &str = "begin string s; integer result; string procedure pick(n); value n; integer n; if n > 0 then pick := 'HI' else pick := 'LO'; s := pick(1); if s < 'LO' then result := 42 else result := 0; print(s) end";
 
+const ALGOL_STRING_ARRAY: &str = "begin string array words[1:2]; integer result; words[1] := 'HI'; words[2] := 'LO'; if words[1] < words[2] then result := 42 else result := 0; print(words[1]) end";
+
 fn compile_case(source: &str, module_name: &str) -> interpreter_ir::IIRModule {
     compile_source(source, module_name).expect("ALGOL source should compile")
 }
@@ -218,6 +220,40 @@ fn algol_runtime_string_ordering_lowers_to_wasm_jvm_clr_beam_and_llvm() {
         &iir_to_llvm::IIRLlvmConfig::new("algol_runtime_string_ordering"),
     )
     .expect("runtime string ordering should lower to LLVM");
+    assert!(llvm.contains("@__twig_str_cmp"));
+}
+
+#[test]
+fn algol_string_array_lowers_to_every_standard_backend() {
+    let module = compile_case(ALGOL_STRING_ARRAY, "algol_string_array_backend_compat");
+
+    let wasm = iir_to_wasm::lower_iir_to_wasm(
+        &module,
+        &iir_to_wasm::IIRWasmConfig::new("AlgolStringArray"),
+    )
+    .expect("string array should lower to WASM");
+    assert!(iir_to_wasm::encode_module(&wasm).expect("WASM should encode").starts_with(b"\0asm"));
+
+    let jvm = iir_to_jvm_class_file::lower_iir_to_jvm(
+        &module,
+        &iir_to_jvm_class_file::IIRJvmConfig::new("AlgolStringArray"),
+    )
+    .expect("string array should lower to JVM");
+    assert!(!jvm.methods.is_empty());
+
+    let clr = iir_to_cil_bytecode::emit_il(
+        &module,
+        &iir_to_cil_bytecode::IIRClrConfig::new("AlgolStringArray"),
+    )
+    .expect("string array should emit CLR IL");
+    assert!(clr.contains("newarr [System.Runtime]System.String"));
+
+    let llvm = iir_to_llvm::lower_iir_to_llvm(
+        &module,
+        &iir_to_llvm::IIRLlvmConfig::new("algol_string_array"),
+    )
+    .expect("string array should lower to LLVM");
+    assert!(llvm.contains("store i64"));
     assert!(llvm.contains("@__twig_str_cmp"));
 }
 
