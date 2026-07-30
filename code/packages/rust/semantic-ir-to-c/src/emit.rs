@@ -1751,18 +1751,22 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
     })
 }
 
-/// Collections slice 1: the built-in *method* names the C runtime's
-/// `_sir_builtin_method` dispatches (all 0-arity in this slice).  A `__method__`
-/// call to one of these — when the module has NOT defined a user method of the
-/// same name — routes to the runtime dispatcher instead of the user method
-/// table, and the structural scan accepts it (rather than deferring it to a
-/// later Collections batch).  `length`/`size`/`empty?` are polymorphic over
-/// String/Array/Hash; the rest are String-only (the dispatcher raises
-/// `NoMethodError` on an unsupported receiver type, matching Ruby).
+/// Collections: the built-in *method* names the C runtime's `_sir_builtin_method`
+/// dispatches.  A `__method__` call to one of these — when the module has NOT
+/// defined a user method of the same name — routes to the runtime dispatcher
+/// instead of the user method table, and the structural scan accepts it (rather
+/// than deferring it to a later Collections batch).  Slice 1 = 0-arity String
+/// methods (`length`/`size`/`empty?` polymorphic over String/Array/Hash); slice 2
+/// = 1-arg String queries (`include?`/`start_with?`/`end_with?`/`index`, the arg
+/// a String).  The dispatcher raises `NoMethodError` on an unsupported receiver
+/// type, matching Ruby.
 fn is_builtin_method(name: &str) -> bool {
     matches!(
         name,
+        // slice 1 — 0-arity
         "length" | "size" | "upcase" | "downcase" | "reverse" | "empty?" | "to_s"
+        // slice 2 — 1-arg String queries (the arg is a String)
+        | "include?" | "start_with?" | "end_with?" | "index"
     )
 }
 

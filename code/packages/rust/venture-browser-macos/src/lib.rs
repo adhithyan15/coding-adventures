@@ -16,7 +16,7 @@ use venture_browser_core::{
     BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
     BrowserSession,
 };
-use window_core::{WindowError, WindowEvent};
+use window_core::{ElementState, PointerButton, WindowError, WindowEvent};
 
 #[cfg(target_vendor = "apple")]
 use venture_browser_core::HttpBrowserFetcher;
@@ -115,6 +115,39 @@ where
     Ok(session)
 }
 
+/// Activate the link at a viewport coordinate through the native page
+/// pipeline.
+///
+/// Returns `true` only when a link was hit and a replacement page loaded.
+pub fn activate_link_at<F>(
+    session: &mut BrowserSession,
+    viewport_x: f64,
+    viewport_y: f64,
+    width: f64,
+    height: f64,
+    fetcher: &F,
+) -> Result<bool, BrowserLoadError>
+where
+    F: BrowserResourceFetcher,
+{
+    let theme = mosaic_html_theme();
+    let measurer = NativeMeasurer::new();
+    let shaper = NativeShaper::new();
+    let metrics = NativeMetrics::new();
+    let resolver = NativeResolver::new();
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(width, height, 1.0),
+        &measurer,
+        &shaper,
+        &metrics,
+        &resolver,
+    );
+    Ok(session
+        .activate_link(viewport_x, viewport_y, &pipeline, fetcher)?
+        .is_some())
+}
+
 #[cfg(target_vendor = "apple")]
 pub fn run(start_url: &str) -> Result<(), MacBrowserError> {
     run_with_termination(start_url, None)
@@ -135,7 +168,7 @@ fn run_with_termination(
     terminate_after: Option<f64>,
 ) -> Result<(), MacBrowserError> {
     use window_appkit::AppKitBackend;
-    use window_core::{LogicalSize, SurfacePreference, WindowBuilder};
+    use window_core::{LogicalSize, SurfacePreference, Window, WindowBuilder};
 
     let session = load_initial_session(
         start_url,
@@ -167,9 +200,39 @@ fn run_with_termination(
     let session = Rc::new(RefCell::new(session));
     window.set_event_handler({
         let session = Rc::clone(&session);
+        let mut pointer_position = None;
         move |event| {
             let mut session = session.borrow_mut();
-            if scroll_session(&mut session, &event) {
+            let mut should_repaint = scroll_session(&mut session, &event);
+            if let Some((x, y)) = pointer_link_activation(&mut pointer_position, &event) {
+                match activate_link_at(
+                    &mut session,
+                    x,
+                    y,
+                    DEFAULT_WINDOW_WIDTH,
+                    DEFAULT_WINDOW_HEIGHT,
+                    &HttpBrowserFetcher::default(),
+                ) {
+                    Ok(true) => {
+                        should_repaint = true;
+                        if let Some(viewport) = session.viewport() {
+                            let page = viewport.page();
+                            let title =
+                                window_title(page.document.title.as_deref(), &page.final_url);
+                            if let Err(error) = window.set_title(&title) {
+                                eprintln!(
+                                    "venture-browser-macos: window title update failed: {error}"
+                                );
+                            }
+                        }
+                    }
+                    Ok(false) => {}
+                    Err(error) => {
+                        eprintln!("venture-browser-macos: link navigation failed: {error}");
+                    }
+                }
+            }
+            if should_repaint {
                 if let Some(viewport) = session.viewport() {
                     let scene = viewport.viewport_scene();
                     if let Err(error) =
@@ -205,6 +268,28 @@ pub fn scroll_session(session: &mut BrowserSession, event: &WindowEvent) -> bool
     viewport.scroll_state().offset_y() != previous_offset
 }
 
+/// Track pointer movement and identify a primary-button link activation.
+///
+/// Activation happens on release so dragging away from a link can update the
+/// final viewport coordinate before navigation.
+pub fn pointer_link_activation(
+    pointer_position: &mut Option<(f64, f64)>,
+    event: &WindowEvent,
+) -> Option<(f64, f64)> {
+    match event {
+        WindowEvent::PointerMoved { x, y, .. } => {
+            *pointer_position = Some((*x, *y));
+            None
+        }
+        WindowEvent::PointerButton {
+            button: PointerButton::Primary,
+            state: ElementState::Released,
+            ..
+        } => *pointer_position,
+        _ => None,
+    }
+}
+
 #[cfg(not(target_vendor = "apple"))]
 pub fn run(_start_url: &str) -> Result<(), MacBrowserError> {
     Err(MacBrowserError::UnsupportedPlatform)
@@ -221,7 +306,6 @@ mod tests {
 
     #[cfg(target_vendor = "apple")]
     use venture_browser_core::BrowserFetchResponse;
-    #[cfg(target_vendor = "apple")]
     use window_core::WindowId;
 
     #[test]
@@ -301,6 +385,88 @@ mod tests {
             .expect("scrolling should preserve the viewport");
         assert_eq!(viewport.scroll_state().offset_y(), 96.0);
         assert_ne!(viewport.viewport_scene(), before);
+    }
+
+    #[test]
+    fn primary_release_uses_the_latest_pointer_position() {
+        let mut pointer_position = None;
+        let moved = WindowEvent::PointerMoved {
+            window_id: WindowId(1),
+            x: 12.5,
+            y: 48.0,
+        };
+        let pressed = WindowEvent::PointerButton {
+            window_id: WindowId(1),
+            button: PointerButton::Primary,
+            state: ElementState::Pressed,
+        };
+        let released = WindowEvent::PointerButton {
+            window_id: WindowId(1),
+            button: PointerButton::Primary,
+            state: ElementState::Released,
+        };
+
+        assert_eq!(pointer_link_activation(&mut pointer_position, &moved), None);
+        assert_eq!(
+            pointer_link_activation(&mut pointer_position, &pressed),
+            None
+        );
+        assert_eq!(
+            pointer_link_activation(&mut pointer_position, &released),
+            Some((12.5, 48.0))
+        );
+    }
+
+    #[cfg(target_vendor = "apple")]
+    #[test]
+    fn repeated_link_activation_reloads_the_native_viewport_and_history() {
+        let fetcher = |url: &str| {
+            let html = match url {
+                "http://example.test/" => "<title>Start</title><p><a href='next.html'>Next</a></p>",
+                "http://example.test/next.html" => {
+                    "<title>Next</title><p><a href='final.html'>Final</a></p>"
+                }
+                "http://example.test/final.html" => "<title>Final</title><p>Done</p>",
+                other => return Err(format!("unexpected URL: {other}")),
+            };
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html; charset=utf-8".into()),
+                html.as_bytes().to_vec(),
+            ))
+        };
+        let mut session = load_initial_session("http://example.test/", 320.0, 180.0, &fetcher)
+            .expect("initial native page should load");
+
+        for expected_url in [
+            "http://example.test/next.html",
+            "http://example.test/final.html",
+        ] {
+            let link = session
+                .viewport()
+                .and_then(|viewport| viewport.page().paint.links.first())
+                .cloned()
+                .expect("current page should expose a link");
+            assert!(activate_link_at(
+                &mut session,
+                link.x + link.width / 2.0,
+                link.y + link.height / 2.0,
+                320.0,
+                180.0,
+                &fetcher,
+            )
+            .expect("link activation should load"));
+            assert_eq!(session.history().current_url(), Some(expected_url));
+        }
+
+        assert_eq!(session.history().back_stack().len(), 2);
+        assert_eq!(
+            session
+                .viewport()
+                .and_then(|viewport| viewport.page().document.title.as_deref()),
+            Some("Final")
+        );
     }
 
     #[cfg(not(target_vendor = "apple"))]

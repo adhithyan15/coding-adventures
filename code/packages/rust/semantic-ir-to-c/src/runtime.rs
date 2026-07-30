@@ -1433,8 +1433,10 @@ SirValue _sir_call_class_method(const char *cls, const char *method, int argc, .
  * quoted literal, so this is not reflection (anti-RCE holds).  Slice 1 covers
  * common 0-arity methods; the `argc`/varargs are carried for later arg-taking
  * methods. */
-SirValue _sir_builtin_method(SirValue recv, const char *m, int argc, ...) {
-    (void)argc;  /* every built-in method in this slice is 0-arity */
+/* The switch, over the already-collected `args` (so an arg-taking method reads
+ * `args[0]` after guarding `argc >= 1` and its type).  `_sir_builtin_method`
+ * wraps this to collect/free the varargs, exactly like `_sir_plus`. */
+static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, SirValue *args) {
     if (strcmp(m, "length") == 0 || strcmp(m, "size") == 0) {
         if (recv.tag == SIR_STR) return _sir_int((int64_t)strlen(recv.as.s));
         if (recv.tag == SIR_SEQ) return _sir_int(recv.as.seq->len);
@@ -1452,8 +1454,39 @@ SirValue _sir_builtin_method(SirValue recv, const char *m, int argc, ...) {
     } else if (strcmp(m, "to_s") == 0) {
         if (recv.tag == SIR_STR) return recv;  /* String#to_s is the string itself */
     }
+    /* Collections slice 2: 1-arg String queries (arg is a String). */
+    else if (strcmp(m, "include?") == 0) {
+        if (recv.tag == SIR_STR && argc >= 1 && args[0].tag == SIR_STR)
+            return _sir_bool(strstr(recv.as.s, args[0].as.s) != NULL);
+    } else if (strcmp(m, "start_with?") == 0) {
+        if (recv.tag == SIR_STR && argc >= 1 && args[0].tag == SIR_STR) {
+            size_t pl = strlen(args[0].as.s);
+            return _sir_bool(strncmp(recv.as.s, args[0].as.s, pl) == 0);
+        }
+    } else if (strcmp(m, "end_with?") == 0) {
+        if (recv.tag == SIR_STR && argc >= 1 && args[0].tag == SIR_STR) {
+            size_t rl = strlen(recv.as.s), sl = strlen(args[0].as.s);
+            return _sir_bool(rl >= sl && strcmp(recv.as.s + rl - sl, args[0].as.s) == 0);
+        }
+    } else if (strcmp(m, "index") == 0) {
+        if (recv.tag == SIR_STR && argc >= 1 && args[0].tag == SIR_STR) {
+            const char *p = strstr(recv.as.s, args[0].as.s);
+            return p ? _sir_int((int64_t)(p - recv.as.s)) : _sir_nil();
+        }
+    }
     return _sir_raise(
         _sir_error("NoMethodError", _sir_str(_sir_cat("undefined method ", m))));
+}
+
+SirValue _sir_builtin_method(SirValue recv, const char *m, int argc, ...) {
+    va_list ap;
+    SirValue *args, r;
+    va_start(ap, argc);
+    args = _sir_va_collect(argc, ap);
+    va_end(ap);
+    r = _sir_builtin_method_v(recv, m, argc, args);
+    if (args) free(args);
+    return r;
 }
 
 /* ---- OOP slice 6: class variables (@@x) ------------------------------------

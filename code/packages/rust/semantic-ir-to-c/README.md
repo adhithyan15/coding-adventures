@@ -145,13 +145,15 @@ methods into a class's instance-method resolution and `extend M`
 (`_sir_register_extend`) into its class-method resolution — completing the C
 OOP surface (**6-backend OOP parity**).
 
-And the **Collections** batch has begun (**slice 1** — String methods): a
-`__method__` dispatch to a built-in name the module never defined routes to the
-runtime dispatcher `_sir_builtin_method`, which type-checks the receiver and
-applies the implementation.  Covered so far: `length`/`size`, `upcase`,
-`downcase`, `reverse`, `empty?`, `to_s` (`length`/`size`/`empty?` polymorphic
-over String/Array/Hash).  A wrong-type receiver raises `NoMethodError`; a
-built-in method not lowered yet is still rejected cleanly.
+And the **Collections** batch has begun: a `__method__` dispatch to a built-in
+name the module never defined routes to the runtime dispatcher
+`_sir_builtin_method`, which type-checks the receiver and applies the
+implementation.  Covered so far — **slice 1** (0-arity String): `length`/`size`,
+`upcase`, `downcase`, `reverse`, `empty?`, `to_s` (`length`/`size`/`empty?`
+polymorphic over String/Array/Hash); **slice 2** (1-arg String queries):
+`include?`, `start_with?`, `end_with?` → bool and `index` → Int/nil (the argument
+a String).  A wrong-type receiver or argument raises `NoMethodError`; a built-in
+method not lowered yet is still rejected cleanly.
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
 `Intrinsics`, a `class << self` singleton, and

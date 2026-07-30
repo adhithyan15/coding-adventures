@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.22.1 — fix: cyclic-map/seq display + equality no longer overflow the stack on Windows
+## 0.23.1 — fix: cyclic-map/seq display + equality no longer overflow the stack on Windows
 
 Fixes `cyclic_map_does_not_stack_overflow` (and the sibling cyclic-sequence
 path): a self-referential aggregate (`h[0] = h`, constructible via the mutable
@@ -20,6 +20,26 @@ there — the failure was Windows-only.)
   500; deeper-than-cap output is pathological (only a cycle reaches it) and the
   cap's observable effect (ellipsis / assumed-equal) is unchanged, just reached
   at a safe depth. No test or cross-backend conformance program pins the old value.
+
+## 0.23.0 — Collections slice 2: 1-arg String query methods
+
+Second Collections slice — the first **argument-taking** built-in methods. No new
+`Feature`.
+
+- `_sir_builtin_method` now **collects its varargs** (via `_sir_va_collect`, the
+  same pattern as `_sir_plus`), split into a `_sir_builtin_method_v` impl over the
+  already-collected args + a thin wrapper that frees them. This unblocks methods
+  that read an argument.
+- New String queries: `include?(sub)`, `start_with?(prefix)`, `end_with?(suffix)`
+  → bool; `index(sub)` → the 0-based Int position or nil. Each guards
+  `argc >= 1` and `args[0].tag == SIR_STR`, raising `NoMethodError` on a wrong
+  receiver/argument type (matching Ruby) — never an out-of-bounds read.
+- The emit already carried `argc` + the arguments through the `__method__`
+  routing (slice 1), so only the `is_builtin_method` allowlist grows; the scan
+  accepts the new names automatically.
+
+**Anti-RCE preserved:** the method name is a compiler-emitted quoted C literal
+used only as a `strcmp` target — never reflection.
 
 ## 0.22.0 — Collections slice 1: built-in String methods
 
