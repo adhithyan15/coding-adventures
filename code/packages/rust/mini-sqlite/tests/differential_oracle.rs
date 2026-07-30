@@ -2323,6 +2323,15 @@ const CASES: &[Case] = &[
         setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
         query: "SELECT round(-0.4) AS a, round(-0.0) AS b, round(-0.5) AS c, round(-0.004, 2) AS d FROM t",
     },
+    // `replace(X, '', Y)` — an EMPTY search string returns X unchanged, matching
+    // SQLite (which short-circuits to avoid splicing Y between every character).
+    // A non-empty search still replaces every occurrence, including replacing
+    // with the empty string (`replace('aaa','a','')` = '').
+    Case {
+        id: "replace_empty_search_returns_subject",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT replace('abc', '', 'X') AS a, replace('aaa', 'a', 'bb') AS b, replace('aaa', 'a', '') AS c FROM t",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

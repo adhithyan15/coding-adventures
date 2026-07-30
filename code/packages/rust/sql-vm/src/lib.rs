@@ -1570,6 +1570,14 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
                 (SqlValue::Text(a), SqlValue::Text(b), SqlValue::Text(c)) => (a, b, c),
                 _ => return Err(VmError::TypeMismatch("REPLACE expects TEXT, TEXT, TEXT".to_string())),
             };
+            // An empty search string returns the subject UNCHANGED, matching
+            // SQLite. Rust's `str::replace("", to)` would instead splice `to`
+            // between every character (and at both ends) — `replace('abc','','X')`
+            // → `'XaXbXcX'` — which is wrong; SQLite short-circuits empty search to
+            // avoid that (and the unbounded expansion it implies).
+            if from.is_empty() {
+                return Ok(SqlValue::Text(s.clone()));
+            }
             Ok(SqlValue::Text(s.replace(from.as_str(), to.as_str())))
         }
 
