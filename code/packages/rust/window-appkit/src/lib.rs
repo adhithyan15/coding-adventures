@@ -27,16 +27,16 @@ use std::{
 
 #[cfg(target_vendor = "apple")]
 use objc_bridge::{
-    class, msg, msg_bool, msg_f64, msg_send_class, nsstring, object_getInstanceVariable,
-    object_setInstanceVariable, objc_allocateClassPair, objc_registerClassPair, release, sel,
-    ClassPtr, CGPoint, CGRect, Id, Sel, CGSize, NS_BACKING_STORE_BUFFERED,
-    NS_WINDOW_STYLE_MASK_CLOSABLE,
-    NS_WINDOW_STYLE_MASK_MINIATURIZABLE, NS_WINDOW_STYLE_MASK_RESIZABLE,
-    NS_WINDOW_STYLE_MASK_TITLED, NIL, class_addIvar, class_addMethod,
+    class, class_addIvar, class_addMethod, msg, msg_bool, msg_f64, msg_send_class, nsstring,
+    objc_allocateClassPair, objc_registerClassPair, object_getInstanceVariable,
+    object_setInstanceVariable, release, sel, CGPoint, CGRect, CGSize, ClassPtr, Id, Sel, NIL,
+    NS_BACKING_STORE_BUFFERED, NS_WINDOW_STYLE_MASK_CLOSABLE, NS_WINDOW_STYLE_MASK_MINIATURIZABLE,
+    NS_WINDOW_STYLE_MASK_RESIZABLE, NS_WINDOW_STYLE_MASK_TITLED,
 };
 use window_core::{
-    AppKitRenderTarget, LogicalSize, MountTarget, PhysicalSize, RenderTarget, SurfacePreference,
-    Window, WindowAttributes, WindowBackend, WindowError, WindowEvent, WindowId,
+    AppKitRenderTarget, ElementState, LogicalSize, MountTarget, PhysicalSize, PointerButton,
+    RenderTarget, SurfacePreference, Window, WindowAttributes, WindowBackend, WindowError,
+    WindowEvent, WindowId,
 };
 
 /// Crate version, kept explicit for examples and integration tests.
@@ -462,6 +462,18 @@ unsafe fn ensure_event_view_class() -> Result<ClassPtr, WindowError> {
         scroll_wheel as *const _,
         event_method_types.as_ptr(),
     );
+    class_addMethod(
+        view_class,
+        sel("mouseDown:"),
+        mouse_down as *const _,
+        event_method_types.as_ptr(),
+    );
+    class_addMethod(
+        view_class,
+        sel("mouseUp:"),
+        mouse_up as *const _,
+        event_method_types.as_ptr(),
+    );
     objc_registerClassPair(view_class);
     Ok(view_class)
 }
@@ -491,6 +503,37 @@ fn dispatch_scroll_event(view: Id, native_delta_x: f64, native_delta_y: f64) {
     });
 }
 
+#[cfg(target_vendor = "apple")]
+extern "C" fn mouse_down(view: Id, _sel: Sel, event: Id) {
+    dispatch_pointer_button_event(view, event, ElementState::Pressed);
+}
+
+#[cfg(target_vendor = "apple")]
+extern "C" fn mouse_up(view: Id, _sel: Sel, event: Id) {
+    dispatch_pointer_button_event(view, event, ElementState::Released);
+}
+
+#[cfg(target_vendor = "apple")]
+fn dispatch_pointer_button_event(view: Id, event: Id, state: ElementState) {
+    let location = unsafe { msg_send_point(event, "locationInWindow") };
+    let view_height = unsafe { msg_send_bounds(view).size.height };
+    EVENT_HANDLERS.with(|handlers| {
+        let mut handlers = handlers.borrow_mut();
+        if let Some(entry) = handlers.get_mut(&(view as usize)) {
+            for event in normalized_pointer_button_events(
+                entry.window_id,
+                location.x,
+                location.y,
+                view_height,
+                PointerButton::Primary,
+                state,
+            ) {
+                (entry.callback)(event);
+            }
+        }
+    });
+}
+
 /// Translate AppKit's content-motion deltas into viewport scroll direction.
 pub fn normalized_scroll_event(
     window_id: WindowId,
@@ -504,9 +547,46 @@ pub fn normalized_scroll_event(
     }
 }
 
+/// Translate an AppKit button event into top-left viewport coordinates.
+///
+/// AppKit reports content coordinates from the bottom-left. Emitting a
+/// `PointerMoved` event immediately before the button transition makes the
+/// shared button event useful without embedding duplicate coordinates in it.
+pub fn normalized_pointer_button_events(
+    window_id: WindowId,
+    native_x: f64,
+    native_y: f64,
+    view_height: f64,
+    button: PointerButton,
+    state: ElementState,
+) -> [WindowEvent; 2] {
+    let x = finite_or_zero(native_x);
+    let y = if native_y.is_finite() && view_height.is_finite() {
+        finite_or_zero(view_height.max(0.0) - native_y)
+    } else {
+        0.0
+    };
+    [
+        WindowEvent::PointerMoved { window_id, x, y },
+        WindowEvent::PointerButton {
+            window_id,
+            button,
+            state,
+        },
+    ]
+}
+
 fn invert_finite(value: f64) -> f64 {
     if value.is_finite() {
         -value
+    } else {
+        0.0
+    }
+}
+
+fn finite_or_zero(value: f64) -> f64 {
+    if value.is_finite() {
+        value
     } else {
         0.0
     }
@@ -575,6 +655,14 @@ unsafe fn msg_send_bounds(view: Id) -> objc_bridge::CGRect {
     fn_ptr(view, sel("bounds"))
 }
 
+/// Call a selector such as `[event locationInWindow]` that returns CGPoint.
+#[cfg(target_vendor = "apple")]
+unsafe fn msg_send_point(receiver: Id, selector: &str) -> objc_bridge::CGPoint {
+    use objc_bridge::{objc_msgSend, sel};
+    let fn_ptr: unsafe extern "C" fn(Id, objc_bridge::Sel) -> objc_bridge::CGPoint =
+        std::mem::transmute(objc_msgSend as *const ());
+    fn_ptr(receiver, sel(selector))
+}
 
 impl WindowBackend for AppKitBackend {
     type Window = AppKitWindow;
@@ -775,6 +863,47 @@ mod tests {
                 window_id: WindowId(7),
                 delta_x: 0.0,
                 delta_y: 0.0,
+            }
+        );
+    }
+
+    #[test]
+    fn appkit_pointer_buttons_use_top_left_viewport_coordinates() {
+        assert_eq!(
+            normalized_pointer_button_events(
+                WindowId(7),
+                12.5,
+                150.0,
+                200.0,
+                PointerButton::Primary,
+                ElementState::Released,
+            ),
+            [
+                WindowEvent::PointerMoved {
+                    window_id: WindowId(7),
+                    x: 12.5,
+                    y: 50.0,
+                },
+                WindowEvent::PointerButton {
+                    window_id: WindowId(7),
+                    button: PointerButton::Primary,
+                    state: ElementState::Released,
+                },
+            ]
+        );
+        assert_eq!(
+            normalized_pointer_button_events(
+                WindowId(7),
+                f64::NAN,
+                f64::INFINITY,
+                f64::INFINITY,
+                PointerButton::Primary,
+                ElementState::Pressed,
+            )[0],
+            WindowEvent::PointerMoved {
+                window_id: WindowId(7),
+                x: 0.0,
+                y: 0.0,
             }
         );
     }
