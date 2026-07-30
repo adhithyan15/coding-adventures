@@ -43,13 +43,30 @@ IMPLEMENTATION_LANGUAGES = (
 
 BUCKET_CLASSES = {
     "implementation": IMPLEMENTATION_LANGUAGES,
-    "emerging_implementation": ("c", "cpp"),
+    "emerging_implementation": ("c", "cpp", "ocaml"),
     "execution_target": ("wasm",),
     "domain_language": ("mosaic", "twig"),
     "build_language": ("starlark",),
 }
 
-ALL_BUCKETS = tuple(bucket for buckets in BUCKET_CLASSES.values() for bucket in buckets)
+
+def classified_buckets(
+    bucket_classes: Mapping[str, Sequence[str]],
+) -> tuple[str, ...]:
+    """Flatten disjoint bucket classes and reject an ambiguous lane state."""
+
+    buckets = tuple(
+        bucket for class_buckets in bucket_classes.values() for bucket in class_buckets
+    )
+    duplicates = sorted(bucket for bucket in set(buckets) if buckets.count(bucket) > 1)
+    if duplicates:
+        raise ValueError(
+            "package buckets must belong to exactly one class: " + ", ".join(duplicates)
+        )
+    return buckets
+
+
+ALL_BUCKETS = classified_buckets(BUCKET_CLASSES)
 
 DISPLAY_PRIORITY = (
     "rust",
@@ -67,6 +84,7 @@ DISPLAY_PRIORITY = (
     "perl",
     "dart",
     "swift",
+    "ocaml",
     "cpp",
     "c",
     "wasm",
@@ -209,9 +227,34 @@ def display_names(
     return sorted(preferred_display_name(identity, packages) for identity in identities)
 
 
-def completion_band(language_count: int) -> str:
-    if language_count >= 10:
-        return "10-15"
+def completion_band_labels(established_language_count: int) -> tuple[str, ...]:
+    """Return breadth labels derived from the established denominator."""
+
+    if established_language_count < HIGH_CONSENSUS_MIN_LANGUAGES:
+        raise ValueError(
+            "established language count cannot be smaller than "
+            f"the {HIGH_CONSENSUS_MIN_LANGUAGES}-language consensus floor"
+        )
+    return (
+        f"{HIGH_CONSENSUS_MIN_LANGUAGES}-{established_language_count}",
+        "5-9",
+        "2-4",
+        "1",
+    )
+
+
+def completion_band(
+    language_count: int,
+    established_language_count: int = len(IMPLEMENTATION_LANGUAGES),
+) -> str:
+    """Classify breadth without embedding the current denominator in the label."""
+
+    if not 1 <= language_count <= established_language_count:
+        raise ValueError(
+            "language count must be between one and the established denominator"
+        )
+    if language_count >= HIGH_CONSENSUS_MIN_LANGUAGES:
+        return completion_band_labels(established_language_count)[0]
     if language_count >= 5:
         return "5-9"
     if language_count >= 2:
@@ -223,6 +266,8 @@ def build_report(
     packages: dict[str, dict[str, set[str]]], unknown_buckets: set[str]
 ) -> dict[str, Any]:
     sets = identity_sets(packages)
+    established_language_count = len(IMPLEMENTATION_LANGUAGES)
+    band_order = completion_band_labels(established_language_count)
     implementation_union: set[str] = set().union(
         *(sets[language] for language in IMPLEMENTATION_LANGUAGES)
     )
@@ -310,15 +355,12 @@ def build_report(
                 )
 
     breadth: dict[str, dict[str, int]] = {
-        "10-15": {"packages": 0, "missing_slots": 0},
-        "5-9": {"packages": 0, "missing_slots": 0},
-        "2-4": {"packages": 0, "missing_slots": 0},
-        "1": {"packages": 0, "missing_slots": 0},
+        band: {"packages": 0, "missing_slots": 0} for band in band_order
     }
     for language_count in implementation_frequency.values():
-        band = completion_band(language_count)
+        band = completion_band(language_count, established_language_count)
         breadth[band]["packages"] += 1
-        breadth[band]["missing_slots"] += len(IMPLEMENTATION_LANGUAGES) - language_count
+        breadth[band]["missing_slots"] += established_language_count - language_count
 
     singleton_by_language = {
         language: sum(
@@ -328,9 +370,10 @@ def build_report(
     }
 
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "bucket_classes": {key: list(value) for key, value in BUCKET_CLASSES.items()},
         "package_count": {
+            "established_languages": established_language_count,
             "all_reported_union": len(all_reported_union),
             "implementation_union": len(implementation_union),
             "implementation_directories": sum(
@@ -362,6 +405,7 @@ def build_report(
             packages,
         ),
         "singleton_by_language": singleton_by_language,
+        "completion_band_order": list(band_order),
         "completion_bands": breadth,
         "coverage": coverage,
         "package_frequency": package_frequency,
@@ -383,6 +427,7 @@ def build_report(
 
 def render_markdown(report: Mapping[str, Any]) -> str:
     counts = report["package_count"]
+    established_language_count = counts["established_languages"]
     lines = [
         "# Package Parity Report",
         "",
@@ -393,7 +438,7 @@ def render_markdown(report: Mapping[str, Any]) -> str:
         "",
         "| Baseline | Count |",
         "|---|---:|",
-        f"| Established implementation languages | {len(IMPLEMENTATION_LANGUAGES)} |",
+        f"| Established implementation languages | {established_language_count} |",
         f"| Implementation package directories | {counts['implementation_directories']} |",
         f"| Distinct implementation package identities | {counts['implementation_union']} |",
         f"| Packages present in at least {HIGH_CONSENSUS_MIN_LANGUAGES} languages | {counts['high_consensus']} |",
@@ -418,11 +463,14 @@ def render_markdown(report: Mapping[str, Any]) -> str:
             "",
             "## Completion Bands",
             "",
-            "| Present In | Packages | Missing Slots To All 15 |",
+            (
+                f"| Present In | Packages | Missing Slots To All "
+                f"{established_language_count} |"
+            ),
             "|---|---:|---:|",
         ]
     )
-    for band in ("10-15", "5-9", "2-4", "1"):
+    for band in report["completion_band_order"]:
         row = report["completion_bands"][band]
         language_label = "language" if band == "1" else "languages"
         lines.append(
