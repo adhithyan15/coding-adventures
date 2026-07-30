@@ -70,8 +70,11 @@ scroll-aware link hit-testing, and viewport scene translation.
 scroll coherently when the page changes. `BrowserSession` now dispatches native
 navigation commands and content-link activation through transactional page
 loads, preserving the prior history and viewport on failure. The remaining
-browser gate is the concrete platform shell that binds the session to native
-window events, controls, scrollbars, and the selected production paint backend.
+browser gate is now being closed on macOS first: `venture-browser-macos` loads
+an HTTP page with native CoreText services, creates an AppKit `CAMetalLayer`,
+and presents the viewport through `paint-metal`. Native event translation,
+controls, scrolling, and repeated navigation remain before the shell is
+interactive.
 
 ## Where It Fits
 
@@ -267,13 +270,14 @@ the browser.
 
 ### Platform Abstraction
 
-The browser itself has a thin platform layer. Only Windows is implemented for
-v0.1; macOS and Linux are future work.
+The browser itself has a thin platform layer. The first runnable host targets
+macOS so it can be exercised on current development hardware; Windows remains
+the intended v0.1 parity target after the interaction model is proven.
 
 | Platform | Window              | Rendering                                     | Text Measurement           |
 |----------|---------------------|-----------------------------------------------|----------------------------|
-| Windows  | Win32 CreateWindowExW | paint-vm-direct2d (P2D06) or paint-vm-gdi (P2D07) | text-measure-directwrite  |
-| macOS    | Cocoa NSWindow (future) | paint-vm-metal (exists, partial)            | text-measure-coretext (future) |
+| Windows  | Win32 CreateWindowExW (next host) | paint-vm-direct2d (P2D06) or paint-vm-gdi (P2D07) | text-native DirectWrite |
+| macOS    | Cocoa NSWindow (initial host) | paint-metal + CAMetalLayer              | text-native CoreText |
 | Linux    | GTK/X11 (future)    | paint-vm-cairo (P2D08, future)                | text-measure-pango (future) |
 
 ### Win32 Window Structure
