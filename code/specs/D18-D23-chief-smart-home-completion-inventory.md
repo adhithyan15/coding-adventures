@@ -469,13 +469,37 @@ boundary:
   and timeout publication.
 - Node inclusion and S2 remain explicit follow-on host state machines.
 
+## Current MQTT Runtime Integration Slice
+
+This slice adds a production broker boundary and turns the existing MQTT
+topic/event primitives into normalized D23 devices:
+
+- `smart-home-mqtt-integration` owns a real MQTT 3.1.1 connection, bounded
+  polling, reconnect health, QoS subscriptions, retained deliveries, and
+  broker-native cursors through `rumqttc`.
+- Home Assistant MQTT discovery records dynamically install lights, switches,
+  binary sensors, numeric sensors, and thermostats as normalized bridges,
+  devices, entities, capabilities, and protocol identifiers.
+- Discovered state and availability topics flow into normalized state, health,
+  event history, and stream checkpoints, including scalar JSON value-template
+  extraction for common sensor payloads.
+- Light, switch, and thermostat commands must pass D23 authorization before
+  MQTT publication; accepted commands carry command/correlation metadata and
+  broker queue failures publish terminal command audit.
+- Broker credentials remain ephemeral host values while durable bridge records
+  retain only an opaque `VaultRef`.
+- A runnable bounded host binary and a scripted TCP broker test prove real
+  CONNECT, SUBSCRIBE/SUBACK, retained discovery, dynamic state subscriptions,
+  normalized state, authorization, command publication planning, delivery
+  cursors, and transport failure audit.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
 
-- Continue platform integrations beyond Hue and the Z-Wave runtime adapter:
-  MQTT, Matter/Thread, Zigbee, cameras, thermostats, broader sensors, and a
-  production Z-Wave inclusion and S2 flow.
+- Continue platform integrations beyond Hue, MQTT, and the Z-Wave runtime:
+  Matter/Thread, Zigbee, cameras, broader device families, and a production
+  Z-Wave inclusion and S2 flow.
 - Build Home Assistant migration tools for devices, rooms, scenes,
   automations, dashboards, and historical state export where feasible.
 - Provide a dashboard that can inspect devices, rooms, state, health,
