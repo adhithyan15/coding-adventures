@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.5.73 — date/time modifiers (phase 2)
+
+The date/time functions now take trailing modifier arguments, applied
+left-to-right after the time value, matching real SQLite:
+
+- Offsets: `datetime('2026-07-30 12:00:00','+1 day','-2 hours')`,
+  `date('2026-07-30','+90 minutes')`, fractional `'+1.5 seconds'` / `'+0.5 days'`.
+- Calendar shifts preserve the day (re-normalized) and time:
+  `date('2026-01-31','+1 month')` → `2026-03-03`,
+  `date('2024-02-29','+1 year')` → `2025-03-01`.
+- `start of day` / `start of month` / `start of year`, and `weekday N`
+  (0=Sunday…6=Saturday), which preserves the time of day.
+- Modifiers chain (`'start of month','+1 month','-1 day'`); spacing is strict; an
+  invalid/unknown modifier or an out-of-range result yields NULL.
+
+All modifier arithmetic is overflow-checked, so extreme amounts yield NULL rather
+than panicking. Interpretation modifiers (`unixepoch`/`localtime`/`utc`/…) and
+`strftime` are later phases. Ten new differential-oracle cases (including an
+overflow-guard regression) pin this against bundled real SQLite; the ledger stays
+empty. Spans sql-vm 0.4.43.
+
 ## 0.5.72 — date/time functions (phase 1): date/time/datetime/julianday/unixepoch
 
 mini-sqlite now understands time. Five new functions, matching real SQLite:

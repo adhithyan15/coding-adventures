@@ -3,6 +3,27 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.43] - Unreleased
+
+### Added
+
+- **Date/time modifiers (phase 2).** The date/time functions now accept trailing
+  modifier arguments, applied left-to-right after the time value, matching SQLite:
+  the offsets `±N[.f] days` / `hours` / `minutes` / `seconds` (exact-millisecond
+  shifts, fractional allowed); `±N months` / `years` (calendar shifts that
+  preserve the day — re-normalized, so `date('2026-01-31','+1 month')` →
+  `2026-03-03` — and the time of day); `start of day` / `start of month` /
+  `start of year`; and `weekday N` (0=Sunday…6=Saturday: advance to the next such
+  day, or stay put, preserving the time). Spacing is strict (no leading/trailing
+  space; ≥1 space between an offset's number and unit). An invalid or unknown
+  modifier, or a result outside the Julian-day range, yields NULL. New helpers:
+  `apply_modifier` / `modifier_offset` / `modifier_start_of` / `modifier_weekday`
+  / `offset_ms` / `offset_calendar`. The interpretation modifiers (`unixepoch`,
+  `julianday`, `localtime`, `utc`, `auto`) remain a later phase.
+  - All modifier arithmetic is overflow-checked (`checked_add`/`checked_mul`), so
+    an extreme amount (`'+1000000000000000000 years'`, or a huge day offset feeding
+    a following `weekday`) yields NULL rather than panicking.
+
 ## [0.4.42] - Unreleased
 
 ### Added

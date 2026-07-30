@@ -1418,11 +1418,11 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
         // and converts through an integer-millisecond Julian Day. See the
         // date/time subsystem section for the conversion. Modifier arguments are
         // deferred to a later phase (declined, not ignored).
-        "DATE" => datetime_render(name, DateFmt::Date, &args),
-        "TIME" => datetime_render(name, DateFmt::Time, &args),
-        "DATETIME" => datetime_render(name, DateFmt::DateTime, &args),
-        "JULIANDAY" => julianday_func(&args),
-        "UNIXEPOCH" => unixepoch_func(&args),
+        "DATE" => Ok(datetime_render(DateFmt::Date, &args)),
+        "TIME" => Ok(datetime_render(DateFmt::Time, &args)),
+        "DATETIME" => Ok(datetime_render(DateFmt::DateTime, &args)),
+        "JULIANDAY" => Ok(julianday_func(&args)),
+        "UNIXEPOCH" => Ok(unixepoch_func(&args)),
 
         "UPPER" => {
             if args.len() != 1 {
@@ -3249,44 +3249,181 @@ fn format_ijd(ijd: i64, fmt: &DateFmt) -> String {
     }
 }
 
-/// Shared front-end for `date`/`time`/`datetime`/`julianday`/`unixepoch`: resolve
-/// the (optional) time-value argument to `iJD`, or short-circuit to NULL. The
-/// zero-argument form means `'now'`. Trailing modifier arguments are not yet
-/// supported (phase 2) and are declined rather than silently ignored.
-fn datetime_base_ijd(name: &str, args: &[SqlValue]) -> Result<Option<i64>, VmError> {
-    if args.len() > 1 {
-        return Err(VmError::TypeMismatch(format!(
-            "{name}: date/time modifiers are not yet supported"
-        )));
-    }
-    match args.first() {
-        None => Ok(now_ijd()), // date() == date('now')
-        Some(v) => Ok(time_value_to_ijd(v)),
+/// Apply one date/time modifier to an `iJD`, returning the adjusted value, or
+/// `None` if the modifier is unrecognized/invalid (which makes the whole call
+/// NULL, as in SQLite). Modifiers are matched case-insensitively. SQLite spacing
+/// is strict: no leading or trailing spaces, and at least one space between an
+/// offset's number and its unit (`'+1 day'` is valid; `' +1 day'`, `'+1 day '`
+/// and `'+1day'` are not).
+///
+/// Supported (phase 2): the offsets `±N[.f] days|hours|minutes|seconds` (exact
+/// millisecond math) and `±N months|years` (calendar math, day preserved and
+/// re-normalized — `2026-01-31` `+1 month` → `2026-03-03`); `start of
+/// day|month|year`; and `weekday N` (0=Sunday … 6=Saturday: advance to the next
+/// such day, staying put if already there, preserving the time of day). The
+/// interpretation modifiers (`unixepoch`, `julianday`, `localtime`, `utc`, `auto`)
+/// are a later phase and fall through to `None`.
+fn apply_modifier(ijd: i64, m: &str) -> Option<i64> {
+    match m.as_bytes().first()?.to_ascii_lowercase() {
+        b's' => modifier_start_of(ijd, m),
+        b'w' => modifier_weekday(ijd, m),
+        b'+' | b'-' | b'0'..=b'9' => modifier_offset(ijd, m),
+        _ => None,
     }
 }
 
-/// `date(X)` / `time(X)` / `datetime(X)` — render the time value as text, or NULL.
-fn datetime_render(name: &str, fmt: DateFmt, args: &[SqlValue]) -> Result<SqlValue, VmError> {
-    Ok(match datetime_base_ijd(name, args)? {
+/// `start of day|month|year` — zero the finer fields.
+fn modifier_start_of(ijd: i64, m: &str) -> Option<i64> {
+    let (y, mo, d) = ijd_to_ymd(ijd);
+    match m.to_ascii_lowercase().as_str() {
+        "start of day" => Some(ymd_hms_to_ijd(y, mo, d, 0, 0, 0.0)),
+        "start of month" => Some(ymd_hms_to_ijd(y, mo, 1, 0, 0, 0.0)),
+        "start of year" => Some(ymd_hms_to_ijd(y, 1, 1, 0, 0, 0.0)),
+        _ => None,
+    }
+}
+
+/// `weekday N` (N = 0..6, Sunday..Saturday) — advance to the next day whose day
+/// of week is N, or stay put if already N. Whole days are added, so the time of
+/// day is preserved. The `+129_600_000` (1.5 day) offset aligns the modulo so
+/// that 0 lands on Sunday, matching SQLite.
+fn modifier_weekday(ijd: i64, m: &str) -> Option<i64> {
+    let rest = m.to_ascii_lowercase();
+    let rest = rest.strip_prefix("weekday")?.strip_prefix(' ')?;
+    let n: i64 = rest.trim_start_matches(' ').parse().ok()?;
+    if !(0..=6).contains(&n) {
+        return None;
+    }
+    // Checked arithmetic: a preceding offset modifier may have left `ijd` near
+    // `i64::MAX` (it is only range-checked once, after the whole modifier chain),
+    // so a naive add here could overflow on crafted input. Overflow → None → NULL.
+    let dow = ijd.checked_add(129_600_000)?.rem_euclid(604_800_000) / 86_400_000;
+    ijd.checked_add((n - dow).rem_euclid(7) * 86_400_000)
+}
+
+/// `±N[.f] <unit>` — a signed, possibly fractional amount of a time unit.
+/// days/hours/minutes/seconds are exact millisecond offsets; months/years are
+/// calendar arithmetic (integer part; the day is preserved and re-normalized by
+/// the Julian-day round-trip, and the time of day is carried across exactly).
+fn modifier_offset(ijd: i64, m: &str) -> Option<i64> {
+    let b = m.as_bytes();
+    let mut i = 0;
+    let neg = match b[0] {
+        b'-' => {
+            i = 1;
+            true
+        }
+        b'+' => {
+            i = 1;
+            false
+        }
+        _ => false,
+    };
+    let num_start = i;
+    while i < b.len() && b[i].is_ascii_digit() {
+        i += 1;
+    }
+    if i < b.len() && b[i] == b'.' {
+        i += 1;
+        while i < b.len() && b[i].is_ascii_digit() {
+            i += 1;
+        }
+    }
+    if i == num_start {
+        return None; // no digits
+    }
+    let mag: f64 = m[num_start..i].parse().ok()?;
+    let num = if neg { -mag } else { mag };
+    // Exactly one-or-more spaces separate the number from the unit.
+    if b.get(i) != Some(&b' ') {
+        return None;
+    }
+    while i < b.len() && b[i] == b' ' {
+        i += 1;
+    }
+    let unit = m[i..].to_ascii_lowercase();
+    match unit.as_str() {
+        "day" | "days" => offset_ms(ijd, num, 86_400_000.0),
+        "hour" | "hours" => offset_ms(ijd, num, 3_600_000.0),
+        "minute" | "minutes" => offset_ms(ijd, num, 60_000.0),
+        "second" | "seconds" => offset_ms(ijd, num, 1000.0),
+        "month" | "months" => offset_calendar(ijd, num.trunc() as i64),
+        // `* 12` is checked: `num.trunc() as i64` saturates a huge float to
+        // i64::MAX/MIN, and a naive `* 12` would then overflow. Overflow → NULL.
+        "year" | "years" => offset_calendar(ijd, (num.trunc() as i64).checked_mul(12)?),
+        _ => None,
+    }
+}
+
+/// Add `num * ms_per_unit` milliseconds (rounded to the nearest ms), guarding
+/// against `i64` overflow on an extreme amount.
+fn offset_ms(ijd: i64, num: f64, ms_per_unit: f64) -> Option<i64> {
+    let delta = (num * ms_per_unit).round();
+    if !delta.is_finite() {
+        return None;
+    }
+    ijd.checked_add(delta as i64)
+}
+
+/// Add `months` calendar months (a year modifier passes `12 × years`). The day
+/// and time of day are preserved; an out-of-range day (e.g. `Feb 31`) is
+/// normalized by the Julian-day round-trip exactly as SQLite does.
+fn offset_calendar(ijd: i64, months: i64) -> Option<i64> {
+    let (y, mo, d) = ijd_to_ymd(ijd);
+    let tod = ijd - ymd_hms_to_ijd(y, mo, d, 0, 0, 0.0); // ms since midnight, preserved exactly
+    let total = y.checked_mul(12)?.checked_add(mo - 1)?.checked_add(months)?;
+    let ny = total.div_euclid(12);
+    let nmo = total.rem_euclid(12) + 1;
+    ymd_hms_to_ijd(ny, nmo, d, 0, 0, 0.0).checked_add(tod)
+}
+
+/// Shared front-end for `date`/`time`/`datetime`/`julianday`/`unixepoch`: resolve
+/// the first (time-value) argument to `iJD`, then fold in any trailing modifier
+/// arguments left-to-right. Returns `None` (→ SQL NULL) if the time value or any
+/// modifier is invalid, or if a modifier pushes the result outside the
+/// representable Julian-day range. The zero-argument form means `'now'`.
+fn datetime_base_ijd(args: &[SqlValue]) -> Option<i64> {
+    let (mut ijd, mods) = match args.split_first() {
+        None => (now_ijd()?, &[][..]),
+        Some((first, rest)) => (time_value_to_ijd(first)?, rest),
+    };
+    for m in mods {
+        let text = match m {
+            SqlValue::Text(s) => s,
+            _ => return None, // NULL or non-text modifier → NULL
+        };
+        ijd = apply_modifier(ijd, text)?;
+    }
+    // A modifier may have walked the value out of the valid Julian-day window.
+    if !(0.0..MAX_JULIAN_DAY).contains(&(ijd as f64 / 86_400_000.0)) {
+        return None;
+    }
+    Some(ijd)
+}
+
+/// `date(X, …)` / `time(X, …)` / `datetime(X, …)` — render the (modified) time
+/// value as text, or NULL.
+fn datetime_render(fmt: DateFmt, args: &[SqlValue]) -> SqlValue {
+    match datetime_base_ijd(args) {
         Some(ijd) => SqlValue::Text(format_ijd(ijd, &fmt)),
         None => SqlValue::Null,
-    })
+    }
 }
 
-/// `julianday(X)` — the Julian day as a REAL, or NULL.
-fn julianday_func(args: &[SqlValue]) -> Result<SqlValue, VmError> {
-    Ok(match datetime_base_ijd("JULIANDAY", args)? {
+/// `julianday(X, …)` — the Julian day as a REAL, or NULL.
+fn julianday_func(args: &[SqlValue]) -> SqlValue {
+    match datetime_base_ijd(args) {
         Some(ijd) => SqlValue::Float(ijd as f64 / 86_400_000.0),
         None => SqlValue::Null,
-    })
+    }
 }
 
-/// `unixepoch(X)` — whole seconds since the Unix epoch as an INTEGER, or NULL.
-fn unixepoch_func(args: &[SqlValue]) -> Result<SqlValue, VmError> {
-    Ok(match datetime_base_ijd("UNIXEPOCH", args)? {
+/// `unixepoch(X, …)` — whole seconds since the Unix epoch as an INTEGER, or NULL.
+fn unixepoch_func(args: &[SqlValue]) -> SqlValue {
+    match datetime_base_ijd(args) {
         Some(ijd) => SqlValue::Int((ijd - UNIX_EPOCH_IJD_MS).div_euclid(1000)),
         None => SqlValue::Null,
-    })
+    }
 }
 
 // ===========================================================================
@@ -6430,9 +6567,53 @@ mod tests {
         assert!(matches!(call("DATE", vec![]), SqlValue::Text(_))); // date() == date('now')
         assert!(matches!(call("DATE", vec![txt("now")]), SqlValue::Text(_)));
 
-        // Modifiers are not yet supported (phase 2) — declined, not silently
-        // ignored (which would give a wrong answer).
-        assert!(call_builtin("DATE", vec![txt("2026-07-30"), txt("+1 day")]).is_err());
+        // Modifiers (phase 2) apply left-to-right after the time value.
+        let m = |v: &str, mods: &[&str]| {
+            let mut a = vec![txt(v)];
+            a.extend(mods.iter().map(|s| txt(s)));
+            call_builtin("DATE", a).unwrap()
+        };
+        let dtm = |v: &str, mods: &[&str]| {
+            let mut a = vec![txt(v)];
+            a.extend(mods.iter().map(|s| txt(s)));
+            call_builtin("DATETIME", a).unwrap()
+        };
+        // Exact-millisecond offsets (fractional OK).
+        assert_eq!(dtm("2026-07-30 12:00:00", &["+1 day"]), txt("2026-07-31 12:00:00"));
+        assert_eq!(dtm("2026-07-30 12:00:00", &["-2 hours"]), txt("2026-07-30 10:00:00"));
+        assert_eq!(dtm("2026-07-30 12:00:00", &["+90 minutes"]), txt("2026-07-30 13:30:00"));
+        assert_eq!(dtm("2026-07-30 00:00:00", &["+0.5 days"]), txt("2026-07-30 12:00:00"));
+        // Calendar month/year shifts preserve the day (re-normalized) and time.
+        assert_eq!(m("2026-07-30", &["+1 month"]), txt("2026-08-30"));
+        assert_eq!(m("2026-01-31", &["+1 month"]), txt("2026-03-03")); // Feb 31 → Mar 3
+        assert_eq!(m("2024-02-29", &["+1 year"]), txt("2025-03-01")); // non-leap
+        assert_eq!(m("2026-01-15", &["-3 months"]), txt("2025-10-15")); // crosses year
+        // start-of and weekday (0=Sunday; whole days added, time preserved).
+        assert_eq!(dtm("2026-07-30 14:30:00", &["start of month"]), txt("2026-07-01 00:00:00"));
+        assert_eq!(m("2026-07-30", &["weekday 0"]), txt("2026-08-02")); // Thu → next Sun
+        assert_eq!(m("2026-07-30", &["weekday 4"]), txt("2026-07-30")); // already Thu
+        assert_eq!(dtm("2026-07-30 14:30:00", &["weekday 0"]), txt("2026-08-02 14:30:00"));
+        // Chaining, plural/uppercase/multi-space, and the no-sign form.
+        assert_eq!(dtm("2026-07-30 14:30:00", &["start of month", "+1 month", "-1 day"]), txt("2026-07-31 00:00:00"));
+        assert_eq!(m("2026-07-30", &["+2 day"]), txt("2026-08-01"));
+        assert_eq!(m("2026-07-30", &["+1 DAY"]), txt("2026-07-31"));
+        assert_eq!(m("2026-07-30", &["+1  day"]), txt("2026-07-31"));
+        assert_eq!(m("2026-07-30", &["1 day"]), txt("2026-07-31"));
+        // Invalid modifiers → NULL (strict spacing, bad weekday, unknown keyword,
+        // out-of-range result, non-text/NULL modifier).
+        for bad in [" +1 day", "+1 day ", "+1day", "weekday 7", "bogus", "+100000000 days"] {
+            assert_eq!(m("2026-07-30", &[bad]), SqlValue::Null, "modifier {bad:?}");
+        }
+        assert_eq!(
+            call_builtin("DATE", vec![txt("2026-07-30"), SqlValue::Null]).unwrap(),
+            SqlValue::Null
+        );
+        // Extreme amounts must NULL out via checked arithmetic, never panic — a
+        // year that overflows the `×12`, and a huge day offset that leaves an
+        // intermediate iJD near i64::MAX for a following `weekday` modifier.
+        assert_eq!(m("2026-07-30", &["+1000000000000000000 years"]), SqlValue::Null);
+        assert_eq!(m("2026-07-30", &["+9999999999999999999 days"]), SqlValue::Null);
+        assert_eq!(m("2026-07-30", &["+106749529914.55 days", "weekday 0"]), SqlValue::Null);
     }
 
     #[test]
