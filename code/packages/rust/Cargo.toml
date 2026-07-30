@@ -170,6 +170,7 @@ members = [
     "html-to-layout",
     "html-to-paint",
     "venture-browser-core",
+    "venture-browser-macos",
     "html-renderer",
     "intel4004-gatelevel",
     "mos6502-gatelevel",

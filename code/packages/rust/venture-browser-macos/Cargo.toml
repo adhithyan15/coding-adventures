@@ -1,0 +1,18 @@
+[package]
+name = "venture-browser-macos"
+version = "0.1.0"
+edition = "2021"
+description = "Runnable AppKit, CoreText, and Metal host for the Venture browser."
+
+[dependencies]
+html-to-layout = { path = "../html-to-layout" }
+html-to-paint = { path = "../html-to-paint" }
+layout-text-measure-native = { path = "../layout-text-measure-native" }
+paint-metal = { path = "../paint-metal" }
+text-native = { path = "../text-native" }
+venture-browser-core = { path = "../venture-browser-core" }
+window-appkit = { path = "../window-appkit" }
+window-core = { path = "../window-core" }
+
+[target.'cfg(target_vendor = "apple")'.dependencies]
+objc-bridge = { path = "../objc-bridge" }
