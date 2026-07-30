@@ -1,0 +1,29 @@
+% ============================================================================
+% systemic-vascular-resistance.query.adj — worked applications of systemic vascular resistance.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a haemodynamic problem into a mean arterial pressure,
+% a mean (central) venous pressure, and a cardiac output: it `import`s the grounded formulabook, `observe`s
+% the three values, and asks the engine to APPLY the cited SVR formula. No arithmetic is stated by the
+% consumer; the engine computes each value EXACTLY (over exact rationals) and carries the article's citation
+% as its proof, on the CPU, with zero model calls.
+%
+% Worked case (mean arterial pressure = 90 mmHg, mean venous pressure = 10 mmHg, cardiac output = 5 L/min):
+% SVR = 80 × (90 − 10) / 5 = 80 × 80 / 5 = 1280 dyn·s·cm⁻⁵. Each query fixes two of the three inputs and
+% asks the engine to recover another quantity; every answer is exact and the inversions COMPOSE (each
+% recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli systemic-vascular-resistance.query.adj
+% ============================================================================
+
+import "systemic-vascular-resistance.adj"
+
+% --- SVR: the resistance the pressures and flow imply (expect 1280). ---------------------------------
+observe mean_arterial_pressure(90)
+observe mean_venous_pressure(10)
+observe cardiac_output(5)
+? systemic_vascular_resistance(mean_arterial_pressure, mean_venous_pressure, cardiac_output)   % expect 1280
+
+% --- Inverse: the cardiac output an SVR of 1280 implies at the same pressures (expect 5). ------------
+observe systemic_vascular_resistance(1280)
+? cardiac_output(systemic_vascular_resistance, mean_arterial_pressure, mean_venous_pressure)   % expect 5
