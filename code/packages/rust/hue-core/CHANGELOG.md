@@ -6,6 +6,7 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Zeroize parsed Hue application and client keys when pairing credentials drop.
 - Hue command-plan projection summaries for generated-command and ignored-delta
   reconciliation telemetry.
 - Hue pairing-plan summaries for local registration readiness checks.
