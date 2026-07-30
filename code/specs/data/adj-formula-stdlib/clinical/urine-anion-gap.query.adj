@@ -1,0 +1,30 @@
+% ============================================================================
+% urine-anion-gap.query.adj — worked applications of the urine anion gap.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a hyperchloraemic-acidosis workup into a urine
+% sodium, a urine potassium and a urine chloride: it `import`s the grounded formulabook, `observe`s the
+% three values, and asks the engine to APPLY the cited urine-anion-gap formula. No arithmetic is stated by
+% the consumer; the engine computes each value EXACTLY (over exact rationals) and carries the article's
+% citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (urine Na = 40, urine K = 30, urine Cl = 60 mEq/L): urine anion gap = 40 + 30 − 60 = 10
+% mEq/L — a POSITIVE gap, pointing to impaired renal ammonium excretion (e.g. a distal renal tubular
+% acidosis) rather than a gastrointestinal bicarbonate loss. Each query fixes three of the four quantities
+% and asks the engine to recover the fourth; every answer is exact and the four COMPOSE (each inversion
+% recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli urine-anion-gap.query.adj
+% ============================================================================
+
+import "urine-anion-gap.adj"
+
+% --- Gap: the urine anion gap the three urine electrolytes imply (expect 10). -----------------------
+observe urine_sodium(40)
+observe urine_potassium(30)
+observe urine_chloride(60)
+? urine_anion_gap(urine_sodium, urine_potassium, urine_chloride)   % expect 10
+
+% --- Inverse: the urine chloride a gap of 10 implies at the same Na and K (expect 60). --------------
+observe urine_anion_gap(10)
+? urine_chloride(urine_sodium, urine_potassium, urine_anion_gap)   % expect 60
