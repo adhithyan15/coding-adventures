@@ -1,0 +1,28 @@
+% ============================================================================
+% delta-ratio.query.adj — worked applications of the delta ratio.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a metabolic-acidosis vignette into an anion gap
+% and a bicarbonate: it `import`s the grounded formulabook, `observe`s the two values, and asks the
+% engine to APPLY the cited delta-ratio formula. No arithmetic is stated by the consumer; the engine
+% computes each value EXACTLY (over exact rationals) and carries the article's citation as its proof, on
+% the CPU, with zero model calls.
+%
+% Worked case (anion gap = 30, bicarbonate = 14): delta ratio = (30 − 12) / (24 − 14) = 18 / 10 = 1.8 —
+% a ratio between 1 and 2, consistent with a pure high-anion-gap metabolic acidosis (no hidden second
+% disorder). Each query fixes two of the three quantities and asks the engine to recover the third;
+% every answer is exact and the three COMPOSE (each inversion recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli delta-ratio.query.adj
+% ============================================================================
+
+import "delta-ratio.adj"
+
+% --- Ratio: the delta ratio the anion gap and bicarbonate imply (expect 1.8). ----------------------
+observe anion_gap(30)
+observe bicarbonate(14)
+? delta_ratio(anion_gap, bicarbonate)   % expect 1.8
+
+% --- Inverse: the anion gap a delta ratio of 1.8 implies at bicarbonate 14 (expect 30). ------------
+observe delta_ratio(1.8)
+? anion_gap(delta_ratio, bicarbonate)   % expect 30
