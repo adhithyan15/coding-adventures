@@ -1615,6 +1615,53 @@ fn shipped_specific_heat_capacity_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// Shipped density-of-heat table — two EXACT NIST SP 811 B.9 factors (two names for one unit) resolve,
+// and a wrong-dimension unit (a mass unit) abstains. Guards the SLICE of a NEW dimension (density of
+// heat, energy per area, the joule per square metre) and the honest cross-dimension abstention:
+// `pound` is a mass unit, so a density-of-heat lookup for it must abstain, catching the
+// density-of-heat/mass confusion directly, not mere absence of a value. (Density of heat is energy per
+// area — distinct from plain energy, J; from density of heat flow rate / irradiance, W/m²; and from
+// pressure, a force per area.)
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_density_of_heat_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_densityofheat");
+    let src = stdlib().join("reference/density-of-heat-conversions.adj");
+    std::fs::copy(&src, dir.join("density-of-heat-conversions.adj"))
+        .expect("copy shipped density-of-heat-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"density-of-heat-conversions.adj\"\n\
+         ? density_of_heat_to_joule_per_square_metre(calorie_th_per_square_centimetre, $v)\n\
+         ? density_of_heat_to_joule_per_square_metre(langley, $v)\n\
+         ? density_of_heat_to_joule_per_square_metre(pound, $v)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 exact factor resolves, character-for-character from the table (boldface =
+    // exact; one thermochemical calorie per square centimetre — equivalently one langley — is exactly
+    // 4.184 E+04 J/m²). Both keys map to the same exact value because the langley IS one calth/cm².
+    assert!(
+        out.contains("\"v\":\"41840\""),
+        "calorieth per square centimetre / langley = 4.184 E+04 J/m^2: {out}"
+    );
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `pound` is a MASS unit (it converts to the kilogram, a DIFFERENT quantity), so this
+    // density-of-heat table has no row for it — the engine abstains rather than mis-converting a mass
+    // unit as if it were an energy-per-area unit.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a wrong-dimension unit abstains, never a cross-dimension fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
