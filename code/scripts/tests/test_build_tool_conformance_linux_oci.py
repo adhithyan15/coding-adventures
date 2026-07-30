@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import inspect
 import io
 import json
 import sys
@@ -9,7 +10,6 @@ import tempfile
 import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
-from types import SimpleNamespace
 from unittest import mock
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
@@ -31,12 +31,18 @@ def backend_identity() -> dict[str, object]:
             "implementation": "podman",
             "path": "/usr/bin/podman",
             "version": "4.9.3",
+            "linkage": "static",
             "sha256": "1" * 64,
         },
         "oci_runtime": {
             "implementation": "crun",
             "path": "/usr/bin/crun",
             "sha256": "2" * 64,
+        },
+        "conmon": {
+            "implementation": "conmon",
+            "path": "/usr/bin/conmon",
+            "sha256": "8" * 64,
         },
         "image": {
             "reference": f"ghcr.io/coding-adventures/build-tool-probe@sha256:{'3' * 64}",
@@ -57,30 +63,6 @@ def backend_identity() -> dict[str, object]:
     }
 
 
-def host_info() -> dict[str, object]:
-    return {
-        "host": {
-            "arch": "amd64",
-            "os": "linux",
-            "cgroupManager": "systemd",
-            "cgroupVersion": "v2",
-            "cgroupControllers": ["cpu", "io", "memory", "pids"],
-            "serviceIsRemote": False,
-            "ociRuntime": {
-                "name": "crun",
-                "path": "/usr/bin/crun",
-            },
-            "security": {
-                "rootless": True,
-                "seccompEnabled": True,
-            },
-        },
-        "version": {
-            "Version": "4.9.3",
-        },
-    }
-
-
 def image_info() -> list[dict[str, object]]:
     identity = backend_identity()
     image = identity["image"]
@@ -97,6 +79,16 @@ def image_info() -> list[dict[str, object]]:
             },
         }
     ]
+
+
+def runtime_version() -> dict[str, object]:
+    return {
+        "Client": {
+            "Version": "4.9.3",
+            "Os": "linux",
+            "OsArch": "linux/amd64",
+        }
+    }
 
 
 class LinuxOciBackendTests(unittest.TestCase):
@@ -131,6 +123,10 @@ class LinuxOciBackendTests(unittest.TestCase):
                 lambda value: value["runtime"].__setitem__("version", "latest"),
             ),
             (
+                "runtime-linkage",
+                lambda value: value["runtime"].__setitem__("linkage", "dynamic"),
+            ),
+            (
                 "reference",
                 lambda value: value["image"].__setitem__(
                     "reference",
@@ -140,6 +136,13 @@ class LinuxOciBackendTests(unittest.TestCase):
             (
                 "artifact-path",
                 lambda value: value["probe"].__setitem__("path", "/bad//probe"),
+            ),
+            (
+                "conmon-path",
+                lambda value: value["conmon"].__setitem__(
+                    "path",
+                    "/usr/local/bin/conmon",
+                ),
             ),
         ):
             invalid = copy.deepcopy(identity)
@@ -210,87 +213,21 @@ class LinuxOciBackendTests(unittest.TestCase):
             linux_oci.load_identity(Path("definitely-missing-identity.json"))
         self.assertEqual(raised.exception.code, "LINUX_OCI_IDENTITY_READ_FAILED")
 
-    def test_fixed_environment_drops_host_authority(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            state_root = Path(directory)
-            environment = linux_oci.runtime_environment(state_root)
-        self.assertEqual(
-            environment,
-            {
-                "HOME": str(state_root / "home"),
-                "LANG": "C.UTF-8",
-                "LC_ALL": "C.UTF-8",
-                "PATH": "/usr/sbin:/usr/bin:/sbin:/bin",
-                "TZ": "UTC",
-                "XDG_CONFIG_HOME": str(state_root / "config"),
-                "XDG_RUNTIME_DIR": str(state_root / "runtime"),
-            },
-        )
+    def test_backend_has_no_process_binary_or_state_authority(self) -> None:
         for forbidden in (
-            "CONTAINER_HOST",
-            "DOCKER_HOST",
-            "GITHUB_TOKEN",
-            "HTTP_PROXY",
-            "SSH_AUTH_SOCK",
+            "subprocess",
+            "runtime_environment",
+            "_prepare_state_root",
+            "_binary_digest",
+            "_run_command",
         ):
-            self.assertNotIn(forbidden, environment)
-
-    def test_state_root_must_be_runner_owned_and_absolute(self) -> None:
-        with self.assertRaises(linux_oci.LinuxOciUnavailable) as raised:
-            linux_oci._prepare_state_root(Path("relative-state"))
-        self.assertEqual(raised.exception.code, "LINUX_OCI_STATE_ROOT_INVALID")
-
-    def test_host_preflight_requires_every_containment_primitive(self) -> None:
-        identity = backend_identity()
-        linux_oci.validate_host_info(host_info(), identity)
-
-        mutations = [
-            (("host", "serviceIsRemote"), True, "LINUX_OCI_REMOTE_RUNTIME"),
-            (("host", "security", "rootless"), False, "LINUX_OCI_ROOTFUL_RUNTIME"),
-            (("host", "cgroupVersion"), "v1", "LINUX_OCI_CGROUP_V2_REQUIRED"),
-            (
-                ("host", "cgroupControllers"),
-                ["memory", "pids"],
-                "LINUX_OCI_CGROUP_CONTROLLERS_MISSING",
-            ),
-            (
-                ("host", "ociRuntime", "name"),
-                "runc",
-                "LINUX_OCI_CRUN_REQUIRED",
-            ),
-            (
-                ("host", "security", "seccompEnabled"),
-                False,
-                "LINUX_OCI_SECCOMP_REQUIRED",
-            ),
-            (
-                ("host", "cgroupManager"),
-                "cgroupfs",
-                "LINUX_OCI_CGROUP_MANAGER_UNSUPPORTED",
-            ),
-            (
-                ("host", "arch"),
-                "arm64",
-                "LINUX_OCI_HOST_PLATFORM_MISMATCH",
-            ),
-            (
-                ("version", "Version"),
-                "5.8.3",
-                "LINUX_OCI_RUNTIME_VERSION_MISMATCH",
-            ),
-        ]
-        for path, value, code in mutations:
-            mutated = copy.deepcopy(host_info())
-            cursor = mutated
-            for part in path[:-1]:
-                cursor = cursor[part]  # type: ignore[assignment,index]
-            cursor[path[-1]] = value  # type: ignore[index]
-            with (
-                self.subTest(code=code),
-                self.assertRaises(linux_oci.LinuxOciUnavailable) as raised,
-            ):
-                linux_oci.validate_host_info(mutated, identity)
-            self.assertEqual(raised.exception.code, code)
+            self.assertFalse(hasattr(linux_oci, forbidden))
+        signature = inspect.signature(linux_oci.preflight_brokered)
+        self.assertIs(signature.parameters["runtime_info"].default, inspect.Parameter.empty)
+        self.assertIs(
+            signature.parameters["image_inspect"].default,
+            inspect.Parameter.empty,
+        )
 
     def test_image_preflight_requires_exact_local_identity_and_no_volumes(self) -> None:
         identity = backend_identity()
@@ -354,64 +291,98 @@ class LinuxOciBackendTests(unittest.TestCase):
             (
                 linux_oci.CommandResult(
                     returncode=0,
+                    stdout=b"[" * 2_000 + b"]" * 2_000,
+                    stderr=b"",
+                ),
+                "LINUX_OCI_RUNTIME_RESPONSE_INVALID",
+            ),
+            (
+                linux_oci.CommandResult(
+                    returncode=0,
                     stdout=b"x" * (linux_oci.MAX_RUNTIME_OUTPUT_BYTES + 1),
                     stderr=b"",
                 ),
                 "LINUX_OCI_RUNTIME_OUTPUT_LIMIT",
             ),
         ):
+            with self.subTest(code=code):
+                with self.assertRaises(linux_oci.LinuxOciUnavailable) as raised:
+                    linux_oci._runtime_json(result)
+                self.assertEqual(raised.exception.code, code)
+
+    def test_runtime_depth_scan_ignores_brackets_inside_strings(self) -> None:
+        payload = {"value": "[{" * 100 + "}]" * 100}
+        result = linux_oci.CommandResult(
+            returncode=0,
+            stdout=json.dumps(payload).encode(),
+            stderr=b"",
+        )
+        self.assertEqual(linux_oci._runtime_json(result), payload)
+
+    def test_preflight_requires_both_broker_results(self) -> None:
+        with self.assertRaises(TypeError):
+            linux_oci.preflight_brokered(  # type: ignore[call-arg]
+                backend_identity(),
+                runtime_info=linux_oci.CommandResult(0, b"{}", b""),
+            )
+
+    def test_brokered_preflight_consumes_closed_local_version_result(self) -> None:
+        summary = linux_oci.preflight_brokered(
+            backend_identity(),
+            runtime_info=linux_oci.CommandResult(
+                0,
+                json.dumps(runtime_version()).encode(),
+                b"",
+            ),
+            image_inspect=linux_oci.CommandResult(
+                0,
+                json.dumps(image_info()).encode(),
+                b"",
+            ),
+            platform_name="linux",
+            effective_uid=1000,
+        )
+        self.assertEqual(summary["status"], "available")
+        client = runtime_version()["Client"]
+        assert isinstance(client, dict)
+        for changed, code in (
+            (
+                {"Client": {**client, "Version": "9.9.9"}},
+                "LINUX_OCI_RUNTIME_VERSION_MISMATCH",
+            ),
+            (
+                {"Client": client, "Server": {}},
+                "LINUX_OCI_REMOTE_RUNTIME",
+            ),
+            (
+                {"Client": {**client, "Os": "windows"}},
+                "LINUX_OCI_HOST_PLATFORM_MISMATCH",
+            ),
+            (
+                {"Client": {**client, "OsArch": "linux/arm64"}},
+                "LINUX_OCI_HOST_PLATFORM_MISMATCH",
+            ),
+        ):
             with (
                 self.subTest(code=code),
                 self.assertRaises(linux_oci.LinuxOciUnavailable) as raised,
             ):
-                linux_oci._runtime_json(result)
+                linux_oci.preflight_brokered(
+                    backend_identity(),
+                    runtime_info=linux_oci.CommandResult(
+                        0,
+                        json.dumps(changed).encode(),
+                        b"",
+                    ),
+                    image_inspect=linux_oci.CommandResult(
+                        0,
+                        json.dumps(image_info()).encode(),
+                        b"",
+                    ),
+                    platform_name="linux",
+                    effective_uid=1000,
+                )
             self.assertEqual(raised.exception.code, code)
-
-    def test_direct_runtime_wrapper_bounds_output_and_redacts_failures(self) -> None:
-        completed = SimpleNamespace(returncode=0, stdout=b"{}", stderr=b"")
-        with mock.patch.object(
-            linux_oci.subprocess, "run", return_value=completed
-        ) as run:
-            result = linux_oci._run_command(
-                ["/usr/bin/podman", "info"],
-                {"HOME": "/private"},
-                1.0,
-            )
-        self.assertEqual(result.stdout, b"{}")
-        self.assertFalse(run.call_args.kwargs["shell"])
-        self.assertEqual(run.call_args.args[0], ["/usr/bin/podman", "info"])
-
-        oversized = SimpleNamespace(
-            returncode=0,
-            stdout=b"x" * (linux_oci.MAX_RUNTIME_OUTPUT_BYTES + 1),
-            stderr=b"",
-        )
-        with (
-            mock.patch.object(linux_oci.subprocess, "run", return_value=oversized),
-            self.assertRaises(linux_oci.LinuxOciUnavailable) as raised,
-        ):
-            linux_oci._run_command(
-                ["/usr/bin/podman", "info"],
-                {"HOME": "/private"},
-                1.0,
-            )
-        self.assertEqual(raised.exception.code, "LINUX_OCI_RUNTIME_OUTPUT_LIMIT")
-
-        with (
-            mock.patch.object(
-                linux_oci.subprocess,
-                "run",
-                side_effect=OSError("secret host detail"),
-            ),
-            self.assertRaises(linux_oci.LinuxOciUnavailable) as raised,
-        ):
-            linux_oci._run_command(
-                ["/usr/bin/podman", "info"],
-                {"HOME": "/private"},
-                1.0,
-            )
-        self.assertEqual(raised.exception.code, "LINUX_OCI_RUNTIME_UNAVAILABLE")
-        self.assertNotIn("secret", raised.exception.message)
 
     def test_probe_command_is_fixed_direct_argv_with_one_bounded_tmpfs(self) -> None:
         identity = backend_identity()
@@ -522,107 +493,47 @@ class LinuxOciBackendTests(unittest.TestCase):
             )
         self.assertEqual(raised.exception.code, "LINUX_OCI_RUNNER_PATH_INVALID")
 
-    def test_preflight_uses_only_info_and_exact_image_inspect(self) -> None:
+    def test_preflight_consumes_only_bounded_broker_results(self) -> None:
         identity = backend_identity()
-        calls: list[tuple[list[str], dict[str, str], float]] = []
-
-        def fake_runner(
-            argv: list[str],
-            environment: dict[str, str],
-            timeout_seconds: float,
-        ) -> linux_oci.CommandResult:
-            calls.append((argv, environment, timeout_seconds))
-            payload: object
-            if "info" in argv:
-                payload = host_info()
-            else:
-                payload = image_info()
-            return linux_oci.CommandResult(
+        summary = linux_oci.preflight(
+            identity,
+            runtime_info=linux_oci.CommandResult(
                 returncode=0,
-                stdout=json.dumps(payload).encode("utf-8"),
+                stdout=json.dumps(runtime_version()).encode("utf-8"),
                 stderr=b"",
-            )
-
-        digests = {
-            Path("/usr/bin/podman"): "1" * 64,
-            Path("/usr/bin/crun"): "2" * 64,
-        }
-        with tempfile.TemporaryDirectory() as directory:
-            summary = linux_oci.preflight(
-                identity,
-                state_root=Path(directory),
-                command_runner=fake_runner,
-                binary_digest=lambda path: digests[path],
-                platform_name="linux",
-                effective_uid=1000,
-            )
+            ),
+            image_inspect=linux_oci.CommandResult(
+                returncode=0,
+                stdout=json.dumps(image_info()).encode("utf-8"),
+                stderr=b"",
+            ),
+            platform_name="linux",
+            effective_uid=1000,
+        )
 
         self.assertEqual(summary["status"], "available")
-        self.assertEqual(len(calls), 2)
-        self.assertEqual(calls[0][0][-3:], ["info", "--format", "json"])
-        self.assertEqual(
-            calls[1][0][-5:],
-            ["image", "inspect", "--format", "json", f"sha256:{'4' * 64}"],
-        )
-        self.assertTrue(
-            all("--pull" not in argument for call in calls for argument in call[0])
-        )
-        self.assertTrue(all("create" not in call[0] for call in calls))
 
-    def test_preflight_rejects_platform_root_and_binary_mismatch_before_spawn(
+    def test_preflight_rejects_platform_and_root_before_decoding_results(
         self,
     ) -> None:
         identity = backend_identity()
-        for platform_name, uid, digest, code in (
-            ("win32", 1000, "1" * 64, "LINUX_OCI_PLATFORM_UNSUPPORTED"),
-            ("linux", 0, "1" * 64, "LINUX_OCI_ROOT_USER_FORBIDDEN"),
-            ("linux", 1000, "9" * 64, "LINUX_OCI_RUNTIME_IDENTITY_MISMATCH"),
+        poison = linux_oci.CommandResult(0, b"{", b"")
+        for platform_name, uid, code in (
+            ("win32", 1000, "LINUX_OCI_PLATFORM_UNSUPPORTED"),
+            ("linux", 0, "LINUX_OCI_ROOT_USER_FORBIDDEN"),
         ):
-            calls = 0
-
-            def forbidden_runner(
-                argv: list[str],
-                environment: dict[str, str],
-                timeout_seconds: float,
-            ) -> linux_oci.CommandResult:
-                del argv, environment, timeout_seconds
-                nonlocal calls
-                calls += 1
-                raise AssertionError("runtime must not be invoked")
-
             with (
                 self.subTest(code=code),
-                tempfile.TemporaryDirectory() as directory,
                 self.assertRaises(linux_oci.LinuxOciUnavailable) as raised,
             ):
                 linux_oci.preflight(
                     identity,
-                    state_root=Path(directory),
-                    command_runner=forbidden_runner,
-                    binary_digest=lambda _path, selected=digest: selected,
+                    runtime_info=poison,
+                    image_inspect=poison,
                     platform_name=platform_name,
                     effective_uid=uid,
                 )
             self.assertEqual(raised.exception.code, code)
-            self.assertEqual(calls, 0)
-
-        digests = {
-            Path("/usr/bin/podman"): "1" * 64,
-            Path("/usr/bin/crun"): "9" * 64,
-        }
-        with (
-            tempfile.TemporaryDirectory() as directory,
-            self.assertRaises(linux_oci.LinuxOciUnavailable) as raised,
-        ):
-            linux_oci.preflight(
-                identity,
-                state_root=Path(directory),
-                command_runner=forbidden_runner,
-                binary_digest=lambda path: digests[path],
-                platform_name="linux",
-                effective_uid=1000,
-            )
-        self.assertEqual(raised.exception.code, "LINUX_OCI_CRUN_IDENTITY_MISMATCH")
 
     def test_direct_cli_requires_external_authority_before_identity_read(self) -> None:
         stdout = io.StringIO()

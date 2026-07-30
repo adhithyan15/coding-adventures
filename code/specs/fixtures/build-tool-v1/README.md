@@ -13,10 +13,14 @@ build-tool-v1/
   execution.schema.json
   execution-authority.schema.json
   execution-preflight-loader-authority.schema.json
+  execution-capability-broker-authority.schema.json
   execution-policy.schema.json
   execution-policy.json
   linux-oci-backend.schema.json
+  linux-capability-preflight-broker.schema.json
+  linux-capability-preflight-broker.json
   preflight-imports.json
+  preflight-broker-backend-imports.json
   implementations.schema.json
   implementations.json
   CHANGELOG.md
@@ -69,11 +73,22 @@ empty SHA-256 digest. Execution cases are added only after an enforcing backend
 is reviewed.
 
 `linux-oci-backend.schema.json` closes the separate immutable identity document
-for the first Linux backend tranche. It binds exact rootless Podman, `crun`,
+for the first Linux backend tranche. It binds exact statically linked rootless
+Podman, `crun`, Conmon,
 OCI manifest/config, seccomp, shim, and invariant-probe identities. The
-process-owning `build_tool_conformance_linux_oci.py` preflight validates those
-identities and host capabilities without decoding a fixture or creating a
-container. No identity document is checked in while Linux remains unavailable.
+capability broker validates the non-root Linux/amd64 host, delegated cgroup-v2
+controllers, kernel seccomp actions, exact runtime binary identities, and the
+absence of a Podman ELF `PT_INTERP` segment. Requiring `linkage: static`
+prevents an allowed dynamic loader from becoming an execution trampoline. A
+mandatory Landlock execute ruleset permits pathname-backed execution only of
+the retained Podman inode, so constructor hooks, `catatonit`, and other
+pathname-backed helpers in the reviewed flow cannot execute. Landlock ABI v1
+does not close anonymous
+executable memfds or executable mappings; those remain an explicit gate before
+invariant-probe authority. The
+process-free `build_tool_conformance_linux_oci.py` backend validates only the
+bounded local version and image results without decoding a fixture or creating
+a container. No identity document is checked in while Linux remains unavailable.
 
 `execution-authority.schema.json` closes the external, post-review authority
 bundle for the first safe authorization profile. Its exact raw bytes are
@@ -91,9 +106,18 @@ traverses every component from retained directory handles, and the loader
 copies its own source, the backend, manifest, and identity into sealed memfds.
 A fresh `python -I -S -B` worker executes the sealed loader, rejects undeclared
 or dynamic imports and executable import-time statements, compiles but never
-executes the backend, and verifies its three required structural interfaces.
+executes the backend, and verifies its four required structural interfaces.
 Its receipt reports loadability only: it does not call preflight, Podman, a
 fixture, an adapter, or a container.
+
+`execution-capability-broker-authority.schema.json` is the separately
+domain-bound thirteen-role capability-preflight profile. It additionally binds
+the broker-specific process-free backend import manifest, exact broker source,
+and the language-neutral broker behavior manifest and schema. The checked-in
+manifest closes the two permissible Podman operations, reviewed runtime and
+state descriptors, environment, timeout, combined streaming output ceiling,
+and delegated-cgroup descendant cleanup. Its authority cannot authorize a
+container, execution case, adapter, invariant probe, or Linux readiness.
 
 ## Runner
 
@@ -126,9 +150,12 @@ python code/scripts/build_tool_conformance_backend_loader.py \
 
 This command starts only one isolated Python loadability worker. The bare
 `build_tool_conformance_linux_oci.py --identity ...` entry point fails closed
-with `LINUX_OCI_AUTHORITY_REQUIRED`. Protected capability inspection remains
-disabled until a later broker eliminates the runtime-binary and state-root
-path races, streams bounded combined output, and owns full descendant cleanup.
+with `LINUX_OCI_AUTHORITY_REQUIRED`. The separate broker profile is required
+for real capability inspection; it validates and FD-executes the static Podman
+runtime, verifies the reviewed
+`crun` and Conmon bytes, retains state roots without reopening them, streams
+bounded combined output, and owns full descendant
+cleanup. It still cannot report trusted-execution readiness.
 
 Compare one externally produced adapter result with its fixture:
 
@@ -178,6 +205,16 @@ Python worker started from the sealed approved loader bytes. It receives only
 sealed descriptors, fixed digests, a scrubbed environment, and standard-library
 search paths. The worker validates source closure and interfaces and exits; it
 cannot make the unavailable Linux backend available.
+
+The capability broker adds a separately authorized process boundary for two
+fixed runtime-version and image-inspection commands. It executes retained
+verified Podman bytes,
+verifies reviewed `crun` and Conmon bytes, passes private state descriptors through
+`/proc/self/fd`, applies a fixed environment and command grammar, and owns a
+fresh delegated cgroup until it proves empty. The state root contains only a
+prepopulated private image store before the broker creates its transient
+children. The backend receives only
+bounded command results and remains unable to spawn a process itself.
 
 The bootstrap runner performs no workspace materialization. Adapter
 orchestration and execution fixtures remain blocked until the separate
@@ -244,6 +281,9 @@ python -m unittest discover \
 python -m unittest discover \
   -s code/scripts/tests \
   -p "test_build_tool_conformance_backend_loader.py"
+python -m unittest discover \
+  -s code/scripts/tests \
+  -p "test_build_tool_conformance_capability_broker.py"
 python -m unittest discover \
   -s code/scripts/tests \
   -p "test_build_tool_conformance_linux_oci.py"

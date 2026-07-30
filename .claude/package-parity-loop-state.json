@@ -9,17 +9,17 @@
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
   "active_pr": {
-    "item_id": "build-tool-authority-exact-backend-loader",
-    "number": 9208,
-    "branch": "codex/build-tool-authority-exact-backend-loader",
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9208"
+    "item_id": "build-tool-linux-capability-preflight-broker",
+    "pr_number": 9231,
+    "branch": "codex/build-tool-linux-capability-preflight-broker",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9231"
   },
   "last_inventory": {
-    "revision": "a06ed28b7096c178d84a36a1c1929bf69f056c92",
+    "revision": "b3bc8adb4402b5f163d476bd9ccc0a79e2fcd09d",
     "schema_version": 2,
     "established_languages": 15,
-    "implementation_identities": 1190,
-    "implementation_package_slots": 4331,
+    "implementation_identities": 1191,
+    "implementation_package_slots": 4332,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 278,
     "canonical_collisions": 0,
@@ -69,7 +69,7 @@
       "depends_on": ["build-tool-execution-sandbox"],
       "branch": "codex/build-tool-linux-oci-sandbox",
       "pr_number": 9189,
-      "notes": "Merged PR #9189. The closed identity binds rootless Podman, crun, exact OCI manifest/config, seccomp, shim, and probe; the process-owning module adds fail-closed host/image preflight and exact probe-container argv without fixture decode or launch. The checked-in policy remains disabled and Linux unavailable until protected enforcement evidence exists."
+      "notes": "Merged PR #9189. The closed identity binds rootless Podman, crun, exact OCI manifest/config, seccomp, shim, and probe; the original module defined fail-closed host/image preflight and exact probe-container argv without fixture decode or launch. The current broker tranche leaves that backend process-free. The checked-in policy remains disabled and Linux unavailable until protected enforcement evidence exists."
     },
     {
       "id": "build-tool-trusted-authority-bundle",
@@ -86,25 +86,25 @@
     {
       "id": "build-tool-authority-exact-backend-loader",
       "title": "Load the exact approved preflight backend through an atomic runner boundary",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-trusted-authority-bundle",
         "build-tool-linux-oci-sandbox"
       ],
       "branch": "codex/build-tool-authority-exact-backend-loader",
       "pr_number": 9208,
-      "notes": "Ready-for-review PR #9208. The domain-separated ten-role loader authority binds exact approved verifier, loader, backend, manifest, identity, policy, and schema bytes; retained no-follow directory handles and sealed memfds close component races. The isolated worker validates an exact stdlib import closure and closed interfaces by AST plus compilation without importing the backend or running Podman. Validation covered 125 conformance tests, 67% combined branch-aware coverage, Ruff, Bandit, corpus/contract validators, Go tests/build, parity collision checks, and the unchanged 73-gap build-file audit. Linux-only filesystem, sealed-worker, process-group, and streaming-cap paths run in Ubuntu CI."
+      "notes": "Merged PR #9208. The domain-separated ten-role loader authority binds exact approved verifier, loader, backend, manifest, identity, policy, and schema bytes; retained no-follow directory handles and sealed memfds close component races. The isolated worker validates an exact stdlib import closure and closed interfaces by AST plus compilation without importing the backend or running Podman. Validation covered 125 conformance tests, 67% combined branch-aware coverage, Ruff, Bandit, corpus/contract validators, Go tests/build, parity collision checks, and the unchanged 73-gap build-file audit. Linux-only filesystem, sealed-worker, process-group, and streaming-cap paths passed Ubuntu CI."
     },
     {
       "id": "build-tool-linux-capability-preflight-broker",
       "title": "Broker the two approved Linux OCI capability commands",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-authority-exact-backend-loader"
       ],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Discovered during exact-loader security review. Add a separately authorized protected broker over already-open verified Podman/crun and a retained private state root; permit only info and exact-config image inspect, stream combined output limits, scrub the environment and descriptors, enforce timeout and full descendant cleanup, and eliminate binary hash-to-exec and state-root path races. No container is created."
+      "branch": "codex/build-tool-linux-capability-preflight-broker",
+      "pr_number": 9231,
+      "notes": "Selected after PR #9208 merged because this is the direct dependency for the invariant-probe authority and every later Linux enforcement stage. Add a separately domain-bound authority over the exact broker and backend closure; verify statically linked Podman plus crun and Conmon; reject malformed/non-amd64 Podman ELF or PT_INTERP so no dynamic loader becomes an execution trampoline; execute only retained Podman bytes against a private prepopulated image store and delegated cgroup root; permit only forced-local version and exact-config image inspect; install mandatory Landlock execute confinement whose only allow-rule is the retained Podman inode for pathname-backed execution; keep the worker protocol non-authoritative and source-free; stream one combined output cap; scrub environment and descriptors; enforce timeout plus cgroup-backed descendant kill/reap. No container, fixture, adapter, or invariant probe is created. Anonymous executable memfds and executable mappings remain separately gated."
     },
     {
       "id": "build-tool-execution-case-snapshot",
@@ -114,6 +114,28 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered during the Linux OCI security review. Select the requested direct corpus member from one root-handle/no-follow bounded snapshot and execute the same hashed bytes; reject outside paths, renames, symlinks, hardlinks, case/Unicode aliases, and post-digest mutation."
+    },
+    {
+      "id": "build-tool-runner-image-tcb-attestation",
+      "title": "Bind protected Linux execution to an immutable runner-image TCB receipt",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-linux-capability-preflight-broker"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the capability-broker security review. Capability preflight validates a static Podman ELF and FD-executes it under Landlock, which permits pathname-backed execution only of that retained inode and denies constructor hooks, pause helpers, dynamic-loader trampolines, and other pathname-backed helpers in the reviewed flow; it separately verifies crun and Conmon without executing them. Future container execution still makes their absolute paths, the protected Python interpreter, stdlib/native extensions, libc, loaders for later runtime components, container configuration defaults, and remaining immutable host dependencies runner-image obligations that require a verifiable out-of-band attestation before protected evidence can authorize an invariant probe."
+    },
+    {
+      "id": "build-tool-anonymous-exec-closure",
+      "title": "Close anonymous executable and executable-mapping paths",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-linux-capability-preflight-broker"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during final capability-broker security review. Landlock ABI v1 governs pathname-backed execution but not executable memfds, dlopen, mmap(PROT_EXEC), or mprotect(PROT_EXEC). Add separately reviewed seccomp/LSM enforcement and Linux integration probes before any invariant-probe receipt can become authoritative."
     },
     {
       "id": "build-tool-execution-status-normalization",
@@ -131,6 +153,8 @@
       "depends_on": [
         "build-tool-trusted-authority-bundle",
         "build-tool-authority-exact-backend-loader",
+        "build-tool-runner-image-tcb-attestation",
+        "build-tool-anonymous-exec-closure",
         "build-tool-linux-capability-preflight-broker"
       ],
       "branch": null,
@@ -413,7 +437,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The July 30 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, and venture-browser-core. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; and both smart-home packages as likely native/service applicability cases before opening any port PR."
+      "notes": "The July 30 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, and smart-home-runtime-store. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; and the three smart-home packages as likely native/service/storage applicability cases before opening any port PR."
     },
     {
       "id": "c-cpp-graduation",

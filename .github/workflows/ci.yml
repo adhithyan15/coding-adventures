@@ -88,6 +88,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_execution_runner.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_authority.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_backend_loader.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_capability_broker.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_linux_oci.py'
           python3 code/scripts/build_tool_conformance.py validate-corpus
           python3 code/scripts/build_tool_conformance_execution.py validate-contract

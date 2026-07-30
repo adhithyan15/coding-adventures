@@ -34,12 +34,18 @@ def identity_bytes() -> bytes:
             "implementation": "podman",
             "path": "/usr/bin/podman",
             "version": "5.8.3",
+            "linkage": "static",
             "sha256": "1" * 64,
         },
         "oci_runtime": {
             "implementation": "crun",
             "path": "/usr/bin/crun",
             "sha256": "2" * 64,
+        },
+        "conmon": {
+            "implementation": "conmon",
+            "path": "/usr/bin/conmon",
+            "sha256": "8" * 64,
         },
         "image": {
             "reference": f"localhost/build-tool@sha256:{manifest}",
@@ -72,12 +78,21 @@ def source_bytes(body: str = "") -> bytes:
         "    stdout: bytes\n"
         "    stderr: bytes\n"
         "\n"
+        "def preflight_brokered(\n"
+        "    identity,\n"
+        "    *,\n"
+        "    runtime_info,\n"
+        "    image_inspect,\n"
+        "    platform_name=None,\n"
+        "    effective_uid=None,\n"
+        "):\n"
+        "    raise AssertionError('loadability validation must not call preflight')\n"
+        "\n"
         "def preflight_prevalidated(\n"
         "    identity,\n"
         "    *,\n"
-        "    state_root,\n"
-        "    command_runner=_run_command,\n"
-        "    binary_digest=_binary_digest,\n"
+        "    runtime_info,\n"
+        "    image_inspect,\n"
         "    platform_name=None,\n"
         "    effective_uid=None,\n"
         "):\n"
@@ -94,6 +109,7 @@ def manifest_bytes(imports: list[str]) -> bytes:
         "required_exports": [
             "CommandResult",
             "LinuxOciUnavailable",
+            "preflight_brokered",
             "preflight_prevalidated",
         ],
     }

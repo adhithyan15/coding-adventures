@@ -36,6 +36,7 @@ MODULE_NAME = "build_tool_conformance_linux_oci"
 REQUIRED_EXPORTS = (
     "CommandResult",
     "LinuxOciUnavailable",
+    "preflight_brokered",
     "preflight_prevalidated",
 )
 FORBIDDEN_DYNAMIC_IMPORTS = {"__import__", "import_module"}
@@ -481,30 +482,31 @@ def _validate_backend_structure(
     function_nodes = [node for node in tree.body if isinstance(node, ast.FunctionDef)]
     classes = {node.name: node for node in class_nodes}
     functions = {node.name: node for node in function_nodes}
-    preflight = functions.get("preflight_prevalidated")
-    valid_preflight = (
-        preflight is not None
-        and [argument.arg for argument in preflight.args.posonlyargs] == []
-        and [argument.arg for argument in preflight.args.args] == ["identity"]
-        and preflight.args.vararg is None
-        and [argument.arg for argument in preflight.args.kwonlyargs]
-        == [
-            "state_root",
-            "command_runner",
-            "binary_digest",
-            "platform_name",
-            "effective_uid",
-        ]
-        and preflight.args.kw_defaults[0] is None
-        and isinstance(preflight.args.kw_defaults[1], ast.Name)
-        and preflight.args.kw_defaults[1].id == "_run_command"
-        and isinstance(preflight.args.kw_defaults[2], ast.Name)
-        and preflight.args.kw_defaults[2].id == "_binary_digest"
-        and isinstance(preflight.args.kw_defaults[3], ast.Constant)
-        and preflight.args.kw_defaults[3].value is None
-        and isinstance(preflight.args.kw_defaults[4], ast.Constant)
-        and preflight.args.kw_defaults[4].value is None
-        and preflight.args.kwarg is None
+    def valid_preflight_signature(preflight: ast.FunctionDef | None) -> bool:
+        return bool(
+            preflight is not None
+            and [argument.arg for argument in preflight.args.posonlyargs] == []
+            and [argument.arg for argument in preflight.args.args] == ["identity"]
+            and preflight.args.vararg is None
+            and [argument.arg for argument in preflight.args.kwonlyargs]
+            == [
+                "runtime_info",
+                "image_inspect",
+                "platform_name",
+                "effective_uid",
+            ]
+            and preflight.args.kw_defaults[0] is None
+            and preflight.args.kw_defaults[1] is None
+            and isinstance(preflight.args.kw_defaults[2], ast.Constant)
+            and preflight.args.kw_defaults[2].value is None
+            and isinstance(preflight.args.kw_defaults[3], ast.Constant)
+            and preflight.args.kw_defaults[3].value is None
+            and preflight.args.kwarg is None
+        )
+
+    valid_brokered = valid_preflight_signature(functions.get("preflight_brokered"))
+    valid_preflight = valid_preflight_signature(
+        functions.get("preflight_prevalidated")
     )
     unavailable = classes.get("LinuxOciUnavailable")
     unavailable_init = (
@@ -575,6 +577,7 @@ def _validate_backend_structure(
     required_names = {
         "CommandResult",
         "LinuxOciUnavailable",
+        "preflight_brokered",
         "preflight_prevalidated",
     }
     duplicate_required = any(
@@ -582,7 +585,8 @@ def _validate_backend_structure(
         for name in required_names
     )
     if (
-        not valid_preflight
+        not valid_brokered
+        or not valid_preflight
         or not valid_unavailable
         or not valid_command_result
         or duplicate_required
