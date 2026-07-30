@@ -117,6 +117,7 @@ class PackageInventoryTests(unittest.TestCase):
         )
 
         self.assertEqual(unknown, set())
+        self.assertEqual(report["schema_version"], 3)
         self.assertIn("ocaml", report["bucket_classes"]["emerging_implementation"])
         self.assertEqual(report["package_count"]["established_languages"], 15)
         self.assertEqual(report["package_count"]["implementation_union"], 1)
@@ -126,12 +127,28 @@ class PackageInventoryTests(unittest.TestCase):
         )
         self.assertEqual(report["completion_bands"]["10-15"]["packages"], 1)
         self.assertEqual(report["completion_bands"]["10-15"]["missing_slots"], 0)
+        self.assertEqual(report["completion_bands"]["5-9"]["packages"], 0)
+        self.assertEqual(report["completion_bands"]["2-4"]["packages"], 0)
+        self.assertEqual(report["completion_bands"]["1"]["packages"], 0)
+        self.assertEqual(
+            sum(band["packages"] for band in report["completion_bands"].values()),
+            report["package_count"]["implementation_union"],
+        )
         self.assertEqual(by_package["universal"]["language_count"], 15)
         self.assertIn("ocaml", by_package["universal"]["languages"])
         self.assertEqual(by_package["ocaml-only"]["language_count"], 0)
         self.assertEqual(by_package["ocaml-only"]["implementation_languages"], [])
         self.assertEqual(ocaml_summary["class"], "emerging_implementation")
         self.assertEqual(ocaml_summary["present"], 2)
+        markdown = parity.render_markdown(report)
+        self.assertIn("| ocaml | emerging_implementation | 2 |", markdown)
+
+        csv_rows = {
+            row["package"]: row
+            for row in csv.DictReader(io.StringIO(parity.render_csv(report)))
+        }
+        self.assertEqual(csv_rows["universal"]["ocaml"], "1")
+        self.assertEqual(csv_rows["ocaml-only"]["ocaml"], "1")
 
     def test_completion_band_tracks_the_established_denominator(self) -> None:
         self.assertEqual(parity.completion_band_labels(15)[0], "10-15")
@@ -144,6 +161,8 @@ class PackageInventoryTests(unittest.TestCase):
             parity.completion_band_labels(9)
         with self.assertRaises(ValueError):
             parity.completion_band(17, 16)
+        with self.assertRaises(ValueError):
+            parity.completion_band(0, 16)
 
     def test_bucket_classes_are_disjoint(self) -> None:
         with self.assertRaisesRegex(ValueError, "exactly one class: ocaml"):
@@ -177,8 +196,10 @@ class PackageInventoryTests(unittest.TestCase):
             ]
         )
         report = parity.build_report(packages, unknown)
-        rows = list(csv.DictReader(io.StringIO(parity.render_csv(report))))
+        reader = csv.DictReader(io.StringIO(parity.render_csv(report)))
+        rows = list(reader)
 
+        self.assertEqual(reader.fieldnames, ["package", *parity.ALL_BUCKETS])
         self.assertEqual(len(rows), 2)
         by_package = {row["package"]: row for row in rows}
         self.assertEqual(by_package["heap"]["rust"], "1")

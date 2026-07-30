@@ -199,6 +199,9 @@ OCaml is a known emerging implementation lane governed by
 [OCAML01](./code/specs/OCAML01-emerging-lane-contract.md); its packages remain
 outside the established parity denominator until the scaffold, resolver,
 capability, build-tool, package, and three-platform promotion gates pass.
+The parity report's JSON schema is version 3, and CSV consumers must select
+presence columns by header name because recognized emerging lanes extend the
+matrix.
 
 ### Documents, graphics, and UI compilation
 

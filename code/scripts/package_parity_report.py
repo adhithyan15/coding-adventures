@@ -249,9 +249,9 @@ def completion_band(
 ) -> str:
     """Classify breadth without embedding the current denominator in the label."""
 
-    if not 0 <= language_count <= established_language_count:
+    if not 1 <= language_count <= established_language_count:
         raise ValueError(
-            "language count must be between zero and the established denominator"
+            "language count must be between one and the established denominator"
         )
     if language_count >= HIGH_CONSENSUS_MIN_LANGUAGES:
         return completion_band_labels(established_language_count)[0]
@@ -370,7 +370,7 @@ def build_report(
     }
 
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "bucket_classes": {key: list(value) for key, value in BUCKET_CLASSES.items()},
         "package_count": {
             "established_languages": established_language_count,

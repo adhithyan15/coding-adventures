@@ -49,6 +49,15 @@ The package-parity reporter MUST:
 An OCaml-only package therefore has an implementation `language_count` of zero
 while its complete `languages` list contains `ocaml`. A package present in all
 15 established lanes remains complete even when an OCaml directory exists.
+The JSON additions are report schema version 3; consumers must not treat the
+earlier version 2 shape as interchangeable. The CSV matrix remains
+self-describing through its header, and adding a recognized bucket appends that
+bucket's column in bucket-class declaration order. Consumers must select CSV
+columns by header name rather than fixed position.
+
+Only packages present in at least one established lane belong to a completion
+band. The band-classification helper rejects a zero established-language count
+instead of silently treating an emerging-only package as a singleton.
 
 ## Promotion boundary
 

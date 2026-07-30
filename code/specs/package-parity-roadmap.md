@@ -106,10 +106,11 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 30, 2026 at `3b025282e` after the merged
+inventory was regenerated on July 30, 2026 at `0f8bb3b25` after the merged
 Haskell `http1` and scaffold-capability tranches plus a new wave of Rust-only
-package families. The refresh adds `smart-home-mqtt-integration` after the
-Z-Wave host/integration and earlier smart-home additions. It found zero
+package families. The refresh adds `smart-home-zigbee-integration` after
+`smart-home-mqtt-integration`, the Z-Wave host/integration, and earlier
+smart-home additions. It found zero
 canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -117,9 +118,9 @@ canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 277 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 746 | 10,444 |
+| Present in one language | 747 | 10,458 |
 
-The loop must not start by attempting 10,444 singleton ports. It should finish
+The loop must not start by attempting 10,458 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The July 30 lane audit is:
@@ -138,7 +139,7 @@ The July 30 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 961 | 0 | 100% |
+| Rust | 962 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -844,10 +845,10 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 551 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 552 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30 inventories added eleven Rust singleton identities that now have
+The July 30 inventories added twelve Rust singleton identities that now have
 explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
@@ -855,9 +856,12 @@ protocol core separated from native transport behavior; and
 `smart-home-discovery-service`, `hue-integration`, and
 `smart-home-runtime-store`, `smart-home-automation-runtime`,
 `smart-home-zwave-integration`, the newly merged `smart-home-zwave-host` serial
-host, and `smart-home-mqtt-integration` are native/service/storage applicability
-cases. The MQTT host also needs explicit capability metadata and Vault-mediated
-credentials before that classification is complete; its deterministic
+host, `smart-home-mqtt-integration`, and `smart-home-zigbee-integration` are
+native/service/storage-boundary applicability cases. The Zigbee adapter is pure
+logic above coordinator transport and carries only an opaque `VaultRef`, so its
+likely portable adapter core should be separated conceptually from a future
+native coordinator host. The MQTT host also needs explicit capability metadata
+and Vault-mediated credentials before that classification is complete; its deterministic
 discovery/topic/entity/value/payload transforms are candidates for a separately
 fixture-driven portable core. `venture-browser-macos` is an Apple-native
 AppKit/CoreText/Metal host whose expected classification is `native-source`,
