@@ -9475,3 +9475,160 @@ fn alphanumeric_to_signed_numeric_move_non_ascii_is_the_preexisting_byte_char_ch
     assert_eq!(run_on_jit(&unsigned_src), "591\n");
     assert_eq!(run_on_jit(&signed_src), "59A\n");
 }
+
+// ---------------------------------------------------------------------------
+// Figurative constant SPACE / ZERO as a SINGLE-CHARACTER delimiter / search /
+// replace / region operand. Wherever a single-character operand is taken through
+// the shared delimiter helpers — a DELIMITED BY delimiter (STRING, UNSTRING), an
+// INSPECT TALLYING FOR ALL delimiter, an INSPECT REPLACING search AND replace
+// char, and an INSPECT BEFORE/AFTER region delimiter — a figurative SPACE or ZERO
+// now resolves to its single ASCII character (SPACE → " " 0x20, ZERO → "0" 0x30),
+// reducing to the existing single-character-literal path. Co-total across all
+// three shared helpers (oracle single_delim_char; compiler single_delim_code for
+// the byte scan and single_delim_str for the 1-char replace string). Both images
+// are ASCII, so the pre-existing non-ASCII byte-vs-char behaviour is untouched.
+// Completes the figurative operand-class arc (CONVERTING, STRING sending field,
+// UNSTRING source).
+// ---------------------------------------------------------------------------
+
+#[test]
+fn unstring_figurative_space_delimiter() {
+    // DELIMITED BY SPACE folds to the " " delimiter: "HI YOU" splits at the space
+    // into "HI" and "YOU", each left-justified and space-padded to its X(3) width.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(6) VALUE \"HI YOU\".",
+            "01  A  PIC X(3) VALUE SPACES.",
+            "01  B  PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY SPACE INTO A B.",
+            "DISPLAY A.",
+            "DISPLAY B.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "HI \nYOU\n");
+}
+
+#[test]
+fn unstring_figurative_zero_delimiter() {
+    // DELIMITED BY ZERO folds to the "0" delimiter: "AB0CD" splits at the '0' into
+    // "AB" and "CD", each exactly filling its X(2) receiver.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"AB0CD\".",
+            "01  A  PIC X(2) VALUE SPACES.",
+            "01  B  PIC X(2) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY ZERO INTO A B.",
+            "DISPLAY A.",
+            "DISPLAY B.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "AB\nCD\n");
+}
+
+#[test]
+fn string_figurative_space_delimiter() {
+    // STRING … DELIMITED BY SPACE folds to the " " delimiter, truncating each
+    // sending field at its first space: "HI YOU" contributes only its prefix "HI",
+    // overlaid leftmost into D (the X(5) tail keeps its VALUE SPACES).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S1 PIC X(6) VALUE \"HI YOU\".", "01  D  PIC X(5) VALUE SPACES."],
+        &["STRING S1 DELIMITED BY SPACE INTO D.", "DISPLAY D.", "STOP RUN."],
+    ));
+    assert_eq!(out, "HI   \n");
+}
+
+#[test]
+fn inspect_tallying_figurative_space_delimiter() {
+    // FOR ALL SPACE folds to the " " delimiter: "A B C" holds two spaces, so the
+    // counter goes 0 + 2 = 2.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"A B C\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL SPACE.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn inspect_replacing_figurative_search() {
+    // REPLACING ALL SPACE folds the SEARCH char to " " (single_delim_code): every
+    // space of "A B C" is replaced by "_" → "A_B_C".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"A B C\"."],
+        &["INSPECT S REPLACING ALL SPACE BY \"_\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "A_B_C\n");
+}
+
+#[test]
+fn inspect_replacing_figurative_replace() {
+    // REPLACING … BY ZERO folds the REPLACE char to "0" (single_delim_str, the
+    // 1-char replace-string helper): every 'X' of "XYXY" becomes "0" → "0Y0Y".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"XYXY\"."],
+        &["INSPECT S REPLACING ALL \"X\" BY ZERO.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0Y0Y\n");
+}
+
+#[test]
+fn inspect_figurative_region_delimiter() {
+    // AFTER SPACE folds the REGION delimiter to " ": "XX XX" restricts the tally
+    // window to everything right of the first space → "XX", which holds two 'X's,
+    // so the counter goes 0 + 2 = 2.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"XX XX\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"X\" AFTER SPACE.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn figurative_delimiter_plural_spellings() {
+    // SPACE/SPACES and ZERO/ZEROS/ZEROES are the SAME figurative constant, so every
+    // spelling folds to the identical single delimiter char in a delimiter context.
+    // SPACES → " " counting the two spaces of "A B C" → 002.
+    let spaces = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"A B C\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL SPACES.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(spaces, "002\n");
+
+    // ZEROS → "0" counting the three zeros of "0A0B0" → 003.
+    let zeros = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL ZEROS.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(zeros, "003\n");
+
+    // ZEROES → "0" folds identically to ZEROS: same source, same 003.
+    let zeroes = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"0A0B0\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL ZEROES.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(zeroes, "003\n");
+    assert_eq!(zeros, zeroes, "ZEROS and ZEROES fold to the same single delimiter char");
+}
+
+#[test]
+fn figurative_delimiter_all_ascii_characterization() {
+    // NON-ASCII PARITY: `Fig` is a CLOSED enum {Space, Zero}, both inherently ASCII
+    // (SPACE 0x20, ZERO 0x30), so NO non-ASCII figurative constant can ever reach a
+    // delimiter helper — the single-char image is always one ASCII byte, and the
+    // compiler's byte scan and the oracle's char scan coincide. There is no
+    // diverging non-ASCII figurative case to construct. The separate pre-existing
+    // byte-vs-char concern is a non-ASCII single-char LITERAL/ITEM delimiter
+    // (task_396ba6f6), deliberately not exercised here. This case simply pins an
+    // all-ASCII figurative delimiter to byte-identity: FOR ALL ZERO over "1020304"
+    // counts the three '0' bytes → 003.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(7) VALUE \"1020304\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL ZERO.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "003\n");
+}

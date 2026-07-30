@@ -2570,9 +2570,10 @@ impl<'a> Compiler<'a> {
     }
 
     /// A single delimiter byte reduced to a fresh i64 register: a `const` of the
-    /// byte for a 1-character string literal, or `str_index(item, 0)` for a `PIC
-    /// X(1)` item. A multi-character delimiter, a numeric/figurative delimiter, a
-    /// reference-modified delimiter, and a numeric/group/wider delimiter item are
+    /// byte for a 1-character string literal, a `const` of the single ASCII byte
+    /// for a figurative constant SPACE (0x20) / ZERO (0x30), or `str_index(item,
+    /// 0)` for a `PIC X(1)` item. A multi-character delimiter, a numeric delimiter,
+    /// a reference-modified delimiter, and a numeric/group/wider delimiter item are
     /// later rungs. (COBOL source is ASCII, so a "1-character" literal is a single
     /// byte; the scan loop compares the source's bytes against this code.)
     ///
@@ -2599,10 +2600,17 @@ impl<'a> Compiler<'a> {
             Operandy::Literal(Src::Num(_)) => Err(CompileError::Unsupported(format!(
                 "{verb} with a numeric-literal delimiter is a later rung"
             ))),
-            Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
-                Err(CompileError::Unsupported(format!(
-                    "{verb} with a figurative-constant delimiter is a later rung"
-                )))
+            // SPACE→" " (0x20) / ZERO→"0" (0x30): a figurative constant reduces to
+            // its single ASCII byte, exactly like the 1-byte string-literal arm above.
+            Operandy::Literal(Src::Space) => {
+                let reg = self.fresh("_usd");
+                self.emit("const", Some(&reg), vec![Operand::Int(b' ' as i64)], "i64");
+                Ok(reg)
+            }
+            Operandy::Literal(Src::Zero) => {
+                let reg = self.fresh("_usd");
+                self.emit("const", Some(&reg), vec![Operand::Int(b'0' as i64)], "i64");
+                Ok(reg)
             }
             Operandy::RefMod { .. } => Err(CompileError::Unsupported(format!(
                 "{verb} with a reference-modified delimiter is a later rung"
@@ -4780,12 +4788,13 @@ impl<'a> Compiler<'a> {
     }
 
     /// A single replacement character reduced to a fresh **string** register: a
-    /// `str_const` of the 1-character string for a 1-char literal, or the item's
-    /// own register for a `PIC X(1)` item (its storage is already exactly one
-    /// character wide). The parallel of [`Self::single_delim_code`] (which yields
-    /// a byte code for a *scan*); this yields a 1-char string for a *concat*. The
-    /// same later-rung rejections apply: a multi-character literal, a numeric/
-    /// figurative/reference-modified operand, and a numeric/wider item.
+    /// `str_const` of the 1-character string for a 1-char literal, a `str_const`
+    /// of the single ASCII character for a figurative constant SPACE→" " / ZERO→"0",
+    /// or the item's own register for a `PIC X(1)` item (its storage is already
+    /// exactly one character wide). The parallel of [`Self::single_delim_code`]
+    /// (which yields a byte code for a *scan*); this yields a 1-char string for a
+    /// *concat*. The same later-rung rejections apply: a multi-character literal, a
+    /// numeric/reference-modified operand, and a numeric/wider item.
     fn single_delim_str(
         &mut self,
         op: &GrammarASTNode,
@@ -4805,10 +4814,17 @@ impl<'a> Compiler<'a> {
             Operandy::Literal(Src::Num(_)) => Err(CompileError::Unsupported(format!(
                 "{verb} with a numeric-literal delimiter is a later rung"
             ))),
-            Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
-                Err(CompileError::Unsupported(format!(
-                    "{verb} with a figurative-constant delimiter is a later rung"
-                )))
+            // SPACE→" " / ZERO→"0": a figurative constant reduces to its single
+            // ASCII character as a 1-char string, like the 1-char literal arm above.
+            Operandy::Literal(Src::Space) => {
+                let reg = self.fresh("_usds");
+                self.emit("str_const", Some(&reg), vec![Operand::Str(" ".into())], "str");
+                Ok(reg)
+            }
+            Operandy::Literal(Src::Zero) => {
+                let reg = self.fresh("_usds");
+                self.emit("str_const", Some(&reg), vec![Operand::Str("0".into())], "str");
+                Ok(reg)
             }
             Operandy::RefMod { .. } => Err(CompileError::Unsupported(format!(
                 "{verb} with a reference-modified delimiter is a later rung"

@@ -8,6 +8,28 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.73.0: figurative-constant SPACE/ZERO as a single-character delimiter/search/replace/region operand
+
+A **figurative constant** SPACE or ZERO is now accepted wherever a **single-character** operand is taken
+through the shared delimiter helpers, mapped to its single ASCII character — SPACE→`" "` (0x20),
+ZERO→`"0"` (0x30) — reducing to the existing single-character-literal path. This covers a **DELIMITED
+BY** delimiter (STRING, UNSTRING), an **INSPECT TALLYING FOR ALL** delimiter, an **INSPECT REPLACING**
+search char and replace char, and an **INSPECT BEFORE/AFTER** region delimiter. Compiled byte-identical
+to the `coding-adventures-cobol-runtime` 0.77.0 oracle.
+
+- **Co-total across both compiler helpers.** The oracle uses ONE shared helper (`single_delim_char`) at
+  every call site, while the compiler splits by use: `single_delim_code` yields an i64 byte code for a
+  scan, `single_delim_str` yields a 1-char string for a replace/concat. The figurative reject was lifted
+  in BOTH — `single_delim_code` emits a `const` of the ASCII byte (`b' '`/`b'0'`, `_usd` prefix, `i64`
+  tag) exactly like its 1-byte `Src::Str` arm, and `single_delim_str` emits a `str_const` of the 1-char
+  string (`" "`/`"0"`, `_usds` prefix, `str` tag) exactly like its `Src::Str` arm — so no call site is
+  accepted by the oracle yet rejected by the compiler.
+- **`Src` figurative case is exactly {Space, Zero}, both ASCII**, so no non-ASCII figurative can reach
+  either helper; the pre-existing non-ASCII single-char byte-vs-char behaviour is untouched. A
+  multi-character delimiter, a numeric literal, a reference-modified delimiter, and a numeric/group/wider
+  delimiter item remain later rungs. Completes the figurative operand-class arc across the string/INSPECT
+  verbs (CONVERTING v0.70.0, STRING sending field v0.71.0, UNSTRING source v0.72.0).
+
 ### Added — v0.72.0: UNSTRING with a figurative-constant SPACE/ZERO source
 
 `UNSTRING … DELIMITED BY … INTO …` now lowers when the **source** operand is a **figurative constant**

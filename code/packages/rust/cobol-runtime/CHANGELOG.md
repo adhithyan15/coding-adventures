@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.77.0 — figurative-constant SPACE/ZERO as a single-character delimiter/search/replace/region operand — 2026-07-30
+
+- A **figurative constant** SPACE or ZERO is now accepted wherever a **single-character** operand is
+  taken through the shared delimiter helper `single_delim_char`, mapped to its single ASCII character —
+  SPACE→`' '` (0x20), ZERO→`'0'` (0x30) — reducing to the existing single-character-literal path. This
+  covers a **DELIMITED BY** delimiter (STRING, UNSTRING), an **INSPECT TALLYING FOR ALL** delimiter, an
+  **INSPECT REPLACING** search char and replace char, and an **INSPECT BEFORE/AFTER** region delimiter.
+  Byte-identical to the compiler (0.73.0).
+- **One shared helper, lifted once.** The oracle uses `single_delim_char` at every one of these call
+  sites, so the two figurative arms (`Fig::Space` → `' '`, `Fig::Zero` → `'0'`) lift the reject for all
+  of them at once; the scan/replace/concat logic is unchanged. A multi-character delimiter, a numeric
+  literal, a reference-modified delimiter, and a numeric/group/wider delimiter item remain later rungs.
+- **Fig is closed at {Space, Zero}, both inherently ASCII**, so no non-ASCII figurative can reach the
+  helper; the pre-existing non-ASCII single-char byte-vs-char behaviour is untouched. Completes the
+  figurative operand-class arc across the string/INSPECT verbs (CONVERTING 0.74.0, STRING sending field
+  0.75.0, UNSTRING source 0.76.0).
+
 ## 0.76.0 — UNSTRING with a figurative-constant SPACE/ZERO source — 2026-07-30
 
 - `UNSTRING … DELIMITED BY … INTO …` now accepts a **figurative constant** SPACE or ZERO as the
