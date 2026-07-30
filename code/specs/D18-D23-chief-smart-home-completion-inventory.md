@@ -367,12 +367,30 @@ These items are Chief of Staff architecture, not smart-home platform work:
 
 - No remaining items within the D18 Chief architecture completion boundary.
 
+## Current Durable Runtime Persistence Slice
+
+This slice makes normalized D23 runtime data restart-safe without moving
+process-local worker or subscription ownership into storage:
+
+- `smart-home-core` exposes serde support for the normalized protocol-neutral
+  model, and `smart-home-runtime` can produce and restore a versioned durable
+  snapshot through its existing validated registry and desired-state paths.
+- The snapshot retains bridge, device, entity, scene, state, device-event,
+  authorization, capability-grant, runtime-event, command-result, pairing,
+  optimistic-state, and desired-state data.
+- `smart-home-runtime-store` persists that snapshot through any D18A
+  `StorageBackend`, uses compare-and-swap revisions, and keeps validated opaque
+  automation definitions beside runtime data for the future rules engine.
+- A local-folder restart test closes and reopens the durable backend before
+  proving topology, state, event and command history, pairing, desired state,
+  and automation definitions are queryable again.
+- Live discovery workers and event subscriptions remain process-local and are
+  rebuilt by their owners instead of restoring stale network work or consumers.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
 
-- Persist registry, state cache, event history, command history, pairing
-  sessions, desired state, and automation definitions.
 - Add a local API surface for dashboard, mobile, CLI, and Chief of Staff jobs.
 - Add an automation/rules engine with schedules, triggers, conditions, scenes,
   idempotency, dry-run planning, and audit.

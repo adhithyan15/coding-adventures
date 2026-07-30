@@ -7,6 +7,7 @@
 
 #![forbid(unsafe_code)]
 
+use serde::{Deserialize, Serialize};
 use smart_home_core::{
     tier_for_command, AgentId, AuthorizationDecision, AuthorizationDecisionLogSummary,
     AuthorizationOutcome, Bridge, BridgeId, Capability, CapabilityGrant,
@@ -219,7 +220,7 @@ impl fmt::Display for RuntimeSubscriptionId {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct RuntimePairingSessionId(String);
 
 impl RuntimePairingSessionId {
@@ -267,7 +268,7 @@ pub enum RuntimeEventFilter {
     Supervision,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum RuntimeEvent {
     Device(DeviceEvent),
     CommandResult(CommandResult),
@@ -2612,14 +2613,14 @@ impl RuntimeDiscoveryScheduler {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ReconciliationReason {
     MissingState,
     StaleState,
     Drifted,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DesiredEntityState {
     pub entity_id: EntityId,
     pub desired: Vec<StateDelta>,
@@ -2789,7 +2790,7 @@ pub struct BridgeHealthReport {
     pub metadata: Vec<Metadata>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum PairingSessionStatus {
     PendingUserPresence,
     Completed,
@@ -2808,7 +2809,7 @@ impl PairingSessionStatus {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RuntimePairingSession {
     pub session_id: RuntimePairingSessionId,
     pub bridge_id: BridgeId,
@@ -4277,6 +4278,28 @@ pub struct SmartHomeRuntime {
     desired_states: BTreeMap<EntityId, DesiredEntityState>,
 }
 
+/// Durable, transport-neutral runtime state.
+///
+/// Discovery scheduling and live subscriptions are intentionally omitted:
+/// they are process-local workers and consumers. Everything needed to rebuild
+/// normalized topology, state, history, pending pairing work, and desired
+/// state is retained.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct RuntimeDurableSnapshot {
+    pub bridges: Vec<Bridge>,
+    pub devices: Vec<Device>,
+    pub entities: Vec<Entity>,
+    pub scenes: Vec<Scene>,
+    pub states: Vec<StateSnapshot>,
+    pub registry_events: Vec<DeviceEvent>,
+    pub capability_grants: Vec<CapabilityGrant>,
+    pub authorization_decisions: Vec<AuthorizationDecision>,
+    pub runtime_events: Vec<RuntimeEvent>,
+    pub pairing_sessions: Vec<RuntimePairingSession>,
+    pub optimistic_states: Vec<StateSnapshot>,
+    pub desired_states: Vec<DesiredEntityState>,
+}
+
 impl SmartHomeRuntime {
     pub fn new() -> Self {
         Self {
@@ -4297,6 +4320,86 @@ impl SmartHomeRuntime {
 
     pub fn registry_mut(&mut self) -> &mut InMemorySmartHomeRegistry {
         &mut self.registry
+    }
+
+    pub fn durable_snapshot(&self) -> RuntimeDurableSnapshot {
+        RuntimeDurableSnapshot {
+            bridges: self.registry.bridges().cloned().collect(),
+            devices: self.registry.devices().cloned().collect(),
+            entities: self.registry.entities().cloned().collect(),
+            scenes: self.registry.scenes().cloned().collect(),
+            states: self.registry.states().cloned().collect(),
+            registry_events: self.registry.events().cloned().collect(),
+            capability_grants: self.registry.capability_grants().cloned().collect(),
+            authorization_decisions: self.registry.authorization_decisions().cloned().collect(),
+            runtime_events: self.event_bus.published().to_vec(),
+            pairing_sessions: self.pairing_sessions.values().cloned().collect(),
+            optimistic_states: self.optimistic_states.values().cloned().collect(),
+            desired_states: self.desired_states.values().cloned().collect(),
+        }
+    }
+
+    pub fn restore_durable_snapshot(
+        snapshot: RuntimeDurableSnapshot,
+    ) -> Result<Self, RuntimeError> {
+        let RuntimeDurableSnapshot {
+            bridges,
+            devices,
+            entities,
+            scenes,
+            states,
+            registry_events,
+            capability_grants,
+            authorization_decisions,
+            runtime_events,
+            pairing_sessions,
+            optimistic_states,
+            desired_states,
+        } = snapshot;
+        let mut runtime = Self::new();
+
+        for bridge in bridges {
+            runtime.upsert_bridge(bridge)?;
+        }
+        for device in devices {
+            runtime.upsert_device(device)?;
+        }
+        for entity in entities {
+            runtime.upsert_entity(entity)?;
+        }
+        for scene in scenes {
+            runtime.upsert_scene(scene)?;
+        }
+        for event in registry_events {
+            runtime.registry.record_event(event)?;
+        }
+        for state in states {
+            runtime.registry.apply_state_snapshot(state)?;
+        }
+        for grant in capability_grants {
+            runtime.registry.upsert_capability_grant(grant);
+        }
+        for decision in authorization_decisions {
+            runtime.registry.record_authorization_decision(decision);
+        }
+        for event in runtime_events {
+            runtime.event_bus.publish(event);
+        }
+        for session in pairing_sessions {
+            runtime
+                .pairing_sessions
+                .insert(session.session_id.clone(), session);
+        }
+        for state in optimistic_states {
+            runtime
+                .optimistic_states
+                .insert(state.entity_id.clone(), state);
+        }
+        for desired_state in desired_states {
+            runtime.upsert_desired_state(desired_state)?;
+        }
+
+        Ok(runtime)
     }
 
     pub fn discovery(&self) -> &DiscoveryCatalog {

@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `RuntimeDurableSnapshot` plus snapshot and restore helpers for normalized
+  registry, state, history, pairing, optimistic, and desired-state data.
 - `RuntimeEventDeliverySummary` plus delivery-batch `summary()` helpers for
   compact delivered-event and remaining-backlog counts after subscription polls.
 - `RuntimePollEventsToolRequest` / `RuntimePollEventsToolOutput` and
