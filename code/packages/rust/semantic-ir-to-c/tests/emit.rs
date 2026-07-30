@@ -313,6 +313,24 @@ fn collection_string_methods_route_to_the_builtin_dispatcher() {
 }
 
 #[test]
+fn collection_string_query_passes_its_argument() {
+    // Collections slice 2: a 1-arg built-in query (`include?`) routes to the
+    // dispatcher AND carries its argument (the substring) through.
+    let m = lower_ruby("puts \"hello\".include?(\"ell\")");
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_builtin_method("),
+        "the query routes to the runtime dispatcher\n{src}"
+    );
+    // The `?` in `include?` is trigraph-escaped (`\?`) by `quote_c_string`; what
+    // matters is that argc=1 and the substring argument are passed through.
+    assert!(
+        src.contains(", 1, _sir_str(\"ell\"))"),
+        "the dispatcher is passed argc=1 and the quoted substring argument\n{src}"
+    );
+}
+
+#[test]
 fn sanitize_ident_maps_into_c() {
     assert_eq!(sanitize_ident("foo"), "foo");
     assert_eq!(sanitize_ident("foo_bar1"), "foo_bar1");
