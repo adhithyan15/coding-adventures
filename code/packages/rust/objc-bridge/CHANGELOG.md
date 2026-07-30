@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Typed `msg_bool!` and architecture-correct `msg_f64!` Objective-C message
+  dispatch helpers for native event translation.
+
 ## [0.1.0] - 2026-04-01
 
 ### Added

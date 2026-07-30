@@ -26,5 +26,7 @@ Exercise the real AppKit + Metal presentation path and close automatically:
 cargo run -p venture-browser-macos -- --smoke-seconds 1 http://info.cern.ch/
 ```
 
-This first host slice loads and presents one page. Native controls, input-event
-translation, scrolling, and link activation are the next integration layer.
+This host loads and presents one page. Mouse-wheel and trackpad input drive the
+shared clamped viewport and repaint the translated scene through Metal. Native
+controls, input-event translation beyond wheel events, and link activation are
+the next integration layer.

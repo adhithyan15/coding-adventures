@@ -9,12 +9,16 @@ use html_to_layout::mosaic_html_theme;
 use html_to_paint::HtmlPaintViewport;
 use layout_text_measure_native::NativeMeasurer;
 use std::fmt;
+#[cfg(target_vendor = "apple")]
+use std::{cell::RefCell, rc::Rc};
 use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
     BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
     BrowserSession,
 };
 use window_core::WindowError;
+#[cfg(target_vendor = "apple")]
+use window_core::WindowEvent;
 
 #[cfg(target_vendor = "apple")]
 use venture_browser_core::HttpBrowserFetcher;
@@ -162,11 +166,45 @@ fn run_with_termination(
     paint_metal::render_to_metal_layer(&scene, layer as objc_bridge::Id)
         .map_err(|error| MacBrowserError::Paint(error.to_string()))?;
 
+    let session = Rc::new(RefCell::new(session));
+    window.set_event_handler({
+        let session = Rc::clone(&session);
+        move |event| {
+            let mut session = session.borrow_mut();
+            if scroll_session(&mut session, &event) {
+                if let Some(viewport) = session.viewport() {
+                    let scene = viewport.viewport_scene();
+                    if let Err(error) =
+                        paint_metal::render_to_metal_layer(&scene, layer as objc_bridge::Id)
+                    {
+                        eprintln!("venture-browser-macos: Metal repaint failed: {error}");
+                    }
+                }
+            }
+        }
+    })?;
+
     if let Some(seconds) = terminate_after {
         backend.terminate_after(seconds)?;
     }
     backend.run()?;
     Ok(())
+}
+
+/// Apply a normalized scroll event to the current browser viewport.
+///
+/// Returns `true` only when the clamped offset changed and the host should
+/// repaint.
+pub fn scroll_session(session: &mut BrowserSession, event: &WindowEvent) -> bool {
+    let WindowEvent::Scroll { delta_y, .. } = event else {
+        return false;
+    };
+    let Some(viewport) = session.viewport_mut() else {
+        return false;
+    };
+    let previous_offset = viewport.scroll_state().offset_y();
+    viewport.scroll_by(*delta_y);
+    viewport.scroll_state().offset_y() != previous_offset
 }
 
 #[cfg(not(target_vendor = "apple"))]
@@ -185,6 +223,8 @@ mod tests {
 
     #[cfg(target_vendor = "apple")]
     use venture_browser_core::BrowserFetchResponse;
+    #[cfg(target_vendor = "apple")]
+    use window_core::WindowId;
 
     #[test]
     fn window_title_includes_page_and_final_url() {
@@ -229,6 +269,40 @@ mod tests {
             .data
             .chunks_exact(4)
             .any(|pixel| pixel != [192, 192, 192, 255]));
+    }
+
+    #[cfg(target_vendor = "apple")]
+    #[test]
+    fn normalized_wheel_event_scrolls_and_reprojects_the_loaded_viewport() {
+        let fetcher = |url: &str| {
+            let paragraphs = (0..80)
+                .map(|index| format!("<p>Scrollable Venture paragraph {index}</p>"))
+                .collect::<String>();
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html; charset=utf-8".into()),
+                format!("<title>Scroll</title>{paragraphs}").into_bytes(),
+            ))
+        };
+        let mut session = load_initial_session("http://example.test/", 320.0, 180.0, &fetcher)
+            .expect("native browser pipeline should load tall canned HTML");
+        let before = session
+            .viewport()
+            .expect("loaded session should have a viewport")
+            .viewport_scene();
+        let event = WindowEvent::Scroll {
+            window_id: WindowId(1),
+            delta_x: 0.0,
+            delta_y: 96.0,
+        };
+
+        assert!(scroll_session(&mut session, &event));
+        let viewport = session
+            .viewport()
+            .expect("scrolling should preserve the viewport");
+        assert_eq!(viewport.scroll_state().offset_y(), 96.0);
+        assert_ne!(viewport.viewport_scene(), before);
     }
 
     #[cfg(not(target_vendor = "apple"))]
