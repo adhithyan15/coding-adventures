@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.67.0] — 2026-07-30 — ADR-3: structural grounding gate for `argument` (must be sourced)
+
+The first, deterministic layer of the ADJ-ARGUMENT-IR §3 grounding gate: a shipped `argument`
+must be **sourced**. Every premise must cite the bytes it is read from, and every inference must
+cite its warrant — an un-cited element is now a clean `LowerError::ArgMissingProvenance` (argument
++ element name), the same "must be sourced" lint `table`/`statemachine`/`formula` already enforce.
+
+This is the precondition for the deterministic byte-ANCHOR (is that cite a verbatim slice of the
+pinned source?), which is delivered by the ADR-4 `adj-verify` argument pass reusing the existing
+`verify_quote`/`SnapshotStore` machinery; the *semantic* combined-bytes justification (ADJ61/62)
+and underdetermination (ADJ64) are model-in-the-loop layers that sit above the deterministic CLI.
+
 ## [0.66.0] — 2026-07-30 — ADR-2: the `argument` surface (ADJ-ARGUMENT-IR)
 
 Adds the `argument { premise… infer… }` construct — a byte-grounded argument graph that

@@ -126,6 +126,17 @@ is the ADJ61/62/64 stack, applied **per premise and per inference-connective**:
    an `imported` premise, of the cited source's snapshot). Fabricated citations are rejected
    before any semantic check. Coverage of `D` is tiled and checked (ADJ25 flat-coverage), so the
    decomposition cannot *silently drop* an argumentative move.
+
+   > **Staging (settled ADR-3/ADR-4).** This deterministic layer splits in two. (a) The
+   > **structural** precondition — *a shipped argument must be sourced: every premise carries a
+   > `source` cite and every inference a warrant* — is enforced at lowering as
+   > `LowerError::ArgMissingProvenance` ✅ **shipped (ADR-3**, adj-lang 0.67), the same "must be
+   > sourced" lint `table`/`statemachine`/`formula` use. (b) The **byte-anchor itself** — *is that
+   > cite a verbatim slice of the pinned source at the recorded offset?* — is delivered by the
+   > **ADR-4 `adj-verify` argument pass**, which reuses the existing `logic_engine::verify_quote` /
+   > `SnapshotStore` machinery `adj-verify` already runs over every fact's provenance (so it is not
+   > re-implemented here). An un-sourced element cannot even be anchored, so (a) is (b)'s
+   > precondition.
 2. **Justification (semantic, adversarial).** For each `extracted` premise the cited bytes must
    *state* it (strict); for each `inference` the antecedents' bytes **combined with** the
    connective bytes must *warrant* the consequent (hedged). An independent adversary, blind to the
@@ -225,9 +236,14 @@ grounding payload the §3 gate checks. Final syntax fixed in ADR-2.
   precedence wiring, §2.2) to keep ADR-2 to the support spine. Rendering the argument chain in
   `--explain` (an *SLD* proof chain, distinct from the differential/compute trace `--explain` renders
   today) lands with ADR-4's `adj-verify` argument pass.
-- **ADR-3 — the open-vocab grounding gate over the argument:** per-premise byte-anchor +
-  combined-justification, adversarial reader, decision-sensitivity, applied to a lowered argument
-  program; the gate's verdict (grounded / determined / underdetermined) emitted in the JSON.
+- **ADR-3 — the grounding gate (structural layer)** ✅ **shipped** (adj-lang 0.67): a shipped
+  argument must be *sourced* — every premise cites its bytes, every inference its warrant — enforced
+  as `LowerError::ArgMissingProvenance`. This is the deterministic precondition (§3.1a). The
+  remaining layers of the gate are staged onto where their machinery already lives: the **byte-anchor**
+  (verbatim-slice check) rides **ADR-4**'s `adj-verify` pass (`verify_quote`); the **semantic**
+  combined-bytes justification (ADJ61/62), decision-sensitivity, and underdetermination (ADJ64) are
+  **model-in-the-loop** layers (the `justify_gate.py` / `underdetermination.py` path) that sit
+  *above* the deterministic CLI — not re-implemented inside it.
 - **ADR-4 — `adj-verify` argument pass:** the §4 re-checks (warrant re-refutation + re-derivation
   + attack-set stability) folded into `adj-verify`, with a tampered-warrant e2e that fails hard.
 - **ADR-5 — worked research-paper decomposition end-to-end:** a real (open-access) paragraph →

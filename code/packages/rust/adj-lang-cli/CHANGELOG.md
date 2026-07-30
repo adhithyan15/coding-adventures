@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.30.0] — 2026-07-30 — ADR-3: argument grounding gate — an un-sourced argument won't compile
+
+Picks up adj-lang 0.67's structural grounding gate. New e2e (`argument_surface_e2e.rs`, now 6):
+an un-sourced premise and an un-warranted inference are each named `ArgMissingProvenance` compile
+errors, while the sourced axle argument still derives its cited thesis. Byte-neutral to
+`--json`/golden (the gate only rejects; a valid argument is unchanged).
+
 ## [0.29.0] — 2026-07-30 — ADR-2: `argument` derives + cites its thesis end-to-end
 
 Picks up the new `argument` surface (adj-lang 0.66): a multi-step argument now compiles, and the

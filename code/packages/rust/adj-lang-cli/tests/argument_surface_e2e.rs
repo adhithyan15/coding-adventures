@@ -114,3 +114,38 @@ fn two_elements_sharing_a_name_is_a_compile_error() {
         "a duplicated element name must be a named compile error:\n{out}"
     );
 }
+
+// ---------------------------------------------------------------------------
+// ADR-3 — the structural grounding gate: a shipped argument must be SOURCED.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn an_unsourced_premise_is_a_compile_error() {
+    // A premise with no `source` cite is un-grounded — it names bytes it never quotes.
+    // The grounding gate (§3) rejects it, the same "must be sourced" lint table/
+    // statemachine/formula enforce; it is the precondition for the ADR-4 byte-anchor.
+    let src = "argument u {\n\
+        premise p1 : extracted a(x)\n\
+    }\n\
+    ? a(x)\n";
+    let (_ok, out) = run(src, "unsourced_prem");
+    assert!(
+        out.contains("ArgMissingProvenance") && out.contains("p1"),
+        "an un-sourced premise must be a named compile error:\n{out}"
+    );
+}
+
+#[test]
+fn an_unwarranted_inference_is_a_compile_error() {
+    // An inference with no `source` carries no WARRANT — an un-grounded reasoning step.
+    let src = "argument u {\n\
+        premise p1 : extracted a(x) source \"a\" trust authoritative\n\
+        infer s1 : because conclude c(x) from p1\n\
+    }\n\
+    ? c(x)\n";
+    let (_ok, out) = run(src, "unwarranted");
+    assert!(
+        out.contains("ArgMissingProvenance") && out.contains("s1"),
+        "an un-warranted inference must be a named compile error:\n{out}"
+    );
+}
