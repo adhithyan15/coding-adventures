@@ -9632,3 +9632,51 @@ fn figurative_delimiter_all_ascii_characterization() {
     ));
     assert_eq!(out, "003\n");
 }
+
+#[test]
+fn inspect_replacing_characters_by_figurative() {
+    // REPLACING CHARACTERS BY ZERO folds the replace char to "0" through the
+    // `single_delim_str` CHARACTERS path (the replace-string helper): EVERY position
+    // of "ABC" becomes "0" → "000". Exercises the CHARACTERS-BY call site directly.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"ABC\"."],
+        &["INSPECT S REPLACING CHARACTERS BY ZERO.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000\n");
+}
+
+#[test]
+fn inspect_replacing_multi_item_figurative() {
+    // A MULTI-ITEM REPLACING list where BOTH the search char (via `single_delim_code`)
+    // and the replace char (via `single_delim_str`) are figuratives, on two separate
+    // items: ALL "A" BY SPACE, ALL "B" BY ZERO over "AABB" → "  00". Exercises the
+    // multi-item search+replace pairing, proving the two lifted helpers stay co-total
+    // together.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"AABB\"."],
+        &["INSPECT S REPLACING ALL \"A\" BY SPACE ALL \"B\" BY ZERO.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "  00\n");
+}
+
+#[test]
+fn inspect_tallying_multi_counter_figurative() {
+    // A MULTI-COUNTER TALLYING where one counter tallies a figurative delimiter
+    // (SPACE, via the multi-counter `single_delim_code` path) and the other a literal:
+    // "X X" has 1 space and 2 'X' → C1 = 1, C2 = 2. Exercises the multi-counter delim
+    // call site.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S   PIC X(3) VALUE \"X X\".",
+            "01  C1  PIC 9(3) VALUE 0.",
+            "01  C2  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C1 FOR ALL SPACE C2 FOR ALL \"X\".",
+            "DISPLAY C1.",
+            "DISPLAY C2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "001\n002\n");
+}
