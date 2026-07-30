@@ -82,10 +82,13 @@ absence of a Podman ELF `PT_INTERP` segment. Requiring `linkage: static`
 prevents an allowed dynamic loader from becoming an execution trampoline. A
 mandatory Landlock execute ruleset permits pathname-backed execution only of
 the retained Podman inode, so constructor hooks, `catatonit`, and other
-pathname-backed helpers in the reviewed flow cannot execute. Landlock ABI v1
-does not close anonymous
-executable memfds or executable mappings; those remain an explicit gate before
-invariant-probe authority. The
+pathname-backed helpers in the reviewed flow cannot execute. After closing
+unlisted descriptors, the broker also installs an amd64 classic-seccomp filter
+that denies `execveat`, anonymous executable memfds, executable mappings,
+`SHM_EXEC`, descriptor receipt or acquisition syscalls, `uselib`, and
+`io_uring_*`. Podman begins through pathname `execve` of its retained
+`/proc/self/fd` inode. This closes new executable code
+paths after the transition without removing the protected runner-image TCB. The
 process-free `build_tool_conformance_linux_oci.py` backend validates only the
 bounded local version and image results without decoding a fixture or creating
 a container. No identity document is checked in while Linux remains unavailable.
@@ -106,7 +109,7 @@ traverses every component from retained directory handles, and the loader
 copies its own source, the backend, manifest, and identity into sealed memfds.
 A fresh `python -I -S -B` worker executes the sealed loader, rejects undeclared
 or dynamic imports and executable import-time statements, compiles but never
-executes the backend, and verifies its four required structural interfaces.
+executes the backend, and verifies its three required structural interfaces.
 Its receipt reports loadability only: it does not call preflight, Podman, a
 fixture, an adapter, or a container.
 
@@ -116,7 +119,8 @@ the broker-specific process-free backend import manifest, exact broker source,
 and the language-neutral broker behavior manifest and schema. The checked-in
 manifest closes the two permissible Podman operations, reviewed runtime and
 state descriptors, environment, timeout, combined streaming output ceiling,
-and delegated-cgroup descendant cleanup. Its authority cannot authorize a
+Landlock pathname-exec policy, classic-seccomp in-memory-exec policy, and
+delegated-cgroup descendant cleanup. Its authority cannot authorize a
 container, execution case, adapter, invariant probe, or Linux readiness.
 
 ## Runner
@@ -254,11 +258,12 @@ The platform delivery order is explicit:
 4. Closed execution-semantics fixtures and runner-owned adversarial boundary
    probes after all required platform boundaries exist.
 
-Pull-request CI validates only the process-free schemas, policy, candidate
-digest algorithm, and fake unit tests. Real capability inspection and future
-execution belong to a protected reviewed revision with read-only repository
-permissions, no repository secrets, and the approved authority-bundle digest
-supplied out of band.
+Pull-request CI validates the process-free schemas, policy, candidate digest
+algorithm, platform-neutral unit tests, and Linux kernel integration probes for
+the retained-inode Landlock plus classic-seccomp transition. Real Podman
+capability inspection and future container execution belong to a protected
+reviewed revision with read-only repository permissions, no repository
+secrets, and the approved authority-bundle digest supplied out of band.
 
 ## Validation
 

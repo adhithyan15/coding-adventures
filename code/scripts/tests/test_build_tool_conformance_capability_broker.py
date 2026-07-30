@@ -3,8 +3,12 @@ from __future__ import annotations
 import ctypes
 import errno
 import hashlib
+import importlib.util
+import inspect
 import json
 import os
+import shutil
+import signal
 import stat
 import struct
 import sys
@@ -277,7 +281,6 @@ class CapabilityBrokerAuthorityTests(unittest.TestCase):
                 "CommandResult",
                 "LinuxOciUnavailable",
                 "preflight_brokered",
-                "preflight_prevalidated",
             ],
         )
 
@@ -334,6 +337,41 @@ class CapabilityBrokerManifestTests(unittest.TestCase):
                 "default": "deny",
             },
         )
+        self.assertEqual(
+            execution["in_memory_exec"],
+            {
+                "kind": "seccomp_bpf",
+                "architecture": "x86_64",
+                "arch_mismatch": "kill_process",
+                "x32_syscalls": "kill_process",
+                "default": "allow",
+                "deny_errno": "EPERM",
+                "close_unlisted_descriptors_before_sandbox": True,
+                "deny_syscalls": [
+                    "execveat",
+                    "io_uring_enter",
+                    "io_uring_register",
+                    "io_uring_setup",
+                    "memfd_create",
+                    "memfd_secret",
+                    "open_by_handle_at",
+                    "pidfd_getfd",
+                    "recvmmsg",
+                    "recvmsg",
+                    "uselib",
+                ],
+                "deny_flagged_syscalls": [
+                    {"syscall": "mmap", "argument": 2, "mask": "PROT_EXEC"},
+                    {"syscall": "mprotect", "argument": 2, "mask": "PROT_EXEC"},
+                    {
+                        "syscall": "pkey_mprotect",
+                        "argument": 2,
+                        "mask": "PROT_EXEC",
+                    },
+                    {"syscall": "shmat", "argument": 2, "mask": "SHM_EXEC"},
+                ],
+            },
+        )
         self.assertEqual(execution["cleanup"]["cleanup_timeout_ms"], 5_000)
 
     def test_any_behavior_mutation_fails_exact_schema(self) -> None:
@@ -345,6 +383,17 @@ class CapabilityBrokerManifestTests(unittest.TestCase):
                 self.schema_raw,
             )
         self.assertEqual(caught.exception.code, "BROKER_BEHAVIOR_SCHEMA_INVALID")
+
+        changed = json.loads(self.raw)
+        changed["execution"]["in_memory_exec"]["default"] = "deny"
+        matching_schema = json.loads(self.schema_raw)
+        matching_schema["const"] = changed
+        with self.assertRaises(broker.BrokerUnavailable) as caught:
+            broker.parse_behavior_manifest(
+                json.dumps(changed, separators=(",", ":")).encode(),
+                json.dumps(matching_schema, separators=(",", ":")).encode(),
+            )
+        self.assertEqual(caught.exception.code, "BROKER_BEHAVIOR_INVALID")
 
     def test_rendered_operations_use_only_retained_descriptors(self) -> None:
         state = {
@@ -641,13 +690,9 @@ class CapabilityBrokerHelperTests(unittest.TestCase):
             broker.install_execute_landlock(51)
         self.assertEqual(caught.exception.code, "BROKER_EXEC_SANDBOX_UNAVAILABLE")
 
-    def test_landlock_enforces_exact_retained_fd_exec_on_linux(self) -> None:
-        if not (
-            sys.platform.startswith("linux")
-            and hasattr(os, "fork")
-            and os.execve in os.supports_fd
-        ):
-            self.skipTest("Landlock retained-FD execution requires Linux")
+    def test_kernel_exec_sandbox_allows_only_retained_runtime_inode(self) -> None:
+        if not (sys.platform.startswith("linux") and hasattr(os, "fork")):
+            self.skipTest("kernel retained-inode execution requires Linux")
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             allowed_path = root / "allowed"
@@ -658,13 +703,17 @@ class CapabilityBrokerHelperTests(unittest.TestCase):
             denied_path.chmod(0o755)
             allowed_fd = os.open(allowed_path, os.O_RDONLY | os.O_CLOEXEC)
             denied_fd = os.open(denied_path, os.O_RDONLY | os.O_CLOEXEC)
+            anonymous_fd = -1
+            if hasattr(os, "memfd_create"):
+                anonymous_fd = os.memfd_create("anonymous-exec-test", os.MFD_CLOEXEC)
+                os.write(anonymous_fd, _minimal_static_elf(2))
             try:
                 allowed_pid = os.fork()
                 if allowed_pid == 0:
                     try:
-                        broker.install_execute_landlock(allowed_fd)
+                        broker.install_command_exec_sandbox(allowed_fd)
                         os.execve(
-                            allowed_fd,
+                            broker._proc_fd(allowed_fd),
                             [str(allowed_path)],
                             {"PATH": "/nonexistent"},
                         )
@@ -677,7 +726,7 @@ class CapabilityBrokerHelperTests(unittest.TestCase):
                 pathname_pid = os.fork()
                 if pathname_pid == 0:
                     try:
-                        broker.install_execute_landlock(allowed_fd)
+                        broker.install_command_exec_sandbox(allowed_fd)
                         os.execve(
                             allowed_path,
                             [str(allowed_path)],
@@ -692,9 +741,9 @@ class CapabilityBrokerHelperTests(unittest.TestCase):
                 denied_pid = os.fork()
                 if denied_pid == 0:
                     try:
-                        broker.install_execute_landlock(allowed_fd)
+                        broker.install_command_exec_sandbox(allowed_fd)
                         os.execve(
-                            denied_fd,
+                            broker._proc_fd(denied_fd),
                             [str(denied_path)],
                             {"PATH": "/nonexistent"},
                         )
@@ -706,9 +755,334 @@ class CapabilityBrokerHelperTests(unittest.TestCase):
                 _selected, denied_status = os.waitpid(denied_pid, 0)
                 self.assertTrue(os.WIFEXITED(denied_status))
                 self.assertEqual(os.WEXITSTATUS(denied_status), 42)
+
+                if anonymous_fd >= 0:
+                    anonymous_pid = os.fork()
+                    if anonymous_pid == 0:
+                        try:
+                            broker._close_unlisted_descriptors(
+                                {0, 1, 2, allowed_fd, denied_fd}
+                            )
+                            broker.install_command_exec_sandbox(allowed_fd)
+                            os.execve(
+                                broker._proc_fd(anonymous_fd),
+                                ["anonymous"],
+                                {"PATH": "/nonexistent"},
+                            )
+                        except OSError as error:
+                            os._exit(
+                                44
+                                if error.errno in {errno.EBADF, errno.ENOENT}
+                                else 43
+                            )
+                        except BaseException:  # noqa: BLE001 - child test process
+                            os._exit(42)
+                        os._exit(41)
+                    _selected, anonymous_status = os.waitpid(anonymous_pid, 0)
+                    self.assertTrue(os.WIFEXITED(anonymous_status))
+                    self.assertEqual(os.WEXITSTATUS(anonymous_status), 44)
+
+                if os.execve in os.supports_fd:
+                    fd_form_pid = os.fork()
+                    if fd_form_pid == 0:
+                        try:
+                            broker.install_command_exec_sandbox(allowed_fd)
+                            os.execve(
+                                denied_fd,
+                                [str(denied_path)],
+                                {"PATH": "/nonexistent"},
+                            )
+                        except OSError as error:
+                            os._exit(46 if error.errno == errno.EPERM else 45)
+                        except BaseException:  # noqa: BLE001 - child test process
+                            os._exit(44)
+                        os._exit(43)
+                    _selected, fd_form_status = os.waitpid(fd_form_pid, 0)
+                    self.assertTrue(os.WIFEXITED(fd_form_status))
+                    self.assertEqual(os.WEXITSTATUS(fd_form_status), 46)
             finally:
                 os.close(allowed_fd)
                 os.close(denied_fd)
+                if anonymous_fd >= 0:
+                    os.close(anonymous_fd)
+
+    def test_seccomp_program_kills_arch_mismatch_and_x32_space(self) -> None:
+        program = broker._anonymous_exec_seccomp_instructions()
+        self.assertEqual(program[0].code, broker.BPF_LD_W_ABS)
+        self.assertEqual(program[0].k, broker.SECCOMP_DATA_ARCH_OFFSET)
+        self.assertEqual(program[1].code, broker.BPF_JMP_JEQ_K)
+        self.assertEqual(program[1].k, broker.AUDIT_ARCH_X86_64)
+        self.assertEqual(program[2].code, broker.BPF_RET_K)
+        self.assertEqual(program[2].k, broker.SECCOMP_RET_KILL_PROCESS)
+        self.assertTrue(
+            any(
+                item.code == broker.BPF_JMP_JGE_K
+                and item.k == broker.X32_SYSCALL_BIT
+                for item in program
+            )
+        )
+
+    def test_seccomp_program_has_exact_closed_decisions(self) -> None:
+        program = broker._anonymous_exec_seccomp_instructions()
+
+        def evaluate(
+            number: int,
+            *,
+            architecture: int = broker.AUDIT_ARCH_X86_64,
+            arguments: tuple[int, ...] = (0, 0, 0, 0, 0, 0),
+        ) -> int:
+            raw = struct.pack("<iIQQQQQQQ", number, architecture, 0, *arguments)
+            accumulator = 0
+            position = 0
+            while position < len(program):
+                instruction = program[position]
+                if instruction.code == broker.BPF_LD_W_ABS:
+                    accumulator = struct.unpack_from("<I", raw, instruction.k)[0]
+                    position += 1
+                elif instruction.code == broker.BPF_JMP_JEQ_K:
+                    position += (
+                        instruction.jt + 1
+                        if accumulator == instruction.k
+                        else instruction.jf + 1
+                    )
+                elif instruction.code == broker.BPF_JMP_JGE_K:
+                    position += (
+                        instruction.jt + 1
+                        if accumulator >= instruction.k
+                        else instruction.jf + 1
+                    )
+                elif instruction.code == broker.BPF_JMP_JSET_K:
+                    position += (
+                        instruction.jt + 1
+                        if accumulator & instruction.k
+                        else instruction.jf + 1
+                    )
+                elif instruction.code == broker.BPF_RET_K:
+                    return instruction.k
+                else:
+                    self.fail(f"unexpected BPF instruction {instruction.code}")
+            self.fail("seccomp program fell through without a decision")
+
+        denied = broker.SECCOMP_RET_ERRNO | errno.EPERM
+        self.assertEqual(evaluate(0), broker.SECCOMP_RET_ALLOW)
+        for number in (
+            broker.SYS_EXECVEAT,
+            broker.SYS_IO_URING_ENTER,
+            broker.SYS_IO_URING_REGISTER,
+            broker.SYS_IO_URING_SETUP,
+            broker.SYS_MEMFD_CREATE,
+            broker.SYS_MEMFD_SECRET,
+            broker.SYS_OPEN_BY_HANDLE_AT,
+            broker.SYS_PIDFD_GETFD,
+            broker.SYS_RECVMMSG,
+            broker.SYS_RECVMSG,
+            broker.SYS_USELIB,
+        ):
+            self.assertEqual(evaluate(number), denied)
+        for number, mask in (
+            (broker.SYS_MMAP, broker.PROT_EXEC),
+            (broker.SYS_MPROTECT, broker.PROT_EXEC),
+            (broker.SYS_PKEY_MPROTECT, broker.PROT_EXEC),
+            (broker.SYS_SHMAT, broker.SHM_EXEC),
+        ):
+            arguments = (0, 0, mask, 0, 0, 0)
+            self.assertEqual(evaluate(number, arguments=arguments), denied)
+            self.assertEqual(evaluate(number), broker.SECCOMP_RET_ALLOW)
+        self.assertEqual(
+            evaluate(broker.X32_SYSCALL_BIT),
+            broker.SECCOMP_RET_KILL_PROCESS,
+        )
+        self.assertEqual(
+            evaluate(0, architecture=0),
+            broker.SECCOMP_RET_KILL_PROCESS,
+        )
+
+    def test_seccomp_closes_anonymous_exec_and_exec_mapping_on_linux(self) -> None:
+        if not (sys.platform.startswith("linux") and hasattr(os, "fork")):
+            self.skipTest("classic seccomp integration requires Linux")
+        extension = importlib.util.find_spec("_decimal")
+        dlopen_candidate = None
+        if (
+            extension is not None
+            and isinstance(extension.origin, str)
+            and extension.origin.endswith(".so")
+        ):
+            dlopen_directory = tempfile.TemporaryDirectory()
+            self.addCleanup(dlopen_directory.cleanup)
+            candidate = Path(dlopen_directory.name) / "unloaded-extension.so"
+            shutil.copyfile(extension.origin, candidate)
+            dlopen_candidate = str(candidate)
+        pid = os.fork()
+        if pid == 0:
+            try:
+                library = ctypes.CDLL(None, use_errno=True)
+                library.syscall.restype = ctypes.c_long
+                library.mmap.restype = ctypes.c_void_p
+                library.mmap.argtypes = [
+                    ctypes.c_void_p,
+                    ctypes.c_size_t,
+                    ctypes.c_int,
+                    ctypes.c_int,
+                    ctypes.c_int,
+                    ctypes.c_long,
+                ]
+                library.mprotect.restype = ctypes.c_int
+                library.mprotect.argtypes = [
+                    ctypes.c_void_p,
+                    ctypes.c_size_t,
+                    ctypes.c_int,
+                ]
+                library.munmap.restype = ctypes.c_int
+                library.munmap.argtypes = [ctypes.c_void_p, ctypes.c_size_t]
+                broker.install_in_memory_exec_seccomp()
+
+                if hasattr(os, "memfd_create"):
+                    try:
+                        os.memfd_create("blocked-after-transition", os.MFD_CLOEXEC)
+                    except OSError as error:
+                        if error.errno != errno.EPERM:
+                            os._exit(11)
+                    else:
+                        os._exit(12)
+
+                map_failed = ctypes.c_void_p(-1).value
+                read_write = library.mmap(
+                    None,
+                    4096,
+                    0x1 | 0x2,
+                    0x02 | 0x20,
+                    -1,
+                    0,
+                )
+                if read_write == map_failed:
+                    os._exit(13)
+
+                ctypes.set_errno(0)
+                if library.mprotect(read_write, 4096, 0x1 | 0x4) != -1:
+                    os._exit(14)
+                if ctypes.get_errno() != errno.EPERM:
+                    os._exit(15)
+
+                ctypes.set_errno(0)
+                executable = library.mmap(
+                    None,
+                    4096,
+                    0x1 | 0x4,
+                    0x02 | 0x20,
+                    -1,
+                    0,
+                )
+                if executable != map_failed or ctypes.get_errno() != errno.EPERM:
+                    os._exit(16)
+                if dlopen_candidate is not None:
+                    try:
+                        ctypes.CDLL(dlopen_candidate)
+                    except OSError:
+                        pass
+                    else:
+                        os._exit(35)
+
+                def denied_syscall(number: int, *arguments: object) -> bool:
+                    ctypes.set_errno(0)
+                    result = library.syscall(ctypes.c_long(number), *arguments)
+                    return result == -1 and ctypes.get_errno() == errno.EPERM
+
+                if not denied_syscall(
+                    broker.SYS_PKEY_MPROTECT,
+                    ctypes.c_void_p(read_write),
+                    ctypes.c_size_t(4096),
+                    ctypes.c_int(0x1 | 0x4),
+                    ctypes.c_int(0),
+                ):
+                    os._exit(17)
+                if not denied_syscall(
+                    broker.SYS_SHMAT,
+                    ctypes.c_int(-1),
+                    ctypes.c_void_p(),
+                    ctypes.c_int(broker.SHM_EXEC),
+                ):
+                    os._exit(18)
+                if not denied_syscall(
+                    broker.SYS_EXECVEAT,
+                    ctypes.c_int(-1),
+                    ctypes.c_char_p(b""),
+                    ctypes.c_void_p(),
+                    ctypes.c_void_p(),
+                    ctypes.c_int(0),
+                ):
+                    os._exit(19)
+                for code, number in enumerate(
+                    (
+                        broker.SYS_USELIB,
+                        broker.SYS_IO_URING_SETUP,
+                        broker.SYS_IO_URING_ENTER,
+                        broker.SYS_IO_URING_REGISTER,
+                        broker.SYS_MEMFD_SECRET,
+                        broker.SYS_OPEN_BY_HANDLE_AT,
+                        broker.SYS_PIDFD_GETFD,
+                        broker.SYS_RECVMMSG,
+                        broker.SYS_RECVMSG,
+                    ),
+                    start=20,
+                ):
+                    if not denied_syscall(number):
+                        os._exit(code)
+
+                descendant = os.fork()
+                if descendant == 0:
+                    try:
+                        os.memfd_create("descendant-blocked", os.MFD_CLOEXEC)
+                    except OSError as error:
+                        os._exit(0 if error.errno == errno.EPERM else 31)
+                    os._exit(32)
+                _selected, descendant_status = os.waitpid(descendant, 0)
+                if (
+                    not os.WIFEXITED(descendant_status)
+                    or os.WEXITSTATUS(descendant_status) != 0
+                ):
+                    os._exit(33)
+                if library.munmap(read_write, 4096) != 0:
+                    os._exit(34)
+                os._exit(0)
+            except BaseException:  # noqa: BLE001 - child test process
+                os._exit(99)
+        _selected, status = os.waitpid(pid, 0)
+        self.assertTrue(os.WIFEXITED(status), status)
+        self.assertEqual(os.WEXITSTATUS(status), 0)
+
+    def test_seccomp_kills_x32_syscall_attempt_on_linux(self) -> None:
+        if not (sys.platform.startswith("linux") and hasattr(os, "fork")):
+            self.skipTest("classic seccomp integration requires Linux")
+        pid = os.fork()
+        if pid == 0:
+            library = ctypes.CDLL(None, use_errno=True)
+            broker.install_in_memory_exec_seccomp()
+            library.syscall(ctypes.c_long(broker.X32_SYSCALL_BIT))
+            os._exit(1)
+        _selected, status = os.waitpid(pid, 0)
+        self.assertTrue(os.WIFSIGNALED(status), status)
+        self.assertEqual(os.WTERMSIG(status), signal.SIGSYS)
+
+    def test_seccomp_install_failure_is_stable(self) -> None:
+        with (
+            mock.patch.object(
+                broker,
+                "_install_seccomp_program",
+                side_effect=OSError(errno.EINVAL, "unsupported"),
+            ),
+            self.assertRaises(broker.BrokerUnavailable) as caught,
+        ):
+            broker.install_in_memory_exec_seccomp()
+        self.assertEqual(caught.exception.code, "BROKER_EXEC_SANDBOX_UNAVAILABLE")
+
+    def test_child_closes_unlisted_descriptors_before_final_sandbox(self) -> None:
+        source = inspect.getsource(broker._child_exec)
+        close_at = source.index("_close_unlisted_descriptors(keep)")
+        sandbox_at = source.index("install_command_exec_sandbox")
+        exec_at = source.index("os.execve")
+        self.assertLess(close_at, sandbox_at)
+        self.assertLess(sandbox_at, exec_at)
+        self.assertIn("_proc_fd(command.executable_fd)", source)
 
     def test_static_runtime_elf_rejects_program_interpreter(self) -> None:
         static_raw = _minimal_static_elf(0)

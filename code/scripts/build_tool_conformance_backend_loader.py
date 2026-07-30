@@ -37,7 +37,6 @@ REQUIRED_EXPORTS = (
     "CommandResult",
     "LinuxOciUnavailable",
     "preflight_brokered",
-    "preflight_prevalidated",
 )
 FORBIDDEN_DYNAMIC_IMPORTS = {"__import__", "import_module"}
 RESERVED_SAFE_BINDINGS = {"Path", "dataclass", "frozenset", "__name__"}
@@ -505,9 +504,6 @@ def _validate_backend_structure(
         )
 
     valid_brokered = valid_preflight_signature(functions.get("preflight_brokered"))
-    valid_preflight = valid_preflight_signature(
-        functions.get("preflight_prevalidated")
-    )
     unavailable = classes.get("LinuxOciUnavailable")
     unavailable_init = (
         next(
@@ -578,7 +574,6 @@ def _validate_backend_structure(
         "CommandResult",
         "LinuxOciUnavailable",
         "preflight_brokered",
-        "preflight_prevalidated",
     }
     duplicate_required = any(
         sum(node.name == name for node in [*class_nodes, *function_nodes]) != 1
@@ -586,10 +581,10 @@ def _validate_backend_structure(
     )
     if (
         not valid_brokered
-        or not valid_preflight
         or not valid_unavailable
         or not valid_command_result
         or duplicate_required
+        or "preflight_prevalidated" in functions
     ):
         raise LoaderUnavailable(
             "LOADER_BACKEND_INTERFACE_INVALID",
