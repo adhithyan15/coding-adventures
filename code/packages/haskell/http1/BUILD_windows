@@ -1,1 +1,1 @@
-echo "haskell support not enabled in windows CI yet -- skipping"
+cabal test

@@ -23,21 +23,33 @@ bytes. Both CRLF and bare-LF head terminators are accepted.
 
 - `parseRequestHead` parses a method, raw target, bounded HTTP version, and
   ordered duplicate-preserving headers.
-- `parseResponseHead` parses a bounded status code, normalized reason phrase,
-  and ordered headers.
+- `parseResponseHead` takes the corresponding request method, parses an exact
+  three-digit status code and ordered headers, and applies HEAD/CONNECT
+  response semantics.
 - `ParsedRequestHead` and `ParsedResponseHead` carry the semantic head, exact
   byte offset immediately after the terminating blank line, and body framing.
+- `ParsedResponseHead.responseSwitchesProtocol` identifies a successful
+  CONNECT tunnel transition.
 - `Http1ParseError` distinguishes incomplete heads, start-line, version,
-  status, header, and content-length failures.
+  status, header, framing, and resource-limit failures without retaining raw
+  wire text.
 
-Request framing gives `Transfer-Encoding: chunked` precedence over
-`Content-Length`; absent or zero lengths mean no body. Responses first make
-1xx, 204, and 304 status codes bodyless, then apply chunked, content-length,
-and EOF framing in that order.
+Framing fails closed when `Transfer-Encoding` and `Content-Length` coexist.
+Request transfer coding requires HTTP/1.1 and exactly one final `chunked`
+coding. Duplicate and comma-coalesced content lengths are accepted only when
+every bounded decimal value agrees. Responses apply HEAD, successful CONNECT,
+1xx, 204, and 304 semantics before ordinary chunked, content-length, and EOF
+framing.
 
 Decimal status and content-length parsing is bounded. Signed, malformed, and
 overflowing values fail without constructing attacker-sized arbitrary-precision
 integers.
+
+Before decoding bytes to Haskell `String`, the parser caps a head at 65,536
+bytes, a line at 8,192 bytes, the field section at 100 lines, and transfer
+coding lists at 16 elements. Field names use strict RFC token bytes, whitespace
+before a colon and obsolete folding are rejected, and structural start-line
+delimiters are exact single spaces.
 
 ## Example
 
@@ -48,6 +60,7 @@ import qualified Data.ByteString.Char8 as Bytes
 example :: Either Http1ParseError ParsedResponseHead
 example =
   parseResponseHead
+    "GET"
     (Bytes.pack "HTTP/1.1 200 OK\r\nContent-Length: 4\r\n\r\nbody")
 ```
 
@@ -65,3 +78,6 @@ cabal test --enable-coverage
 The package has no process, filesystem, network, environment, dynamic-loading,
 or unsafe capabilities. Its only runtime dependencies are `base`, `bytestring`,
 and the local pure `http-core` package.
+
+The current suite has 27 Hspec examples and measures 96% expression, 87%
+alternative, and 80% top-level-definition coverage with GHC 9.4.8.
