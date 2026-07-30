@@ -1,0 +1,29 @@
+% ============================================================================
+% corrected-phenytoin.query.adj — worked applications of the albumin-corrected phenytoin.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a therapeutic-drug-monitoring vignette into an
+% obtained phenytoin level and an albumin: it `import`s the grounded formulabook, `observe`s the two
+% values, and asks the engine to APPLY the cited Sheiner–Tozer correction. No arithmetic is stated by
+% the consumer; the engine computes each value EXACTLY (over exact rationals) and carries the article's
+% citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (obtained = 6.5 µg/mL, albumin = 2 g/dL): corrected = 6.5 / (0.275 × 2 + 0.1) =
+% 6.5 / 0.65 = 10 µg/mL — a subtherapeutic-looking total that, corrected for the low albumin, sits at
+% the bottom of the therapeutic range. Each query fixes two of the three quantities and asks the engine
+% to recover the third; every answer is exact and the three COMPOSE (each inversion recovers exactly the
+% worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli corrected-phenytoin.query.adj
+% ============================================================================
+
+import "corrected-phenytoin.adj"
+
+% --- Corrected: the albumin-corrected level the obtained value and albumin imply (expect 10). --------
+observe obtained_phenytoin(6.5)
+observe albumin(2)
+? corrected_phenytoin(obtained_phenytoin, albumin)   % expect 10
+
+% --- Inverse: the obtained level a corrected 10 implies at albumin 2 (expect 6.5). ------------------
+observe corrected_phenytoin(10)
+? obtained_phenytoin(corrected_phenytoin, albumin)   % expect 6.5
