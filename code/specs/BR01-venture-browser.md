@@ -64,9 +64,11 @@ the page omits `<base>`. `venture-browser-core` now owns the in-memory
 Back/Forward/Home/Reload model and composes an injectable page fetch through
 document-URL-aware parsing, layout, paint, and synchronous image resolution.
 Its acceptance path carries a redirected canned page and GIF resource through
-Cairo to RGBA pixels. The remaining browser gate is the concrete platform shell
-that binds those core results to native window events, controls, scrolling, and
-the selected production paint backend.
+Cairo to RGBA pixels. The core also owns clamped vertical scroll geometry,
+scroll-aware link hit-testing, and viewport scene translation. The remaining
+browser gate is the concrete platform shell that binds those core results to
+native window events, controls, scrollbars, and the selected production paint
+backend.
 
 ## Where It Fits
 

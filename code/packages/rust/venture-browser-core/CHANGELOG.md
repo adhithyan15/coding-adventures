@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0
+
+- Add finite, clamped `ScrollState` geometry with resize re-clamping.
+- Add scroll-aware link hit-testing.
+- Add `scrolled_viewport_scene`, which wraps document instructions in a
+  negative-Y translated group on a viewport-sized scene.
+
 ## 0.1.0
 
 - Add `NavigationHistory` with Back, Forward, Home, Reload, and redirect

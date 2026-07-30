@@ -1,6 +1,6 @@
 [package]
 name = "venture-browser-core"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Host-neutral navigation and page-loading orchestration for the Venture browser."
 
@@ -10,9 +10,9 @@ html-to-layout = { path = "../html-to-layout" }
 html-to-paint = { path = "../html-to-paint" }
 http1-client = { path = "../http1-client" }
 layout-ir = { path = "../layout-ir" }
+paint-instructions = { path = "../paint-instructions" }
 text-interfaces = { path = "../text-interfaces" }
 
 [dev-dependencies]
 image-codec-gif = { path = "../image-codec-gif" }
-paint-instructions = { path = "../paint-instructions" }
 paint-vm-cairo = { path = "../paint-vm-cairo" }

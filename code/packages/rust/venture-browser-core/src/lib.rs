@@ -7,15 +7,16 @@
 use coding_adventures_html_parser::{parse_html, BrowserDocument, BrowserRenderTree};
 use html_to_layout::HtmlTheme;
 use html_to_paint::{
-    html_render_tree_to_paint, resolve_scene_image_resources_with_mosaic_fallback, FetchedImage,
-    HtmlImageResourceError, HtmlPaintOutput, HtmlPaintViewport,
+    hit_test_link, html_render_tree_to_paint, resolve_scene_image_resources_with_mosaic_fallback,
+    FetchedImage, HtmlImageResourceError, HtmlPaintOutput, HtmlPaintViewport, LinkRegion,
 };
 use http1_client::HttpClient;
 use layout_ir::TextMeasurer;
+use paint_instructions::{PaintBase, PaintGroup, PaintInstruction, PaintScene};
 use std::fmt;
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 /// In-memory browser navigation state.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -106,6 +107,86 @@ impl NavigationHistory {
         self.current_url.as_ref()?;
         self.current_url = Some(final_url.into());
         self.current_url()
+    }
+}
+
+/// Vertical document scroll state in logical content coordinates.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct ScrollState {
+    offset_y: f64,
+    viewport_height: f64,
+    content_height: f64,
+}
+
+impl ScrollState {
+    pub fn new(viewport_height: f64, content_height: f64) -> Self {
+        Self {
+            offset_y: 0.0,
+            viewport_height: finite_non_negative(viewport_height),
+            content_height: finite_non_negative(content_height),
+        }
+    }
+
+    pub fn offset_y(&self) -> f64 {
+        self.offset_y
+    }
+
+    pub fn viewport_height(&self) -> f64 {
+        self.viewport_height
+    }
+
+    pub fn content_height(&self) -> f64 {
+        self.content_height
+    }
+
+    pub fn max_offset_y(&self) -> f64 {
+        (self.content_height - self.viewport_height).max(0.0)
+    }
+
+    pub fn set_offset_y(&mut self, offset_y: f64) -> f64 {
+        self.offset_y = finite_non_negative(offset_y).min(self.max_offset_y());
+        self.offset_y
+    }
+
+    pub fn scroll_by(&mut self, delta_y: f64) -> f64 {
+        let delta_y = if delta_y.is_finite() { delta_y } else { 0.0 };
+        self.set_offset_y(self.offset_y + delta_y)
+    }
+
+    /// Update page or viewport geometry and re-clamp the current offset.
+    pub fn set_dimensions(&mut self, viewport_height: f64, content_height: f64) -> f64 {
+        self.viewport_height = finite_non_negative(viewport_height);
+        self.content_height = finite_non_negative(content_height);
+        self.set_offset_y(self.offset_y)
+    }
+
+    pub fn hit_test<'a>(
+        &self,
+        links: &'a [LinkRegion],
+        viewport_x: f64,
+        viewport_y: f64,
+    ) -> Option<&'a LinkRegion> {
+        hit_test_link(links, viewport_x, viewport_y, self.offset_y)
+    }
+}
+
+/// Build the viewport scene a paint backend should render at the current scroll.
+///
+/// The document instructions remain unchanged beneath a translated group. The
+/// viewport-sized output surface provides the clip boundary at the backend.
+pub fn scrolled_viewport_scene(scene: &PaintScene, scroll: &ScrollState) -> PaintScene {
+    PaintScene {
+        width: scene.width,
+        height: scroll.viewport_height,
+        background: scene.background.clone(),
+        instructions: vec![PaintInstruction::Group(PaintGroup {
+            base: PaintBase::default(),
+            children: scene.instructions.clone(),
+            transform: Some([1.0, 0.0, 0.0, 1.0, 0.0, -scroll.offset_y]),
+            opacity: None,
+        })],
+        id: scene.id.clone(),
+        metadata: scene.metadata.clone(),
     }
 }
 
@@ -319,6 +400,14 @@ fn is_success(status: u16) -> bool {
     (200..300).contains(&status)
 }
 
+fn finite_non_negative(value: f64) -> f64 {
+    if value.is_finite() {
+        value.max(0.0)
+    } else {
+        0.0
+    }
+}
+
 fn ensure_html_media_type(response: &BrowserFetchResponse) -> Result<(), BrowserLoadError> {
     let Some(media_type) = response.media_type.as_deref() else {
         return Ok(());
@@ -370,6 +459,55 @@ mod tests {
             history.replace_current("http://home.test/index.html"),
             Some("http://home.test/index.html")
         );
+    }
+
+    #[test]
+    fn scroll_state_clamps_offsets_and_reacts_to_geometry_changes() {
+        let mut scroll = ScrollState::new(100.0, 260.0);
+        assert_eq!(scroll.max_offset_y(), 160.0);
+        assert_eq!(scroll.scroll_by(-20.0), 0.0);
+        assert_eq!(scroll.set_offset_y(75.0), 75.0);
+        assert_eq!(scroll.scroll_by(200.0), 160.0);
+        assert_eq!(scroll.scroll_by(f64::NAN), 160.0);
+
+        assert_eq!(scroll.set_dimensions(120.0, 80.0), 0.0);
+        assert_eq!(scroll.max_offset_y(), 0.0);
+        assert_eq!(scroll.set_dimensions(f64::NAN, f64::INFINITY), 0.0);
+        assert_eq!(scroll.viewport_height(), 0.0);
+        assert_eq!(scroll.content_height(), 0.0);
+    }
+
+    #[test]
+    fn scroll_state_hit_tests_content_and_wraps_a_translated_viewport_scene() {
+        let link = LinkRegion {
+            x: 10.0,
+            y: 80.0,
+            width: 30.0,
+            height: 12.0,
+            url: "http://example.test/next".into(),
+        };
+        let mut scroll = ScrollState::new(60.0, 140.0);
+        scroll.set_offset_y(60.0);
+        assert_eq!(
+            scroll.hit_test(std::slice::from_ref(&link), 10.0, 20.0),
+            Some(&link)
+        );
+
+        let mut document = PaintScene::new(100.0, 140.0);
+        document.background = "rgb(192, 192, 192)".into();
+        document.instructions.push(PaintInstruction::Rect(
+            paint_instructions::PaintRect::filled(0.0, 70.0, 20.0, 20.0, "#000000"),
+        ));
+        let viewport = scrolled_viewport_scene(&document, &scroll);
+
+        assert_eq!(viewport.width, 100.0);
+        assert_eq!(viewport.height, 60.0);
+        assert_eq!(viewport.background, document.background);
+        let [PaintInstruction::Group(group)] = viewport.instructions.as_slice() else {
+            panic!("viewport should contain one translated group");
+        };
+        assert_eq!(group.transform, Some([1.0, 0.0, 0.0, 1.0, 0.0, -60.0]));
+        assert_eq!(group.children, document.instructions);
     }
 
     #[test]
