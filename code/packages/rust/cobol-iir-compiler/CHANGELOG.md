@@ -8,6 +8,34 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.78.0: combined INSPECT TALLYING FOR CHARACTERS + REPLACING
+
+**`INSPECT source TALLYING c FOR CHARACTERS [{BEFORE|AFTER} x] REPLACING …`** — the
+COMBINED `TALLYING … REPLACING` form now compiles a `FOR CHARACTERS` TALLYING half,
+byte-identical to the `coding-adventures-cobol-runtime` 0.82.0 oracle on an ASCII source.
+The combined call site now passes `allow_characters = true` to the shared
+`emit_inspect_tallying`, lifting the former "INSPECT TALLYING … FOR CHARACTERS in a
+combined TALLYING/REPLACING is a later rung" reject for the TALLYING half only.
+
+- **Reuses the standalone CHARACTERS lowering.** `emit_inspect_tallying` routes the
+  `characters` flag into the SAME "count every window position" branch the STANDALONE
+  `FOR CHARACTERS` tally (v0.71-era, #60) uses: `cnt = str_len(S)` with no region, or
+  `cnt = end - start` of the shared `emit_inspect_region_window` window with a
+  `{BEFORE|AFTER}` region — then `counter := counter + cnt` via the identical
+  `store_scaled` ADD. No new counting loop is hand-rolled. The count runs over the
+  ORIGINAL bytes BEFORE the REPLACING half overwrites the source (ISO tally-then-replace).
+- **REPLACING half untouched.** The combined REPLACING half keeps its full `ALL`/`LEADING`
+  (+region) support via `emit_inspect_replacing`.
+- **Still deferred (co-total).** The REPLACING half's OWN `CHARACTERS` form
+  (`emit_inspect_replacing_characters`) stays a later rung in the combined form: the
+  combined REPLACING half flows through `inspect_replacing_all`, which still rejects a
+  `REPLACING CHARACTERS` item — co-total with the oracle.
+- **Byte-vs-char count chip (unchanged).** The CHARACTERS count is position-based; the
+  compiler counts BYTE positions (`str_len`) and the oracle CHAR positions (`chars.len()`),
+  coinciding on ASCII. A non-ASCII source is the pre-existing chip (task_396ba6f6, same as
+  #60/#81), and the REPLACING half's per-position reconstruction traps on a multi-byte char
+  regardless (the shared reconstruction chip). Not fixed here.
+
 ### Added — v0.77.0: INSPECT REPLACING with a CHARACTERS item in a multi-item list
 
 **`INSPECT source REPLACING … CHARACTERS BY x …`** — a `CHARACTERS BY x` item alongside other

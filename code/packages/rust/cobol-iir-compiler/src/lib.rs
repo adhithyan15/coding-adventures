@@ -2773,9 +2773,19 @@ impl<'a> Compiler<'a> {
                 // SUPPORTED (this rung): `allow_leading_region = true` lets
                 // `emit_inspect_tallying` emit the SAME window-anchored LEADING lowering
                 // the standalone `FOR LEADING … BEFORE/AFTER` path uses — byte-identical.
-                // `allow_characters = false`: a combined `TALLYING … FOR CHARACTERS …
-                // REPLACING` is a later rung, matching the oracle's combined-form reject.
-                self.emit_inspect_tallying(verb, &s_reg, true, true, true, false)?;
+                // `allow_characters = true` (THIS rung): a combined `TALLYING … FOR
+                // CHARACTERS … REPLACING` is now supported. `emit_inspect_tallying`
+                // routes `FOR CHARACTERS` into the SAME "count every window position"
+                // lowering the STANDALONE `FOR CHARACTERS` tally (#60) uses — `cnt =
+                // len(S)` with no region, `cnt = end - start` with one — running over
+                // the ORIGINAL bytes BEFORE the REPLACING half overwrites the source, in
+                // ISO tally-then-replace order. Matching the oracle's combined-form
+                // accept. (The REPLACING half's OWN `CHARACTERS` form is a DIFFERENT node
+                // — `emit_inspect_replacing_characters` — and stays a later rung in the
+                // combined form: the combined REPLACING half below flows through
+                // `emit_inspect_replacing`/`inspect_replacing_all`, which still rejects a
+                // `REPLACING CHARACTERS` item co-total with the oracle.)
+                self.emit_inspect_tallying(verb, &s_reg, true, true, true, true)?;
                 // The combined REPLACING half supports BOTH `ALL` and `LEADING`:
                 // `allow_leading = true` lets a combined `TALLYING … REPLACING
                 // LEADING` rewrite only the leading run (`emit_inspect_replacing`
@@ -2917,9 +2927,13 @@ impl<'a> Compiler<'a> {
         // Extract the single `FOR ALL`/`FOR LEADING delim [{BEFORE|AFTER} x]` (or
         // `FOR CHARACTERS [{BEFORE|AFTER} x]`) phrase (rejecting the later rungs).
         let (counter_name, delim_node, leading, characters, region) = inspect_tally_all(verb)?;
-        // `FOR CHARACTERS` is supported standalone (`allow_characters = true`) but not
-        // in the combined `TALLYING … REPLACING` form (`allow_characters = false`),
-        // matching the oracle's combined-form read-time reject exactly.
+        // `FOR CHARACTERS` is supported BOTH standalone AND (as of this rung) on the
+        // combined `TALLYING … REPLACING` form's TALLYING half — both callers pass
+        // `allow_characters = true`. The guard is retained honestly so any future
+        // caller that must forbid a CHARACTERS tally can pass `false` and get the clean
+        // later-rung diagnostic, reading uniformly with the other gates below. (The
+        // combined form's REPLACING-half CHARACTERS stays a later rung on a DIFFERENT
+        // path — `inspect_replacing_all` — not this flag.)
         if characters && !allow_characters {
             return Err(CompileError::Unsupported(
                 "INSPECT TALLYING … FOR CHARACTERS in a combined TALLYING/REPLACING is a later rung"

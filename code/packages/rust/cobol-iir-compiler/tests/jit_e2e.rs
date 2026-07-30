@@ -8891,22 +8891,124 @@ fn inspect_combined_leading_no_region_still_supported() {
 }
 
 #[test]
-fn inspect_combined_leading_region_with_characters_is_still_a_later_rung() {
-    // (Case 6, regression) A combined `FOR CHARACTERS` tally stays a later rung even
-    // now that combined LEADING+region is supported — rejected identically on both
-    // engines. (The LEADING lift did NOT relax the CHARACTERS deferral.)
-    let src = wrap(
+fn inspect_combined_characters_before_region_with_leading_replace() {
+    // (Formerly a later-rung regression; THIS rung LIFTS the deferral.) A combined
+    // `FOR CHARACTERS` tally half is now supported, and it composes with EVERY existing
+    // REPLACING-half capability — here a region-narrowed CHARACTERS count beside a
+    // window-anchored `REPLACING LEADING`. "00A0B": the tally window is BEFORE "A" =
+    // "00" (2 positions) → C = 002 (CHARACTERS counts positions, not a delimiter), then
+    // `REPLACING LEADING "0" BY "*" AFTER "A"` narrows to the run beginning after the
+    // "A" (index 3): S[3]='0'→'*', S[4]='B' stops → "00A*B". The tally saw the ORIGINAL
+    // bytes before the replace overwrote any of them (ISO tally-then-replace order).
+    let out = assert_matches_oracle(&wrap(
         &["01  S  PIC X(5) VALUE \"00A0B\".", "01  C  PIC 9(3) VALUE 0."],
         &[
             "INSPECT S TALLYING C FOR CHARACTERS BEFORE \"A\"",
             "    REPLACING LEADING \"0\" BY \"*\" AFTER \"A\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n00A*B\n");
+}
+
+#[test]
+fn inspect_combined_characters_replacing_all() {
+    // The canonical new form: `TALLYING C FOR CHARACTERS REPLACING ALL "A" BY "B"`.
+    // CHARACTERS counts the FULL length of the source (positions, NOT delimiter
+    // matches), so over "XAYAZ" C = 005 — even though only TWO characters are "A".
+    // The REPLACING half then rewrites every "A" → "B" over the whole (still-original)
+    // source → "XBYBZ". Verifying BOTH the counter DISPLAY (005, the length) and the
+    // rewritten source (XBYBZ) proves the tally half counted positions while the
+    // replace half matched the delimiter, in ISO tally-then-replace order.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"XAYAZ\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR CHARACTERS REPLACING ALL \"A\" BY \"B\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "005\nXBYBZ\n");
+}
+
+#[test]
+fn inspect_combined_characters_before_region_replacing_all() {
+    // `TALLYING C FOR CHARACTERS BEFORE "X" REPLACING ALL "A" BY "B"`: the tally count
+    // is NARROWED by the region while the replace runs over the WHOLE source. Over
+    // "AAXAA" the CHARACTERS window BEFORE "X" is "AA" (2 positions) → C = 002, but
+    // `REPLACING ALL "A"` is un-regioned, so EVERY "A" (both before and after the "X")
+    // becomes "B" → "BBXBB". The count's window and the replace's reach are independent
+    // — the crux of this case.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AAXAA\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR CHARACTERS BEFORE \"X\"",
+            "    REPLACING ALL \"A\" BY \"B\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\nBBXBB\n");
+}
+
+#[test]
+fn inspect_combined_characters_replacing_leading() {
+    // `TALLYING C FOR CHARACTERS REPLACING LEADING "A" BY "B"`: a CHARACTERS tally
+    // composed with a LEADING replace. Over "AAXAA" the CHARACTERS count is the full
+    // length (C = 005), then `REPLACING LEADING "A"` rewrites only the consecutive run
+    // of "A" at the START (the two leading A's), stopping at "X" → "BBXAA". The two
+    // trailing A's are left intact — proof the LEADING run map still governs the
+    // replace half unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AAXAA\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR CHARACTERS REPLACING LEADING \"A\" BY \"B\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "005\nBBXAA\n");
+}
+
+#[test]
+fn inspect_combined_characters_non_ascii_shares_the_reconstruction_chip() {
+    // NON-ASCII characterization. The TALLYING-half CHARACTERS count is POSITION-based:
+    // the compiler counts BYTE positions (`str_len`) while the oracle counts CHAR
+    // positions (`chars.len()`) — the PRE-EXISTING byte-vs-char count chip
+    // (task_396ba6f6), identical to the standalone `FOR CHARACTERS` (#60) and multi-item
+    // CHARACTERS (#81). Here the "é" sits strictly OUTSIDE the tally window (BEFORE "X"),
+    // so the CHARACTERS count itself WOULD agree byte-vs-char. BUT the REPLACING half
+    // RECONSTRUCTS the whole field with per-position `str_slice`, which cannot slice a
+    // multi-byte char — so the compiler traps, EXACTLY the shared reconstruction chip
+    // every combined non-ASCII case hits (see
+    // `inspect_combined_leading_region_non_ascii_shares_the_reconstruction_chip`). This
+    // rung introduces NO new divergence. `PIC X(5) VALUE "AAXé"` right-pads the
+    // 4-character value to 5 char-positions — "AAXé " (a trailing space; 6 bytes, since
+    // "é" is a 2-byte UTF-8 sequence) — with "é" strictly AFTER the "X" tally window.
+    // The oracle iterates chars and succeeds; the compiler traps — the documented,
+    // pre-existing gap.
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"AAXé\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR CHARACTERS BEFORE \"X\"",
+            "    REPLACING ALL \"A\" BY \"B\".",
             "STOP RUN.",
         ],
     );
-    assert!(run_cobol(&src).is_err(), "oracle must still reject combined FOR CHARACTERS");
+    // Compiler traps in the REPLACING reconstruction (pre-existing byte-vs-char chip)…
     assert!(
-        compile_source(&src, "e2e").is_err(),
-        "compiler must still reject combined FOR CHARACTERS"
+        run_on_jit_result(&src).is_err(),
+        "compiled combined CHARACTERS reconstruction must trap on a non-ASCII source (shared chip)"
+    );
+    // …while the oracle iterates chars and succeeds — the documented, pre-existing gap.
+    assert!(
+        run_cobol(&src).is_ok(),
+        "oracle succeeds char-based on the non-ASCII source (the pre-existing chip, unchanged)"
     );
 }
 
@@ -8944,20 +9046,23 @@ fn inspect_combined_leading_region_non_ascii_shares_the_reconstruction_chip() {
 
 #[test]
 fn inspect_combined_characters_is_still_a_later_rung() {
-    // A still-deferred combined sub-form: `REPLACING CHARACTERS BY` rewrites every
-    // position unconditionally — rejected identically on both engines even now that
-    // combined REPLACING LEADING is supported.
-    let err = compile_source(
-        &wrap(
-            &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
-            &[
-                "INSPECT S TALLYING C FOR ALL \"B\" REPLACING CHARACTERS BY \"X\".",
-                "STOP RUN.",
-            ],
-        ),
-        "insp_combined_repl_chars",
-    )
-    .unwrap_err();
+    // The still-deferred combined sub-form: `REPLACING CHARACTERS BY` on the REPLACE
+    // half rewrites every position unconditionally — a DIFFERENT node
+    // (`InspectReplacingCharacters` / `emit_inspect_replacing_characters`) from the
+    // TALLYING-half CHARACTERS this rung lifted. It stays a later rung, rejected
+    // CO-TOTAL on both engines: the combined REPLACING half flows through
+    // `inspect_replacing_all`, which rejects a `CHARACTERS` item on both sides.
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"B\" REPLACING CHARACTERS BY \"X\".",
+            "STOP RUN.",
+        ],
+    );
+    // Oracle rejects…
+    assert!(run_cobol(&src).is_err(), "oracle must still reject combined REPLACING CHARACTERS");
+    // …and the compiler rejects with the same later-rung `Unsupported` diagnostic.
+    let err = compile_source(&src, "insp_combined_repl_chars").unwrap_err();
     assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
 }
 

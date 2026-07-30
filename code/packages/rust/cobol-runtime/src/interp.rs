@@ -461,6 +461,7 @@ impl Machine {
                 counter,
                 delim,
                 tally_leading,
+                tally_characters,
                 tally_region,
                 search,
                 replace,
@@ -472,6 +473,7 @@ impl Machine {
                     counter,
                     delim,
                     *tally_leading,
+                    *tally_characters,
                     tally_region.as_ref(),
                     search,
                     replace,
@@ -2001,6 +2003,7 @@ impl Machine {
         counter: &str,
         delim: &Operand,
         tally_leading: bool,
+        tally_characters: bool,
         tally_region: Option<&Region>,
         search: &Operand,
         replace: &Operand,
@@ -2010,12 +2013,15 @@ impl Machine {
         let sidx = self.inspect_alnum_source(source)?;
         // Tally FIRST, on the current (original) storage — it does not mutate the
         // source, so the subsequent replace still sees the original bytes too. The
-        // TALLYING half may be FOR ALL or FOR LEADING (`tally_leading`) and may carry
-        // its OWN `{BEFORE|AFTER}` region (`tally_region`), whose window is computed
-        // over the original storage.
-        // The combined form never carries a CHARACTERS tally (rejected at read time),
-        // so `characters` is always `false` here.
-        self.inspect_tally(sidx, counter, delim, tally_leading, false, tally_region)?;
+        // TALLYING half may be FOR ALL, FOR LEADING (`tally_leading`), or FOR
+        // CHARACTERS (`tally_characters`), and may carry its OWN `{BEFORE|AFTER}`
+        // region (`tally_region`), whose window is computed over the original storage.
+        // `tally_characters` threads STRAIGHT into `inspect_tally`, which already
+        // fully supports the "count every position in the window" form (#60): on that
+        // path `delim` is the never-read placeholder the reader supplied and
+        // `tally_leading` is `false`. (The REPLACING half's OWN CHARACTERS form travels
+        // a different node and stays a later rung, rejected at read time.)
+        self.inspect_tally(sidx, counter, delim, tally_leading, tally_characters, tally_region)?;
         // THEN replace, overwriting the source in place. The REPLACING half may be
         // ALL or LEADING (`replace_leading`) — the same leading-run map used by a
         // lone `INSPECT REPLACING LEADING` — and carries its OWN INDEPENDENT

@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.82.0 — combined INSPECT TALLYING FOR CHARACTERS + REPLACING — 2026-07-30
+
+- **`INSPECT source TALLYING c FOR CHARACTERS [{BEFORE|AFTER} x] REPLACING …`** — the
+  COMBINED `TALLYING … REPLACING` form now admits a `FOR CHARACTERS` TALLYING half.
+  The former read-time reject ("INSPECT TALLYING … FOR CHARACTERS in a combined
+  TALLYING/REPLACING is a later rung") is lifted for the TALLYING half only.
+- **Semantics — tally-then-replace, unchanged ISO order.** The TALLYING half counts
+  EVERY position in its (optional `{BEFORE|AFTER}`) window into the counter — exactly
+  the STANDALONE `FOR CHARACTERS` count (#60: `window.len()`, inheriting the BEFORE→whole
+  / AFTER→empty not-found asymmetry) — over the ORIGINAL source bytes, THEN the REPLACING
+  half rewrites. The REPLACING half keeps its full existing `ALL`/`LEADING` (+region)
+  support untouched.
+- **Threading.** `Stmt::InspectTallyReplace` gains a `tally_characters: bool` field,
+  populated from `read_inspect_tally_all`'s CHARACTERS flag; `exec_inspect_tally_replace`
+  passes it straight into `inspect_tally` (previously hardcoded `characters = false`),
+  which already fully supports the "count every position" form. On this path `delim` is
+  the never-read placeholder the reader supplies and `tally_leading` is `false`, exactly
+  as the standalone `FOR CHARACTERS` path.
+- **Still deferred (co-total).** The REPLACING half's OWN `CHARACTERS` form (`REPLACING
+  CHARACTERS BY x`, read by the single-item `read_inspect_replacing_all` in the combined
+  arm) stays a later rung — it travels a different code path and is NOT admitted here.
+  A multi-character region delimiter on the CHARACTERS tally half remains rejected by the
+  shared readers, identically to the lone forms.
+- **Byte-vs-char count chip (unchanged, pre-existing).** The CHARACTERS count is
+  position-based; the compiler counts BYTE positions (`str_len`), the oracle CHAR
+  positions (`chars.len()`) — they coincide on ASCII. A non-ASCII source is the
+  pre-existing byte-vs-char count chip (task_396ba6f6), identical to the standalone
+  `FOR CHARACTERS` (#60) and multi-item CHARACTERS (#81), and (in the combined form) the
+  REPLACING half's per-position reconstruction traps on a multi-byte char anyway — the
+  same shared reconstruction chip. Not fixed here.
+
 ## 0.81.0 — INSPECT REPLACING with a CHARACTERS item in a multi-item list — 2026-07-30
 
 - **`INSPECT source REPLACING … CHARACTERS BY x …`** — a `CHARACTERS BY x` item ALONGSIDE

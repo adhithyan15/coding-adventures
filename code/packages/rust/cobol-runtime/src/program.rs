@@ -522,9 +522,17 @@ pub enum Stmt {
     /// `REPLACING ALL` AND (as of this rung) `FOR LEADING`/`REPLACING LEADING`: a
     /// LEADING half carrying a region anchors its run at the window start, composing
     /// the SAME standalone LEADING+region routines the lone forms use — byte-identical
-    /// to the oracle. Only a multi-character region delimiter (and combined `FOR
-    /// CHARACTERS`) remain later rungs, rejected at read/exec time by the shared
-    /// readers, identically to the lone forms.
+    /// to the oracle.
+    ///
+    /// The TALLYING half now also admits `FOR CHARACTERS` (`tally_characters`): it
+    /// counts EVERY position in its (optional) region window into the counter,
+    /// composing the SAME standalone `FOR CHARACTERS` count (#60) the lone form uses,
+    /// still in ISO tally-then-replace order over the untouched original bytes. Only a
+    /// multi-character region delimiter remains a later rung on this path, rejected by
+    /// the shared readers exactly as the lone forms do. The REPLACING half's own
+    /// CHARACTERS form (`REPLACING CHARACTERS BY x`, lowered via
+    /// [`Stmt::InspectReplacingCharacters`]) stays DEFERRED in the combined form — it
+    /// travels a different code path and is not admitted here.
     InspectTallyReplace {
         source: String,
         counter: String,
@@ -533,6 +541,14 @@ pub enum Stmt {
         /// `false` for `FOR ALL` (count every occurrence). Applies to the
         /// TALLYING half only.
         tally_leading: bool,
+        /// `true` for `FOR CHARACTERS` (count EVERY position in the window,
+        /// regardless of content), `false` for `FOR ALL`/`FOR LEADING` (match a
+        /// delimiter). Applies to the TALLYING half only. When `true`, `delim`
+        /// carries a never-read placeholder and `tally_leading` is `false`,
+        /// exactly as the STANDALONE `FOR CHARACTERS` path does (#60). The
+        /// REPLACING half's own CHARACTERS form (`InspectReplacingCharacters`)
+        /// stays a later rung — it is NOT this flag.
+        tally_characters: bool,
         /// Optional `{BEFORE|AFTER} x` region narrowing the TALLYING half's count,
         /// computed over the original source (see [`Region`]). `None` = whole source.
         tally_region: Option<Region>,
@@ -1521,17 +1537,17 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     // LEADING half WITHOUT one, were already supported.)
                     let (counter, delim, leading, tally_characters, tally_region) =
                         read_inspect_tally_all(verb)?;
-                    // The shared reader now ACCEPTS `FOR CHARACTERS` (standalone), but the
-                    // COMBINED `TALLYING … REPLACING` form does not support a CHARACTERS
-                    // tally this rung. Re-impose the deferral here, mirroring the LEADING+
-                    // region deferral below, so the combined form stays a later rung on
-                    // both engines identically.
-                    if tally_characters {
-                        return Err(RuntimeError::Unsupported(
-                            "INSPECT TALLYING … FOR CHARACTERS in a combined TALLYING/REPLACING is a later rung"
-                                .into(),
-                        ));
-                    }
+                    // The shared reader ACCEPTS `FOR CHARACTERS`, and THIS rung admits it
+                    // on the COMBINED form's TALLYING half too: `tally_characters` rides
+                    // straight into the statement and the exec threads it into the SAME
+                    // standalone CHARACTERS count (#60), tallying every window position
+                    // over the untouched original bytes before the REPLACING half runs.
+                    // On this path `delim` is the never-read placeholder the reader hands
+                    // back (the CHARACTERS count never consults it) and `leading` is
+                    // `false`, exactly as the standalone `FOR CHARACTERS` path. (The
+                    // REPLACING half's OWN `CHARACTERS` form travels a different code path
+                    // and stays a later rung — see the `(false, true)` arm below.)
+                    //
                     // The combined form's TALLYING half supports BOTH `FOR ALL`
                     // and `FOR LEADING`: `leading` selects the count semantics
                     // (LEADING counts only the consecutive run of `delim` at the
@@ -1559,6 +1575,7 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                         counter,
                         delim,
                         tally_leading: leading,
+                        tally_characters,
                         tally_region,
                         search,
                         replace,
