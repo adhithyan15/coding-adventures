@@ -83,7 +83,8 @@ lines that a caller might later write to a log.
 
 Request lines use exactly two single-space delimiters. Status lines use a
 single space between version and the exactly three-digit status code, followed
-by either no reason phrase or one space and the reason phrase. Tabs and
+by either no delimiter or one space and a non-empty reason phrase whose first
+byte is not structural whitespace. Tabs, trailing empty delimiters, and
 variable whitespace are not accepted as structural delimiters.
 
 Field names must be non-empty RFC token bytes with no whitespace before the

@@ -415,12 +415,12 @@
     },
     {
       "id": "http1-safe-framing-backfill",
-      "title": "Backfill the fail-closed NET04 framing contract across established http1 lanes",
+      "title": "Backfill the fail-closed NET04 framing contract across every existing http1 lane",
       "status": "pending",
       "depends_on": ["haskell-http1"],
       "branch": null,
       "pr_number": null,
-      "notes": "Newly discovered during the Haskell http1 security review. Audit Python, Go, Ruby, TypeScript, Rust, Elixir, Perl, Lua, and Swift for TE/CL ambiguity, strict field/start-line grammar, duplicate Content-Length agreement, HEAD/CONNECT response context, bounded head resources, and redacted typed errors."
+      "notes": "Newly discovered during the Haskell http1 security review. Audit C, C#, Elixir, F#, Go, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript for TE/CL ambiguity, strict field/start-line grammar, duplicate Content-Length agreement, HEAD/CONNECT response context, bounded head resources, and redacted typed errors. C remains emerging but already has a permissive implementation that must be reconciled."
     },
     {
       "id": "haskell-high-consensus-tail",
