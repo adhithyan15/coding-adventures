@@ -8451,6 +8451,11 @@ export function normalizeModelCard(
       (!Number.isFinite(value) || value <= 0.0)
     ) {
       throw invalidElement(name, "MOSFET PHI must be finite and positive");
+    } else if (
+      canonical === "GAMMA" &&
+      (!Number.isFinite(value) || value < 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET GAMMA must be finite and non-negative");
     } else {
       normalized[canonical] = value;
     }

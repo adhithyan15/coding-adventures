@@ -33,12 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS surface-potential validation.
+1. Cross-language Level-1 MOS body-effect validation.
    - Status: current PR completion candidate.
-   - Reject non-positive or non-finite model-card `PHI` values before
-     electrostatic and temperature preprocessing.
-   - Preserve positive explicit surface potentials across Rust, Python, and
-     TypeScript.
+   - Reject negative or non-finite model-card `GAMMA` values before body-effect
+     and temperature preprocessing.
+   - Preserve zero and positive explicit body-effect coefficients across Rust,
+     Python, and TypeScript.
 
 ## Completed Slices
 
@@ -3692,6 +3692,13 @@ the Rust, Python, and TypeScript surfaces together.
      evaluation.
    - Arbitrary finite channel-length modulation coefficients remain aligned
      across Rust, Python, and TypeScript.
+
+302. Cross-language Level-1 MOS surface-potential validation.
+   - Status: completed in PR 9266.
+   - Non-positive and non-finite model-card `PHI` values are rejected before
+     electrostatic and temperature preprocessing.
+   - Positive explicit surface potentials remain aligned across Rust, Python,
+     and TypeScript.
 
 ## Backlog
 
