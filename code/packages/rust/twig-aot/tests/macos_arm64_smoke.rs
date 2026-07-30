@@ -1250,3 +1250,193 @@ fn end_to_end_closure_captured_env_survives_collect() {
          every reference — the closure still returns 41 (got {compacting})",
     );
 }
+
+/// AOT00 records-under-the-GC capstone — a Twig **record** cell is now a precise,
+/// **movable** heap object: its reference fields are traced, and a compacting
+/// collect relocates it *and the child it holds*, fixing up every pointer.
+///
+/// A Twig record `(Point f0 f1)` erases (via `emit_record_def`) to the generic
+/// `alloc` + `field_store` ops — a two-word `ref<LispyPair>` cell of boxed `any`
+/// fields. The native backends now lower that `alloc` to `__twig_gc_alloc_pair`,
+/// which allocates under the MOVABLE `{0,8}` pair kind (both words are reference
+/// slots), instead of the kind-0 conservative `__twig_gc_alloc` (aarch64) /
+/// no-reference-blob `__twig_alloc_bytes` (x86_64, which since twig-aot 0.48.0
+/// would have left the fields **untraced**). So a record is now traced + relocated
+/// exactly like a cons cell.
+///
+/// ```text
+///   main() -> i64:
+///       v42   = dyn_box_int(42)
+///       child = dyn_cons(v42, nil)      ; a heap child; its car is boxed 42
+///       rec   = alloc  (ref<LispyPair>) ; a MOVABLE record cell
+///       field_store rec, 0, child       ; field 0 = the heap child (a reference)
+///       field_store rec, 1, nil
+///       <compacting collect>            ; EVACUATES rec AND child to the arena;
+///                                       ;   rec's root slot and rec's field 0 are
+///                                       ;   both rewritten to the new addresses
+///       c0    = field_load rec, 0       ; the child, at its NEW location
+///       ret dyn_unbox_int(dyn_car(c0))  ; 42
+/// ```
+///
+/// Returning **42** proves three things at once: the record's field 0 was **traced**
+/// (a no-reference-blob record would let `child` be reclaimed → garbage/crash), the
+/// record and its child were **relocated**, and the record's field 0 was **fixed up**
+/// to the child's new address (the `alloc` cell is a *raw*, untagged pointer — a
+/// different root-fixup path than the tagged cons-cell tests above exercise). The
+/// same program under the non-moving precise collect (and a no-collect baseline)
+/// also returns 42.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_record_field_traced_and_relocated() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    fn bx(dest: &str, k: i64, kconst: &str) -> Vec<IIRInstr> {
+        vec![
+            IIRInstr::new("const", Some(kconst.into()), vec![Operand::Int(k)], "i64"),
+            IIRInstr::new("call_builtin", Some(dest.into()),
+                vec![Operand::Var("dyn_box_int".into()), Operand::Var(kconst.into())], "any"),
+        ]
+    }
+
+    fn build(collect: Option<&str>) -> IIRModule {
+        let mut body = bx("v42", 42, "k42");
+        body.extend([
+            // A heap child whose car is boxed 42, held (once its own slot dies)
+            // only through the record's field 0.
+            IIRInstr::new("const", Some("nil".into()), vec![Operand::Int(0)], "ref<LispyPair>"),
+            IIRInstr::new("call_builtin", Some("child".into()),
+                vec![Operand::Var("dyn_cons".into()), Operand::Var("v42".into()), Operand::Var("nil".into())], "any"),
+            // The record cell (generic `alloc` → movable `{0,8}` pair) + its fields.
+            {
+                let mut a = IIRInstr::new("alloc", Some("rec".into()), vec![], "ref<LispyPair>");
+                a.may_alloc = true;
+                a
+            },
+            IIRInstr::new("field_store", None,
+                vec![Operand::Var("rec".into()), Operand::Int(0), Operand::Var("child".into())], "void"),
+            IIRInstr::new("field_store", None,
+                vec![Operand::Var("rec".into()), Operand::Int(1), Operand::Var("nil".into())], "void"),
+        ]);
+        if let Some(c) = collect {
+            body.push(IIRInstr::new("call_builtin", Some("freed".into()),
+                vec![Operand::Var(c.into())], "i64"));
+        }
+        body.extend([
+            // Read the child back THROUGH the (possibly relocated + fixed-up) record.
+            IIRInstr::new("field_load", Some("c0".into()),
+                vec![Operand::Var("rec".into()), Operand::Int(0)], "any"),
+            IIRInstr::new("call_builtin", Some("car".into()),
+                vec![Operand::Var("dyn_car".into()), Operand::Var("c0".into())], "any"),
+            IIRInstr::new("call_builtin", Some("r".into()),
+                vec![Operand::Var("dyn_unbox_int".into()), Operand::Var("car".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ]);
+
+        let mut m = IIRModule::new("gc_record", "twig");
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: Option<&str>| -> i32 {
+        let m = build(collect);
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&m, &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    assert_eq!(run("gc_rec_base", None), 42, "baseline: record round-trips its child's value");
+    assert_eq!(
+        run("gc_rec_prec", Some("gc_collect_precise")), 42,
+        "precise collect must keep the record + its traced child",
+    );
+    assert_eq!(
+        run("gc_rec_comp", Some("gc_collect_compacting")), 42,
+        "compacting collect must relocate the record + child and fix up field 0 (a raw-pointer \
+         root); a wrong value/crash means the record's reference field was untraced or mis-fixed",
+    );
+}
+
+/// AOT00 records/unions — a **raw non-reference word** in a `{0,8}` movable cell is
+/// left untouched by compaction, even when its bit pattern *looks* heap-tagged.
+///
+/// `emit_union_def` stores a synthesized integer **discriminant** in word 0 of the
+/// same generic-`alloc` `{0,8}` cell records use — a word that is NOT one of the
+/// constructor's boxed `any` params. This test pins the guarantee that the `{0,8}`
+/// precise kind is nonetheless sound for it: gc-core traces + relocates a ref slot
+/// *only* when its value resolves to a real live block (`find_header`) / is a key in
+/// the compaction forwarding map. A small integer never is, so it is never followed
+/// or rewritten — no matter its low bits.
+///
+/// The discriminant here is **23** = `0b10111`: its low three bits are `0b111`, the
+/// exact `TAG_HEAP` pattern, and its stripped value (`23 & !7 == 16`) is the kind of
+/// tiny address a naive tag-only tracer might try to relocate. Word 1 holds a real
+/// heap child, so the cell genuinely relocates under compaction. Returning **23**
+/// proves the raw discriminant survived verbatim (a mis-relocation would rewrite it
+/// to a moved address); the live child in word 1 forces the relocation the
+/// discriminant must survive.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_raw_discriminant_word_not_relocated() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    fn build(collect: Option<&str>) -> IIRModule {
+        let mut body = vec![
+            // Word 1: a real heap child, so the cell has a genuine reference to fix up
+            // → it actually relocates under compaction.
+            IIRInstr::new("const", Some("k42".into()), vec![Operand::Int(42)], "i64"),
+            IIRInstr::new("call_builtin", Some("v42".into()),
+                vec![Operand::Var("dyn_box_int".into()), Operand::Var("k42".into())], "any"),
+            IIRInstr::new("const", Some("nil".into()), vec![Operand::Int(0)], "ref<LispyPair>"),
+            IIRInstr::new("call_builtin", Some("child".into()),
+                vec![Operand::Var("dyn_cons".into()), Operand::Var("v42".into()), Operand::Var("nil".into())], "any"),
+            // The {0,8} cell.
+            {
+                let mut a = IIRInstr::new("alloc", Some("cell".into()), vec![], "ref<LispyPair>");
+                a.may_alloc = true;
+                a
+            },
+            // Word 0: a RAW discriminant 23 (0b10111) — low bits 0b111 look heap-tagged.
+            IIRInstr::new("const", Some("tag".into()), vec![Operand::Int(23)], "i64"),
+            IIRInstr::new("field_store", None,
+                vec![Operand::Var("cell".into()), Operand::Int(0), Operand::Var("tag".into())], "void"),
+            IIRInstr::new("field_store", None,
+                vec![Operand::Var("cell".into()), Operand::Int(1), Operand::Var("child".into())], "void"),
+        ];
+        if let Some(c) = collect {
+            body.push(IIRInstr::new("call_builtin", Some("freed".into()),
+                vec![Operand::Var(c.into())], "i64"));
+        }
+        body.extend([
+            // Read the raw discriminant back — must be 23, verbatim.
+            IIRInstr::new("field_load", Some("got".into()),
+                vec![Operand::Var("cell".into()), Operand::Int(0)], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("got".into())], "i64"),
+        ]);
+        let mut m = IIRModule::new("gc_discriminant", "twig");
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: Option<&str>| -> i32 {
+        let m = build(collect);
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&m, &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    assert_eq!(run("gc_disc_base", None), 23, "baseline: raw discriminant round-trips");
+    assert_eq!(run("gc_disc_prec", Some("gc_collect_precise")), 23, "precise: discriminant untouched");
+    assert_eq!(
+        run("gc_disc_comp", Some("gc_collect_compacting")), 23,
+        "compacting: the raw `0b111`-low-bits discriminant must NOT be relocated even though the \
+         cell (via its live word-1 child) moves — provenance filtering leaves non-block words alone",
+    );
+}

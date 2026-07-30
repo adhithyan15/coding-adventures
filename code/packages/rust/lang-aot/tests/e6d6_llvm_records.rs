@@ -87,3 +87,50 @@ fn record_second_field_runs_on_llvm() {
         42,
     );
 }
+
+// --- Native AOT: the record `alloc` now lowers to the MOVABLE `{0,8}` pair
+//     allocator (`__twig_gc_alloc_pair`) instead of the kind-0 / no-ref path.
+//     These prove a real Twig record program still compiles + runs natively with
+//     that change (the GC-relocation proof is the twig-aot smoke differential
+//     `end_to_end_gc_record_field_traced_and_relocated`). -----------------------
+
+/// Native AOT: compile a Twig source straight to a host executable and run it.
+fn run_native(src: &str, stem: &str) -> Option<i32> {
+    let tmp = std::env::temp_dir().join(format!("e6d6_native_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).ok()?;
+    let src_path = tmp.join(format!("{stem}.twig"));
+    std::fs::write(&src_path, src).ok()?;
+    let exe = tmp.join(stem);
+    #[cfg(target_os = "linux")]
+    lang_aot::compile_file_to_linux_executable(&src_path, &exe, Language::Twig).ok()?;
+    #[cfg(target_os = "macos")]
+    lang_aot::compile_file_to_macos_executable(&src_path, &exe, Language::Twig).ok()?;
+    #[cfg(not(any(target_os = "linux", target_os = "macos")))]
+    {
+        let _ = (src_path, exe);
+        return None;
+    }
+    #[cfg(any(target_os = "linux", target_os = "macos"))]
+    Command::new(&exe).output().ok()?.status.code()
+}
+
+#[test]
+fn records_run_on_native() {
+    if !clang_available() {
+        eprintln!("clang absent — skipping");
+        return;
+    }
+    match run_native("(record Point (x : int) (y : int)) (point-x (Point 42 7))", "e6d6_nrec1") {
+        Some(c) => assert_eq!(c, 42, "first field of a native record"),
+        None => {
+            eprintln!("native AOT unsupported on host — skipping");
+            return;
+        }
+    }
+    // Second field exercises the cdr-then-car field_load walk on the movable cells.
+    assert_eq!(
+        run_native("(record Point (x : int) (y : int)) (point-y (Point 7 42))", "e6d6_nrec2"),
+        Some(42),
+        "second field of a native record (movable {{0,8}} pair cells)",
+    );
+}

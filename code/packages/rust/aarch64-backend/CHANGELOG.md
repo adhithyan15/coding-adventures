@@ -1,5 +1,14 @@
 # Changelog — `aarch64-backend`
 
+## 0.34.0 - 2026-07-30 — records are movable: `alloc` → `__twig_gc_alloc_pair`
+
+- The default (2-word pair) **`alloc`** op — the record/union constructor cell — now lowers to
+  `BL __twig_gc_alloc_pair` (the movable `{0,8}` pair allocator) instead of the kind-0 conservative
+  `__twig_gc_alloc`. A Twig record's two boxed-`any` fields are thereby traced precisely and the
+  cell is **relocated** under a compacting collect, on par with cons cells / closures. An explicit
+  non-pair `alloc` size keeps the conservative kind-0 path (unknown layout → a precise ref-map
+  would be unsound). Unit test `pair_alloc_uses_movable_pair_allocator`.
+
 ## 0.33.0 - 2026-07-29 — `gc_register_ref_array_kind` builtin (frontend array GC, AOT00-T5 §7)
 
 - **`gc_register_ref_array_kind` `BuiltinSig` row** (`(fixed, fixed_count, tail_from) -> kind_id`)

@@ -1,5 +1,18 @@
 # Changelog — `x86_64-backend`
 
+## 0.36.0 - 2026-07-30 — records are movable + a latent record-child UAF fixed
+
+- The default (2-word pair) **`alloc`** op — the record/union constructor cell — now lowers to
+  `CALL __twig_gc_alloc_pair` (the movable `{0,8}` pair allocator) instead of `__twig_alloc_bytes`.
+  This is a **correctness fix**, not only a quality upgrade: since twig-aot 0.48.0 routed
+  `__twig_alloc_bytes` through gc-core as a **no-reference blob** kind (for strings), an x86_64
+  record cell allocated that way had its reference fields left **untraced** — a child object held
+  only through a record field could be reclaimed out from under a live record (a use-after-free).
+  The `{0,8}` pair kind traces exactly the two fields, matching aarch64, so the record + its
+  children are traced and relocated precisely under compaction. An explicit non-pair `alloc` size
+  falls back to the conservative kind-0 `__twig_gc_alloc`. Unit test
+  `pair_alloc_uses_movable_pair_allocator`.
+
 ## 0.35.0 - 2026-07-29 — `gc_register_ref_array_kind` builtin (frontend array GC, AOT00-T5 §7)
 
 - **`gc_register_ref_array_kind` `BuiltinSig` row** (`(fixed, fixed_count, tail_from) -> kind_id`)

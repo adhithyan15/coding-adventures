@@ -1490,12 +1490,27 @@ fn emit_instr(
     // signature: one i64 argument (byte count), returns i64 pointer.
     if op == "alloc" {
         let dest = require_dest(instr)?;
-        let size_bytes: u64 = match instr.srcs.first() {
-            Some(CIROperand::Int(n)) if *n > 0 => *n as u64,
-            _ => 16, // default: 2-word LispyPair
+        let explicit_size: Option<u64> = match instr.srcs.first() {
+            Some(CIROperand::Int(n)) if *n > 0 => Some(*n as u64),
+            _ => None,
         };
-        asm.mov_imm64(Reg::X0, size_bytes);
-        asm.bl_external("__twig_gc_alloc");
+        // The default (no explicit size) allocation is a **2-word LispyPair** —
+        // the record/union constructor cell, always a pair of boxed `any` fields
+        // (§ emit_record_def types its params `any`). Allocate it under the
+        // MOVABLE `{0,8}` pair kind via `__twig_gc_alloc_pair` so the compacting
+        // collector can relocate records precisely, instead of the kind-0
+        // `__twig_gc_alloc` which pins them conservatively. An explicit non-pair
+        // size keeps the conservative kind-0 path (its field layout is unknown
+        // here, so a precise ref-map would be unsound).
+        match explicit_size {
+            None | Some(16) => {
+                asm.bl_external("__twig_gc_alloc_pair"); // movable {0,8} pair, no arg
+            }
+            Some(size_bytes) => {
+                asm.mov_imm64(Reg::X0, size_bytes);
+                asm.bl_external("__twig_gc_alloc"); // kind-0 conservative fallback
+            }
+        }
         let slot = alloc.slot_of(dest);
         asm.str_(Reg::X0, Reg::Sp, slot)?;
         return Ok(());
@@ -2322,6 +2337,26 @@ mod tests {
         srcs.extend(args.iter().map(|a| CIROperand::Var((*a).into())));
         CIRInstr { op: "call_builtin".into(), dest: dest.map(Into::into),
                    srcs, ty: "any".into(), deopt_to: None }
+    }
+
+    /// A default (2-word pair) `alloc` — the record/union constructor cell — lowers
+    /// to a `BL __twig_gc_alloc_pair`, the MOVABLE `{0,8}` allocator, not the kind-0
+    /// `__twig_gc_alloc`. So a Twig record is a precise, relocatable heap object.
+    #[test]
+    fn pair_alloc_uses_movable_pair_allocator() {
+        let cir = vec![
+            heap("alloc", Some("cell"), vec![], "ref<LispyPair>"),
+            heap("field_store", None,
+                 vec![CIROperand::Var("cell".into()), CIROperand::Int(0), CIROperand::Int(0)], "void"),
+            ret_u64("cell"),
+        ];
+        let (_bytes, ext) = compile_with_relocs(&ctx("rec", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("record alloc must lower: {e}"));
+        let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(symbols.contains(&"__twig_gc_alloc_pair"),
+                "default-pair alloc must use the movable pair allocator, got {symbols:?}");
+        assert!(!symbols.contains(&"__twig_gc_alloc"),
+                "must NOT use the kind-0 conservative allocator for a pair: {symbols:?}");
     }
 
     #[test]
