@@ -198,6 +198,9 @@ splitHeadLines input = collect 0 False 0 []
       in case Bytes.elemIndex lineFeed searchWindow of
           Nothing
             | Bytes.length remaining > maxLineBytes + 1 -> Left LineTooLong
+            | Bytes.length remaining == maxLineBytes + 1
+                && Bytes.last remaining /= carriageReturn ->
+                Left LineTooLong
             | inputLength > maxHeadBytes -> Left HeadTooLarge
             | otherwise -> Left IncompleteHead
           Just relativeLineEnd ->
@@ -266,7 +269,11 @@ parseStatusLine input =
     _ -> Left InvalidStartLine
 
 validReasonPhrase :: ByteString -> Bool
-validReasonPhrase = Bytes.all isFieldValueByte
+validReasonPhrase input =
+  not (Bytes.null input)
+    && Bytes.head input /= space
+    && Bytes.head input /= horizontalTab
+    && Bytes.all isFieldValueByte input
 
 parseHeaders :: [ByteString] -> Either Http1ParseError [Header]
 parseHeaders = traverse parseHeader
@@ -305,6 +312,9 @@ isOws character = character == ' ' || character == '\t'
 
 space :: Word8
 space = 32
+
+horizontalTab :: Word8
+horizontalTab = 9
 
 colon :: Word8
 colon = 58
