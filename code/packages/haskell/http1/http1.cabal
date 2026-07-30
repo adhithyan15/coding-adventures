@@ -1,0 +1,34 @@
+cabal-version: 3.0
+name:          http1
+version:       0.1.0
+synopsis:      Pure Haskell HTTP/1 request and response head parser with body framing detection
+description:   Pure Haskell HTTP/1 request and response head parser with body framing detection. This package is generated as a publishable library in the coding-adventures monorepo.
+category:      Development
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  CodingAdventures.Http1
+    build-depends:    base >=4.14 && <5
+                    , bytestring >=0.10 && <0.13
+                    , http-core >=0.1 && <0.2
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    Http1Spec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , bytestring >=0.10 && <0.13
+                    , http1
+                    , hspec ==2.*
+    ghc-options:      -Wall
+    default-language: Haskell2010
