@@ -1,0 +1,30 @@
+% ============================================================================
+% maddrey-discriminant-function.query.adj — worked applications of the Maddrey DF.
+% ============================================================================
+% The shape a consumer produces once it has decomposed an alcohol-associated-hepatitis assessment into a
+% patient prothrombin time, a control prothrombin time, and a total bilirubin: it `import`s the grounded
+% formulabook, `observe`s the three values, and asks the engine to APPLY the cited discriminant-function
+% formula. No arithmetic is stated by the consumer; the engine computes each value EXACTLY (over exact
+% rationals) and carries the article's citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (patient PT = 25 s, control PT = 15 s, total bilirubin = 8 mg/dL):
+% discriminant function = 4.6 × (25 − 15) + 8 = 4.6 × 10 + 8 = 46 + 8 = 54 — well above 32, marking severe
+% disease and prompting consideration of corticosteroids. Each query fixes two of the three quantities and
+% asks the engine to recover the third; every answer is exact and the inversions COMPOSE (each recovers
+% exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli maddrey-discriminant-function.query.adj
+% ============================================================================
+
+import "maddrey-discriminant-function.adj"
+
+% --- DF: the discriminant function the PTs and bilirubin imply (expect 54). -------------------------
+observe pt(25)
+observe control_pt(15)
+observe tbili(8)
+? discriminant_function(pt, control_pt, tbili)   % expect 54
+
+% --- Inverse: the patient PT a DF of 54 implies at the same control PT and bilirubin (expect 25). ---
+observe discriminant_function(54)
+? pt(discriminant_function, control_pt, tbili)   % expect 25
