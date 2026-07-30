@@ -9067,6 +9067,63 @@ fn inspect_combined_characters_is_still_a_later_rung() {
 }
 
 #[test]
+fn inspect_combined_characters_on_both_halves_is_a_later_rung() {
+    // CHARACTERS on BOTH halves: the TALLYING half is now supported, but the REPLACING
+    // half's own CHARACTERS form stays deferred, so the whole statement is a later rung
+    // rejected CO-TOTAL (the REPLACING-half reject fires regardless of the tally kind).
+    let src = wrap(
+        &["01  S  PIC X(4) VALUE \"ABAB\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR CHARACTERS REPLACING CHARACTERS BY \"X\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject CHARACTERS on both halves");
+    assert!(
+        compile_source(&src, "insp_combined_both_chars").is_err(),
+        "compiler must reject CHARACTERS on both halves"
+    );
+}
+
+#[test]
+fn inspect_combined_characters_signed_counter_is_a_later_rung() {
+    // The CHARACTERS combined tally validates its counter (unsigned integer PIC 9(n))
+    // before the replace runs — a SIGNED counter is a later rung on BOTH engines, and
+    // the abort leaves the source untouched (co-total).
+    let src = wrap(
+        &["01  S  PIC X(4) VALUE \"ABAB\".", "01  C  PIC S9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR CHARACTERS REPLACING ALL \"A\" BY \"B\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a signed counter");
+    assert!(
+        compile_source(&src, "insp_combined_chars_signed").is_err(),
+        "compiler must reject a signed counter"
+    );
+}
+
+#[test]
+fn inspect_combined_characters_after_absent_delimiter_empty_window_counts_zero() {
+    // Boundary: `FOR CHARACTERS AFTER "Q"` with "Q" absent → the tally window is EMPTY
+    // (start==end==len), so the CHARACTERS count adds 0 (C stays 000) while the REPLACING
+    // half still runs over the whole source. Mirrors the standalone AFTER-not-found rule
+    // in the combined form. `"AA"` → all "A"→"B", C=000.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(2) VALUE \"AA\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR CHARACTERS AFTER \"Q\"",
+            "    REPLACING ALL \"A\" BY \"B\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "000\nBB\n");
+}
+
+#[test]
 fn inspect_combined_second_tally_item_is_a_later_rung() {
     // A combined statement whose TALLYING half has a second FOR-phrase item
     // (`FOR ALL "A" ALL "B"`) is still a later rung — it parses, but the combined

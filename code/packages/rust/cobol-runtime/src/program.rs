@@ -1564,12 +1564,15 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     // SUPPORTED in the combined form (this rung lifts the old
                     // deferral). No re-imposition is needed: `exec_inspect_tally_replace`
                     // composes the SAME standalone routines the lone TALLYING /
-                    // REPLACING statements use — `inspect_tally(…, tally_leading, false,
-                    // tally_region)` first (over the untouched original bytes), then
-                    // `inspect_replace(…, replace_leading, replace_region)`. Those
-                    // routines already anchor a LEADING run at its window start, so the
-                    // combined form is byte-identical to the oracle with no exec change.
-                    // (Only combined `FOR CHARACTERS` stays a later rung, rejected above.)
+                    // REPLACING statements use — `inspect_tally(…, tally_leading,
+                    // tally_characters, tally_region)` first (over the untouched original
+                    // bytes), then `inspect_replace(…, replace_leading, replace_region)`.
+                    // Those routines already anchor a LEADING run at its window start and
+                    // count every position for a CHARACTERS tally, so the combined form is
+                    // byte-identical to the oracle with no exec change.
+                    // (The combined form's TALLYING half now admits `FOR CHARACTERS`; only
+                    // the REPLACING half's own CHARACTERS form — a different node — stays a
+                    // later rung, rejected by `read_inspect_replacing_all`.)
                     Ok(Stmt::InspectTallyReplace {
                         source,
                         counter,
