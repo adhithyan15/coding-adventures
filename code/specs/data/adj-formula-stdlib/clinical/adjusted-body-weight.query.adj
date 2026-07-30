@@ -1,0 +1,28 @@
+% ============================================================================
+% adjusted-body-weight.query.adj — worked applications of the adjusted body weight.
+% ============================================================================
+% The shape a consumer produces once it has decomposed an obese-dosing vignette into an ideal body
+% weight and an actual body weight: it `import`s the grounded formulabook, `observe`s the two values,
+% and asks the engine to APPLY the cited adjustment. No arithmetic is stated by the consumer; the engine
+% computes each value EXACTLY (over exact rationals) and carries the article's citation as its proof, on
+% the CPU, with zero model calls.
+%
+% Worked case (ideal body weight = 70 kg, actual body weight = 100 kg): adjusted = 70 + 0.4 × (100 − 70)
+% = 70 + 0.4 × 30 = 70 + 12 = 82 kg — the dosing weight sits between the ideal and the actual, closer to
+% ideal. Each query fixes two of the three quantities and asks the engine to recover the third; every
+% answer is exact and the three COMPOSE (each inversion recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli adjusted-body-weight.query.adj
+% ============================================================================
+
+import "adjusted-body-weight.adj"
+
+% --- Adjusted: the dosing weight the ideal and actual weights imply (expect 82). --------------------
+observe ideal_body_weight(70)
+observe actual_body_weight(100)
+? adjusted_body_weight(ideal_body_weight, actual_body_weight)   % expect 82
+
+% --- Inverse: the actual body weight an adjusted 82 implies at ideal 70 (expect 100). --------------
+observe adjusted_body_weight(82)
+? actual_body_weight(adjusted_body_weight, ideal_body_weight)   % expect 100
