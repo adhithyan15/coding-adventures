@@ -39,9 +39,9 @@ Framing fails closed when `Transfer-Encoding` and `Content-Length` coexist.
 Request transfer coding requires HTTP/1.1 and exactly one final `chunked`
 coding; parameterized transfer codings are rejected rather than normalized.
 Duplicate and comma-coalesced content lengths are accepted only when every
-bounded decimal value agrees. Responses apply HEAD, successful CONNECT, 1xx,
-204, and 304 semantics before ordinary chunked, content-length, and EOF
-framing, and reject transfer coding when either side uses HTTP/1.0.
+bounded decimal value agrees. Responses reject transfer coding when either
+side uses HTTP/1.0 before applying HEAD, successful CONNECT, 1xx, 204, and 304
+semantics or ordinary chunked, content-length, and EOF framing.
 
 Decimal status and content-length parsing is bounded. Signed, malformed, and
 overflowing values fail without constructing attacker-sized arbitrary-precision
@@ -51,7 +51,8 @@ Before decoding bytes to Haskell `String`, the parser caps a head at 65,536
 bytes, a line at 8,192 bytes, the field section at 100 lines, and transfer
 coding lists at 16 elements. Field names use strict RFC token bytes, whitespace
 before a colon and obsolete folding are rejected, and structural start-line
-delimiters are exact single spaces.
+delimiters are exact single spaces. Status lines require the reason delimiter
+even when the reason phrase is empty.
 
 ## Example
 
@@ -85,5 +86,5 @@ The package has no process, filesystem, network, environment, dynamic-loading,
 or unsafe capabilities. Its only runtime dependencies are `base`, `bytestring`,
 and the local pure `http-core` package.
 
-The current suite has 28 Hspec examples and measures 97% expression and 91%
+The current suite has 28 Hspec examples and measures 97% expression and 90%
 alternative coverage with GHC 9.4.8.

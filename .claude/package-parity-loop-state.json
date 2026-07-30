@@ -411,7 +411,7 @@
       "depends_on": ["haskell-http-core"],
       "branch": "codex/haskell-http1-parity",
       "pr_number": null,
-      "notes": "Selected after PR #9270 merged because the Linux runner-image TCB gate needs an externally chosen immutable/measured runner rather than self-attestation on mutable ubuntu-latest. This protocol edge builds on merged Haskell http-core, closes one of Haskell's three high-consensus gaps, and establishes the fail-closed NET04 framing contract discovered during security review. Local validation: GHC 9.4.8, 28 Hspec examples, 97% expression and 91% alternative coverage, schema-valid empty capability manifest, real Windows BUILD, http-core downstream test, Go resolver test/vet, affected plan http-core -> http1, collision report 4,334 slots / 277 gaps / zero collisions or unknown buckets, and clean diff."
+      "notes": "Selected after PR #9270 merged because the Linux runner-image TCB gate needs an externally chosen immutable/measured runner rather than self-attestation on mutable ubuntu-latest. This protocol edge builds on merged Haskell http-core, closes one of Haskell's three high-consensus gaps, and establishes the fail-closed NET04 framing contract discovered during security review. Local validation: GHC 9.4.8, 28 Hspec examples, 97% expression and 90% alternative coverage, schema-valid empty capability manifest, real Windows BUILD, http-core downstream test, Go resolver test/vet, affected plan http-core -> http1, collision report 4,334 slots / 277 gaps / zero collisions or unknown buckets, and clean diff."
     },
     {
       "id": "http1-safe-framing-backfill",
