@@ -833,6 +833,22 @@ fn mos_model_card_rejects_invalid_oxide_thickness() {
 }
 
 #[test]
+fn mos_model_card_rejects_invalid_surface_mobility() {
+    for (name, value) in [("U0", 0.0), ("UO", 600.0)] {
+        let valid = normalize_model_card("Mvalid", "nmos", &[(name, value)]).unwrap();
+        assert_close(*valid.parameters.get("U0").unwrap(), value);
+    }
+
+    for invalid_mobility in [-1.0, f64::INFINITY, f64::NAN] {
+        assert!(matches!(
+            normalize_model_card("Minvalid", "nmos", &[("U0", invalid_mobility)]),
+            Err(SpiceError::InvalidElement { reason, .. })
+                if reason == "MOSFET U0 must be finite and non-negative"
+        ));
+    }
+}
+
+#[test]
 fn bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() {
     let legacy_card = normalize_model_card(
         "Qlegacy",

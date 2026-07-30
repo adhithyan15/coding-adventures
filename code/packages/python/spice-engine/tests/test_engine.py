@@ -1033,6 +1033,18 @@ def test_mos_model_card_rejects_invalid_oxide_thickness() -> None:
             normalize_model_card("Minvalid", "nmos", {"TOX": invalid_thickness})
 
 
+def test_mos_model_card_rejects_invalid_surface_mobility() -> None:
+    for name, value in (("U0", 0.0), ("UO", 600.0)):
+        valid = normalize_model_card("Mvalid", "nmos", {name: value})
+        assert valid.parameters["U0"] == pytest.approx(value)
+
+    for invalid_mobility in (-1.0, math.inf, math.nan):
+        with pytest.raises(
+            ValueError, match="MOSFET U0 must be finite and non-negative"
+        ):
+            normalize_model_card("Minvalid", "nmos", {"U0": invalid_mobility})
+
+
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
     circuit = Circuit()
     circuit.add(JFET("J1", "drain", "gate", "0", Kf=-1.0))

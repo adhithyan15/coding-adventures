@@ -701,6 +701,19 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects invalid MOS surface mobility", () => {
+    for (const [name, value] of [["U0", 0.0], ["UO", 600.0]] as const) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { [name]: value });
+      expect(valid.parameters.U0).toBe(value);
+    }
+
+    for (const invalidMobility of [-1.0, Number.POSITIVE_INFINITY, Number.NaN]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { U0: invalidMobility }),
+      ).toThrow("MOSFET U0 must be finite and non-negative");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,
