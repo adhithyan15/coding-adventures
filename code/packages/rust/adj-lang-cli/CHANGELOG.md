@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.30.2] — 2026-07-30 — ADR-5: worked-example capstone (closes the argument-graph arc)
+
+The closing rung of the decompose-argument-graph arc: a committed worked example under
+`code/specs/data/adj-argument-ir/` (a technical paragraph + its decomposition into an
+`argument`) proves the whole pipeline end-to-end on prose. `adj-lang-cli` derives the
+paragraph's thesis (`failed_by(axle, fatigue)`) and `adj-verify --snapshots` byte-anchors all
+six of the argument's citations (4 premises + 2 inference warrants) against the pinned source
+(`quotes_verified:6`) and re-derives the thesis. New e2e `argument_worked_example_e2e.rs` (2)
+drives the committed files. Data + test only; no shipped-code change. The arc is now complete:
+spec → surface → grounding gate → verify → worked example.
+
 ## [0.30.1] — 2026-07-30 — ADR-4: adj-verify byte-anchors an argument (proven end-to-end)
 
 Because an `argument` desugars to facts + rules (ADR-2), `adj-verify` already delivers the
