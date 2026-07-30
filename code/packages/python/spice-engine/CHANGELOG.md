@@ -1,5 +1,7 @@
 # Changelog
 
+- Reject non-positive or non-finite Level-1 MOS model-card `KP` values with a
+  stable diagnostic before temperature scaling and current evaluation.
 - Reject negative or non-finite Level-1 MOS model-card `U0` / `UO` values with
   a stable diagnostic before mobility preprocessing.
 - Reject non-positive or non-finite Level-1 MOS model-card `TOX` values with a

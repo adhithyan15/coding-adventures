@@ -849,6 +849,20 @@ fn mos_model_card_rejects_invalid_surface_mobility() {
 }
 
 #[test]
+fn mos_model_card_rejects_invalid_transconductance() {
+    let valid = normalize_model_card("Mvalid", "nmos", &[("KP", 200.0e-6)]).unwrap();
+    assert_close(*valid.parameters.get("KP").unwrap(), 200.0e-6);
+
+    for invalid_transconductance in [0.0, -1.0, f64::INFINITY, f64::NAN] {
+        assert!(matches!(
+            normalize_model_card("Minvalid", "nmos", &[("KP", invalid_transconductance)]),
+            Err(SpiceError::InvalidElement { reason, .. })
+                if reason == "MOSFET KP must be finite and positive"
+        ));
+    }
+}
+
+#[test]
 fn bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() {
     let legacy_card = normalize_model_card(
         "Qlegacy",

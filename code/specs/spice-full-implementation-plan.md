@@ -33,12 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS surface-mobility validation.
+1. Cross-language Level-1 MOS transconductance validation.
    - Status: current PR completion candidate.
-   - Reject negative or non-finite model-card `U0` / `UO` values before
-     mobility preprocessing and process-derived `KP`.
-   - Preserve zero and positive surface mobility with stable diagnostics across
-     Rust, Python, and TypeScript.
+   - Reject non-positive or non-finite model-card `KP` values before
+     temperature scaling and current evaluation.
+   - Preserve positive explicit transconductance and its precedence over
+     process-derived `KP` across Rust, Python, and TypeScript.
 
 ## Completed Slices
 
@@ -3664,6 +3664,13 @@ the Rust, Python, and TypeScript surfaces together.
      mobility and electrostatic process-parameter preprocessing.
    - Positive oxide thickness and stable diagnostics remain aligned across
      Rust, Python, and TypeScript.
+
+298. Cross-language Level-1 MOS surface-mobility validation.
+   - Status: completed in PR 9197.
+   - Negative and non-finite model-card `U0` / `UO` values are rejected before
+     mobility preprocessing and process-derived `KP`.
+   - Zero and positive surface mobility plus stable diagnostics remain aligned
+     across Rust, Python, and TypeScript.
 
 ## Backlog
 

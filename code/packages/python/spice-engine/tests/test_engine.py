@@ -1045,6 +1045,19 @@ def test_mos_model_card_rejects_invalid_surface_mobility() -> None:
             normalize_model_card("Minvalid", "nmos", {"U0": invalid_mobility})
 
 
+def test_mos_model_card_rejects_invalid_transconductance() -> None:
+    valid = normalize_model_card("Mvalid", "nmos", {"KP": 200.0e-6})
+    assert valid.parameters["KP"] == pytest.approx(200.0e-6)
+
+    for invalid_transconductance in (0.0, -1.0, math.inf, math.nan):
+        with pytest.raises(
+            ValueError, match="MOSFET KP must be finite and positive"
+        ):
+            normalize_model_card(
+                "Minvalid", "nmos", {"KP": invalid_transconductance}
+            )
+
+
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
     circuit = Circuit()
     circuit.add(JFET("J1", "drain", "gate", "0", Kf=-1.0))

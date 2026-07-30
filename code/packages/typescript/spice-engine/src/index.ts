@@ -8440,6 +8440,8 @@ export function normalizeModelCard(
       throw invalidElement(name, "MOSFET TOX must be finite and positive");
     } else if (canonical === "U0" && (!Number.isFinite(value) || value < 0.0)) {
       throw invalidElement(name, "MOSFET U0 must be finite and non-negative");
+    } else if (canonical === "KP" && (!Number.isFinite(value) || value <= 0.0)) {
+      throw invalidElement(name, "MOSFET KP must be finite and positive");
     } else {
       normalized[canonical] = value;
     }
