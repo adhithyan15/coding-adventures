@@ -2637,14 +2637,132 @@ fn printf_str(name: &str, v: &SqlValue) -> Result<String, VmError> {
     }
 }
 
+/// Coerce a value to the `f64` a `printf` float conversion (`%e`/`%f`/`%g`)
+/// expects. Matches SQLite's numeric affinity: an integer/boolean is its value;
+/// a float is itself; text contributes its leading real (`'3.14abc'` → 3.14,
+/// `'abc'` → 0.0, same rule as `CAST(... AS REAL)`); NULL and blobs are 0.0.
+fn printf_float(v: &SqlValue) -> f64 {
+    match v {
+        SqlValue::Float(f) => *f,
+        SqlValue::Int(i) => *i as f64,
+        SqlValue::Bool(b) => *b as i64 as f64,
+        SqlValue::Text(s) => parse_real_prefix(s),
+        _ => 0.0,
+    }
+}
+
+/// Rewrite Rust's `{:e}` exponent to C `printf` form: Rust emits `1.5e0` /
+/// `1.23e-4` (bare, sign only when negative, no leading zero); C emits
+/// `1.5e+00` / `1.23e-04` (always a sign, at least two exponent digits). `upper`
+/// selects `E` for the `%E`/`%G` conversions.
+fn fix_exp(s: &str, upper: bool) -> String {
+    let Some((mant, exp)) = s.split_once(['e', 'E']) else {
+        return s.to_string();
+    };
+    let e: i32 = exp.parse().unwrap_or(0);
+    let ec = if upper { 'E' } else { 'e' };
+    let sign = if e < 0 { '-' } else { '+' };
+    format!("{mant}{ec}{sign}{:02}", e.unsigned_abs())
+}
+
+/// `%g` fixed-form cleanup: strip trailing zeros and any now-trailing decimal
+/// point (`"100.000"` → `"100"`, `"1.50000"` → `"1.5"`). Only touches strings
+/// that contain a `.`, so an integer-form body is returned untouched.
+fn strip_g_fixed(s: &str) -> String {
+    if s.contains('.') {
+        s.trim_end_matches('0').trim_end_matches('.').to_string()
+    } else {
+        s.to_string()
+    }
+}
+
+/// `%g` scientific-form cleanup: strip trailing zeros from the mantissa (the
+/// part before `e`/`E`) only — `"1.00000e+20"` → `"1e+20"`, `"1.23457e+06"`
+/// unchanged. The exponent is left intact.
+fn strip_g_sci(s: &str) -> String {
+    match s.find(['e', 'E']) {
+        Some(i) => {
+            let (mant, exp) = s.split_at(i);
+            let m = if mant.contains('.') {
+                mant.trim_end_matches('0').trim_end_matches('.')
+            } else {
+                mant
+            };
+            format!("{m}{exp}")
+        }
+        None => s.to_string(),
+    }
+}
+
+/// Format the (non-negative) MAGNITUDE of a float per a C `printf` float
+/// conversion, matching SQLite. `spec` is one of `e E f F g G`; `precision` is
+/// the explicit `.N` or `None` (defaulting to 6). The sign is handled by the
+/// caller so this composes with the `0`/width padding machinery.
+///
+/// - `%f` — fixed: `precision` fractional digits (`1.5` → `1.500000`).
+/// - `%e` — scientific: one leading digit, `precision` fractional digits, a
+///   C-form exponent (`1.5` → `1.500000e+00`).
+/// - `%g` — the shorter of `%e`/`%f` at `precision` SIGNIFICANT digits, then
+///   trailing zeros trimmed. Uses `%e` when the decimal exponent is `< -4` or
+///   `>= precision`, else `%f`; `precision` 0 is treated as 1 (C rule).
+fn printf_float_body(spec: char, mag: f64, precision: Option<usize>) -> String {
+    let upper = spec.is_ascii_uppercase();
+    // Non-finite values: C prints `inf`/`nan` (upper for the capital specs).
+    if !mag.is_finite() {
+        let s = if mag.is_nan() { "nan" } else { "inf" };
+        return if upper { s.to_uppercase() } else { s.to_string() };
+    }
+    match spec.to_ascii_lowercase() {
+        'f' => format!("{:.*}", precision.unwrap_or(6), mag),
+        'e' => fix_exp(&format!("{:.*e}", precision.unwrap_or(6), mag), upper),
+        _ => {
+            // `%g`: precision is a SIGNIFICANT-digit count (default 6, min 1).
+            let mut p = precision.unwrap_or(6);
+            if p == 0 {
+                p = 1;
+            }
+            if mag == 0.0 {
+                return "0".to_string();
+            }
+            // Round to `p` significant digits in scientific form to learn the
+            // decimal exponent AFTER rounding (a 9.99→10.0 carry can bump it).
+            let sci = format!("{:.*e}", p - 1, mag);
+            let exp: i32 = sci
+                .split(['e', 'E'])
+                .nth(1)
+                .and_then(|e| e.parse().ok())
+                .unwrap_or(0);
+            if exp >= -4 && (exp as i64) < p as i64 {
+                let fprec = (p as i32 - 1 - exp).max(0) as usize;
+                strip_g_fixed(&format!("{:.*}", fprec, mag))
+            } else {
+                strip_g_sci(&fix_exp(&sci, upper))
+            }
+        }
+    }
+}
+
 /// A minimal, DoS-bounded implementation of SQLite's `printf`/`format`.
 ///
 /// Supports the conversions `%d`/`%i`, `%s` (with `.precision` truncation),
-/// `%x`/`%X`, `%o`, `%c` (the first character of the argument's text), `%q`
-/// (single-quotes doubled, for SQL-literal building) and `%%`; with the flags
-/// `-` (left-justify), `0` (zero-pad numbers), `+` and space (sign on positives),
-/// and a field width. Float conversions (`%f`/`%g`/`%e`) are declined — their
-/// exact SQLite text form is the same subtlety HEX/QUOTE avoid.
+/// `%x`/`%X`, `%o`, `%c` (the first character of the argument's text), the
+/// SQL-quoting family `%q` / `%Q` / `%w`, the float conversions `%e`/`%E`,
+/// `%f`/`%F`, `%g`/`%G`, and `%%`; with the flags `-` (left-justify), `0`
+/// (zero-pad numbers), `+` and space (sign on positives), and a field width.
+///
+/// The quoting family follows SQLite's `etSQLESCAPE` semantics: `%q` doubles
+/// single quotes (for a bare string inside a `'...'` literal); `%Q` does the
+/// same AND wraps the result in single quotes; `%w` doubles double quotes (for
+/// a `"..."` identifier). A NULL argument renders as `(NULL)` for `%q`/`%w` and
+/// as the bare keyword `NULL` for `%Q` — matching SQLite exactly. `%q`/`%Q`/`%w`
+/// of a REAL or BLOB argument is declined (its exact SQLite text form is the
+/// same dtoa subtlety HEX/QUOTE avoid); text/integer arguments are supported.
+///
+/// The float conversions coerce their argument with numeric affinity (see
+/// [`printf_float`]) and format it per the C standard (see
+/// [`printf_float_body`]): `%f` fixed, `%e` scientific with a C-form exponent,
+/// `%g` the shorter form at N significant digits with trailing zeros trimmed.
+/// Default precision is 6.
 ///
 /// Missing arguments default to `0` (numeric) or `""` (string), and extra
 /// arguments are ignored — matching SQLite. Width and precision are capped, and
@@ -2760,9 +2878,50 @@ fn sql_printf(name: &str, format: &str, args: &[SqlValue]) -> Result<String, VmE
                 s.chars().next().map(|c| c.to_string()).unwrap_or_default()
             }
             'q' => {
-                let s = printf_str(name, args.get(argi).unwrap_or(&SqlValue::Null))?;
+                // Escape single quotes by doubling; a NULL argument renders as
+                // the SQLite sentinel `(NULL)`. No surrounding quotes.
+                let v = args.get(argi).unwrap_or(&SqlValue::Null);
                 argi += 1;
-                s.replace('\'', "''")
+                match v {
+                    SqlValue::Null => "(NULL)".to_string(),
+                    _ => printf_str(name, v)?.replace('\'', "''"),
+                }
+            }
+            'Q' => {
+                // Like %q, but ALSO wrap the escaped text in single quotes so the
+                // result is a complete SQL string literal. A NULL argument
+                // renders as the bare keyword `NULL` (no quotes).
+                let v = args.get(argi).unwrap_or(&SqlValue::Null);
+                argi += 1;
+                match v {
+                    SqlValue::Null => "NULL".to_string(),
+                    _ => format!("'{}'", printf_str(name, v)?.replace('\'', "''")),
+                }
+            }
+            'w' => {
+                // Escape double quotes by doubling, for embedding in a "..."
+                // identifier. A NULL argument renders as `(NULL)`.
+                let v = args.get(argi).unwrap_or(&SqlValue::Null);
+                argi += 1;
+                match v {
+                    SqlValue::Null => "(NULL)".to_string(),
+                    _ => printf_str(name, v)?.replace('"', "\"\""),
+                }
+            }
+            'e' | 'E' | 'f' | 'F' | 'g' | 'G' => {
+                // Float conversions: coerce via numeric affinity, split off the
+                // sign (so the `0`/width padding composes as for %d), then format
+                // the magnitude per the C standard.
+                let val = printf_float(args.get(argi).unwrap_or(&SqlValue::Null));
+                argi += 1;
+                if val.is_sign_negative() && !val.is_nan() {
+                    sign.push('-');
+                } else if plus {
+                    sign.push('+');
+                } else if space {
+                    sign.push(' ');
+                }
+                printf_float_body(spec, val.abs(), precision)
             }
             other => {
                 return Err(VmError::TypeMismatch(format!(
@@ -2778,7 +2937,12 @@ fn sql_printf(name: &str, format: &str, args: &[SqlValue]) -> Result<String, VmE
             out.push_str(&sign);
             out.push_str(&body);
             out.extend(std::iter::repeat_n(' ', pad));
-        } else if zero && matches!(spec, 'd' | 'i' | 'x' | 'X' | 'o') {
+        } else if zero
+            && matches!(
+                spec,
+                'd' | 'i' | 'x' | 'X' | 'o' | 'e' | 'E' | 'f' | 'F' | 'g' | 'G'
+            )
+        {
             out.push_str(&sign);
             out.extend(std::iter::repeat_n('0', pad));
             out.push_str(&body);
@@ -5892,16 +6056,45 @@ mod tests {
         assert_eq!(pf("%s", vec![SqlValue::Null]), txt("")); // NULL → ""
         assert_eq!(pf("%d %d", vec![SqlValue::Int(1)]), txt("1 0")); // missing → 0
         assert_eq!(pf("%d", vec![SqlValue::Int(1), SqlValue::Int(2)]), txt("1")); // extra ignored
-        // %q doubles single quotes (SQL-literal building).
-        assert_eq!(pf("%q", vec![txt("a'b")]), txt("a''b"));
+        // SQL-quoting family (SQLite etSQLESCAPE semantics).
+        assert_eq!(pf("%q", vec![txt("a'b")]), txt("a''b")); // double single quotes
+        assert_eq!(pf("%q", vec![SqlValue::Null]), txt("(NULL)")); // NULL sentinel
+        assert_eq!(pf("%Q", vec![txt("a'b")]), txt("'a''b'")); // escape AND wrap
+        assert_eq!(pf("%Q", vec![SqlValue::Null]), txt("NULL")); // bare keyword
+        assert_eq!(pf("%Q", vec![SqlValue::Int(42)]), txt("'42'"));
+        assert_eq!(pf("%w", vec![txt("a\"b")]), txt("a\"\"b")); // double double quotes
+        assert_eq!(pf("%w", vec![SqlValue::Null]), txt("(NULL)"));
+        // Float conversions: %f fixed, %e scientific (C-form exponent), %g
+        // shortest-at-N-significant-digits with trailing zeros trimmed.
+        assert_eq!(pf("%f", vec![SqlValue::Float(1.5)]), txt("1.500000"));
+        assert_eq!(pf("%.2f", vec![SqlValue::Float(3.14159)]), txt("3.14"));
+        assert_eq!(pf("%f", vec![SqlValue::Null]), txt("0.000000")); // NULL → 0.0
+        assert_eq!(pf("%f", vec![txt("3.14abc")]), txt("3.140000")); // leading real
+        assert_eq!(pf("%e", vec![SqlValue::Float(1.5)]), txt("1.500000e+00"));
+        assert_eq!(pf("%E", vec![SqlValue::Float(1.5)]), txt("1.500000E+00"));
+        assert_eq!(pf("%.2e", vec![SqlValue::Float(1234.5)]), txt("1.23e+03"));
+        assert_eq!(pf("%e", vec![SqlValue::Float(-0.000123)]), txt("-1.230000e-04"));
+        assert_eq!(pf("[%012.2e]", vec![SqlValue::Float(3.14159)]), txt("[00003.14e+00]"));
+        assert_eq!(pf("%g", vec![SqlValue::Float(1.5)]), txt("1.5"));
+        assert_eq!(pf("%g", vec![SqlValue::Float(100.0)]), txt("100"));
+        assert_eq!(pf("%g", vec![SqlValue::Float(0.0)]), txt("0"));
+        assert_eq!(pf("%g", vec![SqlValue::Float(1234567.0)]), txt("1.23457e+06"));
+        assert_eq!(pf("%g", vec![SqlValue::Float(0.00001)]), txt("1e-05"));
+        assert_eq!(pf("%.3g", vec![SqlValue::Float(1234.5)]), txt("1.23e+03"));
+        assert_eq!(pf("%G", vec![SqlValue::Float(1e20)]), txt("1E+20"));
         // FORMAT is an alias.
         assert_eq!(call_builtin("FORMAT", vec![txt("%d"), SqlValue::Int(7)]).unwrap(), txt("7"));
-        // A NULL format → NULL; a float conversion is declined; no format errors.
+        // A NULL format → NULL; an unknown conversion is declined; no format errors.
         assert_eq!(call_builtin("PRINTF", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
-        assert!(call_builtin("PRINTF", vec![txt("%f"), SqlValue::Float(1.5)]).is_err());
+        assert!(call_builtin("PRINTF", vec![txt("%y"), SqlValue::Int(1)]).is_err());
+        // %q/%Q/%w of a REAL are declined (dtoa subtlety), matching %s of a REAL.
+        assert!(call_builtin("PRINTF", vec![txt("%Q"), SqlValue::Float(1.5)]).is_err());
         assert!(call_builtin("PRINTF", vec![]).is_err());
-        // A hostile field width is rejected, not allocated (DoS guard).
+        // A hostile field width is rejected, not allocated (DoS guard). The same
+        // cap covers float precision, so a giant `.N` on %f/%e/%g cannot drive an
+        // unbounded fractional expansion.
         assert!(call_builtin("PRINTF", vec![txt("%9999999999d"), SqlValue::Int(1)]).is_err());
+        assert!(call_builtin("PRINTF", vec![txt("%.9999999999f"), SqlValue::Float(1.5)]).is_err());
     }
 
     #[test]

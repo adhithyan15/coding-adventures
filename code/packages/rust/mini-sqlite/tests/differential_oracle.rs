@@ -2342,6 +2342,59 @@ const CASES: &[Case] = &[
         setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
         query: "SELECT replace('abc', '', 'X') AS a, replace('aaa', 'a', 'bb') AS b, replace('aaa', 'a', '') AS c FROM t",
     },
+    // printf/format SQL-quoting family (%q/%Q/%w) — SQLite `etSQLESCAPE`
+    // semantics. %q doubles single quotes; %Q does that AND wraps in single
+    // quotes; %w doubles double quotes (for a "..." identifier). A NULL argument
+    // is the sentinel `(NULL)` for %q/%w and the bare keyword `NULL` for %Q — a
+    // detail SQLite gets subtly different across the three. (%q of NULL was ""
+    // before; now `(NULL)`.) REAL/BLOB arguments to this family are declined by
+    // mini-sqlite — the same dtoa subtlety HEX/QUOTE avoid — so they are not
+    // exercised here; text/integer arguments are.
+    Case {
+        id: "printf_quote_q",
+        setup: &[],
+        query: "SELECT printf('%q', 'a''b') AS a, printf('%q', NULL) AS b, printf('%q', 42) AS c",
+    },
+    Case {
+        id: "printf_quote_Q",
+        setup: &[],
+        query: "SELECT printf('%Q', 'a''b') AS a, printf('%Q', NULL) AS b, printf('%Q', 42) AS c",
+    },
+    Case {
+        id: "printf_quote_w",
+        setup: &[],
+        query: "SELECT printf('%w', 'a\"b') AS a, printf('%w', NULL) AS b, printf('%w', 'plain') AS c",
+    },
+    // printf float conversions — %e/%E scientific (C-form exponent: always a
+    // sign, >=2 digits), %f/%F fixed, %g/%G shortest-at-N-significant-digits with
+    // trailing zeros trimmed. Default precision 6. Arguments take numeric
+    // affinity: integers/text coerce (text via leading real, '3.14abc' → 3.14),
+    // NULL → 0.0. Flags/width/precision (`-`, `0`, `+`, space, `.N`) apply.
+    Case {
+        id: "printf_e_basic",
+        setup: &[],
+        query: "SELECT printf('%e', 1.5) AS a, printf('%e', 12345) AS b, printf('%e', -0.000123) AS c, printf('%E', 1.5) AS d",
+    },
+    Case {
+        id: "printf_e_prec_pad",
+        setup: &[],
+        query: "SELECT printf('%.2e', 1234.5) AS a, printf('[%012.2e]', 3.14159) AS b, printf('[%-14.2e]', 3.14159) AS c",
+    },
+    Case {
+        id: "printf_f_basic",
+        setup: &[],
+        query: "SELECT printf('%f', 1.5) AS a, printf('%.2f', 3.14159) AS b, printf('%f', NULL) AS c, printf('%f', '3.14abc') AS d",
+    },
+    Case {
+        id: "printf_g_basic",
+        setup: &[],
+        query: "SELECT printf('%g', 1.5) AS a, printf('%g', 100.0) AS b, printf('%g', 0.0) AS c, printf('%g', 1234567.0) AS d",
+    },
+    Case {
+        id: "printf_g_exp_prec",
+        setup: &[],
+        query: "SELECT printf('%g', 0.00001) AS a, printf('%.3g', 1234.5) AS b, printf('%G', 1e20) AS c, printf('%g', 123456789.0) AS d",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
