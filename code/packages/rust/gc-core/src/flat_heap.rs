@@ -589,6 +589,26 @@ impl FlatHeap {
         self.field_maps.len()
     }
 
+    /// The **kind id** of the live heap object containing payload address `addr`, or `0` if
+    /// `addr` is not inside any live block this heap owns (including `0`/null and any non-heap
+    /// value). A frontend uses this to discriminate object *classes* that share the heap tag —
+    /// e.g. telling a closure kind from a cons kind for `procedure?` / `pair?` — from a value it
+    /// has already stripped of its tag.
+    ///
+    /// Safe: the address is *validated* against the live-block list ([`Self::find_header`])
+    /// before any header read, so a bogus or foreign pointer yields `0` rather than reading
+    /// out of bounds. O(n) in the live-object count (the block-list walk); intended for cold
+    /// type predicates, not per-element hot loops.
+    pub fn kind_of(&self, addr: usize) -> u16 {
+        let h = self.find_header(addr);
+        if h.is_null() {
+            0
+        } else {
+            // SAFETY: `find_header` returned a live block we own; its header is valid.
+            unsafe { (*h).kind }
+        }
+    }
+
     /// Whether the live set has reached the threshold — i.e. a collection is due.
     ///
     /// This is the *policy* half of paced collection: it answers "should I collect
@@ -2660,6 +2680,28 @@ mod tests {
         assert_eq!(heap.register_kind(&[0]), 1);
         assert_eq!(heap.register_kind(&[0, 8]), 2);
         assert_eq!(heap.registered_kinds(), 2);
+    }
+
+    /// `kind_of` reports the registered kind of a live object (for frontend class
+    /// discrimination, e.g. closure vs. cons), `0` for kind-0 / opaque objects, and `0` for any
+    /// address not inside a live block (null, an interior-of-nothing, a stale/foreign pointer).
+    #[test]
+    fn kind_of_reports_object_kind_and_zero_for_non_heap() {
+        let mut heap = FlatHeap::new();
+        let cons = heap.register_kind(&[0, 8]); // e.g. a pair
+        let clos = heap.register_ref_array_kind(&[], 8); // e.g. a closure: code_ptr @0, caps tail
+        let pair = heap.alloc(16, cons) as usize;
+        let closure = heap.alloc(24, clos) as usize;
+        let opaque = heap.alloc(16, 0) as usize; // kind 0
+
+        assert_eq!(heap.kind_of(pair), cons, "pair reports its cons kind");
+        assert_eq!(heap.kind_of(closure), clos, "closure reports its closure kind");
+        assert_ne!(heap.kind_of(pair), heap.kind_of(closure), "distinct classes distinguishable");
+        assert_eq!(heap.kind_of(opaque), 0, "a kind-0 object reports 0");
+        assert_eq!(heap.kind_of(0), 0, "null → 0");
+        assert_eq!(heap.kind_of(0xdead_beef), 0, "a non-heap address → 0 (no OOB read)");
+        // An interior address of a live block still resolves to that block's kind.
+        assert_eq!(heap.kind_of(pair + 8), cons, "interior address resolves to the block's kind");
     }
 
     /// The headline property: with a precise kind whose only ref field is at

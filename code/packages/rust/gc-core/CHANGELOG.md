@@ -1,5 +1,16 @@
 # Changelog — gc-core
 
+## 0.24.0 — 2026-07-29 — `FlatHeap::kind_of` — object-class accessor (AOT00-T6)
+
+- **`FlatHeap::kind_of(addr) -> u16`** — the kind id of the live heap object containing payload
+  address `addr`, or `0` if `addr` is not inside any live block (null, non-heap, or stale
+  pointer). A frontend uses it to discriminate object *classes* that share the heap tag — e.g. a
+  closure kind (`register_ref_array_kind([], 8)`) from a cons kind — for `procedure?` / `pair?`
+  predicates. Safe: the address is validated against the live-block list before any header read,
+  so a bogus value yields `0` (no out-of-bounds read). O(n) in the live-object count; intended for
+  cold type predicates. Foundation for the native-closures arc (AOT00-T6). Test
+  `kind_of_reports_object_kind_and_zero_for_non_heap`.
+
 ## 0.23.2 — 2026-07-29 — robustness-at-scale tests (AOT00-T5, tests only)
 
 Test-only. Confirms the collector stays correct and O(n) as the heap grows to many thousands of
