@@ -1,0 +1,92 @@
+% ============================================================================
+% metabolic-alkalosis-compensation.adj — the expected respiratory compensation for METABOLIC ALKALOSIS
+% (expected PaCO2 = 40 + 0.6 × (HCO3 − 24)) in the ADJ standard library.
+% ============================================================================
+% The metabolic-alkalosis-compensation entry of the *clinical* track — the arterial CO2 tension a patient with
+% a PRIMARY metabolic alkalosis SHOULD settle at once the lungs have compensated. A rising bicarbonate raises
+% the blood pH; the respiratory centre answers by hypoventilating, letting CO2 accumulate to blunt the pH
+% swing. The cited page gives the predicted degree of that compensation as a line anchored at the normal point
+% (PaCO2 40, HCO3 24): for every 1 mmol/L that bicarbonate rises above 24, the expected PaCO2 rises about
+% 0.6 mmHg. THE EXPECTED PaCO2 IS 40 PLUS 0.6 TIMES THE AMOUNT BICARBONATE EXCEEDS 24 — i.e.
+% PaCO2 = 40 + 0.6 × (HCO3 − 24). Comparing a patient's MEASURED PaCO2 against this expected value reveals a
+% superimposed respiratory disorder: a measured PaCO2 far below the expected means a concurrent respiratory
+% alkalosis; far above means a concurrent respiratory acidosis. It is the alkalosis counterpart of Winter's
+% formula (the metabolic-ACIDOSIS compensation grounded separately in winters-formula.adj).
+%
+% It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with its one exact
+% rearrangement (the bicarbonate a given expected PaCO2 implies). As with every compute library, a consumer
+% states NO arithmetic: it `import`s this file, binds the serum bicarbonate from its own byte-provenance
+% decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is performed by the
+% model; the engine computes each value EXACTLY (over exact rationals), carrying the formula's citation.
+%
+%     import "metabolic-alkalosis-compensation.adj"
+%     observe serum_bicarbonate(44)   % "…HCO3 44 mmol/L…"  (span cited by the model)
+%     ? expected_paco2(serum_bicarbonate)   % engine → 52 (mmHg, expected)
+%
+% Structurally this is a BASELINE PLUS A SCALED DEVIATION — a fixed anchor (40) plus a slope (0.6) times how
+% far one measured quantity sits from its own anchor (24) — a shape distinct from the plain-ratio
+% (respiratory-quotient), constant-scaled-product-over-a-value (elimination-half-life) and
+% single-value-over-a-constant (arm-span-height) forms of the other clinical libraries.
+%
+%   expected_paco2(serum_bicarbonate) = 40 + 6 * (serum_bicarbonate - 24) / 10   % (mmHg, expected)
+%   serum_bicarbonate(expected_paco2) = (expected_paco2 - 40) * 10 / 6 + 24       % (mmol/L, solved for HCO3)
+%
+% NOTE on the form of the slope: the cited slope is 0.6, which is EXACTLY 6/10, so multiplying by 0.6 is
+% identically multiplying by 6 and dividing by 10. The formulas are written in that integer form (× 6 … / 10,
+% and its inverse × 10 / 6) so the engine keeps the whole computation in exact integer arithmetic; the value is
+% identical to the cited "0.6 × (HCO3 − 24)". The three embedded constants — the PaCO2 anchor 40, the slope
+% 0.6 (as 6/10) and the HCO3 anchor 24 — are all exact as the cited expression prints them; the bicarbonate is
+% the one formal parameter bound at apply time, so every value the engine returns is exact.
+%
+% The two formulas COMPOSE and invert cleanly around the worked case serum_bicarbonate = 44 mmol/L (expected
+% PaCO2 = 40 + 0.6 × (44 − 24) = 40 + 0.6 × 20 = 40 + 12 = 52 mmHg): the `expected_paco2` a consumer computes
+% is exactly the value the inverse formula back-solves to recover its own measured input (44).
+%
+% NOTE ON UNITS AND MODELLING: bicarbonate is in mmol/L and the expected PaCO2 comes out in mmHg; the anchors
+% 40 mmHg and 24 mmol/L are the assumed normal values and 0.6 is a dimensionless slope in mmHg per mmol/L. This
+% is the EXPECTED (predicted-normal) compensation only — a reference the MEASURED PaCO2 is judged against; the
+% library COMPUTES the expected value, and reading a measured PaCO2 against it (to detect a mixed disorder) is
+% the clinician's task, stated by the cited source but applied by the reader.
+%
+% Both formulas are defended by the SAME clause — the quoted compensation expression — because that one
+% expression (40 + 0.6 × (HCO3 − 24)) sanctions the relation read either way. The quote is transcribed verbatim
+% from the StatPearls article "Alkalosis", where it is printed as the typed, operand-complete expression
+% "PaCO2 in mm Hg = 40 + 0.6 × (HCO3 − 24 mmol/L)". Each `formula` therefore carries the provenance envelope
+% every shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the formula is a verbatim span of the cited page, not asserted from
+% memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `serum_bicarbonate` and `expected_paco2` each appear BOTH as a derived result and as an input (of
+% the other formula), so each is a single dictionary term used in both roles. The `surface` lists are the
+% everyday names a decomposer maps onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary metabolic_alkalosis_compensation_vocab {
+    define serum_bicarbonate : finding  surface "serum bicarbonate", "bicarbonate", "HCO3", "HCO3-", "serum HCO3"        % mmol/L
+    define expected_paco2    : finding  surface "expected PaCO2", "predicted PaCO2", "compensated PaCO2", "expected pCO2" % mmHg
+}
+
+% ----------------------------------------------------------------------------
+% The metabolic-alkalosis respiratory compensation, both ways. Each is a named, importable, reusable formula
+% over its formal parameter, bound at apply time, and each carries the compensation expression from the
+% StatPearls article (a quote is required on a shipped formula). Each is an exact expression in the measured
+% value and the exact constants 40, 6/10 and 24, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook metabolic_alkalosis_compensation_laws {
+    use metabolic_alkalosis_compensation_vocab
+
+    % Expected PaCO2 — the 40 mmHg anchor plus 0.6 (= 6/10) times how far bicarbonate exceeds its 24 anchor.
+    formula expected_paco2(serum_bicarbonate) = 40 + 6 * (serum_bicarbonate - 24) / 10
+        source "PaCO2 in mm Hg = 40 + 0.6 × (HCO3 − 24 mmol/L)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545269/"
+        trust authoritative
+
+    % Serum bicarbonate — the same expression solved for HCO3. Dividing by the cited 0.6 is identically
+    % multiplying by its exact reciprocal 10/6 (0.6 = 6/10), written that way so the engine stays in exact
+    % integer arithmetic. Defended by the SAME clause.
+    formula serum_bicarbonate(expected_paco2) = (expected_paco2 - 40) * 10 / 6 + 24
+        source "PaCO2 in mm Hg = 40 + 0.6 × (HCO3 − 24 mmol/L)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545269/"
+        trust authoritative
+}

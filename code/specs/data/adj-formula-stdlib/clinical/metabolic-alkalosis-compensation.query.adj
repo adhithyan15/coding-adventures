@@ -1,0 +1,28 @@
+% ============================================================================
+% metabolic-alkalosis-compensation.query.adj — worked applications of the metabolic-alkalosis respiratory
+% compensation (expected PaCO2).
+% ============================================================================
+% The shape a consumer produces once it has decomposed an acid-base assessment down to a serum bicarbonate in
+% a primary metabolic alkalosis: it `import`s the grounded formulabook, `observe`s the bicarbonate, and asks
+% the engine to APPLY the cited expected-PaCO2 formula. No arithmetic is stated by the consumer; the engine
+% computes each value EXACTLY (over exact rationals) and carries the article's citation as its proof, on the
+% CPU, with zero model calls.
+%
+% Worked case (serum bicarbonate = 44 mmol/L): expected PaCO2 = 40 + 0.6 × (44 − 24) = 40 + 12 = 52 mmHg (the
+% degree of hypoventilation a pure metabolic alkalosis should produce). Each query fixes one input and asks the
+% engine to recover the other quantity; every answer is exact and the inversion COMPOSES (it recovers exactly
+% the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli metabolic-alkalosis-compensation.query.adj
+% ============================================================================
+
+import "metabolic-alkalosis-compensation.adj"
+
+% --- Expected PaCO2: the compensation a bicarbonate of 44 implies (expect 52). ----------------------
+observe serum_bicarbonate(44)
+? expected_paco2(serum_bicarbonate)   % expect 52
+
+% --- Inverse: the bicarbonate an expected PaCO2 of 52 implies (expect 44). ---------------------------
+observe expected_paco2(52)
+? serum_bicarbonate(expected_paco2)   % expect 44
