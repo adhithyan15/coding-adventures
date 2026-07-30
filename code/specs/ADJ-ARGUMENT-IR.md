@@ -286,8 +286,9 @@ grounding payload the §3 gate checks. Final syntax fixed in ADR-2.
   example. This is the SLD-proof-chain `--explain` the ADR-4 follow-up named; the *adversarial*
   warrant re-refutation (§3.2, model-in-the-loop) remains the last follow-up.
 - **Later:** the trained decomposer that *emits* this adj-lang from prose (reuses the F3 training
-  harness, retargeted from closed-vocab findings to the open-vocab argument surface); multi-
-  paragraph / whole-paper composition (a paper is a DAG of paragraph arguments sharing conclusions).
+  harness, retargeted from closed-vocab findings to the open-vocab argument surface) — now
+  spec'd in [`ADJ-ARGUMENT-DECOMPOSER.md`](ADJ-ARGUMENT-DECOMPOSER.md); multi-paragraph /
+  whole-paper composition (a paper is a DAG of paragraph arguments sharing conclusions).
 
 ---
 
