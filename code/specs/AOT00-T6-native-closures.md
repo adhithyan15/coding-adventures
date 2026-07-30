@@ -198,14 +198,37 @@ differential on aarch64)
 7. **Docs + memory.** Update the convergence memory + this spec's status; note the Twig heap
    surface is now fully native-GC-managed (cons ✓, strings ✓, records via `alloc`, closures ✓).
 
+### 4.1 Sequencing constraint — the transform is COUPLED to native compilation (do not land PR-2 alone)
+
+The naive "land the env transform first, lowering later" plan is **unsound**: a closure-target
+function transformed to the env shape but then *not* compiled natively falls back to the embedded
+`twig-vm`, which expects the **original captures-as-params** shape → the interpreter would run a
+function whose parameter list it no longer understands, breaking closures across the ~130 tests.
+
+Therefore:
+- **The env transform must be applied to a closure-target function ONLY when that function — and
+  the caller sites' `alloc_closure`/`call_closure` — will actually compile natively.** A function
+  (or its closure target) that falls back to the VM must be left in the **original** shape.
+- Practically this means PR-2's transform lands **together with** PR-4/5's `alloc_closure` /
+  `call_closure` lowering, guarded so the transform is only committed for functions that pass
+  native compilation; anything that would fall back is emitted unchanged. Implement it as: try to
+  compile the whole closure cluster natively with the transform applied to a *copy*; on success use
+  the transformed native code, on any failure discard the transform and route the original IIR to
+  the VM. (Equivalently: gate the transform on "all ops in the cluster are backend-supported.")
+- The safest first *mergeable* unit is therefore **PR-3 (the gc-core-capi `closure_kind` +
+  `__gc_kind_of`)**, which is independent and testable; the transform + both lowerings + the
+  partition/fallback guard land as one coherent native-closures PR (or a tightly-reviewed pair),
+  not as isolated slices.
+
 ## 5. Verification (end-to-end)
 - Per-PR: `cargo test` (twig-ir-compiler, twig-vm, backends, gc-core-capi, twig-aot), clippy, Miri
   on any new unsafe, `/security-review`.
 - Headline: a compiled **native aarch64** program `((lambda (x) (+ x c)) …)` capturing `c` returns
   the right value **and** its closure relocates under compaction with the capture fixed up — closures
   run natively and live under the native GC.
-- Regression guard: the full existing closure suite (VM + other engines) stays green through the
-  env-pointer model change (PR-2).
+- Regression guard: the full existing closure suite (VM + the other seven engines) stays green —
+  the env transform is native-path-only and applied only to functions that compile natively, so any
+  closure that falls back to the interpreter keeps its original captures-as-params shape (§4.1).
 
 ## 6. Non-goals
 - Escape analysis / stack-allocating non-escaping closures (an optimisation; heap-allocate all
