@@ -201,19 +201,27 @@ absent — and `AFTER z` replaces right of it — NOTHING if `z` is absent; posi
 outside the region keep their original character, and for `REPLACING LEADING` the run
 is ANCHORED at the window start, so `REPLACING LEADING "a" BY "*" AFTER "X"` over
 `"aaXaab"` rewrites only the in-window run → `"aaX**b"`); the **multi-item**
-`INSPECT source REPLACING ALL a BY x [{BEFORE|AFTER} p] ALL b BY y [{BEFORE|AFTER} q] …`
-(TWO OR MORE `ALL` replace items in one clause, **each item optionally carrying its OWN
-`{BEFORE|AFTER}` region** — ONE left-to-right pass in which each position takes the
-FIRST item, in WRITTEN ORDER, that BOTH contains the position in its own window AND whose
-single-char search matches the ORIGINAL character; FIRST-MATCH-WINS, and — crucially — NO
-RE-CHAINING: a byte a replacement produces is never re-examined by a later item, so
+`INSPECT source REPLACING {ALL|LEADING} a BY x [{BEFORE|AFTER} p] {ALL|LEADING} b BY y [{BEFORE|AFTER} q] …`
+(TWO OR MORE replace items in one clause — a MIX of `ALL` and `LEADING` items,
+**each item optionally carrying its OWN `{BEFORE|AFTER}` region** — ONE left-to-right pass
+in which each position takes the FIRST ELIGIBLE item, in WRITTEN ORDER, that BOTH contains
+the position in its own window AND whose single-char search matches the ORIGINAL character
+(a `LEADING` item ALSO requires its run still active); FIRST-MATCH-WINS, and — crucially —
+NO RE-CHAINING: a byte a replacement produces is never re-examined by a later item, so
 `REPLACING ALL "a" BY "b" ALL "b" BY "z"` over `"ab"` gives `"bz"`, not `"zz"`. Each
 item's window is computed over the ORIGINAL source with the SAME `region_window` helper the
 lone/single-item forms use — `BEFORE p`→`[0, first_index_of_p)`, `AFTER p`→`(first_index_of_p, len]`,
 not-found asymmetry BEFORE→whole / AFTER→empty; an item with no region has the whole source
 as its window. So `ALL "a" BY "b" BEFORE "X" ALL "a" BY "c" AFTER "X"` over `"aXaXa"` →
-`"bXcXc"`. This rung's multi path stays `ALL`-only, single-char; a `LEADING`/`CHARACTERS`/`FIRST`
-item in the list is a later rung — a single replace item keeps all its capabilities);
+`"bXcXc"`. A `LEADING` item in a multi-item list is now supported (this rung), the exact
+replace-side twin of the multi-item TALLYING-with-LEADING form: it replaces only its
+CONSECUTIVE run of `a` anchored at its window start, carried by a per-item `active` run
+flag (consulted only for `LEADING` items) that is updated INDEPENDENTLY of which item won
+each position — a run breaks at the FIRST in-window mismatch, a matching char keeps it
+alive even if a higher-priority item claimed the position, and positions outside the window
+neither begin nor break it. So `REPLACING LEADING "a" BY "X" ALL "b" BY "Y"` over `"aabaa"`
+→ `"XXYaa"`. The multi path stays single-char; a `CHARACTERS`/`FIRST` item in the list is a
+later rung — a single replace item keeps all its capabilities);
 the **replace-every-position** `INSPECT source REPLACING
 CHARACTERS BY x` (no search character — EVERY position of the alphanumeric source is
 overwritten with the single replacement char `x`, so with no region the WHOLE field
@@ -270,8 +278,9 @@ tally, a `{BEFORE|AFTER}` region on a `FOR LEADING`/`REPLACING LEADING` phrase
 MULTI-character region delimiter, a `REPLACING CHARACTERS` item carrying a
 `{BEFORE|AFTER}` region or a non-ASCII literal replacement / `REPLACING FIRST` (a lone
 `REPLACING CHARACTERS BY x` is now supported), a MULTI-item
-`REPLACING` list carrying a `LEADING`/`CHARACTERS`/`FIRST` item or a `{BEFORE|AFTER}`
-region (the multi-item list itself is now supported for plain single-char `ALL` items),
+`REPLACING` list carrying a `CHARACTERS`/`FIRST` item (the multi-item list itself is now
+supported for single-char `ALL` **and** `LEADING` items, and each such item may carry its
+OWN `{BEFORE|AFTER}` region),
 a MULTI-item `TALLYING` list carrying a `CHARACTERS` item
 (the multi-item tally list itself is now supported for single-char `ALL` **and**
 `LEADING` items under ONE counter, and each such item may now carry its OWN

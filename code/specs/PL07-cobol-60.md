@@ -1325,6 +1325,90 @@ in a multi-item list; SEVERAL counters (more than one `tally_for`); and the comb
 lone `FOR LEADING`, a region, and `CHARACTERS`) is untouched, and the several-counters path stays
 `ALL`-only. The counter must remain an unsigned-integer `PIC 9(n)`.
 
+### Multi-item `REPLACING` list with a `LEADING` item (follow-up rung, v0.66.0 / v0.70.0)
+
+The exact **replace-side twin** of the multi-item `TALLYING`-with-`LEADING` rung above. The multi-item
+`REPLACING` list (`REPLACING … a BY x … b BY y …`, two or more `replace_item`s in one clause) now
+accepts a `LEADING` item alongside `ALL` items — a MIX of `ALL` and `LEADING`, each with its own
+optional `{BEFORE|AFTER}` region. Previously any `LEADING` item in a multi-item REPLACING list was a
+later rung (rejected on both engines with "INSPECT REPLACING with several items and a LEADING item is a
+later rung"); that reject is now **lifted**. Only a `CHARACTERS`/`FIRST` item in a multi-item list, and
+the combined `TALLYING … REPLACING` form with several items, remain later rungs. No grammar change is
+needed — `replace_item = (ALL|LEADING) operand BY operand inspect_region*` already parses a per-item
+`LEADING` keyword.
+
+**Semantics (per-item `active` run flags — the SAME machine as the tally twin, but the decision loop
+EMITS instead of counts).** Resolve each item to `(search_char, replace_char, leading, start, end)`
+where `[start, end)` is its window over the ORIGINAL source (`region_window`; a region-less item = the
+whole source `(0, len)`). ONE left-to-right pass over the original positions carries a per-item
+`active` flag (only consulted for `LEADING` items, all init `true`):
+
+```text
+active = [true; N]                    # one per item; consulted for LEADING only
+for i in 0..len:
+    c = chars[i]
+    out[i] = c                        # default: unchanged
+    # decision: first ELIGIBLE item in WRITTEN ORDER, emit its replacement, then stop
+    for k in 0..N:
+        (search, replace, leading, start, end) = resolved[k]
+        in_win = start <= i && i < end
+        if in_win && c == search && (!leading || active[k]): out[i] = replace; break
+    # then update EVERY LEADING item's run flag — INDEPENDENT of which item won:
+    for k in 0..N:
+        (search, _, leading, start, end) = resolved[k]
+        if leading && start <= i && i < end && c != search: active[k] = false
+source := out                         # exactly len chars, width unchanged
+```
+
+The ONLY difference from the tally twin is the decision line: instead of `count += 1` it produces the
+replacement char at position `i` (keeping the original on no match). The run-update pass is IDENTICAL.
+The scan reads the ORIGINAL `chars` (never the output) — the no-re-chaining property, exactly like the
+existing multi-item REPLACING. The decisive subtleties (identical on both engines): (1) the `active`
+update is a SEPARATE pass over ALL leading items AFTER the decision, breaking a run ONLY on an
+IN-WINDOW `c != search` — **not** when another item claimed the position; a matching char keeps the run
+alive even if a higher-priority item won it. (2) A `LEADING` item is eligible only while its `active`
+flag is STILL `true`. (3) First-match-wins: a position is replaced by at most one item, but the
+active-update still runs for all leading items. (4) A region-less `LEADING` item anchors its run at
+source position 0; a `LEADING` item WITH a region anchors it at its window start. Worked (`PIC X`):
+- `"aabaa"` `REPLACING LEADING "a" BY "X" ALL "b" BY "Y"` → `"XXYaa"` (leading run of `a` at 0,1 → `X`;
+  the `b` → `Y`; the `a`s at 3,4 are past the dead run and stay).
+- `"aab"` `REPLACING LEADING "a" BY "X" ALL "a" BY "Y"` → `"XXb"` (the LEADING item claims 0,1;
+  first-match-wins means the duplicate `ALL "a"` never sees them).
+- `"Xaa"` `REPLACING ALL "X" BY "Q" LEADING "a" BY "Z"` → `"Qaa"` (the higher-priority `ALL "X"` wins
+  index 0, whose char breaks the LEADING `a` run in the SEPARATE update pass, so the `a`s at 1,2 are
+  NOT replaced — a fold-into-decision bug would give `"QZZ"`).
+- `"aaZbb"` `REPLACING LEADING "a" BY "X" BEFORE "Z" LEADING "b" BY "Y" AFTER "Z"` → `"XXZYY"` (two
+  independent per-item run flags, each anchored at its own window start).
+
+**Implementation.** The oracle's `Stmt::InspectReplacingMulti.items` becomes
+`Vec<ReplaceMultiLeadingItem>` (`= (Operand, Operand, bool, Option<Region>)`, the replace twin of
+`TallyMultiLeadingItem`); `read_inspect_replacing_multi` reads each item's `LEADING` keyword the same
+way `read_inspect_tally_multi` does, keeping the CHARACTERS/FIRST rejects. `exec_inspect_replacing_multi`
+resolves every `(search, replace, leading, window)` over the original source BEFORE mutating storage,
+then rebuilds in one pass with the two-loop active-flag machine above. The compiler mirrors this:
+`ReplaceItem` gains a `leading` bool, a new `ResolvedReplaceLeadingItem` alias carries the
+search/replace registers plus `leading`/`active`/`window`, and `emit_inspect_replacing_multi` allocates
+a per-`LEADING`-item `active` register (i64, init 1) before the compile-time-unrolled `0..W` pass. In
+the decision chain a `LEADING` link AND-gates on `active`; at the per-position `done` convergence label
+(reached by both a match `jmp` and the no-match fall-through) EVERY leading item's run is updated —
+`active := active AND eq` (region-less) or `active := active AND (eq OR NOT in_win)` (windowed) —
+recomputing `eq`/`in_win` there because an early match `jmp` skips the later chain registers, exactly
+as the tally side's `cont` section does. The two engines' CST readers count the same `replace_item`
+children, so their accept/reject sets stay co-total.
+
+**Byte-safety.** Identical to the multi-item REPLACING-region rung: the match fires only on a
+single-char ASCII search (a multi-byte source char is never falsely matched), and each window is
+content-defined. But because REPLACING RECONSTRUCTS the source, a source that itself contains a
+multi-byte char remains the PRE-EXISTING byte-vs-char chip (`task_396ba6f6`) shared by EVERY `REPLACING`
+lowering: the byte-based compiler rebuilds with per-position `str_slice` and traps, while the char-based
+oracle succeeds. This rung adds NO new non-ASCII divergence (its non-ASCII test is a characterization
+test pinning both engines, not `assert_matches_oracle`).
+
+**Scope kept for a later rung** (unchanged, identical messages on both engines): a `CHARACTERS`/`FIRST`
+item in a multi-item list, and the combined `TALLYING … REPLACING` form with several items. The
+single-item path (which already supports a lone `REPLACING LEADING`, a region, and `CHARACTERS`) is
+untouched.
+
 ### Combined `INSPECT … TALLYING … REPLACING` (one statement)
 
 A single `INSPECT` may carry **both** phrases:

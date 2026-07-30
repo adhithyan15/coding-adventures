@@ -5,7 +5,8 @@ use crate::error::RuntimeError;
 use crate::picture::Picture;
 use crate::program::{
     ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program, RefIndex, Region,
-    RegionKind, RelOp, Stmt, TallyCounterGroup, TallyMultiLeadingItem, ValueSpec, WhenValue,
+    RegionKind, RelOp, ReplaceMultiLeadingItem, Stmt, TallyCounterGroup, TallyMultiLeadingItem,
+    ValueSpec, WhenValue,
 };
 use crate::value::{add, div, move_into_char, move_into_numeric, mul, pow, round, sub, Decimal};
 use std::collections::HashMap;
@@ -1394,78 +1395,114 @@ impl Machine {
     /// BEFORE any mutation so an invalid item leaves the source untouched. A
     /// numeric/group source is rejected by [`Self::inspect_alnum_source`]. The
     /// read-time reader (`read_inspect_replacing_multi`) has already ruled out
-    /// LEADING/CHARACTERS/FIRST items, so here every item is a plain `ALL` single-char
-    /// pair with an OPTIONAL `{BEFORE|AFTER} x` region.
+    /// CHARACTERS/FIRST items, so here every item is a single-char `{ALL|LEADING}`
+    /// search-BY-replace pair with an OPTIONAL `{BEFORE|AFTER} x` region.
     ///
-    /// # Per-item regions (this rung)
+    /// # Per-item regions
     ///
     /// Each item may carry its OWN optional `{BEFORE|AFTER} x` window, computed over
     /// the ORIGINAL source via the SAME [`Self::region_window`] helper the lone/
     /// single-item forms use (BEFORE→`[0, first_x)`; AFTER→`(first_x, len]`; not-found
     /// asymmetry BEFORE→whole, AFTER→empty). An item with NO region has the whole
-    /// source as its window. The single-pass first-match model is otherwise unchanged:
-    /// at each position the items are tried IN WRITTEN ORDER and the FIRST whose window
-    /// CONTAINS the position AND whose search equals the ORIGINAL char wins:
+    /// source as its window (so a region-less `LEADING` item anchors its run at source
+    /// position 0).
+    ///
+    /// # The `LEADING` active-flag machine (this rung — twin of the tally side)
+    ///
+    /// This is the byte-producing analogue of [`Self::exec_inspect_tally_multi`]: the
+    /// ONLY difference from that count-side machine is that the decision loop, instead
+    /// of `count += 1`, EMITS the item's replacement char at position `i` (and on no
+    /// match keeps the ORIGINAL char). The run-update loop is IDENTICAL. ONE
+    /// left-to-right pass carries a per-item `active` flag (only consulted for `LEADING`
+    /// items, all init `true`):
     ///
     /// ```text
+    ///   active = [true; N]                              // one per item; LEADING-only
     ///   for i in 0..width {
-    ///       out[i] = src[i]                                   // default: unchanged
-    ///       for (search, replace, (start, end)) in items {    // written order
-    ///           if start <= i < end && src[i] == search { out[i] = replace; break }
+    ///       c = chars[i]
+    ///       out[i] = c                                   // default: unchanged
+    ///       for (search, replace, leading, start, end) in items {   // written order
+    ///           in_win = start <= i < end
+    ///           if in_win && c == search && (!leading || active[k]) {
+    ///               out[i] = replace; break              // first eligible item wins
+    ///           }
+    ///       }
+    ///       for (search, _, leading, start, end) in items {   // then update EVERY run
+    ///           if leading && start <= i < end && c != search { active[k] = false }
     ///       }
     ///   }
     /// ```
     ///
-    /// This is the exact composition of the two already-merged features — multi-item
-    /// first-match-wins and single-item REPLACING-ALL-with-region — with the per-item
-    /// window ANDed into each link's compare. First-match-wins and no-re-chaining are
-    /// unchanged: the scan reads `chars` (the original) and never the output, and each
-    /// window is computed over that same original, so both engines agree byte-for-byte
-    /// (the match-based replacement only fires on a single-char ASCII search, so
-    /// multi-byte source chars pass through untouched and the rebuilt string stays
-    /// valid UTF-8 — the same byte-safety the single-item region form relies on).
+    /// So a `LEADING` item replaces only its CONSECUTIVE run of `search` anchored at its
+    /// window start; a `search` after a break is NOT replaced. The run-update loop runs
+    /// INDEPENDENTLY of which item won the decision — a run breaks at the FIRST in-window
+    /// position whose char is NOT its search (a matching char keeps the run alive even if
+    /// a higher-priority item claimed that position; positions outside the window neither
+    /// begin nor break the run). First-match-wins and no-re-chaining are unchanged: the
+    /// scan reads `chars` (the original) and never the output, and each window is computed
+    /// over that same original, so both engines agree byte-for-byte (the match-based
+    /// replacement only fires on a single-char ASCII search, so multi-byte source chars
+    /// pass through untouched and the rebuilt string stays valid UTF-8 — the same
+    /// byte-safety the single-item region form relies on).
     fn exec_inspect_replacing_multi(
         &mut self,
         source: &str,
-        items: &[(Operand, Operand, Option<Region>)],
+        items: &[ReplaceMultiLeadingItem],
     ) -> Result<(), RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
         // ONE pass over the ORIGINAL characters — resolve them FIRST so the window
         // (like the single-item path) sees the pre-replacement bytes, and so an
         // invalid operand aborts with the source untouched.
         let chars: Vec<char> = self.items[sidx].storage.chars().collect();
-        // Resolve every (search char, replace char, [start, end) window) FIRST —
-        // reading all items (and computing their windows over the original `chars`)
-        // before touching storage means an invalid operand aborts cleanly, exactly
-        // like the single-item path reads both chars and the window first.
-        let resolved: Vec<(char, char, usize, usize)> = items
+        // Resolve every (search char, replace char, leading flag, [start, end) window)
+        // FIRST — reading all items (and computing their windows over the original
+        // `chars`) before touching storage means an invalid operand aborts cleanly,
+        // exactly like the single-item path reads both chars and the window first.
+        let resolved: Vec<(char, char, bool, usize, usize)> = items
             .iter()
-            .map(|(search, replace, region)| {
+            .map(|(search, replace, leading, region)| {
                 let s = self.single_delim_char(search, "INSPECT REPLACING")?;
                 let r = self.single_delim_char(replace, "INSPECT REPLACING")?;
                 let (start, end) = self.region_window(&chars, region.as_ref())?;
-                Ok((s, r, start, end))
+                Ok((s, r, *leading, start, end))
             })
             .collect::<Result<_, RuntimeError>>()?;
 
-        // At each position the first item in WRITTEN ORDER whose window CONTAINS the
-        // position AND whose search matches wins; on no match the original char is
-        // kept. Because the scan reads `chars` (the original) and never the output,
-        // a produced character is never re-examined — that is the no-re-chaining
-        // property (see the doc comment above), and each window was computed over that
-        // same original, so first-match-per-position within windows is exact.
-        let rebuilt: String = chars
-            .iter()
-            .enumerate()
-            .map(|(i, &c)| {
-                for (search_ch, replace_ch, start, end) in &resolved {
-                    if *start <= i && i < *end && c == *search_ch {
-                        return *replace_ch; // first in-window match wins, stop scanning
-                    }
+        // The `LEADING` active-flag machine — the byte-producing twin of
+        // `exec_inspect_tally_multi` (see the doc comment). A per-item `active` run flag
+        // (only consulted for `LEADING` items, all init `true`) rides one left-to-right
+        // pass. At each position the FIRST ELIGIBLE item in WRITTEN ORDER emits its
+        // replacement and the rest are skipped; on no eligible item the ORIGINAL char is
+        // kept. Because the scan reads `chars` (the original) and never the output, a
+        // produced character is never re-examined — the no-re-chaining property — and
+        // each window was computed over that same original.
+        let mut active = vec![true; resolved.len()];
+        let mut rebuilt = String::with_capacity(self.items[sidx].storage.len());
+        for (i, &c) in chars.iter().enumerate() {
+            // Decision: first eligible item wins. An `ALL` item is eligible iff its
+            // window contains the position AND its search matches; a `LEADING` item ALSO
+            // requires its run still active (every prior in-window position equalled its
+            // search).
+            let mut out = c; // default: unchanged
+            for (k, &(search_ch, replace_ch, leading, start, end)) in resolved.iter().enumerate() {
+                let in_win = start <= i && i < end;
+                if in_win && c == search_ch && (!leading || active[k]) {
+                    out = replace_ch;
+                    break;
                 }
-                c // matched no item's window — unchanged
-            })
-            .collect();
+            }
+            rebuilt.push(out);
+            // Then update EVERY `LEADING` item's run flag, INDEPENDENTLY of which item
+            // won: a run breaks at the FIRST in-window position whose char is NOT its
+            // search (a matching char keeps the run alive even if a higher-priority item
+            // claimed the position; positions outside the window neither begin nor break
+            // the run — anchoring the run at the window start).
+            for (k, &(search_ch, _, leading, start, end)) in resolved.iter().enumerate() {
+                if leading && start <= i && i < end && c != search_ch {
+                    active[k] = false;
+                }
+            }
+        }
         self.move_into(sidx, Src::Chars(rebuilt))
     }
 
