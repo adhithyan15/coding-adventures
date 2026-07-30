@@ -8,6 +8,23 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.72.0: UNSTRING with a figurative-constant SPACE/ZERO source
+
+`UNSTRING … DELIMITED BY … INTO …` now lowers when the **source** operand is a **figurative constant**
+SPACE or ZERO, mapped to its single-character image — SPACE→`" "` (0x20), ZERO→`"0"` (0x30). Every
+spelling folds identically (SPACE/SPACES, ZERO/ZEROS/ZEROES). Compiled byte-identical to the
+`coding-adventures-cobol-runtime` 0.76.0 oracle.
+
+- **A figurative reduces to the 1-char `str_const` source register.** `emit_unstring` maps
+  `Src::Space`/`Src::Zero` to a fresh `_ussrc` register emitting `str_const " "` / `str_const "0"` —
+  exactly the existing `Src::Str` arm's shape — so the DELIMITED BY scan, WITH POINTER write-back,
+  multi-receiver reshape, and ON OVERFLOW lowering apply unchanged. Both images are known-ASCII, so no
+  ASCII check is needed and the non-ASCII-literal-source guard is never tripped.
+- **`Src` figurative case is exactly {Space, Zero}, both ASCII**, so no non-ASCII figurative can reach
+  the path. A numeric-literal source and a computed reference-modified source remain later rungs,
+  unchanged. Completes the figurative operand-class arc across the string verbs (CONVERTING v0.70.0,
+  STRING sending field v0.71.0), mirroring the oracle's read-time map to `Lit::Str`.
+
 ### Added — v0.71.0: STRING with a figurative-constant SPACE/ZERO sending field
 
 `STRING … INTO …` now lowers when a sending field is a **figurative constant** SPACE or ZERO, mapped to

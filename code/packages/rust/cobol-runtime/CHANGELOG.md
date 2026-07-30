@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.76.0 — UNSTRING with a figurative-constant SPACE/ZERO source — 2026-07-30
+
+- `UNSTRING … DELIMITED BY … INTO …` now accepts a **figurative constant** SPACE or ZERO as the
+  **source** operand, mapped to its single-character image — SPACE→`" "` (0x20), ZERO→`"0"` (0x30) —
+  reducing to the existing string-literal source scan. Every spelling folds identically (SPACE/SPACES,
+  ZERO/ZEROS/ZEROES). Byte-identical to the compiler (0.72.0).
+- **A figurative reduces to the string-literal source path.** The UNSTRING read maps
+  `Operand::Lit(Lit::Fig(Fig::Space))` → `Lit::Str(" ")` and `Fig::Zero` → `Lit::Str("0")`, then the
+  next line's exec resolves it exactly like a 1-char string literal; the DELIMITED BY scan, WITH POINTER
+  write-back, multi-receiver reshape, and ON OVERFLOW paths are unchanged. Both images are ASCII, so the
+  non-ASCII-literal-source guard passes.
+- **Fig is closed at {Space, Zero}, so no non-ASCII figurative can reach the path.** A numeric literal
+  source and a computed reference-modified source remain later rungs, unchanged. Completes the
+  figurative operand-class arc across the string verbs (CONVERTING 0.74.0, STRING sending field 0.75.0).
+
 ## 0.75.0 — STRING with a figurative-constant SPACE/ZERO sending field — 2026-07-30
 
 - `STRING … INTO …` now accepts a **figurative constant** SPACE or ZERO as a sending field, mapped to
