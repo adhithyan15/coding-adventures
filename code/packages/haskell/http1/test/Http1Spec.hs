@@ -273,7 +273,7 @@ spec = do
             "POST / HTTP/1.1\r\nTransfer-Encoding: "
               ++ concat (replicate 16 "gzip,")
               ++ "chunked\r\n\r\n"
-          oversizedIncomplete = replicate 65537 'x'
+          oversizedIncomplete = concat (replicate 32769 "\r\n")
       parseRequest longLine `shouldBe` Left LineTooLong
       parseRequest manyHeaders `shouldBe` Left TooManyHeaders
       parseRequest manyCodings `shouldBe` Left TooManyTransferCodings

@@ -1,15 +1,9 @@
--- | Pure HTTP/1 request and response head parsing.
+-- | Pure, bounded HTTP/1 request and response head parsing.
 --
--- An HTTP/1 message crosses two conceptual boundaries:
---
--- @
--- raw connection bytes -> start line and ordered headers -> body reader
--- @
---
--- This module owns the middle boundary. It parses a complete head already
--- present in memory, returns semantic 'RequestHead' or 'ResponseHead' values
--- from @http-core@, and tells the caller both where the body begins and how it
--- is framed. It performs no socket I/O and never consumes body bytes.
+-- The parser owns the boundary between untrusted connection bytes and the
+-- semantic message types from @http-core@. It performs no socket I/O and never
+-- consumes body bytes. Wire grammar and framing decisions fail closed so two
+-- recipients cannot silently disagree about where one message ends.
 module CodingAdventures.Http1
   ( ParsedRequestHead (..)
   , ParsedResponseHead (..)
@@ -22,10 +16,9 @@ module CodingAdventures.Http1
 import CodingAdventures.HttpCore
   ( BodyKind (..)
   , Header (..)
+  , HttpVersion (..)
   , RequestHead (..)
   , ResponseHead (..)
-  , findHeader
-  , parseContentLength
   , parseHttpVersion
   )
 import Data.ByteString (ByteString)
@@ -46,24 +39,34 @@ data ParsedRequestHead = ParsedRequestHead
   } deriving (Eq, Show)
 
 -- | One parsed response head plus the untouched body boundary.
+--
+-- A successful response to CONNECT switches to tunnel bytes immediately after
+-- the head. 'responseSwitchesProtocol' distinguishes that transition from an
+-- ordinary bodyless response.
 data ParsedResponseHead = ParsedResponseHead
   { parsedResponse :: ResponseHead
   , responseBodyOffset :: Int
   , responseBodyKind :: BodyKind
+  , responseSwitchesProtocol :: Bool
   } deriving (Eq, Show)
 
--- | Stable failure classes from the NET04 contract.
+-- | Stable, redacted failure classes from the NET04 contract.
 --
--- The offending start line, token, or header is retained to make malformed
--- fixture failures explainable. Payload bytes are never included because the
--- parser does not inspect them.
+-- No constructor retains raw wire text. Request targets, credentials, and
+-- field values therefore cannot escape when a caller logs an error.
 data Http1ParseError
   = IncompleteHead
-  | InvalidStartLine String
-  | InvalidVersion String
-  | InvalidStatusCode String
-  | InvalidHeaderLine String
-  | InvalidContentLength String
+  | HeadTooLarge
+  | LineTooLong
+  | TooManyHeaders
+  | TooManyTransferCodings
+  | InvalidStartLine
+  | InvalidVersion
+  | InvalidStatusCode
+  | InvalidHeaderLine
+  | InvalidContentLength
+  | InvalidTransferEncoding
+  | AmbiguousFraming
   deriving (Eq, Show)
 
 -- | Parse an HTTP/1 request head from strict bytes.
@@ -71,16 +74,11 @@ parseRequestHead :: ByteString -> Either Http1ParseError ParsedRequestHead
 parseRequestHead input = do
   (linesInHead, bodyOffset) <- splitHeadLines input
   (startLine, headerLines) <- firstLine linesInHead
-  let startText = bytesToString startLine
-  (method, target, versionText) <-
-    case words startText of
-      [parsedMethod, parsedTarget, parsedVersion] ->
-        Right (parsedMethod, parsedTarget, parsedVersion)
-      _ -> Left (InvalidStartLine startText)
+  (method, target, versionText) <- parseRequestLine startLine
   httpVersion <-
-    mapLeft (const (InvalidVersion versionText)) (parseHttpVersion versionText)
+    mapLeft (const InvalidVersion) (parseHttpVersion versionText)
   headers <- parseHeaders headerLines
-  bodyKind <- determineRequestBodyKind headers
+  bodyKind <- determineRequestBodyKind httpVersion headers
   Right
     ParsedRequestHead
       { parsedRequest =
@@ -94,25 +92,31 @@ parseRequestHead input = do
       , requestBodyKind = bodyKind
       }
 
--- | Parse an HTTP/1 response head from strict bytes.
-parseResponseHead :: ByteString -> Either Http1ParseError ParsedResponseHead
-parseResponseHead input = do
+-- | Parse an HTTP/1 response head using its corresponding request method.
+--
+-- Response body rules depend on request semantics: HEAD responses never have a
+-- message body, and successful CONNECT responses transition to a tunnel.
+parseResponseHead
+  :: String
+  -> ByteString
+  -> Either Http1ParseError ParsedResponseHead
+parseResponseHead requestMethodText input = do
   (linesInHead, bodyOffset) <- splitHeadLines input
   (statusLine, headerLines) <- firstLine linesInHead
-  let statusText = bytesToString statusLine
-  (versionText, statusCodeText, reason) <-
-    case words statusText of
-      parsedVersion : parsedStatus : reasonWords ->
-        Right (parsedVersion, parsedStatus, unwords reasonWords)
-      _ -> Left (InvalidStartLine statusText)
+  (versionText, statusCodeText, reason) <- parseStatusLine statusLine
   httpVersion <-
-    mapLeft (const (InvalidVersion versionText)) (parseHttpVersion versionText)
+    mapLeft (const InvalidVersion) (parseHttpVersion versionText)
   statusCode <-
-    case parseBoundedDecimal (maxBound :: Word16) statusCodeText of
-      Nothing -> Left (InvalidStatusCode statusCodeText)
-      Just parsedStatus -> Right parsedStatus
+    if length statusCodeText /= 3
+      then Left InvalidStatusCode
+      else
+        case parseBoundedDecimal (999 :: Word16) statusCodeText of
+          Just parsedStatus
+            | parsedStatus >= 100 -> Right parsedStatus
+          _ -> Left InvalidStatusCode
   headers <- parseHeaders headerLines
-  bodyKind <- determineResponseBodyKind statusCode headers
+  (bodyKind, switchesProtocol) <-
+    determineResponseBodyKind requestMethodText statusCode headers
   Right
     ParsedResponseHead
       { parsedResponse =
@@ -124,42 +128,80 @@ parseResponseHead input = do
             }
       , responseBodyOffset = bodyOffset
       , responseBodyKind = bodyKind
+      , responseSwitchesProtocol = switchesProtocol
       }
+
+-- Resource bounds -----------------------------------------------------------
+
+maxHeadBytes :: Int
+maxHeadBytes = 65536
+
+maxLineBytes :: Int
+maxLineBytes = 8192
+
+maxHeaderCount :: Int
+maxHeaderCount = 100
+
+maxTransferCodingCount :: Int
+maxTransferCodingCount = 16
 
 -- Head framing --------------------------------------------------------------
 
--- | Separate head lines without decoding or copying the body.
+-- | Separate bounded head lines without decoding or copying body bytes.
 --
--- The returned offset is relative to the original input, so leading blank
--- lines remain part of the consumed head. Both CRLF and bare LF are accepted.
+-- Leading blank lines are skipped, CRLF and bare LF are accepted, and the
+-- returned offset remains relative to the original input.
 splitHeadLines :: ByteString -> Either Http1ParseError ([ByteString], Int)
-splitHeadLines input = collect (skipLeadingBlankLines 0) []
+splitHeadLines input = collect 0 False 0 []
   where
     inputLength = Bytes.length input
 
-    skipLeadingBlankLines index
-      | index >= inputLength = index
-      | Bytes.isPrefixOf crlf (Bytes.drop index input) =
-          skipLeadingBlankLines (index + 2)
-      | Bytes.index input index == lineFeed =
-          skipLeadingBlankLines (index + 1)
-      | otherwise = index
-
-    collect index reversedLines
+    collect index sawStart headerCount reversedLines
+      | index >= maxHeadBytes =
+          if index < inputLength
+            then Left HeadTooLarge
+            else Left IncompleteHead
       | index >= inputLength = Left IncompleteHead
       | otherwise =
-          case Bytes.elemIndex lineFeed (Bytes.drop index input) of
-            Nothing -> Left IncompleteHead
-            Just relativeLineEnd ->
-              let rawLine =
-                    Bytes.take relativeLineEnd (Bytes.drop index input)
-                  line = dropTrailingCarriageReturn rawLine
-                  nextIndex = index + relativeLineEnd + 1
-              in if Bytes.null line
-                  then Right (reverse reversedLines, nextIndex)
-                  else collect nextIndex (line : reversedLines)
+          case nextLine index of
+            Left failure -> Left failure
+            Right (line, nextIndex)
+              | Bytes.null line && not sawStart ->
+                  collect nextIndex False 0 []
+              | Bytes.null line ->
+                  Right (reverse reversedLines, nextIndex)
+              | not sawStart ->
+                  collect nextIndex True 0 [line]
+              | headerCount >= maxHeaderCount ->
+                  Left TooManyHeaders
+              | otherwise ->
+                  collect
+                    nextIndex
+                    True
+                    (headerCount + 1)
+                    (line : reversedLines)
 
-    crlf = Bytes.pack [carriageReturn, lineFeed]
+    nextLine index =
+      let remaining = Bytes.drop index input
+          searchBudget =
+            min
+              (maxLineBytes + 2)
+              (maxHeadBytes - index + 1)
+          searchWindow = Bytes.take searchBudget remaining
+      in case Bytes.elemIndex lineFeed searchWindow of
+          Nothing
+            | Bytes.length remaining > maxLineBytes + 1 -> Left LineTooLong
+            | inputLength > maxHeadBytes -> Left HeadTooLarge
+            | otherwise -> Left IncompleteHead
+          Just relativeLineEnd ->
+            let nextIndex = index + relativeLineEnd + 1
+                rawLine = Bytes.take relativeLineEnd remaining
+                line = dropTrailingCarriageReturn rawLine
+            in if nextIndex > maxHeadBytes
+                then Left HeadTooLarge
+                else if Bytes.length line > maxLineBytes
+                  then Left LineTooLong
+                  else Right (line, nextIndex)
 
 carriageReturn :: Word8
 carriageReturn = 13
@@ -173,35 +215,80 @@ dropTrailingCarriageReturn input
       Bytes.init input
   | otherwise = input
 
--- Start lines and headers ----------------------------------------------------
+-- Start lines and headers ---------------------------------------------------
 
 firstLine :: [ByteString] -> Either Http1ParseError (ByteString, [ByteString])
-firstLine [] = Left (InvalidStartLine "")
+firstLine [] = Left InvalidStartLine
 firstLine (line : rest) = Right (line, rest)
+
+parseRequestLine
+  :: ByteString
+  -> Either Http1ParseError (String, String, String)
+parseRequestLine input =
+  case Bytes8.split ' ' input of
+    [methodBytes, targetBytes, versionBytes]
+      | not (Bytes.null methodBytes)
+      , Bytes.all isTokenByte methodBytes
+      , not (Bytes.null targetBytes)
+      , Bytes.all isRequestTargetByte targetBytes
+      , not (Bytes.null versionBytes) ->
+          Right
+            ( bytesToString methodBytes
+            , bytesToString targetBytes
+            , bytesToString versionBytes
+            )
+    _ -> Left InvalidStartLine
+
+parseStatusLine
+  :: ByteString
+  -> Either Http1ParseError (String, String, String)
+parseStatusLine input =
+  case splitByte space input of
+    (versionBytes, Just afterVersion)
+      | not (Bytes.null versionBytes) ->
+          case splitByte space afterVersion of
+            (statusBytes, maybeReason)
+              | not (Bytes.null statusBytes)
+              , maybe True validReasonPhrase maybeReason ->
+                  Right
+                    ( bytesToString versionBytes
+                    , bytesToString statusBytes
+                    , maybe "" bytesToString maybeReason
+                    )
+            _ -> Left InvalidStartLine
+    _ -> Left InvalidStartLine
+
+validReasonPhrase :: ByteString -> Bool
+validReasonPhrase = Bytes.all isFieldValueByte
 
 parseHeaders :: [ByteString] -> Either Http1ParseError [Header]
 parseHeaders = traverse parseHeader
 
 parseHeader :: ByteString -> Either Http1ParseError Header
 parseHeader input =
-  case break (== ':') text of
-    (_, []) -> invalid
-    (rawName, _ : rawValue)
-      | null name -> invalid
-      | otherwise ->
+  case splitByte colon input of
+    (nameBytes, Just rawValue)
+      | not (Bytes.null nameBytes)
+      , Bytes.all isTokenByte nameBytes
+      , Bytes.all isFieldValueByte rawValue ->
           Right
             Header
-              { headerName = name
-              , headerValue = trimOws rawValue
+              { headerName = bytesToString nameBytes
+              , headerValue = trimOws (bytesToString rawValue)
               }
-      where
-        name = trimOws rawName
-  where
-    text = bytesToString input
-    invalid = Left (InvalidHeaderLine text)
+    _ -> Left InvalidHeaderLine
 
 bytesToString :: ByteString -> String
 bytesToString = Bytes8.unpack
+
+splitByte :: Word8 -> ByteString -> (ByteString, Maybe ByteString)
+splitByte delimiter input =
+  case Bytes.elemIndex delimiter input of
+    Nothing -> (input, Nothing)
+    Just index ->
+      ( Bytes.take index input
+      , Just (Bytes.drop (index + 1) input)
+      )
 
 trimOws :: String -> String
 trimOws = dropWhileEnd isOws . dropWhile isOws
@@ -209,58 +296,179 @@ trimOws = dropWhileEnd isOws . dropWhile isOws
 isOws :: Char -> Bool
 isOws character = character == ' ' || character == '\t'
 
+space :: Word8
+space = 32
+
+colon :: Word8
+colon = 58
+
+isAsciiDigitByte :: Word8 -> Bool
+isAsciiDigitByte byte = byte >= 48 && byte <= 57
+
+isRequestTargetByte :: Word8 -> Bool
+isRequestTargetByte byte = byte > 32 && byte /= 127
+
+isFieldValueByte :: Word8 -> Bool
+isFieldValueByte byte =
+  byte == 9
+    || byte == 32
+    || byte >= 33 && byte /= 127
+
+isTokenByte :: Word8 -> Bool
+isTokenByte byte =
+  isAsciiDigitByte byte
+    || byte >= 65 && byte <= 90
+    || byte >= 97 && byte <= 122
+    || byte `elem` tokenPunctuation
+  where
+    tokenPunctuation =
+      [ 33 -- !
+      , 35 -- #
+      , 36 -- $
+      , 37 -- %
+      , 38 -- &
+      , 39 -- '
+      , 42 -- *
+      , 43 -- +
+      , 45 -- -
+      , 46 -- .
+      , 94 -- ^
+      , 95 -- _
+      , 96 -- `
+      , 124 -- |
+      , 126 -- ~
+      ]
+
 -- Body framing --------------------------------------------------------------
 
-determineRequestBodyKind :: [Header] -> Either Http1ParseError BodyKind
-determineRequestBodyKind headers
-  | hasChunkedTransferEncoding headers = Right Chunked
-  | otherwise = do
-      declaredLength <- declaredContentLength headers
-      Right
-        (case declaredLength of
-          Nothing -> NoBody
-          Just 0 -> NoBody
-          Just lengthValue -> ContentLength lengthValue)
+determineRequestBodyKind
+  :: HttpVersion
+  -> [Header]
+  -> Either Http1ParseError BodyKind
+determineRequestBodyKind httpVersion headers
+  | hasTransferEncoding && hasContentLength = Left AmbiguousFraming
+  | hasTransferEncoding = do
+      codings <- transferCodings headers
+      if not (supportsTransferEncoding httpVersion)
+          || not (validFinalChunked codings)
+        then Left InvalidTransferEncoding
+        else Right Chunked
+  | otherwise = bodyKindFromContentLength NoBody headers
+  where
+    hasTransferEncoding = hasHeader headers "Transfer-Encoding"
+    hasContentLength = hasHeader headers "Content-Length"
 
-determineResponseBodyKind :: Word16 -> [Header] -> Either Http1ParseError BodyKind
-determineResponseBodyKind statusCode headers
-  | statusCode >= 100 && statusCode < 200 = Right NoBody
-  | statusCode == 204 || statusCode == 304 = Right NoBody
-  | hasChunkedTransferEncoding headers = Right Chunked
+determineResponseBodyKind
+  :: String
+  -> Word16
+  -> [Header]
+  -> Either Http1ParseError (BodyKind, Bool)
+determineResponseBodyKind requestMethodText statusCode headers
+  | asciiEqual requestMethodText "HEAD" = Right (NoBody, False)
+  | asciiEqual requestMethodText "CONNECT"
+      && statusCode >= 200
+      && statusCode < 300 =
+      Right (NoBody, True)
+  | statusCode >= 100 && statusCode < 200 = Right (NoBody, False)
+  | statusCode == 204 || statusCode == 304 = Right (NoBody, False)
+  | hasTransferEncoding && hasContentLength = Left AmbiguousFraming
+  | hasTransferEncoding = do
+      codings <- transferCodings headers
+      if containsNonFinalOrRepeatedChunked codings
+        then Left InvalidTransferEncoding
+        else
+          Right
+            ( if not (null codings) && asciiEqual (last codings) "chunked"
+                then Chunked
+                else UntilEof
+            , False
+            )
   | otherwise = do
-      declaredLength <- declaredContentLength headers
-      Right
-        (case declaredLength of
-          Nothing -> UntilEof
-          Just 0 -> NoBody
-          Just lengthValue -> ContentLength lengthValue)
+      bodyKind <- bodyKindFromContentLength UntilEof headers
+      Right (bodyKind, False)
+  where
+    hasTransferEncoding = hasHeader headers "Transfer-Encoding"
+    hasContentLength = hasHeader headers "Content-Length"
+
+bodyKindFromContentLength
+  :: BodyKind
+  -> [Header]
+  -> Either Http1ParseError BodyKind
+bodyKindFromContentLength absentKind headers = do
+  declaredLength <- declaredContentLength headers
+  Right
+    (case declaredLength of
+      Nothing -> absentKind
+      Just 0 -> NoBody
+      Just lengthValue -> ContentLength lengthValue)
 
 declaredContentLength :: [Header] -> Either Http1ParseError (Maybe Int)
 declaredContentLength headers =
-  case findHeader headers "Content-Length" of
-    Nothing -> Right Nothing
-    Just rawValue ->
-      case parseContentLength headers of
-        Nothing -> Left (InvalidContentLength rawValue)
-        Just parsedLength -> Right (Just parsedLength)
-
-hasChunkedTransferEncoding :: [Header] -> Bool
-hasChunkedTransferEncoding =
-  any headerContainsChunked
+  case headerValues headers "Content-Length" of
+    [] -> Right Nothing
+    rawValues -> do
+      let pieces = concatMap (splitOn ',') rawValues
+      parsedValues <- traverse parseOne pieces
+      case parsedValues of
+        [] -> Left InvalidContentLength
+        firstValue : rest
+          | all (== firstValue) rest -> Right (Just firstValue)
+          | otherwise -> Left InvalidContentLength
   where
-    headerContainsChunked header =
-      asciiEqual (headerName header) "Transfer-Encoding"
-        && any
-          (\piece -> asciiEqual (trimOws piece) "chunked")
-          (splitOn ',' (headerValue header))
+    parseOne rawValue =
+      case parseBoundedDecimal (maxBound :: Int) (trimOws rawValue) of
+        Nothing -> Left InvalidContentLength
+        Just parsedValue -> Right parsedValue
+
+transferCodings :: [Header] -> Either Http1ParseError [String]
+transferCodings headers =
+  let pieces =
+        concatMap
+          (splitOn ',')
+          (headerValues headers "Transfer-Encoding")
+  in if length pieces > maxTransferCodingCount
+      then Left TooManyTransferCodings
+      else traverse parseCoding pieces
+  where
+    parseCoding rawCoding =
+      let codingWithParameters = trimOws rawCoding
+          codingName = trimOws (takeWhile (/= ';') codingWithParameters)
+      in if null codingName || not (all isTokenCharacter codingName)
+          then Left InvalidTransferEncoding
+          else Right codingName
+
+validFinalChunked :: [String] -> Bool
+validFinalChunked codings =
+  not (null codings)
+    && asciiEqual (last codings) "chunked"
+    && countChunked codings == 1
+
+containsNonFinalOrRepeatedChunked :: [String] -> Bool
+containsNonFinalOrRepeatedChunked codings =
+  null codings
+    || countChunked codings > 1
+    || (countChunked codings == 1 && not (asciiEqual (last codings) "chunked"))
+
+countChunked :: [String] -> Int
+countChunked = length . filter (`asciiEqual` "chunked")
+
+supportsTransferEncoding :: HttpVersion -> Bool
+supportsTransferEncoding httpVersion =
+  versionMajor httpVersion > 1
+    || (versionMajor httpVersion == 1 && versionMinor httpVersion >= 1)
+
+hasHeader :: [Header] -> String -> Bool
+hasHeader headers name = not (null (headerValues headers name))
+
+headerValues :: [Header] -> String -> [String]
+headerValues headers name =
+  [ headerValue header
+  | header <- headers
+  , asciiEqual (headerName header) name
+  ]
 
 -- Bounded protocol helpers --------------------------------------------------
 
--- | Fold ASCII digits while checking the target bound before multiplication.
---
--- Using @read@ here would first allocate an arbitrary-precision 'Integer' for
--- a hostile thousand-digit status code. The guarded fold rejects the same
--- input in bounded space and also excludes signs and non-ASCII numerals.
 parseBoundedDecimal :: Integral value => value -> String -> Maybe value
 parseBoundedDecimal limit text
   | null text = Nothing
@@ -276,6 +484,11 @@ parseBoundedDecimal limit text
 
 isAsciiDigit :: Char -> Bool
 isAsciiDigit character = character >= '0' && character <= '9'
+
+isTokenCharacter :: Char -> Bool
+isTokenCharacter character =
+  fromEnum character <= 255
+    && isTokenByte (fromIntegral (fromEnum character))
 
 asciiEqual :: String -> String -> Bool
 asciiEqual left right = map lowerAscii left == map lowerAscii right
