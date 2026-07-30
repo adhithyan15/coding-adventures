@@ -1,0 +1,97 @@
+% ============================================================================
+% oxygenation-index.adj — the oxygenation index
+% (OI = mean airway pressure × FiO2 × 100 / PaO2) in the ADJ standard library.
+% ============================================================================
+% The oxygenation-index entry of the *clinical* track — a severity index of hypoxaemic respiratory failure
+% used mainly in neonates and children on mechanical ventilation, and a classic trigger threshold for
+% extracorporeal membrane oxygenation (ECMO). Unlike the simple P/F ratio, the oxygenation index weighs the
+% oxygenation achieved against the ventilator SUPPORT needed to achieve it: a child kept at a given PaO2 only
+% by a high mean airway pressure and a high inspired-oxygen fraction is far sicker than one holding the same
+% PaO2 on minimal support, and the index rises accordingly. It is the mean airway pressure times the fraction
+% of inspired oxygen times 100, divided by the arterial oxygen tension — so a HIGHER index means WORSE
+% oxygenation (the opposite sense to the P/F ratio). Rough bands: ≤ 15 mild, 16–25 moderate, 26–40 severe,
+% and > 40 very severe (an ECMO consideration). THE OXYGENATION INDEX IS THE MEAN AIRWAY PRESSURE TIMES FiO2
+% TIMES 100, OVER THE PaO2 — i.e. OI = MAP × FiO2 × 100 / PaO2. It ships as an importable, byte-provenanced,
+% PARAMETERIZED `formula`, together with two exact rearrangements (the PaO2 a given index and support imply,
+% and the mean airway pressure a given index and PaO2 imply). As with every compute library, a consumer
+% states NO arithmetic: it `import`s this file, binds the mean airway pressure, FiO2, and PaO2 from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is
+% performed by the model; the engine computes each value EXACTLY (over exact rationals), carrying the
+% formula's citation.
+%
+%     import "oxygenation-index.adj"
+%     observe mean_airway_pressure(10)   % "…Paw 10 cmH2O…"   (span cited by the model)
+%     observe fio2(0.5)                   % "…FiO2 0.5…"       (span cited by the model)
+%     observe pao2(50)                    % "…PaO2 50 mmHg…"   (span cited by the model)
+%     ? oxygen_index(mean_airway_pressure, fio2, pao2)   % engine → 10
+%
+% Structurally this is a PRODUCT OF TWO VARIABLES AND A CONSTANT, OVER A DIVISOR — the support (mean airway
+% pressure times FiO2) scaled by 100 and divided by the achieved PaO2 — a shape distinct from the ratio,
+% ratio-of-ratios, percentage-sum, product-over-constant, chained-division, constant-scaled-difference,
+% product-times-constant, three-way-product-over-divisor, product-of-a-ratio-and-a-value,
+% quotient-over-a-difference, and constant-times-a-difference-over-a-divisor forms of the other clinical
+% libraries. The ONLY constant is the exact integer 100 (named in the cited equation); the mean airway
+% pressure, FiO2, and PaO2 are all formal parameters bound at apply time, so every value the engine returns
+% is exact. The three formulas COMPOSE and invert cleanly around the worked case mean airway pressure = 10
+% cmH2O, FiO2 = 0.5, PaO2 = 50 mmHg (OI = 10 × 0.5 × 100 / 50 = 500 / 50 = 10): the `oxygen_index` a consumer
+% computes is exactly the value each inverse formula back-solves to recover its own measured input (50, 10).
+%
+%   oxygen_index(mean_airway_pressure, fio2, pao2) = mean_airway_pressure * fio2 * 100 / pao2        % (dimensionless index)
+%   pao2(oxygen_index, mean_airway_pressure, fio2) = mean_airway_pressure * fio2 * 100 / oxygen_index % (solved for PaO2)
+%   mean_airway_pressure(oxygen_index, pao2, fio2) = oxygen_index * pao2 / (fio2 * 100)                % (solved for mean airway pressure)
+%
+% NOTE ON UNITS AND MODELLING: the mean airway pressure is in cmH2O, the PaO2 in mmHg, and — crucially — the
+% FiO2 is entered as a FRACTION between 0 and 1 (0.5 for 50%), not as a percentage; entering it as 50 would
+% inflate the index a hundredfold. The resulting index is dimensionless. This library only COMPUTES the
+% index; deciding what a given index means for escalation (including ECMO referral) is the clinician's task,
+% stated by the cited source but applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted oxygenation-index equation — because that
+% one equation (MAP × FiO2 × 100 / PaO2) sanctions the relation read every way. The quote is transcribed
+% verbatim from the PubMed Central article "Correlation of Oxygen Index, Oxygen Saturation Index, and
+% PaO2/FiO2 Ratio in Invasive Mechanically Ventilated Adults", so each `formula` carries the provenance
+% envelope every shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the formula is a verbatim span of the cited page, not asserted from
+% memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `mean_airway_pressure`, `fio2`, `pao2` and `oxygen_index` each appear BOTH as a derived result
+% and as an input (of the other formulas), so each is a single dictionary term used in both roles. The
+% `surface` lists are the everyday names a decomposer maps onto the canonical term; the trailing comment
+% records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary oxygenation_index_vocab {
+    define mean_airway_pressure  : finding  surface "mean airway pressure", "MAP", "Paw", "mean Paw"       % cmH2O
+    define fio2                  : finding  surface "FiO2", "fraction of inspired oxygen", "inspired oxygen fraction" % fraction 0-1
+    define pao2                  : finding  surface "PaO2", "arterial oxygen tension", "arterial pO2"       % mmHg
+    define oxygen_index          : finding  surface "oxygenation index", "oxygen index", "OI"               % dimensionless
+}
+
+% ----------------------------------------------------------------------------
+% The oxygenation index, three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the oxygenation-index equation from the PMC article
+% (a quote is required on a shipped formula). Each is an exact expression in the measured values and the
+% exact integer 100, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook oxygenation_index_laws {
+    use oxygenation_index_vocab
+
+    % OI — the support (mean airway pressure times FiO2) scaled by 100, over the achieved PaO2.
+    formula oxygen_index(mean_airway_pressure, fio2, pao2) = mean_airway_pressure * fio2 * 100 / pao2
+        source "OI = MAP × FiO2 × 100 ÷ PaO2"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC7874290/"
+        trust authoritative
+
+    % PaO2 — the same equation solved for the arterial oxygen tension. Defended by the SAME equation.
+    formula pao2(oxygen_index, mean_airway_pressure, fio2) = mean_airway_pressure * fio2 * 100 / oxygen_index
+        source "OI = MAP × FiO2 × 100 ÷ PaO2"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC7874290/"
+        trust authoritative
+
+    % Mean airway pressure — the same equation solved for the support pressure, the third reading of the law.
+    formula mean_airway_pressure(oxygen_index, pao2, fio2) = oxygen_index * pao2 / (fio2 * 100)
+        source "OI = MAP × FiO2 × 100 ÷ PaO2"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC7874290/"
+        trust authoritative
+}
