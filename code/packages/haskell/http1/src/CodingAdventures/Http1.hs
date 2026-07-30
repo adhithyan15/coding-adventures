@@ -257,22 +257,24 @@ parseStatusLine input =
     (versionBytes, Just afterVersion)
       | not (Bytes.null versionBytes) ->
           case splitByte space afterVersion of
-            (statusBytes, maybeReason)
+            (statusBytes, Just reasonBytes)
               | not (Bytes.null statusBytes)
-              , maybe True validReasonPhrase maybeReason ->
+              , validReasonPhrase reasonBytes ->
                   Right
                     ( bytesToString versionBytes
                     , bytesToString statusBytes
-                    , maybe "" bytesToString maybeReason
+                    , bytesToString reasonBytes
                     )
             _ -> Left InvalidStartLine
     _ -> Left InvalidStartLine
 
 validReasonPhrase :: ByteString -> Bool
 validReasonPhrase input =
-  not (Bytes.null input)
-    && Bytes.head input /= space
-    && Bytes.head input /= horizontalTab
+  ( Bytes.null input
+      || ( Bytes.head input /= space
+            && Bytes.head input /= horizontalTab
+         )
+  )
     && Bytes.all isFieldValueByte input
 
 parseHeaders :: [ByteString] -> Either Http1ParseError [Header]
@@ -382,6 +384,11 @@ determineResponseBodyKind
   -> [Header]
   -> Either Http1ParseError (BodyKind, Bool)
 determineResponseBodyKind context parsedResponseVersion statusCode headers
+  | hasTransferEncoding
+      && ( not (supportsTransferEncoding (contextRequestVersion context))
+            || not (supportsTransferEncoding parsedResponseVersion)
+         ) =
+      Left InvalidTransferEncoding
   | contextRequestMethod context == "HEAD" = Right (NoBody, False)
   | contextRequestMethod context == "CONNECT"
       && statusCode >= 200
@@ -392,9 +399,7 @@ determineResponseBodyKind context parsedResponseVersion statusCode headers
   | hasTransferEncoding && hasContentLength = Left AmbiguousFraming
   | hasTransferEncoding = do
       codings <- transferCodings headers
-      if not (supportsTransferEncoding (contextRequestVersion context))
-          || not (supportsTransferEncoding parsedResponseVersion)
-          || containsNonFinalOrRepeatedChunked codings
+      if containsNonFinalOrRepeatedChunked codings
         then Left InvalidTransferEncoding
         else
           Right
