@@ -562,9 +562,12 @@ impl Compiler {
             Some(type_node) => self.scalar_type(type_node)?,
             None => ScalarType::Real, // bare `array A[..]` is `real` in ALGOL 60
         };
-        if !matches!(elem_ty, ScalarType::Integer | ScalarType::Real) {
+        if !matches!(
+            elem_ty,
+            ScalarType::Integer | ScalarType::Real | ScalarType::String
+        ) {
             return Err(CompileError::Unsupported(format!(
-                "{} arrays (only integer/real element types so far)",
+                "{} arrays (only integer/real/string element types so far)",
                 elem_ty.name()
             )));
         }
@@ -1790,9 +1793,32 @@ impl Compiler {
                 let var_node = first_direct_node(left, "variable")
                     .ok_or_else(|| CompileError::Malformed("left_part has no variable".into()))?;
                 if array_subscripts(var_node).is_some() {
-                    return Err(CompileError::Unsupported(
-                        "string array assignments".into(),
+                    let (binding, zero) = self.resolve_array_index(var_node)?;
+                    if binding.ty != ScalarType::String {
+                        return Err(CompileError::Type(format!(
+                            "cannot assign string expression to {} array element",
+                            binding.ty.name()
+                        )));
+                    }
+                    let value = self.fresh_temp();
+                    self.emit(IIRInstr::new(
+                        "str_const",
+                        Some(value.clone()),
+                        vec![Operand::Str(literal.clone())],
+                        "str",
                     ));
+                    self.emit(IIRInstr::new(
+                        "array_set",
+                        None,
+                        vec![
+                            Operand::Var(binding.slot),
+                            Operand::Var(zero),
+                            Operand::Var(value),
+                        ],
+                        "str",
+                    ));
+                    saw_string_target = true;
+                    continue;
                 }
                 let name = self.simple_variable_name(var_node)?;
                 let binding = self.require_var(&name)?;
@@ -1834,9 +1860,25 @@ impl Compiler {
                         CompileError::Malformed("left_part has no variable".into())
                     })?;
                     if array_subscripts(var_node).is_some() {
-                        return Err(CompileError::Unsupported(
-                            "string array assignments".into(),
+                        let (binding, zero) = self.resolve_array_index(var_node)?;
+                        if binding.ty != ScalarType::String {
+                            return Err(CompileError::Type(format!(
+                                "cannot assign string expression to {} array element",
+                                binding.ty.name()
+                            )));
+                        }
+                        self.emit(IIRInstr::new(
+                            "array_set",
+                            None,
+                            vec![
+                                Operand::Var(binding.slot),
+                                Operand::Var(zero),
+                                Operand::Var(src_slot.clone()),
+                            ],
+                            "str",
                         ));
+                        saw_string_target = true;
+                        continue;
                     }
                     let name = self.simple_variable_name(var_node)?;
                     let binding = self.require_var(&name)?;
@@ -5134,6 +5176,40 @@ mod tests {
         let src = "begin real array A[1:2]; real result; \
                    A[1] := 2.5; result := A[1] end";
         assert_eq!(run_f64(src), 2.5);
+    }
+
+    /// A `string array` shares the E5 aggregate substrate with numeric arrays:
+    /// literals store as `str` elements, reads feed lexical ordering, and the
+    /// VM observes the selected element as a real string value.
+    #[test]
+    fn string_array_elements_feed_lexical_ordering() {
+        let src = "begin string array words[1:2]; integer result; \
+                   words[1] := 'HI'; words[2] := 'LO'; \
+                   if words[1] < words[2] then result := 42 else result := 0 end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "test").expect("string array program compiles");
+        let main = module.get_function("main").expect("has main");
+        assert!(
+            main.instructions.iter().any(|instr| instr.op == "alloc_array" && instr.type_hint == "array<str>"),
+            "string array declaration must retain the str element type: {:?}",
+            main.instructions
+        );
+        assert!(
+            main.instructions.iter().any(|instr| instr.op == "array_get" && instr.type_hint == "str"),
+            "string array read must produce a str value: {:?}",
+            main.instructions
+        );
+    }
+
+    /// An initialized scalar string can populate an array element without
+    /// losing its runtime handle; the read then remains a normal `str` value.
+    #[test]
+    fn string_array_accepts_initialized_scalar_values() {
+        let src = "begin string array words[1:1]; string greeting; integer result; \
+                   greeting := 'HI'; words[1] := greeting; \
+                   if words[1] = greeting then result := 42 else result := 0 end";
+        assert_eq!(run_i64(src), 42);
     }
 
     // ── AL-pow: ALGOL 60 `↑` exponentiation (spelled `^`) ───────────────────

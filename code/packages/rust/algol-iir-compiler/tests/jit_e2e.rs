@@ -239,3 +239,26 @@ fn algol_runtime_string_ordering_program_runs_through_generic_jit() {
     }
     assert_eq!(result.as_i64(), Some(42));
 }
+
+#[test]
+fn algol_string_array_program_runs_through_generic_jit() {
+    let source = "begin string array words[1:2]; integer result; \
+                  words[1] := 'HI'; words[2] := 'LO'; \
+                  if words[1] < words[2] then result := 42 else result := 0 end";
+    let mut module = compile_source(source, "algol_string_array_jit")
+        .expect("ALGOL string array should compile");
+
+    let mut vm = VMCore::new();
+    let backend = GenericCirJit::new();
+    let error_handle = backend.error_handle();
+    let mut jit = JITCore::new(&mut vm, Box::new(backend));
+    let result = jit
+        .execute_with_jit(&mut vm, &mut module, "main", &[])
+        .expect("JIT execution should succeed")
+        .unwrap_or(Value::Null);
+
+    if let Some(err) = error_handle.lock().unwrap().clone() {
+        panic!("GenericCirJit reported an error: {err}");
+    }
+    assert_eq!(result.as_i64(), Some(42));
+}

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.31.0 — 2026-07-30 — E4d-AL: string arrays
+
+ALGOL `string array` declarations now reuse the shared E5 `array<str>`
+substrate already exercised by Dartmouth BASIC. Literal and initialized-scalar
+string writes lower to `str_const`/`array_set`; subscript reads yield `str` and
+can feed lexical ordering or `print_str`. The regression program stores `HI`
+and `LO`, compares the elements, and prints the selected element across native
+AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+`own`/captured string storage and array parameters remain separate follow-ups.
+
 ## 0.30.0 — 2026-07-30 — E4d-AL: runtime scalar string ordering
 
 Initialized scalar strings carrying a branch-selected `string procedure`

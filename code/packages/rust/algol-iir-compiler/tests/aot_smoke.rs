@@ -64,3 +64,19 @@ fn algol_runtime_string_ordering_program_compiles_to_aot_snapshot() {
     let snapshot = read(&bytes).expect("AOT snapshot should parse");
     assert!(!snapshot.native_code.is_empty());
 }
+
+#[test]
+fn algol_string_array_program_compiles_to_aot_snapshot() {
+    let source = "begin string array words[1:2]; integer result; \
+                  words[1] := 'HI'; words[2] := 'LO'; \
+                  if words[1] < words[2] then result := 42 else result := 0; \
+                  print(words[1]) end";
+    let module = compile_source(source, "algol_string_array_aot")
+        .expect("ALGOL string array should compile");
+
+    let mut aot = AOTCore::new(Box::new(NullBackend), None, 2);
+    let bytes = aot.compile(&module).expect("AOT compile should succeed");
+    assert!(bytes.starts_with(b"AOT\0"));
+    let snapshot = read(&bytes).expect("AOT snapshot should parse");
+    assert!(!snapshot.native_code.is_empty());
+}
