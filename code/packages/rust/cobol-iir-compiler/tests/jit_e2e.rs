@@ -6225,22 +6225,23 @@ fn inspect_replacing_multi_pic_x1_search_and_replacement() {
 }
 
 #[test]
-fn inspect_replacing_multi_with_leading_item_is_a_later_rung() {
-    // A LEADING item inside a MULTI-item list is deferred — rejected on BOTH engines
-    // with the same message (a LONE `REPLACING LEADING` is still supported).
-    let src = wrap(
-        &["01  S  PIC X(4) VALUE \"aabb\"."],
+fn inspect_replacing_multi_leading_then_all_now_supported() {
+    // THIS rung: a LEADING item inside a MULTI-item list is now SUPPORTED (the earlier
+    // "several items and a LEADING item is a later rung" reject is LIFTED — this test was
+    // that reject, converted to a positive). `REPLACING LEADING "a" BY "X" ALL "b" BY "Y"`
+    // over "aabaa": the leading run of "a" (positions 0,1) is replaced by X; the run
+    // breaks at the "b" (index 2, which ALL "b" replaces with Y); the "a"s AFTER the break
+    // (indices 3,4) are NOT replaced — the leading run is dead. → "XXYaa". This is the
+    // exact replace-side twin of #65's tally-multi-LEADING active-flag machine.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aabaa\"."],
         &[
-            "INSPECT S REPLACING ALL \"a\" BY \"x\"",
-            "    LEADING \"b\" BY \"y\".",
+            "INSPECT S REPLACING LEADING \"a\" BY \"X\" ALL \"b\" BY \"Y\".",
+            "DISPLAY S.",
             "STOP RUN.",
         ],
-    );
-    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-item LEADING item");
-    assert!(
-        compile_source(&src, "e2e").is_err(),
-        "compiler must reject a multi-item LEADING item"
-    );
+    ));
+    assert_eq!(out, "XXYaa\n");
 }
 
 #[test]
@@ -6417,6 +6418,179 @@ fn inspect_replacing_multi_with_characters_is_a_later_rung() {
         compile_source(&src, "e2e").is_err(),
         "compiler must reject a multi-item CHARACTERS item"
     );
+}
+
+// INSPECT … REPLACING {ALL|LEADING} … {ALL|LEADING} … — a MULTI-item REPLACING list
+// with one or more LEADING items (THIS rung lifts the multi-item LEADING reject). A
+// LEADING item replaces only its CONSECUTIVE run of `search` anchored at its window
+// start; ONE left-to-right pass carries a per-item `active` run flag (consulted only for
+// LEADING items) — a LEADING item is eligible only while its run is alive, and every
+// LEADING run breaks at the FIRST in-window mismatch, INDEPENDENTLY of which item won the
+// position. The replace-side twin of #65's tally-multi-LEADING machine: the only
+// difference is the decision loop EMITS a replacement instead of counting. Each case pins
+// the exact rebuilt source and `assert_matches_oracle` re-checks JIT == tree-walk oracle.
+
+#[test]
+fn inspect_replacing_multi_leading_first_match_wins_over_all_same_delim() {
+    // First-match precedence with a LEADING item FIRST vs an ALL item that also matches
+    // the SAME delimiter. `LEADING "a" BY "X" ALL "a" BY "Y"` over "aab": positions 0,1
+    // are claimed by the LEADING item (its run is alive) → "X", and ALL "a" never sees
+    // them (first-match-wins, the position is not re-examined). The "b" matches neither
+    // and stays. → "XXb". Pins that an earlier item's claim shadows a later item.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"aab\"."],
+        &["INSPECT S REPLACING LEADING \"a\" BY \"X\" ALL \"a\" BY \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XXb\n");
+}
+
+#[test]
+fn inspect_replacing_multi_leading_with_after_region_anchors_run_at_window_start() {
+    // A LEADING item WITH a `{BEFORE|AFTER}` region + an ALL item — the leading run is
+    // anchored at the WINDOW START, not source position 0. `LEADING "a" BY "X" AFTER "Z"
+    // ALL "b" BY "Y"` over "aaZaab" (Z at index 2): the LEADING window is (2,6] = indices
+    // 3,4,5, so the two "a"s BEFORE the Z (indices 0,1) are OUTSIDE the window — they
+    // neither begin nor break the run and stay "a". The run then replaces the two "a"s at
+    // 3,4 with X (breaks at the "b" at 5, which ALL "b" replaces with Y). → "aaZXXY".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"aaZaab\"."],
+        &[
+            "INSPECT S REPLACING LEADING \"a\" BY \"X\" AFTER \"Z\"",
+            "    ALL \"b\" BY \"Y\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "aaZXXY\n");
+}
+
+#[test]
+fn inspect_replacing_multi_two_leading_items_independent_runs() {
+    // Two LEADING items with DIFFERENT delimiters, no region — both runs anchor at source
+    // start, but position 0 can equal only ONE delimiter, so the OTHER run breaks
+    // immediately (independent run flags). `LEADING "a" BY "X" LEADING "b" BY "Y"` over
+    // "aabb": LEADING "a" replaces the run at 0,1 → X; LEADING "b"'s run breaks at index 0
+    // ("a" != "b"), so the "b"s at 2,3 are NOT replaced. → "XXbb".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"aabb\"."],
+        &["INSPECT S REPLACING LEADING \"a\" BY \"X\" LEADING \"b\" BY \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XXbb\n");
+}
+
+#[test]
+fn inspect_replacing_multi_two_leading_items_disjoint_windows_both_fire() {
+    // Two LEADING items with DIFFERENT delimiters AND disjoint windows, so BOTH runs fire
+    // — each anchored at its OWN window start. `LEADING "a" BY "X" BEFORE "Z" LEADING "b"
+    // BY "Y" AFTER "Z"` over "aaZbb" (Z at index 2): item 1's window is "aa" (indices 0,1
+    // → X,X), item 2's window is "bb" (indices 3,4 → Y,Y); the "Z" matches neither and
+    // stays. → "XXZYY". Pins two independent per-item active flags in one REPLACING list.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"aaZbb\"."],
+        &[
+            "INSPECT S REPLACING LEADING \"a\" BY \"X\" BEFORE \"Z\"",
+            "    LEADING \"b\" BY \"Y\" AFTER \"Z\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "XXZYY\n");
+}
+
+#[test]
+fn inspect_replacing_multi_leading_run_breaks_on_char_claimed_by_higher_priority_item() {
+    // THE run-update-independent-of-winner subtlety (mirrors #65's tally analogue). A
+    // higher-priority ALL item claims position 0, whose char is NOT the LEADING item's
+    // search — the LEADING run must STILL break there, even though the decision loop
+    // `break`s before the LEADING item's decision link is ever evaluated (the run-update
+    // is a SEPARATE pass, not folded into the decision). `ALL "X" BY "Q" LEADING "a" BY
+    // "Z"` over "Xaa": at index 0 the ALL item replaces "X"→"Q" and stops the decision;
+    // the separate run-update sees index 0's "X" != "a" and kills the LEADING run, so the
+    // "a"s at 1,2 are NOT replaced → "Qaa". A buggy impl that decayed `active` only inside
+    // the decision chain would leave the run alive and wrongly produce "QZZ".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"Xaa\"."],
+        &["INSPECT S REPLACING ALL \"X\" BY \"Q\" LEADING \"a\" BY \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "Qaa\n");
+}
+
+#[test]
+fn inspect_replacing_multi_leading_regression_single_item_leading_unchanged() {
+    // Regression: a LONE `REPLACING LEADING` still routes through the single-item path
+    // (unchanged by this rung) — the leading run of "A" is replaced, a later "A" is not.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AABAA\"."],
+        &["INSPECT S REPLACING LEADING \"A\" BY \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XXBAA\n");
+}
+
+#[test]
+fn inspect_replacing_multi_leading_regression_all_only_multi_unchanged() {
+    // Regression: an ALL-only multi-item list (no LEADING) still behaves exactly as
+    // before — first-match-wins, no re-chaining. `ALL "a" BY "x" ALL "b" BY "y"` over
+    // "abab" → "xyxy".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"abab\"."],
+        &["INSPECT S REPLACING ALL \"a\" BY \"x\" ALL \"b\" BY \"y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "xyxy\n");
+}
+
+#[test]
+fn inspect_replacing_multi_leading_with_filler_between_named_items_agrees() {
+    // Cross-producer binding guard: an unnamed FILLER PIC X(2) sits BETWEEN the named
+    // REPLACING source `S` and another named item `T` in WORKING-STORAGE. The compiler
+    // DROPS FILLER items from its data model while the oracle PUSHES them, so the two
+    // engines assign different physical slots; this pins that NAMED binding (the LEADING
+    // multi-REPLACING resolves `S` by NAME) stays byte-identical across the two models.
+    // `LEADING "a" BY "X" ALL "b" BY "Y"` over "aabaa" → "XXYaa"; `T` is untouched.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"aabaa\".",
+            "01  FILLER  PIC X(2).",
+            "01  T  PIC X(3) VALUE \"zzz\".",
+        ],
+        &[
+            "INSPECT S REPLACING LEADING \"a\" BY \"X\" ALL \"b\" BY \"Y\".",
+            "DISPLAY S.",
+            "DISPLAY T.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "XXYaa\nzzz\n");
+}
+
+#[test]
+fn inspect_replacing_multi_leading_non_ascii_source_shares_the_reconstruction_chip() {
+    // NON-ASCII SOURCE — the PRE-EXISTING byte-vs-char reconstruction chip (task_396ba6f6),
+    // shared by EVERY REPLACING lowering and NOT introduced by the LEADING multi path.
+    // REPLACING RECONSTRUCTS the field with per-position byte `str_slice`, which cannot
+    // slice a multi-byte char, so the byte-based compiler TRAPS on any multi-byte source —
+    // EXACTLY as the merged single-item `REPLACING ALL` and multi-item ALL paths do. The
+    // char-based oracle iterates `char`s and succeeds. This is a CHARACTERIZATION test (we
+    // pin BOTH engines' outputs, NOT `assert_matches_oracle`), documenting that the LEADING
+    // multi path inherits the chip identically and introduces NO new divergence.
+    //
+    // Source "aéaba" (chars a, é, a, b, a) with `LEADING "a" BY "X" ALL "b" BY "Y"`:
+    //   i=0 'a' → X (leading run alive);  i=1 'é' ≠ "a"/"b" → kept, and it BREAKS the
+    //   leading "a" run;  i=2 'a' → kept (run dead);  i=3 'b' → Y;  i=4 'a' → kept.
+    // The multi-byte "é" (bytes C3 A9) matches no ASCII search, so the MATCH side is
+    // byte-safe; only the RECONSTRUCTION traps. Oracle → "XéaYa".
+    let src = wrap(
+        &["01  S  PIC X(5) VALUE \"aéaba\"."],
+        &[
+            "INSPECT S REPLACING LEADING \"a\" BY \"X\" ALL \"b\" BY \"Y\".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    );
+    assert!(
+        run_on_jit_result(&src).is_err(),
+        "compiled LEADING-multi reconstruction traps on a non-ASCII source (pre-existing chip)"
+    );
+    assert_eq!(run_cobol(&src).expect("oracle succeeds char-based"), "XéaYa\n");
 }
 
 #[test]

@@ -3247,18 +3247,62 @@ mod tests {
     }
 
     #[test]
-    fn inspect_replacing_multi_leading_item_is_a_later_rung() {
-        // A LEADING item inside a multi-item list stays a later rung even now that
-        // per-item regions are supported — the multi path is ALL-only.
-        let err = run_cobol(&wrap(
-            &["01  S  PIC X(4) VALUE \"aabb\"."],
+    fn inspect_replacing_multi_leading_and_all_items() {
+        // THIS rung: a LEADING item inside a multi-item REPLACING list is now SUPPORTED
+        // (this test was the "later rung" reject, converted to a positive). `REPLACING
+        // LEADING "a" BY "X" ALL "b" BY "Y"` over "aabaa": the leading run of "a" (indices
+        // 0,1) → X; the run breaks at the "b" (index 2 → Y); the "a"s after the break
+        // (indices 3,4) are NOT replaced. → "XXYaa". The replace-side twin of #65's
+        // tally-multi-LEADING machine (decision loop EMITS instead of counting).
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aabaa\"."],
             &[
-                "INSPECT S REPLACING ALL \"a\" BY \"x\" LEADING \"b\" BY \"y\".",
+                "INSPECT S REPLACING LEADING \"a\" BY \"X\" ALL \"b\" BY \"Y\".",
+                "DISPLAY S.",
                 "STOP RUN.",
             ],
         ))
-        .unwrap_err();
-        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+        .unwrap();
+        assert_eq!(out, "XXYaa\n");
+    }
+
+    #[test]
+    fn inspect_replacing_multi_leading_run_breaks_on_higher_priority_claim() {
+        // The run-update-independent-of-winner subtlety: a higher-priority ALL item claims
+        // position 0, whose char is NOT the LEADING item's search — the LEADING run STILL
+        // breaks there (the run-update is a SEPARATE pass, not folded into the first-match
+        // decision). `ALL "X" BY "Q" LEADING "a" BY "Z"` over "Xaa": index 0 "X"→"Q" stops
+        // the decision, the run-update kills the LEADING "a" run (0's "X" != "a"), so the
+        // "a"s at 1,2 are NOT replaced → "Qaa" (a fold-into-decision bug would give "QZZ").
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"Xaa\"."],
+            &[
+                "INSPECT S REPLACING ALL \"X\" BY \"Q\" LEADING \"a\" BY \"Z\".",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "Qaa\n");
+    }
+
+    #[test]
+    fn inspect_replacing_multi_two_leading_items_disjoint_windows() {
+        // Two LEADING items with different delimiters AND disjoint windows, so BOTH runs
+        // fire — each anchored at its OWN window start. `LEADING "a" BY "X" BEFORE "Z"
+        // LEADING "b" BY "Y" AFTER "Z"` over "aaZbb" (Z at index 2): item 1's window "aa"
+        // → X,X; item 2's window "bb" → Y,Y; the "Z" stays. → "XXZYY".
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"aaZbb\"."],
+            &[
+                "INSPECT S REPLACING LEADING \"a\" BY \"X\" BEFORE \"Z\"",
+                "    LEADING \"b\" BY \"Y\" AFTER \"Z\".",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "XXZYY\n");
     }
 
     #[test]

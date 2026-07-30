@@ -8,6 +8,45 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.66.0: INSPECT REPLACING multi-item list with a LEADING item
+
+A multi-item `INSPECT src REPLACING {ALL|LEADING} a BY x {ALL|LEADING} b BY y …` now lowers when one
+(or more) of the items is `LEADING` — the REPLACING twin of v0.65.0's TALLYING multi-item-with-LEADING
+rung (#65). The `LEADING` reject inside a multi-item REPLACING list is LIFTED; compiled byte-identical
+to the `coding-adventures-cobol-runtime` 0.70.0 oracle on ASCII sources.
+
+- **Mirror of the tally active-flag machine.** `emit_inspect_replacing_multi` gains the SAME per-item
+  `active` run-flag machine as `emit_inspect_tally_multi`: one i64 `active` register per item (init 1,
+  consulted only for `LEADING` items). The ONLY difference from the tally side is that the decision
+  loop EMITS the winning item's replacement string instead of bumping a counter (and keeps the ORIGINAL
+  char on no match). At each position the FIRST eligible item in written order wins — an `ALL` item is
+  eligible iff `(start ≤ j < end) AND c == search`; a `LEADING` item ALSO requires its `active` flag
+  still 1.
+- **Run-update independent of the winner.** AFTER the per-position `done` convergence label (both a
+  match and the no-match fall-through reach it), EVERY `LEADING` item's `active` is decayed
+  `active := active AND (eq OR NOT in_win)` — a run breaks at the FIRST in-window mismatch, a matching
+  char keeps it alive even if a higher-priority item claimed the position, and positions OUTSIDE the
+  window never touch `active` (anchoring the run at the window start). `eq`/`in_win` are RECOMPUTED per
+  leading item in the update section (the chain's registers may not have been reached on an early
+  `jmp done`), exactly as the tally side's `cont` section does.
+- **No new scope.** Each item is a single-char `{ALL|LEADING} search BY replace` pair with an OPTIONAL
+  `{BEFORE|AFTER}` region; `CHARACTERS`/`FIRST` items and the combined `TALLYING … REPLACING` with
+  several items stay later rungs (rejected identically on both engines). A
+  multi-character/figurative/wider/numeric/reference-modified search/replace/region delimiter still
+  falls to the shared `single_delim_code`/`single_delim_str` check.
+- **Byte-vs-char.** REPLACING RECONSTRUCTS the source with per-position byte `str_slice`, so a
+  non-ASCII source is the PRE-EXISTING byte-vs-char reconstruction chip (task_396ba6f6) shared by every
+  REPLACING lowering — the byte-based compiler traps on a multi-byte source, exactly as the merged
+  single-item and multi-item ALL paths do. This rung introduces NO new non-ASCII divergence.
+- **Types/reader.** `ReplaceItem` gains a `leading` bool; `inspect_replacing_multi` reads the `LEADING`
+  keyword per item (mirroring `inspect_tally_multi`); a new `ResolvedReplaceLeadingItem` alias carries
+  the search/replace registers plus `leading`/`active`/`window`.
+- **Tests.** The old "several items and a LEADING item is a later rung" reject test is converted to a
+  now-supported positive; added first-match-priority (LEADING vs ALL same delim), a LEADING+region
+  anchored run, two independent LEADING runs (immediate break, and disjoint-window both-fire), the
+  run-breaks-on-higher-priority-claim subtlety, single-item + ALL-only regressions, a FILLER-between
+  cross-producer-binding parity test, and a non-ASCII characterization test pinning the shared chip.
+
 ### Added — v0.65.0: alphanumeric → SIGNED numeric MOVE (completes the Char↔Numeric MOVE matrix)
 
 A cross-category `MOVE <alphanumeric> TO <signed-numeric>` (`MOVE A TO N` where `A` is `PIC X(m)` and

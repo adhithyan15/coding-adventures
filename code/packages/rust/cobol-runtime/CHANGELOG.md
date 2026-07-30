@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.70.0 — INSPECT REPLACING multi-item list with a LEADING item — 2026-07-29
+
+- A multi-item `INSPECT src REPLACING {ALL|LEADING} a BY x {ALL|LEADING} b BY y …` is now interpreted
+  when one (or more) of the items is `LEADING` — the REPLACING twin of 0.69.0's (#65) TALLYING
+  multi-item-with-LEADING rung. The `LEADING` reject inside a multi-item REPLACING list (`read_inspect_
+  replacing_multi`) is LIFTED; any mix of `ALL`/`LEADING` items, each with an optional `{BEFORE|AFTER}`
+  region, is supported.
+- **Mirror of the tally machine.** `exec_inspect_replacing_multi` gains the SAME per-item `active`
+  run-flag machine as `exec_inspect_tally_multi` (all init `true`, consulted only for `LEADING` items).
+  The ONLY difference: the decision loop EMITS the winning item's replacement char at position `i`
+  (keeping the ORIGINAL char on no match) instead of `count += 1`. The run-update loop is IDENTICAL —
+  AFTER the decision, EVERY `LEADING` item's run flag is updated INDEPENDENTLY of who won: its run
+  breaks at the FIRST in-window position whose char is NOT its search (a matching char keeps the run
+  alive even if a higher-priority item claimed that position; positions outside the window neither
+  begin nor break the run). The scan reads the ORIGINAL chars (never the output) — the no-re-chaining
+  property, exactly like the pre-existing multi-item REPLACING.
+- **Types/reader.** `Stmt::InspectReplacingMulti`'s items become `Vec<ReplaceMultiLeadingItem>` (a new
+  `(Operand, Operand, bool, Option<Region>)` alias threading the per-item `leading` flag — the replace
+  twin of `TallyMultiLeadingItem`); `read_inspect_replacing_multi` reads the `LEADING` keyword per item.
+- **Co-totality.** `CHARACTERS`/`FIRST` items and the combined `TALLYING … REPLACING` with several
+  items stay later rungs, rejected identically on both engines; a multi-character/figurative/wider/
+  numeric/reference-modified search/replace/region delimiter still falls to the shared
+  `single_delim_char` reject. All items (chars + windows) are resolved over the ORIGINAL source FIRST,
+  so an invalid operand aborts with the source untouched.
+- **Byte-vs-char.** REPLACING reconstructs the source, so a non-ASCII source is the PRE-EXISTING
+  byte-vs-char chip (task_396ba6f6) shared by the already-merged multi-item REPLACING (#50/#62): the
+  char-based oracle succeeds where the byte-based compiler traps. No new divergence is introduced.
+- **Tests.** The oracle-lib "later rung" reject is converted to a positive `LEADING a BY x ALL b BY y`
+  case; added the run-breaks-on-higher-priority-claim subtlety and a two-LEADING disjoint-windows case.
+
 ## 0.69.0 — alphanumeric → SIGNED numeric MOVE (completes the Char↔Numeric MOVE matrix) — 2026-07-29
 
 - A cross-category `MOVE <alphanumeric> TO <signed-numeric>` (`MOVE A TO N` where `A` is `PIC X(m)`
