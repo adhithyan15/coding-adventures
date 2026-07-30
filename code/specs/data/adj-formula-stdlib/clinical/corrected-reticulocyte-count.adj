@@ -1,0 +1,99 @@
+% ============================================================================
+% corrected-reticulocyte-count.adj — the corrected reticulocyte count
+% (corrected retic = reticulocyte % × (patient hematocrit / normal hematocrit)) in the ADJ stdlib.
+% ============================================================================
+% The corrected-reticulocyte-count entry of the *clinical* track — the reticulocyte percentage adjusted for
+% the degree of anaemia, so that a marrow's true erythropoietic effort can be read off a single number. The
+% raw reticulocyte percentage is a FRACTION of the red cells present, so in anaemia the same absolute number
+% of young cells looks like a bigger percentage simply because the denominator (the total red-cell mass) has
+% shrunk. Scaling the percentage by the patient's haematocrit over a normal haematocrit undoes that
+% inflation: a reticulocyte count that looks reassuringly high in a severely anaemic patient is revealed, once
+% corrected, to be an inadequate response. THE CORRECTED RETICULOCYTE COUNT IS THE RETICULOCYTE PERCENTAGE
+% TIMES THE PATIENT-TO-NORMAL HAEMATOCRIT RATIO — i.e. corrected retic = reticulocyte % × (patient Hct /
+% normal Hct). It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with two exact
+% rearrangements (the raw reticulocyte percentage and the patient haematocrit a given corrected count
+% implies). It is the input to the reticulocyte production index (reticulocyte-production-index.adj), which
+% then divides by a maturation factor; this library computes the CORRECTION step alone. As with every compute
+% library, a consumer states NO arithmetic: it `import`s this file, binds the reticulocyte percentage, the
+% patient haematocrit, and the normal haematocrit from its own byte-provenance decomposition, and asks the
+% engine to APPLY the cited formula on the CPU. Zero math is performed by the model; the engine computes each
+% value EXACTLY (over exact rationals), carrying the formula's citation.
+%
+%     import "corrected-reticulocyte-count.adj"
+%     observe reticulocyte_percent(4)    % "…retics 4%…"        (span cited by the model)
+%     observe patient_hematocrit(20)      % "…Hct 20%…"          (span cited by the model)
+%     observe normal_hematocrit(40)       % "…normal Hct 40%…"   (span cited by the model)
+%     ? corrected_reticulocyte_count(reticulocyte_percent, patient_hematocrit, normal_hematocrit)   % engine → 2
+%
+% Structurally this is a VALUE TIMES A RATIO — the reticulocyte percentage scaled by the haematocrit ratio —
+% the same product-of-a-value-and-a-ratio family as the gravity IV drip rate, reused here for a NEW quantity
+% (the anaemia-corrected reticulocyte count) rather than reinvented; the novelty is the haematologic role,
+% not the arithmetic. There is NO embedded constant: the normal haematocrit is itself a formal parameter
+% (the cited equation writes it as a symbol, "Normal Hematocrit", not a fixed 45 — a reader binds 45 for men
+% or 40 for women, or whatever reference their laboratory uses), so all three quantities are bound at apply
+% time and every value the engine returns is exact. The three formulas COMPOSE and invert cleanly around the
+% worked case reticulocyte % = 4, patient haematocrit = 20, normal haematocrit = 40 (corrected retic =
+% 4 × (20 / 40) = 4 × 0.5 = 2 %): the `corrected_reticulocyte_count` a consumer computes is exactly the value
+% each inverse formula back-solves to recover its own measured input (4, 20).
+%
+%   corrected_reticulocyte_count(reticulocyte_percent, patient_hematocrit, normal_hematocrit) = reticulocyte_percent * patient_hematocrit / normal_hematocrit   % (%)
+%   reticulocyte_percent(corrected_reticulocyte_count, patient_hematocrit, normal_hematocrit) = corrected_reticulocyte_count * normal_hematocrit / patient_hematocrit   % (solved for raw retic %)
+%   patient_hematocrit(corrected_reticulocyte_count, reticulocyte_percent, normal_hematocrit) = corrected_reticulocyte_count * normal_hematocrit / reticulocyte_percent  % (solved for patient Hct)
+%
+% NOTE ON UNITS AND MODELLING: the reticulocyte figure is a PERCENTAGE and the corrected count is likewise a
+% percentage; the two haematocrits must share a unit (both as percentages, or both as fractions) because they
+% enter only as a ratio, so the answer is unit-independent in that ratio. The choice of normal haematocrit
+% (≈ 45 % for men, ≈ 40 % for women) is a reference value the reader supplies, which is why it is a parameter
+% here rather than a baked-in constant. This library only COMPUTES the correction; interpreting whether the
+% corrected count reflects an adequate marrow response (and going on to the production index) is the
+% clinician's task, stated by the cited source but applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted corrected-reticulocyte equation — because
+% that one equation (reticulocyte % × (patient Hct / normal Hct)) sanctions the relation read every way. The
+% quote is transcribed verbatim from the StatPearls "Anemia" article on the NCBI Bookshelf, where it is
+% printed as a fully-bracketed equation with an equals sign, so each `formula` carries the provenance
+% envelope every shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the formula is a verbatim span of the cited page, not asserted from
+% memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `reticulocyte_percent`, `patient_hematocrit`, `normal_hematocrit` and
+% `corrected_reticulocyte_count` each appear BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are the everyday
+% names a decomposer maps onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary corrected_reticulocyte_count_vocab {
+    define reticulocyte_percent           : finding  surface "reticulocyte percentage", "reticulocyte count", "retic %", "retics" % %
+    define patient_hematocrit             : finding  surface "patient hematocrit", "patient's hematocrit", "Hct", "hematocrit"    % %
+    define normal_hematocrit              : finding  surface "normal hematocrit", "reference hematocrit", "expected hematocrit"    % %
+    define corrected_reticulocyte_count   : finding  surface "corrected reticulocyte count", "corrected reticulocyte percentage", "corrected retic" % %
+}
+
+% ----------------------------------------------------------------------------
+% The corrected reticulocyte count, three ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the corrected-reticulocyte equation from the
+% StatPearls "Anemia" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an
+% exact expression in the measured values, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook corrected_reticulocyte_count_laws {
+    use corrected_reticulocyte_count_vocab
+
+    % Corrected retic — the raw reticulocyte percentage scaled by the patient-to-normal haematocrit ratio.
+    formula corrected_reticulocyte_count(reticulocyte_percent, patient_hematocrit, normal_hematocrit) = reticulocyte_percent * patient_hematocrit / normal_hematocrit
+        source "Corrected Reticulocyte Count (%) = Reticulocyte Count (%) × (Patient Hematocrit / Normal Hematocrit)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499994/"
+        trust authoritative
+
+    % Reticulocyte % — the same equation solved for the raw reticulocyte percentage. Defended by the SAME equation.
+    formula reticulocyte_percent(corrected_reticulocyte_count, patient_hematocrit, normal_hematocrit) = corrected_reticulocyte_count * normal_hematocrit / patient_hematocrit
+        source "Corrected Reticulocyte Count (%) = Reticulocyte Count (%) × (Patient Hematocrit / Normal Hematocrit)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499994/"
+        trust authoritative
+
+    % Patient haematocrit — the same equation solved for the patient Hct, the third reading of the one law.
+    formula patient_hematocrit(corrected_reticulocyte_count, reticulocyte_percent, normal_hematocrit) = corrected_reticulocyte_count * normal_hematocrit / reticulocyte_percent
+        source "Corrected Reticulocyte Count (%) = Reticulocyte Count (%) × (Patient Hematocrit / Normal Hematocrit)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499994/"
+        trust authoritative
+}
