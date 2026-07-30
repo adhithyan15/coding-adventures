@@ -493,13 +493,31 @@ topic/event primitives into normalized D23 devices:
   normalized state, authorization, command publication planning, delivery
   cursors, and transport failure audit.
 
+## Current Zigbee Runtime Integration Slice
+
+This slice connects the repository's Zigbee application protocol stack to the
+normalized runtime without pretending to own a coordinator transport:
+
+- `smart-home-zigbee-integration` installs a serial coordinator with an opaque
+  radio-network-key reference and projects ZDO-interviewed Home Automation
+  endpoints into normalized devices, entities, and ZCL-derived capabilities.
+- Inbound APS bytes are validated against the interviewed source endpoint,
+  profile, and cluster before ZCL attribute reports become confirmed runtime
+  state events.
+- Outbound light commands pass through D23 authorization, idempotency, and
+  command audit before the adapter emits round-trippable APS/ZCL bytes.
+- Coordinator radio ownership, joining, network-key leasing, APS security,
+  delivery retries, and acknowledgements remain an explicit production host
+  boundary.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
 
-- Continue platform integrations beyond Hue, MQTT, and the Z-Wave runtime:
-  Matter/Thread, Zigbee, cameras, broader device families, and a production
-  Z-Wave inclusion and S2 flow.
+- Continue platform integrations beyond Hue, MQTT, and the Z-Wave and Zigbee
+  runtime adapters: Matter/Thread, cameras, broader device families, a
+  production Zigbee coordinator/join/security host, and production Z-Wave
+  inclusion and S2.
 - Build Home Assistant migration tools for devices, rooms, scenes,
   automations, dashboards, and historical state export where feasible.
 - Provide a dashboard that can inspect devices, rooms, state, health,
