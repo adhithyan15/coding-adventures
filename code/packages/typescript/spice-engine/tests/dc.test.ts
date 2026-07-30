@@ -679,6 +679,17 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects invalid MOS substrate doping", () => {
+    const valid = normalizeModelCard("Mvalid", "nmos", { NSUB: 4.0e15 });
+    expect(valid.parameters.N_SUB).toBe(4.0e15);
+
+    for (const invalidDoping of [0.0, -1.0, Number.POSITIVE_INFINITY, Number.NaN]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { NSUB: invalidDoping }),
+      ).toThrow("MOSFET NSUB must be finite and positive");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,

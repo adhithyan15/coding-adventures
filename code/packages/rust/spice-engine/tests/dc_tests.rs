@@ -805,6 +805,20 @@ fn mos_model_card_rejects_invalid_nominal_temperature() {
 }
 
 #[test]
+fn mos_model_card_rejects_invalid_substrate_doping() {
+    let valid = normalize_model_card("Mvalid", "nmos", &[("NSUB", 4.0e15)]).unwrap();
+    assert_close(*valid.parameters.get("N_SUB").unwrap(), 4.0e15);
+
+    for invalid_doping in [0.0, -1.0, f64::INFINITY, f64::NAN] {
+        assert!(matches!(
+            normalize_model_card("Minvalid", "nmos", &[("NSUB", invalid_doping)]),
+            Err(SpiceError::InvalidElement { reason, .. })
+                if reason == "MOSFET NSUB must be finite and positive"
+        ));
+    }
+}
+
+#[test]
 fn bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() {
     let legacy_card = normalize_model_card(
         "Qlegacy",

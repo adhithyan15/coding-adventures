@@ -8434,6 +8434,8 @@ export function normalizeModelCard(
       throw invalidElement(name, "MOSFET NSS must be finite and non-negative");
     } else if (canonical === "T_NOM" && (!Number.isFinite(value) || value <= 0.0)) {
       throw invalidElement(name, "MOSFET TNOM must be finite and positive");
+    } else if (canonical === "N_SUB" && (!Number.isFinite(value) || value <= 0.0)) {
+      throw invalidElement(name, "MOSFET NSUB must be finite and positive");
     } else {
       normalized[canonical] = value;
     }

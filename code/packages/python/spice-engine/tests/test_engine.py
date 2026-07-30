@@ -1011,6 +1011,17 @@ def test_mos_model_card_rejects_invalid_nominal_temperature() -> None:
             normalize_model_card("Minvalid", "nmos", {"TNOM": invalid_temperature})
 
 
+def test_mos_model_card_rejects_invalid_substrate_doping() -> None:
+    valid = normalize_model_card("Mvalid", "nmos", {"NSUB": 4.0e15})
+    assert valid.parameters["N_SUB"] == pytest.approx(4.0e15)
+
+    for invalid_doping in (0.0, -1.0, math.inf, math.nan):
+        with pytest.raises(
+            ValueError, match="MOSFET NSUB must be finite and positive"
+        ):
+            normalize_model_card("Minvalid", "nmos", {"NSUB": invalid_doping})
+
+
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
     circuit = Circuit()
     circuit.add(JFET("J1", "drain", "gate", "0", Kf=-1.0))
