@@ -121,6 +121,18 @@ spec = do
       responseBodyKind connectResponse `shouldBe` NoBody
       responseSwitchesProtocol connectResponse `shouldBe` True
 
+    it "treats response request methods as case-sensitive" $ do
+      lowerHead <-
+        expectRight
+          (parseResponseFor "head" "HTTP/1.1 200 OK\r\nContent-Length: 9\r\n\r\n")
+      lowerConnect <-
+        expectRight
+          (parseResponseFor "connect" "HTTP/1.1 200 OK\r\n\r\n")
+      responseBodyKind lowerHead `shouldBe` ContentLength 9
+      responseSwitchesProtocol lowerHead `shouldBe` False
+      responseBodyKind lowerConnect `shouldBe` UntilEof
+      responseSwitchesProtocol lowerConnect `shouldBe` False
+
     it "accepts an empty reason phrase" $ do
       parsed <- expectRight (parseResponse "HTTP/1.1 200\r\n\r\n")
       responseReason (parsedResponse parsed) `shouldBe` ""
@@ -251,11 +263,25 @@ spec = do
       parseRequest
         "POST / HTTP/1.0\r\nTransfer-Encoding: chunked\r\n\r\n"
         `shouldBe` Left InvalidTransferEncoding
+      parseRequest
+        "POST / HTTP/1.1\r\nTransfer-Encoding: chunked;foo=bar\r\n\r\n"
+        `shouldBe` Left InvalidTransferEncoding
       parseResponse
         "HTTP/1.1 200 OK\r\n\
         \Transfer-Encoding: chunked\r\n\
         \Content-Length: 5\r\n\r\n"
         `shouldBe` Left AmbiguousFraming
+      parseResponse
+        "HTTP/1.0 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n"
+        `shouldBe` Left InvalidTransferEncoding
+      parseResponseForVersion
+        "GET"
+        (HttpVersion 1 0)
+        "HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n"
+        `shouldBe` Left InvalidTransferEncoding
+      parseResponse
+        "HTTP/1.1 200 OK\r\nTransfer-Encoding: gzip;\r\n\r\n"
+        `shouldBe` Left InvalidTransferEncoding
 
     it "uses EOF framing for a response with a non-chunked transfer coding" $ do
       parsed <-
@@ -302,7 +328,21 @@ parseResponse :: String -> Either Http1ParseError ParsedResponseHead
 parseResponse = parseResponseFor "GET"
 
 parseResponseFor :: String -> String -> Either Http1ParseError ParsedResponseHead
-parseResponseFor method = parseResponseHead method . Bytes.pack
+parseResponseFor method =
+  parseResponseForVersion method (HttpVersion 1 1)
+
+parseResponseForVersion
+  :: String
+  -> HttpVersion
+  -> String
+  -> Either Http1ParseError ParsedResponseHead
+parseResponseForVersion method requestVersion =
+  parseResponseHead
+    ResponseContext
+      { contextRequestMethod = method
+      , contextRequestVersion = requestVersion
+      }
+    . Bytes.pack
 
 expectRight :: (HasCallStack, Show error) => Either error value -> IO value
 expectRight result =
