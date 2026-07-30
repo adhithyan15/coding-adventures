@@ -652,9 +652,32 @@ pub fn parse_browser_render_tree(source: &str) -> Result<BrowserRenderTree, Pars
     parse_html(source).map(|document| extract_browser_render_tree(&document))
 }
 
+/// Parse HTML into a browser render tree using the fetched document URL as
+/// the fallback base for relative links and resources.
+///
+/// An authored `<base href>` still takes precedence. Relative authored base
+/// URLs are first resolved against `document_url`, matching the navigation
+/// context a browser host supplies after redirects.
+pub fn parse_browser_render_tree_with_document_url(
+    source: &str,
+    document_url: &str,
+) -> Result<BrowserRenderTree, ParseError> {
+    parse_html(source)
+        .map(|document| extract_browser_render_tree_with_document_url(&document, document_url))
+}
+
 /// Extract a browser-facing render-tree input from a parsed DOM document.
 pub fn extract_browser_render_tree(document: &Document) -> BrowserRenderTree {
     BrowserRenderTree::from_document(document)
+}
+
+/// Extract a browser render tree using the fetched document URL as its
+/// fallback URL-resolution base.
+pub fn extract_browser_render_tree_with_document_url(
+    document: &Document,
+    document_url: &str,
+) -> BrowserRenderTree {
+    BrowserRenderTree::from_document_with_document_url(document, document_url)
 }
 
 /// Parse a complete HTML string into a DOM document plus lexer/parser diagnostics.
@@ -4077,10 +4100,16 @@ impl BrowserDocument {
 
 impl BrowserContentTree {
     pub fn from_document(document: &Document) -> Self {
-        let head = find_first_element_in_nodes(&document.children, "head");
-        let base_href = head
-            .and_then(|element| find_first_element_in_nodes(&element.children, "base"))
-            .and_then(|element| element.attribute("href"));
+        let base_href = browser_authored_base_href(document);
+        Self::from_document_with_base(document, base_href)
+    }
+
+    pub fn from_document_with_document_url(document: &Document, document_url: &str) -> Self {
+        let base_href = browser_effective_base_href(document, document_url);
+        Self::from_document_with_base(document, base_href.as_deref())
+    }
+
+    fn from_document_with_base(document: &Document, base_href: Option<&str>) -> Self {
         let body = find_first_element_in_nodes(&document.children, "body");
         let body_children = body
             .map(|element| element.children.as_slice())
@@ -4104,6 +4133,13 @@ impl BrowserContentTree {
 impl BrowserRenderTree {
     pub fn from_document(document: &Document) -> Self {
         Self::from_content_tree(&BrowserContentTree::from_document(document))
+    }
+
+    pub fn from_document_with_document_url(document: &Document, document_url: &str) -> Self {
+        Self::from_content_tree(&BrowserContentTree::from_document_with_document_url(
+            document,
+            document_url,
+        ))
     }
 
     pub fn from_content_tree(content_tree: &BrowserContentTree) -> Self {
@@ -13451,6 +13487,23 @@ fn resolve_browser_url(url: &str, base_href: Option<&str>) -> Option<String> {
     };
 
     Some(format!("{scheme}://{authority}{resolved_path}{suffix}"))
+}
+
+fn browser_authored_base_href(document: &Document) -> Option<&str> {
+    find_first_element_in_nodes(&document.children, "head")
+        .and_then(|element| find_first_element_in_nodes(&element.children, "base"))
+        .and_then(|element| element.attribute("href"))
+}
+
+fn browser_effective_base_href(document: &Document, document_url: &str) -> Option<String> {
+    let document_url = document_url.trim();
+    if !is_absolute_url(document_url) {
+        return None;
+    }
+
+    browser_authored_base_href(document)
+        .and_then(|base_href| resolve_browser_url(base_href, Some(document_url)))
+        .or_else(|| Some(document_url.to_string()))
 }
 
 fn is_absolute_url(url: &str) -> bool {

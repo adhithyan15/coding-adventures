@@ -73,8 +73,10 @@ The current parser surface includes:
   hints, and required/readonly/multiple control state across document,
   content-tree, and render-tree projections
 - browser-facing URL resolution metadata for links, loadable resources, images,
-  and form actions using the document `base` href when available, while keeping
-  raw authored URLs available to browser policy code
+  and form actions using the document `base` href when available, plus
+  `parse_browser_render_tree_with_document_url` for resolving relative browser
+  content against the fetched navigation URL while keeping raw authored URLs
+  available to browser policy code
 - browser-facing link/resource scheduling metadata for preconnect, preload,
   modulepreload, prefetch, manifest, canonical, and icon links, including
   `as`, integrity, CORS/referrer policy, fetch priority, blocking, and

@@ -57,8 +57,11 @@ link regions, resolves host-fetched GIF/JPEG image bytes into shared pixels,
 and proves text and inline-image scenes rasterize to RGBA pixels with Cairo.
 Fetch/decode failures now render clipped bordered HTML `alt` text. The concrete
 `http1-client` now composes URL parsing, bounded TCP I/O, HTTP response framing,
-and relative redirects into a synchronous HTTP/1.0 GET transport. The platform
-host must still wire fetched page and image bytes through navigation to pixels.
+and relative redirects into a synchronous HTTP/1.0 GET transport. Browser
+render-tree extraction can now use the final fetched document URL as its
+fallback base, so relative links and inline images remain fetchable even when
+the page omits `<base>`. The platform host must still compose those stages
+through navigation to pixels.
 
 ## Where It Fits
 

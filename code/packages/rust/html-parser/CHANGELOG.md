@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser render-tree extraction can now accept the fetched document URL as
+  the fallback base, including resolution of relative authored `<base href>`
+  values, so Venture can fetch relative links and inline images after HTTP
+  navigation.
 - The declarative HTML lexer now implements the current processing-instruction
   states, and the canonical 2,637-case tree corpus covers every source
   signature in the current 1,934-case upstream WPT tree-construction corpus.
