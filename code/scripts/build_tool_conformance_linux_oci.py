@@ -26,6 +26,7 @@ MAX_DOCUMENT_BYTES = 2_000_000
 PODMAN_COMMAND = "/usr/bin/podman"
 CRUN_COMMAND = "/usr/bin/crun"
 MAX_RUNTIME_OUTPUT_BYTES = 262_144
+MAX_RUNTIME_JSON_DEPTH = 64
 
 
 class LinuxOciUnavailable(RuntimeError):
@@ -304,6 +305,30 @@ def _runtime_prefix(state_root: Path) -> list[str]:
     ]
 
 
+def _reject_excessive_json_nesting(value: str) -> None:
+    depth = 0
+    in_string = False
+    escaped = False
+    for character in value:
+        if in_string:
+            if escaped:
+                escaped = False
+            elif character == "\\":
+                escaped = True
+            elif character == '"':
+                in_string = False
+        elif character == '"':
+            in_string = True
+        elif character in "[{":
+            depth += 1
+            if depth > MAX_RUNTIME_JSON_DEPTH:
+                raise ValueError("runtime response nesting exceeds the ceiling")
+        elif character in "]}":
+            depth -= 1
+            if depth < 0:
+                raise ValueError("runtime response has unbalanced nesting")
+
+
 def _runtime_json(result: CommandResult) -> object:
     if result.returncode != 0:
         raise LinuxOciUnavailable(
@@ -317,6 +342,7 @@ def _runtime_json(result: CommandResult) -> object:
         )
     try:
         decoded = result.stdout.decode("utf-8", errors="strict")
+        _reject_excessive_json_nesting(decoded)
 
         def reject_duplicates(
             pairs: list[tuple[str, object]],

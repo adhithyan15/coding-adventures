@@ -305,12 +305,19 @@ class LinuxOciBackendTests(unittest.TestCase):
                 "LINUX_OCI_RUNTIME_OUTPUT_LIMIT",
             ),
         ):
-            with (
-                self.subTest(code=code),
-                self.assertRaises(linux_oci.LinuxOciUnavailable) as raised,
-            ):
-                linux_oci._runtime_json(result)
-            self.assertEqual(raised.exception.code, code)
+            with self.subTest(code=code):
+                with self.assertRaises(linux_oci.LinuxOciUnavailable) as raised:
+                    linux_oci._runtime_json(result)
+                self.assertEqual(raised.exception.code, code)
+
+    def test_runtime_depth_scan_ignores_brackets_inside_strings(self) -> None:
+        payload = {"value": "[{" * 100 + "}]" * 100}
+        result = linux_oci.CommandResult(
+            returncode=0,
+            stdout=json.dumps(payload).encode(),
+            stderr=b"",
+        )
+        self.assertEqual(linux_oci._runtime_json(result), payload)
 
     def test_preflight_requires_both_broker_results(self) -> None:
         with self.assertRaises(TypeError):
