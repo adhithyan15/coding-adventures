@@ -13,6 +13,11 @@
   through the shared `refmod_string` — inheriting its numeric-base reject and its `RefModOutOfRange`
   bounds trap (#67/#74) unchanged — and matches the resulting `[c]` single char; the scan/replace/concat
   logic is otherwise unchanged.
+- **Group base rejected up front (co-totality guard).** `refmod_string` slices a **group** base via its
+  `group_image`, but the compiler's `ref_mod_slice` rejects a group base via `item_index`. So the lifted
+  arm now rejects a group base *before* calling `refmod_string` — otherwise `DELIMITED BY G(2:1)` (G a
+  group) would be accepted here yet rejected by the compiler, a divergence at the new delimiter site. An
+  UNDECLARED name still falls through to `refmod_string`'s `UndefinedName`, which both engines raise.
 - **Only CONSTANT (literal) indices are accepted**, mirroring `string_source_chars`: the `const_ix`
   predicate (`start` literal, `len` literal-or-omitted) gates acceptance. A **computed** (data-name
   index) refmod has a run-time length the compiler's compile-time contract cannot carry, so it stays a

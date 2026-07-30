@@ -29,7 +29,11 @@ to the `coding-adventures-cobol-runtime` 0.78.0 oracle.
 - **Later rungs, rejected co-total.** A `SliceLen::Const(_ != 1)` is a multi-character delimiter; a
   `SliceLen::Runtime` (any data-name index) is a **computed** refmod — a run-time length the
   compile-time contract cannot carry — rejected with "a computed reference-modified delimiter is a later
-  rung", matching the oracle. A numeric base takes the pre-existing `ref_mod_slice` numeric reject.
+  rung", matching the oracle. A **numeric** base takes the pre-existing `ref_mod_slice` numeric reject;
+  a **group** base is rejected too — the compiler rejects it via `item_index`, and the oracle's
+  `single_delim_char` gained a matching group-base reject (rather than slicing `group_image`) so the
+  delimiter site stays co-total at all 11 call sites (an UNDECLARED name falls through to the shared
+  `UndefinedName` both engines raise).
 - **Slice reconstruction is byte-based here and char-based in the oracle**; they coincide on ASCII bases.
   A non-ASCII base is the pre-existing byte-vs-char refmod chip (task_396ba6f6), not newly guarded — the
   positive tests use ASCII, and a characterization test keeps the multi-byte char strictly outside the

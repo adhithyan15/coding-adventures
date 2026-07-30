@@ -1682,8 +1682,12 @@ compile-time contract cannot carry (`SliceLen::Runtime` in the compiler; the
 `const_ix` predicate is false in the oracle) → "a computed reference-modified
 delimiter is a later rung"; a constant refmod of slice-length **≠ 1** → a
 multi-character delimiter; a **numeric base** under refmod → the pre-existing
-`refmod_string` / `ref_mod_slice` numeric-base reject; the `RefModOutOfRange`
-bounds trap for an out-of-range constant slice is inherited unchanged.
+`refmod_string` / `ref_mod_slice` numeric-base reject; a **group base** under refmod
+→ rejected on both engines (the compiler rejects it via `item_index`; the oracle's
+`single_delim_char` rejects a group base up front rather than slicing `group_image`,
+so the site stays co-total — an UNDECLARED name still falls through to the shared
+`UndefinedName`); the `RefModOutOfRange` bounds trap for an out-of-range constant
+slice is inherited unchanged.
 
 **Byte-vs-char.** The compiler reconstructs the slice from BYTES, the oracle from
 CHARACTERS; they coincide on an **ASCII** base. A **non-ASCII** base is the

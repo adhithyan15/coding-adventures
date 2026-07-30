@@ -9840,3 +9840,123 @@ fn const_refmod_delimiter_ascii_window_non_ascii_outside() {
     ));
     assert_eq!(out, "002\n");
 }
+
+#[test]
+fn group_base_refmod_delimiter_is_a_later_rung() {
+    // A GROUP base is rejected on BOTH engines: the compiler's `ref_mod_slice`
+    // rejects a group base via `item_index`, and the oracle's `single_delim_char`
+    // now rejects a group base up front (rather than slicing `group_image`) so the
+    // delimiter site stays co-total. (Without that oracle guard the oracle would
+    // ACCEPT `G(2:1)` while the compiler rejected it — the pre-existing group-refmod
+    // chip, here fenced off at the new delimiter site.)
+    let src = wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  G.",
+            "    05 GA PIC X(3) VALUE \"x,y\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &["UNSTRING S DELIMITED BY G(2:1) INTO R1 R2.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a group-base refmod delimiter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a group-base refmod delimiter"
+    );
+}
+
+#[test]
+fn numeric_base_refmod_delimiter_is_a_later_rung() {
+    // A NUMERIC base is rejected on BOTH engines: the compiler's `ref_mod_slice`
+    // (via `item_index`→`Numeric` arm) and the oracle's `refmod_string` both reject
+    // "reference modification of a numeric item", reached through the lifted
+    // `RefMod` arm. Co-total.
+    let src = wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  D  PIC 9(3) VALUE 123.",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &["UNSTRING S DELIMITED BY D(2:1) INTO R1 R2.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a numeric-base refmod delimiter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a numeric-base refmod delimiter"
+    );
+}
+
+#[test]
+fn const_refmod_omitted_length_delimiter() {
+    // An OMITTED length `D(3:)` runs to the end of the 3-char base "ab," — that is
+    // the single char "," (length 1), so it joins the single-char path. This is the
+    // one accepted path whose length is NOT a literal: the compiler's
+    // `const_refmod_len` computes `width - start0` and the oracle slices to `width`.
+    // Tallying "," over "X,Y,Z" agrees byte-for-byte -> 002.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"X,Y,Z\".",
+            "01  D  PIC X(3) VALUE \"ab,\".",
+            "01  C  PIC 9(3) VALUE 0.",
+        ],
+        &["INSPECT S TALLYING C FOR ALL D(3:).", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn const_refmod_omitted_length_multichar_is_a_later_rung() {
+    // An OMITTED length that runs to more than one character — `D(2:)` on the 3-char
+    // "ab," is "b," (length 2) — is a MULTI-CHARACTER delimiter, rejected on BOTH
+    // engines (`SliceLen::Const(2)` in the compiler; a two-char slice in the oracle's
+    // `[c]` match). Co-total.
+    let src = wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  D  PIC X(3) VALUE \"ab,\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &["UNSTRING S DELIMITED BY D(2:) INTO R1 R2.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a length-2 omitted-length refmod delimiter");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a length-2 omitted-length refmod delimiter"
+    );
+}
+
+#[test]
+fn const_refmod_region_delimiter() {
+    // A refmod as an INSPECT BEFORE/AFTER REGION delimiter (oracle site
+    // `single_delim_char`@region; compiler `single_delim_code` via the region-window
+    // emitter). D(2:1) of "x,y" is ",". The BEFORE-"," region of "aa,aa" is "aa", in
+    // which "a" occurs twice -> 002. Positive parity, exercising the region site.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"aa,aa\".",
+            "01  D  PIC X(3) VALUE \"x,y\".",
+            "01  C  PIC 9(3) VALUE 0.",
+        ],
+        &["INSPECT S TALLYING C FOR ALL \"a\" BEFORE D(2:1).", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn const_refmod_replacing_characters_by() {
+    // A refmod as the REPLACING CHARACTERS BY replacement (oracle site
+    // `single_delim_char`@1593; compiler `single_delim_str`@CHARACTERS-BY). E(1:1) of
+    // "*!" is "*", so every character of "ABC" becomes "*" -> "***". Positive parity,
+    // exercising the `single_delim_str` refmod path via CHARACTERS BY.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"ABC\".",
+            "01  E  PIC X(2) VALUE \"*!\".",
+        ],
+        &["INSPECT S REPLACING CHARACTERS BY E(1:1).", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "***\n");
+}

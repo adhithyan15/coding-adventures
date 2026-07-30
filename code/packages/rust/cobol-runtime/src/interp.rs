@@ -1122,6 +1122,22 @@ impl Machine {
                         "{verb} with a computed reference-modified delimiter is a later rung"
                     )));
                 }
+                // A GROUP base is a later rung on BOTH engines. The compiler's
+                // `ref_mod_slice` rejects a group (or undeclared) base up front via
+                // `item_index`, so the oracle must reject a group here too rather than
+                // slicing its `group_image` — otherwise a `DELIMITED BY G(2:1)` (G a
+                // group) would be accepted by the oracle yet rejected by the compiler,
+                // a divergence at this new refmod-delimiter site. (An UNDECLARED name
+                // is not caught here; it falls through to `refmod_string`'s own
+                // `UndefinedName`, which both engines raise identically.) A group base
+                // is `picture == None`; `is_numeric()` groups do not exist.
+                if let Some(&gidx) = self.by_name.get(base) {
+                    if self.items[gidx].picture.is_none() {
+                        return Err(RuntimeError::Unsupported(format!(
+                            "{verb} with a group-item reference-modified delimiter is a later rung"
+                        )));
+                    }
+                }
                 // Reconstruct the slice through the shared helper (which carries the
                 // numeric-base reject and the RefModOutOfRange bounds trap). A
                 // length-1 slice IS a single character, joining the literal path.
