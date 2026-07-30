@@ -8,7 +8,12 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": {
+    "item_id": "haskell-http1",
+    "pr_number": 9290,
+    "branch": "codex/haskell-http1-parity",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9290"
+  },
   "last_inventory": {
     "revision": "ad8bbd75a007085635455786498ab8caf1430df5",
     "schema_version": 2,
@@ -407,11 +412,11 @@
     {
       "id": "haskell-http1",
       "title": "Port http1 to Haskell on the new http-core",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["haskell-http-core"],
       "branch": "codex/haskell-http1-parity",
-      "pr_number": null,
-      "notes": "Selected after PR #9270 merged because the Linux runner-image TCB gate needs an externally chosen immutable/measured runner rather than self-attestation on mutable ubuntu-latest. This protocol edge builds on merged Haskell http-core, closes one of Haskell's three high-consensus gaps, and establishes the fail-closed NET04 framing contract discovered during security review. Local validation: GHC 9.4.8, 28 Hspec examples, 97% expression and 90% alternative coverage, schema-valid empty capability manifest, real Windows BUILD, http-core downstream test, Go resolver test/vet, affected plan http-core -> http1, collision report 4,335 slots / 277 gaps / zero collisions or unknown buckets, and clean diff."
+      "pr_number": 9290,
+      "notes": "PR #9290 builds on merged Haskell http-core, closes one of Haskell's three high-consensus gaps, and establishes the fail-closed NET04 framing contract discovered during security review. The Linux runner-image TCB gate remains externally blocked because mutable ubuntu-latest cannot self-attest an immutable/measured runner identity. Local validation: GHC 9.4.8, 28 Hspec examples, 97% expression and 90% alternative coverage, schema-valid empty capability manifest, real Windows BUILD, http-core downstream test, Go resolver test/vet, affected plan http-core -> http1, collision report 4,335 slots / 277 gaps / zero collisions or unknown buckets, clean diff, and two independent final audits with no findings."
     },
     {
       "id": "http1-safe-framing-backfill",
