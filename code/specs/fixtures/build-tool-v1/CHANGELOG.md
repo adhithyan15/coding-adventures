@@ -2,6 +2,17 @@
 
 ## 2026-07-30
 
+- Added a separately domain-bound exact-loader authority schema with ten fixed
+  component roles and a closed standard-library import manifest.
+- Added retained-directory-handle component reads, sealed anonymous component
+  copies, and a fresh `python -I -S -B` loadability worker that runs the exact
+  approved loader bytes with a scrubbed environment while compiling but never
+  executing the approved backend module.
+- Made the Linux backend import closure standard-library-only and split out the
+  formally prevalidated interface. Loader validation checks the interface but
+  never calls it, Podman, a fixture, an adapter, or a container.
+- Kept capability inspection disabled and recorded its protected command broker
+  as a required dependency before invariant-probe authority.
 - Added the closed external authority-bundle schema and exact
   domain/length/raw-byte approval digest for Linux capability preflight.
 - Added a process-free authority verifier that binds the protected source

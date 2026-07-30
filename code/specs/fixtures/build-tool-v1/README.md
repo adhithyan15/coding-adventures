@@ -12,9 +12,11 @@ build-tool-v1/
   pure-domains.schema.json
   execution.schema.json
   execution-authority.schema.json
+  execution-preflight-loader-authority.schema.json
   execution-policy.schema.json
   execution-policy.json
   linux-oci-backend.schema.json
+  preflight-imports.json
   implementations.schema.json
   implementations.json
   CHANGELOG.md
@@ -82,6 +84,17 @@ identity document. Scope `linux_capability_preflight_v1` binds no corpus,
 adapter, launcher, or executable case and cannot authorize container creation
 or trusted execution.
 
+`execution-preflight-loader-authority.schema.json` is a separately
+domain-bound ten-role profile. It adds the exact loader and closed stdlib
+import manifest without broadening the earlier scope. On Linux, the verifier
+traverses every component from retained directory handles, and the loader
+copies its own source, the backend, manifest, and identity into sealed memfds.
+A fresh `python -I -S -B` worker executes the sealed loader, rejects undeclared
+or dynamic imports and executable import-time statements, compiles but never
+executes the backend, and verifies its three required structural interfaces.
+Its receipt reports loadability only: it does not call preflight, Podman, a
+fixture, an adapter, or a container.
+
 ## Runner
 
 Validate the complete corpus and inventory:
@@ -100,11 +113,22 @@ python code/scripts/build_tool_conformance_authority.py validate-authority \
   --source-tree <full-reviewed-tree>
 ```
 
-This tranche exposes no process-owning `preflight` subcommand. The bare
+Validate a separately approved exact-loader bundle on Linux:
+
+```text
+python code/scripts/build_tool_conformance_backend_loader.py \
+  --authority-bundle path/to/external-loader-authority.json \
+  --approved-authority-sha256 <out-of-band-loader-sha256> \
+  --source-commit <full-reviewed-commit> \
+  --source-tree <full-reviewed-tree> \
+  --repository-root <absolute-reviewed-checkout>
+```
+
+This command starts only one isolated Python loadability worker. The bare
 `build_tool_conformance_linux_oci.py --identity ...` entry point fails closed
-with `LINUX_OCI_AUTHORITY_REQUIRED`. A follow-on exact-byte loader must execute
-the retained approved backend and its bound import closure without a
-name-based Python import before protected capability inspection can run.
+with `LINUX_OCI_AUTHORITY_REQUIRED`. Protected capability inspection remains
+disabled until a later broker eliminates the runtime-binary and state-root
+path races, streams bounded combined output, and owns full descendant cleanup.
 
 Compare one externally produced adapter result with its fixture:
 
@@ -140,7 +164,7 @@ decisions.
 
 ## Security boundary
 
-Authority validation and pull-request CI are intentionally process-free:
+The bootstrap and authority verifiers remain process-free:
 
 - it never launches an adapter or shell;
 - it never applies fixture environment data;
@@ -149,11 +173,11 @@ Authority validation and pull-request CI are intentionally process-free:
   changing permissions, or using a process API; and
 - the preflight authority profile has no flag that can enable execution.
 
-There is intentionally no process handoff in this tranche. Ordinary
-name-based importing after validation would not prove that the approved
-backend bytes are the code being executed. A later loader must consume the
-exact retained artifact and its bound import closure through an atomic
-runner-owned boundary before capability inspection can run.
+The exact-loader tranche has one narrow process handoff: a fresh isolated
+Python worker started from the sealed approved loader bytes. It receives only
+sealed descriptors, fixed digests, a scrubbed environment, and standard-library
+search paths. The worker validates source closure and interfaces and exits; it
+cannot make the unavailable Linux backend available.
 
 The bootstrap runner performs no workspace materialization. Adapter
 orchestration and execution fixtures remain blocked until the separate
@@ -217,6 +241,9 @@ python -m unittest discover \
 python -m unittest discover \
   -s code/scripts/tests \
   -p "test_build_tool_conformance_authority.py"
+python -m unittest discover \
+  -s code/scripts/tests \
+  -p "test_build_tool_conformance_backend_loader.py"
 python -m unittest discover \
   -s code/scripts/tests \
   -p "test_build_tool_conformance_linux_oci.py"

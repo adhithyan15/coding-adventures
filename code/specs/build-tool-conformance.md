@@ -729,13 +729,13 @@ remain process-free and never enumerate or decode an execution case.
 
 Authorization scopes are cryptographically and semantically distinct. Schema
 v1 admits only `linux_capability_preflight_v1`: it approves the exact
-components intended for a future host/image capability inspection, binds an
-empty execution corpus and no adapters, and cannot import a process backend,
-create a container, or decode a case. The future exact-byte preflight loader,
-invariant-probe profile, and trusted-execution profile require additional
-closed contracts after their corresponding components exist and before those
-enforcement paths may run; a preflight digest is therefore structurally
-unusable for either future execution scope.
+components intended for a future host/image capability inspection and binds an
+empty execution corpus and no adapters. Its process-free verifier cannot
+import a process backend, create a container, or decode a case. The exact-byte
+loader, invariant-probe profile, and trusted-execution profile use distinct
+domain-separated scopes and closed contracts after their corresponding
+components exist; a digest for one scope is therefore structurally unusable
+for another.
 
 The authority SHA-256 uses this exact framing:
 
@@ -780,6 +780,66 @@ operation, `crun`, cgroup v2 with delegated `cpu`, `memory`, and `pids`
 controllers, seccomp, exact runtime binary hashes, and the exact local image.
 Missing or mismatched capabilities produce a stable non-passing result before
 any fixture is decoded or materialized.
+
+The exact loader is a separate loadability-only prerequisite, not yet the
+capability-command handoff. Its authority record is described by
+`execution-preflight-loader-authority.schema.json`, uses authorization scope
+`linux_capability_preflight_loader_v1`, and is approved with this distinct
+framing:
+
+1. append the ASCII domain separator
+   `coding-adventures/build-tool-authority/linux-capability-preflight-loader/v1`
+   followed by one NUL;
+2. append the unsigned 64-bit big-endian exact raw-bundle byte length; and
+3. append the exact bounded raw UTF-8 JSON bytes.
+
+The loader profile binds exactly ten roles: its own authority schema, the
+execution policy and schema, the Linux identity schema, the process-free
+bootstrap and authority verifier, the exact loader, the stdlib-only Linux
+preflight backend, the closed backend import manifest, and the external Linux
+identity. The protected source commit/tree remains mandatory. The older
+eight-role `linux_capability_preflight_v1` bundle cannot be upgraded or reused.
+
+The loader profile and implementation have these requirements:
+
+1. Authority validation opens repository and bundle roots once, traverses
+   every fixed component path one segment at a time relative to retained
+   directory handles, and applies no-follow, directory, close-on-exec,
+   bounded-read, stable-file, and singly-linked regular-file checks. Absolute,
+   empty, dot, linked, and separator-containing path segments fail closed.
+2. The stage copies the exact retained loader, backend, import-manifest, and
+   identity bytes into anonymous Linux memory files and applies write, grow,
+   shrink, and seal seals before a worker sees them. If handle-relative
+   traversal, anonymous files, or sealing are unavailable, it fails closed.
+3. One fresh worker starts with the protected interpreter using `-I -S -B`, a
+   fixed scrubbed environment, no checkout directory on `sys.path`, no bytecode
+   cache, no caller modules, and only the sealed component descriptors. The
+   interpreter, standard library, native extensions, libc, and dynamic loader
+   are explicitly part of the protected runner-image TCB.
+4. The worker strictly parses the closed import manifest, rejects invalid
+   UTF-8, a BOM, NUL, relative or wildcard imports, and any import not listed
+   exactly. It rejects executable module/class statements, decorators,
+   defaults, comprehensions, or dynamic imports outside the closed static
+   profile, then compiles the sealed backend bytes without executing them.
+   Every declared import root must be reviewed standard library. The backend
+   has no repository or third-party dependency.
+5. The worker verifies the exact loader/backend/manifest/identity digests and
+   the backend's structural `preflight_prevalidated`, unavailable-error, and
+   command-result declarations. It does not execute backend module code, invoke
+   preflight, inspect Podman, open an execution case, construct a container
+   argv, or retain a reusable worker.
+6. The parent bounds the worker protocol, timeout, output, descriptor set, and
+   exit status. Success is only a loadability receipt binding the authority
+   digest, protected source IDs, and exact component digests. It is not
+   capability, containment, or readiness evidence.
+
+A later protected capability-command broker must retain an atomic private state
+root, execute already-open verified runtime binaries or rely on an attested
+immutable runner image, allow only Podman `info` and exact-config `image
+inspect`, stream a combined output cap, enforce time and complete-descendant
+cleanup, and return stable non-passing capability diagnostics. Until that
+broker and its own authority profile land, the bare Linux CLI remains disabled
+and no real preflight runs. This loader cannot mark Linux ready.
 
 The first Linux delivery tranche contains identity validation, capability
 preflight logic, and construction of the runner-owned invariant-probe
