@@ -2079,6 +2079,16 @@ impl Machine {
                     )),
                 }
             }
+            // A CONSTANT refmod set: its characters are the slice `base(start:len)`,
+            // produced by the SAME [`Self::refmod_string`] evaluator the MOVE-source,
+            // STRING-sending-field, and DISPLAY paths use — resolved up front (before
+            // any per-position write-back), so a refmod whose base ALIASES the source
+            // slices the ORIGINAL bytes. `refmod_string` rejects a numeric base
+            // (`later rung`) exactly as the compiler's `ref_mod_slice` does, keeping
+            // accept/reject identical on both engines. The slice's length is the const
+            // `len` (or `base_width - start + 1` when omitted) — a static width, so the
+            // equal-length check stays fixed just like a data-name's declared width.
+            ConvertOperand::RefMod { base, start, len } => self.refmod_string(base, start, len),
         }
     }
 

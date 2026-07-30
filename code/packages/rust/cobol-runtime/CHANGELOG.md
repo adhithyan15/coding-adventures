@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.73.0 — INSPECT CONVERTING with a CONSTANT reference-modified FROM/TO operand — 2026-07-29
+
+- `INSPECT src CONVERTING from TO to [{BEFORE|AFTER} x]` now accepts a **constant reference
+  modification** `base(start:len)` / `base(start:)` as the `from` and/or `to` translation set — a slice
+  of an alphanumeric item where both indices are LITERALS. Either or both sides may be a const slice,
+  mixing freely with a literal or a data-name. Byte-identical to the compiler (0.69.0).
+- **A const refmod reduces to the data-name case.** `ConvertOperand` gains a `RefMod { base, start,
+  len }` variant (carried unresolved, like `Item`). `converting_operand_str` resolves it up front via
+  the SHARED `refmod_string` evaluator — the same slice the MOVE-source / STRING-sending-field / DISPLAY
+  paths take. Resolved BEFORE the source rewrite, so a refmod whose base ALIASES the source sees the
+  ORIGINAL bytes. The slice length (the const `len`, or `base_width - start + 1` when omitted) is
+  static, so the equal-length check stays fixed just like a data-name's declared width.
+- **Computed refmod deferred co-totally.** `read_converting_operand` admits the `RefMod` variant ONLY
+  when both indices are literals — the SAME `const_ix` predicate (`matches!(start, Lit) &&
+  len.is_none_or(|l| matches!(l, Lit))`) the MOVE/STRING refmod rungs use. A COMPUTED refmod (any
+  data-name index) stays a later rung, rejected with a `"computed reference-modified {which} operand is
+  a later rung"` message — matching the compiler's `SliceLen::Runtime` reject. A numeric refmod base is
+  rejected by `refmod_string` exactly as the compiler's `ref_mod_slice` rejects it.
+- **Co-totality.** Accept/reject is identical on both engines: a const refmod from/to is now accepted
+  on both; a computed refmod, a figurative/numeric-literal from/to, an unequal-length pair (now spanning
+  const slice lengths), and a numeric refmod base all stay later rungs, rejected identically. The
+  non-ASCII disposition is the pre-existing byte-vs-char refmod chip (char-based here, byte-based in the
+  compiler): they coincide on an ASCII base, and a slice/reconstruction straddling a multibyte char
+  traps/diverges exactly as the MOVE/STRING refmod rungs do — no new divergence.
+
 ## 0.72.0 — combined INSPECT TALLYING/REPLACING: a LEADING half may carry a region — 2026-07-29
 
 - `INSPECT src TALLYING c FOR {ALL|LEADING} d [{BEFORE|AFTER} p] REPLACING {ALL|LEADING} s BY r
