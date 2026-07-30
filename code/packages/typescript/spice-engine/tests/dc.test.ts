@@ -690,6 +690,17 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects invalid MOS oxide thickness", () => {
+    const valid = normalizeModelCard("Mvalid", "nmos", { TOX: 100.0e-9 });
+    expect(valid.parameters.TOX).toBe(100.0e-9);
+
+    for (const invalidThickness of [0.0, -1.0, Number.POSITIVE_INFINITY, Number.NaN]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { TOX: invalidThickness }),
+      ).toThrow("MOSFET TOX must be finite and positive");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,

@@ -819,6 +819,20 @@ fn mos_model_card_rejects_invalid_substrate_doping() {
 }
 
 #[test]
+fn mos_model_card_rejects_invalid_oxide_thickness() {
+    let valid = normalize_model_card("Mvalid", "nmos", &[("TOX", 100.0e-9)]).unwrap();
+    assert_close(*valid.parameters.get("TOX").unwrap(), 100.0e-9);
+
+    for invalid_thickness in [0.0, -1.0, f64::INFINITY, f64::NAN] {
+        assert!(matches!(
+            normalize_model_card("Minvalid", "nmos", &[("TOX", invalid_thickness)]),
+            Err(SpiceError::InvalidElement { reason, .. })
+                if reason == "MOSFET TOX must be finite and positive"
+        ));
+    }
+}
+
+#[test]
 fn bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() {
     let legacy_card = normalize_model_card(
         "Qlegacy",
