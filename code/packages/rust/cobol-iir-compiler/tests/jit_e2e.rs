@@ -8360,6 +8360,33 @@ fn inspect_converting_non_ascii_data_name_table_is_the_byte_vs_char_chip() {
     assert_eq!(jit, "XYZ\n", "compiled characterization");
 }
 
+// The TO side of the same chip has a DIFFERENT failure MODE than the FROM side. A
+// non-ASCII TO item is sliced per position with `str_slice(item, k, k+1)` (BYTE
+// offsets); on a multibyte char that slice cuts a UTF-8 boundary, so the byte-based
+// compiler TRAPS while the char-based oracle produces a valid char-mapped result.
+// Both engines confine the disagreement to the non-ASCII-operand chip zone
+// (task_396ba6f6); this CHARACTERIZATION test pins each side independently (compiler
+// traps, oracle succeeds), documenting the trap so a change is caught. The supported
+// ASCII surface is unaffected.
+#[test]
+fn inspect_converting_non_ascii_to_data_name_traps_the_compiler_reconstruction_chip() {
+    // F = "A" (ASCII key), T = "é" (1 char / 2 bytes). Source "AYZ": the oracle maps
+    // A→"é" → "éYZ"; the compiler's up-front `str_slice(T, 0, 1)` cuts the 2-byte "é"
+    // and traps. Deterministic (the trap is in the up-front table build, independent
+    // of whether any source char matches).
+    let src = wrap(
+        &["01  S  PIC X(3) VALUE \"AYZ\".", "01  F  PIC X(1) VALUE \"A\".", "01  T  PIC X(1) VALUE \"é\"."],
+        &["INSPECT S CONVERTING F TO T.", "DISPLAY S.", "STOP RUN."],
+    );
+    // Oracle: char-based, succeeds with the mapped multibyte char.
+    assert_eq!(run_cobol(&src).expect("oracle run"), "éYZ\n", "oracle characterization");
+    // Compiled: byte-based `str_slice` on the multibyte TO item traps (pre-existing chip).
+    assert!(
+        run_on_jit_result(&src).is_err(),
+        "compiled non-ASCII TO-item reconstruction traps (pre-existing byte-vs-char chip)"
+    );
+}
+
 #[test]
 fn inspect_converting_combined_with_replacing_is_rejected() {
     // CONVERTING is a STANDALONE INSPECT alternative — the grammar does not let it
