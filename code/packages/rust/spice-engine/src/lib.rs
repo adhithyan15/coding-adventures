@@ -4380,6 +4380,11 @@ pub fn normalize_model_card(
                     name: name.clone(),
                     reason: "MOSFET KP must be finite and positive".to_string(),
                 });
+            } else if canonical == "VT0" && !raw_value.is_finite() {
+                return Err(SpiceError::InvalidElement {
+                    name: name.clone(),
+                    reason: "MOSFET VT0 must be finite".to_string(),
+                });
             } else {
                 normalized.insert(canonical.to_string(), *raw_value);
             }

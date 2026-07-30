@@ -863,6 +863,22 @@ fn mos_model_card_rejects_invalid_transconductance() {
 }
 
 #[test]
+fn mos_model_card_rejects_non_finite_threshold_voltage() {
+    for (name, value) in [("VT0", -0.7), ("VTO", 0.0), ("VTH", 0.7)] {
+        let valid = normalize_model_card("Mvalid", "nmos", &[(name, value)]).unwrap();
+        assert_close(*valid.parameters.get("VT0").unwrap(), value);
+    }
+
+    for invalid_threshold in [f64::NEG_INFINITY, f64::INFINITY, f64::NAN] {
+        assert!(matches!(
+            normalize_model_card("Minvalid", "nmos", &[("VTO", invalid_threshold)]),
+            Err(SpiceError::InvalidElement { reason, .. })
+                if reason == "MOSFET VT0 must be finite"
+        ));
+    }
+}
+
+#[test]
 fn bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() {
     let legacy_card = normalize_model_card(
         "Qlegacy",

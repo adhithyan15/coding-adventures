@@ -730,6 +730,23 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects non-finite MOS threshold voltage", () => {
+    for (const [name, value] of [["VT0", -0.7], ["VTO", 0.0], ["VTH", 0.7]] as const) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { [name]: value });
+      expect(valid.parameters.VT0).toBe(value);
+    }
+
+    for (const invalidThreshold of [
+      Number.NEGATIVE_INFINITY,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { VTO: invalidThreshold }),
+      ).toThrow("MOSFET VT0 must be finite");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,

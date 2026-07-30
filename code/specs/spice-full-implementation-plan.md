@@ -33,12 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS transconductance validation.
+1. Cross-language Level-1 MOS threshold-voltage validation.
    - Status: current PR completion candidate.
-   - Reject non-positive or non-finite model-card `KP` values before
-     temperature scaling and current evaluation.
-   - Preserve positive explicit transconductance and its precedence over
-     process-derived `KP` across Rust, Python, and TypeScript.
+   - Reject non-finite model-card `VT0` / `VTO` / `VTH` values before threshold
+     preprocessing and explicit-value precedence.
+   - Preserve arbitrary finite NMOS and PMOS threshold voltages across Rust,
+     Python, and TypeScript.
 
 ## Completed Slices
 
@@ -3671,6 +3671,13 @@ the Rust, Python, and TypeScript surfaces together.
      mobility preprocessing and process-derived `KP`.
    - Zero and positive surface mobility plus stable diagnostics remain aligned
      across Rust, Python, and TypeScript.
+
+299. Cross-language Level-1 MOS transconductance validation.
+   - Status: completed in PR 9202.
+   - Non-positive and non-finite model-card `KP` values are rejected before
+     temperature scaling and current evaluation.
+   - Positive explicit transconductance and its precedence over process-derived
+     `KP` remain aligned across Rust, Python, and TypeScript.
 
 ## Backlog
 

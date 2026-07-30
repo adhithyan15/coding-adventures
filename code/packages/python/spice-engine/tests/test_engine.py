@@ -1058,6 +1058,16 @@ def test_mos_model_card_rejects_invalid_transconductance() -> None:
             )
 
 
+def test_mos_model_card_rejects_non_finite_threshold_voltage() -> None:
+    for name, value in (("VT0", -0.7), ("VTO", 0.0), ("VTH", 0.7)):
+        valid = normalize_model_card("Mvalid", "nmos", {name: value})
+        assert valid.parameters["VT0"] == pytest.approx(value)
+
+    for invalid_threshold in (-math.inf, math.inf, math.nan):
+        with pytest.raises(ValueError, match="MOSFET VT0 must be finite"):
+            normalize_model_card("Minvalid", "nmos", {"VTO": invalid_threshold})
+
+
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
     circuit = Circuit()
     circuit.add(JFET("J1", "drain", "gate", "0", Kf=-1.0))
