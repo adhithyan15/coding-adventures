@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.22.1 — fix: cyclic-map/seq display + equality no longer overflow the stack on Windows
+
+Fixes `cyclic_map_does_not_stack_overflow` (and the sibling cyclic-sequence
+path): a self-referential aggregate (`h[0] = h`, constructible via the mutable
+`MapSet`/`SeqSet`) is bounded by depth caps in both the display (`_sir_fmt`) and
+equality (`_sir_value_eq_d`) recursions — but both caps were **5000**, and 5000
+stack frames overrun Windows' 1 MB default stack (~875 KB on the display path)
+**before** the cap can trip. So the guard that was supposed to prevent the
+overflow was itself unreachable on Windows; the emitted program crashed with a
+stack overflow instead of printing the `[...]` ellipsis / returning the
+co-inductive `true`. (Linux/macOS give an 8 MB stack, so the same binary passed
+there — the failure was Windows-only.)
+
+- `SIR_MAX_FMT_DEPTH` and `SIR_MAX_EQ_DEPTH` lowered from `5000` to `500`, sized
+  to fit the SMALLEST common C stack (Windows' 1 MB) with wide margin — ~90 KB on
+  the display path, far under the limit — while staying far beyond any real
+  (non-cyclic) nesting. No behaviour change for finite structures shallower than
+  500; deeper-than-cap output is pathological (only a cycle reaches it) and the
+  cap's observable effect (ellipsis / assumed-equal) is unchanged, just reached
+  at a safe depth. No test or cross-backend conformance program pins the old value.
+
 ## 0.22.0 — Collections slice 1: built-in String methods
 
 The first slice of the **Collections** batch — the built-in method catalog every
