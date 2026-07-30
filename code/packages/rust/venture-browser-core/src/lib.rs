@@ -16,7 +16,7 @@ use paint_instructions::{PaintBase, PaintGroup, PaintInstruction, PaintScene};
 use std::fmt;
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
 
 /// In-memory browser navigation state.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -324,6 +324,118 @@ impl BrowserViewport {
     }
 }
 
+/// A browser navigation command emitted by native controls or content input.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum BrowserNavigation {
+    Navigate(String),
+    Back,
+    Forward,
+    Home,
+    Reload,
+}
+
+/// Host-neutral browser state spanning navigation, loading, and the viewport.
+///
+/// Navigation is transactional: a failed page load leaves both history and the
+/// current viewport untouched. Successful redirects replace the current
+/// history entry with the final fetched URL.
+#[derive(Clone, Debug, PartialEq)]
+pub struct BrowserSession {
+    history: NavigationHistory,
+    viewport: Option<BrowserViewport>,
+    viewport_height: f64,
+}
+
+impl BrowserSession {
+    pub fn new(home_url: impl Into<String>, viewport_height: f64) -> Self {
+        Self {
+            history: NavigationHistory::new(home_url),
+            viewport: None,
+            viewport_height: finite_non_negative(viewport_height),
+        }
+    }
+
+    pub fn history(&self) -> &NavigationHistory {
+        &self.history
+    }
+
+    pub fn viewport(&self) -> Option<&BrowserViewport> {
+        self.viewport.as_ref()
+    }
+
+    pub fn viewport_mut(&mut self) -> Option<&mut BrowserViewport> {
+        self.viewport.as_mut()
+    }
+
+    pub fn resize(&mut self, viewport_height: f64) -> f64 {
+        self.viewport_height = finite_non_negative(viewport_height);
+        self.viewport
+            .as_mut()
+            .map_or(0.0, |viewport| viewport.resize(self.viewport_height))
+    }
+
+    pub fn execute<'session, F, M, S, FM, R>(
+        &'session mut self,
+        navigation: BrowserNavigation,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<Option<&'session BrowserViewport>, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let mut history = self.history.clone();
+        let requested_url = match navigation {
+            BrowserNavigation::Navigate(url) => Some(history.navigate(url).to_string()),
+            BrowserNavigation::Back => history.back().map(str::to_owned),
+            BrowserNavigation::Forward => history.forward().map(str::to_owned),
+            BrowserNavigation::Home => Some(history.home().to_string()),
+            BrowserNavigation::Reload => history.reload().map(str::to_owned),
+        };
+        let Some(requested_url) = requested_url else {
+            return Ok(None);
+        };
+
+        let page = pipeline.load(&requested_url, fetcher)?;
+        history.replace_current(page.final_url.clone());
+        if let Some(viewport) = self.viewport.as_mut() {
+            viewport.replace_page(page);
+        } else {
+            self.viewport = Some(BrowserViewport::new(page, self.viewport_height));
+        }
+        self.history = history;
+        Ok(self.viewport.as_ref())
+    }
+
+    pub fn activate_link<'session, F, M, S, FM, R>(
+        &'session mut self,
+        viewport_x: f64,
+        viewport_y: f64,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<Option<&'session BrowserViewport>, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let Some(url) = self
+            .viewport
+            .as_ref()
+            .and_then(|viewport| viewport.hit_test_link(viewport_x, viewport_y))
+            .map(|link| link.url.clone())
+        else {
+            return Ok(None);
+        };
+        self.execute(BrowserNavigation::Navigate(url), pipeline, fetcher)
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum BrowserLoadError {
     Fetch { url: String, message: String },
@@ -515,6 +627,156 @@ mod tests {
         assert_eq!(
             history.replace_current("http://home.test/index.html"),
             Some("http://home.test/index.html")
+        );
+    }
+
+    #[test]
+    fn browser_session_dispatches_navigation_transactionally() {
+        let requested = "http://example.test/start";
+        let first_page = "http://example.test/guide/index.html";
+        let next_page = "http://example.test/guide/next.html";
+        let home_page = "http://home.test/";
+        let fetched_urls = RefCell::new(Vec::new());
+        let fetcher = |url: &str| {
+            fetched_urls.borrow_mut().push(url.to_string());
+            match url {
+                "http://example.test/start" => Ok(BrowserFetchResponse::new(
+                    first_page,
+                    200,
+                    Some("text/html".into()),
+                    b"<title>Guide</title><p><a href='next.html'>Next</a></p>".to_vec(),
+                )),
+                "http://example.test/guide/index.html" => Ok(BrowserFetchResponse::new(
+                    url,
+                    200,
+                    Some("text/html".into()),
+                    b"<title>Guide</title><p><a href='next.html'>Next</a></p>".to_vec(),
+                )),
+                "http://example.test/guide/next.html" => Ok(BrowserFetchResponse::new(
+                    url,
+                    200,
+                    Some("text/html".into()),
+                    b"<title>Next</title><p>Destination</p>".to_vec(),
+                )),
+                "http://home.test/" => Ok(BrowserFetchResponse::new(
+                    url,
+                    200,
+                    Some("text/html".into()),
+                    b"<title>Home</title><p>Venture home</p>".to_vec(),
+                )),
+                "http://example.test/broken" => Err("offline".into()),
+                _ => Err(format!("unexpected URL {url}")),
+            }
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(220.0, 100.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(home_page, 40.0);
+
+        assert!(session
+            .execute(BrowserNavigation::Back, &pipeline, &fetcher)
+            .expect("empty Back should be a no-op")
+            .is_none());
+        session
+            .execute(
+                BrowserNavigation::Navigate(requested.into()),
+                &pipeline,
+                &fetcher,
+            )
+            .expect("initial navigation should load")
+            .expect("initial navigation should create a viewport");
+        assert_eq!(session.history().current_url(), Some(first_page));
+        assert_eq!(
+            session
+                .viewport()
+                .map(|viewport| viewport.page().final_url.as_str()),
+            Some(first_page)
+        );
+
+        let link = session
+            .viewport()
+            .and_then(|viewport| viewport.page().paint.links.first())
+            .cloned()
+            .expect("first page should expose its resolved link");
+        let offset = session
+            .viewport_mut()
+            .expect("loaded page should have a viewport")
+            .set_scroll_offset_y(link.y);
+        session
+            .activate_link(
+                link.x + link.width / 2.0,
+                link.y - offset + link.height / 2.0,
+                &pipeline,
+                &fetcher,
+            )
+            .expect("link activation should load")
+            .expect("link activation should replace the viewport");
+        assert_eq!(session.history().current_url(), Some(next_page));
+        assert_eq!(session.history().back_stack(), &[first_page.to_string()]);
+
+        session
+            .viewport_mut()
+            .expect("loaded page should have a viewport")
+            .scroll_by(20.0);
+        let before_failure = session.clone();
+        assert_eq!(
+            session.execute(
+                BrowserNavigation::Navigate("http://example.test/broken".into()),
+                &pipeline,
+                &fetcher,
+            ),
+            Err(BrowserLoadError::Fetch {
+                url: "http://example.test/broken".into(),
+                message: "offline".into(),
+            })
+        );
+        assert_eq!(session, before_failure);
+
+        session
+            .execute(BrowserNavigation::Back, &pipeline, &fetcher)
+            .expect("Back should reload the prior page")
+            .expect("Back should replace the viewport");
+        assert_eq!(session.history().current_url(), Some(first_page));
+        assert_eq!(
+            session
+                .viewport()
+                .map(|viewport| viewport.scroll_state().offset_y()),
+            Some(0.0)
+        );
+        session
+            .execute(BrowserNavigation::Forward, &pipeline, &fetcher)
+            .expect("Forward should reload the next page")
+            .expect("Forward should replace the viewport");
+        assert_eq!(session.history().current_url(), Some(next_page));
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .expect("Home should load")
+            .expect("Home should replace the viewport");
+        assert_eq!(session.history().current_url(), Some(home_page));
+        let history_before_reload = session.history().clone();
+        session
+            .execute(BrowserNavigation::Reload, &pipeline, &fetcher)
+            .expect("Reload should load")
+            .expect("Reload should replace the viewport");
+        assert_eq!(session.history(), &history_before_reload);
+
+        assert_eq!(
+            fetched_urls.into_inner(),
+            vec![
+                requested,
+                next_page,
+                "http://example.test/broken",
+                first_page,
+                next_page,
+                home_page,
+                home_page,
+            ]
         );
     }
 
