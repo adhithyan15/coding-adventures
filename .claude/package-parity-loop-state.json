@@ -8,7 +8,12 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": {
+    "item_id": "haskell-scaffold-capability-schema",
+    "pr_number": 9308,
+    "branch": "codex/haskell-scaffold-capability-schema",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9308"
+  },
   "last_inventory": {
     "revision": "8517e41b1c06fbb453c66b62c87c8b08135838f3",
     "schema_version": 2,
@@ -425,11 +430,11 @@
     {
       "id": "haskell-scaffold-capability-schema",
       "title": "Repair Haskell scaffold capability manifests and legacy package metadata",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["haskell-http1"],
       "branch": "codex/haskell-scaffold-capability-schema",
-      "pr_number": null,
-      "notes": "Selected after PR #9290 merged because this generator-level prerequisite prevents the remaining Haskell event-loop and brotli ports from reproducing invalid capability metadata. Repair the Go, TypeScript, and native Haskell scaffold paths; add golden and shared-schema tests; reconcile optional legacy manifests with explicit scaffold-time profiles; and backfill all ten existing invalid Haskell manifests, including truthful nonempty Conduit profiles that require Layer 5 review."
+      "pr_number": 9308,
+      "notes": "PR #9308 repairs the Go, TypeScript, and native Haskell scaffold paths; adds two language-neutral golden fixtures and a Draft 2020-12 CI contract test; backfills all ten invalid Haskell manifests; and records follow-up policy, convention, schema, hardening, and singleton-classification work. Local validation: Go tests/vet/build with 66.7% coverage; native Haskell 9/9 Hspec examples with coverage and -Wall plus real generated library/program builds; TypeScript build and 121/121 tests with 83.97% statement coverage and zero npm-audit findings; 8/8 pure backfill package tests; 16 manifests and 2 fixtures schema-valid with Ruff/Bandit clean; affected build-tool dry-run for 42 packages; parity report 1,195 identities / 4,337 slots / 277 high-consensus gaps / zero collisions or unknown buckets; clean diff; and independent final audits. The nonempty Conduit profiles remain proposed metadata and require Layer 5 review before merge or publish."
     },
     {
       "id": "haskell-capability-policy-audit",
