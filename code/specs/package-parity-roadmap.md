@@ -105,21 +105,22 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 30, 2026 at `a06ed28b7` after the Haskell
+inventory was regenerated on July 30, 2026 at `a30477c4c` after the Haskell
 `barcode-1d` and `http-core` ports, the Go/Rust `multi-directed-graph` slice,
 the Linux OCI preflight and external-authority contracts, and a new wave of
 Rust-only package families. The latest refresh added the Rust-only
-`hue-integration` and `venture-browser-core` identities and found zero
-canonical collisions or unknown language buckets:
+`smart-home-runtime-store` identity after the earlier `hue-integration` and
+`venture-browser-core` additions and found zero canonical collisions or
+unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
 | Present in 10-15 languages | 172 | 278 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 740 | 10,360 |
+| Present in one language | 741 | 10,374 |
 
-The loop must not start by attempting 10,360 singleton ports. It should finish
+The loop must not start by attempting 10,374 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The July 29 lane audit is:
@@ -138,7 +139,7 @@ The July 29 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 952 | 0 | 100% |
+| Rust | 956 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -807,16 +808,17 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 545 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 546 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30 inventories added five Rust singleton identities that now have
+The July 30 inventories added six Rust singleton identities that now have
 explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
 `venture-browser-core` needs a portable-core versus native-boundary review.
-`smart-home-discovery-service` and `hue-integration` are likely native/service
-applicability cases.
+`smart-home-discovery-service`, `hue-integration`, and
+`smart-home-runtime-store` are likely native/service/storage applicability
+cases.
 
 ### Likely portable Rust-led families
 
@@ -935,7 +937,7 @@ Delivery order:
    with no host-execution fallback. This tranche validates authority but never
    executes fixture code. Completed by PR #9178.
 5. Implement the Linux OCI backend first. The completed first tranche defines a
-   closed identity for exact rootless Podman, `crun`, OCI manifest/config,
+   closed identity for exact rootless Podman, `crun`, Conmon, OCI manifest/config,
    seccomp, shim, and invariant-probe artifacts; proves local non-remote
    rootless operation, cgroup v2 delegation, seccomp, exact binaries, and the
    already-present image; and constructs the exact no-pull, private-namespace,
@@ -953,10 +955,19 @@ Delivery order:
    revision, policy, schemas, authority verifier, Linux preflight backend, and
    external backend identity. This first closed profile binds no corpus or
    adapter and approves bytes for capability inspection only; it exposes no
-   process handoff. The current selected tranche adds a separately domain-bound
-   atomic exact-byte backend/import-closure loader and a one-shot isolated
-   loadability worker; it runs no capability command. A protected command
-   broker follows, then a separate invariant-probe authority profile. Run
+   process handoff. PR #9208 added a separately domain-bound atomic exact-byte
+   backend/import-closure loader and a one-shot isolated loadability worker; it
+   runs no capability command. The current selected tranche is the separately
+   authorized protected command broker: it retains verified Podman, `crun`,
+   Conmon, and state descriptors, renders only the two closed preflight
+   operations, streams one
+   combined output ceiling, and owns delegated-cgroup descendant cleanup. The
+   security review also requires a verifiable immutable runner-image TCB
+   attestation before protected evidence may authorize a probe; this covers the
+   protected interpreter, standard library/native extensions, libc, loader,
+   container configuration defaults, and other immutable host dependencies
+   outside the three explicitly bound runtime executables. A separate
+   invariant-probe authority profile follows. Run
    protected probe enforcement to produce containment evidence, then add a
    distinct trusted-execution profile binding that evidence, the exact case
    snapshot, and one adapter before trusted-case enforcement. Only protected
@@ -1013,9 +1024,20 @@ The Linux OCI review discovered four additional dependency gates:
   Linux preflight backend, and external identity for capability inspection
   only; later profiles add launcher, seccomp, image, shim, corpus, and adapter
   bytes only after those components are enforced;
-- load process-owning code only from the exact retained approved backend and
-  its bound import closure, using atomic beneath-root handles rather than a
-  name-based Python import or check-then-open path traversal;
+- load the process-free backend only from its exact retained approved import
+  closure, and execute process-owning code only through the separately bound
+  broker, using atomic beneath-root handles rather than name-based imports or
+  check-then-open traversal;
+- confine each brokered capability command with a mandatory Landlock execute
+  ruleset whose only allow-rule is the exact retained Podman inode, so Podman
+  constructor hooks, pause helpers, and every other pathname-backed helper in
+  the reviewed flow cannot escape the closed command authority;
+- close anonymous executable memfds, executable mappings, and other
+  in-memory-code paths with separately reviewed kernel enforcement before any
+  invariant-probe evidence becomes authoritative;
+- bind protected Linux evidence to a verifiable immutable runner-image TCB
+  receipt before an invariant-probe authority can rely on ambient interpreter,
+  libc/loader, configuration, or helper dependencies;
 - execute only the exact direct corpus member bytes from the approved
   root-handle/no-follow snapshot, never a reopened caller path;
 - normalize `dep-skipped` terminology and enforce result-state/return-code

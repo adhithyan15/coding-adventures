@@ -12,6 +12,7 @@
     "architecture",
     "runtime",
     "oci_runtime",
+    "conmon",
     "image",
     "seccomp_profile_sha256",
     "shim",
@@ -70,6 +71,26 @@
         },
         "path": {
           "const": "/usr/bin/crun"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "conmon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementation",
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "implementation": {
+          "const": "conmon"
+        },
+        "path": {
+          "const": "/usr/bin/conmon"
         },
         "sha256": {
           "$ref": "#/$defs/sha256"

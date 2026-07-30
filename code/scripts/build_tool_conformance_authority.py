@@ -32,6 +32,10 @@ AUTHORITY_DOMAIN = (
 LOADER_AUTHORITY_DOMAIN = (
     b"coding-adventures/build-tool-authority/linux-capability-preflight-loader/v1\0"
 )
+BROKER_AUTHORITY_DOMAIN = (
+    b"coding-adventures/build-tool-authority/"
+    b"linux-capability-preflight-broker/v1\0"
+)
 MAX_AUTHORITY_BUNDLE_BYTES = bootstrap.MAX_DOCUMENT_BYTES
 MAX_AUTHORITY_COMPONENT_BYTES = 16_777_216
 MAX_AUTHORITY_TOTAL_BYTES = 67_108_864
@@ -87,6 +91,44 @@ LOADER_COMPONENT_ROLES = (
     *LOADER_REPOSITORY_COMPONENT_PATHS,
     *BUNDLE_COMPONENT_PATHS,
 )
+BROKER_REPOSITORY_COMPONENT_PATHS = MappingProxyType(
+    {
+        "authority_bundle_schema": (
+            "code/specs/fixtures/build-tool-v1/"
+            "execution-capability-broker-authority.schema.json"
+        ),
+        "execution_policy_schema": (
+            "code/specs/fixtures/build-tool-v1/execution-policy.schema.json"
+        ),
+        "execution_policy": ("code/specs/fixtures/build-tool-v1/execution-policy.json"),
+        "linux_backend_identity_schema": (
+            "code/specs/fixtures/build-tool-v1/linux-oci-backend.schema.json"
+        ),
+        "bootstrap_runner": "code/scripts/build_tool_conformance.py",
+        "authority_verifier": ("code/scripts/build_tool_conformance_authority.py"),
+        "preflight_loader": ("code/scripts/build_tool_conformance_backend_loader.py"),
+        "linux_preflight_backend": ("code/scripts/build_tool_conformance_linux_oci.py"),
+        "preflight_import_manifest": (
+            "code/specs/fixtures/build-tool-v1/"
+            "preflight-broker-backend-imports.json"
+        ),
+        "capability_broker": (
+            "code/scripts/build_tool_conformance_capability_broker.py"
+        ),
+        "capability_broker_schema": (
+            "code/specs/fixtures/build-tool-v1/"
+            "linux-capability-preflight-broker.schema.json"
+        ),
+        "capability_broker_manifest": (
+            "code/specs/fixtures/build-tool-v1/"
+            "linux-capability-preflight-broker.json"
+        ),
+    }
+)
+BROKER_COMPONENT_ROLES = (
+    *BROKER_REPOSITORY_COMPONENT_PATHS,
+    *BUNDLE_COMPONENT_PATHS,
+)
 GIT_OID_LENGTH = 40
 
 
@@ -113,6 +155,19 @@ class LoaderAuthority:
     identity: dict[str, Any]
 
 
+@dataclass(frozen=True)
+class BrokerAuthority:
+    """Retained exact bytes approved for two capability-only commands."""
+
+    bundle_digest: str
+    bundle: dict[str, Any]
+    components: Mapping[str, bytes]
+    policy: dict[str, Any]
+    identity: dict[str, Any]
+    behavior: dict[str, Any]
+    import_manifest: dict[str, Any]
+
+
 def authority_bundle_sha256(raw: bytes) -> str:
     """Digest exact bundle bytes with scope and length separation."""
 
@@ -128,6 +183,16 @@ def loader_authority_bundle_sha256(raw: bytes) -> str:
 
     digest = hashlib.sha256()
     digest.update(LOADER_AUTHORITY_DOMAIN)
+    digest.update(struct.pack(">Q", len(raw)))
+    digest.update(raw)
+    return digest.hexdigest()
+
+
+def broker_authority_bundle_sha256(raw: bytes) -> str:
+    """Digest exact broker-authority bytes in their separate scope."""
+
+    digest = hashlib.sha256()
+    digest.update(BROKER_AUTHORITY_DOMAIN)
     digest.update(struct.pack(">Q", len(raw)))
     digest.update(raw)
     return digest.hexdigest()
@@ -846,6 +911,7 @@ def authorize_backend_loader(
             != [
                 "CommandResult",
                 "LinuxOciUnavailable",
+                "preflight_brokered",
                 "preflight_prevalidated",
             ]
         ):
@@ -859,6 +925,232 @@ def authorize_backend_loader(
             components=MappingProxyType(retained),
             policy=policy,
             identity=identity,
+        )
+    finally:
+        if repository_descriptor is not None:
+            os.close(repository_descriptor)
+        if bundle_descriptor is not None:
+            os.close(bundle_descriptor)
+
+
+def authorize_capability_broker(
+    bundle_path: Path,
+    *,
+    approved_digest: str,
+    expected_commit_oid: str,
+    expected_tree_oid: str,
+    repository_root: Path = bootstrap.REPO_ROOT,
+) -> BrokerAuthority:
+    """Authorize the exact thirteen-role capability-only broker profile."""
+
+    if not _is_sha256(approved_digest):
+        raise bootstrap.ConformanceError(
+            "BROKER_AUTHORITY_DIGEST_INVALID",
+            "approved broker-authority SHA-256 must be lowercase hexadecimal",
+        )
+    if not _is_git_oid(expected_commit_oid) or not _is_git_oid(expected_tree_oid):
+        raise bootstrap.ConformanceError(
+            "BROKER_AUTHORITY_SOURCE_ID_INVALID",
+            "expected source commit and tree must be full lowercase SHA-1 identities",
+        )
+    selected_bundle = bundle_path.absolute()
+    selected_repository = repository_root.absolute()
+    repository_descriptor: int | None = None
+    bundle_descriptor: int | None = None
+    try:
+        repository_descriptor = _open_absolute_directory(selected_repository)
+        bundle_descriptor = _open_absolute_directory(selected_bundle.parent)
+        raw_bundle = _read_bound_regular_at(
+            bundle_descriptor,
+            selected_bundle.name,
+            label="capability broker authority bundle",
+            max_bytes=MAX_AUTHORITY_BUNDLE_BYTES,
+        )
+        actual_digest = broker_authority_bundle_sha256(raw_bundle)
+        if not hmac.compare_digest(actual_digest, approved_digest):
+            raise bootstrap.ConformanceError(
+                "BROKER_AUTHORITY_DIGEST_MISMATCH",
+                "capability broker authority does not match the out-of-band approval",
+            )
+        bundle = bootstrap.strict_load_bytes(
+            raw_bundle,
+            max_bytes=MAX_AUTHORITY_BUNDLE_BYTES,
+        )
+        if not _source_matches(bundle, expected_commit_oid, expected_tree_oid):
+            raise bootstrap.ConformanceError(
+                "BROKER_AUTHORITY_SOURCE_MISMATCH",
+                "capability broker authority source does not match protected identities",
+            )
+        expected_profile = {
+            "schema_version": 1,
+            "purpose": "build-tool-trusted-authority",
+            "authorization_scope": "linux_capability_preflight_broker_v1",
+            "repository": "github.com/adhithyan15/coding-adventures",
+            "conformance_revision": "v1",
+            "platform": "linux",
+            "architecture": "amd64",
+        }
+        components_value = bundle.get("components")
+        if (
+            any(bundle.get(key) != value for key, value in expected_profile.items())
+            or not isinstance(components_value, Mapping)
+            or set(components_value) != set(BROKER_COMPONENT_ROLES)
+        ):
+            raise bootstrap.ConformanceError(
+                "BROKER_AUTHORITY_PROFILE_INVALID",
+                "authority is not the closed capability-broker profile",
+            )
+
+        retained: dict[str, bytes] = {}
+        total_bytes = 0
+        for role in BROKER_COMPONENT_ROLES:
+            record = components_value.get(role)
+            if not isinstance(record, Mapping):
+                raise bootstrap.ConformanceError(
+                    "BROKER_AUTHORITY_COMPONENT_ROLE_INVALID",
+                    f"capability broker authority component {role} is missing",
+                )
+            if role in BROKER_REPOSITORY_COMPONENT_PATHS:
+                expected_provenance = "repository"
+                expected_path = BROKER_REPOSITORY_COMPONENT_PATHS[role]
+                root_descriptor = repository_descriptor
+            else:
+                expected_provenance = "bundle"
+                expected_path = BUNDLE_COMPONENT_PATHS[role]
+                root_descriptor = bundle_descriptor
+            if (
+                record.get("provenance") != expected_provenance
+                or record.get("path") != expected_path
+                or bootstrap.portable_path_error(expected_path)
+            ):
+                raise bootstrap.ConformanceError(
+                    "BROKER_AUTHORITY_COMPONENT_ROLE_INVALID",
+                    f"capability broker authority component {role} "
+                    "does not match its role",
+                )
+            raw = _read_bound_regular_at(
+                root_descriptor,
+                expected_path,
+                label=f"capability broker authority component {role}",
+                max_bytes=MAX_AUTHORITY_COMPONENT_BYTES,
+            )
+            total_bytes += len(raw)
+            if total_bytes > MAX_AUTHORITY_TOTAL_BYTES:
+                raise bootstrap.ConformanceError(
+                    "BROKER_AUTHORITY_COMPONENT_TOTAL_TOO_LARGE",
+                    "capability broker authority components exceed "
+                    "their aggregate ceiling",
+                )
+            if record.get("byte_length") != len(raw):
+                raise bootstrap.ConformanceError(
+                    "BROKER_AUTHORITY_COMPONENT_LENGTH_MISMATCH",
+                    f"capability broker authority component {role} "
+                    "has the wrong length",
+                )
+            digest = record.get("sha256")
+            if not isinstance(digest, str) or not hmac.compare_digest(
+                hashlib.sha256(raw).hexdigest(),
+                digest,
+            ):
+                raise bootstrap.ConformanceError(
+                    "BROKER_AUTHORITY_COMPONENT_DIGEST_MISMATCH",
+                    f"capability broker authority component {role} "
+                    "has the wrong digest",
+                )
+            retained[role] = raw
+
+        authority_schema = _strict_component_document(
+            retained["authority_bundle_schema"],
+            code="BROKER_AUTHORITY_BUNDLE_SCHEMA_INVALID",
+        )
+        bootstrap._validate_schema(
+            bundle,
+            authority_schema,
+            "BROKER_AUTHORITY_BUNDLE_SCHEMA_INVALID",
+        )
+        policy_schema = _strict_component_document(
+            retained["execution_policy_schema"],
+            code="BROKER_AUTHORITY_POLICY_SCHEMA_INVALID",
+        )
+        policy = _strict_component_document(
+            retained["execution_policy"],
+            code="BROKER_AUTHORITY_POLICY_INVALID",
+        )
+        bootstrap._validate_schema(
+            policy,
+            policy_schema,
+            "BROKER_AUTHORITY_POLICY_SCHEMA_INVALID",
+        )
+        _validate_preflight_policy(
+            policy,
+            conformance_revision=bundle["conformance_revision"],
+        )
+        identity_schema = _strict_component_document(
+            retained["linux_backend_identity_schema"],
+            code="BROKER_AUTHORITY_IDENTITY_SCHEMA_INVALID",
+        )
+        identity = _strict_component_document(
+            retained["linux_backend_identity"],
+            code="BROKER_AUTHORITY_IDENTITY_INVALID",
+        )
+        bootstrap._validate_schema(
+            identity,
+            identity_schema,
+            "BROKER_AUTHORITY_IDENTITY_SCHEMA_INVALID",
+        )
+        _validate_identity_semantics(identity)
+        import_manifest = _strict_component_document(
+            retained["preflight_import_manifest"],
+            code="BROKER_AUTHORITY_IMPORT_MANIFEST_INVALID",
+        )
+        if import_manifest != {
+            "schema_version": 1,
+            "module": "build_tool_conformance_linux_oci",
+            "imports": [
+                "__future__",
+                "argparse",
+                "collections.abc",
+                "dataclasses",
+                "hashlib",
+                "json",
+                "os",
+                "pathlib",
+                "stat",
+                "sys",
+                "typing",
+            ],
+            "required_exports": [
+                "CommandResult",
+                "LinuxOciUnavailable",
+                "preflight_brokered",
+                "preflight_prevalidated",
+            ],
+        }:
+            raise bootstrap.ConformanceError(
+                "BROKER_AUTHORITY_IMPORT_MANIFEST_INVALID",
+                "capability broker import manifest is outside the v1 profile",
+            )
+        behavior_schema = _strict_component_document(
+            retained["capability_broker_schema"],
+            code="BROKER_AUTHORITY_BEHAVIOR_SCHEMA_INVALID",
+        )
+        behavior = _strict_component_document(
+            retained["capability_broker_manifest"],
+            code="BROKER_AUTHORITY_BEHAVIOR_INVALID",
+        )
+        bootstrap._validate_schema(
+            behavior,
+            behavior_schema,
+            "BROKER_AUTHORITY_BEHAVIOR_SCHEMA_INVALID",
+        )
+        return BrokerAuthority(
+            bundle_digest=actual_digest,
+            bundle=bundle,
+            components=MappingProxyType(retained),
+            policy=policy,
+            identity=identity,
+            behavior=behavior,
+            import_manifest=import_manifest,
         )
     finally:
         if repository_descriptor is not None:

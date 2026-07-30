@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "profile": "linux_capability_preflight_broker_v1",
+  "platform": "linux",
+  "architecture": "amd64",
+  "runtime_identity_roles": {
+    "runtime": "runtime",
+    "oci_runtime": "oci_runtime",
+    "conmon": "conmon"
+  },
+  "state_root": {
+    "kind": "retained_private_directory",
+    "mode": 448,
+    "children": [
+      "config",
+      "home",
+      "runtime",
+      "runroot",
+      "storage"
+    ],
+    "prepopulated_children": [
+      "storage"
+    ],
+    "locator": "proc_self_fd"
+  },
+  "environment": {
+    "HOME": {
+      "kind": "state_path",
+      "name": "home"
+    },
+    "LANG": {
+      "kind": "literal",
+      "value": "C.UTF-8"
+    },
+    "LC_ALL": {
+      "kind": "literal",
+      "value": "C.UTF-8"
+    },
+    "PATH": {
+      "kind": "literal",
+      "value": "/nonexistent"
+    },
+    "TZ": {
+      "kind": "literal",
+      "value": "UTC"
+    },
+    "XDG_CONFIG_HOME": {
+      "kind": "state_path",
+      "name": "config"
+    },
+    "XDG_RUNTIME_DIR": {
+      "kind": "state_path",
+      "name": "runtime"
+    }
+  },
+  "operations": [
+    {
+      "id": "runtime_version",
+      "executable": {
+        "kind": "opened_executable",
+        "role": "runtime"
+      },
+      "argv": [
+        {
+          "kind": "identity_ref",
+          "path": "runtime.path"
+        },
+        {
+          "kind": "literal",
+          "value": "--remote=false"
+        },
+        {
+          "kind": "literal",
+          "value": "version"
+        },
+        {
+          "kind": "literal",
+          "value": "--format"
+        },
+        {
+          "kind": "literal",
+          "value": "json"
+        }
+      ]
+    },
+    {
+      "id": "image_inspect",
+      "executable": {
+        "kind": "opened_executable",
+        "role": "runtime"
+      },
+      "argv": [
+        {
+          "kind": "identity_ref",
+          "path": "runtime.path"
+        },
+        {
+          "kind": "literal",
+          "value": "--remote=false"
+        },
+        {
+          "kind": "literal",
+          "value": "--root"
+        },
+        {
+          "kind": "state_path",
+          "name": "storage"
+        },
+        {
+          "kind": "literal",
+          "value": "--runroot"
+        },
+        {
+          "kind": "state_path",
+          "name": "runroot"
+        },
+        {
+          "kind": "literal",
+          "value": "--runtime"
+        },
+        {
+          "kind": "identity_ref",
+          "path": "oci_runtime.path"
+        },
+        {
+          "kind": "literal",
+          "value": "--conmon"
+        },
+        {
+          "kind": "identity_ref",
+          "path": "conmon.path"
+        },
+        {
+          "kind": "literal",
+          "value": "--storage-driver"
+        },
+        {
+          "kind": "literal",
+          "value": "vfs"
+        },
+        {
+          "kind": "literal",
+          "value": "image"
+        },
+        {
+          "kind": "literal",
+          "value": "inspect"
+        },
+        {
+          "kind": "literal",
+          "value": "--format"
+        },
+        {
+          "kind": "literal",
+          "value": "json"
+        },
+        {
+          "kind": "identity_ref",
+          "path": "image.config_sha256",
+          "prefix": "sha256:"
+        }
+      ]
+    }
+  ],
+  "execution": {
+    "stdin": "null",
+    "cwd": {
+      "kind": "state_path",
+      "name": "home"
+    },
+    "descriptor_allowlist": [
+      "stdin",
+      "stdout",
+      "stderr",
+      "runtime",
+      "state.config",
+      "state.home",
+      "state.runtime",
+      "state.runroot",
+      "state.storage"
+    ],
+    "timeout_ms": 15000,
+    "combined_output_bytes": 262144,
+    "output_accounting": "combined_streaming",
+    "partial_output": "reject",
+    "ambient_exec": {
+      "kind": "landlock_path_beneath",
+      "minimum_abi": 1,
+      "handled_access": "execute",
+      "coverage": "pathname_backed_executables",
+      "allowed_role": "runtime",
+      "default": "deny"
+    },
+    "cleanup": {
+      "kind": "delegated_cgroup_v2",
+      "membership": "cgroup.procs",
+      "kill": "cgroup.kill",
+      "empty_proof": "cgroup.events:populated 0",
+      "subreaper": true,
+      "process_group_kill": "supplemental",
+      "cleanup_timeout_ms": 5000
+    }
+  }
+}

@@ -59,6 +59,11 @@ def backend_identity() -> dict[str, object]:
             "path": "/usr/bin/crun",
             "sha256": "2" * 64,
         },
+        "conmon": {
+            "implementation": "conmon",
+            "path": "/usr/bin/conmon",
+            "sha256": "8" * 64,
+        },
         "image": {
             "reference": f"localhost/build-tool@sha256:{manifest}",
             "manifest_sha256": manifest,
