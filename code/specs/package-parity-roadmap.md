@@ -958,7 +958,8 @@ Delivery order:
    process handoff. PR #9208 added a separately domain-bound atomic exact-byte
    backend/import-closure loader and a one-shot isolated loadability worker; it
    runs no capability command. The current selected tranche is the separately
-   authorized protected command broker: it retains verified Podman, `crun`,
+   authorized protected command broker: it retains verified statically linked
+   Podman, `crun`,
    Conmon, and state descriptors, renders only the two closed preflight
    operations, streams one
    combined output ceiling, and owns delegated-cgroup descendant cleanup. The
@@ -1028,8 +1029,11 @@ The Linux OCI review discovered four additional dependency gates:
   closure, and execute process-owning code only through the separately bound
   broker, using atomic beneath-root handles rather than name-based imports or
   check-then-open traversal;
-- confine each brokered capability command with a mandatory Landlock execute
-  ruleset whose only allow-rule is the exact retained Podman inode, so Podman
+- require the retained Podman identity to declare static linkage, reject any
+  malformed/non-amd64 ELF or `PT_INTERP`, and confine each brokered capability
+  command with a mandatory Landlock execute ruleset whose only allow-rule is
+  the exact retained Podman inode, so a dynamic loader cannot become a
+  trampoline and Podman
   constructor hooks, pause helpers, and every other pathname-backed helper in
   the reviewed flow cannot escape the closed command authority;
 - close anonymous executable memfds, executable mappings, and other

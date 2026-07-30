@@ -31,6 +31,7 @@ def backend_identity() -> dict[str, object]:
             "implementation": "podman",
             "path": "/usr/bin/podman",
             "version": "4.9.3",
+            "linkage": "static",
             "sha256": "1" * 64,
         },
         "oci_runtime": {
@@ -120,6 +121,10 @@ class LinuxOciBackendTests(unittest.TestCase):
             (
                 "version",
                 lambda value: value["runtime"].__setitem__("version", "latest"),
+            ),
+            (
+                "runtime-linkage",
+                lambda value: value["runtime"].__setitem__("linkage", "dynamic"),
             ),
             (
                 "reference",

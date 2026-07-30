@@ -10,7 +10,9 @@
   fixed two-command grammar and environment, combined nonblocking output
   accounting, hard timeouts, and delegated cgroup-v2 descendant cleanup.
 - Added mandatory Landlock ABI-v1 execute confinement whose sole allow-rule is
-  the retained Podman inode. Podman may re-exec itself, while constructor
+  the retained Podman inode, plus a closed `linkage: static` identity field and
+  bounded ELF64 program-header validation that rejects `PT_INTERP`. Podman may
+  re-exec itself without admitting a dynamic-loader execution trampoline, while constructor
   hooks, `catatonit`, and every other pathname-backed helper in the reviewed
   flow fail closed. Anonymous executable memfds and executable mappings remain
   a separately tracked prerequisite before invariant-probe authority.

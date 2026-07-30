@@ -52,6 +52,7 @@ def backend_identity() -> dict[str, object]:
             "implementation": "podman",
             "path": "/usr/bin/podman",
             "version": "5.8.3",
+            "linkage": "static",
             "sha256": "1" * 64,
         },
         "oci_runtime": {

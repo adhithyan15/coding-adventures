@@ -21,6 +21,7 @@ import os
 import selectors
 import signal
 import stat
+import struct
 import subprocess  # nosec B404
 import sys
 import time
@@ -59,6 +60,11 @@ LANDLOCK_MINIMUM_ABI = 1
 SYS_LANDLOCK_CREATE_RULESET = 444
 SYS_LANDLOCK_ADD_RULE = 445
 SYS_LANDLOCK_RESTRICT_SELF = 446
+ELF64_HEADER_BYTES = 64
+ELF64_PROGRAM_HEADER_BYTES = 56
+ELF_MACHINE_X86_64 = 62
+ELF_PROGRAM_INTERPRETER = 3
+MAX_ELF_PROGRAM_HEADERS = 128
 WORKER_COMPONENTS = (
     "broker",
     "identity",
@@ -382,6 +388,7 @@ def render_operations(
     if (
         runtime.get("implementation") != "podman"
         or runtime.get("path") != "/usr/bin/podman"
+        or runtime.get("linkage") != "static"
         or oci_runtime.get("implementation") != "crun"
         or oci_runtime.get("path") != "/usr/bin/crun"
         or conmon.get("implementation") != "conmon"
@@ -646,6 +653,66 @@ def open_verified_binary(path: str, expected_sha256: str) -> int:
     except BaseException:
         os.close(descriptor)
         raise
+
+
+def validate_static_runtime_elf(descriptor: int) -> None:
+    """Require a static ELF64 x86-64 runtime before one-inode confinement."""
+
+    try:
+        status = os.fstat(descriptor)
+        header = os.pread(descriptor, ELF64_HEADER_BYTES, 0)
+        (
+            identification,
+            elf_type,
+            machine,
+            version,
+            _entry,
+            program_header_offset,
+            _section_header_offset,
+            _flags,
+            header_size,
+            program_header_size,
+            program_header_count,
+            _section_header_size,
+            _section_header_count,
+            _section_name_index,
+        ) = struct.unpack("<16sHHIQQQIHHHHHH", header)
+        table_size = program_header_size * program_header_count
+        if (
+            identification[:4] != b"\x7fELF"
+            or identification[4:7] != b"\x02\x01\x01"
+            or elf_type not in {2, 3}
+            or machine != ELF_MACHINE_X86_64
+            or version != 1
+            or header_size != ELF64_HEADER_BYTES
+            or program_header_size != ELF64_PROGRAM_HEADER_BYTES
+            or not 0 < program_header_count <= MAX_ELF_PROGRAM_HEADERS
+            or program_header_offset < ELF64_HEADER_BYTES
+            or table_size > status.st_size
+            or program_header_offset > status.st_size - table_size
+        ):
+            raise ValueError("invalid ELF64 runtime layout")
+        program_headers = os.pread(
+            descriptor,
+            table_size,
+            program_header_offset,
+        )
+        if len(program_headers) != table_size:
+            raise ValueError("truncated ELF64 program header table")
+        for offset in range(0, table_size, program_header_size):
+            program_type = struct.unpack_from("<I", program_headers, offset)[0]
+            if program_type == ELF_PROGRAM_INTERPRETER:
+                raise BrokerUnavailable(
+                    "BROKER_RUNTIME_LINKAGE_INVALID",
+                    "approved Podman runtime must be statically linked",
+                )
+    except BrokerUnavailable:
+        raise
+    except (AttributeError, OSError, struct.error, ValueError) as error:
+        raise BrokerUnavailable(
+            "BROKER_RUNTIME_LINKAGE_INVALID",
+            "approved Podman runtime is not a valid static ELF64 amd64 executable",
+        ) from error
 
 
 def _private_directory_status(status: os.stat_result, *, owner: int) -> bool:
@@ -1575,6 +1642,7 @@ def _isolated_worker(argv: Sequence[str]) -> int:
             str(runtime.get("path")),
             str(runtime.get("sha256")),
         )
+        validate_static_runtime_elf(runtime_fd)
         oci_runtime_fd = open_verified_binary(
             str(oci_runtime.get("path")),
             str(oci_runtime.get("sha256")),

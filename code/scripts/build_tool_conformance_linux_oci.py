@@ -129,9 +129,11 @@ def validate_identity(
         and identity.get("platform") == "linux"
         and identity.get("architecture") == "amd64"
         and isinstance(identity.get("runtime"), dict)
-        and set(identity["runtime"]) == {"implementation", "path", "version", "sha256"}
+        and set(identity["runtime"])
+        == {"implementation", "path", "version", "linkage", "sha256"}
         and identity["runtime"].get("implementation") == "podman"
         and identity["runtime"].get("path") == "/usr/bin/podman"
+        and identity["runtime"].get("linkage") == "static"
         and _is_version(identity["runtime"].get("version"))
         and _is_sha256(identity["runtime"].get("sha256"))
         and isinstance(identity.get("oci_runtime"), dict)

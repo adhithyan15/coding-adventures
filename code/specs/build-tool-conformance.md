@@ -762,10 +762,11 @@ an untrusted pull request does not approve it.
 
 For `linux_oci`, `identity_sha256` is the SHA-256 of the exact raw bytes of a
 closed Linux OCI backend identity document validated by
-`linux-oci-backend.schema.json`. That document binds the Podman, `crun`, and Conmon
-binaries, their fixed absolute paths, the exact OCI manifest and local config
-image identities, the reviewed seccomp profile, and the in-image shim and
-runner-owned invariant probe. The image `reference` contains the manifest
+`linux-oci-backend.schema.json`. That document binds the statically linked
+Podman runtime, `crun`, and Conmon binaries, their fixed absolute paths, the
+exact OCI manifest and local config image identities, the reviewed seccomp
+profile, and the in-image shim and runner-owned invariant probe. The runtime
+identity MUST declare `linkage` as `static`. The image `reference` contains the manifest
 digest and MUST agree with `manifest_sha256`; a run addresses only the already
 present `sha256:<config_sha256>` image with pull disabled. The runner verifies
 both image identities, operating system, architecture, and absence of
@@ -779,7 +780,8 @@ default command/digest implementation. The authority-gated broker proves a
 non-root Linux amd64 process, a real cgroup-v2 delegated root with enabled
 `cpu`, `memory`, and `pids` controllers, required kernel seccomp actions, exact
 runtime binary hashes, and the exact prepopulated local image. It forces local
-Podman mode. Before Podman starts, the broker installs a Landlock ABI-v1
+Podman mode and rejects a malformed, non-amd64, or dynamically linked Podman
+ELF before command rendering. Before Podman starts, the broker installs a Landlock ABI-v1
 execute ruleset whose sole allow-rule is the already-retained Podman inode.
 Podman re-execution remains possible, while pre-exec hooks, `catatonit`, and
 every other pathname-backed helper execution in the reviewed Podman flow is
@@ -881,8 +883,11 @@ The broker behavior is closed by
    and close-on-exec controls, then requires each to be a root-owned,
    group/world-non-writable, executable, regular file without set-user-ID or
    set-group-ID bits. It hashes retained bytes and compares stable pre/post
-   `fstat` identities including ctime. Podman is executed from the retained
-   descriptor. The exact command supplies the reviewed absolute
+   `fstat` identities including ctime. It also parses Podman's bounded ELF64
+   program-header table and rejects any `PT_INTERP`, malformed layout, or
+   architecture other than amd64. This static-linkage requirement keeps the
+   dynamic loader from becoming an allowed execution trampoline. Podman is
+   executed from the retained descriptor. The exact command supplies the reviewed absolute
    `/usr/bin/crun` and `/usr/bin/conmon` paths, whose bytes are independently
    retained and verified. This preflight does not claim that Podman reports
    those paths or executes either binary. Later container execution still
@@ -901,7 +906,7 @@ The broker behavior is closed by
    exact retained root, runroot, reviewed `crun` and Conmon paths, and `vfs`
    global options from the manifest. `PATH=/nonexistent` makes unexpected
    ambient lookup fail closed, and a Landlock execute-only filesystem ruleset
-   permits pathname-backed execution only of the retained Podman inode. The
+   permits pathname-backed execution only of the retained static Podman inode. The
    restriction is inherited by every fork, namespace transition, and re-exec;
    the broker refuses to run on a kernel without Landlock ABI v1. It does not
    claim to constrain executable memfds, `dlopen`, or executable mappings. No fixture,

@@ -73,10 +73,13 @@ empty SHA-256 digest. Execution cases are added only after an enforcing backend
 is reviewed.
 
 `linux-oci-backend.schema.json` closes the separate immutable identity document
-for the first Linux backend tranche. It binds exact rootless Podman, `crun`, Conmon,
+for the first Linux backend tranche. It binds exact statically linked rootless
+Podman, `crun`, Conmon,
 OCI manifest/config, seccomp, shim, and invariant-probe identities. The
 capability broker validates the non-root Linux/amd64 host, delegated cgroup-v2
-controllers, kernel seccomp actions, and exact runtime binary identities. A
+controllers, kernel seccomp actions, exact runtime binary identities, and the
+absence of a Podman ELF `PT_INTERP` segment. Requiring `linkage: static`
+prevents an allowed dynamic loader from becoming an execution trampoline. A
 mandatory Landlock execute ruleset permits pathname-backed execution only of
 the retained Podman inode, so constructor hooks, `catatonit`, and other
 pathname-backed helpers in the reviewed flow cannot execute. Landlock ABI v1
@@ -148,7 +151,8 @@ python code/scripts/build_tool_conformance_backend_loader.py \
 This command starts only one isolated Python loadability worker. The bare
 `build_tool_conformance_linux_oci.py --identity ...` entry point fails closed
 with `LINUX_OCI_AUTHORITY_REQUIRED`. The separate broker profile is required
-for real capability inspection; it FD-executes Podman, verifies the reviewed
+for real capability inspection; it validates and FD-executes the static Podman
+runtime, verifies the reviewed
 `crun` and Conmon bytes, retains state roots without reopening them, streams
 bounded combined output, and owns full descendant
 cleanup. It still cannot report trusted-execution readiness.

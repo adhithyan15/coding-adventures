@@ -39,6 +39,7 @@ def valid_identity() -> dict[str, object]:
             "implementation": "podman",
             "path": "/usr/bin/podman",
             "version": "5.1.2",
+            "linkage": "static",
             "sha256": "2" * 64,
         },
         "oci_runtime": {
@@ -68,6 +69,59 @@ def valid_identity() -> dict[str, object]:
             "sha256": "7" * 64,
         },
     }
+
+
+def _minimal_static_elf(
+    exit_code: int,
+    *,
+    with_interpreter: bool = False,
+) -> bytes:
+    """Build a minimal static amd64 ELF that exits with the selected status."""
+
+    program_header_count = 2 if with_interpreter else 1
+    code_offset = 64 + 56 * program_header_count
+    code = (
+        b"\xb8\x3c\x00\x00\x00"
+        + b"\xbf"
+        + exit_code.to_bytes(4, "little")
+        + b"\x0f\x05"
+    )
+    total_size = code_offset + len(code)
+    identification = b"\x7fELF\x02\x01\x01\x00" + b"\x00" * 8
+    header = struct.pack(
+        "<16sHHIQQQIHHHHHH",
+        identification,
+        2,
+        broker.ELF_MACHINE_X86_64,
+        1,
+        0x400000 + code_offset,
+        64,
+        0,
+        0,
+        64,
+        56,
+        program_header_count,
+        0,
+        0,
+        0,
+    )
+    load_header = struct.pack(
+        "<IIQQQQQQ",
+        1,
+        5,
+        0,
+        0x400000,
+        0x400000,
+        total_size,
+        total_size,
+        0x1000,
+    )
+    interpreter_header = (
+        struct.pack("<IIQQQQQQ", 3, 4, 0, 0, 0, 0, 0, 1)
+        if with_interpreter
+        else b""
+    )
+    return header + load_header + interpreter_header + code
 
 
 def _component_record(provenance: str, path: str, raw: bytes) -> dict[str, object]:
@@ -371,6 +425,27 @@ class CapabilityBrokerManifestTests(unittest.TestCase):
                 state_fds={},
             )
 
+    def test_dynamic_runtime_identity_fails_closed(self) -> None:
+        identity = valid_identity()
+        runtime = identity["runtime"]
+        assert isinstance(runtime, dict)
+        runtime["linkage"] = "dynamic"
+        with self.assertRaises(broker.BrokerUnavailable) as caught:
+            broker.render_operations(
+                self.manifest,
+                identity,
+                runtime_fd=10,
+                oci_runtime_fd=11,
+                state_fds={
+                    "config": 20,
+                    "home": 21,
+                    "runtime": 22,
+                    "runroot": 23,
+                    "storage": 24,
+                },
+            )
+        self.assertEqual(caught.exception.code, "BROKER_IDENTITY_INVALID")
+
     def test_matching_mutated_schema_cannot_expand_command_grammar(self) -> None:
         changed = json.loads(self.raw)
         changed["operations"][0]["argv"] = [
@@ -573,47 +648,89 @@ class CapabilityBrokerHelperTests(unittest.TestCase):
             and os.execve in os.supports_fd
         ):
             self.skipTest("Landlock retained-FD execution requires Linux")
-        allowed_fd = os.open("/bin/true", os.O_RDONLY | os.O_CLOEXEC)
-        denied_fd = os.open("/bin/false", os.O_RDONLY | os.O_CLOEXEC)
-        try:
-            allowed_pid = os.fork()
-            if allowed_pid == 0:
-                try:
-                    broker.install_execute_landlock(allowed_fd)
-                    os.execve(allowed_fd, ["/bin/true"], {"PATH": "/nonexistent"})
-                except BaseException:  # noqa: BLE001 - child test process
-                    os._exit(125)
-            _selected, allowed_status = os.waitpid(allowed_pid, 0)
-            self.assertTrue(os.WIFEXITED(allowed_status))
-            self.assertEqual(os.WEXITSTATUS(allowed_status), 0)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            allowed_path = root / "allowed"
+            denied_path = root / "denied"
+            allowed_path.write_bytes(_minimal_static_elf(0))
+            denied_path.write_bytes(_minimal_static_elf(1))
+            allowed_path.chmod(0o755)
+            denied_path.chmod(0o755)
+            allowed_fd = os.open(allowed_path, os.O_RDONLY | os.O_CLOEXEC)
+            denied_fd = os.open(denied_path, os.O_RDONLY | os.O_CLOEXEC)
+            try:
+                allowed_pid = os.fork()
+                if allowed_pid == 0:
+                    try:
+                        broker.install_execute_landlock(allowed_fd)
+                        os.execve(
+                            allowed_fd,
+                            [str(allowed_path)],
+                            {"PATH": "/nonexistent"},
+                        )
+                    except BaseException:  # noqa: BLE001 - child test process
+                        os._exit(125)
+                _selected, allowed_status = os.waitpid(allowed_pid, 0)
+                self.assertTrue(os.WIFEXITED(allowed_status))
+                self.assertEqual(os.WEXITSTATUS(allowed_status), 0)
 
-            pathname_pid = os.fork()
-            if pathname_pid == 0:
-                try:
-                    broker.install_execute_landlock(allowed_fd)
-                    os.execve("/bin/true", ["/bin/true"], {"PATH": "/nonexistent"})
-                except BaseException:  # noqa: BLE001 - child test process
-                    os._exit(124)
-            _selected, pathname_status = os.waitpid(pathname_pid, 0)
-            self.assertTrue(os.WIFEXITED(pathname_status))
-            self.assertEqual(os.WEXITSTATUS(pathname_status), 0)
+                pathname_pid = os.fork()
+                if pathname_pid == 0:
+                    try:
+                        broker.install_execute_landlock(allowed_fd)
+                        os.execve(
+                            allowed_path,
+                            [str(allowed_path)],
+                            {"PATH": "/nonexistent"},
+                        )
+                    except BaseException:  # noqa: BLE001 - child test process
+                        os._exit(124)
+                _selected, pathname_status = os.waitpid(pathname_pid, 0)
+                self.assertTrue(os.WIFEXITED(pathname_status))
+                self.assertEqual(os.WEXITSTATUS(pathname_status), 0)
 
-            denied_pid = os.fork()
-            if denied_pid == 0:
-                try:
-                    broker.install_execute_landlock(allowed_fd)
-                    os.execve(denied_fd, ["/bin/false"], {"PATH": "/nonexistent"})
-                except OSError as error:
-                    os._exit(42 if error.errno == errno.EACCES else 41)
-                except BaseException:  # noqa: BLE001 - child test process
-                    os._exit(40)
-                os._exit(39)
-            _selected, denied_status = os.waitpid(denied_pid, 0)
-            self.assertTrue(os.WIFEXITED(denied_status))
-            self.assertEqual(os.WEXITSTATUS(denied_status), 42)
-        finally:
-            os.close(allowed_fd)
-            os.close(denied_fd)
+                denied_pid = os.fork()
+                if denied_pid == 0:
+                    try:
+                        broker.install_execute_landlock(allowed_fd)
+                        os.execve(
+                            denied_fd,
+                            [str(denied_path)],
+                            {"PATH": "/nonexistent"},
+                        )
+                    except OSError as error:
+                        os._exit(42 if error.errno == errno.EACCES else 41)
+                    except BaseException:  # noqa: BLE001 - child test process
+                        os._exit(40)
+                    os._exit(39)
+                _selected, denied_status = os.waitpid(denied_pid, 0)
+                self.assertTrue(os.WIFEXITED(denied_status))
+                self.assertEqual(os.WEXITSTATUS(denied_status), 42)
+            finally:
+                os.close(allowed_fd)
+                os.close(denied_fd)
+
+    def test_static_runtime_elf_rejects_program_interpreter(self) -> None:
+        static_raw = _minimal_static_elf(0)
+        dynamic_raw = _minimal_static_elf(0, with_interpreter=True)
+
+        def validate(raw: bytes) -> None:
+            status = mock.Mock(st_size=len(raw))
+            with (
+                mock.patch.object(broker.os, "fstat", return_value=status),
+                mock.patch.object(
+                    broker.os,
+                    "pread",
+                    side_effect=lambda _fd, size, offset: raw[offset : offset + size],
+                    create=True,
+                ),
+            ):
+                broker.validate_static_runtime_elf(51)
+
+        validate(static_raw)
+        with self.assertRaises(broker.BrokerUnavailable) as caught:
+            validate(dynamic_raw)
+        self.assertEqual(caught.exception.code, "BROKER_RUNTIME_LINKAGE_INVALID")
 
     def test_verified_binary_is_retained_after_exact_hash(self) -> None:
         if not hasattr(os, "pread"):
