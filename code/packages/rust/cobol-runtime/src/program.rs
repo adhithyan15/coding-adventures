@@ -711,14 +711,42 @@ pub struct Region {
 /// path uses [`TallyMultiLeadingItem`], which adds one.
 pub type TallyMultiItem = (Operand, Option<Region>);
 
-/// One `{ALL|LEADING} delim [{BEFORE|AFTER} x]` item of a SINGLE-counter multi-item
-/// `TALLYING` list: the single-char delimiter operand, a `leading` flag (`true` for a
-/// `LEADING` item — count only its run anchored at the window start; `false` for `ALL`),
-/// and its OWN optional `{BEFORE|AFTER}` region window. Extends [`TallyMultiItem`] with the
-/// `leading` flag this rung lifts into the multi-item list; named so
-/// [`read_inspect_tally_multi`]'s return type stays legible (and below clippy's
+/// Which flavour of tally item a SINGLE-counter multi-item `TALLYING` list holds — the
+/// three-way classification this rung lifts into that list (the earlier rung carried only
+/// a `leading: bool`, which could not represent a `CHARACTERS` item). An explicit enum
+/// makes the illegal combination "a `LEADING` item that is ALSO `CHARACTERS`"
+/// UNREPRESENTABLE — the classifier picks exactly one variant per written item:
+///
+/// | keyword written        | variant      | delimiter operand | active-run flag |
+/// |------------------------|--------------|-------------------|-----------------|
+/// | `ALL delim`            | `All`        | `Some(delim)`     | never           |
+/// | `LEADING delim`        | `Leading`    | `Some(delim)`     | per-item run    |
+/// | `CHARACTERS`           | `Characters` | `None`            | never           |
+///
+/// A `Characters` item is the always-eligible catch-all: at each in-window position not
+/// already claimed by an earlier item in written order, it contributes 1 to the shared
+/// counter — no delimiter compare, no run tracking. See [`TallyMultiLeadingItem`] and
+/// [`crate::interp::Interp::exec_inspect_tally_multi`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TallyMultiKind {
+    /// `ALL delim` — eligible at an in-window position whose char equals the delimiter.
+    All,
+    /// `LEADING delim` — like `All`, but only while this item's leading run (anchored at
+    /// its window start) is still unbroken.
+    Leading,
+    /// `CHARACTERS` — eligible at EVERY in-window position; carries no delimiter operand.
+    Characters,
+}
+
+/// One `{ALL|LEADING} delim [{BEFORE|AFTER} x]` — or bare `CHARACTERS [{BEFORE|AFTER} x]` —
+/// item of a SINGLE-counter multi-item `TALLYING` list: an OPTIONAL single-char delimiter
+/// operand (`Some(delim)` for `ALL`/`LEADING`; `None` for `CHARACTERS`, which has none), a
+/// [`TallyMultiKind`] tag, and its OWN optional `{BEFORE|AFTER}` region window. Extends
+/// [`TallyMultiItem`] with BOTH the kind tag this rung lifts into the multi-item list (a
+/// `CHARACTERS` item alongside other items is now admitted) and the per-item region; named
+/// so [`read_inspect_tally_multi`]'s return type stays legible (and below clippy's
 /// type-complexity threshold).
-pub type TallyMultiLeadingItem = (Operand, bool, Option<Region>);
+pub type TallyMultiLeadingItem = (Option<Operand>, TallyMultiKind, Option<Region>);
 
 /// One `{ALL|LEADING} search BY replace [{BEFORE|AFTER} x]` item of a multi-item
 /// `REPLACING` list: the single-char search operand, the single-char replacement
@@ -1709,18 +1737,21 @@ fn read_inspect_tally_all(
 /// capabilities (LEADING, region), and SEVERAL counters (more than one `tally_for`)
 /// stays a later rung rejected there.
 ///
-/// Scope bound for the multi-item path (this rung): EVERY item must be `ALL` or
-/// `LEADING` (NO `CHARACTERS`). Each item carries a `leading` flag (`true` for a
-/// `LEADING` item) AND its OWN optional `{BEFORE|AFTER} x` region (the third tuple
-/// slot), read with the SAME `read_inspect_region` the single-item reader uses — the
-/// per-item region reject and the multi-item `LEADING` reject are BOTH LIFTED this rung.
-/// Only `CHARACTERS` in a multi-item list remains a later rung. Any item violating the
-/// remaining scope is a clean later-rung `Unsupported`, with the SAME messages the
-/// compiler-side reader raises, so both engines accept exactly the same multi-item
-/// statements and reject the same ones identically. (A multi-character/figurative/
-/// wider/numeric/reference-modified delimiter is NOT rejected here — it falls to the
-/// SAME `single_delim_char` check the single-item exec uses, so that rejection is
-/// identical across single and multi.)
+/// Scope for the multi-item path (this rung): each item is `ALL`, `LEADING`, OR
+/// `CHARACTERS` — the multi-item `CHARACTERS` reject is LIFTED this rung (LEADING and the
+/// per-item region were lifted earlier, in #65 / #63). Each item carries a
+/// [`TallyMultiKind`] tag, an OPTIONAL delimiter operand (`Some` for `ALL`/`LEADING`,
+/// `None` for `CHARACTERS`), AND its OWN optional `{BEFORE|AFTER} x` region (the third
+/// tuple slot), read with the SAME `read_inspect_region` the single-item reader uses.
+/// A `CHARACTERS` item is the always-eligible catch-all (no delimiter, no run). Any item
+/// violating the remaining scope is a clean later-rung `Unsupported`, with the SAME
+/// messages the compiler-side reader raises, so both engines accept exactly the same
+/// multi-item statements and reject the same ones identically. (A multi-character/
+/// figurative/wider/numeric/reference-modified delimiter on an `ALL`/`LEADING` item is
+/// NOT rejected here — it falls to the SAME `single_delim_char` check the single-item
+/// exec uses, so that rejection is identical across single and multi. The MULTI-COUNTER
+/// and COMBINED `TALLYING … REPLACING` forms keep rejecting `CHARACTERS` — those gates
+/// live in `read_inspect_tally_counters` / the combined caller, not here.)
 fn read_inspect_tally_multi(
     verb: &GrammarASTNode,
 ) -> Result<(String, Vec<TallyMultiLeadingItem>), RuntimeError> {
@@ -1743,33 +1774,46 @@ fn read_inspect_tally_multi(
     let mut items = Vec::new();
     for ti in child_nodes(tf, "tally_item") {
         let toks = child_tokens(ti);
-        // `CHARACTERS` is not supported for a multi-item list this rung (it is not
-        // even supported for a single item). Reuse the single-item message.
-        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
-            return Err(RuntimeError::Unsupported(
-                "INSPECT TALLYING … FOR CHARACTERS is a later rung".into(),
-            ));
-        }
-        // A `LEADING` item in a multi-item list is now ACCEPTED (this rung): the multi
-        // path supports a MIX of `ALL` and `LEADING` items. The keyword picks per-item
-        // count semantics threaded to `exec_inspect_tally_multi` (a `LEADING` item counts
-        // only its run anchored at its window start). (A LONE `FOR LEADING` is still
-        // supported via the single-item path, not here.)
-        let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
-        // A `{BEFORE|AFTER}` region on an item is now ACCEPTED (this rung): read it
-        // into an `Option<Region>` with the SAME `read_inspect_region` the single-item
-        // reader uses. The region contributes its OWN nested `operand` (the region
-        // delimiter) under the `inspect_region` child, so the item's DIRECT `operand`
-        // child below is still exactly the tally delimiter — the region delimiter is
-        // not among the item's direct operands.
+        // Classify the item into exactly one of the three [`TallyMultiKind`] variants.
+        // `CHARACTERS` in a multi-item list is now ACCEPTED (this rung): it is the
+        // always-eligible catch-all — no delimiter operand, no run tracking. `LEADING`
+        // (also lifted, in #65) counts only its run; `ALL` is the default. The keyword
+        // picks per-item count semantics threaded to `exec_inspect_tally_multi`. (A LONE
+        // `FOR CHARACTERS` or `FOR LEADING` is still supported via the single-item path,
+        // not here — only ITEM ALONGSIDE another routes into this multi path.)
+        let kind = if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+            TallyMultiKind::Characters
+        } else if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
+            TallyMultiKind::Leading
+        } else {
+            TallyMultiKind::All
+        };
+        // A `{BEFORE|AFTER}` region on an item is ACCEPTED for EVERY kind: read it into
+        // an `Option<Region>` with the SAME `read_inspect_region` the single-item reader
+        // uses. The region contributes its OWN nested `operand` (the region delimiter)
+        // under the `inspect_region` child, so an `ALL`/`LEADING` item's DIRECT `operand`
+        // child below is still exactly the tally delimiter — the region delimiter is not
+        // among the item's direct operands.
         let region = match child_node(ti, "inspect_region") {
             None => None,
             Some(region_node) => Some(read_inspect_region(region_node)?),
         };
-        let delim_node = child_node(ti, "operand").ok_or_else(|| {
-            RuntimeError::Unsupported("INSPECT TALLYING FOR ALL/LEADING without a delimiter".into())
-        })?;
-        items.push((read_operand(delim_node)?, leading, region));
+        // A `CHARACTERS` item carries NO delimiter operand (the grammar's CHARACTERS
+        // branch is `CHARACTERS { inspect_region }`), so we must NOT read an `operand`
+        // child on that path — the delimiter is `None`. `ALL`/`LEADING` read their
+        // single delimiter operand exactly as before.
+        let delim = match kind {
+            TallyMultiKind::Characters => None,
+            _ => {
+                let delim_node = child_node(ti, "operand").ok_or_else(|| {
+                    RuntimeError::Unsupported(
+                        "INSPECT TALLYING FOR ALL/LEADING without a delimiter".into(),
+                    )
+                })?;
+                Some(read_operand(delim_node)?)
+            }
+        };
+        items.push((delim, kind, region));
     }
     Ok((counter, items))
 }

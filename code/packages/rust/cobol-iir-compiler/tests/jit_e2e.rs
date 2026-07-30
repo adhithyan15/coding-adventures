@@ -7377,21 +7377,136 @@ fn inspect_tally_multi_leading_non_ascii_source_positive_parity() {
     assert_eq!(out, "004\n");
 }
 
+// A MULTI-item tally list may now include a `CHARACTERS` item (THIS rung lifts the
+// multi-item CHARACTERS reject). `CHARACTERS` is the always-eligible catch-all: at each
+// in-window position not already claimed by an EARLIER item in written order it adds 1 to
+// the shared counter — NO delimiter compare, NO leading-run tracking. An optional
+// `{BEFORE|AFTER}` region narrows its window exactly like any other item. Each case pins
+// the exact counter and `assert_matches_oracle` independently re-checks JIT == tree-walk
+// oracle. (Only the MULTI-COUNTER and COMBINED forms still defer CHARACTERS — see
+// `inspect_tally_counters_with_characters_is_a_later_rung` and
+// `inspect_tally_multi_combined_with_characters_is_a_later_rung`.)
+
 #[test]
-fn inspect_tally_multi_with_characters_is_a_later_rung() {
-    // A `CHARACTERS` item inside a MULTI-item tally list is deferred on BOTH engines.
-    let src = wrap(
-        &["01  S  PIC X(4) VALUE \"aabb\".", "01  C  PIC 9(3) VALUE 0."],
+fn inspect_tally_multi_all_then_characters_covers_the_rest() {
+    // `FOR ALL "A" CHARACTERS` over "ABAB" (length 4). ALL "A" (item 0, higher priority)
+    // claims the two "A"s at positions 0,2; the CHARACTERS catch-all (item 1) claims every
+    // OTHER in-window position (1,3). Every position is claimed by exactly one item, so the
+    // total is the SOURCE LENGTH = 4. Pins that CHARACTERS counts exactly the positions an
+    // earlier item did not.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"ABAB\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"A\" CHARACTERS.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn inspect_tally_multi_characters_first_shadows_the_all_item() {
+    // WRITTEN-ORDER priority: `FOR CHARACTERS ALL "A"` (CHARACTERS FIRST) over "ABAB". The
+    // region-less CHARACTERS catch-all is eligible at EVERY position, so it claims all 4
+    // and the following ALL "A" NEVER fires (first-match-per-position). Count = length = 4,
+    // exactly as if the ALL item were absent — proving CHARACTERS' position in the list is
+    // honoured (a lower-priority ALL of a matching delimiter is shadowed).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"ABAB\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR CHARACTERS ALL \"A\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn inspect_tally_multi_all_then_characters_with_before_region() {
+    // A CHARACTERS item WITH a `{BEFORE|AFTER}` region narrows its window exactly like any
+    // other item. `FOR ALL "A" CHARACTERS BEFORE "X"` over "ABXAB" (X at index 2):
+    //   pos 0 'A' → ALL "A" claims                                   (1)
+    //   pos 1 'B' → ALL no; CHARACTERS window [0,2) contains 1 → claims (2)
+    //   pos 2 'X' → ALL no; CHARACTERS window [0,2) excludes 2 → NOT counted
+    //   pos 3 'A' → ALL "A" claims                                   (3)
+    //   pos 4 'B' → ALL no; CHARACTERS window [0,2) excludes 4 → NOT counted
+    // Total = 3 (NOT the length) — the region genuinely bounds the catch-all.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABXAB\".", "01  C  PIC 9(2) VALUE 0."],
         &[
-            "INSPECT S TALLYING C FOR ALL \"a\"",
-            "    CHARACTERS.",
+            "INSPECT S TALLYING C FOR ALL \"A\" CHARACTERS BEFORE \"X\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "03\n");
+}
+
+#[test]
+fn inspect_tally_multi_leading_then_characters_run_tracking_unaffected() {
+    // A CHARACTERS item alongside a LEADING item — the LEADING run tracking is UNAFFECTED
+    // by the (delimiter-less, run-less) CHARACTERS item. `FOR LEADING "A" CHARACTERS
+    // BEFORE "X"` over "AABAX" (X at index 4):
+    //   pos 0 'A' → LEADING run alive → claims                          (1)
+    //   pos 1 'A' → LEADING run alive → claims                          (2)
+    //   pos 2 'B' → LEADING no (mismatch, run breaks here); CHARACTERS window [0,4)
+    //               contains 2 → claims                                 (3)
+    //   pos 3 'A' → LEADING run now DEAD → no; CHARACTERS window contains 3 → claims (4)
+    //   pos 4 'X' → LEADING dead; CHARACTERS window [0,4) excludes 4 → NOT counted
+    // Total = 4. The LEADING run still counts exactly its anchored run (2) and breaks at
+    // the first in-window mismatch, INDEPENDENTLY of the CHARACTERS item claiming that same
+    // position — the active-run update never consults or is consulted by CHARACTERS.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AABAX\".", "01  C  PIC 9(2) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR LEADING \"A\" CHARACTERS BEFORE \"X\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn inspect_tally_multi_characters_non_ascii_outside_window_is_co_total() {
+    // NON-ASCII byte-vs-char count chip (task_396ba6f6), SAME as the single `FOR
+    // CHARACTERS` form (#60): a `CHARACTERS` item counts POSITIONS, and the compiler
+    // iterates BYTE positions (`str_len`) while the oracle's multi-item exec iterates CHAR
+    // positions (`chars.len()`). They DIVERGE if a multi-byte char falls inside a
+    // CHARACTERS window. We keep this case CO-TOTAL by placing the "é" strictly OUTSIDE
+    // every window so both engines agree. `FOR ALL "0" CHARACTERS BEFORE "b"` over "a0bé0"
+    // (chars a,0,b,é,0 = bytes a,0,b,0xC3,0xA9,0; "b" at char/byte index 2):
+    //   * CHARACTERS window is `[0, 2)` (before "b") — covers only ASCII 'a','0', where a
+    //     byte count and a char count coincide;
+    //   * the "é" (char 3 / bytes 3,4) sits AFTER "b", outside the CHARACTERS window, and
+    //     equals neither ALL "0" nor the region delimiter, so NEITHER engine counts it.
+    // Both engines count: 'a' (CHARACTERS) + '0'@1 (ALL) + '0'@last (ALL) = 3.
+    // `assert_matches_oracle` panics on any divergence, so this pins the co-total agreement
+    // (and documents the chip that a multi-byte char INSIDE a CHARACTERS window would
+    // surface — that divergence is pre-existing and NOT fixed here).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"a0bé0\".", "01  C  PIC 9(2) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"0\" CHARACTERS BEFORE \"b\".",
+            "DISPLAY C.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "03\n");
+}
+
+#[test]
+fn inspect_tally_multi_combined_with_characters_is_a_later_rung() {
+    // The COMBINED `TALLYING … REPLACING` form still DEFERS a CHARACTERS item in its tally
+    // half — rejected identically on both engines. (A combined tally is read by the
+    // single-item reader, which rejects a multi-item list outright; the multi-item
+    // CHARACTERS lift does NOT leak into the combined path.)
+    let src = wrap(
+        &["01  S  PIC X(4) VALUE \"AABB\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"A\" CHARACTERS",
+            "    REPLACING ALL \"B\" BY \"C\".",
             "STOP RUN.",
         ],
     );
-    assert!(run_cobol(&src).is_err(), "oracle must reject a multi-item CHARACTERS item");
+    assert!(run_cobol(&src).is_err(), "oracle must reject combined + multi-item CHARACTERS");
     assert!(
         compile_source(&src, "e2e").is_err(),
-        "compiler must reject a multi-item CHARACTERS item"
+        "compiler must reject combined + multi-item CHARACTERS"
     );
 }
 
