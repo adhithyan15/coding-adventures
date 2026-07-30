@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added a production `smart-home-local-controller` binary that restores the
+  durable runtime store, uses a live clock, and atomically persists authorized
+  desired-state and service mutations before returning success.
+- Added persistence-failure rollback and local-folder restart tests so an HTTP
+  mutation either survives a fresh store instance or remains unapplied.
 - Added a Home Assistant-compatible read-only local API `web-core::WebApp` for
   config, state, services, and events over smart-home runtime snapshots.
 - Added a local-controller smoke script export generated from the runtime smoke
