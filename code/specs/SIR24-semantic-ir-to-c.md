@@ -365,7 +365,10 @@ lockstep:
    `_sir_builtin_method` runtime dispatcher (`length`/`size`, `upcase`,
    `downcase`, `reverse`, `empty?`, `to_s`; `length`/`size`/`empty?` polymorphic
    over String/Array/Hash) — a built-in name the module did not define routes
-   there instead of the user method table; the rest of the catalog follows.
+   there instead of the user method table.  Slice 2 (0.23.0) added the first
+   argument-taking methods (the dispatcher now collects its varargs): the 1-arg
+   String queries `include?`/`start_with?`/`end_with?` (→ bool) and `index`
+   (→ Int/nil).  The rest of the catalog (Array/Hash/Numeric, blocks) follows.
 5. **Exceptions** — `setjmp`/`longjmp` + typed runtime errors.
 6. **OOP** (mirroring the Ruby backend's landed 7-slice arc) — slice 1
    (`Classes` + `Constants`: the `SIR_INSTANCE` runtime, an empty class, `Foo.new`
