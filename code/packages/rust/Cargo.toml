@@ -885,6 +885,7 @@ members = [
     "smart-home-core",
     "smart-home-capability-cage",
     "smart-home-discovery",
+    "smart-home-discovery-service",
     "smart-home-event-streams",
     "smart-home-local-http",
     "smart-home-platform-http",
