@@ -8,7 +8,12 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": {
+    "item_id": "build-tool-anonymous-exec-closure",
+    "pr_number": 9270,
+    "branch": "codex/build-tool-anonymous-exec-closure",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9270"
+  },
   "last_inventory": {
     "revision": "4ef440685d641c5b5089ca73ff408100e46bee11",
     "schema_version": 2,
@@ -125,13 +130,13 @@
     {
       "id": "build-tool-anonymous-exec-closure",
       "title": "Close anonymous executable and executable-mapping paths",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-linux-capability-preflight-broker"
       ],
       "branch": "codex/build-tool-anonymous-exec-closure",
-      "pr_number": null,
-      "notes": "Selected after PR #9231 merged because this is the remaining direct execution-authority gap before invariant-probe approval. Landlock ABI v1 governs pathname-backed execution but not executable memfds, dlopen, mmap(PROT_EXEC), or mprotect(PROT_EXEC). Add separately reviewed seccomp/LSM enforcement and Linux integration probes before any invariant-probe receipt can become authoritative."
+      "pr_number": 9270,
+      "notes": "PR #9270 closes the remaining direct execution-authority gap before invariant-probe approval. The exact broker behavior now closes unlisted descriptors before its final sandbox transition, starts retained Podman through pathname execve under the exact-inode Landlock rule, and installs inherited amd64 classic-seccomp enforcement that kills architecture/x32 bypasses and denies execveat, new anonymous executable files, executable mappings, SHM_EXEC, uselib, and io_uring surfaces. Linux integration probes cover retained-inode execution, foreign and anonymous FD denial, executable mmap/mprotect/pkey_mprotect, dlopen, descendant inheritance, and stable install failure. It creates no container, fixture, adapter, invariant probe, or readiness receipt."
     },
     {
       "id": "build-tool-execution-status-normalization",
