@@ -53,8 +53,9 @@ use adj_lang_cli::{esc, payload, query_echo, FsProvider};
 use cli_builder::types::ParserOutput;
 use cli_builder::{load_spec_from_str, Parser};
 use logic_engine::{
-    enumerate_all, verify_proof, ContentHash, LogicFailure, LogicStatus, Proof, QuoteMiss,
-    QuoteStatus, SnapshotStore, StepVerification, TraceVerification, UnverifiedReason,
+    enumerate_all, recheck_narrowings, verify_proof, ContentHash, LogicFailure, LogicStatus,
+    NarrowingCheck, Proof, QuoteMiss, QuoteStatus, SnapshotStore, StepVerification,
+    TraceVerification, UnverifiedReason,
 };
 
 const SPEC: &str = r#"{
@@ -427,7 +428,76 @@ fn main() -> ExitCode {
         record("lr", &text, &r.result.dag.proofs, &mut totals);
     }
 
-    let verified = first_failure.is_none() && truncated_queries.is_empty();
+    // NUM-6 audit-exactness re-check (ADJ-NUMERIC-SUBSTRATE §4.3, §6, §7). The SLD
+    // and LR passes above re-derive the *logic*; the compute derivation trees carry
+    // the *arithmetic*, and every `round_to`/`round_sig`/`to_scientific`/`to_percent`/
+    // `to_currency` narrowing recorded a rounded number (and boundary string) that a
+    // confidently-wrong or since-edited artifact prints just as fluently. Here that
+    // testimony becomes evidence: for every `let`-bound derived value we walk its tree
+    // and re-round / re-format each narrowing's recorded EXACT source under the recorded
+    // spec/mode (`recheck_narrowings`), confirming the recorded result and rendering
+    // reproduce. A `Mismatch` is a hard failure — the same "valid-looking number from an
+    // invented rounding" class the negation and logit re-checks guard against on their
+    // own paths.
+    let mut narrowing_blobs: Vec<String> = Vec::new();
+    let mut narrowings_rechecked = 0usize;
+    let mut narrowings_unverifiable = 0usize;
+    let mut narrowings_mismatched = 0usize;
+    for d in lowered.kb.derived_bindings() {
+        let checks = recheck_narrowings(&d.tree);
+        if checks.is_empty() {
+            continue;
+        }
+        let mut check_blobs: Vec<String> = Vec::new();
+        for (depth, check) in &checks {
+            let blob = match check {
+                NarrowingCheck::ReChecked => {
+                    narrowings_rechecked += 1;
+                    format!("{{\"depth\":{depth},\"status\":\"rechecked\"}}")
+                }
+                NarrowingCheck::Unverifiable => {
+                    narrowings_unverifiable += 1;
+                    format!("{{\"depth\":{depth},\"status\":\"unverifiable\"}}")
+                }
+                NarrowingCheck::Mismatch {
+                    why,
+                    recorded,
+                    recomputed,
+                } => {
+                    narrowings_mismatched += 1;
+                    if first_failure.is_none() {
+                        first_failure = Some(format!(
+                            "{{\"pass\":\"narrowing\",\"name\":\"{}\",\"depth\":{},\"why\":\"{}\",\"recorded\":\"{}\",\"recomputed\":\"{}\"}}",
+                            esc(&d.name),
+                            depth,
+                            esc(why),
+                            esc(recorded),
+                            esc(recomputed),
+                        ));
+                    }
+                    format!(
+                        "{{\"depth\":{},\"status\":\"mismatch\",\"why\":\"{}\",\"recorded\":\"{}\",\"recomputed\":\"{}\"}}",
+                        depth,
+                        esc(why),
+                        esc(recorded),
+                        esc(recomputed),
+                    )
+                }
+                // A non-narrowing verdict never appears here — `recheck_narrowings`
+                // only returns entries for actual narrowing nodes.
+                NarrowingCheck::NotANarrowing => continue,
+            };
+            check_blobs.push(blob);
+        }
+        narrowing_blobs.push(format!(
+            "{{\"name\":\"{}\",\"checks\":[{}]}}",
+            esc(&d.name),
+            check_blobs.join(",")
+        ));
+    }
+
+    let verified =
+        first_failure.is_none() && truncated_queries.is_empty() && narrowings_mismatched == 0;
     // `fully_verified` is NOT `verified` with extra steps counted. It requires
     // that every proof had its quotes affirmatively confirmed against a pinned
     // snapshot — and that there was something to check at all. An earlier draft
@@ -440,7 +510,7 @@ fn main() -> ExitCode {
         && totals.proofs_fully_verified == totals.proofs
         && totals.quotes_verified > 0;
     println!(
-        "{{\"verified\":{},\"fully_verified\":{},\"totals\":{{\"proofs\":{},\"proofs_fully_verified\":{},\"steps\":{},\"rechecked\":{},\"quotes_verified\":{}}},\"truncated_queries\":[{}],\"first_failure\":{},\"queries\":[{}]}}",
+        "{{\"verified\":{},\"fully_verified\":{},\"totals\":{{\"proofs\":{},\"proofs_fully_verified\":{},\"steps\":{},\"rechecked\":{},\"quotes_verified\":{},\"narrowings_rechecked\":{},\"narrowings_unverifiable\":{},\"narrowings_mismatched\":{}}},\"truncated_queries\":[{}],\"narrowings\":[{}],\"first_failure\":{},\"queries\":[{}]}}",
         verified,
         fully,
         totals.proofs,
@@ -448,7 +518,11 @@ fn main() -> ExitCode {
         totals.steps,
         totals.rechecked,
         totals.quotes_verified,
+        narrowings_rechecked,
+        narrowings_unverifiable,
+        narrowings_mismatched,
         truncated_queries.join(","),
+        narrowing_blobs.join(","),
         first_failure.as_deref().unwrap_or("null"),
         per_query.join(",")
     );

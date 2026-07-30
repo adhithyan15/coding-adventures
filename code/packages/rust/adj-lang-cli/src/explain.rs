@@ -520,6 +520,7 @@ fn expand(n: &DerivationNode, depth: usize, kb: &KnowledgeBase, out: &mut Vec<St
             spec,
             mode,
             operand,
+            operand_exact: _,
             result,
         } => {
             out.push(format!(
@@ -538,6 +539,7 @@ fn expand(n: &DerivationNode, depth: usize, kb: &KnowledgeBase, out: &mut Vec<St
             mode,
             rendered,
             operand,
+            operand_exact: _,
             result,
         } => {
             out.push(format!(
@@ -557,6 +559,7 @@ fn expand(n: &DerivationNode, depth: usize, kb: &KnowledgeBase, out: &mut Vec<St
             mode,
             rendered,
             operand,
+            operand_exact: _,
             result,
         } => {
             out.push(format!(
@@ -577,6 +580,7 @@ fn expand(n: &DerivationNode, depth: usize, kb: &KnowledgeBase, out: &mut Vec<St
             mode,
             rendered,
             operand,
+            operand_exact: _,
             result,
         } => {
             out.push(format!(

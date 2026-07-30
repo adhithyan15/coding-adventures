@@ -145,6 +145,15 @@ and confirms the rendered result — so a rounded number is auditable back to th
 came from, never asserted. Rounding is thus an explicit, checkable step in the trail, not a
 silent lossy coercion (§3).
 
+> **Shipped (NUM-6v).** The re-check is implemented end-to-end. Each narrowing
+> `DerivationNode` carries its operand's exact source (`operand_exact`), and
+> `logic_engine::recheck_narrowing` / `recheck_narrowings` re-run the *same* exact narrowing
+> primitive on that source under the recorded mode, confirming the recorded numeric result and
+> (for the formatters) the rendered string reproduce. `adj-verify` walks every `let`-bound
+> derived value's tree and re-checks every narrowing; a disagreement is a hard failure
+> (`verified: false`, non-zero exit, named in `first_failure`). An operand with no exact
+> sidecar (a transcendental result) is honestly reported `unverifiable`, never a pass.
+
 ### 4.4 Engine shape + sub-staging
 
 `ComputeExpr::Unary(ComputeOp, …)` carries no parameter, so the precision-carrying roundings
@@ -187,8 +196,19 @@ tests → impl → security-review → babysit:
   normalized to the canonical uppercase ISO-4217 form; a non-identifier code is a compile error),
   `places` optional (default 2, `≥ 0`) — the §4.3 audit record
   (`node:to_currency`, `code`, `places`, `mode`, `rendered`, operand subtree), and an
-  end-to-end formula test. Per-`KnowledgeBase` `BigDouble` precision (the configurable default
-  §3 defers here) follows.
+  end-to-end formula test.
+- **NUM-6v** — the **`adj-verify` precision re-check** ✅ **shipped** (§4.3, §7): each narrowing
+  node carries its operand's exact source (`operand_exact`), the engine exposes
+  `recheck_narrowing`/`recheck_narrowings`, and `adj-verify` re-rounds every narrowing in every
+  derived value's tree, failing hard on any disagreement. This is the audit-exactness leg of
+  NUM-6 — a rounded/formatted number is now re-derivable from the exact source it came from, not
+  asserted.
+- **Remaining (the only open NUM-6 item):** per-`KnowledgeBase` `BigDouble` precision — the
+  configurable working precision the §3 default (256 bits) defers here. This depends on the
+  `Number::Real(BigDouble)` compute path of §5, which is **not yet wired into the engine**
+  (roots and transcendentals still evaluate on the `f64` fallback with the exact-rational
+  sidecar going `None`); it is therefore its own substrate rung — wire the `Real` contagion
+  into `compute`, then make its precision a per-`KnowledgeBase` setting — not a small closer.
 
 ---
 
