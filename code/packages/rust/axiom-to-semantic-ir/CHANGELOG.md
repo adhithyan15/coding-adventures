@@ -1,5 +1,57 @@
 # Changelog
 
+## [0.1.1] - 2026-07-30
+
+### Added
+
+- **Oracle/golden tests (`tests/oracle.rs`, HML01 §7 convention)** — the
+  same Axiom source run through (a) `axiom-runtime` (ground truth) and
+  (b) this crate → `semantic-ir-to-javascript` → `node` (compiled),
+  diffed. This closes the gap `0.1.0`'s own CHANGELOG entry disclosed
+  ("No `tests/oracle.rs` in this PR ... an explicitly separate follow-on
+  task"). 29 cases covering arithmetic precedence/associativity/
+  right-associative `^`, every comparison, `:=`, `==` function
+  definition (both declared and undeclared forms, both `f(a, b)` and
+  paren-optional `f a` calls), `if`/`then`/`else`, a `;`-block, a
+  passing and a failing `:` declaration, a passing and a failing `::`
+  coercion, and the book's own two confirmed `has` examples
+  (`Polynomial(Integer) has Ring` → `true`, `List(Integer) has Ring` →
+  `false`). 28 of 29 cases pass with `known_bug: None`; the one
+  exception (a list-literal print) is a disclosed, pre-existing,
+  shared display-convention gap (no `SIR_DISPLAY_AXIOM` infix/bracket
+  printer — see the test file's own module doc, "Finding three"), not
+  an evaluation bug.
+- A new dev-dependency, `coding-adventures-axiom-runtime` (test-only —
+  the crate's main `[dependencies]` still deliberately does not depend
+  on the native runtime, per `0.1.0`'s own disclosed design).
+- Because `axiom.grammar`'s own `program = expr` design means every
+  compiled program is exactly ONE top-level statement even for a
+  `;`-block (which lowers to a single `SymApply(CompoundExpression,
+  [...])` node), the oracle harness includes its own
+  `wrap_axiom_top_level_for_observation` — a harness-only "unroll a
+  top-level `CompoundExpression` into N statements, print only the
+  last" transform, so block-based corpus entries (declare-then-assign,
+  define-then-call) get a REAL value comparison rather than needing
+  `known_bug` for the unrelated, already-documented "no shared-vm
+  handler for `CompoundExpression`" gap (`reduce-to-semantic-ir/tests/
+  oracle.rs`'s own "finding three"). Deliberately does NOT touch
+  `semantic-ir-to-javascript` itself — see that crate's own `0.51.6`
+  CHANGELOG entry for the actual runtime wiring this test corpus
+  exercises.
+- `tests/e2e_node.rs`'s three `__axiom_declare`/`__axiom_coerce`/
+  `__axiom_has` tests now assert on the printed VALUE (`"true"`, `"3"`,
+  `"true"`), not merely "node exited zero" — upgraded now that
+  `semantic-ir-to-javascript` 0.51.6 gives these three reserved heads a
+  real evaluator (see that crate's own CHANGELOG). Renamed to reflect
+  the stronger assertion (`a_declaration_evaluates_to_lowercase_true`,
+  `a_coercion_evaluates_and_prints_the_coerced_value`,
+  `a_has_query_evaluates_to_the_books_own_confirmed_answer`).
+- `src/lower.rs`'s own "Runtime-shim status" module-doc section updated
+  to describe the now-wired state, with a pointer to
+  `semantic-ir-to-javascript`'s own design comment and this crate's new
+  `tests/oracle.rs` — the original deferral text is kept, clearly
+  marked historical, for context rather than deleted.
+
 ## [0.1.0] - 2026-07-29
 
 ### Added

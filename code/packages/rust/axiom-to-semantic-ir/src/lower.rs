@@ -134,47 +134,52 @@
 //! these three constructs — they need no new capability declaration, only a
 //! head name a runtime *may* one day choose to interpret specially.
 //!
-//! **Runtime-shim status: implementation deferred to the follow-on
-//! oracle-testing item, not shipped in this PR.** This crate "never
-//! evaluates anything" (the same "everything is data" design every SIR23
-//! frontend shares) — so it does not *need* a working evaluator for
-//! `__axiom_declare`/`__axiom_coerce`/`__axiom_has` to emit correct,
-//! well-formed SIR. Verified directly against the actual shipped
-//! architecture (not assumed from the task's own suggestion of extending
-//! `sir-runtime-symbolic`): the JS backend's real SIR23 evaluator
+//! **Runtime-shim status: UPDATE (Wave 7 close-out) — now wired, in the
+//! follow-on oracle-testing item this section originally deferred to.**
+//! This crate itself is unchanged (it still "never evaluates anything" —
+//! the same "everything is data" design every SIR23 frontend shares — so
+//! it never *needed* a working evaluator to emit correct, well-formed SIR),
+//! but the deferred half of the story below is no longer accurate as a
+//! description of the CURRENT state of the pipeline, only of this crate's
+//! own PR at the time it shipped. Verified directly against the actual
+//! shipped architecture: the JS backend's real SIR23 evaluator
 //! (`Symbolic.evalTerm`, `HELD_HEADS`, the whole held-form/arithmetic
 //! dispatch the SIR23 spec's addendum describes) lives **inline**, inside
 //! `semantic-ir-to-javascript/src/runtime.rs`'s own emitted `RUNTIME` string
-//! blob — confirmed by reading that file directly (`grep -n HELD_HEADS
-//! semantic-ir-to-javascript/src/runtime.rs` finds `const HELD_HEADS = new
-//! Set(["Assign", "Define", "If"])` inside the emitted JS, not inside any
-//! imported package). The published npm package
-//! `@coding-adventures/sir-runtime-symbolic` (`code/packages/typescript/
-//! sir-runtime-symbolic/`), confirmed directly by reading its own
-//! `CHANGELOG.md`, re-exports only `cas-pattern-matching`'s structural
-//! matcher and `symbolic-ir`'s leaf-term constructors — **it has no evaluator
-//! at all**, and is not what `semantic-ir-to-javascript` actually imports for
-//! JS-backend execution; it only backs the TypeScript backend, which no
-//! Stream B frontend's oracle testing exercises yet (SIR23 spec's own
-//! "Scope boundary" section says so explicitly). So extending it would not,
-//! by itself, make `:`/`::`/`has` evaluate through the path this repo's own
-//! `node`-execution oracle tests actually use.
+//! blob — confirmed by reading that file directly. `HELD_HEADS` now also
+//! lists `__axiom_declare`/`__axiom_coerce`/`__axiom_has` (alongside
+//! `Assign`/`Define`/`If`), each with its own handler
+//! (`axiomDeclareHandler`/`axiomCoerceHandler`/`axiomHasHandler`) — a
+//! JS-side port of `axiom-runtime::domains`'s fixed
+//! `AxiomDomain`/`AxiomCategory` table, described in that file's own
+//! "Axiom domain/category table + reserved-head handlers" section. The
+//! published npm package `@coding-adventures/sir-runtime-symbolic`
+//! (`code/packages/typescript/sir-runtime-symbolic/`) still has no
+//! evaluator at all and still only backs the TypeScript backend (confirmed
+//! unchanged) — the JS runtime addition above did not touch it, matching
+//! this crate's own original finding that extending that package would not
+//! reach the path this repo's `node`-execution oracle tests actually use.
 //!
-//! Given that (a) oracle/golden testing for Axiom is this task's own
-//! explicitly-named separate follow-on item, not part of this PR, and (b)
-//! every prior "new reserved head with no runtime evaluator yet" precedent in
-//! this exact family (`Set`, `CompoundExpression`, `Cons`, `First`, `Second`,
-//! `Third`, `Rest`, `Part`, `Append`, `Reverse` — confirmed, none of these
-//! have an evaluation handler in `symbolic-vm` OR `semantic-ir-to-javascript`
-//! today) shipped its *frontend* first and left the evaluator as later,
-//! separate work, this crate follows the identical, already-proven sequence:
-//! ship the lowering now (this PR), and leave "teach a JS/TS runtime the
-//! fixed `AxiomDomain`/`AxiomCategory` table `axiom-runtime::domains` already
-//! has" as the natural first step of the follow-on oracle-testing task, where
-//! it will actually be exercised end-to-end for the first time. This is the
-//! conservative, narrower call this task's own instructions ask for when
-//! genuine ambiguity is hit, not a shortcut — see `CHANGELOG.md`/`README.md`
-//! for the same disclosure.
+//! `axiom-to-semantic-ir/tests/oracle.rs` is the real end-to-end proof:
+//! the same Axiom source run through `axiom-runtime` (ground truth) and
+//! through this crate → `semantic-ir-to-javascript` → `node` (compiled),
+//! diffed, covering both a passing and a failing `:` declaration, a
+//! passing and a failing `::` coercion, and the book's own two confirmed
+//! `has` examples (`Polynomial(Integer) has Ring` → `true`,
+//! `List(Integer) has Ring` → `false`) — see that file's own module doc
+//! for the full corpus and any disclosed native-vs-compiled differences
+//! found while building it.
+//!
+//! The historical record of the ORIGINAL deferral decision, kept below
+//! verbatim for context (every prior "new reserved head with no runtime
+//! evaluator yet" precedent in this exact family — `Set`,
+//! `CompoundExpression`, `Cons`, `First`, `Second`, `Third`, `Rest`, `Part`,
+//! `Append`, `Reverse` — shipped its *frontend* first and left the
+//! evaluator as later, separate work; this crate followed that identical,
+//! already-proven sequence): ship the lowering now (this PR), and leave
+//! "teach a JS/TS runtime the fixed `AxiomDomain`/`AxiomCategory` table
+//! `axiom-runtime::domains` already has" as the natural first step of the
+//! follow-on oracle-testing task — which is exactly what has now happened.
 //!
 //! # Type positions (`type_expr`) are ordinary symbolic data too — no new
 //! representation needed

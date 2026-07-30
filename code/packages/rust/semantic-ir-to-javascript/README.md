@@ -480,6 +480,26 @@ frontend with an oracle corpus proving it today; Wolfram/Macsyma/Reduce/
 Maple's own conventions are separate future work following the identical
 recipe (one more `SIR_DISPLAY_*` flag + printer port).
 
+**Axiom's three reserved heads (MA13/Wave 7 close-out): `__axiom_declare`/
+`__axiom_coerce`/`__axiom_has` + a sixth display flag.** `axiom-to-
+semantic-ir` lowers Axiom's `:` (declaration), `::` (coercion), and `has`
+(category-membership query) — a fixed, non-extensible domain/category type
+system with no analogue in any other CAS-family language here (MA13 §2/§3) —
+to three reserved `SymApply` head names, never added to shared
+`semantic-ir`/`symbolic-ir`. `HELD_HEADS`/`HANDLERS`/`HELD_HANDLERS` gain a
+matching JS-side port of `axiom-runtime::domains`'s fixed
+`AxiomDomain`/`AxiomCategory` table (`axiomDeclareHandler`/
+`axiomCoerceHandler`/`axiomHasHandler`), plus a SIXTH, independent
+`SIR_DISPLAY_AXIOM_BOOLEAN` flag — much narrower than `SIR_DISPLAY_DERIVE`
+above: it gates only the `True`/`False` symbol's lowercase spelling inside
+the generic `toDisplayString` branch (Axiom still has no full infix/bracket
+printer of its own). `assignHandler` also gains one small, disclosed
+addition: it consults a new `axiomDeclaredDomains` map (populated only by
+`axiomDeclareHandler`) so a `:`-declared domain constraint is enforced
+against a later `:=` — a no-op for every other source language. See
+`axiom-to-semantic-ir/tests/oracle.rs` for the full end-to-end diff against
+`axiom-runtime` and `runtime.rs`'s own comments for the complete design.
+
 ### Array/matrix domain (SIR22 base cut)
 
 The inlined `__Sir` also carries `Array` — a plain-JS port of the

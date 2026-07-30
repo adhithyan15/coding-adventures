@@ -212,7 +212,7 @@ sequence of one-PR items run through the autonomous loop (§8).
   level rather than reusing `matlab-runtime` as a crate dependency the way
   `octave-runtime` does.)*
 - **Wave 7 — Axiom, Julia (subset).** The research-grade lifts (typed CAS;
-  multiple dispatch) — last, and only if warranted. *(Kickoff: see
+  multiple dispatch) — last, and only if warranted. *(Axiom delivered: see
   [`MA13`](MA13-axiom-language.md) for Axiom, Wave 7's first language — verified
   directly against the original 1992 Jenks & Sutor Axiom book (via its
   FriCAS-hosted, continuously-regenerated adaptation, since the language
@@ -231,7 +231,14 @@ sequence of one-PR items run through the autonomous loop (§8).
   book's own Chapters-0/1/2/5/6-vs-Chapters-11-13 structural split — deferring
   whole the *library-language, producer* view (user-defined categories/
   domains/packages via `Join` and conditional exports) that is Axiom's actual
-  reason for existing, exactly as MA11 deferred Q's own tables.)*
+  reason for existing, exactly as MA11 deferred Q's own tables. Axiom's full
+  pipeline — `axiom-lexer`, `axiom-parser`, `axiom-runtime`/`axiom-repl`,
+  `axiom-to-semantic-ir`, and a real oracle-test diff against
+  `semantic-ir-to-javascript` (`:`/`::`/`has` now genuinely evaluate on the
+  compiled path too, not just the native one) — has since landed; see
+  [`HML01`](HML01-math-to-semantic-ir.md) §5's own "A SIXTH Stream B
+  frontend" writeup for the full account. Julia remains Wave 7's one
+  not-yet-started language.)*
 
 ### Item breakdown for the first three waves (illustrative)
 

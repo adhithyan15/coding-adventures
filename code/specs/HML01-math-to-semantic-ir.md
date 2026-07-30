@@ -496,6 +496,50 @@ Macsyma's own `tests/oracle.rs` were the last open item and are done as
 of those two crates landing. All items through JS/TS backend codegen are
 shipped.
 
+**A SIXTH Stream B frontend, Axiom (MA13, HML00 §7 Wave 7), landed after
+this stream's original five and closes out with its own oracle diff too**
+— see `axiom-to-semantic-ir/tests/oracle.rs`, its own 29-case corpus
+cross-checking `axiom-runtime`, 28 of 29 cases `known_bug: None`, against
+the compiled-JS-via-`node` path. Axiom is the one CAS-family language in
+this repo whose own claim to fame — a fixed, non-extensible domain/category
+type system (`:` declares, `::` coerces, `has` queries category
+membership, MA13 §2/§3) — has no analogue in Wolfram/Macsyma/Derive/
+Reduce/Maple, none of which carry any domain/type concept at all
+(`symbolic_ir::IRNode` confirmed to have no such field anywhere, MA13 §2's
+own central finding). `axiom-to-semantic-ir` (MA-13e, #9181) lowers `:`/
+`::`/`has` as ordinary `SymApply` nodes under three new, locally-defined
+reserved head names (`__axiom_declare`/`__axiom_coerce`/`__axiom_has`,
+never added to shared `semantic-ir`/`symbolic-ir`) — the same "new
+construct, no shared-crate change" pattern `reduce-to-semantic-ir`'s
+`CompoundExpression` and `maple-to-semantic-ir`'s `Set` already
+established — but, unlike those two (which shipped with no runtime
+evaluator and remain that way), this stream's own close-out task wired a
+REAL evaluator for all three heads directly into
+`semantic-ir-to-javascript`'s shared `Symbolic.evalTerm` dispatch
+(`axiomDeclareHandler`/`axiomCoerceHandler`/`axiomHasHandler`, a JS-side
+port of `axiom-runtime::domains`'s fixed `AxiomDomain`/`AxiomCategory`
+table, plus a sixth, narrow `SIR_DISPLAY_AXIOM_BOOLEAN` display flag —
+see that crate's own `CHANGELOG.md` `0.51.6` entry). Confirmed
+end-to-end: a passing AND a failing `:` declaration, a passing AND a
+failing `::` coercion (byte-for-byte identical error text on both paths
+for every atomic operand tested), and the book's own two confirmed `has`
+examples (`Polynomial(Integer) has Ring` → `true`,
+`List(Integer) has Ring` → `false`). The one `known_bug` case reconfirms
+finding five/three's own already-documented class of gap (no
+`SIR_DISPLAY_AXIOM` infix/bracket convention for a COMPOUND, non-boolean
+value) rather than discovering a new one. Because `axiom.grammar`'s own
+`program = expr` design (MA13 §5) means every compiled program is exactly
+ONE top-level statement — even a `;`-block, which lowers to a single
+`SymApply(CompoundExpression, [...])` node with no evaluator of its own
+(the same pre-existing, shared gap `reduce-to-semantic-ir/tests/
+oracle.rs`'s own "finding three" already disclosed) — this oracle file
+also introduces its own harness-only `wrap_axiom_top_level_for_observation`
+helper (test-local, no change to `semantic-ir-to-javascript` itself) that
+unrolls a top-level `CompoundExpression` into N statements, printing only
+the last, so block-based corpus entries (declare-then-assign,
+define-then-call) still get a real value comparison instead of needing
+`known_bug` for an unrelated, already-documented gap.
+
 The streams touch disjoint crates except `semantic-ir` core and the two JS
 backends — a short serialization point, not a merge of the whole effort.
 Each item is one PR, following the repo's established one-PR-per-item
@@ -517,12 +561,15 @@ simultaneously, rotating rather than exhausting one before starting another:
    surface, Macsyma's remaining gaps (general multivariate factoring,
    Frobenius ODEs, hypergeometric summation, TS/Rust `Apart` port).
 2. **New math-language additions** — HML00 Wave 4+ has now shipped APL, J,
-   K/Q (as `q-to-semantic-ir`), Scilab, IDL, Reduce, Derive, and Maple —
-   every language this bullet originally tracked except Axiom and Julia,
-   neither of which has a crate or spec anywhere in this repo yet
-   (confirmed: no `axiom-*`/`julia-*` crate under `code/packages/rust/`
-   and no `axiom`/`julia` spec under `code/specs/`). Axiom and Julia
-   remain the two genuinely not-yet-started items on this front.
+   K/Q (as `q-to-semantic-ir`), Scilab, IDL, Reduce, Derive, and Maple, and
+   HML00 §7 Wave 7 has now shipped **Axiom** too (MA13 — kickoff spec
+   #8990, `axiom-lexer` #8997, `axiom-parser` #9022, `axiom-runtime`/
+   `axiom-repl` #9055, `axiom-to-semantic-ir` #9181, oracle tests +
+   `:`/`::`/`has` JS-runtime wiring closing out Wave 7 — see §5's own new
+   "A SIXTH Stream B frontend" paragraph). **Julia remains the one
+   genuinely not-yet-started item** on this front (confirmed: no
+   `julia-*` crate under `code/packages/rust/` and no `julia` spec under
+   `code/specs/`).
 3. **This track (Semantic IR compilation).**
 
 A reasonable cadence: land one PR-sized unit here, then pick up one item from

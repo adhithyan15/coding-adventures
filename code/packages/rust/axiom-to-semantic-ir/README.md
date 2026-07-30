@@ -17,7 +17,7 @@ spec (MA-13a) → axiom.tokens + axiom-lexer (MA-13b)
               → axiom-runtime + axiom-repl (MA-13d)
               → axiom-to-semantic-ir (MA-13e, THIS crate)
               → oracle/golden testing (native axiom-runtime vs. SIR→JS→node)
-                — a SEPARATE follow-on task, not part of this crate
+                — tests/oracle.rs, DONE (Wave 7 close-out)
 ```
 
 ## Where this fits
@@ -93,25 +93,21 @@ same shape an ordinary function call already has — so it lowers to the exact
 same `SymSymbol`/`SymApply` shapes, via a dedicated `lower_type_expr`
 function rather than a new node kind.
 
-**Runtime-shim status: deferred to the follow-on oracle-testing task, not
-shipped in this PR.** This crate never evaluates anything (the "everything is
-data" design every SIR23 frontend shares), so it does not need a working
-evaluator to emit correct SIR. Verified directly (not assumed from a
-suggestion to extend `sir-runtime-symbolic`): the JS backend's real SIR23
-evaluator (`Symbolic.evalTerm`, `HELD_HEADS`, …) lives **inline** inside
-`semantic-ir-to-javascript/src/runtime.rs`'s own emitted runtime blob, not in
-the published `@coding-adventures/sir-runtime-symbolic` npm package — that
-package (confirmed by reading its own `CHANGELOG.md`) only re-exports the
-structural pattern matcher and leaf-term constructors, with no evaluator at
-all, and only backs the TypeScript backend, which no Stream B oracle test
-exercises yet. So extending it would not, on its own, make `:`/`::`/`has`
-evaluate through the path this repo's `node`-execution oracle tests actually
-use. Given oracle/golden testing for Axiom is this task's own named separate
-follow-on item, and every prior "new reserved head, no evaluator yet"
-precedent in this exact family (`Set`, `CompoundExpression`, `Cons`, `First`,
-`Second`, `Third`, `Rest`, `Part`, `Append`, `Reverse`) shipped its frontend
-first and left the evaluator as later work, this crate follows the identical
-sequence. See `src/lower.rs`'s module doc comment for the full disclosure.
+**Runtime-shim status: UPDATE (Wave 7 close-out) — now wired.** This crate
+itself is unchanged (it still never evaluates anything — the "everything is
+data" design every SIR23 frontend shares — so it never *needed* a working
+evaluator to emit correct SIR), but the JS backend's real SIR23 evaluator
+(`Symbolic.evalTerm`, `HELD_HEADS`, …), which lives **inline** inside
+`semantic-ir-to-javascript/src/runtime.rs`'s own emitted runtime blob, now
+has real handlers for all three reserved heads:
+`axiomDeclareHandler`/`axiomCoerceHandler`/`axiomHasHandler`, a JS-side port
+of `axiom-runtime::domains`'s fixed `AxiomDomain`/`AxiomCategory` table — see
+`semantic-ir-to-javascript`'s own `CHANGELOG.md` (`0.51.6`) for the full
+design. The published `@coding-adventures/sir-runtime-symbolic` npm package
+is unaffected (unchanged) and still only backs the TypeScript backend, which
+this task's own oracle testing does not exercise. See `src/lower.rs`'s
+module doc comment for the full disclosure, including the historical record
+of the original deferral decision this update supersedes.
 
 ## A disclosed widening relative to `axiom-runtime`'s own function bodies
 
@@ -194,6 +190,12 @@ none of these guards themselves:
   lists, `if`/`then`/`else`, a multi-statement block, and `:`/`::`/`has` as
   inert data construction) through `node`, proving the SIR23 codegen path is
   genuinely executable end-to-end.
-- No `tests/oracle.rs` in this PR — oracle/golden testing against
-  `axiom-runtime` is an explicitly separate follow-on task (see
-  `CHANGELOG.md`).
+- `tests/oracle.rs` (Wave 7 close-out) — the real end-to-end diff against
+  `axiom-runtime`: 29 cases, 28 `known_bug: None` (the one exception is a
+  disclosed, pre-existing display-convention gap, not an evaluation bug —
+  see that file's own module doc). Covers arithmetic, every comparison,
+  `:=`, both `==` function-definition forms and both call forms,
+  `if`/`then`/`else`, a `;`-block, a passing AND failing `:` declaration,
+  a passing AND failing `::` coercion, and the book's own two confirmed
+  `has` examples — see `CHANGELOG.md`'s `0.1.1` entry for the full
+  write-up.

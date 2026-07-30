@@ -150,6 +150,34 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // never need to arbitrate between them -- only one can ever be `true`
   // for a given module.
   const SIR_DISPLAY_Q_ASCII_MINUS = __SIR_DISPLAY_Q_ASCII_MINUS__;
+  // A SIXTH, independent display-convention flag (MA13/Wave 7 close-out,
+  // `axiom-to-semantic-ir`'s oracle tests): `true` when the module's
+  // `source_language` is Axiom, else `false`. Unlike the five flags above
+  // (which gate `formatSeen`'s bare-number/`SirFloat` branches or, for
+  // `SIR_DISPLAY_DERIVE`, the whole `Symbolic.toDisplayString` stringifier),
+  // this one gates a single, narrow spot inside the GENERIC (non-Derive)
+  // branch of `Symbolic.toDisplayString`'s own `"symbol"` case: real Axiom's
+  // own interactive session renders the `True`/`False` symbols the shared
+  // comparison/logic/`has`-query handlers already produce as LOWERCASE
+  // `true`/`false` (`axiom-runtime::value::print_axiom`'s own render(),
+  // confirmed directly: `IRNode::Symbol(s) if s == "True" => "true"`) --
+  // every OTHER source language in this symbolic (SIR23) domain (Wolfram,
+  // Macsyma, Derive, Reduce, Maple) either has no comparable native
+  // lowercasing convention or (Maple) already gets its own dedicated
+  // case-bridging fix tracked as separate follow-up work, per
+  // `HML01-math-to-semantic-ir.md` §5's own "True/False CASE mismatch"
+  // finding -- so a plain boolean-only flag, mirroring `SIR_DISPLAY_RUBY`'s
+  // minimal shape exactly (NOT Derive's whole precedence-aware printer),
+  // is the correct, narrowest fix here: it does not touch how any
+  // COMPOUND term prints (Axiom still has no infix/bracket display
+  // convention of its own, the same disclosed "finding five"-class gap
+  // every CAS-family language without a `SIR_DISPLAY_<LANG>` flag has --
+  // see `axiom-to-semantic-ir/tests/oracle.rs`'s own module doc for the
+  // corpus cases that document it), only the two atomic boolean symbols.
+  // Mutually exclusive with the five flags above by construction (all six
+  // are computed from the same single `source_language` field in
+  // `emit.rs`).
+  const SIR_DISPLAY_AXIOM_BOOLEAN = __SIR_DISPLAY_AXIOM_BOOLEAN__;
   // ── value model ────────────────────────────────────────────────
   // A symbol is an interned name; `===` on two interned symbols with
   // the same name is therefore identity-equal.
@@ -3296,7 +3324,16 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         return derivePrintAt(node, DERIVE_PREC_LOWEST, depth);
       }
       switch (node.kind) {
-        case "symbol": return node.name;
+        case "symbol":
+          // SIR_DISPLAY_AXIOM_BOOLEAN (see that flag's own comment, above):
+          // real Axiom's own session renders these two symbols lowercase;
+          // every other name (including every OTHER language's True/False,
+          // per the still-open, shared "finding five"/case-mismatch gaps
+          // documented in `HML01-math-to-semantic-ir.md` §5) is unaffected.
+          if (SIR_DISPLAY_AXIOM_BOOLEAN && (node.name === "True" || node.name === "False")) {
+            return node.name === "True" ? "true" : "false";
+          }
+          return node.name;
         case "integer": return String(node.value);
         case "rational": return node.numer + "/" + node.denom;
         case "float": return String(node.value);
@@ -3642,6 +3679,16 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     //   item 3 (this PR) — calculus / elementary-function handlers
     //   item 4 (shipped) — Derive's own SIR23 display convention
     //
+    // A FIFTH addition, layered on top of this same SIR23 addendum after
+    // all four items above shipped (MA13/Wave 7 close-out, not part of
+    // the addendum's own original 4-item plan): Axiom's three reserved
+    // `__axiom_declare`/`__axiom_coerce`/`__axiom_has` heads join
+    // `HELD_HEADS` and `HANDLERS`/`HELD_HANDLERS` below, exactly like any
+    // other new head this dispatch table gains — see
+    // `axiomDeclareHandler`/`axiomCoerceHandler`/`axiomHasHandler`'s own
+    // section comment (further down, right before `HANDLERS`) for the
+    // full design.
+    //
     // `HELD_HEADS` was declared by item 1 — the held-vs-evaluated
     // ARGUMENT treatment below was exercised starting then — but item 1
     // wired up NO handler for any of its three members, so `Assign`/
@@ -3661,7 +3708,19 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // alone folds `List(Add(1,1), Mul(2,3))` into `List(2, 6)` "for
     // free" via the same generic "no handler matched" fallthrough every
     // other unrecognised head (present or future) takes.
-    const HELD_HEADS = new Set(["Assign", "Define", "If"]);
+    // `__axiom_declare`/`__axiom_coerce`/`__axiom_has` (MA13/Wave 7
+    // close-out, `axiom-to-semantic-ir::lower`'s three reserved SIR23
+    // heads) join this set for the identical reason `Assign`'s
+    // left-hand-side name is held: each of the three has at least one
+    // argument position that must NOT be evaluated as an ordinary variable
+    // reference before dispatch (a declared name, a domain/category type
+    // expression) — see each handler's own doc comment, near
+    // `axiomDeclareHandler` above, for exactly which argument(s) each one
+    // evaluates itself versus leaves raw.
+    const HELD_HEADS = new Set([
+      "Assign", "Define", "If",
+      "__axiom_declare", "__axiom_coerce", "__axiom_has",
+    ]);
 
     // SECURITY (CWE-674): `evalTerm`'s OWN recursion-depth cap — this is
     // deliberately NOT a reuse of `MAX_TERM_DEPTH` above. That constant
@@ -3732,6 +3791,21 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // local scope reaches `SymbolicBackend` today), so one flat `Map` is a
     // faithful, not a simplified, port of `BaseBackend.env`.
     const symEnv = new Map();
+
+    // Axiom's own `:`-declared domain-constraint table (MA13 §2/§3/§4) —
+    // a name -> AxiomDomain map, populated ONLY by `axiomDeclareHandler`
+    // (below) and consulted ONLY by `assignHandler`'s own small, disclosed
+    // addition (see that function's comment). Deliberately a SEPARATE map
+    // from `symEnv` immediately above, mirroring `axiom-runtime::
+    // EvalContext`'s own identical separation (`declared: HashMap<String,
+    // AxiomDomain>`, kept apart from the shared VM's own name-binding
+    // environment, "since `symbolic-ir`/`symbolic-vm` have no concept of a
+    // domain at all to store one in") — a faithful port of that same
+    // architectural split, not a new design. Stays permanently EMPTY for
+    // every compiled program that never lowers a `__axiom_declare` call
+    // (i.e. every non-Axiom source language, and any Axiom program with no
+    // `:` declaration), so `assignHandler`'s extra lookup is a no-op there.
+    const axiomDeclaredDomains = new Map();
 
     // ── numeric tower (handlers.rs::Numeric port) ───────────────────
     //
@@ -4428,6 +4502,303 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       return evalTerm(result, depth + 1);
     }
 
+    // ── Axiom domain/category table + reserved-head handlers ─────────
+    //
+    // MA13 §2/§3/§4 (`code/specs/MA13-axiom-language.md`): a JS-side port
+    // of `axiom-runtime::domains`'s fixed, non-extensible
+    // `AxiomDomain`/`AxiomCategory` table -- the ONE piece of genuinely new
+    // evaluator design MA13 needed (`symbolic_ir::IRNode` has no domain/
+    // category/type-tag concept anywhere), reused here for the THREE
+    // reserved SIR23 heads `axiom-to-semantic-ir::lower` defines locally
+    // (never added to shared `semantic-ir`/`symbolic-ir`, per that crate's
+    // own "Decision" section):
+    //
+    //   __axiom_declare(List(name, ...), typeExpr)   -- `a : T` / `(a,b): T`
+    //   __axiom_coerce(value, typeExpr)               -- `e :: T`
+    //   __axiom_has(domainTypeExpr, categoryTypeExpr) -- `D has C`
+    //
+    // `typeExpr` positions are ordinary `SymSymbol`/`SymApply` DATA (a bare
+    // NAME lowers to `SymSymbol`, a parameterized one to
+    // `SymApply(SymSymbol(name), [args...])` -- confirmed directly against
+    // `axiom-to-semantic-ir::lower::Lowerer::lower_type_expr`), the EXACT
+    // same shape an ordinary call already has -- so `axiomParseTypeSpec`
+    // reads a term into the same `{ name, args }` shape
+    // `axiom-runtime::builtins::parse_type_spec` reads a parsed CST node
+    // into, and every function below is a direct, one-for-one port of its
+    // `axiom-runtime::domains` counterpart (same shape, same match arms,
+    // same error TEXT verbatim -- so a coercion/declaration/has-query
+    // failure throws the byte-for-byte SAME message `axiom-runtime` itself
+    // produces for an atomic operand, confirmed by
+    // `axiom-to-semantic-ir/tests/oracle.rs`'s own failing-case entries;
+    // for a COMPOUND operand the message text can still diverge, since it
+    // embeds `toDisplayString`'s generic rendering rather than
+    // `axiom-runtime::value::print_axiom`'s own infix one -- the same
+    // disclosed "no per-language compound-display convention" gap every
+    // CAS-family language without a dedicated `SIR_DISPLAY_<LANG>` printer
+    // has, see `SIR_DISPLAY_AXIOM_BOOLEAN`'s own comment above).
+    //
+    // A JS `AxiomDomain` is represented exactly as compactly as its Rust
+    // counterpart: the eight zero-argument variants are plain STRINGS
+    // (`"Boolean"`, `"Integer"`, `"PositiveInteger"`, `"NonNegativeInteger"`,
+    // `"Float"`, `"String"`, `"FractionInteger"`, `"PolynomialInteger"` --
+    // matching the Rust enum's own variant names, NOT their `display_name()`
+    // spelling, e.g. `"FractionInteger"` not `"Fraction(Integer)"`; see
+    // `axiomDomainDisplayName` below for that separate rendering), and
+    // `List(T)` is `{ tag: "List", inner: <AxiomDomain> }`. `AxiomCategory`
+    // is simply the string `"Ring"` or `"OrderedSet"`.
+
+    // `axiom-runtime::builtins::parse_type_spec`'s port: read a `typeExpr`
+    // TERM (never `evalTerm`'d -- see the three handlers below, all of
+    // which pass this a RAW, unevaluated argument) into a `{ name, args }`
+    // spec.
+    function axiomParseTypeSpec(term) {
+      if (term.kind === "symbol") { return { name: term.name, args: [] }; }
+      if (term.kind === "apply" && term.head.kind === "symbol") {
+        return { name: term.head.name, args: term.args.map(axiomParseTypeSpec) };
+      }
+      throw new TypeError("Symbolic.evalTerm: malformed Axiom type expression");
+    }
+
+    // `axiom-runtime::domains::resolve_domain`'s port -- every error
+    // message is copied VERBATIM from that function so a rejection reads
+    // identically on both the native and compiled paths.
+    function axiomResolveDomain(spec) {
+      const n = spec.args.length;
+      switch (spec.name) {
+        case "Boolean": if (n === 0) { return "Boolean"; } break;
+        case "Integer": if (n === 0) { return "Integer"; } break;
+        case "PositiveInteger": if (n === 0) { return "PositiveInteger"; } break;
+        case "NonNegativeInteger": if (n === 0) { return "NonNegativeInteger"; } break;
+        case "Float": if (n === 0) { return "Float"; } break;
+        case "String": if (n === 0) { return "String"; } break;
+        case "Fraction":
+          if (n === 1) {
+            const inner = axiomResolveDomain(spec.args[0]);
+            if (inner === "Integer") { return "FractionInteger"; }
+            throw new Error(
+              "Fraction(" + axiomDomainDisplayName(inner) + ") is not a valid type -- this cut's "
+              + "`Fraction` is fixed to `Fraction(Integer)` only"
+            );
+          }
+          break;
+        case "Polynomial":
+          if (n === 1) {
+            const inner = axiomResolveDomain(spec.args[0]);
+            if (inner === "Integer") { return "PolynomialInteger"; }
+            throw new Error(
+              "Polynomial(" + axiomDomainDisplayName(inner) + ") is not a valid type -- this cut's "
+              + "`Polynomial` is fixed to `Polynomial(Integer)` only"
+            );
+          }
+          break;
+        case "List":
+          if (n === 1) {
+            const inner = axiomResolveDomain(spec.args[0]);
+            if (typeof inner === "object" && inner.tag === "List") {
+              throw new Error(
+                "List(" + axiomDomainDisplayName(inner) + ") is not a valid type -- `List`'s element "
+                + "type cannot itself be a `List`"
+              );
+            }
+            return { tag: "List", inner };
+          }
+          break;
+        default:
+          break;
+      }
+      if (spec.name === "Fraction" || spec.name === "Polynomial" || spec.name === "List") {
+        throw new Error("`" + spec.name + "` takes exactly 1 type argument, got " + n);
+      }
+      throw new Error(
+        "`" + spec.name + "` is not one of this cut's fixed built-in domains (Boolean, Integer, "
+        + "PositiveInteger, NonNegativeInteger, Float, String, Fraction(Integer), Polynomial(Integer), "
+        + "List(T))"
+      );
+    }
+
+    // `axiom-runtime::domains::resolve_category`'s port.
+    function axiomResolveCategory(spec) {
+      const n = spec.args.length;
+      if (spec.name === "Ring" && n === 0) { return "Ring"; }
+      if (spec.name === "OrderedSet" && n === 0) { return "OrderedSet"; }
+      if (spec.name === "Ring" || spec.name === "OrderedSet") {
+        throw new Error("`" + spec.name + "` takes no type arguments, got " + n);
+      }
+      throw new Error(
+        "`" + spec.name + "` is not one of this cut's fixed built-in categories (Ring, OrderedSet)"
+      );
+    }
+
+    // `axiom-runtime::domains::domain_has_category`'s port -- the fixed
+    // membership table (MA13 §3/§4). `Polynomial(Integer) has Ring` is
+    // `true`; `List(Integer) has Ring` is `false` (the book's own confirmed
+    // examples -- `axiom-to-semantic-ir/tests/oracle.rs`'s own two
+    // headline cases).
+    function axiomDomainHasCategory(domain, category) {
+      if (category === "Ring") {
+        return domain === "Integer" || domain === "FractionInteger" || domain === "PolynomialInteger";
+      }
+      // OrderedSet
+      return domain === "Integer" || domain === "Float"
+        || domain === "PositiveInteger" || domain === "NonNegativeInteger";
+    }
+
+    // `axiom-runtime::domains::is_polynomial_over_integers`'s port -- an
+    // Axiom-runtime-internal STRUCTURAL predicate, not a `symbolic-vm`
+    // change (mirrors that function's own doc comment: "evaluated entirely
+    // within `axiom-runtime`'s own dispatcher, never inside `symbolic-vm`
+    // itself"). Note the same quirk the Rust reference has: ANY bare
+    // symbol (including `True`/`False`) counts as "polynomial", matching
+    // `IRNode::Integer(_) | IRNode::Symbol(_) => true` exactly -- a
+    // faithful port, not a hardening.
+    function axiomIsPolynomialOverIntegers(term) {
+      if (term.kind === "integer" || term.kind === "symbol") { return true; }
+      if (term.kind !== "apply" || term.head.kind !== "symbol") { return false; }
+      const h = term.head.name;
+      if (h === "Add" || h === "Sub" || h === "Mul") {
+        return term.args.every(axiomIsPolynomialOverIntegers);
+      }
+      if (h === "Neg") {
+        return term.args.length === 1 && axiomIsPolynomialOverIntegers(term.args[0]);
+      }
+      if (h === "Pow") {
+        return term.args.length === 2 && axiomIsPolynomialOverIntegers(term.args[0])
+          && term.args[1].kind === "integer" && term.args[1].value >= 0;
+      }
+      return false;
+    }
+
+    // `axiom-runtime::domains::coerce_value`'s port: attempt to coerce an
+    // ALREADY-EVALUATED `term` into `domain`, returning the (possibly
+    // representation-converted) term on success or `null` on failure.
+    // `Float` is the one domain that genuinely CONVERTS representation
+    // (`Integer`/`Rational` -> `Float`, matching real Axiom's own
+    // `3 :: Float` producing `3.0`); every other domain is a pure
+    // membership check that returns the value unchanged.
+    function axiomCoerceValue(term, domain) {
+      if (domain === "Boolean") {
+        return (term.kind === "symbol" && (term.name === "True" || term.name === "False")) ? term : null;
+      }
+      if (domain === "Integer") { return term.kind === "integer" ? term : null; }
+      if (domain === "PositiveInteger") {
+        return (term.kind === "integer" && term.value > 0) ? term : null;
+      }
+      if (domain === "NonNegativeInteger") {
+        return (term.kind === "integer" && term.value >= 0) ? term : null;
+      }
+      if (domain === "Float") {
+        if (term.kind === "float") { return term; }
+        if (term.kind === "integer") { return floatTerm(term.value); }
+        if (term.kind === "rational") { return floatTerm(term.numer / term.denom); }
+        return null;
+      }
+      if (domain === "String") { return term.kind === "string" ? term : null; }
+      if (domain === "FractionInteger") {
+        return (term.kind === "rational" || term.kind === "integer") ? term : null;
+      }
+      if (domain === "PolynomialInteger") {
+        return axiomIsPolynomialOverIntegers(term) ? term : null;
+      }
+      if (typeof domain === "object" && domain.tag === "List") {
+        if (!(term.kind === "apply" && term.head.kind === "symbol" && term.head.name === "List")) {
+          return null;
+        }
+        const coercedArgs = [];
+        for (const elem of term.args) {
+          const c = axiomCoerceValue(elem, domain.inner);
+          if (c === null) { return null; }
+          coercedArgs.push(c);
+        }
+        return applyTerm(symTerm("List"), coercedArgs);
+      }
+      return null;
+    }
+
+    // `axiom-runtime::domains::AxiomDomain::display_name`'s port -- the
+    // book's own spelling (`Integer`, `Fraction(Integer)`, `List(Float)`,
+    // …), used only in error-message text (never the enum/string tag
+    // above, which is `"FractionInteger"`/`"PolynomialInteger"`).
+    function axiomDomainDisplayName(domain) {
+      if (typeof domain === "object" && domain.tag === "List") {
+        return "List(" + axiomDomainDisplayName(domain.inner) + ")";
+      }
+      if (domain === "FractionInteger") { return "Fraction(Integer)"; }
+      if (domain === "PolynomialInteger") { return "Polynomial(Integer)"; }
+      return domain;
+    }
+
+    // `__axiom_declare(List(name, ...), typeExpr)` -- `a : T` / `(a,b,c): T`
+    // (MA13 §3/§4). BOTH arguments are HELD (never `evalTerm`'d): the
+    // names are bare identifiers, not variable reads (evaluating them
+    // would resolve an ALREADY-bound name to its current VALUE instead of
+    // its NAME -- wrong for a declaration, which must restrict the name
+    // going forward regardless of whether it is already bound), and the
+    // type expression is domain/category-shaped data, never an ordinary
+    // variable reference (mirrors `axiom-runtime::eval_declaration`'s own
+    // identical treatment: it walks `type_expr` structurally via
+    // `parse_type_spec`, never through `eval_expr`). Records `name ->
+    // domain` in `axiomDeclaredDomains` for every declared name (consulted
+    // later by `assignHandler`'s own small addition, below) and returns
+    // the `True` symbol -- `axiom-runtime::eval_declaration`'s own
+    // disclosed presentation convention ("a pure declaration has no value
+    // of its own in real Axiom's own interactive session... echoes `true`
+    // to confirm the declaration was accepted").
+    function axiomDeclareHandler(head, args) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const namesListTerm = args[0];
+      const typeExprTerm = args[1];
+      if (!(namesListTerm.kind === "apply" && namesListTerm.head.kind === "symbol"
+            && namesListTerm.head.name === "List")) {
+        throw new TypeError("Symbolic.evalTerm: __axiom_declare names must be a List, got " + namesListTerm.kind);
+      }
+      const names = [];
+      for (const n of namesListTerm.args) {
+        if (n.kind !== "symbol") {
+          throw new TypeError("Symbolic.evalTerm: __axiom_declare name list must contain only symbols");
+        }
+        names.push(n.name);
+      }
+      const domain = axiomResolveDomain(axiomParseTypeSpec(typeExprTerm));
+      for (const name of names) { axiomDeclaredDomains.set(name, domain); }
+      return symTerm("True");
+    }
+
+    // `__axiom_coerce(value, typeExpr)` -- `e :: T` (MA13 §3/§4). `value`
+    // IS evaluated (real Axiom's own `(a + b) :: Float` coerces a COMPUTED
+    // value, MA13 §3), `typeExpr` is held (same reasoning as
+    // `axiomDeclareHandler` above). Throws the book's own confirmed
+    // coercion-failure phrasing, adapted for the standalone `::` case
+    // exactly as `axiom-runtime::eval_coercion` itself adapts it (that
+    // function's own comment: "adapted from the book's own confirmed
+    // assignment-mismatch phrase... for the standalone `::` case, which
+    // has no left-hand side of its own to name").
+    function axiomCoerceHandler(head, args, depth) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const value = evalTerm(args[0], depth + 1);
+      if (isDepthLimitError(value)) { return value; }
+      const domain = axiomResolveDomain(axiomParseTypeSpec(args[1]));
+      const coerced = axiomCoerceValue(value, domain);
+      if (coerced === null) {
+        throw new Error(
+          "Cannot convert " + toDisplayString(value) + " to an object of the type "
+          + axiomDomainDisplayName(domain) + "."
+        );
+      }
+      return coerced;
+    }
+
+    // `__axiom_has(domainTypeExpr, categoryTypeExpr)` -- `D has C` (MA13
+    // §3/§4). BOTH arguments are held type expressions (neither is ever a
+    // variable read -- mirrors `axiom-runtime::eval_has_query`'s identical
+    // treatment). Returns the `True`/`False` symbol from the fixed lookup
+    // table, never a computed `Join`/conditional-export algebra.
+    function axiomHasHandler(head, args) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const domain = axiomResolveDomain(axiomParseTypeSpec(args[0]));
+      const category = axiomResolveCategory(axiomParseTypeSpec(args[1]));
+      return symTerm(axiomDomainHasCategory(domain, category) ? "True" : "False");
+    }
+
     // Per-head dispatch table (arg-evaluated heads only — arithmetic /
     // comparison / logic / elementary-function / calculus; see
     // `HELD_HANDLERS` below for the three `HELD_HEADS` members, whose
@@ -4489,6 +4860,24 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // ported here as a thrown `TypeError` — matching this file's own
     // existing convention of throwing on a domain error no oracle case
     // can even construct (e.g. `divHandler`'s "division by zero" above).
+    //
+    // Axiom's own `:`-declared domain check (MA13 §3/§4) -- a small,
+    // disclosed addition to this otherwise fully shared handler, gated
+    // entirely on `axiomDeclaredDomains` (populated ONLY by
+    // `axiomDeclareHandler`, above). For every OTHER source language, and
+    // for any Axiom program with no prior `a : T` declaration for this
+    // name, that map has no entry for `lhs.name`, so the branch below is a
+    // single, cheap `Map.prototype.get` miss and `assignHandler` behaves
+    // EXACTLY as it did before this addition -- confirmed no other
+    // frontend in this repo ever calls `axiomDeclareHandler` (only
+    // `axiom-to-semantic-ir` emits `__axiom_declare`). This mirrors
+    // `axiom-runtime::eval_assignment`'s own identical design: that
+    // function ALSO consults a private `declared: HashMap<String,
+    // AxiomDomain>` table when handling what is otherwise the shared
+    // `:=` construct, and produces the exact same error text on failure
+    // (the book's own confirmed error shape, quoted verbatim in both
+    // places) -- a faithful port of that cross-construct behaviour, not a
+    // new mechanism invented for the compiled path.
     function assignHandler(head, args, depth) {
       if (args.length !== 2) { return applyTerm(head, args); }
       const [lhs, rhs] = args;
@@ -4497,6 +4886,18 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       }
       const value = evalTerm(rhs, depth + 1);
       if (isDepthLimitError(value)) { return value; }
+      const declaredDomain = axiomDeclaredDomains.get(lhs.name);
+      if (declaredDomain !== undefined) {
+        const coerced = axiomCoerceValue(value, declaredDomain);
+        if (coerced === null) {
+          throw new Error(
+            "Cannot convert right-hand side of assignment " + toDisplayString(value)
+            + " to an object of the type " + axiomDomainDisplayName(declaredDomain) + " of the left-hand side."
+          );
+        }
+        symEnv.set(lhs.name, coerced);
+        return coerced;
+      }
       symEnv.set(lhs.name, value);
       return value;
     }
@@ -4547,6 +4948,9 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       ["Assign", assignHandler],
       ["Define", defineHandler],
       ["If", ifHandler],
+      ["__axiom_declare", axiomDeclareHandler],
+      ["__axiom_coerce", axiomCoerceHandler],
+      ["__axiom_has", axiomHasHandler],
     ]);
 
     // `is_define_record`'s port: true iff `node` is a stored
@@ -6610,6 +7014,58 @@ mod tests {
         assert!(RUNTIME.contains("if (SIR_DISPLAY_J_UNDERSCORE) { return x < 0 ? \"_\" + body : body; }"));
         assert!(RUNTIME.contains("return x < 0 ? \"¯∞\" : \"∞\";"));
         assert!(RUNTIME.contains("return x < 0 ? \"¯\" + body : body;"));
+    }
+
+    // ── Axiom's own display convention + reserved-head handlers
+    // (MA13/Wave 7 close-out, `axiom-to-semantic-ir/tests/oracle.rs`) ────
+
+    #[test]
+    fn todisplaystring_gates_true_false_case_on_the_axiom_boolean_flag() {
+        // Regression guard: real Axiom's own session renders the shared
+        // True/False symbols lowercase; every other source language keeps
+        // the generic, unchanged capitalized spelling.
+        assert!(RUNTIME.contains("const SIR_DISPLAY_AXIOM_BOOLEAN = __SIR_DISPLAY_AXIOM_BOOLEAN__;"));
+        assert!(RUNTIME.contains(
+            "if (SIR_DISPLAY_AXIOM_BOOLEAN && (node.name === \"True\" || node.name === \"False\")) {"
+        ));
+        // The default (flag off) still returns the bare symbol name --
+        // confirming this is a narrow addition, not a replacement of the
+        // generic `"symbol"` case every other language relies on.
+        assert!(RUNTIME.contains("return node.name;"));
+    }
+
+    #[test]
+    fn axiom_reserved_heads_are_wired_into_the_held_dispatch_tables() {
+        // The three reserved SIR23 heads `axiom-to-semantic-ir::lower`
+        // defines locally (never added to shared `semantic-ir`/
+        // `symbolic-ir`) must be held (not argument-evaluated) AND have a
+        // real handler, not just fall through to the generic "rebuild an
+        // inert Apply" policy every OTHER unrecognised head gets.
+        for head in ["__axiom_declare", "__axiom_coerce", "__axiom_has"] {
+            assert!(
+                RUNTIME.contains(&format!("\"{head}\",")),
+                "HELD_HEADS must list `{head}`"
+            );
+        }
+        assert!(RUNTIME.contains("[\"__axiom_declare\", axiomDeclareHandler],"));
+        assert!(RUNTIME.contains("[\"__axiom_coerce\", axiomCoerceHandler],"));
+        assert!(RUNTIME.contains("[\"__axiom_has\", axiomHasHandler],"));
+        // The fixed domain/category table (MA13 §3/§4) — spot-check the
+        // two book-confirmed `has` examples' own membership arm, and that
+        // the coercion-failure message text matches `axiom-runtime`'s own
+        // verbatim.
+        assert!(RUNTIME.contains(
+            "return domain === \"Integer\" || domain === \"FractionInteger\" || domain === \"PolynomialInteger\";"
+        ));
+        assert!(RUNTIME.contains("\"Cannot convert \" + toDisplayString(value) + \" to an object of the type \""));
+        assert!(RUNTIME.contains(
+            "\"Cannot convert right-hand side of assignment \" + toDisplayString(value)"
+        ));
+        // `assignHandler`'s own small, disclosed cross-head addition:
+        // consults `axiomDeclaredDomains`, populated only by
+        // `axiomDeclareHandler` -- a no-op for every other source language.
+        assert!(RUNTIME.contains("const axiomDeclaredDomains = new Map();"));
+        assert!(RUNTIME.contains("const declaredDomain = axiomDeclaredDomains.get(lhs.name);"));
     }
 
     #[test]
