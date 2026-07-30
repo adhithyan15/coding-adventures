@@ -16,9 +16,7 @@ use venture_browser_core::{
     BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
     BrowserSession,
 };
-use window_core::WindowError;
-#[cfg(target_vendor = "apple")]
-use window_core::WindowEvent;
+use window_core::{WindowError, WindowEvent};
 
 #[cfg(target_vendor = "apple")]
 use venture_browser_core::HttpBrowserFetcher;
