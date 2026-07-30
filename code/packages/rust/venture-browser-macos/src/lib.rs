@@ -16,7 +16,9 @@ use venture_browser_core::{
     BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
     BrowserSession,
 };
-use window_core::{ElementState, PointerButton, WindowError, WindowEvent};
+use window_core::{
+    ElementState, Key, NamedKey, PointerButton, WindowError, WindowEvent,
+};
 
 #[cfg(target_vendor = "apple")]
 use venture_browser_core::HttpBrowserFetcher;
@@ -203,7 +205,8 @@ fn run_with_termination(
         let mut pointer_position = None;
         move |event| {
             let mut session = session.borrow_mut();
-            let mut should_repaint = scroll_session(&mut session, &event);
+            let mut should_repaint = scroll_session(&mut session, &event)
+                || keyboard_scroll_session(&mut session, &event);
             if let Some((x, y)) = pointer_link_activation(&mut pointer_position, &event) {
                 match activate_link_at(
                     &mut session,
@@ -268,6 +271,56 @@ pub fn scroll_session(session: &mut BrowserSession, event: &WindowEvent) -> bool
     viewport.scroll_state().offset_y() != previous_offset
 }
 
+/// Apply host-level named scrolling keys to the current browser viewport.
+pub fn keyboard_scroll_session(session: &mut BrowserSession, event: &WindowEvent) -> bool {
+    let WindowEvent::Key {
+        key: Key::Named(key),
+        state: ElementState::Pressed,
+        modifiers,
+        ..
+    } = event
+    else {
+        return false;
+    };
+    if modifiers.control || modifiers.alt || modifiers.meta {
+        return false;
+    }
+    let Some(viewport) = session.viewport_mut() else {
+        return false;
+    };
+    let previous_offset = viewport.scroll_state().offset_y();
+    let viewport_height = viewport.scroll_state().viewport_height();
+    match key {
+        NamedKey::ArrowUp => {
+            viewport.scroll_by(-40.0);
+        }
+        NamedKey::ArrowDown => {
+            viewport.scroll_by(40.0);
+        }
+        NamedKey::PageUp => {
+            viewport.scroll_by(-viewport_height * 0.9);
+        }
+        NamedKey::PageDown => {
+            viewport.scroll_by(viewport_height * 0.9);
+        }
+        NamedKey::Space if modifiers.shift => {
+            viewport.scroll_by(-viewport_height * 0.9);
+        }
+        NamedKey::Space => {
+            viewport.scroll_by(viewport_height * 0.9);
+        }
+        NamedKey::Home => {
+            viewport.set_scroll_offset_y(0.0);
+        }
+        NamedKey::End => {
+            let max_offset = viewport.scroll_state().max_offset_y();
+            viewport.set_scroll_offset_y(max_offset);
+        }
+        _ => return false,
+    }
+    viewport.scroll_state().offset_y() != previous_offset
+}
+
 /// Track pointer movement and identify a primary-button link activation.
 ///
 /// Activation happens on release so dragging away from a link can update the
@@ -303,6 +356,7 @@ pub fn run_for_smoke(_start_url: &str, _seconds: f64) -> Result<(), MacBrowserEr
 #[cfg(test)]
 mod tests {
     use super::*;
+    use window_core::ModifiersState;
 
     #[cfg(target_vendor = "apple")]
     use venture_browser_core::BrowserFetchResponse;
@@ -415,6 +469,83 @@ mod tests {
             pointer_link_activation(&mut pointer_position, &released),
             Some((12.5, 48.0))
         );
+    }
+
+    #[cfg(target_vendor = "apple")]
+    #[test]
+    fn named_keys_scroll_and_clamp_the_native_viewport() {
+        let fetcher = |url: &str| {
+            let paragraphs = (0..80)
+                .map(|index| format!("<p>Keyboard Venture paragraph {index}</p>"))
+                .collect::<String>();
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html; charset=utf-8".into()),
+                format!("<title>Keyboard</title>{paragraphs}").into_bytes(),
+            ))
+        };
+        let mut session = load_initial_session("http://example.test/", 320.0, 180.0, &fetcher)
+            .expect("native browser pipeline should load tall canned HTML");
+        let key_event = |key, modifiers| WindowEvent::Key {
+            window_id: WindowId(1),
+            key: Key::Named(key),
+            state: ElementState::Pressed,
+            modifiers,
+            text: None,
+        };
+
+        assert!(keyboard_scroll_session(
+            &mut session,
+            &key_event(NamedKey::ArrowDown, ModifiersState::default())
+        ));
+        assert_eq!(
+            session
+                .viewport()
+                .expect("viewport should remain loaded")
+                .scroll_state()
+                .offset_y(),
+            40.0
+        );
+        assert!(keyboard_scroll_session(
+            &mut session,
+            &key_event(NamedKey::End, ModifiersState::default())
+        ));
+        let max_offset = session
+            .viewport()
+            .expect("viewport should remain loaded")
+            .scroll_state()
+            .max_offset_y();
+        assert_eq!(
+            session
+                .viewport()
+                .expect("viewport should remain loaded")
+                .scroll_state()
+                .offset_y(),
+            max_offset
+        );
+        assert!(keyboard_scroll_session(
+            &mut session,
+            &key_event(NamedKey::Home, ModifiersState::default())
+        ));
+        assert_eq!(
+            session
+                .viewport()
+                .expect("viewport should remain loaded")
+                .scroll_state()
+                .offset_y(),
+            0.0
+        );
+        assert!(!keyboard_scroll_session(
+            &mut session,
+            &key_event(
+                NamedKey::ArrowDown,
+                ModifiersState {
+                    meta: true,
+                    ..ModifiersState::default()
+                }
+            )
+        ));
     }
 
     #[cfg(target_vendor = "apple")]

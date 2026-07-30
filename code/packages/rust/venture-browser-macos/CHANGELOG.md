@@ -6,6 +6,7 @@
   model and repaint the translated viewport through Metal.
 - Activate viewport links from primary-button input, update the native title,
   and repaint across repeated transactional navigation.
+- Drive the clamped viewport and Metal repaint path from named navigation keys.
 
 ## 0.1.0
 

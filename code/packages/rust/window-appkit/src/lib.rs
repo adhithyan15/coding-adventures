@@ -16,7 +16,7 @@
 // Platform-conditional: code for the non-native platform is intentionally inactive; allow the resulting dead_code/unused lints only where it does not compile in.
 #![cfg_attr(not(target_vendor = "apple"), allow(dead_code, unused_imports))]
 
-use std::ffi::{c_int, c_ulong};
+use std::ffi::{c_int, c_schar, c_ulong};
 
 #[cfg(target_vendor = "apple")]
 use std::{
@@ -27,16 +27,16 @@ use std::{
 
 #[cfg(target_vendor = "apple")]
 use objc_bridge::{
-    class, class_addIvar, class_addMethod, msg, msg_bool, msg_f64, msg_send_class, nsstring,
-    objc_allocateClassPair, objc_registerClassPair, object_getInstanceVariable,
+    class, class_addIvar, class_addMethod, msg, msg_bool, msg_f64, msg_send_class, msg_usize,
+    nsstring, objc_allocateClassPair, objc_registerClassPair, object_getInstanceVariable,
     object_setInstanceVariable, release, sel, CGPoint, CGRect, CGSize, ClassPtr, Id, Sel, NIL,
     NS_BACKING_STORE_BUFFERED, NS_WINDOW_STYLE_MASK_CLOSABLE, NS_WINDOW_STYLE_MASK_MINIATURIZABLE,
     NS_WINDOW_STYLE_MASK_RESIZABLE, NS_WINDOW_STYLE_MASK_TITLED,
 };
 use window_core::{
-    AppKitRenderTarget, ElementState, LogicalSize, MountTarget, PhysicalSize, PointerButton,
-    RenderTarget, SurfacePreference, Window, WindowAttributes, WindowBackend, WindowError,
-    WindowEvent, WindowId,
+    AppKitRenderTarget, ElementState, Key, LogicalSize, ModifiersState, MountTarget, NamedKey,
+    PhysicalSize, PointerButton, RenderTarget, SurfacePreference, Window, WindowAttributes,
+    WindowBackend, WindowError, WindowEvent, WindowId,
 };
 
 /// Crate version, kept explicit for examples and integration tests.
@@ -378,6 +378,7 @@ impl AppKitBackend {
         }
         let view = create_event_view(msg_send_bounds(default_view))?;
         msg!(window, "setContentView:", view);
+        let _ = msg_bool!(window, "makeFirstResponder:", view);
 
         setup_window_delegate(window, app)?;
 
@@ -474,6 +475,25 @@ unsafe fn ensure_event_view_class() -> Result<ClassPtr, WindowError> {
         mouse_up as *const _,
         event_method_types.as_ptr(),
     );
+    class_addMethod(
+        view_class,
+        sel("keyDown:"),
+        key_down as *const _,
+        event_method_types.as_ptr(),
+    );
+    class_addMethod(
+        view_class,
+        sel("keyUp:"),
+        key_up as *const _,
+        event_method_types.as_ptr(),
+    );
+    let bool_method_types = CString::new("c@:").expect("static BOOL method type");
+    class_addMethod(
+        view_class,
+        sel("acceptsFirstResponder"),
+        accepts_first_responder as *const _,
+        bool_method_types.as_ptr(),
+    );
     objc_registerClassPair(view_class);
     Ok(view_class)
 }
@@ -534,6 +554,37 @@ fn dispatch_pointer_button_event(view: Id, event: Id, state: ElementState) {
     });
 }
 
+#[cfg(target_vendor = "apple")]
+extern "C" fn accepts_first_responder(_view: Id, _sel: Sel) -> c_schar {
+    1
+}
+
+#[cfg(target_vendor = "apple")]
+extern "C" fn key_down(view: Id, _sel: Sel, event: Id) {
+    dispatch_key_event(view, event, ElementState::Pressed);
+}
+
+#[cfg(target_vendor = "apple")]
+extern "C" fn key_up(view: Id, _sel: Sel, event: Id) {
+    dispatch_key_event(view, event, ElementState::Released);
+}
+
+#[cfg(target_vendor = "apple")]
+fn dispatch_key_event(view: Id, event: Id, state: ElementState) {
+    let key_code = unsafe { msg_usize!(event, "keyCode") };
+    let modifier_flags = unsafe { msg_usize!(event, "modifierFlags") };
+    EVENT_HANDLERS.with(|handlers| {
+        let mut handlers = handlers.borrow_mut();
+        if let Some(entry) = handlers.get_mut(&(view as usize)) {
+            if let Some(event) =
+                normalized_key_event(entry.window_id, key_code, modifier_flags, state)
+            {
+                (entry.callback)(event);
+            }
+        }
+    });
+}
+
 /// Translate AppKit's content-motion deltas into viewport scroll direction.
 pub fn normalized_scroll_event(
     window_id: WindowId,
@@ -574,6 +625,47 @@ pub fn normalized_pointer_button_events(
             state,
         },
     ]
+}
+
+/// Translate macOS virtual key codes for host-level navigation input.
+pub fn normalized_key_event(
+    window_id: WindowId,
+    key_code: usize,
+    modifier_flags: usize,
+    state: ElementState,
+) -> Option<WindowEvent> {
+    let key = match key_code {
+        0x35 => NamedKey::Escape,
+        0x24 => NamedKey::Enter,
+        0x30 => NamedKey::Tab,
+        0x33 => NamedKey::Backspace,
+        0x31 => NamedKey::Space,
+        0x7b => NamedKey::ArrowLeft,
+        0x7c => NamedKey::ArrowRight,
+        0x7e => NamedKey::ArrowUp,
+        0x7d => NamedKey::ArrowDown,
+        0x73 => NamedKey::Home,
+        0x77 => NamedKey::End,
+        0x74 => NamedKey::PageUp,
+        0x79 => NamedKey::PageDown,
+        _ => return None,
+    };
+    Some(WindowEvent::Key {
+        window_id,
+        key: Key::Named(key),
+        state,
+        modifiers: normalized_modifiers(modifier_flags),
+        text: None,
+    })
+}
+
+fn normalized_modifiers(flags: usize) -> ModifiersState {
+    ModifiersState {
+        shift: flags & (1 << 17) != 0,
+        control: flags & (1 << 18) != 0,
+        alt: flags & (1 << 19) != 0,
+        meta: flags & (1 << 20) != 0,
+    }
 }
 
 fn invert_finite(value: f64) -> f64 {
@@ -905,6 +997,34 @@ mod tests {
                 x: 0.0,
                 y: 0.0,
             }
+        );
+    }
+
+    #[test]
+    fn appkit_named_keys_and_modifiers_are_normalized() {
+        assert_eq!(
+            normalized_key_event(
+                WindowId(7),
+                0x7d,
+                (1 << 17) | (1 << 20),
+                ElementState::Pressed,
+            ),
+            Some(WindowEvent::Key {
+                window_id: WindowId(7),
+                key: Key::Named(NamedKey::ArrowDown),
+                state: ElementState::Pressed,
+                modifiers: ModifiersState {
+                    shift: true,
+                    control: false,
+                    alt: false,
+                    meta: true,
+                },
+                text: None,
+            })
+        );
+        assert_eq!(
+            normalized_key_event(WindowId(7), 0xffff, 0, ElementState::Pressed),
+            None
         );
     }
 }

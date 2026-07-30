@@ -806,6 +806,11 @@ macro_rules! msg_bool {
             ::std::mem::transmute($crate::objc_msgSend as *const ());
         f($receiver, $crate::sel($sel)) != 0
     }};
+    ($receiver:expr, $sel:expr, $a1:expr) => {{
+        let f: unsafe extern "C" fn($crate::Id, $crate::Sel, _) -> ::std::ffi::c_schar =
+            ::std::mem::transmute($crate::objc_msgSend as *const ());
+        f($receiver, $crate::sel($sel), $a1) != 0
+    }};
 }
 
 /// Message dispatch for methods returning an `f64`/Objective-C `double`.
