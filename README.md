@@ -195,6 +195,10 @@ decoders, barcodes, and strict bounds-checked binary parsing.
 The C and C++ lanes compile pure-ISO ports under GCC, Clang, Apple Clang, and
 MSVC with strict conformance flags. See the
 [C/C++ multi-compiler lane](./code/specs/CCPP01-c-cpp-iso-multicompiler-lane.md).
+OCaml is a known emerging implementation lane governed by
+[OCAML01](./code/specs/OCAML01-emerging-lane-contract.md); its packages remain
+outside the established parity denominator until the scaffold, resolver,
+capability, build-tool, package, and three-platform promotion gates pass.
 
 ### Documents, graphics, and UI compilation
 
@@ -258,10 +262,11 @@ See [Engram](./code/specs/engram-app.md) and the
 \-- lessons.md        accumulated engineering failures and durable fixes
 ```
 
-Package implementations currently span C, C++, C#, Dart, Elixir, F#, Go,
-Haskell, Java, Kotlin, Lua, Perl, Python, Ruby, Rust, Swift, TypeScript, and
-WebAssembly. Mosaic and Twig are domain-language buckets; Starlark is used for
-build configuration rather than as an implementation ecosystem.
+Package inventory buckets currently recognize C, C++, C#, Dart, Elixir, F#,
+Go, Haskell, Java, Kotlin, Lua, OCaml, Perl, Python, Ruby, Rust, Swift,
+TypeScript, and WebAssembly. C, C++, and OCaml are emerging rather than
+established parity lanes. Mosaic and Twig are domain-language buckets; Starlark
+is used for build configuration rather than as an implementation ecosystem.
 
 ## Build System
 
@@ -341,6 +346,10 @@ python code/scripts/learning_coverage_report.py --output code/learning/COVERAGE.
 # Test the build tool itself.
 cd code/programs/go/build-tool && go test ./...
 ```
+
+The parity report distinguishes established implementation lanes from emerging
+ones. Emerging OCaml packages are visible in JSON, Markdown, and CSV output but
+do not create missing slots until the explicit promotion contract is completed.
 
 ## CI and Quality Gates
 
