@@ -1,0 +1,26 @@
+% ============================================================================
+% expected-aa-gradient.query.adj — worked applications of the age-predicted normal A-a gradient.
+% ============================================================================
+% The shape a consumer produces once it has decomposed an oxygenation assessment down to the patient's age: it
+% `import`s the grounded formulabook, `observe`s the age, and asks the engine to APPLY the cited
+% expected-A-a-gradient formula. No arithmetic is stated by the consumer; the engine computes each value
+% EXACTLY (over exact rationals) and carries the article's citation as its proof, on the CPU, with zero model
+% calls.
+%
+% Worked case (patient age = 50 years): expected A-a gradient = (50 + 10) / 4 = 60 / 4 = 15 mmHg (the upper
+% limit of normal at 50). Each query fixes one input and asks the engine to recover the other quantity; every
+% answer is exact and the inversion COMPOSES (it recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli expected-aa-gradient.query.adj
+% ============================================================================
+
+import "expected-aa-gradient.adj"
+
+% --- Expected A-a gradient: the upper limit of normal at age 50 (expect 15). -------------------------
+observe patient_age(50)
+? expected_aa_gradient(patient_age)   % expect 15
+
+% --- Inverse: the age at which a gradient of 15 is exactly the upper limit of normal (expect 50). ----
+observe expected_aa_gradient(15)
+? patient_age(expected_aa_gradient)   % expect 50
