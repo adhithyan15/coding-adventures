@@ -3861,6 +3861,41 @@ mod tests {
     }
 
     #[test]
+    fn inspect_converting_data_name_from_to_operands() {
+        // A `PIC X` item as the `from` and/or `to` table is now SUPPORTED — its
+        // translation set is the item's CURRENT storage. FROM item + TO literal:
+        // F = "ABC" maps A→X, B→Y, C→Z on "CAB" → "ZXY".
+        let from_item = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"CAB\".", "01  F  PIC X(3) VALUE \"ABC\"."],
+            &["INSPECT S CONVERTING F TO \"XYZ\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(from_item, "ZXY\n");
+
+        // Both sides items: F = "AEIOU", T = "12345" on "BEAN" → "B21N".
+        let both = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(4) VALUE \"BEAN\".",
+                "01  F  PIC X(5) VALUE \"AEIOU\".",
+                "01  T  PIC X(5) VALUE \"12345\".",
+            ],
+            &["INSPECT S CONVERTING F TO T.", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(both, "B21N\n");
+
+        // `from` item ALIASES the source: INSPECT S CONVERTING S TO T. The table is
+        // built from S's ORIGINAL bytes (leftmost occurrence wins): S = "ABAB",
+        // T = "XYCD" → A→X (index 0), B→Y (index 1) → "XYXY".
+        let alias = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"ABAB\".", "01  T  PIC X(4) VALUE \"XYCD\"."],
+            &["INSPECT S CONVERTING S TO T.", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(alias, "XYXY\n");
+    }
+
+    #[test]
     fn inspect_converting_later_rung_forms_are_clean_errors() {
         // Unequal-length FROM/TO have no well-defined table — a later rung.
         let unequal = run_cobol(&wrap(
@@ -3870,13 +3905,27 @@ mod tests {
         .unwrap_err();
         assert!(matches!(unequal, RuntimeError::Unsupported(_)), "got {unequal:?}");
 
-        // A PIC X item as the `from` operand (not a string literal) is a later rung.
-        let item = run_cobol(&wrap(
-            &["01  S  PIC X(3) VALUE \"ABC\".", "01  F  PIC X(3) VALUE \"ABC\"."],
-            &["INSPECT S CONVERTING F TO \"XYZ\".", "STOP RUN."],
+        // Two data-name tables of UNEQUAL declared width also have no table — a later
+        // rung (the equal-length check now spans item widths).
+        let unequal_items = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(3) VALUE \"ABC\".",
+                "01  F  PIC X(2) VALUE \"AB\".",
+                "01  T  PIC X(3) VALUE \"XYZ\".",
+            ],
+            &["INSPECT S CONVERTING F TO T.", "STOP RUN."],
         ))
         .unwrap_err();
-        assert!(matches!(item, RuntimeError::Unsupported(_)), "got {item:?}");
+        assert!(matches!(unequal_items, RuntimeError::Unsupported(_)), "got {unequal_items:?}");
+
+        // A NUMERIC item as the `from`/`to` table is a later rung — the table must be
+        // an alphanumeric operand.
+        let numeric_item = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"ABC\".", "01  N  PIC 9(3) VALUE 123."],
+            &["INSPECT S CONVERTING N TO \"XYZ\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(numeric_item, RuntimeError::Unsupported(_)), "got {numeric_item:?}");
 
         // A MULTI-character region delimiter restricting the conversion is a later
         // rung (a single-character region delimiter is now supported — see

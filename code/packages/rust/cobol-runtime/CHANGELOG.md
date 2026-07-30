@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.71.0 — INSPECT CONVERTING with a data-name FROM/TO operand — 2026-07-29
+
+- `INSPECT src CONVERTING from TO to [{BEFORE|AFTER} x]` now accepts a **data-name** (`PIC X` item)
+  as the `from` and/or `to` operand — either or both may be an item, mixing freely with a literal on
+  the other side. Previously only string LITERALS were accepted; the hand-written data-name reject in
+  the reader is LIFTED. Byte-identical to the compiler (0.67.0) on ASCII operands.
+- **Unresolved operand carried to exec.** `Stmt::InspectConverting`'s `from`/`to` change from
+  pre-resolved `String`s to a new `ConvertOperand { Literal(String), Item(String) }` enum: a literal is
+  carried resolved, a data-name is carried by NAME and its translation set is read from the item's
+  CURRENT storage at exec time. `read_converting_literal` becomes `read_converting_operand`
+  (`Operand::Lit(Lit::Str)` → `Literal`, `Operand::Ident` → `Item`); the numeric-literal, figurative,
+  and reference-modified rejects stay (a reference-modified `from`/`to` is still a later rung).
+- **Exec resolves up front.** `exec_inspect_converting` resolves each operand to its string BEFORE the
+  translate rewrites the source — a literal is its own characters; a data-name reads
+  `items[by_name[name]].storage` (a new `converting_operand_str` helper, which rejects a numeric/group
+  item as `from`/`to` cleanly, mirroring the compiler). Reading the set up front means a `from`/`to`
+  that ALIASES the source sees its ORIGINAL bytes. The equal-length check, first-occurrence-wins table
+  build, and windowed translate are all UNCHANGED — a data-name's length is its declared width, so the
+  equal-length requirement stays a compile-time-equivalent check spanning item widths.
+- **Co-totality.** Data-name `from`/`to` now accepted on both engines; a numeric/group item as
+  `from`/`to`, an unequal-length pair (now including item widths), a numeric/group source, and a
+  reference-modified/figurative/numeric-literal `from`/`to` are all still rejected identically. A
+  non-ASCII byte in a data-name item's storage is the pre-existing byte-vs-char operand chip (shared
+  with the literal-source scans), not statically rejectable.
+
 ## 0.70.0 — INSPECT REPLACING multi-item list with a LEADING item — 2026-07-29
 
 - A multi-item `INSPECT src REPLACING {ALL|LEADING} a BY x {ALL|LEADING} b BY y …` is now interpreted

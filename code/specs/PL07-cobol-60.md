@@ -1493,9 +1493,15 @@ replace, but **translates** each character through a table:
 `INSPECT source CONVERTING from TO to`.
 
 - `source` is the alphanumeric (`PIC X`) item, **modified in place**.
-- `from` and `to` are **string literals of EQUAL length** (1..N characters). This
-  first rung supports **string literals only** for `from`/`to`; a `PIC X` item as
-  the table (a *variable* table) is a later rung.
+- `from` and `to` are each a **string literal OR a data-name** (`PIC X` item) — a
+  *variable* table — of **EQUAL length**. A data-name's set is its CURRENT storage
+  (its declared width in characters), so the equal-length requirement is checked at
+  compile time whichever mix of literal/item the two sides are. Either or both sides
+  may be an item; a `from`/`to` that ALIASES the source is read BEFORE the rewrite,
+  so it sees the source's ORIGINAL bytes (the oracle reads storage into the table up
+  front; the compiler hoists the loop-invariant `str_index`/`str_slice` reads out of
+  the per-position loop). A numeric/group item as `from`/`to`, and a figurative /
+  reference-modified `from`/`to`, remain later rungs.
 
 Semantics — a per-character **translation table**. For each character of `source`,
 if it equals the character of `from` at some index `k`, it is replaced by the
@@ -1549,9 +1555,12 @@ region delimiter. With no region the lowering is unchanged.
 
 `CONVERTING` is a **standalone** alternative — it is never combined with
 `TALLYING`/`REPLACING` in one statement (a combined form does not parse). Later
-rungs (clean `Unsupported`): an **unequal-length** (or non-ASCII) `from`/`to` pair,
-a `PIC X` **item** / figurative / reference-modified `from`/`to`, a **multi-character**
-region delimiter, and a numeric/group source.
+rungs (clean `Unsupported`): an **unequal-length** `from`/`to` pair (now including
+item widths), a non-ASCII **literal** `from`/`to`, a **numeric/group item** as
+`from`/`to`, a figurative / reference-modified `from`/`to`, a **multi-character**
+region delimiter, and a numeric/group source. A `PIC X` **item** `from`/`to` is now
+supported; a non-ASCII byte in an item's runtime storage is the pre-existing
+byte-vs-char operand chip (the ASCII case is byte-identical on both engines).
 
 Grammar scope tracks the lexer scope below.
 
