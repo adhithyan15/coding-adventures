@@ -1,0 +1,29 @@
+% ============================================================================
+% physiologic-dead-space.query.adj — worked applications of the Bohr physiologic dead space.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a ventilation problem into a tidal volume, an
+% arterial CO2, and a mixed-expired CO2: it `import`s the grounded formulabook, `observe`s the three values,
+% and asks the engine to APPLY the cited Bohr equation. No arithmetic is stated by the consumer; the engine
+% computes each value EXACTLY (over exact rationals) and carries the article's citation as its proof, on the
+% CPU, with zero model calls.
+%
+% Worked case (tidal volume = 500 mL, arterial CO2 = 40 mmHg, mixed-expired CO2 = 20 mmHg):
+% VD = 500 × (40 − 20) / 40 = 500 × 20 / 40 = 250 mL. Each query fixes two of the three inputs and asks the
+% engine to recover another quantity; every answer is exact and the inversions COMPOSE (each recovers
+% exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli physiologic-dead-space.query.adj
+% ============================================================================
+
+import "physiologic-dead-space.adj"
+
+% --- VD: the dead space the tidal volume and CO2 tensions imply (expect 250). ------------------------
+observe tidal_volume(500)
+observe paco2(40)
+observe peco2(20)
+? dead_space_volume(tidal_volume, paco2, peco2)   % expect 250
+
+% --- Inverse: the tidal volume a 250 mL dead space implies at the same CO2 tensions (expect 500). ----
+observe dead_space_volume(250)
+? tidal_volume(dead_space_volume, paco2, peco2)   % expect 500
