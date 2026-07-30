@@ -1045,7 +1045,7 @@ fn main() -> ExitCode {
     // remains the primary, complete artifact (default output); `--explain` is the
     // opt-in human view onto it.
     if explain {
-        println!("{}", explain::explain(&lowered.kb));
+        println!("{}", explain::explain(&lowered.kb, &diff));
         return ExitCode::SUCCESS;
     }
 

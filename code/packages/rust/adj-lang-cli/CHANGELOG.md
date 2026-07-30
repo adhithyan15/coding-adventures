@@ -1,5 +1,42 @@
 # Changelog
 
+## [0.26.0] — 2026-07-30 — RS-4 PR-E2: `--explain` inference + adjudication surfaces
+
+Extends the `--explain` renderer (ADJ-REASON-MATH §E.8) from the derivations
+surface to the **inference** and **adjudication** surfaces, so a *differential*
+query — not just an arithmetic one — explains itself. Still a projection only: it
+reads the decided differential (`Differential`) the engine already produced and
+re-runs nothing.
+
+```
+Inference for bacterial:
+  prior on bacterial = logit -0.847 [source "x" trust empirical]
+  bacterial contributes logit 2.708 via [source "Straus 2006" trust authoritative] [evidence: [unattributed]]
+
+Decision:
+  bacterial — posterior 0.865 (logit 1.861)
+  => bacterial (determinate; posterior 0.865, margin 0.865; trust empirical)
+```
+
+- **Inference** — the ordered proof steps per hypothesis: prior, likelihood-ratio
+  contributions (each showing the CLAUSE that licensed it *and* the observed
+  evidence it consumed), joint interactions, predicate-gated contributions (the
+  CPU comparison `observed <op> threshold`), rule-derived premises, and
+  negation-as-failure. The walk is **total** over `DerivationOrigin` (a new kind
+  ⇒ compile error), mirroring the JSON `trace_steps_json`.
+- **Adjudication** — the ranked hypotheses with their posteriors, and the
+  comparative decision: `determinate` with its margin, or a `Kickback` rendered as
+  the honest "cannot commit" verdict with its reason (the differential's own
+  abstention). P3: the leader shows the trust tier propagated as the `min`
+  (weakest link) over the graded knowledge — prior, rules, and contribution
+  clauses — it relied on.
+- A pure computation (a `let` with no differential evidence) still renders
+  derivations-only; the JSON trail is byte-for-byte unchanged when `--explain` is
+  absent.
+
+New: `tests/rs4e2_explain_inference_e2e.rs` (4 tests). Extends `src/explain.rs`;
+touches `src/main.rs` (threads the decided `diff` into `explain`).
+
 ## [0.25.0] — 2026-07-30 — RS-4 PR-E1: `--explain` renderer (derivations surface)
 
 Adds the human-readable *"explain its reasoning"* view — `adj-lang-cli --explain <prog.adj>` —
