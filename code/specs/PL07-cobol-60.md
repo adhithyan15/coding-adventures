@@ -419,7 +419,8 @@ stop_stmt          = "STOP" ( "RUN" | NUMBER ) ;
 token. They coexist because keyword promotion only rewrites bare `NAME` words,
 while a quoted `"…"`/`'…'` always lexes as the literal token regardless of the
 keyword list. The **first rung** implements `STRING s… DELIMITED BY SIZE INTO t`:
-each sending field (an alphanumeric item or a string/numeric literal) is taken in
+each sending field (an alphanumeric item, a string/numeric literal, or — see the
+figurative rung below — a figurative constant SPACE/ZERO) is taken in
 FULL (`DELIMITED BY SIZE`), the pieces are concatenated left-to-right, and the
 result is stored LEFT-JUSTIFIED into the alphanumeric receiver `t`, truncated at
 `t`'s width. Per ANSI-85, STRING writes only what it produced and **does not
@@ -536,6 +537,21 @@ this rung targets (accepted programs emit byte-identical output). A multi-byte c
 inside or after the window is the PRE-EXISTING refmod byte-vs-char chip, shared with
 `DISPLAY`/`MOVE`-source and not new to STRING; positive tests keep any multi-byte char
 strictly OUTSIDE the window.
+
+**Figurative-constant sending-field rung (now implemented).** A STRING sending field
+may be a **figurative constant** SPACE or ZERO — `STRING SPACE "X" DELIMITED BY SIZE
+INTO t` → `" X"`. It is taken as its **single-character image**: SPACE→`" "` (0x20),
+ZERO→`"0"` (0x30), reducing to the existing string-literal sending-field path (the
+oracle's `string_source_chars` maps `Fig::Space`/`Fig::Zero` to the 1-char string; the
+compiler's `string_source` emits a 1-char `str_const` exactly like the `Src::Str` arm).
+Every spelling folds identically — SPACE/SPACES, ZERO/ZEROS/ZEROES. Once produced, the
+1-char image drops into the concatenation, the delimiter prefix-scan, the receiver
+overlay, and `WITH POINTER` UNCHANGED. Both images are ASCII, and `Fig` is closed at
+{Space, Zero}, so no non-ASCII figurative can reach the path — the non-ASCII
+sending-field-under-a-delimiter guard passes trivially. This is symmetric to the
+`INSPECT … CONVERTING` figurative rung. Still deferred on the figurative side: a
+**numeric item**, a **group item**, and a **computed (data-name) index** reference
+modification as a sending field remain later rungs, rejected identically on both engines.
 
 Still deferred as clean "later rung" errors: a **multi-character** delimiter, a
 non-ASCII delimiter, a non-ASCII literal sending field under a delimiter, a

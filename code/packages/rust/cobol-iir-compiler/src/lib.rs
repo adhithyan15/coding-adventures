@@ -2037,8 +2037,10 @@ impl<'a> Compiler<'a> {
     /// A `STRING` sending field lowered to a `(register, length)` pair. An
     /// alphanumeric item contributes its whole fixed-width slot; a string literal
     /// its text; a numeric literal its lexed source digits verbatim (the same text
-    /// the oracle concatenates). A numeric item and a figurative constant as a
-    /// sending field are later rungs.
+    /// the oracle concatenates). A figurative constant SPACE/ZERO lowers to its
+    /// single-character image — SPACE→`" "`, ZERO→`"0"` — a 1-char `str_const`
+    /// reducing to the string-literal path. A numeric item as a sending field is a
+    /// later rung.
     ///
     /// A reference-modification sending field — `WS(start:len)` — lowers to the
     /// slice register the shared [`Self::ref_mod_slice`] emits (the same `str_slice`
@@ -2072,10 +2074,18 @@ impl<'a> Compiler<'a> {
                 self.emit("str_const", Some(&reg), vec![Operand::Str(s)], "str");
                 Ok((reg, len))
             }
-            Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
-                Err(CompileError::Unsupported(
-                    "a figurative constant as a STRING sending field is a later rung".into(),
-                ))
+            // SPACE→" ", ZERO→"0" reduce to the single-char string-literal
+            // sending-field path (mirrors the oracle's `string_source_chars`);
+            // both images are ASCII so the non-ASCII guard passes unchanged.
+            Operandy::Literal(Src::Space) => {
+                let reg = self.fresh("_slit");
+                self.emit("str_const", Some(&reg), vec![Operand::Str(" ".into())], "str");
+                Ok((reg, 1))
+            }
+            Operandy::Literal(Src::Zero) => {
+                let reg = self.fresh("_slit");
+                self.emit("str_const", Some(&reg), vec![Operand::Str("0".into())], "str");
+                Ok((reg, 1))
             }
             Operandy::RefMod { base, start, len } => {
                 // Reject a computed (data-name) index BEFORE emitting any slice code
