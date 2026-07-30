@@ -42,7 +42,7 @@ use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotType,
 };
-use mosstyle_compiler::StyleDef;
+use mosstyle_compiler::{StyleDef, StyleProp, StyleTransition};
 
 // =====================================================================
 // Public API
@@ -650,6 +650,15 @@ struct EmitContext<'a> {
     /// handler, etc.) for `emit_xaml` to splice into the open tag.
     /// `None` for the standard UserControl root.
     root_extra_attrs: Option<String>,
+    /// Property-scoped WinUI visual-state groups collected from native
+    /// Host* controls that opt into MSL states through `state-when-*`.
+    ///
+    /// The groups are emitted on the generated root after the layout walk,
+    /// where they can target each control's deterministic `x:Name`.
+    visual_state_groups: Vec<XamlVisualStateGroup>,
+    /// Monotonic suffix used to keep generated VisualState names unique in
+    /// the root XAML namescope.
+    visual_state_counter: u32,
 }
 
 impl<'a> EmitContext<'a> {
@@ -683,6 +692,8 @@ impl<'a> EmitContext<'a> {
             used_xmlns: std::collections::BTreeMap::new(),
             slot_aliases: std::collections::HashMap::new(),
             root_extra_attrs: None,
+            visual_state_groups: Vec::new(),
+            visual_state_counter: 0,
         }
     }
 
@@ -735,16 +746,59 @@ impl<'a> EmitContext<'a> {
             self.helpers.push(helper);
         }
     }
+
+    fn next_visual_state_id(&mut self) -> u32 {
+        self.visual_state_counter += 1;
+        self.visual_state_counter
+    }
 }
 
 // =====================================================================
 // Part-style map (mosstyle â†’ flat property fragments)
 // =====================================================================
 
-/// A part-style entry: the joined CSS fragment for one `part` block's
-/// base properties. State blocks are deferred to a later PR; today only
-/// the base goes into the map.
-type PartStyleMap = std::collections::HashMap<String, String>;
+#[derive(Debug, Clone)]
+struct PartStateStyle {
+    props: Vec<StyleProp>,
+    transitions: Vec<StyleTransition>,
+}
+
+/// A part-style entry keeps the already-lowered base attribute fragment
+/// together with the structured MSL state and transition data. Base-only
+/// consumers remain a cheap string lookup; native controls can additionally
+/// lower `state-when-*` predicates to WinUI VisualStates.
+#[derive(Debug, Clone)]
+struct PartStyleEntry {
+    base_fragment: String,
+    transitions: Vec<StyleTransition>,
+    states: std::collections::HashMap<String, PartStateStyle>,
+}
+
+type PartStyleMap = std::collections::HashMap<String, PartStyleEntry>;
+
+#[derive(Debug, Clone)]
+struct XamlVisualState {
+    name: String,
+    trigger_value: String,
+    value: String,
+    transition: Option<StyleTransition>,
+}
+
+#[derive(Debug, Clone)]
+struct PendingXamlVisualState {
+    trigger_value: String,
+    value: String,
+    transition: Option<StyleTransition>,
+}
+
+#[derive(Debug, Clone)]
+struct XamlVisualStateGroup {
+    normal_name: String,
+    target_name: String,
+    property: String,
+    base_transition: Option<StyleTransition>,
+    states: Vec<XamlVisualState>,
+}
 
 /// Walk the `StyleDef` and produce a flat `part_name -> css_fragment`
 /// map. The fragment is a comma-separated `key: "value"` list ready to
@@ -752,13 +806,311 @@ type PartStyleMap = std::collections::HashMap<String, String>;
 fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
     let mut out = PartStyleMap::with_capacity(style.parts.len());
     for part in &style.parts {
-        let frag = build_style_fragment(&part.base);
-        if !frag.is_empty() {
-            out.insert(part.name.clone(), frag);
+        let base_fragment = build_style_fragment(&part.base);
+        let states = part
+            .states
+            .iter()
+            .map(|state| {
+                (
+                    state.state.clone(),
+                    PartStateStyle {
+                        props: state.props.clone(),
+                        transitions: state.transitions.clone(),
+                    },
+                )
+            })
+            .collect();
+        if !base_fragment.is_empty() || !part.transitions.is_empty() || !part.states.is_empty() {
+            out.insert(
+                part.name.clone(),
+                PartStyleEntry {
+                    base_fragment,
+                    transitions: part.transitions.clone(),
+                    states,
+                },
+            );
         }
-        // State blocks not yet wired â€” see CHANGELOG known-limitations.
     }
     out
+}
+
+/// Register MSL state overrides for one native WinUI control.
+///
+/// Each property gets its own VisualStateGroup. This is deliberate:
+/// `VisualTransition.GeneratedDuration` applies to every changed property in
+/// a group, while MSL transitions are property-scoped. Isolating properties
+/// preserves that contract and lets a background fade and opacity change use
+/// different durations or easing curves.
+///
+/// Template-local state predicates are left for a follow-up. A group emitted
+/// on the component root cannot target an element inside an ItemsRepeater
+/// DataTemplate namescope, so silently producing such a group would compile
+/// but never drive the row control.
+fn register_host_visual_states(
+    node: &LayoutNode,
+    xaml_tag: &str,
+    target_name: &str,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) {
+    if !ctx.for_scope.is_empty() {
+        return;
+    }
+    let Some(part_name) = node.part_name.as_deref() else {
+        return;
+    };
+    let Some(part) = part_styles.get(part_name) else {
+        return;
+    };
+
+    // XAML gives the first active trigger precedence. React and SwiftUI give
+    // the last declared `state-when-*` layer precedence, so reverse declaration
+    // order before materialising the VisualStates.
+    let mut state_layers = Vec::new();
+    for prop in node.props.iter().rev() {
+        let Some(state_name) = prop.name.strip_prefix("state-when-") else {
+            continue;
+        };
+        let Some(state_style) = part.states.get(state_name) else {
+            continue;
+        };
+        let Some(trigger_value) = lower_state_trigger_value(&prop.value, ctx) else {
+            continue;
+        };
+        state_layers.push((state_name, trigger_value, state_style));
+    }
+
+    let mut by_property: std::collections::BTreeMap<String, Vec<PendingXamlVisualState>> =
+        std::collections::BTreeMap::new();
+    for (_state_name, trigger_value, state_style) in state_layers {
+        for prop in &state_style.props {
+            let Some(property) = css_property_to_xaml_setter(&prop.name) else {
+                continue;
+            };
+            if !host_control_supports_state_property(xaml_tag, &property) {
+                continue;
+            }
+            let Some(value) = translate_xaml_value(&property, &prop.value) else {
+                continue;
+            };
+            let transition = transition_for_xaml_property(&state_style.transitions, &property);
+            by_property
+                .entry(property)
+                .or_default()
+                .push(PendingXamlVisualState {
+                    trigger_value: trigger_value.clone(),
+                    value,
+                    transition: transition.cloned(),
+                });
+        }
+    }
+
+    for (property, states) in by_property {
+        let group_id = ctx.next_visual_state_id();
+        let normal_name = format!("MosaicState{group_id}Normal");
+        let states = states
+            .into_iter()
+            .enumerate()
+            .map(|(state_index, pending)| XamlVisualState {
+                name: format!("MosaicState{group_id}State{state_index}"),
+                trigger_value: pending.trigger_value,
+                value: pending.value,
+                transition: pending.transition,
+            })
+            .collect();
+        ctx.visual_state_groups.push(XamlVisualStateGroup {
+            normal_name,
+            target_name: target_name.to_string(),
+            property: property.clone(),
+            base_transition: transition_for_xaml_property(&part.transitions, &property).cloned(),
+            states,
+        });
+    }
+}
+
+fn lower_state_trigger_value(value: &LayoutPropValue, ctx: &mut EmitContext<'_>) -> Option<String> {
+    match value {
+        LayoutPropValue::SlotRef(slot) => Some(format!(
+            "{{x:Bind {}, Mode=OneWay}}",
+            ctx.slot_xbind_path(slot)
+        )),
+        LayoutPropValue::Keyword(k) if k == "true" => Some("True".to_string()),
+        LayoutPropValue::Keyword(k) if k == "false" => Some("False".to_string()),
+        LayoutPropValue::Expr(src) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) | ExprLowering::Helper(path) => {
+                Some(format!("{{x:Bind {path}, Mode=OneWay}}"))
+            }
+            ExprLowering::Unsupported(_) => None,
+        },
+        _ => None,
+    }
+}
+
+fn transition_for_xaml_property<'a>(
+    transitions: &'a [StyleTransition],
+    property: &str,
+) -> Option<&'a StyleTransition> {
+    transitions.iter().rev().find(|transition| {
+        css_property_to_xaml_setter(&transition.property).as_deref() == Some(property)
+    })
+}
+
+/// Conservative intersection shared by WinUI Control subclasses emitted for
+/// Mosaic Host primitives. Properties outside this set are skipped instead of
+/// generating a Setter that XamlCompiler rejects for one control type.
+fn host_control_supports_state_property(xaml_tag: &str, property: &str) -> bool {
+    matches!(
+        property,
+        "Background"
+            | "Foreground"
+            | "FontFamily"
+            | "FontSize"
+            | "FontWeight"
+            | "Padding"
+            | "Margin"
+            | "Width"
+            | "Height"
+            | "MaxWidth"
+            | "MaxHeight"
+            | "MinWidth"
+            | "MinHeight"
+            | "BorderThickness"
+            | "BorderBrush"
+            | "CornerRadius"
+            | "Opacity"
+            | "HorizontalAlignment"
+            | "VerticalAlignment"
+    ) || (property == "TextAlignment" && matches!(xaml_tag, "TextBox" | "NumberBox"))
+}
+
+fn xaml_transition_duration(duration: &str) -> Option<String> {
+    let duration = duration.trim();
+    let seconds = if let Some(milliseconds) = duration.strip_suffix("ms") {
+        milliseconds.trim().parse::<f64>().ok()? / 1000.0
+    } else {
+        duration.strip_suffix('s')?.trim().parse::<f64>().ok()?
+    };
+    if !seconds.is_finite() || seconds < 0.0 {
+        return None;
+    }
+    let mut rendered = format!("{seconds:.6}");
+    while rendered.contains('.') && rendered.ends_with('0') {
+        rendered.pop();
+    }
+    if rendered.ends_with('.') {
+        rendered.pop();
+    }
+    Some(format!("0:0:{rendered}"))
+}
+
+fn emit_xaml_easing(transition: &StyleTransition, indent: usize) -> String {
+    let easing = transition.easing.trim();
+    if easing == "linear" {
+        return String::new();
+    }
+    let (element, mode) = match easing {
+        "ease-in" => ("QuadraticEase", "EaseIn"),
+        "ease-out" => ("QuadraticEase", "EaseOut"),
+        "ease" | "ease-in-out" => ("QuadraticEase", "EaseInOut"),
+        // WinUI's XAML EasingFunctionBase has no arbitrary cubic-bezier
+        // implementation. CubicEase is the closest native generated-
+        // transition curve; exact control points require the Composition API.
+        value if value.starts_with("cubic-bezier(") => ("CubicEase", "EaseInOut"),
+        _ => return String::new(),
+    };
+    let pad = " ".repeat(indent);
+    format!(
+        "{pad}<VisualTransition.GeneratedEasingFunction>\n\
+         {pad}    <{element} EasingMode=\"{mode}\"/>\n\
+         {pad}</VisualTransition.GeneratedEasingFunction>\n"
+    )
+}
+
+fn emit_visual_transition(transition: &StyleTransition, to: Option<&str>, indent: usize) -> String {
+    let Some(duration) = xaml_transition_duration(&transition.duration) else {
+        return String::new();
+    };
+    let pad = " ".repeat(indent);
+    let to_attr = to.map(|name| format!(" To=\"{name}\"")).unwrap_or_default();
+    let easing = emit_xaml_easing(transition, indent + 4);
+    if easing.is_empty() {
+        return format!("{pad}<VisualTransition{to_attr} GeneratedDuration=\"{duration}\"/>\n");
+    }
+    format!(
+        "{pad}<VisualTransition{to_attr} GeneratedDuration=\"{duration}\">\n\
+         {easing}\
+         {pad}</VisualTransition>\n"
+    )
+}
+
+fn emit_visual_state_groups(groups: &[XamlVisualStateGroup], indent: usize) -> String {
+    if groups.is_empty() {
+        return String::new();
+    }
+    let pad = " ".repeat(indent);
+    let pad2 = " ".repeat(indent + 4);
+    let pad3 = " ".repeat(indent + 8);
+    let pad4 = " ".repeat(indent + 12);
+    let mut out = String::new();
+    writeln!(out, "{pad}<VisualStateManager.VisualStateGroups>").unwrap();
+    for group in groups {
+        writeln!(out, "{pad2}<VisualStateGroup>").unwrap();
+        let has_transitions =
+            group.base_transition.is_some() || group.states.iter().any(|s| s.transition.is_some());
+        if has_transitions {
+            writeln!(out, "{pad3}<VisualStateGroup.Transitions>").unwrap();
+            if let Some(base_transition) = &group.base_transition {
+                out.push_str(&emit_visual_transition(base_transition, None, indent + 12));
+            }
+            for state in &group.states {
+                if let Some(transition) = &state.transition {
+                    out.push_str(&emit_visual_transition(
+                        transition,
+                        Some(&state.name),
+                        indent + 12,
+                    ));
+                }
+            }
+            writeln!(out, "{pad3}</VisualStateGroup.Transitions>").unwrap();
+        }
+        writeln!(out, "{pad3}<VisualState x:Name=\"{}\"/>", group.normal_name).unwrap();
+        for state in &group.states {
+            writeln!(out, "{pad3}<VisualState x:Name=\"{}\">", state.name).unwrap();
+            writeln!(out, "{pad4}<VisualState.StateTriggers>").unwrap();
+            writeln!(
+                out,
+                "{pad4}    <StateTrigger IsActive=\"{}\"/>",
+                escape_xaml_attr(&state.trigger_value)
+            )
+            .unwrap();
+            writeln!(out, "{pad4}</VisualState.StateTriggers>").unwrap();
+            writeln!(out, "{pad4}<VisualState.Setters>").unwrap();
+            let target = xaml_visual_state_target(&group.target_name, &group.property);
+            writeln!(
+                out,
+                "{pad4}    <Setter Target=\"{}\" Value=\"{}\"/>",
+                target,
+                escape_xaml_attr(&state.value)
+            )
+            .unwrap();
+            writeln!(out, "{pad4}</VisualState.Setters>").unwrap();
+            writeln!(out, "{pad3}</VisualState>").unwrap();
+        }
+        writeln!(out, "{pad2}</VisualStateGroup>").unwrap();
+    }
+    writeln!(out, "{pad}</VisualStateManager.VisualStateGroups>").unwrap();
+    out
+}
+
+/// Brush-valued control properties must target the brush's Color dependency
+/// property for WinUI to generate an interpolating color animation. Replacing
+/// the whole Brush object would make the state change correctly but discretely.
+fn xaml_visual_state_target(target_name: &str, property: &str) -> String {
+    if matches!(property, "Background" | "Foreground" | "BorderBrush") {
+        format!("{target_name}.(Control.{property}).(SolidColorBrush.Color)")
+    } else {
+        format!("{target_name}.{property}")
+    }
 }
 
 fn build_style_fragment(props: &[mosstyle_compiler::StyleProp]) -> String {
@@ -1087,6 +1439,7 @@ fn css_property_to_xaml_setter(name: &str) -> Option<String> {
         // no diagnostic). Caught by the toolkit Button + Alert + Badge
         // demo (#4548).
         "border-radius" => Some("CornerRadius".to_string()),
+        "opacity" => Some("Opacity".to_string()),
         // X5: `text-align` maps to WinUI's `TextAlignment` (a
         // `TextBlock` enum property), NOT `TextAlign`. The value side
         // is PascalCased by `translate_xaml_value`
@@ -1153,6 +1506,7 @@ fn is_container_style_attr(setter: &str) -> bool {
             | "MinHeight"
             | "HorizontalAlignment"
             | "VerticalAlignment"
+            | "Opacity"
     )
 }
 
@@ -1169,6 +1523,7 @@ fn is_stack_panel_style_attr(setter: &str) -> bool {
             | "MinHeight"
             | "HorizontalAlignment"
             | "VerticalAlignment"
+            | "Opacity"
     )
 }
 
@@ -1381,7 +1736,18 @@ fn emit_xaml(
     } else {
         emit_xaml_node(root, 4, part_styles, ctx)?
     };
-    out.push_str(&body);
+    if ctx.visual_state_groups.is_empty() {
+        out.push_str(&body);
+    } else {
+        // WinUI only evaluates declarative StateTriggers automatically when
+        // VisualStateGroups are attached to the root's first visual child.
+        // A transparent Grid provides that stable attachment point without
+        // changing the layout contract.
+        writeln!(out, "    <Grid>").unwrap();
+        out.push_str(&emit_visual_state_groups(&ctx.visual_state_groups, 8));
+        out.push_str(&indent_xaml_fragment(&body, 4));
+        writeln!(out, "    </Grid>").unwrap();
+    }
 
     // ---- Locate the root open tag for splicing ----
     //
@@ -1441,6 +1807,20 @@ fn emit_xaml(
     writeln!(out).unwrap();
     writeln!(out, "</{root_tag}>").unwrap();
     Ok(out)
+}
+
+fn indent_xaml_fragment(fragment: &str, extra_spaces: usize) -> String {
+    let pad = " ".repeat(extra_spaces);
+    let mut out = String::with_capacity(fragment.len() + extra_spaces * 4);
+    for line in fragment.split_inclusive('\n') {
+        if line.trim().is_empty() {
+            out.push_str(line);
+        } else {
+            out.push_str(&pad);
+            out.push_str(line);
+        }
+    }
+    out
 }
 
 /// Lower one moslayout node and its descendants to XAML, indented by
@@ -1613,10 +1993,12 @@ fn emit_xaml_single_content_children(
 /// or an empty string when no style applies.
 fn part_style_attr(node: &LayoutNode, part_styles: &PartStyleMap) -> String {
     if let Some(part) = node.part_name.as_deref() {
-        if let Some(frag) = part_styles.get(part) {
+        if let Some(entry) = part_styles.get(part) {
             // Each fragment is space-separated `Key="Value"` pairs ready
             // to splice straight into the opening tag.
-            return format!(" {frag}");
+            if !entry.base_fragment.is_empty() {
+                return format!(" {}", entry.base_fragment);
+            }
         }
     }
     String::new()
@@ -1698,7 +2080,7 @@ fn partition_box_style(
     part_styles: &PartStyleMap,
 ) -> (String, Vec<(String, String)>) {
     let frag = match part.and_then(|p| part_styles.get(p)) {
-        Some(f) => f.as_str(),
+        Some(entry) => entry.base_fragment.as_str(),
         None => return (String::new(), Vec::new()),
     };
     let mut container = String::new();
@@ -1722,7 +2104,7 @@ fn partition_stack_panel_style(
     part_styles: &PartStyleMap,
 ) -> (String, String, Vec<(String, String)>) {
     let frag = match part.and_then(|p| part_styles.get(p)) {
-        Some(f) => f.as_str(),
+        Some(entry) => entry.base_fragment.as_str(),
         None => return (String::new(), String::new(), Vec::new()),
     };
     let mut wrapper = String::new();
@@ -4384,6 +4766,7 @@ fn emit_host_input(
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
     let x_name = host_x_name(node, "HostInput", ctx);
+    register_host_visual_states(node, "TextBox", &x_name, part_styles, ctx);
 
     // -- Build the attribute set --
     let mut attrs = String::new();
@@ -4515,6 +4898,7 @@ fn emit_host_button(
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
     let x_name = host_x_name(node, "HostButton", ctx);
+    register_host_visual_states(node, "Button", &x_name, part_styles, ctx);
 
     let mut attrs = String::new();
 
@@ -4697,6 +5081,7 @@ fn emit_host_checkbox(
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
     let x_name = host_x_name(node, "HostCheckbox", ctx);
+    register_host_visual_states(node, "CheckBox", &x_name, part_styles, ctx);
 
     let mut attrs = String::new();
 
@@ -4847,6 +5232,7 @@ fn emit_host_radio(
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
     let x_name = host_x_name(node, "HostRadio", ctx);
+    register_host_visual_states(node, "RadioButton", &x_name, part_styles, ctx);
 
     let mut attrs = String::new();
 
@@ -5014,6 +5400,12 @@ fn emit_host_link(
     let x_name = host_x_name(node, "HostLink", ctx);
 
     let external_false = matches!(find_prop_value(node, "external"), Some(LayoutPropValue::Keyword(k)) if k == "false");
+    let xaml_tag = if external_false {
+        "Button"
+    } else {
+        "HyperlinkButton"
+    };
+    register_host_visual_states(node, xaml_tag, &x_name, part_styles, ctx);
     let on_activate = match find_prop_value(node, "onActivate") {
         Some(LayoutPropValue::EmitRef(s)) => Some(s.as_str()),
         _ => None,
@@ -5168,6 +5560,7 @@ fn emit_host_number_input(
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
     let x_name = host_x_name(node, "HostNumberInput", ctx);
+    register_host_visual_states(node, "NumberBox", &x_name, part_styles, ctx);
 
     let mut attrs = String::new();
 
@@ -5899,7 +6292,7 @@ mod tests {
     use super::*;
     use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp};
     use mosmodel_compiler::{EmitParam, ListInnerType, MosmodelComponent, SlotDecl, SlotType};
-    use mosstyle_compiler::{PartStyle, StyleDef, StyleProp};
+    use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp, StyleTransition};
 
     // â”€â”€ helpers â”€â”€
 
@@ -10916,5 +11309,321 @@ mod tests {
             "no px should survive, got:\n{}",
             r.xaml
         );
+    }
+
+    fn transition(property: &str, duration: &str, easing: &str) -> StyleTransition {
+        StyleTransition {
+            property: property.to_string(),
+            duration: duration.to_string(),
+            easing: easing.to_string(),
+        }
+    }
+
+    fn styled_host_button(state_props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: "HostButton".to_string(),
+            part_name: Some("button".to_string()),
+            props: state_props,
+            children: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn transition_values_lower_to_winui_duration_and_easing() {
+        assert_eq!(
+            xaml_transition_duration("80ms").as_deref(),
+            Some("0:0:0.08")
+        );
+        assert_eq!(xaml_transition_duration("1s").as_deref(), Some("0:0:1"));
+        assert_eq!(
+            xaml_transition_duration("150ms").as_deref(),
+            Some("0:0:0.15")
+        );
+        assert!(xaml_transition_duration("fast").is_none());
+
+        let ease_out = emit_xaml_easing(&transition("opacity", "150ms", "ease-out"), 0);
+        assert!(ease_out.contains("<QuadraticEase EasingMode=\"EaseOut\"/>"));
+        let linear = emit_xaml_easing(&transition("opacity", "150ms", "linear"), 0);
+        assert!(linear.is_empty());
+        let cubic = emit_xaml_easing(
+            &transition("opacity", "150ms", "cubic-bezier(0.34, 1.56, 0.64, 1)"),
+            0,
+        );
+        assert!(cubic.contains("<CubicEase EasingMode=\"EaseInOut\"/>"));
+    }
+
+    #[test]
+    fn literal_state_predicate_lowers_to_literal_trigger() {
+        let c = component("AlwaysSelected", vec![], vec![]);
+        let l = layout_with_root(
+            "AlwaysSelected",
+            styled_host_button(vec![LayoutProp {
+                name: "state-when-selected".to_string(),
+                value: LayoutPropValue::Keyword("true".to_string()),
+            }]),
+        );
+        let s = StyleDef {
+            component_name: "AlwaysSelected".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: Vec::new(),
+                transitions: Vec::new(),
+                states: vec![StateStyle {
+                    state: "selected".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.8".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("<StateTrigger IsActive=\"True\"/>"),
+            "literal predicates must not become x:Bind paths:\n{}",
+            r.xaml
+        );
+        assert!(!r.xaml.contains("x:Bind True"), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn host_control_state_and_base_transition_lower_end_to_end() {
+        let c = component(
+            "AnimatedButton",
+            vec![slot("selected", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "AnimatedButton",
+            styled_host_button(vec![LayoutProp {
+                name: "state-when-selected".to_string(),
+                value: LayoutPropValue::SlotRef("selected".to_string()),
+            }]),
+        );
+        let s = StyleDef {
+            component_name: "AnimatedButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "background".to_string(),
+                    value: "#202020".to_string(),
+                }],
+                transitions: vec![transition("background", "80ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "selected".to_string(),
+                    props: vec![StyleProp {
+                        name: "background".to_string(),
+                        value: "#264f78".to_string(),
+                    }],
+                    transitions: vec![],
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("<Button x:Name=\"Button\" Background=\"#202020\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<VisualStateManager.VisualStateGroups>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("    <Grid>\n        <VisualStateManager.VisualStateGroups>"),
+            "WinUI StateTriggers must live on the root's first visual child:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<StateTrigger IsActive=\"{x:Bind Selected, Mode=OneWay}\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "<Setter Target=\"Button.(Control.Background).(SolidColorBrush.Color)\" Value=\"#264f78\"/>"
+            ),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<VisualTransition GeneratedDuration=\"0:0:0.08\">"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<QuadraticEase EasingMode=\"EaseOut\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn state_local_transition_overrides_entry_and_base_handles_exit() {
+        let c = component(
+            "FadeButton",
+            vec![slot("disabled", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "FadeButton",
+            styled_host_button(vec![LayoutProp {
+                name: "state-when-disabled".to_string(),
+                value: LayoutPropValue::SlotRef("disabled".to_string()),
+            }]),
+        );
+        let s = StyleDef {
+            component_name: "FadeButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "1".to_string(),
+                }],
+                transitions: vec![transition("opacity", "150ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "disabled".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.4".to_string(),
+                    }],
+                    transitions: vec![transition("opacity", "300ms", "linear")],
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(r.xaml.contains("Opacity=\"1\""), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml
+                .contains("<VisualTransition GeneratedDuration=\"0:0:0.15\">"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("GeneratedDuration=\"0:0:0.3\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<Setter Target=\"Button.Opacity\" Value=\"0.4\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn last_declared_state_keeps_cross_backend_precedence() {
+        let c = component(
+            "PriorityButton",
+            vec![
+                slot("selected", SlotType::Bool, true),
+                slot("disabled", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let l = layout_with_root(
+            "PriorityButton",
+            styled_host_button(vec![
+                LayoutProp {
+                    name: "state-when-selected".to_string(),
+                    value: LayoutPropValue::SlotRef("selected".to_string()),
+                },
+                LayoutProp {
+                    name: "state-when-disabled".to_string(),
+                    value: LayoutPropValue::SlotRef("disabled".to_string()),
+                },
+            ]),
+        );
+        let s = StyleDef {
+            component_name: "PriorityButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: Vec::new(),
+                transitions: Vec::new(),
+                states: vec![
+                    StateStyle {
+                        state: "selected".to_string(),
+                        props: vec![StyleProp {
+                            name: "opacity".to_string(),
+                            value: "0.8".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                    StateStyle {
+                        state: "disabled".to_string(),
+                        props: vec![StyleProp {
+                            name: "opacity".to_string(),
+                            value: "0.4".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                ],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        let disabled = r
+            .xaml
+            .find("IsActive=\"{x:Bind Disabled")
+            .expect("disabled trigger");
+        let selected = r
+            .xaml
+            .find("IsActive=\"{x:Bind Selected")
+            .expect("selected trigger");
+        assert!(
+            disabled < selected,
+            "last state-when declaration must be first for WinUI trigger precedence:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn template_local_host_state_is_not_emitted_at_root_namescope() {
+        let mut ctx = EmitContext::new("Demo", &[], &[]);
+        ctx.for_scope.push(ForBinding {
+            as_name: "row".to_string(),
+            index_name: Some("r".to_string()),
+            element_type: "string".to_string(),
+            vm_class: "Demo_RowVm".to_string(),
+            projection_property: None,
+        });
+        let node = styled_host_button(vec![LayoutProp {
+            name: "state-when-selected".to_string(),
+            value: LayoutPropValue::Expr("r == 0".to_string()),
+        }]);
+        let style = StyleDef {
+            component_name: "Demo".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: Vec::new(),
+                transitions: Vec::new(),
+                states: vec![StateStyle {
+                    state: "selected".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.8".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+        register_host_visual_states(
+            &node,
+            "Button",
+            "Button",
+            &build_part_style_map(&style),
+            &mut ctx,
+        );
+        assert!(ctx.visual_state_groups.is_empty());
     }
 }

@@ -7,10 +7,11 @@ drop into a Windows App SDK project.
 
 See `code/specs/mosaic-emit-xaml.md` for the design.
 
-## Status: PR-1 — scaffold + simple kernel primitives
+## Status
 
-This first PR implements the scaffold and the **nine simple kernel
-primitives** from UI29 §2.1:
+The backend covers the structural kernel, control flow, native Host controls,
+component references, event dispatch, project-shell generation, and
+mosstyle base styling:
 
 | UI29 primitive | XAML lowering |
 |---|---|
@@ -23,22 +24,36 @@ primitives** from UI29 §2.1:
 | `Spacer`    | `<Rectangle/>` glue |
 | `Divider`   | `<Border BorderThickness="..." />` |
 | `Icon`      | `<FontIcon Glyph="..."/>` |
+| `If` / `Else` | `<ContentControl>` with bound visibility |
+| `For` | `<ItemsRepeater>` with generated row view-models |
+| `HostInput` | `<TextBox>` |
+| `HostButton` | `<Button>` |
+| `HostCheckbox` | `<CheckBox>` |
+| `HostRadio` | `<RadioButton>` |
+| `HostLink` | `<HyperlinkButton>` or routed `<Button>` |
+| `HostNumberInput` | `<NumberBox>` |
+| `HostScroll` | `<ScrollViewer>` |
+| `HostTable` | structural `<Grid>` |
+| `HostDialog` | `<ContentDialog>` / `<Flyout>` |
 
 Plus the UI24 event-dispatch contract (one `Dispatch` event per UserControl)
 and slot → `DependencyProperty` translation.
 
-## What is NOT in this first PR
+## MSL states and motion
 
-The remaining six UI29 kernel primitives and the component-reference
-resolver are tracked as follow-ups per the spec's §17:
+Native Host controls consume `state-when-*` layout predicates and matching
+MSL state blocks. The emitter writes property-scoped WinUI
+`VisualStateGroup`s so different properties can keep distinct transition
+durations and easing curves. The groups live on a transparent first-child
+`Grid`, as required for WinUI to evaluate declarative triggers automatically.
+Part-level transitions animate entry and exit; state-local transitions
+override entry.
 
-- **PR-2**: `If` / `Else` / `For` lowering + the `ExprLowerer`
-- **PR-3**: `HostInput`, `HostButton`, `HostScroll`
-- **PR-4**: `HostTable` with its four section sub-tags
-- **PR-5**: component-reference resolver (`<pkg:ComponentName/>`) +
-  `--package-mode` CLI flag
-- **PR-6**: `mosaic-pkg-grid` compiled through this backend + VisiCalc
-  Windows demo
+Named CSS curves lower to native WinUI easing functions. Arbitrary
+`cubic-bezier(...)` curves currently use `CubicEase`; exact control points
+require a future Windows Composition lowering. State predicates inside a
+`For` template are also deferred because DataTemplates introduce a separate
+XAML namescope.
 
 Any moslayout primitive not in the table above currently surfaces as
 `PipelineEmitError::UnsupportedPrimitive` so authors get a clear "not yet
@@ -49,8 +64,8 @@ supported" diagnostic instead of broken XAML.
 For a component `MyComponent` the emitter returns:
 
 - `xaml`: full XAML markup with `<UserControl>` root, embedded
-  `<UserControl.Resources>` from the mosstyle (deferred for PR-1 — only
-  base `part` blocks land), lowered moslayout tree as the content.
+  resources, native VisualStates from mosstyle, and the lowered moslayout
+  tree as content.
 - `code_behind`: the C# `partial class MyComponent : UserControl` with one
   `DependencyProperty` per `.mil` slot, a `Dispatch` event, and the
   `InitializeComponent()` boilerplate.
@@ -88,6 +103,6 @@ end-to-end smoke tests that build a small `MosmodelComponent` + `LayoutDef`
 generated XAML and C# (presence of the right tags, attributes, and slot
 properties).
 
-The actual `dotnet build` smoke test against the emitted output is a
-Windows-only follow-up — gated by `#[cfg(target_os = "windows")]` and
-running on the `windows-latest` CI matrix.
+Windows CI is the final compiler gate for generated WinUI project shells;
+portable tests validate the IR-to-XAML structure and package fixtures on
+every platform.
