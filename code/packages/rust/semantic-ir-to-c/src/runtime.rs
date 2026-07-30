@@ -142,6 +142,32 @@ char *_sir_cat(const char *a, const char *b) {
     return p;
 }
 
+/* Collections slice 1: String transforms.  Each returns a FRESH arena buffer
+ * (leak-on-exit, like every heap value) so the source string is never mutated.
+ * Case mapping is ASCII-only — no `<ctype.h>` locale surprises, matching the
+ * conformance corpus. */
+char *_sir_str_upcase(const char *s) {
+    size_t n = strlen(s), i;
+    char *p = (char *)_sir_alloc(n + 1);
+    for (i = 0; i < n; i++) { char c = s[i]; p[i] = (c >= 'a' && c <= 'z') ? (char)(c - 32) : c; }
+    p[n] = '\0';
+    return p;
+}
+char *_sir_str_downcase(const char *s) {
+    size_t n = strlen(s), i;
+    char *p = (char *)_sir_alloc(n + 1);
+    for (i = 0; i < n; i++) { char c = s[i]; p[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : c; }
+    p[n] = '\0';
+    return p;
+}
+char *_sir_str_reverse(const char *s) {
+    size_t n = strlen(s), i;
+    char *p = (char *)_sir_alloc(n + 1);
+    for (i = 0; i < n; i++) p[i] = s[n - 1 - i];
+    p[n] = '\0';
+    return p;
+}
+
 /* ---- symbol interning --------------------------------------- */
 
 #define SIR_INTERN_MAX 8192
@@ -1387,6 +1413,40 @@ SirValue _sir_call_class_method(const char *cls, const char *method, int argc, .
     }
     if (args) free(args);
     return r;
+}
+
+/* ---- Collections slice 1: built-in String methods --------------------------
+ *
+ * A `__method__` dispatch whose name is a KNOWN built-in method — and which the
+ * module did NOT define as a user method — routes here instead of the user
+ * method table.  Dispatch is an explicit `strcmp` switch on the method name plus
+ * a receiver-type check (Ruby's built-in methods are polymorphic: `length` works
+ * on a String, Array, or Hash), so a wrong-type receiver raises `NoMethodError`
+ * exactly as Ruby would — never a crash.  The method name is a compiler-emitted
+ * quoted literal, so this is not reflection (anti-RCE holds).  Slice 1 covers
+ * common 0-arity methods; the `argc`/varargs are carried for later arg-taking
+ * methods. */
+SirValue _sir_builtin_method(SirValue recv, const char *m, int argc, ...) {
+    (void)argc;  /* every built-in method in this slice is 0-arity */
+    if (strcmp(m, "length") == 0 || strcmp(m, "size") == 0) {
+        if (recv.tag == SIR_STR) return _sir_int((int64_t)strlen(recv.as.s));
+        if (recv.tag == SIR_SEQ) return _sir_int(recv.as.seq->len);
+        if (recv.tag == SIR_MAP) return _sir_int(recv.as.map->len);
+    } else if (strcmp(m, "upcase") == 0) {
+        if (recv.tag == SIR_STR) return _sir_str(_sir_str_upcase(recv.as.s));
+    } else if (strcmp(m, "downcase") == 0) {
+        if (recv.tag == SIR_STR) return _sir_str(_sir_str_downcase(recv.as.s));
+    } else if (strcmp(m, "reverse") == 0) {
+        if (recv.tag == SIR_STR) return _sir_str(_sir_str_reverse(recv.as.s));
+    } else if (strcmp(m, "empty?") == 0) {
+        if (recv.tag == SIR_STR) return _sir_bool(recv.as.s[0] == '\0');
+        if (recv.tag == SIR_SEQ) return _sir_bool(recv.as.seq->len == 0);
+        if (recv.tag == SIR_MAP) return _sir_bool(recv.as.map->len == 0);
+    } else if (strcmp(m, "to_s") == 0) {
+        if (recv.tag == SIR_STR) return recv;  /* String#to_s is the string itself */
+    }
+    return _sir_raise(
+        _sir_error("NoMethodError", _sir_str(_sir_cat("undefined method ", m))));
 }
 
 /* ---- OOP slice 6: class variables (@@x) ------------------------------------

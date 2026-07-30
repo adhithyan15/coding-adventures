@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.22.0 — Collections slice 1: built-in String methods
+
+The first slice of the **Collections** batch — the built-in method catalog every
+OOP slice deferred (`"hi".length` used to be rejected as "the Collections
+batch"). No new `Feature` (a built-in method is a `__method__` dispatch).
+
+- A new runtime dispatcher `_sir_builtin_method(recv, "m", argc, …)` implements
+  common 0-arity String methods — `length`/`size`, `upcase`, `downcase`,
+  `reverse`, `empty?`, `to_s` — by an explicit `strcmp` switch on the method name
+  plus a receiver-type check. `length`/`size`/`empty?` are **polymorphic** over
+  String/Array/Hash; the rest are String-only. A wrong-type receiver raises
+  `NoMethodError`, exactly as Ruby's dynamic dispatch would — never a crash.
+- `__method__` emit now **routes** by name: a user-registered method (OOP) still
+  goes through the class method table (`_sir_call_method`); a built-in name that
+  the module did *not* define routes to `_sir_builtin_method`. The structural
+  scan's allowlist widens to accept the built-in names, so `"str".upcase` etc.
+  compile instead of being deferred. A built-in method **not** in this slice yet
+  (e.g. `strip`) is still rejected cleanly.
+- **Anti-RCE preserved.** The method name is a compiler-emitted quoted C literal
+  and only ever a `strcmp` target — never reflection.
+
 ## 0.21.0 — OOP mirror slice 7: modules / mixins (final OOP slice)
 
 Modules and mixins — the **final** slice of the C OOP mirror. Accepts
