@@ -23,8 +23,9 @@ bytes. Both CRLF and bare-LF head terminators are accepted.
 
 - `parseRequestHead` parses a method, raw target, bounded HTTP version, and
   ordered duplicate-preserving headers.
-- `parseResponseHead` takes the corresponding request method, parses an exact
-  three-digit status code and ordered headers, and applies HEAD/CONNECT
+- `parseResponseHead` takes a `ResponseContext` containing the corresponding
+  case-sensitive request method and HTTP version, parses an exact three-digit
+  status code and ordered headers, and applies HEAD/CONNECT/transfer-version
   response semantics.
 - `ParsedRequestHead` and `ParsedResponseHead` carry the semantic head, exact
   byte offset immediately after the terminating blank line, and body framing.
@@ -36,10 +37,11 @@ bytes. Both CRLF and bare-LF head terminators are accepted.
 
 Framing fails closed when `Transfer-Encoding` and `Content-Length` coexist.
 Request transfer coding requires HTTP/1.1 and exactly one final `chunked`
-coding. Duplicate and comma-coalesced content lengths are accepted only when
-every bounded decimal value agrees. Responses apply HEAD, successful CONNECT,
-1xx, 204, and 304 semantics before ordinary chunked, content-length, and EOF
-framing.
+coding; parameterized transfer codings are rejected rather than normalized.
+Duplicate and comma-coalesced content lengths are accepted only when every
+bounded decimal value agrees. Responses apply HEAD, successful CONNECT, 1xx,
+204, and 304 semantics before ordinary chunked, content-length, and EOF
+framing, and reject transfer coding when either side uses HTTP/1.0.
 
 Decimal status and content-length parsing is bounded. Signed, malformed, and
 overflowing values fail without constructing attacker-sized arbitrary-precision
@@ -55,12 +57,16 @@ delimiters are exact single spaces.
 
 ```haskell
 import CodingAdventures.Http1
+import CodingAdventures.HttpCore (HttpVersion (..))
 import qualified Data.ByteString.Char8 as Bytes
 
 example :: Either Http1ParseError ParsedResponseHead
 example =
   parseResponseHead
-    "GET"
+    ResponseContext
+      { contextRequestMethod = "GET"
+      , contextRequestVersion = HttpVersion 1 1
+      }
     (Bytes.pack "HTTP/1.1 200 OK\r\nContent-Length: 4\r\n\r\nbody")
 ```
 
@@ -79,5 +85,5 @@ The package has no process, filesystem, network, environment, dynamic-loading,
 or unsafe capabilities. Its only runtime dependencies are `base`, `bytestring`,
 and the local pure `http-core` package.
 
-The current suite has 27 Hspec examples and measures 96% expression, 87%
-alternative, and 80% top-level-definition coverage with GHC 9.4.8.
+The current suite has 28 Hspec examples and measures 97% expression and 91%
+alternative coverage with GHC 9.4.8.

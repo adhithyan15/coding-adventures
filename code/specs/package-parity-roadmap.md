@@ -784,6 +784,13 @@ resources, response-method context, and redacted typed errors. The Haskell
 slice establishes that contract; `http1-safe-framing-backfill` tracks the
 remaining established lanes as a separate dependency-shaped tranche.
 
+The same slice exposed legacy Haskell scaffold capability metadata:
+`required_capabilities.json` is still emitted as an incomplete one-field
+object, and the merged `http-core` package retains that shape. The current
+`http1` package carries a schema-valid v1 pure-computation manifest;
+`haskell-scaffold-capability-schema` tracks generator golden/schema coverage
+and the existing-package backfill.
+
 Recommended family order:
 
 1. Leaf algorithms and data structures.
