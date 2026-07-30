@@ -181,9 +181,9 @@ shared or cached argument that has since drifted from its sources is caught, not
 > Verified end-to-end: a snapshot-pinned argument confirms its premise cite (`quotes_verified ≥ 1`,
 > `status: verified`) and re-derives its thesis; a **drifted** citation — a quote that is not a
 > verbatim slice of the pinned source — fails the run (`verified: false`, `quote_missing`). The
-> warrant re-refutation of §3.2 (an *adversarial* re-read) and rendering the argument chain in
-> `--explain` (an SLD proof chain, which `--explain` does not render today) are the remaining
-> follow-ups; the byte-anchor + re-derivation of §4 are done.
+> warrant re-refutation of §3.2 (an *adversarial* re-read) is the remaining follow-up; the
+> byte-anchor + re-derivation of §4 are done, and rendering the argument chain in `--explain`
+> (an SLD proof chain, premises → connective → conclusion) shipped as **ADR-6** (see §7).
 
 ---
 
@@ -272,6 +272,19 @@ grounding payload the §3 gate checks. Final syntax fixed in ADR-2.
   (`quotes_verified: 6`) and re-derives the thesis. Driven by `argument_worked_example_e2e.rs`;
   see the directory `README.md`. The argument a paragraph makes is a program the engine runs, every
   step auditable back to the paragraph's own bytes.
+- **ADR-6 — `--explain` renders the argument chain** ✅ **shipped**: completes "reason **and**
+  explain" for the `argument` construct — the one explain gap ADR-4 flagged. A binding query is
+  resolved by SLD `enumerate_all`, not the differential, so its proof never flowed through
+  `--explain`'s inference surface; an argument's derivation was invisible to the human view.
+  `--explain` now renders a new **Argument** section per binding query, projecting the proof DAG
+  as the argument it is: grounded **premises** (leaf facts) → the **connective** (each inference
+  rule, its warrant cited) → the derived **conclusion**, with the answer substitution applied so
+  the conclusion shows the derived value (`failed_by(axle, fatigue)`), not the query's open
+  variable. Projection-only (P1), per-line provenance (P2), deterministic (P4), depth-addressed
+  (P6); an unprovable query abstains honestly and a budget-truncated search is never laundered
+  into "no proof exists". Driven by `rs4e3_explain_argument_e2e.rs` (4) over the ADR-5 worked
+  example. This is the SLD-proof-chain `--explain` the ADR-4 follow-up named; the *adversarial*
+  warrant re-refutation (§3.2, model-in-the-loop) remains the last follow-up.
 - **Later:** the trained decomposer that *emits* this adj-lang from prose (reuses the F3 training
   harness, retargeted from closed-vocab findings to the open-vocab argument surface); multi-
   paragraph / whole-paper composition (a paper is a DAG of paragraph arguments sharing conclusions).

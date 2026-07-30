@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.30.3] — 2026-07-30 — ADR-6: `--explain` renders the argument chain
+
+Completes "reason **and** explain" for the `argument` construct — the one explain gap left. A
+binding query (`? failed_by(axle, $M)`) is resolved by SLD enumeration, not the differential, so
+its proof never flowed through `--explain`'s inference surface; an `argument`'s derivation was
+therefore invisible to the human view. `--explain` now renders a new **Argument** section for
+each binding query, projecting the `enumerate_all` proof DAG as the argument it is: grounded
+**premises** (leaf facts) → the **connective** (each inference rule, its warrant cited) → the
+derived **conclusion** — with the answer substitution applied so the conclusion shows the derived
+value (`failed_by(axle, fatigue)`), not the query's open variable. Projection-only (P1: re-runs
+nothing, reads the same DAG the `recall` JSON was built from), per-line provenance (P2),
+deterministic (P4), depth-addressed (P6). An unprovable query renders honest abstention, and a
+budget-truncated search is never laundered into "no proof exists". New e2e
+`rs4e3_explain_argument_e2e.rs` (4) drives the committed `axle-fatigue` worked example plus
+recall/abstention cases. Byte-neutral to `--json`/golden (the section is `--explain`-only and
+absent unless the program has a binding query).
+
 ## [0.30.2] — 2026-07-30 — ADR-5: worked-example capstone (closes the argument-graph arc)
 
 The closing rung of the decompose-argument-graph arc: a committed worked example under
