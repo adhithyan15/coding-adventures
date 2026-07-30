@@ -2637,25 +2637,38 @@ impl Machine {
             // arithmetic and hands `store_scaled` the SAME scale `d` (a no-op shift,
             // then `mag mod 10^(i+d)`). For `d = 0` the split is `int = V_str`,
             // `frac = ""` — reproducing the old integer-receiver behaviour exactly.
-            // Only an unsigned numeric receiver and a genuine alphanumeric SOURCE
-            // ITEM (not a group, not a literal) are handled here; every other shape
-            // falls through to `move_into` below, which rejects a `Src::Chars` →
-            // numeric MOVE.
+            // ANY numeric receiver (SIGNED or unsigned) and a genuine alphanumeric
+            // SOURCE ITEM (not a group, not a literal) are handled here; every other
+            // shape falls through to `move_into` below, which rejects a `Src::Chars`
+            // → numeric MOVE.
+            //
+            // A SIGNED receiver (`PIC S9…`) is now handled (guard relaxed from
+            // `recv_unsigned` to `recv_numeric`). The WHY: an alphanumeric source
+            // carries NO operational sign — COBOL does not read an overpunch from a
+            // plain `PIC X` source — so we store the folded MAGNITUDE and its sign is
+            // ALWAYS POSITIVE. The body below builds `Decimal { neg: false, .. }` and
+            // hands it to `move_into`, which computes the stored sign as
+            // `neg = signed && d.neg && …` = `false` (since `d.neg` is false), so a
+            // signed receiver correctly stores a POSITIVE value. DISPLAY of that
+            // signed field then overpunches the units digit on its POSITIVE row
+            // (`{A…I`) via the same `overpunch_trailing`/`item_image` path signed
+            // DISPLAY already uses — untouched here. The fold/scale rule is UNCHANGED
+            // from the unsigned path.
             if let Operand::Ident(name) = src {
                 if let Some(&sidx) = self.by_name.get(name) {
                     let src_is_char = matches!(
                         self.items[sidx].picture,
                         Some(Picture::Alphanumeric { .. }) | Some(Picture::Alphabetic { .. })
                     );
-                    let recv_unsigned = matches!(
+                    let recv_numeric = matches!(
                         self.items[idx].picture,
-                        Some(Picture::Numeric { signed: false, .. })
+                        Some(Picture::Numeric { .. })
                     );
                     let recv_dec = match &self.items[idx].picture {
                         Some(Picture::Numeric { dec_digits, .. }) => *dec_digits,
                         _ => 0,
                     };
-                    if src_is_char && recv_unsigned {
+                    if src_is_char && recv_numeric {
                         let chars = self.items[sidx].storage.clone();
                         // Guard the `i64` fold: an all-digit source of ≤ 18
                         // characters stays below `10^18 < i64::MAX`; a wider source
@@ -2677,9 +2690,11 @@ impl Machine {
                         // does (it `abs`es the value before `mod 10^(i+d)`). This
                         // matters for a source byte below `'0'` — most commonly a SPACE
                         // (an uninitialised `PIC X` is spaces): `(b - '0')` is then
-                        // negative and the fold goes negative, but a `PIC 9` field is
-                        // unsigned, so both engines keep the magnitude (never a stray
-                        // `'-'`). A non-digit source is defined-but-unspecified,
+                        // negative and the fold goes negative, but the source has NO
+                        // operational sign, so both engines keep the magnitude and
+                        // store it POSITIVE (`Decimal { neg: false }` below) — never a
+                        // stray `'-'` — for a signed OR unsigned receiver alike.
+                        // A non-digit source is defined-but-unspecified,
                         // identical on both engines by construction. (`unsigned_abs`
                         // is total — no panic on `i64::MIN`, unreachable here anyway.)
                         let mag = value.unsigned_abs().to_string();

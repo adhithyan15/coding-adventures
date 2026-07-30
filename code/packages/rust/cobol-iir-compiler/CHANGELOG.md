@@ -8,6 +8,38 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.65.0: alphanumeric → SIGNED numeric MOVE (completes the Char↔Numeric MOVE matrix)
+
+A cross-category `MOVE <alphanumeric> TO <signed-numeric>` (`MOVE A TO N` where `A` is `PIC X(m)` and
+`N` is `PIC S9(i)V9(d)`) now lowers, compiled byte-identical to the
+`coding-adventures-cobol-runtime` 0.69.0 oracle. This was the ONLY remaining unhandled cell of the
+Char↔Numeric × signed/unsigned MOVE matrix — the matrix is now **complete** (both directions, both
+signednesses).
+
+- **Semantics.** An alphanumeric source carries NO operational sign — COBOL does not read an overpunch
+  from a plain `PIC X` source — so the receiver stores the folded MAGNITUDE and its sign is ALWAYS
+  POSITIVE. The fold (`V = V*10 + (byte - '0')` left→right) and scale placement (`V mod 10^(i+d)` at
+  scale `d`) are IDENTICAL to the already-shipped unsigned-receiver path. DISPLAY of the signed field
+  overpunches the units digit on its POSITIVE row (`{A…I` for units 0-9), so `MOVE "123" TO S9(3)`
+  shows `12C`, `MOVE "120"` shows `12{`.
+- **Guard relaxation.** The cross-category arm's pattern dropped its `signed: false` constraint —
+  `(ItemKind::Char, ItemKind::Numeric { dec_digits: d, .. })` — so it accepts any numeric receiver.
+- **Positive store via existing signed-aware path.** After the byte fold we `emit_abs` the value
+  before `store_scaled`, mirroring the oracle's `unsigned_abs()`. This is the crux: a source byte
+  below `'0'` (a SPACE in an uninitialised field) makes the raw fold NEGATIVE, and `store_scaled`
+  re-applies the sign of the value it is handed (`reapply_sign`) for a signed receiver — which would
+  wrongly store a negative value. Absing first makes `reapply_sign` a genuine no-op → a POSITIVE value
+  is stored, byte-identical to the oracle. For an all-digit source the fold is already non-negative, so
+  the unsigned path's output is unchanged.
+- **Exhaustive match.** With both cross-category directions and both signednesses handled, the four
+  `(kind, kind)` arms are now exhaustive over `ItemKind`'s two variants, so the former catch-all `_`
+  reject arm was removed (keeping it would fire an `unreachable_patterns` warning, which CI denies). A
+  future third item kind would now fail to compile and force this logic to be revisited deliberately.
+- **Scope.** The ≤18-character source-width guard (i64 fold) is unchanged. The non-ASCII byte-vs-char
+  behaviour of `emit_str_to_int` (folds the item's `width()` = char-count leading bytes, vs the
+  oracle's full-byte fold) is PRE-EXISTING and shared with the unsigned path — this rung does not touch
+  it (a dedicated jit_e2e test documents that the unsigned path diverges identically).
+
 ### Added — v0.64.0: alphanumeric level-88 with a THRU range
 
 A level-88 condition-name on an **alphanumeric** (`PIC X`) conditional variable now also lowers for an

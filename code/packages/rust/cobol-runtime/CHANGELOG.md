@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.69.0 — alphanumeric → SIGNED numeric MOVE (completes the Char↔Numeric MOVE matrix) — 2026-07-29
+
+- A cross-category `MOVE <alphanumeric> TO <signed-numeric>` (`MOVE A TO N` where `A` is `PIC X(m)`
+  and `N` is `PIC S9(i)V9(d)`) is now interpreted, completing the Char↔Numeric × signed/unsigned MOVE
+  matrix (both directions, both signednesses). An alphanumeric source carries NO operational sign, so
+  the receiver stores the folded MAGNITUDE and its sign is ALWAYS POSITIVE.
+- The fold (`V = V*10 + (byte - '0')` left→right) and scale placement (`V mod 10^(i+d)` at scale `d`)
+  are IDENTICAL to the already-shipped unsigned-receiver path — the only difference is that DISPLAY of
+  a signed field overpunches the units digit on its POSITIVE row (`{A…I` for units 0-9): `MOVE "123"
+  TO S9(3)` → `12C`, `MOVE "120"` → `12{`.
+- Implemented as a pure **guard relaxation**: the cross-category alphanumeric→numeric arm's
+  `recv_unsigned` gate (`Picture::Numeric { signed: false, .. }`) is widened to `recv_numeric`
+  (`Picture::Numeric { .. }`). The existing body already builds `Decimal { neg: false, .. }` and calls
+  `move_into`, whose `neg = signed && d.neg && …` evaluates to `false` (since `d.neg` is false) — so a
+  signed receiver correctly stores a POSITIVE value with no new arithmetic. The magnitude is still
+  taken via `unsigned_abs`, so a SPACE (or any sub-`'0'`) source byte never yields a stray sign.
+- DISPLAY reuses the existing `overpunch_trailing`/`item_image` signed-display path unchanged.
+
 ## 0.68.0 — alphanumeric level-88 with a THRU range — 2026-07-29
 
 - A level-88 condition-name on an **alphanumeric** (`PIC X`) conditional variable now also accepts an
