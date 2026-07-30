@@ -43,6 +43,7 @@ statement   = prior_decl
             | formulabook_decl
             | table_decl
             | statemachine_decl
+            | argument_decl
             | use_decl
             | import_decl
             ;
@@ -459,6 +460,30 @@ sm_exit       = "exit" "when" sm_guard "yield" expr ;
 sm_guard      = ( apply | IDENT ) [ ( GE | LE | GT | LT | EQEQ ) expr ] ;
 
 sm_action     = "assert" term ;
+
+# ----------------------------------------------------------------
+# Argument graph (ADJ-ARGUMENT-IR — ADR-2). An `argument` decomposes a piece of
+# prose into named PREMISES and INFERENCE steps that DESUGAR to the existing
+# substrate: a premise → a provenanced `relate` fact; an inference → a `rule`
+# whose body is the premises/inferences it cites `from`; the paper's thesis is the
+# derived head a trailing `? thesis(…)` queries. Because it lowers to facts + rules,
+# the engine derives the thesis and `--explain` renders the chain for free (no new
+# evaluator). `argument`/`premise`/`infer`/`conclude`/`from` are IDENT-matched
+# literals — no lexer keywords, exactly like `statemachine`/`table`. A premise's
+# `<kind>` is `extracted | imported | inferred`; an inference's `<connective>` is the
+# open-vocabulary connective as written (because/therefore/suggests/…). Each carries
+# the same `{ annotation }` source/locator/trust envelope every grounded clause does
+# — that is the cite/warrant the ADR-3 grounding gate will check. `from` references
+# are `arg_ref` nodes so they are cleanly separable from the name/connective tokens.
+# ----------------------------------------------------------------
+
+argument_decl = "argument" IDENT LBRACE { arg_premise } { arg_infer } RBRACE ;
+
+arg_premise   = "premise" IDENT COLON IDENT term { annotation } ;
+
+arg_infer     = "infer" IDENT COLON IDENT "conclude" term "from" arg_ref { COMMA arg_ref } { annotation } ;
+
+arg_ref       = IDENT ;
 
 # ----------------------------------------------------------------
 # Import (MYCIN-2026 M3 — composition across files). `import "<path>"`

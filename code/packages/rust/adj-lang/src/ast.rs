@@ -553,6 +553,23 @@ pub enum Statement {
         budget: u64,
         annotations: Vec<Annotation>,
     },
+    /// `argument <name> { premise… infer… }` — a byte-grounded **argument graph**
+    /// (ADJ-ARGUMENT-IR, `code/specs/ADJ-ARGUMENT-IR.md` §2/§6; ADR-2). Decomposes a
+    /// piece of prose into named [`ArgPremise`]s (asserted propositions) and
+    /// [`ArgInference`] steps (a conclusion derived `from` earlier premises/inferences).
+    ///
+    /// A sibling of [`Statement::Table`]/[`Statement::StateMachine`], but it **lowers
+    /// away entirely** into existing constructs (§2.3): each premise → a provenanced
+    /// [`Statement::Relate`]-style `Fact`; each inference → a [`Statement::Rule`]-style
+    /// `Rule` whose body is the terms it cites `from`. The engine then *derives* the
+    /// thesis (a trailing `? thesis(…)` query), `--explain` renders the chain, and
+    /// `adj-verify` re-checks it — all for free, because the argument IS adj-lang. No
+    /// argument-specific evaluator, node table, or renderer exists past lowering.
+    Argument {
+        name: String,
+        premises: Vec<ArgPremise>,
+        inferences: Vec<ArgInference>,
+    },
     /// `use <dictionary>` — bind a `dictionary` (by name) as the controlled
     /// vocabulary the enclosing scope's clauses are checked against (MYCIN-2026
     /// M2). Legal at top level or inside a `rulebook`.
@@ -651,6 +668,49 @@ pub struct TableRow {
     /// not the table's first sentence: with one envelope, a six-band table made
     /// every answer in every band quote the same cell, which is an accounting
     /// error the moment the selected row is explicit (as a range lookup makes it).
+    pub annotations: Vec<Annotation>,
+}
+
+/// One `premise <name> : <kind> <claim> { … }` of a [`Statement::Argument`]
+/// (ADJ-ARGUMENT-IR §2.1). An asserted proposition the argument starts from; it
+/// lowers to a provenanced ground `Fact` (§2.3), and its `name` is how later
+/// [`ArgInference`]s cite it in their `from` list. The `annotations` are the same
+/// `source`/`locator`/`trust` envelope every grounded clause carries — the byte
+/// citation the ADR-3 grounding gate will check.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ArgPremise {
+    /// The local name this premise binds, referenced by an inference's `from`.
+    pub name: String,
+    /// `extracted` (stated in the source) | `imported` (an external cited premise) |
+    /// `inferred` (a hedged reading). Validated against that closed set by the lowerer
+    /// (an unknown kind is a clean `LowerError`, never silently accepted). At ADR-2 the
+    /// kind is recorded for the audit; the strict per-kind grounding is ADR-3.
+    pub kind: String,
+    /// The proposition itself, as an ADJ term — lowers to the fact's edge.
+    pub claim: Term,
+    /// Cite/source provenance (`source`/`locator`/`trust`).
+    pub annotations: Vec<Annotation>,
+}
+
+/// One `infer <name> : <connective> conclude <conclusion> from <refs> { … }` of a
+/// [`Statement::Argument`] (ADJ-ARGUMENT-IR §2.1). A step that derives `conclusion`
+/// from the premises/inferences it names in `from`; it lowers to a `Rule` whose head
+/// is `conclusion` and whose body is those referenced terms (§2.3), so the engine
+/// chains the steps by SLD resolution. The `connective` is the open-vocabulary word as
+/// written (because/therefore/suggests/…); the `annotations` carry the warrant.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ArgInference {
+    /// The local name this inference's conclusion binds, referenced by a later `from`.
+    pub name: String,
+    /// The open-vocabulary inference connective as written in the source.
+    pub connective: String,
+    /// The derived proposition — lowers to the rule head.
+    pub conclusion: Term,
+    /// Names of the premises/inferences this step derives its conclusion `from`. Each
+    /// must resolve to an earlier `name` in the same argument (an unknown reference is a
+    /// clean `LowerError`); the referenced terms become the rule's body literals.
+    pub from: Vec<String>,
+    /// Warrant/source provenance (`source`/`locator`/`trust`).
     pub annotations: Vec<Annotation>,
 }
 

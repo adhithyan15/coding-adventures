@@ -161,6 +161,7 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "formulabook_decl" => adapt_formulabook(child),
         "table_decl" => adapt_table(child),
         "statemachine_decl" => adapt_statemachine(child),
+        "argument_decl" => adapt_argument(child),
         "use_decl" => adapt_use(child),
         "import_decl" => adapt_import(child),
         other => Err(AdapterError::UnexpectedRule {
@@ -996,6 +997,119 @@ fn adapt_formula(node: &GrammarASTNode) -> Result<FormulaDef, AdapterError> {
         params,
         steps,
         body,
+        annotations,
+    })
+}
+
+// ---------------------------------------------------------------------------
+// Argument graph (ADJ-ARGUMENT-IR ADR-2). Modelled on `table`/`statemachine`:
+// `argument`/`premise`/`infer`/`conclude`/`from` are IDENT-matched literals that
+// surface as `Name` tokens; premises, inferences, and `from` references are nested
+// nodes (`arg_premise`/`arg_infer`/`arg_ref`). The adapter faithfully carries the
+// STRUCTURE; the well-formedness checks (known premise kind, resolvable `from`
+// references, unique names) are the lowerer's job (§2.3).
+// ---------------------------------------------------------------------------
+
+/// The direct `Name`-token values of a node, in source order. The IDENT-matched
+/// keyword literals surface here alongside the user's identifiers, so a caller reads
+/// them off by position against the fixed grammar shape.
+fn direct_name_tokens(node: &GrammarASTNode) -> Vec<String> {
+    node.children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+            _ => None,
+        })
+        .collect()
+}
+
+fn adapt_argument(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // argument_decl = "argument" IDENT LBRACE { arg_premise } { arg_infer } RBRACE
+    // The name is the only direct Name token that isn't the `argument` keyword (every
+    // premise/inference identifier lives inside a nested node).
+    let name = first_name_not(node, "argument")
+        .ok_or(AdapterError::MissingChild {
+            rule: "argument_decl".into(),
+            position: "argument name",
+        })?
+        .to_string();
+    let mut premises = Vec::new();
+    let mut inferences = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(item) = c {
+            match item.rule_name.as_str() {
+                "arg_premise" => premises.push(adapt_arg_premise(item)?),
+                "arg_infer" => inferences.push(adapt_arg_inference(item)?),
+                _ => {}
+            }
+        }
+    }
+    Ok(Statement::Argument {
+        name,
+        premises,
+        inferences,
+    })
+}
+
+fn adapt_arg_premise(node: &GrammarASTNode) -> Result<crate::ast::ArgPremise, AdapterError> {
+    // arg_premise = "premise" IDENT COLON IDENT term { annotation }
+    // Direct Name tokens are exactly [premise, <name>, <kind>] (the claim's functor is
+    // nested in the `term` node, so it is never a direct token here).
+    let names = direct_name_tokens(node);
+    let name = names.get(1).cloned().ok_or(AdapterError::MissingChild {
+        rule: "arg_premise".into(),
+        position: "premise name",
+    })?;
+    let kind = names.get(2).cloned().ok_or(AdapterError::MissingChild {
+        rule: "arg_premise".into(),
+        position: "premise kind",
+    })?;
+    let claim = expect_term_child(node, "arg_premise")?;
+    let annotations = collect_annotations(node)?;
+    Ok(crate::ast::ArgPremise {
+        name,
+        kind,
+        claim,
+        annotations,
+    })
+}
+
+fn adapt_arg_inference(node: &GrammarASTNode) -> Result<crate::ast::ArgInference, AdapterError> {
+    // arg_infer = "infer" IDENT COLON IDENT "conclude" term "from" arg_ref {COMMA arg_ref} {ann}
+    // Direct Name tokens are [infer, <name>, <connective>, conclude, from] — the `from`
+    // references are `arg_ref` NODES (not direct tokens), so name/connective sit at the
+    // fixed positions 1 and 2 regardless of what the author named them.
+    let names = direct_name_tokens(node);
+    let name = names.get(1).cloned().ok_or(AdapterError::MissingChild {
+        rule: "arg_infer".into(),
+        position: "inference name",
+    })?;
+    let connective = names.get(2).cloned().ok_or(AdapterError::MissingChild {
+        rule: "arg_infer".into(),
+        position: "inference connective",
+    })?;
+    // `conclude <term>` is the only `term` child; the references are `arg_ref` nodes.
+    let conclusion = expect_term_child(node, "arg_infer")?;
+    let mut from = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(r) = c {
+            if r.rule_name == "arg_ref" {
+                let refname = direct_name_tokens(r).into_iter().next().ok_or({
+                    AdapterError::MissingChild {
+                        rule: "arg_ref".into(),
+                        position: "reference name",
+                    }
+                })?;
+                from.push(refname);
+            }
+        }
+    }
+    let annotations = collect_annotations(node)?;
+    Ok(crate::ast::ArgInference {
+        name,
+        connective,
+        conclusion,
+        from,
         annotations,
     })
 }
