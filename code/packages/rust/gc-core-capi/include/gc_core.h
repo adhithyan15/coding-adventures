@@ -64,6 +64,13 @@ int64_t __gc_register_kind(const int64_t *field_offsets, int64_t count);
 int64_t __gc_register_ref_array_kind(const int64_t *fixed, int64_t fixed_count,
                                      int64_t tail_from);
 
+/* Return the kind id of the live heap object at payload address `ptr`, or 0 if `ptr`
+ * is not inside any live GC block (null / non-heap / stale). Lets a frontend tell one
+ * object class from another that shares the heap tag — e.g. a closure kind from a cons
+ * kind for procedure?/pair? — from a value it has already stripped of its low-bit tag.
+ * Read-only; `ptr` is validated before any header read (a bogus value yields 0). */
+int64_t __gc_kind_of(int64_t ptr);
+
 /* Mark from `count` root words at `roots`, then sweep. Returns objects freed.
  * A null `roots` or count <= 0 means "no roots". */
 int64_t __gc_collect_roots(const int64_t *roots, int64_t count);
