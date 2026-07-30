@@ -6129,19 +6129,149 @@ fn inspect_replacing_characters_non_ascii_literal_is_a_later_rung() {
     );
 }
 
+// INSPECT … REPLACING CHARACTERS BY x {BEFORE|AFTER} z — restrict the CHARACTERS
+// overwrite to the sub-slice bounded by the FIRST occurrence of the single region
+// delimiter `z`. EVERY in-window position becomes `x`; positions OUTSIDE the window
+// keep their original char. The window is the SAME one the ALL/region and TALLYING
+// rungs compute (shared helper), so the ISO not-found asymmetry — BEFORE with `z`
+// absent overwrites the WHOLE source, AFTER with `z` absent overwrites NOTHING —
+// must hold byte-for-byte on both engines (ASCII source).
+// ---------------------------------------------------------------------------
+
 #[test]
-fn inspect_replacing_characters_with_a_region_is_a_later_rung() {
-    // A `{BEFORE|AFTER}` region on the CHARACTERS item is deferred (a byte window can
-    // split a multi-byte char mid-position, which the oracle's String storage cannot
-    // represent) — rejected on BOTH engines (guard 3).
+fn inspect_replacing_characters_before_replaces_only_left_of_the_delimiter() {
+    // "AB,CD" — BEFORE "," restricts the overwrite to "AB" (indices 0..2): both become
+    // "*", the comma and "CD" (indices 2..5, at/right of ",") are UNTOUCHED.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AB,CD\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"*\" BEFORE \",\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "**,CD\n");
+}
+
+#[test]
+fn inspect_replacing_characters_after_replaces_only_right_of_the_delimiter() {
+    // Same source — AFTER "," restricts the overwrite to "CD" (indices 3..5): both
+    // become "*"; the comma and "AB" left of it are UNTOUCHED.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AB,CD\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"*\" AFTER \",\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "AB,**\n");
+}
+
+#[test]
+fn inspect_replacing_characters_before_absent_delimiter_replaces_the_whole_source() {
+    // BEFORE "Z" with no "Z" present → the region is the ENTIRE source, so EVERY
+    // position is overwritten (the BEFORE not-found rule).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AB,CD\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"*\" BEFORE \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "*****\n");
+}
+
+#[test]
+fn inspect_replacing_characters_after_absent_delimiter_replaces_nothing() {
+    // AFTER "Z" with no "Z" present → the region is EMPTY, so NOTHING is overwritten and
+    // the source is unchanged (the AFTER not-found rule — asymmetric partner above).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AB,CD\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"*\" AFTER \"Z\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "AB,CD\n");
+}
+
+#[test]
+fn inspect_replacing_characters_region_replacement_is_a_pic_x1_item() {
+    // The replacement `x` can be a PIC X(1) DATA ITEM with a region: R = "*", BEFORE ","
+    // overwrites "AB" → "**,CD" (exercises the item path through the window).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AB,CD\".", "01  R  PIC X(1) VALUE \"*\"."],
+        &["INSPECT S REPLACING CHARACTERS BY R BEFORE \",\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "**,CD\n");
+}
+
+#[test]
+fn inspect_replacing_characters_region_delimiter_is_a_pic_x1_item() {
+    // The region DELIMITER can be a PIC X(1) DATA ITEM (not just a literal): D = ",",
+    // BEFORE D restricts the overwrite to "AB" → "**,CD" — resolved single-char via the
+    // shared helper, identically to a literal delimiter.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"AB,CD\".", "01  D  PIC X(1) VALUE \",\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"*\" BEFORE D.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "**,CD\n");
+}
+
+#[test]
+fn inspect_replacing_characters_before_delimiter_at_index_0_is_an_empty_window() {
+    // Boundary: the delimiter sits at position 0, so BEFORE's window is [0,0) — EMPTY.
+    // Nothing is overwritten; the source is unchanged. Verifies the compiler's byte
+    // `[start,end)` and the oracle's char window agree at the left edge (start==end).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \",ABCD\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"*\" BEFORE \",\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, ",ABCD\n");
+}
+
+#[test]
+fn inspect_replacing_characters_after_delimiter_at_last_index_is_an_empty_window() {
+    // Boundary: the delimiter sits at the LAST position, so AFTER's window is
+    // [len,len) — EMPTY. Nothing is overwritten. Verifies both engines agree at the
+    // right edge (start==end==len), the AFTER partner of the index-0 case above.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABCD,\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"*\" AFTER \",\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ABCD,\n");
+}
+
+#[test]
+fn inspect_replacing_characters_region_short_moved_value_width_invariant() {
+    // Width-vs-storage invariant: a value SHORTER than the picture is space-padded to
+    // the full width (MOVE "AB" TO PIC X(5) → "AB   "), so the compiler's window scan
+    // over str_len(S)==width and its str_slice(S,j,j+1) up to width-1 stay in bounds and
+    // agree with the oracle's char rebuild. BEFORE " " restricts the overwrite to the
+    // pre-space region "AB" → "**   " (the padded spaces are the AFTER-region).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE SPACES.", "01  T  PIC X(2) VALUE \"AB\"."],
+        &[
+            "MOVE T TO S.",
+            "INSPECT S REPLACING CHARACTERS BY \"*\" BEFORE \" \".",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "**   \n");
+}
+
+#[test]
+fn inspect_replacing_characters_region_non_ascii_source_shares_the_reconstruction_chip() {
+    // NON-ASCII SOURCE + region — the PRE-EXISTING byte-vs-char reconstruction chip
+    // (task_396ba6f6), shared by every REPLACING-with-region lowering. The compiler
+    // rebuilds out-of-window positions with per-position `str_slice`, which cannot
+    // slice a multi-byte "é", so it TRAPS. The oracle iterates `char`s and succeeds
+    // char-based (AFTER "," → char window [3,5) = "BC" → "**"; the "é" left of "," is
+    // outside the window and passes through → "Aé,**"). That gap is the documented
+    // pre-existing chip, NOT introduced by this rung; we pin each engine as a stable
+    // characterization.
     let src = wrap(
-        &["01  S  PIC X(5) VALUE \"ABQBA\"."],
-        &["INSPECT S REPLACING CHARACTERS BY \"X\" BEFORE \"Q\".", "STOP RUN."],
+        &["01  S  PIC X(5) VALUE \"Aé,BC\"."],
+        &["INSPECT S REPLACING CHARACTERS BY \"*\" AFTER \",\".", "DISPLAY S.", "STOP RUN."],
     );
-    assert!(run_cobol(&src).is_err(), "oracle must reject a CHARACTERS region");
+    // Compiler: the reconstruction traps on the multi-byte char (pre-existing chip).
     assert!(
-        compile_source(&src, "e2e").is_err(),
-        "compiler must reject a CHARACTERS region"
+        run_on_jit_result(&src).is_err(),
+        "compiled CHARACTERS+region reconstruction must trap on a non-ASCII source (shared chip)"
+    );
+    // Oracle: succeeds char-based (the documented pre-existing chip, unchanged).
+    assert_eq!(
+        run_cobol(&src).expect("oracle succeeds char-based"),
+        "Aé,**\n",
+        "oracle characterization"
     );
 }
 

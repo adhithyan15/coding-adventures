@@ -237,15 +237,22 @@ neither begin nor break it. So `REPLACING LEADING "a" BY "X" ALL "b" BY "Y"` ove
 → `"XXYaa"`. The multi path stays single-char; a `CHARACTERS`/`FIRST` item in the list is a
 later rung — a single replace item keeps all its capabilities);
 the **replace-every-position** `INSPECT source REPLACING
-CHARACTERS BY x` (no search character — EVERY position of the alphanumeric source is
-overwritten with the single replacement char `x`, so with no region the WHOLE field
-becomes `x`s, its width unchanged: `"ABABA"` → CHARACTERS BY `"X"` → `"XXXXX"`; the fill
-is computed on a BYTE basis — `n = storage.len()` copies stored through `move_into`,
-which re-pads/truncates to the picture's CHAR size — so a non-ASCII source stays co-total
-with the byte-based compiler: `PIC X(5) VALUE "café"` → CHARACTERS BY `"Z"` → `"ZZZZZ"`
-(FIVE `Z`s — the fixed 5-char width caps the padded 6-byte image on both engines); a
-`{BEFORE|AFTER}` region on the CHARACTERS item and a single-char but non-ASCII *literal*
-replacement are later rungs, a `PIC X(1)` *item* replacement is supported); and the
+CHARACTERS BY x [{BEFORE|AFTER} z]` (no search character — with no region EVERY position
+of the alphanumeric source is overwritten with the single replacement char `x`, so the
+WHOLE field becomes `x`s, its width unchanged: `"ABABA"` → CHARACTERS BY `"X"` →
+`"XXXXX"`; the no-region fill is computed on a BYTE basis — `n = storage.len()` copies
+stored through `move_into`, which re-pads/truncates to the picture's CHAR size — so a
+non-ASCII source stays co-total with the byte-based compiler: `PIC X(5) VALUE "café"` →
+CHARACTERS BY `"Z"` → `"ZZZZZ"` (FIVE `Z`s — the fixed 5-char width caps the padded
+6-byte image on both engines); an optional `{BEFORE|AFTER} z` **region** is now supported
+— only the window positions become `x`, positions outside keep their original char, using
+the SAME `region_window` machinery as the ALL/region form with the ISO not-found
+asymmetry (`BEFORE z` absent ⇒ whole field, `AFTER z` absent ⇒ nothing): `"AB,CD"` →
+CHARACTERS BY `"*"` BEFORE `","` → `"**,CD"`, AFTER `","` → `"AB,**"`; a single-char but
+non-ASCII *literal* replacement is a later rung, a `PIC X(1)` *item* replacement (and a
+`PIC X(1)` item region delimiter) are supported; the compiler's window is byte-based and
+the oracle's char-based — they coincide on ASCII, a non-ASCII source is the pre-existing
+byte-vs-char chip); and the
 **combined** `INSPECT source TALLYING counter FOR {ALL|LEADING} delim
 REPLACING {ALL|LEADING} x BY y` (one `INSPECT`, both phrases — per ISO it runs as
 tally-then-replace: count `delim` in the ORIGINAL source into `counter` FIRST,
@@ -297,8 +304,9 @@ tally, or a MULTI-character region delimiter
 (the `{BEFORE|AFTER}` region ships for `FOR ALL`/`REPLACING ALL` **and**
 `FOR LEADING`/`REPLACING LEADING` — on the lone forms, on `CONVERTING`, and on each
 half of the combined form), a `REPLACING CHARACTERS` item carrying a
-`{BEFORE|AFTER}` region or a non-ASCII literal replacement / `REPLACING FIRST` (a lone
-`REPLACING CHARACTERS BY x` is now supported), a MULTI-item
+non-ASCII literal replacement / `REPLACING FIRST` (a lone
+`REPLACING CHARACTERS BY x` is now supported, with an optional `{BEFORE|AFTER}` region),
+a MULTI-item
 `REPLACING` list carrying a `CHARACTERS`/`FIRST` item (the multi-item list itself is now
 supported for single-char `ALL` **and** `LEADING` items, and each such item may carry its
 OWN `{BEFORE|AFTER}` region),

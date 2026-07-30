@@ -447,8 +447,8 @@ impl Machine {
             Stmt::InspectReplacingMulti { source, items } => {
                 self.exec_inspect_replacing_multi(source, items)?
             }
-            Stmt::InspectReplacingCharacters { source, replace } => {
-                self.exec_inspect_replacing_characters(source, replace)?
+            Stmt::InspectReplacingCharacters { source, replace, region } => {
+                self.exec_inspect_replacing_characters(source, replace, region.as_ref())?
             }
             Stmt::InspectTallyMulti { source, counter, items } => {
                 return self.exec_inspect_tally_multi(source, counter, items)
@@ -1560,11 +1560,12 @@ impl Machine {
         self.move_into(sidx, Src::Chars(rebuilt))
     }
 
-    /// `INSPECT source REPLACING CHARACTERS BY x` — overwrite EVERY position of the
-    /// alphanumeric `source` with the single replacement character `x`. With no
-    /// region the WHOLE field becomes `x`s; its width is unchanged.
+    /// `INSPECT source REPLACING CHARACTERS BY x [{BEFORE|AFTER} z]` — overwrite the
+    /// alphanumeric `source` positions with the single replacement character `x`. With
+    /// no region the WHOLE field becomes `x`s; with a `{BEFORE|AFTER}` region only the
+    /// window becomes `x`s and the rest is unchanged. Its width is unchanged either way.
     ///
-    /// # Byte-basis fill (co-total with the byte-based compiler)
+    /// # No region — byte-basis fill (co-total with the byte-based compiler)
     ///
     /// The compiler fills `str_len(S)` (BYTE-length) positions; to agree with it for
     /// ANY source we compute the fill on the BYTE basis too: `n = storage.len()` is
@@ -1575,6 +1576,21 @@ impl Machine {
     /// for a non-ASCII source whose byte length exceeds its char size (e.g.
     /// `PIC X(5) VALUE "café"` stores `"café "` = 5 chars / 6 bytes), the `n = 6`
     /// copies cap to the picture's 5 chars — exactly the compiler's `width = 5` fill.
+    /// This SHIPPED no-region path is byte-identical to before this rung.
+    ///
+    /// # With a region — CHAR-window rebuild (THIS rung)
+    ///
+    /// The window `[start, end)` is computed over the source's CURRENT storage CHARS
+    /// via the SHARED [`Self::region_window`] helper (BEFORE→`[0, first_x)`, AFTER→
+    /// `(first_x, len]`, not-found asymmetry BEFORE→whole / AFTER→empty). We rebuild
+    /// `chars[..start]` ++ `repeat(x, end - start)` ++ `chars[end..]`: every in-window
+    /// position becomes `x`, every out-of-window position keeps its original char.
+    /// `chars.len()` equals the item's CHAR width, so the image is width-wide, matching
+    /// the compiler's per-position unroll. The compiler's window is a BYTE span; on an
+    /// ASCII source it coincides with this CHAR span byte-for-byte. A **non-ASCII**
+    /// source (a byte window splitting a multi-byte char, or a multi-byte char INSIDE
+    /// the window) is the PRE-EXISTING byte-vs-char chip shared with every region form;
+    /// the positive tests keep any multi-byte char strictly OUTSIDE the window.
     ///
     /// # Guards (IDENTICAL to the compiler)
     ///
@@ -1584,13 +1600,15 @@ impl Machine {
     ///      compiler's byte-based single-char validator. Applied to LITERALS only: a
     ///      `PIC X(1)` *item* replacement is naturally co-total under the byte-fill
     ///      (both engines emit `width` copies of the item's char), so it is not gated.
+    ///   3. The optional region delimiter `z` is validated single-char by the shared
+    ///      helpers (a multi-char/numeric/reference-modified region delimiter stays a
+    ///      later rung, co-total with the compiler).
     ///   4. A numeric/group source is rejected by `inspect_alnum_source` (guard 4).
-    ///
-    /// (Guard 3 — a `{BEFORE|AFTER}` region — is rejected earlier, at read time.)
     fn exec_inspect_replacing_characters(
         &mut self,
         source: &str,
         replace: &Operand,
+        region: Option<&Region>,
     ) -> Result<(), RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
         // Guard 2 — a single-char but non-ASCII LITERAL replacement is deferred so the
@@ -1607,11 +1625,35 @@ impl Machine {
         // Guard 1 — resolve the single replacement char (also validates a PIC X(1)
         // item), reusing the SAME check REPLACING ALL uses.
         let ch = self.single_delim_char(replace, "INSPECT REPLACING")?;
-        // Byte-basis fill: n = storage BYTE length copies of `ch`. `move_into`
-        // re-pads/truncates to the picture's char size (see the doc comment).
-        let n = self.items[sidx].storage.len();
-        let rebuilt: String = std::iter::repeat_n(ch, n).collect();
-        self.move_into(sidx, Src::Chars(rebuilt))
+        match region {
+            // No region: keep the SHIPPED byte-basis fill EXACTLY — n = storage BYTE
+            // length copies of `ch`; `move_into` re-pads/truncates to the picture's
+            // char size (see the doc comment). This path is unchanged this rung.
+            None => {
+                let n = self.items[sidx].storage.len();
+                let rebuilt: String = std::iter::repeat_n(ch, n).collect();
+                self.move_into(sidx, Src::Chars(rebuilt))
+            }
+            // With a region: compute the CHAR window `[start, end)` over the source's
+            // CURRENT storage chars via the SHARED `region_window` helper (the SAME the
+            // ALL/region path uses — BEFORE→`[0, first_x)`, AFTER→`(first_x, len]`, with
+            // the not-found asymmetry BEFORE→whole / AFTER→empty). Rebuild the image as
+            // `chars[..start]` ++ `repeat(ch, end - start)` ++ `chars[end..]`: every
+            // in-window position becomes `ch`, every out-of-window position keeps its
+            // original char. `chars.len()` equals the item's CHAR width, so the rebuilt
+            // image is width-wide — matching the compiler's per-position unroll. (The
+            // window is content-defined by the FIRST occurrence of the ASCII region
+            // delimiter; on an ASCII source the compiler's byte window coincides.)
+            Some(_) => {
+                let chars: Vec<char> = self.items[sidx].storage.chars().collect();
+                let (start, end) = self.region_window(&chars, region)?;
+                let mut rebuilt = String::with_capacity(self.items[sidx].storage.len());
+                rebuilt.extend(&chars[..start]);
+                rebuilt.extend(std::iter::repeat_n(ch, end - start));
+                rebuilt.extend(&chars[end..]);
+                self.move_into(sidx, Src::Chars(rebuilt))
+            }
+        }
     }
 
     /// `INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|

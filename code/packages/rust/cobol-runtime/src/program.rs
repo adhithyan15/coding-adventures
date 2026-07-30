@@ -313,14 +313,20 @@ pub enum Stmt {
     /// `"ZZZZZ"` (5 `Z`s). The compiler builds `width = 5` copies → also `"ZZZZZ"`.
     /// Both engines land on the SAME image byte-for-byte.
     ///
-    /// # Deferred: a `{BEFORE|AFTER}` region
+    /// # Optional `{BEFORE|AFTER}` region (THIS rung)
     ///
-    /// A region window is computed as a BYTE span on the compiler but a CHAR span on
-    /// the oracle, and a byte window can split a multi-byte character mid-position —
-    /// a state the oracle's `String` storage cannot represent while the compiler's
-    /// byte buffer can. Including a region would be unsound (the two engines could
-    /// diverge on a non-ASCII source), so `REPLACING CHARACTERS … {BEFORE|AFTER}` is
-    /// rejected at read time on BOTH engines and this variant carries no region.
+    /// An optional `region` (the SAME [`Region`] the ALL/region path carries) narrows
+    /// the overwrite to the sub-slice bounded by the FIRST occurrence of the single
+    /// region delimiter, with the ISO not-found asymmetry (BEFORE absent → whole
+    /// source; AFTER absent → empty). Positions OUTSIDE the window keep their original
+    /// character; every position INSIDE becomes `x`. The oracle computes the window as
+    /// a CHAR span over the source's current storage (via the shared `region_window`);
+    /// the compiler computes it as a BYTE span. On an ASCII source the two coincide, so
+    /// both engines land on the SAME image byte-for-byte. A **non-ASCII** source (a
+    /// byte window splitting a multi-byte char, or a multi-byte char INSIDE the window)
+    /// is the PRE-EXISTING byte-vs-char chip (shared with every other region form); the
+    /// positive tests keep any multi-byte char strictly OUTSIDE the window and off the
+    /// replaced positions so the two engines agree.
     ///
     /// # Guards (applied IDENTICALLY on both engines — co-total)
     ///
@@ -329,14 +335,16 @@ pub enum Stmt {
     ///      bytes) is a later rung — mirroring the compiler, whose byte-based
     ///      single-char validator rejects it. (A `PIC X(1)` *item* replacement is not
     ///      ASCII-gated: the byte-fill above is co-total for a multi-byte item too.)
-    ///   3. A `{BEFORE|AFTER}` region is deferred (see above).
+    ///   3. The optional region delimiter is a SINGLE char via the shared helpers; a
+    ///      multi-char/numeric/reference-modified region delimiter stays rejected
+    ///      co-total (unchanged this rung).
     ///   4. A numeric/group/reference-modified/literal source is a later rung, exactly
     ///      as for every other INSPECT form (`inspect_alnum_source`).
     ///
     /// `REPLACING CHARACTERS` inside a MULTI-item REPLACING list, or inside the
     /// COMBINED `TALLYING … REPLACING` form, remain later rungs — only the SINGLE-item
     /// lone-REPLACING path produces this variant.
-    InspectReplacingCharacters { source: String, replace: Operand },
+    InspectReplacingCharacters { source: String, replace: Operand, region: Option<Region> },
     /// `INSPECT source REPLACING ALL a BY x ALL b BY y [ALL c BY z …]` — one
     /// INSPECT carrying TWO OR MORE replace items in a single REPLACING clause.
     ///
@@ -1522,16 +1530,16 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     if let [ri] = items.as_slice() {
                         let toks = child_tokens(ri);
                         if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
-                            // Guard 3 — a `{BEFORE|AFTER}` region on the CHARACTERS item
-                            // is a later rung (a byte window can split a multi-byte char
-                            // mid-position, which the oracle's `String` storage cannot
-                            // represent; the same reject fires on the compiler).
-                            if child_node(ri, "inspect_region").is_some() {
-                                return Err(RuntimeError::Unsupported(
-                                    "INSPECT REPLACING CHARACTERS with a BEFORE/AFTER region is a later rung"
-                                        .into(),
-                                ));
-                            }
+                            // A `{BEFORE|AFTER}` region on the CHARACTERS item is now
+                            // ACCEPTED (THIS rung), read with the SAME `read_inspect_region`
+                            // helper the ALL/tally readers use. The window narrows the
+                            // overwrite; positions outside it keep their original char.
+                            // (The former Guard-3 reject is lifted — the compiler lifts
+                            // the mirror guard, staying co-total.)
+                            let region = match child_node(ri, "inspect_region") {
+                                None => None,
+                                Some(region_node) => Some(read_inspect_region(region_node)?),
+                            };
                             // The lone `operand` child is the replacement `x`
                             // (guards 1/2/4 are applied at exec time / by the caller's
                             // source-category check, identically to the compiler).
@@ -1543,6 +1551,7 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                             return Ok(Stmt::InspectReplacingCharacters {
                                 source,
                                 replace: read_operand(replace_node)?,
+                                region,
                             });
                         }
                     }

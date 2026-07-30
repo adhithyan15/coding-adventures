@@ -1060,27 +1060,53 @@ combined `TALLYING … REPLACING` form with several items, remain later rungs (r
 identically on both engines). A single replace item keeps the full single-item path
 (LEADING, region) unchanged.
 
-**`REPLACING CHARACTERS BY x` (follow-up rung).** `INSPECT source REPLACING
-CHARACTERS BY x` is the **replace-every-position** form: unlike `REPLACING ALL …`
-there is no search character — EVERY position of the alphanumeric `source` is
-overwritten with the single replacement char `x`, so with no region the WHOLE field
-becomes `x`s. Its width is unchanged (a field of char-width N becomes N copies of
-`x`). Worked (`PIC X(5)`): `"ABABA"` REPLACING CHARACTERS BY `"X"` → `"XXXXX"`;
-`"A B C"` BY `"-"` → `"-----"` (even embedded spaces are overwritten); the
+**`REPLACING CHARACTERS BY x [ {BEFORE|AFTER} z ]` (follow-up rung).** `INSPECT source
+REPLACING CHARACTERS BY x` is the **replace-every-position** form: unlike `REPLACING
+ALL …` there is no search character — with no region EVERY position of the
+alphanumeric `source` is overwritten with the single replacement char `x`, so the
+WHOLE field becomes `x`s. Its width is unchanged (a field of char-width N becomes N
+copies of `x`). Worked (`PIC X(5)`): `"ABABA"` REPLACING CHARACTERS BY `"X"` →
+`"XXXXX"`; `"A B C"` BY `"-"` → `"-----"` (even embedded spaces are overwritten); the
 replacement may be a `PIC X(1)` **item** as well as a literal.
 
-The whole subtlety is the **byte basis**. The compiled `cobol-iir-compiler` models
-storage as a BYTE buffer (`str_len` is a byte length; `PIC X` positions ARE bytes)
-while the oracle models it as a Rust `String`. To agree for ANY source we compute
-the fill on the byte basis: the oracle builds `n = storage.len()` (byte-length)
-copies of `x` then stores through `move_into`, which re-pads/truncates to the
-picture's fixed CHAR size; the compiler appends `x` exactly `width` (picture char
-width) times. Because `x` is a single ASCII byte, both converge on `width` copies of
-`x`. Worked non-ASCII regression: `PIC X(5) VALUE "café"` stores `"café "` (padded to
-5 CHARS = 6 BYTES); REPLACING CHARACTERS BY `"Z"` fills the oracle's `n = 6` copies,
-capped by `move_into` to the picture's 5 chars → `"ZZZZZ"` (FIVE `Z`s, not six — the
-fixed width caps the padded byte image on BOTH engines), exactly the compiler's
-`width = 5` fill.
+The whole subtlety of the no-region path is the **byte basis**. The compiled
+`cobol-iir-compiler` models storage as a BYTE buffer (`str_len` is a byte length;
+`PIC X` positions ARE bytes) while the oracle models it as a Rust `String`. To agree
+for ANY source we compute the fill on the byte basis: the oracle builds
+`n = storage.len()` (byte-length) copies of `x` then stores through `move_into`, which
+re-pads/truncates to the picture's fixed CHAR size; the compiler appends `x` exactly
+`width` (picture char width) times. Because `x` is a single ASCII byte, both converge
+on `width` copies of `x`. Worked non-ASCII regression: `PIC X(5) VALUE "café"` stores
+`"café "` (padded to 5 CHARS = 6 BYTES); REPLACING CHARACTERS BY `"Z"` fills the
+oracle's `n = 6` copies, capped by `move_into` to the picture's 5 chars → `"ZZZZZ"`
+(FIVE `Z`s, not six — the fixed width caps the padded byte image on BOTH engines),
+exactly the compiler's `width = 5` fill.
+
+**Optional `{BEFORE|AFTER} z` region (THIS rung).** The former deferral of a region on
+the CHARACTERS item is now **lifted** on both engines. The `InspectReplacingCharacters`
+statement gains an `Option<Region>` field (the SAME `Region` the ALL/region path uses),
+read with the SAME `read_inspect_region` helper. When a region is present, only the
+window positions become `x` and positions OUTSIDE the window keep their original char,
+using the SAME window machinery as the ALL/region and TALLYING CHARACTERS forms: the
+oracle computes the CHAR window `[start, end)` over the source's current storage via
+`region_window` and rebuilds `chars[..start]` ++ `repeat(x, end - start)` ++
+`chars[end..]`; the compiler derives the BYTE window `[start, end)` via
+`emit_inspect_region_window` over the ORIGINAL source and, unrolling `0..width`, appends
+`x` iff `start <= j < end` else the original `str_slice(s, j, j+1)` (the ALL-with-region
+idiom MINUS the `s[j] == x` compare, since CHARACTERS replaces EVERY in-window position).
+Both honour the ISO not-found asymmetry (`BEFORE z` absent → whole field; `AFTER z`
+absent → empty → source unchanged). Worked (`PIC X(5) "AB,CD"`): BEFORE `","` → window
+`"AB"` → `"**,CD"`; AFTER `","` → window `"CD"` → `"AB,**"`; BEFORE `"Z"` (absent) →
+`"*****"`; AFTER `"Z"` (absent) → `"AB,CD"`. The no-region path is byte-identical to
+before this rung.
+
+**Byte-vs-char chip (pre-existing).** The oracle's window is a CHAR span; the compiler's
+is a BYTE span. They coincide on an ASCII source. A **non-ASCII** source (a byte window
+splitting a multi-byte char, or the compiler's per-position `str_slice` reconstruction
+trapping on a multi-byte char while the oracle succeeds char-based) is the PRE-EXISTING
+byte-vs-char chip (task_396ba6f6) shared with every REPLACING-with-region lowering — NOT
+newly guarded here; positive tests use ASCII, and one characterization test documents the
+divergence.
 
 Scoped SMALL and co-total, this rung applies these guards **identically** on both
 engines: (1) `x` must be a SINGLE character (the shared single-char check REPLACING
@@ -1088,19 +1114,17 @@ ALL uses); (2) a single-char but **non-ASCII literal** `x` (e.g. `"é"`, one cha
 two bytes) is a later rung — mirroring the byte-based compiler validator; the oracle
 adds an `is_ascii()` check on the resolved literal char to match. A `PIC X(1)` item
 replacement is NOT ASCII-gated: the byte-fill above is co-total for a multi-byte item
-too (both engines emit `width` copies of the item's char). (3) A `{BEFORE|AFTER}`
-region on the CHARACTERS item is **deferred** — a byte window can split a multi-byte
-character mid-position, a state the oracle's `String` storage cannot represent while
-the compiler's byte buffer can, so including it would be unsound; the new
-`InspectReplacingCharacters` statement therefore carries NO region field and the
-region is rejected at read time. (4) The source-category guard is unchanged (a
-numeric/group/reference-modified/literal source stays a later rung). `REPLACING
-CHARACTERS` inside a MULTI-item list, and inside the COMBINED `TALLYING … REPLACING`
-form, remain later rungs — only the SINGLE-item lone-REPLACING path gains support.
+too (both engines emit `width` copies of the item's char). (3) The optional region
+delimiter `z` is validated single-char by the shared helpers (a multi-char/numeric/
+reference-modified region delimiter stays a later rung, co-total). (4) The
+source-category guard is unchanged (a numeric/group/reference-modified/literal source
+stays a later rung). `REPLACING CHARACTERS` inside a MULTI-item list, and inside the
+COMBINED `TALLYING … REPLACING` form, remain later rungs — only the SINGLE-item
+lone-REPLACING path gains support.
 
 Deferred as clean later rungs (accepted by the grammar, rejected at read/compile
-time): `REPLACING CHARACTERS BY x` with a `{BEFORE|AFTER}` region or a non-ASCII
-literal replacement (see just above), `REPLACING FIRST` (`FIRST` does not parse as a
+time): `REPLACING CHARACTERS BY x` with a non-ASCII
+literal replacement (see above), `REPLACING FIRST` (`FIRST` does not parse as a
 replace keyword — it is deferred at parse time),
 a multi-character region delimiter, a multi-item `REPLACING` list carrying a
 `LEADING`/`CHARACTERS`/`FIRST` item (a `{BEFORE|AFTER}` region on each item of a

@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.79.0 — INSPECT REPLACING CHARACTERS BY x with a BEFORE/AFTER region — 2026-07-30
+
+- **`INSPECT source REPLACING CHARACTERS BY x {BEFORE|AFTER} z`** is now accepted. The former Guard-3
+  reject ("a BEFORE/AFTER region is a later rung") is lifted on both engines. Every character position
+  WITHIN the region window becomes the single replacement char `x`; positions OUTSIDE the window keep
+  their original character. This is the CHARACTERS twin of the ALL/region rung (0.46-era) and the
+  TALLYING CHARACTERS + region rung (#60), and reuses the SAME `region_window` window machinery — no
+  hand-rolled scan.
+- **Window semantics (ISO not-found asymmetry, shared helper).** The window is computed over the
+  source's CURRENT storage via `region_window`: `BEFORE z` → `[0, first_z)` (absent `z` → the WHOLE
+  source); `AFTER z` → `(first_z, len]` (absent `z` → EMPTY, source unchanged). The rebuilt image is
+  `chars[..start]` ++ `repeat(x, end - start)` ++ `chars[end..]`, stored through the SAME `move_into`
+  path — width-wide, matching the compiler's per-position unroll byte-for-byte on an ASCII source.
+- **No-region path unchanged.** With no region the SHIPPED byte-basis fill (`n = storage.len()` copies of
+  `x`, capped by `move_into`) is preserved exactly — its existing tests pass unchanged.
+- **Guards 1 & 2 unchanged.** `x` is still a single char via `single_delim_char`; a single-char but
+  non-ASCII *literal* `x` is still a later rung (co-total with the byte-based compiler). The optional
+  region delimiter is single-char via the shared helpers; a multi-char/numeric/reference-modified region
+  delimiter stays rejected co-total.
+- **Byte-vs-char chip (pre-existing).** The oracle's window is a CHAR span; the compiler's is a BYTE
+  span. They coincide on ASCII. A non-ASCII source (byte window splitting a multi-byte char, or a
+  multi-byte char inside/reconstructed-around the window) is the pre-existing byte-vs-char chip
+  (task_396ba6f6), NOT newly guarded — positive tests use ASCII; one characterization test documents the
+  divergence (compiler traps in reconstruction, oracle succeeds char-based).
+
 ## 0.78.0 — constant reference-modified single-character delimiter/search/replace operand — 2026-07-30
 
 - A **constant reference modification** `BASE(start:len)` with **literal** indices and slice-length

@@ -8,6 +8,30 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.75.0: INSPECT REPLACING CHARACTERS BY x with a BEFORE/AFTER region
+
+**`INSPECT source REPLACING CHARACTERS BY x {BEFORE|AFTER} z`** is now compiled. The former Guard-3
+reject in `emit_inspect_replacing_characters` is lifted; the region is threaded through, mirroring
+`emit_inspect_replacing`'s ALL/region handling. Compiled byte-identical to the
+`coding-adventures-cobol-runtime` 0.79.0 oracle on an ASCII source.
+
+- **Window reuse, no new lowering shape.** The `{BEFORE|AFTER} z` window `[start, end)` is derived ONCE
+  over the ORIGINAL source (before the unroll overwrites `s_reg`) via the SAME
+  `emit_inspect_region_window` the ALL/region and TALLYING sides emit — needing the runtime `str_len`.
+- **Per-position unroll (ALL-with-region MINUS the compare).** For each `j` in `0..width` we emit
+  `in_win = (start <= j < end)` and append `y` when in-window, else `str_slice(S, j, j+1)` — i.e. the
+  ALL-with-region conditional-append idiom without the `S[j] == x` compare, since CHARACTERS replaces
+  EVERY in-window position. The result is copied into `s_reg` through the empty-concat, unchanged.
+- **No-region fast path unchanged.** With no region the `for _ in 0..width { concat y }` fast path is
+  byte-identical to before (the region guard folds away; the fill never reads `s_reg`).
+- **Guards 1 & 2 unchanged.** `x` single-char via `single_delim_str`; a non-ASCII *literal* `x` stays a
+  later rung. A multi-char/numeric/reference-modified region delimiter stays rejected co-total.
+- **Byte-vs-char chip (pre-existing).** The compiler's window/slices are byte-based, the oracle's are
+  char-based; they coincide on ASCII. A non-ASCII source is the pre-existing byte-vs-char chip
+  (task_396ba6f6): the per-position `str_slice` reconstruction traps on a multi-byte char, exactly as
+  every other REPLACING-with-region lowering does. Positive tests are ASCII; one characterization test
+  pins the trap (compiler) vs char-based success (oracle).
+
 ### Added — v0.74.0: constant reference-modified single-character delimiter/search/replace operand
 
 A **constant reference modification** `BASE(start:len)` with **literal** indices and slice-length exactly
