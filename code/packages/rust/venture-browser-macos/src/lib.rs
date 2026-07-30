@@ -12,9 +12,12 @@ use std::fmt;
 use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
     BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
-    BrowserSession, HttpBrowserFetcher,
+    BrowserSession,
 };
 use window_core::WindowError;
+
+#[cfg(target_vendor = "apple")]
+use venture_browser_core::HttpBrowserFetcher;
 
 pub const VERSION: &str = "0.1.0";
 pub const DEFAULT_START_URL: &str = "http://info.cern.ch/";
@@ -179,6 +182,8 @@ pub fn run_for_smoke(_start_url: &str, _seconds: f64) -> Result<(), MacBrowserEr
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[cfg(target_vendor = "apple")]
     use venture_browser_core::BrowserFetchResponse;
 
     #[test]
