@@ -777,7 +777,12 @@ high-consensus backlog to 278 slots, and leaves 3 gaps in the Haskell lane.
 The selected thirty-second Haskell slice is `http1`, the direct NET04 consumer
 of that merged `http-core` foundation. It closes one ready protocol edge,
 validates the repaired Cabal dependency graph, and unlocks the remaining
-Haskell high-consensus tail.
+Haskell high-consensus tail. Its security review also exposed a shared NET04
+contract gap: established implementations need fail-closed framing for
+transfer-encoding/content-length ambiguity, strict wire grammar, bounded head
+resources, response-method context, and redacted typed errors. The Haskell
+slice establishes that contract; `http1-safe-framing-backfill` tracks the
+remaining established lanes as a separate dependency-shaped tranche.
 
 Recommended family order:
 

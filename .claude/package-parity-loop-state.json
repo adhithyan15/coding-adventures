@@ -411,7 +411,16 @@
       "depends_on": ["haskell-http-core"],
       "branch": "codex/haskell-http1-parity",
       "pr_number": null,
-      "notes": "Selected after PR #9270 merged because the Linux runner-image TCB gate needs an externally chosen immutable/measured runner rather than self-attestation on mutable ubuntu-latest. This immediately deliverable protocol edge builds on merged Haskell http-core, closes one of Haskell's three high-consensus gaps, unlocks the remaining Haskell tail, and validates the repaired Cabal dependency graph."
+      "notes": "Selected after PR #9270 merged because the Linux runner-image TCB gate needs an externally chosen immutable/measured runner rather than self-attestation on mutable ubuntu-latest. This immediately deliverable protocol edge builds on merged Haskell http-core, closes one of Haskell's three high-consensus gaps, unlocks the remaining Haskell tail, validates the repaired Cabal dependency graph, and establishes the fail-closed NET04 framing contract discovered during security review."
+    },
+    {
+      "id": "http1-safe-framing-backfill",
+      "title": "Backfill the fail-closed NET04 framing contract across established http1 lanes",
+      "status": "pending",
+      "depends_on": ["haskell-http1"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Newly discovered during the Haskell http1 security review. Audit Python, Go, Ruby, TypeScript, Rust, Elixir, Perl, Lua, and Swift for TE/CL ambiguity, strict field/start-line grammar, duplicate Content-Length agreement, HEAD/CONNECT response context, bounded head resources, and redacted typed errors."
     },
     {
       "id": "haskell-high-consensus-tail",
