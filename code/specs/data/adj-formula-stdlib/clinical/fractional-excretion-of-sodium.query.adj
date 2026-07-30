@@ -1,0 +1,30 @@
+% ============================================================================
+% fractional-excretion-of-sodium.query.adj — worked applications of the fractional excretion of sodium.
+% ============================================================================
+% The shape a consumer produces once it has decomposed an acute-kidney-injury vignette into a paired
+% spot urine and serum: it `import`s the grounded formulabook, `observe`s the four laboratory values,
+% and asks the engine to APPLY the cited index. No arithmetic is stated by the consumer; the engine
+% computes each value EXACTLY (over exact rationals) and carries the article's citation as its proof, on
+% the CPU, with zero model calls.
+%
+% Worked case (urinary sodium = 20, serum creatinine = 4, serum sodium = 125, urinary creatinine = 80):
+% FeNa = 100 × 20 × 4 / (125 × 80) = 8000 / 10000 = 0.8 (percent). Each query fixes the index and three
+% of the four measured quantities and asks the engine to recover the fourth; every answer is exact and
+% the five COMPOSE (each inversion recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli fractional-excretion-of-sodium.query.adj
+% ============================================================================
+
+import "fractional-excretion-of-sodium.adj"
+
+% --- Index: the FeNa the four laboratory values imply (expect 0.8). ---------------------------------
+observe urinary_sodium(20)
+observe serum_creatinine(4)
+observe serum_sodium(125)
+observe urinary_creatinine(80)
+? fractional_excretion_sodium(urinary_sodium, serum_creatinine, serum_sodium, urinary_creatinine)   % expect 0.8
+
+% --- Inverse: the urinary sodium a FeNa of 0.8 implies at the other three values (expect 20). -------
+observe fractional_excretion_sodium(0.8)
+? urinary_sodium(fractional_excretion_sodium, serum_creatinine, serum_sodium, urinary_creatinine)   % expect 20

@@ -1,0 +1,121 @@
+% ============================================================================
+% fractional-excretion-of-sodium.adj — the fractional excretion of sodium
+% (FeNa = 100 × urinary sodium × serum creatinine / (serum sodium × urinary creatinine)) in the ADJ
+% standard library.
+% ============================================================================
+% The fractional-excretion-of-sodium entry of the *clinical* track — the share of the sodium filtered by
+% the glomerulus that is finally EXCRETED in the urine, expressed as a percentage. It is the classic
+% bedside discriminator between the two big causes of acute kidney injury: an AVID, sodium-reabsorbing
+% pre-renal kidney spills little of its filtered sodium (a low FeNa), whereas an injured tubule
+% (acute tubular necrosis) cannot reclaim it (a high FeNa). Because the true filtered load is not
+% measured directly, FeNa is computed from a paired SPOT urine and serum by normalising the sodium
+% clearance to the creatinine clearance: THE FRACTIONAL EXCRETION OF SODIUM IS ONE HUNDRED TIMES THE
+% URINARY SODIUM TIMES THE SERUM CREATININE, DIVIDED BY THE SERUM SODIUM TIMES THE URINARY CREATININE —
+% i.e. 100 × (urinary sodium × serum creatinine) / (serum sodium × urinary creatinine). It ships as an
+% importable, byte-provenanced, PARAMETERIZED `formula`, together with its four exact rearrangements
+% (each of the four measured quantities solved for from the other three and the index). As with every
+% compute library, a consumer states NO arithmetic: it `import`s this file, binds the four laboratory
+% values from its own byte-provenance decomposition, and asks the engine to APPLY the cited formula on
+% the CPU. Zero math is performed by the model; the engine computes each value EXACTLY (over exact
+% rationals), carrying the formula's citation.
+%
+%     import "fractional-excretion-of-sodium.adj"
+%     observe urinary_sodium(20)        % "…urine sodium 20 mmol/L…"    (span cited by the model)
+%     observe serum_creatinine(4)        % "…creatinine 4 mg/dL…"        (span cited by the model)
+%     observe serum_sodium(125)          % "…sodium 125 mmol/L…"         (span cited by the model)
+%     observe urinary_creatinine(80)     % "…urine creatinine 80 mg/dL…" (span cited by the model)
+%     ? fractional_excretion_sodium(urinary_sodium, serum_creatinine, serum_sodium, urinary_creatinine)
+%                                         % engine → 0.8 (percent), the fractional excretion of sodium
+%
+% The 100 is the EXACT percent-scaling of the cited formula (not a measurement); the formulas are
+% otherwise exact expressions over the four parameters, so every value the engine returns is exact. They
+% COMPOSE and invert cleanly around the worked case urinary sodium = 20, serum creatinine = 4, serum
+% sodium = 125, urinary creatinine = 80 (FeNa = 100 × 20 × 4 / (125 × 80) = 8000 / 10000 = 0.8): the
+% `fractional_excretion_sodium` a consumer computes is exactly the value each of the four inverse
+% formulas back-solves to recover its own measured input (20, 4, 125, 80).
+%
+%   fractional_excretion_sodium(urinary_sodium, serum_creatinine, serum_sodium, urinary_creatinine)
+%       = 100 * urinary_sodium * serum_creatinine / (serum_sodium * urinary_creatinine)               % (FeNa, percent)
+%   urinary_sodium(fractional_excretion_sodium, serum_creatinine, serum_sodium, urinary_creatinine)
+%       = fractional_excretion_sodium * serum_sodium * urinary_creatinine / (100 * serum_creatinine)  % (solved for urine Na)
+%   serum_creatinine(fractional_excretion_sodium, urinary_sodium, serum_sodium, urinary_creatinine)
+%       = fractional_excretion_sodium * serum_sodium * urinary_creatinine / (100 * urinary_sodium)    % (solved for serum Cr)
+%   serum_sodium(fractional_excretion_sodium, urinary_sodium, serum_creatinine, urinary_creatinine)
+%       = 100 * urinary_sodium * serum_creatinine / (fractional_excretion_sodium * urinary_creatinine)% (solved for serum Na)
+%   urinary_creatinine(fractional_excretion_sodium, urinary_sodium, serum_creatinine, serum_sodium)
+%       = 100 * urinary_sodium * serum_creatinine / (fractional_excretion_sodium * serum_sodium)      % (solved for urine Cr)
+%
+% NOTE ON UNITS AND MODELLING: the two sodiums must be in the SAME concentration unit (e.g. mmol/L) and
+% the two creatinines in the SAME concentration unit (e.g. mg/dL); because sodium appears as a ratio and
+% creatinine appears as a ratio, those two units CANCEL and FeNa is a pure percentage independent of
+% which consistent units are chosen — exactly why the index is written as this dimensionless product of
+% two ratios. This is the index EXACTLY as the cited article writes it — 100 × (urinary sodium × serum
+% creatinine)/(serum sodium × urinary creatinine). A value under 1% points to a pre-renal cause and a
+% value over 2% to an intrinsic (tubular) cause, per the cited page; this library only COMPUTES the
+% index — it does not itself make that call.
+%
+% All five formulas are defended by the SAME clause — the quoted FeNa equation — because that one
+% statement (FeNa IS 100 times urinary-sodium times serum-creatinine over serum-sodium times
+% urinary-creatinine) sanctions the relation read every way. The quote is transcribed verbatim from the
+% StatPearls "Renal Function Tests" article on the NCBI Bookshelf (a current, non-archived article), so
+% each `formula` carries the provenance envelope every shipped grounded clause carries; the linter
+% rejects an unsourced one. (See feedback_nothing_human_authored — the formula, including its 100
+% constant, is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each of the five quantities appears BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are the
+% everyday names a decomposer maps onto the canonical term; the trailing comment records the intended
+% unit.
+% ----------------------------------------------------------------------------
+dictionary fractional_excretion_sodium_vocab {
+    define urinary_sodium               : finding  surface "urinary sodium", "urine sodium", "urine Na", "UNa"          % concentration (e.g. mmol/L)
+    define serum_creatinine             : finding  surface "serum creatinine", "plasma creatinine", "SCr", "PCr"        % concentration (e.g. mg/dL)
+    define serum_sodium                 : finding  surface "serum sodium", "plasma sodium", "SNa", "PNa"                % concentration (e.g. mmol/L)
+    define urinary_creatinine           : finding  surface "urinary creatinine", "urine creatinine", "UCr"             % concentration (e.g. mg/dL)
+    define fractional_excretion_sodium  : finding  surface "fractional excretion of sodium", "FENa", "FeNa"            % percent
+}
+
+% ----------------------------------------------------------------------------
+% The fractional excretion of sodium, all five ways. Each is a named, importable, reusable formula over
+% its formal parameters, bound at apply time, and each carries the FeNa equation from the StatPearls
+% "Renal Function Tests" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each
+% is an exact expression in the four measured quantities and the cited 100 constant, so the engine
+% returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook fractional_excretion_sodium_laws {
+    use fractional_excretion_sodium_vocab
+
+    % Fractional excretion of sodium — one hundred times urinary-sodium times serum-creatinine, over
+    % serum-sodium times urinary-creatinine.
+    formula fractional_excretion_sodium(urinary_sodium, serum_creatinine, serum_sodium, urinary_creatinine) = 100 * urinary_sodium * serum_creatinine / (serum_sodium * urinary_creatinine)
+        source "FeNa = 100 × (urinary sodium × serum creatinine)/(serum sodium × urinary creatinine)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507821/"
+        trust authoritative
+
+    % Urinary sodium — the same equation solved for the urinary sodium. Defended by the SAME sentence.
+    formula urinary_sodium(fractional_excretion_sodium, serum_creatinine, serum_sodium, urinary_creatinine) = fractional_excretion_sodium * serum_sodium * urinary_creatinine / (100 * serum_creatinine)
+        source "FeNa = 100 × (urinary sodium × serum creatinine)/(serum sodium × urinary creatinine)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507821/"
+        trust authoritative
+
+    % Serum creatinine — the same equation solved for the serum creatinine. The SAME sentence.
+    formula serum_creatinine(fractional_excretion_sodium, urinary_sodium, serum_sodium, urinary_creatinine) = fractional_excretion_sodium * serum_sodium * urinary_creatinine / (100 * urinary_sodium)
+        source "FeNa = 100 × (urinary sodium × serum creatinine)/(serum sodium × urinary creatinine)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507821/"
+        trust authoritative
+
+    % Serum sodium — the same equation solved for the serum sodium. The SAME sentence, read again.
+    formula serum_sodium(fractional_excretion_sodium, urinary_sodium, serum_creatinine, urinary_creatinine) = 100 * urinary_sodium * serum_creatinine / (fractional_excretion_sodium * urinary_creatinine)
+        source "FeNa = 100 × (urinary sodium × serum creatinine)/(serum sodium × urinary creatinine)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507821/"
+        trust authoritative
+
+    % Urinary creatinine — the same equation solved for the urinary creatinine. The SAME sentence, the
+    % fifth reading of the one index.
+    formula urinary_creatinine(fractional_excretion_sodium, urinary_sodium, serum_creatinine, serum_sodium) = 100 * urinary_sodium * serum_creatinine / (fractional_excretion_sodium * serum_sodium)
+        source "FeNa = 100 × (urinary sodium × serum creatinine)/(serum sodium × urinary creatinine)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507821/"
+        trust authoritative
+}
