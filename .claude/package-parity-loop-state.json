@@ -8,7 +8,12 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": {
+    "item_id": "build-tool-trusted-authority-bundle",
+    "pr_number": 9196,
+    "branch": "codex/build-tool-trusted-authority-bundle",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9196"
+  },
   "last_inventory": {
     "revision": "d0b9c442f03520fdff75c12b4f236c50de7f152c",
     "schema_version": 2,
@@ -69,14 +74,14 @@
     {
       "id": "build-tool-trusted-authority-bundle",
       "title": "Define the external authority bundle and Linux preflight profile",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-execution-sandbox",
         "build-tool-linux-oci-sandbox"
       ],
       "branch": "codex/build-tool-trusted-authority-bundle",
-      "pr_number": null,
-      "notes": "Selected after PR #9189 merged because it is the highest-leverage ready security prerequisite. Security review split out a safe first profile: a post-merge external bundle whose raw-byte approval binds the exact source commit/tree, policy, schemas, authority verifier, Linux preflight backend, and external backend identity. Schema v1 approves exact bytes for capability inspection only, with no corpus, adapter, container, executable payload, or process handoff."
+      "pr_number": 9196,
+      "notes": "Ready-for-review PR #9196. Security review split out a safe first profile: a post-merge external bundle whose raw-byte approval binds the exact source commit/tree, policy, schemas, authority verifier, Linux preflight backend, and external backend identity. Schema v1 approves exact bytes for capability inspection only, with no corpus, adapter, container, executable payload, or process handoff. Local validation covers 108 focused tests, 86% branch-aware authority-module coverage, Ruff, Bandit, corpus/contract validators, Go tests/build, parity collision checks, and the unchanged 73-gap build-file audit."
     },
     {
       "id": "build-tool-authority-exact-backend-loader",
