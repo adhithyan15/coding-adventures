@@ -7416,6 +7416,22 @@ fn inspect_tally_multi_characters_first_shadows_the_all_item() {
 }
 
 #[test]
+fn inspect_tally_multi_characters_in_the_middle_shadows_multiple_trailing_items() {
+    // WRITTEN-ORDER priority with a region-less CHARACTERS in the MIDDLE of THREE items:
+    // `FOR ALL "A" CHARACTERS ALL "B"` over "ABAB". Item 0 (ALL "A") claims the two 'A's;
+    // the region-less CHARACTERS catch-all then claims EVERY remaining position, so item 2
+    // (ALL "B") is UNREACHABLE and never fires. Count = length = 4. This exercises the
+    // compiler's unreachable-block emission for MORE THAN ONE trailing chain link after an
+    // unconditional catch-all — each dead link is a self-contained block ending in its own
+    // `jmp cont`, so the shadowing matches the oracle's first-eligible rule byte-for-byte.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"ABAB\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"A\" CHARACTERS ALL \"B\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
 fn inspect_tally_multi_all_then_characters_with_before_region() {
     // A CHARACTERS item WITH a `{BEFORE|AFTER}` region narrows its window exactly like any
     // other item. `FOR ALL "A" CHARACTERS BEFORE "X"` over "ABXAB" (X at index 2):
