@@ -20,8 +20,13 @@ There are four kinds of material in this directory:
 - [Computer Architecture](./computer-architecture/README.md)
 - [Cryptography](./cryptography/README.md)
 - [Language Tooling](./language-tooling/README.md)
+- [Documents and Media](./documents-media/README.md)
+- [SQL and Storage](./sql-storage/README.md)
 - [Python Ecosystem](./programming-languages/python-ecosystem.md)
 - [Human Languages](./human-languages/README.md) — personal curriculum, not a package companion
+
+The hand-authored [Learning Coverage Roadmap](./ROADMAP.md) explains how the
+generated inventory is prioritized and records the baseline survey.
 
 The generated [Learning Coverage Inventory](./COVERAGE.md) is the complete
 package-to-learning backlog. Regenerate it after adding or renaming packages or
@@ -47,6 +52,10 @@ This table is the current answer to "what learning entry explains this package f
 | Deep micro-architecture | `cache`, `branch-predictor`, `hazard-detection`, `pipeline`, `core` | [Pipelines, caches, and speculation](./computer-architecture/pipelines-caches-and-speculation.md) |
 | Frontend and compiler pipeline | `grammar-tools`, `lexer`, `parser`, `bytecode-compiler`, `virtual-machine`, `assembler`, `jit-compiler` | [Language tooling index](./language-tooling/README.md) |
 | Intermediate representations | semantic IR, compiler IR, interpreter IR, lowering, source identity | [Intermediate representations](./language-tooling/intermediate-representations.md) |
+| WebAssembly | binary modules, LEB128, validation, instantiation, stack execution | [WebAssembly from bytes to execution](./language-tooling/webassembly-from-bytes-to-execution.md) |
+| Structured text | JSON, CSV, TOML, XML, lexing, parsing, values, serialization | [Structured text from bytes to values](./language-tooling/structured-text-from-bytes-to-values.md) |
+| SQL execution | lexing, parsing, logical query order, backends, SQLite | [From SQL text to stored rows](./sql-storage/from-sql-text-to-stored-rows.md) |
+| Barcodes | 1D/2D symbols, finite fields, Reed-Solomon correction, layout | [Barcodes and error correction](./documents-media/barcodes-and-error-correction.md) |
 | Python project conventions | packaging, linting, types, `uv`, `ruff`, `pyproject.toml` | [Modern Python ecosystem](./programming-languages/python-ecosystem.md) |
 
 ## Relationship To Specs
