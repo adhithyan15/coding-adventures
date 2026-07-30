@@ -498,8 +498,12 @@ SirValue _sir_ge(SirValue a, SirValue b) {
  * made self-referential (`a[0] = a`). A depth cap keeps such a structure from
  * overflowing the C stack: past the cap two values are ASSUMED equal (the
  * co-inductive answer, so a cyclic comparison terminates). The cap is far
- * beyond any real (non-cyclic) nesting and comfortably under the stack limit. */
-#define SIR_MAX_EQ_DEPTH 5000
+ * beyond any real (non-cyclic) nesting, yet sized to fit the SMALLEST common
+ * C stack — Windows' 1 MB default (Linux/macOS give 8 MB). Each recursion level
+ * is one `_sir_value_eq_d` frame, so ~500 levels stays well under 1 MB even in
+ * an unoptimised build. (A cap of 5000 recursed ~875 KB deep on the display path
+ * and stack-overflowed on Windows before the cap ever tripped.) */
+#define SIR_MAX_EQ_DEPTH 500
 
 int _sir_value_eq_d(SirValue a, SirValue b, int depth) {
     if (depth > SIR_MAX_EQ_DEPTH) return 1;
@@ -914,8 +918,11 @@ void _sir_fmt_pair(FILE *out, SirValue v) {
  * sequence (`a[0] = a`, now constructible via the mutable `SeqSet`) would
  * otherwise recurse forever, so a static depth counter bounds it: past the cap
  * a `[...]` ellipsis is printed instead of descending (the emitted program is
- * single-threaded, so a plain static counter is sufficient). */
-#define SIR_MAX_FMT_DEPTH 5000
+ * single-threaded, so a plain static counter is sufficient). Sized like
+ * `SIR_MAX_EQ_DEPTH` to fit Windows' 1 MB stack: a `_sir_fmt`↔`_sir_fmt_map`
+ * pair is ~175 B per level, so ~500 levels is ~90 KB — far under the limit,
+ * where 5000 overran the 1 MB stack before this cap could print the ellipsis. */
+#define SIR_MAX_FMT_DEPTH 500
 static int _sir_fmt_depth = 0;
 
 void _sir_fmt(FILE *out, SirValue v) {
