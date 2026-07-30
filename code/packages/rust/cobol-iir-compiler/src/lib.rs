@@ -3494,15 +3494,22 @@ impl<'a> Compiler<'a> {
         Ok(())
     }
 
-    /// `INSPECT source REPLACING CHARACTERS BY x` — overwrite EVERY position of the
-    /// alphanumeric `source` with the single replacement character `x`. With no
-    /// region the WHOLE field becomes `x`s; its width is unchanged.
+    /// `INSPECT source REPLACING CHARACTERS BY x [{BEFORE|AFTER} z]` — overwrite the
+    /// alphanumeric `source` positions with the single replacement character `x`. With
+    /// no region the WHOLE field becomes `x`s; with a `{BEFORE|AFTER}` region only the
+    /// window positions become `x` and the rest keep their original char. Width is
+    /// unchanged either way.
     ///
-    /// This reuses [`Self::emit_inspect_replacing`]'s rebuild scaffold, but every
-    /// position becomes `x` UNCONDITIONALLY — there is no `S[j]`-vs-search compare, so
-    /// we need not even read the source bytes. We append the 1-character replacement
-    /// string `width` times (the picture's compile-time CHAR width) into a fresh
-    /// accumulator, then copy it back to the source register.
+    /// This reuses [`Self::emit_inspect_replacing`]'s rebuild scaffold. In the NO-region
+    /// fast path every position becomes `x` UNCONDITIONALLY — there is no `S[j]`-vs-
+    /// search compare, so we need not even read the source bytes: we append the
+    /// 1-character replacement string `width` times (the picture's compile-time CHAR
+    /// width) into a fresh accumulator, then copy it back. With a region we UNROLL over
+    /// `0..width` and, at each position `j`, append `x` iff `start <= j < end` else the
+    /// original `S[j, j+1)` char — the ALL-with-region structure MINUS the `S[j] == x`
+    /// compare (CHARACTERS replaces EVERY in-window position). The window `[start, end)`
+    /// is derived ONCE over the ORIGINAL source via the SAME
+    /// [`Self::emit_inspect_region_window`] the ALL/region and TALLYING sides use.
     ///
     /// # Byte-basis co-totality (why `width` copies, not `str_len(S)` copies)
     ///
@@ -3512,13 +3519,16 @@ impl<'a> Compiler<'a> {
     /// non-ASCII source whose byte length exceeds its char width (e.g.
     /// `PIC X(5) VALUE "café"` = 5 chars / 6 bytes) the oracle's `n = 6` copies cap to
     /// the picture's 5 chars. Emitting exactly `width` copies here reproduces that
-    /// capped image byte-for-byte on both engines.
+    /// capped image byte-for-byte on both engines. With a region the per-position unroll
+    /// emits exactly `width` pieces for the SAME reason.
     ///
     /// # Guards (IDENTICAL to the oracle)
     ///
-    ///   3. A `{BEFORE|AFTER}` region on the CHARACTERS item is a later rung (a byte
-    ///      window can split a multi-byte char mid-position, which the oracle's
-    ///      `String` storage cannot represent — unsound to include, so deferred).
+    ///   3. A `{BEFORE|AFTER}` region is now ACCEPTED (THIS rung), lowered via
+    ///      `emit_inspect_region_window` (a BYTE span). On an ASCII source it coincides
+    ///      with the oracle's CHAR span byte-for-byte; a non-ASCII source (byte window
+    ///      splitting a multi-byte char, or a multi-byte char inside the window) is the
+    ///      PRE-EXISTING byte-vs-char chip shared with every other region form.
     ///   2. A single-char but NON-ASCII **literal** `x` is a later rung, so the
     ///      byte-based compiler stays co-total with the char-based oracle. Applied to
     ///      LITERALS only: a `PIC X(1)` *item* replacement is co-total under the fill.
@@ -3529,13 +3539,8 @@ impl<'a> Compiler<'a> {
         s_reg: &str,
         width: usize,
     ) -> Result<(), CompileError> {
-        // Guard 3 — a `{BEFORE|AFTER}` region on the CHARACTERS item is a later rung.
-        if child_node(ri, "inspect_region").is_some() {
-            return Err(CompileError::Unsupported(
-                "INSPECT REPLACING CHARACTERS with a BEFORE/AFTER region is a later rung".into(),
-            ));
-        }
-        // The lone `operand` child is the replacement `x` (the `BY` operand).
+        // The lone DIRECT `operand` child is the replacement `x` (the `BY` operand); a
+        // region's delimiter lives on the nested `inspect_region` child, not here.
         let replace_node = child_node(ri, "operand").ok_or_else(|| {
             CompileError::Malformed("INSPECT REPLACING CHARACTERS without a BY replacement".into())
         })?;
@@ -3556,21 +3561,123 @@ impl<'a> Compiler<'a> {
         // operands are rejected with the shared messages).
         let y_reg = self.single_delim_str(replace_node, "INSPECT REPLACING")?;
 
-        // result = "" — append `x` for each of the `width` positions.
+        // The optional `{BEFORE|AFTER} z` region → `Option<(RegionKind, delim_node)>`,
+        // extracted with the SAME keyword/operand logic `inspect_replacing_all` uses.
+        // (The former Guard-3 reject is lifted; the oracle lifts the mirror guard.)
+        let region: Option<(RegionKind, &GrammarASTNode)> =
+            match child_node(ri, "inspect_region") {
+                None => None,
+                Some(region_node) => {
+                    let rtoks = child_tokens(region_node);
+                    let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+                        RegionKind::Before
+                    } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+                        RegionKind::After
+                    } else {
+                        return Err(CompileError::Unsupported(
+                            "INSPECT region without a BEFORE or AFTER keyword".into(),
+                        ));
+                    };
+                    let rdelim = child_node(region_node, "operand").ok_or_else(|| {
+                        CompileError::Malformed(
+                            "INSPECT BEFORE/AFTER region without a delimiter".into(),
+                        )
+                    })?;
+                    Some((kind, rdelim))
+                }
+            };
+        // Derive the window `[start, end)` over the ORIGINAL source (before the unroll
+        // overwrites `s_reg`). With no region nothing is emitted and the per-position
+        // guard folds away — the fast path below is byte-identical to the pre-region
+        // lowering. `emit_inspect_region_window` needs the runtime BYTE length.
+        let region_window = match region {
+            None => None,
+            Some(_) => {
+                let len = self.fresh("_irclen");
+                self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.to_string())], "i64");
+                self.emit_inspect_region_window(region, s_reg, &len)?
+            }
+        };
+
+        // result = "" — the accumulator we build `width` characters into.
         let result = self.fresh("_ircres");
         self.emit("str_const", Some(&result), vec![Operand::Str(String::new())], "str");
-        for _ in 0..width {
-            self.emit(
-                "str_concat",
-                Some(&result),
-                vec![Operand::Var(result.clone()), Operand::Var(y_reg.clone())],
-                "str",
-            );
+        for j in 0..width {
+            match &region_window {
+                // No region: append `x` unconditionally (fast path — the fill never
+                // reads `s_reg`).
+                None => {
+                    self.emit(
+                        "str_concat",
+                        Some(&result),
+                        vec![Operand::Var(result.clone()), Operand::Var(y_reg.clone())],
+                        "str",
+                    );
+                }
+                // With a region: append `x` iff `start <= j < end`, else the original
+                // `S[j, j+1)` char. `j` is this unrolled position's compile-time
+                // constant, materialised into a register to compare against the runtime
+                // window bounds. This is `emit_inspect_replacing`'s ALL-with-region
+                // conditional-append idiom MINUS the `S[j] == x` compare.
+                Some((start, end_bound)) => {
+                    let jreg = self.fresh("_ircjr");
+                    self.emit("const", Some(&jreg), vec![Operand::Int(j as i64)], "i64");
+                    let ge = self.fresh("_ircge");
+                    self.emit(
+                        "cmp_ge",
+                        Some(&ge),
+                        vec![Operand::Var(jreg.clone()), Operand::Var(start.clone())],
+                        "i64",
+                    );
+                    let lt = self.fresh("_irclt");
+                    self.emit(
+                        "cmp_lt",
+                        Some(&lt),
+                        vec![Operand::Var(jreg), Operand::Var(end_bound.clone())],
+                        "i64",
+                    );
+                    let in_win = self.fresh("_ircin");
+                    self.emit("and", Some(&in_win), vec![Operand::Var(ge), Operand::Var(lt)], "i64");
+                    let use_orig = self.fresh("irc_orig");
+                    let done = self.fresh("irc_done");
+                    self.emit(
+                        "jmp_if_false",
+                        None,
+                        vec![Operand::Var(in_win), Operand::Var(use_orig.clone())],
+                        "void",
+                    );
+                    self.emit(
+                        "str_concat",
+                        Some(&result),
+                        vec![Operand::Var(result.clone()), Operand::Var(y_reg.clone())],
+                        "str",
+                    );
+                    self.emit("jmp", None, vec![Operand::Var(done.clone())], "void");
+                    self.emit("label", None, vec![Operand::Var(use_orig)], "void");
+                    // orig = S[j, j+1) — the source character unchanged.
+                    let jc = self.str_index(j as i64);
+                    let jc1 = self.str_index(j as i64 + 1);
+                    let orig = self.fresh("_ircorig");
+                    self.emit(
+                        "str_slice",
+                        Some(&orig),
+                        vec![Operand::Var(s_reg.to_string()), Operand::Var(jc), Operand::Var(jc1)],
+                        "str",
+                    );
+                    self.emit(
+                        "str_concat",
+                        Some(&result),
+                        vec![Operand::Var(result.clone()), Operand::Var(orig)],
+                        "str",
+                    );
+                    self.emit("label", None, vec![Operand::Var(done)], "void");
+                }
+            }
         }
         // source := result. `result` is exactly `width` characters, the same
         // fixed-width image the oracle stores after its `move_into` cap. Copy through
-        // an empty concat for symmetry with `emit_inspect_replacing` (the fill never
-        // reads `s_reg`, so no aliasing hazard either way).
+        // an empty concat so the source register (read during a region unroll) is only
+        // overwritten now, after the last read.
         let empty = self.fresh("_ircempty");
         self.emit("str_const", Some(&empty), vec![Operand::Str(String::new())], "str");
         self.emit(

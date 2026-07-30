@@ -3332,14 +3332,35 @@ mod tests {
     }
 
     #[test]
-    fn inspect_replacing_characters_with_a_region_is_a_later_rung() {
-        // A `{BEFORE|AFTER}` region on the CHARACTERS item is deferred (guard 3).
-        let err = run_cobol(&wrap(
-            &["01  S  PIC X(5) VALUE \"ABQBA\"."],
-            &["INSPECT S REPLACING CHARACTERS BY \"X\" BEFORE \"Q\".", "STOP RUN."],
+    fn inspect_replacing_characters_with_a_region_is_now_supported() {
+        // A `{BEFORE|AFTER}` region on the CHARACTERS item is now ACCEPTED (THIS rung):
+        // only the window positions become `x`. BEFORE "," in "AB,CD" → window [0,2) =
+        // "AB" → "**,CD"; AFTER "," → window [3,5) = "CD" → "AB,**". Not-found asymmetry:
+        // BEFORE absent → whole field; AFTER absent → nothing.
+        let before = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AB,CD\"."],
+            &["INSPECT S REPLACING CHARACTERS BY \"*\" BEFORE \",\".", "DISPLAY S.", "STOP RUN."],
         ))
-        .unwrap_err();
-        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+        .unwrap();
+        assert_eq!(before, "**,CD\n");
+        let after = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AB,CD\"."],
+            &["INSPECT S REPLACING CHARACTERS BY \"*\" AFTER \",\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after, "AB,**\n");
+        let before_absent = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AB,CD\"."],
+            &["INSPECT S REPLACING CHARACTERS BY \"*\" BEFORE \"Z\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(before_absent, "*****\n");
+        let after_absent = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AB,CD\"."],
+            &["INSPECT S REPLACING CHARACTERS BY \"*\" AFTER \"Z\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(after_absent, "AB,CD\n");
     }
 
     #[test]
