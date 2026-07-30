@@ -8,7 +8,12 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": {
+    "item_id": "build-tool-linux-capability-preflight-broker",
+    "pr_number": 9231,
+    "branch": "codex/build-tool-linux-capability-preflight-broker",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9231"
+  },
   "last_inventory": {
     "revision": "b3bc8adb4402b5f163d476bd9ccc0a79e2fcd09d",
     "schema_version": 2,
@@ -93,12 +98,12 @@
     {
       "id": "build-tool-linux-capability-preflight-broker",
       "title": "Broker the two approved Linux OCI capability commands",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-authority-exact-backend-loader"
       ],
       "branch": "codex/build-tool-linux-capability-preflight-broker",
-      "pr_number": null,
+      "pr_number": 9231,
       "notes": "Selected after PR #9208 merged because this is the direct dependency for the invariant-probe authority and every later Linux enforcement stage. Add a separately domain-bound authority over the exact broker and backend closure; verify Podman, crun, and Conmon; execute only retained Podman bytes against a private prepopulated image store and delegated cgroup root; permit only forced-local version and exact-config image inspect; install mandatory Landlock execute confinement whose only allow-rule is the retained Podman inode for pathname-backed execution; keep the worker protocol non-authoritative and source-free; stream one combined output cap; scrub environment and descriptors; enforce timeout plus cgroup-backed descendant kill/reap. No container, fixture, adapter, or invariant probe is created. Anonymous executable memfds and executable mappings remain separately gated."
     },
     {
