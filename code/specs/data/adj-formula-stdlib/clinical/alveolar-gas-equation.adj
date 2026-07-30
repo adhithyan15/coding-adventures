@@ -1,0 +1,98 @@
+% ============================================================================
+% alveolar-gas-equation.adj — the alveolar gas equation for the alveolar oxygen
+% partial pressure (PAO2 = [(Patm − PH2O) FiO2] − (PaCO2/RQ)) in the ADJ standard library.
+% ============================================================================
+% The alveolar-gas-equation entry of the *clinical* track — the equation that gives the partial pressure
+% of oxygen in the alveolus (PAO2) from the inspired gas and the arterial CO2. The inspired air is first
+% humidified (so the dry-gas pressure available is the atmospheric pressure minus the water vapour
+% pressure), the fraction of that which is oxygen is FiO2, and the alveolar CO2 displaces oxygen in
+% proportion to how much CO2 is produced per oxygen consumed (the respiratory quotient). The result is the
+% alveolar PO2 that the arterial PO2 is then compared against to form the alveolar–arterial (A-a) gradient
+% (see alveolar-arterial-gradient.adj, which takes THIS value as its input). THE ALVEOLAR OXYGEN PARTIAL
+% PRESSURE IS THE FRACTION OF INSPIRED OXYGEN TIMES THE DRY INSPIRED PRESSURE (ATMOSPHERIC MINUS WATER
+% VAPOUR), MINUS THE ARTERIAL CO2 DIVIDED BY THE RESPIRATORY QUOTIENT — i.e. FiO2 × (Patm − PH2O) −
+% PaCO2 / RQ. It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with two
+% exact rearrangements (the arterial CO2 a given alveolar PO2 implies, and the atmospheric pressure a
+% given alveolar PO2 implies). As with every compute library, a consumer states NO arithmetic: it
+% `import`s this file, binds the inspired-gas and blood-gas quantities from its own byte-provenance
+% decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is performed by the
+% model; the engine computes each value EXACTLY (over exact rationals), carrying the formula's citation.
+%
+%     import "alveolar-gas-equation.adj"
+%     observe fio2(1)      % "…100% oxygen…"        (span cited by the model)
+%     observe patm(760)    % "…at sea level…"       (span cited by the model)
+%     observe ph2o(47)     % "…water vapour 47…"    (span cited by the model)
+%     observe paco2(40)    % "…PaCO2 40 mmHg…"      (span cited by the model)
+%     observe rq(0.8)      % "…respiratory quotient 0.8…"   (span cited by the model)
+%     ? alveolar_po2(fio2, patm, ph2o, paco2, rq)   % engine → 663 (mmHg)
+%
+% The equation carries NO embedded constant: every quantity — the inspired-oxygen fraction, the
+% atmospheric and water-vapour pressures, the arterial CO2, and the respiratory quotient — is a formal
+% parameter bound at apply time (the source quotes the equation with these as symbols; the usual values,
+% ~760 mmHg atmospheric at sea level, ~47 mmHg water vapour at body temperature, and a respiratory
+% quotient of about 0.8, are supplied by the consumer, not baked in). The formula is an exact expression
+% in those parameters, so every value the engine returns is exact. The three formulas COMPOSE and invert
+% cleanly around the worked case FiO2 = 1, Patm = 760, PH2O = 47, PaCO2 = 40, RQ = 0.8
+% (PAO2 = 1 × (760 − 47) − 40 / 0.8 = 713 − 50 = 663 mmHg): the `alveolar_po2` a consumer computes is
+% exactly the value each inverse formula back-solves to recover its own measured input (40, 760).
+%
+%   alveolar_po2(fio2, patm, ph2o, paco2, rq) = fio2 * (patm - ph2o) - paco2 / rq     % (alveolar PO2, mmHg)
+%   paco2(fio2, patm, ph2o, alveolar_po2, rq) = (fio2 * (patm - ph2o) - alveolar_po2) * rq   % (solved for arterial CO2)
+%   patm(fio2, ph2o, paco2, alveolar_po2, rq) = (alveolar_po2 + paco2 / rq) / fio2 + ph2o    % (solved for atmospheric pressure)
+%
+% NOTE ON UNITS AND MODELLING: the pressures (Patm, PH2O, PaCO2, PAO2) are all in millimetres of mercury
+% (mmHg), FiO2 is a fraction between 0 and 1 (e.g. 0.21 for room air, 1 for 100% oxygen), and RQ is a
+% dimensionless ratio (about 0.8). This library only COMPUTES the alveolar PO2; the downstream A-a
+% gradient (alveolar PO2 minus arterial PO2) and its interpretation are handled by the separate
+% alveolar-arterial-gradient.adj library, for which this formula supplies the alveolar term.
+%
+% All three formulas are defended by the SAME clause — the quoted alveolar-gas-equation statement —
+% because that one equation (FiO2 × (Patm − PH2O) − PaCO2 / RQ) sanctions the relation read every way. The
+% quote is transcribed verbatim from the StatPearls "Alveolar Gas Equation" article on the NCBI Bookshelf
+% (a current, non-archived article), so each `formula` carries the provenance envelope every shipped
+% grounded clause carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored — the
+% formula is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `fio2`, `patm`, `ph2o`, `paco2`, `rq` and `alveolar_po2` each appear BOTH as a derived
+% result and as an input (of the other formulas), so each is a single dictionary term used in both roles.
+% The `surface` lists are the everyday names a decomposer maps onto the canonical term; the trailing
+% comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary alveolar_gas_equation_vocab {
+    define fio2         : finding  surface "FiO2", "fraction of inspired oxygen", "inspired oxygen fraction"   % fraction 0-1
+    define patm         : finding  surface "Patm", "atmospheric pressure", "barometric pressure"               % mmHg
+    define ph2o         : finding  surface "PH2O", "water vapour pressure", "partial pressure of water"        % mmHg
+    define paco2        : finding  surface "PaCO2", "arterial CO2", "arterial carbon dioxide"                  % mmHg
+    define rq           : finding  surface "RQ", "respiratory quotient", "respiratory exchange ratio"          % ratio
+    define alveolar_po2 : finding  surface "PAO2", "alveolar PO2", "alveolar oxygen partial pressure"          % mmHg
+}
+
+% ----------------------------------------------------------------------------
+% The alveolar gas equation, three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the alveolar-gas-equation statement from the StatPearls
+% "Alveolar Gas Equation" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each is
+% an exact expression in the parameters, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook alveolar_gas_equation_laws {
+    use alveolar_gas_equation_vocab
+
+    % Alveolar PO2 — inspired-oxygen fraction times the dry inspired pressure, minus arterial CO2 over RQ.
+    formula alveolar_po2(fio2, patm, ph2o, paco2, rq) = fio2 * (patm - ph2o) - paco2 / rq
+        source "PAO2 = [(Patm − PH2O) FiO2] − (PaCO2/RQ)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482268/"
+        trust authoritative
+
+    % Arterial CO2 — the same equation solved for PaCO2. Defended by the SAME equation.
+    formula paco2(fio2, patm, ph2o, alveolar_po2, rq) = (fio2 * (patm - ph2o) - alveolar_po2) * rq
+        source "PAO2 = [(Patm − PH2O) FiO2] − (PaCO2/RQ)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482268/"
+        trust authoritative
+
+    % Atmospheric pressure — the same equation solved for Patm, the third reading of the one equation.
+    formula patm(fio2, ph2o, paco2, alveolar_po2, rq) = (alveolar_po2 + paco2 / rq) / fio2 + ph2o
+        source "PAO2 = [(Patm − PH2O) FiO2] − (PaCO2/RQ)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482268/"
+        trust authoritative
+}
