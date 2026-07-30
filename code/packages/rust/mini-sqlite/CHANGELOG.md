@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.69 — `replace()` with an empty search returns the subject unchanged
+
+`replace('abc', '', 'X')` now returns `'abc'`, matching SQLite — an empty search
+string is a no-op, not a splice of the replacement between every character (which
+`'XaXbXcX'` would be). Non-empty searches are unaffected. Found by probing real
+SQLite. Verified against bundled real SQLite. Spans sql-vm 0.4.39.
+
 ## 0.5.68 — `round()` returns positive zero
 
 `round(-0.4)` and `round(-0.0)` now return `0.0`, not `-0.0`, matching SQLite —

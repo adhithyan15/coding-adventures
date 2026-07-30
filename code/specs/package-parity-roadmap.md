@@ -918,22 +918,46 @@ Delivery order:
    conservative unknown-path handling, typed cache states, inline-only
    Starlark loads, prerequisite-closed shard verification, the OCaml-aware
    toolchain registry, and fail-closed BUILD-file validation.
-4. Add the trusted-execution sandbox and adversarial execution corpus. No
-   repository command may run until filesystem and network isolation,
-   no-follow path handling, sanitized environments, direct argv, and hard
-   process-tree limits are enforced.
-5. Make the Go reference pass the contract, including structured Starlark
+4. Define the process-free trusted-execution policy core: closed execution
+   input/result records, reviewed corpus and adapter digests, explicit operator
+   authorization, stable backend-unavailable results, and a backend interface
+   with no host-execution fallback. This tranche validates authority but never
+   executes fixture code.
+5. Implement the Linux OCI backend first. Require a pinned pre-existing image
+   identity, private mount/user/PID/network namespaces, a read-only root,
+   dropped capabilities, `no_new_privileges`, non-root execution, bounded
+   writable tmpfs, streaming output accounting, cgroup limits, and
+   whole-container termination.
+6. Implement the native Windows boundary with AppContainer or LPAC plus Job
+   Objects and root-handle reparse-safe filesystem operations. Keep macOS
+   non-passing until a signed helper or isolated VM can prove the same
+   filesystem, network, resource, and tree-termination guarantees;
+   `sandbox-exec` alone is not sufficient evidence.
+7. Add closed execution-semantics cases for command ordering, failure
+   propagation, dependency skips, dry-run, jobs, resource locks, legacy shell
+   behavior, and direct argv. Keep escape, network, environment, link-race,
+   cancellation, and resource-exhaustion checks as runner-owned non-oracular
+   probes.
+8. Make the Go reference pass the contract, including structured Starlark
    context/commands and the B05 Windows executor contract.
-6. Remediate existing ports in fixture-failure order: C#/F#, Python, Ruby,
+9. Remediate existing ports in fixture-failure order: C#/F#, Python, Ruby,
    Swift, TypeScript, Elixir, Rust, Perl, Haskell, and Lua. Each independent
    engine is its own PR; a reviewed shared-engine exception must be explicit.
-7. Add language-native Java and Kotlin implementations using shared JVM fixture
+10. Add language-native Java and Kotlin implementations using shared JVM fixture
    infrastructure but separate engines, then add Dart.
-8. Add the OCaml implementation after the lane foundation is stable.
-9. Decide and document whether C and C++ require native build tools before
+11. Add the OCaml implementation after the lane foundation is stable.
+12. Decide and document whether C and C++ require native build tools before
    either emerging lane graduates.
-10. Gate completion in CI: every supported implementation runs the same
+13. Gate completion in CI: every supported implementation runs the same
    conformance corpus on its applicable operating systems.
+
+Pull-request CI may validate the policy, schemas, digests, and fake-backend
+tests, but it must not authorize execution from branch-modifiable code or
+fixtures. Real sandbox probes run only from reviewed immutable revisions in a
+protected `push`/manual workflow with read-only repository permissions, no
+repository secrets, and an out-of-band approved corpus digest. The trusted
+runner never pulls a container image and never falls back to unsandboxed host
+execution.
 
 The pure-domain security review also discovered three follow-on gates that must
 land before final adapter parity:

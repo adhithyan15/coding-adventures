@@ -56,7 +56,12 @@ block_item = declaration | statement ;
 # A declaration ends in its own semicolon; `init_declarator` is the
 # semicolon-less form reused by the `for` initialiser.
 declaration = init_declarator SEMICOLON ;
-init_declarator = type_spec NAME [ EQ expr ] ;
+# A declarator is a scalar (`int x`) or a fixed-size array (`int a[3]`, or
+# `int a[] = {...}` where the size comes from the initialiser).  An array's
+# initialiser is a brace list; a scalar's is a single expression.
+init_declarator = type_spec NAME [ LBRACKET [ INT_LIT ] RBRACKET ] [ EQ initializer ] ;
+initializer = LBRACE [ init_list ] RBRACE | expr ;
+init_list = expr { COMMA expr } ;
 
 statement = compound_stmt
           | if_stmt
@@ -99,8 +104,9 @@ cast = LPAREN type_spec RPAREN cast | unary ;
 
 unary = ( PLUS | MINUS | TILDE | BANG ) unary | postfix ;
 
-postfix = primary { call_suffix } ;
+postfix = primary { call_suffix | index_suffix } ;
 call_suffix = LPAREN [ arg_list ] RPAREN ;
+index_suffix = LBRACKET expr RBRACKET ;
 arg_list = expr { COMMA expr } ;
 
 primary = FLOAT_LIT

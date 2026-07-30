@@ -641,6 +641,67 @@ A fixture is data supplied to a program that can execute commands. Therefore:
     Different language runtimes MUST NOT apply first-key/last-key or permissive
     numeric behavior to security decisions.
 
+### 14. Trusted-execution delivery profile
+
+Trusted execution is delivered in independently reviewable layers. A policy or
+schema layer MUST NOT be treated as an execution sandbox:
+
+1. The process-free policy layer closes the execution input and result records,
+   computes a framed SHA-256 digest over the execution corpus, validates
+   runner-owned adapter and backend identities, and returns stable
+   non-passing results for unavailable backends. It imports no process API and
+   never materializes a workspace.
+2. The Linux layer may execute only through a pinned, already-present OCI image
+   identity. The runner MUST NOT pull, build, tag, or resolve a mutable image
+   name during a conformance run. The container uses private mount, user, PID,
+   and network namespaces; a read-only root filesystem; no new privileges; no
+   capabilities; no host devices; a non-root identity; only explicit
+   read-only inputs; a size-bounded writable tmpfs; cgroup-backed aggregate
+   limits; streaming output accounting; and whole-container termination.
+3. The Windows layer requires a capability-less AppContainer or LPAC and
+   private filesystem ACLs. The child is created suspended, assigned to a Job
+   Object with kill-on-close, no-breakaway, process, CPU, and memory limits,
+   and only then resumed. Every filesystem operation is root-handle-relative
+   and rejects reparse points.
+4. The macOS layer remains unavailable until a signed helper or isolated VM
+   backend can prove filesystem and network containment, aggregate resource
+   ceilings, bounded writable storage, and full descendant termination.
+   `sandbox-exec`, a copied working directory, process groups, or `rlimit`
+   alone do not satisfy this contract.
+5. Execution semantics enter the reviewed corpus only after an enforcing
+   backend exists. Command ordering, fail-stop, dependency skips, dry-run,
+   jobs, resource locks, legacy shell behavior, and structured direct argv are
+   fixture oracles. Filesystem escape, network denial, environment leakage,
+   link races, cancellation, descendant termination, and every hard ceiling
+   remain runner-owned invariant probes; fixtures cannot define them away.
+
+The execution policy is separate from `implementations.json`. It contains an
+exact conformance revision, exact execution-corpus SHA-256, runner-controlled
+hard ceilings, backend identities, and adapter executable digests. A backend
+or adapter marked ready requires an immutable SHA-256 identity. The policy does
+not contain operator authorization: `run-case` additionally requires an
+explicit `--allow-trusted-execution` invocation flag.
+
+The execution-corpus digest is SHA-256 over all `*.json` cases sorted by their
+portable path relative to `execution-cases/`. For each case, append the
+unsigned 64-bit big-endian path-byte length, UTF-8 path bytes, unsigned 64-bit
+big-endian raw-content length, and exact raw bytes. The empty corpus therefore
+has the standard SHA-256 empty digest. Any byte, filename, addition, or removal
+changes the authority.
+
+The process-free `validate-corpus` and `validate-result` bootstrap commands
+remain unchanged and MUST reject execution intent. A separate execution
+contract validator may validate schemas, semantic invariants, policy, and
+digests without decoding executable file payloads, setting permissions,
+creating a workspace, probing a toolchain, importing a process API, or
+launching anything.
+
+Pull-request workflows may run only these process-free checks and fake-backend
+unit tests. Real execution requires a protected reviewed revision, read-only
+repository permissions, no repository secrets, and the approved digest
+supplied out of band. `pull_request_target` MUST NOT execute changed fixtures
+or runner code.
+
 ## Capability registry
 
 V1 capabilities are:

@@ -176,6 +176,23 @@ turning runtime into a Hue integration or process manager:
   path using local fake runners, without opening sockets or moving the Chief
   bridge boundary.
 
+## Current Durable Discovery Service Slice
+
+This slice gives the supervised mDNS pass an actor-owned lifecycle and durable
+restart boundary:
+
+- `smart-home-discovery-service` owns the D23 runtime, mDNS executor,
+  report adapter, and repository-owned `StorageBackend` inside one actor state.
+- Typed tick messages drive due runs sequentially, and the runtime still emits
+  exactly the selected-interface IPv4/IPv6 requests through the injectable
+  executor boundary.
+- Every tick persists worker cadence and retry pressure, a compact run journal,
+  and service health. Reopening against the same backend restores that state
+  before another network request can run.
+- Local-folder restart tests prove successful cadence, named-interface binding,
+  failed-run backoff, service counters, and durable run audits survive process
+  replacement.
+
 ## Current Discovery Observability Slice
 
 This slice makes supervised discovery runs inspectable through the existing
@@ -312,11 +329,6 @@ These items are Chief of Staff architecture, not smart-home platform work:
 
 These items move toward retiring an existing Home Assistant install:
 
-- Connect the supervised mDNS runtime pass to an actor or process that manages
-  lifecycle, OS interface binding, and persistence for schedules, results, and
-  runtime state across restarts. Retry/backoff policy now exists in the runtime
-  scheduler, but an external actor still needs to drive durable process
-  lifecycle.
 - Finish production Hue pairing by connecting the local HTTP registration plan
   to the worker that presses through real LAN I/O and durable Vault writes. The
   typed request/response/VaultRef handoff and runtime no-secret audit trail now

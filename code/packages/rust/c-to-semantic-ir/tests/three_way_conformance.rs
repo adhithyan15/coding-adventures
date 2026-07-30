@@ -629,6 +629,53 @@ fn corpus() -> Vec<Case> {
                    int main(void) { int x = 5; double r = x / 2.0 * 4.0; \
                    printf(\"%d\\n\", (int)r); return 0; }",
         },
+        // ── milestone 11: fixed-size arrays ──────────────────────────────────
+        Case {
+            label: "array literal indexed read a[2] → 30",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { int a[3] = {10, 20, 30}; printf(\"%d\\n\", a[2]); return 0; }",
+        },
+        Case {
+            label: "array sized from initializer, a[0] → 5",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { int a[] = {5, 6, 7}; printf(\"%d\\n\", a[0]); return 0; }",
+        },
+        Case {
+            label: "indexed write then read a[1] = 99 → 99",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { int a[3] = {1, 2, 3}; a[1] = 99; printf(\"%d\\n\", a[1]); return 0; }",
+        },
+        Case {
+            label: "sum an array in a loop {1..5} → 15",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { int a[5] = {1, 2, 3, 4, 5}; int s = 0; \
+                   for (int i = 0; i < 5; i = i + 1) { s = s + a[i]; } \
+                   printf(\"%d\\n\", s); return 0; }",
+        },
+        Case {
+            label: "fill an array in a loop then read a[4] → 8",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { int a[5]; \
+                   for (int i = 0; i < 5; i = i + 1) { a[i] = i * 2; } \
+                   printf(\"%d\\n\", a[4]); return 0; }",
+        },
+        Case {
+            label: "partial initializer zero-fills the rest, a[2] → 0",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { int a[3] = {7}; printf(\"%d\\n\", a[0] + a[2]); return 0; }",
+        },
+        Case {
+            label: "uint8 array element wraps on store, a[0] → 44",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint8_t a[2] = {0, 0}; a[0] = 200 + 100; \
+                   printf(\"%d\\n\", a[0]); return 0; }",
+        },
+        Case {
+            label: "computed index a[i+1] → 20",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { int a[3] = {10, 20, 30}; int i = 0; \
+                   printf(\"%d\\n\", a[i + 1]); return 0; }",
+        },
         // ── milestone 10: faithful printf (float DISPLAY, no (int) cast) ──────
         // These print doubles *directly* with `%f`/`%.Nf` and assert the emitted
         // text is byte-identical to reference C's printf — the payoff of the

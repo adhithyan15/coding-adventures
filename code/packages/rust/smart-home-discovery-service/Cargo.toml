@@ -1,0 +1,18 @@
+[package]
+name = "smart-home-discovery-service"
+version = "0.1.0"
+edition = "2021"
+description = "Actor-owned durable lifecycle for scheduled smart-home mDNS discovery"
+license = "MIT"
+
+[dependencies]
+actor = { path = "../actor" }
+coding-adventures-json-serializer = { path = "../json-serializer" }
+coding-adventures-json-value = { path = "../json-value" }
+smart-home-core = { path = "../smart-home-core" }
+smart-home-discovery = { path = "../smart-home-discovery" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+storage-core = { path = "../storage-core" }
+
+[dev-dependencies]
+storage-local-folder = { path = "../storage-local-folder" }

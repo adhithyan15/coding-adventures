@@ -1352,16 +1352,37 @@ mod tests {
     }
 
     #[test]
-    fn level_88_alphanumeric_thru_range_is_still_a_later_rung() {
-        // A `THRU` range on an alphanumeric conditional variable stays deferred —
-        // a clean error, never a wrong answer.
+    fn level_88_alphanumeric_thru_range_reads_inclusively() {
+        // A `THRU` range with STRING bounds on an alphanumeric conditional variable
+        // now reads: GRADE holds "C", and PASSING (VALUE "A" THRU "D") is an
+        // inclusive range that contains it → true.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  GRADE  PIC X VALUE \"C\".",
+            "88  PASSING  VALUE \"A\" THRU \"D\".",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    IF PASSING DISPLAY \"pass\" ELSE DISPLAY \"fail\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "pass\n");
+    }
+
+    #[test]
+    fn level_88_alphanumeric_thru_range_with_a_numeric_bound_is_still_a_later_rung() {
+        // A `THRU` range with a NON-string (numeric) bound on an alphanumeric
+        // conditional variable stays deferred — a clean error, never a wrong answer.
         let err = run_cobol(&program(&[
             "IDENTIFICATION DIVISION.",
             "PROGRAM-ID. P.",
             "DATA DIVISION.",
             "WORKING-STORAGE SECTION.",
-            "01  FLAG  PIC X VALUE \"M\".",
-            "88  IN-RANGE  VALUE \"A\" THRU \"Z\".",
+            "01  GRADE  PIC X VALUE \"C\".",
+            "88  IN-RANGE  VALUE \"A\" THRU 5.",
             "PROCEDURE DIVISION.",
             "MAIN.",
             "    IF IN-RANGE DISPLAY \"YES\".",

@@ -226,6 +226,24 @@ fn super_lowers_to_call_super() {
 }
 
 #[test]
+fn class_methods_route_through_the_singleton_table() {
+    // OOP slice 5: `def self.m` → `_sir_def_class_method`; `Class.m(x)` →
+    // `_sir_call_class_method` (receiver is the class NAME, a quoted C literal).
+    let m = lower_ruby(
+        "class Math2\n  def self.double(x)\n    x + x\n  end\nend\nputs Math2.double(21)",
+    );
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_def_class_method(\"Math2\", \"double\""),
+        "a class method registers in the class-method table\n{src}"
+    );
+    assert!(
+        src.contains("_sir_call_class_method(\"Math2\", \"double\""),
+        "a `Class.m` call dispatches through the class-method table\n{src}"
+    );
+}
+
+#[test]
 fn sanitize_ident_maps_into_c() {
     assert_eq!(sanitize_ident("foo"), "foo");
     assert_eq!(sanitize_ident("foo_bar1"), "foo_bar1");

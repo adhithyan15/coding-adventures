@@ -1469,6 +1469,46 @@ fn emit_builtin_simple(out: &mut String, name: &str, args: &[Expr], indent: usiz
         }
         return;
     }
+    // OOP slice 5: register a CLASS method.  `args = [StrLit(class),
+    // StrLit(method), MakeClosure(fn)]` — same shape as `__def_method__`, but it
+    // populates the SEPARATE class-method (singleton) table.
+    if name == "__def_class_method__" {
+        if let (Some(Expr::StrLit { value: cls, .. }), Some(Expr::StrLit { value: m, .. }), Some(clo)) =
+            (args.first(), args.get(1), args.get(2))
+        {
+            let _ = write!(out, "_sir_def_class_method({}, {}, ", quote_c_string(cls), quote_c_string(m));
+            emit_expr(out, clo, indent);
+            out.push(')');
+        } else {
+            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+        }
+        return;
+    }
+    // OOP slice 5: dispatch a CLASS method.  `args = [StrLit(class),
+    // StrLit(method), call-args…]` — the receiver is the class NAME (a StrLit),
+    // not an instance expression, so both leading args are quoted C literals.
+    if name == "__class_method__" {
+        if let (Some(Expr::StrLit { value: cls, .. }), Some(Expr::StrLit { value: m, .. })) =
+            (args.first(), args.get(1))
+        {
+            let call_args = &args[2..];
+            let _ = write!(
+                out,
+                "_sir_call_class_method({}, {}, {}",
+                quote_c_string(cls),
+                quote_c_string(m),
+                call_args.len()
+            );
+            for a in call_args {
+                out.push_str(", ");
+                emit_expr(out, a, indent);
+            }
+            out.push(')');
+        } else {
+            let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+        }
+        return;
+    }
     // OOP slice 4: `super` — `args = [StrLit(method), StrLit(definingClass),
     // call-args…]`.  Resolve `method` from the SUPERCLASS of the defining class
     // and apply to the current self.  Method / defining-class are QUOTED C string
@@ -1612,8 +1652,9 @@ fn is_supported_builtin(name: &str) -> bool {
         // `__method__` (dispatch it).  (`__super__`/`__self__`/`__class_method__`/
         // … stay unsupported — later slices.)
         // Slice 3 adds `__self__` (a bare `self`); slice 4 adds `__super__`
-        // (`super`).  (`__class_method__`/`__def_class_method__`/… stay
-        // unsupported — later slices.)
+        // (`super`); slice 5 adds class methods `__def_class_method__` /
+        // `__class_method__`.  (`@@class` vars and modules stay unsupported —
+        // later slices.)
         || matches!(
             name,
             "and" | "or"
@@ -1623,6 +1664,8 @@ fn is_supported_builtin(name: &str) -> bool {
                 | "__method__"
                 | "__self__"
                 | "__super__"
+                | "__def_class_method__"
+                | "__class_method__"
         )
 }
 
@@ -1640,18 +1683,31 @@ thread_local! {
     // anti-RCE by construction — an explicit (class,method) table lookup — so this
     // allowlist is purely for clean COMPILE-TIME rejection.)
     static DEFINED_METHODS: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
+    // OOP slice 5: the same closed-set idea for CLASS methods — the names the
+    // module registers via `__def_class_method__`, the only names a
+    // `__class_method__` dispatch may target (else it is a built-in class method,
+    // the Collections batch, rejected until then).
+    static DEFINED_CLASS_METHODS: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
 }
 
 /// Collect the `__def_method__("Class", "m", …)` method names anywhere in `m`
 /// (a full recursive walk, so a dispatch is never wrongly rejected for a
 /// registration nested in a loop/branch/closure).
-fn collect_defined_methods(m: &Module, out: &mut HashSet<String>) {
-    fn from_expr(e: &Expr, out: &mut HashSet<String>) {
+fn collect_defined_methods(m: &Module, out: &mut (HashSet<String>, HashSet<String>)) {
+    // `out.0` = instance-method names (`__def_method__`); `out.1` = class-method
+    // names (`__def_class_method__`).  Both are collected in ONE walk so the two
+    // dispatch allowlists (instance `__method__`, class `__class_method__`) stay
+    // in lockstep with what the module actually registers.
+    fn from_expr(e: &Expr, out: &mut (HashSet<String>, HashSet<String>)) {
         match e {
             Expr::BuiltinCall { name, args, .. } => {
                 if name == "__def_method__" {
                     if let Some(Expr::StrLit { value, .. }) = args.get(1) {
-                        out.insert(value.clone());
+                        out.0.insert(value.clone());
+                    }
+                } else if name == "__def_class_method__" {
+                    if let Some(Expr::StrLit { value, .. }) = args.get(1) {
+                        out.1.insert(value.clone());
                     }
                 }
                 args.iter().for_each(|a| from_expr(a, out));
@@ -1698,7 +1754,7 @@ fn collect_defined_methods(m: &Module, out: &mut HashSet<String>) {
             _ => {}
         }
     }
-    fn from_stmt(s: &Stmt, out: &mut HashSet<String>) {
+    fn from_stmt(s: &Stmt, out: &mut (HashSet<String>, HashSet<String>)) {
         match s {
             Stmt::LetBinding { value, .. }
             | Stmt::LetStarBinding { value, .. }
@@ -1755,7 +1811,7 @@ fn collect_defined_methods(m: &Module, out: &mut HashSet<String>) {
             _ => {}
         }
     }
-    fn from_block(b: &Block, out: &mut HashSet<String>) {
+    fn from_block(b: &Block, out: &mut (HashSet<String>, HashSet<String>)) {
         b.stmts.iter().for_each(|s| from_stmt(s, out));
         from_expr(&b.value, out);
     }
@@ -1770,9 +1826,10 @@ fn collect_defined_methods(m: &Module, out: &mut HashSet<String>) {
 }
 
 pub fn first_unsupported_builtin(m: &Module) -> Option<(String, Span)> {
-    let mut defined = HashSet::new();
+    let mut defined = (HashSet::new(), HashSet::new());
     collect_defined_methods(m, &mut defined);
-    DEFINED_METHODS.with(|d| *d.borrow_mut() = defined);
+    DEFINED_METHODS.with(|d| *d.borrow_mut() = defined.0);
+    DEFINED_CLASS_METHODS.with(|d| *d.borrow_mut() = defined.1);
     for f in &m.functions {
         // A SIR19 parameter default is an expression the prologue evaluates at
         // call time, so a deferred builtin nested in one must be pre-checked
@@ -1925,11 +1982,41 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
             {
                 return Some(("a malformed __super__ call".to_string(), span.clone()));
             }
-            // `__def_method__`/`__method__`/`__super__` carry `StrLit` class/method
-            // names that must stay raw C literals.  The compound (control-flow-
-            // argument) path cannot recover them, so reject a call that is not
-            // `is_simple` — deferred, not mis-emitted.
-            if matches!(name.as_str(), "__def_method__" | "__method__" | "__super__") && !is_simple(e)
+            // OOP slice 5: `__def_class_method__` mirrors `__def_method__` —
+            // `[StrLit(class), StrLit(method), MakeClosure]`.
+            if name == "__def_class_method__"
+                && !matches!(
+                    args.as_slice(),
+                    [Expr::StrLit { .. }, Expr::StrLit { .. }, Expr::MakeClosure { .. }]
+                )
+            {
+                return Some((
+                    "a malformed __def_class_method__ registration".to_string(),
+                    span.clone(),
+                ));
+            }
+            // OOP slice 5: `__class_method__` is `[StrLit(class), StrLit(method), …]`
+            // — the receiver is the class NAME (a `StrLit`), not an instance expr.
+            if name == "__class_method__"
+                && !matches!(
+                    (args.first(), args.get(1)),
+                    (Some(Expr::StrLit { .. }), Some(Expr::StrLit { .. }))
+                )
+            {
+                return Some(("a malformed __class_method__ dispatch".to_string(), span.clone()));
+            }
+            // These OOP builtins carry `StrLit` class/method names that must stay
+            // raw C literals.  The compound (control-flow-argument) path cannot
+            // recover them, so reject a call that is not `is_simple` — deferred,
+            // not mis-emitted.
+            if matches!(
+                name.as_str(),
+                "__def_method__"
+                    | "__method__"
+                    | "__super__"
+                    | "__def_class_method__"
+                    | "__class_method__"
+            ) && !is_simple(e)
             {
                 return Some((
                     format!("a `{name}` call with a control-flow argument"),
@@ -1948,6 +2035,24 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
                             format!(
                                 "a call to the built-in method `{value}` (only \
                                  user-defined methods dispatch this slice)"
+                            ),
+                            span.clone(),
+                        ));
+                    }
+                }
+            }
+            // OOP slice 5: same allowlist for a `__class_method__` dispatch — a
+            // name the module never registers via `__def_class_method__` is a
+            // built-in class method (`Foo.name`, the Collections batch), rejected
+            // cleanly.  (The method name is args[1]; args[0] is the class NAME.)
+            if name == "__class_method__" {
+                if let Some(Expr::StrLit { value, .. }) = args.get(1) {
+                    let known = DEFINED_CLASS_METHODS.with(|d| d.borrow().contains(value));
+                    if !known {
+                        return Some((
+                            format!(
+                                "a call to the built-in class method `{value}` (only \
+                                 user-defined class methods dispatch this slice)"
                             ),
                             span.clone(),
                         ));

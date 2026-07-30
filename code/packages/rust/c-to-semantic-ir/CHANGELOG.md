@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+### Milestone 11 — fixed-size arrays
+
+The first of the four aggregate axes (arrays → structs → pointers → strings).
+A C array maps to a SIR **sequence**, which the core and both backends already
+render (`SeqLit`/`SeqIndex`/`SeqSet`, `Feature::Sequences`), so this is a
+**frontend-only** slice — no backend changes.
+
+- **Grammar:** `init_declarator` gains an array dimension and a brace
+  initializer (`int a[3]`, `int a[3] = {1,2,3}`, `int a[] = {…}`); `postfix`
+  gains `index_suffix` so `a[i]` parses as an rvalue and an assignment target.
+- **Lowering:** array-ness lives only in the symbol table (`Binding` gains
+  `array_len: Option<usize>`), so every expression still has a scalar `CType`
+  and the expression machinery is unchanged.
+  - `int a[N] = {…}` → a `SeqLit` of the initializers (each converted to the
+    element type), **zero-filled** to `N` (C's aggregate rule); an uninitialised
+    `int a[N];` is all-zero.  Size is `N`, or the initializer count for
+    `int a[] = {…}`.
+  - `a[i]` → `SeqIndex` (result = element type); `a[i] = e` → `Stmt::SeqSet`
+    with `e` converted to the element type, so a narrowing store still wraps
+    (`uint8_t a[…]; a[0] = 200 + 100;` stores 44).
+  - **`Feature::Sequences` is declared only when an array is used**, so a
+    scalar-only program is unchanged.
+  - Refused (positioned error): whole-array assignment, a bare array name used
+    as a value (no pointer decay yet), indexing a non-array, a non-integer
+    index, chained/mixed postfix (`a[i][j]`, `f(x)[i]`), too many initializers,
+    and a length past `MAX_ARRAY_LEN` (a DoS guard).
+- Verified: 51 frontend unit tests (8 new arrays) + three-way conformance
+  (8 new array cases: literal/loop reads, indexed write, loop fill, computed
+  index, partial-init zero-fill, per-element `uint8` wraparound) byte-identical
+  across reference C (`clang -fwrapv`), emitted Ruby, and emitted C; emitted C
+  compiles clean on clang + gcc + MSVC.
+
 ### Milestone 10 — faithful `printf`
 
 `printf` now reproduces C's formatting exactly, so a program can print a

@@ -668,6 +668,17 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects invalid MOS model nominal temperatures", () => {
+    const valid = normalizeModelCard("Mvalid", "nmos", { TNOM: 325.0 });
+    expect(valid.parameters.T_NOM).toBe(325.0);
+
+    for (const invalidTemperature of [0.0, -1.0, Number.POSITIVE_INFINITY, Number.NaN]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { TNOM: invalidTemperature }),
+      ).toThrow("MOSFET TNOM must be finite and positive");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,

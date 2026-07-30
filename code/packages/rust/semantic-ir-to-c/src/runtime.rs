@@ -1248,6 +1248,85 @@ SirValue _sir_call_super(const char *method, const char *defining_class, int arg
     return r;
 }
 
+/* ---- OOP slice 5: class (singleton) methods --------------------------------
+ *
+ * A class method (`def self.m`) belongs to the class's OWN namespace — Ruby's
+ * singleton class — NOT the instance-method table.  Keeping a SEPARATE table
+ * means an instance method `m` and a class method `m` on the same class never
+ * collide (both are legal, and distinct, in Ruby).  Class methods ARE inherited
+ * (`class A; def self.m; end; end; class B < A; end; B.m` works), so dispatch
+ * walks the SAME user-ancestry (`_sir_class_super`) as instance methods. */
+static struct { const char *cls; const char *method; SirValue fn; } _sir_class_method_tab[SIR_METHOD_MAX];
+static int _sir_class_method_n = 0;
+
+SirValue _sir_def_class_method(const char *cls, const char *method, SirValue fn) {
+    const char *c = _sir_intern(cls), *m = _sir_intern(method);
+    int i;
+    for (i = 0; i < _sir_class_method_n; i++) {
+        if (_sir_class_method_tab[i].cls == c && _sir_class_method_tab[i].method == m) {
+            _sir_class_method_tab[i].fn = fn;
+            return fn;
+        }
+    }
+    if (_sir_class_method_n < SIR_METHOD_MAX) {
+        _sir_class_method_tab[_sir_class_method_n].cls = c;
+        _sir_class_method_tab[_sir_class_method_n].method = m;
+        _sir_class_method_tab[_sir_class_method_n].fn = fn;
+        _sir_class_method_n++;
+    }
+    return fn;
+}
+
+/* Look up a class method on THIS class only (no ancestry). */
+static SirValue _sir_lookup_class_method(const char *cls, const char *method) {
+    const char *c = _sir_intern(cls), *m = _sir_intern(method);
+    int i;
+    for (i = 0; i < _sir_class_method_n; i++) {
+        if (_sir_class_method_tab[i].cls == c && _sir_class_method_tab[i].method == m) {
+            return _sir_class_method_tab[i].fn;
+        }
+    }
+    return _sir_nil();
+}
+
+/* Resolve a class method starting at `cls`, walking UP the ancestry (so a
+ * subclass inherits its parent's class methods).  Bounded by SIR_ANCESTRY_MAX. */
+static SirValue _sir_resolve_class_method(const char *cls, const char *method) {
+    const char *cur = cls;
+    int steps = 0;
+    while (cur && steps++ < SIR_ANCESTRY_MAX) {
+        SirValue fn = _sir_lookup_class_method(cur, method);
+        if (fn.tag == SIR_CLOSURE) return fn;
+        cur = _sir_class_super(cur);
+    }
+    return _sir_nil();
+}
+
+/* Dispatch a class method `cls.method(args…)`.  A class method has NO instance
+ * receiver, so `self` is bound to NIL for the body (and restored after) — it
+ * never leaks the caller's instance `self` into a class method (e.g. when an
+ * instance method calls `Foo.bar`).  Unresolved => a (rescuable) NoMethodError. */
+SirValue _sir_call_class_method(const char *cls, const char *method, int argc, ...) {
+    va_list ap;
+    SirValue *args, fn, r;
+    fn = _sir_resolve_class_method(cls, method);
+    if (fn.tag != SIR_CLOSURE) {
+        return _sir_raise(_sir_error(
+            "NoMethodError", _sir_str(_sir_cat("undefined class method ", method))));
+    }
+    va_start(ap, argc);
+    args = _sir_va_collect(argc, ap);
+    va_end(ap);
+    {
+        SirValue saved_self = _sir_current_self;
+        _sir_current_self = _sir_nil();
+        r = fn.as.clo->fn(fn.as.clo->caps, args, argc);
+        _sir_current_self = saved_self;
+    }
+    if (args) free(args);
+    return r;
+}
+
 SirValue _sir_print_v(SirValue *xs, int n) {
     int i;
     for (i = 0; i < n; i++) _sir_fmt(stdout, xs[i]);
