@@ -8,6 +8,34 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.67.0: INSPECT CONVERTING with a data-name FROM/TO operand
+
+`INSPECT src CONVERTING from TO to [{BEFORE|AFTER} x]` now lowers when the `from` and/or `to` table is
+a **data-name** (`PIC X` item) rather than a string literal — either or both sides may be an item,
+mixing freely with a literal on the other. Compiled byte-identical to the `coding-adventures-cobol-runtime`
+0.71.0 oracle on ASCII operands.
+
+- **Operand kind.** A new `ConvOperand { Literal(String), Item { reg, width } }` mirrors the oracle's
+  `ConvertOperand`. `emit_inspect_converting` resolves each `from`/`to` node via a `converting_operand`
+  method (a literal is carried by value; a data-name resolves to its register + declared width through
+  the shared `item_index`; a numeric item, group/undeclared name, figurative, numeric literal, and
+  reference modification are clean later rungs with the same messages the oracle uses).
+- **Table entries: baked const vs loop-invariant runtime read.** The equal-length check spans each
+  side's compile-time length (a literal's char count OR an item's declared width). For a LITERAL the
+  table entries are baked exactly as before — a `const`(byte) per `from[k]`, a 1-char `str_const` per
+  `to[k]`. For a DATA-NAME they become RUNTIME reads emitted ONCE before the per-position loop:
+  `from[k] = str_index(item, k)` (a byte) and `to[k] = str_slice(item, k, k+1)` (a 1-char string).
+  These reads are loop-invariant (the `from`/`to` item does not change during the translate), so
+  hoisting them out is both the natural lowering and the correctness invariant — a `from`/`to` that
+  ALIASES the source is read while the source still holds its ORIGINAL bytes (the source register is
+  overwritten only at the very end). The per-position first-match-wins chain and the `{BEFORE|AFTER}`
+  region guard are BYTE-IDENTICAL to the literal path — they consume the `from_consts`/`to_consts`
+  registers the same way regardless of how the entries were produced.
+- **Byte-vs-char note.** A non-ASCII LITERAL `from`/`to` stays rejected (the compiler compares raw
+  bytes). A non-ASCII byte in a data-name item's runtime storage is the pre-existing byte-vs-char
+  operand chip (shared with the literal-source scans) — not statically rejectable — so the ASCII case
+  is byte-identical and non-ASCII item content stays that shared chip.
+
 ### Added — v0.66.0: INSPECT REPLACING multi-item list with a LEADING item
 
 A multi-item `INSPECT src REPLACING {ALL|LEADING} a BY x {ALL|LEADING} b BY y …` now lowers when one

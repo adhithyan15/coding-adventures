@@ -537,9 +537,16 @@ pub enum Stmt {
     /// from the two EQUAL-length string literals `from` and `to`: a character equal
     /// to `from[k]` becomes `to[k]` (the FIRST such `k` wins if `from` repeats a
     /// character), and a character in no table entry is left unchanged. In place,
-    /// same width. This rung: `from`/`to` are string LITERALS of equal length; a
-    /// `PIC X` item / figurative / reference-modified `from`/`to`, an unequal-length
-    /// pair, and a numeric/group source are later rungs.
+    /// same width. `from`/`to` are each a string LITERAL **or** a data-name (`PIC X`
+    /// item) — either or both may be an item, mixing freely with a literal on the
+    /// other side (carried as a [`ConvertOperand`], resolved at exec time). A
+    /// figurative / reference-modified `from`/`to`, an unequal-length pair, and a
+    /// numeric/group source (or a numeric/group item AS `from`/`to`) are later rungs.
+    ///
+    /// A data-name's translation set is the item's CURRENT storage (its declared
+    /// width in characters). The equal-length requirement stays: a data-name's length
+    /// is its DECLARED WIDTH — known at compile time — so `from`-width must equal
+    /// `to`-width, whatever mix of literal/item the two sides are.
     ///
     /// An optional `region` restricts the translation to a sub-slice of the source —
     /// the `{BEFORE|AFTER} x` phrase (see [`Region`], shared with the TALLYING and
@@ -549,8 +556,31 @@ pub enum Stmt {
     /// the same leftmost-first-index and BEFORE→whole / AFTER→empty not-found
     /// asymmetry the count/replace windows use. A multi-character region delimiter is
     /// a later rung (rejected at exec time by `single_delim_char`).
-    InspectConverting { source: String, from: String, to: String, region: Option<Region> },
+    InspectConverting {
+        source: String,
+        from: ConvertOperand,
+        to: ConvertOperand,
+        region: Option<Region>,
+    },
     StopRun,
+}
+
+/// A CONVERTING `from`/`to` operand, carried UNRESOLVED so a data-name reads its
+/// translation set from the item's CURRENT storage at exec time.
+///
+/// A string literal is fixed at parse time, so it is carried already resolved. A
+/// data-name (`PIC X` item) is carried by NAME — its set is the item's storage,
+/// which the interpreter reads when the CONVERTING executes (loop-invariant: the
+/// `from`/`to` item does not change during the translation, so reading it once up
+/// front is exactly the oracle's char→char table build). Whether the item is a
+/// valid alphanumeric operand (a numeric/group item is a later rung) is checked at
+/// exec time, mirroring the compiler's compile-time check.
+#[derive(Debug, Clone)]
+pub enum ConvertOperand {
+    /// A string literal — its own characters ARE the set.
+    Literal(String),
+    /// A data-name (`PIC X` item) whose CURRENT storage is the set.
+    Item(String),
 }
 
 /// One item of a `WHEN` value-list: a single value or an inclusive `lo THRU hi`
@@ -1972,7 +2002,7 @@ fn read_inspect_replacing_multi(
 /// can share the same diagnostic as any other CONVERTING error.)
 fn read_inspect_converting(
     verb: &GrammarASTNode,
-) -> Result<(String, String, Option<Region>), RuntimeError> {
+) -> Result<(ConvertOperand, ConvertOperand, Option<Region>), RuntimeError> {
     let converting = child_node(verb, "inspect_converting").ok_or_else(|| {
         RuntimeError::Unsupported("INSPECT without a CONVERTING clause is a later rung".into())
     })?;
@@ -1994,27 +2024,27 @@ fn read_inspect_converting(
         }
     };
     Ok((
-        read_converting_literal(from_node, "from")?,
-        read_converting_literal(to_node, "to")?,
+        read_converting_operand(from_node, "from")?,
+        read_converting_operand(to_node, "to")?,
         region,
     ))
 }
 
-/// Read a CONVERTING `from`/`to` operand as a plain string literal. Only string
-/// literals are supported this rung; a data-name (`PIC X` item), figurative
-/// constant, numeric literal, or reference modification is a later rung. `which`
-/// names the position (`"from"`/`"to"`) for the diagnostic.
-fn read_converting_literal(op: &GrammarASTNode, which: &str) -> Result<String, RuntimeError> {
+/// Read a CONVERTING `from`/`to` operand into a [`ConvertOperand`]. A string
+/// literal becomes [`ConvertOperand::Literal`] (its set is fixed now); a data-name
+/// becomes [`ConvertOperand::Item`] (its set is the item's CURRENT storage, read at
+/// exec time — this rung LIFTS the old data-name reject). A figurative constant,
+/// numeric literal, or reference modification stays a later rung. `which` names the
+/// position (`"from"`/`"to"`) for the diagnostic.
+fn read_converting_operand(op: &GrammarASTNode, which: &str) -> Result<ConvertOperand, RuntimeError> {
     match read_operand(op)? {
-        Operand::Lit(Lit::Str(s)) => Ok(s),
+        Operand::Lit(Lit::Str(s)) => Ok(ConvertOperand::Literal(s)),
+        Operand::Ident(name) => Ok(ConvertOperand::Item(name)),
         Operand::Lit(Lit::Num(_)) => Err(RuntimeError::Unsupported(format!(
             "INSPECT CONVERTING with a numeric-literal {which} operand is a later rung"
         ))),
         Operand::Lit(Lit::Fig(_)) => Err(RuntimeError::Unsupported(format!(
             "INSPECT CONVERTING with a figurative-constant {which} operand is a later rung"
-        ))),
-        Operand::Ident(_) => Err(RuntimeError::Unsupported(format!(
-            "INSPECT CONVERTING with a data-name {which} operand is a later rung"
         ))),
         Operand::RefMod { .. } => Err(RuntimeError::Unsupported(format!(
             "INSPECT CONVERTING with a reference-modified {which} operand is a later rung"

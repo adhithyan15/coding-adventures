@@ -245,9 +245,13 @@ LEADING half carrying a region is still a later rung in the combined form even t
 the STANDALONE `FOR LEADING`/`REPLACING LEADING` + region forms are supported); and
 `INSPECT source CONVERTING from TO to` (translate each character
 of the alphanumeric source through a per-character table built from the two
-equal-length string literals `from`/`to` — a character equal to `from[k]` becomes
-`to[k]`, the **first (leftmost) occurrence winning** if `from` repeats a
-character, others left unchanged — **in place**, same width), with an optional
+equal-length operands `from`/`to`, each a string LITERAL **or** a data-name
+(`PIC X` item) whose CURRENT storage supplies the set — either or both may be an
+item, mixing freely with a literal on the other side — a character equal to
+`from[k]` becomes `to[k]`, the **first (leftmost) occurrence winning** if `from`
+repeats a character, others left unchanged — **in place**, same width; a
+`from`/`to` that aliases the source is read before the rewrite so it sees the
+ORIGINAL bytes), with an optional
 `{BEFORE|AFTER} z` **region** (restrict the translation to the sub-slice bounded by
 the FIRST occurrence of the single-character delimiter `z`, using the SAME window the
 count and replacement use: `BEFORE z` translates left of it — the WHOLE source if `z`
@@ -291,7 +295,9 @@ statement whose `TALLYING`/`REPLACING` half is a
 deferred sub-form (a combined `TALLYING … FOR LEADING` and a combined `REPLACING
 LEADING`, in any combination, are now supported), `CONVERTING` with
 unequal-length
-`FROM`/`TO`, or a data-name/figurative/reference-modified `from`/`to`, tables,
+`FROM`/`TO` (now including item widths), a numeric/group item as `from`/`to`, or a
+figurative/reference-modified `from`/`to` (a data-name `PIC X` item `from`/`to` is
+now supported), tables,
 files,
 and every other verb) returns a descriptive `RuntimeError` — never wrong output.
 See PL08 for the roadmap toward full COBOL and later standards.

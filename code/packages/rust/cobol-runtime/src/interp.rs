@@ -4,9 +4,9 @@
 use crate::error::RuntimeError;
 use crate::picture::Picture;
 use crate::program::{
-    ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program, RefIndex, Region,
-    RegionKind, RelOp, ReplaceMultiLeadingItem, Stmt, TallyCounterGroup, TallyMultiLeadingItem,
-    ValueSpec, WhenValue,
+    ArithOp, Cond, ConvertOperand, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program,
+    RefIndex, Region, RegionKind, RelOp, ReplaceMultiLeadingItem, Stmt, TallyCounterGroup,
+    TallyMultiLeadingItem, ValueSpec, WhenValue,
 };
 use crate::value::{add, div, move_into_char, move_into_numeric, mul, pow, round, sub, Decimal};
 use std::collections::HashMap;
@@ -1998,11 +1998,20 @@ impl Machine {
     fn exec_inspect_converting(
         &mut self,
         source: &str,
-        from: &str,
-        to: &str,
+        from: &ConvertOperand,
+        to: &ConvertOperand,
         region: Option<&Region>,
     ) -> Result<(), RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
+
+        // Resolve each `from`/`to` operand to its translation-set string FIRST — a
+        // literal is its own characters; a data-name reads the item's CURRENT
+        // storage. This read is loop-invariant (the `from`/`to` item does not change
+        // during the translate) and happens BEFORE the source is rewritten below, so
+        // even a `from`/`to` that ALIASES the source sees the ORIGINAL bytes — the
+        // same up-front table build the compiler mirrors.
+        let from = self.converting_operand_str(from)?;
+        let to = self.converting_operand_str(to)?;
 
         // The table pairs `from[k]` with `to[k]`, so the two must be equal length.
         let from_chars: Vec<char> = from.chars().collect();
@@ -2041,6 +2050,35 @@ impl Machine {
             })
             .collect();
         self.move_into(sidx, Src::Chars(rebuilt))
+    }
+
+    /// Resolve a CONVERTING `from`/`to` operand to its translation-set string. A
+    /// [`ConvertOperand::Literal`] is its own characters. A [`ConvertOperand::Item`]
+    /// reads the data-name's CURRENT storage — but only when it names an ALPHANUMERIC
+    /// (`PIC X`) item; a numeric or group item as `from`/`to` is a clean later rung,
+    /// rejected here exactly as the compiler rejects it at build time (so both engines
+    /// accept and reject the very same programs). The length used by the equal-length
+    /// check is therefore the item's declared width — its stored image is always that
+    /// many characters wide.
+    fn converting_operand_str(&self, op: &ConvertOperand) -> Result<String, RuntimeError> {
+        match op {
+            ConvertOperand::Literal(s) => Ok(s.clone()),
+            ConvertOperand::Item(name) => {
+                let idx = *self
+                    .by_name
+                    .get(name)
+                    .ok_or_else(|| RuntimeError::UndefinedName(name.clone()))?;
+                match &self.items[idx].picture {
+                    Some(p) if p.is_numeric() => Err(RuntimeError::Unsupported(
+                        "INSPECT CONVERTING with a numeric FROM/TO item is a later rung".into(),
+                    )),
+                    Some(_) => Ok(self.items[idx].storage.clone()),
+                    None => Err(RuntimeError::Unsupported(
+                        "INSPECT CONVERTING with a group FROM/TO item is a later rung".into(),
+                    )),
+                }
+            }
+        }
     }
 
     /// `EVALUATE subject WHEN … END-EVALUATE` — run the first branch whose value

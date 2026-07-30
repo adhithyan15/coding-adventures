@@ -8171,19 +8171,193 @@ fn inspect_converting_unequal_lengths_is_a_later_rung() {
     assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
 }
 
+// ---------------------------------------------------------------------------
+// INSPECT … CONVERTING with a DATA-NAME `from`/`to` operand — the translation
+// SET may come from a `PIC X` item's CURRENT storage instead of a string literal.
+// Either or both of `from`/`to` may be an item (mixing freely with a literal on
+// the other side). The item's declared width supplies the equal-length check at
+// compile time; its bytes are read ONCE (loop-invariant) before the per-position
+// loop, so the per-position first-match-wins chain is byte-identical to the
+// literal path — pinned against the oracle here on ASCII operands.
+// ---------------------------------------------------------------------------
+
 #[test]
-fn inspect_converting_item_operand_is_a_later_rung() {
-    // A PIC X item as the `from` operand (rather than a string literal) is a later
-    // rung this slice.
-    let err = compile_source(
-        &wrap(
-            &["01  S  PIC X(3) VALUE \"ABC\".", "01  F  PIC X(3) VALUE \"ABC\"."],
-            &["INSPECT S CONVERTING F TO \"XYZ\".", "STOP RUN."],
-        ),
-        "insp_conv_item",
-    )
-    .unwrap_err();
-    assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
+fn inspect_converting_data_name_from_literal_to() {
+    // `from` is the item F (= "ABC"), `to` the literal "XYZ": A→X, B→Y, C→Z applied
+    // to "CAB" → "ZXY" — identical to the both-literal simple table.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"CAB\".", "01  F  PIC X(3) VALUE \"ABC\"."],
+        &["INSPECT S CONVERTING F TO \"XYZ\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ZXY\n");
+}
+
+#[test]
+fn inspect_converting_literal_from_data_name_to() {
+    // Reverse mix: `from` the literal "ABC", `to` the item T (= "XYZ"). Same table,
+    // same "CAB" → "ZXY".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"CAB\".", "01  T  PIC X(3) VALUE \"XYZ\"."],
+        &["INSPECT S CONVERTING \"ABC\" TO T.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ZXY\n");
+}
+
+#[test]
+fn inspect_converting_both_data_names() {
+    // BOTH sides are items: F = "AEIOU", T = "12345". "BEAN" → "B21N" (B, N pass
+    // through). The full table is built from two runtime storages.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(4) VALUE \"BEAN\".",
+            "01  F  PIC X(5) VALUE \"AEIOU\".",
+            "01  T  PIC X(5) VALUE \"12345\".",
+        ],
+        &["INSPECT S CONVERTING F TO T.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "B21N\n");
+}
+
+#[test]
+fn inspect_converting_data_name_with_a_region() {
+    // A data-name table narrowed by a `{BEFORE|AFTER}` region: table F="A"→T="0";
+    // BEFORE "Y" in "AXAYA" restricts the translate to "AXA" → "0X0YA" (the trailing
+    // "A" right of "Y" is untouched) — the region guard composes with runtime table
+    // reads exactly as with a literal table.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"AXAYA\".",
+            "01  F  PIC X(1) VALUE \"A\".",
+            "01  T  PIC X(1) VALUE \"0\".",
+        ],
+        &["INSPECT S CONVERTING F TO T BEFORE \"Y\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0X0YA\n");
+}
+
+#[test]
+fn inspect_converting_data_name_first_occurrence_wins() {
+    // The `from` ITEM repeats a char: F = "AAB", T = "XYZ". First occurrence wins, so
+    // A→X (not the later A→Y); B→Z. "AAB" → "XXZ" — the leftmost-wins rule holds for a
+    // runtime-read table just as for a literal one.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"AAB\".",
+            "01  F  PIC X(3) VALUE \"AAB\".",
+            "01  T  PIC X(3) VALUE \"XYZ\".",
+        ],
+        &["INSPECT S CONVERTING F TO T.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XXZ\n");
+}
+
+#[test]
+fn inspect_converting_data_name_char_not_in_from_passes_through() {
+    // A source char in NO table entry is unchanged: table F="AEIOU"→T="12345" on
+    // "HELLO" maps only E→2, O→4; H, L, L pass through → "H2LL4".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"HELLO\".",
+            "01  F  PIC X(5) VALUE \"AEIOU\".",
+            "01  T  PIC X(5) VALUE \"12345\".",
+        ],
+        &["INSPECT S CONVERTING F TO T.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "H2LL4\n");
+}
+
+#[test]
+fn inspect_converting_from_item_aliases_the_source() {
+    // The `from` item IS the source S itself: INSPECT S CONVERTING S TO T. The table
+    // must be built from the ORIGINAL bytes of S — read up front, before the loop
+    // overwrites S. S = "ABAB", T = "XYCD" (only the FIRST occurrence of each S char
+    // matters): the table maps A→X (index 0 wins over index 2), B→Y (index 1 wins
+    // over index 3). "ABAB" → "XYXY". If S were read AFTER a partial rewrite the
+    // result would diverge; parity here pins the up-front read.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"ABAB\".", "01  T  PIC X(4) VALUE \"XYCD\"."],
+        &["INSPECT S CONVERTING S TO T.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XYXY\n");
+}
+
+#[test]
+fn inspect_converting_filler_between_source_and_table_binds_by_name() {
+    // A FILLER sits BETWEEN the named source S and the named table items F/T. The
+    // compiler DROPS the FILLER while the oracle PUSHES it, so the two engines lay
+    // their items out differently — but both bind the source and table operands by
+    // NAME, so the CONVERTING still resolves S, F, T identically. Table F="AB"→T="XY"
+    // on "ABAB" → "XYXY".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S       PIC X(4) VALUE \"ABAB\".",
+            "01  FILLER  PIC X(2) VALUE \"##\".",
+            "01  F       PIC X(2) VALUE \"AB\".",
+            "01  T       PIC X(2) VALUE \"XY\".",
+        ],
+        &["INSPECT S CONVERTING F TO T.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XYXY\n");
+}
+
+#[test]
+fn inspect_converting_unequal_width_data_name_is_a_later_rung() {
+    // A data-name `from`/`to` whose DECLARED WIDTHS differ has no well-defined table —
+    // the equal-length check (now over item widths) rejects it as a later rung on BOTH
+    // engines (the compiler at build time, the oracle at exec time).
+    let src = wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"ABC\".",
+            "01  F  PIC X(2) VALUE \"AB\".",
+            "01  T  PIC X(3) VALUE \"XYZ\".",
+        ],
+        &["INSPECT S CONVERTING F TO T.", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject unequal-width data-name from/to");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject unequal-width data-name from/to"
+    );
+}
+
+#[test]
+fn inspect_converting_numeric_item_as_table_is_a_later_rung() {
+    // A NUMERIC item as the `from` table is a later rung on BOTH engines — CONVERTING's
+    // table must be an alphanumeric (`PIC X`) operand.
+    let src = wrap(
+        &["01  S  PIC X(3) VALUE \"ABC\".", "01  N  PIC 9(3) VALUE 123."],
+        &["INSPECT S CONVERTING N TO \"XYZ\".", "STOP RUN."],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a numeric table item");
+    assert!(compile_source(&src, "e2e").is_err(), "compiler must reject a numeric table item");
+}
+
+// A non-ASCII data-name `from`/`to` operand is the PRE-EXISTING byte-vs-char operand
+// chip (task_396ba6f6): the compiler compares raw bytes, the oracle compares chars,
+// so a multibyte item byte can diverge and is NOT statically rejectable. This
+// CHARACTERIZATION test pins EACH engine's behaviour independently (NOT via
+// assert_matches_oracle) so a change is caught — it deliberately does not assert the
+// two agree. All operands here keep the SOURCE ASCII; only the data-name table
+// carries a multibyte char.
+#[test]
+fn inspect_converting_non_ascii_data_name_table_is_the_byte_vs_char_chip() {
+    // F holds a 1-char (but 2-byte) "é" table key; T holds "0". The SOURCE stays
+    // ASCII ("XYZ") so only the TABLE is multibyte. No source char matches the table
+    // key on either engine (the oracle compares the char 'é', the compiler compares
+    // 'é''s first byte — neither equals X/Y/Z), so both leave the source unchanged.
+    // We pin each engine to "XYZ\n" as a stable characterization of the shared chip,
+    // WITHOUT asserting the two agree by construction.
+    let src = wrap(
+        &["01  S  PIC X(3) VALUE \"XYZ\".", "01  F  PIC X(1) VALUE \"é\".", "01  T  PIC X(1) VALUE \"0\"."],
+        &["INSPECT S CONVERTING F TO T.", "DISPLAY S.", "STOP RUN."],
+    );
+    // Oracle: characterization pin.
+    let oracle = run_cobol(&src).expect("oracle run");
+    assert_eq!(oracle, "XYZ\n", "oracle characterization");
+    // Compiled: characterization pin (independent — this is the shared byte-vs-char chip,
+    // so we do NOT route through assert_matches_oracle).
+    let jit = run_on_jit(&src);
+    assert_eq!(jit, "XYZ\n", "compiled characterization");
 }
 
 #[test]

@@ -151,6 +151,30 @@ struct Item {
     kind: ItemKind,
 }
 
+/// A resolved CONVERTING `from`/`to` operand: a compile-time ASCII string LITERAL,
+/// or a data-name (`PIC X` item) reduced to its backing register plus its declared
+/// width. Both carry a compile-time-known length (a literal's char count, an item's
+/// declared width), so the equal-length check stays entirely at build time — the
+/// exact analogue of the oracle's [`ConvertOperand`](coding-adventures-cobol-runtime).
+enum ConvOperand {
+    /// A string literal — its own bytes bake the compile-time table.
+    Literal(String),
+    /// A `PIC X` item: `reg` is its string register, `width` its declared width.
+    Item { reg: String, width: usize },
+}
+
+impl ConvOperand {
+    /// The operand's length in characters — a literal's char count, or the item's
+    /// declared width. Both are compile-time constants, so the equal-length check
+    /// mixing a literal on one side with an item on the other never touches runtime.
+    fn len(&self) -> usize {
+        match self {
+            ConvOperand::Literal(s) => s.chars().count(),
+            ConvOperand::Item { width, .. } => *width,
+        }
+    }
+}
+
 /// A level-88 condition-name: the index of the item it qualifies (its
 /// "conditional variable") and the value-set that makes it true. The name holds
 /// when the variable equals any single value or falls within any `THRU` range.
@@ -4379,13 +4403,33 @@ impl<'a> Compiler<'a> {
     ///   source := result                     # exactly W chars, width unchanged
     /// ```
     ///
-    /// The `from` bytes are baked as `const` compare targets and the `to` bytes as
-    /// 1-character `str_const`s, both known at compile time. The per-position first-
-    /// match-wins chain mirrors the oracle's char→char map (which also lets the
-    /// earliest `from` occurrence win), so the compiled program is byte-identical to
-    /// `cobol-runtime`'s `exec_inspect` CONVERTING path. Unequal-length or non-ASCII
-    /// literals and a data-name/figurative/reference-modified `from`/`to` are clean
-    /// later-rung `Unsupported`s.
+    /// Each `from`/`to` operand is a string LITERAL or a data-name (`PIC X` item):
+    ///
+    ///   * a **literal** bakes its bytes at compile time — each `from[k]` a `const`
+    ///     compare target, each `to[k]` a 1-character `str_const`;
+    ///   * a **data-name** cannot be baked (its bytes live in the item's storage), so
+    ///     its table entries become RUNTIME reads emitted ONCE, before the per-position
+    ///     loop: `from[k] = str_index(item, k)` (a byte) and `to[k] =
+    ///     str_slice(item, k, k+1)` (a 1-char string). These reads are LOOP-INVARIANT —
+    ///     the `from`/`to` item does not change while we translate — so hoisting them
+    ///     out of the loop is not just an optimisation but the correctness invariant:
+    ///     it also guarantees a `from`/`to` that ALIASES the source is read while the
+    ///     source still holds its ORIGINAL bytes (the source register is overwritten
+    ///     only at the very end), matching the oracle's up-front table build.
+    ///
+    /// Whether a table entry is a baked `const` or a runtime read, the per-position
+    /// first-match-wins chain below is byte-IDENTICAL — it consumes the `from_consts`/
+    /// `to_consts` registers the same way — so the two operand kinds share one lowering.
+    /// The chain mirrors the oracle's char→char map (earliest `from` occurrence wins),
+    /// so the compiled program is byte-identical to `cobol-runtime`'s CONVERTING path
+    /// on ASCII operands. An unequal-length pair (each side's length is the literal's
+    /// char count OR the item's declared width, all compile-time), a non-ASCII LITERAL,
+    /// and a figurative/reference-modified `from`/`to` are clean later-rung
+    /// `Unsupported`s. A non-ASCII BYTE in a data-name item's runtime storage cannot be
+    /// (and is not) statically rejected — it is the pre-existing byte-vs-char operand
+    /// chip shared with the literal-source scans, so the ASCII case is byte-identical
+    /// and non-ASCII item content stays that shared chip. A numeric/group item AS
+    /// `from`/`to` is rejected identically to the oracle.
     ///
     /// An optional `{BEFORE|AFTER} x` region narrows the translation to a sub-slice
     /// of the source. When present we reuse [`Self::emit_inspect_region_window`] —
@@ -4400,27 +4444,37 @@ impl<'a> Compiler<'a> {
         s_reg: &str,
         width: usize,
     ) -> Result<(), CompileError> {
-        // The `CONVERTING from TO to [{BEFORE|AFTER} x]` phrase.
+        // The `CONVERTING from TO to [{BEFORE|AFTER} x]` phrase. Each `from`/`to`
+        // resolves to a LITERAL (its bytes baked now) or a data-name ITEM (its bytes
+        // read at run time), decided by `converting_operand`.
         let (from_node, to_node, region) = inspect_converting_pair(verb)?;
-        let from = inspect_converting_literal(from_node, "from")?;
-        let to = inspect_converting_literal(to_node, "to")?;
-        // The table pairs `from[k]` with `to[k]`, so the two must be equal length.
-        if from.chars().count() != to.chars().count() {
+        let from = self.converting_operand(from_node, "from")?;
+        let to = self.converting_operand(to_node, "to")?;
+        // The table pairs `from[k]` with `to[k]`, so the two must be equal length —
+        // each side's length is a compile-time constant (a literal's char count OR an
+        // item's declared width), so this check stays entirely at build time even when
+        // the two sides mix a literal with a data-name.
+        if from.len() != to.len() {
             return Err(CompileError::Unsupported(
                 "INSPECT CONVERTING with unequal-length FROM/TO operands is a later rung".into(),
             ));
         }
         // This rung compares raw bytes (`str_index` yields a byte), so the table
-        // characters must be single-byte ASCII for the byte compare to equal the
-        // char map the oracle builds. A multi-byte (non-ASCII) literal is a later
-        // rung.
-        if !from.is_ascii() || !to.is_ascii() {
-            return Err(CompileError::Unsupported(
-                "INSPECT CONVERTING with a non-ASCII FROM/TO operand is a later rung".into(),
-            ));
+        // characters must be single-byte ASCII for the byte compare to equal the char
+        // map the oracle builds. A non-ASCII LITERAL is statically rejectable and stays
+        // a later rung. A data-name's runtime bytes CANNOT be statically inspected — a
+        // non-ASCII byte in an item's storage is the pre-existing byte-vs-char operand
+        // chip (shared with the literal-source scans), so we cannot and do not reject
+        // it here; the ASCII case is byte-identical to the oracle.
+        for op in [&from, &to] {
+            if let ConvOperand::Literal(s) = op {
+                if !s.is_ascii() {
+                    return Err(CompileError::Unsupported(
+                        "INSPECT CONVERTING with a non-ASCII FROM/TO operand is a later rung".into(),
+                    ));
+                }
+            }
         }
-        let from_bytes = from.as_bytes();
-        let to_bytes = to.as_bytes();
 
         // The optional `{BEFORE|AFTER} x` window `[start, end)`, derived over the
         // ORIGINAL source (before the unroll overwrites `s_reg`). We reuse the tally
@@ -4435,25 +4489,14 @@ impl<'a> Compiler<'a> {
             }
         };
 
-        // Bake the compile-time table once: a `const` byte for each `from[k]`
-        // (the compare target) and a 1-character `str_const` for each `to[k]`
-        // (the concatenation piece). Shared across all W positions.
-        let from_consts: Vec<String> = from_bytes
-            .iter()
-            .map(|&b| {
-                let reg = self.fresh("_icfrom");
-                self.emit("const", Some(&reg), vec![Operand::Int(b as i64)], "i64");
-                reg
-            })
-            .collect();
-        let to_consts: Vec<String> = to_bytes
-            .iter()
-            .map(|&b| {
-                let reg = self.fresh("_icto");
-                self.emit("str_const", Some(&reg), vec![Operand::Str((b as char).to_string())], "str");
-                reg
-            })
-            .collect();
+        // Build the table entries once, BEFORE the per-position loop (and before the
+        // loop's final write-back to the source register). For a LITERAL these are
+        // compile-time `const`(byte)/`str_const`(1-char) bakes; for a data-name they
+        // are loop-invariant RUNTIME reads of the item's storage — see the helpers.
+        // Either way the result is `W` `from`-compare registers (i64 bytes) and `W`
+        // `to`-concat registers (1-char strings), consumed identically by the chain.
+        let from_consts = self.converting_from_consts(&from);
+        let to_consts = self.converting_to_consts(&to);
 
         // result = "" — the accumulator we build W characters into.
         let result = self.fresh("_icres");
@@ -4558,6 +4601,126 @@ impl<'a> Compiler<'a> {
             "str",
         );
         Ok(())
+    }
+
+    /// Resolve a CONVERTING `from`/`to` operand node into a [`ConvOperand`]. A string
+    /// literal is carried by value (its bytes are baked later); a data-name resolves
+    /// to its backing register and declared width via the shared item-index helper.
+    /// A numeric/group item (`item_index` rejects a group/undeclared name; the
+    /// `Numeric` arm rejects a numeric item), a figurative constant, a numeric
+    /// literal, and a reference modification are clean later rungs — rejected with the
+    /// SAME messages the oracle's `read_converting_operand`/`converting_operand_str`
+    /// use, so both engines accept and reject the very same programs. `which` names
+    /// the position (`"from"`/`"to"`) for the diagnostic.
+    fn converting_operand(
+        &self,
+        op: &GrammarASTNode,
+        which: &str,
+    ) -> Result<ConvOperand, CompileError> {
+        match read_operand(op)? {
+            Operandy::Literal(Src::Str(s)) => Ok(ConvOperand::Literal(s)),
+            Operandy::Name(name) => {
+                let idx = self.item_index(&name)?;
+                match &self.items[idx].kind {
+                    ItemKind::Char { .. } => Ok(ConvOperand::Item {
+                        reg: self.items[idx].reg.clone(),
+                        width: self.items[idx].width(),
+                    }),
+                    ItemKind::Numeric { .. } => Err(CompileError::Unsupported(format!(
+                        "INSPECT CONVERTING with a numeric {which} item is a later rung"
+                    ))),
+                }
+            }
+            Operandy::Literal(Src::Num(_)) => Err(CompileError::Unsupported(format!(
+                "INSPECT CONVERTING with a numeric-literal {which} operand is a later rung"
+            ))),
+            Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
+                Err(CompileError::Unsupported(format!(
+                    "INSPECT CONVERTING with a figurative-constant {which} operand is a later rung"
+                )))
+            }
+            Operandy::RefMod { .. } => Err(CompileError::Unsupported(format!(
+                "INSPECT CONVERTING with a reference-modified {which} operand is a later rung"
+            ))),
+        }
+    }
+
+    /// Bake the `from[0..len]` compare bytes (i64 registers) for a CONVERTING
+    /// operand. A LITERAL bakes one compile-time `const` per byte; a DATA-NAME emits
+    /// one `str_index(item, k)` runtime read per position — a byte, `i64`. The item
+    /// reads are LOOP-INVARIANT (the `from` item does not change during the translate)
+    /// and are emitted ONCE here, before the per-position loop, so a `from` that
+    /// aliases the source is read while the source still holds its original bytes.
+    fn converting_from_consts(&mut self, op: &ConvOperand) -> Vec<String> {
+        match op {
+            ConvOperand::Literal(s) => s
+                .as_bytes()
+                .iter()
+                .map(|&b| {
+                    let reg = self.fresh("_icfrom");
+                    self.emit("const", Some(&reg), vec![Operand::Int(b as i64)], "i64");
+                    reg
+                })
+                .collect(),
+            ConvOperand::Item { reg: item, width } => {
+                let item = item.clone();
+                (0..*width)
+                    .map(|k| {
+                        let ki = self.str_index(k as i64);
+                        let reg = self.fresh("_icfrom");
+                        self.emit(
+                            "str_index",
+                            Some(&reg),
+                            vec![Operand::Var(item.clone()), Operand::Var(ki)],
+                            "i64",
+                        );
+                        reg
+                    })
+                    .collect()
+            }
+        }
+    }
+
+    /// Bake the `to[0..len]` concat pieces (1-character `str` registers) for a
+    /// CONVERTING operand. A LITERAL bakes one 1-char `str_const` per byte; a
+    /// DATA-NAME emits one `str_slice(item, k, k+1)` runtime read per position — the
+    /// 1-character string at `k`. Loop-invariant and emitted once, exactly like the
+    /// `from` side (and read before the source write-back), so the two operand kinds
+    /// feed the per-position chain identically.
+    fn converting_to_consts(&mut self, op: &ConvOperand) -> Vec<String> {
+        match op {
+            ConvOperand::Literal(s) => s
+                .as_bytes()
+                .iter()
+                .map(|&b| {
+                    let reg = self.fresh("_icto");
+                    self.emit(
+                        "str_const",
+                        Some(&reg),
+                        vec![Operand::Str((b as char).to_string())],
+                        "str",
+                    );
+                    reg
+                })
+                .collect(),
+            ConvOperand::Item { reg: item, width } => {
+                let item = item.clone();
+                (0..*width)
+                    .map(|k| {
+                        let ki = self.str_index(k as i64);
+                        let ki1 = self.str_index(k as i64 + 1);
+                        let reg = self.fresh("_icto");
+                        self.emit(
+                            "str_slice",
+                            Some(&reg),
+                            vec![Operand::Var(item.clone()), Operand::Var(ki), Operand::Var(ki1)],
+                            "str",
+                        );
+                        reg
+                    })
+                    .collect()
+            }
+        }
     }
 
     /// A single replacement character reduced to a fresh **string** register: a
@@ -7345,30 +7508,6 @@ fn inspect_converting_pair(verb: &GrammarASTNode) -> Result<ConvertPhrase<'_>, C
         _ => Err(CompileError::Malformed(
             "INSPECT CONVERTING without a FROM and a TO operand".into(),
         )),
-    }
-}
-
-/// Read a CONVERTING `from`/`to` operand as a plain string literal. This rung only
-/// supports **string-literal** translation tables; a data-name (`PIC X` item),
-/// figurative constant, numeric literal, or reference modification is a later rung.
-/// `which` names the position (`"from"`/`"to"`) for the diagnostic.
-fn inspect_converting_literal(op: &GrammarASTNode, which: &str) -> Result<String, CompileError> {
-    match read_operand(op)? {
-        Operandy::Literal(Src::Str(s)) => Ok(s),
-        Operandy::Literal(Src::Num(_)) => Err(CompileError::Unsupported(format!(
-            "INSPECT CONVERTING with a numeric-literal {which} operand is a later rung"
-        ))),
-        Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
-            Err(CompileError::Unsupported(format!(
-                "INSPECT CONVERTING with a figurative-constant {which} operand is a later rung"
-            )))
-        }
-        Operandy::Name(_) => Err(CompileError::Unsupported(format!(
-            "INSPECT CONVERTING with a data-name {which} operand is a later rung"
-        ))),
-        Operandy::RefMod { .. } => Err(CompileError::Unsupported(format!(
-            "INSPECT CONVERTING with a reference-modified {which} operand is a later rung"
-        ))),
     }
 }
 
