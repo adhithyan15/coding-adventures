@@ -1,0 +1,102 @@
+% ============================================================================
+% renal-clearance.adj — the definition of renal clearance
+% (clearance = urine concentration × urine flow rate ÷ plasma concentration) in the ADJ standard
+% library.
+% ============================================================================
+% The renal-clearance entry of the *clinical* track — the foundational nephrology relation behind
+% every measured clearance (creatinine clearance, GFR by a freely-filtered marker, PAH clearance,
+% etc.). It is a product-over-a-value sibling of the shipped drug-clearance.adj (which is the simpler
+% rate ÷ concentration): the amount of a substance appearing in the urine per unit time, expressed as
+% the volume of plasma that would be completely cleared of it per unit time. THE CLEARANCE OF A
+% SUBSTANCE IS ITS URINE CONCENTRATION TIMES THE URINE FLOW RATE, DIVIDED BY ITS PLASMA CONCENTRATION.
+% It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with its two exact
+% rearrangements (the urine concentration a clearance implies, and the plasma concentration it
+% implies). As with every compute library, a consumer states NO arithmetic: it `import`s this file,
+% binds the measured concentrations and the urine flow from its own byte-provenance decomposition, and
+% asks the engine to APPLY the cited definition on the CPU. Zero math is performed by the model; the
+% engine computes each value EXACTLY (over exact rationals), carrying the definition's citation.
+%
+%     import "renal-clearance.adj"
+%     observe urine_concentration(90)      % "…urine [X] 90 mg/mL…"     (span cited by the model)
+%     observe urine_flow(2)                 % "…urine flow 2 mL/min…"     (span cited by the model)
+%     observe plasma_concentration(3)       % "…plasma [X] 3 mg/mL…"      (span cited by the model)
+%     ? renal_clearance(urine_concentration, urine_flow, plasma_concentration)
+%                                            % engine → 60, carrying the clearance
+%
+% All three formulas are EXACT over their parameters (a product over a value, and its inversions), so
+% every value the engine returns is exact. They COMPOSE and invert cleanly around the worked case
+% urine concentration = 90, urine flow = 2, plasma concentration = 3 (clearance = 90 × 2 ÷ 3 = 60): the
+% `renal_clearance` a consumer computes is exactly the value the `urine_concentration` formula scales
+% back up to recover 90, and exactly the value the `plasma_concentration` formula divides into to
+% recover 3.
+%
+%   renal_clearance(urine_concentration, urine_flow, plasma_concentration)
+%       = urine_concentration * urine_flow / plasma_concentration   % Cx = (Ux × V) ÷ Px  (definition)
+%   urine_concentration(renal_clearance, urine_flow, plasma_concentration)
+%       = renal_clearance * plasma_concentration / urine_flow        % Ux = (Cx × Px) ÷ V  (solved for Ux)
+%   plasma_concentration(urine_concentration, urine_flow, renal_clearance)
+%       = urine_concentration * urine_flow / renal_clearance         % Px = (Ux × V) ÷ Cx  (solved for Px)
+%
+% NOTE ON UNITS AND MODELLING: the two concentrations must be in the SAME unit (they cancel), and the
+% clearance then carries the unit of the urine flow (e.g. mL/min). The cited article writes this
+% relation for the glomerular filtration rate using a freely-filtered marker substance S — "GFR =
+% [UrineS (mg/mL) × urine flow (mL/min)] / [PlasmaS (mg/mL)]" — but the same equation IS the general
+% renal clearance of ANY substance S (for a marker that is filtered but neither reabsorbed nor
+% secreted, its clearance equals the GFR; for other substances it is that substance's clearance). This
+% library computes that general clearance over whatever consistent inputs it is given. (The
+% Starling-equation form of the GFR — filtration coefficient × net filtration pressure — is grounded
+% separately in glomerular-filtration-rate.adj; this is the independent CLEARANCE-method relation.)
+%
+% All three formulas are defended by the SAME clause — "GFR = [UrineS (mg/mL) × urine flow (mL/min)] /
+% [PlasmaS (mg/mL)]" — because that one equation (clearance IS the urine-concentration × urine-flow ÷
+% plasma-concentration quotient) sanctions the relation read every way. The quote is transcribed
+% verbatim from the StatPearls "Creatinine Clearance" article on the NCBI Bookshelf, so each `formula`
+% carries the provenance envelope every shipped grounded clause carries; the linter rejects an
+% unsourced one. (See feedback_nothing_human_authored — the equation is a verbatim span of the cited
+% page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable quantity the definition ranges over, and each result is
+% a derived quantity. `urine_concentration`, `plasma_concentration` and `renal_clearance` each appear
+% BOTH as a derived result and as an input (of the other formulas), so each is a single dictionary
+% term used in both roles. The `surface` lists are the everyday names a decomposer maps onto the
+% canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary renal_clearance_vocab {
+    define urine_concentration  : finding  surface "urine concentration", "urinary concentration", "Ux"   % mass per volume (e.g. mg/mL)
+    define urine_flow           : finding  surface "urine flow", "urine flow rate", "urinary flow rate"    % volume per time (e.g. mL/min)
+    define plasma_concentration : finding  surface "plasma concentration", "serum concentration", "Px"     % mass per volume (e.g. mg/mL)
+    define renal_clearance      : finding  surface "renal clearance", "clearance"                          % volume per time (e.g. mL/min)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the clearance equation from the StatPearls
+% "Creatinine Clearance" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each
+% is an exact product or quotient of the measured quantities, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook renal_clearance_laws {
+    use renal_clearance_vocab
+
+    % Renal clearance — the urine concentration times the urine flow, divided by the plasma
+    % concentration (a * b / c parses as (a*b)/c).
+    formula renal_clearance(urine_concentration, urine_flow, plasma_concentration) = urine_concentration * urine_flow / plasma_concentration
+        source "GFR = [UrineS (mg/mL) × urine flow (mL/min)] / [PlasmaS (mg/mL)]"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544228/"
+        trust authoritative
+
+    % Urine concentration — the same definition solved for the urine concentration (Ux = Cx × Px ÷ V).
+    % Defended by the SAME equation.
+    formula urine_concentration(renal_clearance, urine_flow, plasma_concentration) = renal_clearance * plasma_concentration / urine_flow
+        source "GFR = [UrineS (mg/mL) × urine flow (mL/min)] / [PlasmaS (mg/mL)]"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544228/"
+        trust authoritative
+
+    % Plasma concentration — the same definition solved for the plasma concentration (Px = Ux × V ÷ Cx):
+    % the excreted mass rate divided by the clearance. The SAME equation, read the third way.
+    formula plasma_concentration(urine_concentration, urine_flow, renal_clearance) = urine_concentration * urine_flow / renal_clearance
+        source "GFR = [UrineS (mg/mL) × urine flow (mL/min)] / [PlasmaS (mg/mL)]"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544228/"
+        trust authoritative
+}
