@@ -114,14 +114,15 @@ fn self_contained_no_external_headers() {
 
 #[test]
 fn unaccepted_feature_is_rejected_cleanly() {
-    // A `module` declaration declares Feature::Modules, which this backend does
-    // not accept. (Arrays/hashes declare the accepted Sequences/Maps features,
-    // and an empty `class` now declares the accepted Classes feature — the OOP
-    // mirror slice 1 — so none of those exercise the rejection path any longer. A
-    // module is the last OOP feature, still unaccepted, and — being a declaration
-    // — is not folded away like a `true && false` short-circuit.)
-    let m = lower_ruby("module Foo\nend");
-    let err = compile(&m).expect_err("backend rejects Modules");
+    // The whole OOP surface — classes, instance/class methods, `@`/`@@` vars,
+    // inheritance, `super`, and now modules (`include`/`extend`) — is accepted, so
+    // those no longer exercise the rejection path.  A `class << self` singleton
+    // (`Stmt::SingletonClassDef`) is the nearest still-deferred OOP construct: it
+    // observes the accepted `Feature::Classes`, so the capability check passes and
+    // the STRUCTURAL scan rejects it cleanly (rather than reaching an emitter
+    // `unreachable!`).
+    let m = lower_ruby("class << self\n  def x\n    1\n  end\nend");
+    let err = compile(&m).expect_err("backend rejects a singleton class");
     assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
 }
 
@@ -240,6 +241,56 @@ fn class_methods_route_through_the_singleton_table() {
     assert!(
         src.contains("_sir_call_class_method(\"Math2\", \"double\""),
         "a `Class.m` call dispatches through the class-method table\n{src}"
+    );
+}
+
+#[test]
+fn class_vars_route_through_the_cvar_table() {
+    // OOP slice 6: a class-body `@@x = 0` seeds `_sir_cvar_set_in("Class", "@@x")`;
+    // a method-body read/write uses `_sir_cvar_get`/`_sir_cvar_set` (resolved via
+    // the current class).  All names are quoted C string literals (no injection).
+    let m = lower_ruby(
+        "class Counter\n  @@count = 0\n  def self.bump\n    @@count = @@count + 1\n  end\n  \
+         def peek\n    @@count\n  end\nend\nCounter.bump\nputs Counter.new.peek",
+    );
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_cvar_set_in(\"Counter\", \"@@count\""),
+        "the class-body initializer seeds the named class's storage\n{src}"
+    );
+    assert!(
+        src.contains("_sir_cvar_set(\"@@count\","),
+        "a method-body `@@x =` writes via the current class\n{src}"
+    );
+    assert!(
+        src.contains("_sir_cvar_get(\"@@count\")"),
+        "a method-body `@@x` read resolves via the current class\n{src}"
+    );
+}
+
+#[test]
+fn modules_register_include_and_extend() {
+    // OOP slice 7: `include`/`extend` render as `_sir_register_include` /
+    // `_sir_register_extend` (both names quoted); a `module` declaration is a
+    // comment.  Module methods reuse `__def_method__` (keyed on the module name).
+    let m = lower_ruby(
+        "module Greet\n  def hi\n    42\n  end\nend\n\
+         class Person\n  include Greet\nend\n\
+         module Cls\n  def tag\n    7\n  end\nend\n\
+         class Widget\n  extend Cls\nend\nputs Person.new.hi",
+    );
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_register_include(\"Person\", \"Greet\")"),
+        "`include` records the mixin\n{src}"
+    );
+    assert!(
+        src.contains("_sir_register_extend(\"Widget\", \"Cls\")"),
+        "`extend` records the class-method mixin\n{src}"
+    );
+    assert!(
+        src.contains("_sir_def_method(\"Greet\", \"hi\""),
+        "a module method is registered like a class method, keyed on the module\n{src}"
     );
 }
 

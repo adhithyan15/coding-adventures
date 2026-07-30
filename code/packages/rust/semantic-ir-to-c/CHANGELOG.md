@@ -1,5 +1,59 @@
 # Changelog
 
+## 0.21.0 — OOP mirror slice 7: modules / mixins (final OOP slice)
+
+Modules and mixins — the **final** slice of the C OOP mirror. Accepts
+`Feature::Modules`. With it the C backend covers the full class/module surface,
+giving **6-backend OOP parity** (C now joins Ruby/Go/Rust/Python/JS).
+
+- `module M; def m; …; end; end` — a module's methods are registered exactly
+  like a class's (`__def_method__`, keyed on the module NAME), so a mixin needs
+  **no new method storage**. The `ModuleDef` declaration itself emits only a
+  comment (a non-empty module body is rejected cleanly, as with a class).
+- `include M` → `__include__("Class", "M")` → `_sir_register_include`, folding
+  M's methods into the class's **instance**-method resolution; `extend M` →
+  `__extend__` → `_sir_register_extend`, folding them into the class's **class**-
+  method resolution. Both are recorded in `(class, module)` tables.
+- `_sir_resolve_method` now checks, at each ancestor class, the class's own
+  methods **then its included modules'** (most-recently-included first, matching
+  Ruby precedence); `_sir_resolve_class_method` likewise consults **extended**
+  modules. Both remain bounded by `SIR_ANCESTRY_MAX`.
+- The `__class_method__` compile-time allowlist widens to the **union** of
+  registered class methods and instance methods, since `extend` makes a module's
+  instance method a valid class-method dispatch target.
+
+**Anti-RCE.** Class and module names emit as **quoted C string literals** used
+only as table keys (no injection); dispatch stays an explicit data lookup, never
+reflection. This closes the C OOP arc (slices 1–7).
+
+## 0.20.0 — OOP mirror slice 6: class variables (`@@x`)
+
+Class variables — the sixth slice of the C OOP mirror. Accepts
+`Feature::ClassVars`.
+
+- A class variable belongs to a **class** and is shared **down its hierarchy**
+  (a `@@x` defined in a parent is the same storage in every subclass). Storage
+  is a flat `(class, @@name) → value` table with an ancestry-resolved owner
+  (`_sir_cvar_owner` walks `_sir_class_super`, bounded by `SIR_ANCESTRY_MAX`), so
+  a subclass method shares its parent's `@@x`.
+- A **method body**'s `@@x` read/write → `_sir_cvar_get` / `_sir_cvar_set`, which
+  resolve the owning class from a new `_sir_current_class` — bound by dispatch to
+  the receiver's class (`_sir_call_method`) or the dispatched class
+  (`_sir_call_class_method`), and restored after (so it composes with `super`
+  and nested calls).
+- A **class-body** initializer (`@@x = 0` inside `class C`) runs where `self` is
+  the top-level `main`, so it names its class **explicitly**:
+  `_sir_cvar_set_in("C", "@@x", …)`. The `ClassDef` emit now admits a body of
+  **only** such `@@x` initializers; any other class-level statement is still
+  rejected cleanly (it would otherwise be silently dropped).
+- `emit_var_ref` is now exhaustive over `Scope` (all eight variants have a real
+  emit path), so its catch-all `unreachable!` is removed — the exhaustive match
+  is the compile-time totality signal.
+
+**Anti-RCE.** The `@@`-name and class name emit as **quoted C string literals**
+used only as table keys (no injection). Modules (mixins) are the final slice
+(still rejected cleanly).
+
 ## 0.19.0 — OOP mirror slice 5: class methods
 
 Class (singleton) methods — the fifth slice of the C OOP mirror. No new

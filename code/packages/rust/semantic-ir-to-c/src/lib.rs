@@ -172,8 +172,25 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `_sir_ivar_get`/`_sir_ivar_set` on `_sir_current_self` (the receiver the
     // dispatch bound), and `__self__` renders `_sir_self()`.  The `@`-name is a
     // quoted C string literal (no injection).  `@@class` variables are the
-    // separate `Feature::ClassVars`, still rejected.
+    // separate `Feature::ClassVars`, accepted below.
     Feature::InstanceVars,
+    // ── OOP mirror, slice 6: class variables (`@@x`) ─────────────────────
+    // `Feature::ClassVars` — `@@x = v` / `@@x` (`Scope::ClassVar`).  A class
+    // variable belongs to a CLASS (shared down its hierarchy), so a method body
+    // resolves it through `_sir_cvar_get`/`_sir_cvar_set` on `_sir_current_class`
+    // (the class dispatch bound), and a class-body initializer (`@@x = 0` inside
+    // `class C`) seeds it via `_sir_cvar_set_in("C", …)`.  The `@@`-name is a
+    // quoted C string literal (no injection).
+    Feature::ClassVars,
+    // ── OOP mirror, slice 7: modules / mixins (FINAL OOP slice) ──────────
+    // `Feature::Modules` — `module M; …; end` + `include`/`extend`.  A module's
+    // methods are registered exactly like a class's (`__def_method__`, keyed on
+    // the module name), so a mixin adds no method storage — only a `(class,
+    // module)` record: `__include__` makes the module's methods part of the
+    // class's INSTANCE-method resolution, `__extend__` makes them the class's
+    // CLASS-method resolution.  Names are quoted C string literals (no injection).
+    // This completes the C backend's OOP surface (full 6-backend OOP parity).
+    Feature::Modules,
 ];
 
 impl Backend for CBackend {

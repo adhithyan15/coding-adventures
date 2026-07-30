@@ -133,12 +133,19 @@ cannot hang.  Class / method / super-class names are all quoted C string literal
 `_sir_def_class_method` into a SEPARATE class-method (singleton) table (so a class
 method and an instance method of the same name never collide), and `Class.m(args)`
 → `_sir_call_class_method`, an ancestry-walking table lookup (class methods
-inherit) that binds `self` to nil (no instance receiver).
+inherit) that binds `self` to nil (no instance receiver).  And **slice 6** —
+class variables: `@@x` → `_sir_cvar_get`/`_sir_cvar_set` on a `(class, @@name)`
+table shared down the hierarchy (owner resolved via the ancestry), the owning
+class taken from `_sir_current_class` (bound by dispatch); a class-body `@@x = 0`
+initializer seeds it with the class named explicitly (`_sir_cvar_set_in`).  And
+**slice 7** (the final OOP slice) — modules / mixins: a `module` is a name whose
+methods register like a class's, `include M` (`_sir_register_include`) folds M's
+methods into a class's instance-method resolution and `extend M`
+(`_sir_register_extend`) into its class-method resolution — completing the C
+OOP surface (**6-backend OOP parity**).
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
-`Intrinsics`, `NDArrays`, the rest of OOP (`@@class vars`, modules — later mirror
-slices, so `__new__` with constructor args, a `class << self` singleton, and the
-`@@` scope are all refused for now), and
+`Intrinsics`, a `class << self` singleton, and
 every other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
 until a bignum runtime ships — a module needing arbitrary precision is refused,
 never silently truncated.
