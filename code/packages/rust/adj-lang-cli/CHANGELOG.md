@@ -1,5 +1,38 @@
 # Changelog
 
+## [0.25.0] — 2026-07-30 — RS-4 PR-E1: `--explain` renderer (derivations surface)
+
+Adds the human-readable *"explain its reasoning"* view — `adj-lang-cli --explain <prog.adj>` —
+specified by ADJ-REASON-MATH §E.8. Where the default output is the byte-cited JSON trail (the
+machine artifact `adj-verify` re-checks), `--explain` renders the *same* reasoning as text a
+person reads. It is a **projection only**: it reads the derivation trees the engine already
+built and re-runs nothing, so the explanation can never say more than the proof.
+
+This first slice renders the **derivations** surface — the arithmetic behind each `let`/formula
+value, shown operand-by-operand down to its cited leaves (the §E.8.4 shape):
+
+```
+total = 5 [scalar]   <= source "…" locator "…" trust authoritative
+  5 = a + b
+    a = 2   [unattributed]
+    b = 3   [unattributed]
+```
+
+- **P1 projection-only** — walks `derived_bindings`; no engine re-run, no new value computed.
+- **P2 provenance on every line** — a computed value carries its applied `formula`'s citation;
+  an observed leaf with no attribution renders an explicit `[unattributed]`, never silently blank.
+  A literal constant asserts nothing new and is shown inline in its parent expression.
+- **P4 determinism** — first-seen binding order, stable numeric `Display`, no time/locale/map-order;
+  the same program renders byte-identical text every run (pinned by a test).
+- **P6 addressed structure** — each operand renders on its own line, indented one level deeper.
+
+The default (no-flag) output is byte-for-byte unchanged; the JSON trail is untouched. Later PR-E
+slices extend `--explain` to the premises / inference / adjudication / abstention surfaces of the
+§E.8.1 linearization (this slice discharges the derivations portion of FL-7's explanation renderer).
+
+New: `src/explain.rs`, `tests/rs4e_explain_e2e.rs`. Touches: `src/main.rs` (`--explain` flag +
+branch).
+
 ## [0.24.0] — 2026-07-24 — RS-5f: nearest / nearest-neighbour table lookup tactic
 
 Adds the fourth member of the `table` lookup family. A `? lookup … mode nearest give <val>`

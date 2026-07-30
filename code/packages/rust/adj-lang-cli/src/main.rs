@@ -42,6 +42,8 @@ use logic_engine::{
     TrustTier,
 };
 
+mod explain;
+
 const SPEC: &str = r#"{
   "cli_builder_spec_version": "1.0",
   "name": "adj-lang-cli",
@@ -49,6 +51,9 @@ const SPEC: &str = r#"{
   "version": "0.1.0",
   "arguments": [
     {"id": "program", "name": "PROGRAM", "description": "Path to a .adj program (rulebook + case)", "type": "string", "required": true}
+  ],
+  "flags": [
+    {"id": "explain", "long": "explain", "description": "Render a deterministic, human-readable explanation of the reasoning instead of the JSON trail (ADJ-REASON-MATH §E.8). Projection-only: no engine re-run.", "type": "boolean"}
   ]
 }"#;
 
@@ -827,6 +832,13 @@ fn main() -> ExitCode {
         .and_then(|v| v.as_str())
         .unwrap_or("");
 
+    // §E.8: opt-in human-readable explanation instead of the JSON trail.
+    let explain = result
+        .flags
+        .get("explain")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false);
+
     // Resolve the program (and any `import`s) through the filesystem provider.
     // The sandbox root is the directory of the program file; no `import` may
     // read outside it. The canonical id of the root file seeds the resolver.
@@ -1026,6 +1038,16 @@ fn main() -> ExitCode {
     } else {
         format!(",\"derived\":{}", derived)
     };
+
+    // `--explain` (ADJ-REASON-MATH §E.8): render the human-readable view of the
+    // reasoning instead of the JSON trail. Projection-only — it reads the same
+    // `lowered.kb` the JSON above was built from and re-runs nothing. The JSON
+    // remains the primary, complete artifact (default output); `--explain` is the
+    // opt-in human view onto it.
+    if explain {
+        println!("{}", explain::explain(&lowered.kb));
+        return ExitCode::SUCCESS;
+    }
 
     println!(
         "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}{}{}{}{}{}}}",
