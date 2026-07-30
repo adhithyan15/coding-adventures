@@ -138,6 +138,32 @@
       "if": {
         "properties": {
           "domain": {
+            "const": "execution"
+          },
+          "outcome": {
+            "enum": [
+              "ok",
+              "error"
+            ]
+          }
+        },
+        "required": [
+          "domain",
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "$ref": "#/$defs/execution_result"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "domain": {
             "const": "plan"
           },
           "outcome": {
@@ -328,6 +354,129 @@
       "properties": {
         "plan": {
           "type": "object"
+        }
+      }
+    },
+    "execution_command_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "index",
+        "status",
+        "exit_code"
+      ],
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "status": {
+          "enum": [
+            "succeeded",
+            "failed",
+            "not-run"
+          ]
+        },
+        "exit_code": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": -2147483648,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "not-run"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "exit_code": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "exit_code": {
+                "type": "integer",
+                "minimum": -2147483648,
+                "maximum": 2147483647
+              }
+            }
+          }
+        }
+      ]
+    },
+    "execution_package_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "status",
+        "return_code",
+        "commands"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/package_name"
+        },
+        "status": {
+          "enum": [
+            "built",
+            "failed",
+            "dependency-skipped",
+            "would-build"
+          ]
+        },
+        "return_code": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": -2147483648,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "commands": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/execution_command_result"
+          }
+        }
+      }
+    },
+    "execution_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packages"
+      ],
+      "properties": {
+        "packages": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "$ref": "#/$defs/execution_package_result"
+          }
         }
       }
     },

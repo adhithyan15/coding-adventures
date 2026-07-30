@@ -9,13 +9,13 @@
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
   "active_pr": {
-    "item_id": "build-tool-pure-domain-corpus",
-    "pr_number": 9167,
-    "branch": "codex/build-tool-pure-domain-corpus",
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9167"
+    "item_id": "build-tool-execution-sandbox",
+    "pr_number": 9178,
+    "branch": "codex/build-tool-execution-sandbox",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9178"
   },
   "last_inventory": {
-    "revision": "3201fb42078f40ef27f11aefb5e3b4b1bcf8551e",
+    "revision": "40eff9c4432049d7bd704141136662014467e167",
     "schema_version": 2,
     "established_languages": 15,
     "implementation_identities": 1184,
@@ -55,17 +55,57 @@
     },
     {
       "id": "build-tool-execution-sandbox",
-      "title": "Add the trusted execution sandbox and adversarial execution corpus",
-      "status": "pending",
+      "title": "Define the trusted-execution policy, closed schema, and fail-closed backend contract",
+      "status": "pr-open",
       "depends_on": ["build-tool-fixtures"],
+      "branch": "codex/build-tool-execution-sandbox",
+      "pr_number": 9178,
+      "notes": "Ready-for-review PR #9178. Refined after the contract and security audits: land the process-free policy core first, with closed execution records, immutable corpus and adapter identities, explicit operator authorization, and a backend interface that cannot fall back to host execution. This item does not execute fixture code."
+    },
+    {
+      "id": "build-tool-linux-oci-sandbox",
+      "title": "Implement the Linux OCI trusted-execution sandbox",
+      "status": "pending",
+      "depends_on": ["build-tool-execution-sandbox"],
       "branch": null,
       "pr_number": null,
-      "notes": "Newly separated after the contract security review. Require fail-closed filesystem and network isolation, no-follow materialization/output, direct argv, sanitized environments, and process-tree wall/CPU/memory/output/workspace/process-count limits before any execution fixture can run."
+      "notes": "Use a pinned pre-existing image identity, private mount/user/PID/network namespaces, read-only rootfs, no-new-privileges, dropped capabilities, non-root execution, bounded tmpfs, cgroup limits, streaming output accounting, and whole-container termination. Never pull or fall back to the host."
+    },
+    {
+      "id": "build-tool-windows-appcontainer-sandbox",
+      "title": "Implement the Windows AppContainer trusted-execution sandbox",
+      "status": "pending",
+      "depends_on": ["build-tool-execution-sandbox"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Require a capability-less AppContainer or LPAC, private DACLs, root-handle reparse-safe filesystem operations, and a Job Object assigned before resume with no breakaway and whole-tree CPU, memory, process, wall, output, and workspace limits."
+    },
+    {
+      "id": "build-tool-macos-isolated-sandbox",
+      "title": "Implement a provable macOS trusted-execution sandbox",
+      "status": "pending",
+      "depends_on": ["build-tool-execution-sandbox"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Fail closed until a signed sandbox helper or isolated VM backend can enforce filesystem and network denial plus aggregate process-tree CPU, memory, process, wall, output, workspace, and termination limits. sandbox-exec alone is not sufficient evidence."
+    },
+    {
+      "id": "build-tool-execution-semantics-corpus",
+      "title": "Add execution semantics cases and adversarial sandbox probes",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-linux-oci-sandbox",
+        "build-tool-windows-appcontainer-sandbox",
+        "build-tool-macos-isolated-sandbox"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Keep sequencing, dependency skip, dry-run, jobs, resource locks, legacy shell, and direct argv as closed behavior fixtures. Keep filesystem, network, environment, link-race, descendant-kill, and every hard-limit check as runner-owned non-oracular probes."
     },
     {
       "id": "build-tool-pure-domain-corpus",
       "title": "Close the remaining non-execution build-tool domain schemas and fixtures",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-fixtures"],
       "branch": "codex/build-tool-pure-domain-corpus",
       "pr_number": 9167,
@@ -111,7 +151,10 @@
       "id": "build-tool-go-oracle",
       "title": "Bring the Go build tool to the canonical contract",
       "status": "pending",
-      "depends_on": ["build-tool-pure-domain-corpus", "build-tool-execution-sandbox"],
+      "depends_on": [
+        "build-tool-pure-domain-corpus",
+        "build-tool-execution-semantics-corpus"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Wire structured Starlark context/commands and complete the B05 Windows executor contract."
@@ -129,7 +172,10 @@
       "id": "build-tool-jvm",
       "title": "Add language-native Java and Kotlin build tools",
       "status": "pending",
-      "depends_on": ["build-tool-pure-domain-corpus", "build-tool-execution-sandbox"],
+      "depends_on": [
+        "build-tool-pure-domain-corpus",
+        "build-tool-execution-semantics-corpus"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Use shared JVM fixture infrastructure but separate idiomatic engines."
@@ -138,7 +184,10 @@
       "id": "build-tool-dart",
       "title": "Add the Dart build tool",
       "status": "pending",
-      "depends_on": ["build-tool-pure-domain-corpus", "build-tool-execution-sandbox"],
+      "depends_on": [
+        "build-tool-pure-domain-corpus",
+        "build-tool-execution-semantics-corpus"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Must pass the same plan, resolver, execution, and platform fixtures as the reference."
@@ -174,7 +223,11 @@
       "id": "ocaml-build-tool-and-promotion",
       "title": "Implement the OCaml build tool and review 16-lane promotion",
       "status": "pending",
-      "depends_on": ["ocaml-representative-core", "build-tool-pure-domain-corpus", "build-tool-execution-sandbox"],
+      "depends_on": [
+        "ocaml-representative-core",
+        "build-tool-pure-domain-corpus",
+        "build-tool-execution-semantics-corpus"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Require conformance, two-way Go plan interchange, three-OS CI, capability enforcement, and explicit backlog acceptance."
@@ -246,7 +299,10 @@
       "id": "c-cpp-graduation",
       "title": "Review C/C++ graduation and native build-tool requirements",
       "status": "pending",
-      "depends_on": ["build-tool-pure-domain-corpus", "build-tool-execution-sandbox"],
+      "depends_on": [
+        "build-tool-pure-domain-corpus",
+        "build-tool-execution-semantics-corpus"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Keep both emerging until package/scaffold/build-tool maturity and applicability are explicit."

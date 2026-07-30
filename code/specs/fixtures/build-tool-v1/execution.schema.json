@@ -1,0 +1,404 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/build-tool-conformance-execution-v1.json",
+  "title": "Build-tool execution projection v1",
+  "description": "Closed data-only execution input and canonical result records. This schema grants no execution authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "domain",
+    "outcome",
+    "input",
+    "result"
+  ],
+  "properties": {
+    "domain": {
+      "const": "execution"
+    },
+    "outcome": {
+      "enum": [
+        "ok",
+        "error",
+        "unsupported",
+        "skipped"
+      ]
+    },
+    "input": {
+      "$ref": "#/$defs/execution_input"
+    },
+    "result": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/execution_result"
+        },
+        {
+          "$ref": "#/$defs/empty_result"
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "enum": [
+              "ok",
+              "error"
+            ]
+          }
+        },
+        "required": [
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "$ref": "#/$defs/execution_result"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "result": {
+            "$ref": "#/$defs/empty_result"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "safe_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//)[^<>:\"|?*\\u0000-\\u001F/]+(?:/[^<>:\"|?*\\u0000-\\u001F/]+)*$"
+    },
+    "package_name": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*(/[a-z0-9][a-z0-9._-]*)+$",
+      "maxLength": 240
+    },
+    "lock_name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._/-]*$",
+      "maxLength": 160
+    },
+    "legacy_command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "line"
+      ],
+      "properties": {
+        "kind": {
+          "const": "legacy"
+        },
+        "line": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "^[^\\u0000]+$"
+        }
+      }
+    },
+    "structured_command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "program",
+        "args"
+      ],
+      "properties": {
+        "kind": {
+          "const": "structured"
+        },
+        "program": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "args": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "type": "string",
+            "maxLength": 4096,
+            "pattern": "^[^\\u0000]*$"
+          }
+        }
+      }
+    },
+    "command": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/legacy_command"
+        },
+        {
+          "$ref": "#/$defs/structured_command"
+        }
+      ]
+    },
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "rel_path",
+        "language",
+        "commands",
+        "resource_locks"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/package_name"
+        },
+        "rel_path": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "maxLength": 64
+        },
+        "commands": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/command"
+          }
+        },
+        "resource_locks": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/lock_name"
+          }
+        }
+      }
+    },
+    "edge": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/package_name"
+        },
+        {
+          "$ref": "#/$defs/package_name"
+        }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "execution_options": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "platform",
+        "jobs",
+        "dry_run",
+        "packages",
+        "dependency_edges"
+      ],
+      "properties": {
+        "platform": {
+          "enum": [
+            "darwin",
+            "linux",
+            "windows"
+          ]
+        },
+        "jobs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "packages": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "$ref": "#/$defs/package"
+          }
+        },
+        "dependency_edges": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 16384,
+          "items": {
+            "$ref": "#/$defs/edge"
+          }
+        }
+      }
+    },
+    "execution_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation",
+        "options"
+      ],
+      "properties": {
+        "operation": {
+          "const": "execution"
+        },
+        "options": {
+          "$ref": "#/$defs/execution_options"
+        },
+        "arguments": {
+          "type": "array",
+          "default": [],
+          "maxItems": 128,
+          "items": {
+            "type": "string",
+            "maxLength": 4096
+          }
+        },
+        "environment": {
+          "type": "object",
+          "default": {},
+          "propertyNames": {
+            "pattern": "^CONFORMANCE_[A-Z0-9_]+$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "maxLength": 4096
+          }
+        }
+      }
+    },
+    "command_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "index",
+        "status",
+        "exit_code"
+      ],
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "status": {
+          "enum": [
+            "succeeded",
+            "failed",
+            "not-run"
+          ]
+        },
+        "exit_code": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": -2147483648,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "not-run"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "exit_code": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "exit_code": {
+                "type": "integer",
+                "minimum": -2147483648,
+                "maximum": 2147483647
+              }
+            }
+          }
+        }
+      ]
+    },
+    "package_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "status",
+        "return_code",
+        "commands"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/package_name"
+        },
+        "status": {
+          "enum": [
+            "built",
+            "failed",
+            "dependency-skipped",
+            "would-build"
+          ]
+        },
+        "return_code": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": -2147483648,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "commands": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/command_result"
+          }
+        }
+      }
+    },
+    "execution_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packages"
+      ],
+      "properties": {
+        "packages": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "$ref": "#/$defs/package_result"
+          }
+        }
+      }
+    },
+    "empty_result": {
+      "type": "object",
+      "maxProperties": 0,
+      "additionalProperties": false
+    }
+  }
+}

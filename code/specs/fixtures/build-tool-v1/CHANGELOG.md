@@ -19,3 +19,14 @@
 - Added semantic reference, path, hash, cache, Starlark load, shard,
   diagnostic, and toolchain checks while preserving the zero-process,
   zero-materialization bootstrap boundary.
+- Added the closed execution input/result projection and runner-owned execution
+  policy schema.
+- Added framed execution-corpus digests, immutable backend/adapter identity
+  records, explicit hard ceilings, and a disabled-by-default checked-in policy.
+- Added a separate process-free execution contract validator. Its `run-case`
+  entry point checks explicit operator authorization and the exact reviewed
+  digest, then returns a stable non-passing result because no enforcing backend
+  exists in this tranche.
+- Split Linux OCI, Windows AppContainer, macOS isolation, and the later
+  execution-semantics/security-probe corpus into explicit dependent backlog
+  items. The bootstrap runner remains execution-disabled.
