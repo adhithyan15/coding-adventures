@@ -832,16 +832,54 @@ SAME shared helper: the oracle's `inspect_tally` sets `count = window.len()` (sk
 is not, skipping the per-character match loop. This rung enables the **single-item
 single-counter** CHARACTERS phrase; a MULTI-item `CHARACTERS` (one CHARACTERS item
 ALONGSIDE other items under ONE counter) is enabled by a LATER rung — see "A
-`CHARACTERS` item in a multi-item list" below. A MULTI-counter `CHARACTERS` and a
-`CHARACTERS` half inside a combined `TALLYING … REPLACING` stay later rungs rejected
-identically on both engines.
+`CHARACTERS` item in a multi-item list" below. A `CHARACTERS` TALLYING half inside a
+combined `TALLYING … REPLACING` is enabled by a later rung too — see "A `CHARACTERS`
+TALLYING half in the combined form" below. A MULTI-counter `CHARACTERS` and the
+combined REPLACING half's OWN `CHARACTERS` form stay later rungs rejected identically
+on both engines.
 
 Now supported (identically on both engines): a **combined** `TALLYING … REPLACING`
 whose LEADING half (tally and/or replace) carries a region — the combined exec/emit
 compose the SAME standalone LEADING+region routines in ISO tally-then-replace order,
 so the combination is byte-identical to the oracle. Still deferred: a
-multi-character / non-ASCII region delimiter and a `CHARACTERS` half in the combined
-form.
+multi-character / non-ASCII region delimiter and the REPLACING half's OWN
+`CHARACTERS` form in the combined form (the TALLYING half's `FOR CHARACTERS` is now
+supported — see "A `CHARACTERS` TALLYING half in the combined form" below).
+
+**A `CHARACTERS` TALLYING half in the combined form (follow-up rung).** The
+combined `TALLYING … REPLACING` form now admits a `FOR CHARACTERS` TALLYING half:
+`INSPECT S TALLYING C FOR CHARACTERS [ {BEFORE|AFTER} x ] REPLACING …`. The former
+read-time reject ("INSPECT TALLYING … FOR CHARACTERS in a combined TALLYING/REPLACING
+is a later rung") is lifted for the TALLYING half only. It executes in the same ISO
+tally-then-replace order: the CHARACTERS half counts EVERY position in its (optional)
+window into the counter — exactly the STANDALONE `FOR CHARACTERS` count above
+(`window.len()` on the oracle, `str_len(S)` or `end - start` on the compiler,
+inheriting the same `BEFORE`→whole / `AFTER`→empty asymmetry) — over the ORIGINAL
+source bytes, THEN the REPLACING half rewrites. The REPLACING half keeps its full
+existing `ALL`/`LEADING` (+region) support unchanged. Threading: the oracle adds a
+`tally_characters: bool` field to `Stmt::InspectTallyReplace` (populated from
+`read_inspect_tally_all`'s CHARACTERS flag) and passes it into `inspect_tally`
+instead of the hardcoded `false`; the compiler flips the combined call site's
+`allow_characters` argument to `emit_inspect_tallying` from `false` to `true`, routing
+the count through the SAME CHARACTERS lowering the standalone tally uses. Worked
+(`C` `PIC 9(3)`): `"XAYAZ"` `TALLYING C FOR CHARACTERS REPLACING ALL "A" BY "B"` →
+`C = 5` (the full length, NOT the two `"A"`s) and `S = "XBYBZ"`; `"AAXAA"`
+`TALLYING C FOR CHARACTERS BEFORE "X" REPLACING ALL "A" BY "B"` → `C = 2` (the window
+`"AA"` before `"X"`) while the un-regioned replace rewrites EVERY `"A"` →
+`S = "BBXBB"`.
+
+Still deferred (co-total): the combined REPLACING half's OWN `CHARACTERS` form
+(`REPLACING CHARACTERS BY x`) — a DIFFERENT node (`InspectReplacingCharacters` /
+`emit_inspect_replacing_characters`) read by the single-item `read_inspect_replacing_all`
+in the combined arm, which still rejects a `CHARACTERS` REPLACING item on both engines.
+
+**Byte-vs-char count chip (unchanged).** The CHARACTERS count is position-based; the
+compiler counts BYTE positions (`str_len`) while the oracle counts CHAR positions
+(`chars.len()`), coinciding on ASCII. A non-ASCII source is the PRE-EXISTING
+byte-vs-char count chip (task_396ba6f6), identical to the standalone `FOR CHARACTERS`
+and the multi-item `CHARACTERS`; moreover the combined REPLACING half reconstructs the
+field per byte position and traps on a multi-byte char anyway (the shared
+reconstruction chip). Neither is fixed here.
 
 The grammar deliberately accepts the fuller `INSPECT` surface — a MULTI-item or
 MULTI-counter `CHARACTERS` tally (the single-item single-counter `CHARACTERS` form is

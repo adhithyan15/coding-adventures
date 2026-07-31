@@ -162,8 +162,9 @@ that is `length(source)`, with a region it is the window length of the SAME wind
 `FOR ALL` uses, inheriting the identical not-found asymmetry — `BEFORE x` absent ⇒ whole
 source, `AFTER x` absent ⇒ empty ⇒ 0; a MULTI-item `CHARACTERS` — one CHARACTERS item
 ALONGSIDE other items under ONE counter — is now supported, see the multi-item form below;
-a MULTI-counter `CHARACTERS` and a `CHARACTERS` half in a combined `TALLYING … REPLACING`
-stay later rungs); the **multi-item** `INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q] …`
+a `CHARACTERS` TALLYING half in a combined `TALLYING … REPLACING` is now supported too, see
+the combined form below; a MULTI-counter `CHARACTERS` and a `CHARACTERS` REPLACING half in a
+combined `TALLYING … REPLACING` stay later rungs); the **multi-item** `INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q] …`
 (TWO OR MORE `FOR ALL` items sharing ONE counter, **each item with its OWN optional
 `{BEFORE|AFTER}` window** — ONE left-to-right pass in which, at each position, the items
 are tried in WRITTEN ORDER and the FIRST item that BOTH contains the position in its window
@@ -284,7 +285,10 @@ neither half may be leading — and each half independently accepts its OWN
 `FOR LEADING`/`REPLACING LEADING`, both windows computed over the SAME original source
 since the tally does not mutate it; a LEADING half carrying a region is now supported in
 the combined form — it composes the SAME standalone LEADING+region routines, anchoring
-each leading run at its window start); and
+each leading run at its window start; the `TALLYING` half may ALSO be `FOR CHARACTERS`
+(count every position in its optional window into the counter — the SAME standalone
+`FOR CHARACTERS` count — before the replace runs; the `REPLACING` half's OWN `CHARACTERS`
+form stays a later rung in the combined form); and
 `INSPECT source CONVERTING from TO to` (translate each character
 of the alphanumeric source through a per-character table built from the two
 equal-length operands `from`/`to`, each a string LITERAL, a data-name
