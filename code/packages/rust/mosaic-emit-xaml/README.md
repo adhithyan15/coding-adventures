@@ -49,11 +49,20 @@ durations and easing curves. The groups live on a transparent first-child
 Part-level transitions animate entry and exit; state-local transitions
 override entry.
 
+UI15's built-in `state hover` needs no matching layout predicate on controls
+that lower to WinUI's native ButtonBase family (`HostButton`, `HostCheckbox`,
+`HostRadio`, and `HostLink`). Its trigger binds directly to `IsPointerOver`.
+Inside a `For`, the binding and VisualStates remain in the DataTemplate
+namescope, so hovering one repeated row does not restyle its siblings. An
+explicit `state-when-hover` still wins when hover-like styling is intentionally
+driven by application state instead of the pointer.
+
 Named CSS curves lower to native WinUI easing functions. Arbitrary
 `cubic-bezier(...)` curves currently use `CubicEase`; exact control points
-require a future Windows Composition lowering. State predicates inside a
-`For` template are also deferred because DataTemplates introduce a separate
-XAML namescope.
+require a future Windows Composition lowering. Template-local predicates are
+lowered when they can bind directly to the row view-model or be projected into
+it; unsupported cross-namescope expressions are omitted instead of generating
+invalid XAML.
 
 Any moslayout primitive not in the table above currently surfaces as
 `PipelineEmitError::UnsupportedPrimitive` so authors get a clear "not yet
