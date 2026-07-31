@@ -46,6 +46,7 @@
 //! | `Spacer`       | `<Rectangle/>` flex glue                       |
 //! | `Divider`      | `<Border BorderThickness="..." />`             |
 //! | `Icon`         | `<FontIcon Glyph="..."/>`                      |
+//! | `HostSurface`  | Styled `<Border>` + node-bound `<ContentPresenter>` |
 //!
 //! Plus the UI24 dispatch contract (one `Dispatch` event per UserControl)
 //! and the slot → `DependencyProperty` translation table.

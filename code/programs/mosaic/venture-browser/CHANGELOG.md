@@ -10,5 +10,5 @@
   navigation.
 - A compile-time ratchet tying the MIL slots and events to Venture's shared
   host-neutral chrome reducer.
-- An explicit empty `content-surface` boundary reserved for the host-rendered
-  browser viewport; native surface embedding remains a later acceptance gate.
+- A typed `content-surface` node slot lowered through `HostSurface` for native
+  Metal and Direct2D viewport composition.

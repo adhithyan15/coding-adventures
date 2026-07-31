@@ -63,9 +63,17 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         .map(|slot| slot.name.as_str())
         .collect();
     assert_eq!(
-        slots,
+        &slots[..venture_browser_core::VENTURE_CHROME_SLOT_NAMES.len()],
         venture_browser_core::VENTURE_CHROME_SLOT_NAMES
     );
+    assert_eq!(
+        slots.last().copied(),
+        Some(venture_browser_core::VENTURE_CHROME_HOST_SURFACE_SLOT_NAME)
+    );
+    assert!(matches!(
+        interface.component.slots.last().map(|slot| &slot.r#type),
+        Some(mosmodel_compiler::SlotType::Node)
+    ));
     let events: Vec<_> = interface
         .component
         .emits

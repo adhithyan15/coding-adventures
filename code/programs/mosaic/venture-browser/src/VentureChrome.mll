@@ -1,8 +1,7 @@
 // VentureChrome — shared browser-chrome layout.
 //
-// `content-surface` is intentionally empty. It reserves the composition boundary
-// where a native Metal or Direct2D page viewport will be mounted after Mosaic has
-// an explicit host-surface primitive; this package does not fake one with widgets.
+// `content-surface` mounts the host-owned Metal or Direct2D viewport through
+// Mosaic's typed node-slot boundary; browser chrome remains authored once here.
 
 layout VentureChrome {
   Column [ app-shell ] {
@@ -46,7 +45,9 @@ layout VentureChrome {
       )
     }
 
-    Box [ content-surface ] { }
+    HostSurface [ content-surface ] (
+      content : slot: content-surface
+    )
 
     Row [ status-bar ] {
       Text [ status-text ] ( content : slot: status-text )

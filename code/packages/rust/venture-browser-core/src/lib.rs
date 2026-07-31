@@ -16,7 +16,7 @@ use paint_instructions::{PaintBase, PaintGroup, PaintInstruction, PaintScene};
 use std::fmt;
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 
-pub const VERSION: &str = "0.5.0";
+pub const VERSION: &str = "0.6.0";
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
 pub const VENTURE_CHROME_SLOT_NAMES: [&str; 6] = [
@@ -27,6 +27,9 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 6] = [
     "forward-disabled",
     "navigation-disabled",
 ];
+
+/// Host-owned Mosaic node slot that mounts the native page renderer.
+pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
 pub const VENTURE_CHROME_EVENT_NAMES: [&str; 6] = [

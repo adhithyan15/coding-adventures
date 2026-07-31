@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Added - HostSurface native composition primitive
+
+`HostSurface` now registers as a kernel primitive for mounting a host-supplied
+`node` slot. This gives generated native shells an explicit, typed boundary for
+Metal, Direct2D, video, map, and other platform-owned render surfaces without
+reimplementing surrounding application UI outside Mosaic.
+
 ### Fixed - a string literal inside an expression lost its quotes
 
 `( status == "done" )` reconstructed as `status == done` — a comparison against an

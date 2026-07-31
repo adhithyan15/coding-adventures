@@ -1,6 +1,6 @@
 [package]
 name = "venture-browser-core"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
 description = "Host-neutral navigation and page-loading orchestration for the Venture browser."
 

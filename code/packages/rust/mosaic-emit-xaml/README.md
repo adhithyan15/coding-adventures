@@ -28,6 +28,7 @@ mosstyle base styling:
 | `For` | `<ItemsRepeater>` with generated row view-models |
 | `HostInput` | `<TextBox>` |
 | `HostButton` | `<Button>` |
+| `HostSurface` | Styled `<Border>` containing a node-bound `<ContentPresenter>` |
 | `HostCheckbox` | `<CheckBox>` |
 | `HostRadio` | `<RadioButton>` |
 | `HostLink` | `<HyperlinkButton>` or routed `<Button>` |

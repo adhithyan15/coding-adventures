@@ -143,6 +143,8 @@ const PRIMITIVES: &[&str] = &[
     // min/max validation. See code/specs/UI29-4-form-and-nav-
     // candidates-survey.md for the full inclusion-criteria audit.
     "HostInput", "HostButton", "HostTable", "HostScroll", "HostDialog",
+    // Typed native composition boundary for host-supplied `node` slots.
+    "HostSurface",
     "HostCheckbox", "HostRadio",
     "HostLink", "HostTooltip", "HostNumberInput",
     // UI31 — `HostTable` sibling primitives. Recognised by the React
@@ -2527,6 +2529,7 @@ mod tests {
         assert!(PRIMITIVES.contains(&"HostButton"));
         assert!(PRIMITIVES.contains(&"HostTable"));
         assert!(PRIMITIVES.contains(&"HostScroll"));
+        assert!(PRIMITIVES.contains(&"HostSurface"));
         assert!(
             PRIMITIVES.contains(&"HostDialog"),
             "UI29-1 added HostDialog as the 16th kernel primitive"
@@ -2572,6 +2575,25 @@ mod tests {
             PRIMITIVES.contains(&"Col"),
             "UI31 added Col as the cell-definition sub-tag inside HostTableColGroup"
         );
+    }
+
+    #[test]
+    fn host_surface_with_node_slot_compiles() {
+        let interface = mosmodel_compiler::compile(
+            "component Browser { slot content-surface : node ; }",
+        )
+        .expect("compile node-slot interface");
+        let source = r#"
+          layout Browser {
+            Column [ shell ] {
+              HostSurface [ content-surface ] (
+                content : slot: content-surface
+              )
+            }
+          }
+        "#;
+        compile(source, Some(&interface.descriptor_json))
+            .expect("HostSurface must accept a host-supplied node slot");
     }
 
     // =====================================================================
