@@ -39,8 +39,8 @@
 use adj_lang::{LoweredStateMachine, StateMachineOutcome, StateMachineRun};
 use logic_engine::compute::{DerivationNode, RoundSpec};
 use logic_engine::differential::{Differential, DifferentialDecision};
-use logic_engine::proof_dag::{DerivationOrigin, ProofDAG, ProofStep};
-use logic_engine::{KnowledgeBase, Provenance, RoundingMode, TrustTier};
+use logic_engine::proof_dag::{DerivationOrigin, ProofStep};
+use logic_engine::{GovernStatus, GovernedResult, KnowledgeBase, Provenance, RoundingMode, TrustTier};
 
 /// Render the human-readable explanation of a decided query.
 ///
@@ -61,7 +61,7 @@ pub fn explain(
     kb: &KnowledgeBase,
     diff: &Differential,
     state_machine_runs: &[(&LoweredStateMachine, StateMachineRun)],
-    arguments: &[(logic_core::Term, ProofDAG)],
+    arguments: &[(logic_core::Term, GovernedResult)],
 ) -> String {
     let mut sections: Vec<String> = Vec::new();
     let derivations = render_derivations(kb);
@@ -401,12 +401,13 @@ fn render_adjudication(kb: &KnowledgeBase, diff: &Differential) -> String {
 /// **budget-truncated** search is never laundered into "no proof exists" — the
 /// two are reported distinctly (§proof_dag `truncated`). Returns "" when the
 /// program declared no binding query.
-fn render_arguments(kb: &KnowledgeBase, arguments: &[(logic_core::Term, ProofDAG)]) -> String {
+fn render_arguments(kb: &KnowledgeBase, arguments: &[(logic_core::Term, GovernedResult)]) -> String {
     if arguments.is_empty() {
         return String::new();
     }
     let mut out: Vec<String> = Vec::new();
-    for (query, dag) in arguments {
+    for (query, gov) in arguments {
+        let dag = &gov.dag;
         out.push(format!("Argument for {}:", query));
         if !dag.has_proof() {
             // Distinguish "the search ran and found nothing" (evidence of
@@ -427,13 +428,67 @@ fn render_arguments(kb: &KnowledgeBase, arguments: &[(logic_core::Term, ProofDAG
         // resolving each goal under the proof's answer substitution so the
         // conclusion shows the DERIVED value (e.g. `failed_by(axle, fatigue)`),
         // not the query's still-open variable (`failed_by(axle, Mechanism)`).
+        //
+        // AR-3 §4: when a paper's rebuttal DEFEATS a conclusion (a `functional`
+        // thesis + `context_order` → `enumerate_governing` marks the loser
+        // `Defeated`/the winner `Governing`), the FIRST step of each proof is that
+        // proof's top conclusion — annotate it with the DIALECTICAL outcome
+        // (WITHDRAWN / GOVERNING / CONFLICT) read straight off `gov.answers`. We
+        // don't re-decide anything here; we narrate the resolution the engine
+        // already computed.
         for proof in &dag.proofs {
-            for st in &proof.steps {
-                out.push(render_arg_step(kb, st, &proof.bindings));
+            let conclusion = proof
+                .steps
+                .first()
+                .map(|st| resolve_deep(&st.goal, &proof.bindings));
+            for (i, st) in proof.steps.iter().enumerate() {
+                let mut line = render_arg_step(kb, st, &proof.bindings);
+                if i == 0 {
+                    if let Some(c) = &conclusion {
+                        line.push_str(&govern_suffix(c, &gov.answers));
+                    }
+                }
+                out.push(line);
             }
         }
     }
     out.join("\n")
+}
+
+/// AR-3 §4 — the dialectical outcome suffix for a rendered argument's top
+/// conclusion, read off the `enumerate_governing` answers the CLI already
+/// computed. Only annotates when the result is genuinely CONTESTED (some answer
+/// is defeated or a conflict peer), so an ordinary uncontested recall query is
+/// left exactly as ADR-6 rendered it. A defeated conclusion is named WITHDRAWN
+/// and cites its defeater plus the context precedence that withdrew it
+/// (`reanalysis outranks initial_report`); the surviving rival is GOVERNING.
+fn govern_suffix(conclusion: &logic_core::Term, answers: &[logic_engine::GovernedAnswer]) -> String {
+    let contested = answers
+        .iter()
+        .any(|a| !matches!(a.status, GovernStatus::Governing));
+    if !contested {
+        return String::new();
+    }
+    let Some(ans) = answers.iter().find(|a| &a.term == conclusion) else {
+        return String::new();
+    };
+    match &ans.status {
+        GovernStatus::Governing => "  [GOVERNING]".to_string(),
+        GovernStatus::ConflictPeer => "  [CONFLICT — unresolved peer, abstain]".to_string(),
+        GovernStatus::Defeated { by } => {
+            // Name the context precedence that withdrew it, when both the loser
+            // and its defeater carry a `context:` (the ADJ73 `context_order` win).
+            let by_context = answers
+                .iter()
+                .find(|a| &a.term == by)
+                .and_then(|a| a.context.clone());
+            let ctx = match (&ans.context, &by_context) {
+                (Some(lo), Some(hi)) => format!(" ({} outranks {})", hi, lo),
+                _ => String::new(),
+            };
+            format!("  [WITHDRAWN — defeated by {}{}]", by, ctx)
+        }
+    }
 }
 
 /// Deep-resolve a term under a substitution. The engine's `Substitution::walk`

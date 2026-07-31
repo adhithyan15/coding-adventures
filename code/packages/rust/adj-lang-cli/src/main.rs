@@ -41,8 +41,8 @@ use logic_core::{atom, compound, var, LogicVar, Term};
 use logic_engine::govern::Standing;
 use logic_engine::{
     enumerate_all, enumerate_governing, numeric_exact_magnitude, DerivationOrigin,
-    DifferentialDecision, Fact, GovernStatus, KnowledgeBase, LRAggregateResult, Proof, ProofDAG,
-    Provenance, TrustTier,
+    DifferentialDecision, Fact, GovernStatus, GovernedResult, KnowledgeBase, LRAggregateResult,
+    Proof, Provenance, TrustTier,
 };
 
 mod explain;
@@ -1085,9 +1085,14 @@ fn main() -> ExitCode {
         // (projection-only: `enumerate_all` is deterministic and side-effect
         // free), so `--explain` can render the derivation as an argument. Empty
         // for a program with no binding query, leaving all other output unchanged.
-        let argument_chains: Vec<(Term, ProofDAG)> = binding_queries
+        // AR-3 §4: resolve each binding query with `enumerate_governing` (not bare
+        // `enumerate_all`), so `--explain` sees the SAME dialectical resolution the
+        // `governing` JSON section reports — a rebutted conclusion tagged
+        // `Defeated`/its rival `Governing`. The `GovernedResult` carries both the
+        // proof DAG (the chains ADR-6 renders) and the per-answer status.
+        let argument_chains: Vec<(Term, GovernedResult)> = binding_queries
             .iter()
-            .map(|q| (q.clone(), enumerate_all(q, &lowered.kb)))
+            .map(|q| (q.clone(), enumerate_governing(q, &lowered.kb)))
             .collect();
         println!(
             "{}",

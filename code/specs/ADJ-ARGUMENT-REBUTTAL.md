@@ -81,11 +81,13 @@ So the dialectic inherits the whole audit stack: a rebuttal that drifts from its
 - **DERIVE / govern**: the `governing` section already reports each answer's `status`
   (`governing` / `defeated` / `conflict_peer`) and its resolving `context` — that IS the rebuttal
   outcome, today.
-- **`--explain`**: the ADR-6 renderer shows an argument's SLD chain. Rendering the *defeat* — "X
-  was concluded (paragraph A) but is **withdrawn**, defeated by Y (paragraph B) under
-  `reanalysis > initial_report`" — is a small addition to the argument surface of `--explain`
-  (it reads the `governing` resolution the CLI already computes). This is an AR-3 rung, not new
-  engine work.
+- **`--explain` — SHIPPED (adj-lang-cli 0.31.0).** The ADR-6 renderer now NARRATES the *defeat*:
+  a rebutted conclusion is tagged **`[WITHDRAWN — defeated by <rival> (<hi> outranks <lo>)]`** and
+  the surviving rival **`[GOVERNING]`** (e.g. `failed_by(axle, fatigue) … [WITHDRAWN — defeated by
+  failed_by(axle, overload) (reanalysis outranks initial_report)]`). It reads the same `governing`
+  resolution the CLI already computes (`enumerate_governing`) — no new engine work, and it
+  re-decides nothing. Only genuinely contested results are annotated; an uncontested recall or an
+  undercut abstention is untouched. Pinned by `adj-lang-cli/tests/explain_defeated_by_e2e.rs`.
 - **`adj-verify`**: unchanged — it byte-anchors the attacking premises and re-derives; the
   defeat is a resolution over already-verified rules.
 
@@ -115,9 +117,10 @@ cannot be written *inside* the pure `argument` block yet. Two honest paths, both
   `adj-argument-ir/rebuttal/{rebuttal,undercut}-inblock.adj`.
 
 AR-1 committed to **(a)** as the working model and specced **(b)** as the follow-up; AR-3 delivered
-**(b)** — the same reuse-first stance AC-1 took for composition. The one remaining piece is the
-`--explain` "withdrawn / defeated-by" prose rendering (§4), which reads the `governing` resolution
-the CLI already computes and reports today.
+**(b)** — the same reuse-first stance AC-1 took for composition. The `--explain`
+"withdrawn / defeated-by" prose rendering (§4) is now **also shipped** (adj-lang-cli 0.31.0), so the
+argument surface — support, attack, and the human-readable narration of the withdrawal — is
+**complete**.
 
 ## 6. Worked sketch + staging
 
@@ -139,7 +142,8 @@ sample; the fatigue warrant is undercut and the thesis abstains rather than asse
   ONE `argument` block. Worked `adj-argument-ir/rebuttal/{rebuttal,undercut}-inblock.adj` +
   `adj-lang-cli/tests/argument_inblock_attack_e2e.rs` (engine still withdraws the defeated
   conclusion; `adj-verify` byte-anchors both premises). The `--explain` "withdrawn / defeated-by"
-  prose rendering remains the follow-up (the `governing` output already reports the status today).
+  prose rendering is **also shipped** (adj-lang-cli 0.31.0, `explain_defeated_by_e2e.rs`) — the
+  argument surface is now complete.
 - **Later** — the trained decomposer emits attack edges from a paper's rebuttal/limitation
   paragraphs (retarget the AD-1..5 scaffold to the attack surface).
 

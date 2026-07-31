@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.31.0] — 2026-07-31 — AR-3: `--explain` narrates the WITHDRAWAL of a rebutted conclusion
+
+Completes the argument surface (`ADJ-ARGUMENT-REBUTTAL.md` §4): when a paper's rebuttal DEFEATS a
+conclusion (a `functional` thesis + `context_order` → the engine's `enumerate_governing` marks the
+loser `Defeated`/the winner `Governing`), `--explain` now NARRATES the dialectic instead of listing
+both conclusions as equal peers. The defeated conclusion is tagged **`[WITHDRAWN — defeated by
+<rival> (<hi> outranks <lo>)]`** — naming its defeater and the context precedence that withdrew it —
+and the surviving rival is tagged **`[GOVERNING]`**. The defeated conclusion's own premise chain
+stays rendered (the loser is *withdrawn, not discarded* — still auditable).
+
+The `--explain` argument path now resolves each binding query with `enumerate_governing` (was bare
+`enumerate_all`), so the human view reads the SAME resolution the `governing` JSON already reports —
+it re-decides nothing. Only genuinely CONTESTED results are annotated: an ordinary uncontested
+recall query is left exactly as ADR-6 rendered it, and an UNDERCUT thesis still abstains (never
+falsely "withdrawn"). No logic-engine change. Worked on
+`adj-argument-ir/rebuttal/rebuttal-inblock.adj`; pinned by
+`adj-lang-cli/tests/explain_defeated_by_e2e.rs`.
+
 ## [0.30.3] — 2026-07-30 — ADR-6: `--explain` renders the argument chain
 
 Completes "reason **and** explain" for the `argument` construct — the one explain gap left. A
