@@ -108,28 +108,65 @@ String wrapDescription(String description) {
 
 String dartStringLiteral(String value) => jsonEncode(value);
 
-String findRepoRoot([String? startPath]) {
-  var current = Directory(startPath ?? Directory.current.path).absolute;
-  while (true) {
-    final codeDir = Directory('${current.path}/code');
-    final lessons = File('${current.path}/lessons.md');
-    if (codeDir.existsSync() && lessons.existsSync()) {
-      return current.path;
-    }
+/// Render the explicit Spec 13 capability profile for a generated Dart target.
+///
+/// Library scaffolds begin as pure computation. Program scaffolds add only the
+/// stdout authority exercised by the generated `bin/` entry point. Keeping
+/// this renderer data-driven makes the JSON shape deterministic and lets the
+/// native Dart tests compare it byte-for-byte with the language-neutral
+/// contract fixtures.
+String capabilityManifestContents(
+  PackageType packageType,
+  String packageName,
+) {
+  final isProgram = packageType == PackageType.program;
+  final capabilities = <Map<String, String>>[
+    if (isProgram)
+      <String, String>{
+        'category': 'stdout',
+        'action': 'write',
+        'target': '*',
+        'justification':
+            'Writes the generated program starter message to standard output.',
+      },
+  ];
+  final document = <String, Object>{
+    r'$schema':
+        'https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json',
+    'version': 1,
+    'package': 'dart/$packageName',
+    'capabilities': capabilities,
+    'justification': isProgram
+        ? 'Generated program writes its starter message to standard output and uses no other OS capabilities.'
+        : 'Pure computation. No filesystem, network, process, or environment access needed.',
+  };
+  return '${const JsonEncoder.withIndent('  ').convert(document)}\n';
+}
 
-    final parent = current.parent;
-    if (parent.path == current.path) {
-      throw ArgumentError(
-        'Could not find the coding-adventures repo root from ${current.path}.',
-      );
-    }
-    current = parent;
+String findRepoRoot([String? startPath]) {
+  final candidate = Directory(startPath ?? defaultRepoRoot()).absolute;
+  final codeDir = Directory('${candidate.path}/code');
+  final lessons = File('${candidate.path}/lessons.md');
+  if (codeDir.existsSync() && lessons.existsSync()) {
+    return candidate.path;
   }
+
+  throw ArgumentError(
+    '${candidate.path} is not the coding-adventures repo root.',
+  );
 }
 
 String defaultSpecPath([Uri? script]) {
   final scriptFile = File.fromUri(script ?? Platform.script);
   return '${scriptFile.parent.parent.path}/scaffold-generator.json';
+}
+
+String defaultRepoRoot([Uri? script]) {
+  var current = File(defaultSpecPath(script)).parent;
+  for (var index = 0; index < 4; index += 1) {
+    current = current.parent;
+  }
+  return current.path;
 }
 
 List<String> parseLanguages(String rawValue) {
@@ -202,6 +239,12 @@ CliOptions optionsFromParseResult(ParseResult result) {
 }
 
 DependencyRef resolveDependency(String repoRoot, String dependencyName) {
+  if (!kebabCasePattern.hasMatch(dependencyName)) {
+    throw ArgumentError(
+      'Dependency "$dependencyName" is not valid kebab-case.',
+    );
+  }
+
   final packagePath = '$repoRoot/code/packages/dart/$dependencyName';
   if (Directory(packagePath).existsSync()) {
     return DependencyRef(
@@ -467,6 +510,10 @@ List<ScaffoldFile> generateCommonFiles({
       relativePath: 'CHANGELOG.md',
       content: '${changelog.toString().trimRight()}\n',
     ),
+    ScaffoldFile(
+      relativePath: 'required_capabilities.json',
+      content: capabilityManifestContents(packageType, packageName),
+    ),
   ];
 }
 
@@ -706,7 +753,9 @@ String renderDryRun(ScaffoldPlan plan) {
   return buffer.toString();
 }
 
-int run(
+int run(List<String> args) => runWithOverrides(args);
+
+int runWithOverrides(
   List<String> args, {
   String? repoRoot,
   StringSink? out,

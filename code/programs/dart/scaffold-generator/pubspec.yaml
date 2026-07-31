@@ -2,7 +2,7 @@ name: scaffold_generator
 description: >
   Generate CI-ready Dart package and program scaffolding for the
   coding-adventures monorepo.
-version: 0.1.0
+version: 0.2.0
 publish_to: none
 
 environment:
