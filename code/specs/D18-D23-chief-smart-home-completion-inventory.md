@@ -526,6 +526,27 @@ while keeping the absent commissioning and secure-session host explicit:
   validation, fabric key storage, Interaction Model encoding, subscriptions,
   and network I/O remain production host work.
 
+## Current Home Assistant Migration Slice
+
+This slice creates an executable, review-first boundary for retiring Home
+Assistant without silently changing behavior:
+
+- `smart-home-home-assistant-migration` accepts a versioned export of areas,
+  devices, entities, current state, scenes, and a bounded automation subset.
+- The planner assigns deterministic source-prefixed identifiers, preserves
+  Home Assistant registry identifiers and metadata, maps known domains to D23
+  capabilities, and retains unknown domains as observe-only entities.
+- Area, device, entity, scene, condition, and action references are validated
+  before apply. Unsupported or unresolved automation behavior is a blocking
+  diagnostic instead of a partial import.
+- Apply upserts topology, state, scenes, and durable automation definitions
+  through the existing D23 runtime and automation APIs. Stable source
+  fingerprints and receipts make reruns idempotent and auditable.
+- The CLI emits either a dry-run plan or an applied runtime/automation snapshot
+  through an atomic file replacement. Unit and process-level tests prove dry
+  runs, scene and automation mapping, blocking diagnostics, repeat apply, and
+  artifact round trips.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
@@ -535,8 +556,9 @@ These items move toward retiring an existing Home Assistant install:
   Matter commissioning/secure-session/network host, a Thread border-router
   host, a production Zigbee coordinator/join/security host, and production
   Z-Wave inclusion and S2.
-- Build Home Assistant migration tools for devices, rooms, scenes,
-  automations, dashboards, and historical state export where feasible.
+- Extend the completed Home Assistant topology, current-state, scene, and
+  automation importer with live export collection, dashboard migration, and
+  historical state export where feasible.
 - Provide a dashboard that can inspect devices, rooms, state, health,
   automations, event history, pairing, and command audit.
 
