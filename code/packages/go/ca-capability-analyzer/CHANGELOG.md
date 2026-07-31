@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased]
+
+### Security
+
+- Reject unknown and invalid cross-category capability pairs while loading a
+  manifest, before exact or wildcard declarations enter the analyzer.
+- Conform the embedded 19-pair table to the shared language-neutral Spec 13
+  taxonomy fixture.
+
 ## [1.0.2] - 2026-04-13
 
 ### Security

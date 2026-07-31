@@ -11,11 +11,74 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 )
+
+type taxonomyFixture struct {
+	Categories                    map[string][]string `json:"categories"`
+	AllActions                    []string            `json:"all_actions"`
+	ExpectedValidPairCount        int                 `json:"expected_valid_pair_count"`
+	ExpectedInvalidCrossPairCount int                 `json:"expected_invalid_cross_pair_count"`
+}
+
+func loadTaxonomyFixture(t *testing.T) taxonomyFixture {
+	t.Helper()
+	path := filepath.Join("..", "..", "..", "specs", "fixtures", "capability-security-v1", "taxonomy.json")
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read shared taxonomy fixture: %v", err)
+	}
+	var fixture taxonomyFixture
+	if err := json.Unmarshal(data, &fixture); err != nil {
+		t.Fatalf("parse shared taxonomy fixture: %v", err)
+	}
+	return fixture
+}
+
+func containsAction(actions []string, wanted string) bool {
+	for _, action := range actions {
+		if action == wanted {
+			return true
+		}
+	}
+	return false
+}
+
+func TestCapabilityTaxonomyMatchesSharedFixture(t *testing.T) {
+	fixture := loadTaxonomyFixture(t)
+	validCount := 0
+	invalidCount := 0
+	for category, allowed := range fixture.Categories {
+		for _, action := range fixture.AllActions {
+			want := containsAction(allowed, action)
+			if got := validCapabilityPair(category, action); got != want {
+				t.Errorf("validCapabilityPair(%q, %q) = %v, want %v", category, action, got, want)
+			}
+			if want {
+				validCount++
+			} else {
+				invalidCount++
+			}
+		}
+	}
+	if validCount != fixture.ExpectedValidPairCount {
+		t.Errorf("valid pair count = %d, want %d", validCount, fixture.ExpectedValidPairCount)
+	}
+	if invalidCount != fixture.ExpectedInvalidCrossPairCount {
+		t.Errorf("invalid cross-pair count = %d, want %d", invalidCount, fixture.ExpectedInvalidCrossPairCount)
+	}
+	if validCapabilityPair("filesystem", "read") {
+		t.Error("unknown category must fail closed")
+	}
+	if validCapabilityPair("fs", "destroy") {
+		t.Error("unknown action must fail closed")
+	}
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // scopeableCategory
@@ -648,7 +711,24 @@ func TestGenerateSource_WithEnvRead(t *testing.T) {
 	}
 }
 
-func TestGenerateSource_UnknownCapabilityEmitsTODO(t *testing.T) {
+func TestGenerateSource_InvalidCapabilityRejected(t *testing.T) {
+	tmp := t.TempDir()
+	mf := &manifestJSON{
+		Package: "go/future-pkg",
+		Capabilities: []capabilityJSON{
+			{Category: "fs", Action: "connect", Target: "libfoo.so"},
+		},
+	}
+	src, err := generateSource(filepath.Join(tmp, "required_capabilities.json"), mf)
+	if err == nil {
+		t.Fatal("expected invalid category/action pair to fail")
+	}
+	if src != "" {
+		t.Errorf("invalid pair generated source: %q", src)
+	}
+}
+
+func TestGenerateSource_RecognizedUnsupportedCapabilityRejected(t *testing.T) {
 	tmp := t.TempDir()
 	mf := &manifestJSON{
 		Package: "go/future-pkg",
@@ -657,12 +737,11 @@ func TestGenerateSource_UnknownCapabilityEmitsTODO(t *testing.T) {
 		},
 	}
 	src, err := generateSource(filepath.Join(tmp, "required_capabilities.json"), mf)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+	if err == nil {
+		t.Fatal("expected recognized but unsupported capability to fail closed")
 	}
-	// Unknown category:action should emit a TODO comment.
-	if !strings.Contains(src, "TODO") {
-		t.Error("expected TODO comment for unknown capability ffi:call")
+	if src != "" || strings.Contains(src, "TODO") {
+		t.Errorf("unsupported pair must not emit source or TODO: %q", src)
 	}
 }
 
@@ -902,6 +981,44 @@ func TestProcessManifest_InvalidJSON(t *testing.T) {
 	}
 }
 
+func TestProcessManifest_InvalidCapabilityPreservesExistingOutput(t *testing.T) {
+	tmp := t.TempDir()
+	manifestPath := filepath.Join(tmp, "required_capabilities.json")
+	outPath := filepath.Join(tmp, "gen_capabilities.go")
+	sentinel := []byte("package sentinel\n")
+
+	manifest := `{
+		"version": 1,
+		"package": "go/test-pkg",
+		"capabilities": [
+			{
+				"category": "fs",
+				"action": "connect",
+				"target": "*",
+				"justification": "Deliberately invalid cross-pair."
+			}
+		],
+		"justification": "Exercises fail-closed output handling."
+	}`
+	if err := os.WriteFile(manifestPath, []byte(manifest), 0o644); err != nil { //nolint:cap
+		t.Fatalf("write manifest: %v", err)
+	}
+	if err := os.WriteFile(outPath, sentinel, 0o644); err != nil { //nolint:cap
+		t.Fatalf("write sentinel output: %v", err)
+	}
+
+	if err := processManifest(manifestPath, false); err == nil {
+		t.Fatal("expected invalid capability to fail")
+	}
+	got, err := os.ReadFile(outPath) //nolint:cap
+	if err != nil {
+		t.Fatalf("read sentinel output: %v", err)
+	}
+	if string(got) != string(sentinel) {
+		t.Fatalf("invalid manifest replaced existing output: %q", got)
+	}
+}
+
 func TestProcessManifest_MissingFile(t *testing.T) {
 	err := processManifest("/nonexistent/path/required_capabilities.json", false)
 	if err == nil {
@@ -958,6 +1075,53 @@ func TestProcessAll_ReturnsErrorOnBadManifest(t *testing.T) {
 	err := processAll(tmp, false)
 	if err == nil {
 		t.Error("expected error when manifest is invalid JSON")
+	}
+}
+
+func TestProcessAll_InvalidManifestPreservesEveryExistingOutput(t *testing.T) {
+	tmp := t.TempDir()
+	root := filepath.Join(tmp, "code", "packages", "go")
+	sentinel := []byte("package sentinel\n")
+
+	for _, tc := range []struct {
+		name         string
+		capabilities string
+	}{
+		{"a-good", "[]"},
+		{"z-bad", `[{"category":"fs","action":"connect","target":"*","justification":"Invalid cross-pair."}]`},
+	} {
+		pkgDir := filepath.Join(root, tc.name)
+		if err := os.MkdirAll(pkgDir, 0o755); err != nil { //nolint:cap
+			t.Fatalf("create package directory: %v", err)
+		}
+		if err := os.WriteFile(filepath.Join(pkgDir, "main.go"), []byte("package testpkg\n"), 0o644); err != nil { //nolint:cap
+			t.Fatalf("write package source: %v", err)
+		}
+		manifest := fmt.Sprintf(`{
+			"version": 1,
+			"package": "go/%s",
+			"capabilities": %s,
+			"justification": "Batch preflight fixture."
+		}`, tc.name, tc.capabilities)
+		if err := os.WriteFile(filepath.Join(pkgDir, "required_capabilities.json"), []byte(manifest), 0o644); err != nil { //nolint:cap
+			t.Fatalf("write manifest: %v", err)
+		}
+		if err := os.WriteFile(filepath.Join(pkgDir, "gen_capabilities.go"), sentinel, 0o644); err != nil { //nolint:cap
+			t.Fatalf("write sentinel output: %v", err)
+		}
+	}
+
+	if err := processAll(tmp, false); err == nil {
+		t.Fatal("expected batch preflight to reject the invalid manifest")
+	}
+	for _, name := range []string{"a-good", "z-bad"} {
+		got, err := os.ReadFile(filepath.Join(root, name, "gen_capabilities.go")) //nolint:cap
+		if err != nil {
+			t.Fatalf("read %s sentinel output: %v", name, err)
+		}
+		if string(got) != string(sentinel) {
+			t.Fatalf("batch validation failure replaced %s output: %q", name, got)
+		}
 	}
 }
 

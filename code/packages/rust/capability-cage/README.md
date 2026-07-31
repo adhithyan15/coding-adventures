@@ -8,6 +8,12 @@ See `code/specs/capability-cage-rust.md` for the full design and
 `code/specs/13-capability-security.md` for the cross-language
 taxonomy.
 
+The eight categories and 14-action union form exactly 19 valid pairs rather
+than two independently combinable enums. Manifest ingestion rejects unknown
+vocabulary and all other cross-pairs, and the embedded table is exhaustively
+checked against
+`code/specs/fixtures/capability-security-v1/taxonomy.json`.
+
 ## What this crate is
 
 The cage's job is to ensure that no Rust package in this repo
@@ -98,7 +104,6 @@ Spec-defined but landing in subsequent PRs:
 
 - `secure_net` / `secure_proc` / `secure_time` / `secure_stdio` modules
 - `build.rs` codegen for `package_manifest()`
-- Cross-language conformance suite shared with the Go cage
 - The CI lint that rejects raw stdlib usage
 
 ## Dependencies

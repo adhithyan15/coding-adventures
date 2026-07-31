@@ -138,7 +138,61 @@
           "minLength": 10,
           "description": "Human-readable explanation of why this specific capability is needed."
         }
-      }
+      },
+      "allOf": [
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "category": { "const": "fs" },
+                "action": { "enum": ["read", "write", "create", "delete", "list"] }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "net" },
+                "action": { "enum": ["connect", "listen", "dns"] }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "proc" },
+                "action": { "enum": ["exec", "fork", "signal"] }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "env" },
+                "action": { "enum": ["read", "write"] }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "ffi" },
+                "action": { "enum": ["call", "load"] }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "time" },
+                "action": { "enum": ["read", "sleep"] }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "stdin" },
+                "action": { "const": "read" }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "stdout" },
+                "action": { "const": "write" }
+              }
+            }
+          ]
+        }
+      ]
     }
   }
 }

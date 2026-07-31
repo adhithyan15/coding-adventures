@@ -179,6 +179,8 @@ pub fn is_valid_combination(category: Category, action: Action) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use coding_adventures_json_value::{parse, JsonNumber, JsonValue};
+    use std::collections::HashSet;
 
     #[test]
     fn category_round_trips() {
@@ -213,51 +215,72 @@ mod tests {
     }
 
     #[test]
-    fn valid_combinations_exhaustive() {
-        // The 19 valid pairs from the spec table.
-        let valid = [
-            (Category::Fs, Action::Read),
-            (Category::Fs, Action::Write),
-            (Category::Fs, Action::Create),
-            (Category::Fs, Action::Delete),
-            (Category::Fs, Action::List),
-            (Category::Net, Action::Connect),
-            (Category::Net, Action::Listen),
-            (Category::Net, Action::Dns),
-            (Category::Proc, Action::Exec),
-            (Category::Proc, Action::Fork),
-            (Category::Proc, Action::Signal),
-            (Category::Env, Action::Read),
-            (Category::Env, Action::Write),
-            (Category::Ffi, Action::Call),
-            (Category::Ffi, Action::Load),
-            (Category::Time, Action::Read),
-            (Category::Time, Action::Sleep),
-            (Category::Stdin, Action::Read),
-            (Category::Stdout, Action::Write),
-        ];
-        for (c, a) in valid {
-            assert!(is_valid_combination(c, a), "expected {c}:{a} to be valid");
-        }
-    }
+    fn shared_fixture_exhaustively_matches_pair_table() {
+        let fixture = parse(include_str!(
+            "../../../../specs/fixtures/capability-security-v1/taxonomy.json"
+        ))
+        .expect("shared taxonomy fixture must parse");
+        let JsonValue::Object(root) = fixture else {
+            panic!("taxonomy fixture must be an object");
+        };
+        let lookup = |key: &str| {
+            root.iter()
+                .find(|(name, _)| name == key)
+                .map(|(_, value)| value)
+                .unwrap_or_else(|| panic!("missing fixture field {key}"))
+        };
+        let JsonValue::Object(categories) = lookup("categories") else {
+            panic!("categories must be an object");
+        };
+        let JsonValue::Array(all_actions) = lookup("all_actions") else {
+            panic!("all_actions must be an array");
+        };
+        let actions: Vec<&str> = all_actions
+            .iter()
+            .map(|value| match value {
+                JsonValue::String(action) => action.as_str(),
+                _ => panic!("all_actions entries must be strings"),
+            })
+            .collect();
 
-    #[test]
-    fn invalid_combinations_rejected() {
-        // A few that should NOT be valid.
-        let invalid = [
-            (Category::Fs, Action::Connect),
-            (Category::Net, Action::Read),
-            (Category::Proc, Action::Read),
-            (Category::Env, Action::Connect),
-            (Category::Time, Action::Connect),
-            (Category::Stdin, Action::Write),
-            (Category::Stdout, Action::Read),
-        ];
-        for (c, a) in invalid {
-            assert!(
-                !is_valid_combination(c, a),
-                "expected {c}:{a} to be invalid"
-            );
+        let mut valid_count = 0;
+        let mut invalid_count = 0;
+        for (category_name, allowed_value) in categories {
+            let category: Category = category_name.parse().expect("known fixture category");
+            let JsonValue::Array(allowed_values) = allowed_value else {
+                panic!("category actions must be arrays");
+            };
+            let allowed: HashSet<&str> = allowed_values
+                .iter()
+                .map(|value| match value {
+                    JsonValue::String(action) => action.as_str(),
+                    _ => panic!("category action entries must be strings"),
+                })
+                .collect();
+            for action_name in &actions {
+                let action: Action = action_name.parse().expect("known fixture action");
+                let want = allowed.contains(action_name);
+                assert_eq!(
+                    is_valid_combination(category, action),
+                    want,
+                    "pair mismatch for {category}:{action}"
+                );
+                if want {
+                    valid_count += 1;
+                } else {
+                    invalid_count += 1;
+                }
+            }
         }
+
+        let expected_count = |key: &str| match lookup(key) {
+            JsonValue::Number(JsonNumber::Integer(value)) => *value as usize,
+            _ => panic!("{key} must be an integer"),
+        };
+        assert_eq!(valid_count, expected_count("expected_valid_pair_count"));
+        assert_eq!(
+            invalid_count,
+            expected_count("expected_invalid_cross_pair_count")
+        );
     }
 }
