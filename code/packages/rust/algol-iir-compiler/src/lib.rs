@@ -240,6 +240,14 @@ fn array_param_stride_slot(name: &str, dim_index: usize) -> String {
     format!("__algol_array_param_{name}_stride_{dim_index}")
 }
 
+/// Module-global backing name for an array formal captured by a nested
+/// procedure. It is distinct from the incoming IIR parameter slot so the
+/// outer procedure can copy the complete descriptor before the nested sibling
+/// function runs.
+fn array_param_capture_slot(procedure_name: &str, param_name: &str) -> String {
+    format!("__algol_capture_{procedure_name}_{param_name}")
+}
+
 /// A procedure formal that the supported call-by-value slice can carry.
 ///
 /// An array formal receives the caller's storage handle plus its complete
@@ -1252,6 +1260,7 @@ impl Compiler {
     ) -> Result<IIRFunction, CompileError> {
         self.set_loc(proc_decl);
         let (name, params, ret) = self.procedure_parts(proc_decl)?;
+        let captured_array_formals = array_formals_captured_by_nested_procedures(proc_decl, &params);
 
         // ── swap in a fresh emission context ─────────────────────────────
         let saved_instrs = std::mem::take(&mut self.instrs);
@@ -1278,6 +1287,11 @@ impl Compiler {
                 }
             }
         }
+        // A formal parameter or result with the same spelling shadows an
+        // injected enclosing global. Keep this set separate so a duplicate
+        // formal still reaches the normal duplicate-declaration error.
+        let mut injected_global_names: HashSet<String> =
+            self.scopes[0].keys().cloned().collect();
 
         // Bind value parameters and, for typed procedures, the result variable
         // (the procedure name). An array descriptor carries its typed handle,
@@ -1286,6 +1300,9 @@ impl Compiler {
         // callee are visible to the actual array.
         let mut param_pairs: Vec<(String, String)> = Vec::with_capacity(params.len() * 4);
         for (pname, pty) in &params {
+            if injected_global_names.remove(pname) {
+                self.scopes[0].remove(pname);
+            }
             match pty {
                 ProcedureParamType::Scalar(pty) => {
                     // Parameters and the result slot are real registers, never `own`.
@@ -1321,7 +1338,7 @@ impl Compiler {
                         dims,
                         false,
                     )?;
-                    param_pairs.push((handle, make_array_type(elem_ty.iir())));
+                    param_pairs.push((handle.clone(), make_array_type(elem_ty.iir())));
                     for dim_index in 0..*dimensions {
                         let lower_slot = array_param_dim_lower_slot(pname, dim_index);
                         self.register_names.insert(lower_slot.clone());
@@ -1331,6 +1348,15 @@ impl Compiler {
                             self.register_names.insert(stride_slot.clone());
                             param_pairs.push((stride_slot, "i64".to_string()));
                         }
+                    }
+                    if captured_array_formals.contains(pname) {
+                        self.promote_array_parameter_capture(
+                            &name,
+                            pname,
+                            *elem_ty,
+                            *dimensions,
+                            &handle,
+                        )?;
                     }
                 }
             }
@@ -1345,6 +1371,9 @@ impl Compiler {
             // never to the enclosing block, even if that scan recorded its
             // spelling as a candidate capture.
             let result_was_captured = self.block_captured.remove(&name);
+            if injected_global_names.remove(&name) {
+                self.scopes[0].remove(&name);
+            }
             let declared_result = self.declare_var(&name, ret, false);
             if result_was_captured {
                 self.block_captured.insert(name.clone());
@@ -1438,6 +1467,69 @@ impl Compiler {
         self.scopes = saved_scopes;
 
         Ok(func)
+    }
+
+    /// Copy an incoming array descriptor into module globals before a nested
+    /// procedure can run. Nested procedures compile as sibling IIR functions,
+    /// so their fresh frames cannot read the outer procedure's parameter slots
+    /// directly; rebinding the outer formal to the global descriptor gives both
+    /// functions the same storage handle, lower bounds, and strides.
+    fn promote_array_parameter_capture(
+        &mut self,
+        procedure_name: &str,
+        param_name: &str,
+        elem_ty: ScalarType,
+        dimensions: usize,
+        incoming_handle: &str,
+    ) -> Result<(), CompileError> {
+        let capture_slot = array_param_capture_slot(procedure_name, param_name);
+        let binding = self
+            .scopes
+            .last_mut()
+            .and_then(|scope| scope.get_mut(param_name))
+            .ok_or_else(|| CompileError::Malformed(format!(
+                "array parameter {param_name:?} missing while preparing nested capture"
+            )))?;
+        if binding.ty != elem_ty || binding.array.is_none() {
+            return Err(CompileError::Malformed(format!(
+                "array parameter {param_name:?} has an inconsistent descriptor"
+            )));
+        }
+        binding.slot = capture_slot.clone();
+        binding.is_global = true;
+
+        self.emit(IIRInstr::new(
+            "global_store",
+            None,
+            vec![
+                Operand::Str(capture_slot.clone()),
+                Operand::Var(incoming_handle.to_string()),
+            ],
+            "void",
+        ));
+        for dim_index in 0..dimensions {
+            self.emit(IIRInstr::new(
+                "global_store",
+                None,
+                vec![
+                    Operand::Str(array_dim_global_name(&capture_slot, dim_index, "lower")),
+                    Operand::Var(array_param_dim_lower_slot(param_name, dim_index)),
+                ],
+                "void",
+            ));
+            if dim_index + 1 < dimensions {
+                self.emit(IIRInstr::new(
+                    "global_store",
+                    None,
+                    vec![
+                        Operand::Str(array_dim_global_name(&capture_slot, dim_index, "stride")),
+                        Operand::Var(array_param_stride_slot(param_name, dim_index)),
+                    ],
+                    "void",
+                ));
+            }
+        }
+        Ok(())
     }
 
     /// Lower a procedure *call* in value position (`sq(7)`), returning the
@@ -3991,13 +4083,12 @@ fn array_subscripts(var_node: &GrammarASTNode) -> Option<Vec<&GrammarASTNode>> {
     )
 }
 
-/// Infer an array formal's rank from subscripted references in its own procedure
-/// body. ALGOL's array parameter specifier does not carry bounds or a rank, but
-/// a compiled IIR function needs a fixed descriptor parameter list. A formal
-/// that is only forwarded or never indexed retains the established 1-D ABI;
-/// an indexed formal records the exact number of source subscripts. Nested
-/// procedures are deliberately excluded because capturing an array *formal* is
-/// a separate closure/capture ABI concern.
+/// Infer an array formal's rank from its lexical subscripted uses. ALGOL's
+/// array parameter specifier does not carry bounds or a rank, but a compiled
+/// IIR function needs a fixed descriptor parameter list. A formal that is only
+/// forwarded or never indexed retains the established 1-D ABI; an indexed
+/// formal records the exact number of source subscripts, including use by a
+/// nested procedure unless that procedure shadows the formal.
 fn array_formal_dimension_count(
     proc_decl: &GrammarASTNode,
     formal_name: &str,
@@ -4018,7 +4109,7 @@ fn collect_array_formal_dimensions(
         let ASTNodeOrToken::Node(node) = child else {
             continue;
         };
-        if node.rule_name == "procedure_decl" {
+        if node.rule_name == "procedure_decl" && procedure_local_names(node).contains(formal_name) {
             continue;
         }
         if node.rule_name == "variable" {
@@ -4045,6 +4136,109 @@ fn collect_array_formal_dimensions(
         collect_array_formal_dimensions(node, formal_name, dimensions)?;
     }
     Ok(())
+}
+
+/// Find array formals that a nested procedure must read from the outer
+/// procedure's frame. The ordinary capture substrate is a typed module global;
+/// array formals need the same treatment for their handle and full descriptor.
+/// Formal and block-local declarations on the nested procedure shadow the
+/// enclosing formal before its references are collected.
+fn array_formals_captured_by_nested_procedures(
+    proc_decl: &GrammarASTNode,
+    params: &[(String, ProcedureParamType)],
+) -> HashSet<String> {
+    let visible: HashSet<String> = params
+        .iter()
+        .filter_map(|(name, ty)| matches!(ty, ProcedureParamType::Array { .. }).then_some(name.clone()))
+        .collect();
+    let mut captured = HashSet::new();
+    if let Some(body) = first_direct_node(proc_decl, "proc_body") {
+        collect_nested_array_formal_captures(body, &visible, &mut captured);
+    }
+    captured
+}
+
+fn collect_nested_array_formal_captures(
+    node: &GrammarASTNode,
+    visible: &HashSet<String>,
+    captured: &mut HashSet<String>,
+) {
+    for child in direct_nodes(node) {
+        if child.rule_name != "procedure_decl" {
+            collect_nested_array_formal_captures(child, visible, captured);
+            continue;
+        }
+
+        let mut nested_visible = visible.clone();
+        for local in procedure_local_names(child) {
+            nested_visible.remove(&local);
+        }
+        let Some(body) = first_direct_node(child, "proc_body") else {
+            continue;
+        };
+
+        let mut references = HashSet::new();
+        collect_name_tokens_excluding_nested_procedures(body, &mut references);
+        captured.extend(nested_visible.intersection(&references).cloned());
+        collect_nested_array_formal_captures(body, &nested_visible, captured);
+    }
+}
+
+fn procedure_local_names(proc_decl: &GrammarASTNode) -> HashSet<String> {
+    let mut names = HashSet::new();
+    if let Some(name) = direct_tokens(proc_decl)
+        .into_iter()
+        .find(|token| token.effective_type_name() == "NAME")
+        .map(|token| token.value.clone())
+    {
+        names.insert(name);
+    }
+    if let Some(formals) = first_direct_node(proc_decl, "formal_params") {
+        if let Some(list) = first_direct_node(formals, "ident_list") {
+            names.extend(ident_list_names(list));
+        }
+    }
+    if let Some(body) = first_direct_node(proc_decl, "proc_body") {
+        if let Some(block) = first_direct_node(body, "block") {
+            for declaration in direct_nodes(block)
+                .into_iter()
+                .filter(|node| node.rule_name == "declaration")
+            {
+                collect_declared_ident_list_names(declaration, &mut names);
+            }
+        }
+    }
+    names
+}
+
+fn collect_declared_ident_list_names(node: &GrammarASTNode, names: &mut HashSet<String>) {
+    for child in direct_nodes(node) {
+        if child.rule_name == "procedure_decl" {
+            continue;
+        }
+        if child.rule_name == "ident_list" {
+            names.extend(ident_list_names(child));
+            continue;
+        }
+        collect_declared_ident_list_names(child, names);
+    }
+}
+
+fn collect_name_tokens_excluding_nested_procedures(
+    node: &GrammarASTNode,
+    names: &mut HashSet<String>,
+) {
+    for child in &node.children {
+        match child {
+            ASTNodeOrToken::Token(token) if token.effective_type_name() == "NAME" => {
+                names.insert(token.value.clone());
+            }
+            ASTNodeOrToken::Node(node) if node.rule_name != "procedure_decl" => {
+                collect_name_tokens_excluding_nested_procedures(node, names);
+            }
+            _ => {}
+        }
+    }
 }
 
 fn direct_tokens(node: &GrammarASTNode) -> Vec<&Token> {
@@ -5440,6 +5634,62 @@ mod tests {
             .find(|instr| instr.op == "call")
             .expect("main calls fill");
         assert_eq!(call.srcs.len(), 5, "callee + 2-D array descriptor");
+    }
+
+    #[test]
+    fn nested_procedure_captures_multidimensional_array_parameter() {
+        let src = "begin integer array values[-1:0, 4:5]; integer result; \
+                   integer procedure fill(a); value a; integer array a; \
+                     begin procedure seed; begin a[-1,4] := 40; a[0,5] := 2 end; \
+                           seed(); fill := a[-1,4] + a[0,5] end; \
+                   result := fill(values) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "array_formal_capture").expect("compiles");
+        let capture_slot = array_param_capture_slot("fill", "a");
+        let fill = module.get_function("fill").expect("fill function exists");
+        assert!(
+            fill.instructions.iter().any(|instr| {
+                instr.op == "global_store"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+            }),
+            "fill must publish its incoming array handle for the nested procedure"
+        );
+        let seed = module.get_function("seed").expect("seed function exists");
+        assert!(
+            seed.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+            }),
+            "seed must reload its captured array handle from the shared descriptor"
+        );
+    }
+
+    #[test]
+    fn nested_array_capture_infers_rank_from_nested_use() {
+        let src = "begin integer array values[-1:0, 4:5]; integer result; \
+                   integer procedure fill(a); value a; integer array a; \
+                     begin procedure seed; begin a[-1,4] := 40; a[0,5] := 2 end; \
+                           seed(); fill := 42 end; \
+                   result := fill(values) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "nested_array_formal_rank").expect("compiles");
+        let fill = module.get_function("fill").expect("fill function exists");
+        assert_eq!(fill.params.len(), 4, "2-D array descriptor parameters");
+    }
+
+    #[test]
+    fn nested_array_capture_allows_sibling_formal_to_shadow_it() {
+        let src = "begin integer array values[-1:0, 4:5]; integer result; \
+                   integer procedure fill(a); value a; integer array a; \
+                     begin procedure seed; begin a[-1,4] := 40; a[0,5] := 2 end; \
+                           integer procedure shadow(a); value a; integer a; shadow := a; \
+                           seed(); fill := a[-1,4] + a[0,5] end; \
+                   result := fill(values) end";
+        assert_eq!(run_i64(src), 42);
     }
 
     #[test]

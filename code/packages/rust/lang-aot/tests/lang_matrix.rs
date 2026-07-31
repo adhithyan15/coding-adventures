@@ -1381,6 +1381,21 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a nested procedure captures a two-dimensional array formal.
+    // `fill` first publishes the actual's handle, lower bounds, and row-major
+    // stride; `seed` reloads that descriptor in its fresh sibling frame. The
+    // distinct nonzero lower bounds make all descriptor fields observable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array values[-1:0, 4:5]; integer result; \
+                  integer procedure fill(a); value a; integer array a; \
+                    begin procedure seed; begin a[-1,4] := 40; a[0,5] := 2 end; \
+                          seed(); fill := a[-1,4] + a[0,5] end; \
+                  result := fill(values) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — scalar string variables on the direct literal fast path. A
     // `string` scalar assigned from a literal emits `str_const` directly to its
     // slot; the preceding row covers a runtime procedure-result copy.
@@ -5160,6 +5175,37 @@ fn algol_multidimensional_array_parameter_runs_on_every_available_standard_backe
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but multidimensional array-parameter execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_captures_array_formal_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure fill(a)")
+                && program.src.contains("procedure seed; begin a[-1,4] := 40")
+                && program.src.contains("seed(); fill := a[-1,4] + a[0,5]")
+        })
+        .expect("the ALGOL array-formal capture program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested array-formal capture did not complete"
             );
             continue;
         };
