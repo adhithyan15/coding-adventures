@@ -1,0 +1,11 @@
+[package]
+name = "venture-browser"
+version = "0.1.0"
+description = "Shared Mosaic-authored browser chrome for Venture."
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["VentureChrome"]
+
+[kernel]
+version = "1"
