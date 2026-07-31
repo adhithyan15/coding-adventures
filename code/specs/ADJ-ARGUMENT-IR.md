@@ -92,7 +92,11 @@ Two families, both `source_spans`-bearing:
   *defeats* an inference (undercut) or a conclusion (rebut). A research argument is not a tree of
   support; it names its counterarguments. Attack edges desugar to ADJ's existing **defeasible
   precedence + negation-as-failure** (`ADJ73`, the `context`/`outranks_context` machinery), so a
-  rebutted conclusion is *withdrawn by the engine*, not by a Python filter.
+  rebutted conclusion is *withdrawn by the engine*, not by a Python filter. **Now spec'd — with
+  both attack kinds empirically verified against the engine — in
+  [`ADJ-ARGUMENT-REBUTTAL.md`](ADJ-ARGUMENT-REBUTTAL.md): rebut = `functional` + `context:` +
+  `context_order` (the `governing` query marks the loser `defeated`); undercut = a `not`-guarded
+  warrant. Both reuse existing machinery with zero new engine code.**
 
 ### 2.3 The desugaring — this is the whole point
 
