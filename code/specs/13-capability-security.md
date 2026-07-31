@@ -295,6 +295,33 @@ category:action:target
 to both standard output and standard error. Both streams therefore use
 `stdout:write:*`.
 
+#### Closed category/action contract
+
+Category and action are a pair, not two independent vocabularies. A manifest
+MUST use one of the 19 pairs in the table above. An action that is valid for a
+different category is still invalid; for example, `fs:connect`, `net:read`,
+and `stdout:read` MUST be rejected.
+
+The language-neutral fixture
+`code/specs/fixtures/capability-security-v1/taxonomy.json` is the executable
+form of this table. It lists the eight categories, the 14-action union, the 19
+allowed pairs, and the expected 93 invalid cross-pairs. Its schema is
+`code/specs/schemas/capability_taxonomy.schema.json`.
+
+Every manifest schema and every ingestion or enforcement boundary MUST:
+
+1. accept all 19 declared category/action pairs;
+2. reject all 93 other combinations drawn from the known category and action
+   vocabularies;
+3. reject unknown categories and unknown actions;
+4. reject the whole manifest before generation, analysis, or cage construction
+   rather than dropping, weakening, or converting an invalid declaration; and
+5. test its local pair table exhaustively against the shared fixture.
+
+The shared fixture is a conformance oracle, not a runtime dependency. Published
+packages embed the closed pair table so validation remains available without a
+repository checkout.
+
 ### Why This Granularity Matters
 
 Consider the difference between these two declarations:
