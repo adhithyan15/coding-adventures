@@ -1,5 +1,8 @@
 # Changelog
 
+- Reject negative and non-finite Level-1 MOS model-card `CBS` / `CJS` values
+  before source-bulk capacitance shaping.
+
 - Reject negative and non-finite Level-1 MOS model-card `CJSW` values before
   sidewall-junction capacitance shaping.
 
