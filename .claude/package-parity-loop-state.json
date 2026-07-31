@@ -8,7 +8,7 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": 9390,
   "last_inventory": {
     "revision": "5b5cb01273be03cdd018eed9786f2d62c14e1225",
     "schema_version": 3,
@@ -470,11 +470,11 @@
     {
       "id": "phy00-phy01-language-neutral-fixtures",
       "title": "Define shared language-neutral PHY00 trig and PHY01 wave fixtures",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["dart-trig-wave"],
       "branch": "codex/phy00-phy01-conformance-fixtures",
-      "pr_number": null,
-      "notes": "Discovered during the dart-trig-wave fixture audit. All established lanes carry package-native cases, but no shared machine-readable corpus mechanically enforces the specs' same-case claim. Define finite, pole, tiny/subnormal sqrt, signed-zero, quadrant, periodicity, validation, zero-amplitude, and extreme-finite vectors before using the family as a cross-language conformance oracle."
+      "pr_number": 9390,
+      "notes": "Ready-for-review PR #9390. Selected after #9383 merged because the shared corpus is a repository-owned dependency for both tracked PHY00/PHY01 cross-lane hardening items. Defines a closed 53-case Draft 2020-12 oracle, strict JSON and binary64 semantics, operation-specific outcomes, exact corpus membership, an authority-free generated Dart mirror, and an always-on consumer CI reverse edge. Validation: 14 Python oracle tests; Dart format/analyze and 41 trig plus 37 wave tests; 100% production line coverage in both packages; real incremental build-tool execution for exactly trig and wave; full build-tool conformance groups; Go test/vet/build; collision-clean 1,201-identity parity report; zero-delta BUILD validation against main; state, YAML/JSON, generated-sync, diff, dependency, and security checks; and independent contract, fixture, and security re-audits."
     },
     {
       "id": "phy00-small-sqrt-cross-lane-audit",
