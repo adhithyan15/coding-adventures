@@ -1038,6 +1038,24 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects negative or non-finite MOS saturation current density", () => {
+    for (const value of [0.0, 2.0e-10, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { JS: value });
+      expect(valid.parameters.JS).toBe(value);
+    }
+
+    for (const invalidDensity of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { JS: invalidDensity }),
+      ).toThrow("MOSFET JS must be finite and non-negative");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,
