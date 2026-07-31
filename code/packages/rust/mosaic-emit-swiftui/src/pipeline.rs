@@ -2143,6 +2143,7 @@ fn emit_view_tree(
         // the per-function doc comments below for the full mapping.
         "HostInput" => emit_host_input(node, indent)?,
         "HostButton" => emit_host_button(node, indent, emits, for_payload)?,
+        "HostSurface" => emit_host_surface(node, indent),
 
         // UI29-2 kernel — `HostCheckbox` and `HostRadio` both lower to
         // SwiftUI `Toggle` with the platform's default toggle style.
@@ -4213,6 +4214,17 @@ fn find_slot_ref_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a s
         }
         None
     })
+}
+
+/// Lower a host-owned native surface to the typed `AnyView` node supplied by
+/// the component host. A missing binding remains an empty native view so
+/// generated preview/project shells stay buildable before a host is attached.
+fn emit_host_surface(node: &LayoutNode, indent: usize) -> String {
+    let pad = " ".repeat(indent);
+    let expression = find_slot_ref_prop(node, "content")
+        .map(to_camel_case_first_lower)
+        .unwrap_or_else(|| "AnyView(EmptyView())".to_string());
+    format!("{pad}{expression}\n")
 }
 
 /// Find a prop on `node` whose value is an `EmitRef`. Returns the emit's

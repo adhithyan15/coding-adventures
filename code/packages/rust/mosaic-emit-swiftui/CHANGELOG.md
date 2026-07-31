@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - HostSurface native composition
+
+SwiftUI output now lowers Mosaic `HostSurface ( content: slot: ... )` to the
+host-supplied `AnyView` node slot. Generated SwiftPM previews retain an
+`AnyView(EmptyView())` fallback, while application hosts can mount a native
+Metal or other platform renderer inside Mosaic-authored chrome.
+
 ### Added - Native activation for MSL pressed states
 
 SwiftUI output now connects UI15's built-in `state pressed` blocks on

@@ -118,6 +118,7 @@ does not install automatic press tracking.
 | `HostScroll`     | `ScrollView { ... }` *(v0.2.0; UI29 kernel)*  |
 | `HostInput`      | `TextField` with a dispatching `Binding` when `onChange` is wired *(UI29 kernel)* |
 | `HostButton`     | `Button(action: { dispatch(.tap) }) { Text(label) }` *(v0.2.0; UI29 kernel)* |
+| `HostSurface`    | Host-supplied `AnyView` from a `node` slot          |
 | `HostTable`      | `VStack(alignment: .leading, spacing: 0) { HStack { ... } }` *(v0.3.0; UI29 kernel)* |
 | `HostDialog`     | `Color.clear.frame(width: 0, height: 0).sheet(...)` / `.popover(...)` *(v0.5.0; UI29-1 kernel)* |
 

@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - host-owned surface composition
+
+`HostSurface ( content: slot: ... )` now mounts the supplied `ReactNode` in a
+shared MSL-styled container, enabling the same Venture browser package in both
+React and Electron shells.
+
 ### Fixed - two styles that were silently discarded
 
 Both were found while polishing the task-app UI, and both had the same shape: the

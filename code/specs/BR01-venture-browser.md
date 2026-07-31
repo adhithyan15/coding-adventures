@@ -77,6 +77,9 @@ in MIL, MLL, and MSL, with acceptance coverage for native SwiftUI and WinUI
 lowering. `BrowserChromeController` maps that exact slot/event contract onto
 `BrowserSession`, including transactional address drafts, redirect
 synchronization, and history-derived disabled states.
+The Mosaic kernel now exposes a typed `HostSurface` composition primitive;
+Venture's MIL declares the native page renderer as a node slot that lowers to
+SwiftUI `AnyView` and WinUI `ContentPresenter` rather than an empty placeholder.
 `venture-browser-macos` loads an HTTP page with native CoreText services,
 creates an AppKit `CAMetalLayer`, and presents the viewport through
 `paint-metal`. Native AppKit wheel events
@@ -86,7 +89,8 @@ page loads, update the title, and repaint across repeated navigation. Named
 AppKit navigation keys now drive clamped viewport scrolling and Metal repaint.
 Command-Left/Right now reload Back/Forward history entries through the shared
 transactional session, update the native title, and repaint. Mounting the
-generated Mosaic chrome and native page surface into one shell, resize/reflow,
+generated Mosaic chrome and native page surface into the runnable shell,
+resize/reflow,
 richer pointer behavior, and Windows build/interaction acceptance remain before
 the browser shell is complete.
 

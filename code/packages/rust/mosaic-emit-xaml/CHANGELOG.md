@@ -2,6 +2,13 @@
 
 ## [Unreleased] — VC2-xaml Grid: WinUI value translation + nested-For + per-column widths
 
+### Added - HostSurface native composition
+
+WinUI output now lowers Mosaic `HostSurface ( content: slot: ... )` to a
+`ContentPresenter` bound to the host-supplied `UIElement`, wrapped by the
+shared MSL-styled `Border`. This gives Direct2D and other native renderers a
+typed mount point inside Mosaic-authored application chrome.
+
 ### Added - Native activation for MSL pressed states
 
 WinUI output now connects UI15's built-in `state pressed` blocks on

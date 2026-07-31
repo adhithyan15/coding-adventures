@@ -126,6 +126,7 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     "HostTable",
     "HostScroll",
     "HostDialog",
+    "HostSurface",
     "HostCheckbox",
     "HostRadio",
     "HostLink",
@@ -1299,13 +1300,14 @@ version = "1"
 
     #[test]
     fn kernel_set_covers_ui29_section_2_1() {
-        // The twenty-six primitives — fifteen from UI29 §2.1, plus
+        // The twenty-seven primitives — fifteen from UI29 §2.1, plus
         // HostDialog added in UI29-1 (#3846), plus HostCheckbox and
         // HostRadio added in UI29-2 (#3978), plus HostLink,
         // HostTooltip, and HostNumberInput added in UI29-4, plus the
         // five UI31 HostTable structural sub-tags (HostTableColGroup,
-        // HostTableHead, HostTableBody, HostTableFoot, Col).
-        let expected_26 = [
+        // HostTableHead, HostTableBody, HostTableFoot, Col), plus the
+        // typed HostSurface native composition boundary.
+        let expected_27 = [
             "Box",
             "Row",
             "Column",
@@ -1322,6 +1324,7 @@ version = "1"
             "HostTable",
             "HostScroll",
             "HostDialog",
+            "HostSurface",
             "HostCheckbox",
             "HostRadio",
             "HostLink",
@@ -1333,7 +1336,7 @@ version = "1"
             "HostTableFoot",
             "Col",
         ];
-        for name in &expected_26 {
+        for name in &expected_27 {
             assert!(
                 KERNEL_PRIMITIVES.contains(name),
                 "kernel must include `{name}`"
@@ -1363,6 +1366,11 @@ version = "1"
                 "UI35 kernel must include `{name}`"
             );
         }
+    }
+
+    #[test]
+    fn kernel_set_covers_host_surface() {
+        assert!(KERNEL_PRIMITIVES.contains(&"HostSurface"));
     }
 
     // ---- Test 12: package_path is absolute ----

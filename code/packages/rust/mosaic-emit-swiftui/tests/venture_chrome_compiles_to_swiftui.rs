@@ -67,6 +67,10 @@ fn venture_chrome_lowers_to_native_swiftui_controls_and_project_shell() {
             "TextField(\"Enter a URL\", text: Binding(get: { address }, set: { dispatch(.addressChange(value: $0)) }))"
         ));
         assert!(result.output.contains(".onSubmit { dispatch(.navigate) }"));
+        assert!(
+            result.output.matches("contentSurface").count() >= 2,
+            "the node slot must be declared and mounted in the SwiftUI body"
+        );
         assert!(result
             .output
             .contains("_MosaicPressState { __mosaicPressActive in"));
@@ -78,6 +82,9 @@ fn venture_chrome_lowers_to_native_swiftui_controls_and_project_shell() {
         assert!(project.package_swift.contains(".executableTarget("));
         assert!(project.package_swift.contains("name: \"App\""));
         assert!(project.app_swift.contains("VentureChromeView("));
+        assert!(project
+            .app_swift
+            .contains("contentSurface: AnyView(EmptyView())"));
         assert!(project.app_swift.contains("host.dispatch(event)"));
     }
 }

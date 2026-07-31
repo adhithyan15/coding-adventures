@@ -2017,6 +2017,7 @@ fn emit_xaml_node(
         // PR-3: Host* primitives (single-element host-native controls).
         "HostInput" => emit_host_input(node, indent, part_styles, ctx),
         "HostButton" => emit_host_button(node, indent, part_styles, ctx),
+        "HostSurface" => emit_host_surface(node, indent, part_styles, ctx),
 
         // UI29-2 â€” `HostCheckbox` lowers to WinUI/WPF `<CheckBox>` and
         // `HostRadio` lowers to `<RadioButton>`. Both controls share
@@ -2301,6 +2302,32 @@ fn emit_box(
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     emit_container(node, indent, part_styles, "Border", ctx)
+}
+
+/// Mount a host-supplied `UIElement` node slot inside a styled native
+/// composition boundary. The Border preserves shared MSL sizing/background
+/// while ContentPresenter owns the actual WinUI child supplied by the host.
+fn emit_host_surface(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner_pad = " ".repeat(indent + 4);
+    let (container_attrs, _) = partition_box_style(node.part_name.as_deref(), part_styles);
+    let content = match find_prop_value(node, "content") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            format!(
+                " Content=\"{{x:Bind {}, Mode=OneWay}}\"",
+                ctx.slot_xbind_path(slot)
+            )
+        }
+        _ => String::new(),
+    };
+    Ok(format!(
+        "{pad}<Border{container_attrs}>\n{inner_pad}<ContentPresenter{content}/>\n{pad}</Border>\n"
+    ))
 }
 
 fn emit_stack_panel(

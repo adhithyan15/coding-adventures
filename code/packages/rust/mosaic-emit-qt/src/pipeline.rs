@@ -303,6 +303,7 @@ fn build_main_cpp(name: &str, module_name: &str) -> String {
     out.push_str("#include <QApplication>\n");
     out.push_str("#include <QMetaObject>\n");
     out.push_str("#include <QObject>\n");
+    out.push_str("#include <QQuickItem>\n");
     out.push_str("#include <QQuickView>\n");
     out.push_str("#include <QUrl>\n");
     out.push_str("#include <QVariant>\n\n");
@@ -1269,6 +1270,7 @@ fn emit_qml_tree(
         "HostInput" => return emit_host_input_qml(node, depth, ctx),
         "HostButton" => return emit_host_button_qml(node, depth, ctx),
         "HostDialog" => return emit_host_dialog_qml(node, depth, ctx),
+        "HostSurface" => return emit_host_surface_qml(node, depth, ctx),
 
         // UI29-2 kernel — `HostCheckbox` and `HostRadio` lower to
         // QtQuick.Controls 2 `CheckBox` and `RadioButton`. Both
@@ -3513,6 +3515,52 @@ fn find_slot_ref_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a s
         }
         None
     })
+}
+
+/// Load a host-supplied QML `Component` into a real Qt Quick item. The
+/// surrounding Rectangle owns shared MSL sizing/paint; Loader owns the live
+/// browser viewport instance and naturally stays empty in generated previews.
+fn emit_host_surface_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let loader_inner = "    ".repeat(depth + 2);
+    let source = if let Some(slot) = find_slot_ref_prop(node, "content") {
+        let field = to_camel_case_first_lower(slot);
+        validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+        format!("mosaicRoot.{field}")
+    } else {
+        "null".to_string()
+    };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}Rectangle {{").unwrap();
+    writeln!(out, "{inner}objectName: \"mosaic-host-surface\"").unwrap();
+    writeln!(out, "{inner}Layout.fillWidth: true").unwrap();
+    writeln!(out, "{inner}Layout.fillHeight: true").unwrap();
+    if let Some(props) = part_style_props(node, ctx) {
+        for line in qml_layout_size_lines(props) {
+            writeln!(out, "{inner}{line}").unwrap();
+        }
+        let paint = qml_rectangle_paint_lines(props);
+        if paint.iter().all(|line| !line.starts_with("color:")) {
+            writeln!(out, "{inner}color: \"transparent\"").unwrap();
+        }
+        for line in paint {
+            writeln!(out, "{inner}{line}").unwrap();
+        }
+    } else {
+        writeln!(out, "{inner}color: \"transparent\"").unwrap();
+    }
+    writeln!(out, "{inner}Loader {{").unwrap();
+    writeln!(out, "{loader_inner}anchors.fill: parent").unwrap();
+    writeln!(out, "{loader_inner}sourceComponent: {source}").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
 }
 
 /// Find a prop on `node` whose value is an `EmitRef`. Returns the
@@ -7577,6 +7625,10 @@ mod tests {
         assert!(
             proj.main_cpp.contains("QQuickView"),
             "main.cpp must use QQuickView"
+        );
+        assert!(
+            proj.main_cpp.contains("#include <QQuickItem>"),
+            "main.cpp must include QQuickItem so rootObject() converts to QObject*"
         );
         assert!(
             proj.main_cpp

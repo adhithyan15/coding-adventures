@@ -11,6 +11,7 @@ component VentureChrome {
   slot back-disabled       : bool ;
   slot forward-disabled    : bool ;
   slot navigation-disabled : bool ;
+  slot content-surface     : node ;
 
   emit onBack ;
   emit onForward ;

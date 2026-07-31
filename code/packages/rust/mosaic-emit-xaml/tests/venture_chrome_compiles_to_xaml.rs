@@ -63,6 +63,9 @@ fn venture_chrome_lowers_to_native_xaml_controls_and_project_shell() {
         assert!(result
             .xaml
             .contains("Binding FocusState, ElementName=AddressInput"));
+        assert!(result
+            .xaml
+            .contains("<ContentPresenter Content=\"{x:Bind ContentSurface, Mode=OneWay}\"/>"));
 
         let project = result.project.expect("XAML project shell");
         assert!(project.csproj.contains("Microsoft.WindowsAppSDK"));

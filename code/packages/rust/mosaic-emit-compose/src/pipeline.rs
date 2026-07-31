@@ -1090,6 +1090,7 @@ fn emit_compose_tree(
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     match node.tag.as_str() {
+        "HostSurface" => emit_host_surface_compose(node, depth),
         "Box" => emit_container(
             node,
             "Box",
@@ -2338,7 +2339,7 @@ fn slot_type_to_kotlin(t: &SlotType) -> String {
         SlotType::Bool => "Boolean".to_string(),
         SlotType::Image => "String".to_string(),
         SlotType::Color => "String".to_string(),
-        SlotType::Node => "Any".to_string(),
+        SlotType::Node => "@Composable () -> Unit".to_string(),
         SlotType::List(inner) => format!("List<{}>", list_inner_to_kotlin(inner)),
         SlotType::Component(name) => {
             // Same defence in depth as in `from_pipeline` — the
@@ -2354,6 +2355,17 @@ fn slot_type_to_kotlin(t: &SlotType) -> String {
                 "/*UNSAFE_COMPONENT_NAME*/Any".to_string()
             }
         }
+    }
+}
+
+fn emit_host_surface_compose(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    if let Some(LayoutPropValue::SlotRef(slot)) = find_prop_value(node, "content") {
+        let field = to_camel_case_first_lower(slot);
+        validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+        Ok(format!("{pad}{field}()\n"))
+    } else {
+        Ok(format!("{pad}Box {{ }}\n"))
     }
 }
 

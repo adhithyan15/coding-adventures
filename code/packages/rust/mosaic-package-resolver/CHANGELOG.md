@@ -3,6 +3,9 @@
 ## Unreleased
 
 ### Added
+- Registered `HostSurface` as a kernel primitive so package resolution
+  preserves typed host-owned `node` mount points instead of treating them as
+  missing userland component dependencies.
 - Added `LayoutPackageResolver`, a shared `pkg::P::C` layout inliner that
   compiles referenced component layouts, rewrites slot/event bindings, detects
   package-reference cycles, and rejects source symlink escapes.

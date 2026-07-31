@@ -68,6 +68,7 @@
 //! | HostScroll   | `ScrollView { ... }` *(v0.2.0; UI29 kernel)*       |
 //! | HostInput    | `TextField(placeholder, text: .constant(value))`   |
 //! | HostButton   | `Button(action: { dispatch(.tap) }) { Text(label) }` |
+//! | HostSurface  | Host-supplied `AnyView` from a `node` slot          |
 //! | HostTable    | `VStack(alignment: .leading, spacing: 0) { HStack { ... } }` |
 //! | HostDialog   | `Color.clear.frame(...).sheet(isPresented:)` *(v0.5.0; UI29-1 kernel)* |
 //!

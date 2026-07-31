@@ -7,6 +7,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `HostSurface ( content: slot: ... )` now accepts an
+  `@Composable () -> Unit` node slot and invokes it at the shared native
+  composition boundary.
 - Generated Kotlin event classes now expose `mosaicName`, `mosaicPayload`, and
   `mosaicEnvelope`, giving Compose hosts the same target-neutral event map used
   by the HTML, Electron, SwiftUI, XAML, Qt, and Flutter shells.
