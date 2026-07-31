@@ -128,7 +128,10 @@ its procedure body: a 2-D formal `a[i,j]` receives its two lower bounds and
 outer row-major stride beside the `array<T>` handle, and writes remain visible
 to the actual array. This works for `integer`, `real`, and `string` elements;
 the formal and actual must have matching ranks. A never-indexed formal retains
-the compatible 1-D descriptor shape.
+the compatible 1-D descriptor shape. A nested procedure can capture an outer
+array formal too: the outer procedure publishes the handle and complete
+descriptor to compiler-owned globals, so the nested sibling function preserves
+the caller's declared index space while sharing the same element storage.
 
 Scalar `string` captures use typed module globals, so a procedure can write
 and read a string declared by its enclosing block. `own string` initializes to
@@ -142,6 +145,5 @@ the same literal-backed output path as typed procedures; using a proper procedur
 value position is a clean type error because it has no return value.
 
 Unsupported ALGOL 60 features — non-numeric/non-string arrays, dynamic string
-variables, by-name (non-`value`) parameters, array-formal capture by nested
-procedures, and conditional/nested switch-list elements — return explicit
-compiler errors.
+variables, by-name (non-`value`) parameters, and conditional/nested switch-list
+elements — return explicit compiler errors.
