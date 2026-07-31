@@ -80,7 +80,7 @@
 //! assert!(ll.contains("ret i64 42"));
 //! ```
 
-use interpreter_ir::opcodes::array_elem_type;
+use interpreter_ir::opcodes::{array_elem_type, is_array_type};
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use std::cmp::Ordering;
 use std::collections::HashMap;
@@ -222,6 +222,7 @@ fn llvm_type_for(type_hint: &str, function: &str) -> Result<&'static str, IIRLlv
         // type_hint separately (`lower_str_*`); this only governs the LLVM value
         // type at those boundaries.
         "str" => Ok("i64"),
+        t if is_array_type(t) => Ok("ptr"),
         other => Err(IIRLlvmError::UnsupportedType {
             function: function.to_string(),
             type_hint: other.to_string(),
@@ -968,23 +969,33 @@ pub fn lower_iir_to_llvm(
     // symbol `@__twig_global_N`. Index-based (not name-based) so an arbitrary
     // source identifier can never produce an invalid or colliding LLVM symbol —
     // the same lazy-slot discipline the native `_twig_globals` backend uses.
-    // Each is `internal global i64 0` (zero-initialised, matching every other
-    // backend's never-written-global-reads-0 convention).
+    // Scalars use `i64`; arrays use typed pointer globals so a captured handle
+    // remains a real LLVM pointer instead of being forced through a word slot.
     let globals = collect_global_syms(module);
+    let global_types = collect_global_types(module)?;
     if !globals.is_empty() {
         out.push('\n');
         // Emit in symbol order (0,1,2,…) for stable, readable output.
         let mut defs: Vec<(&String, &String)> = globals.iter().collect();
         defs.sort_by(|a, b| a.1.cmp(b.1));
-        for (_name, sym) in defs {
-            out.push_str(&format!("{sym} = internal global i64 0\n"));
+        for (name, sym) in defs {
+            let ty = global_types.get(name).copied().unwrap_or("i64");
+            let init = if ty == "ptr" { "null" } else { "0" };
+            out.push_str(&format!("{sym} = internal global {ty} {init}\n"));
         }
     }
 
     // ── Function bodies ───────────────────────────────────────────────────
     for func in &module.functions {
         out.push('\n');
-        lower_function(func, &callee_sigs, &globals, &string_literals, &mut out)?;
+        lower_function(
+            func,
+            &callee_sigs,
+            &globals,
+            &global_types,
+            &string_literals,
+            &mut out,
+        )?;
     }
 
     Ok(out)
@@ -1165,6 +1176,51 @@ fn collect_global_syms(module: &IIRModule) -> HashMap<String, String> {
     map
 }
 
+/// Infer the storage type for each module global. Existing scalar globals use
+/// the historical i64 word slot; array handles are pointers and must retain
+/// that type when a procedure captures an enclosing array.
+fn collect_global_types(
+    module: &IIRModule,
+) -> Result<HashMap<String, &'static str>, IIRLlvmError> {
+    let mut types = HashMap::new();
+    for func in &module.functions {
+        let mut registers: HashMap<&str, &'static str> = HashMap::new();
+        for (name, ty) in &func.params {
+            registers.insert(name, llvm_type_for(ty, &func.name)?);
+        }
+        for instr in &func.instructions {
+            if let Some(dest) = &instr.dest {
+                registers.insert(dest, llvm_type_for(&instr.type_hint, &func.name)?);
+            }
+            if !matches!(instr.op.as_str(), "global_load" | "global_store") {
+                continue;
+            }
+            let Some(Operand::Str(name)) = instr.srcs.first() else {
+                continue;
+            };
+            let ty = if instr.op == "global_load" {
+                llvm_type_for(&instr.type_hint, &func.name)?
+            } else {
+                match instr.srcs.get(1) {
+                    Some(Operand::Var(value)) => registers.get(value.as_str()).copied().unwrap_or("i64"),
+                    _ => "i64",
+                }
+            };
+            if let Some(previous) = types.insert(name.clone(), ty) {
+                if previous != ty {
+                    return Err(IIRLlvmError::InvalidOperand {
+                        function: func.name.clone(),
+                        detail: format!(
+                            "global {name:?} has incompatible LLVM storage types {previous} and {ty}"
+                        ),
+                    });
+                }
+            }
+        }
+    }
+    Ok(types)
+}
+
 /// A user-defined function's signature, captured at the start of module
 /// lowering so each `call` site knows the param types of its callee.
 struct FnSig {
@@ -1208,6 +1264,8 @@ struct FnState<'a> {
     /// (`@__twig_global_N`). Built once by `lower_iir_to_llvm` so the same name
     /// resolves to the same symbol across every function (LANG-FULL E6).
     globals: &'a HashMap<String, String>,
+    /// Module-wide map: global variable name → its LLVM storage type.
+    global_types: &'a HashMap<String, &'static str>,
     /// Module-wide map of source literal text → LLVM private constant metadata.
     string_literals: &'a HashMap<String, LlvmStringLiteralRef>,
     /// Is the current LLVM basic block still **open** (no terminator yet)?
@@ -1263,6 +1321,7 @@ fn lower_function(
     func: &IIRFunction,
     callee_sigs: &HashMap<String, FnSig>,
     globals: &HashMap<String, String>,
+    global_types: &HashMap<String, &'static str>,
     string_literals: &HashMap<String, LlvmStringLiteralRef>,
     out: &mut String,
 ) -> Result<(), IIRLlvmError> {
@@ -1340,6 +1399,7 @@ fn lower_function(
         fn_name: &func.name,
         callee_sigs,
         globals,
+        global_types,
         string_literals,
         block_open: true, // the entry block is open until its first terminator.
         slots,
@@ -2644,14 +2704,38 @@ fn global_symbol<'a>(
     })
 }
 
-/// Lower `global_load dest <- "g"` — read the module global `g` (an `i64`).
+fn global_type(
+    instr: &IIRInstr,
+    state: &FnState,
+    op: &str,
+) -> Result<&'static str, IIRLlvmError> {
+    let name = match instr.srcs.first() {
+        Some(Operand::Str(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: format!("{op} expects a string-literal global name at srcs[0]"),
+            })
+        }
+    };
+    state
+        .global_types
+        .get(name)
+        .copied()
+        .ok_or_else(|| IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("{op}: global {name:?} has no collected storage type"),
+        })
+}
+
+/// Lower `global_load dest <- "g"` — read a typed module global `g`.
 ///
 /// ```llvm
-/// %dest = load i64, ptr @__twig_global_N
+/// %dest = load <global type>, ptr @__twig_global_N
 /// ```
 ///
-/// `dest` may be a promoted slot; the slot wrapper stores the `i64` we leave in
-/// `env[dest]`.
+/// `dest` may be a promoted slot; array captures bypass slot promotion and keep
+/// their typed pointer handle in `env[dest]`.
 fn lower_global_load(
     instr: &IIRInstr,
     state: &mut FnState,
@@ -2659,7 +2743,8 @@ fn lower_global_load(
 ) -> Result<(), IIRLlvmError> {
     let dest = require_dest(instr, "global_load", state.fn_name)?.to_string();
     let sym = global_symbol(instr, state, "global_load")?.to_string();
-    out.push_str(&format!("  %{dest} = load i64, ptr {sym}\n"));
+    let ty = global_type(instr, state, "global_load")?;
+    out.push_str(&format!("  %{dest} = load {ty}, ptr {sym}\n"));
     state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
 }
@@ -2667,7 +2752,7 @@ fn lower_global_load(
 /// Lower `global_store "g", val` (no dest) — write the module global `g`.
 ///
 /// ```llvm
-/// store i64 <val>, ptr @__twig_global_N
+/// store <global type> <val>, ptr @__twig_global_N
 /// ```
 fn lower_global_store(
     instr: &IIRInstr,
@@ -2681,8 +2766,9 @@ fn lower_global_store(
         });
     }
     let sym = global_symbol(instr, state, "global_store")?.to_string();
-    let val = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
-    out.push_str(&format!("  store i64 {val}, ptr {sym}\n"));
+    let ty = global_type(instr, state, "global_store")?;
+    let val = resolve_operand(instr.srcs.get(1), &state.env, ty, state.fn_name)?;
+    out.push_str(&format!("  store {ty} {val}, ptr {sym}\n"));
     Ok(())
 }
 

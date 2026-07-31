@@ -14,7 +14,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and equality/inequality/lexical-ordering string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); string arrays/input and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays incl. multi-dimensional `DIM A(m,n)` (BA3/BA7/BA-DIM-2D), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures (including `real procedure` returning f64) ✅ (AL13, all 7 backends), switches, 1-D arrays ✅, N-dimensional integer & real arrays ✅ (AL-multidim / AL-multidim-real, all 7 backends), `string array` ✅ (E4d-AL, all 7 standard backends), `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); no call-by-name or captured/`own` strings |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures (including `real procedure` returning f64) ✅ (AL13, all 7 backends), switches, 1-D arrays ✅, N-dimensional integer & real arrays ✅ (AL-multidim / AL-multidim-real, all 7 backends), `string array` ✅ (E4d-AL, all 7 standard backends), procedure capture of enclosing numeric/string arrays with declared bounds ✅, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); no call-by-name, array value parameters, or captured/`own` strings |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -295,10 +295,11 @@ multiple languages; close an enabler before the features that depend on it.
   *catalog-extension*, not a from-scratch fork. Full design + PR breakdown in
   **[`lang-full-e6-dispatch.md`](lang-full-e6-dispatch.md)** (E6 layer 2).
   - **E6 layer 1 (typed module globals) — spec [`lang-full-e6-globals.md`](lang-full-e6-globals.md).**
-    ✅ DONE. A typed `i64` module global a *function* can read/write, on all 7
-    backends (`global_load`/`global_store`; LLVM/JVM/CLR closed the `LANG32b`
-    rejections; ALGOL enclosing-scope frontend + matrix proof). Unblocks AL6
-    (`own`), O3 (Oct globals).
+    ✅ DONE. A function can read/write a typed scalar or array module global on
+    all 7 backends (`global_load`/`global_store`). Scalars retain the original
+    word slots; LLVM uses `ptr` and JVM/CLR use concrete reference fields for
+    `array<T>`, so captured ALGOL arrays retain their handle and bounds across a
+    call. Unblocks AL6 (`own`), O3 (Oct globals), and enclosing-array capture.
   - **E6 layer 2 (general dynamic dispatch) — spec [`lang-full-e6-dispatch.md`](lang-full-e6-dispatch.md).**
     ◑ STARTED. **E6d-1 ✅** — Twig `cons`/`car`/`cdr` (TW3-core) proven on the
     code-gen backends (matrix: `(car (cons 42 0))` → 42, run-verified on WASM +
@@ -699,14 +700,20 @@ backend immediately) come before the enabler-dependent items.
   `ArrayDim.lower_slot` subtraction already existed); `algol-iir-compiler` 0.26.0 / `lang-aot` 0.169.0.
   Array **value parameters** (passing an array to a procedure) remain a follow-up — they need
   managed-backend (JVM/CLR) call-signature work, not just the frontend.
+  **AL-captured-arrays ✅**: procedures can now read/write arrays declared in an
+  enclosing block. The frontend globalizes the handle and every lower-bound /
+  row-major-stride metadata value, so `integer array values[4:5]; procedure
+  seed; values[4] := 40; values[5] := 2; seed` returns 42 on all seven standard
+  backends. This is lexical capture, not an array value parameter: passing an
+  arbitrary array as an actual remains the separate call-ABI follow-up.
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**
   across native/LLVM/WASM/JVM/CLR/VM/JIT (`lang-aot` `lang_matrix.rs`). Lowered to a
   sibling `IIRFunction` + IIR `call`; supports forward references + recursion + multi-arg.
   Surfaced & fixed a real `jit-core` constant-propagation bug (reassigned result slot
-  propagated its dead seed → only the JIT returned 0). **Limits (follow-ups):** typed
-  procedures only — proper (void) procedures rejected (inert on this slice); bodies are
-  lexically flat (no enclosing-scope access yet); `value` params only (by-name is AL7).
+  propagated its dead seed → only the JIT returned 0). **Limits (follow-ups):** `value`
+  params only (by-name is AL7) and array value parameters remain a separate ABI slice;
+  procedures may capture enclosing scalar and array declarations through typed globals.
 - ◑ **AL4** — literal string `print`/`output` I/O runs on all 7 backends via
   **E4**. Undeclared statement-position `print('HI')`/`output('HI')` calls lower
   to `str_const` + `print_str`, and literal-backed scalar string variables

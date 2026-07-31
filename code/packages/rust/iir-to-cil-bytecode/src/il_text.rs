@@ -434,17 +434,17 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
     // ── Module static globals (LANG-FULL E6 layer 1) ──────────────────────────
     //
     // Each distinct global name read/written by `global_load`/`global_store`
-    // becomes a `public static int64 G_N` field of this class, accessed via
-    // `ldsfld`/`stsfld`. Field names are index-based (`G_0`, `G_1`, …) so an
+    // becomes a typed static field. Scalar fields retain `int64`; array fields
+    // use their concrete reference type. Field names are index-based so an
     // arbitrary source identifier can never form an invalid or colliding CIL
     // field name. CLR zero-initialises static fields, matching every backend's
     // never-written-global-reads-0 convention.
     let globals = collect_global_fields(module);
     {
-        let mut ordered: Vec<(&String, &String)> = globals.iter().collect();
-        ordered.sort_by(|a, b| a.1.cmp(b.1));
-        for (_name, field) in ordered {
-            let _ = writeln!(il, "  .field public static int64 {field}");
+        let mut ordered: Vec<(&String, &(String, &'static str))> = globals.iter().collect();
+        ordered.sort_by(|a, b| a.1.0.cmp(&b.1.0));
+        for (_name, (field, field_ty)) in ordered {
+            let _ = writeln!(il, "  .field public static {field_ty} {field}");
         }
     }
 
@@ -496,18 +496,41 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
 
 /// Emit one static `.method` for IIR function `f`.
 /// Collect every distinct module-global name (read or written) into a map
-/// `name → "G_N"`, numbered in first-seen order across all functions (LANG-FULL
-/// E6 layer 1). Field names are index-based so an arbitrary source identifier
-/// can never form an invalid or colliding CIL field name.
-fn collect_global_fields(module: &IIRModule) -> HashMap<String, String> {
-    let mut map: HashMap<String, String> = HashMap::new();
+/// `name → ("G_N", CIL type)`, numbered in first-seen order across all functions
+/// (LANG-FULL E6 layer 1). Field names are index-based so an arbitrary source
+/// identifier can never form an invalid or colliding CIL field name.
+fn collect_global_fields(module: &IIRModule) -> HashMap<String, (String, &'static str)> {
+    let mut map: HashMap<String, (String, &'static str)> = HashMap::new();
     for f in &module.functions {
+        let mut types: HashMap<&str, &str> = f
+            .params
+            .iter()
+            .map(|(name, ty)| (name.as_str(), ty.as_str()))
+            .collect();
         for i in &f.instructions {
+            if let Some(dest) = &i.dest {
+                types.insert(dest, &i.type_hint);
+            }
             if i.op == "global_load" || i.op == "global_store" {
                 if let Some(Operand::Str(name)) = i.srcs.first() {
                     if !map.contains_key(name) {
                         let field = format!("G_{}", map.len());
-                        map.insert(name.clone(), field);
+                        let type_hint = if i.op == "global_load" {
+                            i.type_hint.as_str()
+                        } else {
+                            match i.srcs.get(1) {
+                                Some(Operand::Var(value)) => {
+                                    types.get(value.as_str()).copied().unwrap_or("i64")
+                                }
+                                _ => "i64",
+                            }
+                        };
+                        let field_ty = if is_array_type(type_hint) {
+                            cil_local_type(type_hint)
+                        } else {
+                            "int64"
+                        };
+                        map.insert(name.clone(), (field, field_ty));
                     }
                 }
             }
@@ -520,11 +543,11 @@ fn collect_global_fields(module: &IIRModule) -> HashMap<String, String> {
 /// `instr.srcs[0]`. The name must be an `Operand::Str` (never a register) and
 /// must have been collected into the module's global map.
 fn global_field<'a>(
-    globals: &'a HashMap<String, String>,
+    globals: &'a HashMap<String, (String, &'static str)>,
     instr: &IIRInstr,
     fn_name: &str,
     op: &str,
-) -> Result<&'a str, IIRClrError> {
+) -> Result<(&'a str, &'static str), IIRClrError> {
     let name = match instr.srcs.first() {
         Some(Operand::Str(s)) => s,
         _ => return Err(IIRClrError::InvalidOperand {
@@ -532,10 +555,13 @@ fn global_field<'a>(
             detail: format!("{op} expects a string-literal global name at srcs[0]"),
         }),
     };
-    globals.get(name).map(String::as_str).ok_or_else(|| IIRClrError::InvalidOperand {
-        function: fn_name.to_string(),
-        detail: format!("{op}: global {name:?} was not collected (internal error)"),
-    })
+    globals
+        .get(name)
+        .map(|(field, field_ty)| (field.as_str(), *field_ty))
+        .ok_or_else(|| IIRClrError::InvalidOperand {
+            function: fn_name.to_string(),
+            detail: format!("{op}: global {name:?} was not collected (internal error)"),
+        })
 }
 
 fn emit_method(
@@ -543,7 +569,7 @@ fn emit_method(
     module: &IIRModule,
     f: &IIRFunction,
     asm: &str,
-    globals: &HashMap<String, String>,
+    globals: &HashMap<String, (String, &'static str)>,
 ) -> Result<(), IIRClrError> {
     let is_entry = f.name == entry_name(module);
     // The entry's CIL name is the fixed, safe `MccarthyEntry`; a hoisted function's
@@ -1012,24 +1038,31 @@ fn emit_method(
             //   ld<count>; newarr <Elem>; st<dest>
             // ── global_load <dest> <- "g"  (LANG-FULL E6 layer 1) ────────────
             //
-            // A module global is a `public static int64 G_N` field of this class.
-            // `ldsfld` pushes it; if the dest is a 32-bit local we `conv.i4`
-            // (the field is always 64-bit, like the JVM `J`/native 8-byte slot).
-            //   ldsfld int64 <asm>Program::G_N ; [conv.i4] ; st<dest>
+            // Scalar globals retain their `public static int64 G_N` field; array
+            // globals use their concrete CIL array type. `ldsfld` pushes the
+            // typed value, with scalar narrowing only for a 32-bit local.
             "global_load" => {
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
                     detail: "global_load must have a dest".to_string(),
                 })?;
-                let field = global_field(globals, instr, &f.name, "global_load")?;
-                let _ = writeln!(il, "    ldsfld int64 {asm}Program::{field}");
-                if regs.home(dest)?.ty == "int32" {
+                let (field, field_ty) = global_field(globals, instr, &f.name, "global_load")?;
+                let dest_ty = regs.home(dest)?.ty;
+                let _ = writeln!(il, "    ldsfld {field_ty} {asm}Program::{field}");
+                if field_ty == "int64" && dest_ty == "int32" {
                     let _ = writeln!(il, "    conv.i4");
+                } else if field_ty != "int64" && dest_ty != field_ty {
+                    return Err(IIRClrError::InvalidOperand {
+                        function: f.name.clone(),
+                        detail: format!(
+                            "global_load of {field_ty} field {field:?} into incompatible {dest_ty} local"
+                        ),
+                    });
                 }
                 store_var(il, &regs, dest)?;
             }
             // ── global_store "g", <val>  (no dest; LANG-FULL E6) ─────────────
-            //   ld<val> ; [conv.i8] ; stsfld int64 <asm>Program::G_N
+            //   ld<val> ; [conv.i8 for scalar] ; stsfld <field type> <asm>Program::G_N
             "global_store" => {
                 if instr.dest.is_some() {
                     return Err(IIRClrError::InvalidOperand {
@@ -1037,14 +1070,21 @@ fn emit_method(
                         detail: "global_store must not have a dest".to_string(),
                     });
                 }
-                let field = global_field(globals, instr, &f.name, "global_store")?;
+                let (field, field_ty) = global_field(globals, instr, &f.name, "global_store")?;
                 let val = var_src(f, instr, 1, "global_store")?;
                 load_var(il, &regs, val)?;
-                // The field is int64; widen a 32-bit value before storing.
-                if regs.home(val)?.ty == "int32" {
+                let value_ty = regs.home(val)?.ty;
+                if field_ty == "int64" && value_ty == "int32" {
                     let _ = writeln!(il, "    conv.i8");
+                } else if field_ty != "int64" && value_ty != field_ty {
+                    return Err(IIRClrError::InvalidOperand {
+                        function: f.name.clone(),
+                        detail: format!(
+                            "global_store of {value_ty} local into incompatible {field_ty} field {field:?}"
+                        ),
+                    });
                 }
-                let _ = writeln!(il, "    stsfld int64 {asm}Program::{field}");
+                let _ = writeln!(il, "    stsfld {field_ty} {asm}Program::{field}");
             }
             "alloc_array" => {
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {

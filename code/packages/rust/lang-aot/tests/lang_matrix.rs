@@ -1324,6 +1324,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a proper procedure captures an enclosing array and retains
+    // its declaration-space lower bounds across a fresh procedure frame.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array values[4:5]; integer result; \
+                  procedure seed; begin values[4] := 40; values[5] := 2 end; \
+                  seed; result := values[4] + values[5] end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — scalar string variables on the direct literal fast path. A
     // `string` scalar assigned from a literal emits `str_const` directly to its
     // slot; the preceding row covers a runtime procedure-result copy, while
@@ -4932,6 +4943,36 @@ fn algol_string_array_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but string array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_captured_array_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer array values[4:5]")
+                && program.src.contains("procedure seed")
+        })
+        .expect("the ALGOL captured array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but captured array execution did not complete"
             );
             continue;
         };

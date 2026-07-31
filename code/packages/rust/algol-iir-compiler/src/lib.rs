@@ -208,6 +208,14 @@ struct ArrayInfo {
     elem_ty: ScalarType,
 }
 
+/// A captured array needs more than its handle in module-global storage: every
+/// procedure that indexes it must also recover the declaration-time lower
+/// bounds and row-major strides. These opaque names are never emitted as
+/// backend identifiers, only as string keys for `global_load`/`global_store`.
+fn array_dim_global_name(array_slot: &str, dim_index: usize, field: &str) -> String {
+    format!("{array_slot}.__algol_array_dim_{dim_index}_{field}")
+}
+
 /// A procedure heading read off the AST: `(name, value-params, return-type)`,
 /// where each value parameter is `(name, type)` in declaration order. A missing
 /// return type is an ALGOL proper procedure.
@@ -704,13 +712,53 @@ impl Compiler {
             }
             let array_ty = make_array_type(elem_ty.iir());
             for name in names {
-                let handle = self.declare_array(&name, elem_ty, dims.clone())?;
+                let is_global = self.block_captured.contains(&name);
+                let handle = self.declare_array(&name, elem_ty, dims.clone(), is_global)?;
+                let alloc_dest = if is_global {
+                    self.fresh_temp()
+                } else {
+                    handle.clone()
+                };
                 self.emit(IIRInstr::new(
                     "alloc_array",
-                    Some(handle),
+                    Some(alloc_dest.clone()),
                     vec![Operand::Var(total_len.clone())],
                     &array_ty,
                 ));
+                if is_global {
+                    self.emit(IIRInstr::new(
+                        "global_store",
+                        None,
+                        vec![Operand::Str(handle.clone()), Operand::Var(alloc_dest)],
+                        "void",
+                    ));
+                    for (dim_index, dim) in dims.iter().enumerate() {
+                        self.emit(IIRInstr::new(
+                            "global_store",
+                            None,
+                            vec![
+                                Operand::Str(array_dim_global_name(&handle, dim_index, "lower")),
+                                Operand::Var(dim.lower_slot.clone()),
+                            ],
+                            "void",
+                        ));
+                        if let Some(stride) = &dim.stride_slot {
+                            self.emit(IIRInstr::new(
+                                "global_store",
+                                None,
+                                vec![
+                                    Operand::Str(array_dim_global_name(
+                                        &handle,
+                                        dim_index,
+                                        "stride",
+                                    )),
+                                    Operand::Var(stride.clone()),
+                                ],
+                                "void",
+                            ));
+                        }
+                    }
+                }
             }
         }
         Ok(())
@@ -734,7 +782,7 @@ impl Compiler {
             .find(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
             .ok_or_else(|| CompileError::Malformed("subscripted variable missing name".into()))?;
-        let binding = self.require_var(&name)?;
+        let mut binding = self.require_var(&name)?;
         let Some(info) = binding.array.clone() else {
             return Err(CompileError::Type(format!(
                 "{name:?} is not an array — cannot subscript it"
@@ -755,7 +803,7 @@ impl Compiler {
         // Accumulate into `flat`; start with None meaning "haven't written yet".
         let mut flat: Option<String> = None;
 
-        for (dim, sub_node) in info.dims.iter().zip(subs) {
+        for (dim_index, (dim, sub_node)) in info.dims.iter().zip(subs).enumerate() {
             let idx = self.emit_expr(sub_node)?;
             if idx.ty != ScalarType::Integer {
                 return Err(CompileError::Type(format!(
@@ -763,22 +811,56 @@ impl Compiler {
                 )));
             }
 
-            // diff = sub − lower
+            // diff = sub − lower. A captured array owns its bound metadata in
+            // module globals, because the procedure body has a fresh register
+            // frame and cannot directly see the declaring block's temporaries.
+            let lower_slot = if binding.is_global {
+                let slot = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "global_load",
+                    Some(slot.clone()),
+                    vec![Operand::Str(array_dim_global_name(
+                        &binding.slot,
+                        dim_index,
+                        "lower",
+                    ))],
+                    "i64",
+                ));
+                slot
+            } else {
+                dim.lower_slot.clone()
+            };
             let diff = self.fresh_temp();
             self.emit(IIRInstr::new(
                 "sub",
                 Some(diff.clone()),
-                vec![Operand::Var(idx.slot), Operand::Var(dim.lower_slot.clone())],
+                vec![Operand::Var(idx.slot), Operand::Var(lower_slot)],
                 "i64",
             ));
 
             // contrib = diff * stride  (or just diff when stride = 1, last dim)
             let contrib = if let Some(stride) = &dim.stride_slot {
+                let stride_slot = if binding.is_global {
+                    let slot = self.fresh_temp();
+                    self.emit(IIRInstr::new(
+                        "global_load",
+                        Some(slot.clone()),
+                        vec![Operand::Str(array_dim_global_name(
+                            &binding.slot,
+                            dim_index,
+                            "stride",
+                        ))],
+                        "i64",
+                    ));
+                    slot
+                } else {
+                    stride.clone()
+                };
                 let prod = self.fresh_temp();
                 self.emit(IIRInstr::new(
                     "mul",
                     Some(prod.clone()),
-                    vec![Operand::Var(diff), Operand::Var(stride.clone())],
+                    vec![Operand::Var(diff), Operand::Var(stride_slot)],
                     "i64",
                 ));
                 prod
@@ -802,6 +884,17 @@ impl Compiler {
         }
 
         let flat = flat.expect("dims is always non-empty");
+        if binding.is_global {
+            let handle = self.fresh_temp();
+            self.emit(IIRInstr::new(
+                "global_load",
+                Some(handle.clone()),
+                vec![Operand::Str(binding.slot.clone())],
+                make_array_type(binding.ty.iir()),
+            ));
+            binding.slot = handle;
+            binding.is_global = false;
+        }
         Ok((binding, flat))
     }
 
@@ -3423,6 +3516,7 @@ impl Compiler {
         name: &str,
         elem_ty: ScalarType,
         dims: Vec<ArrayDim>,
+        is_global: bool,
     ) -> Result<String, CompileError> {
         let slot = if self.scopes.len() == 1 {
             name.to_string()
@@ -3444,10 +3538,12 @@ impl Compiler {
                 slot: slot.clone(),
                 ty: elem_ty,
                 array: Some(ArrayInfo { dims, elem_ty }),
-                is_global: false, // arrays-as-globals are a later E6 slice
+                is_global,
             },
         );
-        self.register_names.insert(slot.clone());
+        if !is_global {
+            self.register_names.insert(slot.clone());
+        }
         Ok(slot)
     }
 
