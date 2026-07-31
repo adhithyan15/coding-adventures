@@ -8,18 +8,18 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": 9363,
+  "active_pr": 9368,
   "last_inventory": {
-    "revision": "b6d3c60b1a952df4df1d0cbe52d5a4c28e344d13",
+    "revision": "432e2b6380863aeaa02b83bca6120ec3c32943fe",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1198,
-    "implementation_package_slots": 4340,
+    "implementation_identities": 1199,
+    "implementation_package_slots": 4341,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 277,
-    "singleton_packages": 748,
-    "singleton_missing_slots": 10472,
-    "rust_singletons": 553,
+    "singleton_packages": 749,
+    "singleton_missing_slots": 10486,
+    "rust_singletons": 554,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -153,11 +153,11 @@
     {
       "id": "build-tool-execution-status-normalization",
       "title": "Normalize dependency-skip terminology and result-state invariants",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-execution-sandbox"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Discovered during the fixture audit. Replace the duplicated schema term dependency-skipped with normative dep-skipped and enforce built, failed, dep-skipped, would-build, return-code, command-state, and outcome consistency before execution cases enter the corpus."
+      "branch": "codex/build-tool-execution-status-normalization",
+      "pr_number": 9368,
+      "notes": "Ready-for-review PR #9368. Selected after PR #9363 merged and the e34f26fad collision-clean inventory plus parallel dependency, fixture, and security audits completed, then rebased onto origin/main at 432e2b638 and refreshed to 1,199 identities, 4,341 slots, 749 singletons, zero collisions, and zero unknown buckets. The PR replaces the duplicated schema term dependency-skipped with normative dep-skipped and enforces built, failed, dep-skipped, would-build, return-code, command-state, dry-run, overall-outcome, exact-once result identity, fail-stop, and dependency-propagation invariants before execution cases enter the corpus. Validation: 166 conformance tests passed with 20 expected platform skips; focused execution suites passed 27 tests at 94% branch-aware coverage; both process-free contract validators, 10 reporter tests, Ruff, Bandit, compileall, pip check, JSON, state-graph, diff, secret, Go test/vet/build, and independent security review passed. The canonical diff dry-run found no changed package files; repository-wide BUILD validation still reports unrelated pre-existing BUILD_windows dependency drift on main. This bounded repository-owned contract is on the critical path to trusted execution, the Go oracle, OCaml's build substrate, and every build-tool adapter."
     },
     {
       "id": "build-tool-invariant-probe-authority-profile",
@@ -438,10 +438,19 @@
       "id": "dart-current-14-of-15",
       "title": "Close the 13-package Dart-only 14-of-15 frontier",
       "status": "pending",
-      "depends_on": ["haskell-http-core"],
+      "depends_on": ["haskell-http-core", "dart-scaffold-capability-schema"],
       "branch": null,
       "pr_number": null,
       "notes": "Deliver small dependency-shaped PRs: ML, trig/wave, data structures, ciphers, document-ast, and uuid."
+    },
+    {
+      "id": "dart-scaffold-capability-schema",
+      "title": "Emit truthful schema-v1 capability manifests from the Dart scaffold generator",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the e34f26fad post-merge fixture audit. The native Dart generator emits no required_capabilities.json for library or program scaffolds even though Spec 13 requires explicit schema-v1 profiles. Add language-neutral golden/schema coverage, emit empty profiles for libraries and the truthful stdout profile for generated programs, classify the generator's own runtime authority, and leave existing nonempty Dart profile interpretation to the legacy migration owner."
     },
     {
       "id": "haskell-http1",
@@ -500,11 +509,11 @@
     {
       "id": "capability-schema-category-action-constraints",
       "title": "Encode valid category-action pairs in capability schemas",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["haskell-scaffold-capability-schema"],
       "branch": "codex/capability-category-action-constraints",
       "pr_number": 9363,
-      "notes": "PR #9363 is ready for review. This bounded, restriction-only contract closes the fail-open taxonomy gap and directly unlocks the OCaml capability analyzer, the adj-lang-cli capability profile, and the native Matter controller host. Both schemas and the Go generator, Go analyzer, Go cage, and Rust cage now share the exhaustive 19-valid/93-invalid taxonomy fixture; generator batch writes preflight atomically; schema-only changes exercise every consumer in CI. Validation: Python 5 tests plus Ruff/Bandit; Go race/vet with 89.3%, 96.7%, and 87.4% coverage; Rust fmt/clippy plus 67 tests and four downstream suites; zero reachable Go or Rust vulnerabilities; collision report 4,340 slots / 1,198 identities / zero collisions or unknown buckets; clean JSON/YAML, diff, and secret checks. The pre-existing capability-os-sandbox macOS seatbelt fixture failure reproduces unchanged on main. Legacy out-of-schema vocabulary remains separately classified."
+      "notes": "Merged PR #9363 at e34f26fadebd02dc448ec46c524a21843418ec9b. This bounded, restriction-only contract closes the fail-open taxonomy gap and directly unlocks the OCaml capability analyzer, the adj-lang-cli capability profile, and the native Matter controller host. Both schemas and the Go generator, Go analyzer, Go cage, and Rust cage share the exhaustive 19-valid/93-invalid taxonomy fixture; generator batch writes preflight atomically; schema-only changes exercise every consumer in CI. Final Linux, macOS, Windows, and CodeQL checks passed. Legacy out-of-schema vocabulary remains separately classified."
     },
     {
       "id": "capability-manifest-legacy-shape-and-vocabulary-migration",
@@ -514,6 +523,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered while enforcing the closed taxonomy. The tracked tree has 2,885 required_capabilities.json paths: 150 top-level dependency arrays, 82 metadata objects without a capabilities key, 164 object manifests with legacy string-list capabilities, and 2,489 objects whose capability list is empty or contains structured entries; 2,316 of the last group currently validate as schema-v1 manifests. The structured entries total 373: 359 use valid current-vocabulary pairs, zero use an invalid current-vocabulary cross-pair, and 14 use separately owned legacy categories or actions such as hardware, audio, ffi:export, process:spawn, network:listen, and fs:read_write. Inventory semantic owners before migration; do not reinterpret build-dependency arrays or missing-key metadata as Spec 13 security manifests, and require Layer-5 review before normalizing any nonempty authority profile."
+    },
+    {
+      "id": "capability-generator-all-mode-reconciliation",
+      "title": "Reconcile capability-cage-generator all-mode validation with canonical package and FFI vocabulary",
+      "status": "pending",
+      "depends_on": ["capability-manifest-legacy-shape-and-vocabulary-migration"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the e34f26fad post-merge contract audit. After the eighteen legacy-shape blockers are classified, reconcile three valid underscore-bearing Go package names and three reviewed ffi:call manifests with the generator's package-name and vocabulary rules, then make repository-wide --all --dry-run a tested green contract without weakening closed-schema enforcement."
     },
     {
       "id": "haskell-high-consensus-tail",
@@ -532,6 +550,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Start with lz78/deflate, zstd, and state-machine, then move through shared dependency chains."
+    },
+    {
+      "id": "python-parser-self-hosting-applicability",
+      "title": "Classify the Python lane's remaining self-hosted python-parser gap",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the e34f26fad post-merge inventory. Python-parser exists in twelve established lanes plus WASM while the Python lane already contains python-lexer. Decide whether a Python implementation is portable, self-hosting-applicable, or a reviewed exception; add explicit reporter applicability data rather than leaving the only Python high-consensus gap unowned."
     },
     {
       "id": "swift-dart-high-consensus",

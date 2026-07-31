@@ -106,9 +106,10 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 31, 2026 at `b6d3c60b1` after merged OCaml
-toolchain work and the Rust `smart-home-matter-integration`. It contains 1,198
-normalized implementation identities across 4,340 established-lane package
+inventory was regenerated on July 31, 2026 at `432e2b638` after merged OCaml
+toolchain work, the Rust `smart-home-matter-integration`, and the Rust
+`smart-home-home-assistant-migration`. It contains 1,199 normalized
+implementation identities across 4,341 established-lane package
 slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -116,9 +117,9 @@ slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 277 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 748 | 10,472 |
+| Present in one language | 749 | 10,486 |
 
-The loop must not start by attempting 10,472 singleton ports. It should finish
+The loop must not start by attempting 10,486 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The July 31 lane audit is:
@@ -137,7 +138,7 @@ The July 31 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 963 | 0 | 100% |
+| Rust | 964 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -200,8 +201,15 @@ The historical Priority 1 cohort is complete, but later Haskell work promoted
 - leaf ciphers: `atbash-cipher`, `scytale-cipher`, and `vigenere-cipher`;
 - shared model and utility leaves: `document-ast` and `uuid`.
 
-Close these as small coherent PRs after the cross-language build-tool contract
-foundation is stable.
+The post-#9363 fixture audit found a generator-level prerequisite before these
+ports: Dart's native scaffold generator emits no `required_capabilities.json`
+for either library or program scaffolds. The new
+`dart-scaffold-capability-schema` item must add language-neutral golden/schema
+coverage, explicit empty library profiles, truthful generated-program stdout
+profiles, and classification of the generator's own runtime authority. Existing
+nonempty Dart profiles remain owned by the legacy migration review. Close the
+13-package frontier as small coherent PRs only after that scaffold contract and
+the cross-language build-tool foundation are stable.
 
 Port dependency families together when doing so avoids temporary broken package
 graphs. Grammar-generated lexer/parser pairs should be generated from the shared
@@ -232,6 +240,12 @@ ports to reach all 15. After Priority 1, select work in this order:
 
 Zero-gap lanes remain active reference and conformance lanes; they are not
 exempt from semantic review or build-tool parity.
+
+The e34f26fad inventory gives Python's lone high-consensus gap a dedicated
+`python-parser-self-hosting-applicability` owner. It must record whether a native
+Python parser port is portable, self-hosting-applicable, or a reviewed exception
+through explicit reporter applicability data instead of leaving the gap
+unclassified.
 
 The first seventeen paired Lua/Perl slices are complete: `fenwick-tree`,
 `binary-tree`, `binary-search-tree`, `in-memory-data-store-protocol`,
@@ -806,10 +820,10 @@ TypeScript Haskell Cabal/Hspec templates to full canonical parity; and
 `scaffold-description-injection-hardening` closes structural delimiter
 injection across all generated metadata and source-comment contexts.
 `capability-schema-category-action-constraints` encodes the taxonomy's valid
-category-action pairs in both schemas and every enforcement backend. It is the
-current post-#9354 slice because this restriction-only contract is bounded,
-fully repository-owned, and directly unlocks the future OCaml analyzer,
-`adj-lang-cli` profile reconciliation, and native Matter controller review.
+category-action pairs in both schemas and every enforcement backend. Merged PR
+#9363 completed that restriction-only contract and directly unblocked the
+future OCaml analyzer, `adj-lang-cli` profile reconciliation, native Matter
+controller review, and scaffold manifest repairs.
 
 The implementation audit also separated a legacy migration instead of
 silently forcing unlike files through the new schema. The tracked tree
@@ -826,6 +840,14 @@ invalid cross-pair. The pending
 those semantic owners before migration, must not reinterpret build-dependency
 arrays as security manifests, and must obtain Layer-5 review before changing
 any nonempty authority profile.
+
+The same post-merge audit found six additional repository-wide generator
+blockers not owned by that migration: three valid underscore-bearing Go package
+names rejected by the generator's narrow package-name rule and three reviewed
+`ffi:call` manifests rejected by its duplicated vocabulary. The new
+`capability-generator-all-mode-reconciliation` item follows legacy
+classification, reconciles those rules without reopening the closed taxonomy,
+and makes `--all --dry-run` a tested green repository contract.
 
 Recommended family order:
 
@@ -1080,6 +1102,15 @@ Delivery order:
    either emerging lane graduates.
 14. Gate completion in CI: every supported implementation runs the same
    conformance corpus on its applicable operating systems.
+
+Ready-for-review PR #9368 is the selected repository-owned build-tool slice,
+`build-tool-execution-status-normalization`. It replaces the duplicated
+`dependency-skipped` schema term with normative `dep-skipped` and closes
+contradictory command exit codes, package return codes, dry-run states, overall
+outcomes, duplicate result identities, fail-stop ordering, and dependency
+propagation. This bounded schema-and-validator repair lands before execution
+cases, trusted execution, the Go oracle, OCaml's build substrate, or adapter
+work consumes those records.
 
 Pull-request CI may validate the policy, schemas, digests, and fake-backend
 tests, but it must not authorize execution from branch-modifiable code or

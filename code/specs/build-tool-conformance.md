@@ -386,6 +386,31 @@ Required behavior:
 The current Go `cmd /C` behavior and lack of process limits are known gaps, not
 portable semantics.
 
+Execution results use one closed state machine:
+
+- `succeeded` commands have exit code `0`;
+- `failed` commands have a nonzero exit code;
+- `not-run` commands have a null exit code;
+- `built` packages have return code `0` and every command is `succeeded`;
+- `failed` packages have exactly one `failed` command, use that command's
+  nonzero exit code as the package return code, have only `succeeded` commands
+  before the failure, and only `not-run` commands after it;
+- `dep-skipped` and `would-build` packages have a null return code and every
+  command is `not-run`;
+- a `failed` or `dep-skipped` prerequisite makes each direct dependent
+  `dep-skipped`; conversely, every `dep-skipped` package has at least one direct
+  `failed` or `dep-skipped` prerequisite;
+- dry-run cases have outcome `ok` and every package is `would-build`;
+- non-dry-run outcome `ok` means every package is `built`; and
+- outcome `error` is non-dry-run, contains at least one `failed` package, and
+  otherwise contains only `built` or `dep-skipped` packages.
+
+The schemas enforce every local state/return-code constraint and the
+input/outcome status sets. The process-free execution contract validator also
+enforces command fail-stop order, failed-command/package return-code equality,
+complete package classification, and dependency-graph propagation. No adapter
+or execution case may enter the corpus with a contradictory record.
+
 ### 10. Validation
 
 Validation fixtures report stable diagnostic codes for:
