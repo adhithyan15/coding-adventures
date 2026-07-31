@@ -248,6 +248,13 @@ fn array_param_capture_slot(procedure_name: &str, param_name: &str) -> String {
     format!("__algol_capture_{procedure_name}_{param_name}")
 }
 
+/// Module-global backing name for a scalar value parameter captured by a nested
+/// procedure. The incoming IIR parameter remains the procedure ABI slot; the
+/// outer procedure publishes its value here before the nested sibling runs.
+fn scalar_param_capture_slot(procedure_name: &str, param_name: &str) -> String {
+    format!("__algol_scalar_capture_{procedure_name}_{param_name}")
+}
+
 /// A procedure formal that the supported call-by-value slice can carry.
 ///
 /// An array formal receives the caller's storage handle plus its complete
@@ -501,17 +508,9 @@ impl Compiler {
         Ok(())
     }
 
-    /// E6 capture analysis: collect every NAME referenced inside a procedure
-    /// body of `block`, minus each procedure's own parameters and its result
-    /// name (those are local to the procedure, not enclosing-scope captures).
-    /// A block scalar whose name lands in this set is materialised as a global.
-    ///
-    /// Caveat: only the *immediate* procedure's own params/result are excluded;
-    /// `collect_name_tokens` recurses into any **nested** procedures, so a nested
-    /// procedure's own locals could be over-captured. Harmless unless a block
-    /// scalar shares a name with a nested-procedure local — a rare, untested
-    /// shape (this slice targets one level of block→procedure capture). A proper
-    /// fix tracks nested scopes; tracked as an E6 follow-up.
+    /// E6 capture analysis: collect names used from a procedure body that are
+    /// not declared by that procedure or any intervening nested procedure. A
+    /// block scalar whose name lands in this set is materialised as a global.
     fn collect_block_captures(&self, block: &GrammarASTNode) -> HashSet<String> {
         let mut captured = HashSet::new();
         for child in direct_nodes(block) {
@@ -521,21 +520,16 @@ impl Compiler {
             let Some(proc_decl) = first_direct_node(child, "procedure_decl") else {
                 continue;
             };
-            // The procedure's own locals (param names + the result name) are not
-            // captures. `procedure_parts` is best-effort here; an unparseable
-            // heading just means we exclude nothing, which is safe (we only ever
-            // globalise names that are *also* declared as block scalars).
-            let mut local: HashSet<String> = HashSet::new();
-            if let Ok((pname, params, _)) = self.procedure_parts(proc_decl) {
-                local.insert(pname);
-                for (p, _) in params {
-                    local.insert(p);
-                }
-            }
-            collect_name_tokens(proc_decl, &mut captured);
-            for l in &local {
-                captured.remove(l);
-            }
+            let hidden = procedure_local_names(proc_decl);
+            let Some(body) = first_direct_node(proc_decl, "proc_body") else {
+                continue;
+            };
+
+            let mut references = HashSet::new();
+            collect_name_tokens_excluding_nested_procedures(body, &mut references);
+            references.retain(|name| !hidden.contains(name));
+            captured.extend(references);
+            collect_nested_block_captures(body, &hidden, &mut captured);
         }
         captured
     }
@@ -1270,6 +1264,7 @@ impl Compiler {
         self.set_loc(proc_decl);
         let (name, params, ret) = self.procedure_parts(proc_decl)?;
         let captured_array_formals = array_formals_captured_by_nested_procedures(proc_decl, &params);
+        let captured_scalar_formals = scalar_formals_captured_by_nested_procedures(proc_decl, &params);
 
         // ── swap in a fresh emission context ─────────────────────────────
         let saved_instrs = std::mem::take(&mut self.instrs);
@@ -1322,6 +1317,9 @@ impl Compiler {
                     // direct `str_const` producers support ordering comparisons.
                     if *pty == ScalarType::String {
                         self.initialized_string_slots.insert(slot.clone());
+                    }
+                    if captured_scalar_formals.contains(pname) {
+                        self.promote_scalar_parameter_capture(&name, pname, *pty, &slot)?;
                     }
                     param_pairs.push((slot, pty.iir().to_string()));
                 }
@@ -1478,6 +1476,43 @@ impl Compiler {
         self.scopes = saved_scopes;
 
         Ok(func)
+    }
+
+    /// Publish a scalar value formal into module-global storage when a nested
+    /// procedure needs to read or write it from a separate IIR function frame.
+    fn promote_scalar_parameter_capture(
+        &mut self,
+        procedure_name: &str,
+        param_name: &str,
+        ty: ScalarType,
+        incoming_slot: &str,
+    ) -> Result<(), CompileError> {
+        let capture_slot = scalar_param_capture_slot(procedure_name, param_name);
+        let binding = self
+            .scopes
+            .last_mut()
+            .and_then(|scope| scope.get_mut(param_name))
+            .ok_or_else(|| CompileError::Malformed(format!(
+                "scalar parameter {param_name:?} missing while preparing nested capture"
+            )))?;
+        if binding.ty != ty || binding.array.is_some() {
+            return Err(CompileError::Malformed(format!(
+                "scalar parameter {param_name:?} has an inconsistent binding"
+            )));
+        }
+        binding.slot = capture_slot.clone();
+        binding.is_global = true;
+
+        self.emit(IIRInstr::new(
+            "global_store",
+            None,
+            vec![
+                Operand::Str(capture_slot),
+                Operand::Var(incoming_slot.to_string()),
+            ],
+            "void",
+        ));
+        Ok(())
     }
 
     /// Copy an incoming array descriptor into module globals before a nested
@@ -4062,24 +4097,6 @@ fn direct_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
         .collect()
 }
 
-/// Recursively collect every `NAME` token value reachable under `node` into
-/// `out` (LANG-FULL E6 capture analysis). Over-collection is harmless: only a
-/// name that is *also* declared as an enclosing block scalar is ever
-/// globalised, so a stray identifier (operator, keyword token, label) that
-/// happens through here never affects a real variable.
-fn collect_name_tokens(node: &GrammarASTNode, out: &mut HashSet<String>) {
-    for child in &node.children {
-        match child {
-            ASTNodeOrToken::Token(t) => {
-                if t.effective_type_name() == "NAME" {
-                    out.insert(t.value.clone());
-                }
-            }
-            ASTNodeOrToken::Node(n) => collect_name_tokens(n, out),
-        }
-    }
-}
-
 /// The `arith_expr` subscripts of a `variable` node, or `None` when the
 /// variable is an unsubscripted scalar.  `variable = NAME [ LBRACKET subscripts
 /// RBRACKET ]`, and `subscripts = arith_expr { COMMA arith_expr }`, so a present
@@ -4162,21 +4179,42 @@ fn array_formals_captured_by_nested_procedures(
         .iter()
         .filter_map(|(name, ty)| matches!(ty, ProcedureParamType::Array { .. }).then_some(name.clone()))
         .collect();
+    formals_captured_by_nested_procedures(proc_decl, &visible)
+}
+
+/// Scalar value formals use the same sibling-function capture model as array
+/// descriptors. They are copied into a typed global before the nested procedure
+/// runs, so a nested read or assignment sees the outer invocation's value.
+fn scalar_formals_captured_by_nested_procedures(
+    proc_decl: &GrammarASTNode,
+    params: &[(String, ProcedureParamType)],
+) -> HashSet<String> {
+    let visible: HashSet<String> = params
+        .iter()
+        .filter_map(|(name, ty)| matches!(ty, ProcedureParamType::Scalar(_)).then_some(name.clone()))
+        .collect();
+    formals_captured_by_nested_procedures(proc_decl, &visible)
+}
+
+fn formals_captured_by_nested_procedures(
+    proc_decl: &GrammarASTNode,
+    visible: &HashSet<String>,
+) -> HashSet<String> {
     let mut captured = HashSet::new();
     if let Some(body) = first_direct_node(proc_decl, "proc_body") {
-        collect_nested_array_formal_captures(body, &visible, &mut captured);
+        collect_nested_formal_captures(body, visible, &mut captured);
     }
     captured
 }
 
-fn collect_nested_array_formal_captures(
+fn collect_nested_formal_captures(
     node: &GrammarASTNode,
     visible: &HashSet<String>,
     captured: &mut HashSet<String>,
 ) {
     for child in direct_nodes(node) {
         if child.rule_name != "procedure_decl" {
-            collect_nested_array_formal_captures(child, visible, captured);
+            collect_nested_formal_captures(child, visible, captured);
             continue;
         }
 
@@ -4191,7 +4229,7 @@ fn collect_nested_array_formal_captures(
         let mut references = HashSet::new();
         collect_name_tokens_excluding_nested_procedures(body, &mut references);
         captured.extend(nested_visible.intersection(&references).cloned());
-        collect_nested_array_formal_captures(body, &nested_visible, captured);
+        collect_nested_formal_captures(body, &nested_visible, captured);
     }
 }
 
@@ -4249,6 +4287,34 @@ fn collect_name_tokens_excluding_nested_procedures(
             }
             _ => {}
         }
+    }
+}
+
+/// Collect names that a nested procedure resolves outside every enclosing
+/// procedure-local scope. Nested formals, result variables, and direct block
+/// declarations shadow names from the block currently being analysed.
+fn collect_nested_block_captures(
+    node: &GrammarASTNode,
+    hidden: &HashSet<String>,
+    captured: &mut HashSet<String>,
+) {
+    for child in direct_nodes(node) {
+        if child.rule_name != "procedure_decl" {
+            collect_nested_block_captures(child, hidden, captured);
+            continue;
+        }
+
+        let mut nested_hidden = hidden.clone();
+        nested_hidden.extend(procedure_local_names(child));
+        let Some(body) = first_direct_node(child, "proc_body") else {
+            continue;
+        };
+
+        let mut references = HashSet::new();
+        collect_name_tokens_excluding_nested_procedures(body, &mut references);
+        references.retain(|name| !nested_hidden.contains(name));
+        captured.extend(references);
+        collect_nested_block_captures(body, &nested_hidden, captured);
     }
 }
 
@@ -5706,6 +5772,57 @@ mod tests {
                            seed(); fill := a[-1,4] + a[0,5] end; \
                    result := fill(values) end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn nested_procedure_captures_scalar_value_parameter() {
+        let src = "begin integer result; \
+                   integer procedure total(seed); value seed; integer seed; \
+                     begin integer procedure bump; begin seed := seed + 2; bump := seed end; \
+                           total := bump() end; \
+                   result := total(40) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "scalar_formal_capture").expect("compiles");
+        let capture_slot = scalar_param_capture_slot("total", "seed");
+        let total = module.get_function("total").expect("total function exists");
+        assert!(
+            total.instructions.iter().any(|instr| {
+                instr.op == "global_store"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+            }),
+            "total must publish its incoming scalar parameter before the nested call"
+        );
+        let bump = module.get_function("bump").expect("bump function exists");
+        assert!(
+            bump.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+            }),
+            "bump must reload its captured scalar parameter from shared storage"
+        );
+    }
+
+    #[test]
+    fn nested_formal_shadow_does_not_capture_enclosing_block_scalar() {
+        let src = "begin integer seed, result; \
+                   procedure invoke; \
+                     begin integer procedure local(seed); value seed; integer seed; \
+                           local := seed + 1; \
+                           result := local(1) end; \
+                   seed := 41; invoke; result := result + seed end";
+        assert_eq!(run_i64(src), 43);
+
+        let module = compile_source(src, "nested_formal_shadow").expect("compiles");
+        assert!(
+            module.functions.iter().flat_map(|function| &function.instructions).all(|instr| {
+                !matches!(instr.op.as_str(), "global_load" | "global_store")
+                    || instr.srcs.first().and_then(Operand::as_str_lit) != Some("seed")
+            }),
+            "a nested formal named seed must shadow, not capture, the enclosing block scalar"
+        );
     }
 
     #[test]
