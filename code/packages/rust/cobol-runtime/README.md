@@ -163,8 +163,9 @@ that is `length(source)`, with a region it is the window length of the SAME wind
 source, `AFTER x` absent ⇒ empty ⇒ 0; a MULTI-item `CHARACTERS` — one CHARACTERS item
 ALONGSIDE other items under ONE counter — is now supported, see the multi-item form below;
 a `CHARACTERS` TALLYING half in a combined `TALLYING … REPLACING` is now supported too, see
-the combined form below; a MULTI-counter `CHARACTERS` and a `CHARACTERS` REPLACING half in a
-combined `TALLYING … REPLACING` stay later rungs); the **multi-item** `INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q] …`
+the combined form below; a lone `CHARACTERS` REPLACING half in a combined `TALLYING …
+REPLACING` is now supported too (so both halves may be CHARACTERS); a MULTI-counter
+`CHARACTERS` stays a later rung); the **multi-item** `INSPECT source TALLYING counter FOR ALL a [{BEFORE|AFTER} p] ALL b [{BEFORE|AFTER} q] …`
 (TWO OR MORE `FOR ALL` items sharing ONE counter, **each item with its OWN optional
 `{BEFORE|AFTER}` window** — ONE left-to-right pass in which, at each position, the items
 are tried in WRITTEN ORDER and the FIRST item that BOTH contains the position in its window
@@ -287,8 +288,11 @@ since the tally does not mutate it; a LEADING half carrying a region is now supp
 the combined form — it composes the SAME standalone LEADING+region routines, anchoring
 each leading run at its window start; the `TALLYING` half may ALSO be `FOR CHARACTERS`
 (count every position in its optional window into the counter — the SAME standalone
-`FOR CHARACTERS` count — before the replace runs; the `REPLACING` half's OWN `CHARACTERS`
-form stays a later rung in the combined form); and
+`FOR CHARACTERS` count — before the replace runs); the `REPLACING` half may ALSO be a lone
+`REPLACING CHARACTERS BY x [{BEFORE|AFTER} z]` (overwrite every position in its optional
+window with `x` — the SAME standalone `REPLACING CHARACTERS` fill, run AFTER the tally over
+the untouched original bytes), so BOTH halves may now be a CHARACTERS form; only a MULTI-item
+combined REPLACING half stays a later rung); and
 `INSPECT source CONVERTING from TO to` (translate each character
 of the alphanumeric source through a per-character table built from the two
 equal-length operands `from`/`to`, each a string LITERAL, a data-name

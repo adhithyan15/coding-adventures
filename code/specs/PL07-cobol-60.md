@@ -834,17 +834,18 @@ single-counter** CHARACTERS phrase; a MULTI-item `CHARACTERS` (one CHARACTERS it
 ALONGSIDE other items under ONE counter) is enabled by a LATER rung — see "A
 `CHARACTERS` item in a multi-item list" below. A `CHARACTERS` TALLYING half inside a
 combined `TALLYING … REPLACING` is enabled by a later rung too — see "A `CHARACTERS`
-TALLYING half in the combined form" below. A MULTI-counter `CHARACTERS` and the
-combined REPLACING half's OWN `CHARACTERS` form stay later rungs rejected identically
-on both engines.
+TALLYING half in the combined form" below; the combined REPLACING half's OWN
+`CHARACTERS` form is enabled by a later rung as well — see "A `CHARACTERS` REPLACING
+half in the combined form" below. A MULTI-counter `CHARACTERS` stays a later rung
+rejected identically on both engines.
 
 Now supported (identically on both engines): a **combined** `TALLYING … REPLACING`
 whose LEADING half (tally and/or replace) carries a region — the combined exec/emit
 compose the SAME standalone LEADING+region routines in ISO tally-then-replace order,
 so the combination is byte-identical to the oracle. Still deferred: a
-multi-character / non-ASCII region delimiter and the REPLACING half's OWN
-`CHARACTERS` form in the combined form (the TALLYING half's `FOR CHARACTERS` is now
-supported — see "A `CHARACTERS` TALLYING half in the combined form" below).
+multi-character / non-ASCII region delimiter (both halves' `FOR CHARACTERS` /
+`REPLACING CHARACTERS` forms are now supported — see "A `CHARACTERS` TALLYING half in
+the combined form" and "A `CHARACTERS` REPLACING half in the combined form" below).
 
 **A `CHARACTERS` TALLYING half in the combined form (follow-up rung).** The
 combined `TALLYING … REPLACING` form now admits a `FOR CHARACTERS` TALLYING half:
@@ -868,10 +869,41 @@ the count through the SAME CHARACTERS lowering the standalone tally uses. Worked
 `"AA"` before `"X"`) while the un-regioned replace rewrites EVERY `"A"` →
 `S = "BBXBB"`.
 
-Still deferred (co-total): the combined REPLACING half's OWN `CHARACTERS` form
-(`REPLACING CHARACTERS BY x`) — a DIFFERENT node (`InspectReplacingCharacters` /
-`emit_inspect_replacing_characters`) read by the single-item `read_inspect_replacing_all`
-in the combined arm, which still rejects a `CHARACTERS` REPLACING item on both engines.
+**A `CHARACTERS` REPLACING half in the combined form (follow-up rung).** The
+combined `TALLYING … REPLACING` form now ALSO admits a `REPLACING CHARACTERS BY x`
+half: `INSPECT S TALLYING C FOR … REPLACING CHARACTERS BY x [ {BEFORE|AFTER} z ]`. The
+former read-time reject ("INSPECT REPLACING CHARACTERS is a later rung", raised by
+`read_inspect_replacing_all` / `inspect_replacing_all` in the combined arm) is lifted
+for a LONE `CHARACTERS` replace item. This is the STRUCTURAL TWIN of the TALLYING-half
+CHARACTERS rung above — the CHARACTERS operand-class is now complete on BOTH halves. It
+executes in the same ISO tally-then-replace order: the TALLYING half counts FIRST over
+the ORIGINAL source bytes, THEN the CHARACTERS REPLACING half overwrites EVERY position
+in its (optional) window with the single replacement char `x` — exactly the STANDALONE
+`REPLACING CHARACTERS BY x [region]` fill above, inheriting the same `BEFORE`→whole /
+`AFTER`→empty asymmetry — over the storage the (read-only) count left untouched. The
+two halves are INDEPENDENT: either, both, or neither may be a CHARACTERS form.
+
+Threading (mirroring the TALLYING-half rung): the oracle adds a `replace_characters:
+bool` field to `Stmt::InspectTallyReplace`. The combined `(true, true)` reader detects a
+LONE `CHARACTERS` replace item FIRST (mirroring the standalone `(false, true)` arm),
+reading its optional region via the shared `read_inspect_region` and its `BY` operand,
+with a never-read placeholder `search` and `replace_leading = false`; otherwise it falls
+through to `read_inspect_replacing_all` (ALL/LEADING). `exec_inspect_tally_replace`
+branches on the flag to `inspect_replace_characters` — the POST-`sidx` body factored out
+of `exec_inspect_replacing_characters`, the exact analogue of how `inspect_replace` was
+factored out of `exec_inspect_replacing`. The compiler mirrors this: the combined emit
+detects the lone `CHARACTERS` item and routes it to the SAME standalone
+`emit_inspect_replacing_characters` fill, else falls through to `emit_inspect_replacing`.
+Worked (`C` `PIC 9(3)`): `"XAYAZ"` `TALLYING C FOR ALL "A" REPLACING CHARACTERS BY "*"` →
+`C = 2` (the two `"A"`s, over the original) and `S = "*****"`; `"AAXAA"` `TALLYING C FOR
+ALL "A" REPLACING CHARACTERS BY "*" BEFORE "X"` → `C = 4` (every `"A"`, whole source)
+while the windowed fill overwrites only the `"AA"` before `"X"` → `S = "**XAA"`; and
+CHARACTERS on BOTH halves — `"ABAB"` `TALLYING C FOR CHARACTERS REPLACING CHARACTERS BY
+"*"` → `C = 4` (every position) and `S = "****"`.
+
+Still deferred (co-total): a MULTI-item combined REPLACING half (2+ replace items) stays
+a later rung, rejected by `read_inspect_replacing_all` / `inspect_replacing_all` on both
+engines, and a multi-character region delimiter remains rejected by the shared readers.
 
 **Byte-vs-char count chip (unchanged).** The CHARACTERS count is position-based; the
 compiler counts BYTE positions (`str_len`) while the oracle counts CHAR positions

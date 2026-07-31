@@ -2781,26 +2781,44 @@ impl<'a> Compiler<'a> {
                 // the ORIGINAL bytes BEFORE the REPLACING half overwrites the source, in
                 // ISO tally-then-replace order. Matching the oracle's combined-form
                 // accept. (The REPLACING half's OWN `CHARACTERS` form is a DIFFERENT node
-                // — `emit_inspect_replacing_characters` — and stays a later rung in the
-                // combined form: the combined REPLACING half below flows through
-                // `emit_inspect_replacing`/`inspect_replacing_all`, which still rejects a
-                // `REPLACING CHARACTERS` item co-total with the oracle.)
+                // — `emit_inspect_replacing_characters` — now ALSO supported in the
+                // combined form; see the REPLACING-half dispatch just below.)
                 self.emit_inspect_tallying(verb, &s_reg, true, true, true, true)?;
-                // The combined REPLACING half supports BOTH `ALL` and `LEADING`:
-                // `allow_leading = true` lets a combined `TALLYING … REPLACING
-                // LEADING` rewrite only the leading run (`emit_inspect_replacing`
-                // already threads the `active`-guarded run unroll that stops at the
-                // first non-match). The two halves' leading flags are independent, so
-                // BOTH may be LEADING at once. It too now accepts its OWN INDEPENDENT
-                // `{BEFORE|AFTER}` region (`allow_region = true`): its window rides on
-                // the `inspect_replacing` phrase child and is scanned over the source
-                // BEFORE the unroll overwrites it — and since the tally left the
-                // source untouched, that is the SAME original bytes the count saw, so
-                // both windows agree with the oracle. A combined `REPLACING LEADING`
-                // half carrying a region is now SUPPORTED (this rung) via
-                // `allow_leading_region = true`: it emits the SAME window-anchored
-                // LEADING-run unroll the standalone `REPLACING LEADING … BEFORE/AFTER`
-                // path uses — byte-identical to the oracle.
+                // The combined REPLACING half is EITHER a lone `REPLACING CHARACTERS BY
+                // x` (THIS rung) OR an `ALL`/`LEADING … BY …` substitution. Mirroring
+                // the oracle reader (and the lone-`(false, true)` dispatch below), we
+                // DETECT a lone CHARACTERS item FIRST — a SINGLE `replace_item` carrying
+                // the CHARACTERS keyword — and route it to the SAME standalone
+                // `emit_inspect_replacing_characters` lowering the lone form (#61/#80)
+                // uses, running AFTER the tally emit over the ORIGINAL bytes (which the
+                // read-only count loop left untouched), in ISO tally-then-replace order.
+                // A MULTI-item (2+) or standalone-`CHARACTERS`-elsewhere REPLACING half
+                // still flows through `emit_inspect_replacing`/`inspect_replacing_all`,
+                // which rejects it co-total with the oracle.
+                let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
+                    CompileError::Unsupported(
+                        "INSPECT without a REPLACING clause is a later rung".into(),
+                    )
+                })?;
+                let repl_items = child_nodes(replacing, "replace_item");
+                if let [ri] = repl_items.as_slice() {
+                    let toks = child_tokens(ri);
+                    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+                        // The CHARACTERS fill overwrites `s_reg` and reads its own
+                        // optional `{BEFORE|AFTER}` region off `ri` — the SAME window
+                        // scan the lone form uses, over the post-tally (== original)
+                        // storage. Byte-identical to the oracle's
+                        // `inspect_replace_characters`.
+                        return self.emit_inspect_replacing_characters(ri, &s_reg, source_width);
+                    }
+                }
+                // The ALL/LEADING path. The combined REPLACING half supports BOTH `ALL`
+                // and `LEADING` (`allow_leading = true`), each with its OWN INDEPENDENT
+                // `{BEFORE|AFTER}` region (`allow_region = true`) scanned over the same
+                // original bytes the count saw, and a `REPLACING LEADING … BEFORE/AFTER`
+                // half (`allow_leading_region = true`) — byte-identical to the oracle.
+                // `inspect_replacing_all` (inside `emit_inspect_replacing`) rejects a
+                // MULTI-item half co-total with the oracle's `read_inspect_replacing_all`.
                 self.emit_inspect_replacing(verb, &s_reg, source_width, true, true, true)
             }
             // A lone REPLACING. Dispatch on the number of replace items, mirroring the
@@ -2932,8 +2950,9 @@ impl<'a> Compiler<'a> {
         // `allow_characters = true`. The guard is retained honestly so any future
         // caller that must forbid a CHARACTERS tally can pass `false` and get the clean
         // later-rung diagnostic, reading uniformly with the other gates below. (The
-        // combined form's REPLACING-half CHARACTERS stays a later rung on a DIFFERENT
-        // path — `inspect_replacing_all` — not this flag.)
+        // combined form's REPLACING-half CHARACTERS is now supported too, on a DIFFERENT
+        // path — a lone CHARACTERS half routes to `emit_inspect_replacing_characters`
+        // before reaching `inspect_replacing_all` — not this flag.)
         if characters && !allow_characters {
             return Err(CompileError::Unsupported(
                 "INSPECT TALLYING … FOR CHARACTERS in a combined TALLYING/REPLACING is a later rung"

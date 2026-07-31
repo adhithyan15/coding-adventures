@@ -8,6 +8,36 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.79.0: combined INSPECT TALLYING + REPLACING CHARACTERS BY x
+
+**`INSPECT source TALLYING … REPLACING CHARACTERS BY x [{BEFORE|AFTER} z]`** — the
+COMBINED `TALLYING … REPLACING` form now compiles a `REPLACING CHARACTERS BY x` half,
+byte-identical to the `coding-adventures-cobol-runtime` 0.83.0 oracle on an ASCII source.
+The combined `(true, true)` emit now detects a LONE `CHARACTERS` replace item FIRST
+(mirroring the oracle reader and the lone `(false, true)` dispatch) and routes it to the
+SAME standalone `emit_inspect_replacing_characters` lowering (#61/#80), lifting the former
+"INSPECT REPLACING CHARACTERS is a later rung" reject for the REPLACING half. The
+STRUCTURAL TWIN of v0.78.0 (which lifted the TALLYING-half CHARACTERS): the CHARACTERS
+operand-class is now complete on BOTH halves everywhere.
+
+- **Reuses the standalone CHARACTERS fill.** After the tally emit (unchanged), the
+  CHARACTERS half runs `emit_inspect_replacing_characters` on the same `s_reg` — the
+  `width`-times replacement fill with no region, or the `emit_inspect_region_window`
+  narrowed unroll with a `{BEFORE|AFTER}` region — over the ORIGINAL bytes the read-only
+  count loop left untouched (ISO tally-then-replace). No new fill loop is hand-rolled. The
+  non-ASCII literal guard (guard 2) is inherited from the standalone emit.
+- **TALLYING half untouched.** The tally emit still supports `ALL`/`LEADING`/`CHARACTERS`
+  (+region) via `emit_inspect_tallying`; the two halves are independent.
+- **Still deferred (co-total).** A MULTI-item combined REPLACING half (2+ items) flows
+  through `emit_inspect_replacing`/`inspect_replacing_all`, which rejects it exactly as the
+  oracle's `read_inspect_replacing_all` does; a multi-character region delimiter stays a
+  later rung on both engines.
+- **Byte-vs-char reconstruct chip (unchanged).** The CHARACTERS fill unrolls BYTE
+  positions while the oracle rebuilds CHAR positions, coinciding on ASCII. A non-ASCII
+  source is the pre-existing reconstruct chip (task_396ba6f6, same as the standalone
+  `REPLACING CHARACTERS … {BEFORE|AFTER}` #80): the per-position `str_slice` reconstruction
+  traps on a multi-byte char while the oracle succeeds char-based. Not fixed here.
+
 ### Added — v0.78.0: combined INSPECT TALLYING FOR CHARACTERS + REPLACING
 
 **`INSPECT source TALLYING c FOR CHARACTERS [{BEFORE|AFTER} x] REPLACING …`** — the

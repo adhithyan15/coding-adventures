@@ -466,6 +466,7 @@ impl Machine {
                 search,
                 replace,
                 replace_leading,
+                replace_characters,
                 replace_region,
             } => {
                 return self.exec_inspect_tally_replace(
@@ -478,6 +479,7 @@ impl Machine {
                     search,
                     replace,
                     *replace_leading,
+                    *replace_characters,
                     replace_region.as_ref(),
                 )
             }
@@ -1644,6 +1646,30 @@ impl Machine {
         region: Option<&Region>,
     ) -> Result<(), RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
+        self.inspect_replace_characters(sidx, replace, region)
+    }
+
+    /// The `REPLACING CHARACTERS BY x [{BEFORE|AFTER} z]` half: overwrite EVERY
+    /// position of the source (within its optional window) with the single
+    /// replacement char `x`. Factored out of [`Self::exec_inspect_replacing_characters`]
+    /// (POST-`sidx`) so the COMBINED `TALLYING … REPLACING CHARACTERS` exec can run it
+    /// AFTER the tally — the exact analogue of how [`Self::inspect_replace`] was
+    /// factored out of [`Self::exec_inspect_replacing`] for the combined ALL/LEADING
+    /// path. The standalone caller keeps the SAME bytes by computing `sidx` then
+    /// delegating here, so the lone `REPLACING CHARACTERS` path is byte-identical.
+    ///
+    /// No search character is consulted — CHARACTERS replaces content-blindly. With no
+    /// region the WHOLE field becomes `x`s; with a `{BEFORE|AFTER} z` region only the
+    /// window `[start, end)` [`Self::region_window`] derives is overwritten, positions
+    /// outside it keep their original char. In the combined form the tally ran FIRST
+    /// over the untouched original bytes, so this fill sees (and this window is computed
+    /// over) the same original storage the tally counted.
+    fn inspect_replace_characters(
+        &mut self,
+        sidx: usize,
+        replace: &Operand,
+        region: Option<&Region>,
+    ) -> Result<(), RuntimeError> {
         // Guard 2 — a single-char but non-ASCII LITERAL replacement is deferred so the
         // char-based oracle stays co-total with the byte-based compiler (whose
         // single-char validator rejects a multi-byte literal). Items are not gated.
@@ -2008,6 +2034,7 @@ impl Machine {
         search: &Operand,
         replace: &Operand,
         replace_leading: bool,
+        replace_characters: bool,
         replace_region: Option<&Region>,
     ) -> Result<Flow, RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
@@ -2019,15 +2046,26 @@ impl Machine {
         // `tally_characters` threads STRAIGHT into `inspect_tally`, which already
         // fully supports the "count every position in the window" form (#60): on that
         // path `delim` is the never-read placeholder the reader supplied and
-        // `tally_leading` is `false`. (The REPLACING half's OWN CHARACTERS form travels
-        // a different node and stays a later rung, rejected at read time.)
+        // `tally_leading` is `false`. Both halves are INDEPENDENT: either, both, or
+        // neither may be a CHARACTERS form.
         self.inspect_tally(sidx, counter, delim, tally_leading, tally_characters, tally_region)?;
-        // THEN replace, overwriting the source in place. The REPLACING half may be
-        // ALL or LEADING (`replace_leading`) — the same leading-run map used by a
-        // lone `INSPECT REPLACING LEADING` — and carries its OWN INDEPENDENT
-        // `{BEFORE|AFTER}` region (`replace_region`). Since the tally left the source
-        // untouched, this half's window is also over the SAME original storage.
-        self.inspect_replace(sidx, search, replace, replace_leading, replace_region)?;
+        // THEN replace, overwriting the source in place. The REPLACING half is EITHER
+        // an ALL/LEADING substitution (`replace_characters == false`) OR a CHARACTERS
+        // fill (`replace_characters == true`, THIS rung). Both narrow to their OWN
+        // INDEPENDENT `{BEFORE|AFTER}` region (`replace_region`) over the SAME original
+        // storage the tally left untouched:
+        if replace_characters {
+            // CHARACTERS: overwrite EVERY in-window position with the single
+            // replacement char `x` — no search char is consulted, `search` is the
+            // never-read placeholder the reader supplied and `replace_leading` is
+            // `false`. Composes the SAME standalone `REPLACING CHARACTERS BY x [region]`
+            // fill (#61/#80) the lone form uses, byte-identical.
+            self.inspect_replace_characters(sidx, replace, replace_region)?;
+        } else {
+            // ALL/LEADING (`replace_leading`) — the same leading-run/all map a lone
+            // `INSPECT REPLACING [LEADING] … BY …` uses, over its own region window.
+            self.inspect_replace(sidx, search, replace, replace_leading, replace_region)?;
+        }
         Ok(Flow::Normal)
     }
 

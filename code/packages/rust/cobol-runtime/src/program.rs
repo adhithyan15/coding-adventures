@@ -529,10 +529,19 @@ pub enum Stmt {
     /// composing the SAME standalone `FOR CHARACTERS` count (#60) the lone form uses,
     /// still in ISO tally-then-replace order over the untouched original bytes. Only a
     /// multi-character region delimiter remains a later rung on this path, rejected by
-    /// the shared readers exactly as the lone forms do. The REPLACING half's own
-    /// CHARACTERS form (`REPLACING CHARACTERS BY x`, lowered via
-    /// [`Stmt::InspectReplacingCharacters`]) stays DEFERRED in the combined form — it
-    /// travels a different code path and is not admitted here.
+    /// the shared readers exactly as the lone forms do.
+    ///
+    /// The REPLACING half now ALSO admits `REPLACING CHARACTERS BY x` (`replace_characters`):
+    /// it overwrites EVERY position in its (optional) region window with the single
+    /// replacement char `x`, composing the SAME standalone `REPLACING CHARACTERS BY x
+    /// [region]` fill (#61/#80 — lowered lone via [`Stmt::InspectReplacingCharacters`])
+    /// the lone form uses, still in ISO tally-then-replace order (the CHARACTERS fill runs
+    /// AFTER the tally, over storage the tally left untouched). When `replace_characters`
+    /// is `true`, `search` carries a never-read placeholder and `replace_leading` is
+    /// `false`. The two halves are INDEPENDENT: either, both, or neither may be a
+    /// CHARACTERS form. Only a MULTI-item REPLACING half (2+ replace items) and a
+    /// multi-character region delimiter remain later rungs, rejected co-total by the
+    /// shared readers.
     InspectTallyReplace {
         source: String,
         counter: String,
@@ -546,8 +555,8 @@ pub enum Stmt {
         /// delimiter). Applies to the TALLYING half only. When `true`, `delim`
         /// carries a never-read placeholder and `tally_leading` is `false`,
         /// exactly as the STANDALONE `FOR CHARACTERS` path does (#60). The
-        /// REPLACING half's own CHARACTERS form (`InspectReplacingCharacters`)
-        /// stays a later rung — it is NOT this flag.
+        /// REPLACING half's own CHARACTERS form is carried by the SEPARATE
+        /// `replace_characters` flag below — it is NOT this flag.
         tally_characters: bool,
         /// Optional `{BEFORE|AFTER} x` region narrowing the TALLYING half's count,
         /// computed over the original source (see [`Region`]). `None` = whole source.
@@ -556,8 +565,17 @@ pub enum Stmt {
         replace: Operand,
         /// `true` for `REPLACING LEADING` (substitute only the leading run of
         /// `search`), `false` for `REPLACING ALL` (substitute every `search`).
-        /// Applies to the REPLACING half only.
+        /// Applies to the REPLACING half only. Always `false` when
+        /// `replace_characters` is `true` (CHARACTERS has no leading-run notion).
         replace_leading: bool,
+        /// `true` for `REPLACING CHARACTERS BY x` (overwrite EVERY position in the
+        /// window with `x`, regardless of content), `false` for `REPLACING
+        /// ALL`/`REPLACING LEADING` (match a search char). Applies to the REPLACING
+        /// half only. When `true`, `search` carries a never-read placeholder and
+        /// `replace_leading` is `false`, exactly as the STANDALONE `REPLACING
+        /// CHARACTERS BY x` path does (#61/#80). This is the replace-side twin of
+        /// `tally_characters`; the two halves are independent.
+        replace_characters: bool,
         /// Optional `{BEFORE|AFTER} x` region narrowing the REPLACING half's
         /// substitution, computed over the same original source (see [`Region`]).
         /// `None` = whole source. Independent of `tally_region`.
@@ -1544,35 +1562,87 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     // over the untouched original bytes before the REPLACING half runs.
                     // On this path `delim` is the never-read placeholder the reader hands
                     // back (the CHARACTERS count never consults it) and `leading` is
-                    // `false`, exactly as the standalone `FOR CHARACTERS` path. (The
-                    // REPLACING half's OWN `CHARACTERS` form travels a different code path
-                    // and stays a later rung — see the `(false, true)` arm below.)
+                    // `false`, exactly as the standalone `FOR CHARACTERS` path.
                     //
                     // The combined form's TALLYING half supports BOTH `FOR ALL`
                     // and `FOR LEADING`: `leading` selects the count semantics
                     // (LEADING counts only the consecutive run of `delim` at the
                     // start of the source). It rides along into the statement.
-                    let (search, replace, repl_leading, replace_region) =
-                        read_inspect_replacing_all(verb)?;
-                    // The combined form's REPLACING half supports BOTH `ALL`
-                    // and `LEADING`: `repl_leading` selects the substitution
-                    // semantics (LEADING rewrites only the consecutive run of
-                    // `search` at the start of the source). It rides along into
-                    // the statement, independent of the TALLYING half's `leading`.
                     //
-                    // A LEADING half carrying a `{BEFORE|AFTER}` region is now
-                    // SUPPORTED in the combined form (this rung lifts the old
-                    // deferral). No re-imposition is needed: `exec_inspect_tally_replace`
-                    // composes the SAME standalone routines the lone TALLYING /
-                    // REPLACING statements use — `inspect_tally(…, tally_leading,
-                    // tally_characters, tally_region)` first (over the untouched original
-                    // bytes), then `inspect_replace(…, replace_leading, replace_region)`.
-                    // Those routines already anchor a LEADING run at its window start and
-                    // count every position for a CHARACTERS tally, so the combined form is
-                    // byte-identical to the oracle with no exec change.
-                    // (The combined form's TALLYING half now admits `FOR CHARACTERS`; only
-                    // the REPLACING half's own CHARACTERS form — a different node — stays a
-                    // later rung, rejected by `read_inspect_replacing_all`.)
+                    // The REPLACING half is EITHER a lone `REPLACING CHARACTERS BY x`
+                    // (THIS rung) OR an `ALL`/`LEADING … BY …` substitution. We DETECT
+                    // the CHARACTERS half FIRST — a SINGLE `replace_item` carrying the
+                    // CHARACTERS keyword — exactly as the standalone `(false, true)`
+                    // arm below does, before deferring to `read_inspect_replacing_all`
+                    // (which handles ALL/LEADING and keeps rejecting a MULTI-item or a
+                    // standalone-`CHARACTERS` half). This keeps the CHARACTERS reject
+                    // lifted for the combined form co-total with the compiler.
+                    let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
+                        RuntimeError::Unsupported(
+                            "INSPECT without a REPLACING clause is a later rung".into(),
+                        )
+                    })?;
+                    let repl_items = child_nodes(replacing, "replace_item");
+                    let (search, replace, repl_leading, replace_characters, replace_region) =
+                        if let [ri] = repl_items.as_slice() {
+                            let toks = child_tokens(ri);
+                            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+                                // A lone `REPLACING CHARACTERS BY x [{BEFORE|AFTER} z]`
+                                // half. Read its optional region with the SAME
+                                // `read_inspect_region` helper the standalone form uses,
+                                // and its lone `operand` child as the replacement `x`.
+                                // `search` is the never-read placeholder (mirroring the
+                                // tally-CHARACTERS placeholder `delim`) and
+                                // `replace_leading = false`; the exec routes this half
+                                // through `inspect_replace_characters`, filling every
+                                // in-window position over the original bytes AFTER the
+                                // tally.
+                                let region = match child_node(ri, "inspect_region") {
+                                    None => None,
+                                    Some(region_node) => Some(read_inspect_region(region_node)?),
+                                };
+                                let replace_node = child_node(ri, "operand").ok_or_else(|| {
+                                    RuntimeError::Unsupported(
+                                        "INSPECT REPLACING CHARACTERS without a BY replacement"
+                                            .into(),
+                                    )
+                                })?;
+                                (
+                                    Operand::Lit(Lit::Str(" ".to_string())),
+                                    read_operand(replace_node)?,
+                                    false,
+                                    true,
+                                    region,
+                                )
+                            } else {
+                                // A lone `ALL`/`LEADING … BY …` half. `read_inspect_replacing_all`
+                                // supports BOTH `ALL` and `LEADING` (each with its OWN
+                                // optional region); `repl_leading` selects the substitution
+                                // semantics, independent of the TALLYING half's `leading`.
+                                let (s, r, l, reg) = read_inspect_replacing_all(verb)?;
+                                (s, r, l, false, reg)
+                            }
+                        } else {
+                            // ZERO or 2+ replace items: `read_inspect_replacing_all` rejects
+                            // a MULTI-item REPLACING half in the combined form (co-total with
+                            // the compiler — a multi-item combined REPLACING half stays a
+                            // later rung), and reports a missing clause otherwise.
+                            let (s, r, l, reg) = read_inspect_replacing_all(verb)?;
+                            (s, r, l, false, reg)
+                        };
+                    // A LEADING half carrying a `{BEFORE|AFTER}` region is SUPPORTED in
+                    // the combined form. No re-imposition is needed: `exec_inspect_tally_replace`
+                    // composes the SAME standalone routines the lone TALLYING / REPLACING
+                    // statements use — `inspect_tally(…, tally_leading, tally_characters,
+                    // tally_region)` first (over the untouched original bytes), then EITHER
+                    // `inspect_replace(…, replace_leading, replace_region)` (ALL/LEADING) OR
+                    // `inspect_replace_characters(…, replace_region)` (CHARACTERS, THIS
+                    // rung). Those routines already anchor a LEADING run at its window
+                    // start, count every position for a CHARACTERS tally, and fill every
+                    // in-window position for a CHARACTERS replace, so the combined form is
+                    // byte-identical to the oracle with no further exec change. Only a
+                    // MULTI-item REPLACING half and a multi-character region delimiter stay
+                    // later rungs, rejected co-total by the shared readers.
                     Ok(Stmt::InspectTallyReplace {
                         source,
                         counter,
@@ -1583,6 +1653,7 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                         search,
                         replace,
                         replace_leading: repl_leading,
+                        replace_characters,
                         replace_region,
                     })
                 }
