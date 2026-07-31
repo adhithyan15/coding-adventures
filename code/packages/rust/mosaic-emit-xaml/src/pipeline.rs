@@ -780,7 +780,8 @@ struct PartStateStyle {
 /// A part-style entry keeps the already-lowered base attribute fragment
 /// together with the structured MSL state and transition data. Base-only
 /// consumers remain a cheap string lookup; native controls can additionally
-/// lower `state-when-*` predicates to WinUI VisualStates.
+/// lower `state-when-*` predicates and ButtonBase pointer hover to WinUI
+/// VisualStates.
 #[derive(Debug, Clone)]
 struct PartStyleEntry {
     base_fragment: String,
@@ -848,6 +849,18 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
     out
 }
 
+fn has_explicit_state_when(node: &LayoutNode, state_name: &str) -> bool {
+    let prop_name = format!("state-when-{state_name}");
+    node.props.iter().any(|prop| prop.name == prop_name)
+}
+
+fn button_base_supports_automatic_hover(xaml_tag: &str) -> bool {
+    matches!(
+        xaml_tag,
+        "Button" | "CheckBox" | "RadioButton" | "HyperlinkButton"
+    )
+}
+
 /// Register MSL state overrides for one native WinUI control.
 ///
 /// Each property gets its own VisualStateGroup. This is deliberate:
@@ -885,6 +898,15 @@ fn register_host_visual_states(
             continue;
         };
         state_layers.push((state_name, trigger_value, state_style));
+    }
+    if button_base_supports_automatic_hover(xaml_tag) && !has_explicit_state_when(node, "hover") {
+        if let Some(hover_style) = part.states.get("hover") {
+            state_layers.push((
+                "hover",
+                format!("{{Binding IsPointerOver, ElementName={target_name}}}"),
+                hover_style,
+            ));
+        }
     }
 
     let mut by_property: std::collections::BTreeMap<String, Vec<PendingXamlVisualState>> =
@@ -11594,6 +11616,155 @@ mod tests {
             r.xaml
         );
         assert!(!r.xaml.contains("x:Bind True"), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn button_base_hover_state_uses_native_pointer_binding() {
+        let c = component("HoverButton", vec![], vec![]);
+        let l = layout_with_root("HoverButton", styled_host_button(vec![]));
+        let s = StyleDef {
+            component_name: "HoverButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "background".to_string(),
+                    value: "#202020".to_string(),
+                }],
+                transitions: vec![transition("background", "80ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "hover".to_string(),
+                    props: vec![StyleProp {
+                        name: "background".to_string(),
+                        value: "#264f78".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains(
+                "<StateTrigger IsActive=\"{Binding IsPointerOver, ElementName=Button}\"/>"
+            ),
+            "built-in hover must bind directly to native ButtonBase pointer state:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "<Setter Target=\"Button.(Control.Background).(SolidColorBrush.Color)\" Value=\"#264f78\"/>"
+            ),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<VisualTransition GeneratedDuration=\"0:0:0.08\">"),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn button_base_hover_is_local_to_each_for_template_instance() {
+        let c = component(
+            "HoverRows",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "HoverRows",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                None,
+                vec![styled_host_button(vec![])],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "HoverRows".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "0.8".to_string(),
+                }],
+                transitions: Vec::new(),
+                states: vec![StateStyle {
+                    state: "hover".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "1".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains(
+                "<DataTemplate x:DataType=\"local:HoverRows_RowVm\">\n                <Grid>\n                    <VisualStateManager.VisualStateGroups>"
+            ),
+            "hover groups must live in the repeated row namescope:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "<StateTrigger IsActive=\"{Binding IsPointerOver, ElementName=Button}\"/>"
+            ),
+            "each template instance must bind to its own Button:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn explicit_hover_predicate_remains_author_controlled() {
+        let c = component(
+            "ManualHover",
+            vec![slot("force-hover", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "ManualHover",
+            styled_host_button(vec![LayoutProp {
+                name: "state-when-hover".to_string(),
+                value: LayoutPropValue::SlotRef("force-hover".to_string()),
+            }]),
+        );
+        let s = StyleDef {
+            component_name: "ManualHover".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: Vec::new(),
+                transitions: Vec::new(),
+                states: vec![StateStyle {
+                    state: "hover".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.8".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("<StateTrigger IsActive=\"{x:Bind ForceHover, Mode=OneWay}\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("Binding IsPointerOver"),
+            "explicit hover state must not install native pointer tracking:\n{}",
+            r.xaml
+        );
     }
 
     #[test]

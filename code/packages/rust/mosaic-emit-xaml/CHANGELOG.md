@@ -2,6 +2,16 @@
 
 ## [Unreleased] — VC2-xaml Grid: WinUI value translation + nested-For + per-column widths
 
+### Added - Native activation for MSL hover states
+
+WinUI output now activates UI15's built-in `state hover` blocks on Mosaic
+controls that lower to the native ButtonBase family: `HostButton`,
+`HostCheckbox`, `HostRadio`, and `HostLink`. The generated `StateTrigger`
+binds directly to the control's native `IsPointerOver` dependency property.
+Bindings inside a `For` remain in the DataTemplate namescope, so each repeated
+row owns independent pointer state. Existing explicit `state-when-hover`
+predicates remain author-controlled and do not install pointer tracking.
+
 ### Added - Native MSL states and transitions for Host controls
 
 `HostInput`, `HostButton`, `HostCheckbox`, `HostRadio`, `HostLink`, and
@@ -23,8 +33,9 @@ Supported easing lowerings are `linear`, `ease`, `ease-in`, `ease-out`, and
 `ease-in-out`. WinUI XAML has no arbitrary cubic-bezier
 `EasingFunctionBase`, so `cubic-bezier(...)` currently uses the closest
 native `CubicEase` curve; an exact Composition-API lowering remains a
-follow-up. Template-local Host controls inside `For` remain a follow-up
-because root-level VisualStates cannot target a DataTemplate namescope.
+follow-up. Template-local Host controls inside `For` keep their VisualStates
+inside the DataTemplate namescope so their triggers and targets remain
+row-local.
 
 ### Added - XAML host intent extension point
 
