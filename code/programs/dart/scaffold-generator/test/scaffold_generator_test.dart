@@ -1,12 +1,31 @@
 import 'dart:io';
 
-import 'package:scaffold_generator/scaffold_generator.dart';
+import 'package:scaffold_generator/src/scaffold_generator.dart';
 import 'package:test/test.dart';
 
 void writeFile(String repoRoot, String relativePath, String content) {
   final file = File('$repoRoot/$relativePath');
   file.parent.createSync(recursive: true);
   file.writeAsStringSync(content);
+}
+
+String readCapabilityFixture(String name) => File(
+      '../../../specs/fixtures/scaffold-generator/$name',
+    ).readAsStringSync();
+
+ProcessResult runDart(List<String> arguments, String workingDirectory) {
+  final result = Process.runSync(
+    Platform.resolvedExecutable,
+    arguments,
+    workingDirectory: workingDirectory,
+  );
+  expect(
+    result.exitCode,
+    0,
+    reason:
+        'dart ${arguments.join(' ')} failed in $workingDirectory\n${result.stdout}\n${result.stderr}',
+  );
+  return result;
 }
 
 void writeDartPackage(
@@ -67,6 +86,51 @@ void main() {
     });
   });
 
+  group('capability manifests', () {
+    test('renders the schema-v1 pure-library golden document', () {
+      expect(
+        capabilityManifestContents(PackageType.library, 'my-pkg'),
+        readCapabilityFixture('dart_library_required_capabilities.json'),
+      );
+    });
+
+    test('renders the schema-v1 stdout program golden document', () {
+      expect(
+        capabilityManifestContents(PackageType.program, 'build-helper'),
+        readCapabilityFixture('dart_program_required_capabilities.json'),
+      );
+    });
+  });
+
+  group('repository root', () {
+    late Directory tempDir;
+
+    setUp(() {
+      tempDir = Directory.systemTemp.createTempSync('dart-scaffold-root-');
+      Directory('${tempDir.path}/code').createSync();
+      File('${tempDir.path}/lessons.md').writeAsStringSync('# Lessons\n');
+    });
+
+    tearDown(() {
+      tempDir.deleteSync(recursive: true);
+    });
+
+    test('accepts only the explicit repository root', () {
+      expect(findRepoRoot(tempDir.path), tempDir.absolute.path);
+      expect(
+        () => findRepoRoot('${tempDir.path}/code'),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+
+    test('derives the default root from the generator package', () {
+      final script = Uri.file(
+        '${tempDir.path}/code/programs/dart/scaffold-generator/bin/scaffold_generator.dart',
+      );
+      expect(defaultRepoRoot(script), tempDir.path);
+    });
+  });
+
   group('Dart dependency parsing', () {
     late Directory tempDir;
     late String repoRoot;
@@ -99,6 +163,30 @@ void main() {
         'lexer',
         'parser',
       ]);
+    });
+
+    test('rejects untrusted transitive names before path resolution', () {
+      writeFile(
+        repoRoot,
+        'code/packages/dart/poisoned/pubspec.yaml',
+        '''
+name: coding_adventures_poisoned
+dependencies:
+  ../../../../outside:
+    path: ../../../../outside
+''',
+      );
+
+      expect(
+        () => transitiveClosure(<String>['poisoned'], repoRoot),
+        throwsA(
+          isA<ArgumentError>().having(
+            (error) => error.message,
+            'message',
+            contains('not valid kebab-case'),
+          ),
+        ),
+      );
     });
   });
 
@@ -151,6 +239,12 @@ void main() {
       expect(
         File('${targetDir.path}/test/nib_parser_test.dart').readAsStringSync(),
         contains('describePackage()'),
+      );
+      expect(
+        File(
+          '${targetDir.path}/required_capabilities.json',
+        ).readAsStringSync(),
+        capabilityManifestContents(PackageType.library, 'nib-parser'),
       );
     });
 
@@ -209,6 +303,12 @@ void main() {
         File('${targetDir.path}/pubspec.yaml').readAsStringSync(),
         contains('path: ../../../packages/dart/lexer'),
       );
+      expect(
+        File(
+          '${targetDir.path}/required_capabilities.json',
+        ).readAsStringSync(),
+        capabilityManifestContents(PackageType.program, 'nib-demo'),
+      );
     });
 
     test('renders dry-run output for a scaffold plan', () {
@@ -228,8 +328,58 @@ void main() {
       final preview = renderDryRun(plan);
       expect(preview, contains('Would create'));
       expect(preview, contains('pubspec.yaml'));
+      expect(preview, contains('required_capabilities.json'));
       expect(preview, contains('Transitive Dart dependencies'));
     });
+
+    test(
+      'generated library and program pass the real Dart toolchain',
+      () {
+        final libraryPlan = scaffoldPlan(
+          repoRoot: repoRoot,
+          options: const CliOptions(
+            packageName: 'generated-library',
+            packageType: PackageType.library,
+            languages: <String>['dart'],
+            directDependencies: <String>[],
+            layer: 1,
+            description: 'Generated downstream library.',
+            dryRun: false,
+          ),
+        );
+        final programPlan = scaffoldPlan(
+          repoRoot: repoRoot,
+          options: const CliOptions(
+            packageName: 'generated-program',
+            packageType: PackageType.program,
+            languages: <String>['dart'],
+            directDependencies: <String>[],
+            layer: null,
+            description: 'Generated downstream program.',
+            dryRun: false,
+          ),
+        );
+        writePlan(libraryPlan);
+        writePlan(programPlan);
+
+        for (final target in <String>[
+          libraryPlan.targetDir,
+          programPlan.targetDir,
+        ]) {
+          runDart(<String>['pub', 'get', '--offline'], target);
+          runDart(<String>['analyze'], target);
+          runDart(<String>['test'], target);
+        }
+
+        final execution = runDart(
+          <String>['run', 'bin/generated_program.dart'],
+          programPlan.targetDir,
+        );
+        expect(
+            execution.stdout, contains('TODO: implement generated-program.'));
+      },
+      timeout: const Timeout(Duration(minutes: 2)),
+    );
   });
 
   group('CLI entrypoints', () {
@@ -253,7 +403,7 @@ void main() {
     test('dry-run uses the CLI spec and leaves the tree untouched', () {
       final stdoutBuffer = StringBuffer();
       final stderrBuffer = StringBuffer();
-      final exitCode = run(
+      final exitCode = runWithOverrides(
         <String>[
           'nib-lexer',
           '--depends-on',
@@ -280,7 +430,7 @@ void main() {
 
     test('reports invalid kebab-case names', () {
       final stderrBuffer = StringBuffer();
-      final exitCode = run(
+      final exitCode = runWithOverrides(
         <String>['NibLexer'],
         repoRoot: repoRoot,
         err: stderrBuffer,

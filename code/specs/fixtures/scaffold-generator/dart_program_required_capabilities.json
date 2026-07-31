@@ -7,8 +7,8 @@
       "category": "stdout",
       "action": "write",
       "target": "*",
-      "justification": "Writes the generated program description to standard output."
+      "justification": "Writes the generated program starter message to standard output."
     }
   ],
-  "justification": "Generated program writes its starter description to standard output and uses no other OS capabilities."
+  "justification": "Generated program writes its starter message to standard output and uses no other OS capabilities."
 }
