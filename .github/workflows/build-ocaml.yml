@@ -59,7 +59,7 @@ jobs:
           cp -R code/specs/fixtures/scaffold-generator/ocaml-library/. "$fixture/"
           cd "$fixture"
           opam install . --deps-only --with-test --with-dev-setup --yes --require-checksums
-          opam lock coding-adventures-my-pkg.opam
+          opam lock .
           opam list --installed --columns=name,version --normalise --color=never \
             | sed -e '/^#/d' -e '/^[[:space:]]*$/d' \
                   -e 's/[[:space:]][[:space:]]*/ /g' \
