@@ -106,9 +106,10 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 31, 2026 at `b6d3c60b1` after merged OCaml
-toolchain work and the Rust `smart-home-matter-integration`. It contains 1,198
-normalized implementation identities across 4,340 established-lane package
+inventory was regenerated on July 31, 2026 at `432e2b638` after merged OCaml
+toolchain work, the Rust `smart-home-matter-integration`, and the Rust
+`smart-home-home-assistant-migration`. It contains 1,199 normalized
+implementation identities across 4,341 established-lane package
 slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -116,9 +117,9 @@ slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 277 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 748 | 10,472 |
+| Present in one language | 749 | 10,486 |
 
-The loop must not start by attempting 10,472 singleton ports. It should finish
+The loop must not start by attempting 10,486 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The July 31 lane audit is:
@@ -137,7 +138,7 @@ The July 31 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 963 | 0 | 100% |
+| Rust | 964 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
