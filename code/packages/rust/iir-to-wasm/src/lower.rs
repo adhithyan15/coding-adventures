@@ -674,13 +674,17 @@ pub fn hint_to_value_type(hint: &str) -> Option<ValueType> {
 
 /// The WASM value type + byte size for an E5 array element type hint. The
 /// 64-bit elements (`i64` / `f64`) back the ALGOL frontend's `integer` and
-/// `real` arrays; the 4-byte `str` element (E4d-BA-arr) backs BASIC string
-/// arrays.  Any other element produces a clear error rather than a silently
+/// `real` arrays; `bool` and the E4d-BA-arr `str` handle both use a four-byte
+/// `i32` cell. Any other element produces a clear error rather than a silently
 /// wrong store width.
 fn wasm_array_elem(elem: &str, fn_name: &str) -> Result<(ValueType, u32), IIRWasmError> {
     match elem {
         "i64" | "u64" => Ok((ValueType::I64, 8)),
         "f64" => Ok((ValueType::F64, 8)),
+        // A `bool` is represented by an i32 local on WASM. Keep each element a
+        // full i32 cell so ordinary `i32.load`/`i32.store` preserve adjacent
+        // elements rather than overlapping a compact byte stride.
+        "bool" => Ok((ValueType::I32, 4)),
         // E4d-BA-arr: a `str` element is an E4-dyn runtime string handle — a
         // 4-byte `i32` linear-memory offset (the same representation a `str`
         // local uses via `hint_to_value_type`), so a string array is a flat
@@ -689,7 +693,7 @@ fn wasm_array_elem(elem: &str, fn_name: &str) -> Result<(ValueType, u32), IIRWas
         "str" => Ok((ValueType::I32, 4)),
         _ => Err(IIRWasmError::UnsupportedType {
             function: fn_name.to_string(),
-            type_hint: format!("array element {elem:?} (only i64/f64/str elements on WASM so far)"),
+            type_hint: format!("array element {elem:?} (only i64/f64/bool/str elements on WASM so far)"),
         }),
     }
 }
@@ -5544,5 +5548,10 @@ mod tests {
     #[test]
     fn str_array_elem_is_i32_4_bytes() {
         assert_eq!(wasm_array_elem("str", "main").unwrap(), (ValueType::I32, 4));
+    }
+
+    #[test]
+    fn boolean_array_elem_is_i32_4_bytes() {
+        assert_eq!(wasm_array_elem("bool", "main").unwrap(), (ValueType::I32, 4));
     }
 }

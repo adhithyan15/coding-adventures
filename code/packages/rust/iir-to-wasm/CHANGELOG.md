@@ -1,5 +1,11 @@
 # Changelog — iir-to-wasm
 
+## [0.44.0] — 2026-07-31 (boolean array elements)
+
+`array<bool>` now uses full-width i32 cells in linear memory. The four-byte
+stride preserves the existing i32 load/store representation without allowing
+adjacent boolean writes to overlap.
+
 ## [0.43.0] — 2026-07-30 (runtime `str_concat` allocation discovery)
 
 The feature-discovery pass now marks linear memory and `__array_bump` as

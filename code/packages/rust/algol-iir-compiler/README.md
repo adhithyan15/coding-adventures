@@ -114,7 +114,7 @@ shared `int_to_real` IIR conversion: mixed numeric arithmetic and comparisons,
 all accept integer inputs. `div` and `mod` remain integer-only.
 
 **Arrays** lower and run on **all seven standard backends** (LANG-FULL E5 /
-AL2). `integer array A[1:10]` (and `real` or `string` arrays) becomes an
+AL2). `integer array A[1:10]` (and `real`, `boolean`, or `string` arrays) becomes an
 `alloc_array` sized at run time from the bounds (`upper - lower + 1`, so dynamic
 bounds `A[lo:hi]` work); `A[i]` reads/writes become bounds-checked `array_get`/
 `array_set` with the index translated to the IIR's 0-based form `i - lower`.
@@ -130,7 +130,7 @@ Array `value` parameters pass the caller's storage handle plus the complete
 rank-specific descriptor. The formal's rank is inferred from indexed uses in
 its procedure body: a 2-D formal `a[i,j]` receives its two lower bounds and
 outer row-major stride beside the `array<T>` handle, and writes remain visible
-to the actual array. This works for `integer`, `real`, and `string` elements;
+to the actual array. This works for `integer`, `real`, `boolean`, and `string` elements;
 the formal and actual must have matching ranks. A never-indexed formal retains
 the compatible 1-D descriptor shape. A nested procedure can capture an outer
 array formal too: the outer procedure publishes the handle and complete
@@ -154,6 +154,6 @@ element such as `other[j]` performs that second lookup in the same computed-goto
 chain. Cyclic switch elements are rejected explicitly because they cannot be
 finitely expanded into portable IIR control flow.
 
-Unsupported ALGOL 60 features — non-numeric/non-string arrays, dynamic string
-variables, and by-name (non-`value`) parameters — return explicit compiler
-errors.
+Unsupported ALGOL 60 features — arrays outside the supported integer/real/
+boolean/string element set, dynamic string variables, and by-name (non-`value`)
+parameters — return explicit compiler errors.

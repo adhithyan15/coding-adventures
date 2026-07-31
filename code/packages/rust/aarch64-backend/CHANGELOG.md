@@ -1,5 +1,10 @@
 # Changelog — `aarch64-backend`
 
+## 0.36.0 - 2026-07-31 - boolean array elements
+
+The native array element-size helper now accepts `bool`, using the backend's
+existing fixed word cell representation for erased `array<T>` values.
+
 ## 0.35.0 - 2026-07-30 - runtime string ordering builtin
 
 Register `str_cmp` as a two-argument, i64-returning `V1_BUILTINS` helper. The

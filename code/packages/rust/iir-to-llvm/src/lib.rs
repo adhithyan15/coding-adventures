@@ -2905,6 +2905,12 @@ fn lower_array_get(
     out.push_str(&format!("  {ep} = getelementptr {elem_ty}, ptr {handle}, i64 {idx}\n"));
     out.push_str(&format!("  %{dest} = load {elem_ty}, ptr {ep}\n"));
     state.env.insert(dest.clone(), format!("%{dest}"));
+    if elem_ty == "i1" {
+        // Boolean loads are already an LLVM `i1`. Keep the parallel boolean
+        // environment in sync so a following ALGOL `and`/`or` or branch uses
+        // the loaded bit directly instead of attempting `trunc i64 %value`.
+        state.env_i1.insert(dest.clone(), format!("%{dest}"));
+    }
     Ok(())
 }
 
@@ -3134,15 +3140,24 @@ fn lower_cmp(
     // A comparison's type_hint is normally its **operand** type (`i64`/`f64`/…),
     // and LLVM types the `icmp`/`fcmp` by it. But `lower_dynamic_arith` tags a
     // dynamic `DynValue` comparison result `"bool"` even though its operands are
-    // the unboxed `i64`s — so a `"bool"` hint here means "compare two `i64`s,
+    // the unboxed `i64`s — so a `"bool"` hint normally means "compare two `i64`s,
     // yielding an i1", not "compare two i1s". Without this, LLVM emitted
     // `icmp i1 %x` on a 64-bit `%x` (`'%x' defined with type 'i64' but expected
     // 'i1'`), blocking dynamic comparisons — E6d-6 match/union tag tests and the
     // E6d-7 closure dispatcher — on the LLVM column. (Numeric/E3 comparisons
     // carry the real operand type; the `"i1"` hint is a distinct, legitimate
     // "produce an i1, skip the zext" request — both are left untouched.)
+    let has_i1_source = instr.srcs.iter().any(|operand| match operand {
+        Operand::Var(name) => state.env_i1.contains_key(name),
+        _ => false,
+    });
     let cmp_hint: &str = match instr.type_hint.as_str() {
+        // ALGOL boolean-array loads are real i1 values. Preserve that width
+        // through direct equality and `not` (which uses an i64 hint for scalar
+        // slot compatibility), rather than comparing an i1 register as i64.
+        "bool" if has_i1_source => "i1",
         "bool" => "i64",
+        "i64" if has_i1_source => "i1",
         other => other,
     };
     let operand_ty = llvm_type_for(cmp_hint, state.fn_name)?;

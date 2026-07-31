@@ -679,10 +679,10 @@ impl Compiler {
         };
         if !matches!(
             elem_ty,
-            ScalarType::Integer | ScalarType::Real | ScalarType::String
+            ScalarType::Integer | ScalarType::Real | ScalarType::Boolean | ScalarType::String
         ) {
             return Err(CompileError::Unsupported(format!(
-                "{} arrays (only integer/real/string element types so far)",
+                "{} arrays (only integer/real/boolean/string element types so far)",
                 elem_ty.name()
             )));
         }
@@ -1139,7 +1139,7 @@ impl Compiler {
     ///
     /// On the supported slice every parameter must be a `value` parameter
     /// (call-by-name / Jensen's device is not modelled), and every parameter
-    /// must be specified exactly once. Scalar formals and integer/real/string
+    /// must be specified exactly once. Scalar formals and integer/real/boolean/string
     /// array descriptors are supported; an array formal's rank is inferred from
     /// subscripted uses in its body. A missing heading type is a proper procedure
     /// and lowers to an IIR `void` function.
@@ -1327,9 +1327,15 @@ impl Compiler {
                     elem_ty,
                     dimensions,
                 } => {
-                    if !matches!(*elem_ty, ScalarType::Integer | ScalarType::Real | ScalarType::String) {
+                    if !matches!(
+                        *elem_ty,
+                        ScalarType::Integer
+                            | ScalarType::Real
+                            | ScalarType::Boolean
+                            | ScalarType::String
+                    ) {
                         return Err(CompileError::Unsupported(format!(
-                            "{} array parameters (only integer/real/string element types so far)",
+                            "{} array parameters (only integer/real/boolean/string element types so far)",
                             elem_ty.name()
                         )));
                     }
@@ -5659,6 +5665,28 @@ mod tests {
     }
 
     #[test]
+    fn array_parameter_accepts_boolean_elements() {
+        let src = "begin boolean array flags[-1:0]; integer result; \
+                   procedure setflags(a); value a; boolean array a; \
+                   begin a[-1] := true; a[0] := false end; \
+                   setflags(flags); if flags[-1] and not flags[0] then result := 42 else result := 0 end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "boolean_array_param").expect("compiles");
+        let proc_ = module
+            .get_function("setflags")
+            .expect("boolean array procedure exists");
+        assert_eq!(
+            proc_.params,
+            vec![
+                ("a".to_string(), "array<bool>".to_string()),
+                (array_param_lower_slot("a"), "i64".to_string()),
+            ],
+            "boolean array formal must preserve the descriptor element type"
+        );
+    }
+
+    #[test]
     fn captured_array_actual_reloads_its_descriptor_for_array_parameter() {
         let src = "begin integer array values[4:5, -2:-1]; integer result; \
                    procedure seed(a); value a; integer array a; \
@@ -6180,6 +6208,31 @@ mod tests {
         let src = "begin integer array A[1:3]; integer result; \
                    A[2] := 42; result := A[2] end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    /// Boolean arrays use the same bounds-aware E5 descriptor as numeric arrays
+    /// while keeping their `bool` element type through the load/store path.
+    #[test]
+    fn boolean_array_store_and_load_roundtrips() {
+        let src = "begin boolean array flags[-1:0]; integer result; \
+                   flags[-1] := true; flags[0] := false; \
+                   if flags[-1] and not flags[0] then result := 42 else result := 0 end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "boolean_array").expect("compiles");
+        let main = module.get_function("main").expect("main exists");
+        assert!(
+            main.instructions.iter().any(|instr| {
+                instr.op == "alloc_array" && instr.type_hint == "array<bool>"
+            }),
+            "boolean declaration must allocate an array<bool>"
+        );
+        assert!(
+            main.instructions.iter().any(|instr| {
+                instr.op == "array_get" && instr.type_hint == "bool"
+            }),
+            "boolean read must retain the bool element type"
+        );
     }
 
     /// The 1-based ALGOL lower bound is honoured: writing `A[1]` and reading it

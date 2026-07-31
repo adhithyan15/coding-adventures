@@ -1914,6 +1914,21 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — boolean E5 arrays carry `bool` elements through a typed array
+    // value parameter rather than silently widening to integer storage. The
+    // non-unit lower bound proves the descriptor crosses the call and the normal
+    // ALGOL index translation still applies before `array_get` feeds boolean
+    // control flow. `true and not false` selects the observable 42 result.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean array flags[-1:0]; integer result; \
+               procedure setflags(a); value a; boolean array a; \
+               begin a[-1] := true; a[0] := false end; \
+               setflags(flags); if flags[-1] and not flags[0] then result := 42 else result := 0 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — *`real` array* (LANG-FULL AL9-a — real-typed E5 arrays).  The E5
     // array substrate (`alloc_array`/`array_set`/`array_get`) uses the IIR
     // type_hint to decide the element width: `f64` instead of `i64`.  BASIC's BA3
@@ -5268,6 +5283,36 @@ fn algol_nested_procedure_captures_scalar_formal_on_every_available_standard_bac
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but nested scalar-formal capture did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_boolean_array_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("boolean array flags[-1:0]")
+                && program.src.contains("procedure setflags(a)")
+        })
+        .expect("the ALGOL boolean-array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but boolean-array execution did not complete"
             );
             continue;
         };

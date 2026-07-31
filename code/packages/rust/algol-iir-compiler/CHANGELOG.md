@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.42.0 — 2026-07-31 — boolean arrays
+
+`boolean array` declarations and boolean array `value` formals now lower to
+the shared bounds-checked `array<bool>` descriptor path. Reads retain their
+boolean element type for `not` and boolean operations, and
+formal writes continue to alias the caller's storage across declared bounds.
+
 ## 0.41.0 — 2026-07-31 — nested scalar-formal capture
 
 A nested procedure may now read and assign an enclosing scalar `value`
