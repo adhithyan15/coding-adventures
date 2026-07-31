@@ -106,9 +106,10 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 31, 2026 at `432e2b638` after merged OCaml
+inventory was regenerated on July 31, 2026 at `2e067105d` after merged OCaml
 toolchain work, the Rust `smart-home-matter-integration`, and the Rust
-`smart-home-home-assistant-migration`. It contains 1,199 normalized
+`smart-home-home-assistant-migration`, plus the merged Algol, Mosaic, and
+build-tool status-normalization slices. It contains 1,199 normalized
 implementation identities across 4,341 established-lane package
 slots and found zero canonical collisions or unknown language buckets:
 
@@ -884,10 +885,10 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 553 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 554 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30-31 inventories added thirteen Rust singleton identities that now
+The July 30-31 inventories added fourteen Rust singleton identities that now
 have explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
@@ -905,6 +906,13 @@ discovery/topic/entity/value/payload transforms are candidates for a separately
 fixture-driven portable core. `venture-browser-macos` is an Apple-native
 AppKit/CoreText/Metal host whose expected classification is `native-source`,
 not a blind 14-lane port.
+
+The fourteenth identity, `smart-home-home-assistant-migration`, is a mixed
+boundary rather than an automatic fifteen-lane port. Its deterministic export
+parsing, normalization, planning, diagnostics, IDs, fingerprints, and receipts
+are portable-core candidates; runtime application, atomic filesystem writes,
+CLI behavior, three Rust-only runtime dependencies, and the missing capability
+manifest require explicit host-boundary and authority classification.
 
 The new `smart-home-matter-integration` is also a mixed split candidate rather
 than a native-source exception: endpoint projection, report normalization, and
@@ -1103,14 +1111,32 @@ Delivery order:
 14. Gate completion in CI: every supported implementation runs the same
    conformance corpus on its applicable operating systems.
 
-Ready-for-review PR #9368 is the selected repository-owned build-tool slice,
-`build-tool-execution-status-normalization`. It replaces the duplicated
+Merged PR #9368 completed the repository-owned
+`build-tool-execution-status-normalization` slice. It replaces the duplicated
 `dependency-skipped` schema term with normative `dep-skipped` and closes
 contradictory command exit codes, package return codes, dry-run states, overall
 outcomes, duplicate result identities, fail-stop ordering, and dependency
 propagation. This bounded schema-and-validator repair lands before execution
 cases, trusted execution, the Go oracle, OCaml's build substrate, or adapter
 work consumes those records.
+
+The selected successor is `build-tool-execution-case-snapshot`. It defines the
+typed selector and held-snapshot boundary that is currently only prose, opens
+one bounded direct-member corpus snapshot through a retained no-follow root,
+and preserves the exact hashed bytes for later execution while rejecting path,
+rename, symlink, hardlink, case/Unicode-alias, and post-digest substitution.
+This process-free slice grants no execution authority and marks no backend or
+adapter ready.
+
+The post-#9368 dependency audit also found that trusted authority requires one
+held case and one selected in-image adapter even though both checked-in
+inventories are empty and normal adapter work sits downstream of the execution
+semantics corpus. The new `build-tool-bootstrap-execution-fixture` item follows
+the snapshot, status normalization, and Linux OCI enforcing boundary, then
+lands one inert schema-valid case plus one untrusted digest-bindable bootstrap
+adapter without claiming conformance or execution permission. Trusted authority
+and Linux trusted execution explicitly depend on that bootstrap; the full
+cross-platform corpus remains downstream of every platform sandbox boundary.
 
 Pull-request CI may validate the policy, schemas, digests, and fake-backend
 tests, but it must not authorize execution from branch-modifiable code or

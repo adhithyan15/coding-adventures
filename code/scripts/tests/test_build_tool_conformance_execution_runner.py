@@ -4,6 +4,7 @@ import copy
 import io
 import json
 import sys
+import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
@@ -17,6 +18,7 @@ import build_tool_conformance_execution as execution
 
 FIXTURE_ROOT = bootstrap.DEFAULT_FIXTURE_ROOT
 EMPTY_DIGEST = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+
 
 class ExecutionPolicyRunnerTests(unittest.TestCase):
     def test_checked_in_contract_validates_without_execution(self) -> None:
@@ -198,6 +200,28 @@ class ExecutionPolicyRunnerTests(unittest.TestCase):
 
         with redirect_stderr(io.StringIO()):
             self.assertEqual(execution.main([]), 2)
+
+    def test_cli_errors_redact_host_paths(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            secret_root = Path(directory) / "host-secret-root"
+            stderr = io.StringIO()
+            with redirect_stderr(stderr):
+                exit_code = execution.main(
+                    [
+                        "validate-contract",
+                        "--fixture-root",
+                        str(secret_root),
+                    ]
+                )
+        self.assertEqual(exit_code, 2)
+        error = json.loads(stderr.getvalue())
+        self.assertEqual(error["code"], "DOCUMENT_READ_FAILED")
+        self.assertEqual(
+            error["message"],
+            "trusted-execution contract validation failed",
+        )
+        self.assertNotIn(str(secret_root), stderr.getvalue())
+        self.assertNotIn(Path(directory).name, stderr.getvalue())
 
     def test_fixture_arguments_environment_and_manifest_never_select_authority(
         self,

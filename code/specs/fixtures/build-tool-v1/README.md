@@ -83,6 +83,21 @@ unavailable. The empty `execution-cases/*.json` set therefore has the standard
 empty SHA-256 digest. Execution cases are added only after an enforcing backend
 is reviewed.
 
+The process-free execution validator captures that corpus once as a typed,
+immutable exact-byte snapshot. POSIX uses retained directory descriptors;
+Windows requires a fixed non-remappable local volume, retains a non-reparse
+directory chain, enumerates the root by handle, and matches each member's
+volume and file identity while topology changes are blocked. Direct
+lowercase-`.json` names must be portable, exact NFC, unique after case folding,
+regular, singly linked, bounded, and identity-stable. Digesting, semantic
+validation, and typed selection all consume the retained bytes instead of
+reopening a pathname. A successful selection binds the canonical member name,
+corpus digest, and those exact bytes, but it grants no authority and does not
+make an adapter or backend ready. Capture admits at most 4096 directory
+entries, 256 corpus members, 2000000 raw bytes per member, and 16777216 raw
+bytes across the retained snapshot. Only the validating factory constructs
+member, snapshot, and selection records; callers cannot supply a digest.
+
 `linux-oci-backend.schema.json` closes the separate immutable identity document
 for the first Linux backend tranche. It binds exact statically linked rootless
 Podman, `crun`, Conmon,
@@ -256,6 +271,13 @@ The corpus now closes all process-free v1 domains:
 Execution now has a closed data model and authority policy, but no execution
 backend. This distinction is deliberate: schemas and digests are prerequisites
 for a sandbox, not evidence that one exists.
+
+The exact-byte corpus snapshot closes only a repository read boundary. Unsafe,
+outside, case-alias, and normalization-alias selectors fail before lookup;
+linked, reparse, multiply linked, identity-aliased, changed, or oversized
+members fail during capture. Later pathname replacement cannot change selected
+bytes because selection reads only the immutable snapshot. No execution case is
+decoded by an authority verifier, and no snapshot digest is authorization.
 
 The platform delivery order is explicit:
 

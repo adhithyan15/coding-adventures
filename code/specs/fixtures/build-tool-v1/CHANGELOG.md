@@ -2,6 +2,20 @@
 
 ## 2026-07-31
 
+- Replaced pathname `lstat`/glob/reopen execution-corpus reads with one
+  retained-root, bounded, exact-byte snapshot on POSIX and Windows.
+- Added frozen typed member, snapshot, and selection records so the selected
+  case bytes are exactly the bytes covered by the framed corpus digest.
+- Made those typed records factory-only and added fixed enumeration, member,
+  per-case, and aggregate-byte ceilings so callers cannot forge a digest-bound
+  record or grow an unbounded in-memory snapshot.
+- Required Windows snapshots to come from a fixed non-remappable local volume,
+  bound member volume/file identities to the retained root enumeration, and
+  made CLI error JSON host-path-independent.
+- Added stable rejection of unsafe or aliased selectors, case/Unicode filename
+  collisions, links and reparses, multiply linked or identity-aliased members,
+  unstable reads, changed directory membership, and post-digest pathname
+  substitution without granting execution authority.
 - Replaced the duplicated `dependency-skipped` execution status with the
   normative `dep-skipped` vocabulary.
 - Closed command status/exit-code and package status/return-code combinations

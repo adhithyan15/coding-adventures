@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import shutil
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
@@ -107,7 +109,8 @@ class ExecutionSchemaTests(unittest.TestCase):
 
     def projection(self, case: dict[str, object]) -> dict[str, object]:
         expected = case["expected"]
-        assert isinstance(expected, dict)
+        if not isinstance(expected, dict):
+            self.fail("base execution case expected record is not an object")
         return {
             "domain": case["domain"],
             "outcome": expected["outcome"],
@@ -473,6 +476,327 @@ class ExecutionSchemaTests(unittest.TestCase):
                 execution.framed_corpus_digest([("a.json", b'{ "changed": true }')]),
             )
 
+    def test_corpus_snapshot_retains_exact_hashed_bytes_after_path_mutation(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            case_path = root / "selected.json"
+            original = b'{"value":"approved"}'
+            case_path.write_bytes(original)
+
+            snapshot = execution.capture_execution_case_snapshot(root)
+            expected_digest = execution.framed_corpus_digest(
+                [("selected.json", original)]
+            )
+            self.assertEqual(snapshot.corpus_sha256, expected_digest)
+            self.assertEqual(len(snapshot.members), 1)
+            self.assertEqual(
+                snapshot.members[0].relative_path,
+                "selected.json",
+            )
+            self.assertEqual(snapshot.members[0].raw, original)
+
+            case_path.write_bytes(b'{"value":"changed-after-capture"}')
+            case_path.rename(root / "renamed.json")
+            selection = snapshot.select("selected.json")
+            self.assertEqual(selection.relative_path, "selected.json")
+            self.assertEqual(selection.corpus_sha256, expected_digest)
+            self.assertEqual(selection.raw, original)
+
+            with self.assertRaises(bootstrap.ConformanceError) as raised:
+                snapshot.select("renamed.json")
+            self.assertEqual(raised.exception.code, "EXECUTION_CASE_NOT_FOUND")
+
+    def test_corpus_snapshot_canonicalizes_filesystem_enumeration_order(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "z-last.json").write_bytes(b"z")
+            (root / "a-first.json").write_bytes(b"a")
+            snapshot = execution.capture_execution_case_snapshot(root)
+            self.assertEqual(
+                tuple(member.relative_path for member in snapshot.members),
+                ("a-first.json", "z-last.json"),
+            )
+            self.assertEqual(
+                execution._execution_corpus_entries(root),
+                [("a-first.json", b"a"), ("z-last.json", b"z")],
+            )
+            self.assertEqual(
+                execution._read_raw_regular(root / "a-first.json"),
+                b"a",
+            )
+
+    def test_corpus_snapshot_rejects_invalid_limits_names_and_roots(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "oversized.json").write_bytes(b"12")
+            with self.assertRaises(bootstrap.ConformanceError) as raised:
+                execution.capture_execution_case_snapshot(root, max_bytes=1)
+            self.assertEqual(
+                raised.exception.code,
+                "EXECUTION_CORPUS_FILE_TOO_LARGE",
+            )
+
+            for invalid_limit in (-1, True, 1.5):
+                with self.subTest(invalid_limit=invalid_limit):
+                    with self.assertRaises(bootstrap.ConformanceError) as raised:
+                        execution.capture_execution_case_snapshot(  # type: ignore[arg-type]
+                            root,
+                            max_bytes=invalid_limit,
+                        )
+                    self.assertEqual(
+                        raised.exception.code,
+                        "EXECUTION_CORPUS_LIMIT_INVALID",
+                    )
+            with self.assertRaises(bootstrap.ConformanceError) as raised:
+                execution.capture_execution_case_snapshot(
+                    root,
+                    max_bytes=execution.MAX_EXECUTION_CASE_BYTES + 1,
+                )
+            self.assertEqual(
+                raised.exception.code,
+                "EXECUTION_CORPUS_LIMIT_INVALID",
+            )
+
+        with self.assertRaises(bootstrap.ConformanceError) as raised:
+            execution.snapshot_from_entries([("case\ud800.json", b"{}")])
+        self.assertEqual(
+            raised.exception.code,
+            "EXECUTION_CORPUS_PATH_UNSAFE",
+        )
+
+        with self.assertRaises(bootstrap.ConformanceError) as raised:
+            execution._validated_execution_case_names(["Case.json", "case.json"])
+        self.assertEqual(
+            raised.exception.code,
+            "EXECUTION_CORPUS_PATH_DUPLICATE",
+        )
+        with self.assertRaises(bootstrap.ConformanceError) as raised:
+            execution._validated_execution_case_names(["Straße.json", "strasse.json"])
+        self.assertEqual(
+            raised.exception.code,
+            "EXECUTION_CORPUS_PATH_DUPLICATE",
+        )
+
+        with self.assertRaises(bootstrap.ConformanceError) as raised:
+            execution._lexical_absolute_case_root(Path("child/../cases"))
+        self.assertEqual(
+            raised.exception.code,
+            "EXECUTION_CORPUS_DIRECTORY_INVALID",
+        )
+
+    def test_corpus_snapshot_selector_rejects_outside_and_alias_names(self) -> None:
+        snapshot = execution.snapshot_from_entries([("Case.json", b"{}")])
+
+        for unsafe in (
+            "../Case.json",
+            "nested/Case.json",
+            r"nested\Case.json",
+            "Case.JSON",
+            "C:Case.json",
+            "",
+        ):
+            with self.subTest(unsafe=unsafe):
+                with self.assertRaises(bootstrap.ConformanceError) as raised:
+                    snapshot.select(unsafe)
+                self.assertEqual(
+                    raised.exception.code,
+                    "EXECUTION_CASE_SELECTOR_UNSAFE",
+                )
+
+        with self.assertRaises(bootstrap.ConformanceError) as raised:
+            snapshot.select("case.json")
+        self.assertEqual(raised.exception.code, "EXECUTION_CASE_SELECTOR_ALIAS")
+
+        unicode_snapshot = execution.snapshot_from_entries([("é.json", b"{}")])
+        with self.assertRaises(bootstrap.ConformanceError) as raised:
+            unicode_snapshot.select("e\u0301.json")
+        self.assertEqual(
+            raised.exception.code,
+            "EXECUTION_CASE_SELECTOR_ALIAS",
+        )
+
+    def test_corpus_snapshot_rejects_casefold_aliases_and_non_bytes(self) -> None:
+        with self.assertRaises(bootstrap.ConformanceError) as raised:
+            execution.snapshot_from_entries(
+                [("Case.json", b"{}"), ("case.json", b"{}")]
+            )
+        self.assertEqual(
+            raised.exception.code,
+            "EXECUTION_CORPUS_PATH_DUPLICATE",
+        )
+
+        with self.assertRaises(bootstrap.ConformanceError) as raised:
+            execution.snapshot_from_entries([("case.json", bytearray(b"{}"))])  # type: ignore[list-item]
+        self.assertEqual(
+            raised.exception.code,
+            "EXECUTION_CORPUS_BYTES_INVALID",
+        )
+
+    def test_corpus_snapshot_factories_enforce_closed_types_and_aggregate_limits(
+        self,
+    ) -> None:
+        for constructor, arguments in (
+            (
+                execution.ExecutionCaseMember,
+                {"relative_path": "case.json", "raw": b"forged"},
+            ),
+            (
+                execution.ExecutionCaseSnapshot,
+                {"members": ()},
+            ),
+            (
+                execution.ExecutionCaseSelection,
+                {
+                    "relative_path": "case.json",
+                    "corpus_sha256": "0" * 64,
+                    "raw": b"forged",
+                },
+            ),
+        ):
+            with (
+                self.subTest(constructor=constructor.__name__),
+                self.assertRaises(TypeError),
+            ):
+                constructor(**arguments)
+
+        too_many = (
+            (f"case-{index:03d}.json", b"")
+            for index in range(execution.MAX_EXECUTION_CORPUS_MEMBERS + 1)
+        )
+        with self.assertRaises(bootstrap.ConformanceError) as raised:
+            execution.snapshot_from_entries(too_many)
+        self.assertEqual(
+            raised.exception.code,
+            "EXECUTION_CORPUS_MEMBER_LIMIT_EXCEEDED",
+        )
+
+        with (
+            mock.patch.object(
+                execution,
+                "MAX_EXECUTION_CASE_BYTES",
+                3,
+            ),
+            self.assertRaises(bootstrap.ConformanceError) as raised,
+        ):
+            execution.snapshot_from_entries([("case.json", b"1234")])
+        self.assertEqual(
+            raised.exception.code,
+            "EXECUTION_CORPUS_FILE_TOO_LARGE",
+        )
+
+        with (
+            mock.patch.object(
+                execution,
+                "MAX_EXECUTION_CORPUS_TOTAL_BYTES",
+                3,
+            ),
+            self.assertRaises(bootstrap.ConformanceError) as raised,
+        ):
+            execution.snapshot_from_entries([("a.json", b"12"), ("b.json", b"34")])
+        self.assertEqual(
+            raised.exception.code,
+            "EXECUTION_CORPUS_AGGREGATE_TOO_LARGE",
+        )
+
+        too_many_directory_entries = (
+            f"ignored-{index}.txt"
+            for index in range(execution.MAX_EXECUTION_DIRECTORY_ENTRIES + 1)
+        )
+        with self.assertRaises(bootstrap.ConformanceError) as raised:
+            execution._validated_execution_case_names(too_many_directory_entries)
+        self.assertEqual(
+            raised.exception.code,
+            "EXECUTION_CORPUS_ENUMERATION_LIMIT_EXCEEDED",
+        )
+
+    def test_corpus_snapshot_detects_file_and_directory_change_races(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            case_path = root / "case.json"
+            case_path.write_bytes(b"{}")
+            before = case_path.stat()
+            changed = os.stat_result(
+                (
+                    before.st_mode,
+                    before.st_ino,
+                    before.st_dev,
+                    before.st_nlink,
+                    before.st_uid,
+                    before.st_gid,
+                    before.st_size,
+                    before.st_atime,
+                    before.st_mtime + 1,
+                    before.st_ctime,
+                )
+            )
+            with (
+                mock.patch.object(
+                    execution.os,
+                    "fstat",
+                    side_effect=[before, changed],
+                ),
+                self.assertRaises(bootstrap.ConformanceError) as raised,
+            ):
+                execution._read_raw_regular_bound(case_path)
+            self.assertEqual(
+                raised.exception.code,
+                "EXECUTION_CORPUS_FILE_CHANGED",
+            )
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "case.json").write_bytes(b"{}")
+            if os.name == "nt":
+                original_reader = execution._read_raw_regular_bound
+
+                def mutate_windows(
+                    path: Path,
+                    *,
+                    max_bytes: int,
+                ) -> tuple[bytes, os.stat_result]:
+                    result = original_reader(path, max_bytes=max_bytes)
+                    (root / "added.json").write_bytes(b"{}")
+                    return result
+
+                patcher = mock.patch.object(
+                    execution,
+                    "_read_raw_regular_bound",
+                    side_effect=mutate_windows,
+                )
+            else:
+                original_reader = execution._read_posix_snapshot_member
+
+                def mutate_posix(
+                    root_descriptor: int,
+                    relative_path: str,
+                    *,
+                    max_bytes: int,
+                ) -> tuple[bytes, tuple[int, int]]:
+                    result = original_reader(
+                        root_descriptor,
+                        relative_path,
+                        max_bytes=max_bytes,
+                    )
+                    (root / "added.json").write_bytes(b"{}")
+                    return result
+
+                patcher = mock.patch.object(
+                    execution,
+                    "_read_posix_snapshot_member",
+                    side_effect=mutate_posix,
+                )
+            with (
+                patcher,
+                self.assertRaises(bootstrap.ConformanceError) as raised,
+            ):
+                execution.capture_execution_case_snapshot(root)
+            self.assertEqual(
+                raised.exception.code,
+                "EXECUTION_CORPUS_CHANGED",
+            )
+
     def test_corpus_digest_rejects_unsafe_duplicate_and_missing_inputs(self) -> None:
         with self.assertRaises(bootstrap.ConformanceError) as raised:
             execution.framed_corpus_digest([("../escape.json", b"{}")])
@@ -495,6 +819,103 @@ class ExecutionSchemaTests(unittest.TestCase):
             regular.write_text("not a directory", encoding="utf-8")
             with self.assertRaises(bootstrap.ConformanceError) as raised:
                 execution.execution_corpus_digest(regular)
+            self.assertEqual(
+                raised.exception.code,
+                "EXECUTION_CORPUS_DIRECTORY_INVALID",
+            )
+
+    def test_corpus_snapshot_rejects_links_and_identity_aliases(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            original = root / "original.json"
+            original.write_bytes(b"{}")
+            linked = root / "linked.json"
+            try:
+                os.link(original, linked)
+            except (NotImplementedError, OSError) as error:
+                self.skipTest(f"hard links unavailable: {error}")
+            with self.assertRaises(bootstrap.ConformanceError) as raised:
+                execution.capture_execution_case_snapshot(root)
+            self.assertEqual(
+                raised.exception.code,
+                "EXECUTION_CORPUS_FILE_INVALID",
+            )
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            target = root / "target"
+            target.mkdir()
+            linked_root = root / "linked-root"
+            try:
+                linked_root.symlink_to(target, target_is_directory=True)
+            except (NotImplementedError, OSError) as error:
+                self.skipTest(f"directory symlinks unavailable: {error}")
+            with self.assertRaises(bootstrap.ConformanceError) as raised:
+                execution.capture_execution_case_snapshot(linked_root)
+            self.assertEqual(
+                raised.exception.code,
+                "EXECUTION_CORPUS_DIRECTORY_INVALID",
+            )
+
+    def test_corpus_snapshot_rejects_symlink_and_nonregular_json_members(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "directory.json").mkdir()
+            with self.assertRaises(bootstrap.ConformanceError) as raised:
+                execution.capture_execution_case_snapshot(root)
+            self.assertEqual(
+                raised.exception.code,
+                "EXECUTION_CORPUS_FILE_INVALID",
+            )
+
+    def test_corpus_snapshot_rejects_linked_intermediate_root_component(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            target_parent = root / "target-parent"
+            case_root = target_parent / "execution-cases"
+            case_root.mkdir(parents=True)
+            linked_parent = root / "linked-parent"
+            try:
+                linked_parent.symlink_to(target_parent, target_is_directory=True)
+            except (NotImplementedError, OSError) as error:
+                self.skipTest(f"directory symlinks unavailable: {error}")
+            with self.assertRaises(bootstrap.ConformanceError) as raised:
+                execution.capture_execution_case_snapshot(
+                    linked_parent / "execution-cases"
+                )
+            self.assertEqual(
+                raised.exception.code,
+                "EXECUTION_CORPUS_DIRECTORY_INVALID",
+            )
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            target = root / "target"
+            target.write_bytes(b"{}")
+            linked = root / "linked.json"
+            try:
+                linked.symlink_to(target)
+            except (NotImplementedError, OSError) as error:
+                self.skipTest(f"file symlinks unavailable: {error}")
+            with self.assertRaises(bootstrap.ConformanceError) as raised:
+                execution.capture_execution_case_snapshot(root)
+            self.assertEqual(
+                raised.exception.code,
+                "EXECUTION_CORPUS_FILE_INVALID",
+            )
+
+    def test_contract_rejects_linked_fixture_root_ancestor(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            target = root / "target"
+            shutil.copytree(FIXTURE_ROOT, target)
+            linked_root = root / "linked-fixture"
+            try:
+                linked_root.symlink_to(target, target_is_directory=True)
+            except (NotImplementedError, OSError) as error:
+                self.skipTest(f"directory symlinks unavailable: {error}")
+            with self.assertRaises(bootstrap.ConformanceError) as raised:
+                execution.validate_contract(linked_root)
             self.assertEqual(
                 raised.exception.code,
                 "EXECUTION_CORPUS_DIRECTORY_INVALID",
