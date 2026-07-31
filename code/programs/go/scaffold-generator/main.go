@@ -54,7 +54,7 @@ import (
 // =========================================================================
 
 // validLanguages lists all supported target languages.
-var validLanguages = []string{"python", "go", "ruby", "typescript", "rust", "elixir", "perl", "lua", "swift", "haskell", "java", "kotlin", "c", "cpp"}
+var validLanguages = []string{"python", "go", "ruby", "typescript", "rust", "elixir", "perl", "lua", "swift", "haskell", "ocaml", "java", "kotlin", "c", "cpp"}
 
 const requiredCapabilitiesSchemaURL = "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json"
 
@@ -63,7 +63,9 @@ const requiredCapabilitiesSchemaURL = "https://raw.githubusercontent.com/adhithy
 var kebabCaseRe = regexp.MustCompile(`^[a-z][a-z0-9]*(-[a-z0-9]+)*$`)
 
 func isSafeDescription(description string) bool {
-	if strings.Contains(description, "*/") {
+	if strings.Contains(description, "*/") ||
+		strings.Contains(description, "*)") ||
+		strings.Contains(description, "%{") {
 		return false
 	}
 	for _, char := range description {
@@ -200,6 +202,8 @@ func readDeps(pkgDir, lang string) ([]string, error) {
 		return readSwiftDeps(pkgDir)
 	case "haskell":
 		return readHaskellDeps(pkgDir)
+	case "ocaml":
+		return readOcamlDeps(pkgDir)
 	case "java":
 		return readJavaDeps(pkgDir)
 	case "kotlin":
@@ -577,6 +581,98 @@ func readHaskellDeps(pkgDir string) ([]string, error) {
 	return deps, nil
 }
 
+// readOcamlDeps reads checked-in opam metadata and returns only local
+// coding-adventures package names. External opam dependencies are ignored.
+func readOcamlDeps(pkgDir string) ([]string, error) {
+	metadataPath := filepath.Join(
+		pkgDir,
+		"coding-adventures-"+filepath.Base(pkgDir)+".opam",
+	)
+	// #nosec G304 -- scaffold dependency directories are lstat-checked and contained before this fixed-name read.
+	data, err := os.ReadFile(metadataPath)
+	if os.IsNotExist(err) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	dependsRe := regexp.MustCompile(`(?ms)^depends[ \t]*:\s*\[(.*?)\]`)
+	depends := dependsRe.FindStringSubmatch(string(data))
+	if len(depends) != 2 {
+		return nil, nil
+	}
+	re := regexp.MustCompile(`"coding-adventures-([a-z][a-z0-9]*(?:-[a-z0-9]+)*)"`)
+	matches := re.FindAllStringSubmatch(depends[1], -1)
+	seen := map[string]bool{}
+	deps := make([]string, 0, len(matches))
+	for _, match := range matches {
+		dep := match[1]
+		if !seen[dep] {
+			seen[dep] = true
+			deps = append(deps, dep)
+		}
+	}
+	return deps, nil
+}
+
+// resolveDepDir locates a dependency in either the packages or programs tree.
+// Packages are preferred because they are the standard reusable module location.
+func resolveDepDir(repoRoot, lang, dep string) string {
+	dName := dirName(dep, lang)
+	pkgDir := filepath.Join(repoRoot, "code", "packages", lang, dName)
+	if info, err := os.Stat(pkgDir); err == nil && info.IsDir() {
+		return pkgDir
+	}
+	programDir := filepath.Join(repoRoot, "code", "programs", lang, dName)
+	if info, err := os.Stat(programDir); err == nil && info.IsDir() {
+		return programDir
+	}
+	return pkgDir
+}
+
+func validateDependencyDir(repoRoot, depDir string) error {
+	info, err := os.Lstat(depDir)
+	if err != nil {
+		return err
+	}
+	if info.Mode()&os.ModeSymlink != 0 {
+		return fmt.Errorf("dependency directory must not be a symlink: %s", depDir)
+	}
+	if !info.IsDir() {
+		return fmt.Errorf("dependency path is not a directory: %s", depDir)
+	}
+
+	realRoot, err := filepath.EvalSymlinks(repoRoot)
+	if err != nil {
+		return fmt.Errorf("resolving repository root: %w", err)
+	}
+	realDep, err := filepath.EvalSymlinks(depDir)
+	if err != nil {
+		return fmt.Errorf("resolving dependency directory: %w", err)
+	}
+	relative, err := filepath.Rel(realRoot, realDep)
+	if err != nil ||
+		filepath.IsAbs(relative) ||
+		relative == ".." ||
+		strings.HasPrefix(relative, ".."+string(os.PathSeparator)) {
+		return fmt.Errorf("dependency directory escapes repository root: %s", depDir)
+	}
+	return nil
+}
+
+func validateResolvedDependency(
+	depDir string,
+	validators []func(string) error,
+) error {
+	for _, validate := range validators {
+		if err := validate(depDir); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // jvmDepRe matches local composite-build dependency coordinates in Gradle.
 var jvmDepRe = regexp.MustCompile(`com\.codingadventures:([a-z0-9-]+)`)
 
@@ -617,6 +713,17 @@ func readJVMDeps(pkgDir string) ([]string, error) {
 // the given direct dependencies. Returns the full set (not including the
 // package itself).
 func transitiveClosure(directDeps []string, lang, baseDir string) ([]string, error) {
+	return transitiveClosureWithResolver(directDeps, lang, func(dep string) string {
+		return filepath.Join(baseDir, dirName(dep, lang))
+	})
+}
+
+func transitiveClosureWithResolver(
+	directDeps []string,
+	lang string,
+	resolve func(string) string,
+	validators ...func(string) error,
+) ([]string, error) {
 	visited := make(map[string]bool)
 	queue := make([]string, len(directDeps))
 	copy(queue, directDeps)
@@ -629,7 +736,10 @@ func transitiveClosure(directDeps []string, lang, baseDir string) ([]string, err
 		}
 		visited[dep] = true
 
-		depDir := filepath.Join(baseDir, dirName(dep, lang))
+		depDir := resolve(dep)
+		if err := validateResolvedDependency(depDir, validators); err != nil {
+			return nil, fmt.Errorf("validating dependency %s: %w", dep, err)
+		}
 		depDeps, err := readDeps(depDir, lang)
 		if err != nil {
 			return nil, fmt.Errorf("reading deps of %s: %w", dep, err)
@@ -653,6 +763,17 @@ func transitiveClosure(directDeps []string, lang, baseDir string) ([]string, err
 // that have no dependencies of their own come first). This is the install
 // order needed for BUILD files.
 func topologicalSort(allDeps []string, lang, baseDir string) ([]string, error) {
+	return topologicalSortWithResolver(allDeps, lang, func(dep string) string {
+		return filepath.Join(baseDir, dirName(dep, lang))
+	})
+}
+
+func topologicalSortWithResolver(
+	allDeps []string,
+	lang string,
+	resolve func(string) string,
+	validators ...func(string) error,
+) ([]string, error) {
 	// Build adjacency: dep -> its deps (within the allDeps set)
 	depSet := make(map[string]bool)
 	for _, d := range allDeps {
@@ -667,8 +788,14 @@ func topologicalSort(allDeps []string, lang, baseDir string) ([]string, error) {
 	}
 
 	for _, dep := range allDeps {
-		depDir := filepath.Join(baseDir, dirName(dep, lang))
-		depDeps, _ := readDeps(depDir, lang)
+		depDir := resolve(dep)
+		if err := validateResolvedDependency(depDir, validators); err != nil {
+			return nil, fmt.Errorf("validating dependency %s: %w", dep, err)
+		}
+		depDeps, err := readDeps(depDir, lang)
+		if err != nil {
+			return nil, fmt.Errorf("reading deps of %s: %w", dep, err)
+		}
 		for _, dd := range depDeps {
 			if depSet[dd] {
 				graph[dep] = append(graph[dep], dd)
@@ -1931,6 +2058,202 @@ spec =
 // File generation — Java
 // =========================================================================
 
+func quoteOcamlString(value string) string {
+	escaped := strings.NewReplacer(
+		`\`, `\\`,
+		`"`, `\"`,
+	).Replace(value)
+	return `"` + escaped + `"`
+}
+
+func generateOcaml(
+	targetDir, pkgName, pkgType, description, layerCtx string,
+	directDeps, orderedDeps []string,
+	depDirs map[string]string,
+) error {
+	if !kebabCaseRe.MatchString(pkgName) {
+		return fmt.Errorf("invalid OCaml package name %q", pkgName)
+	}
+	if pkgType != "library" && pkgType != "program" {
+		return fmt.Errorf("invalid OCaml package type %q", pkgType)
+	}
+	if !isSafeDescription(description) {
+		return fmt.Errorf("description must be one printable line without control characters or structural delimiters")
+	}
+	for _, dep := range append(append([]string{}, directDeps...), orderedDeps...) {
+		if !kebabCaseRe.MatchString(dep) {
+			return fmt.Errorf("invalid OCaml dependency name %q", dep)
+		}
+	}
+
+	testBase := toSnakeCase(pkgName)
+	moduleBase := "coding_adventures_" + testBase
+	moduleRef := strings.ToUpper(moduleBase[:1]) + moduleBase[1:]
+	publicName := "coding-adventures-" + pkgName
+	quotedDescription := quoteOcamlString(description)
+
+	duneProject := fmt.Sprintf(`(lang dune 3.16)
+(name %s)
+(generate_opam_files false)
+(package
+ (name %s)
+ (synopsis %s)
+ (description %s))
+`, publicName, publicName, quotedDescription, quotedDescription)
+
+	var opam strings.Builder
+	fmt.Fprintf(&opam, `opam-version: "2.0"
+name: %s
+version: "0.1.0"
+synopsis: %s
+description: %s
+maintainer: "Adhithya Rajasekaran"
+authors: "Adhithya Rajasekaran"
+license: "MIT"
+homepage: "https://github.com/adhithyan15/coding-adventures"
+bug-reports: "https://github.com/adhithyan15/coding-adventures/issues"
+dev-repo: "git+https://github.com/adhithyan15/coding-adventures.git"
+depends: [
+  "ocaml" {= "5.2.1"}
+  "dune" {= "3.17.2"}
+  "alcotest" {with-test & = "1.9.0"}
+  "bisect_ppx" {with-test & = "2.8.3"}
+  "ocamlformat" {with-dev-setup & = "0.27.0"}
+`, quoteOcamlString(publicName), quotedDescription, quotedDescription)
+	sortedDirect := append([]string{}, directDeps...)
+	sort.Strings(sortedDirect)
+	for _, dep := range sortedDirect {
+		fmt.Fprintf(&opam, "  %s {= \"0.1.0\"}\n", quoteOcamlString("coding-adventures-"+dep))
+	}
+	opam.WriteString(`]
+build: [
+  ["dune" "subst"] {dev}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
+`)
+
+	srcDune := fmt.Sprintf(`(library
+ (name %s)
+ (public_name %s)
+ (wrapped false)
+ (instrumentation
+  (backend bisect_ppx)))
+`, moduleBase, publicName)
+	source := fmt.Sprintf(`let version () = "0.1.0"
+let package_name = %s
+`, quoteOcamlString(publicName))
+	if layerCtx != "" {
+		source += fmt.Sprintf("let layer = Some %s\n", quoteOcamlString(layerCtx))
+	} else {
+		source += "let layer = None\n"
+	}
+	iface := `val version : unit -> string
+val package_name : string
+val layer : string option
+`
+	testDune := fmt.Sprintf(`(test
+ (name test_%s)
+ (libraries alcotest %s))
+`, testBase, moduleBase)
+	testSource := fmt.Sprintf(`let () =
+  Alcotest.run %s
+    [
+      ( "metadata",
+        [
+          Alcotest.test_case "version" `+"`Quick"+` (fun () ->
+              Alcotest.(check string)
+                "version" "0.1.0"
+                (%s.version ()));
+        ] );
+    ]
+`, quoteOcamlString(publicName), moduleRef)
+
+	build := ""
+	buildWindows := ""
+	for _, dep := range orderedDeps {
+		pinPath := filepath.ToSlash(filepath.Join("..", dep))
+		if depDir, ok := depDirs[dep]; ok {
+			relative, err := filepath.Rel(targetDir, depDir)
+			if err != nil {
+				return fmt.Errorf("resolving OCaml dependency path for %s: %w", dep, err)
+			}
+			pinPath = filepath.ToSlash(relative)
+		}
+		build += fmt.Sprintf("opam pin add --no-action -y coding-adventures-%s %s\n", dep, pinPath)
+		buildWindows += fmt.Sprintf("opam pin add --no-action -y coding-adventures-%s %s\n", dep, pinPath)
+	}
+	build += fmt.Sprintf(`opam install . --deps-only --with-test --with-dev-setup -y
+opam exec -- dune build @fmt
+BISECT_FILE="$PWD/bisect" opam exec -- dune runtest --force --instrument-with bisect_ppx
+opam exec -- bisect-ppx-report summary --per-file --expect src/%s.ml bisect*.coverage
+`, moduleBase)
+	buildWindows += fmt.Sprintf(`opam install . --deps-only --with-test --with-dev-setup -y
+opam exec -- dune build @fmt
+set BISECT_FILE=%%CD%%\bisect&& opam exec -- dune runtest --force --instrument-with bisect_ppx
+for %%f in (bisect*.coverage) do opam exec -- bisect-ppx-report summary --per-file --expect src/%s.ml %%f
+`, moduleBase)
+
+	capabilityManifest, err := requiredCapabilitiesJSON("ocaml", pkgName)
+	if err != nil {
+		return err
+	}
+	if pkgType == "program" {
+		manifest := requiredCapabilitiesManifest{
+			Schema:  requiredCapabilitiesSchemaURL,
+			Version: 1,
+			Package: "ocaml/" + pkgName,
+			Capabilities: []requiredCapability{{
+				Category:      "stdout",
+				Action:        "write",
+				Target:        "*",
+				Justification: "The generated command prints its deterministic package identity.",
+			}},
+			Justification: "The command only writes its deterministic result to standard output.",
+		}
+		encoded, marshalErr := json.MarshalIndent(manifest, "", "  ")
+		if marshalErr != nil {
+			return marshalErr
+		}
+		capabilityManifest = string(encoded) + "\n"
+	}
+
+	files := map[string]string{
+		".gitignore":                    "_build/\n_opam/\nbisect*.coverage\n",
+		".ocamlformat":                  "version = 0.27.0\nprofile = default\nocaml-version = 5.2\n",
+		"BUILD":                         build,
+		"BUILD_windows":                 buildWindows,
+		publicName + ".opam":            opam.String(),
+		"dune-project":                  duneProject,
+		"required_capabilities.json":    capabilityManifest,
+		"src/" + moduleBase + ".ml":     source,
+		"src/" + moduleBase + ".mli":    iface,
+		"src/dune":                      srcDune,
+		"test/dune":                     testDune,
+		"test/test_" + testBase + ".ml": testSource,
+	}
+	if pkgType == "program" {
+		files["bin/dune"] = fmt.Sprintf(`(executable
+ (name main)
+ (public_name %s)
+ (libraries %s))
+`, pkgName, moduleBase)
+		files["bin/main.ml"] = fmt.Sprintf("let () = print_endline %s.package_name\n", moduleRef)
+	}
+	for path, content := range files {
+		fullPath := filepath.Join(targetDir, path)
+		// #nosec G301 -- generated source trees intentionally use conventional 0755 directories.
+		if err := os.MkdirAll(filepath.Dir(fullPath), 0o755); err != nil {
+			return err
+		}
+		// #nosec G306 -- generated source and metadata files intentionally use conventional 0644 permissions.
+		if err := os.WriteFile(fullPath, []byte(content), 0o644); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func generateJava(targetDir, pkgName, description, layerCtx string, directDeps []string) error {
 	camel := toCamelCase(pkgName)
 	joined := toJoinedLower(pkgName)
@@ -2273,10 +2596,10 @@ int main(void) {
 	runPs1 := isoRunPs1(pkgName, symbol, "c", fmt.Sprintf("\"tests\\%s_test.c\", \"src\\%s.c\"", symbol, symbol))
 
 	return writeCFamilyFiles(targetDir, map[string]string{
-		filepath.Join("include", symbol+".h"):     header,
-		filepath.Join("src", symbol+".c"):         source,
-		filepath.Join("tests", symbol+"_test.c"):  test,
-		"BUILD":                                   build,
+		filepath.Join("include", symbol+".h"):    header,
+		filepath.Join("src", symbol+".c"):        source,
+		filepath.Join("tests", symbol+"_test.c"): test,
+		"BUILD":                                  build,
 		"BUILD_windows":                           buildWin,
 		filepath.Join("tools", "run.sh"):          runSh,
 		filepath.Join("tools", "run.ps1"):         runPs1,
@@ -2332,7 +2655,7 @@ int main() {
 	return writeCFamilyFiles(targetDir, map[string]string{
 		filepath.Join("include", symbol+".hpp"):    header,
 		filepath.Join("tests", symbol+"_test.cpp"): test,
-		"BUILD":                                    build,
+		"BUILD":                           build,
 		"BUILD_windows":                            buildWin,
 		filepath.Join("tools", "run.sh"):           runSh,
 		filepath.Join("tools", "run.ps1"):           runPs1,
@@ -2489,28 +2812,49 @@ func scaffold(cfg scaffoldConfig, lang string, stdout, stderr io.Writer) error {
 	dName := dirName(cfg.packageName, lang)
 	targetDir := filepath.Join(baseDir, dName)
 
-	// Check target doesn't exist
-	if _, err := os.Stat(targetDir); err == nil {
+	// Refuse existing directories and every symlink, including dangling links.
+	if _, err := os.Lstat(targetDir); err == nil {
 		return fmt.Errorf("directory already exists: %s", targetDir)
+	} else if !os.IsNotExist(err) {
+		return fmt.Errorf("checking target directory: %w", err)
 	}
 
-	// Validate dependencies exist
+	// Validate dependencies exist.
+	resolver := func(dep string) string {
+		return filepath.Join(baseDir, dirName(dep, lang))
+	}
+	if lang == "ocaml" {
+		resolver = func(dep string) string {
+			return resolveDepDir(cfg.repoRoot, lang, dep)
+		}
+	}
+	resolvedDepDirs := make(map[string]string)
 	for _, dep := range cfg.directDeps {
-		depDir := filepath.Join(baseDir, dirName(dep, lang))
+		depDir := resolver(dep)
 		if _, err := os.Stat(depDir); os.IsNotExist(err) {
 			return fmt.Errorf("dependency %q not found for %s at %s", dep, lang, depDir)
 		}
+		if err := validateDependencyDir(cfg.repoRoot, depDir); err != nil {
+			return fmt.Errorf("dependency %q is unsafe: %w", dep, err)
+		}
+		resolvedDepDirs[dep] = depDir
 	}
 
 	// Compute transitive closure and topological sort
-	allDeps, err := transitiveClosure(cfg.directDeps, lang, baseDir)
+	validateDep := func(depDir string) error {
+		return validateDependencyDir(cfg.repoRoot, depDir)
+	}
+	allDeps, err := transitiveClosureWithResolver(cfg.directDeps, lang, resolver, validateDep)
 	if err != nil {
 		return fmt.Errorf("resolving transitive deps for %s: %w", lang, err)
 	}
 
-	orderedDeps, err := topologicalSort(allDeps, lang, baseDir)
+	orderedDeps, err := topologicalSortWithResolver(allDeps, lang, resolver, validateDep)
 	if err != nil {
 		return fmt.Errorf("topological sort for %s: %w", lang, err)
+	}
+	for _, dep := range orderedDeps {
+		resolvedDepDirs[dep] = resolver(dep)
 	}
 
 	layerCtx := ""
@@ -2573,6 +2917,19 @@ func scaffold(cfg scaffoldConfig, lang string, stdout, stderr io.Writer) error {
 		if err := generateHaskell(targetDir, cfg.packageName, cfg.description, layerCtx, cfg.directDeps, orderedDeps); err != nil {
 			return err
 		}
+	case "ocaml":
+		if err := generateOcaml(
+			targetDir,
+			cfg.packageName,
+			cfg.pkgType,
+			cfg.description,
+			layerCtx,
+			cfg.directDeps,
+			orderedDeps,
+			resolvedDepDirs,
+		); err != nil {
+			return err
+		}
 	case "java":
 		if err := generateJava(targetDir, cfg.packageName, cfg.description, layerCtx, cfg.directDeps); err != nil {
 			return err
@@ -2615,6 +2972,8 @@ func scaffold(cfg scaffoldConfig, lang string, stdout, stderr io.Writer) error {
 		fmt.Fprintf(stdout, "  After other packages depend on this, run go mod tidy in those too\n")
 	case "java", "kotlin":
 		fmt.Fprintf(stdout, "  Run: cd %s && gradle test\n", targetDir)
+	case "ocaml":
+		fmt.Fprintf(stdout, "  Run: cd %s && opam exec -- dune runtest\n", targetDir)
 	}
 
 	return nil
@@ -2672,7 +3031,7 @@ func run(specPath string, argv []string, stdout, stderr io.Writer) int {
 		// corrupt generated source files (e.g. Swift block-comment terminators
 		// or JSON escape sequences).
 		if !isSafeDescription(description) {
-			fmt.Fprintf(stderr, "scaffold-generator: description must be one printable line without control characters or structural comment delimiters\n")
+			fmt.Fprintf(stderr, "scaffold-generator: description must be one printable line without control characters or structural delimiters\n")
 			return 1
 		}
 

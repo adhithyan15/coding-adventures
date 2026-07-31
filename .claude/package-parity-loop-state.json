@@ -9,13 +9,13 @@
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
   "active_pr": {
-    "item_id": "ocaml-lane-contract",
-    "pr_number": 9323,
-    "branch": "codex/ocaml-lane-contract",
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9323"
+    "item_id": "ocaml-infrastructure",
+    "pr_number": 9336,
+    "branch": "codex/ocaml-infrastructure",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9336"
   },
   "last_inventory": {
-    "revision": "0f8bb3b2519ed73fc932a5291b510433e8a71480",
+    "revision": "67dc08ac8fcd8598a0ad5e82952c2aee5087a38d",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1197,
@@ -331,20 +331,38 @@
     {
       "id": "ocaml-lane-contract",
       "title": "Define OCaml emerging-lane and denominator-safe reporter contracts",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-contract"],
       "branch": "codex/ocaml-lane-contract",
       "pr_number": 9323,
-      "notes": "Selected after merged PR #9308 and refreshed against the collision-checked 0f8bb3b25 inventory because this focused contract makes the reporter denominator-safe, classifies OCaml without changing the established 15-language denominator, and unlocks every later OCaml scaffold, resolver, representative-package, capability, build-tool, and promotion tranche. Ready-for-review PR #9323 opened after the 177-test scripts suite, 10 focused reporter tests, 5 dependent learning-report tests, 86% reporter branch coverage, Ruff, Go test/vet/build-tool build, all-format collision checks, diff checks, baseline-comparison BUILD validation, secret scan, and independent final security review."
+      "notes": "Merged PR #9323. The denominator-safe contract classifies OCaml as emerging without changing the established 15-language denominator and unlocks the remaining OCaml bootstrap."
     },
     {
       "id": "ocaml-infrastructure",
       "title": "Add OCaml scaffolding, lane README, and package metadata support",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["ocaml-lane-contract"],
+      "branch": "codex/ocaml-infrastructure",
+      "pr_number": 9336,
+      "notes": "Ready-for-review PR #9336 adds complete Go and TypeScript scaffold templates plus golden tests, repository ignores, capability metadata/schema support, and the lane README. It uses OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with language 3.16, Alcotest 1.9.0, bisect_ppx 2.8.3, and ocamlformat 0.27.0."
+    },
+    {
+      "id": "ocaml-ci-toolchain",
+      "title": "Provision and transitively lock the OCaml toolchain on Ubuntu, macOS, and Windows CI",
+      "status": "pending",
+      "depends_on": ["ocaml-infrastructure"],
       "branch": null,
       "pr_number": null,
-      "notes": "Add complete Go and TypeScript scaffold templates plus golden tests, repository ignores, capability metadata/schema support, and the lane README. Use OCaml 5.2.1, opam 2.5.x, Dune 3.16.x, Alcotest, bisect_ppx, and ocamlformat."
+      "notes": "Discovered during the post-#9323 fixture and ownership audit. Install and cache OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with language 3.16, Alcotest 1.9.0, bisect_ppx 2.8.3, and ocamlformat 0.27.0 on all three runner families; lock and verify the opam-repository/switch transitive solver state; then prove generated library and program scaffolds run real formatting, test, and coverage commands without skips."
+    },
+    {
+      "id": "adj-lang-cli-capability-profile",
+      "title": "Separate and declare adj-lang-cli runtime and E2E harness capabilities",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the post-#9323 security audit after PR #9324 added argument_verify_e2e.rs. Audit the package's pre-existing filesystem, environment, process, and stdout use; isolate test-harness authority from the publishable runtime profile; add truthful manifests; and obtain Layer-5 approval for every nonempty profile."
     },
     {
       "id": "ocaml-build-substrate",
@@ -359,7 +377,7 @@
       "id": "ocaml-representative-core",
       "title": "Port logic-gates, graph, directed-graph, and state-machine to OCaml",
       "status": "pending",
-      "depends_on": ["ocaml-build-substrate"],
+      "depends_on": ["ocaml-build-substrate", "ocaml-ci-toolchain"],
       "branch": null,
       "pr_number": null,
       "notes": "This dependency chain validates opam metadata, resolver edges, BUILD order, and affected-node expansion."
@@ -394,7 +412,8 @@
       "depends_on": [
         "ocaml-build-tool-and-promotion",
         "ocaml-capability-analyzer",
-        "ocaml-representative-core"
+        "ocaml-representative-core",
+        "ocaml-ci-toolchain"
       ],
       "branch": null,
       "pr_number": null,

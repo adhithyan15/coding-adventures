@@ -59,6 +59,7 @@ export const VALID_LANGUAGES = [
   "lua",
   "swift",
   "haskell",
+  "ocaml",
   "csharp",
   "fsharp",
 ] as const;
@@ -169,6 +170,27 @@ export function resolveDepDir(repoRoot: string, lang: string, dep: string): stri
   return pkgDir; // Default to packages for clearer error messages
 }
 
+function validateDependencyDir(repoRoot: string, depDir: string): void {
+  const info = fs.lstatSync(depDir);
+  if (info.isSymbolicLink()) {
+    throw new Error(`dependency directory must not be a symlink: ${depDir}`);
+  }
+  if (!info.isDirectory()) {
+    throw new Error(`dependency path is not a directory: ${depDir}`);
+  }
+
+  const realRoot = fs.realpathSync(repoRoot);
+  const realDep = fs.realpathSync(depDir);
+  const relative = path.relative(realRoot, realDep);
+  if (
+    path.isAbsolute(relative) ||
+    relative === ".." ||
+    relative.startsWith(`..${path.sep}`)
+  ) {
+    throw new Error(`dependency directory escapes repository root: ${depDir}`);
+  }
+}
+
 // =========================================================================
 // Dependency resolution
 // =========================================================================
@@ -203,6 +225,7 @@ export function readDeps(pkgDir: string, lang: string): string[] {
     lua: () => [],
     swift: () => [],
     haskell: readHaskellDeps,
+    ocaml: readOcamlDeps,
     csharp: readDotnetDeps,
     fsharp: readDotnetDeps,
   };
@@ -466,6 +489,29 @@ export function readHaskellDeps(pkgDir: string): string[] {
   return deps;
 }
 
+export function readOcamlDeps(pkgDir: string): string[] {
+  const metadata = `coding-adventures-${path.basename(pkgDir)}.opam`;
+  const metadataPath = path.join(pkgDir, metadata);
+  if (!fs.existsSync(metadataPath)) {
+    return [];
+  }
+  const content = fs.readFileSync(metadataPath, "utf-8");
+  const depends = content.match(/^depends[ \t]*:\s*\[([\s\S]*?)\]/m)?.[1];
+  if (depends === undefined) {
+    return [];
+  }
+  const deps: string[] = [];
+  const seen = new Set<string>();
+  const pattern = /"coding-adventures-([a-z][a-z0-9]*(?:-[a-z0-9]+)*)"/g;
+  for (const match of depends.matchAll(pattern)) {
+    if (!seen.has(match[1])) {
+      seen.add(match[1]);
+      deps.push(match[1]);
+    }
+  }
+  return deps;
+}
+
 export function readDotnetDeps(pkgDir: string): string[] {
   let files: string[];
   try {
@@ -537,6 +583,7 @@ export function transitiveClosure(
     }
     visited.add(dep);
     const depDir = resolveDepDir(repoRoot, lang, dep);
+    validateDependencyDir(repoRoot, depDir);
     for (const dd of readDeps(depDir, lang)) {
       if (!visited.has(dd)) {
         queue.push(dd);
@@ -585,6 +632,7 @@ export function topologicalSort(
   for (const dep of allDeps) {
     graph[dep] = [];
     const depDir = resolveDepDir(repoRoot, lang, dep);
+    validateDependencyDir(repoRoot, depDir);
     for (const dd of readDeps(depDir, lang)) {
       if (depSet.has(dd)) {
         graph[dep].push(dd);
@@ -1755,9 +1803,14 @@ export function generateHaskell(
   directDeps: string[],
   orderedDeps: string[],
 ): void {
-  if (/[\p{Cc}\p{Zl}\p{Zp}]/u.test(description) || description.includes("*/")) {
+  if (
+    /[\p{Cc}\p{Zl}\p{Zp}]/u.test(description) ||
+    description.includes("*/") ||
+    description.includes("*)") ||
+    description.includes("%{")
+  ) {
     throw new Error(
-      "description must be a single printable line without control characters or structural comment delimiters",
+      "description must be a single printable line without control characters or structural delimiters",
     );
   }
 
@@ -1843,6 +1896,198 @@ main = pure ()
 // -------------------------------------------------------------------------
 // C# generator
 // -------------------------------------------------------------------------
+
+function quoteOcamlString(value: string): string {
+  return `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"`;
+}
+
+export function generateOcaml(
+  targetDir: string,
+  pkgName: string,
+  pkgType: string,
+  description: string,
+  layerCtx: string,
+  directDeps: string[],
+  orderedDeps: string[],
+  depDirs: ReadonlyMap<string, string> = new Map(),
+): void {
+  if (!KEBAB_RE.test(pkgName)) {
+    throw new Error(`invalid OCaml package name '${pkgName}'`);
+  }
+  if (pkgType !== "library" && pkgType !== "program") {
+    throw new Error(`invalid OCaml package type '${pkgType}'`);
+  }
+  if (
+    /[\p{Cc}\p{Zl}\p{Zp}]/u.test(description) ||
+    description.includes("*/") ||
+    description.includes("*)") ||
+    description.includes("%{")
+  ) {
+    throw new Error(
+      "description must be a single printable line without control characters or structural delimiters",
+    );
+  }
+  for (const dep of [...directDeps, ...orderedDeps]) {
+    if (!KEBAB_RE.test(dep)) {
+      throw new Error(`invalid OCaml dependency name '${dep}'`);
+    }
+  }
+
+  const testBase = toSnakeCase(pkgName);
+  const moduleBase = `coding_adventures_${testBase}`;
+  const moduleRef = moduleBase[0].toUpperCase() + moduleBase.slice(1);
+  const publicName = `coding-adventures-${pkgName}`;
+  const quotedDescription = quoteOcamlString(description);
+  const duneProject = `(lang dune 3.16)
+(name ${publicName})
+(generate_opam_files false)
+(package
+ (name ${publicName})
+ (synopsis ${quotedDescription})
+ (description ${quotedDescription}))
+`;
+
+  let opam = `opam-version: "2.0"
+name: ${quoteOcamlString(publicName)}
+version: "0.1.0"
+synopsis: ${quotedDescription}
+description: ${quotedDescription}
+maintainer: "Adhithya Rajasekaran"
+authors: "Adhithya Rajasekaran"
+license: "MIT"
+homepage: "https://github.com/adhithyan15/coding-adventures"
+bug-reports: "https://github.com/adhithyan15/coding-adventures/issues"
+dev-repo: "git+https://github.com/adhithyan15/coding-adventures.git"
+depends: [
+  "ocaml" {= "5.2.1"}
+  "dune" {= "3.17.2"}
+  "alcotest" {with-test & = "1.9.0"}
+  "bisect_ppx" {with-test & = "2.8.3"}
+  "ocamlformat" {with-dev-setup & = "0.27.0"}
+`;
+  for (const dep of [...directDeps].sort()) {
+    opam += `  ${quoteOcamlString(`coding-adventures-${dep}`)} {= "0.1.0"}\n`;
+  }
+  opam += `]
+build: [
+  ["dune" "subst"] {dev}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
+`;
+
+ const srcDune = `(library
+ (name ${moduleBase})
+ (public_name ${publicName})
+ (wrapped false)
+ (instrumentation
+  (backend bisect_ppx)))
+`;
+  let source = `let version () = "0.1.0"
+let package_name = ${quoteOcamlString(publicName)}
+`;
+  source += layerCtx
+    ? `let layer = Some ${quoteOcamlString(layerCtx)}\n`
+    : "let layer = None\n";
+  const iface = `val version : unit -> string
+val package_name : string
+val layer : string option
+`;
+  const testDune = `(test
+ (name test_${testBase})
+ (libraries alcotest ${moduleBase}))
+`;
+  const testSource = `let () =
+  Alcotest.run ${quoteOcamlString(publicName)}
+    [
+      ( "metadata",
+        [
+          Alcotest.test_case "version" \`Quick (fun () ->
+              Alcotest.(check string)
+                "version" "0.1.0"
+                (${moduleRef}.version ()));
+        ] );
+    ]
+`;
+
+  let build = "";
+  let buildWindows = "";
+  for (const dep of orderedDeps) {
+    const depDir = depDirs.get(dep);
+    const pinPath = depDir
+      ? path.relative(targetDir, depDir).split(path.sep).join("/")
+      : `../${dep}`;
+    build += `opam pin add --no-action -y coding-adventures-${dep} ${pinPath}\n`;
+    buildWindows += `opam pin add --no-action -y coding-adventures-${dep} ${pinPath}\n`;
+  }
+  build += `opam install . --deps-only --with-test --with-dev-setup -y
+opam exec -- dune build @fmt
+BISECT_FILE="$PWD/bisect" opam exec -- dune runtest --force --instrument-with bisect_ppx
+opam exec -- bisect-ppx-report summary --per-file --expect src/${moduleBase}.ml bisect*.coverage
+`;
+  buildWindows += `opam install . --deps-only --with-test --with-dev-setup -y
+opam exec -- dune build @fmt
+set BISECT_FILE=%CD%\\bisect&& opam exec -- dune runtest --force --instrument-with bisect_ppx
+for %f in (bisect*.coverage) do opam exec -- bisect-ppx-report summary --per-file --expect src/${moduleBase}.ml %f
+`;
+
+  const capability =
+    pkgType === "program"
+      ? {
+          $schema:
+            "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+          version: 1,
+          package: `ocaml/${pkgName}`,
+          capabilities: [
+            {
+              category: "stdout",
+              action: "write",
+              target: "*",
+              justification:
+                "The generated command prints its deterministic package identity.",
+            },
+          ],
+          justification:
+            "The command only writes its deterministic result to standard output.",
+        }
+      : {
+          $schema:
+            "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+          version: 1,
+          package: `ocaml/${pkgName}`,
+          capabilities: [],
+          justification:
+            "Pure computation. No filesystem, network, process, or environment access needed.",
+        };
+
+  const files: Record<string, string> = {
+    ".gitignore": "_build/\n_opam/\nbisect*.coverage\n",
+    ".ocamlformat":
+      "version = 0.27.0\nprofile = default\nocaml-version = 5.2\n",
+    BUILD: build,
+    BUILD_windows: buildWindows,
+    [`${publicName}.opam`]: opam,
+    "dune-project": duneProject,
+    "required_capabilities.json": JSON.stringify(capability, null, 2) + "\n",
+    [`src/${moduleBase}.ml`]: source,
+    [`src/${moduleBase}.mli`]: iface,
+    "src/dune": srcDune,
+    "test/dune": testDune,
+    [`test/test_${testBase}.ml`]: testSource,
+  };
+  if (pkgType === "program") {
+    files["bin/dune"] = `(executable
+ (name main)
+ (public_name ${pkgName})
+ (libraries ${moduleBase}))
+`;
+    files["bin/main.ml"] =
+      `let () = print_endline ${moduleRef}.package_name\n`;
+  }
+  for (const [relativePath, content] of Object.entries(files)) {
+    writeFile(path.join(targetDir, relativePath), content);
+  }
+}
 
 export function generateCSharp(
   targetDir: string,
@@ -2195,9 +2440,14 @@ export function scaffoldOne(
   output: (msg: string) => void = (msg) => process.stdout.write(msg + "\n"),
   errOutput: (msg: string) => void = (msg) => process.stderr.write(msg + "\n"),
 ): void {
-  if (/[\p{Cc}\p{Zl}\p{Zp}]/u.test(description) || description.includes("*/")) {
+  if (
+    /[\p{Cc}\p{Zl}\p{Zp}]/u.test(description) ||
+    description.includes("*/") ||
+    description.includes("*)") ||
+    description.includes("%{")
+  ) {
     throw new Error(
-      "description must be a single printable line without control characters or structural comment delimiters",
+      "description must be a single printable line without control characters or structural delimiters",
     );
   }
 
@@ -2206,8 +2456,19 @@ export function scaffoldOne(
   const dName = dirName(pkgName, lang);
   const targetDir = path.join(baseDir, dName);
 
-  if (fs.existsSync(targetDir)) {
+  try {
+    fs.lstatSync(targetDir);
     throw new Error(`directory already exists: ${targetDir}`);
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      "code" in error &&
+      (error as NodeJS.ErrnoException).code === "ENOENT"
+    ) {
+      // Expected: target does not exist.
+    } else {
+      throw error;
+    }
   }
 
   for (const dep of directDeps) {
@@ -2217,10 +2478,22 @@ export function scaffoldOne(
         `dependency '${dep}' not found for ${lang} at ${depDir}`,
       );
     }
+    try {
+      validateDependencyDir(repoRoot, depDir);
+    } catch (error) {
+      throw new Error(
+        `dependency '${dep}' is unsafe: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+    }
   }
 
   const allDeps = transitiveClosure(directDeps, lang, repoRoot);
   const orderedDeps = topologicalSort(allDeps, lang, repoRoot);
+  const resolvedDepDirs = new Map(
+    orderedDeps.map((dep) => [dep, resolveDepDir(repoRoot, lang, dep)]),
+  );
 
   const layerCtx = layer > 0 ? `Layer ${layer} in the computing stack.` : "";
 
@@ -2303,6 +2576,17 @@ export function scaffoldOne(
         directDeps,
         orderedDeps,
       ),
+    ocaml: () =>
+      generateOcaml(
+        targetDir,
+        pkgName,
+        pkgType,
+        description,
+        layerCtx,
+        directDeps,
+        orderedDeps,
+        resolvedDepDirs,
+      ),
     csharp: () =>
       generateCSharp(targetDir, pkgName, description, layerCtx, directDeps),
     fsharp: () =>
@@ -2331,6 +2615,8 @@ export function scaffoldOne(
     output(`  Run: cd ${targetDir} && go mod tidy`);
   } else if (lang === "csharp" || lang === "fsharp") {
     output(`  Run: cd ${targetDir} && dotnet test`);
+  } else if (lang === "ocaml") {
+    output(`  Run: cd ${targetDir} && opam exec -- dune runtest`);
   }
 }
 

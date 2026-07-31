@@ -6,6 +6,10 @@ All notable changes to this program will be documented in this file.
 
 ### Added
 
+- **OCaml library and program scaffolds** (`--language ocaml`) with shared
+  byte-exact golden trees, exact direct opam/Dune metadata, Alcotest,
+  ocamlformat, bisect_ppx coverage, resolved local dependency pins, and
+  capability manifests.
 - **C and C++ scaffold templates** (`--language c` / `--language cpp`). Generates
   a pure-ISO package wired to the shared iso-harness: `BUILD`
   (`# build-tool: deps=c/iso-harness` + `sh tools/run.sh`), `BUILD_windows`
@@ -19,6 +23,14 @@ All notable changes to this program will be documented in this file.
 
 ### Fixed
 
+- OCaml descriptions now reject `*)` and use context-safe quoted metadata
+  serialization before any file is written.
+- Dune `%{...}` interpolation openers are rejected before any scaffold output.
+- Accepted Unicode descriptions now remain raw UTF-8 with only OCaml/opam
+  quote and backslash escaping, matching the TypeScript front door byte-for-byte.
+- OCaml dependency discovery reads only the expected opam `depends` field,
+  program scaffolds pin package-tree dependencies by resolved relative path,
+  and direct/transitive dependency symlinks fail closed.
 - Haskell capability metadata now uses the complete shared schema-v1 document,
   with golden output and shared-schema regression coverage instead of the
   legacy one-field JSON object.

@@ -1,12 +1,17 @@
 # scaffold-generator
 
 A CLI tool that generates CI-ready package scaffolding for the coding-adventures
-monorepo across 14 languages: Python, Go, Ruby, TypeScript, Rust, Elixir, Perl,
-Lua, Swift, Haskell, Java, Kotlin, C, and C++.
+monorepo across 15 languages: Python, Go, Ruby, TypeScript, Rust, Elixir, Perl,
+Lua, Swift, Haskell, OCaml, Java, Kotlin, C, and C++.
 
 Haskell scaffolds include a schema-v1 `required_capabilities.json` whose package
 identity matches the generated directory. The manifest starts with an explicit
 empty capability profile for the pure library template.
+
+OCaml library and program scaffolds match the shared OCAML02 golden trees.
+They include exact direct opam/Dune tool constraints, Alcotest, formatting and
+coverage commands, local dependency pins, and schema-v1 capability profiles.
+Transitive opam-repository/switch locking remains a separate CI-toolchain gate.
 
 ## Why
 
@@ -29,6 +34,9 @@ scaffold-generator my-package --dry-run
 
 # Scaffold a program (goes in code/programs/ instead of code/packages/)
 scaffold-generator my-tool --type program --language go
+
+# Scaffold an OCaml library
+scaffold-generator my-package --language ocaml --description "Pure OCaml logic"
 ```
 
 ## Build

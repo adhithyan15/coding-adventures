@@ -33,6 +33,7 @@ import {
   generateElixir,
   generatePerl,
   generateHaskell,
+  generateOcaml,
   generateCSharp,
   generateFSharp,
   generateCommonFiles,
@@ -459,7 +460,13 @@ describe("transitiveClosure", () => {
 
   it("returns direct deps when they have no further deps", () => {
     // Create a package with no BUILD (so no deps)
-    const depDir = path.join(tmpDir, "logic-gates");
+    const depDir = path.join(
+      tmpDir,
+      "code",
+      "packages",
+      "python",
+      "logic-gates",
+    );
     fs.mkdirSync(depDir, { recursive: true });
 
     const result = transitiveClosure(["logic-gates"], "python", tmpDir);
@@ -528,7 +535,7 @@ describe("topologicalSort", () => {
   });
 
   it("returns single dep as-is", () => {
-    const depDir = path.join(tmpDir, "solo");
+    const depDir = path.join(tmpDir, "code", "packages", "python", "solo");
     fs.mkdirSync(depDir, { recursive: true });
     writeTestFile(depDir, "BUILD", "python -m pip install -e .[dev] --quiet\n");
 
@@ -538,12 +545,13 @@ describe("topologicalSort", () => {
 
   it("orders leaves before dependents", () => {
     // leaf has no deps
-    const leafDir = path.join(tmpDir, "leaf");
+    const pkgBase = path.join(tmpDir, "code", "packages", "python");
+    const leafDir = path.join(pkgBase, "leaf");
     fs.mkdirSync(leafDir, { recursive: true });
     writeTestFile(leafDir, "BUILD", "python -m pip install -e .[dev] --quiet\n");
 
     // mid depends on leaf
-    const midDir = path.join(tmpDir, "mid");
+    const midDir = path.join(pkgBase, "mid");
     fs.mkdirSync(midDir, { recursive: true });
     writeTestFile(midDir, "BUILD", "python -m pip install -e ../leaf -e .[dev] --quiet\n");
 
@@ -553,17 +561,18 @@ describe("topologicalSort", () => {
 
   it("handles diamond dependency graph", () => {
     // base has no deps
-    const baseDir = path.join(tmpDir, "base");
+    const pkgBase = path.join(tmpDir, "code", "packages", "python");
+    const baseDir = path.join(pkgBase, "base");
     fs.mkdirSync(baseDir, { recursive: true });
     writeTestFile(baseDir, "BUILD", "python -m pip install -e .[dev] --quiet\n");
 
     // left depends on base
-    const leftDir = path.join(tmpDir, "left");
+    const leftDir = path.join(pkgBase, "left");
     fs.mkdirSync(leftDir, { recursive: true });
     writeTestFile(leftDir, "BUILD", "python -m pip install -e ../base -e .[dev] --quiet\n");
 
     // right depends on base
-    const rightDir = path.join(tmpDir, "right");
+    const rightDir = path.join(pkgBase, "right");
     fs.mkdirSync(rightDir, { recursive: true });
     writeTestFile(rightDir, "BUILD", "python -m pip install -e ../base -e .[dev] --quiet\n");
 
@@ -1107,6 +1116,142 @@ describe("generatePerl", () => {
   });
 });
 
+describe("generateOcaml", () => {
+  let tmpDir: string;
+
+  beforeEach(() => {
+    tmpDir = makeTempDir();
+  });
+
+  afterEach(() => {
+    removeDir(tmpDir);
+  });
+
+  for (const pkgType of ["library", "program"] as const) {
+    it(`matches the shared ${pkgType} golden tree`, () => {
+      generateOcaml(tmpDir, "my-pkg", pkgType, "A test package", "", [], []);
+      const golden = path.resolve(
+        process.cwd(),
+        `../../../specs/fixtures/scaffold-generator/ocaml-${pkgType}`,
+      );
+      expect(readTree(tmpDir)).toEqual(readTree(golden));
+    });
+  }
+
+  it("encodes metadata and pins the full local closure leaf-first", () => {
+    const description =
+      'Quotes " backslash \\\\ hash # parens () ; backticks ` and $(shell) plus\u00a0space';
+    generateOcaml(
+      tmpDir,
+      "my-pkg",
+      "library",
+      description,
+      "Layer 4 in the computing stack.",
+      ["graph"],
+      ["bitset", "graph"],
+    );
+    const opam = fs.readFileSync(
+      path.join(tmpDir, "coding-adventures-my-pkg.opam"),
+      "utf-8",
+    );
+    expect(opam).toContain('"coding-adventures-graph" {= "0.1.0"}');
+    expect(opam).toContain(
+      'synopsis: "Quotes \\" backslash \\\\\\\\ hash # parens () ; backticks ` and $(shell) plus\u00a0space"',
+    );
+    const build = fs.readFileSync(path.join(tmpDir, "BUILD"), "utf-8");
+    expect(build).toContain(
+      "opam pin add --no-action -y coding-adventures-bitset ../bitset",
+    );
+    expect(build).toContain(
+      "opam pin add --no-action -y coding-adventures-graph ../graph",
+    );
+    expect(build).toContain("opam exec -- dune build @fmt");
+    expect(build).toContain("opam exec -- dune runtest --force");
+    expect(build).toContain(
+      "opam exec -- bisect-ppx-report summary --per-file --expect src/coding_adventures_my_pkg.ml bisect*.coverage",
+    );
+    expect(build).not.toContain(description);
+    expect(opam).not.toContain("\\u00a0");
+    expect(
+      fs.readFileSync(path.join(tmpDir, "dune-project"), "utf-8"),
+    ).toContain("plus\u00a0space");
+  });
+
+  it("rejects OCaml comment termination before writing", () => {
+    for (const description of [
+      "safe *) injected",
+      "safe %{workspace_root} injected",
+    ]) {
+      expect(() =>
+        generateOcaml(tmpDir, "my-pkg", "library", description, "", [], []),
+      ).toThrow(/description.*structural/i);
+    }
+    expect(fs.readdirSync(tmpDir)).toEqual([]);
+  });
+
+  it("reads only local coding-adventures dependencies from opam metadata", () => {
+    const pkgDir = path.join(tmpDir, "my-pkg");
+    writeTestFile(
+      pkgDir,
+      "coding-adventures-my-pkg.opam",
+      `opam-version: "2.0"
+name: "coding-adventures-my-pkg"
+synopsis: "depends: [ \\"coding-adventures-synopsis-decoy\\" ]"
+depends: [
+  "ocaml" {= "5.2.1"}
+  "coding-adventures-graph" {= "0.1.0"}
+  "coding-adventures-state-machine" {= "0.1.0"}
+]
+build: [ "echo coding-adventures-build-decoy" ]
+`,
+    );
+    writeTestFile(
+      pkgDir,
+      "aaa-decoy.opam",
+      'depends: [ "coding-adventures-wrong-file" ]\n',
+    );
+    expect(readDeps(pkgDir, "ocaml")).toEqual(["graph", "state-machine"]);
+  });
+
+  it("round-trips generated metadata without creating a self-dependency", () => {
+    const baseDir = path.join(tmpDir, "packages");
+    const pkgDir = path.join(baseDir, "my-pkg");
+    fs.mkdirSync(pkgDir, { recursive: true });
+    generateOcaml(pkgDir, "my-pkg", "library", "A test package", "", [], []);
+
+    expect(readDeps(pkgDir, "ocaml")).toEqual([]);
+    const repoRoot = path.join(tmpDir, "repo");
+    const repoPkgDir = path.join(
+      repoRoot,
+      "code",
+      "packages",
+      "ocaml",
+      "my-pkg",
+    );
+    fs.mkdirSync(path.dirname(repoPkgDir), { recursive: true });
+    fs.renameSync(pkgDir, repoPkgDir);
+    const closure = transitiveClosure(["my-pkg"], "ocaml", repoRoot);
+    expect(topologicalSort(closure, "ocaml", repoRoot)).toEqual(["my-pkg"]);
+  });
+});
+
+function readTree(root: string): Record<string, string> {
+  const result: Record<string, string> = {};
+  const visit = (dir: string): void => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        visit(full);
+      } else {
+        result[path.relative(root, full).split(path.sep).join("/")] =
+          fs.readFileSync(full, "utf-8");
+      }
+    }
+  };
+  visit(root);
+  return result;
+}
+
 describe("generateCSharp", () => {
   let tmpDir: string;
 
@@ -1405,7 +1550,7 @@ describe("findRepoRoot", () => {
 
 describe("VALID_LANGUAGES", () => {
   it("contains all supported languages, including C# and F#", () => {
-    expect(VALID_LANGUAGES).toHaveLength(12);
+    expect(VALID_LANGUAGES).toHaveLength(13);
     expect(VALID_LANGUAGES).toContain("python");
     expect(VALID_LANGUAGES).toContain("go");
     expect(VALID_LANGUAGES).toContain("ruby");
@@ -1416,6 +1561,7 @@ describe("VALID_LANGUAGES", () => {
     expect(VALID_LANGUAGES).toContain("lua");
     expect(VALID_LANGUAGES).toContain("swift");
     expect(VALID_LANGUAGES).toContain("haskell");
+    expect(VALID_LANGUAGES).toContain("ocaml");
     expect(VALID_LANGUAGES).toContain("csharp");
     expect(VALID_LANGUAGES).toContain("fsharp");
   });
@@ -1464,6 +1610,31 @@ describe("scaffoldOne", () => {
     expect(
       fs.existsSync(
         path.join(repoRoot, "code", "packages", "haskell", "test-pkg"),
+      ),
+    ).toBe(false);
+  });
+
+  it("rejects OCaml structural delimiters before dry-run or directory creation", () => {
+    for (const description of [
+      "safe *) injected",
+      "safe %{workspace_root} injected",
+    ]) {
+      expect(() =>
+        scaffoldOne(
+          "test-pkg",
+          "library",
+          "ocaml",
+          [],
+          0,
+          description,
+          true,
+          repoRoot,
+        ),
+      ).toThrow(/description.*structural/i);
+    }
+    expect(
+      fs.existsSync(
+        path.join(repoRoot, "code", "packages", "ocaml", "test-pkg"),
       ),
     ).toBe(false);
   });
@@ -1551,6 +1722,133 @@ describe("scaffoldOne", () => {
     expect(() =>
       scaffoldOne("existing", "library", "python", [], 0, "test", false, repoRoot),
     ).toThrow("directory already exists");
+  });
+
+  it("throws when the target is a dangling symlink", () => {
+    const pkgDir = path.join(
+      repoRoot,
+      "code",
+      "packages",
+      "ocaml",
+      "linked-pkg",
+    );
+    fs.mkdirSync(path.dirname(pkgDir), { recursive: true });
+    try {
+      fs.symlinkSync(path.join(repoRoot, "missing-target"), pkgDir, "dir");
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "EPERM") {
+        return;
+      }
+      throw error;
+    }
+
+    expect(() =>
+      scaffoldOne(
+        "linked-pkg",
+        "library",
+        "ocaml",
+        [],
+        0,
+        "test",
+        false,
+        repoRoot,
+      ),
+    ).toThrow("directory already exists");
+  });
+
+  it("resolves OCaml program dependencies from the packages tree", () => {
+    const packagesDir = path.join(repoRoot, "code", "packages", "ocaml");
+    const leafDir = path.join(packagesDir, "leaf");
+    const baseDir = path.join(packagesDir, "base");
+    fs.mkdirSync(leafDir, { recursive: true });
+    fs.mkdirSync(baseDir, { recursive: true });
+    generateOcaml(leafDir, "leaf", "library", "Leaf", "", [], []);
+    generateOcaml(
+      baseDir,
+      "base",
+      "library",
+      "Base",
+      "",
+      ["leaf"],
+      ["leaf"],
+      new Map([["leaf", leafDir]]),
+    );
+
+    scaffoldOne(
+      "tool",
+      "program",
+      "ocaml",
+      ["base"],
+      0,
+      "An OCaml tool",
+      false,
+      repoRoot,
+      () => {},
+    );
+
+    const build = fs.readFileSync(
+      path.join(repoRoot, "code", "programs", "ocaml", "tool", "BUILD"),
+      "utf-8",
+    );
+    const leafPin =
+      "coding-adventures-leaf ../../../packages/ocaml/leaf";
+    const basePin =
+      "coding-adventures-base ../../../packages/ocaml/base";
+    expect(build).toContain(leafPin);
+    expect(build).toContain(basePin);
+    expect(build.indexOf(leafPin)).toBeLessThan(build.indexOf(basePin));
+  });
+
+  it("rejects direct and transitive dependency symlinks", () => {
+    const packagesDir = path.join(repoRoot, "code", "packages", "ocaml");
+    const outsideDir = path.join(tmpDir, "outside-dep");
+    fs.mkdirSync(outsideDir, { recursive: true });
+    const linkedDir = path.join(packagesDir, "linked-dep");
+    try {
+      fs.symlinkSync(outsideDir, linkedDir, "dir");
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "EPERM") {
+        return;
+      }
+      throw error;
+    }
+
+    expect(() =>
+      scaffoldOne(
+        "direct-consumer",
+        "library",
+        "ocaml",
+        ["linked-dep"],
+        0,
+        "Direct consumer",
+        true,
+        repoRoot,
+      ),
+    ).toThrow(/dependency.*symlink/i);
+
+    const baseDir = path.join(packagesDir, "base");
+    fs.mkdirSync(baseDir, { recursive: true });
+    generateOcaml(
+      baseDir,
+      "base",
+      "library",
+      "Base",
+      "",
+      ["linked-dep"],
+      ["linked-dep"],
+    );
+    expect(() =>
+      scaffoldOne(
+        "transitive-consumer",
+        "library",
+        "ocaml",
+        ["base"],
+        0,
+        "Transitive consumer",
+        true,
+        repoRoot,
+      ),
+    ).toThrow(/dependency.*symlink/i);
   });
 
   it("throws when dependency not found", () => {

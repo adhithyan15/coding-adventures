@@ -87,6 +87,7 @@ var skipDirs = map[string]bool{
 	"build":         true,
 	"target":        true,
 	".claude":       true,
+	"specs":         true, // Specification and golden fixture trees are never buildable packages
 	"Pods":          true,
 	".dart_tool":    true,
 	".build":        true, // Swift Package Manager build artefacts and dependency checkouts

@@ -106,7 +106,7 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 30, 2026 at `0f8bb3b25` after the merged
+inventory was regenerated on July 30, 2026 at `67dc08ac8` after the merged
 Haskell `http1` and scaffold-capability tranches plus a new wave of Rust-only
 package families. The refresh adds `smart-home-zigbee-integration` after
 `smart-home-mqtt-integration`, the Z-Wave host/integration, and earlier
@@ -1103,14 +1103,21 @@ The Linux OCI review discovered eight additional dependency gates:
   containment enforcement, aggregate resource accounting, lifecycle cleanup,
   and protected runner-owned probe evidence.
 
+The post-#9323 security audit also found that `adj-lang-cli` has a legacy
+effective zero-capability profile despite filesystem, environment, process, and
+stdout use in its runtime/tests, with PR #9324 adding another E2E instance.
+Keep that unrelated repair in the dedicated `adj-lang-cli-capability-profile`
+item: separate harness authority from the publishable runtime profile, declare
+truthful capabilities, and obtain Layer-5 approval for every nonempty profile.
+
 ## Cross-Cutting Stream B: Introduce OCaml Safely
 
 OCaml begins as an `emerging_implementation` lane. It must not silently change
 the current 15-language denominator until its package, build, security, and CI
-substrate is real. Use OCaml 5.2.1, opam 2.5.x, Dune 3.16.x, Alcotest,
-`bisect_ppx`, and `ocamlformat`.
+substrate is real. Use OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with Dune language
+3.16, Alcotest 1.9.0, `bisect_ppx` 2.8.3, and `ocamlformat` 0.27.0.
 
-The selected post-#9308 tranche is `ocaml-lane-contract`. OCAML01 classifies
+Merged PR #9323 delivered `ocaml-lane-contract`. OCAML01 classifies
 OCaml as a known emerging bucket, keeps it outside established coverage and
 missing-slot calculations, and derives the reporter's upper completion-band
 bound from the established-language count. This is the denominator-safe
@@ -1121,22 +1128,27 @@ Bootstrap order:
 1. Add an OCaml lane contract. Make the reporter's hard-coded `10-15`
    completion band denominator-safe, classify OCaml as emerging, and test that
    OCaml packages create neither unknown buckets nor 15-lane missing slots.
+   Complete in PR #9323.
 2. Add complete Go and TypeScript scaffold templates plus golden tests,
    repository ignores, capability metadata/schema support, and the
-   `code/packages/ocaml/` lane README.
-3. Add OCaml discovery, opam/Dune dependency resolution, source hashing,
+   `code/packages/ocaml/` lane README. Complete in PR #9336.
+3. Provision the exact direct OCaml/opam/Dune/Alcotest/`bisect_ppx`/
+   `ocamlformat` toolchain on Ubuntu, macOS, and Windows; lock the
+   opam-repository/switch transitive solver state; and run both generated
+   scaffold kinds without skips.
+4. Add OCaml discovery, opam/Dune dependency resolution, source hashing,
    opam-switch serialization, language detection, validator support, shard
    cost, and CI workflow markers to the canonical Go build tool.
-4. Exercise the full path with a real dependency chain:
+5. Exercise the full path with a real dependency chain:
    `logic-gates`, then `graph -> directed-graph -> state-machine`. Every package
    needs native tests, formatting, measured coverage, README, changelog,
    capability metadata, opam/Dune manifests, and BUILD/BUILD_windows.
-5. Add an OCaml capability analyzer over compiler-libs ASTs, covering process
+6. Add an OCaml capability analyzer over compiler-libs ASTs, covering process
    execution, dynamic loading, unsafe marshaling, and `Obj.magic` under the
    repository's explicit capability/exception policy.
-6. Implement the OCaml build tool on `directed-graph` and require two-way
+7. Implement the OCaml build tool on `directed-graph` and require two-way
    build-plan interchange plus the shared conformance corpus.
-7. Promote OCaml into the implementation denominator only when Ubuntu, macOS,
+8. Promote OCaml into the implementation denominator only when Ubuntu, macOS,
    and Windows run real tests without a skip path, the representative chain and
    build tool are green, capability enforcement is active, and the generated
    16-lane backlog has been explicitly reviewed.

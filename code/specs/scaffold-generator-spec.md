@@ -8,6 +8,10 @@ The first published versions covered Python, Go, Ruby, Rust, TypeScript, and
 Elixir; this spec now also defines a Dart bootstrap implementation focused on
 generating Dart packages and programs correctly.
 
+OCaml scaffolds additionally conform to
+[OCAML02](OCAML02-scaffold-infrastructure.md), which fixes their byte-stable
+library/program trees, metadata versions, safety boundary, and golden fixtures.
+
 ---
 
 ## 1. Overview

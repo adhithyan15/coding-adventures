@@ -879,6 +879,8 @@ func TestDescriptionSafety(t *testing.T) {
 		"safe\u0085next-field",
 		"safe\u2028next-line",
 		"safe */ injected",
+		"safe *) injected",
+		"safe %{workspace_root} injected",
 	} {
 		if isSafeDescription(description) {
 			t.Errorf("isSafeDescription(%q) = true, want false", description)
@@ -886,6 +888,313 @@ func TestDescriptionSafety(t *testing.T) {
 	}
 	if !isSafeDescription("A printable single-line description.") {
 		t.Error("isSafeDescription rejected a printable single-line description")
+	}
+}
+
+func TestGenerateOcamlMatchesGoldenTrees(t *testing.T) {
+	for _, pkgType := range []string{"library", "program"} {
+		t.Run(pkgType, func(t *testing.T) {
+			target := t.TempDir()
+			if err := generateOcaml(
+				target,
+				"my-pkg",
+				pkgType,
+				"A test package",
+				"",
+				nil,
+				nil,
+				nil,
+			); err != nil {
+				t.Fatalf("generateOcaml: %v", err)
+			}
+
+			golden := filepath.Join(
+				"..", "..", "..", "specs", "fixtures", "scaffold-generator", "ocaml-"+pkgType,
+			)
+			assertTreesEqual(t, target, golden)
+		})
+	}
+}
+
+func TestGenerateOcamlEncodesDependenciesAndDescriptions(t *testing.T) {
+	target := t.TempDir()
+	description := `Quotes " backslash \ hash # parens () ; backticks ` + "`" + " and $(shell) plus\u00a0space"
+	if err := generateOcaml(
+		target,
+		"my-pkg",
+		"library",
+		description,
+		"Layer 4 in the computing stack.",
+		[]string{"graph"},
+		[]string{"bitset", "graph"},
+		nil,
+	); err != nil {
+		t.Fatalf("generateOcaml: %v", err)
+	}
+
+	opam, err := os.ReadFile(filepath.Join(target, "coding-adventures-my-pkg.opam"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	opamText := string(opam)
+	for _, want := range []string{
+		`"coding-adventures-graph" {= "0.1.0"}`,
+		"synopsis: \"Quotes \\\" backslash \\\\ hash # parens () ; backticks ` and $(shell) plus\u00a0space\"",
+	} {
+		if !strings.Contains(opamText, want) {
+			t.Errorf("opam metadata missing encoded %q", want)
+		}
+	}
+
+	build, err := os.ReadFile(filepath.Join(target, "BUILD"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	buildText := string(build)
+	for _, want := range []string{
+		"opam pin add --no-action -y coding-adventures-bitset ../bitset",
+		"opam pin add --no-action -y coding-adventures-graph ../graph",
+		"opam exec -- dune build @fmt",
+		"opam exec -- dune runtest --force",
+		"opam exec -- bisect-ppx-report summary --per-file --expect src/coding_adventures_my_pkg.ml bisect*.coverage",
+	} {
+		if !strings.Contains(buildText, want) {
+			t.Errorf("BUILD missing %q", want)
+		}
+	}
+	if strings.Contains(buildText, description) {
+		t.Error("BUILD must not contain user-controlled description text")
+	}
+	if strings.Contains(opamText, `\u00a0`) {
+		t.Error("opam metadata must preserve accepted Unicode as UTF-8, not Go escapes")
+	}
+	duneProject, err := os.ReadFile(filepath.Join(target, "dune-project"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(duneProject), "plus\u00a0space") {
+		t.Error("Dune metadata did not preserve accepted Unicode")
+	}
+}
+
+func TestReadOcamlDepsUsesCheckedInOpamMetadata(t *testing.T) {
+	pkgDir := filepath.Join(t.TempDir(), "my-pkg")
+	if err := os.MkdirAll(pkgDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	metadata := `opam-version: "2.0"
+name: "coding-adventures-my-pkg"
+synopsis: "depends: [ \"coding-adventures-synopsis-decoy\" ]"
+depends: [
+  "ocaml" {= "5.2.1"}
+  "coding-adventures-graph" {= "0.1.0"}
+  "coding-adventures-state-machine" {= "0.1.0"}
+]
+build: [ "echo coding-adventures-build-decoy" ]
+`
+	if err := os.WriteFile(filepath.Join(pkgDir, "coding-adventures-my-pkg.opam"), []byte(metadata), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(
+		filepath.Join(pkgDir, "aaa-decoy.opam"),
+		[]byte("depends: [ \"coding-adventures-wrong-file\" ]\n"),
+		0o644,
+	); err != nil {
+		t.Fatal(err)
+	}
+	deps, err := readOcamlDeps(pkgDir)
+	if err != nil {
+		t.Fatalf("readOcamlDeps: %v", err)
+	}
+	if got := strings.Join(deps, ","); got != "graph,state-machine" {
+		t.Fatalf("readOcamlDeps = %v", deps)
+	}
+}
+
+func TestGeneratedOcamlMetadataHasNoSelfDependency(t *testing.T) {
+	baseDir := t.TempDir()
+	pkgDir := filepath.Join(baseDir, "my-pkg")
+	if err := os.MkdirAll(pkgDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := generateOcaml(
+		pkgDir,
+		"my-pkg",
+		"library",
+		"A test package",
+		"",
+		nil,
+		nil,
+		nil,
+	); err != nil {
+		t.Fatal(err)
+	}
+
+	deps, err := readOcamlDeps(pkgDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(deps) != 0 {
+		t.Fatalf("generated dependency metadata includes false deps: %v", deps)
+	}
+	closure, err := transitiveClosure([]string{"my-pkg"}, "ocaml", baseDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	order, err := topologicalSort(closure, "ocaml", baseDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := strings.Join(order, ","); got != "my-pkg" {
+		t.Fatalf("topological order = %q, want my-pkg", got)
+	}
+}
+
+func TestScaffoldOcamlProgramResolvesLibraryDependencies(t *testing.T) {
+	repoRoot := t.TempDir()
+	packagesDir := filepath.Join(repoRoot, "code", "packages", "ocaml")
+	leafDir := filepath.Join(packagesDir, "leaf")
+	baseDir := filepath.Join(packagesDir, "base")
+	for _, dir := range []string{leafDir, baseDir} {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := generateOcaml(leafDir, "leaf", "library", "Leaf", "", nil, nil, nil); err != nil {
+		t.Fatal(err)
+	}
+	if err := generateOcaml(
+		baseDir,
+		"base",
+		"library",
+		"Base",
+		"",
+		[]string{"leaf"},
+		[]string{"leaf"},
+		map[string]string{"leaf": leafDir},
+	); err != nil {
+		t.Fatal(err)
+	}
+
+	var stdout, stderr bytes.Buffer
+	err := scaffold(scaffoldConfig{
+		packageName: "tool",
+		pkgType:     "program",
+		directDeps:  []string{"base"},
+		description: "An OCaml tool",
+		repoRoot:    repoRoot,
+	}, "ocaml", &stdout, &stderr)
+	if err != nil {
+		t.Fatalf("scaffold: %v", err)
+	}
+
+	buildPath := filepath.Join(repoRoot, "code", "programs", "ocaml", "tool", "BUILD")
+	build, err := os.ReadFile(buildPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	buildText := string(build)
+	leafPin := "coding-adventures-leaf ../../../packages/ocaml/leaf"
+	basePin := "coding-adventures-base ../../../packages/ocaml/base"
+	if !strings.Contains(buildText, leafPin) || !strings.Contains(buildText, basePin) {
+		t.Fatalf("program BUILD has incorrect package pin paths:\n%s", buildText)
+	}
+	if strings.Index(buildText, leafPin) > strings.Index(buildText, basePin) {
+		t.Fatalf("program BUILD is not leaf-first:\n%s", buildText)
+	}
+}
+
+func TestScaffoldRejectsSymlinkDependency(t *testing.T) {
+	repoRoot := t.TempDir()
+	baseDir := filepath.Join(repoRoot, "code", "packages", "ocaml")
+	if err := os.MkdirAll(baseDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	outside := filepath.Join(t.TempDir(), "outside")
+	if err := os.MkdirAll(outside, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	depDir := filepath.Join(baseDir, "linked-dep")
+	if err := os.Symlink(outside, depDir); err != nil {
+		t.Skipf("symlink creation is unavailable on this platform: %v", err)
+	}
+
+	var stdout, stderr bytes.Buffer
+	err := scaffold(scaffoldConfig{
+		packageName: "consumer",
+		pkgType:     "library",
+		directDeps:  []string{"linked-dep"},
+		description: "A consumer",
+		dryRun:      true,
+		repoRoot:    repoRoot,
+	}, "ocaml", &stdout, &stderr)
+	if err == nil || !strings.Contains(err.Error(), "symlink") {
+		t.Fatalf("expected symlink dependency rejection, got %v", err)
+	}
+}
+
+func assertTreesEqual(t *testing.T, gotRoot, wantRoot string) {
+	t.Helper()
+	wantFiles := map[string]string{}
+	err := filepath.Walk(wantRoot, func(path string, info os.FileInfo, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if info.IsDir() {
+			return nil
+		}
+		rel, relErr := filepath.Rel(wantRoot, path)
+		if relErr != nil {
+			return relErr
+		}
+		data, readErr := os.ReadFile(path)
+		if readErr != nil {
+			return readErr
+		}
+		wantFiles[filepath.ToSlash(rel)] = string(data)
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("walking golden tree: %v", err)
+	}
+
+	gotFiles := map[string]string{}
+	err = filepath.Walk(gotRoot, func(path string, info os.FileInfo, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if info.IsDir() {
+			return nil
+		}
+		rel, relErr := filepath.Rel(gotRoot, path)
+		if relErr != nil {
+			return relErr
+		}
+		data, readErr := os.ReadFile(path)
+		if readErr != nil {
+			return readErr
+		}
+		gotFiles[filepath.ToSlash(rel)] = string(data)
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("walking generated tree: %v", err)
+	}
+
+	if len(gotFiles) != len(wantFiles) {
+		t.Fatalf("generated %d files, golden has %d\ngot: %v\nwant: %v", len(gotFiles), len(wantFiles), gotFiles, wantFiles)
+	}
+	for path, want := range wantFiles {
+		if got, ok := gotFiles[path]; !ok {
+			t.Errorf("generated tree missing %s", path)
+		} else if got != want {
+			t.Errorf("%s differs from golden\n--- got ---\n%s--- want ---\n%s", path, got, want)
+		}
+	}
+	for path := range gotFiles {
+		if _, ok := wantFiles[path]; !ok {
+			t.Errorf("generated tree has unexpected %s", path)
+		}
 	}
 }
 
@@ -1085,6 +1394,33 @@ func TestRefusesToOverwrite(t *testing.T) {
 // File generation tests — C and C++ (pure ISO, iso-harness)
 // =========================================================================
 
+func TestRefusesDanglingSymlinkTarget(t *testing.T) {
+	repoRoot := t.TempDir()
+	baseDir := filepath.Join(repoRoot, "code", "packages", "ocaml")
+	if err := os.MkdirAll(baseDir, 0o755); err != nil {
+		t.Fatalf("create OCaml package directory: %v", err)
+	}
+
+	targetDir := filepath.Join(baseDir, "linked-pkg")
+	if err := os.Symlink(filepath.Join(repoRoot, "missing-target"), targetDir); err != nil {
+		t.Skipf("symlink creation is unavailable on this platform: %v", err)
+	}
+
+	var stdout, stderr bytes.Buffer
+	err := scaffold(scaffoldConfig{
+		packageName: "linked-pkg",
+		pkgType:     "library",
+		description: "A linked package",
+		repoRoot:    repoRoot,
+	}, "ocaml", &stdout, &stderr)
+	if err == nil {
+		t.Fatal("expected dangling symlink target to be refused")
+	}
+	if !strings.Contains(err.Error(), "directory already exists") {
+		t.Fatalf("expected existing-directory error, got %v", err)
+	}
+}
+
 func TestGenerateC(t *testing.T) {
 	tmpDir := t.TempDir()
 	if err := generateC(tmpDir, "ring-buf", "A ring buffer", ""); err != nil {
@@ -1209,6 +1545,15 @@ func TestCFamilyLanguagesAreValid(t *testing.T) {
 			t.Errorf("%q missing from validLanguages", lang)
 		}
 	}
+}
+
+func TestOcamlLanguageIsValid(t *testing.T) {
+	for _, lang := range validLanguages {
+		if lang == "ocaml" {
+			return
+		}
+	}
+	t.Fatal(`"ocaml" missing from validLanguages`)
 }
 
 // readDeps must not error for C/C++ (they have no manifest; deps live in the
