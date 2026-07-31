@@ -8,7 +8,7 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": 9375,
   "last_inventory": {
     "revision": "8c4785535d9e49cbed77d238d1bc596697f28439",
     "schema_version": 3,
@@ -461,11 +461,11 @@
     {
       "id": "dart-scaffold-capability-schema",
       "title": "Emit truthful schema-v1 capability manifests from the Dart scaffold generator",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["capability-schema-category-action-constraints"],
       "branch": "codex/dart-scaffold-capability-schema",
-      "pr_number": null,
-      "notes": "Selected after merged PR #9371, the collision-clean d05262d inventory, and parallel dependency, fixture, contract, and security audits because it directly unlocks dart-current-14-of-15 and its 13 portable packages. Discovered in the e34f26fad post-merge fixture audit. The native Dart generator emits no required_capabilities.json for library or program scaffolds even though Spec 13 requires explicit schema-v1 profiles. Add language-neutral golden/schema coverage, emit empty profiles for libraries and the truthful stdout profile for generated programs, classify the generator's own runtime authority, and leave existing nonempty Dart profile interpretation to the legacy migration owner."
+      "pr_number": 9375,
+      "notes": "Ready PR #9375 was opened after merged PR #9371, the collision-clean d05262d selection inventory, a post-rebase 8c4785535 inventory, and parallel dependency, fixture, contract, and adversarial security audits because it directly unlocks dart-current-14-of-15 and its 13 portable packages. It adds language-neutral schema-v1 goldens, emits empty library and truthful stdout-only program manifests, declares the generator's exact runtime authority, fixes repository discovery to the checked-in CLI, removes callable public path overrides, and rejects malicious transitive dependency names before path construction. Validation: all 17 Dart tests and real generated library/program toolchains passed; 91.76% line coverage; all four Go build-tool-selected Dart packages built; shared manifest/taxonomy/reporter tests, Dart format/analyze, Ruff, Bandit, compileall, JSON parsing, Go test/vet, collision inventory, state-graph, diff, secret, and independent final audits passed. Spec 13 Layer 5 hardware-key-signed maintainer approval remains required before merge for the new nonempty generator manifest."
     },
     {
       "id": "haskell-http1",
