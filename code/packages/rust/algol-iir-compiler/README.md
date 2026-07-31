@@ -48,6 +48,10 @@ scalar declared in an enclosing block**: such a shared scalar is materialised as
 a typed module **global** (`global_load`/`global_store`) so the procedure and
 the block share one cell — e.g. `integer procedure add(x); … add := counter :=
 counter + x` over an enclosing `integer counter` runs across every backend.
+A nested procedure may also capture an enclosing scalar `value` parameter: its
+outer procedure publishes the incoming typed value to a compiler-owned global
+before the nested sibling runs, so nested reads and assignments share that
+invocation's value. A same-named nested formal still shadows the capture.
 
 Since **LANG-FULL AL6** a variable may be declared **`own`** (`own integer n`),
 giving it *static lifetime*: it is allocated once and retains its value across

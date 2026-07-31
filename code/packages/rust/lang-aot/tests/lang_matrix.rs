@@ -1396,6 +1396,22 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a nested procedure captures an enclosing scalar value
+    // parameter. `total` publishes its incoming `seed` before `bump` runs in a
+    // fresh sibling frame; the nested assignment then feeds the outer result.
+    // This uses the shared typed global IIR ops, so it runs on all seven
+    // standard backends without a backend-specific closure representation.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+                  integer procedure total(seed); value seed; integer seed; \
+                    begin integer procedure bump; begin seed := seed + 2; bump := seed end; \
+                          total := bump() end; \
+                  result := total(40) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — scalar string variables on the direct literal fast path. A
     // `string` scalar assigned from a literal emits `str_const` directly to its
     // slot; the preceding row covers a runtime procedure-result copy.
@@ -5221,6 +5237,37 @@ fn algol_nested_procedure_captures_array_formal_on_every_available_standard_back
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but nested array-formal capture did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_captures_scalar_formal_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure total(seed)")
+                && program.src.contains("integer procedure bump")
+                && program.src.contains("seed := seed + 2")
+        })
+        .expect("the ALGOL scalar-formal capture program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested scalar-formal capture did not complete"
             );
             continue;
         };
