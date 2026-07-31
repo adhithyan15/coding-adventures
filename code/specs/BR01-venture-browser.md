@@ -70,17 +70,25 @@ scroll-aware link hit-testing, and viewport scene translation.
 scroll coherently when the page changes. `BrowserSession` now dispatches native
 navigation commands and content-link activation through transactional page
 loads, preserving the prior history and viewport on failure. The remaining
-browser gate is now being closed on macOS first: `venture-browser-macos` loads
-an HTTP page with native CoreText services, creates an AppKit `CAMetalLayer`,
-and presents the viewport through `paint-metal`. Native AppKit wheel events
+browser gate is now being closed on macOS first. The shared
+`programs/mosaic/venture-browser` package authors Venture's title bar,
+navigation controls, address input, status line, and interaction states once
+in MIL, MLL, and MSL, with acceptance coverage for native SwiftUI and WinUI
+lowering. `BrowserChromeController` maps that exact slot/event contract onto
+`BrowserSession`, including transactional address drafts, redirect
+synchronization, and history-derived disabled states.
+`venture-browser-macos` loads an HTTP page with native CoreText services,
+creates an AppKit `CAMetalLayer`, and presents the viewport through
+`paint-metal`. Native AppKit wheel events
 drive the shared clamped viewport and Metal repaint path. Primary-button events
 now use top-left viewport coordinates to activate links through transactional
 page loads, update the title, and repaint across repeated navigation. Named
 AppKit navigation keys now drive clamped viewport scrolling and Metal repaint.
 Command-Left/Right now reload Back/Forward history entries through the shared
-transactional session, update the native title, and repaint. Text input,
-controls, resize/reflow, and richer pointer behavior remain before the shell is
-interactive.
+transactional session, update the native title, and repaint. Mounting the
+generated Mosaic chrome and native page surface into one shell, resize/reflow,
+richer pointer behavior, and Windows build/interaction acceptance remain before
+the browser shell is complete.
 
 ## Where It Fits
 

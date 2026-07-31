@@ -40,6 +40,14 @@ replaces redirect history with the final URL, and updates the viewport only
 after a successful load. Pointer activation uses viewport coordinates and
 follows the resolved link through the same transactional path.
 
+`BrowserChromeController` is the matching host-neutral reducer for the shared
+Mosaic `VentureChrome` package. It preserves address edits as a draft, maps the
+six MIL events to `BrowserNavigation`, synchronizes redirects only after a
+successful load, and projects one coherent `BrowserChromeProps` snapshot for
+the six MIL slots. Native SwiftUI and WinUI bridges can consume this contract
+instead of implementing browser behavior independently; mounting those bridges
+into the runnable shells remains a separate acceptance gate.
+
 ## Development
 
 ```bash

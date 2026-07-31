@@ -64,14 +64,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         .collect();
     assert_eq!(
         slots,
-        [
-            "address",
-            "page-title",
-            "status-text",
-            "back-disabled",
-            "forward-disabled",
-            "navigation-disabled",
-        ]
+        venture_browser_core::VENTURE_CHROME_SLOT_NAMES
     );
     let events: Vec<_> = interface
         .component
@@ -81,14 +74,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         .collect();
     assert_eq!(
         events,
-        [
-            "onBack",
-            "onForward",
-            "onHome",
-            "onReload",
-            "onAddressChange",
-            "onNavigate",
-        ]
+        venture_browser_core::VENTURE_CHROME_EVENT_NAMES
     );
 
     let manifest = fs::read_to_string(

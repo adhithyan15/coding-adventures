@@ -8,5 +8,7 @@
 - Typed slots for the address, page title, status, and disabled controls.
 - Typed dispatch events for Back, Forward, Home, Reload, address edits, and
   navigation.
+- A compile-time ratchet tying the MIL slots and events to Venture's shared
+  host-neutral chrome reducer.
 - An explicit empty `content-surface` boundary reserved for the host-rendered
   browser viewport; native surface embedding remains a later acceptance gate.

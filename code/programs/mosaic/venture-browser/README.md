@@ -18,6 +18,8 @@ controls.
 - Slots carry the current address, page title, status text, and host-derived
   disabled flags.
 - Emits carry Back, Forward, Home, Reload, address edits, and Navigate.
+- `venture-browser-core::BrowserChromeController` is the shared reducer and
+  slot projection for that exact contract.
 - Both themes expose the same parts and interaction states.
 - `tests/package_compiles.rs` guards the package contract; emitter integration
   tests prove SwiftUI and XAML consume these exact sources.

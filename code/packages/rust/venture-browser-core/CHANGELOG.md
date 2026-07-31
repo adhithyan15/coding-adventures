@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0
+
+- Add the host-neutral `BrowserChromeController` reducer and
+  `BrowserChromeProps` projection for the Mosaic-authored Venture chrome.
+- Pin the exact shared MIL slot and event names so host wiring cannot silently
+  drift from the package contract.
+
 ## 0.4.0
 
 - Add transactional `BrowserSession` navigation across page loading, redirect
