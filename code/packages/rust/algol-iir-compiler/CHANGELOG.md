@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.33.0 — 2026-07-30 — AL6 own arrays
+
+`own [type] array` declarations now have real ALGOL static lifetime. The
+compiler guards their first allocation with a scalar module-global flag, then
+stores the typed array handle and declared lower-bound/stride metadata in
+module globals. Later procedure invocations skip allocation and recover that
+same state, so an `own integer array memo[4:5]` retains element values and its
+nonzero index space across calls.
+
+The parser's checked-in Rust grammar artifact now recognizes `own_array_decl`.
+The execution regression calls a procedure three times and observes `memo[4]`
+as 1, 2, and 3 on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
 ## 0.32.0 — 2026-07-30 — ALGOL captured arrays
 
 Procedures can now read and write arrays declared by their enclosing ALGOL

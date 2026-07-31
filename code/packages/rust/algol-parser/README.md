@@ -35,8 +35,9 @@ The ALGOL 60 grammar (~30 rules) is structured in three major sections:
 
 | Rule             | Description                                          |
 |------------------|------------------------------------------------------|
-| `declaration`    | type_decl \| array_decl \| switch_decl \| procedure_decl |
+| `declaration`    | type_decl \| own_array_decl \| array_decl \| switch_decl \| procedure_decl |
 | `type_decl`      | `integer x, y, z` — declares named variables        |
+| `own_array_decl` | `own integer array A[1:10]` — static-lifetime array |
 | `array_decl`     | `array A[1:10]` — dynamically-sized arrays           |
 | `switch_decl`    | `switch s := label1, label2` — computed goto table  |
 | `procedure_decl` | Full procedure with parameters and body              |

@@ -1618,6 +1618,21 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(6),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — an `own` array has the same static-lifetime rule as an own
+    // scalar, but its handle plus 1-based lower-bound metadata are initialized
+    // only on the first procedure invocation. The three calls observe memo[4]
+    // as 1, 2, then 3; their sum (6) proves the backing array was neither
+    // reallocated nor reset between frames.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+               integer procedure bump(d); value d; integer d; \
+                  begin own integer array memo[4:5]; memo[4] := memo[4] + d; bump := memo[4] end; \
+               result := bump(1) + bump(1) + bump(1) end",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a *switch* (computed goto) + the integer comparison that drives
     // it.  `switch s := a1, a2, a3; … goto s[i]` selects the i-th label by a
     // 1-based linear `index == k ? jmp Lk` chain (portable jmp/jmp_if_false/label
@@ -4973,6 +4988,36 @@ fn algol_captured_array_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but captured array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_own_array_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("own integer array memo[4:5]")
+                && program.src.contains("procedure bump")
+        })
+        .expect("the ALGOL own array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but own array execution did not complete"
             );
             continue;
         };

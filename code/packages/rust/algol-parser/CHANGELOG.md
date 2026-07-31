@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2026-07-30
+
+### Added
+
+- **`own_array_decl` parser support.** The checked-in Rust grammar artifact now
+  recognizes `own [type] array ...`, including typed declarations such as
+  `own integer array memo[4:5]`. This is a narrow synchronization with the
+  source grammar: full regeneration remains intentionally deferred because it
+  would import unrelated grammar shapes the current frontend does not support.
+
 ## [0.3.0] - 2026-07-14
 
 ### Fixed — recursion-depth guard against native stack overflow (DoS)

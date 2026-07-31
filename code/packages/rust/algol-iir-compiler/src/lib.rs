@@ -498,8 +498,11 @@ impl Compiler {
         // segment is lowered to an `alloc_array` whose length is the run-time
         // span `upper - lower + 1`; the binding records the lower bound so a
         // later `A[i]` access can translate to the 0-based IIR index `i - lower`.
+        if let Some(array_decl) = first_direct_node(node, "own_array_decl") {
+            return self.emit_array_decl(array_decl, true);
+        }
         if let Some(array_decl) = first_direct_node(node, "array_decl") {
-            return self.emit_array_decl(array_decl);
+            return self.emit_array_decl(array_decl, false);
         }
         let Some(type_decl) = first_direct_node(node, "type_decl") else {
             let construct = direct_nodes(node)
@@ -565,7 +568,11 @@ impl Compiler {
     /// flat total length (product of all dimension sizes), and emit one
     /// `alloc_array`.  Per-dimension lower bounds and row-major strides are
     /// recorded in `ArrayInfo.dims` so `A[i, j]` can compute the flat index.
-    fn emit_array_decl(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
+    fn emit_array_decl(
+        &mut self,
+        node: &GrammarASTNode,
+        is_own: bool,
+    ) -> Result<(), CompileError> {
         let elem_ty = match first_direct_node(node, "type") {
             Some(type_node) => self.scalar_type(type_node)?,
             None => ScalarType::Real, // bare `array A[..]` is `real` in ALGOL 60
@@ -584,6 +591,47 @@ impl Compiler {
             .into_iter()
             .filter(|n| n.rule_name == "array_segment")
         {
+            let names: Vec<String> = first_direct_node(segment, "ident_list")
+                .map(ident_list_names)
+                .unwrap_or_default();
+            if names.is_empty() {
+                return Err(CompileError::Malformed(
+                    "array_segment has no names".into(),
+                ));
+            }
+
+            // An `own` array declared inside a procedure is allocated on the
+            // first invocation only. The flag is a separate scalar global so
+            // every standard backend can use its existing i64 global support
+            // to guard the typed array-handle global and its dimension metadata.
+            let own_init = is_own.then(|| {
+                let array_slot = self.scoped_slot_name(&names[0]);
+                let flag = format!("{array_slot}.__algol_own_array_initialized");
+                let initialized = self.fresh_temp();
+                let allocate_label = self.fresh_label("own_array_allocate");
+                let ready_label = self.fresh_label("own_array_ready");
+                self.emit(IIRInstr::new(
+                    "global_load",
+                    Some(initialized.clone()),
+                    vec![Operand::Str(flag.clone())],
+                    "i64",
+                ));
+                self.emit(IIRInstr::new(
+                    "jmp_if_false",
+                    None,
+                    vec![Operand::Var(initialized), Operand::Var(allocate_label.clone())],
+                    "void",
+                ));
+                self.emit(IIRInstr::new(
+                    "jmp",
+                    None,
+                    vec![Operand::Var(ready_label.clone())],
+                    "void",
+                ));
+                self.emit_label(&allocate_label);
+                (flag, ready_label)
+            });
+
             let bound_pairs: Vec<&GrammarASTNode> = direct_nodes(segment)
                 .into_iter()
                 .filter(|n| n.rule_name == "bound_pair")
@@ -702,17 +750,9 @@ impl Compiler {
                 })
                 .collect();
 
-            let names: Vec<String> = first_direct_node(segment, "ident_list")
-                .map(ident_list_names)
-                .unwrap_or_default();
-            if names.is_empty() {
-                return Err(CompileError::Malformed(
-                    "array_segment has no names".into(),
-                ));
-            }
             let array_ty = make_array_type(elem_ty.iir());
             for name in names {
-                let is_global = self.block_captured.contains(&name);
+                let is_global = is_own || self.block_captured.contains(&name);
                 let handle = self.declare_array(&name, elem_ty, dims.clone(), is_global)?;
                 let alloc_dest = if is_global {
                     self.fresh_temp()
@@ -759,6 +799,16 @@ impl Compiler {
                         }
                     }
                 }
+            }
+            if let Some((flag, ready_label)) = own_init {
+                let one = self.emit_const(ScalarType::Integer, Operand::Int(1));
+                self.emit(IIRInstr::new(
+                    "global_store",
+                    None,
+                    vec![Operand::Str(flag), Operand::Var(one)],
+                    "void",
+                ));
+                self.emit_label(&ready_label);
             }
         }
         Ok(())
@@ -3466,11 +3516,7 @@ impl Compiler {
         ty: ScalarType,
         is_own: bool,
     ) -> Result<String, CompileError> {
-        let slot = if self.scopes.len() == 1 {
-            name.to_string()
-        } else {
-            format!("__algol_s{}_{}", self.scope_counter, name)
-        };
+        let slot = self.scoped_slot_name(name);
         let current = self
             .scopes
             .last_mut()
@@ -3518,11 +3564,7 @@ impl Compiler {
         dims: Vec<ArrayDim>,
         is_global: bool,
     ) -> Result<String, CompileError> {
-        let slot = if self.scopes.len() == 1 {
-            name.to_string()
-        } else {
-            format!("__algol_s{}_{}", self.scope_counter, name)
-        };
+        let slot = self.scoped_slot_name(name);
         let current = self
             .scopes
             .last_mut()
@@ -3545,6 +3587,14 @@ impl Compiler {
             self.register_names.insert(slot.clone());
         }
         Ok(slot)
+    }
+
+    fn scoped_slot_name(&self, name: &str) -> String {
+        if self.scopes.len() == 1 {
+            name.to_string()
+        } else {
+            format!("__algol_s{}_{}", self.scope_counter, name)
+        }
     }
 
     fn require_var(&self, name: &str) -> Result<VarBinding, CompileError> {
@@ -3940,6 +3990,39 @@ mod tests {
     fn al6_own_variable_persists_across_calls_runs_on_vm() {
         // RUN it: 1 + 2 + 3 = 6 (own persists); a plain local would give 3.
         assert_eq!(run_i64(AL6_OWN_PROG), 6);
+    }
+
+    /// `own` arrays share the scalar `own` lifetime rule, but need an explicit
+    /// first-call allocation guard because their handle and index metadata are
+    /// module globals rather than zero-initialized scalar values.
+    const AL6_OWN_ARRAY_PROG: &str = "begin integer result; \
+         integer procedure bump(d); value d; integer d; \
+         begin own integer array memo[4:5]; memo[4] := memo[4] + d; bump := memo[4] end; \
+         result := bump(1) + bump(1) + bump(1) end";
+
+    #[test]
+    fn al6_own_array_lowers_to_guarded_typed_globals() {
+        let module = compile_source(AL6_OWN_ARRAY_PROG, "test").expect("compiles");
+        let bump = module.functions.iter().find(|f| f.name == "bump").expect("bump fn");
+        let array_slot = "__algol_s1_memo";
+        let flag = "__algol_s1_memo.__algol_own_array_initialized";
+        assert!(bump.instructions.iter().any(|i| i.op == "global_load"
+            && i.srcs.first().and_then(|o| o.as_str_lit()) == Some(flag)),
+            "own array must read its initialization flag");
+        assert!(bump.instructions.iter().any(|i| i.op == "global_store"
+            && i.srcs.first().and_then(|o| o.as_str_lit()) == Some(array_slot)),
+            "own array allocation must store a typed handle global");
+        assert!(bump.instructions.iter().any(|i| i.op == "global_store"
+            && i.srcs.first().and_then(|o| o.as_str_lit()) == Some(flag)),
+            "own array allocation must mark the initialization flag");
+        assert!(bump.instructions.iter().any(|i| i.op == "jmp_if_false"),
+            "own array initialization must be guarded");
+    }
+
+    #[test]
+    fn al6_own_array_persists_across_calls_runs_on_vm() {
+        // RUN it: memo[4] advances 0 → 1 → 2 → 3, so 1 + 2 + 3 = 6.
+        assert_eq!(run_i64(AL6_OWN_ARRAY_PROG), 6);
     }
 
     #[test]
