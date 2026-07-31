@@ -8,7 +8,7 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": 9371,
   "last_inventory": {
     "revision": "2e067105d718d35fbb85d39eae879479302df82e",
     "schema_version": 3,
@@ -107,11 +107,11 @@
     {
       "id": "build-tool-execution-case-snapshot",
       "title": "Bind execution to the exact approved in-memory case snapshot",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-trusted-authority-bundle"],
       "branch": "codex/build-tool-execution-case-snapshot",
-      "pr_number": null,
-      "notes": "Selected after merged PR #9368 and the collision-clean 2e067105d inventory plus parallel package, fixture, and security audits. Define the currently prose-only typed selector/held-snapshot contract, select the requested direct corpus member from one root-handle/no-follow bounded snapshot, and retain the exact hashed bytes for later execution; reject outside paths, renames, symlinks, hardlinks, case/Unicode aliases, and post-digest mutation. This process-free repository boundary is the smallest critical-path successor and claims no execution authority, backend readiness, adapter conformance, or fixture execution."
+      "pr_number": 9371,
+      "notes": "Ready-for-review PR #9371. Selected after merged PR #9368 and the collision-clean 2e067105d inventory plus parallel package, fixture, contract, and security audits. The process-free boundary defines factory-only typed immutable snapshots and selectors, exact retained bytes and digests, bounded direct corpus membership, Unicode/case alias rejection, POSIX retained no-follow traversal, and Windows fixed-volume non-reparse FileId binding without claiming execution authority, backend readiness, adapter conformance, or fixture execution. Validation: 178 build-tool tests passed with 23 expected platform skips and 81% branch-aware Windows coverage; 10 reporter tests, both process-free contract validators, Ruff, Bandit, compileall, Go test/vet, collision and state-graph checks, diff hygiene, and independent fixture, contract, and security reviews passed. The repository BUILD validator reproduced the same 73 pre-existing Windows BUILD/CI metadata errors on pristine origin/main."
     },
     {
       "id": "build-tool-bootstrap-execution-fixture",
