@@ -35,6 +35,7 @@ env:
   ALCOTEST_VERSION: '1.9.0'
   BISECT_PPX_VERSION: '2.8.3'
   OCAMLFORMAT_VERSION: '0.27.0'
+  OPAM_REPOSITORY_COMMIT: 'ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff'
 
 jobs:
   contract:
@@ -43,6 +44,8 @@ jobs:
     steps:
       - name: Checkout reviewed source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
 
       - name: Validate closed manifest, evidence, and workflow
         run: |
@@ -73,18 +76,21 @@ jobs:
     steps:
       - name: Checkout reviewed source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
 
       - name: Set up the reviewed OCaml compiler and repository
         uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
         with:
-          ocaml-compiler: ${{ env.OCAML_VERSION }}
+          ocaml-compiler: ocaml-base-compiler.5.2.1
           opam-repositories: |
             default: git+https://github.com/ocaml/opam-repository.git#ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff
           opam-pin: false
           dune-cache: false
-          cache-prefix: ocaml03-${{ matrix.target }}
+          cache-prefix: ocaml03-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}-fresh-${{ matrix.target }}
           windows-compiler: mingw
           windows-environment: cygwin
+          github-token: ''
 
       - name: Require the reviewed runner and opam bootstrap
         shell: bash
@@ -97,6 +103,16 @@ jobs:
           test "$RUNNER_ARCH" = "$EXPECTED_ARCH"
           actual="$(opam --version)"
           test "$actual" = "$OPAM_VERSION"
+          repository_url="$(opam repository get-url default)"
+          test "$repository_url" = \
+            "git+https://github.com/ocaml/opam-repository.git#$OPAM_REPOSITORY_COMMIT"
+          for package in dune alcotest bisect_ppx ocamlformat; do
+            if opam list --installed --short --columns=name "$package" \
+                | grep -Fxq "$package"; then
+              printf 'fresh switch unexpectedly contains %s\n' "$package" >&2
+              exit 1
+            fi
+          done
 
       - name: Generate fresh solver evidence
         shell: bash
@@ -170,18 +186,21 @@ jobs:
     steps:
       - name: Checkout reviewed source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
 
       - name: Set up the reviewed OCaml compiler and repository
         uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
         with:
-          ocaml-compiler: ${{ env.OCAML_VERSION }}
+          ocaml-compiler: ocaml-base-compiler.5.2.1
           opam-repositories: |
             default: git+https://github.com/ocaml/opam-repository.git#ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff
           opam-pin: false
           dune-cache: false
-          cache-prefix: ocaml03-${{ matrix.target }}
+          cache-prefix: ocaml03-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}-locked-${{ matrix.target }}
           windows-compiler: mingw
           windows-environment: cygwin
+          github-token: ''
 
       - name: Require the reviewed runner and opam bootstrap
         shell: bash
@@ -194,6 +213,16 @@ jobs:
           test "$RUNNER_ARCH" = "$EXPECTED_ARCH"
           actual="$(opam --version)"
           test "$actual" = "$OPAM_VERSION"
+          repository_url="$(opam repository get-url default)"
+          test "$repository_url" = \
+            "git+https://github.com/ocaml/opam-repository.git#$OPAM_REPOSITORY_COMMIT"
+          for package in dune alcotest bisect_ppx ocamlformat; do
+            if opam list --installed --short --columns=name "$package" \
+                | grep -Fxq "$package"; then
+              printf 'locked switch unexpectedly contains %s\n' "$package" >&2
+              exit 1
+            fi
+          done
 
       - name: Install the reviewed transitive lock
         shell: bash
@@ -202,6 +231,8 @@ jobs:
         run: |
           set -euo pipefail
           export OPAMSWITCH
+          export OPAMLOCKED=true
+          export OPAMREQUIRECHECKSUMS=true
           OPAMSWITCH="$(opam switch show --safe)"
           fixture="$RUNNER_TEMP/ocaml03-locked-deps"
           mkdir -p "$fixture"
@@ -221,6 +252,8 @@ jobs:
         run: |
           set -euo pipefail
           export OPAMSWITCH
+          export OPAMLOCKED=true
+          export OPAMREQUIRECHECKSUMS=true
           OPAMSWITCH="$(opam switch show --safe)"
           run_root="$RUNNER_TEMP/ocaml03-run"
           coverage_root="$RUNNER_TEMP/ocaml03-coverage/$TARGET"
@@ -230,17 +263,19 @@ jobs:
             fixture="$run_root/$kind"
             mkdir -p "$fixture" "$coverage_root/$kind"
             cp -R "code/specs/fixtures/scaffold-generator/$kind/." "$fixture/"
+            cp "$GITHUB_WORKSPACE/code/specs/fixtures/ocaml-toolchain/$TARGET/coding-adventures-my-pkg.opam.locked" \
+              "$fixture/"
             cd "$fixture"
             build_file=BUILD
             if [ "$RUNNER_OS" = "Windows" ]; then
               build_file=BUILD_windows
             fi
-            while IFS= read -r command; do
+            while IFS= read -r command || [ -n "$command" ]; do
               if [ -n "$command" ]; then
                 if [ "$RUNNER_OS" = "Windows" ]; then
                   cmd.exe /D /S /C "$command"
                 else
-                  bash -c "$command"
+                  sh -c "$command"
                 fi
               fi
             done < "$build_file"

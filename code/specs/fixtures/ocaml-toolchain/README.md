@@ -27,4 +27,3 @@ change:
 4. replace all three target directories and their manifest digests together;
 5. run the locked fixture matrix and the offline validator; and
 6. obtain a new security review before publication.
-

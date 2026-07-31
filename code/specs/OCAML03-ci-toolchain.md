@@ -31,10 +31,20 @@ The CI workflow MUST use:
 - one reviewed full 40-hex `ocaml/opam-repository` commit.
 
 The workflow MUST fail if a direct installed version differs from the contract.
+It MUST pass the full `ocaml-base-compiler.5.2.1` package identity to the setup
+action rather than a bare semver value or range that requires live compiler
+resolution.
 It MUST configure opam with checksum verification and MUST NOT use a moving
 repository branch, tag, unpinned action version, `depext`, package pin, network
 fallback, cache that can substitute project dependencies, or skip-success path.
 Windows uses the setup action's MinGW compiler mode.
+
+The setup action's cache prefix MUST bind the exact source commit, workflow run,
+run attempt, target, and phase. Fresh-solve and locked-fixture phases MUST NOT
+share or restore a cache from any prior run or rerun, and each phase MUST fail
+before dependency installation if Dune, Alcotest, `bisect_ppx`, or
+`ocamlformat` is already installed. This prevents a pre-seeded project
+dependency solution from influencing either solve.
 
 The setup action currently resolves the newest stable opam below 2.6 rather
 than accepting an exact opam version input. The workflow therefore treats the
@@ -105,10 +115,12 @@ runner families.
 ## Workflow behavior and security
 
 `.github/workflows/build-ocaml.yml` runs a fail-fast-disabled three-target
-matrix. It has read-only repository permissions, consumes no repository
-secrets, and uses only commit-pinned actions. It records `RUNNER_OS`,
-`RUNNER_ARCH`, `ImageOS`, and `ImageVersion` for diagnostics without treating
-those mutable labels as an attested host identity.
+matrix. It has read-only repository permissions, uses no repository- or
+user-supplied secrets, passes an empty token to the setup action, and uses only
+commit-pinned actions. Checkout may use GitHub's automatic read-only token for
+the public clone but MUST NOT persist it in Git configuration. The workflow
+records `RUNNER_OS`, `RUNNER_ARCH`, `ImageOS`, and `ImageVersion` for
+diagnostics without treating those mutable labels as an attested host identity.
 
 Both fixture kinds run sequentially on every target. Every nonblank line in the
 selected `BUILD` or `BUILD_windows` file is one independent command, matching
@@ -118,6 +130,11 @@ while the setup action's Cygwin/MinGW toolchain remains on `PATH`. CI MUST NOT
 use `continue-on-error`, conditional success, `|| true`, or an absent-tool
 skip. The run fails unless formatting, Alcotest, and measured `bisect_ppx`
 coverage all execute and produce a nonempty coverage artifact.
+
+Before either BUILD file executes, the target's reviewed lock MUST be copied
+into that fixture. The line-oriented executor MUST export opam's locked and
+checksum-required modes so the BUILD file's dependency-install line cannot
+perform an unlocked solve or accept an unchecksummed source.
 
 Pull-request validation may verify this public toolchain and public scaffold
 code because it receives no secrets and grants no protected build-tool

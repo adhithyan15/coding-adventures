@@ -362,7 +362,7 @@
       "depends_on": ["ocaml-infrastructure"],
       "branch": "codex/ocaml-ci-toolchain",
       "pr_number": null,
-      "notes": "Selected after PR #9336 merged because the cross-platform toolchain is the next dependency in the OCaml bootstrap and unlocks build-substrate and representative-package work. Install OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with language 3.16, Alcotest 1.9.0, bisect_ppx 2.8.3, and ocamlformat 0.27.0 on all three runner families; pin the opam-repository source, preserve per-platform transitive solver locks and receipts, verify their digests, and prove generated library and program scaffolds run real formatting, tests, and coverage without skips. Mutable hosted-runner image metadata is recorded only as diagnostic evidence and is not a host-image attestation."
+      "notes": "Selected after PR #9336 merged because the cross-platform toolchain is the next dependency in the OCaml bootstrap and satisfies the OCaml CI prerequisite for later build-substrate and representative-package work; build-substrate remains blocked on the separate build-tool-go-oracle item. Install OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with language 3.16, Alcotest 1.9.0, bisect_ppx 2.8.3, and ocamlformat 0.27.0 on all three runner families; pin the opam-repository source, preserve per-platform transitive solver locks and receipts, verify their digests, and prove generated library and program scaffolds run real formatting, tests, and coverage without skips. Mutable hosted-runner image metadata is recorded only as diagnostic evidence and is not a host-image attestation."
     },
     {
       "id": "adj-lang-cli-capability-profile",

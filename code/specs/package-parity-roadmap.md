@@ -1147,7 +1147,8 @@ Bootstrap order:
 4. Add OCaml discovery, opam/Dune dependency resolution, source hashing,
    opam-switch serialization, language detection, validator support, shard
    cost, and CI workflow markers to the canonical Go build tool. This begins
-   only after the cross-platform toolchain evidence in step 3 is green.
+   only after both the cross-platform toolchain evidence in step 3 and the
+   separately tracked `build-tool-go-oracle` are complete.
 5. Exercise the full path with a real dependency chain:
    `logic-gates`, then `graph -> directed-graph -> state-machine`. Every package
    needs native tests, formatting, measured coverage, README, changelog,

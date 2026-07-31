@@ -54,6 +54,70 @@ class OcamlToolchainRepositoryTests(unittest.TestCase):
         self.assertNotIn("secrets.", workflow)
 
 
+class RestrictedWorkflowParserTests(unittest.TestCase):
+    def test_parses_supported_scalar_sequence_mapping_and_blocks(self) -> None:
+        document = toolchain.parse_restricted_workflow_yaml(
+            "name: 'closed'\n"
+            "items:\n"
+            "  - scalar\n"
+            "  - key: value\n"
+            "    nested:\n"
+            "      child: yes\n"
+            "  - empty:\n"
+            "  - child:\n"
+            "      value: nested\n"
+            "  - run: |\n"
+            "      first\n"
+            "\n"
+            "      second\n"
+            "empty_block: |\n"
+            "\n"
+        )
+
+        self.assertEqual("closed", document["name"])
+        self.assertEqual("scalar", document["items"][0])
+        self.assertEqual(
+            {"key": "value", "nested": {"child": "yes"}},
+            document["items"][1],
+        )
+        self.assertEqual({"empty": None}, document["items"][2])
+        self.assertEqual(
+            {"child": {"value": "nested"}},
+            document["items"][3],
+        )
+        self.assertEqual({"run": "first\n\nsecond"}, document["items"][4])
+        self.assertEqual("", document["empty_block"])
+
+    def test_parses_empty_sequence_item_with_nested_value(self) -> None:
+        document = toolchain.parse_restricted_workflow_yaml(
+            "root:\n  - \n    key: value\n"
+        )
+        self.assertEqual({"root": [{"key": "value"}]}, document)
+
+    def test_rejects_invalid_yaml_subset_shapes(self) -> None:
+        cases = (
+            ("", "empty"),
+            ("key:\tvalue\n", "tab"),
+            (" key: value\n", "indentation"),
+            ("  key: value\n", "indentation zero"),
+            ("not-a-mapping\n", "supported mapping"),
+            ("root:\n  - \n", "empty sequence item"),
+            ("root:\n  - scalar\n    key: value\n", "sequence indentation"),
+            ("root:\n  key: value\n    child: value\n", "mapping indentation"),
+            ("root:\n  - key: value\n      - child\n", "non-mapping continuation"),
+            ("root:\n  - key: value\n    key: other\n", "duplicates keys"),
+            ("key: one\nkey: two\n", "duplicates"),
+            ("run: >\n  echo folded\n", "folded block scalar"),
+            ("- scalar\n", "root must be"),
+        )
+        for text, message in cases:
+            with (
+                self.subTest(text=text),
+                self.assertRaisesRegex(toolchain.ContractError, message),
+            ):
+                toolchain.parse_restricted_workflow_yaml(text)
+
+
 class OcamlToolchainShapeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -96,6 +160,14 @@ class OcamlToolchainShapeTests(unittest.TestCase):
         self.assert_rejected(
             lambda document: document["targets"]["linux-x64"].__setitem__(
                 "lock_file", "../outside.opam.locked"
+            ),
+            "safe relative path",
+        )
+
+    def test_rejects_non_normalized_target_path(self) -> None:
+        self.assert_rejected(
+            lambda document: document["targets"]["linux-x64"].__setitem__(
+                "lock_file", "linux-x64//coding-adventures-my-pkg.opam.locked"
             ),
             "safe relative path",
         )
@@ -196,8 +268,8 @@ class OcamlToolchainWorkflowTests(unittest.TestCase):
     def test_rejects_missing_contract_fragments(self) -> None:
         cases = (
             ("diff -u", "required fragment"),
-            ("ubuntu-24.04", "runner label"),
-            ("1.9.0", "exact version"),
+            ("ubuntu-24.04", "contract job"),
+            ("1.9.0", "environment"),
         )
         for removed, message in cases:
             with (
@@ -213,6 +285,7 @@ class OcamlToolchainWorkflowTests(unittest.TestCase):
             "continue-on-error: true",
             "run: command || true",
             "${{ secrets.TOKEN }}",
+            "${{ github.token }}",
             "dune-cache: true",
             "opam-pin: true",
         ):
@@ -221,19 +294,180 @@ class OcamlToolchainWorkflowTests(unittest.TestCase):
                 self.assertRaisesRegex(toolchain.ContractError, "forbidden"),
             ):
                 toolchain.validate_workflow_text(
-                    self.manifest, f"{self.workflow}\n{forbidden}\n"
+                    self.manifest, f"{self.workflow}\n# {forbidden}\n"
                 )
 
     def test_rejects_unpinned_action_references(self) -> None:
         for reference in ("actions/example", "actions/example@v1"):
             with (
                 self.subTest(reference=reference),
-                self.assertRaisesRegex(toolchain.ContractError, "not commit-pinned"),
+                self.assertRaises(toolchain.ContractError),
             ):
                 toolchain.validate_workflow_text(
                     self.manifest,
-                    f"{self.workflow}\n      uses: {reference}\n",
+                    f"{self.workflow}\nextra:\n  uses: {reference}\n",
                 )
+
+    def test_rejects_permission_fragment_hidden_in_block_scalar(self) -> None:
+        workflow = self.workflow.replace(
+            "permissions:\n  contents: read", "permissions: write-all", 1
+        ).replace(
+            "name: OCaml toolchain",
+            "name: |\n  permissions:\n    contents: read",
+            1,
+        )
+
+        with self.assertRaisesRegex(toolchain.ContractError, "workflow name"):
+            toolchain.validate_workflow_text(self.manifest, workflow)
+
+    def test_rejects_folded_run_block_that_skips_lock_diff(self) -> None:
+        workflow = self.workflow.replace(
+            "      - name: Compare fresh solve with reviewed evidence\n"
+            "        shell: bash\n"
+            "        env:\n"
+            "          TARGET: ${{ matrix.target }}\n"
+            "        run: |",
+            "      - name: Compare fresh solve with reviewed evidence\n"
+            "        shell: bash\n"
+            "        env:\n"
+            "          TARGET: ${{ matrix.target }}\n"
+            "        run: >",
+            1,
+        )
+        self.assertNotEqual(self.workflow, workflow)
+
+        with self.assertRaisesRegex(toolchain.ContractError, "folded block scalar"):
+            toolchain.validate_workflow_text(self.manifest, workflow)
+
+    def test_rejects_extra_commit_pinned_action(self) -> None:
+        workflow = (
+            f"{self.workflow}\nextra:\n"
+            "  uses: attacker/example@0000000000000000000000000000000000000000\n"
+        )
+
+        with self.assertRaisesRegex(toolchain.ContractError, "action allowlist"):
+            toolchain.validate_workflow_text(self.manifest, workflow)
+
+    def test_rejects_target_missing_from_only_fresh_matrix(self) -> None:
+        entry = (
+            "          - target: macos-arm64\n"
+            "            runner: macos-14\n"
+            "            runner-os: macOS\n"
+            "            runner-arch: ARM64\n"
+        )
+        self.assertEqual(2, self.workflow.count(entry))
+
+        with self.assertRaisesRegex(toolchain.ContractError, "target matrix"):
+            toolchain.validate_workflow_text(
+                self.manifest, self.workflow.replace(entry, "", 1)
+            )
+
+    def test_rejects_required_commands_hidden_in_comments(self) -> None:
+        cases = (
+            self.workflow.replace(
+                "          opam install . --deps-only --with-test --with-dev-setup \\",
+                "          # opam install . --deps-only --with-test --with-dev-setup \\",
+                1,
+            ),
+            self.workflow.replace(
+                '                  cmd.exe /D /S /C "$command"',
+                '                  # cmd.exe /D /S /C "$command"',
+                1,
+            ),
+            self.workflow.replace(
+                '                  sh -c "$command"',
+                '                  # sh -c "$command"',
+                1,
+            ),
+        )
+        for index, workflow in enumerate(cases):
+            with (
+                self.subTest(case=index),
+                self.assertRaisesRegex(toolchain.ContractError, "reviewed digest"),
+            ):
+                toolchain.validate_workflow_text(self.manifest, workflow)
+
+    def test_rejects_noop_shell_and_redirected_artifacts(self) -> None:
+        cases = (
+            self.workflow.replace(
+                "        shell: bash",
+                '        shell: bash -c "exit 0" {0}',
+                1,
+            ),
+            self.workflow.replace(
+                "path: ${{ runner.temp }}/ocaml03-evidence/${{ matrix.target }}",
+                "path: .github/workflows/build-ocaml.yml",
+                1,
+            ),
+            self.workflow.replace(
+                "path: ${{ runner.temp }}/ocaml03-coverage/${{ matrix.target }}",
+                "path: .github/workflows/build-ocaml.yml",
+                1,
+            ),
+        )
+        for index, workflow in enumerate(cases):
+            with self.subTest(case=index), self.assertRaises(toolchain.ContractError):
+                toolchain.validate_workflow_text(self.manifest, workflow)
+
+    def test_rejects_structural_job_action_and_step_drift(self) -> None:
+        cases = (
+            self.workflow.replace("fail-fast: false", "fail-fast: true", 1),
+            self.workflow.replace("actions/checkout@", "attacker/checkout@", 1),
+            self.workflow.replace("persist-credentials: false", "other: false", 1),
+            self.workflow.replace("ocaml/setup-ocaml@", "attacker/setup-ocaml@", 1),
+            self.workflow.replace("github-token: ''", "github-token: token", 1),
+            self.workflow.replace(
+                "ocaml-compiler: ocaml-base-compiler.5.2.1",
+                "ocaml-compiler: ${{ env.OCAML_VERSION }}",
+                1,
+            ),
+            self.workflow.replace(
+                "actions/upload-artifact@", "attacker/upload-artifact@", 1
+            ),
+            self.workflow.replace("if-no-files-found: error", "unexpected: error", 1),
+            self.workflow.replace("retention-days: 7", "retention-days: 8", 1),
+            self.workflow.replace("needs: contract", "needs: other", 1),
+            self.workflow.replace(
+                "      - name: Generate fresh solver evidence",
+                "      - name: Require the reviewed runner and opam bootstrap",
+                1,
+            ),
+            self.workflow.replace(
+                "      - name: Generate fresh solver evidence",
+                "      - name: Renamed fresh solver evidence",
+                1,
+            ),
+            self.workflow.replace(
+                "      - name: Run both scaffold kinds line by line",
+                "      - name: Renamed locked scaffold execution",
+                1,
+            ),
+            self.workflow.replace(
+                "      - name: Validate closed manifest, evidence, and workflow",
+                "      - name: Validate closed manifest, evidence, and workflow\n"
+                "        timeout-minutes: 1",
+                1,
+            ),
+            self.workflow.replace("branches: ['**']", "branches: [main]", 1),
+            self.workflow.replace(
+                "workflow_dispatch:", "workflow_dispatch:\n    x: y", 1
+            ),
+        )
+        for index, workflow in enumerate(cases):
+            with self.subTest(case=index), self.assertRaises(toolchain.ContractError):
+                toolchain.validate_workflow_text(self.manifest, workflow)
+
+    def test_workflow_type_helpers_reject_wrong_shapes(self) -> None:
+        for function, value in (
+            (toolchain._workflow_mapping, []),
+            (toolchain._workflow_sequence, {}),
+            (toolchain._workflow_string, None),
+        ):
+            with (
+                self.subTest(function=function.__name__),
+                self.assertRaises(toolchain.ContractError),
+            ):
+                function(value, "test")
 
 
 class OcamlToolchainDigestTests(unittest.TestCase):
@@ -247,8 +481,13 @@ class OcamlToolchainDigestTests(unittest.TestCase):
         for kind in ("ocaml-library", "ocaml-program"):
             destination = self.root / "code/specs/fixtures/scaffold-generator" / kind
             destination.mkdir(parents=True)
-            source = source_fixture_root / kind / "coding-adventures-my-pkg.opam"
-            (destination / source.name).write_bytes(source.read_bytes())
+            for filename in (
+                "coding-adventures-my-pkg.opam",
+                "BUILD",
+                "BUILD_windows",
+            ):
+                source = source_fixture_root / kind / filename
+                (destination / filename).write_bytes(source.read_bytes())
 
         self.manifest = copy.deepcopy(toolchain.load_manifest(REPO_ROOT))
         for target in self.manifest["targets"].values():
@@ -334,7 +573,30 @@ class OcamlToolchainDigestTests(unittest.TestCase):
         path.unlink()
         path.symlink_to(self.fixture_root / target["lock_file"])
 
-        with self.assertRaisesRegex(toolchain.ContractError, "regular file"):
+        with self.assertRaisesRegex(toolchain.ContractError, "linked path component"):
+            toolchain.validate_repository(self.root, check_workflow=False)
+
+    def test_rejects_symlinked_evidence_parent(self) -> None:
+        if sys.platform == "win32":
+            self.skipTest("unprivileged Windows cannot reliably create symlinks")
+        target_dir = self.fixture_root / "linux-x64"
+        outside = self.root / "outside-linux-x64"
+        target_dir.rename(outside)
+        target_dir.symlink_to(outside, target_is_directory=True)
+
+        with self.assertRaisesRegex(toolchain.ContractError, "linked path component"):
+            toolchain.validate_repository(self.root, check_workflow=False)
+
+    def test_rejects_scaffold_build_contract_drift(self) -> None:
+        build = self.root / "code/specs/fixtures/scaffold-generator/ocaml-library/BUILD"
+        build.write_text(
+            build.read_text(encoding="utf-8").replace("dune build @fmt", "true"),
+            encoding="utf-8",
+        )
+
+        with self.assertRaisesRegex(
+            toolchain.ContractError, "format, test, and coverage"
+        ):
             toolchain.validate_repository(self.root, check_workflow=False)
 
 
@@ -345,7 +607,7 @@ class OcamlToolchainRuntimeTests(unittest.TestCase):
             manifest,
             {
                 "opam": "2.5.2\n",
-                "ocaml": "The OCaml toplevel, version 5.2.1\n",
+                "ocaml": "5.2.1\n",
                 "dune": "3.17.2\n",
                 "alcotest": "1.9.0\n",
                 "bisect_ppx": "2.8.3\n",
@@ -367,6 +629,25 @@ class OcamlToolchainRuntimeTests(unittest.TestCase):
                     "ocamlformat": "0.27.0",
                 },
             )
+
+    def test_exact_tool_versions_reject_prefix_or_suffix(self) -> None:
+        manifest = toolchain.load_manifest(REPO_ROOT)
+        base = {
+            "opam": "2.5.2",
+            "ocaml": "5.2.1",
+            "dune": "3.17.2",
+            "alcotest": "1.9.0",
+            "bisect_ppx": "2.8.3",
+            "ocamlformat": "0.27.0",
+        }
+        for value in ("2.5.2+modified", "prefix-2.5.2"):
+            with (
+                self.subTest(value=value),
+                self.assertRaisesRegex(toolchain.ContractError, "opam"),
+            ):
+                outputs = dict(base)
+                outputs["opam"] = value
+                toolchain.validate_tool_version_outputs(manifest, outputs)
 
     def test_exact_tool_versions_reject_missing_probe(self) -> None:
         manifest = toolchain.load_manifest(REPO_ROOT)
