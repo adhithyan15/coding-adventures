@@ -9,6 +9,10 @@ All notable changes to this package will be documented in this file.
 `HostSurface ( content: slot: ... )` now lowers to a styled Qt Quick
 `Rectangle` with a filling `Loader` bound to the host's QML `Component`.
 
+The generated Qt project shell now includes `QQuickItem` before assigning
+`QQuickView::rootObject()` to `QObject*`, fixing a real AppleClang build failure
+caused by Qt's forward declaration hiding the inheritance relationship.
+
 ### Changed - Qt project shells support host file dialogs
 
 Generated Qt project shells now use `QApplication` and link `Qt6::Widgets` in

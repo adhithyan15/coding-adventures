@@ -303,6 +303,7 @@ fn build_main_cpp(name: &str, module_name: &str) -> String {
     out.push_str("#include <QApplication>\n");
     out.push_str("#include <QMetaObject>\n");
     out.push_str("#include <QObject>\n");
+    out.push_str("#include <QQuickItem>\n");
     out.push_str("#include <QQuickView>\n");
     out.push_str("#include <QUrl>\n");
     out.push_str("#include <QVariant>\n\n");
@@ -7624,6 +7625,10 @@ mod tests {
         assert!(
             proj.main_cpp.contains("QQuickView"),
             "main.cpp must use QQuickView"
+        );
+        assert!(
+            proj.main_cpp.contains("#include <QQuickItem>"),
+            "main.cpp must include QQuickItem so rootObject() converts to QObject*"
         );
         assert!(
             proj.main_cpp
