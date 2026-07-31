@@ -4,6 +4,17 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - Native activation for MSL pressed states
+
+SwiftUI output now connects UI15's built-in `state pressed` blocks on
+`HostButton`, `HostCheckbox`, `HostRadio`, and `HostLink` to a generated local
+`@GestureState`. Pointer and touch presses activate the shared MSL properties
+and transitions without replacing the control's native action, including
+independent instances inside `ForEach`. Explicit `state-when-pressed`
+predicates remain author-controlled. A Task App acceptance gate proves its
+Mosaic-authored add-task button feedback reaches generated, type-checked
+SwiftUI without handwritten AppKit UI.
+
 ### Added - Native activation for MSL focused states
 
 SwiftUI output now connects UI15's built-in `state focused` blocks on native

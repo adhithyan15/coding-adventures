@@ -288,6 +288,9 @@ style TaskApp {
     state hover {
       background : "#c67f1e" ;
     }
+    state pressed {
+      background : "#a96816" ;
+    }
   }
 
   part task-list {

@@ -65,6 +65,12 @@ same shared MSL properties and transitions. Repeated controls keep their
 VisualStates in the DataTemplate namescope. An explicit
 `state-when-focused` remains application-controlled.
 
+UI15's built-in `state pressed` is native for the same ButtonBase family used
+by hover (`HostButton`, `HostCheckbox`, `HostRadio`, and `HostLink`). Its
+trigger binds directly to `IsPressed`, remains row-local inside DataTemplates,
+and takes precedence over simultaneous focused or hover styling. An explicit
+`state-when-pressed` remains application-controlled.
+
 Named CSS curves lower to native WinUI easing functions. Arbitrary
 `cubic-bezier(...)` curves currently use `CubicEase`; exact control points
 require a future Windows Composition lowering. Template-local predicates are
