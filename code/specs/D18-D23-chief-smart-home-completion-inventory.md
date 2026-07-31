@@ -510,14 +510,31 @@ normalized runtime without pretending to own a coordinator transport:
   delivery retries, and acknowledgements remain an explicit production host
   boundary.
 
+## Current Matter Runtime Integration Slice
+
+This slice connects the repository's typed Matter application model to D23
+while keeping the absent commissioning and secure-session host explicit:
+
+- `smart-home-matter-integration` installs an opaque fabric/controller
+  boundary and projects externally commissioned node endpoint clusters into
+  normalized devices, entities, identifiers, and capabilities.
+- Typed Matter attribute reports are checked against installed endpoint
+  clusters before becoming confirmed runtime state events.
+- Light and lock commands pass authorization and command audit before the
+  adapter creates a typed Matter invocation for a secure-session host.
+- Durable topology retains only a `VaultRef`; PASE/CASE, certificate
+  validation, fabric key storage, Interaction Model encoding, subscriptions,
+  and network I/O remain production host work.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
 
-- Continue platform integrations beyond Hue, MQTT, and the Z-Wave and Zigbee
-  runtime adapters: Matter/Thread, cameras, broader device families, a
-  production Zigbee coordinator/join/security host, and production Z-Wave
-  inclusion and S2.
+- Continue platform integrations beyond Hue, MQTT, and the Z-Wave, Zigbee, and
+  Matter runtime adapters: cameras, broader device families, a production
+  Matter commissioning/secure-session/network host, a Thread border-router
+  host, a production Zigbee coordinator/join/security host, and production
+  Z-Wave inclusion and S2.
 - Build Home Assistant migration tools for devices, rooms, scenes,
   automations, dashboards, and historical state export where feasible.
 - Provide a dashboard that can inspect devices, rooms, state, health,

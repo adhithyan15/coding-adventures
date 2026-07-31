@@ -899,6 +899,7 @@ members = [
     "smart-home-zwave-host",
     "smart-home-mqtt-integration",
     "smart-home-zigbee-integration",
+    "smart-home-matter-integration",
     "smart-home-integration-catalog",
     "smart-home-testkit",
     "hue-core",
