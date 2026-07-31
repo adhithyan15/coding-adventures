@@ -555,8 +555,8 @@ pub enum Stmt {
         /// delimiter). Applies to the TALLYING half only. When `true`, `delim`
         /// carries a never-read placeholder and `tally_leading` is `false`,
         /// exactly as the STANDALONE `FOR CHARACTERS` path does (#60). The
-        /// REPLACING half's own CHARACTERS form (`InspectReplacingCharacters`)
-        /// stays a later rung — it is NOT this flag.
+        /// REPLACING half's own CHARACTERS form is carried by the SEPARATE
+        /// `replace_characters` flag below — it is NOT this flag.
         tally_characters: bool,
         /// Optional `{BEFORE|AFTER} x` region narrowing the TALLYING half's count,
         /// computed over the original source (see [`Region`]). `None` = whole source.

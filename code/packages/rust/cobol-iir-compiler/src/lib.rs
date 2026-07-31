@@ -2950,8 +2950,9 @@ impl<'a> Compiler<'a> {
         // `allow_characters = true`. The guard is retained honestly so any future
         // caller that must forbid a CHARACTERS tally can pass `false` and get the clean
         // later-rung diagnostic, reading uniformly with the other gates below. (The
-        // combined form's REPLACING-half CHARACTERS stays a later rung on a DIFFERENT
-        // path — `inspect_replacing_all` — not this flag.)
+        // combined form's REPLACING-half CHARACTERS is now supported too, on a DIFFERENT
+        // path — a lone CHARACTERS half routes to `emit_inspect_replacing_characters`
+        // before reaching `inspect_replacing_all` — not this flag.)
         if characters && !allow_characters {
             return Err(CompileError::Unsupported(
                 "INSPECT TALLYING … FOR CHARACTERS in a combined TALLYING/REPLACING is a later rung"

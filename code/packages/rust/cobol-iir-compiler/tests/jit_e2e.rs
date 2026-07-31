@@ -9089,6 +9089,66 @@ fn inspect_combined_replacing_characters_before_region() {
 }
 
 #[test]
+fn inspect_combined_replacing_characters_after_absent_delimiter_replaces_nothing() {
+    // The REPLACING-CHARACTERS half honours the ISO not-found asymmetry independently:
+    // `AFTER "Q"` with "Q" absent → an EMPTY replace window, so the source is unchanged
+    // while the tally still counts every "A" over the whole source. `"AA"` → C=002, S
+    // unchanged "AA". (BEFORE-absent → whole-window is the partner, covered by the
+    // whole-field test.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(2) VALUE \"AA\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"A\"",
+            "    REPLACING CHARACTERS BY \"*\" AFTER \"Q\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\nAA\n");
+}
+
+#[test]
+fn inspect_combined_replacing_characters_replacement_is_a_pic_x1_item() {
+    // The CHARACTERS replacement `x` may be a PIC X(1) DATA ITEM in the combined form,
+    // exactly as standalone (#80): R="*", so the whole source becomes "*" while the
+    // tally counts the two "A"s. Exercises the item path through the combined route.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(4) VALUE \"ABAB\".",
+            "01  R  PIC X(1) VALUE \"*\".",
+            "01  C  PIC 9(3) VALUE 0.",
+        ],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"A\" REPLACING CHARACTERS BY R.",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\n****\n");
+}
+
+#[test]
+fn inspect_combined_replacing_characters_signed_counter_is_a_later_rung() {
+    // The combined CHARACTERS-replace path validates its TALLYING counter before the
+    // replace runs — a SIGNED counter is a later rung on BOTH engines, source untouched
+    // (co-total). Mirrors the tally-half counter validation.
+    let src = wrap(
+        &["01  S  PIC X(4) VALUE \"ABAB\".", "01  C  PIC S9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"A\" REPLACING CHARACTERS BY \"*\".",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a signed counter");
+    assert!(
+        compile_source(&src, "insp_comb_replchars_signed").is_err(),
+        "compiler must reject a signed counter"
+    );
+}
+
+#[test]
 fn inspect_combined_characters_on_both_halves_now_supported() {
     // (Formerly a later-rung reject; THIS rung LIFTS the deferral for the REPLACING
     // half too, so CHARACTERS on BOTH halves is now supported.) `TALLYING C FOR
