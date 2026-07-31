@@ -1150,6 +1150,14 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                             })?;
                         body_lits.push(BodyLiteral::Pos(lower_term_scoped(ref_term, &mut vars)));
                     }
+                    // AR-3 UNDERCUT — each `unless <defeater>` lowers to a NAF (`not`)
+                    // body literal, in the SAME variable scope as head+body, so the step
+                    // fires only WHILE its warrant is not defeated. Unlike a `from` ref,
+                    // a defeater is a raw proposition (derived by another step/fact), so it
+                    // does NOT resolve against `bound` — it is lowered as written.
+                    for u in &inf.unless {
+                        body_lits.push(BodyLiteral::Neg(lower_term_scoped(u, &mut vars)));
+                    }
                     let prov = annotations_to_provenance(&inf.annotations)?;
                     // Same structural grounding gate for the inference's WARRANT (§3): an
                     // inference step must cite why its antecedents entail its conclusion —
@@ -1161,7 +1169,15 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                             element: inf.name.clone(),
                         });
                     }
-                    kb.add_rule(Rule::certain(head_term, body_lits).with_provenance(prov));
+                    // AR-3 REBUT — tag the inference's grounding CONTEXT, exactly as
+                    // `rule { … context: … }` does (ADJ73 PR-B). With a `functional` thesis
+                    // and a `context_order`, a rival inference in an outranking context
+                    // defeats this one — the engine withdraws the loser.
+                    let mut rule = Rule::certain(head_term, body_lits).with_provenance(prov);
+                    if let Some(ctx) = &inf.context {
+                        rule = rule.with_context(ctx.clone());
+                    }
+                    kb.add_rule(rule);
                     bound.insert(inf.name.as_str(), &inf.conclusion);
                 }
             }

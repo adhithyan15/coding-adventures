@@ -105,14 +105,19 @@ cannot be written *inside* the pure `argument` block yet. Two honest paths, both
   `functional` + `context_order` (rebut) or a `not`-guarded `rule` (undercut). This mixes the two
   surfaces but needs **no new code** and is fully grounded/verifiable — it proves the dialectic
   end-to-end now.
-- **(b) Ergonomic sugar (deferred, AR-3).** Extend the `argument` surface: allow `infer` to carry
-  a `context:` (mirroring `rule`) and an optional `unless <defeater>` guard (desugaring to a
-  `not` body literal), plus a `functional` note on the argument's thesis. This lets a whole paper
-  — support **and** attack — live in one `argument` block. It is pure surface over the *same*
-  proven desugaring; worth doing only once (a) shows the shape at paper scale.
+- **(b) Ergonomic sugar — SHIPPED (AR-3, adj-lang 0.68.0).** The `argument` surface now lets an
+  `infer` carry a trailing `context:` (mirroring `rule`, for rebut precedence) and an optional
+  `unless <defeater> { , <defeater> }` guard (desugaring to `not` body literals, for undercut), so
+  a whole paper — support **and** attack — lives in one `argument` block. Pure surface over the
+  *same* proven desugaring (§2): `unless` → NAF literals, `context:` → `Rule::with_context`. The
+  thesis `functional` note stays a top-level `functional` declaration (paper-level, not
+  per-inference). Worked in-block examples:
+  `adj-argument-ir/rebuttal/{rebuttal,undercut}-inblock.adj`.
 
-AR-1 commits to **(a)** as the working model and specs **(b)** as the optional follow-up — the
-same reuse-first stance AC-1 took for composition.
+AR-1 committed to **(a)** as the working model and specced **(b)** as the follow-up; AR-3 delivered
+**(b)** — the same reuse-first stance AC-1 took for composition. The one remaining piece is the
+`--explain` "withdrawn / defeated-by" prose rendering (§4), which reads the `governing` resolution
+the CLI already computes and reports today.
 
 ## 6. Worked sketch + staging
 
@@ -129,8 +134,12 @@ sample; the fatigue warrant is undercut and the thesis abstains rather than asse
   byte-anchored to its paragraph's snapshot). Proves the engine **withdraws** the defeated
   conclusion (`governing` → `defeated`), `adj-verify` byte-anchors the rebuttal, and the winner
   governs. A companion **undercut** example (NAF-guarded warrant → thesis abstains when undercut).
-- **AR-3** — the argument-surface sugar of §5(b) (`context:` + `unless` on `infer`) so support and
-  attack compose in one block, plus the `--explain` "withdrawn / defeated-by" rendering.
+- **AR-3 (SHIPPED, adj-lang 0.68.0)** — the argument-surface sugar of §5(b): `unless` (undercut →
+  NAF) and a trailing `context:` (rebut → precedence) on `infer`, so support and attack compose in
+  ONE `argument` block. Worked `adj-argument-ir/rebuttal/{rebuttal,undercut}-inblock.adj` +
+  `adj-lang-cli/tests/argument_inblock_attack_e2e.rs` (engine still withdraws the defeated
+  conclusion; `adj-verify` byte-anchors both premises). The `--explain` "withdrawn / defeated-by"
+  prose rendering remains the follow-up (the `governing` output already reports the status today).
 - **Later** — the trained decomposer emits attack edges from a paper's rebuttal/limitation
   paragraphs (retarget the AD-1..5 scaffold to the attack surface).
 

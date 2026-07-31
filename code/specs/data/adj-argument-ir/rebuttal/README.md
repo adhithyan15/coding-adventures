@@ -39,3 +39,18 @@ byte-anchor — the point is the honest abstention, not a citation count.)
 Both are driven by `adj-lang-cli/tests/rebuttal_worked_example_e2e.rs`. Together they show a paper's
 disagreements are first-class: **the engine withdraws what its counterarguments defeat, and every
 attack is auditable back to the paragraph that makes it.**
+
+## `rebuttal-inblock.adj` / `undercut-inblock.adj` — AR-3, attack IN the `argument` block
+
+The same two papers, but the attack now lives **inside** the `argument` block using the AR-3
+surface sugar (adj-lang 0.68.0), instead of raw `rule`s bolted alongside:
+
+- **`rebuttal-inblock.adj`** — each `infer` carries a trailing `context:` (support in
+  `initial_report`, reanalysis in `reanalysis`); with the top-level `functional` +
+  `context_order`, the engine withdraws fatigue exactly as `rebuttal.adj` does.
+- **`undercut-inblock.adj`** — the support `infer` carries `unless warrant_undercut` (→ a `not`
+  body literal) and a second `infer` derives that defeater from the contamination premise; the
+  thesis abstains while the contamination holds.
+
+Driven by `adj-lang-cli/tests/argument_inblock_attack_e2e.rs`. Same desugaring, same audit — the
+whole dialectic (support **and** attack) now decomposes into one construct.

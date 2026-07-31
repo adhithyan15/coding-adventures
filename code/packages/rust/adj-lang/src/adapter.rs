@@ -1104,12 +1104,34 @@ fn adapt_arg_inference(node: &GrammarASTNode) -> Result<crate::ast::ArgInference
             }
         }
     }
+    // AR-3 UNDERCUT — the optional `unless <defeater> { , <defeater> }` wraps its
+    // defeater terms in an `arg_unless` node, so they are cleanly separable from the
+    // single `conclude` term (which `expect_term_child` already picked above).
+    let mut unless = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(u) = c {
+            if u.rule_name == "arg_unless" {
+                for gc in &u.children {
+                    if let ASTNodeOrToken::Node(t) = gc {
+                        if t.rule_name == "term" {
+                            unless.push(adapt_term(t)?);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // AR-3 REBUT — the optional trailing `context: <name>`, the first Name token after
+    // the `context` keyword literal (same extraction as `rule_decl`'s `context:`).
+    let context = ident_after_keyword(node, "context");
     let annotations = collect_annotations(node)?;
     Ok(crate::ast::ArgInference {
         name,
         connective,
         conclusion,
         from,
+        unless,
+        context,
         annotations,
     })
 }

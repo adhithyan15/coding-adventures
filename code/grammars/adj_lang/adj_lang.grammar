@@ -481,7 +481,20 @@ argument_decl = "argument" IDENT LBRACE { arg_premise } { arg_infer } RBRACE ;
 
 arg_premise   = "premise" IDENT COLON IDENT term { annotation } ;
 
-arg_infer     = "infer" IDENT COLON IDENT "conclude" term "from" arg_ref { COMMA arg_ref } { annotation } ;
+# arg_infer (ADJ-ARGUMENT-REBUTTAL AR-3) — an inference may now carry a paper's
+# ATTACK edges, so support AND rebuttal/undercut compose in ONE `argument` block:
+#   * `unless <defeater> { , <defeater> }` — an UNDERCUT guard. Each defeater term
+#     lowers to a `not <term>` body literal (negation-as-failure), so the step fires
+#     only while its warrant is not defeated. Wrapped in an `arg_unless` node so it is
+#     cleanly separable from the `conclude` term (exactly as `from` refs are `arg_ref`s).
+#   * trailing `context: <name>` — the CONTEXT this inference is grounded in, mirroring
+#     `rule_decl` (ADJ73 PR-B). With a `functional` thesis + `context_order`, a rival
+#     inference in an outranking context REBUTS (defeats) this one — the engine withdraws
+#     the loser. Both desugar to the proven `rule`/`context`/NAF machinery — zero new
+#     engine code.
+arg_infer     = "infer" IDENT COLON IDENT "conclude" term "from" arg_ref { COMMA arg_ref } [ arg_unless ] { annotation } [ "context" COLON IDENT ] ;
+
+arg_unless    = "unless" term { COMMA term } ;
 
 arg_ref       = IDENT ;
 

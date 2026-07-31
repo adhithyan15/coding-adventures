@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.68.0] — 2026-07-30 — AR-3: attack edges compose INSIDE the `argument` block
+
+A paper's ATTACK edges — rebuttals and undercuts — can now live inside the pure `argument`
+block, so support **and** attack decompose into one construct (`ADJ-ARGUMENT-REBUTTAL.md` §5(b)).
+An `infer` gains two pieces of surface sugar, each desugaring to the already-proven substrate
+(zero new engine/logic code):
+
+- **`unless <defeater> { , <defeater> }`** (UNDERCUT) — each defeater lowers to a `not <term>`
+  body literal (negation-as-failure), so the step fires only while its warrant is not defeated.
+- **trailing `context: <name>`** (REBUT) — mirrors `rule`'s `context:` (ADJ73 PR-B). With a
+  `functional` thesis and a `context_order`, a rival `infer` in an outranking context defeats
+  this one and the engine **withdraws** the loser (`status: defeated`, `defeated_by: …`).
+
+Grammar: `arg_infer` gains an optional `arg_unless` node and a trailing `context: IDENT`; the AST
+`ArgInference` gains `unless: Vec<Term>` and `context: Option<String>`; the lowerer pushes the NAF
+literals and applies `Rule::with_context`. Worked in-block examples
+(`adj-argument-ir/rebuttal/{rebuttal,undercut}-inblock.adj`) prove the engine still withdraws the
+defeated conclusion and `adj-verify` byte-anchors both premises. The `--explain` "withdrawn /
+defeated-by" prose rendering remains a follow-up (the `governing` output already reports the
+`defeated`/`governing` status the CLI computes today).
+
 ## [0.67.0] — 2026-07-30 — ADR-3: structural grounding gate for `argument` (must be sourced)
 
 The first, deterministic layer of the ADJ-ARGUMENT-IR §3 grounding gate: a shipped `argument`
