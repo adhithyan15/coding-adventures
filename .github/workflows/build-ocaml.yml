@@ -51,6 +51,8 @@ jobs:
           TARGET: ${{ matrix.target }}
         run: |
           set -euo pipefail
+          export OPAMSWITCH
+          OPAMSWITCH="$(opam switch show --safe)"
           fixture="$RUNNER_TEMP/ocaml03-fixture"
           output="$RUNNER_TEMP/ocaml03-evidence/$TARGET"
           mkdir -p "$fixture" "$output"
