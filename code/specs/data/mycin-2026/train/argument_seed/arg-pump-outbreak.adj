@@ -1,0 +1,6 @@
+argument pump_outbreak {
+    premise p1 : extracted clustered_around(illness, pump) quote "new illness clustered tightly around a single neighborhood water pump" at 25 snapshot "ed42a1df08aca8f92f99204e995ab24ed406877dad115815149bf1497d64532c" source "outbreak field report" trust authoritative
+    premise p2 : extracted fell_after_closure(pump) quote "When that pump was closed, the number of new cases fell sharply" at 153 snapshot "ed42a1df08aca8f92f99204e995ab24ed406877dad115815149bf1497d64532c" source "outbreak field report" trust authoritative
+    infer s1 : therefore conclude source_of(pump, outbreak) from p1, p2 quote "The pump was therefore the source of the outbreak" at 218 snapshot "ed42a1df08aca8f92f99204e995ab24ed406877dad115815149bf1497d64532c" source "outbreak field report" trust authoritative
+}
+? source_of(pump, $What)

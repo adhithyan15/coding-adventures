@@ -1,0 +1,6 @@
+argument galaxy_redshift {
+    premise p1 : extracted shifted(lines, longer_wavelengths) quote "shifted toward longer wavelengths" at 55 snapshot "cf24ae552f7bc85d503b3569c1fb0ca199f99e674b4cbebe8e5929374895acd0" source "spectroscopy note" trust authoritative
+    premise p2 : extracted indicates(redshift, recession) quote "redshift indicates that the source is moving away from the observer" at 97 snapshot "cf24ae552f7bc85d503b3569c1fb0ca199f99e674b4cbebe8e5929374895acd0" source "spectroscopy note" trust authoritative
+    infer s1 : therefore conclude receding(galaxy) from p1, p2 quote "The galaxy is therefore receding from us" at 166 snapshot "cf24ae552f7bc85d503b3569c1fb0ca199f99e674b4cbebe8e5929374895acd0" source "spectroscopy note" trust authoritative
+}
+? receding($Body)
