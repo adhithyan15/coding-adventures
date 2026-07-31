@@ -125,6 +125,13 @@ slots and found zero canonical collisions or unknown language buckets:
 The loop must not start by attempting 10,500 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
+The post-#9375 inventory, refreshed after rebasing at
+`bfa7af2c99a157c4f142c0f28114ff9e2f920292`,
+remains collision-clean and unchanged at 1,200 normalized implementation
+identities, 4,342 implementation slots, 172 high-consensus packages, 277
+high-consensus missing slots, 750 singletons, and zero unknown language
+buckets. No new unowned parity identity was discovered on current `main`.
+
 The July 31 lane audit is:
 
 | Established lane | Packages present | High-consensus gaps | Rust/Python-core coverage |
@@ -204,15 +211,36 @@ The historical Priority 1 cohort is complete, but later Haskell work promoted
 - leaf ciphers: `atbash-cipher`, `scytale-cipher`, and `vigenere-cipher`;
 - shared model and utility leaves: `document-ast` and `uuid`.
 
-The post-#9363 fixture audit found a generator-level prerequisite before these
-ports: Dart's native scaffold generator emits no `required_capabilities.json`
-for either library or program scaffolds. The new
-`dart-scaffold-capability-schema` item must add language-neutral golden/schema
-coverage, explicit empty library profiles, truthful generated-program stdout
-profiles, and classification of the generator's own runtime authority. Existing
+Merged PR #9375 closed the generator-level prerequisite found by the post-#9363
+fixture audit. Dart's native scaffold generator now emits byte-stable,
+schema-v1 empty library profiles and truthful generated-program stdout
+profiles, while declaring its own reviewed runtime authority. Existing
 nonempty Dart profiles remain owned by the legacy migration review. Close the
-13-package frontier as small coherent PRs only after that scaffold contract and
-the cross-language build-tool foundation are stable.
+13-package frontier as small coherent PRs on top of that scaffold contract.
+
+The first child item is `dart-trig-wave`: implement the zero-dependency PHY00
+`trig` leaf, then its direct PHY01 `wave` consumer. This closes two Dart-only
+14-of-15 gaps while exercising the newly merged scaffold and capability
+contract on a real dependency chain.
+
+The post-merge governance audit found no repository-verifiable Layer 5 approval
+for #9375's nonempty generator profile: GitHub reports no review decision, and
+the merge commit carries the GitHub web-flow signature rather than evidence
+bound to `CAPABILITY_SIGNERS`. The externally blocked
+`dart-scaffold-capability-layer5-evidence` item owns either recovery of the
+actual hardware-key-backed approval or an explicit reviewed policy
+reconciliation. The pure `dart-trig-wave` child neither executes nor publishes
+the generator and introduces only empty capability profiles.
+
+The child review also exposed three separately owned follow-ups rather than
+silently widening this serial delivery slice: PHY00/PHY01 lack a machine-
+readable language-neutral fixture corpus; existing PHY00 lanes need a full-
+range tiny/subnormal square-root audit; and existing PHY01 lanes need finite-
+input and overflow-safe evaluation reconciliation. The backlog now records
+these as `phy00-phy01-language-neutral-fixtures`,
+`phy00-small-sqrt-cross-lane-audit`, and
+`phy01-nonfinite-validation-backfill`, with the shared corpus preceding the
+cross-lane remediations.
 
 Port dependency families together when doing so avoids temporary broken package
 graphs. Grammar-generated lexer/parser pairs should be generated from the shared
@@ -1136,11 +1164,19 @@ hashed bytes for later execution while rejecting path, rename, symlink,
 hardlink, case/Unicode-alias, and post-digest substitution. This process-free
 slice grants no execution authority and marks no backend or adapter ready.
 
-The serial parity loop then selected `dart-scaffold-capability-schema`, because
-its merged capability-schema dependency is satisfied and it directly unlocks
-the thirteen-package Dart-only 14-of-15 frontier. The next build-tool successor
-remains `build-tool-bootstrap-execution-fixture`; it does not become active
-while the Dart scaffold PR is open.
+Merged PR #9375 completed `dart-scaffold-capability-schema` with green Linux,
+macOS, Windows, and CodeQL checks. The collision-checked post-merge inventory
+found the same thirteen Dart-only 14-of-15 gaps and no new unowned identity.
+The serial loop selected `dart-trig-wave` because PHY00 `trig` is a dependency-
+free numeric leaf and PHY01 `wave` is its direct consumer. The next build-tool
+successor remains `build-tool-bootstrap-execution-fixture`, which is still
+blocked on the Linux OCI enforcement chain.
+
+Final Dart review hardened the selected implementation for subnormal square
+roots, infinity and signed zero, non-finite wave parameters and time, angular-
+frequency overflow, zero-amplitude evaluation, and extreme finite products.
+The equivalent existing-lane audits and the missing shared PHY00/PHY01 fixture
+corpus remain explicit dependent backlog items rather than unowned gaps.
 
 The post-#9368 dependency audit also found that trusted authority requires one
 held case and one selected in-image adapter even though both checked-in

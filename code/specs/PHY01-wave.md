@@ -45,8 +45,10 @@ The package exposes a single `Wave` class/struct:
 `Wave(amplitude, frequency, phase=0.0)` creates a new wave.
 
 **Validation:**
-- `amplitude` must be $\geq 0$ (negative amplitude is meaningless; use phase to flip)
-- `frequency` must be $> 0$ (zero frequency is a constant, not a wave)
+- `amplitude` must be finite and $\geq 0$ (negative amplitude is meaningless; use phase to flip)
+- `frequency` must be finite and $> 0$ (zero frequency is a constant, not a wave)
+- $2\pi f$ must remain finite in the implementation's floating-point type
+- `phase` must be finite
 
 ### 3.2 Properties
 
@@ -71,6 +73,16 @@ The package exposes a single `Wave` class/struct:
 
 Where $t$ is time in seconds. This is the heart of the package — given a moment in time, what is the wave's value?
 
+`evaluate(t)` rejects non-finite time. It returns zero immediately for a
+zero-amplitude wave, reduces finite time to one period before multiplying by
+frequency, and clamps the first-principles sine approximation to the unit
+interval before amplitude scaling. These rules prevent otherwise finite inputs
+from producing an overflow or a `NaN` through avoidable intermediate values.
+
+The Dart implementation uses lower-camel `angularFrequency()` for the
+language-neutral `angular_frequency()` operation. The remaining constructor,
+properties, `period()`, and `evaluate(t)` names are unchanged.
+
 ## 4. Dependency
 
 The `wave` package depends on the `trig` package (PHY00) for:
@@ -81,7 +93,9 @@ No standard-library math functions are used. The entire computation chain is bui
 
 ## 5. Cross-Language Parity
 
-Implemented identically across all 6 host languages (Python, Go, Ruby, TypeScript, Rust, Elixir). Each implementation passes the same test cases:
+Implemented across all 15 established implementation lanes: C#, Dart, Elixir,
+F#, Go, Haskell, Java, Kotlin, Lua, Perl, Python, Ruby, Rust, Swift, and
+TypeScript. Each implementation passes the same test cases:
 
 1. **Zero crossing:** A wave with phase 0 evaluates to 0 at $t = 0$
 2. **Peak:** A 1 Hz wave with phase 0 reaches amplitude $A$ at $t = 0.25$ (quarter period)
