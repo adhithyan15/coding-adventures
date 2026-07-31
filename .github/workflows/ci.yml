@@ -83,6 +83,7 @@ jobs:
           python3 -m pip install --disable-pip-version-check --quiet jsonschema==4.26.0
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_haskell_required_capabilities.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_ocaml_toolchain_lock.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_schema.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_runner.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_execution_schema.py'

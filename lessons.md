@@ -1910,3 +1910,43 @@ Lessons:
    the `[...]` branch), not just that the program happens not to crash.
 3. `0xC00000FD` / exit `-1073741571` on Windows == stack overflow; suspect
    unbounded (or insufficiently-bounded) recursion.
+
+## Prefer PowerShell filtering over nested jq quoting in PowerShell commands
+
+A parity-loop pre-push check embedded a jq expression containing spaces and
+quoted regular expressions in one PowerShell command. PowerShell split the
+expression before `gh` received it, so `gh pr list` rejected part of the jq
+program as an unknown argument. The following independent `git push` still ran,
+which made the noisy read-only failure easy to miss.
+
+Lessons:
+
+1. On PowerShell, request JSON from `gh`, pipe it through `ConvertFrom-Json`,
+   and filter with `Where-Object` when the jq program needs nested quoting.
+2. Keep a required precondition check separate from the external write it is
+   meant to guard. A failed check must prevent the push rather than merely share
+   a command invocation with it.
+
+## Verify pinned-tool assertions against the pinned CLI before publishing CI
+
+The OCaml toolchain workflow pinned opam `2.5.2` but tried to attest its
+repository with `opam repository get-url default`. That subcommand does not
+exist in opam 2.5, so all three runners finished compiler setup and then failed
+the same preflight before dependency installation.
+
+Lessons:
+
+1. Pinning a tool version also pins its command surface. Run every scripted
+   assertion against that exact version, rather than relying on a plausible
+   subcommand name.
+2. Do not assume a materialized `repo/<name>` checkout survives setup. The
+   setup action may populate opam's repository cache and then remove unused
+   mirrors, as it does on Windows. Query opam's own color-disabled repository
+   report, assert the exact configured name set, and require the reviewed
+   commit-qualified URL exactly once.
+3. A cross-platform failure at the same post-setup step is a shared contract
+   defect until logs prove otherwise; wait for the matrix logs and fix the one
+   common assertion.
+4. Exact machine comparisons must explicitly disable color. A CI action can
+   export `CLICOLOR_FORCE=1`, causing a correct version such as `1.9.0` to
+   arrive wrapped in ANSI escapes unless the probe passes `--color=never`.
