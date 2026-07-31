@@ -872,6 +872,13 @@ fn button_base_supports_automatic_hover(xaml_tag: &str) -> bool {
     )
 }
 
+fn button_base_supports_automatic_press(xaml_tag: &str) -> bool {
+    matches!(
+        xaml_tag,
+        "Button" | "CheckBox" | "RadioButton" | "HyperlinkButton"
+    )
+}
+
 fn control_supports_automatic_focus(xaml_tag: &str) -> bool {
     matches!(
         xaml_tag,
@@ -916,6 +923,15 @@ fn register_host_visual_states(
             continue;
         };
         state_layers.push((state_name, trigger_value, state_style));
+    }
+    if button_base_supports_automatic_press(xaml_tag) && !has_explicit_state_when(node, "pressed") {
+        if let Some(press_style) = part.states.get("pressed") {
+            state_layers.push((
+                "pressed",
+                format!("{{Binding IsPressed, ElementName={target_name}}}"),
+                press_style,
+            ));
+        }
     }
     if control_supports_automatic_focus(xaml_tag) && !has_explicit_state_when(node, "focused") {
         if let Some(focus_style) = part.states.get("focused") {
@@ -11844,6 +11860,90 @@ mod tests {
     }
 
     #[test]
+    fn native_pressed_state_uses_button_base_is_pressed() {
+        let c = component("PressedButton", vec![], vec![]);
+        let l = layout_with_root("PressedButton", styled_host_button(vec![]));
+        let s = StyleDef {
+            component_name: "PressedButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "1".to_string(),
+                }],
+                transitions: vec![transition("opacity", "80ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "pressed".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.7".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("<StateTrigger IsActive=\"{Binding IsPressed, ElementName=Button}\"/>"),
+            "pressed state must bind directly to ButtonBase.IsPressed:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<Setter Target=\"Button.Opacity\" Value=\"0.7\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn explicit_pressed_predicate_remains_author_controlled() {
+        let c = component(
+            "ManualPress",
+            vec![slot("force-press", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "ManualPress",
+            styled_host_button(vec![LayoutProp {
+                name: "state-when-pressed".to_string(),
+                value: LayoutPropValue::SlotRef("force-press".to_string()),
+            }]),
+        );
+        let s = StyleDef {
+            component_name: "ManualPress".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: Vec::new(),
+                transitions: Vec::new(),
+                states: vec![StateStyle {
+                    state: "pressed".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.7".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("<StateTrigger IsActive=\"{x:Bind ForcePress, Mode=OneWay}\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("Binding IsPressed"),
+            "explicit press state must not install native tracking:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
     fn native_focused_state_uses_focus_state_converter() {
         let c = component("FocusField", vec![], vec![]);
         let l = layout_with_root(
@@ -12071,6 +12171,59 @@ mod tests {
         assert!(
             focus < hover,
             "WinUI's first-active trigger precedence must match SwiftUI's focused-over-hover layering:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn native_pressed_precedes_focus_and_hover_when_all_are_active() {
+        let c = component("PressFocusHoverButton", vec![], vec![]);
+        let l = layout_with_root("PressFocusHoverButton", styled_host_button(vec![]));
+        let s = StyleDef {
+            component_name: "PressFocusHoverButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "0.6".to_string(),
+                }],
+                transitions: Vec::new(),
+                states: vec![
+                    StateStyle {
+                        state: "hover".to_string(),
+                        props: vec![StyleProp {
+                            name: "opacity".to_string(),
+                            value: "0.8".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                    StateStyle {
+                        state: "focused".to_string(),
+                        props: vec![StyleProp {
+                            name: "opacity".to_string(),
+                            value: "0.9".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                    StateStyle {
+                        state: "pressed".to_string(),
+                        props: vec![StyleProp {
+                            name: "opacity".to_string(),
+                            value: "1".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                ],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        let pressed = r.xaml.find("Binding IsPressed").expect("pressed trigger");
+        let focus = r.xaml.find("Binding FocusState").expect("focus trigger");
+        let hover = r.xaml.find("Binding IsPointerOver").expect("hover trigger");
+        assert!(
+            pressed < focus && focus < hover,
+            "WinUI first-active precedence must be pressed, focused, hover:\n{}",
             r.xaml
         );
     }

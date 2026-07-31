@@ -95,6 +95,14 @@ authored state properties and transitions from that binding. Repeated controls
 retain independent focus state. An explicit `state-when-focused` continues to
 override automatic focus tracking for application-controlled styling.
 
+UI15's built-in `state pressed` is native for pressable host controls
+(`HostButton`, `HostCheckbox`, `HostRadio`, and `HostLink`). The generated
+wrapper owns a row-local `@GestureState` and observes the control's pointer or
+touch press through a simultaneous zero-distance drag gesture, so the authored
+state properties and transitions activate without replacing the control's
+native action. An explicit `state-when-pressed` remains author-controlled and
+does not install automatic press tracking.
+
 ## Primitive lowering
 
 | Mosaic primitive | SwiftUI                                       |
@@ -170,8 +178,8 @@ business logic.
   `UnknownPrimitive` errors today; each lands in its own follow-up.
 - `connects` wiring (gesture / event modifiers beyond what `HostButton` /
   `HostInput` already wire).
-- Automatic activation of the remaining UI15 built-in interaction states
-  (`pressed` and `focused`). Slot- or expression-driven states continue to use
-  `state-when-*`; `hover` is the first built-in state with native activation.
+- Automatic activation of UI15 interaction states not listed above. Hover,
+  focused, and pressed states are native for the supported Host controls;
+  slot- or expression-driven states continue to use `state-when-*`.
 
 See the crate doc-comment for the full deferred list.

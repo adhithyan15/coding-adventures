@@ -4,6 +4,13 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - native pressed feedback through Mosaic
+
+The add-task button now declares its pressed background in the shared MSL
+themes. SwiftUI and WinUI project generation consume that same authored state,
+so the proving app gets platform-native press feedback without parallel AppKit
+or Win32 chrome.
+
 ### Changed - the app now looks like the design
 
 A polish pass bringing the real app up to `design/ui-prototype.html`, which it had

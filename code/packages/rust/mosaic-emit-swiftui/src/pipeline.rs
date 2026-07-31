@@ -592,6 +592,24 @@ const FOCUS_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicFocusState<Conte
 }
 "#;
 
+const PRESS_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicPressState<Content: View>: View {
+    @GestureState private var isPressed = false
+    private let content: (Bool) -> Content
+
+    init(@ViewBuilder content: @escaping (Bool) -> Content) {
+        self.content = content
+    }
+
+    var body: some View {
+        content(isPressed)
+            .simultaneousGesture(
+                DragGesture(minimumDistance: 0)
+                    .updating($isPressed) { _, state, _ in state = true }
+            )
+    }
+}
+"#;
+
 // =====================================================================
 // HostTable column-widths threading — TableContext
 // =====================================================================
@@ -783,6 +801,32 @@ fn layout_uses_automatic_focus(node: &LayoutNode, part_styles: &PartStyleMap) ->
             .any(|child| layout_uses_automatic_focus(child, part_styles))
 }
 
+fn primitive_supports_automatic_press(tag: &str) -> bool {
+    matches!(
+        tag,
+        "HostButton" | "HostCheckbox" | "HostRadio" | "HostLink"
+    )
+}
+
+fn automatic_press_style<'a>(
+    node: &LayoutNode,
+    part_styles: &'a PartStyleMap,
+) -> Option<&'a PartStyleEntry> {
+    let part_name = node.part_name.as_deref()?;
+    if !primitive_supports_automatic_press(&node.tag) || has_explicit_state_when(node, "pressed") {
+        return None;
+    }
+    part_styles.get(&format!("{part_name}:pressed"))
+}
+
+fn layout_uses_automatic_press(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
+    automatic_press_style(node, part_styles).is_some()
+        || node
+            .children
+            .iter()
+            .any(|child| layout_uses_automatic_press(child, part_styles))
+}
+
 /// One state layer collected from a node's `state-when-<X>: ( expr )` props.
 ///
 /// `cond_expr` is the Swift expression for the predicate (already
@@ -868,6 +912,7 @@ fn collect_state_layers_for_emission<'a>(
     part_styles: &'a PartStyleMap,
     uses_automatic_hover: bool,
     uses_automatic_focus: bool,
+    uses_automatic_press: bool,
 ) -> Vec<StateLayer<'a>> {
     let mut layers = Vec::new();
     if uses_automatic_hover {
@@ -885,6 +930,15 @@ fn collect_state_layers_for_emission<'a>(
                 cond_expr: "__mosaicFocusActive".to_string(),
                 props: focus_style.props.as_slice(),
                 transitions: focus_style.transitions.as_slice(),
+            });
+        }
+    }
+    if uses_automatic_press {
+        if let Some(press_style) = part_styles.get(&format!("{part_name}:pressed")) {
+            layers.push(StateLayer {
+                cond_expr: "__mosaicPressActive".to_string(),
+                props: press_style.props.as_slice(),
+                transitions: press_style.transitions.as_slice(),
             });
         }
     }
@@ -1684,6 +1738,10 @@ pub fn from_pipeline(
         out.push_str(FOCUS_STATE_HELPER_SWIFT);
         writeln!(out).unwrap();
     }
+    if layout_uses_automatic_press(&layout.root, &part_styles) {
+        out.push_str(PRESS_STATE_HELPER_SWIFT);
+        writeln!(out).unwrap();
+    }
 
     // 3. Event enum (analog of UI24 §3.1 event union).
     out.push_str(&emit_event_union(name, &interface.emits)?);
@@ -1978,8 +2036,10 @@ fn emit_view_tree(
 ) -> Result<String, PipelineEmitError> {
     let uses_automatic_hover = automatic_hover_style(node, part_styles).is_some();
     let uses_automatic_focus = automatic_focus_style(node, part_styles).is_some();
-    let automatic_wrapper_count =
-        usize::from(uses_automatic_hover) + usize::from(uses_automatic_focus);
+    let uses_automatic_press = automatic_press_style(node, part_styles).is_some();
+    let automatic_wrapper_count = usize::from(uses_automatic_hover)
+        + usize::from(uses_automatic_focus)
+        + usize::from(uses_automatic_press);
     let indent = indent + automatic_wrapper_count * 4;
     let pad = " ".repeat(indent);
 
@@ -2200,6 +2260,7 @@ fn emit_view_tree(
             part_styles,
             uses_automatic_hover,
             uses_automatic_focus,
+            uses_automatic_press,
         );
         // When a width is injected we MUST run the chain even if the part
         // carries no styles, so the frame still emits.
@@ -2241,6 +2302,13 @@ fn emit_view_tree(
     }
 
     let mut wrapper_indent = indent;
+    if uses_automatic_press {
+        wrapper_indent -= 4;
+        let wrapper_pad = " ".repeat(wrapper_indent);
+        inner = format!(
+            "{wrapper_pad}_MosaicPressState {{ __mosaicPressActive in\n{inner}{wrapper_pad}}}\n"
+        );
+    }
     if uses_automatic_focus {
         wrapper_indent -= 4;
         let wrapper_pad = " ".repeat(wrapper_indent);
@@ -8756,7 +8824,112 @@ mod tests {
     }
 
     // ---------------------------------------------------------------------
-    // T30 — UI15's built-in focused state is activated by native SwiftUI
+    // T30 — UI15's built-in pressed state is activated by row-local native
+    //       SwiftUI gesture state for pressable host controls.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn built_in_pressed_state_emits_native_press_wrapper_and_animation() {
+        let m = component("PressedButton", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "PressedButton".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("button".to_string()),
+                props: vec![prop_string("label", "Save")],
+                children: vec![],
+            },
+        };
+        let s = StyleDef {
+            component_name: "PressedButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![sp("opacity", "1")],
+                transitions: vec![transition("opacity", "80ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "pressed".to_string(),
+                    props: vec![sp("opacity", "0.7")],
+                    transitions: vec![],
+                }],
+            }],
+        };
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            out.contains("private struct _MosaicPressState<Content: View>: View"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains("@GestureState private var isPressed = false"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains("_MosaicPressState { __mosaicPressActive in"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains("DragGesture(minimumDistance: 0)"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains(".opacity(((__mosaicPressActive) ? 0.7 : 1))"),
+            "out = {out}"
+        );
+    }
+
+    #[test]
+    fn explicit_pressed_predicate_remains_author_controlled() {
+        let m = component("ManualPress", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "ManualPress".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("button".to_string()),
+                props: vec![
+                    prop_string("label", "Save"),
+                    prop_expr("state-when-pressed", "( forcePress )"),
+                ],
+                children: vec![],
+            },
+        };
+        let s = style_with_part_and_states(
+            "ManualPress",
+            "button",
+            vec![sp("opacity", "1")],
+            vec![("pressed", vec![sp("opacity", "0.7")])],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            !out.contains("_MosaicPressState"),
+            "explicit predicate should not install native press tracking:\n{out}"
+        );
+        assert!(out.contains("forcePress"), "out = {out}");
+    }
+
+    #[test]
+    fn non_pressable_layout_node_does_not_install_press_tracking() {
+        let m = component("DecorativePress", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "DecorativePress".to_string(),
+            root: box_node_with_part_and_props("panel", vec![]),
+        };
+        let s = style_with_part_and_states(
+            "DecorativePress",
+            "panel",
+            vec![sp("opacity", "1")],
+            vec![("pressed", vec![sp("opacity", "0.7")])],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            !out.contains("_MosaicPressState"),
+            "non-pressable layout nodes must not gain native press tracking:\n{out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T31 — UI15's built-in focused state is activated by native SwiftUI
     //       focus for focus-capable host controls.
     // ---------------------------------------------------------------------
 
