@@ -1,0 +1,10 @@
+% ADJ-ARGUMENT-REBUTTAL AC/AR-2 — a paper whose thesis is REBUTTED. The support paragraph
+% concludes fatigue; the reanalysis paragraph rebuts it with a single-shear overload finding.
+% Under context_order the reanalysis outranks the initial report, so the engine WITHDRAWS fatigue.
+functional failed_by(subject, mechanism)
+relate shows(surface, beach_marks)  quote "exhibited beach marks" at 21 snapshot "1baf6c66bb4db1f3ce48c03cdd93e8cf1c8d1c3a7e955e67c7693b65638fdf17" source "pA-support" trust authoritative
+relate shows(surface, single_shear) quote "showed a single-shear lip" at 26 snapshot "e1d6c446ec0106f702b556b52c972eddce2e52b04c5cc925b9e15e548cbc2b9d" source "pB-reanalysis" trust authoritative
+rule { head: failed_by(axle, fatigue)  when: shows(surface, beach_marks) context: initial_report }
+rule { head: failed_by(axle, overload) when: shows(surface, single_shear) context: reanalysis }
+context_order { reanalysis > initial_report }
+? failed_by(axle, $Mechanism)

@@ -1,0 +1,8 @@
+% ADJ-ARGUMENT-REBUTTAL AR-2 — a paper whose thesis is UNDERCUT. The fatigue inference fires only
+% if its warrant is not undercut; a methods-limitation paragraph grounds the undercut, so the
+% thesis ABSTAINS (no rival mechanism is asserted — the licence is simply removed).
+relate shows(surface, beach_marks) quote "exhibited beach marks" at 21 snapshot "1baf6c66bb4db1f3ce48c03cdd93e8cf1c8d1c3a7e955e67c7693b65638fdf17" source "pA-support" trust authoritative
+relate contaminated(sample)        quote "contaminated during handling" at 51 snapshot "efbe3aa4966754c5860376306c96d0220baa3e0f3fde4a0643e1582a6d0cdcbb" source "pC-limitation" trust authoritative
+rule { head: failed_by(axle, fatigue) when: shows(surface, beach_marks), not warrant_undercut }
+rule { head: warrant_undercut when: contaminated(sample) }
+? failed_by(axle, $Mechanism)
