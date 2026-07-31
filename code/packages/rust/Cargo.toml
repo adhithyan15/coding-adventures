@@ -900,6 +900,7 @@ members = [
     "smart-home-mqtt-integration",
     "smart-home-zigbee-integration",
     "smart-home-matter-integration",
+    "smart-home-home-assistant-migration",
     "smart-home-integration-catalog",
     "smart-home-testkit",
     "hue-core",

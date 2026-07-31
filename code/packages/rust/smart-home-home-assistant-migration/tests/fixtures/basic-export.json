@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "source_instance_id": "test-home",
+  "exported_at_ms": 42000,
+  "areas": [
+    {
+      "area_id": "kitchen",
+      "name": "Kitchen"
+    }
+  ],
+  "devices": [
+    {
+      "device_id": "device-light",
+      "area_id": "kitchen",
+      "name": "Kitchen light",
+      "manufacturer": "Signify",
+      "model": "Hue bulb",
+      "identifiers": [["hue", "lamp-1"]]
+    }
+  ],
+  "entities": [
+    {
+      "entity_id": "light.kitchen",
+      "device_id": "device-light",
+      "platform": "hue",
+      "unique_id": "hue-light-1",
+      "name": "Kitchen"
+    }
+  ],
+  "states": [
+    {
+      "entity_id": "light.kitchen",
+      "state": "on",
+      "attributes": {
+        "brightness_pct": 40
+      }
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "scene.kitchen_night",
+      "name": "Kitchen night",
+      "area_id": "kitchen",
+      "states": [
+        {
+          "entity_id": "light.kitchen",
+          "state": "on",
+          "attributes": {
+            "brightness_pct": 20
+          }
+        }
+      ]
+    }
+  ],
+  "automations": [
+    {
+      "automation_id": "night-kitchen",
+      "alias": "Night kitchen",
+      "trigger": {
+        "kind": "interval",
+        "every_ms": 86400000,
+        "offset_ms": 72000000
+      },
+      "conditions": [
+        {
+          "entity_id": "light.kitchen",
+          "state": "on"
+        }
+      ],
+      "actions": [
+        {
+          "service": "scene.turn_on",
+          "target_entity_ids": ["scene.kitchen_night"]
+        }
+      ]
+    }
+  ]
+}
