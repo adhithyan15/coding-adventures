@@ -8,7 +8,12 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": {
+    "item_id": "ocaml-infrastructure",
+    "pr_number": 9336,
+    "branch": "codex/ocaml-infrastructure",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9336"
+  },
   "last_inventory": {
     "revision": "67dc08ac8fcd8598a0ad5e82952c2aee5087a38d",
     "schema_version": 3,
@@ -335,11 +340,11 @@
     {
       "id": "ocaml-infrastructure",
       "title": "Add OCaml scaffolding, lane README, and package metadata support",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["ocaml-lane-contract"],
       "branch": "codex/ocaml-infrastructure",
-      "pr_number": null,
-      "notes": "Add complete Go and TypeScript scaffold templates plus golden tests, repository ignores, capability metadata/schema support, and the lane README. Use OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with language 3.16, Alcotest 1.9.0, bisect_ppx 2.8.3, and ocamlformat 0.27.0."
+      "pr_number": 9336,
+      "notes": "Ready-for-review PR #9336 adds complete Go and TypeScript scaffold templates plus golden tests, repository ignores, capability metadata/schema support, and the lane README. It uses OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with language 3.16, Alcotest 1.9.0, bisect_ppx 2.8.3, and ocamlformat 0.27.0."
     },
     {
       "id": "ocaml-ci-toolchain",

@@ -1,6 +1,6 @@
 # OCAML02 — Scaffold and metadata infrastructure
 
-Status: in progress
+Status: complete in PR #9336
 
 ## Purpose
 

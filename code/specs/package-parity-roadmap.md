@@ -1131,7 +1131,7 @@ Bootstrap order:
    Complete in PR #9323.
 2. Add complete Go and TypeScript scaffold templates plus golden tests,
    repository ignores, capability metadata/schema support, and the
-   `code/packages/ocaml/` lane README.
+   `code/packages/ocaml/` lane README. Complete in PR #9336.
 3. Provision the exact direct OCaml/opam/Dune/Alcotest/`bisect_ppx`/
    `ocamlformat` toolchain on Ubuntu, macOS, and Windows; lock the
    opam-repository/switch transitive solver state; and run both generated
