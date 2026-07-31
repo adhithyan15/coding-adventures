@@ -1001,6 +1001,24 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects negative or non-finite MOS gate-bulk overlap capacitance", () => {
+    for (const value of [0.0, 2.0e-10, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { CGBO: value });
+      expect(valid.parameters.CGBO).toBe(value);
+    }
+
+    for (const invalidCapacitance of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { CGBO: invalidCapacitance }),
+      ).toThrow("MOSFET CGBO must be finite and non-negative");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,
