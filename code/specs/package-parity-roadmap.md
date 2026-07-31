@@ -106,24 +106,22 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 30, 2026 at `59155426c` after merged OCaml
-scaffolding and AR-2 conformance-contract work. It retains the new wave of
-Rust-only package families, including `smart-home-zigbee-integration` after
-`smart-home-mqtt-integration`, the Z-Wave host/integration, and earlier
-smart-home additions. It found zero
-canonical collisions or unknown language buckets:
+inventory was regenerated on July 31, 2026 at `b6d3c60b1` after merged OCaml
+toolchain work and the Rust `smart-home-matter-integration`. It contains 1,198
+normalized implementation identities across 4,340 established-lane package
+slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
 | Present in 10-15 languages | 172 | 277 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 747 | 10,458 |
+| Present in one language | 748 | 10,472 |
 
-The loop must not start by attempting 10,458 singleton ports. It should finish
+The loop must not start by attempting 10,472 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
-The July 30 lane audit is:
+The July 31 lane audit is:
 
 | Established lane | Packages present | High-consensus gaps | Rust/Python-core coverage |
 |---|---:|---:|---:|
@@ -139,7 +137,7 @@ The July 30 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 962 | 0 | 100% |
+| Rust | 963 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -845,11 +843,11 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 552 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 553 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30 inventories added twelve Rust singleton identities that now have
-explicit classification work in the loop state: `axiom-to-semantic-ir` is a
+The July 30-31 inventories added thirteen Rust singleton identities that now
+have explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
 `venture-browser-core` needs a portable-core versus native-boundary review.
@@ -866,6 +864,14 @@ discovery/topic/entity/value/payload transforms are candidates for a separately
 fixture-driven portable core. `venture-browser-macos` is an Apple-native
 AppKit/CoreText/Metal host whose expected classification is `native-source`,
 not a blind 14-lane port.
+
+The new `smart-home-matter-integration` is also a mixed split candidate rather
+than a native-source exception: endpoint projection, report normalization, and
+command planning are deterministic zero-capability logic, while D23 keeps the
+residual `SmartHomeRuntime` integration Rust-canonical. The backlog now tracks
+language-neutral fixtures and hardening for the portable core separately from a
+future controller host that owns mDNS, commissioning, certificates, PASE/CASE
+sessions, subscriptions, retries, Vault leases, and reviewed host capabilities.
 
 ### Likely portable Rust-led families
 
@@ -1144,8 +1150,9 @@ Bootstrap order:
    verify lock and package-receipt digests against a fresh solve; and run both
    generated scaffold kinds without skips. Hosted-runner image metadata is
    diagnostic evidence only and is not an immutable host-image attestation.
-   Ready-for-review PR #9354 is open; its contract, three fresh-solve, three
-   locked-fixture, repository CI, and CodeQL detection checks are green.
+   Complete in merged PR #9354. Final runs 30605415709, 30605415708,
+   30605413650, and 30605415829 prove the contract, three fresh solves, three
+   locked fixtures, repository builds, and CodeQL detection are green.
 4. Add OCaml discovery, opam/Dune dependency resolution, source hashing,
    opam-switch serialization, language detection, validator support, shard
    cost, and CI workflow markers to the canonical Go build tool. This begins

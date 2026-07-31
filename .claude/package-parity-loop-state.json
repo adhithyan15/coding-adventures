@@ -8,15 +8,18 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": 9354,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "59155426cf0ce7f9f7af9838b91692f0583ec23d",
+    "revision": "b6d3c60b1a952df4df1d0cbe52d5a4c28e344d13",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1197,
-    "implementation_package_slots": 4339,
+    "implementation_identities": 1198,
+    "implementation_package_slots": 4340,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 277,
+    "singleton_packages": 748,
+    "singleton_missing_slots": 10472,
+    "rust_singletons": 553,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -358,11 +361,11 @@
     {
       "id": "ocaml-ci-toolchain",
       "title": "Provision and transitively lock the OCaml toolchain on Ubuntu, macOS, and Windows CI",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["ocaml-infrastructure"],
       "branch": "codex/ocaml-ci-toolchain",
       "pr_number": 9354,
-      "notes": "Ready-for-review PR #9354 provisions the exact OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with language 3.16, Alcotest 1.9.0, bisect_ppx 2.8.3, and ocamlformat 0.27.0 toolchain on Linux x64, macOS ARM64, and Windows x64; commit-pins the opam repository and actions; preserves and verifies per-target transitive solver locks and receipts; and proves generated library and program scaffolds run real formatting, tests, and measured coverage without skips. PR-triggered runs 30603982497, 30603982472, and 30603982499 are green, including the contract, all three fresh solves, all three locked fixtures, repository builds, and CodeQL detection. Mutable hosted-runner image metadata remains diagnostic evidence only, not a host-image attestation. The later OCaml build substrate remains blocked on the separately tracked build-tool-go-oracle item."
+      "notes": "Merged PR #9354 at d35079bbbea7da791e1b3e033613f34f0e61825f provisions the exact OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with language 3.16, Alcotest 1.9.0, bisect_ppx 2.8.3, and ocamlformat 0.27.0 toolchain on Linux x64, macOS ARM64, and Windows x64; commit-pins the opam repository and actions; preserves and verifies per-target transitive solver locks and receipts; and proves generated library and program scaffolds run real formatting, tests, and measured coverage without skips. Final PR-triggered runs 30605415709, 30605415708, 30605413650, and 30605415829 are green, including the contract, all three fresh solves, all three locked fixtures, repository builds, and CodeQL detection. Mutable hosted-runner image metadata remains diagnostic evidence only, not a host-image attestation. The later OCaml build substrate remains blocked on the separately tracked build-tool-go-oracle item."
     },
     {
       "id": "adj-lang-cli-capability-profile",
@@ -546,16 +549,37 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Current singleton leaders are Rust 552, Python 86, and TypeScript 84; do not port blindly."
+      "notes": "Current singleton leaders are Rust 553, Python 86, and TypeScript 84; do not port blindly."
     },
     {
       "id": "rust-singletons-20260730-classification",
-      "title": "Classify the July 30 Rust singleton additions",
+      "title": "Classify the July 30-31 Rust singleton additions",
       "status": "pending",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The July 30 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, and smart-home-zigbee-integration. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, and Zigbee adapter packages as native/service/storage boundary cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary."
+      "notes": "The July 30-31 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, and smart-home-matter-integration; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, and Matter adapter packages as native/service/storage boundary cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic into the Matter contract, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary."
+    },
+    {
+      "id": "matter-portable-core-extraction-and-conformance",
+      "title": "Extract and fixture the portable Matter adapter core",
+      "status": "pending",
+      "depends_on": ["rust-singletons-20260730-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the b6d3c60b1 post-merge inventory. Define language-neutral fixtures for Matter endpoint projection, report normalization, command planning, fabric-scoped entity identity, atomic report batches, atomic node installation, duplicate-endpoint rejection, and secret-free host locator validation. Fold or extract that deterministic zero-capability logic through matter-core before expanding lanes; full adapter ports remain blocked on classification of the Rust-only smart-home-core and smart-home-runtime dependencies. Add an explicit empty required_capabilities.json to the current adapter core."
+    },
+    {
+      "id": "smart-home-matter-controller-host",
+      "title": "Implement and capability-review the native Matter controller host",
+      "status": "pending",
+      "depends_on": [
+        "matter-portable-core-extraction-and-conformance",
+        "capability-schema-category-action-constraints"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the b6d3c60b1 post-merge inventory. Scope the native/service boundary to mDNS, commissioning, certificate and fabric validation, PASE/CASE sessions, Interaction Model encoding and subscriptions, retries, terminal outcomes, Vault leases, and reviewed nonempty network, time, BLE, and domain capabilities. Keep Matter-over-Thread as a later dependent tranche until the D27 IPv6/UDP decompression, commissioning, and border-router layers exist."
     },
     {
       "id": "smart-home-mqtt-integration-security-hardening",
