@@ -500,11 +500,11 @@
     {
       "id": "capability-schema-category-action-constraints",
       "title": "Encode valid category-action pairs in capability schemas",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["haskell-scaffold-capability-schema"],
-      "branch": null,
+      "branch": "codex/capability-category-action-constraints",
       "pr_number": null,
-      "notes": "Discovered during final Haskell capability review. The taxonomy defines category-specific actions, but required_capabilities.schema.json and agent_manifest.schema.json currently use independent global enums and therefore accept nonsensical pairs such as env:listen or stdin:delete. Add conditional or oneOf constraints, shared conformance fixtures, and matching loader/analyzer tests across every enforcement backend."
+      "notes": "Selected after PR #9354 merged because this bounded, restriction-only contract closes a fail-open taxonomy gap and directly unlocks the OCaml capability analyzer, the adj-lang-cli capability profile, and the native Matter controller host. Encode the 19 valid category-action pairs from spec 13 in required_capabilities.schema.json and agent_manifest.schema.json; add one shared exhaustive conformance corpus covering all 19 valid pairs and all 93 invalid cross-pairs; and fail closed at the Go capability generator, Go capability analyzer loader, Go capability cage constructor, and Rust capability cage ingestion boundary. The repository inventory found zero invalid pairs among manifests already using the current category and action vocabularies; legacy out-of-schema vocabulary remains separately classified."
     },
     {
       "id": "haskell-high-consensus-tail",

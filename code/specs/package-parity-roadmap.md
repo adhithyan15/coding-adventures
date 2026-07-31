@@ -806,7 +806,10 @@ TypeScript Haskell Cabal/Hspec templates to full canonical parity; and
 `scaffold-description-injection-hardening` closes structural delimiter
 injection across all generated metadata and source-comment contexts.
 `capability-schema-category-action-constraints` encodes the taxonomy's valid
-category-action pairs in both schemas and every enforcement backend.
+category-action pairs in both schemas and every enforcement backend. It is the
+current post-#9354 slice because this restriction-only contract is bounded,
+fully repository-owned, and directly unlocks the future OCaml analyzer,
+`adj-lang-cli` profile reconciliation, and native Matter controller review.
 
 Recommended family order:
 
