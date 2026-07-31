@@ -2575,11 +2575,23 @@ fn emit_code_behind(
     writeln!(out, "using Microsoft.UI.Xaml.Controls;").unwrap();
     writeln!(out, "using System;").unwrap();
     writeln!(out, "using System.Collections.Generic;").unwrap();
+    if !ctx.row_projections.is_empty() {
+        writeln!(out, "using System.ComponentModel;").unwrap();
+    }
     writeln!(out).unwrap();
     writeln!(out, "namespace {ns};").unwrap();
     writeln!(out).unwrap();
 
-    writeln!(out, "public sealed partial class {name} : {base_class}").unwrap();
+    let property_change_interface = if ctx.row_projections.is_empty() {
+        ""
+    } else {
+        ", INotifyPropertyChanged"
+    };
+    writeln!(
+        out,
+        "public sealed partial class {name} : {base_class}{property_change_interface}"
+    )
+    .unwrap();
     writeln!(out, "{{").unwrap();
 
     // Constructor: `InitializeComponent()`. The XAML compiler generates
@@ -2590,6 +2602,28 @@ fn emit_code_behind(
     writeln!(out, "        this.InitializeComponent();").unwrap();
     writeln!(out, "    }}").unwrap();
     writeln!(out).unwrap();
+
+    if !ctx.row_projections.is_empty() {
+        writeln!(
+            out,
+            "    public event PropertyChangedEventHandler? PropertyChanged;"
+        )
+        .unwrap();
+        writeln!(out).unwrap();
+        writeln!(
+            out,
+            "    private void NotifyRowProjectionChanged(string propertyName)"
+        )
+        .unwrap();
+        writeln!(out, "    {{").unwrap();
+        writeln!(
+            out,
+            "        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));"
+        )
+        .unwrap();
+        writeln!(out, "    }}").unwrap();
+        writeln!(out).unwrap();
+    }
 
     // One DependencyProperty per declared slot (spec Â§8). Slots whose
     // PascalCased name collides with a property on the chosen base
@@ -2672,6 +2706,8 @@ fn emit_dependency_property(
         return Err(PipelineEmitError::UnsafeSlotName(pascal));
     }
     let csharp_type = slot_type_to_csharp(&slot.r#type)?;
+    let dependent_projections = row_projections_depending_on(ctx, &pascal);
+    let changed_callback = format!("OnMosaic{pascal}RowProjectionInputChanged");
 
     let mut out = String::new();
     writeln!(out, "    public {csharp_type} {pascal}").unwrap();
@@ -2690,10 +2726,49 @@ fn emit_dependency_property(
     .unwrap();
     writeln!(
         out,
-        "        DependencyProperty.Register(nameof({pascal}), typeof({csharp_type}), typeof({component}), new PropertyMetadata(default({csharp_type})));"
+        "        DependencyProperty.Register(nameof({pascal}), typeof({csharp_type}), typeof({component}), new PropertyMetadata(default({csharp_type}){}));",
+        if dependent_projections.is_empty() {
+            String::new()
+        } else {
+            format!(", {changed_callback}")
+        }
     )
     .unwrap();
+    if !dependent_projections.is_empty() {
+        writeln!(out).unwrap();
+        writeln!(
+            out,
+            "    private static void {changed_callback}(DependencyObject d, DependencyPropertyChangedEventArgs _)"
+        )
+        .unwrap();
+        writeln!(out, "    {{").unwrap();
+        writeln!(out, "        var control = ({component})d;").unwrap();
+        for property_name in dependent_projections {
+            writeln!(
+                out,
+                "        control.NotifyRowProjectionChanged(nameof({property_name}));"
+            )
+            .unwrap();
+        }
+        writeln!(out, "    }}").unwrap();
+    }
     Ok(out)
+}
+
+fn row_projections_depending_on<'a>(ctx: &'a EmitContext<'_>, slot_path: &str) -> Vec<&'a str> {
+    let mut properties = Vec::new();
+    for projection in &ctx.row_projections {
+        let depends_on_slot = projection.source_path == slot_path
+            || projection.selected_index_path.as_deref() == Some(slot_path);
+        if depends_on_slot
+            && !properties
+                .iter()
+                .any(|property| *property == projection.property_name)
+        {
+            properties.push(projection.property_name.as_str());
+        }
+    }
+    properties
 }
 
 /// Translate a mosmodel slot type to its C# property type per spec Â§8.
@@ -3133,10 +3208,15 @@ fn emit_for(
     let pad3 = " ".repeat(indent + 8);
     let style = part_style_attr(node, part_styles);
     let items_source = projection_property.as_deref().unwrap_or(&items_path);
+    let binding_mode = if projection_property.is_some() {
+        ", Mode=OneWay"
+    } else {
+        ""
+    };
     let mut out = String::new();
     writeln!(
         out,
-        "{pad}<ItemsRepeater ItemsSource=\"{{x:Bind {items_source}}}\"{style}>"
+        "{pad}<ItemsRepeater ItemsSource=\"{{x:Bind {items_source}{binding_mode}}}\"{style}>"
     )
     .unwrap();
     writeln!(out, "{pad2}<ItemsRepeater.ItemTemplate>").unwrap();
@@ -6562,6 +6642,10 @@ mod tests {
         assert!(r
             .code_behind
             .contains("public event EventHandler<FooEvent>? Dispatch;"));
+        assert!(
+            !r.code_behind.contains("INotifyPropertyChanged"),
+            "components without generated row projections should keep the lean code-behind shape"
+        );
     }
 
     #[test]
@@ -7443,7 +7527,7 @@ mod tests {
         let r = compile(&c, &l, &empty_style("Grid"));
         assert!(r
             .xaml
-            .contains("<ItemsRepeater ItemsSource=\"{x:Bind GridRowVmRows}\""));
+            .contains("<ItemsRepeater ItemsSource=\"{x:Bind GridRowVmRows, Mode=OneWay}\""));
         assert!(r.code_behind.contains("var source = Rows;"));
         // The For-generated RowVm should be in for_view_models.
         assert!(!r.for_view_models.is_empty());
@@ -8720,7 +8804,7 @@ mod tests {
         // ItemsRepeater bound to the generated row-VM projection.
         assert!(
             r.xaml
-                .contains("<ItemsRepeater ItemsSource=\"{x:Bind GridRowVmRows}\""),
+                .contains("<ItemsRepeater ItemsSource=\"{x:Bind GridRowVmRows, Mode=OneWay}\""),
             "got:\n{}",
             r.xaml
         );
@@ -10804,7 +10888,7 @@ mod tests {
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(
             r.xaml
-                .contains("<ItemsRepeater ItemsSource=\"{x:Bind FooItemVmRows}\""),
+                .contains("<ItemsRepeater ItemsSource=\"{x:Bind FooItemVmRows, Mode=OneWay}\""),
             "got:\n{}",
             r.xaml
         );
@@ -10836,6 +10920,35 @@ mod tests {
                 .contains("rows.Add(new Foo_ItemVm(source[i], i, i == SelectedIndex));"),
             "got:\n{}",
             r.code_behind
+        );
+        assert!(
+            r.code_behind
+                .contains("public sealed partial class Foo : UserControl, INotifyPropertyChanged"),
+            "projected row properties must publish invalidation, got:\n{}",
+            r.code_behind
+        );
+        assert!(
+            r.code_behind.contains(
+                "new PropertyMetadata(default(IReadOnlyList<string>), \
+                 OnMosaicItemsRowProjectionInputChanged)"
+            ),
+            "source-list replacement must invalidate the projection, got:\n{}",
+            r.code_behind
+        );
+        assert!(
+            r.code_behind.contains(
+                "new PropertyMetadata(default(double), \
+                 OnMosaicSelectedIndexRowProjectionInputChanged)"
+            ),
+            "selection changes must invalidate row-local state, got:\n{}",
+            r.code_behind
+        );
+        assert_eq!(
+            r.code_behind
+                .matches("NotifyRowProjectionChanged(nameof(FooItemVmRows));")
+                .count(),
+            2,
+            "both projection inputs must notify the one-way ItemsSource binding"
         );
     }
 
