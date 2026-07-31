@@ -46,6 +46,11 @@ before dependency installation if Dune, Alcotest, `bisect_ppx`, or
 `ocamlformat` is already installed. This prevents a pre-seeded project
 dependency solution from influencing either solve.
 
+Before dependency installation, the workflow MUST inspect the setup action's
+actual `repo/default` Git checkout. Its `origin` URL and `HEAD` MUST equal the
+reviewed repository and commit; a human-oriented repository-listing command is
+not sufficient evidence.
+
 The setup action currently resolves the newest stable opam below 2.6 rather
 than accepting an exact opam version input. The workflow therefore treats the
 action commit as reviewed bootstrap code and immediately fails closed unless

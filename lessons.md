@@ -1926,3 +1926,23 @@ Lessons:
 2. Keep a required precondition check separate from the external write it is
    meant to guard. A failed check must prevent the push rather than merely share
    a command invocation with it.
+
+## Verify pinned-tool assertions against the pinned CLI before publishing CI
+
+The OCaml toolchain workflow pinned opam `2.5.2` but tried to attest its
+repository with `opam repository get-url default`. That subcommand does not
+exist in opam 2.5, so all three runners finished compiler setup and then failed
+the same preflight before dependency installation.
+
+Lessons:
+
+1. Pinning a tool version also pins its command surface. Run every scripted
+   assertion against that exact version, rather than relying on a plausible
+   subcommand name.
+2. For a Git-backed package repository, inspect the materialized checkout:
+   compare `remote get-url origin` and `rev-parse HEAD` with the reviewed URL
+   and commit. This is stronger than parsing a human-oriented package-manager
+   listing and directly proves the state the solver will read.
+3. A cross-platform failure at the same post-setup step is a shared contract
+   defect until logs prove otherwise; wait for the matrix logs and fix the one
+   common assertion.

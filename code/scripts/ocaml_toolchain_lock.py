@@ -109,10 +109,10 @@ EXPECTED_BUILD_LINES = {
 }
 EXPECTED_RUN_SHA256 = {
     "contract.validate": "6e77be232d50974d1de5d950993e830f46792e4241804fbedf43fa75875c8ec7",
-    "fresh.bootstrap": "6b6d678eff3f6b7bbe640222529057e9278c03aed77f1f8675fe4adff6d75762",
+    "fresh.bootstrap": "a7d2fc10d2ccaa75f7a89e8e519ad6a2ab7a9cdd7324bac0efaddfffd34efaeb",
     "fresh.generate": "1db0d48f6e40cf98a1b93dc9acaa5db9b84035be22c494d5483423b35ca45d26",
     "fresh.compare": "c5380cbbe8df09fc05e09d15f0c275e64d30f7d782e50a3fd771fab8b59cfb6b",
-    "locked.bootstrap": "c53c8113a92d5fe03b40df52f0af21377bec9477879274e7db9d377f9d53331f",
+    "locked.bootstrap": "552610643fa2717526faf7084a9816dcbed22b5bc8a270b1d60a67c94981cfca",
     "locked.install": "83aaefbc943f71a9be36cd9cfa8ac70919040de0d0e71748f93999b84023172c",
     "locked.run": "68cdbecd8ce825ae00f1f1516f3ab73bd06198ac9e3f1c238f06518a00353929",
 }
@@ -964,7 +964,9 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
                 'test "$RUNNER_OS" = "$EXPECTED_OS"',
                 'test "$RUNNER_ARCH" = "$EXPECTED_ARCH"',
                 'test "$actual" = "$OPAM_VERSION"',
-                "opam repository get-url default",
+                "opam var root --safe",
+                'git -C "$repository_root" remote get-url origin',
+                'git -C "$repository_root" rev-parse HEAD',
                 "dune alcotest bisect_ppx ocamlformat",
             ),
             f"{'fresh' if job_name == 'fresh-solve' else 'locked'}.bootstrap",

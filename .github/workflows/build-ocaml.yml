@@ -103,9 +103,15 @@ jobs:
           test "$RUNNER_ARCH" = "$EXPECTED_ARCH"
           actual="$(opam --version)"
           test "$actual" = "$OPAM_VERSION"
-          repository_url="$(opam repository get-url default)"
-          test "$repository_url" = \
-            "git+https://github.com/ocaml/opam-repository.git#$OPAM_REPOSITORY_COMMIT"
+          opam_root="$(opam var root --safe)"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            opam_root="$(cygpath -u "$opam_root")"
+          fi
+          repository_root="$opam_root/repo/default"
+          test "$(git -C "$repository_root" remote get-url origin)" = \
+            "https://github.com/ocaml/opam-repository.git"
+          test "$(git -C "$repository_root" rev-parse HEAD)" = \
+            "$OPAM_REPOSITORY_COMMIT"
           for package in dune alcotest bisect_ppx ocamlformat; do
             if opam list --installed --short --columns=name "$package" \
                 | grep -Fxq "$package"; then
@@ -213,9 +219,15 @@ jobs:
           test "$RUNNER_ARCH" = "$EXPECTED_ARCH"
           actual="$(opam --version)"
           test "$actual" = "$OPAM_VERSION"
-          repository_url="$(opam repository get-url default)"
-          test "$repository_url" = \
-            "git+https://github.com/ocaml/opam-repository.git#$OPAM_REPOSITORY_COMMIT"
+          opam_root="$(opam var root --safe)"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            opam_root="$(cygpath -u "$opam_root")"
+          fi
+          repository_root="$opam_root/repo/default"
+          test "$(git -C "$repository_root" remote get-url origin)" = \
+            "https://github.com/ocaml/opam-repository.git"
+          test "$(git -C "$repository_root" rev-parse HEAD)" = \
+            "$OPAM_REPOSITORY_COMMIT"
           for package in dune alcotest bisect_ppx ocamlformat; do
             if opam list --installed --short --columns=name "$package" \
                 | grep -Fxq "$package"; then
