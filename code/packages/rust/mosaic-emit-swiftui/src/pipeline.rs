@@ -388,11 +388,11 @@ fn build_app_swift(component_name: &str, slots: &[SlotDecl]) -> String {
     // The Mosaic SwiftUI emitter produces a `View` struct named
     // `{component_name}View` (per pipeline.rs:120 doc comment), so
     // mount that here.
-    let root_view = build_root_view_initializer(component_name, slots, "host.props");
+    let root_view = build_root_view_initializer(component_name, slots, "host.props", "host");
     let mut out = String::new();
     write!(
         out,
-        "{BANNER_SWIFT}import Combine\nimport Foundation\nimport SwiftUI\n\n"
+        "{BANNER_SWIFT}import Combine\nimport Foundation\nimport SwiftUI\n#if os(macOS)\nimport AppKit\n#elseif os(iOS)\nimport UIKit\n#endif\n\n"
     )
     .unwrap();
     writeln!(out, "@main").unwrap();
@@ -414,11 +414,12 @@ fn build_root_view_initializer(
     component_name: &str,
     slots: &[SlotDecl],
     props_expr: &str,
+    host_expr: &str,
 ) -> String {
     let mut out = format!("{component_name}View(\n");
     for slot in slots {
         let field = to_camel_case_first_lower(&slot.name);
-        let value = host_value_for_slot(slot, props_expr);
+        let value = host_value_for_slot(slot, props_expr, host_expr);
         writeln!(out, "        {field}: {value},").unwrap();
     }
     out.push_str("        dispatch: { event in\n");
@@ -428,7 +429,7 @@ fn build_root_view_initializer(
     out
 }
 
-fn host_value_for_slot(slot: &SlotDecl, props_expr: &str) -> String {
+fn host_value_for_slot(slot: &SlotDecl, props_expr: &str, host_expr: &str) -> String {
     let key = escape_swift_string(&slot.name);
     let fallback = sample_value_for_slot(slot);
     match &slot.r#type {
@@ -453,13 +454,15 @@ fn host_value_for_slot(slot: &SlotDecl, props_expr: &str) -> String {
             }
             ListInnerType::Node | ListInnerType::Component(_) | ListInnerType::List(_) => fallback,
         },
-        SlotType::Node | SlotType::Component(_) => fallback,
+        SlotType::Node | SlotType::Component(_) => {
+            format!("{host_expr}.node(named: \"{key}\")")
+        }
     }
 }
 
 fn build_mosaic_host_state(component_name: &str) -> String {
     format!(
-        "private final class MosaicHostState: ObservableObject {{\n  @Published var props: [String: Any] = [:]\n  @Published var lastHostIntent: [String: Any]? = nil\n  private let bridge: MosaicHostBridgeObject?\n\n  init() {{\n    self.bridge = MosaicHostBridge.load()\n    applyHostResponse(bridge?.applyProps() as? [String: Any])\n  }}\n\n  func dispatch(_ event: {component_name}Event) {{\n    guard let bridge else {{\n      print(\"Mosaic dispatch: \\(event.mosaicEnvelope)\")\n      return\n    }}\n    applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary, name: event.mosaicName as NSString) as? [String: Any])\n  }}\n\n  private func applyHostResponse(_ response: [String: Any]?) {{\n    guard let response else {{ return }}\n    if let intent = response[\"hostIntent\"] as? [String: Any] {{\n      self.lastHostIntent = intent\n    }}\n    if let next = response[\"props\"] as? [String: Any] {{\n      self.props = next\n      return\n    }}\n    if response[\"hostIntent\"] != nil || response[\"error\"] != nil {{\n      return\n    }}\n    self.props = response\n  }}\n}}\n\n@objc protocol MosaicHostBridgeObject {{\n  func applyProps() -> NSDictionary?\n  func handleEvent(_ envelope: NSDictionary, name: NSString) -> NSDictionary?\n}}\n\nprivate enum MosaicHostBridge {{\n  static func load() -> MosaicHostBridgeObject? {{\n    for className in [\"App.MosaicHost\", \"MosaicHost\"] {{\n      guard let hostType = NSClassFromString(className) as? NSObject.Type else {{\n        continue\n      }}\n      if let bridge = hostType.init() as? MosaicHostBridgeObject {{\n        return bridge\n      }}\n    }}\n    return nil\n  }}\n}}\n\nprivate enum MosaicHostValue {{\n  static func string(_ props: [String: Any], _ key: String, fallback: String) -> String {{\n    if let value = props[key] as? String {{ return value }}\n    if let value = props[key] {{ return String(describing: value) }}\n    return fallback\n  }}\n\n  static func double(_ props: [String: Any], _ key: String, fallback: Double) -> Double {{\n    if let value = props[key] as? Double {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.doubleValue }}\n    if let value = props[key] as? String, let parsed = Double(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func bool(_ props: [String: Any], _ key: String, fallback: Bool) -> Bool {{\n    if let value = props[key] as? Bool {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.boolValue }}\n    if let value = props[key] as? String, let parsed = Bool(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func stringList(_ props: [String: Any], _ key: String, fallback: [String]) -> [String] {{\n    if let value = props[key] as? [String] {{ return value }}\n    if let value = props[key] as? [Any] {{ return value.map {{ String(describing: $0) }} }}\n    return fallback\n  }}\n\n  static func doubleList(_ props: [String: Any], _ key: String, fallback: [Double]) -> [Double] {{\n    if let value = props[key] as? [Double] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.doubleValue }} }}\n    return fallback\n  }}\n\n  static func boolList(_ props: [String: Any], _ key: String, fallback: [Bool]) -> [Bool] {{\n    if let value = props[key] as? [Bool] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.boolValue }} }}\n    return fallback\n  }}\n}}\n"
+        "private final class MosaicHostState: ObservableObject {{\n  @Published var props: [String: Any] = [:]\n  @Published var lastHostIntent: [String: Any]? = nil\n  private let bridge: MosaicHostBridgeObject?\n\n  init() {{\n    self.bridge = MosaicHostBridge.load()\n    applyHostResponse(bridge?.applyProps() as? [String: Any])\n  }}\n\n  func node(named name: String) -> AnyView {{\n    guard let object = bridge?.node?(named: name as NSString) else {{\n      return AnyView(EmptyView())\n    }}\n#if os(macOS)\n    guard let view = object as? NSView else {{ return AnyView(EmptyView()) }}\n    return AnyView(MosaicHostPlatformView(view: view))\n#elseif os(iOS)\n    guard let view = object as? UIView else {{ return AnyView(EmptyView()) }}\n    return AnyView(MosaicHostPlatformView(view: view))\n#else\n    return AnyView(EmptyView())\n#endif\n  }}\n\n  func dispatch(_ event: {component_name}Event) {{\n    guard let bridge else {{\n      print(\"Mosaic dispatch: \\(event.mosaicEnvelope)\")\n      return\n    }}\n    applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary, name: event.mosaicName as NSString) as? [String: Any])\n  }}\n\n  private func applyHostResponse(_ response: [String: Any]?) {{\n    guard let response else {{ return }}\n    if let intent = response[\"hostIntent\"] as? [String: Any] {{\n      self.lastHostIntent = intent\n    }}\n    if let next = response[\"props\"] as? [String: Any] {{\n      self.props = next\n      return\n    }}\n    if response[\"hostIntent\"] != nil || response[\"error\"] != nil {{\n      return\n    }}\n    self.props = response\n  }}\n}}\n\n@objc protocol MosaicHostBridgeObject {{\n  func applyProps() -> NSDictionary?\n  func handleEvent(_ envelope: NSDictionary, name: NSString) -> NSDictionary?\n  @objc optional func node(named name: NSString) -> NSObject?\n}}\n\n#if os(macOS)\nprivate struct MosaicHostPlatformView: NSViewRepresentable {{\n  let view: NSView\n  func makeNSView(context: Context) -> NSView {{ view }}\n  func updateNSView(_ nsView: NSView, context: Context) {{}}\n}}\n#elseif os(iOS)\nprivate struct MosaicHostPlatformView: UIViewRepresentable {{\n  let view: UIView\n  func makeUIView(context: Context) -> UIView {{ view }}\n  func updateUIView(_ uiView: UIView, context: Context) {{}}\n}}\n#endif\n\nprivate enum MosaicHostBridge {{\n  static func load() -> MosaicHostBridgeObject? {{\n    for className in [\"App.MosaicHost\", \"MosaicHost\"] {{\n      guard let hostType = NSClassFromString(className) as? NSObject.Type else {{\n        continue\n      }}\n      if let bridge = hostType.init() as? MosaicHostBridgeObject {{\n        return bridge\n      }}\n    }}\n    return nil\n  }}\n}}\n\nprivate enum MosaicHostValue {{\n  static func string(_ props: [String: Any], _ key: String, fallback: String) -> String {{\n    if let value = props[key] as? String {{ return value }}\n    if let value = props[key] {{ return String(describing: value) }}\n    return fallback\n  }}\n\n  static func double(_ props: [String: Any], _ key: String, fallback: Double) -> Double {{\n    if let value = props[key] as? Double {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.doubleValue }}\n    if let value = props[key] as? String, let parsed = Double(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func bool(_ props: [String: Any], _ key: String, fallback: Bool) -> Bool {{\n    if let value = props[key] as? Bool {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.boolValue }}\n    if let value = props[key] as? String, let parsed = Bool(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func stringList(_ props: [String: Any], _ key: String, fallback: [String]) -> [String] {{\n    if let value = props[key] as? [String] {{ return value }}\n    if let value = props[key] as? [Any] {{ return value.map {{ String(describing: $0) }} }}\n    return fallback\n  }}\n\n  static func doubleList(_ props: [String: Any], _ key: String, fallback: [Double]) -> [Double] {{\n    if let value = props[key] as? [Double] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.doubleValue }} }}\n    return fallback\n  }}\n\n  static func boolList(_ props: [String: Any], _ key: String, fallback: [Bool]) -> [Bool] {{\n    if let value = props[key] as? [Bool] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.boolValue }} }}\n    return fallback\n  }}\n}}\n"
     )
 }
 

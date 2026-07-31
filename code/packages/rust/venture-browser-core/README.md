@@ -44,9 +44,10 @@ follows the resolved link through the same transactional path.
 Mosaic `VentureChrome` package. It preserves address edits as a draft, maps the
 six MIL events to `BrowserNavigation`, synchronizes redirects only after a
 successful load, and projects one coherent `BrowserChromeProps` snapshot for
-the six MIL slots. Native SwiftUI and WinUI bridges can consume this contract
-instead of implementing browser behavior independently; mounting those bridges
-into the runnable shells remains a separate acceptance gate.
+the six MIL slots. Generated Mosaic shells now expose the native node seam on
+all registered backends, but the concrete adapters that connect this reducer
+and the live Venture page renderer to those shells remain a separate acceptance
+gate.
 
 ## Development
 

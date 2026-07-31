@@ -472,6 +472,14 @@ fn build_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
             "        .toList(growable: false);\n",
             "  }}\n",
             "  return const <bool>[];\n",
+            "}}\n\n",
+            "Widget mosaicWidget(\n",
+            "  Map<String, Object?> props,\n",
+            "  String name,\n",
+            "  Widget fallback,\n",
+            ") {{\n",
+            "  final value = props[name];\n",
+            "  return value is Widget ? value : fallback;\n",
             "}}\n"
         ),
         banner = BANNER_DART,
@@ -517,7 +525,9 @@ fn host_value_for_slot(slot: &SlotDecl) -> String {
             ListInnerType::Bool => format!("mosaicBooleanList(_hostProps, \"{slot_name}\")"),
             _ => fallback,
         },
-        SlotType::Node | SlotType::Component(_) => fallback,
+        SlotType::Node | SlotType::Component(_) => {
+            format!("mosaicWidget(_hostProps, \"{slot_name}\", {fallback})")
+        }
     }
 }
 

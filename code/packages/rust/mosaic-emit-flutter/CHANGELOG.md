@@ -5,6 +5,12 @@ this file.
 
 ## [Unreleased]
 
+### Fixed - project-shell widget-slot hydration
+
+Generated Flutter shells now accept a host-provided `Widget` in the props map
+for `node` slots and pass it to the component through `mosaicWidget`. Missing or
+mistyped values retain the deterministic `SizedBox.shrink` fallback.
+
 ### Fixed - host-owned surface composition
 
 `HostSurface ( content: slot: ... )` now mounts the supplied `Widget` instead

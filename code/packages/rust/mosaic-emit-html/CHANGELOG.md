@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Fixed - project-shell node-slot hydration
+
+The generated `main.js` runtime now evaluates triple-mustache node markers
+before escaped text mustaches. Host-owned `HostSurface` markup therefore mounts
+inside the stable generated container instead of leaving a malformed brace
+sequence or escaping the content as text.
+
 ### Added - host-owned surface composition
 
 `HostSurface ( content: slot: ... )` now emits a stable DOM mount point with a

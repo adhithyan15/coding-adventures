@@ -80,6 +80,11 @@ synchronization, and history-derived disabled states.
 The Mosaic kernel now exposes a typed `HostSurface` composition primitive;
 Venture's MIL declares the native page renderer as a node slot that lowers to
 SwiftUI `AnyView` and WinUI `ContentPresenter` rather than an empty placeholder.
+The package builder now carries that same slot through runnable project shells
+for every registered backend (React, Electron, SwiftUI, Qt, WebComponent, HTML,
+XAML, Flutter, and Compose). Its macOS acceptance gate compiles the generated
+SwiftPM shell with a real host-provided `NSView`, while the other shell gates
+verify their backend-native host-object seams.
 `venture-browser-macos` loads an HTTP page with native CoreText services,
 creates an AppKit `CAMetalLayer`, and presents the viewport through
 `paint-metal`. Native AppKit wheel events
@@ -88,11 +93,12 @@ now use top-left viewport coordinates to activate links through transactional
 page loads, update the title, and repaint across repeated navigation. Named
 AppKit navigation keys now drive clamped viewport scrolling and Metal repaint.
 Command-Left/Right now reload Back/Forward history entries through the shared
-transactional session, update the native title, and repaint. Mounting the
-generated Mosaic chrome and native page surface into the runnable shell,
-resize/reflow,
-richer pointer behavior, and Windows build/interaction acceptance remain before
-the browser shell is complete.
+transactional session, update the native title, and repaint. Implementing the
+concrete `MosaicHost` adapters that join the generated chrome,
+`BrowserChromeController`, and live Venture page renderer remains before the
+shell is runnable end to end. Resize/reflow, richer pointer behavior, and direct
+macOS and Windows build/interaction acceptance also remain before the browser
+shell is complete.
 
 ## Where It Fits
 

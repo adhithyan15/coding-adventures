@@ -152,6 +152,13 @@ future enhancement.
 | `list<T>`          | `[<inner Swift type>]`      |
 | `<Component>`      | `AnyView`                   |
 
+Generated project shells ask the optional `MosaicHostBridgeObject` for native
+node slots by Mosaic name. A returned macOS `NSView` or iOS `UIView` is wrapped
+in the matching SwiftUI representable and passed as `AnyView`; a missing hook,
+unknown slot, or wrong object type stays an `EmptyView`. This lets a generated
+Venture shell mount a Metal-backed content view without recreating its chrome
+in AppKit.
+
 ## Event dispatch
 
 Each component carries a single `dispatch: (NameEvent) -> Void` closure
