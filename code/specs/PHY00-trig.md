@@ -65,7 +65,7 @@ $$\tan(x) = \frac{\sin(x)}{\cos(x)}$$
 
 **Geometric interpretation:** On the unit circle, if you draw a vertical line tangent to the circle at $(1, 0)$, then $\tan(x)$ is the $y$-coordinate where the ray at angle $x$ meets that line. This is the literal origin of the name "tangent."
 
-**Undefined points (poles):** $\tan(x)$ is undefined wherever $\cos(x) = 0$, at $x = \pi/2 + k\pi$ for any integer $k$. At these points the function approaches $\pm\infty$. Implementations guard with a threshold ($|\cos(x)| < 10^{-15}$) and return the largest representable float.
+**Undefined points (poles):** $\tan(x)$ is undefined wherever $\cos(x) = 0$, at $x = \pi/2 + k\pi$ for any integer $k$. At these points the function approaches $\pm\infty$. Implementations guard with a threshold ($|\cos(x)| < 10^{-15}$) and return the exact signed finite sentinel $\pm 10^{308}$.
 
 **Worked example:**
 
@@ -96,16 +96,30 @@ $$\text{next} = \frac{\text{guess} + x / \text{guess}}{2}$$
 ```
 function sqrt(x):
   if x < 0: raise error
-  if x == 0: return 0.0
-  guess = x if x >= 1.0 else 1.0
+  if x == 0: return x  # preserve signed zero
+  if x == infinity: return infinity
+  scaled = x
+  result_scale = 1.0
+  while scaled < 0.25:
+    scaled = scaled * 4.0
+    result_scale = result_scale * 0.5
+  while scaled >= 4.0:
+    scaled = scaled * 0.25
+    result_scale = result_scale * 2.0
+  guess = scaled if scaled >= 1.0 else 1.0
   repeat up to 60 times:
-    next = (guess + x / guess) / 2.0
-    if |next - guess| < 1e-15 * guess + 1e-300: return next
+    next = (guess + scaled / guess) / 2.0
+    if |next - guess| < 1e-15 * guess + 1e-300:
+      return next * result_scale
     guess = next
-  return guess
+  return guess * result_scale
 ```
 
-The convergence criterion `1e-15 * guess + 1e-300` handles both relative precision (for large values) and subnormal inputs safely.
+The power-of-four normalization keeps Newton iteration in a compact range and
+rescales the result by matching powers of two. This is required for accurate
+small-normal and subnormal inputs under the fixed 60-iteration budget. The
+convergence criterion `1e-15 * guess + 1e-300` then provides relative precision
+within that normalized interval.
 
 `sqrt` is also used internally by `atan_core` for the half-angle reduction — which is why it must be implemented from scratch and not delegated to any standard library.
 
@@ -192,13 +206,22 @@ All functions are module-level (not attached to an object). The package exposes:
 | `atan` | `Atan` | `atan_approx` | `trig.atan` |
 | `atan2` | `Atan2` | `atan2_approx` | `trig.atan2` |
 
+Dart exposes the `PI` contract constant as the idiomatic lower-camel `pi`,
+alongside `twoPi` and `halfPi`. Its functions retain the contract's lowercase
+names and `atan2(y, x)` argument order.
+
 ## 5. Precision Target
 
 All implementations must agree with IEEE 754 double-precision standard-library results to within $1 \times 10^{-10}$ (10 decimal places) for any input in the range $[-10^6, 10^6]$.
 
 ## 6. Cross-Language Parity
 
-The package is implemented identically across all 9 host languages: **Python, Go, TypeScript, Rust, Ruby, Elixir, Perl, Lua, and Swift**. Each implementation uses the same algorithm (iterative term computation, range reduction) and passes the same test cases validating:
+The package is implemented across all 15 established implementation lanes:
+**C#, Dart, Elixir, F#, Go, Haskell, Java, Kotlin, Lua, Perl, Python, Ruby,
+Rust, Swift, and TypeScript**. The emerging C and C++ lanes also carry native
+implementations but do not enter the established-lane denominator. Every
+implementation uses the same first-principles algorithm (iterative term
+computation and range reduction) and validates:
 
 1. Known exact values: $\sin(0) = 0$, $\cos(0) = 1$, $\sin(\pi/2) = 1$, $\cos(\pi) = -1$
 2. Symmetry: $\sin(-x) = -\sin(x)$, $\cos(-x) = \cos(x)$

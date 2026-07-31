@@ -1,0 +1,14 @@
+# Changelog
+
+## [0.1.0] - 2026-07-31
+
+### Added
+
+- Initial pure Dart implementation of the PHY00 trigonometry contract.
+- First-principles sine, cosine, tangent, square root, arctangent, and
+  four-quadrant arctangent implementations.
+- Cross-language special-angle, identity, range-reduction, conversion, and
+  inverse-function tests.
+- Full-range Newton scaling with tiny-normal, subnormal, infinity, NaN, and
+  signed-zero boundary coverage.
+- Schema-v1 empty capability metadata and portable BUILD entry points.

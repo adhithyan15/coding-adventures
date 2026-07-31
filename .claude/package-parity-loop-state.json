@@ -8,9 +8,9 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": 9375,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "8c4785535d9e49cbed77d238d1bc596697f28439",
+    "revision": "bfa7af2c99a157c4f142c0f28114ff9e2f920292",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1200,
@@ -453,19 +453,65 @@
       "id": "dart-current-14-of-15",
       "title": "Close the 13-package Dart-only 14-of-15 frontier",
       "status": "pending",
-      "depends_on": ["haskell-http-core", "dart-scaffold-capability-schema"],
+      "depends_on": ["haskell-http-core", "dart-scaffold-capability-schema", "dart-trig-wave"],
       "branch": null,
       "pr_number": null,
-      "notes": "Deliver small dependency-shaped PRs: ML, trig/wave, data structures, ciphers, document-ast, and uuid."
+      "notes": "Umbrella backlog only; do not select it as one oversized PR. Deliver tracked child items in small dependency-shaped slices: ML, trig/wave, data structures, ciphers, document-ast, and uuid."
+    },
+    {
+      "id": "dart-trig-wave",
+      "title": "Port the PHY00 trig and dependent PHY01 wave packages to Dart",
+      "status": "in-progress",
+      "depends_on": ["dart-scaffold-capability-schema"],
+      "branch": "codex/dart-trig-wave-parity",
+      "pr_number": null,
+      "notes": "Added as pending after PR #9375 merged, then selected as the first dependency-shaped child of dart-current-14-of-15. After rebasing the worktree, the collision-clean bfa7af2c9 inventory remained unchanged at 1,200 identities and 4,342 slots; all thirteen 14-of-15 gaps remained Dart-only. Trig is a zero-dependency first-principles numeric leaf and wave is its direct consumer, so this two-package slice closes two frontier slots and establishes the scaffold contract's first real downstream use."
+    },
+    {
+      "id": "phy00-phy01-language-neutral-fixtures",
+      "title": "Define shared language-neutral PHY00 trig and PHY01 wave fixtures",
+      "status": "pending",
+      "depends_on": ["dart-trig-wave"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the dart-trig-wave fixture audit. All established lanes carry package-native cases, but no shared machine-readable corpus mechanically enforces the specs' same-case claim. Define finite, pole, tiny/subnormal sqrt, signed-zero, quadrant, periodicity, validation, zero-amplitude, and extreme-finite vectors before using the family as a cross-language conformance oracle."
+    },
+    {
+      "id": "phy00-small-sqrt-cross-lane-audit",
+      "title": "Audit and backfill the full-range PHY00 square-root contract",
+      "status": "pending",
+      "depends_on": ["dart-trig-wave", "phy00-phy01-language-neutral-fixtures"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by security review of the Dart port. Existing lanes commonly start Newton iteration at 1.0 for values below one, which can exhaust a fixed iteration budget before converging for tiny normal or subnormal inputs. Audit every lane and backfill power-of-four normalization, infinity handling, signed-zero preservation, and shared boundary vectors without delegating to opaque standard-library square root implementations."
+    },
+    {
+      "id": "phy01-nonfinite-validation-backfill",
+      "title": "Backfill finite and overflow-safe PHY01 wave evaluation",
+      "status": "pending",
+      "depends_on": ["dart-trig-wave", "phy00-phy01-language-neutral-fixtures"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by security review of the Dart port. Audit every existing wave lane for finite amplitude, frequency, phase, and time validation; finite angular-frequency construction; zero-amplitude short-circuiting; period reduction before multiplication; and bounded amplitude scaling. Preserve the pedagogical first-principles dependency while preventing avoidable NaN and infinity results from finite inputs."
     },
     {
       "id": "dart-scaffold-capability-schema",
       "title": "Emit truthful schema-v1 capability manifests from the Dart scaffold generator",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["capability-schema-category-action-constraints"],
       "branch": "codex/dart-scaffold-capability-schema",
       "pr_number": 9375,
-      "notes": "Ready PR #9375 was opened after merged PR #9371, the collision-clean d05262d selection inventory, a post-rebase 8c4785535 inventory, and parallel dependency, fixture, contract, and adversarial security audits because it directly unlocks dart-current-14-of-15 and its 13 portable packages. It adds language-neutral schema-v1 goldens, emits empty library and truthful stdout-only program manifests, declares the generator's exact runtime authority, fixes repository discovery to the checked-in CLI, removes callable public path overrides, and rejects malicious transitive dependency names before path construction. Validation: all 17 Dart tests and real generated library/program toolchains passed; 91.76% line coverage; all four Go build-tool-selected Dart packages built; shared manifest/taxonomy/reporter tests, Dart format/analyze, Ruff, Bandit, compileall, JSON parsing, Go test/vet, collision inventory, state-graph, diff, secret, and independent final audits passed. Spec 13 Layer 5 hardware-key-signed maintainer approval remains required before merge for the new nonempty generator manifest."
+      "notes": "Merged PR #9375 as a16d90923723b3f57a39ac578383ecf597aa65e6 on 2026-07-31 after every GitHub check passed. It adds language-neutral schema-v1 goldens, emits empty library and truthful stdout-only program manifests, declares the generator's exact runtime authority, fixes repository discovery to the checked-in CLI, removes callable public path overrides, and rejects malicious transitive dependency names before path construction. Validation: all 17 Dart tests and real generated library/program toolchains passed; 91.76% line coverage; all four Go build-tool-selected Dart packages built; shared manifest/taxonomy/reporter tests, Dart format/analyze, Ruff, Bandit, compileall, JSON parsing, Go test/vet, collision inventory, state-graph, diff, secret, and independent final audits passed. The separate dart-scaffold-capability-layer5-evidence item records the missing repository-verifiable approval evidence without claiming that the GitHub web-flow merge signature satisfies Spec 13."
+    },
+    {
+      "id": "dart-scaffold-capability-layer5-evidence",
+      "title": "Reconcile Layer 5 approval evidence for the Dart scaffold generator escalation",
+      "status": "pending",
+      "depends_on": ["dart-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the post-#9375 governance audit. GitHub reports no PR reviews or review decision, and merge commit a16d90923723b3f57a39ac578383ecf597aa65e6 carries GitHub's web-flow GPG signature rather than repository-verifiable CAPABILITY_SIGNERS evidence. A maintainer must provide the actual hardware-key-backed approval evidence or a reviewed policy reconciliation before the nonempty generator capability escalation is treated as Layer-5-approved or published. The pure dart-trig-wave child does not execute or publish the generator and adds only empty capability profiles, so it remains independently selectable."
     },
     {
       "id": "haskell-http1",
