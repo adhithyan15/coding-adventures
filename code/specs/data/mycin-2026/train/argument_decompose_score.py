@@ -31,6 +31,22 @@ Metrics (all ratios in [0, 1] except the integer VETO counts):
   - thesis_derivation — 0/1: does the predicted argument, once compiled, actually DERIVE the gold
     thesis and BYTE-ANCHOR its citations (the real 3-part gate, via gen_argument_data.verify_gold)?
     `None` when the adj-lang-cli / adj-verify binaries are not built (skipped, like AD-2).
+
+ATTACK edges (AD-6) — a paper's DIALECTIC, not just its support. When a later paragraph REBUTS an
+earlier conclusion, the gold-object carries an `attacks` list; these metrics score whether the model
+recovered the rebuttal faithfully AND in the right direction:
+  - attack_precision / attack_recall / attack_f1 — set overlap of predicted vs gold attack edges by
+    identity (kind, directed winner/loser CONCLUSIONS, winner/loser CONTEXTS, normalized-span): an
+    attack matches only if it names the right conflict AND says the right side wins.
+  - attack_wrong_direction (VETO, must be 0) — COUNT of predicted attacks that REVERSE a gold attack
+    (predicted winner == gold loser and vice-versa): the model saw the conflict but backed the loser,
+    which would make the engine withdraw the CORRECT conclusion. The dangerous failure.
+  - attack_fabrication (VETO, must be 0) — COUNT of predicted attacks whose precedence-establishing
+    span is NOT in the note: an invented warrant for a withdrawal the paragraph never licenses.
+  - attack_resolution — 0/1: does the predicted argument, once built with its functional head and
+    context_order and RUN, produce the engine's ADJ73 verdict gold expects — the winner GOVERNS and
+    the loser is WITHDRAWN? `None` when there is no gold attack or the binaries are absent. This is
+    the attack counterpart of thesis_derivation: the engine's governing output is the ground truth.
 """
 
 from __future__ import annotations
@@ -69,6 +85,63 @@ def _pr(pred_keys: list, gold_keys: set) -> tuple[float, float]:
     precision = 1.0 if not pred_keys else len(matched) / len(pred_keys)
     recall = 1.0 if not gold_keys else len({k for k in matched}) / len(gold_keys)
     return precision, recall
+
+
+def _attack_key(a: dict) -> tuple:
+    """An attack edge's identity (AD-6): its kind, the winner/loser CONCLUSIONS, the winner/loser
+    CONTEXTS, and its normalized span. Both the conclusions and the contexts encode the precedence
+    DIRECTION, so an attack that names the right pair but the wrong winner is a different key — it
+    does not match gold."""
+    return (a.get("kind"),
+            _norm(a.get("winner_conclusion", "")), _norm(a.get("loser_conclusion", "")),
+            a.get("winner_context"), a.get("loser_context"), _norm(a.get("span", "")))
+
+
+def _to_attack_builder_spec(predicted: dict, gold: dict) -> dict:
+    """Extend `_to_builder_spec` with the attack surface: carry each predicted inference's `context`
+    tag, take the `functional` head from GOLD (structural, like the thesis), and derive a
+    `context_order` edge from each PREDICTED rebut attack. Building from the PREDICTED precedence is
+    what lets the resolution gate catch a reversed attack — a flipped context_order makes the engine
+    withdraw the wrong conclusion, so the gate returns 0."""
+    spec = _to_builder_spec(predicted, gold.get("thesis", ""))
+    for src, dst in zip(predicted.get("inferences", []) or [], spec["inferences"]):
+        if src.get("context"):
+            dst["context"] = src["context"]
+    spec["functional"] = gold.get("functional")
+    spec["context_order"] = [
+        (a["winner_context"], a["loser_context"])
+        for a in (predicted.get("attacks") or [])
+        if a.get("kind") == "rebut" and a.get("winner_context") and a.get("loser_context")
+    ]
+    return spec
+
+
+def attack_resolution(predicted: dict, gold: dict, note: str) -> int | None:
+    """The real gate for attack edges (AD-6): build the predicted argument WITH its functional head
+    and context_order, run the engine, and check its ADJ73 verdict matches gold — for every gold
+    rebut attack, the winner conclusion GOVERNS and the loser is WITHDRAWN. Returns 1/0, or `None`
+    when there is no gold attack to resolve or the binaries are not built. A reversed or dropped
+    attack scores 0 here: the engine's governing output is the ground truth, not the model's claim."""
+    gold_attacks = [a for a in (gold.get("attacks") or []) if a.get("kind") == "rebut"]
+    if not gold_attacks or not (gad.CLI.exists() and gad.VERIFY.exists()):
+        return None
+    spec = _to_attack_builder_spec(predicted, gold)
+    sb = note.encode("utf-8")
+    try:
+        adj_text, _ = gad.build_argument_adj(spec, sb)
+    except gad.SpanNotFound:
+        return 0  # a fabricated citation can't even be built.
+    try:
+        answers = gad.governing_answers_for(adj_text)
+    except gad.BinariesMissing:
+        return None
+    by_term = {_norm(a["term"]): a for a in answers}
+    for atk in gold_attacks:
+        win = by_term.get(_norm(atk.get("winner_conclusion", "")), {})
+        lose = by_term.get(_norm(atk.get("loser_conclusion", "")), {})
+        if win.get("status") != "governing" or lose.get("status") != "defeated":
+            return 0
+    return 1
 
 
 def _to_builder_spec(predicted: dict, thesis: str) -> dict:
@@ -147,15 +220,39 @@ def score(predicted: dict, gold: dict, note: str, *, run_gate: bool = True) -> d
     # fabrication: a predicted span not present in the note at all (invented bytes).
     fabrication = sum(1 for x in cited if _norm(x["span"]) not in note_n)
 
+    # ATTACK edges (AD-6). Precision/recall/f1 by full identity (kind + directed conclusions/contexts
+    # + span), plus two vetoes mirroring the premise/inference ones:
+    pred_atk = predicted.get("attacks", []) or []
+    gold_atk = gold.get("attacks", []) or []
+    ap, ar = _pr([_attack_key(a) for a in pred_atk], {_attack_key(a) for a in gold_atk})
+    # The DIRECTED conclusion pairs gold asserts, so a REVERSAL (predicted winner == gold loser and
+    # vice-versa) is detectable — the single most dangerous attack error, since it would make the
+    # engine withdraw the correct conclusion.
+    gold_pairs = {(_norm(a.get("winner_conclusion", "")), _norm(a.get("loser_conclusion", "")))
+                  for a in gold_atk}
+    attack_wrong_direction = sum(
+        1 for a in pred_atk
+        if (_norm(a.get("loser_conclusion", "")), _norm(a.get("winner_conclusion", ""))) in gold_pairs
+        and (_norm(a.get("winner_conclusion", "")), _norm(a.get("loser_conclusion", ""))) not in gold_pairs
+    )
+    # A predicted attack whose precedence sentence is not in the note at all — an invented warrant
+    # for a withdrawal the paragraph never licenses.
+    attack_fabrication = sum(1 for a in pred_atk
+                             if a.get("span") and _norm(a["span"]) not in note_n)
+
     out = {
         "premise_precision": pp, "premise_recall": pr_, "premise_f1": _f1(pp, pr_),
         "inference_precision": ip, "inference_recall": ir, "inference_f1": _f1(ip, ir),
         "span_faithfulness": span_faithfulness,
         "discard_recall": discard_recall, "discard_precision": discard_precision,
+        "attack_precision": ap, "attack_recall": ar, "attack_f1": _f1(ap, ar),
         "near_miss_violations": near_miss_violations,
         "fabrication": fabrication,
+        "attack_wrong_direction": attack_wrong_direction,
+        "attack_fabrication": attack_fabrication,
     }
     out["thesis_derivation"] = thesis_derivation(predicted, gold, note) if run_gate else None
+    out["attack_resolution"] = attack_resolution(predicted, gold, note) if run_gate else None
     return out
 
 
@@ -166,11 +263,15 @@ def aggregate(scores: list[dict]) -> dict:
         return {}
     ratio = ("premise_precision", "premise_recall", "premise_f1",
              "inference_precision", "inference_recall", "inference_f1",
-             "span_faithfulness", "discard_recall", "discard_precision")
-    counts = ("near_miss_violations", "fabrication")
+             "span_faithfulness", "discard_recall", "discard_precision",
+             "attack_precision", "attack_recall", "attack_f1")
+    counts = ("near_miss_violations", "fabrication",
+              "attack_wrong_direction", "attack_fabrication")
     out = {m: sum(s[m] for s in scores) / len(scores) for m in ratio}
     out.update({m: sum(s[m] for s in scores) for m in counts})
     gated = [s["thesis_derivation"] for s in scores if s.get("thesis_derivation") is not None]
     out["thesis_derivation"] = (sum(gated) / len(gated)) if gated else None
+    resolved = [s["attack_resolution"] for s in scores if s.get("attack_resolution") is not None]
+    out["attack_resolution"] = (sum(resolved) / len(resolved)) if resolved else None
     out["n"] = len(scores)
     return out
