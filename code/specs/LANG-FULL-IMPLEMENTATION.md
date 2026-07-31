@@ -682,7 +682,7 @@ backend immediately) come before the enabler-dependent items.
   `llvm.trap` via `clang` (PR-4a), WASM linear-memory+`unreachable` via `wasm-runtime` (PR-4b),
   and **native** x86_64/aarch64 `__twig_alloc_bytes`+`ud2`/`udf` trap (PR-4c — aarch64 local,
   x86_64 CI). The for-loop sum-of-squares array Prog now runs on LLVM too (the ALGOL-for-loop
-  guard-type fix landed in `algol-iir-compiler` 0.5.1). Array value parameters are follow-up.
+  guard-type fix landed in `algol-iir-compiler` 0.5.1).
   **AL-multidim ✅**: `integer array M[1:2, 1:2]` (2D) runs on **all 7 backends**
   via row-major flat index `(i-lo1)*stride + (j-lo2)` computed during declaration; strides
   accumulated right-to-left; `alloc_array`/`array_set`/`array_get` with flat 0-based index;
@@ -720,7 +720,8 @@ backend immediately) come before the enabler-dependent items.
   sibling `IIRFunction` + IIR `call`; supports forward references + recursion + multi-arg.
   Surfaced & fixed a real `jit-core` constant-propagation bug (reassigned result slot
   propagated its dead seed → only the JIT returned 0). **Limits (follow-ups):** `value`
-  params only (by-name is AL7); procedures may capture enclosing scalar and
+  params only (by-name is AL7); zero-argument calls may use explicit `f()` in
+  value or statement position; procedures may capture enclosing scalar and
   array declarations through typed globals.
 - ◑ **AL4** — literal string `print`/`output` I/O runs on all 7 backends via
   **E4**. Undeclared statement-position `print('HI')`/`output('HI')` calls lower

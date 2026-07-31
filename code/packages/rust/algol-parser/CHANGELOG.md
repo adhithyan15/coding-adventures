@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.2] - 2026-07-31
+
+### Added
+
+- **Explicit zero-argument procedure calls.** The checked-in Rust grammar
+  artifact now recognizes `f()` both in expression position and as a procedure
+  statement, matching the source grammar's optional `actual_params` rule.
+  Bare `f` remains available for report-style no-argument statements and is
+  still parsed as a variable in expression position.
+
 ## [0.3.1] - 2026-07-30
 
 ### Added

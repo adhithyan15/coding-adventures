@@ -36,7 +36,9 @@ end
 
 A typed procedure lowers to a sibling `IIRFunction` (here `sq(x: i64) -> i64`)
 and a call becomes an IIR `call`, so procedures run on every backend exactly
-like any other function. A `switch` is a named jump table: `goto s[i]` selects
+like any other function. A zero-argument procedure can be invoked explicitly
+as `f()` in either value or statement position; a bare statement name retains
+the report-style no-argument form. A `switch` is a named jump table: `goto s[i]` selects
 the i-th (1-based) target by a portable `index == k ? jmp Lk` chain; an
 out-of-range subscript falls through. Conditional designators
 (`goto if b then L1 else L2`) are also supported. Procedures may be called
@@ -141,5 +143,5 @@ value position is a clean type error because it has no return value.
 
 Unsupported ALGOL 60 features — non-numeric/non-string arrays, dynamic string
 variables, by-name (non-`value`) parameters, array-formal capture by nested
-procedures, parameterless-procedure calls (a bare name parses as a variable),
-and conditional/nested switch-list elements — return explicit compiler errors.
+procedures, and conditional/nested switch-list elements — return explicit
+compiler errors.

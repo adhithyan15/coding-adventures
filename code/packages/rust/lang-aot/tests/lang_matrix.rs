@@ -1324,6 +1324,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — explicit empty argument lists for a zero-argument typed
+    // procedure in value position and a proper procedure in statement
+    // position. Both lower through the shared zero-argument IIR call ABI.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; integer procedure answer; answer := 42; \
+                  procedure store; result := answer(); store() end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a proper procedure captures an enclosing array and retains
     // its declaration-space lower bounds across a fresh procedure frame.
     Prog {
@@ -5088,6 +5099,36 @@ fn algol_array_parameter_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but array parameter execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_zero_argument_procedures_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure answer; answer := 42")
+                && program.src.contains("result := answer(); store()")
+        })
+        .expect("the ALGOL zero-argument procedure program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but zero-argument procedure execution did not complete"
             );
             continue;
         };
