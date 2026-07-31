@@ -80,6 +80,13 @@ ease-out curve. Standard ease curves and `cubic-bezier(...)` lower to native
 `Animation` constructors. Transitions for style properties that the SwiftUI
 backend does not yet lower are intentionally omitted.
 
+UI15's built-in `state hover` needs no matching layout predicate. When a styled
+part declares it, the generated view is wrapped in a native SwiftUI hover-state
+view whose local `@State` drives the same modifier and animation lowering.
+Wrappers are instantiated inside `ForEach`, so repeated rows retain independent
+hover state. An explicit `state-when-hover` remains available when hover-like
+styling is intentionally driven by application state instead of the pointer.
+
 ## Primitive lowering
 
 | Mosaic primitive | SwiftUI                                       |
@@ -93,20 +100,20 @@ backend does not yet lower are intentionally omitted.
 | `Divider`        | `Divider()`                                   |
 | `Stack`          | `ZStack { ... }` *(v0.2.0; UI29 kernel)*      |
 | `HostScroll`     | `ScrollView { ... }` *(v0.2.0; UI29 kernel)*  |
-| `HostInput`      | `TextField(placeholder, text: .constant(value))` *(v0.2.0; UI29 kernel)* |
+| `HostInput`      | `TextField` with a dispatching `Binding` when `onChange` is wired *(UI29 kernel)* |
 | `HostButton`     | `Button(action: { dispatch(.tap) }) { Text(label) }` *(v0.2.0; UI29 kernel)* |
 | `HostTable`      | `VStack(alignment: .leading, spacing: 0) { HStack { ... } }` *(v0.3.0; UI29 kernel)* |
 | `HostDialog`     | `Color.clear.frame(width: 0, height: 0).sheet(...)` / `.popover(...)` *(v0.5.0; UI29-1 kernel)* |
 
-### `HostInput` binding choice — `.constant(value)`
+### `HostInput` binding choice
 
 SwiftUI `TextField` requires `text: Binding<String>`, but Mosaic components
-receive slots as immutable `let` properties. We thread the slot through
-`.constant(value)`, which means **inline typing does not echo back through
-the slot** — the host's flux dispatch loop owns updates via
-`dispatch(.commit(value: ...))`. This matches UI24's dispatch-driven
-pattern. A future revision will offer a `@State`-proxy lowering that
-dispatches per-keystroke.
+receive slots as immutable `let` properties. When `onChange` is wired, the
+generated binding reads the slot and dispatches the new value from its setter;
+the host's flux loop then supplies the updated slot. Inputs without an
+`onChange` handler use `.constant(value)` as an intentionally read-only
+display. This preserves UI24's dispatch-driven ownership without freezing
+editable fields.
 
 ### `HostInput` platform note — `.onExitCommand`
 
@@ -148,10 +155,6 @@ business logic.
   Per UI28 §4.4 the SwiftUI lowering is
   `Grid → SwiftUI.Table { TableColumn(...) }` with each `Column` becoming
   a `TableColumn` definition.
-- `If`, `For` — UI29 kernel primitives that wait on the moslayout
-  grammar additions (U29-G3). Until those land, this crate returns
-  `UnknownPrimitive` for them so authors get a clear "not yet supported"
-  diagnostic.
 - `HostTable` lowers to a structural `VStack` of `HStack` rows (see
   primitive table above); the data-driven `SwiftUI.Table` form waits on
   a follow-up that wires `For`-inside-table.
@@ -159,7 +162,8 @@ business logic.
   `UnknownPrimitive` errors today; each lands in its own follow-up.
 - `connects` wiring (gesture / event modifiers beyond what `HostButton` /
   `HostInput` already wire).
-- `mosstyle::StyleDef` inlining (accepted in the signature so callers can
-  build against the stable interface, not yet applied).
+- Automatic activation of the remaining UI15 built-in interaction states
+  (`pressed` and `focused`). Slot- or expression-driven states continue to use
+  `state-when-*`; `hover` is the first built-in state with native activation.
 
 See the crate doc-comment for the full deferred list.
