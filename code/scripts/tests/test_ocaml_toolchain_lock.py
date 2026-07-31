@@ -9,12 +9,11 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
-import ocaml_toolchain_lock as toolchain  # noqa: E402
+import ocaml_toolchain_lock as toolchain
 
 
 class OcamlToolchainRepositoryTests(unittest.TestCase):
@@ -43,9 +42,9 @@ class OcamlToolchainRepositoryTests(unittest.TestCase):
 
     def test_workflow_uses_closed_matrix_and_pinned_identities(self) -> None:
         manifest = toolchain.load_manifest(REPO_ROOT)
-        workflow = (
-            REPO_ROOT / ".github/workflows/build-ocaml.yml"
-        ).read_text(encoding="utf-8")
+        workflow = (REPO_ROOT / ".github/workflows/build-ocaml.yml").read_text(
+            encoding="utf-8"
+        )
 
         toolchain.validate_workflow_text(manifest, workflow)
         self.assertNotIn("continue-on-error:", workflow)
@@ -78,9 +77,7 @@ class OcamlToolchainShapeTests(unittest.TestCase):
 
     def test_rejects_malformed_action_commit(self) -> None:
         self.assert_rejected(
-            lambda document: document["actions"].__setitem__(
-                "setup_ocaml", "v3"
-            ),
+            lambda document: document["actions"].__setitem__("setup_ocaml", "v3"),
             "40 lowercase hexadecimal",
         )
 
@@ -122,26 +119,14 @@ class OcamlToolchainDigestTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temp_dir = tempfile.TemporaryDirectory()
         self.root = Path(self.temp_dir.name)
-        self.fixture_root = (
-            self.root / "code/specs/fixtures/ocaml-toolchain"
-        )
+        self.fixture_root = self.root / "code/specs/fixtures/ocaml-toolchain"
         self.fixture_root.mkdir(parents=True)
 
-        source_fixture_root = (
-            REPO_ROOT / "code/specs/fixtures/scaffold-generator"
-        )
+        source_fixture_root = REPO_ROOT / "code/specs/fixtures/scaffold-generator"
         for kind in ("ocaml-library", "ocaml-program"):
-            destination = (
-                self.root
-                / "code/specs/fixtures/scaffold-generator"
-                / kind
-            )
+            destination = self.root / "code/specs/fixtures/scaffold-generator" / kind
             destination.mkdir(parents=True)
-            source = (
-                source_fixture_root
-                / kind
-                / "coding-adventures-my-pkg.opam"
-            )
+            source = source_fixture_root / kind / "coding-adventures-my-pkg.opam"
             (destination / source.name).write_bytes(source.read_bytes())
 
         self.manifest = copy.deepcopy(toolchain.load_manifest(REPO_ROOT))
@@ -155,9 +140,7 @@ class OcamlToolchainDigestTests(unittest.TestCase):
                 if path_key == "lock_file":
                     content = "\n".join(
                         f'"{name}" {{= "{version}"}}'
-                        for name, version in self.manifest[
-                            "direct_versions"
-                        ].items()
+                        for name, version in self.manifest["direct_versions"].items()
                     ).encode("utf-8")
                 else:
                     content = b"ocaml.5.2.1\n"
@@ -234,9 +217,7 @@ class OcamlToolchainRuntimeTests(unittest.TestCase):
             )
 
     @mock.patch("ocaml_toolchain_lock.subprocess.run")
-    def test_runtime_probe_executes_closed_commands(
-        self, run: mock.Mock
-    ) -> None:
+    def test_runtime_probe_executes_closed_commands(self, run: mock.Mock) -> None:
         outputs = (
             "2.5.2",
             "5.2.1",
@@ -246,8 +227,7 @@ class OcamlToolchainRuntimeTests(unittest.TestCase):
             "0.27.0",
         )
         run.side_effect = [
-            mock.Mock(returncode=0, stdout=output, stderr="")
-            for output in outputs
+            mock.Mock(returncode=0, stdout=output, stderr="") for output in outputs
         ]
 
         toolchain.validate_runtime(toolchain.load_manifest(REPO_ROOT))
