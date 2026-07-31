@@ -106,9 +106,9 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 30, 2026 at `67dc08ac8` after the merged
-Haskell `http1` and scaffold-capability tranches plus a new wave of Rust-only
-package families. The refresh adds `smart-home-zigbee-integration` after
+inventory was regenerated on July 30, 2026 at `59155426c` after merged OCaml
+scaffolding and AR-2 conformance-contract work. It retains the new wave of
+Rust-only package families, including `smart-home-zigbee-integration` after
 `smart-home-mqtt-integration`, the Z-Wave host/integration, and earlier
 smart-home additions. It found zero
 canonical collisions or unknown language buckets:
@@ -1024,9 +1024,15 @@ Delivery order:
    ready.
 
    The attestation item is not implementable on the repository's mutable
-   GitHub-hosted `ubuntu-latest` runner without circular self-attestation. It
-   remains pending until an immutable/measured runner subject and out-of-band
-   attester are selected; unrelated deliverable parity edges continue meanwhile.
+   GitHub-hosted `ubuntu-latest` runner without circular self-attestation.
+   `build-tool-immutable-runner-attester-provisioning` is therefore an explicit
+   externally blocked prerequisite: infrastructure owners must select and
+   provision the immutable or measured runner/image subject, measurement root,
+   out-of-band attester trust root, protected no-secret workflow, receipt
+   storage, and rotation/revocation procedure. The repository attestation item
+   remains pending until that reviewed subject exists; neither item runs a
+   capability probe, fixture, adapter, or invariant probe. Unrelated
+   deliverable parity edges continue meanwhile.
 7. Implement the native Windows boundary with AppContainer or LPAC plus Job
    Objects and root-handle reparse-safe filesystem operations. Keep macOS
    non-passing until a signed helper or isolated VM can prove the same
@@ -1134,18 +1140,22 @@ Bootstrap order:
    `code/packages/ocaml/` lane README. Complete in PR #9336.
 3. Provision the exact direct OCaml/opam/Dune/Alcotest/`bisect_ppx`/
    `ocamlformat` toolchain on Ubuntu, macOS, and Windows; lock the
-   opam-repository/switch transitive solver state; and run both generated
-   scaffold kinds without skips.
+   opam-repository/switch transitive solver state separately per runner family;
+   verify lock and package-receipt digests against a fresh solve; and run both
+   generated scaffold kinds without skips. Hosted-runner image metadata is
+   diagnostic evidence only and is not an immutable host-image attestation.
 4. Add OCaml discovery, opam/Dune dependency resolution, source hashing,
    opam-switch serialization, language detection, validator support, shard
-   cost, and CI workflow markers to the canonical Go build tool.
+   cost, and CI workflow markers to the canonical Go build tool. This begins
+   only after the cross-platform toolchain evidence in step 3 is green.
 5. Exercise the full path with a real dependency chain:
    `logic-gates`, then `graph -> directed-graph -> state-machine`. Every package
    needs native tests, formatting, measured coverage, README, changelog,
    capability metadata, opam/Dune manifests, and BUILD/BUILD_windows.
 6. Add an OCaml capability analyzer over compiler-libs ASTs, covering process
    execution, dynamic loading, unsafe marshaling, and `Obj.magic` under the
-   repository's explicit capability/exception policy.
+   repository's explicit capability/exception policy after the shared
+   category/action constraint schema is complete.
 7. Implement the OCaml build tool on `directed-graph` and require two-way
    build-plan interchange plus the shared conformance corpus.
 8. Promote OCaml into the implementation denominator only when Ubuntu, macOS,

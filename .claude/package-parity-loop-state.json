@@ -8,14 +8,9 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": {
-    "item_id": "ocaml-infrastructure",
-    "pr_number": 9336,
-    "branch": "codex/ocaml-infrastructure",
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9336"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "67dc08ac8fcd8598a0ad5e82952c2aee5087a38d",
+    "revision": "59155426cf0ce7f9f7af9838b91692f0583ec23d",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1197,
@@ -116,10 +111,24 @@
       "notes": "Discovered during the Linux OCI security review. Select the requested direct corpus member from one root-handle/no-follow bounded snapshot and execute the same hashed bytes; reject outside paths, renames, symlinks, hardlinks, case/Unicode aliases, and post-digest mutation."
     },
     {
+      "id": "build-tool-immutable-runner-attester-provisioning",
+      "title": "Select and provision the immutable Linux runner subject and out-of-band attester",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-linux-capability-preflight-broker",
+        "build-tool-anonymous-exec-closure"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered during post-#9336 dependency reconciliation. External infrastructure owners must select an immutable or measured runner/image identity, measurement root, out-of-band attester trust root, protected no-secret workflow, receipt storage, and rotation/revocation procedure before the repository can verify a runner-image TCB receipt. This item runs no capability probe, fixture, adapter, or invariant probe and is not selectable until those externally owned subjects exist."
+    },
+    {
       "id": "build-tool-runner-image-tcb-attestation",
       "title": "Bind protected Linux execution to an immutable runner-image TCB receipt",
       "status": "pending",
       "depends_on": [
+        "build-tool-immutable-runner-attester-provisioning",
         "build-tool-linux-capability-preflight-broker",
         "build-tool-anonymous-exec-closure"
       ],
@@ -340,20 +349,20 @@
     {
       "id": "ocaml-infrastructure",
       "title": "Add OCaml scaffolding, lane README, and package metadata support",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["ocaml-lane-contract"],
       "branch": "codex/ocaml-infrastructure",
       "pr_number": 9336,
-      "notes": "Ready-for-review PR #9336 adds complete Go and TypeScript scaffold templates plus golden tests, repository ignores, capability metadata/schema support, and the lane README. It uses OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with language 3.16, Alcotest 1.9.0, bisect_ppx 2.8.3, and ocamlformat 0.27.0."
+      "notes": "Merged PR #9336 adds complete Go and TypeScript scaffold templates plus golden tests, repository ignores, capability metadata/schema support, and the lane README. It uses OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with language 3.16, Alcotest 1.9.0, bisect_ppx 2.8.3, and ocamlformat 0.27.0."
     },
     {
       "id": "ocaml-ci-toolchain",
       "title": "Provision and transitively lock the OCaml toolchain on Ubuntu, macOS, and Windows CI",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["ocaml-infrastructure"],
-      "branch": null,
+      "branch": "codex/ocaml-ci-toolchain",
       "pr_number": null,
-      "notes": "Discovered during the post-#9323 fixture and ownership audit. Install and cache OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with language 3.16, Alcotest 1.9.0, bisect_ppx 2.8.3, and ocamlformat 0.27.0 on all three runner families; lock and verify the opam-repository/switch transitive solver state; then prove generated library and program scaffolds run real formatting, test, and coverage commands without skips."
+      "notes": "Selected after PR #9336 merged because the cross-platform toolchain is the next dependency in the OCaml bootstrap and unlocks build-substrate and representative-package work. Install OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with language 3.16, Alcotest 1.9.0, bisect_ppx 2.8.3, and ocamlformat 0.27.0 on all three runner families; pin the opam-repository source, preserve per-platform transitive solver locks and receipts, verify their digests, and prove generated library and program scaffolds run real formatting, tests, and coverage without skips. Mutable hosted-runner image metadata is recorded only as diagnostic evidence and is not a host-image attestation."
     },
     {
       "id": "adj-lang-cli-capability-profile",
@@ -368,7 +377,7 @@
       "id": "ocaml-build-substrate",
       "title": "Integrate OCaml into the canonical Go build substrate",
       "status": "pending",
-      "depends_on": ["ocaml-infrastructure", "build-tool-go-oracle"],
+      "depends_on": ["ocaml-infrastructure", "ocaml-ci-toolchain", "build-tool-go-oracle"],
       "branch": null,
       "pr_number": null,
       "notes": "Add discovery, opam/Dune dependency resolution, source hashing, opam-switch serialization, language detection, validator support, shard cost, affected-node behavior, and CI workflow markers."
@@ -386,7 +395,10 @@
       "id": "ocaml-capability-analyzer",
       "title": "Enforce OCaml capability declarations with compiler-libs ASTs",
       "status": "pending",
-      "depends_on": ["ocaml-representative-core"],
+      "depends_on": [
+        "ocaml-representative-core",
+        "capability-schema-category-action-constraints"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Cover process execution, dynamic loading, unsafe marshaling, and Obj.magic under the repository's explicit capability and reviewed-exception policy."
