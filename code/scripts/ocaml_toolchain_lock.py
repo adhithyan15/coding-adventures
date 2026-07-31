@@ -109,10 +109,10 @@ EXPECTED_BUILD_LINES = {
 }
 EXPECTED_RUN_SHA256 = {
     "contract.validate": "6e77be232d50974d1de5d950993e830f46792e4241804fbedf43fa75875c8ec7",
-    "fresh.bootstrap": "a7d2fc10d2ccaa75f7a89e8e519ad6a2ab7a9cdd7324bac0efaddfffd34efaeb",
+    "fresh.bootstrap": "240997bd7eff9f98a529c7410b2f8849a9f1dcfccc4edfafb8f8801db054f9ed",
     "fresh.generate": "1db0d48f6e40cf98a1b93dc9acaa5db9b84035be22c494d5483423b35ca45d26",
     "fresh.compare": "c5380cbbe8df09fc05e09d15f0c275e64d30f7d782e50a3fd771fab8b59cfb6b",
-    "locked.bootstrap": "552610643fa2717526faf7084a9816dcbed22b5bc8a270b1d60a67c94981cfca",
+    "locked.bootstrap": "5c6306a2240b83375adf154cd035a4ad73f48288b4ee93ea97aaae6948f71eed",
     "locked.install": "83aaefbc943f71a9be36cd9cfa8ac70919040de0d0e71748f93999b84023172c",
     "locked.run": "68cdbecd8ce825ae00f1f1516f3ab73bd06198ac9e3f1c238f06518a00353929",
 }
@@ -964,9 +964,12 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
                 'test "$RUNNER_OS" = "$EXPECTED_OS"',
                 'test "$RUNNER_ARCH" = "$EXPECTED_ARCH"',
                 'test "$actual" = "$OPAM_VERSION"',
-                "opam var root --safe",
-                'git -C "$repository_root" remote get-url origin',
-                'git -C "$repository_root" rev-parse HEAD',
+                "opam repository list --all --short --color=never",
+                "opam repository list --all --color=never",
+                'test "$repository_names" = "default"',
+                "validate-repository-report",
+                '--names "$repository_names"',
+                '--listing "$repository_listing"',
                 "dune alcotest bisect_ppx ocamlformat",
             ),
             f"{'fresh' if job_name == 'fresh-solve' else 'locked'}.bootstrap",
@@ -1117,6 +1120,33 @@ def validate_tool_version_outputs(
             )
 
 
+def validate_repository_report(
+    manifest: Mapping[str, Any], names: str, listing: str
+) -> None:
+    """Validate opam's color-disabled configured-repository report."""
+
+    if names.splitlines() != ["default"]:
+        raise ContractError("opam must report exactly the default repository")
+    expected_source = (
+        "git+https://github.com/ocaml/opam-repository.git"
+        f"#{manifest['opam_repository_commit']}"
+    )
+    default_rows = [
+        fields
+        for line in listing.splitlines()
+        if (fields := line.split()) and fields[0] == "default"
+    ]
+    if (
+        len(default_rows) != 1
+        or len(default_rows[0]) < 2
+        or default_rows[0][1] != expected_source
+        or listing.count(expected_source) != 1
+    ):
+        raise ContractError(
+            "opam default repository must equal the reviewed commit-qualified source"
+        )
+
+
 RUNTIME_COMMANDS: Mapping[str, Sequence[str]] = {
     "opam": ("opam", "--version"),
     "ocaml": ("opam", "exec", "--", "ocamlc", "-version"),
@@ -1126,6 +1156,7 @@ RUNTIME_COMMANDS: Mapping[str, Sequence[str]] = {
         "list",
         "--installed",
         "--short",
+        "--color=never",
         "--columns=version",
         "alcotest",
     ),
@@ -1134,6 +1165,7 @@ RUNTIME_COMMANDS: Mapping[str, Sequence[str]] = {
         "list",
         "--installed",
         "--short",
+        "--color=never",
         "--columns=version",
         "bisect_ppx",
     ),
@@ -1142,6 +1174,7 @@ RUNTIME_COMMANDS: Mapping[str, Sequence[str]] = {
         "list",
         "--installed",
         "--short",
+        "--color=never",
         "--columns=version",
         "ocamlformat",
     ),
@@ -1184,14 +1217,26 @@ def main(argv: Sequence[str] | None = None) -> int:
     runtime_parser.add_argument(
         "--repo-root", type=Path, default=_repo_root_from_script()
     )
+    report_parser = subparsers.add_parser(
+        "validate-repository-report",
+        help="validate opam's configured-repository report",
+    )
+    report_parser.add_argument(
+        "--repo-root", type=Path, default=_repo_root_from_script()
+    )
+    report_parser.add_argument("--names", required=True)
+    report_parser.add_argument("--listing", required=True)
     args = parser.parse_args(argv)
 
     try:
         if args.command == "validate-repository":
             validate_repository(args.repo_root.resolve())
-        else:
+        elif args.command == "validate-runtime":
             manifest = load_manifest(args.repo_root.resolve())
             validate_runtime(manifest)
+        else:
+            manifest = load_manifest(args.repo_root.resolve())
+            validate_repository_report(manifest, args.names, args.listing)
     except (ContractError, OSError, subprocess.CalledProcessError) as exc:
         print(f"OCAML03 validation failed: {exc}", file=sys.stderr)
         return 1

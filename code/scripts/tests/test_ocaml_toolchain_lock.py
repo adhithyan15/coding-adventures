@@ -612,6 +612,35 @@ class OcamlToolchainDigestTests(unittest.TestCase):
 
 
 class OcamlToolchainRuntimeTests(unittest.TestCase):
+    def test_repository_report_requires_one_exact_source_field(self) -> None:
+        manifest = toolchain.load_manifest(REPO_ROOT)
+        source = (
+            "git+https://github.com/ocaml/opam-repository.git"
+            f"#{manifest['opam_repository_commit']}"
+        )
+        toolchain.validate_repository_report(
+            manifest,
+            "default",
+            f"# Repository URL Switches\ndefault {source} current\n",
+        )
+
+        invalid_reports = (
+            f"default {source}-evil current\n",
+            f"default {source} {source}\n",
+            f"default {source}\ndefault {source}\n",
+        )
+        for listing in invalid_reports:
+            with (
+                self.subTest(listing=listing),
+                self.assertRaisesRegex(toolchain.ContractError, "reviewed"),
+            ):
+                toolchain.validate_repository_report(manifest, "default", listing)
+
+        with self.assertRaisesRegex(toolchain.ContractError, "exactly"):
+            toolchain.validate_repository_report(
+                manifest, "default\nextra", f"default {source}\n"
+            )
+
     def test_exact_tool_versions_accept_expected_outputs(self) -> None:
         manifest = toolchain.load_manifest(REPO_ROOT)
         toolchain.validate_tool_version_outputs(
@@ -682,6 +711,12 @@ class OcamlToolchainRuntimeTests(unittest.TestCase):
         toolchain.validate_runtime(toolchain.load_manifest(REPO_ROOT))
 
         self.assertEqual(6, run.call_count)
+        self.assertEqual(
+            [list(command) for command in toolchain.RUNTIME_COMMANDS.values()],
+            [call.args[0] for call in run.call_args_list],
+        )
+        for name in ("alcotest", "bisect_ppx", "ocamlformat"):
+            self.assertIn("--color=never", toolchain.RUNTIME_COMMANDS[name])
         for call in run.call_args_list:
             self.assertTrue(call.kwargs["check"])
             self.assertFalse(call.kwargs["shell"])

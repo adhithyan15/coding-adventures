@@ -31,6 +31,8 @@ The CI workflow MUST use:
 - one reviewed full 40-hex `ocaml/opam-repository` commit.
 
 The workflow MUST fail if a direct installed version differs from the contract.
+Machine-read version probes MUST disable color so runner-level color variables
+cannot decorate an otherwise exact value.
 It MUST pass the full `ocaml-base-compiler.5.2.1` package identity to the setup
 action rather than a bare semver value or range that requires live compiler
 resolution.
@@ -46,10 +48,11 @@ before dependency installation if Dune, Alcotest, `bisect_ppx`, or
 `ocamlformat` is already installed. This prevents a pre-seeded project
 dependency solution from influencing either solve.
 
-Before dependency installation, the workflow MUST inspect the setup action's
-actual `repo/default` Git checkout. Its `origin` URL and `HEAD` MUST equal the
-reviewed repository and commit; a human-oriented repository-listing command is
-not sufficient evidence.
+Before dependency installation, the workflow MUST use opam's color-disabled
+repository report to prove that `default` is the only configured repository and
+that its source URL contains the reviewed commit. This remains valid when the
+setup action removes a materialized repository mirror after populating opam's
+repository cache.
 
 The setup action currently resolves the newest stable opam below 2.6 rather
 than accepting an exact opam version input. The workflow therefore treats the
