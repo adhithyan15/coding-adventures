@@ -508,6 +508,18 @@ mod tests {
         );
     }
 
+    /// Explicit empty parentheses must parse for both value and statement
+    /// procedure calls, preserving a bare identifier for variable reads.
+    #[test]
+    fn test_parse_zero_argument_procedure_calls() {
+        let source = "begin integer result; integer procedure answer; answer := 42; \
+                      procedure store; result := answer(); store() end";
+        let ast = parse_algol(source);
+        assert_program_root(&ast);
+        assert!(find_rule(&ast, "proc_call"), "Expected value proc_call in AST");
+        assert!(find_rule(&ast, "proc_stmt"), "Expected statement proc_stmt in AST");
+    }
+
     // -----------------------------------------------------------------------
     // Test 16: While form in for loop
     // -----------------------------------------------------------------------

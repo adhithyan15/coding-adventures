@@ -5271,6 +5271,24 @@ mod tests {
     }
 
     #[test]
+    fn zero_argument_procedures_run_with_explicit_empty_parentheses() {
+        let src = "begin integer result; integer procedure answer; answer := 42; \
+                   procedure store; result := answer(); store() end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "zero_arg_procedures").expect("compiles");
+        let store = module.get_function("store").expect("store function exists");
+        let calls: Vec<&IIRInstr> = store
+            .instructions
+            .iter()
+            .filter(|instr| instr.op == "call")
+            .collect();
+        assert_eq!(calls.len(), 1, "store calls answer once");
+        assert_eq!(calls[0].srcs.len(), 1, "zero-argument call has only callee");
+        assert!(matches!(calls[0].srcs.first(), Some(Operand::Var(name)) if name == "answer"));
+    }
+
+    #[test]
     fn procedure_emitted_as_sibling_function() {
         let module = compile_source(
             "begin integer result; integer procedure sq(x); value x; integer x; \

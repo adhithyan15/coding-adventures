@@ -52,8 +52,8 @@ pub fn parser_grammar() -> ParserGrammar {
             // `code/grammars/algol.grammar`. A full `grammar-tools
             // compile-grammar` regen is NOT used here because the checked-in
             // `algol.grammar` has drifted ahead of this compiled grammar in
-            // other rules (e.g. `for_stmt` loop targets, optional
-            // `actual_params`, labels) the frontend does not yet handle, so
+            // other rules (e.g. `for_stmt` loop targets, labels) the frontend
+            // does not yet handle, so
             // regenerating wholesale would pull those in and break parsing.
             // Resyncing the full grammar is separate follow-up work.
             body: GrammarElement::Sequence { elements: vec![
@@ -329,7 +329,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                 GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
                         GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
-                        GrammarElement::RuleReference { name: r#"actual_params"#.to_string() },
+                        GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"actual_params"#.to_string() }) },
                         GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
                     ] }) },
             ] },
@@ -774,7 +774,7 @@ pub fn parser_grammar() -> ParserGrammar {
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                 GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
-                GrammarElement::RuleReference { name: r#"actual_params"#.to_string() },
+                GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"actual_params"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
             ] },
             line_number: 324,
