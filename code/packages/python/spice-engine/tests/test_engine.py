@@ -1236,6 +1236,16 @@ def test_mos_model_card_rejects_negative_or_non_finite_gate_bulk_overlap_capacit
             normalize_model_card("Minvalid", "nmos", {"CGBO": invalid_capacitance})
 
 
+def test_mos_model_card_rejects_non_positive_or_non_finite_saturation_current() -> None:
+    for value in (1.0e-15, 2.0e-10, 1.0):
+        valid = normalize_model_card("Mvalid", "nmos", {"IS": value})
+        assert valid.parameters["IS"] == pytest.approx(value)
+
+    for invalid_current in (-math.inf, -0.1, 0.0, math.inf, math.nan):
+        with pytest.raises(ValueError, match="MOSFET IS must be finite and positive"):
+            normalize_model_card("Minvalid", "nmos", {"IS": invalid_current})
+
+
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
     circuit = Circuit()
     circuit.add(JFET("J1", "drain", "gate", "0", Kf=-1.0))

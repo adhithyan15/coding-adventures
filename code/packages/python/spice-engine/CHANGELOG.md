@@ -1,5 +1,8 @@
 # Changelog
 
+- Reject non-positive and non-finite Level-1 MOS model-card `IS` values before
+  bulk-junction leakage and temperature preprocessing.
+
 - Reject negative and non-finite Level-1 MOS model-card `CGBO` values before
   gate-bulk overlap-capacitance stamping.
 
